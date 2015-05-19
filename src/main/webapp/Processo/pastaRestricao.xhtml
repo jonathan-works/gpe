@@ -19,7 +19,9 @@
                 formTitle="#{infoxMessages['searchForm.title']}">
                 
                 <wi:inputText id="nome" value="#{pastaList.entity.nome}"
-                        label="#{infoxMessages['pasta.nome']}" />
+                    label="#{infoxMessages['pasta.nome']}" />
+                <wi:inputText id="descricao" value="#{pastaList.entity.descricao}"
+                    label="#{infoxMessages['pasta.descricao']}" />
                 <ui:define name="buttons">
 					<wi:commandButton id="searchButton"
 						value="#{infoxMessages['button.pesquisar']}"
@@ -36,13 +38,14 @@
 						styleClass="buttons" />
                     <a:commandButton id="addPastaBtn"
                         value="#{infoxMessages['documentoProcesso.addFolder']}"
-                        onclick="#{rich:component('addPastaPanel')}.show();"
-                        render="@this" limitRender="true" styleClass="buttons"
+                        onclick="infox.showLoading();"
+                        oncomplete="#{rich:component('addPastaPanel')}.show(); infox.hideLoading();"
+                        render="@this pastaRestricaoDiv" limitRender="true" styleClass="buttons"
                         action="#{pastaRestricaoAction.newInstance()}"/>
 				</ui:define>
             </wi:searchForm>
         </ui:define>
-					
+
         <!-- Lista de pastas -->
         <ui:define name="headerToolBar" />
         <ui:define name="toolBar">
@@ -50,12 +53,12 @@
             	execute="@this" limitRender="true" rendered="true"
             	render="pastaRestricaoDiv"
             	onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
-                <h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['pasta.restricoes']}" />
+                <h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['pasta.select']}" />
             </a:commandLink>
             <wi:toolBar action="#{pastaRestricaoAction.removePasta(row)}"
                 limitToList="true" status=":status"
                 rendered="#{pastaRestricaoAction.canRemovePasta(row)}"
-                reRender="pastaTable"
+                reRender="pastaTable pastaRestricaoDiv"
                 onclick="if (confirm('#{infoxMessages['crud.confirmRemove']}')) {infox.showLoading(); return true;} else return false;"
                 oncomplete="infox.hideLoading();"
                 url="#{wiSkin.imageFolder}/remove.png"
@@ -87,6 +90,9 @@
                     required="true" maxlength="250"
                     disabled="#{not pastaRestricaoAction.instance.editavel}"
                     label="#{infoxMessages['pasta.nome']}">
+                    <f:validator validatorId="nomePastaValidator" />
+                    <f:attribute name="idProcesso" value="#{pastaRestricaoAction.processo.idProcesso}" />
+                    <f:attribute name="idPasta" value="#{pastaRestricaoAction.instance.id}" />
                 </wi:inputText>
                 <wi:inputText id="editPastaInputDescricao"
                     value="#{pastaRestricaoAction.instance.descricao}"
@@ -97,7 +103,11 @@
                 <wi:inputNumber id="editPastaInputOrdem"
                     value="#{pastaRestricaoAction.instance.ordem}"
                     disabled="#{not pastaRestricaoAction.instance.editavel}"
-                    required="true" label="#{infoxMessages['pasta.ordem']}" />
+                    required="true" label="#{infoxMessages['pasta.ordem']}">
+                    <f:validator validatorId="ordemPastaValidator" />
+                    <f:attribute name="idProcesso" value="#{pastaRestricaoAction.processo.idProcesso}" />
+                    <f:attribute name="idPasta" value="#{pastaRestricaoAction.instance.id}" />
+                </wi:inputNumber>
                 <wi:commandButton id="editPastaButton"
                     action="#{pastaRestricaoAction.updatePasta()}"
                     rendered="#{pastaRestricaoAction.instance.editavel}"
@@ -118,13 +128,13 @@
                         rendered="#{pastaRestricaoAction.canEditRestricao(row)}"
                         reRender="pastaRestricaoDiv editRestricaoPanel"
                         action="#{pastaRestricaoAction.loadRestricao(row)}"
-                        onclick="infox.showLoading();"
+                        onclick="infox.showLoading();" title="#{infoxMessages['pasta.restricao.select']}"
                     	oncomplete="infox.hideLoading(); #{rich:component('editRestricaoPanel')}.show();"
                         url="#{wiSkin.imageFolder}/view.png" />
                     <wi:toolBar id="removePastaRestricao"
                         action="#{pastaRestricaoAction.removeRestricao(row)}"
                         rendered="#{pastaRestricaoAction.canRemoveRestricao(row)}"
-    					reRender="pastaRestricaoDiv"
+    					reRender="pastaRestricaoDiv" title="#{infoxMessages['pasta.restricao.remove']}"
     					url="#{wiSkin.imageFolder}/remove.png" />
     			</ui:define>
     
@@ -200,6 +210,7 @@
     <rich:popupPanel id="addPastaPanel" moveable="true" show="false"
         resizeable="true" minWidth="290" minHeight="280"
         header="#{infoxMessages['pasta.add']}"
+        onbeforeshow="clearAddPastaFields();"
         onbeforehide="clearAddPastaFields();">
         <f:facet name="controls">
             <h:graphicImage id="pastaPanelCloseBtn"
@@ -211,6 +222,8 @@
             <wi:inputText id="addPastaInputName"
                 value="#{pastaRestricaoAction.instance.nome}" required="true"
                 maxlength="250" label="#{infoxMessages['pasta.nome']}">
+                <f:validator validatorId="nomePastaValidator" />
+                <f:attribute name="idProcesso" value="#{pastaRestricaoAction.processo.idProcesso}" />
             </wi:inputText>
             <wi:inputText id="addPastaInputDescricao"
                 value="#{pastaRestricaoAction.instance.descricao}"
@@ -219,12 +232,15 @@
             </wi:inputText>
             <wi:inputNumber id="addPastaInputOrdem"
                 value="#{pastaRestricaoAction.instance.ordem}"
-                required="true" label="#{infoxMessages['pasta.ordem']}" />
+                required="true" label="#{infoxMessages['pasta.ordem']}">
+                <f:validator validatorId="ordemPastaValidator" />
+                <f:attribute name="idProcesso" value="#{pastaRestricaoAction.processo.idProcesso}" />
+            </wi:inputNumber>
             <br />
             <wi:commandButton id="addPastaButton"
                 action="#{pastaRestricaoAction.persistPasta()}"
                 execute="@form"
-                oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('addPastaPanel')}.hide();}else{clearAddPastaFields()}"
+                oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('addPastaPanel')}.hide();}else{infox.hideLoading();}"
                 value="#{infoxMessages['pasta.add']}"
                 reRender="@form pastaTable pastaTablePanel pastaRestricaoDiv pageBodyDialogMessage" />
         </h:form>

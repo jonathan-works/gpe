@@ -1,5 +1,7 @@
 package br.com.infox.epp.processo.documento.manager;
 
+import static java.text.MessageFormat.format;
+
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -145,14 +147,6 @@ public class PastaRestricaoAction implements Serializable {
 	}
 	
 	private boolean prePersist() throws DAOException{
-		if (!validateNomePasta()) {
-		    statusMessage.add(Severity.INFO, "Já existe uma pasta com este nome.");
-		    return false;
-		}
-		if (!validateOrdem()) {
-		    statusMessage.add(Severity.INFO, "Já existe uma pasta com este número de ordem.");
-		    return false;
-		}
 	    getInstance().setProcesso(processo);
 		getInstance().setSistema(false);
 		pastaManager.persistWithDefault(getInstance());
@@ -174,14 +168,8 @@ public class PastaRestricaoAction implements Serializable {
 
 	public void updatePasta() {
 		try {
-		    if (!validateNomePasta()) {
-		        statusMessage.add(Severity.INFO, "Já existe uma pasta com este nome.");
-		    } else  if (!validateOrdem()) {
-		        statusMessage.add(Severity.INFO, "Já existe uma pasta com este número de ordem.");
-		    } else {
-    			pastaManager.update(getInstance());
-    			statusMessage.add(Severity.INFO, "Pasta atualizada com sucesso.");
-		    }
+			pastaManager.update(getInstance());
+			statusMessage.add(Severity.INFO, "Pasta atualizada com sucesso.");
 		} catch (DAOException e) {
 		    LOG.error(e);
 			actionMessagesService.handleDAOException(e);
@@ -195,6 +183,9 @@ public class PastaRestricaoAction implements Serializable {
 			}
 			documentoList.checkPastaToRemove(pasta);
 			pastaManager.deleteComRestricoes(pasta);
+			if (pasta.equals(getInstance())) {
+			    newInstance();
+			}
 			setPastaList(pastaManager.getByProcesso(processo.getProcessoRoot()));
 			FacesMessages.instance().add(Severity.INFO, "Pasta removida com sucesso.");
 		} catch (DAOException e) {
@@ -265,6 +256,7 @@ public class PastaRestricaoAction implements Serializable {
 	    if (isRestricaoPapel()) {
 	        getRestricaoInstance().setAlvo(papel.getIdPapel());
 	    } else {
+	        this.alvoRestricaoPapel = null;
 	        return;
 	    }
 	    this.alvoRestricaoPapel = papel;
@@ -278,6 +270,7 @@ public class PastaRestricaoAction implements Serializable {
         if (isRestricaoLocalizacao() && localizacao != null) {
             getRestricaoInstance().setAlvo(localizacao.getIdLocalizacao());
         } else {
+            this.alvoRestricaoLocalizacao = null;
             return;
         }
         this.alvoRestricaoLocalizacao = localizacao;
@@ -294,15 +287,30 @@ public class PastaRestricaoAction implements Serializable {
         this.alvoRestricaoParticipante = inParticipante;
     }
 
+    private Boolean alreadyExists(PastaRestricao restricao) {
+        List<PastaRestricao> restricoesExistentes = pastaRestricaoManager.getByPasta(getInstance());
+        for (PastaRestricao restricaoExistente : restricoesExistentes) {
+            if (restricaoExistente.getTipoPastaRestricao().equals(restricao.getTipoPastaRestricao())
+                    && restricaoExistente.getAlvo().equals(restricao.getAlvo())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public void persistRestricao() {
-	    PastaRestricao restricao = getRestricaoInstance();
-	    restricao.setPasta(getInstance());
-	    try {
-            pastaRestricaoManager.persist(restricao);
-            getRestricoes().add(restricao);
-        } catch (DAOException e) {
-            LOG.error(e);
-            actionMessagesService.handleDAOException(e);
+        PastaRestricao restricao = getRestricaoInstance();
+        if (alreadyExists(restricao)) {
+            statusMessage.add(Severity.INFO, format(infoxMessages.get("pasta.restricao.alreadyExists"), getAlvoFormatado(restricao)));
+        } else {
+            restricao.setPasta(getInstance());
+            try {
+                pastaRestricaoManager.persist(restricao);
+                getRestricoes().add(restricao);
+            } catch (DAOException e) {
+                LOG.error(e);
+                actionMessagesService.handleDAOException(e);
+            }
         }
 	}
 	
@@ -322,11 +330,16 @@ public class PastaRestricaoAction implements Serializable {
     }
     
     public void updateRestricao() {
-        try {
-            pastaRestricaoManager.update(getRestricaoInstance());
-        } catch (DAOException e) {
-            LOG.error(e);
-            actionMessagesService.handleDAOException(e);
+        PastaRestricao restricao = getRestricaoInstance();
+        if (alreadyExists(restricao)) {
+            statusMessage.add(Severity.INFO, format(infoxMessages.get("pasta.restricao.alreadyExists"), getAlvoFormatado(restricao)));
+        } else {
+            try {
+                pastaRestricaoManager.update(restricao);
+            } catch (DAOException e) {
+                LOG.error(e);
+                actionMessagesService.handleDAOException(e);
+            }
         }
     }
     

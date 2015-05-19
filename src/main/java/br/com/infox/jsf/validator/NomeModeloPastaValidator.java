@@ -42,7 +42,7 @@ public class NomeModeloPastaValidator implements Validator {
         for (ModeloPasta modeloPasta : fluxo.getModeloPastaList()) {
             if (idModeloPasta != null && modeloPasta.getId().equals(idModeloPasta)) continue;
             if (modeloPasta.getNome().equals(nome)) {
-                throw new ValidatorException(new FacesMessage("Já existe modelo de pasta com este nome."));
+                throw new ValidatorException(new FacesMessage("Já existe modelo de pasta com este nome"));
             }
         }
     }

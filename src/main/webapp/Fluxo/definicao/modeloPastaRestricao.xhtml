@@ -190,7 +190,7 @@
         function clearAddModeloPastaFields() {
             #{rich:jQuery('addModeloPastaInputName')}.val('');
             #{rich:jQuery('addModeloPastaInputDescricao')}.val('');
-            #{rich:jQuery('addModeloPastaInputOrdemNumber')}.val('');
+            #{rich:jQuery('addModeloPastaInputOrdemNumberNumber')}.val('');
             #{rich:jQuery('modeloPastaRemovivel')}.attr('checked', true);
             #{rich:jQuery('modeloPastaEditavel')}.attr('checked', true);
             $('.errorFields.errors').remove();
@@ -215,10 +215,10 @@
             #{rich:jQuery('editAlvoInputDiv')}.hide();
             #{rich:jQuery('editAlvoTipoPapelInput')}.val('');
             #{rich:jQuery('editAlvoTipoLocalizacaoInput')}.val('');
-            #{rich:jQuery('editAlvoTipoParticipanteInput')}.val('true')
-            #{rich:jQuery('editReadInput')}.val('false');
-            #{rich:jQuery('editWriteInput')}.val('false');
-            #{rich:jQuery('editDeleteInput')}.val('false');
+            #{rich:jQuery('editAlvoTipoParticipanteInput')}.attr('checked', true)
+            #{rich:jQuery('editReadInput')}.attr('checked', false);
+            #{rich:jQuery('editWriteInput')}.attr('checked', false);
+            #{rich:jQuery('editDeleteInput')}.attr('checked', false);
             $('.errorFields.errors').remove();
             $('.errors').removeClass('errors');
         }
@@ -231,6 +231,7 @@
 	    resizeable="true"
 	    minHeight="360" minWidth="290"
 	    header="#{infoxMessages['modeloPasta.new']}"
+        onbeforeshow="clearAddModeloPastaFields();"
 	    onbeforehide="clearAddModeloPastaFields();">
 		
 		<f:facet name="controls">
