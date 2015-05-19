@@ -4,6 +4,7 @@ public interface UsuarioPerfilQuery {
 
     String PARAM_USUARIO_LOGIN = "usuarioLogin";
     String PARAM_PERFIL_TEMPLATE = "perfilTemplate";
+    String PARAM_DS_PERFIL_TEMPLATE = "descricaoPerfilTemplate";
     String PARAM_LOCALIZACAO = "localizacao";
     String PARAM_ATIVO = "ativo";
 
@@ -16,5 +17,11 @@ public interface UsuarioPerfilQuery {
     String LIST_BY_USUARIO_LOGIN = "UsuarioPerfil.listByUsuarioLogin";
     String LIST_BY_USUARIO_LOGIN_QUERY = "select o from UsuarioPerfil o where o.ativo = true and o.perfilTemplate.ativo = true and o.usuarioLogin = :"
             + PARAM_USUARIO_LOGIN;
+    
+    String EXISTE_USUARIO_COM_DESCRICAO_PERFIL = "existeUsuarioComPerfilDescricao";
+    String EXISTE_USUARIO_COM_DESCRICAO_PERFIL_QUERY = "select count(*) from UsuarioPerfil up " 
+    		+ "inner join up.perfilTemplate pt where pt.descricao = :" + PARAM_DS_PERFIL_TEMPLATE
+    		+ " and up.usuarioLogin = :" + PARAM_USUARIO_LOGIN;
+    
 
 }

@@ -1,6 +1,8 @@
 package br.com.infox.epp.access.entity;
 
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.epp.access.query.UsuarioPerfilQuery.EXISTE_USUARIO_COM_DESCRICAO_PERFIL;
+import static br.com.infox.epp.access.query.UsuarioPerfilQuery.EXISTE_USUARIO_COM_DESCRICAO_PERFIL_QUERY;
 import static br.com.infox.epp.access.query.UsuarioPerfilQuery.GET_BY_USUARIO_LOGIN_PERFIL_TEMPLATE_LOCALIZACAO;
 import static br.com.infox.epp.access.query.UsuarioPerfilQuery.GET_BY_USUARIO_LOGIN_PERFIL_TEMPLATE_LOCALIZACAO_QUERY;
 import static br.com.infox.epp.access.query.UsuarioPerfilQuery.LIST_BY_USUARIO_LOGIN;
@@ -28,7 +30,8 @@ import javax.validation.constraints.NotNull;
 @Table(name="tb_usuario_perfil")
 @NamedQueries({
     @NamedQuery(name=GET_BY_USUARIO_LOGIN_PERFIL_TEMPLATE_LOCALIZACAO, query=GET_BY_USUARIO_LOGIN_PERFIL_TEMPLATE_LOCALIZACAO_QUERY),
-    @NamedQuery(name=LIST_BY_USUARIO_LOGIN, query=LIST_BY_USUARIO_LOGIN_QUERY)
+    @NamedQuery(name=LIST_BY_USUARIO_LOGIN, query=LIST_BY_USUARIO_LOGIN_QUERY),
+    @NamedQuery(name=EXISTE_USUARIO_COM_DESCRICAO_PERFIL, query=EXISTE_USUARIO_COM_DESCRICAO_PERFIL_QUERY)
 })
 public class UsuarioPerfil implements Serializable {
 
