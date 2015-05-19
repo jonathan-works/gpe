@@ -16,25 +16,27 @@ import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.action.ActionMessagesService;
-import br.com.infox.core.file.download.FileDownloader;
+import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.list.DocumentoComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
+import br.com.infox.epp.processo.comunicacao.service.DestinatarioComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
+import br.com.infox.epp.processo.comunicacao.service.ProrrogacaoPrazoService;
 import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
-import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
-import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -62,17 +64,24 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 	private DocumentoManager documentoManager;
 	@In
 	private MetadadoProcessoManager metadadoProcessoManager;
-	
 	@In
-	private ComunicacaoAction comunicacaoAction;
+	private GenericManager genericManager;
+	@In
+	private DestinatarioComunicacaoService destinatarioComunicacaoService;
 	@In
 	private ModeloComunicacaoManager modeloComunicacaoManager;
+	@In
+	private ProrrogacaoPrazoService prorrogacaoPrazoService;
+	@In
+	private ProcessoManager processoManager;
 	
 	private Processo comunicacao;
 	private Processo processoDocumento;
 	private DestinatarioModeloComunicacao destinatarioComunicacao;
 	private Date dataFimPrazoCumprimento;
 	private boolean prorrogacaoPrazo;
+	private boolean documentos;
+	private List<Documento> documentosDestinatario; // Cache dos documentos do destinatário selecionado
 	
 	private DestinatarioBean destinatario;
 	private Date novoPrazoCumprimento;
@@ -85,7 +94,7 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 		dataFimPrazoCumprimento = prazoComunicacaoService.contabilizarPrazoCumprimento(comunicacao);
 		documentoComunicacaoList.setProcesso(comunicacao.getProcessoRoot());
 		documentoComunicacaoList.setModeloComunicacao(destinatarioComunicacao.getModeloComunicacao());
-		clearDestinatarioProrrogacaoPrazo();
+		clearDestinatarioBean();
 	}
 	
 	public String getMeioExpedicao() {
@@ -96,29 +105,10 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 		return dataFimPrazoCumprimento;
 	}
 	
-	public Long getIdDestinatarioComunicacao(){
-		return destinatarioComunicacao.getId();
+	public DestinatarioModeloComunicacao getDestinatarioComunicacao(){
+		return destinatarioComunicacao;
 	}
-	//TODO retirar
-	public void downloadComunicacao() {
-		try {
-			byte[] pdf = comunicacaoService.gerarPdfCompleto(destinatarioComunicacao.getModeloComunicacao(), destinatarioComunicacao);
-			FileDownloader.download(pdf, "application/pdf", "Comunicação.pdf");
-		} catch (DAOException e) {
-			LOG.error("", e);
-			actionMessagesService.handleDAOException(e);
-		}
-	}
-	
-	public void downloadDocumento(Documento documento) {
-		documentoDownloader.downloadDocumento(documento);
-	}
-	//TODO retirar
-	public void downloadSolicitacaoProrrogacaoPrazo() {
-		Documento documentoPedidoProrrogacao = processoDocumento.getMetadado(EppMetadadoProvider.DOCUMENTO_EM_ANALISE).getValue();
-		documentoDownloader.downloadDocumento(documentoPedidoProrrogacao);
-	}
-	
+		
 	public Integer getIdDocPedidoProrrogacao(){
 		Documento documentoPedidoProrrogacao = processoDocumento.getMetadado(EppMetadadoProvider.DOCUMENTO_EM_ANALISE).getValue();
 		return documentoPedidoProrrogacao.getId();
@@ -126,13 +116,7 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 
 	public void endTask() {
 		try {
-			MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
-			MetadadoProcesso metadadoDataPedido = metadadoProcessoProvider.gerarMetadado(
-					ComunicacaoMetadadoProvider.DATA_ANALISE_PRORROGACAO, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(new Date()));
-			comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoDataPedido));
-			
-			TaskInstanceHome taskInstanceHome = TaskInstanceHome.instance();
-			taskInstanceHome.end(taskInstanceHome.getName());
+			prorrogacaoPrazoService.finalizarAnalisePedido(comunicacao);		
 		} catch (Exception e) {
 			LOG.error("", e);
 			if (e instanceof DAOException) {
@@ -143,23 +127,43 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 		}
 	}
 		
-	public void clearDestinatarioProrrogacaoPrazo(){
+	public void clearDestinatarioBean(){
 		setDestinatarioProrrogacaoPrazo(null);
 		setProrrogacaoPrazo(false);
+		setDocumentos(false);
 	}
 	
 	public void setDestinatarioProrrogacaoPrazo(DestinatarioBean bean){
 		this.destinatario = bean;
 		setProrrogacaoPrazo(true);
+		setDocumentos(false);
+	}
+	
+	public void setDestinatarioDocumentos(DestinatarioBean bean){
+		this.destinatario = bean;
+		setProrrogacaoPrazo(false);
+		setDocumentos(true);
+	}
+	
+	public List<Documento> getDocumentosDestinatario() {
+		if (documentosDestinatario == null) {
+			DestinatarioModeloComunicacao destinatarioModelo = genericManager.find(DestinatarioModeloComunicacao.class, destinatario.getIdDestinatario());
+			documentosDestinatario = new ArrayList<>();
+			for (DocumentoModeloComunicacao documentoModelo : destinatarioModelo.getModeloComunicacao().getDocumentos()) {
+				documentosDestinatario.add(documentoModelo.getDocumento());
+			}
+		}
+		return documentosDestinatario;
 	}
 	
 	public List<DestinatarioBean> getDestinatariosCienciaConfirmada() {
 		List<DestinatarioBean> destinatarios = new ArrayList<>();
 	    List<ModeloComunicacao> comunicacoesDoProcesso = modeloComunicacaoManager.listModelosComunicacaoPorProcessoRoot(comunicacao.getNumeroProcessoRoot());
-	    for (ModeloComunicacao modeloComunicacao : comunicacoesDoProcesso) { //TODO deveria chamar esse metodo do comunicacao action?
-	        List<DestinatarioBean> destinatariosPorModelo = comunicacaoAction.getDestinatarios(modeloComunicacao);
+	    for (ModeloComunicacao modeloComunicacao : comunicacoesDoProcesso) { 
+	        List<DestinatarioBean> destinatariosPorModelo = destinatarioComunicacaoService.getDestinatarios(modeloComunicacao);
 	        for (DestinatarioBean destinatarioBean : destinatariosPorModelo) {
-	        	if (!destinatarioBean.getPrazoFinal().equals("-")){
+	        	if (!destinatarioBean.getPrazoFinal().equals("-") && 
+	        			prorrogacaoPrazoService.canRequestProrrogacaoPrazo(destinatarioBean.getModeloComunicacao().getTipoComunicacao())){
 	        		destinatarios.add(destinatarioBean);
 	        	}
             }
@@ -212,7 +216,7 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 					try {
 						metadadoProcessoManager.update(metadadoDataLimiteCumprimento);
 						FacesMessages.instance().add("Prazo prorrogado com sucesso");
-						clearDestinatarioProrrogacaoPrazo();
+						clearDestinatarioBean();
 					} catch (DAOException e) {
 						LOG.error("", e);
 						actionMessagesService.handleDAOException(e);
@@ -243,6 +247,14 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 
 	public void setNovoPrazoCumprimento(Date novoPrazoCumprimento) {
 		this.novoPrazoCumprimento = DateUtil.getEndOfDay(novoPrazoCumprimento);
+	}
+
+	public boolean isDocumentos() {
+		return documentos;
+	}
+
+	public void setDocumentos(boolean documentos) {
+		this.documentos = documentos;
 	}
 	
 		
