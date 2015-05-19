@@ -1,5 +1,7 @@
 package br.com.infox.epp.fluxo.crud;
 
+import static java.text.MessageFormat.format;
+
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -9,9 +11,9 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
+import org.jboss.seam.international.StatusMessages;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.messages.InfoxMessages;
@@ -40,22 +42,24 @@ public class ModeloPastaRestricaoAction implements Serializable {
 	static final String NAME = "modeloPastaRestricaoAction";
 	private static final LogProvider LOG = Logging.getLogProvider(ModeloPastaRestricaoAction.class);
 	
-	@In
-	private FluxoManager fluxoManager;
-	@In
-	private ModeloPastaManager modeloPastaManager;
-	@In
-	private ActionMessagesService actionMessagesService;
-	@In
-	private ModeloPastaRestricaoManager modeloPastaRestricaoManager;
-	@In(create = true)
-	private ModeloPastaList modeloPastaList;
-	@In
-	private PapelManager papelManager;
-	@In
-	private LocalizacaoManager localizacaoManager;
-	@In
-	private InfoxMessages infoxMessages;
+    @In
+    private FluxoManager fluxoManager;
+    @In
+    private ModeloPastaManager modeloPastaManager;
+    @In
+    private ActionMessagesService actionMessagesService;
+    @In
+    private ModeloPastaRestricaoManager modeloPastaRestricaoManager;
+    @In(create = true)
+    private ModeloPastaList modeloPastaList;
+    @In
+    private PapelManager papelManager;
+    @In
+    private LocalizacaoManager localizacaoManager;
+    @In
+    private InfoxMessages infoxMessages;
+    @In(StatusMessages.COMPONENT_NAME)
+    private StatusMessages statusMessage;
 
 	
 	private ModeloPasta instance;
@@ -102,7 +106,7 @@ public class ModeloPastaRestricaoAction implements Serializable {
 				modeloPastaManager.persistWithDefault(getInstance());
 				setListModeloPastas(modeloPastaManager.getByFluxo(getFluxo()));
 				newInstance();
-				FacesMessages.instance().add(StatusMessage.Severity.ERROR, infoxMessages.get("modeloPasta.added"));
+				statusMessage.add(StatusMessage.Severity.INFO, infoxMessages.get("modeloPasta.added"));
 			}
 			newInstance();
 		} catch (DAOException e) {
@@ -114,7 +118,7 @@ public class ModeloPastaRestricaoAction implements Serializable {
 	public void update() {
 		try {
 			modeloPastaManager.update(getInstance());
-			FacesMessages.instance().add(StatusMessage.Severity.ERROR, infoxMessages.get("modeloPasta.updated"));
+			statusMessage.add(StatusMessage.Severity.INFO, infoxMessages.get("modeloPasta.updated"));
 		} catch (DAOException e) {
 			LOG.error(e);
 			actionMessagesService.handleDAOException(e);
@@ -131,7 +135,7 @@ public class ModeloPastaRestricaoAction implements Serializable {
 			    newInstance();
 			}
 			setListModeloPastas(modeloPastaManager.getByFluxo(getFluxo()));
-			FacesMessages.instance().add(Severity.INFO, infoxMessages.get("modeloPasta.removed"));
+			statusMessage.add(Severity.INFO, infoxMessages.get("modeloPasta.removed"));
 		} catch (DAOException e) {
 			LOG.error(e);
 			actionMessagesService.handleDAOException(e);
@@ -148,20 +152,34 @@ public class ModeloPastaRestricaoAction implements Serializable {
 		setRestricoes(modeloPasta);
 	}
 	
-	
 	public void persistRestricao() {
 	    ModeloPastaRestricao restricao = getRestricaoInstance();
-	    restricao.setModeloPasta(getInstance());
-	    try {
-            modeloPastaRestricaoManager.persist(restricao);
-            getRestricoes().add(restricao);
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, infoxMessages.get("modeloPasta.restricao.added"));
-        } catch (DAOException e) {
-        	LOG.error(e);
-            actionMessagesService.handleDAOException(e);
-        }
+	    if (restricaoAlreadyExists(restricao)) {
+	        statusMessage.add(Severity.INFO, format(infoxMessages.get("modeloPasta.restricao.alreadyExists"), getAlvoFormatado(restricao)));
+	    } else {
+    	    restricao.setModeloPasta(getInstance());
+    	    try {
+                modeloPastaRestricaoManager.persist(restricao);
+                getRestricoes().add(restricao);
+                statusMessage.add(StatusMessage.Severity.INFO, infoxMessages.get("modeloPasta.restricao.added"));
+            } catch (DAOException e) {
+            	LOG.error(e);
+                actionMessagesService.handleDAOException(e);
+            }
+	    }
 	}
 	
+    private boolean restricaoAlreadyExists(ModeloPastaRestricao restricao) {
+        List<ModeloPastaRestricao> restricoesExistentes = modeloPastaRestricaoManager.getByModeloPasta(getInstance());
+        for (ModeloPastaRestricao restricaoExistente : restricoesExistentes) {
+            if (restricaoExistente.getTipoPastaRestricao().equals(restricao.getTipoPastaRestricao())
+                    && restricaoExistente.getAlvo().equals(restricao.getAlvo())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void removeModeloRestricao(ModeloPastaRestricao restricao) {
         try {
             modeloPastaRestricaoManager.remove(restricao);
@@ -173,17 +191,30 @@ public class ModeloPastaRestricaoAction implements Serializable {
     }
 
     public void updateRestricao() {
-        try {
-            modeloPastaRestricaoManager.update(getRestricaoInstance());
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, infoxMessages.get("modeloPasta.restricao.updated"));
-        } catch (DAOException e) {
-        	LOG.error(e);
-            actionMessagesService.handleDAOException(e);
+        ModeloPastaRestricao restricao = getRestricaoInstance();
+        if (restricaoAlreadyExists(restricao)) {
+            statusMessage.add(Severity.ERROR, format(infoxMessages.get("modeloPasta.restricao.alreadyExists"), getAlvoFormatado(restricao)));
+        } else {
+            try {
+                modeloPastaRestricaoManager.update(restricao);
+                statusMessage.add(StatusMessage.Severity.ERROR, infoxMessages.get("modeloPasta.restricao.updated"));
+            } catch (DAOException e) {
+            	LOG.error(e);
+                actionMessagesService.handleDAOException(e);
+            }
         }
     }
     
 	public void loadRestricao(ModeloPastaRestricao restricao){
 	     setRestricaoInstance(restricao);
+	     PastaRestricaoEnum tipo = restricao.getTipoPastaRestricao();
+	     if (PastaRestricaoEnum.P.equals(tipo)) {
+	         setAlvoRestricaoPapel(papelManager.find(restricao.getAlvo()));
+	     } else if (PastaRestricaoEnum.L.equals(tipo)) {
+	         setAlvoRestricaoLocalizacao(localizacaoManager.find(restricao.getAlvo()));
+	     } else if (PastaRestricaoEnum.R.equals(tipo)) {
+	         setAlvoRestricaoParticipante(restricao.getAlvo() == 1);
+	     }
 	}
 	
 	public List<PastaRestricaoEnum> getTiposRestricao() {
@@ -262,6 +293,7 @@ public class ModeloPastaRestricaoAction implements Serializable {
 	    if (isRestricaoPapel()) {
 	        getRestricaoInstance().setAlvo(papel.getIdPapel());
 	    } else {
+	        this.alvoRestricaoPapel = null;
 	        return;
 	    }
 	    this.alvoRestricaoPapel = papel;
@@ -275,6 +307,7 @@ public class ModeloPastaRestricaoAction implements Serializable {
         if (isRestricaoLocalizacao() && localizacao != null) {
             getRestricaoInstance().setAlvo(localizacao.getIdLocalizacao());
         } else {
+            this.alvoRestricaoLocalizacao = null;
             return;
         }
         this.alvoRestricaoLocalizacao = localizacao;
