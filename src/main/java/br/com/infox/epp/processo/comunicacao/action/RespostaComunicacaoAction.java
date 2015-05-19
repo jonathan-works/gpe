@@ -23,7 +23,6 @@ import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
-import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.list.DocumentoComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.list.RespostaComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
@@ -265,9 +264,9 @@ public class RespostaComunicacaoAction implements Serializable {
 	}
 
 	public String getStatusProrrogacao() {
-		setStatusProrrogacao(prazoComunicacaoService.getStatusProrrogacaoFormatado(processoComunicacao));
+		setStatusProrrogacao(prorrogacaoPrazoService.getStatusProrrogacaoFormatado(processoComunicacao));
 		if(Strings.isNullOrEmpty(statusProrrogacao)){
-			if (prorrogacaoPrazoService.canRequestProrrogacaoPrazo(destinatario.getModeloComunicacao())){
+			if (prorrogacaoPrazoService.canRequestProrrogacaoPrazo(destinatario.getModeloComunicacao().getTipoComunicacao())){
 				setStatusProrrogacao("Não solicitada");
 			}else{
 				setStatusProrrogacao("Indisponível");
@@ -281,8 +280,7 @@ public class RespostaComunicacaoAction implements Serializable {
 	}
 
 	private void initClassificacoes() {
-		ModeloComunicacao modeloComunicacao = destinatario.getModeloComunicacao();
-		classificacoesEditor = documentoComunicacaoService.getClassificacoesDocumentoDisponiveisRespostaComunicacao(modeloComunicacao, true);
-		classificacoesAnexo = documentoComunicacaoService.getClassificacoesDocumentoDisponiveisRespostaComunicacao(modeloComunicacao, false);
+		classificacoesEditor = documentoComunicacaoService.getClassificacoesDocumentoDisponiveisRespostaComunicacao(destinatario, true);
+		classificacoesAnexo = documentoComunicacaoService.getClassificacoesDocumentoDisponiveisRespostaComunicacao(destinatario, false);
 	}
 }
