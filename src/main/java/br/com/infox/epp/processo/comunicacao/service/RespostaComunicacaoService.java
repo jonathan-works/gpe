@@ -30,7 +30,6 @@ import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
-import br.com.infox.seam.exception.BusinessException;
 
 @Name(RespostaComunicacaoService.NAME)
 @Scope(ScopeType.EVENT)
@@ -77,19 +76,14 @@ public class RespostaComunicacaoService {
 		processoAnaliseDocumentoService.inicializarFluxoDocumento(processoResposta, variaveisJbpm);
 		documentoRespostaComunicacaoDAO.updateDocumentoComoEnviado(respostas);
 		
-		//TODO: ver se tem melhor jeito de fazer isso aqui
 		MetadadoProcesso metadadoDestinatario = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO);
 		TipoComunicacao tipoComunicacao = ((DestinatarioModeloComunicacao) metadadoDestinatario.getValue()).getModeloComunicacao().getTipoComunicacao();
-		for(Documento resposta : respostas){
-			if (prorrogacaoPrazoService.isClassificacaoProrrogacaoPrazo(resposta.getClassificacaoDocumento(), tipoComunicacao)){
-				MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
-				MetadadoProcesso metadadoDataPedido = metadadoProcessoProvider.gerarMetadado(
-						ComunicacaoMetadadoProvider.DATA_PEDIDO_PRORROGACAO, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(new Date()));
-				comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoDataPedido));
-				break;
-			}
-		}
-		
+		if(prorrogacaoPrazoService.containsClassificacaoProrrogacaoPrazo(respostas, tipoComunicacao)){
+			MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
+			MetadadoProcesso metadadoDataPedido = metadadoProcessoProvider.gerarMetadado(
+					ComunicacaoMetadadoProvider.DATA_PEDIDO_PRORROGACAO, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(new Date()));
+			comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoDataPedido));
+		}		
 	}
 	
 	private void setRespostaTempestiva(Date dataResposta, Processo comunicacao) {
@@ -115,14 +109,5 @@ public class RespostaComunicacaoService {
 			}
 		}
 		contextInstance.setVariable("respostaTempestiva", respostaTempestiva);
-	}
-
-//	@Override
-	public void postSignDocument(Documento documento) {
-		try {
-			enviarResposta(documento);
-		} catch (DAOException e) {
-			throw new BusinessException("Erro ao enviar resposta da comunicação", e);
-		}
 	}
 }
