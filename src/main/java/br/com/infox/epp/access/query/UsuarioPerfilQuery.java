@@ -21,7 +21,8 @@ public interface UsuarioPerfilQuery {
     String EXISTE_USUARIO_COM_DESCRICAO_PERFIL = "existeUsuarioComPerfilDescricao";
     String EXISTE_USUARIO_COM_DESCRICAO_PERFIL_QUERY = "select count(*) from UsuarioPerfil up " 
     		+ "inner join up.perfilTemplate pt where pt.descricao = :" + PARAM_DS_PERFIL_TEMPLATE
-    		+ " and up.usuarioLogin = :" + PARAM_USUARIO_LOGIN;
+    		+ " and up.usuarioLogin = :" + PARAM_USUARIO_LOGIN
+    		+ " and up.ativo = true ";
     
 
 }
