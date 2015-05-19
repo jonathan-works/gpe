@@ -72,8 +72,8 @@ public class DocumentoComunicacaoService {
 	@In
 	private GenericManager genericManager;
 	
-	public List<ClassificacaoDocumento> getClassificacoesDocumentoDisponiveisRespostaComunicacao(ModeloComunicacao modeloComunicacao, boolean isEditor) {
-		return classificacaoDocumentoManager.getClassificacoesDocumentoDisponiveisRespostaComunicacao(modeloComunicacao, isEditor, Authenticator.getPapelAtual());
+	public List<ClassificacaoDocumento> getClassificacoesDocumentoDisponiveisRespostaComunicacao(DestinatarioModeloComunicacao destinatarioModeloComunicacao, boolean isEditor) {
+		return classificacaoDocumentoManager.getClassificacoesDocumentoDisponiveisRespostaComunicacao(destinatarioModeloComunicacao, isEditor, Authenticator.getPapelAtual());
 	}
 	
 	public List<ModeloDocumento> getModelosDocumentoDisponiveisComunicacao(TipoComunicacao tipoComunicacao) {
