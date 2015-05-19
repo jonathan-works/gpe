@@ -10,6 +10,7 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.documento.manager.TipoModeloDocumentoManager;
+import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 
 @Name(TipoComunicacaoCrudAction.NAME)
 public class TipoComunicacaoCrudAction extends AbstractCrudAction<TipoComunicacao, TipoComunicacaoManager> {
@@ -33,9 +34,10 @@ public class TipoComunicacaoCrudAction extends AbstractCrudAction<TipoComunicaca
 	}
     
     public List<ClassificacaoDocumento> getClassificacoesDocumento() {
-    	if (classificacoesDocumento == null) {
-    		classificacoesDocumento = classificacaoDocumentoFacade.getUseableClassificacaoDocumento(true);
-    	}
-		return classificacoesDocumento;
-	}
+        if (classificacoesDocumento == null) {
+            classificacoesDocumento = classificacaoDocumentoFacade
+                    .getUseableClassificacaoDocumento(TipoDocumentoEnum.D);
+        }
+        return classificacoesDocumento;
+    }
 }
