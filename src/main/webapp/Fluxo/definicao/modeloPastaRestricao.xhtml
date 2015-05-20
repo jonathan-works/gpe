@@ -127,7 +127,7 @@
                     action="#{modeloPastaRestricaoAction.update()}"
                     execute="@form" onclick="infox.showLoading();" oncomplete="infox.hideLoading();"
                     value="#{infoxMessages['modeloPasta.edit']}"
-                    reRender="@form modeloPastaTable, modeloPastaRestricaoDiv, pageBodyDialogMessage" />
+                    reRender="@form modeloPastaTable modeloPastaRestricaoDiv pageBodyDialogMessage" />
             </h:form>
             
 			<!-- Lista de restrições do modelo de pasta -->
@@ -184,10 +184,9 @@
 				
 		</rich:panel>
 	</s:div>
-		
-		
+
 	<script type="text/javascript">
-        function clearAddModeloPastaFields() {
+		function clearAddModeloPastaFields() {
             #{rich:jQuery('addModeloPastaInputName')}.val('');
             #{rich:jQuery('addModeloPastaInputDescricao')}.val('');
             #{rich:jQuery('addModeloPastaInputOrdemNumberNumber')}.val('');

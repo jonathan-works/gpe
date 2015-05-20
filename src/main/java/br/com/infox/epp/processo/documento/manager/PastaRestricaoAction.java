@@ -6,6 +6,11 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import javax.faces.component.EditableValueHolder;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIViewRoot;
+import javax.faces.context.FacesContext;
+
 import org.apache.commons.beanutils.BeanUtils;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -101,6 +106,11 @@ public class PastaRestricaoAction implements Serializable {
 
 	public void selectPasta(Pasta pasta){
         try {
+            FacesContext context = FacesContext.getCurrentInstance();
+            UIViewRoot viewRoot = context.getViewRoot();
+            List<UIComponent> children = viewRoot.getChildren();
+            resetInputValues(children);
+            
             setInstance((Pasta) BeanUtils.cloneBean(pasta));
         } catch (IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
             LOG.error(e);
@@ -110,7 +120,20 @@ public class PastaRestricaoAction implements Serializable {
         setPastaSelecionada(true);
     }
 
-	public void newInstance() {
+	private void resetInputValues(List<UIComponent> children) {
+	    for (UIComponent component : children) {
+            if (component.getChildCount() > 0) {
+                resetInputValues(component.getChildren());
+            } else {
+                if (component instanceof EditableValueHolder) {
+                    EditableValueHolder input = (EditableValueHolder) component;
+                    input.resetValue();
+                }
+            }
+        }        
+    }
+
+    public void newInstance() {
 		setInstance(new Pasta());
 		getInstance().setRemovivel(true);
 		getInstance().setSistema(false);

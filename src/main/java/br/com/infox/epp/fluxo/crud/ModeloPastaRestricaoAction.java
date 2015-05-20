@@ -6,6 +6,11 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import javax.faces.component.EditableValueHolder;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIViewRoot;
+import javax.faces.context.FacesContext;
+
 import org.apache.commons.beanutils.BeanUtils;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -104,6 +109,7 @@ public class ModeloPastaRestricaoAction implements Serializable {
 		try {
 			if (prePersist()) {
 				modeloPastaManager.persistWithDefault(getInstance());
+				getFluxo().getModeloPastaList().add(getInstance());
 				setListModeloPastas(modeloPastaManager.getByFluxo(getFluxo()));
 				newInstance();
 				statusMessage.add(StatusMessage.Severity.INFO, infoxMessages.get("modeloPasta.added"));
@@ -144,12 +150,30 @@ public class ModeloPastaRestricaoAction implements Serializable {
 
 	public void selectModeloPasta(ModeloPasta modeloPasta){
 		try {
+		    FacesContext context = FacesContext.getCurrentInstance();
+		    UIViewRoot viewRoot = context.getViewRoot();
+		    List<UIComponent> children = viewRoot.getChildren();
+		    resetInputValues(children);
+		    
 			setInstance((ModeloPasta)BeanUtils.cloneBean(modeloPasta));
 		} catch (IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
 			LOG.error(e);
 			actionMessagesService.handleException("", e);
 		}
 		setRestricoes(modeloPasta);
+	}
+	
+	private void resetInputValues(List<UIComponent> children) {
+	    for (UIComponent component : children) {
+            if (component.getChildCount() > 0) {
+                resetInputValues(component.getChildren());
+            } else {
+                if (component instanceof EditableValueHolder) {
+                    EditableValueHolder input = (EditableValueHolder) component;
+                    input.resetValue();
+                }
+            }
+        }
 	}
 	
 	public void persistRestricao() {

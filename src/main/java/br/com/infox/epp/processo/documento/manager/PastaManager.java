@@ -73,9 +73,7 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     public List<Pasta> createDefaultFolders(Processo processo) throws DAOException {
         Processo root = processo.getProcessoRoot();
         List<Pasta> pastaList = root.getPastaList();
-
         List<ModeloPasta> modeloPastaList = modeloPastaManager.getByFluxo(processo.getNaturezaCategoriaFluxo().getFluxo());
-        
         for (ModeloPasta modeloPasta : modeloPastaList) {
             for (Pasta pasta : pastaList) {
                 if (modeloPasta.equals(pasta.getModeloPasta())) {
@@ -84,7 +82,6 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
             }
             pastaList.add(createFromModelo(modeloPasta, processo));
         }
-        
         Pasta padrao = getDefault(processo.getProcessoRoot());
         if (padrao == null && !pastaList.isEmpty()) {
             padrao = pastaList.get(0);
