@@ -47,8 +47,8 @@ public abstract class CustomIdGenerator<T> {
 	}
 	
 	protected EntityManager getEntityManager() {
-		try {
-			EntityManagerFactory emf = (EntityManagerFactory) new InitialContext().lookup("java:comp/env/EPAPersistenceUnit");
+		try {//java:jboss/EPAPersistenceUnit
+			EntityManagerFactory emf = (EntityManagerFactory) new InitialContext().lookup("java:jboss/EPAPersistenceUnit");
 			return emf.createEntityManager();
 		} catch (NamingException e) {
 			LOG.error("getEntityManager", e);
