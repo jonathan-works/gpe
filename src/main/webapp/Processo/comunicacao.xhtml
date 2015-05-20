@@ -39,16 +39,23 @@
 					<rich:column styleClass="dt-toolbar-col" rendered="#{s:hasRole(usuarioInterno)}">
 							<a:commandLink action="#{comunicacaoAction.setDestinatarioCiencia(bean)}" 
 								execute="@this" limitRender="true" rendered="#{not comunicacaoAction.isCienciaConfirmada(bean)}"
-								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage"
+								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage, painelDocumentosResposta"
 								onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
 								<h:graphicImage url="#{wiSkin.imageFolder}/search_16.png" title="#{infoxMessages['comunicacao.confirmarCiencia']}" />
 							</a:commandLink>
 							<a:commandLink action="#{comunicacaoAction.setDestinatarioProrrogacaoPrazo(bean)}"
-								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage" 
+								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage, painelDocumentosResposta" 
 								execute="@this" limitRender="true"
 								rendered="#{comunicacaoAction.podePedirProrrogacaoPrazo(bean)}"
 								onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
 								<h:graphicImage url="#{wiSkin.imageFolder}/time_16.png" title="#{infoxMessages['comunicacao.pedirProrrogacaoPrazo']}" />
+							</a:commandLink>
+							<a:commandLink action="#{comunicacaoAction.setDestinatarioResposta(bean)}"
+								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage, painelDocumentosResposta" 
+								execute="@this" limitRender="true"
+								rendered="true"
+								onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
+								<h:graphicImage url="#{wiSkin.imageFolder}/time_16.png" title="#{infoxMessages['comunicacao.documentosResposta']}" />
 							</a:commandLink>
 					</rich:column>
 					<rich:column>
@@ -202,5 +209,28 @@
 	    		</rich:dataTable>
 	    	</rich:panel>
 	    </s:div>
+	    <s:div id="painelDocumentosResposta">
+	    	<rich:collapsiblePanel header="#{infoxMessages['comunicacao.respostaComunicacao']}" switchType="client" rendered="#{comunicacaoAction.documentoResposta}">
+				<rich:panel id="documentosRespostaList" header="#{infoxMessages['comunicacao.documentosResposta']}">
+					
+					<rich:dataTable value="#{comunicacaoAction.getDocumentosList()}" 
+							var="bean" styleClass="dtable rf-dt-crud">
+							<rich:column styleClass="dt-toolbar-col" rendered="true">
+								<h:form>
+									<a:commandLink rendered="true">
+										<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
+									</a:commandLink>
+								</h:form>
+							</rich:column>
+							<wi:columnOutputText columnHeader="#{infoxMessages['documentoProcesso.numeroDocumento']}" value="#{bean.numeroDocumento}" />
+							<wi:columnOutputText columnHeader="#{infoxMessages['documentoProcesso.descricao']}" value="#{bean.descricao}" />
+							<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.classificacaoDocumento']}" value="#{bean.classificacaoDocumento}" />
+							<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.tamanho']}" value="#{bean.documentoBin.size}" />
+					</rich:dataTable>
+					
+				</rich:panel>
+			</rich:collapsiblePanel>
+	    </s:div>
+	    
 	</s:div>
 </ui:composition>
