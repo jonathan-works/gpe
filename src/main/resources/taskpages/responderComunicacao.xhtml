@@ -163,8 +163,12 @@
 			<h:form style="text-align:left">
 				<wi:commandButton id="gravar" value="#{infoxMessages['comunicacao.enviarResposta']}" 
 					action="#{respostaComunicacaoAction.enviarRespostaComunicacao()}" reRender="pageBodyDialogMessage respostas painelComunicacao painelEditor" rendered="#{respostaComunicacaoList.getResultCount() ge 1}"/>
+				
 			</h:form>
 		</ui:define>
 	</wi:dataTable>
+	<h:form>
+		<ui:include src="/WEB-INF/xhtml/components/form/buttons/taskButtons.xhtml"></ui:include>
+	</h:form>
 </h:body>
 </html>
