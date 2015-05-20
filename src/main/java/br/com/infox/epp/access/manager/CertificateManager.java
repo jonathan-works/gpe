@@ -29,13 +29,18 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
+import br.com.infox.certificado.Certificado;
+import br.com.infox.certificado.CertificadoDadosPessoaFisica;
 import br.com.infox.certificado.CertificadoECPF;
+import br.com.infox.certificado.CertificadoFactory;
+import br.com.infox.certificado.CertificateSignatures;
+import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.certificado.util.DigitalSignatureUtils;
 import br.com.infox.core.util.FileUtil;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(CertificateManager.NAME)
@@ -265,5 +270,18 @@ public class CertificateManager {
         throw new UnsupportedOperationException("Cannot list files for URL "
                 + dirURL);
     }
+    
+    public CertificadoDadosPessoaFisica getDadosPessoaFisicaFromCertificate(String token) throws CertificadoException {
+    	CertificateSignatureBundleBean bundle = getSignatureBundle(token);
+		String certChain = bundle.getSignatureBeanList().get(0).getCertChain();
+		Certificado c = CertificadoFactory.createCertificado(certChain);
+		CertificadoDadosPessoaFisica certificadoDadosPessoaFisica = (CertificadoDadosPessoaFisica) c;
+        return certificadoDadosPessoaFisica;
+    }
+    
+    private CertificateSignatureBundleBean getSignatureBundle(String token) {
+		CertificateSignatures certificateSignatures = ComponentUtil.getComponent(CertificateSignatures.NAME);
+		return certificateSignatures.get(token);
+	}
 
 }
