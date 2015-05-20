@@ -33,6 +33,7 @@ import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.dao.DocumentoRespostaComunicacaoDAO;
 import br.com.infox.epp.processo.comunicacao.list.ModeloComunicacaoRascunhoList;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
@@ -40,6 +41,7 @@ import br.com.infox.epp.processo.comunicacao.service.DestinatarioComunicacaoServ
 import br.com.infox.epp.processo.comunicacao.service.DocumentoComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.ProrrogacaoPrazoService;
+import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
 import br.com.infox.epp.processo.documento.anexos.DocumentoUploader;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -51,7 +53,9 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
+import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.ibpm.util.JbpmUtil;
@@ -108,6 +112,10 @@ public class ComunicacaoAction implements Serializable {
 	private DocumentoBinManager documentoBinManager;
 	@In
 	private DestinatarioComunicacaoService destinatarioComunicacaoService;
+	@In
+	private DocumentoRespostaComunicacaoDAO documentoRespostaComunicacaoDAO;
+	@In
+	private ProcessoDAO processoDAO;
 	
 	private List<ModeloComunicacao> comunicacoes;
 	private List<ClassificacaoDocumento> classificacoesDocumento;
@@ -128,10 +136,13 @@ public class ComunicacaoAction implements Serializable {
 	private boolean prorrogacaoPrazo;
 	private boolean documentos;
 	
+	private boolean documentoResposta;
+	private List<Documento> documentosListResposta;
 	
 	
 	@Create
 	public void init() {
+		clearCache();
 		processo = JbpmUtil.getProcesso();
 		modeloComunicacaoRascunhoList.setProcesso(processo);
 	}
@@ -211,13 +222,10 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	public void setDestinatarioCiencia(DestinatarioBean destinatario) {
+		clearCache();
+		
 		this.destinatario = destinatario;
-		this.documentosDestinatario = null;
 		ciencia = true;
-		prorrogacaoPrazo = false;
-		documentos = false;
-		dataCiencia = null;
-		documentoUploader.clear();
 	}
 	
 	public Date getDataCiencia() {
@@ -334,12 +342,9 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	public void setDestinatarioProrrogacaoPrazo(DestinatarioBean destinatario) {
+		clearCache();
 		this.destinatario = destinatario;
-		this.documentosDestinatario = null;
 		prorrogacaoPrazo = true;
-		ciencia = false;
-		documentos = false;
-		documentoUploader.clear();
 		documentoUploader.setClassificacaoDocumento(null);
 		classificacoesDocumentoProrrogacaoPrazo = null;
 	}
@@ -349,11 +354,9 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	public void setDestinatarioDocumentos(DestinatarioBean destinatario) {
+		clearCache();
 		this.destinatario = destinatario;
-		this.documentosDestinatario = null;
 		documentos = true;
-		prorrogacaoPrazo = false;
-		ciencia = false;
 	}
 	
 	public void pedirProrrogacaoPrazo() {
@@ -454,5 +457,49 @@ public class ComunicacaoAction implements Serializable {
 		if (!isEditorCiencia()){ 
 			documentoUploader.setClassificacaoDocumento(classificacaoDocumentoCiencia);
 		}
+	}
+	
+	public List<Documento> getDocumentosList(){
+		if (documentosListResposta == null) {
+//			documentosListResposta = documentoRespostaComunicacaoDAO.getDocumentosRespostaComunicacao(destinatario.getComunicacao());
+			documentosListResposta = new ArrayList<Documento>();
+			List<Processo> processosAnalise = processoDAO.getProcessosFilhoNotEndedByTipo(destinatario.getComunicacao(), TipoProcesso.DOCUMENTO.toString());
+			for (Processo processo : processosAnalise) {
+				List<MetadadoProcesso> metadadoDocumentoList = processo.getMetadadoList(EppMetadadoProvider.DOCUMENTO_EM_ANALISE);
+				for(MetadadoProcesso metadadoDocumentoAnalise : metadadoDocumentoList){
+					Documento documentoAnalise = metadadoDocumentoAnalise.getValue();
+					documentosListResposta.add(documentoAnalise);
+				}
+			}
+		}
+		return documentosListResposta;
+	}
+	
+	public void setDestinatarioResposta(DestinatarioBean destinatario){
+		clearCache();
+		this.destinatario = destinatario;
+		this.documentoResposta = true;
+		this.documentosListResposta = null;
+	}
+
+	public boolean isDocumentoResposta() {
+		return documentoResposta;
+	}
+
+	public void setDocumentoResposta(boolean documentoResposta) {
+		this.documentoResposta = documentoResposta;
+	}
+
+	private void clearCache() {
+		this.documentosDestinatario = null;
+		documentos = false;
+		
+		prorrogacaoPrazo = false;
+		ciencia = false;
+		dataCiencia = null;
+		documentoUploader.clear();
+		
+		documentoResposta = false;
+		documentosListResposta = null;
 	}
 }
