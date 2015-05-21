@@ -3,6 +3,8 @@ package br.com.infox.epp.access.entity;
 import static br.com.infox.constants.LengthConstants.DESCRICAO_PADRAO;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
+import static br.com.infox.epp.access.query.PerfilTemplateQuery.GET_BY_DESCRICAO;
+import static br.com.infox.epp.access.query.PerfilTemplateQuery.GET_BY_DESCRICAO_QUERY;
 import static br.com.infox.epp.access.query.PerfilTemplateQuery.GET_BY_LOCALIZACAO_PAPEL;
 import static br.com.infox.epp.access.query.PerfilTemplateQuery.GET_BY_LOCALIZACAO_PAPEL_QUERY;
 import static br.com.infox.epp.access.query.PerfilTemplateQuery.LIST_PERFIS_DENTRO_DE_ESTRUTURA;
@@ -30,7 +32,8 @@ import javax.validation.constraints.NotNull;
 @Table(name = PerfilTemplate.TABLE_NAME)
 @NamedQueries({
 	@NamedQuery(name=GET_BY_LOCALIZACAO_PAPEL,query=GET_BY_LOCALIZACAO_PAPEL_QUERY),
-	@NamedQuery(name=LIST_PERFIS_DENTRO_DE_ESTRUTURA, query=LIST_PERFIS_DENTRO_DE_ESTRUTURA_QUERY)
+	@NamedQuery(name=LIST_PERFIS_DENTRO_DE_ESTRUTURA, query=LIST_PERFIS_DENTRO_DE_ESTRUTURA_QUERY),
+	@NamedQuery(name=GET_BY_DESCRICAO, query=GET_BY_DESCRICAO_QUERY)
 })
 public class PerfilTemplate implements Serializable{
 	
