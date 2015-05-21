@@ -61,8 +61,8 @@ public class UsuarioPerfilManager extends Manager<UsuarioPerfilDAO, UsuarioPerfi
         }
     }
     
-    public boolean existeUsuarioPerfil(UsuarioLogin usuarioLogin, String descricaoPerfil) {
-    	return getDao().existeUsuarioPerfil(usuarioLogin, descricaoPerfil);
+    public boolean existeUsuarioPerfilAtivo(UsuarioLogin usuarioLogin, String descricaoPerfil, boolean ativo) {
+    	return getDao().existeUsuarioPerfil(usuarioLogin, descricaoPerfil, ativo);
     }
 
 	@Override

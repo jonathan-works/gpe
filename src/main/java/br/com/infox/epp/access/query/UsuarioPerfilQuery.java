@@ -18,11 +18,11 @@ public interface UsuarioPerfilQuery {
     String LIST_BY_USUARIO_LOGIN_QUERY = "select o from UsuarioPerfil o where o.ativo = true and o.perfilTemplate.ativo = true and o.usuarioLogin = :"
             + PARAM_USUARIO_LOGIN;
     
-    String EXISTE_USUARIO_COM_DESCRICAO_PERFIL = "existeUsuarioComPerfilDescricao";
-    String EXISTE_USUARIO_COM_DESCRICAO_PERFIL_QUERY = "select count(*) from UsuarioPerfil up " 
+    String EXISTE_USUARIO_COM_DESCRICAO_PERFIL_ATIVO = "existeUsuarioComPerfilDescricaoAtivo";
+    String EXISTE_USUARIO_COM_DESCRICAO_PERFIL_ATIVO_QUERY = "select count(*) from UsuarioPerfil up " 
     		+ "inner join up.perfilTemplate pt where pt.descricao = :" + PARAM_DS_PERFIL_TEMPLATE
     		+ " and up.usuarioLogin = :" + PARAM_USUARIO_LOGIN
-    		+ " and up.ativo = true ";
+    		+ " and up.ativo = :" + PARAM_ATIVO;
     
 
 }
