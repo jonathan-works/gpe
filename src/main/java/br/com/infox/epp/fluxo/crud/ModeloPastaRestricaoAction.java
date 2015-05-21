@@ -196,7 +196,8 @@ public class ModeloPastaRestricaoAction implements Serializable {
     private boolean restricaoAlreadyExists(ModeloPastaRestricao restricao) {
         List<ModeloPastaRestricao> restricoesExistentes = modeloPastaRestricaoManager.getByModeloPasta(getInstance());
         for (ModeloPastaRestricao restricaoExistente : restricoesExistentes) {
-            if (restricaoExistente.getTipoPastaRestricao().equals(restricao.getTipoPastaRestricao())
+            if (!restricaoExistente.getId().equals(restricao.getId())
+                    && restricaoExistente.getTipoPastaRestricao().equals(restricao.getTipoPastaRestricao())
                     && restricaoExistente.getAlvo().equals(restricao.getAlvo())) {
                 return true;
             }

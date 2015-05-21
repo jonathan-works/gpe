@@ -313,7 +313,8 @@ public class PastaRestricaoAction implements Serializable {
     private Boolean alreadyExists(PastaRestricao restricao) {
         List<PastaRestricao> restricoesExistentes = pastaRestricaoManager.getByPasta(getInstance());
         for (PastaRestricao restricaoExistente : restricoesExistentes) {
-            if (restricaoExistente.getTipoPastaRestricao().equals(restricao.getTipoPastaRestricao())
+            if (!restricaoExistente.getId().equals(restricao.getId())
+                    && restricaoExistente.getTipoPastaRestricao().equals(restricao.getTipoPastaRestricao())
                     && restricaoExistente.getAlvo().equals(restricao.getAlvo())) {
                 return true;
             }
@@ -330,6 +331,7 @@ public class PastaRestricaoAction implements Serializable {
             try {
                 pastaRestricaoManager.persist(restricao);
                 getRestricoes().add(restricao);
+                statusMessage.add(Severity.INFO, infoxMessages.get("pasta.restricao.added"));
             } catch (DAOException e) {
                 LOG.error(e);
                 actionMessagesService.handleDAOException(e);
@@ -359,6 +361,7 @@ public class PastaRestricaoAction implements Serializable {
         } else {
             try {
                 pastaRestricaoManager.update(restricao);
+                statusMessage.add(Severity.INFO, infoxMessages.get("pasta.restricao.updated"));
             } catch (DAOException e) {
                 LOG.error(e);
                 actionMessagesService.handleDAOException(e);
