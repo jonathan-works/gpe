@@ -11,11 +11,14 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
+
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
@@ -75,6 +78,7 @@ public class DocumentoSearch implements Serializable {
         }
     }
 
+    @Transactional
     public String getNameTarefa(Long idTask) {
         if (idTask != null && idTask != 0) {
             Session session = ManagedJbpmContext.instance().getSession();
