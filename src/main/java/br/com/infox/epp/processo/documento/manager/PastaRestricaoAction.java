@@ -352,6 +352,14 @@ public class PastaRestricaoAction implements Serializable {
     public void loadRestricao(PastaRestricao restricao) {
         newRestricaoInstance();
         setRestricaoInstance(restricao);
+        PastaRestricaoEnum tipo = restricao.getTipoPastaRestricao();
+        if (PastaRestricaoEnum.P.equals(tipo)) {
+            setAlvoRestricaoPapel(papelManager.find(restricao.getAlvo()));
+        } else if (PastaRestricaoEnum.L.equals(tipo)) {
+            setAlvoRestricaoLocalizacao(localizacaoManager.find(restricao.getAlvo()));
+        } else if (PastaRestricaoEnum.R.equals(tipo)) {
+            setAlvoRestricaoParticipante(restricao.getAlvo() == 1);
+        }
     }
     
     public void updateRestricao() {
