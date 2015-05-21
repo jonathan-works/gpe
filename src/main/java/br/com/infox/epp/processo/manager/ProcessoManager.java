@@ -126,13 +126,9 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     }
 
     private void iniciaTask(Processo processo, Long taskInstanceId) {
-        final BusinessProcess bp = BusinessProcess.instance();
-        TaskInstance taskInstance = ManagedJbpmContext.instance().getTaskInstance(taskInstanceId);
+        BusinessProcess bp = BusinessProcess.instance();
         bp.setProcessId(processo.getIdJbpm());
         bp.setTaskId(taskInstanceId);
-        if (!processo.getIdJbpm().equals(bp.getProcessId()) || taskInstance.getStart() == null) {
-            bp.startTask();
-        }
     }
 
     public void iniciarTask(Processo processo, Long idTarefa, UsuarioPerfil usuarioPerfil) throws DAOException {
@@ -148,6 +144,10 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         if ( metadado != null && idTarefa != null) {
         	Map<String, Object> map = processoTarefaManager.findProcessoTarefaByIdProcessoAndIdTarefa(processo.getIdProcesso(), idTarefa.intValue());
         	return (Long) map.get("idTaskInstance");
+        } else if (metadado != null && 
+        			(metadado.<TipoProcesso>getValue().equals(TipoProcesso.COMUNICACAO)
+        					|| metadado.<TipoProcesso>getValue().equals(TipoProcesso.COMUNICACAO_NAO_ELETRONICA)) ) {
+        	return processoTarefaManager.getUltimoProcessoTarefa(processo).getTaskInstance();
         } else {
         	 if (idTarefa != null) {
                  return processoLocalizacaoIbpmDAO.getTaskInstanceId(usuarioPerfil, processo, idTarefa);
