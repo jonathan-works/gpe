@@ -133,40 +133,48 @@
 		</rich:collapsiblePanel>
 	</h:form>
 	<wi:assinaturaPopup id="respostaComunicacaoAssinaturaDocumentoPopup" afterRender="respostasPanel" showIniciarAnaliseDocumentos="false" />
-	<wi:dataTable id="respostas" tableTitle="#{infoxMessages['comunicacao.documentosResposta']}" bean="#{respostaComunicacaoList}"
-		values="#{respostaComunicacaoList.list(10)}" rowId="#{row.id}" hideOrder="true" showSearchForm="false">
-		<ui:define name="headerToolBar" />
-		<ui:define name="toolBar">
-			<h:form>
-				<wi:toolBarAssinatura idDocumento="#{row.id}" idAssinatura="respostaComunicacaoAssinaturaDocumentoPopup"
-			    	renderedLock="#{not empty row.documentoBin.assinaturas}" />
-				<a:commandLink action="#{respostaComunicacaoAction.setDocumentoEdicao(row)}"
-					render="painelEditor" rendered="#{empty row.documentoBin.extensao}">
-					<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['button.selecionar']}"/>
-				</a:commandLink>
-				<h:commandLink action="#{documentoDownloader.downloadDocumento(row)}"
-					rendered="#{not empty row.documentoBin.extensao}" >
-					<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['button.selecionar']}"/>
-				</h:commandLink>
-				<a:commandLink action="#{respostaComunicacaoAction.removerDocumento(row)}"
-					render="respostasPanel, painelEditor, pageBodyDialogMessage, taskButtonsForm"
-					rendered="#{respostaComunicacaoAction.podeRemoverDocumento(row)}"
-					onclick="return confirm('#{infoxMessages['crud.confirmRemove']}')">
-					<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{infoxMessages['crud.remove']}" />
-				</a:commandLink>
-			</h:form>
-		</ui:define>
-		<wi:columnOutputText columnHeader="#{infoxMessages['documentoProcesso.descricao']}" value="#{row.descricao}" />
-		<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.classificacaoDocumento']}" value="#{row.classificacaoDocumento.descricao}" />
-		<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.tamanho']}" value="#{row.documentoBin.sizeFormatado}" />
-		<ui:define name="conteudoAdicional">
-			<h:form style="text-align:left">
-				<wi:commandButton id="gravar" value="#{infoxMessages['comunicacao.enviarResposta']}" 
-					action="#{respostaComunicacaoAction.enviarRespostaComunicacao()}" reRender="pageBodyDialogMessage respostas painelComunicacao painelEditor" rendered="#{respostaComunicacaoList.getResultCount() ge 1}"/>
-				
-			</h:form>
-		</ui:define>
-	</wi:dataTable>
+	<rich:collapsiblePanel header="#{infoxMessages['comunicacao.documentosResposta']}" switchType="client">
+		<wi:dataTable id="respostas" tableTitle="#{infoxMessages['comunicacao.documentosResposta']}" bean="#{respostaComunicacaoList}"
+			values="#{respostaComunicacaoList.list(10)}" rowId="#{row.id}" hideOrder="true" >
+			<ui:define name="searchForm">
+				<wi:searchForm formId="respostasForm" searchReRender="respostasPanel, respostasSearchForm"
+				        clearReRender="respostasPanel, respostasSearchForm" formTitle="#{infoxMessages['searchForm.title']}">
+					<wi:inputText value="#{respostaComunicacaoList.entity.descricao}" label="#{infoxMessages['documentoProcesso.descricao']}" />
+		        </wi:searchForm>
+	        </ui:define>
+			<ui:define name="headerToolBar" />
+			<ui:define name="toolBar">
+				<h:form>
+					<wi:toolBarAssinatura idDocumento="#{row.id}" idAssinatura="respostaComunicacaoAssinaturaDocumentoPopup"
+				    	renderedLock="#{not empty row.documentoBin.assinaturas}" />
+					<a:commandLink action="#{respostaComunicacaoAction.setDocumentoEdicao(row)}"
+						render="painelEditor" rendered="#{empty row.documentoBin.extensao}">
+						<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['button.selecionar']}"/>
+					</a:commandLink>
+					<h:commandLink action="#{documentoDownloader.downloadDocumento(row)}"
+						rendered="#{not empty row.documentoBin.extensao}" >
+						<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['button.selecionar']}"/>
+					</h:commandLink>
+					<a:commandLink action="#{respostaComunicacaoAction.removerDocumento(row)}"
+						render="respostasPanel, painelEditor, pageBodyDialogMessage, taskButtonsForm"
+						rendered="#{respostaComunicacaoAction.podeRemoverDocumento(row)}"
+						onclick="return confirm('#{infoxMessages['crud.confirmRemove']}')">
+						<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{infoxMessages['crud.remove']}" />
+					</a:commandLink>
+				</h:form>
+			</ui:define>
+			<wi:columnOutputText columnHeader="#{infoxMessages['documentoProcesso.descricao']}" value="#{row.descricao}" />
+			<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.classificacaoDocumento']}" value="#{row.classificacaoDocumento.descricao}" />
+			<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.tamanho']}" value="#{row.documentoBin.sizeFormatado}" />
+			<ui:define name="conteudoAdicional">
+				<h:form style="text-align:left">
+					<wi:commandButton id="gravar" value="#{infoxMessages['comunicacao.enviarResposta']}" 
+						action="#{respostaComunicacaoAction.enviarRespostaComunicacao()}" reRender="pageBodyDialogMessage respostas painelComunicacao painelEditor" rendered="#{respostaComunicacaoList.getResultCount() ge 1}"/>
+					
+				</h:form>
+			</ui:define>
+		</wi:dataTable>
+	</rich:collapsiblePanel>
 	<h:form>
 		<ui:include src="/WEB-INF/xhtml/components/form/buttons/taskButtons.xhtml"></ui:include>
 	</h:form>
