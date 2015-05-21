@@ -55,7 +55,7 @@
 								execute="@this" limitRender="true"
 								rendered="true"
 								onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
-								<h:graphicImage url="#{wiSkin.imageFolder}/time_16.png" title="#{infoxMessages['comunicacao.documentosResposta']}" />
+								<h:graphicImage url="#{wiSkin.imageFolder}/Task.png" title="#{infoxMessages['comunicacao.documentosResposta']}" />
 							</a:commandLink>
 					</rich:column>
 					<rich:column>
@@ -75,7 +75,7 @@
 						<h:outputText value="#{bean.dataEnvio}" />
 					</rich:column>
 					<rich:column>
-						<f:facet name="header">#{infoxMessages['comunicacao.dataConfirmacao']}</f:facet>
+						<f:facet name="header">#{infoxMessages['comunicacao.dataCiencia']}</f:facet>
 						<h:outputText value="#{bean.dataConfirmacao}" />
 					</rich:column>
 					<rich:column>
@@ -210,27 +210,12 @@
 	    	</rich:panel>
 	    </s:div>
 	    <s:div id="painelDocumentosResposta">
-	    	<rich:collapsiblePanel header="#{infoxMessages['comunicacao.respostaComunicacao']}" switchType="client" rendered="#{comunicacaoAction.documentoResposta}">
-				<rich:panel id="documentosRespostaList" header="#{infoxMessages['comunicacao.documentosResposta']}">
-					
-					<rich:dataTable value="#{comunicacaoAction.getDocumentosList()}" 
-							var="bean" styleClass="dtable rf-dt-crud">
-							<rich:column styleClass="dt-toolbar-col" rendered="true">
-								<h:form>
-									<a:commandLink rendered="true">
-										<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
-									</a:commandLink>
-								</h:form>
-							</rich:column>
-							<wi:columnOutputText columnHeader="#{infoxMessages['documentoProcesso.numeroDocumento']}" value="#{bean.numeroDocumento}" />
-							<wi:columnOutputText columnHeader="#{infoxMessages['documentoProcesso.descricao']}" value="#{bean.descricao}" />
-							<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.classificacaoDocumento']}" value="#{bean.classificacaoDocumento}" />
-							<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.tamanho']}" value="#{bean.documentoBin.size}" />
-					</rich:dataTable>
-					
-				</rich:panel>
-			</rich:collapsiblePanel>
+	    	<ui:include src="/WEB-INF/xhtml/components/fragments/documentosFluxoAnalise.xhtml">
+	    		<ui:param name="id" value="documentosResposta" />
+	    		<ui:param name="title" value="#{infoxMessages['comunicacao.respostaComunicacao']}" />
+	    		<ui:param name="rendered" value="#{comunicacaoAction.documentoResposta}" />
+	    		<ui:param name="list" value="#{comunicacaoAction.getDocumentosList()}" />
+	    	</ui:include>
 	    </s:div>
-	    
 	</s:div>
 </ui:composition>
