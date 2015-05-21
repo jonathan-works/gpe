@@ -6,6 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -25,8 +32,10 @@ import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.service.ProrrogacaoPrazoService;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.entity.Processo_;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso_;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
@@ -55,6 +64,8 @@ public class ProcessoAnaliseDocumentoService {
 	private IniciarProcessoService iniciarProcessoService;
 	@In
 	private ProrrogacaoPrazoService prorrogacaoPrazoService;
+	@In
+	private EntityManager entityManager;
 	
 	public Processo criarProcessoAnaliseDocumentos(Processo processoPai, Documento... documentoAnalise) throws DAOException {
 		Fluxo fluxoDocumento = getFluxoDocumento();
@@ -135,6 +146,54 @@ public class ProcessoAnaliseDocumentoService {
 			processoAnalise.getMetadadoProcessoList().add(metadado);
 		}
 		
+	}
+	
+	public List<Documento> getDocumentosRespostaComunicacao(Processo comunicacao){
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<MetadadoProcesso> query = cb.createQuery(MetadadoProcesso.class);
+		
+		Root<MetadadoProcesso> root = query.from(MetadadoProcesso.class);
+		
+		
+		Predicate predicate = cb.and();
+		predicate = cb.and(predicate, cb.equal(root.get(MetadadoProcesso_.metadadoType), "documentoEmAnalise"));
+		
+		Join<MetadadoProcesso, Processo> p = root.join(MetadadoProcesso_.processo);
+		predicate =  cb.and(predicate, cb.equal(p.get(Processo_.processoPai), comunicacao));
+		
+		query.select(root);
+		query.where(predicate);
+		
+		List<MetadadoProcesso> listMetadado = entityManager.createQuery(query).getResultList();
+		List<Documento> docList = new ArrayList<Documento>();
+		for (MetadadoProcesso metadado : listMetadado) {
+			docList.add(metadado.<Documento>getValue());
+		}
+		
+		return docList;
+	}
+
+	public List<Documento> getDocumentosAnalise(Processo analiseDocumentos){
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<MetadadoProcesso> query = cb.createQuery(MetadadoProcesso.class);
+		
+		Root<MetadadoProcesso> root = query.from(MetadadoProcesso.class);
+		
+		
+		Predicate predicate = cb.and();
+		predicate = cb.and(predicate, cb.equal(root.get(MetadadoProcesso_.metadadoType), "documentoEmAnalise"));
+		
+		predicate = cb.and(predicate, cb.equal(root.get(MetadadoProcesso_.processo), analiseDocumentos));
+		
+		query.select(root);
+		query.where(predicate);
+		List<MetadadoProcesso> listMetadado = entityManager.createQuery(query).getResultList();
+			List<Documento> docList = new ArrayList<Documento>();
+			for (MetadadoProcesso metadado : listMetadado) {
+				docList.add(metadado.<Documento>getValue());
+			}
+
+			return docList;
 	}
 	
 }
