@@ -9,13 +9,13 @@
 
 	<wi:commandButton id="criarComunicacao" value="#{infoxMessages['comunicacao.criarComunicacao']}"
 		onclick="infox.openPopUp('_blank', '#{pathResolver.contextPath}/Processo/criarComunicacao.seam?jbpmProcessId=#{comunicacaoAction.jbpmProcessId}','1024'); hideLoading(); return false;" 
-		rendered="#{s:hasRole('usuarioInterno')}" />
+		rendered="#{s:hasRole(usuarioInterno)}" />
 	<h:form>
 		<a:jsFunction name="reloadAll" render="comunicacoesDiv" limitRender="true" execute="@this" 
 			action="#{comunicacaoAction.clearCacheModelos}"/>
 	</h:form>
 	<s:div id="comunicacoesDiv">
-		<rich:collapsiblePanel switchType="client" id="rascunhos" header="#{infoxMessages['comunicacao.rascunhos']}" rendered="#{s:hasRole('usuarioInterno')}">
+		<rich:collapsiblePanel switchType="client" id="rascunhos" header="#{infoxMessages['comunicacao.rascunhos']}" rendered="#{s:hasRole(usuarioInterno)}">
 			<wi:dataTable id="rascunhosTable" bean="#{modeloComunicacaoRascunhoList}" showSearchForm="false"
 				values="#{modeloComunicacaoRascunhoList.list(5)}" rowId="#{row.id}" hideOrder="true">
 				<ui:define name="headerToolBar" />
@@ -36,7 +36,7 @@
 			<h:form>
 				<rich:dataTable value="#{comunicacaoAction.getDestinatarios()}" 
 					var="bean" styleClass="dtable rf-dt-crud">
-					<rich:column styleClass="dt-toolbar-col" rendered="#{s:hasRole('usuarioInterno')}">
+					<rich:column styleClass="dt-toolbar-col" rendered="#{s:hasRole(usuarioInterno)}">
 							<a:commandLink action="#{comunicacaoAction.setDestinatarioCiencia(bean)}" 
 								execute="@this" limitRender="true" rendered="#{not comunicacaoAction.isCienciaConfirmada(bean)}"
 								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage"
