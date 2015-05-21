@@ -53,9 +53,7 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
-import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
-import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.ibpm.util.JbpmUtil;
@@ -461,16 +459,7 @@ public class ComunicacaoAction implements Serializable {
 	
 	public List<Documento> getDocumentosList(){
 		if (documentosListResposta == null) {
-//			documentosListResposta = documentoRespostaComunicacaoDAO.getDocumentosRespostaComunicacao(destinatario.getComunicacao());
-			documentosListResposta = new ArrayList<Documento>();
-			List<Processo> processosAnalise = processoDAO.getProcessosFilhoNotEndedByTipo(destinatario.getComunicacao(), TipoProcesso.DOCUMENTO.toString());
-			for (Processo processo : processosAnalise) {
-				List<MetadadoProcesso> metadadoDocumentoList = processo.getMetadadoList(EppMetadadoProvider.DOCUMENTO_EM_ANALISE);
-				for(MetadadoProcesso metadadoDocumentoAnalise : metadadoDocumentoList){
-					Documento documentoAnalise = metadadoDocumentoAnalise.getValue();
-					documentosListResposta.add(documentoAnalise);
-				}
-			}
+			documentosListResposta = processoAnaliseDocumentoService.getDocumentosRespostaComunicacao(destinatario.getComunicacao());
 		}
 		return documentosListResposta;
 	}
