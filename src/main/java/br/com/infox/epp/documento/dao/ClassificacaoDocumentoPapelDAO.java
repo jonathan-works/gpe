@@ -25,4 +25,10 @@ public class ClassificacaoDocumentoPapelDAO extends DAO<ClassificacaoDocumentoPa
     	params.put(ClassificacaoDocumentoPapelQuery.PARAM_PAPEL, papel);
     	return getNamedSingleResult(ClassificacaoDocumentoPapelQuery.PAPEL_PODE_ASSINAR_CLASSIFICACAO, params) != null;
     }
+
+	public boolean classificacaoExigeAssinatura(ClassificacaoDocumento classificacaoDocumento) {
+		Map<String, Object> params = new HashMap<>();
+		params.put(ClassificacaoDocumentoPapelQuery.PARAM_CLASSIFICACAO_DOCUMENTO, classificacaoDocumento);
+		return getNamedSingleResult(ClassificacaoDocumentoPapelQuery.CLASSIFICACAO_EXIGE_ASSINATURA, params) != null;
+	}
 }

@@ -16,6 +16,7 @@ import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.GenericDatabaseErrorCode;
+import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.dao.DocumentoBinDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -42,6 +43,8 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 
 	@In
 	private PathResolver pathResolver;
+	@In
+	private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
 
 	public DocumentoBin createProcessoDocumentoBin(final Documento documento) throws DAOException {
 		final DocumentoBin bin = documento.getDocumentoBin();
@@ -125,6 +128,9 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 	public DocumentoBin persist(DocumentoBin o) throws DAOException {
 		try {
 			o.setUuid(UUID.randomUUID());
+			if (!o.getSuficientementeAssinado() && !o.getDocumentoList().isEmpty()) {
+				o.setSuficientementeAssinado(!classificacaoDocumentoPapelManager.classificacaoExigeAssinatura(o.getDocumentoList().get(0).getClassificacaoDocumento()));
+			}
 			o = super.persist(o);
 		} catch (final DAOException e) {
 			final GenericDatabaseErrorCode error = e.getDatabaseErrorCode();
