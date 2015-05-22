@@ -199,6 +199,8 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	@Override
 	public void setId(Object id) {
 		super.setId(id);
+		// Colocado para poder ser chamado antes do iniciarTask
+		variavelProcessoAction.setProcesso(getInstance());
 	}
 
 	public String getObservacaoMovimentacao() {
@@ -245,7 +247,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
     public void setTab(String tab) {
 		if((tab == null && getTab() != null) || (tab != null && getTab() == null) || !tab.equals(getTab())){
 			super.setTab(tab);
-	        variavelProcessoAction.setProcesso(this.getInstance());
+			variavelProcessoAction.setProcesso(getInstance());
 	        if (tab.equals("relacionamentoProcessoTab")){
 	        	relacionamentoCrudAction.setProcesso(this.getInstance().getNumeroProcessoRoot());
 	        }
