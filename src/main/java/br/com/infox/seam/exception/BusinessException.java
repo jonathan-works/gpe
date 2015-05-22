@@ -3,6 +3,7 @@ package br.com.infox.seam.exception;
 import org.jboss.seam.annotations.ApplicationException;
 
 @ApplicationException(rollback = false, end = false)
+@javax.ejb.ApplicationException(rollback = false)
 public class BusinessException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;

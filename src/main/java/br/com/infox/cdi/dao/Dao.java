@@ -2,6 +2,8 @@ package br.com.infox.cdi.dao;
 
 import java.util.List;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -37,6 +39,7 @@ public abstract class Dao<T, I> {
 		return result.isEmpty() ? null : result.get(0);
 	}
 
+	@TransactionAttribute(TransactionAttributeType.MANDATORY)
 	public T persist(T object) throws DAOException {
 		try {
 			entityManager.persist(object);
@@ -47,6 +50,7 @@ public abstract class Dao<T, I> {
 		}
 	}
 
+	@TransactionAttribute(TransactionAttributeType.MANDATORY)
 	public T update(T object) throws DAOException {
 		try {
 			T res = entityManager.merge(object);
@@ -57,6 +61,7 @@ public abstract class Dao<T, I> {
 		}
 	}
 
+	@TransactionAttribute(TransactionAttributeType.MANDATORY)
 	public T remove(T object) throws DAOException {
 		try {
 			entityManager.remove(object);
