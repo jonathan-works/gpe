@@ -31,7 +31,6 @@ import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
-import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
@@ -67,9 +66,6 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     private UsuarioLoginManager usuarioLoginManager;
     @In
     private ProcessoTarefaManager processoTarefaManager;
-    @In
-    private PastaManager pastaManager;
-    
     
     public Processo buscarPrimeiroProcesso(Processo p, TipoProcesso tipo) {
         for (Processo filho : p.getFilhos()) {
@@ -274,7 +270,6 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 
     private Processo persistProcessoComNumero(final Processo processo) throws DAOException {
         Processo p = getDao().persistProcessoComNumero(processo);
-        pastaManager.createDefaultFolders(p);
         return p;
     }
 

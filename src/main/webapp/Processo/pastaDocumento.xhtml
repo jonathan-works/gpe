@@ -126,12 +126,12 @@
                     onmouseup="selectDocumento(#{rowId});" />
                 <h:graphicImage styleClass="opacityHover"
                     url="#{wiSkin.imageFolder}/remove.png"
-                    rendered="#{not row.excluido and documentoProcessoAction.podeUsuarioExcluirRestaurar() and pastaAction.canDeleteFromInstance()}"
+                    rendered="#{not row.excluido and documentoProcessoAction.podeUsuarioExcluirRestaurar()}"
                     title="#{infoxMessages['button.delete']}"
                     onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(true, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');" />
                 <h:graphicImage styleClass="opacityHover"
                     url="#{wiSkin.imageFolder}/stock_undelete.png"
-                    rendered="#{row.excluido and documentoProcessoAction.podeUsuarioExcluirRestaurar() and pastaAction.canDeleteFromInstance()}"
+                    rendered="#{row.excluido and documentoProcessoAction.podeUsuarioExcluirRestaurar()}"
                     title="#{infoxMessages['button.restaurar']}"
                     onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(false, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');" />
                 <h:form>

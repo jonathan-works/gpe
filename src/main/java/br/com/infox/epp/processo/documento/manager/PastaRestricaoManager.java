@@ -95,7 +95,7 @@ public class PastaRestricaoManager extends Manager<PastaRestricaoDAO, PastaRestr
      */
     private boolean populateBeanPapel(PastaRestricaoBean restricaoBean, PastaRestricao restricao, Papel papelUsuario) {
         Papel papelAlvo = papelManager.find(restricao.getAlvo());
-        if (papelManager.getIdentificadoresPapeisMembros(papelAlvo.getIdentificador()).contains(papelUsuario.getIdentificador())) {
+        if (papelUsuario.equals(papelAlvo) || papelManager.getIdentificadoresPapeisMembros(papelAlvo.getIdentificador()).contains(papelUsuario.getIdentificador())) {
             restricaoBean.setRead(restricaoBean.getRead() || restricao.getRead());
             restricaoBean.setWrite(restricaoBean.getWrite() || restricao.getWrite());
             restricaoBean.setDelete(restricaoBean.getDelete() || restricao.getDelete());

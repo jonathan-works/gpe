@@ -26,6 +26,7 @@ import br.com.infox.epp.access.assignment.LocalizacaoAssignment;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
 import br.com.infox.epp.fluxo.manager.NaturezaManager;
+import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 
@@ -43,6 +44,8 @@ public class IniciarProcessoService implements Serializable {
 	private ProcessoManager processoManager;
     @In
     private NaturezaManager naturezaManager;
+    @In
+    private PastaManager pastaManager;
 
     public static final String ON_CREATE_PROCESS = "br.com.infox.epp.IniciarProcessoService.ONCREATEPROCESS";
     public static final String NAME = "iniciarProcessoService";
@@ -63,6 +66,7 @@ public class IniciarProcessoService implements Serializable {
         processo.setNumeroProcesso(String.valueOf(processo.getIdProcesso()));
         naturezaManager.lockNatureza(processo.getNaturezaCategoriaFluxo().getNatureza());
         processoManager.update(processo);
+        pastaManager.createDefaultFolders(processo);
     }
 
     private Long iniciarProcessoJbpm(Processo processo, String fluxo, Map<String, Object> variaveis) {
