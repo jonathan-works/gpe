@@ -13,6 +13,7 @@
 	<ui:param name="prazoResposta" value="#{empty prazoResposta ? '-' : prazoResposta}"></ui:param>
 	<ui:param name="showPrazoResposta" value="#{empty showPrazoResposta ? false : showPrazoResposta}"></ui:param>
 	<ui:param name="showDataResposta" value="#{empty showDataResposta ? true : showDataResposta}"></ui:param>
+	<ui:param name="showTipoComunicacao" value="#{empty showTipoComunicacao ? true : showTipoComunicacao}"></ui:param>
 	<ui:param name="showStatusProrrogacao" value="#{empty showStatusProrrogacao ? false : showStatusProrrogacao}"></ui:param>
 	<ui:param name="showDownloadComunicacaoCompleta" value="#{empty showDownloadComunicacaoCompleta ? true : showDownloadComunicacaoCompleta}"></ui:param>
 	<ui:param name="showDownloadDocumentoPrincipal" value="#{empty showDownloadDocumentoPrincipal ? false : showDownloadDocumentoPrincipal}"></ui:param>
@@ -47,7 +48,7 @@
 			label="#{infoxMessages['comunicacao.tipoComunicacao']}"
 			value="#{tipoComunicacao}"
 			rendered="#{showTipoComunicacao}" />
-		<wi:outputText id="statusProrrogacao" 
+		<wi:outputText id="#{id}statusProrrogacao" 
 			label="#{infoxMessages['comunicacao.statusProrrogacao']}"
 			value="#{statusProrrogacao}"
 			rendered="#{showStatusProrrogacao}">
@@ -59,7 +60,7 @@
 				styleClass="buttons" type="button" 
 				onclick="infox.openPopUp('documento', '#{documentoDownloader.getViewUrl(documentoComunicacao)}');"
 				rendered="#{showDownloadDocumentoPrincipal}" />
-			<a:commandButton id="visualizarComunicacao" 
+			<a:commandButton id="#{id}visualizarComunicacao" 
                 value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
                 styleClass="buttons"
                 onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?idDestinatario=#{idDestinatario}','1024'); return false;"

@@ -19,6 +19,8 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
+import org.jboss.seam.bpm.ManagedJbpmContext;
+import org.jbpm.graph.exe.ProcessInstance;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
@@ -194,6 +196,16 @@ public class ProcessoAnaliseDocumentoService {
 			}
 
 			return docList;
+	}
+	
+	public boolean isRespostaComunicacao(Processo processoAnalise){
+		ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(processoAnalise.getIdJbpm());
+		return (Boolean)processInstance.getContextInstance().getVariable("respostaComunicacao");
+	}
+	
+	public boolean isPedidoProrrogacaoPrazo(Processo processoAnalise){
+		ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(processoAnalise.getIdJbpm());
+		return (Boolean)processInstance.getContextInstance().getVariable("pedidoProrrogacaoPrazo");
 	}
 	
 }

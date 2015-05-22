@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.comunicacao.query;
 
 
+
 public interface ModeloComunicacaoQuery {
 	String PARAM_MODELO_COMUNICACAO = "modeloComunicacao";
 	String PARAM_NUMERO_PROCESSO_ROOT = "numeroProcessoRoot";
@@ -31,4 +32,7 @@ public interface ModeloComunicacaoQuery {
 			+ "o.modeloComunicacao = :" + PARAM_MODELO_COMUNICACAO + " "
 			+ "and p.identificador in :" + PARAM_IDENTIFICADORES_PAPEL + " "
 			+ "order by d.dataInclusao desc";
+	
+	String GET_DOCUMENTOS_MODELO_COMUNICACAO = "ModeloComunicacao.getDocumentosByModeloComunicacao";
+	String GET_DOCUMENTOS_MODELO_COMUNICACAO_QUERY = "select o.documento from DocumentoModeloComunicacao o where o.modeloComunicacao = :" + PARAM_MODELO_COMUNICACAO;
 }

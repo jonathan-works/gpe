@@ -13,6 +13,7 @@ import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.dao.ModeloComunicacaoDAO;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.Parametros;
 
@@ -46,4 +47,8 @@ public class ModeloComunicacaoManager extends Manager<ModeloComunicacaoDAO, Mode
     	roles.add(Parametros.PAPEL_USUARIO_INTERNO.getValue());
     	return roles;
     }
+	
+	public List<Documento> getDocumentosByModeloComunicacao(ModeloComunicacao modeloComunicacao){
+		return getDao().getDocumentosByModeloComunicacao(modeloComunicacao);
+	}
 }

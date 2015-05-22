@@ -16,6 +16,7 @@ import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.query.ModeloComunicacaoQuery;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
 
 @Name(ModeloComunicacaoDAO.NAME)
@@ -54,4 +55,12 @@ public class ModeloComunicacaoDAO extends DAO<ModeloComunicacao> {
 		}
 		return result.get(0);
 	}
+	
+	public List<Documento> getDocumentosByModeloComunicacao(ModeloComunicacao modeloComunicacao){
+		Map<String, Object> params = new HashMap<>();
+		params.put(ModeloComunicacaoQuery.PARAM_MODELO_COMUNICACAO, modeloComunicacao);
+		return getNamedResultList(ModeloComunicacaoQuery.GET_DOCUMENTOS_MODELO_COMUNICACAO, params);
+	}
+	
+	
 }

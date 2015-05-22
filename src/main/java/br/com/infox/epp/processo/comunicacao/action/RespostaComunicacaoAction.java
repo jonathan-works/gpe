@@ -25,6 +25,7 @@ import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
 import br.com.infox.epp.processo.comunicacao.list.DocumentoComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.list.RespostaComunicacaoList;
+import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.DocumentoComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
@@ -83,8 +84,12 @@ public class RespostaComunicacaoAction implements Serializable {
 	private RespostaComunicacaoService respostaComunicacaoService;
 	@In
 	private ProrrogacaoPrazoService prorrogacaoPrazoService;
+	@In
+	private ModeloComunicacaoManager modeloComunicacaoManager;
 	
 	private DestinatarioModeloComunicacao destinatario;
+	private List<Documento> documentosComunicacao;
+
 	private Processo processoComunicacao;
 	private Processo processoRaiz;
 	private Date prazoResposta;
@@ -116,6 +121,21 @@ public class RespostaComunicacaoAction implements Serializable {
 
 	public Long getIdDestinatario(){
 		return destinatario.getId();
+	}
+	
+	public DestinatarioModeloComunicacao getDestinatario() {
+		return destinatario;
+	}
+
+	public void setDestinatario(DestinatarioModeloComunicacao destinatario) {
+		this.destinatario = destinatario;
+	}
+	
+	public List<Documento> getDocumentosComunicacao(){
+		if(documentosComunicacao == null){
+			documentosComunicacao = modeloComunicacaoManager.getDocumentosByModeloComunicacao(destinatario.getModeloComunicacao());
+		}
+		return documentosComunicacao;
 	}
 		
 	public void assignModeloDocumento() {

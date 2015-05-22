@@ -4,13 +4,35 @@
 	xmlns:wi="http://www.itx.com.br/jsf"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:a="http://richfaces.org/a4j">
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/schema/seam/taglib">
 	
 	<ui:param name="id" value="#{empty id ? 'id' : id}"></ui:param>
     <ui:param name="title" value="#{empty title ? '' : title}"></ui:param>
     <ui:param name="rendered" value="#{empty rendered ? true : rendered}"></ui:param>
+    <ui:param name="showComunicacao" value="#{empty showComunicacao ? false : showComunicacao}"></ui:param>
 
 	<rich:collapsiblePanel id="#{id}documentosList" header="#{title}" switchType="client" rendered="#{rendered}">
+		<s:div rendered="#{showComunicacao}">	
+			<rich:panel header="Comunicação">
+				<ui:include src="/WEB-INF/xhtml/components/fragments/detalhesComunicacao.xhtml">
+			   		<ui:param name="id" value="#{id}analiseDocumentoVisualizarComunicacao" />
+			   		<ui:param name="destinatario" value="#{analiseDocumentoAction.destinatario}" />
+			   		<ui:param name="dataEnvio" value="#{analiseDocumentoAction.dataEnvio}" />
+			   		<ui:param name="dataResposta" value="#{analiseDocumentoAction.dataResposta}" />
+			   		<ui:param name="tipoComunicacao" value="#{analiseDocumentoAction.tipoComunicacao}" />
+			   		<ui:param name="idDestinatario" value="#{analiseDocumentoAction.destinatarioId}" />
+		   		</ui:include>
+		   		
+		   		<ui:include src="/WEB-INF/xhtml/components/fragments/documentosComunicacao.xhtml">
+		    		<ui:param name="id" value="analiseDocumentoDocumentosComunicacao" />
+		    		<ui:param name="showNumeroDocumento" value="false" />
+		    		<ui:param name="list" value="#{analiseDocumentoAction.documentosComunicacao}" />
+		    	</ui:include>
+	    	</rich:panel>
+		</s:div>
+		
+		<rich:panel header="Resposta">
 			<rich:dataTable value="#{list}" 
 					var="bean" styleClass="dtable rf-dt-crud">
 					<rich:column styleClass="dt-toolbar-col">
@@ -26,6 +48,6 @@
 					<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.classificacaoDocumento']}" value="#{bean.classificacaoDocumento}" />
 					<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.tamanho']}" value="#{bean.documentoBin.sizeFormatado}" />
 			</rich:dataTable>
-					
+		</rich:panel>
 	</rich:collapsiblePanel>
 </ui:composition>

@@ -17,4 +17,5 @@ login-required="true"
     <param name="idProcesso" value="#{processoEpaHome.processoIdProcesso}" />
     <param name="tarefaId" value="#{processoEpaHome.tarefaId}" />
     <action execute="#{processoEpaHome.iniciarTarefaProcesso()}" on-postback="false"/>
+    <action execute="#{movimentarController.setProcesso(processoEpaHome.instance)}" on-postback="false"/>
 </page>

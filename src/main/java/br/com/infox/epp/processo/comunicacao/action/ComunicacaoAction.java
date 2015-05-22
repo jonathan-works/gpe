@@ -122,6 +122,7 @@ public class ComunicacaoAction implements Serializable {
 	private Processo processo;
 	private List<Documento> documentosDestinatario; // Cache dos documentos do destinatário selecionado
 	private Map<Long, Boolean> dadosCiencia = new HashMap<>(); // Cache das confirmações de ciência dos destinatários
+	private List<DestinatarioBean> destinatarios;
 	
 	private DestinatarioBean destinatario;
 	private Date dataCiencia;
@@ -154,33 +155,36 @@ public class ComunicacaoAction implements Serializable {
 	
 	public void clearCacheModelos() {
 		this.comunicacoes = null;
+		this.destinatario = null;
 	}
 	
 	public List<DestinatarioBean> getDestinatarios() {
-	    List<DestinatarioBean> destinatarios = new ArrayList<>();
-	    List<ModeloComunicacao> comunicacoesDoProcesso = getComunicacoesDoProcesso();
-	    for (ModeloComunicacao modeloComunicacao : comunicacoesDoProcesso) {
-	        List<DestinatarioBean> destinatariosPorModelo = getDestinatarios(modeloComunicacao);
-	        for (DestinatarioBean destinatarioBean : destinatariosPorModelo) {
-                destinatarios.add(destinatarioBean);
-            }
-        }
-	    Collections.sort(destinatarios, new Comparator<DestinatarioBean>() {
-			@Override
-			public int compare(DestinatarioBean o1, DestinatarioBean o2) {
-				try {
-					Date d1 = dateFormat.parse(o1.getDataEnvio());
-					Date d2 = dateFormat.parse(o2.getDataEnvio());
-					return d2.compareTo(d1);
-				} catch (ParseException e) {
-					throw new RuntimeException(e);
+		if(destinatarios == null){
+			destinatarios = new ArrayList<>();
+		    List<ModeloComunicacao> comunicacoesDoProcesso = getComunicacoesDoProcesso();
+		    for (ModeloComunicacao modeloComunicacao : comunicacoesDoProcesso) {
+		        List<DestinatarioBean> destinatariosPorModelo = getDestinatarios(modeloComunicacao);
+		        for (DestinatarioBean destinatarioBean : destinatariosPorModelo) {
+	                destinatarios.add(destinatarioBean);
+	            }
+	        }
+		    Collections.sort(destinatarios, new Comparator<DestinatarioBean>() {
+				@Override
+				public int compare(DestinatarioBean o1, DestinatarioBean o2) {
+					try {
+						Date d1 = dateFormat.parse(o1.getDataEnvio());
+						Date d2 = dateFormat.parse(o2.getDataEnvio());
+						return d2.compareTo(d1);
+					} catch (ParseException e) {
+						throw new RuntimeException(e);
+					}
 				}
-			}
-		});
+			});
+		}
 	    return destinatarios;
 	}
 	
-	public List<DestinatarioBean> getDestinatarios(ModeloComunicacao modeloComunicacao) {
+	private List<DestinatarioBean> getDestinatarios(ModeloComunicacao modeloComunicacao) {
 		List<DestinatarioBean> destinatarios = destinatarioComunicacaoService.getDestinatarios(modeloComunicacao);
 		for(DestinatarioBean destinatario : destinatarios){
 			dadosCiencia.put(destinatario.getIdDestinatario(), destinatarioComunicacaoService.isCienciaConfirmada(destinatario.getComunicacao()));
@@ -220,8 +224,7 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	public void setDestinatarioCiencia(DestinatarioBean destinatario) {
-		clearCache();
-		
+		clear();
 		this.destinatario = destinatario;
 		ciencia = true;
 	}
@@ -340,7 +343,7 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	public void setDestinatarioProrrogacaoPrazo(DestinatarioBean destinatario) {
-		clearCache();
+		clear();
 		this.destinatario = destinatario;
 		prorrogacaoPrazo = true;
 		documentoUploader.setClassificacaoDocumento(null);
@@ -352,7 +355,7 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	public void setDestinatarioDocumentos(DestinatarioBean destinatario) {
-		clearCache();
+		clear();
 		this.destinatario = destinatario;
 		documentos = true;
 	}
@@ -423,7 +426,9 @@ public class ComunicacaoAction implements Serializable {
 		destinatario = null;
 		dataCiencia = null;
 		editorCiencia = false;
-		documentoUploader.clear();
+		documentoUploader.clear();		
+		documentoResposta = false;
+		documentosListResposta = null;
 	}
 	
 	public String getTextoCiencia() {
@@ -465,7 +470,7 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	public void setDestinatarioResposta(DestinatarioBean destinatario){
-		clearCache();
+		clear();
 		this.destinatario = destinatario;
 		this.documentoResposta = true;
 		this.documentosListResposta = null;

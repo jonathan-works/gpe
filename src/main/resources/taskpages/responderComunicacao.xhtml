@@ -1,34 +1,37 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:ui="http://java.sun.com/jsf/facelets" 
-      xmlns:h="http://java.sun.com/jsf/html" 
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:wi="http://www.itx.com.br/jsf"
-      xmlns:rich="http://richfaces.org/rich"
-      xmlns:a="http://richfaces.org/a4j"
-      xmlns:s="http://jboss.org/schema/seam/taglib">
-<h:head />
-<h:body>
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/schema/seam/taglib">
+	
 	<rich:collapsiblePanel id="painelComunicacao" header="#{infoxMessages['comunicacao.comunicacao']}" switchType="client">
-		<wi:outputText id="meioExpedicao" value="#{respostaComunicacaoAction.meioExpedicao.label}"
-			label="#{infoxMessages['comunicacao.meioExpedicao']}" />
-		<wi:outputText id="tipoComunicacao" value="#{respostaComunicacaoAction.tipoComunicacao.descricao}"
-			label="#{infoxMessages['comunicacao.tipoComunicacao']}" />
-		<wi:outputText id="prazoResposta" label="Prazo de Resposta"
-			value="#{not empty respostaComunicacaoAction.prazoResposta ? respostaComunicacaoAction.prazoResposta : '-' }">
-			<f:convertDateTime pattern="dd/MM/yyyy" />
-		</wi:outputText>
-		<wi:outputText id="statusProrrogacao" label="#{infoxMessages['comunicacao.statusProrrogacao']}"
-			value="#{respostaComunicacaoAction.statusProrrogacao}">
-		</wi:outputText>
-		<h:form>
-			<h:commandButton id="visualizarComunicacao" 
-				value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
-				styleClass="buttons"
-				onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?idDestinatario=#{respostaComunicacaoAction.idDestinatario}','1024'); return false;" />
-		</h:form>
-		<s:div />
+	
+		<ui:include src="/WEB-INF/xhtml/components/fragments/detalhesComunicacao.xhtml">
+	   		<ui:param name="id" value="respExibirComunicacao" />
+	   		<ui:param name="showDestinatario" value="false" />
+	   		<ui:param name="meioExpedicao" value="#{respostaComunicacaoAction.meioExpedicao.label}" />
+	   		<ui:param name="showMeioExpedicao" value="true" />
+	   		<ui:param name="showDataEnvio" value="false" />
+	   		<ui:param name="prazoResposta" value="#{respostaComunicacaoAction.prazoResposta}" />
+	   		<ui:param name="showPrazoResposta" value="true" />
+	   		<ui:param name="showDataResposta" value="false" />
+	   		<ui:param name="tipoComunicacao" value="#{respostaComunicacaoAction.tipoComunicacao.descricao}" />
+	   		<ui:param name="statusProrrogacao" value="#{respostaComunicacaoAction.statusProrrogacao}" />
+	   		<ui:param name="showStatusProrrogacao" value="true" />
+	   		<ui:param name="idDestinatario" value="#{respostaComunicacaoAction.idDestinatario}" />
+	   	</ui:include>
+
+		<ui:include src="/WEB-INF/xhtml/components/fragments/documentosComunicacao.xhtml">
+	    		<ui:param name="id" value="respDocsComunicacao" />
+	    		<ui:param name="showNumeroDocumento" value="false" />
+	    		<ui:param name="list" value="#{respostaComunicacaoAction.documentosComunicacao}" />
+	    </ui:include>
+
 	</rich:collapsiblePanel>
+	
 	<h:form>
 		<rich:collapsiblePanel header="#{infoxMessages['comunicacao.editor']}" switchType="client" id="painelEditor">
 			<ui:param name="minuta" 
@@ -178,5 +181,5 @@
 	<h:form>
 		<ui:include src="/WEB-INF/xhtml/components/form/buttons/taskButtons.xhtml"></ui:include>
 	</h:form>
-</h:body>
-</html>
+	
+</ui:composition>

@@ -73,8 +73,12 @@ public class ProrrogacaoPrazoService {
     }
     
     public boolean isPrazoProrrogado(Processo comunicacao){
-    	return  !comunicacao.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO_INICIAL).getValue().equals(
+    	return  !getDataLimiteCumprimentoInicial(comunicacao).equals(
     					comunicacao.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO).getValue());
+    }
+    
+    public Date getDataLimiteCumprimentoInicial(Processo comunicacao){
+    	return comunicacao.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO_INICIAL).getValue();
     }
     
     public String getStatusProrrogacaoFormatado(Processo comunicacao){
@@ -85,7 +89,7 @@ public class ProrrogacaoPrazoService {
     		}else{
     			String dataAnalise = dateFormat.format(getDataAnaliseProrrogacao(comunicacao)); 
 				if(isPrazoProrrogado(comunicacao)){
-					return "Prazo prorrogado em " + dataAnalise;
+					return "Prazo original: " + dateFormat.format(getDataLimiteCumprimentoInicial(comunicacao));
 				}else{
 					return "Prorrogação negada em " + dataAnalise;
 				}
