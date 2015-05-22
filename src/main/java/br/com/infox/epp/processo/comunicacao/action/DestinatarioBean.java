@@ -18,6 +18,7 @@ public class DestinatarioBean {
 	private String responsavelConfirmacao;
 	private String prazoAtendimento;
 	private String prazoFinal;
+	private String prazoOriginal;
 	private Processo comunicacao;
 	private ModeloComunicacao modeloComunicacao;
 	private Documento documentoComunicacao;
@@ -78,7 +79,13 @@ public class DestinatarioBean {
 	public void setPrazoFinal(String prazoFinal) {
 		this.prazoFinal = prazoFinal;
 	}
-	public Processo getComunicacao() {
+	public String getPrazoOriginal() {
+        return prazoOriginal;
+    }
+    public void setPrazoOriginal(String prazoOriginal) {
+        this.prazoOriginal = prazoOriginal;
+    }
+    public Processo getComunicacao() {
 		return comunicacao;
 	}
 	public void setComunicacao(Processo comunicacao) {

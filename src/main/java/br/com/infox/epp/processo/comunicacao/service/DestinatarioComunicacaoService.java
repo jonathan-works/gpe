@@ -78,6 +78,7 @@ public class DestinatarioComunicacaoService implements Serializable{
 		bean.setDataConfirmacao(getDataConfirmacao(comunicacao));
 		bean.setResponsavelConfirmacao(getResponsavelConfirmacao(comunicacao));
 		bean.setPrazoFinal(getPrazoFinal(comunicacao));
+		bean.setPrazoOriginal(getPrazoOriginal(comunicacao));
 		bean.setStatusProrrogacao(getStatusProrrogacao(comunicacao));
 		return bean;
 	}
@@ -105,6 +106,14 @@ public class DestinatarioComunicacaoService implements Serializable{
 			return dateFormat.format(metadado.getValue());
 		}
 		return "-";
+	}
+	
+	private String getPrazoOriginal(Processo comunicacao) {
+	    MetadadoProcesso metadado = comunicacao.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO_INICIAL);
+	    if (metadado != null) {
+	        return dateFormat.format(metadado.getValue());
+	    }
+	    return "-";
 	}
 	
 	private String getStatusProrrogacao(Processo comunicacao){

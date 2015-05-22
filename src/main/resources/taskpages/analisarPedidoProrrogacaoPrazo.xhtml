@@ -96,6 +96,10 @@
 						<h:outputText value="#{bean.responsavelConfirmacao}" />
 					</rich:column>
 					<rich:column>
+                        <f:facet name="header">#{infoxMessages['comunicacao.prazoOriginal']}</f:facet>
+                        <h:outputText value="#{bean.prazoOriginal}" />
+                    </rich:column>
+                    <rich:column>
 						<f:facet name="header">#{infoxMessages['comunicacao.prazoFinal']}</f:facet>
 						<h:outputText value="#{bean.prazoFinal}" />
 					</rich:column>
