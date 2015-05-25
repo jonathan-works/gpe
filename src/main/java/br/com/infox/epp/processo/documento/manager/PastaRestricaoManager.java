@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.documento.manager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -201,5 +202,17 @@ public class PastaRestricaoManager extends Manager<PastaRestricaoDAO, PastaRestr
             restricao.setDelete(modeloRestricao.getDelete());
             persist(restricao);
         }
+    }
+
+    public List<PastaRestricao> copyRestricoes(Pasta from, Pasta to) throws CloneNotSupportedException, DAOException {
+        List<PastaRestricao> restricoesAntigas = getByPasta(from);
+        List<PastaRestricao> restricoesNovas = new ArrayList<>(restricoesAntigas.size());
+        for (PastaRestricao restricaoAntiga : restricoesAntigas) {
+            PastaRestricao restricaoNova = restricaoAntiga.makeCopy();
+            restricaoNova.setPasta(to);
+            persist(restricaoNova);
+            restricoesNovas.add(restricaoNova);
+        }
+        return restricoesNovas;
     }
 }

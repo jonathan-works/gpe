@@ -120,4 +120,16 @@ public class PastaRestricao {
     public void setTipoPastaRestricao(PastaRestricaoEnum tipoPastaRestricao) {
         this.tipoPastaRestricao = tipoPastaRestricao;
     }
+
+    public PastaRestricao makeCopy() throws CloneNotSupportedException {
+        PastaRestricao nova = new PastaRestricao();
+        nova.setId(null);
+        nova.setPasta(null);
+        nova.setTipoPastaRestricao(this.getTipoPastaRestricao());
+        nova.setAlvo(this.getAlvo());
+        nova.setRead(this.getRead());
+        nova.setWrite(this.getWrite());
+        nova.setDelete(this.getDelete());
+        return nova;
+    }
 }
