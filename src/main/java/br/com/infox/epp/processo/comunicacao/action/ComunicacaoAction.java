@@ -462,9 +462,11 @@ public class ComunicacaoAction implements Serializable {
 		}
 	}
 	
-	public List<Documento> getDocumentosList(){
+	public List<Documento> getDocumentosRespostaList(){
 		if (documentosListResposta == null) {
-			documentosListResposta = processoAnaliseDocumentoService.getDocumentosRespostaComunicacao(destinatario.getComunicacao());
+			if(destinatario != null){
+				documentosListResposta = processoAnaliseDocumentoService.getDocumentosRespostaComunicacao(destinatario.getComunicacao());
+			}
 		}
 		return documentosListResposta;
 	}
