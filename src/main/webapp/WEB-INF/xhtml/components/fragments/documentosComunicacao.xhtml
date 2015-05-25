@@ -18,11 +18,11 @@
 						<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
 				</a:commandLink>
 			</rich:column>
-			<wi:columnOutputText rendered="#{showNumeroDocumento}" 
+			<wi:columnOutputText hideOrder="true" rendered="#{showNumeroDocumento}" 
 				columnHeader="#{infoxMessages['documentoProcesso.numeroDocumento']}" value="#{bean.numeroDocumento}" />
-			<wi:columnOutputText columnHeader="#{infoxMessages['documentoProcesso.descricao']}" value="#{bean.descricao}" />
-			<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.classificacaoDocumento']}" value="#{bean.classificacaoDocumento}" />
-			<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.tamanho']}" value="#{bean.documentoBin.sizeFormatado}" />
+			<wi:columnOutputText hideOrder="true" columnHeader="#{infoxMessages['documentoProcesso.descricao']}" value="#{bean.descricao}" />
+			<wi:columnOutputText hideOrder="true" columnHeader="#{infoxMessages['processoDocumento.classificacaoDocumento']}" value="#{bean.classificacaoDocumento}" />
+			<wi:columnOutputText hideOrder="true" columnHeader="#{infoxMessages['processoDocumento.tamanho']}" value="#{bean.documentoBin.sizeFormatado}" />
 	</rich:dataTable>
 	</h:form>
 		
