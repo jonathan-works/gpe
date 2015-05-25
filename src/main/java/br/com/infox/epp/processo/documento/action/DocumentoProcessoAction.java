@@ -50,9 +50,6 @@ public class DocumentoProcessoAction implements Serializable {
 	private DocumentoManager documentoManager;
 	@In
 	private ActionMessagesService actionMessagesService;
-	
-	
-
 	@In
 	private HistoricoStatusDocumentoManager historicoStatusDocumentoManager;
 	@In
@@ -81,6 +78,7 @@ public class DocumentoProcessoAction implements Serializable {
 	
 	public void onClickDocumentosTab(){
 		cache.clear();
+		documentoList.refresh();
 	}
 	
 	public String getMotivoExclusaoRestauracao() {
