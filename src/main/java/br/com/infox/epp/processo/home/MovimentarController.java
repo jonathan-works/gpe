@@ -43,7 +43,9 @@ public class MovimentarController implements Serializable{
 
 	public void setProcesso(Processo processo) {
 		this.processo = processo;
-		analiseDocumentoAction.setProcesso(getProcesso());
+		if(isTipoProcessoAnaliseDocumento()){
+			analiseDocumentoAction.setProcesso(getProcesso());
+		}
 	}
 	
 }
