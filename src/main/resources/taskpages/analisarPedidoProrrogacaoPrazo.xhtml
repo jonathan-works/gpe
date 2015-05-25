@@ -47,9 +47,9 @@
 	</rich:collapsiblePanel>
 		
 	<rich:collapsiblePanel header="#{infoxMessages['comunicacao.comunicacoeDoProcessos']}" switchType="client" 
-			id="comunicacoesDoProcesso" rendered="#{not empty analisarPedidoProrrogacaoPrazoAction.getDestinatariosCienciaConfirmada()}">
+			id="comunicacoesDoProcesso" rendered="#{not empty analisarPedidoProrrogacaoPrazoAction.destinatarioCienciaConfirmada}">
 		<h:form>
-				<rich:dataTable value="#{analisarPedidoProrrogacaoPrazoAction.getDestinatariosCienciaConfirmada()}" 
+				<rich:dataTable value="#{analisarPedidoProrrogacaoPrazoAction.destinatarioCienciaConfirmada}" 
 					var="bean" styleClass="dtable rf-dt-crud">
 					<rich:column styleClass="dt-toolbar-col" rendered="#{s:hasRole('usuarioInterno')}">
 							<a:commandLink action="#{analisarPedidoProrrogacaoPrazoAction.setDestinatarioDocumentos(bean)}"
