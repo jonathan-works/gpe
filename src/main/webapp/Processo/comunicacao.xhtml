@@ -211,11 +211,11 @@
 	    	</rich:panel>
 	    </s:div>
 	    <s:div id="painelDocumentosResposta">
-	    	<ui:include src="/WEB-INF/xhtml/components/fragments/documentosFluxoAnalise.xhtml">
+	    	<ui:include src="/WEB-INF/xhtml/components/fragments/documentosResposta.xhtml">
 	    		<ui:param name="id" value="documentosResposta" />
-	    		<ui:param name="title" value="#{infoxMessages['comunicacao.respostaComunicacao']}" />
 	    		<ui:param name="rendered" value="#{comunicacaoAction.documentoResposta}" />
-	    		<ui:param name="list" value="#{comunicacaoAction.getDocumentosList()}" />
+	    		<ui:param name="list" value="#{comunicacaoAction.getDocumentosRespostaList()}" />
+	    		<ui:param name="title" value="#{infoxMessages['comunicacao.documentosResposta']}"/>
 	    	</ui:include>
 	    </s:div>
 	</s:div>
