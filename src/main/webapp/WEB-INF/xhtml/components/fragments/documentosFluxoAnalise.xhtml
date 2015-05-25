@@ -32,22 +32,11 @@
 	    	</rich:panel>
 		</s:div>
 		
-		<rich:panel header="Resposta">
-			<rich:dataTable value="#{list}" 
-					var="bean" styleClass="dtable rf-dt-crud">
-					<rich:column styleClass="dt-toolbar-col">
-						<h:form>
-							<a:commandLink rendered="true"
-								onclick="infox.openPopUp('documento', '#{documentoDownloader.getViewUrl(bean)}');">
-								<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
-							</a:commandLink>
-						</h:form>
-					</rich:column>
-					<wi:columnOutputText columnHeader="#{infoxMessages['documentoProcesso.numeroDocumento']}" value="#{bean.numeroDocumento}" />
-					<wi:columnOutputText columnHeader="#{infoxMessages['documentoProcesso.descricao']}" value="#{bean.descricao}" />
-					<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.classificacaoDocumento']}" value="#{bean.classificacaoDocumento}" />
-					<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.tamanho']}" value="#{bean.documentoBin.sizeFormatado}" />
-			</rich:dataTable>
-		</rich:panel>
+		<ui:include src="/WEB-INF/xhtml/components/fragments/documentosResposta.xhtml">
+	    		<ui:param name="id" value="analiseDocumentoDocumentosResposta" />
+	    		<ui:param name="list" value="#{list}" />
+	    		<ui:param name="title" value="#{analiseDocumentoAction.getTituloDocumentosAnaliseList()}"/>
+	    </ui:include>
+		
 	</rich:collapsiblePanel>
 </ui:composition>
