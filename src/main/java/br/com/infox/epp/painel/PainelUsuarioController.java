@@ -78,6 +78,7 @@ public class PainelUsuarioController extends AbstractController {
     	processoIdList = null;
     	selected = null;
     	setTipoProcesso();
+    	consultaProcessoList.newInstance();
     	painelTreeHandler.clearTree();
     	painelTreeHandler.setTipoProcesso(getTipoProcesso());
     	painelTreeHandler.setTabComunicacoesExpedidas(isTabComunicacoesExpedidas());
