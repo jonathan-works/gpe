@@ -215,6 +215,7 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 					try {
 						metadadoProcessoManager.update(metadadoDataLimiteCumprimento);
 						FacesMessages.instance().add("Prazo prorrogado com sucesso");
+						destinatarioCienciaConfirmada = null;
 						clearDestinatarioBean();
 					} catch (DAOException e) {
 						LOG.error("", e);
