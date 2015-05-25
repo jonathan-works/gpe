@@ -9,25 +9,21 @@
       xmlns:s="http://jboss.org/schema/seam/taglib">
 
 	<rich:collapsiblePanel header="#{infoxMessages['comunicacao.comunicacao']}" switchType="client">
-		<wi:outputText id="meioExpedicao" value="#{analisarPedidoProrrogacaoPrazoAction.meioExpedicao}"
-			label="#{infoxMessages['comunicacao.meioExpedicao']}" />
-		<wi:outputText id="prazoResposta" label="Prazo de Resposta"
-			value="#{not empty analisarPedidoProrrogacaoPrazoAction.dataFimPrazoCumprimento 
-				? analisarPedidoProrrogacaoPrazoAction.dataFimPrazoCumprimento : '-' }">
-			<f:convertDateTime pattern="dd/MM/yyyy" />
-		</wi:outputText>
-		<h:form>
-			<h:commandButton id="visualizarComunicacao" 
-				type="button" 
-				value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
-				styleClass="buttons"
-				onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?idDestinatario=#{analisarPedidoProrrogacaoPrazoAction.destinatarioComunicacao.id}','1024'); return false;" />
-			<h:commandButton id="baixarPedidoProrrogacao" 
-				value="#{infoxMessages['comunicacao.visualizarPedidoDeProrrogacao']}" 
-				styleClass="buttons"
-				onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/downloadDocumento.seam?id=#{analisarPedidoProrrogacaoPrazoAction.idDocPedidoProrrogacao}','1024'); return false;" />
-		</h:form>
-		<s:div />
+		
+		<ui:include src="/WEB-INF/xhtml/components/fragments/detalhesComunicacao.xhtml">
+	   		<ui:param name="id" value="analisarPedidoProrrogacaoPrazoExibirComunicacao" />
+	   		<ui:param name="showDestinatario" value="false" />
+	   		<ui:param name="meioExpedicao" value="#{analisarPedidoProrrogacaoPrazoAction.meioExpedicao}" />
+	   		<ui:param name="showMeioExpedicao" value="true" />
+	   		<ui:param name="showDataEnvio" value="false" />
+	   		<ui:param name="prazoResposta" value="#{not empty analisarPedidoProrrogacaoPrazoAction.dataFimPrazoCumprimento 
+				? analisarPedidoProrrogacaoPrazoAction.dataFimPrazoCumprimento : '-'}" />
+	   		<ui:param name="showPrazoResposta" value="true" />
+	   		<ui:param name="showDataResposta" value="false" />
+	   		<ui:param name="showTipoComunicacao" value="false" />
+	   		<ui:param name="idDestinatario" value="#{analisarPedidoProrrogacaoPrazoAction.destinatarioComunicacao.id}" />
+	   	</ui:include>
+	
 		<wi:dataTable id="documentosComunicacao" values="#{documentoComunicacaoList.list(10)}" bean="#{documentoComunicacaoList}"
 			tableTitle="#{infoxMessages['comunicacao.documentosComunicacao']}" showSearchForm="false" rowId="#{row.id}" hideOrder="true">
 			<ui:define name="headerToolBar" />
