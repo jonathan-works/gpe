@@ -9,7 +9,8 @@ public enum Parametros {
 	ID_USUARIO_PROCESSO_SISTEMA("idUsuarioProcessoSistema"),
 	ID_USUARIO_SISTEMA("idUsuarioSistema"),
 	PAPEL_USUARIO_INTERNO("usuarioInterno"),
-	PAPEL_USUARIO_EXTERNO("usuarioExterno");
+	PAPEL_USUARIO_EXTERNO("usuarioExterno"),
+	PASTA_DOCUMENTO_GERADO("pastaDocumentoGerado");
 	
 	private String label;
 	

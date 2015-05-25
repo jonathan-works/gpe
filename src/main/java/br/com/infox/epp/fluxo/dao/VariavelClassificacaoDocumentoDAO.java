@@ -64,8 +64,6 @@ public class VariavelClassificacaoDocumentoDAO extends DAO<VariavelClassificacao
             query.executeUpdate();
         } catch (Exception e) {
             throw new DAOException(e);
-        } finally {
-            rollbackTransactionIfNeeded();
         }
     }
     

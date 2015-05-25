@@ -137,4 +137,8 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     public Pasta getByProcessoAndDescricao(Processo processo, String descricao) {
         return getDao().getByProcessoAndDescricao(processo, descricao);
     }
+    
+    public Pasta getPastaByNome(String nome, Processo processo) {
+    	return getDao().getPastaByNome(nome, processo);
+    }
 }

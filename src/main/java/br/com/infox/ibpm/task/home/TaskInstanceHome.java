@@ -373,7 +373,7 @@ public class TaskInstanceHome implements Serializable {
 		documento.setNumeroDocumento(documentoManager.getNextNumeracao(documento));
 		documento.setIdJbpmTask(getCurrentTaskInstance().getId());
 		documento.setPasta(pastaManager.getDefaultFolder(processoEpaHome.getInstance()));
-		String descricao = JbpmUtil.instance().getMessages().get(variableAccess.getMappedName().split(":")[1]);
+		String descricao = JbpmUtil.instance().getMessages().get(processoEpaHome.getInstance().getNaturezaCategoriaFluxo().getFluxo().getFluxo() + ":" + variableAccess.getMappedName().split(":")[1]);
 		documento.setDescricao(descricao == null ? "-" : descricao);
 		documentoManager.persist(documento);
 	}
@@ -391,6 +391,7 @@ public class TaskInstanceHome implements Serializable {
 	private Boolean checkAccess() {
 		int idProcesso = processoEpaHome.getInstance().getIdProcesso();
 		Integer idUsuarioLogin = Authenticator.getUsuarioLogado().getIdUsuarioLogin();
+		validateTaskId();
 		if (processoManager.checkAccess(idProcesso, idUsuarioLogin, taskId)) {
 			return Boolean.TRUE;
 		} else {

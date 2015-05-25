@@ -21,11 +21,9 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
-import org.jboss.seam.transaction.Transaction;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
-import br.com.infox.seam.exception.ApplicationException;
 
 @Scope(ScopeType.EVENT)
 @AutoCreate
@@ -142,8 +140,6 @@ public abstract class DAO<T> implements Serializable {
             getNamedQuery(namedQuery, null).executeUpdate();
         } catch (Exception e) {
             throw new DAOException(e);
-        } finally {
-            rollbackTransactionIfNeeded();
         }
     }
 
@@ -153,8 +149,6 @@ public abstract class DAO<T> implements Serializable {
             getNamedQuery(namedQuery, parameters).executeUpdate();
         } catch (Exception e) {
             throw new DAOException(e);
-        } finally {
-            rollbackTransactionIfNeeded();
         }
     }
 
@@ -166,8 +160,6 @@ public abstract class DAO<T> implements Serializable {
             return object;
         } catch (Exception e) {
             throw new DAOException(e);
-        } finally {
-            rollbackTransactionIfNeeded();
         }
     }
 
@@ -179,8 +171,6 @@ public abstract class DAO<T> implements Serializable {
             return res;
         } catch (Exception e) {
             throw new DAOException(e);
-        } finally {
-            rollbackTransactionIfNeeded();
         }
     }
 
@@ -192,8 +182,6 @@ public abstract class DAO<T> implements Serializable {
             return object;
         } catch (Exception e) {
             throw new DAOException(e);
-        } finally {
-            rollbackTransactionIfNeeded();
         }
     }
 
@@ -208,8 +196,6 @@ public abstract class DAO<T> implements Serializable {
             return getEntityManager().merge(object);
         } catch (Exception e) {
             throw new DAOException(e);
-        } finally {
-            rollbackTransactionIfNeeded();
         }
     }
 
@@ -270,17 +256,6 @@ public abstract class DAO<T> implements Serializable {
 
     public void refresh(T o) {
         getEntityManager().refresh(o);
-    }
-
-    protected void rollbackTransactionIfNeeded() {
-        try {
-            org.jboss.seam.transaction.UserTransaction ut = Transaction.instance();
-            if (ut != null && ut.isMarkedRollback()) {
-                ut.rollback();
-            }
-        } catch (Exception e) {
-            throw new ApplicationException(ApplicationException.createMessage("rollback da transação", "rollbackTransaction()", "Util", "ePP"), e);
-        }
     }
 
     protected Query createNativeQuery(String nativeQuery, Map<String, Object> parameters) {

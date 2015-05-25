@@ -82,26 +82,6 @@
             value="#{wiSkin.imageFolder}/mod/balao.png"
             rendered="#{row.processo.situacaoPrazo ne 'SAT'}"
           />
-          <h:form id="#{row.processo.numeroProcessoRoot}Form">
-            <h:selectBooleanCheckbox
-              id="#{row.processo.numeroProcessoRoot}Contab"
-              styleClass="checkbox"
-              value="#{row.processo.processo.contabilizar}"
-              required="false"
-              disabled="false"
-            >
-              <a:ajax
-                event="change"
-                listener="#{processoAction.alternarContabilizar(row.processo)}"
-                render="processoListPanel gaugeAjaxDivprocesso"
-                limitRender="true"
-                status=":status"
-                rendered="true"
-                execute="@this"
-              >
-              </a:ajax>
-            </h:selectBooleanCheckbox>
-          </h:form>
           <wi:toolBarEdit
             action="#{processoTarefaList.entity.setProcesso(row.processo)}"
           />

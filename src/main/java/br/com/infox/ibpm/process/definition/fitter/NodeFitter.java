@@ -36,7 +36,9 @@ import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 
 import br.com.infox.core.messages.InfoxMessages;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
+import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.manager.StatusProcessoManager;
@@ -74,6 +76,7 @@ public class NodeFitter extends Fitter implements Serializable {
     private NodeHandler nodeHandler;
     private String nodeName;
     private Map<Number, String> modifiedNodes = new HashMap<Number, String>();
+    private List<ClassificacaoDocumento> classificacoesDocumento;
 
     @In
     private JbpmNodeManager jbpmNodeManager;
@@ -83,6 +86,8 @@ public class NodeFitter extends Fitter implements Serializable {
     private StatusProcessoManager statusProcessoManager;
     @In
     private InfoxMessages infoxMessages;
+    @In
+    private ClassificacaoDocumentoFacade classificacaoDocumentoFacade;
     
     @SuppressWarnings(UNCHECKED)
     public void addNewNode() {
@@ -142,11 +147,6 @@ public class NodeFitter extends Fitter implements Serializable {
                 node.addArrivingTransition(oldT);
                 to.addArrivingTransition(t);
                 // FIM BLOCO //
-
-                if (oldT.getFrom().getNodeType().equals(NodeType.Fork)
-                        && to.getNodeType().equals(NodeType.Join)) {
-                    getProcessBuilder().getTransitionFitter().connectNodes(oldT.getFrom(), to);
-                }
             }
 
             if (nodeType.equals(Fork.class)) {
@@ -180,7 +180,10 @@ public class NodeFitter extends Fitter implements Serializable {
             processo.addNode(join);
             List<Node> nodes = processo.getNodes();
             processo.reorderNode(nodes.indexOf(join), nodes.indexOf(fork) + 1);
-            getProcessBuilder().getTransitionFitter().connectNodes(fork, join);
+            
+            Transition t = (Transition) fork.getLeavingTransitions().get(0);
+            fork.removeLeavingTransition(t);
+            join.addLeavingTransition(t);
         } catch (InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
@@ -575,4 +578,11 @@ public class NodeFitter extends Fitter implements Serializable {
     public List<StatusProcesso> getStatusProcessoList() {
         return statusProcessoManager.findAll();
     }
+    
+    public List<ClassificacaoDocumento> getClassificacoesDocumento() {
+    	if (classificacoesDocumento == null) {
+    		classificacoesDocumento = classificacaoDocumentoFacade.getUseableClassificacaoDocumento(true);
+    	}
+		return classificacoesDocumento;
+	}
 }

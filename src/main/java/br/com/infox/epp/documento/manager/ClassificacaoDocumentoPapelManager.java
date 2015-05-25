@@ -19,4 +19,8 @@ public class ClassificacaoDocumentoPapelManager extends Manager<ClassificacaoDoc
     public boolean papelPodeAssinarClassificacao(Papel papel, ClassificacaoDocumento classificacao) {
     	return getDao().papelPodeAssinarClassificacao(papel, classificacao);
     }
+    
+    public boolean classificacaoExigeAssinatura(ClassificacaoDocumento classificacaoDocumento) {
+    	return getDao().classificacaoExigeAssinatura(classificacaoDocumento);
+    }
 }

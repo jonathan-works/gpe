@@ -13,6 +13,7 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
+import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
 import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
@@ -41,6 +42,8 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     private ProcessoManager processoManager;
     @In
     private NumeracaoDocumentoSequencialManager numeracaoDocumentoSequencialManager;
+    @In
+    private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
 
     public String getModeloDocumentoByIdDocumento(Integer idDocumento) {
         return getDao().getModeloDocumentoByIdDocumento(idDocumento);
@@ -104,7 +107,7 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
         this.classificacaoDocumentoManager.refresh(classificacaoDocumento);
         doc.setClassificacaoDocumento(classificacaoDocumento);
         doc.setNumeroDocumento(numeracaoDocumentoSequencialManager.getNextNumeracaoDocumentoSequencial(processo));
-        return getDao().persist(doc);
+        return persist(doc);
     }
 
     public List<Documento> getDocumentoByTask(org.jbpm.taskmgmt.exe.TaskInstance task) {
@@ -131,4 +134,12 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     	return getDao().getDocumentosSessaoAnexar(processo, idsDocumentos);
     }
     
+    @Override
+    public Documento persist(Documento o) throws DAOException {
+    	o = super.persist(o);
+    	if (!o.getDocumentoBin().getSuficientementeAssinado()) {
+    		o.getDocumentoBin().setSuficientementeAssinado(!classificacaoDocumentoPapelManager.classificacaoExigeAssinatura(o.getClassificacaoDocumento()));
+    	}
+    	return o;
+    }
 }

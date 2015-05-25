@@ -56,11 +56,15 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.system.Parametros;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Entity
 @Table(name = Documento.TABLE_NAME)
@@ -159,21 +163,42 @@ public class Documento implements Serializable, Cloneable {
     
     @PrePersist
     private void prePersist(){
+    	UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
+		if (usuarioPerfil == null) {
+			UsuarioLogin usuario = getUsuarioSistema();
+			// Assumindo que o usuário do sistema só possui um perfil associado a ele, o perfil Sistema
+			// com papel sistema e localização raiz
+			usuarioPerfil = usuario.getUsuarioPerfilList().get(0);
+		}
+		
     	if (getPerfilTemplate() == null){
-    		setPerfilTemplate(Authenticator.getUsuarioPerfilAtual().getPerfilTemplate());
+    		setPerfilTemplate(usuarioPerfil.getPerfilTemplate());
     	}
     	if (getLocalizacao() == null) {
-    		setLocalizacao(Authenticator.getLocalizacaoAtual());
+    		setLocalizacao(usuarioPerfil.getLocalizacao());
     	}
     	setDataInclusao(new Date());
-    	setUsuarioInclusao(Authenticator.getUsuarioLogado());
+    	setUsuarioInclusao(getUsuarioLogadoOuSistema());
     }
     
     @PreUpdate
     private void preUpdate(){
     	setDataAlteracao(new Date());
-    	setUsuarioAlteracao(Authenticator.getUsuarioLogado());
+    	setUsuarioAlteracao(getUsuarioLogadoOuSistema());
     }
+    
+    private UsuarioLogin getUsuarioLogadoOuSistema() {
+    	UsuarioLogin usuario = Authenticator.getUsuarioLogado();
+    	if (usuario == null) {
+    		usuario = getUsuarioSistema();
+    	}
+    	return usuario;
+    }
+
+	private UsuarioLogin getUsuarioSistema() {
+		UsuarioLoginManager usuarioLoginManager = ComponentUtil.getComponent(UsuarioLoginManager.NAME);
+		return usuarioLoginManager.find(Integer.valueOf(Parametros.ID_USUARIO_SISTEMA.getValue()));
+	}
     
 	public Integer getId() {
 		return id;
