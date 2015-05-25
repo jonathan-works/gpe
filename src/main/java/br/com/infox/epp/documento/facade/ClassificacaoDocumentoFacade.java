@@ -58,4 +58,13 @@ public class ClassificacaoDocumentoFacade {
     public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo) {
         return classificacaoDocumentoManager.getUseableClassificacaoDocumento(isModelo, Authenticator.getPapelAtual());
     }
+    
+    public List<ClassificacaoDocumento> getUseableClassificacaoDocumentoAnexar(TipoDocumentoEnum tipoDocumento){
+        return classificacaoDocumentoManager.getClassificacoesDocumentoAnexarDocumento(tipoDocumento);
+    }
+    
+    public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(TipoDocumentoEnum tipoDocumento){
+        return classificacaoDocumentoManager.getClassificacoesDocumentoCruds(tipoDocumento);
+    }
+    
 }

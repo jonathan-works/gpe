@@ -9,6 +9,7 @@ import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.dao.ClassificacaoDocumentoDAO;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.entity.Processo;
 
@@ -22,6 +23,14 @@ public class ClassificacaoDocumentoManager extends Manager<ClassificacaoDocument
 
     public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo, Papel papel) {
         return getDao().getUseableClassificacaoDocumento(isModelo, papel);
+    }
+    
+    public List<ClassificacaoDocumento> getClassificacoesDocumentoAnexarDocumento(TipoDocumentoEnum tipoDocumento) {
+    	return getDao().getClassificacoesDocumentoAnexarDocumento(tipoDocumento);
+    }
+    
+    public List<ClassificacaoDocumento> getClassificacoesDocumentoCruds(TipoDocumentoEnum tipoDocumento){
+        return getDao().getClassificacoesDocumentoCruds(tipoDocumento);
     }
     
     public boolean existsClassificaoAcessoDireto() {

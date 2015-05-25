@@ -39,7 +39,7 @@
                 assignTo="#{ajudaView.id}" />
         </a:jsFunction>
     </h:form>
-    <s:div id="showHelp">
+    <s:div id="showHelp" styleClass="#{identity.loggedIn ? 'showHelp' : ''}">
         <s:div id="resultado">
             <h:outputText
                 value="#{infoxMessages['ajuda.noResult']}"
@@ -106,13 +106,14 @@
     </s:div>
     <wi:panel
         id="helpSearchPanel"
+        rendered="#{identity.loggedIn}"
         styleClass="content-block">
         <h:form>
             <h:panelGroup
                 layout="block"
                 styleClass="left-aligned">
                 <h:outputLabel
-                    value="#{infoxMessages['ajuda.search']} "
+                    value="#{infoxMessages['ajuda.search']}"
                     for="searchText" />
                 <h:inputText
                     id="searchText"

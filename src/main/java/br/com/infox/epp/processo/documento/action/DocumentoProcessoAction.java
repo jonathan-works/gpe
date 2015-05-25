@@ -78,6 +78,7 @@ public class DocumentoProcessoAction implements Serializable {
 	
 	public void onClickDocumentosTab(){
 		cache.clear();
+		documentoList.refresh();
 	}
 	
 	public String getMotivoExclusaoRestauracao() {

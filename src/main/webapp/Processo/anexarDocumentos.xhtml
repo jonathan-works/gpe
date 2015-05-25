@@ -48,12 +48,12 @@
           id="#{f.id}tipoProcessoDocumento"
           label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
           value="#{documentoEditor.documento.classificacaoDocumento}"
-          items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumento(false)}"
+          items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumentoAnexar('P')}"
           required="true"
           disabled="#{not minuta}"
           readonly="#{not minuta}"
           showLabelSelecione="true">
-          <a:ajax event="change" status=":status" limitRender="true" 
+          <a:ajax event="change" limitRender="true" 
           		  render=":movimentarTabPanel:anexarDocumentosForm:editorToolTipDiv" execute="@this"/>
         </wi:selectOneMenuEntity>
         <wi:selectOneMenuEntity
@@ -146,7 +146,7 @@
           id="tipoProcessoDocumentoPdf"
           label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
           value="#{documentoUploader.classificacaoDocumento}"
-          items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumento(false)}"
+          items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumentoAnexar('D')}"
           required="true"
           showLabelSelecione="true">
           <a:ajax
