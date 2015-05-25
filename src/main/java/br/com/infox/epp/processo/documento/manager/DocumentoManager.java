@@ -14,6 +14,7 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
@@ -44,6 +45,8 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     private NumeracaoDocumentoSequencialManager numeracaoDocumentoSequencialManager;
     @In
     private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
+    @In
+    private AssinaturaDocumentoService assinaturaDocumentoService;
 
     public String getModeloDocumentoByIdDocumento(Integer idDocumento) {
         return getDao().getModeloDocumentoByIdDocumento(idDocumento);
@@ -136,10 +139,9 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     
     @Override
     public Documento persist(Documento o) throws DAOException {
-    	o = super.persist(o);
-    	if (!o.getDocumentoBin().getSuficientementeAssinado()) {
-    		o.getDocumentoBin().setSuficientementeAssinado(!classificacaoDocumentoPapelManager.classificacaoExigeAssinatura(o.getClassificacaoDocumento()));
+    	if (!o.getDocumentoBin().getSuficientementeAssinado() && assinaturaDocumentoService.isDocumentoTotalmenteAssinado(o)) {
+    		o.getDocumentoBin().setSuficientementeAssinado(Boolean.TRUE);
     	}
-    	return o;
+    	return super.persist(o);
     }
 }
