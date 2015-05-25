@@ -82,6 +82,7 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 	private boolean prorrogacaoPrazo;
 	private boolean documentos;
 	private List<Documento> documentosDestinatario; // Cache dos documentos do destinatário selecionado
+	private List<DestinatarioBean> destinatarioCienciaConfirmada;
 	
 	private DestinatarioBean destinatario;
 	private Date novoPrazoCumprimento;
@@ -94,6 +95,7 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 		dataFimPrazoCumprimento = prazoComunicacaoService.contabilizarPrazoCumprimento(comunicacao);
 		documentoComunicacaoList.setProcesso(comunicacao.getProcessoRoot());
 		documentoComunicacaoList.setModeloComunicacao(destinatarioComunicacao.getModeloComunicacao());
+		destinatarioCienciaConfirmada = null;
 		clearDestinatarioBean();
 	}
 	
@@ -151,19 +153,21 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 		return documentosDestinatario;
 	}
 	
-	public List<DestinatarioBean> getDestinatariosCienciaConfirmada() {
-		List<DestinatarioBean> destinatarios = new ArrayList<>();
-	    List<ModeloComunicacao> comunicacoesDoProcesso = modeloComunicacaoManager.listModelosComunicacaoPorProcessoRoot(comunicacao.getNumeroProcessoRoot());
-	    for (ModeloComunicacao modeloComunicacao : comunicacoesDoProcesso) { 
-	        List<DestinatarioBean> destinatariosPorModelo = destinatarioComunicacaoService.getDestinatarios(modeloComunicacao);
-	        for (DestinatarioBean destinatarioBean : destinatariosPorModelo) {
-	        	if (!destinatarioBean.getPrazoFinal().equals("-") && 
-	        			prorrogacaoPrazoService.canRequestProrrogacaoPrazo(destinatarioBean.getModeloComunicacao().getTipoComunicacao())){
-	        		destinatarios.add(destinatarioBean);
-	        	}
-            }
-        }
-	    return destinatarios;
+	public List<DestinatarioBean> getDestinatarioCienciaConfirmada() {
+		if(destinatarioCienciaConfirmada == null){
+			destinatarioCienciaConfirmada = new ArrayList<>();
+		    List<ModeloComunicacao> comunicacoesDoProcesso = modeloComunicacaoManager.listModelosComunicacaoPorProcessoRoot(comunicacao.getNumeroProcessoRoot());
+		    for (ModeloComunicacao modeloComunicacao : comunicacoesDoProcesso) { 
+		        List<DestinatarioBean> destinatariosPorModelo = destinatarioComunicacaoService.getDestinatarios(modeloComunicacao);
+		        for (DestinatarioBean destinatarioBean : destinatariosPorModelo) {
+		        	if (!destinatarioBean.getPrazoFinal().equals("-") && 
+		        			prorrogacaoPrazoService.canRequestProrrogacaoPrazo(destinatarioBean.getModeloComunicacao().getTipoComunicacao())){
+		        		destinatarioCienciaConfirmada.add(destinatarioBean);
+		        	}
+	            }
+	        }
+		}
+	    return destinatarioCienciaConfirmada;
 	}
 	
 	public String getStatusComunicacao(DestinatarioBean bean){
