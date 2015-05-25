@@ -33,7 +33,7 @@
 
 	</rich:collapsiblePanel>
 	
-	<h:form>
+	<h:form id="editorRespostaComunicacaoForm">
 		<rich:collapsiblePanel header="#{infoxMessages['comunicacao.editor']}" switchType="client" id="painelEditor">
 			<ui:param name="minuta" 
 				value="#{empty respostaComunicacaoAction.documentoEdicao.id or 
@@ -173,7 +173,7 @@
 			<ui:define name="conteudoAdicional">
 				<h:form style="text-align:left">
 					<wi:commandButton id="gravar" value="#{infoxMessages['comunicacao.enviarResposta']}" 
-						action="#{respostaComunicacaoAction.enviarRespostaComunicacao()}" reRender="pageBodyDialogMessage respostas painelComunicacao painelEditor" rendered="#{respostaComunicacaoList.getResultCount() ge 1}"/>
+						action="#{respostaComunicacaoAction.enviarRespostaComunicacao()}" reRender="pageBodyDialogMessage respostasPanel painelComunicacao painelEditor" rendered="#{respostaComunicacaoList.getResultCount() ge 1}"/>
 					
 				</h:form>
 			</ui:define>
