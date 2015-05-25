@@ -108,11 +108,6 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 	public DestinatarioModeloComunicacao getDestinatarioComunicacao(){
 		return destinatarioComunicacao;
 	}
-		
-	public Integer getIdDocPedidoProrrogacao(){
-		Documento documentoPedidoProrrogacao = processoDocumento.getMetadado(EppMetadadoProvider.DOCUMENTO_EM_ANALISE).getValue();
-		return documentoPedidoProrrogacao.getId();
-	}
 
 	public void endTask() {
 		try {
