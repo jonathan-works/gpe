@@ -53,12 +53,18 @@ public class AnaliseDocumentoAction implements Serializable{
 	}
 
 	public boolean isRespostaComunicacao(){
-		return ComponentUtil.<ProcessoAnaliseDocumentoService>getComponent(ProcessoAnaliseDocumentoService.NAME).isRespostaComunicacao(getProcesso())
-			&& !isPedidoProrrogacaoPrazo();
+		if(getProcesso() != null){
+			return ComponentUtil.<ProcessoAnaliseDocumentoService>getComponent(ProcessoAnaliseDocumentoService.NAME).isRespostaComunicacao(getProcesso())
+					&& !isPedidoProrrogacaoPrazo();
+		}
+		return false;
 	}
 	
 	public boolean isPedidoProrrogacaoPrazo(){
-		return ComponentUtil.<ProcessoAnaliseDocumentoService>getComponent(ProcessoAnaliseDocumentoService.NAME).isPedidoProrrogacaoPrazo(getProcesso());
+		if(getProcesso() != null){
+			return ComponentUtil.<ProcessoAnaliseDocumentoService>getComponent(ProcessoAnaliseDocumentoService.NAME).isPedidoProrrogacaoPrazo(getProcesso());
+		}
+		return false;
 	}
 	
 	public String getTituloGridDocumentosAnalise(){
@@ -68,6 +74,13 @@ public class AnaliseDocumentoAction implements Serializable{
 			return infoxMessages.get("comunicacao.analisarProrrogacaoPrazo");
 		}
 		return infoxMessages.get("comunicacao.analisarDocumento");
+	}
+	
+	public String getTituloDocumentosAnaliseList(){
+		if (isRespostaComunicacao()){
+			return infoxMessages.get("comunicacao.documentosResposta");
+		}
+		return infoxMessages.get("comunicacao.documentosAnalise");
 	}
 	
 	public String getDestinatario(){
