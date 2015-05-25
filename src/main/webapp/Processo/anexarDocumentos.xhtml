@@ -53,7 +53,7 @@
           id="#{f.id}tipoProcessoDocumento"
           label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
           value="#{documentoEditor.documento.classificacaoDocumento}"
-          items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumento('P')}"
+          items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumentoAnexar('P')}"
           required="true"
           disabled="#{not minuta}"
           readonly="#{not minuta}"
@@ -151,7 +151,7 @@
           id="tipoProcessoDocumentoPdf"
           label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
           value="#{documentoUploader.classificacaoDocumento}"
-          items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumento('D')}"
+          items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumentoAnexar('D')}"
           required="true"
           showLabelSelecione="true">
           <a:ajax

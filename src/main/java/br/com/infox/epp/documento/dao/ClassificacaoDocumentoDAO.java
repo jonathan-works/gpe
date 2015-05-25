@@ -20,14 +20,17 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel_;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento_;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
@@ -129,6 +132,24 @@ public class ClassificacaoDocumentoDAO extends DAO<ClassificacaoDocumento> {
     
     public List<ClassificacaoDocumento> getClassificacoesDocumentoCruds(TipoDocumentoEnum tipoDocumento) {
         CriteriaQuery<ClassificacaoDocumento> query = createQueryClassificacoesDocumentoCruds(tipoDocumento);
+        return getEntityManager().createQuery(query).getResultList();
+    }
+    
+    @SuppressWarnings("unchecked")
+	public List<ClassificacaoDocumento> getClassificacoesDocumentoAnexarDocumento(TipoDocumentoEnum tipoDocumento) {
+        CriteriaQuery<ClassificacaoDocumento> query = createQueryClassificacoesDocumentoCruds(tipoDocumento);
+        Root<ClassificacaoDocumento> from = (Root<ClassificacaoDocumento>) query.getRoots().iterator().next();
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        Predicate predicate = query.getRestriction();
+        Subquery<Integer> subquery = query.subquery(Integer.class);
+	      Root<ClassificacaoDocumentoPapel> classificacaoDocumentoPapel = subquery.from(ClassificacaoDocumentoPapel.class);
+	      subquery.select(cb.literal(1));
+	      subquery.where(cb.and(cb.isTrue(classificacaoDocumentoPapel.get(ClassificacaoDocumentoPapel_.podeRedigir)),
+	      		cb.equal(classificacaoDocumentoPapel.get(ClassificacaoDocumentoPapel_.classificacaoDocumento), from),
+	      		cb.equal(classificacaoDocumentoPapel.get(ClassificacaoDocumentoPapel_.papel), Authenticator.getPapelAtual())));
+	              
+	    predicate = cb.and(predicate, cb.exists(subquery));
+	    query.where(predicate);
         return getEntityManager().createQuery(query).getResultList();
     }
 }

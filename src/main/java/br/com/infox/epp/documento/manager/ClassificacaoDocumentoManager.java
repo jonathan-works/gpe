@@ -25,6 +25,10 @@ public class ClassificacaoDocumentoManager extends Manager<ClassificacaoDocument
         return getDao().getUseableClassificacaoDocumento(isModelo, papel);
     }
     
+    public List<ClassificacaoDocumento> getClassificacoesDocumentoAnexarDocumento(TipoDocumentoEnum tipoDocumento) {
+    	return getDao().getClassificacoesDocumentoAnexarDocumento(tipoDocumento);
+    }
+    
     public List<ClassificacaoDocumento> getClassificacoesDocumentoCruds(TipoDocumentoEnum tipoDocumento){
         return getDao().getClassificacoesDocumentoCruds(tipoDocumento);
     }
