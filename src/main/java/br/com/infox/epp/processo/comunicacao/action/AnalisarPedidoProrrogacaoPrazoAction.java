@@ -3,6 +3,7 @@ package br.com.infox.epp.processo.comunicacao.action;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -200,7 +201,10 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 	
 	public Date getDataLimiteCumprimento(){
 		if(destinatario != null){
-			return getDataLimiteCumprimento(destinatario);
+			Calendar calendar =  Calendar.getInstance();
+			calendar.setTime(getDataLimiteCumprimento(destinatario));
+			calendar.add(Calendar.DATE, 1);
+			return calendar.getTime();
 		}
 		return new Date();
 	}
