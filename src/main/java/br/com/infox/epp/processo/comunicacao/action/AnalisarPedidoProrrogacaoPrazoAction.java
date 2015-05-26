@@ -184,7 +184,7 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 	
 	public boolean isPedidoDentroDoPrazo(DestinatarioBean bean){
 		Date dataLimiteCumprimento = getDataLimiteCumprimento(bean);
-		if(dataLimiteCumprimento.after(new Date())){
+		if(dataLimiteCumprimento.after(new Date()) || prorrogacaoPrazoService.hasPedidoProrrogacaoEmAberto(bean.getComunicacao())){
 			return true;
 		}
 		return false;
