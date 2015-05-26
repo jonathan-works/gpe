@@ -1,8 +1,8 @@
 package br.com.infox.epp.processo.comunicacao.action;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
@@ -98,10 +98,12 @@ public class RespostaComunicacaoAction implements Serializable {
 	private List<ClassificacaoDocumento> classificacoesEditor;
 	private List<ClassificacaoDocumento> classificacoesAnexo;
 	private List<ModeloDocumento> modelosDocumento;
+	private String modeloDocumento2;
 	
 	private ModeloDocumento modeloDocumento;
 	
 	private Documento documentoEdicao;
+	private boolean possivelMostrarBotaoEnvio = false;
 	
 	@Create
 	public void init() {
@@ -117,6 +119,7 @@ public class RespostaComunicacaoAction implements Serializable {
 		newDocumentoEdicao();
 		initClassificacoes();
 		prazoResposta = prazoComunicacaoService.contabilizarPrazoCumprimento(processoComunicacao);
+		verificarPossibilidadeEnvioResposta();
 	}
 
 	public Long getIdDestinatario(){
@@ -137,7 +140,7 @@ public class RespostaComunicacaoAction implements Serializable {
 		}
 		return documentosComunicacao;
 	}
-		
+	
 	public void assignModeloDocumento() {
 		if (modeloDocumento == null) {
 			documentoEdicao.getDocumentoBin().setModeloDocumento("");
@@ -146,20 +149,29 @@ public class RespostaComunicacaoAction implements Serializable {
 		}
 	}
 	
+	public boolean isPossivelMostrarBotaoEnvio() {
+		return possivelMostrarBotaoEnvio;
+	}
+	
 	public void gravarResposta() {
 		if (Strings.isNullOrEmpty(documentoEdicao.getDocumentoBin().getModeloDocumento())) {
 			FacesMessages.instance().add("Insira texto no editor");
 			return;
 		}
 		try {
-			documentoEdicao = documentoManager.gravarDocumentoNoProcesso(processoRaiz, documentoEdicao); 
-			documentoComunicacaoService.vincularDocumentoRespostaComunicacao(documentoEdicao, processoComunicacao);
+			if (!documentoManager.contains(documentoEdicao)) {
+				documentoEdicao = documentoManager.gravarDocumentoNoProcesso(processoRaiz, documentoEdicao); 
+				documentoComunicacaoService.vincularDocumentoRespostaComunicacao(documentoEdicao, processoComunicacao);
+			} else {
+				documentoManager.update(documentoEdicao);
+			}
 			newDocumentoEdicao();
 			FacesMessages.instance().add("Registro gravado com sucesso");
 		} catch (DAOException e) {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);
 		}
+		verificarPossibilidadeEnvioResposta();
 	}
 	
 	public void newDocumentoEdicao() {
@@ -181,21 +193,20 @@ public class RespostaComunicacaoAction implements Serializable {
 			actionMessagesService.handleDAOException(e);
 		}
 		documentoUploader.clear();
+		verificarPossibilidadeEnvioResposta();
 	}
 	
 	public void enviarRespostaComunicacao(){
-		List<Documento> documentosResposta = respostaComunicacaoList.list();
-		Iterator<Documento> iteratorResposta = documentosResposta.iterator();
-		while (iteratorResposta.hasNext()){
-			Documento documento = iteratorResposta.next();
-			if(!assinaturaDocumentoService.isDocumentoTotalmenteAssinado(documento)){
-				iteratorResposta.remove();
-			}
-		}
+		List<Documento> documentosResposta = new ArrayList<>(respostaComunicacaoList.list());
 		try {
-			respostaComunicacaoService.enviarResposta(documentosResposta);
-			initClassificacoes();
-			FacesMessages.instance().add("Resposta enviada com sucesso");
+			if(!documentosResposta.isEmpty()){
+				respostaComunicacaoService.enviarResposta(documentosResposta);
+				initClassificacoes();
+				FacesMessages.instance().add("Resposta enviada com sucesso");
+				modelosDocumento = null;
+				newDocumentoEdicao();
+				initClassificacoes();
+			}
 		} catch (DAOException e) {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);
@@ -302,5 +313,16 @@ public class RespostaComunicacaoAction implements Serializable {
 	private void initClassificacoes() {
 		classificacoesEditor = documentoComunicacaoService.getClassificacoesDocumentoDisponiveisRespostaComunicacao(destinatario, true);
 		classificacoesAnexo = documentoComunicacaoService.getClassificacoesDocumentoDisponiveisRespostaComunicacao(destinatario, false);
+	}
+	
+	public void verificarPossibilidadeEnvioResposta() {
+		possivelMostrarBotaoEnvio = true;
+		List<Documento> documentosResposta = respostaComunicacaoList.list();
+		for (Documento documento : documentosResposta) {
+			if(!assinaturaDocumentoService.isDocumentoTotalmenteAssinado(documento) || documento.getDocumentoBin().isMinuta()) {
+				possivelMostrarBotaoEnvio = false;
+				break;
+			}
+		}
 	}
 }
