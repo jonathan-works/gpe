@@ -49,7 +49,7 @@
                             mode="ajax"
                             target="taskNode"
                             id="menuTaskNode"
-                            rendered="#{s:hasPermission('/pages/Caixa/listView.seam', 'access')}">
+                            rendered="#{security.checkPage('/pages/Caixa/listView.seam')}">
                             <rich:menuItem
                                 label="#{infoxMessages['caixa.menu.novaCaixa']}"
                                 icon="#{wiSkin.imageFolder}/add.gif"
@@ -70,7 +70,7 @@
                                 id="menuCaixa"
                                 mode="ajax"
                                 target="caixaNode"
-                                rendered="#{s:hasPermission('/pages/Caixa/listView.seam', 'access')}">
+                                rendered="#{security.checkPage('/pages/Caixa/listView.seam')}">
                                 <rich:menuItem
                                     label="#{infoxMessages['caixa.menu.editaCaixa']}"
                                     icon="#{wiSkin.imageFolder}/mod/edit.gif"

@@ -305,6 +305,7 @@ public class Authenticator implements Serializable {
 
     public void unAuthenticate() throws DAOException {
         Identity.instance().unAuthenticate();
+        Identity.instance().logout();
         limparContexto();
     }
 

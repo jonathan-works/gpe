@@ -65,7 +65,7 @@
                         </wi:toolBar>
                         <a:commandLink
                             id="setPrioridadeLink"
-                            rendered="#{s:hasPermission('/pages/Processo/Consulta/setPrioridadeProcesso', 'access')}"
+                            rendered="#{security.checkPage('/pages/Processo/Consulta/setPrioridadeProcesso')}"
                             execute="@this"
                             render="prioridadeProcessoPanel"
                             limitRender="true"

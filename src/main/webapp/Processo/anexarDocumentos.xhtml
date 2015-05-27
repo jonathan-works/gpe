@@ -62,7 +62,7 @@
             value="#{documentoEditor.pasta}"
             items="#{pastaAction.getPastaListComRestricaoEscrita()}"
             required="true"
-            rendered="#{s:hasPermission('/pages/Pasta/moverDocumento', 'access')}"
+            rendered="#{security.checkPage('/pages/Pasta/moverDocumento')}"
             showLabelSelecione="false">
             <a:ajax
                 event="change"
@@ -165,7 +165,7 @@
             value="#{documentoUploader.pasta}"
             items="#{pastaAction.getPastaListComRestricaoEscrita()}"
             required="false"
-            rendered="#{s:hasPermission('/pages/Pasta/moverDocumento', 'access')}"
+            rendered="#{security.checkPage('/pages/Pasta/moverDocumento')}"
             showLabelSelecione="false">
             <a:ajax
                 event="change"

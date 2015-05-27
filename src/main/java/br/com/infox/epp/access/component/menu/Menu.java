@@ -12,12 +12,13 @@ import javax.naming.NamingException;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.contexts.Contexts;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jboss.seam.security.Identity;
 import org.richfaces.event.DropEvent;
 
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.system.PropertiesLoader;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.path.PathResolver;
 import br.com.infox.seam.security.SecurityUtil;
 
@@ -54,6 +55,7 @@ public class Menu implements Serializable {
      * @param items
      */
     public void setItems(List<String> items) {
+        SecurityUtil securityUtil = BeanManager.INSTANCE.getReference(SecurityUtil.class);
         try {
             InitialContext ic = new InitialContext();
             PropertiesLoader propertiesLoader = (PropertiesLoader) ic.lookup(PropertiesLoader.JNDI_PORTABLE_NAME);
@@ -80,7 +82,7 @@ public class Menu implements Serializable {
                     url = split[1];
                 }
                 String pageRole = SecurityUtil.PAGES_PREFIX + url;
-                if (Identity.instance().hasPermission(pageRole, "access")) {
+                if (securityUtil.checkPage(pageRole)) {
                     buildItem(key, url);
                 }
             } catch (Exception e) {

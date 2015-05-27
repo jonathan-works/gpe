@@ -55,7 +55,7 @@
                         name="tabRecebidas"
                         title="#{infoxMessages['painel.comunicacao.tabRecebidas']}"
                         render="tabPanelComunicaoEletronicas"
-                        rendered="#{s:hasPermission('/pages/Painel/comunicacoesRecebidas.seam', 'access')}"
+                        rendered="#{security.checkPage('/pages/Painel/comunicacoesRecebidas.seam')}"
                         action="#{painelUsuarioController.refresh()}">
                         <s:div id="tabRecebidasDiv"
                             rendered="#{painelUsuarioController.tab eq 'comunicacao' and painelUsuarioController.tabComunicacaoEletronica eq 'tabRecebidas'}">
@@ -152,7 +152,7 @@
                         name="tabExpedidas"
                         title="#{infoxMessages['painel.comunicacao.tabExpedidas']}"
                         render="tabPanelComunicaoEletronicas"
-                        rendered="#{s:hasPermission('/pages/Painel/comunicacoesExpedidas.seam', 'access')}"
+                        rendered="#{security.checkPage('/pages/Painel/comunicacoesExpedidas.seam')}"
                         action="#{painelUsuarioController.refresh()}">
                         <s:div id="tabExpedidasDiv"
                             rendered="#{painelUsuarioController.tab eq 'comunicacao' and painelUsuarioController.tabComunicacaoEletronica eq 'tabExpedidas'}">
@@ -250,7 +250,7 @@
 		
 		<infox:tab id="comunicacoesNaoEletronicas" name="comunicacao_nao_eletronica" render="painelProcessosComunicacaoNaoEletronica"
         	limitRender="true" action="#{painelTreeHandler.clearTree()}"
-            rendered="#{s:hasPermission('/pages/Painel/comunicacoesRecebidas.seam', 'access')}"
+            rendered="#{security.checkPage('/pages/Painel/comunicacoesRecebidas.seam')}"
           	title="#{infoxMessages['painel.comunicacaoNaoEletronicaTab']}" >
         	<s:div rendered="#{painelUsuarioController.tab eq 'comunicacao_nao_eletronica'}">
 	        	<s:div id="comunicacoesNaoEletronicasTarefasDiv" styleClass="p-caixas" >
