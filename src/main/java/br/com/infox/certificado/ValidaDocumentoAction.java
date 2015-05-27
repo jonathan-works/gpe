@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import javax.faces.event.AbortProcessingException;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -177,6 +179,7 @@ public class ValidaDocumentoAction implements Serializable {
 			} catch (CertificadoException | AssinaturaException | DAOException e) {
 				LOG.error("assinaDocumento(String, String, UsuarioPerfil)", e);
 				FacesMessages.instance().add(Severity.ERROR, e.getMessage());
+				throw new AbortProcessingException();
 			}
 		}
 	}
