@@ -34,7 +34,7 @@
           location = '#{pathResolver.contextPath}/Painel/list.seam'; 
         }
       </h:outputScript>
-      <s:div rendered="#{s:hasPermission('/pages/Painel/Comunicacao/painel.seam', 'access')}">
+      <s:div rendered="#{security.checkPage('/pages/Painel/Comunicacao/painel.seam')}">
 	   	  <button class="buttons" 
 	      	onclick="location.href = '#{pathResolver.contextPath}/Painel/Comunicacao/painel.seam';">
 	      	#{infoxMessages['painel.comunicacoes']}
@@ -50,7 +50,7 @@
         <infox:tab id="documentos"
           	name="documento" render="painelProcessosDocumento"
           	limitRender="true" action="#{painelTreeHandler.clearTree()}"
-          	title="#{infoxMessages['painel.documentoTab']}" rendered="#{s:hasPermission('/pages/Painel/fluxoDocumento.seam', 'access')}">
+          	title="#{infoxMessages['painel.documentoTab']}" rendered="#{security.checkPage('/pages/Painel/fluxoDocumento.seam')}">
           <s:div rendered="#{painelUsuarioController.tab eq 'documento'}">
 	          <s:div id="documentosTarefasDiv" styleClass="p-caixas" >
 	          	<h:form id="treeProcessoDocumentoForm">

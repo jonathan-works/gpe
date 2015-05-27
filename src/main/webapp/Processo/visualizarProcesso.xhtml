@@ -68,7 +68,7 @@
             <infox:tab
                 id="tabEntrada"
                 name="tabEntrada"
-                rendered="#{!empty taskInstanceView.fields and s:hasPermission('/pages/Processo/abaEntrada', 'access')}"
+                rendered="#{!empty taskInstanceView.fields and security.checkPage('/pages/Processo/abaEntrada')}"
                 status=":status"
                 title="#{infoxMessages['movimentar.entrada.titleTab']}">
                 <ui:decorate
@@ -85,7 +85,7 @@
             <infox:tab
                 id="tabAnexos"
                 name="tabAnexos"
-                rendered="#{processoEpaHome.managed and s:hasPermission('/pages/Processo/abaAnexos', 'access')}"
+                rendered="#{processoEpaHome.managed and security.checkPage('/pages/Processo/abaAnexos')}"
                 status=":status"
                 action="#{documentoList.entity.setProcesso(processoEpaHome.instance)}"
                 actionListener="#{documentoProcessoAction.onClickDocumentosTab()}"
@@ -98,7 +98,7 @@
                 id="tabPartesDoProcesso"
                 name="tabPartesDoProcesso"
                 status=":status"
-                rendered="#{home.hasPartes() and s:hasPermission('/pages/Processo/abaPartesProcesso', 'access')}"
+                rendered="#{home.hasPartes() and security.checkPage('/pages/Processo/abaPartesProcesso')}"
                 action="#{participanteProcessoList.entity.setProcesso(home.instance)}"
                 title="#{infoxMessages['participanteProcesso.participantes']}">
                 <ui:decorate
@@ -111,7 +111,7 @@
             <infox:tab
                 id="tabAnexar"
                 name="tabAnexar"
-                rendered="#{s:hasPermission('/pages/Processo/abaAnexar', 'access')}"
+                rendered="#{security.checkPage('/pages/Processo/abaAnexar')}"
                 status=":status"
                 title="#{infoxMessages['movimentar.anexar.titleTab']}"
                 action="#{anexoController.onClickTabAnexar(processoEpaHome.instance)}">
@@ -127,7 +127,7 @@
                 id="tabComunicacao"
                 name="tabComunicacao"
                 status=":status"
-                rendered="#{s:hasPermission('abaComunicacao', 'access')}"
+                rendered="#{security.checkPage('abaComunicacao')}"
                 title="Comunicação"
                 action="#{comunicacaoAction.clear}">
                 <ui:include src="comunicacao.xhtml" />
@@ -135,7 +135,7 @@
             <infox:tab
                 id="tabMovimentacoes"
                 name="tabMovimentacoes"
-                rendered="#{processoEpaHome.managed and s:hasPermission('/pages/Processo/abaMovimentacoes', 'access')}"
+                rendered="#{processoEpaHome.managed and security.checkPage('/pages/Processo/abaMovimentacoes')}"
                 status=":status"
                 title="#{infoxMessages['acaoProcesso.menuText']}">
                 <ui:decorate
@@ -151,7 +151,7 @@
                 name="tabSigiloProcesso"
                 status=":status"
                 title="#{infoxMessages['sigiloProcesso.sigiloProcesso']}"
-                rendered="#{s:hasPermission('/pages/Processo/abaSigiloProcesso', 'access')}">
+                rendered="#{security.checkPage('/pages/Processo/abaSigiloProcesso')}">
                 <ui:decorate
                     id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
@@ -164,7 +164,7 @@
                 name="tabSigiloDocumento"
                 status=":status"
                 title="#{infoxMessages['sigiloDocumento.sigiloDocumento']}"
-                rendered="#{s:hasPermission('/pages/Processo/abaSigiloDocumento', 'access')}">
+                rendered="#{security.checkPage('/pages/Processo/abaSigiloDocumento')}">
                 <ui:decorate
                     id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
@@ -178,7 +178,7 @@
             <infox:tab
                 id="documentoFisicoTab"
                 name="documentoFisicoTab"
-                rendered="#{home.isManaged() and s:hasPermission('/pages/Processo/abaDocumentoFisico', 'access')}"
+                rendered="#{home.isManaged() and security.checkPage('/pages/Processo/abaDocumentoFisico')}"
                 action="#{localizacaoDocumentoFisicoCrudAction.setProcesso(processoEpaHome.instance)}"
                 title="#{infoxMessages['documentoFisico.titleTab']}">
                 <ui:decorate

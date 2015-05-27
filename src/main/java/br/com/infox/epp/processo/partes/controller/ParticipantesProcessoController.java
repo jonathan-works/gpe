@@ -3,11 +3,13 @@ package br.com.infox.epp.processo.partes.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.security.Identity;
 
 import br.com.infox.epp.access.component.tree.ParticipanteProcessoTreeHandler;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.entity.Processo;
@@ -15,9 +17,11 @@ import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.partes.entity.TipoParte;
 import br.com.infox.epp.processo.partes.manager.TipoParteManager;
 import br.com.infox.epp.processo.partes.type.ParteProcessoEnum;
+import br.com.infox.seam.security.SecurityUtil;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(ParticipantesProcessoController.NAME)
+@ContextDependency
 public class ParticipantesProcessoController extends AbstractParticipantesController {
 
 	private static final long serialVersionUID = 1L;
@@ -27,6 +31,8 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
 
     @In
     private TipoParteManager tipoParteManager;
+    @Inject
+    private SecurityUtil securityUtil;
     
     private List<TipoParte> tipoPartes;
     private ParticipanteProcessoTreeHandler tree = ComponentUtil.getComponent(ParticipanteProcessoTreeHandler.NAME);
@@ -93,12 +99,12 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     }
     
     public boolean podeInativarPartesFisicas() {
-        return Identity.instance().hasPermission(RECURSO_EXCLUIR, "access")
+        return securityUtil.checkPage(RECURSO_EXCLUIR)
         		&& getPartesAtivas(filtrar(getProcesso().getParticipantes(), TipoPessoaEnum.F)).size() > QUANTIDADE_MINIMA_PARTES;
     }
 
     public boolean podeInativarPartesJuridicas() {
-        return Identity.instance().hasPermission(RECURSO_EXCLUIR, "access")
+        return securityUtil.checkPage(RECURSO_EXCLUIR)
         		&& getPartesAtivas(filtrar(getProcesso().getParticipantes(), TipoPessoaEnum.J)).size() > QUANTIDADE_MINIMA_PARTES;
     }
     
@@ -123,7 +129,7 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     public boolean podeAdicionarPartesFisicas() {
         return getNatureza().getHasPartes()
                 && !apenasPessoaJuridica()
-                && Identity.instance().hasPermission(RECURSO_ADICIONAR, "access")
+                && securityUtil.checkPage(RECURSO_ADICIONAR)
                 && (getNatureza().getNumeroPartesFisicas() == QUANTIDADE_INFINITA_PARTES || getPartesAtivas(filtrar(getProcesso().getParticipantes(), TipoPessoaEnum.F)).size() < getNatureza().getNumeroPartesFisicas());
     }
 
@@ -131,7 +137,7 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     public boolean podeAdicionarPartesJuridicas() {
         return getNatureza().getHasPartes()
                 && !apenasPessoaFisica()
-                && Identity.instance().hasPermission(RECURSO_ADICIONAR, "access")
+                && securityUtil.checkPage(RECURSO_ADICIONAR)
                 && (getNatureza().getNumeroPartesJuridicas() == QUANTIDADE_INFINITA_PARTES || getPartesAtivas(filtrar(getProcesso().getParticipantes(), TipoPessoaEnum.J)).size() < getNatureza().getNumeroPartesJuridicas());
     }
 

@@ -17,7 +17,7 @@
       styleClass="folder-ul"
       rowClass="folder-li"
       var="pasta">
-      <s:div rendered="#{s:hasPermission('/pages/Pasta/visualizarPasta', 'access') or pastaAction.canSee(pasta)}">
+      <s:div rendered="#{security.checkPage('/pages/Pasta/visualizarPasta') or pastaAction.canSee(pasta)}">
 	      <h:graphicImage
 	        url="#{wiSkin.imageFolder}/folder.png"
 	        rendered="true"
@@ -28,7 +28,7 @@
     <wi:commandButton
       id="addPastaBtn"
       value="#{infoxMessages['documentoProcesso.addFolder']}"
-      rendered="#{s:hasPermission('/pages/Pasta/adicionarPasta', 'access')}"
+      rendered="#{security.checkPage('/pages/Pasta/adicionarPasta')}"
       onclick="#{rich:component('anexarPastaPanel')}.show();" />
   </rich:collapsiblePanel>
   <br />
@@ -67,7 +67,7 @@
             value="#{documentoEditor.pasta}"
             items="#{pastaAction.pastaList}"
             required="true"
-            rendered="#{s:hasPermission('/pages/Pasta/moverDocumento', 'access')}"
+            rendered="#{security.checkPage('/pages/Pasta/moverDocumento')}"
             showLabelSelecione="false">
             <a:ajax
                 event="change"
@@ -170,7 +170,7 @@
             value="#{documentoUploader.pasta}"
             items="#{pastaAction.pastaList}"
             required="false"
-            rendered="#{s:hasPermission('/pages/Pasta/moverDocumento', 'access')}"
+            rendered="#{security.checkPage('/pages/Pasta/moverDocumento')}"
             showLabelSelecione="false">
             <a:ajax
                 event="change"

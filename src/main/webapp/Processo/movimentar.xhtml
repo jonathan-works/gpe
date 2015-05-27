@@ -230,7 +230,7 @@
                 id="tabComunicacao"
                 name="tabComunicacao"
                 status=":status"
-                rendered="#{s:hasPermission('abaComunicacao', 'access')}"
+                rendered="#{security.checkPage('abaComunicacao')}"
                 title="Comunicação"
                 action="#{comunicacaoAction.clear}">
                 <ui:include src="comunicacao.xhtml" />

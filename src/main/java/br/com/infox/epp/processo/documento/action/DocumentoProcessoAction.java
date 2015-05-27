@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -17,6 +19,7 @@ import org.jboss.seam.security.Identity;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -28,11 +31,13 @@ import br.com.infox.epp.processo.documento.manager.HistoricoStatusDocumentoManag
 import br.com.infox.epp.processo.documento.type.TipoAlteracaoDocumento;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.Parametros;
+import br.com.infox.seam.security.SecurityUtil;
 
 @AutoCreate
 @Name(DocumentoProcessoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 @Transactional
+@ContextDependency
 public class DocumentoProcessoAction implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -51,7 +56,8 @@ public class DocumentoProcessoAction implements Serializable {
 	@In
 	private ActionMessagesService actionMessagesService;
 	
-	
+	@Inject
+	private SecurityUtil securityUtil;
 
 	@In
 	private HistoricoStatusDocumentoManager historicoStatusDocumentoManager;
@@ -134,7 +140,7 @@ public class DocumentoProcessoAction implements Serializable {
 	}
 	
 	public boolean podeUsuarioExcluirRestaurar(){
-		return Identity.instance().hasPermission("/pages/Processo/excluirDocumentoProcesso", "access");
+	    return securityUtil.checkPage("/pages/Processo/excluirDocumentoProcesso");
 	}
 	
 	public boolean podeUsuarioVerHistorico(){
