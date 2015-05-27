@@ -211,6 +211,7 @@ public class RespostaComunicacaoAction implements Serializable {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);
 		}
+		verificarPossibilidadeEnvioResposta();
 	}
 	
 	public void removerDocumento(Documento documento) {
@@ -225,6 +226,7 @@ public class RespostaComunicacaoAction implements Serializable {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);
 		}
+		verificarPossibilidadeEnvioResposta();
 	}
 	
 	public boolean podeRemoverDocumento(Documento documento) {
@@ -318,6 +320,9 @@ public class RespostaComunicacaoAction implements Serializable {
 	public void verificarPossibilidadeEnvioResposta() {
 		possivelMostrarBotaoEnvio = true;
 		List<Documento> documentosResposta = respostaComunicacaoList.list();
+		if (documentosResposta == null || documentosResposta.isEmpty()) {
+			possivelMostrarBotaoEnvio = false;
+		}
 		for (Documento documento : documentosResposta) {
 			if(!assinaturaDocumentoService.isDocumentoTotalmenteAssinado(documento) || documento.getDocumentoBin().isMinuta()) {
 				possivelMostrarBotaoEnvio = false;
