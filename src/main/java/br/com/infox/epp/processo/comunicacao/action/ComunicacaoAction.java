@@ -141,7 +141,7 @@ public class ComunicacaoAction implements Serializable {
 	
 	@Create
 	public void init() {
-		clearCache();
+		clear();
 		processo = JbpmUtil.getProcesso();
 		modeloComunicacaoRascunhoList.setProcesso(processo);
 	}
@@ -156,6 +156,7 @@ public class ComunicacaoAction implements Serializable {
 	public void clearCacheModelos() {
 		this.comunicacoes = null;
 		this.destinatario = null;
+		this.destinatarios = null;
 	}
 	
 	public List<DestinatarioBean> getDestinatarios() {
@@ -429,6 +430,7 @@ public class ComunicacaoAction implements Serializable {
 		documentoUploader.clear();		
 		documentoResposta = false;
 		documentosListResposta = null;
+		
 	}
 	
 	public String getTextoCiencia() {
@@ -486,16 +488,4 @@ public class ComunicacaoAction implements Serializable {
 		this.documentoResposta = documentoResposta;
 	}
 
-	private void clearCache() {
-		this.documentosDestinatario = null;
-		documentos = false;
-		
-		prorrogacaoPrazo = false;
-		ciencia = false;
-		dataCiencia = null;
-		documentoUploader.clear();
-		
-		documentoResposta = false;
-		documentosListResposta = null;
-	}
 }
