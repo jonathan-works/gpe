@@ -31,14 +31,14 @@
             value="#{usuarioLoginList.entity.nomeUsuario}"
             maxlength="150" />
           <wi:tree id="localizacao"
-               assignTo="perfilTemplateList.entity.localizacao"
-               tree="#{estruturaLocalizacoesPerfilTree}"
+               assignTo="usuarioLoginList.localizacao"
+               tree="#{localizacaoTree}"
                icon="#{wiSkin.imageFolder}/nivelTree.gif"
                iconLeaf="#{wiSkin.imageFolder}/file.gif"
                label="#{infoxMessages['perfil.localizacao']}" 
                styleClass="#{empty item.parent ? 'tree-notselectable' : ''}"/>
           <wi:tree id="papel"
-               assignTo="perfilTemplateList.entity.papel"
+               assignTo="usuarioLoginList.papel"
                tree="#{papelTree}"
                icon="#{wiSkin.imageFolder}/nivelTree.gif"
                iconLeaf="#{wiSkin.imageFolder}/file.gif"
@@ -265,73 +265,8 @@
       <ui:include src="dadosPersonalizadosDaPessoa.xhtml"/>
     </infox:tab>
     
-    <infox:tab id="usuarioAdvogado"
-      	rendered="#{usuarioLoginCrudAction.isManaged()}"
-      	title="#{infoxMessages['usuario.advogadoTitleTab']}"
-      	name="usuarioAdvogado"
-      	action="#{usuarioLoginController.onClickPerfilTab()}">
-      	
-      	<wi:dataTable
-        	values="#{advogadosCrudAction.enderecos}"
-        	tableTitle="#{infoxMessages['pessoaFisicaAdvogado.title']}"
-        	id="advogadosAction"
-        	rowId="#{row.cpf}"
-        	listReRender="divGridLU"
-        	hideOrder="true"
-        	showSearchForm="false"
-        	panelStyleClass="full-sized short-margin-top"
-        	showGrid="#{not empty usuarioLoginCrudAction.instance.pessoaFisica}"
-        	showToolbarColumn="false">
-        	
-        	<ui:define name="toolBar">
-			</ui:define>
-        
-        	<wi:columnOutputText columnId="UF"
-          		columnHeader="#{infoxMessages['advogado.uf']}"
-          		value="#{row.uf}" />
-        	<wi:columnOutputText columnId="advogado.inscricao"
-          		columnHeader="#{infoxMessages['advogado.inscricao']}"
-          		value="#{row.inscricao}" />  	
-        	<wi:columnOutputText columnId="organizacao"
-          		columnHeader="#{infoxMessages['advogado.organizacao']}"
-          		value="#{row.organizacao}" />
-        	<wi:columnOutputText columnId="nomeMae"
-          		columnHeader="#{infoxMessages['advogado.nomeMae']}"
-          		value="#{row.nomeMae}" />  	  	
-        	<wi:columnOutputText columnId="nomePai"
-          		columnHeader="#{infoxMessages['advogado.nomePai']}"
-          		value="#{row.nomePai}" />
-        	<wi:columnOutputText columnId="tipoInscricao"
-          		columnHeader="#{infoxMessages['advogado.tipoInscricao']}"
-          		value="#{row.tipoInscricao}" />
-        	<wi:columnOutputText columnId="situacao"
-          		columnHeader="#{infoxMessages['advogado.situacao']}"
-          		value="#{row.situacao}" />
-         	<wi:columnOutputText columnId="endereco"
-          		columnHeader="#{infoxMessages['advogado.endereco']}"> 	  
-         		<ui:repeat var="end" value="#{row.endereco}">
-					#{end.logradouro} -
-					#{end.bairro} -
-					#{end.cidade}
-					#{end.cep}
-				</ui:repeat>
-			</wi:columnOutputText>
-        	<wi:columnOutputText columnId="contato"
-          		columnHeader="#{infoxMessages['advogado.telefone']}">
-          		<ui:repeat var="tel" value="#{row.contato}">
-					#{tel.ddd} -
-					#{tel.telefone}
-				</ui:repeat>
-			</wi:columnOutputText>
-			<wi:columnOutputText columnId="email"
-          		columnHeader="#{infoxMessages['advogado.email']}"
-          		value="#{row.email}"/>
-          	<wi:columnOutputText columnId="registroPrincipal"
-          		columnHeader="#{infoxMessages['advogado.registroPrincipal']}">
-          		<h:graphicImage value="#{wiSkin.imageFolder}/mod/n_checked.png" />
-          	</wi:columnOutputText>	
-       	</wi:dataTable>   		
-    </infox:tab>
+    <ui:include src="abasPersonalizadasUsuario.xhtml"/>
+    
     <infox:tab
       id="usuarioPerfil"
       rendered="#{usuarioLoginCrudAction.isManaged()}"
