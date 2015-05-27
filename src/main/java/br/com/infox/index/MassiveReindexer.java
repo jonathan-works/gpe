@@ -1,5 +1,8 @@
 package br.com.infox.index;
 
+import org.hibernate.Session;
+import org.hibernate.search.FullTextSession;
+import org.hibernate.search.Search;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
@@ -28,13 +31,13 @@ public class MassiveReindexer {
      * Reconstrói os índices do Lucene sempre que o epp é iniciado
      * */
     public void init() {
-//        Session session = sessionAssistant.getSession();
-//        FullTextSession fullTextSession = Search.getFullTextSession(session);
-//        try {
-//            fullTextSession.createIndexer().startAndWait();
-//        } catch (InterruptedException e) {
-//            LOG.error("Não possível realizar a indexação do lucene", e);
-//        }
+        Session session = sessionAssistant.getSession();
+        FullTextSession fullTextSession = Search.getFullTextSession(session);
+        try {
+            fullTextSession.createIndexer().startAndWait();
+        } catch (InterruptedException e) {
+            LOG.error("Não possível realizar a indexação do lucene", e);
+        }
     }
     
 }
