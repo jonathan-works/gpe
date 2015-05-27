@@ -2,9 +2,11 @@ package br.com.infox.epp.access.manager.ldap;
 
 import static java.text.MessageFormat.format;
 
-import java.io.Serializable;
 import java.util.Hashtable;
 
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
@@ -15,19 +17,14 @@ import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.type.UsuarioEnum;
 
-@Name(LDAPManager.NAME)
-@Scope(ScopeType.EVENT)
-public class LDAPManager implements Serializable {
-    private static final long serialVersionUID = 2543253079848485017L;
-    public static final String NAME = "ldapAuthenticationManager";
-    private static final String CONTEXT_FACTORY = "com.sun.jndi.ldap.LdapCtxFactory";
+@Stateless
+@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+public class LDAPManager {
+	
+    protected static final String CONTEXT_FACTORY = "com.sun.jndi.ldap.LdapCtxFactory";
 
     public enum SecurityAuthenticationType {
         NONE, SIMPLE, SASL_MECH
@@ -59,10 +56,9 @@ public class LDAPManager implements Serializable {
         return usuarioLogin;
     }
 
-    public UsuarioLogin autenticarLDAP(final String usuario,
-            final String senha, final String providerUrl,
-            final String domainName) throws NamingException {
-        final Hashtable<String, String> env = new Hashtable<>();
+    public UsuarioLogin autenticarLDAP(String usuario, String senha, String providerUrl, String domainName) throws NamingException {
+        
+    	Hashtable<String, String> env = new Hashtable<>();
         env.put(Context.INITIAL_CONTEXT_FACTORY, CONTEXT_FACTORY);
         env.put(Context.SECURITY_AUTHENTICATION, SecurityAuthenticationType.SIMPLE.name());
         env.put(Context.SECURITY_PRINCIPAL, usuario);

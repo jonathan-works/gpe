@@ -46,6 +46,7 @@ import br.com.infox.epp.access.manager.UsuarioPerfilManager;
 import br.com.infox.epp.access.manager.ldap.LDAPManager;
 import br.com.infox.epp.access.service.AuthenticatorService;
 import br.com.infox.epp.access.service.PasswordService;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.system.util.ParametroUtil;
@@ -229,7 +230,7 @@ public class Authenticator implements Serializable {
     private boolean ldapLoginExists(final Credentials credentials) {
         boolean ldapUserExists = false;
         try {
-            final LDAPManager ldapManager = (LDAPManager) Component.getInstance(LDAPManager.NAME);
+            LDAPManager ldapManager = BeanManager.INSTANCE.getReference(LDAPManager.class);
             UsuarioLogin user = ldapManager.autenticarLDAP(credentials.getUsername(), credentials.getPassword(), getProviderUrl(), getDomainName());
             usuarioLoginManager.persist(user);
             ldapUserExists = user != null;
