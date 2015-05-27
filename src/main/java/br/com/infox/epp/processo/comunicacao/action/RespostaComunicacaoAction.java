@@ -23,6 +23,7 @@ import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.DocumentoRespostaComunicacao;
 import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
 import br.com.infox.epp.processo.comunicacao.list.DocumentoComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.list.RespostaComunicacaoList;
@@ -197,12 +198,11 @@ public class RespostaComunicacaoAction implements Serializable {
 	}
 	
 	public void enviarRespostaComunicacao(){
-		List<Documento> documentosResposta = new ArrayList<>(respostaComunicacaoList.list());
+		List<Documento> documentosRespostaComunicacao = getDocumentoRespostaList();
 		try {
-			if(!documentosResposta.isEmpty()){
+			if(!documentosRespostaComunicacao.isEmpty()){
 			    long processId = BusinessProcess.instance().getProcessId();
 			    long taskId = BusinessProcess.instance().getTaskId();
-				respostaComunicacaoService.enviarResposta(documentosResposta);
 				BusinessProcess.instance().setProcessId(processId);
 				BusinessProcess.instance().setTaskId(taskId);
 				initClassificacoes();
@@ -323,7 +323,7 @@ public class RespostaComunicacaoAction implements Serializable {
 	
 	public void verificarPossibilidadeEnvioResposta() {
 		possivelMostrarBotaoEnvio = true;
-		List<Documento> documentosResposta = respostaComunicacaoList.list();
+		List<Documento> documentosResposta = getDocumentoRespostaList();
 		if (documentosResposta == null || documentosResposta.isEmpty()) {
 			possivelMostrarBotaoEnvio = false;
 		}
@@ -333,5 +333,14 @@ public class RespostaComunicacaoAction implements Serializable {
 				break;
 			}
 		}
+	}
+	
+	private List<Documento> getDocumentoRespostaList(){
+	    List<DocumentoRespostaComunicacao> documentosRespostaComunicacao = new ArrayList<DocumentoRespostaComunicacao>(respostaComunicacaoList.list());
+	    List<Documento> documentosResposta = new ArrayList<Documento>();
+	    for (DocumentoRespostaComunicacao documentoRespostaComunicacao : documentosRespostaComunicacao) {
+            documentosResposta.add(documentoRespostaComunicacao.getDocumento());
+        }
+	    return documentosResposta;
 	}
 }
