@@ -271,7 +271,7 @@ public class PastaRestricaoAction implements Serializable {
         return PastaRestricaoEnum.R.equals(getRestricaoInstance().getTipoPastaRestricao());
     }
 	
-	public Object getAlvoRestricaoPapel() {
+	public Papel getAlvoRestricaoPapel() {
 	    return alvoRestricaoPapel; 
 	}
 	

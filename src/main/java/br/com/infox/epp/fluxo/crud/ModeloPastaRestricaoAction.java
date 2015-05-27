@@ -310,7 +310,7 @@ public class ModeloPastaRestricaoAction implements Serializable {
 		return getRestricaoInstance().getTipoPastaRestricao() != null;
 	}
 	
-	public Object getAlvoRestricaoPapel() {
+	public Papel getAlvoRestricaoPapel() {
 	    return alvoRestricaoPapel; 
 	}
 	
