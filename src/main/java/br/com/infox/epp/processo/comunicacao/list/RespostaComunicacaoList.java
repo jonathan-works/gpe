@@ -66,4 +66,10 @@ public class RespostaComunicacaoList extends EntityList<DocumentoRespostaComunic
     public void setDescricaoDocumento(String descricaoDocumento) {
         this.descricaoDocumento = descricaoDocumento;
     }
+    
+    @Override
+    public void newInstance() {
+        super.newInstance();
+        this.descricaoDocumento = null;
+    }
 }
