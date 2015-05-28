@@ -39,4 +39,6 @@ public class EppProperties implements Serializable {
     public static final String PROPERTY_TIPO_BANCO_DADOS = "tipoBancoDados";
     public static final String PROPERTY_DATASOURCE_PREFIX = "datasourceJndiPrefix";
     public static final String PROPERTY_TRANSACTION_MANAGER_JNDI = "transactionManager.jndi";
+    
+    public static final String PROPERTY_DESENVOLVIMENTO = "desenvolvimento";
 }
