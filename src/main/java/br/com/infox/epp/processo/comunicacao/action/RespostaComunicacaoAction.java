@@ -203,6 +203,7 @@ public class RespostaComunicacaoAction implements Serializable {
 			if(!documentosRespostaComunicacao.isEmpty()){
 			    long processId = BusinessProcess.instance().getProcessId();
 			    long taskId = BusinessProcess.instance().getTaskId();
+			    respostaComunicacaoService.enviarResposta(documentosRespostaComunicacao);
 				BusinessProcess.instance().setProcessId(processId);
 				BusinessProcess.instance().setTaskId(taskId);
 				initClassificacoes();
