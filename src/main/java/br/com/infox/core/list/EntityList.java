@@ -26,11 +26,9 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.core.util.ExcelExportUtil;
 import br.com.infox.core.util.ReflectionsUtil;
-import br.com.infox.epp.system.EppMessagesContextLoader;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.path.PathResolver;
-import br.com.infox.seam.util.ComponentUtil;
 
 public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 
@@ -301,7 +299,11 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
     }
 
     public String getEntityListName() {
-        return Component.getComponentName(this.getClass());
+    	String componentName = ReflectionsUtil.getCdiComponentName(getClass());
+    	if (componentName == null) {
+    		return Component.getComponentName(this.getClass());
+    	}
+    	return componentName;
     }
 
     protected String getComponentPesquisa() {
