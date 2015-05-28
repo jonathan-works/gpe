@@ -12,6 +12,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
+import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.action.ActionMessagesService;
@@ -98,7 +99,6 @@ public class RespostaComunicacaoAction implements Serializable {
 	private List<ClassificacaoDocumento> classificacoesEditor;
 	private List<ClassificacaoDocumento> classificacoesAnexo;
 	private List<ModeloDocumento> modelosDocumento;
-	private String modeloDocumento2;
 	
 	private ModeloDocumento modeloDocumento;
 	
@@ -200,7 +200,11 @@ public class RespostaComunicacaoAction implements Serializable {
 		List<Documento> documentosResposta = new ArrayList<>(respostaComunicacaoList.list());
 		try {
 			if(!documentosResposta.isEmpty()){
+			    long processId = BusinessProcess.instance().getProcessId();
+			    long taskId = BusinessProcess.instance().getTaskId();
 				respostaComunicacaoService.enviarResposta(documentosResposta);
+				BusinessProcess.instance().setProcessId(processId);
+				BusinessProcess.instance().setTaskId(taskId);
 				initClassificacoes();
 				FacesMessages.instance().add("Resposta enviada com sucesso");
 				modelosDocumento = null;

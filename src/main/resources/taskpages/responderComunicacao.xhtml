@@ -174,7 +174,7 @@
 			<ui:define name="conteudoAdicional">
 				<h:form style="text-align:left">
 					<wi:commandButton id="gravar" value="#{infoxMessages['comunicacao.enviarResposta']}" 
-						action="respostaComunicacaoAction.enviarRespostaComunicacao()" reRender=":movimentarTabPanel:tabSaida" 
+						action="respostaComunicacaoAction.enviarRespostaComunicacao()" reRender="respostasPanel, pageBodyDialogMessage" 
 						rendered="#{respostaComunicacaoAction.possivelMostrarBotaoEnvio}" execute="@this"/>
 				</h:form>
 			</ui:define>
