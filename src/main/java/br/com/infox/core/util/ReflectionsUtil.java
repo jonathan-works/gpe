@@ -9,6 +9,8 @@ import java.lang.reflect.Method;
 
 import javax.inject.Named;
 
+import org.apache.commons.beanutils.BeanUtilsBean;
+
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
