@@ -3,6 +3,8 @@ package br.com.infox.epp.processo.documento.entity;
 import static br.com.infox.epp.processo.documento.query.PastaRestricaoQuery.DELETE_BY_PASTA;
 import static br.com.infox.epp.processo.documento.query.PastaRestricaoQuery.DELETE_BY_PASTA_QUERY;
 import static br.com.infox.epp.processo.documento.query.PastaRestricaoQuery.GET_BY_PASTA;
+import static br.com.infox.epp.processo.documento.query.PastaRestricaoQuery.GET_BY_PASTA_ALVO_TIPO_RESTRICAO;
+import static br.com.infox.epp.processo.documento.query.PastaRestricaoQuery.GET_BY_PASTA_ALVO_TIPO_RESTRICAO_QUERY;
 import static br.com.infox.epp.processo.documento.query.PastaRestricaoQuery.GET_BY_PASTA_QUERY;
 
 import javax.persistence.Column;
@@ -27,7 +29,8 @@ import br.com.infox.epp.processo.documento.type.PastaRestricaoEnum;
 @Table(name = PastaRestricao.TABLE_NAME)
 @NamedQueries({
     @NamedQuery(name = GET_BY_PASTA, query = GET_BY_PASTA_QUERY),
-    @NamedQuery(name = DELETE_BY_PASTA, query = DELETE_BY_PASTA_QUERY)
+    @NamedQuery(name = DELETE_BY_PASTA, query = DELETE_BY_PASTA_QUERY),
+    @NamedQuery(name = GET_BY_PASTA_ALVO_TIPO_RESTRICAO, query = GET_BY_PASTA_ALVO_TIPO_RESTRICAO_QUERY)
 })
 public class PastaRestricao {
     protected static final String TABLE_NAME = "tb_pasta_restricao";
@@ -132,4 +135,30 @@ public class PastaRestricao {
         nova.setDelete(this.getDelete());
         return nova;
     }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PastaRestricao other = (PastaRestricao) obj;
+		if (getId() == null) {
+			if (other.getId() != null)
+				return false;
+		} else if (!getId().equals(other.getId()))
+			return false;
+		return true;
+	}
+    
 }
