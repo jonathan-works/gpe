@@ -411,8 +411,14 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	public boolean podePedirProrrogacaoPrazo(DestinatarioBean bean) {
-		return prorrogacaoPrazoService.canShowClassificacaoProrrogacaoPrazo(bean.getDestinatario()) && isCienciaConfirmada(bean) &&
-				prorrogacaoPrazoService.getDataPedidoProrrogacao(bean.getComunicacao()) == null;
+	    MetadadoProcesso metadadoPrazo = bean.getComunicacao().getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO);
+	    Date dataLimiteCumprimento = metadadoPrazo.getValue();
+	    if (dataLimiteCumprimento != null) {
+	        return prorrogacaoPrazoService.canShowClassificacaoProrrogacaoPrazo(bean.getDestinatario()) &&
+	                prorrogacaoPrazoService.getDataPedidoProrrogacao(bean.getComunicacao()) == null && 
+	                !dataLimiteCumprimento.after(new Date());
+	    }
+	    return false;
 	}
 	
 	public void clear() {
