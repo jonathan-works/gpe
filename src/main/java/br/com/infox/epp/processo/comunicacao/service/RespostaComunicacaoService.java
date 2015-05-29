@@ -103,7 +103,7 @@ public class RespostaComunicacaoService {
 			c.add(Calendar.DAY_OF_MONTH, prazoDestinatario);
 			Date dataFimPrazoDestinatario = DateUtil.getEndOfDay(c.getTime());
 			
-			if (dataCiencia.equals(dataResposta) || dataFimPrazoDestinatario.equals(dataResposta) ||
+			if (dataCiencia.equals(DateUtil.getBeginningOfDay(dataResposta)) || dataFimPrazoDestinatario.equals(DateUtil.getEndOfDay(dataResposta)) ||
 					(dataCiencia.before(dataResposta) && dataFimPrazoDestinatario.after(dataResposta))) {
 				respostaTempestiva = true;
 			}
