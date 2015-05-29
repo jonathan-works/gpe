@@ -416,7 +416,7 @@ public class ComunicacaoAction implements Serializable {
     	    Date dataLimiteCumprimento = metadadoPrazo.getValue();
 	        return prorrogacaoPrazoService.canShowClassificacaoProrrogacaoPrazo(bean.getDestinatario()) &&
 	                prorrogacaoPrazoService.getDataPedidoProrrogacao(bean.getComunicacao()) == null && 
-	                !dataLimiteCumprimento.after(new Date());
+	                dataLimiteCumprimento.after(new Date());
 	    }
 	    return false;
 	}
