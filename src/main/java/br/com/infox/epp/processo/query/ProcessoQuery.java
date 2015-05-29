@@ -190,5 +190,5 @@ public interface ProcessoQuery {
 			+ " and exists (select 1 from MetadadoProcesso mp "
 					+ " where p = mp.processo and  mp.metadadoType = 'prazoDestinatarioComunicacao' ) "
 			+ " and not exists (select 1 from MetadadoProcesso mp "
-					+ " where p = mp.processo and mp.metadadoType = 'dataCumprimento' ) ";
+					+ " where p = mp.processo and mp.metadadoType = 'limiteDataCumprimento' ) ";
 }
