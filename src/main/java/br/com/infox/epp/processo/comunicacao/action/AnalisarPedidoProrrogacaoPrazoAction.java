@@ -129,6 +129,7 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 		setDestinatarioProrrogacaoPrazo(null);
 		setProrrogacaoPrazo(false);
 		setDocumentos(false);
+		setNovoPrazoCumprimento(null);
 	}
 	
 	public void setDestinatarioProrrogacaoPrazo(DestinatarioBean bean){

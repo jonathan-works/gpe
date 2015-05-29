@@ -110,11 +110,9 @@
 			<h:form>
 				<wi:inputDate id="dataNovoPrazoFinal" required="true" showRequired="true" label="#{infoxMessages['comunicacao.novoPrazoAtendimento']}" 
 	    				value="#{analisarPedidoProrrogacaoPrazoAction.novoPrazoCumprimento}" startDate="#{analisarPedidoProrrogacaoPrazoAction.getDataLimiteCumprimento()}"
-                        errorMessage="#{infoxMessages['comunicacao.validator.dataAtendimentoIncorreta']}">
-	    				<a:ajax event="change" render="@form" execute="@form" limitRender="true" />
-	    		</wi:inputDate>
-	    		<h:commandButton value="#{infoxMessages['comunicacao.prorrogarPrazo']}" styleClass="buttons" 
-						action="#{analisarPedidoProrrogacaoPrazoAction.prorrogarPrazoDeCumprimento()}" render="@form"/>
+                        errorMessage="#{infoxMessages['comunicacao.validator.dataAtendimentoIncorreta']}" />
+	    		<a:commandButton value="#{infoxMessages['comunicacao.prorrogarPrazo']}" styleClass="buttons" 
+						action="#{analisarPedidoProrrogacaoPrazoAction.prorrogarPrazoDeCumprimento()}" render="taskPagePainelProrrogacaoPrazo, comunicacoesDoProcesso, pageBodyDialogMessage"/>
 			</h:form>
 		</rich:panel>
 	</s:div>
