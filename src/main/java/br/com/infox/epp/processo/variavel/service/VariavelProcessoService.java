@@ -1,10 +1,7 @@
 package br.com.infox.epp.processo.variavel.service;
 
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -22,6 +19,7 @@ import org.jbpm.graph.exe.ProcessInstance;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
@@ -36,22 +34,17 @@ public class VariavelProcessoService {
 
     @In private DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
     @In private MetadadoProcessoManager metadadoProcessoManager;
+    @In
+    private ProcessoManager processoManager;
 
-    @SuppressWarnings(UNCHECKED)
     public List<VariavelProcesso> getVariaveis(Processo processo) {
-        ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(processo.getIdJbpm());
-        ContextInstance contextInstance = processInstance.getContextInstance();
         List<VariavelProcesso> variaveis = new ArrayList<>();
-        Map<String, Object> jbpmVariables = contextInstance.getVariables();
-
-        for (String variableName : jbpmVariables.keySet()) {
-            if (variableName != null) {
-                DefinicaoVariavelProcesso definicao = definicaoVariavelProcessoManager.getDefinicao(processo
-                        .getNaturezaCategoriaFluxo().getFluxo(), variableName);
-
-                if (definicao != null && definicao.getVisivel()) {
-                    variaveis.add(getVariavelProcesso(processo, definicao));
-                }
+        List<DefinicaoVariavelProcesso> definicaoVariavelList = definicaoVariavelProcessoManager
+                .listVariaveisByFluxo(processo.getNaturezaCategoriaFluxo().getFluxo());
+        
+        for (DefinicaoVariavelProcesso definicao : definicaoVariavelList) {
+            if (definicao.getVisivel()) {
+                variaveis.add(getPrimeiraVariavelProcessoAncestral(processo, definicao));
             }
         }
 
@@ -104,6 +97,21 @@ public class VariavelProcessoService {
         return variavelProcesso;
     }
 
+    public List<VariavelProcesso> getVariaveisHierquiaProcesso(Integer idProcesso) {
+        List<VariavelProcesso> variaveis = new ArrayList<>();
+        Processo processo = processoManager.find(idProcesso);
+        List<DefinicaoVariavelProcesso> definicaoVariavelList = definicaoVariavelProcessoManager
+                .listVariaveisByFluxo(processo.getNaturezaCategoriaFluxo().getFluxo());
+        
+        for (DefinicaoVariavelProcesso definicao : definicaoVariavelList) {
+            VariavelProcesso variavel = getPrimeiraVariavelProcessoAncestral(processo, definicao);
+            if (variavel != null) {
+                variaveis.add(variavel);
+            }
+        }
+        return variaveis;
+    }
+    
     /**
      * Adiciona valor baseado em expressão, de valor padrão configurada na definição do fluxo, ao container de variável
      * de processo
