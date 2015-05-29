@@ -37,6 +37,7 @@ public class CnpjConverter implements Converter {
 
     @Override
     public String getAsString(FacesContext context, UIComponent component, Object value) {
-        return format((String) value);
+		String cnpj = (String) value;
+		return (cnpj == null || cnpj.trim().isEmpty()) ? null :  format((String) value);
     }
 }
