@@ -11,6 +11,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Startup;
 
+import br.com.infox.epp.system.EppProperties;
 import br.com.infox.hibernate.session.SessionAssistant;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -24,14 +25,17 @@ public class MassiveReindexer {
     public static final String NAME = "massiveReindexer";
     private static final LogProvider LOG = Logging.getLogProvider(MassiveReindexer.class);
     
-    @In private SessionAssistant sessionAssistant; 
+    @In
+    private SessionAssistant sessionAssistant; 
+    @In
+    private EppProperties eppProperties;
     
     @Create
-    /**
-     * Reconstrói os índices do Lucene sempre que o epp é iniciado
-     * */
     public void init() {
-        Session session = sessionAssistant.getSession();
+        if(eppProperties.getProperty(EppProperties.PROPERTY_DESENVOLVIMENTO).equals("true")){
+        	return;
+        }
+    	Session session = sessionAssistant.getSession();
         FullTextSession fullTextSession = Search.getFullTextSession(session);
         try {
             fullTextSession.createIndexer().startAndWait();

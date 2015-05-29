@@ -55,4 +55,7 @@ public class SecurityUtil implements Serializable {
         return ComponentUtil.getComponent(NAME);
     }
 
+    public void clearPermissionCache() {
+        permissions = new HashMap<>();
+    }
 }
