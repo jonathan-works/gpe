@@ -22,8 +22,10 @@ import org.dom4j.Element;
 import org.dom4j.Namespace;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
+
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+
 import org.jbpm.JbpmException;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.action.ActionTypes;
@@ -47,6 +49,7 @@ import org.jbpm.taskmgmt.def.TaskController;
 
 import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.ibpm.node.DecisionNode;
+import br.com.infox.ibpm.node.NodeType;
 import br.com.infox.ibpm.task.handler.CustomAction;
 
 public class JpdlXmlWriter {
@@ -225,6 +228,9 @@ public class JpdlXmlWriter {
         Iterator<org.jbpm.graph.def.Node> iter = nodes.iterator();
         while (iter.hasNext()) {
             org.jbpm.graph.def.Node node = iter.next();
+            if (node.getNodeType().equals(org.jbpm.graph.def.Node.NodeType.Node)){
+                node.setAsync(true);
+            }
             if (!(node instanceof StartState)) {
                 Element nodeElement = addElement(parentElement, ProcessFactory.getTypeName(node));
                 if (node instanceof TaskNode) {
