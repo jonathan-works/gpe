@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -22,6 +24,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
@@ -46,8 +49,9 @@ import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.util.time.DateRange;
 
-@Name(ProcessoManager.NAME)
 @AutoCreate
+@ContextDependency
+@Name(ProcessoManager.NAME)
 public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 
     private static final long serialVersionUID = 8095772422429350875L;
@@ -71,8 +75,9 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     private UsuarioLoginManager usuarioLoginManager;
     @In
     private ProcessoTarefaManager processoTarefaManager;
-    @In
+    @Inject
 	private SituacaoProcessoDAO situacaoProcessoDAO;
+    
     public Processo buscarPrimeiroProcesso(Processo p, TipoProcesso tipo) {
         for (Processo filho : p.getFilhos()) {
             if (filho.getDataFim() != null) {

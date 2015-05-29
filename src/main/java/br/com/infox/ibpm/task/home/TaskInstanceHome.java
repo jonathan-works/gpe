@@ -15,6 +15,7 @@ import java.util.Map;
 
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.servlet.http.HttpServletRequest;
@@ -57,6 +58,7 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
@@ -111,6 +113,7 @@ import br.com.itx.component.AbstractHome;
 @Name(TaskInstanceHome.NAME)
 @Scope(ScopeType.CONVERSATION)
 @Transactional
+@ContextDependency
 public class TaskInstanceHome implements Serializable {
 
 	private static final String MSG_USUARIO_SEM_ACESSO = "Você não pode mais efetuar transações "
@@ -122,8 +125,6 @@ public class TaskInstanceHome implements Serializable {
 	private static final String URL_DOWNLOAD_BINARIO = "{0}/downloadDocumento.seam?id={1}";
 	private static final String URL_DOWNLOAD_HTML = "{0}/Painel/documentoHTML.seam?id={1}";
 
-	@In
-	private SituacaoProcessoDAO situacaoProcessoDAO;
 	@In
 	private ProcessoManager processoManager;
 	@In
@@ -154,6 +155,9 @@ public class TaskInstanceHome implements Serializable {
 	private PathResolver pathResolver;
 	@In
 	private ProcessoEpaHome processoEpaHome;
+	
+	@Inject
+	private SituacaoProcessoDAO situacaoProcessoDAO;
 
 	private TaskInstance taskInstance;
 	private Map<String, Object> mapaDeVariaveis;

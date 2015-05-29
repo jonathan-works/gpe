@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Create;
@@ -28,6 +30,7 @@ import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
@@ -66,6 +69,7 @@ import br.com.infox.log.Logging;
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
 @Transactional
+@ContextDependency
 public class ComunicacaoAction implements Serializable {
 	private static final String COMPROVANTE_DE_CIÊNCIA = "Comprovante de Ciência";
 	private static final long serialVersionUID = 1L;
@@ -95,8 +99,6 @@ public class ComunicacaoAction implements Serializable {
 	@In
 	private DocumentoDownloader documentoDownloader;
 	@In
-	private SituacaoProcessoDAO situacaoProcessoDAO;
-	@In
 	private ProcessoTarefaManager processoTarefaManager;
 	@In
 	private ProcessoAnaliseDocumentoService processoAnaliseDocumentoService;
@@ -114,6 +116,9 @@ public class ComunicacaoAction implements Serializable {
 	private DocumentoRespostaComunicacaoDAO documentoRespostaComunicacaoDAO;
 	@In
 	private ProcessoDAO processoDAO;
+	
+	@Inject
+	private SituacaoProcessoDAO situacaoProcessoDAO;
 	
 	private List<ModeloComunicacao> comunicacoes;
 	private List<ClassificacaoDocumento> classificacoesDocumento;

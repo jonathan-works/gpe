@@ -55,9 +55,11 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializ
     private void clearUITree() {
         if (treeId != null) {
             UITree tree = (UITree) FacesContext.getCurrentInstance().getViewRoot().findComponent(treeId);
-            tree.setRowKey(null);
-            tree.setSelection(null);
-            closeParentPanel(tree);
+            if (tree != null) {
+            	 tree.setRowKey(null);
+                 tree.setSelection(null);
+                 closeParentPanel(tree);
+            }
         }
     }
 

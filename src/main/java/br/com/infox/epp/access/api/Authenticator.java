@@ -9,6 +9,7 @@ import java.util.Set;
 
 import javax.el.ELException;
 import javax.faces.model.SelectItem;
+import javax.inject.Inject;
 import javax.naming.NamingException;
 import javax.security.auth.login.LoginException;
 
@@ -47,10 +48,10 @@ import br.com.infox.epp.access.manager.ldap.LDAPManager;
 import br.com.infox.epp.access.service.AuthenticatorService;
 import br.com.infox.epp.access.service.PasswordService;
 import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.system.util.ParametroUtil;
-import br.com.infox.epp.tarefa.component.tree.PainelTreeHandler;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.log.LogProvider;
@@ -61,6 +62,7 @@ import br.com.infox.seam.security.SecurityUtil;
 @Name(Authenticator.NAME)
 @Install(precedence = Install.APPLICATION)
 @Transactional
+@ContextDependency
 public class Authenticator implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -75,6 +77,8 @@ public class Authenticator implements Serializable {
     private InfoxMessages infoxMessages;
     @In
     private PapelManager papelManager;
+    @Inject
+    private SecurityUtil securityUtil;
     
     private String newPassword1;
     private String newPassword2;
@@ -335,7 +339,7 @@ public class Authenticator implements Serializable {
         getAuthenticatorService().logDaBuscaDasRoles(usuarioPerfil);
         getAuthenticatorService().addRolesAtuais(roleSet);
         setVariaveisDoContexto(usuarioPerfil, roleSet);
-        BeanManager.INSTANCE.getReference(SecurityUtil.class).clearPermissionCache();
+        securityUtil.clearPermissionCache();
         if (!getUsuarioLogado().getProvisorio() && !isUsuarioExterno()) {
         	if (!hasToSignTermoAdesao()) {
         		redirectToPainelDoUsuario();
@@ -376,7 +380,6 @@ public class Authenticator implements Serializable {
         Contexts.getSessionContext().set(PAPEIS_USUARIO_LOGADO, roleSet);
         Contexts.getSessionContext().set(LOCALIZACOES_FILHAS_ATUAIS, getLocalizacoesFilhas(usuarioPerfil.getLocalizacao()));
         Contexts.getSessionContext().remove("mainMenu");
-        Contexts.removeFromAllContexts(PainelTreeHandler.NAME);
     }
 
     private Set<String> getRolesAtuais(UsuarioPerfil usuarioPerfil) {

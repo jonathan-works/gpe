@@ -6,9 +6,9 @@ import java.util.List;
 import javax.persistence.Tuple;
 
 import br.com.infox.core.tree.EntityNode;
-import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
+import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
 import br.com.infox.epp.processo.type.TipoProcesso;
-import br.com.infox.seam.util.ComponentUtil;
 
 public class PainelEntityNode extends EntityNode<Tuple> {
 	
@@ -17,19 +17,18 @@ public class PainelEntityNode extends EntityNode<Tuple> {
     public static final String TASK_TYPE = "Task";
     public static final String CAIXA_TYPE = "Caixa";
     
-    private List<PainelEntityNode> rootNodes;
-    private List<PainelEntityNode> nodes;
     private List<EntityNode<Tuple>> caixas;
     private TipoProcesso tipoProcesso;
-    private Boolean comunicacoesExpedidas;
+    private boolean comunicacoesExpedidas;
+    private boolean expanded = true;
 
-    public PainelEntityNode(TipoProcesso tipoProcesso, Boolean comunicacoesExpedidas) {
+    public PainelEntityNode(TipoProcesso tipoProcesso, boolean comunicacoesExpedidas) {
         super("");
         this.tipoProcesso = tipoProcesso;
         this.comunicacoesExpedidas = comunicacoesExpedidas;
     }
     
-    public PainelEntityNode(EntityNode<Tuple> parent, Tuple entity, TipoProcesso tipoProcesso, Boolean comunicacoesExpedidas) {
+    public PainelEntityNode(EntityNode<Tuple> parent, Tuple entity, TipoProcesso tipoProcesso, boolean comunicacoesExpedidas) {
         super(parent, entity, new String[0]);
         this.tipoProcesso = tipoProcesso;
         this.comunicacoesExpedidas = comunicacoesExpedidas;
@@ -39,7 +38,7 @@ public class PainelEntityNode extends EntityNode<Tuple> {
         if (caixas == null) {
             caixas = new ArrayList<EntityNode<Tuple>>();
             if (!isLeaf()) {
-            	List<Tuple> children = getSituacaoProcessoDAO().getCaixaList(tipoProcesso, getTarefaId(), comunicacoesExpedidas);
+            	List<Tuple> children = getSituacaoProcessoManager().getCaixaList(tipoProcesso, getTarefaId(), comunicacoesExpedidas);
         		for (Tuple entity : children) {
         		    caixas.add(new PainelEntityNode(this, entity, tipoProcesso, comunicacoesExpedidas));
         		}
@@ -47,32 +46,7 @@ public class PainelEntityNode extends EntityNode<Tuple> {
         }
         return caixas;
     }
-
-	public List<PainelEntityNode> getRootsFluxos() {
-        if (rootNodes == null) {
-            rootNodes = new ArrayList<>();
-            List<Tuple> roots = getSituacaoProcessoDAO().getRootList(tipoProcesso, comunicacoesExpedidas);
-            for (Tuple entity : roots) {
-            	rootNodes.add(new PainelEntityNode(null, entity, tipoProcesso, comunicacoesExpedidas));
-            }
-        }
-        return rootNodes;
-    }
-
-    public List<PainelEntityNode> getNodesTarefas() {
-        if (nodes == null) {
-            nodes = new ArrayList<>();
-            if (!isLeaf()) {
-            	Integer idFluxo = getEntity().get("idFluxo", Integer.class);
-        		List<Tuple> children = getSituacaoProcessoDAO().getChildrenList(idFluxo, tipoProcesso, comunicacoesExpedidas);
-        		for (Tuple entity : children) {
-        		    nodes.add(new PainelEntityNode(this, entity, tipoProcesso, comunicacoesExpedidas));
-        		}
-            }
-        }
-        return nodes;
-    }
-
+    
     @Override
     public String getType() {
         return getEntity().get("type", String.class);
@@ -88,8 +62,16 @@ public class PainelEntityNode extends EntityNode<Tuple> {
         return idTask == null ? 0L : idTask;
     }
 
-    private SituacaoProcessoDAO getSituacaoProcessoDAO() {
-        return ComponentUtil.getComponent(SituacaoProcessoDAO.NAME);
+    private SituacaoProcessoManager getSituacaoProcessoManager() {
+        return BeanManager.INSTANCE.getReference(SituacaoProcessoManager.class);
     }
+
+	public boolean isExpanded() {
+		return expanded;
+	}
+
+	public void setExpanded(boolean expanded) {
+		this.expanded = expanded;
+	}
     
 }
