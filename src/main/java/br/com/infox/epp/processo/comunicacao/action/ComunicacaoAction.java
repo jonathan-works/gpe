@@ -258,11 +258,7 @@ public class ComunicacaoAction implements Serializable {
 			movimentarProcessoJBPM(comunicacao);
 
 			dadosCiencia.put(destinatario.getIdDestinatario(), true);
-			destinatario = null;
-			dataCiencia = null;
-			ciencia = false;
-			setEditorCiencia(false);
-			setClassificacaoDocumentoCiencia(null);
+			clear();
 			
 			FacesMessages.instance().add("Ciência informada com sucesso");
 			
@@ -378,7 +374,8 @@ public class ComunicacaoAction implements Serializable {
 			MetadadoProcesso dataPedidoProrrogacao = metadadoProcessoProvider.gerarMetadado(
 					ComunicacaoMetadadoProvider.DATA_PEDIDO_PRORROGACAO, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(new Date()));
 			metadadoProcessoManager.persist(dataPedidoProrrogacao);
-			
+			comunicacao.getMetadadoProcessoList().add(dataPedidoProrrogacao);
+			clear();
 			FacesMessages.instance().add("Pedido de prorrogação de prazo efetuado com sucesso");
 		} catch (DAOException e) {
 			LOG.error("", e);
@@ -426,10 +423,11 @@ public class ComunicacaoAction implements Serializable {
 		documentosDestinatario = null;
 		destinatario = null;
 		dataCiencia = null;
-		editorCiencia = false;
 		documentoUploader.clear();		
 		documentoResposta = false;
 		documentosListResposta = null;
+		setEditorCiencia(false);
+		setClassificacaoDocumentoProrrogPrazo(null);
 		
 	}
 	
@@ -449,6 +447,7 @@ public class ComunicacaoAction implements Serializable {
 		this.editorCiencia = editorCiencia;
 		if (!isEditorCiencia()){
 			setClassificacaoDocumentoCiencia(null);
+			setTextoCiencia(null);
 		}
 	}
 
