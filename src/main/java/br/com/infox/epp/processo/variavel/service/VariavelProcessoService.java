@@ -75,26 +75,30 @@ public class VariavelProcessoService {
     }
 
     private VariavelProcesso getVariavelProcesso(Processo processo, DefinicaoVariavelProcesso definicao) {
-        ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(processo.getIdJbpm());
-
-        Object variable = processInstance.getContextInstance().getVariable(definicao.getNome());
-        VariavelProcesso variavelProcesso = inicializaVariavelProcesso(processInstance, definicao);
-        if (variable != null) {
-            variavelProcesso.setValor(variable.toString());
-        } else {
-            List<MetadadoProcesso> metadados = metadadoProcessoManager.getMetadadoProcessoByType(processo, definicao.getNome());
-            if (metadados != null && metadados.size() > 0) {
-                setValor(processo, metadados, variavelProcesso);
+        Long idJbpm = processo.getIdJbpm();
+        if (idJbpm != null) {
+            ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(idJbpm);
+            Object variable = processInstance.getContextInstance().getVariable(definicao.getNome());
+            VariavelProcesso variavelProcesso = inicializaVariavelProcesso(processInstance, definicao);
+            if (variable != null) {
+                variavelProcesso.setValor(variable.toString());
             } else {
-                final String valorPadrao = definicao.getValorPadrao();
-                if (valorPadrao != null) {
-                    setValor(valorPadrao, processo, variavelProcesso);
+                List<MetadadoProcesso> metadados = metadadoProcessoManager.getMetadadoProcessoByType(processo,
+                        definicao.getNome());
+                if (metadados != null && metadados.size() > 0) {
+                    setValor(processo, metadados, variavelProcesso);
                 } else {
-                    variavelProcesso = null;
+                    final String valorPadrao = definicao.getValorPadrao();
+                    if (valorPadrao != null) {
+                        setValor(valorPadrao, processo, variavelProcesso);
+                    } else {
+                        variavelProcesso = null;
+                    }
                 }
             }
+            return variavelProcesso;
         }
-        return variavelProcesso;
+        return null;
     }
 
     public List<VariavelProcesso> getVariaveisHierquiaProcesso(Integer idProcesso) {
