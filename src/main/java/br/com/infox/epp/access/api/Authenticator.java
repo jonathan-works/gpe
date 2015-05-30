@@ -55,6 +55,7 @@ import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.security.SecurityUtil;
 
 @AutoCreate
 @Name(Authenticator.NAME)
@@ -334,6 +335,7 @@ public class Authenticator implements Serializable {
         getAuthenticatorService().logDaBuscaDasRoles(usuarioPerfil);
         getAuthenticatorService().addRolesAtuais(roleSet);
         setVariaveisDoContexto(usuarioPerfil, roleSet);
+        BeanManager.INSTANCE.getReference(SecurityUtil.class).clearPermissionCache();
         if (!getUsuarioLogado().getProvisorio() && !isUsuarioExterno()) {
         	if (!hasToSignTermoAdesao()) {
         		redirectToPainelDoUsuario();
