@@ -143,7 +143,10 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
                 String variableName = group.substring(2, group.length() - 1);
                 String expression = map.get(variableName);
                 if (expression == null) {
-                    matcher.appendReplacement(sb, group);
+                    Expression expr = new Expression(group);
+                    expr = resolver.resolve(expr);
+                    String value = expr.getValue();
+                    matcher.appendReplacement(sb, value);
                 } else {
                 	Expression expr = new Expression(expression);
                 	if (resolver != null) {
