@@ -73,6 +73,10 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	<!-- Seam -->
+	<context-param>
+		<param-name>org.jboss.seam.core.init.jndiPattern</param-name>
+		<param-value>global/moduleName/#{ejbName}</param-value>
+	</context-param>
 	<listener>
 		<listener-class>org.jboss.seam.servlet.SeamListener</listener-class>
 	</listener>
