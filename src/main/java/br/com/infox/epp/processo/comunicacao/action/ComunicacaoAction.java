@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Create;
@@ -59,6 +61,7 @@ import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.util.ComponentUtil;
 
 import com.google.common.base.Strings;
 
@@ -154,6 +157,14 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	public void clearCacheModelos() {
+		if (this.comunicacoes != null) {
+			for (ModeloComunicacao modeloComunicacao : this.comunicacoes) {
+				for (DestinatarioModeloComunicacao destinatarioModeloComunicacao : modeloComunicacao.getDestinatarios()) {
+					genericManager.detach(destinatarioModeloComunicacao);
+				}
+				modeloComunicacaoManager.detach(modeloComunicacao);
+			}
+		}
 		this.comunicacoes = null;
 		this.destinatario = null;
 		this.destinatarios = null;

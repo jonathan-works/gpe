@@ -131,6 +131,9 @@ public class ComunicacaoService {
 		
 		destinatario.setExpedido(true);
 		genericManager.update(destinatario);
+		if (!modeloComunicacao.getDestinatarios().contains(destinatario)) {
+			modeloComunicacao.getDestinatarios().add(destinatario);
+		}
 	}
 	
 	public byte[] gerarPdfCompleto(ModeloComunicacao modeloComunicacao, DestinatarioModeloComunicacao destinatario) throws DAOException {

@@ -13,7 +13,7 @@
 		rendered="#{s:hasRole(usuarioInterno)}" />
 	<h:form>
 		<a:jsFunction name="reloadAll" render="comunicacoesDiv" limitRender="true" execute="@this" 
-			action="#{comunicacaoAction.clearCacheModelos}"/>
+			action="#{comunicacaoAction.clear}"/>
 	</h:form>
 	<s:div id="comunicacoesDiv">
 		<rich:collapsiblePanel switchType="client" id="rascunhos" header="#{infoxMessages['comunicacao.rascunhos']}" rendered="#{s:hasRole(usuarioInterno)}">

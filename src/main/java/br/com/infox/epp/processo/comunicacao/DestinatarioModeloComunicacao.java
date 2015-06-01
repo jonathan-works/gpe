@@ -155,4 +155,54 @@ public class DestinatarioModeloComunicacao implements Serializable {
     public void setPerfilDestino(PerfilTemplate perfilDestino) {
         this.perfilDestino = perfilDestino;
     }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((getDestinatario() == null) ? 0 : getDestinatario().hashCode());
+		result = prime * result + ((getDestino() == null) ? 0 : getDestino().hashCode());
+		result = prime * result + ((getModeloComunicacao() == null) ? 0 : getModeloComunicacao().hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof DestinatarioModeloComunicacao)) {
+			return false;
+		}
+		DestinatarioModeloComunicacao other = (DestinatarioModeloComunicacao) obj;
+		if (getModeloComunicacao() == null) {
+			if (other.getModeloComunicacao() != null) {
+				return false;
+			}
+		} else if (!getModeloComunicacao().equals(other.getModeloComunicacao())) {
+			return false;
+		}
+		if (getDestinatario() == null && other.getDestinatario() == null && getDestino() == null && other.getDestino() == null) {
+			return true;
+		}
+		if (getDestinatario() != null) {
+			if (other.getDestinatario() == null) {
+				return false;
+			}
+		}
+		if (getDestino() != null) {
+			if (other.getDestino() == null) {
+				return false;
+			}
+		}
+		if (getDestinatario() != null) {
+			return getDestinatario().equals(other.getDestinatario());
+		} else if (getDestino() != null) {
+			return getDestino().equals(other.getDestino());
+		}
+		return false;
+	}
 }
