@@ -36,7 +36,7 @@ public class TipoComunicacaoCrudAction extends AbstractCrudAction<TipoComunicaca
     public List<ClassificacaoDocumento> getClassificacoesDocumento() {
         if (classificacoesDocumento == null) {
             classificacoesDocumento = classificacaoDocumentoFacade
-                    .getUseableClassificacaoDocumento(TipoDocumentoEnum.D);
+                    .getUseableClassificacaoDocumento(TipoDocumentoEnum.P);
         }
         return classificacoesDocumento;
     }

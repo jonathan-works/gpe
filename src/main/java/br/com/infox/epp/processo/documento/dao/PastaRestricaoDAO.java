@@ -2,7 +2,7 @@ package br.com.infox.epp.processo.documento.dao;
 
 import static br.com.infox.epp.processo.documento.query.PastaRestricaoQuery.DELETE_BY_PASTA;
 import static br.com.infox.epp.processo.documento.query.PastaRestricaoQuery.GET_BY_PASTA;
-import static br.com.infox.epp.processo.documento.query.PastaRestricaoQuery.PARAM_PASTA;
+import static br.com.infox.epp.processo.documento.query.PastaRestricaoQuery.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +15,7 @@ import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.entity.PastaRestricao;
+import br.com.infox.epp.processo.documento.type.PastaRestricaoEnum;
 
 @AutoCreate
 @Name(PastaRestricaoDAO.NAME)
@@ -29,7 +30,15 @@ public class PastaRestricaoDAO extends DAO<PastaRestricao> {
         params.put(PARAM_PASTA, pasta);
         return getNamedResultList(GET_BY_PASTA, params);
     }
-
+    
+    public PastaRestricao getByPastaAlvoTipoRestricao(Pasta pasta, Integer alvo, PastaRestricaoEnum tipoRestricao) {
+        Map<String, Object> params = new HashMap<>();
+        params.put(PARAM_PASTA, pasta);
+        params.put(PARAM_ALVO, alvo);
+        params.put(PARAM_TIPO_RESTRICAO, tipoRestricao);
+        return getNamedSingleResult(GET_BY_PASTA_ALVO_TIPO_RESTRICAO, params);
+    }
+    
     public void deleteByPasta(Pasta pasta) throws DAOException {
         Map<String, Object> params = new HashMap<>();
         params.put(PARAM_PASTA, pasta);

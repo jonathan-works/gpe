@@ -15,12 +15,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.criteria.AbstractQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -35,6 +35,7 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento_;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.entity.Processo;
 
 @AutoCreate
@@ -43,39 +44,31 @@ public class ClassificacaoDocumentoDAO extends DAO<ClassificacaoDocumento> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "classificacaoDocumentoDAO";
-    
+
     @Override
     public List<ClassificacaoDocumento> findAll() {
-    	String hql = "select o from ClassificacaoDocumento o order by o.descricao";
-    	return getResultList(hql, null);
+        String hql = "select o from ClassificacaoDocumento o order by o.descricao";
+        return getResultList(hql, null);
     }
-    
+
     public List<ClassificacaoDocumento> getClassificacaoDocumentoListByProcesso(Processo processo) {
-    	Map<String, Object> params = new HashMap<>(1);
-    	params.put(PARAM_PROCESSO, processo);
-    	return getNamedResultList(LIST_CLASSIFICACAO_DOCUMENTO_BY_PROCESSO, params);
+        Map<String, Object> params = new HashMap<>(1);
+        params.put(PARAM_PROCESSO, processo);
+        return getNamedResultList(LIST_CLASSIFICACAO_DOCUMENTO_BY_PROCESSO, params);
     }
 
     public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo, Papel papel) {
-    	CriteriaQuery<ClassificacaoDocumento> query = createQueryUseableClassificacaoDocumento(isModelo, papel);
-    	return getEntityManager().createQuery(query).getResultList();
+        CriteriaQuery<ClassificacaoDocumento> query = createQueryUseableClassificacaoDocumento(isModelo, papel);
+        return getEntityManager().createQuery(query).getResultList();
     }
 
-	protected CriteriaQuery<ClassificacaoDocumento> createQueryUseableClassificacaoDocumento(boolean isModelo, Papel papel) {
-		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-    	CriteriaQuery<ClassificacaoDocumento> query = cb.createQuery(ClassificacaoDocumento.class);
-    	Root<ClassificacaoDocumento> from = query.from(ClassificacaoDocumento.class);
-    	Join<ClassificacaoDocumento, ClassificacaoDocumentoPapel> join = from.join("classificacaoDocumentoPapelList");
-    	Predicate predicate = cb.and(cb.equal(from.get("sistema"), false),
-    			cb.equal(join.get("papel"), papel),
-    			cb.equal(from.get("ativo"), true));
-    	
-    	predicate = cb.and(cb.or(cb.equal(from.get("inTipoDocumento"), isModelo ? TipoDocumentoEnum.P : TipoDocumentoEnum.D), 
-    			cb.equal(from.get("inTipoDocumento"), TipoDocumentoEnum.T)), predicate);
-    	
-    	query.where(predicate).orderBy(cb.asc(from.get("descricao")));
-		return query;
-	}
+    protected CriteriaQuery<ClassificacaoDocumento> createQueryUseableClassificacaoDocumento(boolean isModelo,
+            Papel papel) {
+        CriteriaQuery<ClassificacaoDocumento> query = createQueryClassificacoesDocumento();
+        addRedatorFilter(query, papel);
+        addTipoDocumentoEnumFilter(query, isModelo ? TipoDocumentoEnum.P : TipoDocumentoEnum.D);
+        return query;
+    }
 
     public boolean isAssinaturaObrigatoria(ClassificacaoDocumento classificacaoDocumento, Papel papel) {
         HashMap<String, Object> params = new HashMap<String, Object>(0);
@@ -87,69 +80,81 @@ public class ClassificacaoDocumentoDAO extends DAO<ClassificacaoDocumento> {
         }
         return false;
     }
-    
+
     public ClassificacaoDocumento findByCodigo(String codigo) {
         final HashMap<String, Object> parameters = new HashMap<>();
         parameters.put(CODIGO_DOCUMENTO_PARAM, codigo);
         return getNamedSingleResult(FIND_CLASSIFICACAO_DOCUMENTO_BY_CODIGO, parameters);
     }
-    
+
     public ClassificacaoDocumento findByDescricao(String descricao) {
-    	Map<String, Object> params = new HashMap<>(1);
-    	params.put(PARAM_DESCRICAO, descricao);
-    	return getNamedSingleResult(FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO, params);
+        Map<String, Object> params = new HashMap<>(1);
+        params.put(PARAM_DESCRICAO, descricao);
+        return getNamedSingleResult(FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO, params);
     }
-    
+
     public List<ClassificacaoDocumento> getClassificacoesDocumentoDisponiveisRespostaComunicacao(DestinatarioModeloComunicacao destinatarioModeloComunicacao, boolean isModelo, Papel papel) {
 		return getUseableClassificacaoDocumento(isModelo, papel);
 	}
 
-    private CriteriaQuery<ClassificacaoDocumento> createQueryClassificacoesDocumentoCruds(TipoDocumentoEnum tipoDocumento) {
+    @SuppressWarnings("unchecked")
+    protected void addTipoDocumentoEnumFilter(AbstractQuery<?> query, TipoDocumentoEnum tipoDocumento) {
+        Root<ClassificacaoDocumento> from = (Root<ClassificacaoDocumento>) query.getRoots().iterator().next();
+        Predicate predicate = query.getRestriction();
+
+        List<TipoDocumentoEnum> tiposDocumento = new ArrayList<>();
+        tiposDocumento.add(TipoDocumentoEnum.T);
+        switch (tipoDocumento) {
+        case T:
+            tiposDocumento.add(TipoDocumentoEnum.P);
+            tiposDocumento.add(TipoDocumentoEnum.D);
+            break;
+
+        default:
+            tiposDocumento.add(tipoDocumento);
+            break;
+        }
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        predicate = cb.and(predicate, from.get(ClassificacaoDocumento_.inTipoDocumento).in(tiposDocumento));
+        query.where(predicate);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected void addRedatorFilter(AbstractQuery<?> query, Papel papel) {
+        Root<ClassificacaoDocumento> from = (Root<ClassificacaoDocumento>) query.getRoots().iterator().next();
+        Join<ClassificacaoDocumento, ClassificacaoDocumentoPapel> join = from
+                .join(ClassificacaoDocumento_.classificacaoDocumentoPapelList);
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+
+        Predicate predicate = query.getRestriction();
+        predicate = cb.and(predicate, cb.equal(join.get(ClassificacaoDocumentoPapel_.papel), papel));
+        predicate = cb.and(predicate, cb.isTrue(join.get(ClassificacaoDocumentoPapel_.podeRedigir)));
+        query.where(predicate);
+    }
+
+    protected CriteriaQuery<ClassificacaoDocumento> createQueryClassificacoesDocumento() {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<ClassificacaoDocumento> query = cb.createQuery(ClassificacaoDocumento.class);
         Root<ClassificacaoDocumento> from = query.from(ClassificacaoDocumento.class);
-        Predicate predicate = cb.and(cb.isFalse(from.get(ClassificacaoDocumento_.sistema)), 
-                cb.isTrue(from.get(ClassificacaoDocumento_.ativo)));
-        
-        if (tipoDocumento != null){
-            List<TipoDocumentoEnum> tiposDocumento = new ArrayList<>();
-            tiposDocumento.add(TipoDocumentoEnum.T);
-            switch (tipoDocumento) {
-            case T:
-                tiposDocumento.add(TipoDocumentoEnum.P);
-                tiposDocumento.add(TipoDocumentoEnum.D);
-                break;
 
-            default:
-                tiposDocumento.add(tipoDocumento);
-                break;
-            }
-            predicate = cb.and(predicate, from.get(ClassificacaoDocumento_.inTipoDocumento).in(tiposDocumento));
-        }
-        query.where(predicate).orderBy(cb.asc(from.get(ClassificacaoDocumento_.descricao)));
+        Predicate predicate = cb.and(cb.isFalse(from.get(ClassificacaoDocumento_.sistema)));
+        predicate = cb.and(predicate, cb.isTrue(from.get(ClassificacaoDocumento_.ativo)));
+
+        query.where(predicate);
+        query.orderBy(cb.asc(from.get(ClassificacaoDocumento_.descricao)));
         return query;
     }
-    
+
     public List<ClassificacaoDocumento> getClassificacoesDocumentoCruds(TipoDocumentoEnum tipoDocumento) {
-        CriteriaQuery<ClassificacaoDocumento> query = createQueryClassificacoesDocumentoCruds(tipoDocumento);
+        CriteriaQuery<ClassificacaoDocumento> query = createQueryClassificacoesDocumento();
+        addTipoDocumentoEnumFilter(query, tipoDocumento);
         return getEntityManager().createQuery(query).getResultList();
     }
-    
-    @SuppressWarnings("unchecked")
-	public List<ClassificacaoDocumento> getClassificacoesDocumentoAnexarDocumento(TipoDocumentoEnum tipoDocumento) {
-        CriteriaQuery<ClassificacaoDocumento> query = createQueryClassificacoesDocumentoCruds(tipoDocumento);
-        Root<ClassificacaoDocumento> from = (Root<ClassificacaoDocumento>) query.getRoots().iterator().next();
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        Predicate predicate = query.getRestriction();
-        Subquery<Integer> subquery = query.subquery(Integer.class);
-	      Root<ClassificacaoDocumentoPapel> classificacaoDocumentoPapel = subquery.from(ClassificacaoDocumentoPapel.class);
-	      subquery.select(cb.literal(1));
-	      subquery.where(cb.and(cb.isTrue(classificacaoDocumentoPapel.get(ClassificacaoDocumentoPapel_.podeRedigir)),
-	      		cb.equal(classificacaoDocumentoPapel.get(ClassificacaoDocumentoPapel_.classificacaoDocumento), from),
-	      		cb.equal(classificacaoDocumentoPapel.get(ClassificacaoDocumentoPapel_.papel), Authenticator.getPapelAtual())));
-	              
-	    predicate = cb.and(predicate, cb.exists(subquery));
-	    query.where(predicate);
+
+    public List<ClassificacaoDocumento> getClassificacoesDocumentoAnexarDocumento(TipoDocumentoEnum tipoDocumento) {
+        CriteriaQuery<ClassificacaoDocumento> query = createQueryClassificacoesDocumento();
+        addTipoDocumentoEnumFilter(query, tipoDocumento);
+        addRedatorFilter(query, Authenticator.getPapelAtual());
         return getEntityManager().createQuery(query).getResultList();
     }
 }

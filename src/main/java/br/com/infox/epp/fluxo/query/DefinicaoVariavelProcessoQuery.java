@@ -11,6 +11,7 @@ public interface DefinicaoVariavelProcessoQuery {
     String ID_FLUXO = "id_fluxo";
     String VISIVEL = "in_visivel";
     String VISIVEL_PAINEL = "in_visivel_painel";
+    String VALOR_PADRAO = "vl_padrao";
 
     String PARAM_FLUXO = "fluxo";
     String PARAM_NOME = "nome";
