@@ -19,6 +19,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
+import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.graph.exe.ProcessInstance;
 
@@ -118,7 +119,13 @@ public class ProcessoAnaliseDocumentoService {
 				}
 			}
 		}
+		Long processIdOriginal = BusinessProcess.instance().getProcessId(); // Para caso tenha sido expedido para apenas um destinatário
+		Long taskIdOriginal = BusinessProcess.instance().getTaskId();
+		BusinessProcess.instance().setProcessId(null);
+		BusinessProcess.instance().setTaskId(null);
 		iniciarProcessoService.iniciarProcesso(processoAnalise, variaveisJbpm);
+		BusinessProcess.instance().setProcessId(processIdOriginal);
+		BusinessProcess.instance().setTaskId(taskIdOriginal);
 	}
 	
 	private Fluxo getFluxoDocumento() throws DAOException {

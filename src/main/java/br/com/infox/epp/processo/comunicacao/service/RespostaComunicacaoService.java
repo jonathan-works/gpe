@@ -29,7 +29,6 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
-import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 
 @Name(RespostaComunicacaoService.NAME)
 @Scope(ScopeType.EVENT)
@@ -48,22 +47,6 @@ public class RespostaComunicacaoService {
 	@In
 	private ProrrogacaoPrazoService prorrogacaoPrazoService;
 	
-	public void enviarResposta(Documento resposta) throws DAOException {
-		Processo comunicacao = documentoRespostaComunicacaoDAO.getComunicacaoVinculada(resposta);
-		if (comunicacao == null) {
-			return;
-		}
-		Processo processoResposta = processoAnaliseDocumentoService.criarProcessoAnaliseDocumentos(comunicacao, resposta);
-		EppMetadadoProvider provider = new EppMetadadoProvider();
-		MetadadoProcesso metadadoResposta = provider.gerarMetadado(EppMetadadoProvider.DOCUMENTO_EM_ANALISE, processoResposta, resposta.getId().toString());
-		processoResposta.getMetadadoProcessoList().add(metadadoResposta);
-		metadadoProcessoManager.persist(metadadoResposta);
-		
-		Map<String, Object> variaveisJbpm = new HashMap<>();
-		setRespostaTempestiva(processoResposta.getDataInicio(), comunicacao);
-		processoAnaliseDocumentoService.inicializarFluxoDocumento(processoResposta, variaveisJbpm);
-	}
-
 	public void enviarResposta(List<Documento> respostas) throws DAOException {
 		Processo comunicacao = documentoRespostaComunicacaoDAO.getComunicacaoVinculada(respostas.get(0));
 		if (comunicacao == null) {

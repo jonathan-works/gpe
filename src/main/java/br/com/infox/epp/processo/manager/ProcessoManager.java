@@ -314,6 +314,10 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 	}
 	
 	public void movimentarProcessoJBPM(Processo processo) throws DAOException {
+		Long processIdOriginal = BusinessProcess.instance().getProcessId(); // Para caso tenha sido expedido para apenas um destinatário
+		Long taskIdOriginal = BusinessProcess.instance().getTaskId();
+		BusinessProcess.instance().setProcessId(null);
+		BusinessProcess.instance().setTaskId(null);
 		Long idTaskInstance = situacaoProcessoDAO.getIdTaskInstanceByIdProcesso(processo.getIdProcesso());
 		if (idTaskInstance == null) {
 			LOG.warn("idTaskInstance para o processo " + processo.getNumeroProcesso() + " nulo");
@@ -322,6 +326,8 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 		TaskInstance taskInstance = ManagedJbpmContext.instance().getTaskInstanceForUpdate(idTaskInstance);
 		taskInstance.end();
 		atualizarProcessoTarefa(taskInstance);
+		BusinessProcess.instance().setProcessId(processIdOriginal);
+		BusinessProcess.instance().setTaskId(taskIdOriginal);
 	}
 	
 	private void atualizarProcessoTarefa(TaskInstance taskInstance) throws DAOException {

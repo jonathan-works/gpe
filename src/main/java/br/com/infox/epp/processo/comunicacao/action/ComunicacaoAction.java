@@ -11,8 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.EntityManager;
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Create;
@@ -23,6 +21,8 @@ import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.taskmgmt.exe.TaskInstance;
+
+import com.google.common.base.Strings;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.manager.GenericManager;
@@ -61,9 +61,6 @@ import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-import br.com.infox.seam.util.ComponentUtil;
-
-import com.google.common.base.Strings;
 
 @Name(ComunicacaoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -380,7 +377,6 @@ public class ComunicacaoAction implements Serializable {
 
 			Processo prorrogacao = processoAnaliseDocumentoService.criarProcessoAnaliseDocumentos(comunicacao, documento);
 			processoAnaliseDocumentoService.inicializarFluxoDocumento(prorrogacao, null);
-			
 			MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
 			MetadadoProcesso dataPedidoProrrogacao = metadadoProcessoProvider.gerarMetadado(
 					ComunicacaoMetadadoProvider.DATA_PEDIDO_PRORROGACAO, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(new Date()));
