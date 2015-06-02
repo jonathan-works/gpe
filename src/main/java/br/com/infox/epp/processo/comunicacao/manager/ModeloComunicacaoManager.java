@@ -15,7 +15,6 @@ import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.dao.ModeloComunicacaoDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.system.Parametros;
 
 @Name(ModeloComunicacaoManager.NAME)
 @AutoCreate
@@ -41,12 +40,6 @@ public class ModeloComunicacaoManager extends Manager<ModeloComunicacaoDAO, Mode
 	public DocumentoModeloComunicacao getDocumentoInclusoPorPapel(Collection<String> identificadoresPapel, ModeloComunicacao modeloComunicacao) {
 		return getDao().getDocumentoInclusoPorPapel(identificadoresPapel, modeloComunicacao);
 	}
-	
-	public List<String> getIdentificadoresPapeisHerdeirosDeUsuarioInterno() {
-    	List<String> roles = papelManager.getIdentificadoresPapeisMembros(Parametros.PAPEL_USUARIO_INTERNO.getValue());
-    	roles.add(Parametros.PAPEL_USUARIO_INTERNO.getValue());
-    	return roles;
-    }
 	
 	public List<Documento> getDocumentosByModeloComunicacao(ModeloComunicacao modeloComunicacao){
 		return getDao().getDocumentosByModeloComunicacao(modeloComunicacao);

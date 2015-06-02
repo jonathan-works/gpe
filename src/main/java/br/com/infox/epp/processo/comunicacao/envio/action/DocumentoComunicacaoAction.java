@@ -15,6 +15,7 @@ import org.jboss.seam.log.Logging;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
@@ -28,6 +29,7 @@ import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
+import br.com.infox.epp.system.Parametros;
 
 @Name(DocumentoComunicacaoAction.NAME)
 @AutoCreate
@@ -55,6 +57,8 @@ public class DocumentoComunicacaoAction implements Serializable {
 	private DocumentoComunicacaoService documentoComunicacaoService;
 	@In
 	private ModeloComunicacaoManager modeloComunicacaoManager;
+	@In
+	private PapelManager papelManager;
 	
 	private ModeloComunicacao modeloComunicacao;
 	
@@ -114,7 +118,7 @@ public class DocumentoComunicacaoAction implements Serializable {
 		modeloComunicacao.getDocumentos().add(documentoModelo);
 		documentoDisponivelComunicacaoList.adicionarIdDocumento(documento.getId());
 		if (!possuiDocumentoInclusoPorUsuarioInterno) {
-			List<String> papeisUsuarioInterno = modeloComunicacaoManager.getIdentificadoresPapeisHerdeirosDeUsuarioInterno();
+			List<String> papeisUsuarioInterno = papelManager.getIdentificadoresPapeisHerdeiros(Parametros.PAPEL_USUARIO_INTERNO.getValue());
 			possuiDocumentoInclusoPorUsuarioInterno = papeisUsuarioInterno.contains(documento.getPerfilTemplate().getPapel().getIdentificador());
 		}
 	}
@@ -142,7 +146,7 @@ public class DocumentoComunicacaoAction implements Serializable {
 				}
 				
 			} else {
-				List<String> papeisUsuarioInterno = modeloComunicacaoManager.getIdentificadoresPapeisHerdeirosDeUsuarioInterno();
+				List<String> papeisUsuarioInterno = papelManager.getIdentificadoresPapeisHerdeiros(Parametros.PAPEL_USUARIO_INTERNO.getValue());
 				possuiDocumentoInclusoPorUsuarioInterno = false;
 				for (DocumentoModeloComunicacao documentoModeloComunicacao : modeloComunicacao.getDocumentos()) {
 					if (papeisUsuarioInterno.contains(documentoModeloComunicacao.getDocumento().getPerfilTemplate().getPapel().getIdentificador())) {

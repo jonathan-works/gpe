@@ -95,4 +95,10 @@ public class PapelManager extends Manager<PapelDAO, Papel> {
     public List<Papel> getPapeisOrdemAlfabetica() {
         return getDao().getPapeisOrdemAlfabetica();
     }
+    
+    public List<String> getIdentificadoresPapeisHerdeiros(String identificadorPapelBase) {
+        List<String> roles = getIdentificadoresPapeisMembros(identificadorPapelBase);
+        roles.add(identificadorPapelBase);
+        return roles;
+    }
 }
