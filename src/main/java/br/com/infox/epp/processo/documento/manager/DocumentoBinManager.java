@@ -2,6 +2,7 @@ package br.com.infox.epp.processo.documento.manager;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -128,8 +129,14 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 	public DocumentoBin persist(DocumentoBin o) throws DAOException {
 		try {
 			o.setUuid(UUID.randomUUID());
+			if (o.isBinario()) {
+                o.setMinuta(false);
+            }
 			if (!o.getSuficientementeAssinado() && !o.getDocumentoList().isEmpty()) {
-				o.setSuficientementeAssinado(!classificacaoDocumentoPapelManager.classificacaoExigeAssinatura(o.getDocumentoList().get(0).getClassificacaoDocumento()));
+				o.setSuficientementeAssinado(!classificacaoDocumentoPapelManager.classificacaoExigeAssinatura(o.getDocumentoList().get(0).getClassificacaoDocumento()) && !o.isMinuta());
+				if(o.getSuficientementeAssinado()){
+				    o.setDataSuficientementeAssinado(new Date());
+				}
 			}
 			o = super.persist(o);
 		} catch (final DAOException e) {
