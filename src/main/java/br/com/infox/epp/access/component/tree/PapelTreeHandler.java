@@ -1,6 +1,7 @@
 package br.com.infox.epp.access.component.tree;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
@@ -14,7 +15,7 @@ import br.com.infox.epp.access.entity.UsuarioPerfil;
 
 @Name(PapelTreeHandler.NAME)
 @Scope(ScopeType.PAGE)
-@BypassInterceptors
+@AutoCreate
 public class PapelTreeHandler extends AbstractTreeHandler<Papel> {
     public static final String NAME = "papelTree";
     public static final String PAPEL_TREE_EVENT = "papelTreeHandlerSelected";

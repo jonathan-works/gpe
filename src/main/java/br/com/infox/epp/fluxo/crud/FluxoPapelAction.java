@@ -3,11 +3,13 @@ package br.com.infox.epp.fluxo.crud;
 import java.util.Iterator;
 import java.util.List;
 
+
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.international.StatusMessages;
+
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.access.component.tree.PapelTreeHandler;
 import br.com.infox.epp.fluxo.entity.Fluxo;
@@ -20,8 +22,9 @@ public class FluxoPapelAction extends AbstractCrudAction<FluxoPapel, FluxoPapelM
     private static final LogProvider LOG = Logging.getLogProvider(FluxoPapelAction.class);
 
     public static final String NAME = "fluxoPapelAction";
-
-    private PapelTreeHandler papelTreeHandler = new PapelTreeHandler();
+    
+    @In(value= PapelTreeHandler.NAME)
+    private PapelTreeHandler papelTreeHandler;
     private List<FluxoPapel> fluxoPapelList;
     private Fluxo fluxo;
 

@@ -358,7 +358,7 @@ public class ModeloPastaRestricaoAction implements Serializable {
 	}
 
 	public boolean getModeloPastaSelecionada() {
-		return instance.getId() != null;
+		return instance == null || instance.getId() != null;
 	}
 
 	public Integer getId() {
