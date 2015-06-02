@@ -6,6 +6,7 @@ public interface ParticipanteProcessoQuery {
 	String PARAM_PROCESSO = "processo";
 	String PARAM_TIPO_PARTE = "tipoParte";
 	String PARAM_PARTICIPANTE_PAI = "participantePai";
+	String PARAM_PESSOA_PARTICIPANTE_FILHO = "pessoaParticipanteFilho";
 	
 	String PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO = "Participante.pessoa.processo";
 	String PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO_QUERY = "select o from ParticipanteProcesso o " +
@@ -29,4 +30,9 @@ public interface ParticipanteProcessoQuery {
 	String PARTICIPANTES_PROCESSO_RAIZ_QUERY = "select o from ParticipanteProcesso o "
 			+ "where o.processo = :" + PARAM_PROCESSO + " and o.participantePai is null and o.ativo = true";
 	
+	String PARTICIPANTES_BY_PROCESSO_PARTICIPANTE_FILHO = "getParticipantesByProcessoParticipanteFilho";
+	String PARTICIPANTES_BY_PROCESSO_PARTICIPANTE_FILHO_QUERY = "select o from ParticipanteProcesso o "
+	        + "where o.processo = :" + PARAM_PROCESSO + " and exists ("
+	                    + "select 1 from ParticipanteProcesso pp where pp.participantePai = o and pp.pessoa = :" + PARAM_PESSOA_PARTICIPANTE_FILHO
+	                + ")";
 }
