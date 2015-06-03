@@ -46,4 +46,8 @@ public class ParticipanteProcessoManager extends Manager<ParticipanteProcessoDAO
     public List<ParticipanteProcesso> getParticipantesByProcessoPessoaParticipanteFilho(Processo processo, PessoaFisica pessoaParticipanteFilho) {
         return getDao().getParticipantesByProcessoPessoaParticipanteFilho(processo, pessoaParticipanteFilho);
     }
+    
+    public boolean existeParticipanteFilhoByParticipanteProcesso(Processo processo, ParticipanteProcesso participantePai, PessoaFisica pessoaParticipanteFilho) {
+        return getDao().existeParticipanteFilhoByParticipanteProcesso(processo, participantePai, pessoaParticipanteFilho);
+    }
 }

@@ -35,4 +35,10 @@ public interface ParticipanteProcessoQuery {
 	        + "where o.processo = :" + PARAM_PROCESSO + " and exists ("
 	                    + "select 1 from ParticipanteProcesso pp where pp.participantePai = o and pp.pessoa = :" + PARAM_PESSOA_PARTICIPANTE_FILHO
 	                + ")";
+	
+	String EXISTE_PARTICIPANTE_FILHO_BY_PROCESSO = "existeParticipanteFilhoByProcesso";
+    String EXISTE_PARTICIPANTE_FILHO_BY_PROCESSO_QUERY = "select count(o) from ParticipanteProcesso o "
+            + "where o.processo = :" + PARAM_PROCESSO + " "
+                + "and o.participantePai = :" + PARAM_PARTICIPANTE_PAI + " "
+                + "and o.pessoa = :" + PARAM_PESSOA_PARTICIPANTE_FILHO;
 }

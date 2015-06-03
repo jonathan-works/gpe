@@ -2,6 +2,7 @@ package br.com.infox.epp.processo.partes.dao;
 
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_PAI_TIPO;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_TIPO;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_FILHO_BY_PROCESSO;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARAM_PARTICIPANTE_PAI;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARAM_PESSOA;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARAM_PESSOA_PARTICIPANTE_FILHO;
@@ -84,5 +85,14 @@ public class ParticipanteProcessoDAO extends DAO<ParticipanteProcesso> {
         params.put(PARAM_PROCESSO, processo);
         params.put(PARAM_PESSOA_PARTICIPANTE_FILHO, pessoaParticipanteFilho);
         return getNamedResultList(PARTICIPANTES_BY_PROCESSO_PARTICIPANTE_FILHO, params);
+    }
+
+    public boolean existeParticipanteFilhoByParticipanteProcesso(Processo processo,
+            ParticipanteProcesso participantePai, PessoaFisica pessoaParticipanteFilho) {
+        Map<String, Object> params = new HashMap<>();
+        params.put(PARAM_PROCESSO, processo);
+        params.put(PARAM_PARTICIPANTE_PAI, participantePai);
+        params.put(PARAM_PESSOA_PARTICIPANTE_FILHO, pessoaParticipanteFilho);
+        return (Long) getNamedSingleResult(EXISTE_PARTICIPANTE_FILHO_BY_PROCESSO, params) > 0;
     }
 }
