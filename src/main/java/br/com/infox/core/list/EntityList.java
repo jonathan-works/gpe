@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.annotation.PostConstruct;
 import javax.el.PropertyNotFoundException;
 
 import org.jboss.seam.Component;
@@ -51,17 +52,18 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
     private String orderedColumn;
 
     private static final int TAMANHO_XLS_PADRAO = 10000;
-
-    public EntityList() {
-        setCustomFilters();
-        addSearchFields();
-        Map<String, String> map = getCustomColumnsOrder();
-        if (map != null) {
-            customColumnsOrder.putAll(map);
-        }
-        setEjbql(getDefaultEjbql());
-        setOrder(getDefaultOrder());
-        setRestrictions();
+    
+    @PostConstruct
+    public void init() {
+    	setCustomFilters();
+    	addSearchFields();
+    	Map<String, String> map = getCustomColumnsOrder();
+    	if (map != null) {
+           customColumnsOrder.putAll(map);
+    	}
+    	setEjbql(getDefaultEjbql());
+    	setOrder(getDefaultOrder());
+    	setRestrictions();
     }
 
     /**
