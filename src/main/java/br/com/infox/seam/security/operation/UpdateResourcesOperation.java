@@ -37,7 +37,7 @@ public class UpdateResourcesOperation extends RunAsOperation {
             permissionManager.grantPermission(createPermission(role));
         }
     }
-
+    
     private Permission createPermission(final String identificador) {
         return new Permission(resource, ACCESS, new Role(identificador));
     }
