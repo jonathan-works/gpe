@@ -53,7 +53,12 @@ public class PastaDAO extends DAO<Pasta> {
 	public int getTotalDocumentosPastaPorFiltros(Pasta pasta, DocumentoFilter documentoFilter) {
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put(PARAM_PASTA, pasta);
-		String baseQuery = TOTAL_DOCUMENTOS_PASTA_QUERY;
+		parameters.put(PARAM_LOCALIZACAO, Authenticator.getLocalizacaoAtual());
+		String baseQuery = appendDocumentoFilters(documentoFilter, parameters, TOTAL_DOCUMENTOS_PASTA_QUERY);
+		return ((Number) getSingleResult(baseQuery + FILTER_SUFICIENTEMENTE_ASSINADO_OU_SETOR + FILTER_EXCLUIDO + FILTER_SIGILO, parameters)).intValue();
+	}
+
+	protected String appendDocumentoFilters(DocumentoFilter documentoFilter, Map<String, Object> parameters, String baseQuery) {
 		if (documentoFilter.getIdClassificacaoDocumento() != null) {
 			baseQuery = baseQuery + FILTER_CLASSIFICACAO_DOCUMENTO;
 			parameters.put(PARAM_CLASSIFICACAO_DOCUMENTO, documentoFilter.getIdClassificacaoDocumento());
@@ -62,8 +67,7 @@ public class PastaDAO extends DAO<Pasta> {
 			baseQuery = baseQuery + FILTER_NUMERO_DOCUMENTO;
 			parameters.put(PARAM_NUMERO_DOCUMENTO, documentoFilter.getNumeroDocumento());
 		}
-		parameters.put(PARAM_LOCALIZACAO, Authenticator.getLocalizacaoAtual());
-		return ((Number) getSingleResult(baseQuery + FILTER_SUFICIENTEMENTE_ASSINADO_OU_SETOR + FILTER_EXCLUIDO + FILTER_SIGILO, parameters)).intValue();
+		return baseQuery;
 	}
 	
 	public int getTotalDocumentosPasta(Pasta pasta, String customFilter, Map<String, Object> params) {

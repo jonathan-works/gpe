@@ -41,6 +41,11 @@ public class DocumentoList extends EntityList<Documento> {
     @In private ParametroManager parametroManager;
     @In private PastaManager pastaManager;
     @In private ActionMessagesService actionMessagesService;
+    
+    @Override
+    public void newInstance() {
+    	setEntity(new Documento());
+    }
 
     @Override
     public List<Documento> list(int maxResult) {
