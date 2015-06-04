@@ -10,8 +10,8 @@ login-required="true"
 
     <param name="tab" value="#{search.tab}"/>
     <begin-conversation join="true" />
-    <action execute="#{documentoSearch.setPalavraPesquisada(search.searchText)}"/>
-    <action execute="#{taskConteudoSearch.setPalavraPesquisada(search.searchText)}"/>
-    <action execute="#{search.search}"/>
+    <action execute="#{documentoSearch.setPalavraPesquisada(search.searchText)}" on-postback="false"/>
+    <action execute="#{taskConteudoSearch.setPalavraPesquisada(search.searchText)}" on-postback="false"/>
+    <action execute="#{search.search}" on-postback="false"/>
 
 </page>

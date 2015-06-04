@@ -12,10 +12,9 @@ import org.apache.lucene.search.BooleanQuery.TooManyClauses;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.util.Version;
 import org.hibernate.Session;
-import org.hibernate.search.FullTextQuery;
-import org.hibernate.search.FullTextSession;
-import org.hibernate.search.Search;
 import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.jpa.FullTextQuery;
+import org.hibernate.search.jpa.Search;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -95,24 +94,31 @@ public class TaskConteudoDAO extends DAO<TaskConteudo> {
 
     @SuppressWarnings(UNCHECKED)
     public List<TaskConteudo> pesquisar(String searchPattern) throws TooManyClauses, ParseException {
-        Session session = sessionAssistant.getSession();
-        FullTextSession fullTextSession = Search.getFullTextSession(session);
+    	FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(getEntityManager());
         List<TaskConteudo> ret = new ArrayList<TaskConteudo>();
         QueryParser parser = new QueryParser(Version.LUCENE_36, "conteudo", new BrazilianAnalyzer(Version.LUCENE_36));
-        Query luceneQuery;
-        try {
-            luceneQuery = parser.parse(searchPattern);
-        } catch (TooManyClauses | ParseException e) {
-            throw e;
-        }
-        FullTextQuery hibernateQuery = fullTextSession.createFullTextQuery(luceneQuery, TaskConteudo.class);
-        List<TaskConteudo> taskConteudos = hibernateQuery.list();
+        Query luceneQuery = parser.parse(searchPattern);
+        FullTextQuery query = fullTextEntityManager.createFullTextQuery(luceneQuery, TaskConteudo.class);
+        query.setMaxResults(50);
+        List<TaskConteudo> results = query.getResultList();
+        int passo = 0;
         UsuarioLogin usuario = Authenticator.getUsuarioLogado();
-        for (TaskConteudo tc : taskConteudos) {
-            Processo processo = getEntityManager().find(Processo.class, tc.getNumeroProcesso());
-            if (sigiloProcessoService.usuarioPossuiPermissao(usuario, processo)){
-                ret.add(tc);
-            }
+        while (ret.size() < 50 && results != null && !results.isEmpty()) {
+        	passo++;
+	        for (int i = 0; i < results.size() && ret.size() < 50; i++) {
+	        	TaskConteudo taskConteudo = results.get(i);
+	        	Processo processo = getEntityManager().find(Processo.class, taskConteudo.getNumeroProcesso());
+	        	if (sigiloProcessoService.usuarioPossuiPermissao(usuario, processo)){
+	                ret.add(taskConteudo);
+	            }
+	        }
+	        if (ret.size() < 50) {
+	        	query.setFirstResult(passo * 50);
+	        	results = query.getResultList();
+	        }
+	        if (passo * 50 > 1000) {
+	        	break;
+	        }
         }
         return ret;
     }
