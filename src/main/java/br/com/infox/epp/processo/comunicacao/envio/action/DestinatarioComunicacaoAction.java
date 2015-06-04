@@ -76,9 +76,7 @@ public class DestinatarioComunicacaoAction {
 	
 	void resetEntityState() {
 		for (DestinatarioModeloComunicacao dest : modeloComunicacao.getDestinatarios()) {
-			if (!genericManager.contains(dest)) {
-				dest.setId(null);
-			}
+			dest.setId(null);
 		}
 	}
 	

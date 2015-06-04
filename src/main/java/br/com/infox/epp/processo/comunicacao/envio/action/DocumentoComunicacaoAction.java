@@ -85,9 +85,7 @@ public class DocumentoComunicacaoAction implements Serializable {
 	
 	void resetEntityState() {
 		for (DocumentoModeloComunicacao doc : modeloComunicacao.getDocumentos()) {
-			if (!genericManager.contains(doc)) {
-				doc.setId(null);
-			}
+			doc.setId(null);
 		}
 	}
 	
