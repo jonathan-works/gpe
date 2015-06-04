@@ -15,12 +15,12 @@
 		 value="#{id}" />
 		<s:decorate
 			id="#{id}Decoration"
+			rendered="#{not readonly}"
 			template="/WEB-INF/xhtml/components/templates/edit.xhtml">
 			<ui:define name="label">#{infoxMessages['modeloDocumento.modeloDocumento']}</ui:define>
 			
 			<h:selectOneMenu
-				value="#{home.modeloDocumento}"
-				rendered="#{! readonly}">
+				value="#{home.modeloDocumento}">
 			
 				<a:ajax
 					event="change"
