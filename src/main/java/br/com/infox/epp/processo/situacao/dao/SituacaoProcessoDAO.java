@@ -195,7 +195,7 @@ public class SituacaoProcessoDAO extends DAO<SituacaoProcesso> {
 		Selection<String> nomeTarefa = from.<String>get("nomeTarefa").alias("nomeTarefa");
 		Selection<Long> maxIdTask = cb.max(from.<Long>get("idTask")).alias("idTask");
 		Selection<Integer> maxIdTarefa = cb.max(from.<Integer>get("idTarefa")).alias("idTarefa");
-		Selection<Long> countCaixa = cb.countDistinct(from.get("nomeCaixa")).alias("qtdEmCaixa");
+		Selection<Long> countCaixa = cb.count(from.get("nomeCaixa")).alias("qtdEmCaixa");
 		Selection<Long> countProcesso = cb.countDistinct(from.get("idProcesso")).alias("qtd");
 		Selection<String> type = cb.<String>literal(PainelEntityNode.TASK_TYPE).alias("type");
 		cq.select(cb.tuple(nomeTarefa, maxIdTask, maxIdTarefa, countCaixa, countProcesso, type)).distinct(true);
