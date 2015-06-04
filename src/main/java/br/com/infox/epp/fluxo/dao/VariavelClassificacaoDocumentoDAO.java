@@ -86,7 +86,7 @@ public class VariavelClassificacaoDocumentoDAO extends DAO<VariavelClassificacao
     	
     	query.where(createRestrictions(cb, query, idFluxo, variavel, tipoDocumento, nomeClassificacaoDocumento));
     	
-    	return getEntityManager().createQuery(query).getResultList();
+    	return getEntityManager().createQuery(query).setMaxResults(max).setFirstResult(start).getResultList();
     }
     
     public Long totalClassificacoesDisponiveisParaVariavel(Integer idFluxo, String variavel, TipoDocumentoEnum tipoDocumento, String nomeClassificacaoDocumento) {
