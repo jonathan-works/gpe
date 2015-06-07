@@ -51,7 +51,7 @@ public abstract class JpaQuery<E> implements Serializable {
 		if (isAnyParameterDirty()) refresh();
 		if (resultList == null) {
 			Query query = createQuery();
-			resultList = query==null ? null : (List<E>) query.getResultList();
+			resultList = query == null ? null : (List<E>) query.getResultList();
 		}
 		return truncResultList(resultList);
 	}
@@ -211,7 +211,9 @@ public abstract class JpaQuery<E> implements Serializable {
 	}
 	
 	protected String getFieldName(String field){
-		if (!field.contains(".")) return field;		
+		if ( !field.contains(".") ) {
+			return field;		
+		}
 		return field.split("\\.")[0];
 	}
 	

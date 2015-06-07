@@ -18,8 +18,6 @@ public enum RestrictionType {
 	
 	iniciando("{0} like (#'{'{1}.{2}} || '''%''')"),
 	
-	iniciandoAscii("to_ascii({0}) like to_ascii(#'{'{1}.{2}} || '''%''')"),
-
 	contendoLower("lower({0}) like ('''%''' || lower(#'{'{1}.{2}}) || '''%''')"),
 	
 	iniciandoLower("lower({0}) like (lower(#'{'{1}.{2}}) || '''%''')"),
