@@ -26,6 +26,7 @@
     <ui:param
       name="instance"
       value="#{home.instance}" />
+    <ui:param name="showForm" value="#{empty showForm ? true : showForm}" />
     <h:form id="#{formId}" rendered="#{showForm}">
       <a:region>
         <s:div styleClass="edit">
