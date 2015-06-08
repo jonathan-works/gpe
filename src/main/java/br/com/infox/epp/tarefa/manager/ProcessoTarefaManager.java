@@ -144,6 +144,11 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
         }
     }
 
+    public List<ProcessoTarefa> getByProcesso(Processo processo) {
+        return getDao().getByProcesso(processo);
+    }
+    
+
     /**
      * Calcula o tempo a incrementar no {@link ProcessoTarefa} de acordo com
      * a data em que ocorreu o disparo.
