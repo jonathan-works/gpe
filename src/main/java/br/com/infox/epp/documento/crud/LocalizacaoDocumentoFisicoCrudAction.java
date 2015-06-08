@@ -14,6 +14,7 @@ import br.com.infox.epp.documento.entity.LocalizacaoFisica;
 import br.com.infox.epp.documento.list.LocalizacaoFisicaList;
 import br.com.infox.epp.documento.manager.DocumentoFisicoManager;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Scope(ScopeType.CONVERSATION)
 @Name(LocalizacaoDocumentoFisicoCrudAction.NAME)
@@ -29,7 +30,8 @@ public class LocalizacaoDocumentoFisicoCrudAction extends AbstractCrudAction<Doc
 
     public void setProcesso(Processo processo) {
         this.processo = processo;
-        localizacaoFisicaList = new LocalizacaoFisicaList().getResultList();
+        LocalizacaoFisicaList localizacaoFisicaList = ComponentUtil.getComponent(LocalizacaoFisicaList.NAME, ScopeType.PAGE);
+        this.localizacaoFisicaList = localizacaoFisicaList.getResultList();
         listByProcesso();
     }
 
