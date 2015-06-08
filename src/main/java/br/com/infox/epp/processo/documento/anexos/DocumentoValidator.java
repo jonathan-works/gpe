@@ -9,6 +9,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 
+import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
@@ -55,6 +56,8 @@ public class DocumentoValidator {
         }
         if (documentoBinarioManager.existeBinario(pdBin.getId())) {
             documentoDownloader.downloadDocumento(pdBin.getDocumentoList().get(0));
+        } else if (!pdBin.isBinario()) {
+            FileDownloader.download(pdBin.getModeloDocumento().getBytes(), "text/html", pdBin.getNomeArquivo());
         }
         tentativas = 0;
     }
