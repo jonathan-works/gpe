@@ -14,9 +14,12 @@ import br.com.infox.epp.fluxo.entity.ModeloPasta;
 import br.com.infox.epp.fluxo.manager.ModeloPastaManager;
 import br.com.infox.epp.processo.documento.dao.PastaDAO;
 import br.com.infox.epp.processo.documento.entity.Pasta;
+import br.com.infox.epp.processo.documento.entity.PastaRestricao;
 import br.com.infox.epp.processo.documento.filter.DocumentoFilter;
 import br.com.infox.epp.processo.documento.service.DocumentoService;
+import br.com.infox.epp.processo.documento.type.PastaRestricaoEnum;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
@@ -36,6 +39,8 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     private PastaRestricaoManager pastaRestricaoManager;
     @In
     private ModeloPastaManager modeloPastaManager;
+    @In
+    private ProcessoManager processoManager;
     
     public Pasta getDefaultFolder(Processo processo) throws DAOException {
         Pasta pasta = getDefault(processo);
@@ -141,4 +146,29 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     public Pasta getPastaByNome(String nome, Processo processo) {
     	return getDao().getPastaByNome(nome, processo);
     }
+    
+    public void disponibilizarPastaParaParticipantesProcesso(String descricaoPasta, Long idProcesso) throws DAOException {
+    	Processo processo = processoManager.find(idProcesso.intValue()); 
+    	if (processo != null) {
+    		Pasta pasta = getDao().getByProcessoAndDescricao(processo.getProcessoRoot(), descricaoPasta);
+    		if (pasta != null) {
+    			PastaRestricao pastaRestricao = pastaRestricaoManager.getByPastaAlvoTipoRestricao(pasta, 1, PastaRestricaoEnum.R);
+    			if (pastaRestricao == null) {
+    				pastaRestricao = new PastaRestricao();
+    				pastaRestricao.setAlvo(1);
+    				pastaRestricao.setTipoPastaRestricao(PastaRestricaoEnum.R);
+    				pastaRestricao.setWrite(false);
+    				pastaRestricao.setDelete(false);
+    				pastaRestricao.setRead(true);
+    				pastaRestricao.setPasta(pasta);
+    				pastaRestricaoManager.persist(pastaRestricao);
+    			} else {
+    				pastaRestricao.setRead(true);
+    				pastaRestricaoManager.update(pastaRestricao);
+    			}
+    		}
+    	}
+    }
+    
+    
 }

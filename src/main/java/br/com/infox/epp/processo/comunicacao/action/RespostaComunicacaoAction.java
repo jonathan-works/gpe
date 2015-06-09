@@ -1,8 +1,8 @@
 package br.com.infox.epp.processo.comunicacao.action;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
@@ -12,10 +12,10 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
+import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.action.ActionMessagesService;
-import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
@@ -23,12 +23,15 @@ import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.DocumentoRespostaComunicacao;
 import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
 import br.com.infox.epp.processo.comunicacao.list.DocumentoComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.list.RespostaComunicacaoList;
+import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.DocumentoComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
+import br.com.infox.epp.processo.comunicacao.service.ProrrogacaoPrazoService;
 import br.com.infox.epp.processo.comunicacao.service.RespostaComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
@@ -42,6 +45,8 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+
+import com.google.common.base.Strings;
 
 @Name(RespostaComunicacaoAction.NAME)
 @AutoCreate
@@ -79,11 +84,18 @@ public class RespostaComunicacaoAction implements Serializable {
 	private AssinaturaDocumentoService assinaturaDocumentoService;
 	@In
 	private RespostaComunicacaoService respostaComunicacaoService;
+	@In
+	private ProrrogacaoPrazoService prorrogacaoPrazoService;
+	@In
+	private ModeloComunicacaoManager modeloComunicacaoManager;
 	
 	private DestinatarioModeloComunicacao destinatario;
+	private List<Documento> documentosComunicacao;
+
 	private Processo processoComunicacao;
 	private Processo processoRaiz;
 	private Date prazoResposta;
+	private String statusProrrogacao;
 	
 	private List<ClassificacaoDocumento> classificacoesEditor;
 	private List<ClassificacaoDocumento> classificacoesAnexo;
@@ -92,6 +104,7 @@ public class RespostaComunicacaoAction implements Serializable {
 	private ModeloDocumento modeloDocumento;
 	
 	private Documento documentoEdicao;
+	private boolean possivelMostrarBotaoEnvio = false;
 	
 	@Create
 	public void init() {
@@ -107,20 +120,26 @@ public class RespostaComunicacaoAction implements Serializable {
 		newDocumentoEdicao();
 		initClassificacoes();
 		prazoResposta = prazoComunicacaoService.contabilizarPrazoCumprimento(processoComunicacao);
+		verificarPossibilidadeEnvioResposta();
 	}
 
-	public void downloadComunicacao() {
-		try {
-			byte[] pdf = comunicacaoService.gerarPdfCompleto(destinatario.getModeloComunicacao(), destinatario);
-			FileDownloader.download(pdf, "application/pdf", "Comunicação.pdf");
-		} catch (DAOException e) {
-			LOG.error("", e);
-			actionMessagesService.handleDAOException(e);
-		}
+	public Long getIdDestinatario(){
+		return destinatario.getId();
 	}
 	
-	public void downloadDocumento(Documento documento) {
-		documentoDownloader.downloadDocumento(documento);
+	public DestinatarioModeloComunicacao getDestinatario() {
+		return destinatario;
+	}
+
+	public void setDestinatario(DestinatarioModeloComunicacao destinatario) {
+		this.destinatario = destinatario;
+	}
+	
+	public List<Documento> getDocumentosComunicacao(){
+		if(documentosComunicacao == null){
+			documentosComunicacao = modeloComunicacaoManager.getDocumentosByModeloComunicacao(destinatario.getModeloComunicacao());
+		}
+		return documentosComunicacao;
 	}
 	
 	public void assignModeloDocumento() {
@@ -131,20 +150,29 @@ public class RespostaComunicacaoAction implements Serializable {
 		}
 	}
 	
+	public boolean isPossivelMostrarBotaoEnvio() {
+		return possivelMostrarBotaoEnvio;
+	}
+	
 	public void gravarResposta() {
-		String textoEditor = documentoEdicao.getDocumentoBin().getModeloDocumento();
-		if (textoEditor == null || textoEditor.isEmpty()) {
+		if (Strings.isNullOrEmpty(documentoEdicao.getDocumentoBin().getModeloDocumento())) {
 			FacesMessages.instance().add("Insira texto no editor");
 			return;
 		}
 		try {
-			documentoEdicao = documentoManager.gravarDocumentoNoProcesso(processoRaiz, documentoEdicao); 
-			documentoComunicacaoService.vincularDocumentoRespostaComunicacao(documentoEdicao, processoComunicacao);
+			if (!documentoManager.contains(documentoEdicao)) {
+				documentoEdicao = documentoManager.gravarDocumentoNoProcesso(processoRaiz, documentoEdicao); 
+				documentoComunicacaoService.vincularDocumentoRespostaComunicacao(documentoEdicao, processoComunicacao);
+			} else {
+				documentoManager.update(documentoEdicao);
+			}
+			newDocumentoEdicao();
 			FacesMessages.instance().add("Registro gravado com sucesso");
 		} catch (DAOException e) {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);
 		}
+		verificarPossibilidadeEnvioResposta();
 	}
 	
 	public void newDocumentoEdicao() {
@@ -166,24 +194,29 @@ public class RespostaComunicacaoAction implements Serializable {
 			actionMessagesService.handleDAOException(e);
 		}
 		documentoUploader.clear();
+		verificarPossibilidadeEnvioResposta();
 	}
 	
 	public void enviarRespostaComunicacao(){
-		List<Documento> documentosResposta = respostaComunicacaoList.list();
-		Iterator<Documento> iteratorResposta = respostaComunicacaoList.list().iterator();
-		while (iteratorResposta.hasNext()){
-			Documento documento = iteratorResposta.next();
-			if(assinaturaDocumentoService.isDocumentoTotalmenteAssinado(documento)){
-				iteratorResposta.remove();
-			}
-		}
+		List<Documento> documentosRespostaComunicacao = getDocumentoRespostaList();
 		try {
-			respostaComunicacaoService.enviarResposta(documentosResposta);
-			FacesMessages.instance().add("Resposta enviada com sucesso");
+			if(!documentosRespostaComunicacao.isEmpty()){
+			    long processId = BusinessProcess.instance().getProcessId();
+			    long taskId = BusinessProcess.instance().getTaskId();
+			    respostaComunicacaoService.enviarResposta(documentosRespostaComunicacao);
+				BusinessProcess.instance().setProcessId(processId);
+				BusinessProcess.instance().setTaskId(taskId);
+				initClassificacoes();
+				FacesMessages.instance().add("Resposta enviada com sucesso");
+				modelosDocumento = null;
+				newDocumentoEdicao();
+				initClassificacoes();
+			}
 		} catch (DAOException e) {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);
 		}
+		verificarPossibilidadeEnvioResposta();
 	}
 	
 	public void removerDocumento(Documento documento) {
@@ -198,6 +231,7 @@ public class RespostaComunicacaoAction implements Serializable {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);
 		}
+		verificarPossibilidadeEnvioResposta();
 	}
 	
 	public boolean podeRemoverDocumento(Documento documento) {
@@ -267,9 +301,47 @@ public class RespostaComunicacaoAction implements Serializable {
 		return prazoResposta;
 	}
 
+	public String getStatusProrrogacao() {
+		setStatusProrrogacao(prorrogacaoPrazoService.getStatusProrrogacaoFormatado(processoComunicacao));
+		if(Strings.isNullOrEmpty(statusProrrogacao)){
+			if (prorrogacaoPrazoService.canRequestProrrogacaoPrazo(destinatario.getModeloComunicacao().getTipoComunicacao())){
+				setStatusProrrogacao("Não solicitada");
+			}else{
+				setStatusProrrogacao("Indisponível");
+			}
+		}
+		return statusProrrogacao;
+	}
+
+	public void setStatusProrrogacao(String statusProrrogacao) {
+		this.statusProrrogacao = statusProrrogacao;
+	}
+
 	private void initClassificacoes() {
-		TipoComunicacao tipoComunicacao = destinatario.getModeloComunicacao().getTipoComunicacao();
-		classificacoesEditor = documentoComunicacaoService.getClassificacoesDocumentoDisponiveisRespostaComunicacao(tipoComunicacao, true);
-		classificacoesAnexo = documentoComunicacaoService.getClassificacoesDocumentoDisponiveisRespostaComunicacao(tipoComunicacao, false);
+		classificacoesEditor = documentoComunicacaoService.getClassificacoesDocumentoDisponiveisRespostaComunicacao(destinatario, true);
+		classificacoesAnexo = documentoComunicacaoService.getClassificacoesDocumentoDisponiveisRespostaComunicacao(destinatario, false);
+	}
+	
+	public void verificarPossibilidadeEnvioResposta() {
+		possivelMostrarBotaoEnvio = true;
+		List<Documento> documentosResposta = getDocumentoRespostaList();
+		if (documentosResposta == null || documentosResposta.isEmpty()) {
+			possivelMostrarBotaoEnvio = false;
+		}
+		for (Documento documento : documentosResposta) {
+			if(!assinaturaDocumentoService.isDocumentoTotalmenteAssinado(documento) || documento.getDocumentoBin().isMinuta()) {
+				possivelMostrarBotaoEnvio = false;
+				break;
+			}
+		}
+	}
+	
+	private List<Documento> getDocumentoRespostaList(){
+	    List<DocumentoRespostaComunicacao> documentosRespostaComunicacao = new ArrayList<DocumentoRespostaComunicacao>(respostaComunicacaoList.list());
+	    List<Documento> documentosResposta = new ArrayList<Documento>();
+	    for (DocumentoRespostaComunicacao documentoRespostaComunicacao : documentosRespostaComunicacao) {
+            documentosResposta.add(documentoRespostaComunicacao.getDocumento());
+        }
+	    return documentosResposta;
 	}
 }

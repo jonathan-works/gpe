@@ -11,6 +11,7 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.context.exe.ContextInstance;
+import org.joda.time.DateTime;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -18,8 +19,10 @@ import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
+import br.com.infox.epp.processo.metadado.system.MetadadoProcessoDefinition;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.epp.system.Parametros;
 
@@ -35,6 +38,8 @@ public class PrazoComunicacaoService {
 	private CalendarioEventosManager calendarioEventosManager;
 	@In
 	private MetadadoProcessoManager metadadoProcessoManager;
+	@In
+	private ProcessoManager processoManager;
 	
 	public Date contabilizarPrazoCiencia(Processo comunicacao) {
 		DestinatarioModeloComunicacao destinatario = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO).getValue();
@@ -70,8 +75,13 @@ public class PrazoComunicacaoService {
 		}
 		if (diasPrazoCumprimento >= 0) {
     		Date limiteDataCumprimento = contabilizarPrazoCumprimento(comunicacao);
+    		String dataLimite = new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(limiteDataCumprimento);
     		MetadadoProcesso metadadoLimiteDataCumprimento = metadadoProcessoProvider.gerarMetadado(
-    		        ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(limiteDataCumprimento));
+    		        ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO, dataLimite);
+    		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoLimiteDataCumprimento));
+    		
+    		metadadoLimiteDataCumprimento = metadadoProcessoProvider.gerarMetadado(
+    				ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO_INICIAL, dataLimite);
     		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoLimiteDataCumprimento));
 		}
 		adicionarVariavelCienciaAutomaticaAoProcesso(usuarioCiencia, comunicacao);
@@ -106,4 +116,13 @@ public class PrazoComunicacaoService {
 		ContextInstance contextInstance = processInstance.getContextInstance();
         contextInstance.setVariable("possuiPrazoParaCumprimento", possuiPrazoParaCumprimento);
     }
+    
+    public void movimentarComunicacaoPrazoExpirado(Processo comunicacao, MetadadoProcessoDefinition metadadoPrazo) throws DAOException{
+		Date dataLimite = comunicacao.getMetadado(metadadoPrazo).getValue();
+		DateTime dataParaCumprimento = new DateTime(dataLimite.getTime());
+		if (dataParaCumprimento.isBeforeNow()) {
+			processoManager.movimentarProcessoJBPM(comunicacao);
+		}
+	}
+    
 }

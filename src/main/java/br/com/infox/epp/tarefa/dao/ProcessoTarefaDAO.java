@@ -93,4 +93,10 @@ public class ProcessoTarefaDAO extends DAO<ProcessoTarefa> {
         parameters.put(QUERY_PARAM_PROCESSO, processo);
         return getNamedSingleResult(ULTIMO_PROCESSO_TAREFA_BY_PROCESSO, parameters);
     }
+
+    public List<ProcessoTarefa> getByProcesso(Processo processo) {
+        Map<String, Object> params = new HashMap<>();
+        params.put(QUERY_PARAM_PROCESSO, processo);
+        return getNamedResultList(ULTIMO_PROCESSO_TAREFA_BY_PROCESSO, params);
+    }
 }

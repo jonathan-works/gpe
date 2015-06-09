@@ -41,6 +41,7 @@ import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.system.Parametros;
 import br.com.infox.ibpm.task.home.VariableTypeResolver;
 
 @Name(DocumentoComunicacaoService.NAME)
@@ -72,8 +73,8 @@ public class DocumentoComunicacaoService {
 	@In
 	private GenericManager genericManager;
 	
-	public List<ClassificacaoDocumento> getClassificacoesDocumentoDisponiveisRespostaComunicacao(TipoComunicacao tipoComunicacao, boolean isModelo) {
-		return classificacaoDocumentoManager.getClassificacoesDocumentoDisponiveisRespostaComunicacao(tipoComunicacao, isModelo, Authenticator.getPapelAtual());
+	public List<ClassificacaoDocumento> getClassificacoesDocumentoDisponiveisRespostaComunicacao(DestinatarioModeloComunicacao destinatarioModeloComunicacao, boolean isEditor) {
+		return classificacaoDocumentoManager.getClassificacoesDocumentoDisponiveisRespostaComunicacao(destinatarioModeloComunicacao, isEditor, Authenticator.getPapelAtual());
 	}
 	
 	public List<ModeloDocumento> getModelosDocumentoDisponiveisComunicacao(TipoComunicacao tipoComunicacao) {
@@ -155,6 +156,6 @@ public class DocumentoComunicacaoService {
 	}
 
 	public DocumentoModeloComunicacao getDocumentoInclusoPorUsuarioInterno(ModeloComunicacao modeloComunicacao) {
-		return modeloComunicacaoManager.getDocumentoInclusoPorPapel(modeloComunicacaoManager.getIdentificadoresPapeisHerdeirosDeUsuarioInterno(), modeloComunicacao);
+		return modeloComunicacaoManager.getDocumentoInclusoPorPapel(papelManager.getIdentificadoresPapeisHerdeiros(Parametros.PAPEL_USUARIO_INTERNO.getValue()), modeloComunicacao);
 	}
 }

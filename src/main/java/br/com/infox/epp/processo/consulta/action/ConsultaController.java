@@ -65,7 +65,10 @@ public class ConsultaController extends AbstractController {
 
     @Override
     public void setId(Object id) {
-    	Processo processo = processoManager.find(Integer.valueOf((String) id));
+    	if (id instanceof String) {
+    		id = Integer.valueOf((String) id);
+    	}
+    	Processo processo = processoManager.find(id);
     	if (processo == null || processo.getProcessoPai() == null) {
     		this.setProcesso(processo);
     		super.setId(id);

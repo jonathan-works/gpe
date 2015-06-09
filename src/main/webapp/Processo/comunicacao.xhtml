@@ -1,3 +1,4 @@
+
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -12,7 +13,7 @@
 		rendered="#{s:hasRole(usuarioInterno)}" />
 	<h:form>
 		<a:jsFunction name="reloadAll" render="comunicacoesDiv" limitRender="true" execute="@this" 
-			action="#{comunicacaoAction.clearCacheModelos}"/>
+			action="#{comunicacaoAction.clear}"/>
 	</h:form>
 	<s:div id="comunicacoesDiv">
 		<rich:collapsiblePanel switchType="client" id="rascunhos" header="#{infoxMessages['comunicacao.rascunhos']}" rendered="#{s:hasRole(usuarioInterno)}">
@@ -32,23 +33,30 @@
 		</rich:collapsiblePanel>
 		<br />
 		<rich:collapsiblePanel header="#{infoxMessages['comunicacao.comunicacoes']}" 
-			switchType="client" id="comunicacoes" rendered="#{not empty comunicacaoAction.comunicacoesDoProcesso}">
+			switchType="client" id="comunicacoes">
 			<h:form>
 				<rich:dataTable value="#{comunicacaoAction.getDestinatarios()}" 
-					var="bean" styleClass="dtable rf-dt-crud">
+					var="bean" styleClass="dtable rf-dt-crud" rendered="#{not empty comunicacaoAction.comunicacoesDoProcesso}">
 					<rich:column styleClass="dt-toolbar-col" rendered="#{s:hasRole(usuarioInterno)}">
 							<a:commandLink action="#{comunicacaoAction.setDestinatarioCiencia(bean)}" 
 								execute="@this" limitRender="true" rendered="#{not comunicacaoAction.isCienciaConfirmada(bean)}"
-								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage"
+								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage, painelDocumentosResposta"
 								onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
 								<h:graphicImage url="#{wiSkin.imageFolder}/search_16.png" title="#{infoxMessages['comunicacao.confirmarCiencia']}" />
 							</a:commandLink>
 							<a:commandLink action="#{comunicacaoAction.setDestinatarioProrrogacaoPrazo(bean)}"
-								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage" 
+								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage, painelDocumentosResposta" 
 								execute="@this" limitRender="true"
 								rendered="#{comunicacaoAction.podePedirProrrogacaoPrazo(bean)}"
 								onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
 								<h:graphicImage url="#{wiSkin.imageFolder}/time_16.png" title="#{infoxMessages['comunicacao.pedirProrrogacaoPrazo']}" />
+							</a:commandLink>
+							<a:commandLink action="#{comunicacaoAction.setDestinatarioResposta(bean)}"
+								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage, painelDocumentosResposta" 
+								execute="@this" limitRender="true"
+								rendered="true"
+								onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
+								<h:graphicImage url="#{wiSkin.imageFolder}/Task.png" title="#{infoxMessages['comunicacao.documentosResposta']}" />
 							</a:commandLink>
 					</rich:column>
 					<rich:column>
@@ -68,7 +76,7 @@
 						<h:outputText value="#{bean.dataEnvio}" />
 					</rich:column>
 					<rich:column>
-						<f:facet name="header">#{infoxMessages['comunicacao.dataConfirmacao']}</f:facet>
+						<f:facet name="header">#{infoxMessages['comunicacao.dataCiencia']}</f:facet>
 						<h:outputText value="#{bean.dataConfirmacao}" />
 					</rich:column>
 					<rich:column>
@@ -76,12 +84,12 @@
 						<h:outputText value="#{bean.responsavelConfirmacao}" />
 					</rich:column>
 					<rich:column>
-						<f:facet name="header">#{infoxMessages['comunicacao.prazoAtendimento']}</f:facet>
-						<h:outputText value="#{bean.prazoAtendimento}" />
-					</rich:column>
-					<rich:column>
 						<f:facet name="header">#{infoxMessages['comunicacao.prazoFinal']}</f:facet>
 						<h:outputText value="#{bean.prazoFinal}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{infoxMessages['comunicacao.statusProrrogacao']}</f:facet>
+						<h:outputText value="#{bean.statusProrrogacao}" />
 					</rich:column>
 					<rich:column>
 						<f:facet name="header">#{infoxMessages['comunicacao.documentos']}</f:facet>
@@ -171,10 +179,12 @@
 	    	<rich:panel header="#{infoxMessages['comunicacao.documentos']} - #{comunicacaoAction.destinatario.nome} / #{comunicacaoAction.destinatario.tipoComunicacao.descricao}"
 	    		rendered="#{comunicacaoAction.documentos}">
 	    		<h:form>
-	    			<h:commandButton styleClass="buttons" action="#{comunicacaoAction.downloadComunicacao}" 
-	    				value="#{infoxMessages['comunicacao.comunicacao']}"
-	    				rendered="#{not empty comunicacaoAction.destinatario.documentoComunicacao.documentoBin.extensao}"/>
-                    <h:commandButton styleClass="buttons"
+	    			<a:commandButton id="baixarDocumentoComunicacao" 
+						value="#{infoxMessages['comunicacao.comunicacao']}"
+						rendered="#{not empty comunicacaoAction.destinatario.documentoComunicacao.documentoBin.extensao}" 
+						styleClass="buttons"
+						onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/downloadDocumento.seam?id=#{comunicacaoAction.destinatario.documentoComunicacao.id}','1024'); return false;" />
+                    <a:commandButton styleClass="buttons"
                         onclick="infox.openPopUp('doc#{comunicacaoAction.destinatario.documentoComunicacao.documentoBin.id}', '#{pathResolver.contextPath}/Painel/documentoHTML.seam?idBin=#{comunicacaoAction.destinatario.documentoComunicacao.documentoBin.id}','1024'); return false;" 
                         value="#{infoxMessages['comunicacao.comunicacao']}"
                         rendered="#{empty comunicacaoAction.destinatario.documentoComunicacao.documentoBin.extensao}"/>
@@ -182,10 +192,11 @@
 	    		<rich:dataTable value="#{comunicacaoAction.documentosDestinatario}" var="documento" styleClass="dtable rf-dt-crud">
 	    			<rich:column styleClass="dt-toolbar-col">
 	    				<h:form>
-	    					<h:commandLink action="#{comunicacaoAction.downloadDocumento(documento)}"
-	    						rendered="#{not empty documento.documentoBin.extensao}">
+	    					<a:commandLink id="baixarDocumento" 
+								rendered="#{not empty documento.documentoBin.extensao}"
+								onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/downloadDocumento.seam?id=#{documento.id}','1024'); return false;">
 								<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
-							</h:commandLink>
+							</a:commandLink>
 							<a:commandLink rendered="#{empty documento.documentoBin.extensao}"
 								onclick="infox.openPopUp('doc#{documento.documentoBin.id}', '#{pathResolver.contextPath}/Painel/documentoHTML.seam?idBin=#{documento.documentoBin.id}','1024'); return false;">
 								<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
@@ -198,6 +209,14 @@
 	    			</rich:column>
 	    		</rich:dataTable>
 	    	</rich:panel>
+	    </s:div>
+	    <s:div id="painelDocumentosResposta">
+	    	<ui:include src="/WEB-INF/xhtml/components/fragments/documentosResposta.xhtml">
+	    		<ui:param name="id" value="documentosResposta" />
+	    		<ui:param name="rendered" value="#{comunicacaoAction.documentoResposta}" />
+	    		<ui:param name="list" value="#{comunicacaoAction.getDocumentosRespostaList()}" />
+	    		<ui:param name="title" value="#{infoxMessages['comunicacao.documentosResposta']}"/>
+	    	</ui:include>
 	    </s:div>
 	</s:div>
 </ui:composition>

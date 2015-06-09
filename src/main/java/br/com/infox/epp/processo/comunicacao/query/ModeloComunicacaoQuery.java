@@ -1,9 +1,10 @@
 package br.com.infox.epp.processo.comunicacao.query;
 
 
+
 public interface ModeloComunicacaoQuery {
 	String PARAM_MODELO_COMUNICACAO = "modeloComunicacao";
-	String PARAM_PROCESSO = "processo";
+	String PARAM_NUMERO_PROCESSO_ROOT = "numeroProcessoRoot";
 	String PARAM_ID_DESTINATARIO = "idDestinatario";
 	String PARAM_IDENTIFICADORES_PAPEL = "identificadoresPapel";
 	String PARAM_METADADO_DESTINATARIO = "metadadoDestinatario";
@@ -13,11 +14,11 @@ public interface ModeloComunicacaoQuery {
 			+ " d.modeloComunicacao = :" + PARAM_MODELO_COMUNICACAO
 			+ " and d.expedido = false";
 	
-	String LIST_BY_PROCESSO = "ModeloComunicacao.listByProcesso";
-	String LIST_BY_PROCESSO_QUERY = "select o from ModeloComunicacao o where "
-			+ "o.processo = :" + PARAM_PROCESSO + " "
-			+ "and exists (select 1 from DestinatarioModeloComunicacao d where "
-			+ "d.modeloComunicacao = o and d.expedido = true)";
+	String LIST_BY_PROCESSO_ROOT = "ModeloComunicacao.listByProcessoRoot";
+	String LIST_BY_PROCESSO_ROOT_QUERY = "select o from ModeloComunicacao o where "
+			 + "NumeroProcessoRoot(o.processo.idProcesso) = :" + PARAM_NUMERO_PROCESSO_ROOT
+			 + " and exists (select 1 from DestinatarioModeloComunicacao d where "
+			 + "d.modeloComunicacao = o and d.expedido = true)";
 	
 	String GET_COMUNICACAO_DESTINATARIO = "ModeloComunicacao.getComunicacaoDestinatario";
 	String GET_COMUNICACAO_DESTINATARIO_QUERY = "select o from Processo o where "
@@ -31,4 +32,7 @@ public interface ModeloComunicacaoQuery {
 			+ "o.modeloComunicacao = :" + PARAM_MODELO_COMUNICACAO + " "
 			+ "and p.identificador in :" + PARAM_IDENTIFICADORES_PAPEL + " "
 			+ "order by d.dataInclusao desc";
+	
+	String GET_DOCUMENTOS_MODELO_COMUNICACAO = "ModeloComunicacao.getDocumentosByModeloComunicacao";
+	String GET_DOCUMENTOS_MODELO_COMUNICACAO_QUERY = "select o.documento from DocumentoModeloComunicacao o where o.modeloComunicacao = :" + PARAM_MODELO_COMUNICACAO;
 }

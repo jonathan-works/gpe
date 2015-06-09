@@ -1,30 +1,39 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:ui="http://java.sun.com/jsf/facelets" 
-      xmlns:h="http://java.sun.com/jsf/html" 
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:wi="http://www.itx.com.br/jsf"
-      xmlns:rich="http://richfaces.org/rich"
-      xmlns:a="http://richfaces.org/a4j"
-      xmlns:s="http://jboss.org/schema/seam/taglib">
-<h:head />
-<h:body>
-	<rich:collapsiblePanel header="#{infoxMessages['comunicacao.comunicacao']}" switchType="client">
-		<wi:outputText id="meioExpedicao" value="#{respostaComunicacaoAction.meioExpedicao.label}"
-			label="#{infoxMessages['comunicacao.meioExpedicao']}" />
-		<wi:outputText id="tipoComunicacao" value="#{respostaComunicacaoAction.tipoComunicacao.descricao}"
-			label="#{infoxMessages['comunicacao.tipoComunicacao']}" />
-		<wi:outputText id="prazoResposta" label="Prazo de Resposta"
-			value="#{not empty respostaComunicacaoAction.prazoResposta ? respostaComunicacaoAction.prazoResposta : '-' }">
-			<f:convertDateTime pattern="dd/MM/yyyy" />
-		</wi:outputText>
-		<h:form>
-			<h:commandButton value="#{infoxMessages['comunicacao.visualizarComunicacao']}" styleClass="buttons" 
-				action="#{respostaComunicacaoAction.downloadComunicacao}" />
-		</h:form>
-		<s:div />
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:h="http://java.sun.com/jsf/html"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/schema/seam/taglib">
+	
+	<rich:collapsiblePanel id="painelComunicacao" header="#{infoxMessages['comunicacao.comunicacao']}" switchType="client">
+	
+		<ui:include src="/WEB-INF/xhtml/components/fragments/detalhesComunicacao.xhtml">
+	   		<ui:param name="id" value="respExibirComunicacao" />
+	   		<ui:param name="showDestinatario" value="false" />
+	   		<ui:param name="meioExpedicao" value="#{respostaComunicacaoAction.meioExpedicao.label}" />
+	   		<ui:param name="showMeioExpedicao" value="true" />
+	   		<ui:param name="showDataEnvio" value="false" />
+	   		<ui:param name="prazoResposta" value="#{respostaComunicacaoAction.prazoResposta}" />
+	   		<ui:param name="showPrazoResposta" value="true" />
+	   		<ui:param name="showDataResposta" value="false" />
+	   		<ui:param name="tipoComunicacao" value="#{respostaComunicacaoAction.tipoComunicacao.descricao}" />
+	   		<ui:param name="statusProrrogacao" value="#{respostaComunicacaoAction.statusProrrogacao}" />
+	   		<ui:param name="showStatusProrrogacao" value="true" />
+	   		<ui:param name="idDestinatario" value="#{respostaComunicacaoAction.idDestinatario}" />
+	   	</ui:include>
+
+		<ui:include src="/WEB-INF/xhtml/components/fragments/documentosComunicacao.xhtml">
+	    		<ui:param name="id" value="respDocsComunicacao" />
+	    		<ui:param name="showNumeroDocumento" value="false" />
+	    		<ui:param name="list" value="#{respostaComunicacaoAction.documentosComunicacao}" />
+	    </ui:include>
+
 	</rich:collapsiblePanel>
-	<h:form>
+	
+	<h:form id="editorRespostaComunicacaoForm">
 		<rich:collapsiblePanel header="#{infoxMessages['comunicacao.editor']}" switchType="client" id="painelEditor">
 			<ui:param name="minuta" 
 				value="#{empty respostaComunicacaoAction.documentoEdicao.id or 
@@ -64,7 +73,7 @@
 		  		<h:graphicImage url="#{wiSkin.imageFolder}/help.gif" />
 					<div class="epp-tooltip">
 						<div class="tooltip-panel">
-							<div><h:outputText value="Observação:"/></div>
+							<div><h:outputText value="#{infoxMessages['comunicacao.tooltipObservacao']}"/></div>
 							<h:outputText value="#{respostaComunicacaoAction.documentoEdicao.classificacaoDocumento.observacao}"/>
 						</div>
 					</div>
@@ -87,7 +96,7 @@
 		</rich:collapsiblePanel>
 	</h:form>
 	
-	<h:form>
+	<h:form id="anexoRespostaComunicacaoForm">
 		<rich:collapsiblePanel header="#{infoxMessages['anexosProcesso.titleView']}" switchType="client">
 			<wi:inputText id="descricaoAnexo" value="#{respostaComunicacaoAction.descricaoAnexo}"
 				label="#{infoxMessages['documentoProcesso.descricao']}" showRequired="true">
@@ -104,7 +113,7 @@
 		  		<h:graphicImage url="#{wiSkin.imageFolder}/help.gif" />
 					<div class="epp-tooltip">
 						<div class="tooltip-panel">
-							<div><h:outputText value="Observação:"/></div>
+							<div><h:outputText value="#{infoxMessages['comunicacao.tooltipObservacao']}"/></div>
 							<h:outputText value="#{respostaComunicacaoAction.classificacaoAnexo.observacao}"/>
 						</div>
 					</div>
@@ -127,48 +136,52 @@
 			</s:div>
 		</rich:collapsiblePanel>
 	</h:form>
-	
-	<wi:assinaturaPopup id="respostaComunicacaoAssinaturaDocumentoPopup" afterRender="respostasPanel" showIniciarAnaliseDocumentos="false" />
+	<wi:assinaturaPopup id="respostaComunicacaoAssinaturaDocumentoPopup" afterRender="respostasPanel" showIniciarAnaliseDocumentos="false" 
+			actionPosSign="respostaComunicacaoAction.verificarPossibilidadeEnvioResposta()" />
 	<rich:collapsiblePanel header="#{infoxMessages['comunicacao.documentosResposta']}" switchType="client">
 		<wi:dataTable id="respostas" tableTitle="#{infoxMessages['comunicacao.documentosResposta']}" bean="#{respostaComunicacaoList}"
-			values="#{respostaComunicacaoList.list(10)}" rowId="#{row.id}" hideOrder="true">
+			values="#{respostaComunicacaoList.list(10)}" rowId="#{row.id}" hideOrder="true" >
 			<ui:define name="searchForm">
 				<wi:searchForm formId="respostasForm" searchReRender="respostasPanel, respostasSearchForm"
-					clearReRender="respostasPanel, respostasSearchForm" formTitle="#{infoxMessages['searchForm.title']}">
-					<wi:inputText value="#{respostaComunicacaoList.entity.descricao}" label="#{infoxMessages['documentoProcesso.descricao']}" />
-				</wi:searchForm>
-			</ui:define>
+				        clearReRender="respostasPanel, respostasSearchForm" formTitle="#{infoxMessages['searchForm.title']}">
+					<wi:inputText value="#{respostaComunicacaoList.descricaoDocumento}" label="#{infoxMessages['documentoProcesso.descricao']}" />
+		        </wi:searchForm>
+	        </ui:define>
 			<ui:define name="headerToolBar" />
 			<ui:define name="toolBar">
 				<h:form>
-					<wi:toolBarAssinatura idDocumento="#{row.id}" idAssinatura="respostaComunicacaoAssinaturaDocumentoPopup"
-				    	renderedLock="#{not empty row.documentoBin.assinaturas}" />
-					<a:commandLink action="#{respostaComunicacaoAction.setDocumentoEdicao(row)}"
-						render="painelEditor" rendered="#{empty row.documentoBin.extensao}">
+					<wi:toolBarAssinatura idDocumento="#{row.documento.id}" idAssinatura="respostaComunicacaoAssinaturaDocumentoPopup"
+				    	renderedLock="#{not empty row.documento.documentoBin.assinaturas}" />
+					<a:commandLink action="#{respostaComunicacaoAction.setDocumentoEdicao(row.documento)}"
+						render="painelEditor" rendered="#{empty row.documento.documentoBin.extensao}">
 						<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['button.selecionar']}"/>
 					</a:commandLink>
-					<h:commandLink action="#{respostaComunicacaoAction.downloadDocumento(row)}"
-						rendered="#{not empty row.documentoBin.extensao}">
+					<h:commandLink action="#{documentoDownloader.downloadDocumento(row.documento)}"
+						rendered="#{not empty row.documento.documentoBin.extensao}" >
 						<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['button.selecionar']}"/>
 					</h:commandLink>
-					<a:commandLink action="#{respostaComunicacaoAction.removerDocumento(row)}"
+					<a:commandLink action="#{respostaComunicacaoAction.removerDocumento(row.documento)}"
 						render="respostasPanel, painelEditor, pageBodyDialogMessage, taskButtonsForm"
-						rendered="#{respostaComunicacaoAction.podeRemoverDocumento(row)}"
+						rendered="#{respostaComunicacaoAction.podeRemoverDocumento(row.documento)}"
 						onclick="return confirm('#{infoxMessages['crud.confirmRemove']}')">
 						<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{infoxMessages['crud.remove']}" />
 					</a:commandLink>
 				</h:form>
 			</ui:define>
-			<wi:columnOutputText columnHeader="#{infoxMessages['documentoProcesso.descricao']}" value="#{row.descricao}" />
-			<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.classificacaoDocumento']}" value="#{row.classificacaoDocumento.descricao}" />
-			<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.tamanho']}" value="#{row.documentoBin.sizeFormatado}" />
+			<wi:columnOutputText columnHeader="#{infoxMessages['documentoProcesso.descricao']}" value="#{row.documento.descricao}" />
+			<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.classificacaoDocumento']}" value="#{row.documento.classificacaoDocumento.descricao}" />
+			<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.tamanho']}" value="#{row.documento.documentoBin.sizeFormatado}" />
 			<ui:define name="conteudoAdicional">
 				<h:form style="text-align:left">
 					<wi:commandButton id="gravar" value="#{infoxMessages['comunicacao.enviarResposta']}" 
-						action="#{respostaComunicacaoAction.enviarRespostaComunicacao()}" reRender="pageBodyDialogMessage" rendered="#{respostaComunicacaoList.getResultCount() ge 1}"/>
+						action="respostaComunicacaoAction.enviarRespostaComunicacao()" reRender="respostasPanel, pageBodyDialogMessage, editorRespostaComunicacaoForm, anexoRespostaComunicacaoForm" 
+						rendered="#{respostaComunicacaoAction.possivelMostrarBotaoEnvio}" execute="@this"/>
 				</h:form>
 			</ui:define>
 		</wi:dataTable>
 	</rich:collapsiblePanel>
-</h:body>
-</html>
+	<h:form>
+		<ui:include src="/WEB-INF/xhtml/components/form/buttons/taskButtons.xhtml"></ui:include>
+	</h:form>
+	
+</ui:composition>

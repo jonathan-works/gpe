@@ -6,6 +6,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.ejb.Singleton;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.naming.InitialContext;
@@ -17,6 +19,7 @@ import org.jboss.seam.annotations.Name;
 @AutoCreate
 @Name(InfoxMessages.NAME)
 @Singleton(name = InfoxMessages.NAME)
+@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class InfoxMessages extends HashMap<String, String> implements Serializable{
 	
 	private static final long serialVersionUID = 1L;

@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" 
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
       xmlns:ui="http://java.sun.com/jsf/facelets" 
       xmlns:h="http://java.sun.com/jsf/html" 
       xmlns:f="http://java.sun.com/jsf/core"
@@ -7,30 +7,33 @@
       xmlns:rich="http://richfaces.org/rich"
       xmlns:a="http://richfaces.org/a4j"
       xmlns:s="http://jboss.org/schema/seam/taglib">
-<h:head />
-<h:body>
+
 	<rich:collapsiblePanel header="#{infoxMessages['comunicacao.comunicacao']}" switchType="client">
-		<wi:outputText id="meioExpedicao" value="#{analisarPedidoProrrogacaoPrazoAction.meioExpedicao}"
-			label="#{infoxMessages['comunicacao.meioExpedicao']}" />
-		<wi:outputText id="prazoResposta" label="Prazo de Resposta"
-			value="#{not empty analisarPedidoProrrogacaoPrazoAction.dataFimPrazoCumprimento 
-				? analisarPedidoProrrogacaoPrazoAction.dataFimPrazoCumprimento : '-' }">
-			<f:convertDateTime pattern="dd/MM/yyyy" />
-		</wi:outputText>
-		<h:form>
-			<h:commandButton value="#{infoxMessages['comunicacao.visualizarComunicacao']}" styleClass="buttons" 
-				action="#{analisarPedidoProrrogacaoPrazoAction.downloadComunicacao}" />
-		</h:form>
-		<s:div />
+		
+		<ui:include src="/WEB-INF/xhtml/components/fragments/detalhesComunicacao.xhtml">
+	   		<ui:param name="id" value="analisarPedidoProrrogacaoPrazoExibirComunicacao" />
+	   		<ui:param name="showDestinatario" value="false" />
+	   		<ui:param name="meioExpedicao" value="#{analisarPedidoProrrogacaoPrazoAction.meioExpedicao}" />
+	   		<ui:param name="showMeioExpedicao" value="true" />
+	   		<ui:param name="showDataEnvio" value="false" />
+	   		<ui:param name="prazoResposta" value="#{not empty analisarPedidoProrrogacaoPrazoAction.dataFimPrazoCumprimento 
+				? analisarPedidoProrrogacaoPrazoAction.dataFimPrazoCumprimento : '-'}" />
+	   		<ui:param name="showPrazoResposta" value="true" />
+	   		<ui:param name="showDataResposta" value="false" />
+	   		<ui:param name="showTipoComunicacao" value="false" />
+	   		<ui:param name="idDestinatario" value="#{analisarPedidoProrrogacaoPrazoAction.destinatarioComunicacao.id}" />
+	   	</ui:include>
+	
 		<wi:dataTable id="documentosComunicacao" values="#{documentoComunicacaoList.list(10)}" bean="#{documentoComunicacaoList}"
 			tableTitle="#{infoxMessages['comunicacao.documentosComunicacao']}" showSearchForm="false" rowId="#{row.id}" hideOrder="true">
 			<ui:define name="headerToolBar" />
 			<ui:define name="toolBar">
 				<h:form>
-					<h:commandLink action="#{analisarPedidoProrrogacaoPrazoAction.downloadDocumento(row)}"
-  						rendered="#{not empty row.documentoBin.extensao}">
+					<a:commandLink id="baixarPedidoProrrogacao" 
+						rendered="#{not empty row.documentoBin.extensao}"
+						onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/downloadDocumento.seam?id=#{row.id}','1024'); return false;">
 						<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
-					</h:commandLink>
+					</a:commandLink>
 					<a:commandLink rendered="#{empty row.documentoBin.extensao}"
 						onclick="infox.openPopUp('doc#{row.documentoBin.id}', '#{pathResolver.contextPath}/Painel/documentoHTML.seam?idBin=#{row.documentoBin.id}','1024'); return false;">
 						<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
@@ -40,21 +43,117 @@
 			<wi:columnOutputText columnHeader="#{infoxMessages['documentoProcesso.descricao']}" value="#{row.descricao}" />
 			<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.classificacaoDocumento']}" value="#{row.classificacaoDocumento.descricao}" />
 			<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.tamanho']}" value="#{row.documentoBin.sizeFormatado}" />
-		</wi:dataTable>
+		</wi:dataTable>		
 	</rich:collapsiblePanel>
-	<rich:panel header="Prorrogação de Prazo">
+		
+	<rich:collapsiblePanel header="#{infoxMessages['comunicacao.comunicacoeDoProcessos']}" switchType="client" 
+			id="comunicacoesDoProcesso" rendered="#{not empty analisarPedidoProrrogacaoPrazoAction.destinatarioCienciaConfirmada}">
 		<h:form>
-			<wi:inputNumber id="prorrogacao" value="#{analisarPedidoProrrogacaoPrazoAction.diasProrrogacao}"
-				onkeyup="onlyPositiveNumber(this)" label="Dias de Prorrogação">
-				<a:ajax event="change" />
-			</wi:inputNumber>
+				<rich:dataTable value="#{analisarPedidoProrrogacaoPrazoAction.destinatarioCienciaConfirmada}" 
+					var="bean" styleClass="dtable rf-dt-crud">
+					<rich:column styleClass="dt-toolbar-col" rendered="#{s:hasRole('usuarioInterno')}">
+							<a:commandLink action="#{analisarPedidoProrrogacaoPrazoAction.setDestinatarioDocumentos(bean)}"
+								execute="@this" limitRender="true"
+								render="painelDocumentosDaComunicacao"
+								onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
+								<h:graphicImage url="#{wiSkin.imageFolder}/file.gif" title="#{infoxMessages['comunicacao.documentos']}"/>
+							</a:commandLink>
+							<a:commandLink action="#{analisarPedidoProrrogacaoPrazoAction.setDestinatarioProrrogacaoPrazo(bean)}"
+										render="taskPagePainelProrrogacaoPrazo pageBodyDialogMessage"
+										execute="@this" limitRender="true"
+										rendered="#{analisarPedidoProrrogacaoPrazoAction.isPedidoDentroDoPrazo(bean)}"
+										onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
+										<h:graphicImage url="#{wiSkin.imageFolder}/time_plus_16.png" title="#{infoxMessages['comunicacao.prorrogarPrazo']}" />
+							</a:commandLink>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{infoxMessages['comunicacao.destinatario']}</f:facet>
+						<h:outputText value="#{bean.nome}" />
+					</rich:column>
+                          <rich:column>
+                              <f:facet name="header">#{infoxMessages['comunicacao.tipoComunicacao']}</f:facet>
+                              <h:outputText value="#{bean.tipoComunicacao.descricao}" />
+                          </rich:column>
+					<rich:column>
+						<f:facet name="header">#{infoxMessages['comunicacao.meioExpedicao']}</f:facet>
+						<h:outputText value="#{bean.meioExpedicao}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{infoxMessages['comunicacao.dataEnvio']}</f:facet>
+						<h:outputText value="#{bean.dataEnvio}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{infoxMessages['comunicacao.dataConfirmacao']}</f:facet>
+						<h:outputText value="#{bean.dataConfirmacao}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{infoxMessages['comunicacao.responsavelConfirmacao']}</f:facet>
+						<h:outputText value="#{bean.responsavelConfirmacao}" />
+					</rich:column>
+					<rich:column>
+                        <f:facet name="header">#{infoxMessages['comunicacao.prazoOriginal']}</f:facet>
+                        <h:outputText value="#{bean.prazoOriginal}" />
+                    </rich:column>
+                    <rich:column>
+						<f:facet name="header">#{infoxMessages['comunicacao.prazoFinal']}</f:facet>
+						<h:outputText value="#{bean.prazoFinal}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{infoxMessages['comunicacao.status']}</f:facet>
+						<h:outputText value="#{analisarPedidoProrrogacaoPrazoAction.getStatusComunicacao(bean)}" />
+					</rich:column>
+				</rich:dataTable>
 		</h:form>
-	</rich:panel>
-	
+	</rich:collapsiblePanel>
+	<s:div id="taskPagePainelProrrogacaoPrazo">
+		<rich:panel header="Prorrogação de Prazo" rendered="#{not empty analisarPedidoProrrogacaoPrazoAction.destinatario and analisarPedidoProrrogacaoPrazoAction.prorrogacaoPrazo}">
+			<h:form>
+				<wi:inputDate id="dataNovoPrazoFinal" required="true" showRequired="true" label="#{infoxMessages['comunicacao.novoPrazoAtendimento']}" 
+	    				value="#{analisarPedidoProrrogacaoPrazoAction.novoPrazoCumprimento}" startDate="#{analisarPedidoProrrogacaoPrazoAction.getDataLimiteCumprimento()}"
+                        errorMessage="#{infoxMessages['comunicacao.validator.dataAtendimentoIncorreta']}" />
+	    		<a:commandButton value="#{infoxMessages['comunicacao.prorrogarPrazo']}" styleClass="buttons" 
+						action="#{analisarPedidoProrrogacaoPrazoAction.prorrogarPrazoDeCumprimento()}" render="taskPagePainelProrrogacaoPrazo, comunicacoesDoProcesso, pageBodyDialogMessage"/>
+			</h:form>
+		</rich:panel>
+	</s:div>
+	<s:div id="painelDocumentosDaComunicacao">
+	    	<rich:panel header="#{infoxMessages['comunicacao.documentos']} - #{analisarPedidoProrrogacaoPrazoAction.destinatario.nome} / #{analisarPedidoProrrogacaoPrazoAction.destinatario.tipoComunicacao.descricao}"
+	    		rendered="#{analisarPedidoProrrogacaoPrazoAction.documentos}">
+	    		<h:form>
+	    			<a:commandButton id="baixarComunicacao" 
+						value="#{infoxMessages['comunicacao.comunicacao']}"
+						rendered="#{not empty analisarPedidoProrrogacaoPrazoAction.destinatario.documentoComunicacao.documentoBin.extensao}" 
+						styleClass="buttons"
+						onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/downloadDocumento.seam?id=#{analisarPedidoProrrogacaoPrazoAction.destinatarioComunicacao.documentoComunicacao.id}','1024'); return false;" />
+                    <a:commandButton styleClass="buttons"
+                        onclick="infox.openPopUp('doc#{analisarPedidoProrrogacaoPrazoAction.destinatarioComunicacao.documentoComunicacao.documentoBin.id}', '#{pathResolver.contextPath}/Painel/documentoHTML.seam?idBin=#{analisarPedidoProrrogacaoPrazoAction.destinatarioComunicacao.documentoComunicacao.documentoBin.id}','1024'); return false;" 
+                        value="#{infoxMessages['comunicacao.comunicacao']}"
+                        rendered="#{empty analisarPedidoProrrogacaoPrazoAction.destinatario.documentoComunicacao.documentoBin.extensao}"/>
+	    		</h:form>
+	    		<rich:dataTable value="#{analisarPedidoProrrogacaoPrazoAction.documentosDestinatario}" var="documento" styleClass="dtable rf-dt-crud">
+	    			<rich:column styleClass="dt-toolbar-col">
+	    				<h:form>
+	    					<a:commandLink id="baixarDocumento" 
+								rendered="#{not empty documento.documentoBin.extensao}"
+								onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/downloadDocumento.seam?id=#{documento.id}','1024'); return false;">
+								<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
+							</a:commandLink>
+							<a:commandLink rendered="#{empty documento.documentoBin.extensao}"
+								onclick="infox.openPopUp('doc#{documento.documentoBin.id}', '#{pathResolver.contextPath}/Painel/documentoHTML.seam?idBin=#{documento.documentoBin.id}','1024'); return false;">
+								<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
+							</a:commandLink>
+	    				</h:form>
+	    			</rich:column>
+	    			<rich:column>
+	    				<f:facet name="header">#{infoxMessages['comunicacao.documento']}</f:facet>
+	    				<h:outputText value="#{documento.descricao}" />
+	    			</rich:column>
+	    		</rich:dataTable>
+	    	</rich:panel>
+	</s:div>
 	<h:form id="taskButtonsForm">
 		<ui:include src="/WEB-INF/xhtml/components/form/buttons/taskButtonsTaskPage.xhtml">
 			<ui:param name="taskEndAction" value="analisarPedidoProrrogacaoPrazoAction.endTask" />
 		</ui:include>
 	</h:form>
-</h:body>
-</html>
+</ui:composition>

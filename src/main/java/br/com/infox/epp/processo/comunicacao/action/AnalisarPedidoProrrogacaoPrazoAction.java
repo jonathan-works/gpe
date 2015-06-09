@@ -1,7 +1,11 @@
 package br.com.infox.epp.processo.comunicacao.action;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -13,20 +17,27 @@ import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.action.ActionMessagesService;
-import br.com.infox.core.file.download.FileDownloader;
+import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.list.DocumentoComunicacaoList;
+import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
+import br.com.infox.epp.processo.comunicacao.service.DestinatarioComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
+import br.com.infox.epp.processo.comunicacao.service.ProrrogacaoPrazoService;
 import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
-import br.com.infox.ibpm.task.home.TaskInstanceHome;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -54,13 +65,29 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 	private DocumentoManager documentoManager;
 	@In
 	private MetadadoProcessoManager metadadoProcessoManager;
+	@In
+	private GenericManager genericManager;
+	@In
+	private DestinatarioComunicacaoService destinatarioComunicacaoService;
+	@In
+	private ModeloComunicacaoManager modeloComunicacaoManager;
+	@In
+	private ProrrogacaoPrazoService prorrogacaoPrazoService;
+	@In
+	private ProcessoManager processoManager;
 	
 	private Processo comunicacao;
 	private Processo processoDocumento;
 	private DestinatarioModeloComunicacao destinatarioComunicacao;
 	private Date dataFimPrazoCumprimento;
-	private Integer diasProrrogacao;
+	private boolean prorrogacaoPrazo;
+	private boolean documentos;
+	private List<Documento> documentosDestinatario; // Cache dos documentos do destinatário selecionado
+	private List<DestinatarioBean> destinatarioCienciaConfirmada;
 	
+	private DestinatarioBean destinatario;
+	private Date novoPrazoCumprimento;
+
 	@Create
 	public void init() {
 		processoDocumento = JbpmUtil.getProcesso();
@@ -69,6 +96,8 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 		dataFimPrazoCumprimento = prazoComunicacaoService.contabilizarPrazoCumprimento(comunicacao);
 		documentoComunicacaoList.setProcesso(comunicacao.getProcessoRoot());
 		documentoComunicacaoList.setModeloComunicacao(destinatarioComunicacao.getModeloComunicacao());
+		destinatarioCienciaConfirmada = null;
+		clearDestinatarioBean();
 	}
 	
 	public String getMeioExpedicao() {
@@ -79,34 +108,13 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 		return dataFimPrazoCumprimento;
 	}
 	
-	public void downloadComunicacao() {
-		try {
-			byte[] pdf = comunicacaoService.gerarPdfCompleto(destinatarioComunicacao.getModeloComunicacao(), destinatarioComunicacao);
-			FileDownloader.download(pdf, "application/pdf", "Comunicação.pdf");
-		} catch (DAOException e) {
-			LOG.error("", e);
-			actionMessagesService.handleDAOException(e);
-		}
-	}
-	
-	public void downloadDocumento(Documento documento) {
-		documentoDownloader.downloadDocumento(documento);
-	}
-	
-	public void downloadSolicitacaoProrrogacaoPrazo() {
-		documentoDownloader.downloadDocumento(processoDocumento.getDocumentoList().get(0));
+	public DestinatarioModeloComunicacao getDestinatarioComunicacao(){
+		return destinatarioComunicacao;
 	}
 
 	public void endTask() {
 		try {
-			MetadadoProcesso metadadoPrazo = comunicacao.getMetadado(ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
-			if (metadadoPrazo != null && diasProrrogacao != null) {
-				int prazoExistente = Integer.valueOf(metadadoPrazo.getValor());
-				metadadoPrazo.setValor(String.valueOf(prazoExistente + diasProrrogacao));
-				metadadoProcessoManager.update(metadadoPrazo);
-			}
-			TaskInstanceHome taskInstanceHome = TaskInstanceHome.instance();
-			taskInstanceHome.end(taskInstanceHome.getName());
+			prorrogacaoPrazoService.finalizarAnalisePedido(comunicacao);		
 		} catch (Exception e) {
 			LOG.error("", e);
 			if (e instanceof DAOException) {
@@ -116,16 +124,143 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 			}
 		}
 	}
-	
-	public Integer getDiasProrrogacao() {
-		return diasProrrogacao;
+		
+	public void clearDestinatarioBean(){
+		setDestinatarioProrrogacaoPrazo(null);
+		setProrrogacaoPrazo(false);
+		setDocumentos(false);
+		setNovoPrazoCumprimento(null);
 	}
 	
-	public void setDiasProrrogacao(Integer diasProrrogacao) {
-		if (diasProrrogacao < 0) {
-			FacesMessages.instance().add("O prazo deve ser maior ou igual a 0");
-			return;
+	public void setDestinatarioProrrogacaoPrazo(DestinatarioBean bean){
+		this.destinatario = bean;
+		setProrrogacaoPrazo(true);
+		setDocumentos(false);
+	}
+	
+	public void setDestinatarioDocumentos(DestinatarioBean bean){
+		this.destinatario = bean;
+		setProrrogacaoPrazo(false);
+		setDocumentos(true);
+	}
+	
+	public List<Documento> getDocumentosDestinatario() {
+		if (documentosDestinatario == null) {
+			DestinatarioModeloComunicacao destinatarioModelo = genericManager.find(DestinatarioModeloComunicacao.class, destinatario.getIdDestinatario());
+			documentosDestinatario = new ArrayList<>();
+			for (DocumentoModeloComunicacao documentoModelo : destinatarioModelo.getModeloComunicacao().getDocumentos()) {
+				documentosDestinatario.add(documentoModelo.getDocumento());
+			}
 		}
-		this.diasProrrogacao = diasProrrogacao;
+		return documentosDestinatario;
 	}
+	
+	public List<DestinatarioBean> getDestinatarioCienciaConfirmada() {
+		if(destinatarioCienciaConfirmada == null){
+			destinatarioCienciaConfirmada = new ArrayList<>();
+		    List<ModeloComunicacao> comunicacoesDoProcesso = modeloComunicacaoManager.listModelosComunicacaoPorProcessoRoot(comunicacao.getNumeroProcessoRoot());
+		    for (ModeloComunicacao modeloComunicacao : comunicacoesDoProcesso) { 
+		        List<DestinatarioBean> destinatariosPorModelo = destinatarioComunicacaoService.getDestinatarios(modeloComunicacao);
+		        for (DestinatarioBean destinatarioBean : destinatariosPorModelo) {
+		        	if (!destinatarioBean.getPrazoFinal().equals("-") && 
+		        			prorrogacaoPrazoService.canRequestProrrogacaoPrazo(destinatarioBean.getModeloComunicacao().getTipoComunicacao())){
+		        		destinatarioCienciaConfirmada.add(destinatarioBean);
+		        	}
+	            }
+	        }
+		}
+	    return destinatarioCienciaConfirmada;
+	}
+	
+	public String getStatusComunicacao(DestinatarioBean bean){
+		Processo comunicacao  = bean.getComunicacao();
+		if (comunicacao != null) {
+            MetadadoProcesso mp = comunicacao.getMetadado(EppMetadadoProvider.STATUS_PROCESSO);
+            if (mp != null){
+            	return mp.toString();
+            }
+        }
+		return "-";
+	}
+	
+	public boolean isPedidoDentroDoPrazo(DestinatarioBean bean){
+		Date dataLimiteCumprimento = getDataLimiteCumprimento(bean);
+		if(dataLimiteCumprimento.after(new Date()) || prorrogacaoPrazoService.hasPedidoProrrogacaoEmAberto(bean.getComunicacao())){
+			return true;
+		}
+		return false;
+	}
+	
+	public Date getDataLimiteCumprimento(DestinatarioBean bean){
+		MetadadoProcesso metadadoPrazo = bean.getComunicacao().getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO);
+		Date dataLimiteCumprimento = new Date();
+		if (metadadoPrazo != null && bean.getPrazoFinal() != null) {
+			dataLimiteCumprimento = metadadoPrazo.getValue();
+		}
+		return dataLimiteCumprimento;
+	}
+	
+	public Date getDataLimiteCumprimento(){
+		if(destinatario != null){
+			Calendar calendar =  Calendar.getInstance();
+			calendar.setTime(getDataLimiteCumprimento(destinatario));
+			calendar.add(Calendar.DATE, 1);
+			return calendar.getTime();
+		}
+		return new Date();
+	}
+	
+	public void prorrogarPrazoDeCumprimento(){
+		if (isPedidoDentroDoPrazo(destinatario)) {
+				Date dataLimiteCumprimento = getDataLimiteCumprimento(destinatario);
+				if(dataLimiteCumprimento.before(novoPrazoCumprimento)){
+					MetadadoProcesso metadadoDataLimiteCumprimento = destinatario.getComunicacao().getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO);
+					String dateFormatted = new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(novoPrazoCumprimento);
+					metadadoDataLimiteCumprimento.setValor(dateFormatted);
+					try {
+						metadadoProcessoManager.update(metadadoDataLimiteCumprimento);
+						FacesMessages.instance().add("Prazo prorrogado com sucesso");
+						destinatarioCienciaConfirmada = null;
+						clearDestinatarioBean();
+					} catch (DAOException e) {
+						LOG.error("", e);
+						actionMessagesService.handleDAOException(e);
+					}
+				}
+		}
+	}
+		
+	public DestinatarioBean getDestinatario() {
+		return destinatario;
+	}
+
+	public void setDestinatario(DestinatarioBean destinatario) {
+		this.destinatario = destinatario;
+	}
+
+	public boolean isProrrogacaoPrazo() {
+		return prorrogacaoPrazo;
+	}
+
+	public void setProrrogacaoPrazo(boolean prorrogacaoPrazo) {
+		this.prorrogacaoPrazo = prorrogacaoPrazo;
+	}
+	
+	public Date getNovoPrazoCumprimento() {
+		return novoPrazoCumprimento;
+	}
+
+	public void setNovoPrazoCumprimento(Date novoPrazoCumprimento) {
+		this.novoPrazoCumprimento = DateUtil.getEndOfDay(novoPrazoCumprimento);
+	}
+
+	public boolean isDocumentos() {
+		return documentos;
+	}
+
+	public void setDocumentos(boolean documentos) {
+		this.documentos = documentos;
+	}
+	
+		
 }

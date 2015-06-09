@@ -215,4 +215,8 @@ public class PastaRestricaoManager extends Manager<PastaRestricaoDAO, PastaRestr
         }
         return restricoesNovas;
     }
+    
+    public PastaRestricao getByPastaAlvoTipoRestricao(Pasta pasta, Integer alvo, PastaRestricaoEnum tipoRestricao) {
+    	return getDao().getByPastaAlvoTipoRestricao(pasta, alvo, tipoRestricao);
+    }
 }

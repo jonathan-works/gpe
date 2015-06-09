@@ -23,20 +23,17 @@
 			styleClass="BP-ipt"
             value="#{search.searchText}" 
             required="true"/>					
-        <h:commandButton
+        <a:commandButton
                  action="/Pesquisa/indexedSearch.xhtml"
                  image="#{wiSkin.imageFolder}/imgPes.png" 
                  onclick="if (#{rich:element('searchText')}.value == '') { new infox.Messages({'timeout': 3000}).dialog('#{infoxMessages['pesquisa.campoPesquisaVazio']}'); return false; }"/>
-        <h:commandLink
-          action="/help/show.xhtml"
-          target="helpwnd"
+        <a:commandLink
           immediate="true"
-          actionListener="#{ajudaView.setViewId('/Pesquisa/indexedSearch.seam', true)}">
+          onclick="openPopUp('helpwnd', '#{pathResolver.contextPath}/help/show.seam?viewId=/Pesquisa/indexedSearch.seam');return false;">
           <h:graphicImage
             url="#{wiSkin.imageFolder}/question.png"
-            title="#{infoxMessages['ajuda.ajudaBtn']}"
-            onclick="openPopUp('helpwnd', 'about:blank');" />
-        </h:commandLink>
+            title="#{infoxMessages['ajuda.ajudaBtn']}" />
+        </a:commandLink>
 	</h:form>
 
 </ui:composition>

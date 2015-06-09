@@ -7,12 +7,15 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.access.entity.Recurso;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.manager.RecursoManager;
+
+
 import br.com.infox.seam.security.operation.UpdateResourcesOperation;
 
 @Scope(ScopeType.CONVERSATION)
@@ -63,6 +66,7 @@ public class RecursoPapelController implements Serializable {
         return recursoManager.getPapeisAssociadosARecurso(recurso);
     }
 
+    @Transactional
     public void save() {
     	List<String> papeisTotais = papelManager.getListaDeNomesDosPapeis();
         UpdateResourcesOperation resourcesOperation = new UpdateResourcesOperation(recurso.getIdentificador(), getPapeis(), papeisTotais);

@@ -71,7 +71,8 @@
 					<s:div id="assinatura_pers">
 	
 						<a:jsFunction name="assinar"
-							action="#{validaDocumentoAction.assinaDocumento(authenticator.getUsuarioPerfilAtual())}"
+							actionListener="#{validaDocumentoAction.assinaDocumento(authenticator.getUsuarioPerfilAtual())}"
+							action="#{elFunctions.invokeMethod(actionPosSign)}"
 							execute="@this appletAssinaturaToken"
 							render="mp_ass, pageBodyDialogMessage, assinaturaListCont, conteudoAssinatura, #{afterRender}"
 							oncomplete="infox.hideLoading();" />

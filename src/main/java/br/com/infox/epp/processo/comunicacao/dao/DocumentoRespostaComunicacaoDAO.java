@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.comunicacao.dao;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
@@ -32,5 +33,11 @@ public class DocumentoRespostaComunicacaoDAO extends DAO<DocumentoRespostaComuni
 		Map<String, Object> params = new HashMap<>();
 		params.put(DocumentoRespostaComunicacaoQuery.PARAM_DOCUMENTO, documento);
 		return getNamedSingleResult(DocumentoRespostaComunicacaoQuery.GET_COMUNICACAO_VINCULADA, params);
+	}
+	
+	public void updateDocumentoComoEnviado(List<Documento> documentos) throws DAOException{
+		Map<String, Object> params = new HashMap<>();
+		params.put(DocumentoRespostaComunicacaoQuery.PARAM_DOCUMENTO_LIST, documentos);
+		executeNamedQueryUpdate(DocumentoRespostaComunicacaoQuery.UPDATE_DOCUMENTO_COMO_ENVIADO, params);
 	}
 }

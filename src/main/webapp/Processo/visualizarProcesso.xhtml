@@ -104,7 +104,7 @@
                 name="tabPartesDoProcesso"
                 status=":status"
                 rendered="#{home.hasPartes() and security.checkPage('/pages/Processo/abaPartesProcesso')}"
-                action="#{participanteProcessoList.entity.setProcesso(home.instance)}"
+                action="#{participanteProcessoList.entity.setProcesso(home.instance.processoRoot)}"
                 title="#{infoxMessages['participanteProcesso.participantes']}">
                 <ui:decorate
                     id="frameDecorate"

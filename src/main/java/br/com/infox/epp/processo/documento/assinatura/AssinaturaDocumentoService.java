@@ -97,6 +97,9 @@ public class AssinaturaDocumentoService implements Serializable {
     }
 
     public boolean isDocumentoTotalmenteAssinado(Documento documento) {
+        if (documento.getDocumentoBin().isMinuta()) {
+            return false;
+        }
         List<ClassificacaoDocumentoPapel> classificacaoDocumentoPapeis = documento.getClassificacaoDocumento()
                 .getClassificacaoDocumentoPapelList();
         
@@ -117,6 +120,9 @@ public class AssinaturaDocumentoService implements Serializable {
     }
     
     public boolean isDocumentoTotalmenteAssinado(DocumentoBin documento){
+        if (documento.isMinuta()) {
+            return false;
+        }
     	List<Documento> documentos = documentoManager.getDocumentosFromDocumentoBin(documento);
     	if (documentos.size()>0){
     	    return isDocumentoTotalmenteAssinado(documentos.get(0));

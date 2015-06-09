@@ -16,7 +16,7 @@ public class ComunicacaoMetadadoProvider extends MetadadoProcessoProvider {
 			new MetadadoProcessoDefinition("destinatarioComunicacao", DestinatarioModeloComunicacao.class);
 	
 	public static final MetadadoProcessoDefinition PRAZO_DESTINATARIO = 
-			new MetadadoProcessoDefinition("prazoDestinatarioComunicacao", "Prazo (dias)", Integer.class);
+			new MetadadoProcessoDefinition("prazoDestinatarioComunicacao", Integer.class);
 
 	public static final MetadadoProcessoDefinition COMUNICACAO = 
 			new MetadadoProcessoDefinition("comunicacao", Documento.class);
@@ -40,8 +40,17 @@ public class ComunicacaoMetadadoProvider extends MetadadoProcessoProvider {
 			new MetadadoProcessoDefinition("documentoComprovacaoCiencia", Documento.class);
 	
 	public static final MetadadoProcessoDefinition LIMITE_DATA_CIENCIA = 
-            new MetadadoProcessoDefinition("limiteDataCiencia", "Limite para Ciência", Date.class);
+            new MetadadoProcessoDefinition("limiteDataCiencia", Date.class);
 	
 	public static final MetadadoProcessoDefinition LIMITE_DATA_CUMPRIMENTO = 
             new MetadadoProcessoDefinition("limiteDataCumprimento", "Limite para Cumprimento", Date.class);
+	
+	public static final MetadadoProcessoDefinition LIMITE_DATA_CUMPRIMENTO_INICIAL = 
+            new MetadadoProcessoDefinition("limiteDataCumprimentoInicial", Date.class);
+	
+	public static final MetadadoProcessoDefinition DATA_PEDIDO_PRORROGACAO = 
+            new MetadadoProcessoDefinition("dataPedidoProrrogacao", "Data de Solicitação da Prorrogação", Date.class);
+	
+	public static final MetadadoProcessoDefinition DATA_ANALISE_PRORROGACAO = 
+            new MetadadoProcessoDefinition("dataAnaliseProrrogacao", "Data da Análise da Prorrogação", Date.class);
 }

@@ -89,6 +89,9 @@ import br.com.infox.ibpm.task.action.TaskPageAction;
 import br.com.infox.ibpm.task.dao.TaskConteudoDAO;
 import br.com.infox.ibpm.task.entity.TaskConteudo;
 import br.com.infox.ibpm.task.manager.TaskInstanceManager;
+import br.com.infox.ibpm.task.view.Form;
+import br.com.infox.ibpm.task.view.FormField;
+import br.com.infox.ibpm.task.view.TaskInstanceForm;
 import br.com.infox.ibpm.transition.TransitionHandler;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.util.UserHandler;
@@ -210,6 +213,9 @@ public class TaskInstanceHome implements Serializable {
 			Documento documento = null;
 			if (idDocumento != null) {
 				documento = documentoManager.find(idDocumento);
+				if (variableRetriever.isEditor() && documento.hasAssinatura()) {
+					setModeloReadonly(variableRetriever.getName());
+				}
 			} else {
 				documento = new Documento();
 				loadClassificacaoDocumentoDefault(variableRetriever, documento);
@@ -238,6 +244,17 @@ public class TaskInstanceHome implements Serializable {
 			if (!variableRetriever.hasVariable()) {
 				setModeloDocumento(getModeloDocumentoFromModelo(modelo));
 				assignModeloDocumento(getFieldName(variableRetriever.getName()));
+			}
+		}
+	}
+	
+	private void setModeloReadonly(String variavelEditor) {
+		Form form = ComponentUtil.getComponent(TaskInstanceForm.NAME);
+		String variavelComboModelo = variavelEditor + "Modelo";
+		for (FormField formField : form.getFields()) {
+			if (formField.getId().equals(variavelComboModelo)) {
+				formField.getProperties().put("readonly", true);
+				break;
 			}
 		}
 	}
@@ -524,6 +541,12 @@ public class TaskInstanceHome implements Serializable {
 			try {
 				assinaturaDocumentoService.assinarDocumento(getDocumentoToSign(), Authenticator.getUsuarioPerfilAtual(),
 						signatureBean.getCertChain(), signatureBean.getSignature());
+				for (String variavel : variaveisDocumento.keySet()) {
+					if (variaveisDocumento.get(variavel).getId().equals(documentoToSign.getId())) {
+						setModeloReadonly(variavel.split("-")[0]);
+						break;
+					}
+				}
 			} catch (CertificadoException | AssinaturaException | DAOException e) {
 				FacesMessages.instance().add(e.getMessage());
 				LOG.error("assinarDocumento()", e);

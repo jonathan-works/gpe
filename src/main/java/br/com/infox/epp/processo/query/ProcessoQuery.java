@@ -188,7 +188,7 @@ public interface ProcessoQuery {
 					+ " where p = mp.processo and mp.metadadoType = 'meioExpedicaoComunicacao' "
 					+ " and mp.valor = :" + MEIO_EXPEDICAO_PARAM + " ) "
 			+ " and exists (select 1 from MetadadoProcesso mp "
-					+ " where p = mp.processo and  mp.metadadoType = 'prazoDestinatarioComunicacao' ) "
+					+ " where p = mp.processo and  mp.metadadoType = 'limiteDataCumprimento' ) "
 			+ " and not exists (select 1 from MetadadoProcesso mp "
 					+ " where p = mp.processo and mp.metadadoType = 'dataCumprimento' ) ";
 }

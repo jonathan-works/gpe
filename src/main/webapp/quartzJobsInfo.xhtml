@@ -5,6 +5,7 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
+    xmlns:a="http://richfaces.org/a4j"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf"
     template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
@@ -66,14 +67,15 @@
                 <rich:column
                     rendered="#{s:hasRole('admin') or s:hasRole('administrador')}">
                     <h:form>
-                        <h:commandLink value="#{infoxMessages['button.execute']}"
+                        <a:commandLink value="#{infoxMessages['button.execute']}"
                             action="#{quartzJobsInfo.triggerJob(row.jobName, row.groupName)}"
-                            rendered="#{row.jobValid}" />
+                            rendered="#{row.jobValid}" render="quartzPanel, pageBodyDialogMessage" />
                     </h:form>
                     <h:form>
-                        <h:commandLink
+                        <a:commandLink
                             value="#{infoxMessages['button.delete']}"
-                            action="#{quartzJobsInfo.deleteJob(row.jobName, row.groupName, row.triggerName)}" />
+                            action="#{quartzJobsInfo.deleteJob(row.jobName, row.groupName, row.triggerName)}"
+                            render="quartzPanel, pageBodyDialogMessage" />
                     </h:form>
                 </rich:column>
             </wi:dataTable>

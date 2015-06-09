@@ -11,6 +11,7 @@ import org.jboss.seam.bpm.TaskInstance;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
@@ -47,6 +48,8 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
     @In
     private AssinaturaDocumentoService assinaturaDocumentoService;
+    @In
+    private PapelManager papelManager;
 
     public String getModeloDocumentoByIdDocumento(Integer idDocumento) {
         return getDao().getModeloDocumentoByIdDocumento(idDocumento);
@@ -139,9 +142,28 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     
     @Override
     public Documento persist(Documento o) throws DAOException {
-    	if (!o.getDocumentoBin().getSuficientementeAssinado() && assinaturaDocumentoService.isDocumentoTotalmenteAssinado(o)) {
-    		o.getDocumentoBin().setSuficientementeAssinado(Boolean.TRUE);
-    	}
+        atualizarSuficienciaAssinatura(o);
     	return super.persist(o);
+    }
+    
+    @Override
+    public Documento update(Documento o) throws DAOException {
+        atualizarSuficienciaAssinatura(o);
+        return super.update(o);
+    }
+    
+    private void atualizarSuficienciaAssinatura(Documento o ){
+        if (!o.getDocumentoBin().getSuficientementeAssinado() && assinaturaDocumentoService.isDocumentoTotalmenteAssinado(o)) {
+            o.getDocumentoBin().setSuficientementeAssinado(Boolean.TRUE);
+            o.getDocumentoBin().setDataSuficientementeAssinado(new Date());
+        }
+    }
+    
+    public boolean isDocumentoInclusoPorHierarquia(Documento documento, String identificadorPapelBase) {
+        return isDocumentoInclusoPorPapeis(documento, papelManager.getIdentificadoresPapeisHerdeiros(identificadorPapelBase));
+    }
+
+    public boolean isDocumentoInclusoPorPapeis(Documento documento, List<String> identificadoresPapeis) {
+        return identificadoresPapeis.contains(documento.getPerfilTemplate().getPapel().getIdentificador());
     }
 }

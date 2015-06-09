@@ -17,17 +17,17 @@ import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.annotations.Transactional;
+import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.security.Identity;
 import org.jbpm.taskmgmt.exe.TaskInstance;
+
+import com.google.common.base.Strings;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
@@ -35,12 +35,15 @@ import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.dao.DocumentoRespostaComunicacaoDAO;
 import br.com.infox.epp.processo.comunicacao.list.ModeloComunicacaoRascunhoList;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
+import br.com.infox.epp.processo.comunicacao.service.DestinatarioComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.DocumentoComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.ProrrogacaoPrazoService;
+import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
 import br.com.infox.epp.processo.documento.anexos.DocumentoUploader;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -53,14 +56,11 @@ import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
-import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-
-import com.google.common.base.Strings;
 
 @Name(ComunicacaoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -108,15 +108,21 @@ public class ComunicacaoAction implements Serializable {
 	private DocumentoManager documentoManager;
 	@In
 	private DocumentoBinManager documentoBinManager;
+	@In
+	private DestinatarioComunicacaoService destinatarioComunicacaoService;
+	@In
+	private DocumentoRespostaComunicacaoDAO documentoRespostaComunicacaoDAO;
+	@In
+	private ProcessoDAO processoDAO;
 	
 	private List<ModeloComunicacao> comunicacoes;
 	private List<ClassificacaoDocumento> classificacoesDocumento;
 	private List<ClassificacaoDocumento> classificacoesDocumentoProrrogacaoPrazo;
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-	private boolean usuarioInterno = Identity.instance().hasRole(Parametros.PAPEL_USUARIO_INTERNO.getValue());
 	private Processo processo;
 	private List<Documento> documentosDestinatario; // Cache dos documentos do destinatário selecionado
 	private Map<Long, Boolean> dadosCiencia = new HashMap<>(); // Cache das confirmações de ciência dos destinatários
+	private List<DestinatarioBean> destinatarios;
 	
 	private DestinatarioBean destinatario;
 	private Date dataCiencia;
@@ -129,66 +135,68 @@ public class ComunicacaoAction implements Serializable {
 	private boolean prorrogacaoPrazo;
 	private boolean documentos;
 	
+	private boolean documentoResposta;
+	private List<Documento> documentosListResposta;
 	
 	
 	@Create
 	public void init() {
+		clear();
 		processo = JbpmUtil.getProcesso();
 		modeloComunicacaoRascunhoList.setProcesso(processo);
 	}
 	
 	public List<ModeloComunicacao> getComunicacoesDoProcesso() {
 		if (comunicacoes == null) {
-			comunicacoes = modeloComunicacaoManager.listModelosComunicacaoPorProcesso(processo);
+			comunicacoes = modeloComunicacaoManager.listModelosComunicacaoPorProcessoRoot(processo.getNumeroProcessoRoot());
 		}
 		return comunicacoes;
 	}
 	
 	public void clearCacheModelos() {
+		if (this.comunicacoes != null) {
+			for (ModeloComunicacao modeloComunicacao : this.comunicacoes) {
+				for (DestinatarioModeloComunicacao destinatarioModeloComunicacao : modeloComunicacao.getDestinatarios()) {
+					genericManager.detach(destinatarioModeloComunicacao);
+				}
+				modeloComunicacaoManager.detach(modeloComunicacao);
+			}
+		}
 		this.comunicacoes = null;
+		this.destinatario = null;
+		this.destinatarios = null;
 	}
 	
 	public List<DestinatarioBean> getDestinatarios() {
-	    List<DestinatarioBean> destinatarios = new ArrayList<>();
-	    List<ModeloComunicacao> comunicacoesDoProcesso = getComunicacoesDoProcesso();
-	    for (ModeloComunicacao modeloComunicacao : comunicacoesDoProcesso) {
-	        List<DestinatarioBean> destinatariosPorModelo = getDestinatarios(modeloComunicacao);
-	        for (DestinatarioBean destinatarioBean : destinatariosPorModelo) {
-                destinatarios.add(destinatarioBean);
-            }
-        }
-	    Collections.sort(destinatarios, new Comparator<DestinatarioBean>() {
-			@Override
-			public int compare(DestinatarioBean o1, DestinatarioBean o2) {
-				try {
-					Date d1 = dateFormat.parse(o1.getDataEnvio());
-					Date d2 = dateFormat.parse(o2.getDataEnvio());
-					return d2.compareTo(d1);
-				} catch (ParseException e) {
-					throw new RuntimeException(e);
+		if(destinatarios == null){
+			destinatarios = new ArrayList<>();
+		    List<ModeloComunicacao> comunicacoesDoProcesso = getComunicacoesDoProcesso();
+		    for (ModeloComunicacao modeloComunicacao : comunicacoesDoProcesso) {
+		        List<DestinatarioBean> destinatariosPorModelo = getDestinatarios(modeloComunicacao);
+		        for (DestinatarioBean destinatarioBean : destinatariosPorModelo) {
+	                destinatarios.add(destinatarioBean);
+	            }
+	        }
+		    Collections.sort(destinatarios, new Comparator<DestinatarioBean>() {
+				@Override
+				public int compare(DestinatarioBean o1, DestinatarioBean o2) {
+					try {
+						Date d1 = dateFormat.parse(o1.getDataEnvio());
+						Date d2 = dateFormat.parse(o2.getDataEnvio());
+						return d2.compareTo(d1);
+					} catch (ParseException e) {
+						throw new RuntimeException(e);
+					}
 				}
-			}
-		});
+			});
+		}
 	    return destinatarios;
 	}
 	
-	public List<DestinatarioBean> getDestinatarios(ModeloComunicacao modeloComunicacao) {
-		List<DestinatarioBean> destinatarios = new ArrayList<>();
-		for (DestinatarioModeloComunicacao destinatarioModeloComunicacao : modeloComunicacao.getDestinatarios()) {
-			if (!destinatarioModeloComunicacao.getExpedido()) {
-				continue;
-			}
-
-			Processo comunicacao = modeloComunicacaoManager.getComunicacao(destinatarioModeloComunicacao);
-			if (comunicacao == null) {
-				continue;
-			}
-			boolean cienciaConfirmada = isCienciaConfirmada(destinatarioModeloComunicacao);
-			dadosCiencia.put(destinatarioModeloComunicacao.getId(), cienciaConfirmada);
-			if (!usuarioInterno && !cienciaConfirmada) {
-				continue;
-			}
-			destinatarios.add(createDestinatarioBean(destinatarioModeloComunicacao));
+	private List<DestinatarioBean> getDestinatarios(ModeloComunicacao modeloComunicacao) {
+		List<DestinatarioBean> destinatarios = destinatarioComunicacaoService.getDestinatarios(modeloComunicacao);
+		for(DestinatarioBean destinatario : destinatarios){
+			dadosCiencia.put(destinatario.getIdDestinatario(), destinatarioComunicacaoService.isCienciaConfirmada(destinatario.getComunicacao()));
 		}
 		return destinatarios;
 	}
@@ -204,9 +212,8 @@ public class ComunicacaoAction implements Serializable {
 	public List<ClassificacaoDocumento> getClassificacoesDocumentoProrrogacaoPrazo() {
 		if (classificacoesDocumentoProrrogacaoPrazo == null) {
 			if (isProrrogacaoPrazo()) {
-				ModeloComunicacao modeloComunicacao = modeloComunicacaoManager.find(destinatario.getIdModeloComunicacao());
 				classificacoesDocumentoProrrogacaoPrazo = new ArrayList<>();
-				classificacoesDocumentoProrrogacaoPrazo.add(prorrogacaoPrazoService.getClassificacaoProrrogacaoPrazo(modeloComunicacao.getTipoComunicacao()));
+				classificacoesDocumentoProrrogacaoPrazo.add(prorrogacaoPrazoService.getClassificacaoProrrogacaoPrazo(destinatario.getDestinatario()));
 			}
 		}
 		return classificacoesDocumentoProrrogacaoPrazo;
@@ -226,13 +233,9 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	public void setDestinatarioCiencia(DestinatarioBean destinatario) {
+		clear();
 		this.destinatario = destinatario;
-		this.documentosDestinatario = null;
 		ciencia = true;
-		prorrogacaoPrazo = false;
-		documentos = false;
-		dataCiencia = null;
-		documentoUploader.clear();
 	}
 	
 	public Date getDataCiencia() {
@@ -263,11 +266,7 @@ public class ComunicacaoAction implements Serializable {
 			movimentarProcessoJBPM(comunicacao);
 
 			dadosCiencia.put(destinatario.getIdDestinatario(), true);
-			destinatario = null;
-			dataCiencia = null;
-			ciencia = false;
-			setEditorCiencia(false);
-			setClassificacaoDocumentoCiencia(null);
+			clear();
 			
 			FacesMessages.instance().add("Ciência informada com sucesso");
 			
@@ -349,12 +348,9 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	public void setDestinatarioProrrogacaoPrazo(DestinatarioBean destinatario) {
+		clear();
 		this.destinatario = destinatario;
-		this.documentosDestinatario = null;
 		prorrogacaoPrazo = true;
-		ciencia = false;
-		documentos = false;
-		documentoUploader.clear();
 		documentoUploader.setClassificacaoDocumento(null);
 		classificacoesDocumentoProrrogacaoPrazo = null;
 	}
@@ -364,11 +360,9 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	public void setDestinatarioDocumentos(DestinatarioBean destinatario) {
+		clear();
 		this.destinatario = destinatario;
-		this.documentosDestinatario = null;
 		documentos = true;
-		prorrogacaoPrazo = false;
-		ciencia = false;
 	}
 	
 	public void pedirProrrogacaoPrazo() {
@@ -383,6 +377,12 @@ public class ComunicacaoAction implements Serializable {
 
 			Processo prorrogacao = processoAnaliseDocumentoService.criarProcessoAnaliseDocumentos(comunicacao, documento);
 			processoAnaliseDocumentoService.inicializarFluxoDocumento(prorrogacao, null);
+			MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
+			MetadadoProcesso dataPedidoProrrogacao = metadadoProcessoProvider.gerarMetadado(
+					ComunicacaoMetadadoProvider.DATA_PEDIDO_PRORROGACAO, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(new Date()));
+			metadadoProcessoManager.persist(dataPedidoProrrogacao);
+			comunicacao.getMetadadoProcessoList().add(dataPedidoProrrogacao);
+			clear();
 			FacesMessages.instance().add("Pedido de prorrogação de prazo efetuado com sucesso");
 		} catch (DAOException e) {
 			LOG.error("", e);
@@ -418,7 +418,14 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	public boolean podePedirProrrogacaoPrazo(DestinatarioBean bean) {
-		return prorrogacaoPrazoService.canShowClassificacaoProrrogacaoPrazo(bean.getTipoComunicacao()) && isCienciaConfirmada(bean);
+	    MetadadoProcesso metadadoPrazo = bean.getComunicacao().getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO);
+	    if (metadadoPrazo != null) {
+    	    Date dataLimiteCumprimento = metadadoPrazo.getValue();
+	        return prorrogacaoPrazoService.canShowClassificacaoProrrogacaoPrazo(bean.getDestinatario()) &&
+	                prorrogacaoPrazoService.getDataPedidoProrrogacao(bean.getComunicacao()) == null && 
+	                dataLimiteCumprimento.after(new Date());
+	    }
+	    return false;
 	}
 	
 	public void clear() {
@@ -429,64 +436,14 @@ public class ComunicacaoAction implements Serializable {
 		documentosDestinatario = null;
 		destinatario = null;
 		dataCiencia = null;
-		editorCiencia = false;
-		documentoUploader.clear();
-	}
-	
-	private DestinatarioBean createDestinatarioBean(DestinatarioModeloComunicacao destinatario) {
-		DestinatarioBean bean = new DestinatarioBean();
-		bean.setIdDestinatario(destinatario.getId());
-		bean.setComunicacao(modeloComunicacaoManager.getComunicacao(destinatario));
-		bean.setMeioExpedicao(destinatario.getMeioExpedicao().getLabel());
-		bean.setTipoComunicacao(destinatario.getModeloComunicacao().getTipoComunicacao());
-		bean.setNome(destinatario.getNome());
-		bean.setDocumentoComunicacao(destinatario.getDocumentoComunicacao());
-		bean.setIdModeloComunicacao(destinatario.getModeloComunicacao().getId());
+		documentoUploader.clear();		
+		documentoResposta = false;
+		documentosListResposta = null;
+		setEditorCiencia(false);
+		setClassificacaoDocumentoProrrogPrazo(null);
 		
-		Processo comunicacao = bean.getComunicacao();
-		MetadadoProcesso metadadoPrazo = comunicacao.getMetadado(ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
-		if (metadadoPrazo != null) {
-			bean.setPrazoAtendimento(metadadoPrazo.getValue().toString());
-		} else {
-			bean.setPrazoAtendimento("-");
-		}
-		bean.setDataEnvio(dateFormat.format(comunicacao.getDataInicio()));
-		bean.setDataConfirmacao(getDataConfirmacao(comunicacao));
-		bean.setResponsavelConfirmacao(getResponsavelConfirmacao(comunicacao));
-		bean.setPrazoFinal(getPrazoFinal(comunicacao));
-		return bean;
 	}
 	
-	private boolean isCienciaConfirmada(DestinatarioModeloComunicacao destinatario) {
-		Processo comunicacao = modeloComunicacaoManager.getComunicacao(destinatario);
-		return !getDataConfirmacao(comunicacao).equals("-");
-	}
-	
-	private String getDataConfirmacao(Processo comunicacao) {
-		MetadadoProcesso metadado = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA);
-		if (metadado != null) {
-			return dateFormat.format(metadado.getValue());
-		}
-		return "-";
-	}
-	
-	private String getResponsavelConfirmacao(Processo comunicacao) {
-		MetadadoProcesso metadado = comunicacao.getMetadado(ComunicacaoMetadadoProvider.RESPONSAVEL_CIENCIA);
-		if (metadado != null) {
-			UsuarioLogin usuario = metadado.getValue();
-			return usuario.getNomeUsuario();
-		}
-		return "-";
-	}
-	
-	private String getPrazoFinal(Processo comunicacao) {
-		MetadadoProcesso metadado = comunicacao.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO);
-		if (metadado != null) {
-			return dateFormat.format(metadado.getValue());
-		}
-		return "-";
-	}
-
 	public String getTextoCiencia() {
 		return textoCiencia;
 	}
@@ -503,6 +460,7 @@ public class ComunicacaoAction implements Serializable {
 		this.editorCiencia = editorCiencia;
 		if (!isEditorCiencia()){
 			setClassificacaoDocumentoCiencia(null);
+			setTextoCiencia(null);
 		}
 	}
 
@@ -517,4 +475,29 @@ public class ComunicacaoAction implements Serializable {
 			documentoUploader.setClassificacaoDocumento(classificacaoDocumentoCiencia);
 		}
 	}
+	
+	public List<Documento> getDocumentosRespostaList(){
+		if (documentosListResposta == null) {
+			if(destinatario != null){
+				documentosListResposta = processoAnaliseDocumentoService.getDocumentosRespostaComunicacao(destinatario.getComunicacao());
+			}
+		}
+		return documentosListResposta;
+	}
+	
+	public void setDestinatarioResposta(DestinatarioBean destinatario){
+		clear();
+		this.destinatario = destinatario;
+		this.documentoResposta = true;
+		this.documentosListResposta = null;
+	}
+
+	public boolean isDocumentoResposta() {
+		return documentoResposta;
+	}
+
+	public void setDocumentoResposta(boolean documentoResposta) {
+		this.documentoResposta = documentoResposta;
+	}
+
 }

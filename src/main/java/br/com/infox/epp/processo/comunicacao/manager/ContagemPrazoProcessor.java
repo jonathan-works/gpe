@@ -1,6 +1,5 @@
 package br.com.infox.epp.processo.comunicacao.manager;
 
-import java.util.Date;
 import java.util.List;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -10,18 +9,13 @@ import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.annotations.async.Asynchronous;
 import org.jboss.seam.annotations.async.IntervalCron;
 import org.jboss.seam.async.QuartzTriggerHandle;
-import org.jboss.seam.bpm.ManagedJbpmContext;
-import org.jbpm.taskmgmt.exe.TaskInstance;
-import org.joda.time.DateTime;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
+import br.com.infox.epp.processo.comunicacao.service.ProrrogacaoPrazoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
-import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
-import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
-import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
@@ -37,9 +31,8 @@ public class ContagemPrazoProcessor {
 	@In
 	private PrazoComunicacaoService prazoComunicacaoService;
 	@In
-	private ProcessoTarefaManager processoTarefaManager;
-	@In
-	private SituacaoProcessoDAO situacaoProcessoDAO;
+	private ProrrogacaoPrazoService prorrogacaoPrazoService;
+
 	
 	@Asynchronous
 	@Transactional
@@ -56,40 +49,19 @@ public class ContagemPrazoProcessor {
 	private void analisarProcessosAguardandoCumprimento() throws DAOException {
 		List<Processo> processos = processoManager.listProcessosComunicacaoAguardandoCumprimento();
 		for (Processo processo : processos) {
-		    Date dataLimite = processo.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO).getValue();
-            DateTime dataParaCumprimento = new DateTime(dataLimite.getTime());
-			if (dataParaCumprimento.isBeforeNow()) {
-				movimentarProcessoJBPM(processo);
-			}
+		    if (!prorrogacaoPrazoService.hasPedidoProrrogacaoEmAberto(processo)){
+	            prazoComunicacaoService.movimentarComunicacaoPrazoExpirado(processo, ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO);
+		    }
 		}
 	}
 	
 	private void analisarProcessosAguardandoCiencia() throws DAOException {
 		List<Processo> processos = processoManager.listProcessosComunicacaoAguardandoCiencia();
 		for (Processo processo : processos) {
-		    Date dataLimite = processo.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CIENCIA).getValue();
-            DateTime dataParaCiencia = new DateTime(dataLimite.getTime());
-			if (dataParaCiencia.isBeforeNow()) {
-				movimentarProcessoJBPM(processo);
-			}
+			prazoComunicacaoService.movimentarComunicacaoPrazoExpirado(processo, ComunicacaoMetadadoProvider.LIMITE_DATA_CIENCIA);
 		}
 	}
 	
-	private void movimentarProcessoJBPM(Processo processo) throws DAOException {
-		Long idTaskInstance = situacaoProcessoDAO.getIdTaskInstanceByIdProcesso(processo.getIdProcesso());
-		if (idTaskInstance == null) {
-			LOG.warn("idTaskInstance para o processo " + processo.getNumeroProcesso() + " nulo");
-			return;
-		}
-		TaskInstance taskInstance = ManagedJbpmContext.instance().getTaskInstanceForUpdate(idTaskInstance);
-		taskInstance.end();
-		atualizarProcessoTarefa(taskInstance);
-	}
 	
-	private void atualizarProcessoTarefa(TaskInstance taskInstance) throws DAOException {
-		ProcessoTarefa processoTarefa = processoTarefaManager.getByTaskInstance(taskInstance.getId());
-		processoTarefa.setDataFim(taskInstance.getEnd());
-		processoTarefaManager.update(processoTarefa);
-	}
 
 }

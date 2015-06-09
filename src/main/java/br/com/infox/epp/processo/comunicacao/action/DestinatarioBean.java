@@ -1,8 +1,12 @@
 package br.com.infox.epp.processo.comunicacao.action;
 
+import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
+
+import com.google.common.base.Strings;
 
 public class DestinatarioBean {
 	private Long idDestinatario;
@@ -14,9 +18,12 @@ public class DestinatarioBean {
 	private String responsavelConfirmacao;
 	private String prazoAtendimento;
 	private String prazoFinal;
+	private String prazoOriginal;
 	private Processo comunicacao;
-	private Long idModeloComunicacao;
+	private ModeloComunicacao modeloComunicacao;
 	private Documento documentoComunicacao;
+	private String statusProrrogacao;
+	private DestinatarioModeloComunicacao destinatario;
 	
 	public Long getIdDestinatario() {
 		return idDestinatario;
@@ -72,22 +79,43 @@ public class DestinatarioBean {
 	public void setPrazoFinal(String prazoFinal) {
 		this.prazoFinal = prazoFinal;
 	}
-	public Processo getComunicacao() {
+	public String getPrazoOriginal() {
+        return prazoOriginal;
+    }
+    public void setPrazoOriginal(String prazoOriginal) {
+        this.prazoOriginal = prazoOriginal;
+    }
+    public Processo getComunicacao() {
 		return comunicacao;
 	}
 	public void setComunicacao(Processo comunicacao) {
 		this.comunicacao = comunicacao;
 	}
-	public Long getIdModeloComunicacao() {
-		return idModeloComunicacao;
+	public ModeloComunicacao getModeloComunicacao() {
+		return modeloComunicacao;
 	}
-	public void setIdModeloComunicacao(Long idModeloComunicacao) {
-		this.idModeloComunicacao = idModeloComunicacao;
+	public void setModeloComunicacao(ModeloComunicacao modeloComunicacao) {
+		this.modeloComunicacao = modeloComunicacao;
 	}
 	public Documento getDocumentoComunicacao() {
 		return documentoComunicacao;
 	}
 	public void setDocumentoComunicacao(Documento documentoComunicacao) {
 		this.documentoComunicacao = documentoComunicacao;
+	}
+	public String getStatusProrrogacao() {
+		if(Strings.isNullOrEmpty(statusProrrogacao)){
+			return "-";
+		}
+		return statusProrrogacao;
+	}
+	public void setStatusProrrogacao(String statusProrrogacao) {
+		this.statusProrrogacao = statusProrrogacao;
+	}
+	public DestinatarioModeloComunicacao getDestinatario() {
+		return destinatario;
+	}
+	public void setDestinatario(DestinatarioModeloComunicacao destinatario) {
+		this.destinatario = destinatario;
 	}
 }

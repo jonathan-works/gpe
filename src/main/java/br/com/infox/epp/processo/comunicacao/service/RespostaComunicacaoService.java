@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.comunicacao.service;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,14 +20,15 @@ import org.jbpm.graph.exe.ProcessInstance;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
+import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.dao.DocumentoRespostaComunicacaoDAO;
+import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.service.ProcessoAnaliseDocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
-import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
-import br.com.infox.seam.exception.BusinessException;
+import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 
 @Name(RespostaComunicacaoService.NAME)
 @Scope(ScopeType.EVENT)
@@ -42,23 +44,9 @@ public class RespostaComunicacaoService {
 	private ProcessoAnaliseDocumentoService processoAnaliseDocumentoService;
 	@In
 	private MetadadoProcessoManager metadadoProcessoManager;
+	@In
+	private ProrrogacaoPrazoService prorrogacaoPrazoService;
 	
-	public void enviarResposta(Documento resposta) throws DAOException {
-		Processo comunicacao = documentoRespostaComunicacaoDAO.getComunicacaoVinculada(resposta);
-		if (comunicacao == null) {
-			return;
-		}
-		Processo processoResposta = processoAnaliseDocumentoService.criarProcessoAnaliseDocumentos(comunicacao, resposta);
-		EppMetadadoProvider provider = new EppMetadadoProvider();
-		MetadadoProcesso metadadoResposta = provider.gerarMetadado(EppMetadadoProvider.DOCUMENTO_EM_ANALISE, processoResposta, resposta.getId().toString());
-		processoResposta.getMetadadoProcessoList().add(metadadoResposta);
-		metadadoProcessoManager.persist(metadadoResposta);
-		
-		Map<String, Object> variaveisJbpm = new HashMap<>();
-		setRespostaTempestiva(processoResposta.getDataInicio(), comunicacao);
-		processoAnaliseDocumentoService.inicializarFluxoDocumento(processoResposta, variaveisJbpm);
-	}
-
 	public void enviarResposta(List<Documento> respostas) throws DAOException {
 		Processo comunicacao = documentoRespostaComunicacaoDAO.getComunicacaoVinculada(respostas.get(0));
 		if (comunicacao == null) {
@@ -69,6 +57,16 @@ public class RespostaComunicacaoService {
 		Map<String, Object> variaveisJbpm = new HashMap<>();
 		setRespostaTempestiva(processoResposta.getDataInicio(), comunicacao);
 		processoAnaliseDocumentoService.inicializarFluxoDocumento(processoResposta, variaveisJbpm);
+		documentoRespostaComunicacaoDAO.updateDocumentoComoEnviado(respostas);
+		
+		MetadadoProcesso metadadoDestinatario = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO);
+		TipoComunicacao tipoComunicacao = ((DestinatarioModeloComunicacao) metadadoDestinatario.getValue()).getModeloComunicacao().getTipoComunicacao();
+		if(prorrogacaoPrazoService.containsClassificacaoProrrogacaoPrazo(respostas, tipoComunicacao)){
+			MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
+			MetadadoProcesso metadadoDataPedido = metadadoProcessoProvider.gerarMetadado(
+					ComunicacaoMetadadoProvider.DATA_PEDIDO_PRORROGACAO, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(new Date()));
+			comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoDataPedido));
+		}		
 	}
 	
 	private void setRespostaTempestiva(Date dataResposta, Processo comunicacao) {
@@ -88,20 +86,11 @@ public class RespostaComunicacaoService {
 			c.add(Calendar.DAY_OF_MONTH, prazoDestinatario);
 			Date dataFimPrazoDestinatario = DateUtil.getEndOfDay(c.getTime());
 			
-			if (dataCiencia.equals(dataResposta) || dataFimPrazoDestinatario.equals(dataResposta) ||
+			if (dataCiencia.equals(DateUtil.getBeginningOfDay(dataResposta)) || dataFimPrazoDestinatario.equals(DateUtil.getEndOfDay(dataResposta)) ||
 					(dataCiencia.before(dataResposta) && dataFimPrazoDestinatario.after(dataResposta))) {
 				respostaTempestiva = true;
 			}
 		}
 		contextInstance.setVariable("respostaTempestiva", respostaTempestiva);
-	}
-
-//	@Override
-	public void postSignDocument(Documento documento) {
-		try {
-			enviarResposta(documento);
-		} catch (DAOException e) {
-			throw new BusinessException("Erro ao enviar resposta da comunicação", e);
-		}
 	}
 }
