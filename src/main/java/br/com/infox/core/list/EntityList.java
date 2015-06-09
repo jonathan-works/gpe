@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.annotation.PostConstruct;
 import javax.el.PropertyNotFoundException;
 
 import org.jboss.seam.Component;
@@ -26,11 +27,9 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.core.util.ExcelExportUtil;
 import br.com.infox.core.util.ReflectionsUtil;
-import br.com.infox.epp.system.EppMessagesContextLoader;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.path.PathResolver;
-import br.com.infox.seam.util.ComponentUtil;
 
 public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
 
@@ -53,17 +52,18 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
     private String orderedColumn;
 
     private static final int TAMANHO_XLS_PADRAO = 10000;
-
-    public EntityList() {
-        setCustomFilters();
-        addSearchFields();
-        Map<String, String> map = getCustomColumnsOrder();
-        if (map != null) {
-            customColumnsOrder.putAll(map);
-        }
-        setEjbql(getDefaultEjbql());
-        setOrder(getDefaultOrder());
-        setRestrictions();
+    
+    @PostConstruct
+    public void init() {
+    	setCustomFilters();
+    	addSearchFields();
+    	Map<String, String> map = getCustomColumnsOrder();
+    	if (map != null) {
+           customColumnsOrder.putAll(map);
+    	}
+    	setEjbql(getDefaultEjbql());
+    	setOrder(getDefaultOrder());
+    	setRestrictions();
     }
 
     /**
@@ -301,7 +301,11 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
     }
 
     public String getEntityListName() {
-        return Component.getComponentName(this.getClass());
+    	String componentName = ReflectionsUtil.getCdiComponentName(getClass());
+    	if (componentName == null) {
+    		return Component.getComponentName(this.getClass());
+    	}
+    	return componentName;
     }
 
     protected String getComponentPesquisa() {

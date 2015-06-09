@@ -19,6 +19,8 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.graph.exe.Token;
 
+import com.google.common.base.Strings;
+
 import br.com.infox.certificado.CertificateSignatures;
 import br.com.infox.certificado.bean.CertificateSignatureBean;
 import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
@@ -53,8 +55,6 @@ import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
-
-import com.google.common.base.Strings;
 
 @Name(EnvioComunicacaoController.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -107,6 +107,7 @@ public class EnvioComunicacaoController implements Serializable {
 	private boolean inTask = false;
 	private boolean minuta = true;
 	private String idModeloComunicacaoVariableName;
+	private boolean isNew = true;
 	
 	@Create
 	public void init() {
@@ -173,6 +174,7 @@ public class EnvioComunicacaoController implements Serializable {
 			setFinalizada(modeloComunicacao.getFinalizada() != null ? modeloComunicacao.getFinalizada() : false);
 			this.processInstanceId = this.modeloComunicacao.getProcesso().getIdJbpm();
 			BusinessProcess.instance().setProcessId(processInstanceId);
+			isNew = false;
 		}
 	}
 	
@@ -197,6 +199,7 @@ public class EnvioComunicacaoController implements Serializable {
 				}
 			}
 			FacesMessages.instance().add("Registro gravado com sucesso");
+			isNew = false;
 		} catch (Exception e) {
 			LOG.error("", e);
 			if (e instanceof DAOException) {
@@ -244,7 +247,7 @@ public class EnvioComunicacaoController implements Serializable {
 		modeloComunicacao.setFinalizada(false);
 		this.minuta = true;
 		modeloComunicacao.setMinuta(true);
-		if (!modeloComunicacaoManager.contains(modeloComunicacao) && modeloComunicacaoManager.find(modeloComunicacao.getId()) == null) {
+		if (isNew) {
 			modeloComunicacao.setId(null);
 			setIdModeloVariable(null);
 			documentoComunicacaoAction.resetEntityState();

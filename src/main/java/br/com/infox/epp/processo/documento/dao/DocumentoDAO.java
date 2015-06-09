@@ -33,11 +33,9 @@ import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.BooleanQuery.TooManyClauses;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.util.Version;
-import org.hibernate.Session;
-import org.hibernate.search.FullTextQuery;
-import org.hibernate.search.FullTextSession;
-import org.hibernate.search.Search;
 import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.jpa.FullTextQuery;
+import org.hibernate.search.jpa.Search;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -111,30 +109,31 @@ public class DocumentoDAO extends DAO<Documento> {
 
     @SuppressWarnings(UNCHECKED)
     public List<Documento> pesquisar(String searchPattern) throws TooManyClauses, ParseException {
-        Session session = sessionAssistant.getSession();
-        FullTextSession fullTextSession = Search.getFullTextSession(session);
+        FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(getEntityManager());
         List<Documento> ret = new ArrayList<Documento>();
         QueryParser parser = new MultiFieldQueryParser(Version.LUCENE_36, new String[] { "nome", "texto" },
                 new BrazilianAnalyzer(Version.LUCENE_36));
-        Query luceneQuery;
-        try {
-            luceneQuery = parser.parse(searchPattern);
-        } catch (TooManyClauses | ParseException e) {
-            throw e;
-        }
-        FullTextQuery hibernateQuery = fullTextSession.createFullTextQuery(luceneQuery, Documento.class);
-        List<Documento> temp = hibernateQuery.list();
-        for (Documento documento : temp) {
-            if (documento.getAnexo()) {
-                ret.add(documento);
-            }
-        }
+        Query luceneQuery = parser.parse(searchPattern);
+        FullTextQuery query = fullTextEntityManager.createFullTextQuery(luceneQuery, Documento.class);
+        query.setMaxResults(50);
+        List<Documento> results = query.getResultList();
         UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
-        for (Documento documento : ret) {
-
-            if (!sigiloDocumentoService.possuiPermissao(documento, usuarioLogado)) {
-                ret.remove(documento);
-            }
+        int passo = 0;
+        while (ret.size() < 50 && results != null && !results.isEmpty()) {
+        	passo++;
+	        for (int i = 0; i < results.size() && ret.size() < 50; i++) {
+	        	Documento documento = results.get(i);
+	        	if (documento.getAnexo() && sigiloDocumentoService.possuiPermissao(documento, usuarioLogado)) {
+	                ret.add(documento);
+	            }
+	        }
+	        if (ret.size() < 50) {
+	        	query.setFirstResult(passo * 50);
+	        	results = query.getResultList();
+	        }
+	        if (passo * 50 > 1000) {
+	        	break;
+	        }
         }
         return ret;
     }

@@ -20,5 +20,11 @@ public class CategoriaDAO extends DAO<Categoria> {
     public List<Object[]> listProcessoByCategoria() {
         return getNamedResultList(LIST_PROCESSO_EPP_BY_CATEGORIA);
     }
+    
+    @Override
+    public List<Categoria> findAll() {
+    	String hql = "select o from Categoria o order by o.categoria";
+    	return getEntityManager().createQuery(hql, Categoria.class).getResultList();
+    }
 
 }

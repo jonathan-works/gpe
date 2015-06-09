@@ -58,11 +58,10 @@
     </s:div>
     <s:div id="assinaturaDocumentoDiv#{f.id}" >
 	    <s:div id="conteudoAssinatura#{f.id}" rendered="#{taskInstanceHome.podeAssinarDocumento(f.id.split('-')[0])}">
-			
 			<a:jsFunction name="assinar"
 				action="#{taskInstanceHome.assinarDocumento()}"
 				execute="@this, assinaturaDocumentoDiv#{f.id}"
-				render="assinaturaDocumentoDiv#{f.id}, #{id}EditorDiv, pageBodyDialogMessage" 
+				render="assinaturaDocumentoDiv#{f.id}, #{id}EditorDiv, pageBodyDialogMessage, @form" 
 				oncomplete="infox.hideLoading();"/>
 				
 			<wi:certificadoDigital

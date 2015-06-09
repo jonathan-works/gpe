@@ -12,6 +12,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.FacesMessages;
+
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
@@ -47,8 +48,10 @@ public class FileDownloader implements Serializable {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
         response.setContentType(contentType);
-        response.setHeader("Content-disposition", "attachment; filename=\""
-                + fileName + "\"");
+        if (!contentType.equals("text/html")) {
+            response.setHeader("Content-disposition", "attachment; filename=\""
+                    + fileName + "\"");
+        }
         return response;
     }
 

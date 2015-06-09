@@ -7,6 +7,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import javax.inject.Named;
+
+import org.apache.commons.beanutils.BeanUtilsBean;
+
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
@@ -110,6 +114,22 @@ public final class ReflectionsUtil {
     private static Object newInstanceClass(Class<?> clazz, Class<?>[] parameterTypes, Object[] values) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, InstantiationException {
     	Constructor<?> constructor = clazz.getConstructor(parameterTypes);
 		return constructor.newInstance(values);
+    }
+    
+    public static String getCdiComponentName(Class<?> clazz) {
+    	while ( clazz!=null && !Object.class.equals(clazz) ) {
+           Named named = clazz.getAnnotation(Named.class);
+           if ( named != null ) {
+        	   if (named.value().isEmpty()) {
+        		   String first = clazz.getSimpleName().substring(0, 1);
+                   return clazz.getSimpleName().replaceFirst(first, first.toLowerCase());
+        	   } else {
+        		   return named.value();
+        	   }
+           }
+           clazz = clazz.getSuperclass();
+        }
+        return null;
     }
 
 }

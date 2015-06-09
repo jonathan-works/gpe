@@ -44,6 +44,11 @@ public class PrioridadeProcessoChanger implements Serializable {
             this.prioridadeProcesso = new PrioridadeProcesso();
         }
 	}
+	
+	public void setProcesso(Integer idProcesso) {
+		Processo processo = processoManager.find(idProcesso);
+		setProcesso(processo);
+	}
 
     public PrioridadeProcesso getPrioridadeProcesso() {
         return prioridadeProcesso;
