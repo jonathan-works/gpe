@@ -54,17 +54,26 @@
           		
         </wi:dataTable>
     
-        <h:form>
+    	<script>
+    		function abrirMovimentar(event) {
+    			if (event.status === 'success') {
+    				var idProcesso = document.getElementById('iniciarProcessoForm:idProcesso').value;
+    				open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=' + idProcesso, 
+    							idProcesso + 'popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1'); 
+    				window.location='#{pathResolver.contextPath}/Painel/list.seam';
+    			}
+    		}
+    	</script>
+    
+        <h:form id="iniciarProcessoForm">
+        	<h:inputHidden id="idProcesso" value="#{iniciarProcessoAction.processo.idProcesso}" />
             <s:div id="storeDiv">
-                <a:commandButton id="storeButton"
-                    execute="@this"
-                    render="@form pageBodyDialogMessage"
-                    limitRender="true"
-                    action="#{action.iniciarProcesso(participantesController.processo)}"
+                <h:commandButton id="storeButton"
                     rendered="#{participantesController.podeIniciarProcesso()}"
                     value="#{infoxMessages['processo.iniciarBtn']}"
-                    styleClass="#{wi:get(styleClass, 'buttons')}"
-                    oncomplete="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processo.idProcesso}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1'); window.location='#{pathResolver.contextPath}/Painel/list.seam';" />
+                    styleClass="buttons">                    <f:ajax event="click" execute="@this" render="idProcesso :pageBodyDialogMessage" onevent="abrirMovimentar"
+                    	listener="#{action.iniciarProcesso(participantesController.processo)}Z"/>
+                 </h:commandButton>
             </s:div>
         </h:form>
     </s:div>
