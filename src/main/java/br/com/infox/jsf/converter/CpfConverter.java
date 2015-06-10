@@ -36,6 +36,7 @@ public class CpfConverter implements Converter {
 
     @Override
     public String getAsString(FacesContext context, UIComponent component, Object value) {
-        return format((String) value);
+		String cpf = (String) value;
+		return (cpf == null || cpf.trim().isEmpty()) ? null : format((String) value);
     }
 }

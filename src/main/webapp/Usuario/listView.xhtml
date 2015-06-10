@@ -30,6 +30,19 @@
             label="#{infoxMessages['usuarioLogin.nome']}"
             value="#{usuarioLoginList.entity.nomeUsuario}"
             maxlength="150" />
+          <wi:tree id="localizacao"
+               assignTo="usuarioLoginList.localizacao"
+               tree="#{localizacaoTree}"
+               icon="#{wiSkin.imageFolder}/nivelTree.gif"
+               iconLeaf="#{wiSkin.imageFolder}/file.gif"
+               label="#{infoxMessages['perfil.localizacao']}" 
+               styleClass="#{empty item.parent ? 'tree-notselectable' : ''}"/>
+          <wi:tree id="papel"
+               assignTo="usuarioLoginList.papel"
+               tree="#{papelTree}"
+               icon="#{wiSkin.imageFolder}/nivelTree.gif"
+               iconLeaf="#{wiSkin.imageFolder}/file.gif"
+               label="#{infoxMessages['perfil.papel']}" />
           <wi:selectBooleanMenu
             id="bloqueio"
             label="#{infoxMessages['usuarioLogin.bloqueio']}"
@@ -251,6 +264,9 @@
       </wi:dataTable>
       <ui:include src="dadosPersonalizadosDaPessoa.xhtml"/>
     </infox:tab>
+    
+    <ui:include src="abasPersonalizadasUsuario.xhtml"/>
+    
     <infox:tab
       id="usuarioPerfil"
       rendered="#{usuarioLoginCrudAction.isManaged()}"

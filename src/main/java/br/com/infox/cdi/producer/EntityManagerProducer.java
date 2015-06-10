@@ -14,8 +14,8 @@ public class EntityManagerProducer {
 	private EntityManager entityManager;
 	
 	@Produces
-	@PersistenceContext(unitName = "EPABinPersistenceUnit")
 	@BinaryDatabase
+	@PersistenceContext(unitName = "EPABinPersistenceUnit")
 	private EntityManager entityManagerBin;
 
 }

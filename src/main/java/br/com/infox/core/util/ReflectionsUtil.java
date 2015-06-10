@@ -88,6 +88,14 @@ public final class ReflectionsUtil {
         return false;
     }
     
+    public static void copyProperties(Object objectDest, Object objectOrig) {
+		try {
+			BeanUtilsBean.getInstance().copyProperties(objectDest, objectOrig);
+		} catch (IllegalAccessException | InvocationTargetException e) {
+			LOG.error("copyProperties", e);
+		}
+	}
+    
     public static Object newInstance(Class<?> clazz, Class<?> parameterType, Object value) {
     	return newInstance(clazz, new Class<?>[]{parameterType} , new Object[] {value});
     }
