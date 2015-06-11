@@ -29,7 +29,7 @@
             rendered="#{isModelo}"
             target="PopUpDocumentoBin"
         >
-            <h:graphicImage
+            <h:graphicImage styleClass="opacityHover"
                 title="#{infoxMessages['processoDocumento.visualizar']}"
                 url="#{wiSkin.imageFolder}/view.png"
             />
@@ -39,12 +39,12 @@
             rendered="#{!isModelo}"
             action="#{documentoDownloader.downloadDocumento(row)}"
         >
-            <h:graphicImage
+            <h:graphicImage styleClass="opacityHover"
                 value="#{wiSkin.imageFolder}/mod/pdf.gif"
                 title="#{bin.nomeArquivo} (#{documentoDownloader.getFormattedKb(bin)})"
             />
         </h:commandLink>
-        <wi:toolBarAssinatura idDocumento="#{row.id}" 
+        <wi:toolBarAssinatura idDocumento="#{row.id}" styleClass="opacityHover"
 						      renderedLock="#{not empty bin.assinaturas}" />
     </span>
 </ui:composition>
