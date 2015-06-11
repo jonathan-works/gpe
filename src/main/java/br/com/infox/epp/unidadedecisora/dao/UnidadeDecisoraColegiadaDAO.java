@@ -1,5 +1,7 @@
 package br.com.infox.epp.unidadedecisora.dao;
 
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.CODIGO_LOCALIZACAO;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.FIND_UDC_BY_CODIGO_LOCALIZACAO;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.ID_LOCALIZACAO;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.ID_USUARIO_LOGIN;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_EXISTE_UDC_BY_LOCALIZACAO;
@@ -52,4 +54,9 @@ public class UnidadeDecisoraColegiadaDAO extends DAO<UnidadeDecisoraColegiada> {
 	    return getNamedResultList(UnidadeDecisoraColegiadaQuery.FIND_ALL_ATIVO);
 	}
 
+	public UnidadeDecisoraColegiada findByCodigoLocalizacao(String codigoLocalizacao) {
+		Map<String, Object> params = new HashMap<>();
+		params.put(CODIGO_LOCALIZACAO, codigoLocalizacao);
+		return getNamedSingleResult(FIND_UDC_BY_CODIGO_LOCALIZACAO, params);
+	}
 }
