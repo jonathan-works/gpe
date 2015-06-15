@@ -51,5 +51,13 @@ public class UsuarioPerfilDAO extends DAO<UsuarioPerfil> {
         params.put(UsuarioPerfilQuery.PARAM_USUARIO_LOGIN, usuarioLogin);
         return getNamedResultList(UsuarioPerfilQuery.LIST_BY_USUARIO_LOGIN, params);
     }
+    
+    public boolean existeUsuarioPerfil(UsuarioLogin usuarioLogin, String descricaoPerfil, boolean ativo) {
+    	Map<String,Object> params = new HashMap<>(2);
+    	params.put(UsuarioPerfilQuery.PARAM_USUARIO_LOGIN, usuarioLogin);
+    	params.put(UsuarioPerfilQuery.PARAM_DS_PERFIL_TEMPLATE, descricaoPerfil);
+    	params.put(UsuarioPerfilQuery.PARAM_ATIVO, ativo);
+    	return (Long) getNamedSingleResult(UsuarioPerfilQuery.EXISTE_USUARIO_COM_DESCRICAO_PERFIL_ATIVO, params) > 0;
+    }
 
 }

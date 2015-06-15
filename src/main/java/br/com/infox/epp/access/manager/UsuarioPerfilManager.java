@@ -19,8 +19,7 @@ import br.com.infox.epp.access.entity.UsuarioPerfil;
 @Name(UsuarioPerfilManager.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
-public class UsuarioPerfilManager extends
-        Manager<UsuarioPerfilDAO, UsuarioPerfil> {
+public class UsuarioPerfilManager extends Manager<UsuarioPerfilDAO, UsuarioPerfil> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "usuarioPerfilManager";
@@ -60,6 +59,10 @@ public class UsuarioPerfilManager extends
             usuarioLogin.setAtivo(Boolean.FALSE);
             usuarioLoginManager.update(usuarioLogin);
         }
+    }
+    
+    public boolean existeUsuarioPerfilAtivo(UsuarioLogin usuarioLogin, String descricaoPerfil, boolean ativo) {
+    	return getDao().existeUsuarioPerfil(usuarioLogin, descricaoPerfil, ativo);
     }
 
 	@Override

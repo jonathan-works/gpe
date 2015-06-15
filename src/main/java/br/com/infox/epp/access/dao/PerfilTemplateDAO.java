@@ -28,6 +28,12 @@ public class PerfilTemplateDAO extends DAO<PerfilTemplate> {
         param.put("papel", perfilTemplate.getPapel());
         return (Long) getSingleResult(hql, param) > 0;
     }
+    
+    public PerfilTemplate getPerfilTemplateByDescricao(String descricao) {
+    	Map<String, Object> param = new HashMap<>(1);
+        param.put(PerfilTemplateQuery.PARAM_DESCRICAO, descricao);
+        return getNamedSingleResult(PerfilTemplateQuery.GET_BY_DESCRICAO, param);
+    }
 
     public List<PerfilTemplate> listPerfisDentroDeEstrutura() {
         return getNamedResultList(LIST_PERFIS_DENTRO_DE_ESTRUTURA);

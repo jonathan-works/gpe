@@ -80,19 +80,20 @@
         	id="#{id}"
         	value="#{value}"
             toolbar="#{readonly ? 'empty':wi:get(toolbar, 'InfoxToolbar')}"
-            readonly="#{readonly}"
-            required="#{required}"
+            readonly="#{readonly}" oninit="#{oninit}"
+            required="#{required}" width="#{width}" height="#{height}"
             onchange="#{wi:get(onchange, 'void(0);')}"
             >
 			<ui:param name="editorHeight" value="#{wi:get(height, 390)}" />
 			<ui:param name="editorWidth" value="#{wi:get(width, 625)}" />
+			<ui:param name="canCollapse" value="#{wi:get(canCollapse, false)}" />
             <f:facet name="config">
                 removePlugins: 'elementspath',
                 resize_enable:true,
                 resize_dir:'both',
                 toolbar_empty:[],
                 uiColor:'#DDDDDD',
-                toolbarCanCollapse:false,
+                toolbarCanCollapse:#{canCollapse},
                 width:'#{editorWidth}',
                 height:'#{editorHeight}',
                 toolbar_InfoxToolbar:

@@ -4,6 +4,10 @@ import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.E
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_PAI_TIPO_QUERY;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_TIPO;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_TIPO_QUERY;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_FILHO_BY_PROCESSO;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_FILHO_BY_PROCESSO_QUERY;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_BY_PROCESSO_PARTICIPANTE_FILHO;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_BY_PROCESSO_PARTICIPANTE_FILHO_QUERY;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_PROCESSO;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_PROCESSO_QUERY;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_PROCESSO_RAIZ;
@@ -46,7 +50,9 @@ import br.com.infox.epp.processo.entity.Processo;
 		@NamedQuery(name=EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_PAI_TIPO, query=EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_PAI_TIPO_QUERY),
 		@NamedQuery(name=EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_TIPO, query=EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_TIPO_QUERY),
 		@NamedQuery(name = PARTICIPANTES_PROCESSO, query = PARTICIPANTES_PROCESSO_QUERY),
-		@NamedQuery(name = PARTICIPANTES_PROCESSO_RAIZ, query = PARTICIPANTES_PROCESSO_RAIZ_QUERY)
+		@NamedQuery(name = PARTICIPANTES_PROCESSO_RAIZ, query = PARTICIPANTES_PROCESSO_RAIZ_QUERY),
+		@NamedQuery(name = PARTICIPANTES_BY_PROCESSO_PARTICIPANTE_FILHO, query = PARTICIPANTES_BY_PROCESSO_PARTICIPANTE_FILHO_QUERY),
+		@NamedQuery(name = EXISTE_PARTICIPANTE_FILHO_BY_PROCESSO, query = EXISTE_PARTICIPANTE_FILHO_BY_PROCESSO_QUERY)
 })
 public class ParticipanteProcesso implements Serializable, Cloneable {
 

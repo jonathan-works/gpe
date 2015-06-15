@@ -7,6 +7,7 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.pessoa.entity.Pessoa;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.partes.dao.ParticipanteProcessoDAO;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
@@ -40,5 +41,13 @@ public class ParticipanteProcessoManager extends Manager<ParticipanteProcessoDAO
     
     public List<ParticipanteProcesso> getParticipantesProcessoRaiz(Processo processo) {
     	return getDao().getParticipantesProcessoRaiz(processo);
+    }
+    
+    public List<ParticipanteProcesso> getParticipantesByProcessoPessoaParticipanteFilho(Processo processo, PessoaFisica pessoaParticipanteFilho) {
+        return getDao().getParticipantesByProcessoPessoaParticipanteFilho(processo, pessoaParticipanteFilho);
+    }
+    
+    public boolean existeParticipanteFilhoByParticipanteProcesso(Processo processo, ParticipanteProcesso participantePai, PessoaFisica pessoaParticipanteFilho) {
+        return getDao().existeParticipanteFilhoByParticipanteProcesso(processo, participantePai, pessoaParticipanteFilho);
     }
 }

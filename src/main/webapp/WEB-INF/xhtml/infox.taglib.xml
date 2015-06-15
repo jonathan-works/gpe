@@ -396,6 +396,10 @@ version="2.0">
         <source>tags/report/columns/reportColumnSituacao.xhtml</source>
     </tag>
     <tag>
+    	<tag-name>confirmDialog</tag-name>
+        <source>tags/form/confirmDialog.xhtml</source>
+    </tag>
+    <tag>
         <tag-name>numeravelMascara</tag-name>
         <source>components/form/numeravelMascara.xhtml</source>
     </tag>

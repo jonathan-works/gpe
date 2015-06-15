@@ -147,7 +147,7 @@ public class Documento implements Serializable, Cloneable {
     
     @NotNull
     @Column(name="in_excluido", nullable = false)
-    private Boolean excluido = Boolean.FALSE;
+    private Boolean excluido;
     
     @ManyToOne
     @JoinColumn(name="id_pasta")
@@ -179,6 +179,7 @@ public class Documento implements Serializable, Cloneable {
     	}
     	setDataInclusao(new Date());
     	setUsuarioInclusao(getUsuarioLogadoOuSistema());
+    	setExcluido(Boolean.FALSE);
     }
     
     @PreUpdate

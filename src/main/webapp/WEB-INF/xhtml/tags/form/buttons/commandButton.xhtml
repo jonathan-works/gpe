@@ -11,7 +11,7 @@
     <a:commandButton id="#{id}" action="#{elFunctions.invokeMethod(action)}"
         tabindex="#{tabindex}" rendered="#{wi:get(rendered,true)}"
         limitRender="true" execute="#{execute}"
-        type="#{buttonType}"
+        type="#{buttonType}" onmouseup="#{onmouseup}"
         onclick="infox.showLoading();#{onclick}"
         oncomplete="infox.hideLoading();#{oncomplete}" value="#{value}"
         render="#{reRender}" disabled="#{disabled}"

@@ -1,183 +1,176 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:a="http://richfaces.org/a4j"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:rich="http://richfaces.org/rich"
-    xmlns:wi="http://www.itx.com.br/jsf">
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:wi="http://www.itx.com.br/jsf">
 
-    <ui:param name="pastaDocumentoRenderId"
-        value="#{empty pastaDocumentoRenderId ? '' : pastaDocumentoRenderId}" />
-    <a:jsFunction name="selectDocumento" immediate="true"
-        execute="@this" render="historicoDocumentoPanelDiv"
-        limitRender="true" status=":status">
-        <a:param name="idDocumento"
-            assignTo="#{documentoProcessoAction.idDocumento}"
-            converter="javax.faces.Integer" />
-    </a:jsFunction>
+	<ui:param name="pastaDocumentoRenderId"
+		value="#{empty pastaDocumentoRenderId ? '' : pastaDocumentoRenderId}" />
+	<a:jsFunction name="selectDocumento" immediate="true" execute="@this"
+		render="historicoDocumentoPanelDiv" limitRender="true"
+		status=":status">
+		<a:param name="idDocumento"
+			assignTo="#{documentoProcessoAction.idDocumento}"
+			converter="javax.faces.Integer" />
+	</a:jsFunction>
 
-    <rich:collapsiblePanel expanded="true"
-        header="#{infoxMessages['searchForm.title']}"
-        switchType="client">
-        <h:form>
-            <div style="display: inline-block">
-                <h:outputText
-                    value="#{infoxMessages['documentoProcesso.classificacaoDocumento']}"
-                    styleClass="name" />
-                <h:selectOneMenu id="classificacaoDocumento"
-                    value="#{documentoProcessoAction.documentoFilter.idClassificacaoDocumento}"
-                    styleClass="input select">
-                    <f:selectItem noSelectionOption="true"
-                        itemValue="#{null}"
-                        itemLabel="#{infoxMessages['crud.select.all']}" />
-                    <f:selectItems
-                        value="#{documentoProcessoAction.listClassificacaoDocumento}"
-                        var="item" itemLabel="#{item.descricao}"
-                        itemValue="#{item.id}" />
-                    <f:converter converterId="javax.faces.Integer" />
-                </h:selectOneMenu>
-            </div>
-            <div style="display: inline-block; margin-left: 10px;">
-                <h:outputText
-                    value="#{infoxMessages['documentoProcesso.numeroDocumento']}"
-                    styleClass="name" />
-                <h:inputText id="numeroDocumentoPesquisa"
-                    value="#{documentoProcessoAction.documentoFilter.numeroDocumento}"
-                    styleClasse="input text">
-                    <f:converter converterId="javax.faces.Integer" />
-                </h:inputText>
-            </div>
-            <div />
-            <h:commandButton id="btnFiltrarDocumentos"
-                value="#{infoxMessages['button.pesquisar']}"
-                action="#{documentoProcessoAction.filtrarDocumentos()}"
-                styleClass="buttons buttons">
-                <f:ajax immediate="true" execute="@form"
-                    render=":#{pastaDocumentoRenderId}:documentoListSearchForm :#{pastaDocumentoRenderId}:documentoListPanel @form" />
-            </h:commandButton>
+	<rich:collapsiblePanel expanded="true"
+		header="#{infoxMessages['searchForm.title']}" switchType="client">
+		<h:form>
+			<div style="display: inline-block">
+				<h:outputText
+					value="#{infoxMessages['documentoProcesso.classificacaoDocumento']}"
+					styleClass="name" />
+				<h:selectOneMenu id="classificacaoDocumento"
+					value="#{documentoProcessoAction.documentoFilter.idClassificacaoDocumento}"
+					styleClass="input select">
+					<f:selectItem noSelectionOption="true" itemValue="#{null}"
+						itemLabel="#{infoxMessages['crud.select.all']}" />
+					<f:selectItems
+						value="#{documentoProcessoAction.listClassificacaoDocumento}"
+						var="item" itemLabel="#{item.descricao}" itemValue="#{item.id}" />
+					<f:converter converterId="javax.faces.Integer" />
+				</h:selectOneMenu>
+			</div>
+			<div style="display: inline-block; margin-left: 10px;">
+				<h:outputText
+					value="#{infoxMessages['documentoProcesso.numeroDocumento']}"
+					styleClass="name" />
+				<h:inputText id="numeroDocumentoPesquisa"
+					value="#{documentoProcessoAction.documentoFilter.numeroDocumento}"
+					styleClasse="input text">
+					<f:converter converterId="javax.faces.Integer" />
+				</h:inputText>
+			</div>
+			<div />
+			<h:commandButton id="btnFiltrarDocumentos"
+				value="#{infoxMessages['button.pesquisar']}"
+				action="#{documentoProcessoAction.filtrarDocumentos()}"
+				styleClass="buttons buttons">
+				<f:ajax immediate="true" execute="@form"
+					render=":#{pastaDocumentoRenderId}:documentoListSearchForm :#{pastaDocumentoRenderId}:documentoListPanel @form" />
+			</h:commandButton>
 
-        </h:form>
-    </rich:collapsiblePanel>
-    <div style="margin-top: 5px;" />
-    <s:div id="documentoListDiv">
-        <wi:dataTable values="#{documentoList.list(15)}"
-            bean="#{documentoList}" id="documentoList"
-            showGrid="#{pastaAction.isShowGrid()}"
-            tableTitle="#{empty documentoList.entity.pasta ? '' : documentoList.entity.pasta.nome}"
-            rowId="#{row.id}" showSearchForm="true">
+		</h:form>
+	</rich:collapsiblePanel>
+	<div style="margin-top: 5px;" />
+	<s:div id="documentoListDiv">
+		<wi:dataTable values="#{documentoList.list(15)}"
+			bean="#{documentoList}" id="documentoList"
+			showGrid="#{pastaAction.isShowGrid()}"
+			tableTitle="#{empty documentoList.entity.pasta ? '' : documentoList.entity.pasta.nome}"
+			rowId="#{row.id}" showSearchForm="true">
 
-            <ui:define name="searchForm">
-                <rich:panel header="Pastas">
-                    <rich:list value="#{pastaAction.pastaList}"
-                        styleClass="folder-ul" rowClass="folder-li"
-                        var="pasta">
-                        <s:div rendered="#{pastaAction.canSee(pasta)}"
-                            styleClass="rf-tr-nd">
-                            <rich:dropTarget
-                                acceptedTypes="doc#{consultaController.processo.idProcesso}"
-                                dropListener="#{pastaAction.associaDocumento}"
-                                dropValue="#{pasta}"
-                                rendered="#{pastaAction.canWrite(pasta)}"
-                                render="documentoListPanel, documentoListSearchForm"
-                                limitRender="true" />
-                            <a:commandLink render="documentoListDiv"
-                                execute="@form"
-                                action="#{pastaAction.selectPasta(pasta)}"
-            					onbegin="infox.showLoading();"
-            					oncomplete="infox.hideLoading();"
-                                styleClass="folder" limitRender="true">
-                                <h:graphicImage
-                                    url="#{wiSkin.imageFolder}/folder.png"
-                                    rendered="true" title="#{pasta}" />
-                                <h:outputText
-                                    value="#{eventCache.get('pastaAction.getNomePasta(pasta)', pasta.id)}"
-                                    class="folder" />
-                            </a:commandLink>
-                        </s:div>
-                    </rich:list>
-                </rich:panel>
+			<ui:define name="searchForm">
+				<rich:panel header="Pastas">
+					<rich:list value="#{pastaAction.pastaList}" styleClass="folder-ul"
+						rowClass="folder-li" var="pasta">
+						<s:div rendered="#{pastaAction.canSee(pasta)}"
+							styleClass="rf-tr-nd">
+							<rich:dropTarget
+								acceptedTypes="doc#{consultaController.processo.idProcesso}"
+								dropListener="#{pastaAction.associaDocumento}"
+								dropValue="#{pasta}" rendered="#{pastaAction.canWrite(pasta)}"
+								render="documentoListPanel, documentoListSearchForm"
+								limitRender="true" />
+							<a:commandLink render="documentoListDiv" execute="@form"
+								action="#{pastaAction.selectPasta(pasta)}"
+								onbegin="infox.showLoading();" oncomplete="infox.hideLoading();"
+								styleClass="folder" limitRender="true">
+								<h:graphicImage url="#{wiSkin.imageFolder}/folder.png"
+									rendered="true" title="#{pasta}" />
+								<h:outputText
+									value="#{eventCache.get('pastaAction.getNomePasta(pasta)', pasta.id)}"
+									class="folder" />
+							</a:commandLink>
+						</s:div>
+					</rich:list>
+				</rich:panel>
 
-            </ui:define>
+			</ui:define>
 
-            <ui:define name="toolBar">
-                <rich:dragSource
-                    type="doc#{consultaController.processo.idProcesso}"
-                    dragValue="#{row}"
-                    rendered="#{pastaAction.canDeleteFromInstance()}"
-                    dragIndicator="indicator">
-                    <rich:dragIndicator id="indicator"
-                        acceptClass="caixa-acpt"
-                        draggingClass="caixa-drag"
-                        rejectClass="caixa-rejt">
-                        <span class="caixa-ind-lbl">#{row.descricao}</span>
-                    </rich:dragIndicator>
-                </rich:dragSource>
-                <h:graphicImage
-                    rendered="#{pastaAction.canDeleteFromInstance()}"
-                    url="#{wiSkin.imageFolder}/anexo.png"
-                    title="#{infoxMessages['documentoProcesso.moverDocumento']}" />
-                <h:graphicImage styleClass="opacityHover"
-                    url="#{wiSkin.imageFolder}/view.png"
-                    title="#{infoxMessages['button.historico']}"
-                    rendered="#{documentoProcessoAction.hasHistoricoDocumento(rowId) and documentoProcessoAction.podeUsuarioVerHistorico()}"
-                    onmouseup="selectDocumento(#{rowId});" />
-                <h:graphicImage styleClass="opacityHover"
-                    url="#{wiSkin.imageFolder}/remove.png"
-                    rendered="#{not row.excluido and documentoProcessoAction.podeUsuarioExcluirRestaurar()}"
-                    title="#{infoxMessages['button.delete']}"
-                    onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(true, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');" />
-                <h:graphicImage styleClass="opacityHover"
-                    url="#{wiSkin.imageFolder}/stock_undelete.png"
-                    rendered="#{row.excluido and documentoProcessoAction.podeUsuarioExcluirRestaurar()}"
-                    title="#{infoxMessages['button.restaurar']}"
-                    onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(false, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');" />
-                <h:form>
-                    <ui:include
-                        src="/WEB-INF/xhtml/components/grid/processoDocumentoBin.xhtml">
-                        <ui:param name="bin" value="#{row.documentoBin}" />
-                        <ui:param name="header" value="#{row.descricao}" />
-                    </ui:include>
-                </h:form>
-            </ui:define>
+			<ui:define name="toolBar">
+				<rich:dragSource type="doc#{consultaController.processo.idProcesso}"
+					dragValue="#{row}"
+					rendered="#{pastaAction.canDeleteFromInstance()}"
+					dragIndicator="indicator">
+					<rich:dragIndicator id="indicator" acceptClass="caixa-acpt"
+						draggingClass="caixa-drag" rejectClass="caixa-rejt">
+						<span class="caixa-ind-lbl">#{row.descricao}</span>
+					</rich:dragIndicator>
+				</rich:dragSource>
+				<h:graphicImage rendered="#{pastaAction.canDeleteFromInstance()}"
+					url="#{wiSkin.imageFolder}/anexo.png"
+					title="#{infoxMessages['documentoProcesso.moverDocumento']}" />
+				<h:graphicImage styleClass="opacityHover"
+					url="#{wiSkin.imageFolder}/view.png"
+					title="#{infoxMessages['button.historico']}"
+					rendered="#{documentoProcessoAction.hasHistoricoDocumento(rowId) and documentoProcessoAction.podeUsuarioVerHistorico()}"
+					onmouseup="selectDocumento(#{rowId});" />
+				<h:graphicImage styleClass="opacityHover"
+					url="#{wiSkin.imageFolder}/remove.png"
+					rendered="#{not row.excluido and documentoProcessoAction.podeUsuarioExcluirRestaurar()}"
+					title="#{infoxMessages['button.delete']}"
+					onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(true, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');" />
+				<h:graphicImage styleClass="opacityHover"
+					url="#{wiSkin.imageFolder}/stock_undelete.png"
+					rendered="#{row.excluido and documentoProcessoAction.podeUsuarioExcluirRestaurar()}"
+					title="#{infoxMessages['button.restaurar']}"
+					onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(false, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');" />
+				<h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" styleClass="opacityHover"
+					onclick="infox.openPopUp('protocolo', '#{pathResolver.contextPath}/Processo/Documento/protocolo.seam?id=#{row.id}&amp;cod=#{row.documentoBin.uuid.toString()}','800','600');"
+					rendered="#{row.documentoBin.suficientementeAssinado and processoProtocoloDocumentoAction.isDocumentoInclusoPorUsuarioExterno(row)}"
+					title="#{infoxMessages['protocolo.gerarProtocolo']}" />
 
-            <ui:define name="headerToolBar" />
+				<h:form>
+					<ui:include
+						src="/WEB-INF/xhtml/components/grid/processoDocumentoBin.xhtml">
+						<ui:param name="bin" value="#{row.documentoBin}" />
+						<ui:param name="header" value="#{row.descricao}" />
+					</ui:include>
+				</h:form>
+			</ui:define>
 
-            <wi:columnOutputText
-                styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
-                columnId="numeroDocumento"
-                columnHeader="#{infoxMessages['documentoProcesso.numeroDocumento']}"
-                value="#{row.numeroDocumento}" />
-            <wi:columnOutputText
-                styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
-                columnId="usuarioInclusao"
-                columnHeader="#{infoxMessages['assinaturas.usuario']}"
-                value="#{row.usuarioInclusao}" />
-            <wi:columnOutputText
-                styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
-                columnId="dataInclusao"
-                columnHeader="#{infoxMessages['assinaturas.dataInclusao']}"
-                value="#{row.dataInclusao}" />
-            <wi:columnOutputText
-                styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
-                columnId="classificacaoDocumento"
-                columnHeader="#{infoxMessages['documentoProcesso.classificacaoDocumento']}"
-                value="#{row.classificacaoDocumento}" />
-            <wi:columnOutputText
-                styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
-                columnId="descricao"
-                columnHeader="#{infoxMessages['documentoProcesso.descricao']}"
-                value="#{row.descricao}" />
-            <wi:columnOutputText
-                styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
-                columnId="processoDocumentoBin.sizeFormatado"
-                columnHeader="#{infoxMessages['processoDocumento.tamanho']}"
-                value="#{row.documentoBin.sizeFormatado}" />
-        </wi:dataTable>
-    </s:div>
-    <script type="text/javascript">
+			<ui:define name="headerToolBar" />
+
+			<wi:columnOutputText
+				styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+				columnId="numeroDocumento"
+				columnHeader="#{infoxMessages['documentoProcesso.numeroDocumento']}"
+				value="#{row.numeroDocumento}" />
+			<wi:columnOutputText
+				styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+				columnId="usuarioInclusao"
+				columnHeader="#{infoxMessages['assinaturas.usuario']}"
+				value="#{row.usuarioInclusao}" />
+			<wi:columnOutputText
+				styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+				columnId="dataInclusao"
+				columnHeader="#{infoxMessages['assinaturas.dataInclusao']}"
+				value="#{row.dataInclusao}" />
+			<wi:columnOutputText
+				styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+				columnId="classificacaoDocumento"
+				columnHeader="#{infoxMessages['documentoProcesso.classificacaoDocumento']}"
+				value="#{row.classificacaoDocumento}" />
+			<wi:columnOutputText
+				styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+				columnId="descricao"
+				columnHeader="#{infoxMessages['documentoProcesso.descricao']}"
+				value="#{row.descricao}" />
+			<wi:columnOutputText
+				styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+				columnId="processoDocumentoBin.sizeFormatado"
+				columnHeader="#{infoxMessages['processoDocumento.tamanho']}"
+				value="#{row.documentoBin.sizeFormatado}" />
+		</wi:dataTable>
+	</s:div>
+	<script type="text/javascript">
 		  function clearFieldsExcludeRestore() {
 		      var maxlength = 4000;
 		      #{rich:jQuery('motivoExclusaoRestauracao')}.val('');
@@ -220,97 +213,91 @@
 		  }
 	</script>
 
-    <rich:popupPanel id="requestMotivoPanel" header="teste"
-        headerClass="motivo-header" moveable="true" show="false"
-        resizeable="true" minWidth="690" minHeight="310"
-        onbeforehide="clearFieldsExcludeRestore();">
-        <f:facet name="controls">
-            <h:graphicImage id="mp_taskNodeCloseBtn"
-                styleClass="mp-close"
-                value="#{wiSkin.imageFolder}/closeMP.gif"
-                onmouseup="#{rich:component('requestMotivoPanel')}.hide();" />
-        </f:facet>
-        <wi:outputText id="numeroDocumento"
-            label="#{infoxMessages['processoDocumento.numeroDocumento']}" />
+	<rich:popupPanel id="requestMotivoPanel" header="teste"
+		headerClass="motivo-header" moveable="true" show="false"
+		resizeable="true" minWidth="690" minHeight="310"
+		onbeforehide="clearFieldsExcludeRestore();">
+		<f:facet name="controls">
+			<h:graphicImage id="mp_taskNodeCloseBtn" styleClass="mp-close"
+				value="#{wiSkin.imageFolder}/closeMP.gif"
+				onmouseup="#{rich:component('requestMotivoPanel')}.hide();" />
+		</f:facet>
+		<wi:outputText id="numeroDocumento"
+			label="#{infoxMessages['processoDocumento.numeroDocumento']}" />
 
-        <wi:outputText id="tipoProcessoDocumentoOutPanel"
-            label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}" />
+		<wi:outputText id="tipoProcessoDocumentoOutPanel"
+			label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}" />
 
-        <wi:outputText id="processoDocumento"
-            label="#{infoxMessages['processoDocumentoBin.documento']}" />
-        <h:form id="excluirRestaurarDocumentoForm">
-            <div>
-                <h:inputHidden id="hiddenIdDocumento"
-                    value="#{documentoProcessoAction.idDocumentoAlter}"
-                    converter="javax.faces.Integer" />
-                <wi:inputTextarea id="motivoExclusaoRestauracao"
-                    maxlength="4000" required="true" cols="60" rows="5"
-                    label="Motivo"
-                    value="#{documentoProcessoAction.motivoExclusaoRestauracao}">
-                    <f:validator validatorId="emptyStringValidator" />
-                </wi:inputTextarea>
-            </div>
-            <div>
-                <a:commandButton id="excluirRestaurarDocButton"
-                    actionListener="#{documentoProcessoAction.exclusaoRestauracaoDocumento()}"
-                    limitRender="true" execute="@form"
-                    rendered="#{empty hiddenIdDocumento}"
-                    onclick="infox.showLoading();"
-                    oncomplete="infox.hideLoading(); if(#{not facesContext.validationFailed}){#{rich:component('requestMotivoPanel')}.hide();}else{atualizarOnValidationFailed();}"
-                    value="Enviar"
-                    render="@form, documentoList, pageBodyDialogMessage"
-                    styleClass="buttons" />
-            </div>
-        </h:form>
-    </rich:popupPanel>
+		<wi:outputText id="processoDocumento"
+			label="#{infoxMessages['processoDocumentoBin.documento']}" />
+		<h:form id="excluirRestaurarDocumentoForm">
+			<div>
+				<h:inputHidden id="hiddenIdDocumento"
+					value="#{documentoProcessoAction.idDocumentoAlter}"
+					converter="javax.faces.Integer" />
+				<wi:inputTextarea id="motivoExclusaoRestauracao" maxlength="4000"
+					required="true" cols="60" rows="5" label="Motivo"
+					value="#{documentoProcessoAction.motivoExclusaoRestauracao}">
+					<f:validator validatorId="emptyStringValidator" />
+				</wi:inputTextarea>
+			</div>
+			<div>
+				<a:commandButton id="excluirRestaurarDocButton"
+					actionListener="#{documentoProcessoAction.exclusaoRestauracaoDocumento()}"
+					limitRender="true" execute="@form"
+					rendered="#{empty hiddenIdDocumento}"
+					onclick="infox.showLoading();"
+					oncomplete="infox.hideLoading(); if(#{not facesContext.validationFailed}){#{rich:component('requestMotivoPanel')}.hide();}else{atualizarOnValidationFailed();}"
+					value="Enviar" render="@form, documentoList, pageBodyDialogMessage"
+					styleClass="buttons" />
+			</div>
+		</h:form>
+	</rich:popupPanel>
 
-    <s:div id="historicoDocumentoPanelDiv"
-        style="margin-top:20px; width:100%;">
-        <rich:panel id="historicoDocumentoPanel" headerClass=""
-            rendered="#{not empty documentoProcessoAction.processoDocumentoSelected}"
-            bodyClass="dtable-p-b" styleClass="dtable-p"
-            style="width:100%;">
+	<s:div id="historicoDocumentoPanelDiv"
+		style="margin-top:20px; width:100%;">
+		<rich:panel id="historicoDocumentoPanel" headerClass=""
+			rendered="#{not empty documentoProcessoAction.processoDocumentoSelected}"
+			bodyClass="dtable-p-b" styleClass="dtable-p" style="width:100%;">
 
-            <f:facet name="header">
-                <h:outputText
-                    value="#{infoxMessages['historicoStatusDocumento.tableTile']}" />
-                <h:graphicImage
-                    value="#{wiSkin.imageFolder}/closeMP.gif"
-                    onmouseup="selectDocumento(0);" style="float:right;" />
-            </f:facet>
+			<f:facet name="header">
+				<h:outputText
+					value="#{infoxMessages['historicoStatusDocumento.tableTile']}" />
+				<h:graphicImage value="#{wiSkin.imageFolder}/closeMP.gif"
+					onmouseup="selectDocumento(0);" style="float:right;" />
+			</f:facet>
 
-            <rich:dataTable id="historicoDocumentoDataTable"
-                var="historicoDocumento" style="width:100%"
-                value="#{documentoProcessoAction.listHistoricoStatusDocumento}">
+			<rich:dataTable id="historicoDocumentoDataTable"
+				var="historicoDocumento" style="width:100%"
+				value="#{documentoProcessoAction.listHistoricoStatusDocumento}">
 
-                <rich:column style="text-align:center;">
-                    <f:facet name="header">#{infoxMessages['historicoStatusDocumento.nomeUsuarioAlterou']}</f:facet>
-                    <h:outputText
-                        value="#{historicoDocumento.usuarioAlteracao.nomeUsuario}" />
-                </rich:column>
+				<rich:column style="text-align:center;">
+					<f:facet name="header">#{infoxMessages['historicoStatusDocumento.nomeUsuarioAlterou']}</f:facet>
+					<h:outputText
+						value="#{historicoDocumento.usuarioAlteracao.nomeUsuario}" />
+				</rich:column>
 
-                <rich:column style="text-align:center;">
-                    <f:facet name="header">#{infoxMessages['historicoStatusDocumento.dataAlteracao']}</f:facet>
-                    <h:outputText
-                        value="#{historicoDocumento.dataAlteracao}">
-                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
-                    </h:outputText>
-                </rich:column>
+				<rich:column style="text-align:center;">
+					<f:facet name="header">#{infoxMessages['historicoStatusDocumento.dataAlteracao']}</f:facet>
+					<h:outputText value="#{historicoDocumento.dataAlteracao}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+					</h:outputText>
+				</rich:column>
 
-                <rich:column style="text-align:center;">
-                    <f:facet name="header">Tipo Operação</f:facet>
-                    <h:outputText
-                        value="#{historicoDocumento.tipoAlteracaoDocumento.label}" />
-                </rich:column>
+				<rich:column style="text-align:center;">
+					<f:facet name="header">Tipo Operação</f:facet>
+					<h:outputText
+						value="#{historicoDocumento.tipoAlteracaoDocumento.label}" />
+				</rich:column>
 
-                <rich:column>
-                    <f:facet name="header">#{infoxMessages['historicoStatusDocumento.motivo']}</f:facet>
-                    <h:outputText value="#{historicoDocumento.motivo}" />
-                </rich:column>
+				<rich:column>
+					<f:facet name="header">#{infoxMessages['historicoStatusDocumento.motivo']}</f:facet>
+					<h:outputText value="#{historicoDocumento.motivo}" />
+				</rich:column>
 
-            </rich:dataTable>
-        </rich:panel>
-    </s:div>
-    <wi:assinaturaPopup id="assinaturaDocumentoPopup"
-        afterRender="documentoList" />
+			</rich:dataTable>
+		</rich:panel>
+	</s:div>
+	<wi:assinaturaPopup id="assinaturaDocumentoPopup"
+		afterRender="documentoList" />
 </ui:composition>

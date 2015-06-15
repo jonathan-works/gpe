@@ -20,6 +20,14 @@ public final class StringUtil {
             return saida;
         }
     }
+    
+    public static String preencherComZerosAEsquerda(String string, int length) {
+    	int times = length - string.trim().length();
+		for (;times > 0; times--) {
+			string = "0" + string;
+		}
+    	return string;
+    }
 
     public static <E> String concatList(List<E> list, String delimitador) {
         StringBuilder sb = new StringBuilder();

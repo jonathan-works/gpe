@@ -94,6 +94,8 @@ public class VariableCollector {
 
     private void visit(final Collection<Transition> arrivingTransitions,
             final VariableType... restrictionTypes) {
+    	if(arrivingTransitions == null)
+    		return;
         final ArrayList<Transition> transitions = new ArrayList<>(arrivingTransitions);
         transitions.removeAll(visitedTransitions);
         for (final Transition transition : transitions) {

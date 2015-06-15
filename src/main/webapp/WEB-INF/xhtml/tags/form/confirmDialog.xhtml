@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:s="http://jboss.org/schema/seam/taglib">
+
+
+<rich:popupPanel id="#{id}" autosized="true" resizeable="false" 
+modal="true" styleClass="#{styleClass}" zindex="999999" header="${infoxMessages['confirmDialog.header']}">
+
+      <div align="center" style="margin-bottom: 1em;">
+	 	<h:outputText value="#{not empty mensagem ? mensagem : 'Tem certeza da operação?'}" style="" />
+      </div>
+      <div align="center">
+	  <a:commandButton value="Sim" action="#{elFunctions.invokeMethod(action)}" execute="#{empty execute ? '@form' : execute}" styleClass="buttons" 
+	  immediate="#{immediate}"  onclick="#{rich:component(id)}.hide();" render="#{empty render ? '@this' : render}" 
+	  limitRender="#{limitRender}" >
+	  </a:commandButton>
+	  
+	 <input type="button" value="Não" class="buttons"
+	  onclick="#{rich:component(id)}.hide();return false" />
+      </div>
+</rich:popupPanel>
+
+
+</ui:composition>

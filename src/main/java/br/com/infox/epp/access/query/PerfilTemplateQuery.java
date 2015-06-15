@@ -4,6 +4,7 @@ public interface PerfilTemplateQuery {
 
     String PARAM_LOCALIZACAO = "localizacao";
     String PARAM_PAPEL = "papel";
+    String PARAM_DESCRICAO = "descricao";
 
     String LIST_PERFIS_DENTRO_DE_ESTRUTURA = "Perfil.listPerfisDentroDeEstrutura";
     // TODO verificar o caso dos perfis de configuração onde a localização do
@@ -13,5 +14,9 @@ public interface PerfilTemplateQuery {
     String GET_BY_LOCALIZACAO_PAPEL = "PerfilTemplate.getByLocalizacaoPapel";
     String GET_BY_LOCALIZACAO_PAPEL_QUERY = "select o from PerfilTemplate o where o.localizacao = :"
             + PARAM_LOCALIZACAO + " and o.papel =:" + PARAM_PAPEL;
+    
+    String GET_BY_DESCRICAO = "getPerfilteTemplateByDescricao";
+    String GET_BY_DESCRICAO_QUERY = "select o from PerfilTemplate o where o.descricao = :" + PARAM_DESCRICAO;
+    
 
 }
