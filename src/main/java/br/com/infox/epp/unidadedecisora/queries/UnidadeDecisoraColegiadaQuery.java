@@ -12,7 +12,8 @@ public interface UnidadeDecisoraColegiadaQuery {
     		  "inner join up.perfilTemplate pt " +
     		  "inner join up.localizacao l " +
     		  "inner join l.unidadeDecisoraColegiada udc " +
-    		  "where udc.ativo = true and up.usuarioLogin.idUsuarioLogin = :" + ID_USUARIO_LOGIN;
+    		  "where udc.ativo = true and up.usuarioLogin.idUsuarioLogin = :" + ID_USUARIO_LOGIN +
+    		  " and up.ativo = true";
     
     String SEARCH_EXISTE_UDC_BY_LOCALIZACAO = "searchExisteUDCByLocalizacao";
     String SEARCH_EXISTE_UDC_BY_LOCALIZACAO_QUERY = "select count(udc) " +

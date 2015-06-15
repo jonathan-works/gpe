@@ -22,7 +22,8 @@ public interface UnidadeDecisoraMonocraticaQuery {
     		  "inner join up.perfilTemplate pt " +
     		  "inner join up.localizacao l " +
     		  "inner join l.unidadeDecisoraMonocratica udm " +
-    		  "where udm.ativo = true and up.usuarioLogin.idUsuarioLogin = :" + ID_USUARIO_LOGIN;
+    		  "where udm.ativo = true and up.usuarioLogin.idUsuarioLogin = :" + ID_USUARIO_LOGIN + 
+    		  " and up.ativo = true";
     
     String SEARCH_EXISTE_UDM_BY_LOCALIZACAO = "searchExisteUDMByLocalizacao";
     String SEARCH_EXISTE_UDM_BY_LOCALIZACAO_QUERY = "select count(udm) " +
