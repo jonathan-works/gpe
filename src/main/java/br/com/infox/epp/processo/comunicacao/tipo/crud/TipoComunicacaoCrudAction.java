@@ -19,10 +19,8 @@ public class TipoComunicacaoCrudAction extends AbstractCrudAction<TipoComunicaca
     
     private List<TipoModeloDocumento> tiposModeloDocumento;
     private List<ClassificacaoDocumento> classificacoesDocumento;
-    
     @In
     private ClassificacaoDocumentoFacade classificacaoDocumentoFacade;
-    
     @In
     private TipoModeloDocumentoManager tipoModeloDocumentoManager;
     
@@ -40,4 +38,14 @@ public class TipoComunicacaoCrudAction extends AbstractCrudAction<TipoComunicaca
         }
         return classificacoesDocumento;
     }
+    
+    public void addClassificacaoDocumentoResposta(ClassificacaoDocumento classificacaoDocumento){
+    	getInstance().getClassificacoesResposta().add(classificacaoDocumento);
+    	update();
+    }
+    
+    public void removeClassificacaoDocumentoResposta(ClassificacaoDocumento classificacaoDocumento) {
+		getInstance().getClassificacoesResposta().remove(classificacaoDocumento);
+		update();
+	}
 }
