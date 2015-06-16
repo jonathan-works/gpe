@@ -5,8 +5,11 @@ import static java.text.MessageFormat.format;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import br.com.infox.core.messages.InfoxMessages;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 public class EppSystemException extends RuntimeException {
 
@@ -14,43 +17,29 @@ public class EppSystemException extends RuntimeException {
 
     private final ErrorCode errorCode;
     private final Map<String, Object> parameters;
-
+    private final String protocol;
+    
     public EppSystemException(ErrorCode errorCode) {
-        super();
-        this.errorCode = errorCode;
-        this.parameters = new HashMap<>();
+        this(errorCode, null, UUID.randomUUID());
     }
 
-    public EppSystemException(ErrorCode errorCode, String message) {
-        super(message);
+    private EppSystemException(ErrorCode errorCode, Throwable cause, UUID protocol) {
+        super(getLocaleMessage(errorCode, protocol), cause);
         this.errorCode = errorCode;
         this.parameters = new HashMap<>();
+        this.protocol = protocol.toString();
     }
 
-    private EppSystemException(ErrorCode errorCode, String message, Throwable cause) {
-        super(message, cause);
-        this.errorCode = errorCode;
-        this.parameters = new HashMap<>();
-    }
-
-    private EppSystemException(ErrorCode errorCode, Throwable cause) {
-        super(cause);
-        this.errorCode = errorCode;
-        this.parameters = new HashMap<>();
-    }
-
-    public static EppSystemException create(ErrorCode errorCode, String message, Throwable cause) {
-        if (cause instanceof EppSystemException) {
-            return (EppSystemException) cause;
-        }
-        return new EppSystemException(errorCode, message, cause);
+    private static String getLocaleMessage(ErrorCode errorCode, UUID protocol) {
+        String messageKey = format("{0}_{1}", errorCode.getClass().getName(), errorCode.getErrorCode());
+        return format(InfoxMessages.getInstance().get(messageKey), protocol.toString());
     }
 
     public static EppSystemException create(ErrorCode errorCode, Throwable cause) {
         if (cause instanceof EppSystemException) {
             return (EppSystemException) cause;
         }
-        return new EppSystemException(errorCode, cause);
+        return new EppSystemException(errorCode, cause, UUID.randomUUID());
     }
 
     public ErrorCode getErrorCode() {
@@ -65,22 +54,25 @@ public class EppSystemException extends RuntimeException {
     public Object get(String field) {
         return parameters.get(field);
     }
-
-    public String prettyMessage() {
-        return InfoxMessages.getInstance().get(format("{0}_{1}", errorCode.getClass().getName(), errorCode.getErrorCode()));
-    }
-
-    @Override
-    public String getMessage() {
+    
+    private String getLogErrorMessage() {
         StringBuilder sb = new StringBuilder();
-        sb.append(errorCode.getClass().getName()).append(":").append(errorCode.getErrorCode());
+        sb.append("\r\nProtocol:").append(protocol).append("\r\n");
+        sb.append(errorCode.getClass().getName()).append(": ").append(errorCode.getErrorCode()).append("\r\n");
+        sb.append("Parameter list:");
         for (Entry<String, Object> entry : parameters.entrySet()) {
-            sb.append("\n");
+            sb.append("   ");
             sb.append(entry.getKey());
             sb.append(" : ");
             sb.append(entry.getValue());
+            sb.append("\r\n");
         }
         return sb.toString();
     }
-
+     
+    @Override
+    public String toString() {
+        return getLogErrorMessage();
+    }
+    
 }
