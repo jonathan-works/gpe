@@ -7,6 +7,7 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.fluxo.entity.Natureza;
+import br.com.infox.epp.fluxo.query.NaturezaQuery;
 
 @Name(NaturezaDAO.NAME)
 @AutoCreate
@@ -20,5 +21,9 @@ public class NaturezaDAO extends DAO<Natureza> {
     	String hql = "select o from Natureza o order by o.natureza";
     	return getEntityManager().createQuery(hql, Natureza.class).getResultList();
     }
+
+	public List<Natureza> findNaturezasPrimarias() {
+		return getNamedResultList(NaturezaQuery.NATUREZA_FIND_BY_PRIMARIA);
+	}
 
 }
