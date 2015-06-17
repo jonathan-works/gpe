@@ -32,7 +32,6 @@ public class ContagemPrazoProcessor {
 	private PrazoComunicacaoService prazoComunicacaoService;
 	@In
 	private ProrrogacaoPrazoService prorrogacaoPrazoService;
-
 	
 	@Asynchronous
 	@Transactional

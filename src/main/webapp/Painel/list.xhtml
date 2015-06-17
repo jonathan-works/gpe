@@ -10,202 +10,121 @@
   xmlns:s="http://jboss.org/schema/seam/taglib"
   xmlns:wi="http://www.itx.com.br/jsf"
   xmlns:infox="http://www.infox.com.br/jsf"
+  xmlns:p="http://primefaces.org/ui"
   template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
-  <ui:param
-    name="pageTitle"
-    value="#{infoxMessages['painel.titlePage']}"/>
+  
+  <ui:param name="pageTitle" value="#{infoxMessages['painel.titlePage']}"/>
   <ui:define name="title">#{pageTitle}</ui:define>
+  
   <ui:define name="baseBody">
+  
     <wi:messages></wi:messages>
   
     <ui:include src="/WEB-INF/xhtml/templates/core/include/header.xhtml" />
-    <ui:param
-      name="showMenu"
-      value="#{not empty showMenu ? showMenu : identity.loggedIn}" />
+    <ui:param name="showMenu" value="#{not empty showMenu ? showMenu : identity.loggedIn}" />
+    
     <c:if test="#{showMenu}">
       <ui:include src="/WEB-INF/xhtml/templates/core/include/menu.xhtml" />
-      <ui:param
-        name="required"
-        value="false" />
+      <ui:param name="required" value="false" />
     </c:if>
-    <a:region>
-      <h:outputScript>
-        function atualizaPainelFluxo() { 
-          location = '#{pathResolver.contextPath}/Painel/list.seam'; 
-        }
-      </h:outputScript>
-      <s:div rendered="#{security.checkPage('/pages/Painel/Comunicacao/painel.seam')}">
-	   	  <button class="buttons" 
-	      	onclick="location.href = '#{pathResolver.contextPath}/Painel/Comunicacao/painel.seam';">
-	      	#{infoxMessages['painel.comunicacoes']}
-	      </button>
-	  </s:div>
-      <infox:tabPanel id="tabPainelUsuario" switchType="ajax"
-        status=":status" activeTab="#{painelUsuarioController.tab}" >
-        
-        <h:form>
-          <infox:tabHeaders />
-        </h:form>
-        <ui:include src="/Painel/abaAtividades.xhtml" />
-        <infox:tab id="documentos"
-          	name="documento" render="painelProcessosDocumento"
-          	limitRender="true" action="#{painelTreeHandler.clearTree()}"
-          	title="#{infoxMessages['painel.documentoTab']}" rendered="#{security.checkPage('/pages/Painel/fluxoDocumento.seam')}">
-          <s:div rendered="#{painelUsuarioController.tab eq 'documento'}">
-	          <s:div id="documentosTarefasDiv" styleClass="p-caixas" >
-	          	<h:form id="treeProcessoDocumentoForm">
-	            	<ui:include src="tarefasTree.xhtml" />
-	            </h:form>
-	          </s:div>
-	       	  <s:div id="painelProcessosDocumento" styleClass="p-list" >
-	            <s:div id="processosDocumento" 
-	        		rendered="#{(not empty painelUsuarioController.processoIdList or not empty painelUsuarioController.idCaixa) 
-	        					 and painelUsuarioController.tab eq 'documento'}" >
-	        
-		            <wi:dataTable
-		              values="#{consultaProcessoList.list(10)}"
-		              bean="#{consultaProcessoList}"
-		              styleClass="p-list-dtable"
-		              tableTitle="#{infoxMessages['consultaProcesso.processos']}"
-		              id="consultaProcessoDocumentoList"
-		              rowId="#{row.idProcesso}"
-		              searchFormStyleClass="p-list-search"
-		              panelStyleClass="p-list-panel"
-		              hideOrder="true" >
-		            
-		            <ui:define name="searchForm">
-		              <wi:searchForm
-		                opened="false"
-		                formId="consultaProcessoDocumentoForm"
-		                formTitle="#{infoxMessages['searchForm.title']}"
-		                searchReRender="consultaProcessoDocumentoList"
-		                clearAction="consultaProcessoList.newInstance()"
-		                clearReRender="consultaProcessoDocumentoList, @form" >
-		                
-		                <wi:inputText
-		                  id="numeroProcesso"
-		                  label="#{infoxMessages['consultaProcesso.numeroProcesso']}"
-		                  value="#{consultaProcessoList.numeroProcessoRoot}" />
-		                  
-		                <wi:inputDataPeriodo
-		                  id="periodo"
-		                  label="#{infoxMessages['data.inputPeriodo']}"
-		                  valueDateFrom="#{consultaProcessoList.entity.dataInicio}"
-		                  valueDateTo="#{consultaProcessoList.dataFim}" />
-		                  
-		                <wi:selectOneMenuEntity
-		                  id="natureza"
-		                  label="#{infoxMessages['natureza.tableTitle']}"
-		                  value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.natureza}"
-		                  showLabelSelecione="true"
-		                  items="#{naturezaCategoriaFluxoFacade.getNaturezaList()}" />
-		                  
-		                <wi:selectOneMenuEntity
-		                  id="categoria"
-		                  label="#{infoxMessages['categoria.tableTitle']}"
-		                  value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.categoria}"
-		                  showLabelSelecione="true"
-		                  inNewLine="true"
-		                  items="#{naturezaCategoriaFluxoFacade.getCategoriaList()}" />
-		                  
-		              </wi:searchForm>
-		            </ui:define>
-		            
-		            <wi:columnOutputText
-		              columnId="usuarioSolicitante"
-		              columnHeader="#{infoxMessages['consultaProcesso.usuarioCadastroProcesso']}"
-		              value="#{row.usuarioCadastro}"
-		            />
-		            <wi:columnDateTime
-		              columnId="dataInicio"
-		              columnHeader="#{infoxMessages['consultaProcesso.dataInicio']}"
-		              value="#{row.dataInicio}"
-		            />
-		            <wi:columnOutputText
-		              columnId="natureza"
-		              columnHeader="#{infoxMessages['consultaProcesso.natureza']}"
-		              value="#{row.naturezaCategoriaFluxo.natureza}"
-		            />
-		            <wi:columnOutputText
-		              columnId="categoria"
-		              columnHeader="#{infoxMessages['consultaProcesso.categoria']}"
-		              value="#{row.naturezaCategoriaFluxo.categoria}"
-		            />
-		            <wi:columnOutputText
-		              columnId="itemDoProcesso"
-		              columnHeader="#{infoxMessages['consultaProcesso.item']}"
-		              value="#{consultaProcessoList.getItemDoProcesso(row)}"  />
-		            <wi:columnOutputText
-		              columnId="prioridadeProcesso"
-		              columnHeader="#{infoxMessages['prioridadeProcesso.tableTitle']}"
-		              value="#{row.prioridadeProcesso}"
-		            />
-		            <wi:columnOutputText
-		              columnId="numeroProcessoPai"
-		              columnHeader="#{infoxMessages['consultaProcesso.numeroProcessoPai']}"
-		              value="#{row.processoPai.numeroProcessoRoot}" />
-		            <infox:dynamicColumns
-		              columns="#{painelUsuarioController.dynamicColumns}"
-		            />
-		            <ui:define name="headerToolBar">
-		              <ui:include
-		                src="/WEB-INF/xhtml/components/grid/header/tools/toolBarProcessoJbpm.xhtml"
-		              />
-		            </ui:define>
-		            <ui:define name="toolBar">
-		              <ui:include
-		                src="/WEB-INF/xhtml/components/grid/tools/toolBarProcessoJbpm.xhtml"
-		              />
-		            </ui:define>
-	              </wi:dataTable>
-	            </s:div>
-	          </s:div>
-          </s:div>
-        </infox:tab>
-        <ui:include src="/Painel/abasCustomizadas.xhtml" />
-      </infox:tabPanel>
+    
+    <h:outputScript>
+      function atualizaPainelFluxo() { 
+        location = '#{pathResolver.contextPath}/Painel/list.seam'; 
+      }
+      function selectFluxoStyle(component) {
+      	$('.fluxo-sel').removeClass('fluxo-sel');
+      	$(component).addClass('fluxo-sel');
+      }
+    </h:outputScript>
+    
+    <div class="ui-tabs-panel ui-corner-bottom" style="padding: 0.8em; margin-top: 1em;">
+    
+    	<rich:panel header="${infoxMessages['painel.fluxos']}"  
+    		style="width: 15%; display: inline-block; margin-right: 0.5em; vertical-align: top">
+	    	<h:form>	
+	    		<a:jsFunction name="selectFluxo" immediate="true" execute="@this" render="divPainelProcessos" >
+					<a:param name="fluxo" assignTo="#{painelUsuarioController.idProcessDefinition}" />
+				</a:jsFunction>
+				<h:outputText value="#{infoxMessages['process.noAvailableProcesses']}" rendered="#{empty painelUsuarioController.fluxosDisponiveis}" />
+		    	<ui:repeat var="fluxo" value="#{painelUsuarioController.fluxosDisponiveis}" >
+		    	  	  <div onmouseup="selectFluxo(#{fluxo.processDefinitionId}); selectFluxoStyle(this);" 
+		    	  	      style="padding: 0.5em; cursor:pointer; margin-top: 0.5em;" >
+		    	  	  	<h:outputText value="#{fluxo.name} (#{fluxo.quantidadeProcessos})" styleClass="fluxo-div" />
+		    	  	  </div>
+		    	</ui:repeat>
+	    	</h:form>
+    	</rich:panel>
+	    	
+	    <s:div id="divPainelProcessos" style="display: inline-block; width: 83%; vertical-align: top;">	
+	    
+    		<s:div id="tarefasDiv" style="display: inline-block; width: calc(26% - 10px);" rendered="#{painelUsuarioController.showTarefasTree}">
+	           <h:form id="treeProcessoForm"  >
+	               <ui:include src="tarefasTree.xhtml" />
+	           </h:form>
+	     	</s:div>
+	     	
+	     	<s:div id="divPainelProcessosInterna" style="display: inline-block; width: 74%; vertical-align: top; margin-left: 0.5em;" >
+				<ui:include src="/Painel/painelProcessos.xhtml" />
+	    		
+	    		<s:div rendered="#{painelUsuarioController.showPainelComunicacoesEletronicasComum}" style="display: inline-block; width: 100%; vertical-align: top;">
+	    			<ui:include src="/Painel/painelComunicacaoEletronica.xhtml" />
+	    		</s:div>
+	    		
+	    		<s:div rendered="#{painelUsuarioController.showPainelComunicacoesNaoEletronicasComum}" style="display: inline-block; width: 100%; vertical-align: top;">
+	    			<ui:include src="/Painel/painelComunicacaoNaoEletronica.xhtml" />
+	    		</s:div>
+	    		
+	    		<s:div rendered="#{painelUsuarioController.showPainelDocumentosComum}" style="display: inline-block; width: 100%; vertical-align: top;">
+	    			<ui:include src="/Painel/painelDocumentos.xhtml" />
+	    		</s:div>
+	    		
+		    	<ui:include src="/Painel/abasCustomizadas.xhtml" />
+	    	</s:div>
+	    </s:div>
+	    
+	</div>
+	       
+    <rich:popupPanel id="novaCaixaPanel" height="150" left="40" onbeforeshow="infox.util.popupclear();" >
       
-      <rich:popupPanel
-        id="novaCaixaPanel"
-        height="150"
-        left="40"
-        onbeforeshow="infox.util.popupclear();"
-      >
-        <f:facet name="header">
+      <f:facet name="header">
           <h:outputText value="#{infoxMessages['caixa.titleNovaCaixa']}" />
-        </f:facet>
-        <f:facet name="controls">
-          <span onclick="#{rich:component('novaCaixaPanel')}.hide()">X</span>
-        </f:facet>
-        
-        <h:form id="modalForm">
-          <wi:inputText
-            id="nomeCaixa"
-            label="#{infoxMessages['caixa.nomeCaixa']}"
-            value="#{caixaCrudAction.instance.nomeCaixa}"
-            required="true"
-          />
-          <a:commandButton
-            value="#{infoxMessages['crud.persist']}"
-            styleClass="buttons"
-            action="#{caixaCrudAction.adicionarCaixaNoPainel(painelUsuarioController.tarefaId)}"
-            oncomplete="if(#{not facesContext.isValidationFailed()}){#{rich:component('novaCaixaPanel')}.hide()}"
-            render="tabPainelUsuario, nomeCaixaDecoration, pageBodyDialogMessage"
-          />
-        </h:form>
-        
-        <h:outputScript>
-	        namespace("infox.util.popupclear",function onpopupshow(){
-		        $("#modalForm .input.text.crud").val(null);
-		      	if ($("#modalForm .property-error.property-msg").length != 0) {
-					$("#modalForm span.property-error.property-msg").remove();
-					$("#modalForm .property-error").each(function(){$(this).removeClass("property-error")});
-				}
-		    });
-        </h:outputScript>
-        
-      </rich:popupPanel>
-    </a:region>
+      </f:facet>
+      
+      <f:facet name="controls">
+      	  <span onclick="#{rich:component('novaCaixaPanel')}.hide()">X</span>
+      </f:facet>
+      
+      <h:form id="modalForm">
+      
+	      <wi:inputText
+	          id="nomeCaixa"
+	          label="#{infoxMessages['caixa.nomeCaixa']}"
+	          value="#{caixaCrudAction.instance.nomeCaixa}"
+	          required="true" />
+	        
+	      <a:commandButton
+	          value="#{infoxMessages['crud.persist']}"
+	          styleClass="buttons"
+	          execute="@form"
+	          limitRender="true"
+	          action="#{caixaCrudAction.adicionarCaixaNoPainel(painelUsuarioController.tarefaId)}"
+	          oncomplete="if(#{not facesContext.isValidationFailed()}){#{rich:component('novaCaixaPanel')}.hide()}"
+	          render="divPainelProcessos, nomeCaixaDecoration, pageBodyDialogMessage" />
+          
+      </h:form>
+      
+      <h:outputScript>
+	      namespace("infox.util.popupclear",function onpopupshow() {
+		      $("#modalForm .input.text.crud").val(null);
+		      if ($("#modalForm .property-error.property-msg").length != 0) {
+			    $("#modalForm span.property-error.property-msg").remove();
+				$("#modalForm .property-error").each(function(){$(this).removeClass("property-error")});
+			  }
+	      });
+      </h:outputScript>
+      
+    </rich:popupPanel>
     
   </ui:define>
 </ui:composition>

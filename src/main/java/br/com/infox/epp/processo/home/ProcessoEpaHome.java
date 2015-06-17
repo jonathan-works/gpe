@@ -2,6 +2,8 @@ package br.com.infox.epp.processo.home;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -14,6 +16,7 @@ import org.jboss.seam.faces.FacesMessages;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.processo.action.RelacionamentoCrudAction;
 import br.com.infox.epp.processo.consulta.action.ConsultaController;
 import br.com.infox.epp.processo.documento.action.DocumentoProcessoAction;
@@ -52,6 +55,7 @@ import br.com.itx.component.AbstractHome;
 @Name(ProcessoEpaHome.NAME)
 @Scope(ScopeType.CONVERSATION)
 @Transactional
+@ContextDependency
 public class ProcessoEpaHome extends AbstractHome<Processo> {
 
 	private static final LogProvider LOG = Logging.getLogProvider(Processo.class);
@@ -70,8 +74,6 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	private SigiloProcessoService sigiloProcessoService;
 	@In
 	private MetadadoProcessoManager metadadoProcessoManager;
-	@In
-	private SituacaoProcessoDAO situacaoProcessoDAO;
 	@In
 	private Authenticator authenticator;
 	@In
@@ -94,6 +96,9 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	private AnexoController anexoController;
 	@In
 	private PastaList pastaList;
+	
+	@Inject
+	private SituacaoProcessoDAO situacaoProcessoDAO;
 
 	private DocumentoBin documentoBin = new DocumentoBin();
 	private String observacaoMovimentacao;
