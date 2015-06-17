@@ -57,15 +57,11 @@ public class EppSystemException extends RuntimeException {
     
     private String getLogErrorMessage() {
         StringBuilder sb = new StringBuilder();
-        sb.append("\r\nProtocol:").append(protocol).append("\r\n");
+        sb.append("\r\nProtocol ").append(protocol).append("\r\n");
         sb.append(errorCode.getClass().getName()).append(": ").append(errorCode.getErrorCode()).append("\r\n");
-        sb.append("Parameter list:");
+        sb.append("Parameters");
         for (Entry<String, Object> entry : parameters.entrySet()) {
-            sb.append("   ");
-            sb.append(entry.getKey());
-            sb.append(" : ");
-            sb.append(entry.getValue());
-            sb.append("\r\n");
+            sb.append("   ").append(entry.getKey()).append(" : ").append(entry.getValue()).append("\r\n");
         }
         return sb.toString();
     }
