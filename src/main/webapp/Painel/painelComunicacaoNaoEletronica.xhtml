@@ -87,11 +87,7 @@
                 </ui:define>
                 
                 <ui:define name="toolBar">
-                    <ui:include src="/WEB-INF/xhtml/components/grid/tools/toolBarProcessoJbpm.xhtml">
-                        <ui:param
-                            name="showMovimentarToolBar"
-                            value="#{not painelUsuarioController.selectedFluxo.expedida}" />
-                    </ui:include>
+                    <ui:include src="/WEB-INF/xhtml/components/grid/tools/toolBarProcessoJbpm.xhtml" />
                 </ui:define>
                 
             </wi:dataTable>
