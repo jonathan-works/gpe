@@ -16,7 +16,8 @@ public class ClassificacaoDocumentoRespostaComunicacaoList extends EntityList<Cl
 	public static final String NAME = "classificacaoDocumentoRespostaComunicacaoList";
 	
 	protected static final String DEFAULT_EJBQL = "select o from ClassificacaoDocumento o "
-			+ "where o not in (#{tipoComunicacaoCrudAction.instance.classificacoesResposta})" ;
+			+ "where not exists (select 1 from TipoComunicacaoClassificacaoDocumento t where t.classificacaoDocumento = o "
+				+ "	and t.tipoComunicacao = #{tipoComunicacaoCrudAction.instance})" ;
 	private static final String DEFAULT_ORDER = "descricao";
 
     @Override

@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,11 +11,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
@@ -61,10 +59,8 @@ public class TipoComunicacao implements Serializable {
     @JoinColumn(name = "id_classificacao_documento")
     private ClassificacaoDocumento classificacaoDocumento;
 
-    @ManyToMany(fetch =  FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    @JoinTable(name = "tb_tipo_comunic_classif_doc", 
-    joinColumns = {@JoinColumn (name = "id_tipo_comunicacao")}, inverseJoinColumns = {@JoinColumn ( name ="id_classificacao_documento")} )
-    private List<ClassificacaoDocumento> classificacoesResposta = new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tipoComunicacao", orphanRemoval = true)
+    private List<TipoComunicacaoClassificacaoDocumento> tipoComunicacaoClassificacaoDocumentos = new ArrayList<>();
     
     public Long getId() {
         return id;
@@ -113,15 +109,15 @@ public class TipoComunicacao implements Serializable {
     public void setTipoModeloDocumento(TipoModeloDocumento tipoModeloDocumento) {
 		this.tipoModeloDocumento = tipoModeloDocumento;
 	}
+
+    public List<TipoComunicacaoClassificacaoDocumento> getTipoComunicacaoClassificacaoDocumentos() {
+		return tipoComunicacaoClassificacaoDocumentos;
+	}
     
-    public List<ClassificacaoDocumento> getClassificacoesResposta() {
-		return classificacoesResposta;
+    public void setTipoComunicacaoClassificacaoDocumentos(List<TipoComunicacaoClassificacaoDocumento> tipoComunicacaoClassificacaoDocumentos) {
+		this.tipoComunicacaoClassificacaoDocumentos = tipoComunicacaoClassificacaoDocumentos;
 	}
-
-	public void setClassificacoesResposta(List<ClassificacaoDocumento> classificacoesResposta) {
-		this.classificacoesResposta = classificacoesResposta;
-	}
-
+    
 	@Override
     public String toString() {
     	return descricao;
