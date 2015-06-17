@@ -64,7 +64,7 @@
 	           </h:form>
 	     	</s:div>
 	     	
-	     	<s:div id="divPainelProcessosInterna" style="display: inline-block; width: 74%; vertical-align: top; margin-left: 0.5em;" >
+	     	<s:div id="divPainelProcessosInterna" style="display: inline-block; width: #{painelUsuarioController.showTarefasTree ? '74%' : '100%'}; vertical-align: top; margin-left: 0.5em;" >
 				<ui:include src="/Painel/painelProcessos.xhtml" />
 	    		
 	    		<s:div rendered="#{painelUsuarioController.showPainelComunicacoesEletronicasComum}" style="display: inline-block; width: 100%; vertical-align: top;">
