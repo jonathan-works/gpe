@@ -4,29 +4,29 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Named;
+
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.util.ComponentUtil;
 
-@Scope(ScopeType.CONVERSATION)
-@Name(DocumentoEditor.NAME)
+@Named
+@ViewScoped
 public class DocumentoEditor extends DocumentoCreator implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "documentoEditor";
     private static final LogProvider LOG = Logging.getLogProvider(DocumentoEditor.class);
 
-    @In
-    private DocumentoManager documentoManager;
-    private List<Integer> idsDocumentosSessao;
+    private DocumentoManager documentoManager = ComponentUtil.getComponent(DocumentoManager.NAME, ScopeType.EVENT);
     
+    private List<Integer> idsDocumentosSessao;
     private boolean expanded = false;
 
     @Override

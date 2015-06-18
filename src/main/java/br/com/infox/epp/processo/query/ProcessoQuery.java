@@ -1,7 +1,5 @@
 package br.com.infox.epp.processo.query;
 
-
-
 public interface ProcessoQuery {
 
 	String TABLE_PROCESSO = "tb_processo";

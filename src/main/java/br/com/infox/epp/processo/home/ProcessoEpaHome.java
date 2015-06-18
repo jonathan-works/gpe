@@ -93,10 +93,10 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	@In
     private DocumentoProcessoAction documentoProcessoAction;
 	@In
-	private AnexoController anexoController;
-	@In
 	private PastaList pastaList;
 	
+	@Inject
+	private AnexoController anexoController;
 	@Inject
 	private SituacaoProcessoDAO situacaoProcessoDAO;
 
