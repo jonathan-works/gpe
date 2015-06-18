@@ -7,13 +7,24 @@ public interface CalendarioEventosQuery {
     
     String GET_BY_DATA = "getCalendarioEventoByData";
     String GET_BY_DATA_QUERY = "select o from CalendarioEventos o where"
-            + " ("
-                + "o.dia = :" + PARAM_DIA
-                + " and o.mes = :" + PARAM_MES
-                + " and o.ano = :" + PARAM_ANO
-            + ") or ("
-                + "o.dia = :" + PARAM_DIA
-                + " and o.mes = :" + PARAM_MES
-                + " and o.ano is null"
-            + ")";
+    		+ " ("
+    		+ "o.dia = :" + PARAM_DIA
+    		+ " and o.mes = :" + PARAM_MES
+    		+ " and o.ano = :" + PARAM_ANO
+    		+ ") or ("
+    		+ "o.dia = :" + PARAM_DIA
+    		+ " and o.mes = :" + PARAM_MES
+    		+ " and o.ano is null"
+    		+ ")";
+    String GET_BY_DATA_RANGE = "getCalendarioEventoByDataRange";
+    String GET_BY_DATA_RANGE_QUERY = "select o from CalendarioEventos o where"
+    		+ " ("
+    		+ "o.dia = :" + PARAM_DIA
+    		+ " and o.mes = :" + PARAM_MES
+    		+ " and o.ano = :" + PARAM_ANO
+    		+ ") or ("
+    		+ "o.dia = :" + PARAM_DIA
+    		+ " and o.mes = :" + PARAM_MES
+    		+ " and o.ano is null"
+    		+ ")";
 }

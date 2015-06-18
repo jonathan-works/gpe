@@ -2,6 +2,8 @@ package br.com.infox.epp.julgamento.entity;
 
 import static br.com.infox.epp.julgamento.query.SessaoJulgamentoQuery.EXISTE_SESSAO_COM_SALA_E_HORARIO;
 import static br.com.infox.epp.julgamento.query.SessaoJulgamentoQuery.EXISTE_SESSAO_COM_SALA_E_HORARIO_QUERY;
+import static br.com.infox.epp.julgamento.query.SessaoJulgamentoQuery.SESSOES_ENTRE_DATAS;
+import static br.com.infox.epp.julgamento.query.SessaoJulgamentoQuery.SESSOES_ENTRE_DATAS_QUERY;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -27,7 +29,8 @@ import org.joda.time.DateTime;
 @Entity
 @Table(name = "tb_sessao_julgamento")
 @NamedQueries(value = {
-		@NamedQuery(name = EXISTE_SESSAO_COM_SALA_E_HORARIO, query = EXISTE_SESSAO_COM_SALA_E_HORARIO_QUERY)
+		@NamedQuery(name = EXISTE_SESSAO_COM_SALA_E_HORARIO, query = EXISTE_SESSAO_COM_SALA_E_HORARIO_QUERY),
+		@NamedQuery(name = SESSOES_ENTRE_DATAS, query = SESSOES_ENTRE_DATAS_QUERY),
 })
 public class SessaoJulgamento implements Serializable, Cloneable {
 	

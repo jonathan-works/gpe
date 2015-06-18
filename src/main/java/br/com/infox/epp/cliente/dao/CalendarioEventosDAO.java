@@ -12,6 +12,7 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.cliente.entity.CalendarioEventos;
+import br.com.infox.util.time.DateRange;
 import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.*;
 
 @Name(CalendarioEventosDAO.NAME)
@@ -31,4 +32,9 @@ public class CalendarioEventosDAO extends DAO<CalendarioEventos> {
         parameters.put(PARAM_ANO, calendar.get(Calendar.YEAR));
         return getNamedSingleResult(GET_BY_DATA, parameters);
     }
+    
+    public CalendarioEventos getByDate(DateRange date) {
+    	return null;
+    }
+    
 }

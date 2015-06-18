@@ -1,6 +1,7 @@
 package br.com.infox.epp.julgamento.manager;
 
 import java.util.Date;
+import java.util.List;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -19,6 +20,7 @@ import br.com.infox.epp.julgamento.type.Periodicidade;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
+import br.com.infox.util.time.DateRange;
 
 @AutoCreate
 @Name(SessaoJulgamentoManager.NAME)
@@ -36,6 +38,11 @@ public class SessaoJulgamentoManager extends Manager<SessaoJulgamentoDAO, Sessao
 	private SalaTurnoManager salaTurnoManager;
 	@In
 	private InfoxMessages infoxMessages;
+	
+	
+	public List<SessaoJulgamento> getSessoesJulgamento(DateRange range){
+		return getDao().getByDateRange(range);
+	}
 	
 	public void persistIgnorandoErro(SessaoJulgamento sessaoJulgamento) throws DAOException {
 		try {

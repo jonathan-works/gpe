@@ -28,7 +28,8 @@ import br.com.infox.epp.cliente.query.CalendarioEventosQuery;
 @Entity
 @Table(name = CalendarioEventos.TABLE_NAME)
 @NamedQueries({
-	@NamedQuery(name = CalendarioEventosQuery.GET_BY_DATA, query = CalendarioEventosQuery.GET_BY_DATA_QUERY)
+	@NamedQuery(name = CalendarioEventosQuery.GET_BY_DATA, query = CalendarioEventosQuery.GET_BY_DATA_QUERY),
+	@NamedQuery(name = CalendarioEventosQuery.GET_BY_DATA_RANGE, query = CalendarioEventosQuery.GET_BY_DATA_RANGE_QUERY)
 })
 public class CalendarioEventos implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -122,6 +123,21 @@ public class CalendarioEventos implements Serializable {
 
     public void setRepeteAno(Boolean repeteAno) {
         this.repeteAno = repeteAno;
+    }
+    
+    /**
+     * Converte os valores dos métodos {@link getDia()} {@link getMes()} {@link getAno()} para um {@link java.util.Date} 
+     * @return
+     */
+    @Transient
+    public Date getDataEventoAsDate(){
+    	Calendar calendar = Calendar.getInstance();
+    	if(getAno() != null)
+    		calendar.set(Calendar.YEAR, getAno() );
+    	
+    	calendar.set(Calendar.MONTH, getMes() - 1);
+    	calendar.set(Calendar.DAY_OF_MONTH, getDia());
+    	return calendar.getTime();
     }
 
     @Transient
