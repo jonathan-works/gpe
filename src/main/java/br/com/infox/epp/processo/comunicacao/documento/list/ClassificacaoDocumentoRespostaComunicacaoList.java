@@ -23,12 +23,16 @@ public class ClassificacaoDocumentoRespostaComunicacaoList extends EntityList<Cl
 				+ "	and t.tipoComunicacao = #{tipoComunicacaoCrudAction.instance})" ;
 	private static final String DEFAULT_ORDER = "descricao";
 
+	private static final String R1 = "o.ativo = #{classificacaoDocumentoRespostaComunicacaoList.ativo}";
+	
+	private Boolean ativo = true;
+	
     @Override
     protected void addSearchFields() {
         addSearchField("codigoDocumento", SearchCriteria.CONTENDO);
         addSearchField("descricao", SearchCriteria.CONTENDO);
         addSearchField("inTipoDocumento", SearchCriteria.IGUAL);
-        addSearchField("ativo", SearchCriteria.IGUAL);
+        addSearchField("ativo", SearchCriteria.IGUAL, R1);
     }
 
 	@Override
@@ -44,5 +48,13 @@ public class ClassificacaoDocumentoRespostaComunicacaoList extends EntityList<Cl
 	@Override
 	protected Map<String, String> getCustomColumnsOrder() {
 		return null;
+	}
+	
+	public Boolean getAtivo() {
+		return ativo;
+	}
+	
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
 	}
 }
