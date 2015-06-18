@@ -72,7 +72,7 @@
                     rendered="#{participantesController.podeIniciarProcesso()}"
                     value="#{infoxMessages['processo.iniciarBtn']}"
                     styleClass="buttons">                    <f:ajax event="click" execute="@this" render="idProcesso :pageBodyDialogMessage" onevent="abrirMovimentar"
-                    	listener="#{action.iniciarProcesso(participantesController.processo)}Z"/>
+                    	listener="#{action.iniciarProcesso(participantesController.processo)}"/>
                  </h:commandButton>
             </s:div>
         </h:form>
