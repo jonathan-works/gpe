@@ -43,23 +43,23 @@
 	                label="#{infoxMessages['data.inputPeriodo']}"
 	                valueDateFrom="#{consultaProcessoList.entity.dataInicio}"
 	                valueDateTo="#{consultaProcessoList.dataFim}" />
-	               
-	             <wi:selectOneMenuEntity
-	               id="natureza"
-	               label="#{infoxMessages['natureza.tableTitle']}"
-	               value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.natureza}"
-	               showLabelSelecione="true"
-	               items="#{naturezaCategoriaFluxoFacade.getNaturezaList()}" />
-	               
-	             <wi:selectOneMenuEntity
-	               id="categoria"
-	               label="#{infoxMessages['categoria.tableTitle']}"
-	               value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.categoria}"
-	               showLabelSelecione="true"
-	               inNewLine="true"
-	               items="#{naturezaCategoriaFluxoFacade.getCategoriaList()}" />
-	               
-	           </wi:searchForm>
+
+				<wi:selectOneMenuEntity id="natureza" label="#{infoxMessages['natureza.tableTitle']}"
+					value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.natureza}" showLabelSelecione="true"
+					items="#{naturezaCategoriaFluxoFacade.getNaturezaList()}">
+					<a:ajax execute="@this" render="natureza categoriaOutPutPanel"
+						listener="#{naturezaCategoriaFluxoFacade.loadCategoriaList(consultaProcessoList.entity.naturezaCategoriaFluxo.natureza)}"></a:ajax>
+				</wi:selectOneMenuEntity>
+
+				<a:outputPanel id="categoriaOutPutPanel">
+
+					<wi:selectOneMenuEntity disabled="#{empty consultaProcessoList.entity.naturezaCategoriaFluxo.natureza}"
+						id="categoria" label="#{infoxMessages['categoria.tableTitle']}"
+						value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.categoria}" showLabelSelecione="true"
+						inNewLine="true" items="#{naturezaCategoriaFluxoFacade.getCategoriaList()}" />
+				</a:outputPanel>
+
+					</wi:searchForm>
 	         </ui:define>
 	         
 	         <wi:columnOutputText
