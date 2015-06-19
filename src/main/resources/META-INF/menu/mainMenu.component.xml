@@ -40,8 +40,6 @@
             <value>menu.administracao/tipoRelacionamentoProcesso.menuText:/TipoRelacionamentoProcesso/listView.seam</value>
             <value>menu.administracao/menu.unidadeDecisora/unidadeDecisoraMonocratica.menuText:/UnidadeDecisoraMonocratica/listView.seam</value>
             <value>menu.administracao/menu.unidadeDecisora/unidadeDecisoraColegiada.menuText:/UnidadeDecisoraColegiada/listView.seam</value>
-            <value>menu.administracao/menu.julgamentoColegiado/sala.menuText:/Julgamento/Colegiado/Sala/listView.seam</value>
-            <value>menu.administracao/menu.julgamentoColegiado/sessaoJulgamento.menuText:/Julgamento/Colegiado/Sessao/listView.seam</value>
             <value>menu.administracao/menu.usuario/contaTwitter.twitterMenuText:/ContaTwitter/listView.seam</value>
             <value>menu.administracao/automaticNodes.menuText:/automaticNodes.seam</value>
             <value>menu.administracao/quartzJobsInfo.menuText:/quartzJobsInfo.seam</value> 
