@@ -269,7 +269,7 @@ public class AssinaturaDocumentoService implements Serializable {
 		List<RegistroAssinaturaSuficiente> registrosAssinaturaSuficiente = documentoBin.getRegistrosAssinaturaSuficiente();
 		List<Documento> documentoList = documentoManager.getDocumentosFromDocumentoBin(documentoBin);
 		GenericManager genericManager = ComponentUtil.getComponent(GenericManager.NAME);
-        if (!(documentoList == null || documentoList.isEmpty())) {
+        if (!(documentoList == null || documentoList.isEmpty()) && usuarioPerfilAtual != null) {
             Documento documento = documentoList.get(0);
             for (ClassificacaoDocumentoPapel classificacaoDocumentoPapel : documento.getClassificacaoDocumento().getClassificacaoDocumentoPapelList()) {
                 RegistroAssinaturaSuficiente registroAssinaturaSuficiente = new RegistroAssinaturaSuficiente();
