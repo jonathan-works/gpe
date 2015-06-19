@@ -1,25 +1,35 @@
 package br.com.infox.epp.tarefa.component.tree;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.persistence.Tuple;
 
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Name;
+import org.richfaces.event.TreeSelectionChangeEvent;
 
 import br.com.infox.core.tree.AbstractTreeHandler;
+import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.painel.FluxoBean;
+import br.com.infox.epp.painel.PainelUsuarioController;
+import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
 import br.com.infox.epp.processo.type.TipoProcesso;
 
-@AutoCreate
-@Name(PainelTreeHandler.NAME)
+@Named
+@ViewScoped
 public class PainelTreeHandler extends AbstractTreeHandler<Tuple> {
 
     public static final String NAME = "painelTreeHandler"; 
     private static final long serialVersionUID = 1L;
     
+    @Inject
+    private PainelUsuarioController painelUsuarioController;
+    @Inject
+    private SituacaoProcessoManager situacaoProcessoManager;
+    
     private List<PainelEntityNode> rootList;
-    private TipoProcesso tipoProcesso;
-    private Boolean tabComunicacoesExpedidas;
+    private FluxoBean fluxoBean;
 
     @Override
     protected String getQueryRoots() {
@@ -35,6 +45,11 @@ public class PainelTreeHandler extends AbstractTreeHandler<Tuple> {
     protected String getEventSelected() {
         return "selectedTarefasTree";
     }
+    
+    public void processTreeSelectionChange(TreeSelectionChangeEvent ev) {
+    	super.processTreeSelectionChange(ev);
+		painelUsuarioController.onSelectNode();
+    }
 
     public Integer getTaskId() {
         if (getSelected() != null) {
@@ -42,15 +57,13 @@ public class PainelTreeHandler extends AbstractTreeHandler<Tuple> {
         }
         return 0;
     }
-
+    
     public List<PainelEntityNode> getTarefasRoots() {
         if (rootList == null || rootList.isEmpty()) {
-            if (tabComunicacoesExpedidas == null || tabComunicacoesExpedidas == false) {
-                PainelEntityNode entityNode = new PainelEntityNode(getTipoProcesso(), false);
-                rootList = entityNode.getRootsFluxos();
-            } else {
-                PainelEntityNode entityNode = new PainelEntityNode(tipoProcesso, tabComunicacoesExpedidas);
-                rootList = entityNode.getRootsFluxos();
+        	List<Tuple> tuples = situacaoProcessoManager.getChildrenList(getIdFluxo(), getTipoProcesso(), isExpedidas());
+        	rootList = new ArrayList<>(tuples.size());
+            for (Tuple tuple : tuples) {
+            	rootList.add(new PainelEntityNode(null, tuple, getTipoProcesso(), isExpedidas()));
             }
         }
         return rootList;
@@ -69,18 +82,23 @@ public class PainelTreeHandler extends AbstractTreeHandler<Tuple> {
     }
 
 	public TipoProcesso getTipoProcesso() {
-		return tipoProcesso;
+		return fluxoBean.getTipoProcesso();
 	}
 
-	public void setTipoProcesso(TipoProcesso tipoProcesso) {
-		this.tipoProcesso = tipoProcesso;
+	public boolean isExpedidas() {
+		return fluxoBean.getExpedida();
 	}
 
-    public Boolean getTabComunicacoesExpedidas() {
-        return tabComunicacoesExpedidas;
-    }
+	public Integer getIdFluxo() {
+		return Integer.valueOf(fluxoBean.getProcessDefinitionId());
+	}
 
-    public void setTabComunicacoesExpedidas(Boolean tabComunicacoesExpedidas) {
-        this.tabComunicacoesExpedidas = tabComunicacoesExpedidas;
-    }
+	public FluxoBean getFluxoBean() {
+		return fluxoBean;
+	}
+
+	public void setFluxoBean(FluxoBean fluxoBean) {
+		this.fluxoBean = fluxoBean;
+	}
+	
 }

@@ -31,34 +31,19 @@ public class DistribuicaoProcessoService {
 	
 	public static final String NAME = "distribuicaoProcessoService";
 	
-	//TODO remover o Telescoping Anti-Pattern
-	public void distribuirProcesso(Processo processo, PessoaFisica relator, UnidadeDecisoraMonocratica unidadeDecisoraMonocratica) throws DAOException {
-        distribuirProcesso(processo, relator, unidadeDecisoraMonocratica, null);
-    }
-
-    public void distribuirProcesso(Processo processo, UnidadeDecisoraMonocratica unidadeDecisoraMonocratica) throws DAOException {
-        distribuirProcesso(processo, null, unidadeDecisoraMonocratica, null);
-    }
-    
-    public void distribuirProcesso(Processo processo, UnidadeDecisoraColegiada unidadeDecisoraColegiada) throws DAOException {
-        distribuirProcesso(processo, null, null, unidadeDecisoraColegiada);
-    }
-
-    public void distribuirProcesso(Processo processo) throws DAOException {
-        distribuirProcesso(processo,null,null,null);
-    }
-
-    @Transactional
-    public void distribuirProcesso(Processo processo, PessoaFisica relator, UnidadeDecisoraMonocratica unidadeDecisoraMonocratica, UnidadeDecisoraColegiada unidadeDecisoraColegiada) throws DAOException {
-    	String idRelator = relator != null ? relator.getIdPessoa().toString() : null;
+	public void distribuirParaRelatoria(Processo processo, PessoaFisica relator, UnidadeDecisoraMonocratica unidadeDecisoraMonocratica) throws DAOException {
+		String idRelator = relator != null ? relator.getIdPessoa().toString() : null;
     	String idUDM = unidadeDecisoraMonocratica != null ? unidadeDecisoraMonocratica.getIdUnidadeDecisoraMonocratica().toString() : null;
-    	String idUDC = unidadeDecisoraColegiada != null ? unidadeDecisoraColegiada.getIdUnidadeDecisoraColegiada().toString() : null;
-    	
     	setMetadado(EppMetadadoProvider.RELATOR, processo, idRelator);
     	setMetadado(EppMetadadoProvider.UNIDADE_DECISORA_MONOCRATICA, processo, idUDM);
-    	setMetadado(EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA, processo, idUDC);
+    	processoDAO.update(processo);
+	}
+	
+	public void distribuirParaColegiado(Processo processo, UnidadeDecisoraColegiada unidadeDecisoraColegiada) throws DAOException {
+		String idUDC = unidadeDecisoraColegiada != null ? unidadeDecisoraColegiada.getIdUnidadeDecisoraColegiada().toString() : null;
+		setMetadado(EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA, processo, idUDC);
         processoDAO.update(processo);
-    }
+	}
     
     private void setMetadado(MetadadoProcessoDefinition metadadoDefinition, Processo processo, String valor) throws DAOException {
     	MetadadoProcesso metadadoExistente = processo.getMetadado(metadadoDefinition);

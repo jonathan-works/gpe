@@ -70,6 +70,11 @@
             <wi:selectSituacaoRadio id="ativo"
                 label="#{infoxMessages['field.situacao']}"
                 value="#{naturezaCrudAction.instance.ativo}" />
+                
+             <wi:selectBooleanRadio id="primaria"
+                label="#{infoxMessages['natureza.primaria']}"
+                value="#{naturezaCrudAction.instance.primaria}">
+            </wi:selectBooleanRadio>
 
             <s:div id="partesDiv">
                 <wi:selectOneMenuEnum id="tipoDasPartes"

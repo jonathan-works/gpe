@@ -311,7 +311,7 @@
                 name="tabPastaRestricao"
                 status=":status"
                 title="#{infoxMessages['pasta.pastaRestricaoTab']}"
-                rendered="#{s:hasPermission('/pages/Processo/abaPastaRestricao', 'access')}">
+                rendered="#{security.checkPage('/pages/Processo/abaPastaRestricao')}">
                 <ui:decorate
                     id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">

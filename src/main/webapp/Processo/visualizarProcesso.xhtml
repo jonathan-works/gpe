@@ -182,7 +182,7 @@
                 name="tabPastaRestricao"
                 status=":status"
                 title="#{infoxMessages['pasta.pastaRestricaoTab']}"
-                rendered="#{s:hasPermission('/pages/Processo/abaPastaRestricao', 'access')}">
+                rendered="#{security.checkPage('/pages/Processo/abaPastaRestricao')}">
                 <ui:decorate
                     id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
@@ -203,28 +203,7 @@
                     id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
                     <ui:define name="title">#{infoxMessages['documentoFisico.titleTab']}</ui:define>
-                    <s:div id="documentoFisicoDiv">
-                        <wi:dataTable
-                            id="documentoFisicoTable"
-                            values="#{localizacaoDocumentoFisicoCrudAction.documentoFisicoList}"
-                            var="row"
-                            rows="10"
-                            showSearchForm="false"
-                            panelStyleClass="full-sized">
-                            <ui:define name="toolBar" />
-                            <ui:define name="headerToolBar" />
-                            <wi:columnOutputText
-                                columnId="localizacaoFisica"
-                                columnHeader="#{infoxMessages['documentoFisico.localizacaoFisica']}"
-                                value="#{row.localizacaoFisica.caminhoCompletoToString()}"
-                                hideOrder="true" />
-                            <wi:columnOutputText
-                                columnId="descricao"
-                                columnHeader="#{infoxMessages['documentoFisico.descricaoDocumentoFisico']}"
-                                value="#{row.descricaoDocumentoFisico}"
-                                hideOrder="true" />
-                        </wi:dataTable>
-                    </s:div>
+                    <ui:include src="documentoFisico.xhtml" />
                 </ui:decorate>
             </infox:tab>
   

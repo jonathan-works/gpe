@@ -146,6 +146,7 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
                     Expression expr = new Expression(group);
                     expr = resolver.resolve(expr);
                     String value = expr.getValue();
+                    value = value == null ? "" : value;
                     matcher.appendReplacement(sb, value);
                 } else {
                 	Expression expr = new Expression(expression);

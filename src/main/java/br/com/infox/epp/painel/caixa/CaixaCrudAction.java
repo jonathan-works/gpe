@@ -3,6 +3,7 @@ package br.com.infox.epp.painel.caixa;
 import java.util.List;
 
 import javax.faces.model.SelectItem;
+import javax.inject.Inject;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -13,6 +14,7 @@ import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.tarefa.component.tree.PainelTreeHandler;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
@@ -21,6 +23,7 @@ import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
 @Name(CaixaCrudAction.NAME)
+@ContextDependency
 public class CaixaCrudAction extends AbstractCrudAction<Caixa, CaixaManager> {
 	
     private static final long serialVersionUID = 1L;
@@ -32,9 +35,9 @@ public class CaixaCrudAction extends AbstractCrudAction<Caixa, CaixaManager> {
     private TarefaManager tarefaManager;
     @In 
     private CaixaManager caixaManager;
-    @In 
-    private ActionMessagesService actionMessagesService;
     @In
+    private ActionMessagesService actionMessagesService;
+    @Inject
     private PainelTreeHandler painelTreeHandler;
     @In
     private InfoxMessages infoxMessages;

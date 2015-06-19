@@ -4,6 +4,7 @@ public interface UnidadeDecisoraColegiadaQuery {
 	
 	String ID_USUARIO_LOGIN = "idUsuarioLogin";
 	String ID_LOCALIZACAO = "idLocalizacao";
+	String CODIGO_LOCALIZACAO = "codigoLocalizacao";
 	
 	String SEARCH_UDC_BY_USUARIO = "searchUDCByUsuario";
     String SEARCH_UDC_BY_USUARIO_QUERY = "select new map( udc.nome as nome, " +
@@ -12,7 +13,8 @@ public interface UnidadeDecisoraColegiadaQuery {
     		  "inner join up.perfilTemplate pt " +
     		  "inner join up.localizacao l " +
     		  "inner join l.unidadeDecisoraColegiada udc " +
-    		  "where udc.ativo = true and up.usuarioLogin.idUsuarioLogin = :" + ID_USUARIO_LOGIN;
+    		  "where udc.ativo = true and up.usuarioLogin.idUsuarioLogin = :" + ID_USUARIO_LOGIN +
+    		  " and up.ativo = true";
     
     String SEARCH_EXISTE_UDC_BY_LOCALIZACAO = "searchExisteUDCByLocalizacao";
     String SEARCH_EXISTE_UDC_BY_LOCALIZACAO_QUERY = "select count(udc) " +
@@ -23,4 +25,6 @@ public interface UnidadeDecisoraColegiadaQuery {
     String FIND_ALL_ATIVO_QUERY = "select o from UnidadeDecisoraColegiada o " +
             "where o.ativo = true order by o.nome";
 
+    String FIND_UDC_BY_CODIGO_LOCALIZACAO = "UnidadeDecisoraColegiada.findUDCByCodigoLocalizacao";
+    String FIND_UDC_BY_CODIGO_LOCALIZACAO_QUERY = "select o from UnidadeDecisoraColegiada o inner join o.localizacao l where l.codigo = :" + CODIGO_LOCALIZACAO;
 }

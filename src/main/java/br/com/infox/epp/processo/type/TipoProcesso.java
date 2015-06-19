@@ -26,6 +26,10 @@ public class TipoProcesso {
 		this.value = value;
 	}
 	
+	public String value() {
+		return value;
+	}
+	
 	public static TipoProcesso getByName(String name) {
 		name = name.toUpperCase();
 		return values.get(name);
@@ -36,7 +40,7 @@ public class TipoProcesso {
 		if (obj == null || !(obj instanceof TipoProcesso)) {
 			return false;
 		}
-		return ((TipoProcesso) obj).value.equals(value);
+		return ((TipoProcesso) obj).value.equalsIgnoreCase(value);
 	}
 	
 	public static Collection<TipoProcesso> values() {

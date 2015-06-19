@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf">
+    
+    <s:div id="documentoFisicoDiv">
+        <wi:dataTable
+            id="documentoFisicoTable"
+            values="#{localizacaoDocumentoFisicoCrudAction.documentoFisicoList}"
+            var="row"
+            rows="10"
+            showSearchForm="false"
+            panelStyleClass="full-sized">
+            <ui:define name="toolBar" />
+            <ui:define name="headerToolBar" />
+            <wi:columnOutputText
+                columnId="localizacaoFisica"
+                columnHeader="#{infoxMessages['documentoFisico.localizacaoFisica']}"
+                value="#{row.localizacaoFisica.caminhoCompletoToString()}"
+                hideOrder="true" />
+            <wi:columnOutputText
+                columnId="descricao"
+                columnHeader="#{infoxMessages['documentoFisico.descricaoDocumentoFisico']}"
+                value="#{row.descricaoDocumentoFisico}"
+                hideOrder="true" />
+        </wi:dataTable>
+    </s:div>
+</ui:composition>

@@ -21,6 +21,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -35,7 +36,8 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento_;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
-import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
+import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacaoClassificacaoDocumento;
+import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacaoClassificacaoDocumento_;
 import br.com.infox.epp.processo.entity.Processo;
 
 @AutoCreate
@@ -93,11 +95,31 @@ public class ClassificacaoDocumentoDAO extends DAO<ClassificacaoDocumento> {
         return getNamedSingleResult(FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO, params);
     }
 
-    public List<ClassificacaoDocumento> getClassificacoesDocumentoDisponiveisRespostaComunicacao(DestinatarioModeloComunicacao destinatarioModeloComunicacao, boolean isModelo, Papel papel) {
-		return getUseableClassificacaoDocumento(isModelo, papel);
-	}
-
+	public List<ClassificacaoDocumento> getClassificacoesDocumentoDisponiveisRespostaComunicacao(DestinatarioModeloComunicacao destinatarioModeloComunicacao, boolean isModelo, Papel papel) {
+    	CriteriaQuery<ClassificacaoDocumento> query = createQueryUseableClassificacaoDocumento(isModelo, papel);
+    	if (!destinatarioModeloComunicacao.getModeloComunicacao().getTipoComunicacao().getTipoComunicacaoClassificacaoDocumentos().isEmpty()) {
+        	query.where(query.getRestriction(), createClassificacoesDocumentoVinculadasTipoComunicacaoPredicate(query, destinatarioModeloComunicacao));
+    	}
+    	return getEntityManager().createQuery(query).getResultList();
+    }
+    
     @SuppressWarnings("unchecked")
+	protected Predicate createClassificacoesDocumentoVinculadasTipoComunicacaoPredicate(AbstractQuery<?> query, DestinatarioModeloComunicacao destinatarioModeloComunicacao) {
+    	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+    	Root<ClassificacaoDocumento> root = (Root<ClassificacaoDocumento>)query.getRoots().iterator().next();
+    	Subquery<Integer> subquery = query.subquery(Integer.class);
+    	subquery.select(cb.literal(1)); 
+    	Root<TipoComunicacaoClassificacaoDocumento> subroot = subquery.from(TipoComunicacaoClassificacaoDocumento.class);
+    	subquery.where(
+			cb.and(
+				cb.equal(subroot.get(TipoComunicacaoClassificacaoDocumento_.classificacaoDocumento), root),
+				cb.equal(subroot.get(TipoComunicacaoClassificacaoDocumento_.tipoComunicacao), destinatarioModeloComunicacao.getModeloComunicacao().getTipoComunicacao())
+			)
+    	);
+    	return cb.exists(subquery);
+    }
+
+	@SuppressWarnings("unchecked")
     protected void addTipoDocumentoEnumFilter(AbstractQuery<?> query, TipoDocumentoEnum tipoDocumento) {
         Root<ClassificacaoDocumento> from = (Root<ClassificacaoDocumento>) query.getRoots().iterator().next();
         Predicate predicate = query.getRestriction();
