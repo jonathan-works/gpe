@@ -280,6 +280,7 @@ public class AssinaturaDocumentoService implements Serializable {
                 genericManager.persist(registroAssinaturaSuficiente);
             }
         }
+        documentoBinManager.update(documentoBin);
 	}
     
     public void assinarDocumento(final Documento documento,
