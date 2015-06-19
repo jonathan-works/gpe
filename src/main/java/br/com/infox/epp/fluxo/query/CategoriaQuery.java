@@ -10,7 +10,16 @@ public interface CategoriaQuery {
 
     String QUERY_PARAM_CATEGORIA = "categoria";
 
+    String LIST_CATEGORIAS_BY_NATUREZA = "listCategoriaByNatureza";
+    
+    
+    String QUERY_PARAM_NATUREZA = "natureza";
+
+    String LIST_CATEGORIAS_BY_NATUREZA_QUERY = "select c from NaturezaCategoriaFluxo ncf inner join ncf.categoria c where ncf.natureza = :"+ QUERY_PARAM_NATUREZA;
+
+
     String LIST_PROCESSO_EPP_BY_CATEGORIA = "listProcessoEpaByCategoria";
+
 
     String LIST_PROCESSO_EPA_BY_CATEGORIA_QUERY = "select distinct(c), "
             + "(select count(p) from Processo p "
