@@ -23,8 +23,6 @@ import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
@@ -65,12 +63,7 @@ public class TaskConteudoDAO extends DAO<TaskConteudo> {
                 }
             }
         }
-        return getTextoIndexavel(sb.toString());
-    }
-
-    private String getTextoIndexavel(String texto) {
-        Document doc = Jsoup.parse(texto);
-        return doc.body().text();
+        return sb.toString();
     }
 
     @Override

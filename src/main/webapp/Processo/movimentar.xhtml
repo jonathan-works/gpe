@@ -17,10 +17,10 @@
     </ui:define>
     <ui:define name="head">
 	    <script type="text/javascript">
-			if (#{!processoEpaHome.checarVisibilidadeSemException()}) {
+			if (#{not processoEpaHome.checarVisibilidadeSemException()}) {
 				window.close();
 			}
-			if (#{!taskInstanceHome.checkAccessSemException()}) {
+			if (#{not taskInstanceHome.checkAccessSemException()}) {
 				opener.atualizaPainelFluxo();
 				close();
           	}
@@ -64,20 +64,6 @@
 	          } catch (e) {
 	          }
 	      }
-	    </h:outputScript>
-	    <h:outputScript rendered="#{processoEpaHome.tab == 'tabSaida'}">
-	      invoke([ "infox.Modal" ], function(Modal) {
-	        var panelTeste = new Modal({
-	          id : "#{rich:clientId('mp_taskNodeDescription')}"
-	        });
-	        $(".mp-help").click(function show() {
-	          panelTeste.show();
-	        });
-	
-	        #{rich:jQuery('mp_taskNodeCloseBtn')}.click(function hide() {
-	          panelTeste.hide();
-	        });
-	      });
 	    </h:outputScript>
     </ui:define>
     <ui:param
@@ -426,49 +412,35 @@
                 </s:div>
             </infox:tab>
             
-            
-            <ui:include src="abasCustomizadasDoMovimentar.xhtml" />
+        	<ui:include src="abasCustomizadasDoMovimentar.xhtml" />
+        	
         </infox:tabPanel>
-        <c:if test="#{!checkPermission}">
-            <wi:outputText
-                id="error"
-                value="#{infoxMessages['movimentar.noPermission']}" />
-        </c:if>
-        <ui:param
-            name="modalWidth"
-            value="640" />
-        <ui:param
-            name="modalHeight"
-            value="480" />
+        
         <rich:popupPanel
-            id="mp_taskNodeDescription"
-            height="#{modalHeight}"
-            width="#{modalWidth}"
-            rendered="#{checkPermission}"
-            show="false"
-            modal="true"
-            moveable="true"
-            resizeable="false"
-            styleClass="popup-help"
-            domElementAttachment="parent">
-            <f:facet name="header">
-                <h:outputText
-                    value="#{infoxMessages['jbpm.taskNode.description']}" />
-            </f:facet>
-            <f:facet name="controls">
-                <h:panelGroup>
-                    <h:graphicImage
-                        id="mp_taskNodeCloseBtn"
-                        styleClass="mp-close"
-                        value="#{wiSkin.imageFolder}/closeMP.gif" />
-                </h:panelGroup>
-            </f:facet>
-            <wi:editor
-                id="taskNodeDescription"
-                value="#{taskInstanceHome.taskNodeDescription}"
-                width="#{modalWidth-15}"
-                height="#{modalHeight-90}"
-                readonly="true" />
-        </rich:popupPanel>
+	        id="mp_taskNodeDescription"
+	        rendered="#{checkPermission}"
+	        show="false"
+	        modal="true"
+	        moveable="true"
+	        resizeable="true"
+	        styleClass="popup-help"
+	        domElementAttachment="parent">
+	        <f:facet name="header">
+	            <h:outputText value="#{infoxMessages['jbpm.taskNode.description']}" />
+	        </f:facet>
+	        <f:facet name="controls">
+		        <h:graphicImage
+		            id="mp_taskNodeCloseBtn"
+		            styleClass="mp-close"
+		            onmouseup="#{rich:component('mp_taskNodeDescription')}.hide();"
+		            value="#{wiSkin.imageFolder}/closeMP.gif" />
+	        </f:facet>
+	        <h:outputText value="#{taskInstanceHome.taskNodeDescription}" escape="false" />
+	    </rich:popupPanel>
+        
+        <c:if test="#{not checkPermission}">
+            <wi:outputText id="error" value="#{infoxMessages['movimentar.noPermission']}" />
+        </c:if>
+        
     </ui:define>
 </ui:composition>

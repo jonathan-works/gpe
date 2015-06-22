@@ -10,23 +10,16 @@
   xmlns:s="http://jboss.org/schema/seam/taglib"
   xmlns:infox="http://www.infox.com.br/jsf"
   xmlns:wi="http://www.itx.com.br/jsf">
-  <c:if test="#{! empty form}">
-    <ui:param
-      name="formId"
-      value="#{empty formId ? form.formId.concat('Form') : formId}" />
-    <ui:param
-      name="formIdAcs"
-      value="#{form.formId.concat('Form')}" />
+  <c:if test="#{not empty form}">
+    <ui:param name="formId" value="#{empty formId ? form.formId.concat('Form') : formId}" />
+    <ui:param name="formIdAcs" value="#{form.formId.concat('Form')}" />
     <c:if test="#{not empty home}">
       #{form.setHome(home.homeName)}
     </c:if>
-    <ui:param
-      name="home"
-      value="#{empty home ? form.home : home}" />
-    <ui:param
-      name="instance"
-      value="#{home.instance}" />
+    <ui:param name="home" value="#{empty home ? form.home : home}" />
+    <ui:param name="instance" value="#{home.instance}" />
     <ui:param name="showForm" value="#{empty showForm ? true : showForm}" />
+    
     <h:form id="#{formId}" rendered="#{showForm}">
       <a:region>
         <s:div styleClass="edit">
@@ -35,7 +28,8 @@
               #{empty formTitle ? formId : formTitle}
               <h:graphicImage
                 id="helpBtn"
-                styleClass="mp-help"
+                styleClass="mp-help" 
+                onmouseup="#{rich:component('mp_taskNodeDescription')}.show();"
                 value="#{wiSkin.imageFolder}/question.png" />
             </f:facet>
             <s:div>
@@ -160,7 +154,7 @@
         </s:div>
       </a:region>
     </h:form>
-    <s:fragment rendered="#{!empty focus}">
+    <s:fragment rendered="#{not empty focus}">
       <h:outputScript>
         invoke(["infox.escapeId"],function(EscapeId) {
           var id = EscapeId("#{formId}:#{focus}:#{focus}Decoration:#{focus}");
