@@ -17,10 +17,10 @@
     </ui:define>
     <ui:define name="head">
 	    <script type="text/javascript">
-			if (#{!processoEpaHome.checarVisibilidadeSemException()}) {
+			if (#{not processoEpaHome.checarVisibilidadeSemException()}) {
 				window.close();
 			}
-			if (#{!taskInstanceHome.checkAccessSemException()}) {
+			if (#{not taskInstanceHome.checkAccessSemException()}) {
 				opener.atualizaPainelFluxo();
 				close();
           	}
@@ -418,18 +418,15 @@
         
         <rich:popupPanel
 	        id="mp_taskNodeDescription"
-	        height="480"
-	        width="640"
 	        rendered="#{checkPermission}"
 	        show="false"
 	        modal="true"
 	        moveable="true"
-	        resizeable="false"
+	        resizeable="true"
 	        styleClass="popup-help"
 	        domElementAttachment="parent">
 	        <f:facet name="header">
-	            <h:outputText
-	                value="#{infoxMessages['jbpm.taskNode.description']}" />
+	            <h:outputText value="#{infoxMessages['jbpm.taskNode.description']}" />
 	        </f:facet>
 	        <f:facet name="controls">
 		        <h:graphicImage
@@ -438,12 +435,7 @@
 		            onmouseup="#{rich:component('mp_taskNodeDescription')}.hide();"
 		            value="#{wiSkin.imageFolder}/closeMP.gif" />
 	        </f:facet>
-	        <wi:editor
-	            id="taskNodeDescription"
-	            value="#{taskInstanceHome.taskNodeDescription}"
-	            width="#{640 - 30}"
-	            height="#{480 - 118}"
-	            readonly="true" />
+	        <h:outputText value="#{taskInstanceHome.taskNodeDescription}" escape="false" />
 	    </rich:popupPanel>
         
         <c:if test="#{not checkPermission}">
