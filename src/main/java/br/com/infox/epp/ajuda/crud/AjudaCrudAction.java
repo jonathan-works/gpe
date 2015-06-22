@@ -4,8 +4,6 @@ import java.util.Date;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.persistence.DAOException;
@@ -16,6 +14,8 @@ import br.com.infox.epp.ajuda.entity.Pagina;
 import br.com.infox.epp.ajuda.list.HistoricoAjudaList;
 import br.com.infox.epp.ajuda.manager.AjudaManager;
 import br.com.infox.epp.ajuda.manager.PaginaManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(AjudaCrudAction.NAME)
