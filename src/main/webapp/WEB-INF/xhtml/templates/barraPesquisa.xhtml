@@ -11,21 +11,16 @@
      xmlns:s="http://jboss.org/schema/seam/taglib"
      xmlns:wi="http://www.itx.com.br/jsf">
 
-	<h:form
-         styleClass="formPesquisa"
-         rendered="#{identity.loggedIn and !usuarioLogado.provisorio}">
-        <h:outputLabel
-        	for="searchText"
-        	styleClass="BP-lbl"
+	<h:form styleClass="formPesquisa" rendered="#{identity.loggedIn and not usuarioLogado.provisorio}">
+        <h:outputLabel for="searchText"	styleClass="BP-lbl"
         	value="#{infoxMessages['template.abaPesquisaText']}" />
-		<h:inputText
-			id="searchText"
-			styleClass="BP-ipt"
-            value="#{search.searchText}" 
-            required="true"/>					
+		<h:inputText id="searchText" styleClass="BP-ipt"
+            value="#{search.searchText}" required="true"/>					
         <a:commandButton
                  action="/Pesquisa/indexedSearch.xhtml"
                  image="#{wiSkin.imageFolder}/imgPes.png" 
+                 render="@this"
+                 execute="@form"
                  onclick="if (#{rich:element('searchText')}.value == '') { new infox.Messages({'timeout': 3000}).dialog('#{infoxMessages['pesquisa.campoPesquisaVazio']}'); return false; }"/>
         <a:commandLink
           immediate="true"

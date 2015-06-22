@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.hibernate.Session;
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -32,6 +33,7 @@ import br.com.infox.ibpm.task.bean.TaskBean;
 import br.com.infox.ibpm.task.manager.UsuarioTaskInstanceManager;
 import br.com.infox.ibpm.variable.VariableHandler;
 
+@AutoCreate
 @Transactional
 @Scope(ScopeType.CONVERSATION)
 @Name(ProcessoHandler.NAME)
@@ -60,6 +62,13 @@ public class ProcessoHandler implements Serializable {
     private List<TaskInstance> taskDocumentList;
     private Map<TaskInstance, List<Documento>> anexoMap = new HashMap<TaskInstance, List<Documento>>();
     private int inicio;
+    
+    public void clear() {
+    	taskInstanceList = null;
+    	taskDocumentList = null;
+    	anexoMap = new HashMap<TaskInstance, List<Documento>>();
+    	inicio = 0;
+    }
 
     @SuppressWarnings(UNCHECKED)
     public List<TaskInstance> getTaskInstanceList() {

@@ -10,7 +10,7 @@
   xmlns:s="http://jboss.org/schema/seam/taglib"
   xmlns:infox="http://www.infox.com.br/jsf"
   xmlns:wi="http://www.itx.com.br/jsf">
-  <s:div rendered="#{not empty form}">
+  <c:if test="#{not empty form}">
     <ui:param name="formId" value="#{empty formId ? form.formId.concat('Form') : formId}" />
     <ui:param name="formIdAcs" value="#{form.formId.concat('Form')}" />
     <c:if test="#{not empty home}">
@@ -162,5 +162,5 @@
         });
       </h:outputScript>
     </s:fragment>
-  </s:div>
+  </c:if>
 </ui:composition>
