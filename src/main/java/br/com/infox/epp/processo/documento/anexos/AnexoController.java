@@ -1,37 +1,33 @@
 package br.com.infox.epp.processo.documento.anexos;
 
-import static br.com.infox.seam.util.ComponentUtil.getComponent;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Create;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import br.com.infox.core.controller.AbstractController;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
 
-@Name(AnexoController.NAME)
-@Scope(ScopeType.CONVERSATION)
-@AutoCreate
+@Named
+@ViewScoped
 public class AnexoController extends AbstractController {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "anexoController";
-
+    
+    @Inject
+    private DocumentoEditor documentoEditor;
+    @Inject
+    private DocumentoUploader documentoUploader;
+    
     private Processo processo;
-    private List<DocumentoCreator> creators;
     private List<Documento> documentosDaSessao;
     
-    @Create
+    @PostConstruct
     public void init() {
-        creators = new ArrayList<>();
-        creators.add((DocumentoCreator) getComponent(DocumentoUploader.NAME));
-        creators.add((DocumentoCreator) getComponent(DocumentoEditor.NAME));
         documentosDaSessao = new ArrayList<>();
     }
 
@@ -52,10 +48,10 @@ public class AnexoController extends AbstractController {
     }
 
     public void onClickTabAnexar(Processo processo) {
-        for (DocumentoCreator creator : creators) {
-            creator.setProcesso(processo);
-            creator.clear();
-        }
+    	documentoEditor.setProcesso(processo);
+    	documentoUploader.setProcesso(processo);
+    	documentoEditor.clear();
+    	documentoUploader.clear();
     }
 	
 }

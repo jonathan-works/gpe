@@ -17,7 +17,6 @@ import org.jboss.seam.web.ServletContexts;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Named(SecurityUtil.NAME)
 @SessionScoped
@@ -51,10 +50,10 @@ public class SecurityUtil implements Serializable {
         return checkPage(PAGES_PREFIX + servletPath);
     }
     
-    public static SecurityUtil instance() {
-        return ComponentUtil.getComponent(NAME);
+    public boolean hasRole(String roleName) {
+    	return Identity.instance().hasRole(roleName);
     }
-
+    
     public void clearPermissionCache() {
         permissions = new HashMap<>();
     }

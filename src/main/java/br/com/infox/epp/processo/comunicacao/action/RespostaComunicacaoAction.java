@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Create;
@@ -18,6 +20,7 @@ import org.jboss.seam.faces.FacesMessages;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
@@ -52,6 +55,7 @@ import com.google.common.base.Strings;
 @AutoCreate
 @Scope(ScopeType.CONVERSATION)
 @Transactional
+@ContextDependency
 public class RespostaComunicacaoAction implements Serializable {
 	
 	public static final String NAME = "respostaComunicacaoAction";
@@ -64,8 +68,6 @@ public class RespostaComunicacaoAction implements Serializable {
 	private ActionMessagesService actionMessagesService;
 	@In
 	private ModeloDocumentoManager modeloDocumentoManager;
-	@In
-	private DocumentoUploader documentoUploader;
 	@In
 	private RespostaComunicacaoList respostaComunicacaoList;
 	@In
@@ -88,6 +90,9 @@ public class RespostaComunicacaoAction implements Serializable {
 	private ProrrogacaoPrazoService prorrogacaoPrazoService;
 	@In
 	private ModeloComunicacaoManager modeloComunicacaoManager;
+	
+	@Inject
+	private DocumentoUploader documentoUploader;
 	
 	private DestinatarioModeloComunicacao destinatario;
 	private List<Documento> documentosComunicacao;

@@ -83,8 +83,6 @@ public class ComunicacaoAction implements Serializable {
 	@In
 	private PrazoComunicacaoService prazoComunicacaoService;
 	@In
-	private DocumentoUploader documentoUploader;
-	@In
 	private MetadadoProcessoManager metadadoProcessoManager;
 	@In
 	private ActionMessagesService actionMessagesService;
@@ -117,6 +115,8 @@ public class ComunicacaoAction implements Serializable {
 	@In
 	private ProcessoDAO processoDAO;
 	
+	@Inject
+	private DocumentoUploader documentoUploader;
 	@Inject
 	private SituacaoProcessoDAO situacaoProcessoDAO;
 	
