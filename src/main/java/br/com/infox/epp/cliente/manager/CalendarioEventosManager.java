@@ -31,6 +31,7 @@ public class CalendarioEventosManager extends Manager<CalendarioEventosDAO, Cale
     	return getDao().getByDate(dateRange);
     }
     
+    
     /**
      * Retorna o primeiro dia útil de forma recursiva
      * @param dia Data base a considerar
