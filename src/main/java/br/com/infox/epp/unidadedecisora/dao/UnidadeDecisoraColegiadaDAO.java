@@ -1,9 +1,6 @@
 package br.com.infox.epp.unidadedecisora.dao;
 
-import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.ID_LOCALIZACAO;
-import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.ID_USUARIO_LOGIN;
-import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_EXISTE_UDC_BY_LOCALIZACAO;
-import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_UDC_BY_USUARIO;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +23,12 @@ public class UnidadeDecisoraColegiadaDAO extends DAO<UnidadeDecisoraColegiada> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "unidadeDecisoraColegiadaDAO";
+	
+	public List<UnidadeDecisoraColegiada> findUnidadeDecisoraColegiadaWithIdUsuario(Integer idUsuario){
+		Map<String, Object> params = new HashMap<>(1);
+		params.put(ID_USUARIO_LOGIN, idUsuario);
+		return getNamedResultList(FIND_UDC_BY_USUARIO_ID, params);
+	}
 	
 	public List<Map<String, String>> searchUnidadeDecisoraColegiadaWithIdUsuario(Integer idUsuario){
 		Map<String, Object> map = new HashMap<>(1);

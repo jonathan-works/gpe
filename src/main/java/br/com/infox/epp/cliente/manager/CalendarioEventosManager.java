@@ -28,8 +28,9 @@ public class CalendarioEventosManager extends Manager<CalendarioEventosDAO, Cale
     }
     
     public List<CalendarioEventos> getByDate(DateRange dateRange){
-    	return getDao().findAll();
+    	return getDao().getByDate(dateRange);
     }
+    
     
     /**
      * Retorna o primeiro dia útil de forma recursiva

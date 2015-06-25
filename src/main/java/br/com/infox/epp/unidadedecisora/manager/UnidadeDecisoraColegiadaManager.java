@@ -20,6 +20,10 @@ public class UnidadeDecisoraColegiadaManager extends Manager<UnidadeDecisoraCole
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "unidadeDecisoraColegiadaManager";
 	
+	public List<UnidadeDecisoraColegiada> findUnidadeDecisoraListByIdUsuario(Integer idUsuario){
+		return getDao().findUnidadeDecisoraColegiadaWithIdUsuario(idUsuario);
+	}
+	
 	public List<Map<String, String>> getUnidadeDecisoraListByIdUsuario(Integer idUsuario){
 		return getDao().searchUnidadeDecisoraColegiadaWithIdUsuario(idUsuario);
 	}
