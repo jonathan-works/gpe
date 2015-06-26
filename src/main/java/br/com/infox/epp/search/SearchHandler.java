@@ -20,6 +20,7 @@ import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.constants.FloatFormatConstants;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
+import br.com.infox.epp.processo.handler.ProcessoHandler;
 import br.com.infox.epp.processo.search.ProcessoSearcher;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.util.JbpmUtil;
@@ -41,6 +42,8 @@ public class SearchHandler implements Serializable {
     private DocumentoManager documentoManager;
     @In
     private ProcessoSearcher processoSearcher;
+    @In
+    private ProcessoHandler processoHandler;
     
     private String tab;
 
@@ -67,7 +70,7 @@ public class SearchHandler implements Serializable {
         if (searchText == null || "".equals(searchText.trim())) {
             return;
         }
-
+        processoHandler.clear();
         processoSearcher.searchProcesso(searchText);
     }
 

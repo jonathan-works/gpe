@@ -385,7 +385,7 @@ public class SituacaoProcessoDAO {
         String metadadoUnidadeDecisora = EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA.getMetadadoType();
         Integer idUnidadeDecisora = authenticator.getColegiadaLogada().getIdUnidadeDecisoraColegiada();
         Predicate predicateSubquery = cb.and(cb.equal(metadado.get("metadadoType"), metadadoUnidadeDecisora));
-        predicateSubquery = cb.and(cb.equal(metadado.get("valor"), idUnidadeDecisora.toString()));
+        predicateSubquery = cb.and(cb.equal(metadado.get("valor"), idUnidadeDecisora.toString()), predicateSubquery);
         predicateSubquery = cb.and(cb.equal(metadado.get("processo").get("idProcesso"), root.get("idProcesso")), predicateSubquery);
         subquery.where(predicateSubquery);
         Predicate predicate = abstractQuery.getRestriction();

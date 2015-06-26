@@ -1,6 +1,7 @@
 package br.com.infox.epp.unidadedecisora.dao;
 
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.*;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.FIND_UDC_BY_CODIGO_LOCALIZACAO;
 
 import java.util.HashMap;
 import java.util.List;
@@ -55,4 +56,9 @@ public class UnidadeDecisoraColegiadaDAO extends DAO<UnidadeDecisoraColegiada> {
 	    return getNamedResultList(UnidadeDecisoraColegiadaQuery.FIND_ALL_ATIVO);
 	}
 
+	public UnidadeDecisoraColegiada findByCodigoLocalizacao(String codigoLocalizacao) {
+		Map<String, Object> params = new HashMap<>();
+		params.put(CODIGO_LOCALIZACAO, codigoLocalizacao);
+		return getNamedSingleResult(FIND_UDC_BY_CODIGO_LOCALIZACAO, params);
+	}
 }

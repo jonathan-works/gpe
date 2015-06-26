@@ -9,6 +9,8 @@
     <description>Processo: #{processoEpaHome.instance}</description>
     
     <begin-conversation join="true"/>
+    <restrict>#{security.checkPage()}</restrict>
+
 
 <!-- Parametros para RESTFull -->
 	<param name="inTabExpedidas" value="#{processoEpaHome.inTabExpedidas}" />

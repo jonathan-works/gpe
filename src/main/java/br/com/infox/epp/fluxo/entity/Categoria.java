@@ -5,6 +5,8 @@ import static br.com.infox.core.persistence.ORConstants.GENERATOR;
 import static br.com.infox.epp.fluxo.query.CategoriaQuery.CATEGORIA_ATTRIBUTE;
 import static br.com.infox.epp.fluxo.query.CategoriaQuery.DESCRICAO_CATEGORIA;
 import static br.com.infox.epp.fluxo.query.CategoriaQuery.ID_CATEGORIA;
+import static br.com.infox.epp.fluxo.query.CategoriaQuery.LIST_CATEGORIAS_BY_NATUREZA;
+import static br.com.infox.epp.fluxo.query.CategoriaQuery.LIST_CATEGORIAS_BY_NATUREZA_QUERY;
 import static br.com.infox.epp.fluxo.query.CategoriaQuery.LIST_PROCESSO_EPA_BY_CATEGORIA_QUERY;
 import static br.com.infox.epp.fluxo.query.CategoriaQuery.LIST_PROCESSO_EPP_BY_CATEGORIA;
 import static br.com.infox.epp.fluxo.query.CategoriaQuery.SEQUENCE_CATEGORIA;
@@ -34,7 +36,8 @@ import br.com.infox.hibernate.util.HibernateUtil;
 
 @Entity
 @Table(name = TABLE_CATEGORIA)
-@NamedQueries(value = { @NamedQuery(name = LIST_PROCESSO_EPP_BY_CATEGORIA, query = LIST_PROCESSO_EPA_BY_CATEGORIA_QUERY) })
+@NamedQueries(value = { @NamedQuery(name = LIST_PROCESSO_EPP_BY_CATEGORIA, query = LIST_PROCESSO_EPA_BY_CATEGORIA_QUERY), 
+@NamedQuery(name = LIST_CATEGORIAS_BY_NATUREZA, query = LIST_CATEGORIAS_BY_NATUREZA_QUERY) })
 public class Categoria implements Serializable {
     private static final long serialVersionUID = 1L;
 

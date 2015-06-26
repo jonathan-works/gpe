@@ -62,8 +62,7 @@ public class SearchService {
         }
     }
 
-    public static String highlightText(Query query, String text,
-            boolean isFragment) {
+    public static String highlightText(Query query, String text, boolean isFragment) {
         Scorer scorer = new QueryScorer(query);
         Formatter fmt = new SimpleHTMLFormatter(BEGIN_MARKER, END_MARKER);
         Highlighter highlighter = new Highlighter(fmt, scorer);
@@ -73,13 +72,10 @@ public class SearchService {
             highlighter.setTextFragmenter(new NullFragmenter());
         }
 
-        Document doc = Jsoup.parse(text);
-        String auxiliarText = doc.body().text();
-
-        TokenStream ts = getAnalyzer().tokenStream("texto", new StringReader(auxiliarText));
+        TokenStream ts = getAnalyzer().tokenStream("texto", new StringReader(text));
 
         try {
-            String s = highlighter.getBestFragments(ts, auxiliarText, 3, SEPARATOR);
+            String s = highlighter.getBestFragments(ts, text, 3, SEPARATOR);
             s = s.replaceAll(BEGIN_MARKER, BEGIN_TAG);
             s = s.replaceAll(END_MARKER, END_TAG);
             return s;

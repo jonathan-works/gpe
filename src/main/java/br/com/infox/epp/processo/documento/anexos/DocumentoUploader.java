@@ -11,23 +11,24 @@ import javax.faces.component.UIForm;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.commons.io.IOUtils;
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.richfaces.event.FileUploadEvent;
 import org.richfaces.event.FileUploadListener;
 import org.richfaces.model.UploadedFile;
 
+import com.lowagie.text.pdf.PdfReader;
+
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.file.reader.InfoxPdfReader;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ExtensaoArquivo;
 import br.com.infox.epp.documento.manager.ExtensaoArquivoManager;
@@ -37,12 +38,10 @@ import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.util.ComponentUtil;
 
-import com.lowagie.text.pdf.PdfReader;
-
-@Scope(ScopeType.CONVERSATION)
-@Name(DocumentoUploader.NAME)
-@AutoCreate
+@Named
+@ViewScoped
 public class DocumentoUploader extends DocumentoCreator implements FileUploadListener, Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -52,23 +51,19 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     private static final String CLASSIFICACAO_DOCUMENTO_DECORATION = "tipoProcessoDocumentoPdfDecoration";
     private static final String CLASSIFICACAO_DOCUMENTO = "tipoProcessoDocumentoPdfDecoration:tipoProcessoDocumentoPdf";
     private static final String FILE_UPLOAD = "tipoDocumentoDivPdf";
-    
     private static final LogProvider LOG = Logging.getLogProvider(DocumentoUploader.class);
 
-    private boolean isValido;
-
-    @In
-    private DocumentoManager documentoManager;
-    @In
-    private DocumentoBinarioManager documentoBinarioManager;
-    @In
-    private ExtensaoArquivoManager extensaoArquivoManager;
-    @In
+    @Inject
     private InfoxMessages infoxMessages;
+    
+    private DocumentoManager documentoManager = ComponentUtil.getComponent(DocumentoManager.NAME, ScopeType.EVENT);
+    private DocumentoBinarioManager documentoBinarioManager = ComponentUtil.getComponent(DocumentoBinarioManager.NAME, ScopeType.EVENT);
+    private ExtensaoArquivoManager extensaoArquivoManager = ComponentUtil.getComponent(ExtensaoArquivoManager.NAME, ScopeType.EVENT);
     
     private UploadedFile uploadedFile;
     private ClassificacaoDocumento classificacaoDocumento;
     private byte[] pdf;
+    private boolean isValido;
     
     public void onChangeClassificacaoDocumento(AjaxBehaviorEvent ajaxBehaviorEvent){
     	clearUploadFile();

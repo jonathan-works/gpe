@@ -22,7 +22,6 @@ import br.com.infox.seam.util.ComponentUtil;
 public class AnaliseDocumentoAction implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	static final String NAME = "analiseDocumentoAction";
 	
 	@Inject
 	private InfoxMessages infoxMessages;

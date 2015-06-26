@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.hibernate.Session;
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -32,19 +33,14 @@ import br.com.infox.ibpm.task.bean.TaskBean;
 import br.com.infox.ibpm.task.manager.UsuarioTaskInstanceManager;
 import br.com.infox.ibpm.variable.VariableHandler;
 
-@Name(ProcessoHandler.NAME)
-@Scope(ScopeType.CONVERSATION)
+@AutoCreate
 @Transactional
+@Scope(ScopeType.CONVERSATION)
+@Name(ProcessoHandler.NAME)
 public class ProcessoHandler implements Serializable {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "processoHandler";
-
-    private List<TaskInstance> taskInstanceList;
-    private List<TaskInstance> taskDocumentList;
-    private Map<TaskInstance, List<Documento>> anexoMap = new HashMap<TaskInstance, List<Documento>>();
-
-    private int inicio;
 
     @In
     private ProcessoManager processoManager;
@@ -52,6 +48,27 @@ public class ProcessoHandler implements Serializable {
     private DocumentoManager documentoManager;
     @In
     private UsuarioTaskInstanceManager usuarioTaskInstanceManager;
+    
+    private Comparator<TaskBean> comparator = new Comparator<TaskBean>() {
+		@Override
+		public int compare(TaskBean o1, TaskBean o2) {
+			Long startTask1 = o1.getTaskInstance().getStart() == null ? Long.MAX_VALUE : o1.getTaskInstance().getStart().getTime();
+			Long startTask2 = o2.getTaskInstance().getStart() == null ? Long.MAX_VALUE : o2.getTaskInstance().getStart().getTime();
+ 			return startTask1.compareTo(startTask2);
+		}
+	}; 
+    
+    private List<TaskInstance> taskInstanceList;
+    private List<TaskInstance> taskDocumentList;
+    private Map<TaskInstance, List<Documento>> anexoMap = new HashMap<TaskInstance, List<Documento>>();
+    private int inicio;
+    
+    public void clear() {
+    	taskInstanceList = null;
+    	taskDocumentList = null;
+    	anexoMap = new HashMap<TaskInstance, List<Documento>>();
+    	inicio = 0;
+    }
 
     @SuppressWarnings(UNCHECKED)
     public List<TaskInstance> getTaskInstanceList() {
@@ -92,6 +109,7 @@ public class ProcessoHandler implements Serializable {
     	for (TaskInstance taskInstance : list) {
     		beans.add(new TaskBean(taskInstance, usuarioTaskInstanceManager.find(taskInstance.getId())));
     	}
+    	Collections.sort(beans, comparator);
     	return beans;
     }
 

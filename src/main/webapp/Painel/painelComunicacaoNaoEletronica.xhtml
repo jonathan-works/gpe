@@ -38,16 +38,19 @@
                           label="#{infoxMessages['natureza.tableTitle']}"
                           value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.natureza}"
                           showLabelSelecione="true"
-                          items="#{naturezaCategoriaFluxoFacade.getNaturezaList()}" />
-                          
-                        <wi:selectOneMenuEntity
-                          id="categoria"
-                          label="#{infoxMessages['categoria.tableTitle']}"
-                          value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.categoria}"
-                          showLabelSelecione="true"
-                          inNewLine="true"
-                          items="#{naturezaCategoriaFluxoFacade.getCategoriaList()}" />
-                      </wi:searchForm>
+                          items="#{naturezaCategoriaFluxoFacade.getNaturezaList()}">
+							<a:ajax execute="@this" render="natureza categoriaOutPutPanel"
+								listener="#{naturezaCategoriaFluxoFacade.loadCategoriaList(consultaProcessoList.entity.naturezaCategoriaFluxo.natureza)}"></a:ajax>
+						</wi:selectOneMenuEntity>
+
+						<a:outputPanel id="categoriaOutPutPanel">
+
+							<wi:selectOneMenuEntity disabled="#{empty consultaProcessoList.entity.naturezaCategoriaFluxo.natureza}"
+								id="categoria" label="#{infoxMessages['categoria.tableTitle']}"
+								value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.categoria}" showLabelSelecione="true"
+								inNewLine="true" items="#{naturezaCategoriaFluxoFacade.getCategoriaList()}" />
+						</a:outputPanel>
+					</wi:searchForm>
                 </ui:define>
     
                 <wi:columnOutputText
@@ -87,11 +90,7 @@
                 </ui:define>
                 
                 <ui:define name="toolBar">
-                    <ui:include src="/WEB-INF/xhtml/components/grid/tools/toolBarProcessoJbpm.xhtml">
-                        <ui:param
-                            name="showMovimentarToolBar"
-                            value="#{not painelUsuarioController.selectedFluxo.expedida}" />
-                    </ui:include>
+                    <ui:include src="/WEB-INF/xhtml/components/grid/tools/toolBarProcessoJbpm.xhtml" />
                 </ui:define>
                 
             </wi:dataTable>

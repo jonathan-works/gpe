@@ -1,5 +1,7 @@
 package br.com.infox.epp.fluxo.manager;
 
+import java.util.List;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -15,6 +17,12 @@ public class NaturezaManager extends Manager<NaturezaDAO, Natureza> {
     private static final long serialVersionUID = 2649821908249070536L;
 
     public static final String NAME = "naturezaManager";
+    
+    
+    public List<Natureza> getNaturezasPrimarias(){
+    	return getDao().findNaturezasPrimarias();
+    	
+    }
 
     public void lockNatureza(Natureza natureza) throws DAOException {
         if (!natureza.getLocked()) {

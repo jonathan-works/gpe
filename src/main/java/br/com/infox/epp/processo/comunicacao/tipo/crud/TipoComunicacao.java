@@ -1,6 +1,8 @@
 package br.com.infox.epp.processo.comunicacao.tipo.crud;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
@@ -56,6 +59,9 @@ public class TipoComunicacao implements Serializable {
     @JoinColumn(name = "id_classificacao_documento")
     private ClassificacaoDocumento classificacaoDocumento;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tipoComunicacao", orphanRemoval = true)
+    private List<TipoComunicacaoClassificacaoDocumento> tipoComunicacaoClassificacaoDocumentos = new ArrayList<>();
+    
     public Long getId() {
         return id;
     }
@@ -103,8 +109,16 @@ public class TipoComunicacao implements Serializable {
     public void setTipoModeloDocumento(TipoModeloDocumento tipoModeloDocumento) {
 		this.tipoModeloDocumento = tipoModeloDocumento;
 	}
+
+    public List<TipoComunicacaoClassificacaoDocumento> getTipoComunicacaoClassificacaoDocumentos() {
+		return tipoComunicacaoClassificacaoDocumentos;
+	}
     
-    @Override
+    public void setTipoComunicacaoClassificacaoDocumentos(List<TipoComunicacaoClassificacaoDocumento> tipoComunicacaoClassificacaoDocumentos) {
+		this.tipoComunicacaoClassificacaoDocumentos = tipoComunicacaoClassificacaoDocumentos;
+	}
+    
+	@Override
     public String toString() {
     	return descricao;
     }
