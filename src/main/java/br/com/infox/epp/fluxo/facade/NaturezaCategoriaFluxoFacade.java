@@ -13,6 +13,8 @@ import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Natureza;
+import br.com.infox.epp.fluxo.manager.CategoriaManager;
+import br.com.infox.epp.fluxo.manager.NaturezaManager;
 
 @Scope(ScopeType.CONVERSATION)
 @Name(NaturezaCategoriaFluxoFacade.NAME)
@@ -26,15 +28,23 @@ public class NaturezaCategoriaFluxoFacade implements Serializable {
     private List<Fluxo> fluxoList;
 
     @In
+    private NaturezaManager naturezaManager;
+    @In
+    private CategoriaManager categoriaManager;
+    
+    @In
     private GenericManager genericManager;
 
     @Create
     public void init() {
-        naturezaList = genericManager.findAll(Natureza.class);
-        categoriaList = genericManager.findAll(Categoria.class);
+        naturezaList = naturezaManager.getNaturezasPrimarias();
         fluxoList = genericManager.findAll(Fluxo.class);
     }
 
+    
+    public void loadCategoriaList(Natureza natureza){
+    	categoriaList = categoriaManager.getCategoriasByNatureza(natureza);
+    }
     public List<Natureza> getNaturezaList() {
         return naturezaList;
     }

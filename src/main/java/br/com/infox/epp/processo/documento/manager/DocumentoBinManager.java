@@ -2,28 +2,12 @@ package br.com.infox.epp.processo.documento.manager;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-
-import net.glxn.qrgen.QRCode;
-import net.glxn.qrgen.image.ImageType;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-
-import br.com.infox.core.file.encode.MD5Encoder;
-import br.com.infox.core.manager.Manager;
-import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.persistence.GenericDatabaseErrorCode;
-import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
-import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
-import br.com.infox.epp.processo.documento.dao.DocumentoBinDAO;
-import br.com.infox.epp.processo.documento.entity.Documento;
-import br.com.infox.epp.processo.documento.entity.DocumentoBin;
-import br.com.infox.seam.exception.BusinessException;
-import br.com.infox.seam.path.PathResolver;
 
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
@@ -34,6 +18,22 @@ import com.lowagie.text.pdf.ColumnText;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfStamper;
+
+import br.com.infox.core.file.encode.MD5Encoder;
+import br.com.infox.core.manager.Manager;
+import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.persistence.GenericDatabaseErrorCode;
+import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
+import br.com.infox.epp.processo.documento.dao.DocumentoBinDAO;
+import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.seam.exception.BusinessException;
+import br.com.infox.seam.path.PathResolver;
+import net.glxn.qrgen.QRCode;
+import net.glxn.qrgen.image.ImageType;
 
 @AutoCreate
 @Name(DocumentoBinManager.NAME)
@@ -46,6 +46,8 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 	private PathResolver pathResolver;
 	@In
 	private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
+	@In
+	private AssinaturaDocumentoService assinaturaDocumentoService;
 
 	public DocumentoBin createProcessoDocumentoBin(final Documento documento) throws DAOException {
 		final DocumentoBin bin = documento.getDocumentoBin();
@@ -133,9 +135,8 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
                 o.setMinuta(false);
             }
 			if (!o.getSuficientementeAssinado() && !o.getDocumentoList().isEmpty()) {
-				o.setSuficientementeAssinado(!classificacaoDocumentoPapelManager.classificacaoExigeAssinatura(o.getDocumentoList().get(0).getClassificacaoDocumento()) && !o.isMinuta());
-				if(o.getSuficientementeAssinado()){
-				    o.setDataSuficientementeAssinado(new Date());
+				if (!classificacaoDocumentoPapelManager.classificacaoExigeAssinatura(o.getDocumentoList().get(0).getClassificacaoDocumento()) && !o.isMinuta()) {
+					assinaturaDocumentoService.setDocumentoSuficientementeAssinado(o, Authenticator.getUsuarioPerfilAtual());
 				}
 			}
 			o = super.persist(o);

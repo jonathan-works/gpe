@@ -26,8 +26,7 @@ public class TransitionsXPDL implements Serializable {
         List<TransitionXPDL> transitionList = new ArrayList<TransitionXPDL>();
         int index = 0;
         for (Element ele : list) {
-            TransitionXPDL transition = TransitionXPDL.createInstance(ele, FluxoXPDL.NO_NAME
-                    + index);
+            TransitionXPDL transition = TransitionXPDL.createInstance(ele, FluxoXPDL.NO_NAME + index, activities);
             transition.setActivities(activities);
             transitionList.add(transition);
             index++;

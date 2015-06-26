@@ -24,8 +24,8 @@ import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 
-@Name(ConsultaController.NAME)
 @AutoCreate
+@Name(ConsultaController.NAME)
 public class ConsultaController extends AbstractController {
 
     private static final long serialVersionUID = 1L;
@@ -39,7 +39,6 @@ public class ConsultaController extends AbstractController {
     private SigiloProcessoService sigiloProcessoService;
     @In
     private MetadadoProcessoManager metadadoProcessoManager;
-
     @In
     private PastaAction pastaAction;
     @In

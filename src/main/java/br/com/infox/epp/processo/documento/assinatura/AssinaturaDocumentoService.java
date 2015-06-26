@@ -20,6 +20,7 @@ import br.com.infox.certificado.CertificadoDadosPessoaFisica;
 import br.com.infox.certificado.CertificadoFactory;
 import br.com.infox.certificado.ValidaDocumento;
 import br.com.infox.certificado.exception.CertificadoException;
+import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.PerfilTemplate;
@@ -39,6 +40,7 @@ import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.util.ComponentUtil;
 
 @AutoCreate
 @Scope(ScopeType.EVENT)
@@ -260,13 +262,14 @@ public class AssinaturaDocumentoService implements Serializable {
 		}
 	}
 
-	private void setDocumentoSuficientementeAssinado(final DocumentoBin documentoBin,
-			final UsuarioPerfil usuarioPerfilAtual) {
+	public void setDocumentoSuficientementeAssinado(final DocumentoBin documentoBin,
+			final UsuarioPerfil usuarioPerfilAtual) throws DAOException {
 		documentoBin.setSuficientementeAssinado(Boolean.TRUE);
 		documentoBin.setDataSuficientementeAssinado(new Date());
 		List<RegistroAssinaturaSuficiente> registrosAssinaturaSuficiente = documentoBin.getRegistrosAssinaturaSuficiente();
 		List<Documento> documentoList = documentoManager.getDocumentosFromDocumentoBin(documentoBin);
-        if (!(documentoList == null || documentoList.isEmpty())) {
+		GenericManager genericManager = ComponentUtil.getComponent(GenericManager.NAME);
+        if (!(documentoList == null || documentoList.isEmpty()) && usuarioPerfilAtual != null) {
             Documento documento = documentoList.get(0);
             for (ClassificacaoDocumentoPapel classificacaoDocumentoPapel : documento.getClassificacaoDocumento().getClassificacaoDocumentoPapelList()) {
                 RegistroAssinaturaSuficiente registroAssinaturaSuficiente = new RegistroAssinaturaSuficiente();
@@ -274,8 +277,10 @@ public class AssinaturaDocumentoService implements Serializable {
                 registroAssinaturaSuficiente.setPapel(usuarioPerfilAtual.getPerfilTemplate().getPapel().getNome());
                 registroAssinaturaSuficiente.setTipoAssinatura(classificacaoDocumentoPapel.getTipoAssinatura());
                 registrosAssinaturaSuficiente.add(registroAssinaturaSuficiente);
+                genericManager.persist(registroAssinaturaSuficiente);
             }
         }
+        documentoBinManager.update(documentoBin);
 	}
     
     public void assinarDocumento(final Documento documento,

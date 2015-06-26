@@ -13,9 +13,12 @@ import static br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -33,9 +36,12 @@ import javax.validation.constraints.Size;
 
 import br.com.infox.certificado.CertificadoFactory;
 import br.com.infox.certificado.exception.CertificadoException;
+import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.query.UsuarioLoginQuery;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
+import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery;
 
@@ -91,6 +97,10 @@ public class AssinaturaDocumento implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_documento_bin", nullable = false)
     private DocumentoBin documentoBin;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "tp_assinatura")
+	private TipoAssinaturaEnum tipoAssinatura;
 
     public AssinaturaDocumento(DocumentoBin documentoBin, UsuarioPerfil usuarioPerfil, String certChain, String signature) throws CertificadoException {
         this.documentoBin=documentoBin;
@@ -101,6 +111,15 @@ public class AssinaturaDocumento implements Serializable {
         this.signature = signature;
         this.certChain = certChain;
         this.dataAssinatura = new Date();
+        if(documentoBin.getDocumentoList() != null && !documentoBin.getDocumentoList().isEmpty()){
+        	List<ClassificacaoDocumentoPapel> cdps = documentoBin.getDocumentoList().get(0).getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
+            Papel papel = usuarioPerfil.getPerfilTemplate().getPapel();
+            for (ClassificacaoDocumentoPapel cdp : cdps) {
+            	if (papel.equals(cdp.getPapel())) {
+            		this.tipoAssinatura = cdp.getTipoAssinatura();
+            	}
+            }
+        }
     }
     
     public AssinaturaDocumento() {
@@ -178,6 +197,14 @@ public class AssinaturaDocumento implements Serializable {
         this.nomeUsuarioPerfil = nomePerfil;
     }
 
+    public TipoAssinaturaEnum getTipoAssinatura() {
+		return tipoAssinatura;
+	}
+    
+    public void setTipoAssinatura(TipoAssinaturaEnum tipoAssinatura) {
+		this.tipoAssinatura = tipoAssinatura;
+	}
+    
     @Override
     public String toString() {
     	return MessageFormat.format("{0}: {1}", nomeUsuarioPerfil, nomeUsuario);

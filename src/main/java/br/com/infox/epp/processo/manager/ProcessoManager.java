@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.bpm.Actor;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.util.Strings;
@@ -134,6 +135,12 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         BusinessProcess bp = BusinessProcess.instance();
         bp.setProcessId(processo.getIdJbpm());
         bp.setTaskId(taskInstanceId);
+        if (bp.getProcessId() != null && bp.getTaskId() != null && bp.getProcessId().equals(processo.getIdJbpm())) {
+        	TaskInstance taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
+        	if (taskInstance.getStart() == null) {
+        		taskInstance.start(Actor.instance().getId());
+        	}
+        }
     }
 
     public void iniciarTask(Processo processo, Long idTarefa, UsuarioPerfil usuarioPerfil) throws DAOException {

@@ -181,7 +181,7 @@
         <wi:fileUpload
           id="uploadArquivo"
           label="#{infoxMessages['fileUpload.type.file']}"
-          reRender="buttonsPdfDiv #{f.id}tipoProcessoDocumentoPdf"
+          reRender="buttonsPdfDiv #{f.id}tipoProcessoDocumentoPdf pageBodyDialogMessage"
           rendered="#{not empty documentoUploader.classificacaoDocumento and not empty documentoUploader.classificacaoDocumento.extensaoArquivosList and not empty documentoUploader.documento.descricao}"
           accept="#{documentoUploader.documento.classificacaoDocumento.acceptedTypes}">
         </wi:fileUpload>
@@ -192,7 +192,7 @@
           action="documentoUploader.persist()"
           value="#{infoxMessages['processo.anexarDocumentoBtn']}"
           execute="#{f.id}inputProcessoDocumentoPdf, #{f.id}tipoProcessoDocumentoPdf"
-          reRender="@form"
+          reRender="@form pageBodyDialogMessage"
           styleClass="buttons"
           rendered="#{documentoUploader.valido}">
         </wi:commandButton>

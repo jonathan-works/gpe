@@ -3,7 +3,7 @@ package br.com.infox.epp.processo.documento.anexos;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jboss.seam.annotations.In;
+import org.jboss.seam.ScopeType;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -14,17 +14,18 @@ import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.log.LogProvider;
+import br.com.infox.seam.util.ComponentUtil;
 
 public abstract class DocumentoCreator {
-    private Processo processo;
+    
+	private Processo processo;
     private Documento documento;
     private List<Documento> documentosDaSessao;
     private Pasta pasta;
     
     private Processo processoReal;
     
-    @In
-    private MetadadoProcessoManager metadadoProcessoManager;
+    private MetadadoProcessoManager metadadoProcessoManager = ComponentUtil.getComponent(MetadadoProcessoManager.NAME, ScopeType.EVENT);
 
     public Processo getProcesso() {
         return processo;

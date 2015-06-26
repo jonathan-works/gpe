@@ -142,20 +142,21 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     
     @Override
     public Documento persist(Documento o) throws DAOException {
-        atualizarSuficienciaAssinatura(o);
-    	return super.persist(o);
+    	o = super.persist(o);
+    	atualizarSuficienciaAssinatura(o);
+    	return o;
     }
     
     @Override
     public Documento update(Documento o) throws DAOException {
+        o = super.update(o);
         atualizarSuficienciaAssinatura(o);
-        return super.update(o);
+    	return o;
     }
     
-    private void atualizarSuficienciaAssinatura(Documento o ){
+    private void atualizarSuficienciaAssinatura(Documento o ) throws DAOException{
         if (!o.getDocumentoBin().getSuficientementeAssinado() && assinaturaDocumentoService.isDocumentoTotalmenteAssinado(o)) {
-            o.getDocumentoBin().setSuficientementeAssinado(Boolean.TRUE);
-            o.getDocumentoBin().setDataSuficientementeAssinado(new Date());
+            assinaturaDocumentoService.setDocumentoSuficientementeAssinado(o.getDocumentoBin(), Authenticator.getUsuarioPerfilAtual());
         }
     }
     

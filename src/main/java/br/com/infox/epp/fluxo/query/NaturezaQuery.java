@@ -12,5 +12,9 @@ public interface NaturezaQuery {
     String OBRIGATORIO_PARTES = "in_partes";
     String NATUREZA_ATTRIBUTE = "natureza";
     String LOCKED = "in_lock";
+    String PRIMARIA = "in_primaria";
+    
+    String NATUREZA_FIND_BY_PRIMARIA = "natureza.findByPrimaria";
+    String NATUREZA_FIND_BY_PRIMARIA_QUERY = "select n from Natureza n where n.primaria = true and n.ativo = true";
 
 }

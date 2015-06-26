@@ -127,7 +127,8 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     
     @Override
     public boolean podeAdicionarPartesFisicas() {
-        return getNatureza().getHasPartes()
+        return getNatureza() != null
+                && getNatureza().getHasPartes()
                 && !apenasPessoaJuridica()
                 && securityUtil.checkPage(RECURSO_ADICIONAR)
                 && (getNatureza().getNumeroPartesFisicas() == QUANTIDADE_INFINITA_PARTES || getPartesAtivas(filtrar(getProcesso().getParticipantes(), TipoPessoaEnum.F)).size() < getNatureza().getNumeroPartesFisicas());
@@ -135,7 +136,8 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
 
     @Override
     public boolean podeAdicionarPartesJuridicas() {
-        return getNatureza().getHasPartes()
+        return getNatureza() != null &&
+                getNatureza().getHasPartes()
                 && !apenasPessoaFisica()
                 && securityUtil.checkPage(RECURSO_ADICIONAR)
                 && (getNatureza().getNumeroPartesJuridicas() == QUANTIDADE_INFINITA_PARTES || getPartesAtivas(filtrar(getProcesso().getParticipantes(), TipoPessoaEnum.J)).size() < getNatureza().getNumeroPartesJuridicas());

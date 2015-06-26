@@ -24,8 +24,6 @@ import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import com.google.common.base.Strings;
-
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
@@ -65,6 +63,8 @@ import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
+import com.google.common.base.Strings;
+
 @Name(ComunicacaoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
@@ -82,8 +82,6 @@ public class ComunicacaoAction implements Serializable {
 	private ComunicacaoService comunicacaoService;
 	@In
 	private PrazoComunicacaoService prazoComunicacaoService;
-	@In
-	private DocumentoUploader documentoUploader;
 	@In
 	private MetadadoProcessoManager metadadoProcessoManager;
 	@In
@@ -118,6 +116,8 @@ public class ComunicacaoAction implements Serializable {
 	private ProcessoDAO processoDAO;
 	
 	@Inject
+	private DocumentoUploader documentoUploader;
+	@Inject
 	private SituacaoProcessoDAO situacaoProcessoDAO;
 	
 	private List<ModeloComunicacao> comunicacoes;
@@ -146,9 +146,13 @@ public class ComunicacaoAction implements Serializable {
 	
 	@Create
 	public void init() {
-		clear();
-		processo = JbpmUtil.getProcesso();
-		modeloComunicacaoRascunhoList.setProcesso(processo);
+		setProcesso(JbpmUtil.getProcesso());
+	}
+	
+	public void setProcesso(Processo processo) {
+	    clear();
+	    this.processo = processo;
+	    modeloComunicacaoRascunhoList.setProcesso(processo);
 	}
 	
 	public List<ModeloComunicacao> getComunicacoesDoProcesso() {

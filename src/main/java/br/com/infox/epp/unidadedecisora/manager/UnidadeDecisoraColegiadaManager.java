@@ -36,4 +36,7 @@ public class UnidadeDecisoraColegiadaManager extends Manager<UnidadeDecisoraCole
         return getDao().findAllAtivo();
     }
 
+	public UnidadeDecisoraColegiada findByCodigoLocalizacao(String codigoLocalizacao) {
+		return getDao().findByCodigoLocalizacao(codigoLocalizacao);
+	}
 }
