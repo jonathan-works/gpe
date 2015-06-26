@@ -1,5 +1,7 @@
 package br.com.infox.epp.documento.crud;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.jboss.seam.annotations.In;
@@ -28,7 +30,14 @@ public class ClassificacaoDocumentoPapelCrudAction extends AbstractCrudAction<Cl
     }
 
     public List<Papel> papelItems() {
-        return papelManager.getPapeisNaoAssociadosAClassificacaoDocumento(getInstance().getClassificacaoDocumento());
+    	List<Papel> papeis = papelManager.getPapeisNaoAssociadosAClassificacaoDocumento(getInstance().getClassificacaoDocumento());
+        Collections.sort( papeis, new Comparator<Papel>(){
+        	@Override
+        	public int compare(Papel p1, Papel p2){
+        		return p1.getNome().compareTo(p2.getNome());
+        	}
+        });
+        return papeis;
     }
 
 }
