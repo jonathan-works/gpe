@@ -36,7 +36,10 @@ public class AnexoController extends AbstractController {
     }
 
     public void setProcesso(Processo processo) {
-        this.processo = processo;
+        if (getProcesso() == null) {
+            this.processo = processo;
+            onClickTabAnexar(processo);
+        }
     }
 
     public List<Documento> getdocumentosDaSessao() {
