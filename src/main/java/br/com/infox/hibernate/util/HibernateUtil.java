@@ -66,6 +66,10 @@ public final class HibernateUtil {
     	return dialect;
     }
     
+    public static void enableCache(Query query){
+    	query.setHint("org.hibernate.cacheable", true);
+    }
+    
     public static String getQueryString(Query query) {
     	QueryImpl queryImpl = query.unwrap(org.hibernate.internal.QueryImpl.class);
     	return queryImpl.getQueryString();
