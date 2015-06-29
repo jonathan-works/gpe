@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <h:outputStylesheet>
+        .valido {
+            font-weight: bold;
+            font-style: italic;
+            color: green;
+        }
+    </h:outputStylesheet>
+
+    <rich:calendar id="#{id}"
+        dataModel="#{dataModel}"
+        inputStyle="display:inline-block; " direction="auto"
+        popup="true"
+        showWeeksBar="#{false}"
+        enableManualInput="#{false}"
+        required="#{required}"
+        inputClass="maskDate input date"
+        styleClass="date"
+        datePattern="dd/MM/yyyy"
+        mode="ajax"
+        todayControlMode="hidden"
+        boundaryDatesMode="scroll" />
+
+</ui:composition>
