@@ -467,7 +467,9 @@ public class SituacaoProcessoDAO {
 		criteriaQuery.where(cb.equal(root.get("idProcesso"), idProcesso));
 		appendMandatoryFilters(criteriaQuery, tipoProcesso);
 		appendTipoProcessoFilters(criteriaQuery, tipoProcesso, comunicacoesExpedidas);
-		Long count = getEntityManager().createQuery(criteriaQuery).getSingleResult(); 
+		TypedQuery<Long> query = getEntityManager().createQuery(criteriaQuery);
+		query.setHint("org.hibernate.cacheable", "true");
+        Long count = query.getSingleResult(); 
 		return count > 0;
 	}
 	
