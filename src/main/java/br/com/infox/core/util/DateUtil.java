@@ -60,7 +60,7 @@ public final class DateUtil {
      * @param data
      * @return
      */
-    public static Date getHoraZerada(Date data) {
+    public static Date getDateHoraZerada(Date data) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(data);
 		calendar.set(Calendar.HOUR_OF_DAY, 0);
