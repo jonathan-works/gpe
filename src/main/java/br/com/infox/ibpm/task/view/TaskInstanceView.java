@@ -91,6 +91,9 @@ public class TaskInstanceView implements Serializable {
                 if (isReadable && !isWritable) {
                     String[] tokens = var.getMappedName().split(":");
                     VariableType type = VariableType.valueOf(tokens[0]);
+                    if (VariableType.TASK_PAGE.equals(type)){
+                        continue;
+                    }
                     String name = tokens[1];
                     FormField ff = new FormField();
                     ff.setFormId(form.getFormId());
