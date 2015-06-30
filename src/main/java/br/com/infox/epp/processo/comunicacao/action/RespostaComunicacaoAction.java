@@ -199,6 +199,9 @@ public class RespostaComunicacaoAction implements Serializable {
 	
 	public void gravarAnexoResposta() {
 		documentoUploader.persist();
+		if (documentoUploader.getDocumentosDaSessao().isEmpty()) {
+			return;
+		}
 		Documento resposta = documentoUploader.getDocumentosDaSessao().get(documentoUploader.getDocumentosDaSessao().size() - 1);
 		try {
 			documentoComunicacaoService.vincularDocumentoRespostaComunicacao(resposta, processoComunicacao);
