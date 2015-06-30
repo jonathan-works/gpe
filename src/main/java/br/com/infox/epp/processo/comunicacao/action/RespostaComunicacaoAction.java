@@ -38,6 +38,7 @@ import br.com.infox.epp.processo.comunicacao.service.ProrrogacaoPrazoService;
 import br.com.infox.epp.processo.comunicacao.service.RespostaComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
+import br.com.infox.epp.processo.documento.anexos.DocumentoEditor;
 import br.com.infox.epp.processo.documento.anexos.DocumentoUploader;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -93,6 +94,8 @@ public class RespostaComunicacaoAction implements Serializable {
 	
 	@Inject
 	private DocumentoUploader documentoUploader;
+	@Inject
+	private DocumentoEditor documentoEditor;
 	
 	private DestinatarioModeloComunicacao destinatario;
 	private List<Documento> documentosComunicacao;
@@ -166,7 +169,12 @@ public class RespostaComunicacaoAction implements Serializable {
 		}
 		try {
 			if (!documentoManager.contains(documentoEdicao)) {
-				documentoEdicao = documentoManager.gravarDocumentoNoProcesso(processoRaiz, documentoEdicao); 
+				documentoEditor.setDocumento(documentoEdicao);
+				documentoEditor.setProcesso(processoRaiz);
+				documentoEditor.persist();
+				if (documentoEditor.getDocumentosDaSessao().isEmpty()) {
+					return;
+				}
 				documentoComunicacaoService.vincularDocumentoRespostaComunicacao(documentoEdicao, processoComunicacao);
 			} else {
 				documentoManager.update(documentoEdicao);
