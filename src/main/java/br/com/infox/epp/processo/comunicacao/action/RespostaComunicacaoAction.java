@@ -120,8 +120,6 @@ public class RespostaComunicacaoAction implements Serializable {
 		documentoUploader.newInstance();
 		documentoUploader.clear();
 		documentoUploader.setProcesso(processoRaiz);
-		documentoEditor.newInstance();
-		documentoEditor.clear();
 		documentoEditor.setProcesso(processoRaiz);
 		respostaComunicacaoList.setProcesso(processoComunicacao);
 		documentoComunicacaoList.setProcesso(processoRaiz);
@@ -170,14 +168,11 @@ public class RespostaComunicacaoAction implements Serializable {
 		}
 		try {
 			if (!documentoManager.contains(documentoEditor.getDocumento())) {
-				Documento documentoEdicao = getDocumentoEdicao();
-				documentoEdicao.setAnexo(false);
 				documentoEditor.persist();
 				if (documentoEditor.getDocumentosDaSessao().isEmpty()) {
 					return;
 				}
 				documentoComunicacaoService.vincularDocumentoRespostaComunicacao(documentoEditor.getDocumento(), processoComunicacao);
-				setDocumentoEdicao(documentoEdicao);
 			} else {
 				documentoManager.update(documentoEditor.getDocumento());
 			}
@@ -191,6 +186,7 @@ public class RespostaComunicacaoAction implements Serializable {
 	}
 	
 	public void newDocumentoEdicao() {
+		documentoEditor.clear();
 		documentoEditor.newInstance();
 		documentoEditor.getDocumento().setPerfilTemplate(Authenticator.getUsuarioPerfilAtual().getPerfilTemplate());
 		documentoEditor.getDocumento().setAnexo(false);
