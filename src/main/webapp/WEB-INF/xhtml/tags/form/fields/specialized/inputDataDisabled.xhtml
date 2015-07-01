@@ -5,25 +5,37 @@
     xmlns:ui="http://java.sun.com/jsf/facelets">
 
     <h:outputStylesheet>
-        .valido {
+        .dia-valido {
             font-weight: bold;
             font-style: italic;
             color: green;
+            background-color: #E1FFB3;
+        }
+        .dia-invalido {
+            background-color: #D2D2D2;;
         }
     </h:outputStylesheet>
+    
+    <div style="display: inline-block; vertical-align: top;">
+        <h:outputLabel id="#{id}Label" for="#{id}" value="#{label}" styleClass="name" />
 
-    <rich:calendar id="#{id}"
-        dataModel="#{dataModel}"
-        inputStyle="display:inline-block; " direction="auto"
-        popup="true"
-        showWeeksBar="#{false}"
-        enableManualInput="#{false}"
-        required="#{required}"
-        inputClass="maskDate input date"
-        styleClass="date"
-        datePattern="dd/MM/yyyy"
-        mode="ajax"
-        todayControlMode="hidden"
-        boundaryDatesMode="scroll" />
+        <rich:calendar id="#{id}"
+            dataModel="#{dataModel}"
+            required="#{required}"
+            inputStyle="display:inline-block; " direction="auto"
+            popup="true"
+            value="#{value}"
+            showWeeksBar="#{false}"
+            enableManualInput="#{false}"
+            onchange="#{onchange}"
+            inputClass="maskDate input date"
+            styleClass="date value"
+            datePattern="dd/MM/yyyy"
+            mode="ajax"
+            todayControlMode="hidden"
+            boundaryDatesMode="scroll" >
+            <ui:insert />
+        </rich:calendar>
+    </div>
 
 </ui:composition>
