@@ -53,7 +53,7 @@ import br.com.infox.log.Logging;
 
 @Name(RespostaComunicacaoAction.NAME)
 @AutoCreate
-@Scope(ScopeType.CONVERSATION)
+@Scope(ScopeType.PAGE)
 @Transactional
 @ContextDependency
 public class RespostaComunicacaoAction implements Serializable {
@@ -168,11 +168,12 @@ public class RespostaComunicacaoAction implements Serializable {
 		}
 		try {
 			if (!documentoManager.contains(documentoEditor.getDocumento())) {
+				Documento documentoEdicao = getDocumentoEdicao();
 				documentoEditor.persist();
 				if (documentoEditor.getDocumentosDaSessao().isEmpty()) {
 					return;
 				}
-				documentoComunicacaoService.vincularDocumentoRespostaComunicacao(documentoEditor.getDocumento(), processoComunicacao);
+				documentoComunicacaoService.vincularDocumentoRespostaComunicacao(documentoEdicao, processoComunicacao);
 			} else {
 				documentoManager.update(documentoEditor.getDocumento());
 			}
