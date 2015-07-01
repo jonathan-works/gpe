@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.Query;
@@ -25,9 +27,10 @@ import org.jboss.seam.annotations.Transactional;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
 
-@Scope(ScopeType.EVENT)
 @AutoCreate
 @Transactional
+@Scope(ScopeType.STATELESS)
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public abstract class DAO<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
