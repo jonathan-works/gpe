@@ -17,6 +17,8 @@ import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.faces.FacesMessages;
 
+import com.google.common.base.Strings;
+
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
@@ -42,15 +44,12 @@ import br.com.infox.epp.processo.documento.anexos.DocumentoEditor;
 import br.com.infox.epp.processo.documento.anexos.DocumentoUploader;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.entity.Documento;
-import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.service.DocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-
-import com.google.common.base.Strings;
 
 @Name(RespostaComunicacaoAction.NAME)
 @AutoCreate
@@ -111,7 +110,6 @@ public class RespostaComunicacaoAction implements Serializable {
 	
 	private ModeloDocumento modeloDocumento;
 	
-	private Documento documentoEdicao;
 	private boolean possivelMostrarBotaoEnvio = false;
 	
 	@Create
@@ -122,6 +120,9 @@ public class RespostaComunicacaoAction implements Serializable {
 		documentoUploader.newInstance();
 		documentoUploader.clear();
 		documentoUploader.setProcesso(processoRaiz);
+		documentoEditor.newInstance();
+		documentoEditor.clear();
+		documentoEditor.setProcesso(processoRaiz);
 		respostaComunicacaoList.setProcesso(processoComunicacao);
 		documentoComunicacaoList.setProcesso(processoRaiz);
 		documentoComunicacaoList.setModeloComunicacao(destinatario.getModeloComunicacao());
@@ -152,9 +153,9 @@ public class RespostaComunicacaoAction implements Serializable {
 	
 	public void assignModeloDocumento() {
 		if (modeloDocumento == null) {
-			documentoEdicao.getDocumentoBin().setModeloDocumento("");
+			documentoEditor.getDocumento().getDocumentoBin().setModeloDocumento("");
 		} else {
-			documentoEdicao.getDocumentoBin().setModeloDocumento(modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento));
+			documentoEditor.getDocumento().getDocumentoBin().setModeloDocumento(modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento));
 		}
 	}
 	
@@ -163,21 +164,22 @@ public class RespostaComunicacaoAction implements Serializable {
 	}
 	
 	public void gravarResposta() {
-		if (Strings.isNullOrEmpty(documentoEdicao.getDocumentoBin().getModeloDocumento())) {
+		if (Strings.isNullOrEmpty(documentoEditor.getDocumento().getDocumentoBin().getModeloDocumento())) {
 			FacesMessages.instance().add("Insira texto no editor");
 			return;
 		}
 		try {
-			if (!documentoManager.contains(documentoEdicao)) {
-				documentoEditor.setDocumento(documentoEdicao);
-				documentoEditor.setProcesso(processoRaiz);
+			if (!documentoManager.contains(documentoEditor.getDocumento())) {
+				Documento documentoEdicao = getDocumentoEdicao();
+				documentoEdicao.setAnexo(false);
 				documentoEditor.persist();
 				if (documentoEditor.getDocumentosDaSessao().isEmpty()) {
 					return;
 				}
-				documentoComunicacaoService.vincularDocumentoRespostaComunicacao(documentoEdicao, processoComunicacao);
+				documentoComunicacaoService.vincularDocumentoRespostaComunicacao(documentoEditor.getDocumento(), processoComunicacao);
+				setDocumentoEdicao(documentoEdicao);
 			} else {
-				documentoManager.update(documentoEdicao);
+				documentoManager.update(documentoEditor.getDocumento());
 			}
 			newDocumentoEdicao();
 			FacesMessages.instance().add("Registro gravado com sucesso");
@@ -189,10 +191,9 @@ public class RespostaComunicacaoAction implements Serializable {
 	}
 	
 	public void newDocumentoEdicao() {
-		documentoEdicao = new Documento();
-		DocumentoBin bin = new DocumentoBin();
-		documentoEdicao.setDocumentoBin(bin);
-		documentoEdicao.setPerfilTemplate(Authenticator.getUsuarioPerfilAtual().getPerfilTemplate());
+		documentoEditor.newInstance();
+		documentoEditor.getDocumento().setPerfilTemplate(Authenticator.getUsuarioPerfilAtual().getPerfilTemplate());
+		documentoEditor.getDocumento().setAnexo(false);
 		modeloDocumento = null;
 	}
 	
@@ -233,7 +234,7 @@ public class RespostaComunicacaoAction implements Serializable {
 	}
 	
 	public void removerDocumento(Documento documento) {
-		boolean isDocumentoEdicao = documentoEdicao != null && documentoEdicao.equals(documento);
+		boolean isDocumentoEdicao = documentoEditor.getDocumento() != null && documentoEditor.getDocumento().equals(documento);
 		try {
 			documentoComunicacaoService.desvincularDocumentoRespostaComunicacao(documento);
 			documentoManager.remove(documento);
@@ -295,11 +296,11 @@ public class RespostaComunicacaoAction implements Serializable {
 	}
 	
 	public Documento getDocumentoEdicao() {
-		return documentoEdicao;
+		return documentoEditor.getDocumento();
 	}
 	
 	public void setDocumentoEdicao(Documento documentoEdicao) {
-		this.documentoEdicao = documentoEdicao;
+		documentoEditor.setDocumento(documentoEdicao);
 	}
 	
 	public MeioExpedicao getMeioExpedicao() {
