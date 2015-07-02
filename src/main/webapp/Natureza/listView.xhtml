@@ -122,7 +122,7 @@
                         label="#{infoxMessages['naturezaCategoriaFluxo.categoria']}"
                         value="#{naturezaCategoriaFluxoCrudAction.instance.categoria}"
                         required="true"
-                        items="#{naturezaCategoriaFluxoFacade.getCategoriaList()}"
+                        items="#{naturezaCategoriaFluxoCrudAction.categorias}"
                         inactiveCond="#{not item.ativo}"
                         showLabelSelecione="true" />
                     <wi:selectOneMenuEntity id="fluxo"
