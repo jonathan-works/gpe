@@ -1,0 +1,30 @@
+span {
+  &.ui-panel-title{
+    font-family: @default-font-family;
+  }
+}
+
+div {
+
+    &.ui-panel {
+        border: 1px solid #dddddd;
+        border-radius: 0;
+        border-radius: 0;
+
+        &.field {
+            border-width : 0;
+            padding: 0 15px 15px 0;
+        }
+
+        &-titlebar {
+            &:extend(div.rf-cp-hdr);
+            border-radius: 0;
+            border-color: @panel-border-color;
+            border-spacing: 0;
+        }
+        & &-titlebar{
+          padding:2px;
+        }
+    }
+
+}

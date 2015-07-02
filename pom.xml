@@ -481,7 +481,7 @@
                             <force>${producao}</force>
                             <outputFileFormat>{fileName}.css</outputFileFormat>
                             <excludes>
-                                <exclude>*.import.less</exclude>
+                                <exclude>**/*.import.less</exclude>
                             </excludes>
                         </configuration>
                         <goals>
