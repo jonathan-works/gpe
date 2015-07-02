@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 
 import org.hibernate.Session;
 import org.jboss.seam.ScopeType;
@@ -26,9 +28,12 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
+import br.com.infox.epp.processo.consulta.bean.MovimentacoesBean;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.epp.tarefa.entity.Tarefa;
+import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.ibpm.task.bean.TaskBean;
 import br.com.infox.ibpm.task.manager.UsuarioTaskInstanceManager;
 import br.com.infox.ibpm.variable.VariableHandler;
@@ -48,6 +53,8 @@ public class ProcessoHandler implements Serializable {
     private DocumentoManager documentoManager;
     @In
     private UsuarioTaskInstanceManager usuarioTaskInstanceManager;
+    @In
+    private ProcessoTarefaManager processoTarefaManager;
     
     private Comparator<TaskBean> comparator = new Comparator<TaskBean>() {
 		@Override
@@ -189,6 +196,30 @@ public class ProcessoHandler implements Serializable {
 
     public List<PessoaJuridica> getPessoaJuridicaList() {
         return processoManager.getPessoaJuridicaList();
+    }
+
+    public Collection<MovimentacoesBean> getMovimentacoes(){
+        List<TaskInstance> list = getTaskInstanceList();
+        Collection<MovimentacoesBean> beans = new TreeSet<>(new Comparator<MovimentacoesBean>() {
+            @Override
+            public int compare(MovimentacoesBean o1, MovimentacoesBean o2) {
+                Date dataInicio = o1.getDataInicio();
+                Date dataInicio2 = o2.getDataInicio();
+                int result = dataInicio.compareTo(dataInicio2);
+                if (result == 0){
+                    Tarefa tarefa = o1.getTarefa();
+                    Tarefa tarefa2 = o2.getTarefa();
+                    String nomeTarefa = tarefa.getTarefa();
+                    String nomeTarefa2 = tarefa2.getTarefa();
+                    result = nomeTarefa.compareToIgnoreCase(nomeTarefa2);
+                }
+                return result;
+            }
+        });
+        for (TaskInstance taskInstance : list) {
+                beans.add(new MovimentacoesBean(processoTarefaManager.getByTaskInstance(taskInstance.getId()), usuarioTaskInstanceManager.find(taskInstance.getId()), taskInstance));
+        }
+        return beans;
     }
 
 }
