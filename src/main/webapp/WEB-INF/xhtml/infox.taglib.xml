@@ -403,4 +403,33 @@ version="2.0">
         <tag-name>numeravelMascara</tag-name>
         <source>components/form/numeravelMascara.xhtml</source>
     </tag>
+    <tag>
+         <description><![CDATA[Tag Utilitária para importar enums em um xhtml.]]>
+        </description>
+        <tag-name>importEnum</tag-name>
+        <handler-class>br.com.infox.jsf.handler.ImportEnumTagHandler</handler-class>
+        <attribute>
+            <description><![CDATA[Caminho completo do enum. br.com.infox.MeuEnum]]>
+            </description>
+            <name>type</name>
+            <required>true</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <description>
+                <![CDATA[Nome da variável EL a ser utilizada para obter os valores do Enum. Default: nome da classe sem o nome da packge. ]]>
+            </description>
+            <name>var</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+            <description>
+                <![CDATA[Sufixo para referenciar todos os valores do enum. Default: ALL_VALUES.]]>
+            </description>
+            <name>allSuffix</name>
+            <required>false</required>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
 </facelet-taglib>
