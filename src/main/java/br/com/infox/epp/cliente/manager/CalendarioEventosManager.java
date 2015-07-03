@@ -20,6 +20,7 @@ import br.com.infox.util.time.DateRange;
 @AutoCreate
 public class CalendarioEventosManager extends Manager<CalendarioEventosDAO, CalendarioEventos> {
 
+
     private static final long serialVersionUID = 1L;
     public static final String NAME = "calendarioEventosManager";
     
