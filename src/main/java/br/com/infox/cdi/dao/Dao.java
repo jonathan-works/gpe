@@ -38,6 +38,19 @@ public abstract class Dao<T, I> {
 		List<T> result = typedQuery.setMaxResults(1).getResultList();
 		return result.isEmpty() ? null : result.get(0);
 	}
+	
+	public EntityManager getEntityManager() {
+		return entityManager;
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.MANDATORY)
+	public void flush() throws DAOException {
+		try {
+			entityManager.flush();
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
 
 	@TransactionAttribute(TransactionAttributeType.MANDATORY)
 	public T persist(T object) throws DAOException {
