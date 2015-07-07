@@ -273,7 +273,6 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	        }
 	        if(tab.equals("tabAnexar")){
 	        	pastaAction.setProcesso(this.getInstance().getProcessoRoot());
-	        	anexoController.onClickTabAnexar(this.getInstance());
 	        }
 	        if (tab.equals("tabPastaRestricao")) {
 	        	pastaRestricaoAction.setProcesso(this.getInstance().getProcessoRoot());

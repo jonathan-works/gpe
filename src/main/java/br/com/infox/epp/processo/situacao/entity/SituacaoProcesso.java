@@ -3,11 +3,13 @@ package br.com.infox.epp.processo.situacao.entity;
 import java.io.Serializable;
 import java.text.MessageFormat;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.QueryHint;
 import javax.persistence.Table;
 
 import br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery;
@@ -16,8 +18,10 @@ import br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery;
 @Table(name = SituacaoProcesso.TABLE_NAME)
 @NamedQueries(value = {
 		@NamedQuery(name = SituacaoProcessoQuery.GET_ID_TASK_INSTANCE_BY_ID_PROCESSO, 
-				query = SituacaoProcessoQuery.GET_ID_TASK_INSTANCE_BY_ID_PROCESSO_QUERY)
+				query = SituacaoProcessoQuery.GET_ID_TASK_INSTANCE_BY_ID_PROCESSO_QUERY, 
+				hints = {@QueryHint(name="org.hibernate.cacheable", value="true")})
 })
+@Cacheable
 public class SituacaoProcesso implements Serializable {
 
     public static final String TABLE_NAME = "vs_situacao_processo";

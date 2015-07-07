@@ -96,6 +96,9 @@ public class TaskInstanceForm implements Serializable {
                 if (var.isReadable() && var.isWritable() && !var.getAccess().hasAccess("hidden")) {
                     String[] tokens = var.getMappedName().split(":");
                     VariableType type = VariableType.valueOf(tokens[0]);
+                    if (VariableType.TASK_PAGE.equals(type)){
+                        continue;
+                    }
                     String name = tokens[1];
                     Object variable = JbpmUtil.getProcessVariable(name + "Modelo");
                     if (variable != null) {

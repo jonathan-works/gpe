@@ -45,7 +45,7 @@ public class TaskPageAction implements Serializable {
             String[] tokens = va.getMappedName().split(":");
             VariableType type = VariableType.valueOf(tokens[0]);
             if (type == VariableType.TASK_PAGE) {
-                hasTaskPage = true;
+                hasTaskPage = va.isWritable();
                 String pageName = tokens[1] + TASK_PAGE_SUFFIX;
 
                 // Caso a pagina não seja encontrada no TASK_PAGE_COMPONENT_PATH
