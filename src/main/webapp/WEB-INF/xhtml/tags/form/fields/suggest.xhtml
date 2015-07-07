@@ -18,6 +18,9 @@
     name="minChars"
     value="#{empty props.minChars ? (empty minChars ? '1' : minChars) : props.minChars}"
   />
+  
+  <ui:param name="rendered" value="#{empty rendered ? true : rendered}" />
+  
   <s:decorate
     id="#{id}Decoration"
     template="#{template}"
