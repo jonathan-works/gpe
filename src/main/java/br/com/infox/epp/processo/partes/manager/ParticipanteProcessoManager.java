@@ -24,6 +24,9 @@ public class ParticipanteProcessoManager extends Manager<ParticipanteProcessoDAO
     	return getDao().getParticipanteProcessoByPessoaProcesso(pessoa, processo);
     }
     
+    public List<ParticipanteProcesso> getParticipantesProcessoByPartialName(String typedName,int limit){
+    	return getDao().getParticipantesProcessosByPartialName(typedName,limit);
+    }
     public boolean existeParticipanteByPessoaProcessoPaiTipo(Pessoa pessoa, 
     		Processo processo, ParticipanteProcesso pai, TipoParte tipo) {
     	return getDao().existeParticipanteByPessoaProcessoPaiTipo(pessoa, processo, pai, tipo);

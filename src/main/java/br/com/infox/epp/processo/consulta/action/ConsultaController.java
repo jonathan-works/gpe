@@ -50,11 +50,21 @@ public class ConsultaController extends AbstractController {
     @In
     private PastaList pastaList;
     
+    
     private Processo processo;
     private boolean showAllDocuments = false;
     private List<MetadadoProcesso> detalhesMetadados;
+    private boolean showBackButton = true;
 
-    public boolean isShowAllDocuments() {
+	public boolean isShowBackButton() {
+		return showBackButton;
+	}
+
+	public void setShowBackButton(boolean showBackButton) {
+		this.showBackButton = showBackButton;
+	}
+
+	public boolean isShowAllDocuments() {
         return showAllDocuments;
     }
 
@@ -146,4 +156,6 @@ public class ConsultaController extends AbstractController {
             pastaList.setProcesso(getProcesso().getProcessoRoot());
         }
     }
+    
+    
 }

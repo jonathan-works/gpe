@@ -227,6 +227,13 @@ public abstract class DAO<T> implements Serializable {
             final Map<String, Object> parameters) {
         return createQuery(query, parameters).getResultList();
     }
+    
+    @SuppressWarnings(UNCHECKED)
+    public <X> List<X> getResultList(final String query,
+    		final Map<String, Object> parameters, int first, int maxResult) {
+    	return createQuery(query, parameters).setFirstResult(first).setMaxResults(maxResult).getResultList();
+    }
+    
 
     @SuppressWarnings(UNCHECKED)
     public <X> X getSingleResult(final String query,

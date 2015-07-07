@@ -1,17 +1,6 @@
 package br.com.infox.epp.processo.partes.dao;
 
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_PAI_TIPO;
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_TIPO;
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_FILHO_BY_PROCESSO;
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARAM_PARTICIPANTE_PAI;
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARAM_PESSOA;
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARAM_PESSOA_PARTICIPANTE_FILHO;
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARAM_PROCESSO;
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARAM_TIPO_PARTE;
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_BY_PROCESSO_PARTICIPANTE_FILHO;
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_PROCESSO;
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_PROCESSO_RAIZ;
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -85,6 +74,13 @@ public class ParticipanteProcessoDAO extends DAO<ParticipanteProcesso> {
         params.put(PARAM_PROCESSO, processo);
         params.put(PARAM_PESSOA_PARTICIPANTE_FILHO, pessoaParticipanteFilho);
         return getNamedResultList(PARTICIPANTES_BY_PROCESSO_PARTICIPANTE_FILHO, params);
+    }
+    
+    
+    public List<ParticipanteProcesso> getParticipantesProcessosByPartialName(String typedName, int maxResult) {
+    	Map<String, Object> params = new HashMap<>();
+    	params.put(PARAM_TYPED_NAME, typedName);
+    	return getResultList(PARTICIPANTES_PROCESSOS_BY_PARTIAL_NAME, params,0,maxResult);
     }
 
     public boolean existeParticipanteFilhoByParticipanteProcesso(Processo processo,
