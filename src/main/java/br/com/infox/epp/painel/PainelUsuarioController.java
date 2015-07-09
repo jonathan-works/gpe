@@ -273,4 +273,8 @@ public class PainelUsuarioController implements Serializable {
 		return tipoProcessoDisponiveis;
 	}
 
+	public String getLocaleTitleKey() {
+	    return "painel.fluxos";
+	}
+	
 }
