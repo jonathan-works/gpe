@@ -181,7 +181,7 @@ public class PastaRestricaoAction implements Serializable {
 	public void persistPasta() {
 		try {
 			if (prePersist()) {
-				statusMessage.add(StatusMessage.Severity.ERROR, "Pasta adicionada com sucesso.");
+				statusMessage.add(StatusMessage.Severity.INFO, "Pasta adicionada com sucesso.");
 			}
 		} catch (DAOException e) {
 		    LOG.error(e);
