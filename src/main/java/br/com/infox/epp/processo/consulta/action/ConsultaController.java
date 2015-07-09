@@ -53,6 +53,7 @@ public class ConsultaController extends AbstractController {
     private Processo processo;
     private boolean showAllDocuments = false;
     private List<MetadadoProcesso> detalhesMetadados;
+    private Boolean showBackButton = true;
 
     public boolean isShowAllDocuments() {
         return showAllDocuments;
@@ -130,7 +131,15 @@ public class ConsultaController extends AbstractController {
     	return detalhesMetadados;
     }
     
-    @Override
+    public Boolean getShowBackButton() {
+		return showBackButton;
+	}
+
+	public void setShowBackButton(Boolean showBackButton) {
+		this.showBackButton = showBackButton;
+	}
+
+	@Override
     public void setTab(String tab) {
         super.setTab(tab);
         if(tab.equals("tabAnexos") || tab.equals("tabAnexar")){
