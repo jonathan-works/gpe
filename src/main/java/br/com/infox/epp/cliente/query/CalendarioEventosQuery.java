@@ -6,6 +6,8 @@ public interface CalendarioEventosQuery {
     String PARAM_ANO = "ano";
     String PARAM_START_DATE = "start_date";
     String PARAM_END_DATE = "end_date";
+    String PARAM_START_YEAR = "start_year";
+    String PARAM_END_YEAR = "end_year";
     
     
     String GET_BY_DATA = "getCalendarioEventoByData";
@@ -21,5 +23,9 @@ public interface CalendarioEventosQuery {
     		+ ")";
     String GET_BY_DATA_RANGE = "getCalendarioEventoByDataRange";
     String GET_BY_DATA_RANGE_QUERY = "select c from CalendarioEventos c "
-    		+ "where to_date( concat( cast(c.dia as string) ,'/',cast(c.mes as string ) ,'/',cast(c.ano as string ) )  ) between :"+PARAM_START_DATE + " and :"+PARAM_END_DATE ;
+    		+ "where to_date( concat( cast(c.dia as string) ,'/',cast(c.mes as string ) ,'/',cast(c.ano as string ) )  ) between :"+PARAM_START_DATE + " and :"+PARAM_END_DATE 
+    		+ " or "
+                + "to_date( concat( cast(c.dia as string) ,'/',cast(c.mes as string ) ,'/', cast(:" + PARAM_START_YEAR + " as string) )  ) between :"+PARAM_START_DATE + " and :"+PARAM_END_DATE
+                + " or "
+                + "to_date( concat( cast(c.dia as string) ,'/',cast(c.mes as string ) ,'/', cast(:" + PARAM_END_YEAR + " as string) )  ) between :"+PARAM_START_DATE + " and :"+PARAM_END_DATE;
 }
