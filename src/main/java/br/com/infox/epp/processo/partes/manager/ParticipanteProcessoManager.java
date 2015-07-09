@@ -50,4 +50,8 @@ public class ParticipanteProcessoManager extends Manager<ParticipanteProcessoDAO
     public boolean existeParticipanteFilhoByParticipanteProcesso(Processo processo, ParticipanteProcesso participantePai, PessoaFisica pessoaParticipanteFilho) {
         return getDao().existeParticipanteFilhoByParticipanteProcesso(processo, participantePai, pessoaParticipanteFilho);
     }
+    
+    public List<ParticipanteProcesso> getParticipantesByTipo(Processo processo, TipoParte tipoParte) {
+    	return getDao().getParticipantesByTipo(processo, tipoParte);
+    }
 }

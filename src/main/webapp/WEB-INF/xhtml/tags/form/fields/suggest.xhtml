@@ -21,6 +21,7 @@
   <s:decorate
     id="#{id}Decoration"
     template="#{template}"
+    rendered="#{rendered}"
     styleClass="decoration-div suggest-div #{wi:get(decorationClass,'')}"
   >
     <ui:define name="label">#{label}</ui:define>
@@ -34,6 +35,7 @@
       ajax="#{ajax}"
       render="#{render}"
       style="#{style}"
+      rendered="#{rendered}"
       styleClass="#{styleClass}"
       maxlength="#{maxlength}"
     />
