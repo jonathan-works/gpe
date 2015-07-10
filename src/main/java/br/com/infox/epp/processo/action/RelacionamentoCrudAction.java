@@ -1,5 +1,7 @@
 package br.com.infox.epp.processo.action;
 
+import static java.text.MessageFormat.format;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
@@ -12,17 +14,20 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.action.AbstractAction;
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.core.exception.EppSystemException;
+import br.com.infox.core.exception.StandardErrorCode;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.processo.entity.Relacionamento;
 import br.com.infox.epp.processo.entity.RelacionamentoProcesso;
 import br.com.infox.epp.processo.entity.TipoRelacionamentoProcesso;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.manager.RelacionamentoManager;
 import br.com.infox.epp.processo.manager.RelacionamentoProcessoManager;
 import br.com.infox.epp.processo.manager.TipoRelacionamentoProcessoManager;
 import br.com.infox.hibernate.util.HibernateUtil;
-import br.com.infox.seam.exception.BusinessException;
 
 @Name(RelacionamentoCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -38,6 +43,10 @@ public class RelacionamentoCrudAction extends
     private RelacionamentoProcessoManager relacionamentoProcessoManager;
     @In
     private TipoRelacionamentoProcessoManager tipoRelacionamentoProcessoManager;
+    @In
+    private ProcessoManager processoManager;
+    @In
+    private InfoxMessages infoxMessages;
 
     private String processo;
     private String processoRelacionado;
@@ -59,13 +68,22 @@ public class RelacionamentoCrudAction extends
 
     @Override
     protected boolean isInstanceValid() {
+        boolean result = true;
     	if (getInstance().getMotivo().trim().length() > 0 && !isManaged()){
     		if (relacionamentoProcessoManager.existeRelacionamento(processo, processoRelacionado)){
     			getMessagesHandler().add(PROCESSO_RELAC_MSG);
-    			return Boolean.FALSE;
+    			return result = false;
     		}
     	}
-    	return super.isInstanceValid();
+        if (processo != null && getManager().getRelacionamentoByProcesso(processoManager.getProcessoByNumero(processo))!=null){
+            getMessagesHandler().add(format(infoxMessages.get("relacionamentoProcesso.exists"), processo));
+            result = false;
+        }
+        if (processoRelacionado != null && getManager().getRelacionamentoByProcesso(processoManager.getProcessoByNumero(processoRelacionado))!=null){
+            getMessagesHandler().add(format(infoxMessages.get("relacionamentoProcesso.exists"), processoRelacionado));
+            result = false;
+        }
+    	return result;
     }
 
     @Override
@@ -93,7 +111,7 @@ public class RelacionamentoCrudAction extends
                                 processoRelacionado));
             } catch (IllegalAccessException | IllegalArgumentException
                     | InvocationTargetException | DAOException e) {
-                throw new BusinessException("", e);
+                throw EppSystemException.create(StandardErrorCode.UNKNOWN, e);
             }
             newInstance();
         }
