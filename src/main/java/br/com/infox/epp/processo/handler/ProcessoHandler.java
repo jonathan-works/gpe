@@ -205,7 +205,7 @@ public class ProcessoHandler implements Serializable {
             public int compare(MovimentacoesBean o1, MovimentacoesBean o2) {
                 Date dataInicio = o1.getDataInicio();
                 Date dataInicio2 = o2.getDataInicio();
-                int result = dataInicio.compareTo(dataInicio2);
+                int result = dataInicio2.compareTo(dataInicio);
                 if (result == 0){
                     Tarefa tarefa = o1.getTarefa();
                     Tarefa tarefa2 = o2.getTarefa();
