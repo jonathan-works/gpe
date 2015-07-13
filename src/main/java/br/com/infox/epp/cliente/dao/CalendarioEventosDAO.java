@@ -39,6 +39,11 @@ public class CalendarioEventosDAO extends DAO<CalendarioEventos> {
     	Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_START_DATE, date.getStart());
         parameters.put(PARAM_END_DATE, date.getEnd());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date.getStart());
+        parameters.put(PARAM_START_YEAR, calendar.get(Calendar.YEAR));
+        calendar.setTime(date.getEnd());
+        parameters.put(PARAM_END_YEAR, calendar.get(Calendar.YEAR));
         return getNamedResultList(GET_BY_DATA_RANGE, parameters);
     }
     
