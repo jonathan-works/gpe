@@ -436,4 +436,8 @@ version="2.0">
             <type>java.lang.String</type>
         </attribute>
     </tag>
+    <tag>
+        <tag-name>inputMoney</tag-name>
+        <source>tags/form/fields/inputMoney.xhtml</source>
+    </tag>
 </facelet-taglib>
