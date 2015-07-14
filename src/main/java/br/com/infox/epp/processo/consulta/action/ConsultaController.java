@@ -140,7 +140,15 @@ public class ConsultaController extends AbstractController {
     	return detalhesMetadados;
     }
     
-    @Override
+    public Boolean getShowBackButton() {
+		return showBackButton;
+	}
+
+	public void setShowBackButton(Boolean showBackButton) {
+		this.showBackButton = showBackButton;
+	}
+
+	@Override
     public void setTab(String tab) {
         super.setTab(tab);
         if(tab.equals("tabAnexos") || tab.equals("tabAnexar")){
