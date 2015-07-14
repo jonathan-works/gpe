@@ -91,4 +91,18 @@ public abstract class Dao<T, I> {
 	public void detach(T object) {
 		entityManager.detach(object);
 	}
+	
+	@TransactionAttribute(TransactionAttributeType.MANDATORY)
+	public T refresh(T object) throws DAOException {
+		try {
+			if (!entityManager.contains(object)) {
+				object = entityManager.merge(object);
+			}
+			entityManager.refresh(object);
+			entityManager.flush();
+			return object;
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
 }

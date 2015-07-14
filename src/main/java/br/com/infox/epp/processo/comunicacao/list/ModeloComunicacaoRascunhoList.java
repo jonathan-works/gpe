@@ -46,7 +46,7 @@ public class ModeloComunicacaoRascunhoList extends EntityList<ModeloComunicacao>
 
 	@Override
 	protected String getDefaultEjbql() {
-		String banco = EppProperties.getInstance().getProperty(EppProperties.PROPERTY_TIPO_BANCO_DADOS);
+		String banco = EppProperties.getProperty(EppProperties.PROPERTY_TIPO_BANCO_DADOS);
 		String sql = DEFAULT_EJBQL;
 		if ("postgresql".equalsIgnoreCase(banco)) {
 			sql = MessageFormat.format(DEFAULT_EJBQL, "false");

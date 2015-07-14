@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.LockModeType;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -18,6 +22,7 @@ import br.com.infox.epp.pessoa.entity.Pessoa;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
+import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso_;
 import br.com.infox.epp.processo.partes.entity.TipoParte;
 
 @AutoCreate
@@ -91,4 +96,18 @@ public class ParticipanteProcessoDAO extends DAO<ParticipanteProcesso> {
         params.put(PARAM_PESSOA_PARTICIPANTE_FILHO, pessoaParticipanteFilho);
         return (Long) getNamedSingleResult(EXISTE_PARTICIPANTE_FILHO_BY_PROCESSO, params) > 0;
     }
+
+	public List<ParticipanteProcesso> getParticipantesByTipo(Processo processo, TipoParte tipoParte) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<ParticipanteProcesso> query = cb.createQuery(ParticipanteProcesso.class);
+		Root<ParticipanteProcesso> participante = query.from(ParticipanteProcesso.class);
+		Predicate predicate = cb.equal(participante.get(ParticipanteProcesso_.processo), processo);
+		predicate = cb.and(predicate, cb.equal(participante.get(ParticipanteProcesso_.tipoParte), tipoParte));
+		predicate = cb.and(predicate, cb.isTrue(participante.get(ParticipanteProcesso_.ativo)));
+		query.where(predicate);
+		query.orderBy(cb.asc(participante.get(ParticipanteProcesso_.nome)));
+		query.select(participante);
+		
+		return getEntityManager().createQuery(query).getResultList();
+	}
 }
