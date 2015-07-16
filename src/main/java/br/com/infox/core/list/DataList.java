@@ -32,6 +32,7 @@ public abstract class DataList<E> extends JpaQuery<E> {
 	@Override
 	public void newInstance() {
 		if (restrictionFieldList.size() != 0) clearSearchFields();
+		this.orderedColumn = null;
 		super.newInstance();
 	}
 	
