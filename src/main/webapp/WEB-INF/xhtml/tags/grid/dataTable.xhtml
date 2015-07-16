@@ -22,7 +22,7 @@
       id="#{id}Panel"
       bodyClass="dtable-p-b"
       style="#{panelStyle}"
-      styleClass="dtable-p #{panelStyleClass} #{empty showSearchForm or showSearchForm ? '' : 'full-sized'}">
+      styleClass="dtable-p #{panelStyleClass} #{empty showSearchForm or showSearchForm ? '' : 'full-sized'} #{id}classPanel">
       <rich:dataTable value="#{values}" id="#{id}" rowKeyVar="key" rowClasses="#{rowClasses} zebra-row"
         styleClass="dtable rf-dt-crud #{styleClass}" onrowmouseup="#{onrowmouseup}" var="row">
         <rich:column styleClass="dt-toolbar-col" rendered="#{empty showToolbarColumn ? true : showToolbarColumn}"

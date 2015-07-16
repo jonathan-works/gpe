@@ -3,13 +3,24 @@
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns="http://www.w3.org/1999/xhtml"
     xmlns:a="http://richfaces.org/a4j"
-    xmlns:rich="http://richfaces.org/rich">
-
-    <rich:inputNumberSlider enableManualInput="false" showArrows="true"
-        value="#{bean.page}" step="1" minValue="1" width="250px"
-        maxValue="#{bean.pageCount}" showTooltip="true">
-        <a:ajax event="change" status="status" queueId="default" onbegin="infox.showLoading()" oncomplete="infox.hideLoading();"
-            limitRender="true" render="#{id}Panel" />
-    </rich:inputNumberSlider>
-
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:h="http://java.sun.com/jsf/html">
+    
+    <div style="display: inline-block; margin-top: 1em; margin-left: 0.8em;">
+    	<div style="display: inline-block;">
+    		<div style="display: block;">
+    			<span style="display: inline-block; text-align: left;">1</span>
+    			<span style="display: inline-block; float: right;">#{bean.pageCount}</span>
+    		</div>
+		    <p:slider for="#{id}inputSlider" maxValue="#{bean.pageCount}" minValue="1" style="width: 16em; display: inline-block;" step="1" 
+		    	widgetVar="inputSliderPaginator" >
+		    	<p:ajax event="slideEnd" update="@(.#{id}classPanel)" process="@form" onstart="infox.showLoading();" onsuccess="infox.hideLoading();" />
+		    </p:slider>
+	    </div>	
+	    <h:inputText id="#{id}inputSlider" value="#{bean.page}" converter="javax.faces.Integer" style="margin-left: 1em; width: 33px;">
+	    	<p:ajax event="change" update="@(.#{id}classPanel)" process="@form" onstart="infox.showLoading();" onsuccess="infox.hideLoading();" />
+	    </h:inputText>
+	</div>
+	
 </ui:composition>
