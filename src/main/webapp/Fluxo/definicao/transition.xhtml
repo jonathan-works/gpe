@@ -27,7 +27,7 @@
             value="#{values}"
             id="transition#{type}Table"
             styleClass="tabelaVariaveis"
-            var="transition">
+            var="transicaoHandler">
             <rich:column
                 styleClass="dr-table-subheader rich-table-subheader"
                 rendered="#{type eq 'to'}">
@@ -71,8 +71,8 @@
                     <h:selectOneMenu
                         id="from"
                         valueChangeListener="#{nodeFitter.transitionChangeListener}"
-                        rendered="#{empty transition.from}"
-                        value="#{transition.from}">
+                        rendered="#{empty transicaoHandler.from}"
+                        value="#{transicaoHandler.from}">
                         <f:selectItems
                             value="#{nodeFitter.getNodesTransitionItems(type)}"
                             var="v" />
@@ -84,8 +84,8 @@
                             limitRender="true" />
                     </h:selectOneMenu>
                     <h:outputText
-                        rendered="#{!empty transition.from}"
-                        value="#{transition.fromName}" />
+                        rendered="#{!empty transicaoHandler.from}"
+                        value="#{transicaoHandler.fromName}" />
                 </h:form>
             </rich:column>
             <rich:column rendered="#{type=='to'}">
@@ -94,9 +94,9 @@
                     <h:selectOneMenu
                         id="to"
                         valueChangeListener="#{nodeFitter.transitionChangeListener}"
-                        rendered="#{empty transition.to}"
+                        rendered="#{empty transicaoHandler.to}"
                         required="true"
-                        value="#{transition.to}">
+                        value="#{transicaoHandler.to}">
                         <f:selectItems
                             value="#{nodeFitter.getNodesTransitionItems(type)}"
                             var="v" />
@@ -104,19 +104,19 @@
                             event="change"
                             execute="@this"
                             render="transitionName,nodesDiv"
-                            listener="#{transitionFitter.changeTransition(transition, type)}"
+                            listener="#{transitionFitter.changeTransition(transicaoHandler, type)}"
                             limitRender="true" />
                     </h:selectOneMenu>
                     <h:outputText
-                        rendered="#{!empty transition.to}"
-                        value="#{transition.toName}" />
+                        rendered="#{!empty transicaoHandler.to}"
+                        value="#{transicaoHandler.toName}" />
                 </h:form>
             </rich:column>
             <rich:column id="transitionName">
                 <f:facet name="header">#{infoxMessages['process.transition.name']}</f:facet>
                 <h:form>
                     <h:inputText
-                        value="#{transition.name}"
+                        value="#{transicaoHandler.name}"
                         required="true">
                         <a:ajax
                             event="change"
@@ -128,7 +128,7 @@
                         render="nodesDiv"
                         title="#{infoxMessages['process.transition.goto']}"
                         execute="@this"
-                        action="#{nodeFitter.setCurrentNode(transition, type)}"
+                        action="#{nodeFitter.setCurrentNode(transicaoHandler, type)}"
                         limitRender="true">
                         <h:graphicImage
                             url="#{wiSkin.imageFolder}/jbpm/up.gif"
@@ -145,11 +145,11 @@
                     <center>
                         <h:selectBooleanCheckbox
                             id="occultTransitionButton"
-                            value="#{transition.occultTransitionButton}">
+                            value="#{transicaoHandler.occultTransitionButton}">
                             <a:ajax
                                 event="change"
                                 execute="@this"
-                                listener="#{transitionFitter.setTransitionButton(transition)}"
+                                listener="#{transitionFitter.setTransitionButton(transicaoHandler)}"
                                 render="transition#{type}Table"
                                 limitRender="true" />
                         </h:selectBooleanCheckbox>
