@@ -69,8 +69,8 @@ public abstract class Manager<D extends DAO<T>, T> implements Serializable {
     }
     
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void lock(T entity, LockModeType lockModeType) {
-    	getDao().lock(entity, lockModeType);
+    public T lock(T entity, LockModeType lockModeType) {
+    	return getDao().lock(entity, lockModeType);
     }
     
     public List<T> findAll() {

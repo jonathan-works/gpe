@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.LockModeType;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -49,6 +50,11 @@ public abstract class DAO<T> implements Serializable {
         return getEntityManager().find(entityClass, id);
     }
     
+    public Object getIdentifier(T entity) {
+    	EntityManagerFactory emf = entityManager.getEntityManagerFactory();
+    	return emf.getPersistenceUnitUtil().getIdentifier(entity);
+    }
+    
     public List<T> findByIds(Collection<? extends Number> ids) {
     	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
     	CriteriaQuery<T> criteriaQuery = cb.createQuery(getEntityClass());
@@ -59,11 +65,12 @@ public abstract class DAO<T> implements Serializable {
     	return getEntityManager().createQuery(criteriaQuery).getResultList();
     }
     
-    public void lock(T entity, LockModeType lockModeType) {
+    public T lock(T entity, LockModeType lockModeType) {
     	if (!entityManager.contains(entity)) {
-    		entity = entityManager.merge(entity);
+    		entity = entityManager.find(getEntityClass(), getIdentifier(entity));
     	}
     	entityManager.lock(entity, lockModeType);
+    	return entity;
     }
     
     @SuppressWarnings(UNCHECKED)
