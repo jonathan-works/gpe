@@ -13,7 +13,7 @@
     			<span style="display: inline-block; text-align: left;">1</span>
     			<span style="display: inline-block; float: right;">#{bean.pageCount}</span>
     		</div>
-		    <p:slider for="#{id}inputSlider" maxValue="#{bean.pageCount}" minValue="1" style="width: 17em; display: inline-block;" step="1" 
+		    <p:slider for="#{id}inputSlider" maxValue="#{bean.pageCount}" minValue="1" style="width: 16em; display: inline-block;" step="1" 
 		    	widgetVar="inputSliderPaginator" >
 		    	<p:ajax event="slideEnd" update="@(.#{id}classPanel)" process="@form" onstart="infox.showLoading();" onsuccess="infox.hideLoading();" />
 		    </p:slider>
