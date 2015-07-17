@@ -61,7 +61,7 @@ public abstract class DAO<T> implements Serializable {
     
     public void lock(T entity, LockModeType lockModeType) {
     	if (!entityManager.contains(entity)) {
-    		entityManager.merge(entity);
+    		entity = entityManager.merge(entity);
     	}
     	entityManager.lock(entity, lockModeType);
     }
