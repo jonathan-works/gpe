@@ -12,5 +12,6 @@
          <redirect view-id="/login.xhtml"/>
       </rule>
    </navigation>
+   <begin-conversation join="true"/>
 
 </page>
