@@ -1,7 +1,6 @@
 package br.com.infox.epp.fluxo.crud;
 
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.document.DocumentData;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.fluxo.entity.Natureza;
@@ -13,8 +12,6 @@ public class NaturezaCrudAction extends AbstractCrudAction<Natureza, NaturezaMan
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "naturezaCrudAction";
-    
-    private DocumentData data;
     
     @Override
     public void newInstance() {
@@ -65,12 +62,4 @@ public class NaturezaCrudAction extends AbstractCrudAction<Natureza, NaturezaMan
     public ParteProcessoEnum[] getTiposDePartes() {
         return ParteProcessoEnum.values();
     }
-
-    public DocumentData getData() {
-		return data;
-	}
-    
-    public void setData(DocumentData data) {
-		this.data = data;
-	}
 }
