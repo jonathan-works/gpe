@@ -22,10 +22,6 @@ import org.dom4j.Element;
 import org.dom4j.Namespace;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
-
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
-
 import org.jbpm.JbpmException;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.action.ActionTypes;
@@ -49,8 +45,9 @@ import org.jbpm.taskmgmt.def.TaskController;
 
 import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.ibpm.node.DecisionNode;
-import br.com.infox.ibpm.node.NodeType;
 import br.com.infox.ibpm.task.handler.CustomAction;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 public class JpdlXmlWriter {
 
@@ -292,6 +289,9 @@ public class JpdlXmlWriter {
             Element taskElement) {
         if (taskController != null) {
             Element controller = addElement(taskElement, "controller");
+            if (taskController.getTaskControllerDelegation() != null) {
+            	controller.addAttribute("class", taskController.getTaskControllerDelegation().getClassName());
+            }
             List<VariableAccess> list = taskController.getVariableAccesses();
             writeVariables(controller, list);
         }
