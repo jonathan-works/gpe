@@ -147,7 +147,7 @@
             <a:ajax
               execute="@this"
               event="change"
-              render="varDiv, varLabel, pageBodyDialogMessage"
+              render="varDiv, varLabel, pageBodyDialogMessage, resetVariableForm"
               limitRender="true" />
             <f:validator validatorId="jsfComponentIdValidator" />
           </h:inputText>
@@ -170,13 +170,13 @@
               status=":status"
               listener="#{var.copyVariable()}"
               event="blur"
-              render="varDiv,writable,varLabel,formVariableType"
+              render="varDiv,writable,varLabel,formVariableType,resetVariableForm"
               limitRender="true" />
             <a:ajax
               status=":status"
               listener="#{var.copyVariable()}"
               event="selectitem"
-              render="varDiv,writable,varLabel,formVariableType"
+              render="varDiv,writable,varLabel,formVariableType,resetVariableForm"
               limitRender="true" />
           </rich:autocomplete>
         </s:div>
