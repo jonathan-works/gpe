@@ -1,4 +1,3 @@
-
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -31,9 +30,8 @@
 				<wi:columnOutputText columnHeader="#{infoxMessages['comunicacao.tipoComunicacao']}" value="#{row.tipoComunicacao.descricao}"/>
 			</wi:dataTable>
 		</rich:collapsiblePanel>
-		<br />
-		<rich:collapsiblePanel header="#{infoxMessages['comunicacao.comunicacoes']}" 
-			switchType="client" id="comunicacoes">
+		<rich:collapsiblePanel header="#{comunicacaoAction.comunicacoesExpedidasTitle}"
+			switchType="client" id="comunicacoes" style="margin-top:1em">
 			<h:form>
 				<rich:dataTable value="#{comunicacaoAction.getDestinatarios()}" 
 					var="bean" styleClass="dtable rf-dt-crud" rendered="#{not empty comunicacaoAction.comunicacoesDoProcesso}">
@@ -60,13 +58,17 @@
 							</a:commandLink>
 					</rich:column>
 					<rich:column>
+						<f:facet name="header">#{infoxMessages['comunicacao.numeroComunicacao']}</f:facet>
+						<h:outputText value="#{bean.comunicacao.idProcesso}" />
+					</rich:column>
+					<rich:column>
+                        <f:facet name="header">#{infoxMessages['comunicacao.tipoComunicacao']}</f:facet>
+                        <h:outputText value="#{bean.tipoComunicacao.descricao}" />
+                    </rich:column>
+					<rich:column>
 						<f:facet name="header">#{infoxMessages['comunicacao.destinatario']}</f:facet>
 						<h:outputText value="#{bean.nome}" />
 					</rich:column>
-                          <rich:column>
-                              <f:facet name="header">#{infoxMessages['comunicacao.tipoComunicacao']}</f:facet>
-                              <h:outputText value="#{bean.tipoComunicacao.descricao}" />
-                          </rich:column>
 					<rich:column>
 						<f:facet name="header">#{infoxMessages['comunicacao.meioComunicacao']}</f:facet>
 						<h:outputText value="#{bean.meioExpedicao}" />
@@ -88,10 +90,6 @@
 						<h:outputText value="#{bean.prazoFinal}" />
 					</rich:column>
 					<rich:column>
-						<f:facet name="header">#{infoxMessages['comunicacao.statusProrrogacao']}</f:facet>
-						<h:outputText value="#{bean.statusProrrogacao}" />
-					</rich:column>
-					<rich:column>
 						<f:facet name="header">#{infoxMessages['comunicacao.documentos']}</f:facet>
 							<a:commandLink action="#{comunicacaoAction.setDestinatarioDocumentos(bean)}"
 								execute="@this" limitRender="true"
@@ -106,7 +104,7 @@
 				</rich:dataTable>
 			</h:form>
 		</rich:collapsiblePanel>
-	    <s:div id="painelCiencia">
+	    <s:div id="painelCiencia" style="margin-top:1em">
 	    	<rich:panel header="#{infoxMessages['comunicacao.confirmarCiencia']} - #{comunicacaoAction.destinatario.nome} / #{comunicacaoAction.destinatario.tipoComunicacao}" 
 	    		rendered="#{comunicacaoAction.ciencia}">
 	    		<h:form>
@@ -153,7 +151,7 @@
 	    		</h:form>
 	    	</rich:panel>
 	    </s:div>
-	    <s:div id="painelProrrogacaoPrazo">
+	    <s:div id="painelProrrogacaoPrazo" style="margin-top:1em">
 	    	<rich:panel header="#{infoxMessages['comunicacao.prorrogacaoPrazo']} - #{comunicacaoAction.destinatario.nome} / #{comunicacaoAction.destinatario.tipoComunicacao}" 
 	    		rendered="#{comunicacaoAction.prorrogacaoPrazo}">
 	    		<h:form>
@@ -175,7 +173,7 @@
 	    		</h:form>
 	    	</rich:panel>
 	    </s:div>
-	    <s:div id="painelDocumentos">
+	    <s:div id="painelDocumentos" style="margin-top:1em">
 	    	<rich:panel header="#{infoxMessages['comunicacao.documentos']} - #{comunicacaoAction.destinatario.nome} / #{comunicacaoAction.destinatario.tipoComunicacao.descricao}"
 	    		rendered="#{comunicacaoAction.documentos}">
 	    		<h:form>
@@ -210,7 +208,7 @@
 	    		</rich:dataTable>
 	    	</rich:panel>
 	    </s:div>
-	    <s:div id="painelDocumentosResposta">
+	    <s:div id="painelDocumentosResposta" style="margin-top:1em">
 	    	<ui:include src="/WEB-INF/xhtml/components/fragments/documentosResposta.xhtml">
 	    		<ui:param name="id" value="documentosResposta" />
 	    		<ui:param name="rendered" value="#{comunicacaoAction.documentoResposta}" />
