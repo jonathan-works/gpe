@@ -236,6 +236,11 @@ public class EnvioComunicacaoController implements Serializable {
 				msg.append("Existe destinatário sem meio de expedição selecionado");
 				break;
 			}
+			if (isPrazoComunicacaoRequired() && (destinatario.getPrazo() == null || destinatario.getPrazo() <= 0)){
+				msg.append("Não foi informado o prazo para o destinatário ");
+				msg.append(destinatario.getNome());
+				break;
+			}
 		}
 		if (msg.length() > 0) {
 			throw new BusinessException(msg.toString());
@@ -394,5 +399,13 @@ public class EnvioComunicacaoController implements Serializable {
 	
 	public void setMinuta(boolean minuta) {
 		this.minuta = minuta;
+	}
+	
+	public boolean isPrazoComunicacaoRequired(){
+		return false;
+	}
+	
+	public Long getJbpmProcessId() {
+		return JbpmUtil.getProcesso().getIdJbpm();
 	}
 }
