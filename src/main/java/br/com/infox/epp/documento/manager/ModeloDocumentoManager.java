@@ -10,8 +10,6 @@ import java.util.regex.Pattern;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.documento.dao.ModeloDocumentoDAO;
@@ -25,6 +23,8 @@ import br.com.infox.epp.documento.type.ExpressionResolver;
 import br.com.infox.epp.documento.type.SeamExpressionResolver;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 /**
  * Classe Manager para a entidade ModeloDocumento
@@ -221,5 +221,9 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
     public String getConteudo(int idModeloDocumento, ExpressionResolver resolver) {
         final ModeloDocumento modeloDocumento = find(idModeloDocumento);
         return evaluateModeloDocumento(modeloDocumento, resolver);
+    }
+    
+    public List<ModeloDocumento> getModeloDocumentoByTipo(TipoModeloDocumento tipoModeloDocumento) {
+    	return getDao().getModeloDocumentoByTipo(tipoModeloDocumento);
     }
 }
