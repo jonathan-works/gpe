@@ -12,9 +12,19 @@
     <h:outputScript library="js" name="util.js" />
 
     <div>
-        <rich:popupPanel id="modalStatus" width="200" height="35"
-            shadowOpacity="0">
+            	<script>
+	            	function showMessageModalStatus(){
+	            		headerContent = document.querySelector('#modalStatus_header_content');
+	            		if(infox.messageModalStatus)
+	            			headerContent.textContent = infox.messageModalStatus;
+	            		else
+	            			headerContent.textContent = "Por favor Aguarde...";
+        	    	}
+            	</script>
+        <rich:popupPanel id="modalStatus" width="200" height="55" header="Content" 
+            shadowOpacity="0" onshow="showMessageModalStatus();">
             <div>
+            	<h:outputText id="messageModalStatusSpan" styleClass="messageModalStatus"/> 
                 <h:graphicImage url="#{wiSkin.imageFolder}/status/ajax-loader-retangular.gif" />
             </div>
         </rich:popupPanel>
