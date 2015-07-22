@@ -12,6 +12,7 @@
     <rich:panel header="${infoxMessages['painel.tarefas']}" id="TarefasTree" styleClass="tree-tarefas" style="width: 100%; padding-bottom: 110px;">
         <h:outputText rendered="#{empty painelTreeHandler.tarefasRoots}" value="#{infoxMessages['process.noAvailableProcesses']}"/>
         <rich:tree
+            id="selectTarefaTree"
             status=":status"
             toggleType="client"
             execute="@this"
@@ -19,7 +20,7 @@
             selectionChangeListener="#{painelTreeHandler.processTreeSelectionChange}"
             render="divPainelProcessosInterna, :pesquisaListForm"
             var="node">
-            <rich:treeModelAdaptor nodes="#{painelTreeHandler.tarefasRoots}">
+            <rich:treeModelAdaptor id="tarefaTreeModelAdaptor" nodes="#{painelTreeHandler.tarefasRoots}">
                 <rich:treeNode
                     id="taskNode"
                     iconCollapsed="#{wiSkin.imageFolder}/messages.gif"
@@ -46,7 +47,7 @@
                             onclick="#{rich:component('novaCaixaPanel')}.show()" />
                     </rich:contextMenu>
                 </rich:treeNode>
-                <rich:treeModelAdaptor nodes="#{node.caixas}">
+                <rich:treeModelAdaptor id="caixaTreeModelAdaptor" nodes="#{node.caixas}">
                     <rich:treeNode
                         id="caixaNode"
                         iconCollapsed="#{wiSkin.imageFolder}/message.gif"
