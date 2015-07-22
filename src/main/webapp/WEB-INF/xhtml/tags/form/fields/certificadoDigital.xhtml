@@ -15,8 +15,8 @@
     <s:fragment rendered="#{empty rendered ? true : rendered}">
 
       <h:inputHidden id="#{id}Token" value="#{tokenField}" />  
-      <a:commandButton type="button" styleClass="buttons"
-      		action="#{elFunctions.invokeMethod(preSignAction)}"
+      <a:commandButton type="button" styleClass="buttons" disabled="#{disableb}"
+      		action="#{elFunctions.invokeMethod(preSignAction)}" execute="#{execute}"
       		oncomplete="infox.CertDig.#{id}.init();" render="#{empty reRender ? '@this' : reRender}"
       		value="#{empty signButtonCaption ? 'Assinar Digitalmente' : signButtonCaption}" >
       			<f:setPropertyActionListener value="#{propertyValue}" target="#{propertyTarget}" />
