@@ -42,11 +42,18 @@ public class ComunicacaoMetadadoProvider extends MetadadoProcessoProvider {
 	public static final MetadadoProcessoDefinition LIMITE_DATA_CIENCIA = 
             new MetadadoProcessoDefinition("limiteDataCiencia", Date.class);
 	
-	public static final MetadadoProcessoDefinition LIMITE_DATA_CUMPRIMENTO = 
-            new MetadadoProcessoDefinition("limiteDataCumprimento", "Limite para Cumprimento", Date.class);
-	
+	/**
+	 * Primeiro prazo de cumprimento, ele é calculado após confirmação da ciência.
+	 */
 	public static final MetadadoProcessoDefinition LIMITE_DATA_CUMPRIMENTO_INICIAL = 
             new MetadadoProcessoDefinition("limiteDataCumprimentoInicial", Date.class);
+	
+	/**
+	 * Inicialmente é igual ao prazo de cumprimento inicial porém ele pode ser alterado quando houver prorrogação de prazo.
+	 * Este é o prazo utilizado para que o sistema dê cumprimento à uma comunicação.
+	 */
+	public static final MetadadoProcessoDefinition LIMITE_DATA_CUMPRIMENTO = 
+            new MetadadoProcessoDefinition("limiteDataCumprimento", "Limite para Cumprimento", Date.class);
 	
 	public static final MetadadoProcessoDefinition DATA_PEDIDO_PRORROGACAO = 
             new MetadadoProcessoDefinition("dataPedidoProrrogacao", "Data de Solicitação da Prorrogação", Date.class);
