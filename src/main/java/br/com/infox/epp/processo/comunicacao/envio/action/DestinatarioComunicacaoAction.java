@@ -30,6 +30,7 @@ import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.list.ParticipanteProcessoComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.DestinatarioComunicacaoService;
+import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
@@ -65,11 +66,11 @@ public class DestinatarioComunicacaoAction {
 	private Localizacao localizacao;
 	private PerfilTemplate perfilDestino;
 	
-	void init() {
+	protected void init() {
 		initEntityLists();
 	}
 	
-	void persistDestinatarios() throws DAOException {
+	protected void persistDestinatarios() throws DAOException {
 		for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
 			if (destinatario.getId() == null) {
 				genericManager.persist(destinatario);
@@ -77,7 +78,7 @@ public class DestinatarioComunicacaoAction {
 		}
 	}
 	
-	void resetEntityState() {
+	protected void resetEntityState() {
 		for (DestinatarioModeloComunicacao dest : modeloComunicacao.getDestinatarios()) {
 			dest.setId(null);
 		}
@@ -90,6 +91,7 @@ public class DestinatarioComunicacaoAction {
 			// Tem que remover o proxy porque o proxy vem como Pessoa. 
 			// A query sempre retorna PessoaFisica
 			destinatario.setDestinatario(pessoaFisicaManager.merge((PessoaFisica) HibernateUtil.removeProxy(participante.getPessoa())));
+			destinatario.setPrazo(getPrazoDefaultByTipoComunicacao(modeloComunicacao.getTipoComunicacao()));
 			participanteProcessoComunicacaoList.adicionarIdPessoa(destinatario.getDestinatario().getIdPessoa());
 			modeloComunicacao.getDestinatarios().add(destinatario);
 		} catch (DAOException e) {
@@ -107,6 +109,7 @@ public class DestinatarioComunicacaoAction {
 	        DestinatarioModeloComunicacao destinatario = new DestinatarioModeloComunicacao();
 	        destinatario.setModeloComunicacao(modeloComunicacao);
 	        destinatario.setDestino(localizacao);
+	        destinatario.setPrazo(getPrazoDefaultByTipoComunicacao(modeloComunicacao.getTipoComunicacao()));
 	        modeloComunicacao.getDestinatarios().add(destinatario);
 	        idsLocalizacoesSelecionadas.add(localizacao.getIdLocalizacao());
 	    } else {
@@ -121,6 +124,11 @@ public class DestinatarioComunicacaoAction {
             modeloComunicacao.getDestinatarios().add(destinatario);
             addPerfilSelecionado(destinatario);
 	    }
+	}
+	
+
+	protected Integer getPrazoDefaultByTipoComunicacao( TipoComunicacao tipoComunicacao){
+		return null;
 	}
 	
 	public void removerDestinatario(DestinatarioModeloComunicacao destinatario) {
@@ -151,6 +159,7 @@ public class DestinatarioComunicacaoAction {
 				DestinatarioModeloComunicacao destinatario = new DestinatarioModeloComunicacao();
 				destinatario.setDestinatario(relator);
 				destinatario.setModeloComunicacao(modeloComunicacao);
+				destinatario.setPrazo(getPrazoDefaultByTipoComunicacao(modeloComunicacao.getTipoComunicacao()));
 				modeloComunicacao.getDestinatarios().add(destinatario);
 				participanteProcessoComunicacaoList.adicionarIdPessoa(relator.getIdPessoa());
 			}
@@ -273,7 +282,7 @@ public class DestinatarioComunicacaoAction {
 	    return resp;
 	}
 	
-	void setModeloComunicacao(ModeloComunicacao modeloComunicacao) {
+	protected void setModeloComunicacao(ModeloComunicacao modeloComunicacao) {
 		this.modeloComunicacao = modeloComunicacao;
 	}
 

@@ -221,6 +221,13 @@ public class EnvioComunicacaoController implements Serializable {
 	}
 
 	private void validarGravacao() {
+		StringBuilder msg = criarMensagensValidacao();
+		if (msg.length() > 0) {
+			throw new BusinessException(msg.toString());
+		}
+	}
+
+	protected StringBuilder criarMensagensValidacao() {
 		StringBuilder msg = new StringBuilder();
 		if (modeloComunicacao.getTipoComunicacao() == null) {
 			msg.append("Escolha o tipo de comunicação\n");
@@ -233,18 +240,17 @@ public class EnvioComunicacaoController implements Serializable {
 		}
 		for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
 			if (destinatario.getMeioExpedicao() == null) {
-				msg.append("Existe destinatário sem meio de expedição selecionado");
+				msg.append("Existe destinatário sem meio de expedição selecionado\n");
 				break;
 			}
 			if (isPrazoComunicacaoRequired() && (destinatario.getPrazo() == null || destinatario.getPrazo() <= 0)){
 				msg.append("Não foi informado o prazo para o destinatário ");
 				msg.append(destinatario.getNome());
+				msg.append("\n");
 				break;
 			}
 		}
-		if (msg.length() > 0) {
-			throw new BusinessException(msg.toString());
-		}
+		return msg;
 	}
 
 	private void resetEntityState() {
