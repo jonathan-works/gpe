@@ -4,10 +4,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.jboss.seam.ScopeType;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.util.DateUtil;
@@ -15,11 +17,11 @@ import br.com.infox.epp.cliente.dao.CalendarioEventosDAO;
 import br.com.infox.epp.cliente.entity.CalendarioEventos;
 import br.com.infox.util.time.DateRange;
 
-@Name(CalendarioEventosManager.NAME)
-@Scope(ScopeType.EVENT)
+@Stateless
 @AutoCreate
+@Name(CalendarioEventosManager.NAME)
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class CalendarioEventosManager extends Manager<CalendarioEventosDAO, CalendarioEventos> {
-
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "calendarioEventosManager";
@@ -31,7 +33,6 @@ public class CalendarioEventosManager extends Manager<CalendarioEventosDAO, Cale
     public List<CalendarioEventos> getByDate(DateRange dateRange){
     	return getDao().getByDate(dateRange);
     }
-    
     
     /**
      * Retorna o primeiro dia útil de forma recursiva
