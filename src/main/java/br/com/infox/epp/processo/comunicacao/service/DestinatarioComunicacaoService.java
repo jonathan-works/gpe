@@ -3,6 +3,9 @@ package br.com.infox.epp.processo.comunicacao.service;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -10,9 +13,17 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.security.Identity;
 
+import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.access.manager.LocalizacaoManager;
+import br.com.infox.epp.access.manager.PapelManager;
+import br.com.infox.epp.access.manager.UsuarioPerfilManager;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.action.DestinatarioBean;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
@@ -31,10 +42,17 @@ public class DestinatarioComunicacaoService implements Serializable{
 	private ModeloComunicacaoManager modeloComunicacaoManager;
 	@In
 	private ProrrogacaoPrazoService prorrogacaoPrazoService;
+	@In
+	private UsuarioPerfilManager usuarioPerfilManager;
+	@In
+	private PapelManager papelManager;
+	@In
+	private LocalizacaoManager localizacaoManager;
+	@In
+	private String raizLocalizacoesComunicacao;
 	
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 	private boolean usuarioInterno = Identity.instance().hasRole(Parametros.PAPEL_USUARIO_INTERNO.getValue());
-	
 	
 	public List<DestinatarioBean> getDestinatarios(ModeloComunicacao modeloComunicacao) {
 		List<DestinatarioBean> destinatarios = new ArrayList<>();
@@ -136,5 +154,43 @@ public class DestinatarioComunicacaoService implements Serializable{
 	
 	public boolean isCienciaConfirmada(Processo comunicacao) {
 		return !getDataConfirmacao(comunicacao).equals("-");
+	}
+	
+	public List<MeioExpedicao> getMeiosExpedicao(DestinatarioModeloComunicacao destinatario) {
+		if (destinatario.getDestinatario() != null) {
+			PessoaFisica pessoa = destinatario.getDestinatario();
+			UsuarioLogin usuario = pessoa.getUsuarioLogin();
+			if (pessoa.getTermoAdesao() != null) {
+				return order(MeioExpedicao.values());
+			}
+			if (usuario != null) {
+				List<UsuarioPerfil> usuarioPerfilList = usuarioPerfilManager.listByUsuarioLogin(usuario);
+				List<String> papeisHerdeirosUsuarioInterno = papelManager.getIdentificadoresPapeisHerdeiros(Parametros.PAPEL_USUARIO_INTERNO.getValue());
+				for (UsuarioPerfil usuarioPerfil : usuarioPerfilList) {
+					Papel papel = usuarioPerfil.getPerfilTemplate().getPapel();
+					if (papeisHerdeirosUsuarioInterno.contains(papel.getIdentificador())) {
+						return order(MeioExpedicao.values());
+					}
+				}
+			}
+		} else {
+			Localizacao localizacaoRaiz = localizacaoManager.getLocalizacaoByCodigo(raizLocalizacoesComunicacao);
+			if (destinatario.getDestino().getCaminhoCompleto().startsWith(localizacaoRaiz.getCaminhoCompleto())) {
+				return order(MeioExpedicao.values());
+			}
+		}
+		
+		return order(MeioExpedicao.DO, MeioExpedicao.EM, MeioExpedicao.IM);
+	}
+	
+	private List<MeioExpedicao> order(MeioExpedicao... meios) {
+		List<MeioExpedicao> meiosExpedicao = Arrays.asList(meios);
+		Collections.sort(meiosExpedicao, new Comparator<MeioExpedicao>() {
+			@Override
+			public int compare(MeioExpedicao o1, MeioExpedicao o2) {
+				return o1.getLabel().compareToIgnoreCase(o2.getLabel());
+			}
+		});
+		return meiosExpedicao;
 	}
 }
