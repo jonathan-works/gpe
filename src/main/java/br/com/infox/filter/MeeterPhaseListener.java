@@ -42,7 +42,7 @@ public class MeeterPhaseListener {
     public void afterPhase(PhaseEvent event) {
         if (!producao) {
             System.out.println("Saiu: " + event.getPhaseId() + " - "
-                    + (new Date().getTime() - time));
+                    + (new Date().getTime() - time)+ " [ " + event.getFacesContext().getExternalContext().getRequestServletPath() + " ]");
             time = 0;
         }
     }
