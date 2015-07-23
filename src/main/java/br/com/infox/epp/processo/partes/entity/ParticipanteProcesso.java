@@ -17,6 +17,7 @@ import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.P
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -265,5 +266,12 @@ public class ParticipanteProcesso implements Serializable, Cloneable {
     	clone.setHistoricoParticipanteList(cHistoricos);
     	return clone;
     }
+    
+    public static final Comparator<ParticipanteProcesso> COMPARATOR_NOME = new Comparator<ParticipanteProcesso>() {
+		@Override
+		public int compare(ParticipanteProcesso o1, ParticipanteProcesso o2) {
+			return o1.getNome().compareTo(o2.getNome());
+		}
+	};
 	
 }
