@@ -8,6 +8,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.manager.Manager;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.fluxo.dao.DefinicaoVariavelProcessoDAO;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.entity.Fluxo;
@@ -57,5 +58,31 @@ public class DefinicaoVariavelProcessoManager extends Manager<DefinicaoVariavelP
     
     public List<DefinicaoVariavelProcesso> getDefinicaoVariavelProcessoVisivelPainel(Integer idProcesso) {
         return getDao().getDefinicaoVariavelProcessoVisivelPainel(idProcesso);
+    }
+    
+    public void moveUp(DefinicaoVariavelProcesso definicaoVariavelProcesso) throws DAOException {
+    	String hql = "update DefinicaoVariavelProcesso o set o.ordem = o.ordem + 1 "
+    			+ "where o.fluxo = :fluxo and o.ordem = :ordem";
+    	try {
+	    	getDao().getEntityManager().createQuery(hql).setParameter("fluxo", definicaoVariavelProcesso.getFluxo())
+	    		.setParameter("ordem", definicaoVariavelProcesso.getOrdem() - 1).executeUpdate();
+    	} catch (Exception e) {
+    		throw new DAOException(e);
+    	}
+    	definicaoVariavelProcesso.setOrdem(definicaoVariavelProcesso.getOrdem() - 1);
+    	update(definicaoVariavelProcesso);
+    }
+    
+    public void moveDown(DefinicaoVariavelProcesso definicaoVariavelProcesso) throws DAOException {
+    	String hql = "update DefinicaoVariavelProcesso o set o.ordem = o.ordem - 1 "
+    			+ "where o.fluxo = :fluxo and o.ordem = :ordem";
+    	try {
+	    	getDao().getEntityManager().createQuery(hql).setParameter("fluxo", definicaoVariavelProcesso.getFluxo())
+	    		.setParameter("ordem", definicaoVariavelProcesso.getOrdem() + 1).executeUpdate();
+    	} catch (Exception e) {
+    		throw new DAOException(e);
+    	}
+    	definicaoVariavelProcesso.setOrdem(definicaoVariavelProcesso.getOrdem() + 1);
+    	update(definicaoVariavelProcesso);
     }
 }

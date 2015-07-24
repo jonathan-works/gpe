@@ -19,7 +19,7 @@ public interface DefinicaoVariavelProcessoQuery {
 
     String LIST_BY_FLUXO = "listByFluxo";
     String LIST_BY_FLUXO_QUERY = "select o from DefinicaoVariavelProcesso o"
-            + " where o.fluxo = :" + PARAM_FLUXO + " order by o.nome";
+            + " where o.fluxo = :" + PARAM_FLUXO + " order by o.ordem";
 
     String TOTAL_BY_FLUXO = "totalByFluxo";
     String TOTAL_BY_FLUXO_QUERY = "select count(o) from DefinicaoVariavelProcesso o where o.fluxo = :"
@@ -36,12 +36,13 @@ public interface DefinicaoVariavelProcessoQuery {
     String DEFINICAO_BY_ID_PROCESSO_QUERY = "select o from DefinicaoVariavelProcesso o " +
             "where exists (select 1 from NaturezaCategoriaFluxo ncf " +
             "				inner join ncf.processoList p " + 
-            "				where ncf.fluxo = o.fluxo and p.idProcesso = :" + PARAM_ID_PROCESSO + " ) ";
+            "				where ncf.fluxo = o.fluxo and p.idProcesso = :" + PARAM_ID_PROCESSO + " ) "
+            		+ " order by o.ordem";
     
     String DEFINICAO_VISIVEL_PAINEL_BY_ID_PROCESSO = "definicaoVisivelPainelByIdProcesso";
     String DEFINICAO_VISIVEL_PAINEL_BY_ID_PROCESSO_QUERY = "select o from DefinicaoVariavelProcesso o" +
             " where exists (select 1 from NaturezaCategoriaFluxo ncf " +
                 " inner join ncf.processoList p " + 
                 " where ncf.fluxo = o.fluxo and p.idProcesso = :" + PARAM_ID_PROCESSO + ""
-            + " ) and o.visivelPainel is true";
+            + " ) and o.visivelPainel is true order by o.ordem";
 }

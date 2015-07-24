@@ -43,6 +43,7 @@ import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
+import br.com.infox.epp.processo.service.VariaveisJbpmAnaliseDocumento;
 import br.com.infox.epp.processo.type.TipoProcesso;
 
 @Name(ProcessoAnaliseDocumentoService.NAME)
@@ -98,13 +99,13 @@ public class ProcessoAnaliseDocumentoService {
 		} else {
 			variaveisJbpm = new HashMap<>(variaveisJbpm);
 		}
-		variaveisJbpm.put("respostaComunicacao", false);
-		variaveisJbpm.put("pedidoProrrogacaoPrazo", false);
+		variaveisJbpm.put(VariaveisJbpmAnaliseDocumento.RESPOSTA_COMUNICACAO, false);
+		variaveisJbpm.put(VariaveisJbpmAnaliseDocumento.PEDIDO_PRORROGACAO_PRAZO, false);
 		MetadadoProcesso metadadoTipoProcesso = processoAnalise.getProcessoPai().getMetadado(EppMetadadoProvider.TIPO_PROCESSO);
 		if (metadadoTipoProcesso != null) {
 			TipoProcesso tipoProcessoPai = metadadoTipoProcesso.getValue();
 			if (tipoProcessoPai.equals(TipoProcesso.COMUNICACAO) || tipoProcessoPai.equals(TipoProcesso.COMUNICACAO_NAO_ELETRONICA)) {
-				variaveisJbpm.put("respostaComunicacao", true);
+				variaveisJbpm.put(VariaveisJbpmAnaliseDocumento.RESPOSTA_COMUNICACAO, true);
 				
 				List<MetadadoProcesso> metadadoDocumentoList = processoAnalise.getMetadadoList(EppMetadadoProvider.DOCUMENTO_EM_ANALISE);
 				List<Documento> documentos = new ArrayList<Documento>(metadadoDocumentoList.size());
@@ -115,7 +116,8 @@ public class ProcessoAnaliseDocumentoService {
 				MetadadoProcesso metadadoDestinatario = processoAnalise.getProcessoPai().getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO);
 				DestinatarioModeloComunicacao destinatarioComunicacao = metadadoDestinatario.getValue();
 				if(prorrogacaoPrazoService.containsClassificacaoProrrogacaoPrazo(documentos, destinatarioComunicacao.getModeloComunicacao().getTipoComunicacao())){
-					variaveisJbpm.put("pedidoProrrogacaoPrazo", true);
+					variaveisJbpm.put(VariaveisJbpmAnaliseDocumento.PEDIDO_PRORROGACAO_PRAZO, true);
+					variaveisJbpm.putAll(getVariaveisProrrogacaoPrazo(processoAnalise));
 				}
 			}
 		}
@@ -128,6 +130,10 @@ public class ProcessoAnaliseDocumentoService {
 		BusinessProcess.instance().setTaskId(taskIdOriginal);
 	}
 	
+	protected Map<String, Object> getVariaveisProrrogacaoPrazo(Processo processoAnalise) {
+		return new HashMap<>();
+	}
+
 	private Fluxo getFluxoDocumento() throws DAOException {
 		if (codigoFluxoDocumento == null) {
 			throw new DAOException("Fluxo de documento não encontrado");
@@ -165,7 +171,7 @@ public class ProcessoAnaliseDocumentoService {
 		
 		
 		Predicate predicate = cb.and();
-		predicate = cb.and(predicate, cb.equal(root.get(MetadadoProcesso_.metadadoType), "documentoEmAnalise"));
+		predicate = cb.and(predicate, cb.equal(root.get(MetadadoProcesso_.metadadoType), EppMetadadoProvider.DOCUMENTO_EM_ANALISE.getMetadadoType()));
 		
 		Join<MetadadoProcesso, Processo> p = root.join(MetadadoProcesso_.processo);
 		predicate =  cb.and(predicate, cb.equal(p.get(Processo_.processoPai), comunicacao));
@@ -190,7 +196,7 @@ public class ProcessoAnaliseDocumentoService {
 		
 		
 		Predicate predicate = cb.and();
-		predicate = cb.and(predicate, cb.equal(root.get(MetadadoProcesso_.metadadoType), "documentoEmAnalise"));
+		predicate = cb.and(predicate, cb.equal(root.get(MetadadoProcesso_.metadadoType), EppMetadadoProvider.DOCUMENTO_EM_ANALISE.getMetadadoType()));
 		
 		predicate = cb.and(predicate, cb.equal(root.get(MetadadoProcesso_.processo), analiseDocumentos));
 		
@@ -207,12 +213,11 @@ public class ProcessoAnaliseDocumentoService {
 	
 	public boolean isRespostaComunicacao(Processo processoAnalise){
 		ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(processoAnalise.getIdJbpm());
-		return (Boolean)processInstance.getContextInstance().getVariable("respostaComunicacao");
+		return (Boolean)processInstance.getContextInstance().getVariable(VariaveisJbpmAnaliseDocumento.RESPOSTA_COMUNICACAO);
 	}
 	
 	public boolean isPedidoProrrogacaoPrazo(Processo processoAnalise){
 		ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(processoAnalise.getIdJbpm());
-		return (Boolean)processInstance.getContextInstance().getVariable("pedidoProrrogacaoPrazo");
+		return (Boolean)processInstance.getContextInstance().getVariable(VariaveisJbpmAnaliseDocumento.PEDIDO_PRORROGACAO_PRAZO);
 	}
-	
 }

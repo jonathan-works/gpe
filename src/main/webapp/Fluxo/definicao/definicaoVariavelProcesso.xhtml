@@ -49,6 +49,14 @@
                         limitRender="true"
                     />
                 </h:graphicImage>
+                <h:graphicImage title="#{infoxMessages['process.node.up']}" rendered="#{row.ordem gt 0}"
+	                url="#{wiSkin.imageFolder}/jbpm/up.gif" styleClass="opacityHover">
+	                <a:ajax event="click" listener="#{definicaoVariavelProcessoAction.moveUp(row)}" execute="@this" render="variavelTable" limitRender="true" />
+	            </h:graphicImage>
+	            <h:graphicImage title="#{infoxMessages['process.node.down']}" rendered="#{row.ordem lt definicaoVariavelProcessoAction.maiorOrdem - 1}"
+	                url="#{wiSkin.imageFolder}/jbpm/down.gif" styleClass="opacityHover">
+	                <a:ajax event="click" listener="#{definicaoVariavelProcessoAction.moveDown(row)}" execute="@this" render="variavelTable" limitRender="true" />
+	            </h:graphicImage>
             </h:form>
         </ui:define>
         <ui:define name="columns">

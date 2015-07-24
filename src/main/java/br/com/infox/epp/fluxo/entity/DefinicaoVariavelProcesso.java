@@ -36,6 +36,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -85,6 +86,14 @@ public class DefinicaoVariavelProcesso implements Serializable {
     @Size(min = 0, max = LengthConstants.DESCRICAO_GRANDE, message = "{beanValidation.size}")
     @Column(name=VALOR_PADRAO, length = LengthConstants.DESCRICAO_GRANDE)
     private String valorPadrao;
+    
+    @NotNull
+    @Column(name = "nr_ordem", nullable = false)
+    private Integer ordem;
+    
+    @Version
+    @Column(name = "nr_version", nullable = false)
+    private Long version = 0L;
     
     public DefinicaoVariavelProcesso() {
     	setVisivel(Boolean.TRUE);
@@ -146,6 +155,22 @@ public class DefinicaoVariavelProcesso implements Serializable {
 		this.valorPadrao = valorPadrao;
 	}
 
+	public Integer getOrdem() {
+		return ordem;
+	}
+	
+	public void setOrdem(Integer ordem) {
+		this.ordem = ordem;
+	}
+	
+	public Long getVersion() {
+		return version;
+	}
+	
+	public void setVersion(Long version) {
+		this.version = version;
+	}
+	
 	@Override
     public int hashCode() {
         final int prime = 31;

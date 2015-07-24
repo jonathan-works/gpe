@@ -199,7 +199,7 @@ public abstract class DAO<T> implements Serializable {
         }
     }
 
-    protected EntityManager getEntityManager() {
+    public EntityManager getEntityManager() {
         return entityManager;
     }
 
@@ -267,5 +267,4 @@ public abstract class DAO<T> implements Serializable {
         }
         return query;
     }
-    
 }

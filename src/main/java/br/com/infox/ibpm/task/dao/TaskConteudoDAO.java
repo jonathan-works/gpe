@@ -81,7 +81,7 @@ public class TaskConteudoDAO extends DAO<TaskConteudo> {
     }
 
     @Override
-    protected FullTextEntityManager getEntityManager() {
+    public FullTextEntityManager getEntityManager() {
         return (FullTextEntityManager) super.getEntityManager();
     }
 

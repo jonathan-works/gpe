@@ -71,7 +71,7 @@ public class AjudaDAO extends DAO<Ajuda> {
     }
 
     @Override
-    protected FullTextEntityManager getEntityManager() {
+    public FullTextEntityManager getEntityManager() {
         return (FullTextEntityManager) super.getEntityManager();
     }
 
