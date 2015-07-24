@@ -440,16 +440,18 @@ public class ProcessBuilder implements Serializable {
 		Session session = JbpmUtil.getJbpmSession();
 		String hql = "select ti from org.jbpm.taskmgmt.exe.TaskInstance ti "
 						 + "inner join ti.processInstance pi "
-						 + "where ti.end is null and  ti.create is not null "
-						 + "and pi.processDefinition.id = :idProcessDefinition ";
+						 + "where pi.processDefinition.id = :idProcessDefinition ";
 		Query query =  session.createQuery(hql);
 		query.setParameter("idProcessDefinition", idProcessDefinition);
 		List<TaskInstance> taskInstances = (List<TaskInstance>) query.list();
 		for (TaskInstance taskInstance : taskInstances) {
 			String[] actorIds = taskInstance.getTask().getSwimlane().getPooledActorsExpression().split(",");
-			taskInstance.setPooledActors(actorIds);
-			processoLocalizacaoIbpmManager.deleteProcessoLocalizacaoIbpmByTaskInstanceId(taskInstance.getId());
-			processoLocalizacaoIbpmManager.addProcessoLocalizacaoIbpmByTaskInstance(taskInstance);
+			if (taskInstance.getCreate() != null && taskInstance.getEnd() == null) {
+				taskInstance.setPooledActors(actorIds);
+				processoLocalizacaoIbpmManager.deleteProcessoLocalizacaoIbpmByTaskInstanceId(taskInstance.getId());
+				processoLocalizacaoIbpmManager.addProcessoLocalizacaoIbpmByTaskInstance(taskInstance);
+			}
+			taskInstance.getSwimlaneInstance().setPooledActors(actorIds);
 		}
 		session.flush();
 	}
