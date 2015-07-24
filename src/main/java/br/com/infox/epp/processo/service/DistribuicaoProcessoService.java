@@ -6,6 +6,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
+import org.jboss.seam.bpm.ManagedJbpmContext;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
@@ -36,6 +37,7 @@ public class DistribuicaoProcessoService {
     	String idUDM = unidadeDecisoraMonocratica != null ? unidadeDecisoraMonocratica.getIdUnidadeDecisoraMonocratica().toString() : null;
     	setMetadado(EppMetadadoProvider.RELATOR, processo, idRelator);
     	setMetadado(EppMetadadoProvider.UNIDADE_DECISORA_MONOCRATICA, processo, idUDM);
+    	ManagedJbpmContext.instance().getProcessInstanceForUpdate(processo.getIdJbpm()).getContextInstance().setVariable(VariaveisJbpmProcessosGerais.RELATOR, relator.getNome());
     	processoDAO.update(processo);
 	}
 	

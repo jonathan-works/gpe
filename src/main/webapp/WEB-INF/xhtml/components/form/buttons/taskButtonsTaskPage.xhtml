@@ -41,7 +41,7 @@
         </a:repeat>
     </c:if>
 
-    <ui:fragment rendered="#{authenticator.isUsuarioAtualResponsavel()}">
+    <ui:fragment rendered="#{taskInstanceController.podeExibirPrioridadeProcesso()}">
         <h:outputText value="Prioridade:"
             style="margin-left: 40px;" />
         <h:selectOneMenu

@@ -65,6 +65,7 @@ public class PainelUsuarioController implements Serializable {
 	private FluxoBean selectedFluxo;
 	protected List<FluxoBean> fluxosDisponiveis;
 	private List<TipoProcesso> tipoProcessoDisponiveis;
+	private boolean exibirColunasPadrao = true;
 
 	@PostConstruct
 	protected void init() {
@@ -277,4 +278,10 @@ public class PainelUsuarioController implements Serializable {
 	    return "painel.fluxos";
 	}
 	
+	public boolean isExibirColunasPadrao() {
+		return exibirColunasPadrao;
+	}
+	public void setExibirColunasPadrao(boolean exibirColunasPadrao) {
+		this.exibirColunasPadrao = exibirColunasPadrao;
+	}
 }

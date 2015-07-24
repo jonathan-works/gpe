@@ -1,6 +1,8 @@
 package br.com.infox.epp.processo.variavel.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
@@ -81,7 +83,7 @@ public class VariavelProcessoService {
             Object variable = processInstance.getContextInstance().getVariable(definicao.getNome());
             VariavelProcesso variavelProcesso = inicializaVariavelProcesso(processInstance, definicao);
             if (variable != null) {
-                variavelProcesso.setValor(variable.toString());
+                variavelProcesso.setValor(formatarValor(variable));
             } else {
                 List<MetadadoProcesso> metadados = metadadoProcessoManager.getMetadadoProcessoByType(processo,
                         definicao.getNome());
@@ -101,7 +103,16 @@ public class VariavelProcessoService {
         return null;
     }
 
-    public List<VariavelProcesso> getVariaveisHierquiaProcesso(Integer idProcesso) {
+    private String formatarValor(Object variable) {
+    	if (variable instanceof Date) {
+    		return new SimpleDateFormat("dd/MM/yyyy").format(variable);
+    	} else if (variable instanceof Boolean) {
+    		return (Boolean) variable ? "Sim" : "Não";
+    	}
+		return variable.toString();
+	}
+
+	public List<VariavelProcesso> getVariaveisHierquiaProcesso(Integer idProcesso) {
         List<VariavelProcesso> variaveis = new ArrayList<>();
         Processo processo = processoManager.find(idProcesso);
         List<DefinicaoVariavelProcesso> definicaoVariavelList = definicaoVariavelProcessoManager

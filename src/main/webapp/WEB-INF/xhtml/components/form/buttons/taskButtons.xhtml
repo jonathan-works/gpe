@@ -85,7 +85,7 @@
             </a:repeat>
         </c:if>
         <ui:fragment
-            rendered="#{authenticator.isUsuarioAtualResponsavel()}">
+            rendered="#{taskInstanceController.podeExibirPrioridadeProcesso()}">
             <h:outputText
                 value="#{infoxMessages['prioridadeProcesso.comboBox']}"
                 style="margin-left: 40px;" />

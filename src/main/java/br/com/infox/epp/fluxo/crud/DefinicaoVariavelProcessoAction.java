@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
@@ -11,7 +12,9 @@ import br.com.infox.log.Log;
 import br.com.infox.log.Logging;
 
 import br.com.infox.core.action.AbstractAction;
+import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.fluxo.dao.DefinicaoVariavelProcessoDAO;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
@@ -24,11 +27,17 @@ public class DefinicaoVariavelProcessoAction extends AbstractAction<DefinicaoVar
 	public static final String NAME = "definicaoVariavelProcessoAction";
     private static final Log LOG = Logging.getLog(DefinicaoVariavelProcessoAction.class);
 
+    @In
+    private ActionMessagesService actionMessagesService;
+    @In
+    private DefinicaoVariavelProcessoDAO definicaoVariavelProcessoDAO;
+    
     private Fluxo fluxo;
     private DefinicaoVariavelProcesso variavel;
     private List<DefinicaoVariavelProcesso> variaveis;
     private int page = 1;
     private int maxPages;
+    private Integer maiorOrdem;
 
     public void setFluxo(Fluxo fluxo) {
         this.fluxo = fluxo;
@@ -36,6 +45,7 @@ public class DefinicaoVariavelProcessoAction extends AbstractAction<DefinicaoVar
 
     public void adicionarVariavel() {
         this.variavel = new DefinicaoVariavelProcesso();
+        this.variavel.setOrdem(getMaiorOrdem() + 1);
     }
 
     public void save() {
@@ -49,6 +59,7 @@ public class DefinicaoVariavelProcessoAction extends AbstractAction<DefinicaoVar
         if (AbstractAction.PERSISTED.equals(ret)) {
             this.variaveis = null;
             this.variavel = null;
+            this.maiorOrdem = null;
             FacesMessages.instance().add("#{infoxMessages['DefinicaoVariavelProcesso_created']}");
         } else if (AbstractAction.UPDATED.equals(ret)) {
             this.variaveis = null;
@@ -83,6 +94,7 @@ public class DefinicaoVariavelProcessoAction extends AbstractAction<DefinicaoVar
         }
         if (AbstractAction.REMOVED.equals(ret)) {
             this.variaveis = null;
+            this.maiorOrdem = null;
             FacesMessages.instance().add("#{infoxMessages['DefinicaoVariavelProcesso_deleted']}");
             if (obj.equals(this.variavel)) {
                 this.variavel = null;
@@ -151,5 +163,48 @@ public class DefinicaoVariavelProcessoAction extends AbstractAction<DefinicaoVar
 
     public void setNomeAmigavel(String nomeAmigavel) {
         getManager().setNome(variavel, nomeAmigavel);
+    }
+    
+    public Integer getMaiorOrdem() {
+    	if (maiorOrdem == null) {
+    		maiorOrdem = definicaoVariavelProcessoDAO.getMaiorOrdem(fluxo);
+    	}
+		return maiorOrdem;
+	}
+    
+    public void moveUp(DefinicaoVariavelProcesso definicaoVariavelProcesso) {
+    	try {
+    		for (DefinicaoVariavelProcesso definicao : this.variaveis) {
+    			if (definicao.getOrdem().equals(definicaoVariavelProcesso.getOrdem() - 1)) {
+    				definicao.setOrdem(definicao.getOrdem() + 1);
+    				getManager().update(definicao);
+    				break;
+    			}
+    		}
+    		definicaoVariavelProcesso.setOrdem(definicaoVariavelProcesso.getOrdem() - 1);
+    		getManager().update(definicaoVariavelProcesso);
+    		this.variaveis = null;
+    	} catch (DAOException e) {
+    		actionMessagesService.handleDAOException(e);
+    		LOG.error("", e);
+    	}
+    }
+    
+    public void moveDown(DefinicaoVariavelProcesso definicaoVariavelProcesso) {
+    	try {
+    		for (DefinicaoVariavelProcesso definicao : this.variaveis) {
+    			if (definicao.getOrdem().equals(definicaoVariavelProcesso.getOrdem() + 1)) {
+    				definicao.setOrdem(definicao.getOrdem() - 1);
+    				getManager().update(definicao);
+    				break;
+    			}
+    		}
+    		definicaoVariavelProcesso.setOrdem(definicaoVariavelProcesso.getOrdem() + 1);
+    		getManager().update(definicaoVariavelProcesso);
+    		this.variaveis = null;
+    	} catch (DAOException e) {
+    		actionMessagesService.handleDAOException(e);
+    		LOG.error("", e);
+    	}
     }
 }

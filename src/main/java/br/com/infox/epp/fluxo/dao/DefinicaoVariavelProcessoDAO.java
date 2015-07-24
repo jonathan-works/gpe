@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -22,7 +25,9 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.dao.DAO;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
+import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso_;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 
 @Scope(ScopeType.EVENT)
@@ -71,5 +76,27 @@ public class DefinicaoVariavelProcessoDAO extends DAO<DefinicaoVariavelProcesso>
         Map<String, Object> parameters = new HashMap<>(1);
         parameters.put(PARAM_ID_PROCESSO, idProcesso);
         return getNamedResultList(DEFINICAO_VISIVEL_PAINEL_BY_ID_PROCESSO, parameters);
+    }
+    
+    public Integer getMaiorOrdem(Fluxo fluxo) {
+    	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+    	CriteriaQuery<Integer> query = cb.createQuery(Integer.class);
+    	Root<DefinicaoVariavelProcesso> root = query.from(DefinicaoVariavelProcesso.class);
+    	query.select(cb.coalesce(cb.max(root.get(DefinicaoVariavelProcesso_.ordem)), 0));
+    	query.where(cb.equal(root.get(DefinicaoVariavelProcesso_.fluxo), fluxo));
+    	return getEntityManager().createQuery(query).getSingleResult();
+    }
+    
+    @Override
+    public DefinicaoVariavelProcesso remove(DefinicaoVariavelProcesso object) throws DAOException {
+    	Fluxo fluxo = object.getFluxo();
+    	DefinicaoVariavelProcesso ret = super.remove(object);
+    	String hql = "update DefinicaoVariavelProcesso o set o.ordem = o.ordem - 1 where o.fluxo = :fluxo and o.ordem > :ordem";
+    	try {
+    		getEntityManager().createQuery(hql).setParameter("fluxo", fluxo).setParameter("ordem", object.getOrdem()).executeUpdate();
+    	} catch (Exception e) {
+    		throw new DAOException(e);
+    	}
+    	return ret;
     }
 }
