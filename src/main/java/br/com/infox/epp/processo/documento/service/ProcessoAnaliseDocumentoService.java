@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -23,6 +24,7 @@ import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.graph.exe.ProcessInstance;
 
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
@@ -70,12 +72,14 @@ public class ProcessoAnaliseDocumentoService {
 	private ProrrogacaoPrazoService prorrogacaoPrazoService;
 	@In
 	private EntityManager entityManager;
+	@Inject
+	private InfoxMessages infoxMessages;
 	
 	public Processo criarProcessoAnaliseDocumentos(Processo processoPai, Documento... documentoAnalise) throws DAOException {
 		Fluxo fluxoDocumento = getFluxoDocumento();
 		List<NaturezaCategoriaFluxo> ncfs = naturezaCategoriaFluxoManager.getActiveNaturezaCategoriaFluxoListByFluxo(fluxoDocumento);
 		if (ncfs == null || ncfs.isEmpty()) {
-			throw new DAOException("Não existe Natureza/Categoria para o fluxo " + fluxoDocumento.getFluxo());
+			throw new DAOException(infoxMessages.get("fluxo.naoExisteCategoria") + fluxoDocumento.getFluxo());
 		}
 		
 		Processo processoAnalise = new Processo();
@@ -136,11 +140,11 @@ public class ProcessoAnaliseDocumentoService {
 
 	private Fluxo getFluxoDocumento() throws DAOException {
 		if (codigoFluxoDocumento == null) {
-			throw new DAOException("Fluxo de documento não encontrado");
+			throw new DAOException(infoxMessages.get("fluxo.analiseDocumentoNaoEncontrado"));
 		}
 		Fluxo fluxo = fluxoManager.getFluxoByCodigo(codigoFluxoDocumento);
 		if (fluxo == null) {
-			throw new DAOException("Fluxo de documento não encontrado");
+			throw new DAOException(infoxMessages.get("fluxo.analiseDocumentoNaoEncontrado"));
 		}
 		return fluxo;
 	}
