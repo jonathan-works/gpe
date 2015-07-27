@@ -9,8 +9,6 @@
 	version="2.0">
 
 	<persistence-unit name="EPAPersistenceUnit" transaction-type="JTA">
-		<mapping-file>META-INF/extended-mappings.xml</mapping-file>
-		<mapping-file>META-INF/extended-named-queries.xml</mapping-file>
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<jta-data-source>${epp.datasource.jndi.prefix}${epp.datasource.name}</jta-data-source>
 		<shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
