@@ -201,7 +201,7 @@ public class EnvioComunicacaoController implements Serializable {
 			FacesMessages.instance().add("Registro gravado com sucesso");
 			isNew = false;
 		} catch (Exception e) {
-			LOG.error("", e);
+			LOG.error("Erro ao gravar comunicação ", e);
 			if (e instanceof DAOException) {
 				actionMessagesService.handleDAOException((DAOException) e);
 			} else {

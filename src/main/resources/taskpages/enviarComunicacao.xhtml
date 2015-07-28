@@ -164,7 +164,7 @@
 					</rich:column>
 					<rich:column styleClass="dt-toolbar-col" rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
 						<a:commandButton value="#{infoxMessages['comunicacao.replicarPrazo']}" 
-							render="destinatarios" action="#{destinatarioComunicacaoAction.replicarPrazo(row)}"
+							render="destinatariosPanel" action="#{destinatarioComunicacaoAction.replicarPrazo(row)}"
 							rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}" execute="@this, prazo"/>
 					</rich:column>
 				</rich:dataTable>
@@ -173,7 +173,7 @@
 			</rich:panel>
 
 			<!-- Botão Visualizar Comunicações (o ofício da documentação é o último documento incluso por usuário interno) -->
-			<h:form id="expedicaoForm">
+			<h:form id="visualizarComunicacaoAnexoForm">
 				<s:div rendered="#{envioComunicacaoController.podeExibirBotaoVisualizarComunicacoes()}">
 					<h:commandButton id="visualizarComunicacao" 
 							type="button" 
@@ -196,8 +196,8 @@
 											 
 					<a:jsFunction name="assinar" action="#{envioComunicacaoController.expedirComunicacao()}"
 						execute="@this appletAssinaturaToken" 
-						render="comunicacaoDestinatarioForm, pageBodyDialogMessage, destinatarios, documentoComunicacaoForm"
-					  	oncomplete="infox.hideLoading(); if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();" />
+						render="comunicacaoDestinatarioForm, pageBodyDialogMessage, documentoComunicacaoForm, destinatariosSelecionadosComunicacaoPanel"
+					  	oncomplete="infox.hideLoading(); if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"/>
              
 					<wi:certificadoDigital id="appletAssinatura"
                         tokenField="#{envioComunicacaoController.token}"
@@ -403,7 +403,7 @@
 		        
 		        <!-- Botões de Controle -->
 				<wi:commandButton id="gravar" value="#{infoxMessages['crud.update']}" 
-					action="envioComunicacaoController.gravar" reRender="comunicacaoDiv, pageBodyDialogMessage"
+					action="envioComunicacaoController.gravar" reRender=":pageBodyDialogMessage comunicacaoDiv"
 					rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}"
 					oncomplete="if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"/>
 				<s:fragment rendered="#{envioComunicacaoController.expedida and envioComunicacaoController.inTask}">
