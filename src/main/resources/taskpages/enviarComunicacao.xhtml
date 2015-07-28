@@ -138,7 +138,7 @@
 						<f:facet name="header">#{infoxMessages['participanteProcesso.nome']}</f:facet>
 						<h:outputText value="#{row.nome}" />
 					</rich:column>
-					<rich:column styleClass="dt-toolbar-col">
+					<rich:column style="width:12em;">
 						<f:facet name="header">#{infoxMessages['comunicacao.meioExpedicao']}<span class="required">*</span></f:facet>
 						<h:selectOneMenu value="#{row.meioExpedicao}" 
 							rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
@@ -149,7 +149,7 @@
 						</h:selectOneMenu>
 						<h:outputText value="#{row.meioExpedicao.label}" rendered="#{envioComunicacaoController.modeloComunicacao.finalizada}" />
 					</rich:column>
-					<rich:column styleClass="dt-toolbar-col">
+					<rich:column style="width:15em;">
 						<f:facet name="header">
 							#{infoxMessages['comunicacao.prazo']}
 							<s:fragment rendered="#{envioComunicacaoController.prazoComunicacaoRequired}">
@@ -196,7 +196,7 @@
 											 
 					<a:jsFunction name="assinar" action="#{envioComunicacaoController.expedirComunicacao()}"
 						execute="@this appletAssinaturaToken" 
-						render="comunicacaoDestinatarioForm, pageBodyDialogMessage, documentoComunicacaoForm, destinatariosSelecionadosComunicacaoPanel"
+						render="pageBodyDialogMessage comunicacaoDiv"
 					  	oncomplete="infox.hideLoading(); if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"/>
              
 					<wi:certificadoDigital id="appletAssinatura"
@@ -211,8 +211,9 @@
 
 			<!-- Documentos disponíveis para serem vinculados à comunicação -->
 			<rich:collapsiblePanel id="documentos" 
-				header="#{infoxMessages['comunicacao.anexarDocumentos']}"
-				switchType="client" 
+				header="#{envioComunicacaoController.expedida ? infoxMessages['comunicacao.documentosAnexados'] 
+					: infoxMessages['comunicacao.anexarDocumentos']}"
+				switchType="client" style="margin-top:1em;"
 				rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada or not empty envioComunicacaoController.modeloComunicacao.documentos}">
 				<wi:dataTable id="documentosProcesso" values="#{documentoDisponivelComunicacaoList.list(10)}" 
 					bean="#{documentoDisponivelComunicacaoList}" rowId="#{row.id}"
@@ -271,7 +272,7 @@
 				</wi:dataTable>
 				
 				<!-- Documentos vinculados à comunicação -->
-				<rich:panel header="#{infoxMessages['comunicacao.documentosSelecionados']}" headerClass="text-center">
+				<rich:panel header="#{envioComunicacaoController.expedida ? '' : infoxMessages['comunicacao.documentosSelecionados']}" headerClass="text-center">
 					<rich:dataTable id="documentosSelecionados" value="#{envioComunicacaoController.modeloComunicacao.documentos}"
 						styleClass="dtable rf-dt-crud" var="row" rendered="#{not empty envioComunicacaoController.modeloComunicacao.documentos}">
 						<rich:column styleClass="dt-toolbar-col" rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">

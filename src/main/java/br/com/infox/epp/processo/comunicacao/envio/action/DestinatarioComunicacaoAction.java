@@ -178,7 +178,7 @@ public class DestinatarioComunicacaoAction {
 	
 	private boolean isPessoaFisicaNaListaDestinatarios(PessoaFisica relator) {
 		for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
-			if (destinatario.getDestinatario().equals(relator)) {
+			if (destinatario.getDestinatario() != null && destinatario.getDestinatario().equals(relator)) {
 				return true;
 			}
 		}
