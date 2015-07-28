@@ -20,54 +20,69 @@
 	<ui:param name="showDownloadComunicacaoCompleta" value="#{empty showDownloadComunicacaoCompleta ? true : showDownloadComunicacaoCompleta}"></ui:param>
 	<ui:param name="showDownloadDocumentoPrincipal" value="#{empty showDownloadDocumentoPrincipal ? false : showDownloadDocumentoPrincipal}"></ui:param>
 	
-		<wi:outputText id="#{id}meioExpedicao"
-			label="#{infoxMessages['comunicacao.meioExpedicao']}"
-			value="#{meioExpedicao}"
-			rendered="#{showMeioExpedicao}" />
-		<wi:outputText id="#{id}destinatario"
-			label="#{infoxMessages['comunicacao.destinatario']}"
-			value="#{destinatario}"
-			rendered="#{showDestinatario}" />
-		<wi:outputText id="#{id}dataExpedicaoComunicacao"
-			label="#{infoxMessages['comunicacao.dataEnvio']}"
-			value="#{dataEnvio}"
-			rendered="#{showDataEnvio}">
-			<f:convertDateTime pattern="dd/MM/yyyy" />
-		</wi:outputText>
-		<wi:outputText id="#{id}prazoResposta" 
-			label="#{infoxMessages['comunicacao.prazoResposta']}"
-			value="#{prazoResposta}"
-			rendered="#{showPrazoResposta}">
-			<f:convertDateTime pattern="dd/MM/yyyy" />
-		</wi:outputText>
-		<wi:outputText id="#{id}dataResposta"
-			label="#{infoxMessages['comunicacao.dataResposta']}"
-			value="#{dataResposta}"
-			rendered="#{showDataResposta}">
-			<f:convertDateTime pattern="dd/MM/yyyy" />
-		</wi:outputText>
-		<wi:outputText id="#{id}tipoComunicacao"
-			label="#{infoxMessages['comunicacao.tipoComunicacao']}"
-			value="#{tipoComunicacao}"
-			rendered="#{showTipoComunicacao}" />
-		<wi:outputText id="#{id}statusProrrogacao" 
-			label="#{infoxMessages['comunicacao.statusProrrogacao']}"
-			value="#{statusProrrogacao}"
-			rendered="#{showStatusProrrogacao}">
-		</wi:outputText>
-		<h:form>
-			<a:commandButton
-				id="#{id}baixarComunicacaoBtn"
-				value="#{infoxMessages['comunicacao.visualizarComunicacao']}"
-				styleClass="buttons" type="button" 
-				onclick="infox.openPopUp('documento', '#{documentoDownloader.getViewUrl(documentoComunicacao)}');"
-				rendered="#{showDownloadDocumentoPrincipal}" />
-			<a:commandButton id="#{id}visualizarComunicacao" 
-                value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
-                styleClass="buttons"
-                onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?idDestinatario=#{idDestinatario}','1024'); return false;"
-                rendered="#{showDownloadComunicacaoCompleta}" />
-			
-		</h:form>
+	<wi:outputText id="#{id}meioExpedicao"
+		label="#{infoxMessages['comunicacao.meioExpedicao']}"
+		value="#{meioExpedicao}"
+		rendered="#{showMeioExpedicao}" />
+	<wi:outputText id="#{id}destinatario"
+		label="#{infoxMessages['comunicacao.destinatario']}"
+		value="#{destinatario}"
+		rendered="#{showDestinatario}" />
+	<wi:outputText id="#{id}dataExpedicaoComunicacao"
+		label="#{infoxMessages['comunicacao.dataEnvio']}"
+		value="#{dataEnvio}"
+		rendered="#{showDataEnvio}">
+		<f:convertDateTime pattern="dd/MM/yyyy" />
+	</wi:outputText>
+	<wi:outputText id="#{id}prazoResposta" 
+		label="#{infoxMessages['comunicacao.prazoResposta']}"
+		value="#{prazoResposta}"
+		rendered="#{showPrazoResposta}">
+		<f:convertDateTime pattern="dd/MM/yyyy" />
+	</wi:outputText>
+	<wi:outputText id="#{id}dataResposta"
+		label="#{infoxMessages['comunicacao.dataResposta']}"
+		value="#{dataResposta}"
+		rendered="#{showDataResposta}">
+		<f:convertDateTime pattern="dd/MM/yyyy" />
+	</wi:outputText>
+	<wi:outputText id="#{id}dataCienciaComunicacao"
+		label="#{infoxMessages['comunicacao.dataCiencia']}"
+		value="#{dataCiencia}"
+		rendered="#{not empty dataCiencia}">
+		<f:convertDateTime pattern="dd/MM/yyyy" />
+	</wi:outputText>
+	<wi:outputText id="#{id}responsavelCienciaComunicacao"
+		label="#{infoxMessages['comunicacao.responsavelConfirmacao']}"
+		value="#{responsavelCiencia}"
+		rendered="#{not empty responsavelCiencia}" />
+	<wi:outputText id="#{id}tipoComunicacao"
+		label="#{infoxMessages['comunicacao.tipoComunicacao']}"
+		value="#{tipoComunicacao}"
+		rendered="#{showTipoComunicacao}" />
+	<wi:outputText id="#{id}statusProrrogacao" 
+		label="#{infoxMessages['comunicacao.statusProrrogacao']}"
+		value="#{statusProrrogacao}"
+		rendered="#{showStatusProrrogacao}">
+	</wi:outputText>
+	
+	<ui:fragment rendered="#{not empty informacoesAdicionais}">
+		<ui:include src="#{informacoesAdicionais}"></ui:include>
+	</ui:fragment>
+	
+	<h:form>
+		<a:commandButton
+			id="#{id}baixarComunicacaoBtn"
+			value="#{infoxMessages['comunicacao.visualizarComunicacao']}"
+			styleClass="buttons" type="button" 
+			onclick="infox.openPopUp('documento', '#{documentoDownloader.getViewUrl(documentoComunicacao)}');"
+			rendered="#{showDownloadDocumentoPrincipal}" />
+		<a:commandButton id="#{id}visualizarComunicacao" 
+               value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
+               styleClass="buttons"
+               onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?idDestinatario=#{idDestinatario}','1024'); return false;"
+               rendered="#{showDownloadComunicacaoCompleta}" />
+		
+	</h:form>
 
 </ui:composition>
