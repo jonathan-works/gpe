@@ -34,7 +34,6 @@ import org.jboss.seam.util.Strings;
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.util.ArrayUtil;
-import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.assinatura.entity.RegistroAssinaturaSuficiente;
 import br.com.infox.epp.processo.documento.query.DocumentoBinQuery;
@@ -134,15 +133,6 @@ public class DocumentoBin implements Serializable {
     	}
     }
     
-	public boolean isAssinadoPorPapel(Papel papel) {
-		for (AssinaturaDocumento assinaturaDocumento : getAssinaturas()) {
-			if (assinaturaDocumento.getUsuarioPerfil().getPerfilTemplate().getPapel().equals(papel)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	public Integer getId() {
 		return id;
 	}
