@@ -24,6 +24,7 @@ import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.assignment.LocalizacaoAssignment;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
 import br.com.infox.epp.fluxo.manager.NaturezaManager;
@@ -39,10 +40,8 @@ import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 public class IniciarProcessoService implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@In
-    private DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
-    @In
     private VariavelProcessoService variavelProcessoService;
 	@In
 	private ProcessoManager processoManager;
@@ -137,8 +136,8 @@ public class IniciarProcessoService implements Serializable {
         return false;
     }
 
-    private void createJbpmVariables(Processo processo,
-            ContextInstance contextInstance) {
+    private void createJbpmVariables(Processo processo, ContextInstance contextInstance) {
+    	DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager = BeanManager.INSTANCE.getReference(DefinicaoVariavelProcessoManager.class);
         List<DefinicaoVariavelProcesso> variaveis = definicaoVariavelProcessoManager.listVariaveisByFluxo(processo.getNaturezaCategoriaFluxo().getFluxo());
         for (DefinicaoVariavelProcesso variavelProcesso : variaveis) {
             contextInstance.setVariable(variavelProcesso.getNome(), variavelProcessoService.getVariavelProcesso(processo, variavelProcesso.getNome()));

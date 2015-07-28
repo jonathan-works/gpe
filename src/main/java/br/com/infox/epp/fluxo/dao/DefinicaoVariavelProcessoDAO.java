@@ -10,33 +10,30 @@ import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.PARAM_
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.PARAM_NOME;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.TOTAL_BY_FLUXO;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-
-import br.com.infox.core.dao.DAO;
+import br.com.infox.cdi.dao.Dao;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso_;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 
-@Scope(ScopeType.EVENT)
-@AutoCreate
-@Name(DefinicaoVariavelProcessoDAO.NAME)
-public class DefinicaoVariavelProcessoDAO extends DAO<DefinicaoVariavelProcesso> {
+@Stateless
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+public class DefinicaoVariavelProcessoDAO extends Dao<DefinicaoVariavelProcesso, Long> {
 
-    private static final long serialVersionUID = 1L;
-    public static final String NAME = "definicaoVariavelProcessoDAO";
+    public DefinicaoVariavelProcessoDAO() {
+    	super(DefinicaoVariavelProcesso.class);
+	}
 
     @SuppressWarnings(UNCHECKED)
     public List<DefinicaoVariavelProcesso> listVariaveisByFluxo(Fluxo fluxo) {
@@ -44,47 +41,40 @@ public class DefinicaoVariavelProcessoDAO extends DAO<DefinicaoVariavelProcesso>
     }
 
     @SuppressWarnings(UNCHECKED)
-    public List<DefinicaoVariavelProcesso> listVariaveisByFluxo(Fluxo fluxo,
-            int start, int count) {
+    public List<DefinicaoVariavelProcesso> listVariaveisByFluxo(Fluxo fluxo, int start, int count) {
         return createQueryVariaveisProcessoByFluxo(fluxo).setFirstResult(start).setMaxResults(count).getResultList();
     }
 
     public Long getTotalVariaveisByFluxo(Fluxo fluxo) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put(PARAM_FLUXO, fluxo);
-        return getNamedSingleResult(TOTAL_BY_FLUXO, parameters);
+        return entityManager.createNamedQuery(TOTAL_BY_FLUXO, Long.class).setParameter(PARAM_FLUXO, fluxo).setMaxResults(1).getResultList().get(0);
     }
 
     private Query createQueryVariaveisProcessoByFluxo(Fluxo fluxo) {
-        return getEntityManager().createNamedQuery(LIST_BY_FLUXO, DefinicaoVariavelProcesso.class).setParameter(PARAM_FLUXO, fluxo);
+        return entityManager.createNamedQuery(LIST_BY_FLUXO, DefinicaoVariavelProcesso.class).setParameter(PARAM_FLUXO, fluxo);
     }
 
     public DefinicaoVariavelProcesso getDefinicao(Fluxo fluxo, String nome) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put(PARAM_FLUXO, fluxo);
-        parameters.put(PARAM_NOME, nome);
-        return getNamedSingleResult(DEFINICAO_BY_FLUXO, parameters);
+        return entityManager.createNamedQuery(DEFINICAO_BY_FLUXO, DefinicaoVariavelProcesso.class).setParameter(PARAM_FLUXO, fluxo)
+        		.setParameter(PARAM_NOME, nome).setMaxResults(1).getResultList().get(0);
     }
     
     public List<DefinicaoVariavelProcesso> getDefinicaoVariavelProcessoListByIdProcesso(Integer idProcesso) {
-    	Map<String, Object> parameters = new HashMap<>(1);
-        parameters.put(PARAM_ID_PROCESSO, idProcesso);
-        return getNamedResultList(DEFINICAO_BY_ID_PROCESSO, parameters);
+    	return entityManager.createNamedQuery(DEFINICAO_BY_ID_PROCESSO, DefinicaoVariavelProcesso.class)
+    			.setParameter(PARAM_ID_PROCESSO, idProcesso).getResultList();
     }
     
     public List<DefinicaoVariavelProcesso> getDefinicaoVariavelProcessoVisivelPainel(Integer idProcesso) {
-        Map<String, Object> parameters = new HashMap<>(1);
-        parameters.put(PARAM_ID_PROCESSO, idProcesso);
-        return getNamedResultList(DEFINICAO_VISIVEL_PAINEL_BY_ID_PROCESSO, parameters);
+    	return entityManager.createNamedQuery(DEFINICAO_VISIVEL_PAINEL_BY_ID_PROCESSO, DefinicaoVariavelProcesso.class)
+    			.setParameter(PARAM_ID_PROCESSO, idProcesso).getResultList();
     }
     
     public Integer getMaiorOrdem(Fluxo fluxo) {
-    	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+    	CriteriaBuilder cb = entityManager.getCriteriaBuilder();
     	CriteriaQuery<Integer> query = cb.createQuery(Integer.class);
     	Root<DefinicaoVariavelProcesso> root = query.from(DefinicaoVariavelProcesso.class);
     	query.select(cb.coalesce(cb.max(root.get(DefinicaoVariavelProcesso_.ordem)), 0));
     	query.where(cb.equal(root.get(DefinicaoVariavelProcesso_.fluxo), fluxo));
-    	return getEntityManager().createQuery(query).getSingleResult();
+    	return entityManager.createQuery(query).getSingleResult();
     }
     
     @Override
@@ -93,10 +83,14 @@ public class DefinicaoVariavelProcessoDAO extends DAO<DefinicaoVariavelProcesso>
     	DefinicaoVariavelProcesso ret = super.remove(object);
     	String hql = "update DefinicaoVariavelProcesso o set o.ordem = o.ordem - 1 where o.fluxo = :fluxo and o.ordem > :ordem";
     	try {
-    		getEntityManager().createQuery(hql).setParameter("fluxo", fluxo).setParameter("ordem", object.getOrdem()).executeUpdate();
+    		entityManager.createQuery(hql).setParameter("fluxo", fluxo).setParameter("ordem", object.getOrdem()).executeUpdate();
     	} catch (Exception e) {
     		throw new DAOException(e);
     	}
     	return ret;
+    }
+    
+    public EntityManager getEntityManager() {
+    	return this.entityManager;
     }
 }
