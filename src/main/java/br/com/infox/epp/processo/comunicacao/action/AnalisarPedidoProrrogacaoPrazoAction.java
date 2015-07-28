@@ -43,7 +43,7 @@ import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
 @Name(AnalisarPedidoProrrogacaoPrazoAction.NAME)
-@Scope(ScopeType.CONVERSATION)
+@Scope(ScopeType.PAGE)
 @AutoCreate
 @Transactional
 public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
@@ -183,21 +183,38 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 		return "-";
 	}
 	
+	public Date getDataLimiteCumprimento(DestinatarioBean bean){
+		MetadadoProcesso metadadoPrazo = bean.getComunicacao().getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO);
+		Date dataLimiteCumprimento = null;
+		if (metadadoPrazo != null && bean.getPrazoFinal() != null) {
+			dataLimiteCumprimento = metadadoPrazo.getValue();
+		}
+		return dataLimiteCumprimento;
+	}
+	
+	public Date getDataCiencia(){
+		MetadadoProcesso metadadoCiencia = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA);
+		Date dataCiencia = null;
+		if(metadadoCiencia != null){
+			dataCiencia = metadadoCiencia.getValue();
+		}
+		return dataCiencia;
+	}
+	
+	public String getResponsavelCiencia(){
+		MetadadoProcesso metadadoResponsavelCiencia = comunicacao.getMetadado(ComunicacaoMetadadoProvider.RESPONSAVEL_CIENCIA);
+		if(metadadoResponsavelCiencia != null){
+			return metadadoResponsavelCiencia.getValue().toString();
+		}
+		return "-";
+	}
+	
 	public boolean isPedidoDentroDoPrazo(DestinatarioBean bean){
 		Date dataLimiteCumprimento = getDataLimiteCumprimento(bean);
 		if(dataLimiteCumprimento.after(new Date()) || prorrogacaoPrazoService.hasPedidoProrrogacaoEmAberto(bean.getComunicacao())){
 			return true;
 		}
 		return false;
-	}
-	
-	public Date getDataLimiteCumprimento(DestinatarioBean bean){
-		MetadadoProcesso metadadoPrazo = bean.getComunicacao().getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO);
-		Date dataLimiteCumprimento = new Date();
-		if (metadadoPrazo != null && bean.getPrazoFinal() != null) {
-			dataLimiteCumprimento = metadadoPrazo.getValue();
-		}
-		return dataLimiteCumprimento;
 	}
 	
 	public Date getDataLimiteCumprimento(){
@@ -260,6 +277,10 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 
 	public void setDocumentos(boolean documentos) {
 		this.documentos = documentos;
+	}
+	
+	public Processo getComunicacao(){
+		return comunicacao;
 	}
 	
 		
