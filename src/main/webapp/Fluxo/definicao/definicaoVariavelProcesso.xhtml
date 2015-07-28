@@ -53,7 +53,7 @@
 	                url="#{wiSkin.imageFolder}/jbpm/up.gif" styleClass="opacityHover">
 	                <a:ajax event="click" listener="#{definicaoVariavelProcessoAction.moveUp(row)}" execute="@this" render="variavelTable" limitRender="true" />
 	            </h:graphicImage>
-	            <h:graphicImage title="#{infoxMessages['process.node.down']}" rendered="#{row.ordem lt definicaoVariavelProcessoAction.maiorOrdem - 1}"
+	            <h:graphicImage title="#{infoxMessages['process.node.down']}" rendered="#{row.ordem lt definicaoVariavelProcessoAction.maiorOrdem}"
 	                url="#{wiSkin.imageFolder}/jbpm/down.gif" styleClass="opacityHover">
 	                <a:ajax event="click" listener="#{definicaoVariavelProcessoAction.moveDown(row)}" execute="@this" render="variavelTable" limitRender="true" />
 	            </h:graphicImage>
@@ -135,10 +135,16 @@
             </s:div>
             <wi:commandButton
             	id="buttonDefinicaoVariavelPersist"
-                action="#{definicaoVariavelProcessoAction.save()}"
+                action="definicaoVariavelProcessoAction.persist"
                 reRender="variavelForm, variavelTable, pageBodyDialogMessage, variavelPaginator"
-                value="#{definicaoVariavelProcessoAction.persisted ? messages['crud.update'] : messages['crud.persist']}"
-            />
+                rendered="#{not definicaoVariavelProcessoAction.persisted}"
+                value="#{messages['crud.persist']}" />
+            <wi:commandButton
+            	id="buttonDefinicaoVariavelUpdate"
+                action="definicaoVariavelProcessoAction.update"
+                reRender="variavelForm, variavelTable, pageBodyDialogMessage, variavelPaginator"
+                rendered="#{definicaoVariavelProcessoAction.persisted}"
+                value="#{messages['crud.update']}" />
         </ui:fragment>
     </h:form>
 </ui:composition>

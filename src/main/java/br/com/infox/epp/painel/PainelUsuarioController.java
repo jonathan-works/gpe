@@ -53,12 +53,13 @@ public class PainelUsuarioController implements Serializable {
 	protected SecurityUtil securityUtil;
 	@Inject
 	private PainelTreeHandler painelTreeHandler;
+	@Inject
+	protected DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
 
 	private VariavelProcessoService variavelProcessoService = ComponentUtil.getComponent(VariavelProcessoService.NAME);
 	private CaixaManager caixaManager = ComponentUtil.getComponent(CaixaManager.NAME);
 	private ActionMessagesService actionMessagesService = ComponentUtil.getComponent(ActionMessagesService.NAME);
 	private ConsultaProcessoList consultaProcessoList = ComponentUtil.getComponent(ConsultaProcessoList.NAME);
-	protected DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager = ComponentUtil.getComponent(DefinicaoVariavelProcessoManager.NAME);
 
 	private List<Integer> processoIdList;
 	private List<DynamicColumnModel> dynamicColumns;

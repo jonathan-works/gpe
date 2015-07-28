@@ -18,6 +18,7 @@ import org.jboss.seam.core.Expressions.ValueExpression;
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.graph.exe.ProcessInstance;
 
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
 import br.com.infox.epp.processo.entity.Processo;
@@ -34,13 +35,13 @@ public class VariavelProcessoService {
 
     public static final String NAME = "variavelProcessoService";
 
-    @In private DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
     @In private MetadadoProcessoManager metadadoProcessoManager;
     @In
     private ProcessoManager processoManager;
 
     public List<VariavelProcesso> getVariaveis(Processo processo) {
         List<VariavelProcesso> variaveis = new ArrayList<>();
+        DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager = BeanManager.INSTANCE.getReference(DefinicaoVariavelProcessoManager.class);
         List<DefinicaoVariavelProcesso> definicaoVariavelList = definicaoVariavelProcessoManager
                 .listVariaveisByFluxo(processo.getNaturezaCategoriaFluxo().getFluxo());
         
@@ -61,6 +62,7 @@ public class VariavelProcessoService {
     }
 
     public VariavelProcesso getVariavelProcesso(Processo processo, String nome) {
+    	DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager = BeanManager.INSTANCE.getReference(DefinicaoVariavelProcessoManager.class);
         DefinicaoVariavelProcesso definicao = definicaoVariavelProcessoManager.getDefinicao(processo
                 .getNaturezaCategoriaFluxo().getFluxo(), nome);
         return getPrimeiraVariavelProcessoAncestral(processo, definicao);
@@ -115,6 +117,7 @@ public class VariavelProcessoService {
 	public List<VariavelProcesso> getVariaveisHierquiaProcesso(Integer idProcesso) {
         List<VariavelProcesso> variaveis = new ArrayList<>();
         Processo processo = processoManager.find(idProcesso);
+        DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager = BeanManager.INSTANCE.getReference(DefinicaoVariavelProcessoManager.class);
         List<DefinicaoVariavelProcesso> definicaoVariavelList = definicaoVariavelProcessoManager
                 .listVariaveisByFluxo(processo.getNaturezaCategoriaFluxo().getFluxo());
         

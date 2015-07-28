@@ -64,6 +64,7 @@ public abstract class Dao<T, I> {
 	@TransactionAttribute(TransactionAttributeType.MANDATORY)
 	public T remove(T object) throws DAOException {
 		try {
+			object = entityManager.merge(object);
 			entityManager.remove(object);
 			entityManager.flush();
 			return object;
