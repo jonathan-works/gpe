@@ -2,6 +2,10 @@ package br.com.infox.epp.processo.metadado.manager;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -15,6 +19,8 @@ import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 
 @AutoCreate
 @Name(MetadadoProcessoManager.NAME)
+@Stateless
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class MetadadoProcessoManager extends Manager<MetadadoProcessoDAO, MetadadoProcesso> {
 
 	private static final long serialVersionUID = 1L;
