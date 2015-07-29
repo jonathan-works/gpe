@@ -50,7 +50,7 @@ public class PastaAction implements Serializable {
     private PastaRestricaoManager pastaRestricaoManager;
 
     private Processo processo;
-    private List<Pasta> pastaList;
+    private List<Pasta> pastaList = new ArrayList<>();
     private Pasta instance;
     private Integer id;
     private Map<Integer, PastaRestricaoBean> restricoes;

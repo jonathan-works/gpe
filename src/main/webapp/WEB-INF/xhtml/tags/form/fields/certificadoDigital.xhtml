@@ -8,24 +8,28 @@
   xmlns:h="http://java.sun.com/jsf/html"
   xmlns:rich="http://richfaces.org/rich"
   xmlns:s="http://jboss.org/schema/seam/taglib"
-  xmlns:wi="http://www.itx.com.br/jsf">
+  xmlns:wi="http://www.itx.com.br/jsf"
+  xmlns:cc="http://java.sun.com/jsf/composite">
 
   <h:panelGroup id="#{empty id ? 'divApplet' : id}">
     <s:fragment rendered="#{empty rendered ? true : rendered}">
 
       <h:inputHidden id="#{id}Token" value="#{tokenField}" />  
-      <a:commandButton type="button" styleClass="buttons"
-      		action="#{elFunctions.invokeMethod(preSignAction)}"
-      		oncomplete="infox.CertDig.#{id}.init();" render="#{empty reRender ? '@this' : reRender}"
+      <a:commandButton type="button" styleClass="buttons" disabled="#{disableb}" onbegin="infox.showLoading();"
+      		action="#{elFunctions.invokeMethod(preSignAction)}" execute="#{execute}" rendered="#{empty rendered? 'true' : rendered}"
+      		oncomplete="infox.hideLoading();infox.CertDig.#{id}.init();" render="#{empty reRender ? '@this' : reRender}"
       		value="#{empty signButtonCaption ? 'Assinar Digitalmente' : signButtonCaption}" >
       			<f:setPropertyActionListener value="#{propertyValue}" target="#{propertyTarget}" />
       </a:commandButton>
+      
+      <ui:param name="md5" value="#{ empty documentData ? signableData : documentData.documentsMD5}" />
+      
       <h:outputScript name="cookies.min.js" library="js" />  
-      <h:outputScript>
+      <h:outputScript>	
           namespace('infox.CertDig.#{id}', {  
   	          init: function() {  
   	              #{functionPreSign};  
-  	        	  location.href='#{certificadoDigitalPathResolver.JNLPUrl}?md5=#{signableData}';  
+  	        	  location.href='#{certificadoDigitalPathResolver.JNLPUrl}?md5=#{md5}';  
   	        	  var intervalId = setInterval(function() {  
   	        	      var token = Cookies.get('br.com.infox.epp.sign.token');
   	        	      #{rich:element(id.concat('Token'))}.value = token;  
