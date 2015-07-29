@@ -20,6 +20,7 @@ import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.DateUtil;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
@@ -46,6 +47,7 @@ import br.com.infox.log.Logging;
 @Scope(ScopeType.PAGE)
 @AutoCreate
 @Transactional
+@ContextDependency
 public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 	public static final String NAME = "analisarPedidoProrrogacaoPrazoAction";
 	private static final long serialVersionUID = 1L;
@@ -108,10 +110,6 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 		return dataFimPrazoCumprimento;
 	}
 	
-	public DestinatarioModeloComunicacao getDestinatarioComunicacao(){
-		return destinatarioComunicacao;
-	}
-
 	public void endTask() {
 		try {
 			prorrogacaoPrazoService.finalizarAnalisePedido(comunicacao);		
@@ -279,9 +277,29 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 		this.documentos = documentos;
 	}
 	
+	
+	public Processo getProcessoDocumento(){
+		return processoDocumento;
+	}
+	
+	public void setProcessoDocumento(Processo processoDocumento) {
+		this.processoDocumento = processoDocumento;
+	}
+
 	public Processo getComunicacao(){
 		return comunicacao;
 	}
 	
-		
+	public void setComunicacao(Processo comunicacao) {
+		this.comunicacao = comunicacao;
+	}
+
+	public DestinatarioModeloComunicacao getDestinatarioComunicacao(){
+		return destinatarioComunicacao;
+	}
+	
+	public void setDestinatarioComunicacao(DestinatarioModeloComunicacao destinatarioComunicacao) {
+		this.destinatarioComunicacao = destinatarioComunicacao;
+	}
+
 }
