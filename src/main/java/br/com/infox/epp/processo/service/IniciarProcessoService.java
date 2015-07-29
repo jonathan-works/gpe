@@ -130,7 +130,7 @@ public class IniciarProcessoService implements Serializable {
             ContextInstance contextInstance) {
         List<DefinicaoVariavelProcesso> variaveis = definicaoVariavelProcessoManager.listVariaveisByFluxo(processo.getNaturezaCategoriaFluxo().getFluxo());
         for (DefinicaoVariavelProcesso variavelProcesso : variaveis) {
-            contextInstance.setVariable(variavelProcesso.getNome(), variavelProcessoService.getVariavelProcesso(processo, variavelProcesso.getNome()));
+            contextInstance.setVariable(variavelProcesso.getNome(), null);
         }
     }
 }
