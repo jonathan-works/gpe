@@ -4,6 +4,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -23,8 +27,10 @@ import br.com.infox.seam.exception.BusinessException;
 
 @Name(ProrrogacaoPrazoService.NAME)
 @AutoCreate
-@Scope(ScopeType.EVENT)
+@Stateless
+@Scope(ScopeType.STATELESS)
 @Transactional
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class ProrrogacaoPrazoService {
 	public static final String NAME = "prorrogacaoPrazoService";
 	
