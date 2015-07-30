@@ -27,59 +27,59 @@
 				styleClass="buttons"
 				rendered="#{envioComunicacaoController.podeVisualizarComunicacaoNaoFinalizada()}" 
 				onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?idModelo=#{envioComunicacaoController.modeloComunicacao.id}','1024'); return false;" />
-			<wi:commandButton id="btnCriarComunicacao" 
+			<a:commandButton id="btnCriarComunicacao" 
 				value="#{infoxMessages['comunicacao.criarComunicacao']}"
 				rendered="#{envioComunicacaoController.expedida and envioComunicacaoController.inTask}"
+				styleClass="buttons"
 				onclick="infox.openPopUp('_blank', '#{pathResolver.contextPath}/Processo/criarComunicacao.seam?jbpmProcessId=#{envioComunicacaoController.jbpmProcessId}','1024'); return false;" />
 			</h:form>
 			
 			<!-- Painel dos Destinatários -->
-			<rich:panel header="#{infoxMessages['comunicacao.destinatarios']}" id="destinatariosPanel">
 				
-				<!-- Participantes Disponíveis -->
-				<s:div rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
-					<rich:collapsiblePanel header="#{infoxMessages['comunicacao.participantesProcesso']}" switchType="client"
-						rendered="#{participanteProcessoComunicacaoList.resultCount gt 0}">
-						<wi:dataTable id="participantesDisponiveis" values="#{participanteProcessoComunicacaoList.list(15)}" 
-							bean="#{participanteProcessoComunicacaoList}" showSearchForm="false" rowId="#{row.id}">
-							<ui:define name="headerToolBar" />
-							<ui:define name="toolBar">
-								<h:form>
-									<a:commandLink render="destinatariosPanel"
-										action="#{destinatarioComunicacaoAction.adicionarDestinatario(row)}">
-										<h:graphicImage url="#{wiSkin.imageFolder}/add.gif" title="#{infoxMessages['button.add']}" />
-									</a:commandLink>
-								</h:form>
-							</ui:define>
-							<rich:column>
-								<f:facet name="header">#{infoxMessages['participanteProcesso.nome']}</f:facet>
-								<h:outputText value="#{row.nome}" />
-							</rich:column>
-							<rich:column>
-								<f:facet name="header">#{infoxMessages['participanteProcesso.tipoParticipante']}</f:facet>
-								<h:outputText value="#{row.tipoParte.descricao}" />
-							</rich:column>
-                            <rich:column>
-                                <f:facet name="header">#{infoxMessages['participanteProcesso.superior']}</f:facet>
-                                <h:outputText value="#{row.participantePai}"></h:outputText>
-                            </rich:column>
-						</wi:dataTable>
-					</rich:collapsiblePanel>
-				</s:div>
-				
-				<!-- Controle do Relator -->
-				<h:form rendered="#{destinatarioComunicacaoAction.processoPossuiRelator and not envioComunicacaoController.modeloComunicacao.finalizada}"
-					style="margin-top:1em;">
-					<wi:selectBooleanCheckbox id="relator" label="#{infoxMessages['comunicacao.enviarParaRelator']}" 
-						value="#{destinatarioComunicacaoAction.modeloComunicacao.enviarRelatoria}">
-						<a:ajax event="change" render="destinatariosPanel" limitRender="true" execute="@this"
-							listener="#{destinatarioComunicacaoAction.gerenciarRelator}"/>
-					</wi:selectBooleanCheckbox>
-				</h:form>
-				<div />
-				
-				<!-- Localizações disponíveis para serem selecionadas como Destinatários -->
-				<h:form rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
+			<!-- Participantes Disponíveis -->
+			<s:div rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
+				<rich:collapsiblePanel header="#{infoxMessages['comunicacao.participantesProcesso']}" switchType="client"
+					rendered="#{participanteProcessoComunicacaoList.resultCount gt 0}">
+					<wi:dataTable id="participantesDisponiveis" values="#{participanteProcessoComunicacaoList.list(15)}" 
+						bean="#{participanteProcessoComunicacaoList}" showSearchForm="false" rowId="#{row.id}">
+						<ui:define name="headerToolBar" />
+						<ui:define name="toolBar">
+							<h:form>
+								<a:commandLink render="destinatariosPanel"
+									action="#{destinatarioComunicacaoAction.adicionarDestinatario(row)}">
+									<h:graphicImage url="#{wiSkin.imageFolder}/add.gif" title="#{infoxMessages['button.add']}" />
+								</a:commandLink>
+							</h:form>
+						</ui:define>
+						<rich:column>
+							<f:facet name="header">#{infoxMessages['participanteProcesso.nome']}</f:facet>
+							<h:outputText value="#{row.nome}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">#{infoxMessages['participanteProcesso.tipoParticipante']}</f:facet>
+							<h:outputText value="#{row.tipoParte.descricao}" />
+						</rich:column>
+                           <rich:column>
+                               <f:facet name="header">#{infoxMessages['participanteProcesso.superior']}</f:facet>
+                               <h:outputText value="#{row.participantePai}"></h:outputText>
+                           </rich:column>
+					</wi:dataTable>
+				</rich:collapsiblePanel>
+			</s:div>
+			
+			<!-- Controle do Relator -->
+			<h:form rendered="#{destinatarioComunicacaoAction.processoPossuiRelator and not envioComunicacaoController.modeloComunicacao.finalizada}"
+				style="margin-top:1em;">
+				<wi:selectBooleanCheckbox id="relator" label="#{infoxMessages['comunicacao.enviarParaRelator']}" 
+					value="#{destinatarioComunicacaoAction.modeloComunicacao.enviarRelatoria}">
+					<a:ajax event="change" render="destinatariosPanel" limitRender="true" execute="@this"
+						listener="#{destinatarioComunicacaoAction.gerenciarRelator}"/>
+				</wi:selectBooleanCheckbox>
+			</h:form>
+			<div />
+			
+			<!-- Localizações disponíveis para serem selecionadas como Destinatários -->
+			<h:form rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
 					<rich:collapsiblePanel header="#{infoxMessages['comunicacao.localizacoes']}" switchType="client">
                        	<s:div style="margin-botton:1em">
                        		<wi:outputText id="mensagemEnvioLocalizacao" value="#{infoxMessages['comunicacao.mensagemEnvioParaLocalizacao']}" />
@@ -108,7 +108,7 @@
 			<h:form>
 				<!-- Grid dos destinatários selecionados -->
 				<rich:panel id="destinatariosSelecionadosComunicacaoPanel" 
-					header="#{infoxMessages['comunicacao.destinatariosSelecionados']}"
+					header="#{infoxMessages['comunicacao.destinatarios']}"
 					style="margin-top:1em" bodyClass="dtable-p-b" styleClass="dtable-p full-sized">
 				<rich:dataTable id="destinatariosSelecionados"
 					value="#{envioComunicacaoController.modeloComunicacao.destinatarios}"
@@ -170,7 +170,6 @@
 				</rich:dataTable>
 				</rich:panel>
 			</h:form>
-			</rich:panel>
 
 			<!-- Botão Visualizar Comunicações (o ofício da documentação é o último documento incluso por usuário interno) -->
 			<h:form id="visualizarComunicacaoAnexoForm">
