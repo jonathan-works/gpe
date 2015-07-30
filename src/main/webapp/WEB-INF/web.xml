@@ -130,4 +130,7 @@
 		<persistence-unit-ref-name>EPABinPersistenceUnit</persistence-unit-ref-name>
 		<persistence-unit-name>EPABinPersistenceUnit</persistence-unit-name>
 	</persistence-unit-ref>
+	<listener>
+		<listener-class>br.com.infox.jsf.events.EppServletEventListener</listener-class>
+	</listener>	
 </web-app>
