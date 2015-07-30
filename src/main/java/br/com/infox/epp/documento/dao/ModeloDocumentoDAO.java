@@ -13,12 +13,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.documento.entity.GrupoModeloDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
+import br.com.infox.epp.documento.entity.ModeloDocumento_;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 
 @Name(ModeloDocumentoDAO.NAME)
@@ -52,4 +58,18 @@ public class ModeloDocumentoDAO extends DAO<ModeloDocumento> {
         return getNamedResultList(MODELO_BY_LISTA_IDS, parameters);
     }
 
+	public List<ModeloDocumento> getModeloDocumentoByTipo(TipoModeloDocumento tipoModeloDocumento) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<ModeloDocumento> cq = cb.createQuery(ModeloDocumento.class);
+		Root<ModeloDocumento> from = cq.from(ModeloDocumento.class);
+		Predicate equalTipoModelo = cb.equal(from.get(ModeloDocumento_.tipoModeloDocumento), tipoModeloDocumento);
+		Predicate ativo = cb.equal(from.get(ModeloDocumento_.ativo), true);
+		Predicate where = cb.and(equalTipoModelo, ativo);
+
+		cq.select(from);
+		cq.where(where);
+		cq.orderBy(cb.asc(from.get(ModeloDocumento_.modeloDocumento)));
+
+		return getEntityManager().createQuery(cq).getResultList();
+	}
 }

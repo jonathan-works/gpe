@@ -79,12 +79,7 @@
         rendered="#{empty consultaController.processo.dataFim}"
         action="#{anexoController.onClickTabAnexar(consultaController.processo)}">
         <wi:ajaxDiv id="divAnexarDocumentos">
-          <wi:dataForm
-            formId="anexarDocumentosForm"
-            formTitle="#{infoxMessages['processoDocumento.anexarDocumento']}">
-            <ui:include src="/Processo/anexarDocumentos.xhtml" />
-            <ui:define name="buttons" />
-          </wi:dataForm>
+            <ui:include src="/Processo/visualizarAbaAnexar.xhtml" />
         </wi:ajaxDiv>
       </infox:tab>
       <infox:tab

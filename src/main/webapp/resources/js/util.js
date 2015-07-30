@@ -1,4 +1,11 @@
+String.prototype.isEmpty = function() {
+    return (this.length === 0 || !this.trim());
+};
+
 namespace("infox",{
+	
+	messageModalStatus: "",
+	
 	applyCSS:function applyCSS(args) {
 		setTimeout(function(){
 			$(args.selector).css(args.style);
@@ -21,7 +28,12 @@ namespace("infox",{
 		}
 		window.open(url || "about:blank", id || "Janela", props.join(","))
 			.moveTo(0, 0);
-	},showLoading:function showLoading() {
+	},showLoading:function showLoading(message) {
+		if(message)
+			this.messageModalStatus = message;
+		else
+			this.messageModalStatus = "";
+		
 		RichFaces.$('modalStatus').show();	
 	},hideLoading:function hideLoading() {
 		RichFaces.$('modalStatus').hide();
