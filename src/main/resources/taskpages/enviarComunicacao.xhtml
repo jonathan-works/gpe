@@ -35,7 +35,7 @@
 			</h:form>
 			
 			<!-- Painel dos Destinatários -->
-				
+        <s:div id="destinatariosPanel">				
 			<!-- Participantes Disponíveis -->
 			<s:div rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
 				<rich:collapsiblePanel header="#{infoxMessages['comunicacao.participantesProcesso']}" switchType="client"
@@ -170,7 +170,7 @@
 				</rich:dataTable>
 				</rich:panel>
 			</h:form>
-
+        </s:div>
 			<!-- Botão Visualizar Comunicações (o ofício da documentação é o último documento incluso por usuário interno) -->
 			<h:form id="visualizarComunicacaoAnexoForm">
 				<s:div rendered="#{envioComunicacaoController.podeExibirBotaoVisualizarComunicacoes()}">
