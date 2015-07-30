@@ -286,7 +286,7 @@ public class ComunicacaoAction implements Serializable {
 			dadosCiencia.put(destinatario.getIdDestinatario(), true);
 			clear();
 			
-			FacesMessages.instance().add("Ciência informada com sucesso");
+			FacesMessages.instance().add(infoxMessages.get("comunicacao.msg.sucesso.ciencia"));
 			
 		} catch (DAOException e) {
 			LOG.error("", e);
@@ -319,15 +319,16 @@ public class ComunicacaoAction implements Serializable {
 	private void validarCiencia() {
 		StringBuilder msg = new StringBuilder();
 		if (getClassificacaoDocumentoCiencia() == null) {
-			msg.append("Informe a classificação do documento\n");
+			msg.append(infoxMessages.get("comunicacao.msg.erro.classificacao"));
+			msg.append("\n");
 		}
 		if (getDataCiencia() == null) {
-			msg.append("Informe a data de ciência\n");
+			msg.append(infoxMessages.get("comunicacao.msg.erro.cienciaData"));
+			msg.append("\n");
 		}
 		if (documentoUploader.getDocumento() == null && Strings.isNullOrEmpty(getTextoCiencia())) {
-			msg.append("Informe o documento de comprovação de ciência");
+			msg.append(infoxMessages.get("comunicacao.msg.erro.cienciaDocumento"));
 		}
-		
 		if (msg.length() > 0) {
 			FacesMessages.instance().add(msg.toString());
 			return;
@@ -401,7 +402,7 @@ public class ComunicacaoAction implements Serializable {
 			metadadoProcessoManager.persist(dataPedidoProrrogacao);
 			comunicacao.getMetadadoProcessoList().add(dataPedidoProrrogacao);
 			clear();
-			FacesMessages.instance().add("Pedido de prorrogação de prazo efetuado com sucesso");
+			FacesMessages.instance().add(infoxMessages.get("comunicacao.msg.sucesso.pedidoProrrogacao"));
 		} catch (DAOException e) {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);
