@@ -37,10 +37,9 @@
 			 readonly="#{readonly}"
 			 disabled="#{disabled}"
 			 required="#{required}"
-			 
 			 maxlength="#{empty maxlength ? 50 : maxlength}"
 			 onkeyup="onlyNumber(this)">
-			
+				<f:converter converterId="javax.faces.Long"/>
 				<ui:insert />
 			
 		</h:inputText>
