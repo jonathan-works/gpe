@@ -3,6 +3,10 @@ package br.com.infox.epp.processo.comunicacao.service;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -27,9 +31,11 @@ import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.epp.system.Parametros;
 
 @Name(PrazoComunicacaoService.NAME)
-@Scope(ScopeType.EVENT)
+@Scope(ScopeType.STATELESS)
+@Stateless
 @AutoCreate
 @Transactional
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class PrazoComunicacaoService {
 	
 	public static final String NAME = "prazoComunicacaoService";
@@ -58,6 +64,7 @@ public class PrazoComunicacaoService {
         return calendarioEventosManager.getPrimeiroDiaUtil((Date) metadadoCiencia.getValue(), diasPrazoCumprimento);
     }
 	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void darCiencia(Processo comunicacao, Date dataCiencia, UsuarioLogin usuarioCiencia) throws DAOException {
 		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
 		MetadadoProcesso metadadoDataCiencia = metadadoProcessoProvider.gerarMetadado(
@@ -66,6 +73,16 @@ public class PrazoComunicacaoService {
 				ComunicacaoMetadadoProvider.RESPONSAVEL_CIENCIA, usuarioCiencia.getIdUsuarioLogin().toString());
 		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoDataCiencia));
 		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoResponsavelCiencia));
+
+		adicionarPrazoDeCumprimento(comunicacao, dataCiencia);
+		adicionarVariavelCienciaAutomaticaAoProcesso(usuarioCiencia, comunicacao);
+		adicionarVariavelPossuiPrazoAoProcesso(comunicacao);
+	}
+
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	protected void adicionarPrazoDeCumprimento(Processo comunicacao, Date dataCiencia)
+			throws DAOException {
+		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
 		MetadadoProcesso metadadoPrazoCumprimento = comunicacao.getMetadado(ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
 		Integer diasPrazoCumprimento;
 		if (metadadoPrazoCumprimento == null){
@@ -84,8 +101,6 @@ public class PrazoComunicacaoService {
     				ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO_INICIAL, dataLimite);
     		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoLimiteDataCumprimento));
 		}
-		adicionarVariavelCienciaAutomaticaAoProcesso(usuarioCiencia, comunicacao);
-		adicionarVariavelPossuiPrazoAoProcesso(comunicacao);
 	}
 	
 	public void darCumprimento(Processo comunicacao, Date dataCumprimento, UsuarioLogin usuarioCumprimento) throws DAOException {
