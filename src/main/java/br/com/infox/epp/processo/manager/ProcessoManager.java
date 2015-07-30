@@ -123,10 +123,10 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         }
     }
 
-    public void visualizarTask(final Processo processo, final Long idTarefa, final UsuarioPerfil usuarioPerfil) {
+    public void visualizarTask(final Processo processo, final UsuarioPerfil usuarioPerfil) {
         final BusinessProcess bp = BusinessProcess.instance();
         if (!processo.getIdJbpm().equals(bp.getProcessId())) {
-            final Long taskInstanceId = getTaskInstanceId(usuarioPerfil, processo, idTarefa);
+            final Long taskInstanceId = getTaskInstanceId(usuarioPerfil, processo);
             bp.setProcessId(processo.getIdJbpm());
             bp.setTaskId(taskInstanceId);
         }
@@ -147,29 +147,24 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         }
     }
 
-    public void iniciarTask(Processo processo, Long idTarefa, UsuarioPerfil usuarioPerfil) throws DAOException {
-        Long taskInstanceId = getTaskInstanceId(usuarioPerfil, processo, idTarefa);
+    public void iniciarTask(Processo processo, UsuarioPerfil usuarioPerfil) throws DAOException {
+        Long taskInstanceId = getTaskInstanceId(usuarioPerfil, processo);
         if (taskInstanceId != null) {
             iniciaTask(processo, taskInstanceId);
             storeUsuario(taskInstanceId, usuarioPerfil);
         }
     }
 
-    private Long getTaskInstanceId(UsuarioPerfil usuarioPerfil, Processo processo, Long idTarefa) {
+    private Long getTaskInstanceId(UsuarioPerfil usuarioPerfil, Processo processo) {
         MetadadoProcesso metadado = processo.getMetadado(EppMetadadoProvider.TIPO_PROCESSO);
-        if ( metadado != null && idTarefa != null) {
-        	Map<String, Object> map = processoTarefaManager.findProcessoTarefaByIdProcessoAndIdTarefa(processo.getIdProcesso(), idTarefa.intValue());
-        	return (Long) map.get("idTaskInstance");
-        } else if (metadado != null && 
-        			(metadado.<TipoProcesso>getValue().equals(TipoProcesso.COMUNICACAO)
-        					|| metadado.<TipoProcesso>getValue().equals(TipoProcesso.COMUNICACAO_NAO_ELETRONICA)) ) {
-        	return processoTarefaManager.getUltimoProcessoTarefa(processo).getTaskInstance();
+        if (metadado != null) {
+        	TipoProcesso tipoProcesso = metadado.getValue();
+			if (tipoProcesso.equals(TipoProcesso.COMUNICACAO) || tipoProcesso.equals(TipoProcesso.COMUNICACAO_NAO_ELETRONICA)) {
+				return processoTarefaManager.getUltimoProcessoTarefa(processo).getTaskInstance();
+			}
+			return situacaoProcessoDAO.getIdTaskInstanceByIdProcesso(processo.getIdProcesso());
         } else {
-        	 if (idTarefa != null) {
-                 return processoLocalizacaoIbpmDAO.getTaskInstanceId(usuarioPerfil, processo, idTarefa);
-             } else {
-                 return processoLocalizacaoIbpmDAO.getTaskInstanceId(usuarioPerfil, processo);
-             }
+             return processoLocalizacaoIbpmDAO.getTaskInstanceId(usuarioPerfil, processo);
         }
     }
 
