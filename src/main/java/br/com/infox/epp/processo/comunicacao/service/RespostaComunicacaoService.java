@@ -45,7 +45,7 @@ public class RespostaComunicacaoService {
 	@In
 	private MetadadoProcessoManager metadadoProcessoManager;
 	@In
-	private ProrrogacaoPrazoService prorrogacaoPrazoService;
+	private PrazoComunicacaoService prazoComunicacaoService;
 	
 	public void enviarResposta(List<Documento> respostas) throws DAOException {
 		Processo comunicacao = documentoRespostaComunicacaoDAO.getComunicacaoVinculada(respostas.get(0));
@@ -61,7 +61,7 @@ public class RespostaComunicacaoService {
 		
 		MetadadoProcesso metadadoDestinatario = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO);
 		TipoComunicacao tipoComunicacao = ((DestinatarioModeloComunicacao) metadadoDestinatario.getValue()).getModeloComunicacao().getTipoComunicacao();
-		if(prorrogacaoPrazoService.containsClassificacaoProrrogacaoPrazo(respostas, tipoComunicacao)){
+		if(prazoComunicacaoService.containsClassificacaoProrrogacaoPrazo(respostas, tipoComunicacao)){
 			MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
 			MetadadoProcesso metadadoDataPedido = metadadoProcessoProvider.gerarMetadado(
 					ComunicacaoMetadadoProvider.DATA_PEDIDO_PRORROGACAO, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(new Date()));

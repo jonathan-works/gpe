@@ -36,7 +36,6 @@ import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.DocumentoComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
-import br.com.infox.epp.processo.comunicacao.service.ProrrogacaoPrazoService;
 import br.com.infox.epp.processo.comunicacao.service.RespostaComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
@@ -79,18 +78,16 @@ public class RespostaComunicacaoAction implements Serializable {
 	@In
 	private DocumentoService documentoService;
 	@In
-	private PrazoComunicacaoService prazoComunicacaoService;
-	@In
 	private DocumentoComunicacaoService documentoComunicacaoService;
 	@In
 	private AssinaturaDocumentoService assinaturaDocumentoService;
 	@In
 	private RespostaComunicacaoService respostaComunicacaoService;
 	@In
-	private ProrrogacaoPrazoService prorrogacaoPrazoService;
-	@In
 	private ModeloComunicacaoManager modeloComunicacaoManager;
 	
+	@Inject
+	private PrazoComunicacaoService prazoComunicacaoService;
 	@Inject
 	private DocumentoUploader documentoUploader;
 	@Inject
@@ -316,9 +313,9 @@ public class RespostaComunicacaoAction implements Serializable {
 	}
 
 	public String getStatusProrrogacao() {
-		setStatusProrrogacao(prorrogacaoPrazoService.getStatusProrrogacaoFormatado(processoComunicacao));
+		setStatusProrrogacao(prazoComunicacaoService.getStatusProrrogacaoFormatado(processoComunicacao));
 		if(Strings.isNullOrEmpty(statusProrrogacao)){
-			if (prorrogacaoPrazoService.canRequestProrrogacaoPrazo(destinatario.getModeloComunicacao().getTipoComunicacao())){
+			if (prazoComunicacaoService.canRequestProrrogacaoPrazo(destinatario.getModeloComunicacao().getTipoComunicacao())){
 				setStatusProrrogacao("Não solicitada");
 			}else{
 				setStatusProrrogacao("Indisponível");

@@ -24,6 +24,8 @@ import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import com.google.common.base.Strings;
+
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.messages.InfoxMessages;
@@ -44,7 +46,6 @@ import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.DestinatarioComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.DocumentoComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
-import br.com.infox.epp.processo.comunicacao.service.ProrrogacaoPrazoService;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
 import br.com.infox.epp.processo.documento.anexos.DocumentoUploader;
@@ -64,8 +65,6 @@ import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
-import com.google.common.base.Strings;
-
 @Name(ComunicacaoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
@@ -81,8 +80,6 @@ public class ComunicacaoAction implements Serializable {
 	private ModeloComunicacaoManager modeloComunicacaoManager;
 	@In
 	private ComunicacaoService comunicacaoService;
-	@In
-	private PrazoComunicacaoService prazoComunicacaoService;
 	@In
 	private MetadadoProcessoManager metadadoProcessoManager;
 	@In
@@ -104,8 +101,6 @@ public class ComunicacaoAction implements Serializable {
 	@In
 	private DocumentoComunicacaoService documentoComunicacaoService;
 	@In
-	private ProrrogacaoPrazoService prorrogacaoPrazoService;
-	@In
 	private DocumentoManager documentoManager;
 	@In
 	private DocumentoBinManager documentoBinManager;
@@ -118,6 +113,8 @@ public class ComunicacaoAction implements Serializable {
 	@In
 	protected InfoxMessages infoxMessages;
 	
+	@Inject
+	private PrazoComunicacaoService prazoComunicacaoService;
 	@Inject
 	private DocumentoUploader documentoUploader;
 	@Inject
@@ -231,7 +228,7 @@ public class ComunicacaoAction implements Serializable {
 		if (classificacoesDocumentoProrrogacaoPrazo == null) {
 			if (isProrrogacaoPrazo()) {
 				classificacoesDocumentoProrrogacaoPrazo = new ArrayList<>();
-				classificacoesDocumentoProrrogacaoPrazo.add(prorrogacaoPrazoService.getClassificacaoProrrogacaoPrazo(destinatario.getDestinatario()));
+				classificacoesDocumentoProrrogacaoPrazo.add(prazoComunicacaoService.getClassificacaoProrrogacaoPrazo(destinatario.getDestinatario()));
 			}
 		}
 		return classificacoesDocumentoProrrogacaoPrazo;
@@ -440,8 +437,8 @@ public class ComunicacaoAction implements Serializable {
 	    MetadadoProcesso metadadoPrazo = bean.getComunicacao().getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO);
 	    if (metadadoPrazo != null) {
     	    Date dataLimiteCumprimento = metadadoPrazo.getValue();
-	        return prorrogacaoPrazoService.canShowClassificacaoProrrogacaoPrazo(bean.getDestinatario()) &&
-	                prorrogacaoPrazoService.getDataPedidoProrrogacao(bean.getComunicacao()) == null && 
+	        return prazoComunicacaoService.canShowClassificacaoProrrogacaoPrazo(bean.getDestinatario()) &&
+	        		prazoComunicacaoService.getDataPedidoProrrogacao(bean.getComunicacao()) == null && 
 	                dataLimiteCumprimento.after(new Date());
 	    }
 	    return false;

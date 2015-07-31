@@ -41,7 +41,7 @@ public class DestinatarioComunicacaoService implements Serializable{
 	@In
 	private ModeloComunicacaoManager modeloComunicacaoManager;
 	@In
-	private ProrrogacaoPrazoService prorrogacaoPrazoService;
+	private PrazoComunicacaoService prazoComunicacaoService;
 	@In
 	private UsuarioPerfilManager usuarioPerfilManager;
 	@In
@@ -149,7 +149,7 @@ public class DestinatarioComunicacaoService implements Serializable{
 	}
 	
 	private String getStatusProrrogacao(Processo comunicacao){
-		return prorrogacaoPrazoService.getStatusProrrogacaoFormatado(comunicacao);
+		return prazoComunicacaoService.getStatusProrrogacaoFormatado(comunicacao);
 	}
 	
 	public boolean isCienciaConfirmada(Processo comunicacao) {

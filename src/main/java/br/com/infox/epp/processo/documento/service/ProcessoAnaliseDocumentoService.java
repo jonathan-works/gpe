@@ -34,7 +34,7 @@ import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.fluxo.manager.NaturezaCategoriaFluxoManager;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
-import br.com.infox.epp.processo.comunicacao.service.ProrrogacaoPrazoService;
+import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.Processo_;
@@ -69,7 +69,7 @@ public class ProcessoAnaliseDocumentoService {
 	@In
 	private IniciarProcessoService iniciarProcessoService;
 	@In
-	private ProrrogacaoPrazoService prorrogacaoPrazoService;
+	private PrazoComunicacaoService prazoComunicacaoService;
 	@In
 	private EntityManager entityManager;
 	@Inject
@@ -119,7 +119,7 @@ public class ProcessoAnaliseDocumentoService {
 				}
 				MetadadoProcesso metadadoDestinatario = processoAnalise.getProcessoPai().getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO);
 				DestinatarioModeloComunicacao destinatarioComunicacao = metadadoDestinatario.getValue();
-				if(prorrogacaoPrazoService.containsClassificacaoProrrogacaoPrazo(documentos, destinatarioComunicacao.getModeloComunicacao().getTipoComunicacao())){
+				if(prazoComunicacaoService.containsClassificacaoProrrogacaoPrazo(documentos, destinatarioComunicacao.getModeloComunicacao().getTipoComunicacao())){
 					variaveisJbpm.put(VariaveisJbpmAnaliseDocumento.PEDIDO_PRORROGACAO_PRAZO, true);
 					variaveisJbpm.putAll(getVariaveisProrrogacaoPrazo(processoAnalise));
 				}
