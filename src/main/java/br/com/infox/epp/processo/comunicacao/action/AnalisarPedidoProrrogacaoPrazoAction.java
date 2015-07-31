@@ -7,6 +7,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Create;
@@ -30,7 +32,6 @@ import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.DestinatarioComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
-import br.com.infox.epp.processo.comunicacao.service.ProrrogacaoPrazoService;
 import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
@@ -53,7 +54,7 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(AnalisarPedidoProrrogacaoPrazoAction.class);
 	
-	@In
+	@Inject
 	private PrazoComunicacaoService prazoComunicacaoService;
 	@In
 	private ComunicacaoService comunicacaoService;
@@ -73,8 +74,6 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 	private DestinatarioComunicacaoService destinatarioComunicacaoService;
 	@In
 	private ModeloComunicacaoManager modeloComunicacaoManager;
-	@In
-	private ProrrogacaoPrazoService prorrogacaoPrazoService;
 	@In
 	private ProcessoManager processoManager;
 	
@@ -112,7 +111,7 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 	
 	public void endTask() {
 		try {
-			prorrogacaoPrazoService.finalizarAnalisePedido(comunicacao);		
+			prazoComunicacaoService.finalizarAnalisePedido(comunicacao);		
 		} catch (Exception e) {
 			LOG.error("", e);
 			if (e instanceof DAOException) {
@@ -161,7 +160,7 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 		        List<DestinatarioBean> destinatariosPorModelo = destinatarioComunicacaoService.getDestinatarios(modeloComunicacao);
 		        for (DestinatarioBean destinatarioBean : destinatariosPorModelo) {
 		        	if (!destinatarioBean.getPrazoFinal().equals("-") && 
-		        			prorrogacaoPrazoService.canRequestProrrogacaoPrazo(destinatarioBean.getModeloComunicacao().getTipoComunicacao())){
+		        			prazoComunicacaoService.canRequestProrrogacaoPrazo(destinatarioBean.getModeloComunicacao().getTipoComunicacao())){
 		        		destinatarioCienciaConfirmada.add(destinatarioBean);
 		        	}
 	            }
@@ -209,7 +208,7 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 	
 	public boolean isPedidoDentroDoPrazo(DestinatarioBean bean){
 		Date dataLimiteCumprimento = getDataLimiteCumprimento(bean);
-		if(dataLimiteCumprimento.after(new Date()) || prorrogacaoPrazoService.hasPedidoProrrogacaoEmAberto(bean.getComunicacao())){
+		if(dataLimiteCumprimento.after(new Date()) || prazoComunicacaoService.hasPedidoProrrogacaoEmAberto(bean.getComunicacao())){
 			return true;
 		}
 		return false;
