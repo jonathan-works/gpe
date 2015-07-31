@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -124,17 +125,17 @@ public class DestinatarioComunicacaoService implements Serializable{
 	}
 	
 	private String getPrazoFinal(Processo comunicacao) {
-		MetadadoProcesso metadado = comunicacao.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO);
-		if (metadado != null) {
-			return dateFormat.format(metadado.getValue());
+		Date prazoFinal = prazoComunicacaoService.getDataLimiteCumprimento(comunicacao);
+		if (prazoFinal != null) {
+			return dateFormat.format(prazoFinal);
 		}
 		return "-";
 	}
 	
 	private String getPrazoOriginal(Processo comunicacao) {
-	    MetadadoProcesso metadado = comunicacao.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO_INICIAL);
-	    if (metadado != null) {
-	        return dateFormat.format(metadado.getValue());
+	    Date prazoOriginal = prazoComunicacaoService.getDataLimiteCumprimentoInicial(comunicacao);
+	    if (prazoOriginal != null) {
+	        return dateFormat.format(prazoOriginal);
 	    }
 	    return "-";
 	}

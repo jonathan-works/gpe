@@ -434,14 +434,8 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	public boolean podePedirProrrogacaoPrazo(DestinatarioBean bean) {
-	    MetadadoProcesso metadadoPrazo = bean.getComunicacao().getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO);
-	    if (metadadoPrazo != null) {
-    	    Date dataLimiteCumprimento = metadadoPrazo.getValue();
-	        return prazoComunicacaoService.canShowClassificacaoProrrogacaoPrazo(bean.getDestinatario()) &&
-	        		prazoComunicacaoService.getDataPedidoProrrogacao(bean.getComunicacao()) == null && 
-	                dataLimiteCumprimento.after(new Date());
-	    }
-	    return false;
+	    return prazoComunicacaoService.canRequestProrrogacaoPrazo(bean.getDestinatario()) && 
+	                prazoComunicacaoService.getDataLimiteCumprimento(bean.getComunicacao()).after(new Date());
 	}
 	
 	public void clear() {

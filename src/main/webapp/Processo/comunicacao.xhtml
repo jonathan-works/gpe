@@ -65,7 +65,7 @@
 							<a:commandLink action="#{comunicacaoAction.setDestinatarioResposta(bean)}"
 								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage, painelDocumentosResposta" 
 								execute="@this" limitRender="true"
-								rendered="true"
+								rendered="#{bean.destinatario.meioExpedicao eq 'SI'}"
 								onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
 								<h:graphicImage url="#{wiSkin.imageFolder}/file.gif" title="#{infoxMessages['comunicacao.documentosResposta']}" />
 							</a:commandLink>
