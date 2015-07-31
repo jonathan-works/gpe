@@ -160,7 +160,7 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 		        List<DestinatarioBean> destinatariosPorModelo = destinatarioComunicacaoService.getDestinatarios(modeloComunicacao);
 		        for (DestinatarioBean destinatarioBean : destinatariosPorModelo) {
 		        	if (!destinatarioBean.getPrazoFinal().equals("-") && 
-		        			prazoComunicacaoService.canRequestProrrogacaoPrazo(destinatarioBean.getModeloComunicacao().getTipoComunicacao())){
+		        			prazoComunicacaoService.canTipoComunicacaoRequestProrrogacaoPrazo(destinatarioBean.getModeloComunicacao().getTipoComunicacao())){
 		        		destinatarioCienciaConfirmada.add(destinatarioBean);
 		        	}
 	            }
@@ -181,12 +181,7 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 	}
 	
 	public Date getDataLimiteCumprimento(DestinatarioBean bean){
-		MetadadoProcesso metadadoPrazo = bean.getComunicacao().getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO);
-		Date dataLimiteCumprimento = null;
-		if (metadadoPrazo != null && bean.getPrazoFinal() != null) {
-			dataLimiteCumprimento = metadadoPrazo.getValue();
-		}
-		return dataLimiteCumprimento;
+		return prazoComunicacaoService.getDataLimiteCumprimento(bean.getComunicacao());
 	}
 	
 	public Date getDataCiencia(){
@@ -208,12 +203,12 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 	
 	public boolean isPedidoDentroDoPrazo(DestinatarioBean bean){
 		Date dataLimiteCumprimento = getDataLimiteCumprimento(bean);
-		if(dataLimiteCumprimento.after(new Date()) || prazoComunicacaoService.hasPedidoProrrogacaoEmAberto(bean.getComunicacao())){
-			return true;
-		}
-		return false;
+		return dataLimiteCumprimento.after(new Date()) || prazoComunicacaoService.hasPedidoProrrogacaoEmAberto(bean.getComunicacao());
 	}
 	
+	/**
+	 * Seta o starDate do calendário 
+	 */
 	public Date getDataLimiteCumprimento(){
 		if(destinatario != null){
 			Calendar calendar =  Calendar.getInstance();

@@ -315,7 +315,7 @@ public class RespostaComunicacaoAction implements Serializable {
 	public String getStatusProrrogacao() {
 		setStatusProrrogacao(prazoComunicacaoService.getStatusProrrogacaoFormatado(processoComunicacao));
 		if(Strings.isNullOrEmpty(statusProrrogacao)){
-			if (prazoComunicacaoService.canRequestProrrogacaoPrazo(destinatario.getModeloComunicacao().getTipoComunicacao())){
+			if (prazoComunicacaoService.canTipoComunicacaoRequestProrrogacaoPrazo(destinatario.getModeloComunicacao().getTipoComunicacao())){
 				setStatusProrrogacao("Não solicitada");
 			}else{
 				setStatusProrrogacao("Indisponível");
