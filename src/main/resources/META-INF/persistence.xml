@@ -37,6 +37,8 @@
 			<property name="hibernate.cache.use_query_cache" value="true" /> 
 			<property name="hibernate.cache.region.factory_class" value="${hibernate.cache.region.class}" />
 			<property name="hibernate.cache.infinispan.br.com.infox.epp.system.entity.Parametro.expiration.lifespan" value="5000"/> 
+			<property name="hibernate.cache.infinispan.br.com.infox.epp.cliente.entity.CalendarioEventos.expiration.lifespan" value="64800000"/><!-- 18horas --> 
+			<property name="hibernate.cache.infinispan.br.com.infox.epp.cliente.entity.CalendarioEventos.expiration.max_idle" value="21600000"/><!-- 6horas --> 
 			<property name="hibernate.cache.infinispan.br.com.infox.epp.access.entity.Permissao.expiration.lifespan" value="5000"/> 
 			<property name="hibernate.cache.infinispan.br.com.infox.epp.processo.entity.Processo.expiration.lifespan" value="5000"/> 
 			<property name="hibernate.cache.infinispan.br.com.infox.epp.processo.sigilo.entity.SigiloProcesso.expiration.lifespan" value="5000"/>

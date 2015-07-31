@@ -24,6 +24,9 @@ public class ParticipanteProcessoManager extends Manager<ParticipanteProcessoDAO
     	return getDao().getParticipanteProcessoByPessoaProcesso(pessoa, processo);
     }
     
+    public List<ParticipanteProcesso> getParticipantesProcessoByPartialName(String typedName,int limit){
+    	return getDao().getParticipantesProcessosByPartialName(typedName,limit);
+    }
     public boolean existeParticipanteByPessoaProcessoPaiTipo(Pessoa pessoa, 
     		Processo processo, ParticipanteProcesso pai, TipoParte tipo) {
     	return getDao().existeParticipanteByPessoaProcessoPaiTipo(pessoa, processo, pai, tipo);
@@ -49,5 +52,9 @@ public class ParticipanteProcessoManager extends Manager<ParticipanteProcessoDAO
     
     public boolean existeParticipanteFilhoByParticipanteProcesso(Processo processo, ParticipanteProcesso participantePai, PessoaFisica pessoaParticipanteFilho) {
         return getDao().existeParticipanteFilhoByParticipanteProcesso(processo, participantePai, pessoaParticipanteFilho);
+    }
+    
+    public List<ParticipanteProcesso> getParticipantesByTipo(Processo processo, TipoParte tipoParte) {
+    	return getDao().getParticipantesByTipo(processo, tipoParte);
     }
 }

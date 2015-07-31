@@ -2,6 +2,7 @@ package br.com.infox.epp.processo.documento.manager;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,6 +21,7 @@ import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfStamper;
 
 import br.com.infox.core.file.encode.MD5Encoder;
+import br.com.infox.core.file.reader.InfoxPdfReader;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.GenericDatabaseErrorCode;
@@ -65,6 +67,18 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 		bin.setMd5Documento(MD5Encoder.encode(conteudo));
 		bin.setMinuta(false);
 		return persist(bin);
+	}
+	
+	public DocumentoBin createProcessoDocumentoBin(final String tituloDocumento, final byte[] conteudo, final String fileType) throws DAOException{
+		DocumentoBin bin = new DocumentoBin();
+        bin.setNomeArquivo(tituloDocumento);
+        bin.setExtensao(fileType);
+        bin.setMd5Documento(MD5Encoder.encode(conteudo));
+        bin.setSize(conteudo.length);
+        bin.setProcessoDocumento(conteudo);
+        bin.setModeloDocumento(InfoxPdfReader.readPdfFromByteArray(conteudo));
+        bin.setDataInclusao(new Date());
+        return persist(bin);
 	}
 
 	public DocumentoBin getByUUID(final UUID uuid) {

@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import org.jboss.seam.annotations.ApplicationException;
 
 @ApplicationException(end = false, rollback = false)
+@javax.ejb.ApplicationException(rollback = true)
 public class DAOException extends Exception {
 
     private static final long serialVersionUID = 1L;

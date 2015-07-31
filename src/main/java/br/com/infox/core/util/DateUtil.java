@@ -1,8 +1,9 @@
 package br.com.infox.core.util;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 public final class DateUtil {
 
@@ -16,10 +17,58 @@ public final class DateUtil {
 
     public static final int QUANTIDADE_DIAS_SEMANA = 7;
     public static final int QUANTIDADE_MESES_ANO = 12;
+    
+    private static DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
     private DateUtil() {
 
     }
+    
+    /**
+	 * Converte uma instância de Date para uma String. 
+	 * 
+	 * @param data
+	 * @return String no formato dd/MM/yyyy
+	 */
+	public static String formatarData(Date data) {
+		try {
+			
+			return formatter.format(data);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}		
+	}	
+    
+    /**
+     * Adiciona/Subtrai dias de uma data
+     * @param dias
+     * @param data
+     * @return
+     */
+    public static Date adicionarDias(int dias, Date data) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(data);
+		c.add(Calendar.DAY_OF_MONTH, dias);
+		return c.getTime();
+	}
+    
+    
+    /**
+     * Retorna um {@link java.util.Date} sem a informação da hora. 
+     * É utilizado em comparações de datas que devem desconsiderar o horário. 
+     * @param data
+     * @return
+     */
+    public static Date getDateHoraZerada(Date data) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(data);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		return calendar.getTime();
+	}
 
     /**
      * Retorna a diferencia em dias entre a data inicial e final informadas.
@@ -58,7 +107,7 @@ public final class DateUtil {
         if (date == null) {
             return null;
         }
-        Calendar dt = new GregorianCalendar();
+        Calendar dt = Calendar.getInstance();
         dt.setTime(date);
         dt.set(Calendar.HOUR_OF_DAY, 23);
         dt.set(Calendar.MINUTE, 59);
@@ -92,7 +141,7 @@ public final class DateUtil {
         if (date == null) {
             return null;
         }
-        Calendar dt = new GregorianCalendar();
+        Calendar dt = Calendar.getInstance();
         dt.setTime(date);
         dt.set(Calendar.HOUR_OF_DAY, 0);
         dt.set(Calendar.MINUTE, 0);

@@ -27,12 +27,10 @@ public class MassiveReindexer {
     
     @In
     private SessionAssistant sessionAssistant; 
-    @In
-    private EppProperties eppProperties;
     
     @Create
     public void init() {
-        if(eppProperties.getProperty(EppProperties.PROPERTY_DESENVOLVIMENTO).equals("true")){
+        if(EppProperties.getProperty(EppProperties.PROPERTY_DESENVOLVIMENTO).equals("true")){
         	return;
         }
     	Session session = sessionAssistant.getSession();

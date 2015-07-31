@@ -255,17 +255,14 @@
                                 <h:outputText
                                     value="#{infoxMessages['process.node.type']}" />
                             </f:facet>
-                            <rich:column
-                                filterExpression="#{not (node[0] eq 'StartState' or node[0] eq 'Join')}">
+                            <rich:column>
                                 <h:graphicImage
                                     url="#{wiSkin.imageFolder}/jbpm/#{node[0]}.gif" />
                             </rich:column>
-                            <rich:column
-                                filterExpression="#{not (node[0] eq 'StartState' or node[0] eq 'Join')}">
+                            <rich:column>
                                 <h:outputText value="#{node[1]}" />
                             </rich:column>
-                            <rich:column
-                                filterExpression="#{not (node[0] eq 'StartState' or node[0] eq 'Join')}">
+                            <rich:column>
                                 <h:form>
                                     <h:graphicImage
                                         url="#{wiSkin.imageFolder}/jbpm/#{nodeFitter.newNodeType == node[0] ? 'checked' : 'unchecked'}.gif">

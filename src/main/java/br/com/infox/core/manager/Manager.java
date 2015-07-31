@@ -8,40 +8,49 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.LockModeType;
 
 import org.jboss.seam.Component;
-import org.jboss.seam.annotations.Create;
+import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
 
 @Transactional
+@Scope(ScopeType.STATELESS)
 public abstract class Manager<D extends DAO<T>, T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private D dao;
 
     @SuppressWarnings(UNCHECKED)
-    @Create
+    @PostConstruct
     public void init() {
         this.dao = (D) Component.getInstance(getDaoName());
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public T persist(T o) throws DAOException {
         return (T) dao.persist(o);
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public T update(T o) throws DAOException {
         return (T) dao.update(o);
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public T remove(T o) throws DAOException {
         return (T) dao.remove(o);
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public T removeWithoutFlush(T o) {
     	return (T) dao.removeWithoutFlush(o);
     }
@@ -54,12 +63,14 @@ public abstract class Manager<D extends DAO<T>, T> implements Serializable {
         return dao.findByIds(ids);
     }
     
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void lock(T entity) {
     	getDao().lock(entity, LockModeType.PESSIMISTIC_READ);
     }
     
-    public void lock(T entity, LockModeType lockModeType) {
-    	getDao().lock(entity, lockModeType);
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public T lock(T entity, LockModeType lockModeType) {
+    	return getDao().lock(entity, lockModeType);
     }
     
     public List<T> findAll() {
@@ -70,6 +81,7 @@ public abstract class Manager<D extends DAO<T>, T> implements Serializable {
         return dao.contains(o);
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public T merge(T o) throws DAOException {
         return dao.merge(o);
     }
@@ -78,14 +90,17 @@ public abstract class Manager<D extends DAO<T>, T> implements Serializable {
         dao.detach(o);
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void clear() {
         dao.clear();
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void flush() {
         dao.flush();
     }
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void refresh(T o) {
         dao.refresh(o);
     }

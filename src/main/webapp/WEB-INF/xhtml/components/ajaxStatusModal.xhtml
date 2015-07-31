@@ -12,8 +12,8 @@
     <h:outputScript library="js" name="util.js" />
 
     <div>
-        <rich:popupPanel id="modalStatus" width="200" height="35"
-            shadowOpacity="0">
+        <rich:popupPanel id="modalStatus" autosized="true"
+            shadowOpacity="0" header="#{infoxMessages['notificacao.modalStatus.title']}" moveable="false">
             <div>
                 <h:graphicImage url="#{wiSkin.imageFolder}/status/ajax-loader-retangular.gif" />
             </div>

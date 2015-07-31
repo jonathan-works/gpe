@@ -30,5 +30,4 @@ public interface UsuarioPerfilQuery {
     		+ " and up.usuarioLogin = :" + PARAM_USUARIO_LOGIN
     		+ " and up.ativo = :" + PARAM_ATIVO;
     
-
 }

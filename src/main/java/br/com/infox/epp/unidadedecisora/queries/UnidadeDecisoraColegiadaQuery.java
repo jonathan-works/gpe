@@ -16,6 +16,14 @@ public interface UnidadeDecisoraColegiadaQuery {
     		  "where udc.ativo = true and up.usuarioLogin.idUsuarioLogin = :" + ID_USUARIO_LOGIN +
     		  " and up.ativo = true";
     
+    String FIND_UDC_BY_USUARIO_ID = "getUDCByUsuario";
+    String FIND_UDC_BY_USUARIO_ID_QUERY = "select udc " +
+    		"from UsuarioPerfil up " +
+    		"inner join up.localizacao l " +
+    		"inner join l.unidadeDecisoraColegiada udc " +
+    		"where udc.ativo = true and up.usuarioLogin.idUsuarioLogin = :" + ID_USUARIO_LOGIN +
+    		" and up.ativo = true";
+    
     String SEARCH_EXISTE_UDC_BY_LOCALIZACAO = "searchExisteUDCByLocalizacao";
     String SEARCH_EXISTE_UDC_BY_LOCALIZACAO_QUERY = "select count(udc) " +
     		 "from UnidadeDecisoraColegiada udc " +

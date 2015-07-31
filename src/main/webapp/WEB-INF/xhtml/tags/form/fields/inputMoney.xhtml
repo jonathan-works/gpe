@@ -10,11 +10,16 @@
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf">
 
-    <h:outputScript library="js" name="jquery.maskMoney.js" />
-
-    <wi:inputText id="#{id}" converterId="monetarioConverter">
-        <rich:jQuery selector="##{id}" timing="domready"
-            query="maskMoney()" />
-        <ui:insert />
-    </wi:inputText>
+    <h:outputScript library="js" name="infox.maskmoney.js" />
+	<s:div id="#{id}" style="display: inline">
+	    <wi:inputText id="#{id}Input" converterId="monetarioConverter">
+	        <ui:insert />
+	    </wi:inputText>
+	    
+	    <s:div rendered="#{not readonly}" >
+		    <script>
+		  		maskMoney(document.getElementById("#{rich:clientId(id.concat('Input'))}"));
+		   	</script>
+	   	</s:div>
+   	</s:div>
 </ui:composition>

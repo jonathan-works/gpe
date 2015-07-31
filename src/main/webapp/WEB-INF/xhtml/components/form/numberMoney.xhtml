@@ -10,25 +10,14 @@
 	 xmlns:s="http://jboss.org/schema/seam/taglib"
 	 xmlns:wi="http://www.itx.com.br/jsf">
 	
-		<h:outputScript name="jquery.maskMoney.js" library="js"/>
-		
 		<ui:param
 		 name="style"
 		 value="#{empty style ? props.style : style}" />
 		<ui:param
 		 name="maxlength"
 		 value="#{empty maxlength ? props.maxlength : maxlength}" /> 
-		
-		<s:decorate
-		 id="#{id}Decoration"
-		 template="/WEB-INF/xhtml/components/templates/edit.xhtml"
-		 rendered="#{empty rendered or rendered}">
-		
-			<ui:define name="label">#{label}</ui:define>
-			
-			<h:inputText
-			 id="#{id}"
-			 value="#{value}"
+		 
+		<wi:inputMoney id="#{id}" value="#{value}"
 			 readonly="#{readonly}"
 			 disabled="#{disabled}"
 			 required="#{required}"
@@ -39,28 +28,8 @@
 			 onkeypress="#{onkeypress}"
 			 onkeyup="#{onkeyup}"
 			 maxlength="20">
-				<ui:insert />
-				<f:converter converterId="monetarioConverter" />
-			
-		</h:inputText>
-		<s:div rendered="#{!readonly}">
-			<rich:jQuery
-				selector="##{id}"
-				timing="domready"
-				query="maskMoney({
-						symbol:'R$',
-						decimal:',',
-						precision:2,
-						thousands:'.',
-						allowZero:false,
-						allowNegative:false,
-						showSymbol:false
-					})"
-			/>
-		</s:div>
-
+			 <ui:insert />
+		</wi:inputMoney>
 		
-	</s:decorate>
-
 	
 </ui:composition>

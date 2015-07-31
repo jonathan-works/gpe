@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.LockModeType;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -17,7 +18,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
@@ -25,9 +25,8 @@ import org.jboss.seam.annotations.Transactional;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
 
-@Scope(ScopeType.EVENT)
-@AutoCreate
 @Transactional
+@Scope(ScopeType.STATELESS)
 public abstract class DAO<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -51,6 +50,11 @@ public abstract class DAO<T> implements Serializable {
         return getEntityManager().find(entityClass, id);
     }
     
+    public Object getIdentifier(T entity) {
+    	EntityManagerFactory emf = entityManager.getEntityManagerFactory();
+    	return emf.getPersistenceUnitUtil().getIdentifier(entity);
+    }
+    
     public List<T> findByIds(Collection<? extends Number> ids) {
     	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
     	CriteriaQuery<T> criteriaQuery = cb.createQuery(getEntityClass());
@@ -61,11 +65,12 @@ public abstract class DAO<T> implements Serializable {
     	return getEntityManager().createQuery(criteriaQuery).getResultList();
     }
     
-    public void lock(T entity, LockModeType lockModeType) {
+    public T lock(T entity, LockModeType lockModeType) {
     	if (!entityManager.contains(entity)) {
-    		entityManager.merge(entity);
+    		entity = entityManager.find(getEntityClass(), getIdentifier(entity));
     	}
     	entityManager.lock(entity, lockModeType);
+    	return entity;
     }
     
     @SuppressWarnings(UNCHECKED)
@@ -229,6 +234,13 @@ public abstract class DAO<T> implements Serializable {
             final Map<String, Object> parameters) {
         return createQuery(query, parameters).getResultList();
     }
+    
+    @SuppressWarnings(UNCHECKED)
+    public <X> List<X> getResultList(final String query,
+    		final Map<String, Object> parameters, int first, int maxResult) {
+    	return createQuery(query, parameters).setFirstResult(first).setMaxResults(maxResult).getResultList();
+    }
+    
 
     @SuppressWarnings(UNCHECKED)
     public <X> X getSingleResult(final String query,

@@ -18,9 +18,13 @@
     name="minChars"
     value="#{empty props.minChars ? (empty minChars ? '1' : minChars) : props.minChars}"
   />
+  
+  <ui:param name="rendered" value="#{empty rendered ? true : rendered}" />
+  
   <s:decorate
     id="#{id}Decoration"
     template="#{template}"
+    rendered="#{rendered}"
     styleClass="decoration-div suggest-div #{wi:get(decorationClass,'')}"
   >
     <ui:define name="label">#{label}</ui:define>
@@ -34,6 +38,7 @@
       ajax="#{ajax}"
       render="#{render}"
       style="#{style}"
+      rendered="#{rendered}"
       styleClass="#{styleClass}"
       maxlength="#{maxlength}"
     />
