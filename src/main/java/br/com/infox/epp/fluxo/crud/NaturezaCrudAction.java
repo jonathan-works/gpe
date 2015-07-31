@@ -62,5 +62,4 @@ public class NaturezaCrudAction extends AbstractCrudAction<Natureza, NaturezaMan
     public ParteProcessoEnum[] getTiposDePartes() {
         return ParteProcessoEnum.values();
     }
-
 }

@@ -15,8 +15,14 @@ public interface UsuarioPerfilQuery {
     		" and o.ativo = :" + PARAM_ATIVO;
 
     String LIST_BY_USUARIO_LOGIN = "UsuarioPerfil.listByUsuarioLogin";
-    String LIST_BY_USUARIO_LOGIN_QUERY = "select o from UsuarioPerfil o where o.ativo = true and o.perfilTemplate.ativo = true and o.usuarioLogin = :"
-            + PARAM_USUARIO_LOGIN;
+    String LIST_BY_USUARIO_LOGIN_QUERY = "select o "
+            + "from UsuarioPerfil o "
+                + "inner join o.localizacao l "
+                + "inner join o.perfilTemplate pt "
+            + "where o.ativo = true "
+                + "and pt.ativo = true "
+                + "and o.usuarioLogin = :" + PARAM_USUARIO_LOGIN + " "
+            + "order by l.localizacao asc, pt.descricao asc";
     
     String EXISTE_USUARIO_COM_DESCRICAO_PERFIL_ATIVO = "existeUsuarioComPerfilDescricaoAtivo";
     String EXISTE_USUARIO_COM_DESCRICAO_PERFIL_ATIVO_QUERY = "select count(*) from UsuarioPerfil up " 
@@ -24,5 +30,4 @@ public interface UsuarioPerfilQuery {
     		+ " and up.usuarioLogin = :" + PARAM_USUARIO_LOGIN
     		+ " and up.ativo = :" + PARAM_ATIVO;
     
-
 }

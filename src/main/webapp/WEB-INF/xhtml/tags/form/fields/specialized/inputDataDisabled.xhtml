@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <h:outputStylesheet>
+        .dia-valido {
+            font-weight: bold;
+            font-style: italic;
+            color: green;
+            background-color: #E1FFB3;
+        }
+        .dia-invalido {
+            background-color: #FFACAC;
+        }
+    </h:outputStylesheet>
+    
+    <div style="display: inline-block; vertical-align: top;">
+        <h:outputLabel id="#{id}Label" for="#{id}" value="#{label}" styleClass="name" />
+
+        <rich:calendar id="#{id}"
+            dataModel="#{dataModel}"
+            required="#{required}"
+            inputStyle="display:inline-block; " direction="auto"
+            popup="true"
+            value="#{value}"
+            showWeeksBar="#{false}"
+            enableManualInput="#{false}"
+            onchange="#{onchange}"
+            inputClass="maskDate input date"
+            styleClass="date value"
+            datePattern="dd/MM/yyyy"
+            mode="ajax"
+            todayControlMode="hidden"
+            boundaryDatesMode="scroll" >
+            <ui:insert />
+        </rich:calendar>
+    </div>
+
+</ui:composition>

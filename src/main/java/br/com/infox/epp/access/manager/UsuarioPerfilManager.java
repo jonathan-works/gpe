@@ -2,11 +2,13 @@ package br.com.infox.epp.access.manager;
 
 import java.util.List;
 
-import org.jboss.seam.ScopeType;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
@@ -16,9 +18,10 @@ import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 
-@Name(UsuarioPerfilManager.NAME)
-@Scope(ScopeType.EVENT)
 @AutoCreate
+@Stateless
+@Name(UsuarioPerfilManager.NAME)
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class UsuarioPerfilManager extends Manager<UsuarioPerfilDAO, UsuarioPerfil> {
 
     private static final long serialVersionUID = 1L;
@@ -74,7 +77,5 @@ public class UsuarioPerfilManager extends Manager<UsuarioPerfilDAO, UsuarioPerfi
 		}
 		return super.persist(o);
 	}
-    
-    
-
+	
 }

@@ -4,6 +4,7 @@ import static br.com.infox.constants.LengthConstants.DESCRICAO_PADRAO_DOBRO;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.FIND_ALL_ATIVO;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.FIND_ALL_ATIVO_QUERY;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.*;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.FIND_UDC_BY_USUARIO_ID_QUERY;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_EXISTE_UDC_BY_LOCALIZACAO_QUERY;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_UDC_BY_USUARIO;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_UDC_BY_USUARIO_QUERY;
@@ -38,6 +39,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 @Table(name = UnidadeDecisoraColegiada.TABLE_NAME)
 @NamedQueries(value={
     @NamedQuery(name=SEARCH_UDC_BY_USUARIO, query=SEARCH_UDC_BY_USUARIO_QUERY),
+        @NamedQuery(name=FIND_UDC_BY_USUARIO_ID, query=FIND_UDC_BY_USUARIO_ID_QUERY),
     @NamedQuery(name=SEARCH_EXISTE_UDC_BY_LOCALIZACAO, query=SEARCH_EXISTE_UDC_BY_LOCALIZACAO_QUERY),
     @NamedQuery(name=FIND_ALL_ATIVO, query=FIND_ALL_ATIVO_QUERY),
     @NamedQuery(name=FIND_UDC_BY_CODIGO_LOCALIZACAO, query=FIND_UDC_BY_CODIGO_LOCALIZACAO_QUERY)

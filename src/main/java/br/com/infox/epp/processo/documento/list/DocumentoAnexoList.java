@@ -42,7 +42,7 @@ public class DocumentoAnexoList extends EntityList<Documento> {
 
     @Override
     protected String getDefaultEjbql() {
-    	String banco = EppProperties.getInstance().getProperty(EppProperties.PROPERTY_TIPO_BANCO_DADOS);
+    	String banco = EppProperties.getProperty(EppProperties.PROPERTY_TIPO_BANCO_DADOS);
     	String queryAppend = "";
     	if ("PostgreSQL".equals(banco)){
     		queryAppend = " and pd.in_excluido = false and bin.in_minuta = false ";

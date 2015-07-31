@@ -20,6 +20,7 @@ public abstract class DataList<E> extends JpaQuery<E> {
 	private List<RestrictionField> restrictionFieldList = new ArrayList<RestrictionField>();
 	private Map<String, String> customColumnsOrder;
 	private Integer page = 1;
+	private String orderedColumn;
 	
 	@PostConstruct
 	public void init() {
@@ -31,6 +32,7 @@ public abstract class DataList<E> extends JpaQuery<E> {
 	@Override
 	public void newInstance() {
 		if (restrictionFieldList.size() != 0) clearSearchFields();
+		this.orderedColumn = null;
 		super.newInstance();
 	}
 	
@@ -98,6 +100,7 @@ public abstract class DataList<E> extends JpaQuery<E> {
 		if(!order.endsWith("asc") && !order.endsWith("desc")) {
 			order = order.trim().concat(" asc");
 		}
+		this.orderedColumn = order;
 		String[] fields = order.split(" ");
 		order = customColumnsOrder != null ? customColumnsOrder.get(fields[0])
 				.concat(" ").concat(fields[1]) : getDefaultOrder();
@@ -105,7 +108,7 @@ public abstract class DataList<E> extends JpaQuery<E> {
 	}
 	
 	public String getOrderedColumn() {
-		return super.getOrder();
+		return orderedColumn;
 	}
 	
 	public String getEntityListName() {
@@ -144,5 +147,5 @@ public abstract class DataList<E> extends JpaQuery<E> {
 	private Object getValueExpression(String expression){
 		return Expressions.instance().createValueExpression(expression).getValue();
 	}
-
+	
 }

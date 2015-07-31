@@ -38,6 +38,19 @@ public abstract class Dao<T, I> {
 		List<T> result = typedQuery.setMaxResults(1).getResultList();
 		return result.isEmpty() ? null : result.get(0);
 	}
+	
+	public EntityManager getEntityManager() {
+		return entityManager;
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.MANDATORY)
+	public void flush() throws DAOException {
+		try {
+			entityManager.flush();
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
 
 	@TransactionAttribute(TransactionAttributeType.MANDATORY)
 	public T persist(T object) throws DAOException {
@@ -64,7 +77,9 @@ public abstract class Dao<T, I> {
 	@TransactionAttribute(TransactionAttributeType.MANDATORY)
 	public T remove(T object) throws DAOException {
 		try {
-			object = entityManager.merge(object);
+			if (!entityManager.contains(object)) {
+				object = entityManager.merge(object);
+			}
 			entityManager.remove(object);
 			entityManager.flush();
 			return object;
@@ -72,5 +87,22 @@ public abstract class Dao<T, I> {
 			throw new DAOException(e);
 		}
 	}
-
+	
+	public void detach(T object) {
+		entityManager.detach(object);
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.MANDATORY)
+	public T refresh(T object) throws DAOException {
+		try {
+			if (!entityManager.contains(object)) {
+				object = entityManager.merge(object);
+			}
+			entityManager.refresh(object);
+			entityManager.flush();
+			return object;
+		} catch (Exception e) {
+			throw new DAOException(e);
+		}
+	}
 }

@@ -10,13 +10,16 @@ import javax.persistence.Query;
 
 import org.hibernate.Filter;
 import org.hibernate.dialect.Dialect;
+import org.hibernate.ejb.EntityManagerFactoryImpl;
 import org.hibernate.engine.spi.TypedValue;
 import org.hibernate.internal.QueryImpl;
+import org.hibernate.internal.SessionFactoryImpl;
 import org.hibernate.internal.SessionImpl;
 import org.hibernate.proxy.HibernateProxy;
 import org.jboss.seam.Component;
 
 import br.com.infox.core.util.ReflectionsUtil;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.hibernate.session.SessionAssistant;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -66,6 +69,10 @@ public final class HibernateUtil {
     	return dialect;
     }
     
+    public static void enableCache(Query query){
+    	query.setHint("org.hibernate.cacheable", true);
+    }
+    
     public static String getQueryString(Query query) {
     	QueryImpl queryImpl = query.unwrap(org.hibernate.internal.QueryImpl.class);
     	return queryImpl.getQueryString();
@@ -88,6 +95,12 @@ public final class HibernateUtil {
     
     public static Connection getConnection(EntityManager em) {
     	return em.unwrap(SessionImpl.class).connection();
+    }
+    
+    public static SessionFactoryImpl getSessionFactoryImpl() {
+		EntityManager entityManager = BeanManager.INSTANCE.getReference(EntityManager.class);
+		EntityManagerFactoryImpl entityManagerFactoryImpl = (EntityManagerFactoryImpl) entityManager.getEntityManagerFactory();
+		return entityManagerFactoryImpl.getSessionFactory();
     }
 
 }

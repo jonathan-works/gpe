@@ -144,12 +144,17 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.richfaces.ui</groupId>
-            <artifactId>richfaces-components-ui</artifactId>
+            <groupId>org.richfaces</groupId>
+            <artifactId>richfaces</artifactId>
             <type>jar</type>
             <scope>compile</scope>
-            <version>4.3.8-infox-SNAPSHOT</version><!--$NO-MVN-MAN-VER$ -->
+            <version>4.5.7.Final</version>
         </dependency>
+        <dependency>
+			<groupId>net.sourceforge.cssparser</groupId>
+			<artifactId>cssparser</artifactId>
+			<version>0.9.16</version>
+		</dependency>
         <dependency>
             <groupId>br.com.infox</groupId>
             <artifactId>epp-cdi</artifactId>
@@ -159,23 +164,6 @@
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
             <version>5.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.richfaces.ui</groupId>
-            <artifactId>richfaces-components-api</artifactId>
-            <type>jar</type>
-            <scope>compile</scope>
-            <version>4.3.8-infox-SNAPSHOT</version><!--$NO-MVN-MAN-VER$ -->
-        </dependency>
-        <dependency>
-            <groupId>org.richfaces.core</groupId>
-            <artifactId>richfaces-core-impl</artifactId>
-            <version>4.3.8-infox-SNAPSHOT</version><!--$NO-MVN-MAN-VER$ -->
-        </dependency>
-        <dependency>
-            <groupId>org.richfaces.core</groupId>
-            <artifactId>richfaces-core-api</artifactId>
-            <version>4.3.8-infox-SNAPSHOT</version><!--$NO-MVN-MAN-VER$ -->
         </dependency>
         <dependency>
             <groupId>org.jbpm.jbpm3</groupId>
@@ -516,7 +504,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.4</version>
+                <version>2.6</version>
                 <configuration>
                     <attachClasses>true</attachClasses>
                     <classifier>${db.classifier}.${dep.classifier}</classifier>

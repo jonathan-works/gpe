@@ -6,12 +6,20 @@
   xmlns:h="http://java.sun.com/jsf/html"
   xmlns:rich="http://richfaces.org/rich"
   xmlns:s="http://jboss.org/schema/seam/taglib"
-  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:f="http://java.sun.com/jsf/core" 
   xmlns:wi="http://www.itx.com.br/jsf"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
   xmlns:infox="http://www.infox.com.br/jsf"
-  template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+  template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml" >
+  
   <ui:define name="title">#{infoxMessages['consultaProcesso.titlePage']}</ui:define>
+  
   <ui:define name="body">
+  	<c:if test="#{not empty flash.idProcesso}">
+  		<c:set value="#{flash.idProcesso}" target="#{consultaController}" property="id" ></c:set>
+  		<c:set value="#{flash.idJbpm}"  target="#{org.jboss.seam.bpm.businessProcess}" property="processId"  ></c:set>
+  		<c:set value="#{flash.showBackButton}"  target="#{consultaController}" property="showBackButton"  ></c:set>
+  	</c:if>
     <rich:collapsiblePanel
       switchType="client"
       header="#{infoxMessages['processo.titleView']} #{consultaController.processo.numeroProcessoRoot}"
@@ -119,7 +127,7 @@
       <ui:include src="/Processo/Consulta/abasCustomizadasDoDetalheDoProcesso.xhtml"/>
       <div>
               <wi:commandButton
-              	id="btnVoltar"
+              	id="btnVoltar" rendered="#{consultaController.showBackButton}"
                 onclick="infox.redirect({url:'#{pathResolver.contextPath}/Processo/Consulta/listView.seam'})"
                 value="#{infoxMessages['page.return']}" />
       </div>
