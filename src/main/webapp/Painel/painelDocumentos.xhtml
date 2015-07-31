@@ -65,37 +65,44 @@
 	         <wi:columnOutputText
 	           columnId="usuarioSolicitante"
 	           columnHeader="#{infoxMessages['consultaProcesso.usuarioCadastroProcesso']}"
-	           value="#{row.usuarioCadastro}" />
+	           value="#{row.usuarioCadastro}" 
+	           columnRendered="#{painelUsuarioController.exibirColunasPadrao}"/>
 	           
 	         <wi:columnDateTime
 	           columnId="dataInicio"
 	           columnHeader="#{infoxMessages['consultaProcesso.dataInicio']}"
-	           value="#{row.dataInicio}" />
+	           value="#{row.dataInicio}"
+	           columnRendered="#{painelUsuarioController.exibirColunasPadrao}" />
 	           
 	         <wi:columnOutputText
 	           columnId="natureza"
 	           columnHeader="#{infoxMessages['consultaProcesso.natureza']}"
-	           value="#{row.naturezaCategoriaFluxo.natureza}" />
+	           value="#{row.naturezaCategoriaFluxo.natureza}" 
+	           columnRendered="#{painelUsuarioController.exibirColunasPadrao}"/>
 	           
 	         <wi:columnOutputText
 	           columnId="categoria"
 	           columnHeader="#{infoxMessages['consultaProcesso.categoria']}"
-	           value="#{row.naturezaCategoriaFluxo.categoria}" />
+	           value="#{row.naturezaCategoriaFluxo.categoria}" 
+	           columnRendered="#{painelUsuarioController.exibirColunasPadrao}"/>
 	           
 	         <wi:columnOutputText
 	           columnId="itemDoProcesso"
 	           columnHeader="#{infoxMessages['consultaProcesso.item']}"
-	           value="#{consultaProcessoList.getItemDoProcesso(row)}"  />
+	           value="#{consultaProcessoList.getItemDoProcesso(row)}"
+	           columnRendered="#{painelUsuarioController.exibirColunasPadrao}"  />
 	           
 	         <wi:columnOutputText
 	           columnId="prioridadeProcesso"
 	           columnHeader="#{infoxMessages['prioridadeProcesso.tableTitle']}"
-	           value="#{row.prioridadeProcesso}" />
+	           value="#{row.prioridadeProcesso}"
+	           columnRendered="#{painelUsuarioController.exibirColunasPadrao}" />
 	         
 	         <wi:columnOutputText
 	           columnId="numeroProcessoPai"
 	           columnHeader="#{infoxMessages['consultaProcesso.numeroProcessoPai']}"
-	           value="#{row.processoPai.numeroProcessoRoot}" />
+	           value="#{row.processoPai.numeroProcessoRoot}" 
+	           columnRendered="#{painelUsuarioController.exibirColunasPadrao}"/>
 	         
 	         <infox:dynamicColumns columns="#{painelUsuarioController.dynamicColumns}" />
 	         

@@ -10,6 +10,7 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.TaskNode;
+import org.jbpm.instantiation.Delegation;
 import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
@@ -36,6 +37,12 @@ public class TaskHandler implements Serializable {
         this.task = task;
         if (task != null && task.getSwimlane() != null) {
             this.swimlaneName = task.getSwimlane().getName();
+            // Para as tarefas já existentes
+            if (task.getTaskController() != null && task.getTaskController().getTaskControllerDelegation() == null) {
+	            Delegation delegation = new Delegation(InfoxTaskControllerHandler.class.getName());
+	            delegation.setProcessDefinition(task.getProcessDefinition());
+	            task.getTaskController().setTaskControllerDelegation(delegation);
+            }
         }
     }
 
@@ -140,6 +147,9 @@ public class TaskHandler implements Serializable {
                 taskController = new TaskController();
                 task.setTaskController(taskController);
                 taskController.setVariableAccesses(new ArrayList<VariableAccess>());
+                Delegation delegation = new Delegation(InfoxTaskControllerHandler.class.getName());
+                delegation.setProcessDefinition(task.getProcessDefinition());
+                taskController.setTaskControllerDelegation(delegation);
             }
             taskController.getVariableAccesses().add(v);
             ProcessBuilder.instance().getTaskFitter().setTypeList(null);
@@ -212,6 +222,9 @@ public class TaskHandler implements Serializable {
     public void processVarTypeChange(VariableAccessHandler var) {
         clearHasTaskPage();
         var.limparModelos();
+        if (!var.podeIniciarVazia()) {
+        	var.setIniciaVazia(false);
+        }
     }
 
 	@SuppressWarnings(UNCHECKED)

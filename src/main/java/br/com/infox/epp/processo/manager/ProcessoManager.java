@@ -40,6 +40,7 @@ import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
+import br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais;
 import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
 import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.system.manager.ParametroManager;
@@ -140,6 +141,9 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         	if (taskInstance.getStart() == null) {
         		taskInstance.start(Actor.instance().getId());
         	}
+        	// TODO: Não funciona com fork/join
+        	UsuarioLogin usuario = usuarioLoginManager.getUsuarioLoginByLogin(Actor.instance().getId());
+    		taskInstance.getContextInstance().setVariable(VariaveisJbpmProcessosGerais.OWNER, usuario.getNomeUsuario(), taskInstance.getToken());
         }
     }
 

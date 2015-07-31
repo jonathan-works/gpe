@@ -309,21 +309,30 @@ public class SituacaoProcessoDAO {
     }
 	
 	private Subquery<Integer> createSubqueryDestinatario(AbstractQuery<?> abstractQuery) { 
+		String metadadoDestinatario = EppMetadadoProvider.PESSOA_DESTINATARIO.getMetadadoType();
+
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		Root<?> root = abstractQuery.getRoots().iterator().next();
 		Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
 		Root<MetadadoProcesso> metadado = subquery.from(MetadadoProcesso.class);
 		subquery.select(cb.literal(1));
-		String metadadoDestinatario = EppMetadadoProvider.PESSOA_DESTINATARIO.getMetadadoType();
-		PessoaFisica pessoaFisica = Authenticator.getUsuarioLogado().getPessoaFisica();
-		Integer idPessoaFisica = pessoaFisica == null ? -1 : pessoaFisica.getIdPessoa();
 		Predicate predicateSubquery = cb.and(cb.equal(metadado.get("metadadoType"), metadadoDestinatario));
-		predicateSubquery = cb.and(cb.equal(metadado.get("valor"), idPessoaFisica.toString()), predicateSubquery);
 		predicateSubquery = cb.and(cb.equal(metadado.get("processo").get("idProcesso"), root.get("idProcesso")), predicateSubquery);
-		subquery.where(predicateSubquery);
+		
+		subquery.where(getRestrictionDestinatarioComunicacao(abstractQuery, subquery), predicateSubquery);
 		return subquery;
 	}
-    
+	
+	@SuppressWarnings("unchecked")
+	protected Predicate getRestrictionDestinatarioComunicacao(AbstractQuery<?> abstractQuery, Subquery<Integer> subqueryDestinatario) {
+		PessoaFisica pessoaFisica = Authenticator.getUsuarioLogado().getPessoaFisica();
+		Integer idPessoaFisica = pessoaFisica == null ? -1 : pessoaFisica.getIdPessoa();
+
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		Root<MetadadoProcesso> metadado = (Root<MetadadoProcesso>) subqueryDestinatario.getRoots().iterator().next();
+		return cb.equal(metadado.get("valor"), idPessoaFisica.toString());
+	}
+	
     private void appendTipoProcessoFilter(AbstractQuery<?> abstractQuery, TipoProcesso tipoProcesso) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Root<?> root = abstractQuery.getRoots().iterator().next();

@@ -46,7 +46,8 @@ import br.com.infox.seam.util.ComponentUtil;
 
 public class VariableAccessHandler implements Serializable {
 
-    public static final String EVENT_JBPM_VARIABLE_NAME_CHANGED = "jbpmVariableNameChanged";
+    public static final String ACCESS_VARIAVEL_INICIA_VAZIA = "reset";
+	public static final String EVENT_JBPM_VARIABLE_NAME_CHANGED = "jbpmVariableNameChanged";
     private static final String COMMA = ",";
     private static final long serialVersionUID = -4113688503786103974L;
     private static final String PREFIX = "#{modeloDocumento.set('";
@@ -102,11 +103,12 @@ public class VariableAccessHandler implements Serializable {
         } else {
             this.type = VariableType.STRING;
         }
-        access = new boolean[4];
+        access = new boolean[5];
         access[0] = variableAccess.isReadable();
         access[1] = variableAccess.isWritable();
         access[2] = variableAccess.isRequired();
         access[3] = !variableAccess.isReadable() && variableAccess.isWritable();
+        access[4] = variableAccess.getAccess().hasAccess(ACCESS_VARIAVEL_INICIA_VAZIA);
         this.possuiDominio = tipoPossuiDominio(this.type);
         this.isData = isTipoData(this.type);
         this.isFile = isTipoFile(this.type);
@@ -290,6 +292,9 @@ public class VariableAccessHandler implements Serializable {
                 access[0] = !access[3];
             }
             ReflectionsUtil.setValue(variableAccess, "access", new Access(getAccess()));
+            if (!writable) {
+            	setIniciaVazia(false);
+            }
         }
     }
 
@@ -347,6 +352,9 @@ public class VariableAccessHandler implements Serializable {
         }
         if (access[2]) {
             appendPermission(sb, "required");
+        }
+        if (access[4]) {
+        	appendPermission(sb, ACCESS_VARIAVEL_INICIA_VAZIA);
         }
         return sb.toString();
     }
@@ -593,4 +601,16 @@ public class VariableAccessHandler implements Serializable {
         }
     }
 
+    public boolean isIniciaVazia() {
+		return access[4];
+	}
+    
+    public void setIniciaVazia(boolean iniciaVazia) {
+		access[4] = iniciaVazia;
+		ReflectionsUtil.setValue(variableAccess, "access", new Access(getAccess()));
+	}
+    
+    public boolean podeIniciarVazia() {
+    	return isWritable() && type != VariableType.FRAGMENT && type != VariableType.FRAME && type != VariableType.PAGE && type != VariableType.TASK_PAGE;
+    }
 }

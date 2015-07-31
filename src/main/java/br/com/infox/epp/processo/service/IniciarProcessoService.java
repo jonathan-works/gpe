@@ -16,6 +16,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.BusinessProcess;
+import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.bpm.TaskInstance;
 import org.jbpm.context.exe.ContextInstance;
@@ -23,6 +24,7 @@ import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.assignment.LocalizacaoAssignment;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
 import br.com.infox.epp.fluxo.manager.NaturezaManager;
@@ -38,10 +40,8 @@ import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 public class IniciarProcessoService implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@In
-    private DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
-    @In
     private VariavelProcessoService variavelProcessoService;
 	@In
 	private ProcessoManager processoManager;
@@ -67,6 +67,9 @@ public class IniciarProcessoService implements Serializable {
         Long idProcessoJbpm = iniciarProcessoJbpm(processo, processo.getNaturezaCategoriaFluxo().getFluxo().getFluxo(), variaveis);
         processo.setIdJbpm(idProcessoJbpm);
         processo.setNumeroProcesso(String.valueOf(processo.getIdProcesso()));
+        if (processo.getProcessoPai() == null) {
+        	ManagedJbpmContext.instance().getProcessInstanceForUpdate(idProcessoJbpm).getContextInstance().setVariable("numeroProcesso", processo.getNumeroProcesso());
+        }
         naturezaManager.lockNatureza(processo.getNaturezaCategoriaFluxo().getNatureza());
         processoManager.update(processo);
         pastaManager.createDefaultFolders(processo);
@@ -99,9 +102,7 @@ public class IniciarProcessoService implements Serializable {
         swimlaneInstance.setPooledActors(actorIds);
     }
 
-    private void iniciaVariaveisProcesso(Processo processo,
-            Map<String, Object> variaveis,
-            org.jbpm.graph.exe.ProcessInstance processInstance) {
+    private void iniciaVariaveisProcesso(Processo processo, Map<String, Object> variaveis, org.jbpm.graph.exe.ProcessInstance processInstance) {
         ContextInstance contextInstance = processInstance.getContextInstance();
         contextInstance.setVariable("processo", processo.getIdProcesso());
         createJbpmVariables(processo, contextInstance);
@@ -109,6 +110,15 @@ public class IniciarProcessoService implements Serializable {
             for (String variavel : variaveis.keySet()) {
                 contextInstance.setVariable(variavel, variaveis.get(variavel));
             }
+        }
+        if (contextInstance.getVariable("naturezaProcesso") == null) {
+        	contextInstance.setVariable("naturezaProcesso", processo.getNaturezaCategoriaFluxo().getNatureza().getNatureza());
+        }
+        if (contextInstance.getVariable("categoriaProcesso") == null) {
+        	contextInstance.setVariable("categoriaProcesso", processo.getNaturezaCategoriaFluxo().getCategoria().getCategoria());
+        }
+        if (contextInstance.getVariable("dataInicioProcesso") == null) {
+        	contextInstance.setVariable("dataInicioProcesso", processo.getDataInicio());
         }
     }
 
@@ -126,8 +136,8 @@ public class IniciarProcessoService implements Serializable {
         return false;
     }
 
-    private void createJbpmVariables(Processo processo,
-            ContextInstance contextInstance) {
+    private void createJbpmVariables(Processo processo, ContextInstance contextInstance) {
+    	DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager = BeanManager.INSTANCE.getReference(DefinicaoVariavelProcessoManager.class);
         List<DefinicaoVariavelProcesso> variaveis = definicaoVariavelProcessoManager.listVariaveisByFluxo(processo.getNaturezaCategoriaFluxo().getFluxo());
         for (DefinicaoVariavelProcesso variavelProcesso : variaveis) {
             contextInstance.setVariable(variavelProcesso.getNome(), null);

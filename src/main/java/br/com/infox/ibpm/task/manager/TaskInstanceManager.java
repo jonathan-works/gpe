@@ -2,9 +2,12 @@ package br.com.infox.ibpm.task.manager;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.bpm.ManagedJbpmContext;
+import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais;
 import br.com.infox.ibpm.task.dao.TaskInstanceDAO;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
 
@@ -19,6 +22,13 @@ public class TaskInstanceManager extends Manager<TaskInstanceDAO, UsuarioTaskIns
 
     public void removeUsuario(final Long idTaskInstance) throws DAOException {
         getDao().removeUsuario(idTaskInstance);
+        try {
+        	// TODO: Não funciona com fork/join
+	        TaskInstance taskInstance = ManagedJbpmContext.instance().getTaskInstanceForUpdate(idTaskInstance);
+			taskInstance.getContextInstance().deleteVariable(VariaveisJbpmProcessosGerais.OWNER, taskInstance.getToken());
+        } catch (Exception e) {
+        	throw new DAOException(e);
+        }
     }
 
 }

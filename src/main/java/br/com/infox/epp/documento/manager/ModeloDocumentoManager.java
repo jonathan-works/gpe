@@ -10,8 +10,6 @@ import java.util.regex.Pattern;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.documento.dao.ModeloDocumentoDAO;
@@ -25,6 +23,8 @@ import br.com.infox.epp.documento.type.ExpressionResolver;
 import br.com.infox.epp.documento.type.SeamExpressionResolver;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 /**
  * Classe Manager para a entidade ModeloDocumento
@@ -143,29 +143,25 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
                 String variableName = group.substring(2, group.length() - 1);
                 String expression = map.get(variableName);
                 if (expression == null) {
-                    Expression expr = new Expression(group);
-                    expr = resolver.resolve(expr);
-                    String value = expr.getValue();
-                    value = value == null ? "" : value;
-                    matcher.appendReplacement(sb, value);
-                } else {
-                	Expression expr = new Expression(expression);
-                	if (resolver != null) {
-                		try {
-                			expr = resolver.resolve(expr);
-                		} catch (RuntimeException e) {
-                			modeloProcessado.append("Erro na linha: '" + linhas[i]);
-                            modeloProcessado.append("': " + e.getMessage());
-                            LOG.error(".appendTail()", e);
-                		}
-	                }
-                    // Os caracteres \ e $ devem ser escapados devido ao funcionamento do método
-                    // Matcher#appendReplacement (ver o Javadoc correspondente).
-                    // Importante manter a ordem dos replaces abaixo
-                	String value = expr.isResolved() ? expr.getValue() : "";
-                    value = value.replace("\\", "\\\\").replace("$", "\\$");
-                    matcher.appendReplacement(sb, value);
+                	expression = group;
                 }
+            	Expression expr = new Expression(expression);
+            	if (resolver != null) {
+            		try {
+            			expr = resolver.resolve(expr);
+            		} catch (RuntimeException e) {
+            			modeloProcessado.append("Erro na linha: '" + linhas[i]);
+                        modeloProcessado.append("': " + e.getMessage());
+                        LOG.error(".appendTail()", e);
+            		}
+                }
+                // Os caracteres \ e $ devem ser escapados devido ao funcionamento do método
+                // Matcher#appendReplacement (ver o Javadoc correspondente).
+                // Importante manter a ordem dos replaces abaixo
+            	String value = expr.isResolved() ? expr.getValue() : "";
+            	value = value == null ? "" : value;
+                value = value.replace("\\", "\\\\").replace("$", "\\$");
+                matcher.appendReplacement(sb, value);
             }
             matcher.appendTail(sb);
             modeloProcessado.append(sb.toString());
