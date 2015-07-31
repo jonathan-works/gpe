@@ -125,7 +125,7 @@ public class UsuarioPerfil implements Serializable {
 
 	@Override
     public String toString() {
-        return format("{0} / {1}", getPerfilTemplate(), getLocalizacao());
+        return format("{0} - {1}", getLocalizacao(), getPerfilTemplate());
     }
 
     @Override

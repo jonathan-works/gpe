@@ -147,7 +147,7 @@
             <a:ajax
               execute="@this"
               event="change"
-              render="varDiv, varLabel, pageBodyDialogMessage"
+              render="varDiv, varLabel, pageBodyDialogMessage, resetVariableForm"
               limitRender="true" />
             <f:validator validatorId="jsfComponentIdValidator" />
           </h:inputText>
@@ -170,13 +170,13 @@
               status=":status"
               listener="#{var.copyVariable()}"
               event="blur"
-              render="varDiv,writable,varLabel,formVariableType"
+              render="varDiv,writable,varLabel,formVariableType,resetVariableForm"
               limitRender="true" />
             <a:ajax
               status=":status"
               listener="#{var.copyVariable()}"
               event="selectitem"
-              render="varDiv,writable,varLabel,formVariableType"
+              render="varDiv,writable,varLabel,formVariableType,resetVariableForm"
               limitRender="true" />
           </rich:autocomplete>
         </s:div>
@@ -207,7 +207,7 @@
             execute="@this"
             limitRender="true"
             event="change"
-            render="readable,writable" />
+            render="readable,writable,resetVariableForm" />
         </h:selectBooleanCheckbox>
       </h:form>
     </rich:column>
@@ -242,6 +242,23 @@
       </h:form>
     </rich:column>
     <rich:column>
+      <f:facet name="header">Inicia vazia?</f:facet>
+      <h:form id="resetVariableForm">
+        <h:selectBooleanCheckbox
+          id="resetVariable"
+          rendered="#{var.podeIniciarVazia()}"
+          styleClass="checkbox"
+          style="align: center"
+          value="#{var.iniciaVazia}">
+          <a:ajax
+            execute="@this"
+            limitRender="true"
+            event="change"
+            render="readable,writable,required,resetVariableForm" />
+        </h:selectBooleanCheckbox>
+      </h:form>
+    </rich:column>
+    <rich:column>
       <f:facet name="header">#{infoxMessages['process.task.var.type']}</f:facet>
       <h:form id="formVariableType">
         <wi:selectOneMenu
@@ -257,7 +274,7 @@
             execute="true"
             status=":status"
             listener="#{t.processVarTypeChange(var)}"
-            render="addVarDiv, @form, pageBodyDialogMessage, varDiv, toolbarVariableForm"
+            render="addVarDiv, @form, pageBodyDialogMessage, varDiv, toolbarVariableForm, resetVariableForm"
             limitRender="true" />
         </wi:selectOneMenu>
         <a:jsFunction

@@ -6,8 +6,10 @@ import org.dom4j.Element;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.NodeCollection;
 import org.jbpm.graph.def.ProcessDefinition;
+import org.jbpm.instantiation.Delegation;
 import org.jbpm.jpdl.JpdlException;
 import org.jbpm.jpdl.xml.JpdlXmlReader;
+import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.util.ClassLoaderUtil;
 import org.xml.sax.InputSource;
 
@@ -52,4 +54,15 @@ public class InfoxJpdlXmlReader extends JpdlXmlReader {
         }
     }
 
+    @Override
+    protected TaskController readTaskController(Element taskControllerElement) {
+    	TaskController taskController = new TaskController();
+        if (taskControllerElement.attributeValue("class") != null) {
+	        Delegation taskControllerDelegation = new Delegation();
+	        taskControllerDelegation.read(taskControllerElement, this);
+	        taskController.setTaskControllerDelegation(taskControllerDelegation);
+	    }
+        taskController.setVariableAccesses(readVariableAccesses(taskControllerElement));
+        return taskController;
+    }
 }

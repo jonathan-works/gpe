@@ -25,7 +25,7 @@ public class DocumentoBinarioDAO extends DAO<DocumentoBinario> {
     private transient EntityManager entityManagerBin;
 
     @Override
-    protected EntityManager getEntityManager() {
+    public EntityManager getEntityManager() {
         return entityManagerBin;
     }
 

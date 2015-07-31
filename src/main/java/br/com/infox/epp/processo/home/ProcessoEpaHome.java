@@ -115,7 +115,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 
 	public void iniciarTarefaProcesso() {
 		try {
-			processoManager.iniciarTask(instance, tarefaId, Authenticator.getUsuarioPerfilAtual());
+			processoManager.iniciarTask(instance, Authenticator.getUsuarioPerfilAtual());
 			documentoProcessoAction.setProcesso(getInstance().getProcessoRoot());
 		} catch (java.lang.NullPointerException e) {
 			LOG.error("ProcessoEpaHome.iniciarTarefaProcesso()", e);
@@ -132,7 +132,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	}
 
 	public void visualizarTarefaProcesso() {
-		processoManager.visualizarTask(instance, tarefaId, Authenticator.getUsuarioPerfilAtual());
+		processoManager.visualizarTask(instance, Authenticator.getUsuarioPerfilAtual());
 	}
 
 	public static ProcessoEpaHome instance() {

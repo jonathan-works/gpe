@@ -2,40 +2,40 @@ package br.com.infox.epp.fluxo.manager;
 
 import java.util.List;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 
-import br.com.infox.core.manager.Manager;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.fluxo.dao.DefinicaoVariavelProcessoDAO;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 
-@Name(DefinicaoVariavelProcessoManager.NAME)
-@Scope(ScopeType.EVENT)
-@AutoCreate
-public class DefinicaoVariavelProcessoManager extends Manager<DefinicaoVariavelProcessoDAO, DefinicaoVariavelProcesso> {
+@Stateless
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+public class DefinicaoVariavelProcessoManager {
 
-    private static final long serialVersionUID = 1L;
-    public static final String NAME = "definicaoVariavelProcessoManager";
     public static final String JBPM_VARIABLE_TYPE = "processo";
+    
+    @Inject
+    private DefinicaoVariavelProcessoDAO definicaoVariavelProcessoDAO;
 
     public List<DefinicaoVariavelProcesso> listVariaveisByFluxo(Fluxo fluxo) {
-        return getDao().listVariaveisByFluxo(fluxo);
+        return definicaoVariavelProcessoDAO.listVariaveisByFluxo(fluxo);
     }
 
     public List<DefinicaoVariavelProcesso> listVariaveisByFluxo(Fluxo fluxo,
             int start, int count) {
-        return getDao().listVariaveisByFluxo(fluxo, start, count);
+        return definicaoVariavelProcessoDAO.listVariaveisByFluxo(fluxo, start, count);
     }
 
     public Long getTotalVariaveisByFluxo(Fluxo fluxo) {
-        return getDao().getTotalVariaveisByFluxo(fluxo);
+        return definicaoVariavelProcessoDAO.getTotalVariaveisByFluxo(fluxo);
     }
 
     public DefinicaoVariavelProcesso getDefinicao(Fluxo fluxo, String nome) {
-        return getDao().getDefinicao(fluxo, nome);
+        return definicaoVariavelProcessoDAO.getDefinicao(fluxo, nome);
     }
 
     public String getNomeAmigavel(DefinicaoVariavelProcesso variavelProcesso) {
@@ -52,10 +52,53 @@ public class DefinicaoVariavelProcessoManager extends Manager<DefinicaoVariavelP
     }
     
     public List<DefinicaoVariavelProcesso> listVariaveisByIdProcesso(Integer idProcesso) {
-    	return getDao().getDefinicaoVariavelProcessoListByIdProcesso(idProcesso);
+    	return definicaoVariavelProcessoDAO.getDefinicaoVariavelProcessoListByIdProcesso(idProcesso);
     }
     
     public List<DefinicaoVariavelProcesso> getDefinicaoVariavelProcessoVisivelPainel(Integer idProcesso) {
-        return getDao().getDefinicaoVariavelProcessoVisivelPainel(idProcesso);
+        return definicaoVariavelProcessoDAO.getDefinicaoVariavelProcessoVisivelPainel(idProcesso);
+    }
+    
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void moveUp(DefinicaoVariavelProcesso definicaoVariavelProcesso) throws DAOException {
+    	String hql = "update DefinicaoVariavelProcesso o set o.ordem = o.ordem + 1 "
+    			+ "where o.fluxo = :fluxo and o.ordem = :ordem";
+    	try {
+	    	definicaoVariavelProcessoDAO.getEntityManager().createQuery(hql).setParameter("fluxo", definicaoVariavelProcesso.getFluxo())
+	    		.setParameter("ordem", definicaoVariavelProcesso.getOrdem() - 1).executeUpdate();
+    	} catch (Exception e) {
+    		throw new DAOException(e);
+    	}
+    	definicaoVariavelProcesso.setOrdem(definicaoVariavelProcesso.getOrdem() - 1);
+    	update(definicaoVariavelProcesso);
+    }
+    
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void moveDown(DefinicaoVariavelProcesso definicaoVariavelProcesso) throws DAOException {
+    	String hql = "update DefinicaoVariavelProcesso o set o.ordem = o.ordem - 1 "
+    			+ "where o.fluxo = :fluxo and o.ordem = :ordem";
+    	try {
+	    	definicaoVariavelProcessoDAO.getEntityManager().createQuery(hql).setParameter("fluxo", definicaoVariavelProcesso.getFluxo())
+	    		.setParameter("ordem", definicaoVariavelProcesso.getOrdem() + 1).executeUpdate();
+    	} catch (Exception e) {
+    		throw new DAOException(e);
+    	}
+    	definicaoVariavelProcesso.setOrdem(definicaoVariavelProcesso.getOrdem() + 1);
+    	update(definicaoVariavelProcesso);
+    }
+    
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void persist(DefinicaoVariavelProcesso definicaoVariavelProcesso) throws DAOException {
+    	definicaoVariavelProcessoDAO.persist(definicaoVariavelProcesso);
+    }
+    
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public DefinicaoVariavelProcesso update(DefinicaoVariavelProcesso definicaoVariavelProcesso) throws DAOException {
+    	return definicaoVariavelProcessoDAO.update(definicaoVariavelProcesso);
+    }
+    
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void remove(DefinicaoVariavelProcesso definicaoVariavelProcesso) throws DAOException {
+    	definicaoVariavelProcessoDAO.remove(definicaoVariavelProcesso);
     }
 }

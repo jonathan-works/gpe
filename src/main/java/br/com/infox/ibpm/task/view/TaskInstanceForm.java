@@ -181,9 +181,8 @@ public class TaskInstanceForm implements Serializable {
         ff.getProperties().put(propType, url);
     }
 
-        TaskInstance newInstance = org.jboss.seam.bpm.TaskInstance.instance();
-
     private void getTaskInstance() {
+    	TaskInstance newInstance = org.jboss.seam.bpm.TaskInstance.instance();
         if (newInstance == null || !newInstance.equals(taskInstance)) {
             form = null;
         }

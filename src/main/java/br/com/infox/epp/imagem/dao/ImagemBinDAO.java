@@ -29,7 +29,7 @@ public class ImagemBinDAO extends DAO<ImagemBin> {
     private transient EntityManager entityManagerBin;
     
     @Override
-    protected EntityManager getEntityManager() {
+    public EntityManager getEntityManager() {
         return entityManagerBin;
     }
 

@@ -53,18 +53,20 @@ public class PainelUsuarioController implements Serializable {
 	protected SecurityUtil securityUtil;
 	@Inject
 	private PainelTreeHandler painelTreeHandler;
+	@Inject
+	protected DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
 
 	private VariavelProcessoService variavelProcessoService = ComponentUtil.getComponent(VariavelProcessoService.NAME);
 	private CaixaManager caixaManager = ComponentUtil.getComponent(CaixaManager.NAME);
 	private ActionMessagesService actionMessagesService = ComponentUtil.getComponent(ActionMessagesService.NAME);
 	private ConsultaProcessoList consultaProcessoList = ComponentUtil.getComponent(ConsultaProcessoList.NAME);
-	protected DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager = ComponentUtil.getComponent(DefinicaoVariavelProcessoManager.NAME);
 
 	private List<Integer> processoIdList;
 	private List<DynamicColumnModel> dynamicColumns;
 	private FluxoBean selectedFluxo;
 	protected List<FluxoBean> fluxosDisponiveis;
 	private List<TipoProcesso> tipoProcessoDisponiveis;
+	private boolean exibirColunasPadrao = true;
 
 	@PostConstruct
 	protected void init() {
@@ -277,4 +279,10 @@ public class PainelUsuarioController implements Serializable {
 	    return "painel.fluxos";
 	}
 	
+	public boolean isExibirColunasPadrao() {
+		return exibirColunasPadrao;
+	}
+	public void setExibirColunasPadrao(boolean exibirColunasPadrao) {
+		this.exibirColunasPadrao = exibirColunasPadrao;
+	}
 }
