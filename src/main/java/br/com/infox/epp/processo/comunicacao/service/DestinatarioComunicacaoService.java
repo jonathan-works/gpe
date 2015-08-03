@@ -62,11 +62,11 @@ public class DestinatarioComunicacaoService implements Serializable{
 				continue;
 			}
 
-			Processo comunicacao = modeloComunicacaoManager.getComunicacao(destinatarioModeloComunicacao);
+			Processo comunicacao = destinatarioModeloComunicacao.getProcesso();
 			if (comunicacao == null) {
 				continue;
 			}
-			boolean cienciaConfirmada = isCienciaConfirmada(modeloComunicacaoManager.getComunicacao(destinatarioModeloComunicacao));
+			boolean cienciaConfirmada = isCienciaConfirmada(comunicacao);
 			if (!usuarioInterno && !cienciaConfirmada) {
 				continue;
 			}
@@ -76,17 +76,18 @@ public class DestinatarioComunicacaoService implements Serializable{
 	}
 	
 	protected DestinatarioBean createDestinatarioBean(DestinatarioModeloComunicacao destinatario) {
+		Processo comunicacao = destinatario.getProcesso();
 		DestinatarioBean bean = instanciarDestinatarioBean();
 		bean.setIdDestinatario(destinatario.getId());
 		bean.setDestinatario(destinatario);
-		bean.setComunicacao(modeloComunicacaoManager.getComunicacao(destinatario));
+		bean.setComunicacao(comunicacao);
 		bean.setMeioExpedicao(destinatario.getMeioExpedicao().getLabel());
 		bean.setTipoComunicacao(destinatario.getModeloComunicacao().getTipoComunicacao());
 		bean.setNome(destinatario.getNome());
 		bean.setDocumentoComunicacao(destinatario.getDocumentoComunicacao());
 		bean.setModeloComunicacao(destinatario.getModeloComunicacao());
 		
-		Processo comunicacao = bean.getComunicacao();
+		
 		MetadadoProcesso metadadoPrazo = comunicacao.getMetadado(ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
 		if (metadadoPrazo != null) {
 			bean.setPrazoAtendimento(metadadoPrazo.getValue().toString());

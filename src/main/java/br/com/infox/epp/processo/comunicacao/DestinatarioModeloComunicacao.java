@@ -23,6 +23,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.entity.Processo;
 
 @Entity
 @Table(name = "tb_destinatario_modelo_comunic", uniqueConstraints = {
@@ -71,6 +72,10 @@ public class DestinatarioModeloComunicacao implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Documento documentoComunicacao;
 
+	@JoinColumn(name = "id_processo", nullable = true)
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Processo processo;
+	
 	public Long getId() {
 		return id;
 	}
@@ -135,6 +140,14 @@ public class DestinatarioModeloComunicacao implements Serializable {
 		this.documentoComunicacao = documentoComunicacao;
 	}
 	
+	public Processo getProcesso() {
+		return processo;
+	}
+
+	public void setProcesso(Processo processo) {
+		this.processo = processo;
+	}
+
 	@Transient
 	public String getNome() {
 		if (destinatario != null) {
