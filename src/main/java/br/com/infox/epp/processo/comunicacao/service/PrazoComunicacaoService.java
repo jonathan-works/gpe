@@ -215,7 +215,7 @@ public class PrazoComunicacaoService {
     
     protected <T> T getValueMetadado(Processo processo, MetadadoProcessoDefinition metaDefinition){
     	MetadadoProcesso metadadoProcesso = processo.getMetadado(metaDefinition);
-    	if(metadadoProcesso.getValue() != null){
+    	if(metadadoProcesso != null){
     		return metadadoProcesso.getValue();
     	}
     	return null;
