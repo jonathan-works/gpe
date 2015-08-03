@@ -121,7 +121,7 @@ public class ComunicacaoService {
 		processo.setDataInicio(DateTime.now().toDate());
 		processo.setUsuarioCadastro(Authenticator.getUsuarioLogado());
 		processoManager.persist(processo);
-
+		destinatario.setProcesso(processo);
 		
 		Long processIdOriginal = BusinessProcess.instance().getProcessId(); // Para caso tenha sido expedido para apenas um destinatário
 		Long taskIdOriginal = BusinessProcess.instance().getTaskId();
