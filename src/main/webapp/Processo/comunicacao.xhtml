@@ -125,12 +125,10 @@
 	    			<wi:selectOneMenuEntity id="classificacaoCiencia" showRequired="true" label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
 	    				showLabelSelecione="true" value="#{comunicacaoAction.classificacaoDocumentoCiencia}"
 	    				items="#{comunicacaoAction.classificacoesDocumento}">
-	    				<a:ajax event="change" limitRender="true" render="@form" execute="@form" />
+	    				<a:ajax event="change" limitRender="true" render="classificacaoCienciaDecoration" execute="@this" />
 	    			</wi:selectOneMenuEntity>
 
-					<s:div id="editorArquivoDiv" rendered="#{not empty comunicacaoAction.classificacaoDocumentoCiencia 
-	    				and not empty comunicacaoAction.dataCiencia 
-	    				and comunicacaoAction.editorCiencia}">
+					<s:div id="editorArquivoDiv" rendered="#{comunicacaoAction.editorCiencia}">
 						<wi:editor id="documentoCienciaTexto" readonly="false"
 							 value="#{comunicacaoAction.textoCiencia}" required="true" />
 					</s:div>
