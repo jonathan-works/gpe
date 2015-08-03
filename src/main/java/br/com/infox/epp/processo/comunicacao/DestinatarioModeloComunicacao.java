@@ -27,7 +27,6 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 @Entity
 @Table(name = "tb_destinatario_modelo_comunic", uniqueConstraints = {
 	@UniqueConstraint(columnNames = {"id_pessoa_fisica", "id_modelo_comunicacao"}),
-	@UniqueConstraint(columnNames = {"id_localizacao", "id_modelo_comunicacao"})
 })
 public class DestinatarioModeloComunicacao implements Serializable {
 	private static final long serialVersionUID = 1L;
