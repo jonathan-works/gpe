@@ -15,6 +15,9 @@
 		<properties>
 			<property name="hibernate.show_sql" value="${desenvolvimento}" />
 			<property name="hibernate.format_sql" value="false" />
+			
+			<property name="hibernate.ejb.cfgfile" value="hibernate.cfg.xml"/>
+			<property name="hibernate.session_factory_name" value="java:/sessionFactoryEPA"/>
 
 			<property name="hibernate.default_batch_fetch_size" value="16" />
 			<property name="hibernate.max_fetch_depth" value="2" />

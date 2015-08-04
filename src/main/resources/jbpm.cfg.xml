@@ -6,6 +6,9 @@
        <factory>
           <bean class="org.jbpm.persistence.db.DbPersistenceServiceFactory">
              <field name="isTransactionEnabled"><false/></field>
+             <field name="sessionFactoryJndiName">
+             	<string>java:/sessionFactoryEPA</string>
+             </field>
           </bean>
        </factory>
     </service>
@@ -19,13 +22,12 @@
 	<!-- Arquivo que define o calendario de dias e horas úteis. -->
 	<string name="resource.business.calendar" value="jbpm.business.calendar.properties" />
 	
-	<string name='jbpm.mail.class.name'
-			value='br.com.infox.ibpm.mail.JbpmMail' />
+	<string name='jbpm.mail.class.name' value='br.com.infox.ibpm.mail.JbpmMail' />
 	
 	<!-- Definicao dos tipos de no -->
 	<string name="resource.node.types" value="node.types.xml" />
 	
 	<string name="resource.varmapping" value="jbpm.varmapping.xml" />
 	<string name="resource.converter" value="jbpm.converter.properties" />
-
+	
 </jbpm-configuration>
