@@ -41,7 +41,7 @@ public class CaixaJbpmEventHandler implements Serializable {
         if (tarefa != null) {
 	        Integer idNodeAnterior = (int) transition.getFrom().getId();
 	        Caixa caixa = caixaManager.getCaixaByIdTarefaAndIdNodeAnterior(tarefa.getIdTarefa(), idNodeAnterior);
-	        Processo processo = JbpmUtil.getProcesso();
+	        Processo processo = processoManager.getProcessoEpaByIdJbpm(executionContext.getProcessInstance().getId());
 	        if (caixa != null) {
 	        	processo.setCaixa(caixa);
 	        	processoManager.update(processo);
@@ -51,7 +51,7 @@ public class CaixaJbpmEventHandler implements Serializable {
     
    @Observer(Event.EVENTTYPE_TASK_END)
    public void removeCaixaDoProcesso(ExecutionContext context) throws DAOException {
-       Processo processo = JbpmUtil.getProcesso();
+       Processo processo = processoManager.getProcessoEpaByIdJbpm(context.getProcessInstance().getId());
        processo.setCaixa(null);
        processoManager.update(processo);
    }
