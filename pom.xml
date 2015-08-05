@@ -337,7 +337,7 @@
         <dependency>
             <groupId>br.com.infox</groupId>
             <artifactId>infox-certificate-signature</artifactId>
-            <version>0.0.2</version>
+            <version>0.0.3-SNAPSHOT</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
