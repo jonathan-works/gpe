@@ -50,7 +50,7 @@ public class TaskListenerService implements Serializable {
 
     @Observer(Event.EVENTTYPE_TASK_CREATE)
     public void onCreateJbpmTask(ExecutionContext context) {
-        Processo processo = JbpmUtil.getProcesso();
+        Processo processo = processoManager.getProcessoEpaByIdJbpm(context.getProcessInstance().getId());
         if (processo != null) {
             TaskInstance taskInstance = context.getTaskInstance();
             createProcessoTarefa(processo, taskInstance);
