@@ -3,11 +3,10 @@
  */
 package br.com.infox.epp.certificado.manager;
 
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import java.security.cert.CertificateException;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -101,6 +100,7 @@ public class CertificateSignatureGroupManager extends Manager<CertificateSignatu
                     signature.setCertificateChain(bean.getCertChain());
                     signature.setSignature(bean.getSignature());
                     signature.setSignedData(bean.getDocumentMD5());
+                    signature.setUuid(bean.getDocumentUuid());
                     signature.setCertificateSignatureGroup(group);
                     list.add(signature);
                 }

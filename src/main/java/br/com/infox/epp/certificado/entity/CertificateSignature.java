@@ -39,6 +39,8 @@ public class CertificateSignature {
     private String signature;
     @Column(name="ds_signed_data")
     private String signedData;
+    @Column(name="ds_uuid")
+    private String uuid;
     
     public Integer getIdCertificateSignature() {
         return idCertificateSignature;
@@ -69,6 +71,13 @@ public class CertificateSignature {
     }
     public void setSignedData(String signedData) {
         this.signedData = signedData;
+    }
+    
+    public String getUuid() {
+        return uuid;
+    }
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
     
     @Override
