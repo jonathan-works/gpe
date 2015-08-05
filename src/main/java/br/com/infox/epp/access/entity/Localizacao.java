@@ -339,75 +339,30 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = (prime * result)
-                + ((getCaminhoCompleto() == null) ? 0 : getCaminhoCompleto().hashCode());
-        result = (prime * result)
-                + ((getEstruturaFilho() == null) ? 0 : getEstruturaFilho().hashCode());
-        result = (prime * result)
-                + ((getEstruturaPai() == null) ? 0 : getEstruturaPai().hashCode());
-        result = (prime * result)
-                + ((getIdLocalizacao() == null) ? 0 : getIdLocalizacao().hashCode());
-        result = (prime * result)
-                + ((getLocalizacao() == null) ? 0 : getLocalizacao().hashCode());
-        result = (prime * result)
-                + ((getLocalizacaoPai() == null) ? 0 : getLocalizacaoPai().hashCode());
+        result = prime * result + ((getCaminhoCompleto() == null) ? 0 : getCaminhoCompleto().hashCode());
+        result = prime * result + ((getIdLocalizacao() == null) ? 0 : getIdLocalizacao().hashCode());
         return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
+        if (this == obj)
             return true;
-        }
-        if (obj == null) {
+        if (obj == null)
             return false;
-        }
-        if (!(obj instanceof Localizacao)) {
+        if (!(obj instanceof Localizacao))
             return false;
-        }
         Localizacao other = (Localizacao) obj;
         if (getCaminhoCompleto() == null) {
-            if (other.getCaminhoCompleto() != null) {
+            if (other.getCaminhoCompleto() != null)
                 return false;
-            }
-        } else if (!getCaminhoCompleto().equals(other.getCaminhoCompleto())) {
+        } else if (!getCaminhoCompleto().equals(other.getCaminhoCompleto()))
             return false;
-        }
-        if (getEstruturaFilho() == null) {
-            if (other.getEstruturaFilho() != null) {
-                return false;
-            }
-        } else if (!getEstruturaFilho().equals(other.getEstruturaFilho())) {
-            return false;
-        }
-        if (getEstruturaPai() == null) {
-            if (other.getEstruturaPai() != null) {
-                return false;
-            }
-        } else if (!getEstruturaPai().equals(other.getEstruturaPai())) {
-            return false;
-        }
         if (getIdLocalizacao() == null) {
-            if (other.getIdLocalizacao() != null) {
+            if (other.getIdLocalizacao() != null)
                 return false;
-            }
-        } else if (!getIdLocalizacao().equals(other.getIdLocalizacao())) {
+        } else if (!getIdLocalizacao().equals(other.getIdLocalizacao()))
             return false;
-        }
-        if (getLocalizacao() == null) {
-            if (other.getLocalizacao() != null) {
-                return false;
-            }
-        } else if (!getLocalizacao().equals(other.getLocalizacao())) {
-            return false;
-        }
-        if (getLocalizacaoPai() == null) {
-            if (other.getLocalizacaoPai() != null) {
-                return false;
-            }
-        } else if (!getLocalizacaoPai().equals(other.getLocalizacaoPai())) {
-            return false;
-        }
         return true;
     }
 
