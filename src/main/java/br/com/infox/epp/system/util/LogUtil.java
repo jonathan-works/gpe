@@ -93,7 +93,7 @@ public final class LogUtil {
      * @return
      */
     public static boolean isLogable(Object entity) {
-        return !EntityUtil.isAnnotationPresent(entity, Ignore.class);
+        return !entity.getClass().getName().startsWith("org.jbpm") && !EntityUtil.isAnnotationPresent(entity, Ignore.class);
     }
 
     public static boolean compareObj(Object object1, Object object2) {
