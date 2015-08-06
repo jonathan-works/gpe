@@ -330,10 +330,12 @@ public class ValidaDocumentoAction implements Serializable {
 		List<Processo> listProcesso = processoDAO.getProcessosFilhosByTipo(documento.getProcesso(),
 				TipoProcesso.DOCUMENTO.toString());
 		for (Processo processo : listProcesso) {
-			MetadadoProcesso metadadoProcesso = processo.getMetadado(EppMetadadoProvider.DOCUMENTO_EM_ANALISE);
-			if (metadadoProcesso.getValor().equals(documento.getId().toString())) {
-				return true;
-			}
+		    List<MetadadoProcesso> documentosEmAnalise = processo.getMetadadoList(EppMetadadoProvider.DOCUMENTO_EM_ANALISE);
+		    for (MetadadoProcesso metadadoProcesso : documentosEmAnalise) {
+		        if (metadadoProcesso.getValor().equals(documento.getId().toString())) {
+		            return true;
+		        }
+            }
 		}
 		return false;
 	}
