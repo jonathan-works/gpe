@@ -9,6 +9,8 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.contexts.Contexts;
+import org.jboss.seam.log.LogProvider;
+import org.jboss.seam.log.Logging;
 
 /**
  * Classe para medição de tempo das fases do ciclos de vida JSF
@@ -22,6 +24,7 @@ import org.jboss.seam.contexts.Contexts;
 @BypassInterceptors
 public class MeeterPhaseListener {
 
+    private static final LogProvider LOG = Logging.getLogProvider(MeeterPhaseListener.class);
     private long time;
     private boolean producao;
     
@@ -34,14 +37,14 @@ public class MeeterPhaseListener {
     public void beforePhase(PhaseEvent event) {
         if (!producao) {
             time = new Date().getTime();
-            System.out.println("Entrou: " + event.getPhaseId());
+            LOG.info("Entrou: " + event.getPhaseId());
         }
     }
 
     @Observer("org.jboss.seam.afterPhase")
     public void afterPhase(PhaseEvent event) {
         if (!producao) {
-            System.out.println("Saiu: " + event.getPhaseId() + " - "
+            LOG.info("Saiu: " + event.getPhaseId() + " - "
                     + (new Date().getTime() - time)+ " [ " + event.getFacesContext().getExternalContext().getRequestServletPath() + " ]");
             time = 0;
         }
