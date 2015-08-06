@@ -89,6 +89,7 @@
 			<ui:param name="canCollapse" value="#{wi:get(canCollapse, false)}" />
             <f:facet name="config">
                 removePlugins: 'elementspath',
+                allowedContent: true,
                 resize_enable:true,
                 resize_dir:'both',
                 toolbar_empty:[],
@@ -132,7 +133,7 @@
                             multiSelect : false,
                             panel : {
                                 css : [ config.contentsCss,
-                                        CKEDITOR.getUrl(editor.skinPath + 'editor.ecss') ]
+                                        CKEDITOR.getUrl('skins/' + config.skin + '/editor.css') ]
                             },
                             init : function() {
                                 this.startGroup("Variaveis");
