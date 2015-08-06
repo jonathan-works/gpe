@@ -10,6 +10,7 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.LIST_NOT_ENDED_BY_FL
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_BY_ID_JBPM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_PARAM;
+import static br.com.infox.epp.processo.query.ProcessoQuery.NUMERO_PROCESSO_ROOT_PARAM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_FLUXO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_JBPM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PARAM_ID_PROCESSO;
@@ -201,7 +202,7 @@ public class ProcessoDAO extends DAO<Processo> {
 	
 	public List<Processo> getProcessosFilhosByTipo(Processo processo, String tipoProcesso) {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put(PROCESSO_PAI_PARAM, processo);
+		parameters.put(NUMERO_PROCESSO_ROOT_PARAM, processo.getNumeroProcessoRoot());
 		parameters.put(TIPO_PROCESSO_PARAM, tipoProcesso);
 		return getNamedResultList(PROCESSOS_FILHO_BY_TIPO, parameters);
     }
