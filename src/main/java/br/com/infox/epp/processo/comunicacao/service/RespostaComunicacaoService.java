@@ -24,6 +24,7 @@ import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.dao.DocumentoRespostaComunicacaoDAO;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.service.ProcessoAnaliseDocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
@@ -46,6 +47,8 @@ public class RespostaComunicacaoService {
 	private MetadadoProcessoManager metadadoProcessoManager;
 	@In
 	private PrazoComunicacaoService prazoComunicacaoService;
+	@In
+	private DocumentoManager documentoManager;
 	
 	public void enviarResposta(List<Documento> respostas) throws DAOException {
 		Processo comunicacao = documentoRespostaComunicacaoDAO.getComunicacaoVinculada(respostas.get(0));
@@ -62,11 +65,22 @@ public class RespostaComunicacaoService {
 		MetadadoProcesso metadadoDestinatario = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO);
 		TipoComunicacao tipoComunicacao = ((DestinatarioModeloComunicacao) metadadoDestinatario.getValue()).getModeloComunicacao().getTipoComunicacao();
 		if(prazoComunicacaoService.containsClassificacaoProrrogacaoPrazo(respostas, tipoComunicacao)){
-			MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
-			MetadadoProcesso metadadoDataPedido = metadadoProcessoProvider.gerarMetadado(
-					ComunicacaoMetadadoProvider.DATA_PEDIDO_PRORROGACAO, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(new Date()));
-			comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoDataPedido));
+			createMetadadoDataPedidoProrrogacaoPrazo(comunicacao);
 		}		
+	}
+	
+	public void enviarProrrogacaoPrazo(Documento documento, Processo comunicacao) throws DAOException {
+		documentoManager.gravarDocumentoNoProcesso(comunicacao.getProcessoRoot(), documento);
+		Processo prorrogacao = processoAnaliseDocumentoService.criarProcessoAnaliseDocumentos(comunicacao, documento);
+		processoAnaliseDocumentoService.inicializarFluxoDocumento(prorrogacao, null);
+		createMetadadoDataPedidoProrrogacaoPrazo(comunicacao);
+	}
+	
+	private void createMetadadoDataPedidoProrrogacaoPrazo(Processo comunicacao) throws DAOException {
+		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
+		MetadadoProcesso metadadoDataPedido = metadadoProcessoProvider.gerarMetadado(
+				ComunicacaoMetadadoProvider.DATA_PEDIDO_PRORROGACAO, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(new Date()));
+		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoDataPedido));
 	}
 	
 	private void setRespostaTempestiva(Date dataResposta, Processo comunicacao) {

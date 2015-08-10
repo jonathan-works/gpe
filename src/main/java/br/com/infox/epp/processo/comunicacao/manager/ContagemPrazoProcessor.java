@@ -46,7 +46,7 @@ public class ContagemPrazoProcessor {
 	    return null;
 	}
 	
-	private void analisarProcessosAguardandoCumprimento() throws DAOException {
+	protected void analisarProcessosAguardandoCumprimento() throws DAOException {
 		List<Processo> processos = processoManager.listProcessosComunicacaoAguardandoCumprimento();
 		for (Processo processo : processos) {
 		    if (!prazoComunicacaoService.hasPedidoProrrogacaoEmAberto(processo)){
@@ -55,13 +55,10 @@ public class ContagemPrazoProcessor {
 		}
 	}
 	
-	private void analisarProcessosAguardandoCiencia() throws DAOException {
+	protected void analisarProcessosAguardandoCiencia() throws DAOException {
 		List<Processo> processos = processoManager.listProcessosComunicacaoAguardandoCiencia();
 		for (Processo processo : processos) {
 			prazoComunicacaoService.movimentarComunicacaoPrazoExpirado(processo, ComunicacaoMetadadoProvider.LIMITE_DATA_CIENCIA);
 		}
 	}
-	
-	
-
 }

@@ -11,6 +11,7 @@ import javax.inject.Inject;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
@@ -19,6 +20,7 @@ import org.jbpm.context.exe.ContextInstance;
 import org.joda.time.DateTime;
 
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
@@ -27,6 +29,7 @@ import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
@@ -35,8 +38,8 @@ import br.com.infox.epp.processo.metadado.system.MetadadoProcessoDefinition;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
+import br.com.infox.ibpm.task.service.MovimentarTarefaService;
 import br.com.infox.seam.exception.BusinessException;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Name(PrazoComunicacaoService.NAME)
 @AutoCreate
@@ -52,9 +55,13 @@ public class PrazoComunicacaoService {
 	private CalendarioEventosManager calendarioEventosManager;
 	@Inject
 	private MetadadoProcessoManager metadadoProcessoManager;
+	@Inject
+	private MovimentarTarefaService movimentarTarefaService;
 	
-	private ProcessoManager processoManager = ComponentUtil.getComponent(ProcessoManager.NAME);
-	
+	@In
+	private DocumentoManager documentoManager;
+	@In
+	private ProcessoManager processoManager;
 
 	public Date contabilizarPrazoCiencia(Processo comunicacao) {
 		DestinatarioModeloComunicacao destinatario = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.DESTINATARIO);
@@ -85,6 +92,17 @@ public class PrazoComunicacaoService {
 		adicionarPrazoDeCumprimento(comunicacao, dataCiencia);
 		adicionarVariavelCienciaAutomaticaAoProcesso(usuarioCiencia, comunicacao);
 		adicionarVariavelPossuiPrazoAoProcesso(comunicacao);
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void darCienciaManual(Processo comunicacao, Date dataCiencia, Documento documentoCiencia) throws DAOException {
+		documentoManager.gravarDocumentoNoProcesso(comunicacao.getProcessoRoot(), documentoCiencia);
+		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
+		MetadadoProcesso metadadoCiencia = metadadoProcessoProvider.gerarMetadado(
+				ComunicacaoMetadadoProvider.DOCUMENTO_COMPROVACAO_CIENCIA, documentoCiencia.getId().toString());
+		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoCiencia));
+		darCiencia(comunicacao, dataCiencia, Authenticator.getUsuarioLogado());
+		movimentarTarefaService.finalizarTarefaEmAberto(comunicacao);
 	}
 
 	protected void adicionarPrazoDeCumprimento(Processo comunicacao, Date dataCiencia)
@@ -140,9 +158,11 @@ public class PrazoComunicacaoService {
     
     public void movimentarComunicacaoPrazoExpirado(Processo comunicacao, MetadadoProcessoDefinition metadadoPrazo) throws DAOException{
 		Date dataLimite = getValueMetadado(comunicacao, metadadoPrazo);
-		DateTime dataParaCumprimento = new DateTime(dataLimite.getTime());
-		if (dataParaCumprimento.isBeforeNow()) {
-			processoManager.movimentarProcessoJBPM(comunicacao);
+		if (dataLimite != null) {
+			DateTime dataParaCumprimento = new DateTime(dataLimite.getTime());
+			if (dataParaCumprimento.isBeforeNow()) {
+				processoManager.movimentarProcessoJBPM(comunicacao);
+			}
 		}
 	}
     
