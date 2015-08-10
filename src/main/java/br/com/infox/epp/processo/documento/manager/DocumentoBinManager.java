@@ -55,7 +55,10 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 	public DocumentoBin createProcessoDocumentoBin(final Documento documento) throws DAOException {
 		final DocumentoBin bin = documento.getDocumentoBin();
 		if (bin.getMd5Documento() == null) {
-			bin.setMd5Documento(MD5Encoder.encode(documento.getDocumentoBin().getModeloDocumento()));
+			bin.setMd5Documento(MD5Encoder.encode(bin.getModeloDocumento()));
+		}
+		if (bin.getModeloDocumento() == null && bin.isBinario()) {
+			bin.setModeloDocumento(InfoxPdfReader.readPdfFromByteArray(bin.getProcessoDocumento()));
 		}
 		return persist(bin);
 	}
