@@ -260,7 +260,7 @@ public class DecisionNode extends Node {
     }
 
     private void populateVariables(ExecutionContext executionContext) {
-        Integer idProcesso = (Integer) executionContext.getVariable("processo");
+        Integer idProcesso = (Integer) executionContext.getContextInstance().getVariable("processo", executionContext.getProcessInstance().getRootToken());
         VariavelProcessoService variavelProcessoService = ComponentUtil.getComponent(VariavelProcessoService.NAME);
         List<VariavelProcesso> variaveis = variavelProcessoService.getVariaveisHierquiaProcesso(idProcesso);
         for (VariavelProcesso variavel : variaveis) {
