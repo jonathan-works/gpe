@@ -1,7 +1,11 @@
 package br.com.infox.epp.processo.comunicacao.manager;
 
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+
+import javax.persistence.EntityManager;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -9,12 +13,17 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.access.manager.PapelManager;
+import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.action.DestinatarioBean;
 import br.com.infox.epp.processo.comunicacao.dao.ModeloComunicacaoDAO;
+import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 
 @Name(ModeloComunicacaoManager.NAME)
 @AutoCreate
@@ -24,6 +33,8 @@ public class ModeloComunicacaoManager extends Manager<ModeloComunicacaoDAO, Mode
 	
 	@In
 	private PapelManager papelManager;
+	@In
+	private PrazoComunicacaoService prazoComunicacaoService;
 	
 	public boolean isExpedida(ModeloComunicacao modeloComunicacao) {
 		return getDao().isExpedida(modeloComunicacao);
@@ -33,15 +44,44 @@ public class ModeloComunicacaoManager extends Manager<ModeloComunicacaoDAO, Mode
 		return getDao().listModelosComunicacaoPorProcessoRoot(processoRoot);
 	}
 	
-	public Processo getComunicacao(DestinatarioModeloComunicacao destinatario) {
-		return getDao().getComunicacao(destinatario);
-	}
-	
 	public DocumentoModeloComunicacao getDocumentoInclusoPorPapel(Collection<String> identificadoresPapel, ModeloComunicacao modeloComunicacao) {
 		return getDao().getDocumentoInclusoPorPapel(identificadoresPapel, modeloComunicacao);
 	}
 	
 	public List<Documento> getDocumentosByModeloComunicacao(ModeloComunicacao modeloComunicacao){
 		return getDao().getDocumentosByModeloComunicacao(modeloComunicacao);
+	}
+	
+	public List<DestinatarioBean> listDestinatarios(String numeroProcessoRoot) {
+		List<DestinatarioBean> destinatarios = getDao().listDestinatarios(numeroProcessoRoot);
+		EntityManager entityManager = BeanManager.INSTANCE.getReference(EntityManager.class);
+		for (DestinatarioBean destinatario : destinatarios) {
+			DestinatarioModeloComunicacao destinatarioModeloComunicacao = entityManager.find(DestinatarioModeloComunicacao.class, destinatario.getIdDestinatario());
+			Processo comunicacao = destinatarioModeloComunicacao.getProcesso();
+			destinatario.setNome(destinatarioModeloComunicacao.getNome());
+			destinatario.setStatusProrrogacao(prazoComunicacaoService.getStatusProrrogacaoFormatado(comunicacao));
+			destinatario.setDataConfirmacao(getMetadadoValue(comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA)));
+			destinatario.setDataResposta(getMetadadoValue(comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CUMPRIMENTO)));
+			destinatario.setPrazoAtendimento(getMetadadoValue(comunicacao.getMetadado(ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO)));
+			destinatario.setPrazoFinal(getMetadadoValue(comunicacao.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO)));
+			destinatario.setPrazoOriginal(getMetadadoValue(comunicacao.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO_INICIAL)));
+			destinatario.setResponsavelConfirmacao(getMetadadoValue(comunicacao.getMetadado(ComunicacaoMetadadoProvider.RESPONSAVEL_CIENCIA)));
+			setarInformacoesAdicionais(destinatario);
+		}
+		return destinatarios;
+	}
+	
+	protected void setarInformacoesAdicionais(DestinatarioBean destinatario) {
+	}
+
+	protected String getMetadadoValue(MetadadoProcesso metadado) {
+		if (metadado == null) {
+			return "-";
+		}
+		Object value = metadado.getValue();
+		if (value instanceof Date) {
+			return new SimpleDateFormat("dd/MM/yyyy").format(value);
+		}
+		return value.toString();
 	}
 }

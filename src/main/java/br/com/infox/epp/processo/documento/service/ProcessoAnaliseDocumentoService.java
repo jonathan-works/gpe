@@ -125,7 +125,7 @@ public class ProcessoAnaliseDocumentoService {
 				}
 			}
 		}
-		Long processIdOriginal = BusinessProcess.instance().getProcessId(); // Para caso tenha sido expedido para apenas um destinatário
+		Long processIdOriginal = BusinessProcess.instance().getProcessId();
 		Long taskIdOriginal = BusinessProcess.instance().getTaskId();
 		BusinessProcess.instance().setProcessId(null);
 		BusinessProcess.instance().setTaskId(null);
