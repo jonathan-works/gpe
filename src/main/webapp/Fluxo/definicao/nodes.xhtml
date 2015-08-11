@@ -227,7 +227,12 @@
                                 </wi:editor>
                             </rich:collapsiblePanel>
                         </h:form>
-                        <h:form id="eventsForm">
+                        
+                       	<rich:collapsiblePanel switchType="client" expanded="false" header="Listeners" >
+                   			<ui:include src="listeners.xhtml" />
+                       	</rich:collapsiblePanel>
+                       	
+			<h:form id="eventsForm">
                             <rich:collapsiblePanel
                                 switchType="ajax"
                                 expanded="false"
