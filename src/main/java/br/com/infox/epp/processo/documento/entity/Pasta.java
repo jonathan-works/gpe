@@ -30,7 +30,6 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import br.com.infox.epp.fluxo.entity.ModeloPasta;
 import br.com.infox.epp.processo.entity.Processo;
 
 @Entity
@@ -82,10 +81,6 @@ public class Pasta implements Serializable, Cloneable {
     
     @Column(name = "nr_ordem")
     private Integer ordem;
-    
-    @ManyToOne
-    @JoinColumn(name = "id_modelo_pasta")
-    private ModeloPasta modeloPasta;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pasta")
     private List<Documento> documentosList; 
@@ -183,14 +178,6 @@ public class Pasta implements Serializable, Cloneable {
 
     public void setOrdem(Integer ordem) {
         this.ordem = ordem;
-    }
-
-    public ModeloPasta getModeloPasta() {
-        return modeloPasta;
-    }
-
-    public void setModeloPasta(ModeloPasta modeloPasta) {
-        this.modeloPasta = modeloPasta;
     }
 
     @Override

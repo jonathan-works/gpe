@@ -27,6 +27,7 @@ import org.jboss.seam.international.StatusMessages;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.crud.LocalizacaoCrudAction;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
@@ -86,6 +87,10 @@ public class PastaRestricaoAction implements Serializable {
 	@Create
 	public void create() {
 	    clearInstances();
+	    // Isto está aqui para evitar erro ao editar uma restrição do tipo localização na primeira vez que entra na tela,
+        // causado pela injeção a este componente que
+        // está presente em LocalizaccaoTreehandler.getEntityToIgnore
+        ComponentUtil.<LocalizacaoCrudAction>getComponent(LocalizacaoCrudAction.NAME).newInstance();
 	}
 	
 	private void clearInstances() {
@@ -350,7 +355,6 @@ public class PastaRestricaoAction implements Serializable {
     }
     
     public void loadRestricao(PastaRestricao restricao) {
-        newRestricaoInstance();
         setRestricaoInstance(restricao);
         PastaRestricaoEnum tipo = restricao.getTipoPastaRestricao();
         if (PastaRestricaoEnum.P.equals(tipo)) {

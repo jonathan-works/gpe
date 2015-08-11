@@ -109,6 +109,15 @@ public class PastaAction implements Serializable {
         return canDelete(getInstance());
     }
     
+    public Boolean canLogicDelete(Pasta pasta) {
+        PastaRestricaoBean restricaoDaPasta = restricoes.get(pasta.getId());
+        return restricaoDaPasta != null && restricaoDaPasta.getLogicDelete();
+    }
+    
+    public Boolean canLogicDeleteFromInstance() {
+        return canLogicDelete(getInstance());
+    }
+    
     public Pasta getInstance() {
         return instance;
     }
