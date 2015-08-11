@@ -46,6 +46,7 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.service.DocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -95,7 +96,7 @@ public class RespostaComunicacaoAction implements Serializable {
 	
 	private DestinatarioModeloComunicacao destinatario;
 
-	private Processo processoComunicacao;
+	protected Processo processoComunicacao;
 	private Processo processoRaiz;
 	private Date prazoResposta;
 	private String statusProrrogacao;
@@ -108,20 +109,27 @@ public class RespostaComunicacaoAction implements Serializable {
 	
 	private boolean possivelMostrarBotaoEnvio = false;
 	
+	
 	@Create
 	public void init() {
 		this.processoComunicacao = JbpmUtil.getProcesso();
+		respostaComunicacaoList.setProcesso(processoComunicacao);
+		
 		this.processoRaiz = processoComunicacao.getProcessoRoot();
-		this.destinatario = processoComunicacao.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO).getValue();
 		documentoUploader.newInstance();
 		documentoUploader.clear();
 		documentoUploader.setProcesso(processoRaiz);
 		documentoEditor.setProcesso(processoRaiz);
-		respostaComunicacaoList.setProcesso(processoComunicacao);
-		documentoComunicacaoList.setModeloComunicacao(destinatario.getModeloComunicacao());
+		
+		MetadadoProcesso metadadoDestinatario = processoComunicacao.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO);
+		if(metadadoDestinatario != null){
+			destinatario = metadadoDestinatario.getValue();
+			documentoComunicacaoList.setModeloComunicacao(destinatario.getModeloComunicacao());
+			prazoResposta = prazoComunicacaoService.getDataLimiteCumprimento(processoComunicacao);
+		}
+
 		newDocumentoEdicao();
 		initClassificacoes();
-		prazoResposta = prazoComunicacaoService.contabilizarPrazoCumprimento(processoComunicacao);
 		verificarPossibilidadeEnvioResposta();
 	}
 
