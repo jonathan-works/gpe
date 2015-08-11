@@ -9,41 +9,32 @@
 	xmlns:a="http://richfaces.org/a4j">
 
 	<ui:param name="id" value="#{empty id ? 'id' : id}"></ui:param>
-	<ui:param name="showMeioExpedicao" value="#{empty showMeioExpedicao ? false : showMeioExpedicao}"></ui:param>
-	<ui:param name="showDestinatario" value="#{empty showDestinatario ? true : showDestinatario}"></ui:param>
-	<ui:param name="showDataEnvio" value="#{empty showDataEnvio ? true : showDataEnvio}"></ui:param>
 	<ui:param name="prazoResposta" value="#{empty prazoResposta ? '-' : prazoResposta}"></ui:param>
-	<ui:param name="showPrazoResposta" value="#{empty showPrazoResposta ? false : showPrazoResposta}"></ui:param>
-	<ui:param name="showDataResposta" value="#{empty showDataResposta ? true : showDataResposta}"></ui:param>
-	<ui:param name="showTipoComunicacao" value="#{empty showTipoComunicacao ? true : showTipoComunicacao}"></ui:param>
-	<ui:param name="showStatusProrrogacao" value="#{empty showStatusProrrogacao ? false : showStatusProrrogacao}"></ui:param>
-	<ui:param name="showDownloadComunicacaoCompleta" value="#{empty showDownloadComunicacaoCompleta ? true : showDownloadComunicacaoCompleta}"></ui:param>
-	<ui:param name="showDownloadDocumentoPrincipal" value="#{empty showDownloadDocumentoPrincipal ? false : showDownloadDocumentoPrincipal}"></ui:param>
 	
 	<wi:outputText id="#{id}meioExpedicao"
 		label="#{infoxMessages['comunicacao.meioExpedicao']}"
 		value="#{meioExpedicao}"
-		rendered="#{showMeioExpedicao}" />
+		rendered="#{empty showMeioExpedicao ? false : showMeioExpedicao}" />
 	<wi:outputText id="#{id}destinatario"
 		label="#{infoxMessages['comunicacao.destinatario']}"
 		value="#{destinatario}"
-		rendered="#{showDestinatario}" />
+		rendered="#{empty showDestinatario ? true : showDestinatario}" />
 	<wi:outputText id="#{id}dataExpedicaoComunicacao"
 		label="#{infoxMessages['comunicacao.dataEnvio']}"
 		value="#{dataEnvio}"
-		rendered="#{showDataEnvio}">
+		rendered="#{empty showDataEnvio ? true : showDataEnvio}">
 		<f:convertDateTime pattern="dd/MM/yyyy" />
 	</wi:outputText>
 	<wi:outputText id="#{id}prazoResposta" 
 		label="#{infoxMessages['comunicacao.prazoResposta']}"
 		value="#{prazoResposta}"
-		rendered="#{showPrazoResposta}">
+		rendered="#{empty showPrazoResposta ? false : showPrazoResposta}">
 		<f:convertDateTime pattern="dd/MM/yyyy" />
 	</wi:outputText>
 	<wi:outputText id="#{id}dataResposta"
 		label="#{infoxMessages['comunicacao.dataResposta']}"
 		value="#{dataResposta}"
-		rendered="#{showDataResposta}">
+		rendered="#{empty showDataResposta ? true : showDataResposta}">
 		<f:convertDateTime pattern="dd/MM/yyyy" />
 	</wi:outputText>
 	<wi:outputText id="#{id}dataCienciaComunicacao"
@@ -59,11 +50,11 @@
 	<wi:outputText id="#{id}tipoComunicacao"
 		label="#{infoxMessages['comunicacao.tipoComunicacao']}"
 		value="#{tipoComunicacao}"
-		rendered="#{showTipoComunicacao}" />
+		rendered="#{empty showTipoComunicacao ? true : showTipoComunicacao}" />
 	<wi:outputText id="#{id}statusProrrogacao" 
 		label="#{infoxMessages['comunicacao.statusProrrogacao']}"
 		value="#{statusProrrogacao}"
-		rendered="#{showStatusProrrogacao}">
+		rendered="#{empty showStatusProrrogacao ? false : showStatusProrrogacao}">
 	</wi:outputText>
 	
 	<ui:fragment rendered="#{not empty informacoesAdicionais}">
@@ -76,12 +67,12 @@
 			value="#{infoxMessages['comunicacao.visualizarComunicacao']}"
 			styleClass="buttons" type="button" 
 			onclick="infox.openPopUp('documento', '#{documentoDownloader.getViewUrl(documentoComunicacao)}');"
-			rendered="#{showDownloadDocumentoPrincipal}" />
+			rendered="#{empty showDownloadDocumentoPrincipal ? false : showDownloadDocumentoPrincipal}" />
 		<a:commandButton id="#{id}visualizarComunicacao" 
                value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
                styleClass="buttons"
                onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?idDestinatario=#{idDestinatario}','1024'); return false;"
-               rendered="#{showDownloadComunicacaoCompleta}" />
+               rendered="#{empty showDownloadComunicacaoCompleta ? true : showDownloadComunicacaoCompleta}" />
 		
 	</h:form>
 
