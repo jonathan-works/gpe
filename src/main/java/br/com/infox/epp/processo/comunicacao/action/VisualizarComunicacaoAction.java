@@ -31,8 +31,8 @@ public class VisualizarComunicacaoAction implements Serializable{
 		this.processoComunicacao = JbpmUtil.getProcesso();
 		MetadadoProcesso metadadoDestinatario = processoComunicacao.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO);
 		if (metadadoDestinatario != null) {
-			this.destinatario = metadadoDestinatario.getValue();
-			documentoComunicacaoList.setModeloComunicacao(this.destinatario.getModeloComunicacao());
+			destinatario = metadadoDestinatario.getValue();
+			documentoComunicacaoList.setModeloComunicacao(destinatario.getModeloComunicacao());
 		}
 	}
 	

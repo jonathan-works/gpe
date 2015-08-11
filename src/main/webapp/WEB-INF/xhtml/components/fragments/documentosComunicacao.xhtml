@@ -12,6 +12,7 @@
 	
 	
 	<wi:dataTable id="#{id}documentosComunicacao"
+		tableTitle="#{tableTitle}"
 		values="#{empty bean ? documentoComunicacaoList.list(5) : bean.list(5)}"
 		bean="#{empty bean ? documentoComunicacaoList : bean}"
 		rowId="#{row.id}"
@@ -29,8 +30,8 @@
 					</h:form>
 				</rich:column>
 			</ui:define>
-			<wi:columnOutputText rendered="#{empty showNumeroDocumento ? true : showNumeroDocumento}" 
-				columnHeader="#{infoxMessages['documentoProcesso.numeroDocumento']}" value="#{row.numeroDocumento}" />
+			<wi:columnOutputText columnHeader="#{infoxMessages['documentoProcesso.numeroDocumento']}" value="#{row.numeroDocumento}" 
+				columnRendered="#{showNumeroDocumento}"/>
 			<wi:columnOutputText columnHeader="#{infoxMessages['documentoProcesso.descricao']}" value="#{row.descricao}" />
 			<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.classificacaoDocumento']}" value="#{row.classificacaoDocumento}" />
 			<wi:columnOutputText hideOrder="true" columnHeader="#{infoxMessages['processoDocumento.tamanho']}" value="#{row.documentoBin.sizeFormatado}" />
