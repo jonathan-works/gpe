@@ -24,7 +24,7 @@
       style="#{panelStyle}"
       styleClass="dtable-p #{panelStyleClass} #{empty showSearchForm or showSearchForm ? '' : 'full-sized'}">
       <rich:dataTable value="#{values}" id="#{id}" rowKeyVar="key" rowClasses="#{rowClasses} zebra-row"
-        styleClass="dtable rf-dt-crud #{styleClass}" onrowmouseup="#{onrowmouseup}" var="row">
+        styleClass="dtable rf-dt-crud #{styleClass}" onrowmouseup="#{onrowmouseup}" var="row" rendered="#{empty rendered? 'true' : rendered}">
         <rich:column styleClass="dt-toolbar-col" rendered="#{empty showToolbarColumn ? true : showToolbarColumn}"
           			 rowspan="#{empty columnRowspan ? '1':columnRowspan}">
           <f:facet name="header">
@@ -48,7 +48,7 @@
       </rich:dataTable>
       <h:outputText
         value="#{infoxMessages['list.resultPrefix']} #{not empty bean ? bean.resultCount : values.size()} #{infoxMessages['list.resultSufix']}"
-        styleClass="dt-res-count" rendered="#{wi:get(showGridCount, true)}"/>
+        styleClass="dt-res-count" rendered="#{ ( empty rendered ? 'true' : rendered ) and (wi:get(showGridCount, true) )}"/>
       <s:div rendered="#{bean.previousExists or bean.nextExists}">
         <ui:fragment rendered="#{!empty inForm ? false : inForm}">
           <ui:include src="inputNumberSlider.xhtml" />

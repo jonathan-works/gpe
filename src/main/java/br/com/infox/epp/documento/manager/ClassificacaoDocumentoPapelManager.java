@@ -1,5 +1,7 @@
 package br.com.infox.epp.documento.manager;
 
+import java.util.List;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -23,4 +25,8 @@ public class ClassificacaoDocumentoPapelManager extends Manager<ClassificacaoDoc
     public boolean classificacaoExigeAssinatura(ClassificacaoDocumento classificacaoDocumento) {
     	return getDao().classificacaoExigeAssinatura(classificacaoDocumento);
     }
+
+	public List<ClassificacaoDocumentoPapel> getByClassificacaoDocumento(ClassificacaoDocumento classificacaoDocumento) {
+		return getDao().getByClassificacaoDocumento(classificacaoDocumento);
+	}
 }

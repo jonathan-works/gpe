@@ -36,7 +36,7 @@ import br.com.infox.epp.system.Parametros;
 public class DestinatarioComunicacaoService implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	static final String NAME = "destinatarioComunicacaoService";
+	public static final String NAME = "destinatarioComunicacaoService";
 	
 	@In
 	private ModeloComunicacaoManager modeloComunicacaoManager;
@@ -74,8 +74,8 @@ public class DestinatarioComunicacaoService implements Serializable{
 		return destinatarios;
 	}
 	
-	private DestinatarioBean createDestinatarioBean(DestinatarioModeloComunicacao destinatario) {
-		DestinatarioBean bean = new DestinatarioBean();
+	protected DestinatarioBean createDestinatarioBean(DestinatarioModeloComunicacao destinatario) {
+		DestinatarioBean bean = instanciarDestinatarioBean();
 		bean.setIdDestinatario(destinatario.getId());
 		bean.setDestinatario(destinatario);
 		bean.setComunicacao(modeloComunicacaoManager.getComunicacao(destinatario));
@@ -97,8 +97,13 @@ public class DestinatarioComunicacaoService implements Serializable{
 		bean.setResponsavelConfirmacao(getResponsavelConfirmacao(comunicacao));
 		bean.setPrazoFinal(getPrazoFinal(comunicacao));
 		bean.setPrazoOriginal(getPrazoOriginal(comunicacao));
+		bean.setDataResposta(getDataResposta(comunicacao));
 		bean.setStatusProrrogacao(getStatusProrrogacao(comunicacao));
 		return bean;
+	}
+	
+	protected DestinatarioBean instanciarDestinatarioBean(){
+		return new DestinatarioBean();
 	}
 	
 	private String getDataConfirmacao(Processo comunicacao) {
@@ -132,6 +137,15 @@ public class DestinatarioComunicacaoService implements Serializable{
 	        return dateFormat.format(metadado.getValue());
 	    }
 	    return "-";
+	}
+	
+
+	private String getDataResposta(Processo comunicacao){
+		MetadadoProcesso metadado = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CUMPRIMENTO);
+		if(metadado != null){
+			return new SimpleDateFormat("dd/MM/yyyy").format(metadado.getValue());
+		}
+		return "-";
 	}
 	
 	private String getStatusProrrogacao(Processo comunicacao){

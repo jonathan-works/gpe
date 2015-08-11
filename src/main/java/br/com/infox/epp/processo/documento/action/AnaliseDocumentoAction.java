@@ -83,11 +83,8 @@ public class AnaliseDocumentoAction implements Serializable{
 	}
 	
 	public String getDestinatario(){
-		if(destinatarioComunicacao.getDestinatario() != null){
-			return destinatarioComunicacao.getDestinatario().getNome();
-		}
-		if(destinatarioComunicacao.getDestino() != null){
-			return destinatarioComunicacao.getDestino().toString();
+		if(destinatarioComunicacao.getNome() != null){
+			return destinatarioComunicacao.getNome();
 		}
 		return "";
 		

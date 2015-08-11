@@ -18,11 +18,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.jboss.seam.Component;
 import org.jboss.seam.servlet.ContextualHttpServletRequest;
 
-import br.com.infox.certificado.bean.CertificateSignatureConfigBean;
-import br.com.infox.epp.certificado.manager.CertificateSignatureGroupManager;
-
 import com.google.gson.Gson;
 import com.samskivert.mustache.Mustache;
+
+import br.com.infox.certificado.bean.CertificateSignatureConfigBean;
+import br.com.infox.epp.certificado.manager.CertificateSignatureGroupManager;
 
 
 @WebServlet(urlPatterns = CertificadoDigitalJNLPServlet.SERVLET_PATH)
@@ -56,17 +56,28 @@ public class CertificadoDigitalJNLPServlet extends HttpServlet {
 		Map<String, Object> params = new HashMap<>();
 
 		String urlEpp = request.getRequestURL().toString().replace(SERVLET_PATH, "");
-		
+
 		CertificateSignatureConfigBean config = new CertificateSignatureConfigBean();
 		config.setUrl(urlEpp + "/rest" + CertificadoDigitalWS.PATH);
 		config.setToken(uuid);
 		config.setMd5s(new ArrayList<String>());
+		config.setMultiSign(new HashMap<String, String>());
 		
 		String md5s = request.getParameter("md5");
 		if (md5s != null && !md5s.isEmpty()) {
 			for (String md5 : md5s.split(",")) {
 				config.getMd5s().add(md5);
 			}
+		} else {
+		    String loteDocumentos = request.getParameter("multiSign");
+		    if (loteDocumentos != null && !loteDocumentos.isEmpty()) {
+		        for (String documentData : loteDocumentos.split(",")) {
+		            String[] split = documentData.split(":");
+		            String documentUuid = split[0];
+		            String documentMd5 = split[1];
+		            config.getMultiSign().put(documentUuid, documentMd5);
+		        }
+		    }
 		}
 		
 		params.put("urlEpp", urlEpp);

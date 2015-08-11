@@ -26,6 +26,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.cdi.seam.ContextDependency;
@@ -114,6 +115,8 @@ public class ComunicacaoAction implements Serializable {
 	private DocumentoRespostaComunicacaoDAO documentoRespostaComunicacaoDAO;
 	@In
 	private ProcessoDAO processoDAO;
+	@In
+	protected InfoxMessages infoxMessages;
 	
 	@Inject
 	private DocumentoUploader documentoUploader;
@@ -123,7 +126,6 @@ public class ComunicacaoAction implements Serializable {
 	private List<ModeloComunicacao> comunicacoes;
 	private List<ClassificacaoDocumento> classificacoesDocumento;
 	private List<ClassificacaoDocumento> classificacoesDocumentoProrrogacaoPrazo;
-	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 	private Processo processo;
 	private List<Documento> documentosDestinatario; // Cache dos documentos do destinatário selecionado
 	private Map<Long, Boolean> dadosCiencia = new HashMap<>(); // Cache das confirmações de ciência dos destinatários
@@ -143,6 +145,19 @@ public class ComunicacaoAction implements Serializable {
 	private boolean documentoResposta;
 	private List<Documento> documentosListResposta;
 	
+	protected static final Comparator<DestinatarioBean> comparatorDestinatarios = new Comparator<DestinatarioBean>() {
+		@Override
+		public int compare(DestinatarioBean o1, DestinatarioBean o2) {
+			try {
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+				Date d1 = dateFormat.parse(o1.getDataEnvio());
+				Date d2 = dateFormat.parse(o2.getDataEnvio());
+				return d2.compareTo(d1);
+			} catch (ParseException e) {
+				throw new RuntimeException(e);
+			}
+		}
+	};
 	
 	@Create
 	public void init() {
@@ -178,28 +193,22 @@ public class ComunicacaoAction implements Serializable {
 	
 	public List<DestinatarioBean> getDestinatarios() {
 		if(destinatarios == null){
-			destinatarios = new ArrayList<>();
-		    List<ModeloComunicacao> comunicacoesDoProcesso = getComunicacoesDoProcesso();
-		    for (ModeloComunicacao modeloComunicacao : comunicacoesDoProcesso) {
-		        List<DestinatarioBean> destinatariosPorModelo = getDestinatarios(modeloComunicacao);
-		        for (DestinatarioBean destinatarioBean : destinatariosPorModelo) {
-	                destinatarios.add(destinatarioBean);
-	            }
-	        }
-		    Collections.sort(destinatarios, new Comparator<DestinatarioBean>() {
-				@Override
-				public int compare(DestinatarioBean o1, DestinatarioBean o2) {
-					try {
-						Date d1 = dateFormat.parse(o1.getDataEnvio());
-						Date d2 = dateFormat.parse(o2.getDataEnvio());
-						return d2.compareTo(d1);
-					} catch (ParseException e) {
-						throw new RuntimeException(e);
-					}
-				}
-			});
+		    destinatarios = initDestinatarios();
+		    Collections.sort(destinatarios, comparatorDestinatarios );
 		}
 	    return destinatarios;
+	}
+
+	protected List<DestinatarioBean> initDestinatarios() {
+		List<DestinatarioBean> destinatarios = new ArrayList<>();
+		List<ModeloComunicacao> comunicacoesDoProcesso = getComunicacoesDoProcesso();
+		for (ModeloComunicacao modeloComunicacao : comunicacoesDoProcesso) {
+		    List<DestinatarioBean> destinatariosPorModelo = getDestinatarios(modeloComunicacao);
+		    for (DestinatarioBean destinatarioBean : destinatariosPorModelo) {
+		        destinatarios.add(destinatarioBean);
+		    }
+		}
+		return destinatarios;
 	}
 	
 	private List<DestinatarioBean> getDestinatarios(ModeloComunicacao modeloComunicacao) {
@@ -507,6 +516,10 @@ public class ComunicacaoAction implements Serializable {
 
 	public void setDocumentoResposta(boolean documentoResposta) {
 		this.documentoResposta = documentoResposta;
+	}
+	
+	public String getComunicacoesExpedidasTitle(){
+		return infoxMessages.get("comunicacao.comunicacoes");
 	}
 
 }

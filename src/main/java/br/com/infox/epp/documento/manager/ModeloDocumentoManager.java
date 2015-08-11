@@ -218,4 +218,8 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
         final ModeloDocumento modeloDocumento = find(idModeloDocumento);
         return evaluateModeloDocumento(modeloDocumento, resolver);
     }
+    
+    public List<ModeloDocumento> getModeloDocumentoByTipo(TipoModeloDocumento tipoModeloDocumento) {
+    	return getDao().getModeloDocumentoByTipo(tipoModeloDocumento);
+    }
 }

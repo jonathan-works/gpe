@@ -149,11 +149,12 @@ public interface ProcessoQuery {
 	String PROCESSO_BY_NUMERO_QUERY = "select o from Processo o where o.numeroProcesso = :" + NUMERO_PROCESSO_PARAM;
 
 	String PROCESSO_PAI_PARAM = "processoPai";
+	String NUMERO_PROCESSO_ROOT_PARAM = "numeroProcessoRoot";
 	String TIPO_PROCESSO_PARAM = "tipoProcesso";
 		
 	String PROCESSOS_FILHO_BY_TIPO = "listProcessosFilhoByTipo";
 	String PROCESSOS_FILHO_BY_TIPO_QUERY = "select o from Processo o inner join o.metadadoProcessoList m where"
-			+ " o.processoPai = :" + PROCESSO_PAI_PARAM + " and m.metadadoType like 'tipoProcesso' and m.valor = :" + TIPO_PROCESSO_PARAM;
+			+ " NumeroProcessoRoot(o.idProcesso) = :" + NUMERO_PROCESSO_ROOT_PARAM + " and m.metadadoType like 'tipoProcesso' and m.valor = :" + TIPO_PROCESSO_PARAM;
 	
 	String PROCESSOS_FILHO_NOT_ENDED_BY_TIPO = "listProcessosFilhoNotEndedByTipo";
 	String PROCESSOS_FILHO_NOT_ENDED_BY_TIPO_QUERY = PROCESSOS_FILHO_BY_TIPO_QUERY + " and o.dataFim is null ";

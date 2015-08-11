@@ -66,6 +66,7 @@ public class CertificateSignatures implements Serializable {
         bean.setCertChain(signature.getCertificateChain());
         bean.setSignature(signature.getSignature());
         bean.setDocumentMD5(signature.getSignedData());
+        bean.setDocumentUuid(signature.getUuid());
         return bean;
     }
 

@@ -24,6 +24,7 @@ public class DestinatarioBean {
 	private Documento documentoComunicacao;
 	private String statusProrrogacao;
 	private DestinatarioModeloComunicacao destinatario;
+	private String dataResposta;
 	
 	public Long getIdDestinatario() {
 		return idDestinatario;
@@ -117,5 +118,11 @@ public class DestinatarioBean {
 	}
 	public void setDestinatario(DestinatarioModeloComunicacao destinatario) {
 		this.destinatario = destinatario;
+	}
+	public String getDataResposta() {
+		return dataResposta;
+	}
+	public void setDataResposta(String dataResposta) {
+		this.dataResposta = dataResposta;
 	}
 }

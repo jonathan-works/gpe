@@ -8,24 +8,28 @@
   xmlns:h="http://java.sun.com/jsf/html"
   xmlns:rich="http://richfaces.org/rich"
   xmlns:s="http://jboss.org/schema/seam/taglib"
-  xmlns:wi="http://www.itx.com.br/jsf">
+  xmlns:wi="http://www.itx.com.br/jsf"
+  xmlns:cc="http://java.sun.com/jsf/composite">
 
   <h:panelGroup id="#{empty id ? 'divApplet' : id}">
     <s:fragment rendered="#{empty rendered ? true : rendered}">
 
-      <h:inputHidden id="#{id}Token" value="#{tokenField}" />  
-      <a:commandButton type="button" styleClass="buttons"
-      		action="#{elFunctions.invokeMethod(preSignAction)}"
-      		oncomplete="infox.CertDig.#{id}.init();" render="#{empty reRender ? '@this' : reRender}"
+      <h:inputHidden id="#{id}Token" value="#{tokenField}" />
+      <a:commandButton type="button" styleClass="buttons" disabled="#{disableb}" onbegin="infox.showLoading();"
+      		action="#{elFunctions.invokeMethod(preSignAction)}" execute="#{execute}" rendered="#{empty rendered? 'true' : rendered}"
+      		oncomplete="infox.hideLoading();infox.CertDig.#{id}.init();" render="#{empty reRender ? '@this' : reRender}"
       		value="#{empty signButtonCaption ? 'Assinar Digitalmente' : signButtonCaption}" >
       			<f:setPropertyActionListener value="#{propertyValue}" target="#{propertyTarget}" />
       </a:commandButton>
+
+      <ui:param name="parameter" value="#{empty documentData ? 'md5='.concat(signableData) : 'multiSign='.concat(documentData)}" />
+
       <h:outputScript name="cookies.min.js" library="js" />  
-      <h:outputScript>
+      <h:outputScript>	
           namespace('infox.CertDig.#{id}', {  
   	          init: function() {  
-  	              #{functionPreSign};  
-  	        	  location.href='#{certificadoDigitalPathResolver.JNLPUrl}?md5=#{signableData}';  
+  	              #{functionPreSign};
+  	        	  location.href='#{certificadoDigitalPathResolver.JNLPUrl}?#{parameter}';
   	        	  var intervalId = setInterval(function() {  
   	        	      var token = Cookies.get('br.com.infox.epp.sign.token');
   	        	      #{rich:element(id.concat('Token'))}.value = token;  
@@ -36,7 +40,7 @@
   	        	  	      }
   			  	      });  
   		          }, 2000);  
-  		      setTimeout(function() { clearInterval(intervalId); #{functionPosSign}; }, 8000 * 60);  
+                     setTimeout(function() { clearInterval(intervalId); #{functionPosSign}; }, 8000 * 60);
   		   }  
   	   });  
 	  </h:outputScript>

@@ -72,7 +72,7 @@ public class DefinicaoVariavelProcessoDAO extends Dao<DefinicaoVariavelProcesso,
     	CriteriaBuilder cb = entityManager.getCriteriaBuilder();
     	CriteriaQuery<Integer> query = cb.createQuery(Integer.class);
     	Root<DefinicaoVariavelProcesso> root = query.from(DefinicaoVariavelProcesso.class);
-    	query.select(cb.coalesce(cb.max(root.get(DefinicaoVariavelProcesso_.ordem)), 0));
+    	query.select(cb.coalesce(cb.max(root.get(DefinicaoVariavelProcesso_.ordem)), -1));
     	query.where(cb.equal(root.get(DefinicaoVariavelProcesso_.fluxo), fluxo));
     	return entityManager.createQuery(query).getSingleResult();
     }

@@ -4,7 +4,7 @@
     <groupId>br.com.infox.epp</groupId>
     <artifactId>epp</artifactId>
     <packaging>war</packaging>
-    <version>2.7.5-1</version>
+    <version>2.8.0</version>
     <name>epp</name>
     <url>http://www.infox.com.br</url>
     <dependencyManagement>
@@ -337,7 +337,7 @@
         <dependency>
             <groupId>br.com.infox</groupId>
             <artifactId>infox-certificate-signature</artifactId>
-            <version>0.0.2</version>
+            <version>0.0.3</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>

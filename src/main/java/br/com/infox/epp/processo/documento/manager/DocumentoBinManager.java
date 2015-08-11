@@ -26,6 +26,7 @@ import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.GenericDatabaseErrorCode;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
@@ -176,5 +177,9 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 
 	public String getUrlValidacaoDocumento(final DocumentoBin documento) {
 		return getUrlValidacaoDocumento() + "?cod=" + documento.getUuid();
+	}
+	
+	public Boolean isDocumentoBinAssinadoPorPapel(DocumentoBin bin, Papel papel) {
+	    return getDao().isDocumentoBinAssinadoPorPapel(bin, papel);
 	}
 }
