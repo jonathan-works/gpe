@@ -1,11 +1,10 @@
 package br.com.infox.ibpm.process.definition.fitter;
 
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -34,21 +33,21 @@ public class SwimlaneFitter extends Fitter implements Serializable {
 
     private ProcessBuilder pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
     
-    @In private PerfilTemplateManager perfilTemplateManager;
+    @In 
+    private PerfilTemplateManager perfilTemplateManager;
 
     public void addSwimlane() {
         Swimlane s = new Swimlane("Raia " + (swimlanes.size() + 1));
+        s.setKey(UUID.randomUUID().toString());
         setCurrentSwimlane(new SwimlaneHandler(s));
         pb.getInstance().getTaskMgmtDefinition().addSwimlane(s);
         swimlanes.add(currentSwimlane);
     }
 
-    @SuppressWarnings(UNCHECKED)
     public void removeSwimlane(SwimlaneHandler s) {
         swimlanes.remove(s);
         setCurrentSwimlane(null);
-        Map<String, Swimlane> swimlaneMap = pb.getInstance().getTaskMgmtDefinition().getSwimlanes();
-        swimlaneMap.remove(s.getSwimlane().getName());
+        pb.getInstance().getTaskMgmtDefinition().getSwimlanes().remove(s.getSwimlane());
     }
 
     public SwimlaneHandler getCurrentSwimlane() {
@@ -66,7 +65,6 @@ public class SwimlaneFitter extends Fitter implements Serializable {
         return swimlanes;
     }
 
-    @SuppressWarnings(UNCHECKED)
     public List<String> getSwimlaneList() {
         Map<String, Swimlane> swimlaneList = pb.getInstance().getTaskMgmtDefinition().getSwimlanes();
         if (swimlaneList == null) {
