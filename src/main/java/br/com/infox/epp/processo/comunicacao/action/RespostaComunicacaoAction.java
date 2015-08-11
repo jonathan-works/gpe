@@ -94,8 +94,6 @@ public class RespostaComunicacaoAction implements Serializable {
 	private DocumentoEditor documentoEditor;
 	
 	private DestinatarioModeloComunicacao destinatario;
-	private List<Documento> documentosComunicacao;
-	private Boolean existeAnexoComunicacao;
 
 	private Processo processoComunicacao;
 	private Processo processoRaiz;
@@ -120,7 +118,6 @@ public class RespostaComunicacaoAction implements Serializable {
 		documentoUploader.setProcesso(processoRaiz);
 		documentoEditor.setProcesso(processoRaiz);
 		respostaComunicacaoList.setProcesso(processoComunicacao);
-		documentoComunicacaoList.setProcesso(processoRaiz);
 		documentoComunicacaoList.setModeloComunicacao(destinatario.getModeloComunicacao());
 		newDocumentoEdicao();
 		initClassificacoes();
@@ -138,14 +135,6 @@ public class RespostaComunicacaoAction implements Serializable {
 
 	public void setDestinatario(DestinatarioModeloComunicacao destinatario) {
 		this.destinatario = destinatario;
-	}
-	
-	public List<Documento> getDocumentosComunicacao(){
-		if(documentosComunicacao == null){
-			documentosComunicacao = modeloComunicacaoManager.getDocumentosByModeloComunicacao(destinatario.getModeloComunicacao());
-			setExisteAnexoComunicacao(documentosComunicacao != null && !documentosComunicacao.isEmpty());
-		}
-		return documentosComunicacao;
 	}
 	
 	public void assignModeloDocumento() {
@@ -302,14 +291,6 @@ public class RespostaComunicacaoAction implements Serializable {
 		documentoEditor.setDocumento(documentoEdicao);
 	}
 	
-	public Boolean getExisteAnexoComunicacao() {
-		return existeAnexoComunicacao;
-	}
-
-	public void setExisteAnexoComunicacao(Boolean existeAnexoComunicacao) {
-		this.existeAnexoComunicacao = existeAnexoComunicacao;
-	}
-
 	public MeioExpedicao getMeioExpedicao() {
 		return destinatario.getMeioExpedicao();
 	}
