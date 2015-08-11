@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -83,16 +84,17 @@ public class TaskFitter extends Fitter implements Serializable {
         ProcessDefinition process = getProcessBuilder().getInstance();
         if (currentNode instanceof TaskNode) {
             getTasks();
-            TaskNode tn = (TaskNode) currentNode;
-            Task t = new Task();
-            t.setProcessDefinition(process);
-            t.setTaskMgmtDefinition(process.getTaskMgmtDefinition());
+            TaskNode taskNode = (TaskNode) currentNode;
+            Task task = new Task();
+            task.setKey(UUID.randomUUID().toString());
+            task.setProcessDefinition(process);
+            task.setTaskMgmtDefinition(process.getTaskMgmtDefinition());
             List<TaskHandler> list = getProcessBuilder().getTaskNodeMap().get(currentNode);
-            t.setName(currentNode.getName());
-            tn.addTask(t);
-            tn.setEndTasks(true);
-            t.setSwimlane((Swimlane) process.getTaskMgmtDefinition().getSwimlanes().values().iterator().next());
-            TaskHandler th = new TaskHandler(t);
+            task.setName(currentNode.getName());
+            taskNode.addTask(task);
+            taskNode.setEndTasks(true);
+            task.setSwimlane((Swimlane) process.getTaskMgmtDefinition().getSwimlanes().values().iterator().next());
+            TaskHandler th = new TaskHandler(task);
             list.add(th);
             setCurrentTask(th);
         }
