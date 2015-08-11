@@ -9,21 +9,31 @@
 	
 	<ui:param name="id" value="#{empty id ? 'id' : id}"></ui:param>
 	
-	<h:form>
-	<rich:dataTable value="#{list}" id="#{id}documentosComunicacao"
-			var="bean" styleClass="dtable rf-dt-crud" rendered="#{empty rendered ? false : rendered}">
-			<rich:column styleClass="dt-toolbar-col">
-				<a:commandLink
-						onclick="infox.openPopUp('documento', '#{documentoDownloader.getViewUrl(bean)}');">
-						<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
-				</a:commandLink>
-			</rich:column>
-			<wi:columnOutputText hideOrder="true" rendered="#{empty showNumeroDocumento ? true : showNumeroDocumento}" 
-				columnHeader="#{infoxMessages['documentoProcesso.numeroDocumento']}" value="#{bean.numeroDocumento}" />
-			<wi:columnOutputText hideOrder="true" columnHeader="#{infoxMessages['documentoProcesso.descricao']}" value="#{bean.descricao}" />
-			<wi:columnOutputText hideOrder="true" columnHeader="#{infoxMessages['processoDocumento.classificacaoDocumento']}" value="#{bean.classificacaoDocumento}" />
-			<wi:columnOutputText hideOrder="true" columnHeader="#{infoxMessages['processoDocumento.tamanho']}" value="#{bean.documentoBin.sizeFormatado}" />
-	</rich:dataTable>
-	</h:form>
+	
+	
+	<wi:dataTable id="#{id}documentosComunicacao"
+		values="#{empty bean ? documentoComunicacaoList.list(5) : bean.list(5)}"
+		bean="#{empty bean ? documentoComunicacaoList : bean}"
+		rowId="#{row.id}"
+		hideOrder="#{empty hideOrder ? true : hideOrder}"
+		rendered="#{empty rendered ? false : rendered}" 
+		showSearchForm="false">
+			<ui:define name="headerToolBar" />
+			<ui:define name="toolBar">
+				<rich:column styleClass="dt-toolbar-col">
+					<h:form>
+					<a:commandLink
+							onclick="infox.openPopUp('documento', '#{documentoDownloader.getViewUrl(row)}');">
+							<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
+					</a:commandLink>
+					</h:form>
+				</rich:column>
+			</ui:define>
+			<wi:columnOutputText rendered="#{empty showNumeroDocumento ? true : showNumeroDocumento}" 
+				columnHeader="#{infoxMessages['documentoProcesso.numeroDocumento']}" value="#{row.numeroDocumento}" />
+			<wi:columnOutputText columnHeader="#{infoxMessages['documentoProcesso.descricao']}" value="#{row.descricao}" />
+			<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.classificacaoDocumento']}" value="#{row.classificacaoDocumento}" />
+			<wi:columnOutputText hideOrder="true" columnHeader="#{infoxMessages['processoDocumento.tamanho']}" value="#{row.documentoBin.sizeFormatado}" />
+	</wi:dataTable>
 		
 </ui:composition>
