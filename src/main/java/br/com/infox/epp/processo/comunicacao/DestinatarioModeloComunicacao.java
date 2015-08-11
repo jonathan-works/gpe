@@ -172,9 +172,7 @@ public class DestinatarioModeloComunicacao implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((getDestinatario() == null) ? 0 : getDestinatario().hashCode());
-		result = prime * result + ((getDestino() == null) ? 0 : getDestino().hashCode());
-		result = prime * result + ((getModeloComunicacao() == null) ? 0 : getModeloComunicacao().hashCode());
+		result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
 		return result;
 	}
 
@@ -190,30 +188,8 @@ public class DestinatarioModeloComunicacao implements Serializable {
 			return false;
 		}
 		DestinatarioModeloComunicacao other = (DestinatarioModeloComunicacao) obj;
-		if (getModeloComunicacao() == null) {
-			if (other.getModeloComunicacao() != null) {
-				return false;
-			}
-		} else if (!getModeloComunicacao().equals(other.getModeloComunicacao())) {
-			return false;
-		}
-		if (getDestinatario() == null && other.getDestinatario() == null && getDestino() == null && other.getDestino() == null) {
-			return true;
-		}
-		if (getDestinatario() != null) {
-			if (other.getDestinatario() == null) {
-				return false;
-			}
-		}
-		if (getDestino() != null) {
-			if (other.getDestino() == null) {
-				return false;
-			}
-		}
-		if (getDestinatario() != null) {
-			return getDestinatario().equals(other.getDestinatario());
-		} else if (getDestino() != null) {
-			return getDestino().equals(other.getDestino());
+		if (getId() != null && other.getId() != null) {
+			return getId().equals(other.getId());
 		}
 		return false;
 	}
