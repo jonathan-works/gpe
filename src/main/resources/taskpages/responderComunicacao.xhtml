@@ -29,9 +29,10 @@
 	   	</ui:include>
 
 		<ui:include src="/WEB-INF/xhtml/components/fragments/documentosComunicacao.xhtml">
-	    		<ui:param name="id" value="respDocsComunicacao" />
+	    		<ui:param name="id" value="documentosAnexadosComunicacao" />
 	    		<ui:param name="showNumeroDocumento" value="false" />
 	    		<ui:param name="list" value="#{respostaComunicacaoAction.documentosComunicacao}" />
+	    		<ui:param name="rendered" value="#{respostaComunicacaoAction.existeAnexoComunicacao}" />
 	    </ui:include>
 
 	</rich:collapsiblePanel>

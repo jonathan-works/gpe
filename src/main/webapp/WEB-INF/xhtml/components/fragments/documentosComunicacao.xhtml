@@ -8,18 +8,17 @@
 	xmlns:a="http://richfaces.org/a4j">
 	
 	<ui:param name="id" value="#{empty id ? 'id' : id}"></ui:param>
-	<ui:param name="showNumeroDocumento" value="#{empty showNumeroDocumento ? true : showNumeroDocumento}"></ui:param>
 	
 	<h:form>
 	<rich:dataTable value="#{list}" id="#{id}documentosComunicacao"
-			var="bean" styleClass="dtable rf-dt-crud" rendered="#{not list.isEmpty()}">
+			var="bean" styleClass="dtable rf-dt-crud" rendered="#{empty rendered ? false : rendered}">
 			<rich:column styleClass="dt-toolbar-col">
 				<a:commandLink
 						onclick="infox.openPopUp('documento', '#{documentoDownloader.getViewUrl(bean)}');">
 						<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
 				</a:commandLink>
 			</rich:column>
-			<wi:columnOutputText hideOrder="true" rendered="#{showNumeroDocumento}" 
+			<wi:columnOutputText hideOrder="true" rendered="#{empty showNumeroDocumento ? true : showNumeroDocumento}" 
 				columnHeader="#{infoxMessages['documentoProcesso.numeroDocumento']}" value="#{bean.numeroDocumento}" />
 			<wi:columnOutputText hideOrder="true" columnHeader="#{infoxMessages['documentoProcesso.descricao']}" value="#{bean.descricao}" />
 			<wi:columnOutputText hideOrder="true" columnHeader="#{infoxMessages['processoDocumento.classificacaoDocumento']}" value="#{bean.classificacaoDocumento}" />
