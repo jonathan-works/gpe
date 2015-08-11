@@ -32,8 +32,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import br.com.infox.constants.LengthConstants;
-
 @Entity
 @Table(name = TABLE_MODELO_DOCUMENTO)
 @NamedQueries(value = {
@@ -77,8 +75,8 @@ public class ModeloDocumento implements java.io.Serializable {
         this.tipoModeloDocumento = tipoModeloDocumento;
     }
 
-    @Column(name = TITULO_MODELO_DOCUMENTO, nullable = false, length = LengthConstants.DESCRICAO_PADRAO_METADE)
-    @Size(max = LengthConstants.DESCRICAO_PADRAO_METADE)
+    @Column(name = TITULO_MODELO_DOCUMENTO, nullable = false, length = 80)
+    @Size(max = 80)
     @NotNull
     public String getTituloModeloDocumento() {
         return this.tituloModeloDocumento;

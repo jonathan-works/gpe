@@ -26,7 +26,7 @@
                 <wi:searchForm formId="modeloDocumentoSearchForm"
                     formTitle="#{infoxMessages['searchForm.title']}">
 
-                    <wi:inputText id="tituloModeloDocumento"
+                    <wi:inputText id="tituloModeloDocumento" maxlength="80"
                         label="#{infoxMessages['modeloDocumento.tituloModeloDocumento']}"
                         value="#{modeloDocumentoList.entity.tituloModeloDocumento}" />
                     <wi:selectOneMenuEntity id="tipoModeloDocumento"
@@ -67,7 +67,7 @@
                 items="#{modeloDocumentoCrudAction.tiposModeloDocumentoPermitidos}"
                 required="true" inactiveCond="#{!item.ativo}"
                 showLabelSelecione="true" />
-            <wi:inputText id="tituloModeloDocumento"
+            <wi:inputText id="tituloModeloDocumento" maxlength="80"
                 label="#{infoxMessages['modeloDocumento.tituloModeloDocumento']}"
                 value="#{modeloDocumentoCrudAction.instance.tituloModeloDocumento}"
                 required="true" />
@@ -117,7 +117,7 @@
                         formTitle="#{infoxMessages['searchForm.title']}">
 
                         <wi:inputText
-                            id="historicoTituloModeloDocumento"
+                            id="historicoTituloModeloDocumento" maxlength="80"
                             label="#{infoxMessages['historicoModeloDocumento.tituloModeloDocumento']}"
                             value="#{historicoModeloDocumentoList.entity.tituloModeloDocumento}" />
                         <wi:selectOneMenuEntity id="usuarioAlteracao"
