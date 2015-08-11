@@ -3,28 +3,42 @@ package br.com.infox.ibpm.process.definition.fitter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+import javax.faces.model.SelectItem;
+import javax.inject.Inject;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
+import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
 
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.processo.timer.TaskExpiration;
 import br.com.infox.epp.processo.timer.manager.TaskExpirationManager;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
+import br.com.infox.ibpm.listener.EppJbpmListener;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.TaskHandler;
@@ -32,8 +46,9 @@ import br.com.infox.ibpm.task.manager.JbpmTaskManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
-@Name(TaskFitter.NAME)
 @AutoCreate
+@ContextDependency
+@Name(TaskFitter.NAME)
 public class TaskFitter extends Fitter implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -58,7 +73,11 @@ public class TaskFitter extends Fitter implements Serializable {
     private GenericManager genericManager;
     @In
     private TaskExpirationManager taskExpirationManager;
-
+    @Inject
+    private EppJbpmListener eppJbpmListener;
+    @Inject 
+    private InfoxMessages infoxMessages;
+ 
     public void addTask() {
         Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
         ProcessDefinition process = getProcessBuilder().getInstance();
@@ -287,4 +306,66 @@ public class TaskFitter extends Fitter implements Serializable {
         }
         return taskExpiration != null && taskExpiration.getId() != null;
     }
+    
+    public List<SelectItem> getListenersDisponiveis() {
+    	List<SelectItem> listenersDisponiveis = new ArrayList<>();
+    	if (currentTask != null) {
+        	for (String key : eppJbpmListener.getListeners().keySet()) {
+        		if (currentTask.getTask().getEvents() == null || !currentTask.getTask().getEvents().containsKey(key)) {
+        			listenersDisponiveis.add(new SelectItem(key, eppJbpmListener.getListeners().get(key)));
+        		}
+        	}
+    	}
+    	return listenersDisponiveis;
+    }
+    
+    public String getListenerLabel(Event event) {
+    	return eppJbpmListener.getListeners().get(event.getEventType());
+    }
+    
+    public String getListenerConfiguration(Event event) {
+    	if (event.getConfiguration() != null) {
+    		JsonObject jsonObject = new GsonBuilder().create().fromJson(event.getConfiguration(), JsonObject.class);
+    		String key = jsonObject.get("transitionKey").getAsString();
+    		StringBuilder sb = new StringBuilder();
+    		if (key != null) {
+    			sb.append(infoxMessages.get("process.expiration.transition")).append(": ").append(currentTask.getTask().getTaskNode().getLeavingTransition(key).getName());
+    		}
+    		return sb.toString();
+    	}
+    	return "";
+    }
+    
+	public Collection<Event> getListeners() {
+		List<Event> listeners = new ArrayList<>();
+    	if (currentTask != null && currentTask.getTask().getEvents() != null) {
+    		for (Event event : currentTask.getTask().getEvents().values()) {
+    			if (event.getEventType().startsWith(Event.EVENTTYPE_TASK_LISTENER)) {
+    				listeners.add(event);
+    			}
+    		}
+    	}
+    	return listeners;
+    }
+    
+	public void addListener(ActionEvent actionEvent) {
+    	Map<String, String> request = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+    	String inputNome = (String) actionEvent.getComponent().getAttributes().get("listenerValue");
+    	String inputTransicao = (String) actionEvent.getComponent().getAttributes().get("transitionValue");
+    	String nome = request.get(inputNome);
+    	String transicao = request.get(inputTransicao);
+		Event eventRedistribuicao = new Event(nome);
+		if (transicao != null) {
+			Transition transition = currentTask.getTask().getTaskNode().getLeavingTransition(transicao);
+			JsonObject jsonObject = new JsonObject();
+			jsonObject.addProperty("transitionKey", transition.getKey());
+			eventRedistribuicao.setConfiguration(jsonObject.toString());
+		}
+		currentTask.getTask().addEvent(eventRedistribuicao);
+    }
+    
+    public void removeListener(Event event) {
+    	currentTask.getTask().removeEvent(event);
+    }
+    
 }

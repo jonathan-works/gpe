@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf" >
+    
+    <h:form id="formListeners">
+    	<wi:selectOneMenu id="listener" valueItems="#{taskFitter.listenersDisponiveis}" label="${infoxMessages['process.events.listener.nome']}" 
+    		showLabelSelecione="true" required="true" />
+    	
+    	<wi:selectOneMenu id="transitionListener"
+            label="#{infoxMessages['process.expiration.transition']}" valueItems="#{taskFitter.currentTask.transitions}" 
+            showLabelSelecione="true" required="false"/>
+    	
+    	<a:commandButton limitRender="true" render="formListeners listenersDatatable" execute="@form" styleClass="buttons" 
+    		value="${infoxMessages['process.events.listener.adicionar']}" actionListener="#{taskFitter.addListener}" resetValues="true" style="margin-top: 1em;" >
+    		<f:attribute name="listenerValue" value="#{rich:clientId('listener')}" />
+    		<f:attribute name="transitionValue" value="#{rich:clientId('transitionListener')}" />
+    	</a:commandButton>
+    </h:form>
+    
+    <wi:dataTable id="listenersDatatable" values="#{taskFitter.listeners}" showSearchForm="false" hideOrder="true"
+    	showGridCount="false">
+    
+    	<ui:define name="headerToolBar" />
+    	
+    	<ui:define name="toolBar">
+    		<h:form>
+    			<a:commandLink render="listenersDatatablePanel formListeners" execute="@form" 
+    				action="#{taskFitter.removeListener(row)}" >
+    				<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{infoxMessages['button.delete']}" />
+    			</a:commandLink>
+    		</h:form>
+    	</ui:define>
+    	
+    	<wi:columnOutputText columnId="nome" columnHeader="${infoxMessages['process.events.listener.nome']}" 
+    		value="#{taskFitter.getListenerLabel(row)}"/>
+    	
+    	<wi:columnOutputText columnId="configuracao" columnHeader="${infoxMessages['process.events.listener.configuracao']}" 
+    		value="#{taskFitter.getListenerConfiguration(row)}"/>
+    
+    </wi:dataTable>
+    
+</ui:composition>
