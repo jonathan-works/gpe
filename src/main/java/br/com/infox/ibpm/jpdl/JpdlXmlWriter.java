@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.UUID;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -44,6 +45,7 @@ import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
 
 import br.com.infox.core.util.ReflectionsUtil;
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.ibpm.node.DecisionNode;
 import br.com.infox.ibpm.task.handler.CustomAction;
 import br.com.infox.log.LogProvider;
@@ -53,7 +55,7 @@ public class JpdlXmlWriter {
 
     private static final LogProvider LOG = Logging.getLogProvider(JpdlXmlWriter.class);
 
-    private static final String DEFAULT_ENCODING = "ISO-8859-1";
+    private static final String DEFAULT_ENCODING = "UTF-8";
     private static final int DEFAULT_IDENT_SIZE = 4;
     private static final String ELEMENT_NAME = "name";
     static final String JPDL_NAMESPACE = "urn:jbpm.org:jpdl-3.2";
@@ -118,7 +120,6 @@ public class JpdlXmlWriter {
         }
     }
 
-    @SuppressWarnings(UNCHECKED)
     private Document createDomTree(ProcessDefinition processDefinition) {
         Document document = DocumentHelper.createDocument();
         Element root = null;
@@ -129,7 +130,7 @@ public class JpdlXmlWriter {
             root = document.addElement("process-definition");
         }
         addAttribute(root, ELEMENT_NAME, processDefinition.getName());
-
+        addAttribute(root, "key", processDefinition.getKey() == null ? UUID.randomUUID().toString() : processDefinition.getKey());
         writeDescription(root, processDefinition.getDescription());
 
         Map<String, Swimlane> swimlanes = processDefinition.getTaskMgmtDefinition().getSwimlanes();
@@ -173,21 +174,18 @@ public class JpdlXmlWriter {
         e.addCDATA(text);
     }
 
-    @SuppressWarnings(UNCHECKED)
-    private void writeSwimlanes(Element root,
-            ProcessDefinition processDefinition) {
+    private void writeSwimlanes(Element root, ProcessDefinition processDefinition) {
         Map<String, Swimlane> swimlanes = processDefinition.getTaskMgmtDefinition().getSwimlanes();
         for (Entry<String, Swimlane> e : swimlanes.entrySet()) {
             Element swimlane = addElement(root, "swimlane");
             addAttribute(swimlane, ELEMENT_NAME, e.getKey());
             Swimlane s = e.getValue();
-            if (s.getPooledActorsExpression() != null
-                    || s.getActorIdExpression() != null) {
+            addAttribute(swimlane, "key", s.getKey() == null ? UUID.randomUUID().toString() : s.getKey());
+            if (s.getPooledActorsExpression() != null || s.getActorIdExpression() != null) {
                 Element assignment = addElement(swimlane, "assignment");
                 addAttribute(assignment, "pooled-actors", s.getPooledActorsExpression());
                 addAttribute(assignment, "actor-id", s.getActorIdExpression());
             }
-
         }
     }
 
@@ -220,8 +218,7 @@ public class JpdlXmlWriter {
     }
 
     @SuppressWarnings(UNCHECKED)
-    private void writeNodes(Element parentElement,
-            List<org.jbpm.graph.def.Node> nodes) {
+    private void writeNodes(Element parentElement, List<org.jbpm.graph.def.Node> nodes) {
         Iterator<org.jbpm.graph.def.Node> iter = nodes.iterator();
         while (iter.hasNext()) {
             org.jbpm.graph.def.Node node = iter.next();
@@ -279,14 +276,14 @@ public class JpdlXmlWriter {
             addAttribute(taskElement, "description", task.getDescription());
             addAttribute(taskElement, "due-date", task.getDueDate());
             addAttribute(taskElement, "pooled-actors", task.getPooledActorsExpression());
+            addAttribute(taskElement, "key", task.getKey() == null ? UUID.randomUUID().toString() : task.getKey());
             writeController(task.getTaskController(), taskElement);
             writeEvents(taskElement, task);
         }
     }
 
 	@SuppressWarnings(UNCHECKED)
-    private void writeController(TaskController taskController,
-            Element taskElement) {
+    private void writeController(TaskController taskController, Element taskElement) {
         if (taskController != null) {
             Element controller = addElement(taskElement, "controller");
             if (taskController.getTaskControllerDelegation() != null) {
@@ -309,6 +306,15 @@ public class JpdlXmlWriter {
             if (va.getAccess().toString().trim().length() > 0) {
                 addAttribute(ve, "access", va.getAccess().toString());
             }
+            if (!StringUtil.isEmpty(va.getType())) {
+            	addAttribute(ve, "type", va.getType());
+            }
+            if (!StringUtil.isEmpty(va.getValue())) {
+            	addAttribute(ve, "value", va.getValue());
+            }
+            if (!StringUtil.isEmpty(va.getLabel())) {
+            	addAttribute(ve, "label", va.getLabel());
+            }
         }
     }
 
@@ -322,6 +328,7 @@ public class JpdlXmlWriter {
         if (node.isAsync()) {
             addAttribute(element, "async", "true");
         }
+        addAttribute(element, "key", node.getKey() == null ? UUID.randomUUID().toString() : node.getKey());
         if (node instanceof TaskNode) {
             TaskNode t = (TaskNode) node;
             String signal = null;
@@ -365,9 +372,8 @@ public class JpdlXmlWriter {
         }
     }
 
-    @SuppressWarnings(UNCHECKED)
-    private void writeTransition(Element transitionElement,
-            Transition transition) {
+    private void writeTransition(Element transitionElement, Transition transition) {
+    	transitionElement.addAttribute("key", transition.getKey() == null ? UUID.randomUUID().toString() : transition.getKey());
         if (transition.getTo() != null) {
             transitionElement.addAttribute("to", transition.getTo().getName());
         }
@@ -388,7 +394,6 @@ public class JpdlXmlWriter {
         }
     }
 
-    @SuppressWarnings(UNCHECKED)
     private void writeEvents(Element element, GraphElement graphElement) {
         if (graphElement.hasEvents()) {
             Iterator<Event> iter = graphElement.getEvents().values().iterator();
@@ -399,10 +404,12 @@ public class JpdlXmlWriter {
         }
     }
 
-    @SuppressWarnings(UNCHECKED)
     private void writeEvent(Element eventElement, Event event) {
         boolean valid = false;
         eventElement.addAttribute("type", event.getEventType());
+        if (event.getConfiguration() != null) {
+        	eventElement.addAttribute("configuration", event.getConfiguration());
+        }
         if (event.hasActions()) {
             Iterator<Action> actionIter = event.getActions().iterator();
             while (actionIter.hasNext()) {
@@ -415,7 +422,7 @@ public class JpdlXmlWriter {
                 }
             }
         }
-        if (!valid) {
+        if (!valid && !event.getEventType().startsWith(Event.EVENTTYPE_TASK_LISTENER)) {
             eventElement.detach();
         }
     }

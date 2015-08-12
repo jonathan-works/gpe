@@ -236,7 +236,6 @@ public class ProcessBuilder implements Serializable {
         context.getRenderIds().add(messages.getClientId(facesContext));
     }
 
-    @SuppressWarnings("unchecked")
     private void validateTaskExpiration() {
         Set<String> taskNames = new HashSet<>();
         List<Node> nodes = instance.getNodes();
@@ -280,7 +279,6 @@ public class ProcessBuilder implements Serializable {
         }
     }
 
-    @SuppressWarnings(UNCHECKED)
     private void validateMailNode() {
         List<Node> nodes = getInstance().getNodes();
         for (Node node : nodes) {
@@ -293,7 +291,6 @@ public class ProcessBuilder implements Serializable {
         }
     }
     
-    @SuppressWarnings(UNCHECKED)
     private void validateSubProcessNode() {
         List<Node> nodes = getInstance().getNodes();
         for (Node node : nodes) {
@@ -306,7 +303,6 @@ public class ProcessBuilder implements Serializable {
         }
     }
 
-    @SuppressWarnings(UNCHECKED)
     private void validateJbpmGraph() {
         List<Node> nodes = getInstance().getNodes();
         for (Node node : nodes) {
@@ -323,7 +319,6 @@ public class ProcessBuilder implements Serializable {
         }
     }
 
-    @SuppressWarnings(UNCHECKED)
     private boolean findPathToEndState(Node node, Set<Node> visitedNodes,
             boolean hasFoundEndState) {
         if (node.getNodeType().equals(NodeType.EndState)) {
@@ -426,7 +421,6 @@ public class ProcessBuilder implements Serializable {
         }
     }
 
-    @SuppressWarnings(UNCHECKED)
     private void deployActions() throws DAOException {
         raiaPerfilManager.atualizarRaias(fluxo, instance.getTaskMgmtDefinition().getSwimlanes());
         Integer idFluxo = fluxo.getIdFluxo();
