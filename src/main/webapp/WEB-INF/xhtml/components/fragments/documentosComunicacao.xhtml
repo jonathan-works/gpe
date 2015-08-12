@@ -5,36 +5,37 @@
 	xmlns:wi="http://www.itx.com.br/jsf"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:a="http://richfaces.org/a4j">
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/schema/seam/taglib">
 	
 	<ui:param name="id" value="#{empty id ? 'id' : id}"></ui:param>
-	
-	
-	
-	<wi:dataTable id="#{id}documentosComunicacao"
-		tableTitle="#{tableTitle}"
-		values="#{empty bean ? documentoComunicacaoList.list(5) : bean.list(5)}"
-		bean="#{empty bean ? documentoComunicacaoList : bean}"
-		rowId="#{row.id}"
-		hideOrder="#{empty hideOrder ? true : hideOrder}"
-		rendered="#{empty rendered ? false : rendered}" 
-		showSearchForm="false">
-			<ui:define name="headerToolBar" />
-			<ui:define name="toolBar">
-				<rich:column styleClass="dt-toolbar-col">
-					<h:form>
-					<a:commandLink
-							onclick="infox.openPopUp('documento', '#{documentoDownloader.getViewUrl(row)}');">
-							<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
-					</a:commandLink>
-					</h:form>
-				</rich:column>
-			</ui:define>
-			<wi:columnOutputText columnHeader="#{infoxMessages['documentoProcesso.numeroDocumento']}" value="#{row.numeroDocumento}" 
-				columnRendered="#{showNumeroDocumento}"/>
-			<wi:columnOutputText columnHeader="#{infoxMessages['documentoProcesso.descricao']}" value="#{row.descricao}" />
-			<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.classificacaoDocumento']}" value="#{row.classificacaoDocumento}" />
-			<wi:columnOutputText hideOrder="true" columnHeader="#{infoxMessages['processoDocumento.tamanho']}" value="#{row.documentoBin.sizeFormatado}" />
-	</wi:dataTable>
+
+	<s:fragment rendered="#{empty rendered ? false : rendered}">
+		<wi:dataTable id="#{id}documentosComunicacao"
+			tableTitle="#{tableTitle}"
+			values="#{empty bean ? documentoComunicacaoList.list(5) : bean.list(5)}"
+			bean="#{empty bean ? documentoComunicacaoList : bean}"
+			rowId="#{row.id}"
+			hideOrder="#{empty hideOrder ? true : hideOrder}"
+			showSearchForm="false"
+			panelStyle="margin-top:1em">
+				<ui:define name="headerToolBar" />
+				<ui:define name="toolBar">
+					<rich:column styleClass="dt-toolbar-col">
+						<h:form>
+						<a:commandLink
+								onclick="infox.openPopUp('documento', '#{documentoDownloader.getViewUrl(row)}');">
+								<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
+						</a:commandLink>
+						</h:form>
+					</rich:column>
+				</ui:define>
+				<wi:columnOutputText columnHeader="#{infoxMessages['documentoProcesso.numeroDocumento']}" value="#{row.numeroDocumento}" 
+					columnRendered="#{showNumeroDocumento}"/>
+				<wi:columnOutputText columnHeader="#{infoxMessages['documentoProcesso.descricao']}" value="#{row.descricao}" />
+				<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.classificacaoDocumento']}" value="#{row.classificacaoDocumento}" />
+				<wi:columnOutputText hideOrder="true" columnHeader="#{infoxMessages['processoDocumento.tamanho']}" value="#{row.documentoBin.sizeFormatado}" />
+		</wi:dataTable>
+	</s:fragment>
 		
 </ui:composition>
