@@ -207,6 +207,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     public void setClassificacaoDocumento(ClassificacaoDocumento classificacaoDocumento) {
         this.classificacaoDocumento = classificacaoDocumento;
         getDocumento().setClassificacaoDocumento(classificacaoDocumento);
+        clearUploadFile();
     }
     
     @Override
