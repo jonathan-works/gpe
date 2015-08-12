@@ -25,7 +25,6 @@ import org.richfaces.model.UploadedFile;
 import com.lowagie.text.pdf.PdfReader;
 
 import br.com.infox.core.file.encode.MD5Encoder;
-import br.com.infox.core.file.reader.InfoxPdfReader;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.cdi.ViewScoped;
@@ -145,10 +144,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
 
     @Override
     protected Documento gravarDocumento() throws DAOException {
-        String texto = InfoxPdfReader.readPdfFromByteArray(pdf);
         Documento pd = documentoManager.gravarDocumentoNoProcesso(getProcesso(), getDocumento(), getPasta());
-        bin().setModeloDocumento(texto);
-        documentoBinarioManager.salvarBinario(bin().getId(), bin().getProcessoDocumento());
         //Removida indexação manual daqui
         newInstance();
         classificacaoDocumento = null;

@@ -51,16 +51,23 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 	private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
 	@In
 	private AssinaturaDocumentoService assinaturaDocumentoService;
+	@In
+	private DocumentoBinarioManager documentoBinarioManager;
 
 	public DocumentoBin createProcessoDocumentoBin(final Documento documento) throws DAOException {
-		final DocumentoBin bin = documento.getDocumentoBin();
+		DocumentoBin bin = documento.getDocumentoBin();
 		if (bin.getMd5Documento() == null) {
 			bin.setMd5Documento(MD5Encoder.encode(bin.getModeloDocumento()));
 		}
-		if (bin.getModeloDocumento() == null && bin.isBinario()) {
-			bin.setModeloDocumento(InfoxPdfReader.readPdfFromByteArray(bin.getProcessoDocumento()));
+		byte[] dados = bin.getProcessoDocumento();
+		if (bin.isBinario() && dados != null) {
+			bin.setModeloDocumento(InfoxPdfReader.readPdfFromByteArray(dados));
 		}
-		return persist(bin);
+		bin = persist(bin);
+		if (bin.isBinario() && dados != null) {
+			documentoBinarioManager.salvarBinario(bin.getId(), dados);
+		}
+		return bin;
 	}
 
 	public DocumentoBin createProcessoDocumentoBin(final String tituloDocumento, final String conteudo)
