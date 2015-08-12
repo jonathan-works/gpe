@@ -19,7 +19,7 @@
                 value="#{taskInstanceHome.transtionsSelectItems}" />
         </h:selectOneMenu>
         <a:commandButton action="#{elFunctions.invokeMethod(taskEndAction)}"
-            value="OK" status="none" onmouseup="showLoading()"
+            value="OK" status="none" onmouseup="showLoading()" onclick="#{onClickTransition}"
             styleClass="buttons" eventsQueue="editQueue"
             oncomplete="verifyFields();"
             render=":script, #{reRenderEndTask}, :pageBodyDialogMessage"
@@ -29,7 +29,7 @@
         <a:repeat value="#{taskInstanceHome.transitions}"
             var="transition">
             <a:commandButton eventsQueue="editQueue" status="none"
-                onmouseup="showLoading()" oncomplete="verifyFields()"
+                onmouseup="showLoading()" oncomplete="verifyFields()" onclick="#{onClickTransition}"
                 render=":script, #{reRenderEndTask}, :pageBodyDialogMessage"
                 limitRender="true" value="#{transition.name}"
                 styleClass="buttons"

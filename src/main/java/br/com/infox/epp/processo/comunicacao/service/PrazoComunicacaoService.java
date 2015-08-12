@@ -81,6 +81,9 @@ public class PrazoComunicacaoService {
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void darCiencia(Processo comunicacao, Date dataCiencia, UsuarioLogin usuarioCiencia) throws DAOException {
+		if (comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA) != null) {
+    		return;
+    	}
 		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
 		MetadadoProcesso metadadoDataCiencia = metadadoProcessoProvider.gerarMetadado(
 				ComunicacaoMetadadoProvider.DATA_CIENCIA, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(dataCiencia));
@@ -96,6 +99,9 @@ public class PrazoComunicacaoService {
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void darCienciaManual(Processo comunicacao, Date dataCiencia, Documento documentoCiencia) throws DAOException {
+		if (comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA) != null) {
+    		return;
+    	}
 		documentoManager.gravarDocumentoNoProcesso(comunicacao.getProcessoRoot(), documentoCiencia);
 		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
 		MetadadoProcesso metadadoCiencia = metadadoProcessoProvider.gerarMetadado(
@@ -128,6 +134,9 @@ public class PrazoComunicacaoService {
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void darCumprimento(Processo comunicacao, Date dataCumprimento, UsuarioLogin usuarioCumprimento) throws DAOException {
+		if (comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CUMPRIMENTO) != null) {
+    		return;
+    	}
 		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
 		String dateFormatted = new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(dataCumprimento);
 		String idUsuarioCumprimento = usuarioCumprimento.getIdUsuarioLogin().toString();

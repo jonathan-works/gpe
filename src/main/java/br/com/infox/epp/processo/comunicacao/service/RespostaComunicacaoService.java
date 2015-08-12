@@ -19,6 +19,7 @@ import org.jbpm.graph.exe.ProcessInstance;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.DateUtil;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.dao.DocumentoRespostaComunicacaoDAO;
@@ -58,7 +59,6 @@ public class RespostaComunicacaoService {
 		Processo processoResposta = processoAnaliseDocumentoService.criarProcessoAnaliseDocumentos(comunicacao, respostas.toArray(new Documento[respostas.size()]));
 				
 		Map<String, Object> variaveisJbpm = new HashMap<>();
-		setRespostaTempestiva(processoResposta.getDataInicio(), comunicacao);
 		processoAnaliseDocumentoService.inicializarFluxoDocumento(processoResposta, variaveisJbpm);
 		documentoRespostaComunicacaoDAO.updateDocumentoComoEnviado(respostas);
 		
@@ -66,7 +66,10 @@ public class RespostaComunicacaoService {
 		TipoComunicacao tipoComunicacao = ((DestinatarioModeloComunicacao) metadadoDestinatario.getValue()).getModeloComunicacao().getTipoComunicacao();
 		if(prazoComunicacaoService.containsClassificacaoProrrogacaoPrazo(respostas, tipoComunicacao)){
 			createMetadadoDataPedidoProrrogacaoPrazo(comunicacao);
-		}		
+		} else {
+			setRespostaTempestiva(processoResposta.getDataInicio(), comunicacao);
+			prazoComunicacaoService.darCumprimento(comunicacao, new Date(), Authenticator.getUsuarioLogado());
+		}
 	}
 	
 	public void enviarProrrogacaoPrazo(Documento documento, Processo comunicacao) throws DAOException {

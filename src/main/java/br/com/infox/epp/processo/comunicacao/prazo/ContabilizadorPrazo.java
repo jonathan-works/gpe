@@ -38,9 +38,6 @@ public class ContabilizadorPrazo {
     
     public void atribuirCiencia() {
     	Processo comunicacao = JbpmUtil.getProcesso();
-    	if (comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA) != null) {
-    		return;
-    	}
     	UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
     	if (usuarioLogado == null) {
     		Integer idUsuarioSistema = Integer.valueOf(Parametros.ID_USUARIO_SISTEMA.getValue());
