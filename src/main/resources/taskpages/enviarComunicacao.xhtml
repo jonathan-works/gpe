@@ -27,11 +27,6 @@
 				styleClass="buttons"
 				rendered="#{envioComunicacaoController.podeVisualizarComunicacaoNaoFinalizada()}" 
 				onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?idModelo=#{envioComunicacaoController.modeloComunicacao.id}','1024'); return false;" />
-			<a:commandButton id="btnCriarComunicacao" 
-				value="#{infoxMessages['comunicacao.criarComunicacao']}"
-				rendered="#{envioComunicacaoController.expedida and envioComunicacaoController.inTask}"
-				styleClass="buttons"
-				onclick="infox.openPopUp('_blank', '#{pathResolver.contextPath}/Processo/criarComunicacao.seam?jbpmProcessId=#{envioComunicacaoController.jbpmProcessId}','1024'); return false;" />
 			</h:form>
 			
 			<!-- Painel dos Destinatários -->
