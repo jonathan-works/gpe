@@ -93,7 +93,6 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
         setPasta(null);
     }
 
-    @Override
     public void processFileUpload(FileUploadEvent fileUploadEvent) {
         final UploadedFile ui = fileUploadEvent.getUploadedFile();
         try {
@@ -112,7 +111,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
             bin().setSize(Long.valueOf(ui.getSize()).intValue());
             bin().setProcessoDocumento(ui.getData());
             bin().setModeloDocumento(null);
-            FacesMessages.instance().add(infoxMessages.get("processoDocumento.doneLabel"));
+            FacesMessages.instance().add(infoxMessages.get("processoDocumento.uploadCompleted"));
         } else {
             newInstance();
         }
