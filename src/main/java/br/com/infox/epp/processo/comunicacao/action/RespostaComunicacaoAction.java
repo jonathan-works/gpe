@@ -5,24 +5,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.ejb.Stateful;
 import javax.inject.Inject;
+import javax.inject.Named;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Create;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.faces.FacesMessages;
 
 import com.google.common.base.Strings;
 
 import br.com.infox.core.action.ActionMessagesService;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
@@ -32,60 +29,39 @@ import br.com.infox.epp.processo.comunicacao.DocumentoRespostaComunicacao;
 import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
 import br.com.infox.epp.processo.comunicacao.list.DocumentoComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.list.RespostaComunicacaoList;
-import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
-import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.DocumentoComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.RespostaComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
-import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
 import br.com.infox.epp.processo.documento.anexos.DocumentoEditor;
 import br.com.infox.epp.processo.documento.anexos.DocumentoUploader;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
-import br.com.infox.epp.processo.documento.service.DocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.util.ComponentUtil;
 
-@Name(RespostaComunicacaoAction.NAME)
-@AutoCreate
-@Scope(ScopeType.PAGE)
-@Transactional
-@ContextDependency
+@Named
+@Stateful
+@ViewScoped
 public class RespostaComunicacaoAction implements Serializable {
 	
 	public static final String NAME = "respostaComunicacaoAction";
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(RespostaComunicacaoAction.class);
 	
-	@In
-	private ComunicacaoService comunicacaoService;
-	@In
-	private ActionMessagesService actionMessagesService;
-	@In
-	private ModeloDocumentoManager modeloDocumentoManager;
-	@In
-	private RespostaComunicacaoList respostaComunicacaoList;
-	@In
-	private DocumentoDownloader documentoDownloader;
-	@In
-	private DocumentoManager documentoManager;
-	@In
-	private DocumentoComunicacaoList documentoComunicacaoList;
-	@In
-	private DocumentoService documentoService;
-	@In
-	private DocumentoComunicacaoService documentoComunicacaoService;
-	@In
-	private AssinaturaDocumentoService assinaturaDocumentoService;
-	@In
-	private RespostaComunicacaoService respostaComunicacaoService;
-	@In
-	private ModeloComunicacaoManager modeloComunicacaoManager;
+	private ActionMessagesService actionMessagesService = ComponentUtil.getComponent(ActionMessagesService.NAME);
+	private ModeloDocumentoManager modeloDocumentoManager = ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
+	private RespostaComunicacaoList respostaComunicacaoList = ComponentUtil.getComponent(RespostaComunicacaoList.NAME);
+	private DocumentoManager documentoManager = ComponentUtil.getComponent(DocumentoManager.NAME);
+	private DocumentoComunicacaoList documentoComunicacaoList = ComponentUtil.getComponent(DocumentoComunicacaoList.NAME);
+	private DocumentoComunicacaoService documentoComunicacaoService = ComponentUtil.getComponent(DocumentoComunicacaoService.NAME);
+	private AssinaturaDocumentoService assinaturaDocumentoService = ComponentUtil.getComponent(AssinaturaDocumentoService.NAME);
+	private RespostaComunicacaoService respostaComunicacaoService = ComponentUtil.getComponent(RespostaComunicacaoService.NAME);
 	
 	@Inject
 	private PrazoComunicacaoService prazoComunicacaoService;
@@ -93,6 +69,8 @@ public class RespostaComunicacaoAction implements Serializable {
 	private DocumentoUploader documentoUploader;
 	@Inject
 	private DocumentoEditor documentoEditor;
+	@Inject
+	protected InfoxMessages infoxMessages;
 	
 	private DestinatarioModeloComunicacao destinatario;
 
@@ -110,7 +88,7 @@ public class RespostaComunicacaoAction implements Serializable {
 	private boolean possivelMostrarBotaoEnvio = false;
 	
 	
-	@Create
+	@PostConstruct
 	public void init() {
 		this.processoComunicacao = JbpmUtil.getProcesso();
 		respostaComunicacaoList.setProcesso(processoComunicacao);
@@ -198,7 +176,7 @@ public class RespostaComunicacaoAction implements Serializable {
 		Documento resposta = documentoUploader.getDocumentosDaSessao().get(documentoUploader.getDocumentosDaSessao().size() - 1);
 		try {
 			documentoComunicacaoService.vincularDocumentoRespostaComunicacao(resposta, processoComunicacao);
-			FacesMessages.instance().add("Registro gravado com sucesso");
+			FacesMessages.instance().add(infoxMessages.get("comunicacao.resposta.gravadoSucesso"));
 		} catch (DAOException e) {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);
@@ -217,7 +195,7 @@ public class RespostaComunicacaoAction implements Serializable {
 				BusinessProcess.instance().setProcessId(processId);
 				BusinessProcess.instance().setTaskId(taskId);
 				initClassificacoes();
-				FacesMessages.instance().add("Resposta enviada com sucesso");
+				FacesMessages.instance().add("comunicacao.resposta.enviadaSucesso");
 				modelosDocumento = null;
 				newDocumentoEdicao();
 				initClassificacoes();
@@ -337,16 +315,17 @@ public class RespostaComunicacaoAction implements Serializable {
 		List<Documento> documentosResposta = getDocumentoRespostaList();
 		if (documentosResposta == null || documentosResposta.isEmpty()) {
 			possivelMostrarBotaoEnvio = false;
+			return;
 		}
 		for (Documento documento : documentosResposta) {
 			if(!assinaturaDocumentoService.isDocumentoTotalmenteAssinado(documento) || documento.getDocumentoBin().isMinuta()) {
 				possivelMostrarBotaoEnvio = false;
-				break;
+				return;
 			}
 		}
 	}
 	
-	private List<Documento> getDocumentoRespostaList(){
+	protected List<Documento> getDocumentoRespostaList(){
 	    List<DocumentoRespostaComunicacao> documentosRespostaComunicacao = new ArrayList<DocumentoRespostaComunicacao>(respostaComunicacaoList.list());
 	    List<Documento> documentosResposta = new ArrayList<Documento>();
 	    for (DocumentoRespostaComunicacao documentoRespostaComunicacao : documentosRespostaComunicacao) {
@@ -354,4 +333,5 @@ public class RespostaComunicacaoAction implements Serializable {
         }
 	    return documentosResposta;
 	}
+	
 }
