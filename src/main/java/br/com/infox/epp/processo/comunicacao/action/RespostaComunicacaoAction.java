@@ -152,7 +152,7 @@ public class RespostaComunicacaoAction implements Serializable {
 				documentoManager.update(documentoEditor.getDocumento());
 			}
 			newDocumentoEdicao();
-			FacesMessages.instance().add("Registro gravado com sucesso");
+			FacesMessages.instance().add(infoxMessages.get("comunicacao.resposta.gravadoSucesso"));
 		} catch (DAOException e) {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);
@@ -195,7 +195,7 @@ public class RespostaComunicacaoAction implements Serializable {
 				BusinessProcess.instance().setProcessId(processId);
 				BusinessProcess.instance().setTaskId(taskId);
 				initClassificacoes();
-				FacesMessages.instance().add("comunicacao.resposta.enviadaSucesso");
+				FacesMessages.instance().add(infoxMessages.get("comunicacao.resposta.enviadaSucesso"));
 				modelosDocumento = null;
 				newDocumentoEdicao();
 				initClassificacoes();
