@@ -173,7 +173,8 @@ public interface ProcessoQuery {
 					+ " where p = mp.processo and mp.metadadoType = 'dataCiencia' ) "
 			+ " and exists (select 1 from MetadadoProcesso mp "
 					+ " where p = mp.processo and mp.metadadoType = 'meioExpedicaoComunicacao' "
-					+ " and mp.valor = :" + MEIO_EXPEDICAO_PARAM + " ) ";
+					+ " and mp.valor = :" + MEIO_EXPEDICAO_PARAM + " ) "
+			+ " and not exists (select 1 from org.jbpm.graph.exe.ProcessInstance pi where pi.id = p.idJbpm and pi.processDefinition.name = 'Comunicar - Meio eletrônico') ";
 	
 	String LIST_PROCESSOS_COMUNICACAO_SEM_CUMPRIMENTO = "listProcessosComunicacaoSemCumprimento";
 	String LIST_PROCESSOS_COMUNICACAO_SEM_CUMPRIMENTO_QUERY = "select p from Processo p " 
@@ -189,5 +190,6 @@ public interface ProcessoQuery {
 			+ " and exists (select 1 from MetadadoProcesso mp "
 					+ " where p = mp.processo and  mp.metadadoType = 'limiteDataCumprimento' ) "
 			+ " and not exists (select 1 from MetadadoProcesso mp "
-					+ " where p = mp.processo and mp.metadadoType = 'dataCumprimento' ) ";
+					+ " where p = mp.processo and mp.metadadoType = 'dataCumprimento' ) "
+			+ " and not exists (select 1 from org.jbpm.graph.exe.ProcessInstance pi where pi.id = p.idJbpm and pi.processDefinition.name = 'Comunicar - Meio eletrônico') ";
 }

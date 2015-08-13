@@ -33,7 +33,6 @@ import br.com.infox.epp.documento.entity.ExtensaoArquivo;
 import br.com.infox.epp.documento.manager.ExtensaoArquivoManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
-import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -56,7 +55,6 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     private InfoxMessages infoxMessages;
     
     private DocumentoManager documentoManager = ComponentUtil.getComponent(DocumentoManager.NAME, ScopeType.EVENT);
-    private DocumentoBinarioManager documentoBinarioManager = ComponentUtil.getComponent(DocumentoBinarioManager.NAME, ScopeType.EVENT);
     private ExtensaoArquivoManager extensaoArquivoManager = ComponentUtil.getComponent(ExtensaoArquivoManager.NAME, ScopeType.EVENT);
     
     private UploadedFile uploadedFile;
