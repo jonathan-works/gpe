@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.ejb.Remove;
+import javax.ejb.Stateful;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
@@ -82,6 +84,7 @@ import com.google.common.base.Strings;
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
 @Transactional
+@Stateful
 public class ProcessBuilder implements Serializable {
 
     private static final String PROCESS_DEFINITION_TABPANEL_ID = ":processDefinition";
@@ -138,6 +141,14 @@ public class ProcessBuilder implements Serializable {
     private Boolean importacaoConcluida;
     private Set<String> mensagensImportacao;
 
+    /**
+     * Método foi necessário ser adicionado devido ao Seam ter problemas
+     * com anotação @Stateful
+     */
+    @Remove
+    public void destroy(){
+    }
+    
     public void newInstance() {
         instance = null;
     }
