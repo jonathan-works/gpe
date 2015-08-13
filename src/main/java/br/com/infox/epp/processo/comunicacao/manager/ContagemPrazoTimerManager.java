@@ -28,7 +28,7 @@ import br.com.infox.seam.util.ComponentUtil;
 @Name(ContagemPrazoTimerManager.NAME)
 public class ContagemPrazoTimerManager {
 
-	private static final String DEFAULT_CRON_EXPRESSION = "0 0 0 * * ?";
+	private static final String DEFAULT_CRON_EXPRESSION = "0 0/30 * * * ?";
 	private static final LogProvider LOG = Logging.getLogProvider(ContagemPrazoTimerManager.class);
 	public static final String NAME = "contagemPrazoTimerManager";
 	public static final String ID_TIMER_CONTAGEM_PRAZO_COMUNICACAO = "idTimerContagemPrazoComunicacao";
