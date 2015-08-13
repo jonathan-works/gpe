@@ -24,7 +24,6 @@ import org.richfaces.model.UploadedFile;
 
 import com.lowagie.text.pdf.PdfReader;
 
-import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.cdi.ViewScoped;
@@ -105,10 +104,8 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
         if (isValido()) {
             setUploadedFile(ui);
             bin().setNomeArquivo(ui.getName());
-            bin().setMd5Documento(getMD5(ui.getData()));
             bin().setSize(Long.valueOf(ui.getSize()).intValue());
             bin().setProcessoDocumento(ui.getData());
-            bin().setModeloDocumento(null);
             FacesMessages.instance().add(infoxMessages.get("processoDocumento.uploadCompleted"));
         } else {
             newInstance();
@@ -130,10 +127,6 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
         return ret;
     }
 
-    private String getMD5(byte[] data) {
-        return MD5Encoder.encode(data);
-    }
-
     @Override
     protected LogProvider getLogger() {
         return LOG;
@@ -144,7 +137,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
         Documento pd = documentoManager.gravarDocumentoNoProcesso(getProcesso(), getDocumento(), getPasta());
         //Removida indexação manual daqui
         newInstance();
-        classificacaoDocumento = null;
+        setClassificacaoDocumento(null);
         setValido(false);
         return pd;
     }
@@ -213,7 +206,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     @Override
     public void clear() {
         super.clear();
-        this.classificacaoDocumento = null;
+        setClassificacaoDocumento(null);
         setPasta(null);
     }
     
