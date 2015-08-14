@@ -43,7 +43,8 @@
 	    	<rich:panel header="#{infoxMessages[painelUsuarioController.localeTitleKey]}"  
 	    		style="width: 15%; display: inline-block; margin-right: 0.5em; vertical-align: top">
 		    	<h:form id="form-fluxo">	
-		    		<a:jsFunction id="selectFluxo" name="selectFluxo" immediate="true" execute="@this" render="divPainelProcessos" >
+		    		<a:jsFunction id="selectFluxo" name="selectFluxo" immediate="true" execute="@this" onbegin="infox.showLoading('Buscando Tarefas...');"
+		    		oncomplete="infox.hideLoading();" render="divPainelProcessos" >
 						<a:param name="fluxo" assignTo="#{painelUsuarioController.idProcessDefinition}" />
 					</a:jsFunction>
 					<h:outputText value="#{infoxMessages['process.noAvailableProcesses']}" rendered="#{empty painelUsuarioController.fluxosDisponiveis}" />
