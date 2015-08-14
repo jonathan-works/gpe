@@ -13,11 +13,9 @@ import javax.persistence.TypedQuery;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.xml.sax.InputSource;
 
-import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.merger.model.MergePoint;
 import br.com.infox.epp.fluxo.merger.model.MergePointsBundle;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
-import br.com.infox.ibpm.process.definition.ProcessBuilder;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
@@ -25,28 +23,23 @@ public class FluxoMergeService {
 
     @Inject
     private EntityManager entityManager;
-    @Inject
-    private ProcessBuilder processBuilder;
 
-    public List<MergePoint> getMergePoints(Fluxo fluxo) {
+    private List<MergePoint> getMergePoints(ProcessDefinition processDefinition){
         TypedQuery<MergePoint> query = entityManager.createQuery(GET_MERGE_POINTS_QUERY, MergePoint.class);
-        TypedQuery<MergePoint> parameter = query.setParameter(PROCESS_INSTANCE, fluxo.getFluxo());
+        TypedQuery<MergePoint> parameter = query.setParameter(PROCESS_INSTANCE, processDefinition.getName());
         return parameter.getResultList();
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public MergePointsBundle merge(Fluxo base, Fluxo reference) {
-        ProcessDefinition processDefinition = jpdlToProcessDefinition(reference.getXml());
-        MergePointsBundle mergePointsBundle = new MergePointsBundle(getMergePoints(base), processDefinition);
-        if (mergePointsBundle.isValid()){
-            processDefinition.setName(base.getFluxo());
-            processBuilder.load(base);
-            processBuilder.setInstance(processDefinition);
-            processBuilder.deploy();
-        }
-        return mergePointsBundle;
+    public MergePointsBundle verifyMerge(String xmlBase, String xmlReference){
+        ProcessDefinition base = jpdlToProcessDefinition(xmlBase);
+        ProcessDefinition reference = jpdlToProcessDefinition(xmlReference);
+        return verifyMerge(base, reference);
     }
-
+    
+    public MergePointsBundle verifyMerge(ProcessDefinition base, ProcessDefinition reference){
+        return new MergePointsBundle(getMergePoints(base), reference);
+    }
+    
     public ProcessDefinition jpdlToProcessDefinition(String xml) {
         StringReader stringReader = new StringReader(xml);
         InfoxJpdlXmlReader jpdlReader = new InfoxJpdlXmlReader(new InputSource(stringReader));
