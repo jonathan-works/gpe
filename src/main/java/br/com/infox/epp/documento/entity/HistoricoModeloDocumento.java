@@ -33,6 +33,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
+import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 
 @Entity
@@ -101,8 +102,8 @@ public class HistoricoModeloDocumento implements java.io.Serializable {
         return DateFormat.getDateInstance().format(dataAlteracao);
     }
 
-    @Column(name = TITULO_MODELO_DOCUMENTO, nullable = false, length = 80)
-    @Size(max = 80)
+    @Column(name = TITULO_MODELO_DOCUMENTO, nullable = false, length = LengthConstants.DESCRICAO_TITULO)
+    @Size(max = LengthConstants.DESCRICAO_TITULO)
     public String getTituloModeloDocumento() {
         return tituloModeloDocumento;
     }

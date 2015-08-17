@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.el.ELException;
 import javax.faces.event.ValueChangeEvent;
@@ -90,6 +89,7 @@ public class NodeFitter extends Fitter implements Serializable {
     @In
     private ClassificacaoDocumentoFacade classificacaoDocumentoFacade;
     
+    @SuppressWarnings(UNCHECKED)
     public void addNewNode() {
         Class<?> nodeType = NodeTypes.getNodeType(getNodeType(newNodeType));
         ProcessDefinition processo = getProcessBuilder().getInstance();
@@ -105,7 +105,6 @@ public class NodeFitter extends Fitter implements Serializable {
                 node.setAsync(true);
             }
             node.setName(newNodeName);
-            node.setKey(UUID.randomUUID().toString());
             processo.addNode(node);
             nodes = processo.getNodes();
             // Se foi informado newNodeAfter, procura para inserir
@@ -128,16 +127,15 @@ public class NodeFitter extends Fitter implements Serializable {
                 t.setFrom(newNodeAfter);
                 node.addArrivingTransition(t);
                 t.setName(node.getName());
-                t.setKey(UUID.randomUUID().toString());
                 newNodeAfter.addLeavingTransition(t);
-            } else if (newNodeTransition != null && newNodeTransition.getTransition() != null) {
+            } else if (newNodeTransition != null
+                    && newNodeTransition.getTransition() != null) {
                 Transition t = new Transition();
                 Transition oldT = newNodeTransition.getTransition();
                 t.setCondition(oldT.getCondition());
                 t.setDescription(oldT.getDescription());
                 Node to = newNodeTransition.getTransition().getTo();
                 t.setName(to.getName());
-                t.setKey(UUID.randomUUID().toString());
                 t.setProcessDefinition(oldT.getProcessDefinition());
 
                 /*
@@ -176,6 +174,7 @@ public class NodeFitter extends Fitter implements Serializable {
         return ((ModeloDocumentoManager) ComponentUtil.getComponent(ModeloDocumentoManager.NAME)).getModeloDocumentoList();
     }
 
+    @SuppressWarnings(UNCHECKED)
     private void handleForkNode(Node fork) {
         try {
             Node join = Join.class.newInstance();
@@ -315,6 +314,7 @@ public class NodeFitter extends Fitter implements Serializable {
         return oldNodeTransition;
     }
 
+    @SuppressWarnings(UNCHECKED)
     @Factory("processNodes")
     public List<Node> getNodes() {
         if (nodes == null) {
@@ -337,6 +337,7 @@ public class NodeFitter extends Fitter implements Serializable {
         return nodeList;
     }
 
+    @SuppressWarnings(UNCHECKED)
     public List<SelectItem> getNodesItems() {
         if (nodesItems == null) {
             List<Node> list = getProcessBuilder().getInstance().getNodes();
