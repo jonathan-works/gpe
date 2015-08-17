@@ -168,6 +168,7 @@ public class TaskHandler implements Serializable {
 
     public void removeVar(VariableAccessHandler v) {
         task.getTaskController().getVariableAccesses().remove(v.getVariableAccess());
+        v.removeTaskAction(v.getName());
         variables.remove(v);
         if (v.getType() == VariableType.TASK_PAGE) {
             hasTaskPage = null;
