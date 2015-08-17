@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.faces.model.SelectItem;
 
@@ -105,6 +106,7 @@ public class TransitionFitter extends Fitter implements Serializable {
     public void addTransition(String type) {
         Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
         Transition t = new Transition("");
+        t.setKey(UUID.randomUUID().toString());
         if ("from".equals(type)) {
             currentNode.addArrivingTransition(t);
             if (arrivingTransitions == null) {
@@ -184,7 +186,6 @@ public class TransitionFitter extends Fitter implements Serializable {
         return arrivingTransitions;
     }
 
-    @SuppressWarnings(UNCHECKED)
     public List<TransitionHandler> getLeavingTransitions() {
         Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
         if (leavingTransitions == null && currentNode != null
@@ -194,7 +195,6 @@ public class TransitionFitter extends Fitter implements Serializable {
         return leavingTransitions;
     }
 
-    @SuppressWarnings(UNCHECKED)
     public List<TransitionHandler> getTransitions() {
         List<Node> nodes = getProcessBuilder().getNodeFitter().getNodes();
         if (transitionList == null) {
@@ -234,7 +234,6 @@ public class TransitionFitter extends Fitter implements Serializable {
         return transitionNames;
     }
 
-    @SuppressWarnings(UNCHECKED)
     public List<SelectItem> getTransitionsItems(List<Node> nodes) {
         if (transitionsItems == null) {
             transitionsItems = new ArrayList<SelectItem>();
