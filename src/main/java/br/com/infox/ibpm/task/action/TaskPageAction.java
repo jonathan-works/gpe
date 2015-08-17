@@ -2,12 +2,13 @@ package br.com.infox.ibpm.task.action;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
+import java.io.File;
 import java.io.Serializable;
-import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jbpm.context.def.VariableAccess;
@@ -16,6 +17,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.seam.exception.ApplicationException;
+import br.com.infox.seam.path.PathResolver;
 
 /**
  * Classe responsável por incluir a página referente a variavel taskPage
@@ -31,9 +33,12 @@ public class TaskPageAction implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "taskPageAction";
     private String taskPagePath;
-    public static final String TASK_PAGE_COMPONENT_PATH = "/taskpages/";
+    public static final String TASK_PAGE_COMPONENT_PATH = "/WEB-INF/taskpages/";
     private static final String TASK_PAGE_SUFFIX = ".xhtml";
     private boolean hasTaskPage = false;
+    
+    @In
+    private PathResolver pathResolver;
 
     /**
      * Verifica se a tarefa atual está utilizando uma variável taskPage. Se
@@ -41,28 +46,23 @@ public class TaskPageAction implements Serializable {
      */
     private void readTaskPagePath() {
         List<VariableAccess> variableAccesses = getVariableAccesses();
+        String taskPageName = null;
         for (VariableAccess va : variableAccesses) {
             String[] tokens = va.getMappedName().split(":");
             VariableType type = VariableType.valueOf(tokens[0]);
             if (type == VariableType.TASK_PAGE) {
                 hasTaskPage = va.isWritable();
-                String pageName = tokens[1] + TASK_PAGE_SUFFIX;
-
-                // Caso a pagina não seja encontrada no TASK_PAGE_COMPONENT_PATH
-                // é porque essa pagina é
-                // exclusiva do fluxo e vai estar no diretório que o nome é o
-                // código
-                URL taskPageUrl = getClass().getResource(TASK_PAGE_COMPONENT_PATH
-                        + pageName);
-                if (taskPageUrl != null) {
-                    setTaskPagePath(taskPageUrl.toString());
+                taskPageName = tokens[1];
+                String taskPagePath = TASK_PAGE_COMPONENT_PATH + taskPageName + TASK_PAGE_SUFFIX;
+                String taskPageUrl = pathResolver.getRealPath(taskPagePath);
+                if (taskPageUrl != null && new File(taskPageUrl).exists()) {
+            		setTaskPagePath(taskPagePath);
                 }
                 break;
             }
         }
         if (taskPagePath == null && hasTaskPage) {
-            throw new ApplicationException("TaskPageAction não encontrada: "
-                    + taskPagePath);
+            throw new ApplicationException("Página de tarefa não encontrada: " + taskPageName);
         }
     }
 

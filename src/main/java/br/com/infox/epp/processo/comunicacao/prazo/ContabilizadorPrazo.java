@@ -12,7 +12,6 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
-import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.Parametros;

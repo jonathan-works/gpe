@@ -282,8 +282,8 @@ public class ComunicacaoAction implements Serializable {
 			Processo comunicacao = getDestinatarioModeloComunicacao(destinatario).getProcesso();
 			Documento documento = documentoUploader.getDocumento();
 			documento.setDescricao(documentoUploader.getClassificacaoDocumento().getDescricao());
-			documentoUploader.clear();
 			respostaComunicacaoService.enviarProrrogacaoPrazo(documento, comunicacao);
+			documentoUploader.clear();
 			clear();
 			FacesMessages.instance().add(infoxMessages.get("comunicacao.msg.sucesso.pedidoProrrogacao"));
 		} catch (DAOException e) {

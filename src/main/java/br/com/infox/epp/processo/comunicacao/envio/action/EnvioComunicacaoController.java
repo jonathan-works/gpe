@@ -363,10 +363,6 @@ public class EnvioComunicacaoController implements Serializable {
 		this.destinatario = destinatario;
 	}
 	
-	public String getFaceletPath() {
-		return getClass().getResource("/taskpages/enviarComunicacao.xhtml").toString();
-	}
-	
 	public boolean isInTask() {
 		return inTask;
 	}

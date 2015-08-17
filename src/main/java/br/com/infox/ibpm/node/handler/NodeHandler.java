@@ -476,10 +476,10 @@ public class NodeHandler implements Serializable {
 	}
     
     public void setClassificacaoDocumento(ClassificacaoDocumento classificacaoDocumento) {
-		this.classificacaoDocumento = classificacaoDocumento;
-		if (this.classificacaoDocumento == null) {
-			setModeloDocumento(null);
-		}
+    	if (this.classificacaoDocumento == null || !this.classificacaoDocumento.equals(classificacaoDocumento)) {
+    		setModeloDocumento(null);
+    	}
+    	this.classificacaoDocumento = classificacaoDocumento;
 	}
 
     private Action retrieveStatusProcessoEvent(Event event) {

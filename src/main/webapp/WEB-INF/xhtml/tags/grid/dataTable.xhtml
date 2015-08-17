@@ -53,7 +53,7 @@
         <ui:fragment rendered="#{!empty inForm ? false : inForm}">
           <ui:include src="inputNumberSlider.xhtml" />
         </ui:fragment>
-        <h:form rendered="#{empty inForm ? true : !inForm}">
+        <h:form style="text-align: initial" rendered="#{empty inForm ? true : !inForm}">
           <ui:include src="inputNumberSlider.xhtml" />
         </h:form>
       </s:div>

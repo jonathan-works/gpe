@@ -25,18 +25,6 @@
 		rendered="#{empty showDataEnvio ? true : showDataEnvio}">
 		<f:convertDateTime pattern="dd/MM/yyyy" />
 	</wi:outputText>
-	<wi:outputText id="#{id}prazoResposta" 
-		label="#{infoxMessages['comunicacao.prazoResposta']}"
-		value="#{prazoResposta}"
-		rendered="#{empty showPrazoResposta ? false : showPrazoResposta}">
-		<f:convertDateTime pattern="dd/MM/yyyy" />
-	</wi:outputText>
-	<wi:outputText id="#{id}dataResposta"
-		label="#{infoxMessages['comunicacao.dataResposta']}"
-		value="#{dataResposta}"
-		rendered="#{empty showDataResposta ? true : showDataResposta}">
-		<f:convertDateTime pattern="dd/MM/yyyy" />
-	</wi:outputText>
 	<wi:outputText id="#{id}dataCienciaComunicacao"
 		label="#{infoxMessages['comunicacao.dataCiencia']}"
 		value="#{dataCiencia}"
@@ -56,8 +44,20 @@
 		value="#{statusProrrogacao}"
 		rendered="#{empty showStatusProrrogacao ? false : showStatusProrrogacao}">
 	</wi:outputText>
+	<wi:outputText id="#{id}prazoResposta" 
+		label="#{infoxMessages['comunicacao.prazoResposta']}"
+		value="#{prazoResposta}"
+		rendered="#{empty showPrazoResposta ? false : showPrazoResposta}">
+		<f:convertDateTime pattern="dd/MM/yyyy" />
+	</wi:outputText>
+	<wi:outputText id="#{id}dataResposta"
+		label="#{infoxMessages['comunicacao.dataResposta']}"
+		value="#{dataResposta}"
+		rendered="#{empty showDataResposta ? true : showDataResposta}">
+		<f:convertDateTime pattern="dd/MM/yyyy" />
+	</wi:outputText>
 	
-	<ui:fragment rendered="#{not empty informacoesAdicionais}">
+	<ui:fragment rendered="#{empty showInfoAdicionais ? not empty informacoesAdicionais : showInfoAdicionais}">
 		<ui:include src="#{informacoesAdicionais}"></ui:include>
 	</ui:fragment>
 	

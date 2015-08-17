@@ -18,13 +18,14 @@
 	   		<ui:param name="dataEnvio" value="#{visualizarComunicacaoAction.dataEnvio}" />
 	   		<ui:param name="showDataResposta" value="false" />
 	   		<ui:param name="tipoComunicacao" value="#{visualizarComunicacaoAction.destinatario.modeloComunicacao.tipoComunicacao.descricao}" />
-	   		<ui:param name="idDestinatario" value="#{respostaComunicacaoAction.destinatario.id}" />
+	   		<ui:param name="idDestinatario" value="#{visualizarComunicacaoAction.destinatario.id}" />
 	   	</ui:include>
-
-		<ui:include src="/WEB-INF/xhtml/components/fragments/documentosComunicacao.xhtml">
-	    		<ui:param name="id" value="visualizarDocumentosComunicacao" />
+	    
+	    <ui:include src="/WEB-INF/xhtml/components/fragments/documentosComunicacao.xhtml">
+	    		<ui:param name="id" value="documentosAnexadosComunicacao" />
 	    		<ui:param name="showNumeroDocumento" value="true" />
-	    		<ui:param name="list" value="#{visualizarComunicacaoAction.documentosComunicacao}" />
+	    		<ui:param name="tableTitle" value="#{infoxMessages['comunicacao.documentosAnexadosComunicacao']}" />
+	    		<ui:param name="rendered" value="#{documentoComunicacaoList.getResultCount() gt 0}" />
 	    </ui:include>
 
 	</rich:collapsiblePanel>

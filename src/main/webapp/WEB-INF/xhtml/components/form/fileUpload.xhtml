@@ -68,7 +68,7 @@
           addLabel="#{infoxMessages['processoDocumento.addLabel']}"
           clearAllLabel="#{infoxMessages['processoDocumento.clearAllLabel']}"
           clearLabel="#{infoxMessages['processoDocumento.clearLabel']}"
-          doneLabel="#{infoxMessages['processoDocumento.doneLabel']}"
+          doneLabel="#{empty doneLabel ? infoxMessages['processoDocumento.doneLabel'] : doneLabel}"
           uploadLabel="#{infoxMessages['processoDocumento.uploadLabel']}"
           sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}"
           maxFilesQuantity="1"

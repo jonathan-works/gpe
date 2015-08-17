@@ -38,14 +38,14 @@
 						<h:form>
 							<a:commandLink  
 								onclick="infox.openPopUp('download#{bean.idDestinatario}', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?idDestinatario=#{bean.idDestinatario}','1024'); return false;">
-								<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['comunicacao.visualizarComunicacao']}"/>
+								<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['comunicacao.visualizarAComunicacao']}"/>
 							</a:commandLink>
 							<a:commandLink 
 								action="#{comunicacaoAction.setDestinatarioDocumentos(bean)}"
 								execute="@this" limitRender="true"
 								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, painelDocumentosResposta, pageBodyDialogMessage"
 								onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
-								<h:graphicImage url="#{wiSkin.imageFolder}/anexo.png" title="#{infoxMessages['comunicacao.documentosAnexados']}"/>
+								<h:graphicImage url="#{wiSkin.imageFolder}/anexo.png" title="#{infoxMessages['comunicacao.documentosAnexadosComunicacao']}"/>
 							</a:commandLink>
 							<a:commandLink 
 								action="#{comunicacaoAction.setDestinatarioCiencia(bean)}" 
