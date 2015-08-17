@@ -55,7 +55,10 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 	private DocumentoBinarioManager documentoBinarioManager;
 
 	public DocumentoBin createProcessoDocumentoBin(final Documento documento) throws DAOException {
-		DocumentoBin bin = documento.getDocumentoBin();
+		return createProcessoDocumentoBin(documento.getDocumentoBin());
+	}
+	
+	public DocumentoBin createProcessoDocumentoBin(DocumentoBin bin) throws DAOException {
 		byte[] dados = bin.getProcessoDocumento();
 		if (bin.isBinario() && dados != null) {
 			bin.setModeloDocumento(InfoxPdfReader.readPdfFromByteArray(dados));
