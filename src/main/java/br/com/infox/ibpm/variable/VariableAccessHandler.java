@@ -68,7 +68,7 @@ public class VariableAccessHandler implements Serializable {
     private boolean isFile;
     private boolean fragment;
     private FragmentConfiguration fragmentConfiguration;
-
+    
     public VariableAccessHandler(VariableAccess variableAccess, Task task) {
         this.task = task;
         this.variableAccess = variableAccess;
@@ -102,6 +102,7 @@ public class VariableAccessHandler implements Serializable {
             }
         } else {
             this.type = VariableType.STRING;
+            this.name = variableAccess.getVariableName();
         }
         access = new boolean[5];
         access[0] = variableAccess.isReadable();
@@ -576,7 +577,7 @@ public class VariableAccessHandler implements Serializable {
         for (Object value : extra) {
             sb.append(":").append(value);
         }
-        ReflectionsUtil.setValue(variableAccess, "mappedName", sb.toString());
+        variableAccess.setMappedName(sb.toString());
     }
 
     public void limparModelos() {
@@ -607,10 +608,11 @@ public class VariableAccessHandler implements Serializable {
     
     public void setIniciaVazia(boolean iniciaVazia) {
 		access[4] = iniciaVazia;
-		ReflectionsUtil.setValue(variableAccess, "access", new Access(getAccess()));
+		variableAccess.setAccess(new Access(getAccess()));
 	}
     
     public boolean podeIniciarVazia() {
     	return isWritable() && type != VariableType.FRAGMENT && type != VariableType.FRAME && type != VariableType.PAGE && type != VariableType.TASK_PAGE;
     }
+    
 }
