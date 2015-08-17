@@ -227,6 +227,7 @@ public class TaskHandler implements Serializable {
         }
     }
 
+	@SuppressWarnings(UNCHECKED)
     public List<String> getTransitions() {
 	    List<String> transitions = new ArrayList<>();
 	    List<Transition> leavingTransitions = this.task.getTaskNode().getLeavingTransitions();

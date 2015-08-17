@@ -1,5 +1,7 @@
 package br.com.infox.ibpm.swimlane;
 
+import static br.com.infox.constants.WarningConstants.UNCHECKED;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,6 +41,7 @@ public class SwimlaneHandler implements Serializable {
         return swimlane.getName();
     }
 
+    @SuppressWarnings(UNCHECKED)
     public void setName(String name) {
         Map<String, Swimlane> swimlanes = swimlane.getTaskMgmtDefinition().getSwimlanes();
         swimlanes.remove(swimlane.getName());
@@ -88,6 +91,7 @@ public class SwimlaneHandler implements Serializable {
         }
     }
 
+    @SuppressWarnings(UNCHECKED)
     public static List<SwimlaneHandler> createList(ProcessDefinition instance) {
         List<SwimlaneHandler> ret = new ArrayList<SwimlaneHandler>();
         Map<String, Swimlane> swimlanes = instance.getTaskMgmtDefinition().getSwimlanes();

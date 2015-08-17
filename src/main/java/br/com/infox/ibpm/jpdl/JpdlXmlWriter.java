@@ -120,6 +120,7 @@ public class JpdlXmlWriter {
         }
     }
 
+    @SuppressWarnings(UNCHECKED)
     private Document createDomTree(ProcessDefinition processDefinition) {
         Document document = DocumentHelper.createDocument();
         Element root = null;
@@ -130,7 +131,10 @@ public class JpdlXmlWriter {
             root = document.addElement("process-definition");
         }
         addAttribute(root, ELEMENT_NAME, processDefinition.getName());
-        addAttribute(root, "key", processDefinition.getKey() == null ? UUID.randomUUID().toString() : processDefinition.getKey());
+        if (processDefinition.getKey() == null) {
+        	processDefinition.setKey(UUID.randomUUID().toString());
+        }
+        addAttribute(root, "key", processDefinition.getKey());
         writeDescription(root, processDefinition.getDescription());
 
         Map<String, Swimlane> swimlanes = processDefinition.getTaskMgmtDefinition().getSwimlanes();
@@ -174,13 +178,18 @@ public class JpdlXmlWriter {
         e.addCDATA(text);
     }
 
+    @SuppressWarnings(UNCHECKED)
     private void writeSwimlanes(Element root, ProcessDefinition processDefinition) {
         Map<String, Swimlane> swimlanes = processDefinition.getTaskMgmtDefinition().getSwimlanes();
         for (Entry<String, Swimlane> e : swimlanes.entrySet()) {
             Element swimlane = addElement(root, "swimlane");
             addAttribute(swimlane, ELEMENT_NAME, e.getKey());
             Swimlane s = e.getValue();
-            addAttribute(swimlane, "key", s.getKey() == null ? UUID.randomUUID().toString() : s.getKey());
+            if (s.getKey() == null) {
+            	UUID uuid = UUID.randomUUID();
+            	s.setKey(uuid.toString());
+            }
+            addAttribute(swimlane, "key", s.getKey());
             if (s.getPooledActorsExpression() != null || s.getActorIdExpression() != null) {
                 Element assignment = addElement(swimlane, "assignment");
                 addAttribute(assignment, "pooled-actors", s.getPooledActorsExpression());
@@ -268,6 +277,10 @@ public class JpdlXmlWriter {
         for (Task task : tasks) {
             Element taskElement = addElement(element, "task");
             addAttribute(taskElement, ELEMENT_NAME, task.getName());
+            if (task.getKey() == null) {
+            	UUID uuid = UUID.randomUUID();
+            	task.setKey(uuid.toString());
+            }
             if (task.getSwimlane() != null) {
                 addAttribute(taskElement, "swimlane", task.getSwimlane().getName());
             }
@@ -276,7 +289,7 @@ public class JpdlXmlWriter {
             addAttribute(taskElement, "description", task.getDescription());
             addAttribute(taskElement, "due-date", task.getDueDate());
             addAttribute(taskElement, "pooled-actors", task.getPooledActorsExpression());
-            addAttribute(taskElement, "key", task.getKey() == null ? UUID.randomUUID().toString() : task.getKey());
+            addAttribute(taskElement, "key", task.getKey());
             writeController(task.getTaskController(), taskElement);
             writeEvents(taskElement, task);
         }
@@ -328,7 +341,11 @@ public class JpdlXmlWriter {
         if (node.isAsync()) {
             addAttribute(element, "async", "true");
         }
-        addAttribute(element, "key", node.getKey() == null ? UUID.randomUUID().toString() : node.getKey());
+        if (node.getKey() == null) {
+        	UUID uuid = UUID.randomUUID();
+        	node.setKey(uuid.toString());
+        }
+        addAttribute(element, "key", node.getKey());
         if (node instanceof TaskNode) {
             TaskNode t = (TaskNode) node;
             String signal = null;
@@ -373,7 +390,11 @@ public class JpdlXmlWriter {
     }
 
     private void writeTransition(Element transitionElement, Transition transition) {
-    	transitionElement.addAttribute("key", transition.getKey() == null ? UUID.randomUUID().toString() : transition.getKey());
+    	if (transition.getKey() == null) {
+        	UUID uuid = UUID.randomUUID();
+        	transition.setKey(uuid.toString());
+        }
+    	transitionElement.addAttribute("key", transition.getKey());
         if (transition.getTo() != null) {
             transitionElement.addAttribute("to", transition.getTo().getName());
         }
