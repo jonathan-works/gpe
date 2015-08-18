@@ -277,14 +277,6 @@ public class RespostaComunicacaoAction implements Serializable {
 		documentoEditor.setDocumento(documentoEdicao);
 	}
 	
-	public Boolean getExisteAnexoComunicacao() {
-		return existeAnexoComunicacao;
-	}
-
-	public void setExisteAnexoComunicacao(Boolean existeAnexoComunicacao) {
-		this.existeAnexoComunicacao = existeAnexoComunicacao;
-	}
-
 	public MeioExpedicao getMeioExpedicao() {
 		return destinatario.getMeioExpedicao();
 	}
