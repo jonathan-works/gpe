@@ -179,9 +179,18 @@ public class ProcessBuilder implements Serializable {
         eventFitter.clear();
     }
 
+    public void load(){
+    	try {
+    		if(!FacesContext.getCurrentInstance().isPostback()){
+    			internalLoad(getFluxo());
+    		}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
     public void load(Fluxo fluxo) {
         try {
-            internalLoad(fluxo);
+        	internalLoad(fluxo);
         } catch (Exception e) {
             LOG.error(".load()", e);
         }
@@ -610,7 +619,11 @@ public class ProcessBuilder implements Serializable {
         return this.fluxo;
     }
 
-    public void getPaintedGraph() {
+    public void setFluxo(Fluxo fluxo) {
+		this.fluxo = fluxo;
+	}
+
+	public void getPaintedGraph() {
         try {
             getProcessBuilderGraph().paintGraph();
         } catch (IOException e) {

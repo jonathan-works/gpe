@@ -125,10 +125,13 @@
                     value="#{infoxMessages['fluxo.exportar']}" />
                 <wi:commandButton
                     id="definicao"
-                    action="#{processBuilder.load(fluxoCrudAction.instance)}"
-                    value="#{infoxMessages['fluxo.definicao']}"
+                    value="#{infoxMessages['fluxo.definicao']}" reRender="@this"
                     rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.replica}"
-                    oncomplete="openPopUp('processDefinition', '#{pathResolver.getContextPath()}/Fluxo/definicao/processDefinition.seam?scid=#{conversation.id}',1300,850);" />
+                    oncomplete="openPopUp('processDefinition', '#{pathResolver.getContextPath()}/Fluxo/definicao/processDefinition.seam',1300,850);">
+                    <f:setPropertyActionListener value="#{fluxoCrudAction.instance}" target="#{flash.fluxo}"></f:setPropertyActionListener>
+                  	<infox:flashcopy />
+                </wi:commandButton>
+                
                 <wi:commandButton
                     id="importarXPDL"
                     value="#{infoxMessages['importarXPDL.button']}"
@@ -274,3 +277,4 @@
       	</infox:tab>
     </ui:define>
 </ui:composition>
+
