@@ -73,6 +73,7 @@ public class ModeloComunicacaoDAO extends DAO<ModeloComunicacao> {
 			Root<MetadadoProcesso> metadado = subquery.from(MetadadoProcesso.class);
 			subquery.where(cb.equal(metadado.get(MetadadoProcesso_.processo), comunicacao),
 				cb.equal(metadado.get(MetadadoProcesso_.metadadoType), ComunicacaoMetadadoProvider.DATA_CIENCIA.getMetadadoType()));
+			subquery.select(cb.literal(1));
 			
 			query.where(query.getRestriction(), cb.exists(subquery));
 		}
