@@ -27,11 +27,6 @@
 				styleClass="buttons"
 				rendered="#{envioComunicacaoController.podeVisualizarComunicacaoNaoFinalizada()}" 
 				onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?idModelo=#{envioComunicacaoController.modeloComunicacao.id}','1024'); return false;" />
-			<a:commandButton id="btnCriarComunicacao" 
-				value="#{infoxMessages['comunicacao.criarComunicacao']}"
-				rendered="#{envioComunicacaoController.expedida and envioComunicacaoController.inTask}"
-				styleClass="buttons"
-				onclick="infox.openPopUp('_blank', '#{pathResolver.contextPath}/Processo/criarComunicacao.seam?jbpmProcessId=#{envioComunicacaoController.jbpmProcessId}','1024'); return false;" />
 			</h:form>
 			
 			<!-- Painel dos Destinatários -->
@@ -130,7 +125,7 @@
    							</a:commandLink>
    							<h:commandLink onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?idDestinatario=#{row.id}','1024'); return false;"
    								rendered="#{row.expedido}">
-								<h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" title="#{infoxMessages['comunicacao.visualizarComunicacao']}"/>
+								<h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" title="#{infoxMessages['comunicacao.visualizarAComunicacao']}"/>
 							</h:commandLink>
 						</s:div>
 					</rich:column>
@@ -372,8 +367,8 @@
 						<s:div rendered="#{envioComunicacaoController.finalizada and not envioComunicacaoController.modeloComunicacao.finalizada}"
 							style="display:inline-block">
 							<div>
-								<wi:outputText id="mensagemSelecionarLocalizacaoResponsavelAssinatura" 
-									value="#{infoxMessages['comunicacao.mensagemLocalizacaoResponsavelAssinatura']}" />
+								<wi:outputText id="mensagemSelecionarLocalizacaoResponsavelAssinatura"
+									label="#{infoxMessages['comunicacao.mensagemLocalizacaoResponsavelAssinatura']}" />
 							</div>
 							<wi:tree
 					            id="localizacoesTree"

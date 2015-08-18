@@ -12,7 +12,6 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
-import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.Parametros;
@@ -38,9 +37,6 @@ public class ContabilizadorPrazo {
     
     public void atribuirCiencia() {
     	Processo comunicacao = JbpmUtil.getProcesso();
-    	if (comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA) != null) {
-    		return;
-    	}
     	UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
     	if (usuarioLogado == null) {
     		Integer idUsuarioSistema = Integer.valueOf(Parametros.ID_USUARIO_SISTEMA.getValue());

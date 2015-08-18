@@ -101,15 +101,17 @@ public class DestinatarioComunicacaoAction {
 	}
 	
 	public void adicionarDestino(Localizacao localizacao, PerfilTemplate perfilDestino) {
-	    if (perfilDestino == null) {
+		DestinatarioModeloComunicacao destinatario = new DestinatarioModeloComunicacao();
+        destinatario.setModeloComunicacao(modeloComunicacao);
+        destinatario.setDestino(localizacao);
+        destinatario.setPrazo(getPrazoDefaultByTipoComunicacao(modeloComunicacao.getTipoComunicacao()));
+
+		
+		if (perfilDestino == null) {
 	        if (idsLocalizacoesSelecionadas.contains(localizacao.getIdLocalizacao())) {
 	            FacesMessages.instance().add("Localização já adicionada");
 	            return;
 	        }
-	        DestinatarioModeloComunicacao destinatario = new DestinatarioModeloComunicacao();
-	        destinatario.setModeloComunicacao(modeloComunicacao);
-	        destinatario.setDestino(localizacao);
-	        destinatario.setPrazo(getPrazoDefaultByTipoComunicacao(modeloComunicacao.getTipoComunicacao()));
 	        modeloComunicacao.getDestinatarios().add(destinatario);
 	        idsLocalizacoesSelecionadas.add(localizacao.getIdLocalizacao());
 	    } else {
@@ -117,9 +119,6 @@ public class DestinatarioComunicacaoAction {
 	            FacesMessages.instance().add("Perfil já adicionado para esta localização");
 	            return;
 	        }
-	        DestinatarioModeloComunicacao destinatario = new DestinatarioModeloComunicacao();
-            destinatario.setModeloComunicacao(modeloComunicacao);
-            destinatario.setDestino(localizacao);
             destinatario.setPerfilDestino(perfilDestino);
             modeloComunicacao.getDestinatarios().add(destinatario);
             addPerfilSelecionado(destinatario);

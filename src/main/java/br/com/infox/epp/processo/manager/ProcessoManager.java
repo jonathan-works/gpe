@@ -343,7 +343,9 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 	
 	private void atualizarProcessoTarefa(TaskInstance taskInstance) throws DAOException {
 		ProcessoTarefa processoTarefa = processoTarefaManager.getByTaskInstance(taskInstance.getId());
-		processoTarefa.setDataFim(taskInstance.getEnd());
-		processoTarefaManager.update(processoTarefa);
+		if (processoTarefa != null) {
+			processoTarefa.setDataFim(taskInstance.getEnd());
+			processoTarefaManager.update(processoTarefa);
+		}
 	}
 }

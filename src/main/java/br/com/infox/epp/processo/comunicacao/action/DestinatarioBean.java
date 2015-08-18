@@ -1,54 +1,41 @@
 package br.com.infox.epp.processo.comunicacao.action;
 
-import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
-import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
-import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
-import br.com.infox.epp.processo.documento.entity.Documento;
-import br.com.infox.epp.processo.entity.Processo;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import com.google.common.base.Strings;
 
+import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
+
 public class DestinatarioBean {
-	private Long idDestinatario;
-	private String nome;
-	private TipoComunicacao tipoComunicacao;
-	private String meioExpedicao;
+	
+	private String tipoComunicacao;
 	private String dataEnvio;
 	private String dataConfirmacao;
 	private String responsavelConfirmacao;
 	private String prazoAtendimento;
 	private String prazoFinal;
 	private String prazoOriginal;
-	private Processo comunicacao;
-	private ModeloComunicacao modeloComunicacao;
-	private Documento documentoComunicacao;
 	private String statusProrrogacao;
-	private DestinatarioModeloComunicacao destinatario;
+	private String nome;
 	private String dataResposta;
+	private Long idDestinatario;
+	private String numeroComunicacao;
+	private MeioExpedicao meioExpedicao;
 	
-	public Long getIdDestinatario() {
-		return idDestinatario;
-	}
-	public void setIdDestinatario(Long idDestinatario) {
+	public DestinatarioBean(String tipoComunicacao, Date dataEnvio, Long idDestinatario, String numeroComunicacao, MeioExpedicao meioExpedicao) {
+		this.tipoComunicacao = tipoComunicacao;
+		this.dataEnvio = new SimpleDateFormat("dd/MM/yyyy").format(dataEnvio);
 		this.idDestinatario = idDestinatario;
+		this.numeroComunicacao = numeroComunicacao;
+		this.meioExpedicao = meioExpedicao;
 	}
-	public String getNome() {
-		return nome;
-	}
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-	public TipoComunicacao getTipoComunicacao() {
+	
+	public String getTipoComunicacao() {
 		return tipoComunicacao;
 	}
-	public void setTipoComunicacao(TipoComunicacao tipoComunicacao) {
+	public void setTipoComunicacao(String tipoComunicacao) {
 		this.tipoComunicacao = tipoComunicacao;
-	}
-	public String getMeioExpedicao() {
-		return meioExpedicao;
-	}
-	public void setMeioExpedicao(String meioExpedicao) {
-		this.meioExpedicao = meioExpedicao;
 	}
 	public String getDataEnvio() {
 		return dataEnvio;
@@ -86,24 +73,6 @@ public class DestinatarioBean {
     public void setPrazoOriginal(String prazoOriginal) {
         this.prazoOriginal = prazoOriginal;
     }
-    public Processo getComunicacao() {
-		return comunicacao;
-	}
-	public void setComunicacao(Processo comunicacao) {
-		this.comunicacao = comunicacao;
-	}
-	public ModeloComunicacao getModeloComunicacao() {
-		return modeloComunicacao;
-	}
-	public void setModeloComunicacao(ModeloComunicacao modeloComunicacao) {
-		this.modeloComunicacao = modeloComunicacao;
-	}
-	public Documento getDocumentoComunicacao() {
-		return documentoComunicacao;
-	}
-	public void setDocumentoComunicacao(Documento documentoComunicacao) {
-		this.documentoComunicacao = documentoComunicacao;
-	}
 	public String getStatusProrrogacao() {
 		if(Strings.isNullOrEmpty(statusProrrogacao)){
 			return "-";
@@ -113,16 +82,42 @@ public class DestinatarioBean {
 	public void setStatusProrrogacao(String statusProrrogacao) {
 		this.statusProrrogacao = statusProrrogacao;
 	}
-	public DestinatarioModeloComunicacao getDestinatario() {
-		return destinatario;
-	}
-	public void setDestinatario(DestinatarioModeloComunicacao destinatario) {
-		this.destinatario = destinatario;
-	}
 	public String getDataResposta() {
 		return dataResposta;
 	}
 	public void setDataResposta(String dataResposta) {
 		this.dataResposta = dataResposta;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public Long getIdDestinatario() {
+		return idDestinatario;
+	}
+
+	public void setIdDestinatario(Long idDestinatario) {
+		this.idDestinatario = idDestinatario;
+	}
+
+	public String getNumeroComunicacao() {
+		return numeroComunicacao;
+	}
+
+	public void setNumeroComunicacao(String numeroComunicacao) {
+		this.numeroComunicacao = numeroComunicacao;
+	}
+
+	public MeioExpedicao getMeioExpedicao() {
+		return meioExpedicao;
+	}
+
+	public void setMeioExpedicao(MeioExpedicao meioExpedicao) {
+		this.meioExpedicao = meioExpedicao;
 	}
 }

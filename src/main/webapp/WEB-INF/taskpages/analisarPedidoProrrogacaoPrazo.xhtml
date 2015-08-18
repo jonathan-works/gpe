@@ -8,7 +8,7 @@
       xmlns:a="http://richfaces.org/a4j"
       xmlns:s="http://jboss.org/schema/seam/taglib">
 
-	<rich:collapsiblePanel header="#{infoxMessages['comunicacao.comunicacao']}" switchType="client">
+	<rich:collapsiblePanel header="#{infoxMessages['comunicacao.comunicacaoExpedidas']}" switchType="client">
 		
 		<ui:include src="/WEB-INF/xhtml/components/fragments/detalhesComunicacao.xhtml">
 	   		<ui:param name="id" value="analisarPedidoProrrogacaoPrazoExibirComunicacao" />
@@ -24,26 +24,12 @@
 	   		<ui:param name="idDestinatario" value="#{analisarPedidoProrrogacaoPrazoAction.destinatarioComunicacao.id}" />
 	   	</ui:include>
 	
-		<wi:dataTable id="documentosComunicacao" values="#{documentoComunicacaoList.list(10)}" bean="#{documentoComunicacaoList}"
-			tableTitle="#{infoxMessages['comunicacao.documentosComunicacao']}" showSearchForm="false" rowId="#{row.id}" hideOrder="true">
-			<ui:define name="headerToolBar" />
-			<ui:define name="toolBar">
-				<h:form>
-					<a:commandLink id="baixarPedidoProrrogacao" 
-						rendered="#{not empty row.documentoBin.extensao}"
-						onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/downloadDocumento.seam?id=#{row.id}','1024'); return false;">
-						<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
-					</a:commandLink>
-					<a:commandLink rendered="#{empty row.documentoBin.extensao}"
-						onclick="infox.openPopUp('doc#{row.documentoBin.id}', '#{pathResolver.contextPath}/Painel/documentoHTML.seam?idBin=#{row.documentoBin.id}','1024'); return false;">
-						<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
-					</a:commandLink>
-				</h:form>
-			</ui:define>
-			<wi:columnOutputText columnHeader="#{infoxMessages['documentoProcesso.descricao']}" value="#{row.descricao}" />
-			<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.classificacaoDocumento']}" value="#{row.classificacaoDocumento.descricao}" />
-			<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.tamanho']}" value="#{row.documentoBin.sizeFormatado}" />
-		</wi:dataTable>		
+		<ui:include src="/WEB-INF/xhtml/components/fragments/documentosComunicacao.xhtml">
+	    		<ui:param name="id" value="documentosComunicacao" />
+	    		<ui:param name="showNumeroDocumento" value="false" />
+	    		<ui:param name="tableTitle" value="#{infoxMessages['comunicacao.documentosAnexadosComunicacao']}" />
+	    		<ui:param name="rendered" value="#{documentoComunicacaoList.getResultCount() gt 0}" />
+	    </ui:include>
 	</rich:collapsiblePanel>
 		
 	<rich:collapsiblePanel header="#{infoxMessages['comunicacao.comunicacoeDoProcessos']}" switchType="client" 

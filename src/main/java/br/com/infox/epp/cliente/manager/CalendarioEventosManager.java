@@ -8,8 +8,10 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
+import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.util.DateUtil;
@@ -17,6 +19,7 @@ import br.com.infox.epp.cliente.dao.CalendarioEventosDAO;
 import br.com.infox.epp.cliente.entity.CalendarioEventos;
 import br.com.infox.util.time.DateRange;
 
+@Scope(ScopeType.STATELESS)
 @Stateless
 @AutoCreate
 @Name(CalendarioEventosManager.NAME)
@@ -49,6 +52,14 @@ public class CalendarioEventosManager extends Manager<CalendarioEventosDAO, Cale
             return dataPrazo;
         else 
             return getPrimeiroDiaUtil(dataPrazo, 1);
+    }
+    
+    public Date getPrimeiroDiaUtil(Date dia) {
+    	if (isDiaUtil(dia)) {
+    		return dia; 
+    	} else {
+    		return getPrimeiroDiaUtil(dia, 1);
+    	}
     }
     
     public Boolean isDiaUtil(Date dia) {

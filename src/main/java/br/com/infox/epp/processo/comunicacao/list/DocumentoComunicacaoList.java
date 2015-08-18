@@ -10,7 +10,6 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.documento.entity.Documento;
-import br.com.infox.epp.processo.entity.Processo;
 
 @Name(DocumentoComunicacaoList.NAME)
 @Scope(ScopeType.PAGE)
@@ -24,7 +23,6 @@ public class DocumentoComunicacaoList extends EntityList<Documento> {
 	
 	private static final String DEFAULT_ORDER = "o.documento.dataInclusao desc";
 	
-	private Processo processo;
 	private ModeloComunicacao modeloComunicacao;
 
 	@Override
@@ -44,14 +42,6 @@ public class DocumentoComunicacaoList extends EntityList<Documento> {
 	@Override
 	protected Map<String, String> getCustomColumnsOrder() {
 		return null;
-	}
-
-	public Processo getProcesso() {
-		return processo;
-	}
-	
-	public void setProcesso(Processo processo) {
-		this.processo = processo;
 	}
 	
 	public ModeloComunicacao getModeloComunicacao() {

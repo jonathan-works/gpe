@@ -12,12 +12,10 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.international.Messages;
-
-
 import org.richfaces.model.UploadedFile;
 
-import br.com.infox.core.file.encode.MD5Encoder;
-import br.com.infox.core.file.reader.InfoxPdfReader;
+import com.lowagie.text.pdf.PdfReader;
+
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ExtensaoArquivo;
@@ -29,8 +27,6 @@ import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-
-import com.lowagie.text.pdf.PdfReader;
 
 @AutoCreate
 @Scope(ScopeType.STATELESS)
@@ -54,7 +50,6 @@ public class DocumentoUploaderService implements Serializable {
 		DocumentoBin documentoBin = new DocumentoBin();
 		documentoBin.setExtensao(getFileType(uploadedFile.getName()));
 		documentoBin.setNomeArquivo(uploadedFile.getName());
-		documentoBin.setMd5Documento(getMD5(uploadedFile.getData()));
 		documentoBin.setSize(Long.valueOf(uploadedFile.getSize()).intValue());
 		documentoBin.setProcessoDocumento(uploadedFile.getData());
 		documentoBin.setModeloDocumento(null);
@@ -69,10 +64,6 @@ public class DocumentoUploaderService implements Serializable {
         return ret;
     }
 
-	private String getMD5(byte[] data) {
-        return MD5Encoder.encode(data);
-    }
-	
 	public void validaDocumento(UploadedFile uploadFile, ClassificacaoDocumento classificacaoDocumento, byte[] dataStream) throws Exception {
         if (uploadFile == null) {
         	throw new Exception(Messages.instance().get("documentoUploader.error.noFile"));
@@ -92,10 +83,7 @@ public class DocumentoUploaderService implements Serializable {
 	
 	public void persist(DocumentoUploadBean documentoUploadBean) throws DAOException {
 		Documento documento = documentoUploadBean.getDocumento();
-		String texto = InfoxPdfReader.readPdfFromByteArray(documentoUploadBean.getData());
         documentoManager.gravarDocumentoNoProcesso(documento.getProcesso(), documento);
-        documento.getDocumentoBin().setModeloDocumento(texto);
-        documentoBinarioManager.salvarBinario(documento.getDocumentoBin().getId(), documento.getDocumentoBin().getProcessoDocumento());
 	}
 	
 	private void validaLimitePorPagina(Integer limitePorPagina, byte[] dataStream) throws Exception {

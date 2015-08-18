@@ -24,8 +24,6 @@ import org.richfaces.model.UploadedFile;
 
 import com.lowagie.text.pdf.PdfReader;
 
-import br.com.infox.core.file.encode.MD5Encoder;
-import br.com.infox.core.file.reader.InfoxPdfReader;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.cdi.ViewScoped;
@@ -34,7 +32,6 @@ import br.com.infox.epp.documento.entity.ExtensaoArquivo;
 import br.com.infox.epp.documento.manager.ExtensaoArquivoManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
-import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -57,7 +54,6 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     private InfoxMessages infoxMessages;
     
     private DocumentoManager documentoManager = ComponentUtil.getComponent(DocumentoManager.NAME, ScopeType.EVENT);
-    private DocumentoBinarioManager documentoBinarioManager = ComponentUtil.getComponent(DocumentoBinarioManager.NAME, ScopeType.EVENT);
     private ExtensaoArquivoManager extensaoArquivoManager = ComponentUtil.getComponent(ExtensaoArquivoManager.NAME, ScopeType.EVENT);
     
     private UploadedFile uploadedFile;
@@ -94,7 +90,6 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
         setPasta(null);
     }
 
-    @Override
     public void processFileUpload(FileUploadEvent fileUploadEvent) {
         final UploadedFile ui = fileUploadEvent.getUploadedFile();
         try {
@@ -109,11 +104,9 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
         if (isValido()) {
             setUploadedFile(ui);
             bin().setNomeArquivo(ui.getName());
-            bin().setMd5Documento(getMD5(ui.getData()));
             bin().setSize(Long.valueOf(ui.getSize()).intValue());
             bin().setProcessoDocumento(ui.getData());
-            bin().setModeloDocumento(null);
-            FacesMessages.instance().add(infoxMessages.get("processoDocumento.doneLabel"));
+            FacesMessages.instance().add(infoxMessages.get("processoDocumento.uploadCompleted"));
         } else {
             newInstance();
         }
@@ -134,10 +127,6 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
         return ret;
     }
 
-    private String getMD5(byte[] data) {
-        return MD5Encoder.encode(data);
-    }
-
     @Override
     protected LogProvider getLogger() {
         return LOG;
@@ -145,13 +134,10 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
 
     @Override
     protected Documento gravarDocumento() throws DAOException {
-        String texto = InfoxPdfReader.readPdfFromByteArray(pdf);
         Documento pd = documentoManager.gravarDocumentoNoProcesso(getProcesso(), getDocumento(), getPasta());
-        bin().setModeloDocumento(texto);
-        documentoBinarioManager.salvarBinario(bin().getId(), bin().getProcessoDocumento());
         //Removida indexação manual daqui
         newInstance();
-        classificacaoDocumento = null;
+        setClassificacaoDocumento(null);
         setValido(false);
         return pd;
     }
@@ -214,12 +200,13 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
     public void setClassificacaoDocumento(ClassificacaoDocumento classificacaoDocumento) {
         this.classificacaoDocumento = classificacaoDocumento;
         getDocumento().setClassificacaoDocumento(classificacaoDocumento);
+        clearUploadFile();
     }
     
     @Override
     public void clear() {
         super.clear();
-        this.classificacaoDocumento = null;
+        setClassificacaoDocumento(null);
         setPasta(null);
     }
     

@@ -23,11 +23,11 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.entity.Processo;
 
 @Entity
 @Table(name = "tb_destinatario_modelo_comunic", uniqueConstraints = {
 	@UniqueConstraint(columnNames = {"id_pessoa_fisica", "id_modelo_comunicacao"}),
-	@UniqueConstraint(columnNames = {"id_localizacao", "id_modelo_comunicacao"})
 })
 public class DestinatarioModeloComunicacao implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -72,6 +72,10 @@ public class DestinatarioModeloComunicacao implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Documento documentoComunicacao;
 
+	@JoinColumn(name = "id_processo", nullable = true)
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Processo processo;
+	
 	public Long getId() {
 		return id;
 	}
@@ -136,6 +140,14 @@ public class DestinatarioModeloComunicacao implements Serializable {
 		this.documentoComunicacao = documentoComunicacao;
 	}
 	
+	public Processo getProcesso() {
+		return processo;
+	}
+
+	public void setProcesso(Processo processo) {
+		this.processo = processo;
+	}
+
 	@Transient
 	public String getNome() {
 		if (destinatario != null) {
@@ -160,9 +172,7 @@ public class DestinatarioModeloComunicacao implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((getDestinatario() == null) ? 0 : getDestinatario().hashCode());
-		result = prime * result + ((getDestino() == null) ? 0 : getDestino().hashCode());
-		result = prime * result + ((getModeloComunicacao() == null) ? 0 : getModeloComunicacao().hashCode());
+		result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
 		return result;
 	}
 
@@ -178,30 +188,8 @@ public class DestinatarioModeloComunicacao implements Serializable {
 			return false;
 		}
 		DestinatarioModeloComunicacao other = (DestinatarioModeloComunicacao) obj;
-		if (getModeloComunicacao() == null) {
-			if (other.getModeloComunicacao() != null) {
-				return false;
-			}
-		} else if (!getModeloComunicacao().equals(other.getModeloComunicacao())) {
-			return false;
-		}
-		if (getDestinatario() == null && other.getDestinatario() == null && getDestino() == null && other.getDestino() == null) {
-			return true;
-		}
-		if (getDestinatario() != null) {
-			if (other.getDestinatario() == null) {
-				return false;
-			}
-		}
-		if (getDestino() != null) {
-			if (other.getDestino() == null) {
-				return false;
-			}
-		}
-		if (getDestinatario() != null) {
-			return getDestinatario().equals(other.getDestinatario());
-		} else if (getDestino() != null) {
-			return getDestino().equals(other.getDestino());
+		if (getId() != null && other.getId() != null) {
+			return getId().equals(other.getId());
 		}
 		return false;
 	}

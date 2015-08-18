@@ -64,34 +64,33 @@ public class IniciarProcessoService implements Serializable {
     	if (processo.getIdProcesso() == null) {
     		processoManager.persist(processo);
     	}
-        Long idProcessoJbpm = iniciarProcessoJbpm(processo, processo.getNaturezaCategoriaFluxo().getFluxo().getFluxo(), variaveis);
-        processo.setIdJbpm(idProcessoJbpm);
+    	org.jbpm.graph.exe.ProcessInstance processInstance = criarProcessoJbpm(processo, processo.getNaturezaCategoriaFluxo().getFluxo().getFluxo());
+    	processo.setIdJbpm(processInstance.getId());
+    	processoManager.flush();
+        inicializarProcessoJbpm(processo, processInstance, variaveis);
         processo.setNumeroProcesso(String.valueOf(processo.getIdProcesso()));
         if (processo.getProcessoPai() == null) {
-        	ManagedJbpmContext.instance().getProcessInstanceForUpdate(idProcessoJbpm).getContextInstance().setVariable("numeroProcesso", processo.getNumeroProcesso());
+        	processInstance.getContextInstance().setVariable("numeroProcesso", processo.getNumeroProcesso());
         }
         naturezaManager.lockNatureza(processo.getNaturezaCategoriaFluxo().getNatureza());
         processoManager.update(processo);
         pastaManager.createDefaultFolders(processo);
     }
 
-    private Long iniciarProcessoJbpm(Processo processo, String fluxo, Map<String, Object> variaveis) {
-        
-        BusinessProcess businessProcess = BusinessProcess.instance();
+    private org.jbpm.graph.exe.ProcessInstance criarProcessoJbpm(Processo processo, String fluxo) {
+    	BusinessProcess businessProcess = BusinessProcess.instance();
         businessProcess.createProcess(fluxo, false);
         org.jbpm.graph.exe.ProcessInstance processInstance = ProcessInstance.instance();
-        
-        iniciaVariaveisProcesso(processo, variaveis, processInstance);
-        
-        processInstance.signal();
-        
-        boolean iniciouTarefa = iniciaPrimeiraTarefa(businessProcess, processInstance);
-        
+        return processInstance;
+    }
+    
+    private void inicializarProcessoJbpm(Processo processo, org.jbpm.graph.exe.ProcessInstance processoJbpm, Map<String, Object> variaveis) {
+        iniciaVariaveisProcesso(processo, variaveis, processoJbpm);
+        processoJbpm.signal();
+        boolean iniciouTarefa = iniciaPrimeiraTarefa(processoJbpm);
         if (iniciouTarefa) {
         	atribuiSwimlaneTarefa();
         }
-        
-        return businessProcess.getProcessId();
     }
 
     private void atribuiSwimlaneTarefa() {
@@ -104,8 +103,8 @@ public class IniciarProcessoService implements Serializable {
 
     private void iniciaVariaveisProcesso(Processo processo, Map<String, Object> variaveis, org.jbpm.graph.exe.ProcessInstance processInstance) {
         ContextInstance contextInstance = processInstance.getContextInstance();
-        contextInstance.setVariable("processo", processo.getIdProcesso());
         createJbpmVariables(processo, contextInstance);
+        contextInstance.setVariable("processo", processo.getIdProcesso());
         if (variaveis != null) {
             for (String variavel : variaveis.keySet()) {
                 contextInstance.setVariable(variavel, variaveis.get(variavel));
@@ -120,12 +119,14 @@ public class IniciarProcessoService implements Serializable {
         if (contextInstance.getVariable("dataInicioProcesso") == null) {
         	contextInstance.setVariable("dataInicioProcesso", processo.getDataInicio());
         }
+        ManagedJbpmContext.instance().getSession().flush();
     }
-
-    private boolean iniciaPrimeiraTarefa(BusinessProcess businessProcess,
-            org.jbpm.graph.exe.ProcessInstance processInstance) {
-        @SuppressWarnings(UNCHECKED) Collection<org.jbpm.taskmgmt.exe.TaskInstance> taskInstances = processInstance.getTaskMgmtInstance().getTaskInstances();
+    
+    @SuppressWarnings(UNCHECKED)
+    private boolean iniciaPrimeiraTarefa(org.jbpm.graph.exe.ProcessInstance processInstance) {
+        Collection<org.jbpm.taskmgmt.exe.TaskInstance> taskInstances = processInstance.getTaskMgmtInstance().getTaskInstances();
         org.jbpm.taskmgmt.exe.TaskInstance taskInstance = null;
+        BusinessProcess businessProcess = BusinessProcess.instance();
         if (taskInstances != null && !taskInstances.isEmpty()) {
             taskInstance = taskInstances.iterator().next();
             long taskInstanceId = taskInstance.getId();

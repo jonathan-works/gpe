@@ -2,7 +2,6 @@ package br.com.infox.epp.processo.comunicacao.action;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
@@ -10,9 +9,9 @@ import javax.inject.Named;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
-import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
-import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.comunicacao.list.DocumentoComunicacaoList;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -22,14 +21,19 @@ public class VisualizarComunicacaoAction implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
+	private DocumentoComunicacaoList documentoComunicacaoList = ComponentUtil.getComponent(DocumentoComunicacaoList.NAME);
+	
 	private Processo processoComunicacao;
 	private DestinatarioModeloComunicacao destinatario;
-	private List<Documento> documentosComunicacao;
 	
 	@PostConstruct
 	public void init(){
 		this.processoComunicacao = JbpmUtil.getProcesso();
-		this.destinatario = processoComunicacao.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO).getValue();
+		MetadadoProcesso metadadoDestinatario = processoComunicacao.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO);
+		if (metadadoDestinatario != null) {
+			destinatario = metadadoDestinatario.getValue();
+			documentoComunicacaoList.setModeloComunicacao(destinatario.getModeloComunicacao());
+		}
 	}
 	
 	public DestinatarioModeloComunicacao getDestinatario() {
@@ -38,13 +42,6 @@ public class VisualizarComunicacaoAction implements Serializable{
 
 	public void setDestinatario(DestinatarioModeloComunicacao destinatario) {
 		this.destinatario = destinatario;
-	}
-	
-	public List<Documento> getDocumentosComunicacao(){
-		if(documentosComunicacao == null){
-			documentosComunicacao = ComponentUtil.<ModeloComunicacaoManager>getComponent(ModeloComunicacaoManager.NAME).getDocumentosByModeloComunicacao(destinatario.getModeloComunicacao());
-		}
-		return documentosComunicacao;
 	}
 	
 	public Date getDataEnvio(){

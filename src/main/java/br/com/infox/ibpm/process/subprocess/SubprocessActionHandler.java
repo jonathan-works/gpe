@@ -11,6 +11,7 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.bpm.TaskInstance;
 import org.jbpm.graph.def.Event;
+import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.exe.Token;
 
@@ -23,9 +24,9 @@ public class SubprocessActionHandler {
 
     @SuppressWarnings(UNCHECKED)
     @Observer(Event.EVENTTYPE_SUBPROCESS_CREATED)
-    public void copyVariablesToSubprocess() {
+    public void copyVariablesToSubprocess(ExecutionContext executionContext) {
         try {
-            Token token = TaskInstance.instance().getToken();
+            Token token = executionContext.getToken();
             ProcessInstance subProcessInstance = token.getSubProcessInstance();
             Map<String, Object> variables = TaskInstance.instance().getVariables();
             subProcessInstance.getContextInstance().addVariables(variables);
@@ -36,12 +37,12 @@ public class SubprocessActionHandler {
 
     @SuppressWarnings(UNCHECKED)
     @Observer(Event.EVENTTYPE_SUBPROCESS_END)
-    public void copyVariablesFromSubprocess() {
+    public void copyVariablesFromSubprocess(ExecutionContext executionContext) {
         try {
-            Token token = TaskInstance.instance().getToken();
+            Token token = executionContext.getToken();
             ProcessInstance subProcessInstance = token.getProcessInstance();
             Map<String, Object> variables = subProcessInstance.getContextInstance().getVariables();
-            org.jboss.seam.bpm.ProcessInstance.instance().getContextInstance().addVariables(variables);
+            executionContext.getContextInstance().addVariables(variables);
         } catch (Exception ex) {
             throw new ApplicationException(ApplicationException.createMessage("copiar as variaveis do subprocesso", "copyVariablesFromSubprocess()", "SubprocessoActionHandler", "BPM"), ex);
         }
