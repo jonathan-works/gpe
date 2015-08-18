@@ -10,9 +10,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Remove;
+import javax.ejb.Stateful;
 import javax.el.ELException;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
+import javax.inject.Inject;
 
 import org.jboss.el.parser.ELParser;
 import org.jboss.seam.ScopeType;
@@ -40,6 +43,7 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.fluxo.merger.service.FluxoMergeService;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.manager.StatusProcessoManager;
 import br.com.infox.ibpm.node.DecisionNode;
@@ -58,6 +62,7 @@ import br.com.infox.seam.util.ComponentUtil;
 @Name(NodeFitter.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
+@Stateful
 public class NodeFitter extends Fitter implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -88,6 +93,16 @@ public class NodeFitter extends Fitter implements Serializable {
     private InfoxMessages infoxMessages;
     @In
     private ClassificacaoDocumentoFacade classificacaoDocumentoFacade;
+    @Inject
+    private FluxoMergeService fluxoMergeService;
+
+    /**
+     * Método foi necessário ser adicionado devido ao Seam ter problemas
+     * com anotação @Stateful
+     */
+    @Remove
+    public void destroy(){
+    }
     
     @SuppressWarnings(UNCHECKED)
     public void addNewNode() {
@@ -216,9 +231,9 @@ public class NodeFitter extends Fitter implements Serializable {
 
     @SuppressWarnings(UNCHECKED)
     public void removeNode(Node node) {
-        if (ProcessBuilder.instance().existemProcessosAssociadosAoFluxo()) {
+        if (fluxoMergeService.hasActiveNode(ProcessBuilder.instance().getInstance(), node)) {
             FacesMessages.instance().clear();
-            FacesMessages.instance().add("Esta ação não pode ser executada quando possuir fluxo instanciado");
+            FacesMessages.instance().add("Esta ação não pode ser executada o nó existir em fluxo instanciado");
             return;
         }
         nodes.remove(node);
