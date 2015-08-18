@@ -10,6 +10,8 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
+import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -37,6 +39,8 @@ public class DestinatarioComunicacaoService implements Serializable{
 	private LocalizacaoManager localizacaoManager;
 	@In
 	private String raizLocalizacoesComunicacao;
+	@In
+	private GenericManager genericManager;
 	
 	public List<MeioExpedicao> getMeiosExpedicao(DestinatarioModeloComunicacao destinatario) {
 		if (destinatario.getDestinatario() != null) {
@@ -74,5 +78,12 @@ public class DestinatarioComunicacaoService implements Serializable{
 			}
 		});
 		return meiosExpedicao;
+	}
+	
+	public void removeDestinatarioModeloComunicacao(DestinatarioModeloComunicacao destinatarioModeloComunicacao) throws DAOException{
+		if(destinatarioModeloComunicacao.getId() != null){
+			genericManager.remove(destinatarioModeloComunicacao);
+		}
+		
 	}
 }

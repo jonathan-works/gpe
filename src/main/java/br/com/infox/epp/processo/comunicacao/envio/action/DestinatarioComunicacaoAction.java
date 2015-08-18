@@ -3,7 +3,6 @@ package br.com.infox.epp.processo.comunicacao.envio.action;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -12,10 +11,12 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
+import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
@@ -57,9 +58,12 @@ public class DestinatarioComunicacaoAction {
 	private PapelManager papelManager;
 	@In
 	private DestinatarioComunicacaoService destinatarioComunicacaoService;
+	@In
+	private ActionMessagesService actionMessagesService;
 	
 	private List<Integer> idsLocalizacoesSelecionadas = new ArrayList<>();
 	private Map<Localizacao, List<PerfilTemplate>> perfisSelecionados = new HashMap<>();
+	private List<DestinatarioModeloComunicacao> destinatariosExcluidos = new ArrayList<>();
 	
 	private ModeloComunicacao modeloComunicacao;
 	private boolean processoPossuiRelator;
@@ -70,7 +74,13 @@ public class DestinatarioComunicacaoAction {
 		initEntityLists();
 	}
 	
+	@Transactional
 	protected void persistDestinatarios() throws DAOException {
+		for (DestinatarioModeloComunicacao excluido : destinatariosExcluidos) {
+			if(excluido.getId() != null){
+				destinatarioComunicacaoService.removeDestinatarioModeloComunicacao(excluido);
+			}
+		}
 		for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
 			if (destinatario.getId() == null) {
 				genericManager.persist(destinatario);
@@ -131,6 +141,7 @@ public class DestinatarioComunicacaoAction {
 	}
 	
 	public void removerDestinatario(DestinatarioModeloComunicacao destinatario) {
+		destinatariosExcluidos.add(destinatario);
 		modeloComunicacao.getDestinatarios().remove(destinatario);
 		if (destinatario.getDestinatario() != null) {
 			participanteProcessoComunicacaoList.removerIdPessoa(destinatario.getDestinatario().getIdPessoa());
@@ -163,15 +174,14 @@ public class DestinatarioComunicacaoAction {
 				participanteProcessoComunicacaoList.adicionarIdPessoa(relator.getIdPessoa());
 			}
 		} else {
-			Iterator<DestinatarioModeloComunicacao> it = modeloComunicacao.getDestinatarios().iterator();
-			while (it.hasNext()) {
-				DestinatarioModeloComunicacao destinatario = it.next();
-				if (destinatario.getDestinatario() != null && destinatario.getDestinatario().equals(relator)) {
-					it.remove();
-					participanteProcessoComunicacaoList.removerIdPessoa(relator.getIdPessoa());
+			DestinatarioModeloComunicacao destinatarioRelator = null;
+			for (DestinatarioModeloComunicacao destinatarioModeloComunicacao : modeloComunicacao.getDestinatarios()) {
+				if (destinatarioModeloComunicacao.getDestinatario() != null && destinatarioModeloComunicacao.getDestinatario().equals(relator)) {
+					destinatarioRelator = destinatarioModeloComunicacao;
 					break;
 				}
 			}
+			removerDestinatario(destinatarioRelator);
 		}
 	}
 	
