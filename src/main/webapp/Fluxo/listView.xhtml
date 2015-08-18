@@ -6,6 +6,7 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
+    xmlns:a="http://richfaces.org/a4j"
     xmlns:infox="http://www.infox.com.br/jsf"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf"
@@ -72,6 +73,16 @@
                 columnId="ativo"
                 columnHeader="#{infoxMessages['field.situacao']}"
                 value="#{row.ativo}" />
+                <h:column>
+                <h:form>
+                <a:commandButton
+                    id="publicar2"
+                    action="#{fluxoMergeView.deploy(row)}"
+                    value="#{infoxMessages['processBuilder.deployBtn']}"
+                    oncomplete="opener.refreshPage();"
+                    styleClass="buttons #{wi:get(styleClass, '')}" />
+      </h:form>
+                </h:column>
         </wi:dataTable>
     </ui:define>
     <ui:define name="form">
