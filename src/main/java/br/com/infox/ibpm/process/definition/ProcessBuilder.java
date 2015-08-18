@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.ejb.Remove;
@@ -19,6 +20,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
+import javax.inject.Inject;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -58,6 +60,8 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.fluxo.manager.RaiaPerfilManager;
 import br.com.infox.epp.fluxo.manager.VariavelClassificacaoDocumentoManager;
+import br.com.infox.epp.fluxo.merger.model.MergePointsBundle;
+import br.com.infox.epp.fluxo.merger.service.FluxoMergeService;
 import br.com.infox.epp.fluxo.xpdl.FluxoXPDL;
 import br.com.infox.epp.fluxo.xpdl.IllegalXPDLException;
 import br.com.infox.epp.processo.localizacao.manager.ProcessoLocalizacaoIbpmManager;
@@ -126,6 +130,8 @@ public class ProcessBuilder implements Serializable {
     private TaskExpirationManager taskExpirationManager;
     @In
     private InfoxMessages infoxMessages;
+    @Inject
+    private FluxoMergeService fluxoMergeService;
  
     private String id;
     private ProcessDefinition instance;
@@ -421,6 +427,20 @@ public class ProcessBuilder implements Serializable {
     		fluxo.setPublicado(Boolean.TRUE);
     	}
         update();
+        
+        String modifiedXml = fluxo.getXml();
+        String publishedXml = fluxo.getXmlExecucao();
+        boolean needToPublish = !Objects.equals(modifiedXml, publishedXml);
+        if (needToPublish) {
+            ProcessDefinition modifiedProcessDef = fluxoMergeService.jpdlToProcessDefinition(modifiedXml);
+            ProcessDefinition publishedProcessDef = fluxoMergeService.jpdlToProcessDefinition(publishedXml);
+            MergePointsBundle mergePointsBundle = fluxoMergeService.verifyMerge(publishedProcessDef, modifiedProcessDef);
+            if (!mergePointsBundle.isValid()) {
+                FacesMessages.instance().add("Não é possível publicar fluxo");
+                fluxo.setPublicado(false);
+                return;
+            }
+        }
         try {
             deployActions();
         } catch (DAOException e1) {
@@ -430,10 +450,16 @@ public class ProcessBuilder implements Serializable {
             fluxo.setPublicado(false);
             return;
         }
-        if (needToPublic) {
+        if (needToPublish) {
             try {
                 JbpmUtil.getGraphSession().deployProcessDefinition(instance);
                 JbpmUtil.getJbpmSession().flush();
+                fluxo.setXmlExecucao(fluxo.getXml());
+                try {
+                    genericManager.update(fluxo);
+                } catch (DAOException e) {
+                    LOG.error(".update()", e);
+                }
                 Events.instance().raiseEvent(POST_DEPLOY_EVENT, instance);
                 taskFitter.checkCurrentTaskPersistenceState();
                 atualizarRaiaPooledActors(instance.getId());
@@ -442,7 +468,6 @@ public class ProcessBuilder implements Serializable {
             } catch (Exception e) {
                 LOG.error(".deploy()", e);
             }
-            needToPublic = false;
         }
     }
 
