@@ -79,8 +79,9 @@ public class PastaAction implements Serializable {
             Documento doc = (Documento) od;
             Pasta pasta = (Pasta) op;
             Pasta pastaAnterior = doc.getPasta();
-            doc.setPasta(pasta);
+            if (pastaAnterior.equals(pasta)) return;
             try {
+                doc.setPasta(pasta);
                 documentoManager.update(doc);
                 pastaManager.refresh(pasta);
                 pastaManager.refresh(pastaAnterior);
