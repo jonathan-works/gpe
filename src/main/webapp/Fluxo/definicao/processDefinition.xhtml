@@ -118,14 +118,6 @@
         styleClass="buttons #{wi:get(styleClass, '')}"
         onclick="checkIfEditorExists();" />
       <a:commandButton
-        id="publicar"
-        actionListener="#{processBuilder.prepareUpdate}"
-        action="#{processBuilder.deploy}"
-        value="#{infoxMessages['processBuilder.deployBtn']}"
-        rendered="#{processBuilder.exists}"
-        oncomplete="opener.refreshPage();"
-        styleClass="buttons #{wi:get(styleClass, '')}" />
-      <a:commandButton
         id="novoProcesso"
         actionListener="#{processBuilder.prepareUpdate}"
         action="#{processBuilder.update}"
