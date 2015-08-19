@@ -140,7 +140,6 @@ public class ProcessBuilder implements Serializable {
     private boolean exists;
     private String xml;
     private String tab;
-    private boolean needToPublic;
 
     private Fluxo fluxo;
 
@@ -388,7 +387,6 @@ public class ProcessBuilder implements Serializable {
                 // verifica a consistencia do fluxo para evitar salva-lo com
                 // erros.
                 parseInstance(xmlDef);
-                needToPublic = true;
                 modifyNodesAndTasks();
                 fluxo.setXml(xmlDef);
                 try {
@@ -414,7 +412,6 @@ public class ProcessBuilder implements Serializable {
 
         this.id = cdFluxo;
         this.exists = true;
-        this.needToPublic = true;
     }
 
     private void modifyNodesAndTasks() {
@@ -426,8 +423,6 @@ public class ProcessBuilder implements Serializable {
     	if (!fluxo.getPublicado()){
     		fluxo.setPublicado(Boolean.TRUE);
     	}
-        update();
-        
         String modifiedXml = fluxo.getXml();
         String publishedXml = fluxo.getXmlExecucao();
         boolean needToPublish = !Objects.equals(modifiedXml, publishedXml);
@@ -726,7 +721,7 @@ public class ProcessBuilder implements Serializable {
     }
 
     public boolean existemProcessosAssociadosAoFluxo() {
-        return fluxoManager.existemProcessosAssociadosAFluxo(getFluxo());
+        return fluxoMergeService.hasActiveNode(getInstance(), nodeFitter.getCurrentNode());
     }
     
     public String getTypeLabel(String type) {
