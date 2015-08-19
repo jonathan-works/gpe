@@ -233,7 +233,7 @@ public class NodeFitter extends Fitter implements Serializable {
     public void removeNode(Node node) {
         if (fluxoMergeService.hasActiveNode(ProcessBuilder.instance().getInstance(), node)) {
             FacesMessages.instance().clear();
-            FacesMessages.instance().add("Esta ação não pode ser executada o nó existir em fluxo instanciado");
+            FacesMessages.instance().add("Esta ação não pode ser executada enquanto o nó possuir atividade em fluxo instanciado");
             return;
         }
         nodes.remove(node);
