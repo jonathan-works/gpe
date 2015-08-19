@@ -124,7 +124,7 @@
 					onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(false, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');" />
 				<h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" styleClass="opacityHover"
 					onclick="infox.openPopUp('protocolo', '#{pathResolver.contextPath}/Processo/Documento/protocolo.seam?id=#{row.id}&amp;cod=#{row.documentoBin.uuid.toString()}','800','600');"
-					rendered="#{row.documentoBin.suficientementeAssinado and processoProtocoloDocumentoAction.isDocumentoInclusoPorUsuarioExterno(row)}"
+					rendered="#{row.documentoBin.suficientementeAssinado and documentoProcessoAction.isDocumentoInclusoPorUsuarioExterno(row)}"
 					title="#{infoxMessages['protocolo.gerarProtocolo']}" />
 
 				<h:form>

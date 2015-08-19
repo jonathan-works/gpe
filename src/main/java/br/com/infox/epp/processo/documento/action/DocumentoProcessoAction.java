@@ -19,6 +19,7 @@ import org.jboss.seam.security.Identity;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
@@ -32,6 +33,7 @@ import br.com.infox.epp.processo.documento.type.TipoAlteracaoDocumento;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.seam.security.SecurityUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
 @AutoCreate
 @Name(DocumentoProcessoAction.NAME)
@@ -50,6 +52,7 @@ public class DocumentoProcessoAction implements Serializable {
 	private List<ClassificacaoDocumento> listClassificacaoDocumento;
 	private Processo processo;
 	private DocumentoFilter documentoFilter = new DocumentoFilter();
+	private List<String> identificadoresPapeisHerdeirosUsuarioExterno;
 	
 	@In
 	private DocumentoManager documentoManager;
@@ -186,5 +189,12 @@ public class DocumentoProcessoAction implements Serializable {
 	public DocumentoFilter getDocumentoFilter() {
 		return documentoFilter;
 	}
+
+	public boolean isDocumentoInclusoPorUsuarioExterno(Documento documento) {
+        if (identificadoresPapeisHerdeirosUsuarioExterno == null) {
+            identificadoresPapeisHerdeirosUsuarioExterno = ComponentUtil.<PapelManager>getComponent(PapelManager.NAME).getIdentificadoresPapeisHerdeiros(Parametros.PAPEL_USUARIO_EXTERNO.getValue());
+        }
+        return ComponentUtil.<DocumentoManager>getComponent(DocumentoManager.NAME).isDocumentoInclusoPorPapeis(documento, identificadoresPapeisHerdeirosUsuarioExterno);
+    }
 }
 
