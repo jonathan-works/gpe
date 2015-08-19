@@ -11,7 +11,8 @@ public enum Parametros {
 	PAPEL_USUARIO_INTERNO("usuarioInterno"),
 	PAPEL_USUARIO_EXTERNO("usuarioExterno"),
 	PASTA_DOCUMENTO_GERADO("pastaDocumentoGerado"),
-	RAIZ_LOCALIZACOES_COMUNICACAO("raizLocalizacoesComunicacao");
+	RAIZ_LOCALIZACOES_COMUNICACAO("raizLocalizacoesComunicacao"),
+	CODIGO_FLUXO_COMUNICACAO_ELETRONICA("codigoFluxoComunicacao");
 	
 	private String label;
 	

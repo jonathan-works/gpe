@@ -32,21 +32,20 @@
 		</rich:collapsiblePanel>
 		<rich:collapsiblePanel header="#{comunicacaoAction.comunicacoesExpedidasTitle}"
 			switchType="client" id="comunicacoes" style="margin-top:1em">
-			<h:form>
 				<rich:dataTable value="#{comunicacaoAction.getDestinatarios()}" 
 					var="bean" styleClass="dtable rf-dt-crud" rendered="#{not empty comunicacaoAction.comunicacoesDoProcesso}">
 					<rich:column styleClass="dt-toolbar-col" rendered="#{s:hasRole(usuarioInterno)}">
 						<h:form>
 							<a:commandLink  
 								onclick="infox.openPopUp('download#{bean.idDestinatario}', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?idDestinatario=#{bean.idDestinatario}','1024'); return false;">
-								<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['comunicacao.visualizarComunicacao']}"/>
+								<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['comunicacao.visualizarAComunicacao']}"/>
 							</a:commandLink>
 							<a:commandLink 
 								action="#{comunicacaoAction.setDestinatarioDocumentos(bean)}"
 								execute="@this" limitRender="true"
 								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, painelDocumentosResposta, pageBodyDialogMessage"
 								onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
-								<h:graphicImage url="#{wiSkin.imageFolder}/anexo.png" title="#{infoxMessages['comunicacao.documentosAnexados']}"/>
+								<h:graphicImage url="#{wiSkin.imageFolder}/anexo.png" title="#{infoxMessages['comunicacao.documentosAnexadosComunicacao']}"/>
 							</a:commandLink>
 							<a:commandLink 
 								action="#{comunicacaoAction.setDestinatarioCiencia(bean)}" 
@@ -65,7 +64,7 @@
 							<a:commandLink action="#{comunicacaoAction.setDestinatarioResposta(bean)}"
 								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage, painelDocumentosResposta" 
 								execute="@this" limitRender="true"
-								rendered="true"
+								rendered="#{bean.meioExpedicao eq 'SI'}"
 								onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
 								<h:graphicImage url="#{wiSkin.imageFolder}/file.gif" title="#{infoxMessages['comunicacao.documentosResposta']}" />
 							</a:commandLink>
@@ -73,11 +72,11 @@
 					</rich:column>
 					<rich:column>
 						<f:facet name="header">#{infoxMessages['comunicacao.numeroComunicacao']}</f:facet>
-						<h:outputText value="#{bean.comunicacao.idProcesso}" />
+						<h:outputText value="#{bean.numeroComunicacao}" />
 					</rich:column>
 					<rich:column>
                         <f:facet name="header">#{infoxMessages['comunicacao.tipoComunicacao']}</f:facet>
-                        <h:outputText value="#{bean.tipoComunicacao.descricao}" />
+                        <h:outputText value="#{bean.tipoComunicacao}" />
                     </rich:column>
 					<rich:column>
 						<f:facet name="header">#{infoxMessages['comunicacao.destinatario']}</f:facet>
@@ -85,7 +84,7 @@
 					</rich:column>
 					<rich:column>
 						<f:facet name="header">#{infoxMessages['comunicacao.meioComunicacao']}</f:facet>
-						<h:outputText value="#{bean.meioExpedicao}" />
+						<h:outputText value="#{bean.meioExpedicao.label}" />
 					</rich:column>
 					<rich:column>
 						<f:facet name="header">#{infoxMessages['comunicacao.dataEnvio']}</f:facet>
@@ -104,7 +103,6 @@
 						<h:outputText value="#{bean.prazoFinal}" />
 					</rich:column>
 				</rich:dataTable>
-			</h:form>
 		</rich:collapsiblePanel>
 		
 	    <s:div id="painelCiencia" style="margin-top:1em">
@@ -112,9 +110,9 @@
 	    		rendered="#{comunicacaoAction.ciencia}">
 	    		<h:form>
 	    			<wi:inputDate past="true" id="dataCiencia" showRequired="true" label="#{infoxMessages['comunicacao.dataCiencia']}" 
-	    				value="#{comunicacaoAction.dataCiencia}" startDate="#{comunicacaoAction.destinatario.comunicacao.dataInicio}"
+	    				value="#{comunicacaoAction.dataCiencia}" startDate="#{comunicacaoAction.startDateCiencia}"
                         errorMessage="#{infoxMessages['comunicacao.validator.dataCienciaIncorreta']}">
-	    				<a:ajax event="change" render="@form" execute="@form" limitRender="true" />
+	    				<a:ajax event="change" render="dataCienciaDecoration buttonGravar" execute="@this" limitRender="true" />
 	    			</wi:inputDate>
 	    			
 	    			<wi:selectBooleanCheckbox id="editorCiencia" label="#{infoxMessages['comunicacao.adicionarDocumentoEditorCiencia']}" 
@@ -125,12 +123,10 @@
 	    			<wi:selectOneMenuEntity id="classificacaoCiencia" showRequired="true" label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
 	    				showLabelSelecione="true" value="#{comunicacaoAction.classificacaoDocumentoCiencia}"
 	    				items="#{comunicacaoAction.classificacoesDocumento}">
-	    				<a:ajax event="change" limitRender="true" render="@form" execute="@form" />
+	    				<a:ajax event="change" limitRender="true" render="classificacaoCienciaDecoration buttonGravar" execute="@this" />
 	    			</wi:selectOneMenuEntity>
 
-					<s:div id="editorArquivoDiv" rendered="#{not empty comunicacaoAction.classificacaoDocumentoCiencia 
-	    				and not empty comunicacaoAction.dataCiencia 
-	    				and comunicacaoAction.editorCiencia}">
+					<s:div id="editorArquivoDiv" rendered="#{comunicacaoAction.editorCiencia}">
 						<wi:editor id="documentoCienciaTexto" readonly="false"
 							 value="#{comunicacaoAction.textoCiencia}" required="true" />
 					</s:div>
@@ -179,18 +175,18 @@
 	    </s:div>
 	    
 	    <s:div id="painelDocumentos" style="margin-top:1em">
-	    	<rich:panel header="#{infoxMessages['comunicacao.documentos']} #{comunicacaoAction.destinatario.comunicacao.idProcesso} / #{comunicacaoAction.destinatario.nome} / #{comunicacaoAction.destinatario.tipoComunicacao.descricao}"
+	    	<rich:panel header="#{infoxMessages['comunicacao.documentos']} #{comunicacaoAction.destinatario.numeroComunicacao} / #{comunicacaoAction.destinatario.nome} / #{comunicacaoAction.destinatario.tipoComunicacao}"
 	    		rendered="#{comunicacaoAction.documentos}">
 	    		<h:form>
 	    			<a:commandButton id="baixarDocumentoComunicacao" 
 						value="#{infoxMessages['comunicacao.comunicacao']}"
-						rendered="#{not empty comunicacaoAction.destinatario.documentoComunicacao.documentoBin.extensao}" 
+						rendered="#{comunicacaoAction.getComunicacaoDestinatario().documentoBin.binario}" 
 						styleClass="buttons"
-						onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/downloadDocumento.seam?id=#{comunicacaoAction.destinatario.documentoComunicacao.id}','1024'); return false;" />
+						onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/downloadDocumento.seam?id=#{comunicacaoAction.getComunicacaoDestinatario().id}','1024'); return false;" />
                     <a:commandButton styleClass="buttons"
-                        onclick="infox.openPopUp('doc#{comunicacaoAction.destinatario.documentoComunicacao.documentoBin.id}', '#{pathResolver.contextPath}/Painel/documentoHTML.seam?idBin=#{comunicacaoAction.destinatario.documentoComunicacao.documentoBin.id}','1024'); return false;" 
+                        onclick="infox.openPopUp('doc#{comunicacaoAction.getComunicacaoDestinatario().documentoBin.id}', '#{pathResolver.contextPath}/Painel/documentoHTML.seam?idBin=#{comunicacaoAction.getComunicacaoDestinatario().documentoBin.id}','1024'); return false;" 
                         value="#{infoxMessages['comunicacao.comunicacao']}"
-                        rendered="#{empty comunicacaoAction.destinatario.documentoComunicacao.documentoBin.extensao}"/>
+                        rendered="#{not comunicacaoAction.getComunicacaoDestinatario().documentoBin.binario}"/>
 	    		</h:form>
 	    		<rich:dataTable value="#{comunicacaoAction.documentosDestinatario}" var="documento" styleClass="dtable rf-dt-crud">
 	    			<rich:column styleClass="dt-toolbar-col">

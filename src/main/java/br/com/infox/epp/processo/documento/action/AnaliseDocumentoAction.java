@@ -11,6 +11,7 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.list.DocumentoComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.service.ProcessoAnaliseDocumentoService;
@@ -41,6 +42,7 @@ public class AnaliseDocumentoAction implements Serializable{
 		if(isRespostaComunicacao() || isPedidoProrrogacaoPrazo()){
 			comunicacao = processo.getProcessoPai();
 			setDestinatarioComunicacao(comunicacao.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO).<DestinatarioModeloComunicacao>getValue());
+			ComponentUtil.<DocumentoComunicacaoList>getComponent(DocumentoComunicacaoList.NAME).setModeloComunicacao(getDestinatarioComunicacao().getModeloComunicacao());
 		}
 	}
 	

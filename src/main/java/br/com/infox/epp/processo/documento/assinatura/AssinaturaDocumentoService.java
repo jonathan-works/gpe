@@ -26,10 +26,13 @@ import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException.Motivo;
 import br.com.infox.epp.processo.documento.assinatura.entity.RegistroAssinaturaSuficiente;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -64,6 +67,10 @@ public class AssinaturaDocumentoService implements Serializable {
     private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
     @In
     private AssinaturaDocumentoListenerService assinaturaDocumentoListenerService;
+    @In
+    private PessoaFisicaManager pessoaFisicaManager;
+    @In
+    private UsuarioLoginManager usuarioLoginManager;
 
     public Boolean isDocumentoAssinado(final Documento documento) {
         final DocumentoBin documentoBin = documento.getDocumentoBin();
@@ -228,9 +235,29 @@ public class AssinaturaDocumentoService implements Serializable {
                 throw new AssinaturaException(Motivo.CADASTRO_USUARIO_NAO_ASSINADO);
             }
         }
+        try {
+            UsuarioLogin usuarioCertificado = getUsuarioLoginFromCertChain(certChainBase64Encoded);
+            if (!usuarioLogado.equals(usuarioCertificado)) {
+                throw new AssinaturaException(Motivo.CPF_CERTIFICADO_DIFERENTE_USUARIO);
+            }
+        } catch (CertificadoException ce) {
+            throw new AssinaturaException(Motivo.CPF_CERTIFICADO_DIFERENTE_USUARIO);
+        }
         if (!usuarioLogado.getPessoaFisica().checkCertChain(certChainBase64Encoded)) {
             throw new AssinaturaException(Motivo.CERTIFICADO_USUARIO_DIFERENTE_CADASTRO);
         }
+    }
+    
+    private UsuarioLogin getUsuarioLoginFromCertChain(String certChain) throws CertificadoException {
+        Certificado c = CertificadoFactory.createCertificado(certChain);
+        String cpf = new StringBuilder(((CertificadoDadosPessoaFisica) c).getCPF()).insert(9, '-').insert(6, '.').insert(3, '.').toString();
+        if (cpf != null) {
+            PessoaFisica pessoaFisica = pessoaFisicaManager.getByCpf(cpf);
+            if (pessoaFisica != null) {
+                return usuarioLoginManager.getUsuarioLoginByPessoaFisica(pessoaFisica);
+            }
+        }
+        return null;
     }
 
 	public void assinarDocumento(final DocumentoBin documentoBin,

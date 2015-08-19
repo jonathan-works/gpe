@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.transaction.SystemException;
 
 import org.jboss.seam.ScopeType;
@@ -21,11 +22,15 @@ import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.transaction.Transaction;
 import org.joda.time.DateTime;
 
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.PdfCopy;
+
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.pdf.PdfManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
@@ -53,13 +58,11 @@ import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.PdfCopy;
-
 @Name(ComunicacaoService.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
 @Transactional
+@ContextDependency
 public class ComunicacaoService {
 	
 	public static final String NAME = "comunicacaoService";
@@ -89,11 +92,12 @@ public class ComunicacaoService {
 	@In
 	private MetadadoProcessoManager metadadoProcessoManager;
 	@In
-	private PrazoComunicacaoService prazoComunicacaoService;
-	@In
 	private DocumentoComunicacaoService documentoComunicacaoService;
 	@In
 	private UsuarioLoginManager usuarioLoginManager;
+	
+	@Inject
+	private PrazoComunicacaoService prazoComunicacaoService;
 	
 	public void expedirComunicacao(ModeloComunicacao modeloComunicacao) throws DAOException {
 		Long processIdOriginal = BusinessProcess.instance().getProcessId();
@@ -117,7 +121,7 @@ public class ComunicacaoService {
 		processo.setDataInicio(DateTime.now().toDate());
 		processo.setUsuarioCadastro(Authenticator.getUsuarioLogado());
 		processoManager.persist(processo);
-
+		destinatario.setProcesso(processo);
 		
 		Long processIdOriginal = BusinessProcess.instance().getProcessId(); // Para caso tenha sido expedido para apenas um destinatário
 		Long taskIdOriginal = BusinessProcess.instance().getTaskId();
@@ -327,6 +331,8 @@ public class ComunicacaoService {
 					MetadadoProcesso metadadoUdm = destinatario.getModeloComunicacao().getProcesso().getMetadado(EppMetadadoProvider.UNIDADE_DECISORA_MONOCRATICA);
 					UnidadeDecisoraMonocratica udmRelator = metadadoUdm.getValue();
 					metadadosCriados.add(metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.LOCALIZACAO_DESTINO, udmRelator.getLocalizacao().getIdLocalizacao().toString()));
+				} else {
+					metadadosCriados.add(metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.PESSOA_DESTINATARIO, destinatario.getDestinatario().getIdPessoa().toString()));
 				}
 			} else {
 				metadadosCriados.add(metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.PESSOA_DESTINATARIO, destinatario.getDestinatario().getIdPessoa().toString()));

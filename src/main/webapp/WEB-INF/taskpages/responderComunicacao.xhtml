@@ -29,14 +29,13 @@
 	   	</ui:include>
 
 		<ui:include src="/WEB-INF/xhtml/components/fragments/documentosComunicacao.xhtml">
-	    		<ui:param name="id" value="respDocsComunicacao" />
-	    		<ui:param name="showNumeroDocumento" value="false" />
-	    		<ui:param name="list" value="#{respostaComunicacaoAction.documentosComunicacao}" />
+	    		<ui:param name="id" value="documentosAnexadosComunicacao" />
+	    		<ui:param name="rendered" value="#{documentoComunicacaoList.getResultCount() gt 0}" />
 	    </ui:include>
 
 	</rich:collapsiblePanel>
 	
-	<h:form id="editorRespostaComunicacaoForm">
+	<h:form id="editorRespostaComunicacaoForm" style="margin-top:1em">
 		<rich:collapsiblePanel header="#{infoxMessages['comunicacao.editor']}" switchType="client" id="painelEditor">
 			<ui:param name="minuta" 
 				value="#{empty respostaComunicacaoAction.documentoEdicao.id or 
@@ -99,7 +98,7 @@
 		</rich:collapsiblePanel>
 	</h:form>
 	
-	<h:form id="anexoRespostaComunicacaoForm">
+	<h:form id="anexoRespostaComunicacaoForm" style="margin-top:1em">
 		<rich:collapsiblePanel header="#{infoxMessages['anexosProcesso.titleView']}" switchType="client">
 			<wi:inputText id="descricaoAnexo" value="#{respostaComunicacaoAction.descricaoAnexo}"
 				label="#{infoxMessages['documentoProcesso.descricao']}" showRequired="true">
@@ -141,7 +140,7 @@
 	</h:form>
 	<wi:assinaturaPopup id="respostaComunicacaoAssinaturaDocumentoPopup" afterRender="respostasPanel" showIniciarAnaliseDocumentos="false" 
 			actionPosSign="respostaComunicacaoAction.verificarPossibilidadeEnvioResposta()" />
-	<rich:collapsiblePanel header="#{infoxMessages['comunicacao.documentosResposta']}" switchType="client">
+	<rich:collapsiblePanel header="#{infoxMessages['comunicacao.documentosResposta']}" switchType="client" style="margin-top:1em">
 		<wi:dataTable id="respostas" tableTitle="#{infoxMessages['comunicacao.documentosResposta']}" bean="#{respostaComunicacaoList}"
 			values="#{respostaComunicacaoList.list(10)}" rowId="#{row.id}" hideOrder="true" >
 			<ui:define name="searchForm">
@@ -177,7 +176,7 @@
 			<ui:define name="conteudoAdicional">
 				<h:form style="text-align:left">
 					<wi:commandButton id="gravar" value="#{infoxMessages['comunicacao.enviarResposta']}" 
-						action="respostaComunicacaoAction.enviarRespostaComunicacao()" reRender="respostasPanel, pageBodyDialogMessage, editorRespostaComunicacaoForm, anexoRespostaComunicacaoForm" 
+						action="respostaComunicacaoAction.enviarRespostaComunicacao()" reRender="respostasPanel, pageBodyDialogMessage, editorRespostaComunicacaoForm, anexoRespostaComunicacaoForm, painelComunicacao" 
 						rendered="#{respostaComunicacaoAction.possivelMostrarBotaoEnvio}" execute="@this"/>
 				</h:form>
 			</ui:define>

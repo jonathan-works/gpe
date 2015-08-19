@@ -1,7 +1,6 @@
 package br.com.infox.ibpm.process.definition.expressionWizard;
 
 import java.io.StringReader;
-import java.util.List;
 import java.util.Stack;
 
 import org.jboss.el.parser.AstCompositeExpression;
@@ -17,7 +16,7 @@ public final class ExpressionTokenizer {
     public static final void validateExpression(String expression) throws ParseException {
         final StringReader reader = new StringReader(expression);
         final ELParser parser = new ELParser(reader);
-        parser.CompositeExpression();
+        parser.DeferredExpression();
     }
     
     public static final String toNodeJSON(String expression) throws ParseException,Exception{

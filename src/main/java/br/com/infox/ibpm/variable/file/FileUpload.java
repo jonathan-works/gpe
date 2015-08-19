@@ -1,7 +1,5 @@
 package br.com.infox.ibpm.variable.file;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Date;
 
 import javax.faces.component.UIComponent;
@@ -13,8 +11,6 @@ import org.richfaces.event.FileUploadEvent;
 import org.richfaces.event.FileUploadListener;
 import org.richfaces.model.UploadedFile;
 
-import br.com.infox.core.file.encode.MD5Encoder;
-import br.com.infox.core.file.reader.InfoxPdfReader;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.FileUtil;
@@ -68,7 +64,6 @@ public class FileUpload implements FileUploadListener {
         Documento documento = createDocumento(file, uploadFile.getId());
         try {
             documentoManager.gravarDocumentoNoProcesso(processoEpaHome.getInstance(), documento);
-            documentoBinarioManager.salvarBinario(documento.getDocumentoBin().getId(), documento.getDocumentoBin().getProcessoDocumento());
             TaskInstanceHome.instance().getInstance().put(uploadFile.getId(), documento.getId());
         } catch (DAOException e) {
             LOG.error("Não foi possível gravar o documento " + file.getName() + "no processo " + processoEpaHome.getInstance().getIdProcesso(), e);
@@ -91,23 +86,9 @@ public class FileUpload implements FileUploadListener {
         DocumentoBin pdb = new DocumentoBin();
         pdb.setNomeArquivo(file.getName());
         pdb.setExtensao(FileUtil.getFileType(file.getName()));
-        pdb.setMd5Documento(MD5Encoder.encode(file.getData()));
         pdb.setSize(Long.valueOf(file.getSize()).intValue());
         pdb.setProcessoDocumento(file.getData());
-        pdb.setModeloDocumento(getTextoIndexavel(file));
         pdb.setDataInclusao(new Date());
         return pdb;
     }
-    
-    private String getTextoIndexavel(final UploadedFile file) {
-        InputStream inputStream;
-        try {
-            inputStream = file.getInputStream();
-            return InfoxPdfReader.readPdfFromInputStream(inputStream);
-        } catch (IOException exception) {
-            LOG.error("Não foi possível recuperar o inputStream do arquivo carregado", exception);
-        }
-        return null;
-    }
-    
 }

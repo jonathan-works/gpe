@@ -9,7 +9,8 @@ public class AssinaturaException extends Exception {
 
     public enum Motivo {
         USUARIO_SEM_PESSOA_FISICA, CADASTRO_USUARIO_NAO_ASSINADO,
-        CERTIFICADO_USUARIO_DIFERENTE_CADASTRO, SEM_CERTIFICADO
+        CERTIFICADO_USUARIO_DIFERENTE_CADASTRO, SEM_CERTIFICADO,
+        CPF_CERTIFICADO_DIFERENTE_USUARIO
     }
 
     private Motivo motivo;
@@ -58,6 +59,9 @@ public class AssinaturaException extends Exception {
 
             case SEM_CERTIFICADO:
                 return "Sem certificado";
+
+            case CPF_CERTIFICADO_DIFERENTE_USUARIO:
+                return "CPF do certificado diferente da pessoa física do usuário logado";
             default:
                 return null;
         }

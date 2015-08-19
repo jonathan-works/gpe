@@ -30,10 +30,12 @@
             label="#{infoxMessages['process.events.action.expression']}"
             showCounter="false"
         >
+        	<f:validator validatorId="jbpmExpressionValidator" />
             <a:ajax
                 event="change"
                 limitRender="true"
                 execute="@this"
+                render="pageBodyDialogMessage :processDefinition:eventsForm:nodeEventActionExpressionDecoration"
             />
         </wi:inputTextarea>
     </s:div>

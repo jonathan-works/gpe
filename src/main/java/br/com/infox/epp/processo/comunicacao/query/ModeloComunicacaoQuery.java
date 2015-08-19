@@ -15,7 +15,7 @@ public interface ModeloComunicacaoQuery {
 			+ " and d.expedido = false";
 	
 	String LIST_BY_PROCESSO_ROOT = "ModeloComunicacao.listByProcessoRoot";
-	String LIST_BY_PROCESSO_ROOT_QUERY = "select o from ModeloComunicacao o where "
+	String LIST_BY_PROCESSO_ROOT_QUERY = "select o from ModeloComunicacao o inner join fetch o.destinatarios where "
 			 + "NumeroProcessoRoot(o.processo.idProcesso) = :" + PARAM_NUMERO_PROCESSO_ROOT
 			 + " and exists (select 1 from DestinatarioModeloComunicacao d where "
 			 + "d.modeloComunicacao = o and d.expedido = true)";

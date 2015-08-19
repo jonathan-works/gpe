@@ -230,23 +230,23 @@ public class EnvioComunicacaoController implements Serializable {
 	protected StringBuilder criarMensagensValidacao() {
 		StringBuilder msg = new StringBuilder();
 		if (modeloComunicacao.getTipoComunicacao() == null) {
-			msg.append("Escolha o tipo de comunicação\n");
+			msg.append("Escolha o tipo de comunicação.\n");
 		}
 		if (modeloComunicacao.getDestinatarios().isEmpty()) {
-			msg.append("Nenhum destinatário foi selecionado\n");
+			msg.append("Nenhum destinatário foi selecionado.\n");
 		}
 		if (!modeloComunicacao.isMinuta() && Strings.isNullOrEmpty(modeloComunicacao.getTextoComunicacao())){
-			msg.append("O documento do editor não é minuta mas não existe texto no editor\n");
+			msg.append("O documento do editor não é minuta mas não existe texto no editor.\n");
 		}
 		for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
 			if (destinatario.getMeioExpedicao() == null) {
-				msg.append("Existe destinatário sem meio de expedição selecionado\n");
+				msg.append("Existe destinatário sem meio de expedição selecionado.\n");
 				break;
 			}
 			if (isPrazoComunicacaoRequired() && (destinatario.getPrazo() == null || destinatario.getPrazo() <= 0)){
 				msg.append("Não foi informado o prazo para o destinatário ");
 				msg.append(destinatario.getNome());
-				msg.append("\n");
+				msg.append(" ou esse prazo é inválido.\n");
 				break;
 			}
 		}
@@ -361,10 +361,6 @@ public class EnvioComunicacaoController implements Serializable {
 	
 	public void setDestinatario(DestinatarioModeloComunicacao destinatario) {
 		this.destinatario = destinatario;
-	}
-	
-	public String getFaceletPath() {
-		return getClass().getResource("/taskpages/enviarComunicacao.xhtml").toString();
 	}
 	
 	public boolean isInTask() {

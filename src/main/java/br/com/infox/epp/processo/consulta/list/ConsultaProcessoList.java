@@ -34,6 +34,14 @@ public class ConsultaProcessoList extends EntityList<Processo> {
     private static final String R1 = "o.idProcesso in (#{painelUsuarioController.processoIdList})";
     private static final String R2 = "o.caixa.idCaixa = #{painelUsuarioController.idCaixa}";
     private static final String R3 = "NumeroProcessoRoot(o.idProcesso) = #{consultaProcessoList.numeroProcessoRoot}";
+    private static final String R4 = " ( select nat.natureza "
+    		+ " from Processo pc "
+    		+ " inner join pc.naturezaCategoriaFluxo nat "
+    		+ " where pc.numeroProcesso = NumeroProcessoRoot(o.idProcesso) ) = #{consultaProcessoList.entity.naturezaCategoriaFluxo.natureza}";
+    private static final String R5 = " ( select nat.categoria "
+    		+ " from Processo pc "
+    		+ " inner join pc.naturezaCategoriaFluxo nat "
+    		+ " where pc.numeroProcesso = NumeroProcessoRoot(o.idProcesso) ) = #{consultaProcessoList.entity.naturezaCategoriaFluxo.categoria}";
     
     @In
     private ProcessoTarefaManager processoTarefaManager;
@@ -53,8 +61,8 @@ public class ConsultaProcessoList extends EntityList<Processo> {
         addSearchField("caixa.idCaixa", SearchCriteria.IGUAL, R2);
         addSearchField("numeroProcesso", SearchCriteria.IGUAL);
         addSearchField("numeroProcessoRoot", SearchCriteria.IGUAL, R3);
-        addSearchField("naturezaCategoriaFluxo.natureza", SearchCriteria.IGUAL);
-        addSearchField("naturezaCategoriaFluxo.categoria", SearchCriteria.IGUAL);
+        addSearchField("naturezaCategoriaFluxo.natureza", SearchCriteria.IGUAL,R4);
+        addSearchField("naturezaCategoriaFluxo.categoria", SearchCriteria.IGUAL,R5);
         addSearchField("dataInicio", SearchCriteria.DATA_MAIOR_IGUAL);
         addSearchField("dataFim", SearchCriteria.DATA_MENOR_IGUAL);
     }

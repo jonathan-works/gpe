@@ -34,10 +34,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.jboss.seam.annotations.AutoCreate;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.TransactionPropagationType;
 import org.jboss.seam.annotations.Transactional;
@@ -46,6 +48,7 @@ import org.jboss.seam.bpm.ProcessInstance;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
+import br.com.infox.epp.fluxo.dao.FluxoDAO;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
@@ -55,6 +58,8 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.query.ProcessoQuery;
 import br.com.infox.epp.processo.type.TipoProcesso;
+import br.com.infox.epp.system.Parametros;
+import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
@@ -67,6 +72,9 @@ public class ProcessoDAO extends DAO<Processo> {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "processoDAO";
 	private static final LogProvider LOG = Logging.getLogProvider(ProcessoDAO.class);
+	
+	@In
+	private FluxoDAO fluxoDAO;
 
 	public Processo findProcessosByIdProcessoAndIdUsuario(int idProcesso, Integer idUsuarioLogin, Long idTask) {
 		Map<String, Object> parameters = new HashMap<>(3);
@@ -214,16 +222,20 @@ public class ProcessoDAO extends DAO<Processo> {
 	}
 	
 	public List<Processo> listProcessosComunicacaoAguardandoCiencia() {
+		Fluxo fluxoComunicacao = fluxoDAO.getFluxoByCodigo(ParametroUtil.getParametro(Parametros.CODIGO_FLUXO_COMUNICACAO_ELETRONICA.getLabel()));
 		Map<String, Object> params = new HashMap<>(2);
 		params.put(ProcessoQuery.TIPO_PROCESSO_PARAM, TipoProcesso.COMUNICACAO.toString());
 		params.put(ProcessoQuery.MEIO_EXPEDICAO_PARAM, MeioExpedicao.SI.name());
+		params.put(ProcessoQuery.QUERY_PARAM_FLUXO_COMUNICACAO, fluxoComunicacao.getFluxo());
 		return getNamedResultList(ProcessoQuery.LIST_PROCESSOS_COMUNICACAO_SEM_CIENCIA, params);
 	}
 	
 	public List<Processo> listProcessosComunicacaoAguardandoCumprimento() {
+		Fluxo fluxoComunicacao = fluxoDAO.getFluxoByCodigo(ParametroUtil.getParametro(Parametros.CODIGO_FLUXO_COMUNICACAO_ELETRONICA.getLabel()));
 		Map<String, Object> params = new HashMap<>(2);
 		params.put(ProcessoQuery.TIPO_PROCESSO_PARAM, TipoProcesso.COMUNICACAO.toString());
 		params.put(ProcessoQuery.MEIO_EXPEDICAO_PARAM, MeioExpedicao.SI.name());
+		params.put(ProcessoQuery.QUERY_PARAM_FLUXO_COMUNICACAO, fluxoComunicacao.getFluxo());
 		return getNamedResultList(ProcessoQuery.LIST_PROCESSOS_COMUNICACAO_SEM_CUMPRIMENTO, params);
 	}
 }

@@ -7,6 +7,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Create;
@@ -20,16 +22,15 @@ import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.DateUtil;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
-import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.list.DocumentoComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.DestinatarioComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
-import br.com.infox.epp.processo.comunicacao.service.ProrrogacaoPrazoService;
 import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
@@ -43,15 +44,16 @@ import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
 @Name(AnalisarPedidoProrrogacaoPrazoAction.NAME)
-@Scope(ScopeType.CONVERSATION)
+@Scope(ScopeType.PAGE)
 @AutoCreate
 @Transactional
+@ContextDependency
 public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 	public static final String NAME = "analisarPedidoProrrogacaoPrazoAction";
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(AnalisarPedidoProrrogacaoPrazoAction.class);
 	
-	@In
+	@Inject
 	private PrazoComunicacaoService prazoComunicacaoService;
 	@In
 	private ComunicacaoService comunicacaoService;
@@ -71,8 +73,6 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 	private DestinatarioComunicacaoService destinatarioComunicacaoService;
 	@In
 	private ModeloComunicacaoManager modeloComunicacaoManager;
-	@In
-	private ProrrogacaoPrazoService prorrogacaoPrazoService;
 	@In
 	private ProcessoManager processoManager;
 	
@@ -94,7 +94,6 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 		comunicacao = processoDocumento.getProcessoPai();
 		destinatarioComunicacao = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO).getValue();
 		dataFimPrazoCumprimento = prazoComunicacaoService.contabilizarPrazoCumprimento(comunicacao);
-		documentoComunicacaoList.setProcesso(comunicacao.getProcessoRoot());
 		documentoComunicacaoList.setModeloComunicacao(destinatarioComunicacao.getModeloComunicacao());
 		destinatarioCienciaConfirmada = null;
 		clearDestinatarioBean();
@@ -108,13 +107,9 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 		return dataFimPrazoCumprimento;
 	}
 	
-	public DestinatarioModeloComunicacao getDestinatarioComunicacao(){
-		return destinatarioComunicacao;
-	}
-
 	public void endTask() {
 		try {
-			prorrogacaoPrazoService.finalizarAnalisePedido(comunicacao);		
+			prazoComunicacaoService.finalizarAnalisePedido(comunicacao);		
 		} catch (Exception e) {
 			LOG.error("", e);
 			if (e instanceof DAOException) {
@@ -158,22 +153,23 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 	public List<DestinatarioBean> getDestinatarioCienciaConfirmada() {
 		if(destinatarioCienciaConfirmada == null){
 			destinatarioCienciaConfirmada = new ArrayList<>();
-		    List<ModeloComunicacao> comunicacoesDoProcesso = modeloComunicacaoManager.listModelosComunicacaoPorProcessoRoot(comunicacao.getNumeroProcessoRoot());
-		    for (ModeloComunicacao modeloComunicacao : comunicacoesDoProcesso) { 
-		        List<DestinatarioBean> destinatariosPorModelo = destinatarioComunicacaoService.getDestinatarios(modeloComunicacao);
-		        for (DestinatarioBean destinatarioBean : destinatariosPorModelo) {
-		        	if (!destinatarioBean.getPrazoFinal().equals("-") && 
-		        			prorrogacaoPrazoService.canRequestProrrogacaoPrazo(destinatarioBean.getModeloComunicacao().getTipoComunicacao())){
-		        		destinatarioCienciaConfirmada.add(destinatarioBean);
-		        	}
-	            }
-	        }
+//		    List<ModeloComunicacao> comunicacoesDoProcesso = modeloComunicacaoManager.listModelosComunicacaoPorProcessoRoot(comunicacao.getNumeroProcessoRoot());
+//		    for (ModeloComunicacao modeloComunicacao : comunicacoesDoProcesso) { 
+//		        List<DestinatarioBean> destinatariosPorModelo = destinatarioComunicacaoService.getDestinatarios(modeloComunicacao);
+//		        for (DestinatarioBean destinatarioBean : destinatariosPorModelo) {
+//		        	if (!destinatarioBean.getPrazoFinal().equals("-") && 
+//		        			prazoComunicacaoService.canTipoComunicacaoRequestProrrogacaoPrazo(destinatarioBean.getModeloComunicacao().getTipoComunicacao())){
+//		        		destinatarioCienciaConfirmada.add(destinatarioBean);
+//		        	}
+//	            }
+//	        }
 		}
 	    return destinatarioCienciaConfirmada;
 	}
 	
 	public String getStatusComunicacao(DestinatarioBean bean){
-		Processo comunicacao  = bean.getComunicacao();
+		DestinatarioModeloComunicacao destinatarioModelo = genericManager.find(DestinatarioModeloComunicacao.class, destinatario.getIdDestinatario());
+		Processo comunicacao  = destinatarioModelo.getProcesso();
 		if (comunicacao != null) {
             MetadadoProcesso mp = comunicacao.getMetadado(EppMetadadoProvider.STATUS_PROCESSO);
             if (mp != null){
@@ -183,23 +179,35 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 		return "-";
 	}
 	
+	public Date getDataLimiteCumprimento(DestinatarioBean bean){
+		return prazoComunicacaoService.getDataLimiteCumprimento(genericManager.find(DestinatarioModeloComunicacao.class, destinatario.getIdDestinatario()).getProcesso());
+	}
+	
+	public Date getDataCiencia(){
+		MetadadoProcesso metadadoCiencia = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA);
+		Date dataCiencia = null;
+		if(metadadoCiencia != null){
+			dataCiencia = metadadoCiencia.getValue();
+		}
+		return dataCiencia;
+	}
+	
+	public String getResponsavelCiencia(){
+		MetadadoProcesso metadadoResponsavelCiencia = comunicacao.getMetadado(ComunicacaoMetadadoProvider.RESPONSAVEL_CIENCIA);
+		if(metadadoResponsavelCiencia != null){
+			return metadadoResponsavelCiencia.getValue().toString();
+		}
+		return "-";
+	}
+	
 	public boolean isPedidoDentroDoPrazo(DestinatarioBean bean){
 		Date dataLimiteCumprimento = getDataLimiteCumprimento(bean);
-		if(dataLimiteCumprimento.after(new Date()) || prorrogacaoPrazoService.hasPedidoProrrogacaoEmAberto(bean.getComunicacao())){
-			return true;
-		}
-		return false;
+		return dataLimiteCumprimento.after(new Date()) || prazoComunicacaoService.hasPedidoProrrogacaoEmAberto(genericManager.find(DestinatarioModeloComunicacao.class, destinatario.getIdDestinatario()).getProcesso());
 	}
 	
-	public Date getDataLimiteCumprimento(DestinatarioBean bean){
-		MetadadoProcesso metadadoPrazo = bean.getComunicacao().getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO);
-		Date dataLimiteCumprimento = new Date();
-		if (metadadoPrazo != null && bean.getPrazoFinal() != null) {
-			dataLimiteCumprimento = metadadoPrazo.getValue();
-		}
-		return dataLimiteCumprimento;
-	}
-	
+	/**
+	 * Seta o starDate do calendário 
+	 */
 	public Date getDataLimiteCumprimento(){
 		if(destinatario != null){
 			Calendar calendar =  Calendar.getInstance();
@@ -214,7 +222,7 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 		if (isPedidoDentroDoPrazo(destinatario)) {
 				Date dataLimiteCumprimento = getDataLimiteCumprimento(destinatario);
 				if(dataLimiteCumprimento.before(novoPrazoCumprimento)){
-					MetadadoProcesso metadadoDataLimiteCumprimento = destinatario.getComunicacao().getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO);
+					MetadadoProcesso metadadoDataLimiteCumprimento = genericManager.find(DestinatarioModeloComunicacao.class, destinatario.getIdDestinatario()).getProcesso().getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO);
 					String dateFormatted = new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(novoPrazoCumprimento);
 					metadadoDataLimiteCumprimento.setValor(dateFormatted);
 					try {
@@ -262,5 +270,29 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 		this.documentos = documentos;
 	}
 	
-		
+	
+	public Processo getProcessoDocumento(){
+		return processoDocumento;
+	}
+	
+	public void setProcessoDocumento(Processo processoDocumento) {
+		this.processoDocumento = processoDocumento;
+	}
+
+	public Processo getComunicacao(){
+		return comunicacao;//TODO VER SE VAI PRECISAR PORQUE AGORA TEM O PROCESSO NO DESTINATARIO
+	}
+	
+	public void setComunicacao(Processo comunicacao) {
+		this.comunicacao = comunicacao;
+	}
+
+	public DestinatarioModeloComunicacao getDestinatarioComunicacao(){
+		return destinatarioComunicacao;
+	}
+	
+	public void setDestinatarioComunicacao(DestinatarioModeloComunicacao destinatarioComunicacao) {
+		this.destinatarioComunicacao = destinatarioComunicacao;
+	}
+
 }

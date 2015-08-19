@@ -202,7 +202,7 @@
 									label="#{infoxMessages['modeloDocumento.tituloModeloDocumento']}"
 									value="#{nodeFitter.nodeHandler.modeloDocumento}"
 									items="#{nodeFitter.modeloDocumentoList}"
-									showLabelSelecione="true"
+									showLabelSelecione="true" 
 									rendered="#{not empty nodeFitter.nodeHandler.classificacaoDocumento}">
 									<a:ajax event="change"
 										execute="@this"
@@ -231,8 +231,7 @@
                        	<rich:collapsiblePanel switchType="client" expanded="false" header="Listeners" >
                    			<ui:include src="listeners.xhtml" />
                        	</rich:collapsiblePanel>
-                       	
-                        <h:form>
+                       	<h:form id="eventsForm">
                             <rich:collapsiblePanel
                                 switchType="ajax"
                                 expanded="false"
