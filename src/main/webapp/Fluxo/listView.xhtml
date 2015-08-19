@@ -6,6 +6,7 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
+    xmlns:a="http://richfaces.org/a4j"
     xmlns:infox="http://www.infox.com.br/jsf"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf"
@@ -68,10 +69,27 @@
                 columnId="publicado"
                 columnHeader="#{infoxMessages['fluxo.publicado']}"
                 value="#{row.publicado}" />
+                
+            <wi:columnBoolean columnId="possuirAlteracoes" columnHeader="#{infoxMessages['fluxo.alterado']}" value="#{not (row.xml eq row.xmlExecucao)}"/>
             <wi:columnSituacao
                 columnId="ativo"
                 columnHeader="#{infoxMessages['field.situacao']}"
                 value="#{row.ativo}" />
+            <ui:define name="toolBar">
+                <h:form style="display:inline-block;">
+                    <a:commandLink id="publicar"
+                        action="#{fluxoMergeView.deploy(row)}"
+                        onclick="if (!confirm('#{infoxMessages['fluxo.publicar.confirm']}')) { return false; }"
+                        onbegin="infox.showLoading();"
+                        rendered="#{not (row.xml eq row.xmlExecucao and row.publicado)}"
+                        render="@region"
+                        oncomplete="infox.hideLoading();opener.refreshPage();">
+                        <wi:toolBarGraphicImage title="#{infoxMessages['processBuilder.deployBtn']}" url="#{wiSkin.imageFolder}/deploy.png" />
+                    </a:commandLink>
+                <wi:toolBarEdit id="fluxoListedit" />
+                <wi:toolBarInactive />
+                </h:form>
+            </ui:define>
         </wi:dataTable>
     </ui:define>
     <ui:define name="form">
@@ -125,10 +143,13 @@
                     value="#{infoxMessages['fluxo.exportar']}" />
                 <wi:commandButton
                     id="definicao"
-                    action="#{processBuilder.load(fluxoCrudAction.instance)}"
-                    value="#{infoxMessages['fluxo.definicao']}"
+                    value="#{infoxMessages['fluxo.definicao']}" reRender="@this"
                     rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.replica}"
-                    oncomplete="openPopUp('processDefinition', '#{pathResolver.getContextPath()}/Fluxo/definicao/processDefinition.seam?scid=#{conversation.id}',1300,850);" />
+                    oncomplete="openPopUp('processDefinition', '#{pathResolver.getContextPath()}/Fluxo/definicao/processDefinition.seam',1300,850);">
+                    <f:setPropertyActionListener value="#{fluxoCrudAction.instance}" target="#{flash.fluxo}"></f:setPropertyActionListener>
+                  	<infox:flashcopy />
+                </wi:commandButton>
+                
                 <wi:commandButton
                     id="importarXPDL"
                     value="#{infoxMessages['importarXPDL.button']}"
@@ -274,3 +295,4 @@
       	</infox:tab>
     </ui:define>
 </ui:composition>
+

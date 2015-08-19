@@ -11,12 +11,16 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
+import javax.ejb.Remove;
+import javax.ejb.Stateful;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
+import javax.inject.Inject;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -56,6 +60,8 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.fluxo.manager.RaiaPerfilManager;
 import br.com.infox.epp.fluxo.manager.VariavelClassificacaoDocumentoManager;
+import br.com.infox.epp.fluxo.merger.model.MergePointsBundle;
+import br.com.infox.epp.fluxo.merger.service.FluxoMergeService;
 import br.com.infox.epp.fluxo.xpdl.FluxoXPDL;
 import br.com.infox.epp.fluxo.xpdl.IllegalXPDLException;
 import br.com.infox.epp.processo.localizacao.manager.ProcessoLocalizacaoIbpmManager;
@@ -82,6 +88,7 @@ import com.google.common.base.Strings;
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
 @Transactional
+@Stateful
 public class ProcessBuilder implements Serializable {
 
     private static final String PROCESS_DEFINITION_TABPANEL_ID = ":processDefinition";
@@ -123,6 +130,8 @@ public class ProcessBuilder implements Serializable {
     private TaskExpirationManager taskExpirationManager;
     @In
     private InfoxMessages infoxMessages;
+    @Inject
+    private FluxoMergeService fluxoMergeService;
  
     private String id;
     private ProcessDefinition instance;
@@ -131,13 +140,20 @@ public class ProcessBuilder implements Serializable {
     private boolean exists;
     private String xml;
     private String tab;
-    private boolean needToPublic;
 
     private Fluxo fluxo;
 
     private Boolean importacaoConcluida;
     private Set<String> mensagensImportacao;
 
+    /**
+     * Método foi necessário ser adicionado devido ao Seam ter problemas
+     * com anotação @Stateful
+     */
+    @Remove
+    public void destroy(){
+    }
+    
     public void newInstance() {
         instance = null;
     }
@@ -179,9 +195,18 @@ public class ProcessBuilder implements Serializable {
         eventFitter.clear();
     }
 
+    public void load(){
+    	try {
+    		if(!FacesContext.getCurrentInstance().isPostback()){
+    			internalLoad(getFluxo());
+    		}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
     public void load(Fluxo fluxo) {
         try {
-            internalLoad(fluxo);
+        	internalLoad(fluxo);
         } catch (Exception e) {
             LOG.error(".load()", e);
         }
@@ -362,7 +387,6 @@ public class ProcessBuilder implements Serializable {
                 // verifica a consistencia do fluxo para evitar salva-lo com
                 // erros.
                 parseInstance(xmlDef);
-                needToPublic = true;
                 modifyNodesAndTasks();
                 fluxo.setXml(xmlDef);
                 try {
@@ -388,7 +412,6 @@ public class ProcessBuilder implements Serializable {
 
         this.id = cdFluxo;
         this.exists = true;
-        this.needToPublic = true;
     }
 
     private void modifyNodesAndTasks() {
@@ -400,7 +423,19 @@ public class ProcessBuilder implements Serializable {
     	if (!fluxo.getPublicado()){
     		fluxo.setPublicado(Boolean.TRUE);
     	}
-        update();
+        String modifiedXml = fluxo.getXml();
+        String publishedXml = fluxo.getXmlExecucao();
+        boolean needToPublish = !Objects.equals(modifiedXml, publishedXml);
+        if (needToPublish) {
+            ProcessDefinition modifiedProcessDef = fluxoMergeService.jpdlToProcessDefinition(modifiedXml);
+            ProcessDefinition publishedProcessDef = fluxoMergeService.jpdlToProcessDefinition(publishedXml);
+            MergePointsBundle mergePointsBundle = fluxoMergeService.verifyMerge(publishedProcessDef, modifiedProcessDef);
+            if (!mergePointsBundle.isValid()) {
+                FacesMessages.instance().add("Não é possível publicar fluxo");
+                fluxo.setPublicado(false);
+                return;
+            }
+        }
         try {
             deployActions();
         } catch (DAOException e1) {
@@ -410,10 +445,16 @@ public class ProcessBuilder implements Serializable {
             fluxo.setPublicado(false);
             return;
         }
-        if (needToPublic) {
+        if (needToPublish) {
             try {
                 JbpmUtil.getGraphSession().deployProcessDefinition(instance);
                 JbpmUtil.getJbpmSession().flush();
+                fluxo.setXmlExecucao(fluxo.getXml());
+                try {
+                    genericManager.update(fluxo);
+                } catch (DAOException e) {
+                    LOG.error(".update()", e);
+                }
                 Events.instance().raiseEvent(POST_DEPLOY_EVENT, instance);
                 taskFitter.checkCurrentTaskPersistenceState();
                 atualizarRaiaPooledActors(instance.getId());
@@ -422,7 +463,6 @@ public class ProcessBuilder implements Serializable {
             } catch (Exception e) {
                 LOG.error(".deploy()", e);
             }
-            needToPublic = false;
         }
     }
 
@@ -610,7 +650,11 @@ public class ProcessBuilder implements Serializable {
         return this.fluxo;
     }
 
-    public void getPaintedGraph() {
+    public void setFluxo(Fluxo fluxo) {
+		this.fluxo = fluxo;
+	}
+
+	public void getPaintedGraph() {
         try {
             getProcessBuilderGraph().paintGraph();
         } catch (IOException e) {
@@ -677,7 +721,7 @@ public class ProcessBuilder implements Serializable {
     }
 
     public boolean existemProcessosAssociadosAoFluxo() {
-        return fluxoManager.existemProcessosAssociadosAFluxo(getFluxo());
+        return fluxoMergeService.hasActiveNode(getInstance(), nodeFitter.getCurrentNode());
     }
     
     public String getTypeLabel(String type) {

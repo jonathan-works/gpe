@@ -92,6 +92,8 @@
                                         action="#{nodeFitter.setCurrentNode(row)}"
                                         render="divNodesGeral"
                                         execute="@this"
+                                        onbegin="infox.showLoading('Carregando dados da tarefa...');"
+                                        oncomplete="infox.hideLoading();"
                                         limitRender="true"
                                         styleClass="#{row.equals(nodeFitter.currentNode) ? 'bold-link' : '' } link">
                                         <a:outputPanel>
@@ -118,7 +120,7 @@
                     styleClass="node-instance-e">
                     <rich:panel
                         bodyClass="panel"
-                        rendered="#{!empty nodeFitter.currentNode}">
+                        rendered="#{not empty nodeFitter.currentNode}">
                         <f:facet name="header">
                             <h:panelGrid
                                 columns="2"
@@ -243,7 +245,7 @@
                             </rich:collapsiblePanel>
                         </h:form>
 					</rich:panel>
-                    <br />
+
                     <rich:panel
                         header="#{infoxMessages['process.node.new']}"
                         rendered="#{empty nodeFitter.currentNode}">
@@ -304,7 +306,7 @@
                                     id="afterDecoration">
                                     <ui:define name="label">#{infoxMessages['process.node.after']}</ui:define>
                                     <h:selectOneMenu
-                                        id="after"
+                                        id="after" style="width:75%;"
                                         value="#{nodeFitter.newNodeAfter}"
                                         required="true">
                                         <f:selectItems
@@ -318,7 +320,7 @@
                                         id="inTransitionDecoration">
                                         <ui:define name="label">#{infoxMessages['process.node.at']}</ui:define>
                                         <h:selectOneMenu
-                                            id="inTransition"
+                                            id="inTransition" style="width:75%;"
                                             value="#{transitionFitter.newNodeTransitionName}"
                                             required="true">
                                             <f:selectItems
