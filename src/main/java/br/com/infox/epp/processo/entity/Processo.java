@@ -91,6 +91,8 @@ import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 import br.com.infox.epp.processo.query.ProcessoQuery;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
+import javax.persistence.EntityManager;
+import br.com.infox.epp.cdi.config.BeanManager;
 
 @Entity
 @Table(name = TABLE_PROCESSO)
@@ -212,7 +214,7 @@ public class Processo implements Serializable {
     		setIdProcesso(generatedId);
     		setNumeroProcesso(getIdProcesso().toString());
     	}
-    	
+        this.processoPai = BeanManager.INSTANCE.getReference(EntityManager.class).merge(getProcessoPai());	
     	if(getProcessoRoot() == null){
     		Processo processo = this;
     		while (processo.getProcessoPai() != null) {
