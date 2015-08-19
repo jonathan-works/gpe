@@ -69,20 +69,27 @@
                 columnId="publicado"
                 columnHeader="#{infoxMessages['fluxo.publicado']}"
                 value="#{row.publicado}" />
+                
+            <wi:columnBoolean columnId="possuirAlteracoes" columnHeader="#{infoxMessages['fluxo.alterado']}" value="#{not (row.xml eq row.xmlExecucao)}"/>
             <wi:columnSituacao
                 columnId="ativo"
                 columnHeader="#{infoxMessages['field.situacao']}"
                 value="#{row.ativo}" />
-                <h:column>
-                <h:form>
-                <a:commandButton
-                    id="publicar2"
-                    action="#{fluxoMergeView.deploy(row)}"
-                    value="#{infoxMessages['processBuilder.deployBtn']}"
-                    oncomplete="opener.refreshPage();"
-                    styleClass="buttons #{wi:get(styleClass, '')}" />
-      </h:form>
-                </h:column>
+            <ui:define name="toolBar">
+                <h:form style="display:inline-block;">
+                    <a:commandLink id="publicar"
+                        action="#{fluxoMergeView.deploy(row)}"
+                        onclick="if (!confirm('#{infoxMessages['fluxo.publicar.confirm']}')) { return false; }"
+                        onbegin="infox.showLoading();"
+                        rendered="#{not (row.xml eq row.xmlExecucao and row.publicado)}"
+                        render="@region"
+                        oncomplete="infox.hideLoading();opener.refreshPage();">
+                        <wi:toolBarGraphicImage title="#{infoxMessages['processBuilder.deployBtn']}" url="#{wiSkin.imageFolder}/deploy.png" />
+                    </a:commandLink>
+                <wi:toolBarEdit id="fluxoListedit" />
+                <wi:toolBarInactive />
+                </h:form>
+            </ui:define>
         </wi:dataTable>
     </ui:define>
     <ui:define name="form">
