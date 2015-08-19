@@ -196,21 +196,24 @@ public class VariableAccessHandler implements Serializable {
     @SuppressWarnings("unchecked")
 	public void removeTaskAction(String actionName){
     	GraphElement parent = task.getParent();
-    	for (Object entry : parent.getEvents().entrySet()) {
-			Event event = ((Map.Entry<String,Event>)entry).getValue();
-			for (Object o : event.getActions()) {
-                Action a = (Action) o;
-                String name = a.getName();
-                String exp = a.getActionExpression();
-                if ( (name != null && name.equalsIgnoreCase(actionName) ) || ( exp != null  && exp.contains("'"+ actionName +"'") ) ) {
-                	event.removeAction(a);
-                	 if (event.getActions().isEmpty()) {
-                         event.getGraphElement().removeEvent(event);
-                     }
-                    return ;
+    	Map<String, Event> events = parent.getEvents();
+    	if (events != null) {
+            for (Object entry : events.entrySet()) {
+    			Event event = ((Map.Entry<String,Event>)entry).getValue();
+    			for (Object o : event.getActions()) {
+                    Action a = (Action) o;
+                    String name = a.getName();
+                    String exp = a.getActionExpression();
+                    if ( (name != null && name.equalsIgnoreCase(actionName) ) || ( exp != null  && exp.contains("'"+ actionName +"'") ) ) {
+                    	event.removeAction(a);
+                    	 if (event.getActions().isEmpty()) {
+                             event.getGraphElement().removeEvent(event);
+                         }
+                        return ;
+                    }
                 }
-            }
-		}
+    		}
+    	}
     }
 
     private void removeAction(Action action) {
