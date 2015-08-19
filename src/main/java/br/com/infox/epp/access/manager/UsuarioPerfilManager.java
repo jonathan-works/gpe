@@ -73,6 +73,7 @@ public class UsuarioPerfilManager extends Manager<UsuarioPerfilDAO, UsuarioPerfi
 		UsuarioPerfil perfilExistente  = getByUsuarioLoginPerfilTemplateLocalizacaoAtivo(o.getUsuarioLogin(), o.getPerfilTemplate(), o.getLocalizacao(), false);
 		if (perfilExistente != null){
 			perfilExistente.setAtivo(Boolean.TRUE);
+			perfilExistente.setResponsavelLocalizacao(o.getResponsavelLocalizacao());
 			return super.update(perfilExistente);
 		}
 		return super.persist(o);
