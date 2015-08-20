@@ -82,7 +82,13 @@ public class FluxoMergeView implements Serializable {
     private void publish(Fluxo fluxo) {
         String modifiedXml = fluxo.getXml();
         String publishedXml = fluxo.getXmlExecucao();
-        if (!Objects.equals(modifiedXml, publishedXml)) {
+        if (publishedXml == null) {
+            ProcessDefinition modifiedProcessDef = fluxoMergeService.jpdlToProcessDefinition(modifiedXml);
+            modifiedProcessDef.setName(fluxo.getFluxo());
+            processBuilder.load(fluxo);
+            processBuilder.setInstance(modifiedProcessDef);
+            processBuilder.deploy();
+        } else if (!Objects.equals(modifiedXml, publishedXml)) {
             ProcessDefinition modifiedProcessDef = fluxoMergeService.jpdlToProcessDefinition(modifiedXml);
             ProcessDefinition publishedProcessDef = fluxoMergeService.jpdlToProcessDefinition(publishedXml);
             mergePointsBundle = fluxoMergeService.verifyMerge(publishedProcessDef, modifiedProcessDef);

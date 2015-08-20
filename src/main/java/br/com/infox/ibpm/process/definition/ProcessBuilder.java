@@ -52,6 +52,8 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.richfaces.context.ExtendedPartialViewContext;
 import org.xml.sax.InputSource;
 
+import com.google.common.base.Strings;
+
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.messages.InfoxMessages;
@@ -81,8 +83,6 @@ import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.jsf.validator.JsfComponentTreeValidator;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-
-import com.google.common.base.Strings;
 
 @Name(ProcessBuilder.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -420,13 +420,10 @@ public class ProcessBuilder implements Serializable {
     }
 
     public void deploy() {
-    	if (!fluxo.getPublicado()){
-    		fluxo.setPublicado(Boolean.TRUE);
-    	}
         String modifiedXml = fluxo.getXml();
         String publishedXml = fluxo.getXmlExecucao();
         boolean needToPublish = !Objects.equals(modifiedXml, publishedXml);
-        if (needToPublish) {
+        if (publishedXml != null && needToPublish) {
             ProcessDefinition modifiedProcessDef = fluxoMergeService.jpdlToProcessDefinition(modifiedXml);
             ProcessDefinition publishedProcessDef = fluxoMergeService.jpdlToProcessDefinition(publishedXml);
             MergePointsBundle mergePointsBundle = fluxoMergeService.verifyMerge(publishedProcessDef, modifiedProcessDef);
@@ -450,6 +447,9 @@ public class ProcessBuilder implements Serializable {
                 JbpmUtil.getGraphSession().deployProcessDefinition(instance);
                 JbpmUtil.getJbpmSession().flush();
                 fluxo.setXmlExecucao(fluxo.getXml());
+                if (!fluxo.getPublicado()){
+                    fluxo.setPublicado(Boolean.TRUE);
+                }
                 try {
                     genericManager.update(fluxo);
                 } catch (DAOException e) {
