@@ -214,7 +214,9 @@ public class Processo implements Serializable {
     		setIdProcesso(generatedId);
     		setNumeroProcesso(getIdProcesso().toString());
     	}
-        this.processoPai = BeanManager.INSTANCE.getReference(EntityManager.class).merge(getProcessoPai());	
+        if (this.processoPai != null) {
+        	this.processoPai = BeanManager.INSTANCE.getReference(EntityManager.class).merge(getProcessoPai());
+        }
     	if(getProcessoRoot() == null){
     		Processo processo = this;
     		while (processo.getProcessoPai() != null) {
