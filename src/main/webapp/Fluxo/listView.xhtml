@@ -82,7 +82,7 @@
                         onclick="if (!confirm('#{infoxMessages['fluxo.publicar.confirm']}')) { return false; }"
                         onbegin="infox.showLoading();"
                         rendered="#{not (row.xml eq row.xmlExecucao and row.publicado)}"
-                        render="pageBodyDialogMessage fluxoList"
+                        render="pageBody"
                         oncomplete="infox.hideLoading();opener.refreshPage();">
                         <wi:toolBarGraphicImage title="#{infoxMessages['processBuilder.deployBtn']}" url="#{wiSkin.imageFolder}/deploy.png" />
                     </a:commandLink>
