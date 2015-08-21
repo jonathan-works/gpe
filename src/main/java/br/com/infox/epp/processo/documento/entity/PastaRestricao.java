@@ -68,6 +68,10 @@ public class PastaRestricao {
     @Column(name = "in_delete", nullable = false)
     private Boolean delete;
     
+    @NotNull
+    @Column(name = "in_logic_delete", nullable = false)
+    private Boolean logicDelete;
+    
     public Integer getId() {
         return id;
     }
@@ -133,6 +137,7 @@ public class PastaRestricao {
         nova.setRead(this.getRead());
         nova.setWrite(this.getWrite());
         nova.setDelete(this.getDelete());
+        nova.setLogicDelete(this.getLogicDelete());
         return nova;
     }
 
@@ -160,5 +165,13 @@ public class PastaRestricao {
 			return false;
 		return true;
 	}
+
+    public Boolean getLogicDelete() {
+        return logicDelete;
+    }
+
+    public void setLogicDelete(Boolean logicDelete) {
+        this.logicDelete = logicDelete;
+    }
     
 }

@@ -80,15 +80,7 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
         List<Pasta> pastaList = root.getPastaList();
         List<ModeloPasta> modeloPastaList = modeloPastaManager.getByFluxo(processo.getNaturezaCategoriaFluxo().getFluxo());
         for (ModeloPasta modeloPasta : modeloPastaList) {
-            Boolean alreadyExists = false;
-            for (Pasta pasta : pastaList) {
-                if (modeloPasta.equals(pasta.getModeloPasta())) {
-                    alreadyExists = true;
-                }
-            }
-            if (!alreadyExists) {
-                pastaList.add(createFromModelo(modeloPasta, processo));
-            }
+            pastaList.add(createFromModelo(modeloPasta, processo));
         }
         Pasta padrao = getDefault(processo.getProcessoRoot());
         if (padrao == null && !pastaList.isEmpty()) {
@@ -108,7 +100,6 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
         pasta.setEditavel(modeloPasta.getEditavel());
         pasta.setDescricao(modeloPasta.getDescricao());
         pasta.setOrdem(modeloPasta.getOrdem());
-        pasta.setModeloPasta(modeloPasta);
         
         persist(pasta);
         pastaRestricaoManager.createRestricoesFromModelo(modeloPasta, pasta);
