@@ -172,7 +172,7 @@ public class PastaAction implements Serializable {
     }
 
     public String getNomePasta(Pasta pasta) {
-		return pastaManager.getNomePasta(pasta, documentoProcessoAction.getDocumentoFilter(), !canLogicDelete(pasta));
+		return pastaManager.getNomePasta(pasta, documentoProcessoAction.getDocumentoFilter(), !documentoProcessoAction.podeUsuarioVerHistorico());
     }
 
     public Map<Integer, PastaRestricaoBean> getRestricoes() {
