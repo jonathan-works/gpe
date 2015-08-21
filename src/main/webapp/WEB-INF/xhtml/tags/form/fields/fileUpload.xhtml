@@ -55,14 +55,15 @@
       noDuplicate="true"
       render=":pageBodyDialogMessage #{reRender}"
       acceptedTypes="#{accept}"
+      oncomplete="#{oncomplete}"
       ontyperejected="alert('Extensão de arquivo inválida');"
-      onclear="clearUploadFile();">
+      onclear="clearUploadFile(); #{onclear}">
     </rich:fileUpload>
     
   </s:decorate>
 
     <a:jsFunction id="clearUploadFileId#{id}" name="clearUploadFile"
-        render="#{reRender}" execute="@this"
+        render="#{reRender}" execute="@this" oncomplete="infox.hideLoading()"
         actionListener="#{documentoUploader.clearUploadFile()}" />
 
 </ui:composition>
