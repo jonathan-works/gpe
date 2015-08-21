@@ -56,8 +56,8 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     	return getDao().getTotalDocumentosPasta(pasta);
     }
     
-    public int getTotalDocumentosPastaPorFiltros(Pasta pasta, DocumentoFilter documentoFilter) {
-    	return getDao().getTotalDocumentosPastaPorFiltros(pasta, documentoFilter);
+    public int getTotalDocumentosPastaPorFiltros(Pasta pasta, DocumentoFilter documentoFilter, Boolean semExcluidos) {
+    	return getDao().getTotalDocumentosPastaPorFiltros(pasta, documentoFilter, semExcluidos);
     }
     public int getTotalDocumentosPasta(Pasta pasta, String customFilter, Map<String, Object> params) {
     	return getDao().getTotalDocumentosPasta(pasta, customFilter, params);
@@ -71,8 +71,8 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     	return MessageFormat.format(pasta.getTemplateNomePasta(), totalDocumentos);
     }
     
-    public String getNomePasta(Pasta pasta,  DocumentoFilter documentoFilter) {
-    	return getNomePasta(pasta, getTotalDocumentosPastaPorFiltros(pasta, documentoFilter));
+    public String getNomePasta(Pasta pasta,  DocumentoFilter documentoFilter, Boolean semExcluidos) {
+    	return getNomePasta(pasta, getTotalDocumentosPastaPorFiltros(pasta, documentoFilter, semExcluidos));
     }
     
     public List<Pasta> createDefaultFolders(Processo processo) throws DAOException {
