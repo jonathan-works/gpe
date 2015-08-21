@@ -3,7 +3,6 @@ package br.com.infox.hibernate.function;
 import java.util.List;
 
 import org.hibernate.QueryException;
-import org.hibernate.dialect.SQLServerDialect;
 import org.hibernate.dialect.function.SQLFunction;
 import org.hibernate.engine.spi.Mapping;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
@@ -32,11 +31,9 @@ public class NumeroProcessoRoot implements SQLFunction {
     public String render(Type firstArgumentType, List arguments, SessionFactoryImplementor factory) throws QueryException {
         if (arguments.isEmpty()) {
             throw new QueryException("É necessácio informar o id do processo");
-        }
-        String schema = "";
-        if (factory.getDialect() instanceof SQLServerDialect) {
-            schema = "dbo.";
-        }
-        return schema + "NumeroProcessoRoot(" + arguments.get(0) + ")";
+        } 
+        return "(select p.nr_processo from tb_processo p where p.id_processo = "
+        		+ "(select p1.id_processo_root from tb_processo p1 where p1.id_processo = "+ arguments.get(0)+ ") )" ;
     }
+
 }

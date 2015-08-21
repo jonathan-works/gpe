@@ -27,7 +27,7 @@ public class TaskNameValidator implements Validator {
         TaskFitter taskFitter = (TaskFitter) Component.getInstance(TaskFitter.NAME);
         
         if (ProcessBuilder.instance().existemProcessosAssociadosAoFluxo()) {
-            throw new ValidatorException(new FacesMessage("Esta ação não pode ser executada quando possuir fluxo instanciado"));
+            throw new ValidatorException(new FacesMessage("Esta ação não pode ser executada enquanto o nó possuir atividade em fluxo instanciado"));
         }
 
         for (Node node : nodeFitter.getNodes()) {

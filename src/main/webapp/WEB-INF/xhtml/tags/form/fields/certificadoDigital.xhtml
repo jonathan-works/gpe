@@ -17,7 +17,8 @@
       <h:inputHidden id="#{id}Token" value="#{tokenField}" />
       <a:commandButton type="button" styleClass="buttons" disabled="#{disableb}" onbegin="infox.showLoading();"
       		action="#{elFunctions.invokeMethod(preSignAction)}" execute="#{execute}" rendered="#{empty rendered? 'true' : rendered}"
-      		oncomplete="infox.hideLoading();infox.CertDig.#{id}.init();" render="#{empty reRender ? '@this' : reRender}"
+      		oncomplete="infox.hideLoading(); if (#{!facesContext.validationFailed}) {infox.CertDig.#{id}.init();}"
+            render="#{empty reRender ? '@this' : reRender}"
       		value="#{empty signButtonCaption ? 'Assinar Digitalmente' : signButtonCaption}" >
       			<f:setPropertyActionListener value="#{propertyValue}" target="#{propertyTarget}" />
       </a:commandButton>

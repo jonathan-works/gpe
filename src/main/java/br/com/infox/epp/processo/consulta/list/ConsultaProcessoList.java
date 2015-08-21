@@ -37,11 +37,11 @@ public class ConsultaProcessoList extends EntityList<Processo> {
     private static final String R4 = " ( select nat.natureza "
     		+ " from Processo pc "
     		+ " inner join pc.naturezaCategoriaFluxo nat "
-    		+ " where pc.numeroProcesso = NumeroProcessoRoot(o.idProcesso) ) = #{consultaProcessoList.entity.naturezaCategoriaFluxo.natureza}";
+    		+ " where  pc.idProcesso = o.processoRoot.idProcesso ) = #{consultaProcessoList.entity.naturezaCategoriaFluxo.natureza}";
     private static final String R5 = " ( select nat.categoria "
     		+ " from Processo pc "
     		+ " inner join pc.naturezaCategoriaFluxo nat "
-    		+ " where pc.numeroProcesso = NumeroProcessoRoot(o.idProcesso) ) = #{consultaProcessoList.entity.naturezaCategoriaFluxo.categoria}";
+    		+ " where pc.idProcesso = o.processoRoot.idProcesso ) = #{consultaProcessoList.entity.naturezaCategoriaFluxo.categoria}";
     
     @In
     private ProcessoTarefaManager processoTarefaManager;

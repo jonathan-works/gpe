@@ -27,6 +27,7 @@ import br.com.infox.epp.documento.entity.Variavel;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
+import br.com.infox.epp.system.annotation.Ignore;
 import br.com.infox.ibpm.process.definition.expressionWizard.ExpressionTokenizer;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.VariableCollector;
@@ -35,6 +36,7 @@ import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.ApplicationException;
 import br.com.infox.seam.util.ComponentUtil;
 
+@Ignore
 public class DecisionNode extends Node {
     private static final long serialVersionUID = 1L;
 

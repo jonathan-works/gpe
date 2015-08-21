@@ -11,8 +11,18 @@
   xmlns:wi="http://www.itx.com.br/jsf"
   xmlns:infox="http://www.infox.com.br/jsf"
   template="/WEB-INF/xhtml/templates/minimal.xhtml">
+ 
+  
   <ui:define name="title">#{infoxMessages['fluxo.titlePage']}: #{processBuilder.instance.name}</ui:define>
   <ui:define name="head">
+  <c:if test="#{not empty flash.fluxo}">
+  		<c:set property="fluxo" target="#{processBuilder}" value="#{flash.fluxo}"></c:set>
+  		<c:set property="fluxo" target="#{definicaoVariavelProcessoAction}" value="#{flash.fluxo}"></c:set>
+  		<c:set property="fluxo" target="#{variavelClassificacaoDocumentoAction}" value="#{flash.fluxo}"></c:set>
+ 		 <f:metadata>
+	  			<f:event listener="#{processBuilder.load()}" type="preRenderView" />
+  		</f:metadata>
+  </c:if>
     <h:outputScript
       name="jbpmGraph.js"
       library="js" />
@@ -108,14 +118,6 @@
         styleClass="buttons #{wi:get(styleClass, '')}"
         onclick="checkIfEditorExists();" />
       <a:commandButton
-        id="publicar"
-        actionListener="#{processBuilder.prepareUpdate}"
-        action="#{processBuilder.deploy}"
-        value="#{infoxMessages['processBuilder.deployBtn']}"
-        rendered="#{processBuilder.exists}"
-        oncomplete="opener.refreshPage();"
-        styleClass="buttons #{wi:get(styleClass, '')}" />
-      <a:commandButton
         id="novoProcesso"
         actionListener="#{processBuilder.prepareUpdate}"
         action="#{processBuilder.update}"
@@ -155,5 +157,7 @@
       width="920">
       <ui:include src="actions/addClassificacaoDocumento.xhtml" />
     </wi:modalPanel>
+    
+    
   </ui:define>
 </ui:composition>

@@ -55,7 +55,7 @@
                                 rendered="#{type eq 'to'}">
                                 <a:ajax
                                     event="click"
-                                    listener="#{transitionFitter.removeTransition(transition, type)}"
+                                    listener="#{transitionFitter.removeTransition(transicaoHandler, type)}"
                                     execute="@this"
                                     onbeforesubmit="if(!confirm('Confirma?')) return false;"
                                     render="transition#{type}Table,nodesDiv"
@@ -80,7 +80,7 @@
                             event="change"
                             execute="@this"
                             render="transitionName,nodesDiv"
-                            listener="#{transitionFitter.changeTransition(transition, type)}"
+                            listener="#{transitionFitter.changeTransition(transicaoHandler, type)}"
                             limitRender="true" />
                     </h:selectOneMenu>
                     <h:outputText

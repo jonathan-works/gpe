@@ -30,6 +30,8 @@
             limitRender="true"
             status=":status"
             render="@form"
+            onbegin="infox.showLoading();"
+            oncomplete="infox.hideLoading();"
             execute="@this" />
         </wi:selectOneMenu>
         <wi:selectOneMenuEntity id="colegiadaParaMonocratica"
@@ -46,6 +48,8 @@
             event="change"
             limitRender="true"
             status=":status"
+            onbegin="infox.showLoading();"
+            oncomplete="infox.hideLoading();"
             render="@form"
             execute="@form" />
         </wi:selectOneMenuEntity>

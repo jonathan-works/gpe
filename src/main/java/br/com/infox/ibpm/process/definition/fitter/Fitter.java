@@ -17,12 +17,18 @@ public abstract class Fitter {
     public abstract void clear();
 
     protected ProcessBuilder getProcessBuilder() {
+    	if(pb == null || pb.getFluxo() == null)
+    		findProcessBuilder();
         return pb;
     }
 
     @Create
     public void init() {
-        pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
+        findProcessBuilder();
     }
+
+	private void findProcessBuilder() {
+		pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
+	}
 
 }

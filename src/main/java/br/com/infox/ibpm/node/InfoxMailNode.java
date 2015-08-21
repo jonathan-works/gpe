@@ -12,8 +12,6 @@ import java.util.Map;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.jboss.seam.faces.FacesMessages;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jbpm.JbpmContext;
 import org.jbpm.graph.action.ActionTypes;
 import org.jbpm.graph.def.Action;
@@ -28,10 +26,14 @@ import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.mail.entity.ListaEmail;
 import br.com.infox.epp.mail.manager.ListaEmailManager;
+import br.com.infox.epp.system.annotation.Ignore;
 import br.com.infox.epp.twitter.entity.TwitterTemplate;
 import br.com.infox.epp.twitter.manager.TwitterTemplateManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
 
+@Ignore
 public class InfoxMailNode extends MailNode {
 
     private static final long serialVersionUID = 1L;
