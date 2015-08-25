@@ -14,6 +14,7 @@ public interface FluxoQuery {
     String CODIGO_FLUXO = "cd_fluxo";
     String DESCRICAO_FLUXO = "ds_fluxo";
     String XML_FLUXO = "ds_xml";
+    String XML_FLUXO_EXECUCAO = "ds_xml_exec";
     String PRAZO = "qt_prazo";
     String PUBLICADO = "in_publicado";
     String DATA_INICIO_PUBLICACAO = "dt_inicio_publicacao";

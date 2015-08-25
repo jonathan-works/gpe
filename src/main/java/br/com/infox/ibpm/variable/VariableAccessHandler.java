@@ -186,10 +186,35 @@ public class VariableAccessHandler implements Serializable {
                 }
             }
             newExpression.append(")}");
+            action.setName(name);
             action.setActionExpression(newExpression.toString());
         } else {
             removeAction(action);
         }
+    }
+    
+    
+    @SuppressWarnings("unchecked")
+	public void removeTaskAction(String actionName){
+    	GraphElement parent = task.getParent();
+    	Map<String, Event> events = parent.getEvents();
+    	if (events != null) {
+            for (Object entry : events.entrySet()) {
+    			Event event = ((Map.Entry<String,Event>)entry).getValue();
+    			for (Object o : event.getActions()) {
+                    Action a = (Action) o;
+                    String name = a.getName();
+                    String exp = a.getActionExpression();
+                    if ( (name != null && name.equalsIgnoreCase(actionName) ) || ( exp != null  && exp.contains("'"+ actionName +"'") ) ) {
+                    	event.removeAction(a);
+                    	 if (event.getActions().isEmpty()) {
+                             event.getGraphElement().removeEvent(event);
+                         }
+                        return ;
+                    }
+                }
+    		}
+    	}
     }
 
     private void removeAction(Action action) {
@@ -220,6 +245,29 @@ public class VariableAccessHandler implements Serializable {
         Action action = new Action();
         e.addAction(action);
         return action;
+    }
+    
+    
+    private Action getActionNodeEnterByName(String name) {
+    	GraphElement parent = task.getParent();
+    	Event e = parent.getEvent(Event.EVENTTYPE_NODE_ENTER);
+        if (e == null) {
+            e = new Event(parent, Event.EVENTTYPE_NODE_ENTER);
+            parent.addEvent(e);
+        }
+    	if (e.getActions() != null) {
+    		for (Object o : e.getActions()) {
+    			Action a = (Action) o;
+    			String expName = a.getName();
+    			if (expName != null && expName.equalsIgnoreCase(name)) {
+    				return a;
+    			}
+    		}
+    	}
+    	Action action = new Action();
+    	action.setName(name);
+    	e.addAction(action);
+    	return action;
     }
 
     public VariableAccess getVariableAccess() {

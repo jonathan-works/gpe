@@ -5,7 +5,7 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS;
 import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.COUNT_PARTES_ATIVAS_DO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.DATA_FIM; 
+import static br.com.infox.epp.processo.query.ProcessoQuery.DATA_FIM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.DATA_INICIO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST;
 import static br.com.infox.epp.processo.query.ProcessoQuery.GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST_QUERY;
@@ -91,6 +91,8 @@ import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 import br.com.infox.epp.processo.query.ProcessoQuery;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
+import javax.persistence.EntityManager;
+import br.com.infox.epp.cdi.config.BeanManager;
 
 @Entity
 @Table(name = TABLE_PROCESSO)
@@ -200,6 +202,10 @@ public class Processo implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "processo", cascade = {CascadeType.REMOVE})
     private List<Pasta> pastaList = new ArrayList<>();
     
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="id_processo_root")
+    private Processo processoRoot;
+    
     
     @PrePersist
     private void prePersist() {
@@ -208,10 +214,28 @@ public class Processo implements Serializable {
     		setIdProcesso(generatedId);
     		setNumeroProcesso(getIdProcesso().toString());
     	}
+        if (this.processoPai != null) {
+        	this.processoPai = BeanManager.INSTANCE.getReference(EntityManager.class).merge(getProcessoPai());
+        }
+    	if(getProcessoRoot() == null){
+    		Processo processo = this;
+    		while (processo.getProcessoPai() != null) {
+    			processo = processo.getProcessoPai();
+    		}
+    		setProcessoRoot(processo);
+    	}
     }
-        
     
-    public List<Processo> getFilhos() {
+    public Processo getProcessoRoot() {
+		return processoRoot;
+	}
+
+	public void setProcessoRoot(Processo processoRoot) {
+		this.processoRoot = processoRoot;
+	}
+
+
+	public List<Processo> getFilhos() {
 		return processosFilhos;
 	}
 
@@ -377,6 +401,7 @@ public class Processo implements Serializable {
     	return naturezaCategoriaFluxo.getNatureza().getHasPartes();
     }
 	
+	
 	@Transient
 	public MetadadoProcesso getMetadado(MetadadoProcessoDefinition metadadoProcessoDefinition) {
 		for (MetadadoProcesso metadadoProcesso : getMetadadoProcessoList()) {
@@ -396,15 +421,6 @@ public class Processo implements Serializable {
 			}
 		}
 		return metadadoList;
-	}
-	
-	@Transient 
-	public Processo getProcessoRoot() {
-		Processo processo = this;
-		while (processo.getProcessoPai() != null) {
-			processo = processo.getProcessoPai();
-		}
-		return processo;
 	}
 	
 	@Override

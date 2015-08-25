@@ -23,7 +23,7 @@ import br.com.infox.seam.context.ContextFacade;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(ProcessBuilderGraph.NAME)
-@Scope(ScopeType.CONVERSATION)
+@Scope(ScopeType.PAGE)
 @AutoCreate
 @Transactional
 public class ProcessBuilderGraph implements Serializable {

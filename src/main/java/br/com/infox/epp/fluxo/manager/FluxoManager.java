@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -22,6 +26,8 @@ import br.com.infox.epp.fluxo.entity.RaiaPerfil;
 
 @Name(FluxoManager.NAME)
 @AutoCreate
+@Stateless
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
 
     private static final long serialVersionUID = -6521661616139554331L;

@@ -66,6 +66,7 @@ public class GenerateDocumentoHandler implements ActionHandler, CustomAction {
 		ProcessoManager processoManager = ComponentUtil.getComponent(ProcessoManager.NAME);
 		ContextInstance contextInstance = executionContext.getContextInstance();
 		Processo processo = processoManager.getProcessoEpaByIdJbpm(executionContext.getProcessInstance().getId());
+		Processo processoRaiz = processo.getProcessoRoot();
 		ClassificacaoDocumento classificacaoDocumento = classificacaoDocumentoManager.find(configuration.idClassificacaoDocumento);
 		try {
 			ModeloDocumento modeloDocumento = modeloDocumentoManager.find(configuration.idModeloDocumento);
@@ -73,11 +74,11 @@ public class GenerateDocumentoHandler implements ActionHandler, CustomAction {
 	                .and(new SeamExpressionResolver()).build();
 			String texto = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, chain);
 			DocumentoBin documentoBin = documentoBinManager.createProcessoDocumentoBin(modeloDocumento.getTituloModeloDocumento(), texto);
-			Documento documento = documentoManager.createDocumento(processo, modeloDocumento.getTituloModeloDocumento(), documentoBin, classificacaoDocumento);
+			Documento documento = documentoManager.createDocumento(processoRaiz, modeloDocumento.getTituloModeloDocumento(), documentoBin, classificacaoDocumento);
 			
 			String parametroNomePastaDocumentoGerado = Parametros.PASTA_DOCUMENTO_GERADO.getValue();
 			if (parametroNomePastaDocumentoGerado != null) {
-				Pasta pasta = pastaManager.getPastaByNome(parametroNomePastaDocumentoGerado, processo);
+				Pasta pasta = pastaManager.getPastaByNome(parametroNomePastaDocumentoGerado, processoRaiz);
 				if (pasta != null) {
 					documento.setPasta(pasta);
 					documentoManager.update(documento);

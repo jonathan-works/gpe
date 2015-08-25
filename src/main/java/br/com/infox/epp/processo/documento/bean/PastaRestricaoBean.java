@@ -5,11 +5,13 @@ public class PastaRestricaoBean {
     private Boolean read;
     private Boolean write;
     private Boolean delete;
+    private Boolean logicDelete;
 
     public PastaRestricaoBean() {
         this.read = false;
         this.write = false;
         this.delete = false;
+        this.logicDelete = false;
     }
     
     public Boolean getRead() {
@@ -34,5 +36,13 @@ public class PastaRestricaoBean {
 
     public void setDelete(Boolean delete) {
         this.delete = delete;
+    }
+
+    public Boolean getLogicDelete() {
+        return logicDelete;
+    }
+
+    public void setLogicDelete(Boolean logicDelete) {
+        this.logicDelete = logicDelete;
     }
 }

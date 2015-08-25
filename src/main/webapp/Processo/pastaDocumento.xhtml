@@ -108,23 +108,23 @@
 					url="#{wiSkin.imageFolder}/anexo.png"
 					title="#{infoxMessages['documentoProcesso.moverDocumento']}" />
 				<h:graphicImage styleClass="opacityHover"
-					url="#{wiSkin.imageFolder}/view.png"
+					url="#{wiSkin.imageFolder}/time_16.png"
 					title="#{infoxMessages['button.historico']}"
 					rendered="#{documentoProcessoAction.hasHistoricoDocumento(rowId) and documentoProcessoAction.podeUsuarioVerHistorico()}"
 					onmouseup="selectDocumento(#{rowId});" />
 				<h:graphicImage styleClass="opacityHover"
 					url="#{wiSkin.imageFolder}/remove.png"
-					rendered="#{not row.excluido and documentoProcessoAction.podeUsuarioExcluirRestaurar()}"
+					rendered="#{not row.excluido and pastaAction.canLogicDeleteFromInstance()}"
 					title="#{infoxMessages['button.delete']}"
 					onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(true, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');" />
 				<h:graphicImage styleClass="opacityHover"
 					url="#{wiSkin.imageFolder}/stock_undelete.png"
-					rendered="#{row.excluido and documentoProcessoAction.podeUsuarioExcluirRestaurar()}"
+					rendered="#{row.excluido and pastaAction.canLogicDeleteFromInstance()}"
 					title="#{infoxMessages['button.restaurar']}"
 					onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(false, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');" />
 				<h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" styleClass="opacityHover"
 					onclick="infox.openPopUp('protocolo', '#{pathResolver.contextPath}/Processo/Documento/protocolo.seam?id=#{row.id}&amp;cod=#{row.documentoBin.uuid.toString()}','800','600');"
-					rendered="#{row.documentoBin.suficientementeAssinado and processoProtocoloDocumentoAction.isDocumentoInclusoPorUsuarioExterno(row)}"
+					rendered="#{row.documentoBin.suficientementeAssinado and documentoProcessoAction.isDocumentoInclusoPorUsuarioExterno(row)}"
 					title="#{infoxMessages['protocolo.gerarProtocolo']}" />
 
 				<h:form>

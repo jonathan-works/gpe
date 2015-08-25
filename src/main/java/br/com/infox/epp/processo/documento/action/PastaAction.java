@@ -78,9 +78,10 @@ public class PastaAction implements Serializable {
         if (od instanceof Documento && op instanceof Pasta) {
             Documento doc = (Documento) od;
             Pasta pasta = (Pasta) op;
-            Pasta pastaAnterior = doc.getPasta();
-            doc.setPasta(pasta);
+            Pasta pastaAnterior = pastaManager.find(doc.getPasta().getId());
+            if (pastaAnterior.equals(pasta)) return;
             try {
+                doc.setPasta(pasta);
                 documentoManager.update(doc);
                 pastaManager.refresh(pasta);
                 pastaManager.refresh(pastaAnterior);
@@ -107,6 +108,15 @@ public class PastaAction implements Serializable {
     
     public Boolean canDeleteFromInstance() {
         return canDelete(getInstance());
+    }
+    
+    public Boolean canLogicDelete(Pasta pasta) {
+        PastaRestricaoBean restricaoDaPasta = restricoes.get(pasta.getId());
+        return restricaoDaPasta != null && restricaoDaPasta.getLogicDelete();
+    }
+    
+    public Boolean canLogicDeleteFromInstance() {
+        return canLogicDelete(getInstance());
     }
     
     public Pasta getInstance() {
@@ -162,7 +172,7 @@ public class PastaAction implements Serializable {
     }
 
     public String getNomePasta(Pasta pasta) {
-		return pastaManager.getNomePasta(pasta, documentoProcessoAction.getDocumentoFilter());
+		return pastaManager.getNomePasta(pasta, documentoProcessoAction.getDocumentoFilter(), !documentoProcessoAction.podeUsuarioVerHistorico());
     }
 
     public Map<Integer, PastaRestricaoBean> getRestricoes() {

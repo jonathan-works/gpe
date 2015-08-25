@@ -130,7 +130,6 @@ public class DocumentoComunicacaoAction implements Serializable {
 				genericManager.remove(documentoModelo);
 			} catch (DAOException e) {
 				LOG.error("", e);
-				e.printStackTrace();
 				actionMessagesService.handleDAOException(e);
 			}
 		}

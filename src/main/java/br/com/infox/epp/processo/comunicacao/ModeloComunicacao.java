@@ -91,7 +91,7 @@ public class ModeloComunicacao implements Serializable {
 	@Column(name = "in_enviar_relatoria", nullable = false)
 	private Boolean enviarRelatoria = Boolean.FALSE;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modeloComunicacao", cascade = CascadeType.REMOVE)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modeloComunicacao")
 	private List<DestinatarioModeloComunicacao> destinatarios = new ArrayList<>(0);
 	
 	@OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "modeloComunicacao")

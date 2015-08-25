@@ -59,6 +59,7 @@ public class ModeloPastaManager extends Manager<ModeloPastaDAO, ModeloPasta>{
     	restricao.setRead(Boolean.TRUE);
     	restricao.setWrite(Boolean.TRUE);
     	restricao.setDelete(Boolean.TRUE);
+    	restricao.setLogicDelete(Boolean.FALSE);
     	modeloPastaRestricaoManager.persist(restricao);
     	return modelo;
 	}

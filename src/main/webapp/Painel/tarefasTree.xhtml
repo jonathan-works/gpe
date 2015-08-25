@@ -17,6 +17,8 @@
             toggleType="client"
             execute="@this"
             selectionType="ajax"
+            onbegin="infox.showLoading('Buscando Processos...');"
+            oncomplete="infox.hideLoading();"
             selectionChangeListener="#{painelTreeHandler.processTreeSelectionChange}"
             render="divPainelProcessosInterna, :pesquisaListForm"
             var="node">

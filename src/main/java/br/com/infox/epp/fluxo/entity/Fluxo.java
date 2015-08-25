@@ -46,6 +46,7 @@ import static br.com.infox.epp.fluxo.query.FluxoQuery.PUBLICADO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.SEQUENCE_FLUXO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.TABLE_FLUXO;
 import static br.com.infox.epp.fluxo.query.FluxoQuery.XML_FLUXO;
+import static br.com.infox.epp.fluxo.query.FluxoQuery.XML_FLUXO_EXECUCAO;
 
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -93,17 +94,45 @@ public class Fluxo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @SequenceGenerator(allocationSize = 1, initialValue = 1, name = GENERATOR, sequenceName = SEQUENCE_FLUXO)
+    @Id
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
+    @Column(name = ID_FLUXO, unique = true, nullable = false)
     private Integer idFluxo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = ID_USUARIO_PUBLICACAO)
     private UsuarioLogin usuarioPublicacao;
+    @Column(name = CODIGO_FLUXO, length = DESCRICAO_PEQUENA, nullable = false)
+    @Size(min = FLAG, max = DESCRICAO_PEQUENA)
+    @NotNull
     private String codFluxo;
+    @Column(name = DESCRICAO_FLUXO, nullable = false, length = DESCRICAO_PADRAO, unique = true)
+    @Size(min = FLAG, max = DESCRICAO_PADRAO)
+    @NotNull
     private String fluxo;
+    @Column(name = ATIVO, nullable = false)
+    @NotNull
     private Boolean ativo;
+    @Column(name = PRAZO, nullable = true)
+    @NotNull
     private Integer qtPrazo;
+    @Column(name = PUBLICADO, nullable = false)
+    @NotNull
     private Boolean publicado;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = DATA_INICIO_PUBLICACAO, nullable = false)
+    @NotNull
     private Date dataInicioPublicacao;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = DATA_FIM_PUBLICACAO)
     private Date dataFimPublicacao;
+    @Column(name = XML_FLUXO)
     private String xml;
+    @Column(name = XML_FLUXO_EXECUCAO)
+    private String xmlExecucao;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = FLUXO_ATTRIBUTE)
     private List<FluxoPapel> fluxoPapelList = new ArrayList<FluxoPapel>(0);
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = FLUXO_ATTRIBUTE)
     private List<ModeloPasta> modeloPastaList = new ArrayList<>(0); 
 
     public Fluxo() {
@@ -128,10 +157,6 @@ public class Fluxo implements Serializable {
         this.dataFimPublicacao = dataFimPublicacao;
     }
 
-    @SequenceGenerator(allocationSize = 1, initialValue = 1, name = GENERATOR, sequenceName = SEQUENCE_FLUXO)
-    @Id
-    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
-    @Column(name = ID_FLUXO, unique = true, nullable = false)
     public Integer getIdFluxo() {
         return this.idFluxo;
     }
@@ -140,8 +165,6 @@ public class Fluxo implements Serializable {
         this.idFluxo = idFluxo;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = ID_USUARIO_PUBLICACAO)
     public UsuarioLogin getUsuarioPublicacao() {
         return this.usuarioPublicacao;
     }
@@ -150,9 +173,6 @@ public class Fluxo implements Serializable {
         this.usuarioPublicacao = usuarioPublicacao;
     }
 
-    @Column(name = CODIGO_FLUXO, length = DESCRICAO_PEQUENA, nullable = false)
-    @Size(min = FLAG, max = DESCRICAO_PEQUENA)
-    @NotNull
     public String getCodFluxo() {
         return this.codFluxo;
     }
@@ -164,9 +184,6 @@ public class Fluxo implements Serializable {
         }
     }
 
-    @Column(name = DESCRICAO_FLUXO, nullable = false, length = DESCRICAO_PADRAO, unique = true)
-    @Size(min = FLAG, max = DESCRICAO_PADRAO)
-    @NotNull
     public String getFluxo() {
         return this.fluxo;
     }
@@ -178,7 +195,6 @@ public class Fluxo implements Serializable {
         }
     }
 
-    @Column(name = XML_FLUXO)
     public String getXml() {
         return this.xml;
     }
@@ -187,8 +203,14 @@ public class Fluxo implements Serializable {
         this.xml = xml;
     }
 
-    @Column(name = ATIVO, nullable = false)
-    @NotNull
+    public String getXmlExecucao() {
+        return xmlExecucao;
+    }
+
+    public void setXmlExecucao(String xmlExecucao) {
+        this.xmlExecucao = xmlExecucao;
+    }
+
     public Boolean getAtivo() {
         return this.ativo;
     }
@@ -197,8 +219,6 @@ public class Fluxo implements Serializable {
         this.ativo = ativo;
     }
 
-    @Column(name = PRAZO, nullable = true)
-    @NotNull
     public Integer getQtPrazo() {
         return this.qtPrazo;
     }
@@ -207,8 +227,6 @@ public class Fluxo implements Serializable {
         this.qtPrazo = qtPrazo;
     }
 
-    @Column(name = PUBLICADO, nullable = false)
-    @NotNull
     public Boolean getPublicado() {
         return this.publicado;
     }
@@ -217,9 +235,6 @@ public class Fluxo implements Serializable {
         this.publicado = publicado;
     }
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = DATA_INICIO_PUBLICACAO, nullable = false)
-    @NotNull
     public Date getDataInicioPublicacao() {
         return this.dataInicioPublicacao;
     }
@@ -228,8 +243,6 @@ public class Fluxo implements Serializable {
         this.dataInicioPublicacao = dataInicioPublicacao;
     }
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = DATA_FIM_PUBLICACAO)
     public Date getDataFimPublicacao() {
         return this.dataFimPublicacao;
     }
@@ -273,7 +286,6 @@ public class Fluxo implements Serializable {
         this.fluxoPapelList = fluxoPapelList;
     }
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = FLUXO_ATTRIBUTE)
     public List<FluxoPapel> getFluxoPapelList() {
         return fluxoPapelList;
     }
@@ -282,7 +294,6 @@ public class Fluxo implements Serializable {
         this.modeloPastaList = modeloPastaList;
     }
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = FLUXO_ATTRIBUTE)
     public List<ModeloPasta> getModeloPastaList() {
         return modeloPastaList;
     }

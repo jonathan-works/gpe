@@ -1,6 +1,9 @@
 package br.com.infox.epp.fluxo.entity;
 
-import static br.com.infox.epp.fluxo.query.ModeloPastaRestricaoQuery.*;
+import static br.com.infox.epp.fluxo.query.ModeloPastaRestricaoQuery.DELETE_BY_MODELO_PASTA;
+import static br.com.infox.epp.fluxo.query.ModeloPastaRestricaoQuery.DELETE_BY_MODELO_PASTA_QUERY;
+import static br.com.infox.epp.fluxo.query.ModeloPastaRestricaoQuery.GET_BY_MODELO_PASTA;
+import static br.com.infox.epp.fluxo.query.ModeloPastaRestricaoQuery.GET_BY_MODELO_PASTA_QUERY;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -61,6 +64,10 @@ public class ModeloPastaRestricao {
     @NotNull
     @Column(name = "in_delete", nullable = false)
     private Boolean delete;
+    
+    @NotNull
+    @Column(name = "in_logic_delete", nullable = false)
+    private Boolean logicDelete;
 
     public Integer getId() {
         return id;
@@ -116,5 +123,13 @@ public class ModeloPastaRestricao {
 
     public void setDelete(Boolean delete) {
         this.delete = delete;
+    }
+
+    public Boolean getLogicDelete() {
+        return logicDelete;
+    }
+
+    public void setLogicDelete(Boolean logicDelete) {
+        this.logicDelete = logicDelete;
     }
 }

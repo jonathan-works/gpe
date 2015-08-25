@@ -150,7 +150,8 @@ public class ConsultaController extends AbstractController {
 
 	@Override
     public void setTab(String tab) {
-        super.setTab(tab);
+        if (tab != null && tab.equals(getTab())) return;
+	    super.setTab(tab);
         if(tab.equals("tabAnexos") || tab.equals("tabAnexar")){
         	pastaAction.setProcesso(this.getProcesso());
         }

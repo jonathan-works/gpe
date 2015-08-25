@@ -18,6 +18,7 @@ import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.cliente.dao.CalendarioEventosDAO;
 import br.com.infox.epp.cliente.entity.CalendarioEventos;
 import br.com.infox.util.time.DateRange;
+import org.jboss.seam.ScopeType;
 
 @Scope(ScopeType.STATELESS)
 @Stateless

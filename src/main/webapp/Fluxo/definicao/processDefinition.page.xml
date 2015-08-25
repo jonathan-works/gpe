@@ -5,10 +5,7 @@
       xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/seam/pages-2.3.xsd">
 
 	<begin-conversation join="true" />
-	<param name="id" value="#{processBuilder.id}"/>
 	<param name="node" value="#{nodeFitter.nodeIndex}"/>
 	<param name="tab" value="#{processBuilder.tab}"/>
 	<action execute="#{processBuilder.getPaintedGraph()}" if="#{processBuilder.tab eq 'graphTab'}"/>
-	<action execute="#{definicaoVariavelProcessoAction.setFluxo(fluxoCrudAction.instance)}" on-postback="false"/>
-    <action execute="#{variavelClassificacaoDocumentoAction.setFluxo(fluxoCrudAction.instance)}" on-postback="false"/>
 </page>

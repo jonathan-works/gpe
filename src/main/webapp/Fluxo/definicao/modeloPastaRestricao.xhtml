@@ -171,6 +171,10 @@
 					columnHeader="#{infoxMessages['modeloPasta.retirarRestricao']}"
                     hideOrder="true"
 					value="#{row.delete}" />
+				<wi:columnBoolean columnId="restricaoExclusaoLogica"
+					columnHeader="#{infoxMessages['pasta.exclusaoLogicaRestricao']}"
+                    hideOrder="true"
+					value="#{row.logicDelete}" />
 			</wi:dataTable>
 	
 			<h:form>
@@ -205,6 +209,7 @@
             #{rich:jQuery('readInput')}.attr('checked', false);
             #{rich:jQuery('writeInput')}.attr('checked', false);
             #{rich:jQuery('deleteInput')}.attr('checked', false);
+            #{rich:jQuery('logicDeleteInput')}.attr('checked', false);
             $('.errorFields.errors').remove();
             $('.errors').removeClass('errors');
         }
@@ -218,6 +223,7 @@
             #{rich:jQuery('editReadInput')}.attr('checked', false);
             #{rich:jQuery('editWriteInput')}.attr('checked', false);
             #{rich:jQuery('editDeleteInput')}.attr('checked', false);
+            #{rich:jQuery('editLogicDeleteInput')}.attr('checked', false);
             $('.errorFields.errors').remove();
             $('.errors').removeClass('errors');
         }
@@ -282,7 +288,7 @@
     </rich:popupPanel>
    
     <rich:popupPanel id="addModeloRestricaoPanel" moveable="true" show="false"
-        resizeable="true" minWidth="290" minHeight="360"
+        resizeable="true" minWidth="290" minHeight="430"
         header="#{infoxMessages['modeloPasta.adicionarRestricao']}"
         onbeforehide="clearAddModeloRestricaoFields();">
         <f:facet name="controls">
@@ -335,6 +341,10 @@
             <wi:selectBooleanCheckbox id="deleteInput"
                 label="#{infoxMessages['pasta.retirarRestricao']}"
                 value="#{modeloPastaRestricaoAction.restricaoInstance.delete}" />
+            <wi:selectBooleanCheckbox id="logicDeleteInput"
+                label="#{infoxMessages['pasta.exclusaoLogicaRestricao']}"
+                value="#{modeloPastaRestricaoAction.restricaoInstance.logicDelete}" />
+
             <br />
             <wi:commandButton id="addRestricaoButton"
                 action="#{modeloPastaRestricaoAction.persistRestricao()}"
@@ -347,7 +357,7 @@
     </rich:popupPanel>
 
     <rich:popupPanel id="editModeloRestricaoPanel" moveable="true" show="false"
-        resizeable="true" minWidth="290" minHeight="360"
+        resizeable="true" minWidth="290" minHeight="430"
         header="#{infoxMessages['modeloPasta.restricao.edit']}"
         onbeforehide="clearEditModeloRestricaoFields();">
         <f:facet name="controls">
@@ -405,6 +415,9 @@
             <wi:selectBooleanCheckbox id="editDeleteInput"
                 label="#{infoxMessages['pasta.retirarRestricao']}"
                 value="#{modeloPastaRestricaoAction.restricaoInstance.delete}" />
+            <wi:selectBooleanCheckbox id="editLogicDeleteInput"
+                label="#{infoxMessages['pasta.exclusaoLogicaRestricao']}"
+                value="#{modeloPastaRestricaoAction.restricaoInstance.logicDelete}" />
             <br />
             <wi:commandButton id="editRestricaoButton"
                 action="#{modeloPastaRestricaoAction.updateRestricao()}"

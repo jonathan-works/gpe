@@ -153,6 +153,7 @@ public class SituacaoProcessoDAO {
 			appendPerfilTemplateFilter(abstractQuery);
 		}
 	}
+    
 	
 	private void appendSigiloProcessoFilter(AbstractQuery<?> principalQuery) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
@@ -228,7 +229,7 @@ public class SituacaoProcessoDAO {
 		return cq;
 	}
     
-	private void appendDestinoOrDestinatarioFilter(AbstractQuery<?> abstractQuery) {
+	protected void appendDestinoOrDestinatarioFilter(AbstractQuery<?> abstractQuery) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Subquery<Integer> subqueryDestino = createSubqueryDestino(abstractQuery);
         Subquery<Integer> subqueryPerfilDestino = createSubqueryPerfilDestino(abstractQuery);
@@ -248,7 +249,7 @@ public class SituacaoProcessoDAO {
         abstractQuery.where(predicateQuery);
     }
 
-	private void appendLocalizacaoExpedidoraFilter(AbstractQuery<?> abstractQuery) {
+	protected void appendLocalizacaoExpedidoraFilter(AbstractQuery<?> abstractQuery) {
 	    CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 	    Subquery<Integer> subqueryLocalizacaoExpediu = createSubqueryLocalizacaoExpediu(abstractQuery);
 	    Predicate predicateQuery = abstractQuery.getRestriction();
@@ -374,7 +375,7 @@ public class SituacaoProcessoDAO {
         abstractQuery.where(predicate);
 	}
     
-    private void appendUnidadeDecisoraFilter(AbstractQuery<?> abstractQuery) {
+    protected void appendUnidadeDecisoraFilter(AbstractQuery<?> abstractQuery) {
     	if (authenticator.isUsuarioLogandoInMonocraticaAndColegiada()) {
     		appendUnidadeDecisoraColegiadaFilter(abstractQuery);
     		appendUnidadeDecisoraMonocraticaFilter(abstractQuery);
@@ -385,7 +386,7 @@ public class SituacaoProcessoDAO {
         }
 	}
     
-	private void appendUnidadeDecisoraColegiadaFilter(AbstractQuery<?> abstractQuery) {
+	protected void appendUnidadeDecisoraColegiadaFilter(AbstractQuery<?> abstractQuery) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		Root<?> root = abstractQuery.getRoots().iterator().next();
         Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
