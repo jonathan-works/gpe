@@ -145,22 +145,29 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
                 if (expression == null) {
                 	expression = group;
                 }
-            	Expression expr = new Expression(expression);
-            	if (resolver != null) {
-            		try {
-            			expr = resolver.resolve(expr);
-            		} catch (RuntimeException e) {
-            			modeloProcessado.append("Erro na linha: '" + linhas[i]);
-                        modeloProcessado.append("': " + e.getMessage());
-                        LOG.error(".appendTail()", e);
-            		}
+                String value = "";
+                if (!expression.startsWith("#{modelo:")) {
+	            	Expression expr = new Expression(expression);
+	            	if (resolver != null) {
+	            		try {
+	            			expr = resolver.resolve(expr);
+	            		} catch (RuntimeException e) {
+	            			modeloProcessado.append("Erro na linha: '" + linhas[i]);
+	                        modeloProcessado.append("': " + e.getMessage());
+	                        LOG.error(".appendTail()", e);
+	            		}
+	                }
+	                // Os caracteres \ e $ devem ser escapados devido ao funcionamento do método
+	                // Matcher#appendReplacement (ver o Javadoc correspondente).
+	                // Importante manter a ordem dos replaces abaixo
+	            	value = expr.isResolved() ? expr.getValue() : "";
+	            	value = value == null ? "" : value;
+	                value = value.replace("\\", "\\\\").replace("$", "\\$");
+                } else {
+                	String titulo = expression.substring("#{modelo:".length(), expression.length()-1);
+                	ModeloDocumento modeloDocumento2 = getModeloDocumentoByTitulo(titulo);
+                	value = evaluateModeloDocumento(modeloDocumento2, modeloDocumento2.getModeloDocumento(), resolver);
                 }
-                // Os caracteres \ e $ devem ser escapados devido ao funcionamento do método
-                // Matcher#appendReplacement (ver o Javadoc correspondente).
-                // Importante manter a ordem dos replaces abaixo
-            	String value = expr.isResolved() ? expr.getValue() : "";
-            	value = value == null ? "" : value;
-                value = value.replace("\\", "\\\\").replace("$", "\\$");
                 matcher.appendReplacement(sb, value);
             }
             matcher.appendTail(sb);
