@@ -110,15 +110,11 @@ public class IniciarProcessoService implements Serializable {
                 contextInstance.setVariable(variavel, variaveis.get(variavel));
             }
         }
-        if (contextInstance.getVariable("naturezaProcesso") == null) {
+        if (processo.getProcessoPai() == null) {
         	contextInstance.setVariable("naturezaProcesso", processo.getNaturezaCategoriaFluxo().getNatureza().getNatureza());
-        }
-        if (contextInstance.getVariable("categoriaProcesso") == null) {
         	contextInstance.setVariable("categoriaProcesso", processo.getNaturezaCategoriaFluxo().getCategoria().getCategoria());
         }
-        if (contextInstance.getVariable("dataInicioProcesso") == null) {
-        	contextInstance.setVariable("dataInicioProcesso", processo.getDataInicio());
-        }
+    	contextInstance.setVariable("dataInicioProcesso", processo.getDataInicio());
         ManagedJbpmContext.instance().getSession().flush();
     }
     
