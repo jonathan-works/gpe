@@ -3,6 +3,9 @@ package br.com.infox.epp.processo.consulta.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.Remove;
+import javax.ejb.Stateful;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -24,6 +27,7 @@ import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 
+@Stateful
 @AutoCreate
 @Name(ConsultaController.NAME)
 public class ConsultaController extends AbstractController {
@@ -166,5 +170,7 @@ public class ConsultaController extends AbstractController {
         }
     }
     
+	@Remove
+	public void remove(){}
     
 }
