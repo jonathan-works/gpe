@@ -23,7 +23,6 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSOS_FILHO_BY_T
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSOS_FILHO_NOT_ENDED_BY_TIPO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_BY_NUMERO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_EPA_BY_ID_JBPM;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_PAI_PARAM;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_PROCESSO_JBMP;
 import static br.com.infox.epp.processo.query.ProcessoQuery.TEMPO_GASTO_PROCESSO_EPP_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO;
@@ -34,7 +33,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
@@ -203,7 +201,7 @@ public class ProcessoDAO extends DAO<Processo> {
 
 	public List<Processo> getProcessosFilhoNotEndedByTipo(Processo processo, String tipoProcesso) {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put(PROCESSO_PAI_PARAM, processo);
+		parameters.put(NUMERO_PROCESSO_ROOT_PARAM, processo.getNumeroProcessoRoot());
 		parameters.put(TIPO_PROCESSO_PARAM, tipoProcesso);
 		return getNamedResultList(PROCESSOS_FILHO_NOT_ENDED_BY_TIPO, parameters);
     }
