@@ -28,12 +28,13 @@ public class ToDateJpql implements SQLFunction{
 	}
 
 	@Override
+	@SuppressWarnings("rawtypes")
 	public String render(Type firstArgumentType, List arguments,
 			SessionFactoryImplementor factory) throws QueryException {
 		if (arguments.isEmpty()) {
-            throw new QueryException("É necessácio informar o id do processo");
+            throw new QueryException("É necessácio a data");
         }
-        return "convert(Date," + arguments.get(0) + ")";
+        return "convert(Date, " + arguments.get(0) + ", 103)";
 	}
 
 }
