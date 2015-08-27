@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -164,9 +165,14 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
 	            	value = value == null ? "" : value;
 	                value = value.replace("\\", "\\\\").replace("$", "\\$");
                 } else {
-                	String titulo = expression.substring("#{modelo:".length(), expression.length()-1);
-                	ModeloDocumento modeloDocumento2 = getModeloDocumentoByTitulo(titulo);
-                	value = evaluateModeloDocumento(modeloDocumento2, modeloDocumento2.getModeloDocumento(), resolver);
+                	String titulo = StringEscapeUtils.unescapeHtml4(expression.substring("#{modelo:".length(), expression.length()-1));
+                	ModeloDocumento modeloDocumentoInside = getModeloDocumentoByTitulo(titulo);
+                	if (modeloDocumento != null) {
+                		value = evaluateModeloDocumento(modeloDocumentoInside, modeloDocumentoInside.getModeloDocumento(), resolver);
+                	} else {
+                		value = value == null ? "" : value;
+                		value = value.replace("\\", "\\\\").replace("$", "\\$");
+                	}
                 }
                 matcher.appendReplacement(sb, value);
             }
