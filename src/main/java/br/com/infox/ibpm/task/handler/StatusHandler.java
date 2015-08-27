@@ -88,6 +88,7 @@ public class StatusHandler implements ActionHandler, CustomAction {
         	statusMetadado = metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.STATUS_PROCESSO, status.getIdStatusProcesso().toString());
             metadadoManager.persist(statusMetadado);
         }
+        processo.getMetadadoProcessoList().add(statusMetadado);
     }
 
 }

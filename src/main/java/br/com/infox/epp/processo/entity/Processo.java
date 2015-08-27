@@ -224,10 +224,8 @@ public class Processo implements Serializable {
     }
 
 	private void preencherProcessoRoot() {
-		if (getProcessoRoot() == null) {
-    		if (this.processoPai != null) {
-            	this.processoPai = BeanManager.INSTANCE.getReference(EntityManager.class).merge(getProcessoPai());
-            }
+		if (getProcessoRoot() == null && getProcessoPai() != null) {
+        	this.processoPai = BeanManager.INSTANCE.getReference(EntityManager.class).merge(getProcessoPai());
     		Processo processo = this;
     		while (processo.getProcessoPai() != null) {
     			processo = processo.getProcessoPai();
