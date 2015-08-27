@@ -27,7 +27,6 @@ public class ToDateJpql implements SQLFunction{
 		return DateType.INSTANCE;
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
 	@SuppressWarnings("rawtypes")
 	public String render(Type firstArgumentType, List arguments,
