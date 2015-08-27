@@ -69,6 +69,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.QueryHint;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -214,17 +215,26 @@ public class Processo implements Serializable {
     		setIdProcesso(generatedId);
     		setNumeroProcesso(getIdProcesso().toString());
     	}
-        if (this.processoPai != null) {
-        	this.processoPai = BeanManager.INSTANCE.getReference(EntityManager.class).merge(getProcessoPai());
-        }
-    	if(getProcessoRoot() == null){
+    	preencherProcessoRoot();
+    }
+    
+    @PreUpdate
+    private void preUpdate() {
+    	preencherProcessoRoot();
+    }
+
+	private void preencherProcessoRoot() {
+		if (getProcessoRoot() == null) {
+    		if (this.processoPai != null) {
+            	this.processoPai = BeanManager.INSTANCE.getReference(EntityManager.class).merge(getProcessoPai());
+            }
     		Processo processo = this;
     		while (processo.getProcessoPai() != null) {
     			processo = processo.getProcessoPai();
     		}
     		setProcessoRoot(processo);
     	}
-    }
+	}
     
     public Processo getProcessoRoot() {
 		return processoRoot;
