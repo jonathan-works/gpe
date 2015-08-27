@@ -8,7 +8,6 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
-import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.persistence.DAOException;
@@ -54,18 +53,11 @@ public class ProcessoLocalizacaoIbpmManager implements Serializable {
     	for (String stringId : stringIds) {
     		Integer id = Integer.valueOf(stringId);
     		PerfilTemplate perfilTemplate = perfilTemplateManager.find(id);
-    		Long idProcessInstance = getRootProcessInstance(taskInstance.getProcessInstance()).getId();
+    		Long idProcessInstance = taskInstance.getProcessInstance().getRoot().getId();
     		Processo processo = processoManager.getProcessoEpaByIdJbpm(idProcessInstance);
     		ProcessoLocalizacaoIbpm processoLocalizacaoIbpm = create(perfilTemplate, processo, taskInstance);
     		processoLocalizacaoIbpmDAO.persist(processoLocalizacaoIbpm);
     	}
-    }
-    
-    public ProcessInstance getRootProcessInstance(ProcessInstance processInstance) {
-    	while (processInstance.getSuperProcessToken() != null) {
-			processInstance = processInstance.getSuperProcessToken().getProcessInstance();
-		}
-    	return processInstance;    	
     }
     
     public ProcessoLocalizacaoIbpm create(PerfilTemplate perfilTemplate, Processo processo, TaskInstance taskInstance) {
@@ -76,7 +68,7 @@ public class ProcessoLocalizacaoIbpmManager implements Serializable {
     	processoLocalizacaoIbpm.setPapel(perfilTemplate.getPapel());
     	processoLocalizacaoIbpm.setContabilizar(true);
     	processoLocalizacaoIbpm.setProcesso(processo);
-    	processoLocalizacaoIbpm.setIdProcessInstanceJbpm(processo.getIdJbpm());
+    	processoLocalizacaoIbpm.setIdProcessInstanceJbpm(taskInstance.getProcessInstance().getId());
     	return processoLocalizacaoIbpm;
     }
 

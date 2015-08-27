@@ -7,10 +7,6 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Transactional;
-
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
-
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.exe.TaskInstance;
@@ -23,7 +19,8 @@ import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
-import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.ApplicationException;
 
 @Name(TaskListenerService.NAME)
@@ -50,13 +47,13 @@ public class TaskListenerService implements Serializable {
 
     @Observer(Event.EVENTTYPE_TASK_CREATE)
     public void onCreateJbpmTask(ExecutionContext context) {
-        Processo processo = processoManager.getProcessoEpaByIdJbpm(context.getProcessInstance().getId());
+        Processo processo = processoManager.getProcessoEpaByIdJbpm(context.getProcessInstance().getRoot().getId());
         if (processo != null) {
             TaskInstance taskInstance = context.getTaskInstance();
             createProcessoTarefa(processo, taskInstance);
         }
     }
-
+    
     private void createProcessoTarefa(Processo processo, TaskInstance taskInstance) {
         String taskName = taskInstance.getTask().getName();
         String procDefName = taskInstance.getProcessInstance().getProcessDefinition().getName();
@@ -83,7 +80,7 @@ public class TaskListenerService implements Serializable {
 
     @Observer(Event.EVENTTYPE_PROCESS_END)
     public void onEndProcess(ExecutionContext context) throws DAOException {
-        Processo processo = JbpmUtil.getProcesso();
+        Processo processo = processoManager.getProcessoEpaByIdJbpm(context.getProcessInstance().getRoot().getId());
         if (processo == null) {
             throw new ApplicationException("Erro ao criar o processo - Defição de fluxo imcompleta. Contate o administrador do sistema.");
         }

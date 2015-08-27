@@ -16,7 +16,6 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
-import br.com.infox.ibpm.util.JbpmUtil;
 
 @Scope(ScopeType.EVENT)
 @Name(CaixaJbpmEventHandler.NAME)
@@ -51,7 +50,7 @@ public class CaixaJbpmEventHandler implements Serializable {
     
    @Observer(Event.EVENTTYPE_TASK_END)
    public void removeCaixaDoProcesso(ExecutionContext context) throws DAOException {
-       Processo processo = processoManager.getProcessoEpaByIdJbpm(context.getProcessInstance().getId());
+       Processo processo = processoManager.getProcessoEpaByIdJbpm(context.getProcessInstance().getRoot().getId());
        processo.setCaixa(null);
        processoManager.update(processo);
    }
