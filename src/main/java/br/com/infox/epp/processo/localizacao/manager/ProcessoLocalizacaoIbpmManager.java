@@ -53,7 +53,7 @@ public class ProcessoLocalizacaoIbpmManager implements Serializable {
     	for (String stringId : stringIds) {
     		Integer id = Integer.valueOf(stringId);
     		PerfilTemplate perfilTemplate = perfilTemplateManager.find(id);
-    		Long idProcessInstance = taskInstance.getProcessInstance().getId();
+    		Long idProcessInstance = taskInstance.getProcessInstance().getRoot().getId();
     		Processo processo = processoManager.getProcessoEpaByIdJbpm(idProcessInstance);
     		ProcessoLocalizacaoIbpm processoLocalizacaoIbpm = create(perfilTemplate, processo, taskInstance);
     		processoLocalizacaoIbpmDAO.persist(processoLocalizacaoIbpm);
@@ -68,7 +68,7 @@ public class ProcessoLocalizacaoIbpmManager implements Serializable {
     	processoLocalizacaoIbpm.setPapel(perfilTemplate.getPapel());
     	processoLocalizacaoIbpm.setContabilizar(true);
     	processoLocalizacaoIbpm.setProcesso(processo);
-    	processoLocalizacaoIbpm.setIdProcessInstanceJbpm(processo.getIdJbpm());
+    	processoLocalizacaoIbpm.setIdProcessInstanceJbpm(taskInstance.getProcessInstance().getId());
     	return processoLocalizacaoIbpm;
     }
 

@@ -1,7 +1,5 @@
 package br.com.infox.epp.access.assignment;
 
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
-
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Set;
@@ -11,15 +9,16 @@ import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Transactional;
-import org.jboss.seam.bpm.ProcessInstance;
-import org.jboss.seam.bpm.TaskInstance;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
+import org.jbpm.graph.exe.ProcessInstance;
+import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.manager.PerfilTemplateManager;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -41,37 +40,25 @@ public class LocalizacaoAssignment implements Serializable {
             + "values (:idTaskJbpm, :idProcessInstance, :idProcesso, "
             + ":idLocalizacao, :idPapel, :contabilizar, :taskInstance)";
     public static final String NAME = "localizacaoAssignment";
-    private org.jbpm.taskmgmt.exe.TaskInstance currentTaskInstance;
     
     @In
     private InfoxMessages infoxMessages;
+    @In
+    private ProcessoManager processoManager;
 
-    @SuppressWarnings(UNCHECKED)
-    public Set<String> getPooledActors(String... localPapel) {
-        boolean opened = TransactionService.beginTransaction();
-        addLocalizacaoPapel(localPapel);
-        if (opened) {
-            TransactionService.commitTransction();
-        }
-        return Collections.EMPTY_SET;
-    }
-
-    protected boolean addLocalizacaoPapel(String... localPapel) {
-        Processo processo = JbpmUtil.getProcesso();
+    protected boolean addLocalizacaoPapel(ProcessInstance processInstance, TaskInstance taskInstance, String... localPapel) {
+        Processo processo = processoManager.getProcessoEpaByIdJbpm(processInstance.getRoot().getId());
         JbpmUtil.getJbpmSession().flush();
-        if (currentTaskInstance == null) {
-            currentTaskInstance = TaskInstance.instance();
-        }
         if (localPapel == null || allNullElements(localPapel)) {
             throw new BusinessException(infoxMessages.get("process.swimlane.notDefined"));
         }
-        if (currentTaskInstance == null || processo == null) {
+        if (taskInstance == null || processo == null) {
             return false;
         }
         boolean inserted = false;
         PerfilTemplateManager perfilTemplateManager = ComponentUtil.getComponent(PerfilTemplateManager.NAME);
         for (String s : localPapel) {
-            insertProcessoLocalizacaoIbpm(perfilTemplateManager.find(Integer.valueOf(s)), processo);
+            insertProcessoLocalizacaoIbpm(perfilTemplateManager.find(Integer.valueOf(s)), processo, taskInstance, processInstance);
             inserted = true;
         }
         return inserted;
@@ -93,37 +80,38 @@ public class LocalizacaoAssignment implements Serializable {
         return true;
     }
 
-    protected void insertProcessoLocalizacaoIbpm(PerfilTemplate perfilTemplate, Processo processo) {
+    protected void insertProcessoLocalizacaoIbpm(PerfilTemplate perfilTemplate, Processo processo, TaskInstance taskInstance, ProcessInstance processInstance) {
         org.hibernate.Query q = JbpmUtil.getJbpmSession().createSQLQuery(IBPM_QUERY_INSERT);
-        Long taskId = currentTaskInstance.getTask().getId();
+        Long taskId = taskInstance.getTask().getId();
         q.setParameter("idTaskJbpm", taskId);
-        q.setParameter("idProcessInstance", ProcessInstance.instance().getId());
+        q.setParameter("idProcessInstance", processInstance.getId());
         q.setParameter("idProcesso", processo.getIdProcesso());
         q.setParameter("idLocalizacao", perfilTemplate.getLocalizacao().getIdLocalizacao());
         q.setParameter("idPapel", perfilTemplate.getPapel().getIdPapel());
         q.setParameter("contabilizar", true);
-        q.setParameter("taskInstance", currentTaskInstance.getId());
+        q.setParameter("taskInstance", taskInstance.getId());
         q.executeUpdate();
     }
 
-    public Set<String> getPooledActors(String expression) {
-        return getPooledActors(parse(expression));
+    public Set<String> updatePooledActors(String expression, TaskInstance taskInstance, ProcessInstance processInstance) {
+    	String[] localPapel = parse(expression);
+    	boolean opened = TransactionService.beginTransaction();
+        addLocalizacaoPapel(processInstance, taskInstance, localPapel);
+        if (opened) {
+            TransactionService.commitTransction();
+        }
+        return Collections.emptySet();
     }
-
+    
     public static String[] parse(String expression) {
         return expression.split(",");
-    }
-
-    public void setPooledActors(String expression) {
-        getPooledActors(expression);
     }
 
     @Observer(Event.EVENTTYPE_TASK_CREATE)
     public void onTaskCreate(ExecutionContext context) {
         try {
             String expression = context.getTask().getSwimlane().getPooledActorsExpression();
-            this.currentTaskInstance = context.getTaskInstance();
-            getPooledActors(expression);
+            updatePooledActors(expression, context.getTaskInstance(), context.getProcessInstance());
         } catch (BusinessException e) {
         	String msg = String.format("Erro ao inserir processo localização: %s. Contate o Administrador do Sistema.", e.getLocalizedMessage());
         	TransactionService.rollbackTransaction();

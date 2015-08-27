@@ -89,14 +89,14 @@ public class IniciarProcessoService implements Serializable {
         processoJbpm.signal();
         boolean iniciouTarefa = iniciaPrimeiraTarefa(processoJbpm);
         if (iniciouTarefa) {
-        	atribuiSwimlaneTarefa();
+        	atribuiSwimlaneTarefa(processoJbpm);
         }
     }
 
-    private void atribuiSwimlaneTarefa() {
+    private void atribuiSwimlaneTarefa(org.jbpm.graph.exe.ProcessInstance processoJbpm) {
         SwimlaneInstance swimlaneInstance = TaskInstance.instance().getSwimlaneInstance();
         String actorsExpression = swimlaneInstance.getSwimlane().getPooledActorsExpression();
-        Set<String> pooledActors = LocalizacaoAssignment.instance().getPooledActors(actorsExpression);
+        Set<String> pooledActors = LocalizacaoAssignment.instance().updatePooledActors(actorsExpression, TaskInstance.instance(), processoJbpm);
         String[] actorIds = pooledActors.toArray(new String[pooledActors.size()]);
         swimlaneInstance.setPooledActors(actorIds);
     }
@@ -110,15 +110,11 @@ public class IniciarProcessoService implements Serializable {
                 contextInstance.setVariable(variavel, variaveis.get(variavel));
             }
         }
-        if (contextInstance.getVariable("naturezaProcesso") == null) {
+        if (processo.getProcessoPai() == null) {
         	contextInstance.setVariable("naturezaProcesso", processo.getNaturezaCategoriaFluxo().getNatureza().getNatureza());
-        }
-        if (contextInstance.getVariable("categoriaProcesso") == null) {
         	contextInstance.setVariable("categoriaProcesso", processo.getNaturezaCategoriaFluxo().getCategoria().getCategoria());
         }
-        if (contextInstance.getVariable("dataInicioProcesso") == null) {
-        	contextInstance.setVariable("dataInicioProcesso", processo.getDataInicio());
-        }
+    	contextInstance.setVariable("dataInicioProcesso", processo.getDataInicio());
         ManagedJbpmContext.instance().getSession().flush();
     }
     
