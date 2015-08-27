@@ -10,7 +10,8 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Expressions;
-import org.jboss.seam.util.Strings;
+
+import com.google.common.base.Strings;
 
 import br.com.infox.core.messages.InfoxMessages;
 
@@ -30,6 +31,7 @@ public class SelectItemFunctions {
 
     // TODO Tratar virgula e dois pontos no valor ou no texto (\, \:) -> ou JSON
     public List<SelectItem> createFromString(String values) {
+        if (Strings.isNullOrEmpty(values)) return null;
         List<SelectItem> l = new ArrayList<SelectItem>();
         for (String s : values.split(",")) {
             final String[] split = s.split(":");
@@ -56,7 +58,7 @@ public class SelectItemFunctions {
      */
     public Object getSelectExpressionSelectItem(String expression, Object obj) {
         Object returnObject = "";
-        if (!Strings.isEmpty(expression)) {
+        if (!Strings.isNullOrEmpty(expression)) {
             Contexts.getMethodContext().set("obj", obj);
             String auxiliarExpression = expression.replace("{", "#{obj.");
             returnObject = obj == null ? "" : Expressions.instance().createValueExpression(auxiliarExpression).getValue();
