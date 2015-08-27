@@ -30,6 +30,7 @@ import org.jbpm.graph.action.Script;
 import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.GraphElement;
+import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.ProcessFactory;
@@ -47,6 +48,7 @@ import org.jbpm.taskmgmt.def.TaskController;
 import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.ibpm.node.DecisionNode;
+import br.com.infox.ibpm.node.InfoxMailNode;
 import br.com.infox.ibpm.task.handler.CustomAction;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -325,7 +327,7 @@ public class JpdlXmlWriter {
             description.addCDATA(node.getDescription());
         }
         addAttribute(element, ELEMENT_NAME, node.getName());
-        if (node.isAsync()) {
+        if (node.isAsync() && (node.getClass().equals(Node.class) || node.getClass().equals(InfoxMailNode.class))) {
             addAttribute(element, "async", "true");
         }
         addAttribute(element, "key", node.getKey() == null ? UUID.randomUUID().toString() : node.getKey());

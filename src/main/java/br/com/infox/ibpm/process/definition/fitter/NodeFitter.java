@@ -116,7 +116,7 @@ public class NodeFitter extends Fitter implements Serializable {
                 LOG.error("addNewNode()", e);
                 return;
             }
-            if (node.getNodeType().equals(org.jbpm.graph.def.Node.NodeType.Node)){
+            if (nodeType.equals(InfoxMailNode.class) || nodeType.equals(Node.class)){
                 node.setAsync(true);
             }
             node.setName(newNodeName);
