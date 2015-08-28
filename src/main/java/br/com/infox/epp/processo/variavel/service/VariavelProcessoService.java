@@ -167,7 +167,7 @@ public class VariavelProcessoService {
             if (!firstValue) {
                 sb.append(", ");
             }
-            sb.append(metadadoProcesso.getValue());
+            sb.append(formatarValor(metadadoProcesso.getValue()));
             firstValue = false;
         }
         variavelProcesso.setValor(sb.toString());

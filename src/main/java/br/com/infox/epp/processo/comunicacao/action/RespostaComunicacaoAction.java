@@ -55,7 +55,7 @@ public class RespostaComunicacaoAction implements Serializable {
 	private static final LogProvider LOG = Logging.getLogProvider(RespostaComunicacaoAction.class);
 	
 	private ActionMessagesService actionMessagesService = ComponentUtil.getComponent(ActionMessagesService.NAME);
-	private ModeloDocumentoManager modeloDocumentoManager = ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
+	protected ModeloDocumentoManager modeloDocumentoManager = ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
 	private RespostaComunicacaoList respostaComunicacaoList = ComponentUtil.getComponent(RespostaComunicacaoList.NAME);
 	private DocumentoManager documentoManager = ComponentUtil.getComponent(DocumentoManager.NAME);
 	private DocumentoComunicacaoList documentoComunicacaoList = ComponentUtil.getComponent(DocumentoComunicacaoList.NAME);
@@ -81,7 +81,7 @@ public class RespostaComunicacaoAction implements Serializable {
 	
 	private List<ClassificacaoDocumento> classificacoesEditor;
 	private List<ClassificacaoDocumento> classificacoesAnexo;
-	private List<ModeloDocumento> modelosDocumento;
+	private List<ModeloDocumento> modeloDocumentoList;
 	
 	private ModeloDocumento modeloDocumento;
 	
@@ -196,7 +196,7 @@ public class RespostaComunicacaoAction implements Serializable {
 				BusinessProcess.instance().setTaskId(taskId);
 				initClassificacoes();
 				FacesMessages.instance().add(infoxMessages.get("comunicacao.resposta.enviadaSucesso"));
-				modelosDocumento = null;
+				modeloDocumentoList = null;
 				newDocumentoEdicao();
 				initClassificacoes();
 			}
@@ -234,11 +234,11 @@ public class RespostaComunicacaoAction implements Serializable {
 		return classificacoesAnexo;
 	}
 	
-	public List<ModeloDocumento> getModelosDocumento() {
-		if (modelosDocumento == null) {
-			modelosDocumento = modeloDocumentoManager.getModeloDocumentoList();
+	public List<ModeloDocumento> getModeloDocumentoList() {
+		if (modeloDocumentoList == null) {
+			modeloDocumentoList = modeloDocumentoManager.getModeloDocumentoList();
 		}
-		return modelosDocumento;
+		return modeloDocumentoList;
 	}
 	
 	public ModeloDocumento getModeloDocumento() {
