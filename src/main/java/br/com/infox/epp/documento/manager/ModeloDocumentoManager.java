@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -145,22 +146,34 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
                 if (expression == null) {
                 	expression = group;
                 }
-            	Expression expr = new Expression(expression);
-            	if (resolver != null) {
-            		try {
-            			expr = resolver.resolve(expr);
-            		} catch (RuntimeException e) {
-            			modeloProcessado.append("Erro na linha: '" + linhas[i]);
-                        modeloProcessado.append("': " + e.getMessage());
-                        LOG.error(".appendTail()", e);
-            		}
+                String value = "";
+                if (!expression.startsWith("#{modelo:")) {
+	            	Expression expr = new Expression(expression);
+	            	if (resolver != null) {
+	            		try {
+	            			expr = resolver.resolve(expr);
+	            		} catch (RuntimeException e) {
+	            			modeloProcessado.append("Erro na linha: '" + linhas[i]);
+	                        modeloProcessado.append("': " + e.getMessage());
+	                        LOG.error(".appendTail()", e);
+	            		}
+	                }
+	                // Os caracteres \ e $ devem ser escapados devido ao funcionamento do método
+	                // Matcher#appendReplacement (ver o Javadoc correspondente).
+	                // Importante manter a ordem dos replaces abaixo
+	            	value = expr.isResolved() ? expr.getValue() : "";
+	            	value = value == null ? "" : value;
+	                value = value.replace("\\", "\\\\").replace("$", "\\$");
+                } else {
+                	String titulo = StringEscapeUtils.unescapeHtml4(expression.substring("#{modelo:".length(), expression.length()-1));
+                	ModeloDocumento modeloDocumentoInside = getModeloDocumentoByTitulo(titulo);
+                	if (modeloDocumento != null) {
+                		value = evaluateModeloDocumento(modeloDocumentoInside, modeloDocumentoInside.getModeloDocumento(), resolver);
+                	} else {
+                		value = value == null ? "" : value;
+                		value = value.replace("\\", "\\\\").replace("$", "\\$");
+                	}
                 }
-                // Os caracteres \ e $ devem ser escapados devido ao funcionamento do método
-                // Matcher#appendReplacement (ver o Javadoc correspondente).
-                // Importante manter a ordem dos replaces abaixo
-            	String value = expr.isResolved() ? expr.getValue() : "";
-            	value = value == null ? "" : value;
-                value = value.replace("\\", "\\\\").replace("$", "\\$");
                 matcher.appendReplacement(sb, value);
             }
             matcher.appendTail(sb);
