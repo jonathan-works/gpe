@@ -610,6 +610,7 @@ public class TaskInstanceHome implements Serializable {
 			} catch (HibernateException | SystemException e) {
 				LOG.error("", e);
 			}
+			mapaDeVariaveis = null;
 			atualizarPaginaDeMovimentacao();
 		}
 		return null;
