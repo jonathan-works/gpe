@@ -850,8 +850,7 @@ public class TaskInstanceHome implements Serializable {
 		if (variavel.contains("-")) {
 			variavel = variavel.split("-")[0];
 		}
-		ElFunctions elFunctions = (ElFunctions) Component.getInstance(ElFunctions.NAME);
-		String listaModelos = elFunctions.evaluateExpression(variavel);
+		String listaModelos = (String) taskInstance.getContextInstance().getVariable(variavel);
 		return modeloDocumentoManager.getModelosDocumentoInListaModelo(listaModelos);
 	}
 
