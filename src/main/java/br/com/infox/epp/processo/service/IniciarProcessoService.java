@@ -104,7 +104,7 @@ public class IniciarProcessoService implements Serializable {
     private void iniciaVariaveisProcesso(Processo processo, Map<String, Object> variaveis, org.jbpm.graph.exe.ProcessInstance processInstance) {
         ContextInstance contextInstance = processInstance.getContextInstance();
         createJbpmVariables(processo, contextInstance);
-        contextInstance.setVariable("processo", processo.getIdProcesso());
+        contextInstance.setVariable(VariaveisJbpmProcessosGerais.PROCESSO, processo.getIdProcesso());
         if (variaveis != null) {
             for (String variavel : variaveis.keySet()) {
                 contextInstance.setVariable(variavel, variaveis.get(variavel));
