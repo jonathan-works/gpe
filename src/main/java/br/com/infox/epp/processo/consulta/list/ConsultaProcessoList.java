@@ -28,8 +28,8 @@ public class ConsultaProcessoList extends EntityList<Processo> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "consultaProcessoList";
 
-    private static final String DEFAULT_EJBQL = "select o from Processo o";
-    private static final String DEFAULT_ORDER = "coalesce(o.prioridadeProcesso, -1) DESC, o.dataInicio ASC";
+    private static final String DEFAULT_EJBQL = "select o from ProcessoTarefa pt inner join pt.processo o left join o.prioridadeProcesso pp";
+    private static final String DEFAULT_ORDER = "coalesce(pp.peso, -1) DESC, pt.dataInicio ASC";
 
     private static final String R1 = "o.idProcesso in (#{painelUsuarioController.processoIdList})";
     private static final String R2 = "o.caixa.idCaixa = #{painelUsuarioController.idCaixa}";
