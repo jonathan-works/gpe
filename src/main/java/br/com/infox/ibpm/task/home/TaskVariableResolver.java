@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.jboss.seam.contexts.Contexts;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
@@ -44,7 +43,6 @@ final class TaskVariableResolver extends TaskVariable {
 						LOG.info("TaskVariableResolverRF001", e);
 					}
 				}
-				atribuirValorDaVariavelNoContexto();
 				break;
 			case INTEGER:
 				if (value instanceof String) {
@@ -54,7 +52,6 @@ final class TaskVariableResolver extends TaskVariable {
 						LOG.info("TaskVariableResolverRF002", e);
 					}
 				}
-				atribuirValorDaVariavelNoContexto();
 				break;
 			case DATE:
 				if (value instanceof String) {
@@ -64,30 +61,26 @@ final class TaskVariableResolver extends TaskVariable {
 						LOG.info("TaskVariableResolverRF003", e);
 					}
 				}
-				atribuirValorDaVariavelNoContexto();
 				break;
 			case EDITOR:
 				if (!(this.value instanceof Integer)) {
 					this.value = getIdDocumento();
 				}
-				atribuirValorDaVariavelNoContexto();
 				break;
 			case TEXT:
 				if (((String) value).length() > 4000) {
 					throw new BusinessException("O tamanho do texto excede 4000 caracteres");
 				}
-				atribuirValorDaVariavelNoContexto();
 				break;
 			case FILE:
 				if (!(this.value instanceof Integer)) {
 					this.value = getIdDocumento();
 				}
-				atribuirValorDaVariavelNoContexto();
 				break;
 			default:
-				atribuirValorDaVariavelNoContexto();
 				break;
 			}
+			taskInstance.setVariableLocally(getMappedName(), value);
 		}
 	}
 
@@ -98,10 +91,6 @@ final class TaskVariableResolver extends TaskVariable {
 		} else {
 			return null;
 		}
-	}
-
-	public void atribuirValorDaVariavelNoContexto() {
-		Contexts.getBusinessProcessContext().set(variableAccess.getMappedName(), value);
 	}
 
 	private Object getValueFromMapaDeVariaveis(Map<String, Object> mapaDeVariaveis) {

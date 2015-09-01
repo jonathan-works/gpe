@@ -6,7 +6,8 @@
 	xmlns:wi="http://www.itx.com.br/jsf"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:a="http://richfaces.org/a4j">
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:infox="http://www.infox.com.br/jsf">
 
 	<ui:param name="id" value="#{empty id ? 'id' : id}"></ui:param>
 	<ui:param name="prazoResposta" value="#{empty prazoResposta ? '-' : prazoResposta}"></ui:param>
@@ -70,10 +71,13 @@
 			rendered="#{empty showDownloadDocumentoPrincipal ? false : showDownloadDocumentoPrincipal}" />
 		<a:commandButton id="#{id}visualizarComunicacao" 
                value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
-               styleClass="buttons"
-               onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?idDestinatario=#{idDestinatario}','1024'); return false;"
-               rendered="#{empty showDownloadComunicacaoCompleta ? true : showDownloadComunicacaoCompleta}" />
-		
+               styleClass="buttons" render="@this" execute="@this"
+               onclick="alert('#{idDestinatario}')"
+               oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');"
+               rendered="#{empty showDownloadComunicacaoCompleta ? true : showDownloadComunicacaoCompleta}" >
+        	<f:setPropertyActionListener value="#{idDestinatario}" target="#{flash.idDestinatario}" />
+        	<infox:flashcopy/>
+        </a:commandButton>
 	</h:form>
 
 </ui:composition>

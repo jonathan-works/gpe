@@ -32,7 +32,6 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.ProcessInstance;
-import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.transaction.Transaction;
@@ -100,7 +99,6 @@ import br.com.infox.ibpm.util.UserHandler;
 import br.com.infox.ibpm.variable.FragmentConfiguration;
 import br.com.infox.ibpm.variable.FragmentConfigurationCollector;
 import br.com.infox.ibpm.variable.VariableHandler;
-import br.com.infox.jsf.function.ElFunctions;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.context.ContextFacade;
@@ -305,7 +303,6 @@ public class TaskInstanceHome implements Serializable {
 	}
 
 	private void completeUpdate() {
-		Contexts.getBusinessProcessContext().flush();
 		ContextFacade.setToEventContext(UPDATED_VAR_NAME, true);
 		updateIndex();
 		updateTransitions();
@@ -361,7 +358,6 @@ public class TaskInstanceHome implements Serializable {
 					LOG.error("updateVariable(variableAccess)", e);
 				}
 			} else if (variableResolver.isFile()) {
-				Contexts.getBusinessProcessContext().flush();
 				retrieveVariable(variableAccess);
 			}
 		}
@@ -851,8 +847,7 @@ public class TaskInstanceHome implements Serializable {
 		if (variavel.contains("-")) {
 			variavel = variavel.split("-")[0];
 		}
-		ElFunctions elFunctions = (ElFunctions) Component.getInstance(ElFunctions.NAME);
-		String listaModelos = elFunctions.evaluateExpression(variavel);
+		String listaModelos = (String) taskInstance.getContextInstance().getVariable(variavel);
 		return modeloDocumentoManager.getModelosDocumentoInListaModelo(listaModelos);
 	}
 

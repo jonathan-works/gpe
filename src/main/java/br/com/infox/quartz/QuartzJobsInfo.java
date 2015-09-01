@@ -2,6 +2,7 @@ package br.com.infox.quartz;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,12 +12,15 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.persistence.EntityManager;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.async.QuartzDispatcher;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
@@ -50,6 +54,8 @@ public class QuartzJobsInfo implements Serializable {
     private ParametroManager parametroManager;
     @In
     private InfoxMessages infoxMessages;
+    @In
+    private EntityManager entityManager;
     
     private static Pattern patternExpr = Pattern
             .compile("^AsynchronousInvocation\\((.*)\\)$");
@@ -163,12 +169,17 @@ public class QuartzJobsInfo implements Serializable {
         return false;
     }
 
+    @Transactional
     public void triggerJob(String jobName, String groupName) {
         try {
-            getScheduler().triggerJob(JobKey.jobKey(jobName, groupName));
+        	String sql = "UPDATE QRTZ_TRIGGERS SET NEXT_FIRE_TIME = :nextFireTime WHERE JOB_NAME = :jobName AND JOB_GROUP = :groupName";
+        	Calendar nextFireTime = Calendar.getInstance();
+        	nextFireTime.roll(Calendar.MINUTE, -1);
+        	entityManager.createNativeQuery(sql).setParameter("nextFireTime", nextFireTime.getTime().getTime())
+        		.setParameter("jobName", jobName).setParameter("groupName", groupName).executeUpdate();
             FacesMessages.instance().add(Severity.INFO,
                     "Job executado com sucesso: " + jobName);
-        } catch (SchedulerException e) {
+        } catch (Exception e) {
             FacesMessages.instance().add(Severity.ERROR,
                     "Erro ao executar job " + jobName, e);
             LOG.error(".triggerJob()", e);
