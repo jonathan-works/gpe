@@ -4,6 +4,8 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -26,6 +28,7 @@ import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 
 @AutoCreate
 @Name(PastaManager.NAME)
+@Stateless
 public class PastaManager extends Manager<PastaDAO, Pasta> {
 
     private static final long serialVersionUID = 1L;
@@ -172,6 +175,7 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
             pastaRestricao.setDelete(false);
             pastaRestricao.setRead(true);
             pastaRestricao.setPasta(pasta);
+            pastaRestricao.setLogicDelete(false);
             pastaRestricaoManager.persist(pastaRestricao);
         } else {
             pastaRestricao.setRead(true);
