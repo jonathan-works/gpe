@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -52,6 +53,7 @@ import br.com.infox.log.Logging;
 import br.com.infox.util.time.DateRange;
 
 @AutoCreate
+@Stateless
 @ContextDependency
 @Name(ProcessoManager.NAME)
 public class ProcessoManager extends Manager<ProcessoDAO, Processo> {

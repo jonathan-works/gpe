@@ -1,5 +1,7 @@
 package br.com.infox.epp.processo.sigilo.manager;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -12,6 +14,7 @@ import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso;
 
 @Name(SigiloProcessoManager.NAME)
 @Scope(ScopeType.EVENT)
+@Stateless
 @AutoCreate
 public class SigiloProcessoManager extends Manager<SigiloProcessoDAO, SigiloProcesso> {
 

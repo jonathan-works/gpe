@@ -3,6 +3,8 @@ package br.com.infox.epp.access.manager;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -24,6 +26,7 @@ import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
 
 @Name(UsuarioLoginManager.NAME)
+@Stateless
 @AutoCreate
 public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> {
 
