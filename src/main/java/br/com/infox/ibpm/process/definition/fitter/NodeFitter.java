@@ -6,6 +6,7 @@ import static br.com.infox.core.comparators.Comparators.bySelectItemLabelAsc;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -361,7 +362,7 @@ public class NodeFitter extends Fitter implements Serializable {
                 for (Node node : list) {
                     nodesItems.add(new SelectItem(node.toString(), node.getName()));
                 }
-                nodesItems.sort(bySelectItemLabelAsc());
+                Collections.sort(nodesItems, bySelectItemLabelAsc());
                 nodesItems.add(0,new SelectItem(null, infoxMessages.get("process.task.select")));
             }
         }
@@ -377,7 +378,7 @@ public class NodeFitter extends Fitter implements Serializable {
         for (Node node : getNodes(type)) {
             nodeItemsList.add(new SelectItem(node, node.getName()));
         }
-        nodeItemsList.sort(bySelectItemLabelAsc());
+        Collections.sort(nodeItemsList, bySelectItemLabelAsc());
         nodeItemsList.add(0, new SelectItem(null, "Selecione..."));
         return nodeItemsList;
     }
