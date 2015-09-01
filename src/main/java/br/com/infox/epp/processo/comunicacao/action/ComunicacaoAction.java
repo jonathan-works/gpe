@@ -302,6 +302,8 @@ public class ComunicacaoAction implements Serializable {
 			documentosDestinatario = new ArrayList<>();
 			for (DocumentoModeloComunicacao documentoModelo : destinatarioModelo.getModeloComunicacao().getDocumentos()) {
 				documentosDestinatario.add(documentoModelo.getDocumento());
+				// FIXME: Só para não dar lazy na tela
+				documentoModelo.getDocumento().getDocumentoBin().getSize();
 			}
 		}
 		return documentosDestinatario;
