@@ -43,7 +43,7 @@
                 onclick="#{rich:component('expressoesAjudaPopUpPanel')}.show();" />
         </div>
     </s:div>
-    <rich:popupPanel id="expressoesAjudaPopUpPanel" modal="false" header="Expressões disponíveis" resizeable="true">
+    <rich:popupPanel id="expressoesAjudaPopUpPanel" modal="false" header="#{infoxMessages['process.events.expression.title']}" resizeable="true">
         <f:facet name="controls">
             <h:graphicImage id="assinarDocumentosPopUpPanelCloseBtn" styleClass="mp-close"
                 value="#{wiSkin.imageFolder}/closeMP.gif"
