@@ -1,4 +1,18 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ui="http://java.sun.com/jsf/facelets">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html">
+    
+    
+    <h:body>
+    	<c:if test="#{not empty flash.idDestinatario or not empty flash.idModelo}" >
+    		<script type="text/javascript">alert('1')</script>
+    		<f:event listener="#{downloadComunicacaoAction.downloadComunicacaoCompleta(flash.idModelo, flash.idDestinatario)}" type="preRenderView"/>
+    	</c:if>
+    	<c:if test="#{empty flash.idDestinatario and empty flash.idModelo}" >
+    		<script type="text/javascript">alert('Sem permissão para acessar a página'); window.close();</script>
+    	</c:if>
+    </h:body>
 
-</ui:composition>
+</html>

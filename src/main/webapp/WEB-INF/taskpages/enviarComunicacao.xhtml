@@ -6,7 +6,8 @@
       xmlns:wi="http://www.itx.com.br/jsf"
       xmlns:rich="http://richfaces.org/rich"
       xmlns:a="http://richfaces.org/a4j"
-      xmlns:s="http://jboss.org/schema/seam/taglib">
+      xmlns:s="http://jboss.org/schema/seam/taglib"
+      xmlns:infox="http://www.infox.com.br/jsf">
 
 	<h:outputScript library="js" name="components.js" />
 	<s:div style="background-color: white; padding-top: 20px; margin-bottom: 20px; padding-left: 10px; padding-right: 10px;">
@@ -21,12 +22,15 @@
 					<a:ajax event="change" render="modeloDocumento, classificacaoComunicacao" />
 				</wi:selectOneMenuEntity>
 				<div />
-			<h:commandButton id="visualizarComunicacao" 
-				type="button" 
+			<a:commandButton id="visualizarComunicacao" 
+				render="@this" execute="@this"
 				value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
 				styleClass="buttons"
 				rendered="#{envioComunicacaoController.podeVisualizarComunicacaoNaoFinalizada()}" 
-				onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?idModelo=#{envioComunicacaoController.modeloComunicacao.id}','1024'); return false;" />
+				oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');" >
+				<f:setPropertyActionListener value="#{envioComunicacaoController.modeloComunicacao.id}" target="#{flash.idModelo}" />
+				<infox:flashcopy/>
+			</a:commandButton>
 			</h:form>
 			
 			<!-- Painel dos Destinatários -->
@@ -123,10 +127,12 @@
    								rendered="#{envioComunicacaoController.usuarioLogadoNaLocalizacaoPerfilResponsavel and not row.expedido}">
    								<h:graphicImage url="#{wiSkin.imageFolder}/expedir_comunicacao.png" title="#{infoxMessages['button.selecionar']}" />
    							</a:commandLink>
-   							<h:commandLink onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?idDestinatario=#{row.id}','1024'); return false;"
-   								rendered="#{row.expedido}">
+   							<a:commandLink oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');"
+   								rendered="#{row.expedido}" render="@this" execute="@this">
 								<h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" title="#{infoxMessages['comunicacao.visualizarAComunicacao']}"/>
-							</h:commandLink>
+								<f:setPropertyActionListener value="#{row.id}" target="#{flash.idDestinatario}" />
+								<infox:flashcopy/>
+							</a:commandLink>
 						</s:div>
 					</rich:column>
 					<rich:column>
@@ -169,11 +175,14 @@
 			<!-- Botão Visualizar Comunicações (o ofício da documentação é o último documento incluso por usuário interno) -->
 			<h:form id="visualizarComunicacaoAnexoForm">
 				<s:div rendered="#{envioComunicacaoController.podeExibirBotaoVisualizarComunicacoes()}">
-					<h:commandButton id="visualizarComunicacao" 
-							type="button" 
+					<a:commandButton id="visualizarComunicacao" 
+							render="@this" execute="@this"
 							value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
 							styleClass="buttons"
-							onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?idModelo=#{envioComunicacaoController.modeloComunicacao.id}','1024'); return false;" />
+							oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');" >
+						<f:setPropertyActionListener value="#{envioComunicacaoController.modeloComunicacao.id}" target="#{flash.idModelo}" />
+						<infox:flashcopy/>
+					</a:commandButton>
           		</s:div>
 			</h:form>
 			
@@ -182,11 +191,13 @@
 				<s:div id="assinatura_pers" rendered="#{not envioComunicacaoController.modeloComunicacao.documentoBinario
 					and not empty envioComunicacaoController.destinatario and not envioComunicacaoController.destinatario.expedido}">
 					
-					<h:commandButton id="visualizarComunicacao" 
-								type="button" 
+					<a:commandButton id="visualizarComunicacao" 
 								value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
-								styleClass="buttons"
-								onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam?idDestinatario=#{envioComunicacaoController.destinatario.id}','1024'); return false;" />
+								styleClass="buttons" render="@this" execute="@this"
+								oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');" >
+						<f:setPropertyActionListener value="#{envioComunicacaoController.destinatario.id}" target="#{flash.idDestinatario}" />
+						<infox:flashcopy/>
+					</a:commandButton>
 											 
 					<a:jsFunction name="assinar" action="#{envioComunicacaoController.expedirComunicacao()}"
 						execute="@this appletAssinaturaToken" 
