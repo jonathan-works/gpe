@@ -7,4 +7,5 @@ public class VariaveisJbpmProcessosGerais {
 	public static final String CATEGORIA = "categoriaProcesso";
 	public static final String OWNER = "owner";
 	public static final String RELATOR = "relatorProcesso";
+	public static final String PROCESSO = "processo";
 }
