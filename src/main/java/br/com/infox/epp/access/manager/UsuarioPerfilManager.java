@@ -79,4 +79,5 @@ public class UsuarioPerfilManager extends Manager<UsuarioPerfilDAO, UsuarioPerfi
 		return super.persist(o);
 	}
 	
+	
 }

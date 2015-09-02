@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -52,6 +53,7 @@ import br.com.infox.log.Logging;
 import br.com.infox.util.time.DateRange;
 
 @AutoCreate
+@Stateless
 @ContextDependency
 @Name(ProcessoManager.NAME)
 public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
@@ -322,6 +324,11 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 	
 	public Processo getProcessoEpaByIdJbpm(Long idJbpm) {
 		return getDao().getProcessoEpaByIdJbpm(idJbpm);
+	}
+	
+	public void movimentarProcessoJBPM(TaskInstance taskInstance,String transition) throws DAOException {
+		taskInstance.end(transition);
+		atualizarProcessoTarefa(taskInstance);
 	}
 	
 	public void movimentarProcessoJBPM(Processo processo) throws DAOException {
