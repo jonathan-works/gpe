@@ -9,7 +9,7 @@ import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.type.StandardBasicTypes;
 import org.hibernate.type.Type;
 
-public class DateDiffSQLServer implements SQLFunction{
+public class DateDiffDaySQLServer implements SQLFunction{
 
 	@Override
 	public boolean hasArguments() {
@@ -30,12 +30,10 @@ public class DateDiffSQLServer implements SQLFunction{
 	@Override
 	public String render(Type firstArgumentType, List arguments, SessionFactoryImplementor factory)
 			throws QueryException {
-		if (arguments.size() != 3) {
-			throw new QueryException("Função necessita 3 argumentos. Ex: datediff('day', data1, data2)");
+		if (arguments.size() != 2) {
+			throw new QueryException("Função necessita 2 argumentos. Ex: DateDiffDay(data1, data2)");
 		}
-		String interval = (String) arguments.get(0);
-		interval = interval.substring(1, interval.length()-1);
-		return "DATEDIFF(" + interval + ", " + arguments.get(1) + ", " + arguments.get(2) + ")";
+		return "DATEDIFF(day, " + arguments.get(0) + ", " + arguments.get(1) + ")";
 	}
 
 }
