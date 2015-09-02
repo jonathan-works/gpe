@@ -183,13 +183,6 @@ public class ComunicacaoAction implements Serializable {
 		clear();
 		this.destinatario = destinatario;
 		ciencia = true;
-//		try {
-//			prazoComunicacaoService.darCiencia(getDestinatarioModeloComunicacao(destinatario).getProcesso(), new Date(), Authenticator.getUsuarioLogado());
-//			clear();
-//		} catch (DAOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 	}
 	
 	public Date getDataCiencia() {
