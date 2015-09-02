@@ -31,7 +31,7 @@
                         rendered="#{not row.hasItens() and row.necessitaPartes()}"
                         action="#{action.onSelectNatCatFluxo(row)}"
                         execute="@this"
-                        render="@all"
+                        render="pageBody"
                         limitRender="true">
                         <h:graphicImage
                             value="#{wiSkin.imageFolder}/jbpm/StartState.gif" />
