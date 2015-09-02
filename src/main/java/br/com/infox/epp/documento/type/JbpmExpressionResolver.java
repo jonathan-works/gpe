@@ -6,10 +6,14 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+
 import org.apache.commons.lang3.tuple.Pair;
-import org.jbpm.context.exe.ContextInstance;
+import org.jbpm.graph.exe.ProcessInstance;
 
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
+import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
@@ -17,29 +21,38 @@ import br.com.infox.seam.util.ComponentUtil;
 
 public class JbpmExpressionResolver implements ExpressionResolver {
 	private Map<String, Pair<String, VariableType>> variableTypeMap;
-	private ContextInstance context;
+	private Integer idProcesso;
 	
-	public JbpmExpressionResolver(Map<String, Pair<String, VariableType>> variableTypeMap, ContextInstance context) {
+	public JbpmExpressionResolver(Map<String, Pair<String, VariableType>> variableTypeMap, Integer idProcesso) {
 		if (variableTypeMap == null) {
 			throw new NullPointerException("O mapa de variáveis não pode ser nulo");
 		}
-		if (context == null) {
-			throw new NullPointerException("O context não pode ser nulo");
+		if (idProcesso == null) {
+			throw new NullPointerException("O id do processo não pode ser nulo");
 		}
 		this.variableTypeMap = variableTypeMap;
-		this.context = context;
+		this.idProcesso = idProcesso;
 	}
 	
 	@Override
 	public Expression resolve(Expression expression) {
 		String realVariableName = expression.getExpression().substring(2, expression.getExpression().length() - 1);
-        Object value = context.getVariable(realVariableName);
-        Pair<String, VariableType> variableInfo = variableTypeMap.get(realVariableName);
-        if (variableInfo == null && value != null) {
-        	resolveAsJavaType(expression, value);
-        } else if (variableInfo != null && value != null) {
-        	resolveAsVariableType(expression, value, variableInfo);
-        }
+		ProcessoManager processoManager = ComponentUtil.getComponent(ProcessoManager.NAME);
+		EntityManager entityManager = ComponentUtil.getComponent("entityManager");
+		Object value = null;
+		Processo processo = processoManager.find(idProcesso);
+		do {
+			ProcessInstance processInstance = entityManager.find(ProcessInstance.class, processo.getIdJbpm());
+	        value = processInstance.getContextInstance().getVariable(realVariableName);
+	        Pair<String, VariableType> variableInfo = variableTypeMap.get(realVariableName);
+	        if (variableInfo == null && value != null) {
+	        	resolveAsJavaType(expression, value);
+	        } else if (variableInfo != null && value != null) {
+	        	resolveAsVariableType(expression, value, variableInfo);
+	        } else {
+	        	processo = processo.getProcessoPai();
+	        }
+		} while (value == null && processo != null);
         return expression;
 	}
 

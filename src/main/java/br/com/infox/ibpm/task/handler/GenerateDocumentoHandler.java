@@ -6,9 +6,10 @@ import java.util.regex.Pattern;
 
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
-import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.graph.def.ActionHandler;
 import org.jbpm.graph.exe.ExecutionContext;
+
+import com.google.gson.Gson;
 
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
@@ -29,8 +30,6 @@ import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.ibpm.task.home.VariableTypeResolver;
 import br.com.infox.seam.util.ComponentUtil;
-
-import com.google.gson.Gson;
 
 public class GenerateDocumentoHandler implements ActionHandler, CustomAction {
 	private static final long serialVersionUID = 1L;
@@ -64,13 +63,12 @@ public class GenerateDocumentoHandler implements ActionHandler, CustomAction {
 		PastaManager pastaManager = ComponentUtil.getComponent(PastaManager.NAME);
 		VariableTypeResolver variableTypeResolver = ComponentUtil.getComponent(VariableTypeResolver.NAME);
 		ProcessoManager processoManager = ComponentUtil.getComponent(ProcessoManager.NAME);
-		ContextInstance contextInstance = executionContext.getContextInstance();
 		Processo processo = processoManager.getProcessoEpaByIdJbpm(executionContext.getProcessInstance().getId());
 		Processo processoRaiz = processo.getProcessoRoot();
 		ClassificacaoDocumento classificacaoDocumento = classificacaoDocumentoManager.find(configuration.idClassificacaoDocumento);
 		try {
 			ModeloDocumento modeloDocumento = modeloDocumentoManager.find(configuration.idModeloDocumento);
-			ExpressionResolverChain chain = ExpressionResolverChainBuilder.with(new JbpmExpressionResolver(variableTypeResolver.getVariableTypeMap(), contextInstance))
+			ExpressionResolverChain chain = ExpressionResolverChainBuilder.with(new JbpmExpressionResolver(variableTypeResolver.getVariableTypeMap(), processo.getIdProcesso()))
 	                .and(new SeamExpressionResolver()).build();
 			String texto = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, chain);
 			DocumentoBin documentoBin = documentoBinManager.createProcessoDocumentoBin(modeloDocumento.getTituloModeloDocumento(), texto);
