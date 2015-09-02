@@ -2,6 +2,7 @@ package br.com.infox.epp.access.manager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
+import java.util.List;
 
 import javax.ejb.Stateless;
 
@@ -15,6 +16,7 @@ import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.access.dao.UsuarioLoginDAO;
+import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.service.PasswordService;
 import br.com.infox.epp.mail.service.AccessMailService;
@@ -48,7 +50,7 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
         }
         return result;
     }
-
+    
     public void inativarUsuario(final UsuarioLogin usuario) throws DAOException {
         getDao().inativarUsuario(usuario);
     }
@@ -142,6 +144,11 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
     			throw new BusinessException(mensagem);
     		}
     	}
+    }
+    
+    
+    public List<UsuarioLogin> getUsuariosLogin(Localizacao localizacao, String... papeis){
+    	return getDao().getUsuariosLoginLocalizacaoPapeis(localizacao, papeis);
     }
 
 }

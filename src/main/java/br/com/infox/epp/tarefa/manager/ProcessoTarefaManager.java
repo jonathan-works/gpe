@@ -6,6 +6,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -30,6 +32,7 @@ import br.com.infox.epp.turno.type.DiaSemanaEnum;
 import br.com.infox.util.time.DateRange;
 
 @AutoCreate
+@Stateless
 @Name(ProcessoTarefaManager.NAME)
 public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTarefa> {
 

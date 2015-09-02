@@ -326,6 +326,11 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 		return getDao().getProcessoEpaByIdJbpm(idJbpm);
 	}
 	
+	public void movimentarProcessoJBPM(TaskInstance taskInstance,String transition) throws DAOException {
+		taskInstance.end(transition);
+		atualizarProcessoTarefa(taskInstance);
+	}
+	
 	public void movimentarProcessoJBPM(Processo processo) throws DAOException {
 		Long processIdOriginal = BusinessProcess.instance().getProcessId();
 		Long taskIdOriginal = BusinessProcess.instance().getTaskId();
