@@ -7,8 +7,8 @@ import java.net.InetAddress;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.Lock;
-import javax.ejb.LockType;
+import javax.ejb.ConcurrencyManagement;
+import javax.ejb.ConcurrencyManagementType;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.ejb.TransactionAttribute;
@@ -37,7 +37,7 @@ import br.com.infox.seam.exception.BusinessException;
 @Startup
 @Named
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-@Lock(LockType.READ)
+@ConcurrencyManagement(ConcurrencyManagementType.BEAN)
 public class RequestInternalPageService implements Serializable {
 
 	public static final LogProvider LOG = Logging
@@ -86,7 +86,6 @@ public class RequestInternalPageService implements Serializable {
 	 * @throws IOException 
 	 * @throws HttpException 
 	 */
-	@Lock(LockType.WRITE)
 	public String getInternalPage(String pagePath) throws HttpException, IOException {
 		buildSocketBindingInfo();
 		
