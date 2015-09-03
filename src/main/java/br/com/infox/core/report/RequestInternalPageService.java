@@ -7,6 +7,8 @@ import java.net.InetAddress;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.Lock;
+import javax.ejb.LockType;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.ejb.TransactionAttribute;
@@ -20,18 +22,22 @@ import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
 
+import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
+import br.com.infox.core.exception.FailResponseAction;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.exception.BusinessException;
 
 @Singleton
 @Startup
 @Named
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+@Lock(LockType.READ)
 public class RequestInternalPageService implements Serializable {
 
 	public static final LogProvider LOG = Logging
@@ -80,6 +86,7 @@ public class RequestInternalPageService implements Serializable {
 	 * @throws IOException 
 	 * @throws HttpException 
 	 */
+	@Lock(LockType.WRITE)
 	public String getInternalPage(String pagePath) throws HttpException, IOException {
 		buildSocketBindingInfo();
 		
@@ -139,6 +146,10 @@ public class RequestInternalPageService implements Serializable {
 		// Adicionando Header para controle da segurança do sistema
 		getMethod.addRequestHeader(KEY_HEADER_NAME, getKey().toString());
 		client.executeMethod(getMethod);
+		Header errorHeader = getMethod.getResponseHeader(FailResponseAction.HEADER_ERROR_RESPONSE);
+		if (errorHeader != null && !errorHeader.getValue().isEmpty()) {
+		    throw new BusinessException("A requisição interna falhou");
+		}
 		return getMethod.getResponseBodyAsString();
 	}
 
