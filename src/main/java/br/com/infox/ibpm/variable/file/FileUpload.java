@@ -7,6 +7,7 @@ import javax.faces.event.AbortProcessingException;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.faces.FacesMessages;
 import org.richfaces.event.FileUploadEvent;
 import org.richfaces.event.FileUploadListener;
 import org.richfaces.model.UploadedFile;
@@ -25,6 +26,7 @@ import br.com.infox.epp.processo.home.ProcessoEpaHome;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.exception.BusinessException;
 
 @Name(FileUpload.NAME)
 public class FileUpload implements FileUploadListener {
@@ -67,6 +69,8 @@ public class FileUpload implements FileUploadListener {
             TaskInstanceHome.instance().getInstance().put(uploadFile.getId(), documento.getId());
         } catch (DAOException e) {
             LOG.error("Não foi possível gravar o documento " + file.getName() + "no processo " + processoEpaHome.getInstance().getIdProcesso(), e);
+        } catch (BusinessException e) {
+        	FacesMessages.instance().add(e.getMessage());
         }
         TaskInstanceHome.instance().update();
     }

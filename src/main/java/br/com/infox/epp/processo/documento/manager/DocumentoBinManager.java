@@ -15,6 +15,7 @@ import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.Image;
 import com.lowagie.text.Phrase;
+import com.lowagie.text.exceptions.BadPasswordException;
 import com.lowagie.text.pdf.ColumnText;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfReader;
@@ -134,6 +135,8 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 
 			stamper.close();
 			outStream.flush();
+		} catch (BadPasswordException e) {
+			throw new BusinessException("Documento somente leitura, não é possível gravar", e);
 		} catch (IOException | DocumentException e) {
 			throw new BusinessException("Erro ao gravar a margem do PDF", e);
 		}
