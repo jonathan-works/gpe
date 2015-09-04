@@ -71,7 +71,7 @@ public class GenerateDocumentoHandler implements ActionHandler, CustomAction {
 		try {
 			ModeloDocumento modeloDocumento = modeloDocumentoManager.find(configuration.idModeloDocumento);
 			ExpressionResolverChain chain = ExpressionResolverChainBuilder.with(new JbpmExpressionResolver(variableTypeResolver.getVariableTypeMap(), contextInstance))
-	                .and(new SeamExpressionResolver()).build();
+	                .and(new SeamExpressionResolver(executionContext)).build();
 			String texto = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, chain);
 			DocumentoBin documentoBin = documentoBinManager.createProcessoDocumentoBin(modeloDocumento.getTituloModeloDocumento(), texto);
 			Documento documento = documentoManager.createDocumento(processoRaiz, modeloDocumento.getTituloModeloDocumento(), documentoBin, classificacaoDocumento);

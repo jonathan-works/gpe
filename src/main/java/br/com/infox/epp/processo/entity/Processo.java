@@ -235,7 +235,7 @@ public class Processo implements Serializable {
 	}
     
     public Processo getProcessoRoot() {
-		return processoRoot;
+		return processoRoot == null ? this : processoRoot;
 	}
 
 	public void setProcessoRoot(Processo processoRoot) {

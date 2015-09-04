@@ -854,7 +854,7 @@ public class TaskInstanceHome implements Serializable {
 		if (modeloDocumento != null) {
 			ExpressionResolverChain chain = ExpressionResolverChainBuilder
 					.with(new JbpmExpressionResolver(variableTypeResolver.getVariableTypeMap(), ProcessInstance.instance()
-							.getContextInstance())).and(new SeamExpressionResolver()).build();
+					.and(new SeamExpressionResolver(getCurrentTaskInstance())).build();
 			String modelo = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, chain);
 			variaveisDocumento.get(id).getDocumentoBin().setModeloDocumento(modelo);
 		} else {

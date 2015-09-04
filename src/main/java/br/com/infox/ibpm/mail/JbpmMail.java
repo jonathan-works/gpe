@@ -81,7 +81,7 @@ public class JbpmMail extends org.jbpm.mail.Mail {
         ModeloDocumentoManager modeloDocumentoManager = ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
         VariableTypeResolver variableTypeResolver = (VariableTypeResolver) Component.getInstance(VariableTypeResolver.NAME);
         ExpressionResolverChain chain = ExpressionResolverChainBuilder.with(new JbpmExpressionResolver(variableTypeResolver.getVariableTypeMap(), ProcessInstance.instance().getContextInstance()))
-                .and(new SeamExpressionResolver()).build();
+                .and(new SeamExpressionResolver(org.jboss.seam.bpm.TaskInstance.instance())).build();
         data.setBody(modeloDocumentoManager.getConteudo(Integer.parseInt(parameters.get("idModeloDocumento")), chain));
         String idGrupo = parameters.get("idGrupo");
         List<String> recipList = null;

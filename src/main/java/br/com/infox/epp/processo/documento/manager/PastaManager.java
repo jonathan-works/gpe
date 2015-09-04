@@ -152,6 +152,7 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     				pastaRestricao.setDelete(false);
     				pastaRestricao.setRead(true);
     				pastaRestricao.setPasta(pasta);
+    				pastaRestricao.setLogicDelete(false);
     				pastaRestricaoManager.persist(pastaRestricao);
     			} else {
     				pastaRestricao.setRead(true);
