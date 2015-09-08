@@ -28,7 +28,6 @@ import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.system.Parametros;
-import br.com.infox.ibpm.task.home.VariableTypeResolver;
 import br.com.infox.seam.util.ComponentUtil;
 
 public class GenerateDocumentoHandler implements ActionHandler, CustomAction {
@@ -61,14 +60,13 @@ public class GenerateDocumentoHandler implements ActionHandler, CustomAction {
 		ModeloDocumentoManager modeloDocumentoManager = ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
 		ClassificacaoDocumentoManager classificacaoDocumentoManager = ComponentUtil.getComponent(ClassificacaoDocumentoManager.NAME);
 		PastaManager pastaManager = ComponentUtil.getComponent(PastaManager.NAME);
-		VariableTypeResolver variableTypeResolver = ComponentUtil.getComponent(VariableTypeResolver.NAME);
 		ProcessoManager processoManager = ComponentUtil.getComponent(ProcessoManager.NAME);
 		Processo processo = processoManager.getProcessoEpaByIdJbpm(executionContext.getProcessInstance().getId());
 		Processo processoRaiz = processo.getProcessoRoot();
 		ClassificacaoDocumento classificacaoDocumento = classificacaoDocumentoManager.find(configuration.idClassificacaoDocumento);
 		try {
 			ModeloDocumento modeloDocumento = modeloDocumentoManager.find(configuration.idModeloDocumento);
-			ExpressionResolverChain chain = ExpressionResolverChainBuilder.with(new JbpmExpressionResolver(variableTypeResolver.getVariableTypeMap(), processo.getIdProcesso()))
+			ExpressionResolverChain chain = ExpressionResolverChainBuilder.with(new JbpmExpressionResolver(processo.getIdProcesso()))
 	                .and(new SeamExpressionResolver(executionContext)).build();
 			String texto = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, chain);
 			DocumentoBin documentoBin = documentoBinManager.createProcessoDocumentoBin(modeloDocumento.getTituloModeloDocumento(), texto);

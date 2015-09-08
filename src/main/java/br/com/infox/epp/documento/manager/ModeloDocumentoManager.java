@@ -179,7 +179,7 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
     private Map<String, String> getVariaveis(TipoModeloDocumento tipo) {
         List<Variavel> list = new ArrayList<Variavel>();
         if (tipo != null) {
-            list = variavelDAO.getVariaveisByTipoModeloDocumento(tipo);
+            list = variavelDAO.getVariaveisAtivasByTipoModeloDocumento(tipo);
         }
         Map<String, String> map = new HashMap<>();
         int flag = 0x0;

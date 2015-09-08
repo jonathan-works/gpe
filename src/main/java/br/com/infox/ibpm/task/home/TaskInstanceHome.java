@@ -21,7 +21,6 @@ import javax.persistence.NonUniqueResultException;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.SystemException;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.hibernate.HibernateException;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
@@ -99,6 +98,7 @@ import br.com.infox.ibpm.util.UserHandler;
 import br.com.infox.ibpm.variable.FragmentConfiguration;
 import br.com.infox.ibpm.variable.FragmentConfigurationCollector;
 import br.com.infox.ibpm.variable.VariableHandler;
+import br.com.infox.ibpm.variable.entity.VariableInfo;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.context.ContextFacade;
@@ -502,15 +502,15 @@ public class TaskInstanceHome implements Serializable {
 	}
 
 	public boolean podeAssinarDocumento(String variableName) {
-		Pair<String, VariableType> variableType = variableTypeResolver.getVariableTypeMap().get(variableName);
+		VariableInfo variableInfo = variableTypeResolver.getVariableInfoMap().get(variableName);
 		TaskInstance taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
 		if (taskInstance == null){
 			return false;
 		}
-		if (variableType == null){
+		if (variableInfo == null){
 			return false;
 		}
-		Integer idDocumento = (Integer) taskInstance.getVariable(variableType.getLeft());
+		Integer idDocumento = (Integer) taskInstance.getVariable(variableInfo.getMappedName());
 		if (idDocumento != null) {
 			Documento documento = documentoManager.find(idDocumento);
 			return documento != null 
@@ -854,7 +854,7 @@ public class TaskInstanceHome implements Serializable {
 	public void assignModeloDocumento(String id) {
 		if (modeloDocumento != null) {
 			ExpressionResolverChain chain = ExpressionResolverChainBuilder
-					.with(new JbpmExpressionResolver(variableTypeResolver.getVariableTypeMap(), processoEpaHome.getInstance().getIdProcesso()))
+					.with(new JbpmExpressionResolver(processoEpaHome.getInstance().getIdProcesso()))
 					.and(new SeamExpressionResolver(getCurrentTaskInstance())).build();
 			String modelo = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, chain);
 			variaveisDocumento.get(id).getDocumentoBin().setModeloDocumento(modelo);
