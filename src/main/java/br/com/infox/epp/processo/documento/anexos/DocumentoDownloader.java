@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.documento.anexos;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.DecimalFormat;
@@ -60,6 +61,8 @@ public class DocumentoDownloader implements Serializable {
     private SigiloDocumentoService sigiloDocumentoService;
     @In
     private DocumentoBinManager documentoBinManager;
+    
+    private String mensagemErro;
 
 
     public void downloadDocumento(Documento documento) {
@@ -77,14 +80,18 @@ public class DocumentoDownloader implements Serializable {
         String fileName = documento.getNomeArquivo();
         String contentType = "application/" + documento.getExtensao();
         if (contentType.equals("application/pdf") && !documento.getAssinaturas().isEmpty()) {
-            HttpServletResponse response = FileDownloader.prepareDownloadResponse(contentType, fileName);
             try {
-                documentoBinManager.writeMargemDocumento(documento, data, response.getOutputStream());
+            	ByteArrayOutputStream out = new ByteArrayOutputStream();
+                documentoBinManager.writeMargemDocumento(documento, data, out);
+                HttpServletResponse response = FileDownloader.prepareDownloadResponse(contentType, fileName);
+                response.getOutputStream().write(out.toByteArray());
+                response.getOutputStream().flush();
                 FacesContext.getCurrentInstance().responseComplete();
             } catch (IOException | BusinessException e) {
                 LOG.error("", e);
                 FacesMessages.instance().clear();
-                FacesMessages.instance().add("Erro ao gerar a margem do PDF: " + e.getMessage());
+                mensagemErro = "Erro ao gerar a margem do PDF: " + e.getMessage();
+                FacesMessages.instance().add(mensagemErro);
             }
         } else {
             FileDownloader.download(data, contentType, fileName);
@@ -126,6 +133,10 @@ public class DocumentoDownloader implements Serializable {
         }
         return MessageFormat.format(URL_DOWNLOAD_HTML, pathResolver.getContextPath(), documento.getId());
     }
+    
+    public String getMensagemErro() {
+		return mensagemErro;
+	}
 
     // TODO verificar solução melhor para isso
     private String clearId(String id) {

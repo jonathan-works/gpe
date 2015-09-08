@@ -43,6 +43,7 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Named
@@ -208,6 +209,9 @@ public class ComunicacaoAction implements Serializable {
 		} catch (DAOException e) {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);
+		} catch (BusinessException e) {
+			LOG.error("", e);
+			FacesMessages.instance().add(e.getMessage());
 		}
 	}
 	    
@@ -282,6 +286,9 @@ public class ComunicacaoAction implements Serializable {
 		} catch (DAOException e) {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);
+		} catch (BusinessException e) {
+			LOG.error("", e);
+			FacesMessages.instance().add(e.getMessage());
 		}
 	}
 	

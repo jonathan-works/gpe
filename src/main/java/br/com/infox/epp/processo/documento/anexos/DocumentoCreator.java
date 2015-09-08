@@ -14,6 +14,7 @@ import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.log.LogProvider;
+import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.util.ComponentUtil;
 
 public abstract class DocumentoCreator {
@@ -76,7 +77,7 @@ public abstract class DocumentoCreator {
         try {
         	Documento documento = gravarDocumento();
             getDocumentosDaSessao().add(documento);
-        } catch (DAOException e) {
+        } catch (DAOException | BusinessException e) {
             getLogger().error("Não foi possível gravar o documento "
                     + getDocumento() + " no processo " + getProcesso(), e);
         }

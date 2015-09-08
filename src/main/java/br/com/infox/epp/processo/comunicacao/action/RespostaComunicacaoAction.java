@@ -43,6 +43,7 @@ import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Named
@@ -169,7 +170,13 @@ public class RespostaComunicacaoAction implements Serializable {
 	}
 	
 	public void gravarAnexoResposta() {
-		documentoUploader.persist();
+		try {
+			documentoUploader.persist();
+		} catch (BusinessException e){
+			LOG.error("", e);
+			FacesMessages.instance().add(e.getMessage());
+			return;
+		}
 		if (documentoUploader.getDocumentosDaSessao().isEmpty()) {
 			return;
 		}
@@ -180,7 +187,7 @@ public class RespostaComunicacaoAction implements Serializable {
 		} catch (DAOException e) {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);
-		}
+		} 
 		documentoUploader.clear();
 		verificarPossibilidadeEnvioResposta();
 	}
