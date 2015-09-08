@@ -30,14 +30,24 @@ public class SeamExpressionResolver implements ExpressionResolver {
 	}
 	
 	public SeamExpressionResolver(ProcessInstance processInstance) {
-		EntityManager entityManager = ComponentUtil.getComponent("entityManager");
+	    EntityManager entityManager = ComponentUtil.getComponent("entityManager");
 		TypedQuery<TaskInstance> typedQuery = entityManager.createNamedQuery("TaskMgmtSession.findOpenTasksOfProcessInstance", TaskInstance.class);
 		List<TaskInstance> list = typedQuery.setMaxResults(1).setParameter("instance", processInstance).getResultList();
 		TaskInstance taskInstance = list.get(0);
 		executionContext = new ExecutionContext(taskInstance.getToken());
 		executionContext.setTaskInstance(taskInstance);
 	}
-	
+
+	public SeamExpressionResolver(Long idProcessInstance) {
+	    EntityManager entityManager = ComponentUtil.getComponent("entityManager");
+	    String jqpl = "select ti from org.jbpm.taskmgmt.exe.TaskInstance ti inner join fetch ti.token inner join fetch ti.processInstance pi where pi.id = :idProcessInstance and ti.end is null";
+	    TypedQuery<TaskInstance> typedQuery = entityManager.createQuery(jqpl, TaskInstance.class);
+	    List<TaskInstance> list = typedQuery.setMaxResults(1).setParameter("idProcessInstance", idProcessInstance).getResultList();
+	    TaskInstance taskInstance = list.get(0);
+	    executionContext = new ExecutionContext(taskInstance.getToken());
+	    executionContext.setTaskInstance(taskInstance);
+	}
+
 	@Override
 	public Expression resolve(Expression expression) {
 		Object value = null;
