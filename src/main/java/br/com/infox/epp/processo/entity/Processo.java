@@ -56,6 +56,7 @@ import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -81,6 +82,7 @@ import javax.validation.constraints.Size;
 import br.com.infox.core.persistence.generator.CustomIdGenerator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.painel.caixa.Caixa;
@@ -92,8 +94,6 @@ import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 import br.com.infox.epp.processo.query.ProcessoQuery;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
-import javax.persistence.EntityManager;
-import br.com.infox.epp.cdi.config.BeanManager;
 
 @Entity
 @Table(name = TABLE_PROCESSO)
@@ -224,16 +224,19 @@ public class Processo implements Serializable {
     }
 
 	private void preencherProcessoRoot() {
-		if (getProcessoRoot() == null && getProcessoPai() != null) {
-        	this.processoPai = BeanManager.INSTANCE.getReference(EntityManager.class).merge(getProcessoPai());
-    		Processo processo = this;
-    		while (processo.getProcessoPai() != null) {
-    			processo = processo.getProcessoPai();
-    		}
+		Processo processoRoot = getProcessoRoot();
+		if ((processoRoot == null || this.equals(processoRoot)) && getProcessoPai() != null) {
+			this.processoPai = BeanManager.INSTANCE.getReference(EntityManager.class).merge(getProcessoPai());
+			Processo processo = this;
+			while (processo.getProcessoPai() != null) {
+				processo = processo.getProcessoPai();
+			}
     		setProcessoRoot(processo);
+    	} else if (processoRoot == null) {
+    		setProcessoRoot(this);
     	}
 	}
-    
+	
     public Processo getProcessoRoot() {
 		return processoRoot == null ? this : processoRoot;
 	}

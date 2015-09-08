@@ -1,36 +1,28 @@
 package br.com.infox.ibpm.task.home;
 
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
-
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jbpm.context.def.VariableAccess;
-import org.jbpm.graph.def.Node;
-import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.exe.ProcessInstance;
-import org.jbpm.graph.node.TaskNode;
-import org.jbpm.taskmgmt.def.Task;
 
-import br.com.infox.hibernate.util.HibernateUtil;
-import br.com.infox.ibpm.process.definition.variable.VariableType;
+import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.ibpm.variable.entity.VariableInfo;
+import br.com.infox.ibpm.variable.service.VariableTypeResolverService;
 
 @Name(VariableTypeResolver.NAME)
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
+@ContextDependency
 public class VariableTypeResolver implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "variableTypeResolver";
@@ -38,58 +30,33 @@ public class VariableTypeResolver implements Serializable {
     @In(required = false)
     private ProcessInstance processInstance;
     
-    private Map<String, Pair<String, VariableType>> variableTypeMap;
-    private Map<String, Boolean> visitedNodes;
+    @Inject
+    private VariableTypeResolverService variableTypeResolverService;
+    
+    private Map<String, VariableInfo> variableInfoMap;
     
     @PostConstruct
     public void init() {
-        variableTypeMap = new HashMap<>();
+        variableInfoMap = new HashMap<>();
         if (processInstance != null) {
-            buildVariableTypeMap();
+            buildVariableInfoMap();
         }
     }
     
     public void setProcessInstance(ProcessInstance processInstance) {
         this.processInstance = processInstance;
-        buildVariableTypeMap();
+        buildVariableInfoMap();
     }
     
-    public Map<String, Pair<String, VariableType>> getVariableTypeMap() {
-        return Collections.unmodifiableMap(variableTypeMap);
+    public Map<String, VariableInfo> getVariableInfoMap() {
+        return variableInfoMap;
     }
     
-    private void buildVariableTypeMap() {
-        variableTypeMap = new HashMap<>();
-        visitedNodes = new HashMap<>();
-        Node start = processInstance.getProcessDefinition().getStartState();
-        traverse(start);
-        visitedNodes = null;
-    }
-
-    @SuppressWarnings(UNCHECKED)
-    private void traverse(Node node) {
-        visitedNodes.put(node.getName(), true);
-        Node nodeWithoutProxy = (Node) HibernateUtil.removeProxy(node);
-        if (nodeWithoutProxy instanceof TaskNode) {
-            Set<Task> tasks = ((TaskNode) nodeWithoutProxy).getTasks();
-            for (Task task : tasks) {
-                if (task.getTaskController() != null) {
-                    List<VariableAccess> variables = task.getTaskController().getVariableAccesses();
-                    for (VariableAccess variable : variables) {
-                        if (!variableTypeMap.containsKey(variable.getVariableName())) {
-                            String mappedName = variable.getMappedName();
-                            variableTypeMap.put(variable.getVariableName(), new ImmutablePair<>(mappedName, VariableType.valueOf(variable.getMappedName().split(":")[0])));
-                        }
-                    }
-                }
-            }
-        }
-        List<Transition> leavingTransitions = node.getLeavingTransitions();
-        for (Transition transition : leavingTransitions) {
-            Node destination = transition.getTo();
-            if (!visitedNodes.containsKey(destination.getName()) || !visitedNodes.get(destination.getName())) {
-                traverse(destination);
-            }
-        }
+    private void buildVariableInfoMap() {
+    	if (processInstance != null) {
+    		variableInfoMap = Collections.unmodifiableMap(variableTypeResolverService.buildVariableInfoMap(processInstance.getProcessDefinition().getId()));
+    	} else {
+    		variableInfoMap = new HashMap<>();
+    	}
     }
 }

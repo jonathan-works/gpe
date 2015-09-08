@@ -394,6 +394,13 @@
           <include>**/*.properties</include>
           <include>**/*.csv</include>
           <include>**/*.sql</include>
+				</includes>
+			</testResource>
+			<testResource>
+				<directory>${basedir}</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>test/**/*</include>
         </includes>
       </testResource>
     </testResources>

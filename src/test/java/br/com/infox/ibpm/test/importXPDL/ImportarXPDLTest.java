@@ -1,11 +1,10 @@
 package br.com.infox.ibpm.test.importXPDL;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 
 import org.junit.Assert;
-
 import org.junit.Test;
 
 import br.com.infox.epp.fluxo.xpdl.FluxoXPDL;
@@ -14,9 +13,9 @@ import br.com.infox.epp.fluxo.xpdl.lane.IllegalNumberPoolsXPDLException;
 
 public class ImportarXPDLTest {
 
-	private static final String file3Pools = "./test/3Pools.xpdl";
-	private static final String fileSubProcess = "./test/SubProcess.xpdl";
-	private static final String fileSucess = "./test/sucessFluxo.xpdl";
+	private static final String file3Pools = "/test/3Pools.xpdl";
+	private static final String fileSubProcess = "/test/SubProcess.xpdl";
+	private static final String fileSucess = "/test/sucessFluxo.xpdl";
 	private static final String CD_FLUXO = "cdFluxo";
 	private int MAX = 0x10000;
 
@@ -43,7 +42,7 @@ public class ImportarXPDLTest {
 	}
 
 	private byte[] readFile(String name) throws IOException {
-		FileInputStream fileStream = new FileInputStream(name);
+		InputStream fileStream = getClass().getResourceAsStream(name);
 		byte[] buffered = new byte[MAX];
 		int i = 0;
 		int temp = fileStream.read();

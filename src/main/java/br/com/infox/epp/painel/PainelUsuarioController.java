@@ -180,6 +180,7 @@ public class PainelUsuarioController implements Serializable {
 	}
 
 	private void updateDatatable() {
+		consultaProcessoList.newInstance();
 		List<Integer> idsProcesso = getProcessoIdList();
 		if (idsProcesso != null && !idsProcesso.isEmpty()) {
 			Integer idProcesso = idsProcesso.get(0);
