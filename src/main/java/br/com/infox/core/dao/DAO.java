@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.LockModeType;
@@ -19,12 +20,12 @@ import javax.persistence.criteria.Root;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
+import br.com.infox.epp.cdi.config.BeanManager;
 
 @AutoCreate
 @Transactional
@@ -33,8 +34,12 @@ public abstract class DAO<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @In
     private transient EntityManager entityManager;
+    
+    @PostConstruct
+    public void initialize() {
+    	entityManager = BeanManager.INSTANCE.getReference(EntityManager.class);
+    }
 
     /**
      * Busca o registro na entidade informada.

@@ -208,12 +208,7 @@ public class TaskInstanceHome implements Serializable {
 	private void retrieveVariable(VariableAccess variableAccess) {
 		TaskVariableRetriever variableRetriever = new TaskVariableRetriever(variableAccess, taskInstance);
 		variableRetriever.retrieveVariableContent();
-        if (variableRetriever.getVariable() == null && VariableType.FRAGMENT.equals(variableRetriever.getType())) {
-            FragmentConfigurationCollector collector = ComponentUtil.getComponent(FragmentConfigurationCollector.NAME);
-            String code = variableAccess.getMappedName().split(":")[2];
-            FragmentConfiguration fragmentConfiguration = collector.getByCode(code);
-            variableRetriever.setVariable(fragmentConfiguration.init(taskInstance));
-        }
+        
 		mapaDeVariaveis.put(getFieldName(variableRetriever.getName()), variableRetriever.getVariable());
 		if (variableRetriever.isEditor() || variableRetriever.isFile()) {
 			Integer idDocumento = (Integer) taskInstance.getVariable(variableRetriever.getMappedName());
