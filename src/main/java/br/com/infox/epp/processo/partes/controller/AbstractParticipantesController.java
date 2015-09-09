@@ -8,8 +8,6 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.meiocontato.entity.MeioContato;
@@ -26,6 +24,8 @@ import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.partes.entity.TipoParte;
 import br.com.infox.epp.processo.partes.manager.ParticipanteProcessoManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
 
 @Scope(ScopeType.CONVERSATION)
@@ -53,8 +53,8 @@ public abstract class AbstractParticipantesController implements Serializable {
     private ParticipanteProcesso participanteProcesso = new ParticipanteProcesso();
     private Processo processo;
     private TipoPessoaEnum tipoPessoa = TipoPessoaEnum.F;
-    private String email;
-    private MeioContato meioContato;
+    protected String email;
+    protected MeioContato meioContato;
     
     protected void clearParticipanteProcesso() {
     	participanteProcesso = new ParticipanteProcesso();
@@ -80,14 +80,18 @@ public abstract class AbstractParticipantesController implements Serializable {
         	pessoaFisica.setAtivo(true);
         	getParticipanteProcesso().setPessoa(pessoaFisica);
         } else {
-        	meioContato = meioContatoManager.getMeioContatoByPessoaAndTipo(getParticipanteProcesso().getPessoa(), TipoMeioContatoEnum.EM);
-        	if (meioContato == null){
-        		meioContato = new MeioContato();
-        	} else {
-        		email = meioContato.getMeioContato();
-        	}
+        	initEmailParticipante();
         }
     }
+
+	protected void initEmailParticipante() {
+		meioContato = meioContatoManager.getMeioContatoByPessoaAndTipo(getParticipanteProcesso().getPessoa(), TipoMeioContatoEnum.EM);
+		if (meioContato == null){
+			meioContato = new MeioContato();
+		} else {
+			email = meioContato.getMeioContato();
+		}
+	}
 
     public void searchByCnpj() {
         String cnpj = getParticipanteProcesso().getPessoa().getCodigo();
@@ -116,13 +120,18 @@ public abstract class AbstractParticipantesController implements Serializable {
 		try {
 			getParticipanteProcesso().setProcesso(getProcesso());
 	    	existeParticipante(getParticipanteProcesso());
+	    	if (getParticipanteProcesso().getPessoa().getIdPessoa() == null) {
+	    		if (getParticipanteProcesso().getPessoa().getTipoPessoa() == TipoPessoaEnum.F) {
+		    		pessoaFisicaManager.persist((PessoaFisica) getParticipanteProcesso().getPessoa());
+		    	} else {
+		    		pessoaJuridicaManager.persist((PessoaJuridica) getParticipanteProcesso().getPessoa());
+		    	}
+	    	} 
 	    	if (getParticipanteProcesso().getPessoa().getTipoPessoa() == TipoPessoaEnum.F) {
-	    		pessoaFisicaManager.persist((PessoaFisica) getParticipanteProcesso().getPessoa());
 	    		includeMeioContato(getParticipanteProcesso().getPessoa());
-	    	} else {
-	    		pessoaJuridicaManager.persist((PessoaJuridica) getParticipanteProcesso().getPessoa());
 	    	}
 		    participanteProcessoManager.persist(getParticipanteProcesso());
+		    setProcesso(processoManager.merge(getProcesso()));
 		    processoManager.refresh(getProcesso());
 		    participanteProcessoManager.flush();
 		} catch (DAOException e) {
@@ -135,7 +144,7 @@ public abstract class AbstractParticipantesController implements Serializable {
 		}
     }
     
-    private void includeMeioContato(Pessoa pessoa) throws DAOException {
+    protected void includeMeioContato(Pessoa pessoa) throws DAOException {
     	if (getEmail() == null || getEmail().equals(getMeioContato().getMeioContato())) {
     		return;
     	}
