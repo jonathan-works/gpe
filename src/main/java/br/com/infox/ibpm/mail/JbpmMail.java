@@ -9,8 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.seam.bpm.ProcessInstance;
+import org.jbpm.graph.exe.ExecutionContext;
 
+import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.documento.type.ExpressionResolverChain;
 import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
@@ -76,13 +77,14 @@ public class JbpmMail extends org.jbpm.mail.Mail {
     }
 
     private void sendMail() {
+        ExecutionContext executionContext = (ExecutionContext) ReflectionsUtil.getValue(this, "executionContext");
         EMailData data = ComponentUtil.getComponent(EMailData.NAME);
         data.setUseHtmlBody(true);
         ModeloDocumentoManager modeloDocumentoManager = ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
-        Processo processo = ComponentUtil.<ProcessoManager>getComponent(ProcessoManager.NAME).getProcessoEpaByIdJbpm(ProcessInstance.instance().getId());
+        Processo processo = ComponentUtil.<ProcessoManager>getComponent(ProcessoManager.NAME).getProcessoEpaByIdJbpm(executionContext.getProcessInstance().getId());
         ExpressionResolverChain chain = ExpressionResolverChainBuilder
         		.with(new JbpmExpressionResolver(processo.getIdProcesso()))
-                .and(new SeamExpressionResolver(org.jboss.seam.bpm.TaskInstance.instance())).build();
+                .and(new SeamExpressionResolver(executionContext)).build();
         data.setBody(modeloDocumentoManager.getConteudo(Integer.parseInt(parameters.get("idModeloDocumento")), chain));
         String idGrupo = parameters.get("idGrupo");
         List<String> recipList = null;
