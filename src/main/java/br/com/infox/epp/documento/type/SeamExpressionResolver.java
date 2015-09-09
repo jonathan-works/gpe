@@ -8,6 +8,7 @@ import javax.persistence.TypedQuery;
 import org.jboss.seam.core.Expressions;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.ProcessInstance;
+import org.jbpm.graph.exe.Token;
 import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
@@ -33,9 +34,14 @@ public class SeamExpressionResolver implements ExpressionResolver {
 	    EntityManager entityManager = ComponentUtil.getComponent("entityManager");
 		TypedQuery<TaskInstance> typedQuery = entityManager.createNamedQuery("TaskMgmtSession.findOpenTasksOfProcessInstance", TaskInstance.class);
 		List<TaskInstance> list = typedQuery.setMaxResults(1).setParameter("instance", processInstance).getResultList();
-		TaskInstance taskInstance = list.get(0);
-		executionContext = new ExecutionContext(taskInstance.getToken());
-		executionContext.setTaskInstance(taskInstance);
+		if (list != null && !list.isEmpty()) {
+    		TaskInstance taskInstance = list.get(0);
+    		executionContext = new ExecutionContext(taskInstance.getToken());
+    		executionContext.setTaskInstance(taskInstance);
+		} else {
+		    // TODO não funciona com split - join
+            executionContext = new ExecutionContext(processInstance.getRootToken());
+        }
 	}
 
 	public SeamExpressionResolver(Long idProcessInstance) {
@@ -43,9 +49,16 @@ public class SeamExpressionResolver implements ExpressionResolver {
 	    String jqpl = "select ti from org.jbpm.taskmgmt.exe.TaskInstance ti inner join fetch ti.token inner join fetch ti.processInstance pi where pi.id = :idProcessInstance and ti.end is null";
 	    TypedQuery<TaskInstance> typedQuery = entityManager.createQuery(jqpl, TaskInstance.class);
 	    List<TaskInstance> list = typedQuery.setMaxResults(1).setParameter("idProcessInstance", idProcessInstance).getResultList();
+	    if (list != null && !list.isEmpty()) {
 	    TaskInstance taskInstance = list.get(0);
-	    executionContext = new ExecutionContext(taskInstance.getToken());
-	    executionContext.setTaskInstance(taskInstance);
+    	    executionContext = new ExecutionContext(taskInstance.getToken());
+    	    executionContext.setTaskInstance(taskInstance);
+	    } else {
+	        // TODO não funciona com split - join
+	        TypedQuery<Token> tokenQuery = entityManager.createQuery("select t from org.jbpm.graph.exe.Token t where t.processInstance.id = :idProcessInstance and t.parent is null", Token.class);
+	        Token token = tokenQuery.setParameter("idProcessInstance", idProcessInstance).getSingleResult();
+	        executionContext = new ExecutionContext(token);
+	    }
 	}
 
 	@Override
