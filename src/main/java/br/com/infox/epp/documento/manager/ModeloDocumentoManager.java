@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.ejb.Stateless;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -32,6 +34,7 @@ import br.com.infox.log.Logging;
  * 
  * @author erikliberal
  */
+@Stateless
 @Name(ModeloDocumentoManager.NAME)
 @AutoCreate
 public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDocumento> {

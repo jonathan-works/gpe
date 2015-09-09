@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -27,6 +29,7 @@ import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 
+@Stateless
 @Name(VariavelProcessoService.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
@@ -66,6 +69,12 @@ public class VariavelProcessoService {
         DefinicaoVariavelProcesso definicao = definicaoVariavelProcessoManager.getDefinicao(processo
                 .getNaturezaCategoriaFluxo().getFluxo(), nome);
         return getPrimeiraVariavelProcessoAncestral(processo, definicao);
+    }
+
+    public String getValorVariavelSemDefinicao(Processo processo, String nome) {
+        ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(processo.getIdJbpm());
+        Object variable = processInstance.getContextInstance().getVariable(nome);
+        return variable != null ? formatarValor(variable) : null;
     }
 
     private VariavelProcesso getPrimeiraVariavelProcessoAncestral(Processo processo, DefinicaoVariavelProcesso definicao) {

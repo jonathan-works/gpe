@@ -3,6 +3,8 @@ package br.com.infox.epp.processo.documento.manager;
 import java.util.Date;
 import java.util.List;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -25,6 +27,7 @@ import br.com.infox.epp.processo.documento.type.TipoAlteracaoDocumento;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 
+@Stateless
 @AutoCreate
 @Name(DocumentoManager.NAME)
 public class DocumentoManager extends Manager<DocumentoDAO, Documento> {

@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -39,6 +41,7 @@ import br.com.infox.seam.path.PathResolver;
 import net.glxn.qrgen.QRCode;
 import net.glxn.qrgen.image.ImageType;
 
+@Stateless
 @AutoCreate
 @Name(DocumentoBinManager.NAME)
 public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> {
@@ -71,6 +74,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 				bin.setMd5Documento(MD5Encoder.encode(bin.getModeloDocumento()));
 			}
 		}
+		bin.setDataInclusao(new Date());
 		bin = persist(bin);
 		if (bin.isBinario() && dados != null) {
 			documentoBinarioManager.salvarBinario(bin.getId(), dados);
@@ -95,9 +99,7 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
         bin.setMd5Documento(MD5Encoder.encode(conteudo));
         bin.setSize(conteudo.length);
         bin.setProcessoDocumento(conteudo);
-        bin.setModeloDocumento(InfoxPdfReader.readPdfFromByteArray(conteudo));
-        bin.setDataInclusao(new Date());
-        return persist(bin);
+        return bin;
 	}
 
 	public DocumentoBin getByUUID(final UUID uuid) {
