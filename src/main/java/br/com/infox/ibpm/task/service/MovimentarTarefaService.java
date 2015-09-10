@@ -20,7 +20,7 @@ public class MovimentarTarefaService {
 	
 	@SuppressWarnings("unchecked")
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void finalizarTarefaEmAberto(Processo processo) throws DAOException {
+	public void finalizarTarefasEmAberto(Processo processo) throws DAOException {
 		try {
 			Session jbpmSession = ManagedJbpmContext.instance().getSession();
 			ProcessInstance processInstance = (ProcessInstance) jbpmSession.get(ProcessInstance.class, processo.getIdJbpm());

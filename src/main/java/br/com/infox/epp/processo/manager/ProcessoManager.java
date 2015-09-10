@@ -13,11 +13,9 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.bpm.Actor;
 import org.jboss.seam.bpm.BusinessProcess;
-import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.util.Strings;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
-import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.dao.GenericDAO;
@@ -322,17 +320,6 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 	
 	public Processo getProcessoEpaByIdJbpm(Long idJbpm) {
 		return getDao().getProcessoEpaByIdJbpm(idJbpm);
-	}
-	
-	public void movimentarProcessoJBPM(Processo processo) throws DAOException {
-		Long processIdOriginal = BusinessProcess.instance().getProcessId();
-		Long taskIdOriginal = BusinessProcess.instance().getTaskId();
-		BusinessProcess.instance().setProcessId(null);
-		BusinessProcess.instance().setTaskId(null);
-		ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstanceForUpdate(processo.getIdJbpm());
-		processInstance.signal();
-		BusinessProcess.instance().setProcessId(processIdOriginal);
-		BusinessProcess.instance().setTaskId(taskIdOriginal);
 	}
 
 	@Observer({Event.EVENTTYPE_TASK_END})

@@ -108,7 +108,7 @@ public class PrazoComunicacaoService {
 				ComunicacaoMetadadoProvider.DOCUMENTO_COMPROVACAO_CIENCIA, documentoCiencia.getId().toString());
 		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoCiencia));
 		darCiencia(comunicacao, dataCiencia, Authenticator.getUsuarioLogado());
-		movimentarTarefaService.finalizarTarefaEmAberto(comunicacao);
+		movimentarTarefaService.finalizarTarefasEmAberto(comunicacao);
 	}
 
 	protected void adicionarPrazoDeCumprimento(Processo comunicacao, Date dataCiencia)
@@ -170,7 +170,7 @@ public class PrazoComunicacaoService {
 		if (dataLimite != null) {
 			DateTime dataParaCumprimento = new DateTime(dataLimite.getTime());
 			if (dataParaCumprimento.isBeforeNow()) {
-				processoManager.movimentarProcessoJBPM(comunicacao);
+				movimentarTarefaService.finalizarTarefasEmAberto(comunicacao);
 			}
 		}
 	}
