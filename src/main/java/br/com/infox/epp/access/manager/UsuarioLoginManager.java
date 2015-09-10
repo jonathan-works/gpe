@@ -58,20 +58,19 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
         return getDao().getUsuarioLoginByLogin(login);
     }
 
-    public String getActorIdTarefaAtual(Integer idProcesso) {
-        return getDao().getActorIdTarefaAtual(idProcesso);
-    }
-
-    public String getUsuarioByTarefa(TaskInstance taskInstance) {
-        return getDao().getUsuarioByTarefa(taskInstance);
+    public String getLoginUsuarioByTaskInstance(TaskInstance taskInstance) {
+        return getDao().getLoginUsuarioByTaskInstance(taskInstance);
     }
     
-    public String getNomeUsuarioByTarefa(TaskInstance taskInstance) {
-        return getDao().getNomeUsuarioByTarefa(taskInstance);
+    public String getNomeUsuarioByIdTarefa(Integer idTarefa, Integer idProcesso) {
+    	return getDao().getNomeUsuarioByIdTarefa(idTarefa, idProcesso);
+    }
+    
+    public String getNomeUsuarioByTaskInstance(TaskInstance taskInstance) {
+        return getDao().getNomeUsuarioByTaskInstance(taskInstance);
     }
 
-    public UsuarioLogin getUsuarioLoginByPessoaFisica(
-            final PessoaFisica pessoaFisica) {
+    public UsuarioLogin getUsuarioLoginByPessoaFisica(final PessoaFisica pessoaFisica) {
         return getDao().getUsuarioLoginByPessoaFisica(pessoaFisica);
     }
     

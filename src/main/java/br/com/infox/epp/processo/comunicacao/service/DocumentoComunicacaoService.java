@@ -27,8 +27,6 @@ import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.documento.type.ArbitraryExpressionResolver;
 import br.com.infox.epp.documento.type.ExpressionResolverChain;
 import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
-import br.com.infox.epp.documento.type.JbpmExpressionResolver;
-import br.com.infox.epp.documento.type.SeamExpressionResolver;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DocumentoRespostaComunicacao;
@@ -107,8 +105,8 @@ public class DocumentoComunicacaoService {
 		variableTypeResolver.setProcessInstance(processInstance);
 		
 		ExpressionResolverChain chain = ExpressionResolverChainBuilder.with(new ArbitraryExpressionResolver(variaveis))
-				.and(new JbpmExpressionResolver(modeloComunicacao.getProcesso().getIdProcesso()))
-				.and(new SeamExpressionResolver(processInstance)).build();
+				.and(ExpressionResolverChainBuilder.defaultExpressionResolverChain(modeloComunicacao.getProcesso().getIdProcesso(), processInstance))
+				.build();
 		return modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, textoComunicacao, chain);
 	}
 	

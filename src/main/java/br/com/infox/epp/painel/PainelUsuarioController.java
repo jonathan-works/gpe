@@ -43,7 +43,7 @@ public class PainelUsuarioController implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	protected static final String NAME = "painelUsuarioController";
-	protected static final String DYNAMIC_COLUMN_EXPRESSION = "#{painelUsuarioController.getVariavelProcesso(row, '%s').valor}";
+	private static final String DYNAMIC_COLUMN_EXPRESSION = "#{painelUsuarioController.getVariavelProcesso(row, '%s', %s).valor}";
 	private static final LogProvider LOG = Logging.getLogProvider(PainelUsuarioController.class);
 	
 	@Inject
@@ -186,22 +186,22 @@ public class PainelUsuarioController implements Serializable {
 			consultaProcessoList.newInstance();
 			TarefaManager tarefaManager = ComponentUtil.getComponent(TarefaManager.NAME);
 			consultaProcessoList.setTarefa(tarefaManager.find(idTarefa));
-		}
-		List<Integer> idsProcesso = getProcessoIdList();
-		if (idsProcesso != null && !idsProcesso.isEmpty()) {
-			Integer idProcesso = idsProcesso.get(0);
-			List<DefinicaoVariavelProcesso> definicoes = definicaoVariavelProcessoManager.getDefinicaoVariavelProcessoVisivelPainel(idProcesso);
-			dynamicColumns = new ArrayList<>();
-			for (DefinicaoVariavelProcesso definicao : definicoes) {
-				DynamicColumnModel columnModel = new DynamicColumnModel(definicao.getLabel(), String.format(DYNAMIC_COLUMN_EXPRESSION,
-						definicao.getNome()));
-				dynamicColumns.add(columnModel);
+			List<Integer> idsProcesso = getProcessoIdList();
+			if (idsProcesso != null && !idsProcesso.isEmpty()) {
+				Integer idProcesso = idsProcesso.get(0);
+				List<DefinicaoVariavelProcesso> definicoes = definicaoVariavelProcessoManager.getDefinicaoVariavelProcessoVisivelPainel(idProcesso);
+				dynamicColumns = new ArrayList<>();
+				for (DefinicaoVariavelProcesso definicao : definicoes) {
+					DynamicColumnModel columnModel = new DynamicColumnModel(definicao.getLabel(), String.format(DYNAMIC_COLUMN_EXPRESSION,
+							definicao.getNome(), idTarefa));
+					dynamicColumns.add(columnModel);
+				}
 			}
 		}
 	}
 
-	public VariavelProcesso getVariavelProcesso(Processo processo, String nome) {
-		return variavelProcessoService.getVariavelProcesso(processo, nome);
+	public VariavelProcesso getVariavelProcesso(Processo processo, String nome, Integer idTarefa) {
+		return variavelProcessoService.getVariavelProcesso(processo, nome, idTarefa);
 	}
 
 	public List<DynamicColumnModel> getDynamicColumns() {

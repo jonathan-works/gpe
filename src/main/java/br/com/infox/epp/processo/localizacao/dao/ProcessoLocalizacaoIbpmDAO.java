@@ -4,7 +4,6 @@ import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbp
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.DELETE_BY_TASK_INSTANCE_ID;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_BY_TASK_INSTANCE;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_ID_TAREFA;
-import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.PARAM_ID_TASK;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.PARAM_ID_TASK_INSTANCE;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.PARAM_LOCALIZACAO;
@@ -47,15 +46,6 @@ public class ProcessoLocalizacaoIbpmDAO extends DAO<ProcessoLocalizacaoIbpm> {
         parameters.put(PARAM_PAPEL, usuarioPerfil.getPerfilTemplate().getPapel());
         parameters.put(PARAM_ID_TASK, idTarefa.intValue());
         return getNamedSingleResult(LIST_ID_TASK_INSTANCE_BY_ID_TAREFA, parameters);
-    }
-
-    public Long getTaskInstanceId(UsuarioPerfil usuarioPerfil, Processo processo) {
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put(PARAM_PROCESSO, processo);
-        parameters.put(PARAM_LOCALIZACAO, usuarioPerfil.getPerfilTemplate().getLocalizacao());
-        parameters.put(PARAM_PAPEL, usuarioPerfil.getPerfilTemplate().getPapel());
-
-        return getNamedSingleResult(LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL, parameters);
     }
 
     public void deleteProcessoLocalizacaoIbpmByTaskIdAndProcessId(Long taskId, Long processId) throws DAOException {
