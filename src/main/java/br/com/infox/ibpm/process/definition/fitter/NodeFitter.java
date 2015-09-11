@@ -1,10 +1,12 @@
 package br.com.infox.ibpm.process.definition.fitter;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.core.comparators.Comparators.bySelectItemLabelAsc;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -357,10 +359,11 @@ public class NodeFitter extends Fitter implements Serializable {
             List<Node> list = getProcessBuilder().getInstance().getNodes();
             if (list != null) {
                 nodesItems = new ArrayList<SelectItem>();
-                nodesItems.add(new SelectItem(null, infoxMessages.get("process.task.select")));
                 for (Node node : list) {
                     nodesItems.add(new SelectItem(node.toString(), node.getName()));
                 }
+                Collections.sort(nodesItems, bySelectItemLabelAsc());
+                nodesItems.add(0,new SelectItem(null, infoxMessages.get("process.task.select")));
             }
         }
         return nodesItems;
@@ -372,10 +375,11 @@ public class NodeFitter extends Fitter implements Serializable {
 
     public List<SelectItem> getNodesTransitionItems(String type) {
         List<SelectItem> nodeItemsList = new ArrayList<SelectItem>();
-        nodeItemsList.add(new SelectItem(null, "Selecione..."));
         for (Node node : getNodes(type)) {
             nodeItemsList.add(new SelectItem(node, node.getName()));
         }
+        Collections.sort(nodeItemsList, bySelectItemLabelAsc());
+        nodeItemsList.add(0, new SelectItem(null, "Selecione..."));
         return nodeItemsList;
     }
 

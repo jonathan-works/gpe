@@ -31,6 +31,7 @@ import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 import br.com.infox.epp.tarefa.component.tree.PainelEntityNode;
 import br.com.infox.epp.tarefa.component.tree.PainelTreeHandler;
+import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.security.SecurityUtil;
@@ -157,9 +158,9 @@ public class PainelUsuarioController implements Serializable {
 		r.execute();
 	}
 
-	public Long getTaskId() {
+	public Integer getTaskId() {
 		if (getSelected() != null) {
-			return getSelected().get("idTask", Long.class);
+			return getSelected().get("idTask", Integer.class);
 		}
 		return null;
 	}
@@ -180,6 +181,12 @@ public class PainelUsuarioController implements Serializable {
 	}
 
 	private void updateDatatable() {
+		Integer idTarefa = painelTreeHandler.getTarefaId();
+		if (idTarefa != null) {
+			consultaProcessoList.newInstance();
+			TarefaManager tarefaManager = ComponentUtil.getComponent(TarefaManager.NAME);
+			consultaProcessoList.setTarefa(tarefaManager.find(idTarefa));
+		}
 		List<Integer> idsProcesso = getProcessoIdList();
 		if (idsProcesso != null && !idsProcesso.isEmpty()) {
 			Integer idProcesso = idsProcesso.get(0);

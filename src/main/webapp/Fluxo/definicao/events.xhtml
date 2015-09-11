@@ -49,13 +49,14 @@
                         <h:graphicImage
                             title="#{infoxMessages['process.events.remove']}"
                             url="#{wiSkin.imageFolder}/remove.png"
-                        >
+                            style="cursor:pointer"
+                            rendered="#{parent.canRemoveEvent(row)}">
                             <a:ajax
                                 event="click"
                                 listener="#{parent.removeEvent(row)}"
                                 onbeforesubmit="if(!confirm('Confirma?')) return false;"
                                 execute="@this"
-                                render="#{parentId}Div"
+                                render="#{parentId}Div, documentoGenerateForm"
                                 limitRender="true"
                             />
                         </h:graphicImage>

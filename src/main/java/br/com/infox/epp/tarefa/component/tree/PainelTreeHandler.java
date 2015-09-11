@@ -58,6 +58,13 @@ public class PainelTreeHandler extends AbstractTreeHandler<Tuple> {
         return 0;
     }
     
+    public Integer getTarefaId(){
+    	if (getSelected() != null) {
+    		return getSelected().get("idTarefa", Integer.class);
+    	}
+    	return null;
+    }
+    
     public List<PainelEntityNode> getTarefasRoots() {
         if (rootList == null || rootList.isEmpty()) {
         	List<Tuple> tuples = situacaoProcessoManager.getChildrenList(getIdFluxo(), getTipoProcesso(), isExpedidas());

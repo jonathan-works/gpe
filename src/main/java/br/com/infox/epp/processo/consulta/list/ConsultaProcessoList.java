@@ -18,6 +18,7 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
+import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 
 @AutoCreate
@@ -28,8 +29,9 @@ public class ConsultaProcessoList extends EntityList<Processo> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "consultaProcessoList";
 
-    private static final String DEFAULT_EJBQL = "select o from Processo o";
-    private static final String DEFAULT_ORDER = "coalesce(o.prioridadeProcesso, -1) DESC, o.dataInicio ASC";
+    private static final String DEFAULT_EJBQL = "select o from ProcessoTarefa pt inner join pt.processo o left join o.prioridadeProcesso pp"
+    		+ " where pt.tarefa = #{consultaProcessoList.tarefa} and pt.dataFim is null";
+    private static final String DEFAULT_ORDER = "coalesce(pp.peso, -1) DESC, pt.dataInicio ASC";
 
     private static final String R1 = "o.idProcesso in (#{painelUsuarioController.processoIdList})";
     private static final String R2 = "o.caixa.idCaixa = #{painelUsuarioController.idCaixa}";
@@ -47,6 +49,7 @@ public class ConsultaProcessoList extends EntityList<Processo> {
     private ProcessoTarefaManager processoTarefaManager;
     
     private String numeroProcessoRoot;
+    private Tarefa tarefa;
     
     @Override
     public void newInstance() {
@@ -100,6 +103,14 @@ public class ConsultaProcessoList extends EntityList<Processo> {
         ProcessoTarefa pt = processoTarefaManager.getUltimoProcessoTarefa(processo);
         return pt.getDataInicio();
     }
+    
+    public Tarefa getTarefa() {
+		return tarefa;
+	}
+
+	public void setTarefa(Tarefa tarefa) {
+		this.tarefa = tarefa;
+	}
 
     public String getNumeroProcessoRoot() {
         return numeroProcessoRoot;

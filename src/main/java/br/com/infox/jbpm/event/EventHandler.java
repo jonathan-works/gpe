@@ -1,9 +1,8 @@
 package br.com.infox.jbpm.event;
 
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
-
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -66,8 +65,7 @@ public class EventHandler implements Serializable {
         }
     }
 
-    @SuppressWarnings(UNCHECKED)
-    public static List<EventHandler> createList(GraphElement instance) {
+	    public static List<EventHandler> createList(GraphElement instance) {
         if (instance == null) {
             return null;
         }
@@ -77,18 +75,8 @@ public class EventHandler implements Serializable {
             return ret;
         }
         for (Event event : events.values()) {
-        	boolean hide = false;
-        	List<Action> actions = event.getActions();
-        	for (Action action : actions) {
-        		if (NodeHandler.GENERATE_DOCUMENTO_ACTION_NAME.equals(action.getName())) {
-        			hide = true;
-        			break;
-        		}
-        	}
-        	if (!hide) {
-        		EventHandler eh = new EventHandler(event);
-        		ret.add(eh);
-        	}
+    		EventHandler eh = new EventHandler(event);
+    		ret.add(eh);
         }
         return ret;
     }
@@ -133,10 +121,18 @@ public class EventHandler implements Serializable {
         actionList = null;
     }
 
-    @SuppressWarnings(UNCHECKED)
     public List<Action> getActions() {
-        if (actionList == null) {
-            actionList = event.getActions();
+        if (actionList == null && event.getActions() != null) {
+            actionList = new ArrayList<>(event.getActions());
+            if (actionList != null) {
+	            for (Iterator<Action> it = actionList.iterator(); it.hasNext();) {
+	            	Action action = it.next();
+	        		if (NodeHandler.GENERATE_DOCUMENTO_ACTION_NAME.equals(action.getName())) {
+	        			it.remove();
+	        			break;
+	            	}
+	            }
+            }
             setCurrentAction(null);
         }
         return actionList;

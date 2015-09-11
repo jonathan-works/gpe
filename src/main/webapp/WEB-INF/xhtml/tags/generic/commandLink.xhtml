@@ -7,6 +7,7 @@
 
     <a:commandLink id="#{id}" status="#{status}" render="#{render}"
         action="#{elFunctions.invokeMethod(action)}" onclick="#{onclick}"
+        onbegin="#{onbegin}"
         disabled="#{disabled}" oncomplete="#{oncomplete}"
         execute="#{ajaxSingle ? '@this' : ''}"
         limitRender="#{wi:get(limitToList, true)}"

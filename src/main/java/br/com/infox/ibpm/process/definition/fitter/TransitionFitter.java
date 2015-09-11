@@ -1,10 +1,12 @@
 package br.com.infox.ibpm.process.definition.fitter;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
+import static br.com.infox.core.comparators.Comparators.bySelectItemLabelAsc;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -237,7 +239,6 @@ public class TransitionFitter extends Fitter implements Serializable {
     public List<SelectItem> getTransitionsItems(List<Node> nodes) {
         if (transitionsItems == null) {
             transitionsItems = new ArrayList<SelectItem>();
-            transitionsItems.add(new SelectItem(null, infoxMessages.get("process.transition.select")));
             for (Node n : nodes) {
                 if (n.getLeavingTransitions() != null) {
                     for (TransitionHandler t : TransitionHandler.getList((List<Transition>) n.getLeavingTransitions())) {
@@ -245,6 +246,8 @@ public class TransitionFitter extends Fitter implements Serializable {
                     }
                 }
             }
+            Collections.sort(transitionsItems, bySelectItemLabelAsc());
+            transitionsItems.add(0,new SelectItem(null, infoxMessages.get("process.transition.select")));
         }
         return transitionsItems;
     }

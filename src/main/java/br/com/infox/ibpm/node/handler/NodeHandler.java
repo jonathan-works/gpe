@@ -26,6 +26,9 @@ import org.jbpm.scheduler.def.CancelTimerAction;
 import org.jbpm.scheduler.def.CreateTimerAction;
 import org.jbpm.taskmgmt.def.Task;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
 import br.com.infox.constants.WarningConstants;
 import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
@@ -40,9 +43,6 @@ import br.com.infox.ibpm.task.handler.StatusHandler;
 import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;
 import br.com.infox.jbpm.event.EventHandler;
 import br.com.infox.seam.util.ComponentUtil;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 
 public class NodeHandler implements Serializable {
 
@@ -164,8 +164,14 @@ public class NodeHandler implements Serializable {
     }
 
     public void removeEvent(EventHandler e) {
+    	if (e.getEvent().getEventType().equals(Event.EVENTTYPE_NODE_LEAVE)) {
+    		setClassificacaoDocumento(null);
+    		setModeloDocumento(null);
+    	}
         node.removeEvent(e.getEvent());
-        eventList.remove(e);
+        if (eventList != null) {
+        	eventList.remove(e);
+        }
         currentEvent = null;
     }
 
@@ -200,7 +206,6 @@ public class NodeHandler implements Serializable {
         node.addEvent(event);
     }
 
-    @SuppressWarnings(UNCHECKED)
     public List<String> getSupportedEventTypes() {
         List<String> list = new ArrayList<>();
         if (!isSystemNode()) {
@@ -468,6 +473,7 @@ public class NodeHandler implements Serializable {
             event = createNewGenerateDocumentoEvent(modeloDocumento);
             this.node.addEvent(event);
         }
+        this.eventList = null;
 		this.modeloDocumento = modeloDocumento;
 	}
     
@@ -498,12 +504,14 @@ public class NodeHandler implements Serializable {
     private Action retrieveGenerateDocumentoEvent(Event event) {
         List<?> actions = event.getActions();
         Action result = null;
-        for (Object object : actions) {
-            Action action = (Action) object;
-            if (GENERATE_DOCUMENTO_ACTION_NAME.equals(action.getName())) {
-                result = action;
-                break;
-            }
+        if (actions != null) {
+	        for (Object object : actions) {
+	            Action action = (Action) object;
+	            if (GENERATE_DOCUMENTO_ACTION_NAME.equals(action.getName())) {
+	                result = action;
+	                break;
+	            }
+	        }
         }
         return result;
     }
@@ -545,5 +553,12 @@ public class NodeHandler implements Serializable {
         action.setActionDelegation(delegation);
         event.addAction(action);
         return event;
+    }
+    
+    public boolean canRemoveEvent(EventHandler eventHandler) {
+    	if (eventHandler != null && eventHandler.getEvent().getEventType().equals(Event.EVENTTYPE_NODE_LEAVE)) {
+    		return retrieveGenerateDocumentoEvent(eventHandler.getEvent()) == null;
+    	}
+    	return true;
     }
 }

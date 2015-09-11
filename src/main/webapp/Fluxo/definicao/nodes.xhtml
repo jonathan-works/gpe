@@ -197,7 +197,7 @@
 									value="#{nodeFitter.nodeHandler.classificacaoDocumento}"
 									items="#{nodeFitter.classificacoesDocumento}"
 									showLabelSelecione="true">
-									<a:ajax event="change" execute="@this" limitRender="true" render="documentoGenerateForm" />
+									<a:ajax event="change" execute="@this" limitRender="true" render="documentoGenerateForm, eventsForm" />
 								</wi:selectOneMenuEntity>
 								<wi:selectOneMenuEntity
 									id="modeloDocumentoGenerate"
@@ -209,7 +209,7 @@
 									<a:ajax event="change"
 										execute="@this"
 										limitRender="true"
-										render="documentoGenerateForm" />
+										render="documentoGenerateForm, eventsForm" />
 								</wi:selectOneMenuEntity>
 							</rich:collapsiblePanel>
 						</h:form>
@@ -234,7 +234,7 @@
                    			<ui:include src="listeners.xhtml" />
                        	</rich:collapsiblePanel>
                        	
-			<h:form id="eventsForm">
+						<h:form id="eventsForm">
                             <rich:collapsiblePanel
                                 switchType="ajax"
                                 expanded="false"

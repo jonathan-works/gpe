@@ -107,7 +107,7 @@ public class DocumentoComunicacaoService {
 		variableTypeResolver.setProcessInstance(processInstance);
 		
 		ExpressionResolverChain chain = ExpressionResolverChainBuilder.with(new ArbitraryExpressionResolver(variaveis))
-				.and(new JbpmExpressionResolver(variableTypeResolver.getVariableTypeMap(), processInstance.getContextInstance()))
+				.and(new JbpmExpressionResolver(modeloComunicacao.getProcesso().getIdProcesso()))
 				.and(new SeamExpressionResolver(processInstance)).build();
 		return modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, textoComunicacao, chain);
 	}
