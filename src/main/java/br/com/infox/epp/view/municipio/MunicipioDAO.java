@@ -27,8 +27,8 @@ import br.com.infox.log.Logging;
 @AutoCreate
 public class MunicipioDAO extends GenericDAO {
 	
-/*    public static final String NAME = "municipioTceDAO";
-    private static final LogProvider LOG = Logging.getLogProvider(MunicipioDAO.class);
+    public static final String NAME = "municipioTceDAO";
+/*    private static final LogProvider LOG = Logging.getLogProvider(MunicipioDAO.class);
 
     @In
     private EstadoDAO estadoDAO;

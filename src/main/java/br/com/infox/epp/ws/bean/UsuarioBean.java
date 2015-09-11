@@ -14,79 +14,67 @@ import br.com.infox.epp.pessoa.annotation.Data;
 import br.com.infox.epp.pessoa.annotation.EstadoCivil;
 
 public class UsuarioBean implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 	private static final String DATE_PATTERN = "dd/MM/yyyy";
-	
+
 	@NotNull
-	@Size(min=5, max=150)
+	@Size(min = 5, max = 150)
 	private String nome;
 
 	@Cpf
 	@NotNull
 	private String cpf;
-	
+
 	@Email
 	@NotNull
 	private String email;
-	
+
 	@Data(pattern = DATE_PATTERN, past = true)
 	private String dataNascimento;
-	
+
 	private String identidade;
-	
+
 	private String orgaoExpedidor;
-	
+
 	@Data(pattern = DATE_PATTERN, past = true)
 	private String dataExpedicao;
-	
+
 	private String telefoneFixo;
-	
+
 	private String telefoneMovel;
-	
+
 	@EstadoCivil
 	private String estadoCivil;
-	
+
 	private String emailOpcional1;
-	
+
 	private String emailOpcional2;
-	
-	private String logradouro;
-	
-	private String complemento;
-	
-	private String numeroEndereco;
-	
-	private String bairro;
-	
-	private String cep;
-	
-	private String codigoMunicipio;
-	
+
 	public String getNome() {
 		return nome;
 	}
-	
+
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	
+
 	public String getCpf() {
 		return cpf;
 	}
-	
+
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
-	
+
 	public String getEmail() {
 		return email;
 	}
-	
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+
 	public String getDataNascimento() {
 		return dataNascimento;
 	}
@@ -98,19 +86,19 @@ public class UsuarioBean implements Serializable {
 	public String getIdentidade() {
 		return identidade;
 	}
-	
+
 	public void setIdentidade(String identidade) {
 		this.identidade = identidade;
 	}
-	
+
 	public String getOrgaoExpedidor() {
 		return orgaoExpedidor;
 	}
-	
+
 	public void setOrgaoExpedidor(String orgaoExpedidor) {
 		this.orgaoExpedidor = orgaoExpedidor;
 	}
-	
+
 	public String getDataExpedicao() {
 		return dataExpedicao;
 	}
@@ -122,92 +110,44 @@ public class UsuarioBean implements Serializable {
 	public String getTelefoneFixo() {
 		return telefoneFixo;
 	}
-	
+
 	public void setTelefoneFixo(String telefoneFixo) {
 		this.telefoneFixo = telefoneFixo;
 	}
-	
+
 	public String getTelefoneMovel() {
 		return telefoneMovel;
 	}
-	
+
 	public void setTelefoneMovel(String telefoneMovel) {
 		this.telefoneMovel = telefoneMovel;
 	}
-	
+
 	public String getEmailOpcional1() {
 		return emailOpcional1;
 	}
-	
+
 	public void setEmailOpcional1(String emailOpcional1) {
 		this.emailOpcional1 = emailOpcional1;
 	}
-	
+
 	public String getEmailOpcional2() {
 		return emailOpcional2;
 	}
-	
+
 	public void setEmailOpcional2(String emailOpcional2) {
 		this.emailOpcional2 = emailOpcional2;
 	}
-	
+
 	public String getEstadoCivil() {
 		return estadoCivil;
 	}
-	
+
 	public void setEstadoCivil(String estadoCivil) {
 		this.estadoCivil = estadoCivil;
 	}
-	
-	public String getLogradouro() {
-        return logradouro;
-    }
 
-    public void setLogradouro(String logradouro) {
-        this.logradouro = logradouro;
-    }
-
-    public String getComplemento() {
-        return complemento;
-    }
-
-    public void setComplemento(String complemento) {
-        this.complemento = complemento;
-    }
-
-    public String getNumeroEndereco() {
-        return numeroEndereco;
-    }
-
-    public void setNumeroEndereco(String numeroEndereco) {
-        this.numeroEndereco = numeroEndereco;
-    }
-
-    public String getBairro() {
-        return bairro;
-    }
-
-    public void setBairro(String bairro) {
-        this.bairro = bairro;
-    }
-
-    public String getCep() {
-        return cep;
-    }
-
-    public void setCep(String cep) {
-        this.cep = cep;
-    }
-
-    public String getCodigoMunicipio() {
-        return codigoMunicipio;
-    }
-
-    public void setCodigoMunicipio(String codigoMunicipio) {
-        this.codigoMunicipio = codigoMunicipio;
-    }
-    
-	public Date getDataNascimentoAsDate(){
+	public Date getDataNascimentoAsDate() {
 		try {
 			return new SimpleDateFormat(DATE_PATTERN).parse(dataNascimento);
 		} catch (ParseException e) {
@@ -215,8 +155,8 @@ public class UsuarioBean implements Serializable {
 		}
 		return null;
 	}
-	
-	public Date getDataExpedicaoAsDate(){
+
+	public Date getDataExpedicaoAsDate() {
 		try {
 			return new SimpleDateFormat(DATE_PATTERN).parse(dataExpedicao);
 		} catch (ParseException e) {
@@ -224,22 +164,14 @@ public class UsuarioBean implements Serializable {
 		}
 		return null;
 	}
-	
+
 	@Override
 	public String toString() {
-		return  getClass().getSimpleName() + " [nome=" + nome + ", cpf=" + cpf + ", email="
-				+ email + ", dataNascimento="
-				+ dataNascimento + ", identidade=" + identidade
-				+ ", orgaoExpedidor=" + orgaoExpedidor + ", dataExpedicao="
-				+ dataExpedicao + ", telefoneFixo=" + telefoneFixo
-				+ ", telefoneMovel=" + telefoneMovel + ", estadoCivil="
-				+ estadoCivil + ", emailOpcional1=" + emailOpcional1
-				+ ", emailOpcional2=" + emailOpcional2
-		        + ", logradouro=" + logradouro 
-		        + ", complemento=" + complemento
-		        + ", numeroEndereco=" + numeroEndereco
-		        + ", bairro=" + bairro + ", cep=" + cep
-		        + ", codigoMunicipio=" + codigoMunicipio + "]";
+		return getClass().getSimpleName() + " [nome=" + nome + ", cpf=" + cpf + ", email=" + email + ", dataNascimento="
+				+ dataNascimento + ", identidade=" + identidade + ", orgaoExpedidor=" + orgaoExpedidor
+				+ ", dataExpedicao=" + dataExpedicao + ", telefoneFixo=" + telefoneFixo + ", telefoneMovel="
+				+ telefoneMovel + ", estadoCivil=" + estadoCivil + ", emailOpcional1=" + emailOpcional1
+				+ ", emailOpcional2=" + emailOpcional2 + "]";
 	}
 
 	@Override
