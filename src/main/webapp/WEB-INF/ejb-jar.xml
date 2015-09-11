@@ -10,6 +10,7 @@
 		<interceptor-binding>
 			<ejb-name>*</ejb-name>
 			<interceptor-class>org.jboss.seam.ejb.SeamInterceptor</interceptor-class>
+			<interceptor-class>br.com.infox.epp.ws.interceptors.ValidacaoInterceptor</interceptor-class>
 		</interceptor-binding>
 	</assembly-descriptor>
 </ejb-jar>
