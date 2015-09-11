@@ -49,6 +49,8 @@
 					items="#{naturezaCategoriaFluxoFacade.getNaturezaList()}">
 					<a:ajax execute="@this" render="natureza categoriaOutPutPanel"
 						listener="#{naturezaCategoriaFluxoFacade.loadCategoriaList(consultaProcessoList.entity.naturezaCategoriaFluxo.natureza)}"></a:ajax>
+                    <a:ajax execute="@none" render="categoriaOutputPanel"
+                        listener="#{consultaProcessoList.entity.naturezaCategoriaFluxo.setCategoria(null)}" />
 				</wi:selectOneMenuEntity>
 
 				<a:outputPanel id="categoriaOutPutPanel">
