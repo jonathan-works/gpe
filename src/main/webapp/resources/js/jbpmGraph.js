@@ -26,10 +26,10 @@ function NodeArea(scid) {
         area.attr({
             id: '_' + id,
             coords: coords,
-            href: 'javascript:window.location.href = "' + createLink(id, this.scid) + '"',
             shape: 'rect',
             areaName:title,
         });
+        $(area).click(function(){onClickGraphElement(id)});
         $(area).hover(this.mouseover, this.mouseout);
         area[0].areaName = title;
         area[0].vars = vars;
