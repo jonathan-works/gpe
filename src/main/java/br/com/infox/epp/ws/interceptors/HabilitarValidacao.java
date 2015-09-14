@@ -7,21 +7,9 @@ import java.lang.annotation.Target;
 
 import javax.interceptor.InterceptorBinding;
 
-/**
- * @author paulo
- *
- */
 @InterceptorBinding
 @Target({ElementType.METHOD,ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Log {
-	
-	/**
-	 * Define o código do LOG que será gerado
-	 * @return
-	 */
-	String codigo();
-	
-	String mensagem();
+public @interface HabilitarValidacao {
 
 }

@@ -20,36 +20,29 @@ public enum WSMessages {
 	ME_ATTR_EMAILOPCIONAL2_INVALIDO("ME0014", "Atributo email opcional 2 inválido"),
 	ME_USUARIO_INEXISTENTE("ME0015", "Usuário não existe"),
 	ME_PAPEL_INEXISTENTE("ME0016", "Papel não existe"),
-	ME_PERFIL_INEXISTENTE("ME0018", "Perfil não existe"),
-	ME_ATTR_PAPEL_INVALIDO("ME0019", "Atributo papel inválido"),
-	ME_ATTR_CODIGOUNIDADEGESTORA_INVALIDO("ME0020", "Atributo código da Unidade Jurisdicionada Inválido"),
-	ME_USUARIO_JA_POSSUI_PERFIL_ASSOCIADO("ME0021", "Usuário já possui perfil associado"),
-	ME_UNIDADE_GESTORA_NAO_CADASTRADA("ME0022", "Unidade Jurisdicionada não cadastrada e-TCE"),
-	ME_USUARIO_SEM_PERFIL_ASSOCIADO("ME0023", "Usuário não possui perfil associado"),
-	ME_MUNICIPIO_NAO_ENCONTRADO("ME0024", "Município não encontrado"),
-	ME_ENDERECO_INCOMPLETO("ME0025", "Endereço incompleto"),
-	ME_LOCALIZACAO_DA_ESTRUTURA_INEXISTENTE("ME0026", "Localização da Estrutura não existe"),
-	ME_LOCALIZACAO_DO_PERFIL_INEXISTENTE("ME0027", "Localização do perfil do usuário não existe"),
+	ME_PERFIL_INEXISTENTE("ME0017", "Perfil não existe"),
+	ME_ATTR_PAPEL_INVALIDO("ME0018", "Atributo papel inválido"),
+	ME_USUARIO_JA_POSSUI_PERFIL_ASSOCIADO("ME0019", "Usuário já possui perfil associado"),
+	ME_LOCALIZACAO_DA_ESTRUTURA_INEXISTENTE("ME0020", "Localização da Estrutura não existe"),
 	WS_UG_GRAVAR_USUARIO("WS0001", "usuario/gravar"),
 	WS_UG_ATUALIZAR_SENHA("WS0002", "usuario/atualizarSenha"),
 	WS_UG_ADICIONAR_PERFIL("WS0003","perfil/adicionar"),
-	WS_UG_REMOVER_PERFIL("WS0004", "perfil/remover"),
-	WS_UG_ADICIONAR_LOCALIZACAO("WS0005", "localizacao/adicionar");
+	WS_UG_REMOVER_PERFIL("WS0004", "perfil/remover");
 	
-	private String codigo;
-	private String label;
+	private final String codigo;
+	private final String label;
 	
 	private WSMessages(String codigo, String label){
 		this.codigo = codigo;
 		this.label = label;
 	}
 	
-	public String codigo(){
+	public final String codigo(){
 		return this.codigo;
 	}
 	
-	public String label(){
+	public final String label(){
 		return this.label;
 	}
-	
+
 }

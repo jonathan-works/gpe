@@ -15,9 +15,12 @@ import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.PerfilTemplateManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
+import br.com.infox.epp.ws.annotation.Validate;
 import br.com.infox.epp.ws.bean.UsuarioPerfilBean;
+import br.com.infox.epp.ws.interceptors.HabilitarValidacao;
 import br.com.infox.seam.util.ComponentUtil;
 
+//@HabilitarValidacao
 public class PerfilRestService {
 
 	private PerfilTemplateManager perfilTemplateManager = ComponentUtil.getComponent(PerfilTemplateManager.NAME);

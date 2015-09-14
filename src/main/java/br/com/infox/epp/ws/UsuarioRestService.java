@@ -1,18 +1,10 @@
 package br.com.infox.epp.ws;
 
 import static br.com.infox.epp.ws.messages.WSMessages.ME_ATTR_DATAEXPEDICAO_INVALIDO;
-import static br.com.infox.epp.ws.messages.WSMessages.ME_ATTR_DATAEXPEDICAO_INVALIDO;
-import static br.com.infox.epp.ws.messages.WSMessages.ME_ATTR_IDENTIDADE_INVALIDO;
 import static br.com.infox.epp.ws.messages.WSMessages.ME_ATTR_IDENTIDADE_INVALIDO;
 import static br.com.infox.epp.ws.messages.WSMessages.ME_ATTR_ORGAOEXPEDIDOR_INVALIDO;
-import static br.com.infox.epp.ws.messages.WSMessages.ME_ATTR_ORGAOEXPEDIDOR_INVALIDO;
-import static br.com.infox.epp.ws.messages.WSMessages.ME_USUARIO_INEXISTENTE;
-import static br.com.infox.epp.ws.messages.WSMessages.ME_USUARIO_INEXISTENTE;
 import static br.com.infox.epp.ws.messages.WSMessages.ME_USUARIO_INEXISTENTE;
 import static br.com.infox.epp.ws.messages.WSMessages.MS_SUCESSO_ATUALIZAR;
-import static br.com.infox.epp.ws.messages.WSMessages.MS_SUCESSO_ATUALIZAR;
-import static br.com.infox.epp.ws.messages.WSMessages.MS_SUCESSO_ATUALIZAR;
-import static br.com.infox.epp.ws.messages.WSMessages.MS_SUCESSO_INSERIR;
 import static br.com.infox.epp.ws.messages.WSMessages.MS_SUCESSO_INSERIR;
 
 import java.util.ArrayList;
@@ -44,7 +36,6 @@ import br.com.infox.seam.util.ComponentUtil;
 @Stateless
 public class UsuarioRestService {
 
-	private static final long serialVersionUID = 1L;
 	public static final String NAME = "unidadeGestoraService";
 
 	
@@ -248,12 +239,6 @@ public class UsuarioRestService {
 				|| usuarioBean.getOrgaoExpedidor() != null;
 	}
 
-
-	private boolean isValidMunicipio(UsuarioBean usuarioBean) throws DAOException {
-		//String municipio = municipioTceDAO.getNomeMunicipio(usuarioBean.getCodigoMunicipio());
-		//return municipio != null && !"".equals(municipio);
-		throw new UnsupportedOperationException();
-	}
 
 	private void validatePessoaDocumento(UsuarioBean usuarioBean) {
 		if (usuarioBean.getDataExpedicao() == null) {

@@ -1,23 +1,22 @@
 package br.com.infox.epp.ws.interceptors;
 
+import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.jboss.seam.Component;
-import org.jboss.seam.contexts.Lifecycle;
 
-import com.google.inject.Inject;
 
 import br.com.infox.epp.webservice.log.entity.LogWebserviceServer;
 import br.com.infox.epp.webservice.log.manager.LogWebserviceServerManager;
 
-@Log("") @Interceptor
+@Log(codigo = "", mensagem = "") @Interceptor
 public class LogInterceptor {
 	
 	@Inject
-	HttpServletRequest request;
+	private HttpServletRequest request;
 	
 	@AroundInvoke
 	private Object gerarLog(InvocationContext ctx) throws Exception {
@@ -28,7 +27,7 @@ public class LogInterceptor {
 		//FIXME: implementar anotação para definir qual bean deve ser logado
 		Object bean = ctx.getMethod().getParameters()[0];
 		Log log = ctx.getMethod().getAnnotation(Log.class);
-		LogWebserviceServer logWsServer = logWebserviceServerManager.beginLog(log.value(), token, bean.toString());
+		LogWebserviceServer logWsServer = logWebserviceServerManager.beginLog(log.codigo(), token, bean.toString());
 		Object retorno = null;
 		try {
 			retorno = ctx.proceed();
