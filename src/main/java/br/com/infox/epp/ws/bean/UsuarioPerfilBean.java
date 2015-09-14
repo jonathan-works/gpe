@@ -15,13 +15,10 @@ public class UsuarioPerfilBean implements Serializable {
 	private String cpf;
 
 	@NotNull
-	private String papel;
+	private String perfil;
 
 	@NotNull
-	private String codigoLocalizacaoEstrutura;
-
-	@NotNull
-	private String codigoLocalizacaoPerfil;
+	private String codigoLocalizacao;
 
 	public String getCpf() {
 		return cpf;
@@ -31,34 +28,52 @@ public class UsuarioPerfilBean implements Serializable {
 		this.cpf = cpf;
 	}
 
-	public String getPapel() {
-		return papel;
+	public String getPerfil() {
+		return perfil;
 	}
 
-	public void setPapel(String papel) {
-		this.papel = papel;
+	public void setPerfil(String perfil) {
+		this.perfil = perfil;
 	}
 
-	public String getCodigoLocalizacaoEstrutura() {
-		return codigoLocalizacaoEstrutura;
+	public String getCodigoLocalizacao() {
+		return codigoLocalizacao;
 	}
 
-	public void setCodigoLocalizacaoEstrutura(String codigoLocalizacaoEstrutura) {
-		this.codigoLocalizacaoEstrutura = codigoLocalizacaoEstrutura;
+	public void setCodigoLocalizacao(String codigoLocalizacao) {
+		this.codigoLocalizacao = codigoLocalizacao;
 	}
 	
-	public String getCodigoLocalizacaoPerfil() {
-		return codigoLocalizacaoPerfil;
-	}
-
-	public void setCodigoLocalizacaoPerfil(String codigoLocalizacaoPerfil) {
-		this.codigoLocalizacaoPerfil = codigoLocalizacaoPerfil;
+	@Override
+	public String toString() {
+		return "UsuarioPerfilBean [cpf=" + cpf + ", perfil=" + perfil + ", codigoLocalizacao=" + codigoLocalizacao
+				+ "]";
 	}
 
 	@Override
-	public String toString() {
-		return "UsuarioPerfilBean [cpf=" + cpf + ", papel=" + papel + ", codigoLocalizacaoEstrutura="
-				+ codigoLocalizacaoEstrutura + ", codigoLocalizacaoPerfil=" + codigoLocalizacaoPerfil + "]";
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((cpf == null) ? 0 : cpf.hashCode());
+		return result;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		UsuarioPerfilBean other = (UsuarioPerfilBean) obj;
+		if (cpf == null) {
+			if (other.cpf != null)
+				return false;
+		} else if (!cpf.equals(other.cpf))
+			return false;
+		return true;
+	}
+	
 
 }
