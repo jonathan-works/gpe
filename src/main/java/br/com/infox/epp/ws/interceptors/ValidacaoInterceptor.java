@@ -1,6 +1,5 @@
 package br.com.infox.epp.ws.interceptors;
 
-import java.lang.reflect.Parameter;
 import java.util.Set;
 
 import javax.interceptor.AroundInvoke;
@@ -48,12 +47,9 @@ public class ValidacaoInterceptor {
 
 	@AroundInvoke
 	private Object validar(InvocationContext ctx) throws Exception {
-		Parameter[] parametros = ctx.getMethod().getParameters();
 		Object[] valoresParametros = ctx.getParameters();
-		for (int i = 0; i < parametros.length; i++) {
-			if (parametros[i].getAnnotation(Validate.class) != null) {
-				validar(valoresParametros[i]);
-			}
+		for (int i = 0; i < valoresParametros.length; i++) {
+			validar(valoresParametros[i]);
 		}
 		return ctx.proceed();
 	}

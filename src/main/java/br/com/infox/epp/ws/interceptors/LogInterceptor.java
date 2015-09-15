@@ -25,7 +25,7 @@ public class LogInterceptor {
 		//TODO: Alterar log de token ao ser definido novo método de autenticação
 		String token = request.getHeader("token");
 		//FIXME: implementar anotação para definir qual bean deve ser logado
-		Object bean = ctx.getMethod().getParameters()[0];
+		Object bean = ctx.getParameters()[0];
 		Log log = ctx.getMethod().getAnnotation(Log.class);
 		LogWebserviceServer logWsServer = logWebserviceServerManager.beginLog(log.codigo(), token, bean.toString());
 		Object retorno = null;
