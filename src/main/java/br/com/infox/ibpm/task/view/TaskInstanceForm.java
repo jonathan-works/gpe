@@ -21,6 +21,7 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.process.definition.variable.constants.VariableConstants;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
@@ -159,8 +160,7 @@ public class TaskInstanceForm implements Serializable {
                         break;
                     case FRAGMENT: {
                         if (tokens.length >= 3) {
-                            FragmentConfiguration fragmentConfiguration = ComponentUtil
-                                    .<FragmentConfigurationCollector> getComponent(FragmentConfigurationCollector.NAME)
+                            FragmentConfiguration fragmentConfiguration = BeanManager.INSTANCE.getReference(FragmentConfigurationCollector.class)
                                     .getByCode(tokens[2]);
                             ff.getProperties().put("fragmentPath", fragmentConfiguration.getPath());
                             ff.getProperties().put("config", fragmentConfiguration);

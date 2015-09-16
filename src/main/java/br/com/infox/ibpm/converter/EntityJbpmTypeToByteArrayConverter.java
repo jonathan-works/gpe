@@ -16,6 +16,7 @@ import org.jbpm.bytes.ByteArray;
 import org.jbpm.context.exe.Converter;
 
 import br.com.infox.core.util.EntityUtil;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.ibpm.type.EntityJbpmType;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -70,7 +71,7 @@ public class EntityJbpmTypeToByteArrayConverter implements Converter {
 	}
 	
 	private Object getEntityFromDatabase(EntityJbpmType jbpmType){
-		EntityManager entityManager = ComponentUtil.getComponent("entityManager");
+		EntityManager entityManager = BeanManager.INSTANCE.getReference(EntityManager.class);
 		return entityManager.find(jbpmType.getClass(), jbpmType.getId());
 	}
 

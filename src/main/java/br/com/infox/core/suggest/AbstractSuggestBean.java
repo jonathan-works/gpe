@@ -10,12 +10,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import org.apache.commons.lang3.time.StopWatch;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 import br.com.infox.componentes.suggest.SuggestItem;
 import br.com.infox.componentes.suggest.SuggestProvider;
-import br.com.infox.seam.util.ComponentUtil;
+import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 public abstract class AbstractSuggestBean<T> implements SuggestProvider<T>, Serializable {
 
@@ -27,7 +27,7 @@ public abstract class AbstractSuggestBean<T> implements SuggestProvider<T>, Seri
 
     protected static final String INPUT_PARAMETER = "input";
 
-    protected EntityManager entityManager = ComponentUtil.getComponent("entityManager");
+    protected transient EntityManager entityManager = BeanManager.INSTANCE.getReference(EntityManager.class);
 
     @SuppressWarnings(UNCHECKED)
     @Override
