@@ -7,10 +7,10 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.jboss.seam.ScopeType;
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
@@ -18,7 +18,7 @@ import br.com.infox.epp.webservice.log.dao.LogWebserviceServerDAO;
 import br.com.infox.epp.webservice.log.entity.LogWebserviceServer;
 
 @AutoCreate
-@Scope(ScopeType.EVENT)
+@Stateless
 @Name(LogWebserviceServerManager.NAME)
 public class LogWebserviceServerManager extends Manager<LogWebserviceServerDAO, LogWebserviceServer>{
 

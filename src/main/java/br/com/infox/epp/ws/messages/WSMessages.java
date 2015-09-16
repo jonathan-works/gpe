@@ -1,6 +1,6 @@
 package br.com.infox.epp.ws.messages;
 
-public enum WSMessages {
+public enum WSMessages {	
 	
 	MS_SUCESSO_INSERIR("MS0001", "Registro Inserido com Sucesso"),
 	MS_SUCESSO_ATUALIZAR("MS0002", "Registro Atualizado com Sucesso"),
@@ -23,11 +23,8 @@ public enum WSMessages {
 	ME_PERFIL_INEXISTENTE("ME0017", "Perfil não existe"),
 	ME_ATTR_PAPEL_INVALIDO("ME0018", "Atributo papel inválido"),
 	ME_USUARIO_JA_POSSUI_PERFIL_ASSOCIADO("ME0019", "Usuário já possui perfil associado"),
-	ME_LOCALIZACAO_DA_ESTRUTURA_INEXISTENTE("ME0020", "Localização da Estrutura não existe"),
-	WS_UG_GRAVAR_USUARIO("WS0001", "usuario/gravar"),
-	WS_UG_ATUALIZAR_SENHA("WS0002", "usuario/atualizarSenha"),
-	WS_UG_ADICIONAR_PERFIL("WS0003","perfil/adicionar"),
-	WS_UG_REMOVER_PERFIL("WS0004", "perfil/remover");
+	ME_LOCALIZACAO_DA_ESTRUTURA_INEXISTENTE("ME0020", "Localização da Estrutura não existe");
+	
 	
 	private final String codigo;
 	private final String label;

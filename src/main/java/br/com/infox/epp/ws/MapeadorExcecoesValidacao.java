@@ -16,7 +16,7 @@ public class MapeadorExcecoesValidacao implements ExceptionMapper<ValidationExce
 
 	@Override
 	public Response toResponse(ValidationException exception) {
-		return Response.status(Status.INTERNAL_SERVER_ERROR).entity(exception.getMessage()).build();
+		return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).build();
 	}
 
 }

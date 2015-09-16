@@ -20,6 +20,8 @@ import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_NAME
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jbpm.taskmgmt.exe.TaskInstance;
@@ -31,6 +33,7 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 
 @Name(UsuarioLoginDAO.NAME)
 @AutoCreate
+@Stateless
 public class UsuarioLoginDAO extends DAO<UsuarioLogin> {
 
     private static final long serialVersionUID = 1L;

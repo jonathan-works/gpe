@@ -1,5 +1,7 @@
 package br.com.infox.epp.pessoa.manager;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -10,8 +12,9 @@ import br.com.infox.epp.pessoa.dao.PessoaFisicaDAO;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 
 @Name(PessoaFisicaManager.NAME)
-@Scope(ScopeType.EVENT)
+@Scope(ScopeType.STATELESS)
 @AutoCreate
+@Stateless
 public class PessoaFisicaManager extends Manager<PessoaFisicaDAO, PessoaFisica> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "pessoaFisicaManager";

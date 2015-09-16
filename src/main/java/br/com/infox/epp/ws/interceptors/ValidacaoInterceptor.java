@@ -10,46 +10,37 @@ import javax.validation.Validation;
 import javax.validation.ValidationException;
 import javax.validation.Validator;
 
-import org.jboss.seam.contexts.Lifecycle;
-
-import br.com.infox.epp.ws.annotation.Validate;
 import br.com.infox.epp.ws.messages.WSMessages;
 
 /**
- * Interceptor responsável por validar parâmetros anotados com {@link Validate}
+ * Interceptor responsável por validar parâmetros anotados com
+ * {@link ValidarParametros}
  * 
  * @author paulo
  *
  */
-@HabilitarValidacao
+@ValidarParametros
 @Interceptor
 public class ValidacaoInterceptor {
 
 	private static final String MSG_TEMPLATE_CODE = "ME_ATTR_%s_INVALIDO";
 
 	private <T> void validar(T bean) throws ValidationException {
-		Lifecycle.beginCall();
-		try {
-			Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-			Set<ConstraintViolation<T>> errors = validator.validate(bean);
+		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+		Set<ConstraintViolation<T>> errors = validator.validate(bean);
 
-			if (errors.size() != 0) {
-				for (ConstraintViolation<T> violation : errors) {
-					String name = String.format(MSG_TEMPLATE_CODE,
-							violation.getPropertyPath().toString().toUpperCase());
-					throw new ValidationException(WSMessages.valueOf(name).codigo());
-				}
+		if (errors.size() != 0) {
+			for (ConstraintViolation<T> violation : errors) {
+				String name = String.format(MSG_TEMPLATE_CODE, violation.getPropertyPath().toString().toUpperCase());
+				throw new ValidationException(WSMessages.valueOf(name).codigo());
 			}
-		} finally {
-			Lifecycle.endCall();
 		}
 	}
 
 	@AroundInvoke
 	private Object validar(InvocationContext ctx) throws Exception {
-		Object[] valoresParametros = ctx.getParameters();
-		for (int i = 0; i < valoresParametros.length; i++) {
-			validar(valoresParametros[i]);
+		for (Object valor : ctx.getParameters()) {
+			validar(valor);
 		}
 		return ctx.proceed();
 	}

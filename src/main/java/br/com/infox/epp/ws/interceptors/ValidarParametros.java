@@ -7,9 +7,15 @@ import java.lang.annotation.Target;
 
 import javax.interceptor.InterceptorBinding;
 
-@InterceptorBinding
-@Target({ElementType.METHOD,ElementType.TYPE})
-@Retention(RetentionPolicy.RUNTIME)
-public @interface HabilitarValidacao {
 
+/**
+ * Anotação utilizada para indicar que os parâmetros dos métodos chamados devem ser validados  
+ * @author paulo
+ */
+@InterceptorBinding
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.METHOD})
+public @interface ValidarParametros {
+	
+	
 }

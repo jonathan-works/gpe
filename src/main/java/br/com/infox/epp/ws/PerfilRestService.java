@@ -6,6 +6,9 @@ import static br.com.infox.epp.ws.messages.WSMessages.ME_USUARIO_INEXISTENTE;
 import static br.com.infox.epp.ws.messages.WSMessages.MS_SUCESSO_ATUALIZAR;
 import static br.com.infox.epp.ws.messages.WSMessages.MS_SUCESSO_INSERIR;
 
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
@@ -15,20 +18,20 @@ import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.PerfilTemplateManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
-import br.com.infox.epp.ws.annotation.Validate;
 import br.com.infox.epp.ws.bean.UsuarioPerfilBean;
-import br.com.infox.epp.ws.interceptors.HabilitarValidacao;
-import br.com.infox.seam.util.ComponentUtil;
 
-//@HabilitarValidacao
+@Stateless
 public class PerfilRestService {
 
-	private PerfilTemplateManager perfilTemplateManager = ComponentUtil.getComponent(PerfilTemplateManager.NAME);
-	private UsuarioLoginManager usuarioLoginManager = ComponentUtil.getComponent(UsuarioLoginManager.NAME);
-	private UsuarioPerfilManager usuarioPerfilManager = ComponentUtil.getComponent(UsuarioPerfilManager.NAME);
-
-	private LocalizacaoManager localizacaoManager = ComponentUtil.getComponent(LocalizacaoManager.NAME);
-
+	@Inject
+	private PerfilTemplateManager perfilTemplateManager;
+	@Inject
+	private UsuarioLoginManager usuarioLoginManager;
+	@Inject
+	private UsuarioPerfilManager usuarioPerfilManager;
+	@Inject
+	private LocalizacaoManager localizacaoManager;
+	
 	public String adicionarPerfil(UsuarioPerfilBean bean) throws DAOException {
 		UsuarioPerfilBean usuarioPerfilBean = (UsuarioPerfilBean) bean;
 		UsuarioLogin usuarioLogin = usuarioLoginManager.getUsuarioFetchPessoaFisicaByNrCpf(usuarioPerfilBean.getCpf());

@@ -16,12 +16,11 @@ import org.jboss.resteasy.spi.interception.PreProcessInterceptor;
 import org.jboss.seam.contexts.Lifecycle;
 
 import br.com.infox.epp.system.manager.ParametroManager;
-import br.com.infox.epp.ws.interceptors.InjectSeamContext;
 import br.com.infox.epp.ws.messages.WSMessages;
 import br.com.infox.seam.util.ComponentUtil;
 
 /**
- * Define um processador padrão para serviços REST, responsável por gravar LOG, injetar o contexto do Seam em serviços REST contendo a anotação {@link InjectSeamContext} e tratar exceções
+ * Define um processador padrão para serviços REST, responsável por gerenciar a autenticação por meio de um token
  * @author paulo
  *
  */

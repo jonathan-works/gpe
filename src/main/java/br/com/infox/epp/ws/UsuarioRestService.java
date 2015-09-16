@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.validation.ValidationException;
 
 import br.com.infox.core.persistence.DAOException;
@@ -31,20 +32,24 @@ import br.com.infox.epp.pessoa.type.EstadoCivilEnum;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.ws.bean.UsuarioBean;
 import br.com.infox.epp.ws.bean.UsuarioSenhaBean;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Stateless
 public class UsuarioRestService {
 
 	public static final String NAME = "unidadeGestoraService";
 
-	
-	private UsuarioLoginManager usuarioLoginManager = ComponentUtil.getComponent(UsuarioLoginManager.NAME);
-	private UsuarioLoginDAO usuarioLoginDAO = ComponentUtil.getComponent(UsuarioLoginDAO.NAME);
-	private PessoaFisicaManager pessoaFisicaManager = ComponentUtil.getComponent(PessoaFisicaManager.NAME);
-	private MeioContatoManager meioContatoManager = ComponentUtil.getComponent(MeioContatoManager.NAME);
-	private PessoaDocumentoManager pessoaDocumentoManager = ComponentUtil.getComponent(PessoaDocumentoManager.NAME);
-	private PasswordService passwordService = ComponentUtil.getComponent(PasswordService.NAME);
+	@Inject
+	private UsuarioLoginManager usuarioLoginManager;
+	@Inject
+	private UsuarioLoginDAO usuarioLoginDAO;
+	@Inject
+	private PessoaFisicaManager pessoaFisicaManager;
+	@Inject
+	private MeioContatoManager meioContatoManager;
+	@Inject
+	private PessoaDocumentoManager pessoaDocumentoManager;
+	@Inject
+	private PasswordService passwordService;
 
 	public String gravarUsuario(Object bean) throws DAOException {
 		UsuarioBean usuarioBean = (UsuarioBean) bean;
