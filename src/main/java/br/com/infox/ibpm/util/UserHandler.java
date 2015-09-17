@@ -19,13 +19,15 @@ public class UserHandler {
     private TaskInstance taskInstance;
     private String usuarioTarefa;
     private Integer idTarefa;
+    private Integer idProcesso;
 
     @In
     private UsuarioLoginManager usuarioLoginManager;
 
     public String getUsuarioByIdTarefa(Integer idTarefa, Integer idProcesso) {
-    	if (!idTarefa.equals(this.idTarefa)) {
+    	if (!idTarefa.equals(this.idTarefa) || !idProcesso.equals(this.idProcesso)) {
     		this.idTarefa = idTarefa;
+    		this.idProcesso = idProcesso;
     		this.usuarioTarefa = usuarioLoginManager.getNomeUsuarioByIdTarefa(idTarefa, idProcesso);
     	}
     	return this.usuarioTarefa;
