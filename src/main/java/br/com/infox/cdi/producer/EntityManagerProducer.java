@@ -11,13 +11,15 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 
-import br.com.infox.jpa.EntityManagerImpl;
 import br.com.infox.cdi.qualifier.BinaryDatabase;
 import br.com.infox.cdi.qualifier.ViewEntityManager;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.jpa.EntityManagerImpl;
 
 public class EntityManagerProducer {
+    
+    public static final Annotation VIEW_ENTITY_MANAGER = new AnnotationLiteral<ViewEntityManager>() {private static final long serialVersionUID = 1L;};
 
 	@PersistenceUnit(unitName = "EPAPersistenceUnit")
 	private EntityManagerFactory entityManagerFactory;
@@ -25,15 +27,16 @@ public class EntityManagerProducer {
 	@Produces
 	@Named("entityManagerCDI")
 	private EntityManager createEntityManager() {
-		if (BeanManager.INSTANCE.isSessionContextActive()) {
-			Annotation[] annotations = new Annotation[1];
-			annotations[0] = new AnnotationLiteral<ViewEntityManager>() {private static final long serialVersionUID = 1L;};
-			return BeanManager.INSTANCE.getReference(EntityManager.class, annotations);
-		} else {
-			return new EntityManagerImpl(entityManagerFactory);
-		}
+	    EntityManager entityManager = null;
+	    try {
+	        entityManager = BeanManager.INSTANCE.getReference(EntityManager.class, VIEW_ENTITY_MANAGER);
+	        entityManager.isOpen(); // colocado para forçar exceção no jboss 6.2.4
+	    } catch (Exception e) {
+	        entityManager = new EntityManagerImpl(entityManagerFactory);
+	    }
+	    return entityManager;
 	}
-
+	
 	@Produces
 	@ViewScoped
 	@ViewEntityManager
@@ -51,5 +54,5 @@ public class EntityManagerProducer {
 			entityManager.close();
 		}
 	}
-
+	
 }
