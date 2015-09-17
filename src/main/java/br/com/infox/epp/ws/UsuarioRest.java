@@ -5,7 +5,6 @@ import java.io.Serializable;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -37,7 +36,7 @@ public class UsuarioRest implements Serializable {
 	@Produces(MediaType.TEXT_PLAIN)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Log(codigo=CodigosServicos.WS_PERFIS_GRAVAR_USUARIO)
-	public String gravarUsuario(@HeaderParam("token") String token, final UsuarioBean bean) throws DAOException {
+	public String gravarUsuario(final UsuarioBean bean) throws DAOException {
 		return servico.gravarUsuario(bean);
 	}
 
@@ -46,7 +45,7 @@ public class UsuarioRest implements Serializable {
 	@Produces(MediaType.TEXT_PLAIN)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Log(codigo=CodigosServicos.WS_PERFIS_ATUALIZAR_SENHA)
-	public String atualizarSenha(@HeaderParam("token") String token,final UsuarioSenhaBean bean) throws DAOException {
+	public String atualizarSenha(final UsuarioSenhaBean bean) throws DAOException {
 		return servico.atualizarSenha(bean);
 	}
 }

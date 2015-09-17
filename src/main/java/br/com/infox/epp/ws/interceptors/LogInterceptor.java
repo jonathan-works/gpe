@@ -1,5 +1,8 @@
 package br.com.infox.epp.ws.interceptors;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
@@ -10,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.webservice.log.entity.LogWebserviceServer;
 import br.com.infox.epp.webservice.log.manager.LogWebserviceServerManager;
+import br.com.infox.epp.ws.ProcessadorRest;
 
 @Log(codigo = "") @Interceptor
 /**
@@ -28,14 +32,19 @@ public class LogInterceptor {
 	@AroundInvoke
 	private Object gerarLog(InvocationContext ctx) throws Exception {
 		//TODO: Alterar log de token ao ser definido novo método de autenticação
-		String token =((HttpServletRequest) request).getHeader("token");
-		//FIXME: implementar anotação para definir qual bean deve ser logado
-		Object bean = ctx.getParameters()[0];
+		String token =((HttpServletRequest) request).getHeader(ProcessadorRest.NOME_TOKEN_HEADER_HTTP);
+				
 		Log log = ctx.getMethod().getAnnotation(Log.class);
 		if(log == null) {
 			log = ctx.getTarget().getClass().getAnnotation(Log.class);
 		}
-		LogWebserviceServer logWsServer = servico.beginLog(log.codigo(), token, bean.toString());
+		
+		List<Object> parametros = new ArrayList<>();
+		for(Object parametro : ctx.getParameters()) {
+			parametros.add(parametro);
+		}
+		
+		LogWebserviceServer logWsServer = servico.beginLog(log.codigo(), token, parametros.toString());
 		if(logWsServer == null) {
 			throw new DAOException("Erro ao gerar Log do serviço no banco de dados");
 		}
