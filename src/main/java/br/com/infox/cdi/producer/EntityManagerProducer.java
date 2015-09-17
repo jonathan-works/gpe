@@ -5,6 +5,7 @@ import java.lang.annotation.Annotation;
 import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.util.AnnotationLiteral;
+import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
@@ -22,6 +23,7 @@ public class EntityManagerProducer {
 	private EntityManagerFactory entityManagerFactory;
 
 	@Produces
+	@Named("entityManagerCDI")
 	private EntityManager createEntityManager() {
 		if (BeanManager.INSTANCE.isSessionContextActive()) {
 			Annotation[] annotations = new Annotation[1];
