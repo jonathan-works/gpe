@@ -29,6 +29,7 @@ import br.com.infox.core.list.EntityList;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.ReflectionsUtil;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.VariavelTipoModelo;
 import br.com.infox.epp.documento.list.associated.AssociatedTipoModeloVariavelList;
@@ -93,8 +94,7 @@ public class VariableAccessHandler implements Serializable {
                 break;
             case FRAGMENT:
                 if (tokens.length >= 3) {
-                    setFragmentConfiguration(ComponentUtil.<FragmentConfigurationCollector> getComponent(
-                            FragmentConfigurationCollector.NAME).getByCode(tokens[2]));
+                    setFragmentConfiguration(BeanManager.INSTANCE.getReference(FragmentConfigurationCollector.class).getByCode(tokens[2]));
                 }
                 break;
                 default:
