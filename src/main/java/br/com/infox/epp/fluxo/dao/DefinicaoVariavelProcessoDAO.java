@@ -15,7 +15,6 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -46,35 +45,35 @@ public class DefinicaoVariavelProcessoDAO extends Dao<DefinicaoVariavelProcesso,
     }
 
     public Long getTotalVariaveisByFluxo(Fluxo fluxo) {
-        return entityManager.createNamedQuery(TOTAL_BY_FLUXO, Long.class).setParameter(PARAM_FLUXO, fluxo).setMaxResults(1).getResultList().get(0);
+        return getEntityManager().createNamedQuery(TOTAL_BY_FLUXO, Long.class).setParameter(PARAM_FLUXO, fluxo).setMaxResults(1).getResultList().get(0);
     }
 
     private Query createQueryVariaveisProcessoByFluxo(Fluxo fluxo) {
-        return entityManager.createNamedQuery(LIST_BY_FLUXO, DefinicaoVariavelProcesso.class).setParameter(PARAM_FLUXO, fluxo);
+        return getEntityManager().createNamedQuery(LIST_BY_FLUXO, DefinicaoVariavelProcesso.class).setParameter(PARAM_FLUXO, fluxo);
     }
 
     public DefinicaoVariavelProcesso getDefinicao(Fluxo fluxo, String nome) {
-        return entityManager.createNamedQuery(DEFINICAO_BY_FLUXO, DefinicaoVariavelProcesso.class).setParameter(PARAM_FLUXO, fluxo)
+        return getEntityManager().createNamedQuery(DEFINICAO_BY_FLUXO, DefinicaoVariavelProcesso.class).setParameter(PARAM_FLUXO, fluxo)
         		.setParameter(PARAM_NOME, nome).setMaxResults(1).getResultList().get(0);
     }
     
     public List<DefinicaoVariavelProcesso> getDefinicaoVariavelProcessoListByIdProcesso(Integer idProcesso) {
-    	return entityManager.createNamedQuery(DEFINICAO_BY_ID_PROCESSO, DefinicaoVariavelProcesso.class)
+    	return getEntityManager().createNamedQuery(DEFINICAO_BY_ID_PROCESSO, DefinicaoVariavelProcesso.class)
     			.setParameter(PARAM_ID_PROCESSO, idProcesso).getResultList();
     }
     
     public List<DefinicaoVariavelProcesso> getDefinicaoVariavelProcessoVisivelPainel(Integer idProcesso) {
-    	return entityManager.createNamedQuery(DEFINICAO_VISIVEL_PAINEL_BY_ID_PROCESSO, DefinicaoVariavelProcesso.class)
+    	return getEntityManager().createNamedQuery(DEFINICAO_VISIVEL_PAINEL_BY_ID_PROCESSO, DefinicaoVariavelProcesso.class)
     			.setParameter(PARAM_ID_PROCESSO, idProcesso).getResultList();
     }
     
     public Integer getMaiorOrdem(Fluxo fluxo) {
-    	CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+    	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
     	CriteriaQuery<Integer> query = cb.createQuery(Integer.class);
     	Root<DefinicaoVariavelProcesso> root = query.from(DefinicaoVariavelProcesso.class);
     	query.select(cb.coalesce(cb.max(root.get(DefinicaoVariavelProcesso_.ordem)), -1));
     	query.where(cb.equal(root.get(DefinicaoVariavelProcesso_.fluxo), fluxo));
-    	return entityManager.createQuery(query).getSingleResult();
+    	return getEntityManager().createQuery(query).getSingleResult();
     }
     
     @Override
@@ -83,14 +82,10 @@ public class DefinicaoVariavelProcessoDAO extends Dao<DefinicaoVariavelProcesso,
     	DefinicaoVariavelProcesso ret = super.remove(object);
     	String hql = "update DefinicaoVariavelProcesso o set o.ordem = o.ordem - 1 where o.fluxo = :fluxo and o.ordem > :ordem";
     	try {
-    		entityManager.createQuery(hql).setParameter("fluxo", fluxo).setParameter("ordem", object.getOrdem()).executeUpdate();
+    		getEntityManager().createQuery(hql).setParameter("fluxo", fluxo).setParameter("ordem", object.getOrdem()).executeUpdate();
     	} catch (Exception e) {
     		throw new DAOException(e);
     	}
     	return ret;
-    }
-    
-    public EntityManager getEntityManager() {
-    	return this.entityManager;
     }
 }

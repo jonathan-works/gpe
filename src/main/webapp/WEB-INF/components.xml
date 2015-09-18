@@ -2,6 +2,7 @@
 <components
     xmlns="http://jboss.org/schema/seam/components"
     xmlns:core="http://jboss.org/schema/seam/core"
+    xmlns:ui="http://jboss.com/products/seam/ui"
     xmlns:bpm="http://jboss.org/schema/seam/bpm"
     xmlns:async="http://jboss.org/schema/seam/async"
     xmlns:persistence="http://jboss.org/schema/seam/persistence"
@@ -73,6 +74,8 @@
     <security:jpa-permission-store
         user-permission-class="br.com.infox.epp.access.entity.Permissao" 
         entity-manager="#{entityManagerCDI}"/>
+        
+    <ui:jpa-entity-loader entity-manager="#{entityManagerCDI}" />
 
     <security:remember-me
         enabled="false"
