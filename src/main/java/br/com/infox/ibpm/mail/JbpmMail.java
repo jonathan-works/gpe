@@ -15,8 +15,6 @@ import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.documento.type.ExpressionResolverChain;
 import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
-import br.com.infox.epp.documento.type.JbpmExpressionResolver;
-import br.com.infox.epp.documento.type.SeamExpressionResolver;
 import br.com.infox.epp.mail.command.SendmailCommand;
 import br.com.infox.epp.mail.entity.EMailData;
 import br.com.infox.epp.mail.manager.ListaEmailManager;
@@ -82,9 +80,7 @@ public class JbpmMail extends org.jbpm.mail.Mail {
         data.setUseHtmlBody(true);
         ModeloDocumentoManager modeloDocumentoManager = ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
         Processo processo = ComponentUtil.<ProcessoManager>getComponent(ProcessoManager.NAME).getProcessoEpaByIdJbpm(executionContext.getProcessInstance().getId());
-        ExpressionResolverChain chain = ExpressionResolverChainBuilder
-        		.with(new JbpmExpressionResolver(processo.getIdProcesso()))
-                .and(new SeamExpressionResolver(executionContext)).build();
+        ExpressionResolverChain chain = ExpressionResolverChainBuilder.defaultExpressionResolverChain(processo.getIdProcesso(), executionContext);
         data.setBody(modeloDocumentoManager.getConteudo(Integer.parseInt(parameters.get("idModeloDocumento")), chain));
         String idGrupo = parameters.get("idGrupo");
         List<String> recipList = null;

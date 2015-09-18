@@ -4,10 +4,13 @@ import java.util.Date;
 
 import javax.faces.component.UIComponent;
 import javax.faces.event.AbortProcessingException;
+import javax.transaction.SystemException;
 
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.transaction.Transaction;
 import org.richfaces.event.FileUploadEvent;
 import org.richfaces.event.FileUploadListener;
 import org.richfaces.model.UploadedFile;
@@ -48,6 +51,7 @@ public class FileUpload implements FileUploadListener {
     private ProcessoEpaHome processoEpaHome;
     
     @Override
+    @Transactional
     public void processFileUpload(FileUploadEvent event) {
         UploadedFile file = event.getUploadedFile();
         UIComponent uploadFile = event.getComponent();
@@ -59,7 +63,14 @@ public class FileUpload implements FileUploadListener {
                 documentoBinManager.remove(doc.getDocumentoBin());
                 documentoBinarioManager.remove(doc.getDocumentoBin().getId());
             } catch (DAOException e) {
+            	try {
+					Transaction.instance().setRollbackOnly();
+				} catch (IllegalStateException | SystemException e1) {
+					throw new AbortProcessingException(e1);
+				}
                 LOG.error("Erro ao remover o documento existente, com id: " + idDocumentoExistente, e);
+                String message = e.getDatabaseErrorCode() != null ? e.getLocalizedMessage() : e.getMessage();
+                FacesMessages.instance().add("Erro ao substituir o documento: " + message);
                 throw new AbortProcessingException(e);
             }
         }

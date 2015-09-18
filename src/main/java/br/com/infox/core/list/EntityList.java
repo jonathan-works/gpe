@@ -13,6 +13,7 @@ import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 import javax.el.PropertyNotFoundException;
+import javax.persistence.EntityManager;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.contexts.Contexts;
@@ -27,6 +28,7 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.core.util.ExcelExportUtil;
 import br.com.infox.core.util.ReflectionsUtil;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.path.PathResolver;
@@ -50,11 +52,12 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
     private E entity;
 
     private String orderedColumn;
-
+    
     private static final int TAMANHO_XLS_PADRAO = 10000;
     
     @PostConstruct
     public void init() {
+    	setPersistenceContext(BeanManager.INSTANCE.getReference(EntityManager.class));
     	setCustomFilters();
     	addSearchFields();
     	Map<String, String> map = getCustomColumnsOrder();
@@ -348,5 +351,5 @@ public abstract class EntityList<E> extends EntityQuery<E> implements Pageable {
         map.put(className.toString(), beanList);
         ExcelExportUtil.downloadXLS(urlTemplate, map, getDownloadXlsName());
     }
-
+    
 }

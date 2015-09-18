@@ -1,7 +1,5 @@
 package br.com.infox.epp.access.dao;
 
-import static br.com.infox.epp.access.query.UsuarioLoginQuery.ACTORID_TAREFA_ATUAL_BY_PROCESSO;
-import static br.com.infox.epp.access.query.UsuarioLoginQuery.ID_PROCESSO_PARAM;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.INATIVAR_USUARIO;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.NOME_USUARIO_BY_ID_TASK_INSTANCE;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.PARAM_EMAIL;
@@ -33,6 +31,7 @@ import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.query.UsuarioLoginQuery;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 
 @Name(UsuarioLoginDAO.NAME)
@@ -48,8 +47,7 @@ public class UsuarioLoginDAO extends DAO<UsuarioLogin> {
         return getNamedSingleResult(USUARIO_BY_EMAIL, parameters);
     }
 
-    public UsuarioLogin getUsuarioByLoginTaskInstance(Long idTaskInstance,
-            String actorId) {
+    public UsuarioLogin getUsuarioByLoginTaskInstance(Long idTaskInstance, String actorId) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(PARAM_LOGIN, actorId);
         parameters.put(PARAM_ID_TASK_INSTANCE, idTaskInstance);
@@ -68,19 +66,13 @@ public class UsuarioLoginDAO extends DAO<UsuarioLogin> {
         return getNamedSingleResult(USUARIO_LOGIN_NAME, parameters);
     }
 
-    public String getActorIdTarefaAtual(Integer idProcesso) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put(ID_PROCESSO_PARAM, idProcesso);
-        return getNamedSingleResult(ACTORID_TAREFA_ATUAL_BY_PROCESSO, parameters);
-    }
-
-    public String getUsuarioByTarefa(TaskInstance taskInstance) {
+    public String getLoginUsuarioByTaskInstance(TaskInstance taskInstance) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_ID_TASK_INSTANCE, taskInstance.getId());
         return getNamedSingleResult(USUARIO_BY_ID_TASK_INSTANCE, parameters);
     }
     
-    public String getNomeUsuarioByTarefa(TaskInstance taskInstance) {
+    public String getNomeUsuarioByTaskInstance(TaskInstance taskInstance) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_ID_TASK_INSTANCE, taskInstance.getId());
         return getNamedSingleResult(NOME_USUARIO_BY_ID_TASK_INSTANCE, parameters);
@@ -106,4 +98,10 @@ public class UsuarioLoginDAO extends DAO<UsuarioLogin> {
     	return getNamedResultList(USUARIO_LOGIN_LOCALIZACAO_PAPEL, parameters);
     }
 
+	public String getNomeUsuarioByIdTarefa(Integer idTarefa, Integer idProcesso) {
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put(UsuarioLoginQuery.PARAM_ID_TAREFA, idTarefa);
+		parameters.put(UsuarioLoginQuery.ID_PROCESSO_PARAM, idProcesso);
+		return getNamedSingleResult(UsuarioLoginQuery.NOME_USUARIO_BY_ID_TAREFA, parameters);
+	}
 }

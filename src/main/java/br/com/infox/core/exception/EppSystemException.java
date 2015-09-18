@@ -8,8 +8,6 @@ import java.util.Map.Entry;
 import java.util.UUID;
 
 import br.com.infox.core.messages.InfoxMessages;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 public class EppSystemException extends RuntimeException {
 

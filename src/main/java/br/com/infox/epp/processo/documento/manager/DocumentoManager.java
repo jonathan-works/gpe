@@ -111,10 +111,7 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
         doc.setDescricao(label);
         doc.setExcluido(Boolean.FALSE);
         doc.setPasta(pastaManager.getDefaultFolder(processo));
-        // TODO adicionar a classificação de documento na lista de classes
-        // gerenciadas antes de entrar aqui
-        this.classificacaoDocumentoManager.refresh(classificacaoDocumento);
-        doc.setClassificacaoDocumento(classificacaoDocumento);
+        doc.setClassificacaoDocumento(classificacaoDocumentoManager.getReference(classificacaoDocumento.getId()));
         doc.setNumeroDocumento(numeracaoDocumentoSequencialManager.getNextNumeracaoDocumentoSequencial(processo));
         return persist(doc);
     }

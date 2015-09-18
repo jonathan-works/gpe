@@ -21,7 +21,6 @@ import org.jboss.seam.Component;
 import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.hibernate.session.SessionAssistant;
-import br.com.infox.seam.util.ComponentUtil;
 
 public final class HibernateUtil {
 
@@ -56,7 +55,7 @@ public final class HibernateUtil {
     
     @SuppressWarnings("unchecked")
 	public static Dialect getDialect() {
-    	EntityManager em = ComponentUtil.getComponent("entityManager");
+    	EntityManager em = BeanManager.INSTANCE.getReference(EntityManager.class);
     	EntityManagerFactory emf = em.getEntityManagerFactory();
     	String dialectClassName = (String) emf.getProperties().get("hibernate.dialect");
     	Dialect dialect = null;

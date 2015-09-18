@@ -3,11 +3,9 @@ package br.com.infox.core.list;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.Date;
-import java.util.Map;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.type.Displayable;
-import br.com.infox.epp.system.EppMessagesContextLoader;
 import br.com.infox.seam.util.ComponentUtil;
 
 class FieldCommandImpl implements FieldCommand {

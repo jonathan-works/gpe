@@ -13,8 +13,11 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.FacesMessages;
 
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(FileDownloader.NAME)
 @Scope(ScopeType.EVENT)
@@ -24,7 +27,7 @@ public class FileDownloader implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "fileDownloader";
     private static final LogProvider LOG = Logging.getLogProvider(FileDownloader.class);
-
+    
     public static void download(byte[] data, String contentType, String fileName) {
         if (data == null) {
             return;
@@ -55,4 +58,8 @@ public class FileDownloader implements Serializable {
         return response;
     }
 
+    public void download(DocumentoBin documentoBin) {
+    	byte[] data = ComponentUtil.<DocumentoBinarioManager>getComponent(DocumentoBinarioManager.NAME).getData(documentoBin.getId());
+    	download(data, "application/" + documentoBin.getExtensao(), documentoBin.getNomeArquivo());
+    }
 }

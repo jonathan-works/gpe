@@ -302,6 +302,10 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
         return getDao().getWithTaskExpiration();
     }
 
+    public ProcessoTarefa getProcessoTarefaAberto(Processo processo, Integer idTarefa) {
+        return getDao().getProcessoTarefaAberto(processo, idTarefa);
+    }
+    
     public ProcessoTarefa getUltimoProcessoTarefa(Processo processo) {
         return getDao().getUltimoProcessoTarefa(processo);
     }

@@ -483,9 +483,10 @@ public class SituacaoProcessoDAO {
 		return count > 0;
 	}
 	
-	public Long getIdTaskInstanceByIdProcesso(Integer idProcesso) {
+	public Long getIdTaskInstanceByIdProcesso(Integer idProcesso, Integer idTarefa) {
 		TypedQuery<Long> query = getEntityManager().createNamedQuery(SituacaoProcessoQuery.GET_ID_TASK_INSTANCE_BY_ID_PROCESSO, Long.class);
 		query.setParameter(SituacaoProcessoQuery.PARAM_ID_PROCESSO, idProcesso);
+		query.setParameter(SituacaoProcessoQuery.PARAM_ID_TAREFA, idTarefa);
 		List<Long> resultList = query.setMaxResults(1).getResultList();
 		return resultList.isEmpty() ? null : resultList.get(0);
 	}

@@ -11,10 +11,13 @@ import javax.inject.Inject;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.bpm.Actor;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.util.Strings;
+import org.jbpm.graph.def.Event;
+import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.dao.GenericDAO;
@@ -48,8 +51,6 @@ import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import br.com.infox.util.time.DateRange;
 
 @AutoCreate
@@ -61,7 +62,6 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     private static final long serialVersionUID = 8095772422429350875L;
     public static final String NAME = "processoManager";
     private static final int PORCENTAGEM = 100;
-    private static final LogProvider LOG = Logging.getLogProvider(ProcessoManager.class);
 
     @In
     private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
@@ -125,10 +125,10 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         }
     }
 
-    public void visualizarTask(final Processo processo, final UsuarioPerfil usuarioPerfil) {
+    public void visualizarTask(final Processo processo, Integer idTarefa, final UsuarioPerfil usuarioPerfil) {
         final BusinessProcess bp = BusinessProcess.instance();
         if (!processo.getIdJbpm().equals(bp.getProcessId())) {
-            final Long taskInstanceId = getTaskInstanceId(usuarioPerfil, processo);
+            final Long taskInstanceId = getTaskInstanceId(usuarioPerfil, idTarefa, processo);
             bp.setProcessId(processo.getIdJbpm());
             bp.setTaskId(taskInstanceId);
         }
@@ -143,30 +143,29 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         	if (taskInstance.getStart() == null) {
         		taskInstance.start(Actor.instance().getId());
         	}
-        	// TODO: Não funciona com fork/join
         	UsuarioLogin usuario = usuarioLoginManager.getUsuarioLoginByLogin(Actor.instance().getId());
-    		taskInstance.getContextInstance().setVariable(VariaveisJbpmProcessosGerais.OWNER, usuario.getNomeUsuario(), taskInstance.getToken());
+    		taskInstance.setVariableLocally(VariaveisJbpmProcessosGerais.OWNER, usuario.getNomeUsuario());
         }
     }
 
-    public void iniciarTask(Processo processo, UsuarioPerfil usuarioPerfil) throws DAOException {
-        Long taskInstanceId = getTaskInstanceId(usuarioPerfil, processo);
+    public void iniciarTask(Processo processo, Integer idTarefa, UsuarioPerfil usuarioPerfil) throws DAOException {
+        Long taskInstanceId = getTaskInstanceId(usuarioPerfil, idTarefa, processo);
         if (taskInstanceId != null) {
             iniciaTask(processo, taskInstanceId);
             storeUsuario(taskInstanceId, usuarioPerfil);
         }
     }
 
-    private Long getTaskInstanceId(UsuarioPerfil usuarioPerfil, Processo processo) {
+    private Long getTaskInstanceId(UsuarioPerfil usuarioPerfil, Integer idTarefa, Processo processo) {
         MetadadoProcesso metadado = processo.getMetadado(EppMetadadoProvider.TIPO_PROCESSO);
         if (metadado != null) {
         	TipoProcesso tipoProcesso = metadado.getValue();
 			if (tipoProcesso.equals(TipoProcesso.COMUNICACAO) || tipoProcesso.equals(TipoProcesso.COMUNICACAO_NAO_ELETRONICA)) {
-				return processoTarefaManager.getUltimoProcessoTarefa(processo).getTaskInstance();
+				return processoTarefaManager.getProcessoTarefaAberto(processo, idTarefa).getTaskInstance();
 			}
-			return situacaoProcessoDAO.getIdTaskInstanceByIdProcesso(processo.getIdProcesso());
+			return situacaoProcessoDAO.getIdTaskInstanceByIdProcesso(processo.getIdProcesso(), idTarefa);
         } else {
-             return processoLocalizacaoIbpmDAO.getTaskInstanceId(usuarioPerfil, processo);
+             return processoLocalizacaoIbpmDAO.getTaskInstanceId(usuarioPerfil, processo, idTarefa.longValue());
         }
     }
 
@@ -333,29 +332,13 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 		BusinessProcess.instance().setTaskId(null);
 		TaskInstance taskInstanceForUpdate = ManagedJbpmContext.instance().getTaskInstanceForUpdate(taskInstanceId);
 		taskInstanceForUpdate.end(transicao);
-		atualizarProcessoTarefa(taskInstanceForUpdate);
 		BusinessProcess.instance().setProcessId(processIdOriginal);
 		BusinessProcess.instance().setTaskId(taskIdOriginal);
 	}
-	
-	public void movimentarProcessoJBPM(Processo processo) throws DAOException {
-		Long processIdOriginal = BusinessProcess.instance().getProcessId();
-		Long taskIdOriginal = BusinessProcess.instance().getTaskId();
-		BusinessProcess.instance().setProcessId(null);
-		BusinessProcess.instance().setTaskId(null);
-		Long idTaskInstance = situacaoProcessoDAO.getIdTaskInstanceByIdProcesso(processo.getIdProcesso());
-		if (idTaskInstance == null) {
-			LOG.warn("idTaskInstance para o processo " + processo.getNumeroProcesso() + " nulo");
-			return;
-		}
-		TaskInstance taskInstance = ManagedJbpmContext.instance().getTaskInstanceForUpdate(idTaskInstance);
-		taskInstance.end();
-		atualizarProcessoTarefa(taskInstance);
-		BusinessProcess.instance().setProcessId(processIdOriginal);
-		BusinessProcess.instance().setTaskId(taskIdOriginal);
-	}
-	
-	private void atualizarProcessoTarefa(TaskInstance taskInstance) throws DAOException {
+
+	@Observer({Event.EVENTTYPE_TASK_END})
+	public void atualizarProcessoTarefa(ExecutionContext executionContext) throws DAOException {
+		TaskInstance taskInstance = executionContext.getTaskInstance();
 		ProcessoTarefa processoTarefa = processoTarefaManager.getByTaskInstance(taskInstance.getId());
 		if (processoTarefa != null) {
 			processoTarefa.setDataFim(taskInstance.getEnd());

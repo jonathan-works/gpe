@@ -14,7 +14,7 @@
     <ui:param name="minHeight" value="#{empty minHeight ? '160' : minHeight}" />
     <ui:param name="showIniciarAnaliseDocumentos" value="#{empty showIniciarAnaliseDocumentos ? true : showIniciarAnaliseDocumentos}" />
     
-   	<rich:popupPanel id="#{idPopup}" modal="false"  minWidth="#{minWidth}"  
+   	<rich:popupPanel id="#{idPopup}" modal="true"  minWidth="#{minWidth}"  
                      minHeight="#{minHeight}" shadowDepth="8" resizeable="true" >
 		<f:facet name="header">
 			<h:outputText value="#{infoxMessages['validacaoDocumentoList.assinaturas.header']}" />

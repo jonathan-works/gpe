@@ -37,7 +37,7 @@ public class JbpmExpressionResolver implements ExpressionResolver {
 	public Expression resolve(Expression expression) {
 		String realVariableName = expression.getExpression().substring(2, expression.getExpression().length() - 1);
 		ProcessoManager processoManager = ComponentUtil.getComponent(ProcessoManager.NAME);
-		EntityManager entityManager = ComponentUtil.getComponent("entityManager");
+		EntityManager entityManager = BeanManager.INSTANCE.getReference(EntityManager.class);
 		Object value = null;
 		Processo processo = processoManager.find(idProcesso);
 		do {
