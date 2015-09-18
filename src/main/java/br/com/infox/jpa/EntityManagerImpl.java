@@ -30,6 +30,7 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 
 	public EntityManagerImpl(EntityManagerFactory entityManagerFactory) {
 		this.entityManager = entityManagerFactory.createEntityManager();
+		this.entityManager.setProperty("org.hibernate.flushMode", "MANUAL");
 	}
 
 	@Override
