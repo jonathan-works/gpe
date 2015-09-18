@@ -57,6 +57,7 @@ public class ModeloComunicacaoManager extends Manager<ModeloComunicacaoDAO, Mode
 		EntityManager entityManager = BeanManager.INSTANCE.getReference(EntityManager.class);
 		for (DestinatarioBean destinatario : destinatarios) {
 			DestinatarioModeloComunicacao destinatarioModeloComunicacao = entityManager.find(DestinatarioModeloComunicacao.class, destinatario.getIdDestinatario());
+			entityManager.refresh(destinatarioModeloComunicacao);
 			Processo comunicacao = destinatarioModeloComunicacao.getProcesso();
 			destinatario.setNome(destinatarioModeloComunicacao.getNome());
 			destinatario.setStatusProrrogacao(prazoComunicacaoService.getStatusProrrogacaoFormatado(comunicacao));

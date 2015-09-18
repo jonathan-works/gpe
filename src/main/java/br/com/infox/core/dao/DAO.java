@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.LockModeType;
@@ -26,20 +25,15 @@ import org.jboss.seam.annotations.Transactional;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 
 @AutoCreate
 @Transactional
 @Scope(ScopeType.STATELESS)
+@ContextDependency
 public abstract class DAO<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    private transient EntityManager entityManager;
-    
-    @PostConstruct
-    public void initialize() {
-    	entityManager = BeanManager.INSTANCE.getReference(EntityManager.class);
-    }
 
     /**
      * Busca o registro na entidade informada.
@@ -58,7 +52,7 @@ public abstract class DAO<T> implements Serializable {
     }
     
     public Object getIdentifier(T entity) {
-    	EntityManagerFactory emf = entityManager.getEntityManagerFactory();
+    	EntityManagerFactory emf = getEntityManager().getEntityManagerFactory();
     	return emf.getPersistenceUnitUtil().getIdentifier(entity);
     }
     
@@ -73,10 +67,10 @@ public abstract class DAO<T> implements Serializable {
     }
     
     public T lock(T entity, LockModeType lockModeType) {
-    	if (!entityManager.contains(entity)) {
-    		entity = entityManager.find(getEntityClass(), getIdentifier(entity));
+    	if (!getEntityManager().contains(entity)) {
+    		entity = getEntityManager().find(getEntityClass(), getIdentifier(entity));
     	}
-    	entityManager.lock(entity, lockModeType);
+    	getEntityManager().lock(entity, lockModeType);
     	return entity;
     }
     
@@ -212,7 +206,7 @@ public abstract class DAO<T> implements Serializable {
     }
 
     public EntityManager getEntityManager() {
-        return entityManager;
+    	return BeanManager.INSTANCE.getReference(EntityManager.class);
     }
 
     // TODO: Ajeitar trees que chamam isso

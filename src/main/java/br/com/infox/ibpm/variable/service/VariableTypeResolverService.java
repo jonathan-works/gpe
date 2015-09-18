@@ -7,16 +7,14 @@ import java.util.Map;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.ibpm.variable.entity.VariableInfo;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class VariableTypeResolverService {
-	@Inject
-	private EntityManager entityManager;
 	
 	public Map<String, VariableInfo> buildVariableInfoMap(Long processDefinitionId) {
 		Map<String, VariableInfo> variableMap = new HashMap<>();
@@ -24,7 +22,7 @@ public class VariableTypeResolverService {
 				+ " inner join t.taskController tc "
 				+ " inner join tc.variableAccesses va "
 				+ " where t.processDefinition.id = :processDefinitionId";
-		List<String> mappedNames = entityManager.createQuery(hql, String.class).setParameter("processDefinitionId", processDefinitionId).getResultList();
+		List<String> mappedNames = BeanManager.INSTANCE.getReference(EntityManager.class).createQuery(hql, String.class).setParameter("processDefinitionId", processDefinitionId).getResultList();
 		for (String mappedName : mappedNames) {
 			variableMap.put(mappedName.split(":")[1], new VariableInfo(mappedName));
 		}
