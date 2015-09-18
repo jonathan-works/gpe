@@ -3,7 +3,6 @@ package br.com.infox.core.report;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.management.ManagementFactory;
-import java.net.InetAddress;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -90,7 +89,7 @@ public class RequestInternalPageService implements Serializable {
 		buildSocketBindingInfo();
 		
 		Integer port = getServerListeningPort();
-		String host = InetAddress.getLocalHost().getHostAddress();
+		String host = "127.0.0.1";
 
 		StringBuilder stringBuilder = new StringBuilder(sbt.getDescricao());
 		stringBuilder.append(host);

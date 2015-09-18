@@ -4,14 +4,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Install;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.ejb.Singleton;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.inject.Named;
 
-@Name(FragmentConfigurationCollector.NAME)
-@Scope(ScopeType.APPLICATION)
-@Install(precedence = Install.APPLICATION)
+@Singleton
+@Named(FragmentConfigurationCollector.NAME)
+@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class FragmentConfigurationCollector implements Serializable {
     public static final String NAME = "fragmentConfigurationCollector";
 

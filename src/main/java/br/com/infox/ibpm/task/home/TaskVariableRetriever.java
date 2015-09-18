@@ -1,12 +1,16 @@
 package br.com.infox.ibpm.task.home;
 
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
+import br.com.infox.ibpm.process.definition.variable.VariableType;
+import br.com.infox.ibpm.variable.FragmentConfiguration;
+import br.com.infox.ibpm.variable.FragmentConfigurationCollector;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
 
 final class TaskVariableRetriever extends TaskVariable {
@@ -37,6 +41,9 @@ final class TaskVariableRetriever extends TaskVariable {
         Object variable = taskInstance.getVariable(getMappedName());
         if (variable != null) {
             switch (type) {
+            case FRAGMENT:
+                variable = getConteudoFragment(variable);
+                break;
                 case EDITOR:
                     variable = getConteudoEditor(variable);
                     break;
@@ -45,8 +52,21 @@ final class TaskVariableRetriever extends TaskVariable {
                 default:
                     break;
             }
+        } else if (VariableType.FRAGMENT.equals(type)){
+                variable = getConteudoFragment(variable);
         }
         return variable;
+    }
+
+    private Object getConteudoFragment(Object variable) {
+        Object result = variable;
+        if (result == null) {
+            FragmentConfigurationCollector collector = BeanManager.INSTANCE.getReference(FragmentConfigurationCollector.class);
+            String code = variableAccess.getMappedName().split(":")[2];
+            FragmentConfiguration fragmentConfiguration = collector.getByCode(code);
+            result = fragmentConfiguration.init(taskInstance);
+        }
+        return result;
     }
 
     private Object getConteudoEditor(Object variable) {

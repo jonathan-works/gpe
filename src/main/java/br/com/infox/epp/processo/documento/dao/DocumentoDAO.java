@@ -93,7 +93,7 @@ public class DocumentoDAO extends DAO<Documento> {
     }
 
     protected FullTextEntityManager getFullTextEntityManager() {
-        return (FullTextEntityManager) super.getEntityManager();
+        return Search.getFullTextEntityManager(super.getEntityManager());
     }
 
     public List<Documento> getListDocumentoByProcesso(Processo processo) {

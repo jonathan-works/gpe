@@ -19,16 +19,17 @@ import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
+import org.hibernate.search.jpa.Search;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.ajuda.entity.Ajuda;
 import br.com.infox.epp.search.SearchService;
 import br.com.infox.hibernate.session.SessionAssistant;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @Name(AjudaDAO.NAME)
 @AutoCreate
@@ -72,7 +73,7 @@ public class AjudaDAO extends DAO<Ajuda> {
 
     @Override
     public FullTextEntityManager getEntityManager() {
-        return (FullTextEntityManager) super.getEntityManager();
+        return Search.getFullTextEntityManager(super.getEntityManager());
     }
 
     public void reindexarAjuda() {

@@ -5,6 +5,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.jbpm.graph.exe.ExecutionContext;
+import org.jbpm.graph.exe.ProcessInstance;
+import org.jbpm.taskmgmt.exe.TaskInstance;
+
 public class ExpressionResolverChain implements ExpressionResolver {
 
 	private List<ExpressionResolver> resolvers;
@@ -41,6 +45,18 @@ public class ExpressionResolverChain implements ExpressionResolver {
 		
 		public static ExpressionResolverChainBuilder with(ExpressionResolver resolver) {
 			return new ExpressionResolverChainBuilder(resolver);
+		}
+		
+		public static ExpressionResolverChain defaultExpressionResolverChain(Integer idProcesso, ExecutionContext executionContext) {
+			return new ExpressionResolverChain(new JbpmExpressionResolver(idProcesso), new SeamExpressionResolver(executionContext));
+		}
+		
+		public static ExpressionResolverChain defaultExpressionResolverChain(Integer idProcesso, TaskInstance taskInstance) {
+			return new ExpressionResolverChain(new JbpmExpressionResolver(idProcesso), new SeamExpressionResolver(taskInstance));
+		}
+		
+		public static ExpressionResolverChain defaultExpressionResolverChain(Integer idProcesso, ProcessInstance processInstance) {
+			return new ExpressionResolverChain(new JbpmExpressionResolver(idProcesso), new SeamExpressionResolver(processInstance));
 		}
 		
 		public ExpressionResolverChainBuilder and(ExpressionResolver resolver) {

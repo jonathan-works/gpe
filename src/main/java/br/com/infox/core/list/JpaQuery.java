@@ -11,8 +11,6 @@ import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import com.google.common.base.Strings;
-
 import br.com.infox.epp.cdi.config.BeanManager;
 
 public abstract class JpaQuery<E> implements Serializable {

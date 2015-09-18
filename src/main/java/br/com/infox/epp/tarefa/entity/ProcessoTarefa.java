@@ -18,8 +18,8 @@ import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.TAREFA_NOT_ENDED
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO_QUERY;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.TAREFA_PROXIMA_LIMITE;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.TAREFA_PROXIMA_LIMITE_QUERY;
-import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.ULTIMO_PROCESSO_TAREFA_BY_PROCESSO;
-import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.ULTIMO_PROCESSO_TAREFA_BY_PROCESSO_QUERY;
+import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PROCESSO_TAREFA_ABERTO;
+import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PROCESSO_TAREFA_ABERTO_QUERY;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -42,6 +42,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.tarefa.query.ProcessoTarefaQuery;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 
 @Entity
@@ -56,7 +57,9 @@ import br.com.infox.epp.tarefa.type.PrazoEnum;
     @NamedQuery(name = TAREFA_ENDED, query = TAREFA_ENDED_QUERY),
     @NamedQuery(name = DATA_INICIO_PRIMEIRA_TAREFA, query = DATA_INICIO_PRIMEIRA_TAREFA_QUERY),
     @NamedQuery(name = TAREFA_COM_EXPIRACAO, query = TAREFA_COM_EXPIRACAO_QUERY),
-    @NamedQuery(name = ULTIMO_PROCESSO_TAREFA_BY_PROCESSO, query = ULTIMO_PROCESSO_TAREFA_BY_PROCESSO_QUERY)
+    @NamedQuery(name = PROCESSO_TAREFA_ABERTO, query = PROCESSO_TAREFA_ABERTO_QUERY),
+    @NamedQuery(name = ProcessoTarefaQuery.PROCESSOS_TAREFA, query = ProcessoTarefaQuery.PROCESSOS_TAREFA_QUERY),
+    @NamedQuery(name = ProcessoTarefaQuery.ULTIMO_PROCESSO_TAREFA, query = ProcessoTarefaQuery.ULTIMO_PROCESSO_TAREFA_QUERY),
 })
 public class ProcessoTarefa implements Serializable {
 

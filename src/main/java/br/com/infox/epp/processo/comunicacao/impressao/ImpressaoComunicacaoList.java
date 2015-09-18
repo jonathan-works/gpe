@@ -96,7 +96,15 @@ public class ImpressaoComunicacaoList extends EntityList<Processo> {
 			Date o1DataAssinatura = impressaoComunicacaoService.getDataAssinatura(o1);
 			Date o2DataAssinatura = impressaoComunicacaoService.getDataAssinatura(o2);
 			int compare = o1Impresso.compareTo(o2Impresso);
-			return compare == 0 ? o2DataAssinatura.compareTo(o1DataAssinatura): compare;
+			if (compare == 0) {
+				if (o2DataAssinatura != null){
+					return o2DataAssinatura.compareTo(o1DataAssinatura);
+				} else{
+					return o2.getDataInicio().compareTo(o1.getDataInicio());
+				}
+			} else {
+				return compare;
+			}
 		}
 	};
 

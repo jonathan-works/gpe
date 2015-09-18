@@ -11,20 +11,19 @@ import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQu
 import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.NAMED_QUERY_DOCUMENTO_SIGILOSO_POR_ID_DOCUMENTO;
 import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.NAMED_QUERY_INATIVAR_SIGILOS;
 import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.NAMED_QUERY_SIGILO_DOCUMENTO_ATIVO;
-import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.NAMED_QUERY_SIGILO_DOCUMENTO_USUARIO_LOGIN_ATIVO;
-import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.QUERY_SIGILO_DOCUMENTO_USUARIO_LOGIN_ATIVO;
 import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.NAMED_QUERY_SIGILO_DOCUMENTO_ATIVO_POR_ID_DOCUMENTO;
+import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.NAMED_QUERY_SIGILO_DOCUMENTO_USUARIO_LOGIN_ATIVO;
+import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.QUERY_DOCUMENTOS_ATIVO_PESSOA;
 import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.QUERY_DOCUMENTO_SIGILOSO_POR_ID_DOCUMENTO;
 import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.QUERY_INATIVAR_SIGILOS;
 import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.QUERY_SIGILO_DOCUMENTO_ATIVO;
-import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.QUERY_DOCUMENTOS_ATIVO_PESSOA;
 import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.QUERY_SIGILO_DOCUMENTO_ATIVO_POR_ID_DOCUMENTO;
+import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.QUERY_SIGILO_DOCUMENTO_USUARIO_LOGIN_ATIVO;
 import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.SEQUENCE_NAME;
 import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.TABLE_NAME;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,7 +35,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;

@@ -7,6 +7,7 @@ import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.GET_PROCESSO_TAR
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PARAM_CATEGORIA;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PARAM_ID_PROCESSO;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PARAM_ID_TAREFA;
+import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PROCESSO_TAREFA_ABERTO;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PROCESSO_TAREFA_BY_ID_PROCESSO_AND_ID_TAREFA;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.QUERY_PARAM_PROCESSO;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.QUERY_PARAM_TASKINSTANCE;
@@ -15,7 +16,6 @@ import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.TAREFA_COM_EXPIR
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.TAREFA_ENDED;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.TAREFA_PROXIMA_LIMITE;
-import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.ULTIMO_PROCESSO_TAREFA_BY_PROCESSO;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -29,6 +29,7 @@ import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
+import br.com.infox.epp.tarefa.query.ProcessoTarefaQuery;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 
 @AutoCreate
@@ -88,15 +89,22 @@ public class ProcessoTarefaDAO extends DAO<ProcessoTarefa> {
         return getNamedResultList(TAREFA_COM_EXPIRACAO);
     }
 
-    public ProcessoTarefa getUltimoProcessoTarefa(Processo processo) {
+    public ProcessoTarefa getProcessoTarefaAberto(Processo processo, Integer idTarefa) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(QUERY_PARAM_PROCESSO, processo);
-        return getNamedSingleResult(ULTIMO_PROCESSO_TAREFA_BY_PROCESSO, parameters);
+        parameters.put(ProcessoTarefaQuery.PARAM_ID_TAREFA, idTarefa);
+        return getNamedSingleResult(PROCESSO_TAREFA_ABERTO, parameters);
     }
 
     public List<ProcessoTarefa> getByProcesso(Processo processo) {
         Map<String, Object> params = new HashMap<>();
         params.put(QUERY_PARAM_PROCESSO, processo);
-        return getNamedResultList(ULTIMO_PROCESSO_TAREFA_BY_PROCESSO, params);
+        return getNamedResultList(PROCESSO_TAREFA_ABERTO, params);
+    }
+    
+    public ProcessoTarefa getUltimoProcessoTarefa(Processo processo) {
+    	Map<String, Object> params = new HashMap<>();
+        params.put(QUERY_PARAM_PROCESSO, processo);
+        return getNamedSingleResult(ProcessoTarefaQuery.ULTIMO_PROCESSO_TAREFA, params);
     }
 }

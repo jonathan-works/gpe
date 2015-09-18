@@ -23,9 +23,8 @@ public class TaskInstanceManager extends Manager<TaskInstanceDAO, UsuarioTaskIns
     public void removeUsuario(final Long idTaskInstance) throws DAOException {
         getDao().removeUsuario(idTaskInstance);
         try {
-        	// TODO: Não funciona com fork/join
 	        TaskInstance taskInstance = ManagedJbpmContext.instance().getTaskInstanceForUpdate(idTaskInstance);
-			taskInstance.getContextInstance().deleteVariable(VariaveisJbpmProcessosGerais.OWNER, taskInstance.getToken());
+			taskInstance.deleteVariableLocally(VariaveisJbpmProcessosGerais.OWNER);
         } catch (Exception e) {
         	throw new DAOException(e);
         }

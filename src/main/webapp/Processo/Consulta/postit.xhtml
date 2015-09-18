@@ -11,7 +11,7 @@
             <b>#{task.name}</b>
         </div>
         <div class="author">Por:
-            #{userHandler.getUsuarioByTarefa(task)}</div>
+            #{userHandler.getUsuarioByTaskInstance(task)}</div>
         <span class="date">Em: <h:outputText
                 value="#{task.start}">
                 <s:convertDateTime />
