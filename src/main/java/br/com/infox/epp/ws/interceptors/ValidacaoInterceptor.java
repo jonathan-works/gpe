@@ -10,6 +10,7 @@ import javax.validation.Validation;
 import javax.validation.ValidationException;
 import javax.validation.Validator;
 
+import br.com.infox.epp.ws.exception.ValidacaoException;
 import br.com.infox.epp.ws.messages.WSMessages;
 
 /**
@@ -29,11 +30,14 @@ public class ValidacaoInterceptor {
 		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 		Set<ConstraintViolation<T>> errors = validator.validate(bean);
 
-		if (errors.size() != 0) {
+		if(errors.size() > 0) {
+			ValidacaoException excecao = new ValidacaoException();
 			for (ConstraintViolation<T> violation : errors) {
 				String name = String.format(MSG_TEMPLATE_CODE, violation.getPropertyPath().toString().toUpperCase());
-				throw new ValidationException(WSMessages.valueOf(name).codigo());
+				WSMessages mensagem = WSMessages.valueOf(name);
+				excecao.adicionar(mensagem.codigo(), mensagem.label());
 			}
+			throw excecao;			
 		}
 	}
 

@@ -1,27 +1,41 @@
 package br.com.infox.epp.ws;
 
-import javax.validation.ValidationException;
+import javax.ejb.EJBException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import br.com.infox.epp.ws.messages.WSMessages;
+import br.com.infox.epp.ws.exception.ExcecaoServico;
+import br.com.infox.epp.ws.exception.ValidacaoException;
 
 /**
- * Responsável por tratar as exceções de validação em serviços REST 
+ * Responsável por tratar as exceções de validação em serviços REST
+ * 
  * @author paulo
  *
  */
 @Provider
-public class MapeadorExcecoesValidacao implements ExceptionMapper<ValidationException> {
+public class MapeadorExcecoesValidacao implements ExceptionMapper<Throwable> {
 
-	@Override
-	public Response toResponse(ValidationException exception) {
-		if(exception.getMessage().equals(WSMessages.ME_TOKEN_INVALIDO.codigo())) {
-			return Response.status(Status.FORBIDDEN).entity(exception.getMessage()).build();			
+	private Status getStatus(ExcecaoServico ex) {
+		if (ex instanceof ValidacaoException) {
+			return Status.BAD_REQUEST;
+		} else {
+			return Status.INTERNAL_SERVER_ERROR;
 		}
-		return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).build();
 	}
 
+	@Override
+	public Response toResponse(Throwable e) {
+		if(e instanceof EJBException && e.getCause() != null) {
+			e = e.getCause();
+		}
+		if(ExcecaoServico.class.isAssignableFrom(e.getClass())) {
+			ExcecaoServico ex = (ExcecaoServico) e;
+			Status status = getStatus(ex);
+				return Response.status(status).entity(ex.getErro().getCodigo()).build();						
+		}
+		return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+	}
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.validation.ValidationException;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
 
 import org.jboss.resteasy.annotations.interception.ServerInterceptor;
@@ -33,7 +34,7 @@ public class ProcessadorRest implements PreProcessInterceptor, AcceptedByMethod 
 	/**
 	 * Pacote onde esse interceptador será aplicado
 	 */
-	private static final String PACOTE_INTERCEPTADOR2 = UsuarioRest.class.getPackage().getName();
+	private static final String PACOTE_INTERCEPTADOR = UsuarioRest.class.getPackage().getName();
 
 	private static final String TOKEN_NAME = "webserviceToken";
 	public static final String NOME_TOKEN_HEADER_HTTP = "token";
@@ -42,7 +43,10 @@ public class ProcessadorRest implements PreProcessInterceptor, AcceptedByMethod 
 	private ParametroManager parametroManager;
 
 	private ServerResponse getRespostaForbidden() throws ValidationException {
-		throw new ValidationException(WSMessages.ME_TOKEN_INVALIDO.codigo());
+		ServerResponse retorno = new ServerResponse();
+		retorno.setStatus(Status.UNAUTHORIZED.getStatusCode());
+		retorno.setEntity(WSMessages.ME_TOKEN_INVALIDO.codigo());
+		return retorno;
 	}
 
 	private void validarToken(String token) throws ValidationException {
@@ -71,11 +75,11 @@ public class ProcessadorRest implements PreProcessInterceptor, AcceptedByMethod 
 
 	/**
 	 * Aplica esse interceptador apenas no pacote definido em
-	 * {@link #PACOTE_INTERCEPTADOR2}
+	 * {@link #PACOTE_INTERCEPTADOR}
 	 */
 	@Override
 	public boolean accept(@SuppressWarnings("rawtypes") Class classe, Method metodo) {
-		if (classe.getPackage().getName().startsWith(PACOTE_INTERCEPTADOR2)) {
+		if (classe.getPackage().getName().startsWith(PACOTE_INTERCEPTADOR)) {
 			return true;
 		}
 		return false;

@@ -1,5 +1,8 @@
 package br.com.infox.epp.ws.messages;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum WSMessages {	
 	
 	MS_SUCESSO_INSERIR("MS0001", "Registro Inserido com Sucesso"),
@@ -28,10 +31,22 @@ public enum WSMessages {
 	
 	private final String codigo;
 	private final String label;
+	private static Map<String, WSMessages> mapaMensagens;
 	
 	private WSMessages(String codigo, String label){
 		this.codigo = codigo;
 		this.label = label;
+		adicionar(codigo, this);
+	}
+	
+	private void adicionar(String codigo, WSMessages mensagem) {
+		if(mapaMensagens == null) {
+			 mapaMensagens = new HashMap<>();			
+		}
+		if(mapaMensagens.containsKey(codigo)) {
+			throw new RuntimeException("Código já adicionado: " + codigo);
+		}
+		WSMessages.mapaMensagens.put(codigo, mensagem);
 	}
 	
 	public final String codigo(){
@@ -40,6 +55,10 @@ public enum WSMessages {
 	
 	public final String label(){
 		return this.label;
+	}
+	
+	public static WSMessages get(String codigo) {
+		return mapaMensagens.get(codigo);
 	}
 
 }
