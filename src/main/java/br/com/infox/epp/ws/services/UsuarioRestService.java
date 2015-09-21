@@ -1,4 +1,4 @@
-package br.com.infox.epp.ws;
+package br.com.infox.epp.ws.services;
 
 import static br.com.infox.epp.ws.messages.WSMessages.ME_ATTR_DATAEXPEDICAO_INVALIDO;
 import static br.com.infox.epp.ws.messages.WSMessages.ME_ATTR_IDENTIDADE_INVALIDO;
@@ -32,8 +32,10 @@ import br.com.infox.epp.pessoa.type.EstadoCivilEnum;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.ws.bean.UsuarioBean;
 import br.com.infox.epp.ws.bean.UsuarioSenhaBean;
+import br.com.infox.epp.ws.interceptors.ValidarParametros;
 
 @Stateless
+@ValidarParametros
 public class UsuarioRestService {
 
 	public static final String NAME = "unidadeGestoraService";

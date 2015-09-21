@@ -1,4 +1,4 @@
-package br.com.infox.epp.ws;
+package br.com.infox.epp.ws.services;
 
 import static br.com.infox.epp.ws.messages.WSMessages.ME_LOCALIZACAO_DA_ESTRUTURA_INEXISTENTE;
 import static br.com.infox.epp.ws.messages.WSMessages.ME_PERFIL_INEXISTENTE;
@@ -19,8 +19,11 @@ import br.com.infox.epp.access.manager.PerfilTemplateManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
 import br.com.infox.epp.ws.bean.UsuarioPerfilBean;
+import br.com.infox.epp.ws.exception.ValidacaoException;
+import br.com.infox.epp.ws.interceptors.ValidarParametros;
 
 @Stateless
+@ValidarParametros
 public class PerfilRestService {
 
 	@Inject
@@ -36,17 +39,17 @@ public class PerfilRestService {
 		UsuarioPerfilBean usuarioPerfilBean = (UsuarioPerfilBean) bean;
 		UsuarioLogin usuarioLogin = usuarioLoginManager.getUsuarioFetchPessoaFisicaByNrCpf(usuarioPerfilBean.getCpf());
 		if (usuarioLogin == null) {
-			return ME_USUARIO_INEXISTENTE.codigo();
+			throw new ValidacaoException(ME_USUARIO_INEXISTENTE);
 		}
 
 		Localizacao localizacao = localizacaoManager.getLocalizacaoByCodigo(usuarioPerfilBean.getCodigoLocalizacao());
 		if (localizacao == null || localizacao.getEstruturaFilho() == null) {
-			return ME_LOCALIZACAO_DA_ESTRUTURA_INEXISTENTE.codigo();
+			throw new ValidacaoException(ME_LOCALIZACAO_DA_ESTRUTURA_INEXISTENTE);
 		}
 
 		PerfilTemplate perfilTemplate = perfilTemplateManager.getPerfilTemplateByLocalizacaoPaiDescricao(localizacao, bean.getPerfil());
 		if(perfilTemplate == null) {
-			return ME_PERFIL_INEXISTENTE.codigo();
+			throw new ValidacaoException(ME_PERFIL_INEXISTENTE);
 		}
 		
 		UsuarioPerfil usuarioPerfil = usuarioPerfilManager.getByUsuarioLoginPerfilTemplateLocalizacao(usuarioLogin,	perfilTemplate, localizacao);

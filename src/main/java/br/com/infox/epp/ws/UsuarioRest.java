@@ -2,7 +2,6 @@ package br.com.infox.epp.ws;
 
 import java.io.Serializable;
 
-import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -14,12 +13,10 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.ws.bean.UsuarioBean;
 import br.com.infox.epp.ws.bean.UsuarioSenhaBean;
 import br.com.infox.epp.ws.interceptors.Log;
-import br.com.infox.epp.ws.interceptors.ValidarParametros;
 import br.com.infox.epp.ws.messages.CodigosServicos;
+import br.com.infox.epp.ws.services.UsuarioRestService;
 
 @Path(UsuarioRest.PATH)
-@Stateless
-@ValidarParametros
 public class UsuarioRest implements Serializable {
 
 	private static final long serialVersionUID = 1L;

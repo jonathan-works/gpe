@@ -1,6 +1,5 @@
 package br.com.infox.epp.ws;
 
-import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -11,12 +10,10 @@ import javax.ws.rs.core.MediaType;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.ws.bean.UsuarioPerfilBean;
 import br.com.infox.epp.ws.interceptors.Log;
-import br.com.infox.epp.ws.interceptors.ValidarParametros;
 import br.com.infox.epp.ws.messages.CodigosServicos;
+import br.com.infox.epp.ws.services.PerfilRestService;
 
 @Path(PerfilRest.PATH)
-@Stateless
-@ValidarParametros
 public class PerfilRest {
 	
 	public static final String PATH = "/perfil";

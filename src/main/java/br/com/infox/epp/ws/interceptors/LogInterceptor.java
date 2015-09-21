@@ -1,5 +1,7 @@
 package br.com.infox.epp.ws.interceptors;
 
+import static br.com.infox.epp.ws.services.MensagensErroService.CODIGO_ERRO_INDEFINIDO;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +14,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.webservice.log.entity.LogWebserviceServer;
-import br.com.infox.epp.webservice.log.manager.LogWebserviceServerManager;
 import br.com.infox.epp.ws.ProcessadorRest;
+import br.com.infox.epp.ws.exception.ExcecaoServico.ErroServico;
+import br.com.infox.epp.ws.services.LogWebserviceServerManagerNewTransaction;
+import br.com.infox.epp.ws.services.MensagensErroService;;
 
 @Log(codigo = "") @Interceptor
 /**
@@ -27,7 +31,10 @@ public class LogInterceptor {
 	private ServletRequest request;
 	
 	@Inject
-	private LogWebserviceServerManager servico;
+	private LogWebserviceServerManagerNewTransaction servico;
+	
+	@Inject
+	private MensagensErroService mensagensErroService;
 	
 	@AroundInvoke
 	private Object gerarLog(InvocationContext ctx) throws Exception {
@@ -48,12 +55,21 @@ public class LogInterceptor {
 		if(logWsServer == null) {
 			throw new DAOException("Erro ao gerar Log do serviço no banco de dados");
 		}
+		
 		Object retorno = null;
 		try {
 			retorno = ctx.proceed();
-			return retorno;
-		} finally {
 			servico.endLog(logWsServer, retorno == null ? null : retorno.toString());
+			return retorno;
+		}
+		catch(Throwable e) {
+			ErroServico erro = mensagensErroService.getErro(e);
+			String codigoErro = erro.getCodigo();
+			if(CODIGO_ERRO_INDEFINIDO.equals(codigoErro)) {
+				codigoErro = erro.getMensagem(); 
+			}
+			servico.endLog(logWsServer, codigoErro);
+			throw e;
 		}
 	}
 	

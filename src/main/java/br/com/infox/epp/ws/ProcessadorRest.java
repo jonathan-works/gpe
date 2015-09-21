@@ -18,6 +18,9 @@ import org.jboss.resteasy.spi.interception.AcceptedByMethod;
 import org.jboss.resteasy.spi.interception.PreProcessInterceptor;
 
 import br.com.infox.epp.system.manager.ParametroManager;
+import br.com.infox.epp.webservice.log.entity.LogWebserviceServer;
+import br.com.infox.epp.webservice.log.manager.LogWebserviceServerManager;
+import br.com.infox.epp.ws.interceptors.Log;
 import br.com.infox.epp.ws.messages.WSMessages;
 
 /**
@@ -41,6 +44,9 @@ public class ProcessadorRest implements PreProcessInterceptor, AcceptedByMethod 
 
 	@Inject
 	private ParametroManager parametroManager;
+	
+	@Inject
+	private LogWebserviceServerManager servicoLog;
 
 	private ServerResponse getRespostaForbidden() throws ValidationException {
 		ServerResponse retorno = new ServerResponse();
@@ -55,19 +61,36 @@ public class ProcessadorRest implements PreProcessInterceptor, AcceptedByMethod 
 			throw new ValidationException(WSMessages.ME_TOKEN_INVALIDO.codigo());
 		}
 	}
+	
+	private void logarForbiddenBanco(ResourceMethod method, String token) {
+		Log log = method.getMethod().getAnnotation(Log.class);
+		if(log == null) {
+			log = method.getMethod().getDeclaringClass().getAnnotation(Log.class);
+		}
+		if(log == null) {
+			return;
+		}
+		String nomeServico = log.codigo();
+		if(token == null) {
+			token = "null";
+		}
+		LogWebserviceServer entidadeLog = servicoLog.beginLog(nomeServico, token, token);
+		servicoLog.endLog(entidadeLog, WSMessages.ME_TOKEN_INVALIDO.codigo());
+	}
 
 	@Override
 	public ServerResponse preProcess(HttpRequest request, ResourceMethod method)
 			throws Failure, WebApplicationException {
 		List<String> valoresToken = request.getHttpHeaders().getRequestHeader(NOME_TOKEN_HEADER_HTTP);
 		if (valoresToken == null || valoresToken.size() == 0) {
+			logarForbiddenBanco(method, null);
 			return getRespostaForbidden();
 		}
 		String valorToken = valoresToken.get(0);
 		try {
 			validarToken(valorToken);
 		} catch (ValidationException e) { //
-
+			logarForbiddenBanco(method, valorToken);
 			return getRespostaForbidden();
 		}
 		return null;
