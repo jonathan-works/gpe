@@ -3,6 +3,8 @@ package br.com.infox.epp.access.manager;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -24,6 +26,7 @@ import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
 
 @Name(UsuarioLoginManager.NAME)
+@Stateless
 @AutoCreate
 public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> {
 
@@ -58,20 +61,19 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
         return getDao().getUsuarioLoginByLogin(login);
     }
 
-    public String getActorIdTarefaAtual(Integer idProcesso) {
-        return getDao().getActorIdTarefaAtual(idProcesso);
-    }
-
-    public String getUsuarioByTarefa(TaskInstance taskInstance) {
-        return getDao().getUsuarioByTarefa(taskInstance);
+    public String getLoginUsuarioByTaskInstance(TaskInstance taskInstance) {
+        return getDao().getLoginUsuarioByTaskInstance(taskInstance);
     }
     
-    public String getNomeUsuarioByTarefa(TaskInstance taskInstance) {
-        return getDao().getNomeUsuarioByTarefa(taskInstance);
+    public String getNomeUsuarioByIdTarefa(Integer idTarefa, Integer idProcesso) {
+    	return getDao().getNomeUsuarioByIdTarefa(idTarefa, idProcesso);
+    }
+    
+    public String getNomeUsuarioByTaskInstance(TaskInstance taskInstance) {
+        return getDao().getNomeUsuarioByTaskInstance(taskInstance);
     }
 
-    public UsuarioLogin getUsuarioLoginByPessoaFisica(
-            final PessoaFisica pessoaFisica) {
+    public UsuarioLogin getUsuarioLoginByPessoaFisica(final PessoaFisica pessoaFisica) {
         return getDao().getUsuarioLoginByPessoaFisica(pessoaFisica);
     }
     

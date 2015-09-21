@@ -53,28 +53,16 @@
           		hideOrder="true"/>
           		
         </wi:dataTable>
-    
-    	<script>
-    		function abrirMovimentar(event) {
-    			if (event.status === 'success') {
-    				var idProcesso = document.getElementById('iniciarProcessoForm:idProcesso').value;
-    				open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=' + idProcesso, 
-    							idProcesso + 'popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1'); 
-    				window.location='#{pathResolver.contextPath}/Painel/list.seam';
-    			}
-    		}
-    	</script>
-    
+
         <h:form id="iniciarProcessoForm">
-        	<h:inputHidden id="idProcesso" value="#{iniciarProcessoAction.processo.idProcesso}" />
             <s:div id="storeDiv">
-                <h:commandButton id="storeButton"
+                <a:commandButton id="storeButton"
                     rendered="#{participantesController.podeIniciarProcesso()}"
                     value="#{infoxMessages['processo.iniciarBtn']}"
-                    styleClass="buttons">                    <f:ajax event="click" execute="@this" render="idProcesso :pageBodyDialogMessage" onevent="abrirMovimentar"
-                    	listener="#{action.iniciarProcesso(participantesController.processo)}"/>
-                 </h:commandButton>
-            </s:div>
+                    styleClass="buttons"
+                    render=":pageBodyDialogMessage @this scriptMovimentar"
+                    action="#{action.iniciarProcesso(participantesController.processo)}"
+                    oncomplete="abrirMovimentar();" />            </s:div>
         </h:form>
     </s:div>
 </ui:composition>

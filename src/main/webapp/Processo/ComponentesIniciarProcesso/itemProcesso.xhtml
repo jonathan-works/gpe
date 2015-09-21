@@ -22,7 +22,7 @@
                         action="#{action.onSelectItem(row)}"
                         execute="@this" render="@this"
                         limitRender="true"
-                        oncomplete="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processo.idProcesso}', '', 'fullscreen=1, resizable=yes,scrollbars=1');window.location='#{pathResolver.contextPath}/Painel/list.seam';">
+                        oncomplete="abrirMovimentar();">
                         <h:graphicImage value="#{wiSkin.imageFolder}/start.gif" />
                     </a:commandLink>
                     <a:commandLink

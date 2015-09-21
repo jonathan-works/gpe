@@ -9,8 +9,6 @@ public class VariavelProcesso implements Serializable {
     private String nome;
     private String label;
     private String valor;
-    private Long idToken;
-    private Long idProcessInstance;
 
     public String getNome() {
         return nome;
@@ -34,21 +32,5 @@ public class VariavelProcesso implements Serializable {
 
     public void setValor(String valor) {
         this.valor = valor;
-    }
-
-    public Long getIdToken() {
-        return idToken;
-    }
-
-    public void setIdToken(Long idToken) {
-        this.idToken = idToken;
-    }
-
-    public Long getIdProcessInstance() {
-        return idProcessInstance;
-    }
-
-    public void setIdProcessInstance(Long idProcessInstance) {
-        this.idProcessInstance = idProcessInstance;
     }
 }

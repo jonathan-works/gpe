@@ -40,9 +40,9 @@
                         rendered="#{not row.hasItens() and not row.necessitaPartes()}"
                         action="#{action.onSelectNatCatFluxo(row)}"
                         execute="@this"
-                        render="@this"
+                        render="@this scriptMovimentar"
                         limitRender="true"
-                        oncomplete="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processo.idProcesso}', '', 'fullscreen=1, resizable=yes,scrollbars=1');window.location='#{pathResolver.contextPath}/Painel/list.seam';">
+                        oncomplete="abrirMovimentar();">
                         <h:graphicImage
                             value="#{wiSkin.imageFolder}/jbpm/StartState.gif" />
                     </a:commandLink>

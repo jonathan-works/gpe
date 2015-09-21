@@ -103,6 +103,7 @@
         id="documentoFisicoTab"
         name="documentoFisicoTab"
         action="#{localizacaoDocumentoFisicoCrudAction.setProcesso(consultaController.processo)}"
+        rendered="#{security.checkPage('/pages/Processo/abaDocumentoFisico')}"
         title="#{infoxMessages['documentoFisico.titleTab']}">
         <ui:decorate
           id="frameDecorate"

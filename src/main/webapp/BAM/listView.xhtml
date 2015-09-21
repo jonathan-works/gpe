@@ -214,9 +214,9 @@
         </span>
         <span> <h:graphicImage
             url="#{wiSkin.imageFolder}/usuario.gif"
-            rendered="#{!empty userHandler.getNomeUsuarioByTarefa(task)}"
+            rendered="#{!empty userHandler.getUsuarioByTaskInstance(task)}"
           /> <h:outputText
-            value=" #{userHandler.getNomeUsuarioByTarefa(task)}"
+            value=" #{userHandler.getUsuarioByTaskInstance(task)}"
           />
         </span>
       </rich:column>

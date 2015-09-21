@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:rich="http://richfaces.org/rich" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html">
+    <h:panelGrid columns="2">
+        <h:outputLabel styleClass="property-field-edit-name"
+            value="#{infoxMessages['documentoProcesso.classificacaoDocumento']}" />
+        <h:outputText styleClass="property-field-edit-value" value="#{documento.classificacaoDocumento.descricao}" />
+        <h:outputLabel styleClass="property-field-edit-name"
+            value="#{infoxMessages['documentoProcesso.documentoBin.nomeArquivo']}" />
+        <h:outputText styleClass="property-field-edit-value" value="#{documento.documentoBin.nomeArquivo}" />
+        <h:outputLabel styleClass="property-field-edit-name"
+            value="#{infoxMessages['documentoProcesso.documentoBin.sizeFormatado']}" />
+        <h:outputText styleClass="property-field-edit-value" value="#{documento.documentoBin.sizeFormatado}" />
+        <h:outputLabel styleClass="property-field-edit-name"
+            value="#{infoxMessages['documentoProcesso.documentoBin.dataSuficientementeAssinado']}" />
+        <h:outputText styleClass="property-field-edit-value"
+            value="#{documento.documentoBin.dataSuficientementeAssinado}" />
+        <h:outputLabel styleClass="property-field-edit-name" value="#{infoxMessages['documentoProcesso.descricao']}" />
+        <h:outputText styleClass="property-field-edit-value" value="#{documento.descricao}" />
+        <h:outputLabel styleClass="property-field-edit-name" value="#{infoxMessages['documentoProcesso.dataInclusao']}" />
+        <h:outputText styleClass="property-field-edit-value" value="#{documento.dataInclusao}" />
+        <h:outputLabel styleClass="property-field-edit-name" value="#{infoxMessages['documentoProcesso.dataAlteracao']}" />
+        <h:outputText styleClass="property-field-edit-value" value="#{documento.dataAlteracao}" />
+        <h:outputLabel styleClass="property-field-edit-name" value="#{infoxMessages['documentoProcesso.pasta']}" />
+        <h:outputText styleClass="property-field-edit-value" value="#{documento.pasta.nome}" />
+        <h:outputLabel styleClass="property-field-edit-name" value="#{infoxMessages['documentoProcesso.localizacao']}" />
+        <h:outputText styleClass="property-field-edit-value" value="#{documento.localizacao.localizacao}" />
+    </h:panelGrid>
+    <rich:panel header="#{infoxMessages['documentoProcesso.documentoBin.assinaturas']}">
+        <h:dataTable var="assinatura" value="#{documento.documentoBin.assinaturas}">
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText styleClass="property-field-edit-name"
+                        value="#{infoxMessages['AssinaturaDocumento.usuarioPerfil']}" />
+                </f:facet>
+                <h:outputText styleClass="property-field-edit-value"
+                    value="#{assinatura.nomeUsuario} #{assinatura.usuarioPerfil}" />
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText styleClass="property-field-edit-name"
+                        value="#{infoxMessages['AssinaturaDocumento.dataAssinatura']}" />
+                </f:facet>
+                <h:outputText styleClass="property-field-edit-value" value="#{assinatura.dataAssinatura}" />
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    <h:outputText styleClass="property-field-edit-name"
+                        value="#{infoxMessages['AssinaturaDocumento.tipoAssinatura']}" />
+                </f:facet>
+                <h:outputText styleClass="property-field-edit-value" value="#{assinatura.tipoAssinatura.label}" />
+            </h:column>
+        </h:dataTable>
+    </rich:panel>
+</ui:composition>

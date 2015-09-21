@@ -5,7 +5,6 @@ import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -24,9 +23,6 @@ import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.assignment.LocalizacaoAssignment;
-import br.com.infox.epp.cdi.config.BeanManager;
-import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
-import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
 import br.com.infox.epp.fluxo.manager.NaturezaManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.entity.Processo;
@@ -70,7 +66,7 @@ public class IniciarProcessoService implements Serializable {
         inicializarProcessoJbpm(processo, processInstance, variaveis);
         processo.setNumeroProcesso(String.valueOf(processo.getIdProcesso()));
         if (processo.getProcessoPai() == null) {
-        	processInstance.getContextInstance().setVariable("numeroProcesso", processo.getNumeroProcesso());
+        	processInstance.getContextInstance().setVariable(VariaveisJbpmProcessosGerais.NUMERO_PROCESSO, processo.getNumeroProcesso());
         }
         naturezaManager.lockNatureza(processo.getNaturezaCategoriaFluxo().getNatureza());
         processoManager.update(processo);
@@ -103,18 +99,17 @@ public class IniciarProcessoService implements Serializable {
 
     private void iniciaVariaveisProcesso(Processo processo, Map<String, Object> variaveis, org.jbpm.graph.exe.ProcessInstance processInstance) {
         ContextInstance contextInstance = processInstance.getContextInstance();
-        createJbpmVariables(processo, contextInstance);
-        contextInstance.setVariable("processo", processo.getIdProcesso());
+        contextInstance.setVariable(VariaveisJbpmProcessosGerais.PROCESSO, processo.getIdProcesso());
         if (variaveis != null) {
             for (String variavel : variaveis.keySet()) {
                 contextInstance.setVariable(variavel, variaveis.get(variavel));
             }
         }
         if (processo.getProcessoPai() == null) {
-        	contextInstance.setVariable("naturezaProcesso", processo.getNaturezaCategoriaFluxo().getNatureza().getNatureza());
-        	contextInstance.setVariable("categoriaProcesso", processo.getNaturezaCategoriaFluxo().getCategoria().getCategoria());
+        	contextInstance.setVariable(VariaveisJbpmProcessosGerais.NATUREZA, processo.getNaturezaCategoriaFluxo().getNatureza().getNatureza());
+        	contextInstance.setVariable(VariaveisJbpmProcessosGerais.CATEGORIA, processo.getNaturezaCategoriaFluxo().getCategoria().getCategoria());
         }
-    	contextInstance.setVariable("dataInicioProcesso", processo.getDataInicio());
+    	contextInstance.setVariable(VariaveisJbpmProcessosGerais.DATA_INICIO_PROCESSO, processo.getDataInicio());
         ManagedJbpmContext.instance().getSession().flush();
     }
     
@@ -131,13 +126,5 @@ public class IniciarProcessoService implements Serializable {
             return true;
         }
         return false;
-    }
-
-    private void createJbpmVariables(Processo processo, ContextInstance contextInstance) {
-    	DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager = BeanManager.INSTANCE.getReference(DefinicaoVariavelProcessoManager.class);
-        List<DefinicaoVariavelProcesso> variaveis = definicaoVariavelProcessoManager.listVariaveisByFluxo(processo.getNaturezaCategoriaFluxo().getFluxo());
-        for (DefinicaoVariavelProcesso variavelProcesso : variaveis) {
-            contextInstance.setVariable(variavelProcesso.getNome(), null);
-        }
     }
 }

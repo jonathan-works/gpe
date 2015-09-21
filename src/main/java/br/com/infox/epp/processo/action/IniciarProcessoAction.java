@@ -37,6 +37,8 @@ import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.partes.controller.ParticipantesController;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
+import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
+import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
@@ -54,6 +56,8 @@ public class IniciarProcessoAction implements Serializable {
     private IniciarProcessoService iniciarProcessoService;
     @In
     private InfoxMessages infoxMessages;
+    @In
+    private ProcessoTarefaManager processoTarefaManager;
 
     private boolean renderedByItem;
     private boolean renderizarCadastroPartes;
@@ -61,6 +65,7 @@ public class IniciarProcessoAction implements Serializable {
     private Item itemDoProcesso;
     private Processo processo;
     private List<ItemBean> itemList;
+    private Integer idTarefa;
 
     private String viewId;
 
@@ -96,7 +101,12 @@ public class IniciarProcessoAction implements Serializable {
     private void enviarProcessoParaJbpm() {
         try {
             iniciarProcessoService.iniciarProcesso(processo);
+            ProcessoTarefa processoTarefa = processoTarefaManager.getUltimoProcessoTarefa(processo);
             getMessagesHandler().add("Processo inserido com sucesso!");
+            if (processoTarefa == null) {
+            	throw new BusinessException("Processo não está em tarefa humana");
+            }
+            idTarefa = processoTarefa.getTarefa().getIdTarefa();
         } catch (TypeMismatchException tme) {
             sendIniciarProcessoErrorMessage(IniciarProcessoService.TYPE_MISMATCH_EXCEPTION, tme);
         } catch (NullPointerException npe) {
@@ -224,4 +234,8 @@ public class IniciarProcessoAction implements Serializable {
     public void setViewId(String viewId) {
         this.viewId = viewId;
     }
+    
+    public Integer getIdTarefa() {
+		return idTarefa;
+	}
 }

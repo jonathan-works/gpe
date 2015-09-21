@@ -67,7 +67,8 @@ public class PrazoComunicacaoService {
 		DestinatarioModeloComunicacao destinatario = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.DESTINATARIO);
         Integer qtdDias = destinatario.getModeloComunicacao().getTipoComunicacao().getQuantidadeDiasCiencia();
         Date hoje = new Date();
-        return calendarioEventosManager.getPrimeiroDiaUtil(hoje, qtdDias);
+        //O inicio do prazo de ciência é sempre no dia seguinte ao do envio (independentemente de o dia seguinte ao do envio ser útil ou não, já que este prazo é corrido). 64236
+        return calendarioEventosManager.getPrimeiroDiaUtil(hoje, qtdDias + 1);
     }
     
 	public Date contabilizarPrazoCumprimento(Processo comunicacao) {
@@ -76,11 +77,17 @@ public class PrazoComunicacaoService {
         if (diasPrazoCumprimento == null || dataCiencia == null) {
         	return null;
         }
-        return calendarioEventosManager.getPrimeiroDiaUtil(dataCiencia, diasPrazoCumprimento);
+        //O inicio de prazo de resposta sempre se dá em dia útil e sempre no dia útil seguinte ao da ciência (tenha esta sido manual ou pelo sistema).
+        //O fim de prazo de resposta sempre se dá em dia útil. Se o fim de prazo ocorrer em dia não útil, deverá ser contabilizado como fim de prazo o dia útil seguinte. 64136
+        Date inicioPrazoResposta = calendarioEventosManager.getPrimeiroDiaUtil(dataCiencia, 1);
+        return calendarioEventosManager.getPrimeiroDiaUtil(inicioPrazoResposta, diasPrazoCumprimento);
     }
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void darCiencia(Processo comunicacao, Date dataCiencia, UsuarioLogin usuarioCiencia) throws DAOException {
+		//Se o usuário confirmar ciência em dia não útil, o sistema deverá considerar que a ciência foi confirmada no dia útil seguinte e começar a contar o prazo no dia útil 
+    	//seguinte a essa confirmação. 64236
+		dataCiencia = calendarioEventosManager.getPrimeiroDiaUtil(dataCiencia);
 		if (comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA) != null) {
     		return;
     	}
@@ -108,7 +115,7 @@ public class PrazoComunicacaoService {
 				ComunicacaoMetadadoProvider.DOCUMENTO_COMPROVACAO_CIENCIA, documentoCiencia.getId().toString());
 		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoCiencia));
 		darCiencia(comunicacao, dataCiencia, Authenticator.getUsuarioLogado());
-		movimentarTarefaService.finalizarTarefaEmAberto(comunicacao);
+		movimentarTarefaService.finalizarTarefasEmAberto(comunicacao);
 	}
 
 	protected void adicionarPrazoDeCumprimento(Processo comunicacao, Date dataCiencia)
@@ -134,6 +141,7 @@ public class PrazoComunicacaoService {
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void darCumprimento(Processo comunicacao, Date dataCumprimento, UsuarioLogin usuarioCumprimento) throws DAOException {
+		dataCumprimento = calendarioEventosManager.getPrimeiroDiaUtil(dataCumprimento);
 		if (comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CUMPRIMENTO) != null) {
     		return;
     	}
@@ -170,7 +178,7 @@ public class PrazoComunicacaoService {
 		if (dataLimite != null) {
 			DateTime dataParaCumprimento = new DateTime(dataLimite.getTime());
 			if (dataParaCumprimento.isBeforeNow()) {
-				processoManager.movimentarProcessoJBPM(comunicacao);
+				movimentarTarefaService.finalizarTarefasEmAberto(comunicacao);
 			}
 		}
 	}

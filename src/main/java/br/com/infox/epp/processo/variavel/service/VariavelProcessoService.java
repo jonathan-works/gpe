@@ -15,8 +15,8 @@ import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.core.Expressions;
 import org.jboss.seam.core.Expressions.MethodExpression;
 import org.jboss.seam.core.Expressions.ValueExpression;
-import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.graph.exe.ProcessInstance;
+import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
@@ -26,6 +26,8 @@ import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
+import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
+import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 
 @Name(VariavelProcessoService.NAME)
 @Scope(ScopeType.EVENT)
@@ -35,9 +37,12 @@ public class VariavelProcessoService {
 
     public static final String NAME = "variavelProcessoService";
 
-    @In private MetadadoProcessoManager metadadoProcessoManager;
+    @In
+    private MetadadoProcessoManager metadadoProcessoManager;
     @In
     private ProcessoManager processoManager;
+    @In
+    private ProcessoTarefaManager processoTarefaManager;
 
     public List<VariavelProcesso> getVariaveis(Processo processo) {
         List<VariavelProcesso> variaveis = new ArrayList<>();
@@ -47,43 +52,50 @@ public class VariavelProcessoService {
         
         for (DefinicaoVariavelProcesso definicao : definicaoVariavelList) {
             if (definicao.getVisivel()) {
-                variaveis.add(getPrimeiraVariavelProcessoAncestral(processo, definicao));
+            	variaveis.add(getPrimeiraVariavelProcessoAncestral(processo, definicao, null));
             }
         }
 
         return variaveis;
     }
 
-    public void save(VariavelProcesso variavel) {
-        ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(
-                variavel.getIdProcessInstance());
-        ContextInstance contextInstance = processInstance.getContextInstance();
-        contextInstance.setVariable(variavel.getNome(), variavel.getValor());
-    }
-
-    public VariavelProcesso getVariavelProcesso(Processo processo, String nome) {
+    public VariavelProcesso getVariavelProcesso(Processo processo, String nome, Integer idTarefa) {
     	DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager = BeanManager.INSTANCE.getReference(DefinicaoVariavelProcessoManager.class);
-        DefinicaoVariavelProcesso definicao = definicaoVariavelProcessoManager.getDefinicao(processo
-                .getNaturezaCategoriaFluxo().getFluxo(), nome);
-        return getPrimeiraVariavelProcessoAncestral(processo, definicao);
+        DefinicaoVariavelProcesso definicao = definicaoVariavelProcessoManager.getDefinicao(processo.getNaturezaCategoriaFluxo().getFluxo(), nome);
+        TaskInstance taskInstance = null;
+        if (idTarefa != null) {
+        	ProcessoTarefa processoTarefa = processoTarefaManager.getProcessoTarefaAberto(processo, idTarefa);
+        	if (processoTarefa != null) {
+        		taskInstance = ManagedJbpmContext.instance().getTaskInstance(processoTarefa.getTaskInstance());
+        	}
+        }
+        return getPrimeiraVariavelProcessoAncestral(processo, definicao, taskInstance);
     }
 
-    private VariavelProcesso getPrimeiraVariavelProcessoAncestral(Processo processo, DefinicaoVariavelProcesso definicao) {
+    private VariavelProcesso getPrimeiraVariavelProcessoAncestral(Processo processo, DefinicaoVariavelProcesso definicao, TaskInstance taskInstance) {
         VariavelProcesso variavelProcesso = null;
         Processo corrente = processo;
         while (corrente != null && (variavelProcesso == null || variavelProcesso.getValor() == null || variavelProcesso.getValor().isEmpty())) {
-            variavelProcesso = getVariavelProcesso(corrente, definicao);
+            variavelProcesso = getVariavelProcesso(corrente, definicao, taskInstance);
+            // Só deve olhar na taskInstance na primeira iteração
+            taskInstance = null;
             corrente = corrente.getProcessoPai();
         }
         return variavelProcesso;
     }
 
-    private VariavelProcesso getVariavelProcesso(Processo processo, DefinicaoVariavelProcesso definicao) {
+    private VariavelProcesso getVariavelProcesso(Processo processo, DefinicaoVariavelProcesso definicao, TaskInstance taskInstance) {
         Long idJbpm = processo.getIdJbpm();
         if (idJbpm != null) {
             ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(idJbpm);
-            Object variable = processInstance.getContextInstance().getVariable(definicao.getNome());
-            VariavelProcesso variavelProcesso = inicializaVariavelProcesso(processInstance, definicao);
+            Object variable;
+            if (taskInstance != null) {
+            	// Aqui já pega do processInstance caso não tenha na taskInstance por causa da hierarquia de VariableContainer do jBPM
+            	variable = taskInstance.getVariable(definicao.getNome());
+            } else {
+            	variable = processInstance.getContextInstance().getVariable(definicao.getNome());
+            }
+            VariavelProcesso variavelProcesso = inicializaVariavelProcesso(definicao);
             if (variable != null) {
                 variavelProcesso.setValor(formatarValor(variable));
             } else {
@@ -122,7 +134,7 @@ public class VariavelProcessoService {
                 .listVariaveisByFluxo(processo.getNaturezaCategoriaFluxo().getFluxo());
         
         for (DefinicaoVariavelProcesso definicao : definicaoVariavelList) {
-            VariavelProcesso variavel = getPrimeiraVariavelProcessoAncestral(processo, definicao);
+            VariavelProcesso variavel = getPrimeiraVariavelProcessoAncestral(processo, definicao, null);
             if (variavel != null) {
                 variaveis.add(variavel);
             }
@@ -173,11 +185,8 @@ public class VariavelProcessoService {
         variavelProcesso.setValor(sb.toString());
     }
 
-    private VariavelProcesso inicializaVariavelProcesso(ProcessInstance processInstance,
-            DefinicaoVariavelProcesso definicao) {
+    private VariavelProcesso inicializaVariavelProcesso(DefinicaoVariavelProcesso definicao) {
         VariavelProcesso variavelProcesso = new VariavelProcesso();
-        variavelProcesso.setIdProcessInstance(processInstance.getId());
-        variavelProcesso.setIdToken(processInstance.getRootToken().getId());
         variavelProcesso.setLabel(definicao.getLabel());
         variavelProcesso.setNome(definicao.getNome());
         return variavelProcesso;

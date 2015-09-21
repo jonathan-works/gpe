@@ -11,6 +11,7 @@ import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.seam.util.ComponentUtil;
 
 public class SeamExpressionResolver implements ExpressionResolver {
@@ -30,7 +31,7 @@ public class SeamExpressionResolver implements ExpressionResolver {
 	}
 	
 	public SeamExpressionResolver(ProcessInstance processInstance) {
-		EntityManager entityManager = ComponentUtil.getComponent("entityManager");
+		EntityManager entityManager = BeanManager.INSTANCE.getReference(EntityManager.class);
 		TypedQuery<TaskInstance> typedQuery = entityManager.createNamedQuery("TaskMgmtSession.findOpenTasksOfProcessInstance", TaskInstance.class);
 		List<TaskInstance> list = typedQuery.setMaxResults(1).setParameter("instance", processInstance).getResultList();
 		TaskInstance taskInstance = list.get(0);

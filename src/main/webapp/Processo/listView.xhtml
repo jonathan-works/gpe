@@ -16,6 +16,16 @@
         name="action"
         value="#{iniciarProcessoAction}" />
     <ui:define name="body">
+    	<s:div id="scriptMovimentar">
+    		<script>
+    			function abrirMovimentar() {
+	    			if ('#{action.idTarefa}') {
+	    				open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{action.processo.idProcesso}&amp;tarefaId=#{action.idTarefa}', '', 'fullscreen=1, resizable=yes,scrollbars=1');
+	    			}
+	    			window.location='#{pathResolver.contextPath}/Painel/list.seam';
+    			}
+    		</script>
+    	</s:div>
         <wi:panel
             id="iniciarProcessoContentPanel"
             styleClass="content-block">
