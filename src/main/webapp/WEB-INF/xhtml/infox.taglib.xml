@@ -78,6 +78,10 @@ version="2.0">
         <source>tags/form/fields/inputText.xhtml</source>
     </tag>
     <tag>
+        <tag-name>autoComplete</tag-name>
+        <source>tags/form/fields/autoComplete.xhtml</source>
+    </tag>
+    <tag>
         <tag-name>outputText</tag-name>
         <source>tags/form/fields/outputText.xhtml</source>
     </tag>

@@ -477,8 +477,7 @@ public class VariableAccessHandler implements Serializable {
                 switch (type) {
                 case FRAGMENT:
                     if (tokens.length >= 3) {
-                        setFragmentConfiguration(ComponentUtil.<FragmentConfigurationCollector> getComponent(
-                                FragmentConfigurationCollector.NAME).getByCode(tokens[2]));
+                        setFragmentConfiguration(BeanManager.INSTANCE.getReference(FragmentConfigurationCollector.class).getByCode(tokens[2]));
                     }
                     break;
                     case DATE:
