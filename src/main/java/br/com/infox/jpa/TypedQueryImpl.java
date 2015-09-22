@@ -35,72 +35,86 @@ public class TypedQueryImpl<X> extends QueryImpl implements TypedQuery<X>, Seria
 
 	@Override
 	public TypedQuery<X> setMaxResults(int maxResult) {
-		return typedQuery.setMaxResults(maxResult);
+		typedQuery.setMaxResults(maxResult);
+		return this;
 	}
 
 	@Override
 	public TypedQuery<X> setFirstResult(int startPosition) {
-		return typedQuery.setFirstResult(startPosition);
+		typedQuery.setFirstResult(startPosition);
+		return this;
 	}
 
 	@Override
 	public TypedQuery<X> setHint(String hintName, Object value) {
-		return typedQuery.setHint(hintName, value);
+		typedQuery.setHint(hintName, value);
+		return this;
 	}
 
 	@Override
 	public <T> TypedQuery<X> setParameter(Parameter<T> param, T value) {
-		return typedQuery.setParameter(param, value);
+		typedQuery.setParameter(param, value);
+		return this;
 	}
 
 	@Override
 	public TypedQuery<X> setParameter(Parameter<Calendar> param, Calendar value, TemporalType temporalType) {
-		return typedQuery.setParameter(param, value, temporalType);
+		typedQuery.setParameter(param, value, temporalType);
+		return this;
 	}
 
 	@Override
 	public TypedQuery<X> setParameter(Parameter<Date> param, Date value, TemporalType temporalType) {
-		return typedQuery.setParameter(param, value, temporalType);
+		typedQuery.setParameter(param, value, temporalType);
+		return this;
 	}
 
 	@Override
 	public TypedQuery<X> setParameter(String name, Object value) {
-		return typedQuery.setParameter(name, value);
+		typedQuery.setParameter(name, value);
+		return this;
 	}
 
 	@Override
 	public TypedQuery<X> setParameter(String name, Calendar value, TemporalType temporalType) {
-		return typedQuery.setParameter(name, value, temporalType);
+		typedQuery.setParameter(name, value, temporalType);
+		return this;
 	}
 
 	@Override
 	public TypedQuery<X> setParameter(String name, Date value, TemporalType temporalType) {
-		return typedQuery.setParameter(name, value, temporalType);
+		typedQuery.setParameter(name, value, temporalType);
+		return this;
 	}
 
 	@Override
 	public TypedQuery<X> setParameter(int position, Object value) {
-		return typedQuery.setParameter(position, value);
+		typedQuery.setParameter(position, value);
+		return this;
 	}
 
 	@Override
 	public TypedQuery<X> setParameter(int position, Calendar value, TemporalType temporalType) {
-		return typedQuery.setParameter(position, value, temporalType);
+		typedQuery.setParameter(position, value, temporalType);
+		return this;
 	}
 
 	@Override
 	public TypedQuery<X> setParameter(int position, Date value, TemporalType temporalType) {
-		return typedQuery.setParameter(position, value, temporalType);
+		typedQuery.setParameter(position, value, temporalType);
+		return this;
 	}
 
 	@Override
 	public TypedQuery<X> setFlushMode(FlushModeType flushMode) {
-		return typedQuery.setFlushMode(flushMode);
+		typedQuery.setFlushMode(flushMode);
+		return this;
 	}
 
 	@Override
 	public TypedQuery<X> setLockMode(LockModeType lockMode) {
-		return typedQuery.setLockMode(lockMode);
+		typedQuery.setLockMode(lockMode);
+		return this;
 	}
 
 }

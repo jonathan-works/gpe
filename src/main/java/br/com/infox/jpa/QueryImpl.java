@@ -45,7 +45,8 @@ public class QueryImpl implements Query, Serializable {
 
 	@Override
 	public Query setMaxResults(int maxResult) {
-		return query.setMaxResults(maxResult);
+		query.setMaxResults(maxResult);
+		return this;
 	}
 
 	@Override
@@ -55,7 +56,8 @@ public class QueryImpl implements Query, Serializable {
 
 	@Override
 	public Query setFirstResult(int startPosition) {
-		return query.setFirstResult(startPosition);
+		query.setFirstResult(startPosition);
+		return this;
 	}
 
 	@Override
@@ -65,7 +67,8 @@ public class QueryImpl implements Query, Serializable {
 
 	@Override
 	public Query setHint(String hintName, Object value) {
-		return query.setHint(hintName, value);
+		query.setHint(hintName, value);
+		return this;
 	}
 
 	@Override
@@ -75,47 +78,56 @@ public class QueryImpl implements Query, Serializable {
 
 	@Override
 	public <T> Query setParameter(Parameter<T> param, T value) {
-		return query.setParameter(param, value);
+		query.setParameter(param, value);
+		return this;
 	}
 
 	@Override
 	public Query setParameter(Parameter<Calendar> param, Calendar value, TemporalType temporalType) {
-		return query.setParameter(param, value, temporalType);
+		query.setParameter(param, value, temporalType);
+		return this;
 	}
 
 	@Override
 	public Query setParameter(Parameter<Date> param, Date value, TemporalType temporalType) {
-		return query.setParameter(param, value, temporalType);
+		query.setParameter(param, value, temporalType);
+		return this;
 	}
 
 	@Override
 	public Query setParameter(String name, Object value) {
-		return query.setParameter(name, value);
+		query.setParameter(name, value);
+		return this;
 	}
 
 	@Override
 	public Query setParameter(String name, Calendar value, TemporalType temporalType) {
-		return query.setParameter(name, value, temporalType);
+		query.setParameter(name, value, temporalType);
+		return this;
 	}
 
 	@Override
 	public Query setParameter(String name, Date value, TemporalType temporalType) {
-		return query.setParameter(name, value);
+		query.setParameter(name, value);
+		return this;
 	}
 
 	@Override
 	public Query setParameter(int position, Object value) {
-		return query.setParameter(position, value);
+		query.setParameter(position, value);
+		return this;
 	}
 
 	@Override
 	public Query setParameter(int position, Calendar value, TemporalType temporalType) {
-		return query.setParameter(position, value, temporalType);
+		query.setParameter(position, value, temporalType);
+		return this;
 	}
 
 	@Override
 	public Query setParameter(int position, Date value, TemporalType temporalType) {
-		return query.setParameter(position, value, temporalType);
+		query.setParameter(position, value, temporalType);
+		return this;
 	}
 
 	@Override
@@ -175,7 +187,8 @@ public class QueryImpl implements Query, Serializable {
 
 	@Override
 	public Query setLockMode(LockModeType lockMode) {
-		return query.setLockMode(lockMode);
+		query.setLockMode(lockMode);
+		return this;
 	}
 
 	@Override

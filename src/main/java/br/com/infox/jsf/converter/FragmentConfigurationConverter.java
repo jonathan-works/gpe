@@ -7,9 +7,9 @@ import javax.faces.convert.FacesConverter;
 
 import org.jboss.seam.annotations.Name;
 
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.ibpm.variable.FragmentConfiguration;
 import br.com.infox.ibpm.variable.FragmentConfigurationCollector;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Name(FragmentConfigurationConverter.NAME)
 @FacesConverter(FragmentConfigurationConverter.NAME)
@@ -19,7 +19,7 @@ public class FragmentConfigurationConverter implements Converter {
 
     @Override
     public Object getAsObject(FacesContext arg0, UIComponent arg1, String arg2) {
-        return ComponentUtil.<FragmentConfigurationCollector> getComponent(FragmentConfigurationCollector.NAME)
+        return BeanManager.INSTANCE.getReference(FragmentConfigurationCollector.class)
                 .getByCode(arg2);
     }
 
