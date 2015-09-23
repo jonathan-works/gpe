@@ -43,7 +43,8 @@ public class DocumentoDisponivelComunicacaoList extends EntityList<Documento> im
             + "(not exists (select 1 from SigiloDocumento s where s.ativo = true and s.documento = o) or "
             + "exists (select 1 from SigiloDocumentoPermissao sp where sp.usuario = #{usuarioLogado} and sp.ativo = true and "
             + "sp.sigiloDocumento = (select s from SigiloDocumento s where s.ativo = true and s.documento = o))) and "
-            + "bin.suficientementeAssinado = true";
+            + "bin.suficientementeAssinado = true and "
+            + "o.excluido = false";
 
     private static final String DEFAULT_ORDER = "o.dataInclusao desc";
 
@@ -59,7 +60,6 @@ public class DocumentoDisponivelComunicacaoList extends EntityList<Documento> im
     @Override
     protected void addSearchFields() {
         addSearchField("pasta", SearchCriteria.IGUAL);
-        addSearchField("excluido", SearchCriteria.IGUAL);
     }
 
     @Override
