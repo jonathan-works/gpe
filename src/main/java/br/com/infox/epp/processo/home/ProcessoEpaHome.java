@@ -21,7 +21,6 @@ import br.com.infox.epp.processo.action.RelacionamentoCrudAction;
 import br.com.infox.epp.processo.consulta.action.ConsultaController;
 import br.com.infox.epp.processo.documento.action.DocumentoProcessoAction;
 import br.com.infox.epp.processo.documento.action.PastaAction;
-import br.com.infox.epp.processo.documento.anexos.AnexoController;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
@@ -95,8 +94,6 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	@In
 	private PastaList pastaList;
 	
-	@Inject
-	private AnexoController anexoController;
 	@Inject
 	private SituacaoProcessoDAO situacaoProcessoDAO;
 
