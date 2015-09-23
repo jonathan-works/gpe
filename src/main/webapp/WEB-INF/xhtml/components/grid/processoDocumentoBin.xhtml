@@ -8,43 +8,34 @@
     xmlns:jsp="http://java.sun.com/JSP/Page"
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:wi="http://www.itx.com.br/jsf" >
-    <ui:param
-        name="bin"
-        value="#{empty bin ? c.value : bin}"
-    />
-    <ui:param
-        name="isModelo"
-        value="#{empty bin.extensao}"
-    />
-    <ui:param
-        name="row"
-        value="#{row}"
-    />
+	xmlns:wi="http://www.itx.com.br/jsf" 
+	xmlns:infox="http://www.infox.com.br/jsf">
+	
+    <ui:param name="bin" value="#{empty bin ? c.value : bin}" />
+    <ui:param name="isModelo" value="#{empty bin.extensao}" />
+    <ui:param name="row" value="#{row}" />
+    
     <span>
+        <infox:flashcopy/>
         <span class="#{row.excluido ? 'inativo' : ''}" />
-        <h:commandLink
-            action="#{documentoHtmlView.setViewInstance(row)}"
-            onclick="openPopUp('PopUpDocumentoBin', '')"
-            rendered="#{isModelo}"
-            target="PopUpDocumentoBin"
-        >
-            <h:graphicImage styleClass="opacityHover"
-                title="#{infoxMessages['processoDocumento.visualizar']}"
-                url="#{wiSkin.imageFolder}/view.png"
-            />
-        </h:commandLink>
-        <h:commandLink
-            target="idPdf#{row}"
-            rendered="#{!isModelo}"
-            action="#{documentoDownloader.downloadDocumento(row)}"
-        >
-            <h:graphicImage styleClass="opacityHover"
-                value="#{wiSkin.imageFolder}/mod/pdf.gif"
-                title="#{bin.nomeArquivo} (#{documentoDownloader.getFormattedKb(bin)})"
-            />
-        </h:commandLink>
-        <wi:toolBarAssinatura idDocumento="#{row.id}" styleClass="opacityHover"
-						      renderedLock="#{not empty bin.assinaturas}" />
+        <a:commandLink
+            rendered="#{isModelo}" execute="@this" render="@form"
+            oncomplete="infox.openPopUp('PopUpDocumentoBin', '#{pathResolver.contextPath}/Processo/baixarDocumento.seam','1024');" >
+            <h:graphicImage styleClass="opacityHover" title="#{infoxMessages['processoDocumento.visualizar']}"
+                url="#{wiSkin.imageFolder}/view.png" />
+            <f:setPropertyActionListener value="#{row.id}" target="#{flash.idDocumento}" />
+            <f:setPropertyActionListener value="#{false}" target="#{flash.binario}" />
+        </a:commandLink>
+        
+        <a:commandLink
+            rendered="#{!isModelo}" execute="@this" render="@form"
+            oncomplete="infox.openPopUp('PopUpDocumentoBin', '#{pathResolver.contextPath}/Processo/baixarDocumento.seam','1024');">
+            <h:graphicImage styleClass="opacityHover" value="#{wiSkin.imageFolder}/mod/pdf.gif"
+                title="#{bin.nomeArquivo} (#{documentoDownloader.getFormattedKb(bin)})"/>
+            <f:setPropertyActionListener value="#{row.id}" target="#{flash.idDocumento}" />
+            <f:setPropertyActionListener value="#{true}" target="#{flash.binario}" />
+        </a:commandLink>
+        
+        <wi:toolBarAssinatura idDocumento="#{row.id}" styleClass="opacityHover" renderedLock="#{not empty bin.assinaturas}" />
     </span>
 </ui:composition>
