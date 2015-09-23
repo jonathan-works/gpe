@@ -84,7 +84,6 @@ import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
-import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.action.TaskPageAction;
 import br.com.infox.ibpm.task.dao.TaskConteudoDAO;
 import br.com.infox.ibpm.task.entity.TaskConteudo;
@@ -95,8 +94,6 @@ import br.com.infox.ibpm.task.view.TaskInstanceForm;
 import br.com.infox.ibpm.transition.TransitionHandler;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.util.UserHandler;
-import br.com.infox.ibpm.variable.FragmentConfiguration;
-import br.com.infox.ibpm.variable.FragmentConfigurationCollector;
 import br.com.infox.ibpm.variable.VariableHandler;
 import br.com.infox.ibpm.variable.entity.VariableInfo;
 import br.com.infox.log.LogProvider;
@@ -542,7 +539,7 @@ public class TaskInstanceHome implements Serializable {
 				assinaturaDocumentoService.assinarDocumento(getDocumentoToSign(), Authenticator.getUsuarioPerfilAtual(),
 						signatureBean.getCertChain(), signatureBean.getSignature());
 				for (String variavel : variaveisDocumento.keySet()) {
-					if (variaveisDocumento.get(variavel).getId().equals(documentoToSign.getId())) {
+					if (documentoToSign.equals(variaveisDocumento.get(variavel))) {
 						setModeloReadonly(variavel.split("-")[0]);
 						break;
 					}
