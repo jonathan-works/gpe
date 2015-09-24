@@ -26,7 +26,6 @@ import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.query.MetadadoProcessoQuery;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Entity
 @Table(name = MetadadoProcesso.TABLE_NAME)
