@@ -41,10 +41,12 @@
 	        </h:form>
 	    </rich:panel>
 	    
-	    <s:div id="detalhesSigiloProcesso" rendered="#{sigiloProcessoAction.informacaoTelaSigilo eq 'D'}">
+	    <s:div id="detalhesSigiloProcesso" rendered="#{sigiloProcessoAction.informacaoTelaSigilo eq 'D'}" 
+	       style="margin-top: 1em;">
 	    
 	        <wi:dataTable id="sigiloProcessoTable" values="#{sigiloProcessoList.list(5)}" bean="#{sigiloProcessoList}" panelWidth="100%"
-	            tableTitle="#{infoxMessages['sigiloProcesso.detalhes']}" hideOrder="true" showToolbarColumn="false" panelStyleClass="rf-dt-crud">
+	            tableTitle="#{infoxMessages['sigiloProcesso.detalhes']}" hideOrder="true" showToolbarColumn="false" panelStyleClass="rf-dt-crud"
+	            showSearchForm="false">
 	            
 	            <ui:define name="toolBar" />
 	            <ui:define name="headerToolBar" />
@@ -84,7 +86,8 @@
 	           
 	    </s:div>
 	           
-	    <s:div id="permissoesSigiloProcesso" rendered="#{sigiloProcessoAction.informacaoTelaSigilo eq 'P'}">
+	    <s:div id="permissoesSigiloProcesso" rendered="#{sigiloProcessoAction.informacaoTelaSigilo eq 'P'}"
+	       style="margin-top: 1em;">
 	           
 	        <wi:dataTable id="permissoesProcessoTable" values="#{usuarioRaiaList.list(10)}" bean="#{usuarioRaiaList}"
 	            tableTitle="#{infoxMessages['sigiloProcesso.usuarios']}" hideOrder="true" searchFormStyleDiv="padding-left: 10px" showMsg="false">
@@ -100,8 +103,9 @@
 	            </ui:define>
 	            
 	            <ui:define name="searchForm">
-	                <wi:searchForm formId="permissoesProcessoSearchForm" formTitle="Usuários">
-	                    <wi:inputText id="nome" value="#{usuarioRaiaList.entity.nomeUsuario}" label="#{infoxMessages['sigiloProcesso.usuario.nome']}" />
+	                <wi:searchForm formId="permissoesProcessoSearchForm" formTitle="#{infoxMessages['searchForm.title']}" 
+	                    searchReRender="permissoesSigiloProcesso">
+	                    <wi:inputText id="nome" value="#{usuarioRaiaList.nomeUsuario}" label="#{infoxMessages['sigiloProcesso.usuario.nome']}" />
 	                    <wi:selectOneMenuEntity id="perfilTemplate" value="#{usuarioRaiaList.perfil}" 
 	                        items="#{usuarioRaiaList.perfis}" showLabelSelecione="true"
 	                        label="#{infoxMessages['perfil.titlePage']}"/>
