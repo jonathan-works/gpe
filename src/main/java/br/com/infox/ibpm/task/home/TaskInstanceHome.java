@@ -539,7 +539,7 @@ public class TaskInstanceHome implements Serializable {
 				assinaturaDocumentoService.assinarDocumento(getDocumentoToSign(), Authenticator.getUsuarioPerfilAtual(),
 						signatureBean.getCertChain(), signatureBean.getSignature());
 				for (String variavel : variaveisDocumento.keySet()) {
-					if (variaveisDocumento.get(variavel).getId().equals(documentoToSign.getId())) {
+					if (documentoToSign.equals(variaveisDocumento.get(variavel))) {
 						setModeloReadonly(variavel.split("-")[0]);
 						break;
 					}
