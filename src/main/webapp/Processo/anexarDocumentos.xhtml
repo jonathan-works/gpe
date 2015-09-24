@@ -191,7 +191,7 @@
           id="botaoAnexarDocumentoPdf"
           action="documentoUploader.persist()"
           value="#{infoxMessages['processo.anexarDocumentoBtn']}"
-          execute="#{f.id}inputProcessoDocumentoPdf, #{f.id}tipoProcessoDocumentoPdf"
+          execute="@this"
           reRender="@form pageBodyDialogMessage"
           styleClass="buttons"
           rendered="#{documentoUploader.valido}">

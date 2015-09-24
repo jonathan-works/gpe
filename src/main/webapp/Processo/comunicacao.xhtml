@@ -42,7 +42,7 @@
 								oncomplete="infox.openPopUp('download#{row.idDestinatario}', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');">
 								<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['comunicacao.visualizarAComunicacao']}"/>
 								<f:setPropertyActionListener value="#{row.idDestinatario}" target="#{flash.idDestinatario}" />
-								<infox:flascopy/>
+								<infox:flashcopy/>
 							</a:commandLink>
 							<a:commandLink 
 								action="#{comunicacaoAction.setDestinatarioDocumentos(row)}"
