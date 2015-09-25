@@ -166,11 +166,11 @@ public class TaskHandler implements Serializable {
         return false;
     }
 
-    public void removeVar(VariableAccessHandler v) {
-        task.getTaskController().getVariableAccesses().remove(v.getVariableAccess());
-        v.removeTaskAction(v.getName());
-        variables.remove(v);
-        if (v.getType() == VariableType.TASK_PAGE) {
+    public void removeVar(VariableAccessHandler variableAccessHandler) {
+        task.getTaskController().getVariableAccesses().remove(variableAccessHandler.getVariableAccess());
+        variableAccessHandler.removeTaskAction(variableAccessHandler.getName());
+        variables.remove(variableAccessHandler);
+        if (variableAccessHandler.getType() == VariableType.TASK_PAGE) {
             hasTaskPage = null;
         }
         ProcessBuilder.instance().getTaskFitter().setTypeList(null);

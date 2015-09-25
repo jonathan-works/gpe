@@ -1,6 +1,5 @@
 package br.com.infox.ibpm.node.handler;
 
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.epp.processo.status.entity.StatusProcesso.STATUS_PROCESSO_ACTION_NAME;
 import static java.text.MessageFormat.format;
 
@@ -29,7 +28,6 @@ import org.jbpm.taskmgmt.def.Task;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import br.com.infox.constants.WarningConstants;
 import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
@@ -123,7 +121,6 @@ public class NodeHandler implements Serializable {
         }
     }
 
-    @SuppressWarnings(UNCHECKED)
     private void loadTimers(Node node) {
         Event enter = node.getEvent(Event.EVENTTYPE_NODE_ENTER);
         if (enter != null) {
@@ -153,7 +150,7 @@ public class NodeHandler implements Serializable {
         }
         return eventList;
     }
-
+    
     public EventHandler getCurrentEvent() {
         return currentEvent;
     }
@@ -308,7 +305,6 @@ public class NodeHandler implements Serializable {
         return format("{0} {1}", node.getName(), timerList.size()+1);
     }
 
-    @SuppressWarnings(WarningConstants.UNCHECKED)
     public void removeTimer(CreateTimerAction timer) {
         if (timer.equals(currentTimer)) {
             currentTimer = null;
