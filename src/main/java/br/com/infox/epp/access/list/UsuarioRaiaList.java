@@ -59,8 +59,8 @@ public class UsuarioRaiaList extends DataList<UsuarioLogin> {
     
     public List<PerfilTemplate> getPerfis() {
         if (perfis == null) {
-            perfis = getEntityManager().createQuery("select rp.perfilTemplate from RaiaPerfil rp where rp.fluxo = :fluxo", PerfilTemplate.class)
-                            .setParameter("fluxo", getFluxo()).getResultList();
+            String jpql = "select pt from RaiaPerfil rp inner join rp.perfilTemplate pt where rp.fluxo = :fluxo order by pt.descricao ";
+            perfis = getEntityManager().createQuery(jpql, PerfilTemplate.class).setParameter("fluxo", getFluxo()).getResultList();
         }
         return perfis;
     }
