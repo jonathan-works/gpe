@@ -1,7 +1,9 @@
 package br.com.infox.epp.processo.comunicacao.envio.action;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -15,6 +17,7 @@ import org.jboss.seam.log.Logging;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
@@ -24,12 +27,16 @@ import br.com.infox.epp.processo.comunicacao.list.DocumentoDisponivelComunicacao
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.DocumentoComunicacaoService;
+import br.com.infox.epp.processo.documento.bean.PastaRestricaoBean;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
+import br.com.infox.epp.processo.documento.manager.PastaRestricaoManager;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.Parametros;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(DocumentoComunicacaoAction.NAME)
 @AutoCreate
@@ -59,6 +66,8 @@ public class DocumentoComunicacaoAction implements Serializable {
 	private ModeloComunicacaoManager modeloComunicacaoManager;
 	@In
 	private PapelManager papelManager;
+
+	private PastaRestricaoManager pastaRestricaoManager = ComponentUtil.getComponent(PastaRestricaoManager.NAME);
 	
 	private ModeloComunicacao modeloComunicacao;
 	
@@ -66,6 +75,7 @@ public class DocumentoComunicacaoAction implements Serializable {
 	private List<ModeloDocumento> modelosDocumento;
 	private List<Pasta> pastas;
 	private boolean possuiDocumentoInclusoPorUsuarioInterno = false;
+	private Map<Integer, PastaRestricaoBean> restricoesPasta = new HashMap<>();
 	
 	void init() {
 		initClassificacoes();
@@ -172,7 +182,12 @@ public class DocumentoComunicacaoAction implements Serializable {
 	public List<Pasta> getPastas() {
 		if (pastas == null) {
 			try {
-				pastas = pastaManager.getByProcesso(modeloComunicacao.getProcesso().getProcessoRoot());
+			    Processo processo = modeloComunicacao.getProcesso().getProcessoRoot();
+				pastas = pastaManager.getByProcesso(processo);
+				restricoesPasta = pastaRestricaoManager.loadRestricoes(processo,
+				        Authenticator.getUsuarioLogado(),
+				        Authenticator.getLocalizacaoAtual(),
+				        Authenticator.getPapelAtual());
 			} catch (DAOException e) {
 				LOG.error("", e);
 				actionMessagesService.handleDAOException(e);
@@ -180,7 +195,12 @@ public class DocumentoComunicacaoAction implements Serializable {
 		}
 		return pastas;
 	}
-	
+
+	public boolean canSee(Pasta pasta) {
+	    PastaRestricaoBean restricaoBean = restricoesPasta.get(pasta.getId());
+        return restricaoBean != null && restricaoBean.getRead();
+	}
+
 	public List<ClassificacaoDocumento> getClassificacoes() {
 		return classificacoes;
 	}
