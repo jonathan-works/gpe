@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a="http://richfaces.org/a4j"
 	xmlns:p="http://primefaces.org/ui" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core">
 	
-	<p:panel header="#{infoxMessages['acaoProcesso.menuText']}">
+	<p:panel header="#{infoxMessages['acaoProcesso.menuText']}" id="movimentacoesPanel">
 		<p:dataTable var="row" value="#{processoHandler.movimentacoes}">
 			<p:column headerText="#{infoxMessages['fluxo.tarefa']}">
 				<h:outputText value="#{row.tarefa.tarefa}" />
@@ -15,12 +16,15 @@
 				</div>
 				<div>
 					<h:outputText value="#{row.usuario}" />
-					<p:commandLink action="#{taskInstanceHome.removeUsuario(row.taskInstance)}" process="@this"
-						update="@parent pageBodyDialogMessage"
-						onclick="return confirm('#{infoxMessages['movimentar.confirmLiberarTarefa']}');" oncomplete="close()"
-						rendered="#{authenticator.isUsuarioAtualResponsavel() and (!empty row.usuario and empty row.dataFim)}">
-						<h:graphicImage url="#{wiSkin.imageFolder}/unlocked.gif" title="#{infoxMessages['movimentar.liberarTarefa']}" />
-					</p:commandLink>
+					<h:form>
+						<a:commandLink action="#{taskInstanceHome.removeUsuario(row.taskInstance)}" execute="@this"
+							render="movimentacoesPanel pageBodyDialogMessage" limitRender="true"
+							onclick="return confirm('#{infoxMessages['movimentar.confirmLiberarTarefa']}');" 
+							oncomplete="#{taskInstanceHome.currentTaskInstance eq row.taskInstance ? 'close()' : ''}"
+							rendered="#{authenticator.isUsuarioAtualResponsavel() and (!empty row.usuario and empty row.dataFim)}">
+							<h:graphicImage url="#{wiSkin.imageFolder}/unlocked.gif" title="#{infoxMessages['movimentar.liberarTarefa']}" />
+						</a:commandLink>
+					</h:form>
 				</div>
 			</p:column>
 			<p:column headerText="#{infoxMessages['processo.dataInicio']}">
@@ -35,5 +39,4 @@
 			</p:column>
 		</p:dataTable>
 	</p:panel>
-
 </ui:composition>

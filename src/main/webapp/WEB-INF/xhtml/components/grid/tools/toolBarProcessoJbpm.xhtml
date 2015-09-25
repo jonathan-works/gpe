@@ -10,7 +10,7 @@
   <h:form>
     <ui:param name="idProcesso" value="#{row.idProcesso}" />
     <ui:param name="tarefaId" value="#{painelUsuarioController.tarefaId}" />
-    <ui:param name="owner" value="#{userHandler.getActorIdTarefaAtual(idProcesso)}" />
+    <ui:param name="owner" value="#{userHandler.getUsuarioByIdTarefa(tarefaId, idProcesso)}" />
     <ui:param name="inTabExpedidas" value="#{painelUsuarioController.selectedFluxo.expedida}" />
     <ui:param name="showMovimentarToolBar" value="#{wi:get(showMovimentarToolBar, true)}" />
 

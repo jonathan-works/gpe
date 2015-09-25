@@ -9,7 +9,6 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
-import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
@@ -47,12 +46,5 @@ public class VariavelProcessoAction implements Serializable {
 
     public void setProcesso(Processo processo) {
         this.processo = processo;
-    }
-
-    public void save() {
-        for (VariavelProcesso variavel : getVariaveis()) {
-            variavelProcessoService.save(variavel);
-        }
-        FacesMessages.instance().add("#{infoxMessages['VariavelProcesso_updated']}");
     }
 }

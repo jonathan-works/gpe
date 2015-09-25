@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core" xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib">
+    <ui:param name="template" value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
+    <s:decorate id="#{id}Decoration" template="#{template}"
+        styleClass="decoration-div inputText-div #{wi:get(decorationClass,'')}" rendered="#{wi:get(rendered, true)}">
+        <ui:define name="label">#{label}</ui:define>
+        <rich:autocomplete id="#{id}" value="#{value}"
+            disabled="#{disabled}" required="#{required}"
+            styleClass="#{readonly ? 'readOnly' : styleClass}"
+            inputClass="input text crud"
+            style="font-size: 1rem"
+            selectFirst="false" autocompleteList="#{items}" mode="client" minChars="2"
+            clientFilterFunction="function (subString, value) {
+                if (subString.length >= 1) {
+                    if (value.indexOf(subString) != -1)
+                        return true;
+                } else
+                    return false;
+            }">
+            <f:converter
+                converterId="#{wi:get(converterId, 'stringConverter')}" />
+        </rich:autocomplete>
+    </s:decorate>
+</ui:composition>

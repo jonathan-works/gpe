@@ -104,6 +104,10 @@ public abstract class Manager<D extends DAO<T>, T> implements Serializable {
     public void refresh(T o) {
         dao.refresh(o);
     }
+    
+    public T getReference(Object primaryKey) {
+        return dao.getReference(primaryKey);
+    }
 
     public <X> X getSingleResult(final String query,
             final Map<String, Object> params) {

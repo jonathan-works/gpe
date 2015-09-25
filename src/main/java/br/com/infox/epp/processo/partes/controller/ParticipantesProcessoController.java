@@ -9,8 +9,11 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.epp.access.component.tree.ParticipanteProcessoTreeHandler;
+import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.fluxo.entity.Natureza;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
@@ -36,11 +39,22 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     
     private List<TipoParte> tipoPartes;
     private ParticipanteProcessoTreeHandler tree = ComponentUtil.getComponent(ParticipanteProcessoTreeHandler.NAME);
-    
+    private UsuarioLoginManager usuarioLoginManager = ComponentUtil.getComponent(UsuarioLoginManager.NAME);
+        
     @Override
     protected void clearParticipanteProcesso() {
     	super.clearParticipanteProcesso();
     	tree.clearTree();
+    }
+    
+    @Override
+    protected void initEmailParticipante() {
+    	UsuarioLogin usuario = usuarioLoginManager.getUsuarioLoginByPessoaFisica((PessoaFisica) getParticipanteProcesso().getPessoa());
+		if (usuario != null) {
+			email = usuario.getEmail();
+		} else {
+			super.initEmailParticipante();
+		}
     }
     
     @Override

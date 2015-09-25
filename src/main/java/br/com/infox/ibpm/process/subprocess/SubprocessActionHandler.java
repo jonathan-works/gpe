@@ -36,9 +36,9 @@ public class SubprocessActionHandler {
     @Observer(Event.EVENTTYPE_SUBPROCESS_END)
     public void copyVariablesFromSubprocess(ExecutionContext executionContext) {
         try {
-        	ProcessInstance subProcessInstance = executionContext.getToken().getProcessInstance();
+            ProcessInstance subProcessInstance = executionContext.getSubProcessInstance();
         	Map<String, Object> variables = subProcessInstance.getContextInstance().getVariables();
-        	subProcessInstance.getRootToken().getProcessInstance().getContextInstance().addVariables(variables);
+            executionContext.getProcessInstance().getContextInstance().addVariables(variables);
         } catch (Exception ex) {
             throw new ApplicationException(ApplicationException.createMessage("copiar as variaveis do subprocesso", "copyVariablesFromSubprocess()", "SubprocessoActionHandler", "BPM"), ex);
         }

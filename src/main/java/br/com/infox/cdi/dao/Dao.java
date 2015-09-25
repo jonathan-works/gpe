@@ -4,18 +4,15 @@ import java.util.List;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.cdi.config.BeanManager;
 
 public abstract class Dao<T, I> {
-
-	@Inject
-	protected EntityManager entityManager;
 
 	private Class<T> entityClass;
 
@@ -24,14 +21,14 @@ public abstract class Dao<T, I> {
 	}
 	
 	public T findById(I id) {
-		return entityManager.find(entityClass, id);
+		return getEntityManager().find(entityClass, id);
 	}
 
 	public List<T> findAll() {
-		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<T> cq = cb.createQuery(entityClass);
 		cq.from(entityClass);
-		return entityManager.createQuery(cq).getResultList();
+		return getEntityManager().createQuery(cq).getResultList();
 	}
 
 	public T getSingleResult(TypedQuery<T> typedQuery) {
@@ -40,13 +37,13 @@ public abstract class Dao<T, I> {
 	}
 	
 	public EntityManager getEntityManager() {
-		return entityManager;
+		return BeanManager.INSTANCE.getReference(EntityManager.class);
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.MANDATORY)
 	public void flush() throws DAOException {
 		try {
-			entityManager.flush();
+			getEntityManager().flush();
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}
@@ -55,8 +52,8 @@ public abstract class Dao<T, I> {
 	@TransactionAttribute(TransactionAttributeType.MANDATORY)
 	public T persist(T object) throws DAOException {
 		try {
-			entityManager.persist(object);
-			entityManager.flush();
+			getEntityManager().persist(object);
+			getEntityManager().flush();
 			return object;
 		} catch (Exception e) {
 			throw new DAOException(e);
@@ -66,8 +63,8 @@ public abstract class Dao<T, I> {
 	@TransactionAttribute(TransactionAttributeType.MANDATORY)
 	public T update(T object) throws DAOException {
 		try {
-			T res = entityManager.merge(object);
-			entityManager.flush();
+			T res = getEntityManager().merge(object);
+			getEntityManager().flush();
 			return res;
 		} catch (Exception e) {
 			throw new DAOException(e);
@@ -77,11 +74,11 @@ public abstract class Dao<T, I> {
 	@TransactionAttribute(TransactionAttributeType.MANDATORY)
 	public T remove(T object) throws DAOException {
 		try {
-			if (!entityManager.contains(object)) {
-				object = entityManager.merge(object);
+			if (!getEntityManager().contains(object)) {
+				object = getEntityManager().merge(object);
 			}
-			entityManager.remove(object);
-			entityManager.flush();
+			getEntityManager().remove(object);
+			getEntityManager().flush();
 			return object;
 		} catch (Exception e) {
 			throw new DAOException(e);
@@ -89,17 +86,17 @@ public abstract class Dao<T, I> {
 	}
 	
 	public void detach(T object) {
-		entityManager.detach(object);
+		getEntityManager().detach(object);
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.MANDATORY)
 	public T refresh(T object) throws DAOException {
 		try {
-			if (!entityManager.contains(object)) {
-				object = entityManager.merge(object);
+			if (!getEntityManager().contains(object)) {
+				object = getEntityManager().merge(object);
 			}
-			entityManager.refresh(object);
-			entityManager.flush();
+			getEntityManager().refresh(object);
+			getEntityManager().flush();
 			return object;
 		} catch (Exception e) {
 			throw new DAOException(e);

@@ -56,7 +56,7 @@ public final class HibernateUtil {
     
     @SuppressWarnings("unchecked")
 	public static Dialect getDialect() {
-    	EntityManager em = ComponentUtil.getComponent("entityManager");
+    	EntityManager em = BeanManager.INSTANCE.getReference(EntityManager.class);
     	EntityManagerFactory emf = em.getEntityManagerFactory();
     	String dialectClassName = (String) emf.getProperties().get("hibernate.dialect");
     	Dialect dialect = null;

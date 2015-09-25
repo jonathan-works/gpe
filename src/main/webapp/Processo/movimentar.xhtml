@@ -135,15 +135,11 @@
                             value="#{variavelProcessoAction.variaveis}">
                             <wi:inputText
                                 id="variavel-#{variavel.nome.replace(':', '_')}"
+                                readonly="true"
                                 label="#{variavel.label}"
                                 value="#{variavel.valor}" />
                         </ui:repeat>
                     </rich:panel>
-                    <wi:commandButton
-                        id="btnGravarVariaveis"
-                        value="Gravar"
-                        action="#{variavelProcessoAction.save()}"
-                        reRender="@form, pageBodyDialogMessage" />
                 </h:form>
             </infox:tab>
             <infox:tab

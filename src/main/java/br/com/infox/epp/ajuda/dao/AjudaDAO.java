@@ -17,8 +17,10 @@ import org.hibernate.CacheMode;
 import org.hibernate.ScrollMode;
 import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
+import org.hibernate.search.cfg.impl.SearchConfigurationFromHibernateCore;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
+import org.hibernate.search.jpa.Search;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -72,7 +74,7 @@ public class AjudaDAO extends DAO<Ajuda> {
 
     @Override
     public FullTextEntityManager getEntityManager() {
-        return (FullTextEntityManager) super.getEntityManager();
+        return Search.getFullTextEntityManager(super.getEntityManager());
     }
 
     public void reindexarAjuda() {

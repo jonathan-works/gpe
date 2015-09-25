@@ -21,7 +21,6 @@ import br.com.infox.epp.processo.action.RelacionamentoCrudAction;
 import br.com.infox.epp.processo.consulta.action.ConsultaController;
 import br.com.infox.epp.processo.documento.action.DocumentoProcessoAction;
 import br.com.infox.epp.processo.documento.action.PastaAction;
-import br.com.infox.epp.processo.documento.anexos.AnexoController;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
@@ -96,8 +95,6 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	private PastaList pastaList;
 	
 	@Inject
-	private AnexoController anexoController;
-	@Inject
 	private SituacaoProcessoDAO situacaoProcessoDAO;
 
 	private DocumentoBin documentoBin = new DocumentoBin();
@@ -115,7 +112,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 
 	public void iniciarTarefaProcesso() {
 		try {
-			processoManager.iniciarTask(instance, Authenticator.getUsuarioPerfilAtual());
+			processoManager.iniciarTask(instance, tarefaId.intValue(), Authenticator.getUsuarioPerfilAtual());
 			documentoProcessoAction.setProcesso(getInstance().getProcessoRoot());
 		} catch (java.lang.NullPointerException e) {
 			LOG.error("ProcessoEpaHome.iniciarTarefaProcesso()", e);
@@ -132,7 +129,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	}
 
 	public void visualizarTarefaProcesso() {
-		processoManager.visualizarTask(instance, Authenticator.getUsuarioPerfilAtual());
+		processoManager.visualizarTask(instance, tarefaId.intValue(), Authenticator.getUsuarioPerfilAtual());
 	}
 
 	public static ProcessoEpaHome instance() {

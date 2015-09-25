@@ -63,8 +63,6 @@ import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.documento.type.ExpressionResolverChain;
 import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
-import br.com.infox.epp.documento.type.JbpmExpressionResolver;
-import br.com.infox.epp.documento.type.SeamExpressionResolver;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
@@ -76,6 +74,7 @@ import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
+import br.com.infox.epp.processo.handler.ProcessoHandler;
 import br.com.infox.epp.processo.home.ProcessoEpaHome;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
@@ -84,7 +83,7 @@ import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
 import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
-import br.com.infox.ibpm.process.definition.variable.VariableType;
+import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.ibpm.task.action.TaskPageAction;
 import br.com.infox.ibpm.task.dao.TaskConteudoDAO;
 import br.com.infox.ibpm.task.entity.TaskConteudo;
@@ -95,8 +94,6 @@ import br.com.infox.ibpm.task.view.TaskInstanceForm;
 import br.com.infox.ibpm.transition.TransitionHandler;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.util.UserHandler;
-import br.com.infox.ibpm.variable.FragmentConfiguration;
-import br.com.infox.ibpm.variable.FragmentConfigurationCollector;
 import br.com.infox.ibpm.variable.VariableHandler;
 import br.com.infox.ibpm.variable.entity.VariableInfo;
 import br.com.infox.log.LogProvider;
@@ -153,6 +150,10 @@ public class TaskInstanceHome implements Serializable {
 	private PathResolver pathResolver;
 	@In
 	private ProcessoEpaHome processoEpaHome;
+	@In
+	private TarefaManager tarefaManager;
+	@In
+	private ProcessoHandler processoHandler;
 	
 	@Inject
 	private SituacaoProcessoDAO situacaoProcessoDAO;
@@ -169,6 +170,7 @@ public class TaskInstanceHome implements Serializable {
 	private Map<String, Documento> variaveisDocumento;
 	private Documento documentoToSign;
 	private String tokenToSign;
+	private Integer tarefaId;
 
 	private URL urlRetornoAcessoExterno;
 
@@ -203,12 +205,7 @@ public class TaskInstanceHome implements Serializable {
 	private void retrieveVariable(VariableAccess variableAccess) {
 		TaskVariableRetriever variableRetriever = new TaskVariableRetriever(variableAccess, taskInstance);
 		variableRetriever.retrieveVariableContent();
-        if (variableRetriever.getVariable() == null && VariableType.FRAGMENT.equals(variableRetriever.getType())) {
-            FragmentConfigurationCollector collector = ComponentUtil.getComponent(FragmentConfigurationCollector.NAME);
-            String code = variableAccess.getMappedName().split(":")[2];
-            FragmentConfiguration fragmentConfiguration = collector.getByCode(code);
-            variableRetriever.setVariable(fragmentConfiguration.init(taskInstance));
-        }
+        
 		mapaDeVariaveis.put(getFieldName(variableRetriever.getName()), variableRetriever.getVariable());
 		if (variableRetriever.isEditor() || variableRetriever.isFile()) {
 			Integer idDocumento = (Integer) taskInstance.getVariable(variableRetriever.getMappedName());
@@ -465,7 +462,7 @@ public class TaskInstanceHome implements Serializable {
 		return situacaoProcessoDAO.canOpenTask(currentTaskInstance.getId(), tipoProcesso, false);
 	}
 
-	private TaskInstance getCurrentTaskInstance() {
+	public TaskInstance getCurrentTaskInstance() {
 		if (currentTaskInstance == null) {
 			currentTaskInstance = org.jboss.seam.bpm.TaskInstance.instance();
 		}
@@ -542,7 +539,7 @@ public class TaskInstanceHome implements Serializable {
 				assinaturaDocumentoService.assinarDocumento(getDocumentoToSign(), Authenticator.getUsuarioPerfilAtual(),
 						signatureBean.getCertChain(), signatureBean.getSignature());
 				for (String variavel : variaveisDocumento.keySet()) {
-					if (variaveisDocumento.get(variavel).getId().equals(documentoToSign.getId())) {
+					if (documentoToSign.equals(variaveisDocumento.get(variavel))) {
 						setModeloReadonly(variavel.split("-")[0]);
 						break;
 					}
@@ -765,6 +762,7 @@ public class TaskInstanceHome implements Serializable {
 
 	private void afterLiberarTarefa() {
 		userHandler.clear();
+		processoHandler.clear();
 		FacesMessages.instance().clear();
 		FacesMessages.instance().add("Tarefa liberada com sucesso.");
 	}
@@ -801,7 +799,12 @@ public class TaskInstanceHome implements Serializable {
 			bp.setProcessId(processId);
 			updateTransitions();
 			createInstance();
+			this.tarefaId = tarefaManager.getTarefa(taskInstance.getTask().getId()).getIdTarefa();
 		}
+	}
+	
+	public Integer getTarefaId() {
+		return tarefaId;
 	}
 
 	public List<Transition> getTransitions() {
@@ -853,9 +856,7 @@ public class TaskInstanceHome implements Serializable {
 
 	public void assignModeloDocumento(String id) {
 		if (modeloDocumento != null) {
-			ExpressionResolverChain chain = ExpressionResolverChainBuilder
-					.with(new JbpmExpressionResolver(processoEpaHome.getInstance().getIdProcesso()))
-					.and(new SeamExpressionResolver(getCurrentTaskInstance())).build();
+			ExpressionResolverChain chain = ExpressionResolverChainBuilder.defaultExpressionResolverChain(processoEpaHome.getInstance().getIdProcesso(), getCurrentTaskInstance());
 			String modelo = modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, chain);
 			variaveisDocumento.get(id).getDocumentoBin().setModeloDocumento(modelo);
 		} else {

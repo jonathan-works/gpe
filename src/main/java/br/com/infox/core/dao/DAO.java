@@ -19,22 +19,21 @@ import javax.persistence.criteria.Root;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
+import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 
 @AutoCreate
 @Transactional
 @Scope(ScopeType.STATELESS)
+@ContextDependency
 public abstract class DAO<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    @In
-    private transient EntityManager entityManager;
 
     /**
      * Busca o registro na entidade informada.
@@ -53,7 +52,7 @@ public abstract class DAO<T> implements Serializable {
     }
     
     public Object getIdentifier(T entity) {
-    	EntityManagerFactory emf = entityManager.getEntityManagerFactory();
+    	EntityManagerFactory emf = getEntityManager().getEntityManagerFactory();
     	return emf.getPersistenceUnitUtil().getIdentifier(entity);
     }
     
@@ -68,10 +67,10 @@ public abstract class DAO<T> implements Serializable {
     }
     
     public T lock(T entity, LockModeType lockModeType) {
-    	if (!entityManager.contains(entity)) {
-    		entity = entityManager.find(getEntityClass(), getIdentifier(entity));
+    	if (!getEntityManager().contains(entity)) {
+    		entity = getEntityManager().find(getEntityClass(), getIdentifier(entity));
     	}
-    	entityManager.lock(entity, lockModeType);
+    	getEntityManager().lock(entity, lockModeType);
     	return entity;
     }
     
@@ -207,7 +206,7 @@ public abstract class DAO<T> implements Serializable {
     }
 
     public EntityManager getEntityManager() {
-        return entityManager;
+    	return BeanManager.INSTANCE.getReference(EntityManager.class);
     }
 
     // TODO: Ajeitar trees que chamam isso

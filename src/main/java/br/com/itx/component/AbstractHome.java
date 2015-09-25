@@ -3,8 +3,10 @@ package br.com.itx.component;
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static org.jboss.seam.faces.FacesMessages.instance;
 
+import javax.annotation.PostConstruct;
 import javax.faces.component.UIComponent;
 import javax.persistence.EntityExistsException;
+import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.validation.ConstraintViolation;
 
@@ -27,6 +29,7 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.GenericDatabaseErrorCode;
 import br.com.infox.core.util.EntityUtil;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.ApplicationException;
@@ -59,6 +62,11 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
     private String goBackId = null;
     private String goBackTab = null;
     private T oldEntity;
+    
+    @PostConstruct
+    public void initialize() {
+    	setEntityManager(BeanManager.INSTANCE.getReference(EntityManager.class));
+    }
 
     public T getOldEntity() {
         return oldEntity;
@@ -475,4 +483,5 @@ public abstract class AbstractHome<T> extends EntityHome<T> {
             throw new ApplicationException(ApplicationException.createMessage("rollback da transação", "rollbackTransaction()", "Util", "ePP"), e);
         }
     }
+    
 }

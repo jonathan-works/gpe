@@ -5,6 +5,7 @@ public interface ProcessoTarefaQuery {
     String QUERY_PARAM_TASKINSTANCE = "taskInstance";
     String QUERY_PARAM_TIPO_PRAZO = "tipoPrazo";
     String QUERY_PARAM_PROCESSO = "processo";
+    String QUERY_PARAM_ID_TAREFA = "idTarefa";
 
     String GET_PROCESSO_TAREFA_BY_TASKINSTNACE = "getProcessoTarefaByTaskInstance";
     String GET_PROCESSO_TAREFA_BY_TASKINSTNACE_QUERY = "select o from ProcessoTarefa o where o.taskInstance = :"
@@ -65,8 +66,16 @@ public interface ProcessoTarefaQuery {
                 + "where te.tarefa = pt.tarefa.tarefa"
             + ")";
     
-    String ULTIMO_PROCESSO_TAREFA_BY_PROCESSO = "ultimoProcessoTarefaByProcesso";
-    String ULTIMO_PROCESSO_TAREFA_BY_PROCESSO_QUERY = "select pt from ProcessoTarefa pt "
-            + "where pt.processo = :" + QUERY_PARAM_PROCESSO + " "
-            + "order by pt.idProcessoTarefa desc";
+    String PROCESSO_TAREFA_ABERTO = "ultimoProcessoTarefaByProcesso";
+    String PROCESSO_TAREFA_ABERTO_QUERY = "select pt from ProcessoTarefa pt "
+            + "where pt.processo = :" + QUERY_PARAM_PROCESSO + " and pt.tarefa.idTarefa = :" + PARAM_ID_TAREFA
+            + " and pt.dataFim is null";
+    
+    String PROCESSOS_TAREFA = "processosTarefa";
+    String PROCESSOS_TAREFA_QUERY = "select pt from ProcessoTarefa pt "
+    		+ "where pt.processo = :" + QUERY_PARAM_PROCESSO + " order by pt.idProcessoTarefa desc";
+    
+    String ULTIMO_PROCESSO_TAREFA = "ultimoProcessoTarefa";
+    String ULTIMO_PROCESSO_TAREFA_QUERY = "select pt from ProcessoTarefa pt "
+    		+ "where pt.processo = :" + QUERY_PARAM_PROCESSO + " order by pt.dataInicio desc";
 }
