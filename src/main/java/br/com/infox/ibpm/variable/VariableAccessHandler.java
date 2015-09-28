@@ -85,21 +85,24 @@ public class VariableAccessHandler implements Serializable {
                     } else {
                     setValidacaoDataEnum(ValidacaoDataEnum.valueOf(tokens[2]));
                     }
-                break;
+                    break;
                 case ENUMERATION:
                     if (tokens.length >= 3) {
                         DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
                         this.dominioVariavelTarefa = dominioVariavelTarefaManager.find(Integer.valueOf(tokens[2]));
                     }
-                break;
-            case FRAGMENT:
-                if (tokens.length >= 3) {
-                    setFragmentConfiguration(BeanManager.INSTANCE.getReference(FragmentConfigurationCollector.class).getByCode(tokens[2]));
-                }
-                break;
+                    break;
+                case FRAGMENT:
+                    if (tokens.length >= 3) {
+                        setFragmentConfiguration(BeanManager.INSTANCE.getReference(FragmentConfigurationCollector.class).getByCode(tokens[2]));
+                    }
+                    break;
+                case EDITOR: 
+                    carregarModeloList();
+                    break; 
                 default:
-                break;
-            }
+                    break;
+                }
         } else {
             this.type = VariableType.STRING;
             this.name = variableAccess.getVariableName();
@@ -113,6 +116,17 @@ public class VariableAccessHandler implements Serializable {
         this.possuiDominio = tipoPossuiDominio(this.type);
         this.isData = isTipoData(this.type);
         this.isFile = isTipoFile(this.type);
+    }
+
+    private void carregarModeloList() {
+        Action action = getActionNodeEnterByName(variableAccess.getVariableName());
+        if (action == null || action.getActionExpression() == null) return;
+        String expression = action.getActionExpression();
+        String[] modelos = expression.substring(expression.indexOf(",") + 1, expression.indexOf(")")).split(",");
+        modeloList = new ArrayList<>();
+        for (String idModelo : modelos) {
+            modeloList.add(Integer.valueOf(idModelo));
+        }
     }
 
     private boolean tipoPossuiDominio(VariableType type) {
@@ -138,6 +152,9 @@ public class VariableAccessHandler implements Serializable {
                 return;
             }
             Events.instance().raiseEvent(EVENT_JBPM_VARIABLE_NAME_CHANGED, ProcessBuilder.instance().getFluxo().getIdFluxo(), this.name, auxiliarName);
+            if (type == VariableType.EDITOR) {
+                changeModeloDocumentoAction(auxiliarName);
+            }
             this.name = auxiliarName;
             ReflectionsUtil.setValue(variableAccess, "variableName", auxiliarName);
             
@@ -148,9 +165,16 @@ public class VariableAccessHandler implements Serializable {
             } else if (isPossuiDominio()) {
                 setDominioVariavelTarefa(dominioVariavelTarefa);
             } else {
-                setMappedName(auxiliarName,type);
+                setMappedName(auxiliarName, type);
             }
         }
+    }
+
+    private void changeModeloDocumentoAction(String newName) {
+        Action action = getActionNodeEnterByName(name);
+        if (action == null || action.getActionExpression() == null) return;
+        action.setName(newName);
+        action.setActionExpression(action.getActionExpression().replace(name, newName));
     }
 
     public DominioVariavelTarefa getDominioVariavelTarefa() {
@@ -193,28 +217,25 @@ public class VariableAccessHandler implements Serializable {
         }
     }
     
-    
     @SuppressWarnings("unchecked")
 	public void removeTaskAction(String actionName){
     	GraphElement parent = task.getParent();
-    	Map<String, Event> events = parent.getEvents();
-    	if (events != null) {
-            for (Object entry : events.entrySet()) {
-    			Event event = ((Map.Entry<String,Event>)entry).getValue();
-    			for (Object o : event.getActions()) {
-                    Action a = (Action) o;
-                    String name = a.getName();
-                    String exp = a.getActionExpression();
-                    if ( (name != null && name.equalsIgnoreCase(actionName) ) || ( exp != null  && exp.contains("'"+ actionName +"'") ) ) {
-                    	event.removeAction(a);
-                    	 if (event.getActions().isEmpty()) {
-                             event.getGraphElement().removeEvent(event);
-                         }
-                        return ;
+    	if (parent.getEvents() == null) return;
+        for (Object entry : parent.getEvents().entrySet()) {
+			Event event = ((Map.Entry<String,Event>)entry).getValue();
+			for (Object o : event.getActions()) {
+                Action a = (Action) o;
+                String name = a.getName();
+                String exp = a.getActionExpression();
+                if ( (name != null && name.equalsIgnoreCase(actionName) ) || ( exp != null  && exp.contains("'"+ actionName +"'") ) ) {
+                	event.removeAction(a);
+                	if (event.getActions().isEmpty()) {
+                         event.getGraphElement().removeEvent(event);
                     }
+                    return ;
                 }
-    		}
-    	}
+            }
+		}
     }
 
     private void removeAction(Action action) {

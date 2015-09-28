@@ -246,7 +246,7 @@
 						<rich:panel header="Pastas" rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
 							<rich:list value="#{documentoComunicacaoAction.pastas}" styleClass="folder-ul" rowClass="folder-li"
 								var="pasta">
-								<h:form rendered="#{security.checkPage('/pages/Pasta/visualizarPasta')}"
+								<h:form rendered="#{documentoComunicacaoAction.canSee(pasta)}"
 									styleClass="rf-tr-nd">
 									<a:commandLink render="documentosProcessoPanel, documentosProcessoSearchForm"
 										execute="@form"	styleClass="folder" limitRender="true">

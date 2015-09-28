@@ -63,7 +63,11 @@ public class DocumentoDownloader implements Serializable {
     private DocumentoBinManager documentoBinManager;
     
     private String mensagemErro;
-
+    
+    public void downloadDocumento(Integer idDocumento) {
+        Documento documento = documentoManager.find(idDocumento);
+        downloadDocumento(documento);
+    }
 
     public void downloadDocumento(Documento documento) {
     	if (validarSigilo(documento)) {

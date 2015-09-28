@@ -25,11 +25,13 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.entity.Processo_;
 import br.com.infox.epp.processo.localizacao.entity.ProcessoLocalizacaoIbpm;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcessoPermissao;
+import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso_;
 import br.com.infox.epp.processo.situacao.entity.SituacaoProcesso;
 import br.com.infox.epp.processo.situacao.entity.SituacaoProcesso_;
 import br.com.infox.epp.processo.situacao.query.SituacaoProcessoQuery;
@@ -163,6 +165,7 @@ public class SituacaoProcessoDAO {
 		existsSigiloProcesso.select(cb.literal(1));
 		Predicate whereSigiloProcesso = cb.equal(sigiloProcesso.get("processo").get("idProcesso"), root.get("idProcesso"));
 		whereSigiloProcesso = cb.and(cb.equal(sigiloProcesso.get("ativo"), true), whereSigiloProcesso);
+		whereSigiloProcesso = cb.and(cb.isTrue(sigiloProcesso.get(SigiloProcesso_.sigiloso)), whereSigiloProcesso);
 		existsSigiloProcesso.where(whereSigiloProcesso);
 		
 		Subquery<Integer> existsSigiloProcessoPermissao = principalQuery.subquery(Integer.class);
@@ -172,8 +175,8 @@ public class SituacaoProcessoDAO {
 		Subquery<Integer> subquery3 = existsSigiloProcessoPermissao.subquery(Integer.class);
 		Root<SigiloProcesso> sigiloProcesso2 = subquery3.from(SigiloProcesso.class);
 		subquery3.select(sigiloProcesso2.get("id").as(Integer.class));
-		Predicate predicateSubquery3 = cb.equal(sigiloProcesso2.get("processo").get("idProcesso"), root.get("idProcesso"));
-		predicateSubquery3 = cb.and(cb.equal(sigiloProcesso2.get("ativo"), Boolean.TRUE) , predicateSubquery3);
+		Predicate predicateSubquery3 = cb.equal(sigiloProcesso2.get(SigiloProcesso_.processo).get(Processo_.idProcesso), root.get("idProcesso"));
+		predicateSubquery3 = cb.and(cb.isTrue(sigiloProcesso2.get(SigiloProcesso_.ativo)) , predicateSubquery3);
 		subquery3.where(predicateSubquery3);
 		
 		Integer idUsuarioLogado = Authenticator.getUsuarioLogado().getIdUsuarioLogin();
