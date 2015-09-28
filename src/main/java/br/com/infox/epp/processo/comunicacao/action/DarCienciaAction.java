@@ -214,8 +214,7 @@ public class DarCienciaAction implements Serializable{
 		if (signableDocumentoCiencia == null || signableDocumentoCiencia.isEmpty()) {
 			if (isEditorCiencia() && getTextoCiencia() != null && !getTextoCiencia().isEmpty()) {
 				setSignableDocumentoCiencia(MD5Encoder.encode(getTextoCiencia()));
-			}
-			if (documentoUploader.getDocumento() != null) {
+			} else if (documentoUploader.getDocumento() != null) {
 				documentoUploader.getDocumento().getDocumentoBin().setMd5Documento(MD5Encoder.encode(documentoUploader.getDocumento().getDocumentoBin().getProcessoDocumento()));
 				setSignableDocumentoCiencia(documentoUploader.getDocumento().getDocumentoBin().getMd5Documento());
 			}
