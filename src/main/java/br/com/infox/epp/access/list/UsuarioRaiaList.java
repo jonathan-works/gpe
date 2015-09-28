@@ -3,51 +3,48 @@ package br.com.infox.epp.access.list;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Named;
 
-import br.com.infox.constants.WarningConstants;
-import br.com.infox.core.list.EntityList;
+import br.com.infox.core.list.DataList;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.home.ProcessoEpaHome;
 
-@AutoCreate
-@Scope(ScopeType.CONVERSATION)
-@Name(UsuarioRaiaList.NAME)
-public class UsuarioRaiaList extends EntityList<UsuarioLogin> {
+@Named
+@ViewScoped
+public class UsuarioRaiaList extends DataList<UsuarioLogin> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "usuarioRaiaList";
 
-    private static final String DEFAULT_EJBQL = "select distinct u.* from tb_raia_perfil rp "
-            + "inner join tb_usuario_perfil up on (up.id_perfil_template = rp.id_perfil_template) "
-            + "inner join tb_usuario_login u on (u.id_usuario_login = up.id_usuario_login) "
-            + "where u.id_pessoa_fisica is not null "
-            + "and rp.id_fluxo = ";
+    private static final String DEFAULT_JPQL = "select distinct o from UsuarioLogin o "
+        + "inner join fetch o.pessoaFisica pf "
+        + "inner join o.usuarioPerfilList up inner join up.perfilTemplate pt , RaiaPerfil rp ";
+        
+    private static final String DEFAULT_WHERE = "where rp.perfilTemplate.id = pt.id "
+        + "and rp.fluxo.idFluxo = {idFluxo}";
 
-    private static final String DEFAULT_ORDER = "u.nm_usuario";
+    private static final String DEFAULT_ORDER = "o.nomeUsuario";
 
     private List<PerfilTemplate> perfis;
+    private String nomeUsuario;
     private PerfilTemplate perfil;
     private Fluxo fluxo;
 
-    public UsuarioRaiaList() {
-        setNativeQuery(true);
-        setResultClass(UsuarioLogin.class);
-    }
-
     @Override
-    protected void addSearchFields() {
+    protected void addRestrictionFields() {
+        addRestrictionField("nomeUsuario", "o.nomeUsuario like concat('%', #{usuarioRaiaList.nomeUsuario} ,'%')");
+        addRestrictionField("perfil", "rp.perfilTemplate.id = #{usuarioRaiaList.perfil.id}");
     }
 
     @Override
     protected String getDefaultEjbql() {
-        return DEFAULT_EJBQL + getFluxo().getIdFluxo();
+        return DEFAULT_JPQL;
+    }
+    
+    @Override
+    protected String getDefaultWhere() {
+        return DEFAULT_WHERE.replace("{idFluxo}", getFluxo().getIdFluxo().toString());
     }
     
     @Override
@@ -60,16 +57,20 @@ public class UsuarioRaiaList extends EntityList<UsuarioLogin> {
         return null;
     }
     
-    @SuppressWarnings(WarningConstants.UNCHECKED)
     public List<PerfilTemplate> getPerfis() {
         if (perfis == null) {
-            perfis = getEntityManager().createNativeQuery("select p.* from tb_raia_perfil rp "
-                    + "inner join tb_perfil_template p on (p.id_perfil_template = rp.id_perfil_template) "
-                    + "where rp.id_fluxo = :idFluxo", PerfilTemplate.class)
-                .setParameter("idFluxo", getFluxo().getIdFluxo())
-                .getResultList();
+            String jpql = "select pt from RaiaPerfil rp inner join rp.perfilTemplate pt where rp.fluxo = :fluxo order by pt.descricao ";
+            perfis = getEntityManager().createQuery(jpql, PerfilTemplate.class).setParameter("fluxo", getFluxo()).getResultList();
         }
         return perfis;
+    }
+    
+    public String getNomeUsuario() {
+        return nomeUsuario;
+    }
+
+    public void setNomeUsuario(String nomeUsuario) {
+        this.nomeUsuario = nomeUsuario;
     }
 
     public PerfilTemplate getPerfil() {
@@ -80,36 +81,12 @@ public class UsuarioRaiaList extends EntityList<UsuarioLogin> {
         this.perfil = perfil;
     }
 
-    @Override
-    public void newInstance() {
-        super.newInstance();
-        this.perfil = null;
-        refreshQuery();
-    }
-
-    public void refreshQuery() {
-        StringBuilder sb = new StringBuilder();
-
-        if (getPerfil() != null) {
-            sb.append(getDefaultEjbql());
-            sb.append(" and up.id_perfil_template = ");
-            sb.append(getPerfil().getId());
-        } else {
-            sb.append(getDefaultEjbql());
-        }
-
-        if (getEntity().getNomeUsuario() != null) {
-            sb.append(" and lower(u.nm_usuario) like '%");
-            sb.append(getEntity().getNomeUsuario().toLowerCase());
-            sb.append("%'");
-        }
-        setEjbql(sb.toString());
-    }
-    
-    private Fluxo getFluxo() {
-        if (fluxo == null) {
-            fluxo = getEntityManager().find(Processo.class, ProcessoEpaHome.instance().getId()).getNaturezaCategoriaFluxo().getFluxo();
-        }
+    public Fluxo getFluxo() {
         return fluxo;
     }
+
+    public void setFluxo(Fluxo fluxo) {
+        this.fluxo = fluxo;
+    }
+    
 }
