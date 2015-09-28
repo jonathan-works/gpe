@@ -169,6 +169,11 @@
                         form="#{taskInstaceForm}" />
                 </c:if>
                 <c:if test="#{taskPageAction.hasTaskPage}">
+                    <h:graphicImage
+                        id="helpBtn"
+                        styleClass="mp-help"
+                        onmouseup="#{rich:component('mp_taskNodeDescription')}.show();"
+                        value="#{wiSkin.imageFolder}/question.png" />
                     <ui:include src="#{taskPageAction.taskPagePath}" />
                 </c:if>
             </infox:tab>

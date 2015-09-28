@@ -102,7 +102,8 @@
     
     </wi:dataTable>
     
-    <s:div id="informacoesAdicionais">
+    <s:div id="informacoesAdicionais" style="margin-top: 1em;">
+    
         <wi:dataForm rendered="#{sigiloDocumentoController.fragmentoARenderizar eq 'MOTIVO_SIGILO'}" formId="sigiloDocumentoForm"
             formTitle="#{infoxMessages['sigiloDocumento.sigiloDocumentoForm']}">
            <wi:inputTextarea label="#{infoxMessages['sigiloDocumento.motivo']}" required="true" showCounter="false" value="#{sigiloDocumentoAction.motivo}" id="motivo"/>
@@ -178,9 +179,8 @@
            </ui:define>
            
            <ui:define name="searchForm">
-               <wi:searchForm formId="permissoesSearchForm" searchAction="usuarioRaiaList.refreshQuery"
-                   formTitle="#{infoxMessages['sigiloDocumento.usuarios']}">
-                   <wi:inputText id="nome" value="#{usuarioRaiaList.entity.nomeUsuario}" label="#{infoxMessages['sigiloDocumento.usuario.nome']}" />
+               <wi:searchForm formId="permissoesSearchForm" formTitle="#{infoxMessages['sigiloDocumento.usuarios']}">
+                   <wi:inputText id="nome" value="#{usuarioRaiaList.nomeUsuario}" label="#{infoxMessages['sigiloDocumento.usuario.nome']}" />
                    <wi:selectOneMenuEntity id="perfilTemplate" value="#{usuarioRaiaList.perfil}" 
                        label="#{infoxMessages['perfil.titlePage']}"
                        items="#{usuarioRaiaList.perfis}" showLabelSelecione="true" />
