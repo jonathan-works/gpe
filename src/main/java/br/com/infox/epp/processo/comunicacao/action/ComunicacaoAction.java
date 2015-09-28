@@ -17,29 +17,18 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 
-import org.jboss.seam.faces.FacesMessages;
-
-import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.messages.InfoxMessages;
-import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.list.ModeloComunicacaoRascunhoList;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
-import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
-import br.com.infox.epp.processo.comunicacao.service.RespostaComunicacaoService;
 import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
-import br.com.infox.epp.processo.documento.anexos.DocumentoUploader;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.service.ProcessoAnaliseDocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.util.JbpmUtil;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
-import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Named
@@ -48,40 +37,26 @@ import br.com.infox.seam.util.ComponentUtil;
 public class ComunicacaoAction implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "comunicacaoAction";
-	private static final LogProvider LOG = Logging.getLogProvider(ComunicacaoAction.class);
-	
 	
 	private ModeloComunicacaoManager modeloComunicacaoManager = ComponentUtil.getComponent(ModeloComunicacaoManager.NAME);
 	private ProcessoAnaliseDocumentoService processoAnaliseDocumentoService = ComponentUtil.getComponent(ProcessoAnaliseDocumentoService.NAME);
 	private DocumentoDownloader documentoDownloader = ComponentUtil.getComponent(DocumentoDownloader.NAME);
-	private RespostaComunicacaoService respostaComunicacaoService = ComponentUtil.getComponent(RespostaComunicacaoService.NAME);
+	
 	@Inject	
 	private ModeloComunicacaoRascunhoList modeloComunicacaoRascunhoList;
 	@Inject
 	protected InfoxMessages infoxMessages;
 	@Inject
-	private PrazoComunicacaoService prazoComunicacaoService;
-	@Inject
-	private DocumentoUploader documentoUploader;
-	@Inject
-	private ActionMessagesService actionMessagesService;
-	@Inject
 	private EntityManager entityManager;
 	
-	
 	private List<ModeloComunicacao> comunicacoes;
-	private List<ClassificacaoDocumento> classificacoesDocumentoProrrogacaoPrazo;
 	private Processo processo;
 	private List<Documento> documentosDestinatario; // Cache dos documentos do destinatário selecionado
 	private Map<Long, Boolean> dadosCiencia = new HashMap<>(); // Cache das confirmações de ciência dos destinatários
 	private List<DestinatarioBean> destinatarios;
 	
 	private DestinatarioBean destinatario;
-	
-	private ClassificacaoDocumento classificacaoDocumentoProrrogPrazo;
-	private boolean prorrogacaoPrazo;
 	private boolean documentos;
-	
 	private boolean documentoResposta;
 	private List<Documento> documentosListResposta;
 	
@@ -138,42 +113,11 @@ public class ComunicacaoAction implements Serializable {
 		}
 		return destinatarios;
 	}
-	
-	public List<ClassificacaoDocumento> getClassificacoesDocumentoProrrogacaoPrazo() {
-		if (classificacoesDocumentoProrrogacaoPrazo == null) {
-			if (isProrrogacaoPrazo()) {
-				classificacoesDocumentoProrrogacaoPrazo = new ArrayList<>();
-				classificacoesDocumentoProrrogacaoPrazo.add(prazoComunicacaoService.getClassificacaoProrrogacaoPrazo(getDestinatarioModeloComunicacao(destinatario)));
-			}
-		}
-		return classificacoesDocumentoProrrogacaoPrazo;
-	}
-	
-	public ClassificacaoDocumento getClassificacaoDocumentoProrrogPrazo() {
-		return classificacaoDocumentoProrrogPrazo;
-	}
-
-	public void setClassificacaoDocumentoProrrogPrazo(ClassificacaoDocumento classificacaoDocumentoProrrogPrazo) {
-		this.classificacaoDocumentoProrrogPrazo = classificacaoDocumentoProrrogPrazo;
-		documentoUploader.setClassificacaoDocumento(classificacaoDocumentoProrrogPrazo);
-	}
 
 	public DestinatarioBean getDestinatario() {
 		return destinatario;
 	}
 		
-	public boolean isProrrogacaoPrazo() {
-		return prorrogacaoPrazo;
-	}
-	
-	public void setDestinatarioProrrogacaoPrazo(DestinatarioBean destinatario) {
-		clear();
-		this.destinatario = destinatario;
-		prorrogacaoPrazo = true;
-		documentoUploader.setClassificacaoDocumento(null);
-		classificacoesDocumentoProrrogacaoPrazo = null;
-	}
-	
 	public boolean isDocumentos() {
 		return documentos;
 	}
@@ -182,24 +126,6 @@ public class ComunicacaoAction implements Serializable {
 		clear();
 		this.destinatario = destinatario;
 		documentos = true;
-	}
-	
-	public void pedirProrrogacaoPrazo() {
-		try {
-			Processo comunicacao = getDestinatarioModeloComunicacao(destinatario).getProcesso();
-			Documento documento = documentoUploader.getDocumento();
-			documento.setDescricao(documentoUploader.getClassificacaoDocumento().getDescricao());
-			respostaComunicacaoService.enviarProrrogacaoPrazo(documento, comunicacao);
-			documentoUploader.clear();
-			clear();
-			FacesMessages.instance().add(infoxMessages.get("comunicacao.msg.sucesso.pedidoProrrogacao"));
-		} catch (DAOException e) {
-			LOG.error("", e);
-			actionMessagesService.handleDAOException(e);
-		} catch (BusinessException e) {
-			LOG.error("", e);
-			FacesMessages.instance().add(e.getMessage());
-		}
 	}
 	
 	public Long getJbpmProcessId() {
@@ -235,23 +161,13 @@ public class ComunicacaoAction implements Serializable {
 		return dadosCiencia.get(bean.getIdDestinatario());
 	}
 	
-	public boolean podePedirProrrogacaoPrazo(DestinatarioBean bean) {
-		DestinatarioModeloComunicacao destinatarioModeloComunicacao = getDestinatarioModeloComunicacao(bean);
-	    return prazoComunicacaoService.canRequestProrrogacaoPrazo(destinatarioModeloComunicacao) && 
-	                prazoComunicacaoService.getDataLimiteCumprimento(destinatarioModeloComunicacao.getProcesso()).after(new Date());
-	}
-	
 	public void clear() {
 		clearCacheModelos();
-		prorrogacaoPrazo = false;
 		documentos = false;
 		documentosDestinatario = null;
 		destinatario = null;
-		documentoUploader.clear();		
 		documentoResposta = false;
 		documentosListResposta = null;
-		setClassificacaoDocumentoProrrogPrazo(null);
-		
 	}
 	
 	public List<Documento> getDocumentosRespostaList(){

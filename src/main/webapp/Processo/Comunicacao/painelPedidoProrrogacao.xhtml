@@ -8,29 +8,29 @@
     
 	<s:div id="painelProrrogacaoPrazo" style="margin-top:1em">
 		<rich:panel
-			header="#{infoxMessages['comunicacao.prorrogacaoPrazo']} - #{comunicacaoAction.destinatario.nome} / #{comunicacaoAction.destinatario.tipoComunicacao}"
-			rendered="#{comunicacaoAction.prorrogacaoPrazo}">
+			header="#{infoxMessages['comunicacao.prorrogacaoPrazo']} - #{pedirProrrogacaoPrazoAction.destinatario.nome} / #{pedirProrrogacaoPrazoAction.destinatario.tipoComunicacao}"
+			rendered="#{pedirProrrogacaoPrazoAction.prorrogacaoPrazo}">
 			<h:form>
 				<wi:selectOneMenuEntity id="classificacaoProrrogacao"
 					label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-					value="#{comunicacaoAction.classificacaoDocumentoProrrogPrazo}"
-					items="#{comunicacaoAction.classificacoesDocumentoProrrogacaoPrazo}"
+					value="#{pedirProrrogacaoPrazoAction.classificacaoDocumentoProrrogPrazo}"
+					items="#{pedirProrrogacaoPrazoAction.classificacoesDocumentoProrrogacaoPrazo}"
 					showLabelSelecione="true">
 					<a:ajax event="change" limitRender="true" render="@form"
 						execute="@form" />
 				</wi:selectOneMenuEntity>
 				<s:div id="anexo"
-					rendered="#{not empty comunicacaoAction.classificacaoDocumentoProrrogPrazo 
-		    				and not empty comunicacaoAction.classificacaoDocumentoProrrogPrazo.extensaoArquivosList}">
+					rendered="#{not empty pedirProrrogacaoPrazoAction.classificacaoDocumentoProrrogPrazo 
+		    				and not empty pedirProrrogacaoPrazoAction.classificacaoDocumentoProrrogPrazo.extensaoArquivosList}">
 					<wi:fileUpload id="documentoProrrogacaoPrazo"
 						doneLabel="#{infoxMessages['documento.upload.doneLabel']}"
-						accept="#{comunicacaoAction.classificacaoDocumentoProrrogPrazo.acceptedTypes}"
+						accept="#{pedirProrrogacaoPrazoAction.classificacaoDocumentoProrrogPrazo.acceptedTypes}"
 						onclear="infox.showLoading()" oncomplete="infox.hideLoading()"
 						reRender="btnGravar" />
 					<s:div id="btnGravar">
 						<wi:commandButton id="gravar"
 							value="#{infoxMessages['crud.update']}"
-							action="comunicacaoAction.pedirProrrogacaoPrazo()" execute="@this"
+							action="pedirProrrogacaoPrazoAction.pedirProrrogacaoPrazo()" execute="@this"
 							reRender="pageBodyDialogMessage, comunicacoesDiv"
 							rendered="#{documentoUploader.valido}" />
 					</s:div>
