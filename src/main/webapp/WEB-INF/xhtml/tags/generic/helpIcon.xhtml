@@ -2,16 +2,15 @@
 <ui:composition
   xmlns:ui="http://java.sun.com/jsf/facelets"
   xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:h="http://java.sun.com/jsf/html">
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:a="http://richfaces.org/a4j">
+  
   <h:form>
-    <h:commandLink
-      action="/help/show.xhtml"
-      target="helpwnd"
-      actionListener="#{ajudaView.setViewId(facesContext.viewRoot.viewId.replace('.xhtml', '.seam'), true)}">
-      <h:graphicImage
-        url="#{wiSkin.imageFolder}/question.png"
-        title="#{infoxMessages['ajuda.ajudaBtn']}"
-        onclick="openPopUp('helpwnd', 'about:blank');" />
-    </h:commandLink>
+      <a:commandLink execute="@this" render="@this" styleClass="button" limitRender="true"
+          actionListener="#{ajudaView.setViewId(facesContext.viewRoot.viewId.replace('.xhtml', '.seam'), true)}"
+          oncomplete="openPopUp('helpwnd', '#{pathResolver.contextPath}/help/show.seam?scid=#{conversation.id}', 800,600);">
+          <h:graphicImage url="#{wiSkin.imageFolder}/question.png" title="#{infoxMessages['ajuda.ajudaBtn']}" />
+      </a:commandLink>
   </h:form>
+  
 </ui:composition>
