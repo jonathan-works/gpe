@@ -3,19 +3,18 @@ package br.com.infox.epp.processo.comunicacao.list;
 import java.text.MessageFormat;
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.ejb.Stateful;
+import javax.inject.Named;
 
 import br.com.infox.core.list.EntityList;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.EppProperties;
 
-@Name(ModeloComunicacaoRascunhoList.NAME)
-@Scope(ScopeType.PAGE)
-@AutoCreate
+@Named(ModeloComunicacaoRascunhoList.NAME)
+@ViewScoped
+@Stateful
 public class ModeloComunicacaoRascunhoList extends EntityList<ModeloComunicacao> {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "modeloComunicacaoRascunhoList";
