@@ -52,7 +52,7 @@
 								<h:graphicImage url="#{wiSkin.imageFolder}/anexo.png" title="#{infoxMessages['comunicacao.documentosAnexadosComunicacao']}"/>
 							</a:commandLink>
 							<a:commandLink 
-								action="#{comunicacaoAction.setDestinatarioCiencia(row)}" 
+								action="#{darCienciaAction.setDestinatarioCiencia(row)}" 
 								execute="@this" limitRender="true" rendered="#{not comunicacaoAction.isCienciaConfirmada(row)}"
 								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage, painelDocumentosResposta"
 								onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
@@ -109,75 +109,9 @@
 				</rich:dataTable>
 		</rich:collapsiblePanel>
 		
-	    <s:div id="painelCiencia" style="margin-top:1em">
-	    	<rich:panel header="#{infoxMessages['comunicacao.confirmarCiencia']} - #{comunicacaoAction.destinatario.nome} / #{comunicacaoAction.destinatario.tipoComunicacao}" 
-	    		rendered="#{comunicacaoAction.ciencia}">
-	    		<h:form>
-	    			<wi:inputDate past="true" id="dataCiencia" showRequired="true" label="#{infoxMessages['comunicacao.dataCiencia']}" 
-	    				value="#{comunicacaoAction.dataCiencia}" startDate="#{comunicacaoAction.startDateCiencia}"
-                        errorMessage="#{infoxMessages['comunicacao.validator.dataCienciaIncorreta']}">
-	    				<a:ajax event="change" render="dataCienciaDecoration buttonGravar" execute="@this" limitRender="true" />
-	    			</wi:inputDate>
-	    			
-	    			<wi:selectBooleanCheckbox id="editorCiencia" label="#{infoxMessages['comunicacao.adicionarDocumentoEditorCiencia']}" 
-							value="#{comunicacaoAction.editorCiencia}" >
-						<a:ajax event="change" render="@form" limitRender="true" execute="@this" />
-					</wi:selectBooleanCheckbox>
-	    			
-	    			<wi:selectOneMenuEntity id="classificacaoCiencia" showRequired="true" label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-	    				showLabelSelecione="true" value="#{comunicacaoAction.classificacaoDocumentoCiencia}"
-	    				items="#{comunicacaoAction.classificacoesDocumento}">
-	    				<a:ajax event="change" limitRender="true" render="classificacaoCienciaDecoration buttonGravar" execute="@this" />
-	    			</wi:selectOneMenuEntity>
-
-					<s:div id="editorArquivoDiv" rendered="#{comunicacaoAction.editorCiencia}">
-						<wi:editor id="documentoCienciaTexto" readonly="false"
-							 value="#{comunicacaoAction.textoCiencia}" required="true" />
-					</s:div>
-
-					<s:div id="anexo" rendered="#{not empty comunicacaoAction.classificacaoDocumentoCiencia 
-	    				and not empty comunicacaoAction.dataCiencia 
-	    				and not empty comunicacaoAction.classificacaoDocumentoCiencia.extensaoArquivosList
-	    				and not comunicacaoAction.editorCiencia}">
-	    				<wi:fileUpload id="documentoComprovacaoCiencia" accept="#{comunicacaoAction.classificacaoDocumentoCiencia.acceptedTypes}"
-	    					reRender="buttonGravar"/>
-					</s:div>
-					
-					<s:div id="buttonGravar">
-						<wi:commandButton id="gravar"
-							value="#{infoxMessages['crud.update']}"
-							action="comunicacaoAction.darCiencia()"
-							reRender="pageBodyDialogMessage, comunicacoes, painelCiencia"
-							rendered="#{documentoUploader.valido or (not empty comunicacaoAction.classificacaoDocumentoCiencia 
-	    					and not empty comunicacaoAction.dataCiencia and comunicacaoAction.editorCiencia)}" />
-					</s:div>
-	    		</h:form>
-	    	</rich:panel>
-	    </s:div>
-	    
-	    <s:div id="painelProrrogacaoPrazo" style="margin-top:1em">
-	    	<rich:panel header="#{infoxMessages['comunicacao.prorrogacaoPrazo']} - #{comunicacaoAction.destinatario.nome} / #{comunicacaoAction.destinatario.tipoComunicacao}" 
-	    		rendered="#{comunicacaoAction.prorrogacaoPrazo}">
-	    		<h:form>
-	    			<wi:selectOneMenuEntity id="classificacaoProrrogacao" label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-	    				value="#{comunicacaoAction.classificacaoDocumentoProrrogPrazo}" items="#{comunicacaoAction.classificacoesDocumentoProrrogacaoPrazo}"
-	    				showLabelSelecione="true">
-	    				<a:ajax event="change" limitRender="true" render="@form" execute="@form" />
-	    			</wi:selectOneMenuEntity>
-	    			<s:div id="anexo" rendered="#{not empty comunicacaoAction.classificacaoDocumentoProrrogPrazo 
-	    				and not empty comunicacaoAction.classificacaoDocumentoProrrogPrazo.extensaoArquivosList}">
-	    				<wi:fileUpload id="documentoProrrogacaoPrazo" accept="#{comunicacaoAction.classificacaoDocumentoProrrogPrazo.acceptedTypes}"
-	    					reRender="btnGravar"/>
-	    				<s:div id="btnGravar">
-	                        <wi:commandButton id="gravar" value="#{infoxMessages['crud.update']}" action="comunicacaoAction.pedirProrrogacaoPrazo()" 
-    	    						reRender="pageBodyDialogMessage, comunicacoes, painelProrrogacaoPrazo"
-    	    						rendered="#{documentoUploader.valido}"/>
-                    	</s:div>
-                    </s:div>
-	    		</h:form>
-	    	</rich:panel>
-	    </s:div>
-	    
+    	<ui:include src="Comunicacao/painelCiencia.xhtml" />
+    	<ui:include src="Comunicacao/painelPedidoProrrogacao.xhtml" />
+	    	    
 	    <s:div id="painelDocumentos" style="margin-top:1em">
 	    	<rich:panel header="#{infoxMessages['comunicacao.documentos']} #{comunicacaoAction.destinatario.numeroComunicacao} / #{comunicacaoAction.destinatario.nome} / #{comunicacaoAction.destinatario.tipoComunicacao}"
 	    		rendered="#{comunicacaoAction.documentos}">
