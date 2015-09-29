@@ -62,11 +62,11 @@ public class ParticipanteProcessoDAO extends DAO<ParticipanteProcesso> {
     }
     
     
-    public List<PessoaFisica> getPessoasFisicasParticipantesProcesso(Processo processo){
-		String query = "select p from PessoaFisica p "
-				+ "where exists(select pf from ParticipanteProcesso pp inner join pp.pessoa pf where pp.processo = :processo and pf.tipoPessoa = '"+TipoPessoaEnum.F+ "')";
-		
-		return getEntityManager().createQuery(query).setParameter(":processo", processo).getResultList();
+    public List<Pessoa> getPessoasFisicasParticipantesProcesso(Processo processo){
+		String query = "select distinct p from ParticipanteProcesso pp "
+				+ "inner join  pp.pessoa p "
+				+ "where pp.processo = :processo and p.tipoPessoa = '"+TipoPessoaEnum.F+ "' ";
+		return getEntityManager().createQuery(query,Pessoa.class).setParameter("processo", processo).getResultList();
     }
     public boolean existeParticipanteByPessoaProcessoPaiTipo(Pessoa pessoa, 
     		Processo processo, ParticipanteProcesso pai, TipoParte tipo){

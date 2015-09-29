@@ -58,7 +58,7 @@ public class ParticipanteProcessoManager extends Manager<ParticipanteProcessoDAO
     	return getDao().getParticipantesByTipo(processo, tipoParte);
     }
     
-    public List<PessoaFisica> getPessoasParticipantesProcesso(Processo processo){
+    public List<Pessoa> getPessoasParticipantesProcesso(Processo processo){
     	return getDao().getPessoasFisicasParticipantesProcesso(processo);
     }
 }
