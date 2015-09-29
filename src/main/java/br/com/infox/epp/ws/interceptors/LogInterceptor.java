@@ -62,7 +62,7 @@ public class LogInterceptor {
 			servico.endLog(logWsServer, retorno == null ? null : retorno.toString());
 			return retorno;
 		}
-		catch(Throwable e) {
+		catch(Exception e) {
 			ErroServico erro = mensagensErroService.getErro(e);
 			String codigoErro = erro.getCodigo();
 			if(CODIGO_ERRO_INDEFINIDO.equals(codigoErro)) {
