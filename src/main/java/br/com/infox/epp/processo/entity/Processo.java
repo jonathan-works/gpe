@@ -207,7 +207,6 @@ public class Processo implements Serializable {
     @JoinColumn(name="id_processo_root")
     private Processo processoRoot;
     
-    
     @PrePersist
     private void prePersist() {
     	if (idProcesso == null) {
