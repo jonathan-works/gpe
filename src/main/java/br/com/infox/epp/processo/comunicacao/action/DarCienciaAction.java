@@ -90,20 +90,12 @@ public class DarCienciaAction implements Serializable{
 	
 	private void validaClassificacaoCiencia() {
 		if (getClassificacaoDocumentoCiencia() != null) {
-			enviaSemAssinarDocumentoCiencia = podeEnviarSemAssinatura(getClassificacaoDocumentoCiencia());
-			assinaDocumentoCiencia = podeAssinarSuficiente(getClassificacaoDocumentoCiencia()); 
+			enviaSemAssinarDocumentoCiencia = !assinaturaDocumentoService.precisaAssinatura(getClassificacaoDocumentoCiencia());
+			assinaDocumentoCiencia = classificacaoDocumentoPapelManager.papelPodeTornarSuficientementeAssinado(Authenticator.getPapelAtual(), getClassificacaoDocumentoCiencia()); 
 			if (!enviaSemAssinarDocumentoCiencia && !assinaDocumentoCiencia) {
 				FacesMessages.instance().add("O papel atual não consegue completar as assinaturas dessa classificação de documento.");
 			}
 		}
-	}
-	
-	private Boolean podeEnviarSemAssinatura(ClassificacaoDocumento classificacaoDocumento) {
-		return !assinaturaDocumentoService.precisaAssinatura(classificacaoDocumento);
-	}
-	
-	private Boolean podeAssinarSuficiente(ClassificacaoDocumento classificacaoDocumento) {
-		return classificacaoDocumentoPapelManager.papelPodeTornarSuficientementeAssinado(Authenticator.getPapelAtual(), classificacaoDocumento);
 	}
 	
 	public void darCiencia() {

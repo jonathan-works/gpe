@@ -118,7 +118,19 @@ public class PrazoComunicacaoService {
     		return;
     	}
 		gravarDocumentoCiencia(comunicacao, documentoCiencia);
-		darCiencia(comunicacao, dataCiencia, Authenticator.getUsuarioLogado());
+		darCienciaDocumentoGravado(comunicacao, dataCiencia, Authenticator.getUsuarioLogado());
+	}
+
+	private void gravarDocumentoCiencia(Processo comunicacao, Documento documentoCiencia) throws DAOException {
+		documentoManager.gravarDocumentoNoProcesso(comunicacao.getProcessoRoot(), documentoCiencia);
+		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
+		MetadadoProcesso metadadoCiencia = metadadoProcessoProvider.gerarMetadado(
+				ComunicacaoMetadadoProvider.DOCUMENTO_COMPROVACAO_CIENCIA, documentoCiencia.getId().toString());
+		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoCiencia));
+	}
+	
+	private void darCienciaDocumentoGravado(Processo comunicacao, Date dataCiencia, UsuarioLogin usuarioLogin) throws DAOException {
+		darCiencia(comunicacao, dataCiencia, usuarioLogin);
 		movimentarTarefaService.finalizarTarefasEmAberto(comunicacao);
 	}
 	
@@ -130,16 +142,7 @@ public class PrazoComunicacaoService {
     	}
 		gravarDocumentoCiencia(comunicacao, documentoCiencia);
 		assinaturaDocumentoService.assinarDocumento(documentoCiencia.getDocumentoBin(), usuarioPerfil, signatureBean.getCertChain(), signatureBean.getSignature());
-		darCiencia(comunicacao, dataCiencia, usuarioPerfil.getUsuarioLogin());
-		movimentarTarefaService.finalizarTarefasEmAberto(comunicacao);
-	}
-
-	private void gravarDocumentoCiencia(Processo comunicacao, Documento documentoCiencia) throws DAOException {
-		documentoManager.gravarDocumentoNoProcesso(comunicacao.getProcessoRoot(), documentoCiencia);
-		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
-		MetadadoProcesso metadadoCiencia = metadadoProcessoProvider.gerarMetadado(
-				ComunicacaoMetadadoProvider.DOCUMENTO_COMPROVACAO_CIENCIA, documentoCiencia.getId().toString());
-		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoCiencia));
+		darCienciaDocumentoGravado(comunicacao, dataCiencia, usuarioPerfil.getUsuarioLogin());
 	}
 
 	protected void adicionarPrazoDeCumprimento(Processo comunicacao, Date dataCiencia)

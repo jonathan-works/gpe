@@ -16,7 +16,7 @@
 					value="#{darCienciaAction.dataCiencia}"
 					startDate="#{darCienciaAction.startDateCiencia}"
 					errorMessage="#{infoxMessages['comunicacao.validator.dataCienciaIncorreta']}">
-					<a:ajax event="change" render="dataCienciaDecoration buttonGravar"
+					<a:ajax event="change" render="dataCienciaDecoration buttonDarCiencia"
 						execute="@this" limitRender="true" />
 				</wi:inputDate>
 	
@@ -33,7 +33,7 @@
 					value="#{darCienciaAction.classificacaoDocumentoCiencia}"
 					items="#{darCienciaAction.classificacoesDocumentoCiencia}">
 					<a:ajax event="change" limitRender="true"
-						render="classificacaoCienciaDecoration buttonGravar documentoCienciaDiv pageBodyDialogMessage"
+						render="classificacaoCienciaDecoration buttonDarCiencia documentoCienciaDiv pageBodyDialogMessage"
 						execute="@this" listener="#{documentoUploader.clearUploadFile}" />
 				</wi:selectOneMenuEntity>
 	
@@ -52,11 +52,11 @@
 							doneLabel="#{infoxMessages['documento.upload.doneLabel']}"
 							accept="#{darCienciaAction.classificacaoDocumentoCiencia.acceptedTypes}"
 							onclear="infox.showLoading()" oncomplete="infox.hideLoading()"
-							reRender="buttonGravar" />
+							reRender="buttonDarCiencia" />
 					</s:div>
 				</s:div>
 	
-				<s:div id="buttonGravar">
+				<s:div id="buttonDarCiencia">
 					<wi:commandButton id="gravar"
 						value="${infoxMessages['crud.update']}"
 						execute="@this documentoCienciaDiv"
@@ -80,7 +80,7 @@
                             <wi:certificadoDigital id="assinarDocumentoCienciaButton"
                                 rendered="true"
                                 execute="@this documentoCienciaTexto"
-                                reRender="buttonGravar"
+                                reRender="buttonDarCiencia"
                                 tokenField="#{darCienciaAction.tokenAssinaturaDocumentoCiencia}"
                                 signableData="#{darCienciaAction.signableDocumentoCiencia}"
                                 preSignAction="#{darCienciaAction.updateSignableCiencia()}"
