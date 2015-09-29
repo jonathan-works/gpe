@@ -19,22 +19,47 @@
 					<a:ajax event="change" limitRender="true" render="@form"
 						execute="@form" />
 				</wi:selectOneMenuEntity>
-				<s:div id="anexo"
+				<s:div id="documentoAnexoPedidoProrrogacao"
 					rendered="#{not empty pedirProrrogacaoPrazoAction.classificacaoDocumentoProrrogPrazo 
 		    				and not empty pedirProrrogacaoPrazoAction.classificacaoDocumentoProrrogPrazo.extensaoArquivosList}">
 					<wi:fileUpload id="documentoProrrogacaoPrazo"
 						doneLabel="#{infoxMessages['documento.upload.doneLabel']}"
 						accept="#{pedirProrrogacaoPrazoAction.classificacaoDocumentoProrrogPrazo.acceptedTypes}"
 						onclear="infox.showLoading()" oncomplete="infox.hideLoading()"
-						reRender="btnGravar" />
-					<s:div id="btnGravar">
+						reRender="buttonPedirProrrogacao" />
+				</s:div>
+				<s:div id="buttonPedirProrrogacao">
 						<wi:commandButton id="gravar"
 							value="#{infoxMessages['crud.update']}"
 							action="pedirProrrogacaoPrazoAction.pedirProrrogacaoPrazo()" execute="@this"
 							reRender="pageBodyDialogMessage, comunicacoesDiv"
-							rendered="#{documentoUploader.valido}" />
+							rendered="#{documentoUploader.valido and 
+								not empty pedirProrrogacaoPrazoAction.classificacaoDocumentoProrrogPrazo and
+								pedirProrrogacaoPrazoAction.enviaSemAssinarPedidoProrrogacao}" />
+
+						<s:div rendered="#{documentoUploader.valido and 
+								not empty pedirProrrogacaoPrazoAction.classificacaoDocumentoProrrogPrazo and
+								pedirProrrogacaoPrazoAction.assinaPedidoProrrogacao}">
+							<a:jsFunction name="assinarDocumentoPedidoProrrogacao"
+	                                actionListener="#{pedirProrrogacaoPrazoAction.assinarPedirProrrogacaoPrazo}"
+	                                execute="assinarDocumentoPedidoProrrogacaoButtonToken documentoAnexoPedidoProrrogacao"
+	                                render="pageBodyDialogMessage comunicacoesDiv"
+	                                onbegin="infox.showLoading();"
+	                                oncomplete="infox.hideLoading();" />
+	                            <wi:certificadoDigital id="assinarDocumentoPedidoProrrogacaoButton"
+	                                rendered="true"
+	                                execute="@this"
+	                                reRender="buttonPedirProrrogacao"
+	                                tokenField="#{pedirProrrogacaoPrazoAction.tokenAssinaturaDocumentoPedidoProrrogacao}"
+	                                signableData="#{pedirProrrogacaoPrazoAction.signableDocumentoPedidoProrrogacao}"
+	                                preSignAction="#{pedirProrrogacaoPrazoAction.updateSignablePedidoProrrogacao()}"
+	                                functionPreSign="infox.showLoading();"
+	                                functionPosSign="assinarDocumentoPedidoProrrogacao();"
+	                                signButtonCaption="${infoxMessages['comunicacao.painelPedidoProrrogacao.assinar']}" />
+							
+						</s:div>	
+							
 					</s:div>
-				</s:div>
 			</h:form>
 		</rich:panel>
 	</s:div>
