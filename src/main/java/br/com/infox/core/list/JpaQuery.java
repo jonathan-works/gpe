@@ -22,7 +22,7 @@ public abstract class JpaQuery<E> implements Serializable {
 	private Map<RestrictionField, Object> restrictionsParams = new HashMap<RestrictionField, Object>();
 	private String parsedEjbql;
 	private String order;
-	private List<E> resultList;
+	protected List<E> resultList;
 	private Long resultCount;
 	private transient EntityManager entityManager;
 	
