@@ -6,22 +6,18 @@ import static br.com.infox.epp.processo.sigilo.query.SigiloProcessoQuery.QUERY_P
 import static br.com.infox.epp.processo.sigilo.query.SigiloProcessoQuery.QUERY_PARAM_USUARIO_LOGIN;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso;
 
-@Name(SigiloProcessoDAO.NAME)
-@Scope(ScopeType.EVENT)
 @AutoCreate
+@Name(SigiloProcessoDAO.NAME)
 public class SigiloProcessoDAO extends DAO<SigiloProcesso> {
 
     private static final long serialVersionUID = 1L;
@@ -38,11 +34,5 @@ public class SigiloProcessoDAO extends DAO<SigiloProcesso> {
     	params.put(QUERY_PARAM_PROCESSO, processo);
     	params.put(QUERY_PARAM_USUARIO_LOGIN, usuarioLogin);
     	return getNamedSingleResult(NAMED_QUERY_SIGILO_PROCESSO_USUARIO, params);
-    }
-    
-    public List<SigiloProcesso> getSigilosProcessoAtivo(Processo processo) {
-    	Map<String, Object> params = new HashMap<>();
-    	params.put(QUERY_PARAM_PROCESSO, processo);
-    	return getNamedResultList(NAMED_QUERY_SIGILO_PROCESSO_ATIVO,params);
     }
 }
