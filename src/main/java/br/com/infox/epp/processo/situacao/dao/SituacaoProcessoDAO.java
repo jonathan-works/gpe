@@ -154,7 +154,6 @@ public class SituacaoProcessoDAO {
 		}
 	}
     
-	
 	private void appendSigiloProcessoFilter(AbstractQuery<?> principalQuery) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		Root<?> root = principalQuery.getRoots().iterator().next();
