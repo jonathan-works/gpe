@@ -12,10 +12,12 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.dao.MetadadoProcessoDAO;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoDefinition;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
+import br.com.infox.seam.util.ComponentUtil;
 
 @AutoCreate
 @Name(MetadadoProcessoManager.NAME)
@@ -55,4 +57,13 @@ public class MetadadoProcessoManager extends Manager<MetadadoProcessoDAO, Metada
 			processo.getMetadadoProcessoList().add(metadadoProcesso);
 		}
 	}
+	
+	public void removerMetadadoProcesso(Integer idProcesso, MetadadoProcessoDefinition metadadoProcessoDefinition) throws DAOException {
+	    Processo processo = ComponentUtil.<ProcessoManager>getComponent(ProcessoManager.NAME).find(idProcesso);
+	    MetadadoProcesso metadadoProcesso = getMetadado(metadadoProcessoDefinition, processo);
+	    if (metadadoProcesso != null) {
+	        remove(metadadoProcesso);
+	    }
+	}
+	
 }

@@ -2,7 +2,6 @@ package br.com.infox.epp.processo.list;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 

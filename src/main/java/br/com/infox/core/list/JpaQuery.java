@@ -35,7 +35,11 @@ public abstract class JpaQuery<E> implements Serializable {
 	
 	protected abstract Map<RestrictionField, Object> getRestrictionParams();
 	
+	protected abstract void addAdditionalClauses(StringBuilder sb);
+	
 	protected String getDefaultWhere(){ return null; }
+	
+	
 	
 	private void validate() {
 		if ( getDefaultEjbql() == null ) {
@@ -149,8 +153,10 @@ public abstract class JpaQuery<E> implements Serializable {
 			sb.append(fieldFilter.getExpression().replace(getEl(fieldFilter.getExpression()), ":"+getFieldName(fieldFilter.getName())));
 			first = false;
 		}
+		addAdditionalClauses(sb);
 		this.parsedEjbql = sb.toString();
 	}
+
 
 	private String getCountEjbql() {		
 		String countQuery = getDefaultEjbql();

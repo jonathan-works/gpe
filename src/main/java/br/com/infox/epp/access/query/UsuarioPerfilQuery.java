@@ -30,4 +30,9 @@ public interface UsuarioPerfilQuery {
     		+ " and up.usuarioLogin = :" + PARAM_USUARIO_LOGIN
     		+ " and up.ativo = :" + PARAM_ATIVO;
     
+    String LIST_BY_LOCALIZACAO_ATIVO = "listByLocalizacaoAtivo";
+    String LIST_BY_LOCALIZACAO_ATIVO_QUERY = "select distinct pf from UsuarioPerfil up inner join up.usuarioLogin ul "
+            + " inner join ul.pessoaFisica pf where up.localizacao.idLocalizacao = :" + PARAM_LOCALIZACAO 
+            + " and up.ativo = true";
+    
 }

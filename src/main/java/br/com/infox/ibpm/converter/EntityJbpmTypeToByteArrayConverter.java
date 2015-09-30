@@ -18,7 +18,6 @@ import org.jbpm.context.exe.Converter;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.ibpm.type.EntityJbpmType;
-import br.com.infox.seam.util.ComponentUtil;
 
 public class EntityJbpmTypeToByteArrayConverter implements Converter {
 

@@ -101,6 +101,11 @@ public class DocumentoDownloader implements Serializable {
             FileDownloader.download(data, contentType, fileName);
         }
     }
+    
+    public void downloadDocumentoBin(Integer idDocumentoBin) {
+    	DocumentoBin documentoBin = documentoBinManager.find(idDocumentoBin);
+    	downloadDocumento(documentoBin);
+    }
 
     /**
      * Recebe o número de bytes e retorna o número em Kb (kilobytes).

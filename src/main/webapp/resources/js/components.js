@@ -161,6 +161,11 @@ function onlyPositiveNumber(obj){
     obj.value = valor.replace(/\D/g,"");
 }
 
+function onlyPositiveNumberWithPercent(obj){
+	valor = obj.value;
+    obj.value = valor.replace(/\D/g,"") + "%";
+}
+
 function clamp(obj, min, max) {
     if ((!isNaN(obj.value)) && (isFinite(obj.value)) && (obj.value != "")) {
         obj.value = Math.min(max, Math.max(min, obj.value));

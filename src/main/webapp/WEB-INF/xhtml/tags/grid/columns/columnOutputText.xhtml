@@ -39,7 +39,7 @@
             </ui:fragment>
         </div>
         <s:div rendered="#{not editRowOnClick}"
-            styleClass="#{styleClass}">
+            styleClass="#{styleClass}" style="#{styleOutputDiv}">
             <h:outputText value="#{value}" escape="#{escape}"
                 style="#{styleOutputText}">
                 <ui:insert name="outputText" />

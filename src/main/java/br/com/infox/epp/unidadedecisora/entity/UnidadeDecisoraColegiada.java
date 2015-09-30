@@ -3,8 +3,13 @@ package br.com.infox.epp.unidadedecisora.entity;
 import static br.com.infox.constants.LengthConstants.DESCRICAO_PADRAO_DOBRO;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.FIND_ALL_ATIVO;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.FIND_ALL_ATIVO_QUERY;
-import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.*;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.FIND_UDC_BY_CODIGO_LOCALIZACAO;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.FIND_UDC_BY_CODIGO_LOCALIZACAO_QUERY;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.FIND_UDC_BY_USUARIO_ID;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.FIND_UDC_BY_USUARIO_ID_QUERY;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.LIST_COLEGIADA_BY_MONOCRATICA;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.LIST_COLEGIADA_BY_MONOCRATICA_QUERY;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_EXISTE_UDC_BY_LOCALIZACAO;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_EXISTE_UDC_BY_LOCALIZACAO_QUERY;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_UDC_BY_USUARIO;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_UDC_BY_USUARIO_QUERY;
@@ -42,7 +47,8 @@ import br.com.infox.epp.access.entity.Localizacao;
         @NamedQuery(name=FIND_UDC_BY_USUARIO_ID, query=FIND_UDC_BY_USUARIO_ID_QUERY),
     @NamedQuery(name=SEARCH_EXISTE_UDC_BY_LOCALIZACAO, query=SEARCH_EXISTE_UDC_BY_LOCALIZACAO_QUERY),
     @NamedQuery(name=FIND_ALL_ATIVO, query=FIND_ALL_ATIVO_QUERY),
-    @NamedQuery(name=FIND_UDC_BY_CODIGO_LOCALIZACAO, query=FIND_UDC_BY_CODIGO_LOCALIZACAO_QUERY)
+    @NamedQuery(name=FIND_UDC_BY_CODIGO_LOCALIZACAO, query=FIND_UDC_BY_CODIGO_LOCALIZACAO_QUERY),
+    @NamedQuery(name = LIST_COLEGIADA_BY_MONOCRATICA, query = LIST_COLEGIADA_BY_MONOCRATICA_QUERY)
 })
 public class UnidadeDecisoraColegiada implements Serializable {
 

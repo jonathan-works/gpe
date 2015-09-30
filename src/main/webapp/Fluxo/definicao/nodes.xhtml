@@ -233,8 +233,7 @@
                        	<rich:collapsiblePanel switchType="client" expanded="false" header="Listeners" >
                    			<ui:include src="listeners.xhtml" />
                        	</rich:collapsiblePanel>
-                       	
-						<h:form id="eventsForm">
+                       	<h:form id="eventsForm">
                             <rich:collapsiblePanel
                                 switchType="ajax"
                                 expanded="false"
@@ -251,6 +250,7 @@
                         </h:form>
 					</rich:panel>
 
+                    <br />
                     <rich:panel
                         header="#{infoxMessages['process.node.new']}"
                         rendered="#{empty nodeFitter.currentNode}">

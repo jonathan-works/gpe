@@ -5,6 +5,7 @@ public interface UnidadeDecisoraColegiadaQuery {
 	String ID_USUARIO_LOGIN = "idUsuarioLogin";
 	String ID_LOCALIZACAO = "idLocalizacao";
 	String CODIGO_LOCALIZACAO = "codigoLocalizacao";
+	String MONOCRATICA = "monocratica";
 	
 	String SEARCH_UDC_BY_USUARIO = "searchUDCByUsuario";
     String SEARCH_UDC_BY_USUARIO_QUERY = "select new map( udc.nome as nome, " +
@@ -35,4 +36,10 @@ public interface UnidadeDecisoraColegiadaQuery {
 
     String FIND_UDC_BY_CODIGO_LOCALIZACAO = "UnidadeDecisoraColegiada.findUDCByCodigoLocalizacao";
     String FIND_UDC_BY_CODIGO_LOCALIZACAO_QUERY = "select o from UnidadeDecisoraColegiada o inner join o.localizacao l where l.codigo = :" + CODIGO_LOCALIZACAO;
+    
+    String LIST_COLEGIADA_BY_MONOCRATICA = "listColegiadasByMonocratica";
+    String LIST_COLEGIADA_BY_MONOCRATICA_QUERY = "select udc from UnidadeDecisoraColegiadaMonocratica udcm "
+    		+ "inner join udcm.unidadeDecisoraMonocratica udm "
+    		+ "inner join udcm.unidadeDecisoraColegiada udc "
+    		+ "where udm.idUnidadeDecisoraMonocratica = :" + MONOCRATICA;
 }

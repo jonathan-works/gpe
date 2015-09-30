@@ -3,10 +3,12 @@
 <ui:composition
     xmlns="http://www.w3.org/1999/xhtml"
     xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:wi="http://www.itx.com.br/jsf"
     template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
     <ui:define name="body">
+        <f:event listener="#{failResponseAction.putHeader()}" type="preRenderView" />
         <ui:param
             name="showMenu"
             value="false" />
