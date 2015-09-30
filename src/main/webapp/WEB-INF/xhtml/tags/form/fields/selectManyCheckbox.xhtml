@@ -14,12 +14,13 @@
         value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
 
     <s:decorate id="#{id}Decoration" template="#{template}"
-        rendered="#{wi:get(rendered, true)}">
+        rendered="#{wi:get(rendered, true)}"
+        styleClass="decoration-div">
         <ui:define name="label">#{label}</ui:define>
         <h:selectManyCheckbox id="#{id}" readonly="#{readonly}"
-            layout="#{wi:get(direction, 'line')}Direction"
+            layout="#{empty layout ? 'lineDirection' : layout}"
             disabled="#{disabled}" required="#{required}"
-            value="#{value}" styleClass="checkbox">
+            value="#{value}" >
             <f:selectItems value="#{selectItemFunctions.createFromString(valueList) }" />
             <ui:insert />
         </h:selectManyCheckbox>

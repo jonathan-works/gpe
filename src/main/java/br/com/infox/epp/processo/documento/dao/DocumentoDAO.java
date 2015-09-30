@@ -7,6 +7,7 @@ import static br.com.infox.epp.processo.documento.query.DocumentoQuery.ID_JBPM_T
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_ANEXOS_PUBLICOS;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_ANEXOS_PUBLICOS_USUARIO_LOGADO;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_DOCUMENTO_BY_PROCESSO;
+import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_DOCUMENTO_MINUTA_BY_PROCESSO;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.LIST_DOCUMENTO_BY_TASKINSTANCE;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.NEXT_SEQUENCIAL;
 import static br.com.infox.epp.processo.documento.query.DocumentoQuery.PARAM_CLASSIFICACAO_DOCUMENTO;
@@ -99,6 +100,12 @@ public class DocumentoDAO extends DAO<Documento> {
         Map<String, Object> params = new HashMap<>(1);
         params.put(PARAM_PROCESSO, processo);
         return getNamedResultList(LIST_DOCUMENTO_BY_PROCESSO, params);
+    }
+    
+    public List<Documento> getListDocumentoMinutaByProcesso(Processo processo) {
+    	Map<String, Object> params = new HashMap<>(1);
+    	params.put(PARAM_PROCESSO, processo);
+    	return getNamedResultList(LIST_DOCUMENTO_MINUTA_BY_PROCESSO, params);
     }
 
     public List<Documento> getDocumentoListByTask(TaskInstance task) {

@@ -6,7 +6,7 @@ import static br.com.infox.epp.access.query.UsuarioPerfilQuery.EXISTE_USUARIO_CO
 import static br.com.infox.epp.access.query.UsuarioPerfilQuery.GET_BY_USUARIO_LOGIN_PERFIL_TEMPLATE_LOCALIZACAO;
 import static br.com.infox.epp.access.query.UsuarioPerfilQuery.GET_BY_USUARIO_LOGIN_PERFIL_TEMPLATE_LOCALIZACAO_QUERY;
 import static br.com.infox.epp.access.query.UsuarioPerfilQuery.LIST_BY_USUARIO_LOGIN;
-import static br.com.infox.epp.access.query.UsuarioPerfilQuery.LIST_BY_USUARIO_LOGIN_QUERY;
+import static br.com.infox.epp.access.query.UsuarioPerfilQuery.*;
 import static java.text.MessageFormat.format;
 import static javax.persistence.FetchType.EAGER;
 
@@ -31,7 +31,8 @@ import javax.validation.constraints.NotNull;
 @NamedQueries({
     @NamedQuery(name=GET_BY_USUARIO_LOGIN_PERFIL_TEMPLATE_LOCALIZACAO, query=GET_BY_USUARIO_LOGIN_PERFIL_TEMPLATE_LOCALIZACAO_QUERY),
     @NamedQuery(name=LIST_BY_USUARIO_LOGIN, query=LIST_BY_USUARIO_LOGIN_QUERY),
-    @NamedQuery(name=EXISTE_USUARIO_COM_DESCRICAO_PERFIL_ATIVO, query=EXISTE_USUARIO_COM_DESCRICAO_PERFIL_ATIVO_QUERY)
+    @NamedQuery(name=EXISTE_USUARIO_COM_DESCRICAO_PERFIL_ATIVO, query=EXISTE_USUARIO_COM_DESCRICAO_PERFIL_ATIVO_QUERY),
+    @NamedQuery(name = LIST_BY_LOCALIZACAO_ATIVO, query = LIST_BY_LOCALIZACAO_ATIVO_QUERY)
 })
 public class UsuarioPerfil implements Serializable {
 

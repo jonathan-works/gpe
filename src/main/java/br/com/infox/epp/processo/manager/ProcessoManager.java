@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -13,6 +14,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.bpm.Actor;
 import org.jboss.seam.bpm.BusinessProcess;
+import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.util.Strings;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
@@ -52,6 +54,7 @@ import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
 import br.com.infox.util.time.DateRange;
 
 @AutoCreate
+@Stateless
 @ContextDependency
 @Name(ProcessoManager.NAME)
 public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
@@ -320,6 +323,17 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 	
 	public Processo getProcessoEpaByIdJbpm(Long idJbpm) {
 		return getDao().getProcessoEpaByIdJbpm(idJbpm);
+	}
+	
+	public void movimentarProcessoJBPM(Long taskInstanceId, String transicao) throws DAOException {
+		Long processIdOriginal = BusinessProcess.instance().getProcessId();
+		Long taskIdOriginal = BusinessProcess.instance().getTaskId();
+		BusinessProcess.instance().setProcessId(null);
+		BusinessProcess.instance().setTaskId(null);
+		TaskInstance taskInstanceForUpdate = ManagedJbpmContext.instance().getTaskInstanceForUpdate(taskInstanceId);
+		taskInstanceForUpdate.end(transicao);
+		BusinessProcess.instance().setProcessId(processIdOriginal);
+		BusinessProcess.instance().setTaskId(taskIdOriginal);
 	}
 
 	@Observer({Event.EVENTTYPE_TASK_END})

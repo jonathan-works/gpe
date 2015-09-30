@@ -2,10 +2,8 @@ package br.com.infox.epp.processo.sigilo.manager;
 
 import java.util.List;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
@@ -15,9 +13,8 @@ import br.com.infox.epp.processo.sigilo.dao.SigiloProcessoPermissaoDAO;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcessoPermissao;
 
-@Name(SigiloProcessoPermissaoManager.NAME)
 @AutoCreate
-@Scope(ScopeType.EVENT)
+@Name(SigiloProcessoPermissaoManager.NAME)
 public class SigiloProcessoPermissaoManager extends Manager<SigiloProcessoPermissaoDAO, SigiloProcessoPermissao> {
 
     private static final long serialVersionUID = 1L;
@@ -32,8 +29,7 @@ public class SigiloProcessoPermissaoManager extends Manager<SigiloProcessoPermis
         getDao().inativarPermissoes(sigiloProcesso);
     }
 
-    public List<SigiloProcessoPermissao> getPermissoes(
-            SigiloProcesso sigiloProcesso) {
+    public List<SigiloProcessoPermissao> getPermissoes(SigiloProcesso sigiloProcesso) {
         return getDao().getPermissoes(sigiloProcesso);
     }
 

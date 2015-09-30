@@ -15,6 +15,8 @@ public interface UsuarioLoginQuery {
     String PROVISORIO = "in_provisorio";
     String DATA_EXPIRACAO = "dt_expiracao_usuario";
 
+    String PARAM_LOCALIZACAO = "localizacao";
+	String PARAM_PAPEIS = "papeis";
     String PARAM_LOGIN = "login";
     String PARAM_ID_TASK_INSTANCE = "idTaskInstance";
     String PARAM_ID_TAREFA = "idTarefa";
@@ -68,4 +70,14 @@ public interface UsuarioLoginQuery {
     String USUARIO_FETCH_PF_BY_NUMERO_CPF_QUERY = "SELECT o FROM UsuarioLogin o " +
     		"INNER JOIN FETCH o.pessoaFisica pf " +
     		"WHERE pf.cpf = :" + PARAM_NR_CPF;
+    
+    
+    String USUARIO_LOGIN_LOCALIZACAO_PAPEL = "usuarioLoginByLocalizacaoPapel";
+    String USUARIO_LOGIN_LOCALIZACAO_PAPEL_QUERY = "select distinct ul from UsuarioPerfil up " 
+    											+"inner join up.perfilTemplate pt "
+    											+"inner join up.usuarioLogin ul "
+    											+"inner join pt.papel pap " 
+    											+"where up.localizacao = :"+ PARAM_LOCALIZACAO+" "
+    											+ "and pap.identificador in ( :" + PARAM_PAPEIS + " ) "
+    													+ "and up.ativo = true ";
 }

@@ -4,6 +4,8 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -26,6 +28,7 @@ import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 
 @AutoCreate
 @Name(PastaManager.NAME)
+@Stateless
 public class PastaManager extends Manager<PastaDAO, Pasta> {
 
     private static final long serialVersionUID = 1L;
@@ -138,29 +141,45 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     	return getDao().getPastaByNome(nome, processo);
     }
     
-    public void disponibilizarPastaParaParticipantesProcesso(String descricaoPasta, Long idProcesso) throws DAOException {
-    	Processo processo = processoManager.find(idProcesso.intValue()); 
-    	if (processo != null) {
-    		Pasta pasta = getDao().getByProcessoAndDescricao(processo.getProcessoRoot(), descricaoPasta);
-    		if (pasta != null) {
-    			PastaRestricao pastaRestricao = pastaRestricaoManager.getByPastaAlvoTipoRestricao(pasta, 1, PastaRestricaoEnum.R);
-    			if (pastaRestricao == null) {
-    				pastaRestricao = new PastaRestricao();
-    				pastaRestricao.setAlvo(1);
-    				pastaRestricao.setTipoPastaRestricao(PastaRestricaoEnum.R);
-    				pastaRestricao.setWrite(false);
-    				pastaRestricao.setDelete(false);
-    				pastaRestricao.setRead(true);
-    				pastaRestricao.setPasta(pasta);
-    				pastaRestricao.setLogicDelete(false);
-    				pastaRestricaoManager.persist(pastaRestricao);
-    			} else {
-    				pastaRestricao.setRead(true);
-    				pastaRestricaoManager.update(pastaRestricao);
-    			}
-    		}
-    	}
+    public void disponibilizarPastaParaParticipantesProcesso(String descricaoPasta, Long idProcesso)
+            throws DAOException {
+        Processo processo = processoManager.find(idProcesso.intValue());
+        if (processo != null) {
+            Pasta pasta = getDao().getByProcessoAndDescricao(processo.getProcessoRoot(), descricaoPasta);
+            if (pasta != null) {
+                disponibilizarParaLeitura(pasta, 1, PastaRestricaoEnum.R);
+
+            }
+        }
     }
-    
-    
+
+    public void tornarPastaPublica(String nomePasta, Long idProcesso) throws DAOException {
+        Processo processo = processoManager.find(idProcesso.intValue());
+        if (processo != null) {
+            Pasta pasta = getDao().getByProcessoAndDescricao(processo.getProcessoRoot(), nomePasta);
+            if (pasta != null) {
+                disponibilizarParaLeitura(pasta, 0, PastaRestricaoEnum.R);
+                disponibilizarParaLeitura(pasta, null, PastaRestricaoEnum.D);
+            }
+        }
+    }
+
+    private void disponibilizarParaLeitura(Pasta pasta, Integer alvo, PastaRestricaoEnum tipoRestricao)
+            throws DAOException {
+        PastaRestricao pastaRestricao = pastaRestricaoManager.getByPastaAlvoTipoRestricao(pasta, alvo, tipoRestricao);
+        if (pastaRestricao == null) {
+            pastaRestricao = new PastaRestricao();
+            pastaRestricao.setAlvo(alvo);
+            pastaRestricao.setTipoPastaRestricao(tipoRestricao);
+            pastaRestricao.setWrite(false);
+            pastaRestricao.setDelete(false);
+            pastaRestricao.setRead(true);
+            pastaRestricao.setPasta(pasta);
+            pastaRestricao.setLogicDelete(false);
+            pastaRestricaoManager.persist(pastaRestricao);
+        } else {
+            pastaRestricao.setRead(true);
+            pastaRestricaoManager.update(pastaRestricao);
+        }
+    }
 }
