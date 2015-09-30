@@ -104,7 +104,7 @@
 			<wi:certificadoDigital
 	            id="appletAssinatura"
 				signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
-				reRender="assinaturaDocumentoDiv#{f.id}, pageBodyDialogMessage"
+				reRender="pageBodyDialogMessage, @form"
 				tokenField="#{taskInstanceHome.tokenToSign}"
 				propertyValue="#{f.id}"
 				propertyTarget="#{taskInstanceHome.variavelDocumentoToSign}"
