@@ -35,6 +35,7 @@ import javax.validation.constraints.Size;
 
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 
 @Entity
 @Table(name = UnidadeDecisoraMonocratica.TABLE_NAME)
@@ -65,6 +66,10 @@ public class UnidadeDecisoraMonocratica implements Serializable {
     @NotNull
     @Column(name="in_ativo", nullable = false)
     private Boolean ativo;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="id_pessoa_fisica", nullable = true)
+    private PessoaFisica chefeGabinete;
 
     @OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.REFRESH, mappedBy="unidadeDecisoraMonocratica")
     @OrderBy("unidadeDecisoraColegiada ASC")
@@ -100,6 +105,14 @@ public class UnidadeDecisoraMonocratica implements Serializable {
 
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
+    }
+    
+    public PessoaFisica getChefeGabinete() {
+        return chefeGabinete;
+    }
+
+    public void setChefeGabinete(PessoaFisica chefeGabinete) {
+        this.chefeGabinete = chefeGabinete;
     }
 
     public List<UnidadeDecisoraColegiadaMonocratica> getUnidadeDecisoraColegiadaMonocraticaList() {

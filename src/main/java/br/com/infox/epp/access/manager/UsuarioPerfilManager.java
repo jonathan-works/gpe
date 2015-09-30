@@ -17,6 +17,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 
 @AutoCreate
 @Stateless
@@ -77,6 +78,10 @@ public class UsuarioPerfilManager extends Manager<UsuarioPerfilDAO, UsuarioPerfi
 			return super.update(perfilExistente);
 		}
 		return super.persist(o);
+	}
+	
+	public List<PessoaFisica> listByLocalizacaoAtivo(Localizacao localizacao) {
+	    return getDao().listByLocalizacaoAtivo(localizacao);
 	}
 	
 	
