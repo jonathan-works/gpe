@@ -127,21 +127,6 @@
     header="#{infoxMessages['fileUpload.header']}">
     <s:div id="uploaderDiv">
       <div>
-        <wi:inputText
-          id="inputProcessoDocumentoPdf"
-          value="#{documentoUploader.documento.descricao}"
-          disabled="false"
-          required="true"
-          label="#{infoxMessages['processo.anexarDocumentoDescricao']}">
-          <a:ajax
-            event="change"
-            limitRender="true"
-            status=":status"
-            onbeforesubmit="infox.showLoading();"
-            oncomplete="infox.hideLoading();"
-            listener="#{documentoUploader.podeRenderizar}"
-            execute="@this" />
-        </wi:inputText>
         <wi:selectOneMenuEntity
           id="tipoProcessoDocumentoPdf"
           label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
@@ -182,8 +167,10 @@
           id="uploadArquivo"
           label="#{infoxMessages['fileUpload.type.file']}"
           reRender="buttonsPdfDiv #{f.id}tipoProcessoDocumentoPdf pageBodyDialogMessage"
-          rendered="#{not empty documentoUploader.classificacaoDocumento and not empty documentoUploader.classificacaoDocumento.extensaoArquivosList and not empty documentoUploader.documento.descricao}"
-          accept="#{documentoUploader.documento.classificacaoDocumento.acceptedTypes}">
+          rendered="#{not empty documentoUploader.classificacaoDocumento and not empty documentoUploader.classificacaoDocumento.extensaoArquivosList}"
+          accept="#{documentoUploader.documento.classificacaoDocumento.acceptedTypes}"
+          maxFiles="10"
+          >
         </wi:fileUpload>
       </s:div>
       <s:div id="buttonsPdfDiv">
