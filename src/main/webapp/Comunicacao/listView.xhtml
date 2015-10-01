@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:wi="http://www.itx.com.br/jsf"
@@ -120,9 +119,16 @@
 							signableData="#{expedicaoComunicacaoAction.md5Comunicacao}"
 							functionPreSign="infox.showLoading();"
 							functionPosSign="assinar();"
-							rendered="#{expedicaoComunicacaoAction.podeRenderizarApplet()}"
-							signButtonCaption="#{infoxMessages['comunicacao.expedirComunicacao']}">
-					</wi:certificadoDigital>
+							rendered="#{expedicaoComunicacaoAction.podeRenderizarApplet() and not expedicaoComunicacaoAction.destinatario.expedido}"
+							signButtonCaption="#{infoxMessages['comunicacao.expedirComunicacao']}"/>
+							
+					<a:commandButton id="btnExpedirComunicacaoAssinada" execute="@form" styleClass="buttons"
+						value="${infoxMessages['comunicacao.expedirComunicacao']}"
+						rendered="#{expedicaoComunicacaoAction.comunicacaoSuficientementeAssinada and not expedicaoComunicacaoAction.destinatario.expedido}"
+						action="#{expedicaoComunicacaoAction.expedirComunicacao()}"
+						onclick="infox.showLoading();"
+						render="comunicacaoForm, pageBodyDialogMessage, destinatarios"
+						oncomplete="infox.hideLoading();"/>
 				</h:form>
 			</infox:tab>
 		</infox:tabPanel>

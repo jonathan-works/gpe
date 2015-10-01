@@ -33,7 +33,7 @@ import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacaoManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
-import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.transaction.TransactionService;
@@ -111,7 +111,7 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	}
 	
 	public String getMd5Comunicacao() {
-		return getDocumentoComunicacao().getMd5Documento();
+		return getDocumentoComunicacao().getDocumentoBin().getMd5Documento();
 	}
 	
 	public String getToken() {
@@ -138,10 +138,10 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 		UsuarioLogin usuario = usuarioPerfil.getUsuarioLogin();
 		Papel papel = usuarioPerfil.getPerfilTemplate().getPapel();
 		boolean expedicaoValida = !modeloComunicacao.isDocumentoBinario() && destinatario != null && !destinatario.getExpedido()
-				&& !destinatario.getDocumentoComunicacao().hasAssinatura();
+				&& !assinaturaDocumentoService.isDocumentoTotalmenteAssinado(destinatario.getDocumentoComunicacao());
 		return expedicaoValida && 
 				assinaturaDocumentoService.podeRenderizarApplet(papel, modeloComunicacao.getClassificacaoComunicacao(), 
-						getDocumentoComunicacao(), usuario);
+						getDocumentoComunicacao().getDocumentoBin(), usuario);
 	}
 	
 	public void expedirComunicacao() {
@@ -150,16 +150,24 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 				comunicacaoService.expedirComunicacao(modeloComunicacao);
 				return;
 			}
-			DocumentoBin documentoComunicacao = getDocumentoComunicacao();
-			CertificateSignatureBundleBean certificateSignatureBundleBean = certificateSignatures.get(token);
-			if (certificateSignatureBundleBean.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
-			    throw new DAOException(InfoxMessages.getInstance().get("comunicacao.assinar.erro"));
+			Documento documentoComunicacao = getDocumentoComunicacao();
+			if (!isComunicacaoSuficientementeAssinada()) {
+				CertificateSignatureBundleBean certificateSignatureBundleBean = certificateSignatures.get(token);
+				if (certificateSignatureBundleBean.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
+				    throw new DAOException(InfoxMessages.getInstance().get("comunicacao.assinar.erro"));
+				}
+				CertificateSignatureBean signatureBean = certificateSignatureBundleBean.getSignatureBeanList().get(0);
+				if (assinaturaDocumentoService.podeRenderizarApplet(Authenticator.getPapelAtual(), documentoComunicacao.getClassificacaoDocumento(), 
+						documentoComunicacao.getDocumentoBin(), Authenticator.getUsuarioLogado())) {
+					assinaturaDocumentoService.assinarDocumento(getDocumentoComunicacao(), Authenticator.getUsuarioPerfilAtual(), signatureBean.getCertChain(), signatureBean.getSignature());
+				}
 			}
-			CertificateSignatureBean signatureBean = certificateSignatureBundleBean.getSignatureBeanList().get(0);
-			if (documentoComunicacao.getAssinaturas().isEmpty()) {
-				assinaturaDocumentoService.assinarDocumento(getDocumentoComunicacao(), Authenticator.getUsuarioPerfilAtual(), signatureBean.getCertChain(), signatureBean.getSignature());
+			if (isComunicacaoSuficientementeAssinada()) {
+				comunicacaoService.expedirComunicacao(destinatario);
+				FacesMessages.instance().add("Comunicação expedida com sucesso");
+			} else {
+				FacesMessages.instance().add("Comunicação assinada com sucesso");
 			}
-			comunicacaoService.expedirComunicacao(destinatario);
 		} catch (DAOException | CertificadoException | AssinaturaException e) {
 			TransactionService.rollbackTransaction();
 			handleException(e);
@@ -170,11 +178,18 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 		return modeloComunicacaoManager.isExpedida(modeloComunicacao);
 	}
 	
-	private DocumentoBin getDocumentoComunicacao() {
+	public boolean isComunicacaoSuficientementeAssinada() {
 		if (destinatario != null) {
-			return destinatario.getDocumentoComunicacao().getDocumentoBin();
+			return assinaturaDocumentoService.isDocumentoTotalmenteAssinado(destinatario.getDocumentoComunicacao());
+		}
+		return false;
+	}
+	
+	private Documento getDocumentoComunicacao() {
+		if (destinatario != null) {
+			return destinatario.getDocumentoComunicacao();
 		} else {
-			return modeloComunicacao.getDestinatarios().get(0).getDocumentoComunicacao().getDocumentoBin();
+			return modeloComunicacao.getDestinatarios().get(0).getDocumentoComunicacao();
 		}
 	}
 	

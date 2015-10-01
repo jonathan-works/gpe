@@ -1,7 +1,6 @@
 package br.com.infox.epp.processo.comunicacao.envio.action;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.context.FacesContext;
@@ -39,9 +38,6 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
-import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
-import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
-import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
@@ -59,7 +55,6 @@ import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Name(EnvioComunicacaoController.NAME)
 @Scope(ScopeType.CONVERSATION)
@@ -100,8 +95,6 @@ public class EnvioComunicacaoController implements Serializable {
 	@In
 	private DocumentoComunicacaoService documentoComunicacaoService;
 	
-	private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager = ComponentUtil.getComponent(ClassificacaoDocumentoPapelManager.NAME);
-	
 	private ModeloComunicacao modeloComunicacao;
 	private Long processInstanceId;
 	
@@ -116,7 +109,6 @@ public class EnvioComunicacaoController implements Serializable {
 	private boolean minuta = true;
 	private String idModeloComunicacaoVariableName;
 	private boolean isNew = true;
-	private List<String> papeisFaltamAssinar;
 	
 	@Create
 	public void init() {
@@ -281,6 +273,7 @@ public class EnvioComunicacaoController implements Serializable {
 				if (!isComunicacaoSuficientementeAssinada()) {
 					CertificateSignatureBean signatureBean = getCertificateSignatureBean();
 					assinaturaDocumentoService.assinarDocumento(destinatario.getDocumentoComunicacao(), Authenticator.getUsuarioPerfilAtual(), signatureBean.getCertChain(), signatureBean.getSignature());
+					clearAssinaturas();
 				}
 				if (isComunicacaoSuficientementeAssinada()) {
 					comunicacaoService.expedirComunicacao(destinatario);
@@ -291,7 +284,7 @@ public class EnvioComunicacaoController implements Serializable {
 			}
 			clearAssinaturas();
 			expedida = null;
-			if (isExpedida()) {
+			if (destinatario.getExpedido()) {
 				FacesMessages.instance().add("Comunicação expedida com sucesso");
 			} 
 		} catch (DAOException e) {
@@ -389,7 +382,6 @@ public class EnvioComunicacaoController implements Serializable {
 
 	private void clearAssinaturas() {
 		this.comunicacaoSuficientementeAssinada = null;
-		this.papeisFaltamAssinar = null;
 	}
 
 	public boolean isInTask() {
@@ -438,30 +430,5 @@ public class EnvioComunicacaoController implements Serializable {
 	
 	public Long getJbpmProcessId() {
 		return JbpmUtil.getProcesso().getIdJbpm();
-	}
-
-	public List<String> getPapeisFaltamAssinar() {
-		if (papeisFaltamAssinar == null && destinatario != null) {
-			papeisFaltamAssinar = new ArrayList<>();
-			Documento docComunicacao = destinatario.getDocumentoComunicacao();
-			List<ClassificacaoDocumentoPapel> cdps = classificacaoDocumentoPapelManager.getByClassificacaoDocumento(docComunicacao.getClassificacaoDocumento());
-			for (ClassificacaoDocumentoPapel classificacaoDocumentoPapel : cdps) {
-				if (classificacaoDocumentoPapel.getTipoAssinatura().equals(TipoAssinaturaEnum.O) 
-						&& !assinaturaDocumentoService.isDocumentoAssinado(docComunicacao, classificacaoDocumentoPapel.getPapel())) {
-					papeisFaltamAssinar.add(classificacaoDocumentoPapel.getPapel().toString());
-				}
-				if (classificacaoDocumentoPapel.getTipoAssinatura().equals(TipoAssinaturaEnum.S) 
-						&& !assinaturaDocumentoService.isDocumentoAssinado(docComunicacao, classificacaoDocumentoPapel.getPapel())) {
-					papeisFaltamAssinar = new ArrayList<>();
-					papeisFaltamAssinar.add(classificacaoDocumentoPapel.getPapel().toString());
-					break;
-				}
-			}
-		}
-		return papeisFaltamAssinar;
-	}
-
-	public void setPapeisFaltamAssinar(List<String> papeisFaltamAssinar) {
-		this.papeisFaltamAssinar = papeisFaltamAssinar;
 	}
 }
