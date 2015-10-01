@@ -76,7 +76,7 @@ public class FileUpload implements FileUploadListener {
         }
         Documento documento = createDocumento(file, uploadFile.getId());
         try {
-            documentoManager.gravarDocumentoNoProcesso(processoEpaHome.getInstance(), documento);
+            documentoManager.gravarDocumentoNoProcesso(processoEpaHome.getInstance().getProcessoRoot(), documento);
             TaskInstanceHome.instance().getInstance().put(uploadFile.getId(), documento.getId());
         } catch (DAOException e) {
             LOG.error("Não foi possível gravar o documento " + file.getName() + "no processo " + processoEpaHome.getInstance().getIdProcesso(), e);
