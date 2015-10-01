@@ -198,19 +198,34 @@
 						<f:setPropertyActionListener value="#{envioComunicacaoController.destinatario.id}" target="#{flash.idDestinatario}" />
 						<infox:flashcopy/>
 					</a:commandButton>
-											 
+					<a:commandButton id="btnExpedirComunicacaoAssinada" execute="@this"
+						value="${infoxMessages['comunicacao.expedirComunicacao']}"
+						rendered="#{envioComunicacaoController.comunicacaoSuficientementeAssinada}"
+						action="#{envioComunicacaoController.expedirComunicacao()}"
+						onclick="infox.showLoading();"
+						render="pageBodyDialogMessage comunicacaoDiv"
+						oncomplete="infox.hideLoading(); if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"/>
+						
 					<a:jsFunction name="assinar" action="#{envioComunicacaoController.expedirComunicacao()}"
 						execute="@this appletAssinaturaToken" 
-						render="pageBodyDialogMessage comunicacaoDiv"
-					  	oncomplete="infox.hideLoading(); if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"/>
+						render="pageBodyDialogMessage comunicacaoDiv assinaturaListExpedirComunicacao"
+					  	oncomplete="if ('#{envioComunicacaoController.expedida}' === 'false') #{rich:component('assinaturasExpedirComunicacao')}.show();infox.hideLoading(); if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"/>
              
 					<wi:certificadoDigital id="appletAssinatura"
                         tokenField="#{envioComunicacaoController.token}"
 						signableData="#{envioComunicacaoController.destinatario.documentoComunicacao.documentoBin.md5Documento}"
 						functionPreSign="infox.showLoading();"
 						functionPosSign="assinar();"
-						rendered="#{envioComunicacaoController.podeRenderizarApplet()}"
+						rendered="#{envioComunicacaoController.podeRenderizarApplet() and not envioComunicacaoController.comunicacaoSuficientementeAssinada}"
 						signButtonCaption="#{infoxMessages['comunicacao.expedirComunicacao']}" />
+						
+					<a:commandButton id="btnAssinaturasParaExpedirComunicacao" execute="@this"
+						styleClass="buttons"
+						value="${infoxMessages['comunicacao.visualizarAssinaturas']}"
+						rendered="#{not envioComunicacaoController.comunicacaoSuficientementeAssinada and not envioComunicacaoController.expedida}"
+						onclick="infox.showLoading();"
+						render="assinaturaListExpedirComunicacao"
+						oncomplete="#{rich:component('assinaturasExpedirComunicacao')}.show();infox.hideLoading();"/>
           		</s:div>
 			</h:form>
 
@@ -419,4 +434,46 @@
 			</h:form>
 		</s:div>
 	</s:div>
+	
+ 	<rich:popupPanel id="assinaturasExpedirComunicacao" minWidth="850" minHeight="200" autosized="true"
+ 		modal="true">
+       <f:facet name="header">
+           <h:outputText value="#{infoxMessages['comunicacao.visualizarAssinaturas']}" />
+       </f:facet>
+       <f:facet name="controls">
+           <h:graphicImage styleClass="d-msg-h-close" value="#{wiSkin.imageFolder}/closeMP.gif" 
+           		onmouseup="#{rich:component('assinaturasExpedirComunicacao')}.hide()" />
+       </f:facet>
+       <s:div id="assinaturaListExpedirComunicacao">
+           <h:outputText value="${infoxMessages['validacaoDocumentoList.assinaturas.header']}" style="font-weight: bold; margin-bottom: 1em"/>
+           <rich:dataTable
+               value="#{envioComunicacaoController.destinatario.documentoComunicacao.documentoBin.assinaturas}"
+               id="assinaturaDocumentoList" rowKeyVar="row.idAssinatura"
+               rowClasses="zebra-row" styleClass="dtable rf-dt-crud" var="row">
+               <rich:column styleClass="dt-toolbar-col">
+                   <f:facet name="header">
+                       <h:outputText
+                           value="#{infoxMessages['assinaturaDocumento.nomePerfil']}"></h:outputText>
+                   </f:facet>
+                   <h:outputText value="#{row.nomeUsuarioPerfil}"></h:outputText>
+               </rich:column>
+               <rich:column styleClass="dt-toolbar-col">
+                   <f:facet name="header">
+                       <h:outputText
+                           value="#{infoxMessages['assinaturadocumento.dtAssinatura']}"></h:outputText>
+                   </f:facet>
+                   <h:outputText value="#{row.dataAssinatura}"></h:outputText>
+               </rich:column>
+           </rich:dataTable>
+           <div style="margin-top: 1em;">
+	           <h:outputText value="#{infoxMessages['comunicacao.expedirComunicacao.falha']}" style="font-weight: bold; margin-bottom: 1em;"/>
+	           <ui:repeat var="assinatura" value="#{envioComunicacaoController.papeisFaltamAssinar}">
+	               <br />
+	               <h:outputText value="#{assinatura}" />
+	               <br />
+	           </ui:repeat>
+           </div>
+       </s:div>
+   </rich:popupPanel>
+   
 </ui:composition>
