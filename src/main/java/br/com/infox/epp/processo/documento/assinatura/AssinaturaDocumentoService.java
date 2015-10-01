@@ -358,6 +358,18 @@ public class AssinaturaDocumentoService implements Serializable {
         return documento != null && isDocumentoAssinado(documento, usuarioLogin);
     }
     
+    public boolean isDocumentoAssinado(DocumentoBin documentoBin, Papel papel, UsuarioLogin usuario) {
+        boolean result = false;
+        for (AssinaturaDocumento assinaturaDocumento : documentoBin.getAssinaturas()) {
+            if (assinaturaDocumento.getUsuarioPerfil().getPerfilTemplate().getPapel().equals(papel) && 
+            		assinaturaDocumento.getUsuarioPerfil().getUsuarioLogin().equals(usuario)) {
+                result = isSignatureValid(assinaturaDocumento);
+                break;
+            }
+        }
+        return result;
+    }
+    
     public boolean podeRenderizarApplet(Papel papel, ClassificacaoDocumento classificacao, Integer idDocumento, UsuarioLogin usuario) {
     	Documento documento = documentoManager.find(idDocumento);
     	if (documento == null) {
@@ -371,7 +383,7 @@ public class AssinaturaDocumentoService implements Serializable {
     		return false;
     	}
     	return classificacaoDocumentoPapelManager.papelPodeAssinarClassificacao(papel, classificacao) && 
-    			!isDocumentoAssinado(documentoBin, usuario);
+    			!isDocumentoAssinado(documentoBin, papel, usuario);
     }
     
     public boolean precisaAssinatura(ClassificacaoDocumento classificacaoDocumento){
