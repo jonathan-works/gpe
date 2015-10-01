@@ -23,6 +23,7 @@ public class ThreadLocalRequestCleanerFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		EntityManagerProducer.clear();
 		chain.doFilter(request, response);
+		EntityManagerProducer.clear();
 	}
 
 	@Override
