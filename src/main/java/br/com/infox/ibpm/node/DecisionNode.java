@@ -25,8 +25,6 @@ import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.documento.entity.Variavel;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
-import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
-import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 import br.com.infox.epp.system.annotation.Ignore;
 import br.com.infox.ibpm.process.definition.expressionWizard.ExpressionTokenizer;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
@@ -172,8 +170,6 @@ public class DecisionNode extends Node {
         ClassLoader contextClassLoader = currentThread.getContextClassLoader();
         currentThread.setContextClassLoader(JbpmConfiguration.getProcessClassLoader(executionContext.getProcessDefinition()));
 
-        //TODO is this really necessary?
-        populateVariables(executionContext);
         try {
             if (decisionDelegation != null) {
                 DecisionHandler decisionHandler = (DecisionHandler) decisionDelegation.getInstance();
@@ -259,18 +255,6 @@ public class DecisionNode extends Node {
 
         log.debug("decision '" + name + "' is taking " + transition);
         executionContext.leaveNode(transition);
-    }
-
-    private void populateVariables(ExecutionContext executionContext) {
-        Integer idProcesso = (Integer) executionContext.getContextInstance().getVariable("processo", executionContext.getProcessInstance().getRootToken());
-        VariavelProcessoService variavelProcessoService = ComponentUtil.getComponent(VariavelProcessoService.NAME);
-        List<VariavelProcesso> variaveis = variavelProcessoService.getVariaveisHierquiaProcesso(idProcesso);
-        for (VariavelProcesso variavel : variaveis) {
-            Boolean alreadyExists = executionContext.getVariable(variavel.getNome()) != null;
-            if (!alreadyExists) {
-                executionContext.setVariable(variavel.getNome(), variavel.getValor());
-            }
-        }
     }
 
     @Override
