@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.comunicacao.manager;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +22,7 @@ import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.action.DestinatarioBean;
 import br.com.infox.epp.processo.comunicacao.dao.ModeloComunicacaoDAO;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
@@ -70,6 +72,10 @@ public class ModeloComunicacaoManager extends Manager<ModeloComunicacaoDAO, Mode
 			setarInformacoesAdicionais(destinatario);
 		}
 		return destinatarios;
+	}
+	
+	public List<AssinaturaDocumento> listAssinaturasComunicacao(Processo comunicacao) {
+		return new ArrayList<AssinaturaDocumento>();
 	}
 	
 	protected void setarInformacoesAdicionais(DestinatarioBean destinatario) {

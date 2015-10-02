@@ -34,7 +34,8 @@ public class ImpressaoComunicacaoList extends EntityList<Processo> {
 												"and exists (select 1 from MetadadoProcesso mp " +
 												"			  where mp.metadadoType = '" + ComunicacaoMetadadoProvider.MEIO_EXPEDICAO.getMetadadoType() + "' " + 
 												"			  and (mp.valor = '" + MeioExpedicao.DO.name() + "' or mp.valor = '" + MeioExpedicao.IM.name() + "' ) " +
-												"			  and mp.processo = o) ";
+												"			  and mp.processo = o) " +
+												"and o.localizacao = #{usuarioLogadoPerfilAtual.localizacao} ";
 	
 	private static final String DEFAULT_ORDER = "idProcesso";
 	
@@ -46,8 +47,9 @@ public class ImpressaoComunicacaoList extends EntityList<Processo> {
 	
 	private static final String CONDICAO_DATA_ASSINATURA_PREFIX =
 	        "and exists (select 1 from DestinatarioModeloComunicacao dmc "
-	        + "inner join dmc.comunicacao c "
-	        + "inner join c.assinaturas a "
+	        + "inner join dmc.documentoComunicacao c "
+	        + "inner join c.documentoBin bin "
+	        + "inner join bin.assinaturas a "
 	        + "where a.dataAssinatura is not null ";
 	private static final String CONDICAO_DATA_ASSINATURA_SUFIX =
 	        "and dmc.id = (select cast(mp.valor as integer) from MetadadoProcesso mp "

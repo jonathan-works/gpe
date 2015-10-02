@@ -1,7 +1,10 @@
 package br.com.infox.epp.processo.comunicacao.impressao;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -17,6 +20,7 @@ import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
@@ -49,10 +53,15 @@ public class ImpressaoComunicacaoService implements Serializable {
 	}
 	
 	public Date getDataAssinatura(Processo processo) {
-		MetadadoProcesso metadadoProcesso = processo.getMetadado(ComunicacaoMetadadoProvider.COMUNICACAO);
+		
+		MetadadoProcesso metadadoProcesso = processo.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO);
 		if (metadadoProcesso != null) {
-			Documento comunicacao = metadadoProcesso.getValue();
-			return comunicacao.getDocumentoBin().getAssinaturas().get(0).getDataAssinatura();
+			DestinatarioModeloComunicacao destinatario = metadadoProcesso.getValue();
+			List<AssinaturaDocumento> assinaturas = destinatario.getDocumentoComunicacao().getDocumentoBin().getAssinaturas();
+			if (assinaturas != null && !assinaturas.isEmpty()) {
+				Collections.sort(assinaturas, comparatorDataAssinatura);
+				return assinaturas.get(0).getDataAssinatura();
+			}
 		}
 		return null;
 	}
