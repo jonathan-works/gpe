@@ -9,8 +9,6 @@ import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.webservice.log.entity.LogWebserviceServer;
@@ -26,8 +24,10 @@ import br.com.infox.epp.ws.services.MensagensErroService;;
  */
 public class LogInterceptor {
 	
-	@Inject
-	private ServletRequest request;
+	/**
+	 * Nome do parâmetro token no {@link InvocationContext} que será utilizado no log
+	 */
+	public static final String NOME_PARAMETRO_TOKEN = "token";
 	
 	@Inject
 	private LogWebserviceServerManagerNewTransaction servico;
@@ -35,13 +35,15 @@ public class LogInterceptor {
 	@Inject
 	private MensagensErroService mensagensErroService;
 	
+	private String getToken(InvocationContext ctx) {
+		String token = (String)ctx.getContextData().get(NOME_PARAMETRO_TOKEN);
+		return token == null ? "" : token;
+	}
+	
 	@AroundInvoke
 	private Object gerarLog(InvocationContext ctx) throws Exception {
 		//TODO: Alterar log de token ao ser definido novo método de autenticação
-		String token =((HttpServletRequest) request).getHeader(TokenAuthenticationInterceptor.NOME_TOKEN_HEADER_HTTP);
-		if(token == null) {
-			token = "";
-		}
+		String token = getToken(ctx);
 		
 		Log log = ctx.getMethod().getAnnotation(Log.class);
 		if(log == null) {
@@ -61,6 +63,8 @@ public class LogInterceptor {
 		Object retorno = null;
 		try {
 			retorno = ctx.proceed();
+			token = getToken(ctx);
+			logWsServer.setToken(token);
 			servico.endLog(logWsServer, retorno == null ? null : retorno.toString());
 			return retorno;
 		}
@@ -70,6 +74,8 @@ public class LogInterceptor {
 			if(CODIGO_ERRO_INDEFINIDO.equals(codigoErro)) {
 				codigoErro = erro.getMensagem(); 
 			}
+			token = getToken(ctx);
+			logWsServer.setToken(token);
 			servico.endLog(logWsServer, codigoErro);
 			throw e;
 		}

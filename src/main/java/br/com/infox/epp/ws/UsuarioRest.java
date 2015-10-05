@@ -12,12 +12,8 @@ import javax.ws.rs.core.MediaType;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.ws.bean.UsuarioBean;
 import br.com.infox.epp.ws.bean.UsuarioSenhaBean;
-import br.com.infox.epp.ws.interceptors.Log;
-import br.com.infox.epp.ws.interceptors.TokenAuthentication;
-import br.com.infox.epp.ws.messages.CodigosServicos;
 import br.com.infox.epp.ws.services.UsuarioRestService;
 
-@TokenAuthentication
 @Path(UsuarioRest.PATH)
 public class UsuarioRest implements Serializable {
 
@@ -34,7 +30,6 @@ public class UsuarioRest implements Serializable {
 	@Path(PATH_GRAVAR_USUARIO)
 	@Produces(MediaType.TEXT_PLAIN)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Log(codigo=CodigosServicos.WS_PERFIS_GRAVAR_USUARIO)
 	public String gravarUsuario(final UsuarioBean bean) throws DAOException {
 		return servico.gravarUsuario(bean);
 	}
@@ -43,7 +38,6 @@ public class UsuarioRest implements Serializable {
 	@Path(PATH_ATUALIZAR_SENHA)
 	@Produces(MediaType.TEXT_PLAIN)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Log(codigo=CodigosServicos.WS_PERFIS_ATUALIZAR_SENHA)
 	public String atualizarSenha(final UsuarioSenhaBean bean) throws DAOException {
 		return servico.atualizarSenha(bean);
 	}

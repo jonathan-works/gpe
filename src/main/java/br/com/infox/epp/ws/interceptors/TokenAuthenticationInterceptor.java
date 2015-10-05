@@ -35,6 +35,7 @@ public class TokenAuthenticationInterceptor {
 	@AroundInvoke
 	private Object atenticarPorToken(InvocationContext ctx) throws Exception {
 		String token = ((HttpServletRequest) request).getHeader(NOME_TOKEN_HEADER_HTTP);
+		ctx.getContextData().put(LogInterceptor.NOME_PARAMETRO_TOKEN, token);
 		validarToken(token);
 		return ctx.proceed();
 	}

@@ -20,9 +20,13 @@ import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
 import br.com.infox.epp.ws.bean.UsuarioPerfilBean;
 import br.com.infox.epp.ws.exception.ValidacaoException;
+import br.com.infox.epp.ws.interceptors.Log;
+import br.com.infox.epp.ws.interceptors.TokenAuthentication;
 import br.com.infox.epp.ws.interceptors.ValidarParametros;
+import br.com.infox.epp.ws.messages.CodigosServicos;
 
 @Stateless
+@TokenAuthentication
 @ValidarParametros
 public class PerfilRestService {
 
@@ -35,6 +39,7 @@ public class PerfilRestService {
 	@Inject
 	private LocalizacaoManager localizacaoManager;
 	
+	@Log(codigo=CodigosServicos.WS_PERFIS_ADICIONAR_PERFIL)
 	public String adicionarPerfil(UsuarioPerfilBean bean) throws DAOException {
 		UsuarioPerfilBean usuarioPerfilBean = (UsuarioPerfilBean) bean;
 		UsuarioLogin usuarioLogin = usuarioLoginManager.getUsuarioFetchPessoaFisicaByNrCpf(usuarioPerfilBean.getCpf());

@@ -9,12 +9,8 @@ import javax.ws.rs.core.MediaType;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.ws.bean.UsuarioPerfilBean;
-import br.com.infox.epp.ws.interceptors.Log;
-import br.com.infox.epp.ws.interceptors.TokenAuthentication;
-import br.com.infox.epp.ws.messages.CodigosServicos;
 import br.com.infox.epp.ws.services.PerfilRestService;
 
-@TokenAuthentication
 @Path(PerfilRest.PATH)
 public class PerfilRest {
 	
@@ -28,7 +24,6 @@ public class PerfilRest {
 	@Path(PATH_ADICIONAR_PERFIL)
 	@Produces(MediaType.TEXT_PLAIN)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Log(codigo=CodigosServicos.WS_PERFIS_ADICIONAR_PERFIL)
 	public String adicionarPerfil(UsuarioPerfilBean bean) throws DAOException {
 		return servico.adicionarPerfil(bean);
 	}

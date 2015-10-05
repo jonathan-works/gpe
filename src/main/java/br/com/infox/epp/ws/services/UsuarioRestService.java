@@ -32,9 +32,13 @@ import br.com.infox.epp.pessoa.type.EstadoCivilEnum;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.ws.bean.UsuarioBean;
 import br.com.infox.epp.ws.bean.UsuarioSenhaBean;
+import br.com.infox.epp.ws.interceptors.Log;
+import br.com.infox.epp.ws.interceptors.TokenAuthentication;
 import br.com.infox.epp.ws.interceptors.ValidarParametros;
+import br.com.infox.epp.ws.messages.CodigosServicos;
 
 @Stateless
+@TokenAuthentication
 @ValidarParametros
 public class UsuarioRestService {
 
@@ -53,6 +57,7 @@ public class UsuarioRestService {
 	@Inject
 	private PasswordService passwordService;
 
+	@Log(codigo=CodigosServicos.WS_PERFIS_GRAVAR_USUARIO)
 	public String gravarUsuario(Object bean) throws DAOException {
 		UsuarioBean usuarioBean = (UsuarioBean) bean;
 		PessoaFisica pessoaFisica = pessoaFisicaManager.getByCpf(usuarioBean.getCpf());
@@ -112,6 +117,7 @@ public class UsuarioRestService {
 		return MS_SUCESSO_ATUALIZAR.codigo();
 	}
 
+	@Log(codigo=CodigosServicos.WS_PERFIS_ATUALIZAR_SENHA)
 	public String atualizarSenha(Object bean) throws DAOException {
 		UsuarioSenhaBean usuarioSenhaBean = (UsuarioSenhaBean) bean;
 		PessoaFisica pessoaFisica = pessoaFisicaManager.getByCpf(usuarioSenhaBean.getCpf());
