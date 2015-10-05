@@ -3,8 +3,8 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>br.com.infox.epp</groupId>
   <artifactId>epp</artifactId>
-  <packaging>war</packaging>
-        <version>2.10.0-2</version>
+  <packaging>war</packagingit 
+        <version>2.10.0-3</version>
   <name>epp</name>
   <url>http://www.infox.com.br</url>
   <dependencyManagement>
