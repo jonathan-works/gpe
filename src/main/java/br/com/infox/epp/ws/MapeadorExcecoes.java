@@ -4,12 +4,12 @@ import static br.com.infox.epp.ws.services.MensagensErroService.CODIGO_ERRO_INDE
 
 import javax.ejb.EJBException;
 import javax.inject.Inject;
-import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
+import br.com.infox.epp.ws.exception.ExcecaoServico;
 import br.com.infox.epp.ws.exception.ExcecaoServico.ErroServico;
 import br.com.infox.epp.ws.services.MensagensErroService;
 
@@ -29,8 +29,8 @@ public class MapeadorExcecoes implements ExceptionMapper<Throwable> {
 		if(e instanceof EJBException && e.getCause() != null) {
 			e = e.getCause();
 		}
-		if (e instanceof ValidationException) {
-			return Status.BAD_REQUEST.getStatusCode();
+		if (e != null && ExcecaoServico.class.isAssignableFrom(e.getClass())) {
+			return ((ExcecaoServico)e).getStatus();
 		} else {
 			return Status.INTERNAL_SERVER_ERROR.getStatusCode();
 		}

@@ -45,6 +45,16 @@ public interface ExcecaoServico {
 			return this.mensagem;
 		}
 	}
-		
+	
+	/**
+	 * Retorna o erro retornado pelo serviço
+	 * @return
+	 */
 	public ErroServico getErro();
+	
+	/**
+	 * Status HTTP que deve ser retornado ao ocorrer essa exeção
+	 * @return
+	 */
+	public int getStatus();
 }

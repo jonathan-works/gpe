@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.validation.ValidationException;
+import javax.ws.rs.core.Response.Status;
 
 import br.com.infox.epp.ws.messages.WSMessages;
 import br.com.infox.epp.ws.services.MensagensErroService;
@@ -56,6 +57,10 @@ public class ValidacaoException extends ValidationException implements ExcecaoMu
 			throw new ValidacaoException(MensagensErroService.CODIGO_ERRO_INDEFINIDO, "Erro indefinido");
 		}
 		return erros.get(0);
+	}
+	@Override
+	public int getStatus() {
+		return Status.BAD_REQUEST.getStatusCode();
 	}
 	
 
