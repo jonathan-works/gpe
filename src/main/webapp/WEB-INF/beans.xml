@@ -4,6 +4,7 @@
 	<interceptors>
 		<class>br.com.infox.epp.cdi.transaction.TransactionalInterceptor</class>
 		<class>br.com.infox.epp.ws.interceptors.LogInterceptor</class>
+		<class>br.com.infox.epp.ws.interceptors.TokenAuthenticationInterceptor</class>
 		<class>br.com.infox.epp.ws.interceptors.ValidacaoInterceptor</class>
 	</interceptors>
 	

@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.webservice.log.entity.LogWebserviceServer;
-import br.com.infox.epp.ws.ProcessadorRest;
 import br.com.infox.epp.ws.exception.ExcecaoServico.ErroServico;
 import br.com.infox.epp.ws.services.LogWebserviceServerManagerNewTransaction;
 import br.com.infox.epp.ws.services.MensagensErroService;;
@@ -39,8 +38,11 @@ public class LogInterceptor {
 	@AroundInvoke
 	private Object gerarLog(InvocationContext ctx) throws Exception {
 		//TODO: Alterar log de token ao ser definido novo método de autenticação
-		String token =((HttpServletRequest) request).getHeader(ProcessadorRest.NOME_TOKEN_HEADER_HTTP);
-				
+		String token =((HttpServletRequest) request).getHeader(TokenAuthenticationInterceptor.NOME_TOKEN_HEADER_HTTP);
+		if(token == null) {
+			token = "";
+		}
+		
 		Log log = ctx.getMethod().getAnnotation(Log.class);
 		if(log == null) {
 			log = ctx.getTarget().getClass().getAnnotation(Log.class);

@@ -10,9 +10,11 @@ import javax.ws.rs.core.MediaType;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.ws.bean.UsuarioPerfilBean;
 import br.com.infox.epp.ws.interceptors.Log;
+import br.com.infox.epp.ws.interceptors.TokenAuthentication;
 import br.com.infox.epp.ws.messages.CodigosServicos;
 import br.com.infox.epp.ws.services.PerfilRestService;
 
+@TokenAuthentication
 @Path(PerfilRest.PATH)
 public class PerfilRest {
 	
