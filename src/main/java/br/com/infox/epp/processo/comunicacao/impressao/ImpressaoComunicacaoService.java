@@ -1,8 +1,6 @@
 package br.com.infox.epp.processo.comunicacao.impressao;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +16,7 @@ import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
@@ -27,6 +26,7 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
+import br.com.infox.seam.util.ComponentUtil;
 
 @AutoCreate
 @Scope(ScopeType.STATELESS)
@@ -44,6 +44,8 @@ public class ImpressaoComunicacaoService implements Serializable {
 	@In
 	private DocumentoDownloader documentoDownloader;
 	
+	ModeloComunicacaoManager modeloComunicacaoManager = ComponentUtil.getComponent(ModeloComunicacaoManager.NAME);
+	
 	public MeioExpedicao getMeioExpedicao(Processo processo) {
 		MetadadoProcesso metadadoProcesso = processo.getMetadado(ComunicacaoMetadadoProvider.MEIO_EXPEDICAO);
 		if (metadadoProcesso != null) {
@@ -53,15 +55,9 @@ public class ImpressaoComunicacaoService implements Serializable {
 	}
 	
 	public Date getDataAssinatura(Processo processo) {
-		
-		MetadadoProcesso metadadoProcesso = processo.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO);
-		if (metadadoProcesso != null) {
-			DestinatarioModeloComunicacao destinatario = metadadoProcesso.getValue();
-			List<AssinaturaDocumento> assinaturas = destinatario.getDocumentoComunicacao().getDocumentoBin().getAssinaturas();
-			if (assinaturas != null && !assinaturas.isEmpty()) {
-				Collections.sort(assinaturas, comparatorDataAssinatura);
-				return assinaturas.get(0).getDataAssinatura();
-			}
+		List<AssinaturaDocumento> assinaturas = modeloComunicacaoManager.listAssinaturasComunicacao(processo);
+		if (assinaturas != null && !assinaturas.isEmpty() && assinaturas.get(0) != null) {
+			return assinaturas.get(0).getDataAssinatura();
 		}
 		return null;
 	}

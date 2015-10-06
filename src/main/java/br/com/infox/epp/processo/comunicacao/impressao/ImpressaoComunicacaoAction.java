@@ -2,6 +2,7 @@ package br.com.infox.epp.processo.comunicacao.impressao;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
@@ -34,6 +35,7 @@ public class ImpressaoComunicacaoAction implements Serializable {
 	
 	private Boolean impressaoCompleta = Boolean.FALSE;
 	private Integer selected;
+	private HashMap<Processo, Date> cacheDataAssinaturas = new HashMap<>();
 	
 	public void newInstance() {
 		impressaoCompleta = Boolean.FALSE;
@@ -45,7 +47,12 @@ public class ImpressaoComunicacaoAction implements Serializable {
 	}
 	
 	public Date getDataAssinatura(Processo processo) {
-		return impressaoComunicacaoService.getDataAssinatura(processo);
+		if (cacheDataAssinaturas.containsKey(processo)) {
+			return cacheDataAssinaturas.get(processo);
+		}
+		Date dataAssinatura = impressaoComunicacaoService.getDataAssinatura(processo); 
+		cacheDataAssinaturas.put(processo, dataAssinatura);
+		return dataAssinatura;
 	}
 	
 	public Boolean getImpresso(Processo processo) {
