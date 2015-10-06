@@ -81,7 +81,10 @@ final class TaskVariableResolver extends TaskVariable {
 				break;
 			}
 			taskInstance.setVariableLocally(getMappedName(), value);
+		} else {
+			taskInstance.setVariableLocally(getMappedName(), null);
 		}
+		
 	}
 
 	private Integer getIdDocumento() {
