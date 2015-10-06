@@ -5,6 +5,8 @@ import java.util.List;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.LockModeType;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -102,4 +104,18 @@ public abstract class Dao<T, I> {
 			throw new DAOException(e);
 		}
 	}
+	
+	@TransactionAttribute(TransactionAttributeType.MANDATORY)
+	public T lock(T object, LockModeType lock) {
+		if (!getEntityManager().contains(object)) {
+			object = getEntityManager().find(entityClass, getIdentifier(object));
+    	}
+		getEntityManager().lock(object, lock);
+		return object;
+	}
+	
+    public Object getIdentifier(T entity) {
+    	EntityManagerFactory emf = getEntityManager().getEntityManagerFactory();
+    	return emf.getPersistenceUnitUtil().getIdentifier(entity);
+    }
 }
