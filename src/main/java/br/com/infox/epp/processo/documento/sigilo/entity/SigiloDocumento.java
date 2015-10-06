@@ -7,14 +7,18 @@ import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQu
 import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.COLUMN_ID_DOCUMENTO;
 import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.COLUMN_ID_USUARIO_LOGIN;
 import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.COLUMN_MOTIVO;
+import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.NAMED_QUERY_DOCUMENTOS_ATIVO_PESSOA;
 import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.NAMED_QUERY_DOCUMENTO_SIGILOSO_POR_ID_DOCUMENTO;
 import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.NAMED_QUERY_INATIVAR_SIGILOS;
 import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.NAMED_QUERY_SIGILO_DOCUMENTO_ATIVO;
 import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.NAMED_QUERY_SIGILO_DOCUMENTO_ATIVO_POR_ID_DOCUMENTO;
+import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.NAMED_QUERY_SIGILO_DOCUMENTO_USUARIO_LOGIN_ATIVO;
+import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.QUERY_DOCUMENTOS_ATIVO_PESSOA;
 import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.QUERY_DOCUMENTO_SIGILOSO_POR_ID_DOCUMENTO;
 import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.QUERY_INATIVAR_SIGILOS;
 import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.QUERY_SIGILO_DOCUMENTO_ATIVO;
 import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.QUERY_SIGILO_DOCUMENTO_ATIVO_POR_ID_DOCUMENTO;
+import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.QUERY_SIGILO_DOCUMENTO_USUARIO_LOGIN_ATIVO;
 import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.SEQUENCE_NAME;
 import static br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery.TABLE_NAME;
 
@@ -43,9 +47,11 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 @Table(name = TABLE_NAME)
 @NamedQueries({
     @NamedQuery(name = NAMED_QUERY_SIGILO_DOCUMENTO_ATIVO, query = QUERY_SIGILO_DOCUMENTO_ATIVO),
+    @NamedQuery(name = NAMED_QUERY_SIGILO_DOCUMENTO_USUARIO_LOGIN_ATIVO, query = QUERY_SIGILO_DOCUMENTO_USUARIO_LOGIN_ATIVO),
     @NamedQuery(name = NAMED_QUERY_SIGILO_DOCUMENTO_ATIVO_POR_ID_DOCUMENTO, query = QUERY_SIGILO_DOCUMENTO_ATIVO_POR_ID_DOCUMENTO),
     @NamedQuery(name = NAMED_QUERY_DOCUMENTO_SIGILOSO_POR_ID_DOCUMENTO, query = QUERY_DOCUMENTO_SIGILOSO_POR_ID_DOCUMENTO),
-    @NamedQuery(name = NAMED_QUERY_INATIVAR_SIGILOS, query = QUERY_INATIVAR_SIGILOS) 
+    @NamedQuery(name = NAMED_QUERY_INATIVAR_SIGILOS, query = QUERY_INATIVAR_SIGILOS), 
+    @NamedQuery(name = NAMED_QUERY_DOCUMENTOS_ATIVO_PESSOA, query = QUERY_DOCUMENTOS_ATIVO_PESSOA) 
 })
 public class SigiloDocumento implements Serializable {
 
@@ -74,7 +80,7 @@ public class SigiloDocumento implements Serializable {
 
     @Column(name = COLUMN_ATIVO, nullable = false)
     private Boolean ativo;
-
+    
     public Integer getId() {
         return id;
     }
@@ -122,7 +128,7 @@ public class SigiloDocumento implements Serializable {
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
     }
-
+    
 	@Override
 	public int hashCode() {
 		final int prime = 31;

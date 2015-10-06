@@ -9,7 +9,9 @@ import static br.com.infox.epp.processo.sigilo.query.SigiloProcessoQuery.COLUMN_
 import static br.com.infox.epp.processo.sigilo.query.SigiloProcessoQuery.COLUMN_MOTIVO;
 import static br.com.infox.epp.processo.sigilo.query.SigiloProcessoQuery.COLUMN_SIGILOSO;
 import static br.com.infox.epp.processo.sigilo.query.SigiloProcessoQuery.NAMED_QUERY_SIGILO_PROCESSO_ATIVO;
+import static br.com.infox.epp.processo.sigilo.query.SigiloProcessoQuery.NAMED_QUERY_SIGILO_PROCESSO_USUARIO;
 import static br.com.infox.epp.processo.sigilo.query.SigiloProcessoQuery.QUERY_SIGILO_PROCESSO_ATIVO;
+import static br.com.infox.epp.processo.sigilo.query.SigiloProcessoQuery.QUERY_SIGILO_PROCESSO_USUARIO;
 import static br.com.infox.epp.processo.sigilo.query.SigiloProcessoQuery.SEQUENCE_NAME;
 import static br.com.infox.epp.processo.sigilo.query.SigiloProcessoQuery.TABLE_NAME;
 
@@ -39,6 +41,7 @@ import br.com.infox.epp.processo.entity.Processo;
 @Entity
 @Table(name = TABLE_NAME)
 @NamedQueries({ 
+	@NamedQuery(name = NAMED_QUERY_SIGILO_PROCESSO_USUARIO, query = QUERY_SIGILO_PROCESSO_USUARIO),
 	@NamedQuery(name = NAMED_QUERY_SIGILO_PROCESSO_ATIVO, query = QUERY_SIGILO_PROCESSO_ATIVO,
 				hints = {@QueryHint(name="org.hibernate.cacheable", value="true"),
 			 			 @QueryHint(name="org.hibernate.cacheRegion", value="br.com.infox.epp.processo.sigilo.entity.SigiloProcesso")}) 

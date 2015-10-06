@@ -13,6 +13,7 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.unidadedecisora.dao.UnidadeDecisoraColegiadaDAO;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
+import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 
 @Stateless
 @AutoCreate
@@ -41,5 +42,9 @@ public class UnidadeDecisoraColegiadaManager extends Manager<UnidadeDecisoraCole
 
 	public UnidadeDecisoraColegiada findByCodigoLocalizacao(String codigoLocalizacao) {
 		return getDao().findByCodigoLocalizacao(codigoLocalizacao);
+	}
+	
+	public List<UnidadeDecisoraColegiada> listUnidadeDecisoraColegiada(UnidadeDecisoraMonocratica decisoraMonocratica) {
+		return getDao().listUnidadeDecisoraColegiada(decisoraMonocratica);
 	}
 }

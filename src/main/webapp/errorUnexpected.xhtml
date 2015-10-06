@@ -10,7 +10,7 @@
     xmlns:rich="http://richfaces.org/rich"
     template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
     <ui:define name="body">
-    
+        <f:event listener="#{failResponseAction.putHeader()}" type="preRenderView" />
         <wi:panel
             id="unexpectedErrorPanel"
             styleClass="content-block">

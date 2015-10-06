@@ -35,25 +35,47 @@ import br.com.infox.epp.cliente.query.CalendarioEventosQuery;
                 @QueryHint(name="org.hibernate.cacheRegion", value="br.com.infox.epp.cliente.entity.CalendarioEventos") }),
 		@NamedQuery(name = CalendarioEventosQuery.GET_BY_DATA_RANGE, query = CalendarioEventosQuery.GET_BY_DATA_RANGE_QUERY, 
 		hints = { @QueryHint(name = "org.hibernate.cacheable", value = "true"),
-                @QueryHint(name="org.hibernate.cacheRegion", value="br.com.infox.epp.cliente.entity.CalendarioEventos") }) })
+                @QueryHint(name="org.hibernate.cacheRegion", value="br.com.infox.epp.cliente.entity.CalendarioEventos") }) 
+})
 @Cacheable
 public class CalendarioEventos implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
 	public static final String TABLE_NAME = "tb_calendario_eventos";
 
+	@Id
+	@SequenceGenerator(allocationSize = 1, initialValue = 1, name = "CalendarioEventosGenerator", sequenceName = "sq_tb_calendario_eventos")
+	@GeneratedValue(generator = "CalendarioEventosGenerator", strategy = GenerationType.SEQUENCE)
+	@Column(name = "id_calendario_evento", unique = true, nullable = false)
 	private int idCalendarioEvento;
+	
+	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_localizacao", nullable = false)
 	private Localizacao localizacao;
+	
+	@NotNull
+	@Column(name = "ds_evento", length = LengthConstants.DESCRICAO_PADRAO, nullable = false)
+	@Size(max = LengthConstants.DESCRICAO_PADRAO)
 	private String descricaoEvento;
+	
+	@NotNull
+	@Column(name = "dt_dia", nullable = false)
 	private Integer dia;
+	
+	@NotNull
+	@Column(name = "dt_mes", nullable = false)
 	private Integer mes;
+	
+	@Column(name = "dt_ano")
 	private Integer ano;
+	
+	@Transient
 	private Date dataEvento;
+	
+	@Transient
 	private Boolean repeteAno = Boolean.TRUE;
 
-	@SequenceGenerator(allocationSize = 1, initialValue = 1, name = "generator", sequenceName = "sq_tb_calendario_eventos")
-	@Id
-	@GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
-	@Column(name = "id_calendario_evento", unique = true, nullable = false)
 	public int getIdCalendarioEvento() {
 		return idCalendarioEvento;
 	}
@@ -62,9 +84,6 @@ public class CalendarioEventos implements Serializable {
 		this.idCalendarioEvento = idCalendarioEvento;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_localizacao", nullable = false)
-	@NotNull
 	public Localizacao getLocalizacao() {
 		return localizacao;
 	}
@@ -73,9 +92,6 @@ public class CalendarioEventos implements Serializable {
 		this.localizacao = localizacao;
 	}
 
-	@Column(name = "ds_evento", length = LengthConstants.DESCRICAO_PADRAO, nullable = false)
-	@Size(max = LengthConstants.DESCRICAO_PADRAO)
-	@NotNull
 	public String getDescricaoEvento() {
 		return descricaoEvento;
 	}
@@ -84,8 +100,6 @@ public class CalendarioEventos implements Serializable {
 		this.descricaoEvento = descricaoEvento;
 	}
 
-	@Column(name = "dt_dia", nullable = false)
-	@NotNull
 	public Integer getDia() {
 		return dia;
 	}
@@ -94,8 +108,6 @@ public class CalendarioEventos implements Serializable {
 		this.dia = dia;
 	}
 
-	@Column(name = "dt_mes", nullable = false)
-	@NotNull
 	public Integer getMes() {
 		return mes;
 	}
@@ -104,7 +116,6 @@ public class CalendarioEventos implements Serializable {
 		this.mes = mes;
 	}
 
-	@Column(name = "dt_ano")
 	public Integer getAno() {
 		return ano;
 	}
@@ -113,7 +124,6 @@ public class CalendarioEventos implements Serializable {
 		this.ano = ano;
 	}
 
-	@Transient
 	public Date getDataEvento() {
 		return dataEvento;
 	}
@@ -122,7 +132,6 @@ public class CalendarioEventos implements Serializable {
 		this.dataEvento = dataEvento;
 	}
 
-	@Transient
 	public Boolean getRepeteAno() {
 		return repeteAno;
 	}

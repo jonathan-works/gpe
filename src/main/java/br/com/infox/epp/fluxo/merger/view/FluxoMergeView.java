@@ -5,23 +5,22 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jbpm.graph.def.ProcessDefinition;
 
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.transaction.Transactional;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.fluxo.merger.model.MergePointsBundle;
 import br.com.infox.epp.fluxo.merger.service.FluxoMergeService;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Named
 @ViewScoped
-@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class FluxoMergeView implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -35,8 +34,6 @@ public class FluxoMergeView implements Serializable {
     private FluxoManager fluxoManager;
     @Inject
     private FluxoMergeService fluxoMergeService;
-    @Inject
-    private ProcessBuilder processBuilder;
 
     @PostConstruct
     public void init() {
@@ -68,18 +65,20 @@ public class FluxoMergeView implements Serializable {
         return mergePointsBundle;
     }
 
+    @Transactional
     public void merge() {
         Fluxo base = getBase();
         base.setXml(getReference().getXml());
         publish(base);
     }
 
+    @Transactional
     public void deploy(Fluxo fluxo) {
         publish(fluxo);
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     private void publish(Fluxo fluxo) {
+        ProcessBuilder processBuilder = ComponentUtil.getComponent(ProcessBuilder.NAME);
         String modifiedXml = fluxo.getXml();
         String publishedXml = fluxo.getXmlExecucao();
         if (publishedXml == null) {

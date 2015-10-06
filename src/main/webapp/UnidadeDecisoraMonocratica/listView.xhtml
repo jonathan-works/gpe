@@ -91,6 +91,11 @@
 	                clearRender="@this"
 	                label="#{infoxMessages['unidadeDecisoraMonocratica.localizacao']}" 
                     styleClass="#{empty item.entity.estruturaFilho ? 'tree-notselectable' : ''}"/>
+                    
+             <wi:selectOneMenuEntity id="chefeGabinete" value="#{unidadeDecisoraMonocraticaCrudAction.instance.chefeGabinete}" 
+                  label="#{infoxMessages['unidadeDecisoraMonocratica.chefeGabinete']}" rendered="#{unidadeDecisoraMonocraticaCrudAction.managed}" 
+                  items="#{unidadeDecisoraMonocraticaCrudAction.possiveisChefesGabinete}" required="true"
+                  optionLabel="#{item.cpf} - #{item.nome.toUpperCase()}"/>
             
              <wi:selectSituacaoRadio
 	               id="ativo"

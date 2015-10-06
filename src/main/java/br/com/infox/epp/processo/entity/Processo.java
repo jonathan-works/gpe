@@ -207,7 +207,6 @@ public class Processo implements Serializable {
     @JoinColumn(name="id_processo_root")
     private Processo processoRoot;
     
-    
     @PrePersist
     private void prePersist() {
     	if (idProcesso == null) {
@@ -238,7 +237,7 @@ public class Processo implements Serializable {
 	}
 	
     public Processo getProcessoRoot() {
-		return processoRoot == null ? this : processoRoot;
+		return processoRoot;
 	}
 
 	public void setProcessoRoot(Processo processoRoot) {

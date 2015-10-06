@@ -13,6 +13,7 @@ import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.query.UsuarioPerfilQuery;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 
 @AutoCreate
 @Name(UsuarioPerfilDAO.NAME)
@@ -55,6 +56,12 @@ public class UsuarioPerfilDAO extends DAO<UsuarioPerfil> {
     	params.put(UsuarioPerfilQuery.PARAM_DS_PERFIL_TEMPLATE, descricaoPerfil);
     	params.put(UsuarioPerfilQuery.PARAM_ATIVO, ativo);
     	return (Long) getNamedSingleResult(UsuarioPerfilQuery.EXISTE_USUARIO_COM_DESCRICAO_PERFIL_ATIVO, params) > 0;
+    }
+    
+    public List<PessoaFisica> listByLocalizacaoAtivo(Localizacao localizacao) {
+        Map<String,Object> params = new HashMap<>(1);
+        params.put(UsuarioPerfilQuery.PARAM_LOCALIZACAO, localizacao.getIdLocalizacao());
+        return getNamedResultList(UsuarioPerfilQuery.LIST_BY_LOCALIZACAO_ATIVO, params);
     }
     
 }

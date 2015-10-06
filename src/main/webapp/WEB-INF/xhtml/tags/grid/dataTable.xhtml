@@ -23,8 +23,8 @@
       bodyClass="dtable-p-b"
       style="#{panelStyle}"
       styleClass="dtable-p #{panelStyleClass} #{empty showSearchForm or showSearchForm ? '' : 'full-sized'}">
-      <rich:dataTable value="#{values}" id="#{id}" rowKeyVar="key" rowClasses="#{rowClasses} zebra-row"
-        styleClass="dtable rf-dt-crud #{styleClass}" onrowmouseup="#{onrowmouseup}" var="row" rendered="#{empty rendered? 'true' : rendered}">
+      <rich:dataTable value="#{values}" id="#{id}" rowKeyVar="key" rowClasses="#{rowClasses} zebra-row" 
+        styleClass="dtable rf-dt-crud #{styleClass}" onrowmouseup="#{onrowmouseup}" var="row" rendered="#{empty rendered? 'true' : rendered}" >
         <rich:column styleClass="dt-toolbar-col" rendered="#{empty showToolbarColumn ? true : showToolbarColumn}"
           			 rowspan="#{empty columnRowspan ? '1':columnRowspan}">
           <f:facet name="header">
@@ -45,6 +45,11 @@
           </ui:insert>
         </rich:column>
         <ui:insert />
+        <f:facet name="noData">
+        	<div align="left">
+        		#{empty noDataLabel ? infoxMessages['list.defaultNoDataLabel']: noDataLabel }
+        	</div>
+        </f:facet>
       </rich:dataTable>
       <h:outputText
         value="#{infoxMessages['list.resultPrefix']} #{not empty bean ? bean.resultCount : values.size()} #{infoxMessages['list.resultSufix']}"

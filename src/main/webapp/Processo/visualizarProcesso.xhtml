@@ -155,7 +155,9 @@
                     id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
                     <ui:define name="title">#{infoxMessages['sigiloProcesso.sigiloProcesso']}</ui:define>
-                    <ui:include src="sigiloProcesso.xhtml" />
+                    <ui:include src="sigiloProcesso.xhtml" >
+                        <c:set value="#{processoEpaHome.instance.naturezaCategoriaFluxo.fluxo}" target="#{usuarioRaiaList}" property="fluxo" />
+                    </ui:include>
                 </ui:decorate>
             </infox:tab>
             <infox:tab
@@ -168,7 +170,9 @@
                     id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
                     <ui:define name="title">#{infoxMessages['sigiloDocumento.sigiloDocumento']}</ui:define>
-                    <ui:include src="sigiloDocumento.xhtml" />
+                    <ui:include src="sigiloDocumento.xhtml" >
+                         <c:set value="#{processoEpaHome.instance.naturezaCategoriaFluxo.fluxo}" target="#{usuarioRaiaList}" property="fluxo" />
+                    </ui:include>
                 </ui:decorate>
             </infox:tab>
             <infox:tab

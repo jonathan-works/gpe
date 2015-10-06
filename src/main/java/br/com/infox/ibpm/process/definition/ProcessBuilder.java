@@ -15,7 +15,6 @@ import java.util.Objects;
 import java.util.Set;
 
 import javax.ejb.Remove;
-import javax.ejb.Stateful;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
@@ -58,6 +57,7 @@ import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.fluxo.manager.RaiaPerfilManager;
@@ -88,7 +88,7 @@ import br.com.infox.log.Logging;
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
 @Transactional
-@Stateful
+@ContextDependency
 public class ProcessBuilder implements Serializable {
 
     private static final String PROCESS_DEFINITION_TABPANEL_ID = ":processDefinition";
@@ -146,14 +146,6 @@ public class ProcessBuilder implements Serializable {
     private Boolean importacaoConcluida;
     private Set<String> mensagensImportacao;
 
-    /**
-     * Método foi necessário ser adicionado devido ao Seam ter problemas
-     * com anotação @Stateful
-     */
-    @Remove
-    public void destroy(){
-    }
-    
     public void newInstance() {
         instance = null;
     }

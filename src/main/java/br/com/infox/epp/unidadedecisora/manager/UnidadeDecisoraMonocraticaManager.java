@@ -3,6 +3,8 @@ package br.com.infox.epp.unidadedecisora.manager;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -14,6 +16,7 @@ import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 
 @AutoCreate
 @Scope(ScopeType.EVENT)
+@Stateless
 @Name(UnidadeDecisoraMonocraticaManager.NAME)
 public class UnidadeDecisoraMonocraticaManager extends Manager<UnidadeDecisoraMonocraticaDAO, UnidadeDecisoraMonocratica> {
 

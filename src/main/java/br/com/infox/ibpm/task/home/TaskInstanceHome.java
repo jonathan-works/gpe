@@ -50,6 +50,7 @@ import br.com.infox.certificado.bean.CertificateSignatureBean;
 import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
 import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
 import br.com.infox.certificado.exception.CertificadoException;
+import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
@@ -96,6 +97,7 @@ import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.util.UserHandler;
 import br.com.infox.ibpm.variable.VariableHandler;
 import br.com.infox.ibpm.variable.entity.VariableInfo;
+import br.com.infox.ibpm.variable.file.FileVariableHandler;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.context.ContextFacade;
@@ -157,6 +159,10 @@ public class TaskInstanceHome implements Serializable {
 	
 	@Inject
 	private SituacaoProcessoDAO situacaoProcessoDAO;
+	@Inject
+	private FileVariableHandler fileVariableHandler;
+	@Inject
+	private ActionMessagesService actionMessagesService;
 
 	private TaskInstance taskInstance;
 	private Map<String, Object> mapaDeVariaveis;
@@ -1013,4 +1019,22 @@ public class TaskInstanceHome implements Serializable {
 		this.variaveisDocumento = variaveisDocumento;
 	}
 
+	public void removerDocumento(String variableFieldName) {
+		Documento documento = getVariaveisDocumento().get(variableFieldName);
+		if (documento != null) {
+			if (documento.getId() != null) {
+				try {
+					fileVariableHandler.removeDocumento(documento, variableFieldName);
+					variaveisDocumento.put(variableFieldName, new Documento());
+					variaveisDocumento.get(variableFieldName).setClassificacaoDocumento(documento.getClassificacaoDocumento());
+				} catch (DAOException e) {
+					LOG.error("", e);
+					actionMessagesService.handleDAOException(e);
+					documentoManager.refresh(documento);
+				}
+			} else {
+				documento.setDocumentoBin(null);
+			}
+		}
+	}
 }
