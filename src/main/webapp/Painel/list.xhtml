@@ -44,8 +44,13 @@
 	    
 	    <div class="ui-tabs-panel ui-corner-bottom" style="padding: 0.8em; margin-top: 1em;">
 	    
-	    	<rich:panel header="#{infoxMessages[painelUsuarioController.localeTitleKey]}"  
-	    		style="width: 15%; display: inline-block; margin-right: 0.5em; vertical-align: top">
+	    	<rich:panel style="width: 15%; display: inline-block; margin-right: 0.5em; vertical-align: top">
+	    		<f:facet name="header">
+	    			<h:outputText value="#{infoxMessages[painelUsuarioController.localeTitleKey]}"/>
+	    				<h:graphicImage url="#{wiSkin.imageFolder}/filter_add16x16.png" style="vertical-align: middle; margin-left: 12em;"
+	    					title="#{infoxMessages['painel.adicionarFiltro']}"
+	    					onclick="#{rich:component('modalFiltrosPainel')}.show()" />
+	    		</f:facet>
 		    	<h:form id="form-fluxo">	
 		    		<a:jsFunction id="selectFluxo" name="selectFluxo" immediate="true" execute="@this" onbegin="infox.showLoading('Buscando Tarefas...');"
 		    			oncomplete="infox.hideLoading();" render="divPainelProcessos" action="#{painelUsuarioController.selectFluxo}" >
@@ -132,5 +137,6 @@
 	      
 	    </rich:popupPanel>
 	</s:div>
+	<ui:include src="/Painel/filtroPainelModal.xhtml"></ui:include>
   </ui:define>
 </ui:composition>

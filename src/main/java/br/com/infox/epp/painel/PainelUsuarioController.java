@@ -71,6 +71,7 @@ public class PainelUsuarioController implements Serializable {
 	private List<TipoProcesso> tipoProcessoDisponiveis;
 	private boolean exibirColunasPadrao = true;
 	private Boolean expedida;
+	private String numeroProcesso;
 	private String idProcessDefinition;
 
 	@PostConstruct
@@ -144,7 +145,7 @@ public class PainelUsuarioController implements Serializable {
 		if (getSelected() != null && getSelectedFluxo() != null) {
 			if (processoIdList == null) {
 				processoIdList = situacaoProcessoManager.getIdProcessosAbertosByIdTarefa(getSelected(), 
-						selectedFluxo.getTipoProcesso(), getSelectedFluxo().getExpedida());
+						selectedFluxo.getTipoProcesso(), getSelectedFluxo().getExpedida(), getNumeroProcesso());
 			}
 			return processoIdList;
 		}
@@ -218,6 +219,17 @@ public class PainelUsuarioController implements Serializable {
 				}
 			}
 		}
+	}
+	
+	public void adicionarFiltroNumeroProcessoRoot(){
+		loadTipoProcessoDisponiveis();
+		loadFluxosDisponiveis();
+		processoIdList = null; 
+	}
+	
+	public void limparFiltros(){
+		setNumeroProcesso("");
+		processoIdList = null; //TODO ver isso aqui
 	}
 
 	public VariavelProcesso getVariavelProcesso(Processo processo, String nome, Integer idTarefa) {
@@ -322,7 +334,16 @@ public class PainelUsuarioController implements Serializable {
 	public boolean isExibirColunasPadrao() {
 		return exibirColunasPadrao;
 	}
+	
 	public void setExibirColunasPadrao(boolean exibirColunasPadrao) {
 		this.exibirColunasPadrao = exibirColunasPadrao;
+	}
+	
+	public String getNumeroProcesso() {
+		return numeroProcesso;
+	}
+
+	public void setNumeroProcesso(String numeroProcesso) {
+		this.numeroProcesso = numeroProcesso;
 	}
 }

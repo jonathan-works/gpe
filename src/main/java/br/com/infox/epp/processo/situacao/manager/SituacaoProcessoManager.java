@@ -72,10 +72,14 @@ public class SituacaoProcessoManager {
 		}
 	}
 
+	public List<Integer> getIdProcessosAbertosByIdTarefa(Tuple selected, TipoProcesso tipoProcesso, boolean isComunicacaoExpedida, String numeroProcessoRoot) {
+		return situacaoProcessoDAO.getIdProcessosAbertosByIdTarefa(selected, tipoProcesso, isComunicacaoExpedida, numeroProcessoRoot);
+	}
+	
 	public List<Integer> getIdProcessosAbertosByIdTarefa(Tuple selected, TipoProcesso tipoProcesso, boolean isComunicacaoExpedida) {
 		return situacaoProcessoDAO.getIdProcessosAbertosByIdTarefa(selected, tipoProcesso, isComunicacaoExpedida);
 	}
-
+	
 	public List<Tuple> getChildrenList(Integer idFluxo, TipoProcesso tipoProcesso, boolean comunicacoesExpedidas) {
 		return situacaoProcessoDAO.getChildrenList(idFluxo, tipoProcesso, comunicacoesExpedidas);
 	}
