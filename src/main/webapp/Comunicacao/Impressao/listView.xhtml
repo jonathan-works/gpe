@@ -104,10 +104,11 @@
 	        	
 	        	<div/>
 	        	<a:commandButton id="buttonImprimir" 
-	        		styleClass="buttons" 
+	        		styleClass="buttons"
+	        		type="submit"
 	        		value="#{infoxMessages['comunicacao.impressao.imprimirComunicacao']}"
-	        		onmouseup="#{rich:component('imprimirComunicacaoPopUp')}.hide();"
-	        		oncomplete="window.open('#{pathResolver.getContextPath()}/Comunicacao/Impressao/imprimirComunicacao.seam?scid=#{conversation.id}', '_blank');" 
+	        		onclick="#{rich:component('imprimirComunicacaoPopUp')}.hide();"
+	        		oncomplete="window.open('#{pathResolver.getContextPath()}/Comunicacao/Impressao/imprimirComunicacao.seam?scid=#{conversation.id}', '_blank');"
 	        		render=":panelImpressaoComunicacoes">
 	        	</a:commandButton>
 	        		
@@ -129,7 +130,7 @@
 	        	<a:commandButton id="buttonMarcarImpresso" 
 	        		styleClass="buttons" 
 	        		value="#{infoxMessages['comunicacao.impressao.marcarImpressoConfirmar']}"
-	        		onmouseup="#{rich:component('marcarImpressoPopUp')}.hide();"
+	        		onclick="#{rich:component('marcarImpressoPopUp')}.hide();"
 	        		action="#{impressaoComunicacaoAction.marcarComoImpresso()}"
 	        		render=":panelImpressaoComunicacoes">
 	        	</a:commandButton>
