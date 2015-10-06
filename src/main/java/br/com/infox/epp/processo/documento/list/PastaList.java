@@ -21,7 +21,7 @@ public class PastaList extends EntityList<Pasta> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "pastaList";
     private final String DEFAULT_EJBQL = "select o from Pasta o where o.processo = #{pastaList.processo}";
-    private final String DEFAULT_ORDER = "ordem"; 
+    private final String DEFAULT_ORDER = "ordem, o.nome"; 
     
     private Processo processo;
     
