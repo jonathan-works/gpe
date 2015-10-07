@@ -34,15 +34,15 @@
 		          limitRender="true"
 		          action="#{painelUsuarioController.adicionarFiltroNumeroProcessoRoot}"
 		          oncomplete="if(#{not facesContext.isValidationFailed()}){#{rich:component('modalFiltrosPainel')}.hide()}"
-		          render="divPainelProcessos, pageBodyDialogMessage" />
+		          render="divPainelProcessos panelFluxos pageBodyDialogMessage" />
 	          <a:commandButton
 		          value="#{infoxMessages['button.limpar']}"
 		          styleClass="buttons"
-		          execute="@form"
+		          execute="@this"
 		          limitRender="true"
-		          action="#{painelUsuarioController.limparFiltros()}"
-		          oncomplete="if(#{not facesContext.isValidationFailed()}){#{rich:component('modalFiltrosPainel')}.hide()}"
-		          render="divPainelProcessos, pageBodyDialogMessage" />
+		          action="#{painelUsuarioController.limparFiltros}"
+		          oncomplete="#{rich:component('modalFiltrosPainel')}.hide()"
+		          render="divPainelProcessos panelFluxos pageBodyDialogMessage" />
 		</h:form>
 
 	</rich:popupPanel>

@@ -97,7 +97,7 @@ public class PainelUsuarioController implements Serializable {
 	}
 
 	private void loadFluxosDisponiveis() {
-		fluxosDisponiveis = situacaoProcessoManager.getFluxosDisponiveis(tipoProcessoDisponiveis);
+		fluxosDisponiveis = situacaoProcessoManager.getFluxosDisponiveis(tipoProcessoDisponiveis, getNumeroProcesso());
 	}
 
 	protected void loadTipoProcessoDisponiveis() {
@@ -222,14 +222,20 @@ public class PainelUsuarioController implements Serializable {
 	}
 	
 	public void adicionarFiltroNumeroProcessoRoot(){
-		loadTipoProcessoDisponiveis();
-		loadFluxosDisponiveis();
+		init();
+		painelTreeHandler.setNumeroProcessoRoot(getNumeroProcesso());
+		painelTreeHandler.clearTree();
+		setSelectedFluxo(null);
 		processoIdList = null; 
 	}
 	
 	public void limparFiltros(){
 		setNumeroProcesso("");
-		processoIdList = null; //TODO ver isso aqui
+		init();
+		painelTreeHandler.setNumeroProcessoRoot("");
+		painelTreeHandler.clearTree();
+		setSelectedFluxo(null);
+		processoIdList = null;
 	}
 
 	public VariavelProcesso getVariavelProcesso(Processo processo, String nome, Integer idTarefa) {
@@ -321,6 +327,10 @@ public class PainelUsuarioController implements Serializable {
 	
 	public boolean isShowTarefasTree() {
 		return getSelectedFluxo() != null;
+	}
+	
+	public boolean isShowFiltroInfo() {
+		return getNumeroProcesso() != null && !getNumeroProcesso().isEmpty();
 	}
 	
 	public List<TipoProcesso> getTipoProcessoDisponiveis() {
