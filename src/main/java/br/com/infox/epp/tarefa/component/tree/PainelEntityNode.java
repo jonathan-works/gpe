@@ -21,6 +21,7 @@ public class PainelEntityNode extends EntityNode<Tuple> {
     private TipoProcesso tipoProcesso;
     private boolean comunicacoesExpedidas;
     private boolean expanded = true;
+    private String numeroProcessoRoot;
 
     public PainelEntityNode(TipoProcesso tipoProcesso, boolean comunicacoesExpedidas) {
         super("");
@@ -33,12 +34,19 @@ public class PainelEntityNode extends EntityNode<Tuple> {
         this.tipoProcesso = tipoProcesso;
         this.comunicacoesExpedidas = comunicacoesExpedidas;
     }
+    
+    public PainelEntityNode(EntityNode<Tuple> parent, Tuple entity, TipoProcesso tipoProcesso, boolean comunicacoesExpedidas, String numeroProcessoRoot) {
+        super(parent, entity, new String[0]);
+        this.tipoProcesso = tipoProcesso;
+        this.comunicacoesExpedidas = comunicacoesExpedidas;
+        this.numeroProcessoRoot = numeroProcessoRoot;
+    }
 
     public List<EntityNode<Tuple>> getCaixas() {
         if (caixas == null) {
             caixas = new ArrayList<EntityNode<Tuple>>();
             if (!isLeaf()) {
-            	List<Tuple> children = getSituacaoProcessoManager().getCaixaList(tipoProcesso, getTarefaId(), comunicacoesExpedidas);
+            	List<Tuple> children = getSituacaoProcessoManager().getCaixaList(tipoProcesso, getTarefaId(), comunicacoesExpedidas, numeroProcessoRoot);
         		for (Tuple entity : children) {
         		    caixas.add(new PainelEntityNode(this, entity, tipoProcesso, comunicacoesExpedidas));
         		}
