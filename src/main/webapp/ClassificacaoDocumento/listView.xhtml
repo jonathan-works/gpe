@@ -91,14 +91,24 @@
                 label="#{infoxMessages['tipoProcessoDocumento.uso']}"
                 items="#{classificacaoDocumentoFacade.getTipoDocumentoEnumValues()}"
                 value="#{classificacaoDocumentoCrudAction.instance.inTipoDocumento}"
-                required="true" showLabelSelecione="true" />
+                required="true" showLabelSelecione="true" >
+                <f:ajax event="change" execute="@this" render=":defaultTabPanel:classificacaoDocumentoForm:tipoDocumentoDiv" />
+            </wi:selectOneMenuEnum>
             <wi:selectBooleanRadio id="sistema"
                 label="#{infoxMessages['tipoProcessoDocumento.sistema']}"
                 value="#{classificacaoDocumentoCrudAction.instance.sistema}" />
             <wi:selectBooleanRadio id="publico"
                 label="#{infoxMessages['tipoProcessoDocumento.publico']}"
                 value="#{classificacaoDocumentoCrudAction.instance.publico}" />
-            <wi:selectSituacaoRadio id="ativo"
+            <s:div id="tipoDocumentoDiv" style="display: inline-block;">
+                <wi:selectOneMenuEntity id="tipoDocumento"
+    				label="#{infoxMessages['tipoModeloDocumento.tableTitle']}"
+    				items="#{classificacaoDocumentoCrudAction.tiposModeloDocumento}"
+    				rendered="#{classificacaoDocumentoCrudAction.canShowSelectTipoDocumento()}"
+    				value="#{classificacaoDocumentoCrudAction.tipoModeloDocumento}"
+    				showLabelSelecione="true" />
+            </s:div>
+			<wi:selectSituacaoRadio id="ativo"
                 label="#{infoxMessages['field.situacao']}"
                 value="#{classificacaoDocumentoCrudAction.instance.ativo}" />
             <wi:inputTextarea id="tipoProcessoDocumentoObservacao"
