@@ -1,6 +1,5 @@
 package br.com.infox.epp.processo.home;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJBException;
@@ -136,27 +135,6 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 		return detalhesMetadados;
 	}
 	
-	public List<MetadadoProcesso> getMetadados(String type) {
-	    List<MetadadoProcesso> metadadosOfType = new ArrayList<>();
-	    for (MetadadoProcesso metadadoProcesso : getDetalhesMetadados()) {
-	        if (metadadoProcesso.getMetadadoType().equals(type)) {
-	            metadadosOfType.add(metadadoProcesso);
-	        }
-	    }
-	    return metadadosOfType;
-	}
-	
-	public MetadadoProcesso getMetadado(String type) {
-	    MetadadoProcesso metadadoOfType = null;
-	    for (MetadadoProcesso metadadoProcesso : getDetalhesMetadados()) {
-            if (metadadoProcesso.getMetadadoType().equals(type)) {
-                metadadoOfType = metadadoProcesso;
-                break;
-            }
-        }
-	    return metadadoOfType;
-	}
-
 	public void visualizarTarefaProcesso() {
 		processoManager.visualizarTask(instance, tarefaId.intValue(), Authenticator.getUsuarioPerfilAtual());
 	}
