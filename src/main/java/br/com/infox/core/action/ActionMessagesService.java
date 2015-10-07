@@ -4,6 +4,7 @@ import static java.text.MessageFormat.format;
 
 import java.io.Serializable;
 
+import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -90,6 +91,8 @@ public class ActionMessagesService implements Serializable {
 			FacesMessages.instance().add(lockMessage);
 		} else if (exception instanceof DAOException) {
 			handleDAOException((DAOException) exception);
+		} else if (exception instanceof EJBException) {
+			handleException(exception.getCause().getMessage(), exception);
 		} else {
 			handleException(exception.getMessage(), exception);
 		}
