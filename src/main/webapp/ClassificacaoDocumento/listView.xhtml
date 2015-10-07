@@ -103,9 +103,9 @@
             <s:div id="tipoDocumentoDiv" style="display: inline-block;">
                 <wi:selectOneMenuEntity id="tipoDocumento"
     				label="#{infoxMessages['tipoModeloDocumento.tableTitle']}"
-    				items="#{classificacaoDocumentoCrudAction.tiposModeloDocumento}"
+    				valueItems="#{classificacaoDocumentoCrudAction.tiposModeloDocumento}"
     				rendered="#{classificacaoDocumentoCrudAction.canShowSelectTipoDocumento()}"
-    				value="#{classificacaoDocumentoCrudAction.tipoModeloDocumento}"
+    				value="#{classificacaoDocumentoCrudAction.instance.tipoModeloDocumento}"
     				showLabelSelecione="true" />
             </s:div>
 			<wi:selectSituacaoRadio id="ativo"

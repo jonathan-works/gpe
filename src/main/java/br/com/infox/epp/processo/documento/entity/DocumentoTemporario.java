@@ -44,7 +44,7 @@ public class DocumentoTemporario implements Serializable {
     private static final long serialVersionUID = 1L;
     
     private static final String GENERATOR_NAME = "DocumentoTemporarioGenerator";
-    private static final String SEQUENCE_NAME = "tce.sq_documento_temporario";
+    private static final String SEQUENCE_NAME = "sq_documento_temporario";
     
     @Id
     @SequenceGenerator(allocationSize = 1, initialValue = 1, name = GENERATOR_NAME, sequenceName = SEQUENCE_NAME)

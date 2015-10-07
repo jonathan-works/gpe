@@ -38,25 +38,24 @@ import br.com.infox.epp.certificado.SignableDocument;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
-import br.com.infox.epp.documento.entity.VinculoClassificacaoTipoDocumento;
+import br.com.infox.epp.documento.entity.TipoModeloDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
-import br.com.infox.epp.documento.manager.VinculoClassificacaoTipoDocumentoManager;
 import br.com.infox.epp.documento.type.ExpressionResolver;
 import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.entity.DocumentoTemporario;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoTemporarioManager;
 import br.com.infox.epp.processo.documento.service.DocumentoUploaderService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
-import br.com.infox.epp.processo.documento.entity.DocumentoTemporario;
-import br.com.infox.epp.processo.documento.manager.DocumentoTemporarioManager;
 import br.com.infox.ibpm.task.home.VariableTypeResolver;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -73,8 +72,6 @@ public class AnexarDocumentosView implements Serializable {
     
     @Inject
     private DocumentoTemporarioManager documentoTemporarioManager;
-    @Inject
-    private VinculoClassificacaoTipoDocumentoManager vinculoClassificacaoTipoDocumentoManager;
     
     private DocumentoBinManager documentoBinManager = ComponentUtil.getComponent(DocumentoBinManager.NAME);
     private DocumentoUploaderService documentoUploaderService = ComponentUtil.getComponent(DocumentoUploaderService.NAME);
@@ -179,10 +176,10 @@ public class AnexarDocumentosView implements Serializable {
     }
 
     private void checkVinculoClassificacaoDocumento() {
-        VinculoClassificacaoTipoDocumento vinculo = vinculoClassificacaoTipoDocumentoManager.findVinculacaoByClassificacao(getDocumentoEditor().getClassificacaoDocumento());
-        if (vinculo != null) {
+    	TipoModeloDocumento tipoModeloDocumento = getDocumentoEditor().getClassificacaoDocumento().getTipoModeloDocumento();
+        if (tipoModeloDocumento != null) {
             setShowModeloDocumentoCombo(true);
-            setModeloDocumentoList(modeloDocumentoManager.getModeloDocumentoByTipo(vinculo.getTipoModeloDocumento()));
+            setModeloDocumentoList(modeloDocumentoManager.getModeloDocumentoByTipo(tipoModeloDocumento));
             setModeloDocumento(null);
         } else {
             setShowModeloDocumentoCombo(false);
