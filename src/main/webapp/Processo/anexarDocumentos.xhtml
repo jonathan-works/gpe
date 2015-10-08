@@ -82,7 +82,7 @@
                                 value="#{infoxMessages['crud.update']}"
                                 onclick="infox.showLoading();" oncomplete="infox.hideLoading();"
                                 rendered="#{anexarDocumentosView.showUploaderButton}"
-                                render="@form documentoDataTable pageBodyDialogMessage" />
+                                render="uploadPanel documentoDataTable pageBodyDialogMessage" />
                         </s:div>
                     </s:div>
                 </s:div>
@@ -216,7 +216,7 @@
                                 rendered="#{isModelo and not row.documentoBin.minuta}"
                                 status=":status" styleClass="opacityHover"
                                 onclick="infox.showLoading();" render="@this"
-                                oncomplete="infox.hideLoading(); window.open('#{pathResolver.contextPath}/Processo/downloadDocumento.seam');" >
+                                oncomplete="infox.hideLoading(); window.open('#{pathResolver.contextPath}/downloadDocumento.seam?id=#{row.documentoBin.id}&amp;binario=true');" >
                                    <infox:flashcopy />
                                    <h:graphicImage url="#{wiSkin.imageFolder}/view.png" />
                                    <f:setPropertyActionListener value="#{row}" target="#{flash.documentoTemporario}" />
@@ -227,9 +227,9 @@
                                rendered="#{not isModelo}" render="@this" limitRender="true"
                                status=":status" styleClass="opacityHover"
                                onclick="infox.showLoading();"
-                               oncomplete="infox.hideLoading(); window.open('#{pathResolver.contextPath}/Processo/downloadDocumento.seam');">
+                               oncomplete="infox.hideLoading(); window.open('#{pathResolver.contextPath}/downloadDocumento.seam?id=#{row.documentoBin.id}&amp;binario=true');">
                                <infox:flashcopy />
-                               <h:graphicImage url="#{wiSkin.imageFolder}/download.gif" />
+                               <h:graphicImage url="#{wiSkin.imageFolder}/view.png" />
                                <f:setPropertyActionListener value="#{row}" target="#{flash.documentoTemporario}" />
                             </a:commandLink>
 

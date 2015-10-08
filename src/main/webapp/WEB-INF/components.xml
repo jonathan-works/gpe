@@ -2,7 +2,7 @@
 <components
     xmlns="http://jboss.org/schema/seam/components"
     xmlns:core="http://jboss.org/schema/seam/core"
-    xmlns:ui="http://jboss.com/products/seam/ui"
+    xmlns:ui="http://jboss.org/schema/seam/ui"
     xmlns:bpm="http://jboss.org/schema/seam/bpm"
     xmlns:async="http://jboss.org/schema/seam/async"
     xmlns:persistence="http://jboss.org/schema/seam/persistence"
