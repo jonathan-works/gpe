@@ -8,8 +8,15 @@
   xmlns:rich="http://richfaces.org/rich"
   xmlns:wi="http://www.itx.com.br/jsf">
 
+	<script>
+		function clearNumeroProcessoRootField() {
+			#{rich:jQuery('fieldNumeroProcessoRoot')}.val('');
+			#{rich:jQuery('modalFiltrosForm2')}.find('.property-error.property-msg').remove();
+			#{rich:jQuery('modalFiltrosForm2')}.find('.property-error').removeClass('property-error');
+		} 
+	</script>
 	<rich:popupPanel id="modalFiltrosPainel" height="150"
-		onbeforehide="clearNumeroProcessoRootField()">
+		onbeforeshow="clearNumeroProcessoRootField()">
 		<f:facet name="header">
 			<h:outputText value="#{infoxMessages['painel.adicionarFiltro']}" />
 		</f:facet>
@@ -26,7 +33,6 @@
 		          label="#{infoxMessages['processo.numeroProcesso']}"
 		          value="#{painelUsuarioController.numeroProcesso}"
 		          required="true" />
-		        
 		      <a:commandButton
 		          value="#{infoxMessages['button.add']}"
 		          styleClass="buttons"
@@ -34,7 +40,7 @@
 		          limitRender="true"
 		          action="#{painelUsuarioController.adicionarFiltroNumeroProcessoRoot}"
 		          oncomplete="if(#{not facesContext.isValidationFailed()}){#{rich:component('modalFiltrosPainel')}.hide()}"
-		          render="divPainelProcessos panelFluxos pageBodyDialogMessage" />
+		          render="divPainelProcessos panelFluxos pageBodyDialogMessage @form" />
 	          <a:commandButton
 		          value="#{infoxMessages['button.limpar']}"
 		          styleClass="buttons"
@@ -46,12 +52,5 @@
 		</h:form>
 
 	</rich:popupPanel>
-	<script>
-		function clearNumeroProcessoRootField() {
-			#{rich:jQuery('fieldNumeroProcessoRoot')}.val('');
-			$('.errorFields.errors').remove();
-            $('.errors').removeClass('errors');
-		} 
-	</script>
-
+	
 </ui:composition>
