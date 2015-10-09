@@ -71,7 +71,8 @@ public class SituacaoProcessoDAO {
 	 public List<Tuple> getRootList(TipoProcesso tipoProcesso, boolean comunicacoesExpedidas, String numeroProcessoRoot) {
 	        CriteriaQuery<Tuple> criteriaQuery = createQueryRootList(tipoProcesso, comunicacoesExpedidas);
 	        if (numeroProcessoRoot != null && !numeroProcessoRoot.isEmpty()) {
-	        	appendNumeroProcessoRootFilter(criteriaQuery, numeroProcessoRoot);
+	        	appendNumeroProcessoRootFilter(criteriaQuery);
+	        	return getEntityManager().createQuery(criteriaQuery).setParameter("numeroProcessoRoot", numeroProcessoRoot).getResultList();
 	        }
 	        return getEntityManager().createQuery(criteriaQuery).getResultList();
 	    }
@@ -90,7 +91,8 @@ public class SituacaoProcessoDAO {
 			appendMandatoryFilters(criteriaQuery, tipoProcesso);
 			appendTipoProcessoFilters(criteriaQuery, tipoProcesso, comunicacoesExpedidas);
 			if (numeroProcessoRoot != null && !numeroProcessoRoot.isEmpty()) {
-				appendNumeroProcessoRootFilter(criteriaQuery, numeroProcessoRoot);
+				appendNumeroProcessoRootFilter(criteriaQuery);
+				return getEntityManager().createQuery(criteriaQuery).setParameter("numeroProcessoRoot", numeroProcessoRoot).getResultList();
 			}
 	        return getEntityManager().createQuery(criteriaQuery).getResultList();
 	    }
@@ -149,7 +151,8 @@ public class SituacaoProcessoDAO {
         appendTipoProcessoFilters(criteriaQuery, tipoProcesso, comunicacoesExpedidas);
         
 		if (numeroProcessoRoot != null && !numeroProcessoRoot.isEmpty()) {
-			appendNumeroProcessoRootFilter(criteriaQuery, numeroProcessoRoot);
+			appendNumeroProcessoRootFilter(criteriaQuery);
+			return getEntityManager().createQuery(criteriaQuery).setParameter("numeroProcessoRoot", numeroProcessoRoot).getResultList();
 		}
         return getEntityManager().createQuery(criteriaQuery).getResultList();
     }
@@ -159,14 +162,16 @@ public class SituacaoProcessoDAO {
 		appendTipoProcessoFilter(abstractQuery, tipoProcesso);
 	}
 	
-    private void appendNumeroProcessoRootFilter(AbstractQuery<?> abstractQuery, String numeroProcessoRoot) {
+    private void appendNumeroProcessoRootFilter(AbstractQuery<?> abstractQuery) {
     	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
     	Root<?> root = abstractQuery.getRoots().iterator().next();
     	Subquery<Integer> subqueryProcesso = abstractQuery.subquery(Integer.class);
     	Root<Processo> processo = subqueryProcesso.from(Processo.class);
     	Join<Processo, Processo> processoRoot = processo.join(Processo_.processoRoot);
-    	subqueryProcesso.where(cb.like(processoRoot.get(Processo_.numeroProcesso), "%" + numeroProcessoRoot + "%"),
-    				cb.equal(root.get(SituacaoProcesso_.idProcesso.getName()), processo.get(Processo_.idProcesso)));
+    	subqueryProcesso.where(
+    			cb.like(processoRoot.get(Processo_.numeroProcesso), 
+    					cb.concat(cb.concat(cb.literal("%"), cb.parameter(String.class, "numeroProcessoRoot")), cb.literal("%"))),
+				cb.equal(root.get(SituacaoProcesso_.idProcesso.getName()), processo.get(Processo_.idProcesso)));
     	subqueryProcesso.select(cb.literal(1));
 
     	Predicate predicate = abstractQuery.getRestriction();
