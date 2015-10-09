@@ -9,6 +9,7 @@
 
     <wi:commandButton id="newInstanceButton"
         action="#{newInstanceAction}"
+        actionListener="#{newInstanceActionListener}"
         rendered="#{wi:get(rendered, home.managed)}"
         reRender="#{empty reRender ? 'pageBody, pageBodyDialogMessage' : reRender}"
         execute="@this" value="#{infoxMessages['crud.new']}">

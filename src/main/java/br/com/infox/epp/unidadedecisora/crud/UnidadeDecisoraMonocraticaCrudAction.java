@@ -7,7 +7,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.crud.AbstractCrudAction;
-import br.com.infox.core.persistence.GenericDatabaseErrorCode;
+import br.com.infox.core.util.ObjectUtil;
 import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
@@ -37,31 +37,23 @@ public class UnidadeDecisoraMonocraticaCrudAction extends AbstractCrudAction<Uni
 		tree.clearTree();
 		possiveisChefesGabinete = null;
 	}
+    
 	@Override
 	protected boolean isInstanceValid() {
 		boolean existeLoc = unidadeDecisoraColegiadaManager.existeUnidadeColegiadaComLocalizacao(getInstance().getLocalizacao().getIdLocalizacao());
 		if(existeLoc){
 			FacesMessages.instance().clearGlobalMessages();
 			FacesMessages.instance().add("#{infoxMessages['unidadeDecisoraColegiada.jaExisteLocalizacao']}");
-			return false;
+		} else {
+		    UnidadeDecisoraMonocratica udm = getManager().existeUnidadeMonocraticaComLocalizacao(getInstance().getLocalizacao().getIdLocalizacao());
+		    existeLoc = isManaged() ? (!udm.equals(getInstance())) : (udm != null);
+		    if (existeLoc){
+                FacesMessages.instance().clearGlobalMessages();
+                FacesMessages.instance().add("#{infoxMessages['unidadeDecisoraMonocratica.jaExisteLocalizacao']}");
+            }
 		}
-		return super.isInstanceValid();
+		return super.isInstanceValid() && !existeLoc;
 	}
-	
-	@Override
-	public String save() {
-		String ret = super.save();
-		if (GenericDatabaseErrorCode.UNIQUE_VIOLATION.name().equals(ret)){
-			Integer idLocalizacao = getInstance().getLocalizacao().getIdLocalizacao();
-			boolean existeLoc = getManager().existeUnidadeMonocraticaComLocalizacao(idLocalizacao);
-			if (existeLoc){
-				FacesMessages.instance().clearGlobalMessages();
-				FacesMessages.instance().add("#{infoxMessages['unidadeDecisoraMonocratica.jaExisteLocalizacao']}");
-			}
-		}
-		return ret;
-	}
-	
 	
 	public Localizacao getLocalizacao() {
 	    return getInstance().getLocalizacao();
@@ -69,9 +61,16 @@ public class UnidadeDecisoraMonocraticaCrudAction extends AbstractCrudAction<Uni
 	
 	public void setLocalizacao(Localizacao localizacao) {
 	    if (localizacao == null || localizacao.getEstruturaFilho() != null) {
+	        if (!ObjectUtil.equals(localizacao, getLocalizacao())) {
+	            onChangeLocalizacao();
+	        }
 	        getInstance().setLocalizacao(localizacao);
-	    } 
+	    }
 	}
+
+    private void onChangeLocalizacao() {
+        possiveisChefesGabinete = null;
+    }
 
     public List<PessoaFisica> getPossiveisChefesGabinete() {
         if (possiveisChefesGabinete == null && getInstance().getLocalizacao() != null) {
