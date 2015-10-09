@@ -127,13 +127,20 @@ public class DocumentoDownloader implements Serializable {
         }
     }
 
-    public void downloadDocumento(String idDocumento) {
-        Documento documento = documentoManager.find(Integer.valueOf(clearId(idDocumento)));
+    public void downloadDocumento(Integer idDocumento, boolean binario) {
+    	if(binario) {
+    		downloadDocumentoBin(idDocumento);
+    	}
+        Documento documento = documentoManager.find(idDocumento);
         if (documento != null) {
             downloadDocumento(documento);
         } else {
             LOG.warn("Documento não encontrado, id: " + idDocumento);
         }
+    	
+    }
+    public void downloadDocumento(String idDocumento) {
+    	downloadDocumento(Integer.valueOf(clearId(idDocumento)), false);
     }
 
     public String getViewUrl(Documento documento) {

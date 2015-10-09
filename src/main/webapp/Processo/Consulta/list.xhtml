@@ -84,8 +84,7 @@
         immediate="true"
         status=":status"
         title="#{infoxMessages['processoDocumento.anexarDocumento']}"
-        rendered="#{empty consultaController.processo.dataFim}"
-        action="#{anexoController.onClickTabAnexar(consultaController.processo)}">
+        rendered="#{empty consultaController.processo.dataFim}">
         <wi:ajaxDiv id="divAnexarDocumentos">
             <ui:include src="consultarAbaAnexar.xhtml" />
         </wi:ajaxDiv>
