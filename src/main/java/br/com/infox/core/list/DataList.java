@@ -38,6 +38,8 @@ public abstract class DataList<E> extends JpaQuery<E> {
 	
 	protected void addRestrictionFields(){}
 	
+	protected void addAdditionalClauses(StringBuilder sb){};
+
 	protected abstract String getDefaultOrder();
 	
 	protected Map<String, String> getCustomColumnsOrder(){ return null; }

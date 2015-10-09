@@ -1,5 +1,7 @@
 package br.com.infox.epp.processo.service;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -21,6 +23,7 @@ import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 
 @Name(DistribuicaoProcessoService.NAME)
 @Scope(ScopeType.EVENT)
+@Stateless
 @AutoCreate
 @Transactional
 public class DistribuicaoProcessoService {

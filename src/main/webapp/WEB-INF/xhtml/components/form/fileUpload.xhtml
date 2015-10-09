@@ -23,9 +23,10 @@
         showLabelSelecione="true"
         rendered="#{not readonly}">
         <a:ajax
-         render="#{f.id}TipoDocDiv #{f.id}Decoration #{f.id}ToolTipDivExterna"
+         render="#{f.id}TipoDocDiv #{f.id}Decoration #{f.id}ToolTipDivExterna #{f.id}documentoExistente assinaturaDocumentoDiv#{f.id}"
          event="change"
          execute="@this"
+         listener="#{taskInstanceHome.removerDocumento(f.id)}"
          limitRender="true" />
       </wi:selectOneMenuEntity>
     </s:div>
@@ -104,7 +105,7 @@
 			<wi:certificadoDigital
 	            id="appletAssinatura"
 				signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
-				reRender="assinaturaDocumentoDiv#{f.id}, pageBodyDialogMessage"
+				reRender="pageBodyDialogMessage, @form"
 				tokenField="#{taskInstanceHome.tokenToSign}"
 				propertyValue="#{f.id}"
 				propertyTarget="#{taskInstanceHome.variavelDocumentoToSign}"

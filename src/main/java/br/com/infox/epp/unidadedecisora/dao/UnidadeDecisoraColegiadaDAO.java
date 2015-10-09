@@ -1,12 +1,22 @@
 package br.com.infox.epp.unidadedecisora.dao;
 
-import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.*;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.CODIGO_LOCALIZACAO;
 import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.FIND_UDC_BY_CODIGO_LOCALIZACAO;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.FIND_UDC_BY_USUARIO_ID;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.ID_LOCALIZACAO;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.ID_USUARIO_LOGIN;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.LIST_COLEGIADA_BY_MONOCRATICA;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.MONOCRATICA;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_EXISTE_UDC_BY_LOCALIZACAO;
+import static br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery.SEARCH_UDC_BY_USUARIO;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -16,10 +26,13 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
+import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery;
 
+@Stateless
 @AutoCreate
 @Name(UnidadeDecisoraColegiadaDAO.NAME)
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class UnidadeDecisoraColegiadaDAO extends DAO<UnidadeDecisoraColegiada> {
 
 	private static final long serialVersionUID = 1L;
@@ -60,5 +73,11 @@ public class UnidadeDecisoraColegiadaDAO extends DAO<UnidadeDecisoraColegiada> {
 		Map<String, Object> params = new HashMap<>();
 		params.put(CODIGO_LOCALIZACAO, codigoLocalizacao);
 		return getNamedSingleResult(FIND_UDC_BY_CODIGO_LOCALIZACAO, params);
+	}
+	
+	public List<UnidadeDecisoraColegiada> listUnidadeDecisoraColegiada(UnidadeDecisoraMonocratica decisoraMonocratica) {
+		Map<String, Object> params = new HashMap<>();
+		params.put(MONOCRATICA, decisoraMonocratica.getIdUnidadeDecisoraMonocratica());
+		return getNamedResultList(LIST_COLEGIADA_BY_MONOCRATICA, params);
 	}
 }

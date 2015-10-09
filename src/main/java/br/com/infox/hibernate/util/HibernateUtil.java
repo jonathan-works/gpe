@@ -21,7 +21,6 @@ import org.jboss.seam.Component;
 import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.hibernate.session.SessionAssistant;
-import br.com.infox.seam.util.ComponentUtil;
 
 public final class HibernateUtil {
 

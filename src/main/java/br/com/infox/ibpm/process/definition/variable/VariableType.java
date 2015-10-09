@@ -14,6 +14,7 @@ public enum VariableType {
     PAGE(format(DEFAULT_LOCALE,"page"), format(DEFAULT_PATH,"page")),
     FRAME(format(DEFAULT_LOCALE,"frame"), format(DEFAULT_PATH,"frame")),
     EDITOR(format(DEFAULT_LOCALE,"editor"), format(DEFAULT_PATH,"textEditSignature")),
+    STRUCTURED_TEXT(format(DEFAULT_LOCALE,"structuredText"), format(DEFAULT_PATH,"structuredText")),
     TASK_PAGE(format(DEFAULT_LOCALE,"taskPage"), format(DEFAULT_PATH,"taskPage")),
     MONETARY(format(DEFAULT_LOCALE,"monetary"), format(DEFAULT_PATH,"numberMoney")),
     FILE(format(DEFAULT_LOCALE, "file"), format(DEFAULT_PATH, "fileUpload")),

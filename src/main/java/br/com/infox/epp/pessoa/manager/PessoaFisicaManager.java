@@ -13,6 +13,7 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 
 @Name(PessoaFisicaManager.NAME)
 @Scope(ScopeType.STATELESS)
+@Stateless
 @AutoCreate
 @Stateless
 public class PessoaFisicaManager extends Manager<PessoaFisicaDAO, PessoaFisica> {
