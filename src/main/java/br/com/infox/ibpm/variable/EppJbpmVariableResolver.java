@@ -55,7 +55,7 @@ public class EppJbpmVariableResolver extends JbpmVariableResolver {
     }
     
     private Object getMetadadoValue(List<MetadadoProcesso> metadados) {
-        if (metadados == null) return null;
+        if (metadados == null || metadados.isEmpty()) return null;
         if (metadados.size() == 1) {
             return metadados.get(0).getValue();
         } else {
