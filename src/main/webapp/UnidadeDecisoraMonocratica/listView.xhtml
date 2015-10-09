@@ -71,7 +71,6 @@
     	<wi:dataForm
             formId="unidadeDecisoraMonocratica"
             formTitle="#{infoxMessages['form.title']}">
-            
             <wi:inputText
 	                id="nome"
 	                value="#{unidadeDecisoraMonocraticaCrudAction.instance.nome}"
@@ -86,8 +85,8 @@
 	                icon="#{wiSkin.imageFolder}/nivelTree.gif"
 	                iconLeaf="#{wiSkin.imageFolder}/file.gif"
 	                required="true"
-	                rendered="#{isEditable}"
-	                render="@this"
+	                rendered="true"
+	                render="@this, chefeGabineteDecoration"
 	                clearRender="@this"
 	                label="#{infoxMessages['unidadeDecisoraMonocratica.localizacao']}" 
                     styleClass="#{empty item.entity.estruturaFilho ? 'tree-notselectable' : ''}"/>
@@ -101,6 +100,11 @@
 	               id="ativo"
 	               label="#{infoxMessages['field.situacao']}"
 	               value="#{unidadeDecisoraMonocraticaCrudAction.instance.ativo}"/>
+	               
+	         <ui:define name="buttons">
+                 <wi:commandButtonSave />
+                 <wi:commandButtonNew newInstanceActionListener="#{jsfUtil.clearForm('defaultTabPanel:unidadeDecisoraMonocratica')}"/>
+             </ui:define>
              
         </wi:dataForm>
     </ui:define>

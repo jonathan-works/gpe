@@ -38,11 +38,11 @@ public class UnidadeDecisoraMonocraticaDAO extends DAO<UnidadeDecisoraMonocratic
 		return getNamedResultList(SEARCH_UDM_BY_USUARIO, map);
 	}
 	
-	public boolean existeUnidadeDecisoraComLocalizacao(Integer idLocalizacao){
-		Map<String, Object> map = new HashMap<>(1);
-		map.put(ID_LOCALIZACAO, idLocalizacao);
-		return (long) getNamedSingleResult(SEARCH_EXISTE_UDM_BY_LOCALIZACAO, map) > 0;
-	}
+	public UnidadeDecisoraMonocratica existeUnidadeDecisoraComLocalizacao(Integer idLocalizacao){
+        Map<String, Object> map = new HashMap<>(1);
+        map.put(ID_LOCALIZACAO, idLocalizacao);
+        return getNamedSingleResult(SEARCH_EXISTE_UDM_BY_LOCALIZACAO, map);
+    }
 	
 	public UnidadeDecisoraMonocratica findByCodigoLocalizacao(String codigoLocalizacao) {
 		Map<String, Object> params = new HashMap<>();
