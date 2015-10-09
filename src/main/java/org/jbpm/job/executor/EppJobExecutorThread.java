@@ -19,6 +19,8 @@ import org.jbpm.job.Job;
 import org.jbpm.persistence.db.DbPersistenceService;
 import org.jbpm.persistence.db.StaleObjectLogConfigurer;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
+
 public class EppJobExecutorThread extends Thread implements Deactivable {
 
     private final JobExecutor jobExecutor;
@@ -37,6 +39,7 @@ public class EppJobExecutorThread extends Thread implements Deactivable {
             // if an exception occurs, acquireJob() returns null
             if (job != null) {
                 try {
+                    EntityManagerProducer.clear();
                     executeJob(job);
                 } catch (Exception e) {
                     // save exception stack trace
@@ -47,6 +50,8 @@ public class EppJobExecutorThread extends Thread implements Deactivable {
                     // if another exception occurs, it is not rethrown
                     unlockJob(job);
                     throw e;
+                } finally {
+                    EntityManagerProducer.clear();
                 }
             }
         }
