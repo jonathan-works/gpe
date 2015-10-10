@@ -4,16 +4,16 @@ import javax.persistence.EntityManager;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.hibernate.persister.entity.EntityPersister;
-import org.jboss.seam.Component;
 import org.jboss.seam.contexts.Contexts;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.util.ArrayUtil;
 import br.com.infox.epp.system.entity.EntityLog;
 import br.com.infox.epp.system.entity.EntityLogDetail;
 import br.com.infox.epp.system.type.TipoOperacaoLogEnum;
 import br.com.infox.epp.system.util.LogUtil;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 public class ExecuteLog {
 
@@ -29,7 +29,7 @@ public class ExecuteLog {
     public ExecuteLog() {
         sw = new StopWatch();
         sw.start();
-        em = (EntityManager) Component.getInstance("entityManagerLog");
+        em = EntityManagerProducer.getEntityManagerLog();
     }
 
     public Object[] getOldState() {
