@@ -119,37 +119,20 @@ public class AnexarDocumentosView implements Serializable {
     
     private static class DadosUpload {
     	private UploadedFile arquivoUpload;
-    	private ClassificacaoDocumento classificacaoDocumento;
-    	private Pasta pasta;
-    	private Processo processo;
 		private byte[] dadosArquivo;
 
-    	public DadosUpload(UploadedFile arquivoUpload, ClassificacaoDocumento classificacaoDocumento, Pasta pasta, Processo processo,
-				byte[] dadosArquivo) {
+    	public DadosUpload(UploadedFile arquivoUpload, byte[] dadosArquivo) {
 			super();
 			this.arquivoUpload = arquivoUpload;
-			this.classificacaoDocumento = classificacaoDocumento;
-			this.pasta = pasta;
-			this.processo = processo;
 			this.dadosArquivo = dadosArquivo;
 		}
     	
 		public UploadedFile getArquivoUpload() {
 			return arquivoUpload;
 		}
-		public ClassificacaoDocumento getClassificacaoDocumento() {
-			return classificacaoDocumento;
-		}
 		public byte[] getDadosArquivo() {
 			return dadosArquivo;
 		}
-    	public Pasta getPasta() {
-			return pasta;
-		}
-
-		public Processo getProcesso() {
-			return processo;
-		}    	  	
     }
     
 	public void newEditorInstance() {
@@ -169,8 +152,8 @@ public class AnexarDocumentosView implements Serializable {
         UploadedFile uploadedFile = fileUploadEvent.getUploadedFile();
         try {
             byte[] dadosArquivo = IOUtils.toByteArray(uploadedFile.getInputStream());
-            DadosUpload dadosUpload = new DadosUpload(uploadedFile, classificacaoDocumentoUploader, pastaUploader, processo, dadosArquivo);
-            documentoUploaderService.validaDocumento(dadosUpload.getArquivoUpload(), dadosUpload.getClassificacaoDocumento(), dadosUpload.getDadosArquivo());
+            DadosUpload dadosUpload = new DadosUpload(uploadedFile, dadosArquivo);
+            documentoUploaderService.validaDocumento(dadosUpload.getArquivoUpload(), classificacaoDocumentoUploader, dadosUpload.getDadosArquivo());
             dadosUploader.add(dadosUpload);
             
             setShowUploaderButton(true);
@@ -231,9 +214,9 @@ public class AnexarDocumentosView implements Serializable {
 		retorno.setDescricao(dadosUpload.getArquivoUpload().getName());
 		retorno.setDocumentoBin(documentoUploaderService.createProcessoDocumentoBin(dadosUpload.getArquivoUpload()));
 		retorno.setAnexo(Boolean.TRUE);
-		retorno.setClassificacaoDocumento(dadosUpload.getClassificacaoDocumento());
-		retorno.setPasta(dadosUpload.getPasta() == null ? pastaDefault : dadosUpload.getPasta());
-		retorno.setProcesso(dadosUpload.getProcesso());
+		retorno.setClassificacaoDocumento(classificacaoDocumentoUploader);
+		retorno.setPasta(pastaUploader == null ? pastaDefault : pastaUploader);
+		retorno.setProcesso(processo);
         documentoTemporarioManager.gravarDocumentoTemporario(retorno, dadosUpload.getDadosArquivo());
         return retorno;
     }
