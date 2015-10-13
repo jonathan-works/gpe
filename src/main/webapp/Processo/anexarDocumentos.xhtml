@@ -110,7 +110,7 @@
                 <wi:selectOneMenuEntity id="editorPasta"
                     label="#{infoxMessages['pasta.pasta']}"
                     value="#{anexarDocumentosView.documentoEditor.pasta}"
-                    valueItems="#{pastaAction.getPastaListComRestricaoEscrita()}"
+                    items="#{pastaAction.getPastaListComRestricaoEscrita()}"
                     rendered="#{security.checkPage('/pages/Pasta/moverDocumento')}"
                     disabled="#{not minuta}" />
 
