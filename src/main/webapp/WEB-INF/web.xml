@@ -71,6 +71,7 @@
 	<filter>
 		<filter-name>Seam Filter</filter-name>
 		<filter-class>org.jboss.seam.servlet.SeamFilter</filter-class>
+		<async-supported>true</async-supported>
 	</filter>
 	<filter-mapping>
 		<filter-name>Seam Filter</filter-name>
@@ -87,6 +88,7 @@
 	<servlet>
 		<servlet-name>Seam Resource Servlet</servlet-name>
 		<servlet-class>org.jboss.seam.servlet.SeamResourceServlet</servlet-class>
+		<async-supported>true</async-supported>
 	</servlet>
 	<servlet>
 		<servlet-name>Faces Servlet</servlet-name>
@@ -121,10 +123,31 @@
 		<servlet-name>Resource Servlet</servlet-name>
 		<servlet-class>org.richfaces.webapp.ResourceServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
+		<async-supported>true</async-supported>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Resource Servlet</servlet-name>
 		<url-pattern>/org.richfaces.resources/*</url-pattern>
+	</servlet-mapping>
+	<!-- Primefaces Push -->
+	<servlet>
+		<servlet-name>Push Servlet</servlet-name>
+		<servlet-class>org.primefaces.push.PushServlet</servlet-class>
+		<init-param>
+			<param-name>org.atmosphere.annotation.packages</param-name>
+			<param-value>org.primefaces.push</param-value>
+		</init-param>
+		  <!-- turned on broadcaster cache -->
+    <init-param>
+        <param-name>org.atmosphere.cpr.broadcasterCacheClass</param-name>
+        <param-value>org.atmosphere.cache.UUIDBroadcasterCache</param-value>
+    </init-param>    
+		<load-on-startup>1</load-on-startup>
+		<async-supported>true</async-supported>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Push Servlet</servlet-name>
+		<url-pattern>/primepush/*</url-pattern>
 	</servlet-mapping>
 	<persistence-unit-ref>
 		<persistence-unit-ref-name>EPAPersistenceUnit</persistence-unit-ref-name>
@@ -136,5 +159,5 @@
 	</persistence-unit-ref>
 	<listener>
 		<listener-class>br.com.infox.jsf.events.EppServletEventListener</listener-class>
-	</listener>	
+	</listener>
 </web-app>

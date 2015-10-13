@@ -37,10 +37,11 @@
   <ui:param
     name="renderTipMessage"
     value="#{wi:get(renderTipMessage, true)}"></ui:param>
+  <ui:param name="inline" value="#{empty inline ? false : inline}" />
 
   <s:fragment rendered="#{!excludeFields.matches('.*\\b'.concat(id).concat('\\b.*'))}">
     <div class="property-field-edit">
-      <s:div id="#{fieldId}Div" styleClass="property-field-edit-name">
+      <s:div id="#{fieldId}Div" styleClass="property-field-edit-name" style="#{inline ? 'display:inline' : ''}">
         <h:outputLabel for="#{id}">
           <ui:insert name="label" />
           <h:outputText styleClass="required" rendered="#{showRequired}" value="*" />
@@ -57,7 +58,7 @@
           styleClass="property-error property-msg"
           rendered="#{empty showMessage ? true : showMessage}" />
       </s:div>
-      <s:div id="#{fieldId}Container" rendered="#{!obfuscate}" styleClass="property-field-edit-value #{invalid ? 'property-error':''}">
+      <s:div id="#{fieldId}Container" rendered="#{!obfuscate}" styleClass="property-field-edit-value #{invalid ? 'property-error':''}" style="#{inline ? 'display:inline' : ''}">
         <ui:insert />
       </s:div>
       <h:outputText value="ocultado" rendered="#{obfuscate}" />

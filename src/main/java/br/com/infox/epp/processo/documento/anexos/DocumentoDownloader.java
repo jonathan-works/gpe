@@ -70,33 +70,17 @@ public class DocumentoDownloader implements Serializable {
     }
 
     public void downloadDocumento(Documento documento) {
-    	UsuarioLogin usuario = Authenticator.getUsuarioLogado();
-    	if (sigiloDocumentoManager.isSigiloso(documento.getId()) && (usuario == null || !sigiloDocumentoService.possuiPermissao(documento, usuario))) {
-            FacesMessages.instance().add("Este documento é sigiloso.");
-            LOG.warn("Tentativa não autorizada de acesso a documento sigiloso, id: " + documento.getId());
-            return;
-        }
-        downloadDocumento(documento.getDocumentoBin());
+    	if (validarSigilo(documento)) {
+    		downloadDocumento(documento.getDocumentoBin());
+    	}
     }
-    
+
     public void downloadDocumento(DocumentoBin documento) {
         byte[] data = documentoBinarioManager.getData(documento.getId());
         String fileName = documento.getNomeArquivo();
         String contentType = "application/" + documento.getExtensao();
         if (contentType.equals("application/pdf") && !documento.getAssinaturas().isEmpty()) {
-            try {
-            	ByteArrayOutputStream out = new ByteArrayOutputStream();
-                documentoBinManager.writeMargemDocumento(documento, data, out);
-                HttpServletResponse response = FileDownloader.prepareDownloadResponse(contentType, fileName);
-                response.getOutputStream().write(out.toByteArray());
-                response.getOutputStream().flush();
-                FacesContext.getCurrentInstance().responseComplete();
-            } catch (IOException | BusinessException e) {
-                LOG.error("", e);
-                FacesMessages.instance().clear();
-                mensagemErro = "Erro ao gerar a margem do PDF: " + e.getMessage();
-                FacesMessages.instance().add(mensagemErro);
-            }
+            downloadPdf(documento, data, fileName);
         } else {
             FileDownloader.download(data, contentType, fileName);
         }
@@ -105,6 +89,32 @@ public class DocumentoDownloader implements Serializable {
     public void downloadDocumentoBin(Integer idDocumentoBin) {
     	DocumentoBin documentoBin = documentoBinManager.find(idDocumentoBin);
     	downloadDocumento(documentoBin);
+    }
+
+	private void downloadPdf(DocumentoBin documento, byte[] data, String fileName) {
+		try {
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+		    documentoBinManager.writeMargemDocumento(documento, data, out);
+		    HttpServletResponse response = FileDownloader.prepareDownloadResponse("application/pdf", fileName);
+		    response.getOutputStream().write(out.toByteArray());
+		    response.getOutputStream().flush();
+		    FacesContext.getCurrentInstance().responseComplete();
+		} catch (IOException | BusinessException e) {
+		    LOG.error("", e);
+		    FacesMessages.instance().clear();
+		    mensagemErro = "Erro ao gerar a margem do PDF: " + e.getMessage();
+		    FacesMessages.instance().add(mensagemErro);
+		}
+	}
+    
+    public void downloadPdf(Documento documento, byte[] pdf, String nome) {
+    	if (validarSigilo(documento)) {
+    		if (!documento.getDocumentoBin().getAssinaturas().isEmpty()) {
+    			downloadPdf(documento.getDocumentoBin(), pdf, nome);
+    		} else {
+    			FileDownloader.download(pdf, "application/pdf", nome);
+    		}
+    	}
     }
 
     /**
@@ -151,4 +161,14 @@ public class DocumentoDownloader implements Serializable {
     private String clearId(String id) {
         return id.replaceAll("\\D+", "");
     }
+    
+    private boolean validarSigilo(Documento documento) {
+		UsuarioLogin usuario = Authenticator.getUsuarioLogado();
+    	if (sigiloDocumentoManager.isSigiloso(documento.getId()) && (usuario == null || !sigiloDocumentoService.possuiPermissao(documento, usuario))) {
+            FacesMessages.instance().add("Este documento é sigiloso.");
+            LOG.warn("Tentativa não autorizada de acesso a documento sigiloso, id: " + documento.getId());
+            return false;
+        }
+    	return true;
+	}
 }

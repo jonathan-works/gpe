@@ -15,7 +15,7 @@
     <s:decorate id="#{id}Decoration" template="#{template}"
         rendered="#{wi:get(rendered,true)}" styleClass="decoration-div">
         <ui:define name="label">#{label}</ui:define>
-        <h:outputText id="#{id}" value="#{value}" escape="#{escape}" styleClass="#{styleClassOutput}">
+        <h:outputText id="#{id}" value="#{value}" escape="#{escape}" style="#{style}" styleClass="#{styleClassOutput}">
             <ui:insert />
         </h:outputText>
     </s:decorate>
