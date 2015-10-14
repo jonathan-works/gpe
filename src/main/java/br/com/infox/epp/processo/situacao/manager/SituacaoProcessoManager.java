@@ -45,8 +45,8 @@ public class SituacaoProcessoManager {
 					createFluxoBeanList(result, tipoProcesso, tupleList, true);
 				}
 			} else if (TipoProcesso.COMUNICACAO_NAO_ELETRONICA.equals(tipoProcesso)) {
-				tupleList = situacaoProcessoDAO.getRootList(tipoProcesso, true);
-				createFluxoBeanList(result, tipoProcesso, tupleList, true);
+				tupleList = situacaoProcessoDAO.getRootList(tipoProcesso, false);
+				createFluxoBeanList(result, tipoProcesso, tupleList, false);
 			} else {
 				tupleList = situacaoProcessoDAO.getRootList(tipoProcesso, false);
 				createFluxoBeanList(result, tipoProcesso, tupleList, false);

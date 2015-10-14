@@ -18,6 +18,11 @@ public class FluxoBean {
 		this.processDefinitionId = processDefinitionId;
 	}
 
+	public FluxoBean(String processDefinitionId, Boolean expedida) {
+		this(processDefinitionId);
+		this.expedida = expedida;
+	}
+	
 	public FluxoBean(String processDefinitionId, String name, boolean bpmn20) {
 		this.processDefinitionId = processDefinitionId;
 		this.name = name;
@@ -91,6 +96,7 @@ public class FluxoBean {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((expedida == null) ? 0 : expedida.hashCode());
 		result = prime * result + ((processDefinitionId == null) ? 0 : processDefinitionId.hashCode());
 		return result;
 	}
@@ -104,6 +110,11 @@ public class FluxoBean {
 		if (!(obj instanceof FluxoBean))
 			return false;
 		FluxoBean other = (FluxoBean) obj;
+		if (expedida == null) {
+			if (other.expedida != null)
+				return false;
+		} else if (!expedida.equals(other.expedida))
+			return false;
 		if (processDefinitionId == null) {
 			if (other.processDefinitionId != null)
 				return false;

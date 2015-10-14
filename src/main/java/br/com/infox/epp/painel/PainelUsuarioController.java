@@ -68,6 +68,8 @@ public class PainelUsuarioController implements Serializable {
 	protected List<FluxoBean> fluxosDisponiveis;
 	private List<TipoProcesso> tipoProcessoDisponiveis;
 	private boolean exibirColunasPadrao = true;
+	private Boolean expedida;
+	private String idProcessDefinition;
 
 	@PostConstruct
 	protected void init() {
@@ -224,16 +226,24 @@ public class PainelUsuarioController implements Serializable {
 		this.selectedFluxo = selectedFluxo;
 	}
 
-	public void setIdProcessDefinition(String idSelectedFluxo) {
+	public void setIdProcessDefinition(String idProcessDefinition) {
+		this.idProcessDefinition = idProcessDefinition;
+	}
+	
+	public void setExpedida(Boolean expedida) {
+		this.expedida = expedida;
+	}
+
+	public void selectFluxo() {
 		FluxoBean fluxoBean = null;
-		if (idSelectedFluxo != null) {
-			int index = fluxosDisponiveis.indexOf(new FluxoBean(idSelectedFluxo));
+		if (idProcessDefinition != null) {
+			int index = fluxosDisponiveis.indexOf(new FluxoBean(idProcessDefinition, expedida));
 			fluxoBean = fluxosDisponiveis.get(index);
 		}
 		setSelectedFluxo(fluxoBean);
 		onSelectFluxo();
 	}
-
+	
 	public boolean hasRecursoPainelComunicacaoEletronica() {
 		return securityUtil.checkPage("/pages/Painel/Comunicacao/painel.seam");
 	}
