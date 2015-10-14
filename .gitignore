@@ -26,3 +26,4 @@ src/main/webapp/resources/styleSkinInfox/*.ecss
 /target
 /.target/
 /.apt_generated/
+.tern-project
