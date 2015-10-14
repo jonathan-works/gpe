@@ -12,7 +12,7 @@
 
 	<!-- Div com os formulários para upload e editor -->
 	<div id="anexarDocumentosDiv"
-		style="display: inline-block; width: 40%; min-width: 644px; margin: 0em 0.5em 1em 0em; vertical-align: top;">
+		style="display: inline-block; width: 55%; min-width: 640px; margin: 0em 0.5em 1em 0em; vertical-align: top;">
 
 		<!-- Panel de upload -->
 		<rich:collapsiblePanel id="uploadPanel"
@@ -76,13 +76,18 @@
 							uploadLabel="#{infoxMessages['processoDocumento.uploadLabel']}"
 							sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}"
 							maxFilesQuantity="10" listHeight="50px" immediateUpload="true"
-							noDuplicate="true"
+							noDuplicate="true" 
 							render="uploadArquivoAnexarButton pageBodyDialogMessage"
 							acceptedTypes="#{anexarDocumentosView.classificacaoDocumentoUploader.acceptedTypes}"
-							ontyperejected="alert('Extensão de arquivo inválida');"
-							onclear="infox.showLoading(); clearUploadArquivo();">
+							onuploadcomplete="uploadCompleto();"
+							onclear="infox.showLoading(); clearUploadArquivo();">							
 						</rich:fileUpload>
 
+                        <a:jsFunction id="uploadCompleto"
+                            name="uploadCompleto"
+                            render="pageBodyDialogMessage"
+                            actionListener="#{anexarDocumentosView.onUploadsFinalizados}" />
+						
 						<a:jsFunction id="clearUploadArquivoFunction"
 							name="clearUploadArquivo" oncomplete="infox.hideLoading();"
 							render="uploadArquivoDiv"
@@ -169,11 +174,12 @@
 							disabled="#{not minuta}" readonly="#{not minuta}" />
 					</s:div>
 
-					<wi:editor id="modeloDocumento"
+					<wi:editor width="620px" id="modeloDocumento"
 						label="#{infoxMessages['tipoProcessoDocumento.modelo']}"
 						value="#{anexarDocumentosView.documentoEditor.documentoBin.modeloDocumento}"
 						requiredField="false" required="true" readonly="#{not minuta}"
-						showVariables="false" />
+						showVariables="false"
+						/>
 				</s:div>
 				<s:div id="buttonsDiv">
 					<a:commandButton id="editorSubmitButton" styleClass="buttons"
@@ -191,7 +197,7 @@
 		</rich:collapsiblePanel>
 	</div>
 
-	<s:div id="documentoDiv" style="display: inline-block; width: 50%">
+	<s:div id="documentoDiv" style="display: inline-block; width: 44%">
 		<!-- Panel com dataTable de documentos temporários -->
 		<rich:collapsiblePanel id="documentoPanel" style="width: 100%;"
 			header="Documentos Anexados" switchType="client">
@@ -279,6 +285,9 @@
 							columnHeader="#{infoxMessages['anexarDocumentos.data']}"
 							value="#{row.dataInclusao}" />
 
+                        <wi:columnOutputText columnId="pasta"
+                            columnHeader="#{infoxMessages['anexarDocumentos.pasta']}"
+                            value="#{row.pasta}" />
 					</wi:dataTable>
 
 					<a:commandButton id="excluirButton" styleClass="buttons"
