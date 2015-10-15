@@ -8,6 +8,8 @@ import java.util.Map;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -51,6 +53,7 @@ import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
+import br.com.infox.seam.exception.BusinessRollbackException;
 import br.com.infox.util.time.DateRange;
 
 @AutoCreate
@@ -140,8 +143,14 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         bp.setTaskId(taskInstanceId);
         if (bp.getProcessId() != null && bp.getTaskId() != null && bp.getProcessId().equals(processo.getIdJbpm())) {
         	TaskInstance taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
+        	ManagedJbpmContext.instance().getSession().buildLockRequest(LockOptions.READ).setLockMode(LockMode.PESSIMISTIC_FORCE_INCREMENT).lock(taskInstance);
+        	if (taskInstance.getActorId() != null && !Actor.instance().getId().equals(taskInstance.getActorId())) {
+        		throw new BusinessRollbackException("Tarefa bloqueada por outro usuário");
+        	}
         	if (taskInstance.getStart() == null) {
         		taskInstance.start(Actor.instance().getId());
+        	} else {
+        		taskInstance.setActorId(Actor.instance().getId(), true);
         	}
         	UsuarioLogin usuario = usuarioLoginManager.getUsuarioLoginByLogin(Actor.instance().getId());
     		taskInstance.setVariableLocally(VariaveisJbpmProcessosGerais.OWNER, usuario.getNomeUsuario());
