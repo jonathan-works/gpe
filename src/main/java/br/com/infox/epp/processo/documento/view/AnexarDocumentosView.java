@@ -120,6 +120,11 @@ public class AnexarDocumentosView implements Serializable {
 	private String orderedColumn;
 	private String order;
 	private static final String DEFAULT_ORDER = "o.id";
+	
+	/**
+	 * Variável que representa se algum arquivo foi rejeitado no upload
+	 */
+	private boolean arquivosRejeitados = false;
 
 	private static class DadosUpload {
 		private UploadedFile arquivoUpload;
@@ -171,8 +176,16 @@ public class AnexarDocumentosView implements Serializable {
 		}
 	}
 
+	public void onTypeRejected() {
+		arquivosRejeitados = true;
+	}
+	
 	public void onUploadsFinalizados() {
 		FacesMessages.instance().add("Upload efetuado");
+		if(arquivosRejeitados) {
+			FacesMessages.instance().add("Alguns arquivos não foram enviados por possuírem extensão inválida");			
+		}
+		arquivosRejeitados = false;		
 	}
 
 	public void onChangeUploadClassificacaoDocumento() {

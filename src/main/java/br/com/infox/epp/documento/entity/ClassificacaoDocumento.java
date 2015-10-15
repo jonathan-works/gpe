@@ -240,7 +240,11 @@ public class ClassificacaoDocumento implements Serializable {
             return accepted;
         }
         for (ExtensaoArquivo ea : getExtensaoArquivosList()) {
-            accepted += ea.getExtensao() + ", ";
+        	String extensao = ea.getExtensao();
+        	if(!extensao.startsWith(".")) {
+        		extensao = "." + extensao;
+        	}
+            accepted +=  extensao + ", ";
         }
         return accepted.substring(0, accepted.length() -2);
     }
