@@ -20,7 +20,7 @@
       rendered="#{wi:get(showGrid, true)}"
       header="#{tableTitle}"
       id="#{id}Panel"
-      bodyClass="dtable-p-b"
+      bodyClass="dtable-p-b #{bodyClass}"
       style="#{panelStyle}"
       styleClass="dtable-p #{panelStyleClass} #{empty showSearchForm or showSearchForm ? '' : 'full-sized'}">
       <rich:dataTable value="#{values}" id="#{id}" rowKeyVar="key" rowClasses="#{rowClasses} zebra-row" 
