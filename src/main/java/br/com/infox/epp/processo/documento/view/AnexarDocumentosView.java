@@ -46,6 +46,7 @@ import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolve
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.DocumentoTemporario;
 import br.com.infox.epp.processo.documento.entity.Pasta;
@@ -428,7 +429,10 @@ public class AnexarDocumentosView implements Serializable {
 			setDocumentoTemporarioList(loadDocumentoTemporarioList());
 			FacesMessages.instance().add(InfoxMessages.getInstance().get("anexarDocumentos.sucessoAssinatura"));
 			setDocumentosAssinaveis(new ArrayList<DocumentoTemporario>());
-		} catch (Exception e) {
+		}catch(AssinaturaException e){
+			LOG.error("Erro signDocuments ", e);
+			FacesMessages.instance().add(Severity.ERROR,e.getMessage());
+		}catch (Exception e) {
 			LOG.error("Erro signDocuments ", e);
 			FacesMessages.instance().add(Severity.ERROR,
 					InfoxMessages.getInstance().get("anexarDocumentos.erroAssinarDocumentos"));

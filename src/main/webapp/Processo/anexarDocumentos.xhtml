@@ -75,7 +75,7 @@
 							doneLabel="#{infoxMessages['anexarDocumentos.doneLabel']}"
 							uploadLabel="#{infoxMessages['processoDocumento.uploadLabel']}"
 							sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}"
-							maxFilesQuantity="10" listHeight="50px" immediateUpload="true"
+							maxFilesQuantity="10" listHeight="150px" immediateUpload="true"
 							noDuplicate="true" 
 							render="uploadArquivoAnexarButton pageBodyDialogMessage"
 							acceptedTypes="#{anexarDocumentosView.classificacaoDocumentoUploader.acceptedTypes}"
@@ -205,8 +205,9 @@
 				<h:form id="documentosDataTableForm">
 					<wi:dataTable id="documentosAnexadosTable" showSearchForm="false"
 						values="#{anexarDocumentosView.documentoTemporarioList}"
-						rowId="#{row.id}" showGridCount="false"
-						bean="#{anexarDocumentosView}" showToolbarColumn="false">
+						rowId="#{row.id}" showGridCount="false" 
+						bean="#{anexarDocumentosView}" showToolbarColumn="false"
+						panelStyle="overflow: auto; max-height: 300px;">
 
 						<ui:define name="headerToolBar" />
 						<ui:define name="toolBar" />
@@ -316,7 +317,7 @@
 	</s:div>
 
 	<rich:popupPanel id="assinarDocumentosPopUpPanel" autosized="true"
-		modal="true"
+		modal="true" maxHeight="600"
 		header="#{infoxMessages['anexarDocumentos.titleModalAssinatura']}">
 		<f:facet name="controls">
 			<h:graphicImage id="assinarDocumentosPopUpPanelCloseBtn"
