@@ -2,7 +2,9 @@ package br.com.infox.epp.processo.home;
 
 import java.util.List;
 
+import javax.ejb.EJBException;
 import javax.inject.Inject;
+import javax.persistence.OptimisticLockException;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -42,6 +44,7 @@ import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.context.ContextFacade;
 import br.com.infox.seam.exception.ApplicationException;
+import br.com.infox.seam.exception.BusinessRollbackException;
 import br.com.infox.seam.util.ComponentUtil;
 import br.com.itx.component.AbstractHome;
 
@@ -118,6 +121,10 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 			LOG.error("ProcessoEpaHome.iniciarTarefaProcesso()", e);
 		} catch (DAOException e) {
 			LOG.error("Erro ao vincular Usuario", e);
+		} catch (EJBException e) {
+			if (e.getCause() instanceof BusinessRollbackException) {
+				throw new OptimisticLockException();
+			}
 		}
 	}
 
