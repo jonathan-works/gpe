@@ -30,8 +30,7 @@ import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
+import com.google.gson.Gson;
 
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.messages.InfoxMessages;
@@ -42,6 +41,7 @@ import br.com.infox.epp.processo.timer.manager.TaskExpirationManager;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.ibpm.listener.EppJbpmListener;
+import br.com.infox.ibpm.listener.ListenerConfigurationBean;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.InfoxTaskControllerHandler;
@@ -335,8 +335,8 @@ public class TaskFitter extends Fitter implements Serializable {
     
     public String getListenerConfiguration(Event event) {
     	if (event.getConfiguration() != null) {
-    		JsonObject jsonObject = new GsonBuilder().create().fromJson(event.getConfiguration(), JsonObject.class);
-    		String key = jsonObject.get("transitionKey").getAsString();
+    		ListenerConfigurationBean bean = new Gson().fromJson(event.getConfiguration(), ListenerConfigurationBean.class);
+    		String key = bean.getTransitionKey();
     		StringBuilder sb = new StringBuilder();
     		if (key != null) {
     			sb.append(infoxMessages.get("process.expiration.transition")).append(": ").append(currentTask.getTask().getTaskNode().getLeavingTransition(key).getName());
@@ -364,14 +364,14 @@ public class TaskFitter extends Fitter implements Serializable {
     	String inputTransicao = (String) actionEvent.getComponent().getAttributes().get("transitionValue");
     	String nome = request.get(inputNome);
     	String transicao = request.get(inputTransicao);
-		Event eventRedistribuicao = new Event(nome);
+		Event event = new Event(nome);
 		if (transicao != null) {
 			Transition transition = currentTask.getTask().getTaskNode().getLeavingTransition(transicao);
-			JsonObject jsonObject = new JsonObject();
-			jsonObject.addProperty("transitionKey", transition.getKey());
-			eventRedistribuicao.setConfiguration(jsonObject.toString());
+			ListenerConfigurationBean bean = new ListenerConfigurationBean();
+			bean.setTransitionKey(transition.getKey());
+			event.setConfiguration(new Gson().toJson(bean));
 		}
-		currentTask.getTask().addEvent(eventRedistribuicao);
+		currentTask.getTask().addEvent(event);
     }
     
     public void removeListener(Event event) {
