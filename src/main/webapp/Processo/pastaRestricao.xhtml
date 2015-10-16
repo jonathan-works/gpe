@@ -74,6 +74,8 @@
 	       	columnId="ordem"
 	        columnHeader="#{infoxMessages['pasta.ordem']}"
       		value="#{row.ordem}" />
+      		
+      	<ui:include src="Pasta/colunasAdicionaisPastaList.xhtml"/>
 
     </wi:dataTable>
 
@@ -177,13 +179,6 @@
 	</s:div>
 
 	<script type="text/javascript">
-        function clearAddPastaFields() {
-            #{rich:jQuery('addPastaInputName')}.val('');
-            #{rich:jQuery('addPastaInputDescricao')}.val('');
-            #{rich:jQuery('addPastaInputOrdemNumber')}.val('');
-            $('.errorFields.errors').remove();
-            $('.errors').removeClass('errors');
-        }
         
         function clearAddRestricaoFields() {
         	#{rich:jQuery('tipoRestricaoInput')}.val('');
@@ -214,44 +209,7 @@
         }
   	</script>
 
-    <rich:popupPanel id="addPastaPanel" moveable="true" show="false"
-        resizeable="true" minWidth="290" minHeight="280"
-        header="#{infoxMessages['pasta.add']}"
-        onbeforeshow="clearAddPastaFields();"
-        onbeforehide="clearAddPastaFields();">
-        <f:facet name="controls">
-            <h:graphicImage id="pastaPanelCloseBtn"
-                styleClass="mp-close"
-                value="#{wiSkin.imageFolder}/closeMP.gif"
-                onmouseup="#{rich:component('addPastaPanel')}.hide();" />
-        </f:facet>
-        <h:form id="addPastaForm">
-            <wi:inputText id="addPastaInputName"
-                value="#{pastaRestricaoAction.instance.nome}" required="true"
-                maxlength="250" label="#{infoxMessages['pasta.nome']}">
-                <f:validator validatorId="nomePastaValidator" />
-                <f:attribute name="idProcesso" value="#{pastaRestricaoAction.processo.idProcesso}" />
-            </wi:inputText>
-            <wi:inputText id="addPastaInputDescricao"
-                value="#{pastaRestricaoAction.instance.descricao}"
-                required="false" maxlength="250"
-                label="#{infoxMessages['pasta.descricao']}">
-            </wi:inputText>
-            <wi:inputNumber id="addPastaInputOrdem"
-                value="#{pastaRestricaoAction.instance.ordem}"
-                required="true" label="#{infoxMessages['pasta.ordem']}">
-                <f:validator validatorId="ordemPastaValidator" />
-                <f:attribute name="idProcesso" value="#{pastaRestricaoAction.processo.idProcesso}" />
-            </wi:inputNumber>
-            <br />
-            <wi:commandButton id="addPastaButton"
-                action="#{pastaRestricaoAction.persistPasta()}"
-                execute="@form"
-                oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('addPastaPanel')}.hide();}else{infox.hideLoading();}"
-                value="#{infoxMessages['pasta.add']}"
-                reRender="@form pastaTable pastaTablePanel pastaRestricaoDiv pageBodyDialogMessage" />
-        </h:form>
-    </rich:popupPanel>
+    <ui:include src="Pasta/popupAddPasta.xhtml"/>
 
     <rich:popupPanel id="addRestricaoPanel" moveable="true" show="false"
         resizeable="true" minWidth="290" minHeight="430"

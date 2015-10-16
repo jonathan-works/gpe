@@ -50,7 +50,7 @@ import br.com.infox.seam.util.ComponentUtil;
 public class PastaRestricaoAction implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	static final String NAME = "pastaRestricaoAction";
+	public static final String NAME = "pastaRestricaoAction";
 
 	@In
 	private ProcessoManager processoManager;
@@ -101,13 +101,17 @@ public class PastaRestricaoAction implements Serializable {
     public void setProcesso(Processo processo) {
         this.processo = processo.getProcessoRoot();
         try {
-            this.pastaList = pastaManager.getByProcesso(processo.getProcessoRoot());
+            initPastaList(processo);
             clearInstances();
         } catch (DAOException e) {
             LOG.error(e);
             actionMessagesService.handleDAOException(e);
         }
     }
+
+	protected void initPastaList(Processo processo) throws DAOException {
+		this.pastaList = pastaManager.getByProcesso(processo.getProcessoRoot());
+	}
 
 	public void selectPasta(Pasta pasta){
         try {
@@ -174,7 +178,7 @@ public class PastaRestricaoAction implements Serializable {
 	    return true;
 	}
 	
-	private boolean prePersist() throws DAOException{
+	protected boolean prePersist() throws DAOException{
 	    getInstance().setProcesso(processo);
 		getInstance().setSistema(false);
 		pastaManager.persistWithDefault(getInstance());
