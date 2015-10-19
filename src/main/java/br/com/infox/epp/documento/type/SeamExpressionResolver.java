@@ -1,5 +1,7 @@
 package br.com.infox.epp.documento.type;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -13,6 +15,7 @@ import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.seam.util.ComponentUtil;
 
 public class SeamExpressionResolver implements ExpressionResolver {
@@ -71,9 +74,20 @@ public class SeamExpressionResolver implements ExpressionResolver {
 			value = JbpmExpressionEvaluator.evaluate(expression.getExpression(), executionContext);
 		}
 		if (value != null) {
-			expression.setResolved(true);
-			expression.setValue(value.toString());
+			resolveAsJavaType(expression, value);
 		}
 		return expression;
+	}
+	
+	
+	private void resolveAsJavaType(Expression expression, Object value) {
+		if (value instanceof Date) {
+			expression.setValue(new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(value));
+		} else if (value instanceof Boolean) {
+			expression.setValue((Boolean) value ? "Sim" : "Não");
+		} else {
+			expression.setValue(value.toString());
+		}
+		expression.setResolved(true);
 	}
 }
