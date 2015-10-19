@@ -110,6 +110,9 @@
                     <f:attribute name="idProcesso" value="#{pastaRestricaoAction.processo.idProcesso}" />
                     <f:attribute name="idPasta" value="#{pastaRestricaoAction.instance.id}" />
                 </wi:inputNumber>
+                
+                <ui:include src="Pasta/atributosAdicionaisPastas.xhtml"/>
+                
                 <wi:commandButton id="editPastaButton"
                     action="#{pastaRestricaoAction.updatePasta()}"
                     rendered="#{pastaRestricaoAction.instance.editavel}"

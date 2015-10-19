@@ -178,13 +178,17 @@ public class PastaRestricaoAction implements Serializable {
 	    return true;
 	}
 	
-	protected boolean prePersist() throws DAOException{
+	private boolean prePersist() throws DAOException{
 	    getInstance().setProcesso(processo);
 		getInstance().setSistema(false);
-		pastaManager.persistWithDefault(getInstance());
+		persistirNovaPasta();
 		setPastaList(pastaManager.getByProcesso(processo));
 		setPastaSelecionada(false);
 		return true;
+	}
+
+	protected void persistirNovaPasta() throws DAOException {
+		pastaManager.persistWithDefault(getInstance());
 	}
 	
 	public void persistPasta() {
@@ -200,12 +204,16 @@ public class PastaRestricaoAction implements Serializable {
 
 	public void updatePasta() {
 		try {
-			pastaManager.update(getInstance());
+			atualizarPasta();
 			statusMessage.add(Severity.INFO, "Pasta atualizada com sucesso.");
 		} catch (DAOException e) {
 		    LOG.error(e);
 			actionMessagesService.handleDAOException(e);
 		}
+	}
+
+	protected void atualizarPasta() throws DAOException {
+		pastaManager.update(getInstance());
 	}
 
 	public void removePasta(Pasta pasta) {
