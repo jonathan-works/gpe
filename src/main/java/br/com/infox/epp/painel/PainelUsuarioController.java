@@ -1,10 +1,12 @@
 package br.com.infox.epp.painel;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.Tuple;
@@ -34,6 +36,7 @@ import br.com.infox.epp.tarefa.component.tree.PainelTreeHandler;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.path.PathResolver;
 import br.com.infox.seam.security.SecurityUtil;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -76,10 +79,23 @@ public class PainelUsuarioController implements Serializable {
 		loadTipoProcessoDisponiveis();
 		loadFluxosDisponiveis();
 	}
+	
+	public void atualizarPainelProcessos() throws IOException {
+	    ComponentUtil.<PathResolver>getComponent(PathResolver.NAME).getContextRealPath();
+	    List<FluxoBean> fluxosDisponiveisTemp = situacaoProcessoManager.getFluxosDisponiveis(tipoProcessoDisponiveis);
+	    if (fluxosDisponiveisTemp.size() != fluxosDisponiveis.size()) {
+	        FacesContext.getCurrentInstance().getExternalContext().redirect("list.seam");
+	    } else {
+	        fluxosDisponiveisTemp.removeAll(fluxosDisponiveis);
+	        if (!fluxosDisponiveisTemp.isEmpty()) {
+	            FacesContext.getCurrentInstance().getExternalContext().redirect("list.seam");
+	        }
+	    }
+	}
 
 	private void loadFluxosDisponiveis() {
 		fluxosDisponiveis = situacaoProcessoManager.getFluxosDisponiveis(tipoProcessoDisponiveis);
-	}	
+	}
 
 	protected void loadTipoProcessoDisponiveis() {
 		tipoProcessoDisponiveis = new ArrayList<>(4);
@@ -237,8 +253,13 @@ public class PainelUsuarioController implements Serializable {
 	public void selectFluxo() {
 		FluxoBean fluxoBean = null;
 		if (idProcessDefinition != null) {
-			int index = fluxosDisponiveis.indexOf(new FluxoBean(idProcessDefinition, expedida));
-			fluxoBean = fluxosDisponiveis.get(index);
+    		for (FluxoBean fluxoBeanDisponivel : fluxosDisponiveis) {
+                if (fluxoBeanDisponivel.getProcessDefinitionId().equals(idProcessDefinition) 
+                                && fluxoBeanDisponivel.getExpedida().equals(expedida)){
+                    fluxoBean = fluxoBeanDisponivel;
+                    break;
+                }
+            }
 		}
 		setSelectedFluxo(fluxoBean);
 		onSelectFluxo();
