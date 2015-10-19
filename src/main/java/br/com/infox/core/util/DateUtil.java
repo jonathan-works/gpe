@@ -1,5 +1,6 @@
 package br.com.infox.core.util;
 
+import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -70,6 +71,19 @@ public final class DateUtil {
 		return calendar.getTime();
 	}
 
+    /**
+     * Retorna um {@link java.util.Date} sem a informação da data (setado para 01/01/1970). 
+     * É utilizado em comparações de horas que devem desconsiderar a data. 
+     * @param data
+     * @return
+     */
+    public static Time getTimeDataZerada(Date data) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(data);
+		calendar.set(1970, 0, 1);
+		return new Time(calendar.getTime().getTime());
+	}
+    
     /**
      * Retorna a diferencia em dias entre a data inicial e final informadas.
      * 
