@@ -82,7 +82,7 @@ public class SeamExpressionResolver implements ExpressionResolver {
 	
 	private void resolveAsJavaType(Expression expression, Object value) {
 		if (value instanceof Date) {
-			expression.setValue(new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(value));
+			expression.setValue(new SimpleDateFormat("dd/MM/yyyy").format(value));
 		} else if (value instanceof Boolean) {
 			expression.setValue((Boolean) value ? "Sim" : "Não");
 		} else {
