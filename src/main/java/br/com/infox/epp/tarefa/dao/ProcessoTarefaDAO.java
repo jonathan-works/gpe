@@ -8,6 +8,7 @@ import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PARAM_CATEGORIA;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PARAM_ID_PROCESSO;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PARAM_ID_TAREFA;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PROCESSO_TAREFA_ABERTO;
+import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PROCESSOS_TAREFA;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PROCESSO_TAREFA_BY_ID_PROCESSO_AND_ID_TAREFA;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.QUERY_PARAM_PROCESSO;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.QUERY_PARAM_TASKINSTANCE;
@@ -99,7 +100,7 @@ public class ProcessoTarefaDAO extends DAO<ProcessoTarefa> {
     public List<ProcessoTarefa> getByProcesso(Processo processo) {
         Map<String, Object> params = new HashMap<>();
         params.put(QUERY_PARAM_PROCESSO, processo);
-        return getNamedResultList(PROCESSO_TAREFA_ABERTO, params);
+        return getNamedResultList(PROCESSOS_TAREFA, params);
     }
     
     public ProcessoTarefa getUltimoProcessoTarefa(Processo processo) {

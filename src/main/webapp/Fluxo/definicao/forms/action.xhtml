@@ -43,7 +43,23 @@
                 onclick="#{rich:component('expressoesAjudaPopUpPanel')}.show();" />
         </div>
     </s:div>
-    <rich:popupPanel id="expressoesAjudaPopUpPanel" modal="false" header="#{infoxMessages['process.events.expression.title']}" resizeable="true">
+    <script type="text/javascript">
+        function onshowPopup() {
+            var value = $('.expressoesAjudaPopUpPanel');
+            var width = $(window).width() * 0.85;
+            var height = $(window).height() * 0.85;
+            var top = (($(window).height() - height) / 3);
+            var left = (($(window).width() - width) / 2);
+            value.css('width', width + 'px');
+            value.css('height', height + 'px');
+            value.css('top', top + 'px');
+            value.css('left', left + 'px');
+            $('.rf-pp-cnt-scrlr').css('width', '100%');
+            $('.rf-pp-cnt-scrlr').css('height', '100%');
+        }
+    </script>
+    <rich:popupPanel id="expressoesAjudaPopUpPanel" modal="true" header="#{infoxMessages['process.events.expression.title']}" resizeable="true"
+        styleClass="expressoesAjudaPopUpPanel" onshow="onshowPopup();">
         <f:facet name="controls">
             <h:graphicImage id="assinarDocumentosPopUpPanelCloseBtn" styleClass="mp-close"
                 value="#{wiSkin.imageFolder}/closeMP.gif"

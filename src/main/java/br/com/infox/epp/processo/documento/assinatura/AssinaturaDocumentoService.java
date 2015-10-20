@@ -235,12 +235,8 @@ public class AssinaturaDocumentoService implements Serializable {
                 throw new AssinaturaException(Motivo.CADASTRO_USUARIO_NAO_ASSINADO);
             }
         }
-        try {
-            UsuarioLogin usuarioCertificado = getUsuarioLoginFromCertChain(certChainBase64Encoded);
-            if (!usuarioLogado.equals(usuarioCertificado)) {
-                throw new AssinaturaException(Motivo.CPF_CERTIFICADO_DIFERENTE_USUARIO);
-            }
-        } catch (CertificadoException ce) {
+        UsuarioLogin usuarioCertificado = getUsuarioLoginFromCertChain(certChainBase64Encoded);
+        if (!usuarioLogado.getPessoaFisica().getCpf().equals(usuarioCertificado.getPessoaFisica().getCpf())) {
             throw new AssinaturaException(Motivo.CPF_CERTIFICADO_DIFERENTE_USUARIO);
         }
         if (!usuarioLogado.getPessoaFisica().checkCertChain(certChainBase64Encoded)) {

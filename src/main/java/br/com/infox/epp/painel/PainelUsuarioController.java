@@ -1,10 +1,12 @@
 package br.com.infox.epp.painel;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.Tuple;
@@ -76,10 +78,26 @@ public class PainelUsuarioController implements Serializable {
 		loadTipoProcessoDisponiveis();
 		loadFluxosDisponiveis();
 	}
+	
+	public void atualizarPainelProcessos() throws IOException {
+	    List<FluxoBean> fluxosDisponiveisTemp = situacaoProcessoManager.getFluxosDisponiveis(tipoProcessoDisponiveis);
+	    verificaHouveAlteracao(fluxosDisponiveisTemp);
+	}
+	
+	protected void verificaHouveAlteracao(List<FluxoBean> fluxosDisponiveisTemp) throws IOException {
+	    if (fluxosDisponiveisTemp.size() != fluxosDisponiveis.size()) {
+            FacesContext.getCurrentInstance().getExternalContext().redirect("list.seam");
+        } else {
+            fluxosDisponiveisTemp.removeAll(fluxosDisponiveis);
+            if (!fluxosDisponiveisTemp.isEmpty()) {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("list.seam");
+            }
+        }
+	}
 
 	private void loadFluxosDisponiveis() {
 		fluxosDisponiveis = situacaoProcessoManager.getFluxosDisponiveis(tipoProcessoDisponiveis);
-	}	
+	}
 
 	protected void loadTipoProcessoDisponiveis() {
 		tipoProcessoDisponiveis = new ArrayList<>(4);
@@ -237,8 +255,13 @@ public class PainelUsuarioController implements Serializable {
 	public void selectFluxo() {
 		FluxoBean fluxoBean = null;
 		if (idProcessDefinition != null) {
-			int index = fluxosDisponiveis.indexOf(new FluxoBean(idProcessDefinition, expedida));
-			fluxoBean = fluxosDisponiveis.get(index);
+    		for (FluxoBean fluxoBeanDisponivel : fluxosDisponiveis) {
+                if (fluxoBeanDisponivel.getProcessDefinitionId().equals(idProcessDefinition) 
+                                && fluxoBeanDisponivel.getExpedida().equals(expedida)){
+                    fluxoBean = fluxoBeanDisponivel;
+                    break;
+                }
+            }
 		}
 		setSelectedFluxo(fluxoBean);
 		onSelectFluxo();

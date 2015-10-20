@@ -17,6 +17,10 @@
   <ui:define name="title">#{pageTitle}</ui:define>
   
   <ui:define name="baseBody">
+    <h:form>
+        <p:poll listener="#{painelUsuarioController.atualizarPainelProcessos}" interval="10" process="@this" update="@none" immediate="true" />
+    </h:form>
+    
     <s:div id="baseBody">
 	    <wi:messages formId="pageBody" globalOnly="true" />
 	  
