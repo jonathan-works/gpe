@@ -24,6 +24,7 @@ import br.com.infox.certificado.bean.CertificateSignatureBean;
 import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
 import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
 import br.com.infox.certificado.exception.CertificadoException;
+import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
@@ -72,6 +73,9 @@ public class AnexarDocumentosView implements Serializable {
 
 	@Inject
 	private DocumentoTemporarioManager documentoTemporarioManager;
+	
+	@Inject
+	private ActionMessagesService actionMessagesService;
 
 	private DocumentoBinManager documentoBinManager = ComponentUtil.getComponent(DocumentoBinManager.NAME);
 	private DocumentoUploaderService documentoUploaderService = ComponentUtil
@@ -381,7 +385,7 @@ public class AnexarDocumentosView implements Serializable {
 			getDocumentoTemporarioList().removeAll(getDocumentosParaEnviar());
 			FacesMessages.instance().add("Documento(s) enviado(s) com sucesso!");
 		} catch (DAOException e) {
-			FacesMessages.instance().add("Não foi possível enviar os documentos. Tente novamente");
+			actionMessagesService.handleDAOException(e);			
 			LOG.error("Erro ao enviar documentos para o processo", e);
 			setDocumentoTemporarioList(loadDocumentoTemporarioList());
 		}
