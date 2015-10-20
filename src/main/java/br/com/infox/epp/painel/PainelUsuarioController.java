@@ -81,7 +81,6 @@ public class PainelUsuarioController implements Serializable {
 	}
 	
 	public void atualizarPainelProcessos() throws IOException {
-	    ComponentUtil.<PathResolver>getComponent(PathResolver.NAME).getContextRealPath();
 	    List<FluxoBean> fluxosDisponiveisTemp = situacaoProcessoManager.getFluxosDisponiveis(tipoProcessoDisponiveis);
 	    if (fluxosDisponiveisTemp.size() != fluxosDisponiveis.size()) {
 	        FacesContext.getCurrentInstance().getExternalContext().redirect("list.seam");
