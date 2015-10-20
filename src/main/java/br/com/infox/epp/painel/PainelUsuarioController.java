@@ -36,7 +36,6 @@ import br.com.infox.epp.tarefa.component.tree.PainelTreeHandler;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-import br.com.infox.seam.path.PathResolver;
 import br.com.infox.seam.security.SecurityUtil;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -82,14 +81,18 @@ public class PainelUsuarioController implements Serializable {
 	
 	public void atualizarPainelProcessos() throws IOException {
 	    List<FluxoBean> fluxosDisponiveisTemp = situacaoProcessoManager.getFluxosDisponiveis(tipoProcessoDisponiveis);
+	    verificaHouveAlteracao(fluxosDisponiveisTemp);
+	}
+	
+	protected void verificaHouveAlteracao(List<FluxoBean> fluxosDisponiveisTemp) throws IOException {
 	    if (fluxosDisponiveisTemp.size() != fluxosDisponiveis.size()) {
-	        FacesContext.getCurrentInstance().getExternalContext().redirect("list.seam");
-	    } else {
-	        fluxosDisponiveisTemp.removeAll(fluxosDisponiveis);
-	        if (!fluxosDisponiveisTemp.isEmpty()) {
-	            FacesContext.getCurrentInstance().getExternalContext().redirect("list.seam");
-	        }
-	    }
+            FacesContext.getCurrentInstance().getExternalContext().redirect("list.seam");
+        } else {
+            fluxosDisponiveisTemp.removeAll(fluxosDisponiveis);
+            if (!fluxosDisponiveisTemp.isEmpty()) {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("list.seam");
+            }
+        }
 	}
 
 	private void loadFluxosDisponiveis() {
