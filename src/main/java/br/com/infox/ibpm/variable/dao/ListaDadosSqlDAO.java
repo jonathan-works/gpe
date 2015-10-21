@@ -53,8 +53,9 @@ public class ListaDadosSqlDAO implements Serializable {
     
 	public List<SelectItem> getListSelectItem(String nativeQuery) {
     	List<SelectItem> lista = new ArrayList<>();
+    	Connection connection = null;
     	try {
-			Connection connection = getDataSource().getConnection();
+			connection = getDataSource().getConnection();
 			Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE);
 			nativeQuery = addParameters(nativeQuery);
 			ResultSet resultSet = statement.executeQuery(nativeQuery);
@@ -70,7 +71,15 @@ public class ListaDadosSqlDAO implements Serializable {
 			statement.close();
 		} catch (SQLException e) {
 			logger.error("DominioVariavelTarefaDAO:getListSelectItem", e);
-		}
+		} finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    logger.error("Closing connection", e);
+                }
+            }
+        }
     	return lista;
     }
 	
