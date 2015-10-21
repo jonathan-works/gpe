@@ -25,7 +25,7 @@ public class TaskInstanceManager extends Manager<TaskInstanceDAO, UsuarioTaskIns
         try {
 	        TaskInstance taskInstance = ManagedJbpmContext.instance().getTaskInstanceForUpdate(idTaskInstance);
 			taskInstance.deleteVariableLocally(VariaveisJbpmProcessosGerais.OWNER);
-			taskInstance.setActorId(null, true);
+			taskInstance.setAssignee(null);
         } catch (Exception e) {
         	throw new DAOException(e);
         }

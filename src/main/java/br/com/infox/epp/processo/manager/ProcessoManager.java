@@ -26,6 +26,7 @@ import br.com.infox.core.dao.GenericDAO;
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -147,10 +148,11 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         	String currentActorId = Actor.instance().getId();
 			if (taskInstance.getStart() == null) {
         		taskInstance.start(currentActorId);
-        	} else if (!com.google.common.base.Strings.isNullOrEmpty(taskInstance.getActorId()) && !currentActorId.equals(taskInstance.getActorId())) {
+        		taskInstance.setAssignee(currentActorId);
+        	} else if (!StringUtil.isEmpty(taskInstance.getAssignee()) && !currentActorId.equals(taskInstance.getAssignee())) {
         		throw new BusinessRollbackException("Tarefa bloqueada por outro usuário");
         	} else {
-        		taskInstance.setActorId(currentActorId, true);
+        		taskInstance.setAssignee(currentActorId);
         	}
         	UsuarioLogin usuario = usuarioLoginManager.getUsuarioLoginByLogin(currentActorId);
     		taskInstance.setVariableLocally(VariaveisJbpmProcessosGerais.OWNER, usuario.getNomeUsuario());
