@@ -68,6 +68,7 @@
 
 						<rich:fileUpload id="uploadArquivo" execute="@this"
 							status=":status" limitRender="true"
+							onbegin="infox.showLoading('Fazendo upload de arquivos..')"
 							fileUploadListener="#{anexarDocumentosView.fileUploadListener}"
 							addLabel="#{infoxMessages['processoDocumento.addLabel']}"
 							clearAllLabel="#{infoxMessages['processoDocumento.clearAllLabel']}"
@@ -79,7 +80,7 @@
 							noDuplicate="true" 
 							render="uploadArquivoAnexarButton pageBodyDialogMessage"
 							acceptedTypes="#{anexarDocumentosView.classificacaoDocumentoUploader.acceptedTypes}"
-							onuploadcomplete="uploadCompleto();"
+							onuploadcomplete="infox.hideLoading(); uploadCompleto();"
 							onclear="infox.showLoading(); clearUploadArquivo();"
 							ontyperejected="onTypeRejected();">							
 						</rich:fileUpload>
