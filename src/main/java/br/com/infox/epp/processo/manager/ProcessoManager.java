@@ -144,15 +144,15 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         if (bp.getProcessId() != null && bp.getTaskId() != null && bp.getProcessId().equals(processo.getIdJbpm())) {
         	TaskInstance taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
         	ManagedJbpmContext.instance().getSession().buildLockRequest(LockOptions.READ).setLockMode(LockMode.PESSIMISTIC_FORCE_INCREMENT).lock(taskInstance);
-        	if (!com.google.common.base.Strings.isNullOrEmpty(taskInstance.getActorId()) && !Actor.instance().getId().equals(taskInstance.getActorId())) {
+        	String currentActorId = Actor.instance().getId();
+			if (taskInstance.getStart() == null) {
+        		taskInstance.start(currentActorId);
+        	} else if (!com.google.common.base.Strings.isNullOrEmpty(taskInstance.getActorId()) && !currentActorId.equals(taskInstance.getActorId())) {
         		throw new BusinessRollbackException("Tarefa bloqueada por outro usuário");
-        	}
-        	if (taskInstance.getStart() == null) {
-        		taskInstance.start(Actor.instance().getId());
         	} else {
-        		taskInstance.setActorId(Actor.instance().getId(), true);
+        		taskInstance.setActorId(currentActorId, true);
         	}
-        	UsuarioLogin usuario = usuarioLoginManager.getUsuarioLoginByLogin(Actor.instance().getId());
+        	UsuarioLogin usuario = usuarioLoginManager.getUsuarioLoginByLogin(currentActorId);
     		taskInstance.setVariableLocally(VariaveisJbpmProcessosGerais.OWNER, usuario.getNomeUsuario());
         }
     }
