@@ -1,5 +1,7 @@
 package br.com.infox.hibernate.function;
 
+import java.sql.Time;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.QueryException;
@@ -32,7 +34,9 @@ public class ToTimeSQLServer implements SQLFunction{
 		if (arguments.isEmpty()) {
             throw new QueryException("É necessário informar a hora");
         }
-        return "CONVERT(TIME, " + arguments.get(0) + ", 108)";
+		Object arg = arguments.get(0);
+		String hora = arg instanceof String ? (String) arg : (arg instanceof Time ? arg : new Time(((Date) arg).getTime())).toString();
+        return "CONVERT(TIME, " + hora + ", 108)";
 	}
 
 }
