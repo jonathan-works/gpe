@@ -10,6 +10,20 @@
 	xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:a="http://richfaces.org/a4j">
 
+	<script type="text/javascript">
+	
+    var getArquivosSubmetidos = function (event) {
+    	var uploadArquivo = #{rich:element('uploadArquivo')};
+    	var retorno = [];
+    	var arquivosEnviados = uploadArquivo.rf.component.submitedItems;
+        for (var i in arquivosEnviados) {  
+            var arquivo = arquivosEnviados[i].model;
+            var nomeArquivo = arquivo.name;
+            retorno.push(nomeArquivo);
+        }
+        return retorno;
+    };  
+    </script>
 	<!-- Div com os formulários para upload e editor -->
 	<div id="anexarDocumentosDiv"
 		style="display: inline-block; width: 55%; min-width: 640px; margin: 0em 0.5em 1em 0em; vertical-align: top;">
@@ -30,12 +44,12 @@
 						listener="#{anexarDocumentosView.onChangeUploadClassificacaoDocumento()}" />
 				</wi:selectOneMenuEntity>
 
-                <wi:selectOneMenuEntity id="uploadPastaUploader"
-                    label="#{infoxMessages['pasta.pasta']}"
-                    value="#{anexarDocumentosView.pastaUploader}"
-                    items="#{pastaAction.getPastaListComRestricaoEscrita()}">
-                </wi:selectOneMenuEntity>
-                
+				<wi:selectOneMenuEntity id="uploadPastaUploader"
+					label="#{infoxMessages['pasta.pasta']}"
+					value="#{anexarDocumentosView.pastaUploader}"
+					items="#{pastaAction.getPastaListComRestricaoEscrita()}">
+				</wi:selectOneMenuEntity>
+
 				<s:div id="uploadArquivoDiv">
 					<s:div id="uploadArquivoTooltipDiv"
 						rendered="#{anexarDocumentosView.showUploader}">
@@ -76,29 +90,33 @@
 							doneLabel="#{infoxMessages['anexarDocumentos.doneLabel']}"
 							uploadLabel="#{infoxMessages['processoDocumento.uploadLabel']}"
 							sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}"
-							maxFilesQuantity="10" immediateUpload="true"
-							noDuplicate="true" 
+							maxFilesQuantity="10" immediateUpload="true" noDuplicate="true"
 							render="uploadArquivoAnexarButton pageBodyDialogMessage"
 							acceptedTypes="#{anexarDocumentosView.classificacaoDocumentoUploader.acceptedTypes}"
 							onuploadcomplete="infox.hideLoading(); uploadCompleto();"
-							onclear="infox.showLoading(); clearUploadArquivo();"
-							ontyperejected="onTypeRejected();">							
+							ontyperejected="onTypeRejected();">
 						</rich:fileUpload>
 
-                        <a:jsFunction id="onTypeRejected"
-                            name="onTypeRejected"
-                            render="pageBodyDialogMessage"
-                            actionListener="#{anexarDocumentosView.onTypeRejected}" />
-                            
-                        <a:jsFunction id="uploadCompleto"
-                            name="uploadCompleto"
-                            render="pageBodyDialogMessage"
-                            actionListener="#{anexarDocumentosView.onUploadsFinalizados}" />
-						
+
+						<a:jsFunction id="onTypeRejected" name="onTypeRejected"
+							render="pageBodyDialogMessage"
+							actionListener="#{anexarDocumentosView.onTypeRejected}" />
+
+						<a:jsFunction id="uploadCompleto" name="uploadCompleto"
+							render="pageBodyDialogMessage"
+							actionListener="#{anexarDocumentosView.onUploadsFinalizados}" />
+
 						<a:jsFunction id="clearUploadArquivoFunction"
 							name="clearUploadArquivo" oncomplete="infox.hideLoading();"
 							render="uploadArquivoDiv"
 							actionListener="#{anexarDocumentosView.clearUploadFile()}" />
+
+						<a:jsFunction name="removerUpload" render="pageBodyDialogMessage"
+							action="#{anexarDocumentosView.removerUpload}">
+							<a:param name="clearedFile"
+								assignTo="#{anexarDocumentosView.clearedFile}"
+								value="clearedFile" noEscape="true" />
+						</a:jsFunction>
 
 						<s:div id="uploadArquivoAnexarButton">
 							<a:commandButton id="uploadSubmitButton" styleClass="buttons"
@@ -106,7 +124,9 @@
 								value="#{infoxMessages['crud.update']}"
 								onclick="infox.showLoading();" oncomplete="infox.hideLoading();"
 								rendered="#{anexarDocumentosView.showUploaderButton}"
-								render="uploadPanel documentoDataTable pageBodyDialogMessage" />
+								render="uploadPanel documentoDataTable pageBodyDialogMessage">
+                                <a:param assignTo="#{anexarDocumentosView.arquivosSubmetidos}" value="getArquivosSubmetidos()" noEscape="true" />
+							</a:commandButton>
 						</s:div>
 					</s:div>
 				</s:div>
@@ -185,8 +205,7 @@
 						label="#{infoxMessages['tipoProcessoDocumento.modelo']}"
 						value="#{anexarDocumentosView.documentoEditor.documentoBin.modeloDocumento}"
 						requiredField="false" required="true" readonly="#{not minuta}"
-						showVariables="false"
-						/>
+						showVariables="false" />
 				</s:div>
 				<s:div id="buttonsDiv">
 					<a:commandButton id="editorSubmitButton" styleClass="buttons"
@@ -212,7 +231,7 @@
 				<h:form id="documentosDataTableForm">
 					<wi:dataTable id="documentosAnexadosTable" showSearchForm="false"
 						values="#{anexarDocumentosView.documentoTemporarioList}"
-						rowId="#{row.id}" showGridCount="false" 
+						rowId="#{row.id}" showGridCount="false"
 						bean="#{anexarDocumentosView}" showToolbarColumn="false"
 						panelStyle="overflow: auto; max-height: 300px;">
 
@@ -293,9 +312,9 @@
 							columnHeader="#{infoxMessages['anexarDocumentos.data']}"
 							value="#{row.dataInclusao}" />
 
-                        <wi:columnOutputText columnId="pasta"
-                            columnHeader="#{infoxMessages['anexarDocumentos.pasta']}"
-                            value="#{row.pasta}" />
+						<wi:columnOutputText columnId="pasta"
+							columnHeader="#{infoxMessages['anexarDocumentos.pasta']}"
+							value="#{row.pasta}" />
 					</wi:dataTable>
 
 					<a:commandButton id="excluirButton" styleClass="buttons"
