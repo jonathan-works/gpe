@@ -14,6 +14,7 @@ import org.jboss.seam.faces.Redirect;
 
 import br.com.infox.core.controller.AbstractController;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.processo.documento.action.DocumentoProcessoAction;
 import br.com.infox.epp.processo.documento.action.PastaAction;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -26,6 +27,7 @@ import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
+import br.com.infox.ibpm.task.manager.UsuarioTaskInstanceManager;
 
 @Stateful
 @AutoCreate
@@ -53,12 +55,14 @@ public class ConsultaController extends AbstractController {
     private PastaRestricaoAction pastaRestricaoAction;
     @In
     private PastaList pastaList;
-    
+    @In
+    private UsuarioTaskInstanceManager usuarioTaskInstanceManager;
     
     private Processo processo;
     private boolean showAllDocuments = false;
     private List<MetadadoProcesso> detalhesMetadados;
     private boolean showBackButton = true;
+    private List<Localizacao> localizacoesProcesso;
 
 	public boolean isShowBackButton() {
 		return showBackButton;
@@ -142,6 +146,13 @@ public class ConsultaController extends AbstractController {
     		detalhesMetadados = metadadoProcessoManager.getListMetadadoVisivelByProcesso(getProcesso());
     	}
     	return detalhesMetadados;
+    }
+    
+    public List<Localizacao> getLocalizacoes() {
+        if (localizacoesProcesso == null) {
+            localizacoesProcesso = usuarioTaskInstanceManager.getLocalizacoes(getProcesso());
+        }
+        return localizacoesProcesso;
     }
     
     public Boolean getShowBackButton() {

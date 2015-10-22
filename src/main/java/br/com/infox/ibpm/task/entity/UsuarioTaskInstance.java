@@ -2,6 +2,10 @@ package br.com.infox.ibpm.task.entity;
 
 import static br.com.infox.ibpm.task.query.UsuarioTaskInstanceQuery.LOCALIZACAO_DA_TAREFA;
 import static br.com.infox.ibpm.task.query.UsuarioTaskInstanceQuery.LOCALIZACAO_DA_TAREFA_QUERY;
+import static br.com.infox.ibpm.task.query.UsuarioTaskInstanceQuery.LOCALIZACOES_DO_PROCESSO;
+import static br.com.infox.ibpm.task.query.UsuarioTaskInstanceQuery.LOCALIZACOES_DO_PROCESSO_QUERY;
+import static br.com.infox.ibpm.task.query.UsuarioTaskInstanceQuery.USUARIO_DA_LOCALIZACAO_DO_PROCESSO;
+import static br.com.infox.ibpm.task.query.UsuarioTaskInstanceQuery.USUARIO_DA_LOCALIZACAO_DO_PROCESSO_QUERY;
 import static br.com.infox.ibpm.task.query.UsuarioTaskInstanceQuery.USUARIO_DA_TAREFA;
 import static br.com.infox.ibpm.task.query.UsuarioTaskInstanceQuery.USUARIO_DA_TAREFA_QUERY;
 
@@ -27,7 +31,9 @@ import br.com.infox.epp.access.entity.UsuarioPerfil;
 @Entity
 @Table(name = UsuarioTaskInstance.TABLE_NAME)
 @NamedQueries({
-    @NamedQuery(name = LOCALIZACAO_DA_TAREFA, query = LOCALIZACAO_DA_TAREFA_QUERY)
+    @NamedQuery(name = LOCALIZACAO_DA_TAREFA, query = LOCALIZACAO_DA_TAREFA_QUERY),
+    @NamedQuery(name = LOCALIZACOES_DO_PROCESSO, query = LOCALIZACOES_DO_PROCESSO_QUERY),
+    @NamedQuery(name = USUARIO_DA_LOCALIZACAO_DO_PROCESSO, query = USUARIO_DA_LOCALIZACAO_DO_PROCESSO_QUERY)
 })
 @NamedNativeQueries({ 
     @NamedNativeQuery(name = USUARIO_DA_TAREFA, query = USUARIO_DA_TAREFA_QUERY)
