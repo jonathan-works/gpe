@@ -3,6 +3,7 @@ package br.com.infox.epp.processo.partes.dao;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_PAI_TIPO;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_TIPO;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_FILHO_BY_PROCESSO;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARAM_ID_PARTICIPANTE;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARAM_PARTICIPANTE_PAI;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARAM_PESSOA;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARAM_PESSOA_PARTICIPANTE_FILHO;
@@ -14,11 +15,13 @@ import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.P
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_PROCESSOS_BY_PARTIAL_NAME;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_PROCESSO_RAIZ;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PESSOA_BY_PARTICIPANTE_PROCESSO;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
 import javax.persistence.LockModeType;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -42,6 +45,7 @@ import br.com.infox.epp.processo.partes.entity.TipoParte;
 @AutoCreate
 @Scope(ScopeType.EVENT)
 @Name(ParticipanteProcessoDAO.NAME)
+@Stateless
 public class ParticipanteProcessoDAO extends DAO<ParticipanteProcesso> {
 
     private static final long serialVersionUID = 1L;
@@ -130,5 +134,11 @@ public class ParticipanteProcessoDAO extends DAO<ParticipanteProcesso> {
 		query.select(participante);
 		
 		return getEntityManager().createQuery(query).getResultList();
+	}
+
+	public Pessoa getPessoaByParticipanteProcesso(ParticipanteProcesso participanteProcesso) {
+	    Map<String, Object> params = new HashMap<>();
+	    params.put(PARAM_ID_PARTICIPANTE, participanteProcesso.getId());
+	    return getNamedSingleResult(PESSOA_BY_PARTICIPANTE_PROCESSO, params);
 	}
 }
