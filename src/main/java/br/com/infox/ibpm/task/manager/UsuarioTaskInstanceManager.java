@@ -2,6 +2,8 @@ package br.com.infox.ibpm.task.manager;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -11,8 +13,9 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.task.dao.UsuarioTaskInstanceDAO;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
 
-@Name(UsuarioTaskInstanceManager.NAME)
+@Stateless
 @AutoCreate
+@Name(UsuarioTaskInstanceManager.NAME)
 public class UsuarioTaskInstanceManager extends Manager<UsuarioTaskInstanceDAO, UsuarioTaskInstance> {
 
     private static final long serialVersionUID = 1L;
@@ -24,5 +27,9 @@ public class UsuarioTaskInstanceManager extends Manager<UsuarioTaskInstanceDAO, 
     
     public List<Localizacao> getLocalizacoes(Processo processo) {
         return getDao().getLocalizacoes(processo);
+    }
+    
+    public List<UsuarioTaskInstance> getByLocalizacaoExterna(Localizacao localizacao, Processo processo) {
+        return getDao().getByLocalizacaoExterna(localizacao.getIdLocalizacao(), processo.getIdProcesso());
     }
 }

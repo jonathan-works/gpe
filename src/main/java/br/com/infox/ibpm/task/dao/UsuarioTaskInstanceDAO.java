@@ -31,4 +31,11 @@ public class UsuarioTaskInstanceDAO extends DAO<UsuarioTaskInstance> {
         params.put(UsuarioTaskInstanceQuery.PARAM_PROCESSO, processo.getIdProcesso());
         return getNamedResultList(UsuarioTaskInstanceQuery.LOCALIZACOES_DO_PROCESSO, params);
     }
+    
+    public List<UsuarioTaskInstance> getByLocalizacaoExterna(Integer idLocalizacao, Integer idProcesso) {
+        Map<String, Object> params = new HashMap<>(2);
+        params.put(UsuarioTaskInstanceQuery.PARAM_PROCESSO, idProcesso);
+        params.put(UsuarioTaskInstanceQuery.PARAM_LOCALIZACAO, idLocalizacao);
+        return getNamedResultList(UsuarioTaskInstanceQuery.USUARIO_DA_LOCALIZACAO_DO_PROCESSO, params);
+    }
 }
