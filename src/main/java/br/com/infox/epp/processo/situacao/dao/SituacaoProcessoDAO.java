@@ -82,20 +82,18 @@ public class SituacaoProcessoDAO {
         appendMandatoryFilters(criteriaQuery, tipoProcesso);
         appendTipoProcessoFilters(criteriaQuery, tipoProcesso, comunicacoesExpedidas);
 		return criteriaQuery;
-        HibernateUtil.getQueryString(createQuery);
-        HibernateUtil.getQueryParams(createQuery);
 	}
 	
-	 public List<Tuple> getChildrenList(Integer idFluxo, TipoProcesso tipoProcesso, Boolean comunicacoesExpedidas, String numeroProcessoRoot) {
-			CriteriaQuery<Tuple> criteriaQuery = createBaseCriteriaQueryChildren(idFluxo);
-			appendMandatoryFilters(criteriaQuery, tipoProcesso);
-			appendTipoProcessoFilters(criteriaQuery, tipoProcesso, comunicacoesExpedidas);
-			if (numeroProcessoRoot != null && !numeroProcessoRoot.isEmpty()) {
-				appendNumeroProcessoRootFilter(criteriaQuery);
-				return getEntityManager().createQuery(criteriaQuery).setParameter("numeroProcessoRoot", numeroProcessoRoot).getResultList();
-			}
-	        return getEntityManager().createQuery(criteriaQuery).getResultList();
-	    }
+	public List<Tuple> getChildrenList(Integer idFluxo, TipoProcesso tipoProcesso, Boolean comunicacoesExpedidas, String numeroProcessoRoot) {
+		CriteriaQuery<Tuple> criteriaQuery = createBaseCriteriaQueryChildren(idFluxo);
+		appendMandatoryFilters(criteriaQuery, tipoProcesso);
+		appendTipoProcessoFilters(criteriaQuery, tipoProcesso, comunicacoesExpedidas);
+		if (numeroProcessoRoot != null && !numeroProcessoRoot.isEmpty()) {
+			appendNumeroProcessoRootFilter(criteriaQuery);
+			return getEntityManager().createQuery(criteriaQuery).setParameter("numeroProcessoRoot", numeroProcessoRoot).getResultList();
+		}
+        return getEntityManager().createQuery(criteriaQuery).getResultList();
+    }
 	
 	public List<Tuple> getCaixaList(TipoProcesso tipoProcesso, Integer idTarefa, Boolean comunicacoesExpedidas, String numeroProcessoRoot) {
 		TypedQuery<Long> typedCount = getEntityManager().createQuery(getCountSubqueryCaixas(tipoProcesso, comunicacoesExpedidas));
