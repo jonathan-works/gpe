@@ -71,6 +71,7 @@ public class PainelUsuarioController implements Serializable {
 	private List<TipoProcesso> tipoProcessoDisponiveis;
 	private boolean exibirColunasPadrao = true;
 	private Boolean expedida;
+	private String numeroProcesso;
 	private String idProcessDefinition;
 
 	@PostConstruct
@@ -96,7 +97,7 @@ public class PainelUsuarioController implements Serializable {
 	}
 
 	private void loadFluxosDisponiveis() {
-		fluxosDisponiveis = situacaoProcessoManager.getFluxosDisponiveis(tipoProcessoDisponiveis);
+		fluxosDisponiveis = situacaoProcessoManager.getFluxosDisponiveis(tipoProcessoDisponiveis, getNumeroProcesso());
 	}
 
 	protected void loadTipoProcessoDisponiveis() {
@@ -144,7 +145,7 @@ public class PainelUsuarioController implements Serializable {
 		if (getSelected() != null && getSelectedFluxo() != null) {
 			if (processoIdList == null) {
 				processoIdList = situacaoProcessoManager.getIdProcessosAbertosByIdTarefa(getSelected(), 
-						selectedFluxo.getTipoProcesso(), getSelectedFluxo().getExpedida());
+						selectedFluxo.getTipoProcesso(), getSelectedFluxo().getExpedida(), getNumeroProcesso());
 			}
 			return processoIdList;
 		}
@@ -218,6 +219,23 @@ public class PainelUsuarioController implements Serializable {
 				}
 			}
 		}
+	}
+	
+	public void adicionarFiltroNumeroProcessoRoot(){
+		init();
+		painelTreeHandler.setNumeroProcessoRoot(getNumeroProcesso());
+		painelTreeHandler.clearTree();
+		setSelectedFluxo(null);
+		processoIdList = null; 
+	}
+	
+	public void limparFiltros(){
+		setNumeroProcesso("");
+		init();
+		painelTreeHandler.setNumeroProcessoRoot("");
+		painelTreeHandler.clearTree();
+		setSelectedFluxo(null);
+		processoIdList = null;
 	}
 
 	public VariavelProcesso getVariavelProcesso(Processo processo, String nome, Integer idTarefa) {
@@ -311,6 +329,10 @@ public class PainelUsuarioController implements Serializable {
 		return getSelectedFluxo() != null;
 	}
 	
+	public boolean isShowFiltroInfo() {
+		return getNumeroProcesso() != null && !getNumeroProcesso().isEmpty();
+	}
+	
 	public List<TipoProcesso> getTipoProcessoDisponiveis() {
 		return tipoProcessoDisponiveis;
 	}
@@ -322,7 +344,16 @@ public class PainelUsuarioController implements Serializable {
 	public boolean isExibirColunasPadrao() {
 		return exibirColunasPadrao;
 	}
+	
 	public void setExibirColunasPadrao(boolean exibirColunasPadrao) {
 		this.exibirColunasPadrao = exibirColunasPadrao;
+	}
+	
+	public String getNumeroProcesso() {
+		return numeroProcesso;
+	}
+
+	public void setNumeroProcesso(String numeroProcesso) {
+		this.numeroProcesso = numeroProcesso;
 	}
 }

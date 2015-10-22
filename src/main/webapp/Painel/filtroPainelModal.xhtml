@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:wi="http://www.itx.com.br/jsf">
+
+	<script>
+		function clearNumeroProcessoRootField() {
+			#{rich:jQuery('fieldNumeroProcessoRoot')}.val('');
+			#{rich:jQuery('modalFiltrosForm2')}.find('.property-error.property-msg').remove();
+			#{rich:jQuery('modalFiltrosForm2')}.find('.property-error').removeClass('property-error');
+		} 
+	</script>
+	<rich:popupPanel id="modalFiltrosPainel" height="150"
+		onbeforeshow="clearNumeroProcessoRootField()">
+		<f:facet name="header">
+			<h:outputText value="#{infoxMessages['painel.adicionarFiltro']}" />
+		</f:facet>
+		<f:facet name="controls">
+			 <h:graphicImage id="modeloPastaRestricaoPanelCloseBtn"
+                styleClass="mp-close"
+                value="#{wiSkin.imageFolder}/closeMP.gif"
+                onclick="#{rich:component('modalFiltrosPainel')}.hide()" />
+		</f:facet>
+
+		<h:form id="modalFiltrosForm2">
+			<wi:inputText
+		          id="fieldNumeroProcessoRoot"
+		          label="#{infoxMessages['processo.numeroProcesso']}"
+		          value="#{painelUsuarioController.numeroProcesso}"
+		          required="true" />
+		      <a:commandButton
+		          value="#{infoxMessages['button.add']}"
+		          styleClass="buttons"
+		          execute="@form"
+		          limitRender="true"
+		          action="#{painelUsuarioController.adicionarFiltroNumeroProcessoRoot}"
+		          oncomplete="if(#{not facesContext.isValidationFailed()}){#{rich:component('modalFiltrosPainel')}.hide()}"
+		          render="divPainelProcessos panelFluxos pageBodyDialogMessage @form" />
+	          <a:commandButton
+		          value="#{infoxMessages['button.limpar']}"
+		          styleClass="buttons"
+		          execute="@this"
+		          limitRender="true"
+		          action="#{painelUsuarioController.limparFiltros}"
+		          oncomplete="#{rich:component('modalFiltrosPainel')}.hide()"
+		          render="divPainelProcessos panelFluxos pageBodyDialogMessage" />
+		</h:form>
+
+	</rich:popupPanel>
+	
+</ui:composition>

@@ -30,6 +30,7 @@ public class PainelTreeHandler extends AbstractTreeHandler<Tuple> {
     
     private List<PainelEntityNode> rootList;
     private FluxoBean fluxoBean;
+    private String numeroProcessoRoot;
 
     @Override
     protected String getQueryRoots() {
@@ -67,10 +68,10 @@ public class PainelTreeHandler extends AbstractTreeHandler<Tuple> {
     
     public List<PainelEntityNode> getTarefasRoots() {
         if (rootList == null || rootList.isEmpty()) {
-        	List<Tuple> tuples = situacaoProcessoManager.getChildrenList(getIdFluxo(), getTipoProcesso(), isExpedidas());
+        	List<Tuple> tuples = situacaoProcessoManager.getChildrenList(getIdFluxo(), getTipoProcesso(), isExpedidas(), getNumeroProcessoRoot());
         	rootList = new ArrayList<>(tuples.size());
             for (Tuple tuple : tuples) {
-            	rootList.add(new PainelEntityNode(null, tuple, getTipoProcesso(), isExpedidas()));
+            	rootList.add(new PainelEntityNode(null, tuple, getTipoProcesso(), isExpedidas(), getNumeroProcessoRoot()));
             }
         }
         return rootList;
@@ -106,6 +107,14 @@ public class PainelTreeHandler extends AbstractTreeHandler<Tuple> {
 
 	public void setFluxoBean(FluxoBean fluxoBean) {
 		this.fluxoBean = fluxoBean;
+	}
+
+	public String getNumeroProcessoRoot() {
+		return numeroProcessoRoot;
+	}
+
+	public void setNumeroProcessoRoot(String numeroProcessoRoot) {
+		this.numeroProcessoRoot = numeroProcessoRoot;
 	}
 	
 }
