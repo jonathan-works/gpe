@@ -32,6 +32,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.PapelManager;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.entity.PastaRestricao;
@@ -47,6 +48,7 @@ import br.com.infox.seam.util.ComponentUtil;
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
 @Transactional
+@ContextDependency
 public class PastaRestricaoAction implements Serializable {
 
 	private static final long serialVersionUID = 1L;
