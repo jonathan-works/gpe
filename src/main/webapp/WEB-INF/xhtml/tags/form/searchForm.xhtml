@@ -12,51 +12,14 @@
 
     <ui:param name="clearAction"
         value="#{not empty clearAction ? clearAction : bean.entityListName.concat('.newInstance()')}" />
-    <h:form id="#{formId}">
-        <f:validateBean disabled="true">
-            <a:region>
-                <s:div styleClass="edit">
-                    <rich:collapsiblePanel
-                        expanded="#{wi:get(opened, true)}"
-                        header="#{empty formTitle ? formId : formTitle}"
-                        switchType="client">
-                        <ui:param name="template"
-                            value="#{wi:get(template,'/WEB-INF/xhtml/components/templates/view.xhtml')}" />
-                        <ui:insert />
-                        <ui:insert name="buttons">
-                            <wi:selectOneMenu
-                                id="#{gridId}LogicOperator"
-                                label="Mostrar resultado que atenda a:"
-                                value="#{bean.restrictionLogicOperator}"
-                                rendered="#{wi:get(showLogicOperator, false)}"
-                                optionLabel="#{v.equals('and') ? 'Todas as expressões' : 'Qualquer expressão'}"
-                                items="#{'and,or'.split(',')}" />
-
-                            <s:div
-                                rendered="#{wi:get(showButtons, true)}">
-                                <wi:commandButton id="searchButton"
-                                    value="#{infoxMessages['button.pesquisar']}"
-                                    action="#{searchAction}"
-                                    styleClass="buttons"
-                                    reRender="#{wi:get(searchReRender, 'pageBody')}">
-                                    <a:param assignTo="#{bean.page}"
-                                        value="1" />
-                                </wi:commandButton>
-
-                                <a:region>
-                                    <a:commandButton id="clearButton"
-                                        onclick="$('##{formId}').clearForm();showLoading();"
-                                        oncomplete="hideLoading();"
-                                        action="#{elFunctions.invokeMethod(clearAction)}"
-                                        value="#{infoxMessages['button.limpar']}" execute="@this"
-                                        render="#{wi:get(clearReRender, 'pageBody')}"
-                                        styleClass="buttons" />
-                                </a:region>
-                            </s:div>
-                        </ui:insert>
-                    </rich:collapsiblePanel>
-                </s:div>
-            </a:region>
-        </f:validateBean>
-    </h:form>
+    <c:if test="#{empty inForm or not inForm}">
+	    <h:form id="#{formId}">
+	    	<ui:include src="searchFormContent.xhtml" />
+	    </h:form>
+	</c:if>
+	<c:if test="#{inForm}">
+	    <s:div id="#{formId}" rendered="#{inForm}">
+	    	<ui:include src="searchFormContent.xhtml" />
+	    </s:div>
+	</c:if>
 </ui:composition>
