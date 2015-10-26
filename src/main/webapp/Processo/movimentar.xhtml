@@ -50,7 +50,7 @@
 	          if ($('#canClosePanel').val() === 'true') {
 	            close();
 	          } else {
-	            location = location.href.replace(/&amp;tarefaId=\d+/g,"");
+	            location = location.href.replace(/&amp;tarefaId=\d+/g, "&amp;tarefaId=#{taskInstanceHome.tarefaId}");
 	          }
 	        } else {
 	          infox.hideLoading();

@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.ejb.Remove;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
@@ -387,7 +386,7 @@ public class ProcessBuilder implements Serializable {
         }
         processBuilderGraph.clear();
     }
-
+    
     public void updateFluxo(String cdFluxo) {
         String xmlDef = JpdlXmlWriter.toString(instance);
         fluxo.setXml(xmlDef);

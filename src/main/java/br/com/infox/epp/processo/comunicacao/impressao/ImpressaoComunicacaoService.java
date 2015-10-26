@@ -10,7 +10,6 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 
-import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
@@ -18,6 +17,7 @@ import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
+import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
@@ -37,6 +37,8 @@ public class ImpressaoComunicacaoService implements Serializable {
 	private ComunicacaoService comunicacaoService;
 	@In
 	private MetadadoProcessoManager metadadoProcessoManager;
+	@In
+	private DocumentoDownloader documentoDownloader;
 	
 	public MeioExpedicao getMeioExpedicao(Processo processo) {
 		MetadadoProcesso metadadoProcesso = processo.getMetadado(ComunicacaoMetadadoProvider.MEIO_EXPEDICAO);
@@ -82,7 +84,7 @@ public class ImpressaoComunicacaoService implements Serializable {
 		} else {
 			pdf = comunicacaoService.gerarPdfComunicacao(modeloComunicacao, destinatarioModeloComunicacao);
 		}
-		FileDownloader.download(pdf, "application/pdf", "Comunicação.pdf");
+		documentoDownloader.downloadPdf(destinatarioModeloComunicacao.getDocumentoComunicacao(), pdf, "Comunicação.pdf");
 	}
 	
 	public void marcarComunicacaoComoImpressa(Processo processo) throws DAOException {

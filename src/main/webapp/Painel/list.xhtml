@@ -17,6 +17,10 @@
   <ui:define name="title">#{pageTitle}</ui:define>
   
   <ui:define name="baseBody">
+    <h:form>
+        <p:poll listener="#{painelUsuarioController.atualizarPainelProcessos}" interval="10" process="@this" update="@none" immediate="true" />
+    </h:form>
+    
     <s:div id="baseBody">
 	    <wi:messages formId="pageBody" globalOnly="true" />
 	  
@@ -44,12 +48,13 @@
 	    		style="width: 15%; display: inline-block; margin-right: 0.5em; vertical-align: top">
 		    	<h:form id="form-fluxo">	
 		    		<a:jsFunction id="selectFluxo" name="selectFluxo" immediate="true" execute="@this" onbegin="infox.showLoading('Buscando Tarefas...');"
-		    		oncomplete="infox.hideLoading();" render="divPainelProcessos" >
+		    			oncomplete="infox.hideLoading();" render="divPainelProcessos" action="#{painelUsuarioController.selectFluxo}" >
 						<a:param name="fluxo" assignTo="#{painelUsuarioController.idProcessDefinition}" />
+						<a:param name="expedida" assignTo="#{painelUsuarioController.expedida}" />
 					</a:jsFunction>
 					<h:outputText value="#{infoxMessages['process.noAvailableProcesses']}" rendered="#{empty painelUsuarioController.fluxosDisponiveis}" />
 			    	<ui:repeat var="fluxo" value="#{painelUsuarioController.fluxosDisponiveis}" >
-			    	  	  <div onmouseup="selectFluxo(#{fluxo.processDefinitionId}); selectFluxoStyle(this);" 
+			    	  	  <div onmouseup="selectFluxo(#{fluxo.processDefinitionId}, #{fluxo.expedida}); selectFluxoStyle(this);" 
 			    	  	      style="padding: 0.5em; cursor:pointer; margin-top: 0.5em;" >
 			    	  	  	<h:outputText value="#{fluxo.name} (#{fluxo.quantidadeProcessos})" styleClass="fluxo-div" />
 			    	  	  </div>

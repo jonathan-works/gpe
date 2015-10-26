@@ -18,6 +18,9 @@
     <service name="logging" factory="br.com.infox.ibpm.logging.EmptyLoggingServiceFactory" />
     <service name="authentication" factory="org.jbpm.security.authentication.DefaultAuthenticationServiceFactory" />
   </jbpm-context>
+  
+    <!-- Classe que define o Variable Resolver -->
+    <bean name="jbpm.variable.resolver" class="br.com.infox.ibpm.variable.EppJbpmVariableResolver" singleton="true" />
 
 	<!-- Arquivo que define o calendario de dias e horas úteis. -->
 	<string name="resource.business.calendar" value="jbpm.business.calendar.properties" />

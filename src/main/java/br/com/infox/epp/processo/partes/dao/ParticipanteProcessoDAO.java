@@ -1,6 +1,19 @@
 package br.com.infox.epp.processo.partes.dao;
 
-import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.*;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_PAI_TIPO;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_BY_PESSOA_PROCESSO_TIPO;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.EXISTE_PARTICIPANTE_FILHO_BY_PROCESSO;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARAM_PARTICIPANTE_PAI;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARAM_PESSOA;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARAM_PESSOA_PARTICIPANTE_FILHO;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARAM_PROCESSO;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARAM_TIPO_PARTE;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARAM_TYPED_NAME;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_BY_PROCESSO_PARTICIPANTE_FILHO;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_PROCESSO;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_PROCESSOS_BY_PARTIAL_NAME;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_PROCESSO_RAIZ;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +33,7 @@ import org.jboss.seam.annotations.Scope;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.pessoa.entity.Pessoa;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso_;
@@ -47,6 +61,13 @@ public class ParticipanteProcessoDAO extends DAO<ParticipanteProcesso> {
     	return getNamedSingleResult(PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO, params);
     }
     
+    
+    public List<Pessoa> getPessoasFisicasParticipantesProcesso(Processo processo){
+		String query = "select distinct p from ParticipanteProcesso pp "
+				+ "inner join  pp.pessoa p "
+				+ "where pp.processo = :processo and p.tipoPessoa = '"+TipoPessoaEnum.F+ "' ";
+		return getEntityManager().createQuery(query,Pessoa.class).setParameter("processo", processo).getResultList();
+    }
     public boolean existeParticipanteByPessoaProcessoPaiTipo(Pessoa pessoa, 
     		Processo processo, ParticipanteProcesso pai, TipoParte tipo){
     	Map<String, Object> params = new HashMap<>(4);

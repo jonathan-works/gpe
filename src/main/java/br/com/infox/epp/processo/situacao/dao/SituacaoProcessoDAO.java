@@ -74,6 +74,8 @@ public class SituacaoProcessoDAO {
         appendMandatoryFilters(criteriaQuery, tipoProcesso);
         appendTipoProcessoFilters(criteriaQuery, tipoProcesso, comunicacoesExpedidas);
         TypedQuery<Tuple> createQuery = getEntityManager().createQuery(criteriaQuery);
+        HibernateUtil.getQueryString(createQuery);
+        HibernateUtil.getQueryParams(createQuery);
         return createQuery.getResultList();
     }
 
@@ -156,7 +158,6 @@ public class SituacaoProcessoDAO {
 		}
 	}
     
-	
 	private void appendSigiloProcessoFilter(AbstractQuery<?> principalQuery) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		Root<?> root = principalQuery.getRoots().iterator().next();
@@ -207,7 +208,7 @@ public class SituacaoProcessoDAO {
         Selection<String> nomeFluxo = root.<String>get("nomeFluxo").alias("nomeFluxo");
         Selection<Integer> idFluxo = cb.max(root.<Integer>get("idFluxo")).alias("idFluxo");
         Selection<String> type = cb.literal(PainelEntityNode.FLUXO_TYPE).alias("type");
-        Selection<Long> countFluxo = cb.countDistinct(root.get(SituacaoProcesso_.idProcesso)).alias("qtProcesso");
+        Selection<Long> countFluxo = cb.countDistinct(root.get(SituacaoProcesso_.idTaskInstance)).alias("qtProcesso");
         criteriaQuery.select(cb.tuple(nomeFluxo, idFluxo, type, countFluxo));
         criteriaQuery.groupBy(root.get("nomeFluxo"));
         criteriaQuery.orderBy(cb.asc(root.get("nomeFluxo")));
@@ -223,7 +224,7 @@ public class SituacaoProcessoDAO {
 		Selection<Long> maxIdTask = cb.max(from.get(SituacaoProcesso_.idTask)).alias("idTask");
 		Selection<Integer> maxIdTarefa = cb.max(from.get(SituacaoProcesso_.idTarefa)).alias("idTarefa");
 		Selection<Long> countCaixa = cb.count(from.get(SituacaoProcesso_.idCaixa)).alias("qtdEmCaixa");
-		Selection<Long> countProcesso = cb.countDistinct(from.get(SituacaoProcesso_.idProcesso)).alias("qtd");
+		Selection<Long> countProcesso = cb.countDistinct(from.get(SituacaoProcesso_.idTaskInstance)).alias("qtd");
 		Selection<String> type = cb.<String>literal(PainelEntityNode.TASK_TYPE).alias("type");
 		cq.select(cb.tuple(nomeTarefa, maxIdTask, maxIdTarefa, countCaixa, countProcesso, type));
 		cq.where(cb.equal(from.get("idFluxo"), idFluxo));

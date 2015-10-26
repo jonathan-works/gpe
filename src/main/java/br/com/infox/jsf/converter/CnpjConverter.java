@@ -5,7 +5,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-import org.jboss.seam.Component;
 import org.jboss.seam.annotations.Name;
 
 @Name(CnpjConverter.CONVERTER_ID)
@@ -14,11 +13,7 @@ public class CnpjConverter implements Converter {
 	
     public static final String CONVERTER_ID = "cnpjConverter";
     
-    public static CnpjConverter getInstance(){
-    	return (CnpjConverter) Component.getInstance(CnpjConverter.class);
-    }
-    
-    public String format(String value){
+    public static String format(String value){
     	 StringBuilder cnpj = new StringBuilder(value);
          cnpj.insert(2, '.'); // Após o 1º grupo (2 + 0 separador)
          cnpj.insert(6, '.'); // Após o 2º grupo (5 + 1 separador)

@@ -26,7 +26,7 @@ public interface UnidadeDecisoraMonocraticaQuery {
     		  " and up.ativo = true";
     
     String SEARCH_EXISTE_UDM_BY_LOCALIZACAO = "searchExisteUDMByLocalizacao";
-    String SEARCH_EXISTE_UDM_BY_LOCALIZACAO_QUERY = "select count(udm) " +
+    String SEARCH_EXISTE_UDM_BY_LOCALIZACAO_QUERY = "select udm " +
     		 "from UnidadeDecisoraMonocratica udm " +
     		 "where udm.localizacao.idLocalizacao = :" + ID_LOCALIZACAO;
     

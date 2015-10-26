@@ -18,6 +18,11 @@ public class FluxoBean {
 		this.processDefinitionId = processDefinitionId;
 	}
 
+	public FluxoBean(String processDefinitionId, Boolean expedida) {
+		this(processDefinitionId);
+		this.expedida = expedida;
+	}
+	
 	public FluxoBean(String processDefinitionId, String name, boolean bpmn20) {
 		this.processDefinitionId = processDefinitionId;
 		this.name = name;
@@ -87,29 +92,44 @@ public class FluxoBean {
 		return name;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((processDefinitionId == null) ? 0 : processDefinitionId.hashCode());
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (bpmn20 ? 1231 : 1237);
+        result = prime * result + ((expedida == null) ? 0 : expedida.hashCode());
+        result = prime * result + ((processDefinitionId == null) ? 0 : processDefinitionId.hashCode());
+        result = prime * result + ((quantidadeProcessos == null) ? 0 : quantidadeProcessos.hashCode());
+        return result;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof FluxoBean))
-			return false;
-		FluxoBean other = (FluxoBean) obj;
-		if (processDefinitionId == null) {
-			if (other.processDefinitionId != null)
-				return false;
-		} else if (!processDefinitionId.equals(other.processDefinitionId))
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof FluxoBean))
+            return false;
+        FluxoBean other = (FluxoBean) obj;
+        if (bpmn20 != other.bpmn20)
+            return false;
+        if (expedida == null) {
+            if (other.expedida != null)
+                return false;
+        } else if (!expedida.equals(other.expedida))
+            return false;
+        if (processDefinitionId == null) {
+            if (other.processDefinitionId != null)
+                return false;
+        } else if (!processDefinitionId.equals(other.processDefinitionId))
+            return false;
+        if (quantidadeProcessos == null) {
+            if (other.quantidadeProcessos != null)
+                return false;
+        } else if (!quantidadeProcessos.equals(other.quantidadeProcessos))
+            return false;
+        return true;
+    }
 
 }
