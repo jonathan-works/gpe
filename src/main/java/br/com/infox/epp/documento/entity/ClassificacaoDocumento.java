@@ -25,6 +25,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -52,6 +54,7 @@ public class ClassificacaoDocumento implements Serializable {
 
     private static final long serialVersionUID = 1L;
     public static final String TABLE_NAME = "tb_classificacao_documento";
+    private static final String COL_ID_TIPO_MODELO_DOCUMENTO = "id_tipo_modelo_documento";
 
     @Id
     @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_classificacao_documento")
@@ -103,8 +106,13 @@ public class ClassificacaoDocumento implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "classificacaoDocumento")
     private List<ClassificacaoDocumentoPapel> classificacaoDocumentoPapelList = new ArrayList<>(0);
-
-    public ClassificacaoDocumento() {
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = COL_ID_TIPO_MODELO_DOCUMENTO, nullable = false)
+    @NotNull
+    private TipoModeloDocumento tipoModeloDocumento;
+    
+	public ClassificacaoDocumento() {
         visibilidade = VisibilidadeEnum.A;
     }
 
@@ -212,6 +220,14 @@ public class ClassificacaoDocumento implements Serializable {
         this.classificacaoDocumentoPapelList = classificacaoDocumentoPapelList;
     }
 
+    public TipoModeloDocumento getTipoModeloDocumento() {
+		return tipoModeloDocumento;
+	}
+
+	public void setTipoModeloDocumento(TipoModeloDocumento tipoModeloDocumento) {
+		this.tipoModeloDocumento = tipoModeloDocumento;
+	}
+	
     @Override
     public String toString() {
         return descricao;
@@ -224,7 +240,11 @@ public class ClassificacaoDocumento implements Serializable {
             return accepted;
         }
         for (ExtensaoArquivo ea : getExtensaoArquivosList()) {
-            accepted += ea.getExtensao() + ", ";
+        	String extensao = ea.getExtensao();
+        	if(!extensao.startsWith(".")) {
+        		extensao = "." + extensao;
+        	}
+            accepted +=  extensao + ", ";
         }
         return accepted.substring(0, accepted.length() -2);
     }

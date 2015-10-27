@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jbpm.taskmgmt.exe.TaskInstance;
@@ -36,6 +38,7 @@ import edu.emory.mathcs.backport.java.util.Arrays;
 
 @Name(UsuarioLoginDAO.NAME)
 @AutoCreate
+@Stateless
 public class UsuarioLoginDAO extends DAO<UsuarioLogin> {
 
     private static final long serialVersionUID = 1L;

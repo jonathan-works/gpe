@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -47,6 +46,7 @@ import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.epp.processo.service.VariaveisJbpmAnaliseDocumento;
 import br.com.infox.epp.processo.type.TipoProcesso;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(ProcessoAnaliseDocumentoService.NAME)
 @Scope(ScopeType.EVENT)
@@ -72,8 +72,7 @@ public class ProcessoAnaliseDocumentoService {
 	private PrazoComunicacaoService prazoComunicacaoService;
 	@In
 	private EntityManager entityManager;
-	@Inject
-	private InfoxMessages infoxMessages;
+	private InfoxMessages infoxMessages = ComponentUtil.getComponent(InfoxMessages.NAME);
 	
 	public Processo criarProcessoAnaliseDocumentos(Processo processoPai, Documento... documentoAnalise) throws DAOException {
 		Fluxo fluxoDocumento = getFluxoDocumento();

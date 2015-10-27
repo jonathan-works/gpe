@@ -4,7 +4,9 @@ import static java.text.MessageFormat.format;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIForm;
@@ -35,6 +37,7 @@ import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Named
@@ -43,192 +46,234 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "documentoUploader";
-    private static final String NOME_DOCUMENTO_DECORATION = "inputProcessoDocumentoPdfDecoration";
-    private static final String NOME_DOCUMENTO = "inputProcessoDocumentoPdf";
-    private static final String CLASSIFICACAO_DOCUMENTO_DECORATION = "tipoProcessoDocumentoPdfDecoration";
-    private static final String CLASSIFICACAO_DOCUMENTO = "tipoProcessoDocumentoPdfDecoration:tipoProcessoDocumentoPdf";
-    private static final String FILE_UPLOAD = "tipoDocumentoDivPdf";
-    private static final LogProvider LOG = Logging.getLogProvider(DocumentoUploader.class);
+	private static final String NOME_DOCUMENTO_DECORATION = "inputProcessoDocumentoPdfDecoration";
+	private static final String NOME_DOCUMENTO = "inputProcessoDocumentoPdf";
+	private static final String CLASSIFICACAO_DOCUMENTO_DECORATION = "tipoProcessoDocumentoPdfDecoration";
+	private static final String CLASSIFICACAO_DOCUMENTO = "tipoProcessoDocumentoPdfDecoration:tipoProcessoDocumentoPdf";
+	private static final String FILE_UPLOAD = "tipoDocumentoDivPdf";
+	private static final LogProvider LOG = Logging.getLogProvider(DocumentoUploader.class);
 
-    @Inject
-    private InfoxMessages infoxMessages;
-    
-    private DocumentoManager documentoManager = ComponentUtil.getComponent(DocumentoManager.NAME, ScopeType.EVENT);
-    private ExtensaoArquivoManager extensaoArquivoManager = ComponentUtil.getComponent(ExtensaoArquivoManager.NAME, ScopeType.EVENT);
-    
-    private UploadedFile uploadedFile;
-    private ClassificacaoDocumento classificacaoDocumento;
-    private byte[] pdf;
-    private boolean isValido;
-    
-    public void onChangeClassificacaoDocumento(AjaxBehaviorEvent ajaxBehaviorEvent){
-    	clearUploadFile();
-        podeRenderizar(ajaxBehaviorEvent);
-    }
-    
-    public void clearUploadFile(){
-    	getDocumento().setDocumentoBin(new DocumentoBin());
-    	setValido(false);
-    	setUploadedFile(null);
-    	pdf = null;
-    }
+	@Inject
+	private InfoxMessages infoxMessages;
 
-    public boolean isValido() {
-        return isValido;
-    }
-    
-    public void setValido(boolean isValido) {
-        this.isValido = isValido;
-    }
+	private DocumentoManager documentoManager = ComponentUtil.getComponent(DocumentoManager.NAME, ScopeType.EVENT);
+	private ExtensaoArquivoManager extensaoArquivoManager = ComponentUtil.getComponent(ExtensaoArquivoManager.NAME,
+			ScopeType.EVENT);
 
-    @Override
-    public void newInstance() {
-        super.newInstance();
-        uploadedFile = null;
-        isValido = false;
-        pdf = null;
-        setPasta(null);
-    }
+	private ClassificacaoDocumento classificacaoDocumento;
+	private boolean isValido;
 
-    public void processFileUpload(FileUploadEvent fileUploadEvent) {
-        final UploadedFile ui = fileUploadEvent.getUploadedFile();
-        try {
-            pdf = IOUtils.toByteArray(ui.getInputStream());
-        } catch (IOException e) {
-            LOG.error("Não foi possível recuperar o inputStream do arquivo carregado", e);
-            FacesMessages.instance().add("Erro no upload do arquivo, tente novamente.");
-            return;
-        }
-        bin().setExtensao(getFileType(ui.getName()));
-        setValido(isDocumentoBinValido(ui));
-        if (isValido()) {
-            setUploadedFile(ui);
-            bin().setNomeArquivo(ui.getName());
-            bin().setSize(Long.valueOf(ui.getSize()).intValue());
-            bin().setProcessoDocumento(ui.getData());
-            FacesMessages.instance().add(infoxMessages.get("processoDocumento.uploadCompleted"));
-        } else {
-            newInstance();
-        }
-    }
+	private List<Documento> documentos = new ArrayList<>();
 
-    private DocumentoBin bin() {
-        if (getDocumento().getDocumentoBin() == null) {
-            getDocumento().setDocumentoBin(new DocumentoBin());
-        }
-        return getDocumento().getDocumentoBin();
-    }
+	public void onChangeClassificacaoDocumento(AjaxBehaviorEvent ajaxBehaviorEvent) {
+		clearUploadFile();
+		podeRenderizar(ajaxBehaviorEvent);
+	}
 
-    private String getFileType(String nomeArquivo) {
-        String ret = "";
-        if (nomeArquivo != null) {
-            ret = nomeArquivo.substring(nomeArquivo.lastIndexOf('.') + 1);
-        }
-        return ret;
-    }
+	public void clearUploadFile() {
+		getDocumento().setDocumentoBin(new DocumentoBin());
+		documentos.clear();
+		setValido(false);
+	}
 
-    @Override
-    protected LogProvider getLogger() {
-        return LOG;
-    }
+	public boolean isValido() {
+		return isValido;
+	}
 
-    @Override
-    protected Documento gravarDocumento() throws DAOException {
-        Documento pd = documentoManager.gravarDocumentoNoProcesso(getProcesso(), getDocumento(), getPasta());
-        //Removida indexação manual daqui
-        newInstance();
-        setClassificacaoDocumento(null);
-        setValido(false);
-        return pd;
-    }
+	public void setValido(boolean isValido) {
+		this.isValido = isValido;
+	}
 
-    private boolean isDocumentoBinValido(final UploadedFile file) {
-        if (file == null) {
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, infoxMessages.get("documentoUploader.error.noFile"));
-            return false;
-        }
-        ExtensaoArquivo extensaoArquivo = extensaoArquivoManager.getTamanhoMaximo(classificacaoDocumento, bin().getExtensao());
-        if (extensaoArquivo == null) {
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, infoxMessages.get("documentoUploader.error.invalidExtension"));
-            return false;
-        }
-        if ((file.getSize() / 1024F) > extensaoArquivo.getTamanho()) {
-            FacesMessages.instance().add(StatusMessage.Severity.ERROR, format(infoxMessages.get("documentoUploader.error.invalidFileSize"), extensaoArquivo.getTamanho()));
-            return false;
-        }
-        if (extensaoArquivo.getPaginavel()) {
-            if(validaLimitePorPagina(extensaoArquivo.getTamanhoPorPagina())){
-                return true;
-            } else {
-                FacesMessages.instance().add(StatusMessage.Severity.ERROR, infoxMessages.get("documentoUploader.error.notPaginable"));
-                return false;
-            }
-        }
-        return true;
-    }
-    
-    private boolean validaLimitePorPagina(Integer limitePorPagina) {
-        PdfReader reader;
-        try {
-            reader = new PdfReader(pdf);
-            int qtdPaginas = reader.getNumberOfPages();
-            for (int i = 1; i <= qtdPaginas; i++) {
-                if ((reader.getPageContent(i).length / 1024F) > limitePorPagina) {
-                    return false;
-                }
-            }
-        } catch (IOException e) {
-            LOG.error("Não foi possível recuperar as páginas do arquivo", e);
-            return false;
-        }
-        return true;
-    }
-    
+	private void newDocumento() {
+		setDocumento(new Documento());
+		getDocumento().setAnexo(true);
+		getDocumento().setDocumentoBin(new DocumentoBin());
+		getDocumento().setClassificacaoDocumento(classificacaoDocumento);
+	}
 
-    public UploadedFile getUploadedFile() {
-        return uploadedFile;
-    }
+	public void newInstance(boolean limparDocumentos) {
+		super.newInstance();
+		isValido = false;
+		setPasta(null);
+		if (limparDocumentos) {
+			documentos.clear();
+		}
+	}
 
-    public void setUploadedFile(UploadedFile uploadedFile) {
-        this.uploadedFile = uploadedFile;
-    }
+	@Override
+	public void newInstance() {
+		newInstance(true);
+	}
 
-    public ClassificacaoDocumento getClassificacaoDocumento() {
-        return classificacaoDocumento;
-    }
+	public void processFileUpload(FileUploadEvent fileUploadEvent) {
+		final UploadedFile ui = fileUploadEvent.getUploadedFile();
+		byte[] pdf = null;
+		try {
+			pdf = IOUtils.toByteArray(ui.getInputStream());
+		} catch (IOException e) {
+			LOG.error("Não foi possível recuperar o inputStream do arquivo carregado", e);
+			FacesMessages.instance().add("Erro no upload do arquivo, tente novamente.");
+			return;
+		}
+		if (documentos.size() > 0) {
+			newDocumento();
+		}
+		bin().setExtensao(getFileType(ui.getName()));
+		setValido(isDocumentoBinValido(ui, pdf));
+		if (isValido()) {
+			if (getDocumento().getDescricao() == null) {
+				getDocumento().setDescricao(ui.getName());
+			}
+			bin().setNomeArquivo(ui.getName());
+			bin().setSize(Long.valueOf(ui.getSize()).intValue());
+			bin().setProcessoDocumento(ui.getData());
+			FacesMessages.instance().add(infoxMessages.get("processoDocumento.uploadCompleted"));
+			documentos.add(getDocumento());
+		} else {
+			newInstance(false);
+		}
+	}
 
-    public void setClassificacaoDocumento(ClassificacaoDocumento classificacaoDocumento) {
-        this.classificacaoDocumento = classificacaoDocumento;
-        getDocumento().setClassificacaoDocumento(classificacaoDocumento);
-        clearUploadFile();
-    }
-    
-    @Override
-    public void clear() {
-        super.clear();
-        setClassificacaoDocumento(null);
-        setPasta(null);
-    }
-    
-    public void podeRenderizar(AjaxBehaviorEvent ajaxBehaviorEvent) {
-        UIInput input = (UIInput) ajaxBehaviorEvent.getComponent();
-        UIInput input2;
-        UIComponent form = input.getParent();
-        while (!(form instanceof UIForm)) {
-            form = form.getParent();
-        }
-        if (input.getClientId().endsWith(NOME_DOCUMENTO)) {
-            
-            input2 = (UIInput) form.findComponent(CLASSIFICACAO_DOCUMENTO_DECORATION).findComponent(CLASSIFICACAO_DOCUMENTO);
-        } else {
-            input2 = (UIInput) form.findComponent(NOME_DOCUMENTO_DECORATION).findComponent(NOME_DOCUMENTO);
-        }
-        if (input.getValue() != null && input2.getValue() != null) {
-            Collection<String> ids = FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds();
-            ids.add(input.getClientId());
-            ids.add(input2.getClientId());
-            ids.add(form.findComponent(FILE_UPLOAD).getClientId());
-        }
-    }
+	private DocumentoBin bin() {
+		if (getDocumento().getDocumentoBin() == null) {
+			getDocumento().setDocumentoBin(new DocumentoBin());
+		}
+		return getDocumento().getDocumentoBin();
+	}
+
+	private String getFileType(String nomeArquivo) {
+		String ret = "";
+		if (nomeArquivo != null) {
+			ret = nomeArquivo.substring(nomeArquivo.lastIndexOf('.') + 1);
+		}
+		return ret;
+	}
+
+	@Override
+	protected LogProvider getLogger() {
+		return LOG;
+	}
+
+	private Documento gravarDocumento(Documento documento) throws DAOException {
+		return documentoManager.gravarDocumentoNoProcesso(getProcesso(), documento, getPasta());
+	}
+
+	@Override
+	protected Documento gravarDocumento() throws DAOException {
+		Documento pd = gravarDocumento(getDocumento());
+		// Removida indexação manual daqui
+		newInstance();
+		setClassificacaoDocumento(null);
+		setValido(false);
+		return pd;
+	}
+
+	@Override
+	public void persist() {
+		try {
+			for (Documento documento : documentos) {
+				documento = gravarDocumento(documento);
+				getDocumentosDaSessao().add(documento);
+			}
+		} catch (DAOException | BusinessException e) {
+			getLogger().error("Não foi possível gravar o documento " + getDocumento() + " no processo " + getProcesso(),
+					e);
+		}
+		newInstance();
+	}
+
+	private boolean isDocumentoBinValido(final UploadedFile file, byte[] dadosArquivo) {
+		if (file == null) {
+			FacesMessages.instance().add(StatusMessage.Severity.ERROR,
+					infoxMessages.get("documentoUploader.error.noFile"));
+			return false;
+		}
+		ExtensaoArquivo extensaoArquivo = extensaoArquivoManager.getTamanhoMaximo(classificacaoDocumento,
+				bin().getExtensao());
+		if (extensaoArquivo == null) {
+			FacesMessages.instance().add(StatusMessage.Severity.ERROR,
+					infoxMessages.get("documentoUploader.error.invalidExtension"));
+			return false;
+		}
+		if ((file.getSize() / 1024F) > extensaoArquivo.getTamanho()) {
+			FacesMessages.instance().add(StatusMessage.Severity.ERROR,
+					format(infoxMessages.get("documentoUploader.error.invalidFileSize"), extensaoArquivo.getTamanho()));
+			return false;
+		}
+		if (extensaoArquivo.getPaginavel()) {
+			if (validaLimitePorPagina(extensaoArquivo.getTamanhoPorPagina(), dadosArquivo)) {
+				return true;
+			} else {
+				FacesMessages.instance().add(StatusMessage.Severity.ERROR,
+						infoxMessages.get("documentoUploader.error.notPaginable"));
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean validaLimitePorPagina(Integer limitePorPagina, byte[] pdf) {
+		PdfReader reader;
+		try {
+			reader = new PdfReader(pdf);
+			int qtdPaginas = reader.getNumberOfPages();
+			for (int i = 1; i <= qtdPaginas; i++) {
+				if ((reader.getPageContent(i).length / 1024F) > limitePorPagina) {
+					return false;
+				}
+			}
+		} catch (IOException e) {
+			LOG.error("Não foi possível recuperar as páginas do arquivo", e);
+			return false;
+		}
+		return true;
+	}
+
+	public ClassificacaoDocumento getClassificacaoDocumento() {
+		return classificacaoDocumento;
+	}
+
+	public void setClassificacaoDocumento(ClassificacaoDocumento classificacaoDocumento) {
+		this.classificacaoDocumento = classificacaoDocumento;
+		getDocumento().setClassificacaoDocumento(classificacaoDocumento);
+		clearUploadFile();
+	}
+
+	@Override
+	public void clear() {
+		super.clear();
+		setClassificacaoDocumento(null);
+		setPasta(null);
+	}
+
+	public void podeRenderizar(AjaxBehaviorEvent ajaxBehaviorEvent) {
+		UIInput input = (UIInput) ajaxBehaviorEvent.getComponent();
+		UIInput input2 = null;
+		UIComponent form = input.getParent();
+		boolean forcar = false;
+		while (!(form instanceof UIForm)) {
+			form = form.getParent();
+		}
+		if (input.getClientId().endsWith(NOME_DOCUMENTO)) {
+
+			input2 = (UIInput) form.findComponent(CLASSIFICACAO_DOCUMENTO_DECORATION)
+					.findComponent(CLASSIFICACAO_DOCUMENTO);
+		} else {
+			UIComponent component = form.findComponent(NOME_DOCUMENTO_DECORATION);
+			if (component == null) {
+				forcar = true;
+			} else {
+				input2 = (UIInput) component.findComponent(NOME_DOCUMENTO);
+			}
+		}
+		if (input.getValue() != null && (forcar || (input2.getValue() != null))) {
+			Collection<String> ids = FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds();
+			ids.add(input.getClientId());
+			if (input2 != null) {
+				ids.add(input2.getClientId());
+			}
+			ids.add(form.findComponent(FILE_UPLOAD).getClientId());
+		}
+	}
 
 }

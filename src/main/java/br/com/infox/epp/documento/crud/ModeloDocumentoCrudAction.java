@@ -4,12 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.persistence.DAOException;
@@ -24,10 +20,11 @@ import br.com.infox.epp.documento.manager.HistoricoModeloDocumentoManager;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.documento.manager.TipoModeloDocumentoPapelManager;
 import br.com.infox.epp.documento.manager.VariavelManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(ModeloDocumentoCrudAction.NAME)
-@Scope(ScopeType.CONVERSATION)
 public class ModeloDocumentoCrudAction extends AbstractCrudAction<ModeloDocumento, ModeloDocumentoManager> {
 
     /**
