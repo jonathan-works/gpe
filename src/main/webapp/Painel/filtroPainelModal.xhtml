@@ -7,16 +7,17 @@
   xmlns:h="http://java.sun.com/jsf/html"
   xmlns:rich="http://richfaces.org/rich"
   xmlns:wi="http://www.itx.com.br/jsf">
-
+	
+	<a:jsFunction name="clearErrosFiltro"
+		onbegin="#{rich:jQuery('modalFiltrosForm2')}.find('.property-error.property-msg').remove(); #{rich:jQuery('modalFiltrosForm2')}.find('.property-error').removeClass('property-error');"
+		render="fieldNumeroProcessoRoot"/>
 	<script>
 		function clearNumeroProcessoRootField() {
 			#{rich:jQuery('fieldNumeroProcessoRoot')}.val('');
-			#{rich:jQuery('modalFiltrosForm2')}.find('.property-error.property-msg').remove();
-			#{rich:jQuery('modalFiltrosForm2')}.find('.property-error').removeClass('property-error');
-		} 
+		}
 	</script>
 	<rich:popupPanel id="modalFiltrosPainel" height="150"
-		onbeforeshow="clearNumeroProcessoRootField()">
+		onbeforeshow="clearErrosFiltro()">
 		<f:facet name="header">
 			<h:outputText value="#{infoxMessages['painel.adicionarFiltro']}" />
 		</f:facet>
@@ -47,10 +48,9 @@
 		          execute="@this"
 		          limitRender="true"
 		          action="#{painelUsuarioController.limparFiltros}"
-		          oncomplete="#{rich:component('modalFiltrosPainel')}.hide()"
+		          oncomplete="#{rich:component('modalFiltrosPainel')}.hide(); clearNumeroProcessoRootField();"
 		          render="divPainelProcessos panelFluxos pageBodyDialogMessage" />
 		</h:form>
 
 	</rich:popupPanel>
-	
 </ui:composition>

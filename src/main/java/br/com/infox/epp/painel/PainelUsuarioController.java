@@ -76,6 +76,7 @@ public class PainelUsuarioController implements Serializable {
 
 	@PostConstruct
 	protected void init() {
+		setNumeroProcesso(null);
 		loadTipoProcessoDisponiveis();
 		loadFluxosDisponiveis();
 	}
@@ -222,7 +223,8 @@ public class PainelUsuarioController implements Serializable {
 	}
 	
 	public void adicionarFiltroNumeroProcessoRoot(){
-		init();
+		loadTipoProcessoDisponiveis();
+		loadFluxosDisponiveis();
 		painelTreeHandler.setNumeroProcessoRoot(getNumeroProcesso());
 		painelTreeHandler.clearTree();
 		setSelectedFluxo(null);
@@ -230,7 +232,6 @@ public class PainelUsuarioController implements Serializable {
 	}
 	
 	public void limparFiltros(){
-		setNumeroProcesso("");
 		init();
 		painelTreeHandler.setNumeroProcessoRoot("");
 		painelTreeHandler.clearTree();
