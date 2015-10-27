@@ -70,11 +70,16 @@ public class SituacaoProcessoDAO {
 	
 	 public List<Tuple> getRootList(TipoProcesso tipoProcesso, boolean comunicacoesExpedidas, String numeroProcessoRoot) {
 	        CriteriaQuery<Tuple> criteriaQuery = createQueryRootList(tipoProcesso, comunicacoesExpedidas);
-	        if (numeroProcessoRoot != null && !numeroProcessoRoot.isEmpty()) {
-	        	appendNumeroProcessoRootFilter(criteriaQuery);
-	        	return getEntityManager().createQuery(criteriaQuery).setParameter("numeroProcessoRoot", numeroProcessoRoot).getResultList();
-	        }
-	        return getEntityManager().createQuery(criteriaQuery).getResultList();
+	        
+	        TypedQuery<Tuple> typedQuery;
+			if (numeroProcessoRoot != null && !numeroProcessoRoot.isEmpty()) {
+				appendNumeroProcessoRootFilter(criteriaQuery);
+				typedQuery = getEntityManager().createQuery(criteriaQuery);
+				typedQuery.setParameter("numeroProcessoRoot", numeroProcessoRoot);
+			} else {
+				typedQuery = getEntityManager().createQuery(criteriaQuery);
+			}
+	        return typedQuery.getResultList();
 	    }
 
 	private CriteriaQuery<Tuple> createQueryRootList(TipoProcesso tipoProcesso, boolean comunicacoesExpedidas) {
@@ -88,11 +93,16 @@ public class SituacaoProcessoDAO {
 		CriteriaQuery<Tuple> criteriaQuery = createBaseCriteriaQueryChildren(idFluxo);
 		appendMandatoryFilters(criteriaQuery, tipoProcesso);
 		appendTipoProcessoFilters(criteriaQuery, tipoProcesso, comunicacoesExpedidas);
+		
+		TypedQuery<Tuple> typedQuery;
 		if (numeroProcessoRoot != null && !numeroProcessoRoot.isEmpty()) {
 			appendNumeroProcessoRootFilter(criteriaQuery);
-			return getEntityManager().createQuery(criteriaQuery).setParameter("numeroProcessoRoot", numeroProcessoRoot).getResultList();
+			typedQuery = getEntityManager().createQuery(criteriaQuery);
+			typedQuery.setParameter("numeroProcessoRoot", numeroProcessoRoot);
+		} else {
+			typedQuery = getEntityManager().createQuery(criteriaQuery);
 		}
-        return getEntityManager().createQuery(criteriaQuery).getResultList();
+        return typedQuery.getResultList();
     }
 	
 	public List<Tuple> getCaixaList(TipoProcesso tipoProcesso, Integer idTarefa, Boolean comunicacoesExpedidas, String numeroProcessoRoot) {
@@ -148,11 +158,16 @@ public class SituacaoProcessoDAO {
         appendMandatoryFilters(criteriaQuery, tipoProcesso);
         appendTipoProcessoFilters(criteriaQuery, tipoProcesso, comunicacoesExpedidas);
         
+        TypedQuery<Integer> typedQuery;
 		if (numeroProcessoRoot != null && !numeroProcessoRoot.isEmpty()) {
 			appendNumeroProcessoRootFilter(criteriaQuery);
-			return getEntityManager().createQuery(criteriaQuery).setParameter("numeroProcessoRoot", numeroProcessoRoot).getResultList();
+			typedQuery = getEntityManager().createQuery(criteriaQuery);
+			typedQuery.setParameter("numeroProcessoRoot", numeroProcessoRoot);
+		} else {
+			typedQuery = getEntityManager().createQuery(criteriaQuery);
 		}
-        return getEntityManager().createQuery(criteriaQuery).getResultList();
+		
+        return typedQuery.getResultList();
     }
 	
     public void appendMandatoryFilters(AbstractQuery<?> abstractQuery, TipoProcesso tipoProcesso) {
@@ -160,7 +175,7 @@ public class SituacaoProcessoDAO {
 		appendTipoProcessoFilter(abstractQuery, tipoProcesso);
 	}
 	
-    private void appendNumeroProcessoRootFilter(AbstractQuery<?> abstractQuery) {
+    protected void appendNumeroProcessoRootFilter(AbstractQuery<?> abstractQuery) {
     	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
     	Root<?> root = abstractQuery.getRoots().iterator().next();
     	Subquery<Integer> subqueryProcesso = abstractQuery.subquery(Integer.class);
