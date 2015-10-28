@@ -4,7 +4,7 @@
   <groupId>br.com.infox.epp</groupId>
   <artifactId>epp</artifactId>
   <packaging>war</packaging>
-  <version>2.10.2-8</version>
+  <version>2.10.2-9</version>
   <name>epp</name>
   <url>http://www.infox.com.br</url>
   <dependencyManagement>

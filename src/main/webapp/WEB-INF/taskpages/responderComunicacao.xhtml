@@ -47,7 +47,7 @@
 			</s:div>
 			<wi:selectOneMenuEntity id="modeloDocumento" value="#{respostaComunicacaoAction.modeloDocumento}" 
 				label="#{infoxMessages['modeloDocumento.modeloDocumento']}"
-				noSelectionLabel="[Selecione o modelo]" items="#{respostaComunicacaoAction.modelosDocumento}"
+				noSelectionLabel="[Selecione o modelo]" items="#{respostaComunicacaoAction.modeloDocumentoList}"
 				readonly="#{not minuta}" disabled="#{not minuta}">
 				<a:ajax event="change" render="respostaComunicacaoDiv" execute="@this" limitRender="true"
 					listener="#{respostaComunicacaoAction.assignModeloDocumento}"/>
