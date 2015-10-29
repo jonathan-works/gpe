@@ -55,7 +55,7 @@ public class PainelUsuarioController implements Serializable {
 	@Inject
 	protected SecurityUtil securityUtil;
 	@Inject
-	private PainelTreeHandler painelTreeHandler;
+	protected PainelTreeHandler painelTreeHandler;
 	@Inject
 	protected DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
 
