@@ -113,6 +113,8 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     	List<MetadadoProcesso> metaPastas = metadadoProcessoManager.getMetadadoProcessoByType(processo, EppMetadadoProvider.PASTA_DEFAULT.getMetadadoType());
         if (!metaPastas.isEmpty()) {
         	return (Pasta)metaPastas.get(0).getValue();
+        } else if (!processo.getProcessoRoot().getIdProcesso().equals(processo.getIdProcesso())) {
+            return getDefault(processo.getProcessoRoot());
         } else {
         	return null;
         }

@@ -45,7 +45,7 @@ public class FileVariableHandler {
         }
         Documento documento = createDocumento(file, variableFieldName);
         try {
-            documentoManager.gravarDocumentoNoProcesso(processoEpaHome.getInstance().getProcessoRoot(), documento);
+            documentoManager.gravarDocumentoNoProcesso(processoEpaHome.getInstance(), documento);
             taskInstanceHome.getInstance().put(variableFieldName, documento.getId());
         } catch (DAOException | BusinessException e) {
             throw new BusinessRollbackException(e);
