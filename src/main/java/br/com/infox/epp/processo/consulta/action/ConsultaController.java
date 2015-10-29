@@ -155,7 +155,11 @@ public class ConsultaController extends AbstractController {
         return localizacoesProcesso;
     }
     
-    public Boolean getShowBackButton() {
+    public void setLocalizacoes(List<Localizacao> localizacoesProcesso) {
+		this.localizacoesProcesso = localizacoesProcesso;
+	}
+
+	public Boolean getShowBackButton() {
 		return showBackButton;
 	}
 
