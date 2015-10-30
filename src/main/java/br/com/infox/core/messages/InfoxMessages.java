@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.ejb.Lock;
+import javax.ejb.LockType;
 import javax.ejb.Singleton;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -19,8 +21,9 @@ import org.jboss.seam.annotations.Name;
 @AutoCreate
 @Name(InfoxMessages.NAME)
 @Singleton(name = InfoxMessages.NAME)
+@Lock(LockType.READ)
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-public class InfoxMessages extends HashMap<String, String> implements Serializable{
+public class InfoxMessages extends HashMap<String, String> implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
