@@ -9,9 +9,9 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.FileUtil;
@@ -25,12 +25,9 @@ public class ImagemBinDAO extends DAO<ImagemBin> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "imagemBinDAO";
     
-    @In
-    private transient EntityManager entityManagerBin;
-    
     @Override
     public EntityManager getEntityManager() {
-        return entityManagerBin;
+        return EntityManagerProducer.getEntityManagerBin();
     }
 
     public List<ImagemBin> getTodasAsImagens() {

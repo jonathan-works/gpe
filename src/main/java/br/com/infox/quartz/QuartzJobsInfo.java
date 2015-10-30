@@ -33,6 +33,7 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.impl.matchers.GroupMatcher;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.system.manager.ParametroManager;
@@ -54,8 +55,6 @@ public class QuartzJobsInfo implements Serializable {
     private ParametroManager parametroManager;
     @In
     private InfoxMessages infoxMessages;
-    @In
-    private EntityManager entityManager;
     
     private static Pattern patternExpr = Pattern
             .compile("^AsynchronousInvocation\\((.*)\\)$");
@@ -175,7 +174,7 @@ public class QuartzJobsInfo implements Serializable {
         	String sql = "UPDATE QRTZ_TRIGGERS SET NEXT_FIRE_TIME = :nextFireTime WHERE JOB_NAME = :jobName AND JOB_GROUP = :groupName";
         	Calendar nextFireTime = Calendar.getInstance();
         	nextFireTime.roll(Calendar.MINUTE, -1);
-        	entityManager.createNativeQuery(sql).setParameter("nextFireTime", nextFireTime.getTime().getTime())
+        	getEntityManager().createNativeQuery(sql).setParameter("nextFireTime", nextFireTime.getTime().getTime())
         		.setParameter("jobName", jobName).setParameter("groupName", groupName).executeUpdate();
             FacesMessages.instance().add(Severity.INFO,
                     "Job executado com sucesso: " + jobName);
@@ -213,5 +212,9 @@ public class QuartzJobsInfo implements Serializable {
         for (Map<String, Object> job : jobs) {
            deleteJob((String) job.get("jobName"), (String) job.get("groupName"), (String) job.get("triggerName")); 
         }
+    }
+    
+    public EntityManager getEntityManager() {
+        return EntityManagerProducer.getEntityManager();
     }
 }
