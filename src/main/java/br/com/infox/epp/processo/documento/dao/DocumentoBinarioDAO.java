@@ -6,9 +6,9 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.documento.entity.DocumentoBinario;
@@ -21,12 +21,9 @@ public class DocumentoBinarioDAO extends DAO<DocumentoBinario> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "documentoBinarioDAO";
 
-    @In
-    private transient EntityManager entityManagerBin;
-
     @Override
     public EntityManager getEntityManager() {
-        return entityManagerBin;
+        return EntityManagerProducer.getEntityManagerBin();
     }
 
     public byte[] getData(int idDocumentoBin) {
