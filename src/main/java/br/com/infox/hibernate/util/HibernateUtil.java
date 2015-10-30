@@ -18,6 +18,7 @@ import org.hibernate.internal.SessionImpl;
 import org.hibernate.proxy.HibernateProxy;
 import org.jboss.seam.Component;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.hibernate.session.SessionAssistant;
@@ -90,6 +91,10 @@ public final class HibernateUtil {
     
     private static final QueryImpl unwrapQuery(Query query) {
     	return query.unwrap(org.hibernate.internal.QueryImpl.class);
+    }
+    
+    public static Connection getConnection() {
+    	return EntityManagerProducer.getEntityManager().unwrap(SessionImpl.class).connection();
     }
     
     public static Connection getConnection(EntityManager em) {
