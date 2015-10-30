@@ -17,6 +17,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
+import org.jboss.seam.bpm.BusinessProcessInterceptor;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.file.download.FileDownloader;
@@ -31,6 +32,7 @@ import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoManager
 import br.com.infox.epp.processo.documento.sigilo.service.SigiloDocumentoService;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.exception.ApplicationException;
 import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.path.PathResolver;
 
@@ -147,6 +149,10 @@ public class DocumentoDownloader implements Serializable {
     }
 
     public String getViewUrl(Documento documento) {
+    	if(documento == null){
+    		throw new BusinessException("Não foi possível carregar os documentos. ");
+    	}
+    		
         if (documento.getDocumentoBin().isBinario()) {
             return MessageFormat.format(URL_DOWNLOAD_BINARIO, pathResolver.getContextPath(), documento.getId());
         }
