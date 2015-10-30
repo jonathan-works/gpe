@@ -47,5 +47,12 @@ public class PerfilTemplateDAO extends DAO<PerfilTemplate> {
         return getNamedSingleResult(
                 PerfilTemplateQuery.GET_BY_LOCALIZACAO_PAPEL, param);
     }
+    
+    public PerfilTemplate getPerfilTemplateByLocalizacaoPaiDescricao(Integer idLocalizacao, String descricaoPerfil) {
+    	Map<String, Object> param = new HashMap<>(1);
+        param.put(PerfilTemplateQuery.PARAM_DESCRICAO, descricaoPerfil);
+        param.put(PerfilTemplateQuery.PARAM_LOCALIZACAO, idLocalizacao);
+        return getNamedSingleResult(PerfilTemplateQuery.GET_BY_LOCALIZACAO_PAI_DESCRICAO, param);
+    }    
 
 }

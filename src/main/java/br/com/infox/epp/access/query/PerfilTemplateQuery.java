@@ -18,5 +18,10 @@ public interface PerfilTemplateQuery {
     String GET_BY_DESCRICAO = "getPerfilteTemplateByDescricao";
     String GET_BY_DESCRICAO_QUERY = "select o from PerfilTemplate o where o.descricao = :" + PARAM_DESCRICAO;
     
+    String GET_BY_LOCALIZACAO_PAI_DESCRICAO = "getPerfilTemplateByLocalizacaoPaiAndDescricao";
+    String GET_BY_LOCALIZACAO_PAI_DESCRICAO_QUERY = "select o from PerfilTemplate o where exists (select 1 from Localizacao l "
+    		+ "inner join l.estruturaFilho e inner join e.localizacoes lf "
+    		+ "where lf.idLocalizacao = o.localizacao.idLocalizacao and l.idLocalizacao = :" + PARAM_LOCALIZACAO + " ) "
+    		+ "and o.descricao = :" + PARAM_DESCRICAO;
 
 }

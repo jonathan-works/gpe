@@ -2,6 +2,8 @@ package br.com.infox.epp.meiocontato.manager;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -15,8 +17,9 @@ import br.com.infox.epp.meiocontato.type.TipoMeioContatoEnum;
 import br.com.infox.epp.pessoa.entity.Pessoa;
 
 @AutoCreate
-@Scope(ScopeType.EVENT)
+@Scope(ScopeType.STATELESS)
 @Name(MeioContatoManager.NAME)
+@Stateless
 public class MeioContatoManager extends Manager<MeioContatoDAO, MeioContato>{
 
 	private static final long serialVersionUID = 1L;

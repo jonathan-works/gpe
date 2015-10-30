@@ -12,7 +12,7 @@ import br.com.infox.epp.pessoa.dao.PessoaFisicaDAO;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 
 @Name(PessoaFisicaManager.NAME)
-@Scope(ScopeType.EVENT)
+@Scope(ScopeType.STATELESS)
 @Stateless
 @AutoCreate
 public class PessoaFisicaManager extends Manager<PessoaFisicaDAO, PessoaFisica> {
