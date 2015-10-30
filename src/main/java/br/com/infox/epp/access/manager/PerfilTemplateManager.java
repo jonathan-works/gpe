@@ -2,6 +2,8 @@ package br.com.infox.epp.access.manager;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -16,6 +18,7 @@ import br.com.infox.epp.access.entity.PerfilTemplate;
 
 @Name(PerfilTemplateManager.NAME)
 @AutoCreate
+@Stateless
 public class PerfilTemplateManager extends Manager<PerfilTemplateDAO, PerfilTemplate> {
     
     private static final long serialVersionUID = 1L;
@@ -45,6 +48,10 @@ public class PerfilTemplateManager extends Manager<PerfilTemplateDAO, PerfilTemp
     
     public PerfilTemplate getPerfilTemplateByDescricao(String descricao) {
     	return getDao().getPerfilTemplateByDescricao(descricao);
+    }
+
+    public PerfilTemplate getPerfilTemplateByLocalizacaoPaiDescricao(Localizacao localizacaoPai, String descricaoPerfil) {
+    	return getDao().getPerfilTemplateByLocalizacaoPaiDescricao(localizacaoPai.getIdLocalizacao(), descricaoPerfil);
     }
 
 }

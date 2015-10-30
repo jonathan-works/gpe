@@ -34,6 +34,7 @@
     template="#{template}"
     rendered="#{wi:get(rendered, true)}">
     <ui:param name="accept" value="#{wi:get(accept, 'application/pdf')}" />
+    <ui:param name="maxFiles" value="#{wi:get(maxFiles, '1')}" />
     
 	<ui:define name="label">#{label}</ui:define>
     <rich:fileUpload
@@ -49,7 +50,7 @@
       doneLabel="#{empty doneLabel ? infoxMessages['processoDocumento.doneLabel'] : doneLabel}"
       uploadLabel="#{infoxMessages['processoDocumento.uploadLabel']}"
       sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}"
-      maxFilesQuantity="1"
+      maxFilesQuantity="#{maxFiles}"
       listHeight="50px"
       immediateUpload="true"
       noDuplicate="true"

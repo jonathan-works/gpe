@@ -15,6 +15,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Size;
 
 import br.com.infox.epp.system.annotation.Ignore;
 
@@ -41,12 +42,15 @@ public class LogWebserviceServer implements Serializable {
 	private Date dataFim;
 	
 	@Column(name="cd_mensagem_retorno")
+	@Size(max=50)
 	private String mensagemRetorno;
 	
 	@Column(name="cd_webservice", nullable=false)
+	@Size(max=10)
 	private String webService;
 	
 	@Column(name="vl_token", nullable=false)
+	@Size(max=30)
 	private String token;
 	
 	@Column(name="ds_requisicao", nullable=false)
