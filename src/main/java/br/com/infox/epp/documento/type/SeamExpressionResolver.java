@@ -14,9 +14,8 @@ import org.jbpm.graph.exe.Token;
 import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.cdi.config.BeanManager;
-import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
-import br.com.infox.seam.util.ComponentUtil;
 
 public class SeamExpressionResolver implements ExpressionResolver {
 	
@@ -49,7 +48,7 @@ public class SeamExpressionResolver implements ExpressionResolver {
 	}
 
 	public SeamExpressionResolver(Long idProcessInstance) {
-	    EntityManager entityManager = ComponentUtil.getComponent("entityManager");
+	    EntityManager entityManager = EntityManagerProducer.getEntityManager();
 	    String jqpl = "select ti from org.jbpm.taskmgmt.exe.TaskInstance ti inner join fetch ti.token inner join fetch ti.processInstance pi where pi.id = :idProcessInstance and ti.end is null";
 	    TypedQuery<TaskInstance> typedQuery = entityManager.createQuery(jqpl, TaskInstance.class);
 	    List<TaskInstance> list = typedQuery.setMaxResults(1).setParameter("idProcessInstance", idProcessInstance).getResultList();
