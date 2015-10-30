@@ -23,6 +23,7 @@ import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.graph.exe.ProcessInstance;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
@@ -70,8 +71,7 @@ public class ProcessoAnaliseDocumentoService {
 	private IniciarProcessoService iniciarProcessoService;
 	@In
 	private PrazoComunicacaoService prazoComunicacaoService;
-	@In
-	private EntityManager entityManager;
+
 	private InfoxMessages infoxMessages = ComponentUtil.getComponent(InfoxMessages.NAME);
 	
 	public Processo criarProcessoAnaliseDocumentos(Processo processoPai, Documento... documentoAnalise) throws DAOException {
@@ -167,6 +167,7 @@ public class ProcessoAnaliseDocumentoService {
 	}
 	
 	public List<Documento> getDocumentosRespostaComunicacao(Processo comunicacao){
+	    EntityManager entityManager = EntityManagerProducer.getEntityManager();
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<MetadadoProcesso> query = cb.createQuery(MetadadoProcesso.class);
 		
@@ -192,6 +193,7 @@ public class ProcessoAnaliseDocumentoService {
 	}
 
 	public List<Documento> getDocumentosAnalise(Processo analiseDocumentos){
+	    EntityManager entityManager = EntityManagerProducer.getEntityManager();
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<MetadadoProcesso> query = cb.createQuery(MetadadoProcesso.class);
 		
