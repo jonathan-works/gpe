@@ -41,7 +41,7 @@ public class OrdemPastaValidator implements Validator {
         Processo processo = processoManager.find(idProcesso);
         for (Pasta pasta : processo.getPastaList()) {
             if (idPasta != null && pasta.getId().equals(idPasta)) continue;
-            if (pasta.getOrdem().equals(ordem)) {
+            if (ordem.equals(pasta.getOrdem().intValue())) {
                 throw new ValidatorException(new FacesMessage("Já existe pasta com este número de ordem"));
             }
         }
