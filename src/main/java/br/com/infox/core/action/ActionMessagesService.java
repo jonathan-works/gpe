@@ -23,6 +23,7 @@ import org.jboss.seam.international.StatusMessages;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.GenericDatabaseErrorCode;
+import br.com.infox.core.util.ExceptionUtil;
 
 @Name(ActionMessagesService.NAME)
 @AutoCreate
@@ -87,7 +88,7 @@ public class ActionMessagesService implements Serializable {
     }
     
     public void handleLockException(Exception exception, String lockMessage) {
-		if (isLockException(exception)) {
+		if (ExceptionUtil.isLockException(exception)) {
 			FacesMessages.instance().add(lockMessage);
 		} else if (exception instanceof DAOException) {
 			handleDAOException((DAOException) exception);
@@ -96,9 +97,5 @@ public class ActionMessagesService implements Serializable {
 		} else {
 			handleException(exception.getMessage(), exception);
 		}
-	}
-	
-	private boolean isLockException(Exception exception) {
-		return exception.getCause() instanceof OptimisticLockException || exception instanceof OptimisticLockException;
 	}
 }

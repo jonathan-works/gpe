@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.Tuple;
 
+import org.jboss.seam.core.Conversation;
 import org.jboss.seam.faces.Redirect;
 import org.richfaces.event.DropEvent;
 
@@ -55,7 +56,7 @@ public class PainelUsuarioController implements Serializable {
 	@Inject
 	protected SecurityUtil securityUtil;
 	@Inject
-	private PainelTreeHandler painelTreeHandler;
+	protected PainelTreeHandler painelTreeHandler;
 	@Inject
 	protected DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
 
@@ -71,16 +72,21 @@ public class PainelUsuarioController implements Serializable {
 	private List<TipoProcesso> tipoProcessoDisponiveis;
 	private boolean exibirColunasPadrao = true;
 	private Boolean expedida;
+	private String numeroProcesso;
 	private String idProcessDefinition;
 
 	@PostConstruct
 	protected void init() {
+		setNumeroProcesso(null);
 		loadTipoProcessoDisponiveis();
 		loadFluxosDisponiveis();
+		// Alterando o concurrentRequestTimeout para evitar ConcurrentCallToConversation no painel #66435
+		Conversation conversation = ComponentUtil.getComponent("org.jboss.seam.core.conversation");
+		conversation.setConcurrentRequestTimeout(5000);
 	}
 	
 	public void atualizarPainelProcessos() throws IOException {
-	    List<FluxoBean> fluxosDisponiveisTemp = situacaoProcessoManager.getFluxosDisponiveis(tipoProcessoDisponiveis);
+	    List<FluxoBean> fluxosDisponiveisTemp = situacaoProcessoManager.getFluxosDisponiveis(tipoProcessoDisponiveis, getNumeroProcesso());
 	    verificaHouveAlteracao(fluxosDisponiveisTemp);
 	}
 	
@@ -96,7 +102,7 @@ public class PainelUsuarioController implements Serializable {
 	}
 
 	private void loadFluxosDisponiveis() {
-		fluxosDisponiveis = situacaoProcessoManager.getFluxosDisponiveis(tipoProcessoDisponiveis);
+		fluxosDisponiveis = situacaoProcessoManager.getFluxosDisponiveis(tipoProcessoDisponiveis, getNumeroProcesso());
 	}
 
 	protected void loadTipoProcessoDisponiveis() {
@@ -144,7 +150,7 @@ public class PainelUsuarioController implements Serializable {
 		if (getSelected() != null && getSelectedFluxo() != null) {
 			if (processoIdList == null) {
 				processoIdList = situacaoProcessoManager.getIdProcessosAbertosByIdTarefa(getSelected(), 
-						selectedFluxo.getTipoProcesso(), getSelectedFluxo().getExpedida());
+						selectedFluxo.getTipoProcesso(), getSelectedFluxo().getExpedida(), getNumeroProcesso());
 			}
 			return processoIdList;
 		}
@@ -218,6 +224,23 @@ public class PainelUsuarioController implements Serializable {
 				}
 			}
 		}
+	}
+	
+	public void adicionarFiltroNumeroProcessoRoot(){
+		loadTipoProcessoDisponiveis();
+		loadFluxosDisponiveis();
+		painelTreeHandler.setNumeroProcessoRoot(getNumeroProcesso());
+		painelTreeHandler.clearTree();
+		setSelectedFluxo(null);
+		processoIdList = null; 
+	}
+	
+	public void limparFiltros(){
+		init();
+		painelTreeHandler.setNumeroProcessoRoot("");
+		painelTreeHandler.clearTree();
+		setSelectedFluxo(null);
+		processoIdList = null;
 	}
 
 	public VariavelProcesso getVariavelProcesso(Processo processo, String nome, Integer idTarefa) {
@@ -311,6 +334,10 @@ public class PainelUsuarioController implements Serializable {
 		return getSelectedFluxo() != null;
 	}
 	
+	public boolean isShowFiltroInfo() {
+		return getNumeroProcesso() != null && !getNumeroProcesso().isEmpty();
+	}
+	
 	public List<TipoProcesso> getTipoProcessoDisponiveis() {
 		return tipoProcessoDisponiveis;
 	}
@@ -322,7 +349,16 @@ public class PainelUsuarioController implements Serializable {
 	public boolean isExibirColunasPadrao() {
 		return exibirColunasPadrao;
 	}
+	
 	public void setExibirColunasPadrao(boolean exibirColunasPadrao) {
 		this.exibirColunasPadrao = exibirColunasPadrao;
+	}
+	
+	public String getNumeroProcesso() {
+		return numeroProcesso;
+	}
+
+	public void setNumeroProcesso(String numeroProcesso) {
+		this.numeroProcesso = numeroProcesso;
 	}
 }

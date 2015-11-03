@@ -8,6 +8,7 @@ public interface ParticipanteProcessoQuery {
 	String PARAM_PARTICIPANTE_PAI = "participantePai";
 	String PARAM_PESSOA_PARTICIPANTE_FILHO = "pessoaParticipanteFilho";
 	String PARAM_TYPED_NAME = "input";
+	String PARAM_ID_PARTICIPANTE = "idParticipante";
 	
 	String PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO = "Participante.pessoa.processo";
 	String PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO_QUERY = "select o from ParticipanteProcesso o " +
@@ -45,4 +46,12 @@ public interface ParticipanteProcessoQuery {
     
     String PARTICIPANTES_PROCESSOS_BY_PARTIAL_NAME = "select pp from ParticipanteProcesso pp "
     +"inner join pp.tipoParte tp where tp.identificador = 'adm_publica' and lower(pp.nome) like lower(concat (:" + PARAM_TYPED_NAME +", '%')) order by pp.nome";
+
+    String PESSOA_BY_PARTICIPANTE_PROCESSO = "Participante.participanteProcesso";
+    String PESSOA_BY_PARTICIPANTE_PROCESSO_QUERY = "select p from Pessoa p "
+            + "where exists ("
+                + "select 1 from ParticipanteProcesso pp "
+                + "where pp.pessoa = p "
+                    + "and pp.id = :" + PARAM_ID_PARTICIPANTE + " "
+            + ")";
 }

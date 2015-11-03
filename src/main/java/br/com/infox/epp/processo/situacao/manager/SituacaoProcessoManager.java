@@ -27,28 +27,28 @@ public class SituacaoProcessoManager {
 		return situacaoProcessoDAO.getRoot(idFluxo, tipoProcesso, expedidas);
 	}
 	
-	public List<Tuple> getRootList(TipoProcesso tipoProcesso, boolean comunicacoesExpedidas) {
-		return situacaoProcessoDAO.getRootList(tipoProcesso, comunicacoesExpedidas);
+	public List<Tuple> getRootList(TipoProcesso tipoProcesso, boolean comunicacoesExpedidas, String numeroProcessoRoot) {
+		return situacaoProcessoDAO.getRootList(tipoProcesso, comunicacoesExpedidas, numeroProcessoRoot);
 	}
 	
-	public List<FluxoBean> getFluxosDisponiveis(List<TipoProcesso> tiposProcessosDisponiveis) {
+	public List<FluxoBean> getFluxosDisponiveis(List<TipoProcesso> tiposProcessosDisponiveis, String numeroProcessoRoot) {
 		List<FluxoBean> result = new ArrayList<>();
 		for (TipoProcesso tipoProcesso : tiposProcessosDisponiveis) {
 			List<Tuple> tupleList = null;
 			if (TipoProcesso.COMUNICACAO.equals(tipoProcesso)) {
 				if (securityUtil.checkPage("/pages/Painel/comunicacoesRecebidas.seam")) {
-					tupleList = situacaoProcessoDAO.getRootList(tipoProcesso, false);
+					tupleList = situacaoProcessoDAO.getRootList(tipoProcesso, false, numeroProcessoRoot);
 					createFluxoBeanList(result, tipoProcesso, tupleList, false);
 				}
 				if (securityUtil.checkPage("/pages/Painel/comunicacoesExpedidas.seam")) {
-					tupleList = situacaoProcessoDAO.getRootList(tipoProcesso, true);
+					tupleList = situacaoProcessoDAO.getRootList(tipoProcesso, true, numeroProcessoRoot);
 					createFluxoBeanList(result, tipoProcesso, tupleList, true);
 				}
 			} else if (TipoProcesso.COMUNICACAO_NAO_ELETRONICA.equals(tipoProcesso)) {
-				tupleList = situacaoProcessoDAO.getRootList(tipoProcesso, false);
+				tupleList = situacaoProcessoDAO.getRootList(tipoProcesso, true, numeroProcessoRoot);
 				createFluxoBeanList(result, tipoProcesso, tupleList, false);
 			} else {
-				tupleList = situacaoProcessoDAO.getRootList(tipoProcesso, false);
+				tupleList = situacaoProcessoDAO.getRootList(tipoProcesso, false, numeroProcessoRoot);
 				createFluxoBeanList(result, tipoProcesso, tupleList, false);
 			}
 		}
@@ -72,16 +72,16 @@ public class SituacaoProcessoManager {
 		}
 	}
 
-	public List<Integer> getIdProcessosAbertosByIdTarefa(Tuple selected, TipoProcesso tipoProcesso, boolean isComunicacaoExpedida) {
-		return situacaoProcessoDAO.getIdProcessosAbertosByIdTarefa(selected, tipoProcesso, isComunicacaoExpedida);
+	public List<Integer> getIdProcessosAbertosByIdTarefa(Tuple selected, TipoProcesso tipoProcesso, boolean isComunicacaoExpedida, String numeroProcessoRoot) {
+		return situacaoProcessoDAO.getIdProcessosAbertosByIdTarefa(selected, tipoProcesso, isComunicacaoExpedida, numeroProcessoRoot);
+	}
+	
+	public List<Tuple> getChildrenList(Integer idFluxo, TipoProcesso tipoProcesso, boolean comunicacoesExpedidas, String numeroProcessoRoot) {
+		return situacaoProcessoDAO.getChildrenList(idFluxo, tipoProcesso, comunicacoesExpedidas, numeroProcessoRoot);
 	}
 
-	public List<Tuple> getChildrenList(Integer idFluxo, TipoProcesso tipoProcesso, boolean comunicacoesExpedidas) {
-		return situacaoProcessoDAO.getChildrenList(idFluxo, tipoProcesso, comunicacoesExpedidas);
-	}
-
-	public List<Tuple> getCaixaList(TipoProcesso tipoProcesso, Integer idTarefa, boolean comunicacoesExpedidas) {
-		return situacaoProcessoDAO.getCaixaList(tipoProcesso, idTarefa, comunicacoesExpedidas);
+	public List<Tuple> getCaixaList(TipoProcesso tipoProcesso, Integer idTarefa, boolean comunicacoesExpedidas, String numeroProcessoRoot) {
+		return situacaoProcessoDAO.getCaixaList(tipoProcesso, idTarefa, comunicacoesExpedidas, numeroProcessoRoot);
 	}
 
 }

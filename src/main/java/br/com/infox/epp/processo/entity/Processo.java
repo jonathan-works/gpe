@@ -423,6 +423,16 @@ public class Processo implements Serializable {
 	}
 	
 	@Transient
+    public MetadadoProcesso getMetadado(String metadadoType) {
+        for (MetadadoProcesso metadadoProcesso : getMetadadoProcessoList()) {
+            if (metadadoProcesso.getMetadadoType().equalsIgnoreCase(metadadoType)) {
+                return metadadoProcesso;
+            }
+        }
+        return null;
+    }
+	
+	@Transient
 	public List<MetadadoProcesso> getMetadadoList(MetadadoProcessoDefinition metadadoProcessoDefinition){
 		List<MetadadoProcesso> metadadoList = new ArrayList<MetadadoProcesso>();
 		for (MetadadoProcesso metadadoProcesso : getMetadadoProcessoList()) {
@@ -432,6 +442,17 @@ public class Processo implements Serializable {
 		}
 		return metadadoList;
 	}
+	
+	@Transient
+    public List<MetadadoProcesso> getMetadadoList(String metadadoType){
+        List<MetadadoProcesso> metadadoList = new ArrayList<>();
+        for (MetadadoProcesso metadadoProcesso : getMetadadoProcessoList()) {
+            if (metadadoProcesso.getMetadadoType().equalsIgnoreCase(metadadoType)){
+                metadadoList.add(metadadoProcesso);
+            }
+        }
+        return metadadoList;
+    }
 	
 	@Override
     public String toString() {

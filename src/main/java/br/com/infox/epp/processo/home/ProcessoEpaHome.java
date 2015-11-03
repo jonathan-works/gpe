@@ -134,7 +134,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 		}
 		return detalhesMetadados;
 	}
-
+	
 	public void visualizarTarefaProcesso() {
 		processoManager.visualizarTask(instance, tarefaId.intValue(), Authenticator.getUsuarioPerfilAtual());
 	}

@@ -173,13 +173,13 @@
     <dependency>
       <groupId>org.jbpm.jbpm3</groupId>
       <artifactId>jbpm-jpdl</artifactId>
-            <version>3.2.12.5</version>
+            <version>3.3.1</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.jbpm.jbpm3</groupId>
       <artifactId>jbpm-identity</artifactId>
-            <version>3.2.12.5</version>
+            <version>3.3.1</version>
       <scope>compile</scope>
       <type>jar</type>
     </dependency>
@@ -342,7 +342,7 @@
     <dependency>
       <groupId>br.com.infox</groupId>
       <artifactId>infox-certificate-signature</artifactId>
-            <version>0.0.3</version>
+			<version>0.0.3</version>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
@@ -358,6 +358,12 @@
       <artifactId>reflections</artifactId>
       <version>0.9.9</version>
     </dependency>
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jaxrs</artifactId>
+			<version>2.3.7.Final</version>
+			<scope>provided</scope>
+		</dependency>
   </dependencies>
   <build>
     <resources>
@@ -484,7 +490,7 @@
                 <exclude>**/*.import.less</exclude>
               </excludes>
             </configuration>
-                                                <phase>prepare-package</phase>
+						<phase>prepare-package</phase>
             <goals>
               <goal>compile</goal>
             </goals>

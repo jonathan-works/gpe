@@ -44,14 +44,40 @@
 	    
 	    <div class="ui-tabs-panel ui-corner-bottom" style="padding: 0.8em; margin-top: 1em;">
 	    
-	    	<rich:panel header="#{infoxMessages[painelUsuarioController.localeTitleKey]}"  
-	    		style="width: 15%; display: inline-block; margin-right: 0.5em; vertical-align: top">
+	    	<rich:panel id="panelFluxos" style="width: 15%; display: inline-block; margin-right: 0.5em; vertical-align: top">
+	    		<f:facet name="header">
+	    			<div style="position:relative;">
+		    			<h:outputText value="#{infoxMessages[painelUsuarioController.localeTitleKey]}"/>
+	    				<h:graphicImage url="#{wiSkin.imageFolder}/filter16x16.png" 
+	    					rendered="#{not painelUsuarioController.showFiltroInfo}"
+	    					styleClass="ui-icone-filtro-global-painel"
+	    					title="#{infoxMessages['painel.adicionarFiltro']}"
+	    					onclick="#{rich:component('modalFiltrosPainel')}.show()"/>
+	    				<h:graphicImage url="#{wiSkin.imageFolder}/filterOn16x16.png"
+	    					rendered="#{painelUsuarioController.showFiltroInfo}"
+	    					styleClass="ui-icone-filtro-global-painel"
+	    					title="#{infoxMessages['painel.editarFiltro']}"
+	    					onclick="#{rich:component('modalFiltrosPainel')}.show()"/>
+	    			</div>
+	    		</f:facet>
 		    	<h:form id="form-fluxo">	
 		    		<a:jsFunction id="selectFluxo" name="selectFluxo" immediate="true" execute="@this" onbegin="infox.showLoading('Buscando Tarefas...');"
 		    			oncomplete="infox.hideLoading();" render="divPainelProcessos" action="#{painelUsuarioController.selectFluxo}" >
 						<a:param name="fluxo" assignTo="#{painelUsuarioController.idProcessDefinition}" />
 						<a:param name="expedida" assignTo="#{painelUsuarioController.expedida}" />
 					</a:jsFunction>
+					<s:div rendered="#{not empty painelUsuarioController.fluxosDisponiveis and painelUsuarioController.showFiltroInfo}"
+						style="border: 1px solid #c0c0c0; padding:0.5em;">
+						<h:outputLabel id="labelFiltroGlobalPainelUsuario" 
+							for="labelNumeroProcessoRootFiltro" 
+							value="#{infoxMessages['painel.filtrandoPor']}"/>
+						<div>
+							<h:outputText id="labelNumeroProcessoRootFiltro" 
+								value="#{infoxMessages['painel.filtroGlobal.numeroProcesso']} "/>
+							<h:outputText id="numeroProcessoFiltrado"
+								value="#{painelUsuarioController.numeroProcesso}"/>
+						</div>
+					</s:div>
 					<h:outputText value="#{infoxMessages['process.noAvailableProcesses']}" rendered="#{empty painelUsuarioController.fluxosDisponiveis}" />
 			    	<ui:repeat var="fluxo" value="#{painelUsuarioController.fluxosDisponiveis}" >
 			    	  	  <div onmouseup="selectFluxo(#{fluxo.processDefinitionId}, #{fluxo.expedida}); selectFluxoStyle(this);" 
@@ -132,5 +158,6 @@
 	      
 	    </rich:popupPanel>
 	</s:div>
+	<ui:include src="/Painel/filtroPainelModal.xhtml"></ui:include>
   </ui:define>
 </ui:composition>

@@ -12,6 +12,7 @@
         formId="anexarDocumentosForm"
         formTitle="#{infoxMessages['movimentar.anexar.titleForm']}"
         isUploadForm="true">
+		<f:event listener="#{anexarDocumentosView.setProcesso(processoEpaHome.instance)}" type="preRenderView" />        
         <ui:include src="anexarDocumentos.xhtml" />
         <ui:define name="buttons" />
     </wi:dataForm>

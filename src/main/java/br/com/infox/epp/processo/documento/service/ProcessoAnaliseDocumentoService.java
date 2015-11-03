@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -24,6 +23,7 @@ import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.graph.exe.ProcessInstance;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
@@ -47,6 +47,7 @@ import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.epp.processo.service.VariaveisJbpmAnaliseDocumento;
 import br.com.infox.epp.processo.type.TipoProcesso;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(ProcessoAnaliseDocumentoService.NAME)
 @Scope(ScopeType.EVENT)
@@ -70,10 +71,8 @@ public class ProcessoAnaliseDocumentoService {
 	private IniciarProcessoService iniciarProcessoService;
 	@In
 	private PrazoComunicacaoService prazoComunicacaoService;
-	@In
-	private EntityManager entityManager;
-	@Inject
-	private InfoxMessages infoxMessages;
+
+	private InfoxMessages infoxMessages = ComponentUtil.getComponent(InfoxMessages.NAME);
 	
 	public Processo criarProcessoAnaliseDocumentos(Processo processoPai, Documento... documentoAnalise) throws DAOException {
 		Fluxo fluxoDocumento = getFluxoDocumento();
@@ -168,6 +167,7 @@ public class ProcessoAnaliseDocumentoService {
 	}
 	
 	public List<Documento> getDocumentosRespostaComunicacao(Processo comunicacao){
+	    EntityManager entityManager = EntityManagerProducer.getEntityManager();
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<MetadadoProcesso> query = cb.createQuery(MetadadoProcesso.class);
 		
@@ -193,6 +193,7 @@ public class ProcessoAnaliseDocumentoService {
 	}
 
 	public List<Documento> getDocumentosAnalise(Processo analiseDocumentos){
+	    EntityManager entityManager = EntityManagerProducer.getEntityManager();
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<MetadadoProcesso> query = cb.createQuery(MetadadoProcesso.class);
 		

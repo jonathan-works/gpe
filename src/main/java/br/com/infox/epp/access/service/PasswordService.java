@@ -6,6 +6,7 @@ import java.security.SecureRandom;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import javax.ejb.Stateless;
 import javax.security.auth.login.LoginException;
 
 import org.jboss.seam.ScopeType;
@@ -26,9 +27,10 @@ import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.security.operation.ChangePasswordOperation;
 
 @Name(PasswordService.NAME)
-@Scope(ScopeType.EVENT)
+@Scope(ScopeType.STATELESS)
 @AutoCreate
 @Transactional
+@Stateless
 public class PasswordService {
     public static final String NAME = "passwordService";
 

@@ -10,6 +10,7 @@ import br.com.infox.hibernate.function.DateDiffDaySQLServer;
 import br.com.infox.hibernate.function.DocumentoSuficientementeAssinado;
 import br.com.infox.hibernate.function.NumeroProcessoRoot;
 import br.com.infox.hibernate.function.ToDateJpql;
+import br.com.infox.hibernate.function.ToTimeSQLServer;
 
 public class InfoxSQLServer2012Dialect extends SQLServer2012Dialect {
     public InfoxSQLServer2012Dialect() {
@@ -19,5 +20,6 @@ public class InfoxSQLServer2012Dialect extends SQLServer2012Dialect {
         registerFunction("to_date", new ToDateJpql());
         registerFunction("DataUtilAdd", new DataUtilAdd());
         registerFunction("DateDiffDay", new DateDiffDaySQLServer());
+        registerFunction("to_time", new ToTimeSQLServer());
     }
 }
