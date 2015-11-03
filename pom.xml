@@ -4,7 +4,7 @@
   <groupId>br.com.infox.epp</groupId>
   <artifactId>epp</artifactId>
   <packaging>war</packaging>
-  <version>2.10.2-11</version>
+  <version>2.10.3</version>
   <name>epp</name>
   <url>http://www.infox.com.br</url>
   <dependencyManagement>
@@ -173,13 +173,13 @@
     <dependency>
       <groupId>org.jbpm.jbpm3</groupId>
       <artifactId>jbpm-jpdl</artifactId>
-      <version>3.2.12.5</version>
+            <version>3.3.1</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.jbpm.jbpm3</groupId>
       <artifactId>jbpm-identity</artifactId>
-      <version>3.2.12.5</version>
+            <version>3.3.1</version>
       <scope>compile</scope>
       <type>jar</type>
     </dependency>

@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.Tuple;
 
+import org.jboss.seam.core.Conversation;
 import org.jboss.seam.faces.Redirect;
 import org.richfaces.event.DropEvent;
 
@@ -79,6 +80,9 @@ public class PainelUsuarioController implements Serializable {
 		setNumeroProcesso(null);
 		loadTipoProcessoDisponiveis();
 		loadFluxosDisponiveis();
+		// Alterando o concurrentRequestTimeout para evitar ConcurrentCallToConversation no painel #66435
+		Conversation conversation = ComponentUtil.getComponent("org.jboss.seam.core.conversation");
+		conversation.setConcurrentRequestTimeout(5000);
 	}
 	
 	public void atualizarPainelProcessos() throws IOException {

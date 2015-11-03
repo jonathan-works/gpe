@@ -33,8 +33,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Root;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -42,6 +47,10 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.TransactionPropagationType;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.ProcessInstance;
+import org.jbpm.graph.def.Event;
+import org.jbpm.graph.exe.Token;
+import org.jbpm.taskmgmt.def.Task;
+import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
@@ -59,6 +68,7 @@ import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.hibernate.util.HibernateUtil;
+import br.com.infox.ibpm.listener.ListenerTaskBean;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -235,6 +245,51 @@ public class ProcessoDAO extends DAO<Processo> {
 		params.put(ProcessoQuery.MEIO_EXPEDICAO_PARAM, MeioExpedicao.SI.name());
 		params.put(ProcessoQuery.QUERY_PARAM_FLUXO_COMUNICACAO, fluxoComunicacao.getFluxo());
 		return getNamedResultList(ProcessoQuery.LIST_PROCESSOS_COMUNICACAO_SEM_CUMPRIMENTO, params);
+	}
+	
+	public List<ListenerTaskBean> getListeners(Long processInstanceId, String eventType) {
+		EntityManager entityManager = getEntityManager();
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<ListenerTaskBean> query = cb.createQuery(ListenerTaskBean.class);
+		Root<TaskInstance> taskInstance = query.from(TaskInstance.class);
+		Join<TaskInstance, Task> task = taskInstance.join("task");
+		Join<Task, Event> event = task.join("events");
+		query.select(cb.construct(ListenerTaskBean.class, taskInstance.get("id"), event.get("configuration")));
+		
+		List<Long> processInstanceIds = getSubprocessInstanceIds(processInstanceId);
+		processInstanceIds.add(processInstanceId);
+		
+		query.where(
+			cb.isNull(taskInstance.get("end")),
+			cb.isFalse(taskInstance.<Boolean>get("isSuspended")),
+			cb.isTrue(taskInstance.<Boolean>get("isOpen")),
+			cb.equal(event.get("eventType"), eventType),
+			taskInstance.get("processInstance").<Long>get("id").in(processInstanceIds)
+		);
+		
+		return entityManager.createQuery(query).getResultList();
+	}
+	
+	public List<Long> getSubprocessInstanceIds(Long parentProcessInstanceId) {
+		List<Long> ids = new ArrayList<>();
+		Long id = getSubprocessInstanceId(parentProcessInstanceId);
+		while (id != null) {
+			ids.add(id);
+			id = getSubprocessInstanceId(id);
+		}
+		return ids;
+	}
+	
+	private Long getSubprocessInstanceId(Long parentProcessInstanceId) {
+		EntityManager entityManager = getEntityManager();
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Long> query = cb.createQuery(Long.class);
+		Root<org.jbpm.graph.exe.ProcessInstance> processInstance = query.from(org.jbpm.graph.exe.ProcessInstance.class);
+		Join<ProcessInstance, Token> token = processInstance.join("rootToken");
+		query.select(token.get("subProcessInstance").<Long>get("id"));
+		query.where(cb.equal(processInstance.get("id"), parentProcessInstanceId));
+		List<Long> result = entityManager.createQuery(query).getResultList();
+		return result.isEmpty() ? null : result.get(0);
 	}
 }
 
