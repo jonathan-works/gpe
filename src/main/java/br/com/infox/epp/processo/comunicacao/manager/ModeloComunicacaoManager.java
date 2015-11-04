@@ -6,6 +6,11 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Root;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -16,12 +21,18 @@ import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao_;
 import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.action.DestinatarioBean;
 import br.com.infox.epp.processo.comunicacao.dao.ModeloComunicacaoDAO;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento_;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin_;
+import br.com.infox.epp.processo.documento.entity.Documento_;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 
@@ -70,6 +81,19 @@ public class ModeloComunicacaoManager extends Manager<ModeloComunicacaoDAO, Mode
 			setarInformacoesAdicionais(destinatario);
 		}
 		return destinatarios;
+	}
+	
+	public List<AssinaturaDocumento> listAssinaturasComunicacao(Processo comunicacao) {
+		CriteriaBuilder cb = getDao().getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<AssinaturaDocumento> query = cb.createQuery(AssinaturaDocumento.class);
+		Root<DestinatarioModeloComunicacao> dmc= query.from(DestinatarioModeloComunicacao.class);
+		Join<DestinatarioModeloComunicacao, Documento> doc = dmc.join(DestinatarioModeloComunicacao_.documentoComunicacao);
+		Join<Documento, DocumentoBin> bin = doc.join(Documento_.documentoBin);
+		Join<DocumentoBin, AssinaturaDocumento> assin = bin.join(DocumentoBin_.assinaturas, JoinType.LEFT);
+		query.where(cb.equal(dmc.get(DestinatarioModeloComunicacao_.processo), comunicacao));
+		query.orderBy(cb.desc(assin.get(AssinaturaDocumento_.dataAssinatura)));
+		query.select(assin);
+		return getDao().getEntityManager().createQuery(query).getResultList();
 	}
 	
 	protected void setarInformacoesAdicionais(DestinatarioBean destinatario) {
