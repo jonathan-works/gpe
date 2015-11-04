@@ -44,8 +44,8 @@ public class TaskPageAction implements Serializable {
      * Verifica se a tarefa atual está utilizando uma variável taskPage. Se
      * estiver, obtem o caminho dessa página e atribuí a taskPagePath
      */
-    private void readTaskPagePath() {
-        List<VariableAccess> variableAccesses = getVariableAccesses();
+    private void readTaskPagePath(TaskInstance taskInstance) {
+        List<VariableAccess> variableAccesses = getVariableAccesses(taskInstance);
         String taskPageName = null;
         for (VariableAccess va : variableAccesses) {
             String[] tokens = va.getMappedName().split(":");
@@ -67,8 +67,7 @@ public class TaskPageAction implements Serializable {
     }
 
     @SuppressWarnings(UNCHECKED)
-    private List<VariableAccess> getVariableAccesses() {
-        TaskInstance taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
+    private List<VariableAccess> getVariableAccesses(TaskInstance taskInstance) {
         if (taskInstance != null) {
             TaskController taskController = taskInstance.getTask().getTaskController();
             if (taskController != null) {
@@ -88,16 +87,16 @@ public class TaskPageAction implements Serializable {
      * 
      * @return null se não foi definido um componente taskPage.
      */
-    public String getTaskPagePath() {
+    public String getTaskPagePath(TaskInstance taskInstance) {
         if (taskPagePath == null) {
-            readTaskPagePath();
+            readTaskPagePath(taskInstance);
         }
         return taskPagePath;
     }
 
-    public boolean getHasTaskPage() {
+    public boolean getHasTaskPage(TaskInstance taskInstance) {
         if (!hasTaskPage) {
-            readTaskPagePath();
+            readTaskPagePath(taskInstance);
         }
         return hasTaskPage;
     }

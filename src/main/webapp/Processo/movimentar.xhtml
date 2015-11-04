@@ -173,7 +173,7 @@
                 rendered="#{processoEpaHome.managed}"
                 status=":status"
                 title="#{infoxMessages['movimentar.saida.titleTab']}">
-                <c:if test="#{not taskPageAction.hasTaskPage}">
+                <c:if test="#{not taskPageAction.getHasTaskPage(taskInstanceHome.currentTaskInstance)}">
                     <wi:form
                         canEdit="true"
                         formTitle="#{taskInstance.name}"
@@ -181,13 +181,13 @@
                         reRenderSave="taskInstanceForm"
                         form="#{taskInstaceForm}" />
                 </c:if>
-                <c:if test="#{taskPageAction.hasTaskPage}">
+                <c:if test="#{taskPageAction.getHasTaskPage(taskInstanceHome.currentTaskInstance)}">
                     <h:graphicImage
                         id="helpBtn"
                         styleClass="mp-help"
                         onmouseup="#{rich:component('mp_taskNodeDescription')}.show();"
                         value="#{wiSkin.imageFolder}/question.png" />
-                    <ui:include src="#{taskPageAction.taskPagePath}" />
+                    <ui:include src="#{taskPageAction.getTaskPagePath(taskInstanceHome.currentTaskInstance)}" />
                 </c:if>
             </infox:tab>
             <infox:tab

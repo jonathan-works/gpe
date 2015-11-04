@@ -1,0 +1,96 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich">
+
+	<s:div id="painelCiencia" style="margin-top:1em">
+		<rich:panel
+			header="#{infoxMessages['comunicacao.registrarCiencia']} - #{darCienciaAction.destinatario.nome} / #{darCienciaAction.destinatario.tipoComunicacao}"
+			rendered="#{darCienciaAction.ciencia}">
+			<h:form>
+				<wi:inputDate past="true" id="dataCiencia" showRequired="true"
+					label="#{infoxMessages['comunicacao.dataCiencia']}"
+					value="#{darCienciaAction.dataCiencia}"
+					startDate="#{darCienciaAction.startDateCiencia}"
+					errorMessage="#{infoxMessages['comunicacao.validator.dataCienciaIncorreta']}">
+					<a:ajax event="change" render="dataCienciaDecoration buttonDarCiencia"
+						execute="@this" limitRender="true" />
+				</wi:inputDate>
+	
+				<wi:selectBooleanCheckbox id="editorCiencia"
+					label="#{infoxMessages['comunicacao.adicionarDocumentoEditorCiencia']}"
+					value="#{darCienciaAction.editorCiencia}">
+					<a:ajax event="change" render="@form" limitRender="true"
+						execute="@this" />
+				</wi:selectBooleanCheckbox>
+	
+				<wi:selectOneMenuEntity id="classificacaoCiencia" showRequired="true"
+					label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
+					showLabelSelecione="true"
+					value="#{darCienciaAction.classificacaoDocumentoCiencia}"
+					items="#{darCienciaAction.classificacoesDocumentoCiencia}">
+					<a:ajax event="change" limitRender="true"
+						render="classificacaoCienciaDecoration buttonDarCiencia documentoCienciaDiv pageBodyDialogMessage"
+						execute="@this" listener="#{documentoUploader.clearUploadFile}" />
+				</wi:selectOneMenuEntity>
+	
+				<s:div id="documentoCienciaDiv">
+					<s:div id="editorArquivoDiv"
+						rendered="#{darCienciaAction.editorCiencia}">
+						<wi:editor id="documentoCienciaTexto" readonly="false"
+							value="#{darCienciaAction.textoCiencia}" required="true" />
+					</s:div>
+	
+					<s:div id="anexo"
+						rendered="#{not empty darCienciaAction.classificacaoDocumentoCiencia 
+			 				and not empty darCienciaAction.classificacaoDocumentoCiencia.extensaoArquivosList
+			 				and not darCienciaAction.editorCiencia}">
+						<wi:fileUpload id="documentoComprovacaoCiencia"
+							doneLabel="#{infoxMessages['documento.upload.doneLabel']}"
+							accept="#{darCienciaAction.classificacaoDocumentoCiencia.acceptedTypes}"
+							onclear="infox.showLoading()" oncomplete="infox.hideLoading()"
+							reRender="buttonDarCiencia" />
+					</s:div>
+				</s:div>
+	
+				<s:div id="buttonDarCiencia">
+					<wi:commandButton id="gravar"
+						value="${infoxMessages['crud.update']}"
+						execute="@this documentoCienciaDiv"
+						action="darCienciaAction.darCiencia()"
+						reRender="pageBodyDialogMessage, comunicacoesDiv"
+						rendered="#{darCienciaAction.enviaSemAssinarDocumentoCiencia and 
+							not empty darCienciaAction.classificacaoDocumentoCiencia and
+							not empty darCienciaAction.dataCiencia and 
+							(documentoUploader.valido or darCienciaAction.editorCiencia)}" />
+
+					<s:div rendered="#{darCienciaAction.assinaDocumentoCiencia and 
+							not empty darCienciaAction.classificacaoDocumentoCiencia and
+							not empty darCienciaAction.dataCiencia and 
+							(documentoUploader.valido or darCienciaAction.editorCiencia)}">
+						<a:jsFunction name="assinarDocumentoCiencia"
+                                actionListener="#{darCienciaAction.assinarDarCiencia}"
+                                execute="assinarDocumentoCienciaButtonToken documentoCienciaDiv"
+                                render="pageBodyDialogMessage comunicacoesDiv"
+                                onbegin="infox.showLoading();"
+                                oncomplete="infox.hideLoading();" />
+                            <wi:certificadoDigital id="assinarDocumentoCienciaButton"
+                                rendered="true"
+                                execute="@this documentoCienciaTexto"
+                                reRender="buttonDarCiencia"
+                                tokenField="#{darCienciaAction.tokenAssinaturaDocumentoCiencia}"
+                                signableData="#{darCienciaAction.signableDocumentoCiencia}"
+                                preSignAction="#{darCienciaAction.updateSignableCiencia()}"
+                                functionPreSign="infox.showLoading();"
+                                functionPosSign="assinarDocumentoCiencia();"
+                                signButtonCaption="${infoxMessages['comunicacao.painelCiencia.assinar']}" />
+						
+					</s:div>
+				</s:div>
+			</h:form>
+		</rich:panel>
+	</s:div>
+</ui:composition>

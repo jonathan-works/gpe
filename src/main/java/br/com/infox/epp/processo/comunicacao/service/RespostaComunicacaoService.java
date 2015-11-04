@@ -17,13 +17,18 @@ import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.graph.exe.ProcessInstance;
 
+import br.com.infox.certificado.bean.CertificateSignatureBean;
+import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.dao.DocumentoRespostaComunicacaoDAO;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.service.ProcessoAnaliseDocumentoService;
@@ -31,6 +36,7 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(RespostaComunicacaoService.NAME)
 @Scope(ScopeType.EVENT)
@@ -50,6 +56,8 @@ public class RespostaComunicacaoService {
 	private PrazoComunicacaoService prazoComunicacaoService;
 	@In
 	private DocumentoManager documentoManager;
+	
+	private AssinaturaDocumentoService assinaturaDocumentoService = ComponentUtil.getComponent(AssinaturaDocumentoService.NAME);
 	
 	public void enviarResposta(List<Documento> respostas) throws DAOException {
 		Processo comunicacao = documentoRespostaComunicacaoDAO.getComunicacaoVinculada(respostas.get(0));
@@ -74,9 +82,20 @@ public class RespostaComunicacaoService {
 	
 	public void enviarProrrogacaoPrazo(Documento documento, Processo comunicacao) throws DAOException {
 		documentoManager.gravarDocumentoNoProcesso(comunicacao.getProcessoRoot(), documento);
+		enviarPedidoProrrogacaoDocumentoGravado(documento, comunicacao);
+	}
+
+	private void enviarPedidoProrrogacaoDocumentoGravado(Documento documento, Processo comunicacao) throws DAOException {
 		Processo prorrogacao = processoAnaliseDocumentoService.criarProcessoAnaliseDocumentos(comunicacao, documento);
 		processoAnaliseDocumentoService.inicializarFluxoDocumento(prorrogacao, null);
 		createMetadadoDataPedidoProrrogacaoPrazo(comunicacao);
+	}
+	
+	public void assinarEnviarProrrogacaoPrazo(Documento documento, Processo comunicacao, CertificateSignatureBean signatureBean, UsuarioPerfil usuarioPerfil) 
+			throws DAOException, CertificadoException, AssinaturaException{
+		documentoManager.gravarDocumentoNoProcesso(comunicacao.getProcessoRoot(), documento);
+		assinaturaDocumentoService.assinarDocumento(documento.getDocumentoBin(), usuarioPerfil, signatureBean.getCertChain(), signatureBean.getSignature());
+		enviarPedidoProrrogacaoDocumentoGravado(documento, comunicacao);
 	}
 	
 	private void createMetadadoDataPedidoProrrogacaoPrazo(Processo comunicacao) throws DAOException {

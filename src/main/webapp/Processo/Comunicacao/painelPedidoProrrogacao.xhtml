@@ -1,0 +1,66 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich">
+    
+	<s:div id="painelProrrogacaoPrazo" style="margin-top:1em">
+		<rich:panel
+			header="#{infoxMessages['comunicacao.prorrogacaoPrazo']} - #{pedirProrrogacaoPrazoAction.destinatario.nome} / #{pedirProrrogacaoPrazoAction.destinatario.tipoComunicacao}"
+			rendered="#{pedirProrrogacaoPrazoAction.prorrogacaoPrazo}">
+			<h:form>
+				<wi:selectOneMenuEntity id="classificacaoProrrogacao"
+					label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
+					value="#{pedirProrrogacaoPrazoAction.classificacaoDocumentoProrrogPrazo}"
+					items="#{pedirProrrogacaoPrazoAction.classificacoesDocumentoProrrogacaoPrazo}"
+					showLabelSelecione="true">
+					<a:ajax event="change" limitRender="true" render="@form"
+						execute="@form" />
+				</wi:selectOneMenuEntity>
+				<s:div id="documentoAnexoPedidoProrrogacao"
+					rendered="#{not empty pedirProrrogacaoPrazoAction.classificacaoDocumentoProrrogPrazo 
+		    				and not empty pedirProrrogacaoPrazoAction.classificacaoDocumentoProrrogPrazo.extensaoArquivosList}">
+					<wi:fileUpload id="documentoProrrogacaoPrazo"
+						doneLabel="#{infoxMessages['documento.upload.doneLabel']}"
+						accept="#{pedirProrrogacaoPrazoAction.classificacaoDocumentoProrrogPrazo.acceptedTypes}"
+						onclear="infox.showLoading()" oncomplete="infox.hideLoading()"
+						reRender="buttonPedirProrrogacao" />
+				</s:div>
+				<s:div id="buttonPedirProrrogacao">
+						<wi:commandButton id="gravar"
+							value="#{infoxMessages['crud.update']}"
+							action="pedirProrrogacaoPrazoAction.pedirProrrogacaoPrazo()" execute="@this"
+							reRender="pageBodyDialogMessage, comunicacoesDiv"
+							rendered="#{documentoUploader.valido and 
+								not empty pedirProrrogacaoPrazoAction.classificacaoDocumentoProrrogPrazo and
+								pedirProrrogacaoPrazoAction.enviaSemAssinarPedidoProrrogacao}" />
+
+						<s:div rendered="#{documentoUploader.valido and 
+								not empty pedirProrrogacaoPrazoAction.classificacaoDocumentoProrrogPrazo and
+								pedirProrrogacaoPrazoAction.assinaPedidoProrrogacao}">
+							<a:jsFunction name="assinarDocumentoPedidoProrrogacao"
+	                                actionListener="#{pedirProrrogacaoPrazoAction.assinarPedirProrrogacaoPrazo}"
+	                                execute="assinarDocumentoPedidoProrrogacaoButtonToken documentoAnexoPedidoProrrogacao"
+	                                render="pageBodyDialogMessage comunicacoesDiv"
+	                                onbegin="infox.showLoading();"
+	                                oncomplete="infox.hideLoading();" />
+	                            <wi:certificadoDigital id="assinarDocumentoPedidoProrrogacaoButton"
+	                                rendered="true"
+	                                execute="@this"
+	                                reRender="buttonPedirProrrogacao"
+	                                tokenField="#{pedirProrrogacaoPrazoAction.tokenAssinaturaDocumentoPedidoProrrogacao}"
+	                                signableData="#{pedirProrrogacaoPrazoAction.signableDocumentoPedidoProrrogacao}"
+	                                preSignAction="#{pedirProrrogacaoPrazoAction.updateSignablePedidoProrrogacao()}"
+	                                functionPreSign="infox.showLoading();"
+	                                functionPosSign="assinarDocumentoPedidoProrrogacao();"
+	                                signButtonCaption="${infoxMessages['comunicacao.painelPedidoProrrogacao.assinar']}" />
+							
+						</s:div>	
+							
+					</s:div>
+			</h:form>
+		</rich:panel>
+	</s:div>
+</ui:composition>
