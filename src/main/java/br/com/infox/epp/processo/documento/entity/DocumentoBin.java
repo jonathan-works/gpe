@@ -34,6 +34,7 @@ import org.jboss.seam.util.Strings;
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.util.ArrayUtil;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.assinatura.entity.RegistroAssinaturaSuficiente;
 import br.com.infox.epp.processo.documento.query.DocumentoBinQuery;
@@ -256,6 +257,18 @@ public class DocumentoBin implements Serializable {
 	public void setRegistrosAssinaturaSuficiente(
 			List<RegistroAssinaturaSuficiente> registrosAssinaturaSuficiente) {
 		this.registrosAssinaturaSuficiente = registrosAssinaturaSuficiente;
+	}
+	
+	@Transient
+	public boolean isAssinadoPor(UsuarioPerfil usuarioPerfil) {
+        if (getAssinaturas() == null || getAssinaturas().isEmpty()) return false;
+        for (AssinaturaDocumento assinatura : getAssinaturas()) {
+            if (usuarioPerfil.getPerfilTemplate().getPapel().equals(assinatura.getUsuarioPerfil().getPerfilTemplate().getPapel())
+            		&& usuarioPerfil.getUsuarioLogin().equals(assinatura.getUsuario())) {
+                return true;
+            }
+        }
+        return false;
 	}
 
 	@Override

@@ -20,6 +20,11 @@ public class DefaultSignableDocumentImpl implements SignableDocument {
         this.md5 = documentoBin.getMd5Documento();
         this.uuid = documentoBin.getUuid();
     }
+    
+    public DefaultSignableDocumentImpl(String md5, UUID uuid) {
+        this.md5 = md5;
+        this.uuid = uuid;
+    }
 
     @Override
     public String getMD5() {
