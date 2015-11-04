@@ -103,6 +103,7 @@ public class EnvioComunicacaoController implements Serializable {
 	private boolean finalizada;
 	private String token;
 	private Boolean expedida;
+	private Boolean comunicacaoSuficientementeAssinada;
 	private DestinatarioModeloComunicacao destinatario;
 	private boolean inTask = false;
 	private boolean minuta = true;
@@ -138,7 +139,7 @@ public class EnvioComunicacaoController implements Serializable {
 		destinatarioComunicacaoAction.setModeloComunicacao(modeloComunicacao);
 		destinatarioComunicacaoAction.init();		
 	}
-
+	
 	private void initLocalizacaoRaiz() {
 		try {
 			Localizacao localizacaoRaiz = localizacaoManager.getLocalizacaoByNome(raizLocalizacoesComunicacao);
@@ -269,15 +270,23 @@ public class EnvioComunicacaoController implements Serializable {
 	public void expedirComunicacao() {
 		try {
 			if (destinatario != null) {
-				CertificateSignatureBean signatureBean = getCertificateSignatureBean();
-				assinaturaDocumentoService.assinarDocumento(destinatario.getDocumentoComunicacao(), Authenticator.getUsuarioPerfilAtual(), signatureBean.getCertChain(), signatureBean.getSignature());
-				comunicacaoService.expedirComunicacao(destinatario);
+				if (!isComunicacaoSuficientementeAssinada()) {
+					CertificateSignatureBean signatureBean = getCertificateSignatureBean();
+					assinaturaDocumentoService.assinarDocumento(destinatario.getDocumentoComunicacao(), Authenticator.getUsuarioPerfilAtual(), signatureBean.getCertChain(), signatureBean.getSignature());
+					clearAssinaturas();
+				}
+				if (isComunicacaoSuficientementeAssinada()) {
+					comunicacaoService.expedirComunicacao(destinatario);
+				}
 			} else if ((!modeloComunicacao.isDocumentoBinario() && !modeloComunicacao.isClassificacaoAssinavel()) 
 					|| documentoComunicacaoAction.isPossuiDocumentoInclusoPorUsuarioInterno()) {
 				comunicacaoService.expedirComunicacao(modeloComunicacao);
 			}
+			clearAssinaturas();
 			expedida = null;
-			FacesMessages.instance().add("Comunicação expedida com sucesso");
+			if (destinatario.getExpedido()) {
+				FacesMessages.instance().add("Comunicação expedida com sucesso");
+			} 
 		} catch (DAOException e) {
 			LOG.error("Erro ao expedir comunicação", e);
 			actionMessagesService.handleDAOException(e);
@@ -338,6 +347,13 @@ public class EnvioComunicacaoController implements Serializable {
 		return modeloComunicacao.getFinalizada() && expedida;
 	}
 	
+	public boolean isComunicacaoSuficientementeAssinada() {
+		if (destinatario != null && comunicacaoSuficientementeAssinada == null) {
+			comunicacaoSuficientementeAssinada = assinaturaDocumentoService.isDocumentoTotalmenteAssinado(destinatario.getDocumentoComunicacao());
+		}
+		return comunicacaoSuficientementeAssinada;
+	}
+	
 	public boolean podeRenderizarApplet() {
 		UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
 		Papel papel = usuarioPerfil.getPerfilTemplate().getPapel();
@@ -361,8 +377,13 @@ public class EnvioComunicacaoController implements Serializable {
 	
 	public void setDestinatario(DestinatarioModeloComunicacao destinatario) {
 		this.destinatario = destinatario;
+		clearAssinaturas();
 	}
-	
+
+	private void clearAssinaturas() {
+		this.comunicacaoSuficientementeAssinada = null;
+	}
+
 	public boolean isInTask() {
 		return inTask;
 	}

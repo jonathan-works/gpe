@@ -198,10 +198,17 @@
 						<f:setPropertyActionListener value="#{envioComunicacaoController.destinatario.id}" target="#{flash.idDestinatario}" />
 						<infox:flashcopy/>
 					</a:commandButton>
-											 
+					<a:commandButton id="btnExpedirComunicacaoAssinada" execute="@this" styleClass="buttons"
+						value="${infoxMessages['comunicacao.expedirComunicacao']}"
+						rendered="#{envioComunicacaoController.comunicacaoSuficientementeAssinada}"
+						action="#{envioComunicacaoController.expedirComunicacao()}"
+						onclick="infox.showLoading();"
+						render="pageBodyDialogMessage comunicacaoDiv"
+						oncomplete="infox.hideLoading(); if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"/>
+						
 					<a:jsFunction name="assinar" action="#{envioComunicacaoController.expedirComunicacao()}"
 						execute="@this appletAssinaturaToken" 
-						render="pageBodyDialogMessage comunicacaoDiv"
+						render="pageBodyDialogMessage comunicacaoDiv assinaturaListExpedirComunicacao"
 					  	oncomplete="infox.hideLoading(); if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"/>
              
 					<wi:certificadoDigital id="appletAssinatura"
@@ -209,7 +216,7 @@
 						signableData="#{envioComunicacaoController.destinatario.documentoComunicacao.documentoBin.md5Documento}"
 						functionPreSign="infox.showLoading();"
 						functionPosSign="assinar();"
-						rendered="#{envioComunicacaoController.podeRenderizarApplet()}"
+						rendered="#{envioComunicacaoController.podeRenderizarApplet() and not envioComunicacaoController.comunicacaoSuficientementeAssinada}"
 						signButtonCaption="#{infoxMessages['comunicacao.expedirComunicacao']}" />
           		</s:div>
 			</h:form>
@@ -419,4 +426,5 @@
 			</h:form>
 		</s:div>
 	</s:div>
+   
 </ui:composition>
