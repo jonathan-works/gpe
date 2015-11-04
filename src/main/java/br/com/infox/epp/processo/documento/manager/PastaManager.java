@@ -50,7 +50,7 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
         return pasta;
     }
     
-    public List<Pasta> getByProcesso(Processo processo) throws DAOException {
+    public List<Pasta> getByProcesso(Processo processo) {
         List<Pasta> pastaList = getDao().getByProcesso(processo);
         return pastaList;
     }
