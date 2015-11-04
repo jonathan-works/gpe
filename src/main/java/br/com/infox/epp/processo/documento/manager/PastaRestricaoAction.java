@@ -95,7 +95,7 @@ public class PastaRestricaoAction implements Serializable {
         ComponentUtil.<LocalizacaoCrudAction>getComponent(LocalizacaoCrudAction.NAME).newInstance();
 	}
 	
-	private void clearInstances() {
+	protected void clearInstances() {
 	    newInstance();
 	    newRestricaoInstance();
 	}
