@@ -9,6 +9,7 @@ import javax.persistence.PersistenceException;
 
 import org.hibernate.dialect.Dialect;
 
+import br.com.infox.connection.ConnectionFactory;
 import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -25,8 +26,8 @@ public abstract class CustomIdGenerator<T> {
 			public Long nextValue() throws PersistenceException {
 				Dialect dialect = HibernateUtil.getDialect();
 				String sql = dialect.getSequenceNextValString(sequenceName);
-				try (Connection connection = HibernateUtil.getConnection()) {
-					Statement st = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+				try (Connection connection = ConnectionFactory.getConnection()) {
+					Statement st = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE);
 					ResultSet rs = st.executeQuery(sql);
 					if (rs.next()) {
 						Long id = rs.getLong(1);
