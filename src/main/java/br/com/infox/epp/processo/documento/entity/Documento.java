@@ -180,8 +180,12 @@ public class Documento implements Serializable, Cloneable {
     	if (getLocalizacao() == null) {
     		setLocalizacao(usuarioPerfil.getLocalizacao());
     	}
-    	setDataInclusao(new Date());
-    	setUsuarioInclusao(getUsuarioLogadoOuSistema());
+    	if (getDataInclusao() == null) {
+    		setDataInclusao(new Date());
+    	}
+    	if (getUsuarioInclusao() == null) {
+    		setUsuarioInclusao(getUsuarioLogadoOuSistema());
+    	}
     	setExcluido(Boolean.FALSE);
     }
     
