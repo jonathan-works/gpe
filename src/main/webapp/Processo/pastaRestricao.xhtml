@@ -75,14 +75,11 @@
 	        columnHeader="#{infoxMessages['pasta.ordem']}"
       		value="#{row.ordem}" />
       		
-      	<ui:include src="Pasta/colunasAdicionaisPastaList.xhtml"/>
+      	<ui:include src="Pasta/pastaListColunasAdicionais.xhtml"/>
 
     </wi:dataTable>
-
-    <br />
-    <br />
     
-	<s:div id="pastaRestricaoDiv">
+	<s:div id="pastaRestricaoDiv" style="margin-top: 1em;">
         <!-- Edição dos campos da pasta -->
         <rich:panel id="editPastaPanel" header="#{infoxMessages['pasta.selected']} - #{pastaRestricaoAction.instance}"
             rendered="#{pastaRestricaoAction.pastaSelecionada}">
@@ -111,7 +108,7 @@
                     <f:attribute name="idPasta" value="#{pastaRestricaoAction.instance.id}" />
                 </wi:inputNumber>
                 
-                <ui:include src="Pasta/atributosAdicionaisPastas.xhtml"/>
+                <ui:include src="Pasta/pastaAtributosAdicionais.xhtml"/>
                 
                 <wi:commandButton id="editPastaButton"
                     action="#{pastaRestricaoAction.updatePasta()}"
@@ -212,7 +209,7 @@
         }
   	</script>
 
-    <ui:include src="Pasta/popupAddPasta.xhtml"/>
+    <ui:include src="Pasta/addPastaPopup.xhtml"/>
 
     <rich:popupPanel id="addRestricaoPanel" moveable="true" show="false"
         resizeable="true" minWidth="290" minHeight="430"
