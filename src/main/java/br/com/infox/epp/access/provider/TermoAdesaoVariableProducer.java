@@ -15,7 +15,6 @@ import org.jboss.seam.Component;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.contexts.Contexts;
 
-import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.dao.UsuarioLoginDAO;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.meiocontato.manager.MeioContatoManager;
