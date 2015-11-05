@@ -601,8 +601,6 @@
     <hibernate.cache.region.class>org.jboss.as.jpa.hibernate4.infinispan.InfinispanRegionFactory</hibernate.cache.region.class>
     <epp.mail.session>java:jboss/mail/${epp.name}</epp.mail.session>
     <epp.transactionManager.jndi>java:jboss/TransactionManager</epp.transactionManager.jndi>
-    <epp.entityManager.jndi>java:jboss/EPAPersistenceUnit</epp.entityManager.jndi>
-    <epp.entityManagerBin.jndi>java:jboss/EPABinPersistenceUnit</epp.entityManagerBin.jndi>
     <desenvolvimento>false</desenvolvimento>
     <producao>true</producao>
     <log.jbpm>WARNING</log.jbpm>
@@ -649,8 +647,6 @@
         <hibernate.cache.region.class>org.hibernate.cache.infinispan.InfinispanRegionFactory</hibernate.cache.region.class>
         <epp.mail.session>mail/${epp.name}</epp.mail.session>
         <epp.transactionManager.jndi>java:comp/TransactionManager</epp.transactionManager.jndi>
-        <epp.entityManager.jndi>java:comp/env/EPAPersistenceUnit</epp.entityManager.jndi>
-        <epp.entityManagerBin.jndi>java:comp/env/EPABinPersistenceUnit</epp.entityManagerBin.jndi>
       </properties>
       <dependencies>
         <dependency>
