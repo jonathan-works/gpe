@@ -83,6 +83,9 @@
 	       	columnId="ordem"
 	        columnHeader="#{infoxMessages['modeloPasta.ordem']}"
       		value="#{row.ordem}" />
+      	
+      	<ui:include src="ModeloPasta/modeloPastaListColunaAdicionais.xhtml"/>
+      	
     </wi:dataTable>
 
     <br />
@@ -123,6 +126,9 @@
 	            <wi:selectBooleanCheckbox id="editModeloPastaEditavel"
 	                label="#{infoxMessages['modeloPasta.editavel']}"
 	                value="#{modeloPastaRestricaoAction.instance.editavel}" />
+	            
+	            <ui:include src="ModeloPasta/modeloPastaAtributosAdicionais.xhtml"/>
+	            
             	<wi:commandButton id="saveModeloPastaButton"
                     action="#{modeloPastaRestricaoAction.update()}"
                     execute="@form" onclick="infox.showLoading();" oncomplete="infox.hideLoading();"
@@ -190,16 +196,6 @@
 	</s:div>
 
 	<script type="text/javascript">
-		function clearAddModeloPastaFields() {
-            #{rich:jQuery('addModeloPastaInputName')}.val('');
-            #{rich:jQuery('addModeloPastaInputDescricao')}.val('');
-            #{rich:jQuery('addModeloPastaInputOrdemNumberNumber')}.val('');
-            #{rich:jQuery('modeloPastaRemovivel')}.attr('checked', true);
-            #{rich:jQuery('modeloPastaEditavel')}.attr('checked', true);
-            $('.errorFields.errors').remove();
-            $('.errors').removeClass('errors');
-        }
-      
         function clearAddModeloRestricaoFields() {
             #{rich:jQuery('tipoModeloRestricaoInput')}.val('');
             #{rich:jQuery('alvoInputDiv')}.hide();
@@ -229,63 +225,7 @@
         }
   	</script>
 
-	<rich:popupPanel
-	    id="addModeloPastaPanel"
-	    moveable="true"
-	    show="false"
-	    resizeable="true"
-	    minHeight="360" minWidth="290"
-	    header="#{infoxMessages['modeloPasta.new']}"
-        onbeforeshow="clearAddModeloPastaFields();"
-	    onbeforehide="clearAddModeloPastaFields();">
-		
-		<f:facet name="controls">
-      		<h:graphicImage
-		        id="modeloPastaPanelCloseBtn"
-		        styleClass="mp-close"
-		        value="#{wiSkin.imageFolder}/closeMP.gif"
-		        onmouseup="#{rich:component('addModeloPastaPanel')}.hide();" />
-      	</f:facet>
-      	
-      	<h:form id="addModeloPastaForm">
-	        <wi:inputText
-	          	id="addModeloPastaInputName"
-	          	value="#{modeloPastaRestricaoAction.instance.nome}"
-	          	required="true" maxlength="250"
-	        	label="#{infoxMessages['modeloPasta.nome']}">
-                <f:validator validatorId="nomeModeloPastaValidator" />
-                <f:attribute name="idFluxo" value="#{modeloPastaRestricaoAction.fluxo.idFluxo}" />
-	        </wi:inputText>
-			<wi:inputText
-	        	id="addModeloPastaInputDescricao"
-	        	value="#{modeloPastaRestricaoAction.instance.descricao}"
-	        	required="false" maxlength="250"
-	        	label="#{infoxMessages['modeloPasta.descricao']}">
-	        </wi:inputText>	
-	   		<wi:inputNumber
-	        	id="addModeloPastaInputOrdemNumber"
-	        	value="#{modeloPastaRestricaoAction.instance.ordem}"
-	        	required="true" maxlength="19"
-	        	label="#{infoxMessages['modeloPasta.ordem']}">
-                <f:validator validatorId="ordemModeloPastaValidator" />
-                <f:attribute name="idFluxo" value="#{modeloPastaRestricaoAction.fluxo.idFluxo}" />
-		    </wi:inputNumber>
-		    <wi:selectBooleanCheckbox id="modeloPastaRemovivel"
-                label="#{infoxMessages['modeloPasta.removivel']}"
-                value="#{modeloPastaRestricaoAction.instance.removivel}" />
-            <wi:selectBooleanCheckbox id="modeloPastaEditavel"
-                label="#{infoxMessages['modeloPasta.editavel']}"
-                value="#{modeloPastaRestricaoAction.instance.editavel}" />
-	        <br />
-	        <wi:commandButton
-                id="addModeloPastaButton"
-                action="#{modeloPastaRestricaoAction.persist()}"
-                execute="@form"
-                oncomplete="if(#{not (facesContext.validationFailed)}){#{rich:component('addModeloPastaPanel')}.hide();}else{infox.hideLoading();}"
-                value="#{infoxMessages['crud.persist']}"
-                reRender="@form, modeloPastaTablePanel, modeloPastaRestricaoDiv, pageBodyDialogMessage" />
-      	</h:form>
-    </rich:popupPanel>
+	<ui:include src="ModeloPasta/addModeloPastaPopup.xhtml"></ui:include>
    
     <rich:popupPanel id="addModeloRestricaoPanel" moveable="true" show="false"
         resizeable="true" minWidth="290" minHeight="430"

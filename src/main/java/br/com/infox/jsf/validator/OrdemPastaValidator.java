@@ -1,5 +1,6 @@
 package br.com.infox.jsf.validator;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
@@ -12,6 +13,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.epp.processo.documento.entity.Pasta;
+import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.seam.util.ComponentUtil;
@@ -39,9 +41,11 @@ public class OrdemPastaValidator implements Validator {
         
         ProcessoManager processoManager = ComponentUtil.getComponent(ProcessoManager.NAME);
         Processo processo = processoManager.find(idProcesso);
-        for (Pasta pasta : processo.getPastaList()) {
+        PastaManager pastaManager = ComponentUtil.getComponent(PastaManager.NAME);
+        List<Pasta> pastasProcesso = pastaManager.getByProcesso(processo);
+        for (Pasta pasta : pastasProcesso) {
             if (idPasta != null && pasta.getId().equals(idPasta)) continue;
-            if (pasta.getOrdem().equals(ordem)) {
+            if (pasta.getOrdem()!= null && pasta.getOrdem().equals(ordem)) {
                 throw new ValidatorException(new FacesMessage("Já existe pasta com este número de ordem"));
             }
         }

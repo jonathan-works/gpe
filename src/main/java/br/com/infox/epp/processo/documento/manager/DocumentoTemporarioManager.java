@@ -22,7 +22,6 @@ import br.com.infox.epp.processo.documento.dao.DocumentoTemporarioDao;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.DocumentoTemporario;
-import br.com.infox.epp.processo.documento.numeration.NumeracaoDocumentoSequencialManager;
 import br.com.infox.epp.processo.documento.service.ProcessoAnaliseDocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.seam.util.ComponentUtil;
@@ -32,7 +31,6 @@ import br.com.infox.seam.util.ComponentUtil;
 public class DocumentoTemporarioManager {
     
     private static final String RECURSO_ANEXAR_DOCUMENTO_SEM_ANALISE = "anexarDocumentoSemAnalise";
-    private NumeracaoDocumentoSequencialManager numeracaoDocumentoSequencialManager = ComponentUtil.getComponent(NumeracaoDocumentoSequencialManager.NAME);
     private DocumentoBinManager documentoBinManager = ComponentUtil.getComponent(DocumentoBinManager.NAME);
     private PastaManager pastaManager = ComponentUtil.getComponent(PastaManager.NAME);
     private PermissaoService permissaoService = ComponentUtil.getComponent(PermissaoService.NAME);
@@ -107,7 +105,7 @@ public class DocumentoTemporarioManager {
         documento.setDocumentoBin(docBin);
         documento.setProcesso(dt.getProcesso());
         documento.setDescricao(dt.getDescricao());
-        documento.setNumeroDocumento(numeracaoDocumentoSequencialManager.getNextNumeracaoDocumentoSequencial(dt.getProcesso()));
+        documento.setNumeroDocumento(documentoManager.getNextNumeracao(documento));
         documento.setAnexo(dt.getAnexo());
         documento.setIdJbpmTask(dt.getIdJbpmTask());
         documento.setPerfilTemplate(dt.getPerfilTemplate());

@@ -82,7 +82,12 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
         documento.setProcesso(processo);
         documento.setNumeroDocumento(getNextNumeracao(documento));
         documento.setDocumentoBin(this.documentoBinManager.createProcessoDocumentoBin(documento));
-        documento.setUsuarioInclusao(Authenticator.getUsuarioLogado());
+        if (documento.getUsuarioInclusao() == null) {
+        	documento.setUsuarioInclusao(Authenticator.getUsuarioLogado());
+        }
+        if (documento.getDataInclusao() == null) {
+        	documento.setDataInclusao(new Date());
+        }
         if (TaskInstance.instance() != null) {
             long idJbpmTask = TaskInstance.instance().getId();
             documento.setIdJbpmTask(idJbpmTask);

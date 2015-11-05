@@ -11,7 +11,8 @@
   <ui:param
     name="template"
     value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
-  <ui:param name="readonly" value="#{empty readonly ? true : props.readonly or not empty taskInstanceHome.variaveisDocumento[id].documentoBin.assinaturas}" />
+  <ui:param name="readonly" value="#{empty readonly ? true : props.readonly or not empty taskInstanceHome.variaveisDocumento[id].documentoBin.assinaturas
+  		or taskInstanceHome.variaveisDocumento[id].documentoBin.suficientementeAssinado}" />
 <f:subview id="#{f.id}SubView">
     <s:div id="#{f.id}TipoDocDiv" styleClass="padding-top-10">
       <wi:selectOneMenuEntity

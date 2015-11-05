@@ -313,6 +313,13 @@ public class AssinaturaDocumentoService {
             AssinaturaException, DAOException {
         assinarDocumento(documento.getDocumentoBin(), perfilAtual, certChain, signature);
     }
+    
+    public void assinarGravarDocumento(Documento documento,
+            final UsuarioPerfil perfilAtual, final String certChain,
+            final String signature) throws DAOException, CertificadoException, AssinaturaException {
+    	documento = documentoManager.gravarDocumentoNoProcesso(documento.getProcesso(), documento);
+    	assinarDocumento(documento.getDocumentoBin(), perfilAtual, certChain, signature);
+    }
 
     public boolean isDocumentoAssinado(Integer idDocumento, PerfilTemplate perfilTemplate) {
         Documento documento = documentoManager.find(idDocumento);
