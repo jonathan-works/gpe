@@ -1,12 +1,13 @@
 package br.com.infox.jbpm.event;
 
 import org.jboss.seam.core.Events;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jboss.seam.transaction.Transaction;
 import org.jboss.seam.transaction.UserTransaction;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
+
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 public final class JbpmEvents {
 
@@ -48,6 +49,7 @@ public final class JbpmEvents {
         } else {
             Events.instance().raiseEvent(event.getEventType(), context);
         }
+        br.com.infox.bpm.cdi.qualifier.Events.fireEvent(context, event.getEventType());
     }
 
 }
