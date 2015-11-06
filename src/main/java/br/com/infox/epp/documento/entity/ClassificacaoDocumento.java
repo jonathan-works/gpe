@@ -109,7 +109,6 @@ public class ClassificacaoDocumento implements Serializable {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = COL_ID_TIPO_MODELO_DOCUMENTO, nullable = false)
-    @NotNull
     private TipoModeloDocumento tipoModeloDocumento;
     
 	public ClassificacaoDocumento() {

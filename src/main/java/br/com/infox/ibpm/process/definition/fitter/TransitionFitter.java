@@ -17,10 +17,13 @@ import javax.faces.model.SelectItem;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.EndState;
 import org.jbpm.graph.node.StartState;
+import org.jbpm.graph.node.TaskNode;
+import org.jbpm.taskmgmt.def.Task;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
@@ -127,16 +130,17 @@ public class TransitionFitter extends Fitter implements Serializable {
 
     public void removeTransition(TransitionHandler th, String type) {
         Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
-        Transition t = th.getTransition();
-        if ("from".equals(type) && t.getFrom() != null) {
-            t.getFrom().removeLeavingTransition(t);
-        } else if ("to".equals(type) && t.getTo() != null) {
-            t.getTo().removeArrivingTransition(t);
+        Transition transition = th.getTransition();
+        if ("from".equals(type) && transition.getFrom() != null) {
+            transition.getFrom().removeLeavingTransition(transition);
+        } else if ("to".equals(type) && transition.getTo() != null) {
+            transition.getTo().removeArrivingTransition(transition);
         }
         clearArrivingAndLeavingTransitions();
-        currentNode.removeArrivingTransition(t);
-        currentNode.removeLeavingTransition(t);
+        currentNode.removeArrivingTransition(transition);
+        currentNode.removeLeavingTransition(transition);
         removeTaskExpiration(currentNode.getName(), th.getName());
+        removeTaskListener(currentNode, transition);
         checkTransitions();
     }
 
@@ -280,6 +284,23 @@ public class TransitionFitter extends Fitter implements Serializable {
             }
         } catch (DAOException e) {
             LOG.error("transitionFitter.removeTaskExpiration()", e);
+        }
+    }
+    
+    private void removeTaskListener(Node node, Transition transition) {
+        if (!(node instanceof TaskNode)) return;
+        TaskNode taskNode = (TaskNode) node;
+        Task task = (Task) taskNode.getTasks().iterator().next();
+        Map<String, Event> events = task.getEvents();
+        if (events == null) return;
+        List<Event> removeEvents = new ArrayList<>(events.size());
+        for (Event event : events.values()) {
+            if (event.getEventType().startsWith(Event.EVENTTYPE_TASK_LISTENER) && event.getConfiguration().contains(transition.getKey())) {
+                removeEvents.add(event);
+            }
+        }
+        for (Event event : removeEvents) {
+            task.removeEvent(event);
         }
     }
 }
