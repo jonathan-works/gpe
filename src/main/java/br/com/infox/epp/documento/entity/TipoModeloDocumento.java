@@ -156,31 +156,24 @@ public class TipoModeloDocumento implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime
-                * result
-                + ((getIdTipoModeloDocumento() == null) ? 0 : getIdTipoModeloDocumento().hashCode());
+        result = prime * result + ((getIdTipoModeloDocumento() == null) ? 0 : getIdTipoModeloDocumento().hashCode());
         return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
+        if (this == obj)
             return true;
-        }
-        if (obj == null) {
+        if (obj == null)
             return false;
-        }
-        if (getClass() != obj.getClass()) {
+        if (!(obj instanceof TipoModeloDocumento))
             return false;
-        }
         TipoModeloDocumento other = (TipoModeloDocumento) obj;
         if (getIdTipoModeloDocumento() == null) {
-            if (other.getIdTipoModeloDocumento() != null) {
+            if (other.getIdTipoModeloDocumento() != null)
                 return false;
-            }
-        } else if (!getIdTipoModeloDocumento().equals(other.getIdTipoModeloDocumento())) {
+        } else if (!getIdTipoModeloDocumento().equals(other.getIdTipoModeloDocumento()))
             return false;
-        }
         return true;
     }
 
