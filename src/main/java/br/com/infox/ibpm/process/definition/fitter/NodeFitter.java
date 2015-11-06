@@ -220,10 +220,10 @@ public class NodeFitter extends Fitter implements Serializable {
         Node to = transition.getTo();
         if (to != null) {
             to.removeArrivingTransition(transition);
-            removeTaskListener(to, transition);
         }
         Node from = transition.getFrom();
         if (from != null) {
+            removeTaskListener(from, transition);
             from.removeLeavingTransition(transition);
         }
     }
