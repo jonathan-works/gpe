@@ -956,7 +956,7 @@ public class TaskInstanceHome implements Serializable {
 
 	@SuppressWarnings(UNCHECKED)
 	public Object getValueOfVariableFromTaskInstance(String variableName) {
-		TaskController taskController = taskInstance.getTask().getTaskController();
+		TaskController taskController = getCurrentTaskInstance().getTask().getTaskController();
 		if (taskController != null) {
 			List<VariableAccess> variables = taskController.getVariableAccesses();
 			for (VariableAccess variable : variables) {
