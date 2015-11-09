@@ -15,7 +15,6 @@ import javax.inject.Inject;
 import javax.validation.ValidationException;
 
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.access.dao.UsuarioLoginDAO;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.service.PasswordService;
@@ -47,8 +46,6 @@ public class UsuarioRestService {
 	@Inject
 	private UsuarioLoginManager usuarioLoginManager;
 	@Inject
-	private UsuarioLoginDAO usuarioLoginDAO;
-	@Inject
 	private PessoaFisicaManager pessoaFisicaManager;
 	@Inject
 	private MeioContatoManager meioContatoManager;
@@ -69,7 +66,7 @@ public class UsuarioRestService {
 		UsuarioLogin usuarioLogin = createUsuarioLogin(usuarioBean, pessoaFisica);
 		
 		pessoaFisicaManager.persist(pessoaFisica);
-		usuarioLoginDAO.persist(usuarioLogin);
+		usuarioLoginManager.persist(usuarioLogin);
 		
 		List<MeioContato> meioContatoList = createMeioContatoList(usuarioBean, pessoaFisica);
 		for (MeioContato meioContato : meioContatoList) {
