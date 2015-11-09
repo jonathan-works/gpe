@@ -75,8 +75,8 @@ public class PrazoComunicacaoService {
 		DestinatarioModeloComunicacao destinatario = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.DESTINATARIO);
         Integer qtdDias = destinatario.getModeloComunicacao().getTipoComunicacao().getQuantidadeDiasCiencia();
         Date hoje = new Date();
-        //O inicio do prazo de ciência é sempre no dia seguinte ao do envio (independentemente de o dia seguinte ao do envio ser útil ou não, já que este prazo é corrido). 64236
-        return calendarioEventosManager.getPrimeiroDiaUtil(hoje, qtdDias + 1);
+        //O início do prazo de ciência começa no dia do envio. 66741
+        return calendarioEventosManager.getPrimeiroDiaUtil(hoje, qtdDias);
     }
     
 	public Date contabilizarPrazoCumprimento(Processo comunicacao) {
