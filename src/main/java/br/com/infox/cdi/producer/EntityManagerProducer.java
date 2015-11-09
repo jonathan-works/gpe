@@ -37,7 +37,7 @@ public class EntityManagerProducer {
     private EntityManagerFactory entityManagerBinFactory;
 
 	@Produces
-	@Named("javax.persistence.entityManager")
+	@Named("entityManager")
 	private EntityManager createEntityManager() {
 	    EntityManager entityManager = null;
 	    if (BeanManager.INSTANCE.isSessionContextActive()) {

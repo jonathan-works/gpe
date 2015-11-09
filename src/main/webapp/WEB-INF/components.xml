@@ -55,13 +55,13 @@
     <security:jpa-identity-store
         user-class="br.com.infox.epp.access.entity.UsuarioLogin"
         role-class="br.com.infox.epp.access.entity.Papel" 
-        entity-manager="#{javax.persistence.entityManager}" />
+        entity-manager="#{entityManager}" />
 
     <security:jpa-permission-store
         user-permission-class="br.com.infox.epp.access.entity.Permissao" 
-        entity-manager="#{javax.persistence.entityManager}"/>
+        entity-manager="#{entityManager}"/>
         
-    <ui:jpa-entity-loader entity-manager="#{javax.persistence.entityManager}" />
+    <ui:jpa-entity-loader entity-manager="#{entityManager}" />
 
     <security:remember-me
         enabled="false"

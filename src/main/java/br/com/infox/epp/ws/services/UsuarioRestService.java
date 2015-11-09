@@ -41,8 +41,6 @@ import br.com.infox.epp.ws.messages.CodigosServicos;
 @ValidarParametros
 public class UsuarioRestService {
 
-	public static final String NAME = "unidadeGestoraService";
-
 	@Inject
 	private UsuarioLoginManager usuarioLoginManager;
 	@Inject
