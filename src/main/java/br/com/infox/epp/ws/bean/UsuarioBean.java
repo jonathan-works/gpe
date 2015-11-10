@@ -157,6 +157,9 @@ public class UsuarioBean implements Serializable {
 	}
 
 	public Date getDataExpedicaoAsDate() {
+		if(dataExpedicao == null) {
+			return null;
+		}
 		try {
 			return new SimpleDateFormat(DATE_PATTERN).parse(dataExpedicao);
 		} catch (ParseException e) {

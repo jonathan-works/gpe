@@ -1,8 +1,6 @@
 package br.com.infox.epp.ws.services;
 
-import static br.com.infox.epp.ws.messages.WSMessages.ME_ATTR_DATAEXPEDICAO_INVALIDO;
 import static br.com.infox.epp.ws.messages.WSMessages.ME_ATTR_IDENTIDADE_INVALIDO;
-import static br.com.infox.epp.ws.messages.WSMessages.ME_ATTR_ORGAOEXPEDIDOR_INVALIDO;
 import static br.com.infox.epp.ws.messages.WSMessages.ME_USUARIO_INEXISTENTE;
 import static br.com.infox.epp.ws.messages.WSMessages.MS_SUCESSO_ATUALIZAR;
 import static br.com.infox.epp.ws.messages.WSMessages.MS_SUCESSO_INSERIR;
@@ -52,7 +50,7 @@ public class UsuarioRestService {
 	@Inject
 	private PasswordService passwordService;
 
-	@Log(codigo=CodigosServicos.WS_PERFIS_GRAVAR_USUARIO)
+	@Log(codigo = CodigosServicos.WS_PERFIS_GRAVAR_USUARIO)
 	public String gravarUsuario(Object bean) throws DAOException {
 		UsuarioBean usuarioBean = (UsuarioBean) bean;
 		PessoaFisica pessoaFisica = pessoaFisicaManager.getByCpf(usuarioBean.getCpf());
@@ -62,20 +60,20 @@ public class UsuarioRestService {
 	public String inserirUsuario(UsuarioBean usuarioBean) throws DAOException {
 		PessoaFisica pessoaFisica = createPessoaFisica(usuarioBean);
 		UsuarioLogin usuarioLogin = createUsuarioLogin(usuarioBean, pessoaFisica);
-		
+
 		pessoaFisicaManager.persist(pessoaFisica);
 		usuarioLoginManager.persist(usuarioLogin);
-		
+
 		List<MeioContato> meioContatoList = createMeioContatoList(usuarioBean, pessoaFisica);
 		for (MeioContato meioContato : meioContatoList) {
 			meioContatoManager.persist(meioContato);
 		}
-		
+
 		PessoaDocumento pessoaDocumento = createPessoaDocumento(usuarioBean, pessoaFisica);
 		if (pessoaDocumento != null) {
-		    pessoaDocumentoManager.persist(pessoaDocumento);
+			pessoaDocumentoManager.persist(pessoaDocumento);
 		}
-		
+
 		return MS_SUCESSO_INSERIR.codigo();
 	}
 
@@ -112,7 +110,7 @@ public class UsuarioRestService {
 		return MS_SUCESSO_ATUALIZAR.codigo();
 	}
 
-	@Log(codigo=CodigosServicos.WS_PERFIS_ATUALIZAR_SENHA)
+	@Log(codigo = CodigosServicos.WS_PERFIS_ATUALIZAR_SENHA)
 	public String atualizarSenha(Object bean) throws DAOException {
 		UsuarioSenhaBean usuarioSenhaBean = (UsuarioSenhaBean) bean;
 		PessoaFisica pessoaFisica = pessoaFisicaManager.getByCpf(usuarioSenhaBean.getCpf());
@@ -247,16 +245,9 @@ public class UsuarioRestService {
 				|| usuarioBean.getOrgaoExpedidor() != null;
 	}
 
-
 	private void validatePessoaDocumento(UsuarioBean usuarioBean) {
-		if (usuarioBean.getDataExpedicao() == null) {
-			throw new ValidationException(ME_ATTR_DATAEXPEDICAO_INVALIDO.codigo());
-		}
 		if (usuarioBean.getIdentidade() == null) {
 			throw new ValidationException(ME_ATTR_IDENTIDADE_INVALIDO.codigo());
-		}
-		if (usuarioBean.getOrgaoExpedidor() == null) {
-			throw new ValidationException(ME_ATTR_ORGAOEXPEDIDOR_INVALIDO.codigo());
 		}
 	}
 }
