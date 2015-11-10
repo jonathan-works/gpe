@@ -89,7 +89,7 @@ public class RequestInternalPageService implements Serializable {
 		buildSocketBindingInfo();
 		
 		Integer port = getServerListeningPort();
-		String host = "127.0.0.1";
+		String host = InetAddress.getLocalHost().getHostAddress();
 
 		StringBuilder stringBuilder = new StringBuilder(sbt.getDescricao());
 		stringBuilder.append(host);
