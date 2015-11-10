@@ -244,7 +244,7 @@ public class EnvioComunicacaoController implements Serializable {
 				msg.append("Existe destinatário sem meio de expedição selecionado.\n");
 				break;
 			}
-			if (isPrazoComunicacaoRequired() && (destinatario.getPrazo() == null || destinatario.getPrazo() <= 0)){
+			if (isPrazoComunicacaoRequired() && (destinatario.getPrazo() == null || destinatario.getPrazo() < 0)){
 				msg.append("Não foi informado o prazo para o destinatário ");
 				msg.append(destinatario.getNome());
 				msg.append(" ou esse prazo é inválido.\n");
