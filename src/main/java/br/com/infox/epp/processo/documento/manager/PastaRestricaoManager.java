@@ -143,7 +143,7 @@ public class PastaRestricaoManager extends Manager<PastaRestricaoDAO, PastaRestr
      * Método chamado quando é encontrada uma restrição do tipo Localização
      * 
      * Considera o alvo como o id de uma Localização
-     * Verifica se a localização passada por parâmetro está abaixo da localização alvo considerando
+     * Verifica se a localização passada por parâmetro é igual a localização alvo considerando
      * a estrutura de árvore de localizações.
      * 
      * @param restricaoBean bean que está sendo populado
@@ -153,7 +153,7 @@ public class PastaRestricaoManager extends Manager<PastaRestricaoDAO, PastaRestr
      */
     private boolean populateBeanLocalizacao(PastaRestricaoBean restricaoBean, PastaRestricao restricao, Localizacao localizacao) {
         Localizacao localizacaoAlvo = localizacaoManager.find(restricao.getAlvo());
-        if (localizacaoManager.isLocalizacaoAncestor(localizacaoAlvo, localizacao)) {
+        if (localizacao.equals(localizacaoAlvo)) {
             restricaoBean.setRead(restricaoBean.getRead() || restricao.getRead());
             restricaoBean.setWrite(restricaoBean.getWrite() || restricao.getWrite());
             restricaoBean.setDelete(restricaoBean.getDelete() || restricao.getDelete());

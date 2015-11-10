@@ -82,7 +82,7 @@ public class PainelUsuarioController implements Serializable {
 		loadFluxosDisponiveis();
 		// Alterando o concurrentRequestTimeout para evitar ConcurrentCallToConversation no painel #66435
 		Conversation conversation = ComponentUtil.getComponent("org.jboss.seam.core.conversation");
-		conversation.setConcurrentRequestTimeout(5000);
+		conversation.setConcurrentRequestTimeout(60000);
 	}
 	
 	public void atualizarPainelProcessos() throws IOException {

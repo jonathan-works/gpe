@@ -284,7 +284,7 @@ public class TaskInstanceHome implements Serializable {
 			TaskController taskController = taskInstance.getTask().getTaskController();
 			TaskPageAction taskPageAction = ComponentUtil.getComponent(TaskPageAction.NAME);
 			if (taskController != null) {
-				if (!taskPageAction.getHasTaskPage()) {
+				if (!taskPageAction.getHasTaskPage(getCurrentTaskInstance())) {
 					try {
 						updateVariables(taskController);
 					} catch (BusinessException e) {
@@ -956,7 +956,7 @@ public class TaskInstanceHome implements Serializable {
 
 	@SuppressWarnings(UNCHECKED)
 	public Object getValueOfVariableFromTaskInstance(String variableName) {
-		TaskController taskController = taskInstance.getTask().getTaskController();
+		TaskController taskController = getCurrentTaskInstance().getTask().getTaskController();
 		if (taskController != null) {
 			List<VariableAccess> variables = taskController.getVariableAccesses();
 			for (VariableAccess variable : variables) {

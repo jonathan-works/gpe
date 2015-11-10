@@ -682,9 +682,9 @@ public class ProcessBuilder implements Serializable {
             for (Problem object : problems) {
                 mensagensImportacao.add(format("{0}", object.toString()));
             }
-        } catch (IllegalXPDLException | DAOException e) {
+        } catch (IllegalXPDLException | IllegalArgumentException | DAOException e) {
             LOG.error("Erro ao importar arquivo XPDL. " + e.getMessage(), e);
-            if (e instanceof IllegalXPDLException && e.getMessage() != null) {
+            if ((e instanceof IllegalXPDLException || e instanceof IllegalArgumentException) && e.getMessage() != null) {
                 mensagensImportacao.add(e.getMessage());
             }
             if (fluxoXPDL != null) {

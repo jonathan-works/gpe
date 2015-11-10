@@ -33,6 +33,8 @@
     </a:outputPanel>
 
     <a:commandLink execute="@this" target="#{idProcesso}popUpFluxo"
+      onbegin="infox.showLoading(); PF('pollAtualizarPainel').stop();"
+      oncomplete="infox.hideLoading(); PF('pollAtualizarPainel').start();"
       onclick="open('#{pathResolver.contextPath}/Processo/visualizarProcesso.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
 
       <f:param name="idProcesso" value="#{idProcesso}" />
@@ -46,6 +48,8 @@
     <a:commandLink execute="@this" rendered="#{empty owner and showMovimentarToolBar}"
       target="#{idProcesso}popUpFluxo"
       render="baseBody"
+      onbegin="infox.showLoading(); PF('pollAtualizarPainel').stop();"
+      oncomplete="infox.hideLoading(); PF('pollAtualizarPainel').start();"
       onclick="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
 
       <f:param name="idProcesso" value="#{idProcesso}" />

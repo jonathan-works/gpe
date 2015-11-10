@@ -19,15 +19,20 @@ import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.context.exe.ContextInstance;
 import org.joda.time.DateTime;
 
+import br.com.infox.certificado.bean.CertificateSignatureBean;
+import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
@@ -40,6 +45,7 @@ import br.com.infox.epp.system.Parametros;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.task.service.MovimentarTarefaService;
 import br.com.infox.seam.exception.BusinessException;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(PrazoComunicacaoService.NAME)
 @AutoCreate
@@ -62,6 +68,8 @@ public class PrazoComunicacaoService {
 	private DocumentoManager documentoManager;
 	@In
 	private ProcessoManager processoManager;
+	
+	private AssinaturaDocumentoService assinaturaDocumentoService = ComponentUtil.getComponent(AssinaturaDocumentoService.NAME);
 
 	public Date contabilizarPrazoCiencia(Processo comunicacao) {
 		DestinatarioModeloComunicacao destinatario = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.DESTINATARIO);
@@ -109,13 +117,32 @@ public class PrazoComunicacaoService {
 		if (comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA) != null) {
     		return;
     	}
+		gravarDocumentoCiencia(comunicacao, documentoCiencia);
+		darCienciaDocumentoGravado(comunicacao, dataCiencia, Authenticator.getUsuarioLogado());
+	}
+
+	private void gravarDocumentoCiencia(Processo comunicacao, Documento documentoCiencia) throws DAOException {
 		documentoManager.gravarDocumentoNoProcesso(comunicacao.getProcessoRoot(), documentoCiencia);
 		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
 		MetadadoProcesso metadadoCiencia = metadadoProcessoProvider.gerarMetadado(
 				ComunicacaoMetadadoProvider.DOCUMENTO_COMPROVACAO_CIENCIA, documentoCiencia.getId().toString());
 		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoCiencia));
-		darCiencia(comunicacao, dataCiencia, Authenticator.getUsuarioLogado());
+	}
+	
+	private void darCienciaDocumentoGravado(Processo comunicacao, Date dataCiencia, UsuarioLogin usuarioLogin) throws DAOException {
+		darCiencia(comunicacao, dataCiencia, usuarioLogin);
 		movimentarTarefaService.finalizarTarefasEmAberto(comunicacao);
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void darCienciaManualAssinar(Processo comunicacao, Date dataCiencia, Documento documentoCiencia, CertificateSignatureBean signatureBean, UsuarioPerfil usuarioPerfil) 
+			throws DAOException, CertificadoException, AssinaturaException{
+		if (comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA) != null) {
+    		return;
+    	}
+		gravarDocumentoCiencia(comunicacao, documentoCiencia);
+		assinaturaDocumentoService.assinarDocumento(documentoCiencia.getDocumentoBin(), usuarioPerfil, signatureBean.getCertChain(), signatureBean.getSignature());
+		darCienciaDocumentoGravado(comunicacao, dataCiencia, usuarioPerfil.getUsuarioLogin());
 	}
 
 	protected void adicionarPrazoDeCumprimento(Processo comunicacao, Date dataCiencia)
