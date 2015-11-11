@@ -6,15 +6,11 @@ import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
-
-@org.jboss.seam.annotations.faces.Validator
-@Name("jsfComponentIdValidator")
-@BypassInterceptors
+@FacesValidator("jsfComponentIdValidator")
 public class JsfComponentIdValidator implements Validator {
 
     public void validate(FacesContext fc, UIComponent ui, Object obj) {
@@ -22,11 +18,12 @@ public class JsfComponentIdValidator implements Validator {
         UIComponent test = new UIMessage();
         try {
             test.setId(id);
-            if (!Pattern.compile("^[a-z|A-Z][a-z|A-Z|0-9|\\-|_]*$").matcher(id).find()){
+            if (!Pattern.compile("^[a-z|A-Z][a-z|A-Z|0-9|\\-|_]*$").matcher(id).find()) {
                 throw new IllegalArgumentException();
             }
         } catch (IllegalArgumentException e) {
-            throw new ValidatorException(new FacesMessage("Identificador inválido. Deve iniciar com uma letra, e deve conter apenas letras, números, hífens ou underscores."), e);
+            throw new ValidatorException(new FacesMessage(
+                    "Identificador inválido. Deve iniciar com uma letra, e deve conter apenas letras, números, hífens ou underscores."), e);
         }
     }
 

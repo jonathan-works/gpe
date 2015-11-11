@@ -5,14 +5,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-import org.jboss.seam.annotations.Name;
-
-@Name(CpfConverter.CONVERTER_ID)
-@FacesConverter(CpfConverter.CONVERTER_ID)
+@FacesConverter("cpfConverter")
 public class CpfConverter implements Converter {
 	
-    public static final String CONVERTER_ID = "cpfConverter";
-    
     public static String format(String value){
     	StringBuilder cpf = new StringBuilder((String) value);
         cpf.insert(3, '.'); // Após o 1º grupo (3 + 0 ponto)

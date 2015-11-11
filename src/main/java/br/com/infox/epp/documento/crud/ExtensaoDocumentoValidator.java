@@ -3,19 +3,14 @@ package br.com.infox.epp.documento.crud;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
-
 import br.com.infox.core.messages.InfoxMessages;
 
-@org.jboss.seam.annotations.faces.Validator(id = ExtensaoDocumentoValidator.NAME)
-@Name(ExtensaoDocumentoValidator.NAME)
-@BypassInterceptors
+@FacesValidator("extensaoDocumentoValidator")
 public class ExtensaoDocumentoValidator implements Validator {
-	public static final String NAME = "extensaoDocumentoValidator";
 	
 	@Override
 	public void validate(FacesContext context, UIComponent component, Object value) {
