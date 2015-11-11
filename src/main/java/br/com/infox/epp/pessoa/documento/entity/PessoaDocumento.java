@@ -53,12 +53,10 @@ public class PessoaDocumento implements Serializable {
 	@Column(name = "vl_documento", nullable = false)
 	private String documento;
 	
-	@NotNull
-	@Column(name = "ds_orgao_emissor", nullable = false)
+	@Column(name = "ds_orgao_emissor")
 	private String orgaoEmissor;
 	
-	@NotNull
-	@Column(name = "dt_emissao", nullable = false)
+	@Column(name = "dt_emissao")
 	private Date dataEmissao;
 	
 	@NotNull

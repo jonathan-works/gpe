@@ -1,7 +1,6 @@
 package br.com.infox.epp.processo.comunicacao.impressao;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -15,9 +14,6 @@ import br.com.infox.core.list.EntityList;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
-import br.com.infox.epp.processo.type.TipoProcesso;
-import edu.emory.mathcs.backport.java.util.Collections;
 
 @Scope(ScopeType.PAGE)
 @Name(ImpressaoComunicacaoList.NAME)
@@ -26,28 +22,30 @@ public class ImpressaoComunicacaoList extends EntityList<Processo> {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "impressaoComunicacaoList";
 	
-	private static final String DEFAULT_EJBQL = "select o from Processo o " +
+	private static final String DEFAULT_EJBQL = "select o from DestinatarioModeloComunicacao dmc " +
+												"inner join dmc.processo o " +
+												"inner join dmc.documentoComunicacao doc " +
+												"inner join doc.documentoBin bin " +
+												"left join bin.assinaturas a " +
 												"where exists (select 1 from MetadadoProcesso mp " +
-												"				where mp.metadadoType = '" + EppMetadadoProvider.TIPO_PROCESSO.getMetadadoType() + "' " +
-												"				and mp.valor = '" + TipoProcesso.COMUNICACAO_NAO_ELETRONICA + "' " +
-												"				and mp.processo = o) " +
-												"and exists (select 1 from MetadadoProcesso mp " +
 												"			  where mp.metadadoType = '" + ComunicacaoMetadadoProvider.MEIO_EXPEDICAO.getMetadadoType() + "' " + 
 												"			  and (mp.valor = '" + MeioExpedicao.DO.name() + "' or mp.valor = '" + MeioExpedicao.IM.name() + "' ) " +
-												"			  and mp.processo = o) ";
+												"			  and mp.processo = o) " +
+												"and o.localizacao = #{usuarioLogadoPerfilAtual.localizacao} ";
 	
-	private static final String DEFAULT_ORDER = "idProcesso";
+	private static final String DEFAULT_ORDER = "a.dataAssinatura desc";
 	
 	private static final String CONDICAO_MEIO_IMPRESSAO =
 	        "and exists (select 1 from MetadadoProcesso mp where "
 	                + "mp.metadadoType = '" + ComunicacaoMetadadoProvider.MEIO_EXPEDICAO.getMetadadoType() + "' "
                     + "and mp.valor = #{impressaoComunicacaoList.meioExpedicao.name()} "
                     + "and mp.processo = o) ";
-	
+	//Essa query pode trazer resultados incorretos quando houver mais de uma assinatura
 	private static final String CONDICAO_DATA_ASSINATURA_PREFIX =
 	        "and exists (select 1 from DestinatarioModeloComunicacao dmc "
-	        + "inner join dmc.comunicacao c "
-	        + "inner join c.assinaturas a "
+	        + "inner join dmc.documentoComunicacao c "
+	        + "inner join c.documentoBin bin "
+	        + "inner join bin.assinaturas a "
 	        + "where a.dataAssinatura is not null ";
 	private static final String CONDICAO_DATA_ASSINATURA_SUFIX =
 	        "and dmc.id = (select cast(mp.valor as integer) from MetadadoProcesso mp "
@@ -88,26 +86,6 @@ public class ImpressaoComunicacaoList extends EntityList<Processo> {
 		meiosExpedicao.add(MeioExpedicao.DO);
 	}
 	
-	private Comparator<Processo> comparator = new Comparator<Processo>() {
-		@Override
-		public int compare(Processo o1, Processo o2) {
-			Boolean o1Impresso = impressaoComunicacaoService.getImpresso(o1);
-			Boolean o2Impresso = impressaoComunicacaoService.getImpresso(o2);
-			Date o1DataAssinatura = impressaoComunicacaoService.getDataAssinatura(o1);
-			Date o2DataAssinatura = impressaoComunicacaoService.getDataAssinatura(o2);
-			int compare = o1Impresso.compareTo(o2Impresso);
-			if (compare == 0) {
-				if (o2DataAssinatura != null){
-					return o2DataAssinatura.compareTo(o1DataAssinatura);
-				} else{
-					return o2.getDataInicio().compareTo(o1.getDataInicio());
-				}
-			} else {
-				return compare;
-			}
-		}
-	};
-
 	private String getEjbqlRestrictedByFilters() {
         StringBuilder sb = new StringBuilder(DEFAULT_EJBQL);
         if (meioExpedicao != null) {
@@ -135,7 +113,6 @@ public class ImpressaoComunicacaoList extends EntityList<Processo> {
 	public List<Processo> getResultList() {
 	    setEjbql(getEjbqlRestrictedByFilters());
 		List<Processo> resultList = super.getResultList();
-		Collections.sort(resultList, comparator);
 		this.showDataTable = true;
 		return resultList;
 	}

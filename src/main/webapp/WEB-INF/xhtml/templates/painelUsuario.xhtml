@@ -30,8 +30,8 @@
             limitRender="true"
             status=":status"
             render="@form"
-            onbegin="infox.showLoading();"
-            oncomplete="infox.hideLoading();"
+            onbegin="infox.showLoading(); PF('pollAtualizarPainel').stop();"
+            oncomplete="infox.hideLoading(); PF('pollAtualizarPainel').start();"
             execute="@this" />
         </wi:selectOneMenu>
         <wi:selectOneMenuEntity id="colegiadaParaMonocratica"
@@ -48,8 +48,8 @@
             event="change"
             limitRender="true"
             status=":status"
-            onbegin="infox.showLoading();"
-            oncomplete="infox.hideLoading();"
+            onbegin="infox.showLoading(); PF('pollAtualizarPainel').stop();"
+            oncomplete="infox.hideLoading(); PF('pollAtualizarPainel').start();"
             render="@form"
             execute="@parent" />
         </wi:selectOneMenuEntity>

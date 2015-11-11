@@ -29,6 +29,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
+import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.ProcessDefinition;
@@ -40,6 +41,7 @@ import org.jbpm.graph.node.NodeTypes;
 import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
+import org.jbpm.taskmgmt.def.Task;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
@@ -221,7 +223,25 @@ public class NodeFitter extends Fitter implements Serializable {
         }
         Node from = transition.getFrom();
         if (from != null) {
+            removeTaskListener(from, transition);
             from.removeLeavingTransition(transition);
+        }
+    }
+    
+    private void removeTaskListener(Node node, Transition transition) {
+        if (!(node instanceof TaskNode)) return;
+        TaskNode taskNode = (TaskNode) node;
+        Task task = (Task) taskNode.getTasks().iterator().next();
+        Map<String, Event> events = task.getEvents();
+        if (events == null) return;
+        List<Event> removeEvents = new ArrayList<>(events.size());
+        for (Event event : events.values()) {
+            if (event.getEventType().startsWith(Event.EVENTTYPE_TASK_LISTENER) && event.getConfiguration().contains(transition.getKey())) {
+                removeEvents.add(event);
+            }
+        }
+        for (Event event : removeEvents) {
+            task.removeEvent(event);
         }
     }
 

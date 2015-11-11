@@ -40,8 +40,7 @@ import br.com.infox.seam.exception.BusinessException;
 @ConcurrencyManagement(ConcurrencyManagementType.BEAN)
 public class RequestInternalPageService implements Serializable {
 
-	public static final LogProvider LOG = Logging
-			.getLogProvider(RequestInternalPageService.class);
+	public static final LogProvider LOG = Logging.getLogProvider(RequestInternalPageService.class);
 	
 	/**
 	 * TODO: como está implementada a classe depende do jboss pois é necessario sabe o ip e a porta do servidor que está rodando.
@@ -142,7 +141,6 @@ public class RequestInternalPageService implements Serializable {
 			HttpException {
 		HttpClient client = new HttpClient();
 		HttpMethod getMethod = new GetMethod(fullPath);
-		// Adicionando Header para controle da segurança do sistema
 		getMethod.addRequestHeader(KEY_HEADER_NAME, getKey().toString());
 		client.executeMethod(getMethod);
 		Header errorHeader = getMethod.getResponseHeader(FailResponseAction.HEADER_ERROR_RESPONSE);
