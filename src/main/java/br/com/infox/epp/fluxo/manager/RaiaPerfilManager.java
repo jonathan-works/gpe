@@ -3,6 +3,10 @@ package br.com.infox.epp.fluxo.manager;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -17,8 +21,10 @@ import br.com.infox.epp.fluxo.dao.RaiaPerfilDAO;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.RaiaPerfil;
 
-@Name(RaiaPerfilManager.NAME)
+@Stateless
 @AutoCreate
+@Name(RaiaPerfilManager.NAME)
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class RaiaPerfilManager extends Manager<RaiaPerfilDAO, RaiaPerfil> {
 
     private static final long serialVersionUID = 1L;
