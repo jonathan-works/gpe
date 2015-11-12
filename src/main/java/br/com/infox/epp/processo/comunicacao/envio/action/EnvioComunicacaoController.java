@@ -284,7 +284,7 @@ public class EnvioComunicacaoController implements Serializable {
 			}
 			clearAssinaturas();
 			expedida = null;
-			if (destinatario.getExpedido()) {
+			if ((destinatario!= null && destinatario.getExpedido()) || (destinatario == null && isExpedida())) {
 				FacesMessages.instance().add("Comunicação expedida com sucesso");
 			} 
 		} catch (DAOException e) {
