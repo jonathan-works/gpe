@@ -3,17 +3,20 @@ package br.com.infox.epp.documento.list.associative;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.list.AbstractPageableList;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.ibpm.process.definition.fitter.TaskFitter;
 
 @Name(AssociativeModeloDocumentoList.NAME)
 @Scope(ScopeType.PAGE)
+@ContextDependency
 public class AssociativeModeloDocumentoList extends AbstractPageableList<ModeloDocumento> {
 
     private static final long serialVersionUID = 1L;
@@ -21,7 +24,7 @@ public class AssociativeModeloDocumentoList extends AbstractPageableList<ModeloD
 
     private static final String DEFAULT_EJBQL = "select o from ModeloDocumento o";
 
-    @In(required = false)
+    @Inject
     private TaskFitter taskFitter;
     
     private List<ModeloDocumento> modelosAssociados = new ArrayList<>();

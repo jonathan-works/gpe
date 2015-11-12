@@ -2,6 +2,9 @@ package br.com.infox.epp.tarefa.manager;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.faces.model.SelectItem;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -12,8 +15,10 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.tarefa.dao.TarefaDAO;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 
-@Name(TarefaManager.NAME)
+@Stateless
 @AutoCreate
+@Name(TarefaManager.NAME)
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class TarefaManager extends Manager<TarefaDAO, Tarefa> {
 
     private static final long serialVersionUID = 1L;

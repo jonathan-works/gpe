@@ -1,4 +1,4 @@
-function NodeArea(scid) {
+function NodeArea() {
 
     if ($('#nodes').length == 0) {
         var map = $('<map></map>');
@@ -13,18 +13,14 @@ function NodeArea(scid) {
 
     this.map = $('#nodes');
     this.nodes = [];
-    this.scid = scid;
 
     this.map.empty();
-
-    function createLink(nodeIndex, scid) {
-        return "?tab=nodesTab&scid=" + scid + "&node=" + nodeIndex;
-    }
 
     this.addToMap = function(id, coords, title, vars, cond) {
         var area = $('<area></area>');
         area.attr({
             id: '_' + id,
+            nohref: 'nohref',
             coords: coords,
             shape: 'rect',
             areaName:title,

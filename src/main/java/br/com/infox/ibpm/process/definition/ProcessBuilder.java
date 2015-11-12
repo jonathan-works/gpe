@@ -19,17 +19,11 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.jboss.seam.Component;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
-import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.context.def.VariableAccess;
@@ -56,7 +50,9 @@ import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.transaction.Transactional;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.fluxo.manager.RaiaPerfilManager;
@@ -83,11 +79,8 @@ import br.com.infox.jsf.validator.JsfComponentTreeValidator;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
-@Name(ProcessBuilder.NAME)
-@Scope(ScopeType.CONVERSATION)
-@AutoCreate
-@Transactional
-@ContextDependency
+@Named
+@ViewScoped
 public class ProcessBuilder implements Serializable {
 
     private static final String PROCESS_DEFINITION_TABPANEL_ID = ":processDefinition";
@@ -96,38 +89,35 @@ public class ProcessBuilder implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final LogProvider LOG = Logging.getLogProvider(ProcessBuilder.class);
 
-    public static final String NAME = "processBuilder";
     public static final String POST_DEPLOY_EVENT = "postDeployEvent";
 
-    @In
+    @Inject
     private EventFitter eventFitter;
-    @In
+    @Inject
     private TransitionFitter transitionFitter;
-    @In
+    @Inject
     private SwimlaneFitter swimlaneFitter;
-    @In
+    @Inject
     private TaskFitter taskFitter;
-    @In
+    @Inject
     private NodeFitter nodeFitter;
-    @In
+    @Inject
     private ProcessBuilderGraph processBuilderGraph;
-    @In
+    @Inject
     private JsfComponentTreeValidator jsfComponentTreeValidator;
-    @In
+    @Inject
     private GenericManager genericManager;
-    @In
-    private FluxoManager fluxoManager;
-    @In
+    @Inject
     private RaiaPerfilManager raiaPerfilManager;
-    @In
+    @Inject
     private ProcessoLocalizacaoIbpmManager processoLocalizacaoIbpmManager;
-    @In
+    @Inject
     private VariavelClassificacaoDocumentoManager variavelClassificacaoDocumentoManager;
-    @In
+    @Inject
     private ActionMessagesService actionMessagesService;
-    @In
+    @Inject
     private TaskExpirationManager taskExpirationManager;
-    @In
+    @Inject
     private InfoxMessages infoxMessages;
     @Inject
     private FluxoMergeService fluxoMergeService;
@@ -405,6 +395,7 @@ public class ProcessBuilder implements Serializable {
         taskFitter.modifyTasks();
     }
 
+    @Transactional
     public void deploy() {
         String modifiedXml = fluxo.getXml();
         String publishedXml = fluxo.getXmlExecucao();
@@ -514,11 +505,7 @@ public class ProcessBuilder implements Serializable {
     }
 
     public static ProcessBuilder instance() {
-        ProcessBuilder returnInstance = (ProcessBuilder) Contexts.getConversationContext().get(NAME);
-        if (returnInstance == null) {
-            returnInstance = (ProcessBuilder) Component.getInstance(ProcessBuilder.class);
-        }
-        return returnInstance;
+        return BeanManager.INSTANCE.getReference(ProcessBuilder.class);
     }
 
     // --------------------------------------------------------------------------------------------------------------------

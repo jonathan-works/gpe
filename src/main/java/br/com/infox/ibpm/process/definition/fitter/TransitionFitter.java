@@ -13,10 +13,9 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.faces.model.SelectItem;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Transition;
@@ -27,6 +26,7 @@ import org.jbpm.taskmgmt.def.Task;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.processo.timer.TaskExpiration;
 import br.com.infox.epp.processo.timer.manager.TaskExpirationManager;
@@ -34,18 +34,16 @@ import br.com.infox.ibpm.transition.TransitionHandler;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
-@Name(TransitionFitter.NAME)
-@AutoCreate
+@Named
+@ViewScoped
 public class TransitionFitter extends Fitter implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final LogProvider LOG = Logging.getLogProvider(TransitionFitter.class);
 
-    public static final String NAME = "transitionFitter";
-    
-    @In
+    @Inject
     private TaskExpirationManager taskExpirationManager;
-    @In
+    @Inject
     private InfoxMessages infoxMessages;
 
     private List<SelectItem> transitionsItems;
