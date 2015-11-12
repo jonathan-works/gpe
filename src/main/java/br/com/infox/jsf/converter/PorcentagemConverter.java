@@ -25,7 +25,7 @@ public class PorcentagemConverter implements Converter{
         FORMATTER = DecimalFormat.getPercentInstance(new Locale("pt", "BR"));
         FORMATTER.setParseIntegerOnly(false);
         FORMATTER.setMaximumFractionDigits(2);
-        FORMATTER.setRoundingMode(RoundingMode.UNNECESSARY);
+        FORMATTER.setRoundingMode(RoundingMode.FLOOR);
     }
 	
 	@Override
@@ -47,7 +47,7 @@ public class PorcentagemConverter implements Converter{
 
 	@Override
 	public String getAsString(FacesContext context, UIComponent component, Object value) {
-        return value == null ? null : FORMATTER.format(value);
+		return value == null ? null : FORMATTER.format(value);
 	}
 
 }
