@@ -87,7 +87,7 @@ public class RequestInternalPageService implements Serializable {
 	public String getInternalPage(String pagePath) throws HttpException, IOException {
 		buildSocketBindingInfo();
 		Integer port = getServerListeningPort();
-		String host = "127.0.0.1";
+		String host = System.getProperty("jboss.bind.address");
 		StringBuilder stringBuilder = new StringBuilder(sbt.getDescricao());
 		stringBuilder.append(host);
 		stringBuilder.append(":");
@@ -100,8 +100,7 @@ public class RequestInternalPageService implements Serializable {
 	public Integer getServerListeningPort() {
 		try {
 		    Integer port = (Integer) mBeanServer.getAttribute(socketBindingMBean, "boundPort");
-		    String offset = System.getProperty("jboss.socket.binding.port-offset");
-			return port + (offset != null ? Integer.valueOf(offset) : 0);
+			return port;
 		} catch (AttributeNotFoundException | InstanceNotFoundException	| MBeanException | ReflectionException e) {
 			LOG.error(e);
 		}
@@ -109,9 +108,7 @@ public class RequestInternalPageService implements Serializable {
 	}
 
 	private void buildSocketBindingInfo() {
-		if(sbt != null)
-			return;
-		
+		if(sbt != null)	return;
 		try {
 			mBeanServer = ManagementFactory.getPlatformMBeanServer();
 			socketBindingMBean = new ObjectName(JBOSS_HTTPS_SOCKET_BINDING);
