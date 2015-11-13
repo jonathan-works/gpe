@@ -97,11 +97,11 @@ public class RequestInternalPageService implements Serializable {
 		return requestInternalPage(stringBuilder.toString());
 	}
 
-	private Integer getServerListeningPort() {
+	public Integer getServerListeningPort() {
 		try {
 		    Integer port = (Integer) mBeanServer.getAttribute(socketBindingMBean, "boundPort");
 		    String offset = System.getProperty("jboss.socket.binding.port-offset");
-			return port + offset != null ? Integer.valueOf(offset) : 0;
+			return port + (offset != null ? Integer.valueOf(offset) : 0);
 		} catch (AttributeNotFoundException | InstanceNotFoundException	| MBeanException | ReflectionException e) {
 			LOG.error(e);
 		}
@@ -122,9 +122,7 @@ public class RequestInternalPageService implements Serializable {
 			} else {
 				sbt = SocketBindingType.HTTPS;
 			}
-		} catch (MalformedObjectNameException | AttributeNotFoundException
-				| InstanceNotFoundException | MBeanException
-				| ReflectionException e) {
+		} catch (MalformedObjectNameException | AttributeNotFoundException | InstanceNotFoundException | MBeanException	| ReflectionException e) {
 			LOG.error(e);
 		}
 	}
