@@ -1,12 +1,11 @@
 package br.com.infox.jsf.events;
 
 import javax.faces.event.AbortProcessingException;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import br.com.infox.core.report.RequestInternalPageService;
+import br.com.infox.epp.cdi.util.JNDI;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
@@ -16,22 +15,16 @@ public class EppServletEventListener implements ServletContextListener{
 
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
-		InitialContext ic;
-		try {
-			ic = new InitialContext();
-			log.info("Injetando o ContextPath criado no RequestInternalPageService");
-			RequestInternalPageService requestInternalPageService = (RequestInternalPageService) ic.lookup("java:module/RequestInternalPageService");
-			requestInternalPageService.setContextPath(event.getServletContext().getContextPath());
-		} catch (NamingException e) {
-			throw new AbortProcessingException(e);
+		log.info("Injetando o ContextPath criado no RequestInternalPageService");
+		RequestInternalPageService requestInternalPageService = JNDI.lookup("java:module/RequestInternalPageService");
+		if (requestInternalPageService == null) {
+		    throw new AbortProcessingException("RequestInternal page java:module/RequestInternalPageService não encontrado");
 		}
-		
+		requestInternalPageService.setContextPath(event.getServletContext().getContextPath());
 	}
 
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

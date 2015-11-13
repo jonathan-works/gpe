@@ -3,7 +3,6 @@ package br.com.infox.core.report;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.management.ManagementFactory;
-import java.net.InetAddress;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -87,28 +86,23 @@ public class RequestInternalPageService implements Serializable {
 	 */
 	public String getInternalPage(String pagePath) throws HttpException, IOException {
 		buildSocketBindingInfo();
-		
 		Integer port = getServerListeningPort();
-		String host = InetAddress.getLocalHost().getHostAddress();
-
+		String host = "127.0.0.1";
 		StringBuilder stringBuilder = new StringBuilder(sbt.getDescricao());
 		stringBuilder.append(host);
 		stringBuilder.append(":");
 		stringBuilder.append(port);
 		stringBuilder.append(this.getContextPath());
 		stringBuilder.append(pagePath);
-
 		return requestInternalPage(stringBuilder.toString());
-
 	}
 
 	private Integer getServerListeningPort() {
 		try {
-			//em alguns AS servers a propriedade é "port" ou inver e "boundPort"
-			return (Integer) mBeanServer.getAttribute(socketBindingMBean,
-					"boundPort");
-		} catch (AttributeNotFoundException | InstanceNotFoundException
-				| MBeanException | ReflectionException e) {
+		    Integer port = (Integer) mBeanServer.getAttribute(socketBindingMBean, "boundPort");
+		    String offset = System.getProperty("jboss.socket.binding.port-offset");
+			return port + offset != null ? Integer.valueOf(offset) : 0;
+		} catch (AttributeNotFoundException | InstanceNotFoundException	| MBeanException | ReflectionException e) {
 			LOG.error(e);
 		}
 		return sbt.defaultPort;
@@ -120,9 +114,7 @@ public class RequestInternalPageService implements Serializable {
 		
 		try {
 			mBeanServer = ManagementFactory.getPlatformMBeanServer();
-
 			socketBindingMBean = new ObjectName(JBOSS_HTTPS_SOCKET_BINDING);
-			//em alguns AS servers a propriedade é inet-address ao invés de boundAddress
 			String  boundAddress = (String) mBeanServer.getAttribute(socketBindingMBean, "boundAddress");
 			if (boundAddress == null) {
 				socketBindingMBean = new ObjectName(JBOSS_HTTP_SOCKET_BINDING);
@@ -137,8 +129,7 @@ public class RequestInternalPageService implements Serializable {
 		}
 	}
 
-	private String requestInternalPage(String fullPath) throws IOException,
-			HttpException {
+	private String requestInternalPage(String fullPath) throws IOException,	HttpException {
 		HttpClient client = new HttpClient();
 		HttpMethod getMethod = new GetMethod(fullPath);
 		getMethod.addRequestHeader(KEY_HEADER_NAME, getKey().toString());
