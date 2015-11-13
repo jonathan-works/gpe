@@ -30,7 +30,6 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
-import br.com.infox.hibernate.session.SessionAssistant;
 import br.com.infox.ibpm.task.entity.TaskConteudo;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.variable.VariableHandler;
@@ -42,8 +41,6 @@ public class TaskConteudoDAO extends DAO<TaskConteudo> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "taskConteudoDAO";
 
-    @In
-    private SessionAssistant sessionAssistant;
     @In
     private SigiloProcessoService sigiloProcessoService;
 

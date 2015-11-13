@@ -7,12 +7,9 @@ import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
-import junit.framework.Assert;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.Test;
 
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.core.action.AbstractAction;
@@ -51,9 +48,9 @@ import br.com.infox.epp.test.crud.PersistSuccessTest;
 import br.com.infox.epp.test.crud.RunnableTest;
 import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
-import br.com.infox.hibernate.session.SessionAssistant;
 import br.com.infox.ibpm.variable.dao.DominioVariavelTarefaDAO;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
+import junit.framework.Assert;
 
 //@RunWith(Arquillian.class)
 public class LocalizacaoCrudActionIT extends AbstractCrudTest<Localizacao> {
@@ -172,7 +169,7 @@ public class LocalizacaoCrudActionIT extends AbstractCrudTest<Localizacao> {
                 ParametroDAO.class, EMailData.class,
                 DominioVariavelTarefaManager.class,
                 DominioVariavelTarefaDAO.class, DocumentoManager.class,
-                DocumentoDAO.class, SessionAssistant.class,
+                DocumentoDAO.class,
                 SigiloDocumentoService.class, SigiloDocumentoManager.class,
                 SigiloDocumentoDAO.class,
                 SigiloDocumentoPermissaoManager.class,

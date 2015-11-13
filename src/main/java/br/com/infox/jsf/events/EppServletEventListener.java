@@ -9,7 +9,7 @@ import br.com.infox.epp.cdi.util.JNDI;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
-public class EppServletEventListener implements ServletContextListener{
+public class EppServletEventListener implements ServletContextListener {
 	
 	 private static final LogProvider log = Logging.getLogProvider(EppServletEventListener.class);
 
