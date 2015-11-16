@@ -101,6 +101,12 @@ public class UsuarioLoginDAO extends DAO<UsuarioLogin> {
     	return getNamedResultList(USUARIO_LOGIN_LOCALIZACAO_PAPEL, parameters);
     }
 
+    public List<UsuarioLogin> getUsuarioLoginLocalizacao(Localizacao localizacao) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(UsuarioLoginQuery.PARAM_LOCALIZACAO, localizacao);
+        return getNamedResultList(UsuarioLoginQuery.USUARIO_LOGIN_LOCALIZACAO, parameters);
+    }
+
 	public String getNomeUsuarioByIdTarefa(Integer idTarefa, Integer idProcesso) {
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put(UsuarioLoginQuery.PARAM_ID_TAREFA, idTarefa);

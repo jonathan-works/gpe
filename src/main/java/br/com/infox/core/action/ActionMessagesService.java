@@ -8,7 +8,6 @@ import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.persistence.OptimisticLockException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
@@ -87,9 +86,9 @@ public class ActionMessagesService implements Serializable {
         return FacesMessages.instance();
     }
     
-    public void handleLockException(Exception exception, String lockMessage) {
+    public void handleGenericException(Exception exception, String lockExceptionMessage) {
 		if (ExceptionUtil.isLockException(exception)) {
-			FacesMessages.instance().add(lockMessage);
+			FacesMessages.instance().add(lockExceptionMessage);
 		} else if (exception instanceof DAOException) {
 			handleDAOException((DAOException) exception);
 		} else if (exception instanceof EJBException) {

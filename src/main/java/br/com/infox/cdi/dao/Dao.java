@@ -43,7 +43,7 @@ public abstract class Dao<T, I> {
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.MANDATORY)
-	public void flush() throws DAOException {
+	public void flush() {
 		try {
 			getEntityManager().flush();
 		} catch (Exception e) {
@@ -52,7 +52,7 @@ public abstract class Dao<T, I> {
 	}
 
 	@TransactionAttribute(TransactionAttributeType.MANDATORY)
-	public T persist(T object) throws DAOException {
+	public T persist(T object) {
 		try {
 			getEntityManager().persist(object);
 			getEntityManager().flush();
@@ -63,7 +63,7 @@ public abstract class Dao<T, I> {
 	}
 
 	@TransactionAttribute(TransactionAttributeType.MANDATORY)
-	public T update(T object) throws DAOException {
+	public T update(T object) {
 		try {
 			T res = getEntityManager().merge(object);
 			getEntityManager().flush();
@@ -74,7 +74,7 @@ public abstract class Dao<T, I> {
 	}
 
 	@TransactionAttribute(TransactionAttributeType.MANDATORY)
-	public T remove(T object) throws DAOException {
+	public T remove(T object) {
 		try {
 			if (!getEntityManager().contains(object)) {
 				object = getEntityManager().merge(object);
@@ -92,7 +92,7 @@ public abstract class Dao<T, I> {
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.MANDATORY)
-	public T refresh(T object) throws DAOException {
+	public T refresh(T object) {
 		try {
 			if (!getEntityManager().contains(object)) {
 				object = getEntityManager().merge(object);
