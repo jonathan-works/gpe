@@ -111,12 +111,11 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 			final PdfReader pdfReader = new PdfReader(pdf);
 			final PdfStamper stamper = new PdfStamper(pdfReader, outStream);
 			final Font font = new Font(Font.TIMES_ROMAN, 8);
+			
+			final Phrase phrase = new Phrase(getTextoAssinatura(documento), font);
+			final Phrase codPhrase = new Phrase(getTextoCodigo(documento.getUuid()), font);
 
-			final Phrase phrase = createPhraseAssinatura(documento, font);
-			final Phrase codPhrase = createPhraseCodigo(font, documento.getUuid().toString());
-
-			final byte[] qrcode = QRCode.from(getUrlValidacaoDocumento() + "?cod=" + documento.getUuid().toString())
-					.to(ImageType.GIF).withSize(60, 60).stream().toByteArray();
+			final byte[] qrcode = getQrCodeSignatureImage(documento);
 			for (int page = 1; page <= pdfReader.getNumberOfPages(); page++) {
 				int rotation = pdfReader.getPageRotation(page);
 				final PdfContentByte content = stamper.getOverContent(page);
@@ -144,25 +143,30 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 		}
 	}
 
-	private Phrase createPhraseCodigo(final Font font, final String uuid) {
-		final StringBuilder sb = new StringBuilder("Acesse em: ");
+        public byte[] getQrCodeSignatureImage(final DocumentoBin documento){
+            return QRCode.from(getUrlValidacaoDocumento() + "?cod=" + documento.getUuid().toString())
+                    .to(ImageType.GIF).withSize(60, 60).stream().toByteArray();
+        }
+        
+	public String getTextoCodigo(final UUID uuid) {
+        final StringBuilder sb = new StringBuilder("Acesse em: ");
 		sb.append(getUrlValidacaoDocumento());
 		sb.append(" Código do documento: ");
 		sb.append(uuid);
-		final Phrase codPhrase = new Phrase(sb.toString(), font);
-		return codPhrase;
-	}
+		String string = sb.toString();
+        return string;
+    }
 
-	private Phrase createPhraseAssinatura(final DocumentoBin documento, final Font font) {
-		final StringBuilder sb = new StringBuilder("Documento Assinado Digitalmente por: ");
+	public String getTextoAssinatura(final DocumentoBin documento) {
+        final StringBuilder sb = new StringBuilder("Documento Assinado Digitalmente por: ");
 		for (final AssinaturaDocumento assinatura : documento.getAssinaturas()) {
 			sb.append(assinatura.getNomeUsuario());
 			sb.append(", ");
 		}
 		sb.delete(sb.length() - 2, sb.length());
-		final Phrase phrase = new Phrase(sb.toString(), font);
-		return phrase;
-	}
+		String textoAssinatura = sb.toString();
+        return textoAssinatura;
+    }
 
 	@Override
 	public DocumentoBin persist(DocumentoBin o) throws DAOException {
