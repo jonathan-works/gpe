@@ -235,23 +235,20 @@ public class AssinaturaDocumentoService implements Serializable {
                 throw new AssinaturaException(Motivo.CADASTRO_USUARIO_NAO_ASSINADO);
             }
         }
-        UsuarioLogin usuarioCertificado = getUsuarioLoginFromCertChain(certChainBase64Encoded);
-        if (!usuarioLogado.getPessoaFisica().getCpf().equals(usuarioCertificado.getPessoaFisica().getCpf())) {
+        PessoaFisica pessoaFisicaCertificado = getPessoaFisicaFromCertChain(certChainBase64Encoded);
+        if (!usuarioLogado.getPessoaFisica().equals(pessoaFisicaCertificado)) {
             throw new AssinaturaException(Motivo.CPF_CERTIFICADO_DIFERENTE_USUARIO);
         }
-        if (!usuarioLogado.getPessoaFisica().checkCertChain(certChainBase64Encoded)) {
+        if (!pessoaFisicaCertificado.checkCertChain(certChainBase64Encoded)) {
             throw new AssinaturaException(Motivo.CERTIFICADO_USUARIO_DIFERENTE_CADASTRO);
         }
     }
     
-    private UsuarioLogin getUsuarioLoginFromCertChain(String certChain) throws CertificadoException {
+    private PessoaFisica getPessoaFisicaFromCertChain(String certChain) throws CertificadoException {
         Certificado c = CertificadoFactory.createCertificado(certChain);
         String cpf = new StringBuilder(((CertificadoDadosPessoaFisica) c).getCPF()).insert(9, '-').insert(6, '.').insert(3, '.').toString();
         if (cpf != null) {
-            PessoaFisica pessoaFisica = pessoaFisicaManager.getByCpf(cpf);
-            if (pessoaFisica != null) {
-                return usuarioLoginManager.getUsuarioLoginByPessoaFisica(pessoaFisica);
-            }
+            return pessoaFisicaManager.getByCpf(cpf);
         }
         return null;
     }
