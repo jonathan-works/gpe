@@ -82,35 +82,29 @@ public class FluxoPapel implements Serializable {
         this.papel = papel;
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result
-                + ((idFluxoPapel == null) ? 0 : idFluxoPapel.hashCode());
-        return result;
-    }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((getIdFluxoPapel() == null) ? 0 : getIdFluxoPapel().hashCode());
+		return result;
+	}
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final FluxoPapel other = (FluxoPapel) obj;
-        if (idFluxoPapel == null) {
-            if (other.idFluxoPapel != null) {
-                return false;
-            }
-        } else if (!idFluxoPapel.equals(other.idFluxoPapel)) {
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof FluxoPapel))
+			return false;
+		FluxoPapel other = (FluxoPapel) obj;
+		if (getIdFluxoPapel() == null) {
+			if (other.getIdFluxoPapel() != null)
+				return false;
+		} else if (!getIdFluxoPapel().equals(other.getIdFluxoPapel()))
+			return false;
+		return true;
+	}
 
 }

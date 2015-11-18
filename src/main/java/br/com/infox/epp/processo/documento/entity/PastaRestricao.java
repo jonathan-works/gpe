@@ -141,6 +141,14 @@ public class PastaRestricao {
         return nova;
     }
 
+    public Boolean getLogicDelete() {
+        return logicDelete;
+    }
+
+    public void setLogicDelete(Boolean logicDelete) {
+        this.logicDelete = logicDelete;
+    }
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -155,7 +163,7 @@ public class PastaRestricao {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof PastaRestricao))
 			return false;
 		PastaRestricao other = (PastaRestricao) obj;
 		if (getId() == null) {
@@ -165,13 +173,5 @@ public class PastaRestricao {
 			return false;
 		return true;
 	}
-
-    public Boolean getLogicDelete() {
-        return logicDelete;
-    }
-
-    public void setLogicDelete(Boolean logicDelete) {
-        this.logicDelete = logicDelete;
-    }
     
 }

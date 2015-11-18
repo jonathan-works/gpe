@@ -403,38 +403,32 @@ public class UsuarioLogin implements Serializable {
         this.salt = salt;
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = (prime * result)
-                + ((getIdUsuarioLogin() == null) ? 0 : getIdUsuarioLogin().hashCode());
-        return result;
-    }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((getIdUsuarioLogin() == null) ? 0 : getIdUsuarioLogin().hashCode());
+		return result;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        UsuarioLogin other = (UsuarioLogin) obj;
-        if (getIdUsuarioLogin() == null) {
-            if (other.getIdUsuarioLogin() != null) {
-                return false;
-            }
-        } else if (!getIdUsuarioLogin().equals(other.getIdUsuarioLogin())) {
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof UsuarioLogin))
+			return false;
+		UsuarioLogin other = (UsuarioLogin) obj;
+		if (getIdUsuarioLogin() == null) {
+			if (other.getIdUsuarioLogin() != null)
+				return false;
+		} else if (!getIdUsuarioLogin().equals(other.getIdUsuarioLogin()))
+			return false;
+		return true;
+	}
 
-    @Override
+	@Override
     public String toString() {
         return getNomeUsuario();
     }

@@ -83,25 +83,29 @@ public class CategoriaItem implements Serializable {
         return categoria;
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result
-                + ((idCategoriaItem == null) ? 0 : idCategoriaItem.hashCode());
-        return result;
-    }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((getIdCategoriaItem() == null) ? 0 : getIdCategoriaItem().hashCode());
+		return result;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
-        CategoriaItem other = (CategoriaItem) obj;
-        if (idCategoriaItem == null) {
-            if (other.idCategoriaItem != null) return false;
-        } else if (!idCategoriaItem.equals(other.idCategoriaItem)) return false;
-        return true;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof CategoriaItem))
+			return false;
+		CategoriaItem other = (CategoriaItem) obj;
+		if (getIdCategoriaItem() == null) {
+			if (other.getIdCategoriaItem() != null)
+				return false;
+		} else if (!getIdCategoriaItem().equals(other.getIdCategoriaItem()))
+			return false;
+		return true;
+	}
 
 }
