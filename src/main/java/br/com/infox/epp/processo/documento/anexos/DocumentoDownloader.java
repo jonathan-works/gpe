@@ -161,9 +161,9 @@ public class DocumentoDownloader implements Serializable {
     	}
     		
         if (documento.getDocumentoBin().isBinario()) {
-            return MessageFormat.format(URL_DOWNLOAD_BINARIO, pathResolver.getContextPath(), documento.getId());
+            return MessageFormat.format(URL_DOWNLOAD_BINARIO, pathResolver.getContextPath(), documento.getId().toString());
         }
-        return MessageFormat.format(URL_DOWNLOAD_HTML, pathResolver.getContextPath(), documento.getId());
+        return MessageFormat.format(URL_DOWNLOAD_HTML, pathResolver.getContextPath(), documento.getId().toString());
     }
     
     public String getMensagemErro() {
