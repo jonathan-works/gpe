@@ -54,4 +54,13 @@ public interface ParticipanteProcessoQuery {
                 + "where pp.pessoa = p "
                     + "and pp.id = :" + PARAM_ID_PARTICIPANTE + " "
             + ")";
+
+    String PARTICIPANTE_BY_PESSOA_FETCH = "Participante.participanteFetch";
+	String PARTICIPANTE_BY_PESSOA_FETCH_QUERY = "select pp from ParticipanteProcesso pp "
+                + "inner join fetch pp.tipoParte tp "
+                + "left join fetch pp.participantePai ppPai "
+                + "inner join fetch pp.pessoa p "
+                + "inner join pp.processo proc "
+            + "where p.idPessoa = :" + PARAM_PESSOA + " "
+                + "and proc.idProcesso = :" + PARAM_PROCESSO;
 }
