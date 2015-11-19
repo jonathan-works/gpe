@@ -78,7 +78,7 @@
             name="modeloDocumento">
             <wi:dataTable
                 values="#{tipoModeloDocumentoCrudAction.listaDeModeloDocumento}"
-                hideOrder="true"
+                hideOrder="true" showSearchForm="false" panelStyle="margin-top: 1em;"
                 tableTitle="#{infoxMessages['tipoModeloDocumento.modeloDocumentoList']} - #{(tipoModeloDocumentoCrudAction.instance)}"
                 id="associativeModeloDocumentoList"
                 rowId="#{row.idModeloDocumento}"
@@ -161,7 +161,8 @@
                         rowId="#{row.idVariavelTipoModelo}"
                         panelStyleClass="rf-dt-crud"
                         styleClass="Associated-dt"
-                        searchFormStyleClass="hidden">
+                        searchFormStyleClass="hidden"
+                        showSearchForm="false" panelStyle="margin-top: 1em;">
                         <ui:define name="headerToolBar" />
                         <ui:define name="toolBar">
                             <a:region>
@@ -210,7 +211,8 @@
                     tableTitle="#{infoxMessages['tipoModeloDocumentoPapel.tableTitle']}"
                     id="tipoModeloDocumentoPapelList"
                     rowId="#{row.idTipoModeloDocumentoPapel}"
-                    searchFormStyleClass="hidden" showMsg="false">
+                    searchFormStyleClass="hidden" showMsg="false"
+                    showSearchForm="false" panelStyle="margin-top: 1em;">
                     <ui:define name="headerToolBar" />
                     <ui:define name="toolBar">
                         <wi:toolBarRemove id="toolBarRemove"

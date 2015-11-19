@@ -155,7 +155,8 @@
                     tableTitle="#{classificacaoDocumentoCrudAction.instance} - #{infoxMessages['form.title']}"
                     id="classificacaoDocumentoPapelList"
                     rowId="#{row.id}"
-                    listReRender="divAssociarPapel" showMsg="false">
+                    listReRender="divAssociarPapel" showMsg="false"
+                    showSearchForm="false" panelStyle="margin-top: 1em;">
                     <wi:columnOutputText columnId="papel"
                         columnHeader="#{infoxMessages['tipoProcessoDocumentoPapel.papel']}"
                         value="#{row.papel}" />
@@ -231,7 +232,7 @@
                     values="#{extensaoArquivoList.list(15)}"
                     bean="#{extensaoArquivoList}"
                     tableTitle="#{classificacaoDocumentoCrudAction.instance} - Extensões Aceitas"
-                    var="row" rows="10">
+                    var="row" rows="10" showSearchForm="false" panelStyle="margin-top: 1em;">
                     <ui:define name="headerToolBar" />
                     <ui:define name="toolBar">
                         <wi:toolBar
