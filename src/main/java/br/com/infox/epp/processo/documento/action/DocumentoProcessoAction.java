@@ -196,5 +196,9 @@ public class DocumentoProcessoAction implements Serializable {
         }
         return ComponentUtil.<DocumentoManager>getComponent(DocumentoManager.NAME).isDocumentoInclusoPorPapeis(documento, identificadoresPapeisHerdeirosUsuarioExterno);
     }
+	
+	public boolean deveMostrarCadeado(Documento documento) {
+		return documento.hasAssinatura() || documento.isDocumentoAssinavel();		
+	}
 }
 
