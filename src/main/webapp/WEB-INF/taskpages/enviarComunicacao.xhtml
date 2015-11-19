@@ -133,6 +133,14 @@
 								<f:setPropertyActionListener value="#{row.id}" target="#{flash.idDestinatario}" />
 								<infox:flashcopy/>
 							</a:commandLink>
+							<a:commandLink execute="@this"
+								rendered="#{not row.expedido}"
+								render="comunicacaoDiv :pageBodyDialogMessage"
+								action="#{envioComunicacaoController.excluirDestinatarioComunicacao(row)}"
+								onclick="if (confirm('#{envioComunicacaoController.modeloComunicacao.destinatarios.size gt 1 ? infoxMessages['crud.confirmRemove'] : infoxMessages['comunicacao.msg.aviso.exclusaoUltimoDestinatario']}')) {infox.showLoading(); return true;} else return false;"
+								oncomplete="infox.hideLoading(); if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();">
+								<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{infoxMessages['comunicacao.excluir']}"/>
+							</a:commandLink>
 						</s:div>
 					</rich:column>
 					<rich:column>

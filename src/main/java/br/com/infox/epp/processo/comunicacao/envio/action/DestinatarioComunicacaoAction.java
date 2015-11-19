@@ -18,6 +18,7 @@ import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.manager.GenericManager;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
@@ -156,6 +157,11 @@ public class DestinatarioComunicacaoAction {
 		}
 	}
 	
+	public void excluirDestinatario (DestinatarioModeloComunicacao destinatarioModeloComunicacao) throws DAOException {
+		removerDestinatario(destinatarioModeloComunicacao);
+		destinatarioComunicacaoService.removeDestinatarioModeloComunicacao(destinatarioModeloComunicacao);
+	}
+	
 	public void replicarPrazo(DestinatarioModeloComunicacao destinatario) {
 		for (DestinatarioModeloComunicacao dest : modeloComunicacao.getDestinatarios()) {
 			dest.setPrazo(destinatario.getPrazo());
@@ -271,8 +277,8 @@ public class DestinatarioComunicacaoAction {
 	}
 	
 	private void removePerfilSelecionado(DestinatarioModeloComunicacao destinatario) {
-	    if (perfisSelecionados.containsKey(destinatario.getDestino())) {
-	        perfisSelecionados.remove(destinatario.getPerfilDestino());
+	    if (perfisSelecionados.containsKey(destinatario.getDestino()) && perfisSelecionados.get(destinatario.getDestino()).contains(destinatario.getPerfilDestino())) {
+	    	perfisSelecionados.get(destinatario.getDestino()).remove(destinatario.getPerfilDestino());
 	    }
 	}
 	

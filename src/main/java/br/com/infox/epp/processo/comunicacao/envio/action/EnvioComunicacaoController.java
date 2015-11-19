@@ -299,6 +299,32 @@ public class EnvioComunicacaoController implements Serializable {
 		}
 	}
 
+	public void reabrirComunicacao() {
+		
+	}
+	
+	public void excluirDestinatarioComunicacao(DestinatarioModeloComunicacao destinatarioModeloComunicacao) {
+		destinatarioComunicacaoAction.excluirDestinatario(destinatarioModeloComunicacao);
+		if (modeloComunicacao.getDestinatarios().isEmpty()) {
+			try {
+				ModeloComunicacao  copyModeloComunicacao = modeloComunicacao.makeCopy();
+				modeloComunicacaoManager.remove(modeloComunicacao);
+				modeloComunicacao =  copyModeloComunicacao;
+				modeloComunicacao.setEnviarRelatoria(false);
+				isNew = true;
+				resetEntityState();
+				initLocalizacaoRaiz();
+				initDestinatarioComunicacaoAction();
+				initDocumentoComunicacaoAction();
+				FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.sucesso.exclusaoDestinatario"));
+			} catch (DAOException e) {
+				FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.erro.exclusaoDestinatario"));
+			} catch (CloneNotSupportedException e) {
+				FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.erro.recuperaModelo"));
+			}
+		}
+	}
+	
 	private CertificateSignatureBean getCertificateSignatureBean() throws DAOException {
 		CertificateSignatureBundleBean certificateSignatureBundleBean = certificateSignatures.get(token);
 		if (certificateSignatureBundleBean.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
