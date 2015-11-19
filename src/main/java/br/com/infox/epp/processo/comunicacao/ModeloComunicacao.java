@@ -42,7 +42,7 @@ import com.google.common.base.Strings;
 	@NamedQuery(name = ModeloComunicacaoQuery.GET_DOCUMENTOS_MODELO_COMUNICACAO, query = ModeloComunicacaoQuery.GET_DOCUMENTOS_MODELO_COMUNICACAO_QUERY),
 	@NamedQuery(name = ModeloComunicacaoQuery.GET_DOCUMENTO_INCLUSO_POR_PAPEL, query = ModeloComunicacaoQuery.GET_DOCUMENTO_INCLUSO_POR_PAPEL_QUERY)
 })
-public class ModeloComunicacao implements Serializable {
+public class ModeloComunicacao implements Serializable, Cloneable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -214,6 +214,23 @@ public class ModeloComunicacao implements Serializable {
 			}
 		}
 		return false;
+	}
+	
+	public ModeloComunicacao makeCopy() throws CloneNotSupportedException {
+		ModeloComunicacao novoModelo = (ModeloComunicacao) clone();
+		novoModelo.setId(null);
+		novoModelo.setDestinatarios(new ArrayList<DestinatarioModeloComunicacao>());
+		for (DestinatarioModeloComunicacao destinatarioModeloComunicacao : getDestinatarios()) {
+			DestinatarioModeloComunicacao novoDestinatarioModeloComunicacao = destinatarioModeloComunicacao.makeCopy();
+			novoDestinatarioModeloComunicacao.setModeloComunicacao(novoModelo);
+			novoModelo.getDestinatarios().add(novoDestinatarioModeloComunicacao);
+		}
+		novoModelo.setDocumentos(new ArrayList<DocumentoModeloComunicacao>());
+		for (DocumentoModeloComunicacao documentoModeloComunicacao : getDocumentos()) {
+			DocumentoModeloComunicacao novoDocumento = documentoModeloComunicacao.makeCopy();
+			novoModelo.getDocumentos().add(novoDocumento);
+		}
+		return novoModelo;
 	}
 	
 	@Override
