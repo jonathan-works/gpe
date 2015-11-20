@@ -5,8 +5,6 @@ import static br.com.infox.constants.LengthConstants.FLAG;
 import static br.com.infox.constants.LengthConstants.NOME_ATRIBUTO;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.epp.access.query.UsuarioLoginQuery.NOME_USUARIO_BY_ID_TAREFA;
-import static br.com.infox.epp.access.query.UsuarioLoginQuery.NOME_USUARIO_BY_ID_TAREFA_QUERY;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.BLOQUEIO;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.DATA_EXPIRACAO;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.EMAIL;
@@ -15,6 +13,8 @@ import static br.com.infox.epp.access.query.UsuarioLoginQuery.INATIVAR_USUARIO;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.INATIVAR_USUARIO_QUERY;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.LOGIN;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.NOME_USUARIO;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.NOME_USUARIO_BY_ID_TAREFA;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.NOME_USUARIO_BY_ID_TAREFA_QUERY;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.NOME_USUARIO_BY_ID_TASK_INSTANCE;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.NOME_USUARIO_BY_ID_TASK_INSTANCE_QUERY;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.PROVISORIO;
@@ -32,10 +32,12 @@ import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_BY_PESSOA_
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_FETCH_PF_BY_NUMERO_CPF;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_FETCH_PF_BY_NUMERO_CPF_QUERY;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_EMAIL_QUERY;
-import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_NAME;
-import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_QUERY;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_LOCALIZACAO;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_LOCALIZACAO_PAPEL;
 import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_LOCALIZACAO_PAPEL_QUERY;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_LOCALIZACAO_QUERY;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_NAME;
+import static br.com.infox.epp.access.query.UsuarioLoginQuery.USUARIO_LOGIN_QUERY;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;
@@ -100,6 +102,7 @@ import br.com.infox.epp.system.entity.EntityLog;
         @NamedQuery(name = INATIVAR_USUARIO, query = INATIVAR_USUARIO_QUERY),
         @NamedQuery(name = USUARIO_BY_PESSOA, query = USUARIO_BY_PESSOA_QUERY),
         @NamedQuery(name = USUARIO_LOGIN_LOCALIZACAO_PAPEL, query = USUARIO_LOGIN_LOCALIZACAO_PAPEL_QUERY),
+        @NamedQuery(name = USUARIO_LOGIN_LOCALIZACAO, query = USUARIO_LOGIN_LOCALIZACAO_QUERY),
         @NamedQuery(name = USUARIO_FETCH_PF_BY_NUMERO_CPF, query = USUARIO_FETCH_PF_BY_NUMERO_CPF_QUERY) })
 @NamedNativeQueries({
     @NamedNativeQuery(name = USUARIO_BY_ID_TASK_INSTANCE, query = USUARIO_BY_ID_TASK_INSTANCE_QUERY),
@@ -400,38 +403,32 @@ public class UsuarioLogin implements Serializable {
         this.salt = salt;
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = (prime * result)
-                + ((getIdUsuarioLogin() == null) ? 0 : getIdUsuarioLogin().hashCode());
-        return result;
-    }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((getIdUsuarioLogin() == null) ? 0 : getIdUsuarioLogin().hashCode());
+		return result;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        UsuarioLogin other = (UsuarioLogin) obj;
-        if (getIdUsuarioLogin() == null) {
-            if (other.getIdUsuarioLogin() != null) {
-                return false;
-            }
-        } else if (!getIdUsuarioLogin().equals(other.getIdUsuarioLogin())) {
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof UsuarioLogin))
+			return false;
+		UsuarioLogin other = (UsuarioLogin) obj;
+		if (getIdUsuarioLogin() == null) {
+			if (other.getIdUsuarioLogin() != null)
+				return false;
+		} else if (!getIdUsuarioLogin().equals(other.getIdUsuarioLogin()))
+			return false;
+		return true;
+	}
 
-    @Override
+	@Override
     public String toString() {
         return getNomeUsuario();
     }

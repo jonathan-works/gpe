@@ -6,6 +6,7 @@
 		<class>br.com.infox.epp.ws.interceptors.LogInterceptor</class>
 		<class>br.com.infox.epp.ws.interceptors.TokenAuthenticationInterceptor</class>
 		<class>br.com.infox.epp.ws.interceptors.ValidacaoInterceptor</class>
+		<class>br.com.infox.epp.cdi.exception.ExceptionInterceptor</class>
 	</interceptors>
 	
 </beans>

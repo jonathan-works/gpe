@@ -51,6 +51,7 @@ import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
+import br.com.infox.epp.processo.documento.bean.DadosUpload;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.DocumentoTemporario;
 import br.com.infox.epp.processo.documento.entity.Pasta;
@@ -137,25 +138,6 @@ public class AnexarDocumentosView implements Serializable {
 	 */
 	private boolean arquivosRejeitados = false;
 
-	private static class DadosUpload {
-		private UploadedFile arquivoUpload;
-		private byte[] dadosArquivo;
-
-		public DadosUpload(UploadedFile arquivoUpload, byte[] dadosArquivo) {
-			super();
-			this.arquivoUpload = arquivoUpload;
-			this.dadosArquivo = dadosArquivo;
-		}
-
-		public UploadedFile getArquivoUpload() {
-			return arquivoUpload;
-		}
-
-		public byte[] getDadosArquivo() {
-			return dadosArquivo;
-		}
-	}
-
 	public void newEditorInstance() {
 		DocumentoTemporario newEditor = new DocumentoTemporario();
 		newEditor.setDocumentoBin(new DocumentoBin());
@@ -174,7 +156,7 @@ public class AnexarDocumentosView implements Serializable {
 		try {
 			byte[] dadosArquivo = IOUtils.toByteArray(uploadedFile.getInputStream());
 			DadosUpload dadosUpload = new DadosUpload(uploadedFile, dadosArquivo);
-			documentoUploaderService.validaDocumento(dadosUpload.getArquivoUpload(), classificacaoDocumentoUploader,
+			documentoUploaderService.validaDocumento(dadosUpload.getUploadedFile(), classificacaoDocumentoUploader,
 					dadosUpload.getDadosArquivo());
 			dadosUploader.add(dadosUpload);
 			setShowUploaderButton(true);
@@ -245,8 +227,8 @@ public class AnexarDocumentosView implements Serializable {
 
 	private DocumentoTemporario gravarArquivoUpload(DadosUpload dadosUpload) throws Exception {
 		DocumentoTemporario retorno = new DocumentoTemporario();
-		retorno.setDescricao(dadosUpload.getArquivoUpload().getName());
-		retorno.setDocumentoBin(documentoUploaderService.createProcessoDocumentoBin(dadosUpload.getArquivoUpload()));
+		retorno.setDescricao(dadosUpload.getUploadedFile().getName());
+		retorno.setDocumentoBin(documentoUploaderService.createProcessoDocumentoBin(dadosUpload.getUploadedFile()));
 		retorno.setAnexo(Boolean.TRUE);
 		retorno.setClassificacaoDocumento(classificacaoDocumentoUploader);
 		retorno.setPasta(pastaUploader == null ? pastaDefault : pastaUploader);
@@ -273,7 +255,7 @@ public class AnexarDocumentosView implements Serializable {
 		ListIterator<DadosUpload> it = dadosUploader.listIterator(dadosUploader.size()); 
 		while(it.hasPrevious()) {
 			DadosUpload dados = it.previous();
-			String nomeArquivo = dados.getArquivoUpload().getName();
+			String nomeArquivo = dados.getUploadedFile().getName();
 			if(!arquivosAdicionados.contains(nomeArquivo)) {
 				arquivosAdicionados.add(nomeArquivo);
 				arquivosUnicos.add(dados);
@@ -283,7 +265,7 @@ public class AnexarDocumentosView implements Serializable {
 
 		//Preenche 'retorno' somente com os arquivos definidos em 'listaArquivoSubmetidos'
 		for(DadosUpload dados : arquivosUnicos) {
-			String nomeArquivo = dados.getArquivoUpload().getName(); 
+			String nomeArquivo = dados.getUploadedFile().getName();
 			if(setArquivosSubmetidos.contains(nomeArquivo)) {
 				retorno.add(dados);
 				arquivosAdicionados.add(nomeArquivo);
