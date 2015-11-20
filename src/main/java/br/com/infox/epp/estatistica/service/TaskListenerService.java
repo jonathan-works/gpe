@@ -80,6 +80,10 @@ public class TaskListenerService implements Serializable {
 
     @Observer(Event.EVENTTYPE_PROCESS_END)
     public void onEndProcess(ExecutionContext context) throws DAOException {
+    	//Se for um subprocesso não faz nada
+    	if(context.getProcessInstance().getSuperProcessToken() != null) 
+    		return;
+    	
         Processo processo = processoManager.getProcessoEpaByIdJbpm(context.getProcessInstance().getRoot().getId());
         if (processo == null) {
             throw new ApplicationException("Erro ao criar o processo - Defição de fluxo imcompleta. Contate o administrador do sistema.");

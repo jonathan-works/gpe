@@ -32,6 +32,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.PapelManager;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.entity.PastaRestricao;
@@ -47,10 +48,11 @@ import br.com.infox.seam.util.ComponentUtil;
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
 @Transactional
+@ContextDependency
 public class PastaRestricaoAction implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	static final String NAME = "pastaRestricaoAction";
+	public static final String NAME = "pastaRestricaoAction";
 
 	@In
 	private ProcessoManager processoManager;
@@ -93,7 +95,7 @@ public class PastaRestricaoAction implements Serializable {
         ComponentUtil.<LocalizacaoCrudAction>getComponent(LocalizacaoCrudAction.NAME).newInstance();
 	}
 	
-	private void clearInstances() {
+	protected void clearInstances() {
 	    newInstance();
 	    newRestricaoInstance();
 	}
@@ -101,13 +103,17 @@ public class PastaRestricaoAction implements Serializable {
     public void setProcesso(Processo processo) {
         this.processo = processo.getProcessoRoot();
         try {
-            this.pastaList = pastaManager.getByProcesso(processo.getProcessoRoot());
+            initPastaList(processo);
             clearInstances();
         } catch (DAOException e) {
             LOG.error(e);
             actionMessagesService.handleDAOException(e);
         }
     }
+
+	protected void initPastaList(Processo processo) throws DAOException {
+		this.pastaList = pastaManager.getByProcesso(processo.getProcessoRoot());
+	}
 
 	public void selectPasta(Pasta pasta){
         try {
@@ -177,10 +183,14 @@ public class PastaRestricaoAction implements Serializable {
 	private boolean prePersist() throws DAOException{
 	    getInstance().setProcesso(processo);
 		getInstance().setSistema(false);
-		pastaManager.persistWithDefault(getInstance());
+		persistirNovaPasta();
 		setPastaList(pastaManager.getByProcesso(processo));
 		setPastaSelecionada(false);
 		return true;
+	}
+
+	protected void persistirNovaPasta() throws DAOException {
+		pastaManager.persistWithDefault(getInstance());
 	}
 	
 	public void persistPasta() {
@@ -196,12 +206,16 @@ public class PastaRestricaoAction implements Serializable {
 
 	public void updatePasta() {
 		try {
-			pastaManager.update(getInstance());
+			atualizarPasta();
 			statusMessage.add(Severity.INFO, "Pasta atualizada com sucesso.");
 		} catch (DAOException e) {
 		    LOG.error(e);
 			actionMessagesService.handleDAOException(e);
 		}
+	}
+
+	protected void atualizarPasta() throws DAOException {
+		pastaManager.update(getInstance());
 	}
 
 	public void removePasta(Pasta pasta) {

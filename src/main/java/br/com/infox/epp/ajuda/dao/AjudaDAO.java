@@ -21,13 +21,12 @@ import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.jpa.Search;
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.ajuda.entity.Ajuda;
 import br.com.infox.epp.search.SearchService;
-import br.com.infox.hibernate.session.SessionAssistant;
+import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
@@ -42,9 +41,6 @@ public class AjudaDAO extends DAO<Ajuda> {
 
     private static final String INDICES_CRIADOS = "----------- Indices criados -------------";
     private static final String CRIANDO_INDICES = "----------- Criando indices -------------";
-
-    @In
-    private SessionAssistant sessionAssistant;
 
     public Ajuda getAjudaByPaginaUrl(String url) {
         Map<String, Object> parameters = new HashMap<>();
@@ -78,7 +74,7 @@ public class AjudaDAO extends DAO<Ajuda> {
 
     public void reindexarAjuda() {
         LOG.info(CRIANDO_INDICES);
-        Session session = sessionAssistant.getSession();
+        Session session = HibernateUtil.getSession();
         org.hibernate.Query query = session.createQuery(AJUDA_FIND_ALL_QUERY);
         query.setCacheMode(CacheMode.IGNORE);
         query.setFetchSize(50);

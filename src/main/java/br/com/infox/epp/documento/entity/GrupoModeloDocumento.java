@@ -95,36 +95,29 @@ public class GrupoModeloDocumento implements java.io.Serializable {
         return grupoModeloDocumento;
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime
-                * result
-                + ((idGrupoModeloDocumento == null) ? 0 : idGrupoModeloDocumento.hashCode());
-        return result;
-    }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((getIdGrupoModeloDocumento() == null) ? 0 : getIdGrupoModeloDocumento().hashCode());
+		return result;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        GrupoModeloDocumento other = (GrupoModeloDocumento) obj;
-        if (idGrupoModeloDocumento == null) {
-            if (other.idGrupoModeloDocumento != null) {
-                return false;
-            }
-        } else if (!idGrupoModeloDocumento.equals(other.idGrupoModeloDocumento)) {
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof GrupoModeloDocumento))
+			return false;
+		GrupoModeloDocumento other = (GrupoModeloDocumento) obj;
+		if (getIdGrupoModeloDocumento() == null) {
+			if (other.getIdGrupoModeloDocumento() != null)
+				return false;
+		} else if (!getIdGrupoModeloDocumento().equals(other.getIdGrupoModeloDocumento()))
+			return false;
+		return true;
+	}
 
 }

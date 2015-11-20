@@ -16,16 +16,18 @@ public class NumberRangeValidator implements Validator {
 			return;
 		}
 		int number = ((Integer) value).intValue();
-		Integer min = Integer.parseInt((String) component.getAttributes().get("min"));
-		Integer max =  Integer.parseInt((String) component.getAttributes().get("max"));
+		String minAttr = (String) component.getAttributes().get("min");
+		String maxAttr = (String) component.getAttributes().get("max");
+		Integer min = minAttr != null ? Integer.parseInt(minAttr) : null;
+		Integer max = maxAttr != null ? Integer.parseInt(maxAttr) : null;
 		if (min != null && max != null && (number < min.intValue() || number > max.intValue())) {
 			throw new ValidatorException(new FacesMessage("O valor deve estar entre " + min + " e " + max));
 		}
 		if (min != null && number < min.intValue()) {
-			throw new ValidatorException(new FacesMessage("O valor deve ser maior que " + min));
+			throw new ValidatorException(new FacesMessage("O valor deve ser maior ou igual a " + min));
 		}
 		if (max != null && number > max.intValue()) {
-			throw new ValidatorException(new FacesMessage("O valor deve ser menor que " + max));
+			throw new ValidatorException(new FacesMessage("O valor deve ser menor ou igual a " + max));
 		}
 	}
 }

@@ -12,6 +12,8 @@ import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.P
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_PROCESSO_QUERY;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_PROCESSO_RAIZ;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_PROCESSO_RAIZ_QUERY;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTE_BY_PESSOA_FETCH;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTE_BY_PESSOA_FETCH_QUERY;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO_QUERY;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PESSOA_BY_PARTICIPANTE_PROCESSO;
@@ -56,6 +58,7 @@ import br.com.infox.epp.processo.entity.Processo;
 		@NamedQuery(name = PARTICIPANTES_PROCESSO_RAIZ, query = PARTICIPANTES_PROCESSO_RAIZ_QUERY),
 		@NamedQuery(name = PARTICIPANTES_BY_PROCESSO_PARTICIPANTE_FILHO, query = PARTICIPANTES_BY_PROCESSO_PARTICIPANTE_FILHO_QUERY),
 		@NamedQuery(name = PESSOA_BY_PARTICIPANTE_PROCESSO, query = PESSOA_BY_PARTICIPANTE_PROCESSO_QUERY),
+		@NamedQuery(name = PARTICIPANTE_BY_PESSOA_FETCH, query = PARTICIPANTE_BY_PESSOA_FETCH_QUERY),
 		@NamedQuery(name = EXISTE_PARTICIPANTE_FILHO_BY_PROCESSO, query = EXISTE_PARTICIPANTE_FILHO_BY_PROCESSO_QUERY)
 })
 public class ParticipanteProcesso implements Serializable, Cloneable {

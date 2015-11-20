@@ -14,6 +14,7 @@ import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.P
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_PROCESSO;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_PROCESSOS_BY_PARTIAL_NAME;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTES_PROCESSO_RAIZ;
+import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTE_BY_PESSOA_FETCH;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO;
 import static br.com.infox.epp.processo.partes.query.ParticipanteProcessoQuery.PESSOA_BY_PARTICIPANTE_PROCESSO;
 
@@ -140,5 +141,12 @@ public class ParticipanteProcessoDAO extends DAO<ParticipanteProcesso> {
 	    Map<String, Object> params = new HashMap<>();
 	    params.put(PARAM_ID_PARTICIPANTE, participanteProcesso.getId());
 	    return getNamedSingleResult(PESSOA_BY_PARTICIPANTE_PROCESSO, params);
+	}
+
+	public List<ParticipanteProcesso> getParticipanteByPessoaFetch(Integer idProcesso, Integer idPessoa) {
+		Map<String, Object> params = new HashMap<>();
+		params.put(PARAM_PESSOA, idPessoa);
+		params.put(PARAM_PROCESSO, idProcesso);
+		return getNamedResultList(PARTICIPANTE_BY_PESSOA_FETCH, params);
 	}
 }

@@ -6,19 +6,14 @@ import java.util.regex.Pattern;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
-
-@org.jboss.seam.annotations.faces.Validator(id = "cnpjValidator")
-@Name("cnpjValidator")
-@BypassInterceptors
+@FacesValidator("cnpjValidator")
 public class CnpjValidator implements Validator {
 
-    public void validate(FacesContext context, UIComponent component,
-            Object value) {
+    public void validate(FacesContext context, UIComponent component, Object value) {
         try {
             String cnpjValue = (String) value;
             cnpjValue = cnpjValue.replaceAll("\\.", "");

@@ -5,13 +5,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import junit.framework.Assert;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
-import br.com.infox.log.LogProvider;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.Test;
 
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.core.action.AbstractAction;
@@ -46,10 +42,11 @@ import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.crud.RunnableTest;
 import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
-import br.com.infox.hibernate.session.SessionAssistant;
 import br.com.infox.ibpm.variable.dao.DominioVariavelTarefaDAO;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
+import br.com.infox.log.LogProvider;
 import br.com.infox.seam.exception.BusinessException;
+import junit.framework.Assert;
 
 //@RunWith(Arquillian.class)
 public class BloqueioUsuarioCrudActionIT extends
@@ -69,7 +66,7 @@ public class BloqueioUsuarioCrudActionIT extends
                 ModeloDocumentoDAO.class, VariavelDAO.class, LogProvider.class,
                 SendmailCommand.class, DominioVariavelTarefaManager.class,
                 DominioVariavelTarefaDAO.class, DocumentoManager.class,
-                DocumentoDAO.class, SessionAssistant.class,
+                DocumentoDAO.class, 
                 SigiloDocumentoService.class, SigiloDocumentoManager.class,
                 SigiloDocumentoDAO.class,
                 SigiloDocumentoPermissaoManager.class,

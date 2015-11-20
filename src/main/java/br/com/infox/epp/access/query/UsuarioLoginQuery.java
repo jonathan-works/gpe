@@ -80,4 +80,11 @@ public interface UsuarioLoginQuery {
     											+"where up.localizacao = :"+ PARAM_LOCALIZACAO+" "
     											+ "and pap.identificador in ( :" + PARAM_PAPEIS + " ) "
     													+ "and up.ativo = true ";
+
+    String USUARIO_LOGIN_LOCALIZACAO = "usuarioLoginByLocalizacao";
+    String USUARIO_LOGIN_LOCALIZACAO_QUERY = "select distinct ul from UsuarioPerfil up "
+            +"inner join up.perfilTemplate pt "
+            +"inner join up.usuarioLogin ul "
+            +"where up.localizacao = :"+ PARAM_LOCALIZACAO+" "
+            + "and up.ativo = true ";
 }

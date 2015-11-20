@@ -86,9 +86,9 @@ public class ActionMessagesService implements Serializable {
         return FacesMessages.instance();
     }
     
-    public void handleLockException(Exception exception, String lockMessage) {
+    public void handleGenericException(Exception exception, String lockExceptionMessage) {
 		if (ExceptionUtil.isLockException(exception)) {
-			FacesMessages.instance().add(lockMessage);
+			FacesMessages.instance().add(lockExceptionMessage);
 		} else if (exception instanceof DAOException) {
 			handleDAOException((DAOException) exception);
 		} else if (exception instanceof EJBException) {

@@ -29,6 +29,7 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.TEMPO_MEDIO_PROCESSO
 import static br.com.infox.epp.processo.query.ProcessoQuery.TIPO_PROCESSO_PARAM;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -256,8 +257,7 @@ public class ProcessoDAO extends DAO<Processo> {
 		Join<Task, Event> event = task.join("events");
 		query.select(cb.construct(ListenerTaskBean.class, taskInstance.get("id"), event.get("configuration")));
 		
-		List<Long> processInstanceIds = getSubprocessInstanceIds(processInstanceId);
-		processInstanceIds.add(processInstanceId);
+		List<Long> processInstanceIds = getAllProcessInstanceIds(processInstanceId);
 		
 		query.where(
 			cb.isNull(taskInstance.get("end")),
@@ -270,26 +270,27 @@ public class ProcessoDAO extends DAO<Processo> {
 		return entityManager.createQuery(query).getResultList();
 	}
 	
-	public List<Long> getSubprocessInstanceIds(Long parentProcessInstanceId) {
+	public List<Long> getAllProcessInstanceIds(Long parentProcessInstanceId) {
 		List<Long> ids = new ArrayList<>();
-		Long id = getSubprocessInstanceId(parentProcessInstanceId);
-		while (id != null) {
-			ids.add(id);
-			id = getSubprocessInstanceId(id);
-		}
+		listSubprocessInstanceIds(Arrays.asList(parentProcessInstanceId), ids);
 		return ids;
 	}
 	
-	private Long getSubprocessInstanceId(Long parentProcessInstanceId) {
+	private void listSubprocessInstanceIds(List<Long> subProcessInstanceParentIds, List<Long> subProcessInstanceIds) {
+		subProcessInstanceIds.addAll(subProcessInstanceParentIds);
 		EntityManager entityManager = getEntityManager();
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Long> query = cb.createQuery(Long.class);
-		Root<org.jbpm.graph.exe.ProcessInstance> processInstance = query.from(org.jbpm.graph.exe.ProcessInstance.class);
-		Join<ProcessInstance, Token> token = processInstance.join("rootToken");
+		Root<Token> token = query.from(Token.class);
+		query.where(
+			cb.isNotNull(token.get("subProcessInstance")),
+			token.get("processInstance").get("id").in(subProcessInstanceParentIds)
+		);
 		query.select(token.get("subProcessInstance").<Long>get("id"));
-		query.where(cb.equal(processInstance.get("id"), parentProcessInstanceId));
-		List<Long> result = entityManager.createQuery(query).getResultList();
-		return result.isEmpty() ? null : result.get(0);
+		subProcessInstanceParentIds = entityManager.createQuery(query).getResultList();
+		if (!subProcessInstanceParentIds.isEmpty()) {
+			listSubprocessInstanceIds(subProcessInstanceParentIds, subProcessInstanceIds);
+		}
 	}
 }
 

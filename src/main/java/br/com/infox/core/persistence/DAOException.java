@@ -6,7 +6,7 @@ import org.jboss.seam.annotations.ApplicationException;
 
 @ApplicationException(end = false, rollback = false)
 @javax.ejb.ApplicationException(rollback = true)
-public class DAOException extends Exception {
+public class DAOException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
     public static final String MSG_UNIQUE_VIOLATION = "#{infoxMessages['constraintViolation.uniqueViolation']}";

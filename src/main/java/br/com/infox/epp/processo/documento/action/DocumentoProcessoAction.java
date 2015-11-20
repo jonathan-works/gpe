@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Remove;
+import javax.ejb.Stateful;
 import javax.inject.Inject;
 
 import org.jboss.seam.ScopeType;
@@ -20,7 +22,6 @@ import org.jboss.seam.security.Identity;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.manager.PapelManager;
-import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -39,7 +40,7 @@ import br.com.infox.seam.util.ComponentUtil;
 @Name(DocumentoProcessoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 @Transactional
-@ContextDependency
+@Stateful
 public class DocumentoProcessoAction implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -66,7 +67,9 @@ public class DocumentoProcessoAction implements Serializable {
 	private ClassificacaoDocumentoManager classificacaoDocumentoManager;
 	@In
 	private DocumentoList documentoList;
-	
+		
+	@Remove
+	public void destroy() {}
 	
 	public void exclusaoRestauracaoDocumento(){
 		if (idDocumentoAlter == null){
@@ -199,6 +202,10 @@ public class DocumentoProcessoAction implements Serializable {
 	
 	public boolean deveMostrarCadeado(Documento documento) {
 		return documento.hasAssinatura() || documento.isDocumentoAssinavel();		
+	}
+	
+	protected Map<String, Boolean> getCache() {
+		return cache;
 	}
 }
 
