@@ -29,7 +29,7 @@ import br.com.infox.seam.exception.ApplicationException;
 import br.com.infox.seam.exception.BusinessException;
 
 @Name(AccessMailService.NAME)
-@Scope(ScopeType.EVENT)
+@Scope(ScopeType.STATELESS)
 @AutoCreate
 @Transactional
 public class AccessMailService {
@@ -91,7 +91,7 @@ public class AccessMailService {
     }
 
     private ModeloDocumento findModelo(final String nomeParametro) {
-        final Parametro parametro = this.parametroManager.getParametro(nomeParametro);
+        Parametro parametro = this.parametroManager.getParametro(nomeParametro);
         ModeloDocumento result = null;
         if (parametro != null) {
             final String nomeModelo = parametro.getValorVariavel();
@@ -102,12 +102,10 @@ public class AccessMailService {
         if (result == null) {
             result = new ModeloDocumento();
             final StringBuilder defaultEmail = new StringBuilder();
-            defaultEmail
-            .append(MessageFormat.format(AccessMailService.DEFAULT_EMAIL_LINE,
-                    infoxMessages.get(AccessMailService.USUARIO_MAIL_DEFAULT_FIELD_NOME),
+            defaultEmail.append(MessageFormat.format(AccessMailService.DEFAULT_EMAIL_LINE, infoxMessages.get(AccessMailService.USUARIO_MAIL_DEFAULT_FIELD_NOME),
                     AccessMailService.CAMPO_USUARIO));
-            defaultEmail.append(MessageFormat.format(AccessMailService.DEFAULT_EMAIL_LINE,
-                    infoxMessages.get(AccessMailService.USUARIO_MAIL_DEFAULT_FIELD_SENHA), AccessMailService.CAMPO_SENHA));
+            defaultEmail.append(MessageFormat.format(AccessMailService.DEFAULT_EMAIL_LINE, infoxMessages.get(AccessMailService.USUARIO_MAIL_DEFAULT_FIELD_SENHA), 
+                    AccessMailService.CAMPO_SENHA));
             result.setModeloDocumento(defaultEmail.toString());
         }
         return result;
@@ -125,9 +123,8 @@ public class AccessMailService {
     }
 
     private void enviarEmailModelo(final ModeloDocumento modelo, final UsuarioLogin usuario, final String password) {
-        final String conteudo = resolverConteudo(modelo, usuario, password);
-
-        final EMailBean mail = new EMailBean();
+        String conteudo = resolverConteudo(modelo, usuario, password);
+        EMailBean mail = new EMailBean();
         mail.setUseHtmlBody(true);
         mail.setBody(conteudo);
         mail.getReceivers().clear();
@@ -143,16 +140,10 @@ public class AccessMailService {
 
     private String resolverConteudo(final ModeloDocumento modelo, final UsuarioLogin usuario, final String password) {
         String modeloDocumento = modelo.getModeloDocumento();
-
         modeloDocumento = this.modeloDocumentoManager.evaluateModeloDocumento(modelo);
-        modeloDocumento = modeloDocumento.replace(
-                MessageFormat.format(AccessMailService.EXPRESSION_PATTERN, AccessMailService.CAMPO_USUARIO),
-                usuario.getNomeUsuario());
-        modeloDocumento = modeloDocumento.replace(
-                MessageFormat.format(AccessMailService.EXPRESSION_PATTERN, AccessMailService.CAMPO_LOGIN),
-                usuario.getLogin());
-        modeloDocumento = modeloDocumento.replace(
-                MessageFormat.format(AccessMailService.EXPRESSION_PATTERN, AccessMailService.CAMPO_SENHA), password);
+        modeloDocumento = modeloDocumento.replace(MessageFormat.format(AccessMailService.EXPRESSION_PATTERN, AccessMailService.CAMPO_USUARIO), usuario.getNomeUsuario());
+        modeloDocumento = modeloDocumento.replace(MessageFormat.format(AccessMailService.EXPRESSION_PATTERN, AccessMailService.CAMPO_LOGIN), usuario.getLogin());
+        modeloDocumento = modeloDocumento.replace(MessageFormat.format(AccessMailService.EXPRESSION_PATTERN, AccessMailService.CAMPO_SENHA), password);
         return modeloDocumento;
     }
 

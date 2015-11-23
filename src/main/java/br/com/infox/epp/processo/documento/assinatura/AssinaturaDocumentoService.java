@@ -46,6 +46,7 @@ import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
 
+@Stateless
 @AutoCreate
 @Scope(ScopeType.STATELESS)
 @Name(AssinaturaDocumentoService.NAME)
@@ -110,22 +111,32 @@ public class AssinaturaDocumentoService {
         if (documento.getDocumentoBin().isMinuta()) {
             return false;
         }
-        List<ClassificacaoDocumentoPapel> classificacaoDocumentoPapeis = documento.getClassificacaoDocumento()
-                .getClassificacaoDocumentoPapelList();
-        
+        List<ClassificacaoDocumentoPapel> classificacaoDocumentoPapeis = documento.getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
         Map<TipoAssinaturaEnum, List<Boolean>> mapAssinaturas = new HashMap<>();
         for (TipoAssinaturaEnum tipoAssinatura : TipoAssinaturaEnum.values()) {
             mapAssinaturas.put(tipoAssinatura, new ArrayList<Boolean>());
         }
-        
         for (ClassificacaoDocumentoPapel tipoProcessoDocumentoPapel : classificacaoDocumentoPapeis) {
-            final TipoAssinaturaEnum tipoAssinatura = tipoProcessoDocumentoPapel.getTipoAssinatura();
-            
-            final Papel papel = tipoProcessoDocumentoPapel.getPapel();
-            final List<Boolean> assinaturas = mapAssinaturas.get(tipoAssinatura);
-            assinaturas.add(isDocumentoAssinado(documento, papel));
+            TipoAssinaturaEnum tipoAssinatura = tipoProcessoDocumentoPapel.getTipoAssinatura();
+            Papel papel = tipoProcessoDocumentoPapel.getPapel();
+            List<Boolean> assinaturas = mapAssinaturas.get(tipoAssinatura);
+            assinaturas.add(isDocumentoAssinado(documento.getDocumentoBin(), papel));
         }
-        
+        return isDocumentoTotalmenteAssinado(mapAssinaturas);
+    }
+    
+    public boolean isDocumentoTotalmenteAssinado(DocumentoBin documentoBin, ClassificacaoDocumento classificacaoDocumento) {
+        List<ClassificacaoDocumentoPapel> classificacaoDocumentoPapeis = classificacaoDocumento.getClassificacaoDocumentoPapelList();
+        Map<TipoAssinaturaEnum, List<Boolean>> mapAssinaturas = new HashMap<>();
+        for (TipoAssinaturaEnum tipoAssinatura : TipoAssinaturaEnum.values()) {
+            mapAssinaturas.put(tipoAssinatura, new ArrayList<Boolean>());
+        }
+        for (ClassificacaoDocumentoPapel tipoProcessoDocumentoPapel : classificacaoDocumentoPapeis) {
+            TipoAssinaturaEnum tipoAssinatura = tipoProcessoDocumentoPapel.getTipoAssinatura();
+            Papel papel = tipoProcessoDocumentoPapel.getPapel();
+            List<Boolean> assinaturas = mapAssinaturas.get(tipoAssinatura);
+            assinaturas.add(isDocumentoAssinado(documentoBin, papel));
+        }
         return isDocumentoTotalmenteAssinado(mapAssinaturas);
     }
     
@@ -134,7 +145,7 @@ public class AssinaturaDocumentoService {
             return false;
         }
     	List<Documento> documentos = documentoManager.getDocumentosFromDocumentoBin(documento);
-    	if (documentos.size() > 0){
+    	if (!documentos.isEmpty()){
     	    return isDocumentoTotalmenteAssinado(documentos.get(0));
     	}
     	return false;
@@ -204,9 +215,9 @@ public class AssinaturaDocumentoService {
         return result;
     }
 
-    public boolean isDocumentoAssinado(Documento documento, Papel papel) {
+    public boolean isDocumentoAssinado(DocumentoBin documentoBin, Papel papel) {
         boolean result = false;
-        for (AssinaturaDocumento assinaturaDocumento : documento.getDocumentoBin().getAssinaturas()) {
+        for (AssinaturaDocumento assinaturaDocumento : documentoBin.getAssinaturas()) {
             if (assinaturaDocumento.getUsuarioPerfil().getPerfilTemplate().getPapel().equals(papel)) {
                 result = isSignatureValid(assinaturaDocumento);
                 break;
@@ -254,14 +265,12 @@ public class AssinaturaDocumentoService {
         return null;
     }
 
-	public void assinarDocumento(final DocumentoBin documentoBin,
-			final UsuarioPerfil usuarioPerfilAtual, final String certChain,
-			final String signature) throws CertificadoException,
-			AssinaturaException, DAOException {
-		final UsuarioLogin usuario = usuarioPerfilAtual.getUsuarioLogin();
+	public void assinarDocumento(final DocumentoBin documentoBin, UsuarioPerfil usuarioPerfilAtual, final String certChain,
+			String signature) throws CertificadoException, AssinaturaException, DAOException {
+		UsuarioLogin usuario = usuarioPerfilAtual.getUsuarioLogin();
 		verificaCertificadoUsuarioLogado(certChain, usuario);
 
-		final AssinaturaDocumento assinaturaDocumento = new AssinaturaDocumento(documentoBin, usuarioPerfilAtual, certChain, signature);
+		AssinaturaDocumento assinaturaDocumento = new AssinaturaDocumento(documentoBin, usuarioPerfilAtual, certChain, signature);
 		List<Documento> documentosNaoSuficientementeAssinados = documentoBinManager.getDocumentosNaoSuficientementeAssinados(documentoBin);
 		documentoBin.getAssinaturas().add(assinaturaDocumento);
 		
@@ -283,8 +292,7 @@ public class AssinaturaDocumentoService {
 		}
 	}
 
-	public void setDocumentoSuficientementeAssinado(final DocumentoBin documentoBin,
-			final UsuarioPerfil usuarioPerfilAtual) throws DAOException {
+	public void setDocumentoSuficientementeAssinado(DocumentoBin documentoBin, UsuarioPerfil usuarioPerfilAtual) throws DAOException {
 		documentoBin.setSuficientementeAssinado(Boolean.TRUE);
 		documentoBin.setDataSuficientementeAssinado(new Date());
 		List<RegistroAssinaturaSuficiente> registrosAssinaturaSuficiente = documentoBin.getRegistrosAssinaturaSuficiente();
@@ -320,7 +328,7 @@ public class AssinaturaDocumentoService {
 
     public boolean isDocumentoAssinado(Integer idDocumento, PerfilTemplate perfilTemplate) {
         Documento documento = documentoManager.find(idDocumento);
-        return documento != null && isDocumentoAssinado(documento, perfilTemplate.getPapel());
+        return documento != null && isDocumentoAssinado(documento.getDocumentoBin(), perfilTemplate.getPapel());
     }
 
     public boolean isDocumentoAssinado(Integer idDocumento, UsuarioPerfil perfil) {
