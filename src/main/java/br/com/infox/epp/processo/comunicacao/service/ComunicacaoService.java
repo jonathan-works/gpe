@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -141,6 +142,66 @@ public class ComunicacaoService {
 		if (!modeloComunicacao.getDestinatarios().contains(destinatario)) {
 			modeloComunicacao.getDestinatarios().add(destinatario);
 		}
+	}
+	
+	public ModeloComunicacao reabrirComunicacao (ModeloComunicacao modeloComunicacao) throws CloneNotSupportedException, DAOException {
+		modeloComunicacao.setFinalizada(false);
+		modeloComunicacao.setMinuta(true);
+		ModeloComunicacao  copyModeloComunicacao = modeloComunicacao.makeCopy();
+		if (modeloComunicacao.getDestinatarios().isEmpty()) { //não é possível gravar uma comunicação sem destinatário
+			excluirComunicacao(modeloComunicacao);
+			copyModeloComunicacao.setEnviarRelatoria(false);
+		} else {
+			if (modeloComunicacaoManager.hasComunicacaoExpedida(modeloComunicacao)) {
+				copyModeloComunicacao =  modeloComunicacaoManager.persist(copyModeloComunicacao);
+				Iterator<DestinatarioModeloComunicacao> it = modeloComunicacao.getDestinatarios().iterator();
+				while (it.hasNext()){
+					DestinatarioModeloComunicacao destinatario  = it.next();
+					if (!destinatario.getExpedido()) {
+						if (isDestinatarioRelator(destinatario)) {
+							copyModeloComunicacao.setEnviarRelatoria(true);
+							modeloComunicacao.setEnviarRelatoria(false);
+						}
+						copyModeloComunicacao.getDestinatarios().add(destinatario);
+						destinatario.setModeloComunicacao(copyModeloComunicacao);
+						it.remove();
+						genericManager.update(destinatario);
+					}
+				}
+				modeloComunicacaoManager.update(copyModeloComunicacao);
+				modeloComunicacaoManager.update(modeloComunicacao);
+			} else {
+				copyModeloComunicacao = modeloComunicacao;
+			}
+		}
+		modeloComunicacaoManager.flush();
+		return copyModeloComunicacao;
+	}
+	
+	public void excluirComunicacao (ModeloComunicacao modeloComunicacao) throws DAOException {
+		if (!modeloComunicacaoManager.hasComunicacaoExpedida(modeloComunicacao)) {
+			modeloComunicacaoManager.removerDestinatariosModelo(modeloComunicacao);
+			modeloComunicacaoManager.removerDocumentosRelacionados(modeloComunicacao);
+			modeloComunicacaoManager.remove(modeloComunicacao);
+		}
+	}
+	
+	public void excluirDestinatarioComunicacao (DestinatarioModeloComunicacao destinatario) throws DAOException {
+		//TODO ver onde vai ser chamado e o comportamento esperado
+		ModeloComunicacao modeloComunicacao = destinatario.getModeloComunicacao();
+		modeloComunicacao.getDestinatarios().remove(destinatario);
+		destinatarioComunicacaoService.removeDestinatarioModeloComunicacao(destinatario);
+	}
+	
+	private boolean isDestinatarioRelator (DestinatarioModeloComunicacao destinatario) {
+		if (destinatario.getDestinatario() != null) {
+			ModeloComunicacao modeloComunicacao = destinatario.getModeloComunicacao();
+			MetadadoProcesso metadadoRelator = modeloComunicacao.getProcesso().getMetadado(EppMetadadoProvider.RELATOR);
+			if (modeloComunicacao.getEnviarRelatoria() && metadadoRelator != null && destinatario.getDestinatario().equals(metadadoRelator.getValue())) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public byte[] gerarPdfCompleto(ModeloComunicacao modeloComunicacao, DestinatarioModeloComunicacao destinatario) throws DAOException {

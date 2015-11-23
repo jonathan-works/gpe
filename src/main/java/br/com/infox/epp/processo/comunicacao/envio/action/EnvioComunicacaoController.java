@@ -12,6 +12,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.NonUniqueResultException;
+import javax.persistence.OptimisticLockException;
 
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.TaskInstance;
@@ -203,7 +204,11 @@ public class EnvioComunicacaoController implements Serializable {
 		} catch (Exception e) {
 			LOG.error("Erro ao gravar comunicação ", e);
 			if (e instanceof DAOException) {
-				actionMessagesService.handleDAOException((DAOException) e);
+				if (e.getCause() instanceof OptimisticLockException) {
+					actionMessagesService.handleGenericException(e, "Erro ao gravar: A comunicação foi alterada por outro usuário");
+				} else {
+					actionMessagesService.handleDAOException((DAOException) e);
+				}
 			} else {
 				FacesMessages.instance().add(e.getMessage());
 			}
@@ -322,19 +327,19 @@ public class EnvioComunicacaoController implements Serializable {
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void excluirDestinatarioComunicacao(DestinatarioModeloComunicacao destinatarioModeloComunicacao) {
-		destinatarioComunicacaoAction.excluirDestinatario(destinatarioModeloComunicacao);
-		if (modeloComunicacao.getDestinatarios().isEmpty()) {
-			try {
+		try {
+			destinatarioComunicacaoAction.excluirDestinatario(destinatarioModeloComunicacao);
+			if (modeloComunicacao.getDestinatarios().isEmpty()) {
 				modeloComunicacao = comunicacaoService.reabrirComunicacao(getModeloComunicacao());
 				isNew = true;
 				resetEntityState();
-				clear();
-				FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.sucesso.exclusaoDestinatario"));
-			} catch (DAOException e) {
-				FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.erro.exclusaoDestinatario"));
-			} catch (CloneNotSupportedException e) {
-				FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.erro.recuperaModelo"));
 			}
+			clear();
+			FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.sucesso.exclusaoDestinatario"));
+		} catch (DAOException e) {
+			FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.erro.exclusaoDestinatario"));
+		} catch (CloneNotSupportedException e) {
+			FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.erro.recuperaModelo"));
 		}
 	}
 	

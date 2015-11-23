@@ -47,6 +47,12 @@ public class ModeloComunicacaoDAO extends DAO<ModeloComunicacao> {
 		params.put(ModeloComunicacaoQuery.PARAM_MODELO_COMUNICACAO, modeloComunicacao);
 		return getNamedSingleResult(ModeloComunicacaoQuery.IS_EXPEDIDA, params) == null;
 	}
+
+	public boolean hasComunicacaoExpedida(ModeloComunicacao modeloComunicacao) {
+		Map<String, Object> params = new HashMap<>();
+		params.put(ModeloComunicacaoQuery.PARAM_MODELO_COMUNICACAO, modeloComunicacao);
+		return getNamedSingleResult(ModeloComunicacaoQuery.HAS_COMUNICACAO_EXPEDIDA, params) != null;
+	}
 	
 	public List<ModeloComunicacao> listModelosComunicacaoPorProcessoRoot(String processoRoot) {
 		Map<String, Object> params = new HashMap<>();
@@ -101,4 +107,5 @@ public class ModeloComunicacaoDAO extends DAO<ModeloComunicacao> {
 		params.put(ModeloComunicacaoQuery.PARAM_MODELO_COMUNICACAO, modeloComunicacao);
 		return getNamedResultList(ModeloComunicacaoQuery.GET_DOCUMENTOS_MODELO_COMUNICACAO, params);
 	}
+
 }

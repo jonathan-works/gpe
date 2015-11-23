@@ -8,8 +8,6 @@ import java.util.Map;
 
 import javax.ejb.Remove;
 import javax.ejb.Stateful;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -17,7 +15,6 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
@@ -40,13 +37,11 @@ import br.com.infox.seam.util.ComponentUtil;
 @Named(DestinatarioComunicacaoAction.NAME)
 @ViewScoped
 @Stateful
-@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class DestinatarioComunicacaoAction {
 	public static final String NAME = "destinatarioComunicacaoAction";
 	private static final LogProvider LOG = Logging.getLogProvider(DestinatarioComunicacaoAction.class);
 
 	private ParticipanteProcessoComunicacaoList participanteProcessoComunicacaoList = ComponentUtil.getComponent(ParticipanteProcessoComunicacaoList.NAME);
-	private GenericManager genericManager = ComponentUtil.getComponent(GenericManager.NAME);
 	
 	@Inject
 	private PessoaFisicaManager pessoaFisicaManager;
@@ -69,22 +64,11 @@ public class DestinatarioComunicacaoAction {
 	}
 	
 	@Remove
-	public void destroy() {
-		
-	}
+	public void destroy() {}
 	
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void persistDestinatarios() throws DAOException {
-		for (DestinatarioModeloComunicacao excluido : destinatariosExcluidos) {
-			if(excluido.getId() != null){
-				destinatarioComunicacaoService.removeDestinatarioModeloComunicacao(excluido);
-			}
-		}
-		for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) { //TODO ver alterações nos destinatarios
-			if (destinatario.getId() == null) {
-				genericManager.persist(destinatario);
-			}
-		}
+		destinatarioComunicacaoService.removeDestinatariosModeloComunicacaoList(destinatariosExcluidos);
+		destinatarioComunicacaoService.gravaDestinatariosModeloComunicacaoList(modeloComunicacao.getDestinatarios());
 	}
 	
 	public void resetEntityState() {
@@ -155,7 +139,6 @@ public class DestinatarioComunicacaoAction {
 		}
 	}
 	
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void excluirDestinatario (DestinatarioModeloComunicacao destinatarioModeloComunicacao) throws DAOException {
 		removerDestinatario(destinatarioModeloComunicacao);
 		destinatarioComunicacaoService.removeDestinatarioModeloComunicacao(destinatarioModeloComunicacao);
@@ -239,7 +222,7 @@ public class DestinatarioComunicacaoAction {
 	
 	private void initEntityLists() {
 		participanteProcessoComunicacaoList.getEntity().setProcesso(modeloComunicacao.getProcesso().getProcessoRoot());
-		
+		destinatariosExcluidos = new ArrayList<>();
 		PessoaFisica relator = getRelator();
 		processoPossuiRelator = relator != null;
 		for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {

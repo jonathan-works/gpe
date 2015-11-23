@@ -17,7 +17,10 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 
+import org.jboss.seam.faces.FacesMessages;
+
 import br.com.infox.core.messages.InfoxMessages;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
@@ -30,6 +33,8 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.service.ProcessoAnaliseDocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Named
@@ -38,6 +43,7 @@ import br.com.infox.seam.util.ComponentUtil;
 public class ComunicacaoAction implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "comunicacaoAction";
+	private static final LogProvider LOG = Logging.getLogProvider(ComunicacaoAction.class);
 	
 	
 	private ProcessoAnaliseDocumentoService processoAnaliseDocumentoService = ComponentUtil.getComponent(ProcessoAnaliseDocumentoService.NAME);
@@ -83,6 +89,34 @@ public class ComunicacaoAction implements Serializable {
 		setProcesso(JbpmUtil.getProcesso());
 	}
 	
+	public void reabrirComunicacao(ModeloComunicacao modeloComunicacao) {
+		try {
+			comunicacaoService.reabrirComunicacao(modeloComunicacao);
+			FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.sucesso.reabertura"));
+		} catch (DAOException | CloneNotSupportedException e) {
+			LOG.error("Erro ao rebarir comunicação", e);
+			FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.erro.reabertura"));
+		}
+	}
+	
+	public void excluirComunicacao(ModeloComunicacao modeloComunicacao) {
+		try {
+			comunicacaoService.excluirComunicacao(modeloComunicacao);
+			FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.sucesso.exclusao"));
+		} catch (DAOException e) {
+			LOG.error("Erro ao excluir comunicação", e);
+			FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.erro.exclusao"));
+		}
+	}
+	
+	public boolean podeReabrirComunicacao(ModeloComunicacao modeloComunicacao) {
+		return modeloComunicacao.getFinalizada() && !modeloComunicacaoManager.isExpedida(modeloComunicacao);
+	}
+	
+	public boolean podeExcluirModeloComunicacao(ModeloComunicacao modeloComunicacao) {
+		return !modeloComunicacao.getFinalizada() || (modeloComunicacao.getFinalizada() && !modeloComunicacaoManager.hasComunicacaoExpedida(modeloComunicacao));
+	}
+	
 	public void setProcesso(Processo processo) {
 	    clear();
 	    this.processo = processo;
@@ -97,6 +131,10 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	public void clearCacheModelos() {
+		for (ModeloComunicacao modeloComunicacao : modeloComunicacaoRascunhoList.getResultList()) {
+			modeloComunicacaoManager.detach(modeloComunicacao);
+		}
+		modeloComunicacaoRascunhoList.refresh();
 		this.comunicacoes = null;
 		this.destinatario = null;
 		this.destinatarios = null;

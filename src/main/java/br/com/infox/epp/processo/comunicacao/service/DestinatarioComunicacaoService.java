@@ -82,9 +82,24 @@ public class DestinatarioComunicacaoService implements Serializable{
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void removeDestinatarioModeloComunicacao(DestinatarioModeloComunicacao destinatarioModeloComunicacao) throws DAOException{
+	public void removeDestinatarioModeloComunicacao(DestinatarioModeloComunicacao destinatarioModeloComunicacao) throws DAOException {
 		if(destinatarioModeloComunicacao.getId() != null){
 			genericManager.remove(destinatarioModeloComunicacao);
+		}
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void gravaDestinatariosModeloComunicacaoList(List<DestinatarioModeloComunicacao> destinatarios) throws DAOException {
+		for (DestinatarioModeloComunicacao destinatario : destinatarios) {
+			if (destinatario.getId() == null) {
+				genericManager.persist(destinatario);
+			}
+		} 
+	}
+	
+	public void removeDestinatariosModeloComunicacaoList(List<DestinatarioModeloComunicacao> destinatarios) throws DAOException {
+		for (DestinatarioModeloComunicacao destinatarioModeloComunicacao : destinatarios) {
+			removeDestinatarioModeloComunicacao(destinatarioModeloComunicacao);
 		}
 	}
 }

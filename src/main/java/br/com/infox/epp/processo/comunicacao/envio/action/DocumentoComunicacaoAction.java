@@ -7,8 +7,6 @@ import java.util.Map;
 
 import javax.ejb.Remove;
 import javax.ejb.Stateful;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -16,7 +14,6 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
 import br.com.infox.core.action.ActionMessagesService;
-import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.manager.PapelManager;
@@ -41,7 +38,6 @@ import br.com.infox.seam.util.ComponentUtil;
 @Named(DocumentoComunicacaoAction.NAME)
 @Stateful
 @ViewScoped
-@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class DocumentoComunicacaoAction implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -60,7 +56,6 @@ public class DocumentoComunicacaoAction implements Serializable {
 	private PapelManager papelManager = ComponentUtil.getComponent(PapelManager.NAME);
 	private DocumentoDisponivelComunicacaoList documentoDisponivelComunicacaoList = ComponentUtil.getComponent(DocumentoDisponivelComunicacaoList.NAME);
 	private PastaRestricaoManager pastaRestricaoManager = ComponentUtil.getComponent(PastaRestricaoManager.NAME);
-	private GenericManager genericManager = ComponentUtil.getComponent(GenericManager.NAME);
 	
 	private ModeloComunicacao modeloComunicacao;
 	
@@ -83,17 +78,10 @@ public class DocumentoComunicacaoAction implements Serializable {
 	}
 	
 	@Remove
-	public void destroy() {
-		
-	}
+	public void destroy() {}
 	
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void persistDocumentos() throws DAOException {
-		for (DocumentoModeloComunicacao documento : modeloComunicacao.getDocumentos()) {
-			if (documento.getId() == null) {
-				genericManager.persist(documento);
-			}
-		}
+		documentoComunicacaoService.persistDocumentos(modeloComunicacao.getDocumentos());
 	}
 	
 	public void resetEntityState() {
@@ -132,16 +120,13 @@ public class DocumentoComunicacaoAction implements Serializable {
 		}
 	}
 	
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void removerDocumento(DocumentoModeloComunicacao documentoModelo) {
 		modeloComunicacao.getDocumentos().remove(documentoModelo);
-		if(documentoModelo.getId() != null){
-			try {
-				genericManager.remove(documentoModelo);
-			} catch (DAOException e) {
-				LOG.error("", e);
-				actionMessagesService.handleDAOException(e);
-			}
+		try {
+			documentoComunicacaoService.removerDocumento(documentoModelo);
+		} catch (DAOException e) {
+			LOG.error("", e);
+			actionMessagesService.handleDAOException(e);
 		}
 		
 		documentoDisponivelComunicacaoList.removerIdDocumento(documentoModelo.getDocumento().getId());
@@ -209,7 +194,6 @@ public class DocumentoComunicacaoAction implements Serializable {
 		return possuiDocumentoInclusoPorUsuarioInterno;
 	}
 	
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public List<ModeloDocumento> getModelosDocumento() {
 		if (modelosDocumento == null) {
 			modelosDocumento = documentoComunicacaoService.getModelosDocumentoDisponiveisComunicacao(modeloComunicacao.getTipoComunicacao());

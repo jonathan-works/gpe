@@ -46,6 +46,10 @@ public class ModeloComunicacaoManager extends Manager<ModeloComunicacaoDAO, Mode
 		return getDao().isExpedida(modeloComunicacao);
 	}
 	
+	public boolean hasComunicacaoExpedida(ModeloComunicacao modeloComunicacao) {
+		return getDao().hasComunicacaoExpedida(modeloComunicacao);
+	}
+	
 	public List<ModeloComunicacao> listModelosComunicacaoPorProcessoRoot(String processoRoot) {
 		return getDao().listModelosComunicacaoPorProcessoRoot(processoRoot);
 	}
@@ -92,6 +96,18 @@ public class ModeloComunicacaoManager extends Manager<ModeloComunicacaoDAO, Mode
 	}
 	
 	protected void setarInformacoesAdicionais(DestinatarioBean destinatario) {
+	}
+	
+	public void removerDocumentosRelacionados(ModeloComunicacao modeloComunicacao) throws DAOException {
+		for (DocumentoModeloComunicacao docComunicacao : modeloComunicacao.getDocumentos()) {
+			getDao().getEntityManager().remove(docComunicacao);
+		}
+	}
+	
+	public void removerDestinatariosModelo(ModeloComunicacao modeloComunicacao) throws DAOException {
+		for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
+			getDao().getEntityManager().remove(destinatario);
+		}
 	}
 
 	protected String getMetadadoValue(MetadadoProcesso metadado) {

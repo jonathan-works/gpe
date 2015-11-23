@@ -6,12 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
+
 import org.jbpm.JbpmContext;
 import org.jbpm.graph.exe.ProcessInstance;
 
@@ -41,35 +40,28 @@ import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.ibpm.task.home.VariableTypeResolver;
+import br.com.infox.seam.util.ComponentUtil;
 
-@Name(DocumentoComunicacaoService.NAME)
-@Scope(ScopeType.EVENT)
-@AutoCreate
-@Transactional
+@Stateless
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class DocumentoComunicacaoService {
 	
 	public static final String NAME = "documentoComunicacaoService";
 	
-	@In
-	private ClassificacaoDocumentoManager classificacaoDocumentoManager;
-	@In
+	@Inject
 	private ModeloDocumentoManager modeloDocumentoManager;
-	@In
+	@Inject
 	private DocumentoManager documentoManager;
-	@In
+	@Inject
 	private ModeloComunicacaoManager modeloComunicacaoManager;
-	@In
-	private PapelManager papelManager;
-	@In
-	private VariableTypeResolver variableTypeResolver;
-	@In("org.jboss.seam.bpm.jbpmContext")
-	private JbpmContext jbpmContext;
-	@In
-	private DocumentoRespostaComunicacaoDAO documentoRespostaComunicacaoDAO;
-	@In
+	@Inject
 	private DocumentoBinManager documentoBinManager;
-	@In
-	private GenericManager genericManager;
+	
+	private PapelManager papelManager = ComponentUtil.getComponent(PapelManager.NAME);
+	private ClassificacaoDocumentoManager classificacaoDocumentoManager = ComponentUtil.getComponent(ClassificacaoDocumentoManager.NAME);
+	private VariableTypeResolver variableTypeResolver = ComponentUtil.getComponent(VariableTypeResolver.NAME);
+	private DocumentoRespostaComunicacaoDAO documentoRespostaComunicacaoDAO = ComponentUtil.getComponent(DocumentoRespostaComunicacaoDAO.NAME);
+	private GenericManager genericManager = ComponentUtil.getComponent(GenericManager.NAME);
 	
 	public List<ClassificacaoDocumento> getClassificacoesDocumentoDisponiveisRespostaComunicacao(DestinatarioModeloComunicacao destinatarioModeloComunicacao, boolean isEditor) {
 		return classificacaoDocumentoManager.getClassificacoesDocumentoDisponiveisRespostaComunicacao(destinatarioModeloComunicacao, isEditor, Authenticator.getPapelAtual());
@@ -91,8 +83,10 @@ public class DocumentoComunicacaoService {
 			return Arrays.asList(tipoComunicacao.getClassificacaoDocumento());
 		}
 	}
-	
+
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public String evaluateComunicacao(DestinatarioModeloComunicacao destinatario) {
+		JbpmContext jbpmContext = ComponentUtil.getComponent("org.jboss.seam.bpm.jbpmContext");
 		ModeloComunicacao modeloComunicacao = destinatario.getModeloComunicacao();
 		String textoComunicacao = modeloComunicacao.getTextoComunicacao();
 		ModeloDocumento modeloDocumento = modeloComunicacao.getModeloDocumento();
@@ -110,10 +104,12 @@ public class DocumentoComunicacaoService {
 		return modeloDocumentoManager.evaluateModeloDocumento(modeloDocumento, textoComunicacao, chain);
 	}
 	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void desvincularDocumentoRespostaComunicacao(Documento documento) throws DAOException {
 		documentoRespostaComunicacaoDAO.removerDocumentoResposta(documento);
 	}
 	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void vincularDocumentoRespostaComunicacao(Documento documento, Processo comunicacao) throws DAOException {
 		DocumentoRespostaComunicacao documentoRespostaComunicacao = new DocumentoRespostaComunicacao();
 		documentoRespostaComunicacao.setDocumento(documento);
@@ -131,7 +127,8 @@ public class DocumentoComunicacaoService {
 		return variaveis;
 	}
 
-	void gravarDocumentos(ModeloComunicacao modeloComunicacao) throws DAOException {
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void gravarDocumentos(ModeloComunicacao modeloComunicacao) throws DAOException {
 		Processo processoRaiz = modeloComunicacao.getProcesso().getProcessoRoot();
 		if (!modeloComunicacao.isDocumentoBinario()) {
 			for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
@@ -156,4 +153,21 @@ public class DocumentoComunicacaoService {
 	public DocumentoModeloComunicacao getDocumentoInclusoPorUsuarioInterno(ModeloComunicacao modeloComunicacao) {
 		return modeloComunicacaoManager.getDocumentoInclusoPorPapel(papelManager.getIdentificadoresPapeisHerdeiros(Parametros.PAPEL_USUARIO_INTERNO.getValue()), modeloComunicacao);
 	}
+
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void persistDocumentos(List<DocumentoModeloComunicacao> documentos) throws DAOException{
+		for (DocumentoModeloComunicacao documento : documentos) {
+			if (documento.getId() == null) {
+				genericManager.persist(documento);
+			}
+		}
+	}
+
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void removerDocumento(DocumentoModeloComunicacao documentoModelo) throws DAOException{
+		if(documentoModelo.getId() != null){
+			genericManager.remove(documentoModelo);
+		}
+	}
+	
 }
