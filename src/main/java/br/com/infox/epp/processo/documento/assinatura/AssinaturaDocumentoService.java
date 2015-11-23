@@ -51,7 +51,6 @@ import br.com.infox.seam.util.ComponentUtil;
 @Scope(ScopeType.STATELESS)
 @Name(AssinaturaDocumentoService.NAME)
 @Transactional
-@Stateless
 public class AssinaturaDocumentoService {
 
     private static final LogProvider LOG = Logging.getLogProvider(AssinaturaDocumentoService.class);
