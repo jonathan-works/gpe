@@ -5,14 +5,13 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-
-import com.google.inject.Inject;
 
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
