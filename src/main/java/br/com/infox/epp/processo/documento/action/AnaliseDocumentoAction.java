@@ -25,6 +25,8 @@ public class AnaliseDocumentoAction implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Inject
+	private ModeloComunicacaoManager modeloComunicacaoManager;
+	@Inject
 	private InfoxMessages infoxMessages;
 	
 	private List<Documento> documentosAnalise;
@@ -110,7 +112,7 @@ public class AnaliseDocumentoAction implements Serializable{
 	
 	public List<Documento> getDocumentosComunicacao(){
 		if(documentosComunicacao == null){
-			documentosComunicacao = ComponentUtil.<ModeloComunicacaoManager>getComponent(ModeloComunicacaoManager.NAME).getDocumentosByModeloComunicacao(destinatarioComunicacao.getModeloComunicacao());
+			documentosComunicacao = modeloComunicacaoManager.getDocumentosByModeloComunicacao(destinatarioComunicacao.getModeloComunicacao());
 		}
 		return documentosComunicacao;
 	}

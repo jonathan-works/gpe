@@ -6,61 +6,54 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
+import javax.ejb.Remove;
+import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
-import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.manager.GenericManager;
-import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
-import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.list.ParticipanteProcessoComunicacaoList;
-import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.DestinatarioComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.hibernate.util.HibernateUtil;
+import br.com.infox.seam.util.ComponentUtil;
 
-@Name(DestinatarioComunicacaoAction.NAME)
-@Scope(ScopeType.CONVERSATION)
-@AutoCreate
+@Named(DestinatarioComunicacaoAction.NAME)
+@ViewScoped
+@Stateful
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class DestinatarioComunicacaoAction {
 	public static final String NAME = "destinatarioComunicacaoAction";
 	private static final LogProvider LOG = Logging.getLogProvider(DestinatarioComunicacaoAction.class);
 
-	@In
-	private ParticipanteProcessoComunicacaoList participanteProcessoComunicacaoList;
-	@In
+	private ParticipanteProcessoComunicacaoList participanteProcessoComunicacaoList = ComponentUtil.getComponent(ParticipanteProcessoComunicacaoList.NAME);
+	private GenericManager genericManager = ComponentUtil.getComponent(GenericManager.NAME);
+	
+	@Inject
 	private PessoaFisicaManager pessoaFisicaManager;
-	@In
+	@Inject
 	private UsuarioPerfilManager usuarioPerfilManager;
-	@In
-	private GenericManager genericManager;
-	@In
-	private ModeloComunicacaoManager modeloComunicacaoManager;
-	@In
-	private PapelManager papelManager;
-	@In
+	@Inject
 	private DestinatarioComunicacaoService destinatarioComunicacaoService;
-	@In
-	private ActionMessagesService actionMessagesService;
 	
 	private List<Integer> idsLocalizacoesSelecionadas = new ArrayList<>();
 	private Map<Localizacao, List<PerfilTemplate>> perfisSelecionados = new HashMap<>();
@@ -71,25 +64,30 @@ public class DestinatarioComunicacaoAction {
 	private Localizacao localizacao;
 	private PerfilTemplate perfilDestino;
 	
-	protected void init() {
+	public void init() {
 		initEntityLists();
 	}
 	
-	@Transactional
-	protected void persistDestinatarios() throws DAOException {
+	@Remove
+	public void destroy() {
+		
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void persistDestinatarios() throws DAOException {
 		for (DestinatarioModeloComunicacao excluido : destinatariosExcluidos) {
 			if(excluido.getId() != null){
 				destinatarioComunicacaoService.removeDestinatarioModeloComunicacao(excluido);
 			}
 		}
-		for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
+		for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) { //TODO ver alterações nos destinatarios
 			if (destinatario.getId() == null) {
 				genericManager.persist(destinatario);
 			}
 		}
 	}
 	
-	protected void resetEntityState() {
+	public void resetEntityState() {
 		for (DestinatarioModeloComunicacao dest : modeloComunicacao.getDestinatarios()) {
 			dest.setId(null);
 		}
@@ -157,6 +155,7 @@ public class DestinatarioComunicacaoAction {
 		}
 	}
 	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void excluirDestinatario (DestinatarioModeloComunicacao destinatarioModeloComunicacao) throws DAOException {
 		removerDestinatario(destinatarioModeloComunicacao);
 		destinatarioComunicacaoService.removeDestinatarioModeloComunicacao(destinatarioModeloComunicacao);
@@ -297,7 +296,7 @@ public class DestinatarioComunicacaoAction {
 	    return resp;
 	}
 	
-	protected void setModeloComunicacao(ModeloComunicacao modeloComunicacao) {
+	public void setModeloComunicacao(ModeloComunicacao modeloComunicacao) {
 		this.modeloComunicacao = modeloComunicacao;
 	}
 

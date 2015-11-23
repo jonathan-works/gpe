@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -12,12 +14,8 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-
 import br.com.infox.core.manager.Manager;
-import br.com.infox.epp.access.manager.PapelManager;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
@@ -36,15 +34,12 @@ import br.com.infox.epp.processo.documento.entity.Documento_;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 
-@Name(ModeloComunicacaoManager.NAME)
-@AutoCreate
+@Stateless
 public class ModeloComunicacaoManager extends Manager<ModeloComunicacaoDAO, ModeloComunicacao> {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "modeloComunicacaoManager";
 	
-	@In
-	private PapelManager papelManager;
-	@In
+	@Inject
 	private PrazoComunicacaoService prazoComunicacaoService;
 	
 	public boolean isExpedida(ModeloComunicacao modeloComunicacao) {

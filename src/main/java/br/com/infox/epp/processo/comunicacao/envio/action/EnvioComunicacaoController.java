@@ -3,16 +3,16 @@ package br.com.infox.epp.processo.comunicacao.envio.action;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.ejb.Remove;
+import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.persistence.NonUniqueResultException;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Create;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.TaskInstance;
 import org.jboss.seam.faces.FacesMessages;
@@ -37,63 +37,57 @@ import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
-import br.com.infox.epp.processo.comunicacao.service.DocumentoComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacaoManager;
-import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.epp.system.Parametros;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
+import br.com.infox.seam.util.ComponentUtil;
 
-@Name(EnvioComunicacaoController.NAME)
-@Scope(ScopeType.CONVERSATION)
-@AutoCreate
-@Transactional
+@Named(EnvioComunicacaoController.NAME)
+@Stateful
+@ViewScoped
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class EnvioComunicacaoController implements Serializable {
 	
 	public static final String NAME = "envioComunicacaoController";
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(EnvioComunicacaoController.class);
 	
-	@In
-	private TipoComunicacaoManager tipoComunicacaoManager;
-	@In
-	private ModeloComunicacaoManager modeloComunicacaoManager;
-	@In
-	private ActionMessagesService actionMessagesService;
-	@In
-	private LocalizacaoSubTreeHandler localizacaoSubTree;
-	@In
-	private String raizLocalizacoesComunicacao;
-	@In
-	private LocalizacaoManager localizacaoManager;
-	@In
-	private AssinaturaDocumentoService assinaturaDocumentoService;
-	@In
-	private ComunicacaoService comunicacaoService;
-	@In
-	private ProcessoManager processoManager;
-	@In
-	private DocumentoDownloader documentoDownloader;
-	@In
-	private CertificateSignatures certificateSignatures;
-	@In
+	private TipoComunicacaoManager tipoComunicacaoManager = ComponentUtil.getComponent(TipoComunicacaoManager.NAME);
+	private LocalizacaoSubTreeHandler localizacaoSubTree = ComponentUtil.getComponent(LocalizacaoSubTreeHandler.NAME);
+	private AssinaturaDocumentoService assinaturaDocumentoService = ComponentUtil.getComponent(AssinaturaDocumentoService.NAME);
+	private CertificateSignatures certificateSignatures = ComponentUtil.getComponent(CertificateSignatures.NAME);
+	
+	@Inject
 	private DocumentoComunicacaoAction documentoComunicacaoAction;
-	@In
+	@Inject
+	private ModeloComunicacaoManager modeloComunicacaoManager;
+	@Inject
 	private DestinatarioComunicacaoAction destinatarioComunicacaoAction;
-	@In
-	private DocumentoComunicacaoService documentoComunicacaoService;
+	@Inject
+	private ProcessoManager processoManager;
+	@Inject
+	private ComunicacaoService comunicacaoService;
+	@Inject
+	private LocalizacaoManager localizacaoManager;
+	@Inject
+	private ActionMessagesService actionMessagesService;
+	
+	private String raizLocalizacoesComunicacao = Parametros.RAIZ_LOCALIZACOES_COMUNICACAO.getValue();
 	
 	private ModeloComunicacao modeloComunicacao;
 	private Long processInstanceId;
@@ -110,7 +104,7 @@ public class EnvioComunicacaoController implements Serializable {
 	private String idModeloComunicacaoVariableName;
 	private boolean isNew = true;
 	
-	@Create
+	@PostConstruct
 	public void init() {
 		String idJbpm = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("jbpmProcessId");
 		String idModelo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idModeloComunicacao");
@@ -125,9 +119,12 @@ public class EnvioComunicacaoController implements Serializable {
 			idModeloComunicacaoVariableName = "idModeloComunicacao-" + taskInstance.getId();
 		}
 		initModelo(idModelo == null ? null : Long.valueOf(idModelo));
-		initLocalizacaoRaiz();
-		initDestinatarioComunicacaoAction();
-		initDocumentoComunicacaoAction();
+		clear();
+	}
+	
+	@Remove
+	public void destroy(){
+		
 	}
 
 	private void initDocumentoComunicacaoAction() {
@@ -179,6 +176,7 @@ public class EnvioComunicacaoController implements Serializable {
 		}
 	}
 	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void gravar() {
 		try {
 			validarGravacao();
@@ -199,6 +197,7 @@ public class EnvioComunicacaoController implements Serializable {
 					expedirComunicacao();
 				}
 			}
+			clear();
 			FacesMessages.instance().add("Registro gravado com sucesso");
 			isNew = false;
 		} catch (Exception e) {
@@ -210,6 +209,12 @@ public class EnvioComunicacaoController implements Serializable {
 			}
 			resetEntityState();
 		}
+	}
+
+	private void clear() {
+		initLocalizacaoRaiz();
+		initDestinatarioComunicacaoAction();
+		initDocumentoComunicacaoAction();
 	}
 
 	private void setIdModeloVariable(Long id) {
@@ -267,6 +272,7 @@ public class EnvioComunicacaoController implements Serializable {
 		}
 	}
 
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void expedirComunicacao() {
 		try {
 			if (destinatario != null) {
@@ -283,6 +289,7 @@ public class EnvioComunicacaoController implements Serializable {
 				comunicacaoService.expedirComunicacao(modeloComunicacao);
 			}
 			clearAssinaturas();
+			clear();
 			expedida = null;
 			if ((destinatario!= null && destinatario.getExpedido()) || (destinatario == null && isExpedida())) {
 				FacesMessages.instance().add("Comunicação expedida com sucesso");
@@ -299,23 +306,29 @@ public class EnvioComunicacaoController implements Serializable {
 		}
 	}
 
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void reabrirComunicacao() {
-		
+		try {
+			modeloComunicacao = comunicacaoService.reabrirComunicacao(getModeloComunicacao());
+			isNew = false;
+			resetEntityState();
+			clear();
+			FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.sucesso.reabertura"));
+		} catch (DAOException | CloneNotSupportedException e) {
+			LOG.error("Erro ao rebarir comunicação", e);
+			FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.erro.reabertura"));
+		}
 	}
 	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void excluirDestinatarioComunicacao(DestinatarioModeloComunicacao destinatarioModeloComunicacao) {
 		destinatarioComunicacaoAction.excluirDestinatario(destinatarioModeloComunicacao);
 		if (modeloComunicacao.getDestinatarios().isEmpty()) {
 			try {
-				ModeloComunicacao  copyModeloComunicacao = modeloComunicacao.makeCopy();
-				modeloComunicacaoManager.remove(modeloComunicacao);
-				modeloComunicacao =  copyModeloComunicacao;
-				modeloComunicacao.setEnviarRelatoria(false);
+				modeloComunicacao = comunicacaoService.reabrirComunicacao(getModeloComunicacao());
 				isNew = true;
 				resetEntityState();
-				initLocalizacaoRaiz();
-				initDestinatarioComunicacaoAction();
-				initDocumentoComunicacaoAction();
+				clear();
 				FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.sucesso.exclusaoDestinatario"));
 			} catch (DAOException e) {
 				FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.erro.exclusaoDestinatario"));

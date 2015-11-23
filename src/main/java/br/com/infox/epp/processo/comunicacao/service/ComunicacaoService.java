@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.transaction.SystemException;
 
@@ -30,7 +31,6 @@ import br.com.infox.core.pdf.PdfManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
-import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
@@ -62,7 +62,7 @@ import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 @Scope(ScopeType.EVENT)
 @AutoCreate
 @Transactional
-@ContextDependency
+@Stateless
 public class ComunicacaoService {
 	
 	public static final String NAME = "comunicacaoService";
@@ -87,15 +87,18 @@ public class ComunicacaoService {
 	private ProcessoManager processoManager;
 	@In
 	private GenericManager genericManager;
-	@In
-	private ModeloComunicacaoManager modeloComunicacaoManager;
+	
 	@In
 	private MetadadoProcessoManager metadadoProcessoManager;
-	@In
+	@Inject
 	private DocumentoComunicacaoService documentoComunicacaoService;
 	@In
 	private UsuarioLoginManager usuarioLoginManager;
 	
+	@Inject
+	private ModeloComunicacaoManager modeloComunicacaoManager;
+	@Inject
+	private DestinatarioComunicacaoService destinatarioComunicacaoService;
 	@Inject
 	private PrazoComunicacaoService prazoComunicacaoService;
 	

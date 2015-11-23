@@ -3,6 +3,8 @@ package br.com.infox.epp.processo.comunicacao.action;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -22,13 +24,13 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.list.DestinatarioModeloComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
-import br.com.infox.epp.processo.comunicacao.service.DocumentoComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacaoManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
@@ -41,13 +43,14 @@ import br.com.infox.seam.transaction.TransactionService;
 @Name(ExpedicaoComunicacaoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 @Transactional
+@ContextDependency
 public class ExpedicaoComunicacaoAction implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "expedicaoComunicacaoAction";
 	private static final LogProvider LOG = Logging.getLogProvider(ExpedicaoComunicacaoAction.class);
 	
-	@In
+	@Inject
 	private ModeloComunicacaoManager modeloComunicacaoManager;
 	@In
 	private DestinatarioModeloComunicacaoList destinatarioModeloComunicacaoList;
@@ -57,14 +60,12 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	private AssinaturaDocumentoService assinaturaDocumentoService;
 	@In
 	private ComunicacaoService comunicacaoService;
-	@In
+	@Inject
 	private ActionMessagesService actionMessagesService;
 	@In
 	private TipoComunicacaoManager tipoComunicacaoManager;
 	@In
 	private CertificateSignatures certificateSignatures;
-	@In
-	private DocumentoComunicacaoService documentoComunicacaoService;
 	
 	private String tab = "list";
 	private ModeloComunicacao modeloComunicacao;

@@ -24,6 +24,7 @@ import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.list.ModeloComunicacaoRascunhoList;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
+import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.service.ProcessoAnaliseDocumentoService;
@@ -38,10 +39,13 @@ public class ComunicacaoAction implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "comunicacaoAction";
 	
-	private ModeloComunicacaoManager modeloComunicacaoManager = ComponentUtil.getComponent(ModeloComunicacaoManager.NAME);
+	
 	private ProcessoAnaliseDocumentoService processoAnaliseDocumentoService = ComponentUtil.getComponent(ProcessoAnaliseDocumentoService.NAME);
 	private DocumentoDownloader documentoDownloader = ComponentUtil.getComponent(DocumentoDownloader.NAME);
+	private ComunicacaoService comunicacaoService = ComponentUtil.getComponent(ComunicacaoService.NAME); 
 	
+	@Inject
+	private ModeloComunicacaoManager modeloComunicacaoManager;
 	@Inject	
 	private ModeloComunicacaoRascunhoList modeloComunicacaoRascunhoList;
 	@Inject

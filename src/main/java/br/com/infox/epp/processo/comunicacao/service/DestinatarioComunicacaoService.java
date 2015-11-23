@@ -6,9 +6,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
@@ -23,24 +24,24 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
 import br.com.infox.epp.system.Parametros;
+import br.com.infox.seam.util.ComponentUtil;
 
-@AutoCreate
-@Name(DestinatarioComunicacaoService.NAME)
+@Stateless
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class DestinatarioComunicacaoService implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "destinatarioComunicacaoService";
 	
-	@In
+	@Inject
 	private UsuarioPerfilManager usuarioPerfilManager;
-	@In
-	private PapelManager papelManager;
-	@In
+	@Inject
 	private LocalizacaoManager localizacaoManager;
-	@In
-	private String raizLocalizacoesComunicacao;
-	@In
-	private GenericManager genericManager;
+	
+	private GenericManager genericManager = ComponentUtil.getComponent(GenericManager.NAME);
+	private PapelManager papelManager = ComponentUtil.getComponent(PapelManager.NAME);
+	
+	private String raizLocalizacoesComunicacao = Parametros.RAIZ_LOCALIZACOES_COMUNICACAO.getValue();
 	
 	public List<MeioExpedicao> getMeiosExpedicao(DestinatarioModeloComunicacao destinatario) {
 		if (destinatario.getDestinatario() != null) {
@@ -80,10 +81,10 @@ public class DestinatarioComunicacaoService implements Serializable{
 		return meiosExpedicao;
 	}
 	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void removeDestinatarioModeloComunicacao(DestinatarioModeloComunicacao destinatarioModeloComunicacao) throws DAOException{
 		if(destinatarioModeloComunicacao.getId() != null){
 			genericManager.remove(destinatarioModeloComunicacao);
 		}
-		
 	}
 }

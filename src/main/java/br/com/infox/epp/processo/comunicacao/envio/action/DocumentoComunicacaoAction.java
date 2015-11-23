@@ -5,12 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
+import javax.ejb.Remove;
+import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
@@ -19,13 +20,12 @@ import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.manager.PapelManager;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.list.DocumentoDisponivelComunicacaoList;
-import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
-import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.DocumentoComunicacaoService;
 import br.com.infox.epp.processo.documento.bean.PastaRestricaoBean;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -38,36 +38,29 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.seam.util.ComponentUtil;
 
-@Name(DocumentoComunicacaoAction.NAME)
-@AutoCreate
-@Scope(ScopeType.CONVERSATION)
-@Transactional
+@Named(DocumentoComunicacaoAction.NAME)
+@Stateful
+@ViewScoped
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class DocumentoComunicacaoAction implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "documentoComunicacaoAction";
 	private static final LogProvider LOG = Logging.getLogProvider(DocumentoComunicacaoAction.class);
 	
-	@In
-	private DocumentoDisponivelComunicacaoList documentoDisponivelComunicacaoList;
-	@In
-	private ComunicacaoService comunicacaoService;
-	@In
+	@Inject
 	private ActionMessagesService actionMessagesService;
-	@In
+	@Inject
 	private PastaManager pastaManager;
-	@In
+	@Inject
 	private DocumentoBinManager documentoBinManager;
-	@In
-	private GenericManager genericManager;
-	@In
+	@Inject
 	private DocumentoComunicacaoService documentoComunicacaoService;
-	@In
-	private ModeloComunicacaoManager modeloComunicacaoManager;
-	@In
-	private PapelManager papelManager;
-
+	
+	private PapelManager papelManager = ComponentUtil.getComponent(PapelManager.NAME);
+	private DocumentoDisponivelComunicacaoList documentoDisponivelComunicacaoList = ComponentUtil.getComponent(DocumentoDisponivelComunicacaoList.NAME);
 	private PastaRestricaoManager pastaRestricaoManager = ComponentUtil.getComponent(PastaRestricaoManager.NAME);
+	private GenericManager genericManager = ComponentUtil.getComponent(GenericManager.NAME);
 	
 	private ModeloComunicacao modeloComunicacao;
 	
@@ -77,7 +70,7 @@ public class DocumentoComunicacaoAction implements Serializable {
 	private boolean possuiDocumentoInclusoPorUsuarioInterno = false;
 	private Map<Integer, PastaRestricaoBean> restricoesPasta = new HashMap<>();
 	
-	void init() {
+	public void init() {
 		initClassificacoes();
 		initEntityLists();
 		if (modeloComunicacao.getId() != null) {
@@ -89,7 +82,13 @@ public class DocumentoComunicacaoAction implements Serializable {
 		}
 	}
 	
-	void persistDocumentos() throws DAOException {
+	@Remove
+	public void destroy() {
+		
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void persistDocumentos() throws DAOException {
 		for (DocumentoModeloComunicacao documento : modeloComunicacao.getDocumentos()) {
 			if (documento.getId() == null) {
 				genericManager.persist(documento);
@@ -97,7 +96,7 @@ public class DocumentoComunicacaoAction implements Serializable {
 		}
 	}
 	
-	void resetEntityState() {
+	public void resetEntityState() {
 		for (DocumentoModeloComunicacao doc : modeloComunicacao.getDocumentos()) {
 			doc.setId(null);
 		}
@@ -110,14 +109,14 @@ public class DocumentoComunicacaoAction implements Serializable {
 		}
 	}
 
-	void initClassificacoes() {
+	public void initClassificacoes() {
 		classificacoes = documentoComunicacaoService.getClassificacoesDocumentoDisponiveisComunicacao(modeloComunicacao.getTipoComunicacao());
 		if (classificacoes.size() == 1 && modeloComunicacao.getClassificacaoComunicacao() == null) {
 			modeloComunicacao.setClassificacaoComunicacao(classificacoes.get(0));
 		}
 	}
 	
-	void setModeloComunicacao(ModeloComunicacao modeloComunicacao) {
+	public void setModeloComunicacao(ModeloComunicacao modeloComunicacao) {
 		this.modeloComunicacao = modeloComunicacao;
 	}
 	
@@ -133,6 +132,7 @@ public class DocumentoComunicacaoAction implements Serializable {
 		}
 	}
 	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void removerDocumento(DocumentoModeloComunicacao documentoModelo) {
 		modeloComunicacao.getDocumentos().remove(documentoModelo);
 		if(documentoModelo.getId() != null){
@@ -209,6 +209,7 @@ public class DocumentoComunicacaoAction implements Serializable {
 		return possuiDocumentoInclusoPorUsuarioInterno;
 	}
 	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public List<ModeloDocumento> getModelosDocumento() {
 		if (modelosDocumento == null) {
 			modelosDocumento = documentoComunicacaoService.getModelosDocumentoDisponiveisComunicacao(modeloComunicacao.getTipoComunicacao());
@@ -216,7 +217,7 @@ public class DocumentoComunicacaoAction implements Serializable {
 		return modelosDocumento;
 	}
 	
-	void setModelosDocumento(List<ModeloDocumento> modelosDocumento) {
+	public void setModelosDocumento(List<ModeloDocumento> modelosDocumento) {
 		this.modelosDocumento = modelosDocumento;
 	}
 }
