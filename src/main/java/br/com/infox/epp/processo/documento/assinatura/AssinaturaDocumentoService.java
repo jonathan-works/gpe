@@ -1,11 +1,12 @@
 package br.com.infox.epp.processo.documento.assinatura;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.ejb.Stateless;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -46,12 +47,12 @@ import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
 
 @AutoCreate
-@Scope(ScopeType.EVENT)
+@Scope(ScopeType.STATELESS)
 @Name(AssinaturaDocumentoService.NAME)
 @Transactional
-public class AssinaturaDocumentoService implements Serializable {
+@Stateless
+public class AssinaturaDocumentoService {
 
-    private static final long serialVersionUID = 1L;
     private static final LogProvider LOG = Logging.getLogProvider(AssinaturaDocumentoService.class);
     public static final String NAME = "assinaturaDocumentoService";
 
@@ -133,7 +134,7 @@ public class AssinaturaDocumentoService implements Serializable {
             return false;
         }
     	List<Documento> documentos = documentoManager.getDocumentosFromDocumentoBin(documento);
-    	if (documentos.size()>0){
+    	if (documentos.size() > 0){
     	    return isDocumentoTotalmenteAssinado(documentos.get(0));
     	}
     	return false;
@@ -308,6 +309,13 @@ public class AssinaturaDocumentoService implements Serializable {
             final String signature) throws CertificadoException,
             AssinaturaException, DAOException {
         assinarDocumento(documento.getDocumentoBin(), perfilAtual, certChain, signature);
+    }
+    
+    public void assinarGravarDocumento(Documento documento,
+            final UsuarioPerfil perfilAtual, final String certChain,
+            final String signature) throws DAOException, CertificadoException, AssinaturaException {
+    	documento = documentoManager.gravarDocumentoNoProcesso(documento.getProcesso(), documento);
+    	assinarDocumento(documento.getDocumentoBin(), perfilAtual, certChain, signature);
     }
 
     public boolean isDocumentoAssinado(Integer idDocumento, PerfilTemplate perfilTemplate) {

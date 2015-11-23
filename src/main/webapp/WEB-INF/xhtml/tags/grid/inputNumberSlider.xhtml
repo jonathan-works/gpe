@@ -9,7 +9,7 @@
         value="#{bean.page}" step="1" minValue="1" width="250px"
         maxValue="#{bean.pageCount}" showTooltip="true">
         <a:ajax event="change" status="status" queueId="default" onbegin="infox.showLoading()" oncomplete="infox.hideLoading();"
-            limitRender="true" render="#{id}Panel" />
+            limitRender="true" render="#{id}Panel" execute="@this"/>
     </rich:inputNumberSlider>
 
 </ui:composition>

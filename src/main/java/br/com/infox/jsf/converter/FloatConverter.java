@@ -8,21 +8,17 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
+import javax.faces.convert.FacesConverter;
 
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.util.Strings;
 
-@org.jboss.seam.annotations.faces.Converter
-@Name("floatConverter")
-@BypassInterceptors
+@FacesConverter("floatConverter")
 public class FloatConverter implements Converter {
 
     private static final NumberFormat FORMATTER = new DecimalFormat("#,##0.00");
 
     @Override
-    public Object getAsObject(FacesContext context, UIComponent component,
-            String value) {
+    public Object getAsObject(FacesContext context, UIComponent component, String value) {
         if (Strings.isEmpty(value)) {
             return null;
         }
@@ -30,15 +26,13 @@ public class FloatConverter implements Converter {
         try {
             valor = FORMATTER.parse(value).doubleValue();
         } catch (Exception e) {
-            throw new ConverterException(new FacesMessage("Formato inválido: "
-                    + value), e);
+            throw new ConverterException(new FacesMessage("Formato inválido: " + value), e);
         }
         return valor;
     }
 
     @Override
-    public String getAsString(FacesContext context, UIComponent component,
-            Object value) {
+    public String getAsString(FacesContext context, UIComponent component, Object value) {
         return value == null ? null : FORMATTER.format(value);
     }
 

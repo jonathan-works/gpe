@@ -3,14 +3,11 @@ package br.com.infox.jsf.converter;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
+import javax.faces.convert.FacesConverter;
 
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.util.Strings;
 
-@org.jboss.seam.annotations.faces.Converter
-@Name("stringConverter")
-@BypassInterceptors
+@FacesConverter("stringConverter")
 public class StringConverter implements Converter {
 
     private static char[][] replaceCharTable = { { (char) 8211, '-' },
@@ -20,8 +17,7 @@ public class StringConverter implements Converter {
         { (char) 8594, '-' } };
 
     @Override
-    public Object getAsObject(FacesContext context, UIComponent component,
-            String value) {
+    public Object getAsObject(FacesContext context, UIComponent component, String value) {
         String saida = value;
         for (char[] tupla : replaceCharTable) {
             saida = saida.replace(tupla[0], tupla[1]);
@@ -30,8 +26,7 @@ public class StringConverter implements Converter {
     }
 
     @Override
-    public String getAsString(FacesContext context, UIComponent component,
-            Object value) {
+    public String getAsString(FacesContext context, UIComponent component, Object value) {
         return value == null ? null : value.toString();
     }
 

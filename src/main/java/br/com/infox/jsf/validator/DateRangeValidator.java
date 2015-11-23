@@ -6,22 +6,16 @@ import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
-
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.util.DateUtil;
 
-@org.jboss.seam.annotations.faces.Validator(id = DateRangeValidator.NAME)
-@Name(DateRangeValidator.NAME)
-@BypassInterceptors
+@FacesValidator("dateRangeValidator")
 public class DateRangeValidator implements Validator {
 	
-    public static final String NAME = "dateRangeValidator";
-
     public void validate(FacesContext context, UIComponent component, Object value) {
         Date startDate = null, endDate = null;
         String errorMessage = null;

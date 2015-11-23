@@ -6,24 +6,16 @@ import java.util.Date;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
-
 import br.com.infox.core.messages.InfoxMessages;
 
-
-@org.jboss.seam.annotations.faces.Validator(id = FutureDateOnlyValidator.NAME)
-@Name(FutureDateOnlyValidator.NAME)
-@BypassInterceptors
+@FacesValidator("futureDateOnlyValidator")
 public class FutureDateOnlyValidator implements Validator {
 
-    static final String NAME = "futureDateOnlyValidator";
-    
-    public void validate(FacesContext context, UIComponent component,
-            Object value) {
+    public void validate(FacesContext context, UIComponent component, Object value) {
         if (value == null) {
             return;
         }

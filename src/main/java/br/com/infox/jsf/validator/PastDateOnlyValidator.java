@@ -6,22 +6,15 @@ import java.util.Date;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
-
 import br.com.infox.core.messages.InfoxMessages;
 
-
-@org.jboss.seam.annotations.faces.Validator(id = PastDateOnlyValidator.NAME)
-@Name(PastDateOnlyValidator.NAME)
-@BypassInterceptors
+@FacesValidator("pastDateOnlyValidator")
 public class PastDateOnlyValidator implements Validator {
 
-    public static final String NAME = "pastDateOnlyValidator";
-    
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
         if (value == null) {

@@ -28,6 +28,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.PapelManager;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.ModeloPasta;
 import br.com.infox.epp.fluxo.entity.ModeloPastaRestricao;
@@ -42,10 +43,11 @@ import br.com.infox.seam.util.ComponentUtil;
 
 @Name(ModeloPastaRestricaoAction.NAME)
 @Scope(ScopeType.PAGE)
+@ContextDependency
 public class ModeloPastaRestricaoAction implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	static final String NAME = "modeloPastaRestricaoAction";
+	public static final String NAME = "modeloPastaRestricaoAction";
 	private static final LogProvider LOG = Logging.getLogProvider(ModeloPastaRestricaoAction.class);
 	
     @In
@@ -113,9 +115,9 @@ public class ModeloPastaRestricaoAction implements Serializable {
 	public void persist() {
 		try {
 			if (prePersist()) {
-				modeloPastaManager.persistWithDefault(getInstance());
+				persistNovoModeloPasta();
 				getFluxo().getModeloPastaList().add(getInstance());
-				setListModeloPastas(modeloPastaManager.getByFluxo(getFluxo()));
+				initModeloPastaList(getFluxo());
 				newInstance();
 				statusMessage.add(StatusMessage.Severity.INFO, infoxMessages.get("modeloPasta.added"));
 			}
@@ -125,15 +127,23 @@ public class ModeloPastaRestricaoAction implements Serializable {
 			actionMessagesService.handleDAOException(e);
 		}
 	}
+
+	protected void persistNovoModeloPasta() throws DAOException {
+		modeloPastaManager.persistWithDefault(getInstance());
+	}
 	
 	public void update() {
 		try {
-			modeloPastaManager.update(getInstance());
+			updateModeloPasta();
 			statusMessage.add(StatusMessage.Severity.INFO, infoxMessages.get("modeloPasta.updated"));
 		} catch (DAOException e) {
 			LOG.error(e);
 			actionMessagesService.handleDAOException(e);
 		}
+	}
+
+	protected void updateModeloPasta() throws DAOException {
+		modeloPastaManager.update(getInstance());
 	}
 	
 	public void removeModeloPasta(ModeloPasta modelo) {
@@ -145,7 +155,8 @@ public class ModeloPastaRestricaoAction implements Serializable {
 			if (modelo.equals(getInstance())) {
 			    newInstance();
 			}
-			setListModeloPastas(modeloPastaManager.getByFluxo(getFluxo()));
+			modeloPastaList.refresh();
+			initModeloPastaList(getFluxo());
 			statusMessage.add(Severity.INFO, infoxMessages.get("modeloPasta.removed"));
 		} catch (DAOException e) {
 			LOG.error(e);
@@ -382,8 +393,12 @@ public class ModeloPastaRestricaoAction implements Serializable {
 
 	public void setFluxo(Fluxo fluxo) {
 		this.fluxo = fluxo;
+		initModeloPastaList(fluxo);
+	}
+
+	protected void initModeloPastaList(Fluxo fluxo) {
 		modeloPastaList.getEntity().setFluxo(fluxo);
-		setListModeloPastas(modeloPastaManager.getByFluxo(this.fluxo));
+		setListModeloPastas(modeloPastaManager.getByFluxo(fluxo));
 	}
 
 }

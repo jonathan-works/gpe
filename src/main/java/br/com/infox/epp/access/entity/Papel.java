@@ -75,7 +75,7 @@ public class Papel implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private int idPapel;
+    private Integer idPapel;
     private String nome;
     private String identificador;
     private Boolean termoAdesao;
@@ -95,11 +95,11 @@ public class Papel implements java.io.Serializable {
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_PAPEL, unique = true, nullable = false)
-    public int getIdPapel() {
+    public Integer getIdPapel() {
         return this.idPapel;
     }
 
-    public void setIdPapel(int idPerfil) {
+    public void setIdPapel(Integer idPerfil) {
         this.idPapel = idPerfil;
     }
 

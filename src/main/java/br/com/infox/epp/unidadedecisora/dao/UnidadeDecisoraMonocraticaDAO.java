@@ -13,11 +13,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.pessoa.entity.PessoaFisica_;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
+import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica_;
 
 @AutoCreate
 @Name(UnidadeDecisoraMonocraticaDAO.NAME)
@@ -48,5 +56,16 @@ public class UnidadeDecisoraMonocraticaDAO extends DAO<UnidadeDecisoraMonocratic
 		Map<String, Object> params = new HashMap<>();
 		params.put(CODIGO_LOCALIZACAO, codigoLocalizacao);
 		return getNamedSingleResult(FIND_UDM_BY_CODIGO_LOCALIZACAO, params);
+	}
+	
+	public List<PessoaFisica> getRelatores() {
+		EntityManager entityManager = getEntityManager();
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<PessoaFisica> query = cb.createQuery(PessoaFisica.class);
+		Root<UnidadeDecisoraMonocratica> udm = query.from(UnidadeDecisoraMonocratica.class);
+		query.where(cb.isTrue(udm.get(UnidadeDecisoraMonocratica_.ativo)), cb.isNotNull(udm.get(UnidadeDecisoraMonocratica_.chefeGabinete)));
+		query.select(udm.get(UnidadeDecisoraMonocratica_.chefeGabinete));
+		query.orderBy(cb.asc(udm.get(UnidadeDecisoraMonocratica_.chefeGabinete).get(PessoaFisica_.nome)));
+		return entityManager.createQuery(query).getResultList();
 	}
 }

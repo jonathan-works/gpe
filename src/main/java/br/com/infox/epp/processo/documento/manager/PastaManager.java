@@ -50,7 +50,7 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
         return pasta;
     }
     
-    public List<Pasta> getByProcesso(Processo processo) throws DAOException {
+    public List<Pasta> getByProcesso(Processo processo) {
         List<Pasta> pastaList = getDao().getByProcesso(processo);
         return pastaList;
     }
@@ -94,7 +94,7 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
         return pastaList;
     }
     
-    private Pasta createFromModelo(ModeloPasta modeloPasta, Processo processo) throws DAOException {
+    protected Pasta createFromModelo(ModeloPasta modeloPasta, Processo processo) throws DAOException {
         Pasta pasta = new Pasta();
         pasta.setNome(modeloPasta.getNome());
         pasta.setRemovivel(modeloPasta.getRemovivel());

@@ -7,19 +7,15 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
+import javax.faces.convert.FacesConverter;
 
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.joda.time.DateTime;
 
-@org.jboss.seam.annotations.faces.Converter
-@Name("horaConverter")
-@BypassInterceptors
+@FacesConverter("horaConverter")
 public class HoraConverter implements Converter {
 	
     @Override
-    public Object getAsObject(FacesContext context, UIComponent component,
-            String value) {
+    public Object getAsObject(FacesContext context, UIComponent component, String value) {
         if (value == null || value.trim().length() == 0) {
             return null;
         }

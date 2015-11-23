@@ -8,16 +8,11 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
+import javax.faces.convert.FacesConverter;
 
-import org.jboss.seam.annotations.Install;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.util.Strings;
 
-@org.jboss.seam.annotations.faces.Converter
-@Name("monetarioConverter")
-@Install(precedence = Install.FRAMEWORK)
-@BypassInterceptors
+@FacesConverter("monetarioConverter")
 public class MonetarioConverter implements Converter {
 
     private static final NumberFormat FORMATTER;
@@ -29,8 +24,7 @@ public class MonetarioConverter implements Converter {
     }
 
     @Override
-    public Object getAsObject(FacesContext context, UIComponent component,
-            String value) {
+    public Object getAsObject(FacesContext context, UIComponent component, String value) {
         if (Strings.isEmpty(value)) {
             return null;
         }
@@ -42,15 +36,13 @@ public class MonetarioConverter implements Converter {
         try {
             valor = FORMATTER.parse(newValue).doubleValue();
         } catch (Exception e) {
-            throw new ConverterException(new FacesMessage("Formato inválido: "
-                    + newValue), e);
+            throw new ConverterException(new FacesMessage("Formato inválido: " + newValue), e);
         }
         return valor;
     }
 
     @Override
-    public String getAsString(FacesContext context, UIComponent component,
-            Object value) {
+    public String getAsString(FacesContext context, UIComponent component, Object value) {
         return value == null ? null : FORMATTER.format(value);
     }
 

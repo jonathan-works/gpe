@@ -1,8 +1,11 @@
 package br.com.infox.certificado;
 
-import java.io.Serializable;
 import java.security.cert.CertificateException;
 import java.util.List;
+
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -20,13 +23,15 @@ import br.com.infox.epp.certificado.entity.CertificateSignature;
 import br.com.infox.epp.certificado.entity.CertificateSignatureGroup;
 import br.com.infox.epp.certificado.manager.CertificateSignatureGroupManager;
 
-@Name(CertificateSignatures.NAME)
-@Scope(ScopeType.EVENT)
+@Stateless
 @AutoCreate
-public class CertificateSignatures implements Serializable {
+@Scope(ScopeType.STATELESS)
+@Name(CertificateSignatures.NAME)
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+public class CertificateSignatures {
+	
     private static final LogProvider LOG = Logging.getLogProvider(CertificateSignatures.class);
     public static final String NAME = "certificateSignatures";
-    private static final long serialVersionUID = 1L;
 
     @In
     private CertificateSignatureGroupManager certificateSignatureGroupManager;

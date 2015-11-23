@@ -8,20 +8,15 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
+import javax.faces.convert.FacesConverter;
 
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
-
-@org.jboss.seam.annotations.faces.Converter
-@Name("minutoTimeConverter")
-@BypassInterceptors
+@FacesConverter("minutoTimeConverter")
 public class MinutoTimeConverter implements Converter {
 
     private static final int MINUTOS_HORA = 60;
 
     @Override
-    public Object getAsObject(FacesContext context, UIComponent component,
-            String value) {
+    public Object getAsObject(FacesContext context, UIComponent component, String value) {
         if (value == null || value.trim().length() == 0) {
             return null;
         }
@@ -42,15 +37,13 @@ public class MinutoTimeConverter implements Converter {
     }
 
     @Override
-    public String getAsString(FacesContext context, UIComponent component,
-            Object value) {
+    public String getAsString(FacesContext context, UIComponent component, Object value) {
         long minutos = 0;
         if (value instanceof Time) {
             Time time = (Time) value;
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(time);
-            minutos = (calendar.get(Calendar.HOUR_OF_DAY) * MINUTOS_HORA)
-                    + calendar.get(Calendar.MINUTE);
+            minutos = (calendar.get(Calendar.HOUR_OF_DAY) * MINUTOS_HORA) + calendar.get(Calendar.MINUTE);
         }
         return Long.toString(minutos);
     }
