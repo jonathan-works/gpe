@@ -36,6 +36,7 @@ import org.quartz.impl.matchers.GroupMatcher;
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -47,17 +48,15 @@ import br.com.infox.seam.util.ComponentUtil;
 public class QuartzJobsInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private static final LogProvider LOG = Logging
-            .getLogProvider(QuartzJobsInfo.class);
+    private static final LogProvider LOG = Logging.getLogProvider(QuartzJobsInfo.class);
     public static final String NAME = "quartzJobsInfo";
 
     @In
     private ParametroManager parametroManager;
     @In
     private InfoxMessages infoxMessages;
-    
-    private static Pattern patternExpr = Pattern
-            .compile("^AsynchronousInvocation\\((.*)\\)$");
+
+    private static Pattern patternExpr = Pattern.compile("^AsynchronousInvocation\\((.*)\\)$");
 
     public static Scheduler getScheduler() {
         return QuartzDispatcher.instance().getScheduler();
@@ -78,8 +77,7 @@ public class QuartzJobsInfo implements Serializable {
         return maps;
     }
 
-    private List<Map<String, Object>> getListMapInfoGroupFromJobs(
-            String groupName) throws SchedulerException {
+    private List<Map<String, Object>> getListMapInfoGroupFromJobs(String groupName) throws SchedulerException {
         Scheduler scheduler = getScheduler();
         Set<JobKey> jobKeys = scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName));
         List<Map<String, Object>> maps = new ArrayList<Map<String, Object>>();
@@ -87,15 +85,15 @@ public class QuartzJobsInfo implements Serializable {
             JobDetail jobDetail = scheduler.getJobDetail(jobKey);
             List<? extends Trigger> triggersOfJob = scheduler.getTriggersOfJob(jobKey);
             for (Trigger trigger : triggersOfJob) {
-                Map<String, Object> map = getTrigerDetailMap(jobDetail, trigger); 
-                if (map != null) maps.add(map);
+                Map<String, Object> map = getTrigerDetailMap(jobDetail, trigger);
+                if (map != null)
+                    maps.add(map);
             }
         }
         return maps;
     }
 
-    private Map<String, Object> getTrigerDetailMap(JobDetail jobDetail,
-            Trigger trigger) {
+    private Map<String, Object> getTrigerDetailMap(JobDetail jobDetail, Trigger trigger) {
         Map<String, Object> map = new HashMap<String, Object>();
         String jobName = trigger.getJobKey().getName();
         JobDataMap jobDataMap = jobDetail.getJobDataMap();
@@ -112,9 +110,11 @@ public class QuartzJobsInfo implements Serializable {
             String cronExpression = cronTrigger.getCronExpression();
             if (cronExpression != null && cronExpression.trim().length() > 0)
                 map.put("cronExpression", cronExpression);
-            else return null;
-        } else return null;
-        
+            else
+                return null;
+        } else
+            return null;
+
         return map;
     }
 
@@ -159,8 +159,7 @@ public class QuartzJobsInfo implements Serializable {
             LOG.error(".isMethodValid(component, medothName)", e);
         }
         try {
-            component.getClass().getDeclaredMethod(methodName, Date.class,
-                    String.class);
+            component.getClass().getDeclaredMethod(methodName, Date.class, String.class);
             return true;
         } catch (Exception e) {
             LOG.error(".isMethodValid(component, medothName)", e);
@@ -171,16 +170,14 @@ public class QuartzJobsInfo implements Serializable {
     @Transactional
     public void triggerJob(String jobName, String groupName) {
         try {
-        	String sql = "UPDATE QRTZ_TRIGGERS SET NEXT_FIRE_TIME = :nextFireTime WHERE JOB_NAME = :jobName AND JOB_GROUP = :groupName";
-        	Calendar nextFireTime = Calendar.getInstance();
-        	nextFireTime.roll(Calendar.MINUTE, -1);
-        	getEntityManager().createNativeQuery(sql).setParameter("nextFireTime", nextFireTime.getTime().getTime())
-        		.setParameter("jobName", jobName).setParameter("groupName", groupName).executeUpdate();
-            FacesMessages.instance().add(Severity.INFO,
-                    "Job executado com sucesso: " + jobName);
+            String sql = "UPDATE QRTZ_TRIGGERS SET NEXT_FIRE_TIME = :nextFireTime WHERE JOB_NAME = :jobName AND JOB_GROUP = :groupName";
+            Calendar nextFireTime = Calendar.getInstance();
+            nextFireTime.roll(Calendar.MINUTE, -1);
+            getEntityManager().createNativeQuery(sql).setParameter("nextFireTime", nextFireTime.getTime().getTime())
+                    .setParameter("jobName", jobName).setParameter("groupName", groupName).executeUpdate();
+            FacesMessages.instance().add(Severity.INFO, "Job executado com sucesso: " + jobName);
         } catch (Exception e) {
-            FacesMessages.instance().add(Severity.ERROR,
-                    "Erro ao executar job " + jobName, e);
+            FacesMessages.instance().add(Severity.ERROR, "Erro ao executar job " + jobName, e);
             LOG.error(".triggerJob()", e);
         }
     }
@@ -188,12 +185,13 @@ public class QuartzJobsInfo implements Serializable {
     public void deleteJob(String jobName, String groupName, String triggerName) {
         try {
             getScheduler().deleteJob(JobKey.jobKey(jobName, groupName));
-            parametroManager.removeParametroByValue(triggerName);
-            FacesMessages.instance().add(Severity.INFO,
-                    "Job removido com sucesso: " + jobName);
+            Parametro parametro = parametroManager.getParametroByValorVariavel(triggerName);
+            if (parametro != null) {
+                parametroManager.remove(parametro);
+            }
+            FacesMessages.instance().add(Severity.INFO, "Job removido com sucesso: " + jobName);
         } catch (SchedulerException | DAOException e) {
-            FacesMessages.instance().add(Severity.ERROR,
-                    "Erro ao remover job " + jobName, e);
+            FacesMessages.instance().add(Severity.ERROR, "Erro ao remover job " + jobName, e);
             LOG.error(".deleteJob()", e);
         }
     }
@@ -208,12 +206,12 @@ public class QuartzJobsInfo implements Serializable {
 
     public void apagarJobs() {
         List<Map<String, Object>> jobs = getDetailJobsInfo();
-        
+
         for (Map<String, Object> job : jobs) {
-           deleteJob((String) job.get("jobName"), (String) job.get("groupName"), (String) job.get("triggerName")); 
+            deleteJob((String) job.get("jobName"), (String) job.get("groupName"), (String) job.get("triggerName"));
         }
     }
-    
+
     public EntityManager getEntityManager() {
         return EntityManagerProducer.getEntityManager();
     }
