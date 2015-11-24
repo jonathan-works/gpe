@@ -129,7 +129,7 @@ public class AccessMailService {
         mail.setBody(conteudo);
         mail.getReceivers().clear();
         mail.getReceivers().add(new Contact(usuario.getNomeUsuario(), usuario.getEmail()));
-        mail.setSubject("[otherMail] " + infoxMessages.get("usuario.senha.generated.subject"));
+        mail.setSubject(infoxMessages.get("usuario.senha.generated.subject"));
         mail.setSender(new Contact(this.nomeSistema, this.emailSistema));
         try {
             MailSender.sendMail(mail, getEmailSession());
