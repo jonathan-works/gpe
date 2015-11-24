@@ -48,7 +48,7 @@
                 <f:attribute name="idProcesso" value="#{pastaRestricaoAction.processo.idProcesso}" />
             </wi:inputNumber>
             <wi:commandButton id="addPastaButton"
-            	style="margin-top: 1em;
+            	style="margin-top: 1em;"
                 action="#{pastaRestricaoAction.persistPasta()}"
                 execute="@form"
                 oncomplete="if(#{not facesContext.validationFailed}){#{rich:component('addPastaPanel')}.hide();}else{infox.hideLoading();}"
