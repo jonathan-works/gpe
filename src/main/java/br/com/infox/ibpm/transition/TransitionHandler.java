@@ -7,13 +7,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.jboss.seam.Component;
 import org.jboss.seam.core.Events;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.Transition;
 
-import br.com.infox.ibpm.node.converter.NodeConverter;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.fitter.NodeFitter;
 
@@ -56,7 +55,8 @@ public class TransitionHandler implements Serializable {
     }
 
     public void setFrom(String from) {
-        transition.setFrom(NodeConverter.getAsObject(from));
+    	Node node = BeanManager.INSTANCE.getReference(NodeFitter.class).getNodeByName(from);
+        transition.setFrom(node);
     }
 
     public String getFrom() {
@@ -68,7 +68,8 @@ public class TransitionHandler implements Serializable {
     }
 
     public void setTo(String to) {
-        transition.setTo(NodeConverter.getAsObject(to));
+    	Node node = BeanManager.INSTANCE.getReference(NodeFitter.class).getNodeByName(to);
+        transition.setTo(node);
     }
 
     public String getTo() {
@@ -123,9 +124,8 @@ public class TransitionHandler implements Serializable {
         return null;
     }
 
-    @SuppressWarnings(UNCHECKED)
     public boolean isInDecisionNode() {
-        NodeFitter nodeFitter = (NodeFitter) Component.getInstance(NodeFitter.NAME);
+        NodeFitter nodeFitter = BeanManager.INSTANCE.getReference(NodeFitter.class);
         Node currentNode = nodeFitter.getCurrentNode();
         if (currentNode != null
                 && currentNode.getNodeType().equals(NodeType.Decision)) {
@@ -134,9 +134,8 @@ public class TransitionHandler implements Serializable {
         return false;
     }
 
-    @SuppressWarnings(UNCHECKED)
     public boolean isInForkNode() {
-        NodeFitter nodeFitter = (NodeFitter) Component.getInstance(NodeFitter.NAME);
+        NodeFitter nodeFitter = BeanManager.INSTANCE.getReference(NodeFitter.class);
         Node currentNode = nodeFitter.getCurrentNode();
         if (currentNode != null
                 && currentNode.getNodeType().equals(NodeType.Fork)) {
@@ -147,7 +146,7 @@ public class TransitionHandler implements Serializable {
 
     @SuppressWarnings(UNCHECKED)
     public boolean isInJoinNode() {
-        NodeFitter nodeFitter = (NodeFitter) Component.getInstance(NodeFitter.NAME);
+        NodeFitter nodeFitter = BeanManager.INSTANCE.getReference(NodeFitter.class);
         Node currentNode = nodeFitter.getCurrentNode();
         if (currentNode != null
                 && currentNode.getNodeType().equals(NodeType.Join)) {

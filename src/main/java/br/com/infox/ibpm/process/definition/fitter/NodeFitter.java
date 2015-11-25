@@ -13,20 +13,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.ejb.Remove;
-import javax.ejb.Stateful;
 import javax.el.ELException;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.jboss.el.parser.ELParser;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Factory;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.graph.def.Event;
@@ -44,6 +37,7 @@ import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Task;
 
 import br.com.infox.core.messages.InfoxMessages;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
@@ -54,7 +48,6 @@ import br.com.infox.epp.processo.status.manager.StatusProcessoManager;
 import br.com.infox.ibpm.node.DecisionNode;
 import br.com.infox.ibpm.node.InfoxMailNode;
 import br.com.infox.ibpm.node.constants.NodeTypeConstants;
-import br.com.infox.ibpm.node.converter.NodeConverter;
 import br.com.infox.ibpm.node.handler.NodeHandler;
 import br.com.infox.ibpm.node.manager.JbpmNodeManager;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
@@ -64,14 +57,11 @@ import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
 
-@Name(NodeFitter.NAME)
-@Scope(ScopeType.CONVERSATION)
-@AutoCreate
-@Stateful
+@Named
+@ViewScoped
 public class NodeFitter extends Fitter implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "nodeFitter";
     public static final String SET_CURRENT_NODE_EVENT = "NodeFitter.setCurrentNode";
     private static final LogProvider LOG = Logging.getLogProvider(NodeFitter.class);
 
@@ -88,26 +78,19 @@ public class NodeFitter extends Fitter implements Serializable {
     private Map<Number, String> modifiedNodes = new HashMap<Number, String>();
     private List<ClassificacaoDocumento> classificacoesDocumento;
 
-    @In
+    @Inject
     private JbpmNodeManager jbpmNodeManager;
-    @In
+    @Inject
     private TransitionFitter transitionFitter;
-    @In
+    @Inject
     private StatusProcessoManager statusProcessoManager;
-    @In
-    private InfoxMessages infoxMessages;
-    @In
+    @Inject
     private ClassificacaoDocumentoFacade classificacaoDocumentoFacade;
+    @Inject
+    private InfoxMessages infoxMessages;
     @Inject
     private FluxoMergeService fluxoMergeService;
 
-    /**
-     * Método foi necessário ser adicionado devido ao Seam ter problemas
-     * com anotação @Stateful
-     */
-    @Remove
-    public void destroy(){
-    }
     
     public void addNewNode() {
         Class<?> nodeType = NodeTypes.getNodeType(getNodeType(newNodeType));
@@ -213,7 +196,7 @@ public class NodeFitter extends Fitter implements Serializable {
     }
 
     public void transitionChangeListener(ValueChangeEvent e) {
-        oldNodeTransition = NodeConverter.getAsObject((String) e.getOldValue());
+    	oldNodeTransition = getNodeByName((String) e.getOldValue());
     }
 
     private void removeTransition(Transition transition) {
@@ -352,12 +335,20 @@ public class NodeFitter extends Fitter implements Serializable {
         return oldNodeTransition;
     }
 
-    @Factory("processNodes")
     public List<Node> getNodes() {
         if (nodes == null) {
             nodes = getProcessBuilder().getInstance().getNodes();
         }
         return nodes;
+    }
+    
+    public Node getNodeByName(String nodeName) {
+    	for (Node node : nodes) {
+            if (node.toString().equals(nodeName)) {
+                return node;
+            }
+        }
+    	return null;
     }
 
     public List<Node> getNodes(String type) {

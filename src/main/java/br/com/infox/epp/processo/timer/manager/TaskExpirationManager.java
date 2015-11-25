@@ -2,6 +2,10 @@ package br.com.infox.epp.processo.timer.manager;
 
 import java.util.Set;
 
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
@@ -13,9 +17,12 @@ import br.com.infox.epp.processo.timer.TaskExpiration;
 import br.com.infox.epp.processo.timer.dao.TaskExpirationDAO;
 import br.com.infox.ibpm.transition.TransitionHandler;
 
-@Name(TaskExpirationManager.NAME)
+@Stateless
 @AutoCreate
+@Name(TaskExpirationManager.NAME)
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class TaskExpirationManager extends Manager<TaskExpirationDAO, TaskExpiration> {
+	
     static final String NAME = "taskExpirationManager";
     private static final long serialVersionUID = 1L;
     

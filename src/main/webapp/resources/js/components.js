@@ -161,6 +161,46 @@ function onlyPositiveNumber(obj){
     obj.value = valor.replace(/\D/g,"");
 }
 
+function formatValuePercentage(obj){
+	valor = obj.value;
+	valor = valor.replace(/%/g, '');
+
+	decimalSymbol = ',';
+	var normalized = valor.replace(/\D/g, '');
+    if (normalized === '') {
+    	normalized = '0';
+    }
+    
+    var result = [];
+    if (normalized.length == 1) {
+  	  obj.value = '0,0' + normalized;
+  	  return;
+    } else if (normalized.length == 2) {
+  	  obj.value = '0,'+ normalized;
+  	  return;
+    }
+
+    var hasDecimal = false;
+    for (var i = normalized.length - 1; i >= 0; i--) {
+  	  if (i == normalized.length - 3) {
+  		  result.push(decimalSymbol);
+  		  hasDecimal = true;
+  	  }
+  	  result.push(normalized.charAt(i));
+    }
+    result.reverse();
+    while (result[0] === '0' && result[1] !== decimalSymbol) {
+  	  result.shift();
+    }
+    obj.value = result.join('');
+}
+
+function addPercentageSymbol(obj) {
+	valor = obj.value;
+	valor = valor.replace(/%/g, '');
+	obj.value = valor + '%';
+}
+
 function clamp(obj, min, max) {
     if ((!isNaN(obj.value)) && (isFinite(obj.value)) && (obj.value != "")) {
         obj.value = Math.min(max, Math.max(min, obj.value));

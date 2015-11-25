@@ -1,5 +1,7 @@
 package br.com.infox.jsf.converter;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
@@ -20,7 +22,10 @@ public class PorcentagemConverter implements Converter{
     private static final String SYMBOL = "%";
 
     static {
-        FORMATTER = NumberFormat.getPercentInstance(new Locale("pt", "BR"));
+        FORMATTER = DecimalFormat.getPercentInstance(new Locale("pt", "BR"));
+        FORMATTER.setParseIntegerOnly(false);
+        FORMATTER.setMaximumFractionDigits(2);
+        FORMATTER.setRoundingMode(RoundingMode.FLOOR);
     }
 	
 	@Override
