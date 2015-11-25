@@ -46,6 +46,7 @@ import br.com.infox.seam.transaction.TransactionService;
 @ContextDependency
 public class ExpedicaoComunicacaoAction implements Serializable {
 	
+	private static final String TAB_SEARCH = "list";
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "expedicaoComunicacaoAction";
 	private static final LogProvider LOG = Logging.getLogProvider(ExpedicaoComunicacaoAction.class);
@@ -67,7 +68,7 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	@In
 	private CertificateSignatures certificateSignatures;
 	
-	private String tab = "list";
+	private String tab = TAB_SEARCH;
 	private ModeloComunicacao modeloComunicacao;
 	private DestinatarioModeloComunicacao destinatario;
 	private String token;
@@ -165,14 +166,30 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 			}
 			if (isComunicacaoSuficientementeAssinada()) {
 				comunicacaoService.expedirComunicacao(destinatario);
-				FacesMessages.instance().add("Comunicação expedida com sucesso");
+				FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.sucesso.expedicao"));
 			} else {
-				FacesMessages.instance().add("Comunicação assinada com sucesso");
+				FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.sucesso.assinatura"));
 			}
 		} catch (DAOException | CertificadoException | AssinaturaException e) {
 			TransactionService.rollbackTransaction();
 			handleException(e);
 		}
+	}
+	
+	public void reabrirComunicacao() {
+		try {
+			comunicacaoService.reabrirComunicacao(getModeloComunicacao());
+			setTab(TAB_SEARCH);
+			clear();
+			FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.sucesso.reabertura"));
+		} catch (DAOException | CloneNotSupportedException e) {
+			FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.erro.reabertura"));
+			LOG.error(e);
+		}
+	}
+
+	private void clear() {
+		destinatario = null;
 	}
 	
 	public boolean isExpedida(ModeloComunicacao modeloComunicacao) {
@@ -195,7 +212,7 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	}
 	
 	private void handleException(Exception e) {
-		String mensagem = "Erro ao expedir comunicação " + modeloComunicacao.getId();
+		String mensagem = InfoxMessages.getInstance().get("comunicacao.msg.erro.expedicao") + modeloComunicacao.getId();
 		if (destinatario != null) {
 			mensagem += " para o destinatário " + destinatario.getId();
 		}
@@ -204,7 +221,7 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 		if (e instanceof DAOException) {
 			actionMessagesService.handleDAOException((DAOException) e);
 		} else if (e instanceof CertificadoException) {
-			actionMessagesService.handleException("Erro ao expedir comunicação", e);
+			actionMessagesService.handleException(InfoxMessages.getInstance().get("comunicacao.msg.erro.expedicao"), e);
 		} else if (e instanceof AssinaturaException) {
 			FacesMessages.instance().add(e.getMessage());
 		}

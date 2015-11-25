@@ -99,8 +99,6 @@ public class ComunicacaoService {
 	@Inject
 	private ModeloComunicacaoManager modeloComunicacaoManager;
 	@Inject
-	private DestinatarioComunicacaoService destinatarioComunicacaoService;
-	@Inject
 	private PrazoComunicacaoService prazoComunicacaoService;
 	
 	public void expedirComunicacao(ModeloComunicacao modeloComunicacao) throws DAOException {
@@ -184,13 +182,6 @@ public class ComunicacaoService {
 			modeloComunicacaoManager.removerDocumentosRelacionados(modeloComunicacao);
 			modeloComunicacaoManager.remove(modeloComunicacao);
 		}
-	}
-	
-	public void excluirDestinatarioComunicacao (DestinatarioModeloComunicacao destinatario) throws DAOException {
-		//TODO ver onde vai ser chamado e o comportamento esperado
-		ModeloComunicacao modeloComunicacao = destinatario.getModeloComunicacao();
-		modeloComunicacao.getDestinatarios().remove(destinatario);
-		destinatarioComunicacaoService.removeDestinatarioModeloComunicacao(destinatario);
 	}
 	
 	private boolean isDestinatarioRelator (DestinatarioModeloComunicacao destinatario) {
