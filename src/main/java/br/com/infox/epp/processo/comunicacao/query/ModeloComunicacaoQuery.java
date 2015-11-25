@@ -40,4 +40,8 @@ public interface ModeloComunicacaoQuery {
 	
 	String GET_DOCUMENTOS_MODELO_COMUNICACAO = "ModeloComunicacao.getDocumentosByModeloComunicacao";
 	String GET_DOCUMENTOS_MODELO_COMUNICACAO_QUERY = "select o.documento from DocumentoModeloComunicacao o where o.modeloComunicacao = :" + PARAM_MODELO_COMUNICACAO;
+	
+	String GET_NOME_VARIAVEL_MODELO_COMUNICACAO = "ModeloComunicacao.getNomeVariavelModeloComunicacao";
+	String GET_NOME_VARIAVEL_MODELO_COMUNICACAO_QUERY = "select v.name_ from jbpm_variableinstance v where v.name_ like 'idModeloComunicacao%' and "
+				+ "v.longvalue_ = ?";
 }

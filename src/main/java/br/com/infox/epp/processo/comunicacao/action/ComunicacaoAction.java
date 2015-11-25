@@ -25,6 +25,7 @@ import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.envio.action.EnvioComunicacaoController;
 import br.com.infox.epp.processo.comunicacao.list.ModeloComunicacaoRascunhoList;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
@@ -58,6 +59,8 @@ public class ComunicacaoAction implements Serializable {
 	protected InfoxMessages infoxMessages;
 	@Inject
 	private EntityManager entityManager;
+	@Inject
+	private EnvioComunicacaoController envioComunicacaoController;
 	
 	private List<ModeloComunicacao> comunicacoes;
 	private Processo processo;
@@ -102,6 +105,7 @@ public class ComunicacaoAction implements Serializable {
 	public void excluirComunicacao(ModeloComunicacao modeloComunicacao) {
 		try {
 			comunicacaoService.excluirComunicacao(modeloComunicacao);
+			envioComunicacaoController.init();
 			FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.sucesso.exclusao"));
 		} catch (DAOException e) {
 			LOG.error("Erro ao excluir comunicação", e);
@@ -118,9 +122,9 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	public void setProcesso(Processo processo) {
-	    clear();
 	    this.processo = processo;
 	    modeloComunicacaoRascunhoList.setProcesso(processo);
+	    clear();
 	}
 	
 	public List<ModeloComunicacao> getComunicacoesDoProcesso() {

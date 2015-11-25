@@ -120,4 +120,8 @@ public class ModeloComunicacaoManager extends Manager<ModeloComunicacaoDAO, Mode
 		}
 		return value.toString();
 	}
+	
+	public String getNomeVariavelModeloComunicacao(Long idModeloComunicacao) {
+		return getDao().getNomeVariavelModeloComunicacao(idModeloComunicacao);
+	}
 }

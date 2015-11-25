@@ -21,7 +21,10 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.BusinessProcess;
+import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.transaction.Transaction;
+import org.jbpm.context.exe.ContextInstance;
+import org.jbpm.graph.exe.ProcessInstance;
 import org.joda.time.DateTime;
 
 import com.lowagie.text.DocumentException;
@@ -143,14 +146,14 @@ public class ComunicacaoService {
 	}
 	
 	public ModeloComunicacao reabrirComunicacao (ModeloComunicacao modeloComunicacao) throws CloneNotSupportedException, DAOException {
-		modeloComunicacao.setFinalizada(false);
-		modeloComunicacao.setMinuta(true);
 		ModeloComunicacao  copyModeloComunicacao = modeloComunicacao.makeCopy();
+		copyModeloComunicacao.setEnviarRelatoria(false);
 		if (modeloComunicacao.getDestinatarios().isEmpty()) { //não é possível gravar uma comunicação sem destinatário
 			excluirComunicacao(modeloComunicacao);
-			copyModeloComunicacao.setEnviarRelatoria(false);
 		} else {
 			if (modeloComunicacaoManager.hasComunicacaoExpedida(modeloComunicacao)) {
+				copyModeloComunicacao.setFinalizada(false);
+				copyModeloComunicacao.setMinuta(true);
 				copyModeloComunicacao =  modeloComunicacaoManager.persist(copyModeloComunicacao);
 				Iterator<DestinatarioModeloComunicacao> it = modeloComunicacao.getDestinatarios().iterator();
 				while (it.hasNext()){
@@ -166,9 +169,12 @@ public class ComunicacaoService {
 						genericManager.update(destinatario);
 					}
 				}
+				atualizaVariavelModeloComunicacao(modeloComunicacao, copyModeloComunicacao.getId());
 				modeloComunicacaoManager.update(copyModeloComunicacao);
 				modeloComunicacaoManager.update(modeloComunicacao);
 			} else {
+				modeloComunicacao.setFinalizada(false);
+				modeloComunicacao.setMinuta(true);
 				copyModeloComunicacao = modeloComunicacao;
 			}
 		}
@@ -176,11 +182,22 @@ public class ComunicacaoService {
 		return copyModeloComunicacao;
 	}
 	
+	private void atualizaVariavelModeloComunicacao(ModeloComunicacao antigoModeloComunicacao, Long novoModeloComunicacaoId) {
+		String nomeVariavel = modeloComunicacaoManager.getNomeVariavelModeloComunicacao(antigoModeloComunicacao.getId());
+		if (nomeVariavel != null) {
+			ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(antigoModeloComunicacao.getProcesso().getIdJbpm());
+			ContextInstance contextInstance = processInstance.getContextInstance();
+			contextInstance.setVariable(nomeVariavel, novoModeloComunicacaoId);
+			ManagedJbpmContext.instance().getSession().flush();
+		}
+	}
+
 	public void excluirComunicacao (ModeloComunicacao modeloComunicacao) throws DAOException {
 		if (!modeloComunicacaoManager.hasComunicacaoExpedida(modeloComunicacao)) {
 			modeloComunicacaoManager.removerDestinatariosModelo(modeloComunicacao);
 			modeloComunicacaoManager.removerDocumentosRelacionados(modeloComunicacao);
 			modeloComunicacaoManager.remove(modeloComunicacao);
+			atualizaVariavelModeloComunicacao(modeloComunicacao, null);
 		}
 	}
 	

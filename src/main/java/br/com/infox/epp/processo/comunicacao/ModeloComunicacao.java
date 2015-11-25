@@ -13,6 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -42,6 +44,9 @@ import com.google.common.base.Strings;
 	@NamedQuery(name = ModeloComunicacaoQuery.LIST_BY_PROCESSO_ROOT, query = ModeloComunicacaoQuery.LIST_BY_PROCESSO_ROOT_QUERY),
 	@NamedQuery(name = ModeloComunicacaoQuery.GET_DOCUMENTOS_MODELO_COMUNICACAO, query = ModeloComunicacaoQuery.GET_DOCUMENTOS_MODELO_COMUNICACAO_QUERY),
 	@NamedQuery(name = ModeloComunicacaoQuery.GET_DOCUMENTO_INCLUSO_POR_PAPEL, query = ModeloComunicacaoQuery.GET_DOCUMENTO_INCLUSO_POR_PAPEL_QUERY)
+})
+@NamedNativeQueries({
+	@NamedNativeQuery(name = ModeloComunicacaoQuery.GET_NOME_VARIAVEL_MODELO_COMUNICACAO, query = ModeloComunicacaoQuery.GET_NOME_VARIAVEL_MODELO_COMUNICACAO_QUERY)
 })
 public class ModeloComunicacao implements Serializable, Cloneable {
 	private static final long serialVersionUID = 1L;
