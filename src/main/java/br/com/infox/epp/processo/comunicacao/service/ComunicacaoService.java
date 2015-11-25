@@ -171,12 +171,12 @@ public class ComunicacaoService {
 				}
 				atualizaVariavelModeloComunicacao(modeloComunicacao, copyModeloComunicacao.getId());
 				modeloComunicacaoManager.update(copyModeloComunicacao);
-				modeloComunicacaoManager.update(modeloComunicacao);
 			} else {
 				modeloComunicacao.setFinalizada(false);
 				modeloComunicacao.setMinuta(true);
 				copyModeloComunicacao = modeloComunicacao;
 			}
+			modeloComunicacaoManager.update(modeloComunicacao);
 		}
 		modeloComunicacaoManager.flush();
 		return copyModeloComunicacao;

@@ -95,6 +95,7 @@ public class ComunicacaoAction implements Serializable {
 	public void reabrirComunicacao(ModeloComunicacao modeloComunicacao) {
 		try {
 			comunicacaoService.reabrirComunicacao(modeloComunicacao);
+			envioComunicacaoController.init(); //para recarregar a página de tarefa
 			FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.sucesso.reabertura"));
 		} catch (DAOException | CloneNotSupportedException e) {
 			LOG.error("Erro ao rebarir comunicação", e);
@@ -105,7 +106,7 @@ public class ComunicacaoAction implements Serializable {
 	public void excluirComunicacao(ModeloComunicacao modeloComunicacao) {
 		try {
 			comunicacaoService.excluirComunicacao(modeloComunicacao);
-			envioComunicacaoController.init();
+			envioComunicacaoController.init(); //para recarregar a página de tarefa
 			FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.sucesso.exclusao"));
 		} catch (DAOException e) {
 			LOG.error("Erro ao excluir comunicação", e);
