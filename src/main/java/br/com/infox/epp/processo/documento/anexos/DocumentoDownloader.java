@@ -86,7 +86,10 @@ public class DocumentoDownloader implements Serializable {
     
     //FIXME: Função adicionada somente para remover a variável 'documentoOriginal' do escopo flash que fica com o mesmo valor em vários requests. Remover quando achar uma forma alternativa
     public void downloadDocumentoFlash(DocumentoBin documento) {
-    	boolean documentoOriginal = (Boolean)FacesContext.getCurrentInstance().getExternalContext().getFlash().getOrDefault("documentoOriginal", false);
+    	Boolean documentoOriginal = (Boolean)FacesContext.getCurrentInstance().getExternalContext().getFlash().get("documentoOriginal");
+    	if(documentoOriginal == null)
+    		documentoOriginal = Boolean.FALSE;
+    	
     	FacesContext.getCurrentInstance().getExternalContext().getFlash().put("documentoOriginal", false);
     	downloadDocumento(documento, !documentoOriginal);
     }
