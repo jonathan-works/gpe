@@ -6,10 +6,9 @@ import static br.com.infox.core.list.SearchCriteria.IGUAL;
 
 import java.util.Map;
 
+import javax.inject.Named;
+
 import org.jboss.seam.Component;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.tree.TreeHandler;
@@ -18,13 +17,13 @@ import br.com.infox.epp.access.component.tree.PapelTreeHandler;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.PerfilTemplate;
+import br.com.infox.epp.cdi.ViewScoped;
 
-@Name(PerfilTemplateList.NAME)
-@Scope(ScopeType.EVENT)
+@Named
+@ViewScoped
 public class PerfilTemplateList extends EntityList<PerfilTemplate> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "perfilTemplateList";
     
     private static final String DEFAULT_EJBQL = "select o from PerfilTemplate o ";
     private static final String DEFAULT_ORDER = "o.descricao";
