@@ -129,6 +129,16 @@
 						onclick="infox.showLoading();"
 						render="comunicacaoForm, pageBodyDialogMessage, destinatarios"
 						oncomplete="infox.hideLoading();"/>
+						
+					<a:commandButton id="reabrirComunicacao" 
+						render="comunicacaoTabPanel :pageBodyDialogMessage" execute="@this"
+						value="#{infoxMessages['comunicacao.devolverEdicao']}" 
+						styleClass="buttons"
+						rendered="#{expedicaoComunicacaoAction.modeloComunicacao.finalizada and not expedicaoComunicacaoAction.isExpedida(expedicaoComunicacaoAction.modeloComunicacao)}"
+						action="#{expedicaoComunicacaoAction.reabrirComunicacao()}" 
+						onclick="infox.showLoading();"
+						oncomplete="infox.hideLoading();"/>
+						
 				</h:form>
 			</infox:tab>
 		</infox:tabPanel>

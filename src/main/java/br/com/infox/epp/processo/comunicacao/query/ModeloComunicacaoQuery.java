@@ -14,6 +14,11 @@ public interface ModeloComunicacaoQuery {
 			+ " d.modeloComunicacao = :" + PARAM_MODELO_COMUNICACAO
 			+ " and d.expedido = false";
 	
+	String HAS_COMUNICACAO_EXPEDIDA = "ModeloComunicacao.hasComunicacaoExpedida";
+	String HAS_COMUNICACAO_EXPEDIDA_QUERY = "select 1 from DestinatarioModeloComunicacao d where"
+			+ " d.modeloComunicacao = :" + PARAM_MODELO_COMUNICACAO
+			+ " and d.expedido = true";
+	
 	String LIST_BY_PROCESSO_ROOT = "ModeloComunicacao.listByProcessoRoot";
 	String LIST_BY_PROCESSO_ROOT_QUERY = "select o from ModeloComunicacao o inner join fetch o.destinatarios where "
 			 + "NumeroProcessoRoot(o.processo.idProcesso) = :" + PARAM_NUMERO_PROCESSO_ROOT
@@ -35,4 +40,8 @@ public interface ModeloComunicacaoQuery {
 	
 	String GET_DOCUMENTOS_MODELO_COMUNICACAO = "ModeloComunicacao.getDocumentosByModeloComunicacao";
 	String GET_DOCUMENTOS_MODELO_COMUNICACAO_QUERY = "select o.documento from DocumentoModeloComunicacao o where o.modeloComunicacao = :" + PARAM_MODELO_COMUNICACAO;
+	
+	String GET_NOME_VARIAVEL_MODELO_COMUNICACAO = "ModeloComunicacao.getNomeVariavelModeloComunicacao";
+	String GET_NOME_VARIAVEL_MODELO_COMUNICACAO_QUERY = "select v.name_ from jbpm_variableinstance v where v.name_ like 'idModeloComunicacao%' and "
+				+ "v.longvalue_ = ?";
 }

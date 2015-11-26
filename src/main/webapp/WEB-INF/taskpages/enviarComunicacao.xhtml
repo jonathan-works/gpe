@@ -22,15 +22,23 @@
 					<a:ajax event="change" render="modeloDocumento, classificacaoComunicacao" />
 				</wi:selectOneMenuEntity>
 				<div />
-			<a:commandButton id="visualizarComunicacao" 
-				render="@this" execute="@this"
-				value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
-				styleClass="buttons"
-				rendered="#{envioComunicacaoController.podeVisualizarComunicacaoNaoFinalizada()}" 
-				oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');" >
-				<f:setPropertyActionListener value="#{envioComunicacaoController.modeloComunicacao.id}" target="#{flash.idModelo}" />
-				<infox:flashcopy/>
-			</a:commandButton>
+				<a:commandButton id="visualizarComunicacao" 
+					render="@this" execute="@this"
+					value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
+					styleClass="buttons"
+					rendered="#{envioComunicacaoController.podeVisualizarComunicacaoNaoFinalizada()}" 
+					oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');" >
+					<f:setPropertyActionListener value="#{envioComunicacaoController.modeloComunicacao.id}" target="#{flash.idModelo}" />
+					<infox:flashcopy/>
+				</a:commandButton>
+				<a:commandButton id="reabrirComunicacao" 
+					render="comunicacaoDiv" execute="@this"
+					value="#{infoxMessages['comunicacao.reabrir']}" 
+					styleClass="buttons"
+					rendered="#{envioComunicacaoController.modeloComunicacao.finalizada and not envioComunicacaoController.expedida}"
+					action="#{envioComunicacaoController.reabrirComunicacao()}" 
+					onclick="infox.showLoading();"
+					oncomplete="infox.hideLoading(); if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();" />
 			</h:form>
 			
 			<!-- Painel dos Destinatários -->
@@ -132,6 +140,14 @@
 								<h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" title="#{infoxMessages['comunicacao.visualizarAComunicacao']}"/>
 								<f:setPropertyActionListener value="#{row.id}" target="#{flash.idDestinatario}" />
 								<infox:flashcopy/>
+							</a:commandLink>
+							<a:commandLink execute="@this"
+								rendered="#{not row.expedido}"
+								render="comunicacaoDiv :pageBodyDialogMessage"
+								action="#{envioComunicacaoController.excluirDestinatarioComunicacao(row)}"
+								onclick="if (confirm('#{envioComunicacaoController.modeloComunicacao.destinatarios.size gt 1 ? infoxMessages['crud.confirmRemove'] : infoxMessages['comunicacao.msg.aviso.exclusaoUltimoDestinatario']}')) {infox.showLoading(); return true;} else return false;"
+								oncomplete="infox.hideLoading(); if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();">
+								<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{infoxMessages['comunicacao.excluir']}"/>
 							</a:commandLink>
 						</s:div>
 					</rich:column>

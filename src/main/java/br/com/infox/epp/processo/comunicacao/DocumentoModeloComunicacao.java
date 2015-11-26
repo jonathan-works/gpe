@@ -21,7 +21,7 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 @Table(name = "tb_documento_modelo_comunic", uniqueConstraints = {
 	@UniqueConstraint(columnNames = {"id_documento", "id_modelo_comunicacao"})
 })
-public class DocumentoModeloComunicacao implements Serializable {
+public class DocumentoModeloComunicacao implements Serializable, Cloneable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -62,5 +62,12 @@ public class DocumentoModeloComunicacao implements Serializable {
 
 	public void setModeloComunicacao(ModeloComunicacao modeloComunicacao) {
 		this.modeloComunicacao = modeloComunicacao;
+	}
+	
+	public DocumentoModeloComunicacao makeCopy() throws CloneNotSupportedException {
+		DocumentoModeloComunicacao novoDocumentoModeloComunicacao = (DocumentoModeloComunicacao) clone();
+		novoDocumentoModeloComunicacao.setId(null);
+		novoDocumentoModeloComunicacao.setDocumento(getDocumento().makeCopy());
+		return novoDocumentoModeloComunicacao;
 	}
 }

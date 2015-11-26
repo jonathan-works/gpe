@@ -26,6 +26,22 @@
 							onclick="infox.openPopUp('comunicacao#{row.id}', '#{pathResolver.contextPath}/Processo/criarComunicacao.seam?idModeloComunicacao=#{row.id}','1024'); return false;">
 							<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['button.selecionar']}" />
 						</a:commandLink>
+						<a:commandLink execute="@this"
+							rendered="#{comunicacaoAction.podeReabrirComunicacao(row)}"
+							render=":pageBodyDialogMessage rascunhosTablePanel"
+							action="#{comunicacaoAction.reabrirComunicacao(row)}"
+							onclick="infox.showLoading();"
+							oncomplete="infox.hideLoading(); infox.openPopUp('comunicacao#{row.id}', '#{pathResolver.contextPath}/Processo/criarComunicacao.seam?idModeloComunicacao=#{row.id}','1024'); return false;">
+							<h:graphicImage url="#{wiSkin.imageFolder}/mod/edit.png" title="#{infoxMessages['comunicacao.reabrir']}"/>
+						</a:commandLink>						
+						<a:commandLink execute="@this"
+							rendered="#{comunicacaoAction.podeExcluirModeloComunicacao(row)}"
+							render=":pageBodyDialogMessage rascunhosTablePanel"
+							action="#{comunicacaoAction.excluirComunicacao(row)}"
+							onclick="if (confirm('#{infoxMessages['crud.confirmRemove']}')) {infox.showLoading(); return true;} else return false;"
+							oncomplete="infox.hideLoading();">
+							<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{infoxMessages['comunicacao.excluir']}"/>
+						</a:commandLink>
 					</h:form>
 				</ui:define>
 				<wi:columnOutputText columnHeader="#{infoxMessages['comunicacao.tipoComunicacao']}" value="#{row.tipoComunicacao.descricao}"/>

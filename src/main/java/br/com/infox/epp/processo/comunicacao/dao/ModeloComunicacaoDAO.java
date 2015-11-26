@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -46,6 +47,12 @@ public class ModeloComunicacaoDAO extends DAO<ModeloComunicacao> {
 		Map<String, Object> params = new HashMap<>();
 		params.put(ModeloComunicacaoQuery.PARAM_MODELO_COMUNICACAO, modeloComunicacao);
 		return getNamedSingleResult(ModeloComunicacaoQuery.IS_EXPEDIDA, params) == null;
+	}
+
+	public boolean hasComunicacaoExpedida(ModeloComunicacao modeloComunicacao) {
+		Map<String, Object> params = new HashMap<>();
+		params.put(ModeloComunicacaoQuery.PARAM_MODELO_COMUNICACAO, modeloComunicacao);
+		return getNamedSingleResult(ModeloComunicacaoQuery.HAS_COMUNICACAO_EXPEDIDA, params) != null;
 	}
 	
 	public List<ModeloComunicacao> listModelosComunicacaoPorProcessoRoot(String processoRoot) {
@@ -101,4 +108,15 @@ public class ModeloComunicacaoDAO extends DAO<ModeloComunicacao> {
 		params.put(ModeloComunicacaoQuery.PARAM_MODELO_COMUNICACAO, modeloComunicacao);
 		return getNamedResultList(ModeloComunicacaoQuery.GET_DOCUMENTOS_MODELO_COMUNICACAO, params);
 	}
+	
+
+	@SuppressWarnings("unchecked")
+	public String getNomeVariavelModeloComunicacao(Long idModeloComunicacao) {
+		Query query = getEntityManager().createNamedQuery(ModeloComunicacaoQuery.GET_NOME_VARIAVEL_MODELO_COMUNICACAO);
+		query.setParameter(1, idModeloComunicacao);
+		query.setMaxResults(1);
+		List<String> variavel = query.getResultList(); 
+		return !variavel.isEmpty() ? variavel.get(0) : null;
+	}
+
 }

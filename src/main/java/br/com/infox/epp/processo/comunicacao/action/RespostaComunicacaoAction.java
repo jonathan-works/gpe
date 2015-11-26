@@ -60,10 +60,11 @@ public class RespostaComunicacaoAction implements Serializable {
 	private RespostaComunicacaoList respostaComunicacaoList = ComponentUtil.getComponent(RespostaComunicacaoList.NAME);
 	private DocumentoManager documentoManager = ComponentUtil.getComponent(DocumentoManager.NAME);
 	private DocumentoComunicacaoList documentoComunicacaoList = ComponentUtil.getComponent(DocumentoComunicacaoList.NAME);
-	private DocumentoComunicacaoService documentoComunicacaoService = ComponentUtil.getComponent(DocumentoComunicacaoService.NAME);
 	private AssinaturaDocumentoService assinaturaDocumentoService = ComponentUtil.getComponent(AssinaturaDocumentoService.NAME);
 	private RespostaComunicacaoService respostaComunicacaoService = ComponentUtil.getComponent(RespostaComunicacaoService.NAME);
 	
+	@Inject
+	private DocumentoComunicacaoService documentoComunicacaoService;
 	@Inject
 	private PrazoComunicacaoService prazoComunicacaoService;
 	@Inject
