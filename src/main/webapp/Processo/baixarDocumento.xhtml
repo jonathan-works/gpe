@@ -1,33 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html"
     xmlns:c="http://java.sun.com/jsp/jstl/core">
-
-    <h:head>
-	    <h:outputStylesheet>
-	        @media print {
-	            #btnimprimir {
-	                display : none;
-	            }
-	        }
-	    </h:outputStylesheet>
-    </h:head>
-
-    <h:body>
-        <c:if test="#{not empty flash.idDocumento and flash.binario}">
-            <f:event listener="#{documentoDownloader.downloadDocumento(flash.idDocumento)}" type="preRenderView" />
-            <h:outputText value="#{documentoDownloader.mensagemErro}" rendered="#{not empty documentoDownloader.mensagemErro}" />
-        </c:if>
-        <c:if test="#{not empty flash.idDocumento and not flash.binario}">
-            <f:event listener="#{documentoHtmlView.setIdDocumento(flash.idDocumento)}" type="preRenderView" />
-            <h:outputText value="#{documentoHtmlView.getConteudo()}" escape="false" />
-            <br />
-
-            <center>
-                <button id="btnimprimir" onclick="window.print();">Imprimir</button>
-            </center>
-        </c:if>
-    </h:body>
-
+<h:head>
+    <link rel="stylesheet" href="#{request.contextPath}/javax.faces.resource/print.css.seam?ln=styleSkinInfox" />
+</h:head>
+<h:body id="body">
+    <c:if test="#{not empty flash.idDocumento and flash.binario}">
+        <f:event listener="#{documentoDownloader.downloadDocumento(flash.idDocumento)}" type="preRenderView" />
+        <h:outputText value="#{documentoDownloader.mensagemErro}"
+            rendered="#{not empty documentoDownloader.mensagemErro}" />
+    </c:if>
+    <c:if test="#{not empty flash.idDocumento and not flash.binario}">
+        <f:event listener="#{documentoHtmlView.setIdDocumento(flash.idDocumento)}" type="preRenderView" />
+        <div style="margin: 0 0 1em; text-align: center;" class="noprint">
+            <button id="btnimprimir" onclick="window.print();">Imprimir</button>
+        </div>
+        <div class="page">
+            <div class="signature">
+                <h:graphicImage styleClass="signature-qrcode" value="#{documentoHtmlView.qrCode}" />
+                <span class="signature-text">
+                    <div>
+                        <h:outputText value="#{documentoHtmlView.signatureText}" />
+                    </div>
+                    <div>
+                        <h:outputText value="#{documentoHtmlView.uuidText}" />
+                    </div>
+                </span>
+            </div>
+            <div class="text-content">
+                <h:outputText value="#{documentoHtmlView.conteudo}" escape="false" />
+            </div>
+        </div>
+    </c:if>
+</h:body>
 </html>

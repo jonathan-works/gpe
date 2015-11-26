@@ -1,21 +1,25 @@
 package br.com.infox.epp.processo.documento.anexos;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.ejb.Stateful;
+import javax.inject.Inject;
+import javax.inject.Named;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.CharSet;
+import org.apache.commons.lang3.StringUtils;
+
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 
-@AutoCreate
-@Scope(ScopeType.CONVERSATION)
-@Name(DocumentoHtmlView.NAME)
+@ViewScoped
+@Stateful
+@Named(DocumentoHtmlView.NAME)
 public class DocumentoHtmlView implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -24,9 +28,9 @@ public class DocumentoHtmlView implements Serializable {
 
     public static final String NAME = "documentoHtmlView";
 
-    @In
+    @Inject
     private DocumentoManager documentoManager;
-    @In
+    @Inject
     private DocumentoBinManager documentoBinManager;
 
     private Documento viewInstance;
@@ -61,6 +65,27 @@ public class DocumentoHtmlView implements Serializable {
         return PAGINA_VISUALIZACAO;
     }
 
+    public String getUuidText(){
+        return documentoBinManager.getTextoCodigo(documentoBin.getUuid());
+    }
+    
+    public String getSignatureText(){
+        return documentoBinManager.getTextoAssinatura(documentoBin);
+    }
+    
+    public String getQrCode(){
+        byte[] qrCode = documentoBinManager.getQrCodeSignatureImage(documentoBin);
+        StringBuilder sb = new StringBuilder();
+        sb.append("data:image/png;base64,");
+        try {
+            sb.append(StringUtils.toString(org.apache.commons.codec.binary.Base64.encodeBase64(qrCode, true), "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            return "";
+        }
+        System.out.println(sb.toString());
+        return sb.toString();
+    }
+    
     public String getConteudo() {
         return this.documentoBin.getModeloDocumento();
     }
