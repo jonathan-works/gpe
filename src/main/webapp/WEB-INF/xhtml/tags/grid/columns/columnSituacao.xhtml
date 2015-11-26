@@ -8,7 +8,7 @@
 
     <wi:columnOutputText columnId="#{wi:get(columnId, 'ativo')}"
         value="#{value ? messages['entity.ativo'] : messages['entity.inativo']}"
-        columnHeader="#{empty columnHeader ? eppmessages['entity.situacao'] : columnHeader}"
+        columnHeader="#{empty columnHeader ? infoxMessages['entity.situacao'] : columnHeader}"
         columnStyle="text-align:center; #{columnStyle}"
         columnWidth="#{wi:get(columnWidth, '10%')}" />
 
