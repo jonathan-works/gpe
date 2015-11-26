@@ -2,10 +2,10 @@ package br.com.infox.core.manager;
 
 import java.util.List;
 
-import org.jboss.seam.ScopeType;
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.dao.GenericDAO;
 
@@ -17,9 +17,9 @@ import br.com.infox.core.dao.GenericDAO;
  * @author Daniel
  * 
  */
-@Name(GenericManager.NAME)
-@Scope(ScopeType.EVENT)
+@Stateless
 @AutoCreate
+@Name(GenericManager.NAME)
 public class GenericManager extends Manager<GenericDAO, Object> {
 
     private static final long serialVersionUID = -5694962568615133171L;

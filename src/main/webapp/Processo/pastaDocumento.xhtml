@@ -128,6 +128,7 @@
 						src="/WEB-INF/xhtml/components/grid/processoDocumentoBin.xhtml">
 						<ui:param name="bin" value="#{row.documentoBin}" />
 						<ui:param name="header" value="#{row.descricao}" />
+                        <ui:param name="hideSignature" value="#{not documentoProcessoAction.deveMostrarCadeado(row)}" />
 					</ui:include>
 				</h:form>
 			</ui:define>

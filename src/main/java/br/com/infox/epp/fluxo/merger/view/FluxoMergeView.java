@@ -17,7 +17,6 @@ import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.fluxo.merger.model.MergePointsBundle;
 import br.com.infox.epp.fluxo.merger.service.FluxoMergeService;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Named
 @ViewScoped
@@ -34,6 +33,8 @@ public class FluxoMergeView implements Serializable {
     private FluxoManager fluxoManager;
     @Inject
     private FluxoMergeService fluxoMergeService;
+    @Inject
+    private ProcessBuilder processBuilder;
 
     @PostConstruct
     public void init() {
@@ -78,7 +79,6 @@ public class FluxoMergeView implements Serializable {
     }
 
     private void publish(Fluxo fluxo) {
-        ProcessBuilder processBuilder = ComponentUtil.getComponent(ProcessBuilder.NAME);
         String modifiedXml = fluxo.getXml();
         String publishedXml = fluxo.getXmlExecucao();
         if (publishedXml == null) {

@@ -15,10 +15,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
+import javax.inject.Named;
 
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
@@ -32,10 +30,9 @@ import org.jbpm.taskmgmt.def.TaskController;
 
 import com.google.gson.Gson;
 
-import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.timer.TaskExpiration;
 import br.com.infox.epp.processo.timer.manager.TaskExpirationManager;
 import br.com.infox.epp.tarefa.entity.Tarefa;
@@ -50,14 +47,12 @@ import br.com.infox.ibpm.task.manager.JbpmTaskManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
-@AutoCreate
-@ContextDependency
-@Name(TaskFitter.NAME)
+@Named
+@ViewScoped
 public class TaskFitter extends Fitter implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final LogProvider LOG = Logging.getLogProvider(TaskFitter.class);
-    public static final String NAME = "taskFitter";
 
     private TaskHandler startTaskHandler;
     private TaskHandler currentTask;
@@ -69,13 +64,11 @@ public class TaskFitter extends Fitter implements Serializable {
     private List<VariableType> typeList;
     private TaskExpiration taskExpiration;
 
-    @In
+    @Inject
     private JbpmTaskManager jbpmTaskManager;
-    @In
+    @Inject
     private TarefaManager tarefaManager;
-    @In
-    private GenericManager genericManager;
-    @In
+    @Inject
     private TaskExpirationManager taskExpirationManager;
     @Inject
     private EppJbpmListener eppJbpmListener;

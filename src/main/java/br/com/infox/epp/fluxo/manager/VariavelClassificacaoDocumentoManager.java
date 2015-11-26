@@ -2,6 +2,10 @@ package br.com.infox.epp.fluxo.manager;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
@@ -14,8 +18,10 @@ import br.com.infox.epp.fluxo.dao.VariavelClassificacaoDocumentoDAO;
 import br.com.infox.epp.fluxo.entity.VariavelClassificacaoDocumento;
 import br.com.infox.ibpm.variable.VariableAccessHandler;
 
+@Stateless
 @AutoCreate
 @Name(VariavelClassificacaoDocumentoManager.NAME)
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class VariavelClassificacaoDocumentoManager extends Manager<VariavelClassificacaoDocumentoDAO, VariavelClassificacaoDocumento> {
     
 	private static final long serialVersionUID = 1L;

@@ -6,48 +6,41 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.jbpm.taskmgmt.def.Swimlane;
 
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.manager.PerfilTemplateManager;
-import br.com.infox.ibpm.process.definition.ProcessBuilder;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.ibpm.swimlane.SwimlaneHandler;
-import br.com.infox.seam.util.ComponentUtil;
 
-@Scope(ScopeType.PAGE)
-@Name(SwimlaneFitter.NAME)
-@AutoCreate
+@Named
+@ViewScoped
 public class SwimlaneFitter extends Fitter implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "swimlaneFitter";
 
     private List<SwimlaneHandler> swimlanes;
     private SwimlaneHandler currentSwimlane;
     private List<PerfilTemplate> perfisDisponiveis;
 
-    private ProcessBuilder pb = ComponentUtil.getComponent(ProcessBuilder.NAME);
-    
-    @In 
+    @Inject
     private PerfilTemplateManager perfilTemplateManager;
 
     public void addSwimlane() {
         Swimlane s = new Swimlane("Raia " + (swimlanes.size() + 1));
         s.setKey(UUID.randomUUID().toString());
         setCurrentSwimlane(new SwimlaneHandler(s));
-        pb.getInstance().getTaskMgmtDefinition().addSwimlane(s);
+        getProcessBuilder().getInstance().getTaskMgmtDefinition().addSwimlane(s);
         swimlanes.add(currentSwimlane);
     }
 
     public void removeSwimlane(SwimlaneHandler s) {
         swimlanes.remove(s);
         setCurrentSwimlane(null);
-        pb.getInstance().getTaskMgmtDefinition().getSwimlanes().remove(s.getSwimlane());
+        getProcessBuilder().getInstance().getTaskMgmtDefinition().getSwimlanes().remove(s.getSwimlane());
     }
 
     public SwimlaneHandler getCurrentSwimlane() {
@@ -60,13 +53,13 @@ public class SwimlaneFitter extends Fitter implements Serializable {
 
     public List<SwimlaneHandler> getSwimlanes() {
         if (swimlanes == null) {
-            swimlanes = SwimlaneHandler.createList(pb.getInstance());
+            swimlanes = SwimlaneHandler.createList(getProcessBuilder().getInstance());
         }
         return swimlanes;
     }
 
     public List<String> getSwimlaneList() {
-        Map<String, Swimlane> swimlaneList = pb.getInstance().getTaskMgmtDefinition().getSwimlanes();
+        Map<String, Swimlane> swimlaneList = getProcessBuilder().getInstance().getTaskMgmtDefinition().getSwimlanes();
         if (swimlaneList == null) {
             return null;
         }

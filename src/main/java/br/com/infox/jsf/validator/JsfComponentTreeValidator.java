@@ -1,9 +1,11 @@
 package br.com.infox.jsf.validator;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.component.visit.VisitCallback;
@@ -12,18 +14,9 @@ import javax.faces.component.visit.VisitHint;
 import javax.faces.component.visit.VisitResult;
 import javax.faces.context.FacesContext;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-
-@Name(JsfComponentTreeValidator.NAME)
-@Scope(ScopeType.STATELESS)
-@AutoCreate
-public class JsfComponentTreeValidator implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-    public static final String NAME = "jsfComponentTreeValidator";
+@Stateless
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+public class JsfComponentTreeValidator {
 
     public boolean hasInvalidComponent(UIComponent root) {
         if (root == null) {

@@ -2,6 +2,11 @@ package br.com.infox.epp.documento.facade;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -17,14 +22,16 @@ import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
 import br.com.infox.epp.fluxo.manager.VariavelClassificacaoDocumentoManager;
 
-@Name(ClassificacaoDocumentoFacade.NAME)
-@Scope(ScopeType.EVENT)
+@Stateless
 @AutoCreate
+@Scope(ScopeType.STATELESS)
+@Name(ClassificacaoDocumentoFacade.NAME)
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class ClassificacaoDocumentoFacade {
 
     @In
     private ClassificacaoDocumentoManager classificacaoDocumentoManager;
-    @In
+    @Inject
     private VariavelClassificacaoDocumentoManager variavelClassificacaoDocumentoManager;
 
     public static final String NAME = "classificacaoDocumentoFacade";

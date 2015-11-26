@@ -411,6 +411,11 @@ public class Processo implements Serializable {
     	return naturezaCategoriaFluxo.getNatureza().getHasPartes();
     }
 	
+	@Transient
+	public boolean isFinalizado() {
+		return getDataFim() != null;
+	}
+	
 	
 	@Transient
 	public MetadadoProcesso getMetadado(MetadadoProcessoDefinition metadadoProcessoDefinition) {

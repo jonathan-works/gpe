@@ -17,7 +17,6 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
-import org.jboss.seam.bpm.BusinessProcessInterceptor;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.file.download.FileDownloader;
@@ -32,7 +31,6 @@ import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoManager
 import br.com.infox.epp.processo.documento.sigilo.service.SigiloDocumentoService;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-import br.com.infox.seam.exception.ApplicationException;
 import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.path.PathResolver;
 
@@ -66,7 +64,16 @@ public class DocumentoDownloader implements Serializable {
     
     private String mensagemErro;
     
-    public void downloadDocumento(Integer idDocumento) {
+    /**
+     * Define se ocorreu algum erro ao gerar as margens contendo informações de assinatura de um PDF
+     */
+    private boolean erroMargem;
+    
+    public boolean isErroMargem() {
+		return erroMargem;
+	}
+
+	public void downloadDocumento(Integer idDocumento) {
         Documento documento = documentoManager.find(idDocumento);
         downloadDocumento(documento);
     }
@@ -76,16 +83,30 @@ public class DocumentoDownloader implements Serializable {
     		downloadDocumento(documento.getDocumentoBin());
     	}
     }
+    
+    //FIXME: Função adicionada somente para remover a variável 'documentoOriginal' do escopo flash que fica com o mesmo valor em vários requests. Remover quando achar uma forma alternativa
+    public void downloadDocumentoFlash(DocumentoBin documento) {
+    	Boolean documentoOriginal = (Boolean)FacesContext.getCurrentInstance().getExternalContext().getFlash().get("documentoOriginal");
+    	if(documentoOriginal == null)
+    		documentoOriginal = Boolean.FALSE;
+    	
+    	FacesContext.getCurrentInstance().getExternalContext().getFlash().put("documentoOriginal", false);
+    	downloadDocumento(documento, !documentoOriginal);
+    }
 
-    public void downloadDocumento(DocumentoBin documento) {
+    public void downloadDocumento(DocumentoBin documento, boolean gerarMargens) {
         byte[] data = documentoBinarioManager.getData(documento.getId());
         String fileName = documento.getNomeArquivo();
         String contentType = "application/" + documento.getExtensao();
-        if (contentType.equals("application/pdf") && !documento.getAssinaturas().isEmpty()) {
+        if (gerarMargens && contentType.equals("application/pdf") && !documento.getAssinaturas().isEmpty()) {
             downloadPdf(documento, data, fileName);
         } else {
             FileDownloader.download(data, contentType, fileName);
-        }
+        }    	
+    }
+    
+    public void downloadDocumento(DocumentoBin documento) {
+    	downloadDocumento(documento, true);
     }
     
     public void downloadDocumentoBin(Integer idDocumentoBin) {
@@ -97,14 +118,25 @@ public class DocumentoDownloader implements Serializable {
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 		    documentoBinManager.writeMargemDocumento(documento, data, out);
-		    HttpServletResponse response = FileDownloader.prepareDownloadResponse("application/pdf", fileName);
-		    response.getOutputStream().write(out.toByteArray());
-		    response.getOutputStream().flush();
-		    FacesContext.getCurrentInstance().responseComplete();
-		} catch (IOException | BusinessException e) {
+		    data = out.toByteArray();
+		} catch (BusinessException e) {
 		    LOG.error("", e);
 		    FacesMessages.instance().clear();
 		    mensagemErro = "Erro ao gerar a margem do PDF: " + e.getMessage();
+		    FacesMessages.instance().add(mensagemErro);
+		    erroMargem = true;
+		    return;
+		}
+		try {
+		    HttpServletResponse response = FileDownloader.prepareDownloadResponse("application/pdf", fileName);
+		    response.getOutputStream().write(data);
+		    response.getOutputStream().flush();
+		    FacesContext.getCurrentInstance().responseComplete();			
+		}
+		catch (IOException e) {
+		    LOG.error("", e);
+		    FacesMessages.instance().clear();
+		    mensagemErro = "Erro fazer upload do PDF: " + e.getMessage();
 		    FacesMessages.instance().add(mensagemErro);
 		}
 	}

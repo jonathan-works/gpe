@@ -191,7 +191,6 @@ public class JbpmLayout {
         return graph;
     }
 
-    @SuppressWarnings(UNCHECKED)
     private void insertNodes(List<DefaultGraphCell> cellList,
             Map<Node, DefaultGraphCell> nodes) {
         if (taskInstanceMap == null) {

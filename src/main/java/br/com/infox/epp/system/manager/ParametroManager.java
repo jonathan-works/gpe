@@ -23,6 +23,10 @@ public class ParametroManager extends Manager<ParametroDAO, Parametro> {
     public Parametro getParametro(String nome) {
         return getDao().getParametroByNomeVariavel(nome);
     }
+    
+    public Parametro getParametroByValorVariavel(String valorVariavel) {
+        return getDao().getParametroByValorVariavel(valorVariavel);
+    }
 
     public Parametro removeParametroByValue(String value) throws DAOException {
         return getDao().removeByValue(value);

@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns="http://www.w3.org/1999/xhtml" xmlns:a="http://richfaces.org/a4j"
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:a="http://richfaces.org/a4j"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:wi="http://www.itx.com.br/jsf">
 
 	<h:form>
+	   
+	   <a:jsFunction name="onClickGraphElement" immediate="true" limitRender="true" execute="@this" render=":processDefinition">
+	       <a:param name="nodeIndex" assignTo="#{nodeFitter.nodeIndex}" />
+	       <a:param name="tab" assignTo="#{processBuilder.tab}" value="nodesTab" />
+	   </a:jsFunction>
 
 		<div id="processImage">
             
@@ -14,7 +20,7 @@
 			
 			<script>
 			
-				var nodes=new NodeArea('#{conversation.id}');
+				var nodes=new NodeArea();
 				#{processBuilderGraph.map};
 				
 			</script>

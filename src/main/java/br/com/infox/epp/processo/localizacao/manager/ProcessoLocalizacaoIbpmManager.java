@@ -2,6 +2,9 @@ package br.com.infox.epp.processo.localizacao.manager;
 
 import java.io.Serializable;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -19,10 +22,11 @@ import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.localizacao.entity.ProcessoLocalizacaoIbpm;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 
-@Name(ProcessoLocalizacaoIbpmManager.NAME)
-@Scope(ScopeType.EVENT)
 @AutoCreate
 @Transactional
+@Scope(ScopeType.STATELESS)
+@Name(ProcessoLocalizacaoIbpmManager.NAME)
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class ProcessoLocalizacaoIbpmManager implements Serializable {
 	
     private static final long serialVersionUID = 1L;

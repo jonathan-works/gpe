@@ -357,6 +357,9 @@ public class Documento implements Serializable, Cloneable {
 		if (getDocumentoBin() == null) {
 			return false;
 		}
+    	if(getProcesso() != null && getProcesso().isFinalizado()) {
+    		return false;
+    	}
     	List<ClassificacaoDocumentoPapel> papeis = getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
 		for (ClassificacaoDocumentoPapel tipoProcessoDocumentoPapel : papeis){
 			if (tipoProcessoDocumentoPapel.getPapel().equals(papel) 
@@ -371,6 +374,9 @@ public class Documento implements Serializable, Cloneable {
     	if (getDocumentoBin() == null || getDocumentoBin().isMinuta()) {
 			return false;
 		}
+    	if(getProcesso() != null && getProcesso().isFinalizado()) {
+    		return false;
+    	}
     	List<ClassificacaoDocumentoPapel> papeis = getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
 		for (ClassificacaoDocumentoPapel tipoProcessoDocumentoPapel : papeis){
 			if (tipoProcessoDocumentoPapel.getTipoAssinatura() != TipoAssinaturaEnum.P){

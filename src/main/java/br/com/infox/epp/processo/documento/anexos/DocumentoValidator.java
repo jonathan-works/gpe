@@ -24,10 +24,8 @@ public class DocumentoValidator {
     
     @In
     private DocumentoBinManager documentoBinManager;
-    
     @In
     private DocumentoBinarioManager documentoBinarioManager;
-    
     @In
     private DocumentoDownloader documentoDownloader;
     
@@ -55,7 +53,11 @@ public class DocumentoValidator {
             return;
         }
         if (documentoBinarioManager.existeBinario(pdBin.getId())) {
-            documentoDownloader.downloadDocumento(pdBin.getDocumentoList().get(0));
+            if (pdBin.getDocumentoList() == null || pdBin.getDocumentoList().isEmpty()) {
+                documentoDownloader.downloadDocumento(pdBin);
+            } else {
+                documentoDownloader.downloadDocumento(pdBin.getDocumentoList().get(0));
+            }
         } else if (!pdBin.isBinario()) {
             FileDownloader.download(pdBin.getModeloDocumento().getBytes(), "text/html", pdBin.getNomeArquivo());
         }
