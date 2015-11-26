@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.comunicacao.envio.action;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -37,7 +38,9 @@ import br.com.infox.seam.util.ComponentUtil;
 @Named(DestinatarioComunicacaoAction.NAME)
 @ViewScoped
 @Stateful
-public class DestinatarioComunicacaoAction {
+public class DestinatarioComunicacaoAction implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 	public static final String NAME = "destinatarioComunicacaoAction";
 	private static final LogProvider LOG = Logging.getLogProvider(DestinatarioComunicacaoAction.class);
 
