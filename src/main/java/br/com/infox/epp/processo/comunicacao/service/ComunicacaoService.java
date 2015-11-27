@@ -201,7 +201,7 @@ public class ComunicacaoService {
 		}
 	}
 	
-	private boolean isDestinatarioRelator (DestinatarioModeloComunicacao destinatario) {
+	public boolean isDestinatarioRelator (DestinatarioModeloComunicacao destinatario) {
 		if (destinatario.getDestinatario() != null) {
 			ModeloComunicacao modeloComunicacao = destinatario.getModeloComunicacao();
 			MetadadoProcesso metadadoRelator = modeloComunicacao.getProcesso().getMetadado(EppMetadadoProvider.RELATOR);

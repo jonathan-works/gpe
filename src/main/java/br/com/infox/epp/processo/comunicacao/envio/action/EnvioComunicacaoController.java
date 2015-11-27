@@ -84,11 +84,12 @@ public class EnvioComunicacaoController implements Serializable {
 	@Inject
 	private ComunicacaoService comunicacaoService;
 	@Inject
-	private LocalizacaoManager localizacaoManager;
+	protected LocalizacaoManager localizacaoManager;
 	@Inject
 	private ActionMessagesService actionMessagesService;
 	
 	private String raizLocalizacoesComunicacao = Parametros.RAIZ_LOCALIZACOES_COMUNICACAO.getValue();
+	private Localizacao localizacaoRaizComunicacao;
 	
 	private ModeloComunicacao modeloComunicacao;
 	private Long processInstanceId;
@@ -140,9 +141,9 @@ public class EnvioComunicacaoController implements Serializable {
 	
 	private void initLocalizacaoRaiz() {
 		try {
-			Localizacao localizacaoRaiz = localizacaoManager.getLocalizacaoByNome(raizLocalizacoesComunicacao);
-			if (localizacaoRaiz != null) {
-				localizacaoSubTree.setIdLocalizacaoPai(localizacaoRaiz.getIdLocalizacao());
+			localizacaoRaizComunicacao = localizacaoManager.getLocalizacaoByNome(raizLocalizacoesComunicacao);
+			if (localizacaoRaizComunicacao != null) {
+				localizacaoSubTree.setIdLocalizacaoPai(localizacaoRaizComunicacao.getIdLocalizacao());
 			} else {
 				FacesMessages.instance().add("O parâmetro raizLocalizacoesComunicacao não foi definido.");
 			}
@@ -357,6 +358,10 @@ public class EnvioComunicacaoController implements Serializable {
 			tiposComunicacao = tipoComunicacaoManager.listTiposComunicacaoAtivos();
 		}
 		return tiposComunicacao;
+	}
+	
+	protected Localizacao getLocalizacaoRaizComunicacao() {
+		return localizacaoRaizComunicacao;
 	}
 	
 	public String getToken() {
