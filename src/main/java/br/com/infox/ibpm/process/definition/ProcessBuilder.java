@@ -52,7 +52,6 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.config.BeanManager;
-import br.com.infox.epp.cdi.transaction.Transactional;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.fluxo.manager.RaiaPerfilManager;
@@ -395,8 +394,7 @@ public class ProcessBuilder implements Serializable {
         taskFitter.modifyTasks();
     }
 
-    @Transactional
-    public void deploy() {
+    public boolean deploy() {
         String modifiedXml = fluxo.getXml();
         String publishedXml = fluxo.getXmlExecucao();
         boolean needToPublish = !Objects.equals(modifiedXml, publishedXml);
@@ -407,7 +405,7 @@ public class ProcessBuilder implements Serializable {
             if (!mergePointsBundle.isValid()) {
                 FacesMessages.instance().add("Não é possível publicar fluxo");
                 fluxo.setPublicado(false);
-                return;
+                return false;
             }
         }
         try {
@@ -417,7 +415,7 @@ public class ProcessBuilder implements Serializable {
             FacesMessages.instance().clear();
             actionMessagesService.handleDAOException(e1);
             fluxo.setPublicado(false);
-            return;
+            return false;
         }
         if (needToPublish) {
             try {
@@ -439,8 +437,10 @@ public class ProcessBuilder implements Serializable {
                 FacesMessages.instance().add("Fluxo publicado com sucesso!");
             } catch (Exception e) {
                 LOG.error(".deploy()", e);
+                return false;
             }
         }
+        return true;
     }
 
     private void deployActions() throws DAOException {

@@ -2,6 +2,7 @@ package br.com.infox.epp.processo.localizacao.manager;
 
 import java.io.Serializable;
 
+import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
@@ -22,6 +23,7 @@ import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.localizacao.entity.ProcessoLocalizacaoIbpm;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 
+@Stateless
 @AutoCreate
 @Transactional
 @Scope(ScopeType.STATELESS)

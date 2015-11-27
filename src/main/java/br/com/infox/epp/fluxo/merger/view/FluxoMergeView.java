@@ -2,21 +2,18 @@ package br.com.infox.epp.fluxo.merger.view;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Objects;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.jbpm.graph.def.ProcessDefinition;
+import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.cdi.transaction.Transactional;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.fluxo.merger.model.MergePointsBundle;
 import br.com.infox.epp.fluxo.merger.service.FluxoMergeService;
-import br.com.infox.ibpm.process.definition.ProcessBuilder;
 
 @Named
 @ViewScoped
@@ -33,8 +30,6 @@ public class FluxoMergeView implements Serializable {
     private FluxoManager fluxoManager;
     @Inject
     private FluxoMergeService fluxoMergeService;
-    @Inject
-    private ProcessBuilder processBuilder;
 
     @PostConstruct
     public void init() {
@@ -66,37 +61,21 @@ public class FluxoMergeView implements Serializable {
         return mergePointsBundle;
     }
 
-    @Transactional
     public void merge() {
-        Fluxo base = getBase();
-        base.setXml(getReference().getXml());
-        publish(base);
+        try {
+            Fluxo base = getBase();
+            base.setXml(getReference().getXml());
+            mergePointsBundle = fluxoMergeService.publish(base, getMergePointsBundle());
+        } catch (RuntimeException e) {
+            FacesMessages.instance().add(e.getMessage());
+        }
     }
 
-    @Transactional
     public void deploy(Fluxo fluxo) {
-        publish(fluxo);
-    }
-
-    private void publish(Fluxo fluxo) {
-        String modifiedXml = fluxo.getXml();
-        String publishedXml = fluxo.getXmlExecucao();
-        if (publishedXml == null) {
-            ProcessDefinition modifiedProcessDef = fluxoMergeService.jpdlToProcessDefinition(modifiedXml);
-            modifiedProcessDef.setName(fluxo.getFluxo());
-            processBuilder.load(fluxo);
-            processBuilder.setInstance(modifiedProcessDef);
-            processBuilder.deploy();
-        } else if (!Objects.equals(modifiedXml, publishedXml)) {
-            ProcessDefinition modifiedProcessDef = fluxoMergeService.jpdlToProcessDefinition(modifiedXml);
-            ProcessDefinition publishedProcessDef = fluxoMergeService.jpdlToProcessDefinition(publishedXml);
-            mergePointsBundle = fluxoMergeService.verifyMerge(publishedProcessDef, modifiedProcessDef);
-            if (mergePointsBundle.isValid()) {
-                modifiedProcessDef.setName(fluxo.getFluxo());
-                processBuilder.load(fluxo);
-                processBuilder.setInstance(modifiedProcessDef);
-                processBuilder.deploy();
-            }
+        try {
+            mergePointsBundle = fluxoMergeService.publish(fluxo, getMergePointsBundle());
+        } catch (RuntimeException e) {
+            FacesMessages.instance().add(e.getMessage());
         }
     }
 
