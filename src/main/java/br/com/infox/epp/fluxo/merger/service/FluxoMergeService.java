@@ -19,13 +19,16 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.merger.model.MergePoint;
 import br.com.infox.epp.fluxo.merger.model.MergePointsBundle;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
+import br.com.infox.ibpm.process.definition.ProcessBuilder;
 
 @Stateless
-@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class FluxoMergeService {
 
     @Inject
     private EntityManager entityManager;
+    @Inject
+    private ProcessBuilder processBuilder;
 
     private List<MergePoint> getMergePoints(ProcessDefinition processDefinition){
         TypedQuery<MergePoint> query = entityManager.createQuery(GET_MERGE_POINTS_QUERY, MergePoint.class);
@@ -66,6 +69,37 @@ public class FluxoMergeService {
         query = query.setParameter(NODE_NAME, node.getName());
         List<Node> nodes = query.getResultList();
         return nodes != null && nodes.size() > 0;
+    }
+    
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public MergePointsBundle publish(Fluxo fluxo, MergePointsBundle mergePointsBundle) {
+        String modifiedXml = fluxo.getXml();
+        String publishedXml = fluxo.getXmlExecucao();
+        if (publishedXml == null) {
+            ProcessDefinition modifiedProcessDef = jpdlToProcessDefinition(modifiedXml);
+            modifiedProcessDef.setName(fluxo.getFluxo());
+            processBuilder.load(fluxo);
+            processBuilder.setInstance(modifiedProcessDef);
+            boolean isDeployed = processBuilder.deploy();
+            if(!isDeployed){
+                throw new RuntimeException("Erro ao executar deploy!");
+            }
+        } else if (!Objects.equals(modifiedXml, publishedXml)) {
+            ProcessDefinition modifiedProcessDef = jpdlToProcessDefinition(modifiedXml);
+            ProcessDefinition publishedProcessDef = jpdlToProcessDefinition(publishedXml);
+            mergePointsBundle = verifyMerge(publishedProcessDef, modifiedProcessDef);
+            if (mergePointsBundle.isValid()) {
+                modifiedProcessDef.setName(fluxo.getFluxo());
+                processBuilder.load(fluxo);
+                processBuilder.setInstance(modifiedProcessDef);
+                boolean isDeployed = processBuilder.deploy();
+                if(!isDeployed){
+                    throw new RuntimeException("Erro ao executar deploy!");
+                }
+            }
+            return mergePointsBundle;
+        }
+        return mergePointsBundle;
     }
     
     private static final String PROCESS_INSTANCE = "processDefinitionName";
