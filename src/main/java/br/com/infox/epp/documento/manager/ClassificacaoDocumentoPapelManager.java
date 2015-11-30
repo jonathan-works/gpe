@@ -65,4 +65,8 @@ public class ClassificacaoDocumentoPapelManager extends Manager<ClassificacaoDoc
 		List<Integer> result = getDao().getEntityManager().createQuery(query).setMaxResults(1).getResultList();
 		return result != null && !result.isEmpty();
 	}
+
+	public ClassificacaoDocumentoPapel getByPapelAndClassificacao(Papel papel, ClassificacaoDocumento classificacaoDocumento) {
+		return getDao().getByPapelAndClassificacao(papel, classificacaoDocumento);
+	}
 }
