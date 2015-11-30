@@ -16,8 +16,20 @@
 
     <h:body>
         <c:if test="#{not empty flash.idDocumento and flash.binario}">
-            <f:event listener="#{documentoDownloader.downloadDocumento(flash.idDocumento)}" type="preRenderView" />
+            <f:event listener="#{documentoDownloader.downloadDocumentoFlash(flash.idDocumento)}" type="preRenderView" />
             <h:outputText value="#{documentoDownloader.mensagemErro}" rendered="#{not empty documentoDownloader.mensagemErro}" />
+            <h:form>
+            <br/>
+            <h:commandLink id="linkDownload" 
+                value="Clique aqui para baixar o arquivo original"
+                rendered="#{documentoDownloader.erroMargem}"
+                immediate="true"
+                style="font-size:15px; font-weight:bold">
+                <c:set target="#{flash}" property="documentoOriginal" value="#{true}" />
+                <c:set target="#{flash}" property="idDocumento" value="#{flash.idDocumento}" />
+                <c:set target="#{flash}" property="binario" value="#{true}" />
+            </h:commandLink>
+            </h:form>
         </c:if>
         <c:if test="#{not empty flash.idDocumento and not flash.binario}">
             <f:event listener="#{documentoHtmlView.setIdDocumento(flash.idDocumento)}" type="preRenderView" />
