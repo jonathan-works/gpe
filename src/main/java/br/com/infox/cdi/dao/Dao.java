@@ -33,8 +33,8 @@ public abstract class Dao<T, I> {
 		return getEntityManager().createQuery(cq).getResultList();
 	}
 
-	public T getSingleResult(TypedQuery<T> typedQuery) {
-		List<T> result = typedQuery.setMaxResults(1).getResultList();
+	public <K>  K getSingleResult(TypedQuery<K> typedQuery) {
+		List<K> result = typedQuery.setMaxResults(1).getResultList();
 		return result.isEmpty() ? null : result.get(0);
 	}
 	
