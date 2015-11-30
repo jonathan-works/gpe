@@ -78,10 +78,14 @@ public class DocumentoDownloader implements Serializable {
         downloadDocumento(documento);
     }
 
-    public void downloadDocumento(Documento documento) {
+    public void downloadDocumento(Documento documento, boolean gerarMargens) {
     	if (validarSigilo(documento)) {
-    		downloadDocumento(documento.getDocumentoBin());
+    		downloadDocumento(documento.getDocumentoBin(), gerarMargens);
     	}
+    }
+    
+    public void downloadDocumento(Documento documento) {
+    	downloadDocumento(documento, true);
     }
     
     public void downloadDocumentoFlash(Integer idDocumento) {
