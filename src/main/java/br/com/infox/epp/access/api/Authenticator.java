@@ -43,7 +43,6 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
-import br.com.infox.epp.access.manager.UsuarioPerfilManager;
 import br.com.infox.epp.access.manager.ldap.LDAPManager;
 import br.com.infox.epp.access.service.AuthenticatorService;
 import br.com.infox.epp.access.service.PasswordService;
@@ -69,12 +68,10 @@ public class Authenticator implements Serializable {
 	public static final String NAME = "authenticator";
     private static final LogProvider LOG = Logging.getLogProvider(Authenticator.class);
     
-    @In
-    private UsuarioPerfilManager usuarioPerfilManager;
-    @In
-    private UsuarioLoginManager usuarioLoginManager;
-    @In
-    private InfoxMessages infoxMessages;
+    @Inject
+    protected UsuarioLoginManager usuarioLoginManager;
+    @Inject
+    protected InfoxMessages infoxMessages;
     @In
     private PapelManager papelManager;
     @Inject
@@ -226,13 +223,13 @@ public class Authenticator implements Serializable {
             }
     }
 
-    private boolean loginExists(final Credentials credentials) {
+    protected boolean loginExists(final Credentials credentials) {
         final String login = credentials.getUsername();
         final UsuarioLogin user = usuarioLoginManager.getUsuarioLoginByLogin(login);
         return user != null;
     }
 
-    private boolean ldapLoginExists(final Credentials credentials) {
+    protected boolean ldapLoginExists(final Credentials credentials) {
         boolean ldapUserExists = false;
         try {
             LDAPManager ldapManager = BeanManager.INSTANCE.getReference(LDAPManager.class);
