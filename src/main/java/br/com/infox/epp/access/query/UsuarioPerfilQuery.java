@@ -35,4 +35,9 @@ public interface UsuarioPerfilQuery {
             + " inner join ul.pessoaFisica pf where up.localizacao.idLocalizacao = :" + PARAM_LOCALIZACAO 
             + " and up.ativo = true";
     
+    String LIST_BY_USUARIO_PERFIL_LOCALIZACAO_ATIVO = "listUsuarioPerfilByLocalizacaoAtivo";
+    String LIST_BY_USUARIO_PERFIL_LOCALIZACAO_ATIVO_QUERY = "select distinct up from UsuarioPerfil up inner join up.usuarioLogin ul "
+            + " where up.localizacao.idLocalizacao = :" + PARAM_LOCALIZACAO 
+            + " and up.ativo = true";
+    
 }
