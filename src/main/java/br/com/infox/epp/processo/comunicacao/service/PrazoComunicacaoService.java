@@ -167,21 +167,16 @@ public class PrazoComunicacaoService {
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void darCumprimento(Processo comunicacao, Date dataCumprimento, UsuarioLogin usuarioCumprimento) throws DAOException {
+	public void darCumprimento(Processo comunicacao, Date dataCumprimento) throws DAOException {
 		dataCumprimento = calendarioEventosManager.getPrimeiroDiaUtil(dataCumprimento);
 		if (comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CUMPRIMENTO) != null) {
     		return;
     	}
 		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
 		String dateFormatted = new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(dataCumprimento);
-		String idUsuarioCumprimento = usuarioCumprimento.getIdUsuarioLogin().toString();
 		MetadadoProcesso metadadoDataCumprimento = 
 				metadadoProcessoProvider.gerarMetadado(ComunicacaoMetadadoProvider.DATA_CUMPRIMENTO, dateFormatted);
-		MetadadoProcesso metadadoResponsavelCumprimento = 
-				metadadoProcessoProvider.gerarMetadado(ComunicacaoMetadadoProvider.RESPONSAVEL_CUMPRIMENTO, idUsuarioCumprimento);
-		
 		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoDataCumprimento));
-		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoResponsavelCumprimento));
 	}
 	
 	private void adicionarVariavelCienciaAutomaticaAoProcesso(UsuarioLogin usuarioCiencia, Processo comunicacao) {
