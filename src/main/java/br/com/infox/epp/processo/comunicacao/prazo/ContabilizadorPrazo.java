@@ -61,18 +61,13 @@ public class ContabilizadorPrazo {
     
     public void atribuirCumprimento() {
     	Processo comunicacao = JbpmUtil.getProcesso();
-    	UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
     	Date dataCumprimento = DateTime.now().toDate();
-    	if (usuarioLogado == null) {
-    		Integer idUsuarioSistema = Integer.valueOf(Parametros.ID_USUARIO_SISTEMA.getValue());
-    		usuarioLogado = usuarioLoginManager.find(idUsuarioSistema);
-    		MetadadoProcesso metadadoCumprimento = comunicacao.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO);
-    		if (metadadoCumprimento != null) {
-    			dataCumprimento = metadadoCumprimento.getValue();
-    		}
-    	}
+		MetadadoProcesso metadadoCumprimento = comunicacao.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO);
+		if (metadadoCumprimento != null) {
+			dataCumprimento = metadadoCumprimento.getValue();
+		}
     	try {
-			prazoComunicacaoService.darCumprimento(comunicacao, dataCumprimento, usuarioLogado);
+			prazoComunicacaoService.darCumprimento(comunicacao, dataCumprimento);
 		} catch (DAOException e) {
 			LOG.error("atribuirCumprimento", e);
 		}
