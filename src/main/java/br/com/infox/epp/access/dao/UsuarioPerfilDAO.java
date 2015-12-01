@@ -64,4 +64,10 @@ public class UsuarioPerfilDAO extends DAO<UsuarioPerfil> {
         return getNamedResultList(UsuarioPerfilQuery.LIST_BY_LOCALIZACAO_ATIVO, params);
     }
     
+    public List<UsuarioPerfil> listUsuarioPerfilByLocalizacaoAtivo(Localizacao localizacao) {
+        Map<String,Object> params = new HashMap<>(1);
+        params.put(UsuarioPerfilQuery.PARAM_LOCALIZACAO, localizacao.getIdLocalizacao());
+        return getNamedResultList(UsuarioPerfilQuery.LIST_BY_USUARIO_PERFIL_LOCALIZACAO_ATIVO, params);
+    }
+    
 }
