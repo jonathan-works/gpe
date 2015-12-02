@@ -24,14 +24,18 @@ public class ComunicacaoMetadadoProvider extends MetadadoProcessoProvider {
 	public static final MetadadoProcessoDefinition DATA_CIENCIA = 
 			new MetadadoProcessoDefinition("dataCiencia", "Data de Ciência", Date.class);
 	
+	//Data que o processo saiu da tarefa de responder
 	public static final MetadadoProcessoDefinition DATA_CUMPRIMENTO = 
-			new MetadadoProcessoDefinition("dataCumprimento", "Data de Cumprimento", Date.class);
+			new MetadadoProcessoDefinition("dataCumprimento", Date.class);
+	
+	public static final MetadadoProcessoDefinition DATA_RESPOSTA = 
+			new MetadadoProcessoDefinition("dataResposta", "Data de Resposta", Date.class);
 
 	public static final MetadadoProcessoDefinition RESPONSAVEL_CIENCIA = 
 			new MetadadoProcessoDefinition("responsavelCiencia", "Responsável Ciência", UsuarioLogin.class);
 	
-	public static final MetadadoProcessoDefinition RESPONSAVEL_CUMPRIMENTO = 
-			new MetadadoProcessoDefinition("responsavelCumprimento", "Responsável Cumprimento", UsuarioLogin.class);
+	public static final MetadadoProcessoDefinition RESPONSAVEL_RESPOSTA = 
+			new MetadadoProcessoDefinition("responsavelResposta", "Responsável Resposta", UsuarioLogin.class);
 	
 	public static final MetadadoProcessoDefinition DOCUMENTO_COMPROVACAO_CIENCIA = 
 			new MetadadoProcessoDefinition("documentoComprovacaoCiencia", Documento.class);

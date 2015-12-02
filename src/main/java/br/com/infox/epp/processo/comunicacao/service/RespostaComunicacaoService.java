@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -22,7 +25,9 @@ import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.dao.DocumentoRespostaComunicacaoDAO;
@@ -42,6 +47,7 @@ import br.com.infox.seam.util.ComponentUtil;
 @Scope(ScopeType.EVENT)
 @AutoCreate
 @Transactional
+@Stateless
 public class RespostaComunicacaoService {
 	
 	public static final String NAME = "respostaComunicacaoService";
@@ -56,6 +62,9 @@ public class RespostaComunicacaoService {
 	private PrazoComunicacaoService prazoComunicacaoService;
 	@In
 	private DocumentoManager documentoManager;
+	
+	@Inject
+	private CalendarioEventosManager calendarioEventosManager;
 	
 	private AssinaturaDocumentoService assinaturaDocumentoService = ComponentUtil.getComponent(AssinaturaDocumentoService.NAME);
 	
@@ -76,9 +85,24 @@ public class RespostaComunicacaoService {
 			createMetadadoDataPedidoProrrogacaoPrazo(comunicacao);
 		} else {
 			setRespostaTempestiva(processoResposta.getDataInicio(), comunicacao);
-			prazoComunicacaoService.darCumprimento(comunicacao, new Date(), Authenticator.getUsuarioLogado());
+			adicionarDataResposta(comunicacao, new Date(), Authenticator.getUsuarioLogado());
 		}
 	}
+	
+	public void adicionarDataResposta (Processo comunicacao, Date dataResposta, UsuarioLogin usuarioResposta) {
+		dataResposta = calendarioEventosManager.getPrimeiroDiaUtil(dataResposta);
+		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
+		String dateFormatted = new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(dataResposta);
+		String idUsuarioCumprimento = usuarioResposta.getIdUsuarioLogin().toString();
+		MetadadoProcesso metadadoDataResposta = 
+				metadadoProcessoProvider.gerarMetadado(ComunicacaoMetadadoProvider.DATA_RESPOSTA, dateFormatted);
+		MetadadoProcesso metadadoResponsavelResposta = 
+				metadadoProcessoProvider.gerarMetadado(ComunicacaoMetadadoProvider.RESPONSAVEL_RESPOSTA, idUsuarioCumprimento);
+		
+		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoDataResposta));
+		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoResponsavelResposta));
+	}
+	
 	
 	public void enviarProrrogacaoPrazo(Documento documento, Processo comunicacao) throws DAOException {
 		documentoManager.gravarDocumentoNoProcesso(comunicacao.getProcessoRoot(), documento);
