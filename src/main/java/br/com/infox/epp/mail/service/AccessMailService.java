@@ -3,6 +3,7 @@ package br.com.infox.epp.mail.service;
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 
+import javax.ejb.Stateless;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.naming.InitialContext;
@@ -28,6 +29,7 @@ import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.seam.exception.ApplicationException;
 import br.com.infox.seam.exception.BusinessException;
 
+@Stateless
 @Name(AccessMailService.NAME)
 @Scope(ScopeType.STATELESS)
 @AutoCreate
