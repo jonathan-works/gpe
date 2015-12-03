@@ -26,8 +26,6 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
-import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiadaMonocratica;
-import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiadaMonocratica_;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.epp.unidadedecisora.queries.UnidadeDecisoraColegiadaQuery;
 
@@ -83,12 +81,4 @@ public class UnidadeDecisoraColegiadaDAO extends DAO<UnidadeDecisoraColegiada> {
 		return getNamedResultList(LIST_COLEGIADA_BY_MONOCRATICA, params);
 	}
 	
-	public Long getTotalMonocraticasAssociadasColegiada(UnidadeDecisoraColegiada colegiada) {
-		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-		CriteriaQuery<Long> query = cb.createQuery(Long.class);
-		Root<UnidadeDecisoraColegiadaMonocratica> unidadeDecisoraColegiadaMonocratica = query.from(UnidadeDecisoraColegiadaMonocratica.class);
-		query.where(cb.equal(unidadeDecisoraColegiadaMonocratica.get(UnidadeDecisoraColegiadaMonocratica_.unidadeDecisoraColegiada), colegiada));
-		query.select(cb.count(unidadeDecisoraColegiadaMonocratica));
-		return getEntityManager().createQuery(query).getSingleResult();
-	}
 }
