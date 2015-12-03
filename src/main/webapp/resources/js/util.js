@@ -28,6 +28,14 @@ namespace("infox",{
 		}
 		window.open(url || "about:blank", id || "Janela", props.join(","))
 			.moveTo(0, 0);
+	},showPopup:function maximizePopup(id) {
+	    var popup = RichFaces.$(id);
+	    popup.show();
+	    this.maximizePopup(popup);
+	},maximizePopup:function maximizePopup(obj) {
+	    obj.setSize(obj.__calculateWindowWidth()*0.95, obj.__calculateWindowHeight()*0.95);
+	    obj.setTop((obj.__calculateWindowHeight()-obj.height())/2);
+	    obj.setLeft((obj.__calculateWindowWidth()-obj.width())/2);
 	},showLoading:function showLoading(message) {
 		if(message)
 			this.messageModalStatus = message;
