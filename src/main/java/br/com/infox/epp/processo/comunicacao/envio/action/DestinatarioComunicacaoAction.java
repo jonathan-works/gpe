@@ -225,6 +225,7 @@ public class DestinatarioComunicacaoAction implements Serializable{
 	
 	private void initEntityLists() {
 		participanteProcessoComunicacaoList.getEntity().setProcesso(modeloComunicacao.getProcesso().getProcessoRoot());
+		participanteProcessoComunicacaoList.clearIdPessoa();
 		destinatariosExcluidos = new ArrayList<>();
 		PessoaFisica relator = getRelator();
 		processoPossuiRelator = relator != null;

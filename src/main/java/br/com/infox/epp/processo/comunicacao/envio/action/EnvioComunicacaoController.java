@@ -218,6 +218,7 @@ public class EnvioComunicacaoController implements Serializable {
 	}
 
 	private void clear() {
+		destinatario = null;
 		initLocalizacaoRaiz();
 		initDestinatarioComunicacaoAction();
 		initDocumentoComunicacaoAction();
@@ -319,6 +320,7 @@ public class EnvioComunicacaoController implements Serializable {
 			isNew = false;
 			resetEntityState();
 			clear();
+			destinatarioComunicacaoAction.init();
 			FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.sucesso.reabertura"));
 		} catch (DAOException | CloneNotSupportedException e) {
 			LOG.error("Erro ao rebarir comunicação", e);
