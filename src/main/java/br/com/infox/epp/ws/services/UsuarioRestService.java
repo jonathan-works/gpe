@@ -12,11 +12,14 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.validation.ValidationException;
 
+import org.jboss.seam.util.RandomStringUtils;
+
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.service.PasswordService;
 import br.com.infox.epp.access.type.UsuarioEnum;
+import br.com.infox.epp.mail.service.AccessMailService;
 import br.com.infox.epp.meiocontato.entity.MeioContato;
 import br.com.infox.epp.meiocontato.manager.MeioContatoManager;
 import br.com.infox.epp.pessoa.documento.entity.PessoaDocumento;
@@ -49,6 +52,8 @@ public class UsuarioRestService {
 	private PessoaDocumentoManager pessoaDocumentoManager;
 	@Inject
 	private PasswordService passwordService;
+	@Inject
+	private AccessMailService accessMailService;
 
 	@Log(codigo = CodigosServicos.WS_PERFIS_GRAVAR_USUARIO)
 	public String gravarUsuario(Object bean) throws DAOException {
@@ -59,10 +64,13 @@ public class UsuarioRestService {
 
 	public String inserirUsuario(UsuarioBean usuarioBean) throws DAOException {
 		PessoaFisica pessoaFisica = createPessoaFisica(usuarioBean);
-		UsuarioLogin usuarioLogin = createUsuarioLogin(usuarioBean, pessoaFisica);
+		String randomPassword = RandomStringUtils.randomAlphabetic(8);
+		UsuarioLogin usuarioLogin = createUsuarioLogin(usuarioBean, pessoaFisica, randomPassword);
 
 		pessoaFisicaManager.persist(pessoaFisica);
-		usuarioLoginManager.persist(usuarioLogin);
+		usuarioLoginManager.update(usuarioLogin);
+		
+		accessMailService.enviarEmailDeMudancaDeSenha("email", usuarioLogin, randomPassword);
 
 		List<MeioContato> meioContatoList = createMeioContatoList(usuarioBean, pessoaFisica);
 		for (MeioContato meioContato : meioContatoList) {
@@ -83,7 +91,8 @@ public class UsuarioRestService {
 
 		UsuarioLogin usuarioLogin = usuarioLoginManager.getUsuarioLoginByPessoaFisica(pessoaFisica);
 		if (usuarioLogin == null) {
-			usuarioLogin = createUsuarioLogin(usuarioBean, pessoaFisica);
+		    String randomPassword = RandomStringUtils.randomAlphabetic(8);
+			usuarioLogin = createUsuarioLogin(usuarioBean, pessoaFisica, randomPassword);
 		} else {
 			updateUsuarioLogin(usuarioBean, usuarioLogin);
 		}
@@ -125,19 +134,18 @@ public class UsuarioRestService {
 		}
 	}
 
-	private UsuarioLogin createUsuarioLogin(UsuarioBean usuarioBean, PessoaFisica pessoaFisica) {
+	private UsuarioLogin createUsuarioLogin(UsuarioBean usuarioBean, PessoaFisica pessoaFisica, String randomPassword) {
 		UsuarioLogin usuarioLogin = new UsuarioLogin();
 		usuarioLogin.setTipoUsuario(UsuarioEnum.H);
 		usuarioLogin.setNomeUsuario(usuarioBean.getNome());
 		usuarioLogin.setLogin(usuarioBean.getCpf());
 		usuarioLogin.setEmail(usuarioBean.getEmail());
-		usuarioLogin.setAtivo(Boolean.FALSE);
+		usuarioLogin.setAtivo(Boolean.TRUE);
 		usuarioLogin.setBloqueio(Boolean.FALSE);
 		usuarioLogin.setProvisorio(Boolean.FALSE);
 		usuarioLogin.setPessoaFisica(pessoaFisica);
 
 		String salt = passwordService.generatePasswordSalt();
-		String randomPassword = passwordService.generatePasswordSalt();
 
 		usuarioLogin.setSalt(salt);
 		usuarioLogin.setSenha(passwordService.generatePasswordHash(randomPassword, salt));

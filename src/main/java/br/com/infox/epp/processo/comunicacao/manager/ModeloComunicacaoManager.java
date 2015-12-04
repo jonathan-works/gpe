@@ -72,7 +72,7 @@ public class ModeloComunicacaoManager extends Manager<ModeloComunicacaoDAO, Mode
 			destinatario.setNome(destinatarioModeloComunicacao.getNome());
 			destinatario.setStatusProrrogacao(prazoComunicacaoService.getStatusProrrogacaoFormatado(comunicacao));
 			destinatario.setDataConfirmacao(getMetadadoValue(comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA)));
-			destinatario.setDataResposta(getMetadadoValue(comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CUMPRIMENTO)));
+			destinatario.setDataResposta(getMetadadoValue(comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_RESPOSTA)));
 			destinatario.setPrazoAtendimento(getMetadadoValue(comunicacao.getMetadado(ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO)));
 			destinatario.setPrazoFinal(getMetadadoValue(comunicacao.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO)));
 			destinatario.setPrazoOriginal(getMetadadoValue(comunicacao.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO_INICIAL)));

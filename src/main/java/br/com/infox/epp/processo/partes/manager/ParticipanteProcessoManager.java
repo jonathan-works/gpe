@@ -2,6 +2,8 @@ package br.com.infox.epp.processo.partes.manager;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -13,6 +15,7 @@ import br.com.infox.epp.processo.partes.dao.ParticipanteProcessoDAO;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.partes.entity.TipoParte;
 
+@Stateless
 @AutoCreate
 @Name(ParticipanteProcessoManager.NAME)
 public class ParticipanteProcessoManager extends Manager<ParticipanteProcessoDAO, ParticipanteProcesso> {
