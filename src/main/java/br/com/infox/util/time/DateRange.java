@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.joda.time.DateTime;
+import org.joda.time.Duration;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
@@ -12,8 +13,8 @@ import org.joda.time.LocalDate;
  * @author erik
  */
 public class DateRange {
-    private long start;
-    private long end;
+    private DateTime start;
+    private DateTime end;
 
     public static final int MILISSECONDS = 0;
     public static final int SECONDS = 1;
@@ -24,21 +25,11 @@ public class DateRange {
     public static final int YEARS = 5;
 
     public DateRange() {
-        this.start = 0;
-        this.end = 0;
+        setStart(new DateTime());
+        setEnd(new DateTime());
     }
 
     public DateRange(DateTime date1, DateTime date2) {
-        if (date1.isBefore(date2)) {
-            this.start = date1.getMillis();
-            this.end = date2.getMillis();
-        } else {
-            this.start = date2.getMillis();
-            this.end = date1.getMillis();
-        }
-    }
-
-    public DateRange(LocalDate date1, LocalDate date2) {
         if (date1.isBefore(date2)) {
             setStart(date1);
             setEnd(date2);
@@ -48,31 +39,25 @@ public class DateRange {
         }
     }
 
-    public DateRange(final java.util.Date date1, final java.util.Date date2) {
-        final long _d1 = date1.getTime();
-        final long _d2 = date2.getTime();
+    public DateRange(LocalDate date1, LocalDate date2) {
+        this(date1.toDateTimeAtStartOfDay(), date2.toDateTimeAtStartOfDay());
+    }
 
-        if (_d1 > _d2) {
-            this.start = _d2;
-            this.end = _d1;
-        } else {
-            this.start = _d1;
-            this.end = _d2;
-        }
+    public DateRange(final java.util.Date date1, final java.util.Date date2) {
+        this(new DateTime(date1), new DateTime(date2));
     }
 
     private DateRange(Interval interval) {
-        this.start = interval.getStartMillis();
-        this.end = interval.getEndMillis();
+        this.start = interval.getStart();
+        this.end = interval.getEnd();
     }
 
     public boolean contains(final java.util.Date date) {
-        final long _date = date.getTime();
-        return (_date >= this.start) && (_date <= this.end);
+        return toInterval().contains(new DateTime(date));
     }
 
     public boolean contains(final DateRange range) {
-        return (this.start <= range.start) && (this.end >= range.end);
+        return toInterval().contains(range.toInterval());
     }
 
     public Long getDays() {
@@ -80,22 +65,18 @@ public class DateRange {
     }
 
     public Long get(final int intervalFormat) {
-        long divisor = 1;
         switch (intervalFormat) {
         case DAYS:
-            divisor *= 24;
+            return toDuration().getStandardDays();
         case HOURS:
-            divisor *= 60;
+            return toDuration().getStandardHours();
         case MINUTES:
-            divisor *= 60;
+            return toDuration().getStandardMinutes();
         case SECONDS:
-            divisor *= 1000;
-            break;
+            return toDuration().getStandardSeconds();
         default:
-            divisor = 1;
-            break;
+            return toDuration().getMillis();
         }
-        return new Long((this.end - this.start) / divisor);
     }
 
     public Date getEnd() {
@@ -119,77 +100,59 @@ public class DateRange {
         if (range == null) {
             return false;
         }
-        return ((range.start >= this.start) && (range.start <= this.end))
-                || ((range.end >= this.start) && (range.end <= this.end));
-    }
-
-    private void setEnd(LocalDate end){
-        setEnd(end.toDateTimeAtStartOfDay().withTime(23, 59, 59, 999).getMillis());
-    }
-    
-    private void setEnd(long _end){
-        if (_end >= this.start) {
-            this.end = _end;
-        }
+        return toInterval().overlaps(range.toInterval());
     }
     
     public void setEnd(final java.util.Date date) {
-        setEnd(LocalDate.fromDateFields(date));
-    }
-
-    private void setStart(final LocalDate date){
-        setStart(date.toDateTimeAtStartOfDay().getMillis());
+        setEnd(new DateTime(date));
     }
     
-    public void setStart(long start){
-        if (start <= this.end) {
-            this.start = start;
-        }
+    private void setEnd(final DateTime instant){
+        this.end = instant;
+    }
+    
+    private void setStart(final DateTime instant){
+        this.start = instant;
     }
     
     public void setStart(final java.util.Date date) {
-        setStart(LocalDate.fromDateFields(date));
+        setStart(new DateTime(date));
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (int) (end ^ (end >>> 32));
-        result = prime * result + (int) (start ^ (start >>> 32));
-        return result;
+        return toInterval().hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        DateRange other = (DateRange) obj;
-        if (end != other.end)
-            return false;
-        if (start != other.start)
-            return false;
-        return true;
+        return toInterval().equals(obj);
     }
 
+    public DateRange setStartToStartOfDay(){
+        setStart(this.start.withTimeAtStartOfDay());
+        return this;
+    }
+    
+    public DateRange setEndToEndOfDay(){
+        setStart(this.end.withTime(23, 59, 59, 999));
+        return this;
+    }
+    
+    private Duration toDuration() {
+        return new Duration(start, end);
+    }
+    
     private Interval toInterval() {
-        return new Interval(LocalDate.fromDateFields(getStart()).toDateTimeAtStartOfDay(), LocalDate
-                .fromDateFields(getEnd()).toDateTimeAtStartOfDay().toDateTime().withTime(23, 59, 59, 999));
+        return new Interval(start, end);
     }
 
     public DateRange union(DateRange other) {
-        Interval interval1 = toInterval();
-        Interval interval2 = other.toInterval();
-        if (!interval1.abuts(interval2) && !interval1.overlaps(interval2)) {
-            throw new IllegalStateException("Can't unite intervals that can't connect");
+        if (!abuts(other) && !intersects(other)) {
+            return this;
         }
-        DateTime start = interval1.getStart().isBefore(interval2.getStart()) ? interval1.getStart() : interval2
-                .getStart();
-        DateTime end = interval1.getEnd().isAfter(interval2.getEnd()) ? interval1.getEnd() : interval2.getEnd();
+        DateTime start = this.start.isBefore(other.start) ? this.start : other.start;
+        DateTime end = this.end.isAfter(other.end) ? this.end : other.end;
         return new DateRange(start, end);
     }
 
@@ -206,7 +169,7 @@ public class DateRange {
         if (abuts(range)) {
             result = range;
         } else if (intersects(range)) {
-            if (end <= range.end) {
+            if (end.compareTo(range.end)<=0) {
                 result = range;
             } else {
                 result = intersection(range);
@@ -227,6 +190,9 @@ public class DateRange {
     }
 
     public boolean abuts(DateRange other) {
+        if (other == null){
+            return false;
+        }
         return toInterval().abuts(other.toInterval());
     }
 
@@ -237,14 +203,27 @@ public class DateRange {
      * @return
      */
     public DateRange incrementStartByDuration(DateRange dateRange) {
-        this.end = this.end + dateRange.end - dateRange.start;
+        setInterval(toInterval().withDurationAfterStart(toDuration().plus(dateRange.toDuration())));
         return this;
+    }
+
+    private void setInterval(Interval interval) {
+        setStart(interval.getStart());
+        setStart(interval.getEnd());
     }
 
     @Override
     public String toString() {
-        return MessageFormat.format("{0,date,dd/MM/yyyy kk:mm:ss} to {1,date,dd/MM/yyyy kk:mm:ss} ({2} days)",
-                getStart(), getEnd(), String.valueOf(getDays()));
+        String pattern = "dd/MM/yyyy kk:mm:ss";
+        return MessageFormat.format("{0} to {1} ({2} days)", getStart().toString(pattern), getEnd().toString(pattern), String.valueOf(getDays()));
+    }
+
+    public static DateRange merge(Collection<DateRange> ranges) {
+        DateRange result = null;
+        for (DateRange dateRange : ranges) {
+            result = dateRange.union(result);
+        }
+        return result;
     }
     
 }

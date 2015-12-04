@@ -397,6 +397,7 @@
         <filtering>true</filtering>
         <includes>
           <include>**/*.xml</include>
+          <include>**/*.json</include>
           <include>**/*.properties</include>
           <include>**/*.csv</include>
           <include>**/*.sql</include>

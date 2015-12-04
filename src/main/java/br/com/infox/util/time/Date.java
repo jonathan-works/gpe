@@ -1,19 +1,13 @@
 package br.com.infox.util.time;
 
+import java.text.SimpleDateFormat;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 
 public class Date  extends java.util.Date {
     
-    public Date() {
-        super();
-    }
-
-    public Date(long date) {
-        super(date);
-    }
-
     public Date(LocalDate localDate){
         this(localDate.toDateTimeAtStartOfDay());
     }
@@ -23,7 +17,7 @@ public class Date  extends java.util.Date {
     }
 
     public int getDayOfWeek(){
-        return LocalDate.fromDateFields(this).getDayOfWeek();
+        return new DateTime(this).getDayOfWeek();
     }
     
     public Date nextWeekday(){
@@ -35,13 +29,17 @@ public class Date  extends java.util.Date {
     }
     
     public Date toEndOfDay(){
-        return new Date(LocalDate.fromDateFields(this).toDateTimeAtStartOfDay().withTime(23, 59, 59, 999));
+        return new Date(new DateTime(this).withTime(23, 59, 59, 999));
     }
     
     public Date toStartOfDay(){
-        return new Date(LocalDate.fromDateFields(this).toDateTimeAtStartOfDay());
+        return new Date(new DateTime(this).withTimeAtStartOfDay());
     }
     
     private static final long serialVersionUID = 1L;
+
+    public String toString(String string) {
+        return new SimpleDateFormat(string).format(this);
+    }
     
 }
