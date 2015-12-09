@@ -1,14 +1,12 @@
 package br.com.infox.epp.processo.comunicacao.service;
 
-import static br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider.*;
+import static br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider.DATA_CIENCIA;
+import static br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider.LIMITE_DATA_CIENCIA;
+import static br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -23,9 +21,6 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.context.exe.ContextInstance;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeConstants;
-import org.joda.time.LocalDate;
 
 import br.com.infox.certificado.bean.CertificateSignatureBean;
 import br.com.infox.certificado.exception.CertificadoException;
@@ -33,9 +28,8 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
-import br.com.infox.epp.calendario.TipoEvento;
+import br.com.infox.epp.calendario.CalendarioEventosService;
 import br.com.infox.epp.cdi.seam.ContextDependency;
-import br.com.infox.epp.cliente.entity.CalendarioEventos;
 import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
@@ -56,6 +50,7 @@ import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.task.service.MovimentarTarefaService;
 import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.util.ComponentUtil;
+import br.com.infox.util.time.Date;
 import br.com.infox.util.time.DateRange;
 
 @Name(PrazoComunicacaoService.NAME)
@@ -71,6 +66,8 @@ public class PrazoComunicacaoService {
 	@Inject
 	private CalendarioEventosManager calendarioEventosManager;
 	@Inject
+	private CalendarioEventosService calendarioEventosService;
+	@Inject
 	private MetadadoProcessoManager metadadoProcessoManager;
 	@Inject
 	private MovimentarTarefaService movimentarTarefaService;
@@ -82,7 +79,7 @@ public class PrazoComunicacaoService {
 	
 	private AssinaturaDocumentoService assinaturaDocumentoService = ComponentUtil.getComponent(AssinaturaDocumentoService.NAME);
 
-	public Date contabilizarPrazoCiencia(Processo comunicacao) {
+	public java.util.Date contabilizarPrazoCiencia(Processo comunicacao) {
 		DestinatarioModeloComunicacao destinatario = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.DESTINATARIO);
         Integer qtdDias = destinatario.getModeloComunicacao().getTipoComunicacao().getQuantidadeDiasCiencia();
         Date hoje = new Date();
@@ -95,7 +92,7 @@ public class PrazoComunicacaoService {
     }
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void darCiencia(Processo comunicacao, Date dataCiencia, UsuarioLogin usuarioCiencia) throws DAOException {
+	public void darCiencia(Processo comunicacao, java.util.Date dataCiencia, UsuarioLogin usuarioCiencia) throws DAOException {
 		//Se o usuário confirmar ciência em dia não útil, o sistema deverá considerar que a ciência foi confirmada no dia útil seguinte e começar a contar o prazo no dia útil 
     	//seguinte a essa confirmação. 64236
 		dataCiencia = calendarioEventosManager.getPrimeiroDiaUtil(dataCiencia);
@@ -116,7 +113,7 @@ public class PrazoComunicacaoService {
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void darCienciaManual(Processo comunicacao, Date dataCiencia, Documento documentoCiencia) throws DAOException {
+	public void darCienciaManual(Processo comunicacao, java.util.Date dataCiencia, Documento documentoCiencia) throws DAOException {
 		if (comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA) != null) {
     		return;
     	}
@@ -132,13 +129,13 @@ public class PrazoComunicacaoService {
 		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoCiencia));
 	}
 	
-	private void darCienciaDocumentoGravado(Processo comunicacao, Date dataCiencia, UsuarioLogin usuarioLogin) throws DAOException {
+	private void darCienciaDocumentoGravado(Processo comunicacao, java.util.Date dataCiencia, UsuarioLogin usuarioLogin) throws DAOException {
 		darCiencia(comunicacao, dataCiencia, usuarioLogin);
 		movimentarTarefaService.finalizarTarefasEmAberto(comunicacao);
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void darCienciaManualAssinar(Processo comunicacao, Date dataCiencia, Documento documentoCiencia, CertificateSignatureBean signatureBean, UsuarioPerfil usuarioPerfil) 
+	public void darCienciaManualAssinar(Processo comunicacao, java.util.Date dataCiencia, Documento documentoCiencia, CertificateSignatureBean signatureBean, UsuarioPerfil usuarioPerfil) 
 			throws DAOException, CertificadoException, AssinaturaException{
 		if (comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA) != null) {
     		return;
@@ -148,7 +145,7 @@ public class PrazoComunicacaoService {
 		darCienciaDocumentoGravado(comunicacao, dataCiencia, usuarioPerfil.getUsuarioLogin());
 	}
 
-	protected void adicionarPrazoDeCumprimento(Processo comunicacao, Date dataCiencia)
+	protected void adicionarPrazoDeCumprimento(Processo comunicacao, java.util.Date dataCiencia)
 			throws DAOException {
 		
 		Integer diasPrazoCumprimento = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
@@ -170,7 +167,7 @@ public class PrazoComunicacaoService {
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void darCumprimento(Processo comunicacao, Date dataCumprimento) throws DAOException {
+	public void darCumprimento(Processo comunicacao, java.util.Date dataCumprimento) throws DAOException {
 		dataCumprimento = calendarioEventosManager.getPrimeiroDiaUtil(dataCumprimento);
 		if (comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CUMPRIMENTO) != null) {
     		return;
@@ -199,10 +196,9 @@ public class PrazoComunicacaoService {
     }
     
     public void movimentarComunicacaoPrazoExpirado(Processo comunicacao, MetadadoProcessoDefinition metadadoPrazo) throws DAOException{
-		Date dataLimite = getValueMetadado(comunicacao, metadadoPrazo);
+		java.util.Date dataLimite = getValueMetadado(comunicacao, metadadoPrazo);
 		if (dataLimite != null) {
-			DateTime dataParaCumprimento = new DateTime(dataLimite.getTime());
-			if (dataParaCumprimento.isBeforeNow()) {
+			if (dataLimite.compareTo(new java.util.Date())<=0) {
 				movimentarTarefaService.finalizarTarefasEmAberto(comunicacao);
 			}
 		}
@@ -282,64 +278,20 @@ public class PrazoComunicacaoService {
     	}
     	return null;
     }
-
-    private LocalDate getNextWeekday(LocalDate date){
-        LocalDate result=date;
-        while(DateTimeConstants.SATURDAY==result.getDayOfWeek() || DateTimeConstants.SUNDAY==result.getDayOfWeek()){
-            result = result.plusDays(1);
-        }
-        return result;
-    }
-    
-    
-    public List<DateRange> getSuspensoesPrazo(DateRange periodo){
-        List<DateRange> resultList = new ArrayList<>();
-        for (CalendarioEventos calendarioEventos : calendarioEventosManager.getByDate(periodo)) {
-            if (TipoEvento.S.equals(calendarioEventos.getTipoEvento())){
-                resultList.add(new DateRange(calendarioEventos.getDataInicio(), calendarioEventos.getDataFim()));
-            }
-        }
-        return resultList;
-    }
-    
-    //O inicio de prazo de resposta sempre se dá em dia útil e sempre no dia útil seguinte ao da ciência (tenha esta sido manual ou pelo sistema).
-    //O fim de prazo de resposta sempre se dá em dia útil. Se o fim de prazo ocorrer em dia não útil, deverá ser contabilizado como fim de prazo o dia útil seguinte. 64136
-    public DateRange calcularPeriodoComSuspensaoDePrazo(Date date, int prazo){
-        LocalDate inicioPeriodo = getNextWeekday(LocalDate.fromDateFields(date).plusDays(1));
-        LocalDate fimPeriodo = getNextWeekday(inicioPeriodo.plusDays(prazo));
-        DateRange periodo = new DateRange(inicioPeriodo, fimPeriodo);
-        Set<DateRange> connections = new HashSet<>();
-        boolean changed = false;
-        do {
-            changed = false;
-            for (DateRange suspensaoPrazo : getSuspensoesPrazo(periodo)) {
-                if (!connections.contains(suspensaoPrazo)) {
-                    DateRange connection = periodo.connection(suspensaoPrazo);
-                    if (periodo.intersects(connection)) {
-                        periodo = periodo.incrementStartByDuration(connection);
-                        periodo.setEnd(periodo.getEnd().nextWeekday().toEndOfDay());
-                        changed = true;
-                        connections.add(suspensaoPrazo);
-                    } else if (periodo.abuts(connection)) {
-                        periodo = periodo.union(connection);
-                        periodo.setEnd(periodo.getEnd().nextWeekday().toEndOfDay());
-                        changed = true;
-                        connections.add(suspensaoPrazo);
-                    }
-                }
-            }
-        } while (changed);
-        return periodo;
-    }
     
     private Date calcularPrazoDeCumprimento(Processo comunicacao){
-        Date dataCiencia = comunicacao.getMetadado(DATA_CIENCIA).<Date>getValue();
+        java.util.Date dataCiencia = comunicacao.getMetadado(DATA_CIENCIA).getValue();
         Integer diasPrazoCumprimento = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
         if (diasPrazoCumprimento == null){
             diasPrazoCumprimento = -1;
         }
         if (diasPrazoCumprimento>=0 && dataCiencia != null){
-            return calcularPeriodoComSuspensaoDePrazo(dataCiencia, diasPrazoCumprimento).getEnd().toEndOfDay();
+        	Date inicio = new Date(dataCiencia);
+        	DateRange periodo = new DateRange(inicio, inicio.plusDays(diasPrazoCumprimento));
+        	periodo = calendarioEventosService.calcularPrazoIniciandoEmDiaUtil(periodo);
+        	periodo = calendarioEventosService.calcularPrazoSuspensao(periodo);
+        	periodo = calendarioEventosService.calcularPrazoEncerrandoEmDiaUtil(periodo);
+            return periodo.getEnd().withTimeAtEndOfDay();
         }
         return null;
     }
