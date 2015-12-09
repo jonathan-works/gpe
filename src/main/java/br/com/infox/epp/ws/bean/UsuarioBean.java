@@ -1,6 +1,5 @@
 package br.com.infox.epp.ws.bean;
 
-import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -8,15 +7,16 @@ import java.util.Date;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import br.com.infox.epp.meiocontato.annotation.Email;
 import br.com.infox.epp.pessoa.annotation.Cpf;
 import br.com.infox.epp.pessoa.annotation.Data;
 import br.com.infox.epp.pessoa.annotation.EstadoCivil;
 
-public class UsuarioBean implements Serializable {
+public class UsuarioBean {
 
-	private static final long serialVersionUID = 1L;
-	private static final String DATE_PATTERN = "dd/MM/yyyy";
+	public static final String DATE_PATTERN = "dd/MM/yyyy";
 
 	@NotNull
 	@Size(min = 5, max = 150)
@@ -147,7 +147,9 @@ public class UsuarioBean implements Serializable {
 		this.estadoCivil = estadoCivil;
 	}
 
+	@JsonIgnore
 	public Date getDataNascimentoAsDate() {
+	    if (dataNascimento == null) return null;
 		try {
 			return new SimpleDateFormat(DATE_PATTERN).parse(dataNascimento);
 		} catch (ParseException e) {
@@ -156,6 +158,7 @@ public class UsuarioBean implements Serializable {
 		return null;
 	}
 
+	@JsonIgnore
 	public Date getDataExpedicaoAsDate() {
 		if(dataExpedicao == null) {
 			return null;
