@@ -9,7 +9,7 @@ import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.DATA_F
 import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.SERIE;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collection;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -19,19 +19,22 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
-import org.joda.time.LocalDate;
-
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.calendario.entity.SerieEventos;
 import br.com.infox.epp.calendario.modification.process.CalendarioEventosModificationProcessor;
 import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cliente.dao.CalendarioEventosDAO;
 import br.com.infox.epp.cliente.entity.CalendarioEventos;
+import br.com.infox.util.time.Date;
+import br.com.infox.util.time.DateRange;
 
 @Stateless
 public class CalendarioEventosService {
 
     @Inject
     private CalendarioEventosModificationProcessor calendarioEventosProcessor;
+    @Inject
+    private CalendarioEventosDAO calendarioEventosDao;
 
     public List<CalendarioEventosModification> atualizar(CalendarioEventos calendarioEventos) {
         CalendarioEventosModification modification = new CalendarioEventosModification(null, calendarioEventos);
@@ -87,7 +90,7 @@ public class CalendarioEventosService {
     }
 
     private List<CalendarioEventosModification> criarSerie(CalendarioEventos calendarioEventos) {
-        Date dataLimite = getDataLimite();
+        java.util.Date dataLimite = getDataLimite();
         final List<CalendarioEventosModification> result = new ArrayList<>();
         if (calendarioEventos != null && calendarioEventos.getSerie() != null) {
             CalendarioEventos proximoEvento = calendarioEventos;
@@ -105,22 +108,22 @@ public class CalendarioEventosService {
         return query.getResultList();
     }
 
-    private List<CalendarioEventos> getBySerieAfterDate(SerieEventos serie, Date dataFim) {
+    private List<CalendarioEventos> getBySerieAfterDate(SerieEventos serie, java.util.Date dataFim) {
         EntityManager em = getEntityManager();
         TypedQuery<CalendarioEventos> query = em.createNamedQuery(GET_BY_SERIE_AFTER_DATE, CalendarioEventos.class);
         query = query.setParameter(SERIE, serie).setParameter(DATA_FIM, dataFim);
         return query.getResultList();
     }
 
-    private Date getDataLimite() {
-        return new LocalDate().plusYears(2).toDate();
+    private java.util.Date getDataLimite() {
+        return new Date().plusYears(1).toStartOfDay();
     }
 
     private EntityManager getEntityManager() {
         return BeanManager.INSTANCE.getReference(EntityManager.class);
     }
 
-    private List<CalendarioEventos> getNotUpToDate(Date data) {
+    private List<CalendarioEventos> getNotUpToDate(java.util.Date data) {
         EntityManager em = getEntityManager();
         TypedQuery<CalendarioEventos> query = em.createNamedQuery(GET_PERIODICOS_NAO_ATUALIZADOS,
                 CalendarioEventos.class);
@@ -195,7 +198,7 @@ public class CalendarioEventosService {
             /**
              * TODO: confirmar se é pra remover apenas eventos futuros, ou todos os eventos da série
              */
-            for (CalendarioEventos evento : getBySerieAfterDate(calendarioEventos.getSerie(), new LocalDate().toDate())) {
+            for (CalendarioEventos evento : getBySerieAfterDate(calendarioEventos.getSerie(), new Date().toStartOfDay())) {
                 if (!calendarioEventos.equals(evento)) {
                     result.add(new CalendarioEventosModification(evento, null));
                 }
@@ -204,4 +207,41 @@ public class CalendarioEventosService {
         return result;
     }
 
+    private List<DateRange> getSuspensoesPrazo(DateRange periodo){
+        List<DateRange> resultList = new ArrayList<>();
+        for (CalendarioEventos calendarioEventos : calendarioEventosDao.getByDate(periodo)) {
+            if (TipoEvento.S.equals(calendarioEventos.getTipoEvento())){
+                resultList.add(calendarioEventos.getInterval());
+            }
+        }
+        return resultList;
+    }
+    
+	private DateRange[] getFeriados(DateRange periodo) {
+		Collection<DateRange> result = new ArrayList<>();
+		for (CalendarioEventos calendarioEventos : calendarioEventosDao.getByDate(periodo)) {
+			result.add(calendarioEventos.getInterval());
+		}
+		result = DateRange.reduce(result);
+    	DateRange[] feriados = result.toArray(new DateRange[result.size()]);
+		return feriados;
+	}
+    
+    public DateRange calcularPrazoIniciandoEmDiaUtil(DateRange periodo){
+    	DateRange periodoEventos = periodo.withStart(periodo.getStart().minusYears(1)).withEnd(periodo.getEnd().plusYears(1));
+		DateRange[] periodosNaoUteis = getFeriados(periodoEventos);
+        return periodo.withStart(periodo.getStart().nextWeekday(periodosNaoUteis));
+    }
+    public DateRange calcularPrazoEncerrandoEmDiaUtil(DateRange periodo){
+    	DateRange periodoEventos = periodo.withStart(periodo.getStart().minusYears(1)).withEnd(periodo.getEnd().plusYears(1));
+		DateRange[] periodosNaoUteis = getFeriados(periodoEventos);
+        return periodo.withStart(periodo.getStart().nextWeekday(periodosNaoUteis));
+    }
+    
+    public DateRange calcularPrazoSuspensao(DateRange periodo){
+    	DateRange periodoEventos = periodo.withStart(periodo.getStart().minusYears(1)).withEnd(periodo.getEnd().plusYears(1));
+    	return periodo.withSuspensoes(getSuspensoesPrazo(periodoEventos));
+    }
+    
+    
 }
