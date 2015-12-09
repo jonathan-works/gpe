@@ -49,6 +49,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.calendario.TipoEvento;
 import br.com.infox.epp.calendario.entity.SerieEventos;
 import br.com.infox.epp.cliente.query.CalendarioEventosQuery;
+import br.com.infox.util.time.DateRange;
 
 @Entity
 @Table(name = CalendarioEventos.TABLE_NAME)
@@ -247,6 +248,9 @@ public class CalendarioEventos implements Serializable {
     }
 
     public boolean isSimilar(CalendarioEventos other) {
+        if (other == null){
+            return false;
+        }
         if (!Objects.equals(getDataInicio(), other.getDataInicio())) {
             return false;
         }
@@ -287,6 +291,15 @@ public class CalendarioEventos implements Serializable {
         return true;
     }
 
+    public void setInterval(DateRange periodo){
+        this.dataInicio = periodo.getStart().toStartOfDay();
+        this.dataFim = periodo.getEnd().withTimeAtEndOfDay();
+    }
+    
+    public DateRange getInterval(){
+        return new DateRange(getDataInicio(), getDataFim()).setStartToStartOfDay().setEndToEndOfDay();
+    }
+    
     @Override
     public String toString() {
         return MessageFormat.format("{0} {1} {2} [{3}]", getLocalizacao(), getDescricaoEvento(), getTipoEvento(),
