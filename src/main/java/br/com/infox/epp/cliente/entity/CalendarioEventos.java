@@ -292,7 +292,7 @@ public class CalendarioEventos implements Serializable {
     }
 
     public void setInterval(DateRange periodo){
-        this.dataInicio = periodo.getStart().toStartOfDay();
+        this.dataInicio = periodo.getStart().withTimeAtStartOfDay();
         this.dataFim = periodo.getEnd().withTimeAtEndOfDay();
     }
     

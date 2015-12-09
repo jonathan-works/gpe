@@ -10,7 +10,9 @@ import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.SERIE;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -116,7 +118,7 @@ public class CalendarioEventosService {
     }
 
     private java.util.Date getDataLimite() {
-        return new Date().plusYears(1).toStartOfDay();
+        return new Date().plusYears(1).withTimeAtStartOfDay();
     }
 
     private EntityManager getEntityManager() {
@@ -198,7 +200,7 @@ public class CalendarioEventosService {
             /**
              * TODO: confirmar se é pra remover apenas eventos futuros, ou todos os eventos da série
              */
-            for (CalendarioEventos evento : getBySerieAfterDate(calendarioEventos.getSerie(), new Date().toStartOfDay())) {
+            for (CalendarioEventos evento : getBySerieAfterDate(calendarioEventos.getSerie(), new Date().withTimeAtStartOfDay())) {
                 if (!calendarioEventos.equals(evento)) {
                     result.add(new CalendarioEventosModification(evento, null));
                 }
@@ -217,31 +219,51 @@ public class CalendarioEventosService {
         return resultList;
     }
     
-	private DateRange[] getFeriados(DateRange periodo) {
+	private Collection<DateRange> getFeriados(DateRange periodo) {
 		Collection<DateRange> result = new ArrayList<>();
 		for (CalendarioEventos calendarioEventos : calendarioEventosDao.getByDate(periodo)) {
 			result.add(calendarioEventos.getInterval());
 		}
-		result = DateRange.reduce(result);
-    	DateRange[] feriados = result.toArray(new DateRange[result.size()]);
-		return feriados;
+		return DateRange.reduce(result);
 	}
     
     public DateRange calcularPrazoIniciandoEmDiaUtil(DateRange periodo){
     	DateRange periodoEventos = periodo.withStart(periodo.getStart().minusYears(1)).withEnd(periodo.getEnd().plusYears(1));
-		DateRange[] periodosNaoUteis = getFeriados(periodoEventos);
-        return periodo.withStart(periodo.getStart().nextWeekday(periodosNaoUteis));
+    	return calcularPrazoIniciandoEmDiaUtil(periodo, getFeriados(periodoEventos));
     }
+	public DateRange calcularPrazoIniciandoEmDiaUtil(DateRange periodo, Collection<DateRange> eventos) {
+		DateRange[] periodosNaoUteis = eventos.toArray(new DateRange[eventos.size()]);
+        return periodo.withStart(periodo.getStart().nextWeekday(periodosNaoUteis));
+	}
+	public DateRange calcularPrazoEncerrandoEmDiaUtil(DateRange periodo, Collection<DateRange> eventos){
+		DateRange[] periodosNaoUteis = eventos.toArray(new DateRange[eventos.size()]);
+        return periodo.withEnd(periodo.getStart().nextWeekday(periodosNaoUteis));
+	}
     public DateRange calcularPrazoEncerrandoEmDiaUtil(DateRange periodo){
     	DateRange periodoEventos = periodo.withStart(periodo.getStart().minusYears(1)).withEnd(periodo.getEnd().plusYears(1));
-		DateRange[] periodosNaoUteis = getFeriados(periodoEventos);
-        return periodo.withStart(periodo.getStart().nextWeekday(periodosNaoUteis));
+        return calcularPrazoEncerrandoEmDiaUtil(periodo, getFeriados(periodoEventos));
     }
     
     public DateRange calcularPrazoSuspensao(DateRange periodo){
     	DateRange periodoEventos = periodo.withStart(periodo.getStart().minusYears(1)).withEnd(periodo.getEnd().plusYears(1));
-    	return periodo.withSuspensoes(getSuspensoesPrazo(periodoEventos));
+    	return calcularPrazoSuspensao(periodo, getSuspensoesPrazo(periodoEventos));
     }
-    
+
+	public DateRange calcularPrazoSuspensao(DateRange periodo, List<DateRange> suspensoesPrazo) {
+		DateRange result = new DateRange(periodo.getStart(), periodo.getEnd());
+		Set<DateRange> applied = new HashSet<>();
+		boolean changed=false;
+		do {
+			changed = false;
+			for (DateRange suspensao : DateRange.reduce(suspensoesPrazo)) {
+				DateRange connection = result.connection(suspensao);
+	    		if (connection != null && applied.add(suspensao)){
+	    			result = result.incrementStartByDuration(connection);
+	    			changed = true;
+	    		}
+			}
+		} while(changed);
+		return result;
+	}
     
 }

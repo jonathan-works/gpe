@@ -52,7 +52,7 @@ public class Date extends java.util.Date {
 		return new Date(new DateTime(this).withTime(23, 59, 59, 999));
 	}
 
-	public Date toStartOfDay() {
+	public Date withTimeAtStartOfDay() {
 		return new Date(new DateTime(this).withTimeAtStartOfDay());
 	}
 
