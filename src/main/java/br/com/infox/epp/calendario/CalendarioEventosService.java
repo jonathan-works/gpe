@@ -9,10 +9,7 @@ import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.DATA_F
 import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.SERIE;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -27,8 +24,8 @@ import br.com.infox.epp.calendario.modification.process.CalendarioEventosModific
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cliente.dao.CalendarioEventosDAO;
 import br.com.infox.epp.cliente.entity.CalendarioEventos;
+import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
 import br.com.infox.util.time.Date;
-import br.com.infox.util.time.DateRange;
 
 @Stateless
 public class CalendarioEventosService {
@@ -37,6 +34,8 @@ public class CalendarioEventosService {
     private CalendarioEventosModificationProcessor calendarioEventosProcessor;
     @Inject
     private CalendarioEventosDAO calendarioEventosDao;
+    @Inject
+    private CalendarioEventosManager calendarioEventosManager;
 
     public List<CalendarioEventosModification> atualizar(CalendarioEventos calendarioEventos) {
         CalendarioEventosModification modification = new CalendarioEventosModification(null, calendarioEventos);
@@ -208,62 +207,5 @@ public class CalendarioEventosService {
         }
         return result;
     }
-
-    private List<DateRange> getSuspensoesPrazo(DateRange periodo){
-        List<DateRange> resultList = new ArrayList<>();
-        for (CalendarioEventos calendarioEventos : calendarioEventosDao.getByDate(periodo)) {
-            if (TipoEvento.S.equals(calendarioEventos.getTipoEvento())){
-                resultList.add(calendarioEventos.getInterval());
-            }
-        }
-        return resultList;
-    }
-    
-	private Collection<DateRange> getFeriados(DateRange periodo) {
-		Collection<DateRange> result = new ArrayList<>();
-		for (CalendarioEventos calendarioEventos : calendarioEventosDao.getByDate(periodo)) {
-			result.add(calendarioEventos.getInterval());
-		}
-		return DateRange.reduce(result);
-	}
-    
-    public DateRange calcularPrazoIniciandoEmDiaUtil(DateRange periodo){
-    	DateRange periodoEventos = periodo.withStart(periodo.getStart().minusYears(1)).withEnd(periodo.getEnd().plusYears(1));
-    	return calcularPrazoIniciandoEmDiaUtil(periodo, getFeriados(periodoEventos));
-    }
-	public DateRange calcularPrazoIniciandoEmDiaUtil(DateRange periodo, Collection<DateRange> eventos) {
-		DateRange[] periodosNaoUteis = eventos.toArray(new DateRange[eventos.size()]);
-        return periodo.withStart(periodo.getStart().nextWeekday(periodosNaoUteis));
-	}
-	public DateRange calcularPrazoEncerrandoEmDiaUtil(DateRange periodo, Collection<DateRange> eventos){
-		DateRange[] periodosNaoUteis = eventos.toArray(new DateRange[eventos.size()]);
-        return periodo.withEnd(periodo.getEnd().nextWeekday(periodosNaoUteis));
-	}
-    public DateRange calcularPrazoEncerrandoEmDiaUtil(DateRange periodo){
-    	DateRange periodoEventos = periodo.withStart(periodo.getStart().minusYears(1)).withEnd(periodo.getEnd().plusYears(1));
-        return calcularPrazoEncerrandoEmDiaUtil(periodo, getFeriados(periodoEventos));
-    }
-    
-    public DateRange calcularPrazoSuspensao(DateRange periodo){
-    	DateRange periodoEventos = periodo.withStart(periodo.getStart().minusYears(1)).withEnd(periodo.getEnd().plusYears(1));
-    	return calcularPrazoSuspensao(periodo, getSuspensoesPrazo(periodoEventos));
-    }
-
-	public DateRange calcularPrazoSuspensao(DateRange periodo, List<DateRange> suspensoesPrazo) {
-		DateRange result = new DateRange(periodo.getStart(), periodo.getEnd());
-		Set<DateRange> applied = new HashSet<>();
-		boolean changed=false;
-		do {
-			changed = false;
-			for (DateRange suspensao : DateRange.reduce(suspensoesPrazo)) {
-				DateRange connection = result.connection(suspensao);
-	    		if (connection != null && applied.add(suspensao)){
-	    			result = result.incrementStartByDuration(connection);
-	    			changed = true;
-	    		}
-			}
-		} while(changed);
-		return result;
-	}
     
 }

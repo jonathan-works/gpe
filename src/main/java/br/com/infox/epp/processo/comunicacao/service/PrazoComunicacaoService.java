@@ -28,7 +28,6 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
-import br.com.infox.epp.calendario.CalendarioEventosService;
 import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
@@ -65,8 +64,6 @@ public class PrazoComunicacaoService {
 	
 	@Inject
 	private CalendarioEventosManager calendarioEventosManager;
-	@Inject
-	private CalendarioEventosService calendarioEventosService;
 	@Inject
 	private MetadadoProcessoManager metadadoProcessoManager;
 	@Inject
@@ -288,9 +285,9 @@ public class PrazoComunicacaoService {
         if (diasPrazoCumprimento>=0 && dataCiencia != null){
         	Date inicio = new Date(dataCiencia);
         	DateRange periodo = new DateRange(inicio, inicio.plusDays(diasPrazoCumprimento));
-        	periodo = calendarioEventosService.calcularPrazoIniciandoEmDiaUtil(periodo);
-        	periodo = calendarioEventosService.calcularPrazoSuspensao(periodo);
-        	periodo = calendarioEventosService.calcularPrazoEncerrandoEmDiaUtil(periodo);
+        	periodo = calendarioEventosManager.calcularPrazoIniciandoEmDiaUtil(periodo);
+        	periodo = calendarioEventosManager.calcularPrazoSuspensao(periodo);
+        	periodo = calendarioEventosManager.calcularPrazoEncerrandoEmDiaUtil(periodo);
             return periodo.getEnd().withTimeAtEndOfDay();
         }
         return null;
