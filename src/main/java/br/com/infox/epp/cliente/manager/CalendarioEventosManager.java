@@ -34,11 +34,11 @@ public class CalendarioEventosManager extends Manager<CalendarioEventosDAO, Cale
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "calendarioEventosManager";
-
+    //TODO: Atualizar para retornar eventos virtuais. Datas que ainda não existem no banco de dados, mas que existem na progressão de uma série
     public List<CalendarioEventos> getByDate(Date date) {
         return getDao().getByDate(date);
     }
-
+  //TODO: Atualizar para retornar eventos virtuais. Datas que ainda não existem no banco de dados, mas que existem na progressão de uma série
     public List<CalendarioEventos> getByDate(DateRange dateRange) {
         return getDao().getByDate(dateRange);
     }
@@ -103,7 +103,7 @@ public class CalendarioEventosManager extends Manager<CalendarioEventosDAO, Cale
 
 	private List<DateRange> getSuspensoesPrazo(DateRange periodo){
 	    List<DateRange> resultList = new ArrayList<>();
-	    for (CalendarioEventos calendarioEventos : getDao().getByDate(periodo)) {
+	    for (CalendarioEventos calendarioEventos : getByDate(periodo)) {
 	        if (TipoEvento.S.equals(calendarioEventos.getTipoEvento())){
 	            resultList.add(calendarioEventos.getInterval());
 	        }
@@ -113,7 +113,7 @@ public class CalendarioEventosManager extends Manager<CalendarioEventosDAO, Cale
 
 	private Collection<DateRange> getFeriados(DateRange periodo) {
 		Collection<DateRange> result = new ArrayList<>();
-		for (CalendarioEventos calendarioEventos : getDao().getByDate(periodo)) {
+		for (CalendarioEventos calendarioEventos : getByDate(periodo)) {
 			result.add(calendarioEventos.getInterval());
 		}
 		return DateRange.reduce(result);
