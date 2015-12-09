@@ -237,7 +237,7 @@ public class CalendarioEventosService {
 	}
 	public DateRange calcularPrazoEncerrandoEmDiaUtil(DateRange periodo, Collection<DateRange> eventos){
 		DateRange[] periodosNaoUteis = eventos.toArray(new DateRange[eventos.size()]);
-        return periodo.withEnd(periodo.getStart().nextWeekday(periodosNaoUteis));
+        return periodo.withEnd(periodo.getEnd().nextWeekday(periodosNaoUteis));
 	}
     public DateRange calcularPrazoEncerrandoEmDiaUtil(DateRange periodo){
     	DateRange periodoEventos = periodo.withStart(periodo.getStart().minusYears(1)).withEnd(periodo.getEnd().plusYears(1));
