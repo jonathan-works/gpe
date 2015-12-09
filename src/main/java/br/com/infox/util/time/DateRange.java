@@ -3,8 +3,12 @@ package br.com.infox.util.time;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
@@ -13,8 +17,7 @@ import org.joda.time.LocalDate;
  * @author erik
  */
 public class DateRange {
-    private DateTime start;
-    private DateTime end;
+    private Interval interval;
 
     public static final int MILISSECONDS = 0;
     public static final int SECONDS = 1;
@@ -25,17 +28,14 @@ public class DateRange {
     public static final int YEARS = 5;
 
     public DateRange() {
-        setStart(new DateTime());
-        setEnd(new DateTime());
+        this(new DateTime(), new DateTime());
     }
 
     public DateRange(DateTime date1, DateTime date2) {
         if (date1.isBefore(date2)) {
-            setStart(date1);
-            setEnd(date2);
+            setInterval(new Interval(date1,date2));
         } else {
-            setStart(date2);
-            setEnd(date1);
+            setInterval(new Interval(date2,date1));
         }
     }
 
@@ -48,16 +48,23 @@ public class DateRange {
     }
 
     private DateRange(Interval interval) {
-        this.start = interval.getStart();
-        this.end = interval.getEnd();
+        setInterval(interval);
+    }
+
+    private void setInterval(Interval interval) {
+        this.interval = interval;
+    }
+
+    private Interval getInterval() {
+        return this.interval;
     }
 
     public boolean contains(final java.util.Date date) {
-        return toInterval().contains(new DateTime(date));
+        return getInterval().contains(new DateTime(date));
     }
 
     public boolean contains(final DateRange range) {
-        return toInterval().contains(range.toInterval());
+        return getInterval().contains(range.getInterval());
     }
 
     public Long getDays() {
@@ -80,11 +87,11 @@ public class DateRange {
     }
 
     public Date getEnd() {
-        return new Date(this.end);
+        return new Date(getInterval().getEnd());
     }
 
     public Date getStart() {
-        return new Date(this.start);
+        return new Date(getInterval().getStart());
     }
 
     public boolean intersectsAny(DateRange... ranges){
@@ -100,7 +107,7 @@ public class DateRange {
         if (range == null) {
             return false;
         }
-        return toInterval().overlaps(range.toInterval());
+        return getInterval().overlaps(range.getInterval());
     }
     
     public void setEnd(final java.util.Date date) {
@@ -108,11 +115,11 @@ public class DateRange {
     }
     
     private void setEnd(final DateTime instant){
-        this.end = instant;
+        setInterval(getInterval().withEnd(instant));
     }
     
     private void setStart(final DateTime instant){
-        this.start = instant;
+        setInterval(getInterval().withStart(instant));
     }
     
     public void setStart(final java.util.Date date) {
@@ -121,43 +128,70 @@ public class DateRange {
 
     @Override
     public int hashCode() {
-        return toInterval().hashCode();
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((interval == null) ? 0 : interval.hashCode());
+        return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-        return toInterval().equals(obj);
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof DateRange)) {
+            return false;
+        }
+        DateRange other = (DateRange) obj;
+        if (interval == null) {
+            if (other.interval != null) {
+                return false;
+            }
+        } else if (!interval.equals(other.interval)) {
+            return false;
+        }
+        return true;
     }
 
     public DateRange setStartToStartOfDay(){
-        setStart(this.start.withTimeAtStartOfDay());
+        setInterval(getInterval().withStart(getInterval().getStart().withTimeAtStartOfDay()));
         return this;
     }
     
     public DateRange setEndToEndOfDay(){
-        setStart(this.end.withTime(23, 59, 59, 999));
+        setInterval(getInterval().withEnd(getInterval().getEnd().withTime(23, 59, 59, 999)));
         return this;
     }
     
     private Duration toDuration() {
-        return new Duration(start, end);
+        return getInterval().toDuration();
     }
     
-    private Interval toInterval() {
-        return new Interval(start, end);
+    public DateRange union(Collection<DateRange> others){
+        DateRange result = this;
+        for (DateRange range : others) {
+            result = result.union(range);
+        }
+        return result;
     }
-
+    
     public DateRange union(DateRange other) {
         if (!abuts(other) && !intersects(other)) {
             return this;
         }
-        DateTime start = this.start.isBefore(other.start) ? this.start : other.start;
-        DateTime end = this.end.isAfter(other.end) ? this.end : other.end;
+        DateTime start = getInterval().getStart().isBefore(other.getInterval().getStart()) ? getInterval().getStart() : other.getInterval().getStart();
+        DateTime end = getInterval().getEnd().isAfter(other.getInterval().getEnd()) ? getInterval().getEnd() : other.getInterval().getEnd();
         return new DateRange(start, end);
     }
 
     public DateRange intersection(DateRange other) {
-        Interval overlap = toInterval().overlap(other.toInterval());
+        if (other == null){
+            return null;
+        }
+        Interval overlap = getInterval().overlap(other.getInterval());
         return overlap == null ? null : new DateRange(overlap);
     }
 
@@ -169,7 +203,7 @@ public class DateRange {
         if (abuts(range)) {
             result = range;
         } else if (intersects(range)) {
-            if (end.compareTo(range.end)<=0) {
+            if (getInterval().getEnd().isBefore(range.getInterval().getEnd())) {
                 result = range;
             } else {
                 result = intersection(range);
@@ -193,23 +227,19 @@ public class DateRange {
         if (other == null){
             return false;
         }
-        return toInterval().abuts(other.toInterval());
+        return getInterval().abuts(other.getInterval());
     }
 
     /**
      * Incrementa o período a partir do início utilizando objeto daterange como duração
      * 
-     * @param dateRange
+     * @param periodo
      * @return
      */
-    public DateRange incrementStartByDuration(DateRange dateRange) {
-        setInterval(toInterval().withDurationAfterStart(toDuration().plus(dateRange.toDuration())));
+    public DateRange incrementStartByDuration(DateRange periodo) {
+        Duration duracaoPeriodo = periodo.toDuration().plus(Days.days(1).toStandardDuration());
+		setInterval(getInterval().withDurationAfterStart(duracaoPeriodo.plus(getInterval().toDuration())));
         return this;
-    }
-
-    private void setInterval(Interval interval) {
-        setStart(interval.getStart());
-        setStart(interval.getEnd());
     }
 
     @Override
@@ -218,12 +248,36 @@ public class DateRange {
         return MessageFormat.format("{0} to {1} ({2} days)", getStart().toString(pattern), getEnd().toString(pattern), String.valueOf(getDays()));
     }
 
-    public static DateRange merge(Collection<DateRange> ranges) {
-        DateRange result = null;
-        for (DateRange dateRange : ranges) {
-            result = dateRange.union(result);
+    public static Collection<DateRange> reduce(Collection<DateRange> ranges){
+        Set<DateRange> collection = new HashSet<>();
+        for (DateRange dateRange : new HashSet<>(ranges)) {
+            collection.add(dateRange.union(ranges));
         }
-        return result;
+        return collection;
     }
-    
+
+	public DateRange withSuspensoes(List<DateRange> suspensoes) {
+		DateRange result = new DateRange(getStart(), getEnd());
+		Set<DateRange> applied = new HashSet<>();
+		boolean changed=false;
+		do {
+			changed = false;
+			for (DateRange suspensao : DateRange.reduce(suspensoes)) {
+				DateRange connection = result.connection(suspensao);
+	    		if (connection != null && applied.add(suspensao)){
+	    			result = result.incrementStartByDuration(connection);
+	    			changed = true;
+	    		}
+			}
+		} while(changed);
+		return result.setStartToStartOfDay().setEndToEndOfDay();
+    	
+	}
+
+	public DateRange withStart(Date start){
+		return new DateRange(start, getEnd());
+	}
+	public DateRange withEnd(Date end){
+		return new DateRange(getStart(), end);
+	}
 }
