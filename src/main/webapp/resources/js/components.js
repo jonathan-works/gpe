@@ -162,44 +162,71 @@ function onlyPositiveNumber(obj){
 }
 
 function formatValuePercentage(obj){
-	valor = obj.value;
-	valor = valor.replace(/%/g, '');
-
-	decimalSymbol = ',';
-	var normalized = valor.replace(/\D/g, '');
-    if (normalized === '') {
-    	normalized = '0';
-    }
-    
-    var result = [];
-    if (normalized.length == 1) {
-  	  obj.value = '0,0' + normalized;
-  	  return;
-    } else if (normalized.length == 2) {
-  	  obj.value = '0,'+ normalized;
-  	  return;
-    }
-
-    var hasDecimal = false;
-    for (var i = normalized.length - 1; i >= 0; i--) {
-  	  if (i == normalized.length - 3) {
-  		  result.push(decimalSymbol);
-  		  hasDecimal = true;
-  	  }
-  	  result.push(normalized.charAt(i));
-    }
-    result.reverse();
-    while (result[0] === '0' && result[1] !== decimalSymbol) {
-  	  result.shift();
-    }
-    obj.value = result.join('');
+	formatDecimalNumber(obj);
 }
 
 function addPercentageSymbol(obj) {
 	valor = obj.value;
 	valor = valor.replace(/%/g, '');
-	obj.value = valor + '%';
+	if (valor.length > 0) {
+		obj.value = valor + '%';
+	} else {
+		obj.value = '';
+	}
 }
+
+function formatMoney(obj) {
+	formatDecimalNumber(obj, {symbol: 'R$ '});
+}
+
+//Máscara de número decimal com duas casas e sem valor default
+function formatDecimalNumber (obj, options) {
+	options = options || {};
+	options.symbol = options.symbol || '';
+	options.decimal = options.decimal || ',';
+	options.thousands = options.thousands || '.';
+	
+	valor = obj.value;
+	var normalized = valor.replace(/\D/g, '');
+	if (normalized === '') {
+		obj.value = '';
+		return;
+	}
+	
+	var result = [];
+	if (normalized.length == 1) {
+		obj.value = options.symbol + '0' + options.decimal + '0' + normalized;
+		return;
+	} else if (normalized.length == 2) {
+		 obj.value = options.symbol + '0' + options.decimal + normalized;
+		 return;
+	}
+	
+	var count = 0;
+	var hasDecimal = false;
+	for (var i = normalized.length - 1; i >= 0; i--) {
+		if (i == normalized.length - 3) {
+			result.push(options.decimal);
+			hasDecimal = true;
+		}
+		if (hasDecimal && count == 3) {
+			result.push(options.thousands);
+			count = 0;
+		}
+		result.push(normalized.charAt(i));
+		if (hasDecimal) {
+			count++;
+		}
+	}
+	result.reverse();
+	while ((result[0] === '0'  || result[0] === options.thousands) && result[1] !== options.decimal) {
+		result.shift();
+	}
+	valor = result.join('');
+	obj.value = options.symbol + valor;
+}
+
+
 
 function clamp(obj, min, max) {
     if ((!isNaN(obj.value)) && (isFinite(obj.value)) && (obj.value != "")) {
