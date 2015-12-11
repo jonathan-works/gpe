@@ -52,7 +52,7 @@ public class AutomaticNodesInfo implements Serializable {
                 NodeBean node = new NodeBean();
                 Node jbpmNode = (Node) HibernateUtil.removeProxy(token.getNode());
                 node.setNodeName(jbpmNode.getName());
-                node.setNumeroProcesso(processoManager.getNumeroProcessoByIdJbpm(token.getProcessInstance().getId()));
+                node.setNumeroProcesso(processoManager.getNumeroProcessoByIdJbpm(token.getProcessInstance().getRoot().getId()));
                 node.setTokenId(token.getId());
                 node.setNodeType(jbpmNode instanceof InfoxMailNode ? NodeType.M.getLabel() : NodeType.N.getLabel());
                 nodes.add(node);
