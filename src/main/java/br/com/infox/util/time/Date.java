@@ -36,7 +36,18 @@ public class Date extends java.util.Date {
 		}
 		return false;
 	}
-	
+
+	public Date prevWeekday(DateRange... periodosNaoUteis) {
+		DateTime date = new DateTime(this);
+		while(DateTimeConstants.SATURDAY==date.getDayOfWeek() 
+				|| DateTimeConstants.SUNDAY==date.getDayOfWeek()
+				|| isInAny(date, periodosNaoUteis)
+				){
+			date = date.minusDays(1);
+		}
+		return new Date(date);
+	}
+
 	public Date nextWeekday(DateRange... periodosNaoUteis) {
 		DateTime date = new DateTime(this);
 		while(DateTimeConstants.SATURDAY==date.getDayOfWeek() 

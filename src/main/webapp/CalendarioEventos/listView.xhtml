@@ -61,7 +61,7 @@
             </infox:tab>
             <infox:tab id="form" name="form" immediate="true" title="#{infoxMessages['template.abaFormularioText']}"
                 action="#{calendarioEventosCrudAction.clickFormTab}">
-                <h:form>
+                <h:form id="formTabForm">
                     <wi:tree id="localizacao" label="#{infoxMessages['calendarioEventos.localizacao']}"
                         assignTo="calendarioEventosCrudAction.calendarioEventos.localizacao" tree="#{localizacaoTree}"
                         required="true" />
@@ -83,12 +83,12 @@
                         <a:commandButton action="#{calendarioEventosCrudAction.persist}"
                             render="defaultTabPanel :pageBodyDialogMessage calendarioProblems" execute="@form"
                             styleClass="buttons" value="#{infoxMessages['crud.persist']}"
-                            rendered="#{empty calendarioEventosCrudAction.calendarioEventos.idCalendarioEvento}" />
+                            rendered="#{not calendarioEventosCrudAction.persisted}" />
                         <a:commandButton action="#{calendarioEventosCrudAction.update}"
                             render="@form :pageBodyDialogMessage calendarioProblems" execute="@form"
                             styleClass="buttons" value="#{infoxMessages['crud.update']}"
-                            rendered="#{not empty calendarioEventosCrudAction.calendarioEventos.idCalendarioEvento}" />
-                        <a:commandButton action="#{calendarioEventosCrudAction.clickFormTab}"
+                            rendered="#{calendarioEventosCrudAction.persisted}" />
+                        <a:commandButton action="#{calendarioEventosCrudAction.newInstance}"
                             render="defaultTabPanel :pageBodyDialogMessage" execute="@this" styleClass="buttons"
                             value="#{infoxMessages['crud.new']}" />
                     </div>

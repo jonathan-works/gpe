@@ -44,7 +44,6 @@ import javax.validation.constraints.Size;
 import org.joda.time.LocalDate;
 
 import br.com.infox.constants.LengthConstants;
-import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.calendario.TipoEvento;
 import br.com.infox.epp.calendario.entity.SerieEventos;
@@ -134,7 +133,7 @@ public class CalendarioEventos implements Serializable {
     }
 
     public void setDataInicio(Date dataInicio) {
-        this.dataInicio = DateUtil.getBeginningOfDay(dataInicio);
+        this.dataInicio = dataInicio;
     }
 
     public Date getDataFim() {
@@ -142,7 +141,7 @@ public class CalendarioEventos implements Serializable {
     }
 
     public void setDataFim(Date dataFim) {
-        this.dataFim = DateUtil.getEndOfDay(dataFim);
+        this.dataFim = dataFim;
     }
 
     public SerieEventos getSerie() {
@@ -292,8 +291,8 @@ public class CalendarioEventos implements Serializable {
     }
 
     public void setInterval(DateRange periodo){
-        this.dataInicio = periodo.getStart().withTimeAtStartOfDay();
-        this.dataFim = periodo.getEnd().withTimeAtEndOfDay();
+        this.dataInicio = periodo.getStart();
+        this.dataFim = periodo.getEnd();
     }
     
     public DateRange getInterval(){
@@ -302,7 +301,7 @@ public class CalendarioEventos implements Serializable {
     
     @Override
     public String toString() {
-        return MessageFormat.format("{0} {1} {2} [{3}]", getLocalizacao(), getDescricaoEvento(), getTipoEvento(),
+        return MessageFormat.format("[{0}-{2}] {1}: [{3}]", getLocalizacao(), getDescricaoEvento(), getTipoEvento(),
                 getPeriodo());
     }
 

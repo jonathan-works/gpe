@@ -1,0 +1,25 @@
+[{
+"description": "Menos 3 dias sem feriado com fim de semana",
+"dia":"2015-12-01",
+"eventos":[],
+"totalDias":3,
+"resultado":"2015-11-26"
+},{
+"description": "Menos 3 dias sem pausa",
+"dia":"2015-12-04",
+"eventos":[],
+"totalDias":3,
+"resultado":"2015-12-01"
+},{
+"description": "Menos 3 dias com evento sem fim de semana",
+"dia":"2015-12-04",
+"eventos":[{"start":"2015-12-01","end":"2015-12-01"}],
+"totalDias":3,
+"resultado":"2015-11-30"
+},{
+"description": "Menos 3 dias com evento e fim de semana",
+"dia":"2015-12-04",
+"eventos":[{"start":"2015-11-30","end":"2015-12-01"}],
+"totalDias":3,
+"resultado":"2015-11-27"
+}]

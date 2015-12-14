@@ -244,8 +244,13 @@ public class DateRange {
 
     @Override
     public String toString() {
-        String pattern = "dd/MM/yyyy kk:mm:ss";
-        return MessageFormat.format("{0} to {1} ({2} days)", getStart().toString(pattern), getEnd().toString(pattern), String.valueOf(getDays()));
+        final String pattern = "dd/MM/yyyy";
+        final String startDate = getStart().toString(pattern);
+        final String endDate = getEnd().toString(pattern);
+        if (startDate.equals(endDate)){
+        	return startDate;
+        }
+		return MessageFormat.format("[{0} - {1}]", startDate, endDate);
     }
 
     public static Collection<DateRange> reduce(Collection<DateRange> ranges){

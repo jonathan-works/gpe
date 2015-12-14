@@ -119,6 +119,39 @@ public class CalendarioEventosManager extends Manager<CalendarioEventosDAO, Cale
 		return DateRange.reduce(result);
 	}
 
+	public br.com.infox.util.time.Date getDateMinusBusinessDays(Date date, int totalBusinessDays, Collection<DateRange> eventos){
+		int businessDays = 0;
+		br.com.infox.util.time.Date newDate = new br.com.infox.util.time.Date(date);
+		while(businessDays++ < totalBusinessDays){
+			newDate = newDate.minusDays(1).prevWeekday(eventos.toArray(new DateRange[eventos.size()]));
+		}
+		return newDate;
+	}
+	public br.com.infox.util.time.Date getDateMinusBusinessDays(Date date, int totalBusinessDays){
+		DateRange periodo = new DateRange(date, date);
+		periodo = periodo.withStart(periodo.getStart().minusYears(1)).withEnd(periodo.getEnd().plusYears(1));
+		return getDateMinusBusinessDays(date, totalBusinessDays, getFeriados(periodo));
+	}
+	
+	public br.com.infox.util.time.Date getPreviousBusinessDay(Date date, Collection<DateRange> eventos){
+		return new br.com.infox.util.time.Date(date).prevWeekday(eventos.toArray(new DateRange[eventos.size()]));
+	}
+	
+	public br.com.infox.util.time.Date getPreviousBusinessDay(Date date){
+		DateRange periodo = new DateRange(date, date);
+		periodo = periodo.withStart(periodo.getStart().minusYears(1)).withEnd(periodo.getEnd().plusYears(1));
+		return getPreviousBusinessDay(date, getFeriados(periodo));
+	}
+	
+	public br.com.infox.util.time.Date getNextWeekday(Date date, Collection<DateRange> eventos){
+		return new br.com.infox.util.time.Date(date).nextWeekday(eventos.toArray(new DateRange[eventos.size()]));
+	}
+	public br.com.infox.util.time.Date getNextWeekday(Date date){
+		DateRange periodo = new DateRange(date, date);
+		periodo = periodo.withStart(periodo.getStart().minusYears(1)).withEnd(periodo.getEnd().plusYears(1));
+		return getNextWeekday(date, getFeriados(periodo));
+	}
+	
 	public DateRange calcularPrazoIniciandoEmDiaUtil(DateRange periodo){
 		DateRange periodoEventos = periodo.withStart(periodo.getStart().minusYears(1)).withEnd(periodo.getEnd().plusYears(1));
 		return calcularPrazoIniciandoEmDiaUtil(periodo, getFeriados(periodoEventos));
@@ -126,12 +159,12 @@ public class CalendarioEventosManager extends Manager<CalendarioEventosDAO, Cale
 
 	public DateRange calcularPrazoIniciandoEmDiaUtil(DateRange periodo, Collection<DateRange> eventos) {
 		DateRange[] periodosNaoUteis = eventos.toArray(new DateRange[eventos.size()]);
-	    return periodo.withStart(periodo.getStart().nextWeekday(periodosNaoUteis));
+	    return periodo.withStart(periodo.getStart().nextWeekday(periodosNaoUteis).withTimeAtStartOfDay());
 	}
 
 	public DateRange calcularPrazoEncerrandoEmDiaUtil(DateRange periodo, Collection<DateRange> eventos){
 		DateRange[] periodosNaoUteis = eventos.toArray(new DateRange[eventos.size()]);
-	    return periodo.withEnd(periodo.getEnd().nextWeekday(periodosNaoUteis));
+	    return periodo.withEnd(periodo.getEnd().nextWeekday(periodosNaoUteis).withTimeAtEndOfDay());
 	}
 
 	public DateRange calcularPrazoEncerrandoEmDiaUtil(DateRange periodo){
