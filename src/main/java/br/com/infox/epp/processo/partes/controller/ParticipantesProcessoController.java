@@ -122,6 +122,10 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
         		&& getPartesAtivas(filtrar(getProcesso().getParticipantes(), TipoPessoaEnum.J)).size() > QUANTIDADE_MINIMA_PARTES;
     }
     
+    public boolean podeVisualizarDetalhesParticipante(ParticipanteProcesso participanteProcesso) {
+    	return participanteProcesso.getPessoa().getTipoPessoa().equals(TipoPessoaEnum.F) && securityUtil.checkPage(RECURSO_VISUALIZAR);
+    }
+    
     public List<TipoParte> getTipoPartes() {
     	if (tipoPartes == null){
     		tipoPartes = tipoParteManager.findAll();
