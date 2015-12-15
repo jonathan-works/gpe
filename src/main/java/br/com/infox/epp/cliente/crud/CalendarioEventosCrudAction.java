@@ -67,9 +67,7 @@ public class CalendarioEventosCrudAction implements Serializable {
     }
     
     public void clickSearchTab() {
-    	persisted = false;
-    	resetTree(ID_SEARCH_TREE);
-        setCalendarioEventos(null);
+    	newInstance();
         calendarioEventosList.refresh();
     }
 
@@ -110,7 +108,6 @@ public class CalendarioEventosCrudAction implements Serializable {
 			if (modification.getAfter().getIdCalendarioEvento() != null){
 				CalendarioEventosManager calendarioEventosManager = BeanManager.INSTANCE.getReference(CalendarioEventosManager.class);
 				setCalendarioEventos(calendarioEventosManager.find(modification.getAfter().getIdCalendarioEvento()));
-				persisted = true;
 			}
 			StatusMessages.instance().add(Severity.INFO, "#{infoxMessages['entity_updated']}");
 			break;
@@ -161,7 +158,8 @@ public class CalendarioEventosCrudAction implements Serializable {
     }
 
     public void edit(CalendarioEventos calendarioEventos) {
-        this.calendarioEventos = calendarioEventos;
+        setCalendarioEventos(calendarioEventos);
+        persisted = true;
         ((TabPanel) FacesContext.getCurrentInstance().getViewRoot().findComponent("defaultTabPanel"))
                 .setActiveTab("form");
     }
