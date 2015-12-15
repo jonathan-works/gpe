@@ -9,6 +9,7 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
 
+@Stateless
 @Name(TipoComunicacaoManager.NAME)
 @AutoCreate
 @Stateless

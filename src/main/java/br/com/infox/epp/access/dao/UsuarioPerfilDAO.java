@@ -33,6 +33,13 @@ public class UsuarioPerfilDAO extends DAO<UsuarioPerfil> {
         }
         return getResultList(hql, params);
     }
+    
+    public List<PessoaFisica> getPessoasPermitidos(Localizacao localizacao, PerfilTemplate perfilTemplate) {
+        Map<String,Object> params = new HashMap<>();
+        params.put(UsuarioPerfilQuery.PARAM_LOCALIZACAO, localizacao.getIdLocalizacao());
+        params.put(UsuarioPerfilQuery.PARAM_PERFIL_TEMPLATE, perfilTemplate.getId());
+        return getNamedResultList(UsuarioPerfilQuery.LIST_PESSOA_BY_LOCALIZACAO_PERFIL_ATIVO, params);
+    }
 
     public UsuarioPerfil getByUsuarioLoginPerfilTemplateLocalizacao(UsuarioLogin usuarioLogin, PerfilTemplate perfilTemplate,
             Localizacao localizacao, boolean ativo) {

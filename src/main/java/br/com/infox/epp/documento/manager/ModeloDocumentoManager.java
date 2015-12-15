@@ -15,6 +15,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
+import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.dao.ModeloDocumentoDAO;
 import br.com.infox.epp.documento.dao.VariavelDAO;
 import br.com.infox.epp.documento.entity.GrupoModeloDocumento;
@@ -237,5 +238,9 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
     
     public List<ModeloDocumento> getModeloDocumentoByTipo(TipoModeloDocumento tipoModeloDocumento) {
     	return getDao().getModeloDocumentoByTipo(tipoModeloDocumento);
+    }
+    
+    public List<ModeloDocumento> getModeloDocumentoByPapel(Papel papel) {
+        return getDao().getModeloDocumentoByPapel(papel);
     }
 }
