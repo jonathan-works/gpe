@@ -144,6 +144,9 @@ public class CalendarioEventosManager extends Manager<CalendarioEventosDAO, Cale
 	}
 	
 	public br.com.infox.util.time.Date getNextWeekday(Date date, Collection<DateRange> eventos){
+		if (date == null){
+			return null;
+		}
 		return new br.com.infox.util.time.Date(date).nextWeekday(eventos.toArray(new DateRange[eventos.size()]));
 	}
 	public br.com.infox.util.time.Date getNextWeekday(Date date){
