@@ -435,12 +435,13 @@
 					action="envioComunicacaoController.gravar" reRender=":pageBodyDialogMessage comunicacaoDiv"
 					rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}"
 					oncomplete="if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"/>
-				<s:fragment rendered="#{envioComunicacaoController.expedida and envioComunicacaoController.inTask}">
-					<!-- O ui:include tenta incluir o facelet mesmo se o rendered estiver falso -->
-					<ui:include src="#{envioComunicacaoController.inTask ? '/WEB-INF/xhtml/components/form/buttons/taskButtonsTaskPage.xhtml' : ''}" />
-				</s:fragment>
 			</h:form>
 		</s:div>
 	</s:div>
-   
+   <h:form>
+		<s:fragment rendered="#{envioComunicacaoController.expedida and envioComunicacaoController.inTask}">
+			<!-- O ui:include tenta incluir o facelet mesmo se o rendered estiver falso -->
+			<ui:include src="#{envioComunicacaoController.inTask ? '/WEB-INF/xhtml/components/form/buttons/taskButtons.xhtml' : ''}" />
+		</s:fragment>
+   </h:form>
 </ui:composition>

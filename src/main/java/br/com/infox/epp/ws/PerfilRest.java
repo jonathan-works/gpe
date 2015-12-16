@@ -1,7 +1,7 @@
 package br.com.infox.epp.ws;
 
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -9,23 +9,17 @@ import javax.ws.rs.core.MediaType;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.ws.bean.UsuarioPerfilBean;
-import br.com.infox.epp.ws.services.PerfilRestService;
 
 @Path(PerfilRest.PATH)
-public class PerfilRest {
-	
-	public static final String PATH = "/perfil";
-	public static final String PATH_ADICIONAR_PERFIL = "/adicionar";
-	
-	@Inject
-	private PerfilRestService servico;
+public interface PerfilRest {
+    
+    public static final String PATH = "/perfil";
+    public static final String PATH_ADICIONAR_PERFIL = "/adicionar";
+    
+    @POST
+    @Path(PATH_ADICIONAR_PERFIL)
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String adicionarPerfil(@HeaderParam("token") String token, UsuarioPerfilBean bean) throws DAOException;
 
-	@POST
-	@Path(PATH_ADICIONAR_PERFIL)
-	@Produces(MediaType.TEXT_PLAIN)
-	@Consumes(MediaType.APPLICATION_JSON)
-	public String adicionarPerfil(UsuarioPerfilBean bean) throws DAOException {
-		return servico.adicionarPerfil(bean);
-	}
-	
 }

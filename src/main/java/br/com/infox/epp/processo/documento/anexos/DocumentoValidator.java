@@ -54,9 +54,17 @@ public class DocumentoValidator {
         }
         if (documentoBinarioManager.existeBinario(pdBin.getId())) {
             if (pdBin.getDocumentoList() == null || pdBin.getDocumentoList().isEmpty()) {
-                documentoDownloader.downloadDocumento(pdBin);
+                documentoDownloader.downloadDocumento(pdBin, true);
+                //Baixa o arquivo original caso não seja possível gerar as margens
+                if(documentoDownloader.isErroMargem()) {
+                    documentoDownloader.downloadDocumento(pdBin, false);                	
+                }
             } else {
-                documentoDownloader.downloadDocumento(pdBin.getDocumentoList().get(0));
+                documentoDownloader.downloadDocumento(pdBin.getDocumentoList().get(0), true);
+                //Baixa o arquivo original caso não seja possível gerar as margens
+                if(documentoDownloader.isErroMargem()) {
+                    documentoDownloader.downloadDocumento(pdBin.getDocumentoList().get(0), false);                	
+                }
             }
         } else if (!pdBin.isBinario()) {
             FileDownloader.download(pdBin.getModeloDocumento().getBytes(), "text/html", pdBin.getNomeArquivo());

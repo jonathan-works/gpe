@@ -76,10 +76,10 @@ public class PrazoComunicacaoService {
 	
 	private AssinaturaDocumentoService assinaturaDocumentoService = ComponentUtil.getComponent(AssinaturaDocumentoService.NAME);
 
-	public java.util.Date contabilizarPrazoCiencia(Processo comunicacao) {
+	public Date contabilizarPrazoCiencia(Processo comunicacao) {
 		DestinatarioModeloComunicacao destinatario = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.DESTINATARIO);
         Integer qtdDias = destinatario.getModeloComunicacao().getTipoComunicacao().getQuantidadeDiasCiencia();
-        java.util.Date hoje = new java.util.Date();
+        Date hoje = new Date();
         //O início do prazo de ciência começa no dia do envio. 66741
         return calendarioEventosManager.getPrimeiroDiaUtil(hoje, qtdDias);
     }
@@ -89,7 +89,7 @@ public class PrazoComunicacaoService {
     }
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void darCiencia(Processo comunicacao, java.util.Date dataCiencia, UsuarioLogin usuarioCiencia) throws DAOException {
+	public void darCiencia(Processo comunicacao, Date dataCiencia, UsuarioLogin usuarioCiencia) throws DAOException {
 		//Se o usuário confirmar ciência em dia não útil, o sistema deverá considerar que a ciência foi confirmada no dia útil seguinte e começar a contar o prazo no dia útil 
     	//seguinte a essa confirmação. 64236
 		dataCiencia = calendarioEventosManager.getNextWeekday(dataCiencia).toDate();
@@ -110,7 +110,7 @@ public class PrazoComunicacaoService {
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void darCienciaManual(Processo comunicacao, java.util.Date dataCiencia, Documento documentoCiencia) throws DAOException {
+	public void darCienciaManual(Processo comunicacao, Date dataCiencia, Documento documentoCiencia) throws DAOException {
 		if (comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA) != null) {
     		return;
     	}
@@ -126,13 +126,13 @@ public class PrazoComunicacaoService {
 		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoCiencia));
 	}
 	
-	private void darCienciaDocumentoGravado(Processo comunicacao, java.util.Date dataCiencia, UsuarioLogin usuarioLogin) throws DAOException {
+	private void darCienciaDocumentoGravado(Processo comunicacao, Date dataCiencia, UsuarioLogin usuarioLogin) throws DAOException {
 		darCiencia(comunicacao, dataCiencia, usuarioLogin);
 		movimentarTarefaService.finalizarTarefasEmAberto(comunicacao);
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void darCienciaManualAssinar(Processo comunicacao, java.util.Date dataCiencia, Documento documentoCiencia, CertificateSignatureBean signatureBean, UsuarioPerfil usuarioPerfil) 
+	public void darCienciaManualAssinar(Processo comunicacao, Date dataCiencia, Documento documentoCiencia, CertificateSignatureBean signatureBean, UsuarioPerfil usuarioPerfil) 
 			throws DAOException, CertificadoException, AssinaturaException{
 		if (comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA) != null) {
     		return;
@@ -142,7 +142,7 @@ public class PrazoComunicacaoService {
 		darCienciaDocumentoGravado(comunicacao, dataCiencia, usuarioPerfil.getUsuarioLogin());
 	}
 
-	protected void adicionarPrazoDeCumprimento(Processo comunicacao, java.util.Date dataCiencia)
+	protected void adicionarPrazoDeCumprimento(Processo comunicacao, Date dataCiencia)
 			throws DAOException {
 		
 		Integer diasPrazoCumprimento = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
@@ -151,7 +151,7 @@ public class PrazoComunicacaoService {
 		}
 		if (diasPrazoCumprimento >= 0) {
 			MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
-			java.util.Date limiteDataCumprimento = contabilizarPrazoCumprimento(comunicacao);
+			Date limiteDataCumprimento = contabilizarPrazoCumprimento(comunicacao);
     		String dataLimite = new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(limiteDataCumprimento);
     		MetadadoProcesso metadadoLimiteDataCumprimento = metadadoProcessoProvider.gerarMetadado(
     		        ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO, dataLimite);
@@ -164,7 +164,7 @@ public class PrazoComunicacaoService {
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void darCumprimento(Processo comunicacao, java.util.Date dataCumprimento) throws DAOException {
+	public void darCumprimento(Processo comunicacao, Date dataCumprimento) throws DAOException {
 		dataCumprimento = calendarioEventosManager.getPrimeiroDiaUtil(dataCumprimento);
 		if (comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CUMPRIMENTO) != null) {
     		return;
@@ -193,9 +193,9 @@ public class PrazoComunicacaoService {
     }
     
     public void movimentarComunicacaoPrazoExpirado(Processo comunicacao, MetadadoProcessoDefinition metadadoPrazo) throws DAOException{
-		java.util.Date dataLimite = getValueMetadado(comunicacao, metadadoPrazo);
+		Date dataLimite = getValueMetadado(comunicacao, metadadoPrazo);
 		if (dataLimite != null) {
-			if (dataLimite.compareTo(new java.util.Date())<=0) {
+			if (dataLimite.compareTo(new Date())<=0) {
 				movimentarTarefaService.finalizarTarefasEmAberto(comunicacao);
 			}
 		}
