@@ -25,8 +25,12 @@ public class MovimentarController implements Serializable{
 	private Processo processo;
 	
 	
-	public boolean isTipoProcessoAnaliseDocumento(){
+	public boolean isTipoProcessoAnaliseDocumento() {
 		return processoService.isTipoProcessoDocumento(processo);
+	}
+	
+	public boolean isTipoProcessoComunicacao() {
+		return processoService.isTipoProcessoComunicacao(processo);
 	}
 	
 	public ProcessoService getProcessoService() {
