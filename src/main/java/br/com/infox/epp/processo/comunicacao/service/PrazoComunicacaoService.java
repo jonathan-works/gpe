@@ -1,8 +1,12 @@
 package br.com.infox.epp.processo.comunicacao.service;
 
+import static br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider.DATA_CIENCIA;
+import static br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider.LIMITE_DATA_CIENCIA;
+import static br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO;
+
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -17,7 +21,6 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.context.exe.ContextInstance;
-import org.joda.time.DateTime;
 
 import br.com.infox.certificado.bean.CertificateSignatureBean;
 import br.com.infox.certificado.exception.CertificadoException;
@@ -46,6 +49,8 @@ import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.task.service.MovimentarTarefaService;
 import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.util.ComponentUtil;
+import java.util.Date;
+import br.com.infox.util.time.DateRange;
 
 @Name(PrazoComunicacaoService.NAME)
 @AutoCreate
@@ -80,22 +85,14 @@ public class PrazoComunicacaoService {
     }
     
 	public Date contabilizarPrazoCumprimento(Processo comunicacao) {
-		Date dataCiencia = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.DATA_CIENCIA);
-        Integer diasPrazoCumprimento = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
-        if (diasPrazoCumprimento == null || dataCiencia == null) {
-        	return null;
-        }
-        //O inicio de prazo de resposta sempre se dá em dia útil e sempre no dia útil seguinte ao da ciência (tenha esta sido manual ou pelo sistema).
-        //O fim de prazo de resposta sempre se dá em dia útil. Se o fim de prazo ocorrer em dia não útil, deverá ser contabilizado como fim de prazo o dia útil seguinte. 64136
-        Date inicioPrazoResposta = calendarioEventosManager.getPrimeiroDiaUtil(dataCiencia, 1);
-        return calendarioEventosManager.getPrimeiroDiaUtil(inicioPrazoResposta, diasPrazoCumprimento);
+		return calcularPrazoDeCumprimento(comunicacao);
     }
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void darCiencia(Processo comunicacao, Date dataCiencia, UsuarioLogin usuarioCiencia) throws DAOException {
 		//Se o usuário confirmar ciência em dia não útil, o sistema deverá considerar que a ciência foi confirmada no dia útil seguinte e começar a contar o prazo no dia útil 
     	//seguinte a essa confirmação. 64236
-		dataCiencia = calendarioEventosManager.getPrimeiroDiaUtil(dataCiencia);
+		dataCiencia = calendarioEventosManager.getNextWeekday(dataCiencia).toDate();
 		if (comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA) != null) {
     		return;
     	}
@@ -154,7 +151,7 @@ public class PrazoComunicacaoService {
 		}
 		if (diasPrazoCumprimento >= 0) {
 			MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
-    		Date limiteDataCumprimento = contabilizarPrazoCumprimento(comunicacao);
+			Date limiteDataCumprimento = contabilizarPrazoCumprimento(comunicacao);
     		String dataLimite = new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(limiteDataCumprimento);
     		MetadadoProcesso metadadoLimiteDataCumprimento = metadadoProcessoProvider.gerarMetadado(
     		        ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO, dataLimite);
@@ -198,8 +195,7 @@ public class PrazoComunicacaoService {
     public void movimentarComunicacaoPrazoExpirado(Processo comunicacao, MetadadoProcessoDefinition metadadoPrazo) throws DAOException{
 		Date dataLimite = getValueMetadado(comunicacao, metadadoPrazo);
 		if (dataLimite != null) {
-			DateTime dataParaCumprimento = new DateTime(dataLimite.getTime());
-			if (dataParaCumprimento.isBeforeNow()) {
+			if (dataLimite.compareTo(new Date())<=0) {
 				movimentarTarefaService.finalizarTarefasEmAberto(comunicacao);
 			}
 		}
@@ -278,5 +274,41 @@ public class PrazoComunicacaoService {
     		return metadadoProcesso.getValue();
     	}
     	return null;
+    }
+    
+    private Date calcularPrazoDeCumprimento(Processo comunicacao){
+        Date dataCiencia = comunicacao.getMetadado(DATA_CIENCIA).getValue();
+        Integer diasPrazoCumprimento = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
+        if (diasPrazoCumprimento == null){
+            diasPrazoCumprimento = -1;
+        }
+        if (diasPrazoCumprimento>=0 && dataCiencia != null){
+        	br.com.infox.util.time.Date inicio = new br.com.infox.util.time.Date(dataCiencia);
+        	DateRange periodo = new DateRange(inicio.toDate(), inicio.plusDays(diasPrazoCumprimento).toDate());
+        	periodo = calendarioEventosManager.calcularPrazoIniciandoEmDiaUtil(periodo);
+        	periodo = calendarioEventosManager.calcularPrazoSuspensao(periodo);
+        	periodo = calendarioEventosManager.calcularPrazoEncerrandoEmDiaUtil(periodo);
+            return periodo.getEnd().withTimeAtEndOfDay().toDate();
+        }
+        return null;
+    }
+
+    protected void atualizarMetadado(MetadadoProcesso metadado, String valor){
+        if (!Objects.equals(metadado.getValor(), valor)){
+            metadado.setValor(valor);
+            metadadoProcessoManager.update(metadado);
+        }
+    }
+
+    public void atualizarPrazoCiencia(Processo processo) {
+        MetadadoProcesso metadado = processo.getMetadado(LIMITE_DATA_CIENCIA);
+        String novoLimiteDataCiencia = new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(contabilizarPrazoCiencia(processo));
+        atualizarMetadado(metadado, novoLimiteDataCiencia);
+    }
+
+    public void atualizarPrazoDeCumprimento(Processo processo) {
+        MetadadoProcesso metaLimiteDtCumprimento = processo.getMetadado(LIMITE_DATA_CUMPRIMENTO);
+        String novaDataCumprimento = new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(calcularPrazoDeCumprimento(processo));
+        atualizarMetadado(metaLimiteDtCumprimento, novaDataCumprimento);
     }
 }

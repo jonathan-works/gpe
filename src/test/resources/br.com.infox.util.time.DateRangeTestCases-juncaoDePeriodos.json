@@ -1,0 +1,174 @@
+[
+  {
+    "description": "Junção de Um Período",
+    "periodos": [
+      {
+        "start": "2015-01-01",
+        "end": "2015-01-31"
+      }
+    ],
+    "resultados": [
+      {
+        "start": "2015-01-01",
+        "end": "2015-01-31"
+      }
+    ]
+  },
+  {
+    "description": "Junção de Períodos sobrepostos",
+    "periodos": [
+      {
+        "start": "2015-01-03",
+        "end": "2015-01-21"
+      },
+      {
+        "start": "2015-01-01",
+        "end": "2015-01-14"
+      }
+    ],
+    "resultados": [
+      {
+        "start": "2015-01-01",
+        "end": "2015-01-21"
+      }
+    ]
+  },
+  {
+    "description": "Junção de Períodos sobrepostos",
+    "periodos": [
+      {
+        "start": "2015-01-03",
+        "end": "2015-01-21"
+      },
+      {
+        "start": "2015-01-15",
+        "end": "2015-01-31"
+      }
+    ],
+    "resultados": [
+      {
+        "start": "2015-01-03",
+        "end": "2015-01-31"
+      }
+    ]
+  },
+  {
+    "description": "Junção de Períodos sobrepostos",
+    "periodos": [
+      {
+        "start": "2015-01-03",
+        "end": "2015-01-21"
+      },
+      {
+        "start": "2015-01-01",
+        "end": "2015-01-31"
+      }
+    ],
+    "resultados": [
+      {
+        "start": "2015-01-01",
+        "end": "2015-01-31"
+      }
+    ]
+  },
+  {
+    "description": "Junção de Períodos sobrepostos",
+    "periodos": [
+      {
+        "start": "2015-01-03",
+        "end": "2015-01-21"
+      },
+      {
+        "start": "2014-12-20",
+        "end": "2015-01-03"
+      }
+    ],
+    "resultados": [
+      {
+        "start": "2014-12-20",
+        "end": "2015-01-21"
+      }
+    ]
+  },
+  {
+    "description": "Junção de Períodos sobrepostos",
+    "periodos": [
+      {
+        "start": "2015-01-03",
+        "end": "2015-01-21"
+      },
+      {
+        "start": "2015-01-21",
+        "end": "2015-01-31"
+      }
+    ],
+    "resultados": [
+      {
+        "start": "2015-01-03",
+        "end": "2015-01-31"
+      }
+    ]
+  },
+  {
+    "description": "Junção de Períodos sobrepostos",
+    "periodos": [
+      {
+        "start": "2015-01-03",
+        "end": "2015-01-21"
+      },
+      {
+        "start": "2015-01-01",
+        "end": "2015-01-14"
+      },
+      {
+        "start": "2015-01-15",
+        "end": "2015-01-31"
+      },
+      {
+        "start": "2015-01-01",
+        "end": "2015-01-31"
+      },
+      {
+        "start": "2014-12-20",
+        "end": "2015-01-03"
+      },
+      {
+        "start": "2015-01-21",
+        "end": "2015-01-31"
+      }
+    ],
+    "resultados": [
+      {
+        "start": "2014-12-20",
+        "end": "2015-01-31"
+      }
+    ]
+  },
+  {
+    "description": "Junção de Períodos separados",
+    "periodos": [
+      {
+        "start": "2015-01-15",
+        "end": "2015-01-31"
+      },
+      {
+        "start": "2014-12-20",
+        "end": "2015-01-03"
+      },
+      {
+        "start": "2015-01-21",
+        "end": "2015-01-31"
+      }
+    ],
+    "resultados": [
+      {
+        "start": "2014-12-20",
+        "end": "2015-01-03"
+      },
+      {
+        "start": "2015-01-15",
+        "end": "2015-01-31"
+      }
+    ]
+  }
+]

@@ -29,7 +29,7 @@ import br.com.infox.epp.processo.entity.Processo;
 @Table(name = "tb_destinatario_modelo_comunic", uniqueConstraints = {
 	@UniqueConstraint(columnNames = {"id_pessoa_fisica", "id_modelo_comunicacao"}),
 })
-public class DestinatarioModeloComunicacao implements Serializable {
+public class DestinatarioModeloComunicacao implements Serializable, Cloneable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -166,6 +166,12 @@ public class DestinatarioModeloComunicacao implements Serializable {
 
     public void setPerfilDestino(PerfilTemplate perfilDestino) {
         this.perfilDestino = perfilDestino;
+    }
+    
+    public DestinatarioModeloComunicacao makeCopy() throws CloneNotSupportedException {
+    	DestinatarioModeloComunicacao novoDestinatario = (DestinatarioModeloComunicacao) clone();
+    	novoDestinatario.setId(null);
+    	return novoDestinatario;
     }
 
 	@Override

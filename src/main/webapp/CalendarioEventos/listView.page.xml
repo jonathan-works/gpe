@@ -6,10 +6,5 @@
 	  login-required="true">
 	  
 	<restrict>#{security.checkPage()}</restrict>
-	<begin-conversation join="true" />
 
-	<param name="id" value="#{calendarioEventosCrudAction.id}"
-		   converterId="integerConverter" />
-	<param name="tab" value="#{calendarioEventosCrudAction.tab}" />
-		   
 </page>

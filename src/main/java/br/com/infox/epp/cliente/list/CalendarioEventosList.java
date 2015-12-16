@@ -1,37 +1,41 @@
 package br.com.infox.epp.cliente.list;
 
+import java.util.Date;
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Named;
 
-import br.com.infox.core.list.EntityList;
-import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.core.list.DataList;
+import br.com.infox.core.list.RestrictionType;
+import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.calendario.TipoEvento;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cliente.entity.CalendarioEventos;
-import br.com.infox.seam.util.ComponentUtil;
 
-@Name(CalendarioEventosList.NAME)
-@Scope(ScopeType.CONVERSATION)
-public class CalendarioEventosList extends EntityList<CalendarioEventos> {
+@Named(CalendarioEventosList.NAME)
+@ViewScoped
+public class CalendarioEventosList extends DataList<CalendarioEventos> {
 
     public static final String NAME = "calendarioEventosList";
 
     private static final long serialVersionUID = 1L;
 
-    private static final String TEMPLATE = "/CalendarioEventos/CalendarioEvTemplate.xls";
-    private static final String DOWNLOAD_XLS_NAME = "CalendarioEventos.xls";
-
     private static final String DEFAULT_EJBQL = "select o from CalendarioEventos o";
-    private static final String DEFAULT_ORDER = "descricaoEvento";
+    private static final String DEFAULT_ORDER = "o.dataInicio, o.dataFim";
+
+    private Localizacao localizacao;
+    private Date dataInicioPeriodo;
+    private Date dataFimPeriodo;
+    private TipoEvento tipoEvento;
+    private String descricaoEvento;
 
     @Override
-    protected void addSearchFields() {
-        addSearchField("descricaoEvento", SearchCriteria.CONTENDO);
-        addSearchField("localizacao", SearchCriteria.IGUAL);
-        addSearchField("dia", SearchCriteria.IGUAL);
-        addSearchField("mes", SearchCriteria.IGUAL);
-        addSearchField("ano", SearchCriteria.IGUAL);
+    protected void addRestrictionFields() {
+        addRestrictionField("localizacao", RestrictionType.igual);
+        addRestrictionField("tipoEvento", RestrictionType.igual);
+        addRestrictionField("descricaoEvento", RestrictionType.contendoLower);
+        addRestrictionField("dataInicioPeriodo","( o.dataInicio >= #{calendarioEventosList.dataInicioPeriodo} or o.dataFim >= #{calendarioEventosList.dataInicioPeriodo} )");
+        addRestrictionField("dataFimPeriodo","( o.dataInicio <= #{calendarioEventosList.dataFimPeriodo} or o.dataFim <= #{calendarioEventosList.dataFimPeriodo} )");
     }
 
     @Override
@@ -49,18 +53,44 @@ public class CalendarioEventosList extends EntityList<CalendarioEventos> {
         return null;
     }
 
-    public static CalendarioEventosList instance() {
-        return ComponentUtil.getComponent(CalendarioEventosList.NAME);
+    public Localizacao getLocalizacao() {
+        return localizacao;
     }
 
-    @Override
-    public String getTemplate() {
-        return TEMPLATE;
+    public void setLocalizacao(Localizacao localizacao) {
+        this.localizacao = localizacao;
     }
 
-    @Override
-    public String getDownloadXlsName() {
-        return DOWNLOAD_XLS_NAME;
+    public String getDescricaoEvento() {
+        return descricaoEvento;
+    }
+
+    public void setDescricaoEvento(String descricao) {
+        this.descricaoEvento = descricao;
+    }
+
+    public Date getDataInicioPeriodo() {
+        return dataInicioPeriodo;
+    }
+
+    public void setDataInicioPeriodo(Date dataInicioPeriodo) {
+        this.dataInicioPeriodo = dataInicioPeriodo;
+    }
+
+    public Date getDataFimPeriodo() {
+        return dataFimPeriodo;
+    }
+
+    public void setDataFimPeriodo(Date dataFimPeriodo) {
+        this.dataFimPeriodo = dataFimPeriodo;
+    }
+
+    public TipoEvento getTipoEvento() {
+        return tipoEvento;
+    }
+
+    public void setTipoEvento(TipoEvento tipoEvento) {
+        this.tipoEvento = tipoEvento;
     }
 
 }
