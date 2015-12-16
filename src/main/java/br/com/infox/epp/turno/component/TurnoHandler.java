@@ -62,8 +62,8 @@ public class TurnoHandler {
                 .get(diaSemana);
         HorarioBean horarioBean;
         int i = 0;
-        final Date start = intervalo.getStart();
-        final Date end = intervalo.getEnd();
+        final Date start = intervalo.getStart().toDate();
+        final Date end = intervalo.getEnd().toDate();
         Date hora;
         do {
             horarioBean = horarioBeanList.get(i);

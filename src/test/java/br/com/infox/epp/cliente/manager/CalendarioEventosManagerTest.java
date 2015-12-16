@@ -4,6 +4,7 @@ import static java.text.MessageFormat.format;
 import static org.junit.Assert.assertEquals;
 
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -18,7 +19,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonStreamParser;
 
-import br.com.infox.util.time.Date;
+import java.util.Date;
 import br.com.infox.util.time.DateRange;
 
 public class CalendarioEventosManagerTest {
@@ -45,7 +46,8 @@ public class CalendarioEventosManagerTest {
     		List<DateRange> eventos = toDateRange(testCase.getAsJsonArray("eventos"));
     		Date resultadoEncontrado = new CalendarioEventosManager().getDateMinusBusinessDays(date, totalBusinessDays, eventos);
     		Date resultadoEsperado = toDate(testCase.get("resultado").getAsString());
-    		assertEquals(message+" Datas inconsistentes", resultadoEsperado.toString("dd-MM-yyyy"), resultadoEncontrado.toString("dd-MM-yyyy"));
+    		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+    		assertEquals(message+" Datas inconsistentes", formatter.format(resultadoEsperado), formatter.format(resultadoEncontrado));
     	}
 	}
 
@@ -64,7 +66,7 @@ public class CalendarioEventosManagerTest {
 	}
 
 	private Date toDate(String date) {
-		return new Date(DateTime.parse(date, FORMATTER));
+		return DateTime.parse(date, FORMATTER).toDate();
 	}
 	
 }

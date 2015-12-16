@@ -6,22 +6,25 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 
-public class Date extends java.util.Date {
-
+public class Date {
+	
+	private final java.util.Date date;
+	
 	public Date(java.util.Date date) {
-		super(date.getTime());
+		if (date == null) {
+			throw new NullPointerException();
+		}
+		this.date = date;
 	}
-
 	public Date(DateTime dateTime) {
-		super(dateTime.getMillis());
+		this(dateTime.toDate());
 	}
-
 	public Date() {
-		super();
+		this(new java.util.Date());
 	}
 
 	public Date(LocalDate localDate) {
-		this(localDate.toDateTimeAtStartOfDay());
+		this(localDate.toDate());
 	}
 
 	public int getDayOfWeek() {
@@ -38,7 +41,7 @@ public class Date extends java.util.Date {
 	}
 
 	public Date prevWeekday(DateRange... periodosNaoUteis) {
-		DateTime date = new DateTime(this);
+		DateTime date = new DateTime(this.date);
 		while(DateTimeConstants.SATURDAY==date.getDayOfWeek() 
 				|| DateTimeConstants.SUNDAY==date.getDayOfWeek()
 				|| isInAny(date, periodosNaoUteis)
@@ -49,7 +52,7 @@ public class Date extends java.util.Date {
 	}
 
 	public Date nextWeekday(DateRange... periodosNaoUteis) {
-		DateTime date = new DateTime(this);
+		DateTime date = new DateTime(this.date);
 		while(DateTimeConstants.SATURDAY==date.getDayOfWeek() 
 				|| DateTimeConstants.SUNDAY==date.getDayOfWeek()
 				|| isInAny(date, periodosNaoUteis)
@@ -60,15 +63,15 @@ public class Date extends java.util.Date {
 	}
 
 	public Date withTimeAtEndOfDay() {
-		return new Date(new DateTime(this).withTime(23, 59, 59, 999));
+		return new Date(new DateTime(this.date).withTime(23, 59, 59, 999));
 	}
 
 	public Date withTimeAtStartOfDay() {
-		return new Date(new DateTime(this).withTimeAtStartOfDay());
+		return new Date(new DateTime(this.date).withTimeAtStartOfDay());
 	}
 
 	public String toString(String string) {
-		return new SimpleDateFormat(string).format(this);
+		return new SimpleDateFormat(string).format(this.date);
 	}
 
 	public Date minusDays(int qtdDias) {
@@ -76,17 +79,26 @@ public class Date extends java.util.Date {
 	}
 
 	public Date plusDays(int qtdDias) {
-		return new Date(new DateTime(this).plusDays(qtdDias));
+		return new Date(new DateTime(this.date).plusDays(qtdDias));
 	}
 
 	public Date minusYears(int years){
-		return new Date(new DateTime(this).minusYears(years));
+		return new Date(new DateTime(this.date).minusYears(years));
 	}
 	
 	public Date plusYears(int years) {
-		return new Date(new DateTime(this).plusYears(years));
+		return new Date(new DateTime(this.date).plusYears(years));
 	}
 
-	private static final long serialVersionUID = 1L;
-
+	public java.util.Date toDate(){
+		return this.date;
+	}
+	
+	public boolean after(java.util.Date other) {
+		return this.date.after(other);
+	}
+	public int compareTo(Date other) {
+		return this.date.compareTo(other.toDate());
+	}
+	
 }

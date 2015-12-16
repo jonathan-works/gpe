@@ -1,5 +1,7 @@
 package br.com.infox.epp.cliente.crud;
 
+import static java.text.MessageFormat.format;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
@@ -15,7 +17,6 @@ import javax.inject.Named;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.international.StatusMessages;
-import org.joda.time.LocalDate;
 import org.richfaces.component.UITree;
 
 import br.com.infox.componentes.tabs.TabPanel;
@@ -170,6 +171,9 @@ public class CalendarioEventosCrudAction implements Serializable {
 
     public void setCalendarioEventos(CalendarioEventos calendarioEventos) {
         this.calendarioEventos = calendarioEventos;
+        if (this.calendarioEventos.getDataFim() == null){
+        	this.calendarioEventos.setDataFim(this.calendarioEventos.getDataInicio());
+        }
     }
 
     public TipoEvento[] getTiposEvento() {
@@ -192,14 +196,14 @@ public class CalendarioEventosCrudAction implements Serializable {
 
     public void validarDatas(final ComponentSystemEvent event) {
         final UIComponent panel = event.getComponent();
-        final ValueHolder dataInicioComponent = (ValueHolder) panel.findComponent("dataInicio" + "Decoration:"+ "dataInicio");
-        final ValueHolder dataFimComponent = (ValueHolder) panel.findComponent("dataFim" + "Decoration:" + "dataFim");
-        Date dtInicio = (Date) dataInicioComponent.getLocalValue();
-        if (dtInicio != null) {
-            Date dtFim = (Date) dataFimComponent.getLocalValue();
-            final LocalDate dataInicio = LocalDate.fromDateFields(dtInicio);
-            final LocalDate dataFim = LocalDate.fromDateFields(dtFim == null ? dtInicio : dtFim);
-            if (dataInicio.isAfter(dataFim)) {
+		final String datePattern = "{0}Decoration:{0}";
+		final ValueHolder dataInicioComponent = (ValueHolder) panel.findComponent(format(datePattern, "dataInicio"));
+		final ValueHolder dataFimComponent = (ValueHolder) panel.findComponent(format(datePattern, "dataFim"));
+        Date dataInicio = (Date) dataInicioComponent.getLocalValue();
+        if (dataInicio != null) {
+            Date dataFim = (Date) dataFimComponent.getLocalValue();
+            dataFim = dataFim == null ? new Date(dataInicio.getTime()) : dataFim;
+            if (dataInicio.after(dataFim)) {
                 FacesMessages.instance().add(Severity.ERROR, "A data de fim deve ser igual ou superior à data de fim");
                 FacesContext.getCurrentInstance().renderResponse();
             }

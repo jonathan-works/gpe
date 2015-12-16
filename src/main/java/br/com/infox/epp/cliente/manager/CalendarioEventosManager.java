@@ -119,15 +119,15 @@ public class CalendarioEventosManager extends Manager<CalendarioEventosDAO, Cale
 		return DateRange.reduce(result);
 	}
 
-	public br.com.infox.util.time.Date getDateMinusBusinessDays(Date date, int totalBusinessDays, Collection<DateRange> eventos){
+	public Date getDateMinusBusinessDays(Date date, int totalBusinessDays, Collection<DateRange> eventos){
 		int businessDays = 0;
 		br.com.infox.util.time.Date newDate = new br.com.infox.util.time.Date(date);
 		while(businessDays++ < totalBusinessDays){
 			newDate = newDate.minusDays(1).prevWeekday(eventos.toArray(new DateRange[eventos.size()]));
 		}
-		return newDate;
+		return newDate.toDate();
 	}
-	public br.com.infox.util.time.Date getDateMinusBusinessDays(Date date, int totalBusinessDays){
+	public Date getDateMinusBusinessDays(Date date, int totalBusinessDays){
 		DateRange periodo = new DateRange(date, date);
 		periodo = periodo.withStart(periodo.getStart().minusYears(1)).withEnd(periodo.getEnd().plusYears(1));
 		return getDateMinusBusinessDays(date, totalBusinessDays, getFeriados(periodo));
@@ -181,7 +181,7 @@ public class CalendarioEventosManager extends Manager<CalendarioEventosDAO, Cale
 	}
 
 	public DateRange calcularPrazoSuspensao(DateRange periodo, List<DateRange> suspensoesPrazo) {
-		DateRange result = new DateRange(periodo.getStart(), periodo.getEnd());
+		DateRange result = new DateRange(periodo);
 		Set<DateRange> applied = new HashSet<>();
 		boolean changed=false;
 		do {

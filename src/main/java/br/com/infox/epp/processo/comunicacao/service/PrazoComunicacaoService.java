@@ -49,7 +49,7 @@ import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.task.service.MovimentarTarefaService;
 import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.util.ComponentUtil;
-import br.com.infox.util.time.Date;
+import java.util.Date;
 import br.com.infox.util.time.DateRange;
 
 @Name(PrazoComunicacaoService.NAME)
@@ -79,7 +79,7 @@ public class PrazoComunicacaoService {
 	public java.util.Date contabilizarPrazoCiencia(Processo comunicacao) {
 		DestinatarioModeloComunicacao destinatario = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.DESTINATARIO);
         Integer qtdDias = destinatario.getModeloComunicacao().getTipoComunicacao().getQuantidadeDiasCiencia();
-        Date hoje = new Date();
+        java.util.Date hoje = new java.util.Date();
         //O início do prazo de ciência começa no dia do envio. 66741
         return calendarioEventosManager.getPrimeiroDiaUtil(hoje, qtdDias);
     }
@@ -151,7 +151,7 @@ public class PrazoComunicacaoService {
 		}
 		if (diasPrazoCumprimento >= 0) {
 			MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
-    		Date limiteDataCumprimento = contabilizarPrazoCumprimento(comunicacao);
+			java.util.Date limiteDataCumprimento = contabilizarPrazoCumprimento(comunicacao);
     		String dataLimite = new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(limiteDataCumprimento);
     		MetadadoProcesso metadadoLimiteDataCumprimento = metadadoProcessoProvider.gerarMetadado(
     		        ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO, dataLimite);
@@ -277,18 +277,18 @@ public class PrazoComunicacaoService {
     }
     
     private Date calcularPrazoDeCumprimento(Processo comunicacao){
-        java.util.Date dataCiencia = comunicacao.getMetadado(DATA_CIENCIA).getValue();
+        Date dataCiencia = comunicacao.getMetadado(DATA_CIENCIA).getValue();
         Integer diasPrazoCumprimento = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
         if (diasPrazoCumprimento == null){
             diasPrazoCumprimento = -1;
         }
         if (diasPrazoCumprimento>=0 && dataCiencia != null){
-        	Date inicio = new Date(dataCiencia);
-        	DateRange periodo = new DateRange(inicio, inicio.plusDays(diasPrazoCumprimento));
+        	br.com.infox.util.time.Date inicio = new br.com.infox.util.time.Date(dataCiencia);
+        	DateRange periodo = new DateRange(inicio.toDate(), inicio.plusDays(diasPrazoCumprimento).toDate());
         	periodo = calendarioEventosManager.calcularPrazoIniciandoEmDiaUtil(periodo);
         	periodo = calendarioEventosManager.calcularPrazoSuspensao(periodo);
         	periodo = calendarioEventosManager.calcularPrazoEncerrandoEmDiaUtil(periodo);
-            return periodo.getEnd().withTimeAtEndOfDay();
+            return periodo.getEnd().withTimeAtEndOfDay().toDate();
         }
         return null;
     }

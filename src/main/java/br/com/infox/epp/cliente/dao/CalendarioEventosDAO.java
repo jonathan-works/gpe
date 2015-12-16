@@ -36,8 +36,8 @@ public class CalendarioEventosDAO extends DAO<CalendarioEventos> {
 
     public List<CalendarioEventos> getByDate(DateRange date) {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put(PARAM_START_DATE, date.getStart());
-        parameters.put(PARAM_END_DATE, date.getEnd());
+        parameters.put(PARAM_START_DATE, date.getStart().toDate());
+        parameters.put(PARAM_END_DATE, date.getEnd().toDate());
         return getNamedResultList(GET_BY_DATA_RANGE, parameters);
     }
 

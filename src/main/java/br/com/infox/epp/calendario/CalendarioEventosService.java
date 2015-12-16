@@ -25,7 +25,6 @@ import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cliente.dao.CalendarioEventosDAO;
 import br.com.infox.epp.cliente.entity.CalendarioEventos;
 import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
-import br.com.infox.util.time.Date;
 
 @Stateless
 public class CalendarioEventosService {
@@ -117,7 +116,7 @@ public class CalendarioEventosService {
     }
 
     private java.util.Date getDataLimite() {
-        return new Date().plusYears(1).withTimeAtStartOfDay();
+        return new br.com.infox.util.time.Date().plusYears(1).withTimeAtStartOfDay().toDate();
     }
 
     private EntityManager getEntityManager() {
@@ -199,7 +198,7 @@ public class CalendarioEventosService {
             /**
              * TODO: confirmar se é pra remover apenas eventos futuros, ou todos os eventos da série
              */
-            for (CalendarioEventos evento : getBySerieAfterDate(calendarioEventos.getSerie(), new Date().withTimeAtStartOfDay())) {
+            for (CalendarioEventos evento : getBySerieAfterDate(calendarioEventos.getSerie(), new br.com.infox.util.time.Date().withTimeAtStartOfDay().toDate())) {
                 if (!calendarioEventos.equals(evento)) {
                     result.add(new CalendarioEventosModification(evento, null));
                 }

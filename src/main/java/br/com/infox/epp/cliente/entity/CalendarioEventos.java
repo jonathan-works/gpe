@@ -227,11 +227,7 @@ public class CalendarioEventos implements Serializable {
     }
 
     public String getPeriodo() {
-        if (Objects.equals(getDataInicio(), getDataFim())) {
-            return MessageFormat.format("{0,date,dd/MM/yyyy}", getDataInicio());
-        } else {
-            return MessageFormat.format("{0,date,dd/MM/yyyy} - {1,date,dd/MM/yyyy}", getDataInicio(), getDataFim());
-        }
+        return getInterval().toString();
     }
 
     public boolean isPastEventWithSerie() {
@@ -291,12 +287,14 @@ public class CalendarioEventos implements Serializable {
     }
 
     public void setInterval(DateRange periodo){
-        this.dataInicio = periodo.getStart();
-        this.dataFim = periodo.getEnd();
+        this.dataInicio = periodo.getStart().toDate();
+        this.dataFim = periodo.getEnd().toDate();
     }
     
     public DateRange getInterval(){
-        return new DateRange(getDataInicio(), getDataFim()).setStartToStartOfDay().setEndToEndOfDay();
+        Date start = new br.com.infox.util.time.Date(getDataInicio()).withTimeAtStartOfDay().toDate();
+		Date end = new br.com.infox.util.time.Date(getDataFim() == null ? getDataInicio() : getDataFim()).withTimeAtEndOfDay().toDate();
+		return new DateRange(start, end);
     }
     
     @Override

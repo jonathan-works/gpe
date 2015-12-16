@@ -58,7 +58,7 @@ public class DateTest {
 			List<DateRange> feriados = toDateRange(testCase.get("feriados").getAsJsonArray());
 			found = found.nextWeekday(feriados.toArray(new DateRange[feriados.size()]));
 			Date expected = toDate(testCase.get("resultado"));
-			Assert.assertEquals(message+"Datas inconsistentes", expected, found);
+			Assert.assertEquals(message+"Datas inconsistentes", expected.toString(DATE_FORMAT), found.toString(DATE_FORMAT));
 			
 		}
 	}

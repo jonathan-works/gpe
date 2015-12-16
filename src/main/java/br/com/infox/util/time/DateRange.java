@@ -1,5 +1,7 @@
 package br.com.infox.util.time;
 
+import static java.text.MessageFormat.format;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,7 +13,6 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
-import org.joda.time.LocalDate;
 
 /**
  * @author erik
@@ -32,15 +33,11 @@ public class DateRange {
     }
 
     public DateRange(DateTime date1, DateTime date2) {
-        if (date1.isBefore(date2)) {
+        if (date1.equals(date2) || date1.isBefore(date2)) {
             setInterval(new Interval(date1,date2));
         } else {
-            setInterval(new Interval(date2,date1));
+        	setInterval(new Interval(date2,date1));
         }
-    }
-
-    public DateRange(LocalDate date1, LocalDate date2) {
-        this(date1.toDateTimeAtStartOfDay(), date2.toDateTimeAtStartOfDay());
     }
 
     public DateRange(final java.util.Date date1, final java.util.Date date2) {
@@ -51,7 +48,11 @@ public class DateRange {
         setInterval(interval);
     }
 
-    private void setInterval(Interval interval) {
+    public DateRange(DateRange periodo) {
+    	this(periodo.getStart().toDate(), periodo.getEnd().toDate());
+	}
+
+	private void setInterval(Interval interval) {
         this.interval = interval;
     }
 
@@ -262,7 +263,7 @@ public class DateRange {
     }
 
 	public DateRange withSuspensoes(List<DateRange> suspensoes) {
-		DateRange result = new DateRange(getStart(), getEnd());
+		DateRange result = new DateRange(getStart().toDate(), getEnd().toDate());
 		Set<DateRange> applied = new HashSet<>();
 		boolean changed=false;
 		do {
@@ -280,9 +281,13 @@ public class DateRange {
 	}
 
 	public DateRange withStart(Date start){
-		return new DateRange(start, getEnd());
+		return new DateRange(start.toDate(), getEnd().toDate());
 	}
 	public DateRange withEnd(Date end){
-		return new DateRange(getStart(), end);
+		return new DateRange(getStart().toDate(), end.toDate());
+	}
+
+	public boolean contains(Date date) {
+		return contains(date.toDate());
 	}
 }
