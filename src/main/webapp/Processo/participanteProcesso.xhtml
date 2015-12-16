@@ -75,7 +75,8 @@
 				<wi:tree id="participanteSuperior"
                     label="#{infoxMessages['participanteProcesso.superior']}"
                     assignTo="participantesProcessoController.participantePai"
-                    tree="#{participanteProcessoTree}" />
+                    tree="#{participanteProcessoTree}"
+                    required="#{participantesProcessoController.tipoPessoa eq 'F'}" />
 					
 				<wi:inputDate id="dataInicio"
 					value="#{participantesProcessoController.participanteProcesso.dataInicio}"
