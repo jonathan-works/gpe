@@ -181,8 +181,8 @@ public class CalendarioEventos implements Serializable {
 
     public CalendarioEventos plusYears(int ammount) {
         CalendarioEventos newCalendario = new CalendarioEventos();
-        newCalendario.setDataInicio(LocalDate.fromDateFields(getDataInicio()).plusYears(ammount).toDate());
-        newCalendario.setDataFim(LocalDate.fromDateFields(getDataFim()).plusYears(ammount).toDate());
+        newCalendario.setDataInicio(new br.com.infox.util.time.Date(getDataInicio()).plusYears(ammount).toDate());
+        newCalendario.setDataFim(new br.com.infox.util.time.Date(getDataFim() != null ? getDataFim() : getDataInicio()).plusYears(ammount).toDate());
         newCalendario.setDescricaoEvento(getDescricaoEvento());
         newCalendario.setLocalizacao(getLocalizacao());
         newCalendario.setSerie(getSerie());
@@ -219,11 +219,11 @@ public class CalendarioEventos implements Serializable {
     }
 
     public boolean isBefore(Date date) {
-        return LocalDate.fromDateFields(getDataFim()).isBefore(LocalDate.fromDateFields(date));
+        return date.after(getDataInicio()) && date.after(getDataFim());
     }
 
     public boolean isAfter(Date date) {
-        return LocalDate.fromDateFields(getDataInicio()).isAfter(LocalDate.fromDateFields(date));
+    	return date.before(getDataInicio()) && date.before(getDataFim());
     }
 
     public String getPeriodo() {
@@ -293,7 +293,7 @@ public class CalendarioEventos implements Serializable {
     
     public DateRange getInterval(){
         Date start = new br.com.infox.util.time.Date(getDataInicio()).withTimeAtStartOfDay().toDate();
-		Date end = new br.com.infox.util.time.Date(getDataFim() == null ? getDataInicio() : getDataFim()).withTimeAtEndOfDay().toDate();
+		Date end = new br.com.infox.util.time.Date(getDataFim() == null ? getDataInicio() : getDataFim()).withTimeAtStartOfDay().toDate();
 		return new DateRange(start, end);
     }
     

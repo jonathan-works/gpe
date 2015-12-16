@@ -22,19 +22,13 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.calendario.entity.SerieEventos;
 import br.com.infox.epp.calendario.modification.process.CalendarioEventosModificationProcessor;
 import br.com.infox.epp.cdi.config.BeanManager;
-import br.com.infox.epp.cliente.dao.CalendarioEventosDAO;
 import br.com.infox.epp.cliente.entity.CalendarioEventos;
-import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
 
 @Stateless
 public class CalendarioEventosService {
 
     @Inject
     private CalendarioEventosModificationProcessor calendarioEventosProcessor;
-    @Inject
-    private CalendarioEventosDAO calendarioEventosDao;
-    @Inject
-    private CalendarioEventosManager calendarioEventosManager;
 
     public List<CalendarioEventosModification> atualizar(CalendarioEventos calendarioEventos) {
         CalendarioEventosModification modification = new CalendarioEventosModification(null, calendarioEventos);

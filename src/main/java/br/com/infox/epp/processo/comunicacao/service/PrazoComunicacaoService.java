@@ -92,7 +92,7 @@ public class PrazoComunicacaoService {
 	public void darCiencia(Processo comunicacao, java.util.Date dataCiencia, UsuarioLogin usuarioCiencia) throws DAOException {
 		//Se o usuário confirmar ciência em dia não útil, o sistema deverá considerar que a ciência foi confirmada no dia útil seguinte e começar a contar o prazo no dia útil 
     	//seguinte a essa confirmação. 64236
-		dataCiencia = calendarioEventosManager.getPrimeiroDiaUtil(dataCiencia);
+		dataCiencia = calendarioEventosManager.getNextWeekday(dataCiencia).toDate();
 		if (comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA) != null) {
     		return;
     	}

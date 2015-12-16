@@ -204,7 +204,7 @@ public class CalendarioEventosCrudAction implements Serializable {
             Date dataFim = (Date) dataFimComponent.getLocalValue();
             dataFim = dataFim == null ? new Date(dataInicio.getTime()) : dataFim;
             if (dataInicio.after(dataFim)) {
-                FacesMessages.instance().add(Severity.ERROR, "A data de fim deve ser igual ou superior à data de fim");
+                FacesMessages.instance().add(Severity.ERROR, "A data de fim deve ser igual ou superior à data de início");
                 FacesContext.getCurrentInstance().renderResponse();
             }
         }

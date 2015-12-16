@@ -63,7 +63,7 @@ public class Date {
 	}
 
 	public Date withTimeAtEndOfDay() {
-		return new Date(new DateTime(this.date).withTime(23, 59, 59, 999));
+		return new Date(new DateTime(this.date).withTime(23, 59, 59, 0));
 	}
 
 	public Date withTimeAtStartOfDay() {
