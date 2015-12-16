@@ -22,6 +22,10 @@ public class ProcessoService implements Serializable{
 		return isTipoProcesso(TipoProcesso.DOCUMENTO.toString(), processo);
 	}
 	
+	public boolean isTipoProcessoComunicacao(Processo processo) {
+		return isTipoProcesso(TipoProcesso.COMUNICACAO.toString(), processo);
+	}
+	
 	public boolean isTipoProcesso(String tipoProcesso, Processo processo){
 		TipoProcesso byName = TipoProcesso.getByName(tipoProcesso);
 		MetadadoProcesso metadadoTipoProcesso = processo.getMetadado(EppMetadadoProvider.TIPO_PROCESSO);
