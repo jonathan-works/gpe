@@ -14,5 +14,10 @@ public class PerfilRestImpl implements PerfilRest {
 	public String adicionarPerfil(String token, UsuarioPerfilBean bean) throws DAOException {
 		return servico.adicionarPerfil(bean);
 	}
+
+    @Override
+    public String removerPerfil(String token, UsuarioPerfilBean bean) throws DAOException {
+        return servico.removerPerfil(bean);
+    }
 	
 }
