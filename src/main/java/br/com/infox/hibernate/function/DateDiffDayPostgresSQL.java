@@ -32,6 +32,6 @@ public class DateDiffDayPostgresSQL implements SQLFunction{
         if (arguments.size() != 2) {
             throw new QueryException("Função necessita 2 argumentos. Ex: DateDiffDay(data1, data2)");
         }
-        return "DATE_PART('day', " + arguments.get(0) + " - " + arguments.get(1) + ")";
+        return "DATE_PART('day', " + arguments.get(1) + " - " + arguments.get(0) + ")";
     }
 }
