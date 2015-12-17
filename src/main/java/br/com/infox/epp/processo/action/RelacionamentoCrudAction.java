@@ -23,6 +23,7 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.processo.entity.Relacionamento;
 import br.com.infox.epp.processo.entity.RelacionamentoProcesso;
 import br.com.infox.epp.processo.entity.TipoRelacionamentoProcesso;
+import br.com.infox.epp.processo.entity.RelacionamentoProcesso.TipoProcesso;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.manager.RelacionamentoManager;
 import br.com.infox.epp.processo.manager.RelacionamentoProcessoManager;
@@ -70,19 +71,11 @@ public class RelacionamentoCrudAction extends
     protected boolean isInstanceValid() {
         boolean result = true;
     	if (getInstance().getMotivo().trim().length() > 0 && !isManaged()){
-    		if (relacionamentoProcessoManager.existeRelacionamento(processo, processoRelacionado)){
+    		if (relacionamentoProcessoManager.existeRelacionamento(processo, TipoProcesso.ELE, processoRelacionado, TipoProcesso.FIS)){
     			getMessagesHandler().add(PROCESSO_RELAC_MSG);
     			return result = false;
     		}
     	}
-        if (processo != null && getManager().getRelacionamentoByProcesso(processoManager.getProcessoByNumero(processo))!=null){
-            getMessagesHandler().add(format(infoxMessages.get("relacionamentoProcesso.exists"), processo));
-            result = false;
-        }
-        if (processoRelacionado != null && getManager().getRelacionamentoByProcesso(processoManager.getProcessoByNumero(processoRelacionado))!=null){
-            getMessagesHandler().add(format(infoxMessages.get("relacionamentoProcesso.exists"), processoRelacionado));
-            result = false;
-        }
     	return result;
     }
 
@@ -105,10 +98,10 @@ public class RelacionamentoCrudAction extends
                         EntityUtil.getIdValue(getInstance()));
                 relacionamentoProcessoManager
                         .persist(new RelacionamentoProcesso(relacionamento,
-                                processo));
+                                processo, TipoProcesso.ELE));
                 relacionamentoProcessoManager
                         .persist(new RelacionamentoProcesso(relacionamento,
-                                processoRelacionado));
+                                processoRelacionado, TipoProcesso.FIS));
             } catch (IllegalAccessException | IllegalArgumentException
                     | InvocationTargetException | DAOException e) {
                 throw EppSystemException.create(StandardErrorCode.UNKNOWN, e);

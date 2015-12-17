@@ -17,6 +17,8 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -30,6 +32,8 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import br.com.infox.core.type.Displayable;
+
 @Entity
 @Table(name = TABLE_NAME, uniqueConstraints = { @UniqueConstraint(columnNames = {
         NUMERO_PROCESSO, ID_RELACIONAMENTO }) })
@@ -41,14 +45,34 @@ public class RelacionamentoProcesso implements Serializable {
     private Processo processo;
     private Relacionamento relacionamento;
     private String numeroProcesso;
+    private TipoProcesso tipoProcesso;
+    
+    
 
+    public enum TipoProcesso implements Displayable {
+        FIS("Físico"), ELE("Eletrônico");
+
+        private String label;
+
+        TipoProcesso(String label) {
+            this.label = label;
+        }
+
+        @Override
+        public String getLabel() {
+            return label;
+        }
+    	
+    }
+    
     public RelacionamentoProcesso() {
     }
 
     public RelacionamentoProcesso(Relacionamento relacionamento,
-            String numeroProcesso) {
+            String numeroProcesso, TipoProcesso tipoProcesso) {
         this.relacionamento = relacionamento;
         this.numeroProcesso = numeroProcesso;
+        this.tipoProcesso = tipoProcesso;
     }
 
     @Id
@@ -96,38 +120,51 @@ public class RelacionamentoProcesso implements Serializable {
         this.relacionamento = relacionamento;
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = (prime
-                * result)
-                + ((idRelacionamentoProcesso == null) ? 0
-                        : idRelacionamentoProcesso.hashCode());
-        return result;
-    }
+    @NotNull
+    @Column(name = "tp_processo", nullable = false)
+    @Enumerated(EnumType.STRING)
+	public TipoProcesso getTipoProcesso() {
+		return tipoProcesso;
+	}
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (!(obj instanceof RelacionamentoProcesso)) {
-            return false;
-        }
-        final RelacionamentoProcesso other = (RelacionamentoProcesso) obj;
-        if (idRelacionamentoProcesso == null) {
-            if (other.idRelacionamentoProcesso != null) {
-                return false;
-            }
-        } else if (!idRelacionamentoProcesso
-                .equals(other.idRelacionamentoProcesso)) {
-            return false;
-        }
-        return true;
-    }
+	public void setTipoProcesso(TipoProcesso tipoProcesso) {
+		this.tipoProcesso = tipoProcesso;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((numeroProcesso == null) ? 0 : numeroProcesso.hashCode());
+		result = prime * result + ((relacionamento == null) ? 0 : relacionamento.hashCode());
+		result = prime * result + ((tipoProcesso == null) ? 0 : tipoProcesso.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RelacionamentoProcesso other = (RelacionamentoProcesso) obj;
+		if (numeroProcesso == null) {
+			if (other.numeroProcesso != null)
+				return false;
+		} else if (!numeroProcesso.equals(other.numeroProcesso))
+			return false;
+		if (relacionamento == null) {
+			if (other.relacionamento != null)
+				return false;
+		} else if (!relacionamento.equals(other.relacionamento))
+			return false;
+		if (tipoProcesso != other.tipoProcesso)
+			return false;
+		return true;
+	}
+	
+	
 
 }
