@@ -225,7 +225,7 @@ public class ProcessoTarefaManager extends Manager<ProcessoTarefaDAO, ProcessoTa
                 final DateRange range = getIncrementoLocalizacaoTurno(disparoAtual, ultimaAtualizacao, inicioTurno, fimTurno);
                 result = result + range.get(DateRange.MINUTES);
 
-                ultimaAtualizacao.setTime(range.getEnd());
+                ultimaAtualizacao.setTime(range.getEnd().toDate());
 
                 if (!ultimaAtualizacao.before(disparoAtual)) {
                     break;

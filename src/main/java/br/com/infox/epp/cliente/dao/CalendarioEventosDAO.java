@@ -1,8 +1,11 @@
 package br.com.infox.epp.cliente.dao;
 
-import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.*;
+import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.GET_BY_DATA;
+import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.GET_BY_DATA_RANGE;
+import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.DATA;
+import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.PARAM_END_DATE;
+import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.PARAM_START_DATE;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -24,27 +27,18 @@ public class CalendarioEventosDAO extends DAO<CalendarioEventos> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "calendarioEventosDAO";
-    
-    public CalendarioEventos getByDate(Date date) {
+
+    public List<CalendarioEventos> getByDate(Date date) {
         Map<String, Object> parameters = new HashMap<>();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(date.getTime());
-        parameters.put(PARAM_DIA, calendar.get(Calendar.DAY_OF_MONTH));
-        parameters.put(PARAM_MES, calendar.get(Calendar.MONTH) + 1);
-        parameters.put(PARAM_ANO, calendar.get(Calendar.YEAR));
-        return getNamedSingleResult(GET_BY_DATA, parameters);
+        parameters.put(DATA, date);
+        return getNamedResultList(GET_BY_DATA, parameters);
     }
-    
+
     public List<CalendarioEventos> getByDate(DateRange date) {
-    	Map<String, Object> parameters = new HashMap<>();
-        parameters.put(PARAM_START_DATE, date.getStart());
-        parameters.put(PARAM_END_DATE, date.getEnd());
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date.getStart());
-        parameters.put(PARAM_START_YEAR, calendar.get(Calendar.YEAR));
-        calendar.setTime(date.getEnd());
-        parameters.put(PARAM_END_YEAR, calendar.get(Calendar.YEAR));
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PARAM_START_DATE, date.getStart().toDate());
+        parameters.put(PARAM_END_DATE, date.getEnd().toDate());
         return getNamedResultList(GET_BY_DATA_RANGE, parameters);
     }
-    
+
 }

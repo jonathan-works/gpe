@@ -27,9 +27,7 @@ import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.list.DocumentoComunicacaoList;
-import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
-import br.com.infox.epp.processo.comunicacao.service.DestinatarioComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -69,10 +67,6 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 	private MetadadoProcessoManager metadadoProcessoManager;
 	@In
 	private GenericManager genericManager;
-	@In
-	private DestinatarioComunicacaoService destinatarioComunicacaoService;
-	@In
-	private ModeloComunicacaoManager modeloComunicacaoManager;
 	@In
 	private ProcessoManager processoManager;
 	

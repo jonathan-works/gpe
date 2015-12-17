@@ -14,4 +14,9 @@ public interface ClassificacaoDocumentoPapelQuery {
     String CLASSIFICACAO_EXIGE_ASSINATURA_QUERY = "select 1 from ClassificacaoDocumentoPapel o where"
     		+ " o.classificacaoDocumento = :" + PARAM_CLASSIFICACAO_DOCUMENTO
     		+ " and o.tipoAssinatura not in ('F', 'P')";
+
+    String GET_BY_PAPEL_AND_CLASSIFICACAO = "ClassificacaoDocumentoPapel.papelPodeRedigirClassificacao";
+    String GET_BY_PAPEL_AND_CLASSIFICACAO_QUERY = "select o from ClassificacaoDocumentoPapel o "
+            + "where o.classificacaoDocumento = :" + PARAM_CLASSIFICACAO_DOCUMENTO + " "
+				+ "and o.papel = :" + PARAM_PAPEL;
 }

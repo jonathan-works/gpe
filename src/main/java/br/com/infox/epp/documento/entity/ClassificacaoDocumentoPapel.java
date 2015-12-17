@@ -28,6 +28,7 @@ import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 @NamedQueries(value = { 
 	@NamedQuery(name = ClassificacaoDocumentoQuery.ASSINATURA_OBRIGATORIA, query = ClassificacaoDocumentoQuery.ASSINATURA_OBRIGATORIA_QUERY),
 	@NamedQuery(name = ClassificacaoDocumentoPapelQuery.PAPEL_PODE_ASSINAR_CLASSIFICACAO, query = ClassificacaoDocumentoPapelQuery.PAPEL_PODE_ASSINAR_CLASSIFICACAO_QUERY),
+	@NamedQuery(name = ClassificacaoDocumentoPapelQuery.GET_BY_PAPEL_AND_CLASSIFICACAO, query = ClassificacaoDocumentoPapelQuery.GET_BY_PAPEL_AND_CLASSIFICACAO_QUERY),
 	@NamedQuery(name = ClassificacaoDocumentoPapelQuery.CLASSIFICACAO_EXIGE_ASSINATURA, query = ClassificacaoDocumentoPapelQuery.CLASSIFICACAO_EXIGE_ASSINATURA_QUERY)
 })
 public class ClassificacaoDocumentoPapel implements Serializable {

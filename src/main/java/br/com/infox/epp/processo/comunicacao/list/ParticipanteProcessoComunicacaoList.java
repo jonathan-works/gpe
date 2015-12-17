@@ -57,6 +57,11 @@ public class ParticipanteProcessoComunicacaoList extends EntityList<Participante
 		refreshQuery();
 	}
 	
+	public void clearIdPessoa() {
+		idsPessoas = new HashSet<>();
+		refreshQuery();
+	}
+	
 	private void refreshQuery() {
 		StringBuilder hql = new StringBuilder(DEFAULT_EJBQL);
 		if (!idsPessoas.isEmpty()) {

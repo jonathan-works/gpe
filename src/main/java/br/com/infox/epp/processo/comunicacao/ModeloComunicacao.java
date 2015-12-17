@@ -13,6 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -37,12 +39,16 @@ import com.google.common.base.Strings;
 @Table(name = "tb_modelo_comunicacao")
 @NamedQueries({
 	@NamedQuery(name = ModeloComunicacaoQuery.IS_EXPEDIDA, query = ModeloComunicacaoQuery.IS_EXPEDIDA_QUERY),
+	@NamedQuery(name = ModeloComunicacaoQuery.HAS_COMUNICACAO_EXPEDIDA, query = ModeloComunicacaoQuery.HAS_COMUNICACAO_EXPEDIDA_QUERY),
 	@NamedQuery(name = ModeloComunicacaoQuery.GET_COMUNICACAO_DESTINATARIO, query = ModeloComunicacaoQuery.GET_COMUNICACAO_DESTINATARIO_QUERY),
 	@NamedQuery(name = ModeloComunicacaoQuery.LIST_BY_PROCESSO_ROOT, query = ModeloComunicacaoQuery.LIST_BY_PROCESSO_ROOT_QUERY),
 	@NamedQuery(name = ModeloComunicacaoQuery.GET_DOCUMENTOS_MODELO_COMUNICACAO, query = ModeloComunicacaoQuery.GET_DOCUMENTOS_MODELO_COMUNICACAO_QUERY),
 	@NamedQuery(name = ModeloComunicacaoQuery.GET_DOCUMENTO_INCLUSO_POR_PAPEL, query = ModeloComunicacaoQuery.GET_DOCUMENTO_INCLUSO_POR_PAPEL_QUERY)
 })
-public class ModeloComunicacao implements Serializable {
+@NamedNativeQueries({
+	@NamedNativeQuery(name = ModeloComunicacaoQuery.GET_NOME_VARIAVEL_MODELO_COMUNICACAO, query = ModeloComunicacaoQuery.GET_NOME_VARIAVEL_MODELO_COMUNICACAO_QUERY)
+})
+public class ModeloComunicacao implements Serializable, Cloneable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -216,11 +222,23 @@ public class ModeloComunicacao implements Serializable {
 		return false;
 	}
 	
+	public ModeloComunicacao makeCopy() throws CloneNotSupportedException {
+		ModeloComunicacao novoModelo = (ModeloComunicacao) clone();
+		novoModelo.setId(null);
+		novoModelo.setDestinatarios(new ArrayList<DestinatarioModeloComunicacao>());// não copia os destinatários
+		novoModelo.setDocumentos(new ArrayList<DocumentoModeloComunicacao>());
+		for (DocumentoModeloComunicacao documentoModeloComunicacao : getDocumentos()) {
+			DocumentoModeloComunicacao novoDocumento = documentoModeloComunicacao.makeCopy();
+			novoModelo.getDocumentos().add(novoDocumento);
+		}
+		return novoModelo;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
 		return result;
 	}
 
@@ -233,10 +251,10 @@ public class ModeloComunicacao implements Serializable {
 		if (!(obj instanceof ModeloComunicacao))
 			return false;
 		ModeloComunicacao other = (ModeloComunicacao) obj;
-		if (id == null) {
-			if (other.id != null)
+		if (getId() == null) {
+			if (other.getId() != null)
 				return false;
-		} else if (!id.equals(other.id))
+		} else if (!getId().equals(other.getId()))
 			return false;
 		return true;
 	}

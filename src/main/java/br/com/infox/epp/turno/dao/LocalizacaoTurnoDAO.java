@@ -7,20 +7,16 @@ import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.LIST_BY_HORA_IN
 import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.LIST_BY_LOCALIZACAO;
 import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA;
 import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.LOCALIZACAO_TURNO_BY_TAREFA_HORARIO;
-import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.QUERY_PARAM_ANO;
-import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.QUERY_PARAM_DIA;
+import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.QUERY_PARAM_DATA;
 import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.QUERY_PARAM_DIA_SEMANA;
 import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.QUERY_PARAM_HORA_FIM;
 import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.QUERY_PARAM_HORA_INICIO;
 import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.QUERY_PARAM_IDPROCESSO;
 import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.QUERY_PARAM_ID_TASK_INSTANCE;
 import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.QUERY_PARAM_LOCALIZACAO;
-import static br.com.infox.epp.turno.query.LocalizacaoTurnoQuery.QUERY_PARAM_MES;
 
 import java.sql.Time;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,11 +46,7 @@ public class LocalizacaoTurnoDAO extends DAO<LocalizacaoTurno> {
         parameters.put(QUERY_PARAM_HORA_FIM, new Time(dataAtual.getTime()));
         parameters.put(QUERY_PARAM_DIA_SEMANA, diaSemana);
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(dataAtual);
-        parameters.put(QUERY_PARAM_DIA, calendar.get(Calendar.DAY_OF_MONTH));
-        parameters.put(QUERY_PARAM_MES, calendar.get(Calendar.MONTH));
-        parameters.put(QUERY_PARAM_ANO, calendar.get(Calendar.YEAR));
+        parameters.put(QUERY_PARAM_DATA, dataAtual);
         return getNamedSingleResult(LOCALIZACAO_TURNO_BY_TAREFA_HORARIO, parameters);
     }
 
@@ -64,11 +56,7 @@ public class LocalizacaoTurnoDAO extends DAO<LocalizacaoTurno> {
         parameters.put(QUERY_PARAM_ID_TASK_INSTANCE, idTaskInstance);
         parameters.put(QUERY_PARAM_DIA_SEMANA, diaSemana);
 
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(dataAtual);
-        parameters.put(QUERY_PARAM_DIA, calendar.get(Calendar.DAY_OF_MONTH));
-        parameters.put(QUERY_PARAM_MES, calendar.get(Calendar.MONTH));
-        parameters.put(QUERY_PARAM_ANO, calendar.get(Calendar.YEAR));
+        parameters.put(QUERY_PARAM_DATA, dataAtual);
         return getNamedResultList(LOCALIZACAO_TURNO_BY_TAREFA, parameters);
     }
 
@@ -78,11 +66,7 @@ public class LocalizacaoTurnoDAO extends DAO<LocalizacaoTurno> {
         parameters.put(QUERY_PARAM_ID_TASK_INSTANCE, pt.getTaskInstance());
         parameters.put(QUERY_PARAM_DIA_SEMANA, diaSemana);
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(data);
-        parameters.put(QUERY_PARAM_DIA, calendar.get(Calendar.DAY_OF_MONTH));
-        parameters.put(QUERY_PARAM_MES, calendar.get(Calendar.MONTH));
-        parameters.put(QUERY_PARAM_ANO, calendar.get(Calendar.YEAR));
+        parameters.put(QUERY_PARAM_DATA, data);
         return getNamedSingleResult(COUNT_LOCALIZACAO_TURNO_BY_TAREFA_DIA, parameters);
     }
 

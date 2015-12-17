@@ -47,4 +47,11 @@ public class ClassificacaoDocumentoPapelDAO extends DAO<ClassificacaoDocumentoPa
 
 		return getEntityManager().createQuery(cq).getResultList();
 	}
+
+	public ClassificacaoDocumentoPapel getByPapelAndClassificacao(Papel papel, ClassificacaoDocumento classificacaoDocumento) {
+		Map<String, Object> params = new HashMap<>();
+		params.put(ClassificacaoDocumentoPapelQuery.PARAM_CLASSIFICACAO_DOCUMENTO, classificacaoDocumento);
+		params.put(ClassificacaoDocumentoPapelQuery.PARAM_PAPEL, papel);
+		return getNamedSingleResult(ClassificacaoDocumentoPapelQuery.GET_BY_PAPEL_AND_CLASSIFICACAO, params);
+	}
 }

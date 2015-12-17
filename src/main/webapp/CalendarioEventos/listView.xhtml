@@ -1,97 +1,165 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:wi="http://www.itx.com.br/jsf"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:rich="http://richfaces.ajax4jsf.org/rich"
-    xmlns:a="http://richfaces.org/a4j"
-    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
-
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:wi="http://www.itx.com.br/jsf" xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich" xmlns:infox="http://www.infox.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
     <ui:define name="title">#{infoxMessages['calendarioEventos.titlePage']}</ui:define>
-
-    <ui:param name="home" value="#{calendarioEventosCrudAction}" />
-    <ui:param name="list" value="#{calendarioEventosList}" />
-
-    <ui:define name="searchGrid">
-        <wi:dataTable values="#{list.list(15)}" bean="#{list}"
-            tableTitle="#{infoxMessages['calendarioEventos.tableTitle']}"
-            id="calendarioEventosList" rowId="#{row.idCalendarioEvento}">
-            <ui:define name="searchForm">
-                <wi:searchForm formId="pesquisarCalendarioEventosForm"
-                    formTitle="#{infoxMessages['searchForm.title']}">
-                    <wi:tree id="localizacao"
-                        label="#{infoxMessages['calendarioEventos.localizacao']}"
-                        assignTo="calendarioEventosList.entity.localizacao"
-                        tree="#{localizacaoTree}" />
-                    <wi:inputText id="descricaoEvento"
-                        label="#{infoxMessages['calendarioEventos.descricaoEvento']}"
-                        value="#{list.entity.descricaoEvento}"
-                        maxlength="100" />
-                    <wi:inputText id="dia"
-                        label="#{infoxMessages['calendarioEventos.dia']}"
-                        value="#{list.entity.dia}"
-                        onkeyup="onlyPositiveNumber(this); clamp(this,1,31)"
-                        converterId="integerConverter" maxlength="2">
-                    </wi:inputText>
-                    <wi:inputText id="mes"
-                        label="#{infoxMessages['calendarioEventos.mes']}"
-                        value="#{list.entity.mes}"
-                        onkeyup="onlyPositiveNumber(this); clamp(this,1,12)"
-                        converterId="integerConverter" maxlength="2">
-                    </wi:inputText>
-                    <wi:inputText id="ano"
-                        label="#{infoxMessages['calendarioEventos.ano']}"
-                        value="#{list.entity.ano}"
-                        onkeyup="onlyPositiveNumber(this)"
-                        converterId="integerConverter" maxlength="4">
-                    </wi:inputText>
-                </wi:searchForm>
-            </ui:define>
-
-            <ui:define name="toolBar">
-                <wi:toolBarEdit />
-                <wi:toolBar id="#{row.id}Remove"
-                    action="calendarioEventosCrudAction.remove(row)"
-                    rendered="true" limitToList="true" status=":status"
-                    render="searchGridRegion,modalPanelMessages"
-                    onclick="if(!confirm('Deseja remover este registro?')) return false;"
-                    url="#{wiSkin.imageFolder}/remove.png" title="Remover registro" />
-            </ui:define>
-
-            <wi:columnOutputText columnId="localizacao"
-                columnHeader="#{infoxMessages['calendarioEventos.localizacao']}"
-                value="#{row.localizacao}" />
-            <wi:columnOutputText columnId="descricaoEvento"
-                columnHeader="#{infoxMessages['calendarioEventos.descricaoEvento']}"
-                value="#{row.descricaoEvento}" />
-            <wi:columnOutputText columnId="dataEvento" hideOrder="true"
-                columnHeader="#{infoxMessages['calendarioEventos.dataEvento']}"
-                value="#{row.stringDataEvento}" />
-        </wi:dataTable>
+    <ui:define name="body">
+        <infox:tabPanel id="defaultTabPanel" switchType="ajax">
+            <h:form>
+                <infox:tabHeaders />
+            </h:form>
+            <infox:tabChangeListener listener="#{crudTabCleaner}" />
+            <infox:tab id="search" name="search" immediate="true" title="#{infoxMessages['template.abaPesquisaText']}"
+                action="#{calendarioEventosCrudAction.clickSearchTab}">
+                <wi:dataTable id="calendarioEventosList" bean="#{calendarioEventosList}"
+                    values="#{calendarioEventosList.list(10)}"
+                    tableTitle="#{infoxMessages['calendarioEventos.titlePage']}">
+                    <ui:define name="searchForm">
+                        <wi:searchForm formId="pesquisarCalendarioEventosForm"
+                            formTitle="#{infoxMessages['searchForm.title']}">
+                            <wi:tree id="localizacao" label="#{infoxMessages['calendarioEventos.localizacao']}"
+                                assignTo="calendarioEventosList.localizacao" tree="#{localizacaoTree}" />
+                            <wi:inputText id="descricaoEvento"
+                                label="#{infoxMessages['calendarioEventos.descricaoEvento']}"
+                                value="#{calendarioEventosList.descricaoEvento}" maxlength="100" />
+                            <wi:selectOneMenuEnum id="tipoPrestacaoContas"
+                                label="#{infoxMessages['calendarioEventos.tipoEvento']}"
+                                items="#{calendarioEventosCrudAction.tiposEvento}"
+                                value="#{calendarioEventosList.tipoEvento}" />
+                            <wi:inputDataPeriodo id="dataInicio" label="#{infoxMessages['calendarioEventos.periodo']}"
+                                valueDateFrom="#{calendarioEventosList.dataInicioPeriodo}"
+                                valueDateTo="#{calendarioEventosList.dataFimPeriodo}" />
+                        </wi:searchForm>
+                    </ui:define>
+                    <ui:define name="headerToolBar" />
+                    <ui:define name="toolBar">
+                        <h:form>
+                            <a:commandLink action="#{calendarioEventosCrudAction.edit(row)}" render="defaultTabPanel"
+                                execute="@this">
+                                <h:graphicImage url="#{wiSkin.imageFolder}/view.png"
+                                    title="#{infoxMessages['button.selecionar']}" />
+                            </a:commandLink>
+                            <a:commandLink action="#{calendarioEventosCrudAction.remover(row)}"
+                                render="defaultTabPanel pageBodyDialogMessage calendarioProblems" execute="@this">
+                                <h:graphicImage url="#{wiSkin.imageFolder}/remove.png"
+                                    title="#{infoxMessages['crud.remove']}" />
+                            </a:commandLink>
+                        </h:form>
+                    </ui:define>
+                    <wi:columnOutputText columnId="localizacao"
+                        columnHeader="#{infoxMessages['calendarioEventos.localizacao']}" value="#{row.localizacao}" />
+                    <wi:columnOutputText columnId="descricaoEvento"
+                        columnHeader="#{infoxMessages['calendarioEventos.descricaoEvento']}"
+                        value="#{row.descricaoEvento}" />
+                    <wi:columnOutputText columnId="tipoEvento"
+                        columnHeader="#{infoxMessages['calendarioEventos.tipoEvento']}" value="#{row.tipoEvento.label}" />
+                    <wi:columnOutputText columnId="dataEvento" hideOrder="true"
+                        columnHeader="#{infoxMessages['calendarioEventos.dataEvento']}" value="#{row.periodo}" />
+                </wi:dataTable>
+            </infox:tab>
+            <infox:tab id="form" name="form" immediate="true" title="#{infoxMessages['template.abaFormularioText']}"
+                action="#{calendarioEventosCrudAction.clickFormTab}">
+                <h:form id="formTabForm">
+                    <wi:tree id="localizacao" label="#{infoxMessages['calendarioEventos.localizacao']}"
+                        assignTo="calendarioEventosCrudAction.calendarioEventos.localizacao" tree="#{localizacaoTree}"
+                        required="true" />
+                    <wi:inputText id="descricaoEvento" label="#{infoxMessages['calendarioEventos.descricaoEvento']}"
+                        value="#{calendarioEventosCrudAction.calendarioEventos.descricaoEvento}" maxlength="100"
+                        required="true" />
+                    <f:event listener="#{calendarioEventosCrudAction.validarDatas}" type="postValidate" />
+                    <wi:inputDate id="dataInicio" label="#{infoxMessages['calendarioEventos.dataInicio']}"
+                        value="#{calendarioEventosCrudAction.calendarioEventos.dataInicio}" required="true" />
+                    <wi:inputDate id="dataFim" label="#{infoxMessages['calendarioEventos.dataFim']}"
+                        value="#{calendarioEventosCrudAction.calendarioEventos.dataFim}" required="false" />
+                    <wi:selectBooleanCheckbox id="periodico" label="#{infoxMessages['calendarioEventos.periodico']}"
+                        value="#{calendarioEventosCrudAction.anual}" />
+                    <wi:selectOneMenuEnum id="tipoPrestacaoContas"
+                        label="#{infoxMessages['calendarioEventos.tipoEvento']}"
+                        items="#{calendarioEventosCrudAction.tiposEvento}"
+                        value="#{calendarioEventosCrudAction.calendarioEventos.tipoEvento}" required="true" />
+                    <div>
+                        <a:commandButton action="#{calendarioEventosCrudAction.persist}"
+                            render="defaultTabPanel :pageBodyDialogMessage calendarioProblems" execute="@form"
+                            styleClass="buttons" value="#{infoxMessages['crud.persist']}"
+                            rendered="#{not calendarioEventosCrudAction.persisted}" />
+                        <a:commandButton action="#{calendarioEventosCrudAction.update}"
+                            render="@form :pageBodyDialogMessage calendarioProblems" execute="@form"
+                            styleClass="buttons" value="#{infoxMessages['crud.update']}"
+                            rendered="#{calendarioEventosCrudAction.persisted}" />
+                        <a:commandButton action="#{calendarioEventosCrudAction.newInstance}"
+                            render="defaultTabPanel :pageBodyDialogMessage" execute="@this" styleClass="buttons"
+                            value="#{infoxMessages['crud.new']}" />
+                    </div>
+                </h:form>
+            </infox:tab>
+        </infox:tabPanel>
+        <s:div id="calendarioProblems">
+            <rich:popupPanel id="calendarioProblemsPopup"
+                autosized="true"
+                show="#{calendarioEventosCrudAction.calendarioEventosModifications != null and not empty calendarioEventosCrudAction.calendarioEventosModifications}"
+                modal="true">
+                <f:facet name="controls">
+                    <h:form>
+                        <a:commandLink action="#{calendarioEventosCrudAction.cancelar}" render=":pageBodyDialogMessage"
+                            execute="@this" onbegin="#{rich:component('calendarioProblemsPopup')}.hide();">
+                            <h:graphicImage id="closeBtn" value="#{wiSkin.imageFolder}/closeMP.gif" />
+                        </a:commandLink>
+                    </h:form>
+                </f:facet>
+                <f:facet name="header">#{messages['calendarioEventos.modifications']}</f:facet>
+                <h:form>
+                    <a:commandButton action="#{calendarioEventosCrudAction.aplicarModificacoes}"
+                        render="defaultTabPanel :pageBodyDialogMessage calendarioProblems" execute="@this"
+                        onbegin="#{rich:component('calendarioProblemsPopup')}.hide();infox.showLoading();"
+                        oncomplete="infox.hideLoading();"
+                        onclick="return confirm('Esta é uma ação sem retorno. Deseja continuar?');" styleClass="buttons"
+                        value="#{messages['calendarioEventos.modifications.confirm']}" />
+                    <a:commandButton action="#{calendarioEventosCrudAction.cancelar}" type="reset" immediate="true"
+                        render=":pageBodyDialogMessage" execute="@this" styleClass="buttons" value="#{messages['calendarioEventos.modifications.cancel']}"
+                        onbegin="#{rich:component('calendarioProblemsPopup')}.hide();" />
+                </h:form>
+                <div style="overflow: auto; max-height: 100%;">
+                    <rich:dataTable value="#{calendarioEventosCrudAction.calendarioEventosModifications}"
+                        var="modification">
+                        <f:facet name="header">
+                        </f:facet>
+                        <h:column style="width:2em;;">
+                            <h:form>
+                                <a:commandLink action="#{calendarioEventosCrudAction.aplicarModificacao(modification)}"
+                                    onbegin="#{rich:component('calendarioProblemsPopup')}.hide();infox.showLoading();"
+                                    oncomplete="infox.hideLoading();"
+                                    onclick="return confirm('#{infoxMessages['calendarioEventos.modifications.confirmationMessage']}');"
+                                    render="defaultTabPanel :pageBodyDialogMessage calendarioProblems" execute="@this">
+                                    <h:graphicImage style="width:2em;" url="#{wiSkin.imageFolder}/input.png"
+                                        title="#{infoxMessages['calendarioEventos.modifications.confirm']}" />
+                                </a:commandLink>
+                            </h:form>
+                        </h:column>
+                        <h:column>
+                            <h:outputText value="#{modification}" />
+                        </h:column>
+                        <h:column>
+                            <h:outputText rendered="#{modification.issues == null or empty modification.issues}" value="#{messages['calendarioEventos.modifications.empty']}" />
+                            <h:dataTable value="#{modification.issues}" var="issue" rendered="#{modification.issues != null and not empty modification.issues}">
+                                <h:column>
+                                    <f:facet name="header">#{messages['calendarioEventos.issue.issue']}</f:facet>
+                                    <h:outputText value="#{issue.issue}" />
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">#{messages['calendarioEventos.issue.previousState']}</f:facet>
+                                    <h:outputText value="#{issue.previousState}" />
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">#{messages['calendarioEventos.issue.futureState']}</f:facet>
+                                    <h:outputText value="#{issue.futureState}" />
+                                </h:column>
+                            </h:dataTable>
+                        </h:column>
+                    </rich:dataTable>
+                </div>
+            </rich:popupPanel>
+        </s:div>
     </ui:define>
-
-    <ui:define name="form">
-        <wi:dataForm formId="calendarioEventosForm"
-            formTitle="#{infoxMessages['form.title']}">
-            <wi:tree id="localizacao"
-                label="#{infoxMessages['calendarioEventos.localizacao']}"
-                assignTo="calendarioEventosCrudAction.instance.localizacao"
-                tree="#{localizacaoTree}" required="true" />
-            <wi:inputText id="descricaoEvento"
-                label="#{infoxMessages['calendarioEventos.descricaoEvento']}"
-                value="#{home.instance.descricaoEvento}" maxlength="100"
-                required="true" />
-            <wi:inputDate id="dataNascimento"
-                value="#{home.instance.dataEvento}"
-                label="#{infoxMessages['calendarioEventos.dataEvento']}"
-                required="true" />
-            <wi:selectBooleanCheckbox id="periodico"
-                label="#{infoxMessages['calendarioEventos.periodico']}"
-                value="#{home.instance.repeteAno}" />
-
-        </wi:dataForm>
-    </ui:define>
-
 </ui:composition>

@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -12,12 +14,8 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-
 import br.com.infox.core.manager.Manager;
-import br.com.infox.epp.access.manager.PapelManager;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
@@ -36,19 +34,20 @@ import br.com.infox.epp.processo.documento.entity.Documento_;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 
-@Name(ModeloComunicacaoManager.NAME)
-@AutoCreate
+@Stateless
 public class ModeloComunicacaoManager extends Manager<ModeloComunicacaoDAO, ModeloComunicacao> {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "modeloComunicacaoManager";
 	
-	@In
-	private PapelManager papelManager;
-	@In
+	@Inject
 	private PrazoComunicacaoService prazoComunicacaoService;
 	
 	public boolean isExpedida(ModeloComunicacao modeloComunicacao) {
 		return getDao().isExpedida(modeloComunicacao);
+	}
+	
+	public boolean hasComunicacaoExpedida(ModeloComunicacao modeloComunicacao) {
+		return getDao().hasComunicacaoExpedida(modeloComunicacao);
 	}
 	
 	public List<ModeloComunicacao> listModelosComunicacaoPorProcessoRoot(String processoRoot) {
@@ -98,6 +97,18 @@ public class ModeloComunicacaoManager extends Manager<ModeloComunicacaoDAO, Mode
 	
 	protected void setarInformacoesAdicionais(DestinatarioBean destinatario) {
 	}
+	
+	public void removerDocumentosRelacionados(ModeloComunicacao modeloComunicacao) throws DAOException {
+		for (DocumentoModeloComunicacao docComunicacao : modeloComunicacao.getDocumentos()) {
+			getDao().getEntityManager().remove(docComunicacao);
+		}
+	}
+	
+	public void removerDestinatariosModelo(ModeloComunicacao modeloComunicacao) throws DAOException {
+		for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
+			getDao().getEntityManager().remove(destinatario);
+		}
+	}
 
 	protected String getMetadadoValue(MetadadoProcesso metadado) {
 		if (metadado == null) {
@@ -108,5 +119,9 @@ public class ModeloComunicacaoManager extends Manager<ModeloComunicacaoDAO, Mode
 			return new SimpleDateFormat("dd/MM/yyyy").format(value);
 		}
 		return value.toString();
+	}
+	
+	public String getNomeVariavelModeloComunicacao(Long idModeloComunicacao) {
+		return getDao().getNomeVariavelModeloComunicacao(idModeloComunicacao);
 	}
 }

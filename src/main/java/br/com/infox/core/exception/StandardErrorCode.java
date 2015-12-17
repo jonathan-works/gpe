@@ -1,7 +1,7 @@
 package br.com.infox.core.exception;
 
 public enum StandardErrorCode implements ErrorCode{
-    UNKNOWN(0)
+    UNKNOWN(0), CLONE(1)
     ;
 
     private final int errorCode;
