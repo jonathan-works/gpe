@@ -58,6 +58,8 @@ public class AjudaCrudAction extends AbstractCrudAction<Ajuda, AjudaManager> {
         if (ajuda != null) {
             getInstance().setTexto(ajuda.getTexto());
             oldInstance = ajuda;
+        }else{
+        	oldInstance = null;
         }
         getInstance().setPagina(getPagina());
         return getInstance();
