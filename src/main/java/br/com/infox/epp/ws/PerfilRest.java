@@ -15,11 +15,19 @@ public interface PerfilRest {
     
     public static final String PATH = "/perfil";
     public static final String PATH_ADICIONAR_PERFIL = "/adicionar";
+    public static final String PATH_REMOVER_PERFIL = "/remover";
     
     @POST
     @Path(PATH_ADICIONAR_PERFIL)
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
     public String adicionarPerfil(@HeaderParam("token") String token, UsuarioPerfilBean bean) throws DAOException;
+    
+    
+    @POST
+    @Path(PATH_REMOVER_PERFIL)
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String removerPerfil(@HeaderParam("token") String token, UsuarioPerfilBean bean) throws DAOException;
 
 }
