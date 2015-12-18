@@ -120,7 +120,7 @@
                         render=":pageBodyDialogMessage" execute="@this" styleClass="buttons" value="#{messages['calendarioEventos.modifications.cancel']}"
                         onbegin="#{rich:component('calendarioProblemsPopup')}.hide();" />
                 </h:form>
-                <div style="overflow: auto; max-height: 100%;">
+                <div style="overflow: auto; max-height: 432px;max-width:1300px;">
                     <rich:dataTable value="#{calendarioEventosCrudAction.calendarioEventosModifications}"
                         var="modification">
                         <f:facet name="header">
@@ -141,8 +141,11 @@
                             <h:outputText value="#{modification}" />
                         </h:column>
                         <h:column>
+                            <div style="max-height:15rem; overflow:auto;">
                             <h:outputText rendered="#{modification.issues == null or empty modification.issues}" value="#{messages['calendarioEventos.modifications.empty']}" />
-                            <h:dataTable value="#{modification.issues}" var="issue" rendered="#{modification.issues != null and not empty modification.issues}">
+                            <h:dataTable value="#{modification.issues}" var="issue" rendered="#{modification.issues != null and not empty modification.issues}"
+                                rowClasses="zebra-row"
+                            >
                                 <h:column>
                                     <f:facet name="header">#{messages['calendarioEventos.issue.issue']}</f:facet>
                                     <h:outputText value="#{issue.issue}" />
@@ -156,8 +159,10 @@
                                     <h:outputText value="#{issue.futureState}" />
                                 </h:column>
                             </h:dataTable>
+                            </div>
                         </h:column>
                     </rich:dataTable>
+                    
                 </div>
             </rich:popupPanel>
         </s:div>
