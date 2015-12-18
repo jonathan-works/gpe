@@ -19,7 +19,6 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.calendario.TipoEvento;
 import br.com.infox.epp.cliente.dao.CalendarioEventosDAO;
 import br.com.infox.epp.cliente.entity.CalendarioEventos;
@@ -53,22 +52,12 @@ public class CalendarioEventosManager extends Manager<CalendarioEventosDAO, Cale
      * @return
      */
     public Date getPrimeiroDiaUtil(Date dia, int qtdDias) {
-        Calendar prazo = Calendar.getInstance();
-        prazo.setTime(DateUtil.getEndOfDay(dia));
-        prazo.add(Calendar.DAY_OF_MONTH, qtdDias);
-        Date dataPrazo = prazo.getTime();
-        if (isDiaUtil(dataPrazo))
-            return dataPrazo;
-        else
-            return getPrimeiroDiaUtil(dataPrazo, 1);
+        Date dataPrazo = new br.com.infox.util.time.Date(dia).plusDays(qtdDias).toDate();
+        return getPrimeiroDiaUtil(dataPrazo);
     }
 
     public Date getPrimeiroDiaUtil(Date dia) {
-        if (isDiaUtil(dia)) {
-            return dia;
-        } else {
-            return getPrimeiroDiaUtil(dia, 1);
-        }
+        return getNextWeekday(dia).toDate();
     }
 
     public Boolean isDiaUtil(Date dia) {
@@ -101,7 +90,7 @@ public class CalendarioEventosManager extends Manager<CalendarioEventosDAO, Cale
         return null;
     }
 
-	private List<DateRange> getSuspensoesPrazo(DateRange periodo){
+	public List<DateRange> getSuspensoesPrazo(DateRange periodo){
 	    List<DateRange> resultList = new ArrayList<>();
 	    for (CalendarioEventos calendarioEventos : getByDate(periodo)) {
 	        if (TipoEvento.S.equals(calendarioEventos.getTipoEvento())){
@@ -111,7 +100,7 @@ public class CalendarioEventosManager extends Manager<CalendarioEventosDAO, Cale
 	    return resultList;
 	}
 
-	private Collection<DateRange> getFeriados(DateRange periodo) {
+	public Collection<DateRange> getFeriados(DateRange periodo) {
 		Collection<DateRange> result = new ArrayList<>();
 		for (CalendarioEventos calendarioEventos : getByDate(periodo)) {
 			result.add(calendarioEventos.getInterval());
