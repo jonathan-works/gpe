@@ -19,6 +19,7 @@ import br.com.infox.epp.processo.entity.Relacionamento;
 import br.com.infox.epp.processo.entity.RelacionamentoProcesso;
 import br.com.infox.epp.processo.entity.RelacionamentoProcessoInterno;
 import br.com.infox.epp.processo.entity.RelacionamentoProcessoEletronico_;
+import br.com.infox.epp.processo.entity.RelacionamentoProcessoExterno;
 import br.com.infox.epp.processo.entity.RelacionamentoProcesso_;
 import br.com.infox.epp.processo.entity.Relacionamento_;
 
@@ -29,15 +30,29 @@ public class RelacionamentoProcessoDAO extends DAO<RelacionamentoProcesso> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "relacionamentoProcessoDAO";
-
-    public boolean existeRelacionamento(RelacionamentoProcessoInterno rel1, RelacionamentoProcessoInterno rel2) {
+    
+    public boolean existeRelacionamento(RelacionamentoProcessoInterno rel1, RelacionamentoProcesso rel2) {
         final HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("processo1", rel1.getProcesso());
-        parameters.put("processo2", rel2.getProcesso());
-        final String query = "select r.idRelacionamento from RelacionamentoProcessoEletronico rp inner join rp.relacionamento r, RelacionamentoProcessoEletronico rp2 inner join rp2.relacionamento r2 "
-        		+ "where rp.processo=:processo1 "
-        		+ "and rp2.nprocesso=:processo2 "
-        		+ "and r.idRelacionamento = r2.idRelacionamento group by r having count(r)>0";
+        
+        String query = "select r.idRelacionamento from RelacionamentoProcessoInterno rp inner join rp.relacionamento r, "
+        		+ rel2.getClass().getSimpleName() + " rp2 inner join rp2.relacionamento r2 "
+        		+ "where r.idRelacionamento = r2.idRelacionamento "        		
+        		+ "and rp.processo=:processo1 ";
+        		if(rel2 instanceof RelacionamentoProcessoInterno) {
+        			query += "and rp2.processo=:processo2 ";
+        	        parameters.put("processo2", ((RelacionamentoProcessoInterno) rel2).getProcesso());
+        		}
+        		else if(rel2 instanceof RelacionamentoProcessoExterno)
+        		{
+        			query += "and rp2.numeroProcesso=:processo2 ";
+        	        parameters.put("processo2", ((RelacionamentoProcessoExterno) rel2).getNumeroProcesso());        			
+        		}
+        		else
+        		{
+        			throw new UnsupportedOperationException();
+        		}
+        		query += "group by r having count(r)>0";
         final Integer result = getSingleResult(query, parameters);
         return result != null;
     }
