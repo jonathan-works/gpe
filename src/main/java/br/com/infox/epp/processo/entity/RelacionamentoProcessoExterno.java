@@ -20,6 +20,9 @@ public class RelacionamentoProcessoExterno extends RelacionamentoProcesso {
     @Size(min = FLAG, max = NUMERACAO_PROCESSO)
     @Column(name = NUMERO_PROCESSO, length = NUMERACAO_PROCESSO, nullable = false, unique = true)
 	private String numeroProcesso;
+    
+    public RelacionamentoProcessoExterno() {
+	}
 	
     public RelacionamentoProcessoExterno(Relacionamento relacionamento, String numeroProcesso) {
     	this.relacionamento = relacionamento;

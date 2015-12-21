@@ -20,6 +20,9 @@ public class RelacionamentoProcessoInterno extends RelacionamentoProcesso {
     @JoinColumn(name = ID_PROCESSO, nullable = true, unique = true)
     private Processo processo;
 
+	protected RelacionamentoProcessoInterno() {
+	}
+	
     public RelacionamentoProcessoInterno(Relacionamento relacionamento, Processo processo) {
     	this.relacionamento = relacionamento;
     	this.processo = processo;

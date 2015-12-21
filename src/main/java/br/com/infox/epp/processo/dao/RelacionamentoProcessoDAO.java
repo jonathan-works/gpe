@@ -17,9 +17,9 @@ import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.Relacionamento;
 import br.com.infox.epp.processo.entity.RelacionamentoProcesso;
-import br.com.infox.epp.processo.entity.RelacionamentoProcessoInterno;
-import br.com.infox.epp.processo.entity.RelacionamentoProcessoEletronico_;
 import br.com.infox.epp.processo.entity.RelacionamentoProcessoExterno;
+import br.com.infox.epp.processo.entity.RelacionamentoProcessoInterno;
+import br.com.infox.epp.processo.entity.RelacionamentoProcessoInterno_;
 import br.com.infox.epp.processo.entity.RelacionamentoProcesso_;
 import br.com.infox.epp.processo.entity.Relacionamento_;
 
@@ -71,9 +71,9 @@ public class RelacionamentoProcessoDAO extends DAO<RelacionamentoProcesso> {
 		Join<Relacionamento, T> processosRelacionados = (Join<Relacionamento, T>)relacionamento.join(Relacionamento_.relacionamentosProcessos);
     	
     	query.where(
-				cb.equal(root.get(RelacionamentoProcessoEletronico_.processo), processo),
+				cb.equal(root.get(RelacionamentoProcessoInterno_.processo), processo),
 				cb.notEqual(root.get(RelacionamentoProcesso_.idRelacionamentoProcesso), processosRelacionados.get(RelacionamentoProcesso_.idRelacionamentoProcesso)),
-				cb.equal(relacionamento.type(), classe)
+				cb.equal(processosRelacionados.type(), classe)
     	);
     	
     	query.select(processosRelacionados);
