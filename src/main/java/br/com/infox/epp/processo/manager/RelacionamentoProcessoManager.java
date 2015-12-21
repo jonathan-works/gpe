@@ -3,7 +3,6 @@ package br.com.infox.epp.processo.manager;
 import javax.ejb.Stateless;
 
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
@@ -19,10 +18,7 @@ public class RelacionamentoProcessoManager extends Manager<RelacionamentoProcess
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "relacionamentoProcessoManager";
 
-	@In
-	private ProcessoManager processoManager;
-
-	public boolean existeRelacionamento(RelacionamentoProcessoInterno rp1 , RelacionamentoProcessoInterno rp2) {
+	public boolean existeRelacionamento(RelacionamentoProcessoInterno rp1 , RelacionamentoProcesso rp2) {
 		return getDao().existeRelacionamento(rp1, rp2);
 	}
 
