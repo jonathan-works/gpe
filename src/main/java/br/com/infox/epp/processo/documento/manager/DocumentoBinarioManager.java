@@ -1,5 +1,7 @@
 package br.com.infox.epp.processo.documento.manager;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -10,6 +12,7 @@ import br.com.infox.epp.processo.documento.dao.DocumentoBinarioDAO;
 
 @AutoCreate
 @Name(DocumentoBinarioManager.NAME)
+@Stateless
 public class DocumentoBinarioManager extends Manager<DocumentoBinarioDAO, DocumentoBinario> {
 
     private static final long serialVersionUID = 1L;
