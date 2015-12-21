@@ -2,6 +2,8 @@ package br.com.infox.hibernate.util;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -20,6 +22,8 @@ import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.epp.cdi.config.BeanManager;
 
 public final class HibernateUtil {
+    
+    private static final Logger LOGGER = Logger.getLogger(HibernateUtil.class.getName());
 
     private HibernateUtil() {
     }
@@ -35,19 +39,28 @@ public final class HibernateUtil {
         return object;
     }
     
-    @SuppressWarnings("unchecked")
 	public static Dialect getDialect() {
-    	EntityManager em = BeanManager.INSTANCE.getReference(EntityManager.class);
-    	EntityManagerFactory emf = em.getEntityManagerFactory();
-    	String dialectClassName = (String) emf.getProperties().get("hibernate.dialect");
-    	Dialect dialect = null;
+        Class<? extends Dialect> dialectClass = getDialectClass();
+        if (dialectClass == null) return null;
     	try {
-			Class<? extends Dialect> clazz = (Class<? extends Dialect>) Class.forName(dialectClassName);
-			dialect = clazz.newInstance();
-    	} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-			e.printStackTrace();
+			return dialectClass.newInstance();
+    	} catch (InstantiationException | IllegalAccessException e) {
+    	    LOGGER.log(Level.SEVERE, "", e);
+    	    return null;
 		}
-    	return dialect;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static Class<? extends Dialect> getDialectClass() {
+        EntityManager em = EntityManagerProducer.getEntityManager();
+        EntityManagerFactory emf = em.getEntityManagerFactory();
+        String dialectClassName = (String) emf.getProperties().get("hibernate.dialect");
+        try {
+            return (Class<? extends Dialect>) Class.forName(dialectClassName);
+        } catch (ClassNotFoundException e) {
+            LOGGER.log(Level.SEVERE, "", e);
+        }
+        return null;
     }
     
     public static void enableCache(Query query){

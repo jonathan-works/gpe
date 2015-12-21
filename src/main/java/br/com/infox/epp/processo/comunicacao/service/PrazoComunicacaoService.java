@@ -69,12 +69,12 @@ public class PrazoComunicacaoService {
 	@Inject
 	private MovimentarTarefaService movimentarTarefaService;
 	
-	@In
+	@Inject
 	private DocumentoManager documentoManager;
-	@In
+	@Inject
 	private ProcessoManager processoManager;
-	
-	private AssinaturaDocumentoService assinaturaDocumentoService = ComponentUtil.getComponent(AssinaturaDocumentoService.NAME);
+	@Inject
+	private AssinaturaDocumentoService assinaturaDocumentoService;
 
 	public Date contabilizarPrazoCiencia(Processo comunicacao) {
 		DestinatarioModeloComunicacao destinatario = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.DESTINATARIO);
@@ -276,7 +276,7 @@ public class PrazoComunicacaoService {
     	return null;
     }
     
-    private Date calcularPrazoDeCumprimento(Processo comunicacao){
+    public Date calcularPrazoDeCumprimento(Processo comunicacao){
         Date dataCiencia = comunicacao.getMetadado(DATA_CIENCIA).getValue();
         Integer diasPrazoCumprimento = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
         if (diasPrazoCumprimento == null){

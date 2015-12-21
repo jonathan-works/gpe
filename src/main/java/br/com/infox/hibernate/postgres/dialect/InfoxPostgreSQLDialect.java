@@ -6,6 +6,7 @@ import br.com.infox.hibernate.function.DataUtilAdd;
 import br.com.infox.hibernate.function.DateDiffDayPostgresSQL;
 import br.com.infox.hibernate.function.DocumentoSuficientementeAssinado;
 import br.com.infox.hibernate.function.NumeroProcessoRoot;
+import br.com.infox.hibernate.function.ToDateJpql;
 
 public class InfoxPostgreSQLDialect extends PostgreSQL82Dialect {
 
@@ -16,6 +17,7 @@ public class InfoxPostgreSQLDialect extends PostgreSQL82Dialect {
         registerFunction("NumeroProcessoRoot", new NumeroProcessoRoot());
         registerFunction("DataUtilAdd", new DataUtilAdd());
         registerFunction("DateDiffDay", new DateDiffDayPostgresSQL());
+        registerFunction("to_date", new ToDateJpql());
     }
 
 }

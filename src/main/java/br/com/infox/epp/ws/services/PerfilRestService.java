@@ -40,8 +40,7 @@ public class PerfilRestService {
 	private LocalizacaoManager localizacaoManager;
 	
 	@Log(codigo=CodigosServicos.WS_PERFIS_ADICIONAR_PERFIL)
-	public String adicionarPerfil(UsuarioPerfilBean bean) throws DAOException {
-		UsuarioPerfilBean usuarioPerfilBean = (UsuarioPerfilBean) bean;
+	public String adicionarPerfil(UsuarioPerfilBean usuarioPerfilBean) throws DAOException {
 		UsuarioLogin usuarioLogin = usuarioLoginManager.getUsuarioFetchPessoaFisicaByNrCpf(usuarioPerfilBean.getCpf());
 		if (usuarioLogin == null) {
 			throw new ValidacaoException(ME_USUARIO_INEXISTENTE);
@@ -52,7 +51,7 @@ public class PerfilRestService {
 			throw new ValidacaoException(ME_LOCALIZACAO_DA_ESTRUTURA_INEXISTENTE);
 		}
 
-		PerfilTemplate perfilTemplate = perfilTemplateManager.getPerfilTemplateByLocalizacaoPaiDescricao(localizacao, bean.getPerfil());
+		PerfilTemplate perfilTemplate = perfilTemplateManager.getPerfilTemplateByLocalizacaoPaiDescricao(localizacao, usuarioPerfilBean.getPerfil());
 		if(perfilTemplate == null) {
 			throw new ValidacaoException(ME_PERFIL_INEXISTENTE);
 		}
@@ -74,5 +73,31 @@ public class PerfilRestService {
 
 		return MS_SUCESSO_INSERIR.codigo();
 	}
+	
+	@Log(codigo=CodigosServicos.WS_PERFIS_REMOVER_PERFIL)
+	public String removerPerfil(UsuarioPerfilBean usuarioPerfilBean) throws DAOException {
+	    UsuarioLogin usuarioLogin = usuarioLoginManager.getUsuarioFetchPessoaFisicaByNrCpf(usuarioPerfilBean.getCpf());
+        if (usuarioLogin == null) {
+            throw new ValidacaoException(ME_USUARIO_INEXISTENTE);
+        }
+
+        Localizacao localizacao = localizacaoManager.getLocalizacaoByCodigo(usuarioPerfilBean.getCodigoLocalizacao());
+        if (localizacao == null || localizacao.getEstruturaFilho() == null) {
+            throw new ValidacaoException(ME_LOCALIZACAO_DA_ESTRUTURA_INEXISTENTE);
+        }
+
+        PerfilTemplate perfilTemplate = perfilTemplateManager.getPerfilTemplateByLocalizacaoPaiDescricao(localizacao, usuarioPerfilBean.getPerfil());
+        if(perfilTemplate == null) {
+            throw new ValidacaoException(ME_PERFIL_INEXISTENTE);
+        }
+        
+        UsuarioPerfil usuarioPerfil = usuarioPerfilManager.getByUsuarioLoginPerfilTemplateLocalizacao(usuarioLogin, perfilTemplate, localizacao);
+        if (usuarioPerfil != null) {
+            usuarioPerfil.setAtivo(false);
+            usuarioLoginManager.update(usuarioLogin);
+        }
+
+        return MS_SUCESSO_ATUALIZAR.codigo();
+    }
 
 }
