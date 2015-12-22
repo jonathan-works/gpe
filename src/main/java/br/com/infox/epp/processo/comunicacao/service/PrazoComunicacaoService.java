@@ -16,7 +16,6 @@ import javax.inject.Inject;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
@@ -40,7 +39,6 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoDefinition;
@@ -49,7 +47,6 @@ import br.com.infox.epp.system.Parametros;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.task.service.MovimentarTarefaService;
 import br.com.infox.seam.exception.BusinessException;
-import br.com.infox.seam.util.ComponentUtil;
 import br.com.infox.util.time.DateRange;
 
 @Name(PrazoComunicacaoService.NAME)
@@ -71,8 +68,6 @@ public class PrazoComunicacaoService {
 	
 	@Inject
 	private DocumentoManager documentoManager;
-	@Inject
-	private ProcessoManager processoManager;
 	@Inject
 	private AssinaturaDocumentoService assinaturaDocumentoService;
 
@@ -286,7 +281,6 @@ public class PrazoComunicacaoService {
         	br.com.infox.util.time.Date inicio = new br.com.infox.util.time.Date(dataCiencia).plusDays(1);
         	DateRange periodo = new DateRange(inicio.toDate(), inicio.plusDays(diasPrazoCumprimento -1).toDate());
         	periodo = calendarioEventosManager.calcularPrazoIniciandoEmDiaUtil(periodo);
-        	periodo = calendarioEventosManager.calcularPrazoSuspensao(periodo);
         	periodo = calendarioEventosManager.calcularPrazoEncerrandoEmDiaUtil(periodo);
             return periodo.getEnd().withTimeAtEndOfDay().toDate();
         }
