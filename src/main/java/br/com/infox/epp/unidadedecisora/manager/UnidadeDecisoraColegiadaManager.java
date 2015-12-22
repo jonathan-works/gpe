@@ -32,6 +32,7 @@ public class UnidadeDecisoraColegiadaManager extends Manager<UnidadeDecisoraCole
 		return getDao().searchUnidadeDecisoraColegiadaWithIdUsuario(idUsuario);
 	}
 	
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public boolean existeUnidadeColegiadaComLocalizacao(Integer idLocalizacao){
 		return getDao().existeUnidadeDecisoraComLocalizacao(idLocalizacao);
 	}
