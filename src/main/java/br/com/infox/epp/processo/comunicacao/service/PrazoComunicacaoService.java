@@ -5,6 +5,7 @@ import static br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider.
 import static br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -49,7 +50,6 @@ import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.task.service.MovimentarTarefaService;
 import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.util.ComponentUtil;
-import java.util.Date;
 import br.com.infox.util.time.DateRange;
 
 @Name(PrazoComunicacaoService.NAME)
@@ -283,8 +283,8 @@ public class PrazoComunicacaoService {
             diasPrazoCumprimento = -1;
         }
         if (diasPrazoCumprimento>=0 && dataCiencia != null){
-        	br.com.infox.util.time.Date inicio = new br.com.infox.util.time.Date(dataCiencia);
-        	DateRange periodo = new DateRange(inicio.toDate(), inicio.plusDays(diasPrazoCumprimento).toDate());
+        	br.com.infox.util.time.Date inicio = new br.com.infox.util.time.Date(dataCiencia).plusDays(1);
+        	DateRange periodo = new DateRange(inicio.toDate(), inicio.plusDays(diasPrazoCumprimento -1).toDate());
         	periodo = calendarioEventosManager.calcularPrazoIniciandoEmDiaUtil(periodo);
         	periodo = calendarioEventosManager.calcularPrazoSuspensao(periodo);
         	periodo = calendarioEventosManager.calcularPrazoEncerrandoEmDiaUtil(periodo);
@@ -292,7 +292,7 @@ public class PrazoComunicacaoService {
         }
         return null;
     }
-
+    
     protected void atualizarMetadado(MetadadoProcesso metadado, String valor){
         if (!Objects.equals(metadado.getValor(), valor)){
             metadado.setValor(valor);
