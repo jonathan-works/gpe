@@ -270,7 +270,7 @@ public class PrazoComunicacaoService {
     	}
     	return null;
     }
-    
+
     public Date calcularPrazoDeCumprimento(Processo comunicacao){
         Date dataCiencia = comunicacao.getMetadado(DATA_CIENCIA).getValue();
         Integer diasPrazoCumprimento = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
@@ -278,14 +278,18 @@ public class PrazoComunicacaoService {
             diasPrazoCumprimento = -1;
         }
         if (diasPrazoCumprimento>=0 && dataCiencia != null){
-        	br.com.infox.util.time.Date inicio = new br.com.infox.util.time.Date(dataCiencia).plusDays(1);
-        	DateRange periodo = new DateRange(inicio.toDate(), inicio.plusDays(diasPrazoCumprimento -1).toDate());
-        	periodo = calendarioEventosManager.calcularPrazoIniciandoEmDiaUtil(periodo);
-        	periodo = calendarioEventosManager.calcularPrazoEncerrandoEmDiaUtil(periodo);
-            return periodo.getEnd().withTimeAtEndOfDay().toDate();
+        	return calcularPrazoDeCumprimento(dataCiencia, diasPrazoCumprimento);
         }
         return null;
     }
+
+	public Date calcularPrazoDeCumprimento(Date dataCiencia, Integer diasPrazoCumprimento) {
+		br.com.infox.util.time.Date inicio = new br.com.infox.util.time.Date(dataCiencia).plusDays(1);
+		DateRange periodo = new DateRange(inicio.toDate(), inicio.plusDays(diasPrazoCumprimento -1).toDate());
+		periodo = calendarioEventosManager.calcularPrazoIniciandoEmDiaUtil(periodo);
+		periodo = calendarioEventosManager.calcularPrazoEncerrandoEmDiaUtil(periodo);
+		return periodo.getEnd().withTimeAtEndOfDay().toDate();
+	}
     
     protected void atualizarMetadado(MetadadoProcesso metadado, String valor){
         if (!Objects.equals(metadado.getValor(), valor)){
