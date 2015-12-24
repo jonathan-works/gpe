@@ -128,7 +128,7 @@
       <div>
               <wi:commandButton
               	id="btnVoltar" rendered="#{consultaController.showBackButton}"
-                onclick="infox.redirect({url:'#{pathResolver.contextPath}/Processo/Consulta/listView.seam'})"
+                onclick="infox.redirect({url:window.document.referrer})"
                 value="#{infoxMessages['page.return']}" />
       </div>
     </infox:tabPanel>
