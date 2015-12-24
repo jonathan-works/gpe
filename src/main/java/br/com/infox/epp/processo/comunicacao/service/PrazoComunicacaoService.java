@@ -74,11 +74,14 @@ public class PrazoComunicacaoService {
 	public Date contabilizarPrazoCiencia(Processo comunicacao) {
 		DestinatarioModeloComunicacao destinatario = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.DESTINATARIO);
         Integer qtdDias = destinatario.getModeloComunicacao().getTipoComunicacao().getQuantidadeDiasCiencia();
-        Date hoje = new Date();
         //O início do prazo de ciência começa no dia do envio. 66741
-        return calendarioEventosManager.getPrimeiroDiaUtil(hoje, qtdDias);
+        return contabilizarPrazoCiencia(new Date(), qtdDias);
     }
     
+	public Date contabilizarPrazoCiencia(Date dataInicio, Integer qtdDias){
+		return calendarioEventosManager.getPrimeiroDiaUtil(dataInicio, qtdDias);
+	}
+	
 	public Date contabilizarPrazoCumprimento(Processo comunicacao) {
 		return calcularPrazoDeCumprimento(comunicacao);
     }
