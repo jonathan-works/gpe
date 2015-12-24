@@ -10,6 +10,7 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.documento.entity.DocumentoBinario;
 import br.com.infox.epp.processo.documento.dao.DocumentoBinarioDAO;
 
+@Stateless
 @AutoCreate
 @Name(DocumentoBinarioManager.NAME)
 @Stateless

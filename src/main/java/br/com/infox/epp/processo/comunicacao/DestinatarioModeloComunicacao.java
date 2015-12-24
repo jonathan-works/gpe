@@ -78,7 +78,7 @@ public class DestinatarioModeloComunicacao implements Serializable, Cloneable {
 	private Processo processo;
 	
 	@Transient
-	private Boolean comunicacaoParticular;
+	private Boolean individual = Boolean.TRUE;
 	
 	public Long getId() {
 		return id;
@@ -152,12 +152,12 @@ public class DestinatarioModeloComunicacao implements Serializable, Cloneable {
 		this.processo = processo;
 	}
 	
-    public Boolean getComunicacaoParticular() {
-        return comunicacaoParticular;
+    public Boolean getIndividual() {
+        return individual;
     }
 
-    public void setComunicacaoParticular(Boolean comunicacaoParticular) {
-        this.comunicacaoParticular = comunicacaoParticular;
+    public void setIndividual(Boolean individual) {
+        this.individual = individual;
     }
 
     @Transient
