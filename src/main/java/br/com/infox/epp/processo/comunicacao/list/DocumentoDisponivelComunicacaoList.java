@@ -23,6 +23,7 @@ import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
@@ -144,6 +145,9 @@ public class DocumentoDisponivelComunicacaoList extends EntityList<Documento> im
     }
 
     public String getTextoPasta(Pasta pasta) {
+    	if (!paramsPasta.containsKey(PastaQuery.PARAM_USUARIO_PERMISSAO)) {
+    		paramsPasta.put(PastaQuery.PARAM_USUARIO_PERMISSAO, Authenticator.getUsuarioLogado());
+    	}
         int totalDocumentosPasta = pastaManager.getTotalDocumentosPasta(pasta, filterPasta, paramsPasta);
         return pastaManager.getNomePasta(pasta, totalDocumentosPasta);
     }

@@ -9,6 +9,7 @@ public interface PastaQuery {
     String PARAM_NOME = "nome";
     String PARAM_NUMERO_DOCUMENTO = "numeroDocumento";
     String PARAM_DESCRICAO = "descricao";
+    String PARAM_USUARIO_PERMISSAO = "usuarioPermissao";
     
     String GET_BY_PROCESSO = "getByProcesso";
     String GET_BY_PROCESSO_QUERY = "select o from Pasta o where o.processo = :" + PARAM_PROCESSO
@@ -30,7 +31,9 @@ public interface PastaQuery {
     String FILTER_SUFICIENTEMENTE_ASSINADO_OU_SETOR = " and (bin.suficientementeAssinado = true or o.localizacao = :" + PARAM_LOCALIZACAO + ") ";
     String FILTER_SUFICIENTEMENTE_ASSINADO = " and bin.suficientementeAssinado = true ";
 
-    String FILTER_SIGILO = " and not exists (select 1 from SigiloDocumento s where s.ativo = true and s.documento = o) ";
+    String FILTER_SIGILO = " and (not exists (select 1 from SigiloDocumento s where s.ativo = true and s.documento = o) or "
+    		+ "exists(select 1 from SigiloDocumentoPermissao sp where sp.usuario = :" + PARAM_USUARIO_PERMISSAO + " and sp.ativo = true and "
+    		+ "sp.sigiloDocumento = (select s from SigiloDocumento s where s.ativo = true and s.documento = o))) ";
     String FILTER_EXCLUIDO = " and o.excluido = false ";
     String FILTER_DOCUMENTOS = " and o.id not in (:" + PARAM_IDS_DOCUMENTOS + ") ";
     
