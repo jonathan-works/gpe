@@ -36,7 +36,7 @@ public class RelacionamentoDAO extends DAO<Relacionamento> {
         final HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("processo1", rel1.getProcesso());
         
-        String query = "select r from RelacionamentoProcessoInterno rp inner join rp.relacionamento r, "
+        String query = "select r from RelacionamentoProcessoInterno rp inner join rp.relacionamento r inner join fetch r.relacionamentosProcessos, "
         		+ rel2.getClass().getSimpleName() + " rp2 inner join rp2.relacionamento r2 "
         		+ "where r.idRelacionamento = r2.idRelacionamento "        		
         		+ "and rp.processo=:processo1 ";
@@ -60,6 +60,7 @@ public class RelacionamentoDAO extends DAO<Relacionamento> {
 	protected void remove(RelacionamentoProcessoInterno rp1, RelacionamentoProcesso rp2) {
 		Relacionamento relacionamento = getRelacionamento(rp1, rp2);
 		EntityManager em = getEntityManager();
+		em.refresh(relacionamento);
 		
 		for(RelacionamentoProcesso rp : relacionamento.getRelacionamentosProcessos()) {
 			em.remove(rp);
