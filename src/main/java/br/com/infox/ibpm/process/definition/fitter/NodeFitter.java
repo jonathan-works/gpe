@@ -13,7 +13,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.annotation.PostConstruct;
 import javax.el.ELException;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
@@ -51,6 +54,9 @@ import br.com.infox.ibpm.node.constants.NodeTypeConstants;
 import br.com.infox.ibpm.node.handler.NodeHandler;
 import br.com.infox.ibpm.node.manager.JbpmNodeManager;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
+import br.com.infox.ibpm.sinal.Signal;
+import br.com.infox.ibpm.sinal.SignalConfigurationBean;
+import br.com.infox.ibpm.sinal.SignalDao;
 import br.com.infox.ibpm.task.handler.TaskHandler;
 import br.com.infox.ibpm.transition.TransitionHandler;
 import br.com.infox.log.LogProvider;
@@ -77,6 +83,7 @@ public class NodeFitter extends Fitter implements Serializable {
     private String nodeName;
     private Map<Number, String> modifiedNodes = new HashMap<Number, String>();
     private List<ClassificacaoDocumento> classificacoesDocumento;
+    private List<Signal> signals;
 
     @Inject
     private JbpmNodeManager jbpmNodeManager;
@@ -90,7 +97,13 @@ public class NodeFitter extends Fitter implements Serializable {
     private InfoxMessages infoxMessages;
     @Inject
     private FluxoMergeService fluxoMergeService;
-
+    @Inject
+    private SignalDao signalDao; 
+    
+    @PostConstruct
+    private void init() {
+        signals = signalDao.findAll();
+    }
     
     public void addNewNode() {
         Class<?> nodeType = NodeTypes.getNodeType(getNodeType(newNodeType));
@@ -617,4 +630,70 @@ public class NodeFitter extends Fitter implements Serializable {
     	}
 		return classificacoesDocumento;
 	}
+    
+    public boolean canAddSignalToNode() {
+        if (currentNode == null) return false;
+        return NodeType.StartState.equals(currentNode.getNodeType())
+                || NodeType.State.equals(currentNode.getNodeType())
+                || NodeType.Task.equals(currentNode.getNodeType());
+    }
+    
+    public List<Signal> getSinaisDisponiveis() {
+        List<Signal> sinaisDisponiveis = new ArrayList<>();
+        if (currentNode == null) return sinaisDisponiveis;
+        for (Signal signal : signals) {
+            String eventType = Event.EVENTTYPE_TASK_LISTENER.concat("-").concat(signal.getCodigo());
+            if (currentNode.getEvents() == null || signal.getAtivo()
+                    || !currentNode.getEvents().containsKey(eventType)) {
+                sinaisDisponiveis.add(signal);
+            }
+        }
+        return sinaisDisponiveis;
+    }
+    
+    public String getSignalLabel(Event event) {
+        for (Signal signal : signals) {
+            if (event.getEventType().endsWith(signal.getCodigo())){
+                return signal.getNome();
+            }
+        }
+        return "-";
+    }
+    
+    public String getSignalConfigurationLabel(Event event) {
+        SignalConfigurationBean signalConfigurationBean = SignalConfigurationBean.fromJson(event.getConfiguration());
+        return signalConfigurationBean.getConfigurationLabel(currentNode);
+    }
+    
+    public Collection<Event> getSignalEvents() {
+        List<Event> listeners = new ArrayList<>();
+        if (currentNode != null && currentNode.getEvents() != null) {
+            for (Event event : currentNode.getEvents().values()) {
+                if (event.getEventType().startsWith(Event.EVENTTYPE_TASK_LISTENER)) {
+                    listeners.add(event);
+                }
+            }
+        }
+        return listeners;
+    }
+    
+    public void addSignal(ActionEvent actionEvent) {
+        Map<String, String> request = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        String inputNome = (String) actionEvent.getComponent().getAttributes().get("listenerValue");
+        String inputTransicao = (String) actionEvent.getComponent().getAttributes().get("transitionValue");
+        String inputCondition = (String) actionEvent.getComponent().getAttributes().get("conditionValue");
+        String nome = request.get(inputNome);
+        String transitionName = request.get(inputTransicao);
+        String condition = request.get(inputCondition);
+        Event event = new Event(nome);
+        Transition transition = currentNode.getLeavingTransition(transitionName);
+        SignalConfigurationBean signalConfigurationBean = new SignalConfigurationBean(transition.getKey(), condition);
+        event.setConfiguration(signalConfigurationBean.toJson());
+        currentNode.addEvent(event);
+    }
+    
+    public void removeSignal(Event event) {
+        currentNode.removeEvent(event);
+    }
+    
 }

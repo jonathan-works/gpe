@@ -230,9 +230,10 @@
                             </rich:collapsiblePanel>
                         </h:form>
                         
-                       	<rich:collapsiblePanel switchType="client" expanded="false" header="Listeners" >
+                       	<rich:collapsiblePanel switchType="client" expanded="false" header="Listeners" rendered="#{nodeFitter.canAddSignalToNode()}">
                    			<ui:include src="listeners.xhtml" />
                        	</rich:collapsiblePanel>
+                       	
                        	<h:form id="eventsForm">
                             <rich:collapsiblePanel
                                 switchType="ajax"

@@ -53,7 +53,6 @@ import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
-import br.com.infox.ibpm.listener.ListenerTaskBean;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
 import br.com.infox.seam.exception.BusinessRollbackException;
 import br.com.infox.util.time.DateRange;
@@ -358,10 +357,4 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 		}
 	}
 	
-	public void movimentarTarefasListener(Long processInstanceId, String eventType) throws DAOException {
-		List<ListenerTaskBean> tarefas = getDao().getListeners(processInstanceId, eventType);
-		for (ListenerTaskBean tarefa : tarefas) {
-			movimentarProcessoJBPM(tarefa.getTaskInstanceId(), tarefa.getListenerConfiguration().getTransitionKey());
-		}
-	}
 }

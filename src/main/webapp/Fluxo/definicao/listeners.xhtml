@@ -11,21 +11,24 @@
     xmlns:wi="http://www.itx.com.br/jsf" >
     
     <h:form id="formListeners">
-    	<wi:selectOneMenu id="listener" valueItems="#{taskFitter.listenersDisponiveis}" label="${infoxMessages['process.events.listener.nome']}" 
+    	<wi:selectOneMenu id="listener" valueItems="#{nodeFitter.sinaisDisponiveis}" label="${infoxMessages['process.events.listener.nome']}" 
     		showLabelSelecione="true" required="true" />
     	
     	<wi:selectOneMenu id="transitionListener"
-            label="#{infoxMessages['process.expiration.transition']}" valueItems="#{taskFitter.currentTask.transitions}" 
-            showLabelSelecione="true" required="false"/>
+            label="#{infoxMessages['process.expiration.transition']}" valueItems="#{nodeFitter.currentNode.transitions}" 
+            showLabelSelecione="true" required="true"/>
+            
+        <wi:inputText id="conditionListener" label="Condição" required="false" />
     	
     	<a:commandButton limitRender="true" render="formListeners listenersDatatable" execute="@form" styleClass="buttons" 
-    		value="${infoxMessages['process.events.listener.adicionar']}" actionListener="#{taskFitter.addListener}" resetValues="true" style="margin-top: 1em;" >
+    		value="${infoxMessages['process.events.listener.adicionar']}" actionListener="#{nodeFitter.addSignal}" resetValues="true" style="margin-top: 1em;" >
     		<f:attribute name="listenerValue" value="#{rich:clientId('listener')}" />
     		<f:attribute name="transitionValue" value="#{rich:clientId('transitionListener')}" />
+    		<f:attribute name="conditionValue" value="#{rich:clientId('conditionListener')}" />
     	</a:commandButton>
     </h:form>
     
-    <wi:dataTable id="listenersDatatable" values="#{taskFitter.listeners}" showSearchForm="false" hideOrder="true"
+    <wi:dataTable id="listenersDatatable" values="#{nodeFitter.signalEvents}" showSearchForm="false" hideOrder="true"
     	showGridCount="false">
     
     	<ui:define name="headerToolBar" />
@@ -33,17 +36,17 @@
     	<ui:define name="toolBar">
     		<h:form>
     			<a:commandLink render="listenersDatatablePanel formListeners" execute="@form" 
-    				action="#{taskFitter.removeListener(row)}" >
+    				action="#{nodeFitter.removeSignal(row)}" >
     				<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{infoxMessages['button.delete']}" />
     			</a:commandLink>
     		</h:form>
     	</ui:define>
     	
     	<wi:columnOutputText columnId="nome" columnHeader="${infoxMessages['process.events.listener.nome']}" 
-    		value="#{taskFitter.getListenerLabel(row)}"/>
+    		value="#{nodeFitter.getSignalLabel(row)}"/>
     	
     	<wi:columnOutputText columnId="configuracao" columnHeader="${infoxMessages['process.events.listener.configuracao']}" 
-    		value="#{taskFitter.getListenerConfiguration(row)}"/>
+    		value="#{nodeFitter.getSignalConfiguration(row)}"/>
     
     </wi:dataTable>
     
