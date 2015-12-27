@@ -1,6 +1,5 @@
 package br.com.infox.ibpm.process.definition.fitter;
 
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.core.comparators.Comparators.bySelectItemLabelAsc;
 
 import java.io.Serializable;
@@ -219,25 +218,28 @@ public class NodeFitter extends Fitter implements Serializable {
         }
         Node from = transition.getFrom();
         if (from != null) {
-            removeTaskListener(from, transition);
+            removeListener(from, transition);
             from.removeLeavingTransition(transition);
         }
     }
     
-    private void removeTaskListener(Node node, Transition transition) {
-        if (!(node instanceof TaskNode)) return;
-        TaskNode taskNode = (TaskNode) node;
-        Task task = (Task) taskNode.getTasks().iterator().next();
-        Map<String, Event> events = task.getEvents();
+    public void removeListener(Node node, Transition transition) {
+        Map<String, Event> events = null;
+        if (node instanceof TaskNode) {
+            Task task = ((TaskNode) node).getTasks().iterator().next();
+            events = task.getEvents();
+        } else {
+            events = node.getEvents();
+        }
         if (events == null) return;
-        List<Event> removeEvents = new ArrayList<>(events.size());
+        List<Event> removeEvents = new ArrayList<>();
         for (Event event : events.values()) {
-            if (event.getEventType().startsWith(Event.EVENTTYPE_TASK_LISTENER) && event.getConfiguration().contains(transition.getKey())) {
+            if (event.isListener() && event.getConfiguration().contains(transition.getKey())) {
                 removeEvents.add(event);
             }
         }
         for (Event event : removeEvents) {
-            task.removeEvent(event);
+            node.removeEvent(event);
         }
     }
 
@@ -248,7 +250,6 @@ public class NodeFitter extends Fitter implements Serializable {
         }
     }
 
-    @SuppressWarnings(UNCHECKED)
     public void removeNode(Node node) {
         if (fluxoMergeService.hasActiveNode(ProcessBuilder.instance().getInstance(), node)) {
             FacesMessages.instance().clear();
@@ -633,18 +634,18 @@ public class NodeFitter extends Fitter implements Serializable {
     
     public boolean canAddSignalToNode() {
         if (currentNode == null) return false;
-        return NodeType.StartState.equals(currentNode.getNodeType())
-                || NodeType.State.equals(currentNode.getNodeType())
-                || NodeType.Task.equals(currentNode.getNodeType());
+        return NodeTypeConstants.START_STATE.equals(getNodeType())
+                || NodeTypeConstants.TASK.equals(getNodeType())
+                || NodeTypeConstants.PROCESS_STATE.equals(getNodeType());
     }
     
     public List<Signal> getSinaisDisponiveis() {
         List<Signal> sinaisDisponiveis = new ArrayList<>();
         if (currentNode == null) return sinaisDisponiveis;
         for (Signal signal : signals) {
-            String eventType = Event.EVENTTYPE_TASK_LISTENER.concat("-").concat(signal.getCodigo());
-            if (currentNode.getEvents() == null || signal.getAtivo()
-                    || !currentNode.getEvents().containsKey(eventType)) {
+            String eventType = Event.getListenerEventType(currentNode, signal.getCodigo());
+            if (currentNode.getEvents() == null || (signal.getAtivo()
+                    && !currentNode.getEvents().containsKey(eventType))) {
                 sinaisDisponiveis.add(signal);
             }
         }
@@ -669,7 +670,7 @@ public class NodeFitter extends Fitter implements Serializable {
         List<Event> listeners = new ArrayList<>();
         if (currentNode != null && currentNode.getEvents() != null) {
             for (Event event : currentNode.getEvents().values()) {
-                if (event.getEventType().startsWith(Event.EVENTTYPE_TASK_LISTENER)) {
+                if (event.isListener()) {
                     listeners.add(event);
                 }
             }
@@ -682,12 +683,11 @@ public class NodeFitter extends Fitter implements Serializable {
         String inputNome = (String) actionEvent.getComponent().getAttributes().get("listenerValue");
         String inputTransicao = (String) actionEvent.getComponent().getAttributes().get("transitionValue");
         String inputCondition = (String) actionEvent.getComponent().getAttributes().get("conditionValue");
-        String nome = request.get(inputNome);
-        String transitionName = request.get(inputTransicao);
+        String codigo = request.get(inputNome);
+        String transitionKey = request.get(inputTransicao);
         String condition = request.get(inputCondition);
-        Event event = new Event(nome);
-        Transition transition = currentNode.getLeavingTransition(transitionName);
-        SignalConfigurationBean signalConfigurationBean = new SignalConfigurationBean(transition.getKey(), condition);
+        Event event = new Event(Event.getListenerEventType(currentNode, codigo));
+        SignalConfigurationBean signalConfigurationBean = new SignalConfigurationBean(transitionKey, condition);
         event.setConfiguration(signalConfigurationBean.toJson());
         currentNode.addEvent(event);
     }

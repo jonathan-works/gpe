@@ -38,8 +38,7 @@ public class EventHandler implements Serializable {
         if (currentAction != null) {
             return currentAction.getActionExpression();
         }
-        if (expression == null && event.getActions() != null
-                && event.getActions().size() > 0) {
+        if (expression == null && event.getActions() != null && event.getActions().size() > 0) {
             Action action = (Action) event.getActions().get(0);
             if (action instanceof Script) {
                 Script s = (Script) action;
@@ -65,7 +64,7 @@ public class EventHandler implements Serializable {
         }
     }
 
-	    public static List<EventHandler> createList(GraphElement instance) {
+    public static List<EventHandler> createList(GraphElement instance) {
         if (instance == null) {
             return null;
         }
@@ -75,8 +74,10 @@ public class EventHandler implements Serializable {
             return ret;
         }
         for (Event event : events.values()) {
-    		EventHandler eh = new EventHandler(event);
-    		ret.add(eh);
+            if (!event.isListener()) {
+                EventHandler eh = new EventHandler(event);
+                ret.add(eh);
+            }
         }
         return ret;
     }
@@ -125,13 +126,13 @@ public class EventHandler implements Serializable {
         if (actionList == null && event.getActions() != null) {
             actionList = new ArrayList<>(event.getActions());
             if (actionList != null) {
-	            for (Iterator<Action> it = actionList.iterator(); it.hasNext();) {
-	            	Action action = it.next();
-	        		if (NodeHandler.GENERATE_DOCUMENTO_ACTION_NAME.equals(action.getName())) {
-	        			it.remove();
-	        			break;
-	            	}
-	            }
+                for (Iterator<Action> it = actionList.iterator(); it.hasNext();) {
+                    Action action = it.next();
+                    if (NodeHandler.GENERATE_DOCUMENTO_ACTION_NAME.equals(action.getName())) {
+                        it.remove();
+                        break;
+                    }
+                }
             }
             setCurrentAction(null);
         }

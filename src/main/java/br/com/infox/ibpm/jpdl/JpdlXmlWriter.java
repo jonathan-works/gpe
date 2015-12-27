@@ -424,7 +424,7 @@ public class JpdlXmlWriter {
                 }
             }
         }
-        if (!valid && !event.getEventType().startsWith(Event.EVENTTYPE_TASK_LISTENER)) {
+        if (!valid && !event.isListener()) {
             eventElement.detach();
         }
     }

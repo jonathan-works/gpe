@@ -34,7 +34,8 @@
           noSelectionOption="true"
           itemValue="#{null}"
           itemLabel="#{noSelectionLabel}" />
-        <f:selectItems value="#{valueItems}" />
+        <f:selectItems value="#{valueItems}" var="item" itemLabel="#{empty optionLabel ? item : optionLabel}" 
+        	itemValue="#{empty optionValue ? item : optionValue}" />
       </c:if>
       <c:if test="#{empty valueItems}">
         <s:selectItems

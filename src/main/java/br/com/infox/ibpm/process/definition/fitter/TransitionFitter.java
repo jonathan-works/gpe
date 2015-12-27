@@ -1,6 +1,5 @@
 package br.com.infox.ibpm.process.definition.fitter;
 
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.core.comparators.Comparators.bySelectItemLabelAsc;
 
 import java.io.Serializable;
@@ -16,13 +15,10 @@ import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.EndState;
 import org.jbpm.graph.node.StartState;
-import org.jbpm.graph.node.TaskNode;
-import org.jbpm.taskmgmt.def.Task;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
@@ -84,7 +80,6 @@ public class TransitionFitter extends Fitter implements Serializable {
         }
     }
 
-    @SuppressWarnings(UNCHECKED)
     public void checkTransitions() {
         List<Node> nodes = getProcessBuilder().getNodeFitter().getNodes();
         clear();
@@ -138,7 +133,7 @@ public class TransitionFitter extends Fitter implements Serializable {
         currentNode.removeArrivingTransition(transition);
         currentNode.removeLeavingTransition(transition);
         removeTaskExpiration(currentNode.getName(), th.getName());
-        removeTaskListener(currentNode, transition);
+        getProcessBuilder().getNodeFitter().removeListener(currentNode, transition);
         checkTransitions();
     }
 
@@ -180,7 +175,6 @@ public class TransitionFitter extends Fitter implements Serializable {
         return newNodeTransition;
     }
 
-    @SuppressWarnings(UNCHECKED)
     public List<TransitionHandler> getArrivingTransitions() {
         Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
         if (arrivingTransitions == null && currentNode != null
@@ -285,20 +279,4 @@ public class TransitionFitter extends Fitter implements Serializable {
         }
     }
     
-    private void removeTaskListener(Node node, Transition transition) {
-        if (!(node instanceof TaskNode)) return;
-        TaskNode taskNode = (TaskNode) node;
-        Task task = (Task) taskNode.getTasks().iterator().next();
-        Map<String, Event> events = task.getEvents();
-        if (events == null) return;
-        List<Event> removeEvents = new ArrayList<>(events.size());
-        for (Event event : events.values()) {
-            if (event.getEventType().startsWith(Event.EVENTTYPE_TASK_LISTENER) && event.getConfiguration().contains(transition.getKey())) {
-                removeEvents.add(event);
-            }
-        }
-        for (Event event : removeEvents) {
-            task.removeEvent(event);
-        }
-    }
 }

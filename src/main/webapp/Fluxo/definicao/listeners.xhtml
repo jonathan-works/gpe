@@ -12,11 +12,11 @@
     
     <h:form id="formListeners">
     	<wi:selectOneMenu id="listener" valueItems="#{nodeFitter.sinaisDisponiveis}" label="${infoxMessages['process.events.listener.nome']}" 
-    		showLabelSelecione="true" required="true" />
+    		showLabelSelecione="true" required="true" optionLabel="#{item.nome}" optionValue="#{item.codigo}"/>
     	
     	<wi:selectOneMenu id="transitionListener"
-            label="#{infoxMessages['process.expiration.transition']}" valueItems="#{nodeFitter.currentNode.transitions}" 
-            showLabelSelecione="true" required="true"/>
+            label="#{infoxMessages['process.expiration.transition']}" valueItems="#{nodeFitter.currentNode.leavingTransitions}" 
+            showLabelSelecione="true" required="true" showRequired="true" optionLabel="#{item.name}" optionValue="#{item.key}"/>
             
         <wi:inputText id="conditionListener" label="Condição" required="false" />
     	
@@ -46,7 +46,7 @@
     		value="#{nodeFitter.getSignalLabel(row)}"/>
     	
     	<wi:columnOutputText columnId="configuracao" columnHeader="${infoxMessages['process.events.listener.configuracao']}" 
-    		value="#{nodeFitter.getSignalConfiguration(row)}"/>
+    		value="#{nodeFitter.getSignalConfigurationLabel(row)}"/>
     
     </wi:dataTable>
     

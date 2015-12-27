@@ -24,14 +24,15 @@
             
             <ui:define name="toolBar">
             	<h:form>
-            		<a:commandLink execute="@this" render=":defaultTabPanel" action="#{signalView.load(row)}" limitRender="true">
-            			<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="Selecionar"/>
+            		<a:commandLink execute="@this" render=":pageBody" action="#{signalView.load(row)}" limitRender="true">
+            			<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="Selecionar" styleClass="opacityHover"/>
+            			<f:setPropertyActionListener value="form" target="#{signalView.tab}" />
             		</a:commandLink>
             		
             		<a:commandLink execute="@form" render="signalListPanel :pageBodyDialogMessage" 
-            			action="#{signalView.inativar}" limitRender="true">
+            			action="#{signalView.inativar}" limitRender="true" rendered="#{row.ativo}">
             			<f:setPropertyActionListener value="#{row.id}" target="#{signalView.id}" />
-            			<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="Inativar"/>
+            			<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="Inativar" styleClass="opacityHover"/>
             		</a:commandLink>
             	</h:form>
             </ui:define>
@@ -70,13 +71,21 @@
     </ui:define>
 
     <ui:define name="form">
-    	<wi:dataForm formId="SignalForm" formTitle="Sinal">
+    	<wi:dataForm formId="SignalForm" formTitle="#{infoxMessages['signal.signalForm']}">
+			
+			<wi:outputText id="codigoOut" label="#{infoxMessages['signal.codigo']}"
+				value="#{signalView.codigo}" rendered="#{not empty signalView.id}"/>
 			
 			<wi:inputText id="codigo" required="true" label="#{infoxMessages['signal.codigo']}"
-				value="#{signalView.codigo}" maxlength="50" />
+				value="#{signalView.codigo}" maxlength="50" 
+				rendered="#{empty signalView.id}"/>
 				
 			<wi:inputText id="nome" required="true" label="#{infoxMessages['signal.nome']}" 
 				value="#{signalView.nome}" maxlength="200" />
+				
+			<wi:selectSituacaoRadio id="ativo"
+                label="#{infoxMessages['field.situacao']}"
+                value="#{signalView.ativo}" />
 
 			<ui:define name="buttons">
 				<a:commandButton action="#{signalView.inserir}" value="#{infoxMessages['crud.persist']}" 

@@ -40,7 +40,7 @@ public class SignalView implements Serializable {
         Signal signal = new Signal();
         signal.setCodigo(getCodigo());
         signal.setNome(getNome());
-        signal.setNome(getNome());
+        signal.setAtivo(getAtivo());
         signalService.persist(signal);
         setId(signal.getId());
     }
@@ -79,7 +79,7 @@ public class SignalView implements Serializable {
         setId(null);
         setCodigo(null);
         setNome(null);
-        setAtivo(Boolean.FALSE);
+        setAtivo(Boolean.TRUE);
     }
 
     public String getTab() {

@@ -12,8 +12,8 @@ public class SignalList extends DataList<Signal> {
 
     private static final long serialVersionUID = 1L;
     
-    private static final String  DEFAULT_JPQL = "select s from Signal s";
-    private static final String  DEFAULT_ORDER = "s.nome";
+    private static final String  DEFAULT_JPQL = "select o from Signal o";
+    private static final String  DEFAULT_ORDER = "o.nome";
     
     private String codigo;
     private String nome;

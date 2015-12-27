@@ -1,7 +1,5 @@
 package br.com.infox.epp.processo.service;
 
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
-
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
@@ -22,6 +20,7 @@ import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.assignment.LocalizacaoAssignment;
 import br.com.infox.epp.fluxo.manager.NaturezaManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
@@ -52,21 +51,29 @@ public class IniciarProcessoService implements Serializable {
             + "br.com.infox.ibpm.entity.Processo";
 
     public void iniciarProcesso(Processo processo) throws DAOException {
-        iniciarProcesso(processo, null);
+        iniciarProcesso(processo, null, null);
+    }
+    
+    public void iniciarProcesso(Processo processo, String transitionName) throws DAOException {
+        iniciarProcesso(processo, null, transitionName);
     }
     
     public void iniciarProcesso(Processo processo, Map<String, Object> variaveis) throws DAOException {
-    	processo.setDataInicio(new Date());
-    	if (processo.getIdProcesso() == null) {
-    		processoManager.persist(processo);
-    	}
-    	org.jbpm.graph.exe.ProcessInstance processInstance = criarProcessoJbpm(processo, processo.getNaturezaCategoriaFluxo().getFluxo().getFluxo());
-    	processo.setIdJbpm(processInstance.getId());
-    	processoManager.flush();
-        inicializarProcessoJbpm(processo, processInstance, variaveis);
+        iniciarProcesso(processo, variaveis, null);
+    }
+    
+    public void iniciarProcesso(Processo processo, Map<String, Object> variaveis, String transitionName) throws DAOException {
+        processo.setDataInicio(new Date());
+        if (processo.getIdProcesso() == null) {
+            processoManager.persist(processo);
+        }
+        org.jbpm.graph.exe.ProcessInstance processInstance = criarProcessoJbpm(processo, processo.getNaturezaCategoriaFluxo().getFluxo().getFluxo());
+        processo.setIdJbpm(processInstance.getId());
+        processoManager.flush();
+        inicializarProcessoJbpm(processo, processInstance, variaveis, transitionName);
         processo.setNumeroProcesso(String.valueOf(processo.getIdProcesso()));
         if (processo.getProcessoPai() == null) {
-        	processInstance.getContextInstance().setVariable(VariaveisJbpmProcessosGerais.NUMERO_PROCESSO, processo.getNumeroProcesso());
+            processInstance.getContextInstance().setVariable(VariaveisJbpmProcessosGerais.NUMERO_PROCESSO, processo.getNumeroProcesso());
         }
         naturezaManager.lockNatureza(processo.getNaturezaCategoriaFluxo().getNatureza());
         processoManager.update(processo);
@@ -80,9 +87,13 @@ public class IniciarProcessoService implements Serializable {
         return processInstance;
     }
     
-    private void inicializarProcessoJbpm(Processo processo, org.jbpm.graph.exe.ProcessInstance processoJbpm, Map<String, Object> variaveis) {
+    private void inicializarProcessoJbpm(Processo processo, org.jbpm.graph.exe.ProcessInstance processoJbpm, Map<String, Object> variaveis, String transitionName) {
         iniciaVariaveisProcesso(processo, variaveis, processoJbpm);
-        processoJbpm.signal();
+        if (StringUtil.isEmpty(transitionName)) {
+            processoJbpm.signal();
+        } else {
+            processoJbpm.signal(transitionName);
+        }
         boolean iniciouTarefa = iniciaPrimeiraTarefa(processoJbpm);
         if (iniciouTarefa) {
         	atribuiSwimlaneTarefa(processoJbpm);
@@ -113,7 +124,6 @@ public class IniciarProcessoService implements Serializable {
         ManagedJbpmContext.instance().getSession().flush();
     }
     
-    @SuppressWarnings(UNCHECKED)
     private boolean iniciaPrimeiraTarefa(org.jbpm.graph.exe.ProcessInstance processInstance) {
         Collection<org.jbpm.taskmgmt.exe.TaskInstance> taskInstances = processInstance.getTaskMgmtInstance().getTaskInstances();
         org.jbpm.taskmgmt.exe.TaskInstance taskInstance = null;
