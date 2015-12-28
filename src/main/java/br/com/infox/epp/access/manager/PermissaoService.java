@@ -23,10 +23,9 @@ public class PermissaoService extends Manager<PermissaoDAO, Permissao> {
     public Boolean papelPossuiPermissaoParaRecurso(Papel papel, String identificadorRecurso) {
         List<Permissao> permissoes = getDao().getByAlvo(identificadorRecurso);
         for (Permissao permissao : permissoes) {
-            List<String> herdeiros = papelManager.getIdentificadoresPapeisHerdeiros(permissao.getDestinatario());
-            if (herdeiros.contains(papel.getIdentificador())) {
-                return true;
-            }
+        	if (papelManager.isPapelHerdeiro(papel.getIdentificador(), permissao.getDestinatario())) {
+        		return true;
+        	}
         }
         return false;
     }
