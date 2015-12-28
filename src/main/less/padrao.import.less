@@ -241,7 +241,7 @@ h1 {
   margin: 0px;
 
   padding: 0px;
-  color: #000;
+  color: @base-label-color;  
   display: block;
 }
 .name {
@@ -695,7 +695,6 @@ span.rf-ds-btn {
 
 .fluxo-div {
 	font-weight:bold; 
-	color: #000;
 	text-transform: uppercase;
 }
 
@@ -727,7 +726,8 @@ span.rf-ds-btn {
 }
 
 .fluxo-sel {
-	background-color: #A0C991;
+	background-color: @bg-color-item-selecionado;
+	color: @base-label-color-selecionado;
 }
 
 .p-caixas-b {
@@ -1013,12 +1013,12 @@ option {
 
 /* ABAS */
 .ui-widget-header>.ui-state-default.ui-corner-top.ui-tabs-active.ui-state-active {
-  color: @menu-bg-color;
-  background-color: @menu-txt-color;
+  color: @base-label-color-selecionado;
+  background-color: @base-label-color;
 }
 /* texto */
 .ui-widget-header>.ui-state-default.ui-corner-top.ui-tabs-active.ui-state-active>a {
-  color: @menu-bg-color;
+  color: @base-label-color-selecionado;
 }
 
 /*Aba inativa*/
@@ -1056,7 +1056,8 @@ option {
   display:none;
 }
 .rf-trn-cnt.rf-trn-sel {
-  background-color:@menu-bg-color;
+  background-color:@bg-color-item-selecionado;
+  color: @base-label-color-selecionado;
 }
 .rf-insl > .rf-insl-trc-cntr > .rf-insl-trc {
   background-image:none;
@@ -1112,4 +1113,8 @@ option {
     text-align: center;
     
     font: 12px Arial, sans-serif;
+}
+
+div.rf-pp-hdr-cnt {
+  color: @base-label-color;
 }

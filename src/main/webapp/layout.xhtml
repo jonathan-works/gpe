@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+    <ui:define name="body">
+
+        <rich:panel id="layoutPanel" styleClass="content-block"
+            header="#{infoxMessages['layout.titlePage']}">
+
+            <h:form>
+                <wi:selectOneMenuEntity id="skins" required="true"
+                    label="#{infoxMessages['layout.titlePage']}"
+                    value="#{layoutView.skinPadrao}"
+                    items="#{layoutView.skins}">
+                </wi:selectOneMenuEntity>
+
+                <div>
+                    <h:commandButton id="gravar"
+                        value="#{infoxMessages['crud.update']}"
+                        action="#{layoutView.save()}" render="@all"
+                        execute="@form" styleClass="buttons" />
+                </div>
+            </h:form>
+
+        </rich:panel>
+
+        <rich:panel id="painelLogoTopo" styleClass="content-block"
+            style="margin-top:1em;"
+            header="#{infoxMessages['layout.logotipoTopo']}">
+            <h:form enctype="multipart/form-data" acceptcharset="UTF-8">
+                <rich:fileUpload id="uploadLogoTopo" execute="@this"
+                    status=":status" limitRender="true" required="true"
+                    onbegin="infox.showLoading('Fazendo upload de arquivos..')"
+                    fileUploadListener="#{layoutView.processUploadLogoTopo}"
+                    addLabel="#{infoxMessages['processoDocumento.addLabel']}"
+                    clearAllLabel="#{infoxMessages['processoDocumento.clearAllLabel']}"
+                    clearLabel="#{infoxMessages['processoDocumento.clearLabel']}"
+                    doneLabel="#{infoxMessages['processoDocumento.doneLabel']}"
+                    uploadLabel="#{infoxMessages['processoDocumento.uploadLabel']}"
+                    sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}"
+                    maxFilesQuantity="1" listHeight="50px"
+                    immediateUpload="true" noDuplicate="true"
+                    render=":pageBodyDialogMessage"
+                    acceptedTypes=".png, .gif, .bmp, .jpg"
+                    onuploadcomplete="infox.hideLoading();"
+                    ontyperejected="alert('Extensão de arquivo inválida');"
+                    onclear="clearUploadFile();">
+                </rich:fileUpload>
+            </h:form>
+            <h:form>
+                <h:commandButton id="inserirLogotipoTopo"
+                    value="#{infoxMessages['crud.update']}"
+                    action="#{layoutView.persistLogoTopo()}"
+                    render="painelLogoTopo" execute="@none"
+                    styleClass="buttons" />
+            </h:form>
+        </rich:panel>
+
+        <rich:panel id="painelLogoLogin" styleClass="content-block"
+            style="margin-top:1em;"
+            header="#{infoxMessages['layout.logotipoLogin']}">
+            <div id="anexo"></div>
+            <h:form enctype="multipart/form-data" acceptcharset="UTF-8">
+                <rich:fileUpload id="uploadLogoLogin" execute="@this"
+                    status=":status" limitRender="true" required="true"
+                    onbegin="infox.showLoading('Fazendo upload de arquivos..')"
+                    fileUploadListener="#{layoutView.processUploadLogoLogin}"
+                    addLabel="#{infoxMessages['processoDocumento.addLabel']}"
+                    clearAllLabel="#{infoxMessages['processoDocumento.clearAllLabel']}"
+                    clearLabel="#{infoxMessages['processoDocumento.clearLabel']}"
+                    doneLabel="#{infoxMessages['processoDocumento.doneLabel']}"
+                    uploadLabel="#{infoxMessages['processoDocumento.uploadLabel']}"
+                    sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}"
+                    maxFilesQuantity="1" listHeight="50px"
+                    immediateUpload="true" noDuplicate="true"
+                    render=":pageBodyDialogMessage"
+                    acceptedTypes=".png, .gif, .bmp, .jpg"
+                    onuploadcomplete="infox.hideLoading();"
+                    ontyperejected="alert('Extensão de arquivo inválida');"
+                    onclear="clearUploadFile();">
+                </rich:fileUpload>
+            </h:form>
+            <div>
+                <h:form>
+                    <h:commandButton id="inserirLogotipo"
+                        value="#{infoxMessages['crud.update']}"
+                        action="#{layoutView.persistLogoLogin()}"
+                        render="painelLogoLogin" execute="@none"
+                        styleClass="buttons" />
+                </h:form>
+            </div>
+        </rich:panel>
+
+    </ui:define>
+</ui:composition>
