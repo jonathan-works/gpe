@@ -47,8 +47,11 @@
     	<wi:columnOutputText columnId="nome" columnHeader="${infoxMessages['process.events.listener.nome']}" 
     		value="#{nodeFitter.getSignalLabel(row)}"/>
     	
-    	<wi:columnOutputText columnId="configuracao" columnHeader="${infoxMessages['process.events.listener.configuracao']}" 
-    		value="#{nodeFitter.getSignalConfigurationLabel(row)}"/>
+    	<wi:columnOutputText columnId="transicao" columnHeader="${infoxMessages['process.events.listener.transicao']}" 
+    		value="#{nodeFitter.getSignalTransition(row)}"/>
+    		
+    	<wi:columnOutputText columnId="condicao" columnHeader="${infoxMessages['process.events.listener.condicao']}" 
+    		value="#{nodeFitter.getSignalCondition(row)}"/>
     
     </wi:dataTable>
     

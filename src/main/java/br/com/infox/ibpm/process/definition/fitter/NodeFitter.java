@@ -654,9 +654,14 @@ public class NodeFitter extends Fitter implements Serializable {
         return "-";
     }
     
-    public String getSignalConfigurationLabel(Event event) {
+    public String getSignalTransition(Event event) {
         SignalConfigurationBean signalConfigurationBean = SignalConfigurationBean.fromJson(event.getConfiguration());
-        return signalConfigurationBean.getConfigurationLabel(currentNode);
+        return currentNode.getLeavingTransition(signalConfigurationBean.getTransitionKey()).getName();
+    }
+    
+    public String getSignalCondition(Event event) {
+        SignalConfigurationBean signalConfigurationBean = SignalConfigurationBean.fromJson(event.getConfiguration());
+        return signalConfigurationBean.getCondition();
     }
     
     public Collection<Event> getSignalEvents() {
