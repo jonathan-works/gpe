@@ -12,6 +12,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.Relacionamento;
 import br.com.infox.epp.processo.entity.RelacionamentoProcesso;
@@ -57,10 +58,16 @@ public class RelacionamentoDAO extends DAO<Relacionamento> {
         return retorno;
     }
     
+    @Override
+    public Relacionamento persist(Relacionamento object) throws DAOException {
+    	Relacionamento retorno = super.persist(object);
+    	getEntityManager().refresh(retorno);
+    	return retorno;
+    }
+    
 	protected void remove(RelacionamentoProcessoInterno rp1, RelacionamentoProcesso rp2) {
 		Relacionamento relacionamento = getRelacionamento(rp1, rp2);
 		EntityManager em = getEntityManager();
-		em.refresh(relacionamento);
 		
 		for(RelacionamentoProcesso rp : relacionamento.getRelacionamentosProcessos()) {
 			em.remove(rp);
