@@ -170,7 +170,7 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     }
     
     public boolean isDocumentoInclusoPorHierarquia(Documento documento, String identificadorPapelBase) {
-        return isDocumentoInclusoPorPapeis(documento, papelManager.getIdentificadoresPapeisHerdeiros(identificadorPapelBase));
+    	return papelManager.isPapelHerdeiro(documento.getPerfilTemplate().getPapel().getIdentificador(), identificadorPapelBase);
     }
 
     public boolean isDocumentoInclusoPorPapeis(Documento documento, List<String> identificadoresPapeis) {
