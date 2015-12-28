@@ -10,6 +10,7 @@ public class PopulateRoleMembersListOperation extends RunAsOperation {
     private final String role;
     private final List<Principal> membersList;
 
+    //Considera apenas o primeiro nível da hierarquia de papéis
     public PopulateRoleMembersListOperation(final String role,
             final List<Principal> membersList) {
         super(true);

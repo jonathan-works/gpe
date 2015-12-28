@@ -115,8 +115,7 @@ public class DocumentoComunicacaoAction implements Serializable {
 		modeloComunicacao.getDocumentos().add(documentoModelo);
 		documentoDisponivelComunicacaoList.adicionarIdDocumento(documento.getId());
 		if (!possuiDocumentoInclusoPorUsuarioInterno) {
-			List<String> papeisUsuarioInterno = papelManager.getIdentificadoresPapeisHerdeiros(Parametros.PAPEL_USUARIO_INTERNO.getValue());
-			possuiDocumentoInclusoPorUsuarioInterno = papeisUsuarioInterno.contains(documento.getPerfilTemplate().getPapel().getIdentificador());
+			possuiDocumentoInclusoPorUsuarioInterno = papelManager.isPapelHerdeiro(documento.getPerfilTemplate().getPapel().getIdentificador(), Parametros.PAPEL_USUARIO_INTERNO.getValue());
 		}
 	}
 	

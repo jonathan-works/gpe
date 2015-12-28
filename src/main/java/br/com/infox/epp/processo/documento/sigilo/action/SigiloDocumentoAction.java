@@ -83,11 +83,11 @@ public class SigiloDocumentoAction implements Serializable {
 
     public String getViewUrl(Documento documento) {
         if (documento.getDocumentoBin().isBinario()) {
-            return MessageFormat.format(URL_DOWNLOAD_BINARIO, pathResolver.getContextPath(), documento.getId());
+            return MessageFormat.format(URL_DOWNLOAD_BINARIO, pathResolver.getContextPath(), Integer.toString(documento.getId()));
         }
-        return MessageFormat.format(URL_DOWNLOAD_HTML, pathResolver.getContextPath(), documento.getId());
+        return MessageFormat.format(URL_DOWNLOAD_HTML, pathResolver.getContextPath(), Integer.toString(documento.getId()));
     }
-
+    
     public boolean isSigiloso(Documento documento) {
         return sigiloDocumentoManager.isSigiloso(documento.getId());
     }

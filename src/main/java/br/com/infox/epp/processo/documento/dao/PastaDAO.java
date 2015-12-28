@@ -15,6 +15,7 @@ import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_NOME;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_NUMERO_DOCUMENTO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_PASTA;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_PROCESSO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_USUARIO_PERMISSAO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.TOTAL_DOCUMENTOS_PASTA_QUERY;
 
 import java.util.HashMap;
@@ -47,6 +48,7 @@ public class PastaDAO extends DAO<Pasta> {
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put(PARAM_PASTA, pasta);
 		parameters.put(PARAM_LOCALIZACAO, Authenticator.getLocalizacaoAtual());
+		parameters.put(PARAM_USUARIO_PERMISSAO, Authenticator.getUsuarioLogado());
 		return ((Number) getSingleResult(TOTAL_DOCUMENTOS_PASTA_QUERY + FILTER_SUFICIENTEMENTE_ASSINADO_OU_SETOR + FILTER_EXCLUIDO + FILTER_SIGILO, parameters)).intValue();
 	}
 	
@@ -54,6 +56,7 @@ public class PastaDAO extends DAO<Pasta> {
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put(PARAM_PASTA, pasta);
 		parameters.put(PARAM_LOCALIZACAO, Authenticator.getLocalizacaoAtual());
+		parameters.put(PARAM_USUARIO_PERMISSAO, Authenticator.getUsuarioLogado());
 		String baseQuery = appendDocumentoFilters(documentoFilter, parameters, TOTAL_DOCUMENTOS_PASTA_QUERY);
 		String query = baseQuery + FILTER_SUFICIENTEMENTE_ASSINADO_OU_SETOR + FILTER_SIGILO;
 		if (semExcluidos) {
