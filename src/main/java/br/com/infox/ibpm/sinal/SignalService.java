@@ -32,7 +32,6 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 
-@Named
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class SignalService {
@@ -81,14 +80,15 @@ public class SignalService {
     
     private void endSubprocessListening(ProcessInstance processInstance, String eventType) {
         eventType = Event.getSubprocessListenerEventType(eventType);
-        while (processInstance != null && !processInstance.hasEnded()) {
-            List<SignalNodeBean> signalNodes = getSubprocessListening(processInstance.getId(), eventType);
+        List<Long> subprocessInstanceIds = getSubprocessInstanceIds(Arrays.asList(processInstance.getId()));
+        while (!subprocessInstanceIds.isEmpty()) {
+            List<SignalNodeBean> signalNodes = getSubprocessListening(subprocessInstanceIds, eventType);
             for (SignalNodeBean signalNodeBean : signalNodes) {
                 if (signalNodeBean.canExecute()) {
                     processoManager.cancelJbpmSubprocess(signalNodeBean.getId(), signalNodeBean.getListenerConfiguration().getTransitionKey());
                 }
             }
-            processInstance = processInstance.getRootToken().getSubProcessInstance();
+            subprocessInstanceIds = getSubprocessInstanceIds(subprocessInstanceIds);
         }
     }
     
@@ -107,7 +107,7 @@ public class SignalService {
         List<SignalNodeBean> signalNodes = getStartStateListening(eventType);
         for (SignalNodeBean signalNodeBean : signalNodes) {
             if (signalNodeBean.canExecute()) {
-                ProcessDefinition processDefinition = getProcessDefinitionById(signalNodeBean.getId());
+                ProcessDefinition processDefinition = getEntityManager().find(ProcessDefinition.class, signalNodeBean.getId());
                 processoManager.startJbpmProcess(processDefinition.getName(), signalNodeBean.getListenerConfiguration().getTransitionKey());
             }
         }
@@ -134,22 +134,19 @@ public class SignalService {
         return getEntityManager().createQuery(cq).getResultList();
     }
 
-    private List<SignalNodeBean> getSubprocessListening(Long processInstanceId, String eventType) {
+    private List<SignalNodeBean> getSubprocessListening(List<Long> subprocessInstanceIds, String eventType) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<SignalNodeBean> cq = cb.createQuery(SignalNodeBean.class);
-        Root<Token> token = cq.from(Token.class);
-        Join<Token, ProcessInstance> process = token.join("processInstance", JoinType.INNER);
+        Root<ProcessInstance> process = cq.from(ProcessInstance.class);
+        Join<ProcessInstance, Token> token = process.join("rootToken", JoinType.INNER);
         Join<Token, Node> node = token.join("node", JoinType.INNER);
         Join<Node, Event> event = node.join("events", JoinType.INNER);
-        Join<Token, ProcessInstance> subprocess = token.join("subProcessInstance", JoinType.INNER);
-        cq.select(cb.construct(SignalNodeBean.class, subprocess.get("id"), event.get("configuration")));
+        cq.select(cb.construct(SignalNodeBean.class, process.get("id"), event.get("configuration")));
         cq.where(
-            cb.equal(process.get("id"), processInstanceId),
+            process.get("id").in(subprocessInstanceIds),
             cb.isNotNull(token.get("nodeEnter")),
             cb.isNull(token.get("end")),
             cb.equal(event.get("eventType"), eventType),
-            cb.isNull(subprocess.get("end")),
-            cb.isNotNull(subprocess.get("start")),
             cb.isFalse(token.<Boolean>get("isSuspended")),
             cb.isNull(process.get("end"))
         );
@@ -183,9 +180,11 @@ public class SignalService {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
         Root<Token> token = query.from(Token.class);
+        Join<Token, ProcessInstance> process = token.join("processInstance", JoinType.INNER);
         query.where(
             cb.isNotNull(token.get("subProcessInstance")),
-            token.get("processInstance").get("id").in(subProcessInstanceParentIds)
+            cb.isNull(process.get("end")),
+            process.get("id").in(subProcessInstanceParentIds)
         );
         query.select(token.get("subProcessInstance").<Long>get("id"));
         subProcessInstanceParentIds = entityManager.createQuery(query).getResultList();
@@ -194,12 +193,18 @@ public class SignalService {
         }
     }
     
-    private ProcessDefinition getProcessDefinitionById(Long id) {
+    private List<Long> getSubprocessInstanceIds(List<Long> parentProcessInstanceIds) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<ProcessDefinition> cq = cb.createQuery(ProcessDefinition.class);
-        Root<ProcessDefinition> from = cq.from(ProcessDefinition.class);
-        cq.where(cb.equal(from.get("id"), id));
-        return getEntityManager().createQuery(cq).getSingleResult();
+        CriteriaQuery<Long> query = cb.createQuery(Long.class);
+        Root<Token> token = query.from(Token.class);
+        Join<Token, ProcessInstance> process = token.join("processInstance", JoinType.INNER);
+        query.where(
+            cb.isNotNull(token.get("subProcessInstance")),
+            cb.isNull(process.get("end")),
+            process.get("id").in(parentProcessInstanceIds)
+        );
+        query.select(token.get("subProcessInstance").<Long>get("id"));
+        return getEntityManager().createQuery(query).getResultList();
     }
     
     private List<Long> getAllProcessInstanceIds(Long parentProcessInstanceId) {
