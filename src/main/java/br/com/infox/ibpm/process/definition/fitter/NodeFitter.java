@@ -57,6 +57,7 @@ import br.com.infox.ibpm.sinal.SignalConfigurationBean;
 import br.com.infox.ibpm.sinal.SignalDao;
 import br.com.infox.ibpm.task.handler.TaskHandler;
 import br.com.infox.ibpm.transition.TransitionHandler;
+import br.com.infox.jsf.util.JsfUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
@@ -688,6 +689,7 @@ public class NodeFitter extends Fitter implements Serializable {
         SignalConfigurationBean signalConfigurationBean = new SignalConfigurationBean(transitionKey, condition);
         event.setConfiguration(signalConfigurationBean.toJson());
         currentNode.addEvent(event);
+        JsfUtil.clear(inputNome, inputTransicao, inputCondition);
     }
     
     public void removeSignal(Event event) {
