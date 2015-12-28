@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.comunicacao.envio.action;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,6 +17,8 @@ import javax.persistence.NonUniqueResultException;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.taskmgmt.exe.TaskInstance;
+
+import com.lowagie.text.DocumentException;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
@@ -83,7 +86,7 @@ public class EnvioComunicacaoInternaView implements Serializable {
     private Localizacao localizacaoDestino;
     private PerfilTemplate perfilDestino;
     private PessoaFisica pessoaDestinatario;
-    private Boolean particular;
+    private Boolean individual;
     
     //Variáveis de tela para o documento da Comunicação
     private ClassificacaoDocumento classificacaoDocumento;
@@ -102,6 +105,7 @@ public class EnvioComunicacaoInternaView implements Serializable {
         loadModeloComunicacaoInterna();
         loadTiposComunicacao();
         loadClassificacoesDocumento();
+        loadModelosDocumento();
         initLocalizacaoRaiz();
         loadComunicacaoExpedida();
     }
@@ -205,10 +209,10 @@ public class EnvioComunicacaoInternaView implements Serializable {
     }
     
     private void loadModelosDocumento() {
-        if (getTipoComunicacao() == null || getTipoComunicacao().getTipoModeloDocumento() == null) {
-            modelosDocumento = modeloDocumentoManager.getModeloDocumentoByPapel(Authenticator.getPapelAtual());
-        } else {
+        if (getTipoComunicacao() != null && getTipoComunicacao().getTipoModeloDocumento() != null) {
             modelosDocumento = getTipoComunicacao().getTipoModeloDocumento().getModeloDocumentoList();
+        } else {
+            modelosDocumento = modeloDocumentoManager.getModeloDocumentoByPapel(Authenticator.getPapelAtual());
         }
         if (modelosDocumento.size() == 1) {
             setModeloDocumento(modelosDocumento.get(0));
@@ -216,25 +220,28 @@ public class EnvioComunicacaoInternaView implements Serializable {
         }
     }
     
-    @ExceptionHandled(value = MethodType.PERSIST)
+    @ExceptionHandled(value = MethodType.PERSIST, createdMessage="Destinatário inserido com sucesso!")
     public void adicionarDestinatarioComunicacao() {
         if (getModeloComunicacao().getId() == null) {
             throw new BusinessException("Necessário um tipo de Comunicação");
         } else {
             DestinatarioModeloComunicacao destinatario = new DestinatarioModeloComunicacao();
-            destinatario.setComunicacaoParticular(getParticular());
-            destinatario.setDestinatario(getPessoaDestinatario());
-            destinatario.setDestino(getLocalizacaoDestino());
+            destinatario.setIndividual(getIndividual());
+            if (getPessoaDestinatario() != null) {
+                destinatario.setDestinatario(getPessoaDestinatario()); 
+            } else {
+                destinatario.setDestino(getLocalizacaoDestino());
+                destinatario.setPerfilDestino(getPerfilDestino());
+            }
             destinatario.setMeioExpedicao(MeioExpedicao.SI);
             destinatario.setModeloComunicacao(getModeloComunicacao());
-            destinatario.setPerfilDestino(getPerfilDestino());
             comunicacaoInternaService.gravarDestinatario(destinatario);
             clearDestinatarioProperties();
         }
     }
     
     private void clearDestinatarioProperties() {
-        setParticular(Boolean.FALSE);
+        setIndividual(Boolean.FALSE);
         setPessoaDestinatario(null);
         setLocalizacaoDestino(null);
         setPerfilDestino(null);
@@ -245,6 +252,33 @@ public class EnvioComunicacaoInternaView implements Serializable {
     public void removerDestinatario(DestinatarioModeloComunicacao destinatario) {
         destinatarioComunicacaoService.removeDestinatarioModeloComunicacao(destinatario);
         getModeloComunicacao().getDestinatarios().remove(destinatario);
+    }
+    
+    @ExceptionHandled(value = MethodType.UPDATE)
+    public void gravar() {
+        getModeloComunicacao().setMinuta(getMinuta());
+        getModeloComunicacao().setModeloDocumento(getModeloDocumento());
+        getModeloComunicacao().setClassificacaoComunicacao(getClassificacaoDocumento());
+        getModeloComunicacao().setTextoComunicacao(getTextoDocumento());
+        modeloComunicacaoManager.update(getModeloComunicacao());
+    }
+    
+    public void enviar() {
+        try {
+            comunicacaoInternaService.enviarComunicacao(getModeloComunicacao());
+        } catch (BusinessException e) {
+            FacesMessages.instance().add(e.getMessage());
+        } catch (DAOException | IOException | DocumentException e) {
+            LOGGER.log(Level.SEVERE, "enviarComunicacaoInterna", e);
+            FacesMessages.instance().add(e.getMessage());
+        }
+    }
+    
+    public void clearDestinoDestinatario() {
+        setIndividual(Boolean.FALSE);
+        setLocalizacaoDestino(null);
+        setPerfilDestino(null);
+        setPessoaDestinatario(null);
     }
     
     public List<ClassificacaoDocumento> getClassificacoes() {
@@ -267,12 +301,12 @@ public class EnvioComunicacaoInternaView implements Serializable {
         tiposComunicacao = tipoComunicacaoManager.listTiposComunicacaoAtivos();
     }
     
-    public Boolean getParticular() {
-        return particular;
+    public Boolean getIndividual() {
+        return individual;
     }
 
-    public void setParticular(Boolean particular) {
-        this.particular = particular;
+    public void setIndividual(Boolean individual) {
+        this.individual = individual;
     }
 
     public TipoComunicacao getTipoComunicacao() {
@@ -366,6 +400,5 @@ public class EnvioComunicacaoInternaView implements Serializable {
     public LocalizacaoSubTreeHandler getLocalizacaoSubTree() {
         return ComponentUtil.getComponent(LocalizacaoSubTreeHandler.NAME, ScopeType.PAGE);
     }
-    
 
 }

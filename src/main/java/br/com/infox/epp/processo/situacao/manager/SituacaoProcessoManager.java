@@ -40,7 +40,10 @@ public class SituacaoProcessoManager {
 			} else if (TipoProcesso.COMUNICACAO_NAO_ELETRONICA.equals(tipoProcesso)) {
 				taskBeanList = situacaoProcessoDAO.getTaskIntances(tipoProcesso, true, numeroProcessoRoot);
 				createFluxoBeanList(result, tipoProcesso, taskBeanList, false);
-			} else {
+			} else if (TipoProcesso.COMUNICACAO_INTERNA.equals(tipoProcesso)) {
+                tupleList = situacaoProcessoDAO.getRootList(tipoProcesso, true, numeroProcessoRoot);
+                createFluxoBeanList(result, tipoProcesso, tupleList, false);
+            } else {
 				taskBeanList = situacaoProcessoDAO.getTaskIntances(tipoProcesso, false, numeroProcessoRoot);
 				createFluxoBeanList(result, tipoProcesso, taskBeanList, false);
 			}
