@@ -18,7 +18,9 @@
             label="#{infoxMessages['process.expiration.transition']}" valueItems="#{nodeFitter.currentNode.leavingTransitions}" 
             showLabelSelecione="true" required="true" showRequired="true" optionLabel="#{item.name}" optionValue="#{item.key}"/>
             
-        <wi:inputText id="conditionListener" label="Condição" required="false" />
+        <wi:inputText id="conditionListener" label="Condição" required="false">
+        	<f:validator validatorId="javax.faces.elValidator" />
+        </wi:inputText>
     	
     	<a:commandButton limitRender="true" render="formListeners listenersDatatable" execute="@form" styleClass="buttons" 
     		value="${infoxMessages['process.events.listener.adicionar']}" actionListener="#{nodeFitter.addSignal}" resetValues="true" style="margin-top: 1em;" >

@@ -36,7 +36,6 @@ import org.jbpm.graph.node.NodeTypes;
 import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
-import org.jbpm.taskmgmt.def.Task;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.cdi.ViewScoped;
@@ -224,13 +223,7 @@ public class NodeFitter extends Fitter implements Serializable {
     }
     
     public void removeListener(Node node, Transition transition) {
-        Map<String, Event> events = null;
-        if (node instanceof TaskNode) {
-            Task task = ((TaskNode) node).getTasks().iterator().next();
-            events = task.getEvents();
-        } else {
-            events = node.getEvents();
-        }
+        Map<String, Event> events = node.getEvents();
         if (events == null) return;
         List<Event> removeEvents = new ArrayList<>();
         for (Event event : events.values()) {
