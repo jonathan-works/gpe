@@ -23,6 +23,7 @@ import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.exe.Token;
+import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
@@ -153,12 +154,13 @@ public class SignalService {
     }
     
     private List<SignalNodeBean> getTasksListening(Long processInstanceId, String eventType) {
-        EntityManager entityManager = getEntityManager();
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<SignalNodeBean> query = cb.createQuery(SignalNodeBean.class);
         Root<TaskInstance> taskInstance = query.from(TaskInstance.class);
-        Join<TaskInstance, Task> task = taskInstance.join("task");
-        Join<Task, Event> event = task.join("events");
+        Join<TaskInstance, ProcessInstance> process = taskInstance.join("processInstance", JoinType.INNER);
+        Join<TaskInstance, Task> task = taskInstance.join("task", JoinType.INNER);
+        Join<Task, TaskNode> taskNode = task.join("taskNode", JoinType.INNER);
+        Join<TaskNode, Event> event = taskNode.join("events", JoinType.INNER);
         query.select(cb.construct(SignalNodeBean.class, taskInstance.get("id"), event.get("configuration")));
         
         List<Long> processInstanceIds = getAllProcessInstanceIds(processInstanceId);
@@ -168,9 +170,10 @@ public class SignalService {
             cb.isFalse(taskInstance.<Boolean>get("isSuspended")),
             cb.isTrue(taskInstance.<Boolean>get("isOpen")),
             cb.equal(event.get("eventType"), eventType),
+            cb.isNull(process.get("end")),
             taskInstance.get("processInstance").<Long>get("id").in(processInstanceIds)
         );
-        return entityManager.createQuery(query).getResultList();
+        return getEntityManager().createQuery(query).getResultList();
     }
     
     private void listSubprocessInstanceIds(List<Long> subProcessInstanceParentIds, List<Long> subProcessInstanceIds) {
