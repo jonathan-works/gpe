@@ -363,7 +363,10 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         BusinessProcess.instance().setTaskId(null);
         ProcessInstance processInstanceForUpdate = ManagedJbpmContext.instance().getProcessInstanceForUpdate(subProcessInstanceId);
         processInstanceForUpdate.end(transicao);
-        processInstanceForUpdate.getTaskMgmtInstance().endAll();
+        while (processInstanceForUpdate != null) {
+            processInstanceForUpdate.getTaskMgmtInstance().endAll();
+            processInstanceForUpdate = processInstanceForUpdate.getRootToken().getSubProcessInstance();
+        }
         BusinessProcess.instance().setProcessId(processIdOriginal);
         BusinessProcess.instance().setTaskId(taskIdOriginal);
     }
