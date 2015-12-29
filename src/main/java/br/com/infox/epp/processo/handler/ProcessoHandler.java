@@ -100,7 +100,6 @@ public class ProcessoHandler implements Serializable {
     }
     
     
-    @SuppressWarnings("unchecked")
 	private List<TaskInstance> getTaskInstanceListMovimentacoes(Processo processo) {
 		List<org.jbpm.graph.exe.ProcessInstance> processInstances = getProcessosJbpm(processo);
 		List<TaskInstance> taskInstanceList = new ArrayList<>();
