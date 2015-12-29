@@ -138,7 +138,7 @@ public class SignalService {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<SignalNodeBean> cq = cb.createQuery(SignalNodeBean.class);
         Root<ProcessInstance> process = cq.from(ProcessInstance.class);
-        Join<ProcessInstance, Token> token = process.join("rootToken", JoinType.INNER);
+        Join<ProcessInstance, Token> token = process.join("superProcessToken", JoinType.INNER);
         Join<Token, Node> node = token.join("node", JoinType.INNER);
         Join<Node, Event> event = node.join("events", JoinType.INNER);
         cq.select(cb.construct(SignalNodeBean.class, process.get("id"), event.get("configuration")));
