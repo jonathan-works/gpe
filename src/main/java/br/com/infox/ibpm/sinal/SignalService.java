@@ -97,7 +97,7 @@ public class SignalService {
         List<SignalNodeBean> signalNodes = getTasksListening(processInstanceId, eventType);
         for (SignalNodeBean signalNodeBean : signalNodes) {
             if (signalNodeBean.canExecute()) {
-                processoManager.movimentarProcessoJBPM(signalNodeBean.getId(), signalNodeBean.getListenerConfiguration().getTransitionKey());
+                processoManager.cancelTaskInstanceJbpm(signalNodeBean.getId(), signalNodeBean.getListenerConfiguration().getTransitionKey());
             }
         }
     }

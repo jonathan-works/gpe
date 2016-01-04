@@ -356,6 +356,17 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 		BusinessProcess.instance().setTaskId(taskIdOriginal);
 	}
 	
+	public void cancelTaskInstanceJbpm(Long taskInstanceId, String transicao) {
+	    Long processIdOriginal = BusinessProcess.instance().getProcessId();
+        Long taskIdOriginal = BusinessProcess.instance().getTaskId();
+        BusinessProcess.instance().setProcessId(null);
+        BusinessProcess.instance().setTaskId(null);
+        TaskInstance taskInstanceForUpdate = ManagedJbpmContext.instance().getTaskInstanceForUpdate(taskInstanceId);
+        taskInstanceForUpdate.cancel(transicao);
+        BusinessProcess.instance().setProcessId(processIdOriginal);
+        BusinessProcess.instance().setTaskId(taskIdOriginal);
+	}
+	
 	public void cancelJbpmSubprocess(Long subProcessInstanceId, String transicao) throws DAOException {
         Long processIdOriginal = BusinessProcess.instance().getProcessId();
         Long taskIdOriginal = BusinessProcess.instance().getTaskId();
@@ -364,7 +375,7 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         ProcessInstance processInstanceForUpdate = ManagedJbpmContext.instance().getProcessInstanceForUpdate(subProcessInstanceId);
         processInstanceForUpdate.end(transicao);
         while (processInstanceForUpdate != null) {
-            processInstanceForUpdate.getTaskMgmtInstance().endAll();
+            processInstanceForUpdate.getTaskMgmtInstance().cancelAll();
             processInstanceForUpdate = processInstanceForUpdate.getRootToken().getSubProcessInstance();
         }
         BusinessProcess.instance().setProcessId(processIdOriginal);
