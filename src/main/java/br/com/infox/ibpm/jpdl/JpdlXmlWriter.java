@@ -219,7 +219,6 @@ public class JpdlXmlWriter {
         return newElement;
     }
 
-    @SuppressWarnings(UNCHECKED)
     private void writeNodes(Element parentElement, List<org.jbpm.graph.def.Node> nodes) {
         Iterator<org.jbpm.graph.def.Node> iter = nodes.iterator();
         while (iter.hasNext()) {
@@ -363,7 +362,6 @@ public class JpdlXmlWriter {
         writeEvents(element, node);
     }
 
-    @SuppressWarnings(UNCHECKED)
     private void writeTransitions(Element element, org.jbpm.graph.def.Node node) {
         if (node.getLeavingTransitionsMap() != null) {
             Iterator<Transition> iter = node.getLeavingTransitionsList().iterator();
