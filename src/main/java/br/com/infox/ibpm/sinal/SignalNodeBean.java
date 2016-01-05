@@ -16,10 +16,12 @@ public class SignalNodeBean implements Serializable {
 
 	private Long id;
 	private SignalConfigurationBean listenerConfiguration;
+	private DispatcherConfiguration signalDispatcherConfiguration;
 	
 	public SignalNodeBean(Long id, String jsonConfiguration) {
 		this.id = id;
 		this.listenerConfiguration = SignalConfigurationBean.fromJson(jsonConfiguration);
+		this.signalDispatcherConfiguration = createSignalDispatcherConfiguration();
 	}
 	
 	public Long getId() {
@@ -30,6 +32,10 @@ public class SignalNodeBean implements Serializable {
 		return listenerConfiguration;
 	}
     
+    public DispatcherConfiguration getSignalDispatcherConfiguration() {
+        return signalDispatcherConfiguration;
+    }
+
     public boolean canExecute() {
         return canExecute(ExecutionContext.currentExecutionContext());
     }
@@ -45,5 +51,13 @@ public class SignalNodeBean implements Serializable {
             LOGGER.log(Level.SEVERE, "", e);
             return false;
         }
+    }
+    
+    private static DispatcherConfiguration createSignalDispatcherConfiguration() {
+        ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
+        if (executionContext.getEvent() != null) {
+            return DispatcherConfiguration.fromJson(executionContext.getEvent().getConfiguration());
+        }
+        return null;
     }
 }

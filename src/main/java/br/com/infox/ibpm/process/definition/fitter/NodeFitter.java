@@ -626,11 +626,20 @@ public class NodeFitter extends Fitter implements Serializable {
 		return classificacoesDocumento;
 	}
     
-    public boolean canAddSignalToNode() {
+    public boolean canAddCatchSignalToNode() {
         if (currentNode == null) return false;
         return NodeTypeConstants.START_STATE.equals(getNodeType())
                 || NodeTypeConstants.TASK.equals(getNodeType())
                 || NodeTypeConstants.PROCESS_STATE.equals(getNodeType());
+    }
+    
+    public boolean canAddDispatcherSignalToNode() {
+        if (currentNode == null) return false;
+        return NodeTypeConstants.NODE.equals(getNodeType());
+    }
+    
+    public List<Signal> getSignals() {
+        return signals;
     }
     
     public List<Signal> getSinaisDisponiveis() {
@@ -665,7 +674,7 @@ public class NodeFitter extends Fitter implements Serializable {
         return signalConfigurationBean.getCondition();
     }
     
-    public Collection<Event> getSignalEvents() {
+    public Collection<Event> getCatchSignalEvents() {
         List<Event> listeners = new ArrayList<>();
         if (currentNode != null && currentNode.getEvents() != null) {
             for (Event event : currentNode.getEvents().values()) {
@@ -677,7 +686,34 @@ public class NodeFitter extends Fitter implements Serializable {
         return listeners;
     }
     
-    public void addSignal(ActionEvent actionEvent) {
+    public Collection<Event> getDispatchSignalEvents() {
+        List<Event> listeners = new ArrayList<>();
+        if (currentNode != null && currentNode.getEvents() != null) {
+            for (Event event : currentNode.getEvents().values()) {
+                if (event.isListener()) {
+                    listeners.add(event);
+                }
+            }
+        }
+        return listeners;
+    }
+    
+    public Event getDispatcherSignal() {
+        if (currentNode != null && currentNode.getEvents() != null) {
+            for (Event event : currentNode.getEvents().values()) {
+                if (Event.EVENTTYPE_DISPATCHER.equals(event.getEventType())) {
+                    return event;
+                }
+            }
+        }
+        return null;
+    }
+    
+    public void addDispatcherSignal(ActionEvent actionEvent) {
+        
+    }
+    
+    public void addCatchSignal(ActionEvent actionEvent) {
         Map<String, String> request = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         String inputNome = (String) actionEvent.getComponent().getAttributes().get("listenerValue");
         String inputTransicao = (String) actionEvent.getComponent().getAttributes().get("transitionValue");
@@ -692,7 +728,7 @@ public class NodeFitter extends Fitter implements Serializable {
         JsfUtil.clear(inputNome, inputTransicao, inputCondition);
     }
     
-    public void removeSignal(Event event) {
+    public void removeCatchSignal(Event event) {
         currentNode.removeEvent(event);
     }
     

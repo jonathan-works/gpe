@@ -75,7 +75,7 @@ public class SignalService {
         ProcessInstance processInstance = executionContext.getProcessInstance().getRoot();
         startStartStateListening(eventType);
         endSubprocessListening(processInstance, eventType);
-        movimentarTarefasListener(processInstance.getId(), eventType);
+        cancelarTarefasListener(processInstance.getId(), eventType);
     }
     
     private void endSubprocessListening(ProcessInstance processInstance, String eventType) {
@@ -92,7 +92,7 @@ public class SignalService {
         }
     }
     
-    private void movimentarTarefasListener(Long processInstanceId, String eventType) throws DAOException {
+    private void cancelarTarefasListener(Long processInstanceId, String eventType) throws DAOException {
         eventType = Event.getTaskListenerEventType(eventType);
         List<SignalNodeBean> signalNodes = getTasksListening(processInstanceId, eventType);
         for (SignalNodeBean signalNodeBean : signalNodes) {
