@@ -3,6 +3,7 @@ package br.com.infox.epp.layout.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -37,6 +39,8 @@ public class Resource {
 	@Size(max=LengthConstants.DESCRICAO_GRANDE)
 	private String path;
 	
+	@Basic(fetch=FetchType.LAZY)
+	@Lob
 	@NotNull
 	@Column(name="ob_recurso")
 	private byte[] recurso;
@@ -66,12 +70,12 @@ public class Resource {
 		this.path = path;
 	}
 
-	public byte[] getRecurso() {
+	public byte[] getResource() {
 		return recurso;
 	}
 
-	public void setRecurso(byte[] recurso) {
-		this.recurso = recurso;
+	public void setResource(byte[] resource) {
+		this.recurso = resource;
 	}
 
 	public Integer getId() {

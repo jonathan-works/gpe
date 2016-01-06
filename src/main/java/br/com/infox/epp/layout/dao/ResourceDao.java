@@ -7,6 +7,7 @@ import javax.persistence.TypedQuery;
 import br.com.infox.cdi.dao.Dao;
 import br.com.infox.epp.layout.entity.Resource;
 import br.com.infox.epp.layout.entity.Resource.TipoResource;
+import br.com.infox.epp.layout.entity.Skin;
 
 public class ResourceDao extends Dao<Resource, Integer> {
 
@@ -25,4 +26,11 @@ public class ResourceDao extends Dao<Resource, Integer> {
 		return findByPath(tipo.getPath());
 	}
 
+	public Resource findBySkinAndPath(Skin skin, String path) {
+		String jpql = "select r from Resource r inner join r.resourcesSkins rs where rs.skin = :skin and r.path = :path";
+		TypedQuery<Resource> query = getEntityManager().createQuery(jpql, Resource.class);
+		query.setParameter("skin", skin);
+		query.setParameter("path", path);
+		return getSingleResult(query);
+	}
 }

@@ -1,4 +1,4 @@
-package br.com.infox.epp.layout.service;
+package br.com.infox.epp.layout.manager;
 
 import java.io.Serializable;
 

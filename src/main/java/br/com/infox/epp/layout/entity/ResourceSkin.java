@@ -2,6 +2,7 @@ package br.com.infox.epp.layout.entity;
 
 import java.util.Date;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -20,6 +21,7 @@ import br.com.infox.core.persistence.ORConstants;
 
 @Entity
 @Table(name = ResourceSkin.TABLE_NAME)
+@Cacheable
 public class ResourceSkin {
 	
 	public static final String TABLE_NAME = "tb_resource_skin";
@@ -76,6 +78,7 @@ public class ResourceSkin {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((dataModificacao == null) ? 0 : dataModificacao.hashCode());
 		result = prime * result + ((resource == null) ? 0 : resource.hashCode());
 		result = prime * result + ((skin == null) ? 0 : skin.hashCode());
 		return result;
@@ -90,6 +93,11 @@ public class ResourceSkin {
 		if (getClass() != obj.getClass())
 			return false;
 		ResourceSkin other = (ResourceSkin) obj;
+		if (dataModificacao == null) {
+			if (other.dataModificacao != null)
+				return false;
+		} else if (!dataModificacao.equals(other.dataModificacao))
+			return false;
 		if (resource == null) {
 			if (other.resource != null)
 				return false;

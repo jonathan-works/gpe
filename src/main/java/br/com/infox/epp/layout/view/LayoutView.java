@@ -18,7 +18,7 @@ import org.richfaces.model.UploadedFile;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.layout.entity.ResourceSkin;
 import br.com.infox.epp.layout.entity.Skin;
-import br.com.infox.epp.layout.service.LayoutManager;
+import br.com.infox.epp.layout.manager.LayoutManager;
 
 @Named
 @ViewScoped

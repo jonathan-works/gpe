@@ -23,7 +23,7 @@ import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.Selector;
 
 import br.com.infox.epp.layout.dao.SkinDAO;
-import br.com.infox.epp.layout.service.SkinSessaoManager;
+import br.com.infox.epp.layout.manager.SkinSessaoManager;
 import br.com.infox.seam.path.PathResolver;
 import br.com.infox.seam.util.ComponentUtil;
 
