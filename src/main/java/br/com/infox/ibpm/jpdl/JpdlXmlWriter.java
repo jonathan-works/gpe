@@ -358,6 +358,9 @@ public class JpdlXmlWriter {
                 addAttribute(element, "signal", signal);
             }
         }
+        if (node.getAction() != null) {
+            writeAction(element, node.getAction());
+        }
         writeTransitions(element, node);
         writeEvents(element, node);
     }
@@ -422,7 +425,7 @@ public class JpdlXmlWriter {
                 }
             }
         }
-        if (!valid && !event.isListener()) {
+        if (!valid && !event.isListener() && !event.getEventType().equals(Event.EVENTTYPE_DISPATCHER)) {
             eventElement.detach();
         }
     }
@@ -468,19 +471,27 @@ public class JpdlXmlWriter {
         }
         
         String actionName = ActionTypes.getActionName(action.getClass());
-        Element actionElement = parentElement.addElement(actionName);
-
-        if (action.getName() != null) {
-            actionElement.addAttribute(ELEMENT_NAME, action.getName());
+        Element actionElement = parentElement.element(actionName);
+        if (actionElement == null) {
+            actionElement = parentElement.addElement(actionName);
         }
-
-        if (!action.acceptsPropagatedEvents()) {
-            actionElement.addAttribute("accept-propagated-events", "false");
-        }
-        String actionExpression = action.getActionExpression();
-        if (actionExpression != null) {
-            actionElement.addAttribute("expression", actionExpression);
+        
+        if (action.getReferencedAction() != null) {
+            actionElement.addAttribute("ref-name", action.getReferencedAction().getName());
             valid = true;
+        } else {
+            if (action.getName() != null) {
+                actionElement.addAttribute(ELEMENT_NAME, action.getName());
+            }
+
+            if (!action.acceptsPropagatedEvents()) {
+                actionElement.addAttribute("accept-propagated-events", "false");
+            }
+            String actionExpression = action.getActionExpression();
+            if (actionExpression != null) {
+                actionElement.addAttribute("expression", actionExpression);
+                valid = true;
+            }
         }
         action.write(actionElement);
         if (action instanceof Script) {

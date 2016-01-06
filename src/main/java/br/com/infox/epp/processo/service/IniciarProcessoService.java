@@ -3,8 +3,11 @@ package br.com.infox.epp.processo.service;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.inject.Inject;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -22,16 +25,20 @@ import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.assignment.LocalizacaoAssignment;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.fluxo.manager.NaturezaManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 
 @AutoCreate
 @Scope(ScopeType.CONVERSATION)
 @Name(IniciarProcessoService.NAME)
 @Transactional
+@ContextDependency
 public class IniciarProcessoService implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -44,6 +51,8 @@ public class IniciarProcessoService implements Serializable {
     private NaturezaManager naturezaManager;
     @In
     private PastaManager pastaManager;
+    @Inject
+    private MetadadoProcessoManager metadadoProcessoManager;
 
     public static final String ON_CREATE_PROCESS = "br.com.infox.epp.IniciarProcessoService.ONCREATEPROCESS";
     public static final String NAME = "iniciarProcessoService";
@@ -51,22 +60,23 @@ public class IniciarProcessoService implements Serializable {
             + "br.com.infox.ibpm.entity.Processo";
 
     public void iniciarProcesso(Processo processo) throws DAOException {
-        iniciarProcesso(processo, null, null);
+        iniciarProcesso(processo, null, null, null);
     }
     
     public void iniciarProcesso(Processo processo, String transitionName) throws DAOException {
-        iniciarProcesso(processo, null, transitionName);
+        iniciarProcesso(processo, null, null, transitionName);
     }
     
     public void iniciarProcesso(Processo processo, Map<String, Object> variaveis) throws DAOException {
-        iniciarProcesso(processo, variaveis, null);
+        iniciarProcesso(processo, variaveis, null, null);
     }
     
-    public void iniciarProcesso(Processo processo, Map<String, Object> variaveis, String transitionName) throws DAOException {
+    public void iniciarProcesso(Processo processo, Map<String, Object> variaveis, List<MetadadoProcesso> metadados, String transitionName) throws DAOException {
         processo.setDataInicio(new Date());
         if (processo.getIdProcesso() == null) {
             processoManager.persist(processo);
         }
+        createMetadadosProcesso(processo, metadados);
         org.jbpm.graph.exe.ProcessInstance processInstance = criarProcessoJbpm(processo, processo.getNaturezaCategoriaFluxo().getFluxo().getFluxo());
         processo.setIdJbpm(processInstance.getId());
         processoManager.flush();
@@ -78,6 +88,14 @@ public class IniciarProcessoService implements Serializable {
         naturezaManager.lockNatureza(processo.getNaturezaCategoriaFluxo().getNatureza());
         processoManager.update(processo);
         pastaManager.createDefaultFolders(processo);
+    }
+
+    private void createMetadadosProcesso(Processo processo, List<MetadadoProcesso> metadados) {
+        if (metadados == null) return;
+        for (MetadadoProcesso metadadoProcesso : metadados) {
+            metadadoProcesso.setProcesso(processo);
+            metadadoProcessoManager.persist(metadadoProcesso);
+        }
     }
 
     private org.jbpm.graph.exe.ProcessInstance criarProcessoJbpm(Processo processo, String fluxo) {

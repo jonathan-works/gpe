@@ -74,7 +74,7 @@ public class EventHandler implements Serializable {
             return ret;
         }
         for (Event event : events.values()) {
-            if (!event.isListener() || !Event.EVENTTYPE_DISPATCHER.equals(event.getEventType())) {
+            if (!event.isListener() && !Event.EVENTTYPE_DISPATCHER.equals(event.getEventType())) {
                 EventHandler eh = new EventHandler(event);
                 ret.add(eh);
             }

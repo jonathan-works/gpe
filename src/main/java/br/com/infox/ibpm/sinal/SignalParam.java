@@ -6,13 +6,13 @@ import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 public class SignalParam {
 
     private String name;
-    private String value;
+    private Object value;
     private String valueExpression;
     private Type type;
     
     public SignalParam(String name, String value, Type type) {
         this.name = name;
-        if (value.startsWith("#")) {
+        if (value.startsWith("#") || value.startsWith("$")) {
             this.valueExpression = value;
         } else {
             this.value =  value;
@@ -31,7 +31,7 @@ public class SignalParam {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(Object value) {
         this.value = value;
     }
 
@@ -58,6 +58,31 @@ public class SignalParam {
     public Object getParamValue(ExecutionContext executionContext) {
         if (value != null) return value;
         return JbpmExpressionEvaluator.evaluate(valueExpression, executionContext);
+    }
+    
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof SignalParam))
+            return false;
+        SignalParam other = (SignalParam) obj;
+        if (name == null) {
+            if (other.name != null)
+                return false;
+        } else if (!name.equals(other.name))
+            return false;
+        return true;
     }
 
     public enum Type {

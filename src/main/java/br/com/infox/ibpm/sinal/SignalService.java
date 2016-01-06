@@ -2,6 +2,7 @@ package br.com.infox.ibpm.sinal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -97,7 +98,7 @@ public class SignalService {
         List<SignalNodeBean> signalNodes = getTasksListening(processInstanceId, eventType);
         for (SignalNodeBean signalNodeBean : signalNodes) {
             if (signalNodeBean.canExecute()) {
-                processoManager.cancelTaskInstanceJbpm(signalNodeBean.getId(), signalNodeBean.getListenerConfiguration().getTransitionKey());
+                processoManager.movimentarProcessoJBPM(signalNodeBean.getId(), signalNodeBean.getListenerConfiguration().getTransitionKey());
             }
         }
     }
@@ -108,11 +109,21 @@ public class SignalService {
         for (SignalNodeBean signalNodeBean : signalNodes) {
             if (signalNodeBean.canExecute()) {
                 ProcessDefinition processDefinition = getEntityManager().find(ProcessDefinition.class, signalNodeBean.getId());
-                processoManager.startJbpmProcess(processDefinition.getName(), signalNodeBean.getListenerConfiguration().getTransitionKey());
+                processoManager.startJbpmProcess(processDefinition.getName(), signalNodeBean.getListenerConfiguration().getTransitionKey(), getSignalParams());
             }
         }
     }
     
+    private List<SignalParam> getSignalParams() {
+        Event event = ExecutionContext.currentExecutionContext().getAction().getRoot().getEvent();
+        if (event == null) {
+            return Collections.emptyList();
+        } else {
+            DispatcherConfiguration dispatcherConfiguration = DispatcherConfiguration.fromJson(event.getConfiguration());
+            return dispatcherConfiguration.getSignalParams() == null ? Collections.<SignalParam>emptyList() : dispatcherConfiguration.getSignalParams() ;
+        }
+    }
+
     private List<SignalNodeBean> getStartStateListening(String eventType) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<SignalNodeBean> cq = cb.createQuery(SignalNodeBean.class);

@@ -1,7 +1,9 @@
 package br.com.infox.epp.processo.manager;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +34,7 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
@@ -49,6 +52,7 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
+import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais;
@@ -57,6 +61,8 @@ import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
+import br.com.infox.ibpm.sinal.SignalParam;
+import br.com.infox.ibpm.sinal.SignalParam.Type;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
 import br.com.infox.seam.exception.BusinessRollbackException;
 import br.com.infox.seam.util.ComponentUtil;
@@ -94,6 +100,8 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     private NaturezaCategoriaFluxoManager naturezaCategoriaFluxoManager;
     @Inject
     private FluxoManager fluxoManager;
+    @Inject
+    private LocalizacaoManager localizacaoManager; 
     
     public Processo buscarPrimeiroProcesso(Processo p, TipoProcesso tipo) {
         for (Processo filho : p.getFilhos()) {
@@ -356,17 +364,6 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 		BusinessProcess.instance().setTaskId(taskIdOriginal);
 	}
 	
-	public void cancelTaskInstanceJbpm(Long taskInstanceId, String transicao) {
-	    Long processIdOriginal = BusinessProcess.instance().getProcessId();
-        Long taskIdOriginal = BusinessProcess.instance().getTaskId();
-        BusinessProcess.instance().setProcessId(null);
-        BusinessProcess.instance().setTaskId(null);
-        TaskInstance taskInstanceForUpdate = ManagedJbpmContext.instance().getTaskInstanceForUpdate(taskInstanceId);
-        taskInstanceForUpdate.cancel(transicao);
-        BusinessProcess.instance().setProcessId(processIdOriginal);
-        BusinessProcess.instance().setTaskId(taskIdOriginal);
-	}
-	
 	public void cancelJbpmSubprocess(Long subProcessInstanceId, String transicao) throws DAOException {
         Long processIdOriginal = BusinessProcess.instance().getProcessId();
         Long taskIdOriginal = BusinessProcess.instance().getTaskId();
@@ -382,7 +379,7 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         BusinessProcess.instance().setTaskId(taskIdOriginal);
     }
 	
-	public void startJbpmProcess(String fluxoName, String transitionName) throws DAOException {
+	public void startJbpmProcess(String fluxoName, String transitionName, List<SignalParam> params) throws DAOException {
         Long processIdOriginal = BusinessProcess.instance().getProcessId();
         Long taskIdOriginal = BusinessProcess.instance().getTaskId();
         BusinessProcess.instance().setProcessId(null);
@@ -391,11 +388,29 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         List<NaturezaCategoriaFluxo> naturezaCategoriaFluxo = naturezaCategoriaFluxoManager.getActiveNaturezaCategoriaFluxoListByFluxo(fluxo);
         Processo processo = new Processo();
         processo.setDataInicio(new Date());
-        processo.setLocalizacao(Authenticator.getLocalizacaoAtual());
+        Localizacao localizacao = Authenticator.getLocalizacaoAtual();
+        if (localizacao == null) {
+            localizacao = localizacaoManager.getLocalizacaoByNome("e-PP");
+        }
+        processo.setLocalizacao(localizacao);
         processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
         processo.setNaturezaCategoriaFluxo(naturezaCategoriaFluxo.get(0));
-        processo.setUsuarioCadastro(Authenticator.getUsuarioLogado());
-        ComponentUtil.<IniciarProcessoService>getComponent(IniciarProcessoService.NAME).iniciarProcesso(processo, transitionName);
+        UsuarioLogin usuarioLogin = Authenticator.getUsuarioLogado();
+        if (usuarioLogin == null) {
+            usuarioLogin = usuarioLoginManager.getReference(0);
+        }
+        processo.setUsuarioCadastro(usuarioLogin);
+        MetadadoProcessoProvider provider = new MetadadoProcessoProvider(processo);
+        Map<String, Object> variaveis = new HashMap<>();
+        List<MetadadoProcesso> metadados = new ArrayList<>();
+        for (SignalParam signalParam : params) {
+            if (signalParam.getType() == Type.VARIABLE) {
+                variaveis.put(signalParam.getName(), signalParam.getParamValue());
+            } else if (signalParam.getType() == Type.METADADO) {
+                metadados.add(provider.gerarMetadado(signalParam.getName(), signalParam.getParamValue()));
+            }
+        }
+        ComponentUtil.<IniciarProcessoService>getComponent(IniciarProcessoService.NAME).iniciarProcesso(processo, variaveis, metadados, transitionName);
         BusinessProcess.instance().setProcessId(processIdOriginal);
         BusinessProcess.instance().setTaskId(taskIdOriginal);
     }

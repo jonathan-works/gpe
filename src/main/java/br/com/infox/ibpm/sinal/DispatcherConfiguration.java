@@ -22,6 +22,10 @@ public class DispatcherConfiguration {
     public String getCodigoSinal() {
         return codigoSinal;
     }
+    
+    public List<SignalParam> getSignalParams() {
+        return signalParams;
+    }
 
     public void addSignalParam(SignalParam signalVariable) {
         if (signalParams == null) signalParams = new ArrayList<>();

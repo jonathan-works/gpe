@@ -24,6 +24,7 @@ import javax.inject.Named;
 import org.jboss.el.parser.ELParser;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
+import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
@@ -52,9 +53,12 @@ import br.com.infox.ibpm.node.constants.NodeTypeConstants;
 import br.com.infox.ibpm.node.handler.NodeHandler;
 import br.com.infox.ibpm.node.manager.JbpmNodeManager;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
+import br.com.infox.ibpm.sinal.DispatcherConfiguration;
 import br.com.infox.ibpm.sinal.Signal;
 import br.com.infox.ibpm.sinal.SignalConfigurationBean;
 import br.com.infox.ibpm.sinal.SignalDao;
+import br.com.infox.ibpm.sinal.SignalParam;
+import br.com.infox.ibpm.sinal.SignalParam.Type;
 import br.com.infox.ibpm.task.handler.TaskHandler;
 import br.com.infox.ibpm.transition.TransitionHandler;
 import br.com.infox.jsf.util.JsfUtil;
@@ -642,6 +646,15 @@ public class NodeFitter extends Fitter implements Serializable {
         return signals;
     }
     
+    public Signal getSignal(String codigo) {
+        for (Signal signal : signals) {
+            if (signal.getCodigo().equals(codigo)) {
+                return signal;
+            }
+        }
+        return null;
+    }
+    
     public List<Signal> getSinaisDisponiveis() {
         List<Signal> sinaisDisponiveis = new ArrayList<>();
         if (currentNode == null) return sinaisDisponiveis;
@@ -662,6 +675,12 @@ public class NodeFitter extends Fitter implements Serializable {
             }
         }
         return "-";
+    }
+    
+    public List<SignalParam> getDispatchParams() {
+        Event event = getDispatcherSignal();
+        DispatcherConfiguration dispatcherConfiguration = DispatcherConfiguration.fromJson(event.getConfiguration());
+        return dispatcherConfiguration.getSignalParams();
     }
     
     public String getSignalTransition(Event event) {
@@ -686,16 +705,9 @@ public class NodeFitter extends Fitter implements Serializable {
         return listeners;
     }
     
-    public Collection<Event> getDispatchSignalEvents() {
-        List<Event> listeners = new ArrayList<>();
-        if (currentNode != null && currentNode.getEvents() != null) {
-            for (Event event : currentNode.getEvents().values()) {
-                if (event.isListener()) {
-                    listeners.add(event);
-                }
-            }
-        }
-        return listeners;
+    public String getDispatcherSignalName() {
+        DispatcherConfiguration dispatcherConfiguration = DispatcherConfiguration.fromJson(getDispatcherSignal().getConfiguration());
+        return getSignal(dispatcherConfiguration.getCodigoSinal()).getNome();
     }
     
     public Event getDispatcherSignal() {
@@ -709,8 +721,8 @@ public class NodeFitter extends Fitter implements Serializable {
         return null;
     }
     
-    public void addDispatcherSignal(ActionEvent actionEvent) {
-        
+    public Type[] getParamTypes() {
+        return Type.values();
     }
     
     public void addCatchSignal(ActionEvent actionEvent) {
@@ -728,8 +740,59 @@ public class NodeFitter extends Fitter implements Serializable {
         JsfUtil.clear(inputNome, inputTransicao, inputCondition);
     }
     
+    public void addDispatcherSignal(ActionEvent actionEvent) {
+        Map<String, String> request = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        String inputCodigo = (String) actionEvent.getComponent().getAttributes().get("dispatcherCodigo");
+        String codigo = request.get(inputCodigo);
+        Event event = new Event(Event.EVENTTYPE_DISPATCHER);
+        DispatcherConfiguration signalConfigurationBean = new DispatcherConfiguration(codigo);
+        event.setConfiguration(signalConfigurationBean.toJson());
+        Action actionRef = new Action();
+        actionRef.setName("dispatcher-" + codigo + "_" + currentNode.getKey());
+        actionRef.setActionExpression(String.format("#{bpmExpressionService.dispatchSignal('%s')}", codigo));
+        event.addAction(actionRef);
+        currentNode.addEvent(event);
+        Action action = new Action();
+        action.setReferencedAction(actionRef);
+        currentNode.setAction(action);
+        JsfUtil.clear(inputCodigo);
+    }
+    
+    public void addDispatcherParamSignal(ActionEvent actionEvent) {
+        Map<String, String> request = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        String inputNome = (String) actionEvent.getComponent().getAttributes().get("dispatcherParamName");
+        String inputValue = (String) actionEvent.getComponent().getAttributes().get("dispatcherParamValue");
+        String inputType = (String) actionEvent.getComponent().getAttributes().get("dispatcherParamType");
+        String nome = request.get(inputNome);
+        String value = request.get(inputValue);
+        Type type = Type.valueOf(request.get(inputType));
+        Event event = getDispatcherSignal();
+        DispatcherConfiguration dispatcherConfiguration = DispatcherConfiguration.fromJson(event.getConfiguration());
+        SignalParam newSignalParam = new SignalParam(nome, value, type);
+        if (dispatcherConfiguration.getSignalParams() != null && dispatcherConfiguration.getSignalParams().contains(newSignalParam)) {
+            FacesMessages.instance().add("Já existe parâmetro com esse nome!");
+            FacesContext.getCurrentInstance().validationFailed();
+        } else {
+            dispatcherConfiguration.addSignalParam(newSignalParam);
+            event.setConfiguration(dispatcherConfiguration.toJson());
+        }
+        JsfUtil.clear(inputNome, inputValue, inputType);
+    }
+    
     public void removeCatchSignal(Event event) {
         currentNode.removeEvent(event);
+    }
+    
+    public void removeDispatchSignal() {
+        currentNode.removeEvent(getDispatcherSignal());
+        currentNode.setAction(null);
+    }
+    
+    public void removeDispatcherParam(SignalParam signalParam) {
+        Event event = getDispatcherSignal();
+        DispatcherConfiguration dispatcherConfiguration = DispatcherConfiguration.fromJson(event.getConfiguration());
+        dispatcherConfiguration.getSignalParams().remove(signalParam);
+        event.setConfiguration(dispatcherConfiguration.toJson());
     }
     
 }
