@@ -1,20 +1,23 @@
 package br.com.infox.epp.layout.entity;
 
-import java.util.HashSet;
+import java.util.Date;
 import java.util.Set;
+import java.util.TreeSet;
 
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -24,6 +27,7 @@ import edu.emory.mathcs.backport.java.util.Collections;
 
 @Entity
 @Table(name = Resource.TABLE_NAME)
+@Cacheable
 public class Resource {
 	
 	public static final String TABLE_NAME = "tb_resource";
@@ -39,14 +43,18 @@ public class Resource {
 	@Size(max=LengthConstants.DESCRICAO_GRANDE)
 	private String path;
 	
-	@Basic(fetch=FetchType.LAZY)
-	@Lob
 	@NotNull
-	@Column(name="ob_recurso")
-	private byte[] recurso;
+	@Column(name = "dt_modificacao")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dataModificacao;
 	
-	@OneToMany(fetch=FetchType.LAZY, mappedBy="resource", cascade=CascadeType.ALL)
-	private Set<ResourceSkin> resourcesSkins = new HashSet<>();
+	@ManyToMany(fetch=FetchType.LAZY)
+	@JoinTable(name="tb_resource_skin", joinColumns={@JoinColumn(name="id_resource")}, inverseJoinColumns={@JoinColumn(name="id_skin")})
+	private Set<Skin> skins = new TreeSet<>();
+	
+	@NotNull
+	@Column(name="id_binario")
+	private Integer idBinario;
 	
 	public enum TipoResource {
 		LOGO_LOGIN("imagens/logo_epp_login.png"), LOGO_TOPO("imagens/logo_epp_topo.png");
@@ -70,14 +78,6 @@ public class Resource {
 		this.path = path;
 	}
 
-	public byte[] getResource() {
-		return recurso;
-	}
-
-	public void setResource(byte[] resource) {
-		this.recurso = resource;
-	}
-
 	public Integer getId() {
 		return id;
 	}
@@ -86,20 +86,20 @@ public class Resource {
 		setPath(tipo.getPath());
 	}
 	
-	public void add(ResourceSkin resourceSkin) {
-		resourcesSkins.add(resourceSkin);
-		resourceSkin.setResource(this);
+	public void add(Skin skin) {
+		skins.add(skin);
+		//resourceSkin.setResource(this);
 	}
 	
-	public void remove(ResourceSkin resourceSkin) {
-		resourcesSkins.remove(resourceSkin);
+	public void remove(ResourceSkin skin) {
+		skins.remove(skin);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Set<ResourceSkin> getResourcesSkins() {
-		return Collections.unmodifiableSet(resourcesSkins);
+	public Set<Skin> getResourcesSkins() {
+		return Collections.unmodifiableSet(skins);
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -115,8 +115,6 @@ public class Resource {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
 		Resource other = (Resource) obj;
 		if (id == null) {
 			if (other.id != null)
@@ -129,6 +127,22 @@ public class Resource {
 		} else if (!path.equals(other.path))
 			return false;
 		return true;
+	}
+
+	public Date getDataModificacao() {
+		return dataModificacao;
+	}
+
+	public void setDataModificacao(Date dataModificacao) {
+		this.dataModificacao = dataModificacao;
+	}
+
+	public Integer getIdBinario() {
+		return idBinario;
+	}
+
+	public void setIdBinario(Integer idBinario) {
+		this.idBinario = idBinario;
 	}	
 	
 }

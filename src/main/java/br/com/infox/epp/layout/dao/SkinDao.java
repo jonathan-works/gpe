@@ -10,9 +10,9 @@ import br.com.infox.epp.layout.entity.Skin;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-public class SkinDAO extends Dao<Skin, Integer> {
+public class SkinDao extends Dao<Skin, Integer> {
 
-	public SkinDAO() {
+	public SkinDao() {
 		super(Skin.class);
 	}
 	

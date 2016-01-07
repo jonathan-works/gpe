@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.seam.faces.Selector;
 
-import br.com.infox.epp.layout.dao.SkinDAO;
+import br.com.infox.epp.layout.dao.SkinDao;
 import br.com.infox.seam.path.PathResolver;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -26,7 +26,7 @@ public class SkinSessaoManager implements Serializable {
 	private String skin;
 
 	@Inject
-	private SkinDAO skinDAO;
+	private SkinDao skinDAO;
 	
 	public void setSkinCookie(String skin) {
 		PathResolver pathResolver = ComponentUtil.getComponent(PathResolver.NAME);

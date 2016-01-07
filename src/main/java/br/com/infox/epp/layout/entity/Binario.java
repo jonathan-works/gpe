@@ -13,27 +13,21 @@ import javax.validation.constraints.NotNull;
 import br.com.infox.core.persistence.ORConstants;
 
 @Entity
-@Table(name = Resource.TABLE_NAME)
-public class BinarioResource {
+@Table(name = Binario.TABLE_NAME)
+public class Binario {
 
+	public static final String TABLE_NAME = "tb_binario";
+	
 	@Id
-	@SequenceGenerator(allocationSize = 1, initialValue = 1, name = ORConstants.GENERATOR, sequenceName = "sq_resource")
+	@SequenceGenerator(allocationSize = 1, initialValue = 1, name = ORConstants.GENERATOR, sequenceName = "sq_binario")
 	@GeneratedValue(generator = ORConstants.GENERATOR, strategy = GenerationType.SEQUENCE)
-	@Column(name = "id_resource", nullable = false, unique = true)
+	@Column(name = "id_binario", nullable = false, unique = true)
 	private Integer id;
 	
 	@Lob
 	@NotNull
-	@Column(name="ob_recurso")
-	private byte[] resource;
-
-	public byte[] getResource() {
-		return resource;
-	}
-
-	public void setResource(byte[] resource) {
-		this.resource = resource;
-	}
+	@Column(name="ob_binario")
+	private byte[] binario;
 
 	public Integer getId() {
 		return id;
@@ -42,5 +36,15 @@ public class BinarioResource {
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
+	public byte[] getBinario() {
+		return binario;
+	}
+
+	public void setBinario(byte[] binario) {
+		this.binario = binario;
+	}
+	
+	
 
 }

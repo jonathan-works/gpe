@@ -1,5 +1,6 @@
 package br.com.infox.epp.layout.entity;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,7 +16,8 @@ import br.com.infox.core.persistence.ORConstants;
 
 @Entity
 @Table(name = Skin.TABLE_NAME)
-public class Skin {
+@Cacheable
+public class Skin implements Comparable<Skin> {
 	public static final String TABLE_NAME = "tb_skin";
 	
 	@Id
@@ -84,8 +86,6 @@ public class Skin {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
 		Skin other = (Skin) obj;
 		if (codigo == null) {
 			if (other.codigo != null)
@@ -93,6 +93,17 @@ public class Skin {
 		} else if (!codigo.equals(other.codigo))
 			return false;
 		return true;
+	}
+
+	@Override
+	public int compareTo(Skin o) {
+		if(this == o) {
+			return 0;
+		}
+		if(o==null) {
+			return +1;
+		}
+		return this.getCodigo().compareTo(o.getCodigo());
 	}
 	
 }

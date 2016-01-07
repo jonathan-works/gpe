@@ -1,5 +1,6 @@
 package br.com.infox.epp.layout.rest;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -13,6 +14,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import br.com.infox.epp.layout.rest.entity.MetadadosResource;
 
 @Path("skin/{codigo}")
+@Stateless
 public class LayoutRest {
 	
 	@Inject

@@ -22,7 +22,7 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.Selector;
 
-import br.com.infox.epp.layout.dao.SkinDAO;
+import br.com.infox.epp.layout.dao.SkinDao;
 import br.com.infox.epp.layout.manager.SkinSessaoManager;
 import br.com.infox.seam.path.PathResolver;
 import br.com.infox.seam.util.ComponentUtil;
@@ -46,7 +46,7 @@ public class Skin extends Selector implements Serializable {
 	private SkinSessaoManager skinSessao;
 	
 	@Inject
-	private SkinDAO skinDAO;
+	private SkinDao skinDAO;
 
 	public static Map<String, String> getSkinEntries() {
 		return SKIN_ENTRIES;
