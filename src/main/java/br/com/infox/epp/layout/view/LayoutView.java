@@ -98,11 +98,11 @@ public class LayoutView implements Serializable {
 		else if(extensao.equalsIgnoreCase(TipoResource.GIF.toString())) {
 			return TipoResource.GIF;
 		}
-		else if(extensao.equalsIgnoreCase(TipoResource.GIF.toString())) {
-			return TipoResource.GIF;
-		}
 		else if(extensao.equalsIgnoreCase(TipoResource.SVG.toString())) {
 			return TipoResource.SVG;
+		}
+		else if(extensao.equalsIgnoreCase(TipoResource.SVGZ.toString())) {
+			return TipoResource.SVGZ;
 		}
 		else {
 			return TipoResource.PNG;

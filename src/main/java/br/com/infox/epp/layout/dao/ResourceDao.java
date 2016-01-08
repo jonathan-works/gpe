@@ -20,4 +20,22 @@ public class ResourceDao extends Dao<Resource, Long> {
 		return getSingleResult(query);
 	}
 
+	public Resource findByPath(String path) {
+		String jpql = "from Resource r where path = :path";
+		TypedQuery<Resource> query = getEntityManager().createQuery(jpql, Resource.class);
+		query.setParameter("path", path);
+		HibernateUtil.enableCache(query);
+		return getSingleResult(query);
+	}
+	
+	/**
+	 * Localiza um recurso que tenha o path iniciado com o parâmetro passado (retorna o primeiro resultado encontrado caso exista mais de um)
+	 */
+	public Resource findByStartingPath(String path) {
+		String jpql = "from Resource r where path like :path";
+		TypedQuery<Resource> query = getEntityManager().createQuery(jpql, Resource.class);
+		query.setParameter("path", path + "%");
+		HibernateUtil.enableCache(query);
+		return getSingleResult(query);
+	}
 }

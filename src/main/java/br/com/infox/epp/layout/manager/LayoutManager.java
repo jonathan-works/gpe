@@ -1,12 +1,16 @@
 package br.com.infox.epp.layout.manager;
 
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+
+import com.google.common.io.Files;
 
 import br.com.infox.epp.layout.dao.BinarioDao;
 import br.com.infox.epp.layout.dao.ResourceBinDao;
@@ -94,12 +98,19 @@ public class LayoutManager {
 		setResourceBin(Resources.LOGO_TOPO.toString(), logoTopo, tipoResource);
 	}
 	
-	public ResourceBin getResourceBin(String codigoSkin, String pathRecurso) {
+	/**
+	 * Localiza um {@link ResourceBin} por código e path que inicie com o path informado (ignorando a extensão do arquivo) 
+	 */
+	private ResourceBin getResourceBin(String codigoSkin, String pathRecurso) {
 		Skin skin = skinDao.findByCodigo(codigoSkin);
 		if(skin == null) {
 			return null;
 		}
-		ResourceBin retorno = resourceBinDao.findBySkinAndPath(skin, pathRecurso);
+		
+		String pathSemExtensao = pathRecurso.substring(0, pathRecurso.lastIndexOf(".") + 1);
+		Resource resource = resourceDao.findByStartingPath(pathSemExtensao);
+		
+		ResourceBin retorno = resourceBinDao.findBySkinAndPath(skin, resource.getPath());
 		return retorno;
 	}
 	
@@ -111,12 +122,19 @@ public class LayoutManager {
 		return carregarBinario(resourceBin.getIdBinario());
 	}
 	
-	public String getPathResourceRest(String codigoSkin, String pathRecurso) {
-		return MessageFormat.format("/rest/skin/{0}{1}", codigoSkin, pathRecurso);
+	private String getResourcePathRest(String codigoSkin, String pathRecurso) {
+		ResourceBin resourceBin = getResourceBin(codigoSkin, pathRecurso);
+		
+		
+		Path diretorio = Paths.get(pathRecurso).getParent();
+		String nomeArquivo = Files.getNameWithoutExtension(pathRecurso);
+		String extensao = resourceBin.getTipo().toString().toLowerCase();
+		
+		return MessageFormat.format("/rest/skin/{0}{1}/{2}.{3}", codigoSkin, diretorio, nomeArquivo, extensao);
 	}
 
 	
-	public String getPathResourceJava(String codigoSkin, String pathRecurso) {
+	private String getResourcePathJava(String codigoSkin, String pathRecurso) {
 		return MessageFormat.format("/resources/styleSkinInfox/{0}{1}", codigoSkin, pathRecurso);
 	}
 	
@@ -127,16 +145,16 @@ public class LayoutManager {
 			return new MetadadosResource(resourceBin);			
 		}
 		
-		URL url = LayoutManager.class.getResource(getPathResourceJava(codigoSkin, pathRecurso));
+		URL url = LayoutManager.class.getResource(getResourcePathJava(codigoSkin, pathRecurso));
 		return new MetadadosResource(url);
 	}
 	
 	public String getResourcePath(String codigoSkin, String path) {
 		ResourceBin resourceBin = getResourceBin(codigoSkin, path);
 		if(resourceBin != null) {
-			return getPathResourceRest(codigoSkin, path);
+			return getResourcePathRest(codigoSkin, path);
 		}
-		return getPathResourceJava(codigoSkin, path);
+		return getResourcePathJava(codigoSkin, path);
 	}
 	
 	

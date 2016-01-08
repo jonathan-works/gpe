@@ -62,7 +62,7 @@ public class ResourceBin {
 	private TipoResource tipo;
 	
 	public enum TipoResource {
-		SVG, JPG, PNG, GIF
+		JPG, PNG, GIF, SVG, SVGZ
 	}
 	
 	public Long getId() {
@@ -120,7 +120,7 @@ public class ResourceBin {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((idBinario == null) ? 0 : idBinario.hashCode());
+		result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
 		return result;
 	}
 
@@ -130,15 +130,14 @@ public class ResourceBin {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof ResourceBin))
 			return false;
 		ResourceBin other = (ResourceBin) obj;
-		if (idBinario == null) {
-			if (other.idBinario != null)
+		if (getId() == null) {
+			if (other.getId() != null)
 				return false;
-		} else if (!idBinario.equals(other.idBinario))
+		} else if (!getId().equals(other.getId()))
 			return false;
 		return true;
 	}	
-	
 }
