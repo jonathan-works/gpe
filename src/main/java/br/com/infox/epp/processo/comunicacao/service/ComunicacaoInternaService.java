@@ -99,35 +99,7 @@ public class ComunicacaoInternaService {
         }
     }
     
-    public void expedirComunicacao(DestinatarioModeloComunicacao destinatarioModeloComunicacao) throws DAOException, IOException, DocumentException {
-        Processo processo = new Processo();
-        processo.setLocalizacao(Authenticator.getLocalizacaoAtual());
-        processo.setNaturezaCategoriaFluxo(getNaturezaCategoriaFluxo());
-        processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
-        processo.setProcessoPai(destinatarioModeloComunicacao.getModeloComunicacao().getProcesso());
-        processo.setDataInicio(DateTime.now().toDate());
-        processo.setUsuarioCadastro(Authenticator.getUsuarioLogado());
-        processoManager.persist(processo);
-        
-        Documento documentoComunicacao = criarDocumentoComunicacao(processo, destinatarioModeloComunicacao.getModeloComunicacao());
-        
-        Long processIdOriginal = BusinessProcess.instance().getProcessId();
-        Long taskIdOriginal = BusinessProcess.instance().getTaskId();
-        BusinessProcess.instance().setProcessId(null);
-        BusinessProcess.instance().setTaskId(null);
-        getIniciarProcessoService().iniciarProcesso(processo);
-        BusinessProcess.instance().setProcessId(processIdOriginal);
-        BusinessProcess.instance().setTaskId(taskIdOriginal);
-
-        criarMetadados(destinatarioModeloComunicacao, processo);
-        
-       destinatarioModeloComunicacao.setExpedido(true);
-       destinatarioModeloComunicacao.setDocumentoComunicacao(documentoComunicacao);
-       entityManager.merge(destinatarioModeloComunicacao);
-       entityManager.flush();
-    }
-
-    public void expedirComunicacaoDestinatarios(ModeloComunicacao modeloComunicacao) throws DAOException, IOException, DocumentException {
+    private void expedirComunicacaoDestinatarios(ModeloComunicacao modeloComunicacao) throws DAOException, IOException, DocumentException {
         List<DestinatarioModeloComunicacao> destinatariosIndividuais = new ArrayList<>();
         for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
             if (destinatario.getIndividual()) {
@@ -136,7 +108,7 @@ public class ComunicacaoInternaService {
         }
         modeloComunicacao.getDestinatarios().removeAll(destinatariosIndividuais);
         
-        if (modeloComunicacao.getDestinatarios().isEmpty()) {
+        if (!modeloComunicacao.getDestinatarios().isEmpty()) {
             expedirComunicacao(modeloComunicacao);
         }
         
@@ -176,6 +148,34 @@ public class ComunicacaoInternaService {
             destinatario.setDocumentoComunicacao(documentoComunicacao);
             entityManager.merge(destinatario);
         }
+    }
+    
+    private void expedirComunicacao(DestinatarioModeloComunicacao destinatarioModeloComunicacao) throws DAOException, IOException, DocumentException {
+        Processo processo = new Processo();
+        processo.setLocalizacao(Authenticator.getLocalizacaoAtual());
+        processo.setNaturezaCategoriaFluxo(getNaturezaCategoriaFluxo());
+        processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
+        processo.setProcessoPai(destinatarioModeloComunicacao.getModeloComunicacao().getProcesso());
+        processo.setDataInicio(DateTime.now().toDate());
+        processo.setUsuarioCadastro(Authenticator.getUsuarioLogado());
+        processoManager.persist(processo);
+        
+        Documento documentoComunicacao = criarDocumentoComunicacao(processo, destinatarioModeloComunicacao.getModeloComunicacao());
+        
+        Long processIdOriginal = BusinessProcess.instance().getProcessId();
+        Long taskIdOriginal = BusinessProcess.instance().getTaskId();
+        BusinessProcess.instance().setProcessId(null);
+        BusinessProcess.instance().setTaskId(null);
+        getIniciarProcessoService().iniciarProcesso(processo);
+        BusinessProcess.instance().setProcessId(processIdOriginal);
+        BusinessProcess.instance().setTaskId(taskIdOriginal);
+
+        criarMetadados(destinatarioModeloComunicacao, processo);
+        
+       destinatarioModeloComunicacao.setExpedido(true);
+       destinatarioModeloComunicacao.setDocumentoComunicacao(documentoComunicacao);
+       entityManager.merge(destinatarioModeloComunicacao);
+       entityManager.flush();
     }
     
     private Documento criarDocumentoComunicacao(Processo processo, ModeloComunicacao modeloComunicacao) throws IOException, DocumentException {

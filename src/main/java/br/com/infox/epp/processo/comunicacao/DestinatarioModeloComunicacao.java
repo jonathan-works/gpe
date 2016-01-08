@@ -77,7 +77,7 @@ public class DestinatarioModeloComunicacao implements Serializable, Cloneable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Processo processo;
 	
-	@Transient
+	@Column(name = "in_individual", nullable = true)
 	private Boolean individual = Boolean.TRUE;
 	
 	public Long getId() {
