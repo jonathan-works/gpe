@@ -135,22 +135,18 @@
                                     value="#{nodeFitter.nodeName}" />
                             </h:panelGrid>
                         </f:facet>
-                        <s:fragment
-                            rendered="#{nodeFitter.currentNode.nodeType != 'StartState'}">
-                            <ui:include src="transition.xhtml">
-                                <ui:param
-                                    name="type"
-                                    value="from" />
-                            </ui:include>
-                        </s:fragment>
-                        <s:fragment
-                            rendered="#{nodeFitter.currentNode.nodeType != 'EndState'}">
-                            <ui:include src="transition.xhtml">
-                                <ui:param
-                                    name="type"
-                                    value="to" />
-                            </ui:include>
-                        </s:fragment>
+                        <div class="flex-displayed-container">
+                            <s:fragment rendered="#{nodeFitter.currentNode.nodeType != 'StartState'}">
+                                <ui:include src="transition.xhtml">
+                                    <ui:param name="type" value="from" />
+                                </ui:include>
+                            </s:fragment>
+                            <s:fragment rendered="#{nodeFitter.currentNode.nodeType != 'EndState'}">
+                                <ui:include src="transition.xhtml">
+                                    <ui:param name="type" value="to" />
+                                </ui:include>
+                            </s:fragment>
+                        </div>
                         <s:fragment
                             rendered="#{nodeFitter.currentNode.nodeType == 'Task'}">
                             <ui:include src="tasks.xhtml" />
@@ -257,7 +253,6 @@
                         </h:form>
 					</rich:panel>
 
-                    <br />
                     <rich:panel
                         header="#{infoxMessages['process.node.new']}"
                         rendered="#{empty nodeFitter.currentNode}">

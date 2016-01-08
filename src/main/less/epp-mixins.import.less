@@ -1,3 +1,7 @@
+.background-image(@base-path:@imgFolder, @image-name){
+  background-image:~"url("%("%s/%s",@base-path,@image-name)~")";
+}
+
 .image(@imgName) {
   background-image:~"url("%("%s/%s",@imgFolder,@imgName)~")";
 }

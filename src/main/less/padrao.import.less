@@ -21,6 +21,7 @@
 
 /* TEMAS */
 @import "primeUI.import.less";
+@import "minimal.import.less";
 
 /* PÁGINAS */
 
@@ -132,10 +133,10 @@
   }
 }
 .pageBody {
-  height:calc(~"100% - "(@banner-calc-height+23))
+  height:calc(100%~" - "@banner-calc-height+23);
 }
 .clean-pageBody {
-  height:calc(~"100% - 2px");
+  height:100%;
 }
 .conteudo {
   text-align: left;
@@ -143,9 +144,6 @@
   height: calc(~"100% - "36px);
   overflow: auto;
   margin: 5px 0 0 0;
-  &.minimal {
-    height:calc(~"100% - "(@banner-calc-height));
-  }
 }
 
 .tituloPagina {
@@ -217,7 +215,7 @@ h1 {
 }
 
 #html,#body {
-  height: 100%;
+  height: calc(100%~" - "1px);
   width: 100%;
   min-width: 796px;
   min-height: 470px;
@@ -695,7 +693,7 @@ span.rf-ds-btn {
 }
 
 .fluxo-div {
-	font-weight:bold; 
+	font-weight:bold;
 	text-transform: uppercase;
 }
 
@@ -1107,12 +1105,12 @@ option {
     width: 12px;
     height: 12px;
     padding: 2px;
-    
+
     background: #fff;
     border: 2px solid #666;
     color: #666;
     text-align: center;
-    
+
     font: 12px Arial, sans-serif;
 }
 
