@@ -1,157 +1,113 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ui:composition
-  xmlns:ui="http://java.sun.com/jsf/facelets"
-  xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:a="http://richfaces.org/a4j"
-  xmlns:c="http://java.sun.com/jsp/jstl/core"
-  xmlns:f="http://java.sun.com/jsf/core"
-  xmlns:h="http://java.sun.com/jsf/html"
-  xmlns:rich="http://richfaces.org/rich"
-  xmlns:s="http://jboss.org/schema/seam/taglib"
-  xmlns:wi="http://www.itx.com.br/jsf">
-  <s:div id="taskDiv">
-    <h:form>
-      <wi:inputText
-        id="taskName"
-        value="#{taskFitter.taskName}"
-        widthDiv="230px"
-        label="#{infoxMessages['process.task.name']}"
-        converterId="nodeNameConverter"
-        required="true">
-        <a:ajax
-          event="change"
-          render="nodesDiv"
-          limitRender="true"
-          execute="@this"
-          listener="#{nodeFitter.setCurrentNodeName(taskFitter.taskName)}" />
-        <f:validator validatorId="taskNameValidator" />
-      </wi:inputText>
-      <wi:selectOneMenu
-        id="swimlaneTask"
-        items="#{swimlaneFitter.swimlaneList}"
-        label="#{infoxMessages['process.task.responsavel']}"
-        widthDiv="230px"
-        showLabelSelecione="true"
-        value="#{t.swimlaneName}">
-        <a:ajax
-          event="change"
-          execute="@this"
-          limitRender="true" />
-      </wi:selectOneMenu>
-      <wi:inputNumber
-        id="prazo"
-        label="#{infoxMessages['process.task.prazo']}"
-        value="#{taskFitter.tarefaAtual.prazo}"
-        rendered="#{taskFitter.currentJbpmTaskPersisted}">
-        <a:ajax
-          event="change"
-          execute="@this"
-          limitRender="true"
-          listener="#{taskFitter.marcarTarefaAtual()}" />
-      </wi:inputNumber>
-      <wi:selectOneMenuEnum
-        id="tipoPrazo"
-        label="#{infoxMessages['process.task.prazo.unidade']}"
-        value="#{taskFitter.tarefaAtual.tipoPrazo}"
-        items="#{prazoCombo.tipoPrazoList}"
-        showLabelSelecione="true"
-        rendered="#{taskFitter.currentJbpmTaskPersisted}">
-        <a:ajax
-          event="change"
-          execute="@this"
-          limitRender="true"
-          listener="#{taskFitter.marcarTarefaAtual()}" />
-      </wi:selectOneMenuEnum>
-    </h:form>
-  </s:div>
-  <rich:dataTable
-    value="#{t.variables}"
-    id="varTable"
-    styleClass="tabelaVariaveis"
-    var="var">
-    <rich:column styleClass="dr-table-subheader rich-table-subheader">
-      <f:facet name="header">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib" xmlns:wi="http://www.itx.com.br/jsf">
+    <s:div id="taskDiv">
         <h:form>
-          <a:commandLink
-            action="#{t.newVar()}"
-            execute="@this"
-            render="varTable pageBodyDialogMessage"
-            limitRender="true">
-            <h:graphicImage
-              title="#{infoxMessages['process.task.addVariable']}"
+            <wi:inputText id="taskName" value="#{taskFitter.taskName}" widthDiv="230px"
+                label="#{infoxMessages['process.task.name']}" converterId="nodeNameConverter" required="true">
+                <a:ajax event="change" render="nodesDiv" limitRender="true" execute="@this"
+                    listener="#{nodeFitter.setCurrentNodeName(taskFitter.taskName)}" />
+                <f:validator validatorId="taskNameValidator" />
+            </wi:inputText>
+        </h:form>
+    </s:div>
+    <rich:collapsiblePanel expanded="true" switchType="client" header="#{infoxMessages['process.task.responsavel']}">
+        <h:form style="text-align:center;">
+            <h:selectOneRadio styleClass="radio" style="display: block; margin: 0 0 1em;" value="#{t.assignmentType}">
+                <f:selectItem itemValue="swimlane" itemLabel="#{infoxMessages['process.def.assignment.type.swimlane']}" />
+                <f:selectItem itemValue="pooledActorsExpression"
+                    itemLabel="#{infoxMessages['process.def.assignment.type.pooledActorsExpression']}" />
+                <f:selectItem itemValue="assignee" itemLabel="#{infoxMessages['process.def.assignment.type.assignee']}" />
+                <a:ajax event="change" execute="@this" limitRender="true" render="@form" />
+            </h:selectOneRadio>
+            <wi:selectOneMenu id="swimlaneTask" valueItems="#{swimlaneFitter.swimlaneList}" widthDiv="230px"
+                showLabelSelecione="false" rendered="#{'swimlane' == t.assignmentType}" value="#{t.swimlaneName}">
+                <a:ajax event="change" execute="@this" limitRender="true" render="@form" />
+            </wi:selectOneMenu>
+            <wi:inputText id="pooledActorsExpression" value="#{t.pooledActorsExpression}"
+                rendered="#{'pooledActorsExpression' == t.assignmentType}">
+                <a:ajax event="change" execute="@this" limitRender="true" render="@form" />
+            </wi:inputText>
+            <wi:inputText id="assigneeExpression" value="#{t.assigneeExpression}"
+                rendered="#{'assignee' == t.assignmentType}">
+                <a:ajax event="change" execute="@this" limitRender="true" render="@form" />
+            </wi:inputText>
+        </h:form>
+    </rich:collapsiblePanel>
+    <rich:collapsiblePanel expanded="false" switchType="client" header="#{infoxMessages['process.task.prazos']}">
+        <h:form>
+            <wi:inputNumber id="prazo" label="#{infoxMessages['process.task.prazo']}"
+                value="#{taskFitter.tarefaAtual.prazo}" rendered="#{taskFitter.currentJbpmTaskPersisted}">
+                <a:ajax event="change" execute="@this" limitRender="true" listener="#{taskFitter.marcarTarefaAtual()}" />
+            </wi:inputNumber>
+            <wi:selectOneMenuEnum id="tipoPrazo" label="#{infoxMessages['process.task.prazo.unidade']}"
+                value="#{taskFitter.tarefaAtual.tipoPrazo}" items="#{prazoCombo.tipoPrazoList}"
+                showLabelSelecione="true" rendered="#{taskFitter.currentJbpmTaskPersisted}">
+                <a:ajax event="change" execute="@this" limitRender="true" listener="#{taskFitter.marcarTarefaAtual()}" />
+            </wi:selectOneMenuEnum>
+        </h:form>
+    </rich:collapsiblePanel>
+    <rich:collapsiblePanel expanded="true" switchType="client" header="#{infoxMessages['process.task.variaveis']}">
+        <rich:dataTable value="#{t.variables}" id="varTable" styleClass="tabelaVariaveis" var="var">
+            <rich:column styleClass="dr-table-subheader rich-table-subheader">
+                <f:facet name="header">
+                    <h:form>
+                        <a:commandLink action="#{t.newVar()}" execute="@this" render="varTable pageBodyDialogMessage"
+                            limitRender="true">
+                            <h:graphicImage title="#{infoxMessages['process.task.addVariable']}"
               url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}" />
-          </a:commandLink>
-        </h:form>
-      </f:facet>
-      <div>
-        <h:form id="toolbarVariableForm">
-          <a:commandLink
-            action="#{t.removeVar(var)}"
-            execute="@this"
-            onclick="return confirm(\'#{infoxMessages['processBuilder.confirm']}\');"
-            render="varTable nodeEventeventSubView"
-            limitRender="true"
-            styleClass="opacityHover">
-            <h:graphicImage
-              title="#{infoxMessages['process.task.removeVariable']}"
+                        </a:commandLink>
+                    </h:form>
+                </f:facet>
+                <div>
+                    <h:form id="toolbarVariableForm">
+                        <a:commandLink action="#{t.removeVar(var)}" execute="@this"
+                            onclick="return confirm(\'#{infoxMessages['processBuilder.confirm']}\');"
+                            render="varTable nodeEventeventSubView" limitRender="true" styleClass="opacityHover">
+                            <h:graphicImage title="#{infoxMessages['process.task.removeVariable']}"
               url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" />
-          </a:commandLink>
-          <a:commandLink
-            id="setCurrentVariableLink"
-            execute="@this"
-            render="actionTemplate"
-            limitRender="true"
-            status=":status"
-            action="#{taskFitter.currentTask.setCurrentVariable(var)}"
-            styleClass="opacityHover"
-            oncomplete="#{rich:component('actionTemplatePanel')}.show()"
-            rendered="#{var.type eq 'EDITOR'}">
-            <h:graphicImage
-              title="#{infoxMessages['process.task.var.modelo']}"
-              rendered="#{empty var.modeloList}"
+                        </a:commandLink>
+                        <a:commandLink id="setCurrentVariableLink" execute="@this" render="actionTemplate"
+                            limitRender="true" status=":status"
+                            action="#{taskFitter.currentTask.setCurrentVariable(var)}" styleClass="opacityHover"
+                            oncomplete="#{rich:component('actionTemplatePanel')}.show()"
+                            rendered="#{var.type eq 'EDITOR'}">
+                            <h:graphicImage title="#{infoxMessages['process.task.var.modelo']}"
+                                rendered="#{empty var.modeloList}" url="#{wiSkin.imageFolder}/newfile.gif" />
+                            <h:graphicImage title="#{var.modeloDocumentoList.toString()}"
               url="#{layoutController.getResourceUrlByPath('/imagens/newfile.gif')}" />
-            <h:graphicImage
-              title="#{var.modeloDocumentoList.toString()}"
-              rendered="#{not empty var.modeloList}"
-              status=":status"
               url="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}" />
-          </a:commandLink>
-          <a:commandLink
-            id="setVariableForVariavelClassificacaoDocumentoLink"
-            execute="@this"
-            limitRender="true"
-            status=":status"
-            render="classificacoesParaVariavelPanel"
-            styleClass="opacityHover"
-            oncomplete="#{rich:component('classificacoesParaVariavelPanel')}.show()"
-            rendered="#{var.type eq 'EDITOR' or var.type eq 'FILE'}">
-            <h:graphicImage
-              title="#{infoxMessages['variavelClassificacaoDocumento.gerenciarClassificacoes']}"
-              status=":status"
+                        </a:commandLink>
+                        <a:commandLink id="setVariableForVariavelClassificacaoDocumentoLink" execute="@this"
+                            limitRender="true" status=":status" render="classificacoesParaVariavelPanel"
+                            styleClass="opacityHover"
+                            oncomplete="#{rich:component('classificacoesParaVariavelPanel')}.show()"
+                            rendered="#{var.type eq 'EDITOR' or var.type eq 'FILE'}">
+                            <h:graphicImage
+                                title="#{infoxMessages['variavelClassificacaoDocumento.gerenciarClassificacoes']}"
+                                status=":status" url="#{wiSkin.imageFolder}/hamburger.png" />
               url="#{layoutController.getResourceUrlByPath('/imagens/hamburger.png')}" />
-            <f:setPropertyActionListener value="#{var.name}" target="#{variavelClassificacaoDocumentoAction.currentVariable}" />
-            <f:setPropertyActionListener value="#{var.type}" target="#{variavelClassificacaoDocumentoAction.currentVariableType}" />
-          </a:commandLink>
-        </h:form>
-      </div>
-    </rich:column>
-    <rich:column>
-      <f:facet name="header">#{infoxMessages['process.task.var']}</f:facet>
-      <h:form>
-        <s:div id="varDiv">
-          <h:message for="varName" />
-          <h:inputText
-            id="varName"
-            rendered="#{!empty var.name or empty t.previousVariables}"
-            value="#{var.name}">
-            <a:ajax
-              execute="@this"
-              event="change"
-              render="varDiv, varLabel, pageBodyDialogMessage, resetVariableForm"
-              limitRender="true" />
-            <f:validator validatorId="jsfComponentIdValidator" />
-          </h:inputText>
-            <h:outputScript>
+                                target="#{variavelClassificacaoDocumentoAction.currentVariable}" />
+                            <f:setPropertyActionListener value="#{var.type}"
+                                target="#{variavelClassificacaoDocumentoAction.currentVariableType}" />
+                        </a:commandLink>
+                    </h:form>
+                </div>
+            </rich:column>
+            <rich:column>
+                <f:facet name="header">#{infoxMessages['process.task.var']}</f:facet>
+                <h:form>
+                    <s:div id="varDiv">
+                        <h:message for="varName" />
+                        <h:inputText id="varName" rendered="#{!empty var.name or empty t.previousVariables}"
+                            value="#{var.name}">
+                            <a:ajax execute="@this" event="change"
+                                render="varDiv, varLabel, pageBodyDialogMessage, resetVariableForm" limitRender="true" />
+                            <f:validator validatorId="jsfComponentIdValidator" />
+                        </h:inputText>
+                        <h:outputScript>
                 function customFilter(subString, value) {
                     if (subString.length >= 1) {
                         if (value.indexOf(subString) != -1)
@@ -160,213 +116,120 @@
                         return false;
                 };
             </h:outputScript>
-          <rich:autocomplete
-            value="#{var.name}"
-            rendered="#{empty var.name and !empty t.previousVariables}"
-            selectFirst="false"
-            autocompleteList="#{t.previousVariables}"
-            mode="client" minChars="2" clientFilterFunction="customFilter">
-            <a:ajax
-              status=":status"
-              listener="#{var.copyVariable()}"
-              event="blur"
-              render="varDiv,writable,varLabel,formVariableType,resetVariableForm"
-              limitRender="true" />
-            <a:ajax
-              status=":status"
-              listener="#{var.copyVariable()}"
-              event="selectitem"
-              render="varDiv,writable,varLabel,formVariableType,resetVariableForm"
-              limitRender="true" />
-          </rich:autocomplete>
-        </s:div>
-      </h:form>
-    </rich:column>
-    <rich:column>
-      <f:facet name="header">#{infoxMessages['process.task.var.label']}</f:facet>
-      <h:form>
-        <s:div id="varLabel">
-          <h:inputText value="#{var.label}">
-            <a:ajax
-              execute="@this"
-              limitRender="true"
-              event="change"
-              render="varLabel" />
-          </h:inputText>
-        </s:div>
-      </h:form>
-    </rich:column>
-    <rich:column>
-      <f:facet name="header">#{infoxMessages['process.task.var.modo']}</f:facet>
-      <h:form>
-        <h:selectBooleanCheckbox
-          id="writable"
-          styleClass="checkbox"
-          value="#{var.writable}">
-          <a:ajax
-            execute="@this"
-            limitRender="true"
-            event="change"
-            render="readable,writable,resetVariableForm" />
-        </h:selectBooleanCheckbox>
-      </h:form>
-    </rich:column>
-    <rich:column>
-      <f:facet name="header">#{infoxMessages['process.task.var.required']}</f:facet>
-      <h:form>
-        <h:selectBooleanCheckbox
-          id="required"
-          styleClass="checkbox"
-          value="#{var.required}">
-          <a:ajax
-            execute="@this"
-            limitRender="true"
-            event="change"
-            render="readable,writable,hidden" />
-        </h:selectBooleanCheckbox>
-      </h:form>
-    </rich:column>
-    <rich:column>
-      <f:facet name="header">#{infoxMessages['process.task.var.hidden']}</f:facet>
-      <h:form>
-        <h:selectBooleanCheckbox
-          id="hidden"
-          styleClass="checkbox"
-          value="#{var.hidden}">
-          <a:ajax
-            execute="@this"
-            limitRender="true"
-            event="change"
-            render="readable,writable,required" />
-        </h:selectBooleanCheckbox>
-      </h:form>
-    </rich:column>
-    <rich:column>
-      <f:facet name="header">Inicia vazia?</f:facet>
-      <h:form id="resetVariableForm">
-        <h:selectBooleanCheckbox
-          id="resetVariable"
-          rendered="#{var.podeIniciarVazia()}"
-          styleClass="checkbox"
-          style="align: center"
-          value="#{var.iniciaVazia}">
-          <a:ajax
-            execute="@this"
-            limitRender="true"
-            event="change"
-            render="readable,writable,required,resetVariableForm" />
-        </h:selectBooleanCheckbox>
-      </h:form>
-    </rich:column>
-    <rich:column>
-      <f:facet name="header">#{infoxMessages['process.task.var.type']}</f:facet>
-      <h:form id="formVariableType">
-        <wi:selectOneMenu
-          id="type"
-          value="#{var.type}"
-          items="#{taskFitter.typeList}"
-          optionLabel="#{infoxMessages[item.label]}"
-          widthDiv="100%"
-          hideNoSelectionLabel=""
-          required="true">
-          <a:ajax
-            event="change"
-            execute="true"
-            status=":status"
-            listener="#{t.processVarTypeChange(var)}"
-            render="addVarDiv, @form, pageBodyDialogMessage, varDiv, toolbarVariableForm, resetVariableForm"
-            limitRender="true" />
-        </wi:selectOneMenu>
-        <a:jsFunction
-          name="renderDominio"
-          execute="@this"
-          render="definicaoDominio"
-          limitRender="true"
-          oncomplete="hideLoading();"
-          onbegin="showLoading();"
-          action="#{dominioVariavelTarefaCrudAction.reset}" />
-        <a:jsFunction
-          name="renderData"
-          execute="@this"
-          render="definicaoTipoData"
-          limitRender="true"
-          oncomplete="hideLoading();"
-          onbegin="showLoading();" />
-        <rich:panel
-          id="definicaoTipoData"
-          rendered="#{var.data}">
-          <wi:selectOneMenuEnum
-            id="tipoDeData"
-            label="#{infoxMessages['data.tipoData']}"
-            showLabelSelecione="true"
-            items="#{var.getTypeDateValues()}"
-            value="#{var.validacaoDataEnum}">
-            <a:ajax
-              event="change"
-              execute="@this"
-              status=":status"
-              listener="#{t.clearHasTaskPage()}"
-              render="addVarDiv, @this, pageBodyDialogMessage, varDiv"
-              limitRender="true" />
-          </wi:selectOneMenuEnum>
-        </rich:panel>
-        <rich:panel
-          id="definicaoDominio"
-          rendered="#{var.possuiDominio}">
-          <ui:param
-            name="dominio"
-            value="#{var.dominioVariavelTarefa}" />
-          <ui:param
-            name="params"
-            value="#{not empty dominio ? '?id='.concat(dominio.id).concat('&amp;tab=form') : ''}" />
-          <f:facet name="header">
-            <h:outputText value="Valor" />
-          </f:facet>
-          <wi:outputText
-            id="dominioAtual"
-            label="Valor atual"
-            value="#{empty var.dominioVariavelTarefa ? 'Nenhum' : var.dominioVariavelTarefa.nome}" />
-          <div />
-          <a:commandLink
-            value="Configurar valor"
-            onclick="showLoading()"
-            limitRender="true"
-            render="dominioVariavelTarefaPanel"
-            execute="@this"
-            oncomplete="hideLoading();#{rich:component('dominioVariavelTarefaPanel')}.show()"
-            style="padding-right: 5px">
-            <f:setPropertyActionListener
-              target="#{dominioVariavelTarefaCrudAction.currentVariable}"
-              value="#{var}" />
-          </a:commandLink>
-          <a:commandLink
-            value="Remover valor"
-            onclick="showLoading()"
-            limitRender="true"
-            render="definicaoDominio"
-            execute="@this"
-            oncomplete="hideLoading();"
-            rendered="#{not empty var.dominioVariavelTarefa}">
-            <f:setPropertyActionListener
-              target="#{var.dominioVariavelTarefa}"
-              value="#{null}" />
-          </a:commandLink>
-          </rich:panel>
-          <rich:panel id="definicaoFragmento" rendered="#{var.fragment}">
-            <wi:selectOneMenu id="tipoDeFragmento" value="#{var.fragmentConfiguration}"
-              items="#{fragmentConfigurationCollector.availableFragmentConfigurations}"
-              label="#{infoxMessages['process.def.var.fragmentsConfiguration.list']}">
-              <a:ajax
-              event="change"
-              execute="@this"
-              status=":status"
-              listener="#{t.clearHasTaskPage()}"
-              render="addVarDiv, @this, pageBodyDialogMessage, varDiv"
-              limitRender="true" />
-              <f:converter converterId="fragmentConfigurationConverter" />
-            </wi:selectOneMenu>
-          </rich:panel>
-        </h:form>
-    </rich:column>
-  </rich:dataTable>
+                        <rich:autocomplete value="#{var.name}"
+                            rendered="#{empty var.name and !empty t.previousVariables}" selectFirst="false"
+                            autocompleteList="#{t.previousVariables}" mode="client" minChars="2"
+                            clientFilterFunction="customFilter">
+                            <a:ajax status=":status" listener="#{var.copyVariable()}" event="blur"
+                                render="varDiv,writable,varLabel,formVariableType,resetVariableForm" limitRender="true" />
+                            <a:ajax status=":status" listener="#{var.copyVariable()}" event="selectitem"
+                                render="varDiv,writable,varLabel,formVariableType,resetVariableForm" limitRender="true" />
+                        </rich:autocomplete>
+                    </s:div>
+                </h:form>
+            </rich:column>
+            <rich:column>
+                <f:facet name="header">#{infoxMessages['process.task.var.label']}</f:facet>
+                <h:form>
+                    <s:div id="varLabel">
+                        <h:inputText value="#{var.label}">
+                            <a:ajax execute="@this" limitRender="true" event="change" render="varLabel" />
+                        </h:inputText>
+                    </s:div>
+                </h:form>
+            </rich:column>
+            <rich:column>
+                <f:facet name="header">#{infoxMessages['process.task.var.modo']}</f:facet>
+                <h:form>
+                    <h:selectBooleanCheckbox id="writable" styleClass="checkbox" value="#{var.writable}">
+                        <a:ajax execute="@this" limitRender="true" event="change"
+                            render="readable,writable,resetVariableForm" />
+                    </h:selectBooleanCheckbox>
+                </h:form>
+            </rich:column>
+            <rich:column>
+                <f:facet name="header">#{infoxMessages['process.task.var.required']}</f:facet>
+                <h:form>
+                    <h:selectBooleanCheckbox id="required" styleClass="checkbox" value="#{var.required}">
+                        <a:ajax execute="@this" limitRender="true" event="change" render="readable,writable,hidden" />
+                    </h:selectBooleanCheckbox>
+                </h:form>
+            </rich:column>
+            <rich:column>
+                <f:facet name="header">#{infoxMessages['process.task.var.hidden']}</f:facet>
+                <h:form>
+                    <h:selectBooleanCheckbox id="hidden" styleClass="checkbox" value="#{var.hidden}">
+                        <a:ajax execute="@this" limitRender="true" event="change" render="readable,writable,required" />
+                    </h:selectBooleanCheckbox>
+                </h:form>
+            </rich:column>
+            <rich:column>
+                <f:facet name="header">Inicia vazia?</f:facet>
+                <h:form id="resetVariableForm">
+                    <h:selectBooleanCheckbox id="resetVariable" rendered="#{var.podeIniciarVazia()}"
+                        styleClass="checkbox" style="align: center" value="#{var.iniciaVazia}">
+                        <a:ajax execute="@this" limitRender="true" event="change"
+                            render="readable,writable,required,resetVariableForm" />
+                    </h:selectBooleanCheckbox>
+                </h:form>
+            </rich:column>
+            <rich:column>
+                <f:facet name="header">#{infoxMessages['process.task.var.type']}</f:facet>
+                <h:form id="formVariableType">
+                    <wi:selectOneMenu id="type" value="#{var.type}" items="#{taskFitter.typeList}"
+                        optionLabel="#{infoxMessages[item.label]}" widthDiv="100%" hideNoSelectionLabel=""
+                        required="true">
+                        <a:ajax event="change" execute="true" status=":status" listener="#{t.processVarTypeChange(var)}"
+                            render="addVarDiv, @form, pageBodyDialogMessage, varDiv, toolbarVariableForm, resetVariableForm"
+                            limitRender="true" />
+                    </wi:selectOneMenu>
+                    <a:jsFunction name="renderDominio" execute="@this" render="definicaoDominio" limitRender="true"
+                        oncomplete="hideLoading();" onbegin="showLoading();"
+                        action="#{dominioVariavelTarefaCrudAction.reset}" />
+                    <a:jsFunction name="renderData" execute="@this" render="definicaoTipoData" limitRender="true"
+                        oncomplete="hideLoading();" onbegin="showLoading();" />
+                    <rich:panel id="definicaoTipoData" rendered="#{var.data}">
+                        <wi:selectOneMenuEnum id="tipoDeData" label="#{infoxMessages['data.tipoData']}"
+                            showLabelSelecione="true" items="#{var.getTypeDateValues()}"
+                            value="#{var.validacaoDataEnum}">
+                            <a:ajax event="change" execute="@this" status=":status" listener="#{t.clearHasTaskPage()}"
+                                render="addVarDiv, @this, pageBodyDialogMessage, varDiv" limitRender="true" />
+                        </wi:selectOneMenuEnum>
+                    </rich:panel>
+                    <rich:panel id="definicaoDominio" rendered="#{var.possuiDominio}">
+                        <ui:param name="dominio" value="#{var.dominioVariavelTarefa}" />
+                        <ui:param name="params"
+                            value="#{not empty dominio ? '?id='.concat(dominio.id).concat('&amp;tab=form') : ''}" />
+                        <f:facet name="header">
+                            <h:outputText value="Valor" />
+                        </f:facet>
+                        <wi:outputText id="dominioAtual" label="Valor atual"
+                            value="#{empty var.dominioVariavelTarefa ? 'Nenhum' : var.dominioVariavelTarefa.nome}" />
+                        <div />
+                        <a:commandLink value="Configurar valor" onclick="showLoading()" limitRender="true"
+                            render="dominioVariavelTarefaPanel" execute="@this"
+                            oncomplete="hideLoading();#{rich:component('dominioVariavelTarefaPanel')}.show()"
+                            style="padding-right: 5px">
+                            <f:setPropertyActionListener target="#{dominioVariavelTarefaCrudAction.currentVariable}"
+                                value="#{var}" />
+                        </a:commandLink>
+                        <a:commandLink value="Remover valor" onclick="showLoading()" limitRender="true"
+                            render="definicaoDominio" execute="@this" oncomplete="hideLoading();"
+                            rendered="#{not empty var.dominioVariavelTarefa}">
+                            <f:setPropertyActionListener target="#{var.dominioVariavelTarefa}" value="#{null}" />
+                        </a:commandLink>
+                    </rich:panel>
+                    <rich:panel id="definicaoFragmento" rendered="#{var.fragment}">
+                        <wi:selectOneMenu id="tipoDeFragmento" value="#{var.fragmentConfiguration}"
+                            items="#{fragmentConfigurationCollector.availableFragmentConfigurations}"
+                            label="#{infoxMessages['process.def.var.fragmentsConfiguration.list']}">
+                            <a:ajax event="change" execute="@this" status=":status" listener="#{t.clearHasTaskPage()}"
+                                render="addVarDiv, @this, pageBodyDialogMessage, varDiv" limitRender="true" />
+                            <f:converter converterId="fragmentConfigurationConverter" />
+                        </wi:selectOneMenu>
+                    </rich:panel>
+                </h:form>
+            </rich:column>
+        </rich:dataTable>
+    </rich:collapsiblePanel>
 </ui:composition>

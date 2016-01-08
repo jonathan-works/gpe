@@ -11,7 +11,6 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.instantiation.Delegation;
-import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
@@ -19,6 +18,7 @@ import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
 import br.com.infox.epp.documento.list.associative.AssociativeModeloDocumentoList;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
+import br.com.infox.ibpm.task.assignment.SingleActorAssignmentHandler;
 import br.com.infox.ibpm.variable.VariableAccessHandler;
 import br.com.infox.jbpm.action.ActionTemplateHandler;
 import br.com.infox.seam.util.ComponentUtil;
@@ -35,15 +35,21 @@ public class TaskHandler implements Serializable {
 
     public TaskHandler(Task task) {
         this.task = task;
-        if (task != null && task.getSwimlane() != null) {
-            this.swimlaneName = task.getSwimlane().getName();
-            // Para as tarefas já existentes
-            if (task.getTaskController() != null && task.getTaskController().getTaskControllerDelegation() == null) {
-	            Delegation delegation = new Delegation(InfoxTaskControllerHandler.class.getName());
-	            delegation.setProcessDefinition(task.getProcessDefinition());
-	            task.getTaskController().setTaskControllerDelegation(delegation);
-            }
+        if (task != null){
+        	if (task.getSwimlane() != null) {
+        		this.swimlaneName = task.getSwimlane().getName();
+        	}
+        	// Para as tarefas já existentes
+        	if (task.getTaskController() != null && task.getTaskController().getTaskControllerDelegation() == null) {
+        		Delegation delegation = new Delegation(InfoxTaskControllerHandler.class.getName());
+        		delegation.setProcessDefinition(task.getProcessDefinition());
+        		task.getTaskController().setTaskControllerDelegation(delegation);
+        	}
         }
+    }
+    
+    public boolean isExpressionAssigned(){
+    	return getTask() != null && getTask().getSwimlane() == null;
     }
 
     public Task getTask() {
@@ -54,22 +60,81 @@ public class TaskHandler implements Serializable {
         this.task = task;
     }
 
+    public String getAssigneeExpression(){
+    	return task == null || task.getAssignmentDelegation() == null ? null : task.getAssignmentDelegation().getConfiguration();
+    }
+    public void setAssigneeExpression(String expression){
+    	if (task != null){
+			task.setAssignmentDelegation(createAssignmentDelegation(expression));
+    	}
+    }
+    
+    public String getPooledActorsExpression(){
+    	return task == null ? null : task.getPooledActorsExpression();
+    }
+    public void setPooledActorsExpression(String expression){
+    	if (task != null){
+    		task.setPooledActorsExpression(expression);
+    	}
+    }
+
+    public void setAssignmentType(String assignmentType){
+    	switch (assignmentType) {
+		case "assignee":
+			setAssigneeExpression("");
+			break;
+		case "pooledActorsExpression":
+			setPooledActorsExpression("");
+			break;
+		case "swimlane":
+			task.setSwimlane(task.getTaskMgmtDefinition().getSwimlanes().values().iterator().next());
+			break;
+		default:
+			break;
+		}
+    }
+    
+    public String getAssignmentType(){
+    	if (getTask() != null){
+    		Task task = getTask();
+    		if (task.getSwimlane() != null){
+    			return "swimlane";
+    		}
+    		if (task.getPooledActorsExpression() != null){
+    			return "pooledActorsExpression";
+    		}
+    		if (task.getAssignmentDelegation() != null) {
+				if (SingleActorAssignmentHandler.class.getName().equals(task.getAssignmentDelegation().getClassName())) {
+					return "assignee";
+				}
+			}
+    	}
+    	return null;
+    }
+    
     public String getSwimlaneName() {
-        return swimlaneName;
+        return task == null || task.getSwimlane() == null ? null : task.getSwimlane().getName();
     }
 
     public void setSwimlaneName(String swimlaneName) {
         this.swimlaneName = swimlaneName;
         if (swimlaneName == null) {
-            task.setSwimlane(null);
+        	task.setSwimlane(null);
         } else {
             if (task.getTaskMgmtDefinition() == null) {
                 task.setTaskMgmtDefinition(new TaskMgmtDefinition());
             }
-            Swimlane swimlane = task.getTaskMgmtDefinition().getSwimlane(swimlaneName);
-            task.setSwimlane(swimlane);
+            task.setSwimlane(task.getTaskMgmtDefinition().getSwimlane(swimlaneName));
         }
     }
+
+	private Delegation createAssignmentDelegation(String configuration) {
+		Delegation assignmentDelegation = new Delegation(SingleActorAssignmentHandler.class.getName());
+		assignmentDelegation.setConfigType("constructor");
+		assignmentDelegation.setProcessDefinition(task.getProcessDefinition());
+		assignmentDelegation.setConfiguration(configuration);
+		return assignmentDelegation;
+	}
 
     public boolean isDirty() {
         return dirty;
