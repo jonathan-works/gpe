@@ -1,13 +1,12 @@
 package br.com.infox.epp.layout.view;
 
-import static java.text.MessageFormat.format;
-
 import java.io.Serializable;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import br.com.infox.epp.layout.manager.LayoutManager;
 import br.com.infox.epp.layout.manager.SkinSessaoManager;
 
 @Named
@@ -21,10 +20,12 @@ public class LayoutController implements Serializable {
 	@Inject
 	private SkinSessaoManager skinSessaoManager;
 	
+	@Inject
+	private LayoutManager layoutManager;
+	
 	public String getResourcePath(String path) {
 		String skin = skinSessaoManager.getSkin();
-		return format("/rest/skin/{0}/{1}", skin, path);
-		//return format("/resources/styleSkinInfox/{0}/{1}", skin, path);
+		return layoutManager.getResourcePath(skin, path);
 	}
 
 

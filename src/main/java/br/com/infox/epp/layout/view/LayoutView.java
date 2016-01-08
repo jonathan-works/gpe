@@ -16,8 +16,8 @@ import org.richfaces.event.FileUploadEvent;
 import org.richfaces.model.UploadedFile;
 
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.layout.entity.ResourceSkin;
 import br.com.infox.epp.layout.entity.Skin;
+import br.com.infox.epp.layout.entity.ResourceBin.TipoResource;
 import br.com.infox.epp.layout.manager.LayoutManager;
 
 @Named
@@ -34,23 +34,16 @@ public class LayoutView implements Serializable {
 	@Inject
 	private LayoutManager layoutManager;
 	
-	private ResourceSkin logotipos;
-	
-	
 	private byte[] logoLogin;
 	private byte[] logoTopo;
 	
 	private Image imagemLogoLogin;
-	private TipoImagem tipoImagemLogoLogin;
+	private TipoResource tipoImagemLogoLogin;
 	private Image imagemLogoTopo;
-	private TipoImagem tipoImagemLogoTopo;
+	private TipoResource tipoImagemLogoTopo;
 	
 	@Inject
 	private Logger log;
-	
-	private enum TipoImagem {
-		PNG, JPG, GIF
-	}
 	
 	public List<Skin> getSkins() {
 		return layoutManager.listSkins();
@@ -75,25 +68,13 @@ public class LayoutView implements Serializable {
 	}
 	
 	public String persistLogoTopo() {
-		layoutManager.setLogoTopo(logoTopo);
+		layoutManager.setLogoTopo(logoTopo, tipoImagemLogoTopo);
 		return "";
 	}
 	
 	public String persistLogoLogin() {
-		layoutManager.setLogoLogin(logoLogin);
+		layoutManager.setLogoLogin(logoLogin, tipoImagemLogoLogin);
 		return "";
-	}
-	
-	public void newLogotipo() {
-		logotipos = new ResourceSkin();
-	}
-
-	public ResourceSkin getLogotipos() {
-		return logotipos;
-	}
-
-	public void setLogotipos(ResourceSkin logotipos) {
-		this.logotipos = logotipos;
 	}
 	
 	private Image getImagem(FileUploadEvent evt) {
@@ -109,16 +90,22 @@ public class LayoutView implements Serializable {
 		return null;		
 	}
 	
-	private TipoImagem getTipoImagem(FileUploadEvent evt) {
+	private TipoResource getTipoImagem(FileUploadEvent evt) {
 		String extensao = evt.getUploadedFile().getFileExtension();
 		if(extensao.equalsIgnoreCase("jpg") || extensao.equalsIgnoreCase("jpeg")) {
-			return TipoImagem.JPG;
+			return TipoResource.JPG;
 		}
-		else if(extensao.equalsIgnoreCase(TipoImagem.GIF.toString())) {
-			return TipoImagem.GIF;
+		else if(extensao.equalsIgnoreCase(TipoResource.GIF.toString())) {
+			return TipoResource.GIF;
+		}
+		else if(extensao.equalsIgnoreCase(TipoResource.GIF.toString())) {
+			return TipoResource.GIF;
+		}
+		else if(extensao.equalsIgnoreCase(TipoResource.SVG.toString())) {
+			return TipoResource.SVG;
 		}
 		else {
-			return TipoImagem.PNG;
+			return TipoResource.PNG;
 		}
 	}
 	

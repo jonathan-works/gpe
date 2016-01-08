@@ -12,7 +12,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.infox.constants.LengthConstants;
-import br.com.infox.core.persistence.ORConstants;
 
 @Entity
 @Table(name = Skin.TABLE_NAME)
@@ -21,10 +20,10 @@ public class Skin implements Comparable<Skin> {
 	public static final String TABLE_NAME = "tb_skin";
 	
 	@Id
-	@SequenceGenerator(allocationSize = 1, initialValue = 1, name = ORConstants.GENERATOR, sequenceName = "sq_skin")
-	@GeneratedValue(generator = ORConstants.GENERATOR, strategy = GenerationType.SEQUENCE)
+	@SequenceGenerator(allocationSize = 1, initialValue = 1, name = "SkinGenerator", sequenceName = "sq_skin")
+	@GeneratedValue(generator = "SkinGenerator", strategy = GenerationType.SEQUENCE)
 	@Column(name = "id_skin", nullable = false, unique = true)
-	private Integer id;
+	private Long id;
 	
 	@NotNull
 	@Size(max=LengthConstants.CODIGO_DOCUMENTO)
@@ -39,7 +38,7 @@ public class Skin implements Comparable<Skin> {
 	@Column(name = "in_padrao")
 	private boolean padrao;
 	
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 

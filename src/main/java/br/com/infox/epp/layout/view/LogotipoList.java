@@ -6,11 +6,11 @@ import javax.inject.Named;
 
 import br.com.infox.core.list.DataList;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.layout.entity.ResourceSkin;
+import br.com.infox.epp.layout.entity.ResourceBin;
 
 @Named
 @ViewScoped
-public class LogotipoList extends DataList<ResourceSkin> implements Serializable {
+public class LogotipoList extends DataList<ResourceBin> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -24,7 +24,7 @@ public class LogotipoList extends DataList<ResourceSkin> implements Serializable
 		return "from Resources";
 	}
 
-	public String getTextoSkins(ResourceSkin logotipo) {
+	public String getTextoSkins(ResourceBin resource) {
 		/*if (logotipo.getSkinsAssociadas() == null) {
 			return null;
 		}

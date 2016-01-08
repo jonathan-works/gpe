@@ -11,6 +11,7 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
+import br.com.infox.epp.layout.manager.LayoutManager;
 import br.com.infox.epp.layout.rest.entity.MetadadosResource;
 
 @Path("skin/{codigo}")
@@ -18,11 +19,12 @@ import br.com.infox.epp.layout.rest.entity.MetadadosResource;
 public class LayoutRest {
 	
 	@Inject
-	LayoutRestService servico;
+	LayoutManager servico;
 	
 	@GET
 	@Path("{path : .+}")
 	public Response getResource(@PathParam("codigo") String codigoSkin, @PathParam("path") String pathRecurso, @Context Request request) {
+		pathRecurso = "/" + pathRecurso;
 		MetadadosResource metadados = servico.getMetadados(codigoSkin, pathRecurso);
 		EntityTag etag = metadados.getEtag();
 		ResponseBuilder builder = request.evaluatePreconditions(etag);

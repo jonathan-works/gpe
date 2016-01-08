@@ -1,5 +1,7 @@
 package br.com.infox.epp.layout.manager;
 
+import java.net.URL;
+import java.text.MessageFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -7,12 +9,16 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import br.com.infox.epp.layout.dao.BinarioDao;
+import br.com.infox.epp.layout.dao.ResourceBinDao;
 import br.com.infox.epp.layout.dao.ResourceDao;
 import br.com.infox.epp.layout.dao.SkinDao;
 import br.com.infox.epp.layout.entity.Binario;
 import br.com.infox.epp.layout.entity.Resource;
-import br.com.infox.epp.layout.entity.Resource.TipoResource;
+import br.com.infox.epp.layout.entity.Resource.Resources;
+import br.com.infox.epp.layout.entity.ResourceBin;
+import br.com.infox.epp.layout.entity.ResourceBin.TipoResource;
 import br.com.infox.epp.layout.entity.Skin;
+import br.com.infox.epp.layout.rest.entity.MetadadosResource;
 
 @Stateless
 public class LayoutManager {
@@ -20,15 +26,17 @@ public class LayoutManager {
 	@Inject
 	private SkinDao skinDao;
 
-	// Utilizado @EJB devido a um bug na implementação do CDI do JBoss
 	@Inject
 	private SkinSessaoManager skinManager;
 
 	@Inject
-	private ResourceDao resourceDao;
+	private ResourceBinDao resourceBinDao;
 	
 	@Inject
 	private BinarioDao binarioDao;
+	
+	@Inject
+	private ResourceDao resourceDao;
 	
 	public List<Skin> listSkins() {
 		return skinDao.findAll();
@@ -51,53 +59,85 @@ public class LayoutManager {
 		return binarioDao.findById(idBinario).getBinario();
 	}
 
-	private void setResource(TipoResource tipo, byte[] bin) {
-		List<Resource> resourcesAtuais = resourceDao.findByTipo(tipo);
+	private void setResourceBin(String codigo, byte[] bin, TipoResource tipo) {
+		Resource resource = resourceDao.findByCodigo(codigo);
+		List<ResourceBin> resourcesAtuais = resourceBinDao.findByResource(resource);
 		if (resourcesAtuais != null) {
-			for (Resource resourceAtual : resourcesAtuais) {
+			for (ResourceBin resourceAtual : resourcesAtuais) {
 				binarioDao.removeById(resourceAtual.getIdBinario());
-				resourceDao.remove(resourceAtual);
+				resourceBinDao.remove(resourceAtual);
 			}
 		}
-		Resource resource = new Resource();
-		resource.setTipo(tipo);
-		resource.setDataModificacao(new Date());
+		ResourceBin resourceBin = new ResourceBin();
+		resourceBin.setResource(resource);
+		resourceBin.setTipo(tipo);
+		resourceBin.setDataModificacao(new Date());
 		
 		Binario binario = new Binario();
 		binario.setBinario(bin);
 		binarioDao.persist(binario);
-		resource.setIdBinario(binario.getId());
+		resourceBin.setIdBinario(binario.getId());
 		List<Skin> skinsAssociadas = skinDao.findAll();
 		for (Skin skin : skinsAssociadas) {
-			resource.add(skin);
+			resourceBin.add(skin);
 		}
-		resourceDao.persist(resource);
+		resourceBinDao.persist(resourceBin);
 
 	}
 
-	public void setLogoLogin(byte[] logoLogin) {
-		setResource(TipoResource.LOGO_LOGIN, logoLogin);
+	public void setLogoLogin(byte[] logoLogin, TipoResource tipoResource) {
+		setResourceBin(Resources.LOGO_LOGIN.toString(), logoLogin, tipoResource);
 	}
 
-	public void setLogoTopo(byte[] logoTopo) {
-		setResource(TipoResource.LOGO_TOPO, logoTopo);
+	public void setLogoTopo(byte[] logoTopo, TipoResource tipoResource) {
+		setResourceBin(Resources.LOGO_TOPO.toString(), logoTopo, tipoResource);
 	}
 	
-	public Resource getResource(String codigoSkin, String pathRecurso) {
+	public ResourceBin getResourceBin(String codigoSkin, String pathRecurso) {
 		Skin skin = skinDao.findByCodigo(codigoSkin);
 		if(skin == null) {
 			return null;
 		}
-		Resource retorno =  resourceDao.findBySkinAndPath(skin, pathRecurso);
+		ResourceBin retorno = resourceBinDao.findBySkinAndPath(skin, pathRecurso);
 		return retorno;
 	}
 	
 	public byte[] carregarBinario(String codigoSkin, String pathRecurso) {
-		Resource resource = getResource(codigoSkin, pathRecurso);
-		if(resource == null) {
+		ResourceBin resourceBin = getResourceBin(codigoSkin, pathRecurso);
+		if(resourceBin == null) {
 			return null;
 		}
-		return carregarBinario(resource.getIdBinario());
+		return carregarBinario(resourceBin.getIdBinario());
 	}
+	
+	public String getPathResourceRest(String codigoSkin, String pathRecurso) {
+		return MessageFormat.format("/rest/skin/{0}{1}", codigoSkin, pathRecurso);
+	}
+
+	
+	public String getPathResourceJava(String codigoSkin, String pathRecurso) {
+		return MessageFormat.format("/resources/styleSkinInfox/{0}{1}", codigoSkin, pathRecurso);
+	}
+	
+	public MetadadosResource getMetadados(String codigoSkin, String pathRecurso) {
+		ResourceBin resourceBin = getResourceBin(codigoSkin, pathRecurso);
+		//Retorna resources do banco
+		if(resourceBin != null) {
+			return new MetadadosResource(resourceBin);			
+		}
+		
+		URL url = LayoutManager.class.getResource(getPathResourceJava(codigoSkin, pathRecurso));
+		return new MetadadosResource(url);
+	}
+	
+	public String getResourcePath(String codigoSkin, String path) {
+		ResourceBin resourceBin = getResourceBin(codigoSkin, path);
+		if(resourceBin != null) {
+			return getPathResourceRest(codigoSkin, path);
+		}
+		return getPathResourceJava(codigoSkin, path);
+	}
+	
+	
 	
 }

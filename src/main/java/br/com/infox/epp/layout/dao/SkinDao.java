@@ -7,6 +7,7 @@ import javax.persistence.TypedQuery;
 
 import br.com.infox.cdi.dao.Dao;
 import br.com.infox.epp.layout.entity.Skin;
+import br.com.infox.hibernate.util.HibernateUtil;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -25,6 +26,7 @@ public class SkinDao extends Dao<Skin, Integer> {
         String jpql = "from Skin where codigo = :codigo";
         TypedQuery<Skin> query = getEntityManager().createQuery(jpql, Skin.class);
         query.setParameter("codigo", codigo);
+        HibernateUtil.enableCache(query);
         return getSingleResult(query);
     }
 	
