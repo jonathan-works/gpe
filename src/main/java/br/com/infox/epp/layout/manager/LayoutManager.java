@@ -53,6 +53,7 @@ public class LayoutManager {
 		skinDao.persist(skinPadraoAntiga);
 		skinDao.persist(skin);
 		skinManager.setSkin(skin.getCodigo());
+		skinManager.setSkinCookie(skin.getCodigo());
 	}
 	
 	public byte[] carregarBinario(Integer idBinario) {
