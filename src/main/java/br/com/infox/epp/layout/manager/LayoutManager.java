@@ -18,9 +18,8 @@ import br.com.infox.epp.layout.dao.ResourceDao;
 import br.com.infox.epp.layout.dao.SkinDao;
 import br.com.infox.epp.layout.entity.Binario;
 import br.com.infox.epp.layout.entity.Resource;
-import br.com.infox.epp.layout.entity.Resource.Resources;
 import br.com.infox.epp.layout.entity.ResourceBin;
-import br.com.infox.epp.layout.entity.ResourceBin.TipoResource;
+import br.com.infox.epp.layout.entity.ResourceBin.TipoArquivo;
 import br.com.infox.epp.layout.entity.Skin;
 import br.com.infox.epp.layout.rest.entity.MetadadosResource;
 
@@ -41,6 +40,10 @@ public class LayoutManager {
 	
 	@Inject
 	private ResourceDao resourceDao;
+	
+	public List<Resource> listResources() {
+		return resourceDao.findAll();
+	}
 	
 	public List<Skin> listSkins() {
 		return skinDao.findAll();
@@ -64,8 +67,8 @@ public class LayoutManager {
 		return binarioDao.findById(idBinario).getBinario();
 	}
 
-	private void setResourceBin(String codigo, byte[] bin, TipoResource tipo) {
-		Resource resource = resourceDao.findByCodigo(codigo);
+	public void setResource(String codigoResource, byte[] bin, TipoArquivo tipoArquivo) {
+		Resource resource = resourceDao.findByCodigo(codigoResource);
 		List<ResourceBin> resourcesAtuais = resourceBinDao.findByResource(resource);
 		if (resourcesAtuais != null) {
 			for (ResourceBin resourceAtual : resourcesAtuais) {
@@ -75,7 +78,7 @@ public class LayoutManager {
 		}
 		ResourceBin resourceBin = new ResourceBin();
 		resourceBin.setResource(resource);
-		resourceBin.setTipo(tipo);
+		resourceBin.setTipo(tipoArquivo);
 		resourceBin.setDataModificacao(new Date());
 		
 		Binario binario = new Binario();
@@ -90,14 +93,6 @@ public class LayoutManager {
 
 	}
 
-	public void setLogoLogin(byte[] logoLogin, TipoResource tipoResource) {
-		setResourceBin(Resources.LOGO_LOGIN.toString(), logoLogin, tipoResource);
-	}
-
-	public void setLogoTopo(byte[] logoTopo, TipoResource tipoResource) {
-		setResourceBin(Resources.LOGO_TOPO.toString(), logoTopo, tipoResource);
-	}
-	
 	/**
 	 * Retorna o código de um resource a partir de seu path
 	 */

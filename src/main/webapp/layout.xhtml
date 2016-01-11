@@ -30,47 +30,19 @@
 
         </rich:panel>
 
-        <rich:panel id="painelLogoTopo" styleClass="content-block"
+        <rich:panel id="painelResource" styleClass="content-block"
             style="margin-top:1em;"
-            header="#{infoxMessages['layout.logotipoTopo']}">
-            <h:form enctype="multipart/form-data" acceptcharset="UTF-8">
-                <rich:fileUpload id="uploadLogoTopo" execute="@this"
-                    status=":status" limitRender="true" required="true"
-                    onbegin="infox.showLoading('Fazendo upload de arquivos..')"
-                    fileUploadListener="#{layoutView.processUploadLogoTopo}"
-                    addLabel="#{infoxMessages['processoDocumento.addLabel']}"
-                    clearAllLabel="#{infoxMessages['processoDocumento.clearAllLabel']}"
-                    clearLabel="#{infoxMessages['processoDocumento.clearLabel']}"
-                    doneLabel="#{infoxMessages['processoDocumento.doneLabel']}"
-                    uploadLabel="#{infoxMessages['processoDocumento.uploadLabel']}"
-                    sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}"
-                    maxFilesQuantity="1" listHeight="50px"
-                    immediateUpload="true" noDuplicate="true"
-                    render=":pageBodyDialogMessage"
-                    acceptedTypes=".png, .gif, .bmp, .jpg, .svg, .svgz"
-                    onuploadcomplete="infox.hideLoading();"
-                    ontyperejected="alert('Extensão de arquivo inválida');"
-                    onclear="clearUploadFile();">
-                </rich:fileUpload>
-            </h:form>
+            header="#{infoxMessages['layout.imagens']}">
             <h:form>
-                <h:commandButton id="inserirLogotipoTopo"
-                    value="#{infoxMessages['crud.update']}"
-                    action="#{layoutView.persistLogoTopo()}"
-                    render="@all" execute="@none"
-                    styleClass="buttons" />
-            </h:form>
-        </rich:panel>
-
-        <rich:panel id="painelLogoLogin" styleClass="content-block"
-            style="margin-top:1em;"
-            header="#{infoxMessages['layout.logotipoLogin']}">
-            <div id="anexo"></div>
-            <h:form enctype="multipart/form-data" acceptcharset="UTF-8">
-                <rich:fileUpload id="uploadLogoLogin" execute="@this"
+                <wi:selectOneMenuEntity id="comboFluxo"
+                    value="#{layoutView.resource}"
+                    label="#{infoxMessages['layout.imagem']}"
+                    items="#{layoutView.resources}"
+                    showLabelSelecione="true" required="true" />
+                <rich:fileUpload id="uploadResource" execute="@this"
                     status=":status" limitRender="true" required="true"
                     onbegin="infox.showLoading('Fazendo upload de arquivos..')"
-                    fileUploadListener="#{layoutView.processUploadLogoLogin}"
+                    fileUploadListener="#{layoutView.processUploadResource}"
                     addLabel="#{infoxMessages['processoDocumento.addLabel']}"
                     clearAllLabel="#{infoxMessages['processoDocumento.clearAllLabel']}"
                     clearLabel="#{infoxMessages['processoDocumento.clearLabel']}"
@@ -85,16 +57,11 @@
                     ontyperejected="alert('Extensão de arquivo inválida');"
                     onclear="clearUploadFile();">
                 </rich:fileUpload>
+                <h:commandButton id="inserirResource"
+                    value="#{infoxMessages['crud.update']}"
+                    action="#{layoutView.persistResource()}"
+                    render="@all" execute="@none" styleClass="buttons" />
             </h:form>
-            <div>
-                <h:form>
-                    <h:commandButton id="inserirLogotipo"
-                        value="#{infoxMessages['crud.update']}"
-                        action="#{layoutView.persistLogoLogin()}"
-                        render="painelLogoLogin" execute="@none"
-                        styleClass="buttons" />
-                </h:form>
-            </div>
         </rich:panel>
 
     </ui:define>

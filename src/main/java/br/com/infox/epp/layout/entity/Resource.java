@@ -3,6 +3,8 @@ package br.com.infox.epp.layout.entity;
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -42,6 +44,17 @@ public class Resource {
 	@Column(name="ds_path")
 	@Size(max=LengthConstants.DESCRICAO_GRANDE)
 	private String path;
+	
+	
+	@NotNull
+	@Column(name="tp_resource")
+	@Enumerated(EnumType.STRING)
+	private TipoResource tipo;
+	
+	public enum TipoResource {
+		IMG, ICO
+		
+	}
 		
 
 	public String getCodigo() {
@@ -95,5 +108,10 @@ public class Resource {
 		} else if (!getId().equals(other.getId()))
 			return false;
 		return true;
-	}	
+	}
+	
+	@Override
+	public String toString() {
+		return getNome();
+	}
 }

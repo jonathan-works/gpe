@@ -59,9 +59,9 @@ public class ResourceBin {
 	@NotNull
 	@Column(name="tp_resource_bin")
 	@Enumerated(EnumType.STRING)
-	private TipoResource tipo;
+	private TipoArquivo tipo;
 	
-	public enum TipoResource {
+	public enum TipoArquivo {
 		JPG, PNG, GIF, SVG, SVGZ
 	}
 	
@@ -100,11 +100,11 @@ public class ResourceBin {
 		this.idBinario = idBinario;
 	}
 
-	public TipoResource getTipo() {
+	public TipoArquivo getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(TipoResource tipo) {
+	public void setTipo(TipoArquivo tipo) {
 		this.tipo = tipo;
 	}
 

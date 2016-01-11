@@ -13,7 +13,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 
 import com.google.common.net.MediaType;
 
-import br.com.infox.epp.layout.entity.ResourceBin.TipoResource;
+import br.com.infox.epp.layout.entity.ResourceBin.TipoArquivo;
 import br.com.infox.epp.layout.manager.LayoutManager;
 import br.com.infox.epp.layout.rest.entity.MetadadosResource;
 
@@ -43,13 +43,13 @@ public class LayoutRest {
 
 		if (builder == null) {
 			byte[] resource = servico.carregarBinario(codigoSkin, codigoResource);
-			TipoResource tipoResource = metadados.getTipo();
+			TipoArquivo tipoResource = metadados.getTipo();
 			String type = "image/" + tipoResource.toString().toLowerCase();
-			if (tipoResource == TipoResource.SVG || tipoResource == TipoResource.SVGZ) {
+			if (tipoResource == TipoArquivo.SVG || tipoResource == TipoArquivo.SVGZ) {
 				type = MediaType.SVG_UTF_8.toString();
 			}
 			builder = Response.ok(resource).type(type).tag(etag);
-			if (tipoResource == TipoResource.SVGZ) {
+			if (tipoResource == TipoArquivo.SVGZ) {
 				builder = builder.header("Content-Encoding", "x-gzip");
 			}
 		}

@@ -8,13 +8,13 @@ import java.util.Date;
 import javax.ws.rs.core.EntityTag;
 
 import br.com.infox.epp.layout.entity.ResourceBin;
-import br.com.infox.epp.layout.entity.ResourceBin.TipoResource;
+import br.com.infox.epp.layout.entity.ResourceBin.TipoArquivo;
 
 public class MetadadosResource {
 
 	private Date lastModified;
 	private EntityTag etag;
-	private TipoResource tipo;
+	private TipoArquivo tipo;
 
 	// FIXME: Arrumar outra forma de gerar etag a partir de um resource no WAR
 	public MetadadosResource(URL urlResourceWar) {
@@ -46,7 +46,7 @@ public class MetadadosResource {
 		return etag;
 	}
 
-	public TipoResource getTipo() {
+	public TipoArquivo getTipo() {
 		return tipo;
 	}
 

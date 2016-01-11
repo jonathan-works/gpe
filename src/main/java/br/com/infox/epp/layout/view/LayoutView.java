@@ -16,8 +16,9 @@ import org.richfaces.event.FileUploadEvent;
 import org.richfaces.model.UploadedFile;
 
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.layout.entity.Resource;
+import br.com.infox.epp.layout.entity.ResourceBin.TipoArquivo;
 import br.com.infox.epp.layout.entity.Skin;
-import br.com.infox.epp.layout.entity.ResourceBin.TipoResource;
 import br.com.infox.epp.layout.manager.LayoutManager;
 
 @Named
@@ -34,16 +35,16 @@ public class LayoutView implements Serializable {
 	@Inject
 	private LayoutManager layoutManager;
 	
-	private byte[] logoLogin;
-	private byte[] logoTopo;
-	
-	private Image imagemLogoLogin;
-	private TipoResource tipoImagemLogoLogin;
-	private Image imagemLogoTopo;
-	private TipoResource tipoImagemLogoTopo;
+	private Resource resource;
+	private byte[] binarioResource;
+	private TipoArquivo tipoArquivo;
 	
 	@Inject
 	private Logger log;
+	
+	public List<Resource> getResources() {
+		return layoutManager.listResources();
+	}
 	
 	public List<Skin> getSkins() {
 		return layoutManager.listSkins();
@@ -64,17 +65,13 @@ public class LayoutView implements Serializable {
 		layoutManager.setSkinPadrao(skinPadrao);
 	}
 	
-	public void persistLogotipos() {
-	}
-	
-	public String persistLogoTopo() {
-		layoutManager.setLogoTopo(logoTopo, tipoImagemLogoTopo);
-		return "";
-	}
-	
-	public String persistLogoLogin() {
-		layoutManager.setLogoLogin(logoLogin, tipoImagemLogoLogin);
-		return "";
+	public void persistResource() {
+		if(binarioResource == null) {
+			FacesMessages.instance().add("Deve ser selecionado um arquivo");
+			return;
+		}
+		layoutManager.setResource(resource.getCodigo(), binarioResource, tipoArquivo);
+		newResource();
 	}
 	
 	private Image getImagem(FileUploadEvent evt) {
@@ -90,51 +87,59 @@ public class LayoutView implements Serializable {
 		return null;		
 	}
 	
-	private TipoResource getTipoImagem(FileUploadEvent evt) {
+	private TipoArquivo getTipoArquivo(FileUploadEvent evt) {
 		String extensao = evt.getUploadedFile().getFileExtension();
 		if(extensao.equalsIgnoreCase("jpg") || extensao.equalsIgnoreCase("jpeg")) {
-			return TipoResource.JPG;
+			return TipoArquivo.JPG;
 		}
-		else if(extensao.equalsIgnoreCase(TipoResource.GIF.toString())) {
-			return TipoResource.GIF;
+		else if(extensao.equalsIgnoreCase(TipoArquivo.GIF.toString())) {
+			return TipoArquivo.GIF;
 		}
-		else if(extensao.equalsIgnoreCase(TipoResource.SVG.toString())) {
-			return TipoResource.SVG;
+		else if(extensao.equalsIgnoreCase(TipoArquivo.SVG.toString())) {
+			return TipoArquivo.SVG;
 		}
-		else if(extensao.equalsIgnoreCase(TipoResource.SVGZ.toString())) {
-			return TipoResource.SVGZ;
+		else if(extensao.equalsIgnoreCase(TipoArquivo.SVGZ.toString())) {
+			return TipoArquivo.SVGZ;
 		}
 		else {
-			return TipoResource.PNG;
+			return TipoArquivo.PNG;
 		}
 	}
 	
-	public void processUploadLogoTopo(FileUploadEvent evt) {
-		logoTopo = evt.getUploadedFile().getData();
-		imagemLogoTopo = getImagem(evt);
-		tipoImagemLogoTopo = getTipoImagem(evt);
+	public void processUploadResource(FileUploadEvent evt) {
+		binarioResource = evt.getUploadedFile().getData();
+		//imagemLogoTopo = getImagem(evt);
+		tipoArquivo = getTipoArquivo(evt);
 	}
 	
-	public void processUploadLogoLogin(FileUploadEvent evt) {
-		logoLogin = evt.getUploadedFile().getData();
-		imagemLogoLogin = getImagem(evt);
-		tipoImagemLogoLogin = getTipoImagem(evt);
+	public void newResource() {
+		binarioResource = null;
+		tipoArquivo = null;
+		resource = null;
 	}
 
-	public Image getImagemLogoLogin() {
-		return imagemLogoLogin;
+	public Resource getResource() {
+		return resource;
 	}
 
-	public void setImagemLogoLogin(Image imagemLogoLogin) {
-		this.imagemLogoLogin = imagemLogoLogin;
+	public void setResource(Resource resource) {
+		this.resource = resource;
 	}
 
-	public Image getImagemLogoTopo() {
-		return imagemLogoTopo;
+	public byte[] getBinarioResource() {
+		return binarioResource;
 	}
 
-	public void setImagemLogoTopo(Image imagemLogoTopo) {
-		this.imagemLogoTopo = imagemLogoTopo;
+	public void setBinarioResource(byte[] binarioResource) {
+		this.binarioResource = binarioResource;
+	}
+
+	public TipoArquivo getTipoArquivo() {
+		return tipoArquivo;
+	}
+
+	public void setTipoArquivo(TipoArquivo tipoArquivo) {
+		this.tipoArquivo = tipoArquivo;
 	}
 	
 }
