@@ -140,7 +140,7 @@
 		          styleClass="buttons"
 		          execute="@form"
 		          limitRender="true"
-		          action="#{caixaCrudAction.adicionarCaixaNoPainel(painelUsuarioController.tarefaId)}"
+		          action="#{caixaCrudAction.adicionarCaixaNoPainel(painelUsuarioController.taskNodeKey)}"
 		          oncomplete="if(#{not facesContext.isValidationFailed()}){#{rich:component('novaCaixaPanel')}.hide()}"
 		          render="divPainelProcessos, nomeCaixaDecoration, pageBodyDialogMessage" />
 	          

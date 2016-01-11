@@ -24,8 +24,8 @@ public class TarefaManager extends Manager<TarefaDAO, Tarefa> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "tarefaManager";
 
-    public List<SelectItem> getPreviousNodes(Tarefa tarefa) {
-        return getDao().getPreviousNodes(tarefa);
+    public List<SelectItem> getPreviousNodes(String nodeKey) {
+        return getDao().getPreviousNodes(nodeKey);
     }
 
     public void encontrarNovasTarefas() throws DAOException {

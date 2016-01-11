@@ -3,12 +3,7 @@ package br.com.infox.epp.processo.localizacao.dao;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.DELETE_BY_PROCESS_ID_AND_TASK_ID;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.DELETE_BY_TASK_INSTANCE_ID;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_BY_TASK_INSTANCE;
-import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_ID_TAREFA;
-import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.PARAM_ID_TASK;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.PARAM_ID_TASK_INSTANCE;
-import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.PARAM_LOCALIZACAO;
-import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.PARAM_PAPEL;
-import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.PARAM_PROCESSO;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.PARAM_PROCESS_ID;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.PARAM_TASK_ID;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.PARAM_TASK_INSTANCE;
@@ -22,8 +17,6 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.access.entity.UsuarioPerfil;
-import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.localizacao.entity.ProcessoLocalizacaoIbpm;
 
 @AutoCreate
@@ -37,15 +30,6 @@ public class ProcessoLocalizacaoIbpmDAO extends DAO<ProcessoLocalizacaoIbpm> {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(PARAM_ID_TASK_INSTANCE, idTaskInstance);
         return getNamedSingleResult(LIST_BY_TASK_INSTANCE, parameters);
-    }
-
-    public Long getTaskInstanceId(UsuarioPerfil usuarioPerfil, Processo processo, Long idTarefa) {
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put(PARAM_PROCESSO, processo);
-        parameters.put(PARAM_LOCALIZACAO, usuarioPerfil.getPerfilTemplate().getLocalizacao());
-        parameters.put(PARAM_PAPEL, usuarioPerfil.getPerfilTemplate().getPapel());
-        parameters.put(PARAM_ID_TASK, idTarefa.intValue());
-        return getNamedSingleResult(LIST_ID_TASK_INSTANCE_BY_ID_TAREFA, parameters);
     }
 
     public void deleteProcessoLocalizacaoIbpmByTaskIdAndProcessId(Long taskId, Long processId) throws DAOException {

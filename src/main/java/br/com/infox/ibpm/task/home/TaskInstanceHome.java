@@ -16,8 +16,6 @@ import java.util.Map;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.SystemException;
 
@@ -64,6 +62,7 @@ import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.documento.type.ExpressionResolverChain;
 import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
+import br.com.infox.epp.painel.PainelUsuarioController;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
@@ -94,7 +93,6 @@ import br.com.infox.ibpm.task.view.FormField;
 import br.com.infox.ibpm.task.view.TaskInstanceForm;
 import br.com.infox.ibpm.transition.TransitionHandler;
 import br.com.infox.ibpm.util.JbpmUtil;
-import br.com.infox.ibpm.util.UserHandler;
 import br.com.infox.ibpm.variable.VariableHandler;
 import br.com.infox.ibpm.variable.entity.VariableInfo;
 import br.com.infox.ibpm.variable.file.FileVariableHandler;
@@ -131,8 +129,6 @@ public class TaskInstanceHome implements Serializable {
 	@In
 	private ModeloDocumentoManager modeloDocumentoManager;
 	@In
-	private UserHandler userHandler;
-	@In
 	private AssinaturaDocumentoService assinaturaDocumentoService;
 	@In
 	private VariableTypeResolver variableTypeResolver;
@@ -154,8 +150,6 @@ public class TaskInstanceHome implements Serializable {
 	private ProcessoEpaHome processoEpaHome;
 	@In
 	private TarefaManager tarefaManager;
-	@In
-	private ProcessoHandler processoHandler;
 	
 	@Inject
 	private SituacaoProcessoDAO situacaoProcessoDAO;
@@ -163,6 +157,8 @@ public class TaskInstanceHome implements Serializable {
 	private FileVariableHandler fileVariableHandler;
 	@Inject
 	private ActionMessagesService actionMessagesService;
+	@Inject
+	private PainelUsuarioController painelUsuarioController;
 
 	private TaskInstance taskInstance;
 	private Map<String, Object> mapaDeVariaveis;
@@ -176,7 +172,6 @@ public class TaskInstanceHome implements Serializable {
 	private Map<String, Documento> variaveisDocumento;
 	private Documento documentoToSign;
 	private String tokenToSign;
-	private Integer tarefaId;
 
 	private URL urlRetornoAcessoExterno;
 
@@ -730,57 +725,19 @@ public class TaskInstanceHome implements Serializable {
 		}
 	}
 
-	public void removeUsuario(final TaskInstance taskInstance) {
+	public void removeUsuario(TaskInstance taskInstance) {
 		if (taskInstance != null) {
-			try {
-				taskInstanceManager.removeUsuario(taskInstance.getId());
-				afterLiberarTarefa();
-			} catch (DAOException e) {
-				LOG.error("TaskInstanceHome.removeUsuario(taskInstance)", e);
-			}
+		    painelUsuarioController.liberarTarefa(taskInstance.getId());
 		}
 	}
 
-	public void removeUsuario(final Long idTaskInstance) {
-		try {
-			taskInstanceManager.removeUsuario(idTaskInstance);
-			afterLiberarTarefa();
-		} catch (Exception e) {
-			LOG.error("TaskInstanceHome.removeUsuario(idTaskInstance)", e);
-		}
-	}
-
-	public void removeUsuario(final Integer idProcesso, final Integer idTarefa) {
-		try {
-			final Map<String, Object> result = processoTarefaManager.findProcessoTarefaByIdProcessoAndIdTarefa(idProcesso, idTarefa);
-			taskInstanceManager.removeUsuario((Long) result.get("idTaskInstance"));
-			afterLiberarTarefa();
-		} catch (NoResultException e) {
-			LOG.error(".removeUsuario(idProcesso, idTarefa) - Sem resultado", e);
-		} catch (NonUniqueResultException e) {
-			LOG.error(".removeUsuario(idProcesso, idTarefa) - Mais de um resultado", e);
-		} catch (IllegalStateException e) {
-			LOG.error(".removeUsuario(idProcesso, idTarefa) - Estado ilegal", e);
-		} catch (DAOException e) {
-			LOG.error(".removeUsuario(idProcesso, idTarefa) - ", e);
-		}
-	}
-
-	private void afterLiberarTarefa() {
-		userHandler.clear();
-		processoHandler.clear();
-		FacesMessages.instance().clear();
-		FacesMessages.instance().add("Tarefa liberada com sucesso.");
+	public void removeUsuario(Long idTaskInstance) {
+	    painelUsuarioController.liberarTarefa(idTaskInstance);
 	}
 
 	public void removeUsuario() {
 		if (BusinessProcess.instance().hasCurrentTask()) {
-			try {
-				taskInstanceManager.removeUsuario(BusinessProcess.instance().getTaskId());
-				afterLiberarTarefa();
-			} catch (DAOException e) {
-				LOG.error(".removeUsuario() - ", e);
-			}
+		    painelUsuarioController.liberarTarefa(BusinessProcess.instance().getTaskId());
 		} else {
 			FacesMessages.instance().add(infoxMessages.get("org.jboss.seam.TaskNotFound"));
 		}
@@ -805,14 +762,9 @@ public class TaskInstanceHome implements Serializable {
 			bp.setProcessId(processId);
 			updateTransitions();
 			createInstance();
-			this.tarefaId = tarefaManager.getTarefa(taskInstance.getTask().getId()).getIdTarefa();
 		}
 	}
 	
-	public Integer getTarefaId() {
-		return tarefaId;
-	}
-
 	public List<Transition> getTransitions() {
 		validateAndUpdateTransitions();
 		return getAvailableTransitionsFromDefinicaoDoFluxo();

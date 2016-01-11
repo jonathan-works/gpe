@@ -86,7 +86,7 @@
 							columnHeader="#{infoxMessages['prioridadeProcesso.tableTitle']}"
 							value="#{row.prioridadeProcesso}" columnRendered="#{painelUsuarioController.exibirColunasPadrao}"/>
 						<infox:dynamicColumns
-							columns="#{painelUsuarioController.dynamicColumns}" />
+							columns="#{consultaProcessoList.dynamicColumns}" />
 						<ui:define name="headerToolBar">
 							<ui:include
 								src="/WEB-INF/xhtml/components/grid/header/tools/toolBarProcessoJbpm.xhtml" />

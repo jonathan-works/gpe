@@ -1,5 +1,7 @@
 package br.com.infox.ibpm.task.manager;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.bpm.ManagedJbpmContext;
@@ -12,8 +14,10 @@ import br.com.infox.ibpm.task.dao.TaskInstanceDAO;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
 
 @Name(TaskInstanceManager.NAME)
+@Stateless
 @AutoCreate
 public class TaskInstanceManager extends Manager<TaskInstanceDAO, UsuarioTaskInstance> {
+    
     private static final long serialVersionUID = 1L;
     public static final String NAME = "taskInstanceManager";
 

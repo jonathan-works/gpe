@@ -1,5 +1,8 @@
 package br.com.infox.epp.painel;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import br.com.infox.epp.processo.type.TipoProcesso;
 
 public class FluxoBean {
@@ -10,6 +13,9 @@ public class FluxoBean {
 	private TipoProcesso tipoProcesso;
 	private Boolean expedida = false;
 	private boolean bpmn20;
+	private Map<String, TaskBean> tasks = new HashMap<>();
+	
+	private Map<String, TaskDefinitionBean> taskDefinitions = new HashMap<>();
 	
 	public FluxoBean() {
 	}
@@ -38,8 +44,28 @@ public class FluxoBean {
 		this(name, quantidadeProcessos);
 		this.processDefinitionId = processDefinitionId;
 	}
+	
+	public void addTaskDefinition(TaskBean taskBean) {
+	    String taskNodeKey = taskBean.getTaskNodeKey();
+	    String taskName = taskBean.getTaskName();
+	    TaskDefinitionBean taskDefinitionBean = taskDefinitions.get(taskNodeKey);
+	    if (taskDefinitionBean == null) {
+	        taskDefinitionBean = new TaskDefinitionBean(taskNodeKey, taskName);
+	        taskDefinitions.put(taskNodeKey, taskDefinitionBean);
+	    }
+	    taskDefinitionBean.addTaskBean(taskBean);
+	    tasks.put(taskBean.getIdTaskInstance().toString(), taskBean);
+	}
+	
+	public Map<String, TaskDefinitionBean> getTaskDefinitions() {
+        return taskDefinitions;
+    }
+	
+	public TaskBean getTask(String idTaskInstance) {
+	    return tasks.get(idTaskInstance);
+	}
 
-	public String getProcessDefinitionId() {
+    public String getProcessDefinitionId() {
 		return processDefinitionId;
 	}
 	
@@ -56,11 +82,7 @@ public class FluxoBean {
 	}
 	
 	public Long getQuantidadeProcessos() {
-		return quantidadeProcessos;
-	}
-
-	public void setQuantidadeProcessos(Long quantidadeProcessos) {
-		this.quantidadeProcessos = quantidadeProcessos;
+		return (long) tasks.size();
 	}
 
 	public TipoProcesso getTipoProcesso() {

@@ -55,8 +55,8 @@ public class DefinicaoVariavelProcessoManager {
     	return definicaoVariavelProcessoDAO.getDefinicaoVariavelProcessoListByIdProcesso(idProcesso);
     }
     
-    public List<DefinicaoVariavelProcesso> getDefinicaoVariavelProcessoVisivelPainel(Integer idProcesso) {
-        return definicaoVariavelProcessoDAO.getDefinicaoVariavelProcessoVisivelPainel(idProcesso);
+    public List<DefinicaoVariavelProcesso> getDefinicaoVariavelProcessoVisivelPainel(Integer idFluxo) {
+        return definicaoVariavelProcessoDAO.getDefinicaoVariavelProcessoVisivelPainel(idFluxo);
     }
     
     @TransactionAttribute(TransactionAttributeType.REQUIRED)

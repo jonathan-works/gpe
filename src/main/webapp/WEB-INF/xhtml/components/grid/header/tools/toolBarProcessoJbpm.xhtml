@@ -10,7 +10,7 @@
   <h:form>
     <a:outputPanel>
 
-      <rich:dragSource type="task#{painelUsuarioController.tarefaId}"
+      <rich:dragSource type="task#{row.taskNodeKey}"
         dragValue="#{consultaProcessoList.resultList}"
         dragIndicator="indicator">
         <rich:dragIndicator id="indicator" acceptClass="caixa-acpt"

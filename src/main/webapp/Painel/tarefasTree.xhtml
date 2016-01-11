@@ -29,13 +29,13 @@
                     iconLeaf="#{wiSkin.imageFolder}/messages.gif"
                     iconClass="tarefa-tree-icon"
                     labelClass="tarefa-tree-lbl">
-                    <h:outputText value="#{node.entity.get('nomeTarefa')}" />
+                    <h:outputText value="#{node.entity.name}" />
                     <h:outputText
-                        rendered="#{node.entity.get('qtd') - node.entity.get('qtdEmCaixa') gt 0}"
-                        value="(#{node.entity.get('qtd') - node.entity.get('qtdEmCaixa')})" />
+                        rendered="#{node.entity.quantidade - node.entity.quantidadeEmCaixa gt 0}"
+                        value="(#{node.entity.quantidade - node.entity.quantidadeEmCaixa})" />
                     <h:outputText
-                        rendered="#{node.entity.get('qtdEmCaixa') gt 0}"
-                        value=" (Em caixas: #{node.entity.get('qtdEmCaixa')})" />
+                        rendered="#{node.entity.quantidadeEmCaixa gt 0}"
+                        value=" (Em caixas: #{node.entity.quantidadeEmCaixa})" />
                     <rich:contextMenu
                         mode="ajax"
                         target="taskNode"
@@ -56,8 +56,8 @@
                         iconLeaf="#{wiSkin.imageFolder}/message.gif"
                         iconClass="tarefa-tree-icon"
                         labelClass="tarefa-tree-lbl">
-                        <h:outputText value="#{node.entity.get('nomeCaixa')}" />
-                        <h:outputText value="(#{node.entity.get('qtd')})" />
+                        <h:outputText value="#{node.entity.name}" />
+                        <h:outputText value="(#{node.entity.quantidade})" />
                         <rich:contextMenu
                             id="menuCaixa"
                             mode="ajax"
@@ -73,15 +73,13 @@
                                 onclick="return confirm(\'#{infoxMessages['caixa.confirm.remove']}\');"
                                 render="divPainelProcessos, TarefasTree, pageBodyDialogMessage"
                                 action="#{caixaCrudAction.removerCaixaNoPainel()}">
-                                <f:setPropertyActionListener
-                                    target="#{caixaCrudAction.id}"
-                                    value="#{painelUsuarioController.selected.get('idCaixa')}" />
+                                <f:setPropertyActionListener target="#{caixaCrudAction.id}" value="#{node.entity.id}" />
                             </rich:menuItem>
                         </rich:contextMenu>
                         <rich:dropTarget
-                            acceptedTypes="task#{node.entity.get('idTarefa')}"
+                            acceptedTypes="task#{node.parent.entity.id}"
                             dropListener="#{painelUsuarioController.moverProcessoParaCaixaDropEventListener}"
-                            dropValue="#{node.entity.get('idCaixa')}"
+                            dropValue="#{node.entity.id}"
                             render="divPainelProcessos, TarefasTree"
                             limitRender="true" />
                     </rich:treeNode>

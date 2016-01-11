@@ -13,27 +13,19 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.tarefa.entity.Tarefa;
 
 @Entity
 @Table(name = "tb_caixa")
-@NamedQueries(value = {
-		@NamedQuery(name = CaixaQuery.CAIXA_BY_ID_TAREFA_AND_ID_NODE_ANTERIOR, 
-						query = CaixaQuery.CAIXA_BY_ID_TAREFA_AND_ID_NODE_ANTERIOR_QUERY)
-})
 public class Caixa implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -42,7 +34,7 @@ public class Caixa implements Serializable {
     @SequenceGenerator(allocationSize=1, initialValue=1, name = "CaixaGenerator", sequenceName = "sq_tb_caixa")
     @GeneratedValue(generator = "CaixaGenerator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_caixa", unique = true, nullable = false)
-    private int idCaixa;
+    private Integer idCaixa;
     
     @Column(name = "nm_caixa", length = LengthConstants.NOME_PADRAO)
     @Size(max = LengthConstants.NOME_PADRAO)
@@ -51,16 +43,16 @@ public class Caixa implements Serializable {
     @Column(name = "ds_caixa", nullable = true)
     private String dsCaixa;
     
+    @NotNull
+    @Column(name = "cd_node_key", nullable = false)
+    private String taskKey;
+    
     @Column(name = "nm_caixa_idx", length = LengthConstants.NOME_PADRAO, nullable = false)
     @Size(max = LengthConstants.NOME_PADRAO)
     private String nomeIndice;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_tarefa", nullable = true)
-    private Tarefa tarefa;
-    
     @Column(name = "id_node_anterior", nullable = true)
-    private Integer idNodeAnterior;
+    private Long idNodeAnterior;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "caixa")
     private List<Processo> processoList = new ArrayList<Processo>(0);
@@ -75,11 +67,18 @@ public class Caixa implements Serializable {
     	normalizarNomeIndiceCaixa();
     }
     
-    public int getIdCaixa() {
+    public Caixa() {
+    }
+
+    public Caixa(Integer idCaixa) {
+        this.idCaixa = idCaixa;
+    }
+
+    public Integer getIdCaixa() {
         return idCaixa;
     }
 
-    public void setIdCaixa(int idCaixa) {
+    public void setIdCaixa(Integer idCaixa) {
         this.idCaixa = idCaixa;
     }
 
@@ -98,13 +97,13 @@ public class Caixa implements Serializable {
     public void setDsCaixa(String dsCaixa) {
         this.dsCaixa = dsCaixa;
     }
-
-    public Tarefa getTarefa() {
-        return tarefa;
+    
+    public String getTaskKey() {
+        return taskKey;
     }
 
-    public void setTarefa(Tarefa tarefa) {
-        this.tarefa = tarefa;
+    public void setTaskKey(String taskKey) {
+        this.taskKey = taskKey;
     }
 
     public String getNomeIndice() {
@@ -115,11 +114,11 @@ public class Caixa implements Serializable {
         this.nomeIndice = nomeIndice;
     }
 
-    public Integer getIdNodeAnterior() {
+    public Long getIdNodeAnterior() {
         return idNodeAnterior;
     }
 
-    public void setIdNodeAnterior(Integer idNodeAnterior) {
+    public void setIdNodeAnterior(Long idNodeAnterior) {
         this.idNodeAnterior = idNodeAnterior;
     }
 
@@ -138,19 +137,18 @@ public class Caixa implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
+        if (this == obj)
             return true;
-        }
-        if (obj == null) {
+        if (obj == null)
             return false;
-        }
-        if (!(obj instanceof Caixa)) {
+        if (!(obj instanceof Caixa))
             return false;
-        }
         Caixa other = (Caixa) obj;
-        if (getIdCaixa() != other.getIdCaixa()) {
+        if (getIdCaixa() == null) {
+            if (other.getIdCaixa() != null)
+                return false;
+        } else if (!getIdCaixa().equals(other.getIdCaixa()))
             return false;
-        }
         return true;
     }
 
@@ -158,12 +156,12 @@ public class Caixa implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + getIdCaixa();
+        result = prime * result + ((getIdCaixa() == null) ? 0 : getIdCaixa().hashCode());
         return result;
     }
     
     private void normalizarNomeIndiceCaixa() {
-    	String nomeIndiceCaixa = format("{0}-{1}", getNomeCaixa(), getTarefa().getIdTarefa());
+    	String nomeIndiceCaixa = format("{0}-{1}", getNomeCaixa(), getTaskKey());
     	String normalized = Normalizer.normalize(nomeIndiceCaixa, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "").toLowerCase();
         setNomeIndice(normalized);
     }

@@ -10,8 +10,7 @@
 	xmlns:infox="http://www.infox.com.br/jsf">
 	
     <s:div id="painelProcessosDocumento" style="width: 100%; margin-left: 0.6em;" >
-        <s:div id="processosDocumento" 
-    		rendered="#{not empty painelUsuarioController.processoIdList or not empty painelUsuarioController.idCaixa}" >
+        <s:div id="processosDocumento" rendered="#{painelUsuarioController.canShowProcessoList()}" >
     
 	        <wi:dataTable
 	           values="#{consultaProcessoList.list(10)}"
@@ -41,23 +40,22 @@
 	             <wi:inputDataPeriodo
 	                id="periodo"
 	                label="#{infoxMessages['data.inputPeriodo']}"
-	                valueDateFrom="#{consultaProcessoList.entity.dataInicio}"
+	                valueDateFrom="#{consultaProcessoList.dataInicio}"
 	                valueDateTo="#{consultaProcessoList.dataFim}" />
 
 				<wi:selectOneMenuEntity id="natureza" label="#{infoxMessages['natureza.tableTitle']}"
-					value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.natureza}" showLabelSelecione="true"
+					value="#{consultaProcessoList.natureza}" showLabelSelecione="true"
 					items="#{naturezaCategoriaFluxoFacade.getNaturezaList()}">
 					<a:ajax execute="@this" render="natureza categoriaOutPutPanel"
-						listener="#{naturezaCategoriaFluxoFacade.loadCategoriaList(consultaProcessoList.entity.naturezaCategoriaFluxo.natureza)}"></a:ajax>
-                    <a:ajax execute="@none" render="categoriaOutputPanel"
-                        listener="#{consultaProcessoList.entity.naturezaCategoriaFluxo.setCategoria(null)}" />
+						listener="#{naturezaCategoriaFluxoFacade.loadCategoriaList(consultaProcessoList.natureza)}"></a:ajax>
+                    <a:ajax execute="@none" render="categoriaOutputPanel" listener="#{consultaProcessoList.setCategoria(null)}" />
 				</wi:selectOneMenuEntity>
 
 				<a:outputPanel id="categoriaOutPutPanel">
 
-					<wi:selectOneMenuEntity disabled="#{empty consultaProcessoList.entity.naturezaCategoriaFluxo.natureza}"
+					<wi:selectOneMenuEntity disabled="#{empty consultaProcessoList.natureza}"
 						id="categoria" label="#{infoxMessages['categoria.tableTitle']}"
-						value="#{consultaProcessoList.entity.naturezaCategoriaFluxo.categoria}" showLabelSelecione="true"
+						value="#{consultaProcessoList.categoria}" showLabelSelecione="true"
 						inNewLine="true" items="#{naturezaCategoriaFluxoFacade.getCategoriaList()}" />
 				</a:outputPanel>
 
@@ -67,7 +65,7 @@
 	         <wi:columnOutputText
 	           columnId="usuarioSolicitante"
 	           columnHeader="#{infoxMessages['consultaProcesso.usuarioCadastroProcesso']}"
-	           value="#{row.usuarioCadastro}" 
+	           value="#{row.nomeUsuarioSolicitante}" 
 	           columnRendered="#{painelUsuarioController.exibirColunasPadrao}"/>
 	           
 	         <wi:columnDateTime
@@ -79,19 +77,19 @@
 	         <wi:columnOutputText
 	           columnId="natureza"
 	           columnHeader="#{infoxMessages['consultaProcesso.natureza']}"
-	           value="#{row.naturezaCategoriaFluxo.natureza}" 
+	           value="#{row.nomeNatureza}" 
 	           columnRendered="#{painelUsuarioController.exibirColunasPadrao}"/>
 	           
 	         <wi:columnOutputText
 	           columnId="categoria"
 	           columnHeader="#{infoxMessages['consultaProcesso.categoria']}"
-	           value="#{row.naturezaCategoriaFluxo.categoria}" 
+	           value="#{row.nomeCategoria}" 
 	           columnRendered="#{painelUsuarioController.exibirColunasPadrao}"/>
 	           
 	         <wi:columnOutputText
 	           columnId="itemDoProcesso"
 	           columnHeader="#{infoxMessages['consultaProcesso.item']}"
-	           value="#{consultaProcessoList.getItemDoProcesso(row)}"
+	           value="#{consultaProcessoList.getVariavelProcesso(row, 'itemProcesso')}"
 	           columnRendered="#{painelUsuarioController.exibirColunasPadrao}"  />
 	           
 	         <wi:columnOutputText
@@ -103,10 +101,10 @@
 	         <wi:columnOutputText
 	           columnId="numeroProcessoPai"
 	           columnHeader="#{infoxMessages['consultaProcesso.numeroProcessoPai']}"
-	           value="#{row.processoPai.numeroProcessoRoot}" 
+	           value="#{row.numeroProcessoRoot}" 
 	           columnRendered="#{painelUsuarioController.exibirColunasPadrao}"/>
 	         
-	         <infox:dynamicColumns columns="#{painelUsuarioController.dynamicColumns}" />
+	         <infox:dynamicColumns columns="#{consultaProcessoList.dynamicColumns}" />
 	         
 	         <ui:define name="headerToolBar">
 	           <ui:include src="/WEB-INF/xhtml/components/grid/header/tools/toolBarProcessoJbpm.xhtml" />
