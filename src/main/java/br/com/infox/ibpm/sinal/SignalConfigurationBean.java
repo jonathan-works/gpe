@@ -21,7 +21,7 @@ public class SignalConfigurationBean implements Serializable {
 	    this.condition = condition;
 	}
 	
-	public String getTransitionKey() {
+    public String getTransitionKey() {
 		return transitionKey;
 	}
 	

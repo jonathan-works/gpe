@@ -659,7 +659,7 @@ public class NodeFitter extends Fitter implements Serializable {
         List<Signal> sinaisDisponiveis = new ArrayList<>();
         if (currentNode == null) return sinaisDisponiveis;
         for (Signal signal : signals) {
-            String eventType = Event.getListenerEventType(currentNode, signal.getCodigo());
+            String eventType = Event.getListenerEventType(signal.getCodigo());
             if (currentNode.getEvents() == null || (signal.getAtivo()
                     && !currentNode.getEvents().containsKey(eventType))) {
                 sinaisDisponiveis.add(signal);
@@ -733,7 +733,7 @@ public class NodeFitter extends Fitter implements Serializable {
         String codigo = request.get(inputNome);
         String transitionKey = request.get(inputTransicao);
         String condition = request.get(inputCondition);
-        Event event = new Event(Event.getListenerEventType(currentNode, codigo));
+        Event event = new Event(Event.getListenerEventType(codigo));
         SignalConfigurationBean signalConfigurationBean = new SignalConfigurationBean(transitionKey, condition);
         event.setConfiguration(signalConfigurationBean.toJson());
         currentNode.addEvent(event);

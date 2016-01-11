@@ -24,6 +24,8 @@ import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.exe.Token;
+import org.jbpm.graph.node.ProcessState;
+import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.exe.TaskInstance;
@@ -74,13 +76,13 @@ public class SignalService {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void dispatch(String eventType, ExecutionContext executionContext) {
         ProcessInstance processInstance = executionContext.getProcessInstance().getRoot();
+        eventType = Event.getListenerEventType(eventType);
         startStartStateListening(eventType);
         endSubprocessListening(processInstance, eventType);
-        cancelarTarefasListener(processInstance.getId(), eventType);
+        movimentarTarefasListener(processInstance.getId(), eventType);
     }
     
     private void endSubprocessListening(ProcessInstance processInstance, String eventType) {
-        eventType = Event.getSubprocessListenerEventType(eventType);
         List<Long> subprocessInstanceIds = getSubprocessInstanceIds(Arrays.asList(processInstance.getId()));
         while (!subprocessInstanceIds.isEmpty()) {
             List<SignalNodeBean> signalNodes = getSubprocessListening(subprocessInstanceIds, eventType);
@@ -93,8 +95,7 @@ public class SignalService {
         }
     }
     
-    private void cancelarTarefasListener(Long processInstanceId, String eventType) throws DAOException {
-        eventType = Event.getTaskListenerEventType(eventType);
+    private void movimentarTarefasListener(Long processInstanceId, String eventType) throws DAOException {
         List<SignalNodeBean> signalNodes = getTasksListening(processInstanceId, eventType);
         for (SignalNodeBean signalNodeBean : signalNodes) {
             if (signalNodeBean.canExecute()) {
@@ -104,7 +105,6 @@ public class SignalService {
     }
     
     private void startStartStateListening(String eventType) {
-        eventType = Event.getStartStateListenerEventType(eventType);
         List<SignalNodeBean> signalNodes = getStartStateListening(eventType);
         for (SignalNodeBean signalNodeBean : signalNodes) {
             if (signalNodeBean.canExecute()) {
@@ -140,7 +140,8 @@ public class SignalService {
         
         cq.where(
             cb.equal(event.get("eventType"), eventType),
-            cb.equal(definition.get("version"), versionQuery)
+            cb.equal(definition.get("version"), versionQuery),
+            cb.equal(node.type(), StartState.class)
         );
         return getEntityManager().createQuery(cq).getResultList();
     }
@@ -159,7 +160,8 @@ public class SignalService {
             cb.isNull(token.get("end")),
             cb.equal(event.get("eventType"), eventType),
             cb.isFalse(token.<Boolean>get("isSuspended")),
-            cb.isNull(process.get("end"))
+            cb.isNull(process.get("end")),
+            cb.equal(node.type(), ProcessState.class)
         );
         return getEntityManager().createQuery(cq).getResultList();
     }
@@ -182,6 +184,7 @@ public class SignalService {
             cb.isTrue(taskInstance.<Boolean>get("isOpen")),
             cb.equal(event.get("eventType"), eventType),
             cb.isNull(process.get("end")),
+            cb.equal(taskNode.type(), TaskNode.class),
             taskInstance.get("processInstance").<Long>get("id").in(processInstanceIds)
         );
         return getEntityManager().createQuery(query).getResultList();
