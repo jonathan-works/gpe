@@ -12,6 +12,7 @@ import javax.persistence.criteria.AbstractQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
+import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
@@ -24,6 +25,7 @@ import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.exe.PooledActor;
+import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
@@ -298,6 +300,21 @@ public class SituacaoProcessoDAO {
 	}
     
 	protected void appendUnidadeDecisoraColegiadaFilter(AbstractQuery<?> abstractQuery, From<?, Processo> processo) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
+        Root<MetadadoProcesso> metadado = subquery.from(MetadadoProcesso.class);
+        subquery.select(cb.literal(1));
+        String metadadoUnidadeDecisora = EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA.getMetadadoType();
+        Integer idUnidadeDecisora = authenticator.getColegiadaLogada().getIdUnidadeDecisoraColegiada();
+        Predicate predicateSubquery = cb.and(cb.equal(metadado.get("metadadoType"), metadadoUnidadeDecisora));
+        predicateSubquery = cb.and(cb.equal(metadado.get("valor"), idUnidadeDecisora.toString()), predicateSubquery);
+        predicateSubquery = cb.and(cb.equal(metadado.get("processo").get("idProcesso"), processo.get("idProcesso")), predicateSubquery);
+        subquery.where(predicateSubquery);
+        Predicate predicate = abstractQuery.getRestriction();
+        predicate = cb.and(cb.exists(subquery), predicate);
+        abstractQuery.where(predicate);
+    }
+    
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
         Root<MetadadoProcesso> metadado = subquery.from(MetadadoProcesso.class);
@@ -406,6 +423,4 @@ public class SituacaoProcessoDAO {
 	
 	protected Authenticator getAuthenticator() {
 	    return Authenticator.instance();
-	}
-	
 }

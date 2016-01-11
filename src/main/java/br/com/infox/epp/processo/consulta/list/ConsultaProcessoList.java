@@ -18,7 +18,6 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.componentes.column.DynamicColumnModel;
 import br.com.infox.core.list.DataList;
-import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
@@ -26,6 +25,19 @@ import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
 import br.com.infox.epp.painel.FluxoBean;
 import br.com.infox.epp.painel.PanelDefinition;
+import br.com.infox.epp.painel.TaskBean;
+import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
+import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
+
+@Named
+@ViewScoped
+public class ConsultaProcessoList extends DataList<TaskBean> {
+import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.fluxo.entity.Categoria;
+import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
+import br.com.infox.epp.fluxo.entity.Natureza;
+import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
+import br.com.infox.epp.painel.FluxoBean;
 import br.com.infox.epp.painel.TaskBean;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
@@ -130,20 +142,23 @@ public class ConsultaProcessoList extends DataList<TaskBean> {
     }
 
     @Override
-    public void newInstance() {
+    public List<TaskBean> getResultList() {
         filteredTasks = new ArrayList<>(getTasks());
         setNumeroProcesso(null);
-        setNumeroProcessoRoot(null);
         setNatureza(null);
         setCategoria(null);
         setDataInicio(null);
         setDataFim(null);
         search();
     }
-
+    
     @Override
     public boolean isNextExists() {
         return getPage() * getMaxResults() < filteredTasks.size();
+        if (dynamicColumns == null) {
+            updateDatatable();
+        }
+        return dynamicColumns;
     }
     
     @Override

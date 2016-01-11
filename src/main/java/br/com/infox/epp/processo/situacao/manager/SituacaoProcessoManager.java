@@ -52,6 +52,18 @@ public class SituacaoProcessoManager {
 	private void createFluxoBeanList(List<FluxoBean> fluxoBeanList, TipoProcesso tipoProcesso, List<TaskBean> taskBeanList, boolean expedida) {
 		for (TaskBean taskBean : taskBeanList) {
 		    String nomeFluxo = taskBean.getNomeFluxo();
+		    if (fluxoBean == null) {
+		        fluxoBean = createFluxoBean(tipoProcesso, expedida, taskBean);
+		        fluxoBeanList.add(fluxoBean);
+		    }
+		    fluxoBean.addTaskDefinition(taskBean);
+		}
+	}
+
+    private FluxoBean createFluxoBean(TipoProcesso tipoProcesso, boolean expedida, TaskBean taskBean) {
+        FluxoBean fluxoBean;
+        fluxoBean = new FluxoBean();
+        String nome = taskBean.getNomeFluxo();
 		    if (TipoProcesso.COMUNICACAO.equals(tipoProcesso)) {
 		        nomeFluxo = expedida ? nomeFluxo.concat(" - Expedidas") : nomeFluxo.concat(" - Recebidas");
 		    }
