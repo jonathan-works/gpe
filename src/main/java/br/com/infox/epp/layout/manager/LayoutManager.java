@@ -99,64 +99,86 @@ public class LayoutManager {
 	}
 	
 	/**
-	 * Localiza um {@link ResourceBin} por código e path que inicie com o path informado (ignorando a extensão do arquivo) 
+	 * Retorna o código de um resource a partir de seu path
 	 */
-	private ResourceBin getResourceBin(String codigoSkin, String pathRecurso) {
+	public String getCodigo(String resourcePath) {
+		String pathSemExtensao = resourcePath.substring(0, resourcePath.lastIndexOf(".") + 1);
+		Resource resource = resourceDao.findByStartingPath(pathSemExtensao);
+		return resource.getCodigo();
+	}
+	
+	private ResourceBin getResourceBin(String codigoSkin, String codigoResource) {
 		Skin skin = skinDao.findByCodigo(codigoSkin);
 		if(skin == null) {
 			return null;
 		}
-		
-		String pathSemExtensao = pathRecurso.substring(0, pathRecurso.lastIndexOf(".") + 1);
-		Resource resource = resourceDao.findByStartingPath(pathSemExtensao);
-		
-		ResourceBin retorno = resourceBinDao.findBySkinAndPath(skin, resource.getPath());
+				
+		ResourceBin retorno = resourceBinDao.findBySkinAndCodigo(skin, codigoResource);
 		return retorno;
 	}
 	
-	public byte[] carregarBinario(String codigoSkin, String pathRecurso) {
-		ResourceBin resourceBin = getResourceBin(codigoSkin, pathRecurso);
+	public byte[] carregarBinario(String codigoSkin, String codigoResource) {
+		ResourceBin resourceBin = getResourceBin(codigoSkin, codigoResource);
 		if(resourceBin == null) {
 			return null;
 		}
 		return carregarBinario(resourceBin.getIdBinario());
 	}
 	
-	private String getResourcePathRest(String codigoSkin, String pathRecurso) {
-		ResourceBin resourceBin = getResourceBin(codigoSkin, pathRecurso);
+	private String getUrlRest(String codigoSkin, String codigoResource) {
+		return MessageFormat.format("/rest/skin/{0}/{1}", codigoSkin, codigoResource);
+	}
+	
+	private String getUrlRestByPath(String codigoSkin, String resourcePath) {
+		ResourceBin resourceBin = getResourceBin(codigoSkin, resourcePath);
 		
 		
-		Path diretorio = Paths.get(pathRecurso).getParent();
-		String nomeArquivo = Files.getNameWithoutExtension(pathRecurso);
+		Path diretorio = Paths.get(resourcePath).getParent();
+		String nomeArquivo = Files.getNameWithoutExtension(resourcePath);
 		String extensao = resourceBin.getTipo().toString().toLowerCase();
 		
-		return MessageFormat.format("/rest/skin/{0}{1}/{2}.{3}", codigoSkin, diretorio, nomeArquivo, extensao);
+		return MessageFormat.format("/rest/skin/{0}/path{1}/{2}.{3}", codigoSkin, diretorio, nomeArquivo, extensao);
 	}
 
 	
-	private String getResourcePathJava(String codigoSkin, String pathRecurso) {
-		return MessageFormat.format("/resources/styleSkinInfox/{0}{1}", codigoSkin, pathRecurso);
+	private String getUrlJava(String codigoSkin, String codigoResource) {
+		Resource res = resourceDao.findByCodigo(codigoResource);
+		return getUrlJavaByPath(codigoSkin, res.getPath());
 	}
 	
-	public MetadadosResource getMetadados(String codigoSkin, String pathRecurso) {
-		ResourceBin resourceBin = getResourceBin(codigoSkin, pathRecurso);
+	private String getUrlJavaByPath(String codigoSkin, String resourcePath) {
+		return MessageFormat.format("/resources/styleSkinInfox/{0}{1}", codigoSkin, resourcePath);
+	}
+	
+	public MetadadosResource getMetadados(String codigoSkin, String codigoResource) {
+		ResourceBin resourceBin = getResourceBin(codigoSkin, codigoResource);
 		//Retorna resources do banco
 		if(resourceBin != null) {
 			return new MetadadosResource(resourceBin);			
 		}
 		
-		URL url = LayoutManager.class.getResource(getResourcePathJava(codigoSkin, pathRecurso));
+		URL url = LayoutManager.class.getResource(getUrlJava(codigoSkin, codigoResource));
 		return new MetadadosResource(url);
 	}
 	
-	public String getResourcePath(String codigoSkin, String path) {
-		ResourceBin resourceBin = getResourceBin(codigoSkin, path);
+	public String getResourceUrlByPath(String codigoSkin, String path) {
+		String pathSemExtensao = path.substring(0, path.lastIndexOf(".") + 1);
+		Resource resource = resourceDao.findByStartingPath(pathSemExtensao);
+
+		ResourceBin resourceBin = getResourceBin(codigoSkin, resource.getCodigo());
 		if(resourceBin != null) {
-			return getResourcePathRest(codigoSkin, path);
+			return getUrlRestByPath(codigoSkin, path);
 		}
-		return getResourcePathJava(codigoSkin, path);
+		return getUrlJavaByPath(codigoSkin, path);
 	}
 	
+	public String getResourceUrl(String codigoSkin, String codigo) {
+		ResourceBin resourceBin = getResourceBin(codigoSkin, codigo);
+		if(resourceBin != null) {
+			return getUrlRest(codigoSkin, codigo);
+		}
+		return getUrlJava(codigoSkin, codigo);
+	}
 	
 	
 }

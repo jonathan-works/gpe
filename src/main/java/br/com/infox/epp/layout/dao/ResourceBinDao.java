@@ -25,11 +25,16 @@ public class ResourceBinDao extends Dao<ResourceBin, Integer> {
 		String jpql = "select rb from ResourceBin rb inner join rb.resource r where r.path = :path";
 		TypedQuery<ResourceBin> query = getEntityManager().createQuery(jpql, ResourceBin.class);
 		query.setParameter("path", path);
+		HibernateUtil.enableCache(query);		
 		return query.getResultList();
 	}
 	
 	public List<ResourceBin> findByResource(Resource resource) {
-		return findByPath(resource.getPath());
+		String jpql = "select rb from ResourceBin rb where rb.resource = :resource";
+		TypedQuery<ResourceBin> query = getEntityManager().createQuery(jpql, ResourceBin.class);
+		query.setParameter("resource", resource);
+		HibernateUtil.enableCache(query);		
+		return query.getResultList();
 	}
 
 	public ResourceBin findBySkinAndCodigo(Skin skin, String codigoResource) {
@@ -37,6 +42,7 @@ public class ResourceBinDao extends Dao<ResourceBin, Integer> {
 		TypedQuery<ResourceBin> query = getEntityManager().createQuery(jpql, ResourceBin.class);
 		query.setParameter("skin", skin);
 		query.setParameter("codigo", codigoResource);
+		HibernateUtil.enableCache(query);		
 		return getSingleResult(query);
 	}
 	

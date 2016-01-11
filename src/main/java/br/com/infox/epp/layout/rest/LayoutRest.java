@@ -17,7 +17,7 @@ import br.com.infox.epp.layout.entity.ResourceBin.TipoResource;
 import br.com.infox.epp.layout.manager.LayoutManager;
 import br.com.infox.epp.layout.rest.entity.MetadadosResource;
 
-@Path("skin/{codigo}")
+@Path("skin/{codigoSkin}")
 @Stateless
 public class LayoutRest {
 
@@ -25,16 +25,24 @@ public class LayoutRest {
 	LayoutManager servico;
 
 	@GET
-	@Path("{path : .+}")
-	public Response getResource(@PathParam("codigo") String codigoSkin, @PathParam("path") String pathRecurso,
+	@Path("path/{path : .+}")
+	public Response getResourceByPath(@PathParam("codigoSkin") String codigoSkin, @PathParam("path") String pathResource,
 	        @Context Request request) {
-		pathRecurso = "/" + pathRecurso;
-		MetadadosResource metadados = servico.getMetadados(codigoSkin, pathRecurso);
+		pathResource = "/" + pathResource;
+		String codigo = servico.getCodigo(pathResource);
+		return getResourceByCodigo(codigoSkin, codigo, request);
+	}
+	
+	@GET
+	@Path("{codigo}")
+	public Response getResourceByCodigo(@PathParam("codigoSkin") String codigoSkin, @PathParam("codigo") String codigoResource,
+	        @Context Request request) {
+		MetadadosResource metadados = servico.getMetadados(codigoSkin, codigoResource);
 		EntityTag etag = metadados.getEtag();
 		ResponseBuilder builder = request.evaluatePreconditions(etag);
 
 		if (builder == null) {
-			byte[] resource = servico.carregarBinario(codigoSkin, pathRecurso);
+			byte[] resource = servico.carregarBinario(codigoSkin, codigoResource);
 			TipoResource tipoResource = metadados.getTipo();
 			String type = "image/" + tipoResource.toString().toLowerCase();
 			if (tipoResource == TipoResource.SVG || tipoResource == TipoResource.SVGZ) {
@@ -48,5 +56,6 @@ public class LayoutRest {
 
 		return builder.build();
 	}
+	
 
 }

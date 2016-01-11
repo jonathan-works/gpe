@@ -23,10 +23,15 @@ public class LayoutController implements Serializable {
 	@Inject
 	private LayoutManager layoutManager;
 	
-	public String getResourcePath(String path) {
+	
+	public String getResourceUrl(String codigo) {
 		String skin = skinSessaoManager.getSkin();
-		return layoutManager.getResourcePath(skin, path);
+		return layoutManager.getResourceUrl(skin, codigo);
 	}
 
+	public String getResourceUrlByPath(String path) {
+		String skin = skinSessaoManager.getSkin();
+		return layoutManager.getResourceUrl(skin, path);
+	}
 
 }

@@ -18,8 +18,10 @@ public class SkinDao extends Dao<Skin, Integer> {
 	}
 	
     public Skin getSkinPadrao() {
-        String query = "from Skin where padrao = true";
-        return getSingleResult(getEntityManager().createQuery(query, Skin.class));
+        String jpql = "from Skin where padrao = true";
+        TypedQuery<Skin> query = getEntityManager().createQuery(jpql, Skin.class);
+		HibernateUtil.enableCache(query);		        
+        return getSingleResult(query);
     }
     
     public Skin findByCodigo(String codigo) {
