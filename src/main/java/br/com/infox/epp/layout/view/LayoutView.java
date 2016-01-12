@@ -3,7 +3,10 @@ package br.com.infox.epp.layout.view;
 import java.awt.Image;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,6 +42,8 @@ public class LayoutView implements Serializable {
 	private byte[] binarioResource;
 	private TipoArquivo tipoArquivo;
 	
+	private SortedSet<Skin> skins;
+	
 	@Inject
 	private Logger log;
 	
@@ -46,8 +51,19 @@ public class LayoutView implements Serializable {
 		return layoutManager.listResources();
 	}
 	
-	public List<Skin> getSkins() {
-		return layoutManager.listSkins();
+	private class ComparadorSkins implements Comparator<Skin> {
+		@Override
+		public int compare(Skin s1, Skin s2) {
+			return s1.getNome().compareTo(s2.getNome());
+		}
+	}
+	
+	public SortedSet<Skin> getSkins() {
+		if(skins == null) {
+			skins = new TreeSet<>(new ComparadorSkins());
+			skins.addAll(layoutManager.listSkins());
+		}
+		return skins;
 	}
 
 	public Skin getSkinPadrao() {
