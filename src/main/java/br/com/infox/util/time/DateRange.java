@@ -1,7 +1,5 @@
 package br.com.infox.util.time;
 
-import static java.text.MessageFormat.format;
-
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,6 +11,8 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
+import org.joda.time.ReadableDuration;
+import org.joda.time.Years;
 
 /**
  * @author erik
@@ -280,11 +280,30 @@ public class DateRange {
     	
 	}
 
-	public DateRange withStart(Date start){
+	public DateRange withDurationBeforeEnd(DateRange dateRange){
+		return new DateRange(getInterval().withDurationBeforeEnd(dateRange.toDuration()));
+	}
+	
+	public DateRange withDurationAfterStart(ReadableDuration duration){
+		return new DateRange(getInterval().withDurationAfterStart(duration));
+	}
+	
+	public DateRange withDurationAfterStart(DateRange dateRange){
+		return new DateRange(getInterval().withDurationAfterStart(dateRange.toDuration()));
+	}
+	
+	public DateRange withExtendedStart(Date start){
 		return new DateRange(start.toDate(), getEnd().toDate());
 	}
-	public DateRange withEnd(Date end){
+	public DateRange withExtendedEnd(Date end){
 		return new DateRange(getStart().toDate(), end.toDate());
+	}
+	
+	public DateRange withStart(Date start){
+		return new DateRange(toDuration().toIntervalFrom(new DateTime(start.toDate())));
+	}
+	public DateRange withEnd(Date end){
+		return new DateRange(toDuration().toIntervalTo(new DateTime(end.toDate())));
 	}
 
 	public boolean contains(Date date) {

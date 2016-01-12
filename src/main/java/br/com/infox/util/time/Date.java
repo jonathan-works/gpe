@@ -90,6 +90,10 @@ public class Date {
 		return new Date(new DateTime(this.date).plusYears(years));
 	}
 
+	public DateRange toDateRangeWithEnd(Date end){
+		return new DateRange(this.toDate(), end.toDate());
+	}
+	
 	public java.util.Date toDate(){
 		return this.date;
 	}
