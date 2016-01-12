@@ -7,7 +7,7 @@ public class CaixaDefinitionBean implements PanelDefinition {
     
     private Integer idCaixa;
     private String name;
-    private List<TaskBean> tasks;
+    private List<TaskBean> tasks = new ArrayList<>();
     
     public CaixaDefinitionBean(Integer idCaixa, String name) {
         this.idCaixa = idCaixa;
@@ -15,7 +15,6 @@ public class CaixaDefinitionBean implements PanelDefinition {
     }
 
     public void addTaskBean(TaskBean taskBean) {
-        if (tasks == null) tasks = new ArrayList<TaskBean>();
         tasks.add(taskBean);
     }
     

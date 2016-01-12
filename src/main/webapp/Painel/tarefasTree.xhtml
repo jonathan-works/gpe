@@ -17,6 +17,7 @@
             toggleType="client"
             execute="@this"
             selectionType="ajax"
+       		oncomplete="infox.hideLoading();"
             selectionChangeListener="#{painelTreeHandler.processTreeSelectionChange}"
             render="divPainelProcessosInterna, :pesquisaListForm"
             var="node">
@@ -28,8 +29,9 @@
                     expanded="#{node.expanded}"
                     iconLeaf="#{wiSkin.imageFolder}/messages.gif"
                     iconClass="tarefa-tree-icon"
+                    onclick="infox.showLoading();"
                     labelClass="tarefa-tree-lbl">
-                    <h:outputText value="#{node.entity.name}" />
+                    <h:outputText value="#{node.entity.name}"/>
                     <h:outputText
                         rendered="#{node.entity.quantidade - node.entity.quantidadeEmCaixa gt 0}"
                         value="(#{node.entity.quantidade - node.entity.quantidadeEmCaixa})" />
@@ -55,6 +57,7 @@
                         expanded="#{node.expanded}"
                         iconLeaf="#{wiSkin.imageFolder}/message.gif"
                         iconClass="tarefa-tree-icon"
+                        onclick="infox.showLoading();"
                         labelClass="tarefa-tree-lbl">
                         <h:outputText value="#{node.entity.name}" />
                         <h:outputText value="(#{node.entity.quantidade})" />

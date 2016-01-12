@@ -6,13 +6,11 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.AbstractQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
@@ -21,7 +19,6 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
 import javax.persistence.criteria.Subquery;
 
-import org.jboss.seam.Component;
 import org.jbpm.context.exe.variableinstance.LongInstance;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.node.TaskNode;
@@ -29,6 +26,7 @@ import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.exe.PooledActor;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao_;
@@ -62,14 +60,9 @@ import br.com.infox.epp.processo.type.TipoProcesso;
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class SituacaoProcessoDAO {
-
-	@Inject
-	private EntityManager entityManager;
-	
-	private Authenticator authenticator = (Authenticator) Component.getInstance(Authenticator.class);
 	
 	public EntityManager getEntityManager() {
-		return entityManager;
+		return EntityManagerProducer.getEntityManager();
 	}
 	
 	public List<TaskBean> getTaskIntances(TipoProcesso tipoProcesso, boolean comunicacoesExpedidas, String numeroProcessoRootFilter) {
@@ -107,10 +100,11 @@ public class SituacaoProcessoDAO {
 	    Selection<String> numeroProcessoRoot = processoRoot.get(Processo_.numeroProcesso);
 	    Selection<String> nomeUsuarioSolicitante = usuarioSolicitante.get(UsuarioLogin_.nomeUsuario);
 	    Selection<String> nomePrioridade = prioridadeProcesso.get(PrioridadeProcesso_.descricaoPrioridade);
+	    Selection<Integer> pesoPrioridade = prioridadeProcesso.get(PrioridadeProcesso_.peso);
 	    Selection<Date> dataInicio = processo.get(Processo_.dataInicio);
 	    
 	    cq.select(cb.construct(TaskBean.class, idTaskInstance, taskName, assignee, idProcessInstance, taskNodeKey, idProcesso, nomeCaixa, idCaixa, nomeFluxo, idFluxo,
-	            nomeNatureza, nomeCategoria, numeroProcesso, numeroProcessoRoot, nomeUsuarioSolicitante, nomePrioridade, dataInicio));
+	            nomeNatureza, nomeCategoria, numeroProcesso, numeroProcessoRoot, nomeUsuarioSolicitante, nomePrioridade, pesoPrioridade, dataInicio));
 
 	    cq.where(
 	            cb.equal(variableInstance.get("processInstance").<Long>get("id"), processInstance.<Long>get("id")),
@@ -130,7 +124,7 @@ public class SituacaoProcessoDAO {
 	    return getEntityManager().createQuery(cq).getResultList();
 	}
 	
-    protected void appendNumeroProcessoRootFilter(AbstractQuery<?> abstractQuery, String numeroProcesso, From<Processo, Processo> processoRoot) {
+    protected void appendNumeroProcessoRootFilter(AbstractQuery<?> abstractQuery, String numeroProcesso, From<?, Processo> processoRoot) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Predicate predicate = abstractQuery.getRestriction();
         abstractQuery.where(
@@ -141,8 +135,8 @@ public class SituacaoProcessoDAO {
         );
     }
     
-    //TODO: Alterar essa passagem de parametro pelo ROot<?>
-    public void appendTipoProcessoFilters(AbstractQuery<?> abstractQuery, TipoProcesso tipoProcesso, Boolean comunicacoesExpedidas, Root<TaskInstance> taskInstance, Root<Processo> processo) {
+    public void appendTipoProcessoFilters(AbstractQuery<?> abstractQuery, TipoProcesso tipoProcesso, Boolean comunicacoesExpedidas, 
+            From<?, TaskInstance> taskInstance, From<?, Processo> processo) {
         if (TipoProcesso.COMUNICACAO.equals(tipoProcesso)) {
             if (comunicacoesExpedidas != null && comunicacoesExpedidas) {
                 appendLocalizacaoExpedidoraFilter(abstractQuery, processo);
@@ -152,7 +146,7 @@ public class SituacaoProcessoDAO {
         } else if (TipoProcesso.DOCUMENTO.equals(tipoProcesso)) {
             appendPerfilTemplateFilter(abstractQuery, taskInstance);
         } else {
-//            appendUnidadeDecisoraFilter(abstractQuery);
+            appendUnidadeDecisoraFilter(abstractQuery, processo);
             appendPerfilTemplateFilter(abstractQuery, taskInstance);
         }
     }
@@ -189,7 +183,7 @@ public class SituacaoProcessoDAO {
         principalQuery.where(predicate);
     }
 	
-	protected void appendDestinoOrDestinatarioFilter(AbstractQuery<?> abstractQuery, Root<Processo> processo) {
+	protected void appendDestinoOrDestinatarioFilter(AbstractQuery<?> abstractQuery, From<?, Processo> processo) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Subquery<Integer> subqueryDestino = createSubqueryDestino(abstractQuery, processo);
         Subquery<Integer> subqueryPerfilDestino = createSubqueryPerfilDestino(abstractQuery, processo);
@@ -209,7 +203,7 @@ public class SituacaoProcessoDAO {
         abstractQuery.where(predicateQuery);
     }
 
-	protected void appendLocalizacaoExpedidoraFilter(AbstractQuery<?> abstractQuery, Root<Processo> processo) {
+	protected void appendLocalizacaoExpedidoraFilter(AbstractQuery<?> abstractQuery, From<?, Processo> processo) {
 	    CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Integer idLocalizacao = Authenticator.getLocalizacaoAtual().getIdLocalizacao();
         Predicate predicate = abstractQuery.getRestriction();
@@ -221,7 +215,7 @@ public class SituacaoProcessoDAO {
         );
 	}
 	
-	private Subquery<Integer> createSubqueryPerfilDestino(AbstractQuery<?> abstractQuery, Root<Processo> processo) {
+	private Subquery<Integer> createSubqueryPerfilDestino(AbstractQuery<?> abstractQuery, From<?, Processo> processo) {
 	    CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
         Root<MetadadoProcesso> metadado = subquery.from(MetadadoProcesso.class);
@@ -242,7 +236,7 @@ public class SituacaoProcessoDAO {
         return subquery;
     }
 
-    private Subquery<Integer> createSubqueryDestino(AbstractQuery<?> abstractQuery, Root<Processo> processo) {
+    private Subquery<Integer> createSubqueryDestino(AbstractQuery<?> abstractQuery, From<?, Processo> processo) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
         Root<MetadadoProcesso> metadado = subquery.from(MetadadoProcesso.class);
@@ -256,7 +250,7 @@ public class SituacaoProcessoDAO {
 		return subquery;
 	}
     
-	private Subquery<Integer> createSubqueryDestinatario(AbstractQuery<?> abstractQuery,  Root<Processo> processo) { 
+	private Subquery<Integer> createSubqueryDestinatario(AbstractQuery<?> abstractQuery,  From<?, Processo> processo) { 
 		String metadadoDestinatario = EppMetadadoProvider.PESSOA_DESTINATARIO.getMetadadoType();
 		PessoaFisica pessoaFisica = Authenticator.getUsuarioLogado().getPessoaFisica();
         Integer idPessoaFisica = pessoaFisica == null ? -1 : pessoaFisica.getIdPessoa();
@@ -292,80 +286,52 @@ public class SituacaoProcessoDAO {
         abstractQuery.where(predicate);
     }
     
-    protected void appendUnidadeDecisoraFilter(AbstractQuery<?> abstractQuery) {
-    	if (authenticator.isUsuarioLogandoInMonocraticaAndColegiada()) {
-    		appendUnidadeDecisoraColegiadaFilter(abstractQuery);
-    		appendUnidadeDecisoraMonocraticaFilter(abstractQuery);
-        } else if (authenticator.isUsuarioLogadoInColegiada()) {
-            appendUnidadeDecisoraColegiadaFilter(abstractQuery);
-        } else if (authenticator.isUsuarioLogadoInMonocratica()) {
-        	appendUnidadeDecisoraMonocraticaFilter(abstractQuery);
+    protected void appendUnidadeDecisoraFilter(AbstractQuery<?> abstractQuery, From<?, Processo> processo) {
+    	if (getAuthenticator().isUsuarioLogandoInMonocraticaAndColegiada()) {
+    		appendUnidadeDecisoraColegiadaFilter(abstractQuery, processo);
+    		appendUnidadeDecisoraMonocraticaFilter(abstractQuery, processo);
+        } else if (getAuthenticator().isUsuarioLogadoInColegiada()) {
+            appendUnidadeDecisoraColegiadaFilter(abstractQuery, processo);
+        } else if (getAuthenticator().isUsuarioLogadoInMonocratica()) {
+        	appendUnidadeDecisoraMonocraticaFilter(abstractQuery, processo);
         }
 	}
     
-    protected void appendUnidadeDecisoraColegiadaFilter(AbstractQuery<?> abstractQuery, Root<Processo> processo) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
-        Root<MetadadoProcesso> metadado = subquery.from(MetadadoProcesso.class);
-        subquery.select(cb.literal(1));
-        String metadadoUnidadeDecisora = EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA.getMetadadoType();
-        Integer idUnidadeDecisora = authenticator.getColegiadaLogada().getIdUnidadeDecisoraColegiada();
-        Predicate predicateSubquery = cb.and(cb.equal(metadado.get("metadadoType"), metadadoUnidadeDecisora));
-        predicateSubquery = cb.and(cb.equal(metadado.get("valor"), idUnidadeDecisora.toString()), predicateSubquery);
-        predicateSubquery = cb.and(cb.equal(metadado.get("processo").get("idProcesso"), processo.get("idProcesso")), predicateSubquery);
-        subquery.where(predicateSubquery);
-        Predicate predicate = abstractQuery.getRestriction();
-        predicate = cb.and(cb.exists(subquery), predicate);
-        abstractQuery.where(predicate);
-    }
-    
-	protected void appendUnidadeDecisoraColegiadaFilter(AbstractQuery<?> abstractQuery) {
+	protected void appendUnidadeDecisoraColegiadaFilter(AbstractQuery<?> abstractQuery, From<?, Processo> processo) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-		Root<?> root = abstractQuery.getRoots().iterator().next();
         Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
         Root<MetadadoProcesso> metadado = subquery.from(MetadadoProcesso.class);
         subquery.select(cb.literal(1));
         String metadadoUnidadeDecisora = EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA.getMetadadoType();
-        Integer idUnidadeDecisora = authenticator.getColegiadaLogada().getIdUnidadeDecisoraColegiada();
-        Predicate predicateSubquery = cb.and(cb.equal(metadado.get("metadadoType"), metadadoUnidadeDecisora));
-        predicateSubquery = cb.and(cb.equal(metadado.get("valor"), idUnidadeDecisora.toString()), predicateSubquery);
-        predicateSubquery = cb.and(cb.equal(metadado.get("processo").get("idProcesso"), root.get("idProcesso")), predicateSubquery);
+        Integer idUnidadeDecisora = getAuthenticator().getColegiadaLogada().getIdUnidadeDecisoraColegiada();
+        Predicate predicateSubquery = cb.and(cb.equal(metadado.get(MetadadoProcesso_.metadadoType), metadadoUnidadeDecisora));
+        predicateSubquery = cb.and(cb.equal(metadado.get(MetadadoProcesso_.valor), idUnidadeDecisora.toString()), predicateSubquery);
+        predicateSubquery = cb.and(cb.equal(metadado.get(MetadadoProcesso_.processo).get(Processo_.idProcesso), processo.get(Processo_.idProcesso)), predicateSubquery);
         subquery.where(predicateSubquery);
         Predicate predicate = abstractQuery.getRestriction();
     	predicate = cb.and(cb.exists(subquery), predicate);
     	abstractQuery.where(predicate);
 	}
 	
-	public void appendUnidadeDecisoraMonocraticaFilter(AbstractQuery<?> abstractQuery) {
+	protected void appendUnidadeDecisoraMonocraticaFilter(AbstractQuery<?> abstractQuery, From<?, Processo> processo) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-		Root<?> root = abstractQuery.getRoots().iterator().next();
         Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
         Root<MetadadoProcesso> metadado = subquery.from(MetadadoProcesso.class);
         subquery.select(cb.literal(1));
         
         String metadadoUnidadeDecisora = EppMetadadoProvider.UNIDADE_DECISORA_MONOCRATICA.getMetadadoType();
-        Integer idUnidadeDecisora = authenticator.getMonocraticaLogada().getIdUnidadeDecisoraMonocratica();
-        Predicate predicateSubquery = cb.and(cb.equal(metadado.get("metadadoType"), metadadoUnidadeDecisora));
-        predicateSubquery = cb.and(cb.equal(metadado.get("valor"), idUnidadeDecisora.toString()), predicateSubquery);
-        
-        Subquery<Integer> subQueryProcessoRoot = abstractQuery.subquery(Integer.class);
-        Root<Processo> processo = subQueryProcessoRoot.from(Processo.class);
-        Expression<Integer> idProcesso = processo.get("idProcesso");
-        subQueryProcessoRoot.select(idProcesso);
-        subQueryProcessoRoot.where(cb.and(
-        	cb.equal(processo.get("numeroProcesso"), cb.function("NumeroProcessoRoot", String.class, root.get("idProcesso"))),
-        	cb.isNull(processo.get("processoPai"))
-        ));
-        
-        predicateSubquery = cb.and(cb.equal(metadado.get("processo").get("idProcesso"),	subQueryProcessoRoot), predicateSubquery);
+        Integer idUnidadeDecisora = getAuthenticator().getMonocraticaLogada().getIdUnidadeDecisoraMonocratica();
+        Predicate predicateSubquery = cb.and(cb.equal(metadado.get(MetadadoProcesso_.metadadoType), metadadoUnidadeDecisora));
+        predicateSubquery = cb.and(cb.equal(metadado.get(MetadadoProcesso_.valor), idUnidadeDecisora.toString()), predicateSubquery);
+        predicateSubquery = cb.and(cb.equal(metadado.get(MetadadoProcesso_.processo).get(Processo_.idProcesso),	processo.get(Processo_.processoRoot).get(Processo_.idProcesso)), predicateSubquery);
         subquery.where(predicateSubquery);
-        
         Predicate predicate = abstractQuery.getRestriction();
+        
     	predicate = cb.and(cb.exists(subquery), predicate);
     	abstractQuery.where(predicate);
 	}
 	
-    public void appendPerfilTemplateFilter(AbstractQuery<?> abstractQuery, Root<TaskInstance> taskInstance) {
+    private void appendPerfilTemplateFilter(AbstractQuery<?> abstractQuery, From<?, TaskInstance> taskInstance) {
         Integer idPerfilTemplate = Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getId();
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
@@ -436,6 +402,10 @@ public class SituacaoProcessoDAO {
         query.setHint("org.hibernate.cacheable", "true");
         Long count = query.getSingleResult(); 
         return count > 0;
+	}
+	
+	protected Authenticator getAuthenticator() {
+	    return Authenticator.instance();
 	}
 	
 }

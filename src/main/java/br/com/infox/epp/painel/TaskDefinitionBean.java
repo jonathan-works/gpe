@@ -9,7 +9,7 @@ public class TaskDefinitionBean implements PanelDefinition {
     
     private String taskNodeKey;
     private String name;
-    private List<TaskBean> tasks;
+    private List<TaskBean> tasks = new ArrayList<>();
     
     private Map<Integer, CaixaDefinitionBean> caixas = new HashMap<>();
 
@@ -25,7 +25,6 @@ public class TaskDefinitionBean implements PanelDefinition {
     }
 
     public void addTaskBean(TaskBean taskBean) {
-        if (tasks == null) tasks = new ArrayList<>();
         if (taskBean.getIdCaixa() != null) {
             addTaskBeanToCaixa(taskBean);
         } else {

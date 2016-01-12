@@ -117,7 +117,7 @@ public class PainelUsuarioController implements Serializable {
 	public void onSelectFluxo() {
 		painelTreeHandler.clearTree();
 		painelTreeHandler.setFluxoBean(getSelectedFluxo());
-		consultaProcessoList.newInstance();
+		consultaProcessoList.onSelectFluxo(getSelectedFluxo());
 	}
 	
 	@Transactional
@@ -146,7 +146,7 @@ public class PainelUsuarioController implements Serializable {
     }
 
 	public void onSelectNode() {
-		consultaProcessoList.setTasks(getSelected().getTasks());
+		consultaProcessoList.onSelectNode(getSelected());
 	}
 	
 	public String getTaskNodeKey() {
