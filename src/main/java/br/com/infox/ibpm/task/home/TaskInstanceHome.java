@@ -62,11 +62,11 @@ import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.documento.type.ExpressionResolverChain;
 import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
-import br.com.infox.epp.painel.PainelUsuarioController;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
+import br.com.infox.epp.painel.PainelUsuarioController;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -150,6 +150,8 @@ public class TaskInstanceHome implements Serializable {
 	private ProcessoEpaHome processoEpaHome;
 	@In
 	private TarefaManager tarefaManager;
+	@In
+	private ProcessoHandler processoHandler;
 	
 	@Inject
 	private SituacaoProcessoDAO situacaoProcessoDAO;
@@ -726,22 +728,44 @@ public class TaskInstanceHome implements Serializable {
 	}
 
 	public void removeUsuario(TaskInstance taskInstance) {
-		if (taskInstance != null) {
-		    painelUsuarioController.liberarTarefa(taskInstance.getId());
-		}
+	    if (taskInstance != null) {
+            try {
+                taskInstanceManager.removeUsuario(taskInstance.getId());
+                afterLiberarTarefa();
+            } catch (DAOException e) {
+                LOG.error("TaskInstanceHome.removeUsuario(taskInstance)", e);
+            }
+	    }
 	}
 
 	public void removeUsuario(Long idTaskInstance) {
-	    painelUsuarioController.liberarTarefa(idTaskInstance);
+	    try {
+            taskInstanceManager.removeUsuario(idTaskInstance);
+            afterLiberarTarefa();
+        } catch (Exception e) {
+            LOG.error("TaskInstanceHome.removeUsuario(idTaskInstance)", e);
+        }
 	}
 
 	public void removeUsuario() {
-		if (BusinessProcess.instance().hasCurrentTask()) {
-		    painelUsuarioController.liberarTarefa(BusinessProcess.instance().getTaskId());
-		} else {
-			FacesMessages.instance().add(infoxMessages.get("org.jboss.seam.TaskNotFound"));
-		}
+	    if (BusinessProcess.instance().hasCurrentTask()) {
+            try {
+                taskInstanceManager.removeUsuario(BusinessProcess.instance().getTaskId());
+                afterLiberarTarefa();
+            } catch (DAOException e) {
+                LOG.error(".removeUsuario() - ", e);
+            }
+        } else {
+            FacesMessages.instance().add(infoxMessages.get("org.jboss.seam.TaskNotFound"));
+        }
 	}
+	
+	private void afterLiberarTarefa() {
+        processoHandler.clear();
+        FacesMessages.instance().clear();
+        FacesMessages.instance().add("Tarefa liberada com sucesso.");
+	}
+
 
 	public void start(long taskId) {
 		setTaskId(taskId);
