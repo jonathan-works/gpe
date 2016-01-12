@@ -62,7 +62,6 @@ import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.documento.type.ExpressionResolverChain;
 import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
-import br.com.infox.epp.painel.PainelUsuarioController;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
@@ -151,6 +150,8 @@ public class TaskInstanceHome implements Serializable {
 	private ProcessoEpaHome processoEpaHome;
 	@In
 	private TarefaManager tarefaManager;
+	@In
+	private ProcessoHandler processoHandler;
 	
 	@Inject
 	private SituacaoProcessoDAO situacaoProcessoDAO;
@@ -734,6 +735,7 @@ public class TaskInstanceHome implements Serializable {
             } catch (DAOException e) {
                 LOG.error("TaskInstanceHome.removeUsuario(taskInstance)", e);
             }
+            }
 	    }
 	public void removeUsuario(Long idTaskInstance) {
 	    try {
@@ -741,6 +743,7 @@ public class TaskInstanceHome implements Serializable {
             afterLiberarTarefa();
         } catch (Exception e) {
             LOG.error("TaskInstanceHome.removeUsuario(idTaskInstance)", e);
+        }
         }
 	public void removeUsuario() {
 	    if (BusinessProcess.instance().hasCurrentTask()) {
@@ -754,6 +757,13 @@ public class TaskInstanceHome implements Serializable {
             FacesMessages.instance().add(infoxMessages.get("org.jboss.seam.TaskNotFound"));
         }
 	}
+	
+	private void afterLiberarTarefa() {
+        processoHandler.clear();
+        FacesMessages.instance().clear();
+        FacesMessages.instance().add("Tarefa liberada com sucesso.");
+	}
+
 	
 	private void afterLiberarTarefa() {
         processoHandler.clear();
