@@ -3,7 +3,6 @@ package br.com.infox.epp.layout.view;
 import java.awt.Image;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.SortedSet;
@@ -11,6 +10,7 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -19,8 +19,6 @@ import org.jboss.seam.faces.FacesMessages;
 import org.richfaces.event.FileUploadEvent;
 import org.richfaces.model.UploadedFile;
 
-import br.com.infox.componentes.suggest.SuggestItem;
-import br.com.infox.componentes.suggest.SuggestProvider;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.layout.entity.Resource;
 import br.com.infox.epp.layout.entity.ResourceBin.TipoArquivo;
@@ -29,7 +27,7 @@ import br.com.infox.epp.layout.manager.LayoutManager;
 
 @Named
 @ViewScoped
-public class LayoutView implements Serializable, SuggestProvider<Resource> {
+public class LayoutView implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -187,28 +185,14 @@ public class LayoutView implements Serializable, SuggestProvider<Resource> {
 		this.tipoArquivo = tipoArquivo;
 	}
 	
-	private List<SuggestItem> toSuggestItems(List<Resource> resources) {
-		List<SuggestItem> retorno = new ArrayList<>();
-		for(Resource res : resources) {
-			retorno.add(new SuggestItem((Long)res.getId(), res.getNome()));
-		}
-		return retorno;
-	}
-
-	@Override
-	public List<SuggestItem> getSuggestions(String query) {
+	public List<Resource> completarResource(String query) {
 		List<Resource> resources = layoutManager.findResourcesByNome(query, MAXIMO_SUGESTOES);
 		if(resources.size() < MAXIMO_SUGESTOES) {
 			List<Resource> resourcesByPath = layoutManager.findResourcesByPath(query, MAXIMO_SUGESTOES - resources.size());
 			resourcesByPath.removeAll(resources);
 			resources.addAll(resourcesByPath);
 		}
-		return toSuggestItems(resources);
-	}
-
-	@Override
-	public Resource load(Object id) {
-		return layoutManager.findResourceById(((Integer)id).longValue());
+		return resources;		
 	}
 	
 	public String getImagemAtual() {
@@ -216,5 +200,9 @@ public class LayoutView implements Serializable, SuggestProvider<Resource> {
 			return null;
 		}
 		return layoutController.getResourceUrl(resource.getCodigo());
+	}
+	
+	public void resourceSelecionado(AjaxBehaviorEvent evt) {
+		
 	}
 }

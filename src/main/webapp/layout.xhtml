@@ -7,6 +7,7 @@
     xmlns:rich="http://richfaces.org/rich"
     xmlns:a="http://richfaces.org/a4j"
     xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:p="http://primefaces.org/ui"
     template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
     <ui:define name="body">
 
@@ -34,33 +35,44 @@
             style="margin-top:1em;"
             header="#{infoxMessages['layout.imagens']}">
             <h:form>
-                <wi:suggest id="grupoModeloDocumento"
-                    required="true"
-                    suggestProvider="#{layoutView}"
-                    value="#{layoutView.resource}"
-                    label="#{infoxMessages['layout.imagem']}" />
-                <h:graphicImage
-                    value="#{layoutView.imagemAtual}"
-                    rendered="#{layoutView.resource != null}" 
-                    />
-                <rich:fileUpload id="uploadResource" execute="@this"
-                    status=":status" limitRender="true" required="true"
-                    onbegin="infox.showLoading('Fazendo upload de arquivos..')"
-                    fileUploadListener="#{layoutView.processUploadResource}"
-                    addLabel="#{infoxMessages['processoDocumento.addLabel']}"
-                    clearAllLabel="#{infoxMessages['processoDocumento.clearAllLabel']}"
-                    clearLabel="#{infoxMessages['processoDocumento.clearLabel']}"
-                    doneLabel="#{infoxMessages['processoDocumento.doneLabel']}"
-                    uploadLabel="#{infoxMessages['processoDocumento.uploadLabel']}"
-                    sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}"
-                    maxFilesQuantity="1" listHeight="50px"
-                    immediateUpload="true" noDuplicate="true"
-                    render=":pageBodyDialogMessage"
-                    acceptedTypes=".png, .gif, .bmp, .jpg, .svg, .svgz"
-                    onuploadcomplete="infox.hideLoading();"
-                    ontyperejected="alert('Extensão de arquivo inválida');"
-                    onclear="clearUploadFile();">
-                </rich:fileUpload>
+                <div style="padding: 4px; font-size: 11px">
+                    <p:outputLabel styleClass="property-field-edit-name"
+                        style="font-size: 11px; padding-bottom: 4px"
+                        value="#{infoxMessages['layout.imagem']}"
+                        for="resource" />
+                    <p:autoComplete id="resource" dropdown="true"
+                        value="#{layoutView.resource}"
+                        completeMethod="#{layoutView.completarResource}"
+                        var="res" itemValue="#{res}"
+                        itemLabel="#{res.nome}"
+                        converter="resourceConverter" required="true"
+                        forceSelection="true">
+                        <p:ajax event="itemSelect"
+                            listener="#{layoutView.resourceSelecionado}"
+                            process="@form" update="@form" />
+                    </p:autoComplete>
+                </div>
+                <div style="padding-top: 1em">
+                    <rich:fileUpload id="uploadResource" execute="@this"
+                        status=":status" limitRender="true"
+                        required="true"
+                        onbegin="infox.showLoading('Fazendo upload de arquivos..')"
+                        fileUploadListener="#{layoutView.processUploadResource}"
+                        addLabel="#{infoxMessages['processoDocumento.addLabel']}"
+                        clearAllLabel="#{infoxMessages['processoDocumento.clearAllLabel']}"
+                        clearLabel="#{infoxMessages['processoDocumento.clearLabel']}"
+                        doneLabel="#{infoxMessages['processoDocumento.doneLabel']}"
+                        uploadLabel="#{infoxMessages['processoDocumento.uploadLabel']}"
+                        sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}"
+                        maxFilesQuantity="1" listHeight="50px"
+                        immediateUpload="true" noDuplicate="true"
+                        render=":pageBodyDialogMessage"
+                        acceptedTypes=".png, .gif, .bmp, .jpg, .svg, .svgz"
+                        onuploadcomplete="infox.hideLoading();"
+                        ontyperejected="alert('Extensão de arquivo inválida');"
+                        onclear="clearUploadFile();">
+                    </rich:fileUpload>
+                </div>
                 <h:commandButton id="inserirResource"
                     value="#{infoxMessages['crud.update']}"
                     action="#{layoutView.persistResource()}"
