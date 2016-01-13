@@ -75,8 +75,8 @@ public class PainelUsuarioController implements Serializable {
 	}
 	
 	public void atualizarPainelProcessos() throws IOException {
-//	    List<FluxoBean> fluxosDisponiveisTemp = situacaoProcessoManager.getFluxos(tipoProcessoDisponiveis, getNumeroProcesso());
-//	    verificaHouveAlteracao(fluxosDisponiveisTemp);
+	    List<FluxoBean> fluxosDisponiveisTemp = situacaoProcessoManager.getFluxos(tipoProcessoDisponiveis, getNumeroProcesso());
+	    verificaHouveAlteracao(fluxosDisponiveisTemp);
 	}
 	
 	protected void verificaHouveAlteracao(List<FluxoBean> fluxosDisponiveisTemp) throws IOException {

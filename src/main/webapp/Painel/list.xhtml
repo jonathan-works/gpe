@@ -18,7 +18,7 @@
   
   <ui:define name="baseBody">
     <h:form>
-        <p:poll listener="#{painelUsuarioController.atualizarPainelProcessos}" interval="10" process="@this" update="@none" immediate="true" widgetVar="pollAtualizarPainel" partialSubmit="true"/>
+    	<a:poll action="#{painelUsuarioController.atualizarPainelProcessos}" interval="10000" execute="@this" render="@none" immediate="true" bypassUpdates="true"/>
     </h:form>
     
     <s:div id="baseBody">
