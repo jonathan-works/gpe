@@ -2,8 +2,11 @@ package br.com.infox.ibpm.task.manager;
 
 import javax.ejb.Stateless;
 
+import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.bpm.Actor;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
@@ -33,6 +36,12 @@ public class TaskInstanceManager extends Manager<TaskInstanceDAO, UsuarioTaskIns
         } catch (Exception e) {
         	throw new DAOException(e);
         }
+    }
+    
+    public void atribuirTarefa(Long idTaskInstance) {
+        TaskInstance taskInstance = ManagedJbpmContext.instance().getTaskInstance(idTaskInstance);
+        ManagedJbpmContext.instance().getSession().buildLockRequest(LockOptions.READ).setLockMode(LockMode.PESSIMISTIC_FORCE_INCREMENT).lock(taskInstance);
+        taskInstance.setAssignee(Actor.instance().getId());
     }
 
 }

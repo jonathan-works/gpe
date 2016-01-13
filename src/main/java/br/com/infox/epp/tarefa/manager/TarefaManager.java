@@ -39,5 +39,9 @@ public class TarefaManager extends Manager<TarefaDAO, Tarefa> {
     public Tarefa getTarefa(String tarefa, String fluxo) {
         return getDao().getTarefa(tarefa, fluxo);
     }
+    
+    public String getTaskName(String taskKey) {
+        return getDao().getTaskName(taskKey);
+    }
 
 }

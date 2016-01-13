@@ -30,7 +30,8 @@
 	             formTitle="#{infoxMessages['searchForm.title']}"
 	             searchReRender="painelProcessosDocumento"
 	             clearAction="consultaProcessoList.newInstance()"
-	             clearReRender="painelProcessosDocumento" >
+	             clearReRender="painelProcessosDocumento" 
+	             searchAction="#{consultaProcessoList.search()}">
 	             
 	             <wi:inputText
                     id="numeroProcessoRoot"

@@ -2,12 +2,14 @@ package br.com.infox.epp.painel;
 
 import java.util.Date;
 
+import br.com.infox.epp.painel.caixa.Caixa;
+
 public class TaskBean {
     
-    private Long idTaskInstance;
+    private String idTaskInstance;
     private String taskName;
     private String assignee;
-    private Long idProcessInstance;
+    private String idProcessInstance;
     private String taskNodeKey;
     private Integer idProcesso;
     private String nomeCaixa;
@@ -24,7 +26,7 @@ public class TaskBean {
     private Date dataInicio;
     
     
-    public TaskBean(Long idTaskInstance, String taskName, String assignee, Long idProcessInstance, String taskNodeKey,
+    public TaskBean(String idTaskInstance, String taskName, String assignee, String idProcessInstance, String taskNodeKey,
             Integer idProcesso, String nomeCaixa, Integer idCaixa, String nomeFluxo, Integer idFluxo, String nomeNatureza, 
             String nomeCategoria, String numeroProcesso, String numeroProcessoRoot, String nomeUsuarioSolicitante, 
             String prioridadeProcesso, Integer pesoPrioridadeProcesso, Date dataInicio) {
@@ -48,7 +50,7 @@ public class TaskBean {
         this.dataInicio = dataInicio;
     }
     
-    public Long getIdTaskInstance() {
+    public String getIdTaskInstance() {
         return idTaskInstance;
     }
     
@@ -64,7 +66,7 @@ public class TaskBean {
         this.assignee = assignee;
     }
 
-    public Long getIdProcessInstance() {
+    public String getIdProcessInstance() {
         return idProcessInstance;
     }
     
@@ -83,7 +85,7 @@ public class TaskBean {
     public Integer getIdCaixa() {
         return idCaixa;
     }
-    
+
     public String getNomeFluxo() {
         return nomeFluxo;
     }
@@ -122,6 +124,16 @@ public class TaskBean {
     
     public Integer getPesoPrioridadeProcesso() {
         return pesoPrioridadeProcesso;
+    }
+    
+    public void removerCaixa() {
+        this.idCaixa = null;
+        this.nomeCaixa = null;
+    }
+    
+    public void moverParaCaixa(Caixa caixa) {
+        this.idCaixa = caixa.getIdCaixa();
+        this.nomeCaixa = caixa.getNomeCaixa();
     }
 
     @Override

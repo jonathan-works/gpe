@@ -8,7 +8,7 @@
   xmlns:s="http://jboss.org/schema/seam/taglib">
 
   <h:form>
-    <a:outputPanel>
+    <div>
 
       <rich:dragSource type="task#{row.taskNodeKey}"
         dragValue="#{consultaProcessoList.resultList}"
@@ -21,7 +21,7 @@
       <h:graphicImage url="#{wiSkin.imageFolder}/multipleImages.png"
         title="#{infoxMessages['processo.caixa.moverTodosProcessos']}" />
 
-    </a:outputPanel>
+    </div>
   </h:form>
 
 </ui:composition>

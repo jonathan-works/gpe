@@ -33,6 +33,11 @@ public class CaixaManager extends Manager<CaixaDAO, Caixa> {
     	return super.remove(caixa);
     }
     
+    public void remove(Integer idCaixa) {
+        Caixa caixa = getDao().find(idCaixa);
+        remove(caixa);
+    }
+    
     public void moverProcessoParaCaixa(Processo processo, Caixa caixa) throws DAOException {
     	processo.setCaixa(caixa);
     	processoManager.update(processo);

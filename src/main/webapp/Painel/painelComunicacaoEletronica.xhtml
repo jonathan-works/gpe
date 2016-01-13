@@ -20,7 +20,8 @@
                 <ui:define name="searchForm">
                     <wi:searchForm opened="false" formId="consultaProcessoComunicacaoRecebidasForm"
                         formTitle="#{infoxMessages['searchForm.title']}" searchReRender="painelProcessosComunicacaoEletronica"
-                        clearAction="consultaProcessoList.newInstance()" clearReRender="painelProcessosComunicacaoEletronica">
+                        clearAction="consultaProcessoList.newInstance()" clearReRender="painelProcessosComunicacaoEletronica"
+                        searchAction="#{consultaProcessoList.search()}">
                         <wi:inputText
                           id="numeroProcessoRoot"
                           label="#{infoxMessages['consultaProcesso.numeroProcesso']}"

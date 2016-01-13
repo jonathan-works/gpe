@@ -29,12 +29,11 @@
                     expanded="#{node.expanded}"
                     iconLeaf="#{wiSkin.imageFolder}/messages.gif"
                     iconClass="tarefa-tree-icon"
-                    onclick="infox.showLoading();"
                     labelClass="tarefa-tree-lbl">
                     <h:outputText value="#{node.entity.name}"/>
                     <h:outputText
                         rendered="#{node.entity.quantidade - node.entity.quantidadeEmCaixa gt 0}"
-                        value="(#{node.entity.quantidade - node.entity.quantidadeEmCaixa})" />
+                        value="(#{node.entity.quantidade})" />
                     <h:outputText
                         rendered="#{node.entity.quantidadeEmCaixa gt 0}"
                         value=" (Em caixas: #{node.entity.quantidadeEmCaixa})" />
@@ -57,7 +56,6 @@
                         expanded="#{node.expanded}"
                         iconLeaf="#{wiSkin.imageFolder}/message.gif"
                         iconClass="tarefa-tree-icon"
-                        onclick="infox.showLoading();"
                         labelClass="tarefa-tree-lbl">
                         <h:outputText value="#{node.entity.name}" />
                         <h:outputText value="(#{node.entity.quantidade})" />
@@ -75,7 +73,7 @@
                                 icon="#{wiSkin.imageFolder}/remove.png"
                                 onclick="return confirm(\'#{infoxMessages['caixa.confirm.remove']}\');"
                                 render="divPainelProcessos, TarefasTree, pageBodyDialogMessage"
-                                action="#{caixaCrudAction.removerCaixaNoPainel()}">
+                                action="#{painelUsuarioController.removerCaixa(node)}">
                                 <f:setPropertyActionListener target="#{caixaCrudAction.id}" value="#{node.entity.id}" />
                             </rich:menuItem>
                         </rich:contextMenu>
@@ -90,4 +88,7 @@
             </rich:treeModelAdaptor>
         </rich:tree>
     </rich:panel>
+    <script type="text/javascript">
+    	$('.rf-trn-cnt').click(function(){infox.showLoading();});
+    </script>
 </ui:composition>

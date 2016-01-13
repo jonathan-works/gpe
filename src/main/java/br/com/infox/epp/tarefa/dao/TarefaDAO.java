@@ -17,6 +17,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -33,6 +34,26 @@ public class TarefaDAO extends DAO<Tarefa> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "tarefaDAO";
+    
+    public String getTaskName(String taskKey) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<String> cq = cb.createQuery(String.class);
+        Root<Node> node = cq.from(Node.class);
+        cq.select(node.<String>get("name"));
+        
+        Subquery<Long> subquery = cq.subquery(Long.class);
+        Root<Node> node2 = subquery.from(Node.class);
+        subquery.select(cb.max(node2.<Long>get("id")));
+        subquery.where(
+                cb.equal(node2.<String>get("key"), cb.literal(taskKey))
+        );
+        
+        cq.where(
+                cb.equal(subquery, node.<Long>get("id"))
+        );
+        
+        return getEntityManager().createQuery(cq).getSingleResult();
+    }
 
     public List<SelectItem> getPreviousNodes(String nodeKey) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
@@ -40,9 +61,17 @@ public class TarefaDAO extends DAO<Tarefa> {
         Root<Transition> transition = cq.from(Transition.class);
         Join<Transition, Node> nodeFrom = transition.join("from", JoinType.INNER);
         Join<Transition, Node> nodeTo = transition.join("to", JoinType.INNER);
+        
+        Subquery<Long> subquery = cq.subquery(Long.class);
+        Root<Node> node = subquery.from(Node.class);
+        subquery.select(cb.max(node.<Long>get("id")));
+        subquery.where(
+                cb.equal(node.<String>get("key"), cb.literal(nodeKey))
+        );
+        
         cq.select(cb.construct(SelectItem.class, nodeFrom.<Long>get("id"), nodeFrom.<String>get("name")));
         cq.where(
-                cb.equal(nodeTo.get("key"), cb.literal(nodeKey))
+                cb.equal(subquery, nodeTo.<Long>get("id"))
         );
         return getEntityManager().createQuery(cq).getResultList();
     }

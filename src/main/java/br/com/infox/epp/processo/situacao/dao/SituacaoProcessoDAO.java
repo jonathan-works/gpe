@@ -83,10 +83,10 @@ public class SituacaoProcessoDAO {
 	    Join<Processo, PrioridadeProcesso> prioridadeProcesso = processo.join(Processo_.prioridadeProcesso, JoinType.LEFT);
 	    Join<Processo, Caixa> caixa = processo.join(Processo_.caixa, JoinType.LEFT);
 	    
-	    Selection<Long> idTaskInstance = taskInstance.<Long>get("id");
+	    Selection<String> idTaskInstance = taskInstance.<Long>get("id").as(String.class);
 	    Selection<String> taskName = task.<String>get("name");
 	    Selection<String> assignee = taskInstance.<String>get("assignee");
-	    Selection<Long> idProcessInstance = processInstance.<Long>get("id");
+	    Selection<String> idProcessInstance = processInstance.<Long>get("id").as(String.class);
 	    Selection<String> taskNodeKey = taskNode.<String>get("key");
 	    Selection<Integer> idProcesso =  processo.get(Processo_.idProcesso);
 	    Selection<String> nomeCaixa =  caixa.get(Caixa_.nomeCaixa);

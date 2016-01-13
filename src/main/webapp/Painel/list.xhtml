@@ -18,7 +18,7 @@
   
   <ui:define name="baseBody">
     <h:form>
-        <p:poll listener="#{painelUsuarioController.atualizarPainelProcessos}" interval="10" process="@this" update="@none" immediate="true" widgetVar="pollAtualizarPainel"/>
+        <p:poll listener="#{painelUsuarioController.atualizarPainelProcessos}" interval="10" process="@this" update="@none" immediate="true" widgetVar="pollAtualizarPainel" partialSubmit="true"/>
     </h:form>
     
     <s:div id="baseBody">
@@ -132,7 +132,6 @@
 		      <wi:inputText
 		          id="nomeCaixa"
 		          label="#{infoxMessages['caixa.nomeCaixa']}"
-		          value="#{caixaCrudAction.instance.nomeCaixa}"
 		          required="true" />
 		        
 		      <a:commandButton
@@ -140,9 +139,11 @@
 		          styleClass="buttons"
 		          execute="@form"
 		          limitRender="true"
-		          action="#{caixaCrudAction.adicionarCaixaNoPainel(painelUsuarioController.taskNodeKey)}"
+		          actionListener="#{painelUsuarioController.adicionarCaixa}"
 		          oncomplete="if(#{not facesContext.isValidationFailed()}){#{rich:component('novaCaixaPanel')}.hide()}"
-		          render="divPainelProcessos, nomeCaixaDecoration, pageBodyDialogMessage" />
+		          render="divPainelProcessos, nomeCaixaDecoration, pageBodyDialogMessage">
+		          <f:attribute name="inputNomeCaixa" value="#{rich:clientId('nomeCaixa')}" />
+		      </a:commandButton>
 	          
 	      </h:form>
 	      

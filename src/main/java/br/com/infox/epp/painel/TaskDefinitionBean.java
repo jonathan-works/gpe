@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.com.infox.epp.painel.caixa.Caixa;
+
 public class TaskDefinitionBean implements PanelDefinition {
     
     private String taskNodeKey;
@@ -35,7 +37,7 @@ public class TaskDefinitionBean implements PanelDefinition {
     private void addTaskBeanToCaixa(TaskBean taskBean) {
         CaixaDefinitionBean caixaDefinitionBean = caixas.get(taskBean.getIdCaixa());
         if (caixaDefinitionBean == null) {
-            caixaDefinitionBean = new CaixaDefinitionBean(taskBean.getIdCaixa(), taskBean.getNomeCaixa());
+            caixaDefinitionBean = new CaixaDefinitionBean(taskBean.getIdCaixa(), taskBean.getNomeCaixa(), this);
             caixas.put(taskBean.getIdCaixa(), caixaDefinitionBean);
         }
         caixaDefinitionBean.addTaskBean(taskBean);
@@ -58,6 +60,27 @@ public class TaskDefinitionBean implements PanelDefinition {
     @Override
     public int getQuantidade() {
         return tasks == null ? 0 : tasks.size();
+    }
+    
+    public void removerCaixa(Integer idCaixa) {
+        CaixaDefinitionBean caixaDefinitionBean = caixas.get(idCaixa);
+        if (caixaDefinitionBean == null) return;
+        for (TaskBean taskBean : caixaDefinitionBean.getTasks()) {
+            taskBean.removerCaixa();
+        }
+        tasks.addAll(caixaDefinitionBean.getTasks());
+        caixas.remove(idCaixa);
+    }
+    
+    public void moverParaCaixa(TaskBean taskBean, Caixa caixa) {
+        tasks.remove(taskBean);
+        taskBean.moverParaCaixa(caixa);
+        CaixaDefinitionBean caixaDefinitionBean = caixas.get(caixa.getIdCaixa());
+        if (caixaDefinitionBean == null) {
+            caixaDefinitionBean = new CaixaDefinitionBean(caixa.getIdCaixa(), caixa.getNomeCaixa(), this);
+            caixas.put(caixa.getIdCaixa(), caixaDefinitionBean);
+        }
+        caixaDefinitionBean.addTaskBean(taskBean);
     }
     
     public CaixaDefinitionBean getCaixaDefinitionBean(Integer idCaixa) {
