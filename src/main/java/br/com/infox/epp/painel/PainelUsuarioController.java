@@ -15,23 +15,20 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.richfaces.event.DropEvent;
 
-import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.messages.InfoxMessages;
-import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.exception.ExceptionHandled;
+import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.painel.caixa.CaixaManager;
 import br.com.infox.epp.processo.consulta.list.ConsultaProcessoList;
-import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
 import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.tarefa.component.tree.PainelEntityNode;
 import br.com.infox.epp.tarefa.component.tree.PainelTreeHandler;
 import br.com.infox.ibpm.task.manager.TaskInstanceManager;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import br.com.infox.seam.security.SecurityUtil;
 
 @Named
@@ -39,8 +36,6 @@ import br.com.infox.seam.security.SecurityUtil;
 public class PainelUsuarioController implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	protected static final String NAME = "painelUsuarioController";
-	private static final LogProvider LOG = Logging.getLogProvider(PainelUsuarioController.class);
 	
 	@Inject
 	private SituacaoProcessoManager situacaoProcessoManager;
@@ -119,27 +114,21 @@ public class PainelUsuarioController implements Serializable {
 		consultaProcessoList.onSelectFluxo(getSelectedFluxo());
 	}
 	
+	@ExceptionHandled(value = MethodType.UNSPECIFIED)
 	public void atribuirTarefa(TaskBean taskBean) {
-	    try {
-	        taskInstanceManager.atribuirTarefa(Long.valueOf(taskBean.getIdTaskInstance()));
-	        taskBean.setAssignee(Authenticator.getUsuarioLogado().getLogin());
-	    } catch (Exception e) {
-            LOG.error("painelUsuarioController.atribuirTarefa(taskBean)", e);
-	    }
+        taskInstanceManager.atribuirTarefa(Long.valueOf(taskBean.getIdTaskInstance()));
+	    taskBean.setAssignee(Authenticator.getUsuarioLogado().getLogin());
 	}
 	
+	@ExceptionHandled(value = MethodType.UNSPECIFIED)
 	public void liberarTarefa(Long idTaskInstance) {
-        try {
-            taskInstanceManager.removeUsuario(idTaskInstance);
-            TaskBean taskBean = getSelectedFluxo().getTask(idTaskInstance.toString());
-            if (taskBean != null) {
-                taskBean.setAssignee(null);
-            }
-            FacesMessages.instance().add("Tarefa Liberada com Sucesso!");
-        } catch (Exception e) {
-            LOG.error("painelUsuarioController.removeUsuario(idTaskInstance)", e);
+	    taskInstanceManager.removeUsuario(idTaskInstance);
+        TaskBean taskBean = getSelectedFluxo().getTask(idTaskInstance.toString());
+        if (taskBean != null) {
+            taskBean.setAssignee(null);
         }
-    }
+        FacesMessages.instance().add("Tarefa Liberada com Sucesso!");
+	}   
 
 	public void onSelectNode() {
 		consultaProcessoList.onSelectNode(getSelected());
@@ -150,6 +139,7 @@ public class PainelUsuarioController implements Serializable {
 	}
 
 	@SuppressWarnings("unchecked")
+	@ExceptionHandled(value = MethodType.UNSPECIFIED)
 	public void moverProcessoParaCaixaDropEventListener(DropEvent evt) {
 		Caixa caixa = caixaManager.find((Integer) evt.getDropValue());
 		Object dragValue = evt.getDragValue();
@@ -161,48 +151,37 @@ public class PainelUsuarioController implements Serializable {
 	}
 	
 	private void moverProcessoParaCaixa(TaskBean taskBean, Caixa caixa) {
-	    try {
-	        Processo processo = EntityManagerProducer.getEntityManager().find(Processo.class, taskBean.getIdProcesso());
-	        caixaManager.moverProcessoParaCaixa(processo, caixa);
-	        getSelected().moverParaCaixa(taskBean, caixa);
-	        painelTreeHandler.clearTree();
-	    } catch (DAOException e) {
-	        FacesMessages.instance().add("Erro ao mover para caixa");
-	    }
+        caixaManager.moverProcessoParaCaixa(taskBean.getIdProcesso(), caixa);
+        getSelected().moverParaCaixa(taskBean, caixa);
+        painelTreeHandler.clearTree();
     }
 	
 	private void moverProcessosParaCaixa(List<TaskBean> taskBeans, Caixa caixa) {
 	    for (TaskBean taskBean : taskBeans) {
-	        moverProcessoParaCaixa(taskBean, caixa);
+	        caixaManager.moverProcessoParaCaixa(taskBean.getIdProcesso(), caixa);
+            getSelected().moverParaCaixa(taskBean, caixa);
 	    }
+	    painelTreeHandler.clearTree();
 	}
 	
+	@ExceptionHandled(value = MethodType.REMOVE)
 	public void removerCaixa(PainelEntityNode painelEntityNode) {
-        try {
-            Integer idCaixa = (Integer) painelEntityNode.getEntity().getId();
-            caixaManager.remove(idCaixa);
-            TaskDefinitionBean taskDefinitionBean = (TaskDefinitionBean) painelEntityNode.getParent().getEntity();
-            taskDefinitionBean.removerCaixa(idCaixa);
-            painelTreeHandler.clearTree();
-        } catch (DAOException e) {
-            actionMessagesService.handleDAOException(e);
-            LOG.error("removerCaixa(panelDefinition)", e);
-        }
+        Integer idCaixa = (Integer) painelEntityNode.getEntity().getId();
+        caixaManager.remove(idCaixa);
+        TaskDefinitionBean taskDefinitionBean = (TaskDefinitionBean) painelEntityNode.getParent().getEntity();
+        taskDefinitionBean.removerCaixa(idCaixa);
+        painelTreeHandler.clearTree();
     }
 
+	@ExceptionHandled(value = MethodType.PERSIST)
 	public void adicionarCaixa(ActionEvent event) {
 	    String inputNomeCaixa = (String) event.getComponent().getAttributes().get("inputNomeCaixa");
 	    String nomeCaixa = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(inputNomeCaixa);
-	    try {
-	        Caixa caixa = new Caixa();
-	        caixa.setTaskKey(getSelected().getId().toString());
-	        caixa.setNomeCaixa(nomeCaixa);
-	        caixaManager.persist(caixa);
-	        painelTreeHandler.clearTree();
-	    } catch (DAOException e) {
-            actionMessagesService.handleDAOException(e);
-            LOG.error("adicionarCaixa", e);
-        }
+        Caixa caixa = new Caixa();
+        caixa.setTaskKey(getSelected().getId().toString());
+        caixa.setNomeCaixa(nomeCaixa);
+        caixaManager.persist(caixa);
+        painelTreeHandler.clearTree();
     }
 
 	public void editarCaixa() {

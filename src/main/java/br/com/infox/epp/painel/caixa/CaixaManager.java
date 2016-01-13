@@ -38,17 +38,10 @@ public class CaixaManager extends Manager<CaixaDAO, Caixa> {
         remove(caixa);
     }
     
-    public void moverProcessoParaCaixa(Processo processo, Caixa caixa) throws DAOException {
+    public void moverProcessoParaCaixa(Integer idProcesso, Caixa caixa) throws DAOException {
+        Processo processo = processoManager.find(idProcesso);
     	processo.setCaixa(caixa);
     	processoManager.update(processo);
-    }
-    
-    public void moverProcessosParaCaixa(List<Processo> processos, Caixa caixa) throws DAOException {
-    	for (Processo processo : processos) {
-    		processo.setCaixa(caixa);
-    		processoManager.merge(processo);
-    	}
-    	flush();
     }
     
     public Caixa getCaixaByDestinationNodeKeyNodeAnterior(String taskKey, String taskKeyAnterior) {

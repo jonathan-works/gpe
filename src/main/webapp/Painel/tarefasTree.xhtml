@@ -31,16 +31,9 @@
                     iconClass="tarefa-tree-icon"
                     labelClass="tarefa-tree-lbl">
                     <h:outputText value="#{node.entity.name}"/>
-                    <h:outputText
-                        rendered="#{node.entity.quantidade - node.entity.quantidadeEmCaixa gt 0}"
-                        value="(#{node.entity.quantidade})" />
-                    <h:outputText
-                        rendered="#{node.entity.quantidadeEmCaixa gt 0}"
-                        value=" (Em caixas: #{node.entity.quantidadeEmCaixa})" />
-                    <rich:contextMenu
-                        mode="ajax"
-                        target="taskNode"
-                        id="menuTaskNode"
+                    <h:outputText rendered="#{node.entity.quantidade ne 0}" value=" (#{node.entity.quantidade})" />
+                    <h:outputText rendered="#{node.entity.quantidadeEmCaixa gt 0}" value=" (Em caixas: #{node.entity.quantidadeEmCaixa})" />
+                    <rich:contextMenu mode="ajax" target="taskNode" id="menuTaskNode"
                         rendered="#{security.checkPage('/pages/Caixa/listView.seam')}"> 
                         <rich:menuItem
                             label="#{infoxMessages['caixa.menu.novaCaixa']}"
@@ -58,7 +51,7 @@
                         iconClass="tarefa-tree-icon"
                         labelClass="tarefa-tree-lbl">
                         <h:outputText value="#{node.entity.name}" />
-                        <h:outputText value="(#{node.entity.quantidade})" />
+                        <h:outputText value=" (#{node.entity.quantidade})" />
                         <rich:contextMenu
                             id="menuCaixa"
                             mode="ajax"
@@ -78,11 +71,12 @@
                             </rich:menuItem>
                         </rich:contextMenu>
                         <rich:dropTarget
-                            acceptedTypes="task#{node.parent.entity.id}"
+                            acceptedTypes="#{node.parent.entity.id.toUpperCase()}"
                             dropListener="#{painelUsuarioController.moverProcessoParaCaixaDropEventListener}"
                             dropValue="#{node.entity.id}"
                             render="divPainelProcessos, TarefasTree"
-                            limitRender="true" />
+                            limitRender="true" 
+                            execute="@this"/>
                     </rich:treeNode>
                 </rich:treeModelAdaptor>
             </rich:treeModelAdaptor>
