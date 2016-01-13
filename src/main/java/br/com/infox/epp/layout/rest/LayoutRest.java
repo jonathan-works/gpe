@@ -34,7 +34,7 @@ public class LayoutRest {
 	}
 	
 	@GET
-	@Path("{codigo}")
+	@Path("{codigo : .+}")
 	public Response getResourceByCodigo(@PathParam("codigoSkin") String codigoSkin, @PathParam("codigo") String codigoResource,
 	        @Context Request request) {
 		MetadadosResource metadados = servico.getMetadados(codigoSkin, codigoResource);
