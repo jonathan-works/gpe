@@ -24,7 +24,7 @@ public class CaixaJbpmEventHandler {
     public void moverProcessoParaCaixaDestino(@Observes @Transition ExecutionContext executionContext) throws DAOException {
     	Node nodeTo = executionContext.getTransition().getTo();
     	Node nodeFrom = executionContext.getTransition().getFrom();
-	    Caixa caixa = caixaManager.getCaixaByDestinationNodeKeyNodeAnterior(nodeTo.getKey(), nodeFrom.getId());
+	    Caixa caixa = caixaManager.getCaixaByDestinationNodeKeyNodeAnterior(nodeTo.getKey(), nodeFrom.getKey());
 	    if (caixa != null) {
 	        Processo processo = processoManager.getProcessoEpaByIdJbpm(executionContext.getProcessInstance().getId());
 	        if (caixa != null) {

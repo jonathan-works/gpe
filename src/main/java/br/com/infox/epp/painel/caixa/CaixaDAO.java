@@ -20,13 +20,13 @@ public class CaixaDAO extends DAO<Caixa> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "caixaDAO";
     
-    public Caixa getCaixaByDestinationNodeKeyNodeAnterior(String taskKey, Long idNodeAnterior) {
+    public Caixa getCaixaByDestinationNodeKeyNodeAnterior(String taskKey, String taskKeyAnterior) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Caixa> cq = cb.createQuery(Caixa.class);
         Root<Caixa> caixa = cq.from(Caixa.class);
         cq.where(
                 cb.equal(caixa.get(Caixa_.taskKey), cb.literal(taskKey)),
-                cb.equal(caixa.get(Caixa_.idNodeAnterior), cb.literal(idNodeAnterior))
+                cb.equal(caixa.get(Caixa_.taskKeyAnterior), cb.literal(taskKeyAnterior))
         );
     	return getSingleResult(getEntityManager().createQuery(cq));
     }

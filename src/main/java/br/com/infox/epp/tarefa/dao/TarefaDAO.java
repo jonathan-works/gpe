@@ -69,7 +69,7 @@ public class TarefaDAO extends DAO<Tarefa> {
                 cb.equal(node.<String>get("key"), cb.literal(nodeKey))
         );
         
-        cq.select(cb.construct(SelectItem.class, nodeFrom.<Long>get("id"), nodeFrom.<String>get("name")));
+        cq.select(cb.construct(SelectItem.class, nodeFrom.<String>get("key"), nodeFrom.<String>get("name")));
         cq.where(
                 cb.equal(subquery, nodeTo.<Long>get("id"))
         );

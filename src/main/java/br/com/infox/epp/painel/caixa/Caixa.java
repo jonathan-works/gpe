@@ -51,8 +51,8 @@ public class Caixa implements Serializable {
     @Size(max = LengthConstants.NOME_PADRAO)
     private String nomeIndice;
     
-    @Column(name = "id_node_anterior", nullable = true)
-    private Long idNodeAnterior;
+    @Column(name = "cd_node_key_anterior", nullable = true)
+    private String taskKeyAnterior;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "caixa")
     private List<Processo> processoList = new ArrayList<Processo>(0);
@@ -114,12 +114,12 @@ public class Caixa implements Serializable {
         this.nomeIndice = nomeIndice;
     }
 
-    public Long getIdNodeAnterior() {
-        return idNodeAnterior;
+    public String getTaskKeyAnterior() {
+        return taskKeyAnterior;
     }
 
-    public void setIdNodeAnterior(Long idNodeAnterior) {
-        this.idNodeAnterior = idNodeAnterior;
+    public void setTaskKeyAnterior(String taskKeyAnterior) {
+        this.taskKeyAnterior = taskKeyAnterior;
     }
 
     public List<Processo> getProcessoList() {

@@ -51,8 +51,8 @@ public class CaixaManager extends Manager<CaixaDAO, Caixa> {
     	flush();
     }
     
-    public Caixa getCaixaByDestinationNodeKeyNodeAnterior(String taskKey, Long idNodeAnterior) {
-    	return getDao().getCaixaByDestinationNodeKeyNodeAnterior(taskKey, idNodeAnterior);
+    public Caixa getCaixaByDestinationNodeKeyNodeAnterior(String taskKey, String taskKeyAnterior) {
+    	return getDao().getCaixaByDestinationNodeKeyNodeAnterior(taskKey, taskKeyAnterior);
     }
 
 }
