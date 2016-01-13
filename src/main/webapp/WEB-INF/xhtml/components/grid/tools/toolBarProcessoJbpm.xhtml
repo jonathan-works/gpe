@@ -13,7 +13,7 @@
     <ui:param name="owner" value="#{row.assignee}" />
     <ui:param name="showMovimentarToolBar" value="#{wi:get(showMovimentarToolBar, true)}" />
 
-    <div>
+    <div style="display: inline-block;">
       <rich:dragSource type="#{row.taskNodeKey.toUpperCase()}" dragValue="#{row}" dragIndicator="indicator">
         <rich:dragIndicator id="indicator" acceptClass="caixa-acpt" draggingClass="caixa-drag" rejectClass="caixa-rejt">
           <span class="caixa-ind-lbl">#{infoxMessages['processo.titlePage']}: #{row.numeroProcessoRoot}</span>
