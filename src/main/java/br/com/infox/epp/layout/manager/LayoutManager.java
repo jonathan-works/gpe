@@ -102,6 +102,12 @@ public class LayoutManager {
 		return resource.getCodigo();
 	}
 	
+	private ResourceBin getResourceBinByPath(String codigoSkin, String path) {
+		String pathSemExtensao = path.substring(0, path.lastIndexOf(".") + 1);
+		Resource resource = resourceDao.findByStartingPath(pathSemExtensao);
+		return getResourceBin(codigoSkin, resource.getCodigo());
+	}
+	
 	private ResourceBin getResourceBin(String codigoSkin, String codigoResource) {
 		Skin skin = skinDao.findByCodigo(codigoSkin);
 		if(skin == null) {
@@ -125,7 +131,7 @@ public class LayoutManager {
 	}
 	
 	private String getUrlRestByPath(String codigoSkin, String resourcePath) {
-		ResourceBin resourceBin = getResourceBin(codigoSkin, resourcePath);
+		ResourceBin resourceBin = getResourceBinByPath(codigoSkin, resourcePath);
 		
 		
 		Path diretorio = Paths.get(resourcePath).getParent();
@@ -157,10 +163,7 @@ public class LayoutManager {
 	}
 	
 	public String getResourceUrlByPath(String codigoSkin, String path) {
-		String pathSemExtensao = path.substring(0, path.lastIndexOf(".") + 1);
-		Resource resource = resourceDao.findByStartingPath(pathSemExtensao);
-
-		ResourceBin resourceBin = getResourceBin(codigoSkin, resource.getCodigo());
+		ResourceBin resourceBin = getResourceBinByPath(codigoSkin, path);
 		if(resourceBin != null) {
 			return getUrlRestByPath(codigoSkin, path);
 		}
