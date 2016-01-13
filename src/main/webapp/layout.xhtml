@@ -50,6 +50,16 @@
                         <p:ajax event="itemSelect"
                             listener="#{layoutView.resourceSelecionado}"
                             process="@form" update="@form" />
+                        <p:column>
+                            <p:graphicImage
+                                value="#{layoutController.getResourceUrl(res.codigo)}"
+                                width="40" height="30"
+                                style="float:left; margin-right:10px; background-color: Gainsboro;" />
+                            <span class="font333 fontSize14"><h:outputText
+                                    value="#{res.nome}" /></span>
+                            <br />
+                            <p class="separator"></p>
+                        </p:column>
                     </p:autoComplete>
                 </div>
                 <div style="padding-top: 1em">

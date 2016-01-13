@@ -195,6 +195,10 @@ public class LayoutView implements Serializable {
 		return resources;		
 	}
 	
+	public String getImagem(String codigoResource) {
+		return layoutController.getResourceUrl(codigoResource);
+	}
+	
 	public String getImagemAtual() {
 		if(resource == null) {
 			return null;
