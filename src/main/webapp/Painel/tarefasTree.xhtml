@@ -24,10 +24,10 @@
             <rich:treeModelAdaptor id="tarefaTreeModelAdaptor" nodes="#{painelTreeHandler.tarefasRoots}">
                 <rich:treeNode
                     id="taskNode"
-                    iconCollapsed="#{wiSkin.imageFolder}/messages.gif"
-                    iconExpanded="#{wiSkin.imageFolder}/messages.gif"
+                    iconCollapsed="#{layoutController.getResourceUrlByPath('/imagens/messages.gif')}"
+                    iconExpanded="#{layoutController.getResourceUrlByPath('/imagens/messages.gif')}"
                     expanded="#{node.expanded}"
-                    iconLeaf="#{wiSkin.imageFolder}/messages.gif"
+                    iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/messages.gif')}"
                     iconClass="tarefa-tree-icon"
                     labelClass="tarefa-tree-lbl">
                     <h:outputText value="#{node.entity.name}"/>
@@ -37,17 +37,17 @@
                         rendered="#{security.checkPage('/pages/Caixa/listView.seam')}"> 
                         <rich:menuItem
                             label="#{infoxMessages['caixa.menu.novaCaixa']}"
-                            icon="#{wiSkin.imageFolder}/add.gif"
+                            icon="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}"
                             onclick="#{rich:component('novaCaixaPanel')}.show()" />
                     </rich:contextMenu>
                 </rich:treeNode>
                 <rich:treeModelAdaptor id="caixaTreeModelAdaptor" nodes="#{node.caixas}">
                     <rich:treeNode
                         id="caixaNode"
-                        iconCollapsed="#{wiSkin.imageFolder}/message.gif"
-                        iconExpanded="#{wiSkin.imageFolder}/message.gif"
+                        iconCollapsed="#{layoutController.getResourceUrlByPath('/imagens/message.gif')}"
+                        iconExpanded="#{layoutController.getResourceUrlByPath('/imagens/message.gif')}"
                         expanded="#{node.expanded}"
-                        iconLeaf="#{wiSkin.imageFolder}/message.gif"
+                        iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/message.gif')}"
                         iconClass="tarefa-tree-icon"
                         labelClass="tarefa-tree-lbl">
                         <h:outputText value="#{node.entity.name}" />
@@ -59,11 +59,11 @@
                             rendered="#{security.checkPage('/pages/Caixa/listView.seam')}">
                             <rich:menuItem
                                 label="#{infoxMessages['caixa.menu.editaCaixa']}"
-                                icon="#{wiSkin.imageFolder}/mod/edit.gif"
+                                icon="#{layoutController.getResourceUrlByPath('/imagens/mod/edit.gif')}"
                                 action="#{painelUsuarioController.editarCaixa()}" />
                             <rich:menuItem
                                 label="#{infoxMessages['caixa.menu.removerCaixa']}"
-                                icon="#{wiSkin.imageFolder}/remove.png"
+                                icon="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
                                 onclick="return confirm(\'#{infoxMessages['caixa.confirm.remove']}\');"
                                 render="divPainelProcessos, TarefasTree, pageBodyDialogMessage"
                                 action="#{painelUsuarioController.removerCaixa(node)}">

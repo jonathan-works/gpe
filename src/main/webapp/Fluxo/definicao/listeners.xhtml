@@ -39,7 +39,7 @@
     		<h:form>
     			<a:commandLink render="listenersDatatablePanel formListeners" execute="@form" 
     				action="#{nodeFitter.removeCatchSignal(row)}" >
-    				<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{infoxMessages['button.delete']}" />
+    				<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="#{infoxMessages['button.delete']}" />
     			</a:commandLink>
     		</h:form>
     	</ui:define>

@@ -11,7 +11,7 @@
         <a:region>
             <a:commandLink status=":status" render=":pageBody"
                 id="#{gridId}Edit">
-                <h:graphicImage url="#{wiSkin.imageFolder}/view.png"
+                <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
                     title="#{infoxMessages['button.selecionar']}" />
                 <f:param name="id" value="#{row[bean.key]}" />
                 <f:param name="tab" value="form" />
@@ -22,7 +22,7 @@
             rendered="#{wi:get(canEdit, true)}" limitRender="true"
             status=":status" render="#{gridId}"
             onclick="if(!confirm('Deseja inativar este registro?')) return false;">
-            <h:graphicImage url="#{wiSkin.imageFolder}/remove.png"
+            <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
                 title="#{infoxMessages['button.inactive']}" />
             <f:param name="firstResult" value="#{bean.firstResult}" />
             <f:param name="page" value="#{bean.page}" />

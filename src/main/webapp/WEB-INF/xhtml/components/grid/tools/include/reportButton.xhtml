@@ -13,7 +13,7 @@
     </h:outputScript>
 
     <s:link view="#{bean.viewId}/report.xhtml" target="_blank">
-        <h:graphicImage url="#{wiSkin.imageFolder}/mod/pdf.gif" title="#{infoxMessages['report.exportPDF']}" />
+        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/mod/pdf.gif')}" title="#{infoxMessages['report.exportPDF']}" />
     </s:link>
 
 </ui:composition>

@@ -186,7 +186,7 @@
                         id="helpBtn"
                         styleClass="mp-help"
                         onmouseup="#{rich:component('mp_taskNodeDescription')}.show();"
-                        value="#{wiSkin.imageFolder}/question.png" />
+                        value="#{layoutController.getResourceUrlByPath('/imagens/question.png')}" />
                     <ui:include src="#{taskPageAction.getTaskPagePath(taskInstanceHome.currentTaskInstance)}" />
                 </c:if>
             </infox:tab>
@@ -396,7 +396,7 @@
                                     status=":status"
                                     render="relacionamentoProcessoFormDiv relacionamentoProcessoDTDiv pageBodyDialogMessage"
                                     onclick="return confirm(\'#{infoxMessages['crud.confirmInactivate']}\');"
-                                    url="#{wiSkin.imageFolder}/remove.png"
+                                    url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
                                     title="#{infoxMessages['button.inactive']}" />
                             </ui:define>
                             <wi:columnOutputText
@@ -447,7 +447,7 @@
 		            id="mp_taskNodeCloseBtn"
 		            styleClass="mp-close"
 		            onmouseup="#{rich:component('mp_taskNodeDescription')}.hide();"
-		            value="#{wiSkin.imageFolder}/closeMP.gif" />
+		            value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}" />
 	        </f:facet>
 	        <h:outputText value="#{taskInstanceHome.taskNodeDescription}" escape="false" />
 	    </rich:popupPanel>

@@ -85,7 +85,7 @@
                         rendered="#{not row.bpmn and not (row.xml eq row.xmlExecucao and row.publicado)}"
                         render="pageBody"
                         oncomplete="infox.hideLoading();opener.refreshPage();">
-                        <wi:toolBarGraphicImage title="#{infoxMessages['processBuilder.deployBtn']}" url="#{wiSkin.imageFolder}/deploy.png" />
+                        <wi:toolBarGraphicImage title="#{infoxMessages['processBuilder.deployBtn']}" url="#{layoutController.getResourceUrlByPath('/imagens/deploy.png')}" />
                     </a:commandLink>
                 <wi:toolBarEdit id="fluxoListedit" />
                 <wi:toolBarInactive />

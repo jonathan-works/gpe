@@ -30,7 +30,7 @@
                 id="helpBtn"
                 styleClass="mp-help" 
                 onmouseup="#{rich:component('mp_taskNodeDescription')}.show();"
-                value="#{wiSkin.imageFolder}/question.png" />
+                value="#{layoutController.getResourceUrlByPath('/imagens/question.png')}" />
             </f:facet>
             <s:div>
               <c:if test="#{form.tabbed}">
@@ -137,7 +137,7 @@
                 <s:div
                   rendered="#{canEdit and !empty form.fields and form.hasRequiredField()}">
                   <img
-                    src="#{pathResolver.contextPath}#{wiSkin.imageFolder}/mod/balao.png" />
+                    src="#{pathResolver.contextPath}#{layoutController.getResourceUrlByPath('/imagens/mod/balao.png')}" />
                   <span class="required">*</span>#{infoxMessages['form.required']}</s:div>
               </div>
             </s:div>

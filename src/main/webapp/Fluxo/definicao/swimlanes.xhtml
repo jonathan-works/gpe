@@ -21,7 +21,7 @@
                         limitRender="true">
                         <h:graphicImage
                             title="#{infoxMessages['processBuilder.addSwimlane']}"
-                            url="#{wiSkin.imageFolder}/add.gif" />
+                            url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}" />
                     </a:commandLink>
                 </h:form>
             </ui:define>
@@ -30,7 +30,7 @@
                 <h:form>
                     <h:graphicImage
                         title="#{infoxMessages['processBuilder.removeSwimlane']}"
-                        url="#{wiSkin.imageFolder}/remove.png"
+                        url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
                         styleClass="opacityHover pointer">
                         <a:ajax event="click"
                             listener="#{swimlaneFitter.removeSwimlane(row)}"
@@ -79,7 +79,7 @@
                 <ui:define name="toolBar">
                     <h:graphicImage
                         title="#{infoxMessages['processBuilder.swimlane.removeUsuarioPerfil']}"
-                        url="#{wiSkin.imageFolder}/remove.png">
+                        url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}">
                         <a:ajax event="click"
                             listener="#{swimlaneFitter.currentSwimlane.removePerfil(row)}"
                             execute="@this"
@@ -99,7 +99,7 @@
                                 <h:graphicImage
                                     title="#{infoxMessages['processBuilder.swimlane.addUsuarioPerfil']}"
                                     styleClass="pointer"
-                                    id="novoLocPapel" url="#{wiSkin.imageFolder}/add.gif">
+                                    id="novoLocPapel" url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}">
                                     <a:ajax event="click"
                                         listener="#{swimlaneFitter.currentSwimlane.addPerfil()}"
                                         execute="@this, swimlaneName, localPapeis"

@@ -31,7 +31,7 @@ public class LayoutController implements Serializable {
 
 	public String getResourceUrlByPath(String path) {
 		String skin = skinSessaoManager.getSkin();
-		return layoutManager.getResourceUrl(skin, path);
+		return layoutManager.getResourceUrlByPath(skin, path);
 	}
 
 }

@@ -178,5 +178,14 @@ public class LayoutManager {
 		return getUrlJava(codigoSkin, codigo);
 	}
 	
+	public List<Resource> findResourcesByPath(String path, Integer maxResults) {
+		return resourceDao.findAllByPath(path, maxResults);		
+	}
+	public List<Resource> findResourcesByNome(String nome, Integer maxResults) {
+		return resourceDao.findAllByNome(nome, maxResults);		
+	}
 	
+	public Resource findResourceById(Long id) {
+		return resourceDao.findById(id);
+	}
 }

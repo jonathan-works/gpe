@@ -11,7 +11,7 @@
         status=":status"
         reRender="#{wi:get(reRender, 'searchGridRegion')}"
         onclick="#{empty onclick ? 'return confirm(\''.concat(messages['crud.confirmRemove']).concat('\');') : onclick}"
-        url="#{wiSkin.imageFolder}/remove.png"
+        url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
         title="#{wi:get(title, messages['crud.remove'])}">
         <f:param name="page" value="#{bean.page}" />
     </wi:toolBar>

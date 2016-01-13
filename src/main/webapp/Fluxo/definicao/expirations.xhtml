@@ -18,7 +18,7 @@
                 <rich:column>
                     <h:form>
                         <a:commandLink action="#{taskFitter.removeExpiration(row)}" execute="@this" render="expirationPanel" limitRender="true">
-                            <h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{infoxMessages['button.delete']}" />
+                            <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="#{infoxMessages['button.delete']}" />
                         </a:commandLink>
                     </h:form>
                 </rich:column>

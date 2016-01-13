@@ -34,11 +34,15 @@
             style="margin-top:1em;"
             header="#{infoxMessages['layout.imagens']}">
             <h:form>
-                <wi:selectOneMenuEntity id="comboFluxo"
+                <wi:suggest id="grupoModeloDocumento"
+                    required="true"
+                    suggestProvider="#{layoutView}"
                     value="#{layoutView.resource}"
-                    label="#{infoxMessages['layout.imagem']}"
-                    items="#{layoutView.resources}"
-                    showLabelSelecione="true" required="true" />
+                    label="#{infoxMessages['layout.imagem']}" />
+                <h:graphicImage
+                    value="#{layoutView.imagemAtual}"
+                    rendered="#{layoutView.resource != null}" 
+                    />
                 <rich:fileUpload id="uploadResource" execute="@this"
                     status=":status" limitRender="true" required="true"
                     onbegin="infox.showLoading('Fazendo upload de arquivos..')"

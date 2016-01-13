@@ -17,7 +17,7 @@
         <a:commandLink action="#{home.setId(row[bean.key])}"
             rendered="#{canEdit and listReRender == ':pagebody'}"
             limitRender="true" status=":status" render="#{listReRender}">
-            <h:graphicImage url="#{wiSkin.imageFolder}/mod/edit.gif"
+            <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/mod/edit.gif')}"
                 title="#{infoxMessages['button.selecionar']}" />
             <f:param name="firstResult" value="#{bean.firstResult}" />
             <f:param name="page" value="#{bean.page}" />
@@ -26,7 +26,7 @@
     <a:commandLink action="#{home.setId(row[bean.key])}"
         rendered="#{canEdit and listReRender != ':pagebody'}"
         limitRender="true" status=":status" render="#{listReRender}">
-        <h:graphicImage url="#{wiSkin.imageFolder}/mod/edit.gif"
+        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/mod/edit.gif')}"
             title="#{infoxMessages['button.selecionar']}" />
         <f:param name="firstResult" value="#{bean.firstResult}" />
         <f:param name="page" value="#{bean.page}" />

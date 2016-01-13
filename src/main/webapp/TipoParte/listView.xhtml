@@ -34,7 +34,7 @@
 			<ui:define name="toolBar">
 				<h:form>
 					<a:commandLink action="#{tipoParteView.load(row)}" render=":pageBody" execute="@this" style="margin-right: 0.3em;">
-						<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="Selecionar" styleClass="opacityHover"/>
+						<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="Selecionar" styleClass="opacityHover"/>
 						<f:setPropertyActionListener value="form" target="#{tipoParteView.tab}"/>
 					</a:commandLink>
 				</h:form>

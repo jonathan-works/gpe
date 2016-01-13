@@ -10,14 +10,14 @@
  
 	<h:graphicImage title="#{infoxMessages['assinaturas.assinar']}"
 				alt="#{infoxMessages['assinaturas.assinar']}"
-				url="#{wiSkin.imageFolder}/lock_unlock.png" 
+				url="#{layoutController.getResourceUrlByPath('/imagens/lock_unlock.png')}" 
 				style="cursor: pointer" styleClass="#{styleClass}"
 				rendered="#{(not renderedLock) and (not hideSignature) }" 
 				onmouseup="selectDocumentoAssinar( #{idDocumento} );" />
 				
 	<h:graphicImage title="#{infoxMessages['assinaturas.validar']}"
                  alt="#{infoxMessages['assinaturas.validar']}"
-                 url="#{wiSkin.imageFolder}/lock.png" 
+                 url="#{layoutController.getResourceUrlByPath('/imagens/lock.png')}" 
                  style="cursor: pointer" styleClass="#{styleClass}"
                  rendered="#{renderedLock and (not hideSignature)}" 
                  onmouseup="selectDocumentoAssinar( #{idDocumento} );" />

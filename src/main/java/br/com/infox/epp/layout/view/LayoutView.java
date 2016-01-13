@@ -3,6 +3,7 @@ package br.com.infox.epp.layout.view;
 import java.awt.Image;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.SortedSet;
@@ -18,6 +19,8 @@ import org.jboss.seam.faces.FacesMessages;
 import org.richfaces.event.FileUploadEvent;
 import org.richfaces.model.UploadedFile;
 
+import br.com.infox.componentes.suggest.SuggestItem;
+import br.com.infox.componentes.suggest.SuggestProvider;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.layout.entity.Resource;
 import br.com.infox.epp.layout.entity.ResourceBin.TipoArquivo;
@@ -26,35 +29,53 @@ import br.com.infox.epp.layout.manager.LayoutManager;
 
 @Named
 @ViewScoped
-public class LayoutView implements Serializable {
+public class LayoutView implements Serializable, SuggestProvider<Resource> {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	
+	private static final int MAXIMO_SUGESTOES = 10;
 
 	private Skin skinPadrao;
 	
 	@Inject
 	private LayoutManager layoutManager;
 	
+	@Inject
+	LayoutController layoutController;
+	
 	private Resource resource;
 	private byte[] binarioResource;
 	private TipoArquivo tipoArquivo;
 	
 	private SortedSet<Skin> skins;
+	private SortedSet<Resource> resources;
 	
 	@Inject
 	private Logger log;
-	
-	public List<Resource> getResources() {
-		return layoutManager.listResources();
-	}
-	
+		
 	private class ComparadorSkins implements Comparator<Skin> {
 		@Override
 		public int compare(Skin s1, Skin s2) {
 			return s1.getNome().compareTo(s2.getNome());
+		}
+	}
+	
+	private class ComparadorResources implements Comparator<Resource> {
+
+		@Override
+		public int compare(Resource o1, Resource o2) {
+			String nome1 = o1.getNome().toLowerCase();
+			String nome2 = o2.getNome().toLowerCase();
+			
+			//Comparação temporária colocando nomes que estão com o mesmo nome do arquivo no final da ordenação 
+			if(nome1.startsWith("/") && !nome2.startsWith("/")) {
+				return +1;
+			}
+			else if(!nome1.startsWith("/") && nome2.startsWith("/")) {
+				return -1;
+			}
+			
+			return nome1.compareTo(nome2);
 		}
 	}
 	
@@ -65,6 +86,14 @@ public class LayoutView implements Serializable {
 		}
 		return skins;
 	}
+	
+	public SortedSet<Resource> getResources() {
+		if(resources == null) {
+			resources = new TreeSet<>(new ComparadorResources());
+			resources.addAll(layoutManager.listResources());
+		}
+		return resources;
+	}	
 
 	public Skin getSkinPadrao() {
 		if(skinPadrao == null) {
@@ -158,4 +187,34 @@ public class LayoutView implements Serializable {
 		this.tipoArquivo = tipoArquivo;
 	}
 	
+	private List<SuggestItem> toSuggestItems(List<Resource> resources) {
+		List<SuggestItem> retorno = new ArrayList<>();
+		for(Resource res : resources) {
+			retorno.add(new SuggestItem((Long)res.getId(), res.getNome()));
+		}
+		return retorno;
+	}
+
+	@Override
+	public List<SuggestItem> getSuggestions(String query) {
+		List<Resource> resources = layoutManager.findResourcesByNome(query, MAXIMO_SUGESTOES);
+		if(resources.size() < MAXIMO_SUGESTOES) {
+			List<Resource> resourcesByPath = layoutManager.findResourcesByPath(query, MAXIMO_SUGESTOES - resources.size());
+			resourcesByPath.removeAll(resources);
+			resources.addAll(resourcesByPath);
+		}
+		return toSuggestItems(resources);
+	}
+
+	@Override
+	public Resource load(Object id) {
+		return layoutManager.findResourceById(((Integer)id).longValue());
+	}
+	
+	public String getImagemAtual() {
+		if(resource == null) {
+			return null;
+		}
+		return layoutController.getResourceUrl(resource.getCodigo());
+	}
 }

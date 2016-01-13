@@ -53,7 +53,7 @@
             	execute="@this" limitRender="true" rendered="true"
             	render="pastaRestricaoDiv"
             	onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
-                <h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['pasta.select']}" />
+                <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['pasta.select']}" />
             </a:commandLink>
             <wi:toolBar action="#{pastaRestricaoAction.removePasta(row)}"
                 limitToList="true" status=":status"
@@ -61,7 +61,7 @@
                 reRender="pastaTable pastaRestricaoDiv"
                 onclick="if (confirm('#{infoxMessages['crud.confirmRemove']}')) {infox.showLoading(); return true;} else return false;"
                 oncomplete="infox.hideLoading();"
-                url="#{wiSkin.imageFolder}/remove.png"
+                url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
                 title="#{infoxMessages['crud.remove']}" />
         </ui:define>
         <wi:columnOutputText columnId="nome"
@@ -132,12 +132,12 @@
                         action="#{pastaRestricaoAction.loadRestricao(row)}"
                         onclick="infox.showLoading();" title="#{infoxMessages['pasta.restricao.select']}"
                     	oncomplete="infox.hideLoading(); #{rich:component('editRestricaoPanel')}.show();"
-                        url="#{wiSkin.imageFolder}/view.png" />
+                        url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
                     <wi:toolBar id="removePastaRestricao"
                         action="#{pastaRestricaoAction.removeRestricao(row)}"
                         rendered="#{pastaRestricaoAction.canRemoveRestricao(row)}"
     					reRender="pastaRestricaoDiv" title="#{infoxMessages['pasta.restricao.remove']}"
-    					url="#{wiSkin.imageFolder}/remove.png" />
+    					url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" />
     			</ui:define>
     
                 <wi:columnEnum columnId="tipoPastaRestricao"
@@ -218,7 +218,7 @@
         <f:facet name="controls">
             <h:graphicImage id="pastaRestricaoPanelCloseBtn"
                 styleClass="mp-close"
-                value="#{wiSkin.imageFolder}/closeMP.gif"
+                value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
                 onmouseup="#{rich:component('addRestricaoPanel')}.hide();" />
         </f:facet>
         <h:form>
@@ -243,8 +243,8 @@
                     rendered="#{pastaRestricaoAction.isRestricaoLocalizacao()}"
                     assignTo="pastaRestricaoAction.alvoRestricaoLocalizacao"
                     tree="#{localizacaoTree}"
-                    icon="#{wiSkin.imageFolder}/nivelTree.gif"
-                    iconLeaf="#{wiSkin.imageFolder}/file.gif"
+                    icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
+                    iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
                     required="true"
                     label="#{infoxMessages['pasta.restricaoAlvo']}" />
                 <wi:selectOneRadio id="alvoTipoParticipanteInput"
@@ -282,7 +282,7 @@
         <f:facet name="controls">
             <h:graphicImage id="editPastaRestricaoPanelCloseBtn"
                 styleClass="mp-close"
-                value="#{wiSkin.imageFolder}/closeMP.gif"
+                value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
                 onmouseup="#{rich:component('editRestricaoPanel')}.hide();" />
         </f:facet>
         <h:form>
@@ -315,8 +315,8 @@
                     rendered="#{pastaRestricaoAction.isRestricaoLocalizacao()}"
                     assignTo="pastaRestricaoAction.alvoRestricaoLocalizacao"
                     tree="#{localizacaoTree}"
-                    icon="#{wiSkin.imageFolder}/nivelTree.gif"
-                    iconLeaf="#{wiSkin.imageFolder}/file.gif"
+                    icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
+                    iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
                     required="true"
                     label="#{infoxMessages['pasta.restricaoAlvo']}" />
                 <wi:selectOneRadio id="editAlvoTipoParticipanteInput"

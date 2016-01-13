@@ -13,7 +13,10 @@
           <span class="caixa-ind-lbl">#{infoxMessages['processo.caixa.todosProcessos']}</span>
         </rich:dragIndicator>
       </rich:dragSource>
-      <h:graphicImage url="#{wiSkin.imageFolder}/multipleImages.png" title="#{infoxMessages['processo.caixa.moverTodosProcessos']}" />
+      <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/multipleImages.png')}"
+        title="#{infoxMessages['processo.caixa.moverTodosProcessos']}" />
+
+    </a:outputPanel>
   </h:form>
 
 </ui:composition>

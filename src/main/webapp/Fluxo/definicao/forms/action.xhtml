@@ -20,7 +20,7 @@
             oncomplete="#{rich:component('actionTemplatePanel')}.show()"
         >
             <h:graphicImage
-                url="#{wiSkin.imageFolder}/jbpm/wizard.gif"
+                url="#{layoutController.getResourceUrlByPath('/imagens/jbpm/wizard.gif')}"
                 title="Assistente para expressão"
             />
         </a:commandLink>
@@ -40,7 +40,7 @@
             />
         </wi:inputTextarea>
         <div style="display: inline-block">
-            <h:graphicImage id="#{id}helpEditTipImg" url="#{wiSkin.imageFolder}/help.gif"
+            <h:graphicImage id="#{id}helpEditTipImg" url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}"
                 onclick="#{rich:component('expressoesAjudaPopUpPanel')}.show();" />
         </div>
     </s:div>
@@ -73,7 +73,7 @@
 	    
         <f:facet name="controls">
             <h:graphicImage id="assinarDocumentosPopUpPanelCloseBtn" styleClass="mp-close"
-                value="#{wiSkin.imageFolder}/closeMP.gif"
+                value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
                 onclick="#{rich:component('expressoesAjudaPopUpPanel')}.hide();" />
         </f:facet>
         <ui:include src="actionHelp.xhtml" />

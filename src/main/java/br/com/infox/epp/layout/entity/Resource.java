@@ -52,7 +52,7 @@ public class Resource {
 	private TipoResource tipo;
 	
 	public enum TipoResource {
-		IMG, ICO
+		IMG, BTN
 		
 	}
 		
