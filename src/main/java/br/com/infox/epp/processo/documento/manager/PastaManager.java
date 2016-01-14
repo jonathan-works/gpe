@@ -79,13 +79,13 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     }
     
     public List<Pasta> createDefaultFolders(Processo processo) throws DAOException {
-        Processo root = processo;
+        Processo root = processo.getProcessoRoot();
         List<Pasta> pastaList = root.getPastaList();
         List<ModeloPasta> modeloPastaList = modeloPastaManager.getByFluxo(processo.getNaturezaCategoriaFluxo().getFluxo());
         for (ModeloPasta modeloPasta : modeloPastaList) {
             pastaList.add(createFromModelo(modeloPasta, processo));
         }
-        Pasta padrao = getDefault(processo);
+        Pasta padrao = getDefault(processo.getProcessoRoot());
         if (padrao == null && !pastaList.isEmpty()) {
             padrao = pastaList.get(0);
             documentoService.setDefaultFolder(padrao);
@@ -94,16 +94,37 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
         return pastaList;
     }
     
+    public List<Pasta> createDefaultFoldersChild(Processo processo) throws DAOException {
+        List<Pasta> pastaList = processo.getPastaList();
+        List<ModeloPasta> modeloPastaList = modeloPastaManager.getByFluxo(processo.getNaturezaCategoriaFluxo().getFluxo());
+        for (ModeloPasta modeloPasta : modeloPastaList) {
+            pastaList.add(createFromModeloChild(modeloPasta, processo));
+        }
+        if (!pastaList.isEmpty()) {
+            Pasta padrao = pastaList.get(0);
+            documentoService.setDefaultFolder(padrao);
+            metadadoProcessoManager.addMetadadoProcesso(processo, EppMetadadoProvider.PASTA_DEFAULT, padrao.getId().toString());
+        }
+        return pastaList;
+    }
+    
     protected Pasta createFromModelo(ModeloPasta modeloPasta, Processo processo) throws DAOException {
+        return createPastaFromModelo(modeloPasta, processo.getProcessoRoot());
+    }
+    
+    protected Pasta createFromModeloChild(ModeloPasta modeloPasta, Processo processo) throws DAOException {
+        return createPastaFromModelo(modeloPasta, processo);
+    }
+
+    private Pasta createPastaFromModelo(ModeloPasta modeloPasta, Processo processo) {
         Pasta pasta = new Pasta();
         pasta.setNome(modeloPasta.getNome());
         pasta.setRemovivel(modeloPasta.getRemovivel());
-        pasta.setProcesso(processo.getProcessoRoot());
+        pasta.setProcesso(processo);
         pasta.setSistema(modeloPasta.getSistema());
         pasta.setEditavel(modeloPasta.getEditavel());
         pasta.setDescricao(modeloPasta.getDescricao());
         pasta.setOrdem(modeloPasta.getOrdem());
-        
         persist(pasta);
         pastaRestricaoManager.createRestricoesFromModelo(modeloPasta, pasta);
         return pasta;

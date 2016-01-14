@@ -21,16 +21,8 @@ public class NumeracaoDocumentoSequencialDAO extends DAO<NumeracaoDocumentoSeque
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "numeracaoDocumentoSequencialDAO";
 	
-	public Integer getNextNumeracaoDocumentoSequencialRoot(Processo processo) throws DAOException {
-	    return getNextNumeroSequencial(processo.getProcessoRoot());
-	}
-	
 	public Integer getNextNumeracaoDocumentoSequencial(Processo processo) throws DAOException {
-        return getNextNumeroSequencial(processo);
-    }
-
-    private Integer getNextNumeroSequencial(Processo processo) {
-        Map<String, Object> parameters = new HashMap<>();
+	    Map<String, Object> parameters = new HashMap<>();
         parameters.put("processo", processo);
         NumeracaoDocumentoSequencial next = getNamedSingleResult(NumeracaoDocumentoSequencial.GET_NEXT_VALUE, parameters);
         if (next == null) {
@@ -48,8 +40,8 @@ public class NumeracaoDocumentoSequencialDAO extends DAO<NumeracaoDocumentoSeque
             update(next);
             return result;
         }
-    }
-
+	}
+	
     public NumeracaoDocumentoSequencial removeByProcesso(Processo processo) throws DAOException {
         Map<String, Object> params = new HashMap<>();
         params.put(NumeracaoDocumentoSequencial.PARAM_PROCESSO, processo);

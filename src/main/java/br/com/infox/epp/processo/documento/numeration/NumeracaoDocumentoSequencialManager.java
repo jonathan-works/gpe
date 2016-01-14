@@ -17,13 +17,9 @@ public class NumeracaoDocumentoSequencialManager extends Manager<NumeracaoDocume
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "numeracaoDocumentoSequencialManager";
 	
-	public Integer getNextNumeracaoDocumentoSequencialRoot(Processo processo) throws DAOException {
-		return getDao().getNextNumeracaoDocumentoSequencialRoot(processo);
-	}
-	
 	public Integer getNextNumeracaoDocumentoSequencial(Processo processo) throws DAOException {
-        return getDao().getNextNumeracaoDocumentoSequencial(processo);
-    }
+		return getDao().getNextNumeracaoDocumentoSequencial(processo);
+	}
 	
 	public NumeracaoDocumentoSequencial removeByProcesso(Processo processo) throws DAOException {
 	    return getDao().removeByProcesso(processo);

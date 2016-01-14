@@ -389,7 +389,7 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
                 metadados.add(provider.gerarMetadado(signalParam.getName(), signalParam.getParamValue()));
             }
         }
-        ComponentUtil.<IniciarProcessoService>getComponent(IniciarProcessoService.NAME).iniciarProcesso(processo, variaveis, metadados, transitionName);
+        ComponentUtil.<IniciarProcessoService>getComponent(IniciarProcessoService.NAME).iniciarProcesso(processo, variaveis, metadados, transitionName, true);
         BusinessProcess.instance().setProcessId(processIdOriginal);
         BusinessProcess.instance().setTaskId(taskIdOriginal);
     }

@@ -58,18 +58,23 @@ public class IniciarProcessoService implements Serializable {
             + "br.com.infox.ibpm.entity.Processo";
 
     public void iniciarProcesso(Processo processo) throws DAOException {
-        iniciarProcesso(processo, null, null, null);
+        iniciarProcesso(processo, null, null, null, true);
     }
     
     public void iniciarProcesso(Processo processo, String transitionName) throws DAOException {
-        iniciarProcesso(processo, null, null, transitionName);
+        iniciarProcesso(processo, null, null, transitionName, true);
     }
     
     public void iniciarProcesso(Processo processo, Map<String, Object> variaveis) throws DAOException {
-        iniciarProcesso(processo, variaveis, null, null);
+        iniciarProcesso(processo, variaveis, null, null, true);
     }
     
-    public void iniciarProcesso(Processo processo, Map<String, Object> variaveis, List<MetadadoProcesso> metadados, String transitionName) throws DAOException {
+    public void iniciarProcesso(Processo processo, Map<String, Object> variaveis, boolean createDefaultFolders) throws DAOException {
+        iniciarProcesso(processo, variaveis, null, null, createDefaultFolders);
+    }
+    
+    public void iniciarProcesso(Processo processo, Map<String, Object> variaveis, List<MetadadoProcesso> metadados, String transitionName, 
+            boolean createDefaultFolders) throws DAOException {
         processo.setDataInicio(new Date());
         if (processo.getIdProcesso() == null) {
             processoManager.persist(processo);
@@ -85,7 +90,9 @@ public class IniciarProcessoService implements Serializable {
         }
         naturezaManager.lockNatureza(processo.getNaturezaCategoriaFluxo().getNatureza());
         processoManager.update(processo);
-        pastaManager.createDefaultFolders(processo);
+        if (createDefaultFolders) {
+            pastaManager.createDefaultFolders(processo);
+        }
     }
 
     private void createMetadadosProcesso(Processo processo, List<MetadadoProcesso> metadados) {

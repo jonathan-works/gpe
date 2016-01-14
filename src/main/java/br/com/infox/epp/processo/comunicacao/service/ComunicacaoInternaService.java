@@ -35,7 +35,6 @@ import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
-import br.com.infox.epp.processo.documento.numeration.NumeracaoDocumentoSequencialManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
@@ -67,8 +66,6 @@ public class ComunicacaoInternaService {
     private PastaManager pastaManager;
     @Inject
     private PdfManager pdfManager;
-    @Inject
-    private NumeracaoDocumentoSequencialManager numeracaoDocumentoSequencialManager;
     
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void gravarDestinatario(DestinatarioModeloComunicacao destinatarioModeloComunicacao) {
@@ -121,6 +118,7 @@ public class ComunicacaoInternaService {
         }
         
         modeloComunicacao.setFinalizada(true);
+        entityManager.merge(modeloComunicacao);
         entityManager.flush();
     }
 
@@ -133,7 +131,7 @@ public class ComunicacaoInternaService {
         processo.setDataInicio(DateTime.now().toDate());
         processo.setUsuarioCadastro(Authenticator.getUsuarioLogado());
         processoManager.persist(processo);
-        pastaManager.createDefaultFolders(processo);
+        pastaManager.createDefaultFoldersChild(processo);
         
         Documento documentoComunicacao = criarDocumentoComunicacao(processo, modeloComunicacao);
         
@@ -143,7 +141,7 @@ public class ComunicacaoInternaService {
         Long taskIdOriginal = BusinessProcess.instance().getTaskId();
         BusinessProcess.instance().setProcessId(null);
         BusinessProcess.instance().setTaskId(null);
-        getIniciarProcessoService().iniciarProcesso(processo, variables);
+        getIniciarProcessoService().iniciarProcesso(processo, variables, false);
         BusinessProcess.instance().setProcessId(processIdOriginal);
         BusinessProcess.instance().setTaskId(taskIdOriginal);
 
@@ -163,7 +161,7 @@ public class ComunicacaoInternaService {
         processo.setDataInicio(DateTime.now().toDate());
         processo.setUsuarioCadastro(Authenticator.getUsuarioLogado());
         processoManager.persist(processo);
-        pastaManager.createDefaultFolders(processo);
+        pastaManager.createDefaultFoldersChild(processo);
         
         Documento documentoComunicacao = criarDocumentoComunicacao(processo, destinatarioModeloComunicacao.getModeloComunicacao());
         
@@ -173,7 +171,7 @@ public class ComunicacaoInternaService {
         Long taskIdOriginal = BusinessProcess.instance().getTaskId();
         BusinessProcess.instance().setProcessId(null);
         BusinessProcess.instance().setTaskId(null);
-        getIniciarProcessoService().iniciarProcesso(processo, variables);
+        getIniciarProcessoService().iniciarProcesso(processo, variables, false);
         BusinessProcess.instance().setProcessId(processIdOriginal);
         BusinessProcess.instance().setTaskId(taskIdOriginal);
 
@@ -188,18 +186,8 @@ public class ComunicacaoInternaService {
         String textoEditor = modeloComunicacao.getTextoComunicacao() == null ? "" : modeloComunicacao.getTextoComunicacao();
         pdfManager.convertHtmlToPdf(textoEditor, outputStream);
         DocumentoBin documentoBin = documentoBinManager.createProcessoDocumentoBin("Comunicação Interna", outputStream.toByteArray(), "pdf");
-        documentoBinManager.createProcessoDocumentoBin(documentoBin);
-        Documento doc = new Documento();
-        doc.setDocumentoBin(documentoBin);
-        doc.setDataInclusao(DateTime.now().toDate());
-        doc.setUsuarioInclusao(Authenticator.getUsuarioLogado());
-        doc.setProcesso(processo);
-        doc.setDescricao("Comunicação Interna");
-        doc.setExcluido(Boolean.FALSE);
-        doc.setPasta(pastaManager.getDefaultFolder(processo));
-        doc.setClassificacaoDocumento(modeloComunicacao.getClassificacaoComunicacao());
-        doc.setNumeroDocumento(numeracaoDocumentoSequencialManager.getNextNumeracaoDocumentoSequencial(processo));
-        return documentoManager.persist(doc);
+        documentoBin = documentoBinManager.createProcessoDocumentoBin(documentoBin);
+        return documentoManager.createDocumento(processo, "Comunicação Interna", documentoBin, modeloComunicacao.getClassificacaoComunicacao());
     }
 
     private Map<String, Object> createVariables(ModeloComunicacao modeloComunicacao, Documento documento) {
