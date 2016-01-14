@@ -49,23 +49,22 @@ public class SituacaoProcessoManager {
 
 	private void createFluxoBeanList(List<FluxoBean> fluxoBeanList, TipoProcesso tipoProcesso, List<TaskBean> taskBeanList, boolean expedida) {
 		for (TaskBean taskBean : taskBeanList) {
-		    String processDefinitionId = taskBean.getIdFluxo().toString();
-		    FluxoBean fluxoBean = getFluxoBeanByProcessDefinitionId(fluxoBeanList, processDefinitionId);
+		    String nomeFluxo = taskBean.getNomeFluxo();
+		    if (TipoProcesso.COMUNICACAO.equals(tipoProcesso)) {
+		        nomeFluxo = expedida ? nomeFluxo.concat(" - Expedidas") : nomeFluxo.concat(" - Recebidas");
+		    }
+		    FluxoBean fluxoBean = getFluxoBeanByProcessDefinitionId(fluxoBeanList, nomeFluxo);
 		    if (fluxoBean == null) {
-		        fluxoBean = createFluxoBean(tipoProcesso, expedida, taskBean);
+		        fluxoBean = createFluxoBean(tipoProcesso, expedida, taskBean, nomeFluxo);
 		        fluxoBeanList.add(fluxoBean);
 		    }
 		    fluxoBean.addTaskDefinition(taskBean);
 		}
 	}
 
-    private FluxoBean createFluxoBean(TipoProcesso tipoProcesso, boolean expedida, TaskBean taskBean) {
+    private FluxoBean createFluxoBean(TipoProcesso tipoProcesso, boolean expedida, TaskBean taskBean, String nome) {
         FluxoBean fluxoBean;
         fluxoBean = new FluxoBean();
-        String nome = taskBean.getNomeFluxo();
-        if (TipoProcesso.COMUNICACAO.equals(tipoProcesso)) {
-            nome = expedida ? nome.concat(" - Expedidas") : nome.concat(" - Recebidas");
-        }
         fluxoBean.setName(nome);
         fluxoBean.setProcessDefinitionId(taskBean.getIdFluxo().toString());
         fluxoBean.setTipoProcesso(tipoProcesso);
@@ -74,9 +73,9 @@ public class SituacaoProcessoManager {
         return fluxoBean;
     }
 	
-	private FluxoBean getFluxoBeanByProcessDefinitionId(List<FluxoBean> result, String definitionId) {
+	private FluxoBean getFluxoBeanByProcessDefinitionId(List<FluxoBean> result, String nomeFluxo) {
 	    for (FluxoBean fluxoBean : result) {
-	        if (fluxoBean.getProcessDefinitionId().equals(definitionId)) {
+	        if (fluxoBean.getName().equals(nomeFluxo)) {
 	            return fluxoBean;
 	        }
 	    }
