@@ -44,7 +44,6 @@ import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Named
 @Stateful
@@ -54,14 +53,6 @@ public class RespostaComunicacaoAction implements Serializable {
 	public static final String NAME = "respostaComunicacaoAction";
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(RespostaComunicacaoAction.class);
-	
-	private ActionMessagesService actionMessagesService = ComponentUtil.getComponent(ActionMessagesService.NAME);
-	protected ModeloDocumentoManager modeloDocumentoManager = ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
-	private RespostaComunicacaoList respostaComunicacaoList = ComponentUtil.getComponent(RespostaComunicacaoList.NAME);
-	private DocumentoManager documentoManager = ComponentUtil.getComponent(DocumentoManager.NAME);
-	private DocumentoComunicacaoList documentoComunicacaoList = ComponentUtil.getComponent(DocumentoComunicacaoList.NAME);
-	private AssinaturaDocumentoService assinaturaDocumentoService = ComponentUtil.getComponent(AssinaturaDocumentoService.NAME);
-	private RespostaComunicacaoService respostaComunicacaoService = ComponentUtil.getComponent(RespostaComunicacaoService.NAME);
 	
 	@Inject
 	private DocumentoComunicacaoService documentoComunicacaoService;
@@ -73,6 +64,21 @@ public class RespostaComunicacaoAction implements Serializable {
 	private DocumentoEditor documentoEditor;
 	@Inject
 	protected InfoxMessages infoxMessages;
+	@Inject
+	private ActionMessagesService actionMessagesService;
+	@Inject
+	private RespostaComunicacaoList respostaComunicacaoList;
+	@Inject
+	private DocumentoComunicacaoList documentoComunicacaoList;
+	@Inject
+	protected ModeloDocumentoManager modeloDocumentoManager;
+	@Inject
+	private DocumentoManager documentoManager;
+	@Inject
+	private AssinaturaDocumentoService assinaturaDocumentoService;
+	@Inject
+	private RespostaComunicacaoService respostaComunicacaoService;
+	
 	
 	private DestinatarioModeloComunicacao destinatario;
 
@@ -94,19 +100,18 @@ public class RespostaComunicacaoAction implements Serializable {
 	public void init() {
 		this.processoComunicacao = JbpmUtil.getProcesso();
 		respostaComunicacaoList.setProcesso(processoComunicacao);
+		prazoResposta = prazoComunicacaoService.getDataLimiteCumprimento(processoComunicacao);
+		MetadadoProcesso metadadoDestinatario = processoComunicacao.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO);
+		if(metadadoDestinatario != null){
+			destinatario = metadadoDestinatario.getValue();
+			documentoComunicacaoList.setModeloComunicacao(destinatario.getModeloComunicacao());
+		}
 		
 		this.processoRaiz = processoComunicacao.getProcessoRoot();
 		documentoUploader.newInstance();
 		documentoUploader.clear();
 		documentoUploader.setProcesso(processoRaiz);
 		documentoEditor.setProcesso(processoRaiz);
-		
-		MetadadoProcesso metadadoDestinatario = processoComunicacao.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO);
-		if(metadadoDestinatario != null){
-			destinatario = metadadoDestinatario.getValue();
-			documentoComunicacaoList.setModeloComunicacao(destinatario.getModeloComunicacao());
-			prazoResposta = prazoComunicacaoService.getDataLimiteCumprimento(processoComunicacao);
-		}
 
 		newDocumentoEdicao();
 		initClassificacoes();

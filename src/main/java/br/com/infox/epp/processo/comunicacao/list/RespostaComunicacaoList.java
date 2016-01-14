@@ -2,20 +2,16 @@ package br.com.infox.epp.processo.comunicacao.list;
 
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Named;
 
-import br.com.infox.core.list.EntityList;
-import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.core.list.DataList;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.comunicacao.DocumentoRespostaComunicacao;
 import br.com.infox.epp.processo.entity.Processo;
 
-@Name(RespostaComunicacaoList.NAME)
-@Scope(ScopeType.PAGE)
-@AutoCreate
-public class RespostaComunicacaoList extends EntityList<DocumentoRespostaComunicacao> {
+@Named
+@ViewScoped
+public class RespostaComunicacaoList extends DataList<DocumentoRespostaComunicacao> {
 	public static final String NAME = "respostaComunicacaoList";
 	private static final long serialVersionUID = 1L;
 
@@ -32,8 +28,8 @@ public class RespostaComunicacaoList extends EntityList<DocumentoRespostaComunic
 	
 	
     @Override
-	protected void addSearchFields() {
-		addSearchField("descricaoDocumento", SearchCriteria.CONTENDO, FILTRO_DESCRICAO_DOCUMENTO);
+	protected void addRestrictionFields() {
+		addRestrictionField("descricaoDocumento", FILTRO_DESCRICAO_DOCUMENTO);
 	}
 
 	@Override

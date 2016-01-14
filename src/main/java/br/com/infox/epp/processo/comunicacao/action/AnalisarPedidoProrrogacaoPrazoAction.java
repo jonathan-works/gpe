@@ -55,8 +55,8 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 	private MetadadoProcessoManager metadadoProcessoManager;
 	@Inject
 	private CalendarioEventosManager calendarioEventosManager;
-	
-	private DocumentoComunicacaoList documentoComunicacaoList = ComponentUtil.getComponent(DocumentoComunicacaoList.NAME);
+	@Inject
+	private DocumentoComunicacaoList documentoComunicacaoList;
 	
 	private Processo processoDocumento;
 	private List<Documento> documentosAnalise;
@@ -79,7 +79,6 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 	private void clear() {
 		diasProrrogacao = null;
 		novoPrazoCumprimento = null;
-		
 	}
 
 	private void initDadosAnalise() {

@@ -26,6 +26,8 @@ public class AnaliseDocumentoAction implements Serializable{
 	
 	@Inject
 	private ModeloComunicacaoManager modeloComunicacaoManager;
+	@Inject 
+	private DocumentoComunicacaoList documentoComunicacaoList;
 	@Inject
 	private InfoxMessages infoxMessages;
 	
@@ -44,7 +46,7 @@ public class AnaliseDocumentoAction implements Serializable{
 		if(isRespostaComunicacao() || isPedidoProrrogacaoPrazo()){
 			comunicacao = processo.getProcessoPai();
 			setDestinatarioComunicacao(comunicacao.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO).<DestinatarioModeloComunicacao>getValue());
-			ComponentUtil.<DocumentoComunicacaoList>getComponent(DocumentoComunicacaoList.NAME).setModeloComunicacao(getDestinatarioComunicacao().getModeloComunicacao());
+			documentoComunicacaoList.setModeloComunicacao(getDestinatarioComunicacao().getModeloComunicacao());
 		}
 	}
 	

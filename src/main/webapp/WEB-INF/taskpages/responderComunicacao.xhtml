@@ -10,6 +10,7 @@
 	xmlns:s="http://jboss.org/schema/seam/taglib">
 	
 	<c:set value="#{processoEpaHome.instance}" target="#{respostaComunicacaoList}" property="processo" />
+	<f:setPropertyActionListener value="#{respostaComunicacaoAction.destinatario.modeloComunicacao}" target="#{documentoComunicacaoList.modeloComunicacao}"/>
 	
 	<rich:collapsiblePanel id="painelComunicacao" header="#{infoxMessages['comunicacao.comunicacao']}" switchType="client">
 	
@@ -132,6 +133,7 @@
 			<s:div id="uploadButton">
 				<wi:commandButton id="gravarResposta"
 					action="respostaComunicacaoAction.gravarAnexoResposta"
+					execute="@this"
 					value="#{infoxMessages['crud.update']}"
 					reRender="pageBodyDialogMessage, @form, respostasPanel, taskButtonsForm"
 					rendered="#{respostaComunicacaoAction.anexoValido}" />
