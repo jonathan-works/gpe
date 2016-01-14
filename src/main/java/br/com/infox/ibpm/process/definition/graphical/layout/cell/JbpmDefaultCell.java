@@ -60,8 +60,13 @@ public class JbpmDefaultCell extends DefaultGraphCell {
             TaskNode tnode = (TaskNode) node;
             Task task = (Task) tnode.getTasks().iterator().next();
             List<Swimlane> l = new ArrayList<Swimlane>(node.getProcessDefinition().getTaskMgmtDefinition().getSwimlanes().values());
-            swimlaneIndex = l.indexOf(task.getSwimlane());
-            swimlaneName = task.getSwimlane().getName();
+            if (task.getSwimlane() != null) {
+                swimlaneIndex = l.indexOf(task.getSwimlane());
+                swimlaneName = task.getSwimlane().getName();
+            } else if (task.getPooledActorsExpression() != null) {
+                swimlaneIndex = 0;
+                swimlaneName = task.getPooledActorsExpression();
+            }
         }
 
     }

@@ -573,7 +573,7 @@ public class ProcessBuilder implements Serializable {
 
     @SuppressWarnings(UNCHECKED)
     public Number getIdProcessDefinition() {
-        if (instance == null) {
+        if (instance == null || instance.getName() == null) {
             return null;
         }
         String query = "select max(id_) from jbpm_processdefinition where name_ = :pdName";
