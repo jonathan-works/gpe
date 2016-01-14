@@ -46,7 +46,6 @@ import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.task.service.MovimentarTarefaService;
-import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.util.time.DateRange;
 
 @Name(PrazoComunicacaoService.NAME)
@@ -65,7 +64,6 @@ public class PrazoComunicacaoService {
 	private MetadadoProcessoManager metadadoProcessoManager;
 	@Inject
 	private MovimentarTarefaService movimentarTarefaService;
-	
 	@Inject
 	private DocumentoManager documentoManager;
 	@Inject
@@ -179,7 +177,7 @@ public class PrazoComunicacaoService {
 		boolean isUsuarioSistema = idUsuarioSistema.equals(usuarioCiencia.getIdUsuarioLogin());
 		org.jbpm.graph.exe.ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstanceForUpdate(comunicacao.getIdJbpm());
 		ContextInstance contextInstance = processInstance.getContextInstance();
-        contextInstance.setVariable("cienciaAutomatica", isUsuarioSistema);
+        contextInstance.setVariable(VariaveisJbpmComunicacao.CIENCIA_AUTOMATICA, isUsuarioSistema);
 	}
 	
     private void adicionarVariavelPossuiPrazoAoProcesso(Processo comunicacao) {
@@ -187,7 +185,7 @@ public class PrazoComunicacaoService {
     	boolean possuiPrazoParaCumprimento = metadadoProcesso != null;
     	org.jbpm.graph.exe.ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstanceForUpdate(comunicacao.getIdJbpm());
 		ContextInstance contextInstance = processInstance.getContextInstance();
-        contextInstance.setVariable("possuiPrazoParaCumprimento", possuiPrazoParaCumprimento);
+        contextInstance.setVariable(VariaveisJbpmComunicacao.POSSUI_PRAZO_CUMPRIMENTO, possuiPrazoParaCumprimento);
     }
     
     public void movimentarComunicacaoPrazoExpirado(Processo comunicacao, MetadadoProcessoDefinition metadadoPrazo) throws DAOException{

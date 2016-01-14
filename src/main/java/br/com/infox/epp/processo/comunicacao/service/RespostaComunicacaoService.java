@@ -132,7 +132,7 @@ public class RespostaComunicacaoService {
 	private void setRespostaTempestiva(Date dataResposta, Processo comunicacao) {
 		ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstanceForUpdate(comunicacao.getIdJbpm());
 		ContextInstance contextInstance = processInstance.getContextInstance();
-		if (contextInstance.getVariable("respostaTempestiva") != null) {
+		if (contextInstance.getVariable(VariaveisJbpmComunicacao.RESPOSTA_TEMPESTIVA) != null) {
 			return;
 		}
 		boolean respostaTempestiva = false;
@@ -151,6 +151,6 @@ public class RespostaComunicacaoService {
 				respostaTempestiva = true;
 			}
 		}
-		contextInstance.setVariable("respostaTempestiva", respostaTempestiva);
+		contextInstance.setVariable(VariaveisJbpmComunicacao.RESPOSTA_TEMPESTIVA, respostaTempestiva);
 	}
 }
