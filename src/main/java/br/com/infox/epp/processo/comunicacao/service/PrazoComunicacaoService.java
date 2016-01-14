@@ -201,26 +201,48 @@ public class PrazoComunicacaoService {
     	return getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO);
     }
 
-	//Prorrogação de Prazo Service
+	//Prorrogação de Prazo Service TODO corrigir no TCE
 	
-	public Boolean isClassificacaoProrrogacaoPrazo(ClassificacaoDocumento classificacaoDocumento, TipoComunicacao tipoComunicacao) {
-		return false;
+//	public Boolean isClassificacaoProrrogacaoPrazo(ClassificacaoDocumento classificacaoDocumento, TipoComunicacao tipoComunicacao) {
+//		return false;
+//	}
+    public Boolean isClassificacaoProrrogacaoPrazo(ClassificacaoDocumento classificacaoDocumento, TipoComunicacao tipoComunicacao) {
+		return classificacaoDocumento != null && classificacaoDocumento.equals(tipoComunicacao.getClassificacaoDocumento());
 	}
 	
-	public Boolean canRequestProrrogacaoPrazo(DestinatarioModeloComunicacao destinatarioModeloComunicacao) {
-		return false;
+//	public Boolean canRequestProrrogacaoPrazo(DestinatarioModeloComunicacao destinatarioModeloComunicacao) {
+//		return false;
+//	}
+    public Boolean canRequestProrrogacaoPrazo(DestinatarioModeloComunicacao destinatarioModeloComunicacao) {
+		return canTipoComunicacaoRequestProrrogacaoPrazo(destinatarioModeloComunicacao.getModeloComunicacao().getTipoComunicacao()) &&
+				getDataPedidoProrrogacao(destinatarioModeloComunicacao.getProcesso()) == null;
 	}
 	
-	public Boolean containsClassificacaoProrrogacaoPrazo(List<Documento> documentos, TipoComunicacao tipoComunicacao) {
-		return false;
+//	public Boolean containsClassificacaoProrrogacaoPrazo(List<Documento> documentos, TipoComunicacao tipoComunicacao) {
+//		return false;
+//	}
+    public Boolean containsClassificacaoProrrogacaoPrazo(List<Documento> documentos, TipoComunicacao tipoComunicacao) {
+		ClassificacaoDocumento classificacaoProrrogacao = tipoComunicacao.getClassificacaoProrrogacao();
+		for (Documento documento : documentos) {
+			if (documento.getClassificacaoDocumento().equals(classificacaoProrrogacao)) {
+				return Boolean.TRUE;
+			}
+		}
+		return Boolean.FALSE;
 	}
 	
-	public Boolean canTipoComunicacaoRequestProrrogacaoPrazo(TipoComunicacao tipoComunicacao){
-		return false;
+//	public Boolean canTipoComunicacaoRequestProrrogacaoPrazo(TipoComunicacao tipoComunicacao){
+//		return false;
+//	}
+    public Boolean canTipoComunicacaoRequestProrrogacaoPrazo(TipoComunicacao tipoComunicacao) {
+		return tipoComunicacao.getClassificacaoProrrogacao() != null;
 	}
 	
-	public ClassificacaoDocumento getClassificacaoProrrogacaoPrazo(DestinatarioModeloComunicacao destinatarioModeloComunicacao) {
-		throw new BusinessException("O tipo de comunicação " + destinatarioModeloComunicacao.getModeloComunicacao().getTipoComunicacao().getDescricao() + " não admite pedido de prorrogação de prazo");
+//	public ClassificacaoDocumento getClassificacaoProrrogacaoPrazo(DestinatarioModeloComunicacao destinatarioModeloComunicacao) {
+//		throw new BusinessException("O tipo de comunicação " + destinatarioModeloComunicacao.getModeloComunicacao().getTipoComunicacao().getDescricao() + " não admite pedido de prorrogação de prazo");
+//	}
+    public ClassificacaoDocumento getClassificacaoProrrogacaoPrazo(DestinatarioModeloComunicacao destinatarioModeloComunicacao) {
+		return destinatarioModeloComunicacao.getModeloComunicacao().getTipoComunicacao().getClassificacaoProrrogacao();
 	}
 	
 	public void finalizarAnalisePedido(Processo comunicacao) throws DAOException{

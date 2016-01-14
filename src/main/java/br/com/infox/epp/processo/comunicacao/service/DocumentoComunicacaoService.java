@@ -56,6 +56,8 @@ public class DocumentoComunicacaoService {
 	private ModeloComunicacaoManager modeloComunicacaoManager;
 	@Inject
 	private DocumentoBinManager documentoBinManager;
+	@Inject
+	private PrazoComunicacaoService prazoComunicacaoService;
 	
 	private PapelManager papelManager = ComponentUtil.getComponent(PapelManager.NAME);
 	private ClassificacaoDocumentoManager classificacaoDocumentoManager = ComponentUtil.getComponent(ClassificacaoDocumentoManager.NAME);
@@ -63,8 +65,18 @@ public class DocumentoComunicacaoService {
 	private DocumentoRespostaComunicacaoDAO documentoRespostaComunicacaoDAO = ComponentUtil.getComponent(DocumentoRespostaComunicacaoDAO.NAME);
 	private GenericManager genericManager = ComponentUtil.getComponent(GenericManager.NAME);
 	
+	//TODO ver como vai ficar no TCE
+//	public List<ClassificacaoDocumento> getClassificacoesDocumentoDisponiveisRespostaComunicacao(DestinatarioModeloComunicacao destinatarioModeloComunicacao, boolean isEditor) {
+//		return classificacaoDocumentoManager.getClassificacoesDocumentoDisponiveisRespostaComunicacao(destinatarioModeloComunicacao, isEditor, Authenticator.getPapelAtual());
+//	}
 	public List<ClassificacaoDocumento> getClassificacoesDocumentoDisponiveisRespostaComunicacao(DestinatarioModeloComunicacao destinatarioModeloComunicacao, boolean isEditor) {
-		return classificacaoDocumentoManager.getClassificacoesDocumentoDisponiveisRespostaComunicacao(destinatarioModeloComunicacao, isEditor, Authenticator.getPapelAtual());
+		List<ClassificacaoDocumento> classificacaoesResposta = classificacaoDocumentoManager.getClassificacoesDocumentoDisponiveisRespostaComunicacao(destinatarioModeloComunicacao, isEditor, Authenticator.getPapelAtual());
+		if (prazoComunicacaoService.canRequestProrrogacaoPrazo(destinatarioModeloComunicacao)) {
+			ClassificacaoDocumento classificacaoPorrogacao = destinatarioModeloComunicacao.getModeloComunicacao().getTipoComunicacao().getClassificacaoProrrogacao();
+			if (!classificacaoesResposta.contains(classificacaoPorrogacao))
+				classificacaoesResposta.add(classificacaoPorrogacao);
+		}
+		return classificacaoesResposta;
 	}
 	
 	public List<ModeloDocumento> getModelosDocumentoDisponiveisComunicacao(TipoComunicacao tipoComunicacao) {
