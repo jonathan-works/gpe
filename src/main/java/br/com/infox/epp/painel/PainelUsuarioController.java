@@ -99,7 +99,6 @@ public class PainelUsuarioController implements Serializable {
 		tipoProcessoDisponiveis.add(null);
 		if (hasRecursoPainelComunicacaoEletronica()) {
 			tipoProcessoDisponiveis.add(TipoProcesso.COMUNICACAO);
-			tipoProcessoDisponiveis.add(TipoProcesso.COMUNICACAO_INTERNA);
 		}
 		if (hasRecursoPainelComunicacaoNaoEletronica()) {
 			tipoProcessoDisponiveis.add(TipoProcesso.COMUNICACAO_NAO_ELETRONICA);

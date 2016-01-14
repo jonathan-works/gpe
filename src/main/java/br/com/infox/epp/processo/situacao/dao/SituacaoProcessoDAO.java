@@ -146,9 +146,9 @@ public class SituacaoProcessoDAO {
                 appendDestinoOrDestinatarioFilter(abstractQuery, processo);
             }
         } else if (TipoProcesso.DOCUMENTO.equals(tipoProcesso)) {
-		} else if (TipoProcesso.COMUNICACAO_INTERNA.equals(tipoProcesso)) {
-		    appendDestinoOrDestinatarioFilter(abstractQuery);
+            appendPerfilTemplateFilter(abstractQuery, taskInstance);
         } else {
+            appendUnidadeDecisoraFilter(abstractQuery, processo);
             appendPerfilTemplateFilter(abstractQuery, taskInstance);
         }
     }
