@@ -12,6 +12,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais;
 import br.com.infox.ibpm.task.dao.TaskInstanceDAO;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
@@ -42,6 +43,10 @@ public class TaskInstanceManager extends Manager<TaskInstanceDAO, UsuarioTaskIns
         TaskInstance taskInstance = ManagedJbpmContext.instance().getTaskInstance(idTaskInstance);
         ManagedJbpmContext.instance().getSession().buildLockRequest(LockOptions.READ).setLockMode(LockMode.PESSIMISTIC_FORCE_INCREMENT).lock(taskInstance);
         taskInstance.setAssignee(Actor.instance().getId());
+    }
+    
+    public TaskInstance getTaskInstanceOpen(Processo processo) {
+        return getDao().getTaskInstanceOpen(processo.getIdProcesso());
     }
 
 }

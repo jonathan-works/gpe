@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 
 import org.hibernate.TypeMismatchException;
 import org.jboss.seam.ScopeType;
@@ -20,10 +21,12 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.international.StatusMessages;
+import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.bean.ItemBean;
 import br.com.infox.epp.fluxo.entity.Categoria;
@@ -37,8 +40,8 @@ import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.partes.controller.ParticipantesController;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
-import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
+import br.com.infox.ibpm.task.manager.TaskInstanceManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
@@ -46,6 +49,7 @@ import br.com.infox.seam.exception.BusinessException;
 @Name(IniciarProcessoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 @Transactional
+@ContextDependency
 public class IniciarProcessoAction implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -58,6 +62,8 @@ public class IniciarProcessoAction implements Serializable {
     private InfoxMessages infoxMessages;
     @In
     private ProcessoTarefaManager processoTarefaManager;
+    @Inject
+    private TaskInstanceManager taskInstanceManager;
 
     private boolean renderedByItem;
     private boolean renderizarCadastroPartes;
@@ -65,7 +71,7 @@ public class IniciarProcessoAction implements Serializable {
     private Item itemDoProcesso;
     private Processo processo;
     private List<ItemBean> itemList;
-    private Integer idTarefa;
+    private Long idTaskInstance;
 
     private String viewId;
 
@@ -101,12 +107,12 @@ public class IniciarProcessoAction implements Serializable {
     private void enviarProcessoParaJbpm() {
         try {
             iniciarProcessoService.iniciarProcesso(processo);
-            ProcessoTarefa processoTarefa = processoTarefaManager.getUltimoProcessoTarefa(processo);
+            TaskInstance taskInstance = taskInstanceManager.getTaskInstanceOpen(processo);
             getMessagesHandler().add("Processo inserido com sucesso!");
-            if (processoTarefa == null) {
+            if (taskInstance == null) {
             	throw new BusinessException("Processo não está em tarefa humana");
             }
-            idTarefa = processoTarefa.getTarefa().getIdTarefa();
+            idTaskInstance = taskInstance.getId();
         } catch (TypeMismatchException tme) {
             sendIniciarProcessoErrorMessage(IniciarProcessoService.TYPE_MISMATCH_EXCEPTION, tme);
         } catch (NullPointerException npe) {
@@ -234,8 +240,9 @@ public class IniciarProcessoAction implements Serializable {
     public void setViewId(String viewId) {
         this.viewId = viewId;
     }
+
+    public Long getIdTaskInstance() {
+        return idTaskInstance;
+    }
     
-    public Integer getIdTarefa() {
-		return idTarefa;
-	}
 }
