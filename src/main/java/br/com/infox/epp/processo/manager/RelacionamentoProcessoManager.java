@@ -1,34 +1,25 @@
 package br.com.infox.epp.processo.manager;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
-import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.dao.RelacionamentoProcessoDAO;
 import br.com.infox.epp.processo.entity.RelacionamentoProcesso;
+import br.com.infox.epp.processo.entity.RelacionamentoProcessoInterno;
 
 @AutoCreate
 @Name(RelacionamentoProcessoManager.NAME)
+@Stateless
 public class RelacionamentoProcessoManager extends Manager<RelacionamentoProcessoDAO, RelacionamentoProcesso> {
 
-    private static final long serialVersionUID = 1L;
-    public static final String NAME = "relacionamentoProcessoManager";
+	private static final long serialVersionUID = 1L;
+	public static final String NAME = "relacionamentoProcessoManager";
 
-    @In
-    private ProcessoManager processoManager;
-
-    public boolean existeRelacionamento(String processo1, String processo2) {
-        return getDao().existeRelacionamento(processo1, processo2);
-    }
-    
-    @Override
-    public RelacionamentoProcesso persist(RelacionamentoProcesso instance) throws DAOException {
-        if (instance.getProcesso() == null) {
-            instance.setProcesso(processoManager.getProcessoEpaByNumeroProcesso(instance.getNumeroProcesso()));
-        }
-        return super.persist(instance);
-    }
+	public boolean existeRelacionamento(RelacionamentoProcessoInterno rp1 , RelacionamentoProcesso rp2) {
+		return getDao().existeRelacionamento(rp1, rp2);
+	}
 
 }

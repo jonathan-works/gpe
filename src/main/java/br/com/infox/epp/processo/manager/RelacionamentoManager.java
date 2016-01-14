@@ -2,6 +2,9 @@ package br.com.infox.epp.processo.manager;
 
 import java.lang.reflect.InvocationTargetException;
 
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -14,10 +17,17 @@ import br.com.infox.epp.processo.entity.Relacionamento;
 
 @AutoCreate
 @Name(RelacionamentoManager.NAME)
+@Stateless
 public class RelacionamentoManager extends Manager<RelacionamentoDAO, Relacionamento> {
 
     public static final String NAME = "relacionamentoManager";
     private static final long serialVersionUID = 1L;
+    
+    @Inject
+    private RelacionamentoDAO relacionamentoDAO;
+    
+    @Inject
+    private ProcessoManager processoManager;
 
     public Relacionamento getRelacionamentoByProcesso(Processo processo) {
         Relacionamento relacionamento = null;
@@ -37,4 +47,16 @@ public class RelacionamentoManager extends Manager<RelacionamentoDAO, Relacionam
             throw new DAOException(e);
         }
     }
+    
+	public void remove(Integer idProcesso, Integer idProcessoInternoRelacionado) {
+		Processo processo = processoManager.find(idProcesso);
+		Processo processoInternoRelacionado = processoManager.find(idProcessoInternoRelacionado);
+		relacionamentoDAO.remove(processo, processoInternoRelacionado);
+	}
+
+	public void remove(Integer idProcesso, String numeroProcessoExterno) {
+		Processo processo = processoManager.find(idProcesso);
+		relacionamentoDAO.remove(processo, numeroProcessoExterno);
+	}
+    
 }

@@ -164,6 +164,10 @@ public class ComunicacaoAction implements Serializable {
 	public DestinatarioBean getDestinatario() {
 		return destinatario;
 	}
+	
+	protected void setDestinatario(DestinatarioBean destinatarioBean) {
+		this.destinatario = destinatarioBean;
+	}
 		
 	public boolean isDocumentos() {
 		return documentos;

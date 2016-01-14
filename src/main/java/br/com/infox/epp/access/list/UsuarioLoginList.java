@@ -29,10 +29,10 @@ public class UsuarioLoginList extends EntityList<UsuarioLogin> {
     
     private static final String FILTRO_BY_LOCALIZACAO = "exists (select 1 from UsuarioPerfil upl "
     							+ " where upl.localizacao = #{usuarioLoginList.localizacao} "
-    							+ " and upl.usuarioLogin = o)";
+    							+ " and upl.usuarioLogin = o and upl.ativo = true)";
     
     private static final String FILTRO_BY_PAPEL = "exists (select 1 from UsuarioPerfil upl inner join upl.perfilTemplate pt "
-    		+ " where pt.papel = #{usuarioLoginList.papel} and upl.usuarioLogin = o)";
+    		+ " where pt.papel = #{usuarioLoginList.papel} and upl.usuarioLogin = o and upl.ativo = true)";
     
     private static final String DEFAULT_ORDER = "o.nomeUsuario";
     

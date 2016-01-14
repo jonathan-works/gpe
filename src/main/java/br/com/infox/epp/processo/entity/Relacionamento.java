@@ -16,14 +16,17 @@ import static javax.persistence.TemporalType.TIMESTAMP;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -40,6 +43,7 @@ public class Relacionamento implements Serializable {
     private String nomeUsuario;
     private Date dataRelacionamento;
     private Boolean ativo;
+    private Set<RelacionamentoProcesso> relacionamentosProcessos;
 
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
@@ -139,5 +143,14 @@ public class Relacionamento implements Serializable {
         }
         return true;
     }
+
+    @OneToMany(mappedBy="relacionamento", fetch=FetchType.LAZY)
+	public Set<RelacionamentoProcesso> getRelacionamentosProcessos() {
+		return relacionamentosProcessos;
+	}
+
+	public void setRelacionamentosProcessos(Set<RelacionamentoProcesso> relacionamentosProcessos) {
+		this.relacionamentosProcessos = relacionamentosProcessos;
+	}
 
 }
