@@ -5,6 +5,7 @@ import static br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider.
 import static br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,7 +16,6 @@ import javax.inject.Inject;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
@@ -39,7 +39,6 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoDefinition;
@@ -48,8 +47,6 @@ import br.com.infox.epp.system.Parametros;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.task.service.MovimentarTarefaService;
 import br.com.infox.seam.exception.BusinessException;
-import br.com.infox.seam.util.ComponentUtil;
-import java.util.Date;
 import br.com.infox.util.time.DateRange;
 
 @Name(PrazoComunicacaoService.NAME)
@@ -72,18 +69,19 @@ public class PrazoComunicacaoService {
 	@Inject
 	private DocumentoManager documentoManager;
 	@Inject
-	private ProcessoManager processoManager;
-	@Inject
 	private AssinaturaDocumentoService assinaturaDocumentoService;
 
 	public Date contabilizarPrazoCiencia(Processo comunicacao) {
 		DestinatarioModeloComunicacao destinatario = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.DESTINATARIO);
         Integer qtdDias = destinatario.getModeloComunicacao().getTipoComunicacao().getQuantidadeDiasCiencia();
-        Date hoje = new Date();
         //O início do prazo de ciência começa no dia do envio. 66741
-        return calendarioEventosManager.getPrimeiroDiaUtil(hoje, qtdDias);
+        return contabilizarPrazoCiencia(new Date(), qtdDias);
     }
     
+	public Date contabilizarPrazoCiencia(Date dataInicio, Integer qtdDias){
+		return calendarioEventosManager.getPrimeiroDiaUtil(dataInicio, qtdDias);
+	}
+	
 	public Date contabilizarPrazoCumprimento(Processo comunicacao) {
 		return calcularPrazoDeCumprimento(comunicacao);
     }
@@ -275,7 +273,7 @@ public class PrazoComunicacaoService {
     	}
     	return null;
     }
-    
+
     public Date calcularPrazoDeCumprimento(Processo comunicacao){
         Date dataCiencia = comunicacao.getMetadado(DATA_CIENCIA).getValue();
         Integer diasPrazoCumprimento = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
@@ -283,16 +281,19 @@ public class PrazoComunicacaoService {
             diasPrazoCumprimento = -1;
         }
         if (diasPrazoCumprimento>=0 && dataCiencia != null){
-        	br.com.infox.util.time.Date inicio = new br.com.infox.util.time.Date(dataCiencia);
-        	DateRange periodo = new DateRange(inicio.toDate(), inicio.plusDays(diasPrazoCumprimento).toDate());
-        	periodo = calendarioEventosManager.calcularPrazoIniciandoEmDiaUtil(periodo);
-        	periodo = calendarioEventosManager.calcularPrazoSuspensao(periodo);
-        	periodo = calendarioEventosManager.calcularPrazoEncerrandoEmDiaUtil(periodo);
-            return periodo.getEnd().withTimeAtEndOfDay().toDate();
+        	return calcularPrazoDeCumprimento(dataCiencia, diasPrazoCumprimento);
         }
         return null;
     }
 
+	public Date calcularPrazoDeCumprimento(Date dataCiencia, Integer diasPrazoCumprimento) {
+		br.com.infox.util.time.Date inicio = new br.com.infox.util.time.Date(dataCiencia).plusDays(1);
+		DateRange periodo = new DateRange(inicio.toDate(), inicio.plusDays(diasPrazoCumprimento -1).toDate());
+		periodo = calendarioEventosManager.calcularPrazoIniciandoEmDiaUtil(periodo);
+		periodo = calendarioEventosManager.calcularPrazoEncerrandoEmDiaUtil(periodo);
+		return periodo.getEnd().withTimeAtEndOfDay().toDate();
+	}
+    
     protected void atualizarMetadado(MetadadoProcesso metadado, String valor){
         if (!Objects.equals(metadado.getValor(), valor)){
             metadado.setValor(valor);

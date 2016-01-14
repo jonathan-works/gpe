@@ -11,7 +11,7 @@
       <dependency>
         <groupId>org.jboss.seam</groupId>
         <artifactId>bom</artifactId>
-        <version>2.3.9</version>
+        <version>2.3.9-2</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -52,7 +52,7 @@
       <groupId>org.jboss.seam</groupId>
       <artifactId>jboss-seam</artifactId>
       <scope>compile</scope>
-      <version>2.3.9-1</version><!--$NO-MVN-MAN-VER$ -->
+      <version>2.3.9-2</version><!--$NO-MVN-MAN-VER$ -->
       <type>jar</type>
       <exclusions>
         <exclusion>
@@ -172,13 +172,13 @@
     <dependency>
       <groupId>org.jbpm.jbpm3</groupId>
       <artifactId>jbpm-jpdl</artifactId>
-      <version>3.3.2</version>
+            <version>3.3.1</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.jbpm.jbpm3</groupId>
       <artifactId>jbpm-identity</artifactId>
-      <version>3.3.2</version>
+            <version>3.3.1</version>
       <scope>compile</scope>
       <type>jar</type>
     </dependency>

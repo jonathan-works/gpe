@@ -127,8 +127,8 @@ public class CalendarioEventosManager extends Manager<CalendarioEventosDAO, Cale
 	}
 	
 	public br.com.infox.util.time.Date getPreviousBusinessDay(Date date){
-		DateRange periodo = new DateRange(date, date);
-		periodo = periodo.withStart(periodo.getStart().minusYears(1)).withEnd(periodo.getEnd().plusYears(1));
+		br.com.infox.util.time.Date baseDate = new br.com.infox.util.time.Date(date);
+		DateRange periodo = baseDate.minusYears(1).toDateRangeWithEnd(baseDate.plusYears(1));
 		return getPreviousBusinessDay(date, getFeriados(periodo));
 	}
 	
@@ -139,13 +139,13 @@ public class CalendarioEventosManager extends Manager<CalendarioEventosDAO, Cale
 		return new br.com.infox.util.time.Date(date).nextWeekday(eventos.toArray(new DateRange[eventos.size()]));
 	}
 	public br.com.infox.util.time.Date getNextWeekday(Date date){
-		DateRange periodo = new DateRange(date, date);
-		periodo = periodo.withStart(periodo.getStart().minusYears(1)).withEnd(periodo.getEnd().plusYears(1));
+		br.com.infox.util.time.Date baseDate = new br.com.infox.util.time.Date(date);
+		DateRange periodo = baseDate.minusYears(1).toDateRangeWithEnd(baseDate.plusYears(1));
 		return getNextWeekday(date, getFeriados(periodo));
 	}
 	
 	public DateRange calcularPrazoIniciandoEmDiaUtil(DateRange periodo){
-		DateRange periodoEventos = periodo.withStart(periodo.getStart().minusYears(1)).withEnd(periodo.getEnd().plusYears(1));
+		DateRange periodoEventos = periodo.getStart().minusYears(1).toDateRangeWithEnd(periodo.getEnd().plusYears(1));
 		return calcularPrazoIniciandoEmDiaUtil(periodo, getFeriados(periodoEventos));
 	}
 
@@ -160,12 +160,12 @@ public class CalendarioEventosManager extends Manager<CalendarioEventosDAO, Cale
 	}
 
 	public DateRange calcularPrazoEncerrandoEmDiaUtil(DateRange periodo){
-		DateRange periodoEventos = periodo.withStart(periodo.getStart().minusYears(1)).withEnd(periodo.getEnd().plusYears(1));
+		DateRange periodoEventos = periodo.getStart().minusYears(1).toDateRangeWithEnd(periodo.getEnd().plusYears(1));
 	    return calcularPrazoEncerrandoEmDiaUtil(periodo, getFeriados(periodoEventos));
 	}
 
 	public DateRange calcularPrazoSuspensao(DateRange periodo){
-		DateRange periodoEventos = periodo.withStart(periodo.getStart().minusYears(1)).withEnd(periodo.getEnd().plusYears(1));
+		DateRange periodoEventos = periodo.getStart().minusYears(1).toDateRangeWithEnd(periodo.getEnd().plusYears(1));
 		return calcularPrazoSuspensao(periodo, getSuspensoesPrazo(periodoEventos));
 	}
 
