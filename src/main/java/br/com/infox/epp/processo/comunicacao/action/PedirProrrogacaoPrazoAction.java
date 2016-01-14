@@ -81,8 +81,9 @@ public class PedirProrrogacaoPrazoAction implements Serializable{
 	
 	public boolean podePedirProrrogacaoPrazo(DestinatarioBean bean) {
 		DestinatarioModeloComunicacao destinatarioModeloComunicacao = getDestinatarioModeloComunicacao(bean);
-	    return prazoComunicacaoService.canRequestProrrogacaoPrazo(destinatarioModeloComunicacao) && 
-	                prazoComunicacaoService.getDataLimiteCumprimento(destinatarioModeloComunicacao.getProcesso()).after(new Date());
+		Date dataLimite = prazoComunicacaoService.getDataLimiteCumprimento(destinatarioModeloComunicacao.getProcesso());
+			return prazoComunicacaoService.canRequestProrrogacaoPrazo(destinatarioModeloComunicacao) && 
+					dataLimite != null && dataLimite.after(new Date());
 	}
 	
 	public void pedirProrrogacaoPrazo() {
