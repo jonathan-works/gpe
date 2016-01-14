@@ -117,7 +117,7 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
         doc.setExcluido(Boolean.FALSE);
         doc.setPasta(pastaManager.getDefaultFolder(processo));
         doc.setClassificacaoDocumento(classificacaoDocumentoManager.getReference(classificacaoDocumento.getId()));
-        doc.setNumeroDocumento(numeracaoDocumentoSequencialManager.getNextNumeracaoDocumentoSequencial(processo));
+        doc.setNumeroDocumento(numeracaoDocumentoSequencialManager.getNextNumeracaoDocumentoSequencialRoot(processo));
         return persist(doc);
     }
 
@@ -126,7 +126,7 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     }
 
     public Integer getNextNumeracao(Documento documento) throws DAOException {
-        return numeracaoDocumentoSequencialManager.getNextNumeracaoDocumentoSequencial(documento.getProcesso());
+        return numeracaoDocumentoSequencialManager.getNextNumeracaoDocumentoSequencialRoot(documento.getProcesso());
     }
 
     public List<Documento> getAnexosPublicos(long idJbpmTask) {

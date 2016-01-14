@@ -2,7 +2,9 @@ package br.com.infox.epp.processo.comunicacao.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -26,22 +28,17 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.fluxo.manager.NaturezaCategoriaFluxoManager;
-import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
-import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
+import br.com.infox.epp.processo.documento.manager.PastaManager;
+import br.com.infox.epp.processo.documento.numeration.NumeracaoDocumentoSequencialManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
-import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
-import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
-import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
-import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
-import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.util.ComponentUtil;
@@ -50,12 +47,14 @@ import br.com.infox.seam.util.ComponentUtil;
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class ComunicacaoInternaService {
     
+    private static final String DESTINATARIO = "destinatario";
+    private static final String EXPEDIDOR = "expedidor";
+    private static final String DOCUMENTO_COMUNICACAO = "documentoComunicacao";
+    
     @Inject
     private EntityManager entityManager;
     @Inject
     private ProcessoManager processoManager;
-    @Inject
-    private MetadadoProcessoManager metadadoProcessoManager;
     @Inject
     private NaturezaCategoriaFluxoManager naturezaCategoriaFluxoManager;
     @Inject
@@ -65,7 +64,11 @@ public class ComunicacaoInternaService {
     @Inject
     private DocumentoBinManager documentoBinManager;
     @Inject
+    private PastaManager pastaManager;
+    @Inject
     private PdfManager pdfManager;
+    @Inject
+    private NumeracaoDocumentoSequencialManager numeracaoDocumentoSequencialManager;
     
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void gravarDestinatario(DestinatarioModeloComunicacao destinatarioModeloComunicacao) {
@@ -130,19 +133,20 @@ public class ComunicacaoInternaService {
         processo.setDataInicio(DateTime.now().toDate());
         processo.setUsuarioCadastro(Authenticator.getUsuarioLogado());
         processoManager.persist(processo);
+        pastaManager.createDefaultFolders(processo);
         
         Documento documentoComunicacao = criarDocumentoComunicacao(processo, modeloComunicacao);
+        
+        Map<String, Object> variables = createVariables(modeloComunicacao, documentoComunicacao);
         
         Long processIdOriginal = BusinessProcess.instance().getProcessId();
         Long taskIdOriginal = BusinessProcess.instance().getTaskId();
         BusinessProcess.instance().setProcessId(null);
         BusinessProcess.instance().setTaskId(null);
-        getIniciarProcessoService().iniciarProcesso(processo);
+        getIniciarProcessoService().iniciarProcesso(processo, variables);
         BusinessProcess.instance().setProcessId(processIdOriginal);
         BusinessProcess.instance().setTaskId(taskIdOriginal);
 
-        criarMetadados(modeloComunicacao, processo);
-        
         for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
             destinatario.setExpedido(true);
             destinatario.setDocumentoComunicacao(documentoComunicacao);
@@ -159,6 +163,7 @@ public class ComunicacaoInternaService {
         processo.setDataInicio(DateTime.now().toDate());
         processo.setUsuarioCadastro(Authenticator.getUsuarioLogado());
         processoManager.persist(processo);
+        pastaManager.createDefaultFolders(processo);
         
         Documento documentoComunicacao = criarDocumentoComunicacao(processo, destinatarioModeloComunicacao.getModeloComunicacao());
         
@@ -170,7 +175,7 @@ public class ComunicacaoInternaService {
         BusinessProcess.instance().setProcessId(processIdOriginal);
         BusinessProcess.instance().setTaskId(taskIdOriginal);
 
-        criarMetadados(destinatarioModeloComunicacao, processo);
+//        criarMetadados(destinatarioModeloComunicacao, processo);
         
        destinatarioModeloComunicacao.setExpedido(true);
        destinatarioModeloComunicacao.setDocumentoComunicacao(documentoComunicacao);
@@ -184,56 +189,54 @@ public class ComunicacaoInternaService {
         pdfManager.convertHtmlToPdf(textoEditor, outputStream);
         DocumentoBin documentoBin = documentoBinManager.createProcessoDocumentoBin("Comunicação Interna", outputStream.toByteArray(), "pdf");
         documentoBinManager.createProcessoDocumentoBin(documentoBin);
-        return documentoManager.createDocumento(processo, "Comunicação Interna", documentoBin, modeloComunicacao.getClassificacaoComunicacao());
+        Documento doc = new Documento();
+        doc.setDocumentoBin(documentoBin);
+        doc.setDataInclusao(DateTime.now().toDate());
+        doc.setUsuarioInclusao(Authenticator.getUsuarioLogado());
+        doc.setProcesso(processo);
+        doc.setDescricao("Comunicação Interna");
+        doc.setExcluido(Boolean.FALSE);
+        doc.setPasta(pastaManager.getDefaultFolder(processo));
+        doc.setClassificacaoDocumento(modeloComunicacao.getClassificacaoComunicacao());
+        doc.setNumeroDocumento(numeracaoDocumentoSequencialManager.getNextNumeracaoDocumentoSequencial(processo));
+        return documentoManager.persist(doc);
     }
 
-    private void criarMetadados(ModeloComunicacao modeloComunicacao, Processo processo) throws DAOException {
-        MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processo);
-        List<MetadadoProcesso> metadados = new ArrayList<>();
-
-        criarMetadadoDestinatario(modeloComunicacao, metadadoProcessoProvider, metadados);
+//    private void criarMetadados(ModeloComunicacao modeloComunicacao, Processo processo) throws DAOException {
+//        MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processo);
+//        List<MetadadoProcesso> metadados = new ArrayList<>();
+//
+//        metadados.add(metadadoProcessoProvider.gerarMetadado(ComunicacaoMetadadoProvider.MEIO_EXPEDICAO, MeioExpedicao.SI.name()));
+//        
+//        metadadoProcessoManager.persistMetadados(metadadoProcessoProvider, metadados);
+//    }
+//    
+//    private void criarMetadados(DestinatarioModeloComunicacao destinatarioModeloComunicacao, Processo processo) throws DAOException {
+//        MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processo);
+//        List<MetadadoProcesso> metadados = new ArrayList<>();
+//        
+//        metadados.add(metadadoProcessoProvider.gerarMetadado(ComunicacaoMetadadoProvider.MEIO_EXPEDICAO, MeioExpedicao.SI.name()));
+//        
+//        metadadoProcessoManager.persistMetadados(metadadoProcessoProvider, metadados);
+//    }
+    
+    private Map<String, Object> createVariables(ModeloComunicacao modeloComunicacao, Documento documento) {
+        Map<String, Object> variables = new HashMap<String, Object>();
         
-        metadados.add(metadadoProcessoProvider.gerarMetadado(ComunicacaoMetadadoProvider.MEIO_EXPEDICAO, MeioExpedicao.SI.name()));
-        
+        List<String> destinatarios = new ArrayList<>();
         for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
-            metadados.add(metadadoProcessoProvider.gerarMetadado(ComunicacaoMetadadoProvider.DESTINATARIO, destinatario.getId().toString()));
+            if (destinatario.getDestinatario() != null) {
+                destinatarios.add(destinatario.getDestinatario().getUsuarioLogin().getLogin());
+            } else if (destinatario.getPerfilDestino() != null && destinatario.getDestino() != null) {
+                destinatarios.add(destinatario.getDestino().getCodigo()+":"+destinatario.getPerfilDestino().getId());
+            } else {
+                destinatarios.add(destinatario.getDestino().getCodigo());
+            }
         }
-        
-        metadados.add(metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.TIPO_PROCESSO, TipoProcesso.COMUNICACAO_INTERNA.toString()));
-        
-        metadadoProcessoManager.persistMetadados(metadadoProcessoProvider, metadados);
-    }
-    
-    private void criarMetadados(DestinatarioModeloComunicacao destinatarioModeloComunicacao, Processo processo) throws DAOException {
-        MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processo);
-        List<MetadadoProcesso> metadados = new ArrayList<>();
-
-        criarMetadadoDestinatario(destinatarioModeloComunicacao, metadadoProcessoProvider, metadados);
-        
-        metadados.add(metadadoProcessoProvider.gerarMetadado(ComunicacaoMetadadoProvider.MEIO_EXPEDICAO, MeioExpedicao.SI.name()));
-        
-        metadados.add(metadadoProcessoProvider.gerarMetadado(ComunicacaoMetadadoProvider.DESTINATARIO, destinatarioModeloComunicacao.getId().toString()));
-        
-        metadados.add(metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.TIPO_PROCESSO, TipoProcesso.COMUNICACAO_INTERNA.toString()));
-        
-        metadadoProcessoManager.persistMetadados(metadadoProcessoProvider, metadados);
-    }
-    
-    private void criarMetadadoDestinatario(ModeloComunicacao modeloComunicacao, MetadadoProcessoProvider metadadoProcessoProvider, 
-            List<MetadadoProcesso> metadados) throws DAOException {
-        for (DestinatarioModeloComunicacao destinatarioModeloComunicacao : modeloComunicacao.getDestinatarios()) {
-            criarMetadadoDestinatario(destinatarioModeloComunicacao, metadadoProcessoProvider, metadados);
-        }
-    }
-    
-    private void criarMetadadoDestinatario(DestinatarioModeloComunicacao destinatario, MetadadoProcessoProvider metadadoProcessoProvider, 
-            List<MetadadoProcesso> metadados) throws DAOException {
-        if (destinatario.getDestinatario() != null) {
-            metadados.add(metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.PESSOA_DESTINATARIO, destinatario.getDestinatario().getIdPessoa().toString()));
-        } else {
-            metadados.add(metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.LOCALIZACAO_DESTINO, destinatario.getDestino().getIdLocalizacao().toString()));
-            metadados.add(metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.PERFIL_DESTINO, destinatario.getPerfilDestino().getId().toString()));
-        }
+        variables.put(DESTINATARIO, StringUtil.concatList(destinatarios, ","));
+        variables.put(EXPEDIDOR, Authenticator.getUsuarioLogado().getLogin());
+        variables.put(DOCUMENTO_COMUNICACAO, documento.getId().longValue());
+        return variables;
     }
     
     private NaturezaCategoriaFluxo getNaturezaCategoriaFluxo() throws DAOException {

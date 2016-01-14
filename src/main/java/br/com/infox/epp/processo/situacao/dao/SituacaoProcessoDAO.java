@@ -350,6 +350,8 @@ public class SituacaoProcessoDAO {
 	
     private void appendPerfilTemplateFilter(AbstractQuery<?> abstractQuery, From<?, TaskInstance> taskInstance) {
         Integer idPerfilTemplate = Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getId();
+        String login = Authenticator.getUsuarioLogado().getLogin();
+        String localizacao = Authenticator.getLocalizacaoAtual().getCodigo();
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
         subquery.select(cb.literal(1));
@@ -357,7 +359,12 @@ public class SituacaoProcessoDAO {
         Join<PooledActor, TaskInstance> taskInstances = pooledActor.join("taskInstances", JoinType.INNER);
         subquery.where(
                 cb.equal(taskInstance.<Long>get("id"), taskInstances.<Long>get("id")),
-                cb.equal(pooledActor.<String>get("actorId"), cb.literal(idPerfilTemplate.toString()))
+                cb.or(
+                        cb.equal(pooledActor.<String>get("actorId"), cb.literal(idPerfilTemplate.toString())),
+                        cb.equal(pooledActor.<String>get("actorId"), cb.literal(login)),
+                        cb.equal(pooledActor.<String>get("actorId"), cb.literal(localizacao+":"+idPerfilTemplate.toString())),
+                        cb.equal(pooledActor.<String>get("actorId"), cb.literal(localizacao))
+                )
         );
         Predicate predicate = abstractQuery.getRestriction();
         abstractQuery.where(cb.and(cb.exists(subquery), predicate));
