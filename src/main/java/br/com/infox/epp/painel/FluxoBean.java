@@ -5,7 +5,7 @@ import java.util.Map;
 
 import br.com.infox.epp.processo.type.TipoProcesso;
 
-public class FluxoBean {
+public class FluxoBean implements Comparable<FluxoBean> {
 	
 	private String processDefinitionId;
 	private String name;
@@ -154,4 +154,9 @@ public class FluxoBean {
         return true;
     }
 
+    @Override
+    public int compareTo(FluxoBean o) {
+        return this.getName().compareTo(o.getName());
+    }
+    
 }

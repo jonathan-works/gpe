@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.situacao.manager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -44,6 +45,7 @@ public class SituacaoProcessoManager {
 				createFluxoBeanList(result, tipoProcesso, taskBeanList, false);
 			}
 		}
+		Collections.sort(result);
 		return result;
 	}
 
