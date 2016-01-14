@@ -62,6 +62,10 @@ public class TipoComunicacao implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "tipoComunicacao", orphanRemoval = true)
     private List<TipoComunicacaoClassificacaoDocumento> tipoComunicacaoClassificacaoDocumentos = new ArrayList<>();
     
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "id_classificacao_ped_prorroga", nullable = true)
+    private ClassificacaoDocumento classificacaoProrrogacao;
+    
     public Long getId() {
         return id;
     }
@@ -118,6 +122,14 @@ public class TipoComunicacao implements Serializable {
 		this.tipoComunicacaoClassificacaoDocumentos = tipoComunicacaoClassificacaoDocumentos;
 	}
     
+	public ClassificacaoDocumento getClassificacaoProrrogacao() {
+		return classificacaoProrrogacao;
+	}
+
+	public void setClassificacaoProrrogacao(ClassificacaoDocumento classificacaoProrrogacao) {
+		this.classificacaoProrrogacao = classificacaoProrrogacao;
+	}
+
 	@Override
     public String toString() {
     	return descricao;
