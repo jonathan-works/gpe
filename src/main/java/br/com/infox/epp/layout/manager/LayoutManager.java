@@ -66,16 +66,21 @@ public class LayoutManager {
 	public byte[] carregarBinario(Integer idBinario) {
 		return binarioDao.findById(idBinario).getBinario();
 	}
-
-	public void setResource(String codigoResource, byte[] bin, TipoArquivo tipoArquivo) {
-		Resource resource = resourceDao.findByCodigo(codigoResource);
+	
+	private void apagarResourcesBinsAssociados(Resource resource) {
 		List<ResourceBin> resourcesAtuais = resourceBinDao.findByResource(resource);
 		if (resourcesAtuais != null) {
 			for (ResourceBin resourceAtual : resourcesAtuais) {
 				binarioDao.removeById(resourceAtual.getIdBinario());
 				resourceBinDao.remove(resourceAtual);
 			}
-		}
+		}		
+	}
+
+	public void setResource(String codigoResource, byte[] bin, TipoArquivo tipoArquivo) {
+		Resource resource = resourceDao.findByCodigo(codigoResource);
+		apagarResourcesBinsAssociados(resource);
+		
 		ResourceBin resourceBin = new ResourceBin();
 		resourceBin.setResource(resource);
 		resourceBin.setTipo(tipoArquivo);
@@ -187,5 +192,10 @@ public class LayoutManager {
 	
 	public Resource findResourceById(Long id) {
 		return resourceDao.findById(id);
+	}
+	
+	public void restaurarPadrao(String codigoResource) {
+		Resource resource = resourceDao.findByCodigo(codigoResource);
+		apagarResourcesBinsAssociados(resource);		
 	}
 }

@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.hibernate.validator.internal.util.privilegedactions.NewInstance;
 import org.jboss.seam.faces.FacesMessages;
 import org.richfaces.event.FileUploadEvent;
 import org.richfaces.model.UploadedFile;
@@ -208,5 +209,10 @@ public class LayoutView implements Serializable {
 	
 	public void resourceSelecionado(AjaxBehaviorEvent evt) {
 		
+	}
+	
+	public void restaurarPadrao() {
+		layoutManager.restaurarPadrao(resource.getCodigo());
+		newResource();
 	}
 }

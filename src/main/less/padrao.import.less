@@ -34,6 +34,7 @@
 @import "painelUsuario.import.less";
 
 @imgFolder:~"#{pathResolver.contextPath}/#{wiSkin.imageFolder}";
+@contextPath:~"#{pathResolver.contextPath}";
 @baseBgColor:#c3d9e4;
 @baseDegBgColor:#acc8be;
 @button-txt-color:#5B7961;
@@ -1117,4 +1118,67 @@ option {
 
 div.rf-pp-hdr-cnt {
   color: @base-label-color;
+}
+
+
+/* Primefaces */
+.ui-outputlabel-rfi {
+  color:@bgColorRequired;
+}
+
+.ui-outputlabel.property-field-edit-name {
+  font-size: 11px;
+}
+
+.ui-outputlabel {
+  font-family: @default-font-family;
+}
+
+.ui-inputfield.ui-state-focus {
+  box-shadow: none;
+  border-color: #C4C0B9;
+}
+
+input.ui-inputfield {
+  box-shadow: none;
+  padding: 2px 4px 2px 4px;
+}
+
+.ui-inputfield {
+  border-radius : 0px;
+}
+
+.ui-corner-left {
+  border-radius : 0px;
+}
+
+.ui-corner-right {
+  border-radius : 0px;
+}
+
+
+.ui-autocomplete-dropdown {
+    background-image: none;
+}
+
+.ui-state-hover {
+    box-shadow: none;
+}
+
+button:hover {
+    background: #eee;
+}
+
+button.ui-autocomplete-dropdown {
+  width: 18px;
+  border: 2px outset rgb(221, 221, 221);
+  background-color: rgb(231, 231, 231);
+}
+
+.ui-icon.ui-icon-triangle-1-s {
+  background-image: none
+}
+
+.ui-autocomplete-dropdown.ui-button {
+  background-image: ~"url(#{pathResolver.contextPath}/resources/styleSkinInfox/all/caret-down.png)";
 }

@@ -35,12 +35,13 @@
             style="margin-top:1em;"
             header="#{infoxMessages['layout.imagens']}">
             <h:form>
-                <div style="padding: 4px; font-size: 11px">
+                <div styleClass="rf-p-b">
                     <p:outputLabel styleClass="property-field-edit-name"
-                        style="font-size: 11px; padding-bottom: 4px"
+                        style="padding-bottom: 4px"
                         value="#{infoxMessages['layout.imagem']}"
                         for="resource" />
                     <p:autoComplete id="resource" dropdown="true"
+                        size="59"
                         value="#{layoutView.resource}"
                         completeMethod="#{layoutView.completarResource}"
                         var="res" itemValue="#{res}"
@@ -87,6 +88,10 @@
                     value="#{infoxMessages['crud.update']}"
                     action="#{layoutView.persistResource()}"
                     render="@all" execute="@none" styleClass="buttons" />
+                <h:commandButton id="resetResource"
+                    value="#{infoxMessages['layout.reset']}"
+                    action="#{layoutView.restaurarPadrao()}"
+                    render="@all" execute="resource" styleClass="buttons" />
             </h:form>
         </rich:panel>
 
