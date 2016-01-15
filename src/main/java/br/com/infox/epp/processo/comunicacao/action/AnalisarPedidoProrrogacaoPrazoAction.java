@@ -6,21 +6,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.inject.Named;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Create;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 import org.joda.time.DateTime;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.DateUtil;
-import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
@@ -35,13 +31,9 @@ import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-import br.com.infox.seam.util.ComponentUtil;
 
-@Name(AnalisarPedidoProrrogacaoPrazoAction.NAME)
-@Scope(ScopeType.PAGE)
-@AutoCreate
-@Transactional
-@ContextDependency
+@Named(AnalisarPedidoProrrogacaoPrazoAction.NAME)
+@ViewScoped
 public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 	public static final String NAME = "analisarPedidoProrrogacaoPrazoAction";
 	private static final long serialVersionUID = 1L;
@@ -67,7 +59,7 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 	private Integer diasProrrogacao;
 	private Date novoPrazoCumprimento;
 
-	@Create
+	@PostConstruct
 	public void init() {
 		processoDocumento = JbpmUtil.getProcesso();
 		initDadosAnalise();
@@ -105,6 +97,7 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 	public void prorrogarPrazoDeCumprimento(){
 		if (getNovoPrazoCumprimento() != null) {
 			try {
+				atualizaNovoPrazo();
 				dataFimPrazoCumprimento = getNovoPrazoCumprimento();
 				MetadadoProcesso metadadoDataFimCumprimento = comunicacao.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO);
 				metadadoDataFimCumprimento.setValor(new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(getDataFimPrazoCumprimento()));
@@ -182,14 +175,6 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 
 	public void setNovoPrazoCumprimento(Date novoPrazoCumprimento) {
 		this.novoPrazoCumprimento = DateUtil.getEndOfDay(novoPrazoCumprimento);
-	}
-
-	public Processo getProcessoDocumento(){
-		return processoDocumento;
-	}
-	
-	public void setProcessoDocumento(Processo processoDocumento) {
-		this.processoDocumento = processoDocumento;
 	}
 
 	public DestinatarioModeloComunicacao getDestinatarioComunicacao(){

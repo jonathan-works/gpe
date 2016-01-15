@@ -45,9 +45,7 @@ import br.com.infox.seam.util.ComponentUtil;
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class DocumentoComunicacaoService {
-	
-	public static final String NAME = "documentoComunicacaoService";
-	
+
 	@Inject
 	private ModeloDocumentoManager modeloDocumentoManager;
 	@Inject
@@ -58,17 +56,14 @@ public class DocumentoComunicacaoService {
 	private DocumentoBinManager documentoBinManager;
 	@Inject
 	private PrazoComunicacaoService prazoComunicacaoService;
+	@Inject
+	private GenericManager genericManager;
 	
 	private PapelManager papelManager = ComponentUtil.getComponent(PapelManager.NAME);
 	private ClassificacaoDocumentoManager classificacaoDocumentoManager = ComponentUtil.getComponent(ClassificacaoDocumentoManager.NAME);
 	private VariableTypeResolver variableTypeResolver = ComponentUtil.getComponent(VariableTypeResolver.NAME);
 	private DocumentoRespostaComunicacaoDAO documentoRespostaComunicacaoDAO = ComponentUtil.getComponent(DocumentoRespostaComunicacaoDAO.NAME);
-	private GenericManager genericManager = ComponentUtil.getComponent(GenericManager.NAME);
 	
-	//TODO ver como vai ficar no TCE
-//	public List<ClassificacaoDocumento> getClassificacoesDocumentoDisponiveisRespostaComunicacao(DestinatarioModeloComunicacao destinatarioModeloComunicacao, boolean isEditor) {
-//		return classificacaoDocumentoManager.getClassificacoesDocumentoDisponiveisRespostaComunicacao(destinatarioModeloComunicacao, isEditor, Authenticator.getPapelAtual());
-//	}
 	public List<ClassificacaoDocumento> getClassificacoesDocumentoDisponiveisRespostaComunicacao(DestinatarioModeloComunicacao destinatarioModeloComunicacao, boolean isEditor) {
 		List<ClassificacaoDocumento> classificacaoesResposta = classificacaoDocumentoManager.getClassificacoesDocumentoDisponiveisRespostaComunicacao(destinatarioModeloComunicacao, isEditor, Authenticator.getPapelAtual());
 		if (prazoComunicacaoService.canRequestProrrogacaoPrazo(destinatarioModeloComunicacao)) {

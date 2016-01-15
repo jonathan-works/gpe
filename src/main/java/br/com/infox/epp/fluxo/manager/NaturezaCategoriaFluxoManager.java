@@ -18,6 +18,7 @@ import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 @Stateless
 @Name(NaturezaCategoriaFluxoManager.NAME)
 @AutoCreate
+@Stateless
 public class NaturezaCategoriaFluxoManager extends Manager<NaturezaCategoriaFluxoDAO, NaturezaCategoriaFluxo> {
 
     private static final long serialVersionUID = -1441750117108371132L;

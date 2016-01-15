@@ -1,24 +1,16 @@
 package br.com.infox.epp.processo.comunicacao.service;
 
 import static br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider.DATA_CIENCIA;
-import static br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider.LIMITE_DATA_CIENCIA;
-import static br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.context.exe.ContextInstance;
 
@@ -28,7 +20,6 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
-import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
@@ -48,13 +39,8 @@ import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.task.service.MovimentarTarefaService;
 import br.com.infox.util.time.DateRange;
 
-@Name(PrazoComunicacaoService.NAME)
-@AutoCreate
 @Stateless
-@Scope(ScopeType.STATELESS)
-@Transactional
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-@ContextDependency
 public class PrazoComunicacaoService {
 	public static final String NAME = "prazoComunicacaoService";
 	
@@ -73,16 +59,32 @@ public class PrazoComunicacaoService {
 		DestinatarioModeloComunicacao destinatario = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.DESTINATARIO);
         Integer qtdDias = destinatario.getModeloComunicacao().getTipoComunicacao().getQuantidadeDiasCiencia();
         //O início do prazo de ciência começa no dia do envio. 66741
-        return contabilizarPrazoCiencia(new Date(), qtdDias);
+        return calcularPrazoCiencia(new Date(), qtdDias);
     }
     
-	public Date contabilizarPrazoCiencia(Date dataInicio, Integer qtdDias){
+	public Date calcularPrazoCiencia(Date dataInicio, Integer qtdDias){
 		return calendarioEventosManager.getPrimeiroDiaUtil(dataInicio, qtdDias);
 	}
 	
 	public Date contabilizarPrazoCumprimento(Processo comunicacao) {
-		return calcularPrazoDeCumprimento(comunicacao);
+		Date dataCiencia = comunicacao.getMetadado(DATA_CIENCIA).getValue();
+        Integer diasPrazoCumprimento = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
+        if (diasPrazoCumprimento == null){
+            diasPrazoCumprimento = -1;
+        }
+        if (diasPrazoCumprimento>=0 && dataCiencia != null){
+        	return calcularPrazoDeCumprimento(dataCiencia, diasPrazoCumprimento);
+        }
+        return null;
     }
+
+	public Date calcularPrazoDeCumprimento(Date dataCiencia, Integer diasPrazoCumprimento) {
+		br.com.infox.util.time.Date inicio = new br.com.infox.util.time.Date(dataCiencia).plusDays(1);
+		DateRange periodo = new DateRange(inicio.toDate(), inicio.plusDays(diasPrazoCumprimento -1).toDate());
+		periodo = calendarioEventosManager.calcularPrazoIniciandoEmDiaUtil(periodo);
+		periodo = calendarioEventosManager.calcularPrazoEncerrandoEmDiaUtil(periodo);
+		return periodo.getEnd().withTimeAtEndOfDay().toDate();
+	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void darCiencia(Processo comunicacao, Date dataCiencia, UsuarioLogin usuarioCiencia) throws DAOException {
@@ -104,6 +106,22 @@ public class PrazoComunicacaoService {
 		adicionarVariavelCienciaAutomaticaAoProcesso(usuarioCiencia, comunicacao);
 		adicionarVariavelPossuiPrazoAoProcesso(comunicacao);
 	}
+	
+	private void adicionarVariavelCienciaAutomaticaAoProcesso(UsuarioLogin usuarioCiencia, Processo comunicacao) {
+		Integer idUsuarioSistema = Integer.valueOf(Parametros.ID_USUARIO_SISTEMA.getValue());
+		boolean isUsuarioSistema = idUsuarioSistema.equals(usuarioCiencia.getIdUsuarioLogin());
+		org.jbpm.graph.exe.ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstanceForUpdate(comunicacao.getIdJbpm());
+		ContextInstance contextInstance = processInstance.getContextInstance();
+        contextInstance.setVariable(VariaveisJbpmComunicacao.CIENCIA_AUTOMATICA, isUsuarioSistema);
+	}
+	
+    private void adicionarVariavelPossuiPrazoAoProcesso(Processo comunicacao) {
+    	MetadadoProcesso metadadoProcesso = comunicacao.getMetadado(ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
+    	boolean possuiPrazoParaCumprimento = metadadoProcesso != null;
+    	org.jbpm.graph.exe.ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstanceForUpdate(comunicacao.getIdJbpm());
+		ContextInstance contextInstance = processInstance.getContextInstance();
+        contextInstance.setVariable(VariaveisJbpmComunicacao.POSSUI_PRAZO_CUMPRIMENTO, possuiPrazoParaCumprimento);
+    }
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void darCienciaManual(Processo comunicacao, Date dataCiencia, Documento documentoCiencia) throws DAOException {
@@ -138,9 +156,7 @@ public class PrazoComunicacaoService {
 		darCienciaDocumentoGravado(comunicacao, dataCiencia, usuarioPerfil.getUsuarioLogin());
 	}
 
-	protected void adicionarPrazoDeCumprimento(Processo comunicacao, Date dataCiencia)
-			throws DAOException {
-		
+	private void adicionarPrazoDeCumprimento(Processo comunicacao, Date dataCiencia) throws DAOException {
 		Integer diasPrazoCumprimento = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
 		if (diasPrazoCumprimento == null){
 			diasPrazoCumprimento = -1;
@@ -172,22 +188,6 @@ public class PrazoComunicacaoService {
 		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoDataCumprimento));
 	}
 	
-	private void adicionarVariavelCienciaAutomaticaAoProcesso(UsuarioLogin usuarioCiencia, Processo comunicacao) {
-		Integer idUsuarioSistema = Integer.valueOf(Parametros.ID_USUARIO_SISTEMA.getValue());
-		boolean isUsuarioSistema = idUsuarioSistema.equals(usuarioCiencia.getIdUsuarioLogin());
-		org.jbpm.graph.exe.ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstanceForUpdate(comunicacao.getIdJbpm());
-		ContextInstance contextInstance = processInstance.getContextInstance();
-        contextInstance.setVariable(VariaveisJbpmComunicacao.CIENCIA_AUTOMATICA, isUsuarioSistema);
-	}
-	
-    private void adicionarVariavelPossuiPrazoAoProcesso(Processo comunicacao) {
-    	MetadadoProcesso metadadoProcesso = comunicacao.getMetadado(ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
-    	boolean possuiPrazoParaCumprimento = metadadoProcesso != null;
-    	org.jbpm.graph.exe.ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstanceForUpdate(comunicacao.getIdJbpm());
-		ContextInstance contextInstance = processInstance.getContextInstance();
-        contextInstance.setVariable(VariaveisJbpmComunicacao.POSSUI_PRAZO_CUMPRIMENTO, possuiPrazoParaCumprimento);
-    }
-    
     public void movimentarComunicacaoPrazoExpirado(Processo comunicacao, MetadadoProcessoDefinition metadadoPrazo) throws DAOException{
 		Date dataLimite = getValueMetadado(comunicacao, metadadoPrazo);
 		if (dataLimite != null) {
@@ -201,26 +201,17 @@ public class PrazoComunicacaoService {
     	return getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO);
     }
 
-	//Prorrogação de Prazo Service TODO corrigir no TCE
+	//Prorrogação de Prazo Service
 	
-//	public Boolean isClassificacaoProrrogacaoPrazo(ClassificacaoDocumento classificacaoDocumento, TipoComunicacao tipoComunicacao) {
-//		return false;
-//	}
     public Boolean isClassificacaoProrrogacaoPrazo(ClassificacaoDocumento classificacaoDocumento, TipoComunicacao tipoComunicacao) {
 		return classificacaoDocumento != null && classificacaoDocumento.equals(tipoComunicacao.getClassificacaoDocumento());
 	}
 	
-//	public Boolean canRequestProrrogacaoPrazo(DestinatarioModeloComunicacao destinatarioModeloComunicacao) {
-//		return false;
-//	}
     public Boolean canRequestProrrogacaoPrazo(DestinatarioModeloComunicacao destinatarioModeloComunicacao) {
 		return canTipoComunicacaoRequestProrrogacaoPrazo(destinatarioModeloComunicacao.getModeloComunicacao().getTipoComunicacao()) &&
 				getDataPedidoProrrogacao(destinatarioModeloComunicacao.getProcesso()) == null;
 	}
-	
-//	public Boolean containsClassificacaoProrrogacaoPrazo(List<Documento> documentos, TipoComunicacao tipoComunicacao) {
-//		return false;
-//	}
+
     public Boolean containsClassificacaoProrrogacaoPrazo(List<Documento> documentos, TipoComunicacao tipoComunicacao) {
 		ClassificacaoDocumento classificacaoProrrogacao = tipoComunicacao.getClassificacaoProrrogacao();
 		for (Documento documento : documentos) {
@@ -231,16 +222,10 @@ public class PrazoComunicacaoService {
 		return Boolean.FALSE;
 	}
 	
-//	public Boolean canTipoComunicacaoRequestProrrogacaoPrazo(TipoComunicacao tipoComunicacao){
-//		return false;
-//	}
     public Boolean canTipoComunicacaoRequestProrrogacaoPrazo(TipoComunicacao tipoComunicacao) {
 		return tipoComunicacao.getClassificacaoProrrogacao() != null;
 	}
 	
-//	public ClassificacaoDocumento getClassificacaoProrrogacaoPrazo(DestinatarioModeloComunicacao destinatarioModeloComunicacao) {
-//		throw new BusinessException("O tipo de comunicação " + destinatarioModeloComunicacao.getModeloComunicacao().getTipoComunicacao().getDescricao() + " não admite pedido de prorrogação de prazo");
-//	}
     public ClassificacaoDocumento getClassificacaoProrrogacaoPrazo(DestinatarioModeloComunicacao destinatarioModeloComunicacao) {
 		return destinatarioModeloComunicacao.getModeloComunicacao().getTipoComunicacao().getClassificacaoProrrogacao();
 	}
@@ -286,7 +271,7 @@ public class PrazoComunicacaoService {
 		return "";
     }
     
-    protected <T> T getValueMetadado(Processo processo, MetadadoProcessoDefinition metaDefinition){
+    private <T> T getValueMetadado(Processo processo, MetadadoProcessoDefinition metaDefinition){
     	MetadadoProcesso metadadoProcesso = processo.getMetadado(metaDefinition);
     	if(metadadoProcesso != null){
     		return metadadoProcesso.getValue();
@@ -294,42 +279,4 @@ public class PrazoComunicacaoService {
     	return null;
     }
 
-    public Date calcularPrazoDeCumprimento(Processo comunicacao){
-        Date dataCiencia = comunicacao.getMetadado(DATA_CIENCIA).getValue();
-        Integer diasPrazoCumprimento = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
-        if (diasPrazoCumprimento == null){
-            diasPrazoCumprimento = -1;
-        }
-        if (diasPrazoCumprimento>=0 && dataCiencia != null){
-        	return calcularPrazoDeCumprimento(dataCiencia, diasPrazoCumprimento);
-        }
-        return null;
-    }
-
-	public Date calcularPrazoDeCumprimento(Date dataCiencia, Integer diasPrazoCumprimento) {
-		br.com.infox.util.time.Date inicio = new br.com.infox.util.time.Date(dataCiencia).plusDays(1);
-		DateRange periodo = new DateRange(inicio.toDate(), inicio.plusDays(diasPrazoCumprimento -1).toDate());
-		periodo = calendarioEventosManager.calcularPrazoIniciandoEmDiaUtil(periodo);
-		periodo = calendarioEventosManager.calcularPrazoEncerrandoEmDiaUtil(periodo);
-		return periodo.getEnd().withTimeAtEndOfDay().toDate();
-	}
-    
-    protected void atualizarMetadado(MetadadoProcesso metadado, String valor){
-        if (!Objects.equals(metadado.getValor(), valor)){
-            metadado.setValor(valor);
-            metadadoProcessoManager.update(metadado);
-        }
-    }
-
-    public void atualizarPrazoCiencia(Processo processo) {
-        MetadadoProcesso metadado = processo.getMetadado(LIMITE_DATA_CIENCIA);
-        String novoLimiteDataCiencia = new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(contabilizarPrazoCiencia(processo));
-        atualizarMetadado(metadado, novoLimiteDataCiencia);
-    }
-
-    public void atualizarPrazoDeCumprimento(Processo processo) {
-        MetadadoProcesso metaLimiteDtCumprimento = processo.getMetadado(LIMITE_DATA_CUMPRIMENTO);
-        String novaDataCumprimento = new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(calcularPrazoDeCumprimento(processo));
-        atualizarMetadado(metaLimiteDtCumprimento, novaDataCumprimento);
-    }
 }

@@ -67,6 +67,7 @@ import br.com.infox.log.Logging;
 @Stateless
 @AutoCreate
 @Name(ProcessoDAO.NAME)
+@Stateless
 public class ProcessoDAO extends DAO<Processo> {
 
 	private static final long serialVersionUID = 1L;

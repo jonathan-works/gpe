@@ -16,7 +16,6 @@ import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.service.ProcessoAnaliseDocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Named
 @ViewScoped
@@ -30,6 +29,8 @@ public class AnaliseDocumentoAction implements Serializable{
 	private DocumentoComunicacaoList documentoComunicacaoList;
 	@Inject
 	private InfoxMessages infoxMessages;
+	@Inject
+	private ProcessoAnaliseDocumentoService processoAnaliseDocumentoService;
 	
 	private List<Documento> documentosAnalise;
 	private Processo processo;
@@ -52,14 +53,14 @@ public class AnaliseDocumentoAction implements Serializable{
 	
 	public List<Documento> getDocumentosAnalise(){
 		if (documentosAnalise == null){
-			documentosAnalise = ComponentUtil.<ProcessoAnaliseDocumentoService>getComponent(ProcessoAnaliseDocumentoService.NAME).getDocumentosAnalise(getProcesso());
+			documentosAnalise = processoAnaliseDocumentoService.getDocumentosAnalise(getProcesso());
 		}
 		return documentosAnalise;
 	}
 
 	public boolean isRespostaComunicacao(){
 		if(getProcesso() != null){
-			return ComponentUtil.<ProcessoAnaliseDocumentoService>getComponent(ProcessoAnaliseDocumentoService.NAME).isRespostaComunicacao(getProcesso())
+			return processoAnaliseDocumentoService.isRespostaComunicacao(getProcesso())
 					&& !isPedidoProrrogacaoPrazo();
 		}
 		return false;
@@ -67,7 +68,7 @@ public class AnaliseDocumentoAction implements Serializable{
 	
 	public boolean isPedidoProrrogacaoPrazo(){
 		if(getProcesso() != null){
-			return ComponentUtil.<ProcessoAnaliseDocumentoService>getComponent(ProcessoAnaliseDocumentoService.NAME).isPedidoProrrogacaoPrazo(getProcesso());
+			return processoAnaliseDocumentoService.isPedidoProrrogacaoPrazo(getProcesso());
 		}
 		return false;
 	}

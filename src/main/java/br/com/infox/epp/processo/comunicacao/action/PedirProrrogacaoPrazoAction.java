@@ -39,12 +39,11 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Named(PedirProrrogacaoPrazoAction.NAME)
 @ViewScoped
 @Stateful
-public class PedirProrrogacaoPrazoAction implements Serializable{
+public class PedirProrrogacaoPrazoAction implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(PedirProrrogacaoPrazoAction.class);
@@ -62,13 +61,16 @@ public class PedirProrrogacaoPrazoAction implements Serializable{
 	protected InfoxMessages infoxMessages;
 	@Inject
 	private EntityManager entityManager;
+	@Inject
+	private AssinaturaDocumentoService assinaturaDocumentoService;
+	@Inject
+	private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
+	@Inject
+	private CertificateSignatures certificateSignatures;
+	@Inject
+	private RespostaComunicacaoService respostaComunicacaoService;
 	
-	private AssinaturaDocumentoService assinaturaDocumentoService = ComponentUtil.getComponent(AssinaturaDocumentoService.NAME);
-	private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager = ComponentUtil.getComponent(ClassificacaoDocumentoPapelManager.NAME);
-	private CertificateSignatures certificateSignatures = ComponentUtil.getComponent(CertificateSignatures.NAME);
-	private RespostaComunicacaoService respostaComunicacaoService = ComponentUtil.getComponent(RespostaComunicacaoService.NAME);
-	
-	private List<ClassificacaoDocumento> classificacoesDocumentoProrrogacaoPrazo;
+	protected List<ClassificacaoDocumento> classificacoesDocumentoProrrogacaoPrazo;
 	private DestinatarioBean destinatario;
 	private boolean prorrogacaoPrazo;
 	private ClassificacaoDocumento classificacaoDocumentoProrrogPrazo;

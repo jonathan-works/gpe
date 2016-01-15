@@ -84,8 +84,8 @@ public class RespostaComunicacaoAction implements Serializable {
 
 	protected Processo processoComunicacao;
 	private Processo processoRaiz;
-	private Date prazoResposta;
-	private String statusProrrogacao;
+	protected Date prazoResposta;
+	protected String statusProrrogacao;
 	
 	private List<ClassificacaoDocumento> classificacoesEditor;
 	private List<ClassificacaoDocumento> classificacoesAnexo;
@@ -159,6 +159,7 @@ public class RespostaComunicacaoAction implements Serializable {
 				documentoManager.update(documentoEditor.getDocumento());
 			}
 			newDocumentoEdicao();
+			respostaComunicacaoList.refresh();
 			FacesMessages.instance().add(infoxMessages.get("comunicacao.resposta.gravadoSucesso"));
 		} catch (DAOException e) {
 			LOG.error("", e);
@@ -175,6 +176,7 @@ public class RespostaComunicacaoAction implements Serializable {
 		modeloDocumento = null;
 	}
 	
+	//TODO ver como colocar esse método no service
 	public void gravarAnexoResposta() {
 		try {
 			documentoUploader.persist();
@@ -189,6 +191,7 @@ public class RespostaComunicacaoAction implements Serializable {
 		Documento resposta = documentoUploader.getDocumentosDaSessao().get(documentoUploader.getDocumentosDaSessao().size() - 1);
 		try {
 			documentoComunicacaoService.vincularDocumentoRespostaComunicacao(resposta, processoComunicacao);
+			respostaComunicacaoList.refresh();
 			FacesMessages.instance().add(infoxMessages.get("comunicacao.resposta.gravadoSucesso"));
 		} catch (DAOException e) {
 			LOG.error("", e);
@@ -198,6 +201,7 @@ public class RespostaComunicacaoAction implements Serializable {
 		verificarPossibilidadeEnvioResposta();
 	}
 	
+	//TODO ver como colocar esse método no service
 	public void enviarRespostaComunicacao(){
 		List<Documento> documentosRespostaComunicacao = getDocumentoRespostaList();
 		try {
@@ -212,6 +216,7 @@ public class RespostaComunicacaoAction implements Serializable {
 				modeloDocumentoList = null;
 				newDocumentoEdicao();
 				initClassificacoes();
+				respostaComunicacaoList.refresh();
 			}
 		} catch (DAOException e) {
 			LOG.error("", e);
@@ -220,6 +225,7 @@ public class RespostaComunicacaoAction implements Serializable {
 		verificarPossibilidadeEnvioResposta();
 	}
 	
+	//TODO ver como colocar esse método no service
 	public void removerDocumento(Documento documento) {
 		boolean isDocumentoEdicao = documentoEditor.getDocumento() != null && documentoEditor.getDocumento().equals(documento);
 		try {
@@ -228,6 +234,8 @@ public class RespostaComunicacaoAction implements Serializable {
 			if (isDocumentoEdicao) {
 				newDocumentoEdicao();
 			}
+			respostaComunicacaoList.refresh();
+			FacesMessages.instance().add("Documento removido com sucesso");
 		} catch (DAOException e) {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);

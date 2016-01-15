@@ -70,7 +70,7 @@ public class ModeloComunicacaoManager extends Manager<ModeloComunicacaoDAO, Mode
 			entityManager.refresh(destinatarioModeloComunicacao);
 			Processo comunicacao = destinatarioModeloComunicacao.getProcesso();
 			destinatario.setNome(destinatarioModeloComunicacao.getNome());
-			destinatario.setStatusProrrogacao(prazoComunicacaoService.getStatusProrrogacaoFormatado(comunicacao));
+			setStatusComunicacaoByDestinatario(destinatario, comunicacao);
 			destinatario.setDataConfirmacao(getMetadadoValue(comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA)));
 			destinatario.setDataResposta(getMetadadoValue(comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_RESPOSTA)));
 			destinatario.setPrazoAtendimento(getMetadadoValue(comunicacao.getMetadado(ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO)));
@@ -80,6 +80,10 @@ public class ModeloComunicacaoManager extends Manager<ModeloComunicacaoDAO, Mode
 			setarInformacoesAdicionais(destinatario);
 		}
 		return destinatarios;
+	}
+
+	protected void setStatusComunicacaoByDestinatario(DestinatarioBean destinatario, Processo comunicacao) {
+		destinatario.setStatusProrrogacao(prazoComunicacaoService.getStatusProrrogacaoFormatado(comunicacao));
 	}
 	
 	public List<AssinaturaDocumento> listAssinaturasComunicacao(Processo comunicacao) {

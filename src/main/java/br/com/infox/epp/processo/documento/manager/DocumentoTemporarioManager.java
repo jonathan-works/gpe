@@ -24,20 +24,25 @@ import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.DocumentoTemporario;
 import br.com.infox.epp.processo.documento.service.ProcessoAnaliseDocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class DocumentoTemporarioManager {
     
     private static final String RECURSO_ANEXAR_DOCUMENTO_SEM_ANALISE = "anexarDocumentoSemAnalise";
-    private DocumentoBinManager documentoBinManager = ComponentUtil.getComponent(DocumentoBinManager.NAME);
-    private PastaManager pastaManager = ComponentUtil.getComponent(PastaManager.NAME);
-    private PermissaoService permissaoService = ComponentUtil.getComponent(PermissaoService.NAME);
-    private DocumentoManager documentoManager = ComponentUtil.getComponent(DocumentoManager.NAME);
-    private ProcessoAnaliseDocumentoService processoAnaliseDocumentoService = ComponentUtil.getComponent(ProcessoAnaliseDocumentoService.NAME);
-    private ClassificacaoDocumentoManager classificacaoDocumentoManager = ComponentUtil.getComponent(ClassificacaoDocumentoManager.NAME);
     
+    @Inject
+    private DocumentoBinManager documentoBinManager;
+    @Inject
+    private PastaManager pastaManager;
+    @Inject
+    private PermissaoService permissaoService;
+    @Inject
+    private DocumentoManager documentoManager;
+    @Inject
+    private ProcessoAnaliseDocumentoService processoAnaliseDocumentoService;
+    @Inject
+    private ClassificacaoDocumentoManager classificacaoDocumentoManager;
     @Inject
     private DocumentoTemporarioDao documentoTemporarioDao;
     

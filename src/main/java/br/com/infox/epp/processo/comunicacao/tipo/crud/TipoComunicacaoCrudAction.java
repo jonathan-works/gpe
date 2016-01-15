@@ -84,6 +84,10 @@ public class TipoComunicacaoCrudAction extends AbstractCrudAction<TipoComunicaca
     @Override
 	public void setInstance(TipoComunicacao instance) {
 		super.setInstance(instance);
+		atualizaCamposAdicionais();
+	}
+
+	protected void atualizaCamposAdicionais() {
 		setClassificacaoDocumentoProrrogacao(getInstance().getClassificacaoProrrogacao());
 	}
     

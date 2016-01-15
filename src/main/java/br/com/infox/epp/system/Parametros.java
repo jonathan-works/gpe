@@ -13,7 +13,8 @@ public enum Parametros {
 	PASTA_DOCUMENTO_GERADO("pastaDocumentoGerado"),
 	RAIZ_LOCALIZACOES_COMUNICACAO("raizLocalizacoesComunicacao"),
 	CODIGO_FLUXO_COMUNICACAO_ELETRONICA("codigoFluxoComunicacao"),
-	CODIGO_FLUXO_COMUNICACAO_NAO_ELETRONICA("codigoFluxoComunicacaoNaoEletronico");
+	CODIGO_FLUXO_COMUNICACAO_NAO_ELETRONICA("codigoFluxoComunicacaoNaoEletronico"),
+	CODIGO_FLUXO_DOCUMENTO("codigoFluxoDocumento");
 	
 	private String label;
 	
