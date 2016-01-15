@@ -118,19 +118,6 @@ public class LayoutView implements Serializable {
 		newResource();
 	}
 	
-	private Image getImagem(FileUploadEvent evt) {
-		UploadedFile arquivo = evt.getUploadedFile(); 
-		try {
-			Image imagemUpload = ImageIO.read(arquivo.getInputStream());
-			arquivo.getInputStream().close();
-			return imagemUpload;
-		} catch (IOException e) {
-			log.log(Level.SEVERE, "Não foi possível recuperar o inputStream do arquivo carregado", e);
-			FacesMessages.instance().add("Erro no upload do arquivo, tente novamente.");
-		}
-		return null;		
-	}
-	
 	private TipoArquivo getTipoArquivo(FileUploadEvent evt) {
 		String extensao = evt.getUploadedFile().getFileExtension();
 		if(extensao.equalsIgnoreCase("jpg") || extensao.equalsIgnoreCase("jpeg")) {

@@ -62,7 +62,11 @@ public class ResourceBin {
 	private TipoArquivo tipo;
 	
 	public enum TipoArquivo {
-		JPG, PNG, GIF, SVG, SVGZ
+		JPG, PNG, GIF, SVG, SVGZ;
+		
+		public String getExtensao() {
+			return this.name().toLowerCase();
+		}
 	}
 	
 	public Long getId() {

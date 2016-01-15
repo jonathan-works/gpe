@@ -114,4 +114,12 @@ public class Resource {
 	public String toString() {
 		return getNome();
 	}
+
+	public TipoResource getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(TipoResource tipo) {
+		this.tipo = tipo;
+	}
 }
