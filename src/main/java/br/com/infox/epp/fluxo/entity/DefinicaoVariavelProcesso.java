@@ -4,8 +4,8 @@ import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.DEFINI
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.DEFINICAO_BY_FLUXO_NOME_QUERY;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.DEFINICAO_BY_ID_PROCESSO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.DEFINICAO_BY_ID_PROCESSO_QUERY;
-import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.DEFINICAO_VISIVEL_PAINEL_BY_ID_PROCESSO;
-import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.DEFINICAO_VISIVEL_PAINEL_BY_ID_PROCESSO_QUERY;
+import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.DEFINICAO_VISIVEL_PAINEL_BY_ID_FLUXO;
+import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.DEFINICAO_VISIVEL_PAINEL_BY_ID_FLUXO_QUERY;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.GENERATOR_DEFINICAO_VARIAVEL_PROCESSO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.ID_DEFINICAO_VARIAVEL_PROCESSO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.ID_FLUXO;
@@ -17,9 +17,9 @@ import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.SEQUEN
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.TABLE_DEFINICAO_VARIAVEL_PROCESSO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.TOTAL_BY_FLUXO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.TOTAL_BY_FLUXO_QUERY;
+import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.VALOR_PADRAO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.VISIVEL;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.VISIVEL_PAINEL;
-import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.VALOR_PADRAO;
 
 import java.io.Serializable;
 
@@ -50,7 +50,7 @@ import br.com.infox.constants.LengthConstants;
     @NamedQuery(name = LIST_BY_FLUXO, query = LIST_BY_FLUXO_QUERY),
     @NamedQuery(name = TOTAL_BY_FLUXO, query = TOTAL_BY_FLUXO_QUERY),
     @NamedQuery(name = DEFINICAO_BY_ID_PROCESSO, query = DEFINICAO_BY_ID_PROCESSO_QUERY),
-    @NamedQuery(name = DEFINICAO_VISIVEL_PAINEL_BY_ID_PROCESSO, query = DEFINICAO_VISIVEL_PAINEL_BY_ID_PROCESSO_QUERY)
+    @NamedQuery(name = DEFINICAO_VISIVEL_PAINEL_BY_ID_FLUXO, query = DEFINICAO_VISIVEL_PAINEL_BY_ID_FLUXO_QUERY)
 })
 public class DefinicaoVariavelProcesso implements Serializable {
 

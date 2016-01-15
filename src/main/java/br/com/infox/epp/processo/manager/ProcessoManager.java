@@ -53,10 +53,8 @@ import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
-import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais;
-import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
 import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
@@ -94,8 +92,6 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     private UsuarioLoginManager usuarioLoginManager;
     @In
     private ProcessoTarefaManager processoTarefaManager;
-    @Inject
-	private SituacaoProcessoDAO situacaoProcessoDAO;
     @Inject
     private NaturezaCategoriaFluxoManager naturezaCategoriaFluxoManager;
     @Inject
@@ -146,12 +142,11 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         }
     }
 
-    public void visualizarTask(final Processo processo, Integer idTarefa, final UsuarioPerfil usuarioPerfil) {
+    public void visualizarTask(Processo processo, Long idTaskInstance, UsuarioPerfil usuarioPerfil) {
         final BusinessProcess bp = BusinessProcess.instance();
         if (!processo.getIdJbpm().equals(bp.getProcessId())) {
-            final Long taskInstanceId = getTaskInstanceId(usuarioPerfil, idTarefa, processo);
             bp.setProcessId(processo.getIdJbpm());
-            bp.setTaskId(taskInstanceId);
+            bp.setTaskId(idTaskInstance);
         }
     }
 
@@ -176,25 +171,9 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         }
     }
 
-    public void iniciarTask(Processo processo, Integer idTarefa, UsuarioPerfil usuarioPerfil) throws DAOException {
-        Long taskInstanceId = getTaskInstanceId(usuarioPerfil, idTarefa, processo);
-        if (taskInstanceId != null) {
-            iniciaTask(processo, taskInstanceId);
-            storeUsuario(taskInstanceId, usuarioPerfil);
-        }
-    }
-
-    private Long getTaskInstanceId(UsuarioPerfil usuarioPerfil, Integer idTarefa, Processo processo) {
-        MetadadoProcesso metadado = processo.getMetadado(EppMetadadoProvider.TIPO_PROCESSO);
-        if (metadado != null) {
-        	TipoProcesso tipoProcesso = metadado.getValue();
-			if (tipoProcesso.equals(TipoProcesso.COMUNICACAO) || tipoProcesso.equals(TipoProcesso.COMUNICACAO_NAO_ELETRONICA)) {
-				return processoTarefaManager.getProcessoTarefaAberto(processo, idTarefa).getTaskInstance();
-			}
-			return situacaoProcessoDAO.getIdTaskInstanceByIdProcesso(processo.getIdProcesso(), idTarefa);
-        } else {
-             return processoLocalizacaoIbpmDAO.getTaskInstanceId(usuarioPerfil, processo, idTarefa.longValue());
-        }
+    public void iniciarTask(Processo processo, Long idTaskInstance, UsuarioPerfil usuarioPerfil) throws DAOException {
+        iniciaTask(processo, idTaskInstance);
+        storeUsuario(idTaskInstance, usuarioPerfil);
     }
 
     /**

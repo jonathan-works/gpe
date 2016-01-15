@@ -179,5 +179,17 @@ public final class DateUtil {
         return (int) (dataFimMilli - dataInicialMilli)
                 / (MILESIMOS_DO_SEGUNDO * SEGUNDOS_DO_MINUTO);
     }
+    
+    public static boolean isDataMaiorIgual(Date date1, Date date2) {
+        date1 = DateUtil.getBeginningOfDay(date1);
+        date2 = DateUtil.getBeginningOfDay(date2);
+        return date1.getTime() >= date2.getTime();
+    }
+    
+    public static boolean isDataMenorIgual(Date date1, Date date2) {
+        date1 = DateUtil.getBeginningOfDay(date1);
+        date2 = DateUtil.getBeginningOfDay(date2);
+        return date1.getTime() <= date2.getTime();
+    }
 
 }

@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -18,13 +17,10 @@ import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.bpm.ProcessInstance;
-import org.jboss.seam.bpm.TaskInstance;
 import org.jbpm.context.exe.ContextInstance;
-import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.StringUtil;
-import br.com.infox.epp.access.assignment.LocalizacaoAssignment;
 import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.fluxo.manager.NaturezaManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
@@ -54,7 +50,6 @@ public class IniciarProcessoService implements Serializable {
     @Inject
     private MetadadoProcessoManager metadadoProcessoManager;
 
-    public static final String ON_CREATE_PROCESS = "br.com.infox.epp.IniciarProcessoService.ONCREATEPROCESS";
     public static final String NAME = "iniciarProcessoService";
     public static final String TYPE_MISMATCH_EXCEPTION = "Tipo informado não é uma instância de "
             + "br.com.infox.ibpm.entity.Processo";
@@ -112,18 +107,7 @@ public class IniciarProcessoService implements Serializable {
         } else {
             processoJbpm.signal(transitionName);
         }
-        boolean iniciouTarefa = iniciaPrimeiraTarefa(processoJbpm);
-        if (iniciouTarefa) {
-        	atribuiSwimlaneTarefa(processoJbpm);
-        }
-    }
-
-    private void atribuiSwimlaneTarefa(org.jbpm.graph.exe.ProcessInstance processoJbpm) {
-        SwimlaneInstance swimlaneInstance = TaskInstance.instance().getSwimlaneInstance();
-        String actorsExpression = swimlaneInstance.getSwimlane().getPooledActorsExpression();
-        Set<String> pooledActors = LocalizacaoAssignment.instance().updatePooledActors(actorsExpression, TaskInstance.instance(), processoJbpm);
-        String[] actorIds = pooledActors.toArray(new String[pooledActors.size()]);
-        swimlaneInstance.setPooledActors(actorIds);
+        iniciaPrimeiraTarefa(processoJbpm);
     }
 
     private void iniciaVariaveisProcesso(Processo processo, Map<String, Object> variaveis, org.jbpm.graph.exe.ProcessInstance processInstance) {
@@ -142,7 +126,7 @@ public class IniciarProcessoService implements Serializable {
         ManagedJbpmContext.instance().getSession().flush();
     }
     
-    private boolean iniciaPrimeiraTarefa(org.jbpm.graph.exe.ProcessInstance processInstance) {
+    private void iniciaPrimeiraTarefa(org.jbpm.graph.exe.ProcessInstance processInstance) {
         Collection<org.jbpm.taskmgmt.exe.TaskInstance> taskInstances = processInstance.getTaskMgmtInstance().getTaskInstances();
         org.jbpm.taskmgmt.exe.TaskInstance taskInstance = null;
         BusinessProcess businessProcess = BusinessProcess.instance();
@@ -151,8 +135,6 @@ public class IniciarProcessoService implements Serializable {
             long taskInstanceId = taskInstance.getId();
             businessProcess.setTaskId(taskInstanceId);
             businessProcess.startTask();
-            return true;
         }
-        return false;
     }
 }

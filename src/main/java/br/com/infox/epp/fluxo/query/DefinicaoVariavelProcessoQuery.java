@@ -39,10 +39,7 @@ public interface DefinicaoVariavelProcessoQuery {
             "				where ncf.fluxo = o.fluxo and p.idProcesso = :" + PARAM_ID_PROCESSO + " ) "
             		+ " order by o.ordem";
     
-    String DEFINICAO_VISIVEL_PAINEL_BY_ID_PROCESSO = "definicaoVisivelPainelByIdProcesso";
-    String DEFINICAO_VISIVEL_PAINEL_BY_ID_PROCESSO_QUERY = "select o from DefinicaoVariavelProcesso o" +
-            " where exists (select 1 from NaturezaCategoriaFluxo ncf " +
-                " inner join ncf.processoList p " + 
-                " where ncf.fluxo = o.fluxo and p.idProcesso = :" + PARAM_ID_PROCESSO + ""
-            + " ) and o.visivelPainel is true order by o.ordem";
+    String DEFINICAO_VISIVEL_PAINEL_BY_ID_FLUXO = "definicaoVisivelPainelByIdProcesso";
+    String DEFINICAO_VISIVEL_PAINEL_BY_ID_FLUXO_QUERY = "select o from DefinicaoVariavelProcesso o " +
+            " where o.fluxo.idFluxo = :" + PARAM_FLUXO + " and o.visivelPainel is true order by o.ordem";
 }
