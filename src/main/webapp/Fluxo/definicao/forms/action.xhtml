@@ -29,6 +29,7 @@
             value="#{event.currentAction.actionExpression}"
             label="#{infoxMessages['process.events.action.expression']}"
             showCounter="false"
+            styleClass="textAreaExpressionAction"
         >
         	<f:validator validatorId="jbpmExpressionValidator" />
             <a:ajax
@@ -60,6 +61,16 @@
     </script>
     <rich:popupPanel id="expressoesAjudaPopUpPanel" modal="true" header="#{infoxMessages['process.events.expression.title']}" resizeable="true"
         styleClass="expressoesAjudaPopUpPanel" onshow="onshowPopup();">
+        
+        <script type="text/javascript">
+	    	function onSelectBpmnExpression(obj) {
+	    		var text = $($(obj).children().get(1)).text();
+	    		#{rich:component('expressoesAjudaPopUpPanel')}.hide();
+	    		$('.textAreaExpressionAction').text(text);
+	    		$('.textAreaExpressionAction').change();
+	    	}
+	    </script>
+	    
         <f:facet name="controls">
             <h:graphicImage id="assinarDocumentosPopUpPanelCloseBtn" styleClass="mp-close"
                 value="#{wiSkin.imageFolder}/closeMP.gif"

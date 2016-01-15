@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:p="http://primefaces.org/ui" >
+    
+    <p:outputPanel id="panelDipatcherForm" autoUpdate="false">
+	    <h:form rendered="#{empty nodeFitter.dispatcherSignal}">
+	    	<wi:selectOneMenu id="dispatcher" valueItems="#{nodeFitter.signals}" label="${infoxMessages['process.events.dispatcher.nome']}" 
+	    		showLabelSelecione="true" required="true" optionLabel="#{item.nome}" optionValue="#{item.codigo}"/>
+	    		
+	    	<a:commandButton limitRender="true" render="panelDipatcherForm, panelDispatcherTable" execute="@form" styleClass="buttons"
+	    		value="${infoxMessages['process.events.listener.adicionar']}" actionListener="#{nodeFitter.addDispatcherSignal}" resetValues="true" style="margin-top: 1em;" >
+	    		<f:attribute name="dispatcherCodigo" value="#{rich:clientId('dispatcher')}"/>
+	    	</a:commandButton>
+	    </h:form>
+    </p:outputPanel>
+    
+    <p:outputPanel id="panelDispatcherTable" autoUpdate="false" style="border: 0px none;">
+    	
+    	<div>
+    		<wi:outputText id="dispatcherName" label="${infoxMessages['process.events.dispatcher.nome']}" 
+    			value="#{nodeFitter.dispatcherSignalName}" rendered="#{not empty nodeFitter.dispatcherSignal}"/>
+    		<h:form style="display: inline-block;" rendered="#{not empty nodeFitter.dispatcherSignal}">
+    			<a:commandLink render="panelDispatcherTable, panelDipatcherForm" execute="@form" action="#{nodeFitter.removeDispatchSignal}" >
+    				<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{infoxMessages['button.delete']}" />
+    			</a:commandLink>
+    		</h:form>
+    	</div>
+	    <wi:dataTable id="dispatcherParamsDatatable" values="#{nodeFitter.dispatchParams}" showSearchForm="false" hideOrder="true"
+	    	showGridCount="false" rendered="#{not empty nodeFitter.dispatcherSignal}" panelStyle="border: 0px none;">
+	    
+	    	<ui:define name="headerToolBar">
+	    		<h:form>
+		   			<a:commandLink onclick="#{rich:component('calendarioProblemsPopup')}.show();" 
+		   				render="formParamSignal" execute="@this">
+		   				<h:graphicImage url="#{wiSkin.imageFolder}/add.gif" title="Adicionar Parâmetro" />
+		   			</a:commandLink>
+	   			</h:form>
+	    	</ui:define>
+	    	
+	    	<ui:define name="toolBar">
+	    		<h:form>
+	    			<a:commandLink render="dispatcherParamsDatatable" execute="@form" 
+	    				action="#{nodeFitter.removeDispatcherParam(row)}" >
+	    				<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{infoxMessages['button.delete']}" />
+	    			</a:commandLink>
+	    		</h:form>
+	    	</ui:define>
+	    	
+	    	<wi:columnOutputText columnId="paramName" columnHeader="${infoxMessages['process.events.dispatcher.param.name']}" 
+	    		value="#{row.name}"/>
+	    		
+	    	<wi:columnOutputText columnId="paramValue" columnHeader="${infoxMessages['process.events.dispatcher.param.value']}" 
+	    		value="#{empty row.value ? row.valueExpression : row.value}"/>
+	    		
+	    	<wi:columnOutputText columnId="paramType" columnHeader="${infoxMessages['process.events.dispatcher.param.type']}" 
+	    		value="#{row.type.getLabel()}"/>
+	    
+	    </wi:dataTable>
+	    
+	    <rich:popupPanel id="calendarioProblemsPopup" modal="true" header="Adicionar Parâmetro" width="600" height="270" rendered="#{not empty nodeFitter.dispatcherSignal}">
+	    	<f:facet name="controls">
+	        	<h:graphicImage id="closeBtn" value="#{wiSkin.imageFolder}/closeMP.gif" 
+	        		onmouseup="#{rich:component('calendarioProblemsPopup')}.hide();" style="cursor: pointer;"/>
+	        </f:facet>
+	    	<h:form id="formParamSignal">
+		    	<wi:inputText id="paramName" label="${infoxMessages['process.events.dispatcher.param.name']}" required="true"/>
+		    	
+		    	<wi:inputText id="paramValue" label="${infoxMessages['process.events.dispatcher.param.value']}" required="true"/>
+		    	
+		    	<wi:selectOneMenu id="paramType" valueItems="#{nodeFitter.paramTypes}" label="${infoxMessages['process.events.dispatcher.param.type']}" 
+		    		showLabelSelecione="true" required="true" optionLabel="#{item.label}" optionValue="#{item.name()}"/>
+		    		
+		    	<a:commandButton limitRender="true" render="@form dispatcherParamsDatatable, pageBodyDialogMessage" execute="@form" styleClass="buttons"
+		    		value="${infoxMessages['process.events.listener.adicionar']}" 
+		    		actionListener="#{nodeFitter.addDispatcherParamSignal}" resetValues="true" style="margin-top: 1em; display: block;" 
+		    		oncomplete="if(#{not facesContext.validationFailed}){ #{rich:component('calendarioProblemsPopup')}.hide() }">
+		    		<f:attribute name="dispatcherParamName" value="#{rich:clientId('paramName')}" />
+		    		<f:attribute name="dispatcherParamValue" value="#{rich:clientId('paramValue')}" />
+		    		<f:attribute name="dispatcherParamType" value="#{rich:clientId('paramType')}" />
+		    	</a:commandButton>
+	    	</h:form>
+	    </rich:popupPanel>
+    </p:outputPanel>
+    
+    
+</ui:composition>
