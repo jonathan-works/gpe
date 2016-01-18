@@ -141,7 +141,9 @@ public class PrazoComunicacaoService {
 	
 	private void darCienciaDocumentoGravado(Processo comunicacao, Date dataCiencia, UsuarioLogin usuarioLogin) throws DAOException {
 		darCiencia(comunicacao, dataCiencia, usuarioLogin);
-		movimentarTarefaService.finalizarTarefasEmAberto(comunicacao);
+		if (comunicacao.getNaturezaCategoriaFluxo().getFluxo().getCodFluxo().equals(Parametros.CODIGO_FLUXO_COMUNICACAO_ELETRONICA.getValue())) {
+			movimentarTarefaService.finalizarTarefasEmAberto(comunicacao);
+		}
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
