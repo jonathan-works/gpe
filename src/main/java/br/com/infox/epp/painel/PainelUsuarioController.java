@@ -119,12 +119,8 @@ public class PainelUsuarioController implements Serializable {
 	
 	@ExceptionHandled(value = MethodType.UNSPECIFIED)
 	public void atribuirTarefa(TaskBean taskBean) {
-	    try {
-	        taskInstanceManager.atribuirTarefa(Long.valueOf(taskBean.getIdTaskInstance()));
-	        taskBean.setAssignee(Authenticator.getUsuarioLogado().getLogin());
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "painelUsuarioController.atribuirTarefa(taskBean)", e);
-        }
+        taskInstanceManager.atribuirTarefa(Long.valueOf(taskBean.getIdTaskInstance()));
+        taskBean.setAssignee(Authenticator.getUsuarioLogado().getLogin());
 	}
 	
 	@ExceptionHandled(value = MethodType.UNSPECIFIED)
