@@ -35,7 +35,6 @@ public class PainelEntityNode extends EntityNode<PanelDefinition> {
                 CaixaDefinitionBean caixaDefinitionBean = taskDefinitionBean.getCaixaDefinitionBean(caixa.getIdCaixa());
                 if (caixaDefinitionBean == null) {
                     caixaDefinitionBean = new CaixaDefinitionBean(caixa.getIdCaixa(), caixa.getNomeCaixa(), taskDefinitionBean);
-                    caixaDefinitionBean = new CaixaDefinitionBean(caixa.getIdCaixa(), caixa.getNomeCaixa());
                 }
                 PainelEntityNode painelEntityNode = new PainelEntityNode(this, caixaDefinitionBean, CAIXA_TYPE);
                 caixasEntityNode.add(painelEntityNode);
@@ -55,10 +54,6 @@ public class PainelEntityNode extends EntityNode<PanelDefinition> {
 
 	public void setExpanded(boolean expanded) {
 		this.expanded = expanded;
-	}
-	
-	private CaixaDAO getCaixaDAO() {
-	    return BeanManager.INSTANCE.getReference(CaixaDAO.class);
 	}
 	
 	private CaixaDAO getCaixaDAO() {

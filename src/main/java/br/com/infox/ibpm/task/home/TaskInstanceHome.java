@@ -764,14 +764,6 @@ public class TaskInstanceHome implements Serializable {
         FacesMessages.instance().add("Tarefa liberada com sucesso.");
 	}
 
-	
-	private void afterLiberarTarefa() {
-        processoHandler.clear();
-        FacesMessages.instance().clear();
-        FacesMessages.instance().add("Tarefa liberada com sucesso.");
-	}
-
-
 	public void start(long taskId) {
 		setTaskId(taskId);
 		BusinessProcess.instance().startTask();
@@ -792,6 +784,7 @@ public class TaskInstanceHome implements Serializable {
 			updateTransitions();
 			createInstance();
 		}
+	}
 	
 	public List<Transition> getTransitions() {
 		validateAndUpdateTransitions();

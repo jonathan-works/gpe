@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
@@ -12,12 +14,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jboss.seam.faces.FacesMessages;
-import org.hibernate.LockOptions;
-import org.jboss.seam.bpm.Actor;
-import org.jboss.seam.bpm.ManagedJbpmContext;
-import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
-import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.richfaces.event.DropEvent;
 
 import br.com.infox.core.action.ActionMessagesService;
@@ -31,6 +28,7 @@ import br.com.infox.epp.painel.caixa.CaixaManager;
 import br.com.infox.epp.processo.consulta.list.ConsultaProcessoList;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
 import br.com.infox.epp.processo.type.TipoProcesso;
+import br.com.infox.epp.tarefa.component.tree.PainelEntityNode;
 import br.com.infox.epp.tarefa.component.tree.PainelTreeHandler;
 import br.com.infox.ibpm.task.manager.TaskInstanceManager;
 import br.com.infox.seam.security.SecurityUtil;
@@ -40,6 +38,7 @@ import br.com.infox.seam.security.SecurityUtil;
 public class PainelUsuarioController implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private static final Logger LOG = Logger.getLogger(PainelUsuarioController.class.getName());
 	
 	@Inject
 	private SituacaoProcessoManager situacaoProcessoManager;
@@ -75,7 +74,7 @@ public class PainelUsuarioController implements Serializable {
 	
 	public void atualizarPainelProcessos() throws IOException {
 	    List<FluxoBean> fluxosDisponiveisTemp = situacaoProcessoManager.getFluxos(tipoProcessoDisponiveis, getNumeroProcesso());
-//	    verificaHouveAlteracao(fluxosDisponiveisTemp);
+	    verificaHouveAlteracao(fluxosDisponiveisTemp);
 	}
 	
 	protected void verificaHouveAlteracao(List<FluxoBean> fluxosDisponiveisTemp) throws IOException {
@@ -120,13 +119,11 @@ public class PainelUsuarioController implements Serializable {
 	
 	@ExceptionHandled(value = MethodType.UNSPECIFIED)
 	public void atribuirTarefa(TaskBean taskBean) {
-        taskInstanceManager.atribuirTarefa(Long.valueOf(taskBean.getIdTaskInstance()));
-	    taskBean.setAssignee(Authenticator.getUsuarioLogado().getLogin());
-            ManagedJbpmContext.instance().getSession().buildLockRequest(LockOptions.READ).setLockMode(LockMode.PESSIMISTIC_FORCE_INCREMENT).lock(taskInstance);
-            taskInstance.setAssignee(Actor.instance().getId());
-            taskBean.setAssignee(taskInstance.getAssignee());
+	    try {
+	        taskInstanceManager.atribuirTarefa(Long.valueOf(taskBean.getIdTaskInstance()));
+	        taskBean.setAssignee(Authenticator.getUsuarioLogado().getLogin());
         } catch (Exception e) {
-            LOG.error("painelUsuarioController.atribuirTarefa(taskBean)", e);
+            LOG.log(Level.SEVERE, "painelUsuarioController.atribuirTarefa(taskBean)", e);
         }
 	}
 	
@@ -134,16 +131,13 @@ public class PainelUsuarioController implements Serializable {
 	public void liberarTarefa(TaskBean taskBean) {
 	    taskInstanceManager.removeUsuario(Long.valueOf(taskBean.getIdTaskInstance()));
         taskBean.setAssignee(null);
-        FacesMessages.instance().add("Tarefa Liberada com Sucesso!");
-        } catch (Exception e) {
-            LOG.error("painelUsuarioController.removeUsuario(idTaskInstance)", e);
-	}   
+
+    }
+    
 	public void onSelectNode() {
 		consultaProcessoList.onSelectNode(getSelected());
     }
 	
-	public String getTaskNodeKey() {
-	    return getSelected().getId().toString();
 	public String getTaskNodeKey() {
 	    return getSelected().getId().toString();
 	}
@@ -199,6 +193,8 @@ public class PainelUsuarioController implements Serializable {
 		r.setParameter("tab", "form");
 		r.setParameter("id", getSelected().getId());
 		r.execute();
+	}
+	
 	public PanelDefinition getSelected() {
 		return painelTreeHandler.getSelected();
 	}
@@ -325,4 +321,5 @@ public class PainelUsuarioController implements Serializable {
 	public void setNumeroProcesso(String numeroProcesso) {
 		this.numeroProcesso = numeroProcesso;
 	}
+	
 }
