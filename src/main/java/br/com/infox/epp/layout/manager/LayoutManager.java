@@ -3,6 +3,7 @@ package br.com.infox.epp.layout.manager;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.nio.file.Path;
@@ -10,6 +11,8 @@ import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -100,7 +103,11 @@ public class LayoutManager {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document doc;
-			doc = builder.parse(new ByteArrayInputStream(bin));
+			InputStream entrada = new ByteArrayInputStream(bin);
+			if(tipoArquivo == TipoArquivo.SVGZ) {
+				entrada = new GZIPInputStream(entrada);
+			}
+			doc = builder.parse(entrada);
 
 			Element svg = (Element)doc.getElementsByTagName("svg").item(0);
 			svg.setAttribute("width", Integer.toString(16));
@@ -109,10 +116,20 @@ public class LayoutManager {
 			DOMSource domSource = new DOMSource(doc);
 			ByteArrayOutputStream saida = new ByteArrayOutputStream();
 			OutputStreamWriter writer = new OutputStreamWriter(saida);
+			GZIPOutputStream saidaGzip = null;
+			
+			if(tipoArquivo == TipoArquivo.SVGZ) {
+				saidaGzip = new GZIPOutputStream(saida);
+				writer = new OutputStreamWriter(saidaGzip);
+			}
+			
 			StreamResult result = new StreamResult(writer);
 			TransformerFactory tf = TransformerFactory.newInstance();
 			Transformer transformer = tf.newTransformer();
 			transformer.transform(domSource, result);
+			if(saidaGzip != null) {
+				saidaGzip.close();
+			}
 			return saida.toByteArray();
 		} catch (SAXException | IOException | ParserConfigurationException | TransformerException e) {
 			throw new RuntimeException(e);
