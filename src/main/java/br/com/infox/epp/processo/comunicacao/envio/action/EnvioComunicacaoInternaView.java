@@ -413,6 +413,10 @@ public class EnvioComunicacaoInternaView implements Serializable {
         return Parametros.RAIZ_LOCALIZACOES_COMUNICACAO_INTERNA.getValue();
     }
     
+    public boolean isTaskPage() {
+        return taskPage;
+    }
+
     public LocalizacaoSubTreeHandler getLocalizacaoSubTree() {
         return ComponentUtil.getComponent(LocalizacaoSubTreeHandler.NAME, ScopeType.PAGE);
     }

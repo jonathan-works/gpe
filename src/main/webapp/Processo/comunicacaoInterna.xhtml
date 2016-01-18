@@ -9,8 +9,10 @@
     xmlns:infox="http://www.infox.com.br/jsf">
     
     <h:form>
-		<a:commandButton value="Criar Comunicação Interna" styleClass="buttons">
-			<f:param />
+		<a:commandButton value="Criar Comunicação Interna" styleClass="buttons" 
+			oncomplete="infox.openPopUp('criarComunicacaoInterna', '#{pathResolver.contextPath}/Processo/criarComunicacaoInterna.seam','1024');">
+			<f:param name="abaComunicacao" value="true"/>
+			<f:param name="idTaskInstance" value="#{taskInstanceHome.taskId}"/>
 		</a:commandButton>    
     </h:form>
     
@@ -21,9 +23,10 @@
     	
     	<ui:define name="toolBar">
     		<h:form>
-    			<a:commandLink
-					render="@this" execute="@this"
-					oncomplete="infox.openPopUp('download#{row.idProcesso}', '#{pathResolver.contextPath}/Processo/baixarDocumento.seam','1024');">
+    			<a:commandLink render="@this" execute="@this"
+					oncomplete="infox.openPopUp('criarComunicacaoInterna', '#{pathResolver.contextPath}/Processo/criarComunicacaoInterna.seam','1024');">
+					<f:param name="idModeloComunicacao" value="#{row.id}"/>
+					<f:param name="abaComunicacao" value="true"/>
 					<h:graphicImage url="#{wiSkin.imageFolder}/mod/edit.png" />
 				</a:commandLink>
     		</h:form>

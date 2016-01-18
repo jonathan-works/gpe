@@ -49,7 +49,7 @@ public class ComunicacaoInternaSearch {
         cq.select(modeloComunicacao);
         cq.where(
                 cb.equal(modeloComunicacao.get(ModeloComunicacao_.processo).get(Processo_.idProcesso), cb.literal(idProcesso)),
-                cb.isTrue(modeloComunicacao.get(ModeloComunicacao_.finalizada))
+                cb.isFalse(modeloComunicacao.get(ModeloComunicacao_.finalizada))
         );
         return getEntityManager().createQuery(cq).getResultList();
     }
