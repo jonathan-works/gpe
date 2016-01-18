@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -31,6 +33,7 @@ import br.com.infox.epp.processo.partes.manager.ParticipanteProcessoManager;
 
 @AutoCreate
 @Name(PastaRestricaoManager.NAME)
+@Stateless
 public class PastaRestricaoManager extends Manager<PastaRestricaoDAO, PastaRestricao> {
 
     private static final long serialVersionUID = 1L;
@@ -96,7 +99,7 @@ public class PastaRestricaoManager extends Manager<PastaRestricaoDAO, PastaRestr
      */
     private boolean populateBeanPapel(PastaRestricaoBean restricaoBean, PastaRestricao restricao, Papel papelUsuario) {
         Papel papelAlvo = papelManager.find(restricao.getAlvo());
-        if (papelUsuario.equals(papelAlvo) || papelManager.getIdentificadoresPapeisMembros(papelAlvo.getIdentificador()).contains(papelUsuario.getIdentificador())) {
+        if (papelUsuario.equals(papelAlvo) || papelManager.isPapelHerdeiro(papelUsuario.getIdentificador(), papelAlvo.getIdentificador())) {
             restricaoBean.setRead(restricaoBean.getRead() || restricao.getRead());
             restricaoBean.setWrite(restricaoBean.getWrite() || restricao.getWrite());
             restricaoBean.setDelete(restricaoBean.getDelete() || restricao.getDelete());

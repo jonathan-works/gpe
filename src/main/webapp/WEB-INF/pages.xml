@@ -69,7 +69,12 @@
             <message severity="ERROR"></message>
         </redirect>
     </exception>
-    
+
+    <exception class="br.com.infox.core.exception.EppConfigurationException">
+        <redirect view-id="/errorConfiguration.xhtml">
+        </redirect>
+    </exception>
+
     <exception>
         <redirect view-id="/errorUnexpected.xhtml">
 			<message>Erro inesperado, por favor tente novamente.</message>

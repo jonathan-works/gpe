@@ -214,7 +214,14 @@ public class ProcessBuilder implements Serializable {
     private ProcessDefinition parseInstance(String newXml) {
         StringReader stringReader = new StringReader(newXml);
         InfoxJpdlXmlReader jpdlReader = new InfoxJpdlXmlReader(new InputSource(stringReader));
-        return jpdlReader.readProcessDefinition();
+        try {
+        	return jpdlReader.readProcessDefinition();
+        } catch (JpdlException e) {
+        	for (Object p : e.getProblems()) {
+        		System.out.println(((Problem) p).getDescription());
+        	}
+        	throw e;
+        }
     }
 
     public void prepareUpdate(ActionEvent event) {

@@ -7,7 +7,6 @@ import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.async.Asynchronous;
 import org.jboss.seam.annotations.async.IntervalCron;
@@ -30,7 +29,7 @@ public class ContagemPrazoProcessor {
 	
 	@Inject
 	private PrazoComunicacaoService prazoComunicacaoService;
-	@In
+	@Inject
 	private ProcessoManager processoManager;
 	
 	@Asynchronous
@@ -53,7 +52,7 @@ public class ContagemPrazoProcessor {
 	    return null;
 	}
 	
-	protected void analisarProcessosAguardandoCumprimento() throws DAOException {
+	private void analisarProcessosAguardandoCumprimento() throws DAOException {
 		List<Processo> processos = processoManager.listProcessosComunicacaoAguardandoCumprimento();
 		for (Processo processo : processos) {
 		    if (!prazoComunicacaoService.hasPedidoProrrogacaoEmAberto(processo)){
@@ -62,7 +61,7 @@ public class ContagemPrazoProcessor {
 		}
 	}
 	
-	protected void analisarProcessosAguardandoCiencia() throws DAOException {
+	private void analisarProcessosAguardandoCiencia() throws DAOException {
 		List<Processo> processos = processoManager.listProcessosComunicacaoAguardandoCiencia();
 		for (Processo processo : processos) {
 			prazoComunicacaoService.movimentarComunicacaoPrazoExpirado(processo, ComunicacaoMetadadoProvider.LIMITE_DATA_CIENCIA);

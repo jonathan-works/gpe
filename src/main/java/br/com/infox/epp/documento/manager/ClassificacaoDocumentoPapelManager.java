@@ -2,6 +2,7 @@ package br.com.infox.epp.documento.manager;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -19,6 +20,7 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel_;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 
 @AutoCreate
+@Stateless
 @Name(ClassificacaoDocumentoPapelManager.NAME)
 public class ClassificacaoDocumentoPapelManager extends Manager<ClassificacaoDocumentoPapelDAO, ClassificacaoDocumentoPapel> {
 	

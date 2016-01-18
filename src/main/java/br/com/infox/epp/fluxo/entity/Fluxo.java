@@ -130,6 +130,14 @@ public class Fluxo implements Serializable {
     private String xml;
     @Column(name = XML_FLUXO_EXECUCAO)
     private String xmlExecucao;
+    
+    @NotNull
+    @Column(name = "in_bpmn", nullable = false)
+    private Boolean bpmn = false;
+    
+    @Column(name = "ds_bpmn_xml")
+    private String bpmnXml;
+    
     @OneToMany(fetch = FetchType.LAZY, mappedBy = FLUXO_ATTRIBUTE)
     private List<FluxoPapel> fluxoPapelList = new ArrayList<FluxoPapel>(0);
     @OneToMany(fetch = FetchType.LAZY, mappedBy = FLUXO_ATTRIBUTE)
@@ -311,4 +319,20 @@ public class Fluxo implements Serializable {
             return "";
         }
     }
+    
+    public Boolean getBpmn() {
+		return bpmn;
+	}
+    
+    public void setBpmn(Boolean bpmn) {
+		this.bpmn = bpmn;
+	}
+    
+    public String getBpmnXml() {
+		return bpmnXml;
+	}
+    
+    public void setBpmnXml(String bpmnXml) {
+		this.bpmnXml = bpmnXml;
+	}
 }

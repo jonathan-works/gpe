@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -24,6 +25,7 @@ import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.bpm.ProcessInstance;
+import org.jbpm.context.exe.variableinstance.LongInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
@@ -31,6 +33,7 @@ import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.processo.consulta.bean.MovimentacoesBean;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
@@ -77,6 +80,36 @@ public class ProcessoHandler implements Serializable {
     	inicio = 0;
     }
 
+    /**
+     * Retorna todos os {@link org.jbpm.graph.exe.ProcessInstance} (incluindo de sub-processos) associados a um {@link Processo} 
+     */
+    private List<org.jbpm.graph.exe.ProcessInstance> getProcessosJbpm(Processo processo) {
+        Session jbpmSession = ManagedJbpmContext.instance().getSession();
+        String hql = "from org.jbpm.context.exe.variableinstance.LongInstance v where v.name = :nomeVariavel and value = :idProcesso";
+        Query query = jbpmSession.createQuery(hql);
+        query.setParameter("nomeVariavel", "processo");
+        query.setParameter("idProcesso", processo.getIdProcesso().longValue());
+        
+        @SuppressWarnings("unchecked")
+		List<LongInstance> variaveis = query.list();
+        List<org.jbpm.graph.exe.ProcessInstance> retorno = new ArrayList<>(); 
+        for (LongInstance var : variaveis) {
+            retorno.add(var.getProcessInstance());
+        }
+        return retorno;
+    }
+    
+    
+	private List<TaskInstance> getTaskInstanceListMovimentacoes(Processo processo) {
+		List<org.jbpm.graph.exe.ProcessInstance> processInstances = getProcessosJbpm(processo);
+		List<TaskInstance> taskInstanceList = new ArrayList<>();
+		
+		for(org.jbpm.graph.exe.ProcessInstance processInstance : processInstances) {
+			taskInstanceList.addAll(processInstance.getTaskMgmtInstance().getTaskInstances());
+		}
+        return taskInstanceList;
+    }
+    
     @SuppressWarnings(UNCHECKED)
     public List<TaskInstance> getTaskInstanceList() {
         if (taskInstanceList == null) {
@@ -199,7 +232,11 @@ public class ProcessoHandler implements Serializable {
     }
 
     public Collection<MovimentacoesBean> getMovimentacoes(){
-        List<TaskInstance> list = getTaskInstanceList();
+    	org.jbpm.graph.exe.ProcessInstance processoJbpm = ProcessInstance.instance().getRoot();
+    	Processo processo = processoManager.getProcessoEpaByIdJbpm(processoJbpm.getId());
+    	
+        List<TaskInstance> list = getTaskInstanceListMovimentacoes(processo);
+        
         Collection<MovimentacoesBean> beans = new TreeSet<>(new Comparator<MovimentacoesBean>() {
             @Override
             public int compare(MovimentacoesBean o1, MovimentacoesBean o2) {

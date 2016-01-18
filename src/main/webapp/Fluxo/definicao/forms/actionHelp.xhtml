@@ -10,9 +10,9 @@
                 <h:outputText styleClass="property-field-edit-name" value="#{infoxMessages[method.name]}" />
                 <h:outputText styleClass="property-field-edit-value" value="#{infoxMessages[method.tooltip]}" />
             </div>
-            <div style="margin: 1em 0 0">
+            <div style="margin: 1em 0 0" onclick="onSelectBpmnExpression(this)">
                 <h:outputText styleClass="property-field-edit-name" value="#{infoxMessages['process.events.expression.example']}" />
-                <h:outputText styleClass="property-field-edit-value" value="#{method.expression}" />
+                <h:outputText styleClass="property-field-edit-value" style="cursor: pointer;" value="#{method.expression}" title="Selecionar"/>
             </div>
             <s:div style="margin: 1em 0 0;" rendered="#{not empty method.getParameters()}">
                 <h:outputText styleClass="property-field-edit-name" value="#{infoxMessages['process.events.expression.parameters']}" />

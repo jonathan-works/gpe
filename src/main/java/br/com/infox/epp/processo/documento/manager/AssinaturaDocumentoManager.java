@@ -2,6 +2,8 @@ package br.com.infox.epp.processo.documento.manager;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -15,6 +17,7 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 @AutoCreate
 @Scope(ScopeType.EVENT)
 @Name(AssinaturaDocumentoManager.NAME)
+@Stateless
 public class AssinaturaDocumentoManager extends Manager<AssinaturaDocumentoDAO, AssinaturaDocumento> {
 
     public static final String NAME = "assinaturaDocumentoManager";

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: errorUnexpected.xhtml 516 2010-08-12 23:21:53Z jplacerda $ -->
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:rich="http://richfaces.org/rich"
+    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+
+    <ui:define name="title">Erro de configuração</ui:define>
+
+    <ui:define name="body">
+        <f:event listener="#{failResponseAction.putHeader()}" type="preRenderView" />
+
+        <wi:panel id="configurationError"
+            styleClass="content-block">
+
+            <p>Você foi redirecionado para esta página pois um erro de configuração foi detectado.</p>
+
+            <p><b>#{org.jboss.seam.handledException.message}</b></p>
+
+            <p>Favor contatar o administrador do sistema.</p>
+        </wi:panel>
+    </ui:define>
+</ui:composition>

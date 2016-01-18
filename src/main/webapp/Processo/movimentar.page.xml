@@ -11,11 +11,8 @@ login-required="true"
     <begin-conversation join="true"/>
     <!-- Parametros para RESTFull -->
     <param name="tab" value="#{processoEpaHome.tab}"/>
-    <param name="goBackUrl" value="#{processoEpaHome.goBackUrl}"/>
-    <param name="goBackId" value="#{processoEpaHome.goBackId}"/>
-    <param name="goBackTab" value="#{processoEpaHome.goBackTab}"/>
     <param name="idProcesso" value="#{processoEpaHome.processoIdProcesso}" />
-    <param name="tarefaId" value="#{processoEpaHome.tarefaId}" />
+    <param name="idTaskInstance" value="#{processoEpaHome.idTaskInstance}" />
     <action execute="#{processoEpaHome.iniciarTarefaProcesso()}" on-postback="false"/>
     <action execute="#{movimentarController.setProcesso(processoEpaHome.instance)}" on-postback="false"/>
 </page>

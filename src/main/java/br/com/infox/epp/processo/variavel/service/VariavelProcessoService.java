@@ -28,12 +28,11 @@ import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
-import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 
 @Stateless
 @Name(VariavelProcessoService.NAME)
-@Scope(ScopeType.EVENT)
+@Scope(ScopeType.STATELESS)
 @AutoCreate
 @Transactional
 public class VariavelProcessoService {
@@ -61,17 +60,16 @@ public class VariavelProcessoService {
 
         return variaveis;
     }
+    
+    public VariavelProcesso getVariavelProcesso(Integer idProcesso, String nome, Long idTaskInstance) {
+        Processo processo = processoManager.find(idProcesso);
+        return getVariavelProcesso(processo, nome, idTaskInstance);
+    }
 
-    public VariavelProcesso getVariavelProcesso(Processo processo, String nome, Integer idTarefa) {
+    public VariavelProcesso getVariavelProcesso(Processo processo, String nome, Long idTaskInstance) {
     	DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager = BeanManager.INSTANCE.getReference(DefinicaoVariavelProcessoManager.class);
         DefinicaoVariavelProcesso definicao = definicaoVariavelProcessoManager.getDefinicao(processo.getNaturezaCategoriaFluxo().getFluxo(), nome);
-        TaskInstance taskInstance = null;
-        if (idTarefa != null) {
-        	ProcessoTarefa processoTarefa = processoTarefaManager.getProcessoTarefaAberto(processo, idTarefa);
-        	if (processoTarefa != null) {
-        		taskInstance = ManagedJbpmContext.instance().getTaskInstance(processoTarefa.getTaskInstance());
-        	}
-        }
+        TaskInstance taskInstance = ManagedJbpmContext.instance().getTaskInstance(idTaskInstance);
         return getPrimeiraVariavelProcessoAncestral(processo, definicao, taskInstance);
     }
 

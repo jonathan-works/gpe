@@ -16,8 +16,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PersistenceUnitUtil;
 import javax.persistence.Transient;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import org.jboss.seam.util.Reflections;
@@ -262,6 +264,11 @@ public final class EntityUtil implements Serializable {
             LOG.error(".newInstance()", e);
         }
         return null;
+    }
+    
+    public static Object getIdentifier(Object entity) {
+        PersistenceUnitUtil puu = EntityManagerProducer.getEntityManager().getEntityManagerFactory().getPersistenceUnitUtil();
+        return puu.getIdentifier(entity);
     }
 
 }

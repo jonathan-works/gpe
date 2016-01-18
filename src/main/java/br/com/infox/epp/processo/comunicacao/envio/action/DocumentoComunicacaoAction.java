@@ -52,10 +52,12 @@ public class DocumentoComunicacaoAction implements Serializable {
 	private DocumentoBinManager documentoBinManager;
 	@Inject
 	private DocumentoComunicacaoService documentoComunicacaoService;
+	@Inject
+	private PapelManager papelManager;
+	@Inject
+	private PastaRestricaoManager pastaRestricaoManager;
 	
-	private PapelManager papelManager = ComponentUtil.getComponent(PapelManager.NAME);
 	private DocumentoDisponivelComunicacaoList documentoDisponivelComunicacaoList = ComponentUtil.getComponent(DocumentoDisponivelComunicacaoList.NAME);
-	private PastaRestricaoManager pastaRestricaoManager = ComponentUtil.getComponent(PastaRestricaoManager.NAME);
 	
 	private ModeloComunicacao modeloComunicacao;
 	
@@ -115,8 +117,7 @@ public class DocumentoComunicacaoAction implements Serializable {
 		modeloComunicacao.getDocumentos().add(documentoModelo);
 		documentoDisponivelComunicacaoList.adicionarIdDocumento(documento.getId());
 		if (!possuiDocumentoInclusoPorUsuarioInterno) {
-			List<String> papeisUsuarioInterno = papelManager.getIdentificadoresPapeisHerdeiros(Parametros.PAPEL_USUARIO_INTERNO.getValue());
-			possuiDocumentoInclusoPorUsuarioInterno = papeisUsuarioInterno.contains(documento.getPerfilTemplate().getPapel().getIdentificador());
+			possuiDocumentoInclusoPorUsuarioInterno = papelManager.isPapelHerdeiro(documento.getPerfilTemplate().getPapel().getIdentificador(), Parametros.PAPEL_USUARIO_INTERNO.getValue());
 		}
 	}
 	

@@ -7,47 +7,35 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.persistence.Tuple;
 
-import org.jboss.seam.core.Conversation;
+import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.richfaces.event.DropEvent;
 
-import br.com.infox.componentes.column.DynamicColumnModel;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.messages.InfoxMessages;
-import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
-import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
+import br.com.infox.epp.cdi.exception.ExceptionHandled;
+import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
 import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.painel.caixa.CaixaManager;
-import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
-import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.consulta.list.ConsultaProcessoList;
-import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.situacao.manager.SituacaoProcessoManager;
 import br.com.infox.epp.processo.type.TipoProcesso;
-import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
-import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 import br.com.infox.epp.tarefa.component.tree.PainelEntityNode;
 import br.com.infox.epp.tarefa.component.tree.PainelTreeHandler;
-import br.com.infox.epp.tarefa.manager.TarefaManager;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
+import br.com.infox.ibpm.task.manager.TaskInstanceManager;
 import br.com.infox.seam.security.SecurityUtil;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Named
 @ViewScoped
 public class PainelUsuarioController implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	protected static final String NAME = "painelUsuarioController";
-	private static final String DYNAMIC_COLUMN_EXPRESSION = "#{painelUsuarioController.getVariavelProcesso(row, '%s', %s).valor}";
-	private static final LogProvider LOG = Logging.getLogProvider(PainelUsuarioController.class);
 	
 	@Inject
 	private SituacaoProcessoManager situacaoProcessoManager;
@@ -58,15 +46,14 @@ public class PainelUsuarioController implements Serializable {
 	@Inject
 	protected PainelTreeHandler painelTreeHandler;
 	@Inject
-	protected DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
+	protected ConsultaProcessoList consultaProcessoList;
+	@Inject
+	protected CaixaManager caixaManager;
+	@Inject
+	protected ActionMessagesService actionMessagesService;
+	@Inject
+	private TaskInstanceManager taskInstanceManager;
 
-	private VariavelProcessoService variavelProcessoService = ComponentUtil.getComponent(VariavelProcessoService.NAME);
-	private CaixaManager caixaManager = ComponentUtil.getComponent(CaixaManager.NAME);
-	private ActionMessagesService actionMessagesService = ComponentUtil.getComponent(ActionMessagesService.NAME);
-	private ConsultaProcessoList consultaProcessoList = ComponentUtil.getComponent(ConsultaProcessoList.NAME);
-
-	private List<Integer> processoIdList;
-	private List<DynamicColumnModel> dynamicColumns;
 	private FluxoBean selectedFluxo;
 	protected List<FluxoBean> fluxosDisponiveis;
 	private List<TipoProcesso> tipoProcessoDisponiveis;
@@ -80,13 +67,10 @@ public class PainelUsuarioController implements Serializable {
 		setNumeroProcesso(null);
 		loadTipoProcessoDisponiveis();
 		loadFluxosDisponiveis();
-		// Alterando o concurrentRequestTimeout para evitar ConcurrentCallToConversation no painel #66435
-		Conversation conversation = ComponentUtil.getComponent("org.jboss.seam.core.conversation");
-		conversation.setConcurrentRequestTimeout(60000);
 	}
 	
 	public void atualizarPainelProcessos() throws IOException {
-	    List<FluxoBean> fluxosDisponiveisTemp = situacaoProcessoManager.getFluxosDisponiveis(tipoProcessoDisponiveis, getNumeroProcesso());
+	    List<FluxoBean> fluxosDisponiveisTemp = situacaoProcessoManager.getFluxos(tipoProcessoDisponiveis, getNumeroProcesso());
 	    verificaHouveAlteracao(fluxosDisponiveisTemp);
 	}
 	
@@ -99,10 +83,11 @@ public class PainelUsuarioController implements Serializable {
                 FacesContext.getCurrentInstance().getExternalContext().redirect("list.seam");
             }
         }
+	    fluxosDisponiveisTemp.clear();
 	}
 
 	private void loadFluxosDisponiveis() {
-		fluxosDisponiveis = situacaoProcessoManager.getFluxosDisponiveis(tipoProcessoDisponiveis, getNumeroProcesso());
+		fluxosDisponiveis = situacaoProcessoManager.getFluxos(tipoProcessoDisponiveis, getNumeroProcesso());
 	}
 
 	protected void loadTipoProcessoDisponiveis() {
@@ -126,137 +111,105 @@ public class PainelUsuarioController implements Serializable {
 	public void onSelectFluxo() {
 		painelTreeHandler.clearTree();
 		painelTreeHandler.setFluxoBean(getSelectedFluxo());
-		consultaProcessoList.newInstance();
+		consultaProcessoList.onSelectFluxo(getSelectedFluxo());
 	}
+	
+	@ExceptionHandled(value = MethodType.UNSPECIFIED)
+	public void atribuirTarefa(TaskBean taskBean) {
+        taskInstanceManager.atribuirTarefa(Long.valueOf(taskBean.getIdTaskInstance()));
+	    taskBean.setAssignee(Authenticator.getUsuarioLogado().getLogin());
+	}
+	
+	@ExceptionHandled(value = MethodType.UNSPECIFIED)
+	public void liberarTarefa(Long idTaskInstance) {
+	    taskInstanceManager.removeUsuario(idTaskInstance);
+        TaskBean taskBean = getSelectedFluxo().getTask(idTaskInstance.toString());
+        if (taskBean != null) {
+            taskBean.setAssignee(null);
+        }
+        FacesMessages.instance().add("Tarefa Liberada com Sucesso!");
+	}   
 
 	public void onSelectNode() {
-		processoIdList = null;
-		dynamicColumns = null;
-		updateDatatable();
+		consultaProcessoList.onSelectNode(getSelected());
 	}
-
-	public Integer getIdCaixa() {
-		if (PainelEntityNode.CAIXA_TYPE.equals(getSelectedType())) {
-			return getSelected().get("idCaixa", Integer.class);
-		}
-		return null;
-	}
-
-	private String getSelectedType() {
-		return getSelected() != null ? getSelected().get("type", String.class) : null;
-	}
-
-	public List<Integer> getProcessoIdList() {
-		if (getSelected() != null && getSelectedFluxo() != null) {
-			if (processoIdList == null) {
-				processoIdList = situacaoProcessoManager.getIdProcessosAbertosByIdTarefa(getSelected(), 
-						selectedFluxo.getTipoProcesso(), getSelectedFluxo().getExpedida(), getNumeroProcesso());
-			}
-			return processoIdList;
-		}
-		return null;
+	
+	public String getTaskNodeKey() {
+	    return getSelected().getId().toString();
 	}
 
 	@SuppressWarnings("unchecked")
+	@ExceptionHandled(value = MethodType.UNSPECIFIED)
 	public void moverProcessoParaCaixaDropEventListener(DropEvent evt) {
 		Caixa caixa = caixaManager.find((Integer) evt.getDropValue());
-		try {
-			if (evt.getDragValue() instanceof Processo) {
-				Processo processo = (Processo) evt.getDragValue();
-				caixaManager.moverProcessoParaCaixa(processo, caixa);
-			} else if (evt.getDragValue() instanceof List<?>) {
-				List<Processo> processos = (List<Processo>) evt.getDragValue();
-				caixaManager.moverProcessosParaCaixa(processos, caixa);
-			}
-		} catch (DAOException e) {
-			LOG.error("moverProcessoParaCaixaDropEventListener", e);
-			actionMessagesService.handleDAOException(e);
+		Object dragValue = evt.getDragValue();
+		if (dragValue instanceof TaskBean) {
+			moverProcessoParaCaixa((TaskBean) dragValue, caixa);
+		} else if (dragValue instanceof List<?>) {
+			moverProcessosParaCaixa((List<TaskBean>) dragValue, caixa);
 		}
-		painelTreeHandler.clearTree();
-		processoIdList = null;
 	}
+	
+	private void moverProcessoParaCaixa(TaskBean taskBean, Caixa caixa) {
+        caixaManager.moverProcessoParaCaixa(taskBean.getIdProcesso(), caixa);
+        getSelected().moverParaCaixa(taskBean, caixa);
+        painelTreeHandler.clearTree();
+    }
+	
+	private void moverProcessosParaCaixa(List<TaskBean> taskBeans, Caixa caixa) {
+	    for (TaskBean taskBean : taskBeans) {
+	        caixaManager.moverProcessoParaCaixa(taskBean.getIdProcesso(), caixa);
+            getSelected().moverParaCaixa(taskBean, caixa);
+	    }
+	    painelTreeHandler.clearTree();
+	}
+	
+	@ExceptionHandled(value = MethodType.REMOVE)
+	public void removerCaixa(PainelEntityNode painelEntityNode) {
+        Integer idCaixa = (Integer) painelEntityNode.getEntity().getId();
+        caixaManager.remove(idCaixa);
+        TaskDefinitionBean taskDefinitionBean = (TaskDefinitionBean) painelEntityNode.getParent().getEntity();
+        taskDefinitionBean.removerCaixa(idCaixa);
+        painelTreeHandler.clearTree();
+    }
+
+	@ExceptionHandled(value = MethodType.PERSIST)
+	public void adicionarCaixa(ActionEvent event) {
+	    String inputNomeCaixa = (String) event.getComponent().getAttributes().get("inputNomeCaixa");
+	    String nomeCaixa = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(inputNomeCaixa);
+        Caixa caixa = new Caixa();
+        caixa.setTaskKey(getSelected().getId().toString());
+        caixa.setNomeCaixa(nomeCaixa);
+        caixaManager.persist(caixa);
+        painelTreeHandler.clearTree();
+    }
 
 	public void editarCaixa() {
 		Redirect r = new Redirect();
 		r.setViewId("/Caixa/listView.xhtml");
 		r.setParameter("tab", "form");
-		r.setParameter("id", getSelected().get("idCaixa"));
+		r.setParameter("id", getSelected().getId());
 		r.execute();
 	}
 
-	public Integer getTaskId() {
-		if (getSelected() != null) {
-			return getSelected().get("idTask", Integer.class);
-		}
-		return null;
-	}
-
-	public Integer getTarefaId() {
-		if (getSelected() != null) {
-			return getSelected().get("idTarefa", Integer.class);
-		}
-		return null;
-	}
-
-	public Tuple getSelected() {
+	public PanelDefinition getSelected() {
 		return painelTreeHandler.getSelected();
 	}
 
 	public void refresh() {
 		painelTreeHandler.refresh();
 	}
-
-	private void updateDatatable() {
-		Integer idTarefa = painelTreeHandler.getTarefaId();
-		if (idTarefa != null) {
-			consultaProcessoList.newInstance();
-			TarefaManager tarefaManager = ComponentUtil.getComponent(TarefaManager.NAME);
-			consultaProcessoList.setTarefa(tarefaManager.find(idTarefa));
-			List<Integer> idsProcesso = getProcessoIdList();
-			if (idsProcesso != null && !idsProcesso.isEmpty()) {
-				Integer idProcesso = idsProcesso.get(0);
-				List<DefinicaoVariavelProcesso> definicoes = definicaoVariavelProcessoManager.getDefinicaoVariavelProcessoVisivelPainel(idProcesso);
-				dynamicColumns = new ArrayList<>();
-				for (DefinicaoVariavelProcesso definicao : definicoes) {
-					DynamicColumnModel columnModel = new DynamicColumnModel(definicao.getLabel(), String.format(DYNAMIC_COLUMN_EXPRESSION,
-							definicao.getNome(), idTarefa));
-					dynamicColumns.add(columnModel);
-				}
-			}
-		}
-	}
 	
 	public void adicionarFiltroNumeroProcessoRoot(){
-		loadTipoProcessoDisponiveis();
 		loadFluxosDisponiveis();
-		painelTreeHandler.setNumeroProcessoRoot(getNumeroProcesso());
-		painelTreeHandler.clearTree();
 		setSelectedFluxo(null);
-		processoIdList = null; 
+		painelTreeHandler.clearTree();
 	}
 	
 	public void limparFiltros(){
 		init();
-		painelTreeHandler.setNumeroProcessoRoot("");
 		painelTreeHandler.clearTree();
 		setSelectedFluxo(null);
-		processoIdList = null;
-	}
-
-	public VariavelProcesso getVariavelProcesso(Processo processo, String nome, Integer idTarefa) {
-		return variavelProcessoService.getVariavelProcesso(processo, nome, idTarefa);
-	}
-
-	public List<DynamicColumnModel> getDynamicColumns() {
-		if (dynamicColumns == null) {
-			updateDatatable();
-		}
-		return dynamicColumns;
-	}
-
-	public String getDestinatarioComunicacao(Processo processo) {
-		DestinatarioModeloComunicacao destinatario = processo.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO).getValue();
-		return destinatario.getNome();
 	}
 
 	public FluxoBean getSelectedFluxo() {
@@ -288,6 +241,10 @@ public class PainelUsuarioController implements Serializable {
 		}
 		setSelectedFluxo(fluxoBean);
 		onSelectFluxo();
+	}
+	
+	public boolean canShowProcessoList() {
+	    return getSelected() != null;
 	}
 	
 	public boolean hasRecursoPainelComunicacaoEletronica() {

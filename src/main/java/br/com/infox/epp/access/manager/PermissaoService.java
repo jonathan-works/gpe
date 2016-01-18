@@ -2,6 +2,8 @@ package br.com.infox.epp.access.manager;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -13,6 +15,7 @@ import br.com.infox.epp.access.entity.Permissao;
 
 @Name(PermissaoService.NAME)
 @AutoCreate
+@Stateless
 public class PermissaoService extends Manager<PermissaoDAO, Permissao> {
     public static final String NAME = "permissaoService";
     private static final long serialVersionUID = 1L;
@@ -23,10 +26,9 @@ public class PermissaoService extends Manager<PermissaoDAO, Permissao> {
     public Boolean papelPossuiPermissaoParaRecurso(Papel papel, String identificadorRecurso) {
         List<Permissao> permissoes = getDao().getByAlvo(identificadorRecurso);
         for (Permissao permissao : permissoes) {
-            List<String> herdeiros = papelManager.getIdentificadoresPapeisHerdeiros(permissao.getDestinatario());
-            if (herdeiros.contains(papel.getIdentificador())) {
-                return true;
-            }
+        	if (papelManager.isPapelHerdeiro(papel.getIdentificador(), permissao.getDestinatario())) {
+        		return true;
+        	}
         }
         return false;
     }

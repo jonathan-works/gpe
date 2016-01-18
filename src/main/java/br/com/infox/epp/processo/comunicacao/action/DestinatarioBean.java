@@ -21,13 +21,16 @@ public class DestinatarioBean {
 	private String dataResposta;
 	private Long idDestinatario;
 	private String numeroComunicacao;
+	private String numeroModeloComunicacao;
 	private MeioExpedicao meioExpedicao;
 	
-	public DestinatarioBean(String tipoComunicacao, Date dataEnvio, Long idDestinatario, String numeroComunicacao, MeioExpedicao meioExpedicao) {
+	public DestinatarioBean(String tipoComunicacao, Date dataEnvio, Long idDestinatario, String numeroComunicacao, String numeroModeloComunicacao,
+			MeioExpedicao meioExpedicao) {
 		this.tipoComunicacao = tipoComunicacao;
 		this.dataEnvio = new SimpleDateFormat("dd/MM/yyyy").format(dataEnvio);
 		this.idDestinatario = idDestinatario;
 		this.numeroComunicacao = numeroComunicacao;
+		this.numeroModeloComunicacao = numeroModeloComunicacao;
 		this.meioExpedicao = meioExpedicao;
 	}
 	
@@ -111,6 +114,14 @@ public class DestinatarioBean {
 
 	public void setNumeroComunicacao(String numeroComunicacao) {
 		this.numeroComunicacao = numeroComunicacao;
+	}
+
+	public String getNumeroModeloComunicacao() {
+		return numeroModeloComunicacao;
+	}
+
+	public void setNumeroModeloComunicacao(String numeroModeloComunicacao) {
+		this.numeroModeloComunicacao = numeroModeloComunicacao;
 	}
 
 	public MeioExpedicao getMeioExpedicao() {

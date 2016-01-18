@@ -110,8 +110,12 @@ public class DecisionNode extends Node {
         } catch (ParseException e){
             this.decisionExpression=format("#'{'{0}'}'", getLeavingTransitionList().get(0));
             LogProvider logProvider = Logging.getLogProvider(DecisionNode.class);
-            ActionMessagesService actionMessagesService = ComponentUtil.getComponent(ActionMessagesService.NAME);
-            actionMessagesService.handleException("Erro na expressão",e);
+            try {
+	            ActionMessagesService actionMessagesService = ComponentUtil.getComponent(ActionMessagesService.NAME);
+	            actionMessagesService.handleException("Erro na expressão",e);
+            } catch (IllegalStateException e1) {
+            	logProvider.info(e1);
+            }
             logProvider.error("Erro ao recuperar expressão", e);
         }
     }

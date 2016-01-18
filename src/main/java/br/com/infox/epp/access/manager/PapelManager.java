@@ -1,12 +1,14 @@
 package br.com.infox.epp.access.manager;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.ejb.Stateless;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.security.management.IdentityStore;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
@@ -18,10 +20,11 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
-import br.com.infox.seam.security.operation.PopulateRoleMembersListOperation;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Name(PapelManager.NAME)
 @AutoCreate
+@Stateless
 public class PapelManager extends Manager<PapelDAO, Papel> {
 
     private static final long serialVersionUID = 1L;
@@ -74,14 +77,13 @@ public class PapelManager extends Manager<PapelDAO, Papel> {
         return papel;
     }
     
-    public List<String> getIdentificadoresPapeisMembros(String identificadorPapelBase) {
-    	List<Principal> roles = new ArrayList<>();
-		new PopulateRoleMembersListOperation(identificadorPapelBase, roles).run();
-		List<String> papeisMembros = new ArrayList<>();
-		for (Principal role : roles) {
-			papeisMembros.add(role.getName());
-		}
-		return papeisMembros;
+    //Lista todos os identificadores dos papéis que herdam (direta ou indiretamente) do papel dado 
+    public List<String> getIdentificadoresPapeisMembros(String identificador) {
+    	return ComponentUtil.<IdentityStore>getComponent("org.jboss.seam.security.identityStore").listAllMembers(identificador);
+	}
+    
+    public boolean isPapelHerdeiro(String identificadorPapelHerdeiro, String identificadorPapelBase) {
+    	return ComponentUtil.<IdentityStore>getComponent("org.jboss.seam.security.identityStore").isImpliedMemberOf(identificadorPapelHerdeiro, identificadorPapelBase);
     }
     
     public boolean hasToSignTermoAdesao(UsuarioLogin usuario){

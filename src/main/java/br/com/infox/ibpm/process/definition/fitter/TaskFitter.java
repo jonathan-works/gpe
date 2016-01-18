@@ -3,7 +3,6 @@ package br.com.infox.ibpm.process.definition.fitter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -11,16 +10,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
-import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
-import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.instantiation.Delegation;
@@ -28,17 +22,12 @@ import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
 
-import com.google.gson.Gson;
-
-import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.timer.TaskExpiration;
 import br.com.infox.epp.processo.timer.manager.TaskExpirationManager;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
-import br.com.infox.ibpm.listener.EppJbpmListener;
-import br.com.infox.ibpm.listener.ListenerConfigurationBean;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.InfoxTaskControllerHandler;
@@ -70,11 +59,7 @@ public class TaskFitter extends Fitter implements Serializable {
     private TarefaManager tarefaManager;
     @Inject
     private TaskExpirationManager taskExpirationManager;
-    @Inject
-    private EppJbpmListener eppJbpmListener;
-    @Inject 
-    private InfoxMessages infoxMessages;
- 
+    
     public void addTask() {
         Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
         ProcessDefinition process = getProcessBuilder().getInstance();
@@ -310,65 +295,5 @@ public class TaskFitter extends Fitter implements Serializable {
         return taskExpiration != null && taskExpiration.getId() != null;
     }
     
-    public List<SelectItem> getListenersDisponiveis() {
-    	List<SelectItem> listenersDisponiveis = new ArrayList<>();
-    	if (currentTask != null) {
-        	for (String key : eppJbpmListener.getListeners().keySet()) {
-        		if (currentTask.getTask().getEvents() == null || !currentTask.getTask().getEvents().containsKey(key)) {
-        			listenersDisponiveis.add(new SelectItem(key, eppJbpmListener.getListeners().get(key)));
-        		}
-        	}
-    	}
-    	return listenersDisponiveis;
-    }
-    
-    public String getListenerLabel(Event event) {
-    	return eppJbpmListener.getListeners().get(event.getEventType());
-    }
-    
-    public String getListenerConfiguration(Event event) {
-    	if (event.getConfiguration() != null) {
-    		ListenerConfigurationBean bean = new Gson().fromJson(event.getConfiguration(), ListenerConfigurationBean.class);
-    		String key = bean.getTransitionKey();
-    		StringBuilder sb = new StringBuilder();
-    		if (key != null) {
-    			sb.append(infoxMessages.get("process.expiration.transition")).append(": ").append(currentTask.getTask().getTaskNode().getLeavingTransition(key).getName());
-    		}
-    		return sb.toString();
-    	}
-    	return "";
-    }
-    
-	public Collection<Event> getListeners() {
-		List<Event> listeners = new ArrayList<>();
-    	if (currentTask != null && currentTask.getTask().getEvents() != null) {
-    		for (Event event : currentTask.getTask().getEvents().values()) {
-    			if (event.getEventType().startsWith(Event.EVENTTYPE_TASK_LISTENER)) {
-    				listeners.add(event);
-    			}
-    		}
-    	}
-    	return listeners;
-    }
-    
-	public void addListener(ActionEvent actionEvent) {
-    	Map<String, String> request = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-    	String inputNome = (String) actionEvent.getComponent().getAttributes().get("listenerValue");
-    	String inputTransicao = (String) actionEvent.getComponent().getAttributes().get("transitionValue");
-    	String nome = request.get(inputNome);
-    	String transicao = request.get(inputTransicao);
-		Event event = new Event(nome);
-		if (transicao != null) {
-			Transition transition = currentTask.getTask().getTaskNode().getLeavingTransition(transicao);
-			ListenerConfigurationBean bean = new ListenerConfigurationBean();
-			bean.setTransitionKey(transition.getKey());
-			event.setConfiguration(new Gson().toJson(bean));
-		}
-		currentTask.getTask().addEvent(event);
-    }
-    
-    public void removeListener(Event event) {
-    	currentTask.getTask().removeEvent(event);
-    }
     
 }

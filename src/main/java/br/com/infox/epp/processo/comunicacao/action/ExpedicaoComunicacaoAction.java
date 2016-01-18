@@ -4,12 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.certificado.CertificateSignatures;
@@ -24,8 +20,7 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
-import br.com.infox.epp.cdi.seam.ContextDependency;
-import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.list.DestinatarioModeloComunicacaoList;
@@ -40,10 +35,8 @@ import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.transaction.TransactionService;
 
-@Name(ExpedicaoComunicacaoAction.NAME)
-@Scope(ScopeType.CONVERSATION)
-@Transactional
-@ContextDependency
+@Named
+@ViewScoped
 public class ExpedicaoComunicacaoAction implements Serializable {
 	
 	private static final String TAB_SEARCH = "list";
@@ -53,19 +46,17 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	
 	@Inject
 	private ModeloComunicacaoManager modeloComunicacaoManager;
-	@In
+	@Inject
 	private DestinatarioModeloComunicacaoList destinatarioModeloComunicacaoList;
-	@In
-	private ModeloDocumentoManager modeloDocumentoManager;
-	@In
+	@Inject
 	private AssinaturaDocumentoService assinaturaDocumentoService;
-	@In
+	@Inject
 	private ComunicacaoService comunicacaoService;
 	@Inject
 	private ActionMessagesService actionMessagesService;
-	@In
+	@Inject
 	private TipoComunicacaoManager tipoComunicacaoManager;
-	@In
+	@Inject
 	private CertificateSignatures certificateSignatures;
 	
 	private String tab = TAB_SEARCH;

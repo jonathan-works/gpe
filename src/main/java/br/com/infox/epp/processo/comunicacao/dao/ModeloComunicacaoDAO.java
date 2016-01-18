@@ -72,7 +72,8 @@ public class ModeloComunicacaoDAO extends DAO<ModeloComunicacao> {
 
 		query.select(cb.construct(getClassDestinatarioBean(), tipoComunicacao.get(TipoComunicacao_.descricao), 
 			comunicacao.get(Processo_.dataInicio), destinatario.get(DestinatarioModeloComunicacao_.id), 
-			comunicacao.get(Processo_.idProcesso).as(String.class), destinatario.get(DestinatarioModeloComunicacao_.meioExpedicao)));
+			comunicacao.get(Processo_.idProcesso).as(String.class), modelo.get(ModeloComunicacao_.id).as(String.class), 
+			destinatario.get(DestinatarioModeloComunicacao_.meioExpedicao)));
 		query.where(cb.equal(cb.function("NumeroProcessoRoot", String.class, comunicacao.get(Processo_.idProcesso)), numeroProcessoRoot));
 		boolean usuarioInterno = Identity.instance().hasRole(Parametros.PAPEL_USUARIO_INTERNO.getValue());
 		if (!usuarioInterno) {

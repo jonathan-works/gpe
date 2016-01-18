@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -13,12 +17,6 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.graph.exe.ProcessInstance;
@@ -47,38 +45,33 @@ import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.epp.processo.service.VariaveisJbpmAnaliseDocumento;
 import br.com.infox.epp.processo.type.TipoProcesso;
-import br.com.infox.seam.util.ComponentUtil;
+import br.com.infox.epp.system.Parametros;
 
-@Name(ProcessoAnaliseDocumentoService.NAME)
-@Scope(ScopeType.EVENT)
-@AutoCreate
-@Transactional
+@Stateless
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class ProcessoAnaliseDocumentoService {
 	
-	public static final String NAME = "processoAnaliseDocumentoService";
-	
-	@In
+	@Inject
 	private NaturezaCategoriaFluxoManager naturezaCategoriaFluxoManager;
-	@In
+	@Inject
 	private ProcessoManager processoManager;
-	@In
+	@Inject
 	private MetadadoProcessoManager metadadoProcessoManager;
-	@In(required = false)
-	private String codigoFluxoDocumento;
-	@In
+	@Inject
 	private FluxoManager fluxoManager;
-	@In
+	@Inject
 	private IniciarProcessoService iniciarProcessoService;
-	@In
+	@Inject
 	private PrazoComunicacaoService prazoComunicacaoService;
-
-	private InfoxMessages infoxMessages = ComponentUtil.getComponent(InfoxMessages.NAME);
 	
+	private String codigoFluxoDocumento = Parametros.CODIGO_FLUXO_DOCUMENTO.getValue();
+
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public Processo criarProcessoAnaliseDocumentos(Processo processoPai, Documento... documentoAnalise) throws DAOException {
 		Fluxo fluxoDocumento = getFluxoDocumento();
 		List<NaturezaCategoriaFluxo> ncfs = naturezaCategoriaFluxoManager.getActiveNaturezaCategoriaFluxoListByFluxo(fluxoDocumento);
 		if (ncfs == null || ncfs.isEmpty()) {
-			throw new DAOException(infoxMessages.get("fluxo.naoExisteCategoria") + fluxoDocumento.getFluxo());
+			throw new DAOException(InfoxMessages.getInstance().get("fluxo.naoExisteCategoria") + fluxoDocumento.getFluxo());
 		}
 		
 		Processo processoAnalise = new Processo();
@@ -96,6 +89,7 @@ public class ProcessoAnaliseDocumentoService {
 		return processoAnalise;
 	}
 	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void inicializarFluxoDocumento(Processo processoAnalise, Map<String, Object> variaveisJbpm) throws DAOException {
 		if (variaveisJbpm == null) {
 			variaveisJbpm = new HashMap<>();
@@ -118,7 +112,7 @@ public class ProcessoAnaliseDocumentoService {
 				}
 				MetadadoProcesso metadadoDestinatario = processoAnalise.getProcessoPai().getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO);
 				DestinatarioModeloComunicacao destinatarioComunicacao = metadadoDestinatario.getValue();
-				if(prazoComunicacaoService.containsClassificacaoProrrogacaoPrazo(documentos, destinatarioComunicacao.getModeloComunicacao().getTipoComunicacao())){
+				if(hasPedidoProrrogacaoPrazo(documentos, destinatarioComunicacao)){
 					variaveisJbpm.put(VariaveisJbpmAnaliseDocumento.PEDIDO_PRORROGACAO_PRAZO, true);
 					variaveisJbpm.putAll(getVariaveisProrrogacaoPrazo(processoAnalise));
 				}
@@ -132,6 +126,10 @@ public class ProcessoAnaliseDocumentoService {
 		BusinessProcess.instance().setProcessId(processIdOriginal);
 		BusinessProcess.instance().setTaskId(taskIdOriginal);
 	}
+
+	protected Boolean hasPedidoProrrogacaoPrazo(List<Documento> documentos, DestinatarioModeloComunicacao destinatarioComunicacao) {
+		return prazoComunicacaoService.containsClassificacaoProrrogacaoPrazo(documentos, destinatarioComunicacao.getModeloComunicacao().getTipoComunicacao());
+	}
 	
 	protected Map<String, Object> getVariaveisProrrogacaoPrazo(Processo processoAnalise) {
 		return new HashMap<>();
@@ -139,15 +137,16 @@ public class ProcessoAnaliseDocumentoService {
 
 	private Fluxo getFluxoDocumento() throws DAOException {
 		if (codigoFluxoDocumento == null) {
-			throw new DAOException(infoxMessages.get("fluxo.analiseDocumentoNaoEncontrado"));
+			throw new DAOException(InfoxMessages.getInstance().get("fluxo.analiseDocumentoNaoEncontrado"));
 		}
 		Fluxo fluxo = fluxoManager.getFluxoByCodigo(codigoFluxoDocumento);
 		if (fluxo == null) {
-			throw new DAOException(infoxMessages.get("fluxo.analiseDocumentoNaoEncontrado"));
+			throw new DAOException(InfoxMessages.getInstance().get("fluxo.analiseDocumentoNaoEncontrado"));
 		}
 		return fluxo;
 	}
 	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	private void criarMetadadosProcessoAnalise(Processo processoAnalise, Documento... documentoAnalise) throws DAOException {
 		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processoAnalise);
 		MetadadoProcesso metadado = metadadoProcessoProvider.gerarMetadado(EppMetadadoProvider.TIPO_PROCESSO, TipoProcesso.DOCUMENTO.toString());
@@ -216,11 +215,13 @@ public class ProcessoAnaliseDocumentoService {
 			return docList;
 	}
 	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public boolean isRespostaComunicacao(Processo processoAnalise){
 		ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(processoAnalise.getIdJbpm());
 		return (Boolean)processInstance.getContextInstance().getVariable(VariaveisJbpmAnaliseDocumento.RESPOSTA_COMUNICACAO);
 	}
-	
+
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public boolean isPedidoProrrogacaoPrazo(Processo processoAnalise){
 		ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(processoAnalise.getIdJbpm());
 		return (Boolean)processInstance.getContextInstance().getVariable(VariaveisJbpmAnaliseDocumento.PEDIDO_PRORROGACAO_PRAZO);

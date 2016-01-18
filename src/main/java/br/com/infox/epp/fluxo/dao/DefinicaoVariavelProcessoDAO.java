@@ -3,12 +3,11 @@ package br.com.infox.epp.fluxo.dao;
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.DEFINICAO_BY_FLUXO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.DEFINICAO_BY_ID_PROCESSO;
-import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.DEFINICAO_VISIVEL_PAINEL_BY_ID_PROCESSO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.LIST_BY_FLUXO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.PARAM_FLUXO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.PARAM_ID_PROCESSO;
 import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.PARAM_NOME;
-import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.TOTAL_BY_FLUXO;
+import static br.com.infox.epp.fluxo.query.DefinicaoVariavelProcessoQuery.*;
 
 import java.util.List;
 
@@ -62,9 +61,9 @@ public class DefinicaoVariavelProcessoDAO extends Dao<DefinicaoVariavelProcesso,
     			.setParameter(PARAM_ID_PROCESSO, idProcesso).getResultList();
     }
     
-    public List<DefinicaoVariavelProcesso> getDefinicaoVariavelProcessoVisivelPainel(Integer idProcesso) {
-    	return getEntityManager().createNamedQuery(DEFINICAO_VISIVEL_PAINEL_BY_ID_PROCESSO, DefinicaoVariavelProcesso.class)
-    			.setParameter(PARAM_ID_PROCESSO, idProcesso).getResultList();
+    public List<DefinicaoVariavelProcesso> getDefinicaoVariavelProcessoVisivelPainel(Integer idFluxo) {
+    	return getEntityManager().createNamedQuery(DEFINICAO_VISIVEL_PAINEL_BY_ID_FLUXO, DefinicaoVariavelProcesso.class)
+    			.setParameter(PARAM_FLUXO, idFluxo).getResultList();
     }
     
     public Integer getMaiorOrdem(Fluxo fluxo) {

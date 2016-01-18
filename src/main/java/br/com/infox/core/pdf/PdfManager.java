@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -25,6 +27,7 @@ import com.lowagie.text.pdf.PdfReader;
 
 @Name(PdfManager.NAME)
 @Scope(ScopeType.STATELESS)
+@Stateless
 @AutoCreate
 public class PdfManager implements Serializable {
     private static final long serialVersionUID = 1L;

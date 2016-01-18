@@ -35,6 +35,7 @@ public abstract class AbstractParticipantesController implements Serializable {
 	private static final long serialVersionUID = 1L;
 	protected static final String RECURSO_ADICIONAR = "/pages/Processo/adicionarParticipanteProcesso";
 	protected static final String RECURSO_EXCLUIR = "/pages/Processo/excluirParticipanteProcesso";
+	protected static final String RECURSO_VISUALIZAR = "/pages/Processo/exibirDetalhesParticipanteProcesso";
 	private static final LogProvider LOG = Logging.getLogProvider(AbstractParticipantesController.class);
 	
     @In

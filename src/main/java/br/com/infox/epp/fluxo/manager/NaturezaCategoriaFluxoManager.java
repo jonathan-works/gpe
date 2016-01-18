@@ -2,6 +2,8 @@ package br.com.infox.epp.fluxo.manager;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -15,6 +17,7 @@ import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 
 @Name(NaturezaCategoriaFluxoManager.NAME)
 @AutoCreate
+@Stateless
 public class NaturezaCategoriaFluxoManager extends Manager<NaturezaCategoriaFluxoDAO, NaturezaCategoriaFluxo> {
 
     private static final long serialVersionUID = -1441750117108371132L;

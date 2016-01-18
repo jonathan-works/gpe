@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:infox="http://www.infox.com.br/jsf">
+    
+	<infox:tab id="classificacaoPedidoProrrogacao" name="classificacaoPedidoProrrogacao" rendered="#{home.managed}"
+		immediate="true" status=":status" title="#{infoxMessages['tipoComunicacao.classificacaoPedidoProrrogacao']}">
+	    <rich:panel header="#{infoxMessages['tipoComunicacao.classificacaoPedidoProrrogacao']}">
+	    	<h:form>
+	    		<wi:selectOneMenuEntity id="classificacaoDocumento" 
+	    			label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}" noSelectionLabel="Nenhuma" 
+            		value="#{tipoComunicacaoCrudAction.classificacaoDocumentoProrrogacao}"
+            		items="#{tipoComunicacaoCrudAction.classificacoesDisponiveis}"/>
+            	<s:div id="tooltipComunicacao" styleClass="tooltip-parent" style="display:inline;"> 
+		  			<h:graphicImage id="imgTootipClassificacaoProrrogacao" url="#{wiSkin.imageFolder}/help.gif" />
+					<div class="epp-tooltip" style="display:inline;" >
+						<div class="tooltip-panel">
+							<h:outputText value="#{infoxMessages['tipoComunicacao.msgPedidoConfig']}"/>
+						</div>
+					</div>
+		   		</s:div>
+	    		<div>
+	            	<a:commandButton id="btnGravarClassificacaoProrrogacao"
+	            		styleClass="buttons"
+	            		execute="@form"
+	            		render="@form :pageBodyDialogMessage"
+	            		action="#{tipoComunicacaoCrudAction.gravarClassificacaoProrrogacao}"
+	            		value="#{infoxMessages['crud.update']}"/>
+           		</div>
+            </h:form>
+	    </rich:panel>    
+	</infox:tab>
+
+</ui:composition>

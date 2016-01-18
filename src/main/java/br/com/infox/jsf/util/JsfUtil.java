@@ -18,6 +18,7 @@ public class JsfUtil {
 	public static void clear(UIComponent uiComponent){
 		if(uiComponent instanceof EditableValueHolder){
 			((EditableValueHolder)uiComponent).resetValue();
+			((EditableValueHolder)uiComponent).setValue(null);
 		}
 		for (UIComponent child : uiComponent.getChildren()){
 			if(!(child instanceof UIData) || !(child instanceof UIDataTable)){
@@ -25,6 +26,15 @@ public class JsfUtil {
 			}
 		}
 	}
+	
+	public static void clear(String... componentIds){
+	    if (componentIds == null) return;
+	    FacesContext facesContext = FacesContext.getCurrentInstance();
+	    for (String componentId : componentIds) {
+	        UIComponent component = facesContext.getViewRoot().findComponent(componentId);
+	        clear(component);
+	    }
+    }
 	
 	public void clearForm(String formId) {
 	    FacesContext facesContext = FacesContext.getCurrentInstance();
