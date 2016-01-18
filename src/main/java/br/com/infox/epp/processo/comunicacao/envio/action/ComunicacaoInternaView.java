@@ -1,6 +1,9 @@
 package br.com.infox.epp.processo.comunicacao.envio.action;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -8,6 +11,7 @@ import javax.inject.Named;
 
 import org.jbpm.JbpmContext;
 import org.jbpm.graph.exe.ProcessInstance;
+import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import ComunicacaoInternaView.ComunicacaoInternaSearch;
 import br.com.infox.epp.cdi.ViewScoped;
@@ -34,6 +38,23 @@ public class ComunicacaoInternaView implements Serializable {
     public Integer getIdDocumentoComunicacao(Processo processo) {
         ProcessInstance processInstance = JbpmContext.getCurrentJbpmContext().getProcessInstance(processo.getIdJbpm());
         return (Integer) processInstance.getContextInstance().getVariable(ComunicacaoInternaService.DOCUMENTO_COMUNICACAO);
+    }
+    
+    public List<String> getTaskNames(Processo processo) {
+        if (processo == null) return Collections.emptyList();
+        ProcessInstance processInstance = JbpmContext.getCurrentJbpmContext().getProcessInstance(processo.getIdJbpm());
+        return getTaskInstancesOpenedNames(processInstance);
+    }
+    
+    private List<String> getTaskInstancesOpenedNames(ProcessInstance processInstance) {
+        Collection<TaskInstance> taskInstances = processInstance.getTaskMgmtInstance().getTaskInstances();
+        List<String> taskNames = new ArrayList<>();
+        for (TaskInstance taskInstance : taskInstances) {
+            if (!taskInstance.hasEnded()) {
+                taskNames.add(taskInstance.getName());
+            }
+        }
+        return taskNames;
     }
 
     public List<Processo> getComunicacoesInternas() {

@@ -265,6 +265,7 @@ public class EnvioComunicacaoInternaView implements Serializable {
     
     public void enviar() {
         try {
+            gravar();
             comunicacaoInternaService.enviarComunicacao(getModeloComunicacao());
             loadComunicacaoExpedida();
         } catch (BusinessException e) {

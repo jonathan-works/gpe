@@ -31,6 +31,12 @@
     	
     	<wi:columnOutputText columnId="localizacao" columnHeader="Localização" value="#{row.localizacao}"/>
     	
+    	<wi:column columnId="tarefa(s)" columnHeader="Tarefas">
+    		<ui:repeat var="task" value="#{comunicacaoInternaView.getTaskNames(row)}" varStatus="status">
+    			<h:outputText value="#{task}" style="display: block;"/>
+    		</ui:repeat>
+    	</wi:column>
+    	
     	<wi:columnDateTime columnId="dataInicio" columnHeader="Data de Início" value="#{row.dataInicio}"/>
     	
     	<wi:columnDateTime columnId="dataFim" columnHeader="Data de Fim" value="#{row.dataFim}"/>
