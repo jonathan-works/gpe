@@ -14,7 +14,8 @@ public enum Parametros {
 	RAIZ_LOCALIZACOES_COMUNICACAO("raizLocalizacoesComunicacao"),
 	CODIGO_FLUXO_COMUNICACAO_ELETRONICA("codigoFluxoComunicacao"),
 	CODIGO_FLUXO_COMUNICACAO_NAO_ELETRONICA("codigoFluxoComunicacaoNaoEletronico"),
-	CODIGO_FLUXO_DOCUMENTO("codigoFluxoDocumento");
+	CODIGO_FLUXO_DOCUMENTO("codigoFluxoDocumento"),
+	IS_PRORROGACAO_AUTOMATICA_POR_MODELO_COMUNICACAO("prorrogarPrazoAutomaticamentePorModelo");
 	
 	private String label;
 	
