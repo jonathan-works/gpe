@@ -81,6 +81,14 @@ public class ModeloComunicacaoManager extends Manager<ModeloComunicacaoDAO, Mode
 		}
 		return destinatarios;
 	}
+	
+	public List<DestinatarioModeloComunicacao> listDestinatatiosByModeloComunicacao(ModeloComunicacao modeloComunicacao) {
+		CriteriaBuilder cb = getDao().getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<DestinatarioModeloComunicacao> query = cb.createQuery(DestinatarioModeloComunicacao.class);
+		Root<DestinatarioModeloComunicacao> destinatario = query.from(DestinatarioModeloComunicacao.class);
+		query.where(cb.equal(destinatario.get(DestinatarioModeloComunicacao_.modeloComunicacao), modeloComunicacao));
+		return getDao().getEntityManager().createQuery(query).getResultList();
+	}
 
 	protected void setStatusComunicacaoByDestinatario(DestinatarioBean destinatario, Processo comunicacao) {
 		destinatario.setStatusProrrogacao(prazoComunicacaoService.getStatusProrrogacaoFormatado(comunicacao));

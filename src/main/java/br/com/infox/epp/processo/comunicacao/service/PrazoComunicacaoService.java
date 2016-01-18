@@ -35,7 +35,6 @@ import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoDefinition;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.epp.system.Parametros;
-import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.task.service.MovimentarTarefaService;
 import br.com.infox.util.time.DateRange;
 
@@ -227,10 +226,6 @@ public class PrazoComunicacaoService {
 	
     public ClassificacaoDocumento getClassificacaoProrrogacaoPrazo(DestinatarioModeloComunicacao destinatarioModeloComunicacao) {
 		return destinatarioModeloComunicacao.getModeloComunicacao().getTipoComunicacao().getClassificacaoProrrogacao();
-	}
-	
-	public void finalizarAnalisePedido(Processo comunicacao) throws DAOException{
-		TaskInstanceHome.instance().end(TaskInstanceHome.instance().getName());
 	}
 	
 	public Date getDataPedidoProrrogacao(Processo comunicacao){
