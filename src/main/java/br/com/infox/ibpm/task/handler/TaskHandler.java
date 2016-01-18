@@ -18,7 +18,6 @@ import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
 import br.com.infox.epp.documento.list.associative.AssociativeModeloDocumentoList;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
-import br.com.infox.ibpm.task.assignment.SingleActorAssignmentHandler;
 import br.com.infox.ibpm.variable.VariableAccessHandler;
 import br.com.infox.jbpm.action.ActionTemplateHandler;
 import br.com.infox.seam.util.ComponentUtil;
@@ -60,15 +59,6 @@ public class TaskHandler implements Serializable {
         this.task = task;
     }
 
-    public String getAssigneeExpression(){
-    	return task == null || task.getAssignmentDelegation() == null ? null : task.getAssignmentDelegation().getConfiguration();
-    }
-    public void setAssigneeExpression(String expression){
-    	if (task != null){
-			task.setAssignmentDelegation(createAssignmentDelegation(expression));
-    	}
-    }
-    
     public String getPooledActorsExpression(){
     	return task == null ? null : task.getPooledActorsExpression();
     }
@@ -80,9 +70,6 @@ public class TaskHandler implements Serializable {
 
     public void setAssignmentType(String assignmentType){
     	switch (assignmentType) {
-		case "assignee":
-			setAssigneeExpression("");
-			break;
 		case "pooledActorsExpression":
 			setPooledActorsExpression("");
 			break;
@@ -103,11 +90,6 @@ public class TaskHandler implements Serializable {
     		if (task.getPooledActorsExpression() != null){
     			return "pooledActorsExpression";
     		}
-    		if (task.getAssignmentDelegation() != null) {
-				if (SingleActorAssignmentHandler.class.getName().equals(task.getAssignmentDelegation().getClassName())) {
-					return "assignee";
-				}
-			}
     	}
     	return null;
     }
@@ -127,14 +109,6 @@ public class TaskHandler implements Serializable {
             task.setSwimlane(task.getTaskMgmtDefinition().getSwimlane(swimlaneName));
         }
     }
-
-	private Delegation createAssignmentDelegation(String configuration) {
-		Delegation assignmentDelegation = new Delegation(SingleActorAssignmentHandler.class.getName());
-		assignmentDelegation.setConfigType("constructor");
-		assignmentDelegation.setProcessDefinition(task.getProcessDefinition());
-		assignmentDelegation.setConfiguration(configuration);
-		return assignmentDelegation;
-	}
 
     public boolean isDirty() {
         return dirty;
