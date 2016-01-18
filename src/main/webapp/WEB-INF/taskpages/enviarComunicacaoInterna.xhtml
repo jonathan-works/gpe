@@ -12,7 +12,7 @@
 
 	<h:outputScript library="js" name="components.js" />
 	
-	<rich:panel header="Comunicação Interna" style="margin: 18px 28px;">
+	<rich:panel id="comunicacaoInternaPanel" header="Comunicação Interna" style="margin: 18px 28px;">
 	
 		<h:form id="comunicacaoForm">
 			<wi:selectOneMenuEntity id="tipoComunicacao" label="#{infoxMessages['comunicacao.tipoComunicacao']}"
@@ -81,14 +81,15 @@
 					
 			        <div>
 						<a:commandButton id="gravar" value="#{infoxMessages['crud.update']}" 
-							action="#{envioComunicacaoInternaView.gravar}" render=":pageBodyDialogMessage comunicacaoDiv"
+							action="#{envioComunicacaoInternaView.gravar}" render=":pageBodyDialogMessage comunicacaoInternaPanel"
 							rendered="#{not envioComunicacaoInternaView.modeloComunicacao.finalizada}"
 							oncomplete="if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"
 							styleClass="buttons"/>
 							
 						<a:commandButton id="enviar" value="#{infoxMessages['crud.send']}" 
-							action="#{envioComunicacaoInternaView.enviar}" render=":pageBodyDialogMessage comunicacaoDiv"
+							action="#{envioComunicacaoInternaView.enviar}" render=":pageBodyDialogMessage comunicacaoInternaPanel"
 							oncomplete="if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"
+							rendered="#{not envioComunicacaoInternaView.modeloComunicacao.finalizada}"
 							styleClass="buttons"/>
 					</div>
 				</h:form>
