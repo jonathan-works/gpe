@@ -37,6 +37,11 @@
 					<infox:flashcopy/>
 				</a:commandLink>
     		</h:form>
+    		<h:form>
+    			<a:commandLink render="comunicacaoInternaNaoExpedidaListPanel" execute="@form" action="#{comunicacaoInternaView.excluirModelo}">
+					<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" />
+				</a:commandLink>
+    		</h:form>
     	</ui:define>
     
     	<wi:columnOutputText columnId="tipoComunicacao" columnHeader="Tipo Comunicação" value="#{row.tipoComunicacao}"/>

@@ -75,6 +75,15 @@ public class ComunicacaoInternaService {
     }
     
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void removerModeloComunicacao(ModeloComunicacao modeloComunicacao) {
+        for(DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
+            entityManager.remove(destinatario);
+        }
+        entityManager.remove(modeloComunicacao);
+        entityManager.flush();
+    }
+    
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void enviarComunicacao(ModeloComunicacao modeloComunicacao) throws DAOException, IOException, DocumentException {
         validarEnvioComunicacao(modeloComunicacao);
         Long processIdOriginal = BusinessProcess.instance().getProcessId();

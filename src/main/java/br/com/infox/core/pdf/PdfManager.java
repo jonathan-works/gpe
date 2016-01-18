@@ -5,8 +5,6 @@ import java.io.OutputStream;
 
 import javax.ejb.Stateless;
 
-import javax.ejb.Stateless;
-
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -29,7 +27,6 @@ import com.lowagie.text.pdf.PdfReader;
 @Stateless
 @Name(PdfManager.NAME)
 @Scope(ScopeType.STATELESS)
-@Stateless
 @AutoCreate
 public class PdfManager {
     

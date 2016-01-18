@@ -280,9 +280,11 @@ public class EnvioComunicacaoInternaView implements Serializable {
             FacesMessages.instance().add("Comunicação enviada com sucesso!");
         } catch (BusinessException e) {
             FacesMessages.instance().add(e.getMessage());
+            FacesContext.getCurrentInstance().validationFailed();
         } catch (DAOException | IOException | DocumentException e) {
             LOGGER.log(Level.SEVERE, "enviarComunicacaoInterna", e);
             FacesMessages.instance().add(e.getMessage());
+            FacesContext.getCurrentInstance().validationFailed();
         }
     }
     

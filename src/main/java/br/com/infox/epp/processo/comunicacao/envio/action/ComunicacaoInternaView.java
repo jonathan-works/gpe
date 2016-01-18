@@ -15,6 +15,8 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import ComunicacaoInternaView.ComunicacaoInternaSearch;
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.exception.ExceptionHandled;
+import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoInternaService;
 import br.com.infox.epp.processo.entity.Processo;
@@ -27,6 +29,8 @@ public class ComunicacaoInternaView implements Serializable {
     
     @Inject
     private ComunicacaoInternaSearch comunicacaoInternaSearch;
+    @Inject
+    private ComunicacaoInternaService comunicacaoInternaService;
     
     private Processo processo;
     private List<Processo> comunicacoesInternas;
@@ -41,6 +45,12 @@ public class ComunicacaoInternaView implements Serializable {
     public Integer getIdDocumentoComunicacao(Processo processo) {
         ProcessInstance processInstance = JbpmContext.getCurrentJbpmContext().getProcessInstance(processo.getIdJbpm());
         return (Integer) processInstance.getContextInstance().getVariable(ComunicacaoInternaService.DOCUMENTO_COMUNICACAO);
+    }
+    
+    @ExceptionHandled(value = MethodType.REMOVE)
+    public void excluirModelo(ModeloComunicacao modeloComunicacao) {
+        comunicacaoInternaService.removerModeloComunicacao(modeloComunicacao);
+        comunicacoesInternasNaoFinalizadas.remove(modeloComunicacao);
     }
     
     public List<String> getTaskNames(Processo processo) {
