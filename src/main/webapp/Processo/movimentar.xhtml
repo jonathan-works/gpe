@@ -236,6 +236,15 @@
                 <ui:include src="comunicacao.xhtml" />
             </infox:tab>
             <infox:tab
+                id="tabComunicacaoInterna"
+                name="tabComunicacaoInterna"
+                status=":status"
+                rendered="#{security.checkPage('abaComunicacaoInterna')}"
+                title="Comunicação Interna"
+                action="#{comunicacaoInternaView.onSelectTab(processoEpaHome.instance)}">
+                <ui:include src="comunicacaoInterna.xhtml" />
+            </infox:tab>
+            <infox:tab
                 id="tabMovimentacoes"
                 name="tabMovimentacoes"
                 rendered="#{processoEpaHome.managed}"

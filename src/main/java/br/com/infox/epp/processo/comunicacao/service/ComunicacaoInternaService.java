@@ -48,7 +48,7 @@ public class ComunicacaoInternaService {
     
     private static final String DESTINATARIO = "destinatario";
     private static final String EXPEDIDOR = "expedidor";
-    private static final String DOCUMENTO_COMUNICACAO = "documentoComunicacao";
+    public static final String DOCUMENTO_COMUNICACAO = "documentoComunicacao";
     
     @Inject
     private EntityManager entityManager;
@@ -76,7 +76,7 @@ public class ComunicacaoInternaService {
     
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void enviarComunicacao(ModeloComunicacao modeloComunicacao) throws DAOException, IOException, DocumentException {
-        validarEnvioComunicacao();
+        validarEnvioComunicacao(modeloComunicacao);
         Long processIdOriginal = BusinessProcess.instance().getProcessId();
         Long taskIdOriginal = BusinessProcess.instance().getTaskId();
         expedirComunicacaoDestinatarios(modeloComunicacao);
@@ -84,7 +84,10 @@ public class ComunicacaoInternaService {
         BusinessProcess.instance().setTaskId(taskIdOriginal);
     }
     
-    private void validarEnvioComunicacao() {
+    private void validarEnvioComunicacao(ModeloComunicacao modeloComunicacao) {
+        if (modeloComunicacao.isMinuta()) {
+            throw new BusinessException("Documento em elaboração não pode ser enviado!");
+        }
         String codigoFluxoComunicacao = Parametros.CODIGO_FLUXO_COMUNICACAO_INTERNA.getValue();
         if (StringUtil.isEmpty(codigoFluxoComunicacao)) {
             throw new BusinessException("Paramêtro '" + Parametros.CODIGO_FLUXO_COMUNICACAO_INTERNA.getLabel() + "' não configurado!");
@@ -146,6 +149,7 @@ public class ComunicacaoInternaService {
         BusinessProcess.instance().setTaskId(taskIdOriginal);
 
         for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
+            destinatario.setProcesso(processo);
             destinatario.setExpedido(true);
             destinatario.setDocumentoComunicacao(documentoComunicacao);
             entityManager.merge(destinatario);
@@ -175,10 +179,11 @@ public class ComunicacaoInternaService {
         BusinessProcess.instance().setProcessId(processIdOriginal);
         BusinessProcess.instance().setTaskId(taskIdOriginal);
 
-       destinatarioModeloComunicacao.setExpedido(true);
-       destinatarioModeloComunicacao.setDocumentoComunicacao(documentoComunicacao);
-       entityManager.merge(destinatarioModeloComunicacao);
-       entityManager.flush();
+        destinatarioModeloComunicacao.setProcesso(processo);
+        destinatarioModeloComunicacao.setExpedido(true);
+        destinatarioModeloComunicacao.setDocumentoComunicacao(documentoComunicacao);
+        entityManager.merge(destinatarioModeloComunicacao);
+        entityManager.flush();
     }
     
     private Documento criarDocumentoComunicacao(Processo processo, ModeloComunicacao modeloComunicacao) throws IOException, DocumentException {

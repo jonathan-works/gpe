@@ -1,0 +1,40 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:infox="http://www.infox.com.br/jsf">
+    
+    
+    <wi:dataTable id="comunicacaoInternaList" tableTitle="Comunicações Internas" values="#{comunicacaoInternaView.comunicacoesInternas}"
+    	hideOrder="true" showSearchForm="false">
+    	
+    	<ui:define name="headerToolBar" />
+    	
+    	<ui:define name="toolBar">
+    		<h:form>
+    			<a:commandLink
+					render="@this" execute="@this"
+					oncomplete="infox.openPopUp('download#{row.idProcesso}', '#{pathResolver.contextPath}/Processo/baixarDocumento.seam','1024');">
+					<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['comunicacao.visualizarAComunicacao']}"/>
+					<f:setPropertyActionListener value="#{comunicacaoInternaView.getIdDocumentoComunicacao(row)}" target="#{flash.idDocumento}" />
+					<f:setPropertyActionListener value="#{true}" target="#{flash.binario}" />
+					<infox:flashcopy/>
+				</a:commandLink>
+    		</h:form>
+    	</ui:define>
+    
+    	<wi:columnOutputText columnId="numeroProcesso" columnHeader="Número Processo" value="#{row.numeroProcesso}"/>
+    	
+    	<wi:columnOutputText columnId="localizacao" columnHeader="Localização" value="#{row.localizacao}"/>
+    	
+    	<wi:columnDateTime columnId="dataInicio" columnHeader="Data de Início" value="#{row.dataInicio}"/>
+    	
+    	<wi:columnDateTime columnId="dataFim" columnHeader="Data de Fim" value="#{row.dataFim}"/>
+    
+    </wi:dataTable>
+    
+</ui:composition>

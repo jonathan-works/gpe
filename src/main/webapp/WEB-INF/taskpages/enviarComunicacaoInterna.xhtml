@@ -81,15 +81,15 @@
 					
 			        <div>
 						<a:commandButton id="gravar" value="#{infoxMessages['crud.update']}" 
-							action="#{envioComunicacaoInternaView.gravar}" render=":pageBodyDialogMessage comunicacaoInternaPanel"
-							rendered="#{not envioComunicacaoInternaView.modeloComunicacao.finalizada}"
+							action="#{envioComunicacaoInternaView.gravar}" render=":pageBodyDialogMessage, :movimentarTabPanel:comunicacaoInternaPanel"
+							rendered="#{not envioComunicacaoInternaView.expedida}"
 							oncomplete="if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"
 							styleClass="buttons"/>
 							
 						<a:commandButton id="enviar" value="#{infoxMessages['crud.send']}" 
-							action="#{envioComunicacaoInternaView.enviar}" render=":pageBodyDialogMessage comunicacaoInternaPanel"
+							action="#{envioComunicacaoInternaView.enviar}" render=":pageBodyDialogMessage, :movimentarTabPanel:comunicacaoInternaPanel"
 							oncomplete="if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"
-							rendered="#{not envioComunicacaoInternaView.modeloComunicacao.finalizada}"
+							rendered="#{not envioComunicacaoInternaView.expedida}"
 							styleClass="buttons"/>
 					</div>
 				</h:form>

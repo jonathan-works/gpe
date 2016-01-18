@@ -266,6 +266,7 @@ public class EnvioComunicacaoInternaView implements Serializable {
     public void enviar() {
         try {
             comunicacaoInternaService.enviarComunicacao(getModeloComunicacao());
+            loadComunicacaoExpedida();
         } catch (BusinessException e) {
             FacesMessages.instance().add(e.getMessage());
         } catch (DAOException | IOException | DocumentException e) {
