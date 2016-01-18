@@ -95,6 +95,10 @@
 						<h:outputText value="#{row.numeroComunicacao}" />
 					</rich:column>
 					<rich:column>
+						<f:facet name="header">#{infoxMessages['comunicacao.modeloComunicacao']}</f:facet>
+						<h:outputText value="#{row.numeroModeloComunicacao}" />
+					</rich:column>
+					<rich:column>
                         <f:facet name="header">#{infoxMessages['comunicacao.tipoComunicacao']}</f:facet>
                         <h:outputText value="#{row.tipoComunicacao}" />
                     </rich:column>

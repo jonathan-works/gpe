@@ -44,7 +44,6 @@ import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Named
 @Stateful
@@ -54,14 +53,6 @@ public class RespostaComunicacaoAction implements Serializable {
 	public static final String NAME = "respostaComunicacaoAction";
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(RespostaComunicacaoAction.class);
-	
-	private ActionMessagesService actionMessagesService = ComponentUtil.getComponent(ActionMessagesService.NAME);
-	protected ModeloDocumentoManager modeloDocumentoManager = ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
-	private RespostaComunicacaoList respostaComunicacaoList = ComponentUtil.getComponent(RespostaComunicacaoList.NAME);
-	private DocumentoManager documentoManager = ComponentUtil.getComponent(DocumentoManager.NAME);
-	private DocumentoComunicacaoList documentoComunicacaoList = ComponentUtil.getComponent(DocumentoComunicacaoList.NAME);
-	private AssinaturaDocumentoService assinaturaDocumentoService = ComponentUtil.getComponent(AssinaturaDocumentoService.NAME);
-	private RespostaComunicacaoService respostaComunicacaoService = ComponentUtil.getComponent(RespostaComunicacaoService.NAME);
 	
 	@Inject
 	private DocumentoComunicacaoService documentoComunicacaoService;
@@ -73,13 +64,28 @@ public class RespostaComunicacaoAction implements Serializable {
 	private DocumentoEditor documentoEditor;
 	@Inject
 	protected InfoxMessages infoxMessages;
+	@Inject
+	private ActionMessagesService actionMessagesService;
+	@Inject
+	private RespostaComunicacaoList respostaComunicacaoList;
+	@Inject
+	private DocumentoComunicacaoList documentoComunicacaoList;
+	@Inject
+	protected ModeloDocumentoManager modeloDocumentoManager;
+	@Inject
+	private DocumentoManager documentoManager;
+	@Inject
+	private AssinaturaDocumentoService assinaturaDocumentoService;
+	@Inject
+	private RespostaComunicacaoService respostaComunicacaoService;
+	
 	
 	private DestinatarioModeloComunicacao destinatario;
 
 	protected Processo processoComunicacao;
 	private Processo processoRaiz;
-	private Date prazoResposta;
-	private String statusProrrogacao;
+	protected Date prazoResposta;
+	protected String statusProrrogacao;
 	
 	private List<ClassificacaoDocumento> classificacoesEditor;
 	private List<ClassificacaoDocumento> classificacoesAnexo;
@@ -94,19 +100,18 @@ public class RespostaComunicacaoAction implements Serializable {
 	public void init() {
 		this.processoComunicacao = JbpmUtil.getProcesso();
 		respostaComunicacaoList.setProcesso(processoComunicacao);
+		prazoResposta = prazoComunicacaoService.getDataLimiteCumprimento(processoComunicacao);
+		MetadadoProcesso metadadoDestinatario = processoComunicacao.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO);
+		if(metadadoDestinatario != null){
+			destinatario = metadadoDestinatario.getValue();
+			documentoComunicacaoList.setModeloComunicacao(destinatario.getModeloComunicacao());
+		}
 		
 		this.processoRaiz = processoComunicacao.getProcessoRoot();
 		documentoUploader.newInstance();
 		documentoUploader.clear();
 		documentoUploader.setProcesso(processoRaiz);
 		documentoEditor.setProcesso(processoRaiz);
-		
-		MetadadoProcesso metadadoDestinatario = processoComunicacao.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO);
-		if(metadadoDestinatario != null){
-			destinatario = metadadoDestinatario.getValue();
-			documentoComunicacaoList.setModeloComunicacao(destinatario.getModeloComunicacao());
-			prazoResposta = prazoComunicacaoService.getDataLimiteCumprimento(processoComunicacao);
-		}
 
 		newDocumentoEdicao();
 		initClassificacoes();
@@ -154,6 +159,7 @@ public class RespostaComunicacaoAction implements Serializable {
 				documentoManager.update(documentoEditor.getDocumento());
 			}
 			newDocumentoEdicao();
+			respostaComunicacaoList.refresh();
 			FacesMessages.instance().add(infoxMessages.get("comunicacao.resposta.gravadoSucesso"));
 		} catch (DAOException e) {
 			LOG.error("", e);
@@ -170,6 +176,7 @@ public class RespostaComunicacaoAction implements Serializable {
 		modeloDocumento = null;
 	}
 	
+	//TODO ver como colocar esse método no service
 	public void gravarAnexoResposta() {
 		try {
 			documentoUploader.persist();
@@ -184,6 +191,7 @@ public class RespostaComunicacaoAction implements Serializable {
 		Documento resposta = documentoUploader.getDocumentosDaSessao().get(documentoUploader.getDocumentosDaSessao().size() - 1);
 		try {
 			documentoComunicacaoService.vincularDocumentoRespostaComunicacao(resposta, processoComunicacao);
+			respostaComunicacaoList.refresh();
 			FacesMessages.instance().add(infoxMessages.get("comunicacao.resposta.gravadoSucesso"));
 		} catch (DAOException e) {
 			LOG.error("", e);
@@ -193,6 +201,7 @@ public class RespostaComunicacaoAction implements Serializable {
 		verificarPossibilidadeEnvioResposta();
 	}
 	
+	//TODO ver como colocar esse método no service
 	public void enviarRespostaComunicacao(){
 		List<Documento> documentosRespostaComunicacao = getDocumentoRespostaList();
 		try {
@@ -207,6 +216,7 @@ public class RespostaComunicacaoAction implements Serializable {
 				modeloDocumentoList = null;
 				newDocumentoEdicao();
 				initClassificacoes();
+				respostaComunicacaoList.refresh();
 			}
 		} catch (DAOException e) {
 			LOG.error("", e);
@@ -215,6 +225,7 @@ public class RespostaComunicacaoAction implements Serializable {
 		verificarPossibilidadeEnvioResposta();
 	}
 	
+	//TODO ver como colocar esse método no service
 	public void removerDocumento(Documento documento) {
 		boolean isDocumentoEdicao = documentoEditor.getDocumento() != null && documentoEditor.getDocumento().equals(documento);
 		try {
@@ -223,6 +234,8 @@ public class RespostaComunicacaoAction implements Serializable {
 			if (isDocumentoEdicao) {
 				newDocumentoEdicao();
 			}
+			respostaComunicacaoList.refresh();
+			FacesMessages.instance().add("Documento removido com sucesso");
 		} catch (DAOException e) {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);

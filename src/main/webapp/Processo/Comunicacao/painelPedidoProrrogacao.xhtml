@@ -8,7 +8,7 @@
     
 	<s:div id="painelProrrogacaoPrazo" style="margin-top:1em">
 		<rich:panel
-			header="#{infoxMessages['comunicacao.prorrogacaoPrazo']} - #{pedirProrrogacaoPrazoAction.destinatario.nome} / #{pedirProrrogacaoPrazoAction.destinatario.tipoComunicacao}"
+			header="#{infoxMessages['comunicacao.prorrogacaoPrazo']} - #{pedirProrrogacaoPrazoAction.destinatario.numeroComunicacao} / #{pedirProrrogacaoPrazoAction.destinatario.nome} / #{pedirProrrogacaoPrazoAction.destinatario.tipoComunicacao}"
 			rendered="#{pedirProrrogacaoPrazoAction.prorrogacaoPrazo}">
 			<h:form>
 				<wi:selectOneMenuEntity id="classificacaoProrrogacao"
