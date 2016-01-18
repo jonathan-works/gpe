@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
@@ -13,7 +12,6 @@ import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.richfaces.event.DropEvent;
 
@@ -38,7 +36,6 @@ import br.com.infox.seam.security.SecurityUtil;
 public class PainelUsuarioController implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private static final Logger LOG = Logger.getLogger(PainelUsuarioController.class.getName());
 	
 	@Inject
 	private SituacaoProcessoManager situacaoProcessoManager;
