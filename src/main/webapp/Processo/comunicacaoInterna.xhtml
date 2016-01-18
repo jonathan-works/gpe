@@ -8,26 +8,33 @@
     xmlns:rich="http://richfaces.org/rich"
     xmlns:infox="http://www.infox.com.br/jsf">
     
+     <h:outputScript>
+	      function reload() { 
+	        location = '#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{processoEpaHome.instance.idProcesso}&amp;idTaskInstance=#{taskInstanceHome.taskId}'; 
+	      }
+	 </h:outputScript>
+    
     <h:form>
-		<a:commandButton value="Criar Comunicação Interna" styleClass="buttons" 
-			oncomplete="infox.openPopUp('criarComunicacaoInterna', '#{pathResolver.contextPath}/Processo/criarComunicacaoInterna.seam','1024');">
-			<f:param name="abaComunicacao" value="true"/>
-			<f:param name="idTaskInstance" value="#{taskInstanceHome.taskId}"/>
+		<a:commandButton value="Criar Comunicação Interna" styleClass="buttons" render="@form" execute="@form"
+			oncomplete="infox.openPopUp('criarComunicacaoInterna', '#{pathResolver.contextPath}/Processo/criarComunicacaoInterna.seam?scid=#{conversation.id}','1024');">
+			<f:setPropertyActionListener value="#{true}" target="#{flash.abaComunicacao}" />
+			<infox:flashcopy/>
 		</a:commandButton>    
     </h:form>
     
-    <wi:dataTable id="comunicacaoInternaNaoExpedidaList" tableTitle="Comunicações Internas não Expedidas" 
+    <wi:dataTable id="comunicacaoInternaNaoExpedidaList" tableTitle="Comunicações Internas não expedidas" panelStyle="margin-top: 1em;" 
     	values="#{comunicacaoInternaView.comunicacoesInternasNaoFinalizadas}" hideOrder="true" showSearchForm="false">
     	
     	<ui:define name="headerToolBar" />
     	
     	<ui:define name="toolBar">
     		<h:form>
-    			<a:commandLink render="@this" execute="@this"
-					oncomplete="infox.openPopUp('criarComunicacaoInterna', '#{pathResolver.contextPath}/Processo/criarComunicacaoInterna.seam','1024');">
-					<f:param name="idModeloComunicacao" value="#{row.id}"/>
-					<f:param name="abaComunicacao" value="true"/>
+    			<a:commandLink render="@form" execute="@form"
+					oncomplete="infox.openPopUp('criarComunicacaoInterna', '#{pathResolver.contextPath}/Processo/criarComunicacaoInterna.seam?scid=#{conversation.id}','1024');">
+					<f:setPropertyActionListener value="#{row.id}" target="#{flash.idModeloComunicacao}" />
+					<f:setPropertyActionListener value="#{true}" target="#{flash.abaComunicacao}" />
 					<h:graphicImage url="#{wiSkin.imageFolder}/mod/edit.png" />
+					<infox:flashcopy/>
 				</a:commandLink>
     		</h:form>
     	</ui:define>
@@ -42,8 +49,8 @@
     	
     </wi:dataTable>
     
-    <wi:dataTable id="comunicacaoInternaList" tableTitle="Comunicações Internas" values="#{comunicacaoInternaView.comunicacoesInternas}"
-    	hideOrder="true" showSearchForm="false">
+    <wi:dataTable id="comunicacaoInternaList" tableTitle="Comunicações Internas expedidas" values="#{comunicacaoInternaView.comunicacoesInternas}"
+    	hideOrder="true" showSearchForm="false" panelStyle="margin-top: 1em;">
     	
     	<ui:define name="headerToolBar" />
     	

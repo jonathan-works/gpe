@@ -37,8 +37,7 @@
 		</h:form>
 		
 		<p:outputPanel style="background-color: white; padding-left: 10px; padding-right: 10px; width: 100%;" 
-			rendered="#{not envioComunicacaoInternaView.expedida}"
-			autoUpdate="false">
+			rendered="#{not envioComunicacaoInternaView.expedida}" autoUpdate="false">
 			
 			<div style="margin-top: 1em; max-width: 50%; display: inline-block;">
 			    <h:form id="documentoComunicacaoForm">
@@ -83,14 +82,14 @@
 					
 			        <div>
 						<a:commandButton id="gravar" value="#{infoxMessages['crud.update']}" 
-							action="#{envioComunicacaoInternaView.gravar}" render=":pageBodyDialogMessage, :movimentarTabPanel:comunicacaoInternaPanel"
+							action="#{envioComunicacaoInternaView.gravar}" render=":pageBodyDialogMessage, comunicacaoInternaPanel"
 							rendered="#{not envioComunicacaoInternaView.expedida}"
-							oncomplete="if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"
+							oncomplete="if (#{not envioComunicacaoInternaView.taskPage}) opener.reload();"
 							styleClass="buttons"/>
 							
 						<a:commandButton id="enviar" value="#{infoxMessages['crud.send']}" 
-							action="#{envioComunicacaoInternaView.enviar}" render=":pageBodyDialogMessage, :movimentarTabPanel:comunicacaoInternaPanel"
-							oncomplete="if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"
+							action="#{envioComunicacaoInternaView.enviar}" render=":pageBodyDialogMessage, comunicacaoInternaPanel"
+							oncomplete="if (#{not envioComunicacaoInternaView.taskPage}) window.close();"
 							rendered="#{not envioComunicacaoInternaView.expedida}"
 							styleClass="buttons"/>
 					</div>

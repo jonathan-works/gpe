@@ -41,6 +41,7 @@ import br.com.infox.log.Logging;
 @Stateful
 @ViewScoped
 public class ComunicacaoAction implements Serializable {
+    
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "comunicacaoAction";
 	private static final LogProvider LOG = Logging.getLogProvider(ComunicacaoAction.class);

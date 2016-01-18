@@ -20,6 +20,10 @@ import org.jboss.seam.security.Identity;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.entity.Fluxo_;
+import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
+import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo_;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao_;
@@ -62,20 +66,27 @@ public class ModeloComunicacaoDAO extends DAO<ModeloComunicacao> {
 	}
 	
 	public List<DestinatarioBean> listDestinatarios(String numeroProcessoRoot) {
+	    String codigoComunicacaoEletronica = Parametros.CODIGO_FLUXO_COMUNICACAO_ELETRONICA.getValue();
+	    String codigoComunicacaoNaoEletronica = Parametros.CODIGO_FLUXO_COMUNICACAO_NAO_ELETRONICA.getValue();
 		EntityManager entityManager = BeanManager.INSTANCE.getReference(EntityManager.class);
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<DestinatarioBean> query = cb.createQuery(DestinatarioBean.class);
 		Root<DestinatarioModeloComunicacao> destinatario = query.from(DestinatarioModeloComunicacao.class);
 		Join<DestinatarioModeloComunicacao, Processo> comunicacao = destinatario.join(DestinatarioModeloComunicacao_.processo);
+		Join<Processo, NaturezaCategoriaFluxo> natCatFluxo = comunicacao.join(Processo_.naturezaCategoriaFluxo);
+		Join<NaturezaCategoriaFluxo, Fluxo> fluxo = natCatFluxo.join(NaturezaCategoriaFluxo_.fluxo);
 		Join<DestinatarioModeloComunicacao, ModeloComunicacao> modelo = destinatario.join(DestinatarioModeloComunicacao_.modeloComunicacao);
 		Join<ModeloComunicacao, TipoComunicacao> tipoComunicacao = modelo.join(ModeloComunicacao_.tipoComunicacao);
-
 		query.select(cb.construct(getClassDestinatarioBean(), tipoComunicacao.get(TipoComunicacao_.descricao), 
 			comunicacao.get(Processo_.dataInicio), destinatario.get(DestinatarioModeloComunicacao_.id), 
 			comunicacao.get(Processo_.idProcesso).as(String.class), modelo.get(ModeloComunicacao_.id).as(String.class), 
 			destinatario.get(DestinatarioModeloComunicacao_.meioExpedicao)));
-		query.where(cb.equal(cb.function("NumeroProcessoRoot", String.class, comunicacao.get(Processo_.idProcesso)), numeroProcessoRoot));
+		query.where(
+		        cb.equal(cb.function("NumeroProcessoRoot", String.class, comunicacao.get(Processo_.idProcesso)), numeroProcessoRoot),
+		        fluxo.get(Fluxo_.codFluxo).in(codigoComunicacaoEletronica, codigoComunicacaoNaoEletronica)
+		);
 		boolean usuarioInterno = Identity.instance().hasRole(Parametros.PAPEL_USUARIO_INTERNO.getValue());
+		
 		if (!usuarioInterno) {
 			Subquery<Integer> subquery = query.subquery(Integer.class);
 			Root<MetadadoProcesso> metadado = subquery.from(MetadadoProcesso.class);

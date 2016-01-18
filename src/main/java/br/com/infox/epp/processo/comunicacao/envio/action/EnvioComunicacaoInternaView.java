@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -114,17 +113,13 @@ public class EnvioComunicacaoInternaView implements Serializable {
     }
     
     private void loadModeloComunicacaoInterna() {
-        Map<String, String> paramsMap = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-        if (paramsMap.get("abaComunicacao") != null) {
-            taskPage = !Boolean.valueOf(paramsMap.get("abaComunicacaoInterna"));
-        }
+        Boolean abaComunicacao = (Boolean) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("abaComunicacao");
+        Long idModeloComunicacao = (Long) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("idModeloComunicacao");
+        taskPage = abaComunicacao != null ? !abaComunicacao : true;
         TaskInstance taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
-        Long idModeloComunicacao = null;
-        if (paramsMap.get("idModeloComunicacao") != null) {
-            idModeloComunicacao = Long.valueOf(paramsMap.get("idModeloComunicacao"));
-        } else if (taskPage) {
+        if (idModeloComunicacao == null && taskPage) {
             idModeloComunicacao = (Long) taskInstance.getVariable("idModeloComunicacaoInterna-" + taskInstance.getId());
-        }
+        } 
         if (idModeloComunicacao == null) {
             modeloComunicacao = new ModeloComunicacao();
             Integer idProcesso = (Integer) taskInstance.getVariable("processo");
@@ -282,6 +277,7 @@ public class EnvioComunicacaoInternaView implements Serializable {
             gravar();
             comunicacaoInternaService.enviarComunicacao(getModeloComunicacao());
             loadComunicacaoExpedida();
+            FacesMessages.instance().add("Comunicação enviada com sucesso!");
         } catch (BusinessException e) {
             FacesMessages.instance().add(e.getMessage());
         } catch (DAOException | IOException | DocumentException e) {
