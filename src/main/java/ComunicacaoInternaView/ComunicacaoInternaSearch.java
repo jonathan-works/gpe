@@ -17,6 +17,8 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Fluxo_;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo_;
+import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.ModeloComunicacao_;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.Processo_;
 import br.com.infox.epp.system.Parametros;
@@ -36,6 +38,18 @@ public class ComunicacaoInternaSearch {
         cq.where(
                 cb.equal(from.get(Processo_.processoRoot).get(Processo_.idProcesso), cb.literal(idProcesso)),
                 cb.equal(fluxo.get(Fluxo_.codFluxo), cb.literal(codigoFluxoComunicacaoInterna))
+        );
+        return getEntityManager().createQuery(cq).getResultList();
+    }
+    
+    public List<ModeloComunicacao> getComunicacoesInternasNaoFinalizadas(Integer idProcesso) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<ModeloComunicacao> cq = cb.createQuery(ModeloComunicacao.class);
+        Root<ModeloComunicacao> modeloComunicacao = cq.from(ModeloComunicacao.class);
+        cq.select(modeloComunicacao);
+        cq.where(
+                cb.equal(modeloComunicacao.get(ModeloComunicacao_.processo).get(Processo_.idProcesso), cb.literal(idProcesso)),
+                cb.isTrue(modeloComunicacao.get(ModeloComunicacao_.finalizada))
         );
         return getEntityManager().createQuery(cq).getResultList();
     }

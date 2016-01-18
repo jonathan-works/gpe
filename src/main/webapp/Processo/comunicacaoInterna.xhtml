@@ -8,6 +8,36 @@
     xmlns:rich="http://richfaces.org/rich"
     xmlns:infox="http://www.infox.com.br/jsf">
     
+    <h:form>
+		<a:commandButton value="Criar Comunicação Interna" styleClass="buttons">
+			<f:param />
+		</a:commandButton>    
+    </h:form>
+    
+    <wi:dataTable id="comunicacaoInternaNaoExpedidaList" tableTitle="Comunicações Internas não Expedidas" 
+    	values="#{comunicacaoInternaView.comunicacoesInternasNaoFinalizadas}" hideOrder="true" showSearchForm="false">
+    	
+    	<ui:define name="headerToolBar" />
+    	
+    	<ui:define name="toolBar">
+    		<h:form>
+    			<a:commandLink
+					render="@this" execute="@this"
+					oncomplete="infox.openPopUp('download#{row.idProcesso}', '#{pathResolver.contextPath}/Processo/baixarDocumento.seam','1024');">
+					<h:graphicImage url="#{wiSkin.imageFolder}/mod/edit.png" />
+				</a:commandLink>
+    		</h:form>
+    	</ui:define>
+    
+    	<wi:columnOutputText columnId="tipoComunicacao" columnHeader="Tipo Comunicação" value="#{row.tipoComunicacao}"/>
+    	
+    	<wi:column columnId="destinatarios" columnHeader="Destinatários">
+    		<ui:repeat var="destinatario" value="#{row.destinatarios}" varStatus="status">
+    			<h:outputText value="#{destinatario.nome}" style="display: block;"/>
+    		</ui:repeat>
+    	</wi:column>
+    	
+    </wi:dataTable>
     
     <wi:dataTable id="comunicacaoInternaList" tableTitle="Comunicações Internas" values="#{comunicacaoInternaView.comunicacoesInternas}"
     	hideOrder="true" showSearchForm="false">

@@ -15,6 +15,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import ComunicacaoInternaView.ComunicacaoInternaSearch;
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoInternaService;
 import br.com.infox.epp.processo.entity.Processo;
 
@@ -29,10 +30,12 @@ public class ComunicacaoInternaView implements Serializable {
     
     private Processo processo;
     private List<Processo> comunicacoesInternas;
+    private List<ModeloComunicacao> comunicacoesInternasNaoFinalizadas;
     
     public void onSelectTab(Processo processo) {
         this.processo = processo;
         comunicacoesInternas = comunicacaoInternaSearch.getComunicacoesInternas(getProcesso().getIdProcesso());
+        comunicacoesInternasNaoFinalizadas = comunicacaoInternaSearch.getComunicacoesInternasNaoFinalizadas(getProcesso().getIdProcesso());
     }
     
     public Integer getIdDocumentoComunicacao(Processo processo) {
@@ -55,6 +58,10 @@ public class ComunicacaoInternaView implements Serializable {
             }
         }
         return taskNames;
+    }
+    
+    public List<ModeloComunicacao> getComunicacoesInternasNaoFinalizadas() {
+        return comunicacoesInternasNaoFinalizadas;
     }
 
     public List<Processo> getComunicacoesInternas() {

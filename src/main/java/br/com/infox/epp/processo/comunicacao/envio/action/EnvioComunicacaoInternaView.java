@@ -5,11 +5,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.event.Observes;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.NonUniqueResultException;
@@ -81,6 +83,7 @@ public class EnvioComunicacaoInternaView implements Serializable {
     private ModeloComunicacao modeloComunicacao;
     private TipoComunicacao tipoComunicacao;
     private Boolean expedida;
+    private boolean taskPage = true;
 
     //Variáveis de tela para o destinatário
     private Localizacao localizacaoDestino;
@@ -111,8 +114,17 @@ public class EnvioComunicacaoInternaView implements Serializable {
     }
     
     private void loadModeloComunicacaoInterna() {
+        Map<String, String> paramsMap = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        if (paramsMap.get("abaComunicacao") != null) {
+            taskPage = !Boolean.valueOf(paramsMap.get("abaComunicacaoInterna"));
+        }
         TaskInstance taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
-        Long idModeloComunicacao = (Long) taskInstance.getVariable("idModeloComunicacaoInterna-" + taskInstance.getId());
+        Long idModeloComunicacao = null;
+        if (paramsMap.get("idModeloComunicacao") != null) {
+            idModeloComunicacao = Long.valueOf(paramsMap.get("idModeloComunicacao"));
+        } else if (taskPage) {
+            idModeloComunicacao = (Long) taskInstance.getVariable("idModeloComunicacaoInterna-" + taskInstance.getId());
+        }
         if (idModeloComunicacao == null) {
             modeloComunicacao = new ModeloComunicacao();
             Integer idProcesso = (Integer) taskInstance.getVariable("processo");
@@ -183,7 +195,9 @@ public class EnvioComunicacaoInternaView implements Serializable {
             getModeloComunicacao().setTipoComunicacao(getTipoComunicacao());
             modeloComunicacao = modeloComunicacaoManager.update(getModeloComunicacao());
             TaskInstance taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
-            taskInstance.setVariable("idModeloComunicacaoInterna-" + taskInstance.getId(), modeloComunicacao.getId());
+            if (taskPage) {
+                taskInstance.setVariable("idModeloComunicacaoInterna-" + taskInstance.getId(), modeloComunicacao.getId());
+            }
         }
         loadClassificacoesDocumento();
         loadModelosDocumento();
