@@ -121,12 +121,9 @@ public class PainelUsuarioController implements Serializable {
 	}
 	
 	@ExceptionHandled(value = MethodType.UNSPECIFIED)
-	public void liberarTarefa(Long idTaskInstance) {
-	    taskInstanceManager.removeUsuario(idTaskInstance);
-        TaskBean taskBean = getSelectedFluxo().getTask(idTaskInstance.toString());
-        if (taskBean != null) {
-            taskBean.setAssignee(null);
-        }
+	public void liberarTarefa(TaskBean taskBean) {
+	    taskInstanceManager.removeUsuario(Long.valueOf(taskBean.getIdTaskInstance()));
+        taskBean.setAssignee(null);
         FacesMessages.instance().add("Tarefa Liberada com Sucesso!");
 	}   
 
