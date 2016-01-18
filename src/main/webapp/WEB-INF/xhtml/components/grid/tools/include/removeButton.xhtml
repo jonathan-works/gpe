@@ -18,7 +18,7 @@
         render=":#{gridId}#{empty listReRender ? '' : (',').concat(listReRender)}"
         onclick="if(!confirm('Deseja remover este registro?')) return false;">
 
-        <h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="Remover registro" />
+        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="Remover registro" />
         <f:param name="firstResult" value="#{bean.firstResult}" />
         <f:param name="page" value="#{bean.page}" />
 

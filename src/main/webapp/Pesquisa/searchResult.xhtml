@@ -91,22 +91,22 @@
                             id="firstPage"
                             action="#{search.firstPage()}"
                             disabled="#{!search.previousPageAvailable}"
-                            image="#{wiSkin.imageFolder}/grid/arrow-first#{search.previousPageAvailable ? '' : '-off'}.gif" />
+                            image="#{wiSkinTemp.imageFolder}/grid/arrow-first#{search.previousPageAvailable ? '' : '-off'}.gif" />
                         <h:commandButton
                             id="previousPage"
                             action="#{search.previousPage()}"
                             disabled="#{!search.previousPageAvailable}"
-                            image="#{wiSkin.imageFolder}/grid/arrow-previous#{search.previousPageAvailable ? '' : '-off'}.gif" />
+                            image="#{wiSkinTemp.imageFolder}/grid/arrow-previous#{search.previousPageAvailable ? '' : '-off'}.gif" />
                         <h:commandButton
                             id="nextPage"
                             action="#{search.nextPage()}"
                             disabled="#{!search.nextPageAvailable}"
-                            image="#{wiSkin.imageFolder}/grid/arrow-next#{search.nextPageAvailable ? '' : '-off'}.gif" />
+                            image="#{wiSkinTemp.imageFolder}/grid/arrow-next#{search.nextPageAvailable ? '' : '-off'}.gif" />
                         <h:commandButton
                             id="lastPage"
                             action="#{search.lastPage()}"
                             disabled="#{!search.nextPageAvailable}"
-                            image="#{wiSkin.imageFolder}/grid/arrow-last#{search.nextPageAvailable ? '' : '-off'}.gif" />
+                            image="#{wiSkinTemp.imageFolder}/grid/arrow-last#{search.nextPageAvailable ? '' : '-off'}.gif" />
                     </h:panelGrid>
                 </h:form>
             </s:div>

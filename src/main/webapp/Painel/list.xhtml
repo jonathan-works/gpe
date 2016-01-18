@@ -48,12 +48,12 @@
 	    		<f:facet name="header">
 	    			<div style="position:relative;">
 		    			<h:outputText value="#{infoxMessages[painelUsuarioController.localeTitleKey]}"/>
-	    				<h:graphicImage url="#{wiSkin.imageFolder}/filter16x16.png" 
+	    				<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/filter16x16.png')}" 
 	    					rendered="#{not painelUsuarioController.showFiltroInfo}"
 	    					styleClass="ui-icone-filtro-global-painel"
 	    					title="#{infoxMessages['painel.adicionarFiltro']}"
 	    					onclick="#{rich:component('modalFiltrosPainel')}.show()"/>
-	    				<h:graphicImage url="#{wiSkin.imageFolder}/filterOn16x16.png"
+	    				<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/filterOn16x16.png')}"
 	    					rendered="#{painelUsuarioController.showFiltroInfo}"
 	    					styleClass="ui-icone-filtro-global-painel"
 	    					title="#{infoxMessages['painel.editarFiltro']}"

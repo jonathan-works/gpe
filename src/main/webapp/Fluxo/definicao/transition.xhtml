@@ -15,7 +15,7 @@
                 cellpadding="0"
                 cellspacing="0">
                 <h:graphicImage
-                    url="#{wiSkin.imageFolder}/jbpm/#{type == 'from' ? 'arriving' : 'leaving'}.gif" />
+                    url="#{wiSkinTemp.imageFolder}/jbpm/#{type == 'from' ? 'arriving' : 'leaving'}.gif" />
                 <h:outputText
                     value="#{type == 'from' ? messages['process.transitions.arriving'] : messages['process.transitions.leaving']}" />
             </h:panelGrid>
@@ -41,7 +41,7 @@
                             limitRender="true">
                             <h:graphicImage
                                 title="#{infoxMessages['process.transition.add']}"
-                                url="#{wiSkin.imageFolder}/add.gif" />
+                                url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}" />
                         </a:commandLink>
                     </h:form>
                 </f:facet>
@@ -50,7 +50,7 @@
                         <h:form>
                             <h:graphicImage
                                 title="#{infoxMessages['process.transition.remove']}"
-                                url="#{wiSkin.imageFolder}/remove.png"
+                                url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
                                 styleClass="opacityHover"
                                 rendered="#{type eq 'to'}">
                                 <a:ajax
@@ -131,10 +131,10 @@
                         action="#{nodeFitter.setCurrentNode(transicaoHandler, type)}"
                         limitRender="true">
                         <h:graphicImage
-                            url="#{wiSkin.imageFolder}/jbpm/up.gif"
+                            url="#{layoutController.getResourceUrlByPath('/imagens/jbpm/up.gif')}"
                             rendered="#{type == 'from'}" />
                         <h:graphicImage
-                            url="#{wiSkin.imageFolder}/jbpm/down.gif"
+                            url="#{layoutController.getResourceUrlByPath('/imagens/jbpm/down.gif')}"
                             rendered="#{type == 'to'}" />
                     </a:commandLink>
                 </h:form>

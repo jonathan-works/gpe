@@ -16,7 +16,7 @@
             render="#{reRenderRemove}"
             action="#{expressions.createMethodExpression(removeAllExpression).invoke(null)}"
             rendered="#{canEdit}">
-            <h:graphicImage url="#{wiSkin.imageFolder}/grid/copyRight.gif"
+            <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/grid/copyRight.gif')}"
                 title="#{infoxMessages['button.deleteAll']}" />
         </a:commandLink>
     </h:form>

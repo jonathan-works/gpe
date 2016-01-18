@@ -50,7 +50,7 @@
                             <ui:define name="toolBar">
                                 <h:form>
 	                                <a:commandLink execute="@this" render="defaultTabPanel" limitRender="true">
-	                                   <h:graphicImage url="#{wiSkin.imageFolder}/mod/edit.gif" title="Editar" />
+	                                   <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/mod/edit.gif')}" title="Editar" />
 								       <f:setPropertyActionListener
 								            target="#{dominioVariavelTarefaCrudAction.id}" value="#{row.id}" />
 								       <f:setPropertyActionListener
@@ -60,7 +60,7 @@
                                         onbegin="showLoading()" execute="@this" limitRender="true" 
                                         oncomplete="hideLoading(); #{rich:component('dominioVariavelTarefaPanel')}.hide()">
                                         <f:setPropertyActionListener target="#{dominioVariavelTarefaCrudAction.instance}" value="#{row}" />
-                                        <h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['dominioVariavelTarefa.select']}" />
+                                        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['dominioVariavelTarefa.select']}" />
                                     </a:commandLink>
                                 </h:form>
                             </ui:define>

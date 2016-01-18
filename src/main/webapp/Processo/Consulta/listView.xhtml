@@ -59,7 +59,7 @@
                     <ui:define name="headerToolBar" />
                     <ui:define name="toolBar">
                         <wi:toolBar
-                            url="#{wiSkin.imageFolder}/view.png"
+                            url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
                             title="#{infoxMessages['button.selecionar']}"
                             action="#{processoSearcher.visualizarProcesso(row)}">
                         </wi:toolBar>
@@ -75,7 +75,7 @@
                             oncomplete="#{rich:component('prioridadeProcessoPanel')}.show()">
                             <h:graphicImage
                                 title="#{infoxMessages['prioridadeProcesso.select']}"
-                                url="#{wiSkin.imageFolder}/priority.gif" />
+                                url="#{layoutController.getResourceUrlByPath('/imagens/priority.gif')}" />
                         </a:commandLink>
                     </ui:define>
                     <wi:columnOutputText
@@ -116,7 +116,7 @@
             <f:facet name="controls">
                 <h:panelGroup>
                     <h:graphicImage
-                        value="#{wiSkin.imageFolder}/closeMP.gif"
+                        value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
                         onclick="#{rich:component('prioridadeProcessoPanel')}.hide()" />
                 </h:panelGroup>
             </f:facet>

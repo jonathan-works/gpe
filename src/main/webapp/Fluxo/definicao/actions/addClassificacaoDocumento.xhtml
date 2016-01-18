@@ -32,7 +32,7 @@
                                     render="variavelClassificacaoDocumentoDiv"
                                     action="#{variavelClassificacaoDocumentoAction.removerClassificacao(row)}">
                                     <h:graphicImage
-                                        url="#{wiSkin.imageFolder}/grid/copyRight.gif"
+                                        url="#{layoutController.getResourceUrlByPath('/imagens/grid/copyRight.gif')}"
                                         title="#{infoxMessages['button.delete']}" />
                                 </a:commandLink>
                             </h:form>
@@ -70,7 +70,7 @@
                                 render="variavelClassificacaoDocumentoDiv"
                                 action="#{variavelClassificacaoDocumentoAction.adicionarClassificacao(row)}">
                                 <h:graphicImage
-                                    url="#{wiSkin.imageFolder}/grid/copyLeft.gif"
+                                    url="#{layoutController.getResourceUrlByPath('/imagens/grid/copyLeft.gif')}"
                                     title="#{infoxMessages['button.add']}" />
                             </a:commandLink>
                         </h:form>

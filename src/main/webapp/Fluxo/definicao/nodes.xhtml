@@ -33,7 +33,7 @@
                                     limitRender="true">
                                     <h:graphicImage
                                         title="#{infoxMessages['process.node.add']}"
-                                        url="#{wiSkin.imageFolder}/add.gif" />
+                                        url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}" />
                                 </a:commandLink>
                             </h:form>
                         </ui:define>
@@ -41,7 +41,7 @@
                             <h:form>
                                 <h:graphicImage
                                     title="#{infoxMessages['process.node.remove']}"
-                                    url="#{wiSkin.imageFolder}/remove.png"
+                                    url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
                                     styleClass="opacityHover"
                                     rendered="#{not (row.nodeType eq 'StartState' or row.nodeType eq 'Join')}">
                                     <a:ajax
@@ -55,7 +55,7 @@
                                 <h:graphicImage
                                     title="#{infoxMessages['process.node.up']}"
                                     rendered="#{key != 0}"
-                                    url="#{wiSkin.imageFolder}/jbpm/up.gif"
+                                    url="#{layoutController.getResourceUrlByPath('/imagens/jbpm/up.gif')}"
                                     styleClass="opacityHover">
                                     <a:ajax
                                         event="click"
@@ -67,7 +67,7 @@
                                 <h:graphicImage
                                     title="#{infoxMessages['process.node.down']}"
                                     rendered="#{key lt nodeFitter.nodes.size - 1}"
-                                    url="#{wiSkin.imageFolder}/jbpm/down.gif"
+                                    url="#{layoutController.getResourceUrlByPath('/imagens/jbpm/down.gif')}"
                                     styleClass="opacityHover">
                                     <a:ajax
                                         event="click"
@@ -102,7 +102,7 @@
                                                 cellspacing="0"
                                                 cellpadding="0">
                                                 <h:graphicImage
-                                                    url="#{wiSkin.imageFolder}/jbpm/#{nodeFitter.getIcon(row)}.gif"
+                                                    url="#{wiSkinTemp.imageFolder}/jbpm/#{nodeFitter.getIcon(row)}.gif"
                                                     title="#{row.nodeType}" />
                                                 <h:outputText
                                                     value="#{row.name}"
@@ -127,7 +127,7 @@
                                 cellpadding="0"
                                 cellspacing="0">
                                 <h:graphicImage
-                                    url="#{wiSkin.imageFolder}/jbpm/#{nodeFitter.getIcon(nodeFitter.currentNode)}.gif"
+                                    url="#{wiSkinTemp.imageFolder}/jbpm/#{nodeFitter.getIcon(nodeFitter.currentNode)}.gif"
                                     title="#{nodeFitter.currentNode.nodeType}" />
                                 <h:outputText
                                     value="#{nodeFitter.nodeName}" />
@@ -269,7 +269,7 @@
                             </f:facet>
                             <rich:column>
                                 <h:graphicImage
-                                    url="#{wiSkin.imageFolder}/jbpm/#{node[0]}.gif" />
+                                    url="#{wiSkinTemp.imageFolder}/jbpm/#{node[0]}.gif" />
                             </rich:column>
                             <rich:column>
                                 <h:outputText value="#{node[1]}" />
@@ -277,7 +277,7 @@
                             <rich:column>
                                 <h:form>
                                     <h:graphicImage
-                                        url="#{wiSkin.imageFolder}/jbpm/#{nodeFitter.newNodeType == node[0] ? 'checked' : 'unchecked'}.gif">
+                                        url="#{wiSkinTemp.imageFolder}/jbpm/#{nodeFitter.newNodeType == node[0] ? 'checked' : 'unchecked'}.gif">
                                         <a:ajax
                                             event="click"
                                             listener="#{nodeFitter.setNewNodeType(node[0])}"

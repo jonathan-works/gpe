@@ -14,7 +14,7 @@
                 status=":status"
                 render="#{empty reRenderRemove ? ':'.concat(gridId) : reRenderRemove},pageBodyDialogMessage"
                 onclick="return !confirm('Confirma?');">
-                <h:graphicImage url="#{wiSkin.imageFolder}/remove.png"
+                <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
                     title="#{infoxMessages['button.delete']}" />
                 <f:param name="firstResult" value="#{bean.firstResult}" />
                 <f:param name="page" value="#{bean.page}" />

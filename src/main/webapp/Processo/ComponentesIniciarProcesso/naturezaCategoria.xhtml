@@ -25,7 +25,7 @@
                         rendered="#{row.hasItens()}"
                         action="#{action.onSelectNatCatFluxo(row)}">
                         <h:graphicImage
-                            value="#{wiSkin.imageFolder}/jbpm/StartState.gif" />
+                            value="#{layoutController.getResourceUrlByPath('/imagens/jbpm/StartState.gif')}" />
                     </h:commandLink>
                     <a:commandLink
                         rendered="#{not row.hasItens() and row.necessitaPartes()}"
@@ -34,7 +34,7 @@
                         render="pageBody"
                         limitRender="true">
                         <h:graphicImage
-                            value="#{wiSkin.imageFolder}/jbpm/StartState.gif" />
+                            value="#{layoutController.getResourceUrlByPath('/imagens/jbpm/StartState.gif')}" />
                     </a:commandLink>
                     <a:commandLink
                         rendered="#{not row.hasItens() and not row.necessitaPartes()}"
@@ -44,7 +44,7 @@
                         limitRender="true"
                         oncomplete="abrirMovimentar();">
                         <h:graphicImage
-                            value="#{wiSkin.imageFolder}/jbpm/StartState.gif" />
+                            value="#{layoutController.getResourceUrlByPath('/imagens/jbpm/StartState.gif')}" />
                     </a:commandLink>
                 </ui:define>
                 <wi:columnOutputText

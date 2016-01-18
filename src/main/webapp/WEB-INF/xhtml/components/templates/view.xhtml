@@ -27,7 +27,7 @@
 				<h:graphicImage
 					id="#{fieldId}ViewTipImg"
 					
-					url="#{wiSkin.imageFolder}/help.gif">
+					url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}">
 					<rich:tooltip
 						
 						value="#{tipMessage}" />

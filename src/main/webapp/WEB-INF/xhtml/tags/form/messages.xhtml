@@ -25,7 +25,7 @@
         <label class="d-msg-h-lbl">#{infoxMessages['messages.header']}</label>
         <h:graphicImage
           styleClass="d-msg-h-close"
-          value="#{wiSkin.imageFolder}/closeMP.gif" />
+          value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}" />
       </div>
       <div class="d-msg-c">
         <h:messages
@@ -39,7 +39,7 @@
                     Messages({
                           existsMessages : "#{showDialogMessage}",
                           existsGlobalMessages : "#{!facesMessages.currentGlobalMessages.isEmpty()}",
-                          icon:"#{pathResolver.contextPath}/#{wiSkin.imageFolder}/Help\ Desk.jpg",
+                          icon:"#{pathResolver.contextPath}/#{layoutController.getResourceUrlByPath('/imagens/Help_Desk.jpg')}",
                           title:"#{infoxMessages['notification.msg.title']}",
                           timeout:-1
                         }).init();

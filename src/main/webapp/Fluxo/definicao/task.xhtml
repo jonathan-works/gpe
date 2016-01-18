@@ -79,7 +79,7 @@
             limitRender="true">
             <h:graphicImage
               title="#{infoxMessages['process.task.addVariable']}"
-              url="#{wiSkin.imageFolder}/add.gif" />
+              url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}" />
           </a:commandLink>
         </h:form>
       </f:facet>
@@ -94,7 +94,7 @@
             styleClass="opacityHover">
             <h:graphicImage
               title="#{infoxMessages['process.task.removeVariable']}"
-              url="#{wiSkin.imageFolder}/remove.png" />
+              url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" />
           </a:commandLink>
           <a:commandLink
             id="setCurrentVariableLink"
@@ -109,12 +109,12 @@
             <h:graphicImage
               title="#{infoxMessages['process.task.var.modelo']}"
               rendered="#{empty var.modeloList}"
-              url="#{wiSkin.imageFolder}/newfile.gif" />
+              url="#{layoutController.getResourceUrlByPath('/imagens/newfile.gif')}" />
             <h:graphicImage
               title="#{var.modeloDocumentoList.toString()}"
               rendered="#{not empty var.modeloList}"
               status=":status"
-              url="#{wiSkin.imageFolder}/file.gif" />
+              url="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}" />
           </a:commandLink>
           <a:commandLink
             id="setVariableForVariavelClassificacaoDocumentoLink"
@@ -128,7 +128,7 @@
             <h:graphicImage
               title="#{infoxMessages['variavelClassificacaoDocumento.gerenciarClassificacoes']}"
               status=":status"
-              url="#{wiSkin.imageFolder}/hamburger.png" />
+              url="#{layoutController.getResourceUrlByPath('/imagens/hamburger.png')}" />
             <f:setPropertyActionListener value="#{var.name}" target="#{variavelClassificacaoDocumentoAction.currentVariable}" />
             <f:setPropertyActionListener value="#{var.type}" target="#{variavelClassificacaoDocumentoAction.currentVariableType}" />
           </a:commandLink>

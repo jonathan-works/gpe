@@ -26,7 +26,7 @@
             <ui:define name="toolBar">
                 <h:graphicImage
                     title="#{infoxMessages['process.mail.receiver.remove']}"
-                    url="#{wiSkin.imageFolder}/remove.png"
+                    url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
                     style="cursor: pointer"
                 >
                     <a:ajax
@@ -58,7 +58,7 @@
                             <h:graphicImage
                                 title="#{infoxMessages['process.mail.receiver.add']}"
                                 id="novoLocPapel"
-                                url="#{wiSkin.imageFolder}/add.gif"
+                                url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}"
                                 style="cursor: pointer"
                             >
                                 <a:ajax

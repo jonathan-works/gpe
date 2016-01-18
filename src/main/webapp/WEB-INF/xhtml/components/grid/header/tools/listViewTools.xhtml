@@ -15,7 +15,7 @@
                 render="#{modalPanelId}Region" limitRender="true"
                 action="#{home.newInstance()}"
                 oncomplete="showModal('#{modalPanelId}')">
-                <h:graphicImage url="#{wiSkin.imageFolder}/add.gif"
+                <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}"
                     title="Adicionar novo registro" />
             </a:commandLink>
         </h:form>

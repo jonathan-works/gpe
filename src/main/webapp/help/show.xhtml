@@ -120,7 +120,7 @@
                     value="#{ajudaView.textoPesquisa}" />
                 <a:commandButton
                     render="@all"
-                    image="#{wiSkin.imageFolder}/grid/arrow-next-off.gif"
+                    image="#{layoutController.getResourceUrlByPath('/imagens/grid/arrow-next-off.gif')}"
                     oncomplete="if (#{rich:component('helpPanel')}.getItems().length &gt; 1) #{rich:component('helpPanel')}.switchToItem('search');" />
             </h:panelGroup>
             <h:panelGroup
@@ -128,18 +128,18 @@
                 styleClass="right-aligned">
                 <h:outputLink value="#{pathResolver.contextPath}/help/show.seam?viewId=#{ajudaView.viewId}">
                     <h:graphicImage
-                        url="#{wiSkin.imageFolder}/link.gif"
+                        url="#{layoutController.getResourceUrlByPath('/imagens/link.gif')}"
                         title="#{infoxMessages['ajuda.link']}" />
                 </h:outputLink>
                 <h:graphicImage
-                    url="#{wiSkin.imageFolder}/mod/edit.png"
+                    url="#{layoutController.getResourceUrlByPath('/imagens/mod/edit.png')}"
                     title="#{infoxMessages['ajuda.edit']}"
                     styleClass="cursor-pointer"
                     onclick="infox.openPopUp('_blank', '#{pathResolver.contextPath}/help/edit.seam?scid=#{org.jboss.seam.core.conversation.id}','1024','768');" />
             </h:panelGroup>
             <a:status id="status">
                 <f:facet name="start">
-                    <h:graphicImage value="#{wiSkin.imageFolder}/spinner.gif" />
+                    <h:graphicImage value="#{layoutController.getResourceUrlByPath('/imagens/spinner.gif')}" />
                 </f:facet>
             </a:status>
         </h:form>
