@@ -208,8 +208,7 @@ public class PrazoComunicacaoService {
 	}
 	
     public Boolean canRequestProrrogacaoPrazo(DestinatarioModeloComunicacao destinatarioModeloComunicacao) {
-		return canTipoComunicacaoRequestProrrogacaoPrazo(destinatarioModeloComunicacao.getModeloComunicacao().getTipoComunicacao()) &&
-				getDataPedidoProrrogacao(destinatarioModeloComunicacao.getProcesso()) == null;
+		return canTipoComunicacaoRequestProrrogacaoPrazo(destinatarioModeloComunicacao.getModeloComunicacao().getTipoComunicacao());
 	}
 
     public Boolean containsClassificacaoProrrogacaoPrazo(List<Documento> documentos, TipoComunicacao tipoComunicacao) {
