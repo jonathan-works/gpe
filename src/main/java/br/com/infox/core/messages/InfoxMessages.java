@@ -61,6 +61,9 @@ public class InfoxMessages extends HashMap<String, String> implements Serializab
 	
 	public String get(Object key) {
 		Map<String, String> map = locales.get(getRequestLocale());
+		if (map == null) {
+			map = locales.get(new Locale("pt", "BR"));
+		}
 		return (String) (map != null && map.containsKey(key) ? map.get(key) : key);
 	}
 	
