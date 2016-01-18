@@ -20,7 +20,6 @@ import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.InfoxTaskControllerHandler;
 
 public class TaskNodeFactory {
-	@SuppressWarnings("unchecked")
 	public TaskNode createTaskNode(UserTask userTask, ProcessDefinition processDefinition) {
 		TaskNode taskNode = new TaskNode(getIdentification(userTask));
 		taskNode.setEndTasks(true);
@@ -31,7 +30,7 @@ public class TaskNodeFactory {
 		task.setTaskController(new TaskController());
 		task.getTaskController().setTaskControllerDelegation(new Delegation(InfoxTaskControllerHandler.class.getName()));
 		task.getTaskController().getTaskControllerDelegation().setProcessDefinition(processDefinition);
-		taskNode.setTasks(new HashSet<>());
+		taskNode.setTasks(new HashSet<Task>());
 		taskNode.getTasks().add(task);
 		resolveVariables(userTask, task);
 		return taskNode;
