@@ -101,8 +101,9 @@
                                                 columns="2"
                                                 cellspacing="0"
                                                 cellpadding="0">
+                                                <c:set var="pathResource" value="/imagens/jbpm/#{nodeFitter.getIcon(row)}.gif" />
                                                 <h:graphicImage
-                                                    url="#{wiSkinTemp.imageFolder}/jbpm/#{nodeFitter.getIcon(row)}.gif"
+                                                    url="#{layoutController.getResourceUrlByPath(pathResource)}"
                                                     title="#{row.nodeType}" />
                                                 <h:outputText
                                                     value="#{row.name}"
@@ -126,8 +127,9 @@
                                 columns="2"
                                 cellpadding="0"
                                 cellspacing="0">
+                                <c:set var="pathResource" value="/imagens/jbpm/#{nodeFitter.getIcon(nodeFitter.currentNode)}.gif" />
                                 <h:graphicImage
-                                    url="#{wiSkinTemp.imageFolder}/jbpm/#{nodeFitter.getIcon(nodeFitter.currentNode)}.gif"
+                                    url="#{layoutController.getResourceUrlByPath(pathResource)}"
                                     title="#{nodeFitter.currentNode.nodeType}" />
                                 <h:outputText
                                     value="#{nodeFitter.nodeName}" />
@@ -268,16 +270,18 @@
                                     value="#{infoxMessages['process.node.type']}" />
                             </f:facet>
                             <rich:column>
+                                <c:set var="pathResource" value="/imagens/jbpm/#{node[0]}.gif" />
                                 <h:graphicImage
-                                    url="#{wiSkinTemp.imageFolder}/jbpm/#{node[0]}.gif" />
+                                    url="#{layoutController.getResourceUrlByPath(pathResource)}" />
                             </rich:column>
                             <rich:column>
                                 <h:outputText value="#{node[1]}" />
                             </rich:column>
                             <rich:column>
                                 <h:form>
-                                    <h:graphicImage
-                                        url="#{wiSkinTemp.imageFolder}/jbpm/#{nodeFitter.newNodeType == node[0] ? 'checked' : 'unchecked'}.gif">
+                                <c:set var="pathResource" value="/imagens/jbpm/#{nodeFitter.newNodeType == node[0] ? 'checked' : 'unchecked'}.gif" />
+                                <h:graphicImage
+                                        url="#{layoutController.getResourceUrlByPath(pathResource)}" >
                                         <a:ajax
                                             event="click"
                                             listener="#{nodeFitter.setNewNodeType(node[0])}"

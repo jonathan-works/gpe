@@ -159,8 +159,9 @@
                                             cellpadding="0"
                                             cellspacing="0"
                                         >
+                                            <c:set var="pathResource" value="/imagens/jbpm/#{event.getIcon(row)}.gif" />
                                             <h:graphicImage
-                                                url="#{wiSkinTemp.imageFolder}/jbpm/#{event.getIcon(row)}.gif"
+                                                url="#{layoutController.getResourceUrlByPath(pathResource)}"
                                             />
                                             <h:outputText
                                                 value="#{empty row.name ? messages['process.events.action'].concat(key + 1) : row.name}"

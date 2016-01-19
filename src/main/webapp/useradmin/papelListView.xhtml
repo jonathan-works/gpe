@@ -107,10 +107,11 @@
             roots="#{rolesTree.roots}"
             nodes="#{item.nodes}"
           >
+            <c:set var="pathResource" value="/imagens/#{item.entity.identificador.startsWith('/') ? 'resource.gif' : 'role.gif'}" />
             <rich:treeNode
-              iconCollapsed="#{wiSkinTemp.imageFolder}/#{item.entity.identificador.startsWith('/') ? 'resource.gif' : 'role.gif'}"
-              iconExpanded="#{wiSkinTemp.imageFolder}/#{item.entity.identificador.startsWith('/') ? 'resource.gif' : 'role.gif'}"
-              iconLeaf="#{wiSkinTemp.imageFolder}/#{item.entity.identificador.startsWith('/') ? 'resource.gif' : 'role.gif'}"
+              iconCollapsed="#{layoutController.getResourceUrlByPath(pathResource)}"
+              iconExpanded="#{layoutController.getResourceUrlByPath(pathResource)}"
+              iconLeaf="#{layoutController.getResourceUrlByPath(pathResource)}"
             >
               #{item.entity}
             </rich:treeNode>
