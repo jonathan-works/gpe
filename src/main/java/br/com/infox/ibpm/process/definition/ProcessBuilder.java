@@ -468,7 +468,9 @@ public class ProcessBuilder implements Serializable {
 					processoLocalizacaoIbpmManager.deleteProcessoLocalizacaoIbpmByTaskInstanceId(taskInstance.getId());
 					processoLocalizacaoIbpmManager.addProcessoLocalizacaoIbpmByTaskInstance(taskInstance);
 				}
-				taskInstance.getSwimlaneInstance().setPooledActors(actorIds);
+				if (taskInstance.getSwimlaneInstance() != null) {
+				    taskInstance.getSwimlaneInstance().setPooledActors(actorIds);
+				}
 			}
 			if (taskInstance.getTask().getPooledActorsExpression() != null){
 				//TODO: REAVALIAR EXPRESSÃO
