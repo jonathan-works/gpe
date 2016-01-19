@@ -7,12 +7,10 @@ import java.util.Date;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.action.AbstractAction;
-import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
@@ -28,10 +26,7 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
     private static final LogProvider LOG = Logging
             .getLogProvider(FluxoCrudAction.class);
     public static final String NAME = "fluxoCrudAction";
-    
-    @In
-    private ActionMessagesService actionMessagesService;
-    
+
     private boolean replica = false;
 
     public String criarReplica() {
@@ -113,15 +108,5 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
         super.newInstance();
         getInstance().setPublicado(false);
         this.replica = false;
-    }
-    
-    public void converterParaJpdl() {
-    	try {
-    		getManager().converterParaJpdl(getInstance());
-    		FacesMessages.instance().add("Definição convertida com sucesso");
-    	} catch (Exception e) {
-    		LOG.error("", e);
-    		actionMessagesService.handleGenericException(e, "");
-    	}
     }
 }

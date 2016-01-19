@@ -1,6 +1,5 @@
 package br.com.infox.epp.fluxo.manager;
 
-import java.io.StringWriter;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -15,7 +14,6 @@ import javax.ejb.TransactionAttributeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jbpm.graph.def.ProcessDefinition;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
@@ -25,8 +23,6 @@ import br.com.infox.epp.fluxo.dao.FluxoDAO;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.FluxoPapel;
 import br.com.infox.epp.fluxo.entity.RaiaPerfil;
-import br.com.infox.epp.modeler.converter.BpmnJpdlConverter;
-import br.com.infox.ibpm.jpdl.JpdlXmlWriter;
 
 @Name(FluxoManager.NAME)
 @AutoCreate
@@ -130,17 +126,4 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
                 && isValidUsuarioPerfil(fluxo, usuarioPerfil);
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void converterParaJpdl(Fluxo fluxo) {
-    	refresh(fluxo);
-    	BpmnJpdlConverter converter = new BpmnJpdlConverter();
-    	ProcessDefinition processDefinition = converter.convert(fluxo.getBpmnXml());
-    	processDefinition.setName(fluxo.getFluxo());
-    	StringWriter writer = new StringWriter();
-    	JpdlXmlWriter jpdlWriter = new JpdlXmlWriter(writer);
-    	jpdlWriter.write(processDefinition);
-    	fluxo.setXml(writer.toString());
-    	fluxo.setBpmn(false);
-    	update(fluxo);
-    }
 }
