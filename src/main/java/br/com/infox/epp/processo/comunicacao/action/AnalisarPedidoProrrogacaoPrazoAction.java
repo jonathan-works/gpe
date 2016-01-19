@@ -85,7 +85,11 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 	}
 	
 	public void atualizaNovoPrazo() {
-		novoPrazoCumprimento = DateUtil.getEndOfDay(calendarioEventosManager.getPrimeiroDiaUtil(getDataFimPrazoCumprimento(), getDiasProrrogacao()));
+		if (getDiasProrrogacao() != null) {
+			novoPrazoCumprimento = DateUtil.getEndOfDay(calendarioEventosManager.getPrimeiroDiaUtil(getDataFimPrazoCumprimento(), getDiasProrrogacao()));
+		} else {
+			novoPrazoCumprimento = null;
+		}
 	}
 	
 	public void prorrogarPrazoDeCumprimento(){
