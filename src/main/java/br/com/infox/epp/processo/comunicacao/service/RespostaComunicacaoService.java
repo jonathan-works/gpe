@@ -1,7 +1,6 @@
 package br.com.infox.epp.processo.comunicacao.service;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +18,8 @@ import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.graph.exe.ProcessInstance;
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
 
 import br.com.infox.certificado.bean.CertificateSignatureBean;
 import br.com.infox.certificado.exception.CertificadoException;
@@ -135,22 +136,17 @@ public class RespostaComunicacaoService {
 		if (contextInstance.getVariable("respostaTempestiva") != null) {
 			return;
 		}
-		boolean respostaTempestiva = false;
 		MetadadoProcesso metadadoDataCiencia = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA);
-		MetadadoProcesso metadadoPrazoDestinatario = comunicacao.getMetadado(ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
-		if (metadadoDataCiencia != null && metadadoPrazoDestinatario != null) {
-			Date dataCiencia = DateUtil.getBeginningOfDay((Date) metadadoDataCiencia.getValue());
-			Integer prazoDestinatario = metadadoPrazoDestinatario.getValue();
-			Calendar c = Calendar.getInstance();
-			c.setTime(dataCiencia);
-			c.add(Calendar.DAY_OF_MONTH, prazoDestinatario);
-			Date dataFimPrazoDestinatario = DateUtil.getEndOfDay(c.getTime());
-			
-			if (dataCiencia.equals(DateUtil.getBeginningOfDay(dataResposta)) || dataFimPrazoDestinatario.equals(DateUtil.getEndOfDay(dataResposta)) ||
-					(dataCiencia.before(dataResposta) && dataFimPrazoDestinatario.after(dataResposta))) {
-				respostaTempestiva = true;
-			}
+		Date dataLimiteCumprimento = prazoComunicacaoService.getDataLimiteCumprimento(comunicacao);
+		boolean respostaTempestiva = false;
+		if (metadadoDataCiencia != null && dataLimiteCumprimento != null) {
+			Date dataCiencia = metadadoDataCiencia.getValue();
+			respostaTempestiva = isRespostaTempestiva(dataCiencia, dataLimiteCumprimento, dataResposta);
 		}
 		contextInstance.setVariable("respostaTempestiva", respostaTempestiva);
+	}
+
+	boolean isRespostaTempestiva(Date dataCiencia, Date dataLimiteCumprimento, Date dataResposta) {
+		return new Interval(new DateTime(dataCiencia), new DateTime(dataLimiteCumprimento)).contains(new DateTime(dataResposta));
 	}
 }
