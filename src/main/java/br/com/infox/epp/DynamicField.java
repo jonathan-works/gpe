@@ -5,25 +5,24 @@ import java.util.Map;
 
 import javax.persistence.metamodel.SingularAttribute;
 
-
 public class DynamicField {
 
 	private String id;
 	private String label;
 	private String path;
 	private String tooltip;
-	private String previousValue;
-	private String value;
+	private Object previousValue;
+	private Object value;
 	private FieldType type;
-	private SingularAttribute<?,String> keyAttribute;
-	private SingularAttribute<?,String> labelAttribute;
+	private SingularAttribute<?, String> keyAttribute;
+	private SingularAttribute<?, String> labelAttribute;
 	private final Map<String, Object> options;
 
-	public DynamicField(){
+	public DynamicField() {
 		this.options = new HashMap<>();
 		this.previousValue = null;
 	}
-	
+
 	public String getId() {
 		return id;
 	}
@@ -48,10 +47,10 @@ public class DynamicField {
 		this.path = path;
 	}
 
-	public void setType(FieldType type){
+	public void setType(FieldType type) {
 		this.type = type;
 	}
-	
+
 	public FieldType getType() {
 		return type;
 	}
@@ -68,12 +67,12 @@ public class DynamicField {
 		return options;
 	}
 
-	public String getValue() {
+	public Object getValue() {
 		return value;
 	}
 
-	public void setValue(String value) {
-		if (this.previousValue == null){
+	public void setValue(Object value) {
+		if (this.previousValue == null) {
 			this.previousValue = this.value;
 		}
 		this.value = value;
@@ -98,9 +97,14 @@ public class DynamicField {
 	public void set(String key, Object value) {
 		this.options.put(key, value);
 	}
-	
-	public Object get(String key){
+
+	public Object get(String key) {
 		return this.options.get(key);
+	}
+
+	@Override
+	public String toString() {
+		return "DynamicField [id=" + id + ", value=" + value + ", type=" + type + "]";
 	}
 
 }

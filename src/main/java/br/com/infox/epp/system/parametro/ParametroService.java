@@ -1,7 +1,6 @@
 package br.com.infox.epp.system.parametro;
 
 import java.io.Serializable;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,15 +15,22 @@ import javax.enterprise.inject.Instance;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
+
+import br.com.infox.epp.Filter;
 
 @Stateless
 public class ParametroService implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private Map<String, SortedSet<ParametroDefinition>> parametrosByGrupo;
-	private Map<String, SortedSet<ParametroDefinition>> parametrosByNome;
+	private Map<String, SortedSet<ParametroDefinition<?>>> parametrosByGrupo;
+	private Map<String, SortedSet<ParametroDefinition<?>>> parametrosByNome;
 
 	@Inject
 	private EntityManager entityManager;
@@ -32,10 +38,30 @@ public class ParametroService implements Serializable {
 	@Inject
 	private Instance<ParametroProvider> parametroProviders;
 	
-	public List<SelectItem> getItems(SingularAttribute<?,?> key, SingularAttribute<?,?> label){
-		String pattern="select new javax.faces.model.SelectItem( concat('''',o.{0}), concat('''',o.{1}) ) from {2} o order by o.{1}";
-		Object[] arguments = {label.getName(), key.getName(), key.getDeclaringType().getJavaType().getName()};
-		return entityManager.createQuery(MessageFormat.format(pattern, arguments), SelectItem.class).getResultList();
+	
+	public List<SelectItem> getItemsCriteria(ParametroDefinition<?> parametroDefinition){
+		return null;
+	}
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public <T> List<SelectItem> getItems(ParametroDefinition parametroDefinition){
+		SingularAttribute<?,?> key = parametroDefinition.getKeyAttribute();
+		SingularAttribute<?,?> label = parametroDefinition.getLabelAttribute();
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<SelectItem> cq = cb.createQuery(SelectItem.class);
+		
+		Class<?> rootClass = key.getDeclaringType().getJavaType();
+		Root<?> from = cq.from(rootClass);
+		cq = cq.select(cb.construct(AnySelectItem.class, from.get(label.getName()), from.get(key.getName())));
+		List<Filter<?,?>> filters = parametroDefinition.getFilters();
+		if (filters != null && !filters.isEmpty()){
+			Predicate predicate = cb.and();
+			for (Filter<?,?> entry : filters) {
+				predicate = cb.and(predicate, entry.filter((Path)from, cb));
+			}
+			cq.where(predicate);
+		}
+		cq = cq.orderBy(cb.asc(from.get(label.getName())));
+		return entityManager.createQuery(cq).getResultList();
 	}
 	
 	@PostConstruct
@@ -43,7 +69,7 @@ public class ParametroService implements Serializable {
 		this.parametrosByGrupo = new HashMap<>();
 		this.parametrosByNome = new HashMap<>();
 		for (ParametroProvider parametroProvider : parametroProviders) {
-			for(ParametroDefinition parametroDefinition : parametroProvider.getParametroDefinitions()){
+			for(ParametroDefinition<?> parametroDefinition : parametroProvider.getParametroDefinitions()){
 				addParametro(parametroDefinition);
 			}
 		}
@@ -59,8 +85,7 @@ public class ParametroService implements Serializable {
 		}
 		return map.get(key);
 	}
-	
-	private void addParametro(ParametroDefinition parametroDefinition) {
+	private void addParametro(ParametroDefinition<?> parametroDefinition) {
 		String grupo = parametroDefinition.getGrupo();
 		String nome = parametroDefinition.getNome();
 		if (get(nome, parametrosByNome).contains(parametroDefinition) || get(grupo, parametrosByGrupo).contains(parametroDefinition)) {
@@ -70,8 +95,18 @@ public class ParametroService implements Serializable {
 		get(nome, parametrosByNome).add(parametroDefinition);
 	}
 
-	public List<ParametroDefinition> getParametros(String grupo){
+	public List<ParametroDefinition<?>> getParametros(String grupo){
 		return new ArrayList<>(get(grupo, parametrosByGrupo));
+	}
+
+	static class AnySelectItem extends SelectItem {
+
+		public AnySelectItem(Object label, Object value) {
+			super(String.valueOf(label), String.valueOf(value));
+		}
+		
+		private static final long serialVersionUID = 1L;
+		
 	}
 	
 }

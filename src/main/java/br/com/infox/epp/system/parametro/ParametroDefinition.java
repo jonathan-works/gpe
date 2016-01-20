@@ -1,10 +1,16 @@
 package br.com.infox.epp.system.parametro;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.metamodel.SingularAttribute;
 
-public class ParametroDefinition implements Comparable<ParametroDefinition> {
+import br.com.infox.epp.FieldType;
+import br.com.infox.epp.Filter;
+
+public class ParametroDefinition<T> implements Comparable<ParametroDefinition<T>> {
 
 	public static interface Precedencia {
 		int DEFAULT = 0;
@@ -14,26 +20,27 @@ public class ParametroDefinition implements Comparable<ParametroDefinition> {
 	}
 
 	private final String nome;
-	private final Class<?> tipo;
+	private final FieldType tipo;
 	private final String grupo;
 	private final int precedencia;
-	private final SingularAttribute<?, ?> keyAttribute;
-	private final SingularAttribute<?, ?> labelAttribute;
+	private final SingularAttribute<T, ?> keyAttribute;
+	private final SingularAttribute<T, ?> labelAttribute;
+	private final List<Filter<T,?>> filters;
 
-	public ParametroDefinition(String grupo, String nome, Class<?> tipo) {
+	public ParametroDefinition(String grupo, String nome, FieldType tipo) {
 		this(grupo, nome, tipo, Precedencia.DEFAULT);
 	}
 
-	public ParametroDefinition(String grupo, String nome, Class<?> tipo, int precedencia) {
+	public ParametroDefinition(String grupo, String nome, FieldType tipo, int precedencia) {
 		this(grupo, nome, tipo, null, null, precedencia);
 	}
 	
-	public ParametroDefinition(String grupo, String nome, Class<?> tipo, SingularAttribute<?, ?> keySingularAttribute,
-			SingularAttribute<?, ?> labelSingularAttribute) {
+	public ParametroDefinition(String grupo, String nome, FieldType tipo, SingularAttribute<T, ?> keySingularAttribute,
+			SingularAttribute<T, ?> labelSingularAttribute) {
 		this(grupo, nome, tipo, keySingularAttribute, labelSingularAttribute, Precedencia.DEFAULT);
 	}
 
-	public ParametroDefinition(String grupo, String nome, Class<?> tipo, SingularAttribute<?, ?> code, SingularAttribute<?, ?> label,
+	public ParametroDefinition(String grupo, String nome, FieldType tipo, SingularAttribute<T, ?> code, SingularAttribute<T, ?> label,
 			int precedencia) {
 		this.nome = Objects.requireNonNull(nome);
 		this.tipo = Objects.requireNonNull(tipo);
@@ -41,13 +48,14 @@ public class ParametroDefinition implements Comparable<ParametroDefinition> {
 		this.precedencia = Objects.requireNonNull(precedencia);
 		this.keyAttribute = code;
 		this.labelAttribute = label;
+		this.filters = new ArrayList<>();
 	}
 
-	public SingularAttribute<?, ?> getKeyAttribute() {
+	public SingularAttribute<T, ?> getKeyAttribute() {
 		return keyAttribute;
 	}
 
-	public SingularAttribute<?, ?> getLabelAttribute() {
+	public SingularAttribute<T, ?> getLabelAttribute() {
 		return labelAttribute;
 	}
 
@@ -55,7 +63,7 @@ public class ParametroDefinition implements Comparable<ParametroDefinition> {
 		return nome;
 	}
 
-	public Class<?> getTipo() {
+	public FieldType getTipo() {
 		return tipo;
 	}
 
@@ -68,7 +76,7 @@ public class ParametroDefinition implements Comparable<ParametroDefinition> {
 	}
 
 	@Override
-	public int compareTo(ParametroDefinition o) {
+	public int compareTo(ParametroDefinition<T> o) {
 		int result = nome.compareTo(o.nome);
 		if (result == 0) {
 			result = precedencia - o.precedencia;
@@ -85,6 +93,7 @@ public class ParametroDefinition implements Comparable<ParametroDefinition> {
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -93,7 +102,7 @@ public class ParametroDefinition implements Comparable<ParametroDefinition> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ParametroDefinition other = (ParametroDefinition) obj;
+		ParametroDefinition<T> other = (ParametroDefinition<T>) obj;
 		if (nome == null) {
 			if (other.nome != null)
 				return false;
@@ -102,6 +111,15 @@ public class ParametroDefinition implements Comparable<ParametroDefinition> {
 		if (precedencia != other.precedencia)
 			return false;
 		return true;
+	}
+
+	public <V> ParametroDefinition<T> addFilter(Filter<T,?> filter){
+		filters.add(filter);
+		return this;
+	}
+	
+	public List<Filter<T,?>> getFilters() {
+		return Collections.unmodifiableList(filters);
 	}
 
 }

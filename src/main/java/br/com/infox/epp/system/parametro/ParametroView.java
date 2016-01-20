@@ -58,8 +58,7 @@ public class ParametroView implements Serializable {
 		refreshFormFields(parametroService.getParametros(grupo));
 	}
 
-	public DynamicField createFormField(ParametroDefinition definicaoParametro) {
-		Class<?> type = definicaoParametro.getTipo();
+	public DynamicField createFormField(ParametroDefinition<?> definicaoParametro) {
 		Parametro parametro = parametroManager.getParametro(definicaoParametro.getNome());
 		if (parametro == null){
 			return null;
@@ -67,20 +66,20 @@ public class ParametroView implements Serializable {
 		DynamicField ff = new DynamicField();
 		ff.setId(parametro.getNomeVariavel());
 		ff.setLabel(parametro.getDescricaoVariavel());
-		ff.setType(FieldType.getByClass(type));
+		ff.setType(definicaoParametro.getTipo());
 		ff.setTooltip(parametro.getDescricaoVariavel());
 		ff.setPath(MessageFormat.format("{0}.{1}", Introspector.decapitalize(ParametroView.class.getSimpleName()), "formFields"));
 		ff.setValue(parametro.getValorVariavel());
 		if (definicaoParametro.getKeyAttribute() != null && definicaoParametro.getLabelAttribute() != null){
-			List<SelectItem> items = parametroService.getItems(definicaoParametro.getKeyAttribute(), definicaoParametro.getLabelAttribute());
+			List<SelectItem> items = parametroService.getItems(definicaoParametro);
 			ff.set("items", items);
 		}
 		return ff;
 	}
 	
-	private void refreshFormFields(Collection<ParametroDefinition> parametros) {
+	private void refreshFormFields(Collection<ParametroDefinition<?>> parametros) {
 		formFields.clear();
-		for (ParametroDefinition parametro : parametros) {
+		for (ParametroDefinition<?> parametro : parametros) {
 			DynamicField ff = createFormField(parametro);
 			if (ff != null){
 				formFields.put(ff.getId(), ff);
@@ -103,7 +102,7 @@ public class ParametroView implements Serializable {
 			Parametro parametro = parametroManager.getParametro(entry.getKey()); 
 			DynamicField formField = entry.getValue();
 			if (parametro != null) {
-				parametro.setValorVariavel(formField.getValue());
+				parametro.setValorVariavel(String.valueOf(formField.getValue()));
 				parametroManager.update(parametro);
 			}
 		}

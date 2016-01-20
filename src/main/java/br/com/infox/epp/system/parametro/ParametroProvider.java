@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface ParametroProvider {
 
-	List<ParametroDefinition> getParametroDefinitions();
+	List<ParametroDefinition<?>> getParametroDefinitions();
 
 }

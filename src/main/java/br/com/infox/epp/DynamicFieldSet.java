@@ -45,6 +45,7 @@ public class DynamicFieldSet extends UIComponentBase {
 	public DynamicFieldSet() {
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void encodeBegin(FacesContext context) throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
