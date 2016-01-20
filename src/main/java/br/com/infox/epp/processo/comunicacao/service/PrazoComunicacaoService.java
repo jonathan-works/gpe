@@ -312,4 +312,9 @@ public class PrazoComunicacaoService {
         String novaDataCumprimento = new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(calcularPrazoDeCumprimento(processo));
         atualizarMetadado(metaLimiteDtCumprimento, novaDataCumprimento);
     }
+    
+    public Date getPrazoLimiteParaResposta(Processo comunicacao){
+    	return getDataLimiteCumprimento(comunicacao);
+    }
+    
 }
