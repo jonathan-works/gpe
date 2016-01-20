@@ -18,13 +18,10 @@ import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.graph.exe.ProcessInstance;
-import org.joda.time.DateTime;
-import org.joda.time.Interval;
 
 import br.com.infox.certificado.bean.CertificateSignatureBean;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
@@ -43,6 +40,7 @@ import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.seam.util.ComponentUtil;
+import br.com.infox.util.time.DateRange;
 
 @Name(RespostaComunicacaoService.NAME)
 @Scope(ScopeType.EVENT)
@@ -137,7 +135,7 @@ public class RespostaComunicacaoService {
 			return;
 		}
 		MetadadoProcesso metadadoDataCiencia = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA);
-		Date dataLimiteCumprimento = prazoComunicacaoService.getDataLimiteCumprimento(comunicacao);
+		Date dataLimiteCumprimento = prazoComunicacaoService.getPrazoLimiteParaResposta(comunicacao);
 		boolean respostaTempestiva = false;
 		if (metadadoDataCiencia != null && dataLimiteCumprimento != null) {
 			Date dataCiencia = metadadoDataCiencia.getValue();
@@ -147,6 +145,6 @@ public class RespostaComunicacaoService {
 	}
 
 	boolean isRespostaTempestiva(Date dataCiencia, Date dataLimiteCumprimento, Date dataResposta) {
-		return new Interval(new DateTime(dataCiencia), new DateTime(dataLimiteCumprimento)).contains(new DateTime(dataResposta));
+		return new DateRange(dataCiencia, dataLimiteCumprimento).contains(dataResposta);
 	}
 }
