@@ -12,7 +12,6 @@ import org.joda.time.Days;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
 import org.joda.time.ReadableDuration;
-import org.joda.time.Years;
 
 /**
  * @author erik
@@ -61,11 +60,14 @@ public class DateRange {
     }
 
     public boolean contains(final java.util.Date date) {
-        return getInterval().contains(new DateTime(date));
+    	long thisStart = interval.getStartMillis();
+        long thisEnd = interval.getEndMillis();
+        long millisInstant = date.getTime();
+        return (millisInstant >= thisStart && millisInstant <= thisEnd);
     }
 
     public boolean contains(final DateRange range) {
-        return getInterval().contains(range.getInterval());
+        return contains(range.getStart()) && contains(range.getEnd());
     }
 
     public Long getDays() {
