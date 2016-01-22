@@ -3,6 +3,7 @@ package br.com.infox.core.tree;
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.io.Serializable;
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -16,13 +17,14 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.core.Expressions;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.richfaces.component.UICollapsiblePanel;
 import org.richfaces.component.UITree;
 import org.richfaces.event.TreeSelectionChangeEvent;
 
 import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Scope(ScopeType.PAGE)
@@ -141,9 +143,16 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializ
 
     protected void raiseEvents(EntityNode<E> en) {
         Events.instance().raiseEvent(getEventSelected(), getSelected());
+        if (getTreeItemSelect() != null) {
+            BeanManager.INSTANCE.fireEvent(getSelected(), getTreeItemSelect());
+        }
     }
 
     protected String getEventSelected() {
+        return null;
+    }
+    
+    protected Annotation getTreeItemSelect() {
         return null;
     }
 
@@ -292,4 +301,5 @@ public abstract class AbstractTreeHandler<E> implements TreeHandler<E>, Serializ
     private GenericDAO genericDAO() {
         return ComponentUtil.getComponent(GenericDAO.NAME);
     }
+    
 }

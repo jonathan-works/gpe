@@ -298,21 +298,21 @@ public class SituacaoProcessoDAO {
 	}
     
 	protected void appendUnidadeDecisoraColegiadaFilter(AbstractQuery<?> abstractQuery, From<?, Processo> processo) {
-		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
         Root<MetadadoProcesso> metadado = subquery.from(MetadadoProcesso.class);
         subquery.select(cb.literal(1));
         String metadadoUnidadeDecisora = EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA.getMetadadoType();
         Integer idUnidadeDecisora = getAuthenticator().getColegiadaLogada().getIdUnidadeDecisoraColegiada();
-        Predicate predicateSubquery = cb.and(cb.equal(metadado.get(MetadadoProcesso_.metadadoType), metadadoUnidadeDecisora));
-        predicateSubquery = cb.and(cb.equal(metadado.get(MetadadoProcesso_.valor), idUnidadeDecisora.toString()), predicateSubquery);
-        predicateSubquery = cb.and(cb.equal(metadado.get(MetadadoProcesso_.processo).get(Processo_.idProcesso), processo.get(Processo_.idProcesso)), predicateSubquery);
+        Predicate predicateSubquery = cb.and(cb.equal(metadado.get("metadadoType"), metadadoUnidadeDecisora));
+        predicateSubquery = cb.and(cb.equal(metadado.get("valor"), idUnidadeDecisora.toString()), predicateSubquery);
+        predicateSubquery = cb.and(cb.equal(metadado.get("processo").get("idProcesso"), processo.get("idProcesso")), predicateSubquery);
         subquery.where(predicateSubquery);
         Predicate predicate = abstractQuery.getRestriction();
-    	predicate = cb.and(cb.exists(subquery), predicate);
-    	abstractQuery.where(predicate);
-	}
-	
+        predicate = cb.and(cb.exists(subquery), predicate);
+        abstractQuery.where(predicate);
+    }
+    
 	protected void appendUnidadeDecisoraMonocraticaFilter(AbstractQuery<?> abstractQuery, From<?, Processo> processo) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
@@ -333,6 +333,8 @@ public class SituacaoProcessoDAO {
 	
     private void appendPerfilTemplateFilter(AbstractQuery<?> abstractQuery, From<?, TaskInstance> taskInstance) {
         Integer idPerfilTemplate = Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getId();
+        String login = Authenticator.getUsuarioLogado().getLogin();
+        String localizacao = Authenticator.getLocalizacaoAtual().getCodigo();
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
         subquery.select(cb.literal(1));
@@ -340,7 +342,12 @@ public class SituacaoProcessoDAO {
         Join<PooledActor, TaskInstance> taskInstances = pooledActor.join("taskInstances", JoinType.INNER);
         subquery.where(
                 cb.equal(taskInstance.<Long>get("id"), taskInstances.<Long>get("id")),
-                cb.equal(pooledActor.<String>get("actorId"), cb.literal(idPerfilTemplate.toString()))
+                cb.or(
+                        cb.equal(pooledActor.<String>get("actorId"), cb.literal(idPerfilTemplate.toString())),
+                        cb.equal(pooledActor.<String>get("actorId"), cb.literal(login)),
+                        cb.equal(pooledActor.<String>get("actorId"), cb.literal(localizacao+":"+idPerfilTemplate.toString())),
+                        cb.equal(pooledActor.<String>get("actorId"), cb.literal(localizacao))
+                )
         );
         Predicate predicate = abstractQuery.getRestriction();
         abstractQuery.where(cb.and(cb.exists(subquery), predicate));
@@ -407,5 +414,4 @@ public class SituacaoProcessoDAO {
 	protected Authenticator getAuthenticator() {
 	    return Authenticator.instance();
 	}
-	
 }

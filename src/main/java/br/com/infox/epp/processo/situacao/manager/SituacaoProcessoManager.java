@@ -40,7 +40,7 @@ public class SituacaoProcessoManager {
 			} else if (TipoProcesso.COMUNICACAO_NAO_ELETRONICA.equals(tipoProcesso)) {
 				taskBeanList = situacaoProcessoDAO.getTaskIntances(tipoProcesso, true, numeroProcessoRoot);
 				createFluxoBeanList(result, tipoProcesso, taskBeanList, false);
-			} else {
+            } else {
 				taskBeanList = situacaoProcessoDAO.getTaskIntances(tipoProcesso, false, numeroProcessoRoot);
 				createFluxoBeanList(result, tipoProcesso, taskBeanList, false);
 			}
@@ -53,9 +53,9 @@ public class SituacaoProcessoManager {
 		for (TaskBean taskBean : taskBeanList) {
 		    String nomeFluxo = taskBean.getNomeFluxo();
 		    if (TipoProcesso.COMUNICACAO.equals(tipoProcesso)) {
-		        nomeFluxo = expedida ? nomeFluxo.concat(" - Expedidas") : nomeFluxo.concat(" - Recebidas");
+		        nomeFluxo = expedida ? nomeFluxo.concat("-Expedidas") : nomeFluxo.concat("-Recebidas");
 		    }
-		    FluxoBean fluxoBean = getFluxoBeanByProcessDefinitionId(fluxoBeanList, nomeFluxo);
+		    FluxoBean fluxoBean = getFluxoBeanByName(fluxoBeanList, nomeFluxo);
 		    if (fluxoBean == null) {
 		        fluxoBean = createFluxoBean(tipoProcesso, expedida, taskBean, nomeFluxo);
 		        fluxoBeanList.add(fluxoBean);
@@ -75,7 +75,7 @@ public class SituacaoProcessoManager {
         return fluxoBean;
     }
 	
-	private FluxoBean getFluxoBeanByProcessDefinitionId(List<FluxoBean> result, String nomeFluxo) {
+	private FluxoBean getFluxoBeanByName(List<FluxoBean> result, String nomeFluxo) {
 	    for (FluxoBean fluxoBean : result) {
 	        if (fluxoBean.getName().equals(nomeFluxo)) {
 	            return fluxoBean;

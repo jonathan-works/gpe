@@ -735,9 +735,8 @@ public class TaskInstanceHome implements Serializable {
             } catch (DAOException e) {
                 LOG.error("TaskInstanceHome.removeUsuario(taskInstance)", e);
             }
+            }
 	    }
-	}
-
 	public void removeUsuario(Long idTaskInstance) {
 	    try {
             taskInstanceManager.removeUsuario(idTaskInstance);
@@ -745,8 +744,7 @@ public class TaskInstanceHome implements Serializable {
         } catch (Exception e) {
             LOG.error("TaskInstanceHome.removeUsuario(idTaskInstance)", e);
         }
-	}
-
+        }
 	public void removeUsuario() {
 	    if (BusinessProcess.instance().hasCurrentTask()) {
             try {
@@ -765,7 +763,6 @@ public class TaskInstanceHome implements Serializable {
         FacesMessages.instance().clear();
         FacesMessages.instance().add("Tarefa liberada com sucesso.");
 	}
-
 
 	public void start(long taskId) {
 		setTaskId(taskId);

@@ -1,0 +1,198 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:wi="http://www.itx.com.br/jsf"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:a="http://richfaces.org/a4j"
+      xmlns:s="http://jboss.org/schema/seam/taglib"
+      xmlns:infox="http://www.infox.com.br/jsf"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<h:outputScript library="js" name="components.js" />
+	
+	<ui:param name="showTaskButtons" value="#{empty showTaskButtons ? 'true' : showTaskButtons}" />
+	
+	<rich:panel id="comunicacaoInternaPanel" header="Comunicação Interna" >
+	
+		<h:form id="comunicacaoForm">
+			<wi:selectOneMenuEntity id="tipoComunicacao" label="#{infoxMessages['comunicacao.tipoComunicacao']}"
+				showRequired="true" items="#{envioComunicacaoInternaView.tiposComunicacao}"
+				value="#{envioComunicacaoInternaView.tipoComunicacao}"
+				rendered="#{not envioComunicacaoInternaView.expedida}">
+				<a:ajax event="change" render="documentoComunicacaoForm" execute="@this" process="@this" 
+					listener="#{envioComunicacaoInternaView.onChangeTipoComunicacao}" />
+			</wi:selectOneMenuEntity>
+			
+			<a:commandButton id="visualizarComunicacao" 
+				render="@this" execute="@this"
+				value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
+				styleClass="buttons"
+				rendered="#{envioComunicacaoInternaView.expedida}"
+				oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');" >
+				<f:setPropertyActionListener value="#{envioComunicacaoInternaView.modeloComunicacao.id}" target="#{flash.idModelo}" />
+				<infox:flashcopy/>
+			</a:commandButton>
+		</h:form>
+		
+		<p:outputPanel style="background-color: white; padding-left: 10px; width: 100%; display: inline-block;" 
+			rendered="#{not envioComunicacaoInternaView.expedida}" autoUpdate="false">
+			
+			<!-- Painel dos Destinatários -->
+			<div id="destinatariosPanel" style="vertical-align: top; margin-top: 1em; width: 100%;">
+				<rich:panel header="#{infoxMessages['comunicacao.localizacoes']}" switchType="client">
+				    <h:form>
+	                      <wi:tree
+	                          id="localizacao"
+	                          assignTo="envioComunicacaoInternaView.localizacaoDestino"
+	                          tree="#{localizacaoSubTree}"
+	                          icon="#{wiSkin.imageFolder}/nivelTree.gif"
+	                          iconLeaf="#{wiSkin.imageFolder}/file.gif"
+	                          label="#{infoxMessages['comunicacao.localizacoes']}"
+	                          required="true"
+	                          render="perfisPermitidosDestinoDecoration pessoasPermitidosDestinoDecoration" />
+	                          
+	                      <wi:selectOneMenuEntity
+	                          id="perfisPermitidosDestino"
+	                          value="#{envioComunicacaoInternaView.perfilDestino}"
+	                          label="#{infoxMessages['usuarioPerfil.perfil']}"
+	                          items="#{envioComunicacaoInternaView.perfisDestino}"
+	                          showLabelSelecione="true"
+	                          required="true"
+	                          disabled="#{empty envioComunicacaoInternaView.localizacaoDestino}">
+	                          <a:ajax event="change" render="pessoasPermitidosDestinoDecoration" execute="@this" limitRender="true" 
+	                              listener="#{envioComunicacaoInternaView.onChangePerfilDestino}"/>
+	                      </wi:selectOneMenuEntity>
+	                          
+	                      <wi:selectOneMenuEntity
+	                          id="pessoasPermitidosDestino"
+	                          value="#{envioComunicacaoInternaView.pessoaDestinatario}"
+	                          label="Destinatário"
+	                          items="#{envioComunicacaoInternaView.pessoasDestinatario}"
+	                          showLabelSelecione="true"
+	                          disabled="#{empty envioComunicacaoInternaView.localizacaoDestino or empty envioComunicacaoInternaView.perfilDestino}"/>
+	                          
+	                      <wi:selectBooleanCheckbox id="comunicacaoIndividual" label="Individual?" 
+	                      	value="#{envioComunicacaoInternaView.individual}"/>
+	                      
+	                      <div>
+		                      <a:commandButton id="adicionarLocalizacao" render="@form, pageBodyDialogMessage panelDestinatariosComunicacao" 
+		                      	  value="#{infoxMessages['button.add']}" styleClass="buttons" execute="@form"
+				        	      action="#{envioComunicacaoInternaView.adicionarDestinatarioComunicacao}" />
+				        	      
+				        	  <a:commandButton id="limparDestinoDestinatario" render="@form" execute="@this" 
+				        	  	action="#{envioComunicacaoInternaView.clearDestinoDestinatario}" limitRender="true"
+				        	  	value="Limpar" styleClass="buttons"/>
+			        	  </div>
+			        </h:form>
+				</rich:panel>
+				
+				<rich:panel id="panelDestinatariosComunicacao" header="Destinatários" style="margin-top: 1em;">
+					<rich:dataTable value="#{envioComunicacaoInternaView.modeloComunicacao.destinatarios}" var="destinatario" style="width: 100%;">
+						
+						<rich:column style="width: 25px; text-align: center;">
+							<h:form>
+								<a:commandLink action="#{envioComunicacaoInternaView.removerDestinatario(destinatario)}" 
+									execute="@this" render="panelDestinatariosComunicacao" limitRender="true">
+									<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" styleClass="opacityHover" onclick="return confirm('Deseja remover?');"/>
+								</a:commandLink>
+							</h:form>
+						</rich:column>
+						
+						<rich:column>
+							<f:facet name="header">Localização</f:facet>
+							<h:outputText value="#{empty destinatario.destino ? '-' : destinatario.destino}"/>
+						</rich:column>
+						
+						<rich:column>
+							<f:facet name="header">Perfil</f:facet>
+							<h:outputText value="#{empty destinatario.perfilDestino ? '-' : destinatario.perfilDestino}"/>
+						</rich:column>
+						
+						<rich:column>
+							<f:facet name="header">Destinatário</f:facet>
+							<h:outputText value="#{empty destinatario.destinatario ? '-' : destinatario.destinatario}"/>
+						</rich:column>
+						
+						<rich:column style="width: 40px; text-align: center;">
+							<f:facet name="header">Individual?</f:facet>
+							<h:outputText value="#{destinatario.individual ? 'Sim' : 'Não'}"/>
+						</rich:column>
+						
+					</rich:dataTable>
+				</rich:panel>
+			</div>
+			
+			<div style="margin-top: 1em; width: 100%;">
+			    <h:form id="documentoComunicacaoForm" style="display: inline-block; width: 100%;">
+					<rich:panel style="display: inline-block; vertical-align: top" header="#{infoxMessages['comunicacao.panelEditorComunicacaoTitulo']}">
+	    				<wi:selectOneMenuEntity id="classificacaoComunicacao"
+	    					label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
+				      		items="#{envioComunicacaoInternaView.classificacoes}"
+				      		showLabelSelecione="true"
+				      		value="#{envioComunicacaoInternaView.classificacaoDocumento}"
+				      		readonly="#{not envioComunicacaoInternaView.minuta or envioComunicacaoInternaView.classificacoes.size() eq 1}"
+	      					disabled="#{not envioComunicacaoInternaView.minuta or envioComunicacaoInternaView.classificacoes.size() eq 1}">
+	      					<a:ajax event="change" render="tooltipComunicacao" execute="@this" limitRender="true" />
+	    				</wi:selectOneMenuEntity>
+						<wi:selectOneMenuEntity id="modeloDocumento" value="#{envioComunicacaoInternaView.modeloDocumento}" 
+							label="#{infoxMessages['modeloDocumento.modeloDocumento']}"
+							readonly="#{not envioComunicacaoInternaView.minuta or envioComunicacaoInternaView.modelosDocumento.size() eq 1}"
+							disabled="#{not envioComunicacaoInternaView.minuta}"
+							noSelectionLabel="[Selecione o modelo]" 
+							items="#{envioComunicacaoInternaView.modelosDocumento}">
+							<a:ajax event="change" render="comunicacaoDecoration" execute="@this" limitRender="true"
+								listener="#{envioComunicacaoInternaView.onChangeModeloDocumento}"/>
+						</wi:selectOneMenuEntity>
+						<wi:selectBooleanRadio id="minuta" value="#{envioComunicacaoInternaView.minuta}"
+							label="#{infoxMessages['comunicacao.minutaLabel']}" 
+							readonly="#{not envioComunicacaoInternaView.minuta}" 
+							disabled="#{not envioComunicacaoInternaView.minuta}" />
+						<div>
+							<s:div id="tooltipComunicacao" styleClass="tooltip-parent" style="width: 10px; display:inline;"> 
+					  			<h:graphicImage id="imgTootipEditorComunicacao" url="#{wiSkin.imageFolder}/help.gif" />
+					  			<s:fragment rendered="#{not empty envioComunicacaoInternaView.classificacaoDocumento.observacao}">
+									<div class="epp-tooltip" style="display:inline;" >
+										<div class="tooltip-panel">
+											<div><h:outputText value="#{infoxMessages['comunicacao.tooltipObservacao']}"/></div>
+											<h:outputText value="#{envioComunicacaoInternaView.classificacaoDocumento.observacao}"/>
+										</div>
+									</div>
+								</s:fragment>
+					   		</s:div>
+						</div>
+						<wi:editor id="comunicacao" value="#{envioComunicacaoInternaView.textoDocumento}" readonly="#{not envioComunicacaoInternaView.minuta}" 
+							style="width: 100%;"/>
+					</rich:panel>
+					
+			        <div>
+						<a:commandButton id="gravar" value="#{infoxMessages['crud.update']}" 
+							action="#{envioComunicacaoInternaView.gravar}" render=":pageBodyDialogMessage, comunicacaoInternaPanel"
+							rendered="#{not envioComunicacaoInternaView.expedida}"
+							oncomplete="if (#{not envioComunicacaoInternaView.taskPage}) opener.reload();"
+							styleClass="buttons"/>
+							
+						<a:commandButton id="enviar" value="#{infoxMessages['crud.send']}" 
+							action="#{envioComunicacaoInternaView.enviar}" render=":pageBodyDialogMessage, comunicacaoInternaPanel"
+							oncomplete="if (#{not envioComunicacaoInternaView.taskPage and not facesContext.validationFailed}) { opener.reload(); window.close(); }"
+							rendered="#{not envioComunicacaoInternaView.expedida}"
+							styleClass="buttons"/>
+					</div>
+				</h:form>
+			</div>
+			
+			
+		</p:outputPanel>
+		 
+		<c:if test="#{showTaskButtons and envioComunicacaoInternaView.expedida}">
+			<h:form>
+				<ui:fragment>
+					<ui:include src="/WEB-INF/xhtml/components/form/buttons/taskButtons.xhtml" />
+				</ui:fragment>
+			</h:form>
+		</c:if>
+	
+	</rich:panel>
+	
+</ui:composition>

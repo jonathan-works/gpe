@@ -265,7 +265,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	        	consultaController.setProcesso(this.getInstance());
 	        }
 	        if (tab.equals("tabAnexos")){
-	        	pastaAction.setProcesso(this.getInstance().getProcessoRoot());
+	        	pastaAction.setProcesso(this.getInstance());
 	        	documentoList.setProcesso(this.getInstance().getProcessoRoot());
 	        	documentoProcessoAction.setProcesso(getInstance().getProcessoRoot());
 	        	documentoProcessoAction.setListClassificacaoDocumento(null);

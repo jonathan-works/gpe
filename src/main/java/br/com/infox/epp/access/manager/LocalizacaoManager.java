@@ -153,7 +153,7 @@ public class LocalizacaoManager extends Manager<LocalizacaoDAO, Localizacao> {
     	return getDao().getLocalizacaoForaEstruturaByNome(nomeLocalizacao);
     }
     
-        public Localizacao getLocalizacaoByCodigo(String codigo) {
+    public Localizacao getLocalizacaoByCodigo(String codigo) {
     	return getDao().getLocalizacaoByCodigo(codigo);
     }
 

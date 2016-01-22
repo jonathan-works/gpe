@@ -175,7 +175,7 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         iniciaTask(processo, idTaskInstance);
         storeUsuario(idTaskInstance, usuarioPerfil);
     }
-
+    
     /**
      * Armazena o usuário que executou a tarefa. O jBPM mantem apenas os
      * usuários das tarefas em execução, apagando o usuário sempre que a tarefa
@@ -389,11 +389,11 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
                 metadados.add(provider.gerarMetadado(signalParam.getName(), signalParam.getParamValue()));
             }
         }
-        ComponentUtil.<IniciarProcessoService>getComponent(IniciarProcessoService.NAME).iniciarProcesso(processo, variaveis, metadados, transitionName);
+        ComponentUtil.<IniciarProcessoService>getComponent(IniciarProcessoService.NAME).iniciarProcesso(processo, variaveis, metadados, transitionName, true);
         BusinessProcess.instance().setProcessId(processIdOriginal);
         BusinessProcess.instance().setTaskId(taskIdOriginal);
     }
-
+	
 	@Observer({Event.EVENTTYPE_TASK_END})
 	public void atualizarProcessoTarefa(ExecutionContext executionContext) throws DAOException {
 		TaskInstance taskInstance = executionContext.getTaskInstance();

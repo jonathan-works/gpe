@@ -133,14 +133,13 @@ public class ConsultaProcessoList extends DataList<TaskBean> {
     public void newInstance() {
         filteredTasks = new ArrayList<>(getTasks());
         setNumeroProcesso(null);
-        setNumeroProcessoRoot(null);
         setNatureza(null);
         setCategoria(null);
         setDataInicio(null);
         setDataFim(null);
         search();
     }
-
+    
     @Override
     public boolean isNextExists() {
         return getPage() * getMaxResults() < filteredTasks.size();

@@ -11,7 +11,6 @@ import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.richfaces.event.DropEvent;
 
@@ -117,19 +116,19 @@ public class PainelUsuarioController implements Serializable {
 	@ExceptionHandled(value = MethodType.UNSPECIFIED)
 	public void atribuirTarefa(TaskBean taskBean) {
         taskInstanceManager.atribuirTarefa(Long.valueOf(taskBean.getIdTaskInstance()));
-	    taskBean.setAssignee(Authenticator.getUsuarioLogado().getLogin());
+        taskBean.setAssignee(Authenticator.getUsuarioLogado().getLogin());
 	}
 	
 	@ExceptionHandled(value = MethodType.UNSPECIFIED)
 	public void liberarTarefa(TaskBean taskBean) {
 	    taskInstanceManager.removeUsuario(Long.valueOf(taskBean.getIdTaskInstance()));
         taskBean.setAssignee(null);
-        FacesMessages.instance().add("Tarefa Liberada com Sucesso!");
-	}   
 
+    }
+    
 	public void onSelectNode() {
 		consultaProcessoList.onSelectNode(getSelected());
-	}
+    }
 	
 	public String getTaskNodeKey() {
 	    return getSelected().getId().toString();
@@ -169,7 +168,6 @@ public class PainelUsuarioController implements Serializable {
         taskDefinitionBean.removerCaixa(idCaixa);
         painelTreeHandler.clearTree();
     }
-
 	@ExceptionHandled(value = MethodType.PERSIST)
 	public void adicionarCaixa(ActionEvent event) {
 	    String inputNomeCaixa = (String) event.getComponent().getAttributes().get("inputNomeCaixa");
@@ -188,7 +186,7 @@ public class PainelUsuarioController implements Serializable {
 		r.setParameter("id", getSelected().getId());
 		r.execute();
 	}
-
+	
 	public PanelDefinition getSelected() {
 		return painelTreeHandler.getSelected();
 	}
@@ -315,4 +313,5 @@ public class PainelUsuarioController implements Serializable {
 	public void setNumeroProcesso(String numeroProcesso) {
 		this.numeroProcesso = numeroProcesso;
 	}
+	
 }

@@ -9,9 +9,9 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
 
+@Stateless
 @Name(TipoComunicacaoManager.NAME)
 @AutoCreate
-@Stateless
 public class TipoComunicacaoManager extends Manager<TipoComunicacaoDAO, TipoComunicacao> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "tipoComunicacaoManager";

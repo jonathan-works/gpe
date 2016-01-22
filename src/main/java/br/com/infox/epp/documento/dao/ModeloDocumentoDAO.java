@@ -15,6 +15,8 @@ import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -22,10 +24,14 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
+import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.entity.GrupoModeloDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento_;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
+import br.com.infox.epp.documento.entity.TipoModeloDocumentoPapel;
+import br.com.infox.epp.documento.entity.TipoModeloDocumentoPapel_;
+import br.com.infox.epp.documento.entity.TipoModeloDocumento_;
 
 @Name(ModeloDocumentoDAO.NAME)
 @AutoCreate
@@ -72,4 +78,19 @@ public class ModeloDocumentoDAO extends DAO<ModeloDocumento> {
 
 		return getEntityManager().createQuery(cq).getResultList();
 	}
+	
+	public List<ModeloDocumento> getModeloDocumentoByPapel(Papel papel) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<ModeloDocumento> cq = cb.createQuery(ModeloDocumento.class);
+        Root<TipoModeloDocumentoPapel> from = cq.from(TipoModeloDocumentoPapel.class);
+        Join<TipoModeloDocumentoPapel, TipoModeloDocumento> tipoModeloDocumento = from.join(TipoModeloDocumentoPapel_.tipoModeloDocumento, JoinType.INNER);
+        Join<TipoModeloDocumento, ModeloDocumento> modeloDocumento = tipoModeloDocumento.join(TipoModeloDocumento_.modeloDocumentoList, JoinType.INNER);
+        cq.select(modeloDocumento);
+        Predicate equalPapel = cb.equal(from.get(TipoModeloDocumentoPapel_.papel), papel);
+        Predicate ativo = cb.isTrue(modeloDocumento.get(ModeloDocumento_.ativo));
+        Predicate where = cb.and(equalPapel, ativo);
+        cq.where(where);
+        cq.orderBy(cb.asc(modeloDocumento.get(ModeloDocumento_.modeloDocumento)));
+        return getEntityManager().createQuery(cq).getResultList();
+    }
 }

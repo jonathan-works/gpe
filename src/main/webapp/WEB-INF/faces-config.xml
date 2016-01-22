@@ -21,5 +21,12 @@
 		<component-type>org.richfaces.DataTable</component-type>
 		<component-class>br.com.infox.jsf.workaround.UIDataTableWorkaround</component-class>
 	</component>
+	    <render-kit>
+        <renderer>
+            <component-family>javax.faces.SelectOne</component-family>
+            <renderer-type>javax.faces.Radio</renderer-type>
+            <renderer-class>br.com.infox.jsf.workaround.TablelessRadioRenderer</renderer-class>
+        </renderer>
+    </render-kit>
 
 </faces-config>
