@@ -26,6 +26,8 @@ import org.camunda.bpm.model.bpmn.instance.bpmndi.BpmnPlane;
 import org.camunda.bpm.model.bpmn.instance.bpmndi.BpmnShape;
 import org.camunda.bpm.model.bpmn.instance.dc.Bounds;
 import org.camunda.bpm.model.bpmn.instance.di.DiagramElement;
+import org.jbpm.graph.action.Script;
+import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
@@ -63,6 +65,7 @@ public class BpmnJpdlConverter {
 		
 		traverse(startEvent, processDefinition, null);
 		resolveLanes(process, processDefinition);
+		createDefaultEvents(processDefinition);
 		return processDefinition;
 	}
 	
@@ -99,10 +102,8 @@ public class BpmnJpdlConverter {
 	private Node createNode(FlowNode flowNode, ProcessDefinition processDefinition, Node node) {
 		if (flowNode.getElementType().getTypeName().equals("startEvent")) {
 			node = new StartState(getIdentification(flowNode));
-			node.setKey(UUID.randomUUID().toString());
 		} else if (flowNode.getElementType().getTypeName().equals("endEvent")) {
 			node = new EndState(getIdentification(flowNode));
-			node.setKey(UUID.randomUUID().toString());
 		} else if (flowNode.getElementType().getTypeName().equals("userTask")) {
 			node = new TaskNodeFactory().createTaskNode((UserTask) flowNode, processDefinition);
 		} else if (flowNode.getElementType().getTypeName().equals("serviceTask")) {
@@ -118,6 +119,7 @@ public class BpmnJpdlConverter {
 		} else if (flowNode.getElementType().getTypeName().equals("intermediateThrowEvent")) {
 			node = new Node(getIdentification(flowNode));
 		}
+		node.setKey(flowNode.getId());
 		return node;
 	}
 	
@@ -211,5 +213,22 @@ public class BpmnJpdlConverter {
 			}
 		}
 		return null;
+	}
+	
+	private void createDefaultEvents(ProcessDefinition processDefinition) {
+		String[] events = {
+			Event.EVENTTYPE_SUPERSTATE_ENTER, Event.EVENTTYPE_PROCESS_START, Event.EVENTTYPE_BEFORE_SIGNAL, Event.EVENTTYPE_TASK_END,
+			Event.EVENTTYPE_SUBPROCESS_CREATED, Event.EVENTTYPE_TASK_CREATE, Event.EVENTTYPE_TRANSITION, Event.EVENTTYPE_TASK_ASSIGN,
+			Event.EVENTTYPE_AFTER_SIGNAL, Event.EVENTTYPE_TIMER, Event.EVENTTYPE_TASK_START, Event.EVENTTYPE_SUBPROCESS_END,
+			Event.EVENTTYPE_NODE_LEAVE, Event.EVENTTYPE_PROCESS_END, Event.EVENTTYPE_SUPERSTATE_LEAVE, Event.EVENTTYPE_NODE_ENTER
+		};
+		
+		for (String eventType : events) {
+			Event event = new Event(eventType);
+			Script script = new Script();
+			script.setExpression("br.com.infox.jbpm.event.JbpmEvents.raiseEvent(executionContext)");
+			event.addAction(script);
+			processDefinition.addEvent(event);
+		}
 	}
 }
