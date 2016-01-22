@@ -14,7 +14,7 @@
 	
 	<ui:param name="showTaskButtons" value="#{empty showTaskButtons ? 'true' : showTaskButtons}" />
 	
-	<rich:panel id="comunicacaoInternaPanel" header="Comunicação Interna" style="margin: 18px 28px;">
+	<rich:panel id="comunicacaoInternaPanel" header="Comunicação Interna" >
 	
 		<h:form id="comunicacaoForm">
 			<wi:selectOneMenuEntity id="tipoComunicacao" label="#{infoxMessages['comunicacao.tipoComunicacao']}"
@@ -36,68 +36,11 @@
 			</a:commandButton>
 		</h:form>
 		
-		<p:outputPanel style="background-color: white; padding-left: 10px; padding-right: 10px; width: 100%;" 
+		<p:outputPanel style="background-color: white; padding-left: 10px; width: 100%; display: inline-block;" 
 			rendered="#{not envioComunicacaoInternaView.expedida}" autoUpdate="false">
 			
-			<div style="margin-top: 1em; max-width: 50%; display: inline-block;">
-			    <h:form id="documentoComunicacaoForm">
-					<rich:panel style="display: inline-block; vertical-align: top" header="#{infoxMessages['comunicacao.panelEditorComunicacaoTitulo']}">
-	    				<wi:selectOneMenuEntity id="classificacaoComunicacao"
-	    					label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-				      		items="#{envioComunicacaoInternaView.classificacoes}"
-				      		showLabelSelecione="true"
-				      		value="#{envioComunicacaoInternaView.classificacaoDocumento}"
-				      		readonly="#{not envioComunicacaoInternaView.minuta or envioComunicacaoInternaView.classificacoes.size() eq 1}"
-	      					disabled="#{not envioComunicacaoInternaView.minuta or envioComunicacaoInternaView.classificacoes.size() eq 1}">
-	      					<a:ajax event="change" render="tooltipComunicacao" execute="@this" limitRender="true" />
-	    				</wi:selectOneMenuEntity>
-						<wi:selectOneMenuEntity id="modeloDocumento" value="#{envioComunicacaoInternaView.modeloDocumento}" 
-							label="#{infoxMessages['modeloDocumento.modeloDocumento']}"
-							readonly="#{not envioComunicacaoInternaView.minuta or envioComunicacaoInternaView.modelosDocumento.size() eq 1}"
-							disabled="#{not envioComunicacaoInternaView.minuta}"
-							noSelectionLabel="[Selecione o modelo]" 
-							items="#{envioComunicacaoInternaView.modelosDocumento}">
-							<a:ajax event="change" render="comunicacaoDecoration" execute="@this" limitRender="true"
-								listener="#{envioComunicacaoInternaView.onChangeModeloDocumento}"/>
-						</wi:selectOneMenuEntity>
-						<wi:selectBooleanRadio id="minuta" value="#{envioComunicacaoInternaView.minuta}"
-							label="#{infoxMessages['comunicacao.minutaLabel']}" 
-							readonly="#{not envioComunicacaoInternaView.minuta}" 
-							disabled="#{not envioComunicacaoInternaView.minuta}" />
-						<div>
-							<s:div id="tooltipComunicacao" styleClass="tooltip-parent" style="width: 10px; display:inline;"> 
-					  			<h:graphicImage id="imgTootipEditorComunicacao" url="#{wiSkin.imageFolder}/help.gif" />
-					  			<s:fragment rendered="#{not empty envioComunicacaoInternaView.classificacaoDocumento.observacao}">
-									<div class="epp-tooltip" style="display:inline;" >
-										<div class="tooltip-panel">
-											<div><h:outputText value="#{infoxMessages['comunicacao.tooltipObservacao']}"/></div>
-											<h:outputText value="#{envioComunicacaoInternaView.classificacaoDocumento.observacao}"/>
-										</div>
-									</div>
-								</s:fragment>
-					   		</s:div>
-						</div>
-						<wi:editor id="comunicacao" value="#{envioComunicacaoInternaView.textoDocumento}" readonly="#{not envioComunicacaoInternaView.minuta}" />
-					</rich:panel>
-					
-			        <div>
-						<a:commandButton id="gravar" value="#{infoxMessages['crud.update']}" 
-							action="#{envioComunicacaoInternaView.gravar}" render=":pageBodyDialogMessage, comunicacaoInternaPanel"
-							rendered="#{not envioComunicacaoInternaView.expedida}"
-							oncomplete="if (#{not envioComunicacaoInternaView.taskPage}) opener.reload();"
-							styleClass="buttons"/>
-							
-						<a:commandButton id="enviar" value="#{infoxMessages['crud.send']}" 
-							action="#{envioComunicacaoInternaView.enviar}" render=":pageBodyDialogMessage, comunicacaoInternaPanel"
-							oncomplete="if (#{not envioComunicacaoInternaView.taskPage and not facesContext.validationFailed}) { opener.reload(); window.close(); }"
-							rendered="#{not envioComunicacaoInternaView.expedida}"
-							styleClass="buttons"/>
-					</div>
-				</h:form>
-			</div>
-			
 			<!-- Painel dos Destinatários -->
-			<div id="destinatariosPanel" style="width:48%; display: inline-block; vertical-align: top; margin-top: 1em;">
+			<div id="destinatariosPanel" style="vertical-align: top; margin-top: 1em; width: 100%;">
 				<rich:panel header="#{infoxMessages['comunicacao.localizacoes']}" switchType="client">
 				    <h:form>
 	                      <wi:tree
@@ -180,6 +123,66 @@
 					</rich:dataTable>
 				</rich:panel>
 			</div>
+			
+			<div style="margin-top: 1em; width: 100%;">
+			    <h:form id="documentoComunicacaoForm" style="display: inline-block; width: 100%;">
+					<rich:panel style="display: inline-block; vertical-align: top" header="#{infoxMessages['comunicacao.panelEditorComunicacaoTitulo']}">
+	    				<wi:selectOneMenuEntity id="classificacaoComunicacao"
+	    					label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
+				      		items="#{envioComunicacaoInternaView.classificacoes}"
+				      		showLabelSelecione="true"
+				      		value="#{envioComunicacaoInternaView.classificacaoDocumento}"
+				      		readonly="#{not envioComunicacaoInternaView.minuta or envioComunicacaoInternaView.classificacoes.size() eq 1}"
+	      					disabled="#{not envioComunicacaoInternaView.minuta or envioComunicacaoInternaView.classificacoes.size() eq 1}">
+	      					<a:ajax event="change" render="tooltipComunicacao" execute="@this" limitRender="true" />
+	    				</wi:selectOneMenuEntity>
+						<wi:selectOneMenuEntity id="modeloDocumento" value="#{envioComunicacaoInternaView.modeloDocumento}" 
+							label="#{infoxMessages['modeloDocumento.modeloDocumento']}"
+							readonly="#{not envioComunicacaoInternaView.minuta or envioComunicacaoInternaView.modelosDocumento.size() eq 1}"
+							disabled="#{not envioComunicacaoInternaView.minuta}"
+							noSelectionLabel="[Selecione o modelo]" 
+							items="#{envioComunicacaoInternaView.modelosDocumento}">
+							<a:ajax event="change" render="comunicacaoDecoration" execute="@this" limitRender="true"
+								listener="#{envioComunicacaoInternaView.onChangeModeloDocumento}"/>
+						</wi:selectOneMenuEntity>
+						<wi:selectBooleanRadio id="minuta" value="#{envioComunicacaoInternaView.minuta}"
+							label="#{infoxMessages['comunicacao.minutaLabel']}" 
+							readonly="#{not envioComunicacaoInternaView.minuta}" 
+							disabled="#{not envioComunicacaoInternaView.minuta}" />
+						<div>
+							<s:div id="tooltipComunicacao" styleClass="tooltip-parent" style="width: 10px; display:inline;"> 
+					  			<h:graphicImage id="imgTootipEditorComunicacao" url="#{wiSkin.imageFolder}/help.gif" />
+					  			<s:fragment rendered="#{not empty envioComunicacaoInternaView.classificacaoDocumento.observacao}">
+									<div class="epp-tooltip" style="display:inline;" >
+										<div class="tooltip-panel">
+											<div><h:outputText value="#{infoxMessages['comunicacao.tooltipObservacao']}"/></div>
+											<h:outputText value="#{envioComunicacaoInternaView.classificacaoDocumento.observacao}"/>
+										</div>
+									</div>
+								</s:fragment>
+					   		</s:div>
+						</div>
+						<wi:editor id="comunicacao" value="#{envioComunicacaoInternaView.textoDocumento}" readonly="#{not envioComunicacaoInternaView.minuta}" 
+							style="width: 100%;"/>
+					</rich:panel>
+					
+			        <div>
+						<a:commandButton id="gravar" value="#{infoxMessages['crud.update']}" 
+							action="#{envioComunicacaoInternaView.gravar}" render=":pageBodyDialogMessage, comunicacaoInternaPanel"
+							rendered="#{not envioComunicacaoInternaView.expedida}"
+							oncomplete="if (#{not envioComunicacaoInternaView.taskPage}) opener.reload();"
+							styleClass="buttons"/>
+							
+						<a:commandButton id="enviar" value="#{infoxMessages['crud.send']}" 
+							action="#{envioComunicacaoInternaView.enviar}" render=":pageBodyDialogMessage, comunicacaoInternaPanel"
+							oncomplete="if (#{not envioComunicacaoInternaView.taskPage and not facesContext.validationFailed}) { opener.reload(); window.close(); }"
+							rendered="#{not envioComunicacaoInternaView.expedida}"
+							styleClass="buttons"/>
+					</div>
+				</h:form>
+			</div>
+			
+			
 		</p:outputPanel>
 		 
 		<c:if test="#{showTaskButtons and envioComunicacaoInternaView.expedida}">
