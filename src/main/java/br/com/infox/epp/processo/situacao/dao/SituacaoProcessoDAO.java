@@ -14,6 +14,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
@@ -226,7 +227,7 @@ public class SituacaoProcessoDAO {
 	    return getEntityManager().createQuery(cq).getResultList();
 	}
 	
-    protected void appendNumeroProcessoRootFilter(AbstractQuery<?> abstractQuery, String numeroProcesso, From<?, Processo> processoRoot) {
+    protected void appendNumeroProcessoRootFilter(AbstractQuery<?> abstractQuery, String numeroProcesso, Path<Processo> processoRoot) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Predicate predicate = abstractQuery.getRestriction();
         abstractQuery.where(
@@ -253,7 +254,7 @@ public class SituacaoProcessoDAO {
         }
     }
 	
-	private void appendSigiloProcessoFilter(AbstractQuery<?> principalQuery, Root<Processo> processo) {
+	private void appendSigiloProcessoFilter(AbstractQuery<?> principalQuery, Path<Processo> processo) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Subquery<Integer> existsSigiloProcesso = principalQuery.subquery(Integer.class);
         Root<SigiloProcesso> sigiloProcesso = existsSigiloProcesso.from(SigiloProcesso.class);
@@ -367,7 +368,7 @@ public class SituacaoProcessoDAO {
 		return subquery;
 	}
 	
-    private void appendTipoProcessoFilter(AbstractQuery<?> abstractQuery, TipoProcesso tipoProcesso, Root<Processo> processo) {
+    private void appendTipoProcessoFilter(AbstractQuery<?> abstractQuery, TipoProcesso tipoProcesso, Path<Processo> processo) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
         Root<MetadadoProcesso> metadado = subquery.from(MetadadoProcesso.class);
@@ -511,6 +512,12 @@ public class SituacaoProcessoDAO {
         Long count = query.getSingleResult(); 
         return count > 0;
 	}
+	
+    public void appendMandatoryFilters(AbstractQuery<?> abstractQuery, TipoProcesso tipoProcesso, Path<Processo> processo) {
+		appendSigiloProcessoFilter(abstractQuery, processo);
+		appendTipoProcessoFilter(abstractQuery, tipoProcesso, processo);
+	}
+	
 	
 	protected Authenticator getAuthenticator() {
 	    return Authenticator.instance();
