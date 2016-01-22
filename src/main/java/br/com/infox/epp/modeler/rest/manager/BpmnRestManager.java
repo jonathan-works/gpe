@@ -46,9 +46,10 @@ public class BpmnRestManager {
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void updateBpmn(Integer idFluxo, String bpmn) {
-		Fluxo fluxo = fluxoManager.find(idFluxo);
-		fluxo.setBpmnXml(bpmn);
+	public void updateBpmn(Bpmn bpmn) {
+		Fluxo fluxo = fluxoManager.find(bpmn.getId());
+		fluxo.setBpmnXml(bpmn.getBpmn());
+		fluxo.setSvg(bpmn.getSvg());
 		fluxoManager.update(fluxo);
 	}
 }

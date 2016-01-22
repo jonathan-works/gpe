@@ -148,6 +148,9 @@ public class Fluxo implements Serializable {
     @Column(name = "ds_bpmn_xml")
     private String bpmnXml;
     
+    @Column(name = "ds_svg")
+    private String svg;
+    
     @OneToMany(fetch = FetchType.LAZY, mappedBy = FLUXO_ATTRIBUTE)
     private List<FluxoPapel> fluxoPapelList = new ArrayList<FluxoPapel>(0);
     
@@ -345,5 +348,13 @@ public class Fluxo implements Serializable {
     
     public void setBpmnXml(String bpmnXml) {
 		this.bpmnXml = bpmnXml;
+	}
+    
+    public String getSvg() {
+		return svg;
+	}
+    
+    public void setSvg(String svg) {
+		this.svg = svg;
 	}
 }

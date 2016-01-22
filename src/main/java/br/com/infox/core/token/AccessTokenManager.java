@@ -33,4 +33,9 @@ public class AccessTokenManager {
 	public void clearTokens() {
 		accessTokenDao.getEntityManager().createQuery("delete from AccessToken").executeUpdate();
 	}
+	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void clearTokens() {
+		accessTokenDao.getEntityManager().createQuery("delete from AccessToken").executeUpdate();
+	}
 }

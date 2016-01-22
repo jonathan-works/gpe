@@ -7,12 +7,14 @@ public class Bpmn {
 	private String bpmn;
 	private String descricao;
 	private String codigo;
+	private String svg;
 	
 	public Bpmn(Fluxo fluxo) {
 		this.id = fluxo.getIdFluxo();
 		this.bpmn = fluxo.getBpmnXml();
 		this.descricao = fluxo.getFluxo();
 		this.codigo = fluxo.getCodFluxo();
+		this.svg = fluxo.getSvg();
 	}
 
 	public String getDescricao() {
@@ -45,5 +47,13 @@ public class Bpmn {
 	
 	public void setBpmn(String bpmn) {
 		this.bpmn = bpmn;
+	}
+	
+	public String getSvg() {
+		return svg;
+	}
+	
+	public void setSvg(String svg) {
+		this.svg = svg;
 	}
 }
