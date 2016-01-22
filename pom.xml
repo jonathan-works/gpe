@@ -55,6 +55,16 @@
 			<version>1.8.4</version>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.xmlgraphics</groupId>
+			<artifactId>batik-svg-dom</artifactId>
+			<version>1.8</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.xmlgraphics</groupId>
+			<artifactId>batik-anim</artifactId>
+			<version>1.8</version>
+		</dependency>
+		<dependency>
 			<groupId>org.jboss.seam</groupId>
 			<artifactId>jboss-seam</artifactId>
 			<scope>compile</scope>
@@ -383,8 +393,8 @@
         <artifactId>thumbnailator</artifactId>
         <version>0.4.8</version>
     </dependency>
-	<dependency>
-		<groupId>br.com.infox</groupId>
+		<dependency>
+			<groupId>br.com.infox</groupId>
 		<artifactId>rest-client</artifactId>
 		<version>1.0.1-1</version>
 	</dependency>
@@ -392,7 +402,7 @@
 		<groupId>commons-codec</groupId>
 		<artifactId>commons-codec</artifactId>
 		<version>1.10</version>
-	</dependency>
+		</dependency>
 	<dependency>
 		<groupId>br.com.infox</groupId>
 		<artifactId>epp-services</artifactId>
