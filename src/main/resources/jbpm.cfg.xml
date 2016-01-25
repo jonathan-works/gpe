@@ -7,7 +7,7 @@
           <bean class="org.jbpm.persistence.db.DbPersistenceServiceFactory">
              <field name="isTransactionEnabled"><false/></field>
              <field name="sessionFactoryJndiName">
-             	<string>java:/sessionFactoryEPA</string>
+             	<string>java:comp/env/EPAPersistenceUnit</string>
              </field>
           </bean>
        </factory>

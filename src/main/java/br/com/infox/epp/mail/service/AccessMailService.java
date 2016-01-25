@@ -6,8 +6,6 @@ import java.text.MessageFormat;
 import javax.ejb.Stateless;
 import javax.mail.MessagingException;
 import javax.mail.Session;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -21,6 +19,7 @@ import br.com.infox.core.mail.EMailBean;
 import br.com.infox.core.mail.MailSender;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.cdi.util.JNDI;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.mail.entity.EMailData;
@@ -114,12 +113,9 @@ public class AccessMailService {
     }
 
     private Session getEmailSession() {
-        Session session = null;
-        try {
-            final InitialContext context = new InitialContext();
-            session = (Session) context.lookup("java:jboss/mail/epp");
-        } catch (final NamingException e) {
-            throw new IllegalArgumentException(e);
+        Session session = JNDI.lookup("java:jboss/mail/epp");
+        if (session == null) {
+        	session = JNDI.lookup("openejb:Resource/mail/epp"); //TOMEE
         }
         return session;
     }
