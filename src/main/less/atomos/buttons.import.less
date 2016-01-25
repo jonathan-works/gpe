@@ -1,0 +1,61 @@
+.standard-button(){
+    font-size:1em;
+    min-width:5em;
+    padding:2px 5px;
+    border-radius:5px;
+    border:solid 1px;
+    text-decoration: none;
+    vertical-align: middle;
+    margin:4px;
+    &:hover {
+        cursor:pointer;
+    }
+}
+.standard-button-colors() {
+    border-color:@button-border-color;
+    color:@button-txt-color;
+    
+    .deg-color(@button-bg-color);
+    .btn-deg-color(@button-bg-color, @deg-color);
+    &:hover {
+        .btn-deg-color(@deg-color, @button-bg-color);
+    }
+}
+
+.link-button(){
+    padding: 3px 12px 3px 3px;
+    text-decoration: none;
+    text-align: center;
+    display: inline-block;
+    vertical-align: top;
+    cursor: default;
+    .box-sizing(border-box);
+}
+input.button{
+    .standard-button();
+    .standard-button-colors();
+}
+input {
+  &.buttons,&.input_button,&.rf-pick-btn,&.input_button {
+    &:extend(input.button);
+    &:hover {
+        &:extend(input.button:hover);
+    }
+  }
+}
+button {
+  &.button,&.buttons,&.rf-pick-btn,&.input_button {
+    &:extend(input.button);
+    &:hover {
+        &:extend(input.button:hover);
+    }
+  }
+  &:hover {
+    background: #eee;
+    }
+}
+.buttons {
+  &.link{
+    .link-button();
+  }
+}

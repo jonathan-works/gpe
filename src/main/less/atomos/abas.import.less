@@ -1,0 +1,49 @@
+@infox-tab-bg-color:@menu-bg-color;
+@infox-tab-txt-color:@menu-txt-color;
+/* CORES DAS ABAS */
+.ui-widget-header {
+
+    & >.ui-state-default.ui-corner-top{
+        background-color: @infox-tab-bg-color;
+        background-image: none;
+        border-style:none;
+        &>a {
+            color: @infox-tab-txt-color;
+            text-shadow: none;
+        }
+
+        &.ui-tabs-active.ui-state-active{
+            color: @infox-tab-bg-color;
+            background-color:@infox-tab-txt-color;
+            &>a {
+                color:@infox-tab-bg-color;
+            }
+        }
+
+        &.ui-state-disabled{
+            background: @infox-tab-bg-color;
+            &>a {
+                color: lighten(@infox-tab-txt-color,50%);
+            }
+        }
+    }
+}
+
+.ui-widget-content.ui-tabs {
+    background-image:none;
+    background-color:inherit;
+    border-style:none;
+    .ui-tabs-nav{
+        background-image:none;
+        background-color:inherit;
+        border-color:transparent;
+    }
+    .ui-tabs-panel {
+        border-width:1px;
+        border-style:solid;
+        border-color:@infox-tab-txt-color;
+        margin:-1px 0 0 4px;
+        overflow-x: auto;
+        overflow-y: visible;
+    }
+}
