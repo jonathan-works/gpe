@@ -13,8 +13,8 @@ import br.com.infox.seam.path.PathResolver;
 public class SkinZoom extends Selector {
     private static final long serialVersionUID = 1L;
     private int skinZoom = TAM_NORMAL;
-    private static final Integer TAM_NORMAL = 12;
-    private static final Integer TAM_MEDIO = 17;
+    private static final Integer TAM_NORMAL = 16;
+    private static final Integer TAM_MEDIO = 19;
     private static final Integer TAM_GRANDE = 22;
     public SkinZoom() {
         PathResolver pathResolver = (PathResolver) Component.getInstance(PathResolver.NAME);
