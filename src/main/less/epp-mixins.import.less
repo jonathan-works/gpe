@@ -6,6 +6,29 @@
   background-image:~"url("%("%s/%s",@imgFolder,@imgName)~")";
 }
 
+.transition(...){
+    -o-transition: @arguments;
+    -moz-transition: @arguments;
+    -webkit-transition: @arguments;
+    transition: @arguments;
+}
+
+.transform-origin(...){
+    -o-transform-origin: @arguments;
+    -ms-transform-origin: @arguments;
+    -moz-transform-origin: @arguments;
+    -webkit-transform-origin: @arguments;
+    transform-origin: @arguments;
+}
+
+.transform(...){
+    -o-transform: @arguments;
+    -webkit-transform: @arguments;
+    -ms-transform: @arguments;
+    -moz-transform: @arguments;
+    transform: @arguments;
+}
+
 .flex-displayed-container {
   display: -webkit-box;
   display: -moz-box;

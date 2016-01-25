@@ -1,3 +1,7 @@
+.background-image(@base-path:@imgFolder, @image-name){
+  background-image:~"url("%("%s/%s",@base-path,@image-name)~")";
+}
+
 .image(@imgName) {
   background-image:~"url("%("%s/%s",@imgFolder,@imgName)~")";
 }
@@ -5,6 +9,47 @@
 .z-depth(@level){
     box-shadow:0 2px*@level 5px*@level 0 rgba(0,0,0,0.16*@level),
     0 2px*@level 10px*@level 0 rgba(0,0,0,0.12*@level);
+}
+
+.transition(...){
+    -o-transition: @arguments;
+    -moz-transition: @arguments;
+    -webkit-transition: @arguments;
+    transition: @arguments;
+}
+
+.transform-origin(...){
+    -o-transform-origin: @arguments;
+    -ms-transform-origin: @arguments;
+    -moz-transform-origin: @arguments;
+    -webkit-transform-origin: @arguments;
+    transform-origin: @arguments;
+}
+
+.transform(...){
+    -o-transform: @arguments;
+    -webkit-transform: @arguments;
+    -ms-transform: @arguments;
+    -moz-transform: @arguments;
+    transform: @arguments;
+}
+
+.flex-displayed-container {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+}
+
+.flex-child(@ratio:1){
+  -moz-flex:@ratio;
+  -webkit-flex: @ratio;
+  -ms-flex: @ratio;
+  flex: @ratio;
+}
+.flex-displayed-child {
+  .flex-child(1);
 }
 
 .central-block-section() {
@@ -23,11 +68,6 @@
     -webkit-box-sizing:@value;
     -moz-box-sizing:@value;
     box-sizing:@value;
-}
-
-.anchor(@vertical,@horizontal){
-  @{vertical}:0;
-  @{horizontal}:0;
 }
 
 .full-scr(){
