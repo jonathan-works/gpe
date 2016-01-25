@@ -1,7 +1,7 @@
-/* FUNÇÕES */
+// FUNÇÕES
 @import "functions/epp-mixins.import.less";
 
-/* COMPONENTES / ÁTOMOS */
+// COMPONENTES / ÁTOMOS
 @import "atomos/buttons.import.less";
 @import "atomos/tree.import.less";
 @import "atomos/popup-panel.import.less";
@@ -13,17 +13,19 @@
 @import "atomos/defaultCRUD.import.less";
 @import "atomos/abas.import.less";
 
-/* GRUPOS DE COMPONENTES / MOLÉCULAS */
+// GRUPOS DE COMPONENTES / MOLÉCULAS
+@import "header.import.less";//OLD
+@import "menu.import.less";//OLD
 @import "moleculas/header.import.less";
 @import "moleculas/postit.import.less";
 @import "moleculas/menu.import.less";
 @import "moleculas/quadro.import.less";
 
-/* MODELOS DE PAGINAS */
+// MODELOS DE PAGINAS
 @import "temas/primeUI.import.less"; // ??
 @import "temas/empty.import.less";
 
-/* PÁGINAS */
+// PÁGINAS
 @import "paginas/login.import.less";
 @import "paginas/movimentar.import.less";
 @import "paginas/paginator.import.less";
@@ -65,7 +67,7 @@
 @menu-bg-color:#a0c991;
 @menu-txt-color:#030;
 
-/*LAYOUT GERAL DA PÁGINA*/
+//LAYOUT GERAL DA PÁGINA
 .width-5 {
   width: 5rem/16;
 }
@@ -141,7 +143,7 @@
   margin: 0 5rem/16 5rem/16 0;
 }
 
-/* FIM LAYOUT GERAL */
+//FIM LAYOUT GERAL
 
 .readOnly {
   color: gray !important;
@@ -268,7 +270,7 @@ h1 {
   font-weight: bold;
 }
 
-/* BAM */
+// BAM
 .circ {
   width: 15rem/16;
   height: 15rem/16;
@@ -312,7 +314,7 @@ h1 {
   border-right-color: #C0C0C0;
 }
 
-/*Retira o sombreamento do ModalPanel*/
+// Retira o sombreamento do ModalPanel
 .noMaskClass .rich-mpnl-mask-div {
   display: none;
 }
@@ -549,9 +551,7 @@ span.rf-ds-btn {
   padding-left: 2rem/16;
 }
 
-/*
- detalheLog.xhtml, documentoHTML.xhtml
- */
+//detalheLog.xhtml, documentoHTML.xhtml
 @media print {
   .onlyprint {
     display: block;
@@ -563,7 +563,7 @@ span.rf-ds-btn {
   }
 }
 
-/*turnoCalendar.xhtml*/
+// turnoCalendar.xhtml
 .selected {
   background-color: #d42;
 }
@@ -585,7 +585,7 @@ span.rf-ds-btn {
   	padding-bottom: 113rem/16;
 }
 
-/*Painel/list.xhtml*/
+// Painel/list.xhtml
 .p-caixas {
   color: #5C6469;
   background-color: @baseBgColor;
@@ -615,7 +615,7 @@ span.rf-ds-btn {
   text-transform: uppercase;
   font-weight: bold;
 }
-/*Seleção de turnos no calendário de localização*/
+// Seleção de turnos no calendário de localização
 .hidden.turno.calendar {
   visibility: hidden;
 }
@@ -678,12 +678,12 @@ form {
   display: none;
 }
 
-/* Workaround para o bug RF-12332 do Richfaces. Ver https://issues.jboss.org/browse/RF-12332 */
+//  Workaround para o bug RF-12332 do Richfaces. Ver https://issues.jboss.org/browse/RF-12332 
 div.rf-trn {
   overflow: visible;
 }
 
-/* Fim do workaround RF-12332 */
+//  Fim do workaround RF-12332 
 .rf-tr {
   text-align: left;
 }
@@ -935,7 +935,7 @@ div.rf-pp-hdr-cnt {
 }
 
 
-/* Primefaces */
+//  Primefaces 
 .ui-outputlabel-rfi {
   color:@bgColorRequired;
 }
