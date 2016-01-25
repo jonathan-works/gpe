@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -50,9 +51,9 @@ import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(ProcessoAnaliseDocumentoService.NAME)
-@Scope(ScopeType.EVENT)
 @AutoCreate
 @Transactional
+@Stateless
 public class ProcessoAnaliseDocumentoService {
 	
 	public static final String NAME = "processoAnaliseDocumentoService";

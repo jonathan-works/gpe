@@ -43,7 +43,6 @@ import br.com.infox.seam.util.ComponentUtil;
 import br.com.infox.util.time.DateRange;
 
 @Name(RespostaComunicacaoService.NAME)
-@Scope(ScopeType.EVENT)
 @AutoCreate
 @Transactional
 @Stateless

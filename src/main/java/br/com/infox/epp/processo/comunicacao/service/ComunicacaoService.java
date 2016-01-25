@@ -63,7 +63,6 @@ import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 
 @Name(ComunicacaoService.NAME)
-@Scope(ScopeType.EVENT)
 @AutoCreate
 @Transactional
 @Stateless
