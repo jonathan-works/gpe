@@ -7,13 +7,21 @@
         font-size:1em;
     }
 }
+form#login{
+    text-align:center;
+}
+.bg_login_inferior{
+    padding:1.5em;
+}
 .blocoCentralLogin {
   text-align:center;  
   background-image:~"url(""#{pathResolver.contextPath}/#{layoutController.getResourceUrl('LOGO_LOGIN')}"~")";
   background-repeat:no-repeat;
   background-position:top center;
-  padding: 146px 0 0;
+  padding: 146px 1em 1em;
   font-size:1rem;
+  display:inline-block;
+  .z-depth(1);
 }
 .logo-img{
   display:none;
@@ -40,4 +48,9 @@ input.input-text-login{
   text-align:center;
   font-size:1em;
   margin:0.2em;
+}
+span.versao{
+    position:fixed;
+    bottom:1em;
+    right:1em;
 }

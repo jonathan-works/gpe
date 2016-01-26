@@ -20,18 +20,10 @@
     <h:form>
     	<a:poll action="#{painelUsuarioController.atualizarPainelProcessos}" interval="10000" execute="@this" render="@none" immediate="true" bypassUpdates="true"/>
     </h:form>
-    
+    <wi:menu menuHandler="#{menuNavigation}">
     <s:div id="baseBody">
 	    <wi:messages formId="pageBody" globalOnly="true" />
 	  
-	    <ui:include src="/WEB-INF/xhtml/templates/core/include/header.xhtml" />
-	    <ui:param name="showMenu" value="#{not empty showMenu ? showMenu : identity.loggedIn}" />
-	    
-	    <c:if test="#{showMenu}">
-	      <ui:include src="/WEB-INF/xhtml/templates/core/include/menu.xhtml" />
-	      <ui:param name="required" value="false" />
-	    </c:if>
-	    
 	    <h:outputScript>
 	      function atualizaPainelFluxo() { 
 	        location = '#{pathResolver.contextPath}/Painel/list.seam'; 
@@ -159,6 +151,7 @@
 	      
 	    </rich:popupPanel>
 	</s:div>
+    </wi:menu>
 	<ui:include src="/Painel/filtroPainelModal.xhtml"></ui:include>
   </ui:define>
 </ui:composition>

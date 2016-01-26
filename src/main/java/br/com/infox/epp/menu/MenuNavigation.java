@@ -33,6 +33,11 @@ public class MenuNavigation implements Serializable, MenuHandler {
 		navBarMenu = new ArrayList<>();
 		actionMenu = new ArrayList<>();
 	}
+	
+	public void refresh(){
+		navBarMenu.clear();
+		actionMenu.clear();
+	}
 
 	private List<MenuItem> getActionMenuItemsFor(MenuItem menu) {
 		List<MenuItem> result = new ArrayList<>();
@@ -124,9 +129,9 @@ public class MenuNavigation implements Serializable, MenuHandler {
 	@Override
 	public List<MenuItem> getMainMenu() {
 		List<MenuItem> mainMenu = getMenuItems();
-		if (mainMenu != null && !mainMenu.isEmpty()) {
+		if (mainMenu!=null){
 			addLogoutMenuItem(mainMenu);
-			if (mainMenuItem == null) {
+			if (!mainMenu.isEmpty() && mainMenuItem == null) {
 				selectMainMenuItem(mainMenu.get(0));
 			}
 		}
