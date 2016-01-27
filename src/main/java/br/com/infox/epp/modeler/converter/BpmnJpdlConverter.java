@@ -90,7 +90,7 @@ public class BpmnJpdlConverter {
 		
 		for (SequenceFlow sequenceFlow : root.getOutgoing()) {
 			Transition transition = new Transition(getIdentification(sequenceFlow));
-			transition.setKey(UUID.randomUUID().toString());
+			transition.setKey(sequenceFlow.getId());
 			node.addLeavingTransition(transition);
 			traverse(sequenceFlow.getTarget(), processDefinition, transition);
 		}
@@ -131,7 +131,7 @@ public class BpmnJpdlConverter {
 		if (decisionBpmn.getDefault() == null) {
 			throw new BpmnJpdlConverterException("Uma transição padrão deve estar configurada no gateway " + decisionBpmn.getId());
 		}
-		String defaultTransition = getIdentification(decisionBpmn.getDefault().getTarget());
+		String defaultTransition = decisionBpmn.getDefault().getId();
 		StringBuilder sb = new StringBuilder("#{");
 		for (SequenceFlow sequenceFlow : decisionBpmn.getOutgoing()) {
 			if (sequenceFlow.equals(decisionBpmn.getDefault())) {
@@ -144,7 +144,7 @@ public class BpmnJpdlConverter {
 			condition = condition.substring(2, condition.length() - 1);
 			sb.append(condition);
 			sb.append(" ? '");
-			sb.append(getIdentification(sequenceFlow.getTarget()));
+			sb.append(sequenceFlow.getId());
 			sb.append("' : ");
 		}
 		sb.append("'" + defaultTransition + "'}");
