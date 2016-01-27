@@ -389,7 +389,7 @@ public class JpdlXmlWriter {
     	transitionElement.addAttribute("key", transition.getKey() == null ? "key_" + UUID.randomUUID().toString() : transition.getKey());
     	transitionElement.addAttribute("hidden", String.valueOf(transition.isHidden()));
         if (transition.getTo() != null) {
-            transitionElement.addAttribute("to", transition.getTo().getName());
+            transitionElement.addAttribute("to", transition.getTo().getKey());
         }
         if (transition.getName() != null) {
             transitionElement.addAttribute(ELEMENT_NAME, transition.getName());
