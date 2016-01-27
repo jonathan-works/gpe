@@ -132,7 +132,7 @@ public class JpdlXmlWriter {
             root = document.addElement("process-definition");
         }
         addAttribute(root, ELEMENT_NAME, processDefinition.getName());
-        addAttribute(root, "key", processDefinition.getKey() == null ? UUID.randomUUID().toString() : processDefinition.getKey());
+        addAttribute(root, "key", processDefinition.getKey() == null ? "key_" + UUID.randomUUID().toString() : processDefinition.getKey());
         writeDescription(root, processDefinition.getDescription());
 
         Map<String, Swimlane> swimlanes = processDefinition.getTaskMgmtDefinition().getSwimlanes();
@@ -182,7 +182,7 @@ public class JpdlXmlWriter {
             Element swimlane = addElement(root, "swimlane");
             addAttribute(swimlane, ELEMENT_NAME, e.getKey());
             Swimlane s = e.getValue();
-            addAttribute(swimlane, "key", s.getKey() == null ? UUID.randomUUID().toString() : s.getKey());
+            addAttribute(swimlane, "key", s.getKey() == null ? "key_" + UUID.randomUUID().toString() : s.getKey());
             if (s.getPooledActorsExpression() != null || s.getActorIdExpression() != null) {
                 writeAssignment(swimlane, s.getActorIdExpression(), s.getPooledActorsExpression());
             }
@@ -280,7 +280,7 @@ public class JpdlXmlWriter {
             addAttribute(taskElement, "condition", task.getCondition());
             addAttribute(taskElement, "description", task.getDescription());
             addAttribute(taskElement, "due-date", task.getDueDate());
-            addAttribute(taskElement, "key", task.getKey() == null ? UUID.randomUUID().toString() : task.getKey());
+            addAttribute(taskElement, "key", task.getKey() == null ? "key_" + UUID.randomUUID().toString() : task.getKey());
             writeController(task.getTaskController(), taskElement);
             writeEvents(taskElement, task);
         }
@@ -342,7 +342,7 @@ public class JpdlXmlWriter {
         if (node.isAsync() && (node.getClass().equals(Node.class) || node.getClass().equals(InfoxMailNode.class))) {
             addAttribute(element, "async", "true");
         }
-        addAttribute(element, "key", node.getKey() == null ? UUID.randomUUID().toString() : node.getKey());
+        addAttribute(element, "key", node.getKey() == null ? "key_" + UUID.randomUUID().toString() : node.getKey());
         if (node instanceof TaskNode) {
             TaskNode t = (TaskNode) node;
             String signal = null;
@@ -386,7 +386,7 @@ public class JpdlXmlWriter {
     }
 
     private void writeTransition(Element transitionElement, Transition transition) {
-    	transitionElement.addAttribute("key", transition.getKey() == null ? UUID.randomUUID().toString() : transition.getKey());
+    	transitionElement.addAttribute("key", transition.getKey() == null ? "key_" + UUID.randomUUID().toString() : transition.getKey());
     	transitionElement.addAttribute("hidden", String.valueOf(transition.isHidden()));
         if (transition.getTo() != null) {
             transitionElement.addAttribute("to", transition.getTo().getName());
