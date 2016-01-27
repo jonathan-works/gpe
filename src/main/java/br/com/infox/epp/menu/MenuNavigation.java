@@ -10,6 +10,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.jboss.seam.Component;
 import org.jboss.seam.security.Identity;
 
@@ -23,22 +24,15 @@ public class MenuNavigation implements Serializable, MenuHandler {
 
 	private static final long serialVersionUID = 1L;
 
-	private List<MenuItem> navBarMenu;
-	private List<MenuItem> actionMenu;
 	private MenuItem mainMenuItem;
 	private MenuItem navBarItem;
 
 	@PostConstruct
 	public void start() {
-		navBarMenu = new ArrayList<>();
-		actionMenu = new ArrayList<>();
+		mainMenuItem=null;
+		navBarItem=null;
 	}
 	
-	public void refresh(){
-		navBarMenu.clear();
-		actionMenu.clear();
-	}
-
 	private List<MenuItem> getActionMenuItemsFor(MenuItem menu) {
 		List<MenuItem> result = new ArrayList<>();
 		if (menu != null) {
@@ -65,20 +59,9 @@ public class MenuNavigation implements Serializable, MenuHandler {
 	@Override
 	public String selectNavBarMenuItem(MenuItem menu) {
 		String result = "";
-		this.actionMenu.clear();
 		this.navBarItem = menu;
+		List<MenuItem> actionMenu = getActionMenu();
 		if (navBarItem != null) {
-			if (!Objects.equals(navBarItem, mainMenuItem)){
-				for (MenuItem menuItem : navBarItem.getChildren()) {
-					actionMenu.addAll(getActionMenuItemsFor(menuItem));
-				}
-			} else {
-				for (MenuItem menuItem : navBarItem.getChildren()) {
-					if (menuItem.getUrl() != null && !menuItem.getUrl().isEmpty()){
-						actionMenu.add(menuItem);
-					}
-				}
-			}
 			if (navBarItem.getUrl() != null && !navBarItem.getUrl().trim().isEmpty()) {
 				result = navBarItem.getUrl();
 			} else if (!actionMenu.isEmpty()) {
@@ -91,26 +74,15 @@ public class MenuNavigation implements Serializable, MenuHandler {
 	@Override
 	public String selectMainMenuItem(MenuItem item) {
 		String result = "";
-		navBarMenu.clear();
 		this.mainMenuItem = item;
 		if (this.mainMenuItem != null) {
-			boolean hasActionItem=false;
-			for (MenuItem menuItem : this.mainMenuItem.getChildren()) {
-				if (menuItem.getUrl() == null || menuItem.getUrl().trim().isEmpty()) {
-					navBarMenu.add(menuItem);
-				}else{
-					hasActionItem = true;
-				}
-			}
-			addMenuUsuario(navBarMenu);
-			if (hasActionItem){
-				navBarMenu.add(0, mainMenuItem);
-			}
-			
 			if ( mainMenuItem.getUrl() != null && !mainMenuItem.getUrl().trim().isEmpty()) {
 				result = mainMenuItem.getUrl();
-			} else if (!navBarMenu.isEmpty()) {
-				result = selectNavBarMenuItem(navBarMenu.get(0));
+			} else {
+				final List<MenuItem> navBarMenu = getNavBarMenu();
+				if (!navBarMenu.isEmpty()) {
+					result = selectNavBarMenuItem(navBarMenu.get(0));
+				}
 			}
 		}
 		return result;
@@ -118,23 +90,48 @@ public class MenuNavigation implements Serializable, MenuHandler {
 
 	@Override
 	public List<MenuItem> getNavBarMenu() {
+		List<MenuItem> navBarMenu = new ArrayList<>();
+		if (mainMenuItem != null) {
+			boolean hasActionItem=false;
+			for (MenuItem menuItem : mainMenuItem.getChildren()) {
+				if (menuItem.getUrl() == null || menuItem.getUrl().trim().isEmpty()) {
+					navBarMenu.add(menuItem);
+				}else{
+					hasActionItem = true;
+				}
+			}
+			if (hasActionItem){
+				navBarMenu.add(0, mainMenuItem);
+			}
+		}
+		addMenuUsuario(navBarMenu);
 		return navBarMenu;
 	}
 
 	@Override
 	public List<MenuItem> getActionMenu() {
+		List<MenuItem> actionMenu = new ArrayList<>();
+		if (navBarItem != null) {
+			if (!Objects.equals(navBarItem, mainMenuItem)){
+				for (MenuItem menuItem : navBarItem.getChildren()) {
+					actionMenu.addAll(getActionMenuItemsFor(menuItem));
+				}
+			} else {
+				for (MenuItem menuItem : navBarItem.getChildren()) {
+					if (menuItem.getUrl() != null && !menuItem.getUrl().isEmpty()){
+						actionMenu.add(menuItem);
+					}
+				}
+			}
+		}
 		return actionMenu;
 	}
 
 	@Override
 	public List<MenuItem> getMainMenu() {
-		List<MenuItem> mainMenu = getMenuItems();
-		if (mainMenu!=null){
-			addLogoutMenuItem(mainMenu);
-			if (!mainMenu.isEmpty() && mainMenuItem == null) {
-				selectMainMenuItem(mainMenu.get(0));
-			}
-		}
+		List<MenuItem> mainMenu = new ArrayList<>();
+		mainMenu.addAll(ObjectUtils.defaultIfNull(getMenuItems(), new ArrayList<MenuItem>()));
+		addLogoutMenuItem(mainMenu);
 		return mainMenu;
 	}
 

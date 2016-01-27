@@ -47,6 +47,7 @@ import br.com.infox.epp.access.service.AuthenticatorService;
 import br.com.infox.epp.access.service.PasswordService;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.menu.MenuNavigation;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.system.util.ParametroUtil;
@@ -224,6 +225,7 @@ public class Authenticator implements Serializable {
 				setNewPassword1(null);
 				setNewPassword2(null);
 			}
+                BeanManager.INSTANCE.getReference(MenuNavigation.class).start();
         } else {
             getMessagesHandler().add(Severity.ERROR, infoxMessages.get("login.error.invalid"));
         }
