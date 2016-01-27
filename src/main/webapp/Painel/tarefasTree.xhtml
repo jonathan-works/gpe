@@ -16,6 +16,8 @@
             status=":status"
             toggleType="client"
             execute="@this"
+            onbegin=" PF('pollAtualizarPainel').stop(); if(!#{security.checkPage('/pages/Caixa/listView.seam')}){infox.showLoading('Buscando processos...');}"
+            oncomplete="PF('pollAtualizarPainel').start(); if(!#{security.checkPage('/pages/Caixa/listView.seam')}){infox.hideLoading(); }"
             selectionType="ajax"
             selectionChangeListener="#{painelTreeHandler.processTreeSelectionChange}"
             render="divPainelProcessosInterna, :pesquisaListForm"
