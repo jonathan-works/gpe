@@ -14,11 +14,16 @@ form#login{
     padding:1.5em;
 }
 .blocoCentralLogin {
+  @img-folder:"#{layoutController.getResourceUrl('LOGO_LOGIN')}";
   text-align:center;  
-  background-image:~"url(""#{pathResolver.contextPath}/#{layoutController.getResourceUrl('LOGO_LOGIN')}"~")";
+  background-image:url("@{context-path}\@{img-folder}");
   background-repeat:no-repeat;
   background-position:top center;
-  padding: 146px 1em 1em;
+  background-size:contain;
+  @img-width:370px;
+  @img-height:140px;
+  @padding:1em;
+  padding: calc(~"@{img-height} + @{padding}") @padding @padding;
   font-size:1rem;
   display:inline-block;
   .z-depth(1);
