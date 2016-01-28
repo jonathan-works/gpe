@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib" xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:infox="http://www.infox.com.br/jsf">
+
+    <ui:include src="/WEB-INF/xhtml/components/fragments/documentosFluxoAnalise.xhtml">
+        <ui:param name="id" value="documentosAnaliseDocumentos" />
+        <ui:param name="title" value="#{analiseDocumentoAction.getTituloGridDocumentosAnalise()}" />
+        <ui:param name="rendered" value="#{movimentarController.isTipoProcessoAnaliseDocumento()}" />
+        <ui:param name="list" value="#{analiseDocumentoAction.documentosAnalise}" />
+        <ui:param name="showComunicacao" value="#{analiseDocumentoAction.isRespostaComunicacao()}" />
+    </ui:include>
+    <wi:form canEdit="true" formTitle="#{taskInstance.name}" home="#{taskInstanceHome}" form="#{taskInstanceView}"
+        showForm="#{not empty taskInstanceView.fields}" />
+
+</ui:composition>
