@@ -111,9 +111,10 @@ public class PainelUsuarioController implements Serializable {
 		painelTreeHandler.clearTree();
 		painelTreeHandler.setFluxoBean(getSelectedFluxo());
 		consultaProcessoList.onSelectFluxo(getSelectedFluxo());
+		situacaoProcessoManager.loadTasks(getSelectedFluxo());
 	}
 	
-	@ExceptionHandled(value = MethodType.UNSPECIFIED)
+    @ExceptionHandled(value = MethodType.UNSPECIFIED)
 	public void atribuirTarefa(TaskBean taskBean) {
         taskInstanceManager.atribuirTarefa(Long.valueOf(taskBean.getIdTaskInstance()));
         taskBean.setAssignee(Authenticator.getUsuarioLogado().getLogin());
@@ -168,6 +169,7 @@ public class PainelUsuarioController implements Serializable {
         taskDefinitionBean.removerCaixa(idCaixa);
         painelTreeHandler.clearTree();
     }
+	
 	@ExceptionHandled(value = MethodType.PERSIST)
 	public void adicionarCaixa(ActionEvent event) {
 	    String inputNomeCaixa = (String) event.getComponent().getAttributes().get("inputNomeCaixa");
@@ -196,7 +198,6 @@ public class PainelUsuarioController implements Serializable {
 	}
 	
 	public void adicionarFiltroNumeroProcessoRoot(){
-		loadFluxosDisponiveis();
 		setSelectedFluxo(null);
 		painelTreeHandler.clearTree();
 	}

@@ -27,61 +27,43 @@ public class SituacaoProcessoManager {
 	public List<FluxoBean> getFluxos(List<TipoProcesso> tiposProcessosDisponiveis, String numeroProcessoRoot) {
 		List<FluxoBean> result = new ArrayList<>();
 		for (TipoProcesso tipoProcesso : tiposProcessosDisponiveis) {
-			List<TaskBean> taskBeanList = null;
 			if (TipoProcesso.COMUNICACAO.equals(tipoProcesso)) {
 				if (securityUtil.checkPage("/pages/Painel/comunicacoesRecebidas.seam")) {
-					taskBeanList = situacaoProcessoDAO.getTaskIntances(tipoProcesso, false, numeroProcessoRoot);
-					createFluxoBeanList(result, tipoProcesso, taskBeanList, false);
+					List<FluxoBean> fluxos = situacaoProcessoDAO.getFluxoList(tipoProcesso, false, numeroProcessoRoot);
+					renameFluxoComunicao(fluxos, false);
+					result.addAll(fluxos);
 				}
 				if (securityUtil.checkPage("/pages/Painel/comunicacoesExpedidas.seam")) {
-					taskBeanList = situacaoProcessoDAO.getTaskIntances(tipoProcesso, true, numeroProcessoRoot);
-					createFluxoBeanList(result, tipoProcesso, taskBeanList, true);
+				    List<FluxoBean> fluxos = situacaoProcessoDAO.getFluxoList(tipoProcesso, true, numeroProcessoRoot);
+                    renameFluxoComunicao(fluxos, true);
+                    result.addAll(fluxos);
 				}
 			} else if (TipoProcesso.COMUNICACAO_NAO_ELETRONICA.equals(tipoProcesso)) {
-				taskBeanList = situacaoProcessoDAO.getTaskIntances(tipoProcesso, true, numeroProcessoRoot);
-				createFluxoBeanList(result, tipoProcesso, taskBeanList, false);
+			    List<FluxoBean> fluxos = situacaoProcessoDAO.getFluxoList(tipoProcesso, false, numeroProcessoRoot);
+                result.addAll(fluxos);
             } else {
-				taskBeanList = situacaoProcessoDAO.getTaskIntances(tipoProcesso, false, numeroProcessoRoot);
-				createFluxoBeanList(result, tipoProcesso, taskBeanList, false);
+                List<FluxoBean> fluxos = situacaoProcessoDAO.getFluxoList(tipoProcesso, false, numeroProcessoRoot);
+                result.addAll(fluxos);
 			}
 		}
 		Collections.sort(result);
 		return result;
 	}
-
-	private void createFluxoBeanList(List<FluxoBean> fluxoBeanList, TipoProcesso tipoProcesso, List<TaskBean> taskBeanList, boolean expedida) {
-		for (TaskBean taskBean : taskBeanList) {
-		    String nomeFluxo = taskBean.getNomeFluxo();
-		    if (TipoProcesso.COMUNICACAO.equals(tipoProcesso)) {
-		        nomeFluxo = expedida ? nomeFluxo.concat("-Expedidas") : nomeFluxo.concat("-Recebidas");
-		    }
-		    FluxoBean fluxoBean = getFluxoBeanByName(fluxoBeanList, nomeFluxo);
-		    if (fluxoBean == null) {
-		        fluxoBean = createFluxoBean(tipoProcesso, expedida, taskBean, nomeFluxo);
-		        fluxoBeanList.add(fluxoBean);
-		    }
-		    fluxoBean.addTaskDefinition(taskBean);
-		}
-	}
-
-    private FluxoBean createFluxoBean(TipoProcesso tipoProcesso, boolean expedida, TaskBean taskBean, String nome) {
-        FluxoBean fluxoBean;
-        fluxoBean = new FluxoBean();
-        fluxoBean.setName(nome);
-        fluxoBean.setProcessDefinitionId(taskBean.getIdFluxo().toString());
-        fluxoBean.setTipoProcesso(tipoProcesso);
-        fluxoBean.setBpmn20(false);
-        fluxoBean.setExpedida(expedida);
-        return fluxoBean;
-    }
 	
-	private FluxoBean getFluxoBeanByName(List<FluxoBean> result, String nomeFluxo) {
-	    for (FluxoBean fluxoBean : result) {
-	        if (fluxoBean.getName().equals(nomeFluxo)) {
-	            return fluxoBean;
-	        }
+	public void loadTasks(FluxoBean fluxoBean) {
+	    if (fluxoBean.getTasks() == null) {
+	        List<TaskBean> taskBeans = situacaoProcessoDAO.getTaskIntances(fluxoBean);
+            for (TaskBean taskBean : taskBeans) {
+                fluxoBean.addTaskDefinition(taskBean);
+            }
 	    }
-	    return null;
+	}
+	
+    private void renameFluxoComunicao(List<FluxoBean> fluxoBeanList, boolean expedida) {
+	    for (FluxoBean fluxoBean : fluxoBeanList) {
+	        String fluxoName = fluxoBean.getName();
+	        fluxoBean.setName(fluxoName.concat(expedida ? "-Expedidas" : "-Recebidas"));
+	    }
 	}
 
 }

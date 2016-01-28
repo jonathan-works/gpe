@@ -13,13 +13,14 @@ public class FluxoBean implements Comparable<FluxoBean> {
 	private TipoProcesso tipoProcesso;
 	private Boolean expedida = false;
 	private boolean bpmn20;
-	private Map<String, TaskBean> tasks = new HashMap<>();
 	
+	private String numeroProcessoRootFilter;
+	private Map<String, TaskBean> tasks;
 	private Map<String, TaskDefinitionBean> taskDefinitions = new HashMap<>();
 	
 	public FluxoBean() {
 	}
-
+	
 	public FluxoBean(String processDefinitionId) {
 		this.processDefinitionId = processDefinitionId;
 	}
@@ -45,7 +46,18 @@ public class FluxoBean implements Comparable<FluxoBean> {
 		this.processDefinitionId = processDefinitionId;
 	}
 	
-	public void addTaskDefinition(TaskBean taskBean) {
+	public FluxoBean(String processDefinitionId, String name, Long quantidadeProcessos, String tipoProcesso, String expedida, String numeroProcessoRootFilter) {
+        this.processDefinitionId = processDefinitionId;
+        this.name = name;
+        this.quantidadeProcessos = quantidadeProcessos;
+        this.tipoProcesso = TipoProcesso.getByName(tipoProcesso);
+        this.expedida = Boolean.valueOf(expedida);
+        this.bpmn20 = false;
+        this.numeroProcessoRootFilter = numeroProcessoRootFilter;
+    }
+
+    public void addTaskDefinition(TaskBean taskBean) {
+        if (tasks == null) tasks = new HashMap<>();
 	    String taskNodeKey = taskBean.getTaskNodeKey();
 	    String taskName = taskBean.getTaskName();
 	    TaskDefinitionBean taskDefinitionBean = taskDefinitions.get(taskNodeKey);
@@ -60,6 +72,10 @@ public class FluxoBean implements Comparable<FluxoBean> {
 	public Map<String, TaskDefinitionBean> getTaskDefinitions() {
         return taskDefinitions;
     }
+	
+	public Map<String, TaskBean> getTasks() {
+	    return tasks;
+	}
 	
 	public TaskBean getTask(String idTaskInstance) {
 	    return tasks.get(idTaskInstance);
@@ -82,7 +98,7 @@ public class FluxoBean implements Comparable<FluxoBean> {
 	}
 	
 	public Long getQuantidadeProcessos() {
-		return (long) tasks.size();
+		return quantidadeProcessos;
 	}
 
 	public TipoProcesso getTipoProcesso() {
@@ -109,7 +125,11 @@ public class FluxoBean implements Comparable<FluxoBean> {
 		this.bpmn20 = bpmn20;
 	}
 	
-	@Override
+	public String getNumeroProcessoRootFilter() {
+        return numeroProcessoRootFilter;
+    }
+
+    @Override
 	public String toString() {
 		return name;
 	}
