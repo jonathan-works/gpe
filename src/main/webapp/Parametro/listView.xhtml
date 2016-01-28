@@ -11,11 +11,6 @@
 	<ui:define name="title">#{infoxMessages['parametro.titlePage']}</ui:define>
 	<ui:param name="home" value="#{parametroCrudAction}" />
 
-	<ui:define name="head">
-		<h:outputStylesheet library="styleSkinInfox"
-			name="dynamicParameters.css" />
-	</ui:define>
-
 	<ui:define name="body">
 		<h:form>
 			<h:selectOneMenu value="#{parametroView.grupo}"
