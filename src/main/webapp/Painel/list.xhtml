@@ -11,18 +11,16 @@
   xmlns:wi="http://www.itx.com.br/jsf"
   xmlns:infox="http://www.infox.com.br/jsf"
   xmlns:p="http://primefaces.org/ui"
-  template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
+  template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
   
   <ui:param name="pageTitle" value="#{infoxMessages['painel.titlePage']}"/>
   <ui:define name="title">#{pageTitle}</ui:define>
   
-  <ui:define name="baseBody">
+  <ui:define name="body">
     <h:form>
     	<a:poll action="#{painelUsuarioController.atualizarPainelProcessos}" interval="10000" execute="@this" render="@none" immediate="true" bypassUpdates="true"/>
     </h:form>
-    <wi:menu menuHandler="#{menuNavigation}">
     <s:div id="baseBody">
-	    <wi:messages formId="pageBody" globalOnly="true" />
 	  
 	    <h:outputScript>
 	      function atualizaPainelFluxo() { 
@@ -151,7 +149,6 @@
 	      
 	    </rich:popupPanel>
 	</s:div>
-    </wi:menu>
 	<ui:include src="/Painel/filtroPainelModal.xhtml"></ui:include>
   </ui:define>
 </ui:composition>
