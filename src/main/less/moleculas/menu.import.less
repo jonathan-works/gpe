@@ -1,54 +1,84 @@
 @menu-block-size:3em;
 @menu-height:@menu-block-size;
-@context-menu-width: 9.6em;
-@content-translation: @context-menu-width+1;
 
 .boundries {
     font-size:1rem;
     padding:1em;
     .flex-displayed-container;
-    & > *{
+    > *{
         display:inline-block;
         vertical-align:top;
+        position:relative;
     }
+}
+
+.collapse-ctx-menu(){
+    @resource-url:"/javax.faces.resource/arrow-left.png.seam?ln=styleSkinInfox/all";
+    background-image:url("@{context-path}\@{resource-url}");
+    background-position:center right;
+    background-repeat:no-repeat;
+    box-shadow:0 4px 10px 0 rgba(0, 0, 0, 0.4);
+    &:hover{
+        .transform(translate(0,0.2em));
+    }
+}
+.extend-ctx-menu(){
+    @resource-url:"/javax.faces.resource/arrow-right.png.seam?ln=styleSkinInfox/all";
+    background-image:url("@{context-path}\@{resource-url}");
 }
 
 .page-content{
+    @context-menu-width: 9.6em;
+    @content-translation: @context-menu-width+1;
     margin-top:@menu-height+(9/8);
-    margin-left:@content-translation;
+    .transform(translate(@content-translation,0));
     max-width:calc(100%~" - "@content-translation);
     width:100%;
-    margin-right:-100%;
+    margin-right:calc(-100%~" + "@content-translation);
     .z-depth(1);
+    ~ .ifx-menu-container{
+        max-height:@menu-height+(1/8);
+        width:100%;
+        margin-right:-100%;
+    }
+    ~ .ifx-ctx-menu-container{
+        margin-top:@menu-height+(9/8);
+        .ifx-ctx-menu-nav{
+            width:@context-menu-width;
+            .transform-origin(left center);
+            >.ifx-ctx-menu{
+                .z-depth(4);
+                // .transform(translate(calc(-100%~" - "-@menu-block-size), 1em));
+            }
+            
+        }
+        > form {
+            .display-flex();
+            > .ifx-ctx-menu-collapse{
+                .collapse-ctx-menu();
+                width:1em;
+            }
+        }
+    }
+    &.ifx-ctx-menu-collapsed {
+        max-width:inherit;
+        margin-right:-100%;
+        .transform(translate(0,0));
+        ~ .ifx-ctx-menu-container{
+            .transform(translate(calc(~"-@{content-translation}"), 0));
+            > form > .ifx-ctx-menu-collapse{
+                .extend-ctx-menu();
+            }
+        }
+    }
 }
 
-.ifx-menu-container{
-  max-height:@menu-height+(1/8);
-  width:100%;
-  margin-right:-100%;
-}
-
-.ifx-ctx-menu-container{
-    margin-top:@menu-height+(9/8);
-}
 
 .ifx-menu-nav {
     text-align:right;
-    &>.ifx-menu{
+    >.ifx-menu{
         .z-depth(2);
     }
-}
-.ifx-ctx-menu-nav{
-    width:@context-menu-width;
-    .transform-origin(left center);
-    .transition(all 0.3s ease-in-out);
-    &>.ifx-ctx-menu{
-       .z-depth(4);
-       &.off-screen{
-         .transform(translate(calc(-100%~" - "-@menu-block-size), 1em));
-       }
-    }
-    
 }
 
 .ifx-menu, .ifx-ctx-menu{
@@ -78,13 +108,15 @@
 
 .ifx-menu-itm {
     text-align:left;
-    &>.ifx-menu-lnk{
-        padding:@menu-height/3;
-        display:inline-block;
-        white-space:pre;
-        box-sizing:border-box;
+    >.ifx-menu-lnk{
+        >.ifx-menu-lbl{
+            padding:@menu-height/3;
+            white-space:pre;
+            display:inline-block;
+        }
+        display:block;
     }
-    &>.ifx-menu{
+    >.ifx-menu{
         .z-depth(4);
         position:absolute;
         margin:0.1em;
@@ -92,12 +124,12 @@
         .transition(all 0.3s ease-in-out);
         .transform(scale(1,0));
         .transform-origin(100% 0);
-        &>.ifx-menu-itm{
+        >.ifx-menu-itm{
             display:block;
         }
     }
     &:active,&:hover {
-        &>.ifx-menu{
+        >.ifx-menu{
             .transform(scale(1));
         }
     }
@@ -132,7 +164,7 @@ a.ifx-menu-lnk,a.ifx-ctx-menu-lnk {
     background-color: @menu-bg-color;
     border-color: darken(@menu-bg-color,5%);
     color: @menu-txt-color;
-    &>.ifx-menu-lnk{
+    >.ifx-menu-lnk{
         &.ifx-menu-hidden{
             @resource-url:"#{layoutController.getResourceUrlByPath('/imagens/hamburger.png')}";
             background-image:url("@{context-path}\@{resource-url}");

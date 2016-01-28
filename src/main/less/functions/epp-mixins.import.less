@@ -32,20 +32,26 @@
     -moz-transform: @arguments;
     transform: @arguments;
 }
-
-.flex-displayed-container {
+.display-flex{
   display: -webkit-box;
   display: -moz-box;
   display: -ms-flexbox;
   display: -webkit-flex;
-  display: flex;
+  display: flex;  
 }
-
-.flex-child(@ratio:1){
+.flex(@ratio:1){
   -moz-flex:@ratio;
   -webkit-flex: @ratio;
   -ms-flex: @ratio;
   flex: @ratio;
+}
+
+.flex-displayed-container {
+  &:extend(.display-flex);
+}
+
+.flex-child(@ratio:1){
+  .flex(@ratio);
 }
 .flex-displayed-child {
   .flex-child(1);
