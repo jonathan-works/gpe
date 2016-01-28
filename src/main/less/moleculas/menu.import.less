@@ -61,11 +61,13 @@
     position: relative;
     text-align:center;
 }
-.ifx-menu > .ifx-menu-itm {
-    display:inline-block;
-    vertical-align:top;
-    cursor:pointer;
-    position:relative;
+.ifx-menu-itm-plain,.ifx-menu-itm{
+    .ifx-menu > & {
+        display:inline-block;
+        vertical-align:top;
+        cursor:pointer;
+        position:relative;
+    }
 }
 
 .ifx-ctx-menu-lnk{
@@ -108,15 +110,23 @@ a.ifx-menu-lnk,a.ifx-ctx-menu-lnk {
   text-decoration:inherit;
   font-size:inherit;
 }
-
+@context-path:"#{pathResolver.contextPath}";
 /*MENU COLORING*/
 .ifx-menu-nav {
   color: @menu-txt-color;
   background-color: @menu-bg-color;
-  background-image:~"url(""#{pathResolver.contextPath}\#{layoutController.getResourceUrl('LOGO_TOPO')}"~")";
+  @resource-url:"#{layoutController.getResourceUrl('LOGO_TOPO')}";
+  @image-width:170px;
+  @image-height:75px;
+  background-image:url("@{context-path}\@{resource-url}");
   background-position:top left;
   background-repeat:no-repeat;
-  background-size:auto 100%;
+  background-size:contain;
+}
+.ifx-menu-itm-plain{
+    background-color: @menu-bg-color;
+    border-color: darken(@menu-bg-color,5%);
+    color: @menu-txt-color;
 }
 .ifx-menu-itm {
     background-color: @menu-bg-color;
@@ -124,10 +134,10 @@ a.ifx-menu-lnk,a.ifx-ctx-menu-lnk {
     color: @menu-txt-color;
     &>.ifx-menu-lnk{
         &.ifx-menu-hidden{
-            background-image:~"url(""#{pathResolver.contextPath}\#{layoutController.getResourceUrlByPath('/imagens/hamburger.png')}"~")";
+            @resource-url:"#{layoutController.getResourceUrlByPath('/imagens/hamburger.png')}";
+            background-image:url("@{context-path}\@{resource-url}");
             background-position:center center;
             background-repeat:no-repeat;
-            background-size:2em;
             width:@menu-block-size;
             height:@menu-block-size;
             .ifx-menu-lbl {
