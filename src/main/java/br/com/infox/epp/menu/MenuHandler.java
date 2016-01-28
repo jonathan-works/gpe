@@ -19,5 +19,7 @@ public interface MenuHandler {
 	List<MenuItem> getMainMenu();
 
 	boolean isShowMenu();
+	
+	void refresh();
 
 }

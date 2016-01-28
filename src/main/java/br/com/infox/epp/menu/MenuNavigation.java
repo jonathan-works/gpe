@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
@@ -27,8 +26,8 @@ public class MenuNavigation implements Serializable, MenuHandler {
 	private MenuItem mainMenuItem;
 	private MenuItem navBarItem;
 
-	@PostConstruct
-	public void start() {
+	@Override
+	public void refresh() {
 		mainMenuItem=null;
 		navBarItem=null;
 	}
@@ -104,7 +103,7 @@ public class MenuNavigation implements Serializable, MenuHandler {
 				navBarMenu.add(0, mainMenuItem);
 			}
 		}
-		addMenuUsuario(navBarMenu);
+		navBarMenu.add(new MenuItem("#{infoxMessages['painel.titlePage']}", "/Painel/list.seam"));
 		return navBarMenu;
 	}
 
@@ -140,7 +139,10 @@ public class MenuNavigation implements Serializable, MenuHandler {
 	}
 
 	private void addMenuUsuario(List<MenuItem> menu) {
-		menu.add(new MenuItem(Authenticator.getUsuarioLogado().toString(), "/Painel/list.seam"));
+//		UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
+//		if (usuarioLogado != null) {
+//			menu.add(new MenuItem(usuarioLogado.toString(), "/Painel/list.seam"));
+//		}
 	}
 
 	private void addLogoutMenuItem(List<MenuItem> menu) {

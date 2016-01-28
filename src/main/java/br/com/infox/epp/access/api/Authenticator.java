@@ -225,7 +225,6 @@ public class Authenticator implements Serializable {
 				setNewPassword1(null);
 				setNewPassword2(null);
 			}
-                BeanManager.INSTANCE.getReference(MenuNavigation.class).start();
         } else {
             getMessagesHandler().add(Severity.ERROR, infoxMessages.get("login.error.invalid"));
         }
@@ -343,6 +342,7 @@ public class Authenticator implements Serializable {
         getAuthenticatorService().addRolesAtuais(roleSet);
         setVariaveisDoContexto(usuarioPerfil, roleSet);
         securityUtil.clearPermissionCache();
+        BeanManager.INSTANCE.getReference(MenuNavigation.class).refresh();
         if (!getUsuarioLogado().getProvisorio() && !isUsuarioExterno()) {
         	if (!hasToSignTermoAdesao()) {
         		redirectToPainelDoUsuario();
