@@ -276,4 +276,9 @@ public class PrazoComunicacaoService {
     	return null;
     }
 
+    
+    public Date getPrazoLimiteParaResposta(Processo comunicacao){
+    	return getDataLimiteCumprimento(comunicacao);
+    }
+    
 }

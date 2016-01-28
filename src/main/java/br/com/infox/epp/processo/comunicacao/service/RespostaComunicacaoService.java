@@ -1,7 +1,6 @@
 package br.com.infox.epp.processo.comunicacao.service;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +18,6 @@ import org.jbpm.graph.exe.ProcessInstance;
 import br.com.infox.certificado.bean.CertificateSignatureBean;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
@@ -38,6 +36,7 @@ import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.seam.util.ComponentUtil;
+import br.com.infox.util.time.DateRange;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -132,22 +131,17 @@ public class RespostaComunicacaoService {
 		if (contextInstance.getVariable(VariaveisJbpmComunicacao.RESPOSTA_TEMPESTIVA) != null) {
 			return;
 		}
-		boolean respostaTempestiva = false;
 		MetadadoProcesso metadadoDataCiencia = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA);
-		MetadadoProcesso metadadoPrazoDestinatario = comunicacao.getMetadado(ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO);
-		if (metadadoDataCiencia != null && metadadoPrazoDestinatario != null) {
-			Date dataCiencia = DateUtil.getBeginningOfDay((Date) metadadoDataCiencia.getValue());
-			Integer prazoDestinatario = metadadoPrazoDestinatario.getValue();
-			Calendar c = Calendar.getInstance();
-			c.setTime(dataCiencia);
-			c.add(Calendar.DAY_OF_MONTH, prazoDestinatario);
-			Date dataFimPrazoDestinatario = DateUtil.getEndOfDay(c.getTime());
-			
-			if (dataCiencia.equals(DateUtil.getBeginningOfDay(dataResposta)) || dataFimPrazoDestinatario.equals(DateUtil.getEndOfDay(dataResposta)) ||
-					(dataCiencia.before(dataResposta) && dataFimPrazoDestinatario.after(dataResposta))) {
-				respostaTempestiva = true;
-			}
+		Date dataLimiteCumprimento = prazoComunicacaoService.getPrazoLimiteParaResposta(comunicacao);
+		boolean respostaTempestiva = false;
+		if (metadadoDataCiencia != null && dataLimiteCumprimento != null) {
+			Date dataCiencia = metadadoDataCiencia.getValue();
+			respostaTempestiva = isRespostaTempestiva(dataCiencia, dataLimiteCumprimento, dataResposta);
 		}
 		contextInstance.setVariable(VariaveisJbpmComunicacao.RESPOSTA_TEMPESTIVA, respostaTempestiva);
+	}
+
+	boolean isRespostaTempestiva(Date dataCiencia, Date dataLimiteCumprimento, Date dataResposta) {
+		return new DateRange(dataCiencia, dataLimiteCumprimento).contains(dataResposta);
 	}
 }
