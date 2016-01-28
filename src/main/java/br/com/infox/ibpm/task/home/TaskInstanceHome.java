@@ -22,6 +22,7 @@ import javax.transaction.SystemException;
 import org.hibernate.HibernateException;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.Factory;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
@@ -66,6 +67,7 @@ import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
+import br.com.infox.epp.menu.MenuMovimentar;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -151,6 +153,8 @@ public class TaskInstanceHome implements Serializable {
 	@In
 	private ProcessoHandler processoHandler;
 	
+	@Inject
+	private MenuMovimentar menuMovimentar;
 	@Inject
 	private SituacaoProcessoDAO situacaoProcessoDAO;
 	@Inject
@@ -266,6 +270,11 @@ public class TaskInstanceHome implements Serializable {
 		return modeloDocumentoManager.find(Integer.parseInt(s));
 	}
 
+	@Factory("menuMovimentar")
+	public MenuMovimentar getMenuMovimentar() {
+		return menuMovimentar;
+	}
+	
 	public Map<String, Object> getInstance() {
 		createInstance();
 		return mapaDeVariaveis;
