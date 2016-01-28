@@ -744,12 +744,12 @@
     <repository>
       <id>infox-releases</id>
       <name>Infox Releases</name>
-      <url>http://hudson.infox.intranet:8081/nexus/content/repositories/infox-releases/</url>
+      <url>http://ci.infox.intranet:8081/nexus/content/repositories/infox-releases/</url>
     </repository>
     <snapshotRepository>
       <id>infox-snapshots</id>
       <name>Infox Snapshots</name>
-      <url>http://hudson.infox.intranet:8081/nexus/content/repositories/infox-snapshots/</url>
+      <url>http://ci.infox.intranet:8081/nexus/content/repositories/infox-snapshots/</url>
     </snapshotRepository>
   </distributionManagement>
 </project>
