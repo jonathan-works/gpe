@@ -200,6 +200,7 @@ public class PainelUsuarioController implements Serializable {
 	public void adicionarFiltroNumeroProcessoRoot(){
 		setSelectedFluxo(null);
 		painelTreeHandler.clearTree();
+		loadFluxosDisponiveis();
 	}
 	
 	public void limparFiltros(){

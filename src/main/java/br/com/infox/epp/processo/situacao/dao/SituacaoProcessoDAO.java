@@ -231,7 +231,7 @@ public class SituacaoProcessoDAO {
         Predicate predicate = abstractQuery.getRestriction();
         abstractQuery.where(
                cb.and(
-                       cb.like(processoRoot.get(Processo_.numeroProcesso), "%" + cb.literal(numeroProcesso) + "%"),
+                       cb.like(processoRoot.get(Processo_.numeroProcesso),  cb.literal("%" + numeroProcesso + "%")),
                        predicate
                )
         );
