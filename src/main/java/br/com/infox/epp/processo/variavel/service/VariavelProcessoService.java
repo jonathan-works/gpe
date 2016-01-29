@@ -28,6 +28,7 @@ import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
+import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 
 @Stateless
@@ -59,6 +60,12 @@ public class VariavelProcessoService {
         }
 
         return variaveis;
+    }
+    
+    public VariavelProcesso getVariavelProcesso(Integer idProcesso, String nome) {
+    	Processo processo =  processoManager.find(idProcesso);
+    	ProcessoTarefa processoTarefa = processoTarefaManager.getUltimoProcessoTarefa(processo);
+    	return getVariavelProcesso(processo, nome, processoTarefa.getTaskInstance());
     }
     
     public VariavelProcesso getVariavelProcesso(Integer idProcesso, String nome, Long idTaskInstance) {

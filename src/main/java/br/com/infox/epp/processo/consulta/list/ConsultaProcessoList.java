@@ -19,6 +19,7 @@ import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.componentes.column.DynamicColumnModel;
 import br.com.infox.core.list.DataList;
 import br.com.infox.core.util.DateUtil;
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
@@ -164,7 +165,6 @@ public class ConsultaProcessoList extends DataList<TaskBean> {
     }
     
     private void updateDatatable() {
-        if (dynamicColumns == null) return;
         if (fluxoBean != null) {
             dynamicColumns = new ArrayList<>();
             Integer idFluxo = Integer.valueOf(fluxoBean.getProcessDefinitionId());
@@ -177,7 +177,11 @@ public class ConsultaProcessoList extends DataList<TaskBean> {
     }
     
     public VariavelProcesso getVariavelProcesso(Integer idProcesso, String nome, String idTaskInstance) {
-        return variavelProcessoService.getVariavelProcesso(idProcesso, nome, Long.parseLong(idTaskInstance));
+    	if (StringUtil.isEmpty(idTaskInstance)) {
+    		return variavelProcessoService.getVariavelProcesso(idProcesso, nome);
+    	} else {
+    		return variavelProcessoService.getVariavelProcesso(idProcesso, nome, Long.parseLong(idTaskInstance));
+    	}
     }
     
     public Object getVariavelProcesso(TaskBean taskBean, String expression) {
