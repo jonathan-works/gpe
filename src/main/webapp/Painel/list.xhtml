@@ -66,7 +66,7 @@
 						<a:param name="fluxo" assignTo="#{painelUsuarioController.idProcessDefinition}" />
 						<a:param name="expedida" assignTo="#{painelUsuarioController.expedida}" />
 					</a:jsFunction>
-					<s:div rendered="#{not empty painelUsuarioController.fluxosDisponiveis and painelUsuarioController.showFiltroInfo}"
+					<s:div rendered="#{painelUsuarioController.showFiltroInfo}"
 						style="border: 1px solid #c0c0c0; padding:0.5em;">
 						<h:outputLabel id="labelFiltroGlobalPainelUsuario" 
 							for="labelNumeroProcessoRootFiltro" 

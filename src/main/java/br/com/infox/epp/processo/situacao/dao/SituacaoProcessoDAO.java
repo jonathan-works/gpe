@@ -166,66 +166,7 @@ public class SituacaoProcessoDAO {
             appendNumeroProcessoRootFilter(cq, fluxoBean.getNumeroProcessoRootFilter(), processoRoot);
         }
         return getEntityManager().createQuery(cq).getResultList();
-    }
-	
-	public List<TaskBean> getTaskIntances(TipoProcesso tipoProcesso, boolean comunicacoesExpedidas, String numeroProcessoRootFilter) {
-	    CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-	    CriteriaQuery<TaskBean> cq = cb.createQuery(TaskBean.class);
-	    Root<TaskInstance> taskInstance = cq.from(TaskInstance.class);
-	    Root<LongInstance> variableInstance = cq.from(LongInstance.class);
-	    Root<Processo> processo = cq.from(Processo.class);
-	    Join<TaskInstance, ProcessInstance> processInstance = taskInstance.join("processInstance", JoinType.INNER);
-	    Join<Processo, NaturezaCategoriaFluxo> natCatFluxo = processo.join(Processo_.naturezaCategoriaFluxo, JoinType.INNER);
-	    Join<NaturezaCategoriaFluxo, Fluxo> fluxo = natCatFluxo.join(NaturezaCategoriaFluxo_.fluxo, JoinType.INNER);
-	    Join<TaskInstance, Task> task = taskInstance.join("task", JoinType.INNER);
-	    Join<Task, TaskNode> taskNode = task.join("taskNode", JoinType.INNER);
-	    Join<NaturezaCategoriaFluxo, Natureza> natureza = natCatFluxo.join(NaturezaCategoriaFluxo_.natureza, JoinType.INNER);
-	    Join<NaturezaCategoriaFluxo, Categoria> categoria = natCatFluxo.join(NaturezaCategoriaFluxo_.categoria, JoinType.INNER);
-	    Join<Processo, UsuarioLogin> usuarioSolicitante = processo.join(Processo_.usuarioCadastro, JoinType.INNER);
-	    Join<Processo, Processo> processoRoot = processo.join(Processo_.processoRoot, JoinType.INNER);
-	    Join<Processo, PrioridadeProcesso> prioridadeProcesso = processo.join(Processo_.prioridadeProcesso, JoinType.LEFT);
-	    Join<Processo, Caixa> caixa = processo.join(Processo_.caixa, JoinType.LEFT);
-	    
-	    Selection<String> idTaskInstance = taskInstance.<Long>get("id").as(String.class);
-	    Selection<String> taskName = task.<String>get("name");
-	    Selection<String> assignee = taskInstance.<String>get("assignee");
-	    Selection<String> idProcessInstance = processInstance.<Long>get("id").as(String.class);
-	    Selection<String> taskNodeKey = taskNode.<String>get("key");
-	    Selection<Integer> idProcesso =  processo.get(Processo_.idProcesso);
-	    Selection<String> nomeCaixa =  caixa.get(Caixa_.nomeCaixa);
-	    Selection<Integer> idCaixa =  caixa.get(Caixa_.idCaixa);
-	    Selection<String> nomeFluxo =  fluxo.get(Fluxo_.fluxo);
-	    Selection<Integer> idFluxo =  fluxo.get(Fluxo_.idFluxo);
-	    
-	    Selection<String> nomeNatureza = natureza.get(Natureza_.natureza); 
-	    Selection<String> nomeCategoria = categoria.get(Categoria_.categoria); 
-	    Selection<String> numeroProcesso = processo.get(Processo_.numeroProcesso);
-	    Selection<String> numeroProcessoRoot = processoRoot.get(Processo_.numeroProcesso);
-	    Selection<String> nomeUsuarioSolicitante = usuarioSolicitante.get(UsuarioLogin_.nomeUsuario);
-	    Selection<String> nomePrioridade = prioridadeProcesso.get(PrioridadeProcesso_.descricaoPrioridade);
-	    Selection<Integer> pesoPrioridade = prioridadeProcesso.get(PrioridadeProcesso_.peso);
-	    Selection<Date> dataInicio = processo.get(Processo_.dataInicio);
-	    
-	    cq.select(cb.construct(TaskBean.class, idTaskInstance, taskName, assignee, idProcessInstance, taskNodeKey, idProcesso, nomeCaixa, idCaixa, nomeFluxo, idFluxo,
-	            nomeNatureza, nomeCategoria, numeroProcesso, numeroProcessoRoot, nomeUsuarioSolicitante, nomePrioridade, pesoPrioridade, dataInicio));
-
-	    cq.where(
-	            cb.equal(variableInstance.get("processInstance").<Long>get("id"), processInstance.<Long>get("id")),
-	            cb.equal(variableInstance.<String>get("name"), cb.literal("processo")),
-	            cb.equal(variableInstance.<Long>get("value"), processo.get(Processo_.idProcesso)),
-	            cb.isNull(processInstance.<Date>get("end")),
-	            cb.isTrue(taskInstance.<Boolean>get("isOpen")),
-	            cb.isFalse(taskInstance.<Boolean>get("isSuspended"))
-	    );
-	    
-	    appendSigiloProcessoFilter(cq, processo);
-        appendTipoProcessoFilter(cq, tipoProcesso, processo);
-        appendTipoProcessoFilters(cq, tipoProcesso, comunicacoesExpedidas, taskInstance, processo);
-        if (!StringUtil.isEmpty(numeroProcessoRootFilter)) {
-            appendNumeroProcessoRootFilter(cq, numeroProcessoRootFilter, processoRoot);
-        }
-	    return getEntityManager().createQuery(cq).getResultList();
-	}
+    }	
 	
     protected void appendNumeroProcessoRootFilter(AbstractQuery<?> abstractQuery, String numeroProcesso, Path<Processo> processoRoot) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();

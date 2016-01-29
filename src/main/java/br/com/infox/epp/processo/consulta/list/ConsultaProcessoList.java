@@ -137,6 +137,7 @@ public class ConsultaProcessoList extends DataList<TaskBean> {
         setCategoria(null);
         setDataInicio(null);
         setDataFim(null);
+        setPage(1);
         search();
     }
     

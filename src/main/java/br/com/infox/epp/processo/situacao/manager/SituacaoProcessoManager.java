@@ -30,12 +30,10 @@ public class SituacaoProcessoManager {
 			if (TipoProcesso.COMUNICACAO.equals(tipoProcesso)) {
 				if (securityUtil.checkPage("/pages/Painel/comunicacoesRecebidas.seam")) {
 					List<FluxoBean> fluxos = situacaoProcessoDAO.getFluxoList(tipoProcesso, false, numeroProcessoRoot);
-					renameFluxoComunicao(fluxos, false);
 					result.addAll(fluxos);
 				}
 				if (securityUtil.checkPage("/pages/Painel/comunicacoesExpedidas.seam")) {
 				    List<FluxoBean> fluxos = situacaoProcessoDAO.getFluxoList(tipoProcesso, true, numeroProcessoRoot);
-                    renameFluxoComunicao(fluxos, true);
                     result.addAll(fluxos);
 				}
 			} else if (TipoProcesso.COMUNICACAO_NAO_ELETRONICA.equals(tipoProcesso)) {
@@ -58,12 +56,4 @@ public class SituacaoProcessoManager {
             }
 	    }
 	}
-	
-    private void renameFluxoComunicao(List<FluxoBean> fluxoBeanList, boolean expedida) {
-	    for (FluxoBean fluxoBean : fluxoBeanList) {
-	        String fluxoName = fluxoBean.getName();
-	        fluxoBean.setName(fluxoName.concat(expedida ? "-Expedidas" : "-Recebidas"));
-	    }
-	}
-
 }

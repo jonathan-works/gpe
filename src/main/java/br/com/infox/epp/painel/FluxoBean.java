@@ -48,12 +48,19 @@ public class FluxoBean implements Comparable<FluxoBean> {
 
 	public FluxoBean(String processDefinitionId, String name, Long quantidadeProcessos, String tipoProcesso, String expedida, String numeroProcessoRootFilter) {
         this.processDefinitionId = processDefinitionId;
-        this.name = name;
         this.quantidadeProcessos = quantidadeProcessos;
         this.tipoProcesso = TipoProcesso.getByName(tipoProcesso);
         this.expedida = Boolean.valueOf(expedida);
         this.bpmn20 = false;
         this.numeroProcessoRootFilter = numeroProcessoRootFilter;
+
+        if(TipoProcesso.COMUNICACAO.value().equals(tipoProcesso)) {
+        	this.name = name + (this.expedida ? "-Expedidas" : "-Recebidas");
+        }
+        else
+        {
+            this.name = name;        	
+        }
     }
 
     public void addTaskDefinition(TaskBean taskBean) {
