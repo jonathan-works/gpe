@@ -53,7 +53,7 @@ public class SignalView implements Serializable {
         signalService.update(signal);
     }
     
-    @ExceptionHandled(value = MethodType.INACTIVE)
+    @ExceptionHandled(value = MethodType.UPDATE, updatedMessage = "Registro Inativado com sucesso!" )
     public void inativar() {
         Signal signal = signalDao.findById(getId());
         signal.setAtivo(Boolean.FALSE);
