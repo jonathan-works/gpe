@@ -4,12 +4,6 @@
 	
 	<enterprise-beans>
 	    <session>
-	      <ejb-name>EjbSynchronizations</ejb-name>
-	      <ejb-class>org.jboss.seam.transaction.EjbSynchronizations</ejb-class>
-		  <session-type>Stateful</session-type>
-		  <transaction-type>Container</transaction-type>
-	    </session>
-	    <session>
 	      <ejb-name>TimerServiceDispatcher</ejb-name>
 	      <ejb-class>org.jboss.seam.async.TimerServiceDispatcher</ejb-class>
 		  <session-type>Stateless</session-type>
