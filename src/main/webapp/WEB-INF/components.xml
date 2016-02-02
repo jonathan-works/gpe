@@ -28,6 +28,8 @@
         debug="${desenvolvimento}"
         transaction-management-enabled="false" />
         
+    <transaction:ejb-transaction />
+        
     <document:document-store use-extensions="true" />
 
     <web:hot-deploy-filter url-pattern="*.seam" />
