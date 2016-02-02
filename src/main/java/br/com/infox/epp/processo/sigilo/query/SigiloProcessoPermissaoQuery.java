@@ -2,7 +2,7 @@ package br.com.infox.epp.processo.sigilo.query;
 
 public interface SigiloProcessoPermissaoQuery {
     String TABLE_NAME = "tb_sigilo_processo_permissao";
-    String SEQUENCE_NAME = "sq_tb_sigilo_processo_permissao";
+    String SEQUENCE_NAME = "sq_sigilo_processo_permissao";
     String COLUMN_ID = "id_sigilo_processo_permissao";
     String COLUMN_ID_SIGILO_PROCESSO = "id_sigilo_processo";
     String COLUMN_ID_USUARIO_LOGIN = "id_usuario_login";

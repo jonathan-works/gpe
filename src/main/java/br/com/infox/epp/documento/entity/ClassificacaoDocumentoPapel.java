@@ -34,12 +34,12 @@ import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 public class ClassificacaoDocumentoPapel implements Serializable {
     
 	private static final long serialVersionUID = 1L;
-	public static final String TABLE_NAME = "tb_classificacao_documento_papel";
+	public static final String TABLE_NAME = "tb_classificacao_doc_papel";
 
     @Id
-    @SequenceGenerator(allocationSize=1, initialValue=1, name = "ClassificacaoPapelGenerator", sequenceName = "sq_classificacao_documento_papel")
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = "ClassificacaoPapelGenerator", sequenceName = "sq_classificacao_doc_papel")
     @GeneratedValue(generator = "ClassificacaoPapelGenerator", strategy = GenerationType.SEQUENCE)
-    @Column(name = "id_classificacao_documento_papel", nullable = false, unique = true)
+    @Column(name = "id_classificacao_doc_papel", nullable = false, unique = true)
     private Integer id;
     
     @NotNull

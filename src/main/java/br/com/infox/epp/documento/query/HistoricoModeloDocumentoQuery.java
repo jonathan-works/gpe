@@ -3,7 +3,7 @@ package br.com.infox.epp.documento.query;
 public interface HistoricoModeloDocumentoQuery {
 
     String TABLE_HISTORICO_MODELO_DOCUMENTO = "tb_modelo_documento_historico";
-    String SEQUENCE_HISTORICO_MODELO_DOCUMENTO = "sq_tb_modelo_documento_historico";
+    String SEQUENCE_HISTORICO_MODELO_DOCUMENTO = "sq_modelo_documento_historico";
     String ID_HISTORICO_MODELO_DOCUMENTO = "id_modelo_documento_historico";
     String ID_MODELO_DOCUMENTO = "id_modelo_documento";
     String ID_USUARIO_ALTERACAO = "id_usuario_alteracao";
