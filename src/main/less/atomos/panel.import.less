@@ -1,0 +1,36 @@
+#panel.panel-specs {
+    background-image:none;
+    background-color: @panel-bg-color;
+    color: @panel-txt-color;
+    font-family: @default-font-family;
+}
+
+.rf-p {
+  border-color:@panelBorderColor;
+  & > &-hdr{
+      &:extend(#panel.panel-specs);
+  }
+  &-hdr.dt-form-p-h {
+      &:extend(#panel.panel-specs);
+  }
+}
+
+.rf-cp{
+    &-gr{
+    border-spacing: 0;
+    }
+    &.rf-tgp{
+        padding: 0;
+        background-color:@toggle-panel-bg-color;
+        border-color:@panelBorderColor;
+    }
+    &-hdr{
+        &-exp&, &-colps&{
+            &:extend(#panel.panel-specs);
+        }
+        &-exp&{
+            &:extend(.rf-cp.rf-tgp);
+            &:extend(.rf-cp-gr);
+        }
+    }
+}

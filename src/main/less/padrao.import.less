@@ -12,6 +12,7 @@
 @import "atomos/messages.import.less";
 @import "atomos/defaultCRUD.import.less";
 @import "atomos/abas.import.less";
+@import "atomos/panel.import.less";
 
 // GRUPOS DE COMPONENTES / MOLÉCULAS
 @import "header.import.less";//OLD
@@ -107,27 +108,6 @@
 }
 .property.field.edit {
     &:extend(.property-field-edit);
-}
-.rf-cp-gr{
-  border-spacing: 0;
-}
-.rf-cp.rf-tgp{
-    padding: 0;
-    background-color:@toggle-panel-bg-color;
-    border-color:@panelBorderColor;
-}
-
-.rf-cp-hdr-exp.rf-cp-hdr{
-    &:extend(.rf-cp.rf-tgp);
-    &:extend(.rf-cp-gr);
-}
-.pageBody {
-}
-.clean-pageBody {
-}
-.conteudo {
-  &.minimal {
-  }
 }
 
 .organized {
@@ -704,7 +684,6 @@ div.rf-trn {
   width:210rem/16;
 }
 .rf-p {
-  border-color:@panelBorderColor;
   &.dt-form-p {
     background-color:@baseBgColor;
   }
@@ -863,12 +842,6 @@ option {
   border-color: @menu-bg-color;
   color: @menu-txt-color;
   background-image:none;
-}
-.rf-cp-hdr-exp.rf-cp-hdr,.rf-cp-hdr.rf-cp-hdr-colps,.rf-p-hdr.dt-form-p-h,.rf-p > .rf-p-hdr{
-  background-image:none;
-  background-color: @menu-bg-color;
-  color: @menu-txt-color;
-  font-family: @default-font-family;
 }
 .processo-panel-form.hidden {
   display:none;
