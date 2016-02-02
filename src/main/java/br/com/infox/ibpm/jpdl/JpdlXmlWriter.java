@@ -186,12 +186,7 @@ public class JpdlXmlWriter {
             addAttribute(swimlane, ELEMENT_NAME, e.getKey());
             Swimlane s = e.getValue();
             addAttribute(swimlane, "key", s.getKey() == null ? UUID.randomUUID().toString() : s.getKey());
-            if (s.getPooledActorsExpression() != null || s.getActorIdExpression() != null) {
-            	writeAssignment(swimlane, s.getActorIdExpression(), s.getPooledActorsExpression());
-            }
-            if (s.getAssignmentDelegation() != null){
-            	writeAssignmentDelegation(s.getAssignmentDelegation(), swimlane);
-            }
+            writeAssignment(s, swimlane);
         }
     }
 
@@ -268,22 +263,36 @@ public class JpdlXmlWriter {
         Set variableAccess = (Set) ReflectionsUtil.getValue(node, "variableAccesses");
         writeVariables(nodeElement, variableAccess);
     }
-
+   
+    private void writeAssignment(Swimlane swimlane, Element element){
+    	if (swimlane.getPooledActorsExpression() != null || swimlane.getActorIdExpression() != null) {
+        	writeAssignment(element, swimlane.getActorIdExpression(), swimlane.getPooledActorsExpression());
+        }
+        if (swimlane.getAssignmentDelegation() != null){
+        	writeAssignmentDelegation(swimlane.getAssignmentDelegation(), element);
+        }
+    }
+    
+    private void writeAssignment(Task task, Element element){
+		if (task.getAssignmentDelegation() != null){
+			writeAssignmentDelegation(task.getAssignmentDelegation(), element);
+        }
+		if (task.getPooledActorsExpression() != null || task.getActorIdExpression() != null){
+			writeAssignment(element, task.getActorIdExpression(), task.getPooledActorsExpression());
+			addAttribute(element, "actor-id", task.getActorIdExpression());
+			addAttribute(element, "pooled-actors", task.getPooledActorsExpression());
+		}
+    }
+    
     private void writeTasks(Set<Task> tasks, Element element) {
         for (Task task : tasks) {
             Element taskElement = addElement(element, "task");
             addAttribute(taskElement, ELEMENT_NAME, task.getName());
-            if (task.getSwimlane() != null) {
-                addAttribute(taskElement, "swimlane", task.getSwimlane().getName());
+            if (task.getSwimlane() != null){
+            	addAttribute(taskElement, "swimlane", task.getSwimlane().getName());
+            } else {
+            	writeAssignment(task, taskElement);
             }
-			if (task.getAssignmentDelegation() != null){
-				writeAssignmentDelegation(task.getAssignmentDelegation(), taskElement);
-            }
-			if (task.getPooledActorsExpression() != null || task.getActorIdExpression() != null){
-				writeAssignment(taskElement, task.getActorIdExpression(), task.getPooledActorsExpression());
-//				addAttribute(taskElement, "actor-id", task.getActorIdExpression());
-//				addAttribute(taskElement, "pooled-actors", task.getPooledActorsExpression());
-			}
             addAttribute(taskElement, "condition", task.getCondition());
             addAttribute(taskElement, "description", task.getDescription());
             addAttribute(taskElement, "due-date", task.getDueDate());
