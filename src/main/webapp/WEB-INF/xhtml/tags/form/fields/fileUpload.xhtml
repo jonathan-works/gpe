@@ -14,7 +14,7 @@
     
    <s:div id="#{id}ToolTipDiv" styleClass="tooltip-parent" style="width: 10px" 
    		  rendered="#{wi:get(rendered, true) and not empty documentoUploader.documento.classificacaoDocumento}">
-   	<h:graphicImage id="#{id}helpEditTipImg" url="#{wiSkin.imageFolder}/help.gif" />
+   	<h:graphicImage id="#{id}helpEditTipImg" url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
 	<div class="epp-tooltip">
 		<div class="tooltip-panel">
 			<div><h:outputText value="Extensões Aceitas:" /></div>

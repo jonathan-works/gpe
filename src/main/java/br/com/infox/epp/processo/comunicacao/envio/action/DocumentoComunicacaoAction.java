@@ -52,10 +52,12 @@ public class DocumentoComunicacaoAction implements Serializable {
 	private DocumentoBinManager documentoBinManager;
 	@Inject
 	private DocumentoComunicacaoService documentoComunicacaoService;
+	@Inject
+	private PapelManager papelManager;
+	@Inject
+	private PastaRestricaoManager pastaRestricaoManager;
 	
-	private PapelManager papelManager = ComponentUtil.getComponent(PapelManager.NAME);
 	private DocumentoDisponivelComunicacaoList documentoDisponivelComunicacaoList = ComponentUtil.getComponent(DocumentoDisponivelComunicacaoList.NAME);
-	private PastaRestricaoManager pastaRestricaoManager = ComponentUtil.getComponent(PastaRestricaoManager.NAME);
 	
 	private ModeloComunicacao modeloComunicacao;
 	

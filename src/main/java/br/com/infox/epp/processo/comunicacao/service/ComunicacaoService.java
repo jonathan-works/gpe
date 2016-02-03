@@ -11,15 +11,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.transaction.SystemException;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.transaction.Transaction;
@@ -62,47 +58,43 @@ import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 
-@Name(ComunicacaoService.NAME)
-@AutoCreate
-@Transactional
 @Stateless
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class ComunicacaoService {
 	
 	public static final String NAME = "comunicacaoService";
 	
-	@In
+	@Inject
 	private NaturezaCategoriaFluxoManager naturezaCategoriaFluxoManager;
-	@In
+	@Inject
 	private FluxoManager fluxoManager;
-	@In
-	private String codigoFluxoComunicacao;
-	@In
-	private String codigoFluxoComunicacaoNaoEletronico;
-	@In
+	@Inject
 	private DocumentoBinarioManager documentoBinarioManager;
-	@In
+	@Inject
 	private PdfManager pdfManager;
-	@In
+	@Inject
 	private IniciarProcessoService iniciarProcessoService;
-	@In
+	@Inject
 	private DocumentoBinManager documentoBinManager;
-	@In
+	@Inject
 	private ProcessoManager processoManager;
-	@In
+	@Inject
 	private GenericManager genericManager;
-	
-	@In
+	@Inject
 	private MetadadoProcessoManager metadadoProcessoManager;
 	@Inject
 	private DocumentoComunicacaoService documentoComunicacaoService;
-	@In
+	@Inject
 	private UsuarioLoginManager usuarioLoginManager;
-	
 	@Inject
 	private ModeloComunicacaoManager modeloComunicacaoManager;
 	@Inject
 	private PrazoComunicacaoService prazoComunicacaoService;
 	
+	private String codigoFluxoComunicacao = Parametros.CODIGO_FLUXO_COMUNICACAO_ELETRONICA.getValue();
+	private String codigoFluxoComunicacaoNaoEletronico = Parametros.CODIGO_FLUXO_COMUNICACAO_NAO_ELETRONICA.getValue();
+	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void expedirComunicacao(ModeloComunicacao modeloComunicacao) throws DAOException {
 		Long processIdOriginal = BusinessProcess.instance().getProcessId();
 		Long taskIdOriginal = BusinessProcess.instance().getTaskId();
@@ -113,6 +105,7 @@ public class ComunicacaoService {
 		BusinessProcess.instance().setTaskId(taskIdOriginal);
 	}
 	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void expedirComunicacao(DestinatarioModeloComunicacao destinatario) throws DAOException {
 		ModeloComunicacao modeloComunicacao = destinatario.getModeloComunicacao();
 		
@@ -144,6 +137,7 @@ public class ComunicacaoService {
 		}
 	}
 	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public ModeloComunicacao reabrirComunicacao (ModeloComunicacao modeloComunicacao) throws CloneNotSupportedException, DAOException {
 		ModeloComunicacao  copyModeloComunicacao = modeloComunicacao.makeCopy();
 		copyModeloComunicacao.setEnviarRelatoria(false);
@@ -181,6 +175,7 @@ public class ComunicacaoService {
 		return copyModeloComunicacao;
 	}
 	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	private void atualizaVariavelModeloComunicacao(ModeloComunicacao antigoModeloComunicacao, Long novoModeloComunicacaoId) {
 		String nomeVariavel = modeloComunicacaoManager.getNomeVariavelModeloComunicacao(antigoModeloComunicacao.getId());
 		if (nomeVariavel != null) {
@@ -191,6 +186,7 @@ public class ComunicacaoService {
 		}
 	}
 
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void excluirComunicacao (ModeloComunicacao modeloComunicacao) throws DAOException {
 		if (!modeloComunicacaoManager.hasComunicacaoExpedida(modeloComunicacao)) {
 			modeloComunicacaoManager.removerDestinatariosModelo(modeloComunicacao);
@@ -300,6 +296,7 @@ public class ComunicacaoService {
 		}
 	}
 	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void finalizarComunicacao(ModeloComunicacao modeloComunicacao) throws DAOException {
 		if (!modeloComunicacao.isDocumentoBinario()) {
 			if (modeloComunicacao.isMinuta()) {
@@ -320,6 +317,7 @@ public class ComunicacaoService {
 		documentoComunicacaoService.gravarDocumentos(modeloComunicacao);
 	}
 
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	private void criarMetadados(DestinatarioModeloComunicacao destinatario, Processo processo) throws DAOException {
 		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processo);
 		List<MetadadoProcesso> metadados = new ArrayList<>();
@@ -347,6 +345,13 @@ public class ComunicacaoService {
 		}
 		
 		metadadoProcessoManager.persistMetadados(metadadoProcessoProvider, metadados);
+		createMetadadosCiencia(destinatario, processo);
+		
+	}
+	
+	protected void createMetadadosCiencia(DestinatarioModeloComunicacao destinatario, Processo processo) {
+		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processo);
+		List<MetadadoProcesso> metadados;
 		metadados = new ArrayList<>();
 		if (destinatario.getModeloComunicacao().getTipoComunicacao().getQuantidadeDiasCiencia() == 0) {
 			prazoComunicacaoService.darCiencia(processo, new Date(), usuarioLoginManager.find(Integer.valueOf(Parametros.ID_USUARIO_SISTEMA.getValue())));
@@ -356,7 +361,6 @@ public class ComunicacaoService {
 		            ComunicacaoMetadadoProvider.LIMITE_DATA_CIENCIA, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(dataLimiteCiencia)));
             metadadoProcessoManager.persistMetadados(metadadoProcessoProvider, metadados);
 		}
-		
 	}
 	
 	private Map<String, Object> createVariaveisJbpm(DestinatarioModeloComunicacao destinatario) {
@@ -369,7 +373,7 @@ public class ComunicacaoService {
 		}
 		variaveis.put(VariaveisJbpmComunicacao.PRAZO_DESTINATARIO, destinatario.getPrazo());
 		variaveis.put(VariaveisJbpmComunicacao.TIPO_COMUNICACAO, destinatario.getModeloComunicacao().getTipoComunicacao().getDescricao());
-		variaveis.put("cienciaAutomatica", destinatario.getModeloComunicacao().getTipoComunicacao().getQuantidadeDiasCiencia() == 0);
+		variaveis.put(VariaveisJbpmComunicacao.CIENCIA_AUTOMATICA, destinatario.getModeloComunicacao().getTipoComunicacao().getQuantidadeDiasCiencia() == 0);
 		return variaveis;
 	}
 	

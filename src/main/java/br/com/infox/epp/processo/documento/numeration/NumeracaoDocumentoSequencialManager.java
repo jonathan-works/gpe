@@ -10,8 +10,8 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.entity.Processo;
 
 @AutoCreate
-@Name(NumeracaoDocumentoSequencialManager.NAME)
 @Stateless
+@Name(NumeracaoDocumentoSequencialManager.NAME)
 public class NumeracaoDocumentoSequencialManager extends Manager<NumeracaoDocumentoSequencialDAO, NumeracaoDocumentoSequencial> {
 	
 	private static final long serialVersionUID = 1L;

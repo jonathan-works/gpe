@@ -2,19 +2,18 @@ package br.com.infox.epp.processo.comunicacao.list;
 
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.ejb.Stateful;
+import javax.inject.Named;
 
-import br.com.infox.core.list.EntityList;
+import br.com.infox.core.list.DataList;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.documento.entity.Documento;
 
-@Name(DocumentoComunicacaoList.NAME)
-@Scope(ScopeType.PAGE)
-@AutoCreate
-public class DocumentoComunicacaoList extends EntityList<Documento> {
+@Named
+@ViewScoped
+@Stateful
+public class DocumentoComunicacaoList extends DataList<Documento> {
 	public static final String NAME = "documentoComunicacaoList";
 	private static final long serialVersionUID = 1L;
 	
@@ -24,10 +23,6 @@ public class DocumentoComunicacaoList extends EntityList<Documento> {
 	private static final String DEFAULT_ORDER = "o.documento.dataInclusao desc";
 	
 	private ModeloComunicacao modeloComunicacao;
-
-	@Override
-	protected void addSearchFields() {
-	}
 
 	@Override
 	protected String getDefaultEjbql() {

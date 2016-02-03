@@ -9,13 +9,9 @@
 	<description>Caixa: #{caixaCrudAction.instance}</description>
 	
 	<begin-conversation join="true"/>
-	<param name="nomeCaixa.order" value="#{caixaGrid.order}"/>
 	<param name="id" value="#{caixaCrudAction.id}" converterId="integerConverter" />
 
 	<!-- Parametros para RESTFull -->
 	<param name="tab" value="#{caixaCrudAction.tab}"/>
 
-	<!-- Parametros para a ordem de grids -->
-	<param name="caixa.order" value="#{caixaGrid.order}"/>		
- 
 </page>

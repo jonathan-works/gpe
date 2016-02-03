@@ -50,7 +50,7 @@
 	          if ($('#canClosePanel').val() === 'true') {
 	            close();
 	          } else {
-	            location = location.href.replace(/&amp;tarefaId=\d+/g, "&amp;tarefaId=#{taskInstanceHome.tarefaId}");
+	            location = location.href.replace(/&amp;idTaskInstance=\d+/g, "&amp;idTaskInstance=#{taskInstanceHome.taskId}");
 	          }
 	        } else {
 	          infox.hideLoading();
@@ -186,7 +186,7 @@
                         id="helpBtn"
                         styleClass="mp-help"
                         onmouseup="#{rich:component('mp_taskNodeDescription')}.show();"
-                        value="#{wiSkin.imageFolder}/question.png" />
+                        value="#{layoutController.getResourceUrlByPath('/imagens/question.png')}" />
                     <ui:include src="#{taskPageAction.getTaskPagePath(taskInstanceHome.currentTaskInstance)}" />
                 </c:if>
             </infox:tab>
@@ -234,6 +234,15 @@
                 title="Comunicação"
                 action="#{comunicacaoAction.clear}">
                 <ui:include src="comunicacao.xhtml" />
+            </infox:tab>
+            <infox:tab
+                id="tabComunicacaoInterna"
+                name="tabComunicacaoInterna"
+                status=":status"
+                rendered="#{security.checkPage('abaComunicacaoInterna')}"
+                title="Comunicação Interna"
+                action="#{comunicacaoInternaView.onSelectTab(processoEpaHome.instance)}">
+                <ui:include src="comunicacaoInterna.xhtml" />
             </infox:tab>
             <infox:tab
                 id="tabMovimentacoes"
@@ -396,7 +405,7 @@
                                     status=":status"
                                     render="relacionamentoProcessoFormDiv relacionamentoProcessoDTDiv pageBodyDialogMessage"
                                     onclick="return confirm(\'#{infoxMessages['crud.confirmInactivate']}\');"
-                                    url="#{wiSkin.imageFolder}/remove.png"
+                                    url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
                                     title="#{infoxMessages['button.inactive']}" />
                             </ui:define>
                             <wi:columnOutputText
@@ -447,7 +456,7 @@
 		            id="mp_taskNodeCloseBtn"
 		            styleClass="mp-close"
 		            onmouseup="#{rich:component('mp_taskNodeDescription')}.hide();"
-		            value="#{wiSkin.imageFolder}/closeMP.gif" />
+		            value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}" />
 	        </f:facet>
 	        <h:outputText value="#{taskInstanceHome.taskNodeDescription}" escape="false" />
 	    </rich:popupPanel>

@@ -42,7 +42,7 @@
     	<s:div id="#{editorId.replace('-','')}ToolTipDivExterna">
 		    <s:div id="#{editorId.replace('-','')}ToolTipDiv" styleClass="tooltip-parent" style="width: 10px" 
 			  	rendered="#{not empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.observacao and not (readonly or taskInstanceHome.variaveisDocumento[id].hasAssinatura())}">
-			  	<h:graphicImage id="#{id}helpEditTipImg" url="#{wiSkin.imageFolder}/help.gif" />
+			  	<h:graphicImage id="#{id}helpEditTipImg" url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
 				<div class="epp-tooltip">
 					<div class="tooltip-panel">
 						<div><h:outputText value="Observação:"/></div>

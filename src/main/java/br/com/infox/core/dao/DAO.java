@@ -13,6 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.LockModeType;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -78,6 +79,11 @@ public abstract class DAO<T> implements Serializable {
     protected Class<T> getEntityClass() {
         ParameterizedType superType = (ParameterizedType) getClass().getGenericSuperclass();
         return (Class<T>) superType.getActualTypeArguments()[0];
+    }
+    
+    public <K>  K getSingleResult(TypedQuery<K> typedQuery) {
+        List<K> result = typedQuery.setMaxResults(1).getResultList();
+        return result.isEmpty() ? null : result.get(0);
     }
 
     /**

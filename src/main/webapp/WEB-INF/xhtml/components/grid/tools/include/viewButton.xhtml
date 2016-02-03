@@ -16,7 +16,7 @@
         limitRender="true"
         onclick="n=parentNode;        while(n.tagName.toLowerCase() != 'tr') {n = n.parentNode};       jQuery('##{gridId}List .activeRow').removeClass('activeRow');       jQuery(n).addClass('activeRow');">
 
-        <h:graphicImage url="#{wiSkin.imageFolder}/view.png"
+        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
             title="Exibir detalhes" />
         <f:param name="id" value="#{row[bean.key]}" />
 

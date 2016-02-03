@@ -2,7 +2,7 @@ package br.com.infox.epp.processo.documento.sigilo.query;
 
 public interface SigiloDocumentoPermissaoQuery {
     String TABLE_NAME = "tb_sigilo_documento_permissao";
-    String SEQUENCE_NAME = "sq_tb_sigilo_documento_permissao";
+    String SEQUENCE_NAME = "sq_sigilo_documento_permissao";
     String COLUMN_ID = "id_sigilo_documento_permissao";
     String COLUMN_ID_SIGILO_DOCUMENTO = "id_sigilo_documento";
     String COLUMN_ID_USUARIO_LOGIN = "id_usuario_login";

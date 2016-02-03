@@ -3,6 +3,7 @@ package br.com.infox.ibpm.jpdl;
 import static br.com.infox.constants.WarningConstants.RAWTYPES;
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -18,10 +19,12 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.dom4j.Document;
+import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.Namespace;
 import org.dom4j.io.OutputFormat;
+import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.jbpm.JbpmException;
 import org.jbpm.context.def.VariableAccess;
@@ -184,9 +187,10 @@ public class JpdlXmlWriter {
             Swimlane s = e.getValue();
             addAttribute(swimlane, "key", s.getKey() == null ? UUID.randomUUID().toString() : s.getKey());
             if (s.getPooledActorsExpression() != null || s.getActorIdExpression() != null) {
-                Element assignment = addElement(swimlane, "assignment");
-                addAttribute(assignment, "pooled-actors", s.getPooledActorsExpression());
-                addAttribute(assignment, "actor-id", s.getActorIdExpression());
+            	writeAssignment(swimlane, s.getActorIdExpression(), s.getPooledActorsExpression());
+            }
+            if (s.getAssignmentDelegation() != null){
+            	writeAssignmentDelegation(s.getAssignmentDelegation(), swimlane);
             }
         }
     }
@@ -219,7 +223,6 @@ public class JpdlXmlWriter {
         return newElement;
     }
 
-    @SuppressWarnings(UNCHECKED)
     private void writeNodes(Element parentElement, List<org.jbpm.graph.def.Node> nodes) {
         Iterator<org.jbpm.graph.def.Node> iter = nodes.iterator();
         while (iter.hasNext()) {
@@ -273,15 +276,54 @@ public class JpdlXmlWriter {
             if (task.getSwimlane() != null) {
                 addAttribute(taskElement, "swimlane", task.getSwimlane().getName());
             }
-            addAttribute(taskElement, "actor-id", task.getActorIdExpression());
+			if (task.getAssignmentDelegation() != null){
+				writeAssignmentDelegation(task.getAssignmentDelegation(), taskElement);
+            }
+			if (task.getPooledActorsExpression() != null || task.getActorIdExpression() != null){
+				writeAssignment(taskElement, task.getActorIdExpression(), task.getPooledActorsExpression());
+//				addAttribute(taskElement, "actor-id", task.getActorIdExpression());
+//				addAttribute(taskElement, "pooled-actors", task.getPooledActorsExpression());
+			}
             addAttribute(taskElement, "condition", task.getCondition());
             addAttribute(taskElement, "description", task.getDescription());
             addAttribute(taskElement, "due-date", task.getDueDate());
-            addAttribute(taskElement, "pooled-actors", task.getPooledActorsExpression());
             addAttribute(taskElement, "key", task.getKey() == null ? UUID.randomUUID().toString() : task.getKey());
             writeController(task.getTaskController(), taskElement);
             writeEvents(taskElement, task);
         }
+    }
+
+	@SuppressWarnings("unchecked")
+	private org.dom4j.Node[] getAsXmlContent(String content){
+    	List<org.dom4j.Node> assignment = new ArrayList<>();
+    	try {
+	    	String string = "<content>"+content+"</content>";
+			Document doc = new SAXReader().read(new ByteArrayInputStream(string.getBytes()));
+			Element el = doc.getRootElement();
+			for (Iterator<org.dom4j.Node> i = el.content().iterator(); i.hasNext();) {
+		        org.dom4j.Node node = i.next();
+		        i.remove();
+				assignment.add(node);
+		      }
+    	} catch(DocumentException e){
+    		LOG.warn("Failed to return node content", e);
+    	}
+		return assignment.toArray(new org.dom4j.Node[assignment.size()]);
+    }
+
+    private void writeAssignment(Element taskElement, String actorIdExpression, String pooledActorsExpression) {
+    	Element assignment = addElement(taskElement, "assignment");
+		addAttribute(assignment, "actor-id", actorIdExpression);
+		addAttribute(assignment, "pooled-actors", pooledActorsExpression);
+	}
+
+    private void writeAssignmentDelegation(Delegation assignmentDelegation, Element taskElement) {
+    	Element assignment= addElement(taskElement, "assignment");
+    	addAttribute(assignment, "class", assignmentDelegation.getClassName());
+    	addAttribute(assignment, "config-type", assignmentDelegation.getConfigType());
+    	for (org.dom4j.Node node : getAsXmlContent(assignmentDelegation.getConfiguration())) {
+    		assignment.add(node);
+    	}
     }
 
 	@SuppressWarnings(UNCHECKED)
@@ -363,7 +405,6 @@ public class JpdlXmlWriter {
         writeEvents(element, node);
     }
 
-    @SuppressWarnings(UNCHECKED)
     private void writeTransitions(Element element, org.jbpm.graph.def.Node node) {
         if (node.getLeavingTransitionsMap() != null) {
             Iterator<Transition> iter = node.getLeavingTransitionsList().iterator();
@@ -424,7 +465,7 @@ public class JpdlXmlWriter {
                 }
             }
         }
-        if (!valid && !event.getEventType().startsWith(Event.EVENTTYPE_TASK_LISTENER)) {
+        if (!valid && !event.isListener() && !event.getEventType().equals(Event.EVENTTYPE_DISPATCHER)) {
             eventElement.detach();
         }
     }

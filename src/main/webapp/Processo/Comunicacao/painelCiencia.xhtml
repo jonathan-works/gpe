@@ -8,7 +8,7 @@
 
 	<s:div id="painelCiencia" style="margin-top:1em">
 		<rich:panel
-			header="#{infoxMessages['comunicacao.registrarCiencia']} - #{darCienciaAction.destinatario.nome} / #{darCienciaAction.destinatario.tipoComunicacao}"
+			header="#{infoxMessages['comunicacao.registrarCiencia']} - #{darCienciaAction.destinatario.numeroComunicacao} / #{darCienciaAction.destinatario.nome} / #{darCienciaAction.destinatario.tipoComunicacao}"
 			rendered="#{darCienciaAction.ciencia}">
 			<h:form>
 				<wi:inputDate past="true" id="dataCiencia" showRequired="true"

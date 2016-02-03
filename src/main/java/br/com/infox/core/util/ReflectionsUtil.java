@@ -1,5 +1,6 @@
 package br.com.infox.core.util;
 
+import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -129,8 +130,7 @@ public final class ReflectionsUtil {
            Named named = clazz.getAnnotation(Named.class);
            if ( named != null ) {
         	   if (named.value().isEmpty()) {
-        		   String first = clazz.getSimpleName().substring(0, 1);
-                   return clazz.getSimpleName().replaceFirst(first, first.toLowerCase());
+        		   return Introspector.decapitalize(clazz.getSimpleName());
         	   } else {
         		   return named.value();
         	   }

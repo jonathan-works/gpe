@@ -31,6 +31,7 @@
             <value>menu.administracao/menu.fluxos/menu.agrupamento/categoria.menuText:/Categoria/listView.seam</value>
             <value>menu.administracao/menu.fluxos/menu.agrupamento/item.menuText:/Item/listView.seam</value>
             <value>menu.administracao/menu.fluxos/tipoParte.menuText:/TipoParte/listView.seam</value>
+            <value>menu.administracao/menu.fluxos/signal.menuText:/Sinal/listView.seam</value>
             
             <value>menu.administracao/log.logs/log.menuText:/Consulta/Log/list.seam</value>
             <value>menu.administracao/contaTwitter.twitterSysMenuText:/ContaTwitter/Sistema/listView.seam</value>
@@ -44,6 +45,7 @@
             <value>menu.administracao/menu.usuario/contaTwitter.twitterMenuText:/ContaTwitter/listView.seam</value>
             <value>menu.administracao/automaticNodes.menuText:/automaticNodes.seam</value>
             <value>menu.administracao/quartzJobsInfo.menuText:/quartzJobsInfo.seam</value>
+            <value>menu.administracao/layout.menuText:/layout.seam</value>
             
             <value>menu.controle/bam.menuText:/BAM/listView.seam</value>
             <value>menu.controle/produtividade.menuText:/BAM/Produtividade/listView.seam</value>

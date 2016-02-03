@@ -1,116 +1,230 @@
 package br.com.infox.epp.processo.consulta.list;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-import br.com.infox.core.list.EntityList;
-import br.com.infox.core.list.SearchCriteria;
+import org.jbpm.graph.exe.ExecutionContext;
+import org.jbpm.graph.exe.Token;
+import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
+import org.jbpm.taskmgmt.exe.TaskInstance;
+
+import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.componentes.column.DynamicColumnModel;
+import br.com.infox.core.list.DataList;
 import br.com.infox.core.util.DateUtil;
-import br.com.infox.epp.fluxo.entity.Item;
-import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
-import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
-import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
-import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
-import br.com.infox.epp.tarefa.entity.Tarefa;
-import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
+import br.com.infox.core.util.StringUtil;
+import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.fluxo.entity.Categoria;
+import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
+import br.com.infox.epp.fluxo.entity.Natureza;
+import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
+import br.com.infox.epp.painel.FluxoBean;
+import br.com.infox.epp.painel.PanelDefinition;
+import br.com.infox.epp.painel.TaskBean;
+import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
+import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 
-@AutoCreate
-@Scope(ScopeType.PAGE)
-@Name(ConsultaProcessoList.NAME)
-public class ConsultaProcessoList extends EntityList<Processo> {
+@Named
+@ViewScoped
+public class ConsultaProcessoList extends DataList<TaskBean> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "consultaProcessoList";
-
-    private static final String DEFAULT_EJBQL = "select o from ProcessoTarefa pt inner join pt.processo o left join o.prioridadeProcesso pp"
-    		+ " where pt.tarefa = #{consultaProcessoList.tarefa} and pt.dataFim is null";
-    private static final String DEFAULT_ORDER = "coalesce(pp.peso, -1) DESC, pt.dataInicio ASC";
-
-    private static final String R1 = "o.idProcesso in (#{painelUsuarioController.processoIdList})";
-    private static final String R2 = "o.caixa.idCaixa = #{painelUsuarioController.idCaixa}";
-    private static final String R3 = "NumeroProcessoRoot(o.idProcesso) = #{consultaProcessoList.numeroProcessoRoot}";
-    private static final String R4 = " ( select nat.natureza "
-    		+ " from Processo pc "
-    		+ " inner join pc.naturezaCategoriaFluxo nat "
-    		+ " where  pc.idProcesso = o.processoRoot.idProcesso ) = #{consultaProcessoList.entity.naturezaCategoriaFluxo.natureza}";
-    private static final String R5 = " ( select nat.categoria "
-    		+ " from Processo pc "
-    		+ " inner join pc.naturezaCategoriaFluxo nat "
-    		+ " where pc.idProcesso = o.processoRoot.idProcesso ) = #{consultaProcessoList.entity.naturezaCategoriaFluxo.categoria}";
     
-    @In
-    private ProcessoTarefaManager processoTarefaManager;
+    private static final String DYNAMIC_COLUMN_EXPRESSION = "#{consultaProcessoList.getVariavelProcesso(row.idProcesso, '%s', row.idTaskInstance).valor}";
+
+    private static Comparator<TaskBean> TASK_COMPARATOR = new Comparator<TaskBean>() {
+
+        @Override
+        public int compare(TaskBean taskBean1, TaskBean taskBean2) {
+            int pesoCompare = taskBean1.getPesoPrioridadeProcesso().compareTo(taskBean2.getPesoPrioridadeProcesso());
+            if (pesoCompare != 0) {
+                return pesoCompare;
+            } else {
+                return taskBean1.getDataInicio().compareTo(taskBean2.getDataInicio());
+            }
+        }
+    };
     
+    @Inject
+    protected VariavelProcessoService variavelProcessoService;
+    @Inject
+    protected DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
+
+    private String numeroProcesso;
     private String numeroProcessoRoot;
-    private Tarefa tarefa;
+    private Natureza natureza;
+    private Categoria categoria;
+    private Date dataInicio;
+    private Date dataFim;
     
+    private List<DynamicColumnModel> dynamicColumns;
+    private List<TaskBean> filteredTasks;
+    private FluxoBean fluxoBean;
+    private PanelDefinition panelDefinition;
+    
+    public void onSelectFluxo(FluxoBean fluxoBean) {
+        this.fluxoBean = fluxoBean;
+        this.dynamicColumns = null;
+    }
+    
+    public void onSelectNode(PanelDefinition panelDefinition) {
+        this.panelDefinition = panelDefinition;
+        newInstance();
+    }
+    
+    public void search() {
+        filteredTasks = new ArrayList<>(getTasks());
+        applyFilters();
+        applySort();
+    }
+    
+    @Override
+    public List<TaskBean> getResultList() {
+        return truncateList(filteredTasks);
+    }
+
+    private void applyFilters() {
+        List<TaskBean> tasksToRemove = new ArrayList<>();
+        for (TaskBean taskBean : getTasks()) {
+            if (numeroProcesso != null && !taskBean.getNumeroProcesso().contains(numeroProcesso)) {
+                tasksToRemove.add(taskBean);
+            } else if (numeroProcessoRoot != null && !taskBean.getNumeroProcessoRoot().contains(numeroProcessoRoot)) {
+                tasksToRemove.add(taskBean);
+            } else if (natureza != null && !taskBean.getNomeNatureza().equals(natureza.getNatureza())) {
+                tasksToRemove.add(taskBean);
+            } else if (categoria != null && !taskBean.getNomeCategoria().equals(categoria.getCategoria())) {
+                tasksToRemove.add(taskBean);
+            } else if (dataInicio != null && !DateUtil.isDataMaiorIgual(taskBean.getDataInicio(), dataInicio)){
+                tasksToRemove.add(taskBean);
+            } else if (dataFim != null && !DateUtil.isDataMenorIgual(taskBean.getDataInicio(), dataFim)) {
+                tasksToRemove.add(taskBean);
+            }
+        }
+        filteredTasks.removeAll(tasksToRemove);
+    }
+    
+    private void applySort() {
+        Collections.sort(filteredTasks, TASK_COMPARATOR);
+    }
+    
+    private List<TaskBean> truncateList(List<TaskBean> resultList) {
+        if (getResultCount() > getMaxResults()) {
+            int lastIndex = getLastIndex() > resultList.size() ? resultList.size() : getLastIndex(); 
+            return resultList.subList(getFirstIndex(), lastIndex);
+        }
+        return resultList;
+    }
+    
+    private int getFirstIndex() {
+        return (getPage() - 1) * getMaxResults();
+    }
+    
+    private int getLastIndex() {
+        return getPage() * getMaxResults();
+    }
+
     @Override
     public void newInstance() {
-        super.newInstance();
-        getEntity().setNaturezaCategoriaFluxo(new NaturezaCategoriaFluxo());
-        setNumeroProcessoRoot(null);
+        filteredTasks = new ArrayList<>(getTasks());
+        setNumeroProcesso(null);
+        setNatureza(null);
+        setCategoria(null);
+        setDataInicio(null);
+        setDataFim(null);
+        setPage(1);
+        search();
     }
-
+    
     @Override
-    protected void addSearchFields() {
-        addSearchField("idProcesso", SearchCriteria.IGUAL, R1);
-        addSearchField("caixa.idCaixa", SearchCriteria.IGUAL, R2);
-        addSearchField("numeroProcesso", SearchCriteria.IGUAL);
-        addSearchField("numeroProcessoRoot", SearchCriteria.IGUAL, R3);
-        addSearchField("naturezaCategoriaFluxo.natureza", SearchCriteria.IGUAL,R4);
-        addSearchField("naturezaCategoriaFluxo.categoria", SearchCriteria.IGUAL,R5);
-        addSearchField("dataInicio", SearchCriteria.DATA_MAIOR_IGUAL);
-        addSearchField("dataFim", SearchCriteria.DATA_MENOR_IGUAL);
+    public boolean isNextExists() {
+        return getPage() * getMaxResults() < filteredTasks.size();
     }
-
+    
+    @Override
+    public boolean isPreviousExists() {
+        return getFirstIndex() > 0;
+    }
+    
+    @Override
+    public Long getResultCount() {
+        return (long) filteredTasks.size();
+    }
+    
+    public List<DynamicColumnModel> getDynamicColumns() {
+        if (dynamicColumns == null) {
+            updateDatatable();
+        }
+        return dynamicColumns;
+    }
+    
+    private void updateDatatable() {
+        if (fluxoBean != null) {
+            dynamicColumns = new ArrayList<>();
+            Integer idFluxo = Integer.valueOf(fluxoBean.getProcessDefinitionId());
+            List<DefinicaoVariavelProcesso> definicoes = definicaoVariavelProcessoManager.getDefinicaoVariavelProcessoVisivelPainel(idFluxo);
+            for (DefinicaoVariavelProcesso definicao : definicoes) {
+                DynamicColumnModel columnModel = new DynamicColumnModel(definicao.getLabel(), String.format(DYNAMIC_COLUMN_EXPRESSION, definicao.getNome()));
+                dynamicColumns.add(columnModel);
+            }
+        }
+    }
+    
+    public VariavelProcesso getVariavelProcesso(Integer idProcesso, String nome, String idTaskInstance) {
+    	if (StringUtil.isEmpty(idTaskInstance)) {
+    		return variavelProcessoService.getVariavelProcesso(idProcesso, nome);
+    	} else {
+    		return variavelProcessoService.getVariavelProcesso(idProcesso, nome, Long.parseLong(idTaskInstance));
+    	}
+    }
+    
+    public Object getVariavelProcesso(TaskBean taskBean, String expression) {
+        Token token = EntityManagerProducer.getEntityManager().find(TaskInstance.class, Long.parseLong(taskBean.getIdTaskInstance())).getToken();
+        ExecutionContext executionContext = new ExecutionContext(token);
+        Object object = JbpmExpressionEvaluator.evaluate("#{"+expression+"}", executionContext);
+        return object;
+    }
     
     @Override
     protected String getDefaultEjbql() {
-        return DEFAULT_EJBQL;
+        return "";
     }
 
     @Override
     protected String getDefaultOrder() {
-        return DEFAULT_ORDER;
+        return "";
     }
 
     @Override
     protected Map<String, String> getCustomColumnsOrder() {
         return null;
     }
-
-    public Date getDataFim() {
-        return getEntity().getDataFim();
-    }
-
-    public void setDataFim(Date dataFim) {
-        getEntity().setDataFim(DateUtil.getEndOfDay(dataFim));
-    }
     
-    public Item getItemDoProcesso(Processo processo){
-    	MetadadoProcesso metadado = processo.getMetadado(EppMetadadoProvider.ITEM_DO_PROCESSO);
-    	return  metadado != null ? (Item) metadado.getValue() : null;
+    public List<TaskBean> getTasks() {
+        return panelDefinition.getTasks();
     }
 
-    public Date getDataEntradaUltimaTarefa(Processo processo) {
-        ProcessoTarefa pt = processoTarefaManager.getUltimoProcessoTarefa(processo);
-        return pt.getDataInicio();
+    public List<TaskBean> getFilteredTasks() {
+        return filteredTasks;
     }
-    
-    public Tarefa getTarefa() {
-		return tarefa;
-	}
 
-	public void setTarefa(Tarefa tarefa) {
-		this.tarefa = tarefa;
-	}
+    public FluxoBean getFluxoBean() {
+        return fluxoBean;
+    }
+
+    public String getNumeroProcesso() {
+        return numeroProcesso;
+    }
+
+    public void setNumeroProcesso(String numeroProcesso) {
+        this.numeroProcesso = numeroProcesso;
+    }
 
     public String getNumeroProcessoRoot() {
         return numeroProcessoRoot;
@@ -119,4 +233,37 @@ public class ConsultaProcessoList extends EntityList<Processo> {
     public void setNumeroProcessoRoot(String numeroProcessoRoot) {
         this.numeroProcessoRoot = numeroProcessoRoot;
     }
+
+    public Natureza getNatureza() {
+        return natureza;
+    }
+
+    public void setNatureza(Natureza natureza) {
+        this.natureza = natureza;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
+
+    public Date getDataInicio() {
+        return dataInicio;
+    }
+
+    public void setDataInicio(Date dataInicio) {
+        this.dataInicio = dataInicio;
+    }
+
+    public Date getDataFim() {
+        return dataFim;
+    }
+
+    public void setDataFim(Date dataFim) {
+        this.dataFim = dataFim;
+    }
+    
 }

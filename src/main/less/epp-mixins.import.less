@@ -1,5 +1,27 @@
+.background-image(@base-path:@imgFolder, @image-name){
+  background-image:~"url("%("%s/%s",@base-path,@image-name)~")";
+}
+
 .image(@imgName) {
   background-image:~"url("%("%s/%s",@imgFolder,@imgName)~")";
+}
+
+.flex-displayed-container {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+}
+
+.flex-child(@ratio:1){
+  -moz-flex:@ratio;
+  -webkit-flex: @ratio;
+  -ms-flex: @ratio;
+  flex: @ratio;
+}
+.flex-displayed-child {
+  .flex-child(1);
 }
 
 .central-block-section() {

@@ -34,7 +34,7 @@
     <s:div id="#{f.id}ToolTipDivExterna">
 	    <s:div id="#{f.id}ToolTipDiv" styleClass="tooltip-parent" style="width: 10px" 
 	    	rendered="#{not empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento and not readonly}">
-			<h:graphicImage id="#{id}helpEditTipImg" url="#{wiSkin.imageFolder}/help.gif" />
+			<h:graphicImage id="#{id}helpEditTipImg" url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
 			<div class="epp-tooltip">
 				<div class="tooltip-panel">
 					<s:div rendered="#{empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento}">
@@ -90,7 +90,7 @@
                 <h:outputText value="#{infoxMessages['processoDocumento.classificacaoDocumento']}: #{not readonly or not empty taskInstanceHome.variaveisDocumento[id] ? taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.descricao : props.classificacaoDocumento}"/>
                 <br />
                 <h:outputText id="file#{id}" value="Documento: #{not readonly or not empty taskInstanceHome.variaveisDocumento[id] ? taskInstanceHome.variaveisDocumento[id].documentoBin.nomeArquivo : value}"/>
-               	<h:graphicImage url="#{wiSkin.imageFolder}/show.gif" title="Visualizar" style="cursor: pointer" rendered="#{not readonly or not empty taskInstanceHome.variaveisDocumento[id]}"
+               	<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}" title="Visualizar" style="cursor: pointer" rendered="#{not readonly or not empty taskInstanceHome.variaveisDocumento[id]}"
                 				onclick="infox.openPopUp('documento', '#{taskInstanceHome.getViewUrlDownload(id.split('-')[0])}');" />
             </fieldset>
         </s:fragment>

@@ -55,14 +55,14 @@
         	<a:commandLink action="#{modeloPastaRestricaoAction.selectModeloPasta(row)}" 
 				execute="@this" limitRender="true" render="modeloPastaRestricaoDiv"
 				onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
-				<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['modeloPasta.select']}" />
+				<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['modeloPasta.select']}" />
 			</a:commandLink>
 			<wi:toolBar action="#{modeloPastaRestricaoAction.removeModeloPasta(row)}"
                 limitToList="true" status=":status"
                 reRender="modeloPastaTable modeloPastaRestricaoDiv"
                 onclick="if (confirm('#{infoxMessages['crud.confirmRemove']}')) {infox.showLoading(); return true;} else return false;"
                 oncomplete="infox.hideLoading();"
-                url="#{wiSkin.imageFolder}/remove.png"
+                url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
                 title="#{infoxMessages['crud.remove']}" />
         </ui:define>
         <wi:columnOutputText columnId="nome"
@@ -145,7 +145,7 @@
 				<ui:define name="headerToolBar" />
 				<ui:define name="toolBar">
 					<wi:toolBar id="viewModeloPastaRestricao"
-						reRender="modeloPastaRestricaoDiv" url="#{wiSkin.imageFolder}/view.png"
+						reRender="modeloPastaRestricaoDiv" url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
                         title="#{infoxMessages['modeloPasta.restricao.select']}"
 						action="modeloPastaRestricaoAction.loadRestricao(row)"
 						onclick="infox.showLoading();"
@@ -154,7 +154,7 @@
 						action="#{modeloPastaRestricaoAction.removeModeloRestricao(row)}"
                         title="#{infoxMessages['modeloPasta.restricao.delete']}"
 						reRender="modeloPastaRestricaoDiv" rendered="#{!modeloPastaRestricaoAction.isRestricaoDefault(row)}"
-						url="#{wiSkin.imageFolder}/remove.png" />
+						url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" />
 				</ui:define>
 				
 				<wi:columnEnum columnId="restricaoTipo"
@@ -234,7 +234,7 @@
         <f:facet name="controls">
             <h:graphicImage id="modeloPastaRestricaoPanelCloseBtn"
                 styleClass="mp-close"
-                value="#{wiSkin.imageFolder}/closeMP.gif"
+                value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
                 onmouseup="#{rich:component('addModeloRestricaoPanel')}.hide();" />
         </f:facet>
         <h:form>
@@ -265,8 +265,8 @@
                     rendered="#{modeloPastaRestricaoAction.isRestricaoLocalizacao()}"
                     assignTo="modeloPastaRestricaoAction.alvoRestricaoLocalizacao"
                     tree="#{localizacaoTree}"
-                    icon="#{wiSkin.imageFolder}/nivelTree.gif"
-                    iconLeaf="#{wiSkin.imageFolder}/file.gif"
+                    icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
+                    iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
                     required="true"
                     label="#{infoxMessages['pasta.restricaoAlvo']}">
                     <ui:param name="clearRender" value="alvoTipoLocalizacaoInput" />
@@ -303,7 +303,7 @@
         <f:facet name="controls">
             <h:graphicImage id="editModeloPastaRestricaoPanelCloseBtn"
                 styleClass="mp-close"
-                value="#{wiSkin.imageFolder}/closeMP.gif"
+                value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
                 onmouseup="#{rich:component('editModeloRestricaoPanel')}.hide();" />
         </f:facet>
         <h:form>
@@ -336,8 +336,8 @@
                     rendered="#{modeloPastaRestricaoAction.isRestricaoLocalizacao()}"
                     assignTo="modeloPastaRestricaoAction.alvoRestricaoLocalizacao"
                     tree="#{localizacaoTree}"
-                    icon="#{wiSkin.imageFolder}/nivelTree.gif"
-                    iconLeaf="#{wiSkin.imageFolder}/file.gif"
+                    icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
+                    iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
                     required="true"
                     label="#{infoxMessages['modeloPasta.restricaoAlvo']}" />
                 <wi:selectOneRadio id="editAlvoTipoParticipanteInput"

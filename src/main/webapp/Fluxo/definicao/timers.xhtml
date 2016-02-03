@@ -42,7 +42,7 @@
                             limitRender="true"
                         >
                             <h:graphicImage
-                                url="#{wiSkin.imageFolder}/add.gif"
+                                url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}"
                                 title="#{infoxMessages['process.timer.new']}"
                             />
                         </a:commandLink>
@@ -52,7 +52,7 @@
                     <h:form>
                         <h:graphicImage
                             title="#{infoxMessages['process.timer.remove']}"
-                            url="#{wiSkin.imageFolder}/remove.png"
+                            url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
                             styleClass="cursor-pointer"
                         >
                             <a:ajax

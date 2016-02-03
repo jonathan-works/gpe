@@ -28,10 +28,10 @@
                                 limitRender="true" status="status"
                                 action="#{bean.toggleVisibleColumn(col.id)}"
                                 styleClass="opacityHover">
-                                     url="#{wiSkin.imageFolder}/add.gif"
+                                     url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}"
                                      title="Mostrar coluna"
 									rendered="#{!visible}"/&gt;
-								<h:graphicImage url="#{wiSkin.imageFolder}/removeCol.png" title="Esconder coluna"
+								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/removeCol.png')}" title="Esconder coluna"
                                     rendered="#{visible}" />
                             </a:commandLink>
                             <a:commandLink rendered="#{key != 0}"
@@ -39,7 +39,7 @@
                                 limitRender="true" status="status"
                                 action="#{bean.moveColumnUp(col)}"
                                 styleClass="opacityHover">
-                                     url="#{wiSkin.imageFolder}/jbpm/up.gif"
+                                     url="#{layoutController.getResourceUrlByPath('/imagens/jbpm/up.gif')}"
                                      title="Subir"
                                      rendered="#{visible}" /&gt;
 							</a:commandLink>
@@ -49,7 +49,7 @@
                                 limitRender="true" status="status"
                                 action="#{bean.moveColumnDown(col)}"
                                 styleClass="opacityHover">
-                                     url="#{wiSkin.imageFolder}/jbpm/down.gif"
+                                     url="#{layoutController.getResourceUrlByPath('/imagens/jbpm/down.gif')}"
                                      title="Descer"
                                      rendered="#{visible}" /&gt;
 							</a:commandLink>

@@ -20,7 +20,7 @@
             oncomplete="#{rich:component('actionTemplatePanel')}.show()"
         >
             <h:graphicImage
-                url="#{wiSkin.imageFolder}/jbpm/wizard.gif"
+                url="#{layoutController.getResourceUrlByPath('/imagens/jbpm/wizard.gif')}"
                 title="Assistente para expressão"
             />
         </a:commandLink>
@@ -29,6 +29,7 @@
             value="#{event.currentAction.actionExpression}"
             label="#{infoxMessages['process.events.action.expression']}"
             showCounter="false"
+            styleClass="textAreaExpressionAction"
         >
         	<f:validator validatorId="jbpmExpressionValidator" />
             <a:ajax
@@ -39,7 +40,7 @@
             />
         </wi:inputTextarea>
         <div style="display: inline-block">
-            <h:graphicImage id="#{id}helpEditTipImg" url="#{wiSkin.imageFolder}/help.gif"
+            <h:graphicImage id="#{id}helpEditTipImg" url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}"
                 onclick="#{rich:component('expressoesAjudaPopUpPanel')}.show();" />
         </div>
     </s:div>
@@ -60,9 +61,19 @@
     </script>
     <rich:popupPanel id="expressoesAjudaPopUpPanel" modal="true" header="#{infoxMessages['process.events.expression.title']}" resizeable="true"
         styleClass="expressoesAjudaPopUpPanel" onshow="onshowPopup();">
+        
+        <script type="text/javascript">
+	    	function onSelectBpmnExpression(obj) {
+	    		var text = $($(obj).children().get(1)).text();
+	    		#{rich:component('expressoesAjudaPopUpPanel')}.hide();
+	    		$('.textAreaExpressionAction').text(text);
+	    		$('.textAreaExpressionAction').change();
+	    	}
+	    </script>
+	    
         <f:facet name="controls">
             <h:graphicImage id="assinarDocumentosPopUpPanelCloseBtn" styleClass="mp-close"
-                value="#{wiSkin.imageFolder}/closeMP.gif"
+                value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
                 onclick="#{rich:component('expressoesAjudaPopUpPanel')}.hide();" />
         </f:facet>
         <ui:include src="actionHelp.xhtml" />

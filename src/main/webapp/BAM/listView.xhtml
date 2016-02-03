@@ -79,7 +79,7 @@
       <ui:define name="toolBar">
         <div class="tbar-div">
           <h:graphicImage
-            value="#{wiSkin.imageFolder}/mod/balao.png"
+            value="#{layoutController.getResourceUrlByPath('/imagens/mod/balao.png')}"
             rendered="#{row.processo.situacaoPrazo ne 'SAT'}"
           />
           <wi:toolBarEdit
@@ -127,12 +127,12 @@
       <rich:column styleClass="defaultCell">
         <f:facet name="header">#{infoxMessages['localizacao.localizacao']} / #{infoxMessages['usuario.usuario']}</f:facet>
         <span> <h:graphicImage
-            url="#{wiSkin.imageFolder}/localizacao.gif"
+            url="#{layoutController.getResourceUrlByPath('/imagens/localizacao.gif')}"
             rendered="#{!empty jbpmUtil.getLocalizacao(task)}"
           /> <h:outputText value="#{jbpmUtil.getLocalizacao(task)}" />
         </span>
         <span> <h:graphicImage
-            url="#{wiSkin.imageFolder}/usuario.gif"
+            url="#{layoutController.getResourceUrlByPath('/imagens/usuario.gif')}"
             rendered="#{!empty userHandler.getUsuario(task.actorId)}"
           /> <h:outputText
             value=" #{userHandler.getUsuario(task.actorId)}"
@@ -208,12 +208,12 @@
       <rich:column styleClass="defaultCell">
         <f:facet name="header">#{infoxMessages['localizacao.localizacao']} / #{infoxMessages['usuario.usuario']}</f:facet>
         <span> <h:graphicImage
-            url="#{wiSkin.imageFolder}/localizacao.gif"
+            url="#{layoutController.getResourceUrlByPath('/imagens/localizacao.gif')}"
             rendered="#{!empty jbpmUtil.getLocalizacao(task)}"
           /> <h:outputText value="#{jbpmUtil.getLocalizacao(task)}" />
         </span>
         <span> <h:graphicImage
-            url="#{wiSkin.imageFolder}/usuario.gif"
+            url="#{layoutController.getResourceUrlByPath('/imagens/usuario.gif')}"
             rendered="#{!empty userHandler.getUsuarioByTaskInstance(task)}"
           /> <h:outputText
             value=" #{userHandler.getUsuarioByTaskInstance(task)}"

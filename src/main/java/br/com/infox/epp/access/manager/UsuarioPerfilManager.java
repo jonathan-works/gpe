@@ -34,6 +34,10 @@ public class UsuarioPerfilManager extends Manager<UsuarioPerfilDAO, UsuarioPerfi
     public List<PerfilTemplate> getPerfisPermitidos(Localizacao localizacao) {
         return getDao().getPerfisPermitidos(localizacao);
     }
+    
+    public List<PessoaFisica> getPessoasPermitidos(Localizacao localizacao, PerfilTemplate perfilTemplate) {
+        return getDao().getPessoasPermitidos(localizacao, perfilTemplate);
+    }
 
     public List<UsuarioPerfil> listByUsuarioLogin(UsuarioLogin usuarioLogin) {
         return getDao().listByUsuarioLogin(usuarioLogin);

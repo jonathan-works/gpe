@@ -8,6 +8,7 @@ import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import javax.ejb.Stateless;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletResponse;
 
@@ -37,6 +38,7 @@ import br.com.infox.seam.path.PathResolver;
 @AutoCreate
 @Scope(ScopeType.EVENT)
 @Name(DocumentoDownloader.NAME)
+@Stateless
 @Transactional
 public class DocumentoDownloader implements Serializable {
 

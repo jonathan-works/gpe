@@ -52,8 +52,8 @@
                 maxlength="100" />
             <wi:tree id="itemPai"
                 assignTo="itemCrudAction.instance.itemPai"
-                tree="#{itemTree}" icon="#{wiSkin.imageFolder}/nivelTree.gif"
-                iconLeaf="#{wiSkin.imageFolder}/file.gif"
+                tree="#{itemTree}" icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
+                iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
                 label="#{infoxMessages['item.itemPai']}" />
             <wi:selectSituacaoRadio id="ativo"
                 label="#{infoxMessages['field.situacao']}"

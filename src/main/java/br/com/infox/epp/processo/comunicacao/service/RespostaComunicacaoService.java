@@ -7,14 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.graph.exe.ProcessInstance;
@@ -42,30 +38,26 @@ import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.seam.util.ComponentUtil;
 import br.com.infox.util.time.DateRange;
 
-@Name(RespostaComunicacaoService.NAME)
-@AutoCreate
-@Transactional
 @Stateless
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class RespostaComunicacaoService {
 	
-	public static final String NAME = "respostaComunicacaoService";
-	
-	@In
+	@Inject
 	private DocumentoRespostaComunicacaoDAO documentoRespostaComunicacaoDAO;
-	@In
+	@Inject
 	private ProcessoAnaliseDocumentoService processoAnaliseDocumentoService;
-	@In
+	@Inject
 	private MetadadoProcessoManager metadadoProcessoManager;
-	@In
+	@Inject
 	private PrazoComunicacaoService prazoComunicacaoService;
-	@In
+	@Inject
 	private DocumentoManager documentoManager;
-	
 	@Inject
 	private CalendarioEventosManager calendarioEventosManager;
 	
 	private AssinaturaDocumentoService assinaturaDocumentoService = ComponentUtil.getComponent(AssinaturaDocumentoService.NAME);
 	
+	@TransactionAttribute
 	public void enviarResposta(List<Documento> respostas) throws DAOException {
 		Processo comunicacao = documentoRespostaComunicacaoDAO.getComunicacaoVinculada(respostas.get(0));
 		if (comunicacao == null) {
@@ -79,14 +71,19 @@ public class RespostaComunicacaoService {
 		
 		MetadadoProcesso metadadoDestinatario = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO);
 		TipoComunicacao tipoComunicacao = ((DestinatarioModeloComunicacao) metadadoDestinatario.getValue()).getModeloComunicacao().getTipoComunicacao();
-		if(prazoComunicacaoService.containsClassificacaoProrrogacaoPrazo(respostas, tipoComunicacao)){
+		if(hasPedidoProrrogacaoPrazo(respostas, tipoComunicacao)){
 			createMetadadoDataPedidoProrrogacaoPrazo(comunicacao);
 		} else {
 			setRespostaTempestiva(processoResposta.getDataInicio(), comunicacao);
 			adicionarDataResposta(comunicacao, new Date(), Authenticator.getUsuarioLogado());
 		}
 	}
+
+	protected Boolean hasPedidoProrrogacaoPrazo(List<Documento> respostas, TipoComunicacao tipoComunicacao) {
+		return prazoComunicacaoService.containsClassificacaoProrrogacaoPrazo(respostas, tipoComunicacao);
+	}
 	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void adicionarDataResposta (Processo comunicacao, Date dataResposta, UsuarioLogin usuarioResposta) {
 		dataResposta = calendarioEventosManager.getPrimeiroDiaUtil(dataResposta);
 		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
@@ -101,7 +98,7 @@ public class RespostaComunicacaoService {
 		comunicacao.getMetadadoProcessoList().add(metadadoProcessoManager.persist(metadadoResponsavelResposta));
 	}
 	
-	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void enviarProrrogacaoPrazo(Documento documento, Processo comunicacao) throws DAOException {
 		documentoManager.gravarDocumentoNoProcesso(comunicacao.getProcessoRoot(), documento);
 		enviarPedidoProrrogacaoDocumentoGravado(documento, comunicacao);
@@ -113,6 +110,7 @@ public class RespostaComunicacaoService {
 		createMetadadoDataPedidoProrrogacaoPrazo(comunicacao);
 	}
 	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void assinarEnviarProrrogacaoPrazo(Documento documento, Processo comunicacao, CertificateSignatureBean signatureBean, UsuarioPerfil usuarioPerfil) 
 			throws DAOException, CertificadoException, AssinaturaException{
 		documentoManager.gravarDocumentoNoProcesso(comunicacao.getProcessoRoot(), documento);
@@ -130,7 +128,7 @@ public class RespostaComunicacaoService {
 	private void setRespostaTempestiva(Date dataResposta, Processo comunicacao) {
 		ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstanceForUpdate(comunicacao.getIdJbpm());
 		ContextInstance contextInstance = processInstance.getContextInstance();
-		if (contextInstance.getVariable("respostaTempestiva") != null) {
+		if (contextInstance.getVariable(VariaveisJbpmComunicacao.RESPOSTA_TEMPESTIVA) != null) {
 			return;
 		}
 		MetadadoProcesso metadadoDataCiencia = comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA);
@@ -140,7 +138,7 @@ public class RespostaComunicacaoService {
 			Date dataCiencia = metadadoDataCiencia.getValue();
 			respostaTempestiva = isRespostaTempestiva(dataCiencia, dataLimiteCumprimento, dataResposta);
 		}
-		contextInstance.setVariable("respostaTempestiva", respostaTempestiva);
+		contextInstance.setVariable(VariaveisJbpmComunicacao.RESPOSTA_TEMPESTIVA, respostaTempestiva);
 	}
 
 	boolean isRespostaTempestiva(Date dataCiencia, Date dataLimiteCumprimento, Date dataResposta) {

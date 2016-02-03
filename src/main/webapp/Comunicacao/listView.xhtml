@@ -68,13 +68,13 @@
 								action="#{expedicaoComunicacaoAction.setDestinatario(row)}"
 								render="comunicacaoForm" execute="@this"
 								rendered="#{not row.expedido}">
-								<h:graphicImage url="#{wiSkin.imageFolder}/expedir_comunicacao.png"
+								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/expedir_comunicacao.png')}"
 									title="#{infoxMessages['button.selecionar']}" />
 							</a:commandLink>
 							
 							<a:commandLink oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');"
 								rendered="#{row.expedido}" render="@this" execute="@this">
-								<h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" title="#{infoxMessages['comunicacao.imprimirComunicacao']}" />
+								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/reopen.png')}" title="#{infoxMessages['comunicacao.imprimirComunicacao']}" />
 								<f:setPropertyActionListener value="#{row.id}" target="#{flash.idDestinatario}" />
 								<infox:flashcopy/>
 							</a:commandLink>

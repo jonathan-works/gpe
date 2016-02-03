@@ -18,7 +18,7 @@
                     status=":status" render=":pageBody"
                     limitRender="true" id="#{gridId}Edit">
 
-                    <h:graphicImage url="#{wiSkin.imageFolder}/view.png"
+                    <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
                         title="#{infoxMessages['button.selecionar']}" />
                     <f:param name="id" value="#{row[bean.key]}" />
                     <f:param name="tab" value="Confirmacao" />

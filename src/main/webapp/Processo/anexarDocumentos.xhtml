@@ -55,7 +55,7 @@
 						rendered="#{anexarDocumentosView.showUploader}">
 						<div class="tooltip-parent" style="width: 10px">
 							<h:graphicImage id="helpEditTipImg"
-								url="#{wiSkin.imageFolder}/help.gif" />
+								url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
 							<div class="epp-tooltip">
 								<div class="tooltip-panel">
 									<div>
@@ -182,7 +182,7 @@
 					<s:div id="editorToolTipDiv" styleClass="tooltip-parent"
 						style="width: 10px">
 						<h:graphicImage id="#{id}helpEditTipImg"
-							url="#{wiSkin.imageFolder}/help.gif" />
+							url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
 						<div class="epp-tooltip">
 							<div class="tooltip-panel">
 								<div>
@@ -258,7 +258,7 @@
 								styleClass="opacityHover" onclick="infox.showLoading();"
 								oncomplete="infox.hideLoading();"
 								actionListener="#{anexarDocumentosView.viewDocumento(row)}">
-								<h:graphicImage url="#{wiSkin.imageFolder}/view.png" />
+								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
 							</a:commandLink>
 
 							<a:commandLink id="viewEditorLink" execute="@form"
@@ -267,7 +267,7 @@
 								onclick="infox.showLoading();" render="@this"
 								oncomplete="infox.hideLoading(); window.open('#{pathResolver.contextPath}/downloadDocumento.seam?id=#{row.documentoBin.id}&amp;binario=true');">
 								<infox:flashcopy />
-								<h:graphicImage url="#{wiSkin.imageFolder}/view.png" />
+								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
 								<f:setPropertyActionListener value="#{row}"
 									target="#{flash.documentoTemporario}" />
 							</a:commandLink>
@@ -278,7 +278,7 @@
 								onclick="infox.showLoading();"
 								oncomplete="infox.hideLoading(); window.open('#{pathResolver.contextPath}/downloadDocumento.seam?id=#{row.documentoBin.id}&amp;binario=true');">
 								<infox:flashcopy />
-								<h:graphicImage url="#{wiSkin.imageFolder}/view.png" />
+								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
 								<f:setPropertyActionListener value="#{row}"
 									target="#{flash.documentoTemporario}" />
 							</a:commandLink>
@@ -292,7 +292,7 @@
 								<h:graphicImage
 									title="#{infoxMessages['anexarDocumentos.visualizarAssinaturas']}"
 									alt="#{infoxMessages['anexarDocumentos.visualizarAssinaturas']}"
-									url="#{wiSkin.imageFolder}/lock.png" style="cursor: pointer"
+									url="#{layoutController.getResourceUrlByPath('/imagens/lock.png')}" style="cursor: pointer"
 									styleClass="#{styleClass}" />
 								<f:setPropertyActionListener value="#{row}"
 									target="#{anexarDocumentosView.docTempMostrarAssinaturas}" />
@@ -347,7 +347,7 @@
 		header="#{infoxMessages['anexarDocumentos.titleModalAssinatura']}">
 		<f:facet name="controls">
 			<h:graphicImage id="assinarDocumentosPopUpPanelCloseBtn"
-				styleClass="mp-close" value="#{wiSkin.imageFolder}/closeMP.gif"
+				styleClass="mp-close" value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
 				onmouseup="#{rich:component('assinarDocumentosPopUpPanel')}.hide();" />
 		</f:facet>
 
@@ -464,7 +464,7 @@
 		header="#{infoxMessages['anexarDocumentos.enviarDocumentos.header']}">
 		<f:facet name="controls">
 			<h:graphicImage id="enviarDocumentosPopupCloseBtn"
-				styleClass="mp-close" value="#{wiSkin.imageFolder}/closeMP.gif"
+				styleClass="mp-close" value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
 				onmouseup="#{rich:component('enviarDocumentosPopup')}.hide();" />
 		</f:facet>
 		<ui:param name="faltaAssinatura"
@@ -513,7 +513,7 @@
 		</f:facet>
 		<f:facet name="controls">
 			<h:graphicImage styleClass="d-msg-h-close"
-				value="#{wiSkin.imageFolder}/closeMP.gif"
+				value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
 				onmouseup="#{rich:component('assinaturasDocumento')}.hide()" />
 		</f:facet>
 

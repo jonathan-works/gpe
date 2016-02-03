@@ -13,6 +13,7 @@ import org.jboss.seam.bpm.TaskInstance;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
@@ -175,5 +176,20 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
 
     public boolean isDocumentoInclusoPorPapeis(Documento documento, List<String> identificadoresPapeis) {
         return identificadoresPapeis.contains(documento.getPerfilTemplate().getPapel().getIdentificador());
+    }
+    
+    /**
+     * Define se um papel deve assinar um documento (checando se sua asinatura é obrigatória e se não existem outras restrições 
+     * para que o papel possa ser assinado, como processo finalizado e assinatura já feita pelo papel) 
+     */
+    public boolean deveAssinar(Documento documento, Papel papel) {
+        	return documento.isDocumentoAssinavel(papel) && documento.isAssinaturaObrigatoria(papel) && !documento.isDocumentoAssinado(papel);
+    }
+    
+    /**
+     * Diz se um usuário pode assinar um documento (verificando se o documento já foi assinado por esse papel)
+     */
+    public boolean podeAssinar(Documento documento, Papel papel) {
+    	return documento.isDocumentoAssinavel(papel) && !documento.isDocumentoAssinado(papel);
     }
 }

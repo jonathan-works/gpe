@@ -6,11 +6,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 
 import br.com.infox.core.persistence.DAOException;
@@ -28,10 +25,8 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
-import br.com.infox.seam.util.ComponentUtil;
 
 @AutoCreate
-@Scope(ScopeType.STATELESS)
 @Name(ImpressaoComunicacaoService.NAME)
 @Transactional
 @ContextDependency
@@ -40,15 +35,15 @@ public class ImpressaoComunicacaoService implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "impressaoComunicacaoService";
 	
-	@In
+	@Inject
 	private ComunicacaoService comunicacaoService;
-	@In
+	@Inject
 	private MetadadoProcessoManager metadadoProcessoManager;
-	@In
+	@Inject
 	private DocumentoDownloader documentoDownloader;
 	
 	@Inject
-	ModeloComunicacaoManager modeloComunicacaoManager;
+	private ModeloComunicacaoManager modeloComunicacaoManager;
 	
 	public MeioExpedicao getMeioExpedicao(Processo processo) {
 		MetadadoProcesso metadadoProcesso = processo.getMetadado(ComunicacaoMetadadoProvider.MEIO_EXPEDICAO);

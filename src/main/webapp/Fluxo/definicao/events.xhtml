@@ -40,7 +40,7 @@
                             rendered="#{not parent.systemNode or (parent.systemNode and empty parent.eventList)}"
                         >
                             <h:graphicImage
-                                url="#{wiSkin.imageFolder}/add.gif"
+                                url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}"
                                 title="#{infoxMessages['process.events.new']}"
                             />
                         </a:commandLink>
@@ -48,7 +48,7 @@
                     <ui:define name="toolBar">
                         <h:graphicImage
                             title="#{infoxMessages['process.events.remove']}"
-                            url="#{wiSkin.imageFolder}/remove.png"
+                            url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
                             style="cursor:pointer"
                             rendered="#{parent.canRemoveEvent(row)}">
                             <a:ajax
@@ -123,7 +123,7 @@
                                 limitRender="true"
                             >
                                 <h:graphicImage
-                                    url="#{wiSkin.imageFolder}/add.gif"
+                                    url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}"
                                     title="#{infoxMessages['process.events.action.new']}"
                                 />
                             </a:commandLink>
@@ -131,7 +131,7 @@
                         <ui:define name="toolBar">
                             <h:graphicImage
                                 title="#{infoxMessages['process.events.action.remove']}"
-                                url="#{wiSkin.imageFolder}/remove.png"
+                                url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
                             >
                                 <a:ajax
                                     event="click"
@@ -159,8 +159,9 @@
                                             cellpadding="0"
                                             cellspacing="0"
                                         >
+                                            <c:set var="pathResource" value="/imagens/jbpm/#{event.getIcon(row)}.gif" />
                                             <h:graphicImage
-                                                url="#{wiSkin.imageFolder}/jbpm/#{event.getIcon(row)}.gif"
+                                                url="#{layoutController.getResourceUrlByPath(pathResource)}"
                                             />
                                             <h:outputText
                                                 value="#{empty row.name ? messages['process.events.action'].concat(key + 1) : row.name}"

@@ -24,7 +24,7 @@
 					<h:form>
 						<a:commandLink execute="@this"
 							onclick="infox.openPopUp('comunicacao#{row.id}', '#{pathResolver.contextPath}/Processo/criarComunicacao.seam?idModeloComunicacao=#{row.id}','1024'); return false;">
-							<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['button.selecionar']}" />
+							<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['button.selecionar']}" />
 						</a:commandLink>
 						<a:commandLink execute="@this"
 							rendered="#{comunicacaoAction.podeReabrirComunicacao(row)}"
@@ -32,7 +32,7 @@
 							action="#{comunicacaoAction.reabrirComunicacao(row)}"
 							onclick="infox.showLoading();"
 							oncomplete="infox.hideLoading(); infox.openPopUp('comunicacao#{row.id}', '#{pathResolver.contextPath}/Processo/criarComunicacao.seam?idModeloComunicacao=#{row.id}','1024'); return false;">
-							<h:graphicImage url="#{wiSkin.imageFolder}/mod/edit.png" title="#{infoxMessages['comunicacao.reabrir']}"/>
+							<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/mod/edit.png')}" title="#{infoxMessages['comunicacao.reabrir']}"/>
 						</a:commandLink>						
 						<a:commandLink execute="@this"
 							rendered="#{comunicacaoAction.podeExcluirModeloComunicacao(row)}"
@@ -40,7 +40,7 @@
 							action="#{comunicacaoAction.excluirComunicacao(row)}"
 							onclick="if (confirm('#{infoxMessages['crud.confirmRemove']}')) {infox.showLoading(); return true;} else return false;"
 							oncomplete="infox.hideLoading();">
-							<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{infoxMessages['comunicacao.excluir']}"/>
+							<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="#{infoxMessages['comunicacao.excluir']}"/>
 						</a:commandLink>
 					</h:form>
 				</ui:define>
@@ -56,7 +56,7 @@
 							<a:commandLink  
 								render="@this" execute="@this"
 								oncomplete="infox.openPopUp('download#{row.idDestinatario}', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');">
-								<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['comunicacao.visualizarAComunicacao']}"/>
+								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['comunicacao.visualizarAComunicacao']}"/>
 								<f:setPropertyActionListener value="#{row.idDestinatario}" target="#{flash.idDestinatario}" />
 								<infox:flashcopy/>
 							</a:commandLink>
@@ -65,34 +65,38 @@
 								execute="@this" limitRender="true"
 								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, painelDocumentosResposta, pageBodyDialogMessage"
 								onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
-								<h:graphicImage url="#{wiSkin.imageFolder}/anexo.png" title="#{infoxMessages['comunicacao.documentosAnexadosComunicacao']}"/>
+								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/anexo.png')}" title="#{infoxMessages['comunicacao.documentosAnexadosComunicacao']}"/>
 							</a:commandLink>
 							<a:commandLink 
 								action="#{darCienciaAction.setDestinatarioCiencia(row)}" 
 								execute="@this" limitRender="true" rendered="#{not comunicacaoAction.isCienciaConfirmada(row)}"
 								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage, painelDocumentosResposta"
 								onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
-								<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/checked.gif" title="#{infoxMessages['comunicacao.registrarCiencia']}" />
+								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/jbpm/checked.gif')}" title="#{infoxMessages['comunicacao.registrarCiencia']}" />
 							</a:commandLink>
 							<a:commandLink action="#{pedirProrrogacaoPrazoAction.setDestinatarioProrrogacaoPrazo(row)}"
 									render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage, painelDocumentosResposta" 
 									execute="@this" limitRender="true"
 									rendered="#{pedirProrrogacaoPrazoAction.podePedirProrrogacaoPrazo(row)}"
 									onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
-									<h:graphicImage url="#{wiSkin.imageFolder}/time_16.png" title="#{infoxMessages['comunicacao.pedirProrrogacaoPrazo']}" />
+									<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/time_16.png')}" title="#{infoxMessages['comunicacao.pedirProrrogacaoPrazo']}" />
 							</a:commandLink>
 							<a:commandLink action="#{comunicacaoAction.setDestinatarioResposta(row)}"
 								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage, painelDocumentosResposta" 
 								execute="@this" limitRender="true"
 								rendered="#{row.meioExpedicao eq 'SI'}"
 								onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
-								<h:graphicImage url="#{wiSkin.imageFolder}/file.gif" title="#{infoxMessages['comunicacao.documentosResposta']}" />
+								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}" title="#{infoxMessages['comunicacao.documentosResposta']}" />
 							</a:commandLink>
 						</h:form>
 					</rich:column>
 					<rich:column>
 						<f:facet name="header">#{infoxMessages['comunicacao.numeroComunicacao']}</f:facet>
 						<h:outputText value="#{row.numeroComunicacao}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">#{infoxMessages['comunicacao.modeloComunicacao']}</f:facet>
+						<h:outputText value="#{row.numeroModeloComunicacao}" />
 					</rich:column>
 					<rich:column>
                         <f:facet name="header">#{infoxMessages['comunicacao.tipoComunicacao']}</f:facet>
@@ -148,11 +152,11 @@
 	    					<a:commandLink id="baixarDocumento" 
 								rendered="#{not empty documento.documentoBin.extensao}"
 								onclick="infox.openPopUp('download', '#{pathResolver.contextPath}/downloadDocumento.seam?id=#{documento.id}','1024'); return false;">
-								<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
+								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/jbpm/down.gif')}" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
 							</a:commandLink>
 							<a:commandLink rendered="#{empty documento.documentoBin.extensao}"
 								onclick="infox.openPopUp('doc#{documento.documentoBin.id}', '#{pathResolver.contextPath}/Painel/documentoHTML.seam?idBin=#{documento.documentoBin.id}','1024'); return false;">
-								<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
+								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/jbpm/down.gif')}" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
 							</a:commandLink>
 	    				</h:form>
 	    			</rich:column>

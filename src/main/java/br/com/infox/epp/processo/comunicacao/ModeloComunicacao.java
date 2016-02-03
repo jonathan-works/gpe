@@ -86,7 +86,7 @@ public class ModeloComunicacao implements Serializable, Cloneable {
 	private Localizacao localizacaoResponsavelAssinatura;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_perfil_template_resp_assinat")
+	@JoinColumn(name = "id_perfil_template_assinat")
 	private PerfilTemplate perfilResponsavelAssinatura;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

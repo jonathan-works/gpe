@@ -37,7 +37,7 @@
                                 onclick="if(!confirm('Deseja inativar este registro?')) return false;"
                                 action="contaTwitterCrudAction.remove()"
                                 render="idTwitterBody"
-                                url="#{wiSkin.imageFolder}/remove.png"
+                                url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
                                 limitToList="true"
                                 status=":status"
                                 title="#{infoxMessages['button.delete']}">

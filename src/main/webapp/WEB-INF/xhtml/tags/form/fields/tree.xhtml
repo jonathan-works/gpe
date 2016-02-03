@@ -88,11 +88,11 @@
             immediate="true"
             render="#{id}Form #{clearRender}">
             <h:graphicImage
-              value="#{wiSkin.imageFolder}/clear.gif"
+              value="#{layoutController.getResourceUrlByPath('/imagens/clear.gif')}"
               title="#{infoxMessages['button.limpar']}" />
           </a:commandLink>
           <h:graphicImage
-            value="#{wiSkin.imageFolder}/mod/clear_off.gif"
+            value="#{layoutController.getResourceUrlByPath('/imagens/mod/clear_off.gif')}"
             rendered="#{empty tree.selected}"
             title="#{infoxMessages['button.limpar']}" />
         </s:div>

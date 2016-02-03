@@ -16,7 +16,7 @@
         <a:commandLink action="#{pesqHome.setIdPesquisa(row[bean.key])}"
             limitRender="true" status=":status" render="viewPanel"
             oncomplete="showModal('#{modalPanelId}')">
-            <h:graphicImage url="#{wiSkin.imageFolder}/view.png"
+            <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
                 title="Mostrar Processos" />
         </a:commandLink>
     </a:region>

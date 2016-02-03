@@ -3,7 +3,7 @@
   <groupId>br.com.infox.epp</groupId>
   <artifactId>epp</artifactId>
   <packaging>war</packaging>
-  <version>2.11.1-2</version>
+  <version>2.11.1-3</version>
   <name>epp</name>
   <url>http://www.infox.com.br</url>
   <dependencyManagement>
@@ -172,13 +172,13 @@
     <dependency>
       <groupId>org.jbpm.jbpm3</groupId>
       <artifactId>jbpm-jpdl</artifactId>
-            <version>3.3.2</version>
+      <version>3.3.4-1</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.jbpm.jbpm3</groupId>
       <artifactId>jbpm-identity</artifactId>
-            <version>3.3.2</version>
+      <version>3.3.4</version>
       <scope>compile</scope>
       <type>jar</type>
     </dependency>
@@ -357,12 +357,16 @@
       <artifactId>reflections</artifactId>
       <version>0.9.9</version>
     </dependency>
-		<dependency>
-			<groupId>org.jboss.resteasy</groupId>
-			<artifactId>resteasy-jaxrs</artifactId>
-			<version>2.3.7.Final</version>
-			<scope>provided</scope>
-		</dependency>
+    <dependency>
+        <groupId>net.coobird</groupId>
+        <artifactId>thumbnailator</artifactId>
+        <version>0.4.8</version>
+    </dependency>
+	<dependency>
+		<groupId>br.com.infox</groupId>
+		<artifactId>epp-bpm</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</dependency>
   </dependencies>
   <build>
     <resources>
@@ -542,6 +546,7 @@
               <excludes>
                 <exclude>WEB-INF/web.xml</exclude>
                 <exclude>WEB-INF/components.xml</exclude>
+                <exclude>WEB-INF/jboss-deployment-structure.xml</exclude>
               </excludes>
             </resource>
             <resource>
@@ -550,6 +555,7 @@
               <includes>
                 <include>WEB-INF/web.xml</include>
                 <include>WEB-INF/components.xml</include>
+                <include>WEB-INF/jboss-deployment-structure.xml</include>
               </includes>
             </resource>
           </webResources>
@@ -623,6 +629,7 @@
     <quartz.delegate>org.quartz.impl.jdbcjobstore.PostgreSQLDelegate</quartz.delegate>
     <database.type>PostgreSQL</database.type>
     <db.classifier>postgresql</db.classifier>
+    <optional.oracle.module>true</optional.oracle.module>
   </properties>
   <profiles>
     <profile>
@@ -646,6 +653,16 @@
         <quartz.delegate>org.quartz.impl.jdbcjobstore.MSSQLDelegate</quartz.delegate>
         <database.type>SQLServer</database.type>
         <db.classifier>sqlserver</db.classifier>
+      </properties>
+    </profile>
+    <profile>
+      <id>oracle</id>
+      <properties>
+        <hibernate.dialect>br.com.infox.hibernate.oracle.dialect.InfoxOracleDialect</hibernate.dialect>
+        <quartz.delegate>org.quartz.impl.jdbcjobstore.oracle.OracleDelegate</quartz.delegate>
+        <database.type>Oracle</database.type>
+        <db.classifier>oracle</db.classifier>
+        <optional.oracle.module>false</optional.oracle.module>
       </properties>
     </profile>
     <profile>

@@ -22,7 +22,7 @@
 							onclick="return confirm('#{infoxMessages['movimentar.confirmLiberarTarefa']}');" 
 							oncomplete="#{taskInstanceHome.currentTaskInstance eq row.taskInstance ? 'close()' : ''}"
 							rendered="#{authenticator.isUsuarioAtualResponsavel() and (!empty row.usuario and empty row.dataFim)}">
-							<h:graphicImage url="#{wiSkin.imageFolder}/unlocked.gif" title="#{infoxMessages['movimentar.liberarTarefa']}" />
+							<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/unlocked.gif')}" title="#{infoxMessages['movimentar.liberarTarefa']}" />
 						</a:commandLink>
 					</h:form>
 				</div>
