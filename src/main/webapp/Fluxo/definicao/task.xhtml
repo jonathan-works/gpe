@@ -82,8 +82,7 @@
                             rendered="#{var.type eq 'EDITOR' or var.type eq 'FILE'}">
                             <h:graphicImage
                                 title="#{infoxMessages['variavelClassificacaoDocumento.gerenciarClassificacoes']}"
-                                status=":status" url="#{wiSkin.imageFolder}/hamburger.png" />
-              url="#{layoutController.getResourceUrlByPath('/imagens/hamburger.png')}" />
+                                status=":status" url="#{layoutController.getResourceUrlByPath('/imagens/hamburger.png')}" 
                                 target="#{variavelClassificacaoDocumentoAction.currentVariable}" />
                             <f:setPropertyActionListener value="#{var.type}"
                                 target="#{variavelClassificacaoDocumentoAction.currentVariableType}" />
