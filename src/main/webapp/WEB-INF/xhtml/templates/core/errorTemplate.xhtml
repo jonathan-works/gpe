@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:rich="http://richfaces.org/rich" xmlns:ui="http://java.sun.com/jsf/facelets" id="html">
+<h:head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>#{nomeSistema}: <ui:insert name="title" /></title>
+    <link rel="icon" href="#{pathResolver.contextPath}/favicon.ico" type="image/x-icon" />
+    <ui:include src="/WEB-INF/xhtml/templates/cssPage.xhtml" />
+    <ui:include src="/WEB-INF/xhtml/templates/jsPage.xhtml" />
+    <ui:insert name="baseHead" />
+</h:head>
+<h:body id="body">
+    <div style="display:flex;">
+        <h:panelGroup styleClass="logo-top">
+            <h:graphicImage url="#{wiSkin.imageFolder}/logo_epp_topo.png" />
+        </h:panelGroup>
+        <div style="text-align: right; flex:1;">
+            <div>#{usuarioLogado}</div>
+            <div>#{usuarioLogadoPerfilAtual}</div>
+        </div>
+    </div>
+    <h:panelGroup layout="block" styleClass="pageBody" id="pageBody">
+        <div style="margin:0 1rem;"><button onclick="infox.redirect({url:window.document.referrer})" class="buttons">#{infoxMessages['page.return']}</button></div>
+        <ui:insert name="body" />
+    </h:panelGroup>
+    <wi:messages formId="pageBody" rendered="#{empty showMsg ? true : showMsg}" globalOnly="true" />
+</h:body>
+</html>
