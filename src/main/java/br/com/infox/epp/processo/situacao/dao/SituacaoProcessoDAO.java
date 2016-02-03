@@ -21,6 +21,7 @@ import javax.persistence.criteria.Selection;
 import javax.persistence.criteria.Subquery;
 
 import org.jbpm.context.exe.variableinstance.LongInstance;
+import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Task;
@@ -73,9 +74,9 @@ public class SituacaoProcessoDAO {
         Root<TaskInstance> taskInstance = cq.from(TaskInstance.class);
         Root<LongInstance> variableInstance = cq.from(LongInstance.class);
         Root<Processo> processo = cq.from(Processo.class);
+        Root<Fluxo> fluxo = cq.from(Fluxo.class);
         Join<TaskInstance, ProcessInstance> processInstance = taskInstance.join("processInstance", JoinType.INNER);
-        Join<Processo, NaturezaCategoriaFluxo> natCatFluxo = processo.join(Processo_.naturezaCategoriaFluxo, JoinType.INNER);
-        Join<NaturezaCategoriaFluxo, Fluxo> fluxo = natCatFluxo.join(NaturezaCategoriaFluxo_.fluxo, JoinType.INNER);
+        Join<ProcessInstance, ProcessDefinition> processDefinition = processInstance.join("processDefinition", JoinType.INNER);
         Join<Processo, Processo> processoRoot = processo.join(Processo_.processoRoot, JoinType.INNER);
         
         Selection<String> nomeFluxo =  fluxo.get(Fluxo_.fluxo);
@@ -94,6 +95,7 @@ public class SituacaoProcessoDAO {
                 cb.equal(variableInstance.get("processInstance").<Long>get("id"), processInstance.<Long>get("id")),
                 cb.equal(variableInstance.<String>get("name"), cb.literal("processo")),
                 cb.equal(variableInstance.<Long>get("value"), processo.get(Processo_.idProcesso)),
+                cb.equal(processDefinition.get("name"), fluxo.get(Fluxo_.fluxo)),
                 cb.isNull(processInstance.<Date>get("end")),
                 cb.isTrue(taskInstance.<Boolean>get("isOpen")),
                 cb.isFalse(taskInstance.<Boolean>get("isSuspended"))
@@ -114,9 +116,10 @@ public class SituacaoProcessoDAO {
         Root<TaskInstance> taskInstance = cq.from(TaskInstance.class);
         Root<LongInstance> variableInstance = cq.from(LongInstance.class);
         Root<Processo> processo = cq.from(Processo.class);
+        Root<Fluxo> fluxo = cq.from(Fluxo.class);
         Join<TaskInstance, ProcessInstance> processInstance = taskInstance.join("processInstance", JoinType.INNER);
+        Join<ProcessInstance, ProcessDefinition> processDefinition = processInstance.join("processDefinition", JoinType.INNER);
         Join<Processo, NaturezaCategoriaFluxo> natCatFluxo = processo.join(Processo_.naturezaCategoriaFluxo, JoinType.INNER);
-        Join<NaturezaCategoriaFluxo, Fluxo> fluxo = natCatFluxo.join(NaturezaCategoriaFluxo_.fluxo, JoinType.INNER);
         Join<TaskInstance, Task> task = taskInstance.join("task", JoinType.INNER);
         Join<Task, TaskNode> taskNode = task.join("taskNode", JoinType.INNER);
         Join<NaturezaCategoriaFluxo, Natureza> natureza = natCatFluxo.join(NaturezaCategoriaFluxo_.natureza, JoinType.INNER);
@@ -150,6 +153,7 @@ public class SituacaoProcessoDAO {
                 nomeNatureza, nomeCategoria, numeroProcesso, numeroProcessoRoot, nomeUsuarioSolicitante, nomePrioridade, pesoPrioridade, dataInicio));
 
         cq.where(
+                cb.equal(processDefinition.get("name"), fluxo.get(Fluxo_.fluxo)),
                 cb.equal(variableInstance.get("processInstance").<Long>get("id"), processInstance.<Long>get("id")),
                 cb.equal(variableInstance.<String>get("name"), cb.literal("processo")),
                 cb.equal(variableInstance.<Long>get("value"), processo.get(Processo_.idProcesso)),
