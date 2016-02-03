@@ -10,6 +10,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.ServletContext;
 
 import org.jboss.seam.faces.Redirect;
 import org.richfaces.event.DropEvent;
@@ -74,12 +75,13 @@ public class PainelUsuarioController implements Serializable {
 	}
 	
 	protected void verificaHouveAlteracao(List<FluxoBean> fluxosDisponiveisTemp) throws IOException {
+	    ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
 	    if (fluxosDisponiveisTemp.size() != fluxosDisponiveis.size()) {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("list.seam");
+            FacesContext.getCurrentInstance().getExternalContext().redirect(servletContext.getContextPath() + "/Painel/list.seam");
         } else {
             fluxosDisponiveisTemp.removeAll(fluxosDisponiveis);
             if (!fluxosDisponiveisTemp.isEmpty()) {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("list.seam");
+                FacesContext.getCurrentInstance().getExternalContext().redirect(servletContext.getContextPath() + "/Painel/list.seam");
             }
         }
 	    fluxosDisponiveisTemp.clear();
