@@ -13,7 +13,6 @@ import javax.inject.Named;
 import javax.servlet.ServletContext;
 
 import org.jboss.seam.faces.Redirect;
-import org.jboss.seam.servlet.SeamListener;
 import org.richfaces.event.DropEvent;
 
 import br.com.infox.core.action.ActionMessagesService;
