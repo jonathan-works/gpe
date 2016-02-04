@@ -1,38 +1,38 @@
 package br.com.infox.epp.processo.home;
 
-import java.util.List;
+import javax.inject.Inject;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.annotations.async.Asynchronous;
 import org.jboss.seam.annotations.async.IntervalCron;
 import org.jboss.seam.async.QuartzTriggerHandle;
-import org.jbpm.graph.def.Node;
-import org.jbpm.graph.exe.ExecutionContext;
-import org.jbpm.graph.exe.Token;
 
-import br.com.infox.hibernate.util.HibernateUtil;
-import br.com.infox.ibpm.node.InfoxMailNode;
-import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.core.report.RequestInternalPageService;
+import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.quartz.ws.QuartzRest;
+import br.com.infox.epp.ws.client.RestClient;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
-@Name(AutomaticNodeRetryProcessor.NAME)
 @AutoCreate
+@ContextDependency
+@Name(AutomaticNodeRetryProcessor.NAME)
 public class AutomaticNodeRetryProcessor {
+    
     public static final String NAME = "automaticNodeRetryProcessor";
+    private static final LogProvider LOG = Logging.getLogProvider(AutomaticNodeRetryProcessor.class);
+    
+    @Inject
+    private RequestInternalPageService requestInternalPageService;
     
     @Asynchronous
-    @Transactional
     public QuartzTriggerHandle retryAutomaticNodes(@IntervalCron String cron) {
-        List<Token> tokens = JbpmUtil.getTokensOfAutomaticNodesNotEnded();
-        for (Token token : tokens) {
-            Node node = (Node) HibernateUtil.removeProxy(token.getNode());
-            if (node instanceof InfoxMailNode) {
-                ExecutionContext executionContext = new ExecutionContext(token);
-                node.execute(executionContext);
-            } else {
-                token.signal(); // Sistema
-            }
+        try {
+            QuartzRest quartzRest = RestClient.constructInternal(QuartzRest.class);
+            quartzRest.retryAutomaticNodes(requestInternalPageService.getKey().toString());
+        } catch (Exception e) {
+            LOG.error(e);
         }
         return null;
     }

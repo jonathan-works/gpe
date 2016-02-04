@@ -4,7 +4,7 @@ import javax.faces.event.AbortProcessingException;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import br.com.infox.core.report.RequestInternalPageService;
+import br.com.infox.core.server.ApplicationServerService;
 import br.com.infox.epp.cdi.util.JNDI;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -16,11 +16,11 @@ public class EppServletEventListener implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
 		log.info("Injetando o ContextPath criado no RequestInternalPageService");
-		RequestInternalPageService requestInternalPageService = JNDI.lookup("java:module/RequestInternalPageService");
-		if (requestInternalPageService == null) {
-		    throw new AbortProcessingException("RequestInternal page java:module/RequestInternalPageService não encontrado");
+		ApplicationServerService applicationServerService = JNDI.lookup("java:module/ApplicationServerService");
+		if (applicationServerService == null) {
+		    throw new AbortProcessingException("RequestInternal page java:module/ApplicationServerService não encontrado");
 		}
-		requestInternalPageService.setContextPath(event.getServletContext().getContextPath());
+		applicationServerService.setContextPath(event.getServletContext().getContextPath());
 	}
 
 	@Override

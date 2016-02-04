@@ -3,6 +3,8 @@ package br.com.infox.epp.estatistica.manager;
 import java.util.Date;
 import java.util.HashMap;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -18,6 +20,7 @@ import br.com.infox.epp.estatistica.abstracts.BamTimerProcessor;
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.seam.util.ComponentUtil;
 
+@Stateless
 @Name(BamTimerManager.NAME)
 @AutoCreate
 public class BamTimerManager extends Manager<GenericDAO, Object> {

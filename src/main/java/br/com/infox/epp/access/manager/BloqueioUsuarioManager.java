@@ -3,6 +3,8 @@ package br.com.infox.epp.access.manager;
 import java.util.Date;
 import java.util.List;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -15,6 +17,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 
 @Name(BloqueioUsuarioManager.NAME)
 @AutoCreate
+@Stateless
 public class BloqueioUsuarioManager extends Manager<BloqueioUsuarioDAO, BloqueioUsuario> {
 
     private static final long serialVersionUID = 1L;
