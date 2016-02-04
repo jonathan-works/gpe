@@ -1,4 +1,4 @@
-package br.com.infox.epp.estatistica.query;
+package br.com.infox.epp.estatistica.produtividade;
 
 public interface ProdutividadeQuery {
 
