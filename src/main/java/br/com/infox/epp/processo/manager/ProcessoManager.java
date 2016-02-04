@@ -56,6 +56,7 @@ import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais;
 import br.com.infox.epp.processo.type.TipoProcesso;
+import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
@@ -376,7 +377,7 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         processo.setNaturezaCategoriaFluxo(naturezaCategoriaFluxo.get(0));
         UsuarioLogin usuarioLogin = Authenticator.getUsuarioLogado();
         if (usuarioLogin == null) {
-            usuarioLogin = usuarioLoginManager.getReference(0);
+            usuarioLogin = usuarioLoginManager.getReference(Integer.valueOf(Parametros.ID_USUARIO_SISTEMA.getValue()));
         }
         processo.setUsuarioCadastro(usuarioLogin);
         MetadadoProcessoProvider provider = new MetadadoProcessoProvider(processo);
