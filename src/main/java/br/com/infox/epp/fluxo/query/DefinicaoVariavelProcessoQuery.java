@@ -3,7 +3,7 @@ package br.com.infox.epp.fluxo.query;
 public interface DefinicaoVariavelProcessoQuery {
 
     String TABLE_DEFINICAO_VARIAVEL_PROCESSO = "tb_definicao_variavel_processo";
-    String SEQUENCE_DEFINICAO_VARIAVEL_PROCESSO = "sq_tb_definicao_variavel_processo";
+    String SEQUENCE_DEFINICAO_VARIAVEL_PROCESSO = "sq_definicao_variavel_processo";
     String GENERATOR_DEFINICAO_VARIAVEL_PROCESSO = "DefinicaoVariavelProcessoGenerator";
     String ID_DEFINICAO_VARIAVEL_PROCESSO = "id_definicao_variavel_processo";
     String NOME_VARIAVEL = "nm_variavel";
