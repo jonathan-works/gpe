@@ -6,7 +6,12 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public final class DateUtil {
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Named;
+
+@Named
+@RequestScoped
+public class DateUtil {
 
     public static final int MILESIMOS_DO_SEGUNDO = 1000;
 
@@ -21,7 +26,7 @@ public final class DateUtil {
     
     private static DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
-    private DateUtil() {
+    public DateUtil() {
 
     }
     
