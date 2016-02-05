@@ -26,6 +26,7 @@ import org.hibernate.Session;
 import org.jboss.seam.Component;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage.Severity;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
@@ -180,8 +181,20 @@ public class ProcessBuilder implements Serializable {
     		if(!FacesContext.getCurrentInstance().isPostback()){
     			internalLoad(getFluxo());
     		}
+    	} catch (JpdlException e){
+    		for (Problem problem : (List<Problem>)e.getProblems()) {
+				int problemLevel = problem.getLevel();
+				if (problemLevel == Problem.LEVEL_FATAL || problemLevel == Problem.LEVEL_ERROR){
+					FacesMessages.instance().add(Severity.ERROR, problem.getDescription());
+					LOG.error(problem);
+				} else if (problemLevel == Problem.LEVEL_WARNING){
+					LOG.warn(problem);
+				} else {
+					LOG.info(problem);
+				}
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error(e);
 		}
     }
     public void load(Fluxo fluxo) {
