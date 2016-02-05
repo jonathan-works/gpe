@@ -3,7 +3,6 @@ package br.com.infox.ibpm.jpdl;
 import static br.com.infox.constants.WarningConstants.RAWTYPES;
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -19,12 +18,10 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.dom4j.Document;
-import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.Namespace;
 import org.dom4j.io.OutputFormat;
-import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.jbpm.JbpmException;
 import org.jbpm.context.def.VariableAccess;
@@ -186,7 +183,9 @@ public class JpdlXmlWriter {
             addAttribute(swimlane, ELEMENT_NAME, e.getKey());
             Swimlane s = e.getValue();
             addAttribute(swimlane, "key", s.getKey() == null ? UUID.randomUUID().toString() : s.getKey());
-            writeAssignment(s, swimlane);
+            if (s.getPooledActorsExpression() != null || s.getActorIdExpression() != null) {
+                writeAssignment(swimlane, s.getActorIdExpression(), s.getPooledActorsExpression());
+            }
         }
     }
 
@@ -264,23 +263,11 @@ public class JpdlXmlWriter {
         writeVariables(nodeElement, variableAccess);
     }
    
-    private void writeAssignment(Swimlane swimlane, Element element){
-    	if (swimlane.getPooledActorsExpression() != null || swimlane.getActorIdExpression() != null) {
-        	writeAssignment(element, swimlane.getActorIdExpression(), swimlane.getPooledActorsExpression());
-        }
-        if (swimlane.getAssignmentDelegation() != null){
-        	writeAssignmentDelegation(swimlane.getAssignmentDelegation(), element);
-        }
-    }
-    
     private void writeAssignment(Task task, Element element){
-		if (task.getAssignmentDelegation() != null){
-			writeAssignmentDelegation(task.getAssignmentDelegation(), element);
-        }
 		if (task.getPooledActorsExpression() != null || task.getActorIdExpression() != null){
 			writeAssignment(element, task.getActorIdExpression(), task.getPooledActorsExpression());
-			addAttribute(element, "actor-id", task.getActorIdExpression());
-			addAttribute(element, "pooled-actors", task.getPooledActorsExpression());
+//			addAttribute(element, "actor-id", task.getActorIdExpression());
+//			addAttribute(element, "pooled-actors", task.getPooledActorsExpression());
 		}
     }
     
@@ -290,7 +277,8 @@ public class JpdlXmlWriter {
             addAttribute(taskElement, ELEMENT_NAME, task.getName());
             if (task.getSwimlane() != null){
             	addAttribute(taskElement, "swimlane", task.getSwimlane().getName());
-            } else {
+            } 
+            if (task.getPooledActorsExpression() != null || task.getActorIdExpression() != null) {
             	writeAssignment(task, taskElement);
             }
             addAttribute(taskElement, "condition", task.getCondition());
@@ -302,38 +290,15 @@ public class JpdlXmlWriter {
         }
     }
 
-	@SuppressWarnings("unchecked")
-	private org.dom4j.Node[] getAsXmlContent(String content){
-    	List<org.dom4j.Node> assignment = new ArrayList<>();
-    	try {
-	    	String string = "<content>"+content+"</content>";
-			Document doc = new SAXReader().read(new ByteArrayInputStream(string.getBytes()));
-			Element el = doc.getRootElement();
-			for (Iterator<org.dom4j.Node> i = el.content().iterator(); i.hasNext();) {
-		        org.dom4j.Node node = i.next();
-		        i.remove();
-				assignment.add(node);
-		      }
-    	} catch(DocumentException e){
-    		LOG.warn("Failed to return node content", e);
-    	}
-		return assignment.toArray(new org.dom4j.Node[assignment.size()]);
-    }
-
     private void writeAssignment(Element taskElement, String actorIdExpression, String pooledActorsExpression) {
     	Element assignment = addElement(taskElement, "assignment");
-		addAttribute(assignment, "actor-id", actorIdExpression);
-		addAttribute(assignment, "pooled-actors", pooledActorsExpression);
-	}
-
-    private void writeAssignmentDelegation(Delegation assignmentDelegation, Element taskElement) {
-    	Element assignment= addElement(taskElement, "assignment");
-    	addAttribute(assignment, "class", assignmentDelegation.getClassName());
-    	addAttribute(assignment, "config-type", assignmentDelegation.getConfigType());
-    	for (org.dom4j.Node node : getAsXmlContent(assignmentDelegation.getConfiguration())) {
-    		assignment.add(node);
+    	if (pooledActorsExpression != null) {
+    	    addAttribute(assignment, "pooled-actors", pooledActorsExpression);
     	}
-    }
+    	if (actorIdExpression != null) {
+    	    addAttribute(assignment, "actor-id", actorIdExpression);
+    	}
+	}
 
 	@SuppressWarnings(UNCHECKED)
     private void writeController(TaskController taskController, Element taskElement) {

@@ -14,19 +14,13 @@
         </h:form>
     </s:div>
     <rich:collapsiblePanel expanded="true" switchType="client" header="#{infoxMessages['process.task.responsavel']}">
-        <h:form style="text-align:center;">
-            <h:selectOneRadio styleClass="radio" style="display: inline-block; margin-right: 1.5em;" value="#{t.assignmentType}">
-                <f:selectItem itemValue="swimlane" itemLabel="#{infoxMessages['process.def.assignment.type.swimlane']}" />
-                <f:selectItem itemValue="pooledActorsExpression"
-                    itemLabel="#{infoxMessages['process.def.assignment.type.pooledActorsExpression']}" />
-                <a:ajax event="change" execute="@this" limitRender="true" render="@form" />
-            </h:selectOneRadio>
+        <h:form>
             <wi:selectOneMenu id="swimlaneTask" valueItems="#{swimlaneFitter.swimlaneList}" widthDiv="230px"
-                showLabelSelecione="false" rendered="#{'swimlane' == t.assignmentType}" value="#{t.swimlaneName}">
+                showLabelSelecione="false" value="#{t.swimlaneName}" label="#{infoxMessages['process.def.assignment.type.swimlane']}">
                 <a:ajax event="change" execute="@this" limitRender="true" render="@form" />
             </wi:selectOneMenu>
             <wi:inputText id="pooledActorsExpression" value="#{t.pooledActorsExpression}"
-                rendered="#{'pooledActorsExpression' == t.assignmentType}">
+                label="#{infoxMessages['process.def.assignment.type.pooledActorsExpression']}">
                 <a:ajax event="change" execute="@this" limitRender="true" render="@form" />
             </wi:inputText>
         </h:form>
