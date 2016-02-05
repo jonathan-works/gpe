@@ -273,6 +273,15 @@ public class ParticipanteProcesso implements Serializable, Cloneable {
     	return clone;
     }
     
+    public ParticipanteProcesso makeCopySemHistorico() throws CloneNotSupportedException {
+    	ParticipanteProcesso clone = (ParticipanteProcesso) clone();
+    	clone.setId(null);
+    	clone.setProcesso(null);
+    	clone.setParticipantePai(null);
+    	clone.setHistoricoParticipanteList(null);
+    	return clone;
+    }
+    
     public static final Comparator<ParticipanteProcesso> COMPARATOR_NOME = new Comparator<ParticipanteProcesso>() {
 		@Override
 		public int compare(ParticipanteProcesso o1, ParticipanteProcesso o2) {

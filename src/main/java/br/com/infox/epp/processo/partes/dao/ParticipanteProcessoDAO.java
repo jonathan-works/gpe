@@ -66,13 +66,13 @@ public class ParticipanteProcessoDAO extends DAO<ParticipanteProcesso> {
     	return getNamedSingleResult(PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO, params);
     }
     
-    
     public List<Pessoa> getPessoasFisicasParticipantesProcesso(Processo processo){
 		String query = "select distinct p from ParticipanteProcesso pp "
 				+ "inner join  pp.pessoa p "
 				+ "where pp.processo = :processo and p.tipoPessoa = '"+TipoPessoaEnum.F+ "' ";
 		return getEntityManager().createQuery(query,Pessoa.class).setParameter("processo", processo).getResultList();
     }
+    
     public boolean existeParticipanteByPessoaProcessoPaiTipo(Pessoa pessoa, 
     		Processo processo, ParticipanteProcesso pai, TipoParte tipo){
     	Map<String, Object> params = new HashMap<>(4);

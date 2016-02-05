@@ -3,6 +3,10 @@ package br.com.infox.epp.processo.partes.manager;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -13,6 +17,7 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.partes.dao.ParticipanteProcessoDAO;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
+import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso_;
 import br.com.infox.epp.processo.partes.entity.TipoParte;
 
 @Stateless
@@ -64,4 +69,24 @@ public class ParticipanteProcessoManager extends Manager<ParticipanteProcessoDAO
     public List<Pessoa> getPessoasParticipantesProcesso(Processo processo){
     	return getDao().getPessoasFisicasParticipantesProcesso(processo);
     }
+    
+    //ver se vai usar
+    public List<ParticipanteProcesso> getAllParticipantesByParticipantePai(ParticipanteProcesso participantePai) {
+		CriteriaBuilder cb = getDao().getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<ParticipanteProcesso> query = cb.createQuery(ParticipanteProcesso.class);
+		Root<ParticipanteProcesso> participante = query.from(ParticipanteProcesso.class);
+		query.where(cb.like(participante.get(ParticipanteProcesso_.caminhoAbsoluto), 
+				cb.literal("%:caminhoAbsolutoPai%")));
+		TypedQuery<ParticipanteProcesso> typedQuery = getDao().getEntityManager().createQuery(query);
+		typedQuery.setParameter("caminhoAbsolutoPai", participantePai.getCaminhoAbsoluto());
+		return typedQuery.getResultList();
+	}
+    
+    public void gravarListaParticipantes(List<ParticipanteProcesso> participantes) {
+		for (ParticipanteProcesso participanteProcesso : participantes) {
+			getDao().getEntityManager().persist(participanteProcesso);
+		}
+		getDao().getEntityManager().flush();
+	}
+    
 }
