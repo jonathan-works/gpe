@@ -164,6 +164,10 @@
                 	action="#{fluxoCrudAction.converterParaJpdl}" styleClass="buttons"
                 	rendered="#{fluxoCrudAction.managed and fluxoCrudAction.instance.bpmn and not fluxoCrudAction.replica and not empty fluxoCrudAction.instance.bpmnXml}"/>
                 
+                <a:commandButton value="Converter para BPMN" render="@form :pageBodyDialogMessage" execute="@this" limitRender="true"
+                	action="#{fluxoCrudAction.converterParaBpmn}" styleClass="buttons"
+                	rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.instance.bpmn and not fluxoCrudAction.replica and not empty fluxoCrudAction.instance.xml}"/>
+                
                 <wi:commandButton
                     id="importarXPDL"
                     value="#{infoxMessages['importarXPDL.button']}"

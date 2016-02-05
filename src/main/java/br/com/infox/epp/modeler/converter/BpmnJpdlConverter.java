@@ -4,19 +4,23 @@ import java.awt.Rectangle;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
+import java.util.Map;
 
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
+import org.camunda.bpm.model.bpmn.GatewayDirection;
 import org.camunda.bpm.model.bpmn.instance.Definitions;
 import org.camunda.bpm.model.bpmn.instance.ExclusiveGateway;
 import org.camunda.bpm.model.bpmn.instance.FlowElement;
 import org.camunda.bpm.model.bpmn.instance.FlowNode;
 import org.camunda.bpm.model.bpmn.instance.Lane;
 import org.camunda.bpm.model.bpmn.instance.LaneSet;
+import org.camunda.bpm.model.bpmn.instance.ParallelGateway;
 import org.camunda.bpm.model.bpmn.instance.Process;
 import org.camunda.bpm.model.bpmn.instance.SequenceFlow;
 import org.camunda.bpm.model.bpmn.instance.StartEvent;
@@ -32,12 +36,16 @@ import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.EndState;
+import org.jbpm.graph.node.Fork;
+import org.jbpm.graph.node.Join;
 import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
+
+import com.google.common.base.Strings;
 
 import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.ibpm.node.DecisionNode;
@@ -63,7 +71,7 @@ public class BpmnJpdlConverter {
 		processDefinition.setName(process.getName());
 		processDefinition.addDefinition(new TaskMgmtDefinition());
 		
-		traverse(startEvent, processDefinition, null);
+		visit(startEvent, processDefinition, null, new HashMap<String, Boolean>());
 		resolveLanes(process, processDefinition);
 		createDefaultEvents(processDefinition);
 		return processDefinition;
@@ -73,7 +81,8 @@ public class BpmnJpdlConverter {
 		return convert(new ByteArrayInputStream(bpmnXml.getBytes(StandardCharsets.UTF_8)));
 	}
 
-	private void traverse(FlowNode root, ProcessDefinition processDefinition, Transition origin) {
+	private void visit(FlowNode root, ProcessDefinition processDefinition, Transition origin, Map<String, Boolean> markedNodes) {
+		markedNodes.put(root.getId(), true);
 		Node node = processDefinition.getNode(getIdentification(root));
 		if (node == null) {
 			node = createNode(root, processDefinition, node);
@@ -92,7 +101,13 @@ public class BpmnJpdlConverter {
 			Transition transition = new Transition(getIdentification(sequenceFlow));
 			transition.setKey(sequenceFlow.getId());
 			node.addLeavingTransition(transition);
-			traverse(sequenceFlow.getTarget(), processDefinition, transition);
+			if (!markedNodes.containsKey(sequenceFlow.getTarget().getId())) {
+				visit(sequenceFlow.getTarget(), processDefinition, transition, markedNodes);
+			} else {
+				Node to = processDefinition.getNode(sequenceFlow.getTarget().getId());
+				transition.setTo(to);
+				to.addArrivingTransition(transition);
+			}
 		}
 		if (node instanceof DecisionNode) {
 			setExpression((DecisionNode) node, (ExclusiveGateway) root);
@@ -118,6 +133,13 @@ public class BpmnJpdlConverter {
 			ReflectionsUtil.setValue(node, "subProcessName", flowNode.getName());
 		} else if (flowNode.getElementType().getTypeName().equals("intermediateThrowEvent")) {
 			node = new Node(getIdentification(flowNode));
+		} else if (flowNode.getElementType().getTypeName().equals("parallelGateway")) {
+			GatewayDirection direction = ((ParallelGateway) flowNode).getGatewayDirection();
+			if (direction == GatewayDirection.Diverging) {
+				node = new Fork(getIdentification(flowNode));
+			} else if (direction == GatewayDirection.Converging) {
+				node = new Join(getIdentification(flowNode));
+			}
 		}
 		node.setKey(flowNode.getId());
 		return node;
@@ -129,7 +151,7 @@ public class BpmnJpdlConverter {
 	
 	private void setExpression(DecisionNode decisionNode, ExclusiveGateway decisionBpmn) {
 		if (decisionBpmn.getDefault() == null) {
-			throw new BpmnJpdlConverterException("Uma transição padrão deve estar configurada no gateway " + decisionBpmn.getId());
+			throw new BpmnJpdlConverterException("Uma transição padrão deve estar configurada no gateway '" + getIdentification(decisionBpmn) + "'");
 		}
 		String defaultTransition = decisionBpmn.getDefault().getId();
 		StringBuilder sb = new StringBuilder("#{");
@@ -138,14 +160,17 @@ public class BpmnJpdlConverter {
 				continue;
 			}
 			if (sequenceFlow.getConditionExpression() == null) {
-				throw new BpmnJpdlConverterException("A transição " + getIdentification(sequenceFlow) + " deve ter uma condição configurada");
+				String template = "A transição ''{0}'' ({1} -> {2}) deve ter uma condição configurada";
+				throw new BpmnJpdlConverterException(MessageFormat.format(template, getIdentification(sequenceFlow), getIdentification(sequenceFlow.getSource()), getIdentification(sequenceFlow.getTarget())));
 			}
 			String condition = sequenceFlow.getConditionExpression().getTextContent();
-			condition = condition.substring(2, condition.length() - 1);
-			sb.append(condition);
-			sb.append(" ? '");
-			sb.append(sequenceFlow.getId());
-			sb.append("' : ");
+			if (!Strings.isNullOrEmpty(condition)) {
+				condition = condition.substring(2, condition.length() - 1);
+				sb.append(condition);
+				sb.append(" ? '");
+				sb.append(sequenceFlow.getId());
+				sb.append("' : ");
+			}
 		}
 		sb.append("'" + defaultTransition + "'}");
 		decisionNode.setDecisionExpression(sb.toString());
@@ -156,7 +181,7 @@ public class BpmnJpdlConverter {
 			LaneSet laneSet = process.getLaneSets().iterator().next();
 			for (Lane lane : laneSet.getLanes()) {
 				Swimlane swimlane = new Swimlane(lane.getName());
-				swimlane.setKey(UUID.randomUUID().toString());
+				swimlane.setKey(lane.getId());
 				processDefinition.getTaskMgmtDefinition().addSwimlane(swimlane);
 				Collection<FlowNode> flowNodes = lane.getFlowNodeRefs();
 				if (flowNodes.isEmpty()) {

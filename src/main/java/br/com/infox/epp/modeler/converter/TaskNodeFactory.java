@@ -42,19 +42,19 @@ public class TaskNodeFactory {
 	
 	@SuppressWarnings("unchecked")
 	private void resolveVariables(UserTask userTask, Task task) {
-		CamundaFormData formData;
-		try {
-			formData = userTask.getExtensionElements().getElementsQuery().filterByType(CamundaFormData.class).singleResult();
-		} catch (BpmnModelException e) {
-			return;
-		}
-		if (formData != null) {
-			task.getTaskController().setVariableAccesses(new ArrayList<VariableAccess>());
-			for (CamundaFormField formField : formData.getCamundaFormFields()) {
-				String type = VariableType.valueOf(formField.getCamundaType()).name();
-				VariableAccess variableAccess = new VariableAccess(formField.getCamundaId(), "read,write", type + ":" + formField.getCamundaId());
-				task.getTaskController().getVariableAccesses().add(variableAccess);
-			}
-		}
+//		CamundaFormData formData;
+//		try {
+//			formData = userTask.getExtensionElements().getElementsQuery().filterByType(CamundaFormData.class).singleResult();
+//		} catch (BpmnModelException e) {
+//			return;
+//		}
+//		if (formData != null) {
+//			task.getTaskController().setVariableAccesses(new ArrayList<VariableAccess>());
+//			for (CamundaFormField formField : formData.getCamundaFormFields()) {
+//				String type = VariableType.valueOf(formField.getCamundaType()).name();
+//				VariableAccess variableAccess = new VariableAccess(formField.getCamundaId(), "read,write", type + ":" + formField.getCamundaId());
+//				task.getTaskController().getVariableAccesses().add(variableAccess);
+//			}
+//		}
 	}
 }
