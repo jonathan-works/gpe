@@ -161,11 +161,11 @@
                 </wi:commandButton>
                 
                 <a:commandButton value="Converter para JPDL" render="@form :pageBodyDialogMessage" execute="@this" limitRender="true"
-                	action="#{fluxoCrudAction.converterParaJpdl}" styleClass="buttons"
+                	action="#{fluxoCrudAction.converterParaJpdl}" styleClass="buttons" onclick="infox.showLoading()" oncomplete="infox.hideLoading()"
                 	rendered="#{fluxoCrudAction.managed and fluxoCrudAction.instance.bpmn and not fluxoCrudAction.replica and not empty fluxoCrudAction.instance.bpmnXml}"/>
                 
                 <a:commandButton value="Converter para BPMN" render="@form :pageBodyDialogMessage" execute="@this" limitRender="true"
-                	action="#{fluxoCrudAction.converterParaBpmn}" styleClass="buttons"
+                	action="#{fluxoCrudAction.converterParaBpmn}" styleClass="buttons" onclick="infox.showLoading()" oncomplete="infox.hideLoading()"
                 	rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.instance.bpmn and not fluxoCrudAction.replica and not empty fluxoCrudAction.instance.xml}"/>
                 
                 <wi:commandButton

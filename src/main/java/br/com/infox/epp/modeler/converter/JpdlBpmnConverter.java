@@ -370,8 +370,8 @@ public class JpdlBpmnConverter {
 		if (!totalNodesForLane.containsKey(lane.getId())) {
 			totalNodesForLane.put(lane.getId(), totalNodes);
 		} else {
-			totalNodes = totalNodesForLane.get(lane.getId());
-			totalNodesForLane.put(lane.getId(), totalNodes + 1);
+			totalNodes = totalNodesForLane.get(lane.getId()) + 1;
+			totalNodesForLane.put(lane.getId(), totalNodes);
 		}
 		
 		BpmnShape lastLane = lastLaneShape;
