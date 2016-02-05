@@ -1,4 +1,4 @@
-package br.com.infox.epp.quartz.ws;
+package br.com.infox.epp.quartz.ws.impl;
 
 import org.jboss.seam.async.QuartzTriggerHandle;
 import org.jboss.seam.contexts.Lifecycle;
@@ -7,6 +7,7 @@ import org.quartz.Trigger;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.estatistica.manager.BamTimerManager;
+import br.com.infox.epp.quartz.ws.BamResource;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 import br.com.infox.log.LogProvider;

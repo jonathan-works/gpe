@@ -1,4 +1,4 @@
-package br.com.infox.epp.quartz.ws;
+package br.com.infox.epp.quartz.ws.impl;
 
 import java.util.Date;
 import java.util.List;
@@ -31,6 +31,9 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.timer.TaskExpiration;
 import br.com.infox.epp.processo.timer.manager.TaskExpirationManager;
+import br.com.infox.epp.quartz.ws.BamResource;
+import br.com.infox.epp.quartz.ws.QuartzRest;
+import br.com.infox.epp.quartz.ws.interceptor.KeyValidation;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.hibernate.util.HibernateUtil;
@@ -38,14 +41,13 @@ import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
+@KeyValidation
 public class QuartzRestImpl implements QuartzRest {
     
     private static final LogProvider LOG = Logging.getLogProvider(QuartzRestImpl.class);
     
     @Inject
     private BloqueioUsuarioManager bloqueioUsuarioManager;
-    @Inject
-    private RequestInternalPageService requestInternalPageService;
     @Inject
     private ProcessoTarefaManager processoTarefaManager;
     @Inject
@@ -62,7 +64,7 @@ public class QuartzRestImpl implements QuartzRest {
     @Override
     @Transactional
     public void processBloqueioUsuario(String key) {
-        if (!requestInternalPageService.isValid(key)) throw new WebApplicationException(401);
+//        if (!requestInternalPageService.isValid(key)) throw new WebApplicationException(401);
         List<BloqueioUsuario> bloqueios = bloqueioUsuarioManager.getBloqueiosAtivos();
         for (BloqueioUsuario bloqueio : bloqueios) {
             Date hoje = new Date();
@@ -80,7 +82,7 @@ public class QuartzRestImpl implements QuartzRest {
     @Override
     @Transactional
     public void taskExpirationProcessor(String key) {
-        if (!requestInternalPageService.isValid(key)) throw new WebApplicationException(401);
+//        if (!requestInternalPageService.isValid(key)) throw new WebApplicationException(401);
         List<ProcessoTarefa> processoTarefaList = this.processoTarefaManager.getWithTaskExpiration();
         for (ProcessoTarefa processoTarefa : processoTarefaList) {
             TaskExpiration taskExpiration = this.taskExpirationManager.getByFluxoAndTaskName(processoTarefa.getProcesso().getNaturezaCategoriaFluxo().getFluxo(), processoTarefa.getTarefa().getTarefa());
@@ -103,14 +105,14 @@ public class QuartzRestImpl implements QuartzRest {
     @Override
     @Transactional
     public BamResource getBamResource(String key) {
-        if (!requestInternalPageService.isValid(key)) throw new WebApplicationException(401);
+//        if (!requestInternalPageService.isValid(key)) throw new WebApplicationException(401);
         return new BamResourceImpl(bamTimerManager, processoTarefaManager);
     }
     
     @Override
     @Transactional
     public void retryAutomaticNodes(String key) {
-        if (!requestInternalPageService.isValid(key)) throw new WebApplicationException(401);
+//        if (!requestInternalPageService.isValid(key)) throw new WebApplicationException(401);
         Lifecycle.beginCall();
         try {
             List<Token> tokens = JbpmUtil.getTokensOfAutomaticNodesNotEnded();
@@ -126,7 +128,7 @@ public class QuartzRestImpl implements QuartzRest {
 
     @Override
     public void processContagemPrazoComunicacao(String key) {
-        if (!requestInternalPageService.isValid(key)) throw new WebApplicationException(401);
+//        if (!requestInternalPageService.isValid(key)) throw new WebApplicationException(401);
         Lifecycle.beginCall();
         try {
             UserTransaction transaction = Transaction.instance();
@@ -151,7 +153,7 @@ public class QuartzRestImpl implements QuartzRest {
     
     @Override
     public void processUpdateCalendarioSync(String key) {
-        if (!requestInternalPageService.isValid(key)) throw new WebApplicationException(401);
+//        if (!requestInternalPageService.isValid(key)) throw new WebApplicationException(401);
         Lifecycle.beginCall();
         try {
             UserTransaction transaction = Transaction.instance();
