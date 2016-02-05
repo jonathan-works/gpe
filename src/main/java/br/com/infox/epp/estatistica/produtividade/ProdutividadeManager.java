@@ -1,4 +1,4 @@
-package br.com.infox.epp.estatistica.manager;
+package br.com.infox.epp.estatistica.produtividade;
 
 import java.util.List;
 import java.util.Map;
@@ -9,8 +9,6 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.manager.Manager;
-import br.com.infox.epp.estatistica.bean.ProdutividadeBean;
-import br.com.infox.epp.estatistica.dao.ProdutividadeDAO;
 
 @AutoCreate
 @Name(ProdutividadeManager.NAME)

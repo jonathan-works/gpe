@@ -1,31 +1,31 @@
-package br.com.infox.epp.estatistica.dao;
+package br.com.infox.epp.estatistica.produtividade;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
-import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.BASE_QUERY;
-import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.CONDICAO_DATA_FIM;
-import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.CONDICAO_DATA_INICIO;
-import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.CONDICAO_FIXA;
-import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.CONDICAO_FLUXO;
-import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.CONDICAO_USUARIO;
-import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.GROUP_BY;
-import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.INDEX_LOCALIZACAO;
-import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.INDEX_MAXIMO_TEMPO_GASTO;
-import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.INDEX_MEDIA_TEMPO_GASTO;
-import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.INDEX_MINIMO_TEMPO_GASTO;
-import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.INDEX_PAPEL;
-import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.INDEX_QUANTIDADE_TAREFAS;
-import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.INDEX_TAREFA;
-import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.INDEX_TEMPO_PREVISTO;
-import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.INDEX_TIPO_PRAZO_TAREFA;
-import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.INDEX_USUARIO;
-import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.INNER_JOIN_FLUXO;
-import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.ORDER_BY;
-import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.PARAM_COUNT;
-import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.PARAM_DATA_FIM;
-import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.PARAM_DATA_INICIO;
-import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.PARAM_FLUXO;
-import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.PARAM_START;
-import static br.com.infox.epp.estatistica.query.ProdutividadeQuery.PARAM_USUARIO;
+import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.BASE_QUERY;
+import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.CONDICAO_DATA_FIM;
+import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.CONDICAO_DATA_INICIO;
+import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.CONDICAO_FIXA;
+import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.CONDICAO_FLUXO;
+import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.CONDICAO_USUARIO;
+import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.GROUP_BY;
+import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.INDEX_LOCALIZACAO;
+import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.INDEX_MAXIMO_TEMPO_GASTO;
+import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.INDEX_MEDIA_TEMPO_GASTO;
+import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.INDEX_MINIMO_TEMPO_GASTO;
+import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.INDEX_PAPEL;
+import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.INDEX_QUANTIDADE_TAREFAS;
+import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.INDEX_TAREFA;
+import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.INDEX_TEMPO_PREVISTO;
+import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.INDEX_TIPO_PRAZO_TAREFA;
+import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.INDEX_USUARIO;
+import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.INNER_JOIN_FLUXO;
+import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.ORDER_BY;
+import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.PARAM_COUNT;
+import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.PARAM_DATA_FIM;
+import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.PARAM_DATA_INICIO;
+import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.PARAM_FLUXO;
+import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.PARAM_START;
+import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.PARAM_USUARIO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,6 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.dao.DAO;
-import br.com.infox.epp.estatistica.bean.ProdutividadeBean;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 
 @AutoCreate

@@ -1,4 +1,4 @@
-package br.com.infox.epp.estatistica.bean;
+package br.com.infox.epp.estatistica.produtividade;
 
 import java.io.Serializable;
 

@@ -1,4 +1,4 @@
-package br.com.infox.epp.estatistica.query;
+package br.com.infox.epp.estatistica.produtividade;
 
 public interface ProdutividadeQuery {
 
@@ -10,15 +10,15 @@ public interface ProdutividadeQuery {
     String PARAM_COUNT = "count";
 
     String BASE_QUERY = "SELECT t.nr_prazo, l.ds_localizacao, p.ds_nome, ul.nm_usuario, "
-            + "	t.ds_tarefa, AVG(pet.nr_tempo_gasto) AS media_tempo_gasto, MIN(pet.nr_tempo_gasto) AS min_tempo_gasto,"
+            + " t.ds_tarefa, AVG(pet.nr_tempo_gasto) AS media_tempo_gasto, MIN(pet.nr_tempo_gasto) AS min_tempo_gasto,"
             + " MAX(pet.nr_tempo_gasto) AS max_tempo_gasto, COUNT(pet.id_processo_tarefa) AS quantidade_tarefas,"
             + " t.tp_prazo"
-            + "	FROM tb_processo_tarefa pet"
-            + "	INNER JOIN tb_usuario_taskinstance ut ON (ut.id_taskinstance = pet.id_task_instance)"
-            + "	INNER JOIN tb_papel p ON (p.id_papel = ut.id_papel)"
-            + "	INNER JOIN tb_usuario_login ul ON (ul.id_usuario_login = ut.id_usuario_login)"
-            + "	INNER JOIN tb_localizacao l ON (l.id_localizacao = ut.id_localizacao)"
-            + "	INNER JOIN tb_tarefa t ON (t.id_tarefa = pet.id_tarefa)";
+            + " FROM tb_processo_tarefa pet"
+            + " INNER JOIN tb_usuario_taskinstance ut ON (ut.id_taskinstance = pet.id_task_instance)"
+            + " INNER JOIN tb_papel p ON (p.id_papel = ut.id_papel)"
+            + " INNER JOIN tb_usuario_login ul ON (ul.id_usuario_login = ut.id_usuario_login)"
+            + " INNER JOIN tb_localizacao l ON (l.id_localizacao = ut.id_localizacao)"
+            + " INNER JOIN tb_tarefa t ON (t.id_tarefa = pet.id_tarefa)";
 
     String INNER_JOIN_FLUXO = " INNER JOIN tb_processo pro ON (pro.id_processo = pet.id_processo)"
             + " INNER JOIN tb_natureza_categoria_fluxo ncf ON (ncf.id_natureza_categoria_fluxo = pro.id_natureza_categoria_fluxo)";
