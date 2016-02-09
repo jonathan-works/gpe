@@ -35,8 +35,9 @@ public class RequestInternalPageService implements Serializable {
 	public static final String KEY_HEADER_NAME = "X-Key";
 	
 	@Inject
-	private ApplicationServerService applicationServerService;
+    private ApplicationServerService applicationServerService;
 	
+	private String contextPath;
 	private UUID key;
 
 	@PostConstruct
@@ -58,7 +59,7 @@ public class RequestInternalPageService implements Serializable {
 	}
 
 	public String getInternalPage(String pagePath) throws HttpException, IOException {
-		String path = applicationServerService.getResquestUrl(pagePath);
+		String path = getResquestUrl(pagePath);
 		return requestInternalPage(path);
 	}
 
@@ -73,5 +74,21 @@ public class RequestInternalPageService implements Serializable {
 		}
 		return getMethod.getResponseBodyAsString();
 	}
+	
+	public String getResquestUrl(String relativePath) {
+        return applicationServerService.getBaseResquestUrl() + contextPath + (relativePath.startsWith("/") ? relativePath : "/".concat(relativePath));
+    }
+	
+	public String getResquestUrlRest() {
+        return applicationServerService.getBaseResquestUrl() + contextPath + "/rest";
+    }
+	
+	public String getContextPath() {
+        return this.contextPath;
+    }
+
+    public void setContextPath(String contextPath) {
+        this.contextPath = contextPath;
+    }
 	
 }

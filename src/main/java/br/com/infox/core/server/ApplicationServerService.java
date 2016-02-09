@@ -28,19 +28,13 @@ public class ApplicationServerService implements Serializable {
     private static final String JBOSS_HTTPS_SOCKET_BINDING = "jboss.as:socket-binding-group=standard-sockets,socket-binding=https";
     
     private String basePath;
-    private String contextPath;
     private ObjectName socketBindingMBean;
     private SocketBindingType sbt;
     private MBeanServer mBeanServer;
     
     public String getBaseResquestUrl() {
         if (basePath == null) buildSocketBindingInfo();
-        return basePath + contextPath;
-    }
-    
-    public String getResquestUrl(String relativePath) {
-        if (basePath == null) buildSocketBindingInfo();
-        return basePath + contextPath + (relativePath.startsWith("/") ? relativePath : "/".concat(relativePath));
+        return basePath;
     }
     
     private void buildSocketBindingInfo() {
@@ -77,15 +71,6 @@ public class ApplicationServerService implements Serializable {
         return sbt.defaultPort;
     }
 
-    public String getContextPath() {
-        return this.contextPath;
-    }
-
-    public void setContextPath(String contextPath) {
-        this.contextPath = contextPath;
-    }
-    
-    
     private enum SocketBindingType {
 
         HTTP("http://", 80), HTTPS("https://", 443);
