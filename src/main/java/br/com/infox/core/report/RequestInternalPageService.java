@@ -8,7 +8,6 @@ import javax.annotation.PostConstruct;
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.ConcurrencyManagementType;
 import javax.ejb.Singleton;
-import javax.ejb.Startup;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
@@ -25,7 +24,6 @@ import br.com.infox.core.server.ApplicationServerService;
 import br.com.infox.seam.exception.BusinessException;
 
 @Singleton
-@Startup
 @Named
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 @ConcurrencyManagement(ConcurrencyManagementType.BEAN)
