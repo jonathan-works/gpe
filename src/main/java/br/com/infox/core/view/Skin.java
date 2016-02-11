@@ -10,16 +10,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.Remove;
-import javax.ejb.Stateful;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
+import javax.inject.Named;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.Selector;
 
 import br.com.infox.epp.layout.dao.SkinDao;
@@ -27,11 +22,8 @@ import br.com.infox.epp.layout.manager.SkinSessaoManager;
 import br.com.infox.seam.path.PathResolver;
 import br.com.infox.seam.util.ComponentUtil;
 
-@Name("wiSkin")
-@Scope(ScopeType.SESSION)
-@BypassInterceptors
-@Stateful
 @SessionScoped
+@Named("wiSkin")
 public class Skin extends Selector implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -44,7 +36,6 @@ public class Skin extends Selector implements Serializable {
 
 	@Inject
 	private SkinSessaoManager skinSessao;
-	
 	@Inject
 	private SkinDao skinDAO;
 
@@ -68,11 +59,6 @@ public class Skin extends Selector implements Serializable {
 				SKIN_ENTRIES.put(skin.getCodigo(), skin.getNome());
 			}
 		}
-	}
-
-	@Remove
-	public void destroy() {
-
 	}
 
 	// #{wiSkin.imageFolder}
