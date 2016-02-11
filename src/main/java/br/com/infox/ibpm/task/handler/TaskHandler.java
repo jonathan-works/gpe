@@ -48,7 +48,7 @@ public class TaskHandler implements Serializable {
     }
     
     public boolean isExpressionAssigned(){
-    	return getTask() != null && getTask().getSwimlane() == null;
+    	return getTask() != null && getTask().getPooledActorsExpression() == null;
     }
 
     public Task getTask() {
@@ -68,32 +68,6 @@ public class TaskHandler implements Serializable {
     	}
     }
 
-    public void setAssignmentType(String assignmentType){
-    	switch (assignmentType) {
-		case "pooledActorsExpression":
-			setPooledActorsExpression("");
-			break;
-		case "swimlane":
-			task.setSwimlane(task.getTaskMgmtDefinition().getSwimlanes().values().iterator().next());
-			break;
-		default:
-			break;
-		}
-    }
-    
-    public String getAssignmentType(){
-    	if (getTask() != null){
-    		Task task = getTask();
-    		if (task.getSwimlane() != null){
-    			return "swimlane";
-    		}
-    		if (task.getPooledActorsExpression() != null){
-    			return "pooledActorsExpression";
-    		}
-    	}
-    	return null;
-    }
-    
     public String getSwimlaneName() {
         return task == null || task.getSwimlane() == null ? null : task.getSwimlane().getName();
     }

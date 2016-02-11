@@ -58,7 +58,7 @@ public class ProcessoLocalizacaoIbpm implements java.io.Serializable {
     public ProcessoLocalizacaoIbpm() {
     }
 
-    @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_tb_processo_localizacao_ibpm")
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_processo_localizacao_ibpm")
     @Id
     @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_processo_localizacao", unique = true, nullable = false)

@@ -612,14 +612,13 @@ public class TaskInstanceHome implements Serializable {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
 	private boolean validarAssinaturaDocumentosAoMovimentar() {
-		Map<String, Object> variableMap = org.jboss.seam.bpm.TaskInstance.instance().getVariableInstances();
+		Map<String, VariableInstance> variableMap = org.jboss.seam.bpm.TaskInstance.instance().getVariableInstances();
 		FacesMessages.instance().clear();
 		boolean isAssinaturaOk = true;
 		for (String key : variableMap.keySet()) {
 			if (key.startsWith("FILE") || key.startsWith("EDITOR")) {
-				VariableInstance variableInstance = (VariableInstance) variableMap.get(key);
+				VariableInstance variableInstance = variableMap.get(key);
 				if (variableInstance instanceof NullInstance) {
 					continue;
 				}
