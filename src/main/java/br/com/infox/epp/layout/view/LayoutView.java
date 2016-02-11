@@ -1,24 +1,17 @@
 package br.com.infox.epp.layout.view;
 
-import java.awt.Image;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.faces.event.AjaxBehaviorEvent;
-import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.hibernate.validator.internal.util.privilegedactions.NewInstance;
 import org.jboss.seam.faces.FacesMessages;
 import org.richfaces.event.FileUploadEvent;
-import org.richfaces.model.UploadedFile;
 
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.layout.entity.Resource;
@@ -40,7 +33,7 @@ public class LayoutView implements Serializable {
 	private LayoutManager layoutManager;
 	
 	@Inject
-	LayoutController layoutController;
+	private LayoutController layoutController;
 	
 	private Resource resource;
 	private byte[] binarioResource;
@@ -49,9 +42,6 @@ public class LayoutView implements Serializable {
 	private SortedSet<Skin> skins;
 	private SortedSet<Resource> resources;
 	
-	@Inject
-	private Logger log;
-		
 	private class ComparadorSkins implements Comparator<Skin> {
 		@Override
 		public int compare(Skin s1, Skin s2) {

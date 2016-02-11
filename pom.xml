@@ -131,11 +131,11 @@
       <version>4.4.3.Final</version><!--$NO-MVN-MAN-VER$ -->
     </dependency>
     <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-infinispan</artifactId>
-      <version>4.2.14.Final</version><!--$NO-MVN-MAN-VER$ -->
-      <scope>provided</scope>
-    </dependency>
+		<groupId>org.infinispan</groupId>
+		<artifactId>infinispan-core</artifactId>
+		<version>5.2.7.Final</version>
+		<scope>provided</scope>
+	</dependency>
     <dependency>
       <artifactId>dom4j</artifactId>
       <groupId>dom4j</groupId>

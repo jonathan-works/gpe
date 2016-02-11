@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -24,7 +23,6 @@ public class Binario {
 	@Column(name = "id_binario", nullable = false, unique = true)
 	private Integer id;
 	
-	@Lob
 	@NotNull
 	@Column(name="ob_binario")
 	private byte[] binario;
