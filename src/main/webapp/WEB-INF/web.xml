@@ -46,7 +46,6 @@
 		<param-name>org.richfaces.CONTROL_SKINNING</param-name>
 		<param-value>disable</param-value>
 	</context-param>
-
 	<context-param>
 		<param-name>org.richfaces.CONTROL_SKINNING_CLASSES</param-name>
 		<param-value>disable</param-value>
@@ -76,6 +75,7 @@
 		<filter-name>Seam Filter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+	<!-- Listener for RequestInternalPage before seam listener -->
 	<listener>
 		<listener-class>br.com.infox.jsf.events.EppServletEventListener</listener-class>
 	</listener>

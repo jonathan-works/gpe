@@ -11,7 +11,6 @@ import javax.ejb.Singleton;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
@@ -24,7 +23,6 @@ import br.com.infox.core.server.ApplicationServerService;
 import br.com.infox.seam.exception.BusinessException;
 
 @Singleton
-@Named
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 @ConcurrencyManagement(ConcurrencyManagementType.BEAN)
 public class RequestInternalPageService implements Serializable {
@@ -41,6 +39,7 @@ public class RequestInternalPageService implements Serializable {
 	@PostConstruct
 	private void init() {
 		key = UUID.randomUUID();
+		applicationServerService.init();
 	}
 
 	public UUID getKey() {

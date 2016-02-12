@@ -32,6 +32,10 @@ public class ApplicationServerService implements Serializable {
     private SocketBindingType sbt;
     private MBeanServer mBeanServer;
     
+    public void init() {
+        buildSocketBindingInfo();
+    }
+    
     public String getBaseResquestUrl() {
         if (basePath == null) buildSocketBindingInfo();
         return basePath;
