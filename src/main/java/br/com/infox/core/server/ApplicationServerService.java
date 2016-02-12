@@ -29,11 +29,10 @@ public class ApplicationServerService implements Serializable {
     private String basePath;
     
     public void init() {
-        buildSocketBindingInfo();
+    	buildBasePath();
     }
     
     public String getBaseResquestUrl() {
-        if (basePath == null) buildBasePath();
         return basePath;
     }
     
