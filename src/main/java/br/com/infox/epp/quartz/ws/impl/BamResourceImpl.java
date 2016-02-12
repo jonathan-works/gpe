@@ -1,5 +1,7 @@
 package br.com.infox.epp.quartz.ws.impl;
 
+import javax.inject.Inject;
+
 import org.jboss.seam.async.QuartzTriggerHandle;
 import org.jboss.seam.contexts.Lifecycle;
 import org.quartz.SchedulerException;
@@ -17,14 +19,11 @@ public class BamResourceImpl implements BamResource {
     
     private static final LogProvider LOG = Logging.getLogProvider(BamResourceImpl.class);
     
+    @Inject
     private BamTimerManager bamTimerManager;
+    @Inject
     private ProcessoTarefaManager processoTarefaManager;
     
-    public BamResourceImpl(BamTimerManager bamTimerManager, ProcessoTarefaManager processoTarefaManager) {
-        this.bamTimerManager = bamTimerManager;
-        this.processoTarefaManager = processoTarefaManager;
-    }
-
     @Override
     public void tarefaTimerProcessor(String parameterName, PrazoEnum prazo) {
         Lifecycle.beginCall();

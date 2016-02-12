@@ -7,23 +7,16 @@ import org.jboss.seam.annotations.async.IntervalCron;
 import org.jboss.seam.async.QuartzTriggerHandle;
 
 import br.com.infox.epp.quartz.client.QuartzRestFactory;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 @Name(TaskExpirationProcessor.NAME)
 @AutoCreate
 public class TaskExpirationProcessor {
 
     public static final String NAME = "taskExpirationProcessor";
-    private static final LogProvider LOG = Logging.getLogProvider(TaskExpirationProcessor.class);
     
     @Asynchronous
     public QuartzTriggerHandle processTaskExpiration(@IntervalCron String cron) {
-        try {
-            QuartzRestFactory.create().taskExpirationProcessor();
-        } catch (Exception e) {
-            LOG.error(e);
-        }
+        QuartzRestFactory.create().taskExpirationProcessor();
         return null;
     }
 }

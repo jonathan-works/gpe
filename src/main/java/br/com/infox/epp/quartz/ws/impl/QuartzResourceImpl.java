@@ -7,6 +7,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
+import javax.ws.rs.WebApplicationException;
 
 import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.contexts.Lifecycle;
@@ -23,7 +24,6 @@ import br.com.infox.epp.access.entity.BloqueioUsuario;
 import br.com.infox.epp.access.manager.BloqueioUsuarioManager;
 import br.com.infox.epp.calendario.CalendarioEventosService;
 import br.com.infox.epp.cdi.transaction.Transactional;
-import br.com.infox.epp.estatistica.manager.BamTimerManager;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.entity.Processo;
@@ -51,13 +51,13 @@ public class QuartzResourceImpl implements QuartzResource {
     @Inject
     private TaskExpirationManager taskExpirationManager;
     @Inject
-    private BamTimerManager bamTimerManager;
-    @Inject
     private PrazoComunicacaoService prazoComunicacaoService;
     @Inject
     private ProcessoManager processoManager;
     @Inject
     private CalendarioEventosService calendarioEventosService;
+    @Inject
+    private BamResourceImpl bamResourceImpl;
 
     @Override
     @Transactional
@@ -101,7 +101,7 @@ public class QuartzResourceImpl implements QuartzResource {
     @Override
     @Transactional
     public BamResource getBamResource() {
-        return new BamResourceImpl(bamTimerManager, processoTarefaManager);
+        return bamResourceImpl;
     }
     
     @Override
@@ -135,9 +135,9 @@ public class QuartzResourceImpl implements QuartzResource {
                 try {
                     transaction.rollback();
                 } catch (IllegalStateException | SecurityException | SystemException e1) {
-                    LOG.error(e);
+                    throw new WebApplicationException(e1, 500);
                 }
-                LOG.error(e);
+                throw new WebApplicationException(e, 500);
             } 
         } finally {
             Lifecycle.endCall();
@@ -159,9 +159,9 @@ public class QuartzResourceImpl implements QuartzResource {
                 try {
                     transaction.rollback();
                 } catch (IllegalStateException | SecurityException | SystemException e1) {
-                    throw new RuntimeException(e1);
+                    throw new WebApplicationException(e1, 500);
                 }
-                LOG.error(e);
+                throw new WebApplicationException(e, 500);
             }
         } finally {
             Lifecycle.endCall();
