@@ -30,7 +30,7 @@
     			value="#{nodeFitter.dispatcherSignalName}" rendered="#{not empty nodeFitter.dispatcherSignal}"/>
     		<h:form style="display: inline-block;" rendered="#{not empty nodeFitter.dispatcherSignal}">
     			<a:commandLink render="panelDispatcherTable, panelDipatcherForm" execute="@form" action="#{nodeFitter.removeDispatchSignal}" >
-    				<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{infoxMessages['button.delete']}" />
+    				<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="#{infoxMessages['button.delete']}" />
     			</a:commandLink>
     		</h:form>
     	</div>
@@ -41,7 +41,7 @@
 	    		<h:form>
 		   			<a:commandLink onclick="#{rich:component('calendarioProblemsPopup')}.show();" 
 		   				render="formParamSignal" execute="@this">
-		   				<h:graphicImage url="#{wiSkin.imageFolder}/add.gif" title="Adicionar Parâmetro" />
+		   				<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}" title="Adicionar Parâmetro" />
 		   			</a:commandLink>
 	   			</h:form>
 	    	</ui:define>
@@ -50,7 +50,7 @@
 	    		<h:form>
 	    			<a:commandLink render="dispatcherParamsDatatable" execute="@form" 
 	    				action="#{nodeFitter.removeDispatcherParam(row)}" >
-	    				<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{infoxMessages['button.delete']}" />
+	    				<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="#{infoxMessages['button.delete']}" />
 	    			</a:commandLink>
 	    		</h:form>
 	    	</ui:define>
@@ -68,7 +68,7 @@
 	    
 	    <rich:popupPanel id="calendarioProblemsPopup" modal="true" header="Adicionar Parâmetro" width="600" height="270" rendered="#{not empty nodeFitter.dispatcherSignal}">
 	    	<f:facet name="controls">
-	        	<h:graphicImage id="closeBtn" value="#{wiSkin.imageFolder}/closeMP.gif" 
+	        	<h:graphicImage id="closeBtn" value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}" 
 	        		onmouseup="#{rich:component('calendarioProblemsPopup')}.hide();" style="cursor: pointer;"/>
 	        </f:facet>
 	    	<h:form id="formParamSignal">

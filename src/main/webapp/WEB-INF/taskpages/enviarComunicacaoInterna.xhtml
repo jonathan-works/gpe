@@ -47,8 +47,8 @@
 	                          id="localizacao"
 	                          assignTo="envioComunicacaoInternaView.localizacaoDestino"
 	                          tree="#{localizacaoSubTree}"
-	                          icon="#{wiSkin.imageFolder}/nivelTree.gif"
-	                          iconLeaf="#{wiSkin.imageFolder}/file.gif"
+	                          icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
+	                          iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
 	                          label="#{infoxMessages['comunicacao.localizacoes']}"
 	                          required="true"
 	                          render="perfisPermitidosDestinoDecoration pessoasPermitidosDestinoDecoration" />
@@ -95,7 +95,7 @@
 							<h:form>
 								<a:commandLink action="#{envioComunicacaoInternaView.removerDestinatario(destinatario)}" 
 									execute="@this" render="panelDestinatariosComunicacao" limitRender="true">
-									<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" styleClass="opacityHover" onclick="return confirm('Deseja remover?');"/>
+									<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" styleClass="opacityHover" onclick="return confirm('Deseja remover?');"/>
 								</a:commandLink>
 							</h:form>
 						</rich:column>
@@ -151,7 +151,7 @@
 							disabled="#{not envioComunicacaoInternaView.minuta}" />
 						<div>
 							<s:div id="tooltipComunicacao" styleClass="tooltip-parent" style="width: 10px; display:inline;"> 
-					  			<h:graphicImage id="imgTootipEditorComunicacao" url="#{wiSkin.imageFolder}/help.gif" />
+					  			<h:graphicImage id="imgTootipEditorComunicacao" url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
 					  			<s:fragment rendered="#{not empty envioComunicacaoInternaView.classificacaoDocumento.observacao}">
 									<div class="epp-tooltip" style="display:inline;" >
 										<div class="tooltip-panel">

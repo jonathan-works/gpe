@@ -33,7 +33,7 @@
 					oncomplete="infox.openPopUp('criarComunicacaoInterna', '#{pathResolver.contextPath}/Processo/criarComunicacaoInterna.seam?scid=#{conversation.id}','1024');">
 					<f:setPropertyActionListener value="#{row.id}" target="#{flash.idModeloComunicacao}" />
 					<f:setPropertyActionListener value="#{true}" target="#{flash.abaComunicacao}" />
-					<h:graphicImage url="#{wiSkin.imageFolder}/mod/edit.png" />
+					<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/mod/edit.png')}" />
 					<infox:flashcopy/>
 				</a:commandLink>
 				<a:commandLink styleClass="opacityHover" render="comunicacaoInternaNaoExpedidaListPanel" execute="@form" 
@@ -63,7 +63,7 @@
     			<a:commandLink
 					render="@this" execute="@this"
 					oncomplete="infox.openPopUp('download#{row.idProcesso}', '#{pathResolver.contextPath}/Processo/baixarDocumento.seam','1024');">
-					<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['comunicacao.visualizarAComunicacao']}"/>
+					<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['comunicacao.visualizarAComunicacao']}"/>
 					<f:setPropertyActionListener value="#{comunicacaoInternaView.getIdDocumentoComunicacao(row)}" target="#{flash.idDocumento}" />
 					<f:setPropertyActionListener value="#{true}" target="#{flash.binario}" />
 					<infox:flashcopy/>

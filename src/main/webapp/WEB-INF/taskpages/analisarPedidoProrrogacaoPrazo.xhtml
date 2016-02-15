@@ -41,7 +41,7 @@
 				<h:form>
 					<a:commandLink id="baixarDocumentoAnalise" 
 						 onclick="infox.openPopUp('documento', '#{documentoDownloader.getViewUrl(row)}');">
-						<h:graphicImage url="#{wiSkin.imageFolder}/jbpm/down.gif" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
+						<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/jbpm/down.gif')}" title="#{infoxMessages['comunicacao.baixarDocumento']}"/>
 					</a:commandLink>
 				</h:form>
 			</rich:column>

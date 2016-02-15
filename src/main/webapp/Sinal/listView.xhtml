@@ -25,14 +25,14 @@
             <ui:define name="toolBar">
             	<h:form>
             		<a:commandLink execute="@this" render=":pageBody" action="#{signalView.load(row)}" limitRender="true">
-            			<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="Selecionar" styleClass="opacityHover"/>
+            			<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="Selecionar" styleClass="opacityHover"/>
             			<f:setPropertyActionListener value="form" target="#{signalView.tab}" />
             		</a:commandLink>
             		
             		<a:commandLink execute="@form" render="signalListPanel :pageBodyDialogMessage" 
             			action="#{signalView.inativar}" limitRender="true" rendered="#{row.ativo}">
             			<f:setPropertyActionListener value="#{row.id}" target="#{signalView.id}" />
-            			<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="Inativar" styleClass="opacityHover"/>
+            			<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="Inativar" styleClass="opacityHover"/>
             		</a:commandLink>
             	</h:form>
             </ui:define>

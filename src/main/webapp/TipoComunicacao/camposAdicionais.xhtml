@@ -18,7 +18,7 @@
             		value="#{tipoComunicacaoCrudAction.classificacaoDocumentoProrrogacao}"
             		items="#{tipoComunicacaoCrudAction.classificacoesDisponiveis}"/>
             	<s:div id="tooltipComunicacao" styleClass="tooltip-parent" style="display:inline;"> 
-		  			<h:graphicImage id="imgTootipClassificacaoProrrogacao" url="#{wiSkin.imageFolder}/help.gif" />
+		  			<h:graphicImage id="imgTootipClassificacaoProrrogacao" url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
 					<div class="epp-tooltip" style="display:inline;" >
 						<div class="tooltip-panel">
 							<h:outputText value="#{infoxMessages['tipoComunicacao.msgPedidoConfig']}"/>
