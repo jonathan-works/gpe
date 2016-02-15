@@ -189,6 +189,9 @@ public class LayoutManager {
 	private ResourceBin getResourceBinByPath(String codigoSkin, String path) {
 		String pathSemExtensao = path.substring(0, path.lastIndexOf(".") + 1);
 		Resource resource = resourceDao.findByStartingPath(pathSemExtensao);
+		if(resource == null) {
+			return null;
+		}
 		return getResourceBin(codigoSkin, resource.getCodigo());
 	}
 
