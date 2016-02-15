@@ -59,6 +59,7 @@ import br.com.infox.epp.processo.sigilo.entity.SigiloProcessoPermissao;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcessoPermissao_;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso_;
 import br.com.infox.epp.processo.type.TipoProcesso;
+import br.com.infox.ibpm.type.PooledActorType;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -391,12 +392,25 @@ public class SituacaoProcessoDAO {
         Root<PooledActor> pooledActor = subquery.from(PooledActor.class);
         Join<PooledActor, TaskInstance> taskInstances = pooledActor.join("taskInstances", JoinType.INNER);
         subquery.where(
-                cb.equal(taskInstance.<Long>get("id"), taskInstances.<Long>get("id")),
-                cb.or(
-                        cb.equal(pooledActor.<String>get("actorId"), cb.literal(idPerfilTemplate.toString())),
-                        cb.equal(pooledActor.<String>get("actorId"), cb.literal(login)),
-                        cb.equal(pooledActor.<String>get("actorId"), cb.literal(localizacao+":"+idPerfilTemplate.toString()))
+            cb.equal(taskInstance.<Long>get("id"), taskInstances.<Long>get("id")),
+            cb.or(
+                cb.and(
+                    cb.equal(pooledActor.<String>get("actorId"), cb.literal(idPerfilTemplate.toString())),
+                    cb.isNull(pooledActor.get("type"))
+                ),
+                cb.and(
+                    cb.equal(pooledActor.<String>get("actorId"), cb.literal(login)),
+                    cb.equal(pooledActor.<String>get("type"), PooledActorType.USER.getValue())
+                ),
+                cb.and(
+                    cb.equal(pooledActor.<String>get("actorId"), cb.literal(localizacao+"&"+idPerfilTemplate.toString())),
+                    cb.equal(pooledActor.<String>get("type"), PooledActorType.GROUP.getValue())
+                ),
+                cb.and(
+                    cb.equal(pooledActor.<String>get("actorId"), cb.literal(localizacao)),
+                    cb.equal(pooledActor.<String>get("type"), PooledActorType.LOCAL)
                 )
+            )
         );
         Predicate predicate = abstractQuery.getRestriction();
         abstractQuery.where(cb.and(cb.exists(subquery), predicate));

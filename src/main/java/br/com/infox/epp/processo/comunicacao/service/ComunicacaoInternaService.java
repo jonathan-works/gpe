@@ -39,6 +39,7 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.epp.system.Parametros;
+import br.com.infox.ibpm.type.PooledActorType;
 import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -210,15 +211,15 @@ public class ComunicacaoInternaService {
         List<String> destinatarios = new ArrayList<>();
         for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
             if (destinatario.getDestinatario() != null) {
-                destinatarios.add(destinatario.getDestinatario().getUsuarioLogin().getLogin());
+                destinatarios.add(PooledActorType.USER.toPooledActorId(destinatario.getDestinatario().getUsuarioLogin().getLogin()));
             } else if (destinatario.getPerfilDestino() != null && destinatario.getDestino() != null) {
-                destinatarios.add(destinatario.getDestino().getCodigo()+":"+destinatario.getPerfilDestino().getId());
+                destinatarios.add(PooledActorType.GROUP.toPooledActorId(destinatario.getDestino().getCodigo()+"&"+destinatario.getPerfilDestino().getId()));
             } else {
-                destinatarios.add(destinatario.getDestino().getCodigo());
+                destinatarios.add(PooledActorType.LOCAL.toPooledActorId(destinatario.getDestino().getCodigo()));
             }
         }
         variables.put(DESTINATARIO, StringUtil.concatList(destinatarios, ","));
-        variables.put(EXPEDIDOR, Authenticator.getUsuarioLogado().getLogin());
+        variables.put(EXPEDIDOR, PooledActorType.USER.toPooledActorId(Authenticator.getUsuarioLogado().getLogin()));
         variables.put(DOCUMENTO_COMUNICACAO, documento.getId());
         return variables;
     }
@@ -228,14 +229,14 @@ public class ComunicacaoInternaService {
         
         String destinatarioVariable = "";
         if (destinatario.getDestinatario() != null) {
-            destinatarioVariable = destinatario.getDestinatario().getUsuarioLogin().getLogin();
+            destinatarioVariable = PooledActorType.USER.toPooledActorId(destinatario.getDestinatario().getUsuarioLogin().getLogin());
         } else if (destinatario.getPerfilDestino() != null && destinatario.getDestino() != null) {
-            destinatarioVariable = destinatario.getDestino().getCodigo()+":"+destinatario.getPerfilDestino().getId();
+            destinatarioVariable = PooledActorType.GROUP.toPooledActorId(destinatario.getDestino().getCodigo()+"&"+destinatario.getPerfilDestino().getId());
         } else {
-            destinatarioVariable = destinatario.getDestino().getCodigo();
+            destinatarioVariable = PooledActorType.LOCAL.toPooledActorId(destinatario.getDestino().getCodigo());
         }
         variables.put(DESTINATARIO, destinatarioVariable);
-        variables.put(EXPEDIDOR, Authenticator.getUsuarioLogado().getLogin());
+        variables.put(EXPEDIDOR, PooledActorType.USER.toPooledActorId(Authenticator.getUsuarioLogado().getLogin()));
         variables.put(DOCUMENTO_COMUNICACAO, documento.getId());
         return variables;
     }

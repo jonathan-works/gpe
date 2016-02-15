@@ -80,7 +80,6 @@ public class VariableCollector {
         return this.declaredVariables;
     }
 
-    @SuppressWarnings(UNCHECKED)
     private void visit(final Node node, final VariableType... restrictionTypes) {
         if (!(node instanceof StartState) && !visitedNodes.contains(node)) {
             if (node instanceof TaskNode) {
@@ -111,7 +110,6 @@ public class VariableCollector {
         }
     }
 
-    @SuppressWarnings(UNCHECKED)
     private void populateVariableAccessForNode(final TaskNode node,
             final VariableType... restrictionTypes) {
         for (final Task task : (Set<Task>) node.getTasks()) {
