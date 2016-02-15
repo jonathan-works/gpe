@@ -37,12 +37,10 @@ public class TaskHandlerVisitor {
         return variableList;
     }
 
-    @SuppressWarnings(UNCHECKED)
     public void visit(Node n) {
         addVariables(n.getArrivingTransitions());
     }
 
-    @SuppressWarnings(UNCHECKED)
     public void visit(Task t) {
         visitedTasks.add(t);
         Node n = (Node) t.getParent();
@@ -51,7 +49,6 @@ public class TaskHandlerVisitor {
         addVariables(transitions);
     }
 
-    @SuppressWarnings(UNCHECKED)
     private void addVariables(Collection<Transition> transitions) {
         if (transitions == null) {
             return;
