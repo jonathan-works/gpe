@@ -32,6 +32,7 @@ import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao_;
+import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioLogin_;
 import br.com.infox.epp.fluxo.entity.Categoria;
@@ -383,7 +384,7 @@ public class SituacaoProcessoDAO {
 	}
 	
     protected void appendPooledActorFilter(AbstractQuery<?> abstractQuery, From<?, TaskInstance> taskInstance) {
-        Integer idPerfilTemplate = Authenticator.getUsuarioPerfilAtual().getPerfilTemplate().getId();
+        PerfilTemplate perfilTemplate = Authenticator.getUsuarioPerfilAtual().getPerfilTemplate();
         String login = Authenticator.getUsuarioLogado().getLogin();
         String localizacao = Authenticator.getLocalizacaoAtual().getCodigo();
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
@@ -395,7 +396,7 @@ public class SituacaoProcessoDAO {
             cb.equal(taskInstance.<Long>get("id"), taskInstances.<Long>get("id")),
             cb.or(
                 cb.and(
-                    cb.equal(pooledActor.<String>get("actorId"), cb.literal(idPerfilTemplate.toString())),
+                    cb.equal(pooledActor.<String>get("actorId"), cb.literal(perfilTemplate.getId().toString())),
                     cb.isNull(pooledActor.get("type"))
                 ),
                 cb.and(
@@ -403,7 +404,7 @@ public class SituacaoProcessoDAO {
                     cb.equal(pooledActor.<String>get("type"), PooledActorType.USER.getValue())
                 ),
                 cb.and(
-                    cb.equal(pooledActor.<String>get("actorId"), cb.literal(localizacao+"&"+idPerfilTemplate.toString())),
+                    cb.equal(pooledActor.<String>get("actorId"), cb.literal(localizacao+"&"+perfilTemplate.getCodigo())),
                     cb.equal(pooledActor.<String>get("type"), PooledActorType.GROUP.getValue())
                 ),
                 cb.and(

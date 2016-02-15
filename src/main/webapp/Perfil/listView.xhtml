@@ -22,9 +22,13 @@
             <ui:define name="searchForm">
                 <wi:searchForm formId="perfilTemplateSearchForm"
                     formTitle="#{infoxMessages['searchForm.title']}">
+                    <wi:inputText id="codigo"
+                        label="#{infoxMessages['perfil.codigo']}"
+                        value="#{perfilTemplateList.entity.codigo}"
+                        maxlength="50"/>
                     <wi:inputText id="perfil"
                         label="#{infoxMessages['perfil.descricao']}"
-                        value="#{perfilTemplateList.entity.descricao}"></wi:inputText>
+                        value="#{perfilTemplateList.entity.descricao}"/>
                     <wi:tree id="localizacao"
                         assignTo="perfilTemplateList.entity.localizacao"
                         tree="#{estruturaLocalizacoesPerfilTree}"
@@ -43,6 +47,9 @@
                         label="#{infoxMessages['field.situacao']}" />
                 </wi:searchForm>
             </ui:define>
+            <wi:columnOutputText columnId="codigo"
+                columnHeader="#{infoxMessages['perfil.codigo']}"
+                value="#{row.codigo}" />
             <wi:columnOutputText columnId="descricao"
                 columnHeader="#{infoxMessages['perfil.descricao']}"
                 value="#{row.descricao}" />
@@ -60,6 +67,14 @@
     <ui:define name="form">
         <wi:dataForm formId="perfilTemplateForm"
             formTitle="#{infoxMessages['form.title']}">
+            <wi:inputText id="codigo"
+                label="#{infoxMessages['perfil.codigo']}"
+                value="#{perfilTemplateCrudAction.instance.codigo}"
+                required="true" rendered="#{not perfilTemplateCrudAction.managed}"/>
+            <wi:outputText id="codigoOut"
+                label="#{infoxMessages['perfil.codigo']}"
+                value="#{perfilTemplateCrudAction.instance.codigo}" 
+                rendered="#{perfilTemplateCrudAction.managed}"/>
             <wi:inputText id="perfil"
                 label="#{infoxMessages['perfil.descricao']}"
                 value="#{perfilTemplateCrudAction.instance.descricao}"
