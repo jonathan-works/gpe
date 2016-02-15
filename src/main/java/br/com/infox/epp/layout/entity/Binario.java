@@ -1,7 +1,11 @@
 package br.com.infox.epp.layout.entity;
 
+import java.sql.Blob;
+
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,9 +27,14 @@ public class Binario {
 	@Column(name = "id_binario", nullable = false, unique = true)
 	private Integer id;
 	
+	@Basic(fetch = FetchType.LAZY)
 	@NotNull
 	@Column(name="ob_binario")
 	private byte[] binario;
+	
+	@Basic(fetch = FetchType.LAZY)
+	@Column(name = "ob_binario", insertable = false, updatable = false)
+	private Blob blob;
 
 	public Integer getId() {
 		return id;
@@ -43,7 +52,11 @@ public class Binario {
 		this.binario = binario;
 	}
 	
-	@Override
+	public Blob getBlob() {
+        return blob;
+    }
+
+    @Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
