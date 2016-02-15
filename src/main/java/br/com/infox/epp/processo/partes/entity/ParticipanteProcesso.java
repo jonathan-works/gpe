@@ -279,6 +279,7 @@ public class ParticipanteProcesso implements Serializable, Cloneable {
     	clone.setProcesso(null);
     	clone.setParticipantePai(null);
     	clone.setHistoricoParticipanteList(null);
+    	clone.setParticipantesFilhos(new ArrayList<>(clone.getParticipantesFilhos()));
     	return clone;
     }
     
