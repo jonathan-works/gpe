@@ -408,7 +408,7 @@ public class SituacaoProcessoDAO {
                 ),
                 cb.and(
                     cb.equal(pooledActor.<String>get("actorId"), cb.literal(localizacao)),
-                    cb.equal(pooledActor.<String>get("type"), PooledActorType.LOCAL)
+                    cb.equal(pooledActor.<String>get("type"), PooledActorType.LOCAL.getValue())
                 )
             )
         );
