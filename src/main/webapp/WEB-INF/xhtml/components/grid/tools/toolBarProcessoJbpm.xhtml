@@ -49,7 +49,7 @@
 
     <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/role.gif')}"
       rendered="#{(owner ne authenticator.getUsuarioLogado().login and not empty owner and not authenticator.isUsuarioAtualResponsavel()) and showMovimentarToolBar}"
-      title="Processo bloqueado pelo servidor #{owner}" />
+      title="Processo bloqueado pelo servidor #{row.nomeUsuarioTarefa}" />
 
     <a:commandLink
       action="#{painelUsuarioController.liberarTarefa(row)}"
@@ -58,7 +58,7 @@
       limitRender="true"
       rendered="#{(owner ne authenticator.getUsuarioLogado().login and not empty owner and authenticator.isUsuarioAtualResponsavel())}">
       <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/role.gif')}"
-        title="#{infoxMessages['painel.list.liberarTarefaServidor']} #{owner}" />
+        title="#{infoxMessages['painel.list.liberarTarefaServidor']} #{row.nomeUsuarioTarefa}" />
     </a:commandLink>
   </h:form>
 
