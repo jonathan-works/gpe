@@ -12,7 +12,7 @@
         render="#{id}Panel">
         <h:graphicImage title="Ordem crescente"
             styleClass="#{orderAsc and selectedOrder ? 'disabled' : ''}"
-            url="#{wiSkin.imageFolder}/grid/arrow-up.png" />
+            url="#{layoutController.getResourceUrlByPath('/imagens/grid/arrow-up.png')}" />
     </a:commandLink>
     <h:outputText value="#{columnHeader}" />
     <a:commandLink execute="@this" status="status"
@@ -22,7 +22,7 @@
         render="#{id}Panel">
         <h:graphicImage title="Ordem decrescente"
             styleClass="#{!orderAsc and selectedOrder ? 'disabled' : ''}"
-            url="#{wiSkin.imageFolder}/grid/arrow-down.png" />
+            url="#{layoutController.getResourceUrlByPath('/imagens/grid/arrow-down.png')}" />
     </a:commandLink>
 
 </ui:composition>

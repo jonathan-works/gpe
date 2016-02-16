@@ -1,7 +1,5 @@
 package br.com.infox.ibpm.transition;
 
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -144,7 +142,6 @@ public class TransitionHandler implements Serializable {
         return false;
     }
 
-    @SuppressWarnings(UNCHECKED)
     public boolean isInJoinNode() {
         NodeFitter nodeFitter = BeanManager.INSTANCE.getReference(NodeFitter.class);
         Node currentNode = nodeFitter.getCurrentNode();

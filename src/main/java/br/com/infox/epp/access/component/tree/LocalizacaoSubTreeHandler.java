@@ -1,5 +1,14 @@
 package br.com.infox.epp.access.component.tree;
 
+import java.lang.annotation.Annotation;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import javax.enterprise.util.AnnotationLiteral;
+import javax.inject.Qualifier;
+
 import org.jboss.seam.Component;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -17,8 +26,10 @@ public class LocalizacaoSubTreeHandler extends AbstractTreeHandler<Localizacao> 
 
     public static final String NAME = "localizacaoSubTree";
     public static final String EVENT_SELECTED = "evtSelectSubLocalizacao";
-
+    private static final Annotation TREE_SELECT_EVENT = new AnnotationLiteral<LocalizacaoSubTreeSelectEvent>() {private static final long serialVersionUID = 1L;};
+    
     private int idLocalizacaoPai = -1;
+    
     
     @Override
     protected String getQueryRoots() {
@@ -35,6 +46,11 @@ public class LocalizacaoSubTreeHandler extends AbstractTreeHandler<Localizacao> 
     protected String getEventSelected() {
         return EVENT_SELECTED;
     }
+    
+    @Override
+    protected Annotation getTreeItemSelect() {
+        return TREE_SELECT_EVENT;
+    }
 
     @Override
     protected Localizacao getEntityToIgnore() {
@@ -48,4 +64,11 @@ public class LocalizacaoSubTreeHandler extends AbstractTreeHandler<Localizacao> 
     public void setIdLocalizacaoPai(Integer idLocalizacaoPai) {
 		this.idLocalizacaoPai = idLocalizacaoPai;
 	}
+    
+    @Qualifier
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
+    public @interface LocalizacaoSubTreeSelectEvent {}
+    
+    
 }

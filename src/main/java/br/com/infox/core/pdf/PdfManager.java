@@ -2,7 +2,8 @@ package br.com.infox.core.pdf;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.Serializable;
+
+import javax.ejb.Stateless;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -23,11 +24,12 @@ import com.lowagie.text.pdf.BadPdfFormatException;
 import com.lowagie.text.pdf.PdfCopy;
 import com.lowagie.text.pdf.PdfReader;
 
+@Stateless
 @Name(PdfManager.NAME)
 @Scope(ScopeType.STATELESS)
 @AutoCreate
-public class PdfManager implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class PdfManager {
+    
     public static final String NAME = "pdfManager";
 	
 	public void convertHtmlToPdf(String html, OutputStream out) throws DocumentException {

@@ -23,13 +23,13 @@
                         execute="@this" render="@this"
                         limitRender="true"
                         oncomplete="abrirMovimentar();">
-                        <h:graphicImage value="#{wiSkin.imageFolder}/start.gif" />
+                        <h:graphicImage value="#{layoutController.getResourceUrlByPath('/imagens/start.gif')}" />
                     </a:commandLink>
                     <a:commandLink
                         rendered="#{action.necessitaPartes()}"
                         action="#{action.onSelectItem(row)}"
                         execute="@this" render="pageBody" limitRender="true">
-                        <h:graphicImage value="#{wiSkin.imageFolder}/start.gif" />
+                        <h:graphicImage value="#{layoutController.getResourceUrlByPath('/imagens/start.gif')}" />
                     </a:commandLink>
                 </ui:define>
                 <wi:columnOutputText columnId="item"

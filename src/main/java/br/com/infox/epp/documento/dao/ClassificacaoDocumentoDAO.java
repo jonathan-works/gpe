@@ -36,6 +36,7 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento_;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacaoClassificacaoDocumento;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacaoClassificacaoDocumento_;
 import br.com.infox.epp.processo.entity.Processo;
@@ -94,7 +95,14 @@ public class ClassificacaoDocumentoDAO extends DAO<ClassificacaoDocumento> {
         params.put(PARAM_DESCRICAO, descricao);
         return getNamedSingleResult(FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO, params);
     }
-
+    
+    public List<ClassificacaoDocumento> getClassificacoesDisponiveisPedidoProrrogacaoByTipoComunicacao(TipoComunicacao tipoComunicacao) {
+    	//TODO ver se precisa que essas classificações sejam distintas das selecionadas na resposta e 
+    	String sql = "select o from ClassificacaoDocumento o"
+    			+ " where o.ativo = true and o.sistema = false";
+    	return getEntityManager().createQuery(sql, ClassificacaoDocumento.class).getResultList();
+	}
+    //TODO retirar dessa exibição a classificação do pedido de prorrogação /\
 	public List<ClassificacaoDocumento> getClassificacoesDocumentoDisponiveisRespostaComunicacao(DestinatarioModeloComunicacao destinatarioModeloComunicacao, boolean isModelo, Papel papel) {
     	CriteriaQuery<ClassificacaoDocumento> query = createQueryUseableClassificacaoDocumento(isModelo, papel);
     	if (!destinatarioModeloComunicacao.getModeloComunicacao().getTipoComunicacao().getTipoComunicacaoClassificacaoDocumentos().isEmpty()) {

@@ -26,6 +26,7 @@ import org.hibernate.Session;
 import org.jboss.seam.Component;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage.Severity;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
@@ -180,8 +181,20 @@ public class ProcessBuilder implements Serializable {
     		if(!FacesContext.getCurrentInstance().isPostback()){
     			internalLoad(getFluxo());
     		}
+    	} catch (JpdlException e){
+    		for (Problem problem : (List<Problem>)e.getProblems()) {
+				int problemLevel = problem.getLevel();
+				if (problemLevel == Problem.LEVEL_FATAL || problemLevel == Problem.LEVEL_ERROR){
+					FacesMessages.instance().add(Severity.ERROR, problem.getDescription());
+					LOG.error(problem);
+				} else if (problemLevel == Problem.LEVEL_WARNING){
+					LOG.warn(problem);
+				} else {
+					LOG.info(problem);
+				}
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error(e);
 		}
     }
     public void load(Fluxo fluxo) {
@@ -461,13 +474,26 @@ public class ProcessBuilder implements Serializable {
 		query.setParameter("idProcessDefinition", idProcessDefinition);
 		List<TaskInstance> taskInstances = (List<TaskInstance>) query.list();
 		for (TaskInstance taskInstance : taskInstances) {
-			String[] actorIds = taskInstance.getTask().getSwimlane().getPooledActorsExpression().split(",");
-			if (taskInstance.getCreate() != null && taskInstance.getEnd() == null) {
-				taskInstance.setPooledActors(actorIds);
-				processoLocalizacaoIbpmManager.deleteProcessoLocalizacaoIbpmByTaskInstanceId(taskInstance.getId());
-				processoLocalizacaoIbpmManager.addProcessoLocalizacaoIbpmByTaskInstance(taskInstance);
+			if (taskInstance.getTask().getSwimlane() != null){
+				String[] actorIds = taskInstance.getTask().getSwimlane().getPooledActorsExpression().split(",");
+				if (taskInstance.getCreate() != null && taskInstance.getEnd() == null) {
+					taskInstance.setPooledActors(actorIds);
+					processoLocalizacaoIbpmManager.deleteProcessoLocalizacaoIbpmByTaskInstanceId(taskInstance.getId());
+					processoLocalizacaoIbpmManager.addProcessoLocalizacaoIbpmByTaskInstance(taskInstance);
+				}
+				if (taskInstance.getSwimlaneInstance() != null) {
+				    taskInstance.getSwimlaneInstance().setPooledActors(actorIds);
+				}
 			}
-			taskInstance.getSwimlaneInstance().setPooledActors(actorIds);
+			if (taskInstance.getTask().getPooledActorsExpression() != null){
+				//TODO: REAVALIAR EXPRESSÃO
+			}
+			if (taskInstance.getTask().getActorIdExpression() != null){
+				//TODO: REAVALIAR EXPRESSÃO
+			}
+			if (taskInstance.getTask().getAssignmentDelegation()!= null){
+				//TODO: REAVALIAR EXPRESSÃO
+			}
 		}
 		session.flush();
 	}
@@ -562,7 +588,7 @@ public class ProcessBuilder implements Serializable {
 
     @SuppressWarnings(UNCHECKED)
     public Number getIdProcessDefinition() {
-        if (instance == null) {
+        if (instance == null || instance.getName() == null) {
             return null;
         }
         String query = "select max(id_) from jbpm_processdefinition where name_ = :pdName";

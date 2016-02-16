@@ -135,10 +135,17 @@ public class PastaAction implements Serializable {
         this.processo = processo.getProcessoRoot();
         try {
             this.pastaList = pastaManager.getByProcesso(processo.getProcessoRoot());
-            this.restricoes = pastaRestricaoManager.loadRestricoes(processo,
+            this.restricoes = pastaRestricaoManager.loadRestricoes(processo.getProcessoRoot(),
                     Authenticator.getUsuarioLogado(),
                     Authenticator.getLocalizacaoAtual(),
                     Authenticator.getPapelAtual());
+            if (!processo.equals(processo.getProcessoRoot())) {
+                this.pastaList.addAll(pastaManager.getByProcesso(processo));
+                this.restricoes.putAll(pastaRestricaoManager.loadRestricoes(processo,
+                        Authenticator.getUsuarioLogado(),
+                        Authenticator.getLocalizacaoAtual(),
+                        Authenticator.getPapelAtual()));
+            }
         } catch (DAOException e) {
             actionMessagesService.handleDAOException(e);
         }

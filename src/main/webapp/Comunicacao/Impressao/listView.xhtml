@@ -27,12 +27,12 @@
 				hideOrder="true" showGrid="#{impressaoComunicacaoList.showDataTable}">
 
                 <ui:define name="toolBar">
-					<h:graphicImage url="#{wiSkin.imageFolder}/reopen.png"
+					<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/reopen.png')}"
 							title="#{infoxMessages['comunicacao.impressao.imprimirComunicacao']}" 
 							onclick="#{rich:component('imprimirComunicacaoPopUp')}.show(); selectProcesso(#{row.idProcesso});" 
 							styleClass="pointerRow opacityHover">
 					</h:graphicImage>
-                    <h:graphicImage url="#{wiSkin.imageFolder}/print.png"
+                    <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/print.png')}"
                             title="#{infoxMessages['comunicacao.impressao.marcarImpresso']}" 
                             onclick="#{rich:component('marcarImpressoPopUp')}.show(); selectProcesso(#{row.idProcesso});" 
                             styleClass="pointerRow opacityHover"
@@ -94,7 +94,7 @@
             	<h:outputText value="#{infoxMessages['comunicacao.impressao.imprimirComunicacao']}" />
 	        </f:facet>
 	        <f:facet name="controls">
-	            <h:graphicImage value="#{wiSkin.imageFolder}/closeMP.gif" 
+	            <h:graphicImage value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}" 
 	            		onclick="#{rich:component('imprimirComunicacaoPopUp')}.hide();"/>
 	        </f:facet>
 	        <h:form id="formImpressao">
@@ -120,7 +120,7 @@
                 <h:outputText value="#{infoxMessages['comunicacao.impressao.marcarImpresso']}" />
             </f:facet>
             <f:facet name="controls">
-                <h:graphicImage value="#{wiSkin.imageFolder}/closeMP.gif" 
+                <h:graphicImage value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}" 
                         onclick="#{rich:component('marcarImpressoPopUp')}.hide();"/>
             </f:facet>
             <wi:outputText id="marcarImpressoLabelConfirm"

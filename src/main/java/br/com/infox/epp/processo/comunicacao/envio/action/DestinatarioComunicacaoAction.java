@@ -69,6 +69,7 @@ public class DestinatarioComunicacaoAction implements Serializable{
 	@Remove
 	public void destroy() {}
 	
+	//TODO ver como colocar esse método no service
 	public void persistDestinatarios() throws DAOException {
 		destinatarioComunicacaoService.removeDestinatariosModeloComunicacaoList(destinatariosExcluidos);
 		destinatarioComunicacaoService.gravaDestinatariosModeloComunicacaoList(modeloComunicacao.getDestinatarios());
@@ -101,7 +102,6 @@ public class DestinatarioComunicacaoAction implements Serializable{
         destinatario.setModeloComunicacao(modeloComunicacao);
         destinatario.setDestino(localizacao);
         destinatario.setPrazo(getPrazoDefaultByTipoComunicacao(modeloComunicacao.getTipoComunicacao()));
-
 		
 		if (perfilDestino == null) {
 	        if (idsLocalizacoesSelecionadas.contains(localizacao.getIdLocalizacao())) {
@@ -120,7 +120,6 @@ public class DestinatarioComunicacaoAction implements Serializable{
             addPerfilSelecionado(destinatario);
 	    }
 	}
-	
 
 	protected Integer getPrazoDefaultByTipoComunicacao( TipoComunicacao tipoComunicacao){
 		return null;

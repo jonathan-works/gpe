@@ -70,12 +70,7 @@ public class AutomaticNodesInfo implements Serializable {
             Node node = (Node) HibernateUtil.removeProxy(token.getNode());
             nodeName = node.getName();
             processId = token.getProcessInstance().getId();
-            if (node instanceof InfoxMailNode) {
-                ExecutionContext context = new ExecutionContext(token);
-                node.execute(context);
-            } else {
-                token.signal(); // Sistema
-            }
+            node.execute(new ExecutionContext(token));
         } catch (Exception e) {
             LOG.error(MessageFormat.format("Nó: {0}\tProcesso Jbpm: {1}", nodeName, processId), e);
             FacesMessages.instance().add("Erro ao executar nó");

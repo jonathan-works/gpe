@@ -36,21 +36,22 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Named
 @Stateful
 @ViewScoped
 public class ComunicacaoAction implements Serializable {
+    
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "comunicacaoAction";
 	private static final LogProvider LOG = Logging.getLogProvider(ComunicacaoAction.class);
 	
-	
-	private ProcessoAnaliseDocumentoService processoAnaliseDocumentoService = ComponentUtil.getComponent(ProcessoAnaliseDocumentoService.NAME);
-	private DocumentoDownloader documentoDownloader = ComponentUtil.getComponent(DocumentoDownloader.NAME);
-	private ComunicacaoService comunicacaoService = ComponentUtil.getComponent(ComunicacaoService.NAME); 
-	
+	@Inject
+	private ProcessoAnaliseDocumentoService processoAnaliseDocumentoService;
+	@Inject
+	private DocumentoDownloader documentoDownloader;
+	@Inject
+	private ComunicacaoService comunicacaoService; 
 	@Inject
 	private ModeloComunicacaoManager modeloComunicacaoManager;
 	@Inject	

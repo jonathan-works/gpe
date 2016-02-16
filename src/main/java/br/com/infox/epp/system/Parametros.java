@@ -12,8 +12,12 @@ public enum Parametros {
 	PAPEL_USUARIO_EXTERNO("usuarioExterno"),
 	PASTA_DOCUMENTO_GERADO("pastaDocumentoGerado"),
 	RAIZ_LOCALIZACOES_COMUNICACAO("raizLocalizacoesComunicacao"),
+	RAIZ_LOCALIZACOES_COMUNICACAO_INTERNA("raizLocalizacoesComunicacaoInterna"),
 	CODIGO_FLUXO_COMUNICACAO_ELETRONICA("codigoFluxoComunicacao"),
-	CODIGO_FLUXO_COMUNICACAO_NAO_ELETRONICA("codigoFluxoComunicacaoNaoEletronico");
+	CODIGO_FLUXO_COMUNICACAO_NAO_ELETRONICA("codigoFluxoComunicacaoNaoEletronico"),
+	CODIGO_FLUXO_DOCUMENTO("codigoFluxoDocumento"),
+	CODIGO_FLUXO_COMUNICACAO_INTERNA("codigoFluxoComunicacaoInterna"),
+	IS_PRORROGACAO_AUTOMATICA_POR_MODELO_COMUNICACAO("prorrogarPrazoAutomaticamentePorModelo");
 	
 	private String label;
 	

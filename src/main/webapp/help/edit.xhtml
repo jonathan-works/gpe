@@ -60,7 +60,7 @@
               <ui:define name="toolBar">
                 <wi:toolBar
                   id="recuperarRevisao"
-                  url="#{wiSkin.imageFolder}/grid/copyLeft.gif"
+                  url="#{layoutController.getResourceUrlByPath('/imagens/grid/copyLeft.gif')}"
                   title="#{infoxMessages['ajuda.historico.recuperar']}"
                   render="formAjuda, gridAjuda"
                   action="ajudaCrudAction.recuperar(row)"

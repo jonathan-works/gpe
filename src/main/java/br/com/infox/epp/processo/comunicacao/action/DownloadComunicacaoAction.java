@@ -2,8 +2,10 @@ package br.com.infox.epp.processo.comunicacao.action;
 
 import java.io.Serializable;
 
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.action.ActionMessagesService;
@@ -19,17 +21,18 @@ import br.com.infox.log.Logging;
 
 @Name(DownloadComunicacaoAction.NAME)
 @AutoCreate
+@Stateless
 public class DownloadComunicacaoAction implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "downloadComunicacaoAction";
 	private static final LogProvider LOG = Logging.getLogProvider(DownloadComunicacaoAction.class);
 	
-	@In
+	@Inject
 	private GenericManager genericManager;
-	@In
+	@Inject
 	private ComunicacaoService comunicacaoService;
-	@In
+	@Inject
 	private ActionMessagesService actionMessagesService;
 	
 	public void downloadComunicacaoCompleta(Long idModelo, Long idDestinatario) {

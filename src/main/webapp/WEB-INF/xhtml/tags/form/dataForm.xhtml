@@ -23,7 +23,7 @@
 	                <s:div styleClass="required-alert"
 	                    rendered="#{wi:get(requiredForm,true)}">
 	                    <img
-	                        src="#{pathResolver.contextPath}#{wiSkin.imageFolder}/mod/balao.png" />
+	                        src="#{pathResolver.contextPath}#{layoutController.getResourceUrlByPath('/imagens/mod/balao.png')}" />
 	                    <span class="required">*</span>
 	                    <span>#{infoxMessages['form.required']}</span>
 	                </s:div>
@@ -42,7 +42,7 @@
 	                <s:div styleClass="required-alert"
 	                    rendered="#{wi:get(requiredForm,true)}">
 	                    <img
-	                        src="#{pathResolver.contextPath}#{wiSkin.imageFolder}/mod/balao.png" />
+	                        src="#{pathResolver.contextPath}#{layoutController.getResourceUrlByPath('/imagens/mod/balao.png')}" />
 	                    <span class="required">*</span>
 	                    <span>#{infoxMessages['form.required']}</span>
 	                </s:div>

@@ -9,7 +9,7 @@
         <s:link
             view="#{empty reportPath ? pathResolver.viewIdDirectory.concat('report.xhtml') : reportPath}"
             target="_blank">
-            <h:graphicImage url="#{wiSkin.imageFolder}/mod/pdf.gif"
+            <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/mod/pdf.gif')}"
                 title="#{infoxMessages['report.exportPDF']}" />
         </s:link>
     </s:span>

@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -19,6 +21,7 @@ import br.com.infox.epp.processo.entity.Processo;
 @Name(DocumentoRespostaComunicacaoDAO.NAME)
 @Scope(ScopeType.EVENT)
 @AutoCreate
+@Stateless
 public class DocumentoRespostaComunicacaoDAO extends DAO<DocumentoRespostaComunicacao> {
 	public static final String NAME = "documentoRespostaComunicacaoDAO";
 	private static final long serialVersionUID = 1L;

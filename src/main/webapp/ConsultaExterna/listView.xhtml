@@ -53,7 +53,7 @@
                     </ui:define>
 
                     <ui:define name="toolBar">
-                        <wi:toolBar url="#{wiSkin.imageFolder}/view.png"
+                        <wi:toolBar url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
                             title="#{infoxMessages['button.selecionar']}" action="#{consultaExternaController.selectProcesso(row)}"/>
                     </ui:define>
 
@@ -107,7 +107,7 @@
                     </ui:define>
 
                     <ui:define name="toolBar">
-                        <wi:toolBar url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['button.selecionar']}" 
+                        <wi:toolBar url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['button.selecionar']}" 
                             action="#{consultaExternaController.selectProcesso(row)}"/>
                     </ui:define>
 
@@ -205,14 +205,14 @@
                                                 target="PopUpDocumentoBin">
                                                 <h:graphicImage
                                                     title="Visualizar"
-                                                    url="#{wiSkin.imageFolder}/view.png" />
+                                                    url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
                                             </h:commandLink>
 
                                             <h:commandLink target="idPdf#{row}"
                                                 rendered="#{not empty doc.documentoBin.extensao}"
                                                 action="#{documentoDownloader.downloadDocumento(doc)}">
                                                 <h:graphicImage
-                                                    value="#{wiSkin.imageFolder}/mod/pdf.gif"
+                                                    value="#{layoutController.getResourceUrlByPath('/imagens/mod/pdf.gif')}"
                                                     title="#{doc.documentoBin.nomeArquivo} (#{documentoDownloader.getFormattedKb(doc.documentoBin)})" />
                                             </h:commandLink>
                                         </rich:column>

@@ -10,7 +10,7 @@
     <a:region renderRegionOnly="false">
         <div>
             <s:link view="#{linkDetalhe}">
-                <h:graphicImage url="#{wiSkin.imageFolder}/view.png"
+                <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
                     title="#{infoxMessages['button.selecionar']}" />
                 <f:param name="id" value="#{rowId}" />
                 <f:param name="tab" value="form" />

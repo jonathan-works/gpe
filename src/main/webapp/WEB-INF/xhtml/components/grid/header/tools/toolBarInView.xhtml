@@ -21,13 +21,13 @@
         <h:graphicImage rendered="#{showSearchFields}"
             onclick="Richfaces.showModalPanel('#{gridId}SearchFields')"
             title="#{infoxMessages['button.pesquisar']}"
-            url="#{wiSkin.imageFolder}/search.gif" />
+            url="#{layoutController.getResourceUrlByPath('/imagens/search.gif')}" />
 
         <s:link view="#{viewId}/edit.xhtml" immediate="true"
             rendered="#{wiacsSecurity.checkPage(viewId.concat('/edit.seam'))}"
             id="#{gridId}Create">
 
-            <h:graphicImage url="#{wiSkin.imageFolder}/add.gif"
+            <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}"
                 title="Adicionar novo registro"
                 onclick="Richfaces.showModalPanel('#{modalPanelId}')" />
             <f:param name="id" />

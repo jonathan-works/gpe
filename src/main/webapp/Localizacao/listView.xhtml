@@ -34,8 +34,8 @@
             id="localizacaoPai"
             assignTo="localizacaoList.entity.localizacaoPai"
             tree="#{localizacaoTree}"
-            icon="#{wiSkin.imageFolder}/nivelTree.gif"
-            iconLeaf="#{wiSkin.imageFolder}/file.gif"
+            icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
+            iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
             label="#{infoxMessages['localizacao.localizacaoPai']}" />
           <wi:selectSituacaoOneMenu
             id="ativo"
@@ -90,8 +90,8 @@
         id="localizacaoPai"
         assignTo="localizacaoCrudAction.localizacaoPai"
         tree="#{localizacaoTree}"
-        icon="#{wiSkin.imageFolder}/nivelTree.gif"
-        iconLeaf="#{wiSkin.imageFolder}/file.gif"
+        icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
+        iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
         required="true"
         rendered="#{isEditable}"
         label="#{infoxMessages['localizacao.localizacaoPai']}" />

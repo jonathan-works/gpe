@@ -19,13 +19,13 @@
                     <s:conversationPropagation type="none" />
                     <f:param name="id" value="#{mainId}" />
                     <h:graphicImage title="Visualizar"
-                        url="#{wiSkin.imageFolder}/show.gif" />
+                        url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}" />
                 </s:link>
                 <a:commandLink action="#{home.remove(row)}"
                     rendered="#{canEdit}" limitRender="true"
                     status=":status" render=":#{gridId}"
                     onclick="if(!confirm('Confirma?')) return false;">
-                    <h:graphicImage url="#{wiSkin.imageFolder}/remove.png"
+                    <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
                         title="#{infoxMessages['button.delete']}" />
                     <f:param name="firstResult"
                         value="#{bean.firstResult}" />

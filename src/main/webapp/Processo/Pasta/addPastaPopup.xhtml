@@ -26,7 +26,7 @@
         <f:facet name="controls">
             <h:graphicImage id="pastaPanelCloseBtn"
                 styleClass="mp-close"
-                value="#{wiSkin.imageFolder}/closeMP.gif"
+                value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
                 onmouseup="#{rich:component('addPastaPanel')}.hide();" />
         </f:facet>
         <h:form id="addPastaForm">

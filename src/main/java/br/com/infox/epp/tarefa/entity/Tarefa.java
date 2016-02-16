@@ -2,8 +2,6 @@ package br.com.infox.epp.tarefa.entity;
 
 import static br.com.infox.epp.tarefa.query.TarefaQuery.NOVAS_TAREFAS;
 import static br.com.infox.epp.tarefa.query.TarefaQuery.NOVAS_TAREFAS_QUERY;
-import static br.com.infox.epp.tarefa.query.TarefaQuery.PREVIOUS_NODES;
-import static br.com.infox.epp.tarefa.query.TarefaQuery.PREVIOUS_NODES_QUERY;
 import static br.com.infox.epp.tarefa.query.TarefaQuery.TAREFA_BY_ID_JBPM_TASK;
 import static br.com.infox.epp.tarefa.query.TarefaQuery.TAREFA_BY_ID_JBPM_TASK_QUERY;
 import static br.com.infox.epp.tarefa.query.TarefaQuery.TAREFA_BY_TAREFA_AND_FLUXO;
@@ -36,13 +34,11 @@ import javax.validation.constraints.Size;
 
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.painel.caixa.Caixa;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 
 @Entity
 @Table(name = Tarefa.TABLE_NAME)
 @NamedNativeQueries({
-    @NamedNativeQuery(name = PREVIOUS_NODES, query = PREVIOUS_NODES_QUERY),
     @NamedNativeQuery(name = NOVAS_TAREFAS, query = NOVAS_TAREFAS_QUERY) })
 @NamedQueries({
     @NamedQuery(name = TAREFA_BY_TAREFA_AND_FLUXO, query = TAREFA_BY_TAREFA_AND_FLUXO_QUERY),
@@ -60,7 +56,6 @@ public class Tarefa implements java.io.Serializable {
     private PrazoEnum tipoPrazo;
 
     private List<TarefaJbpm> tarefaJbpmList = new ArrayList<TarefaJbpm>(0);
-    private List<Caixa> caixaList = new ArrayList<Caixa>(0);
 
     @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_tb_tarefa")
     @Id
@@ -103,15 +98,6 @@ public class Tarefa implements java.io.Serializable {
 
     public void setTarefaJbpmList(List<TarefaJbpm> tarefaJbpmList) {
         this.tarefaJbpmList = tarefaJbpmList;
-    }
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tarefa")
-    public List<Caixa> getCaixaList() {
-        return caixaList;
-    }
-
-    public void setCaixaList(List<Caixa> caixaList) {
-        this.caixaList = caixaList;
     }
 
     @Transient

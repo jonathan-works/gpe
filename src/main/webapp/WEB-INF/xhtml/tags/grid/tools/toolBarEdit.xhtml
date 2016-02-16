@@ -5,7 +5,7 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:wi="http://www.itx.com.br/jsf">
 
-    <wi:toolBar url="#{wiSkin.imageFolder}/view.png"
+    <wi:toolBar url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
         title="#{infoxMessages['button.selecionar']}" id="#{id}">
         <f:param name="id" value="#{rowId}" />
         <f:param name="tab" value="#{wi:get(tabName, 'form')}" />

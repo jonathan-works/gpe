@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+    <ui:define name="body">
+
+        <rich:panel id="layoutPanel" styleClass="content-block"
+            header="#{infoxMessages['layout.titlePage']}">
+
+            <h:form>
+                <wi:selectOneMenuEntity id="skins" required="true"
+                    label="#{infoxMessages['layout.titlePage']}"
+                    value="#{layoutView.skinPadrao}"
+                    items="#{layoutView.skins}">
+                </wi:selectOneMenuEntity>
+
+                <div>
+                    <h:commandButton id="gravar"
+                        value="#{infoxMessages['crud.update']}"
+                        action="#{layoutView.save()}" render="@all"
+                        execute="@form" styleClass="buttons" />
+                </div>
+            </h:form>
+
+        </rich:panel>
+
+        <rich:panel id="painelResource" styleClass="content-block"
+            style="margin-top:1em;"
+            header="#{infoxMessages['layout.imagens']}">
+            <h:form>
+                <div styleClass="rf-p-b">
+                    <p:outputLabel styleClass="property-field-edit-name"
+                        style="padding-bottom: 4px"
+                        value="#{infoxMessages['layout.imagem']}"
+                        for="resource" />
+                    <p:autoComplete id="resource" dropdown="true"
+                        size="59"
+                        value="#{layoutView.resource}"
+                        completeMethod="#{layoutView.completarResource}"
+                        var="res" itemValue="#{res}"
+                        itemLabel="#{res.nome}"
+                        converter="resourceConverter" required="true"
+                        forceSelection="true">
+                        <p:ajax event="itemSelect"
+                            listener="#{layoutView.resourceSelecionado}"
+                            process="@form" update="@form" />
+                        <p:column>
+                            <p:graphicImage
+                                value="#{layoutController.getResourceUrl(res.codigo)}"
+                                height="25"
+                                style="float:left; margin-right:10px; background-color: Gainsboro;" />
+                            <span class="font333 fontSize14"><h:outputText
+                                    value="#{res.nome}" /></span>
+                            <br />
+                            <p class="separator"></p>
+                        </p:column>
+                    </p:autoComplete>
+                </div>
+                <div style="padding-top: 1em">
+                    <rich:fileUpload id="uploadResource" execute="@this"
+                        status=":status" limitRender="true"
+                        required="true"
+                        onbegin="infox.showLoading('Fazendo upload de arquivos..')"
+                        fileUploadListener="#{layoutView.processUploadResource}"
+                        addLabel="#{infoxMessages['processoDocumento.addLabel']}"
+                        clearAllLabel="#{infoxMessages['processoDocumento.clearAllLabel']}"
+                        clearLabel="#{infoxMessages['processoDocumento.clearLabel']}"
+                        doneLabel="#{infoxMessages['processoDocumento.doneLabel']}"
+                        uploadLabel="#{infoxMessages['processoDocumento.uploadLabel']}"
+                        sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}"
+                        maxFilesQuantity="1" listHeight="50px"
+                        immediateUpload="true" noDuplicate="true"
+                        render=":pageBodyDialogMessage"
+                        acceptedTypes=".png, .gif, .bmp, .jpg, .svg, .svgz"
+                        onuploadcomplete="infox.hideLoading();"
+                        ontyperejected="alert('Extensão de arquivo inválida');"
+                        onclear="clearUploadFile();">
+                    </rich:fileUpload>
+                </div>
+                <h:commandButton id="inserirResource"
+                    value="#{infoxMessages['crud.update']}"
+                    action="#{layoutView.persistResource()}"
+                    render="@all" execute="@none" styleClass="buttons" />
+                <h:commandButton id="resetResource"
+                    value="#{infoxMessages['layout.reset']}"
+                    action="#{layoutView.restaurarPadrao()}"
+                    render="@all" execute="resource" styleClass="buttons" />
+            </h:form>
+        </rich:panel>
+
+    </ui:define>
+</ui:composition>

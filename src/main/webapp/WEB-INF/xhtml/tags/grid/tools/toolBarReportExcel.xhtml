@@ -13,7 +13,7 @@
     <h:form>
       <h:commandLink action="#{elFunctions.invokeMethod(action)}">
         <h:graphicImage
-          url="#{wiSkin.imageFolder}/excel.png"
+          url="#{layoutController.getResourceUrlByPath('/imagens/excel.png')}"
           title="#{infoxMessages['report.exportXLS']}" />
       </h:commandLink>
     </h:form>

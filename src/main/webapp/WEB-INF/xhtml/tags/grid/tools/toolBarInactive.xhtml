@@ -15,7 +15,7 @@
     status=":status"
     render="#{wi:get(reRender, 'searchGridRegion')},pageBodyDialogMessage"
     onclick="return confirm(\'#{infoxMessages['crud.confirmInactivate']}\');"
-    url="#{wiSkin.imageFolder}/remove.png"
+    url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
     title="#{infoxMessages['button.inactive']}"
   />
 </ui:composition>

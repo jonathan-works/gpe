@@ -3,6 +3,8 @@ package br.com.infox.epp.access.manager;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -22,6 +24,7 @@ import br.com.infox.seam.util.ComponentUtil;
 
 @Name(PapelManager.NAME)
 @AutoCreate
+@Stateless
 public class PapelManager extends Manager<PapelDAO, Papel> {
 
     private static final long serialVersionUID = 1L;

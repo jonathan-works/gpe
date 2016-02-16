@@ -18,7 +18,7 @@
             value="#{search.searchText}" required="true"/>					
         <a:commandButton
                  action="/Pesquisa/indexedSearch.xhtml"
-                 image="#{wiSkin.imageFolder}/imgPes.png" 
+                 image="#{layoutController.getResourceUrlByPath('/imagens/imgPes.png')}" 
                  render="@this"
                  execute="@form"
                  onclick="if (#{rich:element('searchText')}.value == '') { new infox.Messages({'timeout': 3000}).dialog('#{infoxMessages['pesquisa.campoPesquisaVazio']}'); return false; }"/>
@@ -26,7 +26,7 @@
           immediate="true"
           onclick="openPopUp('helpwnd', '#{pathResolver.contextPath}/help/show.seam?viewId=/Pesquisa/indexedSearch.seam');return false;">
           <h:graphicImage
-            url="#{wiSkin.imageFolder}/question.png"
+            url="#{layoutController.getResourceUrlByPath('/imagens/question.png')}"
             title="#{infoxMessages['ajuda.ajudaBtn']}" />
         </a:commandLink>
 	</h:form>

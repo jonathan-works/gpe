@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import javax.ejb.Stateful;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -33,6 +32,7 @@ import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.documento.anexos.DocumentoUploader;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.error.DocumentoErrorCode;
@@ -41,20 +41,23 @@ import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.util.ComponentUtil;
 
-@Named
+@Named(DarCienciaAction.NAME)
 @ViewScoped
-@Stateful
-public class DarCienciaAction implements Serializable{
-
+public class DarCienciaAction implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(DarCienciaAction.class);
 	private static final String COMPROVANTE_DE_CIENCIA = "Comprovante de Ciência";
+	public static final String NAME = "darCienciaAction";
 	
-	private ClassificacaoDocumentoFacade classificacaoDocumentoFacade = ComponentUtil.getComponent(ClassificacaoDocumentoFacade.NAME);
-	private AssinaturaDocumentoService assinaturaDocumentoService = ComponentUtil.getComponent(AssinaturaDocumentoService.NAME);
-	private CertificateSignatures certificateSignatures = ComponentUtil.getComponent(CertificateSignatures.NAME);
+	@Inject
+	private ClassificacaoDocumentoFacade classificacaoDocumentoFacade;
+	@Inject
+	private AssinaturaDocumentoService assinaturaDocumentoService;
+	@Inject
+	private CertificateSignatures certificateSignatures;
+	@Inject
 	private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager = ComponentUtil.getComponent(ClassificacaoDocumentoPapelManager.NAME);
-	
 	@Inject
 	private PrazoComunicacaoService prazoComunicacaoService;
 	@Inject
@@ -64,7 +67,7 @@ public class DarCienciaAction implements Serializable{
 	@Inject
 	protected InfoxMessages infoxMessages;
 	@Inject
-	private ActionMessagesService actionMessagesService;
+	protected ActionMessagesService actionMessagesService;
 	@Inject
 	private EntityManager entityManager;
 
@@ -79,8 +82,6 @@ public class DarCienciaAction implements Serializable{
 	private boolean enviaSemAssinarDocumentoCiencia;
 	private String tokenAssinaturaDocumentoCiencia;
 	private String signableDocumentoCiencia;
-	
-	
 	
 	public void setDestinatarioCiencia(DestinatarioBean destinatario) {
 		clear();
@@ -97,12 +98,12 @@ public class DarCienciaAction implements Serializable{
 			}
 		}
 	}
-	
+
 	public void darCiencia() {
 		try {
 			validarCiencia();
 			Documento documento = criarDocumentoCiencia();
-			prazoComunicacaoService.darCienciaManual(getDestinatarioModeloComunicacao(getDestinatario()).getProcesso(), getDataCiencia(), documento);
+			darCiencia(documento);
 			finalizaCiencia();
 		} catch (DAOException e) {
 			LOG.error("", e);
@@ -113,6 +114,10 @@ public class DarCienciaAction implements Serializable{
 		}
 	}
 
+	protected void darCiencia(Documento documento) {
+		prazoComunicacaoService.darCienciaManual(getDestinatarioModeloComunicacao(getDestinatario()).getProcesso(), getDataCiencia(), documento);
+	}
+
 	public void assinarDarCiencia(){
 		try {
 			validarCiencia();
@@ -120,8 +125,7 @@ public class DarCienciaAction implements Serializable{
 			CertificateSignatureBean signatureBean = bundle.getSignatureBeanList().get(0);
 			validaDocumentoAssinatura(signatureBean);
 			Documento documentoCiencia = criarDocumentoCiencia();
-			prazoComunicacaoService.darCienciaManualAssinar(getDestinatarioModeloComunicacao(getDestinatario()).getProcesso(), getDataCiencia(), documentoCiencia, 
-					signatureBean, Authenticator.getUsuarioPerfilAtual());
+			assinarDarCiencia(signatureBean, documentoCiencia);
 			finalizaCiencia();
 		} catch (EppSystemException e) {
 			FacesMessages.instance().add(Severity.ERROR, e.getMessage());
@@ -130,8 +134,14 @@ public class DarCienciaAction implements Serializable{
 	        FacesMessages.instance().add(Severity.ERROR, "Erro ao assinar documento de ciência, favor tente novamente.");
 		}
 	}
+
+	protected void assinarDarCiencia(CertificateSignatureBean signatureBean, Documento documentoCiencia)
+			throws CertificadoException, AssinaturaException {
+		prazoComunicacaoService.darCienciaManualAssinar(getDestinatarioModeloComunicacao(getDestinatario()).getProcesso(), getDataCiencia(), documentoCiencia, 
+				signatureBean, Authenticator.getUsuarioPerfilAtual());
+	}
 	
-	private CertificateSignatureBundleBean getSignatureBundle(String token) throws CertificadoException {
+	protected CertificateSignatureBundleBean getSignatureBundle(String token) throws CertificadoException {
 	    CertificateSignatureBundleBean bundle = certificateSignatures.get(token);
 	    if (bundle == null) {
 	        throw new CertificadoException(infoxMessages.get("assinatura.error.hasExpired"));
@@ -141,7 +151,7 @@ public class DarCienciaAction implements Serializable{
         return bundle;
     }
 		    
-	private Documento criarDocumentoCiencia() {
+	protected Documento criarDocumentoCiencia() {
 		Documento documento = null;
 		if (isEditorCiencia()) {	
 			documento = new Documento();
@@ -159,7 +169,7 @@ public class DarCienciaAction implements Serializable{
 		return documento;
 	}
 	
-	private void validaDocumentoAssinatura(CertificateSignatureBean signatureBean) throws CertificadoException {
+	protected void validaDocumentoAssinatura(CertificateSignatureBean signatureBean) throws CertificadoException {
 		if (!isEditorCiencia()) {
 			DocumentoBin bin = documentoUploader.getDocumento().getDocumentoBin();
 			if (!bin.getMd5Documento().equals(signatureBean.getDocumentMD5())){
@@ -177,7 +187,7 @@ public class DarCienciaAction implements Serializable{
 		}
 	}
 
-	private void validarCiencia() {
+	protected void validarCiencia() {
 		StringBuilder msg = new StringBuilder();
 		if (getClassificacaoDocumentoCiencia() == null) {
 			msg.append(infoxMessages.get("comunicacao.msg.erro.classificacao"));
@@ -196,7 +206,7 @@ public class DarCienciaAction implements Serializable{
 		}
 	}
 
-	private void finalizaCiencia() {
+	protected void finalizaCiencia() {
 		comunicacaoAction.getDadosCiencia().put(getDestinatario().getIdDestinatario(), true);
 		clear();
 		FacesMessages.instance().add(infoxMessages.get("comunicacao.msg.sucesso.ciencia"));
@@ -213,7 +223,7 @@ public class DarCienciaAction implements Serializable{
 		}
 	}
 	
-	private DestinatarioModeloComunicacao getDestinatarioModeloComunicacao(DestinatarioBean bean) {
+	protected DestinatarioModeloComunicacao getDestinatarioModeloComunicacao(DestinatarioBean bean) {
 		return entityManager.find(DestinatarioModeloComunicacao.class, bean.getIdDestinatario());
 	}
 	

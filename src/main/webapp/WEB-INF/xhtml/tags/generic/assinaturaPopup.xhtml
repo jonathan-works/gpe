@@ -20,7 +20,7 @@
 			<h:outputText value="#{infoxMessages['validacaoDocumentoList.assinaturas.header']}" />
 		</f:facet>
 		<f:facet name="controls">
-			<h:graphicImage styleClass="d-msg-h-close" value="#{wiSkin.imageFolder}/closeMP.gif" onmouseup="#{rich:component(idPopup)}.hide()" />
+			<h:graphicImage styleClass="d-msg-h-close" value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}" onmouseup="#{rich:component(idPopup)}.hide()" />
 		</f:facet>
 		<f:subview id="#{idPopup}SubView">
 			<a:jsFunction name="selectDocumentoAssinar" render="assinaturaListCont, conteudoAssinatura" 

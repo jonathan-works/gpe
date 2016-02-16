@@ -30,6 +30,7 @@ import br.com.infox.epp.processo.entity.Processo;
 	@UniqueConstraint(columnNames = {"id_pessoa_fisica", "id_modelo_comunicacao"}),
 })
 public class DestinatarioModeloComunicacao implements Serializable, Cloneable {
+    
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -75,6 +76,9 @@ public class DestinatarioModeloComunicacao implements Serializable, Cloneable {
 	@JoinColumn(name = "id_processo", nullable = true)
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Processo processo;
+	
+	@Column(name = "in_individual", nullable = true)
+	private Boolean individual = Boolean.TRUE;
 	
 	public Long getId() {
 		return id;
@@ -147,8 +151,16 @@ public class DestinatarioModeloComunicacao implements Serializable, Cloneable {
 	public void setProcesso(Processo processo) {
 		this.processo = processo;
 	}
+	
+    public Boolean getIndividual() {
+        return individual;
+    }
 
-	@Transient
+    public void setIndividual(Boolean individual) {
+        this.individual = individual;
+    }
+
+    @Transient
 	public String getNome() {
 		if (destinatario != null) {
 			return destinatario.getNome();

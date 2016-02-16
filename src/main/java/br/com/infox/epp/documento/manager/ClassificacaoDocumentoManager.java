@@ -2,6 +2,8 @@ package br.com.infox.epp.documento.manager;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -15,6 +17,7 @@ import br.com.infox.epp.processo.entity.Processo;
 
 @AutoCreate
 @Name(ClassificacaoDocumentoManager.NAME)
+@Stateless
 public class ClassificacaoDocumentoManager extends Manager<ClassificacaoDocumentoDAO, ClassificacaoDocumento> {
 
     private static final long serialVersionUID = 1L;

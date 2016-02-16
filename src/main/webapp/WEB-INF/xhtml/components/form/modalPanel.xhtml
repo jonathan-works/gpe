@@ -18,7 +18,7 @@
         </c:if>
         <f:facet name="controls">
             <h:panelGroup>
-                <h:graphicImage value="#{wiSkin.imageFolder}/close.gif" title="Fechar"
+                <h:graphicImage value="#{layoutController.getResourceUrlByPath('/imagens/close.gif')}" title="Fechar"
                     id="hidelink">
                     <rich:componentControl target="#{id}"
                         operation="hide" event="click" />

@@ -13,7 +13,7 @@
         <a:commandLink limitRender="true" status=":status"
             render="#{reRenderRemove}"
             action="#{variavel.removeModelo(row)}" rendered="#{canEdit}">
-            <h:graphicImage url="#{wiSkin.imageFolder}/grid/copyRight.gif"
+            <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/grid/copyRight.gif')}"
                 title="#{infoxMessages['button.delete']}" />
         </a:commandLink>
     </a:region>

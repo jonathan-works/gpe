@@ -12,15 +12,12 @@
     <restrict>#{security.checkPage()}</restrict>
 
 
-<!-- Parametros para RESTFull -->
+	<!-- Parametros para RESTFull -->
 	<param name="inTabExpedidas" value="#{processoEpaHome.inTabExpedidas}" />
     <param name="tab" value="#{processoEpaHome.tab}"/>
-    <param name="goBackUrl" value="#{processoEpaHome.goBackUrl}"/>
-    <param name="goBackId" value="#{processoEpaHome.goBackId}"/>
-    <param name="goBackTab" value="#{processoEpaHome.goBackTab}"/>
 
     <param name="idProcesso" value="#{processoEpaHome.processoIdProcesso}"/>
-    <param name="tarefaId" value="#{processoEpaHome.tarefaId}" />    
+    <param name="idTaskInstance" value="#{processoEpaHome.idTaskInstance}" />    
     <action execute="#{processoEpaHome.visualizarTarefaProcesso()}" on-postback="false"/>
  
     <action execute="#{sigiloProcessoAction.setProcesso(processoEpaHome.instance)}" on-postback="false"/>

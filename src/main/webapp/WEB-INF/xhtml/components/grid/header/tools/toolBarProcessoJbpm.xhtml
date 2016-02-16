@@ -7,21 +7,14 @@
   xmlns:rich="http://richfaces.org/rich"
   xmlns:s="http://jboss.org/schema/seam/taglib">
 
-  <h:form>
-    <a:outputPanel>
-
-      <rich:dragSource type="task#{painelUsuarioController.tarefaId}"
-        dragValue="#{consultaProcessoList.resultList}"
-        dragIndicator="indicator">
-        <rich:dragIndicator id="indicator" acceptClass="caixa-acpt"
-          draggingClass="caixa-drag" rejectClass="caixa-rejt">
+  <h:form styleClass="#{painelUsuarioController.taskNodeKey.toUpperCase()}">
+      <rich:dragSource type="#{painelUsuarioController.taskNodeKey.toUpperCase()}" dragValue="#{consultaProcessoList.resultList}" dragIndicator="indicator3">
+        <rich:dragIndicator id="indicator3" acceptClass="caixa-acpt" draggingClass="caixa-drag" rejectClass="caixa-rejt">
           <span class="caixa-ind-lbl">#{infoxMessages['processo.caixa.todosProcessos']}</span>
         </rich:dragIndicator>
       </rich:dragSource>
-      <h:graphicImage url="#{wiSkin.imageFolder}/multipleImages.png"
+      <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/multipleImages.png')}"
         title="#{infoxMessages['processo.caixa.moverTodosProcessos']}" />
-
-    </a:outputPanel>
   </h:form>
 
 </ui:composition>

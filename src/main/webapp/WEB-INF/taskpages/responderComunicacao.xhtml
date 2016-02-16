@@ -10,6 +10,7 @@
 	xmlns:s="http://jboss.org/schema/seam/taglib">
 	
 	<c:set value="#{processoEpaHome.instance}" target="#{respostaComunicacaoList}" property="processo" />
+	<f:setPropertyActionListener value="#{respostaComunicacaoAction.destinatario.modeloComunicacao}" target="#{documentoComunicacaoList.modeloComunicacao}"/>
 	
 	<rich:collapsiblePanel id="painelComunicacao" header="#{infoxMessages['comunicacao.comunicacao']}" switchType="client">
 	
@@ -72,7 +73,7 @@
 			<s:div id="tooltipComunicacao">
 		   		<s:div styleClass="tooltip-parent" style="width: 10px" 
 		  			rendered="#{not empty respostaComunicacaoAction.documentoEdicao.classificacaoDocumento.observacao}">
-		  		<h:graphicImage url="#{wiSkin.imageFolder}/help.gif" />
+		  		<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
 					<div class="epp-tooltip">
 						<div class="tooltip-panel">
 							<div><h:outputText value="#{infoxMessages['comunicacao.tooltipObservacao']}"/></div>
@@ -112,7 +113,7 @@
 			<s:div id="tooltipClassificacaoAnexo">
 		   		<s:div styleClass="tooltip-parent" style="width: 10px" 
 		  			rendered="#{not empty respostaComunicacaoAction.classificacaoAnexo.observacao}">
-		  		<h:graphicImage url="#{wiSkin.imageFolder}/help.gif" />
+		  		<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
 					<div class="epp-tooltip">
 						<div class="tooltip-panel">
 							<div><h:outputText value="#{infoxMessages['comunicacao.tooltipObservacao']}"/></div>
@@ -132,6 +133,7 @@
 			<s:div id="uploadButton">
 				<wi:commandButton id="gravarResposta"
 					action="respostaComunicacaoAction.gravarAnexoResposta"
+					execute="@this"
 					value="#{infoxMessages['crud.update']}"
 					reRender="pageBodyDialogMessage, @form, respostasPanel, taskButtonsForm"
 					rendered="#{respostaComunicacaoAction.anexoValido}" />
@@ -156,17 +158,17 @@
 				    	renderedLock="#{not empty row.documento.documentoBin.assinaturas}" />
 					<a:commandLink action="#{respostaComunicacaoAction.setDocumentoEdicao(row.documento)}"
 						render="painelEditor" rendered="#{empty row.documento.documentoBin.extensao}">
-						<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['button.selecionar']}"/>
+						<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['button.selecionar']}"/>
 					</a:commandLink>
 					<h:commandLink action="#{documentoDownloader.downloadDocumento(row.documento)}"
 						rendered="#{not empty row.documento.documentoBin.extensao}" >
-						<h:graphicImage url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['button.selecionar']}"/>
+						<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['button.selecionar']}"/>
 					</h:commandLink>
 					<a:commandLink action="#{respostaComunicacaoAction.removerDocumento(row.documento)}"
 						render="respostasPanel, painelEditor, pageBodyDialogMessage, taskButtonsForm"
 						rendered="#{respostaComunicacaoAction.podeRemoverDocumento(row.documento)}"
 						onclick="return confirm('#{infoxMessages['crud.confirmRemove']}')">
-						<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{infoxMessages['crud.remove']}" />
+						<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="#{infoxMessages['crud.remove']}" />
 					</a:commandLink>
 				</h:form>
 			</ui:define>

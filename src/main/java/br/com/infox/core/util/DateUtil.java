@@ -6,7 +6,12 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public final class DateUtil {
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Named;
+
+@Named
+@RequestScoped
+public class DateUtil {
 
     public static final int MILESIMOS_DO_SEGUNDO = 1000;
 
@@ -21,7 +26,7 @@ public final class DateUtil {
     
     private static DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
-    private DateUtil() {
+    public DateUtil() {
 
     }
     
@@ -178,6 +183,18 @@ public final class DateUtil {
         long dataFimMilli = dataFim.getTime();
         return (int) (dataFimMilli - dataInicialMilli)
                 / (MILESIMOS_DO_SEGUNDO * SEGUNDOS_DO_MINUTO);
+    }
+    
+    public static boolean isDataMaiorIgual(Date date1, Date date2) {
+        date1 = DateUtil.getBeginningOfDay(date1);
+        date2 = DateUtil.getBeginningOfDay(date2);
+        return date1.getTime() >= date2.getTime();
+    }
+    
+    public static boolean isDataMenorIgual(Date date1, Date date2) {
+        date1 = DateUtil.getBeginningOfDay(date1);
+        date2 = DateUtil.getBeginningOfDay(date2);
+        return date1.getTime() <= date2.getTime();
     }
 
 }

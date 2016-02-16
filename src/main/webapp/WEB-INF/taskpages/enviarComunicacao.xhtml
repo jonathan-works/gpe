@@ -54,7 +54,7 @@
 							<h:form>
 								<a:commandLink render="destinatariosPanel"
 									action="#{destinatarioComunicacaoAction.adicionarDestinatario(row)}">
-									<h:graphicImage url="#{wiSkin.imageFolder}/add.gif" title="#{infoxMessages['button.add']}" />
+									<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}" title="#{infoxMessages['button.add']}" />
 								</a:commandLink>
 							</h:form>
 						</ui:define>
@@ -95,8 +95,8 @@
                             id="localizacao"
                             assignTo="destinatarioComunicacaoAction.localizacao"
                             tree="#{localizacaoSubTree}"
-                            icon="#{wiSkin.imageFolder}/nivelTree.gif"
-                            iconLeaf="#{wiSkin.imageFolder}/file.gif"
+                            icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
+                            iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
                             label="#{infoxMessages['comunicacao.localizacoes']}"
                             required="true"
                             render="perfisPermitidosDestino" />
@@ -128,16 +128,16 @@
 						<a:commandLink execute="@this" render="destinatariosPanel"
 							action="#{destinatarioComunicacaoAction.removerDestinatario(row)}"
 							rendered="#{showToolbarNaoFinalizada}">
-							<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{infoxMessages['button.delete']}" />
+							<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="#{infoxMessages['button.delete']}" />
 						</a:commandLink>
 						<s:div rendered="#{showToolbarFinalizada}">
    							<a:commandLink action="#{envioComunicacaoController.setDestinatario(row)}" render="comunicacaoDestinatarioForm" execute="@this"
    								rendered="#{envioComunicacaoController.usuarioLogadoNaLocalizacaoPerfilResponsavel and not row.expedido}">
-   								<h:graphicImage url="#{wiSkin.imageFolder}/expedir_comunicacao.png" title="#{infoxMessages['button.selecionar']}" />
+   								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/expedir_comunicacao.png')}" title="#{infoxMessages['button.selecionar']}" />
    							</a:commandLink>
    							<a:commandLink oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');"
    								rendered="#{row.expedido}" render="@this" execute="@this">
-								<h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" title="#{infoxMessages['comunicacao.visualizarAComunicacao']}"/>
+								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/reopen.png')}" title="#{infoxMessages['comunicacao.visualizarAComunicacao']}"/>
 								<f:setPropertyActionListener value="#{row.id}" target="#{flash.idDestinatario}" />
 								<infox:flashcopy/>
 							</a:commandLink>
@@ -147,7 +147,7 @@
 								action="#{envioComunicacaoController.excluirDestinatarioComunicacao(row)}"
 								onclick="if (confirm('#{envioComunicacaoController.modeloComunicacao.destinatarios.size gt 1 ? infoxMessages['crud.confirmRemove'] : infoxMessages['comunicacao.msg.aviso.exclusaoUltimoDestinatario']}')) {infox.showLoading(); return true;} else return false;"
 								oncomplete="infox.hideLoading(); if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();">
-								<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{infoxMessages['comunicacao.excluir']}"/>
+								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="#{infoxMessages['comunicacao.excluir']}"/>
 							</a:commandLink>
 						</s:div>
 					</rich:column>
@@ -252,11 +252,11 @@
 						<h:form>
 							<a:commandLink action="#{documentoComunicacaoAction.adicionarDocumento(row)}" 
 								execute="@this" render="documentos">
-								<h:graphicImage url="#{wiSkin.imageFolder}/add.gif" title="#{infoxMessages['button.add']}" />
+								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}" title="#{infoxMessages['button.add']}" />
 							</a:commandLink>
 							<a:commandLink
 								onclick="infox.editor['comunicacao'].insertText('#{documentoComunicacaoAction.getLink(row.documentoBin)}'); return false;">
-								<h:graphicImage url="#{wiSkin.imageFolder}/link.gif" title="#{infoxMessages['button.copiarLink']}" />
+								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/link.gif')}" title="#{infoxMessages['button.copiarLink']}" />
 							</a:commandLink>
                             <ui:include src="/WEB-INF/xhtml/components/grid/processoDocumentoBin.xhtml">
                                 <ui:param name="bin" value="#{row.documentoBin}" />
@@ -274,7 +274,7 @@
 									<a:commandLink render="documentosProcessoPanel, documentosProcessoSearchForm"
 										execute="@form"	styleClass="folder" limitRender="true">
 				  		              <h:graphicImage
-				                          url="#{wiSkin.imageFolder}/folder.png"
+				                          url="#{layoutController.getResourceUrlByPath('/imagens/folder.png')}"
 				                          rendered="true"
 				                          title="#{pasta}" />
 										<f:attribute name="pastaToSelect" value="#{pasta}" />
@@ -307,11 +307,11 @@
 							<h:form>
 								<a:commandLink action="#{documentoComunicacaoAction.removerDocumento(row)}" 
 									execute="@this" render="documentos">
-									<h:graphicImage url="#{wiSkin.imageFolder}/remove.png" title="#{infoxMessages['button.delete']}" />
+									<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="#{infoxMessages['button.delete']}" />
 								</a:commandLink>
 								<a:commandLink
 									onclick="infox.editor['comunicacao'].insertText('#{documentoComunicacaoAction.getLink(row.documento.documentoBin)}'); return false;">
-									<h:graphicImage url="#{wiSkin.imageFolder}/link.gif" title="#{infoxMessages['button.copiarLink']}" />
+									<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/link.gif')}" title="#{infoxMessages['button.copiarLink']}" />
 								</a:commandLink>
                                 <ui:include src="/WEB-INF/xhtml/components/grid/processoDocumentoBin.xhtml">
                                     <ui:param name="bin" value="#{row.documento.documentoBin}" />
@@ -359,7 +359,7 @@
 	        					limitRender="true" />
 	    				</wi:selectOneMenuEntity>
 				   		<s:div id="tooltipComunicacao" styleClass="tooltip-parent" style="width: 10px; display:inline;"> 
-				  			<h:graphicImage id="imgTootipEditorComunicacao" url="#{wiSkin.imageFolder}/help.gif" />
+				  			<h:graphicImage id="imgTootipEditorComunicacao" url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
 				  			<s:fragment rendered="#{not empty envioComunicacaoController.modeloComunicacao.classificacaoComunicacao.observacao}">
 								<div class="epp-tooltip" style="display:inline;" >
 									<div class="tooltip-panel">
@@ -391,7 +391,7 @@
 				</rich:collapsiblePanel>
 				</s:div>
 				
-				<rich:panel id="panelFinalizacaoDaElaboracaoComunicacao">
+				<rich:panel id="panelFinalizacaoDaElaboracaoComunicacao" style="margin-top: 1em;">
 					<!-- Finalização e Responsáveis pela Expedição da Comunicação -->
 					<s:div id="responsaveisAssinatura">
 						<wi:selectBooleanCheckbox id="finalizada" label="#{infoxMessages['comunicacao.finalizada']}" 
@@ -408,8 +408,8 @@
 					            id="localizacoesTree"
 					            assignTo="envioComunicacaoController.modeloComunicacao.localizacaoResponsavelAssinatura"
 					            tree="#{localizacaoSubTree}"
-					            icon="#{wiSkin.imageFolder}/nivelTree.gif"
-					            iconLeaf="#{wiSkin.imageFolder}/file.gif"
+					            icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
+					            iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
 					            clearRender="@this"
 					            label="#{infoxMessages['comunicacao.localizacoes']}" 
 					            render="perfisPermitidos" />

@@ -34,6 +34,8 @@
 			<property name="hibernate.search.lucene_version" value="LUCENE_36" />
 			<property name="hibernate.search.analyzer"	value="org.apache.lucene.analysis.br.BrazilianAnalyzer" />
 			
+			<property name="hibernate.cache.infinispan.cfg" value="infinispan-config.xml"/>
+			
 			<property name="hibernate.cache.region_prefix" value="" />
 			<property name="hibernate.cache.use_second_level_cache" value="true" /> 
 			<property name="hibernate.cache.use_query_cache" value="true" /> 

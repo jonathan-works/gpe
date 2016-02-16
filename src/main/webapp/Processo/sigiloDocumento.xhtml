@@ -36,7 +36,7 @@
                <h:outputText value="#{infoxMessages['sigiloDocumento.documento.documento']}" />
            </f:facet>
            <center>
-               <h:graphicImage url="#{wiSkin.imageFolder}/show.gif" title="Visualizar" style="cursor: pointer"
+               <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}" title="Visualizar" style="cursor: pointer"
                    onclick="infox.openPopUp('documento', '#{sigiloDocumentoAction.getViewUrl(row)}');"/>
            </center>
        </rich:column>
@@ -64,12 +64,12 @@
                <h:form rendered="#{empty sigiloDocumentoController.fragmentoARenderizar or sigiloDocumentoController.fragmentoARenderizar eq 'DETALHE_SIGILO'}">
                    <a:commandLink style="cursor: default" 
                        execute="@this" render="documentosTable, informacoesAdicionais" limitRender="true">
-                       <h:graphicImage url="#{wiSkin.imageFolder}/search_16.png" title="#{infoxMessages['sigiloDocumento.verDetalhes']}" style="cursor: pointer"/>
+                       <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/search_16.png')}" title="#{infoxMessages['sigiloDocumento.verDetalhes']}" style="cursor: pointer"/>
                        <f:setPropertyActionListener target="#{sigiloDocumentoController.fragmentoARenderizar}" value="DETALHE_SIGILO" />
                        <f:setPropertyActionListener target="#{sigiloDocumentoList.documento}" value="#{row}" />
                    </a:commandLink>
                </h:form>
-               <h:graphicImage url="#{wiSkin.imageFolder}/search_16_gray.png" title="#{infoxMessages['sigiloDocumento.verDetalhes']}"
+               <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/search_16_gray.png')}" title="#{infoxMessages['sigiloDocumento.verDetalhes']}"
                    rendered="#{not empty sigiloDocumentoController.fragmentoARenderizar and sigiloDocumentoController.fragmentoARenderizar != 'DETALHE_SIGILO'}" />
            </center>
        </rich:column>
@@ -81,12 +81,12 @@
                    <h:form rendered="#{sigiloDocumentoPermissaoAction.canManagePermissions() and (empty sigiloDocumentoController.fragmentoARenderizar or sigiloDocumentoController.fragmentoARenderizar eq 'DETALHE_SIGILO')}">
 	                   <a:commandLink style="cursor: default"
 	                       execute="@this" limitRender="true" render="documentosTable, informacoesAdicionais">
-	                       <h:graphicImage url="#{wiSkin.imageFolder}/add.gif" title="#{infoxMessages['sigiloDocumento.gerenciarPermissoes']}" style="cursor: pointer" />
+	                       <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}" title="#{infoxMessages['sigiloDocumento.gerenciarPermissoes']}" style="cursor: pointer" />
 	                       <f:setPropertyActionListener target="#{sigiloDocumentoController.fragmentoARenderizar}" value="PERMISSOES_SIGILO" />
 	                       <f:setPropertyActionListener target="#{sigiloDocumentoList.documento}" value="#{row}" />
 	                   </a:commandLink>
 	               </h:form>
-                   <h:graphicImage url="#{wiSkin.imageFolder}/add_gray.png" title="#{infoxMessages['sigiloDocumento.gerenciarPermissoes']}"
+                   <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/add_gray.png')}" title="#{infoxMessages['sigiloDocumento.gerenciarPermissoes']}"
                        rendered="#{sigiloDocumentoPermissaoAction.canManagePermissions() and not empty sigiloDocumentoController.fragmentoARenderizar and sigiloDocumentoController.fragmentoARenderizar != 'DETALHE_SIGILO'}" />
                </h:panelGroup>
            </f:facet>

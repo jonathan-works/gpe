@@ -8,8 +8,6 @@ import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbp
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.DELETE_BY_TASK_INSTANCE_ID_QUERY;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_BY_TASK_INSTANCE;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_BY_TASK_INSTANCE_QUERY;
-import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_ID_TAREFA;
-import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_ID_TAREFA_QUERY;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL;
 import static br.com.infox.epp.processo.localizacao.query.ProcessoLocalizacaoIbpmQuery.LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL_QUERY;
 
@@ -37,7 +35,6 @@ import br.com.infox.epp.system.annotation.Ignore;
 @Table(name = ProcessoLocalizacaoIbpm.TABLE_NAME)
 @NamedQueries({
     @NamedQuery(name = LIST_BY_TASK_INSTANCE, query = LIST_BY_TASK_INSTANCE_QUERY),
-    @NamedQuery(name = LIST_ID_TASK_INSTANCE_BY_ID_TAREFA, query = LIST_ID_TASK_INSTANCE_BY_ID_TAREFA_QUERY),
     @NamedQuery(name = COUNT_PROCESSO_LOCALIZACAO_IBPM_BY_ATTRIBUTES, query = COUNT_PROCESSO_LOC_IBPM_BY_IDP_LOC_AND_PAPEL_QUERY),
     @NamedQuery(name = DELETE_BY_PROCESS_ID_AND_TASK_ID, query = DELETE_BY_PROCESS_ID_AND_TASK_ID_QUERY),
     @NamedQuery(name = LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL, query = LIST_ID_TASK_INSTANCE_BY_LOCALIZACAO_PAPEL_QUERY),
@@ -61,7 +58,7 @@ public class ProcessoLocalizacaoIbpm implements java.io.Serializable {
     public ProcessoLocalizacaoIbpm() {
     }
 
-    @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_tb_processo_localizacao_ibpm")
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = "generator", sequenceName = "sq_processo_localizacao_ibpm")
     @Id
     @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_processo_localizacao", unique = true, nullable = false)

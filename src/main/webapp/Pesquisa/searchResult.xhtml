@@ -87,26 +87,30 @@
                         cellspacing="0"
                         border="0"
                         rendered="#{search.resultSize &gt; 0 and (search.previousPageAvailable or search.nextPageAvailable)}">
+                        <c:set var="pathResource" value="/imagens/grid/arrow-first#{search.previousPageAvailable ? '' : '-off'}.gif" />
                         <h:commandButton
                             id="firstPage"
                             action="#{search.firstPage()}"
                             disabled="#{!search.previousPageAvailable}"
-                            image="#{wiSkin.imageFolder}/grid/arrow-first#{search.previousPageAvailable ? '' : '-off'}.gif" />
+                            image="#{layoutController.getResourceUrlByPath(pathResource)}" />
+                        <c:set var="pathResource" value="/imagens/grid/arrow-previous#{search.previousPageAvailable ? '' : '-off'}.gif" />
                         <h:commandButton
                             id="previousPage"
                             action="#{search.previousPage()}"
                             disabled="#{!search.previousPageAvailable}"
-                            image="#{wiSkin.imageFolder}/grid/arrow-previous#{search.previousPageAvailable ? '' : '-off'}.gif" />
+                            image="#{layoutController.getResourceUrlByPath(pathResource)}" />
+                        <c:set var="pathResource" value="/imagens/grid/arrow-next#{search.nextPageAvailable ? '' : '-off'}.gif" />
                         <h:commandButton
                             id="nextPage"
                             action="#{search.nextPage()}"
                             disabled="#{!search.nextPageAvailable}"
-                            image="#{wiSkin.imageFolder}/grid/arrow-next#{search.nextPageAvailable ? '' : '-off'}.gif" />
+                            image="#{layoutController.getResourceUrlByPath(pathResource)}" />
+                        <c:set var="pathResource" value="/imagens/grid/arrow-last#{search.nextPageAvailable ? '' : '-off'}.gif" />
                         <h:commandButton
                             id="lastPage"
                             action="#{search.lastPage()}"
                             disabled="#{!search.nextPageAvailable}"
-                            image="#{wiSkin.imageFolder}/grid/arrow-last#{search.nextPageAvailable ? '' : '-off'}.gif" />
+                            image="#{layoutController.getResourceUrlByPath(pathResource)}" />
                     </h:panelGrid>
                 </h:form>
             </s:div>
