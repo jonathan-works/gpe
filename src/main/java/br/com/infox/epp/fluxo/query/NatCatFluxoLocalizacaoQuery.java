@@ -3,7 +3,7 @@ package br.com.infox.epp.fluxo.query;
 public interface NatCatFluxoLocalizacaoQuery {
 
     String TABLE_NAT_CAT_FLUXO_LOCALIZACAO = "tb_nat_cat_fluxo_localizacao";
-    String SEQUENCE_NAT_CAT_FLUXO_LOCALIZACAO = "sq_tb_nat_cat_fluxo_localizacao";
+    String SEQUENCE_NAT_CAT_FLUXO_LOCALIZACAO = "sq_nat_cat_fluxo_localizacao";
     String ID_NAT_CAT_FLUXO_LOCALIZACAO = "id_nat_cat_fluxo_localizacao";
     String ID_NAT_CAT_FLUXO = "id_nat_cat_fluxo";
     String ID_LOCALIZACAO = "id_localizacao";

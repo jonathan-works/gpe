@@ -38,12 +38,12 @@
                         <h:form>
                             <a:commandLink action="#{calendarioEventosCrudAction.edit(row)}" render="defaultTabPanel"
                                 execute="@this">
-                                <h:graphicImage url="#{wiSkin.imageFolder}/view.png"
+                                <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
                                     title="#{infoxMessages['button.selecionar']}" />
                             </a:commandLink>
                             <a:commandLink action="#{calendarioEventosCrudAction.remover(row)}"
                                 render="defaultTabPanel pageBodyDialogMessage calendarioProblems" execute="@this">
-                                <h:graphicImage url="#{wiSkin.imageFolder}/remove.png"
+                                <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
                                     title="#{infoxMessages['crud.remove']}" />
                             </a:commandLink>
                         </h:form>
@@ -104,7 +104,7 @@
                     <h:form>
                         <a:commandLink action="#{calendarioEventosCrudAction.cancelar}" render=":pageBodyDialogMessage"
                             execute="@this" onbegin="#{rich:component('calendarioProblemsPopup')}.hide();">
-                            <h:graphicImage id="closeBtn" value="#{wiSkin.imageFolder}/closeMP.gif" />
+                            <h:graphicImage id="closeBtn" value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}" />
                         </a:commandLink>
                     </h:form>
                 </f:facet>
@@ -132,7 +132,7 @@
                                     oncomplete="infox.hideLoading();"
                                     onclick="return confirm('#{infoxMessages['calendarioEventos.modifications.confirmationMessage']}');"
                                     render="defaultTabPanel :pageBodyDialogMessage calendarioProblems" execute="@this">
-                                    <h:graphicImage style="width:2em;" url="#{wiSkin.imageFolder}/input.png"
+                                    <h:graphicImage style="width:2em;" url="#{layoutController.getResourceUrlByPath('/imagens/input.png')}"
                                         title="#{infoxMessages['calendarioEventos.modifications.confirm']}" />
                                 </a:commandLink>
                             </h:form>

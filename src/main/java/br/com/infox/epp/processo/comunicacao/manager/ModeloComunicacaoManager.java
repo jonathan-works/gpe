@@ -70,7 +70,7 @@ public class ModeloComunicacaoManager extends Manager<ModeloComunicacaoDAO, Mode
 			entityManager.refresh(destinatarioModeloComunicacao);
 			Processo comunicacao = destinatarioModeloComunicacao.getProcesso();
 			destinatario.setNome(destinatarioModeloComunicacao.getNome());
-			destinatario.setStatusProrrogacao(prazoComunicacaoService.getStatusProrrogacaoFormatado(comunicacao));
+			setStatusComunicacaoByDestinatario(destinatario, comunicacao);
 			destinatario.setDataConfirmacao(getMetadadoValue(comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA)));
 			destinatario.setDataResposta(getMetadadoValue(comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_RESPOSTA)));
 			destinatario.setPrazoAtendimento(getMetadadoValue(comunicacao.getMetadado(ComunicacaoMetadadoProvider.PRAZO_DESTINATARIO)));
@@ -80,6 +80,18 @@ public class ModeloComunicacaoManager extends Manager<ModeloComunicacaoDAO, Mode
 			setarInformacoesAdicionais(destinatario);
 		}
 		return destinatarios;
+	}
+	
+	public List<DestinatarioModeloComunicacao> listDestinatatiosByModeloComunicacao(ModeloComunicacao modeloComunicacao) {
+		CriteriaBuilder cb = getDao().getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<DestinatarioModeloComunicacao> query = cb.createQuery(DestinatarioModeloComunicacao.class);
+		Root<DestinatarioModeloComunicacao> destinatario = query.from(DestinatarioModeloComunicacao.class);
+		query.where(cb.equal(destinatario.get(DestinatarioModeloComunicacao_.modeloComunicacao), modeloComunicacao));
+		return getDao().getEntityManager().createQuery(query).getResultList();
+	}
+
+	protected void setStatusComunicacaoByDestinatario(DestinatarioBean destinatario, Processo comunicacao) {
+		destinatario.setStatusProrrogacao(prazoComunicacaoService.getStatusProrrogacaoFormatado(comunicacao));
 	}
 	
 	public List<AssinaturaDocumento> listAssinaturasComunicacao(Processo comunicacao) {

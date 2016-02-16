@@ -9,81 +9,56 @@
 
   <h:form>
     <ui:param name="idProcesso" value="#{row.idProcesso}" />
-    <ui:param name="tarefaId" value="#{painelUsuarioController.tarefaId}" />
-    <ui:param name="owner" value="#{userHandler.getUsuarioByIdTarefa(tarefaId, idProcesso)}" />
-    <ui:param name="inTabExpedidas" value="#{painelUsuarioController.selectedFluxo.expedida}" />
+    <ui:param name="idTaskInstance" value="#{row.idTaskInstance}" />
+    <ui:param name="owner" value="#{row.assignee}" />
     <ui:param name="showMovimentarToolBar" value="#{wi:get(showMovimentarToolBar, true)}" />
 
-    <a:outputPanel>
-
-      <rich:dragSource type="task#{tarefaId}" dragValue="#{row}"
-        dragIndicator="indicator">
-        <rich:dragIndicator
-          id="indicator"
-          acceptClass="caixa-acpt"
-          draggingClass="caixa-drag"
-          rejectClass="caixa-rejt"
-        >
+    <div style="display: inline-block;">
+      <rich:dragSource type="#{row.taskNodeKey.toUpperCase()}" dragValue="#{row}" dragIndicator="indicator">
+        <rich:dragIndicator id="indicator" acceptClass="caixa-acpt" draggingClass="caixa-drag" rejectClass="caixa-rejt">
           <span class="caixa-ind-lbl">#{infoxMessages['processo.titlePage']}: #{row.numeroProcessoRoot}</span>
         </rich:dragIndicator>
       </rich:dragSource>
-
-      <h:graphicImage url="#{wiSkin.imageFolder}/annotate.png" title="#{infoxMessages['caixa.moverCaixa']}" />
-
-    </a:outputPanel>
+      <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/annotate.png')}" title="#{infoxMessages['caixa.moverCaixa']}" />
+    </div>
 
     <a:commandLink execute="@this" target="#{idProcesso}popUpFluxo"
-      onbegin="PF('pollAtualizarPainel').stop();"
-      oncomplete="PF('pollAtualizarPainel').start();"
-      onclick="open('#{pathResolver.contextPath}/Processo/visualizarProcesso.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
-
+      onclick="open('#{pathResolver.contextPath}/Processo/visualizarProcesso.seam?idProcesso=#{idProcesso}&amp;idTaskInstance=#{idTaskInstance}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
       <f:param name="idProcesso" value="#{idProcesso}" />
-
-      <f:param name="tarefaId" value="#{tarefaId}" />
-
-      <h:graphicImage url="#{wiSkin.imageFolder}/view.png" />
-
+      <f:param name="idTaskInstance" value="#{idTaskInstance}" />
+      <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
     </a:commandLink>
 
     <a:commandLink execute="@this" rendered="#{empty owner and showMovimentarToolBar}"
       target="#{idProcesso}popUpFluxo"
-      render="@form"
-      oncomplete="PF('pollAtualizarPainel').start();"
-      onclick="PF('pollAtualizarPainel').stop();open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
-
+      render="@form" action="#{painelUsuarioController.atribuirTarefa(row)}"
+      onclick="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;idTaskInstance=#{idTaskInstance}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
       <f:param name="idProcesso" value="#{idProcesso}" />
-
-      <f:param name="tarefaId" value="#{tarefaId}" />
-
-      <h:graphicImage url="#{wiSkin.imageFolder}/mod/edit.png" />
-
+      <f:param name="idTaskInstance" value="#{idTaskInstance}" />
+      <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/mod/edit.png')}" />
     </a:commandLink>
 
     <a:commandLink execute="@this"
-      rendered="#{owner == authenticator.getUsuarioLogado() and showMovimentarToolBar}"
+      rendered="#{owner eq authenticator.getUsuarioLogado().login and showMovimentarToolBar}"
       target="#{idProcesso}popUpFluxo"
-      onclick="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;tarefaId=#{tarefaId}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
-
+      onclick="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;idTaskInstance=#{idTaskInstance}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
       <f:param name="idProcesso" value="#{idProcesso}" />
-
-      <f:param name="tarefaId" value="#{tarefaId}" />
-
-      <h:graphicImage url="#{wiSkin.imageFolder}/processAssigned.png" />
-
+      <f:param name="idTaskInstance" value="#{idTaskInstance}" />
+      <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/processAssigned.png')}" />
     </a:commandLink>
 
-    <h:graphicImage url="#{wiSkin.imageFolder}/role.gif"
-      rendered="#{(owner != authenticator.getUsuarioLogado() and ! empty owner and !authenticator.isUsuarioAtualResponsavel()) and showMovimentarToolBar}"
-      title="Processo bloqueado pelo servidor #{owner}" />
+    <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/role.gif')}"
+      rendered="#{(owner ne authenticator.getUsuarioLogado().login and not empty owner and not authenticator.isUsuarioAtualResponsavel()) and showMovimentarToolBar}"
+      title="Processo bloqueado pelo servidor #{row.nomeUsuarioTarefa}" />
 
     <a:commandLink
-      action="#{taskInstanceHome.removeUsuario(idProcesso,tarefaId)}"
+      action="#{painelUsuarioController.liberarTarefa(row)}"
       execute="@this" render="baseBody, pageBodyDialogMessage"
       onclick="return confirm(\'#{infoxMessages['movimentar.confirmLiberarTarefa']}\');"
       limitRender="true"
-      rendered="#{(owner != authenticator.getUsuarioLogado() and ! empty owner and authenticator.isUsuarioAtualResponsavel())}">
-      <h:graphicImage url="#{wiSkin.imageFolder}/role.gif"
-        title="#{infoxMessages['painel.list.liberarTarefaServidor']} #{owner}" />
+      rendered="#{(owner ne authenticator.getUsuarioLogado().login and not empty owner and authenticator.isUsuarioAtualResponsavel())}">
+      <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/role.gif')}"
+        title="#{infoxMessages['painel.list.liberarTarefaServidor']} #{row.nomeUsuarioTarefa}" />
     </a:commandLink>
   </h:form>
 

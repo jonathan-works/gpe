@@ -50,6 +50,10 @@ public class PerfilTemplate implements Serializable{
 	private Integer id;
 	
 	@NotNull
+    @Column(name="cd_perfil_template", length = 50, nullable = false)
+    private String codigo;
+	
+	@NotNull
 	@Column(name="ds_perfil_template", length=DESCRICAO_PADRAO, nullable=false)
     private String descricao;
 	
@@ -84,6 +88,14 @@ public class PerfilTemplate implements Serializable{
         this.id = id;
     }
     
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
     public String getDescricao() {
         return descricao;
     }

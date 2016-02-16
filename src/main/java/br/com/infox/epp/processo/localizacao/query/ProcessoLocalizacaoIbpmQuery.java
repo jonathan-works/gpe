@@ -21,15 +21,6 @@ public interface ProcessoLocalizacaoIbpmQuery {
             + " where o.processo = :processo"
             + " and o.localizacao = :localizacao" + " and o.papel = :papel";
 
-    String LIST_ID_TASK_INSTANCE_BY_ID_TAREFA = "listIdTaskInstanceByIdTarefa";
-    String LIST_ID_TASK_INSTANCE_BY_ID_TAREFA_QUERY = "select o.idTaskInstance from SituacaoProcesso o"
-            + " where o.idTarefa = :idTask "
-            + "and exists (from ProcessoLocalizacaoIbpm tl "
-            + "where tl.processo = :processo "
-            + "and tl.idTaskInstance = o.idTaskInstance "
-            + "and tl.localizacao = :localizacao "
-            + "and (tl.papel = :papel or tl.papel is null))";
-
     String COUNT_PROCESSO_LOCALIZACAO_IBPM_BY_ATTRIBUTES = "countProcessoLocalizacaoIbpmByAttributes";
     String COUNT_PROCESSO_LOC_IBPM_BY_IDP_LOC_AND_PAPEL_QUERY = "select count(o) from ProcessoLocalizacaoIbpm o "
             + "where o.processo = :"

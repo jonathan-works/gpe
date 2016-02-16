@@ -14,7 +14,7 @@
             <a:commandLink action="#{home.setInstance(row)}"
                 status=":status" render="#{reRender}" limitRender="true"
                 id="#{gridId}Edit">
-                <wi:toolBarGraphicImage url="#{wiSkin.imageFolder}/view.png"
+                <wi:toolBarGraphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
                     title="#{infoxMessages['button.selecionar']}" />
             </a:commandLink>
             <a:commandLink
@@ -22,7 +22,7 @@
                 rendered="#{wi:get(canEdit,true)}" limitRender="true"
                 status=":status" render="#{reRender}"
                 onclick="if(!confirm('Confirma?')) return false;">
-                <wi:toolBarGraphicImage url="#{wiSkin.imageFolder}/remove.png"
+                <wi:toolBarGraphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
                     title="#{infoxMessages['button.delete']}" />
             </a:commandLink>
         </a:region>

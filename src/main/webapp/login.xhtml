@@ -47,7 +47,7 @@
           id="blocoCentralLogin"
           class="blocoCentralLogin">
           <div id="logo" class="logo">
-            <h:graphicImage title="Logo" styleClass="logo-img" url="#{wiSkin.imageFolder}/logo_epp_login.png" />
+            <h:graphicImage title="Logo" styleClass="logo-img" url="#{layoutController.getResourceUrl('LOGO_LOGIN')}" />
           </div>
           <div class="logo_inferior"></div>
           <div id="bg_login" class="bg_login login">
@@ -125,7 +125,7 @@
       				   style="background: linear-gradient(to bottom, #A2B9B5 0%, #B8D1CF 100%) repeat scroll 0% 0% transparent;">
         <f:facet name="controls">	
           <div style="cursor: pointer;">
-            <h:graphicImage id="requestPasswordPanelCloseBtn" value="#{wiSkin.imageFolder}/closeMP.gif" 
+            <h:graphicImage id="requestPasswordPanelCloseBtn" value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}" 
             				onclick="#{rich:component('requestPasswordPanel')}.hide();" />
           </div>
         </f:facet>
@@ -160,7 +160,7 @@
       				   style="background: linear-gradient(to bottom, #A2B9B5 0%, #B8D1CF 100%) repeat scroll 0% 0% transparent;">
         <f:facet name="controls">
           <div style="cursor: pointer;" > 
-            <h:graphicImage id="alterPasswordCloseBtn" value="#{wiSkin.imageFolder}/closeMP.gif" 
+            <h:graphicImage id="alterPasswordCloseBtn" value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}" 
             				onclick="#{rich:component('alterPasswordModal')}.hide();" />
           </div>
         </f:facet>	
@@ -208,7 +208,7 @@
           <h:outputText value="#{infoxMessages['certificate.waitInit']}" />
         </f:facet>
         <div>
-          <h:graphicImage url="#{wiSkin.imageFolder}/ajax-loader.gif" />
+          <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/ajax-loader.gif')}" />
         </div>
       </rich:popupPanel>
       <wi:messages />

@@ -13,7 +13,7 @@
             <div>
                 <a:commandLink status=":status" render=":pageBody"
                     limitRender="true" id="#{gridId}Edit">
-                    <h:graphicImage url="#{wiSkin.imageFolder}/view.png"
+                    <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
                         title="#{infoxMessages['button.selecionar']}" />
                     <f:param name="id" value="#{row[bean.key]}" />
                     <f:param name="tab" value="form" />
@@ -22,7 +22,7 @@
                     rendered="#{canEdit}" limitRender="true"
                     status=":status" render=":#{gridId}"
                     onclick="if(!confirm('Confirma?')) return false;">
-                    <h:graphicImage url="#{wiSkin.imageFolder}/remove.png"
+                    <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
                         title="#{infoxMessages['button.delete']}" />
                     <f:param name="firstResult"
                         value="#{bean.firstResult}" />

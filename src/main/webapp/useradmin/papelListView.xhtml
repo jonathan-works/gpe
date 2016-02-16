@@ -107,15 +107,16 @@
             roots="#{rolesTree.roots}"
             nodes="#{item.nodes}"
           >
+            <c:set var="pathResource" value="/imagens/#{item.entity.identificador.startsWith('/') ? 'resource.gif' : 'role.gif'}" />
             <rich:treeNode
-              iconCollapsed="#{wiSkin.imageFolder}/#{item.entity.identificador.startsWith('/') ? 'resource.gif' : 'role.gif'}"
-              iconExpanded="#{wiSkin.imageFolder}/#{item.entity.identificador.startsWith('/') ? 'resource.gif' : 'role.gif'}"
-              iconLeaf="#{wiSkin.imageFolder}/#{item.entity.identificador.startsWith('/') ? 'resource.gif' : 'role.gif'}"
+              iconCollapsed="#{layoutController.getResourceUrlByPath(pathResource)}"
+              iconExpanded="#{layoutController.getResourceUrlByPath(pathResource)}"
+              iconLeaf="#{layoutController.getResourceUrlByPath(pathResource)}"
             >
               #{item.entity}
             </rich:treeNode>
             <rich:treeModelAdaptor nodes="#{item.entity.recursos}">
-              <rich:treeNode iconLeaf="#{wiSkin.imageFolder}/resource.gif">#{item}</rich:treeNode>
+              <rich:treeNode iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/resource.gif')}">#{item}</rich:treeNode>
             </rich:treeModelAdaptor>
           </rich:treeModelRecursiveAdaptor>
         </rich:tree>

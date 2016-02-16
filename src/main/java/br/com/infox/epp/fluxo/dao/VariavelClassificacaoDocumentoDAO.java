@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -24,6 +25,7 @@ import br.com.infox.epp.fluxo.query.VariavelClassificacaoDocumentoQuery;
 
 @Name(VariavelClassificacaoDocumentoDAO.NAME)
 @AutoCreate
+@Stateless
 public class VariavelClassificacaoDocumentoDAO extends DAO<VariavelClassificacaoDocumento> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "variavelClassificacaoDocumentoDAO";

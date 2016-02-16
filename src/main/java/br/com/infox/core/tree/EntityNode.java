@@ -166,6 +166,10 @@ public class EntityNode<E> implements Serializable {
     public EntityNode<E> getParent() {
         return parent;
     }
+    
+    public void setParent(EntityNode<E> entityNode) {
+        this.parent = entityNode;
+    }
 
     public boolean canSelect() {
         return true;

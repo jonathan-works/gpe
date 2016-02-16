@@ -170,7 +170,7 @@
                     <ui:define name="headerToolBar" />
                     <ui:define name="toolBar">
                         <wi:toolBar
-                            url="#{wiSkin.imageFolder}/remove.png"
+                            url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
                             title="Remover registro"
                             action="classificacaoDocumentoPapelCrudAction.remove(row)"
                             render="divAssociarPapel, pageBodyDialogMessage"
@@ -236,7 +236,7 @@
                     <ui:define name="headerToolBar" />
                     <ui:define name="toolBar">
                         <wi:toolBar
-                            url="#{wiSkin.imageFolder}/remove.png"
+                            url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
                             title="Remover registro"
                             action="extensaoArquivoCrudAction.remove(row)"
                             render="divAssociarExtensoes, pageBodyDialogMessage"

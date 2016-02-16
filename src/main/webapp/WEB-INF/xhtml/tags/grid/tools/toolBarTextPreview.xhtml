@@ -7,7 +7,7 @@
     xmlns:rich="http://richfaces.org/rich"
     xmlns:wi="http://www.itx.com.br/jsf">
 
-    <wi:toolBarGraphicImage url="#{wiSkin.imageFolder}/view.png" title="Pré-visualizar"
+    <wi:toolBarGraphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="Pré-visualizar"
         onclickGraphicImage="mp = this.nextSibling.id; #{rich:component('mp_'.concat(c.id))}.show()" />
 
     <rich:popupPanel id="mp_#{c.id}" height="560" width="720"

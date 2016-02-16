@@ -18,7 +18,7 @@
             limitRender="true"
             action="#{expressions.createMethodExpression(removeExpression).invoke(null)}"
             rendered="#{canEdit}">
-            <h:graphicImage url="#{wiSkin.imageFolder}/grid/copyRight.gif"
+            <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/grid/copyRight.gif')}"
                 title="#{infoxMessages['button.delete']}" />
         </a:commandLink>
     </h:form>

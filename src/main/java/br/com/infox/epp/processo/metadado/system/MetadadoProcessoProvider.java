@@ -1,14 +1,18 @@
 package br.com.infox.epp.processo.metadado.system;
 
 import java.lang.reflect.Field;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
+import org.joda.time.DateTime;
 
+import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.type.TipoProcesso;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 public class MetadadoProcessoProvider {
 	
@@ -44,6 +48,7 @@ public class MetadadoProcessoProvider {
 		metadado.setVisivel(definition.getLabel() != null);
 		metadado.setClassType(definition.getClassType());
 		metadado.setMetadadoType(definition.getMetadadoType());
+		metadado.setProcesso(getProcesso());
 		return metadado;
 	}
 	
@@ -60,6 +65,35 @@ public class MetadadoProcessoProvider {
 		metadado.setProcesso(processo);
 		metadado.setValor(valor);
 		return metadado;
+	}
+	
+	public MetadadoProcesso gerarMetadado(String nome, Object value) {
+	    MetadadoProcesso metadadoProcesso = null;
+	    MetadadoProcessoDefinition metadadoProcessoDefinition = getDefinicoesMetadados().get(nome);
+	    if (metadadoProcessoDefinition != null) {
+	        metadadoProcesso = gerarMetadado(metadadoProcessoDefinition);
+	    } else {
+	        metadadoProcesso = new MetadadoProcesso();
+	        metadadoProcesso.setClassType(value.getClass());
+	        metadadoProcesso.setProcesso(getProcesso());
+	        metadadoProcesso.setMetadadoType(nome);
+	        metadadoProcesso.setVisivel(false);
+	    }
+	    if (EntityUtil.isEntity(value)) {
+	        metadadoProcesso.setValor(EntityUtil.getIdentifier(value).toString());
+	    } else if (value.getClass().isAssignableFrom(Enum.class)) {
+	        Enum<?> enums = (Enum<?>) value;
+	        metadadoProcesso.setValor(enums.name());
+	    } else if (value.getClass().isAssignableFrom(Date.class)) {
+	        Date data = (Date) value;
+	        metadadoProcesso.setValor(new DateTime(data.getTime()).toString(MetadadoProcesso.DATE_PATTERN));
+	    } else if (value.getClass().isAssignableFrom(TipoProcesso.class)) {
+	        TipoProcesso tipoProcesso = (TipoProcesso) value;
+	        metadadoProcesso.setValor(tipoProcesso.value());
+	    } else {
+	        metadadoProcesso.setValor(value.toString());
+	    }
+	    return metadadoProcesso;
 	}
 	
 	public Processo getProcesso() {

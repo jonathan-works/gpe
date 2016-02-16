@@ -26,17 +26,17 @@
                     rendered="#{row.ativo and participantesProcessoController.podeInativarPartes(row.pessoa.tipoPessoa)}"
                     action="#{participanteProcessoCrudAction.setInstance(row)}"
                     reRender="parteProcessoListDiv"
-                    url="#{wiSkin.imageFolder}/remove.png" id="ativo" />
+                    url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" id="ativo" />
                 <wi:toolBar
                     rendered="#{not row.ativo and participantesProcessoController.podeAdicionarPartes(row.pessoa.tipoPessoa)}"
                     action="#{participanteProcessoCrudAction.setInstance(row)}"
-                    reRender="parteProcessoListDiv" url="#{wiSkin.imageFolder}/stock_undelete.png"
+                    reRender="parteProcessoListDiv" url="#{layoutController.getResourceUrlByPath('/imagens/stock_undelete.png')}"
                     id="inativo" />
                 <wi:toolBar
                     rendered="#{row.historicoParticipanteList.size > 0}"
                     action="participanteProcessoCrudAction.setShowHistory(row)"
                     reRender="historicoParticipantePanelDiv"
-                    url="#{wiSkin.imageFolder}/view.png"
+                    url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
                     id="viewHistorico" />
             </ui:define>
             <wi:columnOutputTextIdent columnId="pessoa.nome"

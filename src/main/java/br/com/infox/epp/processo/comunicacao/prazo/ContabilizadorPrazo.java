@@ -1,15 +1,13 @@
-package br.com.infox.epp.processo.comunicacao.prazo;
+	package br.com.infox.epp.processo.comunicacao.prazo;
 
 import java.util.Date;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
 import org.joda.time.DateTime;
 
 import br.com.infox.core.persistence.DAOException;
@@ -25,21 +23,20 @@ import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
-@AutoCreate
-@Name(ContabilizadorPrazo.NAME)
-@Scope(ScopeType.STATELESS)
+@Named(ContabilizadorPrazo.NAME)
 @Stateless
-@Transactional
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class ContabilizadorPrazo {
 	
     public static final String NAME = "contabilizadorPrazo";
     public static final LogProvider LOG = Logging.getLogProvider(ContabilizadorPrazo.class);
     
-    @In
+    @Inject
     private PrazoComunicacaoService prazoComunicacaoService;
-    @In
+    @Inject
     private UsuarioLoginManager usuarioLoginManager;
     
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void atribuirCiencia() {
     	Processo comunicacao = JbpmUtil.getProcesso();
     	UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
@@ -53,12 +50,17 @@ public class ContabilizadorPrazo {
     		}
     	} 
     	try {
-			prazoComunicacaoService.darCiencia(comunicacao, dataCiencia, usuarioLogado);
+			darCiencia(comunicacao, usuarioLogado, dataCiencia);
 		} catch (DAOException e) {
 			LOG.error("atribuirCiencia", e);
 		}
     }
+
+	protected void darCiencia(Processo comunicacao, UsuarioLogin usuarioLogado, Date dataCiencia) {
+		prazoComunicacaoService.darCiencia(comunicacao, dataCiencia, usuarioLogado);
+	}
     
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void atribuirCumprimento() {
     	Processo comunicacao = JbpmUtil.getProcesso();
     	Date dataCumprimento = DateTime.now().toDate();
@@ -67,10 +69,14 @@ public class ContabilizadorPrazo {
 			dataCumprimento = metadadoCumprimento.getValue();
 		}
     	try {
-			prazoComunicacaoService.darCumprimento(comunicacao, dataCumprimento);
+			darCumprimento(comunicacao, dataCumprimento);
 		} catch (DAOException e) {
 			LOG.error("atribuirCumprimento", e);
 		}
     }
+
+	protected void darCumprimento(Processo comunicacao, Date dataCumprimento) {
+		prazoComunicacaoService.darCumprimento(comunicacao, dataCumprimento);
+	}
     
 }

@@ -2,6 +2,7 @@
 	<deployment>
 		<dependencies>
 			<module name="org.dom4j" export="true" />
+			<module name="oracle.ojdbc" export="true" optional="${optional.oracle.module}"/>
 		</dependencies>
 	</deployment>
 </jboss-deployment-structure>

@@ -1,80 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:wi="http://www.itx.com.br/jsf"
-    xmlns:f="http://java.sun.com/jsf/core"
-    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
 
-    <ui:define name="title">#{infoxMessages['parametro.titlePage']}</ui:define>
-    <ui:param name="home" value="#{parametroCrudAction}" />
+	<ui:define name="title">#{infoxMessages['parametro.titlePage']}</ui:define>
+	<ui:param name="home" value="#{parametroCrudAction}" />
 
-    <ui:define name="searchGrid">
-        <wi:dataTable values="#{parametroList.list(15)}"
-            bean="#{parametroList}"
-            tableTitle="#{infoxMessages['parametro.tableTitle']}"
-            id="parametroList" rowId="#{row.idParametro}">
-            <ui:define name="searchForm">
-                <wi:searchForm formId="parametroSearchForm"
-                    formTitle="#{infoxMessages['searchForm.title']}">
-                    <wi:inputText id="nomeVariavel"
-                        label="#{infoxMessages['parametro.nomeVariavel']}"
-                        value="#{parametroList.entity.nomeVariavel}" />
-                    <wi:selectSituacaoOneMenu id="ativo"
-                        value="#{parametroList.entity.ativo}" />
-                </wi:searchForm>
-            </ui:define>
+	<ui:define name="head">
+		<h:outputStylesheet library="styleSkinInfox"
+			name="dynamicParameters.css" />
+	</ui:define>
 
-            <wi:columnOutputText columnId="nomeVariavel"
-                columnHeader="#{infoxMessages['parametro.nomeVariavel']}"
-                value="#{row.nomeVariavel}" />
-            <wi:columnOutputText columnId="descricaoVariavel"
-                columnHeader="#{infoxMessages['parametro.descricaoVariavel']}"
-                value="#{row.descricaoVariavel}" />
-            <wi:columnOutputText columnId="valorVariavel"
-                columnHeader="#{infoxMessages['parametro.valorVariavel']}"
-                value="#{row.valorVariavel}" />
-            <wi:columnDateTime columnId="dataAtualizacao"
-                columnHeader="#{infoxMessages['parametro.dataAtualizacao']}"
-                value="#{row.dataAtualizacao}" showTime="true" />
-            <wi:columnBoolean columnId="sistema"
-                columnHeader="#{infoxMessages['parametro.sistema']}"
-                value="#{row.sistema}" />
-            <wi:columnOutputText columnId="usuarioModificacao"
-                columnHeader="#{infoxMessages['parametro.usuarioModificacao']}"
-                value="#{row.usuarioModificacao}" />
-            <wi:columnSituacao
-                columnHeader="#{infoxMessages['field.situacao']}" />
-        </wi:dataTable>
-    </ui:define>
-
-    <ui:define name="form">
-        <wi:dataForm formId="parametroForm"
-            formTitle="#{infoxMessages['form.title']}">
-            <wi:inputText id="nomeVariavel"
-                label="#{infoxMessages['parametro.nomeVariavel']}"
-                value="#{parametroCrudAction.instance.nomeVariavel}"
-                required="true"
-                maxlength="100" />
-            <wi:inputText id="descricaoVariavel"
-                label="#{infoxMessages['parametro.descricaoVariavel']}"
-                value="#{parametroCrudAction.instance.descricaoVariavel}"
-                required="true"
-                maxlength="100" />
-            <wi:inputText id="valorVariavel"
-                label="#{infoxMessages['parametro.valorVariavel']}"
-                value="#{parametroCrudAction.instance.valorVariavel}"
-                required="true" />
-            <wi:selectBooleanRadio id="sistema"
-                label="#{infoxMessages['parametro.sistema']}"
-                value="#{parametroCrudAction.instance.sistema}"
-                required="true" />
-
-            <wi:selectSituacaoRadio id="idParametro"
-                label="#{infoxMessages['field.situacao']}"
-                value="#{parametroCrudAction.instance.ativo}"
-                required="true" />
-        </wi:dataForm>
-    </ui:define>
+	<ui:define name="body">
+		<h:form>
+			<h:selectOneMenu value="#{parametroView.grupo}"
+				hideNoSelectionOption="true">
+				<f:selectItems value="#{parametroView.grupos}" />
+				<f:ajax event="change" execute="@this" render=":dynamicForm" />
+			</h:selectOneMenu>
+		</h:form>
+		<h:body>
+			<h:form id="dynamicForm"
+				rendered="#{not empty parametroView.formFields}"
+				enctype="application/x-www-form-urlencoded" acceptcharset="UTF-8">
+				<h:commandButton value="Save" action="#{parametroView.publish}"  styleClass="buttons" style="margin:0em 0px -2em" />
+				<wi:dynamicFieldSet value="#{parametroView.formFields}" />
+			</h:form>
+		</h:body>
+	</ui:define>
 
 </ui:composition>

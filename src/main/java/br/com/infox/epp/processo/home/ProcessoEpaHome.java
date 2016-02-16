@@ -106,16 +106,11 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	private List<MetadadoProcesso> detalhesMetadados;
 	private Boolean inTabExpedidas;
 
-	private Long tarefaId;
-
-	// TODO confirmar se é método realmente não é mais utilizado e removê-lo
-	public void limpar() {
-		newInstance();
-	}
+	private Long idTaskInstance;
 
 	public void iniciarTarefaProcesso() {
 		try {
-			processoManager.iniciarTask(instance, tarefaId.intValue(), Authenticator.getUsuarioPerfilAtual());
+			processoManager.iniciarTask(instance, getIdTaskInstance(), Authenticator.getUsuarioPerfilAtual());
 			documentoProcessoAction.setProcesso(getInstance().getProcessoRoot());
 		} catch (java.lang.NullPointerException e) {
 			LOG.error("ProcessoEpaHome.iniciarTarefaProcesso()", e);
@@ -136,7 +131,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	}
 	
 	public void visualizarTarefaProcesso() {
-		processoManager.visualizarTask(instance, tarefaId.intValue(), Authenticator.getUsuarioPerfilAtual());
+		processoManager.visualizarTask(instance, getIdTaskInstance(), Authenticator.getUsuarioPerfilAtual());
 	}
 
 	public static ProcessoEpaHome instance() {
@@ -226,15 +221,15 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 		this.observacaoMovimentacao = observacaoMovimentacao;
 	}
 
-	public void setTarefaId(Long tarefaId) {
-		this.tarefaId = tarefaId;
-	}
+	public Long getIdTaskInstance() {
+        return idTaskInstance;
+    }
 
-	public Long getTarefaId() {
-		return tarefaId;
-	}
+    public void setIdTaskInstance(Long idTaskInstance) {
+        this.idTaskInstance = idTaskInstance;
+    }
 
-	public boolean isIniciaExterno() {
+    public boolean isIniciaExterno() {
 		return iniciaExterno;
 	}
 
@@ -270,7 +265,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	        	consultaController.setProcesso(this.getInstance());
 	        }
 	        if (tab.equals("tabAnexos")){
-	        	pastaAction.setProcesso(this.getInstance().getProcessoRoot());
+	        	pastaAction.setProcesso(this.getInstance());
 	        	documentoList.setProcesso(this.getInstance().getProcessoRoot());
 	        	documentoProcessoAction.setProcesso(getInstance().getProcessoRoot());
 	        	documentoProcessoAction.setListClassificacaoDocumento(null);

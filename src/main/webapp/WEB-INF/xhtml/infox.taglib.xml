@@ -444,4 +444,11 @@ version="2.0">
         <tag-name>inputMoney</tag-name>
         <source>tags/form/fields/inputMoney.xhtml</source>
     </tag>
+    <tag>
+        <tag-name>dynamicFieldSet</tag-name>
+        <component>
+            <component-type>DynamicFieldSet</component-type>
+            <renderer-type>DynamicFieldSet</renderer-type>
+        </component>
+    </tag>
 </facelet-taglib>

@@ -17,23 +17,23 @@
         >
             <h:graphicImage
                 styleClass="palette-img-inpt"
-                url="#{wiSkin.imageFolder}/mod/palette.png"
+                url="#{layoutController.getResourceUrlByPath('/imagens/mod/palette.png')}"
                 onclick="#{rich:component(id.concat('-skinPanel'))}.show()"
             />
             <h:commandButton
                 styleClass="palette-img-inpt"
                 action="#{skinZoom.setTmNormal()}"
-                image="#{wiSkin.imageFolder}/zoom-normal.png"
+                image="#{layoutController.getResourceUrlByPath('/imagens/zoom-normal.png')}"
             />
             <h:commandButton
                 styleClass="palette-img-inpt"
                 action="#{skinZoom.setTmMedio()}"
-                image="#{wiSkin.imageFolder}/zoom-medio.png"
+                image="#{layoutController.getResourceUrlByPath('/imagens/zoom-medio.png')}"
             />
             <h:commandButton
                 styleClass="palette-img-inpt"
                 action="#{skinZoom.setTmGrande()}"
-                image="#{wiSkin.imageFolder}/zoom-grande.png"
+                image="#{layoutController.getResourceUrlByPath('/imagens/zoom-grande.png')}"
             />
         </h:form>
     </div>
@@ -45,7 +45,7 @@
         <f:facet name="controls">
             <h:panelGroup>
                 <h:graphicImage
-                    value="#{wiSkin.imageFolder}/closeMP.gif"
+                    value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
                     onclick="#{rich:component(id.concat('-skinPanel'))}.hide()"
                 />
             </h:panelGroup>

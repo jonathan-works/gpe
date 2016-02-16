@@ -29,8 +29,8 @@
                     <wi:tree id="localizacaoFisicaPai"
                         assignTo="localizacaoFisicaList.entity.localizacaoFisicaPai"
                         tree="#{localizacaoFisicaTree}"
-                        icon="#{wiSkin.imageFolder}/nivelTree.gif"
-                        iconLeaf="#{wiSkin.imageFolder}/file.gif"
+                        icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
+                        iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
                         label="#{infoxMessages['localizacaoFisica.localizacaoFisicaPai']}" />
                     <wi:selectSituacaoOneMenu id="ativo"
                         label="#{infoxMessages['field.situacao']}"
@@ -60,7 +60,7 @@
             <wi:tree id="localizacaoFisicaPai"
                 assignTo="localizacaoFisicaCrudAction.instance.localizacaoFisicaPai"
                 tree="#{localizacaoFisicaTree}"
-                icon="#{wiSkin.imageFolder}/nivelTree.gif" iconLeaf="#{wiSkin.imageFolder}/file.gif"
+                icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}" iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
                 label="#{infoxMessages['localizacaoFisica.pai']}" />
             <wi:selectSituacaoRadio id="ativo"
                 label="#{infoxMessages['field.situacao']}"

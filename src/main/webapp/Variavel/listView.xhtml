@@ -104,7 +104,7 @@
                                     action="#{variavelTipoModeloDocumentoCrudAction.removeTipoModeloVariavel(row)}"
                                     rendered="true">
                                     <h:graphicImage
-                                        url="#{wiSkin.imageFolder}/grid/copyRight.gif"
+                                        url="#{layoutController.getResourceUrlByPath('/imagens/grid/copyRight.gif')}"
                                         title="#{infoxMessages['button.delete']}" />
                                 </a:commandLink>
                             </a:region>
@@ -162,7 +162,7 @@
                                     action="#{variavelTipoModeloDocumentoCrudAction.addTipoModeloVariavel(row)}"
                                     rendered="true">
                                     <h:graphicImage
-                                        url="#{wiSkin.imageFolder}/grid/copyLeft.gif"
+                                        url="#{layoutController.getResourceUrlByPath('/imagens/grid/copyLeft.gif')}"
                                         title="#{infoxMessages['button.add']}" />
                                 </a:commandLink>
                             </a:region>

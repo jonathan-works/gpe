@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Queue;
 
 import javax.faces.event.AbortProcessingException;
+import javax.inject.Inject;
 
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
@@ -28,6 +28,7 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
@@ -35,12 +36,10 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.AssinaturaDocumentoManager;
-import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.service.ProcessoAnaliseDocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
-import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.log.LogProvider;
@@ -50,6 +49,7 @@ import br.com.infox.seam.util.ComponentUtil;
 @Scope(ScopeType.CONVERSATION)
 @Name(ValidaDocumentoAction.NAME)
 @Transactional
+@ContextDependency
 public class ValidaDocumentoAction implements Serializable {
 
 	private static final String RECURSO_ANEXAR_DOCUMENTO_SEM_ANALISE = "anexarDocumentoSemAnalise";
@@ -66,25 +66,19 @@ public class ValidaDocumentoAction implements Serializable {
 	private String externalCallback;
 	private String token;
 
-	@In
+	@Inject
 	public DocumentoManager documentoManager;
-	@In
-	private DocumentoBinarioManager documentoBinarioManager;
-	@In
+	@Inject
 	private AssinaturaDocumentoService assinaturaDocumentoService;
-	@In
+	@Inject
 	private AssinaturaDocumentoManager assinaturaDocumentoManager;
-	@In
+	@Inject
 	private CertificateSignatures certificateSignatures;
-	@In
-	private InfoxMessages infoxMessages;
-	@In
+	@Inject
 	private ProcessoAnaliseDocumentoService processoAnaliseDocumentoService;
-	@In
-	private MetadadoProcessoManager metadadoProcessoManager;
-	@In
+	@Inject
 	private ProcessoDAO processoDAO;
-	@In
+	@Inject
 	private ActionMessagesService actionMessagesService;
 
 	private Boolean podeIniciarFluxoAnaliseDocumentos;
@@ -260,12 +254,12 @@ public class ValidaDocumentoAction implements Serializable {
 	private CertificateSignatureBundleBean getSignature() throws CertificadoException {
 		CertificateSignatureBundleBean bundle = certificateSignatures.get(getToken());
 		if (bundle == null) {
-			throw new CertificadoException(infoxMessages.get("assinatura.error.hashExpired"));
+			throw new CertificadoException(InfoxMessages.getInstance().get("assinatura.error.hashExpired"));
 		} else {
 			switch (bundle.getStatus()) {
 			case ERROR:
 			case UNKNOWN:
-				throw new CertificadoException(infoxMessages.get("assinatura.error.unknown"));
+				throw new CertificadoException(InfoxMessages.getInstance().get("assinatura.error.unknown"));
 			default:
 				break;
 			}

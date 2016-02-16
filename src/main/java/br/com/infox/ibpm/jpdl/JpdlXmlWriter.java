@@ -184,9 +184,7 @@ public class JpdlXmlWriter {
             Swimlane s = e.getValue();
             addAttribute(swimlane, "key", s.getKey() == null ? UUID.randomUUID().toString() : s.getKey());
             if (s.getPooledActorsExpression() != null || s.getActorIdExpression() != null) {
-                Element assignment = addElement(swimlane, "assignment");
-                addAttribute(assignment, "pooled-actors", s.getPooledActorsExpression());
-                addAttribute(assignment, "actor-id", s.getActorIdExpression());
+                writeAssignment(swimlane, s.getActorIdExpression(), s.getPooledActorsExpression());
             }
         }
     }
@@ -219,7 +217,6 @@ public class JpdlXmlWriter {
         return newElement;
     }
 
-    @SuppressWarnings(UNCHECKED)
     private void writeNodes(Element parentElement, List<org.jbpm.graph.def.Node> nodes) {
         Iterator<org.jbpm.graph.def.Node> iter = nodes.iterator();
         while (iter.hasNext()) {
@@ -265,24 +262,43 @@ public class JpdlXmlWriter {
         Set variableAccess = (Set) ReflectionsUtil.getValue(node, "variableAccesses");
         writeVariables(nodeElement, variableAccess);
     }
-
+   
+    private void writeAssignment(Task task, Element element){
+		if (task.getPooledActorsExpression() != null || task.getActorIdExpression() != null){
+			writeAssignment(element, task.getActorIdExpression(), task.getPooledActorsExpression());
+//			addAttribute(element, "actor-id", task.getActorIdExpression());
+//			addAttribute(element, "pooled-actors", task.getPooledActorsExpression());
+		}
+    }
+    
     private void writeTasks(Set<Task> tasks, Element element) {
         for (Task task : tasks) {
             Element taskElement = addElement(element, "task");
             addAttribute(taskElement, ELEMENT_NAME, task.getName());
-            if (task.getSwimlane() != null) {
-                addAttribute(taskElement, "swimlane", task.getSwimlane().getName());
+            if (task.getSwimlane() != null){
+            	addAttribute(taskElement, "swimlane", task.getSwimlane().getName());
+            } 
+            if (task.getPooledActorsExpression() != null || task.getActorIdExpression() != null) {
+            	writeAssignment(task, taskElement);
             }
-            addAttribute(taskElement, "actor-id", task.getActorIdExpression());
             addAttribute(taskElement, "condition", task.getCondition());
             addAttribute(taskElement, "description", task.getDescription());
             addAttribute(taskElement, "due-date", task.getDueDate());
-            addAttribute(taskElement, "pooled-actors", task.getPooledActorsExpression());
             addAttribute(taskElement, "key", task.getKey() == null ? UUID.randomUUID().toString() : task.getKey());
             writeController(task.getTaskController(), taskElement);
             writeEvents(taskElement, task);
         }
     }
+
+    private void writeAssignment(Element taskElement, String actorIdExpression, String pooledActorsExpression) {
+    	Element assignment = addElement(taskElement, "assignment");
+    	if (pooledActorsExpression != null) {
+    	    addAttribute(assignment, "pooled-actors", pooledActorsExpression);
+    	}
+    	if (actorIdExpression != null) {
+    	    addAttribute(assignment, "actor-id", actorIdExpression);
+    	}
+	}
 
 	@SuppressWarnings(UNCHECKED)
     private void writeController(TaskController taskController, Element taskElement) {
@@ -363,7 +379,6 @@ public class JpdlXmlWriter {
         writeEvents(element, node);
     }
 
-    @SuppressWarnings(UNCHECKED)
     private void writeTransitions(Element element, org.jbpm.graph.def.Node node) {
         if (node.getLeavingTransitionsMap() != null) {
             Iterator<Transition> iter = node.getLeavingTransitionsList().iterator();
@@ -424,7 +439,7 @@ public class JpdlXmlWriter {
                 }
             }
         }
-        if (!valid && !event.getEventType().startsWith(Event.EVENTTYPE_TASK_LISTENER)) {
+        if (!valid && !event.isListener() && !event.getEventType().equals(Event.EVENTTYPE_DISPATCHER)) {
             eventElement.detach();
         }
     }

@@ -6,7 +6,7 @@
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf">
     <ui:param name="idPopUp" value="#{resultList[rowId]}" />
-    <wi:toolBar url="#{wiSkin.imageFolder}/view.png" title="#{infoxMessages['button.selecionar']}"
+    <wi:toolBar url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['button.selecionar']}"
         oncomplete="openPopUp('#{idPopUp}', '#{wi:get(target,null)}');">
         <f:param name="id"
             value="#{empty toolBarIdRow ? rowId : toolBarIdRow}" />

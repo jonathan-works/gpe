@@ -29,18 +29,11 @@
       showDialogMessage="#{showDialogMessage}" />
     <wi:quadro styleClass="minimal">
       <ui:define name="banner">
-        <div class="banner-lft minimal">
-          <h:graphicImage styleClass="banner-logo minimal"
-            url="#{wiSkin.imageFolder}/logo_epp_topo.png" />
-        </div>
-        <div class="banner-rgt minimal">
-          <s:div styleClass="liveclock bannerclock minimal"></s:div>
-          <div class="painelUsuario">
-            <h:outputText styleClass="painelUsuario-label name minimal"
-              value="#{usuarioLogado}" />
-          </div>
-        </div>
-      </ui:define>
+                <s:div styleClass="liveclock bannerclock minimal" />
+                <div class="painelUsuario minimal">
+                <h:graphicImage styleClass="banner-logo minimal" url="#{layoutController.getResourceUrl('LOGO_TOPO')}" />
+                </div>
+    </ui:define>
       <ui:insert name="body" />
     </wi:quadro>
   </s:div>

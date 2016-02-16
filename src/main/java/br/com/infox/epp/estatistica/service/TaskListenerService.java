@@ -7,6 +7,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Transactional;
+import org.jbpm.JbpmContext;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.exe.TaskInstance;
@@ -14,7 +15,6 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
-import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
@@ -36,14 +36,9 @@ public class TaskListenerService implements Serializable {
     @In
     private ProcessoTarefaManager processoTarefaManager;
     @In
-    TarefaManager tarefaManager;
+    private TarefaManager tarefaManager;
     @In
     private ProcessoManager processoManager;
-
-    @Observer(IniciarProcessoService.ON_CREATE_PROCESS)
-    public void onStartProcess(TaskInstance taskInstance, Processo processo) {
-        createProcessoTarefa(processo, taskInstance);
-    }
 
     @Observer(Event.EVENTTYPE_TASK_CREATE)
     public void onCreateJbpmTask(ExecutionContext context) {
@@ -58,7 +53,7 @@ public class TaskListenerService implements Serializable {
         String taskName = taskInstance.getTask().getName();
         String procDefName = taskInstance.getProcessInstance().getProcessDefinition().getName();
         Tarefa tarefa = tarefaManager.getTarefa(taskName, procDefName);
-
+        JbpmContext.getCurrentJbpmContext().getSession().flush();
         ProcessoTarefa pTarefa = new ProcessoTarefa();
         pTarefa.setProcesso(processoManager.find(processo.getIdProcesso()));
         pTarefa.setTarefa(tarefa);
@@ -74,7 +69,7 @@ public class TaskListenerService implements Serializable {
         try {
         	processoTarefaManager.persist(pTarefa);
         } catch (DAOException e) {
-            LOG.error(".createProcessoEpa(processo, taskInstance)", e);
+            LOG.error(".createProcesso(processo, taskInstance)", e);
         }
     }
 

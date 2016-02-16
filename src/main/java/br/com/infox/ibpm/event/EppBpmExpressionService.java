@@ -8,12 +8,14 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.comunicacao.prazo.ContabilizadorPrazo;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
+import br.com.infox.ibpm.sinal.SignalService;
 
 @Stateless
 @Named(BpmExpressionService.NAME)
@@ -24,6 +26,8 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
 
     private ContabilizadorPrazo contabilizadorPrazo = BeanManager.INSTANCE.getReference(ContabilizadorPrazo.class);
     private PastaManager pastaManager = BeanManager.INSTANCE.getReference(PastaManager.class);
+    @Inject
+    private SignalService signalService;
 
     @External(tooltip = "process.events.expression.atribuirCiencia.tooltip")
     public void atribuirCiencia() {
@@ -50,6 +54,13 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void tornarPastaPublica(String nomePasta, Long processo) throws DAOException {
         pastaManager.tornarPastaPublica(nomePasta, processo);
+    }
+    
+    @External(value = {
+            @Parameter(defaultValue = "'Código do Sinal'", label = "process.events.expression.param.codigoSinal.label", tooltip = "process.events.expression.param.codigoSinal.tooltip", selectable = true)
+            })
+    public void dispatchSignal(String codigoSinal) throws DAOException {
+        signalService.dispatch(codigoSinal);
     }
 
     @Override
