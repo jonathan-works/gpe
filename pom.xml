@@ -646,6 +646,7 @@
     <database.type>PostgreSQL</database.type>
     <db.classifier>postgresql</db.classifier>
     <optional.oracle.module>true</optional.oracle.module>
+    <session.factory.jndi>java:/sessionFactoryEPA</session.factory.jndi>
   </properties>
   <profiles>
     <profile>
@@ -692,6 +693,7 @@
         <hibernate.cache.region.class>org.hibernate.cache.infinispan.InfinispanRegionFactory</hibernate.cache.region.class>
         <epp.mail.session>mail/${epp.name}</epp.mail.session>
         <epp.transactionManager.jndi>java:comp/TransactionManager</epp.transactionManager.jndi>
+        <session.factory.jndi>java:comp/env/EPAPersistenceUnit</session.factory.jndi>
       </properties>
       <dependencies>
         <dependency>
