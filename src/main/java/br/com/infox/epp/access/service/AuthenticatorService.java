@@ -2,7 +2,6 @@ package br.com.infox.epp.access.service;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
-import java.io.Serializable;
 import java.security.Principal;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
@@ -40,7 +39,6 @@ import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.BloqueioUsuarioManager;
 import br.com.infox.epp.access.manager.CertificateManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
-import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
@@ -50,11 +48,12 @@ import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.RedirectToLoginApplicationException;
 
-@Name(AuthenticatorService.NAME)
-@AutoCreate
 @Stateless
+@AutoCreate
 @Scope(ScopeType.STATELESS)
-public class AuthenticatorService implements Serializable {
+@Scope(ScopeType.STATELESS)
+@Name(AuthenticatorService.NAME)
+public class AuthenticatorService {
 
     public static final String CERTIFICATE_ERROR_EXPIRED = "certificate.error.expired";
     private static final String CERTIFICATE_ERROR_USUARIO_LOGIN_PROVISORIO_EXPIRADO = "certificate.error.usuarioLoginProvisorioExpirado";
@@ -65,7 +64,6 @@ public class AuthenticatorService implements Serializable {
     private static final String CERTIFICATE_ERROR_SEM_PESSOA_FISICA = "certificate.error.semPessoaFisica";
     private static final String SEAM_SECURITY_CREDENTIALS = "org.jboss.seam.security.credentials";
     private static final String CHECK_VALIDADE_CERTIFICADO = "CertificateAuthenticator.checkValidadeCertificado(Certificado)";
-    private static final long serialVersionUID = 1L;
     public static final String NAME = "authenticatorService";
 
     @Inject

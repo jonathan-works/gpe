@@ -126,8 +126,8 @@ public class Authenticator implements Serializable {
         if (id != null) {
             JpaIdentityStore store = getJpaIdentyStore();
             UsuarioLogin usuario = (UsuarioLogin) store.lookupUser(id);
-            validaCadastroDeUsuario(id, usuario);
             try {
+                validaCadastroDeUsuario(id, usuario);
                 getAuthenticatorService().validarUsuario(usuario);
                 if (isTrocarSenha()) {
                     trocarSenhaUsuario(usuario);
@@ -136,8 +136,7 @@ public class Authenticator implements Serializable {
                 }
             } catch (LoginException e) {
                 Identity.instance().unAuthenticate();
-                LOG.error("postAuthenticate()", e);
-                throw e;
+                FacesMessages.instance().add(e.getMessage());
             } catch (DAOException e) {
                 LOG.error("postAuthenticate()", e);
             }
@@ -263,9 +262,9 @@ public class Authenticator implements Serializable {
     public void loginFailed(Object obj) throws LoginException {
         UsuarioLogin usuario = usuarioLoginManager.getUsuarioLoginByLogin(Identity.instance().getCredentials().getUsername());
         if (usuario != null && !usuario.getAtivo()) {
-            throw new LoginException(infoxMessages.get("login.error.usuarioNaoAtivo"));
+            FacesMessages.instance().add(infoxMessages.get("login.error.usuarioNaoAtivo"));
         }
-        throw new LoginException(infoxMessages.get("login.error.usuarioOuSenhaInvalidos"));
+        FacesMessages.instance().add(infoxMessages.get("login.error.usuarioOuSenhaInvalidos"));
     }
 
     @Observer(Identity.EVENT_LOGGED_OUT)
@@ -288,11 +287,9 @@ public class Authenticator implements Serializable {
         return getLocalizacoesFilhas(localizacao, new ArrayList<Localizacao>());
     }
 
-    private static List<Localizacao> getLocalizacoesFilhas(Localizacao loc,
-            List<Localizacao> list) {
+    private static List<Localizacao> getLocalizacoesFilhas(Localizacao loc, List<Localizacao> list) {
         list.add(loc);
-        if (loc.getEstruturaFilho() != null
-                && !list.contains(loc.getEstruturaFilho())) {
+        if (loc.getEstruturaFilho() != null && !list.contains(loc.getEstruturaFilho())) {
 //            getLocalizacoesFilhas(loc.getEstruturaFilho(), list);
         }
         for (Localizacao locFilho : loc.getLocalizacaoList()) {
