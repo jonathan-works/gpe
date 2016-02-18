@@ -19,7 +19,6 @@ import javax.swing.JPanel;
 
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Node;
-import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.TaskNode;
@@ -33,14 +32,13 @@ import org.jgraph.graph.DefaultGraphModel;
 import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.GraphModel;
 
+import com.jgraph.layout.JGraphFacade;
+import com.jgraph.layout.hierarchical.JGraphHierarchicalLayout;
+
 import br.com.infox.core.messages.InfoxMessages;
-import br.com.infox.ibpm.node.DecisionNode;
 import br.com.infox.ibpm.process.definition.graphical.layout.cell.JbpmDefaultCell;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.util.JbpmUtil;
-
-import com.jgraph.layout.JGraphFacade;
-import com.jgraph.layout.hierarchical.JGraphHierarchicalLayout;
 
 public class JbpmLayout {
 
@@ -101,10 +99,7 @@ public class JbpmLayout {
                 } else {
                     sb.append(",{}");
                 }
-                if (cell.getNode().getNodeType() == NodeType.Decision) {
-                    DecisionNode decNode = (DecisionNode) cell.getNode();
-                    sb.append(", \"" + decNode.getDecisionExpression() + "\"");
-                }
+               // TODO Colocar as condições nas transições
                 sb.append(");\n");
 
             }

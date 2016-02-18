@@ -66,7 +66,6 @@ import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
-import br.com.infox.epp.painel.PainelUsuarioController;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -91,7 +90,6 @@ import br.com.infox.ibpm.task.manager.TaskInstanceManager;
 import br.com.infox.ibpm.task.view.Form;
 import br.com.infox.ibpm.task.view.FormField;
 import br.com.infox.ibpm.task.view.TaskInstanceForm;
-import br.com.infox.ibpm.transition.TransitionHandler;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.variable.VariableHandler;
 import br.com.infox.ibpm.variable.entity.VariableInfo;
@@ -159,8 +157,6 @@ public class TaskInstanceHome implements Serializable {
 	private FileVariableHandler fileVariableHandler;
 	@Inject
 	private ActionMessagesService actionMessagesService;
-	@Inject
-	private PainelUsuarioController painelUsuarioController;
 
 	private TaskInstance taskInstance;
 	private Map<String, Object> mapaDeVariaveis;
@@ -796,7 +792,7 @@ public class TaskInstanceHome implements Serializable {
 			for (Transition transition : leavingTransitions) {
 				// POG temporario devido a falha no JBPM de avaliar as
 				// avaliablesTransitions
-				if (availableTransitions.contains(transition) && !hasOcculTransition(transition)) {
+				if (availableTransitions.contains(transition) && !transition.isHidden()) {
 					list.add(transition);
 				}
 			}
@@ -842,12 +838,6 @@ public class TaskInstanceHome implements Serializable {
 		}
 	}
 
-	public static boolean hasOcculTransition(Transition transition) {
-		return transition.getDescription() != null && transition.getDescription().contains(TransitionHandler.OCCULT_TRANSITION);
-		// return OCCULT_TRANSITION.equals(transition.getCondition());
-	}
-
-	@SuppressWarnings(UNCHECKED)
 	public void updateTransitions() {
 		availableTransitions = taskInstance.getAvailableTransitions();
 		leavingTransitions = taskInstance.getTask().getTaskNode().getLeavingTransitions();

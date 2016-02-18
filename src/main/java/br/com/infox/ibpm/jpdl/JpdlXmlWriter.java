@@ -17,6 +17,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
+import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -47,7 +48,6 @@ import org.jbpm.taskmgmt.def.TaskController;
 
 import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.core.util.StringUtil;
-import br.com.infox.ibpm.node.DecisionNode;
 import br.com.infox.ibpm.node.InfoxMailNode;
 import br.com.infox.ibpm.task.handler.CustomAction;
 import br.com.infox.log.LogProvider;
@@ -238,10 +238,6 @@ public class JpdlXmlWriter {
                 if (node instanceof ProcessState) {
                     writeProcessState((ProcessState) node, nodeElement);
                 }
-                if (node instanceof DecisionNode) {
-                    DecisionNode decision = (DecisionNode) node;
-                    addAttribute(nodeElement, "expression", decision.getDecisionExpression());
-                }
                 node.write(nodeElement);
                 writeNode(nodeElement, node);
             }
@@ -391,6 +387,7 @@ public class JpdlXmlWriter {
 
     private void writeTransition(Element transitionElement, Transition transition) {
     	transitionElement.addAttribute("key", transition.getKey() == null ? UUID.randomUUID().toString() : transition.getKey());
+    	transitionElement.addAttribute("hidden", String.valueOf(transition.isHidden()));
         if (transition.getTo() != null) {
             transitionElement.addAttribute("to", transition.getTo().getName());
         }
@@ -401,10 +398,13 @@ public class JpdlXmlWriter {
         if ((transitionEvent != null) && (transitionEvent.hasActions())) {
             writeActions(transitionElement, transitionEvent.getActions());
         }
-        if (transition.getCondition() != null
-                && !"".equals(transition.getCondition().trim())) {
-            Element condition = transitionElement.addElement("condition");
-            condition.addAttribute("expression", transition.getCondition());
+        if (transition.getCondition() != null && !"".equals(transition.getCondition().trim())) {
+        	transitionElement.addAttribute("condition", transition.getCondition());
+        } else {
+        	Attribute condition = transitionElement.attribute("condition");
+        	if (condition != null) {
+        		transitionElement.remove(condition);
+        	}
         }
         if (transition.getDescription() != null) {
             writeDescription(transitionElement, transition.getDescription());

@@ -15,8 +15,8 @@
   <node-type element="interleave-end" class="org.jbpm.graph.node.InterleaveEnd" />
   <node-type element="page" class="org.jboss.seam.pageflow.Page" />
   <node-type element="start-page" class="org.jboss.seam.pageflow.Page" />
+  <node-type element="decision" class="org.jbpm.graph.node.Decision" />
 
 <!-- Customizados -->
-  <node-type element="decision" class="br.com.infox.ibpm.node.DecisionNode" />
   <node-type element="mail-node" class="br.com.infox.ibpm.node.InfoxMailNode" />
 </node-types>

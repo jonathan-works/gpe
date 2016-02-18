@@ -70,7 +70,6 @@
     <mapping resource="hibernate.extra.hbm.xml" />
     <mapping resource="hibernate.identity.hbm.xml" />
 
-    <mapping resource="DecisionNode.xml" />
     <mapping resource="MailNode.xml" />
     <!-- ###################### -->
     <!-- # jbpm mapping files # -->
