@@ -1,9 +1,8 @@
 package br.com.infox.epp.fluxo.xpdl.activities;
 
 import org.jbpm.graph.def.Node;
+import org.jbpm.graph.node.Decision;
 import org.jdom2.Element;
-
-import br.com.infox.ibpm.node.DecisionNode;
 
 public class DecisionActivityXPDL extends ActivityXPDL {
 
@@ -16,7 +15,7 @@ public class DecisionActivityXPDL extends ActivityXPDL {
     @Override
     public Node toNode() {
         if (node == null) {
-            node = new DecisionNode();
+            node = new Decision();
             node.setName(this.getName());
         }
         return node;

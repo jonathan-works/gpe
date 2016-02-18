@@ -135,7 +135,7 @@
                                     value="#{nodeFitter.nodeName}" />
                             </h:panelGrid>
                         </f:facet>
-                        <div class="flex-displayed-container">
+                        <div class="#{nodeFitter.currentNode.nodeType ne 'Decision' ? 'flex-displayed-container' : ''}">
                             <s:fragment rendered="#{nodeFitter.currentNode.nodeType != 'StartState'}">
                                 <ui:include src="transition.xhtml">
                                     <ui:param name="type" value="from" />

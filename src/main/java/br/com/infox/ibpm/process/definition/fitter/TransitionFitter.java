@@ -206,20 +206,6 @@ public class TransitionFitter extends Fitter implements Serializable {
         return transitionList;
     }
 
-    /**
-     * Seta a #{true} na condição da transição para o botão não ser exibido na
-     * tab de saída do fluxo.
-     * 
-     * @param th
-     */
-    public void setTransitionButton(TransitionHandler th) {
-        if (th.getTransition().getDescription() == null || th.getTransition().getDescription().equals("")) {
-            th.getTransition().setDescription(TransitionHandler.OCCULT_TRANSITION);
-        } else {
-            th.getTransition().setDescription(null);
-        }
-    }
-
     public List<String[]> getTransitionNames() {
         if (transitionNames == null) {
             getTransitions();
