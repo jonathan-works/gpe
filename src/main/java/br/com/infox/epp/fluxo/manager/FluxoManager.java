@@ -12,8 +12,6 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 
-import org.camunda.bpm.model.bpmn.Bpmn;
-import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -151,8 +149,7 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
     public void converterParaBpmn(Fluxo fluxo) {
     	refresh(fluxo);
     	JpdlBpmnConverter converter = new JpdlBpmnConverter();
-    	BpmnModelInstance bpmnModelInstance = converter.convert(fluxo.getXml());
-    	fluxo.setBpmnXml(Bpmn.convertToString(bpmnModelInstance));
+    	fluxo.setBpmnXml(converter.convert(fluxo.getXml()));
     	fluxo.setBpmn(true);
     	update(fluxo);
     }

@@ -4,7 +4,6 @@ import java.awt.Rectangle;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,6 +13,7 @@ import java.util.Map;
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.GatewayDirection;
+import org.camunda.bpm.model.bpmn.impl.BpmnModelConstants;
 import org.camunda.bpm.model.bpmn.instance.Definitions;
 import org.camunda.bpm.model.bpmn.instance.ExclusiveGateway;
 import org.camunda.bpm.model.bpmn.instance.FlowElement;
@@ -35,6 +35,7 @@ import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
+import org.jbpm.graph.node.Decision;
 import org.jbpm.graph.node.EndState;
 import org.jbpm.graph.node.Fork;
 import org.jbpm.graph.node.Join;
@@ -48,7 +49,6 @@ import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
 import com.google.common.base.Strings;
 
 import br.com.infox.core.util.ReflectionsUtil;
-import br.com.infox.ibpm.node.DecisionNode;
 
 public class BpmnJpdlConverter {
 	
@@ -72,6 +72,7 @@ public class BpmnJpdlConverter {
 		processDefinition.addDefinition(new TaskMgmtDefinition());
 		
 		visit(startEvent, processDefinition, null, new HashMap<String, Boolean>());
+		resolveDecisionExpressions(model, processDefinition);
 		resolveLanes(process, processDefinition);
 		createDefaultEvents(processDefinition);
 		return processDefinition;
@@ -109,31 +110,28 @@ public class BpmnJpdlConverter {
 				to.addArrivingTransition(transition);
 			}
 		}
-		if (node instanceof DecisionNode) {
-			setExpression((DecisionNode) node, (ExclusiveGateway) root);
-		}
 	}
 
 	private Node createNode(FlowNode flowNode, ProcessDefinition processDefinition, Node node) {
-		if (flowNode.getElementType().getTypeName().equals("startEvent")) {
+		if (flowNode.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_START_EVENT)) {
 			node = new StartState(getIdentification(flowNode));
-		} else if (flowNode.getElementType().getTypeName().equals("endEvent")) {
+		} else if (flowNode.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_END_EVENT)) {
 			node = new EndState(getIdentification(flowNode));
-		} else if (flowNode.getElementType().getTypeName().equals("userTask")) {
+		} else if (flowNode.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_USER_TASK)) {
 			node = new TaskNodeFactory().createTaskNode((UserTask) flowNode, processDefinition);
-		} else if (flowNode.getElementType().getTypeName().equals("serviceTask")) {
+		} else if (flowNode.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_SERVICE_TASK)) {
 			node = new Node(getIdentification(flowNode));
-		} else if (flowNode.getElementType().getTypeName().equals("exclusiveGateway")) {
-			node = new DecisionNode(getIdentification(flowNode));
-		} else if (flowNode.getElementType().getTypeName().equals("subProcess")) {
+		} else if (flowNode.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_EXCLUSIVE_GATEWAY)) {
+			node = new Decision(getIdentification(flowNode));
+		} else if (flowNode.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_SUB_PROCESS)) {
 			if (flowNode.getName() == null) {
 				throw new BpmnJpdlConverterException("O subprocesso deve possuir um nome");
 			}
 			node = new ProcessState(flowNode.getName());
 			ReflectionsUtil.setValue(node, "subProcessName", flowNode.getName());
-		} else if (flowNode.getElementType().getTypeName().equals("intermediateThrowEvent")) {
+		} else if (flowNode.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_INTERMEDIATE_THROW_EVENT)) {
 			node = new Node(getIdentification(flowNode));
-		} else if (flowNode.getElementType().getTypeName().equals("parallelGateway")) {
+		} else if (flowNode.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_PARALLEL_GATEWAY)) {
 			GatewayDirection direction = ((ParallelGateway) flowNode).getGatewayDirection();
 			if (direction == GatewayDirection.Diverging) {
 				node = new Fork(getIdentification(flowNode));
@@ -149,31 +147,26 @@ public class BpmnJpdlConverter {
 		return element.getName() != null ? element.getName() : element.getId();
 	}
 	
-	private void setExpression(DecisionNode decisionNode, ExclusiveGateway decisionBpmn) {
-		if (decisionBpmn.getDefault() == null) {
-			throw new BpmnJpdlConverterException("Uma transição padrão deve estar configurada no gateway '" + getIdentification(decisionBpmn) + "'");
-		}
-		String defaultTransition = decisionBpmn.getDefault().getId();
-		StringBuilder sb = new StringBuilder("#{");
-		for (SequenceFlow sequenceFlow : decisionBpmn.getOutgoing()) {
-			if (sequenceFlow.equals(decisionBpmn.getDefault())) {
-				continue;
-			}
-			if (sequenceFlow.getConditionExpression() == null) {
-				String template = "A transição ''{0}'' ({1} -> {2}) deve ter uma condição configurada";
-				throw new BpmnJpdlConverterException(MessageFormat.format(template, getIdentification(sequenceFlow), getIdentification(sequenceFlow.getSource()), getIdentification(sequenceFlow.getTarget())));
-			}
-			String condition = sequenceFlow.getConditionExpression().getTextContent();
-			if (!Strings.isNullOrEmpty(condition)) {
-				condition = condition.substring(2, condition.length() - 1);
-				sb.append(condition);
-				sb.append(" ? '");
-				sb.append(sequenceFlow.getId());
-				sb.append("' : ");
+	private void resolveDecisionExpressions(BpmnModelInstance modelInstance, ProcessDefinition processDefinition) {
+		Collection<ExclusiveGateway> gateways = modelInstance.getModelElementsByType(ExclusiveGateway.class);
+		for (ExclusiveGateway gateway : gateways) {
+			Decision decision = (Decision) processDefinition.getNode(gateway.getId());
+			if (decision.getLeavingTransitions() != null) {
+				SequenceFlow defaultSequenceFlow = gateway.getDefault();
+				for (Transition transition : decision.getLeavingTransitions()) {
+					if (defaultSequenceFlow != null && defaultSequenceFlow.getId().equals(transition.getKey())) {
+						transition.setCondition(null);
+					} else {
+						SequenceFlow sequenceFlow = modelInstance.getModelElementById(transition.getKey());
+						if (sequenceFlow.getConditionExpression() != null && !Strings.isNullOrEmpty(sequenceFlow.getConditionExpression().getTextContent())) {
+							transition.setCondition(sequenceFlow.getConditionExpression().getTextContent());
+						} else {
+							transition.setCondition(null);
+						}
+					}
+				}
 			}
 		}
-		sb.append("'" + defaultTransition + "'}");
-		decisionNode.setDecisionExpression(sb.toString());
 	}
 	
 	private void resolveLanes(Process process, ProcessDefinition processDefinition) {
@@ -188,7 +181,7 @@ public class BpmnJpdlConverter {
 					flowNodes = getNodesInLaneGraphically(lane, (Definitions) process.getParentElement());
 				}
 				for (FlowNode flowNode : flowNodes) {
-					if (flowNode.getElementType().getTypeName().equals("userTask")) {
+					if (flowNode.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_USER_TASK)) {
 						TaskNode taskNode = (TaskNode) processDefinition.getNode(getIdentification(flowNode));
 						for (Object task : taskNode.getTasks()) {
 							((Task) task).setSwimlane(swimlane);

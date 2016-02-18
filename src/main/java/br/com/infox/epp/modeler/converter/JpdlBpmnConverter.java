@@ -1,5 +1,6 @@
 package br.com.infox.epp.modeler.converter;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,6 +15,7 @@ import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.GatewayDirection;
 import org.camunda.bpm.model.bpmn.builder.AbstractFlowNodeBuilder;
 import org.camunda.bpm.model.bpmn.builder.ProcessBuilder;
+import org.camunda.bpm.model.bpmn.impl.BpmnModelConstants;
 import org.camunda.bpm.model.bpmn.instance.Activity;
 import org.camunda.bpm.model.bpmn.instance.Collaboration;
 import org.camunda.bpm.model.bpmn.instance.ConditionExpression;
@@ -37,18 +39,23 @@ import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
-import org.jbpm.graph.node.EndState;
-import org.jbpm.graph.node.Fork;
-import org.jbpm.graph.node.Join;
+import org.jbpm.graph.node.Decision;
 import org.jbpm.graph.node.ProcessState;
-import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Swimlane;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.Namespace;
+import org.jdom2.filter.ElementFilter;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
+import org.jdom2.util.IteratorIterable;
 
 import com.google.common.base.Strings;
 
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
-import br.com.infox.ibpm.node.DecisionNode;
 import br.com.infox.ibpm.node.InfoxMailNode;
 
 public class JpdlBpmnConverter {
@@ -65,7 +72,7 @@ public class JpdlBpmnConverter {
 	private static final int PARTICIPANT_LANE_OFFSET = 30;
 	private static final int FLOW_NODE_X_OFFSET = 30;
 	
-	private List<DecisionNode> decisions = new LinkedList<>();
+	private ProcessDefinition processDefinition;
 	private List<TaskNode> taskNodes = new LinkedList<>();
 	private StartEvent startEvent;
 	private Map<String, Lane> nodesToLanes = new HashMap<>();
@@ -75,8 +82,8 @@ public class JpdlBpmnConverter {
 	private Map<String, BpmnShape> laneShapes = new HashMap<>();
 	private double maxXFromPreviousLane = 0d;
 	
-	public BpmnModelInstance convert(String processDefinitionXml) {
-		ProcessDefinition processDefinition = new InfoxJpdlXmlReader(new StringReader(processDefinitionXml)).readProcessDefinition();
+	public String convert(String processDefinitionXml) {
+		processDefinition = new InfoxJpdlXmlReader(new StringReader(processDefinitionXml)).readProcessDefinition();
 		ProcessBuilder builder = Bpmn.createProcess(processDefinition.getKey()).name(processDefinition.getName());
 		AbstractFlowNodeBuilder<?, ?> flowNodeBuilder = builder.startEvent(processDefinition.getStartState().getKey());
 
@@ -94,10 +101,44 @@ public class JpdlBpmnConverter {
 				sequenceFlow.removeConditionExpression();
 			}
 		}
-		
-		return modelInstance;
+
+		modelInstance.getDefinitions().getDomElement().registerNamespace("xsi", BpmnModelConstants.XSI_NS);
+		String bpmn = Bpmn.convertToString(modelInstance);
+		bpmn = fixConditionExpressionsType(bpmn);
+		return bpmn;
 	}
 	
+	private String fixConditionExpressionsType(String bpmn) {
+		SAXBuilder saxBuilder = new SAXBuilder();
+		Document doc;
+		try {
+			doc = saxBuilder.build(new StringReader(bpmn));
+		} catch (JDOMException | IOException e) {
+			throw new RuntimeException(e);
+		}
+
+		Element definitions = doc.getRootElement();
+		Namespace xsi = null;
+		for (Namespace namespace : definitions.getNamespacesInScope()) {
+			if (namespace.getURI().equals(BpmnModelConstants.XSI_NS)) {
+				xsi = namespace;
+				break;
+			}
+		}
+		if (xsi == null) {
+			xsi = Namespace.getNamespace("xsi", BpmnModelConstants.XSI_NS);
+			definitions.addNamespaceDeclaration(xsi);
+		}
+		
+		IteratorIterable<Element> conditions = definitions.getDescendants(new ElementFilter(BpmnModelConstants.BPMN_ELEMENT_CONDITION_EXPRESSION, definitions.getNamespace()));
+		for (Element condition : conditions) {
+			condition.setAttribute(BpmnModelConstants.XSI_ATTRIBUTE_TYPE, "tFormalExpression", xsi);
+		}
+		
+		XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
+		return out.outputString(doc);
+	}
+
 	private void visit(Node node, AbstractFlowNodeBuilder<?, ?> parentBuilder, Transition originTransition, Map<String, Boolean> markedNodes) {
 		markedNodes.put(node.getKey(), true);
 		AbstractFlowNodeBuilder<?, ?> currentBuilder = null;
@@ -106,25 +147,24 @@ public class JpdlBpmnConverter {
 			parentBuilder.sequenceFlowId(originTransition.getKey()).condition(originTransition.getName(), "");
 		}
 		
-		if (node instanceof StartState) {
+		if (node.getNodeType().equals(NodeType.StartState)) {
 			currentBuilder = parentBuilder;
-		} else if (node instanceof DecisionNode) {
+		} else if (node.getNodeType().equals(NodeType.Decision)) {
 			currentBuilder = parentBuilder.exclusiveGateway(node.getKey());
-			decisions.add((DecisionNode) node);
 		} else if (node.getNodeType().equals(NodeType.Task)) {
 			currentBuilder = parentBuilder.userTask(node.getKey());
 			taskNodes.add((TaskNode) node);
 		} else if (node.getNodeType().equals(NodeType.Node)) {
 			currentBuilder = parentBuilder.serviceTask(node.getKey());
-		} else if (node instanceof EndState) {
+		} else if (node.getNodeType().equals(NodeType.EndState)) {
 			currentBuilder = parentBuilder.endEvent(node.getKey());
 		} else if (node instanceof ProcessState) {
 			currentBuilder = parentBuilder.subProcess(node.getKey());
 		} else if (node instanceof InfoxMailNode) {
 			currentBuilder = parentBuilder.serviceTask(node.getKey());
-		} else if (node instanceof Fork) {
+		} else if (node.getNodeType().equals(NodeType.Fork)) {
 			currentBuilder = parentBuilder.parallelGateway(node.getKey()).gatewayDirection(GatewayDirection.Diverging);
-		} else if (node instanceof Join) {
+		} else if (node.getNodeType().equals(NodeType.Join)) {
 			currentBuilder = parentBuilder.parallelGateway(node.getKey()).gatewayDirection(GatewayDirection.Converging);
 		}
 		
@@ -139,49 +179,6 @@ public class JpdlBpmnConverter {
 					} else {
 						currentBuilder.sequenceFlowId(transition.getKey()).condition(transition.getName(), "").connectTo(next.getKey());
 					}
-				}
-			}
-		}
-	}
-	
-	private void resolveDecisionExpressions(BpmnModelInstance modelInstance) {
-		for (DecisionNode node : decisions) {
-			String decisionExpression = node.getDecisionExpression();
-			if (decisionExpression == null) {
-				continue;
-			}
-			ExclusiveGateway gateway = modelInstance.getModelElementById(node.getKey());
-			decisionExpression = decisionExpression.substring(2, decisionExpression.length() - 1);
-			int totalParenteses = 0;
-			for (int i = decisionExpression.length() - 1; i >= 0; i--) {
-				char c = decisionExpression.charAt(i);
-				if (c == ')') {
-					totalParenteses++;
-				} else {
-					break;
-				}
-			}
-			if (totalParenteses > 0) {
-				decisionExpression = decisionExpression.substring(totalParenteses, decisionExpression.length() - totalParenteses);
-			}
-			String[] conditionSequencePairs = decisionExpression.split(":");
-			for (String conditionSequencePair : conditionSequencePairs) {
-				String[] conditionSequencePairsSplitted = conditionSequencePair.split("\\?");
-				if (conditionSequencePairsSplitted.length == 1) {
-					String unparsedSequenceId = conditionSequencePairsSplitted[0].trim();
-					String sequenceId = unparsedSequenceId.substring(1, unparsedSequenceId.length() - 1);
-					SequenceFlow sequenceFlow = findSequenceFlowInGateway(sequenceId, gateway);
-					if (sequenceFlow != null) {
-						gateway.setDefault(sequenceFlow);
-					}
-				} else {
-					String condition = conditionSequencePairsSplitted[0].trim();
-					String unparsedSequenceId = conditionSequencePairsSplitted[1].trim();
-					String sequenceId = unparsedSequenceId.substring(1, unparsedSequenceId.length() - 1);
-					SequenceFlow sequenceFlow = findSequenceFlowInGateway(sequenceId, gateway);
-					ConditionExpression conditionExpression = modelInstance.newInstance(ConditionExpression.class);
-					conditionExpression.setTextContent("#{" + condition + "}");
-					sequenceFlow.setConditionExpression(conditionExpression);
 				}
 			}
 		}
@@ -223,18 +220,24 @@ public class JpdlBpmnConverter {
 		}
 	}
 	
-	private SequenceFlow findSequenceFlowInGateway(String sequenceFlowIdentification, ExclusiveGateway gateway) {
-		BpmnModelInstance modelInstance = (BpmnModelInstance) gateway.getModelInstance();
-		SequenceFlow sequenceFlow = modelInstance.getModelElementById(sequenceFlowIdentification);
-		if (sequenceFlow != null) {
-			return sequenceFlow;
-		}
-		for (SequenceFlow flow : gateway.getOutgoing()) {
-			if (sequenceFlowIdentification.equals(flow.getName())) {
-				return flow;
+	private void resolveDecisionExpressions(BpmnModelInstance modelInstance) {
+		Collection<ExclusiveGateway> gateways = modelInstance.getModelElementsByType(ExclusiveGateway.class);
+		for (ExclusiveGateway gateway : gateways) {
+			Decision decision = (Decision) processDefinition.getNode(gateway.getId());
+			if (decision.getLeavingTransitions() != null) {
+				gateway.setDefault((SequenceFlow) modelInstance.getModelElementById(decision.getDefaultLeavingTransition().getKey()));
+				for (Transition transition : decision.getLeavingTransitions()) {
+					SequenceFlow sequenceFlow = modelInstance.getModelElementById(transition.getKey());
+					if (!Strings.isNullOrEmpty(transition.getCondition())) {
+						ConditionExpression expression = modelInstance.newInstance(ConditionExpression.class);
+						expression.setTextContent(transition.getCondition());
+						sequenceFlow.setConditionExpression(expression);
+					} else {
+						sequenceFlow.removeConditionExpression();
+					}
+				}
 			}
 		}
-		return null;
 	}
 	
 	private void pseudoTopologicalSort(FlowNode node, Map<String, Boolean> markedNodes) {
