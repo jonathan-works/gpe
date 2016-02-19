@@ -66,6 +66,13 @@ public class ParticipanteProcessoDAO extends DAO<ParticipanteProcesso> {
     	return getNamedSingleResult(PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO, params);
     }
     
+    public List<ParticipanteProcesso> getParticipantesByPessoaProcesso(Pessoa pessoa, Processo processo){
+    	Map<String, Object> params = new HashMap<>();
+    	params.put(PARAM_PESSOA, pessoa);
+    	params.put(PARAM_PROCESSO, processo);
+    	return getNamedResultList(PARTICIPANTE_PROCESSO_BY_PESSOA_PROCESSO, params);
+    }
+    
     public List<Pessoa> getPessoasFisicasParticipantesProcesso(Processo processo){
 		String query = "select distinct p from ParticipanteProcesso pp "
 				+ "inner join  pp.pessoa p "
