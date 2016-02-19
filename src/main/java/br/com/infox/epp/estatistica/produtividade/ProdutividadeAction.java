@@ -1,4 +1,4 @@
-package br.com.infox.epp.estatistica.action;
+package br.com.infox.epp.estatistica.produtividade;
 
 import java.io.Serializable;
 import java.text.NumberFormat;
@@ -20,9 +20,6 @@ import br.com.infox.core.exception.ExcelExportException;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.util.ExcelExportUtil;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.estatistica.bean.ProdutividadeBean;
-import br.com.infox.epp.estatistica.manager.ProdutividadeManager;
-import br.com.infox.epp.estatistica.query.ProdutividadeQuery;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.log.Log;

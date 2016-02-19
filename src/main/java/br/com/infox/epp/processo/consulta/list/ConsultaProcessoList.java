@@ -97,9 +97,9 @@ public class ConsultaProcessoList extends DataList<TaskBean> {
                 tasksToRemove.add(taskBean);
             } else if (numeroProcessoRoot != null && !taskBean.getNumeroProcessoRoot().contains(numeroProcessoRoot)) {
                 tasksToRemove.add(taskBean);
-            } else if (natureza != null && !taskBean.getNomeNatureza().equals(natureza.getNatureza())) {
+            } else if (natureza != null && !taskBean.getNomeNaturezaProcessoRoot().equals(natureza.getNatureza())) {
                 tasksToRemove.add(taskBean);
-            } else if (categoria != null && !taskBean.getNomeCategoria().equals(categoria.getCategoria())) {
+            } else if (categoria != null && !taskBean.getNomeCategoriaProcessoRoot().equals(categoria.getCategoria())) {
                 tasksToRemove.add(taskBean);
             } else if (dataInicio != null && !DateUtil.isDataMaiorIgual(taskBean.getDataInicio(), dataInicio)){
                 tasksToRemove.add(taskBean);
@@ -134,6 +134,7 @@ public class ConsultaProcessoList extends DataList<TaskBean> {
     public void newInstance() {
         filteredTasks = new ArrayList<>(getTasks());
         setNumeroProcesso(null);
+        setNumeroProcessoRoot(null);
         setNatureza(null);
         setCategoria(null);
         setDataInicio(null);

@@ -16,6 +16,7 @@ import org.richfaces.model.UploadedFile;
 
 import com.lowagie.text.pdf.PdfReader;
 
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ExtensaoArquivo;
@@ -93,11 +94,16 @@ public class DocumentoUploaderService implements Serializable {
         	float fileLength = reader.getFileLength() / 1024F;
             float averagePage = fileLength / qtdPaginas;
             if (averagePage > limitePorPagina) {
-                throw new Exception("Arquivo excede o limite por página");
+            	throw new Exception(InfoxMessages.getInstance().get("documentoUploader.error.notPaginable"));
             }
+            for (int i = 1; i <= qtdPaginas; i++) {
+				if ((reader.getPageContent(i).length / 1024F) > limitePorPagina) {
+					throw new Exception(InfoxMessages.getInstance().get("documentoUploader.error.notPaginable"));
+				}
+			}
         } catch (IOException e) {
             LOG.error("Não foi possível recuperar as páginas do arquivo", e);
-            throw new Exception(Messages.instance().get("documentoUploader.error.notPaginable"));
+            throw new Exception(InfoxMessages.getInstance().get("documentoUploader.error.notPaginable"));
         }
     }
 	

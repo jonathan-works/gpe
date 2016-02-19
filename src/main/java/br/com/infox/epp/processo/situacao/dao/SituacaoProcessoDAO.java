@@ -128,6 +128,9 @@ public class SituacaoProcessoDAO {
         Join<NaturezaCategoriaFluxo, Categoria> categoria = natCatFluxo.join(NaturezaCategoriaFluxo_.categoria, JoinType.INNER);
         Join<Processo, UsuarioLogin> usuarioSolicitante = processo.join(Processo_.usuarioCadastro, JoinType.INNER);
         Join<Processo, Processo> processoRoot = processo.join(Processo_.processoRoot, JoinType.INNER);
+        Join<Processo, NaturezaCategoriaFluxo> natCatFluxoRoot = processoRoot.join(Processo_.naturezaCategoriaFluxo, JoinType.INNER);
+        Join<NaturezaCategoriaFluxo, Natureza> naturezaRoot = natCatFluxoRoot.join(NaturezaCategoriaFluxo_.natureza, JoinType.INNER);
+        Join<NaturezaCategoriaFluxo, Categoria> categoriaRoot = natCatFluxoRoot.join(NaturezaCategoriaFluxo_.categoria, JoinType.INNER);
         Join<Processo, PrioridadeProcesso> prioridadeProcesso = processo.join(Processo_.prioridadeProcesso, JoinType.LEFT);
         Join<Processo, Caixa> caixa = processo.join(Processo_.caixa, JoinType.LEFT);
         
@@ -146,13 +149,16 @@ public class SituacaoProcessoDAO {
         Selection<String> nomeCategoria = categoria.get(Categoria_.categoria); 
         Selection<String> numeroProcesso = processo.get(Processo_.numeroProcesso);
         Selection<String> numeroProcessoRoot = processoRoot.get(Processo_.numeroProcesso);
+        Selection<String> nomeNaturezaProcessoRoot = naturezaRoot.get(Natureza_.natureza); 
+        Selection<String> nomeCategoriaProcessoRoot = categoriaRoot.get(Categoria_.categoria);
         Selection<String> nomeUsuarioSolicitante = usuarioSolicitante.get(UsuarioLogin_.nomeUsuario);
         Selection<String> nomePrioridade = prioridadeProcesso.get(PrioridadeProcesso_.descricaoPrioridade);
         Selection<Integer> pesoPrioridade = prioridadeProcesso.get(PrioridadeProcesso_.peso);
         Selection<Date> dataInicio = processo.get(Processo_.dataInicio);
         
         cq.select(cb.construct(TaskBean.class, idTaskInstance, taskName, assignee, idProcessInstance, taskNodeKey, idProcesso, nomeCaixa, idCaixa, nomeFluxo, idFluxo,
-                nomeNatureza, nomeCategoria, numeroProcesso, numeroProcessoRoot, nomeUsuarioSolicitante, nomePrioridade, pesoPrioridade, dataInicio));
+                nomeNatureza, nomeCategoria, numeroProcesso, numeroProcessoRoot, nomeUsuarioSolicitante, nomePrioridade, pesoPrioridade, dataInicio,
+                nomeNaturezaProcessoRoot, nomeCategoriaProcessoRoot));
 
         cq.where(
                 cb.equal(processDefinition.get("name"), fluxo.get(Fluxo_.fluxo)),

@@ -2,6 +2,9 @@ package br.com.infox.epp.painel;
 
 import java.util.Date;
 
+import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.dao.UsuarioLoginDAO;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.painel.caixa.Caixa;
 
 public class TaskBean {
@@ -20,16 +23,20 @@ public class TaskBean {
     private String nomeCategoria;
     private String numeroProcesso;
     private String numeroProcessoRoot;
+    private String nomeNaturezaProcessoRoot;
+    private String nomeCategoriaProcessoRoot;
     private String nomeUsuarioSolicitante;
     private String prioridadeProcesso;
     private Integer pesoPrioridadeProcesso;
     private Date dataInicio;
+    private String nomeUsuarioTarefa;
     
     
     public TaskBean(String idTaskInstance, String taskName, String assignee, String idProcessInstance, String taskNodeKey,
             Integer idProcesso, String nomeCaixa, Integer idCaixa, String nomeFluxo, Integer idFluxo, String nomeNatureza, 
             String nomeCategoria, String numeroProcesso, String numeroProcessoRoot, String nomeUsuarioSolicitante, 
-            String prioridadeProcesso, Integer pesoPrioridadeProcesso, Date dataInicio) {
+            String prioridadeProcesso, Integer pesoPrioridadeProcesso, Date dataInicio, String nomeNaturezaProcessoRoot, 
+            String nomeCategoriaProcessoRoot) {
         this.idTaskInstance = idTaskInstance;
         this.taskName = taskName;
         this.assignee = assignee;
@@ -44,6 +51,8 @@ public class TaskBean {
         this.nomeCategoria = nomeCategoria;
         this.numeroProcesso = numeroProcesso;
         this.numeroProcessoRoot = numeroProcessoRoot;
+        this.nomeNaturezaProcessoRoot = nomeNaturezaProcessoRoot;
+        this.nomeCategoriaProcessoRoot = nomeCategoriaProcessoRoot;
         this.nomeUsuarioSolicitante = nomeUsuarioSolicitante;
         this.prioridadeProcesso = prioridadeProcesso;
         this.pesoPrioridadeProcesso = pesoPrioridadeProcesso == null ? -1 : pesoPrioridadeProcesso;
@@ -110,6 +119,14 @@ public class TaskBean {
         return numeroProcessoRoot;
     }
 
+    public String getNomeNaturezaProcessoRoot() {
+        return nomeNaturezaProcessoRoot;
+    }
+
+    public String getNomeCategoriaProcessoRoot() {
+        return nomeCategoriaProcessoRoot;
+    }
+
     public String getNomeUsuarioSolicitante() {
         return nomeUsuarioSolicitante;
     }
@@ -124,6 +141,13 @@ public class TaskBean {
     
     public Integer getPesoPrioridadeProcesso() {
         return pesoPrioridadeProcesso;
+    }
+    
+    public String getNomeUsuarioTarefa() {
+        if (nomeUsuarioTarefa == null && assignee != null && !Authenticator.getUsuarioLogado().getLogin().equals(assignee)) {
+            nomeUsuarioTarefa = BeanManager.INSTANCE.getReference(UsuarioLoginDAO.class).getUsuarioLoginByLogin(assignee).getNomeUsuario();
+        }
+        return nomeUsuarioTarefa;
     }
     
     public void removerCaixa() {
