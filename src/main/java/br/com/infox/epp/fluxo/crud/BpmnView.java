@@ -16,6 +16,8 @@ import br.com.infox.core.token.AccessTokenManager;
 import br.com.infox.core.token.TokenRequester;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.manager.FluxoManager;
+import br.com.infox.ibpm.process.definition.ProcessBuilder;
 
 @Named
 @ViewScoped
@@ -24,6 +26,8 @@ public class BpmnView implements Serializable {
 	
 	@Inject
 	private AccessTokenManager accessTokenManager;
+	@Inject
+	private FluxoManager fluxoManager;
 	
 	private String restApiUrl;
 	private Fluxo fluxo;
@@ -68,5 +72,13 @@ public class BpmnView implements Serializable {
 	@PreDestroy
 	private void destroy() {
 		accessTokenManager.remove(accessToken);
+	}
+	
+	public void refresh() {
+		if (fluxo != null) {
+			fluxo = fluxoManager.find(fluxo.getIdFluxo());
+			fluxoManager.refresh(fluxo);
+			ProcessBuilder.instance().load(fluxo);
+		}
 	}
 }

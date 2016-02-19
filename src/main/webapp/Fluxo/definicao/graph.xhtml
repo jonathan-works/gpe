@@ -1,32 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns="http://www.w3.org/1999/xhtml" 
-	xmlns:a="http://richfaces.org/a4j"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:infox="http://www.infox.com.br/jsf"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:wi="http://www.itx.com.br/jsf">
 
-	<h:form>
-	   
-	   <a:jsFunction name="onClickGraphElement" immediate="true" limitRender="true" execute="@this" render=":processDefinition">
-	       <a:param name="nodeIndex" assignTo="#{nodeFitter.nodeIndex}" />
-	       <a:param name="tab" assignTo="#{processBuilder.tab}" value="nodesTab" />
-	   </a:jsFunction>
+	<h:outputScript name="jquery.js" library="js" />
+	<h:outputStylesheet name="diagram-js.css" library="modelador/css" />
+	<h:outputStylesheet name="react-simpletabs.min.css" library="modelador/css" />
+	<h:outputStylesheet name="app.css" library="modelador/css" />
+	<link type="text/css" href="#{pathResolver.contextPath}/resources/modelador/vendor/bpmn-font/css/bpmn.css" rel="stylesheet"></link>
+	<h:outputStylesheet name="bootstrap.min.css" library="modelador/css" />
+	<h:outputStylesheet name="bootstrap-theme.min.css" library="modelador/css" />
+	<h:outputScript name="bootstrap.min.js" library="modelador" />
 
-		<div id="processImage">
-            
-			<img src="data:image/png;base64,#{processBuilderGraph.encodedGraph}" usemap="#nodes" ismap="true" />
-			
-			<script>
-			
-				var nodes=new NodeArea();
-				#{processBuilderGraph.map};
-				
-			</script>
-			
-		</div>
-			
-	</h:form>
-
+	<div id="react-app" style="background-color: white"></div>
+	<h:outputScript name="bundle.js" library="modelador" />
+	<script>
+        var modeler = new InfoxBpmnModeler('react-app', '#{bpmnView.restApiUrl}', '#{bpmnView.token}');
+    </script>
 </ui:composition>

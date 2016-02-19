@@ -1,38 +1,44 @@
 package br.com.infox.epp.fluxo.manager;
 
-import java.io.StringWriter;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jbpm.graph.def.ProcessDefinition;
+import org.jbpm.graph.def.Transition;
+import org.jbpm.graph.node.EndState;
+import org.jbpm.graph.node.StartState;
+import org.jbpm.taskmgmt.def.Swimlane;
+import org.jbpm.taskmgmt.def.Task;
 
 import br.com.infox.core.manager.Manager;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.fluxo.dao.FluxoDAO;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.FluxoPapel;
 import br.com.infox.epp.fluxo.entity.RaiaPerfil;
-import br.com.infox.epp.modeler.converter.BpmnJpdlConverter;
-import br.com.infox.epp.modeler.converter.JpdlBpmnConverter;
-import br.com.infox.ibpm.jpdl.JpdlXmlWriter;
 
 @Name(FluxoManager.NAME)
 @AutoCreate
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+@ContextDependency
 public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
 
     private static final long serialVersionUID = -6521661616139554331L;
@@ -41,7 +47,9 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
 
     @In
     private RaiaPerfilManager raiaPerfilManager;
-
+    @Inject
+    private InfoxMessages infoxMessages;
+    
     private boolean isValidDataFim(Fluxo fluxo, Date now){
         final Date date = fluxo.getDataFimPublicacao();
         return date==null || date.after(now);
@@ -131,26 +139,32 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
                 && isValidUsuarioPerfil(fluxo, usuarioPerfil);
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void converterParaJpdl(Fluxo fluxo) {
-    	refresh(fluxo);
-    	BpmnJpdlConverter converter = new BpmnJpdlConverter();
-    	ProcessDefinition processDefinition = converter.convert(fluxo.getBpmnXml());
-    	processDefinition.setName(fluxo.getFluxo());
-    	StringWriter writer = new StringWriter();
-    	JpdlXmlWriter jpdlWriter = new JpdlXmlWriter(writer);
-    	jpdlWriter.write(processDefinition);
-    	fluxo.setXml(writer.toString());
-    	fluxo.setBpmn(false);
-    	update(fluxo);
-    }
-    
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void converterParaBpmn(Fluxo fluxo) {
-    	refresh(fluxo);
-    	JpdlBpmnConverter converter = new JpdlBpmnConverter();
-    	fluxo.setBpmnXml(converter.convert(fluxo.getXml()));
-    	fluxo.setBpmn(true);
-    	update(fluxo);
+    public ProcessDefinition createInitialProcessDefinition() {
+    	ProcessDefinition processDefinition = ProcessDefinition.createNewProcessDefinition();
+    	processDefinition.setKey("key_" + UUID.randomUUID().toString());
+        Swimlane laneSolicitante = new Swimlane("Solicitante");
+        laneSolicitante.setKey("key_" + UUID.randomUUID().toString());
+        laneSolicitante.setActorIdExpression("#{actor.id}");
+
+        Task startTask = new Task("Tarefa inicial");
+        startTask.setKey("key_" + UUID.randomUUID().toString());
+        startTask.setSwimlane(laneSolicitante);
+        processDefinition.getTaskMgmtDefinition().setStartTask(startTask);
+
+        StartState startState = new StartState(infoxMessages.get("process.node.first"));
+        startState.setKey("key_" + UUID.randomUUID().toString());
+        processDefinition.addNode(startState);
+        EndState endState = new EndState(infoxMessages.get("process.node.last"));
+        endState.setKey("key_" + UUID.randomUUID().toString());
+        processDefinition.addNode(endState);
+        Transition t = new Transition();
+        t.setKey("key_" + UUID.randomUUID().toString());
+        t.setName(endState.getName());
+        t.setTo(endState);
+        startState.addLeavingTransition(t);
+        endState.addArrivingTransition(t);
+        processDefinition.getTaskMgmtDefinition().addSwimlane(laneSolicitante);
+        
+        return processDefinition;
     }
 }

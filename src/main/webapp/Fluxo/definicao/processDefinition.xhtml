@@ -46,7 +46,8 @@
       <infox:tab
         name="propriedadesTab"
         id="propriedadesTab"
-        title="#{infoxMessages['processBuilder.properties']}">
+        title="#{infoxMessages['processBuilder.properties']}"
+        render="processDefinitionButtonsForm">
         <rich:panel header="#{infoxMessages['processBuilder.info']}">
           <h:form>
             <wi:inputText
@@ -88,13 +89,17 @@
         name="nodesTab"
         id="nodesTab"
         rendered="#{processBuilder.exists}"
-        title="#{infoxMessages['processBuilder.nodes']}">
+        title="#{infoxMessages['processBuilder.nodes']}"
+        action="#{bpmnView.refresh}"
+        render="processDefinitionButtonsForm">
         <ui:include src="nodes.xhtml" />
       </infox:tab>
       <infox:tab
         name="graphTab"
         id="graphTab"
-        title="#{infoxMessages['processBuilder.graph']}">
+        title="#{infoxMessages['processBuilder.graph']}"
+        action="#{bpmnView.setFluxo(processBuilder.fluxo)}"
+        render="processDefinitionButtonsForm">
         <ui:include src="graph.xhtml" />
       </infox:tab>
     </infox:tabPanel>
@@ -116,9 +121,13 @@
       <a:commandButton
         id="gravar"
         value="#{infoxMessages['processBuilder.saveBtn']}"
-        rendered="#{processBuilder.exists}"
+        rendered="#{processBuilder.exists and processBuilder.tab ne 'graphTab'}"
         styleClass="buttons #{wi:get(styleClass, '')}"
         onclick="checkIfEditorExists();" />
+      <a:commandButton id="gravarBpmn" value="#{infoxMessages['processBuilder.saveBtn']}"
+      	rendered="#{processBuilder.exists and processBuilder.tab eq 'graphTab'}" 
+      	styleClass="buttons" onclick="infox.showLoading(); modeler.updateBpmn()"
+      	oncomplete="infox.hideLoading()"/>
       <a:commandButton
         id="novoProcesso"
         actionListener="#{processBuilder.prepareUpdate}"
