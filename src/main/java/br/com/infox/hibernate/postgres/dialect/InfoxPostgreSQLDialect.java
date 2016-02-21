@@ -1,6 +1,6 @@
 package br.com.infox.hibernate.postgres.dialect;
 
-import org.hibernate.dialect.PostgreSQL82Dialect;
+import org.hibernate.dialect.PostgresPlusDialect;
 
 import br.com.infox.hibernate.function.DataUtilAdd;
 import br.com.infox.hibernate.function.DateDiffDayPostgresSQL;
@@ -8,7 +8,7 @@ import br.com.infox.hibernate.function.DocumentoSuficientementeAssinado;
 import br.com.infox.hibernate.function.NumeroProcessoRoot;
 import br.com.infox.hibernate.function.ToDateJpql;
 
-public class InfoxPostgreSQLDialect extends PostgreSQL82Dialect {
+public class InfoxPostgreSQLDialect extends PostgresPlusDialect {
 
     public InfoxPostgreSQLDialect() {
         registerKeyword("true");
