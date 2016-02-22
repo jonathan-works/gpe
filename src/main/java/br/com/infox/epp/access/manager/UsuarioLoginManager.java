@@ -112,19 +112,25 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
         return persisted;
     }
 
-    @Override
-    public UsuarioLogin persist(final UsuarioLogin usuario) throws DAOException {
-        validarPermanencia(usuario);
+    public UsuarioLogin persist(UsuarioLogin usuario, boolean sendMail){
+    	validarPermanencia(usuario);
         try {
             final Object id = EntityUtil.getIdValue(getDao().persist(usuario));
             final UsuarioLogin persisted = find(id);
             final String password = usuario.getSenha();
             passwordService.changePassword(persisted, password);
-            accessMailService.enviarEmailDeMudancaDeSenha("email", persisted, password);
+            if (sendMail){
+            	accessMailService.enviarEmailDeMudancaDeSenha("email", persisted, password);
+            }
             return persisted;
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             throw new DAOException(e);
         }
+    }
+    
+    @Override
+    public UsuarioLogin persist(final UsuarioLogin usuario) throws DAOException {
+        return persist(usuario, true);
     }
     
     public UsuarioLogin getUsuarioDeProcessosDoSistema() {
