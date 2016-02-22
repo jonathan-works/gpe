@@ -3,6 +3,10 @@ package br.com.infox.epp.documento.manager;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Root;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -13,6 +17,9 @@ import br.com.infox.epp.documento.dao.ClassificacaoDocumentoDAO;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
+import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.Documento_;
+import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.entity.Processo;
 
 @AutoCreate
@@ -59,5 +66,15 @@ public class ClassificacaoDocumentoManager extends Manager<ClassificacaoDocument
     public List<ClassificacaoDocumento> getClassificacaoDocumentoListByProcesso(Processo processo) {
     	return getDao().getClassificacaoDocumentoListByProcesso(processo);
     }
+    
+    public List<ClassificacaoDocumento> listClassificacoesDocumentoByPasta(Pasta pasta) {
+		CriteriaBuilder cb = getDao().getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<ClassificacaoDocumento> query = cb.createQuery(ClassificacaoDocumento.class);
+		Root<Documento> doc = query.from(Documento.class);
+		Join<Documento, ClassificacaoDocumento> classificacaoJoin = doc.join(Documento_.classificacaoDocumento);
+		query.where(cb.equal(doc.get(Documento_.pasta), pasta));
+		query.select(classificacaoJoin);
+		return getDao().getEntityManager().createQuery(query).getResultList();
+	}
 
 }

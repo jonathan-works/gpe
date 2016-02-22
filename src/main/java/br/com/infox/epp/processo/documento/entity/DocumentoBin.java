@@ -118,6 +118,7 @@ public class DocumentoBin implements Serializable {
         this.documentoList = new ArrayList<>(0);
         this.assinaturas = new ArrayList<>(0);
         this.registrosAssinaturaSuficiente = new ArrayList<>(0);
+        this.uuid = UUID.randomUUID();
     }
     
     @PrePersist

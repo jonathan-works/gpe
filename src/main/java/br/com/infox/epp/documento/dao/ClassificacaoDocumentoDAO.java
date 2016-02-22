@@ -187,4 +187,5 @@ public class ClassificacaoDocumentoDAO extends DAO<ClassificacaoDocumento> {
         addRedatorFilter(query, Authenticator.getPapelAtual());
         return getEntityManager().createQuery(query).getResultList();
     }
+    
 }

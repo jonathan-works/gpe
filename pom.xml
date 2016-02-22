@@ -41,7 +41,7 @@
     <dependency>
       <groupId>org.jsoup</groupId>
       <artifactId>jsoup</artifactId>
-      <version>1.7.2</version>
+      <version>1.8.3</version>
     </dependency>
     <dependency>
       <groupId>org.apache.pdfbox</groupId>
@@ -284,7 +284,7 @@
     <dependency>
       <groupId>br.com.infox</groupId>
       <artifactId>componentes</artifactId>
-      <version>1.3.2</version>
+      <version>1.3.7</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
