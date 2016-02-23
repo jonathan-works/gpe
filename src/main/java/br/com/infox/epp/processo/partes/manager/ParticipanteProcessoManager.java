@@ -27,6 +27,10 @@ public class ParticipanteProcessoManager extends Manager<ParticipanteProcessoDAO
     	return getDao().getParticipanteProcessoByPessoaProcesso(pessoa, processo);
     }
     
+    public List<ParticipanteProcesso> getParticipantesByPessoaProcesso(Pessoa pessoa, Processo processo){
+    	return getDao().getParticipantesByPessoaProcesso(pessoa, processo);
+    }
+    
     public List<ParticipanteProcesso> getParticipantesProcessoByPartialName(String typedName,int limit){
     	return getDao().getParticipantesProcessosByPartialName(typedName,limit);
     }
@@ -64,4 +68,12 @@ public class ParticipanteProcessoManager extends Manager<ParticipanteProcessoDAO
     public List<Pessoa> getPessoasParticipantesProcesso(Processo processo){
     	return getDao().getPessoasFisicasParticipantesProcesso(processo);
     }
+    
+    public void gravarListaParticipantes(List<ParticipanteProcesso> participantes) {
+		for (ParticipanteProcesso participanteProcesso : participantes) {
+			getDao().getEntityManager().persist(participanteProcesso);
+		}
+		getDao().getEntityManager().flush();
+	}
+    
 }

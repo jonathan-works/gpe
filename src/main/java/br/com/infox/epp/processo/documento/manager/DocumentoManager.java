@@ -9,6 +9,7 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.bpm.TaskInstance;
+import org.joda.time.DateTime;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
@@ -192,4 +193,14 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     public boolean podeAssinar(Documento documento, Papel papel) {
     	return documento.isDocumentoAssinavel(papel) && !documento.isDocumentoAssinado(papel);
     }
+    
+	public Documento copiarDocumento(Documento original, Processo novoProcesso, Pasta novaPasta) throws CloneNotSupportedException {
+		Documento cDoc = original.makeCopy();
+        cDoc.setPasta(novaPasta);
+        cDoc.setNumeroDocumento(null);
+        cDoc.setDataInclusao(DateTime.now().toDate());
+        cDoc.setUsuarioInclusao(null);
+        cDoc.setProcesso(novoProcesso);
+        return persist(cDoc);
+	}
 }

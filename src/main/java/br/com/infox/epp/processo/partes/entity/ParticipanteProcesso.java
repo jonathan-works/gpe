@@ -272,6 +272,17 @@ public class ParticipanteProcesso implements Serializable, Cloneable {
     	clone.setHistoricoParticipanteList(cHistoricos);
     	return clone;
     }
+
+    //Os relacionamentos com os participantes filhoes matém a referência para os filhos do participante clonado e devem ser refeitos de alguma forma para o clone
+    public ParticipanteProcesso copiarParticipanteMantendoFilhos() throws CloneNotSupportedException {
+		ParticipanteProcesso clone = (ParticipanteProcesso) clone();
+		clone.setId(null);
+		clone.setProcesso(null);
+		clone.setParticipantePai(null);
+		clone.setHistoricoParticipanteList(null);
+		clone.setParticipantesFilhos(new ArrayList<>(clone.getParticipantesFilhos()));
+		return clone;
+	}
     
     public static final Comparator<ParticipanteProcesso> COMPARATOR_NOME = new Comparator<ParticipanteProcesso>() {
 		@Override

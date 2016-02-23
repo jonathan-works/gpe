@@ -27,7 +27,6 @@ import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.file.reader.InfoxPdfReader;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.persistence.GenericDatabaseErrorCode;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
@@ -170,26 +169,15 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 
 	@Override
 	public DocumentoBin persist(DocumentoBin o) throws DAOException {
-		try {
-			o.setUuid(UUID.randomUUID());
-			if (o.isBinario()) {
-                o.setMinuta(false);
-            }
-			if (!o.getSuficientementeAssinado() && !o.getDocumentoList().isEmpty()) {
-				if (!classificacaoDocumentoPapelManager.classificacaoExigeAssinatura(o.getDocumentoList().get(0).getClassificacaoDocumento()) && !o.isMinuta()) {
-					assinaturaDocumentoService.setDocumentoSuficientementeAssinado(o, Authenticator.getUsuarioPerfilAtual());
-				}
-			}
-			o = super.persist(o);
-		} catch (final DAOException e) {
-			final GenericDatabaseErrorCode error = e.getDatabaseErrorCode();
-			if ((error != null) && (error == GenericDatabaseErrorCode.UNIQUE_VIOLATION)
-					&& (getByUUID(o.getUuid()) != null)) {
-				o = persist(o);
-			} else {
-				throw e;
+		if (o.isBinario()) {
+            o.setMinuta(false);
+        }
+		if (!o.getSuficientementeAssinado() && !o.getDocumentoList().isEmpty()) {
+			if (!classificacaoDocumentoPapelManager.classificacaoExigeAssinatura(o.getDocumentoList().get(0).getClassificacaoDocumento()) && !o.isMinuta()) {
+				assinaturaDocumentoService.setDocumentoSuficientementeAssinado(o, Authenticator.getUsuarioPerfilAtual());
 			}
 		}
+		o = super.persist(o);
 		return o;
 	}
 

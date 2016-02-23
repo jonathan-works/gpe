@@ -6,10 +6,8 @@ import java.util.Map;
 
 import javax.ejb.Stateless;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
@@ -19,7 +17,6 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
 
 @Name(DocumentoRespostaComunicacaoDAO.NAME)
-@Scope(ScopeType.EVENT)
 @AutoCreate
 @Stateless
 public class DocumentoRespostaComunicacaoDAO extends DAO<DocumentoRespostaComunicacao> {
