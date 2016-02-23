@@ -11,6 +11,8 @@ import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -35,9 +37,11 @@ import br.com.infox.constants.LengthConstants;
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.util.ArrayUtil;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.assinatura.entity.RegistroAssinaturaSuficiente;
 import br.com.infox.epp.processo.documento.query.DocumentoBinQuery;
+import br.com.infox.epp.processo.documento.service.DocumentoBinService;
 import br.com.infox.hibernate.UUIDGenericType;
 
 @Entity
@@ -48,11 +52,16 @@ import br.com.infox.hibernate.UUIDGenericType;
 })
 public class DocumentoBin implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    
     private static final float BYTES_IN_A_KILOBYTE = 1024f;
 
-    private static final long serialVersionUID = 1L;
     public static final String TABLE_NAME = "tb_documento_bin";
     
+	public enum TipoStorage {
+		DB, SVC
+	}
+	
     @Id
     @SequenceGenerator(allocationSize = 1, initialValue = 1, name = "DocumentoBinGenerator", sequenceName = "sq_documento_bin")
     @GeneratedValue(generator = "DocumentoBinGenerator", strategy = GenerationType.SEQUENCE)
@@ -81,45 +90,64 @@ public class DocumentoBin implements Serializable {
     @NotNull
     @Column(name = "dt_inclusao", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date dataInclusao;
+    private Date dataInclusao = new Date();
     
     @Column(name = "ds_uuid")
     @Type(type = UUIDGenericType.TYPE_NAME)
-    private UUID uuid;
+    private UUID uuid = UUID.randomUUID();
     
     @Column(name = "in_minuta")
     @NotNull
-    private Boolean minuta;
+    private Boolean minuta = Boolean.TRUE;
     
     @NotNull
     @Column(name="in_assin_sufic")
-    private Boolean suficientementeAssinado;
+    private Boolean suficientementeAssinado = Boolean.FALSE;
     
     @Column(name="dt_assin_sufic", nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataSuficientementeAssinado;
     
     @OneToMany(fetch= FetchType.LAZY, mappedBy="documentoBin")
-    private List<RegistroAssinaturaSuficiente> registrosAssinaturaSuficiente;
+    private List<RegistroAssinaturaSuficiente> registrosAssinaturaSuficiente = new ArrayList<>();
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "documentoBin")
-    private List<Documento> documentoList;
+    private List<Documento> documentoList = new ArrayList<>();
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "documentoBin", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private List<AssinaturaDocumento> assinaturas = new ArrayList<>();
     
     @Transient
     private byte[] processoDocumento;
+    
+    @Transient
+	private DocumentoBinService documentoBinService;
 
-    public DocumentoBin() {
-    	this.minuta = Boolean.TRUE;
-    	this.suficientementeAssinado = Boolean.FALSE;
-        this.dataInclusao=new Date();
-        this.documentoList = new ArrayList<>(0);
-        this.assinaturas = new ArrayList<>(0);
-        this.registrosAssinaturaSuficiente = new ArrayList<>(0);
-        this.uuid = UUID.randomUUID();
-    }
+	@Column(name="tp_storage")
+	@Enumerated(EnumType.STRING)
+	private TipoStorage tipoStorage = TipoStorage.DB;
+	
+	@Size(max=50)
+	@Column(name="cd_documento")
+	private String codigoDocumento;
+
+	public TipoStorage getTipoStorage() {
+		return tipoStorage;
+	}
+
+	public void setTipoStorage(TipoStorage tipoStorage) {
+		this.tipoStorage = tipoStorage;
+	}
+	
+	public String getCodigoDocumento() {
+		return codigoDocumento;
+	}
+
+	public void setCodigoDocumento(String codigoDocumento) {
+		this.codigoDocumento = codigoDocumento;
+	}
+    
+    
     
     @PrePersist
     private void prePersist() {
@@ -174,9 +202,13 @@ public class DocumentoBin implements Serializable {
 	public void setNomeArquivo(String nomeArquivo) {
 		this.nomeArquivo = nomeArquivo;
 	}
+	
+	public Integer getSizeBanco() {
+		return size;
+	}
 
 	public Integer getSize() {
-		return size;
+		return getDocumentoBinService().getSize(getId());
 	}
 
 	public void setSize(Integer size) {
@@ -198,9 +230,20 @@ public class DocumentoBin implements Serializable {
 	public void setDocumentoList(List<Documento> documentoList) {
 		this.documentoList = documentoList;
 	}
+	
+	public DocumentoBinService getDocumentoBinService() {
+		if(documentoBinService == null) {
+			documentoBinService = BeanManager.INSTANCE.getReference(DocumentoBinService.class);
+		}
+		return documentoBinService; 		
+	}
 
-	public List<AssinaturaDocumento> getAssinaturas() {
+	public List<AssinaturaDocumento> getAssinaturasBanco() {
 		return assinaturas;
+	}
+	
+	public List<AssinaturaDocumento> getAssinaturas() {
+		return getDocumentoBinService().carregarAssinaturas(getId());
 	}
 
 	public void setAssinaturas(List<AssinaturaDocumento> assinaturas) {
