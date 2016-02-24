@@ -31,7 +31,7 @@ public class SwimlaneFitter extends Fitter implements Serializable {
 
     public void addSwimlane() {
         Swimlane s = new Swimlane("Raia " + (swimlanes.size() + 1));
-        s.setKey(UUID.randomUUID().toString());
+        s.setKey("key_" + UUID.randomUUID().toString());
         setCurrentSwimlane(new SwimlaneHandler(s));
         getProcessBuilder().getInstance().getTaskMgmtDefinition().addSwimlane(s);
         swimlanes.add(currentSwimlane);

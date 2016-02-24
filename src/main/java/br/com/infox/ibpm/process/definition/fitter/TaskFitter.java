@@ -67,7 +67,7 @@ public class TaskFitter extends Fitter implements Serializable {
             getTasks();
             TaskNode taskNode = (TaskNode) currentNode;
             Task task = new Task();
-            task.setKey(UUID.randomUUID().toString());
+            task.setKey("key_" + UUID.randomUUID().toString());
             task.setProcessDefinition(process);
             task.setTaskMgmtDefinition(process.getTaskMgmtDefinition());
             List<TaskHandler> list = getProcessBuilder().getTaskNodeMap().get(currentNode);

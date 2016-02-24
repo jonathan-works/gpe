@@ -121,7 +121,7 @@ public class NodeFitter extends Fitter implements Serializable {
                 node.setAsync(true);
             }
             node.setName(newNodeName);
-            node.setKey(UUID.randomUUID().toString());
+            node.setKey("key_ " + UUID.randomUUID().toString());
             processo.addNode(node);
             nodes = processo.getNodes();
             // Se foi informado newNodeAfter, procura para inserir
@@ -144,7 +144,7 @@ public class NodeFitter extends Fitter implements Serializable {
                 t.setFrom(newNodeAfter);
                 node.addArrivingTransition(t);
                 t.setName(node.getName());
-                t.setKey(UUID.randomUUID().toString());
+                t.setKey("key_" + UUID.randomUUID().toString());
                 newNodeAfter.addLeavingTransition(t);
             } else if (newNodeTransition != null && newNodeTransition.getTransition() != null) {
                 Transition t = new Transition();
@@ -153,7 +153,7 @@ public class NodeFitter extends Fitter implements Serializable {
                 t.setDescription(oldT.getDescription());
                 Node to = newNodeTransition.getTransition().getTo();
                 t.setName(to.getName());
-                t.setKey(UUID.randomUUID().toString());
+                t.setKey("key_" + UUID.randomUUID().toString());
                 t.setProcessDefinition(oldT.getProcessDefinition());
 
                 /*

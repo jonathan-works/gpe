@@ -104,7 +104,7 @@ public class TransitionFitter extends Fitter implements Serializable {
     public void addTransition(String type) {
         Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
         Transition t = new Transition("");
-        t.setKey(UUID.randomUUID().toString());
+        t.setKey("key_" + UUID.randomUUID().toString());
         if ("from".equals(type)) {
             currentNode.addArrivingTransition(t);
             if (arrivingTransitions == null) {
