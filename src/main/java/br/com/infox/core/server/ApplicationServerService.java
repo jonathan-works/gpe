@@ -74,6 +74,10 @@ public class ApplicationServerService implements Serializable {
         }
         return sbt.defaultPort;
     }
+    
+    public String getInstanceName() {
+        return System.getProperty("jboss.node.name");
+    }
 
     private enum SocketBindingType {
 

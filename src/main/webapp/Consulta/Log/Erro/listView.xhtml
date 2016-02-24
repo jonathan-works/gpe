@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:infox="http://www.infox.com.br/jsf"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+
+	<ui:define name="title">Consulta Log de Erro</ui:define>
+
+	<ui:define name="body">
+	
+		<wi:panel id="logErroPanel" styleClass="content-block">
+
+			<wi:dataTable values="#{consultaLogErroList.list(15)}" bean="#{consultaLogErroList}" tableTitle="Log de Erro"
+				id="consultaLogErroListTable" >
+				
+				<ui:define name="searchForm">
+				
+					<wi:searchForm formId="pesquisarLogErroForm" formTitle="#{infoxMessages['searchForm.title']}"
+						showLogicOperator="false" >
+						
+						<wi:inputText id="codigo" value="#{bean.codigo}" label="Código" />
+						
+						<wi:inputText id="instancia" value="#{bean.instancia}" label="Instância" />
+						
+						<wi:inputDataPeriodo id="periodo" label="Data da Ocorrência" valueDateFrom="#{bean.dataInicio}"
+							valueDateTo="#{bean.dataFim}" validatePastDateFrom="true" validatePastDateTo="true" 
+							pattern="dd/MM/yyyy kk:mm"/>
+							
+						<wi:selectOneMenuEnum id="status" items="#{bean.statusList}"
+							value="#{bean.status}" label="Status do Envio" noSelectionLabel="#{infoxMessages['crud.select.all']}" />
+
+					</wi:searchForm>
+					
+				</ui:define>
+
+				<ui:define name="headerToolBar"/>
+				
+				<ui:define name="toolBar">
+					<h:form>
+						<a:commandLink rendered="#{row.status ne 'ENVIADO'}" render="consultaLogErroListTable, pageBodyDialogMessage" 
+							execute="@this"	action="#{consultaLogErroList.send(row)}">
+							<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/reopen.png')}"/>
+						</a:commandLink>
+					</h:form>
+				</ui:define>
+
+				<wi:columnOutputText columnId="codigo" columnHeader="Codigo" value="#{row.codigo}" />
+					
+				<wi:columnOutputText columnId="instancia" columnHeader="Instância" value="#{row.instancia}" />
+					
+				<wi:columnDateTime columnId="data" columnHeader="Data" value="#{row.data}" pattern="dd/MM/yyyy kk:mm" />
+				
+				<wi:columnDateTime columnId="dataEnvio" columnHeader="Data do Envio" value="#{row.dataEnvio}" pattern="dd/MM/yyyy kk:mm" />
+					
+				<wi:columnOutputText columnId="status" columnHeader="Status do Envio" value="#{row.status.label}" />
+				
+				<wi:column columnId="stackTrace" columnHeader="StackTrace" hideOrder="true" styleColumn="width: 30%">
+					<h:outputText value="#{row.stacktrace.length() > 200 ? row.stacktrace.substring(0, 199).concat(' ...') : row.stacktrace}" />
+					<h:form style="display: inline-block;">
+						<a:commandLink oncomplete="#{rich:component('stacktraceModal')}.show();"
+							render="@this, outputPanelStackTrace" execute="@this" rendered="#{row.stacktrace.length() > 200}">
+							<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/reopen.png')}" title="Enviar"/>
+							<f:setPropertyActionListener value="#{row.stacktrace}" target="#{flash.stacktrace}" />
+						</a:commandLink>
+					</h:form>
+				</wi:column>
+				
+			</wi:dataTable>
+			
+		</wi:panel>
+		
+		<rich:popupPanel id="stacktraceModal" modal="true" resizeable="true" minWidth="900" minHeight="500">
+	        <f:facet name="header">StackTrace</f:facet>
+
+	        <f:facet name="controls">
+            	<h:graphicImage id="closeBtn" value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}" 
+            		onclick="#{rich:component('stacktraceModal')}.hide();" style="cursor: pointer;"/>
+	        </f:facet>
+	        
+	        <p:outputPanel id="outputPanelStackTrace">
+	        	#{flash.stacktrace}
+	        </p:outputPanel>
+	        
+		</rich:popupPanel>
+		
+	</ui:define>
+</ui:composition>
