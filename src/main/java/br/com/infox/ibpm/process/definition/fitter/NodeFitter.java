@@ -149,7 +149,6 @@ public class NodeFitter extends Fitter implements Serializable {
             } else if (newNodeTransition != null && newNodeTransition.getTransition() != null) {
                 Transition t = new Transition();
                 Transition oldT = newNodeTransition.getTransition();
-                t.setCondition(oldT.getCondition());
                 t.setDescription(oldT.getDescription());
                 Node to = newNodeTransition.getTransition().getTo();
                 t.setName(to.getName());
