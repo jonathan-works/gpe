@@ -10,20 +10,6 @@
 	xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:a="http://richfaces.org/a4j">
 
-	<script type="text/javascript">
-	
-    var getArquivosSubmetidos = function (event) {
-    	var uploadArquivo = #{rich:element('uploadArquivo')};
-    	var retorno = [];
-    	var arquivosEnviados = uploadArquivo.rf.component.submitedItems;
-        for (var i in arquivosEnviados) {  
-            var arquivo = arquivosEnviados[i].model;
-            var nomeArquivo = arquivo.name;
-            retorno.push(nomeArquivo);
-        }
-        return retorno;
-    };  
-    </script>
 	<!-- Div com os formulários para upload e editor -->
 	<div id="anexarDocumentosDiv"
 		style="display: inline-block; width: 55%; min-width: 640px; margin: 0em 0.5em 1em 0em; vertical-align: top;">
@@ -90,33 +76,23 @@
 							doneLabel="#{infoxMessages['anexarDocumentos.doneLabel']}"
 							uploadLabel="#{infoxMessages['processoDocumento.uploadLabel']}"
 							sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}"
-							maxFilesQuantity="10" immediateUpload="true" noDuplicate="true"
+							maxFilesQuantity="20" immediateUpload="true" noDuplicate="true"
 							render="uploadArquivoAnexarButton pageBodyDialogMessage"
 							acceptedTypes="#{anexarDocumentosView.classificacaoDocumentoUploader.acceptedTypes}"
-							onuploadcomplete="infox.hideLoading(); uploadCompleto();"
-							ontyperejected="onTypeRejected();">
+							onuploadcomplete="infox.hideLoading(); addClearEventUploadModelo();"
+							rendered="#{not empty anexarDocumentosView.classificacaoDocumentoUploader.extensaoArquivosList}">
 						</rich:fileUpload>
+						
+						<script type="text/javascript">
+                            var upload = #{rich:component('uploadArquivo')};
+                            upload.serverErrorProcLabel = 'Falha no Envio';
+                        </script>
 
-
-						<a:jsFunction id="onTypeRejected" name="onTypeRejected"
-							render="pageBodyDialogMessage"
-							actionListener="#{anexarDocumentosView.onTypeRejected}" />
-
-						<a:jsFunction id="uploadCompleto" name="uploadCompleto"
-							render="pageBodyDialogMessage"
-							actionListener="#{anexarDocumentosView.onUploadsFinalizados}" />
-
-						<a:jsFunction id="clearUploadArquivoFunction"
-							name="clearUploadArquivo" oncomplete="infox.hideLoading();"
-							render="uploadArquivoDiv"
-							actionListener="#{anexarDocumentosView.clearUploadFile()}" />
-
-						<a:jsFunction name="removerUpload" render="pageBodyDialogMessage"
-							action="#{anexarDocumentosView.removerUpload}">
-							<a:param name="clearedFile"
-								assignTo="#{anexarDocumentosView.clearedFile}"
-								value="clearedFile" noEscape="true" />
-						</a:jsFunction>
+                        <a:jsFunction id="onClickClearItemList" name="onClickClearItemList" render="uploadArquivoAnexarButton"
+                            actionListener="#{anexarDocumentosView.removeDocumentoUpload}" immediate="true" onbegin="infox.showLoading();"
+                            oncomplete="infox.hideLoading();">
+                            <a:param name="fileName"/>
+                        </a:jsFunction>
 
 						<s:div id="uploadArquivoAnexarButton">
 							<a:commandButton id="uploadSubmitButton" styleClass="buttons"
@@ -124,15 +100,39 @@
 								value="#{infoxMessages['crud.update']}"
 								onclick="infox.showLoading();" oncomplete="infox.hideLoading();"
 								rendered="#{anexarDocumentosView.showUploaderButton}"
-								render="uploadPanel documentoDataTable pageBodyDialogMessage">
-                                <a:param assignTo="#{anexarDocumentosView.arquivosSubmetidos}" value="getArquivosSubmetidos()" noEscape="true" />
-							</a:commandButton>
+								render="uploadPanel documentoDataTable pageBodyDialogMessage"/>
 						</s:div>
 					</s:div>
 				</s:div>
 			</h:form>
 		</rich:collapsiblePanel>
-
+		
+		<script type="text/javascript">
+	        function addClearEventUploadModelo() {
+	        	var upload = #{rich:component('uploadArquivo')};
+	        	var clearButton = upload.clearButton;
+	        	clearButton.click((function() {
+			      var fileName = 'ALL_FILES';
+			      return function() { 
+			    	  onClickClearItemList(fileName);
+			      }
+			    })());
+	        	var items = upload.submitedItems;
+	        	for (var i in items) {
+	        		var item = items[i];
+	        		var link = item.link;
+	        		if (item.model.state === 'done') {
+	        			link.click((function() {
+	  				      var fileName = item.model.file.name
+	  				      return function() { 
+	  				    	  onClickClearItemList(fileName);
+	  				      }
+	  				    })());
+	        		}
+	        	}
+	        }
+        </script>
+        
 		<!-- Panel de editor -->
 		<rich:collapsiblePanel id="editorPanel" header="Editor"
 			switchType="client">
