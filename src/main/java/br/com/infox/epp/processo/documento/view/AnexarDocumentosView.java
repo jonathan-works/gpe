@@ -3,16 +3,15 @@ package br.com.infox.epp.processo.documento.view;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
 import java.util.UUID;
 
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.jboss.seam.faces.FacesMessages;
@@ -67,30 +66,31 @@ import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.ApplicationException;
 import br.com.infox.seam.util.ComponentUtil;
-import edu.emory.mathcs.backport.java.util.Arrays;
-import edu.emory.mathcs.backport.java.util.Collections;
 
 @Named
 @ViewScoped
 public class AnexarDocumentosView implements Serializable {
+    
 	private static final long serialVersionUID = 1L;
 
 	private static final LogProvider LOG = Logging.getLogProvider(AnexarDocumentosView.class);
 
 	@Inject
 	private DocumentoTemporarioManager documentoTemporarioManager;
-	
 	@Inject
 	private ActionMessagesService actionMessagesService;
-
-	private DocumentoBinManager documentoBinManager = ComponentUtil.getComponent(DocumentoBinManager.NAME);
-	private DocumentoUploaderService documentoUploaderService = ComponentUtil
-			.getComponent(DocumentoUploaderService.NAME);
-	private MetadadoProcessoManager metadadoProcessoManager = ComponentUtil.getComponent(MetadadoProcessoManager.NAME);
-	private ModeloDocumentoManager modeloDocumentoManager = ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
-	private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager = ComponentUtil
-			.getComponent(ClassificacaoDocumentoPapelManager.NAME);
-	private InfoxMessages infoxMessages = ComponentUtil.getComponent(InfoxMessages.NAME);
+	@Inject
+	private DocumentoBinManager documentoBinManager;
+	@Inject
+	private DocumentoUploaderService documentoUploaderService;
+	@Inject
+	private MetadadoProcessoManager metadadoProcessoManager;
+	@Inject
+	private ModeloDocumentoManager modeloDocumentoManager;
+	@Inject
+	private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
+	@Inject
+	private InfoxMessages infoxMessages;
 
 	// Propriedades da classe
 	private Processo processo;
@@ -103,9 +103,6 @@ public class AnexarDocumentosView implements Serializable {
 	private Pasta pastaUploader;
 	private List<DadosUpload> dadosUploader = new ArrayList<>();
 	private boolean showUploader;
-	private boolean showUploaderButton;
-	//String associada aos arquivos submetidos em javascript contendo seus nomes separados por vírgula 
-	private String arquivosSubmetidos;
 
 	// Controle do editor
 	private DocumentoTemporario documentoEditor;
@@ -133,11 +130,6 @@ public class AnexarDocumentosView implements Serializable {
 	private String order;
 	private static final String DEFAULT_ORDER = "o.id";
 	
-	/**
-	 * Variável que representa se algum arquivo foi rejeitado no upload
-	 */
-	private boolean arquivosRejeitados = false;
-
 	public void newEditorInstance() {
 		DocumentoTemporario newEditor = new DocumentoTemporario();
 		newEditor.setDocumentoBin(new DocumentoBin());
@@ -151,35 +143,37 @@ public class AnexarDocumentosView implements Serializable {
 		setShowModeloDocumentoCombo(false);
 	}
 
-	public void fileUploadListener(FileUploadEvent fileUploadEvent) {
+	public void fileUploadListener(FileUploadEvent fileUploadEvent) throws IOException {
 		UploadedFile uploadedFile = fileUploadEvent.getUploadedFile();
 		try {
 			byte[] dadosArquivo = IOUtils.toByteArray(uploadedFile.getInputStream());
 			DadosUpload dadosUpload = new DadosUpload(uploadedFile, dadosArquivo);
-			documentoUploaderService.validaDocumento(dadosUpload.getUploadedFile(), classificacaoDocumentoUploader,
-					dadosUpload.getDadosArquivo());
+			documentoUploaderService.validaDocumento(dadosUpload.getUploadedFile(), classificacaoDocumentoUploader,	dadosUpload.getDadosArquivo());
 			dadosUploader.add(dadosUpload);
-			setShowUploaderButton(true);
-		} catch (IOException e) {
-			LOG.error("Não foi possível recuperar o inputStream do arquivo carregado", e);
-			FacesMessages.instance().add("Erro no upload do arquivo, tente novamente.");
-			return;
 		} catch (Exception e) {
 			FacesMessages.instance().add(e.getMessage());
+			HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+            response.sendError(415);
 		}
-	}
-
-	public void onTypeRejected() {
-		arquivosRejeitados = true;
 	}
 	
-	public void onUploadsFinalizados() {
-		FacesMessages.instance().add("Upload efetuado");
-		if(arquivosRejeitados) {
-			FacesMessages.instance().add("Alguns arquivos não foram enviados por possuírem extensão inválida");			
-		}
-		arquivosRejeitados = false;		
-	}
+	public void removeDocumentoUpload() {
+        String fileName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("fileName");
+        if ("ALL_FILES".equals(fileName)) {
+            dadosUploader.clear();
+        } else if (fileName != null) {
+            DadosUpload dadosUploadToRemove = null;
+            for (DadosUpload dadosUpload : dadosUploader) {
+                if (dadosUpload.getUploadedFile().getName().equals(fileName)) {
+                    dadosUploadToRemove = dadosUpload;
+                    break;
+                }
+            }
+            if (dadosUploadToRemove != null) {
+                dadosUploader.remove(dadosUploadToRemove);
+            }
+        }
+    }
 
 	public void onChangeUploadClassificacaoDocumento() {
 		clearUploadFile();
@@ -195,7 +189,6 @@ public class AnexarDocumentosView implements Serializable {
 	public void clearUploadFile() {
 		dadosUploader.clear();
 		setShowUploader(classificacaoDocumentoUploader != null);
-		setShowUploaderButton(false);
 	}
 	
 	public void onChangeEditorClassificacaoDocumento() {
@@ -237,57 +230,12 @@ public class AnexarDocumentosView implements Serializable {
 		return retorno;
 	}
 
-	/**
-	 * Transforma {@link #dadosUploader} em uma lista contendo apenas os arquivos submetidos (excluindo os arquivos apagados via JavaScript no cliente) 
-	 */
-	private List<DadosUpload> getDadosArquivosSubmetidos() {
-		@SuppressWarnings("unchecked")
-		List<String> listaArquivoSubmetidos = Arrays.asList(arquivosSubmetidos.split(","));
-		Set<String> setArquivosSubmetidos = new HashSet<>(listaArquivoSubmetidos);
-		
-		List<DadosUpload> retorno = new ArrayList<>();
-
-		//Grava os arquivos que já foram adicionados para que não sejam retornados duplicados
-		Set<String> arquivosAdicionados = new HashSet<>();
-		List<DadosUpload> arquivosUnicos = new ArrayList<>();
-		
-		//Preenche uma lista contendo arquivos com nome único (em caso de duplicados apenas os mais recentes são adicionados)
-		ListIterator<DadosUpload> it = dadosUploader.listIterator(dadosUploader.size()); 
-		while(it.hasPrevious()) {
-			DadosUpload dados = it.previous();
-			String nomeArquivo = dados.getUploadedFile().getName();
-			if(!arquivosAdicionados.contains(nomeArquivo)) {
-				arquivosAdicionados.add(nomeArquivo);
-				arquivosUnicos.add(dados);
-			}
-		}
-		Collections.reverse(arquivosUnicos);
-
-		//Preenche 'retorno' somente com os arquivos definidos em 'listaArquivoSubmetidos'
-		for(DadosUpload dados : arquivosUnicos) {
-			String nomeArquivo = dados.getUploadedFile().getName();
-			if(setArquivosSubmetidos.contains(nomeArquivo)) {
-				retorno.add(dados);
-				arquivosAdicionados.add(nomeArquivo);
-			}
-		}
-		return retorno;
-	}
-	
 	public void persistUpload() {
 		try {
-			List<DadosUpload> dadosArquivosSubmetidos = getDadosArquivosSubmetidos();
-			
-			
-			if (dadosArquivosSubmetidos.isEmpty()) {
-				FacesMessages.instance().add("Não foi anexado nenhum documento.");
-				return;
-			}
-			for (DadosUpload dadosUpload : dadosArquivosSubmetidos) {
+			for (DadosUpload dadosUpload : dadosUploader) {
 				DocumentoTemporario documentoGerado = gravarArquivoUpload(dadosUpload);
 				getDocumentoTemporarioList().add(new DocumentoTemporarioWrapper(documentoGerado));
 			}
-
 			resetUploader();
 		} catch (DAOException e) {
 			FacesMessages.instance().add("Não foi possível enviar o arquivo. Tente novamente");
@@ -715,11 +663,7 @@ public class AnexarDocumentosView implements Serializable {
 	}
 
 	public boolean isShowUploaderButton() {
-		return showUploaderButton;
-	}
-
-	public void setShowUploaderButton(boolean showUploaderButton) {
-		this.showUploaderButton = showUploaderButton;
+		return !dadosUploader.isEmpty();
 	}
 
 	public ClassificacaoDocumento getClassificacaoDocumentoUploader() {
@@ -800,11 +744,4 @@ public class AnexarDocumentosView implements Serializable {
 		this.pastaUploader = pastaUploader;
 	}
 
-	public String getArquivosSubmetidos() {
-		return arquivosSubmetidos;
-	}
-
-	public void setArquivosSubmetidos(String arquivosSubmetidos) {
-		this.arquivosSubmetidos = arquivosSubmetidos;
-	}
 }

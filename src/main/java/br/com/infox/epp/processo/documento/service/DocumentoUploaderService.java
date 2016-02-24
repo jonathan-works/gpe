@@ -5,6 +5,8 @@ import static java.text.MessageFormat.format;
 import java.io.IOException;
 import java.io.Serializable;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -30,6 +32,7 @@ import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
 @AutoCreate
+@Stateless
 @Scope(ScopeType.STATELESS)
 @Name(DocumentoUploaderService.NAME)
 @Transactional
