@@ -115,6 +115,13 @@ public class ConsultaLogErroList extends DataList<LogErro> {
     public void setStatus(StatusLog status) {
         this.status = status;
     }
-    
+
+    public Date getDataEnvio() {
+        return dataEnvio;
+    }
+
+    public void setDataEnvio(Date dataEnvio) {
+        this.dataEnvio = dataEnvio;
+    }
     
 }
