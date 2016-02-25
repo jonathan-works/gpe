@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -16,6 +18,7 @@ import br.com.infox.epp.access.query.UsuarioPerfilQuery;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 
 @AutoCreate
+@Stateless
 @Name(UsuarioPerfilDAO.NAME)
 public class UsuarioPerfilDAO extends DAO<UsuarioPerfil> {
 
