@@ -3,6 +3,7 @@ package br.com.infox.epp.processo.partes.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.enterprise.context.ConversationScoped;
 import javax.inject.Inject;
 
 import org.jboss.seam.annotations.In;
@@ -24,6 +25,7 @@ import br.com.infox.seam.security.SecurityUtil;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(ParticipantesProcessoController.NAME)
+@ConversationScoped
 @ContextDependency
 public class ParticipantesProcessoController extends AbstractParticipantesController {
 
@@ -38,13 +40,14 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     private SecurityUtil securityUtil;
     
     private List<TipoParte> tipoPartes;
-    private ParticipanteProcessoTreeHandler tree = ComponentUtil.getComponent(ParticipanteProcessoTreeHandler.NAME);
+    @In
+    private ParticipanteProcessoTreeHandler participanteProcessoTree;
     private UsuarioLoginManager usuarioLoginManager = ComponentUtil.getComponent(UsuarioLoginManager.NAME);
         
     @Override
     protected void clearParticipanteProcesso() {
     	super.clearParticipanteProcesso();
-    	tree.clearTree();
+    	participanteProcessoTree.clearTree();
     }
     
     @Override
@@ -169,6 +172,12 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
     @Override
     public boolean apenasPessoaJuridica() {
         return ParteProcessoEnum.J.equals(getNatureza().getTipoPartes());
+    }
+    
+    @Override
+    public void includeParticipanteProcesso() {
+    	super.includeParticipanteProcesso();
+    	participanteProcessoTree.clearTree();
     }
     
     public ParticipanteProcesso getParticipantePai() {
