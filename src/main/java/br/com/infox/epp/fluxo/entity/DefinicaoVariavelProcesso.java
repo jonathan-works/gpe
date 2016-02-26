@@ -62,8 +62,8 @@ public class DefinicaoVariavelProcesso implements Serializable {
     @Column(name = ID_DEFINICAO_VARIAVEL_PROCESSO, nullable = false, unique = true)
     private Long id;
 
-    @Column(name = NOME_VARIAVEL, nullable = false, length = LengthConstants.DESCRICAO_PEQUENA)
-    @Size(min = 1, max = LengthConstants.DESCRICAO_PEQUENA, message = "{beanValidation.size}")
+    @Column(name = NOME_VARIAVEL, nullable = false, length = LengthConstants.DESCRICAO_GRANDE)
+    @Size(min = 1, max = LengthConstants.DESCRICAO_GRANDE, message = "{beanValidation.size}")
     @NotNull(message = "{beanValidation.notNull}")
     private String nome;
 
