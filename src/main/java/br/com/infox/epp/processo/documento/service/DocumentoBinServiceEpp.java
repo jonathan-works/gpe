@@ -21,6 +21,8 @@ public class DocumentoBinServiceEpp implements DocumentoBinService {
 	@Inject
 	private DocumentoBinarioDAO documentoBinarioDao;
 	
+	private DocumentoBin documentoBin;
+	
 	private DocumentoBin carregarDocumentoBin(Integer idDocumentoBin) {
 		DocumentoBin documentoBin = documentoBinDao.find(idDocumentoBin);
 		if(documentoBin.getTipoStorage() != TipoStorage.DB) {
@@ -29,25 +31,42 @@ public class DocumentoBinServiceEpp implements DocumentoBinService {
 		return documentoBin; 
 	}
 	
+	private DocumentoBin getDocumentoBin(Integer idDocumentoBin) {
+		if(documentoBin == null || documentoBin.getId() != idDocumentoBin) {
+			documentoBin = carregarDocumentoBin(idDocumentoBin);
+		}
+		return documentoBin;
+	}
+	
 	public List<AssinaturaDocumento> carregarAssinaturas(Integer idDocumentoBin) {
-		DocumentoBin documentoBin = carregarDocumentoBin(idDocumentoBin);
+		DocumentoBin documentoBin = getDocumentoBin(idDocumentoBin);
 		return documentoBin.getAssinaturasBanco();			
 	}
 	public DocumentoBinario carregarDocumentoBinario(Integer idDocumentoBin) {
-		carregarDocumentoBin(idDocumentoBin);
+		getDocumentoBin(idDocumentoBin);
 		DocumentoBinario documentoBinario = documentoBinarioDao.find(idDocumentoBin);
 		return documentoBinario;			
 	}
 
 	@Override
 	public Integer getSize(Integer idDocumentoBin) {
-		DocumentoBin documentoBin = carregarDocumentoBin(idDocumentoBin);
+		DocumentoBin documentoBin = getDocumentoBin(idDocumentoBin);
 		return documentoBin.getSizeBanco();
 	}
 
 	@Override
 	public boolean existeBinario(Integer idDocumentoBin) {
- 		carregarDocumentoBin(idDocumentoBin);
+		getDocumentoBin(idDocumentoBin);
  		return documentoBinarioDao.existeBinario(idDocumentoBin);
+	}
+
+	@Override
+	public String getNomeArquivo(Integer idDocumentoBin) {
+		return getDocumentoBin(idDocumentoBin).getNomeArquivoBanco();
+	}
+
+	@Override
+	public String getExtensao(Integer idDocumentoBin) {
+		return getDocumentoBin(idDocumentoBin).getExtensaoBanco();
 	}
 }

@@ -10,4 +10,6 @@ public interface DocumentoBinService {
 	public DocumentoBinario carregarDocumentoBinario(Integer idDocumentoBin);
 	public Integer getSize(Integer idDocumentoBin);
 	public boolean existeBinario(Integer idDocumentoBin);
+	public String getNomeArquivo(Integer idDocumentoBin);
+	public String getExtensao(Integer idDocumentoBin);
 }

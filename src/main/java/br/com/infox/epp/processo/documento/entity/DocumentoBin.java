@@ -171,8 +171,12 @@ public class DocumentoBin implements Serializable {
 		this.id = id;
 	}
 
+	public String getExtensaoBanco() {
+		return extensao;		
+	}
+	
 	public String getExtensao() {
-		return extensao;
+		return getDocumentoBinService().getExtensao(getId());
 	}
 
 	public void setExtensao(String extensao) {
@@ -195,8 +199,12 @@ public class DocumentoBin implements Serializable {
 		this.md5Documento = md5Documento;
 	}
 
-	public String getNomeArquivo() {
+	public String getNomeArquivoBanco() {
 		return nomeArquivo;
+	}
+	
+	public String getNomeArquivo() {
+		return getDocumentoBinService().getNomeArquivo(getId());
 	}
 
 	public void setNomeArquivo(String nomeArquivo) {
