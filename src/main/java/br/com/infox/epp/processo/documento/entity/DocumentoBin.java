@@ -11,8 +11,6 @@ import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -58,10 +56,8 @@ public class DocumentoBin implements Serializable {
 
     public static final String TABLE_NAME = "tb_documento_bin";
     
-	public enum TipoStorage {
-		DB, SVC
-	}
-	
+    public static final String DOCUMENTO_EXTERNO_SERVICO = "SVC"; 
+    
     @Id
     @SequenceGenerator(allocationSize = 1, initialValue = 1, name = "DocumentoBinGenerator", sequenceName = "sq_documento_bin")
     @GeneratedValue(generator = "DocumentoBinGenerator", strategy = GenerationType.SEQUENCE)
@@ -123,33 +119,30 @@ public class DocumentoBin implements Serializable {
     @Transient
 	private DocumentoBinService documentoBinService;
 
-	@Column(name="tp_storage")
-	@Enumerated(EnumType.STRING)
-	private TipoStorage tipoStorage = TipoStorage.DB;
+	@Column(name="tp_documento_externo")
+	private String tipoDocumentoExterno;
 	
 	@Size(max=50)
-	@Column(name="cd_documento")
-	private String codigoDocumento;
+	@Column(name="id_documento_externo")
+	private String idDocumentoExterno;
 
-	public TipoStorage getTipoStorage() {
-		return tipoStorage;
-	}
-
-	public void setTipoStorage(TipoStorage tipoStorage) {
-		this.tipoStorage = tipoStorage;
-	}
-	
-	public String getCodigoDocumento() {
-		return codigoDocumento;
+	public String getTipoDocumentoExterno() {
+		return tipoDocumentoExterno;
 	}
 
-	public void setCodigoDocumento(String codigoDocumento) {
-		this.codigoDocumento = codigoDocumento;
+	public void setTipoDocumentoExterno(String tipoDocumentoExterno) {
+		this.tipoDocumentoExterno = tipoDocumentoExterno;
 	}
-    
-    
-    
-    @PrePersist
+
+	public String getIdDocumentoExterno() {
+		return idDocumentoExterno;
+	}
+
+    public void setIdDocumentoExterno(String idDocumentoExterno) {
+		this.idDocumentoExterno = idDocumentoExterno;
+	}
+
+	@PrePersist
     private void prePersist() {
     	if (getExtensao() != null) {
     		setMinuta(false);

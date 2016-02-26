@@ -10,7 +10,6 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.dao.DocumentoBinDAO;
 import br.com.infox.epp.processo.documento.dao.DocumentoBinarioDAO;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
-import br.com.infox.epp.processo.documento.entity.DocumentoBin.TipoStorage;
 
 @Default
 public class DocumentoBinServiceEpp implements DocumentoBinService {
@@ -25,8 +24,8 @@ public class DocumentoBinServiceEpp implements DocumentoBinService {
 	
 	private DocumentoBin carregarDocumentoBin(Integer idDocumentoBin) {
 		DocumentoBin documentoBin = documentoBinDao.find(idDocumentoBin);
-		if(documentoBin.getTipoStorage() != TipoStorage.DB) {
-			throw new UnsupportedOperationException("Tipo de storage inválido: " + documentoBin.getTipoStorage());			
+		if(documentoBin.getTipoDocumentoExterno() != null) {
+			throw new UnsupportedOperationException("Tipo de storage não suportado: " + documentoBin.getTipoDocumentoExterno());			
 		}
 		return documentoBin; 
 	}
