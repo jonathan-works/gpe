@@ -1,7 +1,6 @@
 package br.com.infox.jta;
 
 import javax.transaction.Synchronization;
-import javax.transaction.TransactionSynchronizationRegistry;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Install;
@@ -10,7 +9,7 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.transaction.Synchronizations;
 
-import br.com.infox.epp.cdi.util.JNDI;
+import br.com.infox.core.transaction.TransactionSyncronizationsUtil;
 
 @Name("org.jboss.seam.transaction.synchronizations")
 @Scope(ScopeType.EVENT)
@@ -48,7 +47,7 @@ public class JtaSyncronizations implements Synchronizations {
 
     @Override
     public void registerSynchronization(Synchronization sync) {
-        JNDI.<TransactionSynchronizationRegistry>lookup("java:comp/TransactionSynchronizationRegistry").registerInterposedSynchronization(sync);
+        TransactionSyncronizationsUtil.getTransactionSynchronizationRegistry().registerInterposedSynchronization(sync);
     }
 
     @Override

@@ -3,8 +3,10 @@ package br.com.infox.jsf.events;
 import javax.faces.event.AbortProcessingException;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.transaction.TransactionSynchronizationRegistry;
 
 import br.com.infox.core.report.RequestInternalPageService;
+import br.com.infox.core.transaction.TransactionSyncronizationsUtil;
 import br.com.infox.epp.cdi.util.JNDI;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -21,9 +23,15 @@ public class EppServletEventListener implements ServletContextListener {
 		    throw new AbortProcessingException("RequestInternal page java:module/ApplicationServerService não encontrado");
 		}
 		requestInternalPageService.setContextPath(event.getServletContext().getContextPath());
+		setTransactionSynchronizationRegistry();
 	}
 
-	@Override
+	private void setTransactionSynchronizationRegistry() {
+	    TransactionSynchronizationRegistry tsr = JNDI.<TransactionSynchronizationRegistry>lookup("java:comp/TransactionSynchronizationRegistry");
+	    TransactionSyncronizationsUtil.setTransactionSynchronizationRegistry(tsr);
+    }
+
+    @Override
 	public void contextDestroyed(ServletContextEvent sce) {
 	}
 
