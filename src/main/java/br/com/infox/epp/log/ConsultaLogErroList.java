@@ -41,8 +41,8 @@ public class ConsultaLogErroList extends DataList<LogErro> {
     protected void addRestrictionFields() {
         addRestrictionField("codigo", RestrictionType.contendo);
         addRestrictionField("instancia", RestrictionType.contendo);
-        addRestrictionField("dataInicio", "o.data >= to_date(#{consultaLogErroList.dataInicio})");
-        addRestrictionField("dataFim", "o.data <= to_date(#{consultaLogErroList.dataFim})");
+        addRestrictionField("dataInicio", "o.data >= #{consultaLogErroList.dataInicio}");
+        addRestrictionField("dataFim", "o.data <= #{consultaLogErroList.dataFim}");
         addRestrictionField("status", RestrictionType.igual);
     }
     
@@ -72,8 +72,12 @@ public class ConsultaLogErroList extends DataList<LogErro> {
     
     @ExceptionHandled(value = MethodType.UNSPECIFIED)
     public void send(LogErro logErro) {
-        errorLogService.send(logErro, FacesContext.getCurrentInstance().getExternalContext().getRequestServerName());
-        FacesMessages.instance().add("Registro enviado com sucesso!");
+        try {
+            errorLogService.send(logErro, FacesContext.getCurrentInstance().getExternalContext().getRequestServerName());
+            FacesMessages.instance().add("Registro enviado com sucesso!");
+        } catch (Exception e) {
+            FacesMessages.instance().add(e.getMessage());
+        }
     }
 
     public String getCodigo() {

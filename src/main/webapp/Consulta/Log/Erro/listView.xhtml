@@ -18,12 +18,12 @@
 		<wi:panel id="logErroPanel" styleClass="content-block">
 
 			<wi:dataTable values="#{consultaLogErroList.list(15)}" bean="#{consultaLogErroList}" tableTitle="Log de Erro"
-				id="consultaLogErroListTable" >
+				id="consultaLogErroListTable">
 				
 				<ui:define name="searchForm">
 				
-					<wi:searchForm formId="pesquisarLogErroForm" formTitle="#{infoxMessages['searchForm.title']}"
-						showLogicOperator="false" >
+					<wi:searchForm formId="pesquisarLogErroForm" formTitle="#{infoxMessages['searchForm.title']}" 
+						searchAction="#{bean.refresh()}">
 						
 						<wi:inputText id="codigo" value="#{bean.codigo}" label="Código" />
 						
@@ -31,7 +31,7 @@
 						
 						<wi:inputDataPeriodo id="periodo" label="Data da Ocorrência" valueDateFrom="#{bean.dataInicio}"
 							valueDateTo="#{bean.dataFim}" validatePastDateFrom="true" validatePastDateTo="true" 
-							pattern="dd/MM/yyyy kk:mm"/>
+							pattern="dd/MM/yyyy HH:mm" maskDate="99/99/9999 99:99"/>
 							
 						<wi:selectOneMenuEnum id="status" items="#{bean.statusList}"
 							value="#{bean.status}" label="Status do Envio" noSelectionLabel="#{infoxMessages['crud.select.all']}" />

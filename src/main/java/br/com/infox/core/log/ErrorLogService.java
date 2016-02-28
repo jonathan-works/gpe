@@ -41,6 +41,7 @@ public class ErrorLogService {
         if (StringUtil.isEmpty(pass)) {
             throw new BusinessException("Password de cliente para envio não configurado. Favor configurar parâmetro " + Parametros.PASSWORD_CLIENTE_ENVIO_LOG.getLabel());
         }
+        StatusLog status = logErro.getStatus();
         try {
             LogRest logRest = RestClientFactory.create(urlEnvio, LogRest.class);
             LogDTO logDTO = createLogDto(logErro, endereco);
@@ -50,7 +51,7 @@ public class ErrorLogService {
             logErro.setDataEnvio(DateTime.now().toDate());
             atualizarLogErro(logErro);
         } catch (Exception e) {
-            logErro.setStatus(StatusLog.PENDENTE);
+            logErro.setStatus(status);
             logErro.setErroEnvio(e.getMessage());
             atualizarLogErro(logErro);
             throw new BusinessException(e.getMessage());
