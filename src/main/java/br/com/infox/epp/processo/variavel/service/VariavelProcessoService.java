@@ -6,10 +6,10 @@ import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
@@ -40,11 +40,11 @@ public class VariavelProcessoService {
 
     public static final String NAME = "variavelProcessoService";
 
-    @In
+    @Inject
     private MetadadoProcessoManager metadadoProcessoManager;
-    @In
+    @Inject
     private ProcessoManager processoManager;
-    @In
+    @Inject
     private ProcessoTarefaManager processoTarefaManager;
 
     public List<VariavelProcesso> getVariaveis(Processo processo) {
