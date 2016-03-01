@@ -67,5 +67,20 @@ public class UsuarioLoginSearch {
 		Predicate ativo = cb.and(cb.isTrue(usuario.get(UsuarioLogin_.ativo)), naoBloqueado, naoExpirado);
 		return ativo;
 	}
+
+	public UsuarioLogin getUsuarioByLogin(String login) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<UsuarioLogin> cq = cb.createQuery(UsuarioLogin.class);
+		
+		Root<UsuarioLogin> usuario = cq.from(UsuarioLogin.class);
+		
+		Predicate ativo = usuarioAtivo(cb, usuario);
+		Predicate humano = cb.equal(usuario.get(UsuarioLogin_.tipoUsuario), UsuarioEnum.H);
+		Predicate loginIgual = cb.equal(usuario.get(UsuarioLogin_.login), login);
+		
+		cq = cq.select(usuario).where(cb.and(ativo, humano, loginIgual));
+		
+		return getEntityManager().createQuery(cq).getSingleResult();
+	}
 	
 }

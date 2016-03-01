@@ -10,15 +10,19 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import javax.ejb.Stateless;
 import javax.faces.model.SelectItem;
+import javax.inject.Inject;
 import javax.security.auth.login.LoginException;
 
 import org.jboss.seam.Component;
+import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Transactional;
+import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.Contexts;
+import org.jboss.seam.core.Events;
 import org.jboss.seam.security.Credentials;
 import org.jboss.seam.security.Identity;
 import org.jboss.seam.security.SimplePrincipal;
@@ -38,7 +42,6 @@ import br.com.infox.epp.access.manager.CertificateManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
-import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException.Motivo;
 import br.com.infox.epp.system.util.ParametroUtil;
@@ -48,7 +51,8 @@ import br.com.infox.seam.exception.RedirectToLoginApplicationException;
 
 @Name(AuthenticatorService.NAME)
 @AutoCreate
-@Transactional
+@Stateless
+@Scope(ScopeType.STATELESS)
 public class AuthenticatorService implements Serializable {
     public static final String CERTIFICATE_ERROR_EXPIRED = "certificate.error.expired";
     private static final String CERTIFICATE_ERROR_USUARIO_LOGIN_PROVISORIO_EXPIRADO = "certificate.error.usuarioLoginProvisorioExpirado";
@@ -62,19 +66,17 @@ public class AuthenticatorService implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "authenticatorService";
 
-    @In
+    @Inject
     private UsuarioLoginManager usuarioLoginManager;
-    @In
+    @Inject
     private BloqueioUsuarioManager bloqueioUsuarioManager;
-    @In
+    @Inject
     private PessoaFisicaManager pessoaFisicaManager;
     @In
     private CertificateManager certificateManager;
-    @In
+    @Inject
     private UsuarioPerfilDAO usuarioPerfilDAO;
-    @In
-    private ProcessoDAO processoDAO;
-    @In
+    @Inject
     private InfoxMessages infoxMessages;
     
     public static final String CERTIFICATE_ERROR_UNKNOWN = "certificate.error.unknown";
@@ -256,6 +258,17 @@ public class AuthenticatorService implements Serializable {
         return usuarioLogin;
     }
 
+    public void loginWithoutPassword(UsuarioLogin usuarioLogin){
+    	loginWithoutPassword(usuarioLogin.getLogin());
+    }
+    public void loginWithoutPassword(String login){
+		if (login(login)) {
+			Events events = Events.instance();
+			events.raiseEvent(Identity.EVENT_LOGIN_SUCCESSFUL, new Object[1]);
+			events.raiseEvent(Identity.EVENT_POST_AUTHENTICATE, new Object[1]);
+		}
+    }
+    
     protected boolean login(final String login) {
         final IdentityManager identityManager = IdentityManager.instance();
         final boolean userExists = identityManager.getIdentityStore()
