@@ -85,13 +85,17 @@ public class DocumentoUploaderService implements Serializable {
         String extensao = getFileType(uploadFile.getName());
         ExtensaoArquivo extensaoArquivo = extensaoArquivoManager.getTamanhoMaximo(classificacaoDocumento, extensao);
         if (extensaoArquivo == null) {
-        	throw new Exception(Messages.instance().get("documentoUploader.error.invalidExtension"));
+        	throw new Exception("Arquivo: "+ uploadFile.getName() + " - " + Messages.instance().get("documentoUploader.error.invalidExtension"));
         }
         if ((uploadFile.getSize() / 1024F) > extensaoArquivo.getTamanho()) {
-        	throw new Exception(format(Messages.instance().get("documentoUploader.error.invalidFileSize"), extensaoArquivo.getTamanho()));
+        	throw new Exception("Arquivo: "+ uploadFile.getName() + " - " +format(Messages.instance().get("documentoUploader.error.invalidFileSize"), extensaoArquivo.getTamanho()));
         }
         if (extensaoArquivo.getPaginavel()) {
-            validaLimitePorPagina(extensaoArquivo.getTamanhoPorPagina(), dataStream);
+        	try{
+        		validaLimitePorPagina(extensaoArquivo.getTamanhoPorPagina(), dataStream);
+        	}catch(Exception e){
+        		throw new Exception("Arquivo: "+ uploadFile.getName() + " - " + e.getMessage());
+        	}
         }
     }
 	
@@ -102,13 +106,17 @@ public class DocumentoUploaderService implements Serializable {
         String extensao = getFileType(uploadFile.getName());
         ExtensaoArquivo extensaoArquivo = extensaoArquivoManager.getTamanhoMaximo(classificacaoDocumento, extensao);
         if (extensaoArquivo == null) {
-            throw new Exception(Messages.instance().get("documentoUploader.error.invalidExtension"));
+            throw new Exception("Arquivo: "+ uploadFile.getName() + " - " + Messages.instance().get("documentoUploader.error.invalidExtension"));
         }
         if ((uploadFile.getSize() / 1024F) > extensaoArquivo.getTamanho()) {
-            throw new Exception(format(Messages.instance().get("documentoUploader.error.invalidFileSize"), extensaoArquivo.getTamanho()));
+            throw new Exception("Arquivo: "+ uploadFile.getName() + " - " + format(Messages.instance().get("documentoUploader.error.invalidFileSize"), extensaoArquivo.getTamanho()));
         }
         if (extensaoArquivo.getPaginavel()) {
-            validaLimitePorPagina(extensaoArquivo.getTamanhoPorPagina(), uploadFile.getInputStream());
+        	try{
+        		validaLimitePorPagina(extensaoArquivo.getTamanhoPorPagina(), uploadFile.getInputStream());
+        	}catch(Exception e){
+        		throw new Exception("Arquivo: "+ uploadFile.getName() + " - " + e.getMessage());
+        	}
         }
     }
 	
