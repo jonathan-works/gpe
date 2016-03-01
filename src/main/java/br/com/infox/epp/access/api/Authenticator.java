@@ -74,6 +74,8 @@ public class Authenticator implements Serializable {
     private PapelManager papelManager;
     @Inject
     private SecurityUtil securityUtil;
+    @Inject
+    private CdiAuthenticator cdiAuthenticator;
     
     private String newPassword1;
     private String newPassword2;
@@ -203,6 +205,12 @@ public class Authenticator implements Serializable {
     public void login() {
             final Identity identity = Identity.instance();
             final Credentials credentials = identity.getCredentials();
+            
+            if (cdiAuthenticator.authenticate(credentials.getUsername(), credentials.getPassword())){
+            	getAuthenticatorService().loginWithoutPassword(credentials.getUsername());
+            	return;
+            }
+            
             if (loginExists(credentials) || ldapLoginExists(credentials)) {
                 try {
                     identity.login();
