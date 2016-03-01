@@ -75,7 +75,7 @@ public class DocumentoUploaderService implements Serializable {
         if (nomeArquivo != null) {
             ret = nomeArquivo.substring(nomeArquivo.lastIndexOf('.') + 1);
         }
-        return ret;
+        return ret.toLowerCase();
     }
 
 	public void validaDocumento(UploadedFile uploadFile, ClassificacaoDocumento classificacaoDocumento, byte[] dataStream) throws Exception {
