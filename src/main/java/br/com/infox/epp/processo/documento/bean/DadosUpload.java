@@ -3,8 +3,14 @@ package br.com.infox.epp.processo.documento.bean;
 import org.richfaces.model.UploadedFile;
 
 public class DadosUpload {
+    
     private UploadedFile uploadedFile;
     private byte[] dadosArquivo;
+    
+    public DadosUpload(UploadedFile uploadedFile) {
+        super();
+        this.uploadedFile = uploadedFile;
+    }
 
     public DadosUpload(UploadedFile uploadedFile, byte[] dadosArquivo) {
         super();
