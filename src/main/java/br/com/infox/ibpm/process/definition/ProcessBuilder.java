@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -144,19 +145,25 @@ public class ProcessBuilder implements Serializable {
         exists = false;
         clear();
         instance = ProcessDefinition.createNewProcessDefinition();
+        instance.setKey("key_" + UUID.randomUUID().toString());
         Swimlane laneSolicitante = new Swimlane("solicitante");
+        laneSolicitante.setKey("key_" + UUID.randomUUID().toString());
         laneSolicitante.setActorIdExpression("#{actor.id}");
 
         Task startTask = new Task("Tarefa inicial");
+        startTask.setKey("key_" + UUID.randomUUID().toString());
         startTask.setSwimlane(laneSolicitante);
         taskFitter.setStarTaskHandler(new TaskHandler(startTask));
         instance.getTaskMgmtDefinition().setStartTask(taskFitter.getStartTaskHandler().getTask());
 
         StartState startState = new StartState(infoxMessages.get("process.node.first"));
+        startState.setKey("key_" + UUID.randomUUID().toString());
         instance.addNode(startState);
         EndState endState = new EndState(infoxMessages.get("process.node.last"));
+        endState.setKey("key_" + UUID.randomUUID().toString());
         instance.addNode(endState);
         Transition t = new Transition();
+        t.setKey("key_" + UUID.randomUUID().toString());
         t.setName(endState.getName());
         t.setTo(endState);
         startState.addLeavingTransition(t);

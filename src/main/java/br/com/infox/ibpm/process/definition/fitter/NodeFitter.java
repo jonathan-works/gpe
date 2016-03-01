@@ -121,7 +121,7 @@ public class NodeFitter extends Fitter implements Serializable {
                 node.setAsync(true);
             }
             node.setName(newNodeName);
-            node.setKey("key_ " + UUID.randomUUID().toString());
+            node.setKey("key_" + UUID.randomUUID().toString());
             processo.addNode(node);
             nodes = processo.getNodes();
             // Se foi informado newNodeAfter, procura para inserir
