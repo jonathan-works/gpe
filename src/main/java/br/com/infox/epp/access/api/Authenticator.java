@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.el.ELException;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.naming.NamingException;
@@ -15,11 +16,9 @@ import javax.security.auth.login.LoginException;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
-import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.Actor;
 import org.jboss.seam.contexts.Context;
 import org.jboss.seam.contexts.Contexts;
@@ -60,7 +59,6 @@ import br.com.infox.seam.security.SecurityUtil;
 @AutoCreate
 @Name(Authenticator.NAME)
 @Install(precedence = Install.APPLICATION)
-@Transactional
 @ContextDependency
 public class Authenticator implements Serializable {
 
@@ -72,7 +70,7 @@ public class Authenticator implements Serializable {
     protected UsuarioLoginManager usuarioLoginManager;
     @Inject
     protected InfoxMessages infoxMessages;
-    @In
+    @Inject
     private PapelManager papelManager;
     @Inject
     private SecurityUtil securityUtil;
@@ -347,11 +345,17 @@ public class Authenticator implements Serializable {
     }
 
     private void redirectToPainelDoUsuario() {
-        Redirect redirect = Redirect.instance();
-        redirect.getParameters().clear();
-        redirect.setViewId(getCaminhoPainel());
-        redirect.setParameter("scid", null);
-        redirect.execute();
+    	try {
+	        Redirect redirect = Redirect.instance();
+	        redirect.getParameters().clear();
+	        redirect.setViewId(getCaminhoPainel());
+	        redirect.setParameter("scid", null);
+	        redirect.execute();
+    	} catch (NullPointerException e){
+    		if (FacesContext.getCurrentInstance() != null){
+    			throw e;
+    		}
+    	}
     }
     
     public String getCaminhoPainel() {
@@ -363,11 +367,17 @@ public class Authenticator implements Serializable {
     }
 
     private void redirectToTermoAdesao() {
-        Redirect redirect = Redirect.instance();
-        redirect.getParameters().clear();
-        redirect.setViewId("/termoAdesao.seam");
-        redirect.setParameter("scid", null);
-        redirect.execute();
+    	try {
+	        Redirect redirect = Redirect.instance();
+	        redirect.getParameters().clear();
+	        redirect.setViewId("/termoAdesao.seam");
+	        redirect.setParameter("scid", null);
+	        redirect.execute();
+    	} catch (NullPointerException e){
+    		if (FacesContext.getCurrentInstance() != null){
+    			throw e;
+    		}
+    	}
     }
     
     private void setVariaveisDoContexto(UsuarioPerfil usuarioPerfil,
