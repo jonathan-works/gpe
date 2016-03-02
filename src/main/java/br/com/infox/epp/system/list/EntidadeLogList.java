@@ -3,28 +3,25 @@ package br.com.infox.epp.system.list;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-import br.com.infox.core.list.EntityList;
-import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.core.list.DataList;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.system.entity.ConsultaEntidadeLog;
 import br.com.infox.epp.system.entity.EntityLog;
 import br.com.infox.epp.system.entity.EntityLogDetail;
 import br.com.infox.epp.system.manager.EntidadeLogManager;
 import br.com.infox.epp.system.type.TipoOperacaoLogEnum;
 
-@Name(EntidadeLogList.NAME)
-@Scope(ScopeType.PAGE)
-public class EntidadeLogList extends EntityList<EntityLog> {
+@Named
+@ViewScoped
+public class EntidadeLogList extends DataList<EntityLog> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "entidadeLogList";
 
-    @In
+    @Inject
     private EntidadeLogManager entidadeLogManager;
 
     private ConsultaEntidadeLog instance = new ConsultaEntidadeLog();
@@ -32,7 +29,7 @@ public class EntidadeLogList extends EntityList<EntityLog> {
     private String idEntidade;
     private Integer idPesquisa;
 
-    private static final String DEFAULT_EJBQL = "select o from EntityLog o";
+    private static final String DEFAULT_EJBQL = "select o from EntityLog o ";
     private static final String DEFAULT_ORDER = "dataLog desc";
 
     private static final String R1 = "ip like concat(lower(#{entidadeLogList.instance.ip}),'%')";
@@ -44,16 +41,17 @@ public class EntidadeLogList extends EntityList<EntityLog> {
     private static final String R8 = "cast(dataLog as date) >= #{entidadeLogList.instance.dataInicio}";
     private static final String R9 = "cast(dataLog as date)<= #{entidadeLogList.instance.dataFim}";
 
+    
     @Override
-    protected void addSearchFields() {
-        addSearchField("ip", SearchCriteria.INICIANDO, R1);
-        addSearchField("usuario", SearchCriteria.IGUAL, R2);
-        addSearchField("nomeEntidade", SearchCriteria.IGUAL, R3);
-        addSearchField("tipoOperacao", SearchCriteria.IGUAL, R4);
-        addSearchField("nomePackage", SearchCriteria.IGUAL, R6);
-        addSearchField("idEntidade", SearchCriteria.IGUAL, R7);
-        addSearchField("dataLogInicio", SearchCriteria.MAIOR_IGUAL, R8);
-        addSearchField("dataLogFim", SearchCriteria.MENOR_IGUAL, R9);
+    protected void addRestrictionFields() {
+    	addRestrictionField("ip", R1);
+    	addRestrictionField("usuario", R2);
+    	addRestrictionField("nomeEntidade", R3);
+    	addRestrictionField("tipoOperacao", R4);
+    	addRestrictionField("nomePackage", R6);
+    	addRestrictionField("idEntidade", R7);
+    	addRestrictionField("dataLogInicio", R8);
+    	addRestrictionField("dataLogFim", R9);
     }
 
     @Override
