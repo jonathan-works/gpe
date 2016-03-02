@@ -29,7 +29,7 @@ public interface UsuarioRest {
 	UsuarioResource getUsuarioResource(@PathParam("cpf") String cpf);
 
 	@POST
-	@Path("/login")
+	@Path("/signin")
 	Response login(@HeaderParam(JWT_TOKEN_NAME) String jwt);
 
 	// @Path("/{cpf}/perfil/{codigo}")

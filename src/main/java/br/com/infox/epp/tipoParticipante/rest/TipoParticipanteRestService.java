@@ -1,10 +1,16 @@
 package br.com.infox.epp.tipoParticipante.rest;
 
+import static br.com.infox.epp.ws.RestUtils.produceErrorJson;
+
 import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.partes.entity.TipoParte;
 import br.com.infox.epp.processo.partes.manager.TipoParteManager;
 import br.com.infox.epp.tipoParte.TipoParteSearch;
@@ -33,15 +39,27 @@ public class TipoParticipanteRestService {
 	}
 
 	public void adicionarTipoParticipante(TipoParticipanteDTO tipoParticipanteDTO) {
-		tipoParteManager.persist(aplicar(tipoParticipanteDTO,new TipoParte()));
+		try {
+			tipoParteManager.persist(aplicar(tipoParticipanteDTO,new TipoParte()));
+		} catch (DAOException e){
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(produceErrorJson(e.getMessage())).build());
+		}
 	}
 
 	public void atualizarTipoParticipante(String codigo, TipoParticipanteDTO tipoParticipanteDTO) {
-		tipoParteManager.update(aplicar(tipoParticipanteDTO,tipoParteSearch.getTipoParteByIdentificador(codigo)));
+		try {
+			tipoParteManager.update(aplicar(tipoParticipanteDTO,tipoParteSearch.getTipoParteByIdentificador(codigo)));
+		} catch (DAOException e){
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(produceErrorJson(e.getMessage())).build());
+		}
 	}
 
 	public void removerTipoParticipante(String codigo) {
-		tipoParteManager.remove(tipoParteSearch.getTipoParteByIdentificador(codigo));
+		try {
+			tipoParteManager.remove(tipoParteSearch.getTipoParteByIdentificador(codigo));
+		} catch (DAOException e){
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(produceErrorJson(e.getMessage())).build());
+		}
 	}
 
 	public TipoParte aplicar(TipoParticipanteDTO tipoParticipanteDTO, TipoParte tipoParte){
