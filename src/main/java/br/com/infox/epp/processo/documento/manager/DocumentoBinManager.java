@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.documento.manager;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.UUID;
 
 import javax.ejb.Stateless;
 
+import org.apache.commons.io.IOUtils;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -29,6 +31,7 @@ import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.documento.entity.DocumentoBinario;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
@@ -80,6 +83,27 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 		}
 		return bin;
 	}
+	
+	public DocumentoBin createProcessoDocumentoBin(DocumentoBin bin, InputStream inputStream) throws DAOException, IOException {
+	    byte[] dados = IOUtils.toByteArray(inputStream);
+        if (bin.isBinario() && dados != null) {
+            bin.setModeloDocumento(InfoxPdfReader.readPdfFromByteArray(dados));
+        }
+        if (bin.getMd5Documento() == null) {
+            if (bin.isBinario()) {
+                bin.setMd5Documento(MD5Encoder.encode(dados));
+            } else {
+                bin.setMd5Documento(MD5Encoder.encode(bin.getModeloDocumento()));
+            }
+        }
+        bin.setDataInclusao(new Date());
+        bin = persist(bin);
+        if (bin.isBinario() && dados != null) {
+            DocumentoBinario documentoBinario = documentoBinarioManager.salvarBinario(bin.getId(), dados);
+            documentoBinarioManager.detach(documentoBinario);
+        }
+        return bin;
+    }
 
 	public DocumentoBin createProcessoDocumentoBin(final String tituloDocumento, final String conteudo)
 			throws DAOException {

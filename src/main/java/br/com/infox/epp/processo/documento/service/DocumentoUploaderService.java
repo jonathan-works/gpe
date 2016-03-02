@@ -3,6 +3,7 @@ package br.com.infox.epp.processo.documento.service;
 import static java.text.MessageFormat.format;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 
 import javax.ejb.Stateless;
@@ -60,12 +61,21 @@ public class DocumentoUploaderService implements Serializable {
 		return documentoBin;
 	}
 	
+	public DocumentoBin createDocumentoBin(UploadedFile uploadedFile) {
+        DocumentoBin documentoBin = new DocumentoBin();
+        documentoBin.setExtensao(getFileType(uploadedFile.getName()));
+        documentoBin.setNomeArquivo(uploadedFile.getName());
+        documentoBin.setSize(Long.valueOf(uploadedFile.getSize()).intValue());
+        documentoBin.setModeloDocumento(null);
+        return documentoBin;
+    }
+	
 	private String getFileType(String nomeArquivo) {
         String ret = "";
         if (nomeArquivo != null) {
             ret = nomeArquivo.substring(nomeArquivo.lastIndexOf('.') + 1);
         }
-        return ret;
+        return ret.toLowerCase();
     }
 
 	public void validaDocumento(UploadedFile uploadFile, ClassificacaoDocumento classificacaoDocumento, byte[] dataStream) throws Exception {
@@ -75,13 +85,38 @@ public class DocumentoUploaderService implements Serializable {
         String extensao = getFileType(uploadFile.getName());
         ExtensaoArquivo extensaoArquivo = extensaoArquivoManager.getTamanhoMaximo(classificacaoDocumento, extensao);
         if (extensaoArquivo == null) {
-        	throw new Exception(Messages.instance().get("documentoUploader.error.invalidExtension"));
+        	throw new Exception("Arquivo: "+ uploadFile.getName() + " - " + Messages.instance().get("documentoUploader.error.invalidExtension"));
         }
         if ((uploadFile.getSize() / 1024F) > extensaoArquivo.getTamanho()) {
-        	throw new Exception(format(Messages.instance().get("documentoUploader.error.invalidFileSize"), extensaoArquivo.getTamanho()));
+        	throw new Exception("Arquivo: "+ uploadFile.getName() + " - " +format(Messages.instance().get("documentoUploader.error.invalidFileSize"), extensaoArquivo.getTamanho()));
         }
         if (extensaoArquivo.getPaginavel()) {
-            validaLimitePorPagina(extensaoArquivo.getTamanhoPorPagina(), dataStream);
+        	try{
+        		validaLimitePorPagina(extensaoArquivo.getTamanhoPorPagina(), dataStream);
+        	}catch(Exception e){
+        		throw new Exception("Arquivo: "+ uploadFile.getName() + " - " + e.getMessage());
+        	}
+        }
+    }
+	
+	public void validaDocumento(UploadedFile uploadFile, ClassificacaoDocumento classificacaoDocumento) throws Exception {
+        if (uploadFile == null) {
+            throw new Exception(Messages.instance().get("documentoUploader.error.noFile"));
+        }
+        String extensao = getFileType(uploadFile.getName());
+        ExtensaoArquivo extensaoArquivo = extensaoArquivoManager.getTamanhoMaximo(classificacaoDocumento, extensao);
+        if (extensaoArquivo == null) {
+            throw new Exception("Arquivo: "+ uploadFile.getName() + " - " + Messages.instance().get("documentoUploader.error.invalidExtension"));
+        }
+        if ((uploadFile.getSize() / 1024F) > extensaoArquivo.getTamanho()) {
+            throw new Exception("Arquivo: "+ uploadFile.getName() + " - " + format(Messages.instance().get("documentoUploader.error.invalidFileSize"), extensaoArquivo.getTamanho()));
+        }
+        if (extensaoArquivo.getPaginavel()) {
+        	try{
+        		validaLimitePorPagina(extensaoArquivo.getTamanhoPorPagina(), uploadFile.getInputStream());
+        	}catch(Exception e){
+        		throw new Exception("Arquivo: "+ uploadFile.getName() + " - " + e.getMessage());
+        	}
         }
     }
 	
@@ -106,6 +141,26 @@ public class DocumentoUploaderService implements Serializable {
 			}
         } catch (IOException e) {
             LOG.error("Não foi possível recuperar as páginas do arquivo", e);
+            throw new Exception(InfoxMessages.getInstance().get("documentoUploader.error.notPaginable"));
+        }
+    }
+	
+	private void validaLimitePorPagina(Integer limitePorPagina, InputStream inputStream) throws Exception {
+        try {
+            PdfReader reader = new PdfReader(inputStream);
+            int qtdPaginas = reader.getNumberOfPages();
+            float fileLength = reader.getFileLength() / 1024F;
+            float averagePage = fileLength / qtdPaginas;
+            if (averagePage > limitePorPagina) {
+                throw new Exception(InfoxMessages.getInstance().get("documentoUploader.error.notPaginable"));
+            }
+            for (int i = 1; i <= qtdPaginas; i++) {
+                if ((reader.getPageContent(i).length / 1024F) > limitePorPagina) {
+                    throw new Exception(InfoxMessages.getInstance().get("documentoUploader.error.notPaginable"));
+                }
+            }
+        } catch (IOException e) {
+            LOG.info("Não foi possível recuperar as páginas do arquivo", e);
             throw new Exception(InfoxMessages.getInstance().get("documentoUploader.error.notPaginable"));
         }
     }
