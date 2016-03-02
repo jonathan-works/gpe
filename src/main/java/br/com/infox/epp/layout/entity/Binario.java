@@ -32,10 +32,6 @@ public class Binario {
 	@Column(name="ob_binario")
 	private byte[] binario;
 	
-	@Basic(fetch = FetchType.LAZY)
-	@Column(name = "ob_binario", insertable = false, updatable = false)
-	private Blob blob;
-
 	public Integer getId() {
 		return id;
 	}
@@ -52,10 +48,6 @@ public class Binario {
 		this.binario = binario;
 	}
 	
-	public Blob getBlob() {
-        return blob;
-    }
-
     @Override
 	public int hashCode() {
 		final int prime = 31;
