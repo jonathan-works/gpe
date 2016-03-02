@@ -17,7 +17,6 @@ import javax.security.auth.login.LoginException;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.Contexts;
@@ -51,7 +50,6 @@ import br.com.infox.seam.exception.RedirectToLoginApplicationException;
 @Stateless
 @AutoCreate
 @Scope(ScopeType.STATELESS)
-@Scope(ScopeType.STATELESS)
 @Name(AuthenticatorService.NAME)
 public class AuthenticatorService {
 
@@ -73,11 +71,10 @@ public class AuthenticatorService {
     @Inject
     private PessoaFisicaManager pessoaFisicaManager;
     @Inject
-    @Inject
     private UsuarioPerfilDAO usuarioPerfilDAO;
     @Inject
     private InfoxMessages infoxMessages;
-    @In
+    @Inject
     private CertificateManager certificateManager;
 
     public static final String CERTIFICATE_ERROR_UNKNOWN = "certificate.error.unknown";

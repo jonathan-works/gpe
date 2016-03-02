@@ -18,7 +18,7 @@ public enum Parametros {
 	CODIGO_FLUXO_DOCUMENTO("codigoFluxoDocumento"),
 	CODIGO_FLUXO_COMUNICACAO_INTERNA("codigoFluxoComunicacaoInterna"),
 	IS_PRORROGACAO_AUTOMATICA_POR_MODELO_COMUNICACAO("prorrogarPrazoAutomaticamentePorModelo"),
-	WEB_SERVICE_TOKEN("webserviceToken");
+	WEB_SERVICE_TOKEN("webserviceToken"),
 	CODIGO_CLIENTE_ENVIO_LOG("codigoClienteEnvioLog"),
 	PASSWORD_CLIENTE_ENVIO_LOG("passwordClienteEnvioLog"),
 	IS_ATIVO_ENVIO_LOG_AUTOMATICO("ativarServicoEnvioLogAutomatico"),
