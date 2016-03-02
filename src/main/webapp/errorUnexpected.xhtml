@@ -21,12 +21,12 @@
         	<h:outputText value="Descupe-nos pelo transtorno, ocorreu um erro inesperado, contate o suporte para que o problema seja corrigido o mais rápido possível !"
             	style="font-size: 15px;"/>
         
-            <p:outputPanel style="margin-bottom: 1em;" rendered="#{unexpectedErrorView.managed}">
+            <p:outputPanel style="margin-bottom: 1em;" rendered="#{not empty unexpectedErrorView.codigoErro}">
             	<h:outputLabel for="codigoErro" value="Código de erro:" style="font-size: 15px;"/>
-            	<h:outputText id="codigoErro" value="#{unexpectedErrorView.logErro.codigo}" style="margin-left: 1em; color: red; font-size: 15px;"/>
+            	<h:outputText id="codigoErro" value="#{unexpectedErrorView.codigoErro}" style="margin-left: 1em; color: red; font-size: 15px;"/>
             </p:outputPanel>
             
-            <p:outputPanel style="margin-bottom: 1em;" rendered="#{not unexpectedErrorView.managed}">
+            <p:outputPanel style="margin-bottom: 1em;" rendered="#{empty unexpectedErrorView.codigoErro}">
             	<rich:collapsiblePanel switchType="client" expanded="true" header="Handled Exception">
 	                <pre>Caused by #{org.jboss.seam.handledException.class.name} with message: #{org.jboss.seam.handledException.message}
 		                <ui:repeat value="#{org.jboss.seam.handledException.stackTrace}" var="stackElement">

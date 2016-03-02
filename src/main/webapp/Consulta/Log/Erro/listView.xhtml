@@ -46,7 +46,7 @@
 					<h:form>
 						<a:commandLink rendered="#{row.status ne 'ENVIADO'}" render="consultaLogErroListTable, pageBodyDialogMessage" 
 							execute="@this"	action="#{consultaLogErroList.send(row)}">
-							<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/reopen.png')}"/>
+							<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/expedir_comunicacao.png')}" title="Enviar"/>
 						</a:commandLink>
 					</h:form>
 				</ui:define>

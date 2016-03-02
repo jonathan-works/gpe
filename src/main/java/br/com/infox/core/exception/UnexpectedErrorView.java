@@ -2,6 +2,9 @@ package br.com.infox.core.exception;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -33,29 +36,36 @@ public class UnexpectedErrorView {
     @Inject
     private ApplicationServerService applicationServerService;
     
-    private boolean managed;
-    private LogErro logErro;
+    private String codigoErro;
     
     @ExceptionHandled(value = MethodType.UNSPECIFIED)
     public void sendErrorLog() {
+        codigoErro = UUID.randomUUID().toString().replace("-", "");
+        Logger.getLogger(UnexpectedErrorView.class.getName()).log(Level.SEVERE, codigoErro);
         Exception handledException = ComponentUtil.getComponent("org.jboss.seam.handledException");
         if (handledException == null) return;
         String ativo = Parametros.IS_ATIVO_ENVIO_LOG_AUTOMATICO.getValue();
-        logErro = new LogErro();
-        logErro.setCodigo(String.valueOf(DateTime.now().toDate().getTime()));
+        if ("true".equals(ativo)) {
+            LogErro logErro = creteLogErro(handledException, StatusLog.PENDENTE);
+            String remote = FacesContext.getCurrentInstance().getExternalContext().getRequestServerName();
+            errorLogService.gravarLog(logErro);
+            codigoErro = logErro.getCodigo();
+            errorLogService.send(logErro, remote);
+        } else {
+            LogErro logErro = creteLogErro(handledException, StatusLog.NENVIADO);
+            errorLogService.gravarLog(logErro);
+            codigoErro = logErro.getCodigo();
+        }
+    }
+
+    private LogErro creteLogErro(Exception handledException, StatusLog statusLog) {
+        LogErro logErro = new LogErro();
+        logErro.setCodigo(codigoErro);
         logErro.setData(DateTime.now().toDate());
         logErro.setInstancia(applicationServerService.getInstanceName());
         logErro.setStacktrace(getStacktrace(handledException));
-        if ("true".equals(ativo)) {
-            logErro.setStatus(StatusLog.PENDENTE);
-            String remote = FacesContext.getCurrentInstance().getExternalContext().getRequestServerName();
-            errorLogService.gravarLog(logErro);
-            errorLogService.send(logErro, remote);
-        } else {
-            logErro.setStatus(StatusLog.NENVIADO);
-            errorLogService.gravarLog(logErro);
-        }
-        this.managed = true;
+        logErro.setStatus(statusLog);
+        return logErro;
     }
 
     private String getStacktrace(Exception handledException) {
@@ -71,12 +81,8 @@ public class UnexpectedErrorView {
         return String.format(ERROR_MESSAGE_FORMAT, usuarioPerfil.getUsuarioLogin().getLogin(), localizacao.getCodigo(), usuarioPerfil.getPerfilTemplate().getCodigo());
     }
 
-    public LogErro getLogErro() {
-        return logErro;
-    }
-
-    public boolean isManaged() {
-        return managed;
+    public String getCodigoErro() {
+        return codigoErro;
     }
 
 }
