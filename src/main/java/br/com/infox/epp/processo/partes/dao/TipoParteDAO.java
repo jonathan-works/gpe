@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
@@ -11,6 +13,7 @@ import br.com.infox.epp.processo.partes.entity.TipoParte;
 import br.com.infox.epp.processo.partes.query.TipoParteQuery;
 
 @Name(TipoParteDAO.NAME)
+@Stateless
 public class TipoParteDAO extends DAO<TipoParte> {
 
 	private static final long serialVersionUID = 1L;
