@@ -1,8 +1,8 @@
 package br.com.infox.epp.processo.documento.bean;
 
 import java.nio.charset.Charset;
-import java.util.Base64;
 
+import org.apache.commons.codec.binary.Base64;
 import org.richfaces.model.UploadedFile;
 
 public class DadosUpload {
@@ -18,7 +18,7 @@ public class DadosUpload {
     public DadosUpload(UploadedFile uploadedFile, byte[] dadosArquivo) {
         this.uploadedFile = uploadedFile;
         this.dadosArquivo = dadosArquivo;
-        this.fileNameEncoded = Base64.getEncoder().encodeToString(uploadedFile.getName().getBytes(Charset.forName("UTF-8")));
+        this.fileNameEncoded = Base64.encodeBase64String(uploadedFile.getName().getBytes(Charset.forName("UTF-8")));
     }
 
     public UploadedFile getUploadedFile() {
