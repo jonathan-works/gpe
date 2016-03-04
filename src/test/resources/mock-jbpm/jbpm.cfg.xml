@@ -1,0 +1,23 @@
+<jbpm-configuration>
+
+
+  <jbpm-context>
+		<service name="persistence"
+			factory="org.jbpm.persistence.db.DbPersistenceServiceFactory" />
+  </jbpm-context>
+	<string name="resource.hibernate.cfg.xml" value='mock-jbpm/hibernate.cfg.xml' />
+    <!-- Classe que define o Variable Resolver -->
+    <bean name="jbpm.variable.resolver" class="br.com.infox.ibpm.variable.EppJbpmVariableResolver" singleton="true" />
+
+	<!-- Arquivo que define o calendario de dias e horas úteis. -->
+	<string name="resource.business.calendar" value="jbpm.business.calendar.properties" />
+	
+	<string name='jbpm.mail.class.name' value='br.com.infox.ibpm.mail.JbpmMail' />
+	
+	<!-- Definicao dos tipos de no -->
+	<string name="resource.node.types" value="node.types.xml" />
+	
+	<string name="resource.varmapping" value="jbpm.varmapping.xml" />
+	<string name="resource.converter" value="jbpm.converter.properties" />
+	
+</jbpm-configuration>
