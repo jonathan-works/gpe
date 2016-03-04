@@ -53,5 +53,9 @@ public class PerfilTemplateManager extends Manager<PerfilTemplateDAO, PerfilTemp
     public PerfilTemplate getPerfilTemplateByLocalizacaoPaiDescricao(Localizacao localizacaoPai, String descricaoPerfil) {
     	return getDao().getPerfilTemplateByLocalizacaoPaiDescricao(localizacaoPai.getIdLocalizacao(), descricaoPerfil);
     }
+    
+    public PerfilTemplate getPerfilTemplateByCodigo(String codigo) {
+    	return getDao().getPerfilTemplateByCodigo(codigo);    	
+    }
 
 }
