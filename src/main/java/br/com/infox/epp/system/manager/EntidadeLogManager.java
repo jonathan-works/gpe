@@ -2,6 +2,8 @@ package br.com.infox.epp.system.manager;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -12,6 +14,7 @@ import br.com.infox.epp.system.entity.EntityLog;
 
 @Name(EntidadeLogManager.NAME)
 @AutoCreate
+@Stateless
 public class EntidadeLogManager extends Manager<EntidadeLogDAO, EntityLog> {
 
     private static final long serialVersionUID = 1L;

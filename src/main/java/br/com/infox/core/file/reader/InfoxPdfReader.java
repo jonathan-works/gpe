@@ -13,7 +13,7 @@ import com.lowagie.text.pdf.parser.PdfTextExtractor;
 
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-import br.com.infox.seam.exception.BusinessException;
+import br.com.infox.seam.exception.BusinessRollbackException;
 
 public class InfoxPdfReader {
     
@@ -59,7 +59,7 @@ public class InfoxPdfReader {
 			PdfStamper pdfStamper = new PdfStamper(pdfReader, new ByteArrayOutputStream());
 			pdfStamper.close();
 		} catch (BadPasswordException e) {
-			throw new BusinessException("Documento somente leitura, não é possível gravar");
+			throw new BusinessRollbackException("Documento somente leitura, não é possível gravar");
 		} catch (DocumentException | IOException e) {
 			LOG.error("Não foi possível recuperar o conteúdo do pdf", e);
 		} 

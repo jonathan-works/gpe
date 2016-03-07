@@ -15,6 +15,7 @@ import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.documento.dao.ClassificacaoDocumentoDAO;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento_;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -74,6 +75,7 @@ public class ClassificacaoDocumentoManager extends Manager<ClassificacaoDocument
 		Join<Documento, ClassificacaoDocumento> classificacaoJoin = doc.join(Documento_.classificacaoDocumento);
 		query.where(cb.equal(doc.get(Documento_.pasta), pasta));
 		query.select(classificacaoJoin);
+		query.orderBy(cb.asc(classificacaoJoin.get(ClassificacaoDocumento_.descricao)));
 		return getDao().getEntityManager().createQuery(query).getResultList();
 	}
 
