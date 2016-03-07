@@ -34,6 +34,7 @@ import org.jbpm.graph.def.GraphElement;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
+import org.jbpm.graph.def.node.loop.Activity;
 import org.jbpm.graph.node.ProcessFactory;
 import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
@@ -60,7 +61,7 @@ public class JpdlXmlWriter {
     private static final String DEFAULT_ENCODING = "UTF-8";
     private static final int DEFAULT_IDENT_SIZE = 4;
     private static final String ELEMENT_NAME = "name";
-    static final String JPDL_NAMESPACE = "urn:jbpm.org:jpdl-3.2";
+    static final String JPDL_NAMESPACE = "urn:jbpm.org:jpdl-3.3";
     static final Namespace JBPM_NAMESPACE = new Namespace(null, JPDL_NAMESPACE);
 
     private Writer writer = null;
@@ -91,6 +92,10 @@ public class JpdlXmlWriter {
     }
 
     public void write(ProcessDefinition processDefinition) {
+    	write(processDefinition, false);
+    }
+    
+    public void write(ProcessDefinition processDefinition, boolean prettyPrint) {
         problems = new ArrayList<String>();
         if (processDefinition == null) {
             throw new JbpmException("processDefinition is null");
@@ -104,9 +109,10 @@ public class JpdlXmlWriter {
             Document document = createDomTree(processDefinition);
 
             // write the dom-tree to the given writer
-            OutputFormat outputFormat = OutputFormat.createPrettyPrint();
+            OutputFormat outputFormat = prettyPrint ? OutputFormat.createPrettyPrint() : OutputFormat.createCompactFormat();
             outputFormat.setIndentSize(DEFAULT_IDENT_SIZE);
             outputFormat.setEncoding(DEFAULT_ENCODING);
+            
             XMLWriter xmlWriter = new XMLWriter(writer, outputFormat);
             xmlWriter.write(document);
             xmlWriter.flush();
@@ -240,6 +246,9 @@ public class JpdlXmlWriter {
                     if (taskNode.getTasks() != null) {
                         writeTasks(taskNode.getTasks(), nodeElement);
                     }
+                    if (taskNode.getLoopConfiguration() != null){
+                    	writeLoopConfiguration(taskNode, nodeElement);
+                    }
                 }
                 if (node instanceof ProcessState) {
                     writeProcessState((ProcessState) node, nodeElement);
@@ -250,7 +259,11 @@ public class JpdlXmlWriter {
         }
     }
 
-    @SuppressWarnings({ UNCHECKED, RAWTYPES })
+    private void writeLoopConfiguration(Activity activity, Element element) {
+		activity.getLoopConfiguration().write(element);
+	}
+
+	@SuppressWarnings({ UNCHECKED, RAWTYPES })
     private void writeProcessState(ProcessState node, Element nodeElement) {
         Element subProcess = addElement(nodeElement, "sub-process");
         String subProcessName;
@@ -258,6 +271,9 @@ public class JpdlXmlWriter {
             subProcessName = node.getSubProcessDefinition().getName();
         } else { // Publicação
             subProcessName = node.getSubProcessName();
+        }
+        if (node.getLoopConfiguration() != null){
+        	writeLoopConfiguration(node, nodeElement);
         }
         subProcess.addAttribute(ELEMENT_NAME, subProcessName);
         subProcess.addAttribute("binding", "late");

@@ -2,6 +2,7 @@ package br.com.infox.ibpm.jpdl;
 
 import static br.com.infox.epp.processo.status.entity.StatusProcesso.STATUS_PROCESSO_ACTION_NAME;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
@@ -11,6 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.io.XMLWriter;
 import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
@@ -21,6 +27,7 @@ import org.jbpm.graph.def.node.loop.LoopConfigurationMultiInstance;
 import org.jbpm.graph.def.node.loop.LoopConfigurationMultiInstanceFlowCondition;
 import org.jbpm.graph.def.node.loop.LoopConfigurationStandard;
 import org.jbpm.graph.node.EndState;
+import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.instantiation.Delegation;
@@ -79,10 +86,14 @@ public class JpdlXmlWriterTest {
 		processDefinition.setName("teste");
 		StartState startNode = addNode(processDefinition, new StartState("Início"));
 		TaskNode loopNode1 = addNode(processDefinition, new TaskNode("loopNode"));
+		ProcessState processState1 = addNode(processDefinition, new ProcessState("processState"));
+		processState1.setLoopConfiguration(loopConfiguration);
+		processState1.setSubProcessDefinition(criarComStatusProcesso());
 		loopNode1.setLoopConfiguration(loopConfiguration);
 		EndState endState = addNode(processDefinition, new EndState("Término"));
 		addTransition(startNode, loopNode1);
-		addTransition(loopNode1, endState);
+		addTransition(loopNode1, processState1);
+		addTransition(processState1, endState);
 		return processDefinition;
 	}
 
@@ -116,7 +127,6 @@ public class JpdlXmlWriterTest {
 		try {
 			StringWriter writer = new StringWriter();
 			print(processDefinition, writer);
-			print(processDefinition, System.out);
 			String xml = writer.toString();
 			JpdlXmlReader reader = new JpdlXmlReader(new StringReader(xml));
 			return reader.readProcessDefinition();
@@ -167,9 +177,25 @@ public class JpdlXmlWriterTest {
 			TaskNode node = (TaskNode) pd.getNode("loopNode");
 			TaskNode node2 = (TaskNode) pd2.getNode("loopNode");
 			
-			Assert.assertEquals(new Gson().toJson(node.getLoopConfiguration()), new Gson().toJson(node2.getLoopConfiguration()));
+			String expected=elementToString(node.getLoopConfiguration());
+			String actual=elementToString(node2.getLoopConfiguration());
+			Assert.assertEquals(expected, actual);
 		}
 	}
+	
+	private String elementToString(LoopConfiguration loopConfiguration){
+		Element element = DocumentHelper.createElement("element");
+		loopConfiguration.write(element);
+		StringWriter writer = new StringWriter();
+		XMLWriter xmlWriter = new XMLWriter(writer);
+		try {
+			xmlWriter.write(element);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		return writer.toString();
+	}
+	
 	
 	@Test
 	public void validateStandardLoop() {
@@ -179,7 +205,9 @@ public class JpdlXmlWriterTest {
 			TaskNode node = (TaskNode) pd.getNode("loopNode");
 			TaskNode node2 = (TaskNode) pd2.getNode("loopNode");
 			
-			Assert.assertEquals(new Gson().toJson(node.getLoopConfiguration()), new Gson().toJson(node2.getLoopConfiguration()));
+			String expected=elementToString(node.getLoopConfiguration());
+			String actual=elementToString(node2.getLoopConfiguration());
+			Assert.assertEquals(expected, actual);
 		}
 	}
 
@@ -191,6 +219,19 @@ public class JpdlXmlWriterTest {
 		lc.setIsSequential(isSequential);
 		lc.setLoopCardinality(loopCardinality);
 		lc.setLoopDataInput(loopDataInput);
+		if (LoopConfigurationMultiInstanceFlowCondition.N.equals(behavior)){
+			Event event = new Event();
+			Action action = new Action();
+			action.setActionExpression("#{expression}");
+			event.addAction(action);
+			lc.setNoneBehaviorEvent(event);
+		} else if (LoopConfigurationMultiInstanceFlowCondition.N.equals(behavior)){
+			Event event = new Event();
+			Action action = new Action();
+			action.setActionExpression("#{expression}");
+			event.addAction(action);
+			lc.setOneBehaviorEvent(event);
+		}
 //		lc.setLoopDataOutput(loopDataOutput);
 //		lc.setNoneBehaviorEventRef(noneBehaviorEventRef);
 //		lc.setOneBehaviorEventRef(oneBehaviorEventRef);
