@@ -7,13 +7,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.enterprise.context.RequestScoped;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.joda.time.DateTime;
 
-import br.com.infox.core.log.ErrorLogService;
+import br.com.infox.core.log.LogErrorService;
 import br.com.infox.core.server.ApplicationServerService;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
@@ -32,7 +31,7 @@ public class UnexpectedErrorView {
     public final static String ERROR_MESSAGE_FORMAT = "Usuario: %s , Localizacao: %s , Perfil: %s \n";
     
     @Inject
-    private ErrorLogService errorLogService;
+    private LogErrorService errorLogService;
     @Inject
     private ApplicationServerService applicationServerService;
     
@@ -43,27 +42,29 @@ public class UnexpectedErrorView {
         codigoErro = UUID.randomUUID().toString().replace("-", "");
         Logger.getLogger(UnexpectedErrorView.class.getName()).log(Level.SEVERE, codigoErro);
         Exception handledException = ComponentUtil.getComponent("org.jboss.seam.handledException");
+        Exception caughtException = ComponentUtil.getComponent("org.jboss.seam.caughtException"); 
         if (handledException == null) return;
         String ativo = Parametros.IS_ATIVO_ENVIO_LOG_AUTOMATICO.getValue();
         if ("true".equals(ativo)) {
-            LogErro logErro = creteLogErro(handledException, StatusLog.PENDENTE);
-            String remote = FacesContext.getCurrentInstance().getExternalContext().getRequestServerName();
-            errorLogService.gravarLog(logErro);
-            codigoErro = logErro.getCodigo();
-            errorLogService.send(logErro, remote);
+            LogErro logErro = creteLogErro(handledException, caughtException, StatusLog.PENDENTE);
+            errorLogService.saveLog(logErro);
+            errorLogService.send(logErro);
         } else {
-            LogErro logErro = creteLogErro(handledException, StatusLog.NENVIADO);
-            errorLogService.gravarLog(logErro);
-            codigoErro = logErro.getCodigo();
+            LogErro logErro = creteLogErro(handledException, caughtException, StatusLog.NENVIADO);
+            errorLogService.saveLog(logErro);
         }
     }
 
-    private LogErro creteLogErro(Exception handledException, StatusLog statusLog) {
+    private LogErro creteLogErro(Exception handledException, Exception caughtException, StatusLog statusLog) {
         LogErro logErro = new LogErro();
         logErro.setCodigo(codigoErro);
         logErro.setData(DateTime.now().toDate());
         logErro.setInstancia(applicationServerService.getInstanceName());
-        logErro.setStacktrace(getStacktrace(handledException));
+        String stackTrace = getStacktrace(handledException);
+        if (caughtException != null) {
+            stackTrace += getStacktrace(caughtException);
+        }
+        logErro.setStacktrace(stackTrace);
         logErro.setStatus(statusLog);
         return logErro;
     }

@@ -26,24 +26,6 @@
             	<h:outputText id="codigoErro" value="#{unexpectedErrorView.codigoErro}" style="margin-left: 1em; color: red; font-size: 15px;"/>
             </p:outputPanel>
             
-            <p:outputPanel style="margin-bottom: 1em;" rendered="#{empty unexpectedErrorView.codigoErro}">
-            	<rich:collapsiblePanel switchType="client" expanded="true" header="Handled Exception">
-	                <pre>Caused by #{org.jboss.seam.handledException.class.name} with message: #{org.jboss.seam.handledException.message}
-		                <ui:repeat value="#{org.jboss.seam.handledException.stackTrace}" var="stackElement">
-		                   #{stackElement}
-		                </ui:repeat>
-	            	</pre>
-	            </rich:collapsiblePanel>
-            
-	            <rich:collapsiblePanel switchType="client" expanded="false" header="Unhandled or Wrapper Exception">
-	                <pre>Caused by #{org.jboss.seam.caughtException.class.name} with message: #{org.jboss.seam.caughtException.message}
-		            	<ui:repeat value="#{org.jboss.seam.caughtException.stackTrace}" var="stackElement">
-		    				#{stackElement}
-		            	</ui:repeat>
-	            	</pre>
-	            </rich:collapsiblePanel>
-            </p:outputPanel>
-            
         </wi:panel>
     </ui:define>
 </ui:composition>

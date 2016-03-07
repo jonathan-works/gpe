@@ -78,6 +78,10 @@ public class ApplicationServerService implements Serializable {
     public String getInstanceName() {
         return System.getProperty("jboss.node.name");
     }
+    
+    public String getLogDir() {
+        return System.getProperty("jboss.server.log.dir");
+    }
 
     private enum SocketBindingType {
 

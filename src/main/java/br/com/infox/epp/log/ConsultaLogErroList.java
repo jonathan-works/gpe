@@ -2,9 +2,9 @@ package br.com.infox.epp.log;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -12,7 +12,7 @@ import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.list.DataList;
 import br.com.infox.core.list.RestrictionType;
-import br.com.infox.core.log.ErrorLogService;
+import br.com.infox.core.log.LogErrorService;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
@@ -28,7 +28,7 @@ public class ConsultaLogErroList extends DataList<LogErro> {
     private static final String DEFAULT_ORDER = "o.data desc";
     
     @Inject
-    private ErrorLogService errorLogService;
+    private LogErrorService errorLogService;
     
     private String codigo;
     private String instancia;
@@ -73,10 +73,24 @@ public class ConsultaLogErroList extends DataList<LogErro> {
     @ExceptionHandled(value = MethodType.UNSPECIFIED)
     public void send(LogErro logErro) {
         try {
-            errorLogService.send(logErro, FacesContext.getCurrentInstance().getExternalContext().getRequestServerName());
+            errorLogService.send(logErro);
             FacesMessages.instance().add("Registro enviado com sucesso!");
         } catch (Exception e) {
             FacesMessages.instance().add(e.getMessage());
+        }
+    }
+    
+    @ExceptionHandled(value = MethodType.UNSPECIFIED)
+    public void sendAll() {
+        List<LogErro> logErros = getResultList();
+        for (LogErro logErro : logErros) {
+            if (logErro.getStatus() == StatusLog.ENVIADO) continue;
+            try {
+                errorLogService.send(logErro);
+                FacesMessages.instance().add("Registro " + logErro.getCodigo() + " enviado com sucesso!");
+            } catch (Exception e) {
+                FacesMessages.instance().add("Erro ao enviar registro " + logErro.getCodigo() + " " + e.getMessage());
+            }
         }
     }
 

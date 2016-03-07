@@ -40,7 +40,14 @@
 					
 				</ui:define>
 
-				<ui:define name="headerToolBar"/>
+				<ui:define name="headerToolBar">
+					<h:form>
+						<a:commandLink rendered="#{row.status ne 'ENVIADO'}" render="consultaLogErroListTable, pageBodyDialogMessage" 
+							execute="@this"	action="#{consultaLogErroList.sendAll}">
+							<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/expedir_comunicacao.png')}" title="Enviar Todos"/>
+						</a:commandLink>
+					</h:form>
+				</ui:define>
 				
 				<ui:define name="toolBar">
 					<h:form>
