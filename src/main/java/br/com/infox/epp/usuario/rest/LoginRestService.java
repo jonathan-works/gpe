@@ -76,7 +76,7 @@ public class LoginRestService {
 			if (!decodedPayload.containsKey("iat")) {
 				throw new JWTVerifyException("The JWT token must have an issued at date");
 			}
-			if (!decodedPayload.containsKey(URI_LOGIN) || !decodedPayload.containsKey(URI_CPF)) {
+			if (!decodedPayload.containsKey(URI_LOGIN) && !decodedPayload.containsKey(URI_CPF)) {
 				throw new JWTVerifyException("JWT Token expected one of '" + URI_LOGIN + "' or '" + URI_CPF + "'");
 			}
 			String login = (String) decodedPayload.get(URI_LOGIN);

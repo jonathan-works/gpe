@@ -20,7 +20,7 @@ public class RestUtils {
 		error.addProperty("errorMessage", errorMessage);
 		Gson gson = new Gson();
 		error.add("properties", gson.toJsonTree(properties));
-		return gson.toJson(properties);
+		return gson.toJson(error);
 	}
 	
 }

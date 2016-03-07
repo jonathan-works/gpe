@@ -197,6 +197,9 @@ public class DocumentoBin implements Serializable {
 	}
 	
 	public String getNomeArquivo() {
+		if(getId() == null) {
+			return nomeArquivo;
+		}		
 		return getDocumentoBinService().getNomeArquivo(getId());
 	}
 
@@ -209,6 +212,9 @@ public class DocumentoBin implements Serializable {
 	}
 
 	public Integer getSize() {
+		if(getId() == null) {
+			return size;
+		}				
 		return getDocumentoBinService().getSize(getId());
 	}
 
@@ -244,6 +250,9 @@ public class DocumentoBin implements Serializable {
 	}
 	
 	public List<AssinaturaDocumento> getAssinaturas() {
+		if(getId() == null) {
+			return getAssinaturasBanco();
+		}		
 		return getDocumentoBinService().carregarAssinaturas(getId());
 	}
 

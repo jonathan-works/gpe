@@ -45,6 +45,8 @@ public class EppParametroProvider implements Serializable, ParametroProvider {
 		initParametrosExecFluxo();
 		initParametrosLDAP();
 		initParametrosSistema();
+		create("loginWebService", "authorizationSecret", FieldType.STRING);
+	    create("externalAuthenticationService","externalAuthenticationServiceUrl", FieldType.STRING);		
 	}
 
 	private void initParametrosControleAcesso() {

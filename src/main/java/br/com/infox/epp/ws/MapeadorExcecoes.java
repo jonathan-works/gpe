@@ -49,7 +49,12 @@ public class MapeadorExcecoes implements ExceptionMapper<Throwable> {
 		if (e instanceof WebApplicationException) {
 			WebApplicationException exception = (WebApplicationException) e;
 			return exception.getResponse();
-		} else if (e instanceof ValidationException) {
+		}
+		else if(e.getCause() instanceof WebApplicationException) {
+			WebApplicationException exception = (WebApplicationException) e.getCause();
+			return exception.getResponse();			
+		}
+		else if (e instanceof ValidationException) {
 			WebApplicationException wae = buildWebApplicationException((ValidationException) e);
 			return wae.getResponse();
 		} else {
