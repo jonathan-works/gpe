@@ -557,6 +557,9 @@ public class TaskInstanceHome implements Serializable {
 	@Observer(Event.EVENTTYPE_TASK_CREATE)
 	public void setCurrentTaskInstance(ExecutionContext context) {
 		if (currentTaskInstance != null) {
+			if (!currentTaskInstance.getProcessInstance().equals(context.getProcessInstance())) {
+				return;
+			}
 			Token currentRootToken = currentTaskInstance.getProcessInstance().getRootToken();
 			if (!currentRootToken.equals(context.getProcessInstance().getRootToken())) {
 				return;
