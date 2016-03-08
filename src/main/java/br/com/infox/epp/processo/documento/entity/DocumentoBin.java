@@ -104,7 +104,7 @@ public class DocumentoBin implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataSuficientementeAssinado;
     
-    @OneToMany(fetch= FetchType.LAZY, mappedBy="documentoBin")
+    @OneToMany(fetch= FetchType.LAZY, mappedBy="documentoBin", cascade = {CascadeType.REMOVE})
     private List<RegistroAssinaturaSuficiente> registrosAssinaturaSuficiente = new ArrayList<>();
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "documentoBin")

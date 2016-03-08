@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -20,8 +21,10 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 
 @Name(AssinaturaDocumentoDAO.NAME)
+@Stateless
 @AutoCreate
 public class AssinaturaDocumentoDAO extends DAO<AssinaturaDocumento> {
+    
     public static final String NAME = "assinaturaDocumentoDAO";
     private static final long serialVersionUID = 1L;
     

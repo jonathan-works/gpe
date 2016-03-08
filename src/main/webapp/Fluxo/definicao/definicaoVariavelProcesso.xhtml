@@ -104,24 +104,27 @@
     <h:form id="variavelForm">
         <ui:fragment
             rendered="#{not empty definicaoVariavelProcessoAction.variavel}"
-        >
+>
             <s:div>
                 <wi:inputText
                     id="nomeVariavel"
                     label="#{infoxMessages['definicaoVariavelProcesso.nome']}"
                     required="true"
+                    maxlength="255"
                     value="#{definicaoVariavelProcessoAction.nomeAmigavel}"
                 />
                 <wi:inputText
                     id="labelProcesso"
                     label="#{infoxMessages['definicaoVariavelProcesso.label']}"
                     required="true"
+                    maxlength="50"
                     value="#{definicaoVariavelProcessoAction.variavel.label}"
                 />
                 <wi:inputText
                     id="defaultValue"
                     label="#{infoxMessages['definicaoVariavelProcesso.valorPadrao']}"
                     required="false"
+                    maxlength="255"
                     value="#{definicaoVariavelProcessoAction.variavel.valorPadrao}"
                 />
                 <wi:selectBooleanCheckbox

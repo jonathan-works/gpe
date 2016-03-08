@@ -207,12 +207,12 @@ public class ProcessoAnaliseDocumentoService {
 		query.select(root);
 		query.where(predicate);
 		List<MetadadoProcesso> listMetadado = entityManager.createQuery(query).getResultList();
-			List<Documento> docList = new ArrayList<Documento>();
-			for (MetadadoProcesso metadado : listMetadado) {
-				docList.add(metadado.<Documento>getValue());
-			}
+		List<Documento> docList = new ArrayList<Documento>();
+		for (MetadadoProcesso metadado : listMetadado) {
+			docList.add(metadado.<Documento>getValue());
+		}
 
-			return docList;
+		return docList;
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)

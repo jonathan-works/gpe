@@ -17,7 +17,6 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
 import br.com.infox.log.Log;
 import br.com.infox.log.Logging;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Named
 @ViewScoped
@@ -30,6 +29,8 @@ public class DefinicaoVariavelProcessoAction implements Serializable {
     private DefinicaoVariavelProcessoDAO definicaoVariavelProcessoDAO;
     @Inject
     private DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
+    @Inject
+    private ActionMessagesService actionMessagesService;
     
     private Fluxo fluxo;
     private DefinicaoVariavelProcesso variavel;
@@ -55,7 +56,7 @@ public class DefinicaoVariavelProcessoAction implements Serializable {
 	        clear();
     	} catch (DAOException e) {
     		LOG.error("", e);
-    		ComponentUtil.<ActionMessagesService>getComponent(ActionMessagesService.NAME).handleDAOException(e);
+    		actionMessagesService.handleDAOException(e);
     		variavel.setId(null);
     	}
     }
@@ -67,7 +68,7 @@ public class DefinicaoVariavelProcessoAction implements Serializable {
 	        clear();
     	} catch (DAOException e) {
     		LOG.error("", e);
-    		ComponentUtil.<ActionMessagesService>getComponent(ActionMessagesService.NAME).handleDAOException(e);
+    		actionMessagesService.handleDAOException(e);
     	}
     }
 
@@ -92,7 +93,7 @@ public class DefinicaoVariavelProcessoAction implements Serializable {
             }
         } catch (DAOException e) {
             LOG.error("Não foi possível remover a DefinicaoVariavelProcesso " + obj.getNome(), e);
-            ComponentUtil.<ActionMessagesService>getComponent(ActionMessagesService.NAME).handleDAOException(e);
+            actionMessagesService.handleDAOException(e);
         }
     }
 
@@ -170,7 +171,7 @@ public class DefinicaoVariavelProcessoAction implements Serializable {
     		definicaoVariavelProcessoManager.moveUp(definicaoVariavelProcesso);
     		this.variaveis = null;
     	} catch (DAOException e) {
-    		ComponentUtil.<ActionMessagesService>getComponent(ActionMessagesService.NAME).handleDAOException(e);
+    		actionMessagesService.handleDAOException(e);
     		LOG.error("", e);
     	}
     }
@@ -180,7 +181,7 @@ public class DefinicaoVariavelProcessoAction implements Serializable {
     		definicaoVariavelProcessoManager.moveDown(definicaoVariavelProcesso);
     		this.variaveis = null;
     	} catch (DAOException e) {
-    		ComponentUtil.<ActionMessagesService>getComponent(ActionMessagesService.NAME).handleDAOException(e);
+    		actionMessagesService.handleDAOException(e);
     		LOG.error("", e);
     	}
     }

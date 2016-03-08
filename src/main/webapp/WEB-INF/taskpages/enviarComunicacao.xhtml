@@ -432,13 +432,13 @@
 		        
 		        <!-- Botões de Controle -->
 				<wi:commandButton id="gravar" value="#{infoxMessages['crud.update']}" 
-					action="envioComunicacaoController.gravar" reRender=":pageBodyDialogMessage comunicacaoDiv"
+					action="envioComunicacaoController.gravar" reRender=":pageBodyDialogMessage comunicacaoDiv buttonsTaskPageComunicacaoForm"
 					rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}"
 					oncomplete="if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"/>
 			</h:form>
 		</s:div>
 	</s:div>
-   <h:form>
+   <h:form id="buttonsTaskPageComunicacaoForm">
 		<s:fragment rendered="#{envioComunicacaoController.expedida and envioComunicacaoController.inTask}">
 			<!-- O ui:include tenta incluir o facelet mesmo se o rendered estiver falso -->
 			<ui:include src="#{envioComunicacaoController.inTask ? '/WEB-INF/xhtml/components/form/buttons/taskButtons.xhtml' : ''}" />
