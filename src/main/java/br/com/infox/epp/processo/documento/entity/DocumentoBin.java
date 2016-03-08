@@ -169,7 +169,7 @@ public class DocumentoBin implements Serializable {
 	}
 	
 	public String getExtensao() {
-		return getDocumentoBinService().getExtensao(getId());
+		return extensao != null && !extensao.isEmpty() ? extensao : getDocumentoBinService().getExtensao(getId());
 	}
 
 	public void setExtensao(String extensao) {
