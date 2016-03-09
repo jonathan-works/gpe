@@ -33,10 +33,14 @@ public class MapeadorExcecoes implements ExceptionMapper<Throwable> {
 	@Inject
 	private MensagensErroService mensagensService;
 
-	private int getStatus(Throwable e) {
+	private Throwable getExcecao(Throwable e) {
 		if(e instanceof EJBException && e.getCause() != null) {
-			e = e.getCause();
+			return e.getCause();
 		}
+		return e;
+	}
+	
+	private int getStatus(Throwable e) {
 		if (e != null && ExcecaoServico.class.isAssignableFrom(e.getClass())) {
 			return ((ExcecaoServico)e).getStatus();
 		} else {
@@ -46,13 +50,10 @@ public class MapeadorExcecoes implements ExceptionMapper<Throwable> {
 
 	@Override
 	public Response toResponse(Throwable e) {
+		e = getExcecao(e);
 		if (e instanceof WebApplicationException) {
 			WebApplicationException exception = (WebApplicationException) e;
 			return exception.getResponse();
-		}
-		else if(e.getCause() instanceof WebApplicationException) {
-			WebApplicationException exception = (WebApplicationException) e.getCause();
-			return exception.getResponse();			
 		}
 		else if (e instanceof ValidationException) {
 			WebApplicationException wae = buildWebApplicationException((ValidationException) e);
@@ -65,7 +66,7 @@ public class MapeadorExcecoes implements ExceptionMapper<Throwable> {
 			}
 
 			int status = getStatus(e);
-			return Response.status(status).entity(mensagemResposta).build();
+			return Response.status(status).entity(mensagemResposta).type(MediaType.APPLICATION_JSON).build();
 		}
 	}
 

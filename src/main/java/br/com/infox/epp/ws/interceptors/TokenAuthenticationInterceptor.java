@@ -9,20 +9,20 @@ import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
-import br.com.infox.epp.system.manager.ParametroManager;
+import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.rest.RestException;
+import br.com.infox.epp.ws.autenticacao.AutenticadorToken;
 import br.com.infox.epp.ws.exception.UnauthorizedException;
-import br.com.infox.epp.ws.messages.WSMessages;
+import br.com.infox.epp.ws.interceptors.TokenAuthentication.TipoExcecao;
 
 @TokenAuthentication
 @Interceptor
 public class TokenAuthenticationInterceptor {
-
-	private static final String TOKEN_NAME = "webserviceToken";
-	public static final String NOME_TOKEN_HEADER_HTTP = "token";
-
-	@Inject
-	private ParametroManager parametroManager;
 
 	@Inject
 	@RequestScoped
@@ -30,21 +30,42 @@ public class TokenAuthenticationInterceptor {
 	
 	@Inject
 	private Logger logger;
-
-	private void validarToken(String token) throws UnauthorizedException {
-		String tokenParametro = parametroManager.getValorParametro(TOKEN_NAME);
-		if (tokenParametro == null || !tokenParametro.equals(token)) {
-			throw new UnauthorizedException(WSMessages.ME_TOKEN_INVALIDO.codigo(),
-					WSMessages.ME_TOKEN_INVALIDO.label());
+	
+	private TokenAuthentication getAnotacao(InvocationContext ctx) {
+		TokenAuthentication anotacao = ctx.getMethod().getAnnotation(TokenAuthentication.class);
+		if(anotacao == null) {
+			anotacao = ctx.getMethod().getDeclaringClass().getAnnotation(TokenAuthentication.class);
 		}
+		return anotacao;
 	}
-
+	
 	@AroundInvoke
 	private Object atenticarPorToken(InvocationContext ctx) throws Exception {
-		String token = ((HttpServletRequest) request).getHeader(NOME_TOKEN_HEADER_HTTP);
+		TokenAuthentication anotacao = getAnotacao(ctx);
+		
+		AutenticadorToken autenticadorToken = BeanManager.INSTANCE.getReference(anotacao.autenticador());
+		
+		HttpServletRequest req =  ((HttpServletRequest) request);
+		String token = autenticadorToken.getValorToken(req);
 		logger.finest("Autenticando usando token: '" + token + "'");
 		ctx.getContextData().put(LogInterceptor.NOME_PARAMETRO_TOKEN, token);
-		validarToken(token);
+		
+		try
+		{
+			autenticadorToken.validarToken(req);			
+		}
+		catch(UnauthorizedException e) {
+			if(anotacao.tipoExcecao() == TipoExcecao.STRING) {
+				throw e;
+			}
+			else
+			{
+				RestException excecao = new RestException(e.getErro().getCodigo(), e.getErro().getMensagem());
+				Response response = Response.status(Status.UNAUTHORIZED).entity(excecao).type(MediaType.APPLICATION_JSON).build();
+				throw new WebApplicationException(response);				
+			}
+		}
+		
 		return ctx.proceed();
 	}
 
