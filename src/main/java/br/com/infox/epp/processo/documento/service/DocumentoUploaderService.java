@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -43,12 +44,10 @@ public class DocumentoUploaderService implements Serializable {
 	public static final String NAME = "documentoUploaderService";
 	private static final LogProvider LOG = Logging.getLogProvider(DocumentoUploaderService.class);
 	
-	@In
+	@Inject
 	private ExtensaoArquivoManager extensaoArquivoManager;
-	@In
+	@Inject
 	private DocumentoManager documentoManager;
-	@In
-	private DocumentoBinarioManager documentoBinarioManager;
 	
 	public DocumentoBin createProcessoDocumentoBin(UploadedFile uploadedFile) throws Exception {
 		DocumentoBin documentoBin = new DocumentoBin();
@@ -94,7 +93,7 @@ public class DocumentoUploaderService implements Serializable {
         	    if (dataStream == null) {
         	        dataStream = uploadFile.getData();
         	    }
-        		validaLimitePorPagina(extensaoArquivo.getTamanhoPorPagina(), dataStream);
+        		validaLimitePorPagina(extensaoArquivo.getTamanhoPorPagina(), dataStream, uploadFile.getSize());
         	} catch(Exception e){
         		throw new Exception("Arquivo: " + uploadFile.getName() + " - " + e.getMessage());
         	}
@@ -106,14 +105,14 @@ public class DocumentoUploaderService implements Serializable {
         documentoManager.gravarDocumentoNoProcesso(documento.getProcesso(), documento);
 	}
 	
-	private void validaLimitePorPagina(Integer limitePorPagina, byte[] dataStream) throws Exception {
+	//Alteração solicitada no bug #69320 para utilizar a média do tamanho do documento pelo número de páginas e comparar com o limite do tamanho por paǵina 
+	public void validaLimitePorPagina(Integer limitePorPagina, byte[] dataStream, Long tamanhoTotalArquivo) throws Exception {
         try {
         	PdfReader reader = new PdfReader(dataStream);
         	int qtdPaginas = reader.getNumberOfPages();
-            for (int i = 1; i <= qtdPaginas; i++) {
-				if ((reader.getPageContent(i).length / 1024F) > limitePorPagina) {
-				    throw new Exception("Página de número " + i + " excede o limite de " + limitePorPagina + "kb");
-				}
+        	long tamanhoPorPagina = tamanhoTotalArquivo / qtdPaginas;
+			if ((tamanhoPorPagina / 1024F) > limitePorPagina) {
+			    throw new Exception("O tamanho limite de " + limitePorPagina + "kb por página é excedido.");
 			}
         } catch (IOException e) {
             if (e.getMessage().contains("PDF header signature")) {

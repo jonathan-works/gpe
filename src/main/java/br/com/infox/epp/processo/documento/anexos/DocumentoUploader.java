@@ -201,7 +201,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
 			return false;
 		}
 		if (extensaoArquivo.getPaginavel()) {
-			if (validaLimitePorPagina(extensaoArquivo.getTamanhoPorPagina(), dadosArquivo)) {
+			if (validaLimitePorPagina(extensaoArquivo.getTamanhoPorPagina(), dadosArquivo, file.getSize())) {
 				return true;
 			} else {
 				FacesMessages.instance().add(StatusMessage.Severity.ERROR,
@@ -212,15 +212,16 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
 		return true;
 	}
 
-	private boolean validaLimitePorPagina(Integer limitePorPagina, byte[] pdf) {
+	//Alteração solicitada no bug #69320 para utilizar a média do tamanho do documento pelo número de páginas e comparar com o limite do tamanho por paǵina
+	//Isso duplica um método do DocumentoUploaderService
+	private boolean validaLimitePorPagina(Integer limitePorPagina, byte[] pdf, Long tamanhoTotalArquivo) {
 		PdfReader reader;
 		try {
 			reader = new PdfReader(pdf);
 			int qtdPaginas = reader.getNumberOfPages();
-			for (int i = 1; i <= qtdPaginas; i++) {
-				if ((reader.getPageContent(i).length / 1024F) > limitePorPagina) {
-					return false;
-				}
+        	long tamanhoPorPagina =  tamanhoTotalArquivo / qtdPaginas;
+			if ((tamanhoPorPagina / 1024F) > limitePorPagina) {
+				return false;
 			}
 		} catch (IOException e) {
 			LOG.error("Não foi possível recuperar as páginas do arquivo", e);
