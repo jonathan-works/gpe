@@ -82,10 +82,10 @@ public class DocumentoList extends EntityList<Documento> {
         Map<String, String> map = new HashMap<>();
         map.put("processoDocumentoBin.sizeFormatado", "o.documentoBin.size");
         map.put("numeroDocumento", "o.numeroDocumento");
-        map.put("usuarioInclusao", "o.usuarioInclusao");
+        map.put("usuarioInclusao", "o.usuarioInclusao.nomeUsuario");
         map.put("dataInclusao", "o.dataInclusao");
         map.put("descricao", "o.descricao");
-        map.put("classificacaoDocumento", "o.classificacaoDocumento");
+        map.put("classificacaoDocumento", "o.classificacaoDocumento.descricao");
         return map;
     }
 
