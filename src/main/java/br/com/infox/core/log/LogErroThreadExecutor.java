@@ -38,7 +38,7 @@ public class LogErroThreadExecutor implements Serializable {
                 } catch (IOException e) {
                 }
                 logErrorService.sendAllPendentesEnvio();
-                sleep(20);
+                sleep(300);
                 EntityManagerProducer.clear();
             }
         }
