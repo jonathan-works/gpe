@@ -73,7 +73,7 @@
 					<h:form style="display: inline-block;">
 						<a:commandLink oncomplete="#{rich:component('stacktraceModal')}.show();"
 							render="@this, outputPanelStackTrace" execute="@this" rendered="#{row.stacktrace.length() > 200}">
-							<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/reopen.png')}" title="Enviar"/>
+							<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/reopen.png')}" title="Detalhes"/>
 							<f:setPropertyActionListener value="#{row.stacktrace}" target="#{flash.stacktrace}" />
 						</a:commandLink>
 					</h:form>
