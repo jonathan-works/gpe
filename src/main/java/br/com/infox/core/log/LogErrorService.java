@@ -58,8 +58,7 @@ public class LogErrorService {
                 String data = new GsonBuilder().create().toJson(logErro) + "\n";
                 fileWriter.write(data, 0, data.getBytes().length);
                 fileWriter.flush();
-            } catch (IOException e1) {
-                // do nothing
+            } catch (IOException e1) { // do nothing
             }
             throw e;
         }

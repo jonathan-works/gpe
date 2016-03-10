@@ -1,7 +1,6 @@
 package br.com.infox.epp.log;
 
 import java.util.Date;
-import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,6 +18,9 @@ import javax.validation.constraints.NotNull;
 
 import org.joda.time.DateTime;
 
+import br.com.infox.epp.system.annotation.Ignore;
+
+@Ignore
 @Entity
 @Table(name = "tb_log_erro")
 public class LogErro {
@@ -60,9 +62,6 @@ public class LogErro {
     
     @PrePersist
     private void prePersist() {
-        if (codigo == null) {
-            codigo = UUID.randomUUID().toString();
-        }
         if (data == null) {
             data = DateTime.now().toDate();
         }
