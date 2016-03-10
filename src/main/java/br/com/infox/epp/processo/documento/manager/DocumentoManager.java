@@ -15,6 +15,7 @@ import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
@@ -190,8 +191,17 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     /**
      * Diz se um usuário pode assinar um documento (verificando se o documento já foi assinado por esse papel)
      */
-    public boolean podeAssinar(Documento documento, Papel papel) {
-    	return documento.isDocumentoAssinavel(papel) && !documento.isDocumentoAssinado(papel);
+    public boolean podeAssinar(Documento documento, UsuarioPerfil usuarioPerfil) {
+		if (documento == null || !usuarioPerfil.getAtivo())
+			return false;
+
+		boolean isAssinavel = documento.isDocumentoAssinavel(usuarioPerfil.getPerfilTemplate().getPapel());
+		if (!isAssinavel)
+			return false;
+
+		boolean assinadoPor = assinaturaDocumentoService.isDocumentoAssinado(documento, usuarioPerfil);
+
+		return isAssinavel && !assinadoPor;
     }
     
 	public Documento copiarDocumento(Documento original, Processo novoProcesso, Pasta novaPasta) throws CloneNotSupportedException {
