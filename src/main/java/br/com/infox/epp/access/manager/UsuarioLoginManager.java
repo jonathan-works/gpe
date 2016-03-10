@@ -5,9 +5,10 @@ import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.security.auth.login.LoginException;
 
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.util.RandomStringUtils;
 import org.jbpm.taskmgmt.exe.TaskInstance;
@@ -36,9 +37,9 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
     public static final String NAME = "usuarioLoginManager";
     private static final LogProvider LOG = Logging.getLogProvider(UsuarioLoginManager.class);
 
-    @In
+    @Inject
     private PasswordService passwordService;
-    @In
+    @Inject
     private AccessMailService accessMailService;
 
     public boolean usuarioExpirou(final UsuarioLogin usuarioLogin) {
@@ -99,30 +100,27 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
         }
     }
 
-    /**
-     * @throws IllegalArgumentException
-     * */
-    public UsuarioLogin createLDAPUser(final UsuarioLogin usuario) throws DAOException, IllegalAccessException, InvocationTargetException {
+    public UsuarioLogin createLDAPUser(UsuarioLogin usuario) throws DAOException, IllegalAccessException, InvocationTargetException {
         validarPermanencia(usuario);
-        final String password = usuario.getSenha();
-        final Object id = EntityUtil.getIdValue(super.persist(usuario));
-        final UsuarioLogin persisted = find(id);
+        String password = usuario.getSenha();
+        Object id = EntityUtil.getIdValue(super.persist(usuario));
+        UsuarioLogin persisted = find(id);
         passwordService.changePassword(persisted, password);
         //TODO ADICIONAR LOCALIZAÇÃO, PAPEL E ESTRUTURA PADRÃO?
-        return persisted;
+        return update(persisted);
     }
 
     public UsuarioLogin persist(UsuarioLogin usuario, boolean sendMail){
     	validarPermanencia(usuario);
         try {
-            final Object id = EntityUtil.getIdValue(getDao().persist(usuario));
-            final UsuarioLogin persisted = find(id);
-            final String password = usuario.getSenha();
+            Object id = EntityUtil.getIdValue(getDao().persist(usuario));
+            UsuarioLogin persisted = find(id);
+            String password = usuario.getSenha();
             passwordService.changePassword(persisted, password);
             if (sendMail){
             	accessMailService.enviarEmailDeMudancaDeSenha("email", persisted, password);
             }
-            return persisted;
+	    return persisted;
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             throw new DAOException(e);
         }
@@ -151,6 +149,15 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
     	}
     }
     
+    public void requisitarNovaSenhaPorEmail(UsuarioLogin usuario, String tipoParametro) throws LoginException, DAOException {
+        if (usuario == null) {
+            throw new BusinessException("Usuário não encontrado");
+        }
+        String plainTextPassword = passwordService.gerarNovaSenha(usuario);
+        passwordService.changePassword(usuario, plainTextPassword);
+        update(usuario);
+        accessMailService.enviarEmailDeMudancaDeSenha(tipoParametro, usuario, plainTextPassword);
+    }
     
     public List<UsuarioLogin> getUsuariosLogin(Localizacao localizacao, String... papeis){
     	return getDao().getUsuariosLoginLocalizacaoPapeis(localizacao, papeis);

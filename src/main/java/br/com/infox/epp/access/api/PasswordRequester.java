@@ -1,42 +1,47 @@
 package br.com.infox.epp.access.api;
 
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.security.auth.login.LoginException;
 
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 
+import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.access.service.PasswordService;
 import br.com.infox.seam.exception.BusinessException;
 
-@Name(PasswordRequester.NAME)
-@Transactional
+@Named
+@RequestScoped
 public class PasswordRequester {
 
     private static final LogProvider LOG = Logging.getLogProvider(PasswordRequester.class);
 
-    public static final String NAME = "passwordRequester";
-
-    @In
-    private PasswordService passwordService;
+    @Inject
+    private UsuarioLoginManager usuarioLoginManager;
 
     private String login;
     private String email;
 
     public void requisitarNovaSenha() throws LoginException {
-        final FacesMessages facesMessages = FacesMessages.instance();
         try {
-            passwordService.requisitarNovaSenha(email, login);
+            UsuarioLogin usuario = null;
+            if (!login.isEmpty()) {
+                usuario = usuarioLoginManager.getUsuarioLoginByLogin(login);
+                usuarioLoginManager.requisitarNovaSenhaPorEmail(usuario, "login");
+            } else if (!email.isEmpty()) {
+                usuario = usuarioLoginManager.getUsuarioLoginByEmail(email);
+                usuarioLoginManager.requisitarNovaSenhaPorEmail(usuario, "email");
+            }
         } catch (BusinessException be) {
             LOG.warn(".requisitarNovaSenha()", be);
-            facesMessages.add(be.getLocalizedMessage());
+            FacesMessages.instance().add(be.getLocalizedMessage());
         } catch (DAOException e) {
             LOG.warn(".requisitarNovaSenha()", e);
-            facesMessages.add(e.getLocalizedMessage());
+            FacesMessages.instance().add(e.getLocalizedMessage());
         }
     }
 

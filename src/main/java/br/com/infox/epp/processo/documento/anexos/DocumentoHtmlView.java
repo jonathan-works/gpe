@@ -7,8 +7,6 @@ import javax.ejb.Stateful;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.CharSet;
 import org.apache.commons.lang3.StringUtils;
 
 import br.com.infox.epp.cdi.ViewScoped;

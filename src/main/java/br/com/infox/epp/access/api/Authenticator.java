@@ -126,8 +126,8 @@ public class Authenticator implements Serializable {
         if (id != null) {
             JpaIdentityStore store = getJpaIdentyStore();
             UsuarioLogin usuario = (UsuarioLogin) store.lookupUser(id);
-            validaCadastroDeUsuario(id, usuario);
             try {
+                validaCadastroDeUsuario(id, usuario);
                 getAuthenticatorService().validarUsuario(usuario);
                 if (isTrocarSenha()) {
                     trocarSenhaUsuario(usuario);
@@ -136,8 +136,7 @@ public class Authenticator implements Serializable {
                 }
             } catch (LoginException e) {
                 Identity.instance().unAuthenticate();
-                LOG.error("postAuthenticate()", e);
-                throw e;
+                FacesMessages.instance().add(e.getMessage());
             } catch (DAOException e) {
                 LOG.error("postAuthenticate()", e);
             }
@@ -192,6 +191,7 @@ public class Authenticator implements Serializable {
         if (newPassword1.equals(newPassword2)) {
             PasswordService passwordService = (PasswordService) Component.getInstance(PasswordService.NAME);
             passwordService.changePassword(usuario, newPassword1);
+            usuarioLoginManager.update(usuario);
             getMessagesHandler().add(infoxMessages.get("login.error.senhaAlteradaSucesso"));
         } else {
             throw new LoginException(infoxMessages.get("login.error.novaSenhaNaoConfere"));
@@ -203,35 +203,35 @@ public class Authenticator implements Serializable {
     }
 
     public void login() {
-            final Identity identity = Identity.instance();
-            final Credentials credentials = identity.getCredentials();
+        Identity identity = Identity.instance();
+        Credentials credentials = identity.getCredentials();
             
             if (cdiAuthenticator.authenticate(credentials.getUsername(), credentials.getPassword())){
             	getAuthenticatorService().loginWithoutPassword(credentials.getUsername());
             	return;
             }
             
-            if (loginExists(credentials) || ldapLoginExists(credentials)) {
-                try {
-                    identity.login();
-                } catch (ELException e) {
-                    if (e.getCause() instanceof RedirectException) {
-                        LOG.warn("Erro de redirecionamento", e);                        
-                    } else {
-                        LOG.error(e);
-                    }
-                } finally {
-    				setNewPassword1(null);
-    				setNewPassword2(null);
-    			}
-            } else {
-                getMessagesHandler().add(Severity.ERROR, infoxMessages.get("login.error.invalid"));
-            }
+        if (loginExists(credentials) || ldapLoginExists(credentials)) {
+            try {
+                identity.login();
+            } catch (ELException e) {
+                if (e.getCause() instanceof RedirectException) {
+                    LOG.warn("Erro de redirecionamento", e);                        
+                } else {
+                    LOG.error(e);
+                }
+            } finally {
+				setNewPassword1(null);
+				setNewPassword2(null);
+			}
+        } else {
+            getMessagesHandler().add(Severity.ERROR, infoxMessages.get("login.error.invalid"));
+        }
     }
 
     protected boolean loginExists(final Credentials credentials) {
-        final String login = credentials.getUsername();
-        final UsuarioLogin user = usuarioLoginManager.getUsuarioLoginByLogin(login);
+        String login = credentials.getUsername();
+        UsuarioLogin user = usuarioLoginManager.getUsuarioLoginByLogin(login);
         return user != null;
     }
 
@@ -262,9 +262,9 @@ public class Authenticator implements Serializable {
     public void loginFailed(Object obj) throws LoginException {
         UsuarioLogin usuario = usuarioLoginManager.getUsuarioLoginByLogin(Identity.instance().getCredentials().getUsername());
         if (usuario != null && !usuario.getAtivo()) {
-            throw new LoginException(infoxMessages.get("login.error.usuarioNaoAtivo"));
+            FacesMessages.instance().add(infoxMessages.get("login.error.usuarioNaoAtivo"));
         }
-        throw new LoginException(infoxMessages.get("login.error.usuarioOuSenhaInvalidos"));
+        FacesMessages.instance().add(infoxMessages.get("login.error.usuarioOuSenhaInvalidos"));
     }
 
     @Observer(Identity.EVENT_LOGGED_OUT)
@@ -287,11 +287,9 @@ public class Authenticator implements Serializable {
         return getLocalizacoesFilhas(localizacao, new ArrayList<Localizacao>());
     }
 
-    private static List<Localizacao> getLocalizacoesFilhas(Localizacao loc,
-            List<Localizacao> list) {
+    private static List<Localizacao> getLocalizacoesFilhas(Localizacao loc, List<Localizacao> list) {
         list.add(loc);
-        if (loc.getEstruturaFilho() != null
-                && !list.contains(loc.getEstruturaFilho())) {
+        if (loc.getEstruturaFilho() != null && !list.contains(loc.getEstruturaFilho())) {
 //            getLocalizacoesFilhas(loc.getEstruturaFilho(), list);
         }
         for (Localizacao locFilho : loc.getLocalizacaoList()) {
@@ -388,8 +386,7 @@ public class Authenticator implements Serializable {
     	}
     }
     
-    private void setVariaveisDoContexto(UsuarioPerfil usuarioPerfil,
-            Set<String> roleSet) {
+    private void setVariaveisDoContexto(UsuarioPerfil usuarioPerfil, Set<String> roleSet) {
         Contexts.getSessionContext().set(USUARIO_PERFIL_ATUAL, usuarioPerfil);
         Contexts.getSessionContext().set(INDENTIFICADOR_PAPEL_ATUAL, usuarioPerfil.getPerfilTemplate().getPapel().getIdentificador());
         Contexts.getSessionContext().set(PAPEIS_USUARIO_LOGADO, roleSet);

@@ -17,12 +17,6 @@
         </navigation>
     </page>
 
-    <exception class="org.jboss.seam.framework.EntityNotFoundException">
-        <redirect view-id="/error.xhtml">
-            <message>Não encontrado.</message>
-        </redirect>
-    </exception>
-    
     <exception class="javax.persistence.EntityNotFoundException">
         <redirect view-id="/error.xhtml">
             <message>Não encontrado.</message>
@@ -36,13 +30,13 @@
         </redirect>
     </exception>
     
-    <exception class="org.jboss.seam.security.AuthorizationException">
+    <exception class="org.jboss.seam.security.AuthorizationException" log="false">
         <redirect view-id="/home.xhtml">
             <message>Sem permissão para acessar a página.</message>
         </redirect>
     </exception>
     
-    <exception class="org.jboss.seam.security.NotLoggedInException">
+    <exception class="org.jboss.seam.security.NotLoggedInException" log="false">
         <redirect view-id="/login.xhtml">
             <message>Por favor, identifique-se.</message>
         </redirect>
@@ -54,13 +48,13 @@
         </redirect>
     </exception>
     
-    <exception class="javax.faces.application.ViewExpiredException">
+    <exception class="javax.faces.application.ViewExpiredException" log="false">
         <redirect view-id="/error.xhtml">
             <message>Sua sessão expirou, por favor tente novamente.</message>
         </redirect>
     </exception>
      
-    <exception class="javax.security.auth.login.LoginException">
+    <exception class="javax.security.auth.login.LoginException" log="false">
         <redirect view-id="/login.xhtml" />
     </exception>
     
@@ -70,7 +64,7 @@
         </redirect>
     </exception>
 
-    <exception class="br.com.infox.core.exception.EppConfigurationException">
+    <exception class="br.com.infox.core.exception.EppConfigurationException" log="false">
         <redirect view-id="/errorConfiguration.xhtml">
         </redirect>
     </exception>
