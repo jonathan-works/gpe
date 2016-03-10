@@ -131,16 +131,7 @@ public class ValidaDocumentoAction implements Serializable {
 	}
 
 	public boolean isAssinadoPor(UsuarioPerfil usuarioPerfil) {
-		boolean result = false;
-		final List<AssinaturaDocumento> assinaturas = getListAssinaturaDocumento();
-		if (assinaturas != null) {
-			for (AssinaturaDocumento assinatura : assinaturas) {
-				if (result = assinatura.getUsuarioPerfil().equals(usuarioPerfil)) {
-					break;
-				}
-			}
-		}
-		return result;
+		return assinaturaDocumentoService.isDocumentoAssinado(documento, usuarioPerfil);
 	}
 
 	public boolean isAssinadoPor(final UsuarioLogin usuarioLogin) {

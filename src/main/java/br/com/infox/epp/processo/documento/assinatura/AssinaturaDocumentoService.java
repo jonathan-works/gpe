@@ -186,10 +186,7 @@ public class AssinaturaDocumentoService {
         for (AssinaturaDocumento assinaturaDocumento : documento.getDocumentoBin().getAssinaturas()) {
             Papel papel = usuarioLocalizacao.getPerfilTemplate().getPapel();
             UsuarioLogin usuario = usuarioLocalizacao.getUsuarioLogin();
-            if (result = (assinaturaDocumento.getUsuarioPerfil().getPerfilTemplate().getPapel()
-                    .equals(papel) || assinaturaDocumento.getUsuario().equals(
-                    usuario))
-                    && isSignatureValid(assinaturaDocumento)) {
+            if (result = (assinaturaDocumento.getUsuarioPerfil().getPerfilTemplate().getPapel().equals(papel) && assinaturaDocumento.getUsuario().equals(usuario))) {
                 break;
             }
         }
