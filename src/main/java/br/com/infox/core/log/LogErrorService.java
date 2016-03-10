@@ -48,8 +48,7 @@ public class LogErrorService {
     public void saveLog(LogErro logErro) {
         try {
             getEntityManager().persist(logErro);
-            throw new RuntimeException("Teste");
-//            getEntityManager().flush();
+            getEntityManager().flush();
         } catch (Exception e) {
             logErro.setId(null);
             File dir = new File(applicationServerService.getLogDir());
