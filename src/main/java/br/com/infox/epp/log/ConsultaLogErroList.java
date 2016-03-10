@@ -76,7 +76,7 @@ public class ConsultaLogErroList extends DataList<LogErro> {
             errorLogService.send(logErro);
             FacesMessages.instance().add("Registro enviado com sucesso!");
         } catch (Exception e) {
-            FacesMessages.instance().add(e.getMessage());
+            FacesMessages.instance().add("Erro ao enviar " + e.getMessage());
         }
     }
     

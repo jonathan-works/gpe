@@ -20,6 +20,7 @@ import com.google.gson.GsonBuilder;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.server.ApplicationServerService;
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.log.LogErro;
 import br.com.infox.epp.log.StatusLog;
 import br.com.infox.epp.log.rest.LogRest;
@@ -68,13 +69,13 @@ public class LogErrorService {
         Parametro urlEnvio = parametroDAO.getParametroByNomeVariavel(Parametros.URL_SERVICO_ENVIO_LOG_ERRO.getLabel());
         Parametro client = parametroDAO.getParametroByNomeVariavel(Parametros.CODIGO_CLIENTE_ENVIO_LOG.getLabel());
         Parametro pass = parametroDAO.getParametroByNomeVariavel(Parametros.PASSWORD_CLIENTE_ENVIO_LOG.getLabel());
-        if (urlEnvio == null) {
+        if (urlEnvio == null || StringUtil.isEmpty(urlEnvio.getValorVariavel())) {
             throw new BusinessException("URL de envio não configurada. Favor configurar parâmetro " + Parametros.URL_SERVICO_ENVIO_LOG_ERRO.getLabel());
         }
-        if (client == null) {
+        if (client == null || StringUtil.isEmpty(client.getValorVariavel())) {
             throw new BusinessException("Cliente para envio não configurado. Favor configurar parâmetro " + Parametros.CODIGO_CLIENTE_ENVIO_LOG.getLabel());
         }
-        if (pass == null) {
+        if (pass == null || StringUtil.isEmpty(pass.getValorVariavel())) {
             throw new BusinessException("Password de cliente para envio não configurado. Favor configurar parâmetro " + Parametros.PASSWORD_CLIENTE_ENVIO_LOG.getLabel());
         }
         StatusLog status = logErro.getStatus();
