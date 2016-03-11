@@ -56,8 +56,6 @@ public class DocumentoBin implements Serializable {
 
     public static final String TABLE_NAME = "tb_documento_bin";
     
-    public static final String DOCUMENTO_EXTERNO_SERVICO = "SVC"; 
-    
     @Id
     @SequenceGenerator(allocationSize = 1, initialValue = 1, name = "DocumentoBinGenerator", sequenceName = "sq_documento_bin")
     @GeneratedValue(generator = "DocumentoBinGenerator", strategy = GenerationType.SEQUENCE)
