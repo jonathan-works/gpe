@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -34,6 +33,7 @@ import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.InfoxTaskControllerHandler;
 import br.com.infox.ibpm.task.handler.TaskHandler;
 import br.com.infox.ibpm.task.manager.JbpmTaskManager;
+import br.com.infox.ibpm.util.BpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
@@ -67,7 +67,7 @@ public class TaskFitter extends Fitter implements Serializable {
         getTasks();
         TaskNode taskNode = (TaskNode) currentNode;
         Task task = new Task();
-        task.setKey("key_" + UUID.randomUUID().toString());
+            task.setKey(BpmUtil.generateKey());
         task.setProcessDefinition(process);
         task.setTaskMgmtDefinition(process.getTaskMgmtDefinition());
         List<TaskHandler> list = getProcessBuilder().getTaskNodeMap().get(currentNode);

@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -33,6 +32,7 @@ import br.com.infox.epp.fluxo.dao.FluxoDAO;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.FluxoPapel;
 import br.com.infox.epp.fluxo.entity.RaiaPerfil;
+import br.com.infox.ibpm.util.BpmUtil;
 
 @Name(FluxoManager.NAME)
 @AutoCreate
@@ -141,24 +141,24 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
 
     public ProcessDefinition createInitialProcessDefinition() {
     	ProcessDefinition processDefinition = ProcessDefinition.createNewProcessDefinition();
-    	processDefinition.setKey("key_" + UUID.randomUUID().toString());
+    	processDefinition.setKey(BpmUtil.generateKey());
         Swimlane laneSolicitante = new Swimlane("Solicitante");
-        laneSolicitante.setKey("key_" + UUID.randomUUID().toString());
+        laneSolicitante.setKey(BpmUtil.generateKey());
         laneSolicitante.setActorIdExpression("#{actor.id}");
 
         Task startTask = new Task("Tarefa inicial");
-        startTask.setKey("key_" + UUID.randomUUID().toString());
+        startTask.setKey(BpmUtil.generateKey());
         startTask.setSwimlane(laneSolicitante);
         processDefinition.getTaskMgmtDefinition().setStartTask(startTask);
 
         StartState startState = new StartState(infoxMessages.get("process.node.first"));
-        startState.setKey("key_" + UUID.randomUUID().toString());
+        startState.setKey(BpmUtil.generateKey());
         processDefinition.addNode(startState);
         EndState endState = new EndState(infoxMessages.get("process.node.last"));
-        endState.setKey("key_" + UUID.randomUUID().toString());
+        endState.setKey(BpmUtil.generateKey());
         processDefinition.addNode(endState);
         Transition t = new Transition();
-        t.setKey("key_" + UUID.randomUUID().toString());
+        t.setKey(BpmUtil.generateKey());
         t.setName(endState.getName());
         t.setTo(endState);
         startState.addLeavingTransition(t);

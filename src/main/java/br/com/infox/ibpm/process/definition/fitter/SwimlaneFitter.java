@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -15,6 +14,7 @@ import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.manager.PerfilTemplateManager;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.ibpm.swimlane.SwimlaneHandler;
+import br.com.infox.ibpm.util.BpmUtil;
 
 @Named
 @ViewScoped
@@ -31,7 +31,7 @@ public class SwimlaneFitter extends Fitter implements Serializable {
 
     public void addSwimlane() {
         Swimlane s = new Swimlane("Raia " + (swimlanes.size() + 1));
-        s.setKey("key_" + UUID.randomUUID().toString());
+        s.setKey(BpmUtil.generateKey());
         setCurrentSwimlane(new SwimlaneHandler(s));
         getProcessBuilder().getInstance().getTaskMgmtDefinition().addSwimlane(s);
         swimlanes.add(currentSwimlane);

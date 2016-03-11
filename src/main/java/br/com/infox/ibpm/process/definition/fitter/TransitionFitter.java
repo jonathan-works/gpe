@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
@@ -27,6 +26,7 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.processo.timer.TaskExpiration;
 import br.com.infox.epp.processo.timer.manager.TaskExpirationManager;
 import br.com.infox.ibpm.transition.TransitionHandler;
+import br.com.infox.ibpm.util.BpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
@@ -104,7 +104,7 @@ public class TransitionFitter extends Fitter implements Serializable {
     public void addTransition(String type) {
         Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
         Transition t = new Transition("");
-        t.setKey("key_" + UUID.randomUUID().toString());
+        t.setKey(BpmUtil.generateKey());
         if ("from".equals(type)) {
             currentNode.addArrivingTransition(t);
             if (arrivingTransitions == null) {

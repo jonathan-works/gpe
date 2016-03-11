@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
@@ -57,6 +56,7 @@ import br.com.infox.ibpm.sinal.SignalDao;
 import br.com.infox.ibpm.sinal.SignalParam;
 import br.com.infox.ibpm.sinal.SignalParam.Type;
 import br.com.infox.ibpm.transition.TransitionHandler;
+import br.com.infox.ibpm.util.BpmUtil;
 import br.com.infox.jsf.util.JsfUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;

@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
@@ -57,6 +56,7 @@ import com.google.common.base.Strings;
 
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
 import br.com.infox.ibpm.node.InfoxMailNode;
+import br.com.infox.ibpm.util.BpmUtil;
 
 public class JpdlBpmnConverter {
 	
@@ -196,9 +196,9 @@ public class JpdlBpmnConverter {
 		Collaboration collaboration = (Collaboration) modelInstance.getDefinitions().getUniqueChildElementByType(Collaboration.class);
 		if (collaboration == null) {
 			collaboration = modelInstance.newInstance(Collaboration.class);
-			collaboration.setId("key_" + UUID.randomUUID());
+			collaboration.setId(BpmUtil.generateKey());
 			Participant participant = modelInstance.newInstance(Participant.class);
-			participant.setId("key_" + UUID.randomUUID());
+			participant.setId(BpmUtil.generateKey());
 			participant.setProcess((Process) modelInstance.getDefinitions().getModelInstance().getModelElementById(processId));
 			collaboration.addChildElement(participant);
 			modelInstance.getDefinitions().addChildElement(collaboration);
