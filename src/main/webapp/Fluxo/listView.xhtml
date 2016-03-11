@@ -71,7 +71,6 @@
                 value="#{row.publicado}" />
                 
             <wi:columnBoolean columnId="possuirAlteracoes" columnHeader="#{infoxMessages['fluxo.alterado']}" value="#{not (row.xml eq row.xmlExecucao)}"/>
-            <wi:columnBoolean columnId="bpmn" columnHeader="#{infoxMessages['fluxo.bpmn']}" value="#{row.bpmn}"/>
             <wi:columnSituacao
                 columnId="ativo"
                 columnHeader="#{infoxMessages['field.situacao']}"
@@ -128,7 +127,6 @@
                 value="#{fluxoCrudAction.instance.dataFimPublicacao}" />
             <wi:outputText id="statusPublicacao" rendered="#{fluxoCrudAction.managed}" label="#{infoxMessages['fluxo.publicado']}"
                 value="#{fluxoCrudAction.instance.publicado ? 'Sim' : 'Não'}" />
-            <wi:selectBooleanRadio id="bpmn" value="#{fluxoCrudAction.instance.bpmn}" label="#{infoxMessages['fluxo.bpmn']}" />
             <wi:selectSituacaoRadio
                 id="ativo"
                 label="#{infoxMessages['field.situacao']}"
@@ -151,22 +149,6 @@
                     <f:setPropertyActionListener value="#{fluxoCrudAction.instance}" target="#{flash.fluxo}"></f:setPropertyActionListener>
                   	<infox:flashcopy />
                 </wi:commandButton>
-                <wi:commandButton
-                    id="definicaoBpmn"
-                    value="#{infoxMessages['fluxo.definicao']}" reRender="@this"
-                    rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.replica and fluxoCrudAction.instance.bpmn}"
-                    oncomplete="openPopUp('processDefinition', '#{pathResolver.getContextPath()}/Fluxo/definicao/bpmnDefinition.seam#/bpmn/#{fluxoCrudAction.instance.idFluxo}',1300,850);">
-                    <f:setPropertyActionListener value="#{fluxoCrudAction.instance}" target="#{flash.fluxo}"></f:setPropertyActionListener>
-                  	<infox:flashcopy />
-                </wi:commandButton>
-                
-                <a:commandButton value="Converter para JPDL" render="@form :pageBodyDialogMessage" execute="@this" limitRender="true"
-                	action="#{fluxoCrudAction.converterParaJpdl}" styleClass="buttons" onclick="infox.showLoading()" oncomplete="infox.hideLoading()"
-                	rendered="#{fluxoCrudAction.managed and fluxoCrudAction.instance.bpmn and not fluxoCrudAction.replica and not empty fluxoCrudAction.instance.bpmnXml}"/>
-                
-                <a:commandButton value="Converter para BPMN" render="@form :pageBodyDialogMessage" execute="@this" limitRender="true"
-                	action="#{fluxoCrudAction.converterParaBpmn}" styleClass="buttons" onclick="infox.showLoading()" oncomplete="infox.hideLoading()"
-                	rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.instance.bpmn and not fluxoCrudAction.replica and not empty fluxoCrudAction.instance.xml}"/>
                 
                 <wi:commandButton
                     id="importarXPDL"
