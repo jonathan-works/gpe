@@ -6,13 +6,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
@@ -30,7 +28,6 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
-import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 
 @AutoCreate
 @Scope(ScopeType.CONVERSATION)
@@ -42,13 +39,11 @@ public class IniciarProcessoService implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@In
-    private VariavelProcessoService variavelProcessoService;
-	@In
+	@Inject
 	private ProcessoManager processoManager;
-    @In
+    @Inject
     private NaturezaManager naturezaManager;
-    @In
+    @Inject
     private PastaManager pastaManager;
     @Inject
     private MetadadoProcessoManager metadadoProcessoManager;

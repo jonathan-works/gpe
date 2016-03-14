@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.swing.BorderFactory;
 
 import org.jbpm.graph.def.Node;
+import org.jbpm.graph.node.Decision;
 import org.jbpm.graph.node.EndState;
 import org.jbpm.graph.node.Fork;
 import org.jbpm.graph.node.Join;
@@ -23,7 +24,6 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.GraphConstants;
 
-import br.com.infox.ibpm.node.DecisionNode;
 import br.com.infox.ibpm.process.definition.graphical.layout.Util;
 
 public class JbpmDefaultCell extends DefaultGraphCell {
@@ -37,7 +37,7 @@ public class JbpmDefaultCell extends DefaultGraphCell {
         iconType.put(ProcessState.class, "icons/process_state_enabled.gif");
         iconType.put(Fork.class, "icons/fork_enabled.gif");
         iconType.put(Join.class, "icons/join_enabled.gif");
-        iconType.put(DecisionNode.class, "icons/decision_enabled.gif");
+        iconType.put(Decision.class, "icons/decision_enabled.gif");
         iconType.put(TaskNode.class, "icons/task_node_enabled.gif");
         iconType.put(MailNode.class, "icons/mail_node_enabled.gif");
         iconType.put(org.jbpm.graph.node.MailNode.class, "icons/mail_node_enabled.gif");

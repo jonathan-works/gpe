@@ -84,17 +84,6 @@ public class ValidaDocumentoAction implements Serializable {
 	private Boolean podeIniciarFluxoAnaliseDocumentos;
 
 	/**
-	 * @deprecated
-	 * */
-	@Deprecated
-	public void validaDocumento(Documento documento) {
-		this.documento = documento;
-		DocumentoBin bin = documento.getDocumentoBin();
-		// TODO ASSINATURA
-		// validaDocumento(bin, bin.getCertChain(), bin.getSignature());
-	}
-
-	/**
 	 * Valida a assinatura de um ProcessoDocumento. Quando o documento é do tipo
 	 * modelo as quebras de linha são retiradas.
 	 * 

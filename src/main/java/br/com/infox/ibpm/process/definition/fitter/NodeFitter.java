@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
-import javax.el.ELException;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
@@ -21,7 +20,6 @@ import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.jboss.el.parser.ELParser;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.graph.def.Action;
@@ -30,6 +28,7 @@ import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
+import org.jbpm.graph.node.Decision;
 import org.jbpm.graph.node.EndState;
 import org.jbpm.graph.node.Fork;
 import org.jbpm.graph.node.Join;
@@ -47,7 +46,6 @@ import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.fluxo.merger.service.FluxoMergeService;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.manager.StatusProcessoManager;
-import br.com.infox.ibpm.node.DecisionNode;
 import br.com.infox.ibpm.node.InfoxMailNode;
 import br.com.infox.ibpm.node.constants.NodeTypeConstants;
 import br.com.infox.ibpm.node.handler.NodeHandler;
@@ -123,7 +121,7 @@ public class NodeFitter extends Fitter implements Serializable {
                 node.setAsync(true);
             }
             node.setName(newNodeName);
-            node.setKey(UUID.randomUUID().toString());
+            node.setKey("key_" + UUID.randomUUID().toString());
             processo.addNode(node);
             nodes = processo.getNodes();
             // Se foi informado newNodeAfter, procura para inserir
@@ -146,16 +144,15 @@ public class NodeFitter extends Fitter implements Serializable {
                 t.setFrom(newNodeAfter);
                 node.addArrivingTransition(t);
                 t.setName(node.getName());
-                t.setKey(UUID.randomUUID().toString());
+                t.setKey("key_" + UUID.randomUUID().toString());
                 newNodeAfter.addLeavingTransition(t);
             } else if (newNodeTransition != null && newNodeTransition.getTransition() != null) {
                 Transition t = new Transition();
                 Transition oldT = newNodeTransition.getTransition();
-                t.setCondition(oldT.getCondition());
                 t.setDescription(oldT.getDescription());
                 Node to = newNodeTransition.getTransition().getTo();
                 t.setName(to.getName());
-                t.setKey(UUID.randomUUID().toString());
+                t.setKey("key_" + UUID.randomUUID().toString());
                 t.setProcessDefinition(oldT.getProcessDefinition());
 
                 /*
@@ -468,9 +465,7 @@ public class NodeFitter extends Fitter implements Serializable {
     public String getNodeForm() {
         String type = "empty";
         if (currentNode != null) {
-            if (NodeType.Decision.equals(currentNode.getNodeType())) {
-                type = "decision";
-            } else if (NodeType.Node.equals(currentNode.getNodeType())) {
+            if (NodeType.Node.equals(currentNode.getNodeType())) {
                 if (currentNode instanceof ProcessState) {
                     type = "processState";
                 } else if (currentNode instanceof InfoxMailNode) {
@@ -524,7 +519,7 @@ public class NodeFitter extends Fitter implements Serializable {
         if (currentNode instanceof InfoxMailNode) {
             return NodeTypeConstants.MAIL_NODE;
         }
-        if (currentNode instanceof DecisionNode) {
+        if (currentNode instanceof Decision) {
             return NodeTypeConstants.DECISION;
         }
         if (currentNode instanceof StartState) {
@@ -598,25 +593,6 @@ public class NodeFitter extends Fitter implements Serializable {
             return false;
         }
         return !getProcessBuilder().existemProcessosAssociadosAoFluxo();
-    }
-    
-    public String getCurrentDecisionExpression() {
-        return ((DecisionNode) getCurrentNode()).getDecisionExpression();
-    }
-    
-    public void setCurrentDecisionExpression(String expression) {
-        DecisionNode decision = (DecisionNode) getCurrentNode();
-        if (expression != null) {
-            try {
-                ELParser.parse(expression);
-            } catch (ELException e) {
-                LOG.warn("Erro de sintaxe na expressão do nó de decisão " + decision.getName(), e);
-                FacesMessages.instance().clear();
-                FacesMessages.instance().add("Erro de sintaxe na expressão");
-                return;
-            }
-        }
-        decision.setDecisionExpression(expression);
     }
     
     public List<StatusProcesso> getStatusProcessoList() {

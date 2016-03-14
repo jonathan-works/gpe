@@ -6,6 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -13,7 +20,14 @@ import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.PerfilTemplate;
+import br.com.infox.epp.access.entity.PerfilTemplate_;
 import br.com.infox.epp.access.query.PerfilTemplateQuery;
+import br.com.infox.epp.documento.entity.ModeloDocumento;
+import br.com.infox.epp.documento.entity.ModeloDocumento_;
+import br.com.infox.epp.documento.entity.TipoModeloDocumento;
+import br.com.infox.epp.documento.entity.TipoModeloDocumentoPapel;
+import br.com.infox.epp.documento.entity.TipoModeloDocumentoPapel_;
+import br.com.infox.epp.documento.entity.TipoModeloDocumento_;
 
 @Name(PerfilTemplateDAO.NAME)
 @AutoCreate
@@ -27,6 +41,15 @@ public class PerfilTemplateDAO extends DAO<PerfilTemplate> {
         Map<String, Object> param = new HashMap<>();
         param.put("papel", perfilTemplate.getPapel());
         return (Long) getSingleResult(hql, param) > 0;
+    }
+    
+    public PerfilTemplate getPerfilTemplateByCodigo(String codigo) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<PerfilTemplate> cq = cb.createQuery(PerfilTemplate.class);
+		Root<PerfilTemplate> perfilTemplate = cq.from(PerfilTemplate.class);
+		cq.select(perfilTemplate);
+		cq.where(cb.equal(perfilTemplate.get(PerfilTemplate_.codigo), codigo));
+		return getSingleResult(getEntityManager().createQuery(cq));
     }
     
     public PerfilTemplate getPerfilTemplateByDescricao(String descricao) {

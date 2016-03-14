@@ -18,12 +18,12 @@ public class EppServletEventListener implements ServletContextListener {
 		log.info("Injetando o ContextPath criado no RequestInternalPageService");
 		RequestInternalPageService requestInternalPageService = JNDI.lookup("java:module/RequestInternalPageService");
 		if (requestInternalPageService == null) {
-		    throw new AbortProcessingException("RequestInternal page java:module/RequestInternalPageService não encontrado");
+		    throw new AbortProcessingException("RequestInternal page java:module/ApplicationServerService não encontrado");
 		}
 		requestInternalPageService.setContextPath(event.getServletContext().getContextPath());
 	}
 
-	@Override
+    @Override
 	public void contextDestroyed(ServletContextEvent sce) {
 	}
 

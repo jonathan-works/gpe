@@ -17,8 +17,8 @@ import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.query.UsuarioPerfilQuery;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 
-@AutoCreate
 @Stateless
+@AutoCreate
 @Name(UsuarioPerfilDAO.NAME)
 public class UsuarioPerfilDAO extends DAO<UsuarioPerfil> {
 

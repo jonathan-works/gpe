@@ -104,7 +104,7 @@ public class TransitionFitter extends Fitter implements Serializable {
     public void addTransition(String type) {
         Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
         Transition t = new Transition("");
-        t.setKey(UUID.randomUUID().toString());
+        t.setKey("key_" + UUID.randomUUID().toString());
         if ("from".equals(type)) {
             currentNode.addArrivingTransition(t);
             if (arrivingTransitions == null) {
@@ -204,20 +204,6 @@ public class TransitionFitter extends Fitter implements Serializable {
             }
         }
         return transitionList;
-    }
-
-    /**
-     * Seta a #{true} na condição da transição para o botão não ser exibido na
-     * tab de saída do fluxo.
-     * 
-     * @param th
-     */
-    public void setTransitionButton(TransitionHandler th) {
-        if (th.getTransition().getDescription() == null || th.getTransition().getDescription().equals("")) {
-            th.getTransition().setDescription(TransitionHandler.OCCULT_TRANSITION);
-        } else {
-            th.getTransition().setDescription(null);
-        }
     }
 
     public List<String[]> getTransitionNames() {

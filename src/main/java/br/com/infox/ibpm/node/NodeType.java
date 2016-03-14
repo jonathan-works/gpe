@@ -1,4 +1,9 @@
 package br.com.infox.ibpm.node;
+
+import org.jbpm.graph.def.Node;
+import org.jbpm.graph.def.SuperState;
+import org.jbpm.graph.node.ProcessState;
+
 /**
  * Discriminadores da coluna class_ da tabela jbpm_node, de acordo com as informações do arquivo Node.hbm.xml 
  * em org/jbpm/graph/def no JAR jbpm-jpdl
@@ -17,5 +22,33 @@ public enum NodeType {
     
     public String getLabel() {
         return label;
+    }
+    
+    public static NodeType getNodeType(Node node) {
+    	if (node.getNodeType().equals(org.jbpm.graph.def.Node.NodeType.Node)) {
+    		return N;
+    	} else if (node.getNodeType().equals(org.jbpm.graph.def.Node.NodeType.Decision)) {
+    		return D;
+    	} else if (node.getNodeType().equals(org.jbpm.graph.def.Node.NodeType.EndState)) {
+    		return E;
+    	} else if (node.getNodeType().equals(org.jbpm.graph.def.Node.NodeType.Fork)) {
+    		return F;
+    	} else if (node.getNodeType().equals(org.jbpm.graph.def.Node.NodeType.Join)) {
+    		return J;
+    	} else if (node.getNodeType().equals(org.jbpm.graph.def.Node.NodeType.StartState)) {
+    		return R;
+    	} else if (node.getNodeType().equals(org.jbpm.graph.def.Node.NodeType.State)) {
+    		return S;
+    	} else if (node.getNodeType().equals(org.jbpm.graph.def.Node.NodeType.Task)) {
+    		return K;
+    	} else if (node instanceof InfoxMailNode) {
+    		return M;
+    	} else if (node instanceof ProcessState) {
+    		return C;
+    	} else if (node instanceof SuperState) {
+    		return U;
+    	}
+    	
+    	throw new IllegalArgumentException("Nó desconhecido: " + node);
     }
 }

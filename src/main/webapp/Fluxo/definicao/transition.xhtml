@@ -9,7 +9,7 @@
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf">
-    <rich:panel bodyClass="panel" styleClass="flex-displayed-child">
+    <rich:panel bodyClass="panel" styleClass="#{nodeFitter.currentNode.nodeType ne 'Decision' ? 'flex-displayed-child' : ''}">
         <f:facet name="header">
             <h:panelGrid
                 columns="2"
@@ -28,7 +28,7 @@
         <rich:dataTable
             value="#{values}"
             id="transition#{type}Table"
-            styleClass="tabelaVariaveis"
+            styleClass="#{nodeFitter.currentNode.nodeType eq 'Decision' and type eq 'to' ? 'dtable rf-dt-crud' : 'tabelaVariaveis'}"
             var="transicaoHandler">
             <rich:column
                 styleClass="dr-table-subheader rich-table-subheader"
@@ -141,17 +141,24 @@
                     </a:commandLink>
                 </h:form>
             </rich:column>
+            <rich:column id="conditionColumn" rendered="#{type eq 'to' and nodeFitter.currentNode.nodeType eq 'Decision'}" style="width: 40%">
+                <f:facet name="header">#{infoxMessages['process.transition.condition']}</f:facet>
+                <h:form>
+	                <h:inputTextarea value="#{transicaoHandler.transition.condition}" maxlength="1000" style="width: 100%">
+	                    <a:ajax event="change" execute="@this" render="transition#{type}Table" limitRender="true" />
+	                </h:inputTextarea>
+                </h:form>
+            </rich:column>
             <rich:column id="occulTransitionButtonColumn" rendered="#{type eq 'to'}">
                 <f:facet name="header">#{infoxMessages['process.transition.ocultar']}</f:facet>
                 <h:form>
                     <center>
                         <h:selectBooleanCheckbox
                             id="occultTransitionButton"
-                            value="#{transicaoHandler.occultTransitionButton}">
+                            value="#{transicaoHandler.transition.hidden}">
                             <a:ajax
                                 event="change"
                                 execute="@this"
-                                listener="#{transitionFitter.setTransitionButton(transicaoHandler)}"
                                 render="transition#{type}Table"
                                 limitRender="true" />
                         </h:selectBooleanCheckbox>

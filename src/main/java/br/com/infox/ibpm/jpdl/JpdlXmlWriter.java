@@ -17,6 +17,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
+import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -47,7 +48,6 @@ import org.jbpm.taskmgmt.def.TaskController;
 
 import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.core.util.StringUtil;
-import br.com.infox.ibpm.node.DecisionNode;
 import br.com.infox.ibpm.node.InfoxMailNode;
 import br.com.infox.ibpm.task.handler.CustomAction;
 import br.com.infox.log.LogProvider;
@@ -132,7 +132,7 @@ public class JpdlXmlWriter {
             root = document.addElement("process-definition");
         }
         addAttribute(root, ELEMENT_NAME, processDefinition.getName());
-        addAttribute(root, "key", processDefinition.getKey() == null ? UUID.randomUUID().toString() : processDefinition.getKey());
+        addAttribute(root, "key", processDefinition.getKey() == null ? "key_" + UUID.randomUUID().toString() : processDefinition.getKey());
         writeDescription(root, processDefinition.getDescription());
 
         Map<String, Swimlane> swimlanes = processDefinition.getTaskMgmtDefinition().getSwimlanes();
@@ -182,7 +182,7 @@ public class JpdlXmlWriter {
             Element swimlane = addElement(root, "swimlane");
             addAttribute(swimlane, ELEMENT_NAME, e.getKey());
             Swimlane s = e.getValue();
-            addAttribute(swimlane, "key", s.getKey() == null ? UUID.randomUUID().toString() : s.getKey());
+            addAttribute(swimlane, "key", s.getKey() == null ? "key_" + UUID.randomUUID().toString() : s.getKey());
             if (s.getPooledActorsExpression() != null || s.getActorIdExpression() != null) {
                 writeAssignment(swimlane, s.getActorIdExpression(), s.getPooledActorsExpression());
             }
@@ -238,10 +238,6 @@ public class JpdlXmlWriter {
                 if (node instanceof ProcessState) {
                     writeProcessState((ProcessState) node, nodeElement);
                 }
-                if (node instanceof DecisionNode) {
-                    DecisionNode decision = (DecisionNode) node;
-                    addAttribute(nodeElement, "expression", decision.getDecisionExpression());
-                }
                 node.write(nodeElement);
                 writeNode(nodeElement, node);
             }
@@ -284,7 +280,7 @@ public class JpdlXmlWriter {
             addAttribute(taskElement, "condition", task.getCondition());
             addAttribute(taskElement, "description", task.getDescription());
             addAttribute(taskElement, "due-date", task.getDueDate());
-            addAttribute(taskElement, "key", task.getKey() == null ? UUID.randomUUID().toString() : task.getKey());
+            addAttribute(taskElement, "key", task.getKey() == null ? "key_" + UUID.randomUUID().toString() : task.getKey());
             writeController(task.getTaskController(), taskElement);
             writeEvents(taskElement, task);
         }
@@ -346,7 +342,7 @@ public class JpdlXmlWriter {
         if (node.isAsync() && (node.getClass().equals(Node.class) || node.getClass().equals(InfoxMailNode.class))) {
             addAttribute(element, "async", "true");
         }
-        addAttribute(element, "key", node.getKey() == null ? UUID.randomUUID().toString() : node.getKey());
+        addAttribute(element, "key", node.getKey() == null ? "key_" + UUID.randomUUID().toString() : node.getKey());
         if (node instanceof TaskNode) {
             TaskNode t = (TaskNode) node;
             String signal = null;
@@ -390,9 +386,10 @@ public class JpdlXmlWriter {
     }
 
     private void writeTransition(Element transitionElement, Transition transition) {
-    	transitionElement.addAttribute("key", transition.getKey() == null ? UUID.randomUUID().toString() : transition.getKey());
+    	transitionElement.addAttribute("key", transition.getKey() == null ? "key_" + UUID.randomUUID().toString() : transition.getKey());
+    	transitionElement.addAttribute("hidden", String.valueOf(transition.isHidden()));
         if (transition.getTo() != null) {
-            transitionElement.addAttribute("to", transition.getTo().getName());
+            transitionElement.addAttribute("to", transition.getTo().getKey());
         }
         if (transition.getName() != null) {
             transitionElement.addAttribute(ELEMENT_NAME, transition.getName());
@@ -401,10 +398,13 @@ public class JpdlXmlWriter {
         if ((transitionEvent != null) && (transitionEvent.hasActions())) {
             writeActions(transitionElement, transitionEvent.getActions());
         }
-        if (transition.getCondition() != null
-                && !"".equals(transition.getCondition().trim())) {
-            Element condition = transitionElement.addElement("condition");
-            condition.addAttribute("expression", transition.getCondition());
+        if (transition.getCondition() != null && !"".equals(transition.getCondition().trim())) {
+        	transitionElement.addAttribute("condition", transition.getCondition());
+        } else {
+        	Attribute condition = transitionElement.attribute("condition");
+        	if (condition != null) {
+        		transitionElement.remove(condition);
+        	}
         }
         if (transition.getDescription() != null) {
             writeDescription(transitionElement, transition.getDescription());

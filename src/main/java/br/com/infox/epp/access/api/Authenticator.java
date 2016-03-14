@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.el.ELException;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.naming.NamingException;
@@ -15,11 +16,9 @@ import javax.security.auth.login.LoginException;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
-import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.Actor;
 import org.jboss.seam.contexts.Context;
 import org.jboss.seam.contexts.Contexts;
@@ -60,7 +59,6 @@ import br.com.infox.seam.security.SecurityUtil;
 @AutoCreate
 @Name(Authenticator.NAME)
 @Install(precedence = Install.APPLICATION)
-@Transactional
 @ContextDependency
 public class Authenticator implements Serializable {
 
@@ -72,10 +70,12 @@ public class Authenticator implements Serializable {
     protected UsuarioLoginManager usuarioLoginManager;
     @Inject
     protected InfoxMessages infoxMessages;
-    @In
+    @Inject
     private PapelManager papelManager;
     @Inject
     private SecurityUtil securityUtil;
+    @Inject
+    private CdiAuthenticator cdiAuthenticator;
     
     private String newPassword1;
     private String newPassword2;
@@ -126,8 +126,8 @@ public class Authenticator implements Serializable {
         if (id != null) {
             JpaIdentityStore store = getJpaIdentyStore();
             UsuarioLogin usuario = (UsuarioLogin) store.lookupUser(id);
-            validaCadastroDeUsuario(id, usuario);
             try {
+                validaCadastroDeUsuario(id, usuario);
                 getAuthenticatorService().validarUsuario(usuario);
                 if (isTrocarSenha()) {
                     trocarSenhaUsuario(usuario);
@@ -136,8 +136,7 @@ public class Authenticator implements Serializable {
                 }
             } catch (LoginException e) {
                 Identity.instance().unAuthenticate();
-                LOG.error("postAuthenticate()", e);
-                throw e;
+                FacesMessages.instance().add(e.getMessage());
             } catch (DAOException e) {
                 LOG.error("postAuthenticate()", e);
             }
@@ -192,6 +191,7 @@ public class Authenticator implements Serializable {
         if (newPassword1.equals(newPassword2)) {
             PasswordService passwordService = (PasswordService) Component.getInstance(PasswordService.NAME);
             passwordService.changePassword(usuario, newPassword1);
+            usuarioLoginManager.update(usuario);
             getMessagesHandler().add(infoxMessages.get("login.error.senhaAlteradaSucesso"));
         } else {
             throw new LoginException(infoxMessages.get("login.error.novaSenhaNaoConfere"));
@@ -203,29 +203,35 @@ public class Authenticator implements Serializable {
     }
 
     public void login() {
-            final Identity identity = Identity.instance();
-            final Credentials credentials = identity.getCredentials();
-            if (loginExists(credentials) || ldapLoginExists(credentials)) {
-                try {
-                    identity.login();
-                } catch (ELException e) {
-                    if (e.getCause() instanceof RedirectException) {
-                        LOG.warn("Erro de redirecionamento", e);                        
-                    } else {
-                        LOG.error(e);
-                    }
-                } finally {
-    				setNewPassword1(null);
-    				setNewPassword2(null);
-    			}
-            } else {
-                getMessagesHandler().add(Severity.ERROR, infoxMessages.get("login.error.invalid"));
+        Identity identity = Identity.instance();
+        Credentials credentials = identity.getCredentials();
+            
+            if (cdiAuthenticator.authenticate(credentials.getUsername(), credentials.getPassword())){
+            	getAuthenticatorService().loginWithoutPassword(credentials.getUsername());
+            	return;
             }
+            
+        if (loginExists(credentials) || ldapLoginExists(credentials)) {
+            try {
+                identity.login();
+            } catch (ELException e) {
+                if (e.getCause() instanceof RedirectException) {
+                    LOG.warn("Erro de redirecionamento", e);                        
+                } else {
+                    LOG.error(e);
+                }
+            } finally {
+				setNewPassword1(null);
+				setNewPassword2(null);
+			}
+        } else {
+            getMessagesHandler().add(Severity.ERROR, infoxMessages.get("login.error.invalid"));
+        }
     }
 
     protected boolean loginExists(final Credentials credentials) {
-        final String login = credentials.getUsername();
-        final UsuarioLogin user = usuarioLoginManager.getUsuarioLoginByLogin(login);
+        String login = credentials.getUsername();
+        UsuarioLogin user = usuarioLoginManager.getUsuarioLoginByLogin(login);
         return user != null;
     }
 
@@ -256,9 +262,9 @@ public class Authenticator implements Serializable {
     public void loginFailed(Object obj) throws LoginException {
         UsuarioLogin usuario = usuarioLoginManager.getUsuarioLoginByLogin(Identity.instance().getCredentials().getUsername());
         if (usuario != null && !usuario.getAtivo()) {
-            throw new LoginException(infoxMessages.get("login.error.usuarioNaoAtivo"));
+            FacesMessages.instance().add(infoxMessages.get("login.error.usuarioNaoAtivo"));
         }
-        throw new LoginException(infoxMessages.get("login.error.usuarioOuSenhaInvalidos"));
+        FacesMessages.instance().add(infoxMessages.get("login.error.usuarioOuSenhaInvalidos"));
     }
 
     @Observer(Identity.EVENT_LOGGED_OUT)
@@ -281,11 +287,9 @@ public class Authenticator implements Serializable {
         return getLocalizacoesFilhas(localizacao, new ArrayList<Localizacao>());
     }
 
-    private static List<Localizacao> getLocalizacoesFilhas(Localizacao loc,
-            List<Localizacao> list) {
+    private static List<Localizacao> getLocalizacoesFilhas(Localizacao loc, List<Localizacao> list) {
         list.add(loc);
-        if (loc.getEstruturaFilho() != null
-                && !list.contains(loc.getEstruturaFilho())) {
+        if (loc.getEstruturaFilho() != null && !list.contains(loc.getEstruturaFilho())) {
 //            getLocalizacoesFilhas(loc.getEstruturaFilho(), list);
         }
         for (Localizacao locFilho : loc.getLocalizacaoList()) {
@@ -347,11 +351,17 @@ public class Authenticator implements Serializable {
     }
 
     private void redirectToPainelDoUsuario() {
-        Redirect redirect = Redirect.instance();
-        redirect.getParameters().clear();
-        redirect.setViewId(getCaminhoPainel());
-        redirect.setParameter("scid", null);
-        redirect.execute();
+    	try {
+	        Redirect redirect = Redirect.instance();
+	        redirect.getParameters().clear();
+	        redirect.setViewId(getCaminhoPainel());
+	        redirect.setParameter("scid", null);
+	        redirect.execute();
+    	} catch (NullPointerException e){
+    		if (FacesContext.getCurrentInstance() != null){
+    			throw e;
+    		}
+    	}
     }
     
     public String getCaminhoPainel() {
@@ -363,15 +373,20 @@ public class Authenticator implements Serializable {
     }
 
     private void redirectToTermoAdesao() {
-        Redirect redirect = Redirect.instance();
-        redirect.getParameters().clear();
-        redirect.setViewId("/termoAdesao.seam");
-        redirect.setParameter("scid", null);
-        redirect.execute();
+    	try {
+	        Redirect redirect = Redirect.instance();
+	        redirect.getParameters().clear();
+	        redirect.setViewId("/termoAdesao.seam");
+	        redirect.setParameter("scid", null);
+	        redirect.execute();
+    	} catch (NullPointerException e){
+    		if (FacesContext.getCurrentInstance() != null){
+    			throw e;
+    		}
+    	}
     }
     
-    private void setVariaveisDoContexto(UsuarioPerfil usuarioPerfil,
-            Set<String> roleSet) {
+    private void setVariaveisDoContexto(UsuarioPerfil usuarioPerfil, Set<String> roleSet) {
         Contexts.getSessionContext().set(USUARIO_PERFIL_ATUAL, usuarioPerfil);
         Contexts.getSessionContext().set(INDENTIFICADOR_PAPEL_ATUAL, usuarioPerfil.getPerfilTemplate().getPapel().getIdentificador());
         Contexts.getSessionContext().set(PAPEIS_USUARIO_LOGADO, roleSet);

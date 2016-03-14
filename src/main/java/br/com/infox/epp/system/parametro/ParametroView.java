@@ -16,7 +16,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import br.com.infox.epp.DynamicField;
-import br.com.infox.epp.FieldType;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.epp.system.manager.ParametroManager;

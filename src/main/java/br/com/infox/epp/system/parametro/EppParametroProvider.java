@@ -45,9 +45,12 @@ public class EppParametroProvider implements Serializable, ParametroProvider {
 		initParametrosExecFluxo();
 		initParametrosLDAP();
 		initParametrosSistema();
+		create("loginWebService", "authorizationSecret", FieldType.STRING);
+		initParametrsoLog();
+	    create("externalAuthenticationService","externalAuthenticationServiceUrl", FieldType.STRING);		
 	}
 
-	private void initParametrosControleAcesso() {
+    private void initParametrosControleAcesso() {
 		final String grupo = "controle de acesso";
 		create(grupo, "termoAdesao", ModeloDocumento_.tituloModeloDocumento, ModeloDocumento_.tituloModeloDocumento)
 				.addFilter(isTrue(ModeloDocumento_.ativo));
@@ -108,6 +111,13 @@ public class EppParametroProvider implements Serializable, ParametroProvider {
 		create("sistema", "usuarioExterno", Papel_.nome, Papel_.identificador).addFilter(isTrue(Papel_.termoAdesao));
 		create("sistema", "pastaDocumentoGerado", ModeloPasta_.descricao, ModeloPasta_.nome);
 	}
+	
+	private void initParametrsoLog() {
+	    create("envioLog", "codigoClienteEnvioLog", FieldType.STRING);
+        create("envioLog", "passwordClienteEnvioLog", FieldType.STRING);
+        create("envioLog", "ativarServicoEnvioLogAutomatico", FieldType.BOOLEAN);
+        create("envioLog", "urlServicoEnvioLogErro", FieldType.STRING);
+    }
 
 	public <T> ParametroDefinition<T> create(String grupo, String nome, SingularAttribute<T, ?> keyAttribute,
 			SingularAttribute<T, ?> labelAttribute) {

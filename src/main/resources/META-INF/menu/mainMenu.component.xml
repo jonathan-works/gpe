@@ -34,6 +34,7 @@
             <value>menu.administracao/menu.fluxos/signal.menuText:/Sinal/listView.seam</value>
             
             <value>menu.administracao/log.logs/log.menuText:/Consulta/Log/list.seam</value>
+            <value>menu.administracao/log.logs/log.erro.menuText:/Consulta/Log/Erro/listView.seam</value>
             <value>menu.administracao/contaTwitter.twitterSysMenuText:/ContaTwitter/Sistema/listView.seam</value>
             <value>menu.administracao/calendarioEventos.menuText:/CalendarioEventos/listView.seam</value>
             <value>menu.administracao/parametro.menuText:/Parametro/listView.seam</value>

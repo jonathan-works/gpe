@@ -9,9 +9,12 @@ import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.instantiation.Delegation;
 import org.jbpm.jpdl.JpdlException;
 import org.jbpm.jpdl.xml.JpdlXmlReader;
+import org.jbpm.jpdl.xml.Problem;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.util.ClassLoaderUtil;
 import org.xml.sax.InputSource;
+
+import br.com.infox.core.util.ReflectionsUtil;
 
 public class InfoxJpdlXmlReader extends JpdlXmlReader {
 
@@ -33,7 +36,18 @@ public class InfoxJpdlXmlReader extends JpdlXmlReader {
      * Tratamento da descrição
      */
     public ProcessDefinition readProcessDefinition() {
-        ProcessDefinition definition = super.readProcessDefinition();
+    	ProcessDefinition definition;
+    	try {
+    		definition = super.readProcessDefinition();
+    	} catch (JpdlException e) {
+    		StringBuilder sb = new StringBuilder(e.getMessage());
+    		for (Object o : e.getProblems()) {
+    			sb.append("\n");
+    			sb.append(((Problem) o).getDescription());
+    		}
+    		ReflectionsUtil.setValue(e, "detailMessage", sb.toString());
+    		throw e;
+    	}
         String description = definition.getDescription();
         if (description != null) {
             Element root = document.getRootElement();

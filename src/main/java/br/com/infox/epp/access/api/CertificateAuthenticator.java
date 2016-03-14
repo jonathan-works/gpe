@@ -7,10 +7,10 @@ import java.io.Serializable;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
 
+import javax.inject.Inject;
 import javax.security.auth.login.LoginException;
 
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
@@ -24,8 +24,8 @@ import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.service.AuthenticatorService;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -34,41 +34,39 @@ import br.com.infox.seam.exception.RedirectToLoginApplicationException;
 @Name(CertificateAuthenticator.NAME)
 @Scope(ScopeType.CONVERSATION)
 @Transactional
+@ContextDependency
 public class CertificateAuthenticator implements Serializable {
+
     private static final long serialVersionUID = 6825659622529568148L;
     private static final String AUTHENTICATE = "certificateAuthenticator.authenticate()";
-    private static final LogProvider LOG = Logging
-            .getLogProvider(CertificateAuthenticator.class);
+    private static final LogProvider LOG = Logging.getLogProvider(CertificateAuthenticator.class);
     public static final String NAME = "certificateAuthenticator";
     private boolean certificateLogin = false;
     private String token;
 
-    @In
-    private UsuarioLoginManager usuarioLoginManager;
-    @In
+    @Inject
     private AuthenticatorService authenticatorService;
-    @In
+    @Inject
     private CertificateSignatures certificateSignatures;
-    @In
+    @Inject
     private InfoxMessages infoxMessages;
 
     public void authenticate() {
         try {
-        	CertificateSignatureBundleBean bundle = getSignatureBundle();
-			String certChain = bundle.getSignatureBeanList().get(0).getCertChain();
+            CertificateSignatureBundleBean bundle = getSignatureBundle();
+            String certChain = bundle.getSignatureBeanList().get(0).getCertChain();
             UsuarioLogin usuarioLogin = authenticatorService.getUsuarioLoginFromCertChain(certChain);
             authenticatorService.signatureAuthentication(usuarioLogin, null, certChain, false);
-            final Events events = Events.instance();
+            Events events = Events.instance();
             events.raiseEvent(Identity.EVENT_LOGIN_SUCCESSFUL, new Object[1]);
             events.raiseEvent(Identity.EVENT_POST_AUTHENTICATE, new Object[1]);
-        } catch (final CertificateExpiredException e) {
+        } catch (CertificateExpiredException e) {
             LOG.error(AUTHENTICATE, e);
             throw new RedirectToLoginApplicationException(infoxMessages.get(CERTIFICATE_ERROR_EXPIRED), e);
-        } catch (final CertificateException e) {
+        } catch (CertificateException e) {
             LOG.error(AUTHENTICATE, e);
-            throw new RedirectToLoginApplicationException(format(
-                    infoxMessages.get(AuthenticatorService.CERTIFICATE_ERROR_UNKNOWN),
-                    e.getMessage()), e);
+            throw new RedirectToLoginApplicationException(
+                    format(infoxMessages.get(AuthenticatorService.CERTIFICATE_ERROR_UNKNOWN), e.getMessage()), e);
         } catch (CertificadoException | LoginException | DAOException e) {
             LOG.error(AUTHENTICATE, e);
             throw new RedirectToLoginApplicationException(e.getMessage(), e);
@@ -76,22 +74,22 @@ public class CertificateAuthenticator implements Serializable {
 
     }
 
-	private CertificateSignatureBundleBean getSignatureBundle() throws CertificadoException {
-		CertificateSignatureBundleBean bundle = certificateSignatures.get(token);
-		if (bundle == null || bundle.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
-			throw new CertificadoException(infoxMessages.get("login.sign.error") + bundle);
-		}
-		return bundle;
-	}
-    
+    private CertificateSignatureBundleBean getSignatureBundle() throws CertificadoException {
+        CertificateSignatureBundleBean bundle = certificateSignatures.get(token);
+        if (bundle == null || bundle.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
+            throw new CertificadoException(infoxMessages.get("login.sign.error") + bundle);
+        }
+        return bundle;
+    }
+
     public String getToken() {
-		return token;
-	}
-    
+        return token;
+    }
+
     public void setToken(String token) {
-		this.token = token;
-	}
-    
+        this.token = token;
+    }
+
     public boolean isCertificateLogin() {
         return certificateLogin || ParametroUtil.isLoginComAssinatura();
     }

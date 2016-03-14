@@ -26,6 +26,7 @@ import br.com.infox.quartz.QuartzConstant;
 @Scope(ScopeType.STATELESS)
 @AutoCreate
 public class BamTimerStarter {
+    
     private static final LogProvider LOG = Logging.getLogProvider(BamTimerStarter.class);
     private static final Properties QUARTZ_PROPERTIES = ClassLoaderUtil.getProperties(QuartzConstant.QUARTZ_PROPERTIES);
     private static final String PROCESSO_CRON_EXPRESSION = "0 0 0 * * ?";
@@ -42,30 +43,26 @@ public class BamTimerStarter {
             return;
         }
 
-        final BamTimerManager bamTimerManager = (BamTimerManager) Component.getInstance(BamTimerManager.NAME);
+        BamTimerManager bamTimerManager = (BamTimerManager) Component.getInstance(BamTimerManager.NAME);
         initProcessoTimerProcessor(bamTimerManager);
         initTarefaTimerProcessor(bamTimerManager);
     }
 
     private void initTarefaTimerProcessor(final BamTimerManager bamTimerManager) {
-        final TarefaTimerProcessor processor = (TarefaTimerProcessor) Component.getInstance(TarefaTimerProcessor.NAME);
-        final String cronExpression = QUARTZ_PROPERTIES.getProperty(QuartzConstant.QUARTZ_CRON_EXPRESSION, TAREFA_CRON_EXPRESSION);
+        TarefaTimerProcessor processor = (TarefaTimerProcessor) Component.getInstance(TarefaTimerProcessor.NAME);
+        String cronExpression = QUARTZ_PROPERTIES.getProperty(QuartzConstant.QUARTZ_CRON_EXPRESSION, TAREFA_CRON_EXPRESSION);
 
         initTimerProcessor(cronExpression, ID_INICIAR_TASK_TIMER_PARAMETER, "ID do timer de tarefas do sistema", processor, bamTimerManager);
     }
 
-    private void initProcessoTimerProcessor(
-            final BamTimerManager bamTimerManager) {
-        final ProcessoTimerProcessor processor = (ProcessoTimerProcessor) Component.getInstance(ProcessoTimerProcessor.NAME);
-        final String cronExpression = QUARTZ_PROPERTIES.getProperty(QuartzConstant.QUARTZ_CRON_EXPRESSION, PROCESSO_CRON_EXPRESSION);
+    private void initProcessoTimerProcessor(BamTimerManager bamTimerManager) {
+        ProcessoTimerProcessor processor = (ProcessoTimerProcessor) Component.getInstance(ProcessoTimerProcessor.NAME);
+        String cronExpression = QUARTZ_PROPERTIES.getProperty(QuartzConstant.QUARTZ_CRON_EXPRESSION, PROCESSO_CRON_EXPRESSION);
 
         initTimerProcessor(cronExpression, ID_INICIAR_PROCESSO_TIMER_PARAMETER, "ID do timer de projetos do sistema", processor, bamTimerManager);
     }
 
-    private void initTimerProcessor(final String cronExpression,
-            final String idTimer, final String description,
-            final BamTimerProcessor processor,
-            final BamTimerManager bamTimerManager) {
+    private void initTimerProcessor(String cronExpression, String idTimer, String description, BamTimerProcessor processor, BamTimerManager bamTimerManager) {
         try {
             String idIniciarFluxoTimer = null;
             try {

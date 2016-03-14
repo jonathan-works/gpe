@@ -28,8 +28,6 @@
         debug="${desenvolvimento}"
         transaction-management-enabled="false" />
         
-    <transaction:ejb-transaction />
-        
     <document:document-store use-extensions="true" />
 
     <web:hot-deploy-filter url-pattern="*.seam" />
@@ -82,6 +80,8 @@
             <value>messages</value>
         </core:bundle-names>
     </core:resource-loader>
+
+	<transaction:ejb-transaction />
 
     <factory
         name="pagesDir"

@@ -42,9 +42,6 @@ public class CalendarioEventosCrudAction implements Serializable {
 
     private static final String ID_FORM_TREE = "defaultTabPanel"+ ":"+ "formTabForm"+ ":"+ "localizacaoTreeDecoration"
 			+ ":"+ "localizacaoTree";
-    private static final String ID_SEARCH_TREE = "defaultTabPanel"+ ":"+ "pesquisarCalendarioEventosForm"
-			+ ":"+ "pesquisarCalendarioEventosFormlocalizacaoTreeDecoration"
-			+ ":"+ "pesquisarCalendarioEventosFormlocalizacaoTree";
     
     @Inject
     private CalendarioEventosList calendarioEventosList;
