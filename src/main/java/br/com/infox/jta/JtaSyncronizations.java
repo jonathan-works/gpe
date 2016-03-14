@@ -16,7 +16,7 @@ import br.com.infox.epp.cdi.util.JNDI;
 
 @Name("org.jboss.seam.transaction.synchronizations")
 @Scope(ScopeType.EVENT)
-@Install(precedence=Install.DEPLOYMENT, dependencies="org.jboss.seam.transaction.ejbTransaction")
+@Install(precedence=Install.DEPLOYMENT)
 @BypassInterceptors
 public class JtaSyncronizations implements Synchronizations {
     
