@@ -48,6 +48,8 @@ public class JtaSyncronizations implements Synchronizations {
         try {
             if (transactionManager.getTransaction() != null) {
                 transactionManager.getTransaction().registerSynchronization(sync);
+            } else {
+            	throw new IllegalStateException("No transaction");
             }
         } catch (IllegalStateException | SystemException | RollbackException e) {
         }

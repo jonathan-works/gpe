@@ -18,31 +18,31 @@ import javax.management.ReflectionException;
 @Singleton
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class ApplicationServerService implements Serializable {
-    
-    private static final long serialVersionUID = 1L;
-    
-    private static final String JBOSS_HTTP_SOCKET_BINDING = "jboss.as:socket-binding-group=standard-sockets,socket-binding=http";
-    private static final String JBOSS_HTTPS_SOCKET_BINDING = "jboss.as:socket-binding-group=standard-sockets,socket-binding=https";
-    private static final String TOMCAT_SERVICE_CONNECTOR = "Catalina:type=Service";
-    
-    private boolean isSecure;
-    private String basePath;
-    
-    public void init() {
-    	buildBasePath();
-    }
-    
-    public String getBaseResquestUrl() {
-        return basePath;
-    }
-    
-    private void buildBasePath() {
-        String host = System.getProperty("jboss.bind.address");
-        Integer port = getServerListeningPort();
-        basePath = (isSecure ? "https://" : "http://")  + (host == null ? "0.0.0.0" : host) + ":" + port;
-    }
-    
-    private Integer getServerListeningPort() {
+
+	private static final long serialVersionUID = 1L;
+
+	private static final String JBOSS_HTTP_SOCKET_BINDING = "jboss.as:socket-binding-group=standard-sockets,socket-binding=http";
+	private static final String JBOSS_HTTPS_SOCKET_BINDING = "jboss.as:socket-binding-group=standard-sockets,socket-binding=https";
+	private static final String TOMCAT_SERVICE_CONNECTOR = "Catalina:type=Service";
+
+	private boolean isSecure;
+	private String basePath;
+
+	public void init() {
+		buildBasePath();
+	}
+
+	public String getBaseResquestUrl() {
+		return basePath;
+	}
+
+	private void buildBasePath() {
+		String host = System.getProperty("jboss.bind.address");
+		Integer port = getServerListeningPort();
+		basePath = (isSecure ? "https://" : "http://") + (host == null ? "0.0.0.0" : host) + ":" + port;
+	}
+
+	private Integer getServerListeningPort() {
     	MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
         try {
         	ObjectName socketBindingMBean = new ObjectName(JBOSS_HTTPS_SOCKET_BINDING);
@@ -50,14 +50,7 @@ public class ApplicationServerService implements Serializable {
             isSecure = boundAddress != null;
             if (boundAddress == null) {
             	socketBindingMBean = new ObjectName(JBOSS_HTTP_SOCKET_BINDING);
-    public String getInstanceName() {
-        return System.getProperty("jboss.node.name");
-    }
-    
-    public String getLogDir() {
-        return System.getProperty("jboss.server.log.dir");
-    }
-
+            	
             }
             return (Integer) mBeanServer.getAttribute(socketBindingMBean, "boundPort");
         } catch (AttributeNotFoundException | InstanceNotFoundException | MBeanException | ReflectionException | MalformedObjectNameException e) {
@@ -77,6 +70,15 @@ public class ApplicationServerService implements Serializable {
 			}
     		throw new IllegalStateException(e);
         }
+	}
+            
+    public String getInstanceName() {
+        return System.getProperty("jboss.node.name");
+    }
+    
+    public String getLogDir() {
+        return System.getProperty("jboss.server.log.dir");
     }
 
+           
 }
