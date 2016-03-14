@@ -79,14 +79,7 @@ public class BpmnJpdlService implements Serializable {
 			bpmnTransitionKeys.add(sequenceFlow.getId());
 		}
 
-		Iterator<Entry<String, Element>> it = jpdlTransitions.entrySet().iterator();
-		while (it.hasNext()) {
-			Entry<String, Element> entry = it.next();
-			if (!bpmnTransitionKeys.contains(entry.getKey())) {
-				entry.getValue().detach();
-				it.remove();
-			}
-		}
+		removeTransitions(jpdlTransitions, bpmnTransitionKeys);
 		
 		XMLOutputter out = new XMLOutputter();
 		ProcessDefinition processDefinition = new InfoxJpdlXmlReader(new StringReader(out.outputString(jpdlDoc))).readProcessDefinition();
@@ -104,6 +97,60 @@ public class BpmnJpdlService implements Serializable {
 			bpmnNodeKeys.add(flowNode.getId());
 		}
 		
+		resolveLanes(bpmn, jpdlSwimlaneKeys, bpmnSwimlaneKeys, processDefinition);
+		Map<String, Swimlane> swimlaneKeyMap = new HashMap<>();
+		for (Swimlane swimlane : processDefinition.getTaskMgmtDefinition().getSwimlanes().values()) {
+			swimlaneKeyMap.put(swimlane.getKey(), swimlane);
+		}
+		
+		resolveNodes(bpmn, jpdlNodeKeys, bpmnNodeKeys, swimlaneKeyMap, processDefinition);
+		resolveTransitions(bpmn, jpdlTransitions, bpmnTransitionKeys, processDefinition);
+
+		return processDefinition;
+	}
+
+	private void resolveTransitions(BpmnModelInstance bpmn, Map<String, Element> jpdlTransitions,
+			List<String> bpmnTransitionKeys, ProcessDefinition processDefinition) {
+		for (String bpmnTransitionKey : bpmnTransitionKeys) {
+			if (!jpdlTransitions.keySet().contains(bpmnTransitionKey)) {
+				SequenceFlow sequenceFlow = bpmn.getModelElementById(bpmnTransitionKey);
+				Node from = processDefinition.getNode(sequenceFlow.getSource().getId());
+				Node to = processDefinition.getNode(sequenceFlow.getTarget().getId());
+				Transition transition = new Transition(getLabel(sequenceFlow));
+				transition.setKey(sequenceFlow.getId());
+				transition.setFrom(from);
+				transition.setTo(to);
+				from.addLeavingTransition(transition);
+				to.addArrivingTransition(transition);
+			}
+		}
+	}
+
+	private void resolveNodes(BpmnModelInstance bpmn, List<String> jpdlNodeKeys, List<String> bpmnNodeKeys, Map<String, Swimlane> swimlaneKeyMap, ProcessDefinition processDefinition) {
+		for (String jpdlNodeKey : jpdlNodeKeys) {
+			if (!bpmnNodeKeys.contains(jpdlNodeKey)) {
+				processDefinition.removeNode(processDefinition.getNode(jpdlNodeKey));
+			}
+		}
+		for (String bpmnNodeKey : bpmnNodeKeys) {
+			if (!jpdlNodeKeys.contains(bpmnNodeKey)) {
+				Node node = createNode((FlowNode) bpmn.getModelElementById(bpmnNodeKey), processDefinition);
+				processDefinition.addNode(node);
+				if (node.getNodeType().equals(NodeType.Task)) {
+					for (Lane lane : bpmn.getModelElementsByType(Lane.class)) {
+						for (FlowNode flowNode : lane.getFlowNodeRefs()) {
+							if (flowNode.getId().equals(node.getKey())) {
+								((TaskNode) node).getTasks().iterator().next().setSwimlane(swimlaneKeyMap.get(lane.getId()));
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private void resolveLanes(BpmnModelInstance bpmn, List<String> jpdlSwimlaneKeys, List<String> bpmnSwimlaneKeys, ProcessDefinition processDefinition) {
 		for (String jpdlSwimlaneKey : jpdlSwimlaneKeys) {
 			if (!bpmnSwimlaneKeys.contains(jpdlSwimlaneKey)) {
 				processDefinition.getTaskMgmtDefinition().getSwimlanes().remove(jpdlSwimlaneKey);
@@ -118,44 +165,17 @@ public class BpmnJpdlService implements Serializable {
 				processDefinition.getTaskMgmtDefinition().addSwimlane(swimlane);
 			}
 		}
-		
-		for (String jpdlNodeKey : jpdlNodeKeys) {
-			if (!bpmnNodeKeys.contains(jpdlNodeKey)) {
-				processDefinition.removeNode(processDefinition.getNode(jpdlNodeKey));
-			}
-		}
-		for (String bpmnNodeKey : bpmnNodeKeys) {
-			if (!jpdlNodeKeys.contains(bpmnNodeKey)) {
-				Node node = createNode((FlowNode) bpmn.getModelElementById(bpmnNodeKey), processDefinition);
-				processDefinition.addNode(node);
-				if (node.getNodeType().equals(NodeType.Task)) {
-					for (Lane lane : bpmn.getModelElementsByType(Lane.class)) {
-						for (FlowNode flowNode : lane.getFlowNodeRefs()) {
-							if (flowNode.getId().equals(node.getKey())) {
-								((TaskNode) node).getTasks().iterator().next().setSwimlane(processDefinition.getTaskMgmtDefinition().getSwimlane(lane.getName()));
-								break;
-							}
-						}
-					}
-				}
-			}
-		}
-		
-		for (String bpmnTransitionKey : bpmnTransitionKeys) {
-			if (!jpdlTransitions.keySet().contains(bpmnTransitionKey)) {
-				SequenceFlow sequenceFlow = bpmn.getModelElementById(bpmnTransitionKey);
-				Node from = processDefinition.getNode(sequenceFlow.getSource().getId());
-				Node to = processDefinition.getNode(sequenceFlow.getTarget().getId());
-				Transition transition = new Transition(getLabel(sequenceFlow));
-				transition.setKey(sequenceFlow.getId());
-				transition.setFrom(from);
-				transition.setTo(to);
-				from.addLeavingTransition(transition);
-				to.addArrivingTransition(transition);
-			}
-		}
+	}
 
-		return processDefinition;
+	private void removeTransitions(Map<String, Element> jpdlTransitions, List<String> bpmnTransitionKeys) {
+		Iterator<Entry<String, Element>> it = jpdlTransitions.entrySet().iterator();
+		while (it.hasNext()) {
+			Entry<String, Element> entry = it.next();
+			if (!bpmnTransitionKeys.contains(entry.getKey())) {
+				entry.getValue().detach();
+				it.remove();
+			}
+		}
 	}
 	
 	private Node createNode(FlowNode flowNode, ProcessDefinition processDefinition) {
