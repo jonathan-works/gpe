@@ -120,7 +120,7 @@ public class DocumentoBin implements Serializable {
 	@Column(name="tp_documento_externo")
 	private String tipoDocumentoExterno;
 	
-	@Size(max=50)
+	@Size(max=1000)
 	@Column(name="id_documento_externo")
 	private String idDocumentoExterno;
 
@@ -162,12 +162,8 @@ public class DocumentoBin implements Serializable {
 		this.id = id;
 	}
 
-	public String getExtensaoBanco() {
-		return extensao;		
-	}
-	
 	public String getExtensao() {
-		return getId() == null ? extensao : getDocumentoBinService().getExtensao(getId());
+		return extensao;		
 	}
 
 	public void setExtensao(String extensao) {
@@ -182,30 +178,30 @@ public class DocumentoBin implements Serializable {
 		this.modeloDocumento = modeloDocumento;
 	}
 
-	public String getMd5Documento() {
+	public String getMd5DocumentoAtributo() {
 		return md5Documento;
+	}
+	
+	public String getMd5Documento() {
+		if(getId() == null) {
+			return md5Documento;
+		}				
+		return getDocumentoBinService().getHash(getId());
 	}
 
 	public void setMd5Documento(String md5Documento) {
 		this.md5Documento = md5Documento;
 	}
 
-	public String getNomeArquivoBanco() {
-		return nomeArquivo;
-	}
-	
 	public String getNomeArquivo() {
-		if(getId() == null) {
-			return nomeArquivo;
-		}		
-		return getDocumentoBinService().getNomeArquivo(getId());
+		return nomeArquivo;
 	}
 
 	public void setNomeArquivo(String nomeArquivo) {
 		this.nomeArquivo = nomeArquivo;
 	}
 	
-	public Integer getSizeBanco() {
+	public Integer getSizeAtributo() {
 		return size;
 	}
 
@@ -243,13 +239,13 @@ public class DocumentoBin implements Serializable {
 		return documentoBinService; 		
 	}
 
-	public List<AssinaturaDocumento> getAssinaturasBanco() {
+	public List<AssinaturaDocumento> getAssinaturasAtributo() {
 		return assinaturas;
 	}
 	
 	public List<AssinaturaDocumento> getAssinaturas() {
 		if(getId() == null) {
-			return getAssinaturasBanco();
+			return getAssinaturasAtributo();
 		}		
 		return getDocumentoBinService().carregarAssinaturas(getId());
 	}
@@ -335,6 +331,7 @@ public class DocumentoBin implements Serializable {
 
     @Transient
     public String getSizeFormatado() {
+    	Integer size = getSize();
         if (size != null && size > 0) {
             NumberFormat formatter = new DecimalFormat("###,##0.00");
             float sizeF = size / BYTES_IN_A_KILOBYTE;
