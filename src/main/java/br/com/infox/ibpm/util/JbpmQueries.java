@@ -9,5 +9,5 @@ interface JbpmQueries {
             + "where ti.isSuspended = false and ti.isOpen = true order by ti.name";
 
     String TOKENS_OF_AUTOMATIC_NODES_NOT_ENDED_QUERY = "SELECT t FROM org.jbpm.graph.exe.Token t "
-            + "WHERE t.end IS NULL AND t.lock = null AND t.node.class IN ('N', 'M')";
+            + "WHERE t.end IS NULL AND t.lock is null AND t.node.class IN ('N', 'M', 'D')";
 }

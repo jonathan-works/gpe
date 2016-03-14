@@ -19,7 +19,6 @@ import org.jbpm.graph.exe.Token;
 
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.hibernate.util.HibernateUtil;
-import br.com.infox.ibpm.node.InfoxMailNode;
 import br.com.infox.ibpm.node.NodeType;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
@@ -54,7 +53,7 @@ public class AutomaticNodesInfo implements Serializable {
                 node.setNodeName(jbpmNode.getName());
                 node.setNumeroProcesso(processoManager.getNumeroProcessoByIdJbpm(token.getProcessInstance().getRoot().getId()));
                 node.setTokenId(token.getId());
-                node.setNodeType(jbpmNode instanceof InfoxMailNode ? NodeType.M.getLabel() : NodeType.N.getLabel());
+                node.setNodeType(NodeType.getNodeType(jbpmNode).getLabel());
                 nodes.add(node);
             }
         }
