@@ -81,8 +81,6 @@
         </core:bundle-names>
     </core:resource-loader>
 
-	<transaction:ejb-transaction />
-
     <factory
         name="pagesDir"
         value="/"
