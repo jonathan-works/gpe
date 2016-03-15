@@ -28,11 +28,10 @@ public class ApplicationServerService implements Serializable {
 	private boolean isSecure;
 	private String basePath;
 
-	public void init() {
-		buildBasePath();
-	}
-
 	public String getBaseResquestUrl() {
+	    if (basePath == null) {
+	        buildBasePath();
+	    }
 		return basePath;
 	}
 
