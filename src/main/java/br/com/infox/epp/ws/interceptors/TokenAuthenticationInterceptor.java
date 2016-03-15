@@ -60,7 +60,7 @@ public class TokenAuthenticationInterceptor {
 			}
 			else
 			{
-				RestException excecao = new RestException(e.getErro().getCodigo(), e.getErro().getMensagem());
+				RestException excecao = new RestException(e.getErro().getCode(), e.getErro().getMessage());
 				Response response = Response.status(Status.UNAUTHORIZED).entity(excecao).type(MediaType.APPLICATION_JSON).build();
 				throw new WebApplicationException(response);				
 			}

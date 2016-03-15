@@ -62,6 +62,10 @@ public class ValidacaoException extends ValidationException implements ExcecaoMu
 	public int getStatus() {
 		return Status.BAD_REQUEST.getStatusCode();
 	}
+	@Override
+	public String getCode() {
+		return getCode();
+	}
 	
 
 }

@@ -16,8 +16,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import br.com.infox.epp.rest.RestException;
+import br.com.infox.epp.ws.exception.ErroServico;
 import br.com.infox.epp.ws.exception.ExcecaoServico;
-import br.com.infox.epp.ws.exception.ExcecaoServico.ErroServico;
 import br.com.infox.epp.ws.messages.WSMessages;
 import br.com.infox.epp.ws.services.MensagensErroService;
 
@@ -60,9 +60,9 @@ public class MapeadorExcecoes implements ExceptionMapper<Throwable> {
 			return wae.getResponse();
 		} else {
 			ErroServico erro = mensagensService.getErro(e);
-			String mensagemResposta = erro.getCodigo();
+			String mensagemResposta = erro.getCode();
 			if (CODIGO_ERRO_INDEFINIDO.equals(mensagemResposta)) {
-				mensagemResposta = erro.getMensagem();
+				mensagemResposta = erro.getMessage();
 			}
 
 			int status = getStatus(e);
