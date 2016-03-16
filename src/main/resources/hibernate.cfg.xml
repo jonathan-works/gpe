@@ -166,7 +166,15 @@
     <mapping resource="org/jbpm/context/exe/variableinstance/LongInstance.hbm.xml"/>
     <mapping resource="org/jbpm/context/exe/variableinstance/NullInstance.hbm.xml"/>
     <mapping resource="org/jbpm/context/exe/variableinstance/StringInstance.hbm.xml"/>
-
+    
+    <!-- loopBehavior.def mapping files -->
+    <mapping resource="org/jbpm/loopBehavior/def/LoopBehaviorModuleDefinition.hbm.xml"/>
+    <mapping resource="org/jbpm/graph/def/node/loop/LoopConfiguration.hbm.xml"/>
+    <mapping resource="org/jbpm/graph/def/node/loop/LoopConfigurationMultiInstance.hbm.xml"/>
+    <mapping resource="org/jbpm/graph/def/node/loop/LoopConfigurationStandard.hbm.xml"/>
+    <!-- loopBehavior.exe mapping files -->
+    <mapping resource="org/jbpm/loopBehavior/exe/LoopBehaviorFactory.hbm.xml"/>
+    
     <!-- job mapping files -->
     <mapping resource="org/jbpm/job/Job.hbm.xml"/>
     <mapping resource="org/jbpm/job/Timer.hbm.xml"/>

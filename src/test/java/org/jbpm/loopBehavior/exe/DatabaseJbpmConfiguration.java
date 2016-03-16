@@ -1,7 +1,6 @@
 package org.jbpm.loopBehavior.exe;
 
-import java.io.InputStream;
-import java.sql.SQLException;
+import java.util.UUID;
 
 import org.jbpm.JbpmConfiguration;
 import org.jbpm.JbpmContext;
@@ -10,25 +9,20 @@ import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.exe.Token;
 import org.jbpm.graph.node.TaskNode;
-import org.jbpm.loopBehavior.exe.Consumer;
 import org.jbpm.persistence.PersistenceService;
 import org.jbpm.persistence.db.DbPersistenceService;
 import org.jbpm.taskmgmt.exe.TaskInstance;
+import org.junit.Assert;
+import org.junit.Test;
+import org.xml.sax.InputSource;
+
+import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
 
 public class DatabaseJbpmConfiguration {
 
-	public void beforeInit() {
+	public void createProcessInstance(String name,JbpmConfiguration jbpmConfiguration) {
 		jbpmConfiguration.createSchema();
-	}
-
-	public void afterCompletion() {
-		jbpmConfiguration.dropSchema();
-	}
-
-	static JbpmConfiguration jbpmConfiguration = null;
-
-	public void createProcessInstance(String name) {
-		ProcessDefinition processDefinition = getGraphSession().findLatestProcessDefinition("teste");
+		ProcessDefinition processDefinition = getGraphSession(jbpmConfiguration).findLatestProcessDefinition("teste");
 
 		ProcessInstance processInstance = new ProcessInstance(processDefinition);
 
@@ -46,47 +40,33 @@ public class DatabaseJbpmConfiguration {
 		}
 
 	}
-
-	// @BeforeClass
-	public static void configuration()
-			throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
-		InputStream inputStream = ClassLoader.getSystemResourceAsStream("mock-jbpm/jbpm.cfg.xml");
-		if (inputStream != null) {
-			jbpmConfiguration = JbpmConfiguration.parseInputStream(inputStream);
-		}
-	}
-
-	// @Before
-	public void initDatabase() {
-	}
-
-	// @After
-	public void closeDatabase() {
-	}
-
-	private void deploy(final ProcessDefinition processDefinition) {
-		execute(new Consumer<GraphSession>() {
-			@Override
-			public void consume(GraphSession obj) {
-				obj.deployProcessDefinition(processDefinition);
+	
+	@Test
+	public void deployFluxoLoop(){
+		try {
+			JbpmConfiguration jbpmConfiguration = JbpmConfiguration.parseInputStream(ClassLoader.getSystemResourceAsStream("mock-jbpm/jbpm.cfg.xml"));
+			InputSource is = new InputSource(ClassLoader.getSystemResourceAsStream("mock-jbpm/fluxo-loop.xml"));
+			InfoxJpdlXmlReader reader = new InfoxJpdlXmlReader(is);
+			ProcessDefinition processDefinition = reader.readProcessDefinition();
+			processDefinition.setName("loop-config-"+UUID.randomUUID().toString());
+			JbpmContext jbpmContext = jbpmConfiguration.createJbpmContext();
+			PersistenceService persistenceService = jbpmContext.getServices().getPersistenceService();
+			GraphSession graphSession = null;
+			if (persistenceService instanceof DbPersistenceService) {
+				DbPersistenceService dbPersistenceService = (DbPersistenceService) persistenceService;
+				graphSession = dbPersistenceService.getGraphSession();
+				graphSession.deployProcessDefinition(processDefinition);
+				dbPersistenceService.getSession().flush();
+				dbPersistenceService.close();
 			}
-		});
-	}
-
-	private void execute(Consumer<GraphSession> runnable) {
-		JbpmContext jbpmContext = jbpmConfiguration.createJbpmContext();
-		PersistenceService persistenceService = jbpmContext.getServices().getPersistenceService();
-		GraphSession graphSession = null;
-		if (persistenceService instanceof DbPersistenceService) {
-			DbPersistenceService dbPersistenceService = (DbPersistenceService) persistenceService;
-			graphSession = dbPersistenceService.getGraphSession();
-			runnable.consume(graphSession);
-			dbPersistenceService.getSession().flush();
-			dbPersistenceService.close();
+		} catch (Exception e){
+			e.printStackTrace(System.out);
+			Assert.fail(e.getMessage());
 		}
+		
 	}
-
-	private GraphSession getGraphSession() {
+	
+	private GraphSession getGraphSession(JbpmConfiguration jbpmConfiguration) {
 		JbpmContext jbpmContext = jbpmConfiguration.createJbpmContext();
 		PersistenceService persistenceService = jbpmContext.getServices().getPersistenceService();
 		GraphSession graphSession = null;

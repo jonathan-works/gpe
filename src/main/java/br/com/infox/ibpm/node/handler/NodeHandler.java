@@ -37,7 +37,6 @@ import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.manager.StatusProcessoManager;
 import br.com.infox.ibpm.task.handler.GenerateDocumentoHandler;
 import br.com.infox.ibpm.task.handler.GenerateDocumentoHandler.GenerateDocumentoConfiguration;
-import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.task.handler.StatusHandler;
 import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;
 import br.com.infox.jbpm.event.EventHandler;
@@ -559,7 +558,85 @@ public class NodeHandler implements Serializable {
     	return true;
     }
     
-    public List<String> getProcessDefinitionNames() {
-        return JbpmUtil.instance().getProcessDefinitionNames();
+    public boolean isActivity(){
+    	return getNode() instanceof Activity;
+    }
+    
+    public boolean isLoopNode(){
+    	return isActivity() && ((Activity)getNode()).getLoopConfiguration() != null;
+    }
+    
+    public boolean isMultiInstance(){
+    	return isLoopNode() && ((Activity)getNode()).getLoopConfiguration() instanceof LoopConfigurationMultiInstance;
+    }
+
+	public void setMultiInstance(boolean isMultiInstance) {
+		if (isActivity()) {
+			Activity activity = (Activity) getNode();
+			LoopConfiguration loopConfiguration = activity.getLoopConfiguration();
+			if (loopConfiguration != null) {
+				if (isMultiInstance && !(loopConfiguration instanceof LoopConfigurationMultiInstance)) {
+					activity.setLoopConfiguration(new LoopConfigurationMultiInstance());
+				} else if (!isMultiInstance && loopConfiguration instanceof LoopConfigurationMultiInstance) {
+					activity.setLoopConfiguration(new LoopConfigurationStandard());
+				}
+			}
+		}
+	}
+    
+    public void setLoopNode(boolean loopNode){
+    	if (isActivity()){
+    		Activity activity = (Activity)getNode();
+			LoopConfiguration loopConfiguration = activity.getLoopConfiguration();
+			if (loopNode && loopConfiguration == null) {
+					activity.setLoopConfiguration(new LoopConfigurationStandard());
+			} else if (!loopNode && loopConfiguration != null) {
+					activity.setLoopConfiguration(null);
+			}
+    	}
+    }
+    
+    public LoopConfiguration getLoopConfiguration(){
+    	if (isActivity()){
+    		Activity activity = (Activity)getNode();
+    		return activity.getLoopConfiguration();
+    	}
+    	return null;
+    }
+    
+    public EventHandler getLoopEvent(){
+    	if (!isMultiInstance()){
+    		return null;
+    	}
+    	if (this.loopEvent == null){
+	    	this.loopEvent = initializeLoopEvent();
+    	}
+    	return this.loopEvent;
+    }
+
+	private EventHandler initializeLoopEvent() {
+		LoopConfigurationMultiInstance configurationMultiInstance = (LoopConfigurationMultiInstance)((Activity)getNode()).getLoopConfiguration();
+		switch (configurationMultiInstance.getBehavior()) {
+		case N:
+			if (configurationMultiInstance.getNoneBehaviorEvent() == null){
+				configurationMultiInstance.setNoneBehaviorEvent(new Event(getNode(), "noneBehaviorEvent"));
+			}
+			return new EventHandler(configurationMultiInstance.getNoneBehaviorEvent());
+		case O:
+			if (configurationMultiInstance.getOneBehaviorEvent() == null){
+				configurationMultiInstance.setOneBehaviorEvent(new Event(getNode(), "oneBehaviorEvent"));
+			}
+			return new EventHandler(configurationMultiInstance.getOneBehaviorEvent());
+		default:
+			break;
+		}
+		return null;
+	}
+    
+    public void setLoopConfiguration(LoopConfiguration loopConfiguration){
+    	if (isActivity()){
+    		Activity activity = (Activity)getNode();
+    		activity.setLoopConfiguration(loopConfiguration);
+    	}
     }
 }
