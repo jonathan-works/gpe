@@ -2,6 +2,7 @@ package br.com.infox.epp.documento.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -31,6 +32,7 @@ import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 	@NamedQuery(name = ClassificacaoDocumentoPapelQuery.GET_BY_PAPEL_AND_CLASSIFICACAO, query = ClassificacaoDocumentoPapelQuery.GET_BY_PAPEL_AND_CLASSIFICACAO_QUERY),
 	@NamedQuery(name = ClassificacaoDocumentoPapelQuery.CLASSIFICACAO_EXIGE_ASSINATURA, query = ClassificacaoDocumentoPapelQuery.CLASSIFICACAO_EXIGE_ASSINATURA_QUERY)
 })
+@Cacheable
 public class ClassificacaoDocumentoPapel implements Serializable {
     
 	private static final long serialVersionUID = 1L;

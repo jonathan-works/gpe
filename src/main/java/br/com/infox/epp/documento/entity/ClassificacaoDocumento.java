@@ -17,6 +17,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -50,6 +51,7 @@ import br.com.infox.epp.processo.documento.entity.Documento;
     @NamedQuery(name = FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO, query = FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO_QUERY),
     @NamedQuery(name = LIST_CLASSIFICACAO_DOCUMENTO_BY_PROCESSO, query = LIST_CLASSIFICACAO_DOCUMENTO_BY_PROCESSO_QUERY)
 })
+@Cacheable
 public class ClassificacaoDocumento implements Serializable {
 
     private static final long serialVersionUID = 1L;

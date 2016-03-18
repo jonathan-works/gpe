@@ -8,6 +8,7 @@ import static br.com.infox.epp.documento.query.ExtensaoArquivoQuery.LIMITE_EXTEN
 
 import java.io.Serializable;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,6 +19,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.QueryHint;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
@@ -27,8 +29,10 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = ExtensaoArquivo.TABLE_NAME)
 @NamedQueries({
-    @NamedQuery(name=LIMITE_EXTENSAO, query=LIMITE_EXTENSAO_QUERY)
+    @NamedQuery(name=LIMITE_EXTENSAO, query=LIMITE_EXTENSAO_QUERY,
+		    hints = {@QueryHint(name="org.hibernate.cacheable", value="true"), @QueryHint(name="org.hibernate.cacheRegion", value="br.com.infox.epp.documento.entity.ExtensaoArquivo")})
 })
+@Cacheable
 public class ExtensaoArquivo implements Serializable {
     
 	private static final long serialVersionUID = 1L;
