@@ -3,6 +3,7 @@ package br.com.infox.epp.search;
 import java.io.IOException;
 import java.io.StringReader;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.br.BrazilianAnalyzer;
@@ -54,7 +55,8 @@ public class SearchService {
         QueryParser parser = new QueryParser(Version.LUCENE_36, "texto", SearchService.getAnalyzer());
         try {
             Query query = parser.parse(textoPesquisa);
-            return SearchService.highlightText(query, texto, false);
+            Document doc = Jsoup.parse(texto);
+            return SearchService.highlightText(query, StringEscapeUtils.unescapeHtml4(texto), false);
         } catch (ParseException e) {
             LOG.error("Não foi possível fazer parser do texto { Pesquisa por "
                     + textoPesquisa + " em " + texto + "}", e);
