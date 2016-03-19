@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -20,6 +21,7 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento_;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery;
+import br.com.infox.hibernate.util.HibernateUtil;
 
 @Name(AssinaturaDocumentoDAO.NAME)
 @Stateless
@@ -60,6 +62,9 @@ public class AssinaturaDocumentoDAO extends DAO<AssinaturaDocumento> {
         Root<AssinaturaDocumento> from = cq.from(AssinaturaDocumento.class);
         cq.select(from);
         cq.where(cb.equal(from.get(AssinaturaDocumento_.documentoBin), documentoBin));
-        return getEntityManager().createQuery(cq).getResultList();
+        
+        TypedQuery<AssinaturaDocumento> query = getEntityManager().createQuery(cq);
+        HibernateUtil.enableCache(query);
+		return query.getResultList();
     }
 }

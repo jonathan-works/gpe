@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.AbstractQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -40,6 +41,7 @@ import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacaoClassificacaoDocumento;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacaoClassificacaoDocumento_;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.hibernate.util.HibernateUtil;
 
 @AutoCreate
 @Name(ClassificacaoDocumentoDAO.NAME)
@@ -185,7 +187,9 @@ public class ClassificacaoDocumentoDAO extends DAO<ClassificacaoDocumento> {
         CriteriaQuery<ClassificacaoDocumento> query = createQueryClassificacoesDocumento();
         addTipoDocumentoEnumFilter(query, tipoDocumento);
         addRedatorFilter(query, Authenticator.getPapelAtual());
-        return getEntityManager().createQuery(query).getResultList();
+        TypedQuery<ClassificacaoDocumento> typedQuery = getEntityManager().createQuery(query);
+        HibernateUtil.enableCache(typedQuery);
+		return typedQuery.getResultList();
     }
     
 }
