@@ -4,9 +4,12 @@ import static java.text.MessageFormat.format;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 import javax.persistence.NoResultException;
 
+import org.apache.commons.lang3.ObjectUtils;
+import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
@@ -15,11 +18,13 @@ import org.jboss.seam.annotations.Startup;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
+import org.jboss.seam.util.Conversions;
+import org.jboss.seam.util.Conversions.PropertyValue;
 
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.epp.system.manager.ParametroManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(ParametroUtil.NAME)
@@ -100,4 +105,10 @@ public class ParametroUtil {
     private static ParametroManager getParametroManager() {
         return ComponentUtil.getComponent(ParametroManager.NAME);
     }
+    
+    public static boolean isDebug(){
+    	Map<String, Conversions.PropertyValue> properties = (Map<String, PropertyValue>) Contexts.getApplicationContext().get(Component.PROPERTIES);
+    	return "true".equals(properties.get("org.jboss.seam.core.init.debug").getSingleValue());
+    }
+    
 }
