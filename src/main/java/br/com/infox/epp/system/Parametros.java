@@ -18,6 +18,7 @@ public enum Parametros {
 	CODIGO_FLUXO_DOCUMENTO("codigoFluxoDocumento"),
 	CODIGO_FLUXO_COMUNICACAO_INTERNA("codigoFluxoComunicacaoInterna"),
 	IS_PRORROGACAO_AUTOMATICA_POR_MODELO_COMUNICACAO("prorrogarPrazoAutomaticamentePorModelo"),
+	RICHFACES_FILE_UPLOAD_MAX_FILES_QUANTITY("richFileUploadMaxFilesQuantity"),
 	WEB_SERVICE_TOKEN("webserviceToken"),
 	CODIGO_CLIENTE_ENVIO_LOG("codigoClienteEnvioLog"),
 	PASSWORD_CLIENTE_ENVIO_LOG("passwordClienteEnvioLog"),

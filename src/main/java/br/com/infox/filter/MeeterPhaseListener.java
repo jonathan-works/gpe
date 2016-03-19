@@ -8,9 +8,10 @@ import javax.faces.event.PhaseEvent;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
-import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
+
+import br.com.infox.epp.system.util.ParametroUtil;
 
 /**
  * Classe para medição de tempo das fases do ciclos de vida JSF
@@ -30,7 +31,7 @@ public class MeeterPhaseListener {
     
     @PostConstruct
     public void init() {
-        producao = "true".equals(Contexts.getApplicationContext().get("producao"));
+        producao = !ParametroUtil.isDebug();
     }
 
     @Observer("org.jboss.seam.beforePhase")
