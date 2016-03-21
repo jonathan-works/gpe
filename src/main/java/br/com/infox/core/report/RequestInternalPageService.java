@@ -20,6 +20,7 @@ import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
+import javax.xml.ws.http.HTTPException;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
@@ -97,6 +98,19 @@ public class RequestInternalPageService implements Serializable {
 		return requestInternalPage(stringBuilder.toString());
 	}
 
+	public byte[] getInternalPageAsPdf(String pagePath) throws HttpException, IOException {
+        buildSocketBindingInfo();
+        Integer port = getServerListeningPort();
+        String host = System.getProperty("jboss.bind.address");
+        StringBuilder stringBuilder = new StringBuilder(sbt.getDescricao());
+        stringBuilder.append(host);
+        stringBuilder.append(":");
+        stringBuilder.append(port);
+        stringBuilder.append(this.getContextPath());
+        stringBuilder.append(pagePath);
+        return requestInternalPageAsPdf(stringBuilder.toString());
+    }
+ 
 	public Integer getServerListeningPort() {
 		try {
 		    Integer port = (Integer) mBeanServer.getAttribute(socketBindingMBean, "boundPort");
@@ -134,6 +148,18 @@ public class RequestInternalPageService implements Serializable {
 		    throw new BusinessException("A requisição interna falhou");
 		}
 		return getMethod.getResponseBodyAsString();
+	}
+
+	private byte[] requestInternalPageAsPdf(String fullPath) throws IOException, HTTPException {
+	    HttpClient client = new HttpClient();
+	    HttpMethod getMethod = new GetMethod(fullPath);
+	    getMethod.addRequestHeader(KEY_HEADER_NAME, getKey().toString());
+	    client.executeMethod(getMethod);
+	    Header errorHeader = getMethod.getResponseHeader(FailResponseAction.HEADER_ERROR_RESPONSE);
+	    if (errorHeader != null && !errorHeader.getValue().isEmpty()) {
+	        throw new BusinessException("A requisição interna falhou");
+	    }
+	    return getMethod.getResponseBody();
 	}
 
 	public String getContextPath() {
