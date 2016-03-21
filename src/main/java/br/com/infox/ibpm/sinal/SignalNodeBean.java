@@ -55,7 +55,7 @@ public class SignalNodeBean implements Serializable {
     
     private static DispatcherConfiguration createSignalDispatcherConfiguration() {
         ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
-        if (executionContext.getEvent() != null) {
+        if (executionContext != null && executionContext.getEvent() != null) {
             return DispatcherConfiguration.fromJson(executionContext.getEvent().getConfiguration());
         }
         return null;

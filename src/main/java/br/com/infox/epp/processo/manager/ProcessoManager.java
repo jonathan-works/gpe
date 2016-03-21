@@ -359,7 +359,7 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         BusinessProcess.instance().setTaskId(taskIdOriginal);
     }
 	
-	public void startJbpmProcess(String fluxoName, String transitionName, List<SignalParam> params) throws DAOException {
+	public ProcessInstance startJbpmProcess(String fluxoName, String transitionName, List<SignalParam> params) throws DAOException {
         Long processIdOriginal = BusinessProcess.instance().getProcessId();
         Long taskIdOriginal = BusinessProcess.instance().getTaskId();
         BusinessProcess.instance().setProcessId(null);
@@ -390,9 +390,11 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
                 metadados.add(provider.gerarMetadado(signalParam.getName(), signalParam.getParamValue()));
             }
         }
-        ComponentUtil.<IniciarProcessoService>getComponent(IniciarProcessoService.NAME).iniciarProcesso(processo, variaveis, metadados, transitionName, true);
+        ProcessInstance processInstance = ComponentUtil.<IniciarProcessoService>getComponent(IniciarProcessoService.NAME).iniciarProcesso(processo, variaveis, metadados, transitionName, true);
         BusinessProcess.instance().setProcessId(processIdOriginal);
         BusinessProcess.instance().setTaskId(taskIdOriginal);
+        
+        return processInstance;
     }
 	
 	@Observer({Event.EVENTTYPE_TASK_END})

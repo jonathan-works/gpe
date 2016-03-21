@@ -18,6 +18,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
 import org.jboss.seam.bpm.ManagedJbpmContext;
+import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
@@ -75,11 +76,21 @@ public class SignalService {
     
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void dispatch(String eventType, ExecutionContext executionContext) {
-        ProcessInstance processInstance = executionContext.getProcessInstance().getRoot();
+        ProcessInstance currentProcessInstance = executionContext == null ? null : executionContext.getProcessInstance().getRoot();
+        
         eventType = Event.getListenerEventType(eventType);
-        startStartStateListening(eventType);
-        endSubprocessListening(processInstance, eventType);
-        movimentarTarefasListener(processInstance.getId(), eventType);
+        
+        //Lista contendo todos os processos que devem ser atualizados (processo atual e novos processos criados)
+        List<ProcessInstance> processInstances = new ArrayList<>();
+        if(currentProcessInstance != null) {
+            processInstances.add(currentProcessInstance);        	
+        }
+        processInstances.addAll(startStartStateListening(eventType));
+        
+        for(ProcessInstance processInstance : processInstances) {
+            endSubprocessListening(processInstance, eventType);
+            movimentarTarefasListener(processInstance.getId(), eventType);        	
+        }
     }
     
     private void endSubprocessListening(ProcessInstance processInstance, String eventType) {
@@ -104,18 +115,30 @@ public class SignalService {
         }
     }
     
-    private void startStartStateListening(String eventType) {
+    private List<ProcessInstance> startStartStateListening(String eventType) {
         List<SignalNodeBean> signalNodes = getStartStateListening(eventType);
+        List<ProcessInstance> processInstances = new ArrayList<>();
         for (SignalNodeBean signalNodeBean : signalNodes) {
             if (signalNodeBean.canExecute()) {
                 ProcessDefinition processDefinition = getEntityManager().find(ProcessDefinition.class, signalNodeBean.getId());
-                processoManager.startJbpmProcess(processDefinition.getName(), signalNodeBean.getListenerConfiguration().getTransitionKey(), getSignalParams());
+                ProcessInstance newProcessInstance = processoManager.startJbpmProcess(processDefinition.getName(), signalNodeBean.getListenerConfiguration().getTransitionKey(), getSignalParams());
+                processInstances.add(newProcessInstance);
             }
         }
+        
+        return processInstances;
     }
     
     private List<SignalParam> getSignalParams() {
-        Event event = ExecutionContext.currentExecutionContext().getAction().getRoot().getEvent();
+    	ExecutionContext ctx = ExecutionContext.currentExecutionContext();
+        if (ctx == null) {
+            return Collections.emptyList();
+        }
+    	Action action = ctx.getAction();
+        if (action == null) {
+            return Collections.emptyList();
+        }
+        Event event = action.getRoot().getEvent();
         if (event == null) {
             return Collections.emptyList();
         } else {
@@ -232,5 +255,4 @@ public class SignalService {
     private EntityManager getEntityManager() {
         return EntityManagerProducer.getEntityManager();
     }
-
 }

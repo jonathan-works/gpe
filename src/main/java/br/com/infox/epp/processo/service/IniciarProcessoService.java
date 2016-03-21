@@ -68,7 +68,7 @@ public class IniciarProcessoService implements Serializable {
         iniciarProcesso(processo, variaveis, null, null, createDefaultFolders);
     }
     
-    public void iniciarProcesso(Processo processo, Map<String, Object> variaveis, List<MetadadoProcesso> metadados, String transitionName, 
+    public org.jbpm.graph.exe.ProcessInstance iniciarProcesso(Processo processo, Map<String, Object> variaveis, List<MetadadoProcesso> metadados, String transitionName, 
             boolean createDefaultFolders) throws DAOException {
         processo.setDataInicio(new Date());
         if (processo.getIdProcesso() == null) {
@@ -88,6 +88,7 @@ public class IniciarProcessoService implements Serializable {
         if (createDefaultFolders) {
             pastaManager.createDefaultFolders(processo);
         }
+        return processInstance;
     }
 
     private void createMetadadosProcesso(Processo processo, List<MetadadoProcesso> metadados) {
