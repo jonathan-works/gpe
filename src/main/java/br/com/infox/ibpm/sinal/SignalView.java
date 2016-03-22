@@ -29,6 +29,7 @@ public class SignalView implements Serializable {
     private String codigo;
     private String nome;
     private Boolean ativo;
+    private Boolean sistema;
     
     @PostConstruct
     private void init() {
@@ -41,6 +42,7 @@ public class SignalView implements Serializable {
         signal.setCodigo(getCodigo());
         signal.setNome(getNome());
         signal.setAtivo(getAtivo());
+        signal.setSistema(sistema);
         signalService.persist(signal);
         setId(signal.getId());
     }
@@ -50,6 +52,7 @@ public class SignalView implements Serializable {
         Signal signal = signalDao.findById(getId());
         signal.setNome(getNome());
         signal.setAtivo(getAtivo());
+        signal.setSistema(getSistema());
         signalService.update(signal);
     }
     
@@ -65,6 +68,7 @@ public class SignalView implements Serializable {
         setCodigo(signal.getCodigo());
         setNome(signal.getNome());
         setAtivo(signal.getAtivo());
+        setSistema(signal.getSistema());
     }
 
     public void onClickFormTab() {
@@ -80,6 +84,7 @@ public class SignalView implements Serializable {
         setCodigo(null);
         setNome(null);
         setAtivo(Boolean.TRUE);
+        setSistema(Boolean.FALSE);
     }
 
     public String getTab() {
@@ -122,4 +127,11 @@ public class SignalView implements Serializable {
         this.ativo = ativo;
     }
 
+    public Boolean getSistema() {
+        return sistema;
+    }
+    
+    public void setSistema(Boolean sistema) {
+        this.sistema = sistema;
+    }
 }
