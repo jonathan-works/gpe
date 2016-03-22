@@ -75,7 +75,18 @@ public class SignalService {
     }
     
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void dispatch(String eventType, List<SignalParam> params) {
+        ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
+        dispatch(eventType, executionContext, params);
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void dispatch(String eventType, ExecutionContext executionContext) {
+    	dispatch(eventType, executionContext, null);
+    }
+    
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void dispatch(String eventType, ExecutionContext executionContext, List<SignalParam> params) {
         ProcessInstance currentProcessInstance = executionContext == null ? null : executionContext.getProcessInstance().getRoot();
         
         eventType = Event.getListenerEventType(eventType);
@@ -85,7 +96,7 @@ public class SignalService {
         if(currentProcessInstance != null) {
             processInstances.add(currentProcessInstance);        	
         }
-        processInstances.addAll(startStartStateListening(eventType));
+        processInstances.addAll(startStartStateListening(eventType, params));
         
         for(ProcessInstance processInstance : processInstances) {
             endSubprocessListening(processInstance, eventType);
@@ -115,13 +126,16 @@ public class SignalService {
         }
     }
     
-    private List<ProcessInstance> startStartStateListening(String eventType) {
+    private List<ProcessInstance> startStartStateListening(String eventType, List<SignalParam> params) {
         List<SignalNodeBean> signalNodes = getStartStateListening(eventType);
         List<ProcessInstance> processInstances = new ArrayList<>();
         for (SignalNodeBean signalNodeBean : signalNodes) {
             if (signalNodeBean.canExecute()) {
                 ProcessDefinition processDefinition = getEntityManager().find(ProcessDefinition.class, signalNodeBean.getId());
-                ProcessInstance newProcessInstance = processoManager.startJbpmProcess(processDefinition.getName(), signalNodeBean.getListenerConfiguration().getTransitionKey(), getSignalParams());
+                if(params == null) {
+                	params = getSignalParams();
+                }
+                ProcessInstance newProcessInstance = processoManager.startJbpmProcess(processDefinition.getName(), signalNodeBean.getListenerConfiguration().getTransitionKey(), params);
                 processInstances.add(newProcessInstance);
             }
         }
