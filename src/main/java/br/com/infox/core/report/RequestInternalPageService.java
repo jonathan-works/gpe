@@ -2,15 +2,25 @@ package br.com.infox.core.report;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.management.ManagementFactory;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.ConcurrencyManagementType;
 import javax.ejb.Singleton;
+import javax.ejb.Startup;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+import javax.inject.Named;
+import javax.management.AttributeNotFoundException;
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanException;
+import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+import javax.management.ReflectionException;
 import javax.xml.ws.http.HTTPException;
 
 import org.apache.commons.httpclient.Header;
@@ -21,26 +31,44 @@ import org.apache.commons.httpclient.methods.GetMethod;
 
 import br.com.infox.core.exception.FailResponseAction;
 import br.com.infox.core.server.ApplicationServerService;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
 
 @Singleton
+@Startup
+@Named
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 @ConcurrencyManagement(ConcurrencyManagementType.BEAN)
 public class RequestInternalPageService implements Serializable {
 
+	public static final LogProvider LOG = Logging.getLogProvider(RequestInternalPageService.class);
+	
+	/**
+	 * TODO: como está implementada a classe depende do jboss pois é necessario sabe o ip e a porta do servidor que está rodando.
+	 * Uma alternativa é passar o <ip>:<port> como parâmetro de inicialização ou colocar na configuração do servidor de aplicação um jndi 
+	 * que informe o parâmetro   
+	 */
+	private static final String JBOSS_HTTP_SOCKET_BINDING = "jboss.as:socket-binding-group=standard-sockets,socket-binding=http";
+	private static final String JBOSS_HTTPS_SOCKET_BINDING = "jboss.as:socket-binding-group=standard-sockets,socket-binding=https";
 	private static final long serialVersionUID = 1L;
 	public static final String KEY_HEADER_NAME = "X-Key";
-	
+
 	@Inject
-    private ApplicationServerService applicationServerService;
+	private ApplicationServerService applicationServerService;
 	
+	private ObjectName socketBindingMBean;
+	private SocketBindingType sbt;
+	private MBeanServer mBeanServer;
+
 	private String contextPath;
 	private UUID key;
 
+	
+	
 	@PostConstruct
 	private void init() {
 		key = UUID.randomUUID();
-		applicationServerService.init();
 	}
 
 	public UUID getKey() {
@@ -56,9 +84,27 @@ public class RequestInternalPageService implements Serializable {
 		}
 	}
 
+	/**
+	 * Método que retorna um xhtml do sistema em String.
+	 * 
+	 * @param pagePath
+	 * @return
+	 * @throws IOException 
+	 * @throws HttpException 
+	 */
 	public String getInternalPage(String pagePath) throws HttpException, IOException {
-		String path = getResquestUrl(pagePath);
-		return requestInternalPage(path);
+		buildSocketBindingInfo();
+		Integer port = getServerListeningPort();
+		String host = System.getProperty("jboss.bind.address");
+		StringBuilder stringBuilder = new StringBuilder(sbt.getDescricao());
+		stringBuilder.append(host);
+		stringBuilder.append(":");
+		stringBuilder.append(port);
+		stringBuilder.append(this.getContextPath());
+		stringBuilder.append(pagePath);
+		return requestInternalPage(stringBuilder.toString());
+	}
+
 	public byte[] getInternalPageAsPdf(String pagePath) throws HttpException, IOException {
         buildSocketBindingInfo();
         Integer port = getServerListeningPort();
@@ -72,6 +118,31 @@ public class RequestInternalPageService implements Serializable {
         return requestInternalPageAsPdf(stringBuilder.toString());
     }
  
+	public Integer getServerListeningPort() {
+		try {
+		    Integer port = (Integer) mBeanServer.getAttribute(socketBindingMBean, "boundPort");
+			return port;
+		} catch (AttributeNotFoundException | InstanceNotFoundException	| MBeanException | ReflectionException e) {
+			LOG.error(e);
+		}
+		return sbt.defaultPort;
+	}
+
+	private void buildSocketBindingInfo() {
+		if(sbt != null)	return;
+		try {
+			mBeanServer = ManagementFactory.getPlatformMBeanServer();
+			socketBindingMBean = new ObjectName(JBOSS_HTTPS_SOCKET_BINDING);
+			String  boundAddress = (String) mBeanServer.getAttribute(socketBindingMBean, "boundAddress");
+			if (boundAddress == null) {
+				socketBindingMBean = new ObjectName(JBOSS_HTTP_SOCKET_BINDING);
+				sbt = SocketBindingType.HTTP;
+			} else {
+				sbt = SocketBindingType.HTTPS;
+			}
+		} catch (MalformedObjectNameException | AttributeNotFoundException | InstanceNotFoundException | MBeanException	| ReflectionException e) {
+			LOG.error(e);
+		}
 	}
 
 	private String requestInternalPage(String fullPath) throws IOException,	HttpException {
@@ -97,21 +168,45 @@ public class RequestInternalPageService implements Serializable {
 	    }
 	    return getMethod.getResponseBody();
 	}
-	
-	public String getResquestUrl(String relativePath) {
-        return applicationServerService.getBaseResquestUrl() + contextPath + (relativePath.startsWith("/") ? relativePath : "/".concat(relativePath));
-    }
+
+	public String getContextPath() {
+		return this.contextPath;
+	}
 	
 	public String getResquestUrlRest() {
         return applicationServerService.getBaseResquestUrl() + contextPath + "/rest";
     }
-	
-	public String getContextPath() {
-        return this.contextPath;
-    }
 
-    public void setContextPath(String contextPath) {
-        this.contextPath = contextPath;
-    }
-	
+	public void setContextPath(String contextPath) {
+		this.contextPath = contextPath;
+	}
+
+	enum SocketBindingType {
+
+		HTTP("http://", 80), HTTPS("https://", 443);
+
+		private String descricao;
+		private Integer defaultPort;
+
+		SocketBindingType(String description, Integer port) {
+			this.setDescricao(description);
+			this.setDefaultPort(port);
+		}
+
+		public String getDescricao() {
+			return descricao;
+		}
+
+		public void setDescricao(String descricao) {
+			this.descricao = descricao;
+		}
+
+		public Integer getDefaultPort() {
+			return defaultPort;
+		}
+
+		public void setDefaultPort(Integer defaultPort) {
+			this.defaultPort = defaultPort;
+		}
+	}
 }
