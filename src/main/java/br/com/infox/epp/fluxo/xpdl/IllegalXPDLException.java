@@ -1,6 +1,6 @@
 package br.com.infox.epp.fluxo.xpdl;
 
-public class IllegalXPDLException extends Exception {
+public class IllegalXPDLException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
