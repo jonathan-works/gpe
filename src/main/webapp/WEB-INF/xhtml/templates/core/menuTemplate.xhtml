@@ -10,7 +10,7 @@
     </ui:define>
     <ui:define name="baseBody">
         <h:outputScript library="js" name="jqueryExt.js" />
-        <wi:menu menuHandler="#{menuNavigation}">
+        <wi:menu id="menu" menuHandler="#{menuNavigation}">
             <ui:define name="custom-content">
                 <li  class="ifx-menu-itm-plain">
                     <ui:include src="/WEB-INF/xhtml/templates/painelUsuario.xhtml" />
