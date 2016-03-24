@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.infinispan.Cache;
 import org.jboss.seam.Component;
 import org.jboss.seam.servlet.ContextualHttpServletRequest;
 
@@ -32,7 +33,8 @@ public class CertificadoDigitalJNLPServlet extends HttpServlet {
 	public static final int COOKIE_MAX_AGE = 8 * 60;
 	public static final String SERVLET_PATH = "/certificadodigital/jnlp";
 	private static final String SIGN_COOKIE_NAME = "br.com.infox.epp.sign.token";
-
+	public static final String DOCUMENTOS_ASSINATURA="DocumentoView.documentosAssinatura";
+	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		resp.setContentType("application/x-java-jnlp-file");
@@ -64,7 +66,19 @@ public class CertificadoDigitalJNLPServlet extends HttpServlet {
 		config.setMultiSign(new HashMap<String, String>());
 		
 		String md5s = request.getParameter("md5");
-		if (md5s != null && !md5s.isEmpty()) {
+		String bundleToken = request.getParameter("bundleToken");
+		if (bundleToken != null && !bundleToken.isEmpty()){
+			Cache<String, String> documentosAssinatura = CertificadoDigitalMapSingleton.getCache(CertificadoDigitalJNLPServlet.DOCUMENTOS_ASSINATURA);
+			String loteDocumentos = documentosAssinatura.get(bundleToken);
+		    if (loteDocumentos != null && !loteDocumentos.isEmpty()) {
+		        for (String documentData : loteDocumentos.split(",")) {
+		            String[] split = documentData.split(":");
+		            String documentUuid = split[0];
+		            String documentMd5 = split[1];
+		            config.getMultiSign().put(documentUuid, documentMd5);
+		        }
+		    }
+		} else if (md5s != null && !md5s.isEmpty()) {
 			for (String md5 : md5s.split(",")) {
 				config.getMd5s().add(md5);
 			}

@@ -23,10 +23,10 @@
       			<f:setPropertyActionListener value="#{propertyValue}" target="#{propertyTarget}" />
       </a:commandButton>
 
-      <ui:param name="parameter" value="#{empty documentData ? 'md5='.concat(signableData) : 'multiSign='.concat(documentData)}" />
+      <ui:param name="parameter" value="#{empty documentBundleToken ? (empty documentData ? 'md5='.concat(signableData) : 'multiSign='.concat(documentData)) : 'bundleToken='.concat(documentBundleToken)}" />
 
       <h:outputScript name="cookies.min.js" library="js" />  
-      <h:outputScript>	
+      <h:outputScript>
           namespace('infox.CertDig.#{id}', {  
   	          init: function() {  
   	              #{functionPreSign};
