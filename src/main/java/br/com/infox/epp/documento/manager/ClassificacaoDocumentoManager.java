@@ -74,7 +74,7 @@ public class ClassificacaoDocumentoManager extends Manager<ClassificacaoDocument
 		Root<Documento> doc = query.from(Documento.class);
 		Join<Documento, ClassificacaoDocumento> classificacaoJoin = doc.join(Documento_.classificacaoDocumento);
 		query.where(cb.equal(doc.get(Documento_.pasta), pasta));
-		query.select(classificacaoJoin);
+		query.select(classificacaoJoin).distinct(true);
 		query.orderBy(cb.asc(classificacaoJoin.get(ClassificacaoDocumento_.descricao)));
 		return getDao().getEntityManager().createQuery(query).getResultList();
 	}
