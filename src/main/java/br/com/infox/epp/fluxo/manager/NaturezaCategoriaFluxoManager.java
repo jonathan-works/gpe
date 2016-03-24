@@ -48,4 +48,8 @@ public class NaturezaCategoriaFluxoManager extends Manager<NaturezaCategoriaFlux
     public NaturezaCategoriaFluxo getNaturezaCategoriaFluxoDisponiveis(String dsNatureza, String dsCategoria) {
 		return getDao().getNaturezaCategoriaFluxoDisponiveis(dsNatureza, dsCategoria);
 	}
+    
+    public NaturezaCategoriaFluxo getByCodigos(String descricaoNatureza, String descricaoCategoria, String codigoFluxo) {
+        return getDao().getByCodigos(descricaoNatureza, descricaoCategoria, codigoFluxo);
+    }
 }
