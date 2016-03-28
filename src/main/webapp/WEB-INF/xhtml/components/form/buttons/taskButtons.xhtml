@@ -9,6 +9,7 @@
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf">
+    <ui:param name="taskEndAction" value="#{empty taskEndAction ? 'taskInstanceHome.end(taskInstanceHome.name)' : taskEndAction}"/>
     <s:div
         id="taskButtonsDiv"
         styleClass="actionButtons">
@@ -61,7 +62,7 @@
                     value="#{taskInstanceHome.transtionsSelectItems}" />
             </h:selectOneMenu>
             <a:commandButton
-                action="#{taskInstanceHome.end(taskInstanceHome.name)}"
+                action="#{elFunctions.invokeMethod(taskEndAction)}"
                 value="OK"
                 status="none"
                 onmouseup="showLoading()"
@@ -80,7 +81,8 @@
                     render=":pageBodyDialogMessage,:script,#{reRenderSave}"
                     value="#{transition.name}"
                     styleClass="buttons"
-                    action="#{taskInstanceHome.end(transition.name)}">
+                    action="#{elFunctions.invokeMethod(taskEndAction)}">
+                    <f:setPropertyActionListener target="#{taskInstanceHome.name}" value="#{transition.name}" />
                 </a:commandButton>
             </a:repeat>
         </c:if>
