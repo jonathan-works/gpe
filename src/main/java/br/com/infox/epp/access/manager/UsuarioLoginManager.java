@@ -13,6 +13,8 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.util.RandomStringUtils;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import com.google.common.base.Strings;
+
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
@@ -133,7 +135,7 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
     
     public UsuarioLogin getUsuarioDeProcessosDoSistema() {
     	String idUsuarioSistema = ParametroUtil.getParametroOrFalse(Parametros.ID_USUARIO_PROCESSO_SISTEMA.getLabel());
-    	if (idUsuarioSistema == null || "false".equals(idUsuarioSistema)) {
+    	if (Strings.isNullOrEmpty(idUsuarioSistema) || "false".equals(idUsuarioSistema)) {
     		String mensagem = "Não foi configurado o usuário de processos do sistema";
 			LOG.error(mensagem);
     		throw new BusinessException(mensagem);
