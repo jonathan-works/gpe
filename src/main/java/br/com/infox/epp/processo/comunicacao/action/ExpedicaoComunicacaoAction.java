@@ -212,7 +212,7 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 		if (e instanceof DAOException) {
 			actionMessagesService.handleDAOException((DAOException) e);
 		} else if (e instanceof CertificadoException) {
-			actionMessagesService.handleException(InfoxMessages.getInstance().get("comunicacao.msg.erro.expedicao"), e);
+			actionMessagesService.handleException(InfoxMessages.getInstance().get("comunicacao.msg.erro.expedicaoCompleta") + e.getMessage(), e);
 		} else if (e instanceof AssinaturaException) {
 			FacesMessages.instance().add(e.getMessage());
 		}

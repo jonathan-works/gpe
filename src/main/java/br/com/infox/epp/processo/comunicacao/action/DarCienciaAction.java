@@ -127,7 +127,9 @@ public class DarCienciaAction implements Serializable {
 			Documento documentoCiencia = criarDocumentoCiencia();
 			assinarDarCiencia(signatureBean, documentoCiencia);
 			finalizaCiencia();
-		} catch (EppSystemException e) {
+		} catch (CertificadoException | AssinaturaException e) {
+			FacesMessages.instance().add(Severity.ERROR, e.getMessage());
+		}catch (EppSystemException e) {
 			FacesMessages.instance().add(Severity.ERROR, e.getMessage());
 		} catch (Exception e) {
 	        LOG.error("Erro ao assinar documentode ciência.", e);

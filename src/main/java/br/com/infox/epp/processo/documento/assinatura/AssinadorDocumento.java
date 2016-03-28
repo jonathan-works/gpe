@@ -1,18 +1,21 @@
 package br.com.infox.epp.processo.documento.assinatura;
 
+import javax.inject.Inject;
+
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.certificado.exception.CertificadoException;
+import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.controller.AbstractController;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.log.LogProvider;
@@ -20,6 +23,7 @@ import br.com.infox.log.Logging;
 
 @Scope(ScopeType.CONVERSATION)
 @Name(AssinadorDocumento.NAME)
+@ContextDependency
 public class AssinadorDocumento extends AbstractController {
 
     private static final long serialVersionUID = 1L;
@@ -33,12 +37,12 @@ public class AssinadorDocumento extends AbstractController {
     private Documento documento;
     private DocumentoBin documentoBin;
 
-    @In
+    @Inject
     private AssinaturaDocumentoService assinaturaDocumentoService;
-    @In
+    @Inject
     private GenericManager genericManager;
-    @In
-    private InfoxMessages infoxMessages;
+    @Inject
+    private ActionMessagesService actionMessagesService;
 
     public String getCertChain() {
         return certChain;
@@ -81,10 +85,11 @@ public class AssinadorDocumento extends AbstractController {
                     perfilAtual, certChain, signature);
             genericManager.update(documento);
             messages.clear();
-            messages.add(infoxMessages.get("assinatura.assinadoSucesso"));
+            messages.add(InfoxMessages.getInstance().get("assinatura.assinadoSucesso"));
         } catch (DAOException e) {
             LOG.error("Não foi possível assinar o documento "
                     + documento, e);
+            actionMessagesService.handleDAOException(e);
         } catch (CertificadoException | AssinaturaException e) {
             LOG.error("Não foi possível verificar o certificado do usuário "
                     + Authenticator.getUsuarioLogado(), e);
