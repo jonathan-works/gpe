@@ -423,7 +423,7 @@ public class AnexarDocumentosView implements Serializable {
 			setDocumentoTemporarioList(loadDocumentoTemporarioList());
 			FacesMessages.instance().add(InfoxMessages.getInstance().get("anexarDocumentos.sucessoAssinatura"));
 			setDocumentosAssinaveis(new ArrayList<DocumentoTemporario>());
-		}catch(AssinaturaException e){
+		}catch(AssinaturaException | CertificadoException e){
 			LOG.error("Erro signDocuments ", e);
 			FacesMessages.instance().add(Severity.ERROR,e.getMessage());
 		}catch (Exception e) {

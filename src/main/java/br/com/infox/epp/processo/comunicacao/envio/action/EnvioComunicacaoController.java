@@ -306,7 +306,7 @@ public class EnvioComunicacaoController implements Serializable {
 			actionMessagesService.handleDAOException(e);
 		} catch (CertificadoException e) {
 			LOG.error("Erro ao expedir comunicação", e);
-			actionMessagesService.handleException("Erro ao expedir comunicação", e);
+			actionMessagesService.handleException("Erro ao expedir comunicação. " + e.getMessage(), e);
 		} catch (AssinaturaException e) {
 			LOG.error("Erro ao expedir comunicação", e);
 			FacesMessages.instance().add(e.getMessage());

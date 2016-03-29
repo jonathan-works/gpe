@@ -32,6 +32,7 @@ import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.RespostaComunicacaoService;
 import br.com.infox.epp.processo.documento.anexos.DocumentoUploader;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.error.DocumentoErrorCode;
@@ -126,7 +127,10 @@ public class PedirProrrogacaoPrazoAction implements Serializable {
 			respostaComunicacaoService.assinarEnviarProrrogacaoPrazo(createDocumentoPedidoProrrogacao(), comunicacao, signatureBean, Authenticator.getUsuarioPerfilAtual());
 			clear();
 			FacesMessages.instance().add(infoxMessages.get("comunicacao.msg.sucesso.pedidoProrrogacao"));
-		} catch (EppSystemException e) {
+		} catch (CertificadoException | AssinaturaException e) {
+			FacesMessages.instance().add(Severity.ERROR, e.getMessage());
+		}
+		catch (EppSystemException e) {
 			FacesMessages.instance().add(Severity.ERROR, e.getMessage());
 		} catch (Exception e) {
 	        LOG.error("Erro ao assinar documentode de Pedido de Prorrogação de Prazo.", e);
