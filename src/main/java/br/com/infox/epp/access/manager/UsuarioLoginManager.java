@@ -8,6 +8,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.security.auth.login.LoginException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.util.RandomStringUtils;
@@ -25,6 +26,8 @@ import br.com.infox.epp.access.service.PasswordService;
 import br.com.infox.epp.mail.service.AccessMailService;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.system.Parametros;
+import br.com.infox.epp.system.dao.ParametroDAO;
+import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -43,6 +46,8 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
     private PasswordService passwordService;
     @Inject
     private AccessMailService accessMailService;
+    @Inject
+    private ParametroDAO parametroDAO;
 
     public boolean usuarioExpirou(final UsuarioLogin usuarioLogin) {
         boolean result = Boolean.FALSE;
@@ -131,6 +136,15 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
     @Override
     public UsuarioLogin persist(final UsuarioLogin usuario) throws DAOException {
         return persist(usuario, true);
+    }
+    
+    public UsuarioLogin getUsuarioSistema() {
+        Parametro parametro = parametroDAO.getParametroByNomeVariavel(Parametros.ID_USUARIO_SISTEMA.getLabel());
+        String strIdUsuarioSistema = parametro.getValorVariavel();
+        if(StringUtils.isEmpty(strIdUsuarioSistema)) {
+        	return null;
+        }
+		return find(Integer.valueOf(strIdUsuarioSistema));
     }
     
     public UsuarioLogin getUsuarioDeProcessosDoSistema() {

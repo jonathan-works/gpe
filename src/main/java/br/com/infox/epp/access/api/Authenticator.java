@@ -409,7 +409,11 @@ public class Authenticator implements Serializable {
      * @return o UsuarioPerfil atual do usuário logado
      */
     public static UsuarioPerfil getUsuarioPerfilAtual() {
-        UsuarioPerfil usuarioPerfil = (UsuarioPerfil) Contexts.getSessionContext().get(USUARIO_PERFIL_ATUAL);
+    	Context context = Contexts.getSessionContext();
+    	if(context == null) {
+    		return null;
+    	}
+        UsuarioPerfil usuarioPerfil = (UsuarioPerfil) context.get(USUARIO_PERFIL_ATUAL);
         if (usuarioPerfil != null) {
             usuarioPerfil = getUsuarioPerfilDAO().find(usuarioPerfil.getIdUsuarioPerfil());
         }
