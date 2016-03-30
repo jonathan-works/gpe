@@ -53,6 +53,7 @@
 @tableBorderWidth:1rem/16;
 
 @toggle-panel-bg-color:#FFF;
+@toggle-panel-txt-color:#000;
 
 @sub-borda-bg-color:#80a991;
 @sub-borda-bg-deg-color:#bbcec2;
@@ -177,7 +178,7 @@ h1 {
   margin: 0;
 
   padding: 0;
-  color: @base-label-color;  
+  color: @base-label-color;
   display: block;
 }
 .name {
@@ -554,7 +555,7 @@ span.rf-ds-btn {
 }
 
 .fluxo-div {
-	font-weight:bold; 
+	font-weight:bold;
 	text-transform: uppercase;
 }
 
@@ -659,12 +660,12 @@ form {
   display: none;
 }
 
-//  Workaround para o bug RF-12332 do Richfaces. Ver https://issues.jboss.org/browse/RF-12332 
+//  Workaround para o bug RF-12332 do Richfaces. Ver https://issues.jboss.org/browse/RF-12332
 div.rf-trn {
   overflow: visible;
 }
 
-//  Fim do workaround RF-12332 
+//  Fim do workaround RF-12332
 .rf-tr {
   text-align: left;
 }
@@ -836,13 +837,6 @@ option {
   }
 }
 
-.rf-p.dtable-p > .rf-p-hdr{
-  font-family: @default-font-family;
-  background-color: @menu-bg-color;
-  border-color: @menu-bg-color;
-  color: @menu-txt-color;
-  background-image:none;
-}
 .processo-panel-form.hidden {
   display:none;
 }
@@ -895,12 +889,12 @@ option {
     width: 12rem/16;
     height: 12rem/16;
     padding: 2rem/16;
-    
+
     background: #fff;
     border: 2rem/16 solid #666;
     color: #666;
     text-align: center;
-    
+
     font: 12rem/16 Arial, sans-serif;
 }
 
@@ -909,7 +903,7 @@ div.rf-pp-hdr-cnt {
 }
 
 
-//  Primefaces 
+//  Primefaces
 .ui-outputlabel-rfi {
   color:@bgColorRequired;
 }

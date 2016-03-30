@@ -17,11 +17,10 @@
 
 .rf-cp{
     &-gr{
-    border-spacing: 0;
+      border-spacing: 0;
     }
     &.rf-tgp{
         padding: 0;
-        background-color:@toggle-panel-bg-color;
         border-color:@panelBorderColor;
     }
     &-hdr{
@@ -29,7 +28,8 @@
             &:extend(#panel.panel-specs);
         }
         &-exp&{
-            &:extend(.rf-cp.rf-tgp);
+            background-color:@toggle-panel-bg-color;
+            color:@toggle-panel-txt-color;
             &:extend(.rf-cp-gr);
         }
     }
