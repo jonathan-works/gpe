@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -27,7 +28,6 @@ import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
-import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
@@ -38,7 +38,6 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaException.Motivo
 import br.com.infox.epp.processo.documento.assinatura.entity.RegistroAssinaturaSuficiente;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
-import br.com.infox.epp.processo.documento.manager.AssinaturaDocumentoManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
@@ -56,22 +55,18 @@ public class AssinaturaDocumentoService {
     private static final LogProvider LOG = Logging.getLogProvider(AssinaturaDocumentoService.class);
     public static final String NAME = "assinaturaDocumentoService";
 
-    @In
+    @Inject
     private DocumentoManager documentoManager;
-    @In
+    @Inject
     private DocumentoBinarioManager documentoBinarioManager;
-    @In
-    private AssinaturaDocumentoManager assinaturaDocumentoManager;
-    @In
+    @Inject
     private DocumentoBinManager documentoBinManager;
-    @In
+    @Inject
     private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
     @In
     private AssinaturaDocumentoListenerService assinaturaDocumentoListenerService;
-    @In
+    @Inject
     private PessoaFisicaManager pessoaFisicaManager;
-    @In
-    private UsuarioLoginManager usuarioLoginManager;
 
     public Boolean isDocumentoAssinado(final Documento documento) {
         final DocumentoBin documentoBin = documento.getDocumentoBin();

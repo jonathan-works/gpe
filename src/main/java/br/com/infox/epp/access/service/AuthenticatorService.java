@@ -74,8 +74,6 @@ public class AuthenticatorService {
     private UsuarioPerfilDAO usuarioPerfilDAO;
     @Inject
     private InfoxMessages infoxMessages;
-    @Inject
-    private CertificateManager certificateManager;
 
     public static final String CERTIFICATE_ERROR_UNKNOWN = "certificate.error.unknown";
 
@@ -249,7 +247,7 @@ public class AuthenticatorService {
 
     private void checkValidadeCertificado(final Certificado c) throws LoginException, CertificateException {
         try {
-            certificateManager.verificaCertificado(c.getCertChain());
+            CertificateManager.instance().verificaCertificado(c.getCertChain());
         } catch (CertificateException e) {
             LOG.error(CHECK_VALIDADE_CERTIFICADO, e);
             if (ParametroUtil.isProducao()) {

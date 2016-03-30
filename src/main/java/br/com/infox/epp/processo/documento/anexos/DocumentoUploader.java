@@ -93,6 +93,7 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
 
 	public void newInstance(boolean limparDocumentos) {
 		super.newInstance();
+		newDocumento();
 		isValido = false;
 		setPasta(null);
 		if (limparDocumentos) {
