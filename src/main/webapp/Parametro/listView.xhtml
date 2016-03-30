@@ -12,21 +12,20 @@
 	<ui:param name="home" value="#{parametroCrudAction}" />
 
 	<ui:define name="body">
-		<h:form>
-			<h:selectOneMenu value="#{parametroView.grupo}"
-				hideNoSelectionOption="true">
-				<f:selectItems value="#{parametroView.grupos}" />
-				<f:ajax event="change" execute="@this" render=":dynamicForm" />
-			</h:selectOneMenu>
-		</h:form>
-		<h:body>
-			<h:form id="dynamicForm"
-				rendered="#{not empty parametroView.formFields}"
-				enctype="application/x-www-form-urlencoded" acceptcharset="UTF-8">
-				<h:commandButton value="Save" action="#{parametroView.publish}"  styleClass="buttons" style="margin:0em 0px -2em" />
-				<wi:dynamicFieldSet value="#{parametroView.formFields}" />
-			</h:form>
-		</h:body>
+        <div id="dynamicForm">
+    		<h:form>
+    			<h:selectOneMenu value="#{parametroView.grupo}" styleClass="input select"
+    				hideNoSelectionOption="true" title="#{infoxMessages['parametro.grupos.title']}">
+    				<f:selectItems value="#{parametroView.grupos}" />
+    				<f:ajax event="change" execute="@this" render=":parametersForm" />
+    			</h:selectOneMenu>
+    		</h:form>
+    		<h:form id="parametersForm" rendered="#{not empty parametroView.formFields}"
+    			enctype="application/x-www-form-urlencoded" acceptcharset="UTF-8">
+    			<wi:dynamicFieldSet value="#{parametroView.formFields}" />
+    			<h:commandButton value="#{infoxMessages['crud.update']}" action="#{parametroView.publish}"  styleClass="buttons" style="margin:0em 0px -2em" />
+    		</h:form>
+        </div>
 	</ui:define>
 
 </ui:composition>
