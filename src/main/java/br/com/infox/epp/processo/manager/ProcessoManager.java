@@ -215,19 +215,9 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 		return persistProcessoComNumero(processo);
 	}
     
-    public Processo criarProcesso(NaturezaCategoriaFluxo natcf, Localizacao localizacao) throws DAOException {
-		Processo processo = criarProcesso(natcf, localizacao, Authenticator.getUsuarioLogado());
-		return persistProcessoComNumero(processo);
-	}
-    
     public Processo criarProcessoSistema(NaturezaCategoriaFluxo natcf, Processo processoPai) throws DAOException {
 		Processo processo = criarProcesso(natcf, processoPai.getLocalizacao(), usuarioLoginManager.getUsuarioDeProcessosDoSistema());
 		processo.setProcessoPai(processoPai);
-		return persistProcessoComNumero(processo);
-	}
-    
-    public Processo criarProcessoSistema(NaturezaCategoriaFluxo natcf, Localizacao localizacao) throws DAOException {
-		Processo processo = criarProcesso(natcf, localizacao, usuarioLoginManager.getUsuarioDeProcessosDoSistema());
 		return persistProcessoComNumero(processo);
 	}
     
