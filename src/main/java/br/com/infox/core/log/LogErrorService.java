@@ -31,8 +31,6 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
-import br.com.infox.epp.cdi.exception.ExceptionHandled;
-import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
 import br.com.infox.epp.log.LogErro;
 import br.com.infox.epp.log.StatusLog;
 import br.com.infox.epp.log.rest.LogRest;
@@ -216,7 +214,7 @@ public class LogErrorService {
     /**
      * Gera um {@link LogErro}, persiste no banco e envia ao serviço, caso esteja habilitado  
      */
-    @ExceptionHandled(value = MethodType.UNSPECIFIED)
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public LogErro log(Exception exception) {
     	return log(exception, null);    	
     }
@@ -224,7 +222,7 @@ public class LogErrorService {
     /**
      * Gera um {@link LogErro}, persiste no banco e envia ao serviço, caso esteja habilitado  
      */
-    @ExceptionHandled(value = MethodType.UNSPECIFIED)
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public LogErro log(Exception handledException, Exception caughtException) {
         String codigoErro = UUID.randomUUID().toString().replace("-", "");
         logger.log(Level.SEVERE, codigoErro);

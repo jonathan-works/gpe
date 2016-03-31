@@ -147,7 +147,8 @@ public class MenuNavigation implements Serializable, MenuHandler {
 
 	private void addLogoutMenuItem(List<MenuItem> menu) {
 		final String logoutUrl = "/login.seam";
-		if (!menu.get(menu.size()-1).getUrl().equals(logoutUrl)){
+		
+		if (menu.size() == 0 || !menu.get(menu.size()-1).getUrl().equals(logoutUrl)){
 			menu.add(new MenuItem("#{infoxMessages['menu.logout']}",logoutUrl));
 		}
 	}
