@@ -72,11 +72,19 @@ public class ApplicationServerService implements Serializable {
 	}
             
     public String getInstanceName() {
-        return System.getProperty("jboss.node.name");
+        String nodeName = System.getProperty("jboss.node.name");
+        if (nodeName == null) {
+            nodeName = System.getProperty("tomcat.node.name");
+        }
+        return nodeName;
     }
     
     public String getLogDir() {
-        return System.getProperty("jboss.server.log.dir");
+        String logDir = System.getProperty("jboss.server.log.dir");
+        if (logDir == null) {
+            logDir = System.getProperty("tomcat.server.log.dir");
+        }
+        return logDir;
     }
 
            
