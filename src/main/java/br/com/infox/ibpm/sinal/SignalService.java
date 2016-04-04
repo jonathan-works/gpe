@@ -75,33 +75,14 @@ public class SignalService {
     }
     
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void dispatch(String eventType, List<SignalParam> params) {
-        ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
-        dispatch(eventType, executionContext, params);
-    }
-
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void dispatch(String eventType, ExecutionContext executionContext) {
-    	dispatch(eventType, executionContext, null);
-    }
-    
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void dispatch(String eventType, ExecutionContext executionContext, List<SignalParam> params) {
-        ProcessInstance currentProcessInstance = executionContext == null ? null : executionContext.getProcessInstance().getRoot();
+        ProcessInstance currentProcessInstance = executionContext.getProcessInstance().getRoot();
         
         eventType = Event.getListenerEventType(eventType);
+        startStartStateListeningImpl(eventType);
         
-        //Lista contendo todos os processos que devem ser atualizados (processo atual e novos processos criados)
-        List<ProcessInstance> processInstances = new ArrayList<>();
-        if(currentProcessInstance != null) {
-            processInstances.add(currentProcessInstance);        	
-        }
-        processInstances.addAll(startStartStateListening(eventType, params));
-        
-        for(ProcessInstance processInstance : processInstances) {
-            endSubprocessListening(processInstance, eventType);
-            movimentarTarefasListener(processInstance.getId(), eventType);        	
-        }
+        endSubprocessListening(currentProcessInstance, eventType);
+        movimentarTarefasListener(currentProcessInstance.getId(), eventType);        	        	
     }
     
     private void endSubprocessListening(ProcessInstance processInstance, String eventType) {
@@ -126,7 +107,16 @@ public class SignalService {
         }
     }
     
-    private List<ProcessInstance> startStartStateListening(String eventType, List<SignalParam> params) {
+    public List<ProcessInstance> startStartStateListening(String eventType, List<SignalParam> params) {
+        eventType = Event.getListenerEventType(eventType);
+        return startStartStateListeningImpl(eventType, params);    	
+    }
+    
+    private List<ProcessInstance> startStartStateListeningImpl(String eventType) {
+    	return startStartStateListening(eventType, null);
+    }
+    
+    private List<ProcessInstance> startStartStateListeningImpl(String eventType, List<SignalParam> params) {
         List<SignalNodeBean> signalNodes = getStartStateListening(eventType);
         List<ProcessInstance> processInstances = new ArrayList<>();
         for (SignalNodeBean signalNodeBean : signalNodes) {
