@@ -12,7 +12,7 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.transaction.Synchronizations;
 
-import br.com.infox.epp.cdi.util.JNDI;
+import br.com.infox.core.server.ApplicationServerService;
 
 @Name("org.jboss.seam.transaction.synchronizations")
 @Scope(ScopeType.EVENT)
@@ -50,10 +50,7 @@ public class JtaSyncronizations implements Synchronizations {
 
     @Override
     public void registerSynchronization(Synchronization sync) {
-        TransactionManager transactionManager = JNDI.lookup("java:jboss/TransactionManager"); // JBOSS
-        if (transactionManager == null) {
-            transactionManager = JNDI.lookup("java:comp/TransactionManager"); // TOMCAT
-        }
+        TransactionManager transactionManager = ApplicationServerService.instance().getTransactionManager();
         try {
             if (transactionManager.getTransaction() != null) {
                 transactionManager.getTransaction().registerSynchronization(sync);

@@ -206,11 +206,11 @@ public class Authenticator implements Serializable {
     public void login() {
         Identity identity = Identity.instance();
         Credentials credentials = identity.getCredentials();
-            
-            if (cdiAuthenticator.authenticate(credentials.getUsername(), credentials.getPassword())){
-            	getAuthenticatorService().loginWithoutPassword(credentials.getUsername());
-            	return;
-            }
+        
+        if (cdiAuthenticator.authenticate(credentials.getUsername(), credentials.getPassword())){
+        	getAuthenticatorService().loginWithoutPassword(credentials.getUsername());
+        	return;
+        }
             
         if (loginExists(credentials) || ldapLoginExists(credentials)) {
             try {
@@ -220,7 +220,7 @@ public class Authenticator implements Serializable {
                     LOG.warn("Erro de redirecionamento", e);                        
                 } else {
                     LOG.error(e);
-                }
+                }  
             } finally {
 				setNewPassword1(null);
 				setNewPassword2(null);

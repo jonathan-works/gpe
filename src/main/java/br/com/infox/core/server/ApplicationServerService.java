@@ -14,6 +14,12 @@ import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
+import javax.sql.DataSource;
+import javax.transaction.TransactionManager;
+
+import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.JNDI;
+import br.com.infox.epp.system.EppProperties;
 
 @Singleton
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
@@ -70,6 +76,19 @@ public class ApplicationServerService implements Serializable {
     		throw new IllegalStateException(e);
         }
 	}
+	
+	public DataSource getDataSource(String name) {
+	    String datasourcePrefix = EppProperties.getProperty(EppProperties.PROPERTY_DATASOURCE_PREFIX);
+	    return JNDI.lookup(datasourcePrefix.concat(name));
+	}
+	
+	public TransactionManager getTransactionManager() {
+	    TransactionManager transactionManager = JNDI.lookup("java:jboss/TransactionManager"); // JBOSS
+        if (transactionManager == null) {
+            transactionManager = JNDI.lookup("java:comp/TransactionManager"); // TOMCAT
+        }
+        return transactionManager;
+	}
             
     public String getInstanceName() {
         String nodeName = System.getProperty("jboss.node.name");
@@ -86,6 +105,9 @@ public class ApplicationServerService implements Serializable {
         }
         return logDir;
     }
-
+    
+    public static ApplicationServerService instance() {
+        return BeanManager.INSTANCE.getReference(ApplicationServerService.class);
+    }
            
 }
