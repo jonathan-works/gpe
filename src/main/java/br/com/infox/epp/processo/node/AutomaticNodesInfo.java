@@ -72,7 +72,7 @@ public class AutomaticNodesInfo implements Serializable {
             node.execute(new ExecutionContext(token));
         } catch (Exception e) {
             LOG.error(MessageFormat.format("Nó: {0}\tProcesso Jbpm: {1}", nodeName, processId), e);
-            FacesMessages.instance().add("Erro ao executar nó");
+            FacesMessages.instance().add("Erro ao executar nó: \n " + e.getMessage() );
         }
         this.nodes = null;
     }

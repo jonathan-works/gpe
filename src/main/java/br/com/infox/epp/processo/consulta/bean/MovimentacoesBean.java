@@ -23,8 +23,8 @@ public class MovimentacoesBean {
     private TaskInstance taskInstance;
 
     public MovimentacoesBean(ProcessoTarefa processoTarefa, UsuarioTaskInstance usuarioTaskInstance, TaskInstance taskInstance) {
-        this.dataInicio = processoTarefa.getDataInicio();
-        this.dataFim = processoTarefa.getDataFim();
+        this.dataInicio = taskInstance.getCreate();
+        this.dataFim = taskInstance.getEnd();
         this.setTarefa(processoTarefa.getTarefa());
         this.setTaskInstance(taskInstance);
         setUsuarioTaskInstance(usuarioTaskInstance);
