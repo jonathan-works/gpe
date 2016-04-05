@@ -10,6 +10,7 @@ import javax.transaction.UserTransaction;
 import javax.ws.rs.WebApplicationException;
 
 import org.jboss.seam.bpm.BusinessProcess;
+import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.contexts.Lifecycle;
 import org.jboss.seam.transaction.Transaction;
 import org.jbpm.graph.def.Node;
@@ -18,6 +19,7 @@ import org.jbpm.graph.exe.Token;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.joda.time.DateTime;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.access.entity.BloqueioUsuario;
@@ -78,25 +80,31 @@ public class QuartzResourceImpl implements QuartzResource {
     
     @Override
     @Transactional
-    public void taskExpirationProcessor() {
-        List<ProcessoTarefa> processoTarefaList = this.processoTarefaManager.getWithTaskExpiration();
-        for (ProcessoTarefa processoTarefa : processoTarefaList) {
-            TaskExpiration taskExpiration = this.taskExpirationManager.getByFluxoAndTaskName(processoTarefa.getProcesso().getNaturezaCategoriaFluxo().getFluxo(), processoTarefa.getTarefa().getTarefa());
-            if (taskExpiration != null) {
-                DateTime expirationDate = new DateTime(DateUtil.getEndOfDay(taskExpiration.getExpiration()));
-                if (expirationDate.isBeforeNow()) {
-                    BusinessProcess.instance().setProcessId(processoTarefa.getProcesso().getIdJbpm());
-                    BusinessProcess.instance().setTaskId(processoTarefa.getTaskInstance());
-                    TaskInstance taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
-                    try {
-                        this.processoTarefaManager.finalizarInstanciaTarefa(taskInstance, taskExpiration.getTransition());
-                    } catch (DAOException e) {
-                        LOG.error("quartzRestImpl.processTaskExpiration()", e);
-                    }
-                }
-            }
-        }
-    }
+	public void taskExpirationProcessor() {
+		Lifecycle.beginCall();
+		try {
+			List<ProcessoTarefa> processoTarefaList = this.processoTarefaManager.getWithTaskExpiration();
+			for (ProcessoTarefa processoTarefa : processoTarefaList) {
+				TaskExpiration taskExpiration = this.taskExpirationManager.getByFluxoAndTaskName(
+						processoTarefa.getProcesso().getNaturezaCategoriaFluxo().getFluxo(),
+						processoTarefa.getTarefa().getTarefa());
+				if (taskExpiration != null) {
+					DateTime expirationDate = new DateTime(DateUtil.getEndOfDay(taskExpiration.getExpiration()));
+					if (expirationDate.isBeforeNow()) {
+						TaskInstance taskInstance = ManagedJbpmContext.instance().getTaskInstanceForUpdate(processoTarefa.getTaskInstance());
+						try {
+							this.processoTarefaManager.finalizarInstanciaTarefa(taskInstance,
+									taskExpiration.getTransition());
+						} catch (DAOException e) {
+							LOG.error("quartzRestImpl.processTaskExpiration()", e);
+						}
+					}
+				}
+			}
+		} finally {
+			Lifecycle.endCall();
+		}
+	}
 
     @Override
     @Transactional
