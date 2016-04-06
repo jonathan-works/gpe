@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.ejb.Stateless;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -15,8 +15,6 @@ import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.xml.sax.InputSource;
 
-import br.com.infox.epp.cdi.transaction.Transactional;
-import br.com.infox.epp.cdi.transaction.Transactional.TxType;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.merger.model.MergePoint;
 import br.com.infox.epp.fluxo.merger.model.MergePointsBundle;
@@ -24,7 +22,7 @@ import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 
 @Stateless
-@TransactionManagement(TransactionManagementType.BEAN)
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class FluxoMergeService {
 
     @Inject
@@ -62,7 +60,7 @@ public class FluxoMergeService {
     public ProcessDefinition jpdlToProcessDefinition(String xml) {
         StringReader stringReader = new StringReader(xml);
         InfoxJpdlXmlReader jpdlReader = new InfoxJpdlXmlReader(new InputSource(stringReader));
-        return xml == null || xml.isEmpty() ? null : jpdlReader.readProcessDefinition();
+        return jpdlReader.readProcessDefinition();
     }
 
     public boolean hasActiveNode(ProcessDefinition processDefinition, Node node){
@@ -77,7 +75,7 @@ public class FluxoMergeService {
     public MergePointsBundle publish(Fluxo fluxo, MergePointsBundle mergePointsBundle) {
         String modifiedXml = fluxo.getXml();
         String publishedXml = fluxo.getXmlExecucao();
-        if (publishedXml == null || publishedXml.isEmpty()) {
+        if (publishedXml == null) {
             ProcessDefinition modifiedProcessDef = jpdlToProcessDefinition(modifiedXml);
             modifiedProcessDef.setName(fluxo.getFluxo());
             processBuilder.load(fluxo);
