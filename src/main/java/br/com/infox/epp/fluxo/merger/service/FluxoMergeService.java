@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -15,6 +15,8 @@ import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.xml.sax.InputSource;
 
+import br.com.infox.epp.cdi.transaction.Transactional;
+import br.com.infox.epp.cdi.transaction.Transactional.TxType;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.merger.model.MergePoint;
 import br.com.infox.epp.fluxo.merger.model.MergePointsBundle;
@@ -22,7 +24,7 @@ import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 
 @Stateless
-@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+@TransactionManagement(TransactionManagementType.BEAN)
 public class FluxoMergeService {
 
     @Inject
@@ -71,7 +73,7 @@ public class FluxoMergeService {
         return nodes != null && nodes.size() > 0;
     }
     
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @Transactional(value = TxType.REQUIRED, timeout = 900)
     public MergePointsBundle publish(Fluxo fluxo, MergePointsBundle mergePointsBundle) {
         String modifiedXml = fluxo.getXml();
         String publishedXml = fluxo.getXmlExecucao();

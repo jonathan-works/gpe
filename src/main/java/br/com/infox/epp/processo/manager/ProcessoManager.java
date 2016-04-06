@@ -194,8 +194,8 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         }
     }
 
-    public void atualizarProcessos() {
-        getDao().atualizarProcessos();
+    public void atualizarProcessos(Long processDefinitionId, String processDefinitionName) {
+        getDao().atualizarProcessos(processDefinitionId, processDefinitionName);
     }
 
     public boolean checkAccess(final int idProcesso, final Integer idUsuarioLogado, final Long idTask) {
