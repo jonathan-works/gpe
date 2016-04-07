@@ -1,4 +1,4 @@
-package br.com.infox.bpm.cdi.qualifier;
+package br.com.infox.jpa.packaging;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;

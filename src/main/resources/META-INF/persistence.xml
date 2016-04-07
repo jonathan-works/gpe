@@ -12,7 +12,7 @@
 			<property name="hibernate.show_sql" value="${desenvolvimento}" />
 			<property name="hibernate.format_sql" value="false" />
 			
-			<property name="hibernate.ejb.resource_scanner" value="br.com.infox.bpm.cdi.qualifier.EntityScanner"/>
+			<property name="hibernate.ejb.resource_scanner" value="br.com.infox.jpa.packaging.EntityScanner"/>
 			
 			<property name="hibernate.ejb.cfgfile" value="hibernate.cfg.xml"/>
 			<property name="hibernate.session_factory_name" value="java:/sessionFactoryEPA"/>
