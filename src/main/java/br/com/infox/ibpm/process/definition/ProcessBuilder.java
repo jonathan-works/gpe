@@ -502,12 +502,6 @@ public class ProcessBuilder implements Serializable {
             String[] pooledActorIds = swimlaneInstance.getSwimlane().getPooledActorsExpression().split(",");
             swimlaneInstance.setPooledActors(pooledActorIds);
             session.merge(swimlaneInstance);
-						 + "order by ti.id";
-		int maxResults = 100;
-		query.setFirstResult(firstResult);
-		query.setMaxResults(maxResults);
-		List<TaskInstance> taskInstances = query.list();
-		while (!taskInstances.isEmpty()) {
         }
         session.flush();
         session.clear();
@@ -516,17 +510,8 @@ public class ProcessBuilder implements Serializable {
 		    ExecutionContext executionContext = new ExecutionContext(taskInstance.getToken());
             taskInstance.assign(executionContext);
             session.merge(taskInstance);
-			}
-			
-			session.flush();
-			for (TaskInstance taskInstance : taskInstances) {
-				session.evict(taskInstance);
-			}
-			
-			firstResult += taskInstances.size();
-			taskInstances = query.setFirstResult(firstResult).list();
 		}
-		LogEventListener.enableLog();
+		session.flush();
 	}
 
 	@SuppressWarnings(UNCHECKED)

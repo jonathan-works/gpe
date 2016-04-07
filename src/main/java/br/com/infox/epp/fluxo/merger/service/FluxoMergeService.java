@@ -73,7 +73,7 @@ public class FluxoMergeService {
         return nodes != null && nodes.size() > 0;
     }
     
-    @Transactional(value = TxType.REQUIRED, timeout = 900)
+    @Transactional(value = TxType.REQUIRED, timeout = 1800)
     public MergePointsBundle publish(Fluxo fluxo, MergePointsBundle mergePointsBundle) {
         String modifiedXml = fluxo.getXml();
         String publishedXml = fluxo.getXmlExecucao();
