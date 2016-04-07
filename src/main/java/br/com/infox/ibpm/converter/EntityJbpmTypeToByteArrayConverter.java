@@ -71,7 +71,7 @@ public class EntityJbpmTypeToByteArrayConverter implements Converter {
 	
 	private Object getEntityFromDatabase(EntityJbpmType jbpmType){
 		EntityManager entityManager = BeanManager.INSTANCE.getReference(EntityManager.class);
-		return entityManager.find(jbpmType.getClass(), jbpmType.getId());
+		return entityManager.find(jbpmType.getEntity(), jbpmType.getId());
 	}
 
 }
