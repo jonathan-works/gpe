@@ -8,7 +8,7 @@
         <wi:inputText id="loopCondition" label="#{infoxMessages['process.def.activity.loop.condition']}"
             value="#{loopConfiguration.loopCondition}">
             <a:ajax event="change" execute="@this" render="@form"/>
-            <f:validator validatorId="ELValidator" />
+            <f:validator validatorId="javax.faces.elValidator" />
         </wi:inputText>
         <wi:selectBooleanCheckbox id="testBefore" value="#{loopConfiguration.testBefore}"
             label="#{infoxMessages['process.def.activity.loop.testBefore']}">

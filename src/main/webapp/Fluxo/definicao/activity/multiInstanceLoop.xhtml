@@ -23,17 +23,17 @@
         <wi:inputText id="loopCardinality" value="#{loopConfiguration.loopCardinality}"
             label="#{infoxMessages['process.def.activity.loop.cardinality']}">
             <a:ajax event="change" execute="@this" render="@form" />
-            <f:validator validatorId="ELValidator" />
+            <f:validator validatorId="javax.faces.elValidator" />
         </wi:inputText>
         <wi:inputText id="completionCondition" label="#{infoxMessages['process.def.activity.loop.completionCondition']}"
             value="#{loopConfiguration.completionCondition}">
             <a:ajax event="change" execute="@this" render="@form" />
-            <f:validator validatorId="ELValidator" />
+            <f:validator validatorId="javax.faces.elValidator" />
         </wi:inputText>
         <wi:inputText id="loopDataInput" label="#{infoxMessages['process.def.activity.loop.dataInput']}"
             value="#{loopConfiguration.loopDataInput}">
             <a:ajax event="change" execute="@this" render="@form" />
-            <f:validator validatorId="ELValidator" />
+            <f:validator validatorId="javax.faces.elValidator" />
         </wi:inputText>
         <rich:panel rendered="#{loopConfiguration.behavior ne null and loopConfiguration.behavior ne 'A'}"
             header="#{infoxMessages['process.def.activity.loop.event']}">
