@@ -6,11 +6,11 @@ import br.com.infox.cdi.producer.EntityManagerProducer;
 
 public abstract class PersistenceController {
     
-    protected EntityManager getEntityManager() {
+    public EntityManager getEntityManager() {
         return EntityManagerProducer.getEntityManager();
     }
     
-    protected EntityManager getEntityManagerBin() {
+    public EntityManager getEntityManagerBin() {
         return EntityManagerProducer.getEntityManagerBin();
     }
 
