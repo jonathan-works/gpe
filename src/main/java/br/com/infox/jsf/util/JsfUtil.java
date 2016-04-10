@@ -1,7 +1,9 @@
 package br.com.infox.jsf.util;
 
+import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
@@ -11,9 +13,25 @@ import javax.inject.Named;
 
 import org.richfaces.component.UIDataTable;
 
+import br.com.infox.epp.cdi.config.BeanManager;
+
 @Named
 @RequestScoped
 public class JsfUtil {
+    
+    private transient FacesContext context;
+    
+    @PostConstruct
+    private void init() {
+        context = FacesContext.getCurrentInstance();
+        if (context == null) {
+            throw new IllegalStateException("FacesContext is null");
+        }
+    }
+    
+    public static JsfUtil instance() {
+        return BeanManager.INSTANCE.getReference(JsfUtil.class);
+    }
     
 	public static void clear(UIComponent uiComponent){
 		if(uiComponent instanceof EditableValueHolder){
@@ -37,11 +55,19 @@ public class JsfUtil {
     }
 	
 	public void clearForm(String formId) {
-	    FacesContext facesContext = FacesContext.getCurrentInstance();
-        UIComponent formComponent = facesContext.getViewRoot().findComponent(formId);
+        UIComponent formComponent = context.getViewRoot().findComponent(formId);
         List<UIComponent> children = formComponent.getChildren();
         for (UIComponent uiComponent : children) {
             clear(uiComponent);
         }
 	}
+	
+    public void render(String clientId) {
+        context.getPartialViewContext().getRenderIds().add(clientId);
+    }
+
+    public void render(Collection<String> collection) {
+        context.getPartialViewContext().getRenderIds().addAll(collection);
+    }
+	
 }
