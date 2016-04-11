@@ -14,12 +14,14 @@
 
 .collapse-ctx-menu(){
     @resource-url:"/javax.faces.resource/arrow-left.png.seam?ln=styleSkinInfox/all";
+    background-color:@menu-bg-color;
     background-image:url("@{context-path}\@{resource-url}");
-    background-position:center right;
+    background-position:center center;
     background-repeat:no-repeat;
-    box-shadow:0 4px 10px 0 rgba(0, 0, 0, 0.4);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+    cursor:pointer;
     &:hover{
-        .transform(translate(0,0.2em));
+        background-color:lighten(@menu-txt-color,20%);
     }
 }
 .extend-ctx-menu(){
@@ -89,6 +91,10 @@
     display: block;
     cursor: pointer;
     position: relative;
+    text-align:center;
+}
+.ifx-menu-itm-plain{
+    padding:4em/16;
     text-align:center;
 }
 .ifx-menu-itm-plain,.ifx-menu-itm{

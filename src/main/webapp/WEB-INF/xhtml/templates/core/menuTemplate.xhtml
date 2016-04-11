@@ -17,8 +17,8 @@
                 </li>
             </ui:define>
             <s:div styleClass="pageBody" id="pageBody">
-                <wi:messages formId="pageBody" rendered="#{empty showMsg ? true : showMsg}" globalOnly="true" />
                 <ui:insert name="body" />
+                <wi:messages formId="pageBody" rendered="#{empty showMsg ? true : showMsg}" globalOnly="true" />
             </s:div>
         </wi:menu>
     </ui:define>
