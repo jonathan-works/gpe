@@ -312,6 +312,9 @@ public class ProcessBuilder implements Serializable {
                 if (Strings.isNullOrEmpty(mailNode.getTo())) {
                     throw new IllegalStateException("O nó de email " + mailNode.getName() + " deve possuir pelo menos um destinatário.");
                 }
+                if (mailNode.getModeloDocumento() == null) {
+                	throw new IllegalStateException("O nó de email " + mailNode.getName() + " deve possuir um modelo de documento associado.");
+                }
             }
         }
     }

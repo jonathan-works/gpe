@@ -31,6 +31,8 @@
       library="js" />
   </ui:define>
   <ui:define name="body">
+    <!-- rich:tree para carregar javascript da tree para o nó de email. Não retirar, ver ticket #70361  -->
+  	<rich:tree />
     <ui:param
       name="def"
       value="#{processBuilder.instance}" />
