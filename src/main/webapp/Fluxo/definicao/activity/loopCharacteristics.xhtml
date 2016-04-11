@@ -8,16 +8,10 @@
     <rich:collapsiblePanel id="loopCharacteristicsPanel" expanded="true" switchType="client"
         header="#{infoxMessages['process.def.activity.loopCharacteristics']}" style="text-align:center;">
         <h:form>
-            <wi:selectBooleanCheckbox id="isLoop" value="#{activity.loopNode}"
-                label="#{infoxMessages['process.def.activity.loop']}">
+            <wi:selectOneRadioEnum id="loopType" onbeforesubmit="infox.showLoading();" oncomplete="infox.hideLoading();"  value="#{activity.loopNodeType}">
                 <a:ajax event="change" render="loopCharacteristicsPanel" execute="@this"
                     onbeforesubmit="infox.showLoading();" oncomplete="infox.hideLoading();" />
-            </wi:selectBooleanCheckbox>
-            <wi:selectBooleanCheckbox id="isMultiInstance" rendered="#{activity.loopNode}"
-                value="#{activity.multiInstance}" label="#{infoxMessages['process.def.activity.loop.multiInstance']}">
-                <a:ajax event="change" render="loopCharacteristicsPanel" execute="@this"
-                    onbeforesubmit="infox.showLoading();" oncomplete="infox.hideLoading();" />
-            </wi:selectBooleanCheckbox>
+            </wi:selectOneRadioEnum>
         </h:form>
         <s:fragment rendered="#{activity.loopNode}">
             <s:fragment rendered="#{activity.multiInstance}">

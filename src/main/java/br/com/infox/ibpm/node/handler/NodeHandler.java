@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Action;
@@ -20,6 +21,10 @@ import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.Transition;
+import org.jbpm.graph.def.node.loop.Activity;
+import org.jbpm.graph.def.node.loop.LoopConfiguration;
+import org.jbpm.graph.def.node.loop.LoopConfigurationMultiInstance;
+import org.jbpm.graph.def.node.loop.LoopConfigurationStandard;
 import org.jbpm.instantiation.Delegation;
 import org.jbpm.scheduler.def.CancelTimerAction;
 import org.jbpm.scheduler.def.CreateTimerAction;
@@ -77,6 +82,7 @@ public class NodeHandler implements Serializable {
     private StatusProcesso statusProcesso;
     private ModeloDocumento modeloDocumento;
     private ClassificacaoDocumento classificacaoDocumento;
+	private EventHandler loopEvent;
 
     public NodeHandler(Node node) {
         this.node = node;
