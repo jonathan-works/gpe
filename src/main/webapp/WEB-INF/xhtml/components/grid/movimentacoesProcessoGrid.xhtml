@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:a="http://richfaces.org/a4j"
-	xmlns:p="http://primefaces.org/ui" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:s="http://jboss.org/schema/seam/taglib">
 	
 	<p:panel header="#{infoxMessages['acaoProcesso.menuText']}" id="movimentacoesPanel">
-		<p:dataTable var="row" value="#{processoHandler.movimentacoes}">
+		<p:dataTable var="row" value="#{processoHandler.movimentacoes}" rowIndexVar="key">
 			<p:column headerText="#{infoxMessages['fluxo.tarefa']}">
 				<h:outputText value="#{row.tarefa.tarefa}" />
 			</p:column>
@@ -36,6 +39,18 @@
 				<h:outputText value="#{row.dataFim}">
 					<f:convertDateTime pattern="dd-MM-yyyy HH:mm" />
 				</h:outputText>
+			</p:column>
+			<p:column>
+				<s:link
+					target="_blank"
+					rendered="#{processoHandler.taskDocumentList.contains(row.taskInstance)}"
+					view="/Processo/Consulta/paginator.seam">
+					<h:graphicImage url="#{wiSkin.imageFolder}/view.png" />
+					<f:param name="inicio" value="#{key + 1}" />
+				</s:link>
+				<h:graphicImage
+					rendered="#{!empty processoHandler.getAnexos(row.taskInstance)}"
+					url="#{wiSkin.imageFolder}/anexo.png" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
