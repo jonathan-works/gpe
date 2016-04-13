@@ -691,7 +691,7 @@
         <epp.datasource.jndi.prefix>openejb:Resource/</epp.datasource.jndi.prefix>
         <epp.transaction.class>org.apache.openejb.hibernate.TransactionManagerLookup</epp.transaction.class>
         <hibernate.cache.region.class>org.hibernate.cache.infinispan.InfinispanRegionFactory</hibernate.cache.region.class>
-        <epp.mail.session>mail/${epp.name}</epp.mail.session>
+        <epp.mail.session>openejb:Resource/mail/${epp.name}</epp.mail.session>
         <epp.transactionManager.jndi>java:comp/TransactionManager</epp.transactionManager.jndi>
         <session.factory.jndi>java:comp/env/EPAPersistenceUnit</session.factory.jndi>
       </properties>
