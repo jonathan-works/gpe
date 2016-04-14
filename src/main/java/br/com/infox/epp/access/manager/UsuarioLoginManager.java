@@ -120,15 +120,14 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
     public UsuarioLogin persist(UsuarioLogin usuario, boolean sendMail){
     	validarPermanencia(usuario);
         try {
-            Object id = EntityUtil.getIdValue(getDao().persist(usuario));
-            UsuarioLogin persisted = find(id);
+            UsuarioLogin persisted = getDao().persist(usuario);
             String password = usuario.getSenha();
             passwordService.changePassword(persisted, password);
             if (sendMail){
             	accessMailService.enviarEmailDeMudancaDeSenha("email", persisted, password);
             }
 	    return persisted;
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+        } catch (IllegalArgumentException e) {
             throw new DAOException(e);
         }
     }

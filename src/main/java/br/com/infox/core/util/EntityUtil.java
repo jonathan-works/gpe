@@ -19,11 +19,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.PersistenceUnitUtil;
 import javax.persistence.Transient;
 
+import org.jboss.seam.util.Reflections;
+
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-import org.jboss.seam.util.Reflections;
-
 import br.com.infox.seam.util.ComponentUtil;
 
 public final class EntityUtil implements Serializable {
@@ -63,6 +63,7 @@ public final class EntityUtil implements Serializable {
      * 
      * @throws IllegalArgumentException quando o objeto não é uma entidade
      * */
+    @Deprecated
     public static Object getIdValue(Object objId) throws IllegalAccessException, InvocationTargetException {
         if (!EntityUtil.isEntity(objId)) {
             throw new IllegalArgumentException("O objeto não é uma entidade: "
