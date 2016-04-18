@@ -91,6 +91,21 @@ public class AccessMailService {
         enviarEmailModelo(modelo, usuario, password);
     }
 
+    public void enviarEmail(String conteudo, String subject, UsuarioLogin usuario) {
+        EMailBean mail = new EMailBean();
+        mail.setUseHtmlBody(true);
+        mail.setBody(conteudo);
+        mail.getReceivers().clear();
+        mail.getReceivers().add(new Contact(usuario.getNomeUsuario(), usuario.getEmail()));
+        mail.setSubject(subject);
+        mail.setSender(new Contact(this.nomeSistema, this.emailSistema));
+        try {
+            MailSender.sendMail(mail, getEmailSession());
+        } catch (UnsupportedEncodingException | MessagingException e) {
+            throw new ApplicationException(infoxMessages.get("mail.send.fail"), e);
+        }
+    }
+
     private ModeloDocumento findModelo(final String nomeParametro) {
         Parametro parametro = this.parametroManager.getParametro(nomeParametro);
         ModeloDocumento result = null;
@@ -122,18 +137,8 @@ public class AccessMailService {
 
     private void enviarEmailModelo(final ModeloDocumento modelo, final UsuarioLogin usuario, final String password) {
         String conteudo = resolverConteudo(modelo, usuario, password);
-        EMailBean mail = new EMailBean();
-        mail.setUseHtmlBody(true);
-        mail.setBody(conteudo);
-        mail.getReceivers().clear();
-        mail.getReceivers().add(new Contact(usuario.getNomeUsuario(), usuario.getEmail()));
-        mail.setSubject(infoxMessages.get("usuario.senha.generated.subject"));
-        mail.setSender(new Contact(this.nomeSistema, this.emailSistema));
-        try {
-            MailSender.sendMail(mail, getEmailSession());
-        } catch (UnsupportedEncodingException | MessagingException e) {
-            throw new ApplicationException(infoxMessages.get("mail.send.fail"), e);
-        }
+        String subject = infoxMessages.get("usuario.senha.generated.subject");
+        enviarEmail(conteudo, subject, usuario);
     }
 
     private String resolverConteudo(final ModeloDocumento modelo, final UsuarioLogin usuario, final String password) {

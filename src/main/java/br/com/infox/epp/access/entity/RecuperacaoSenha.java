@@ -44,10 +44,6 @@ public class RecuperacaoSenha implements Serializable {
 	@Column(name = "dt_criacao", nullable = false)
 	private Date dataCriacao;
 
-	@NotNull
-	@Column(name = "in_ativo", nullable = false)
-	private Boolean ativo = Boolean.TRUE;
-
 	public Integer getId() {
 		return id;
 	}
@@ -78,13 +74,5 @@ public class RecuperacaoSenha implements Serializable {
 
 	public void setDataCriacao(Date dataCriacao) {
 		this.dataCriacao = dataCriacao;
-	}
-
-	public Boolean getAtivo() {
-		return ativo;
-	}
-
-	public void setAtivo(Boolean ativo) {
-		this.ativo = ativo;
 	}
 }

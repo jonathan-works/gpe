@@ -130,49 +130,92 @@
                 styleClass="input-button-login input_button"
                 id="btnTrocarSenha"
                 type="button"
-                value="#{infoxMessages['login.requisitarSenhaBtn']}" 
+                value="#{infoxMessages['login.esqueciSenhaBtn']}"
                 onclick="#{rich:component('requestPasswordPanel')}.show();" />
             </h:panelGroup>
           </div>
         </div>
       </h:form>
-      <rich:popupPanel id="requestPasswordPanel" width="370" height="182" headerClass="login-header-modal"
-      				   style="background: linear-gradient(to bottom, #A2B9B5 0%, #B8D1CF 100%) repeat scroll 0% 0% transparent;">
+    <rich:popupPanel id="requestPasswordPanel" resizeable="false"
+        header="#{infoxMessages['login.esqueciSenhaBtn']}"
+        minWidth="330" minHeight="450"
+        styleClass="gradiente-background">
+    
         <f:facet name="controls">	
-          <div style="cursor: pointer;">
+            <div style="cursor: pointer;">
             <h:graphicImage id="requestPasswordPanelCloseBtn" value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}" 
-            				onclick="#{rich:component('requestPasswordPanel')}.hide();" />
-          </div>
+        		onclick="#{rich:component('requestPasswordPanel')}.hide();" />
+            </div>
         </f:facet>
-        <h:form id="requestPasswordPanelGerarSenhaForm" >
-          <div>
-            <div>
-              <h:outputLabel for="login" class="login-lbl" value="#{infoxMessages['login.nomeUsuario']}" />
-              <h:inputText id="login" class="input-text-login" value="#{passwordRequester.login}" />
-            </div>
-            <div>
-              <h:outputLabel for="email" class="login-lbl" value="#{infoxMessages['login.emailUsuario']}" />
-              <h:inputText id="email" styleClass="input-text-login" value="#{passwordRequester.email}" />
-            </div>
-          </div>
-          <div style="margin-top:3px; text-align: center;" >
-            <h:commandButton
-              id="confirma"
-              styleClass="input-button-login input_button"
-              value="#{infoxMessages['login.requisitarSenhaBtn']}"
-              action="#{passwordRequester.requisitarNovaSenha()}" />
-            <h:commandButton
-              styleClass="input-button-login input_button"
-              id="cancelar"
-              type="button"
-              value="#{infoxMessages['login.cancelaTrocaSenhaBtn']}" 
-              onclick="#{rich:component('requestPasswordPanel')}.hide();" />
-          </div>
-        </h:form>
-      </rich:popupPanel>
+        
+        <p:accordionPanel activeIndex="-1">
+            <p:tab title="#{infoxMessages['login.solicitarCodigo']}" >
+                <h:outputText value="#{infoxMessages['login.msgSolicitarCodigo']}" />
+                <h:form>
+                    <div>
+                        <div>
+                            <h:outputLabel for="login" class="login-lbl" value="#{infoxMessages['login.nomeUsuario']}" />
+                            <h:inputText id="login" class="input-text-login" value="#{passwordRequester.login}" />
+                        </div>
+                        <div>
+                            <h:outputLabel for="email" class="login-lbl" value="#{infoxMessages['login.emailUsuario']}" />
+                            <h:inputText id="email" styleClass="input-text-login" value="#{passwordRequester.email}" />
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top:3px;" >
+                        <a:commandButton id="confirma" styleClass="input-button-login input_button"
+                            value="#{infoxMessages['login.requisitarCodigoSenhaBtn']}"
+                            action="#{passwordRequester.requisitarCodigoRecuperacao()}"
+                            limitRender="true" render="@form DialogMessage" />
+                        <h:commandButton id="cancelar" styleClass="input-button-login input_button"
+                            type="button"
+                            value="#{infoxMessages['login.cancelaTrocaSenhaBtn']}"
+                            onclick="#{rich:component('requestPasswordPanel')}.hide();" />
+                    </div>
+                </h:form>
+            </p:tab>
+            
+            <p:tab title="#{infoxMessages['login.jaPossuoCodigo']}">
+                <h:outputText value="#{infoxMessages['login.msgJaPossuoCodigo']}"/>
+                <h:form id="requestPasswordPanelGerarSenhaForm">
+                    <div>
+                        <div>
+                            <h:outputLabel for="login" class="login-lbl" value="#{infoxMessages['login.nomeUsuario']}" />
+                            <h:inputText id="login" class="input-text-login" value="#{passwordRequester.login}" />
+                        </div>
+                        <div>
+                            <h:outputLabel styleClass="login-lbl" for="codigo" class="login-lbl" value="#{infoxMessages['login.codigo']}" />
+                            <h:inputText id="codigo" styleClass="input-text-login" value="#{passwordRequester.codigo}"/>
+                        </div>
+                        <div>
+                            <h:outputLabel for="newPass1" class="login-lbl" value="#{infoxMessages['login.novaSenha']}" />
+                            <h:inputSecret id="newPass1" styleClass="input-text-login" value="#{passwordRequester.newPass1}" />
+                        </div>
+                        <div>
+                            <h:outputLabel for="newPass2" class="login-lbl" value="#{infoxMessages['login.confirmacaoNovaSenha']}" />
+                            <h:inputSecret id="newPass2" styleClass="input-text-login" value="#{passwordRequester.newPass2}" />
+                        </div>
+                    </div>
       
-      <rich:popupPanel id="alterPasswordModal" width="370" height="301" headerClass="login-header-modal"
-      				   style="background: linear-gradient(to bottom, #A2B9B5 0%, #B8D1CF 100%) repeat scroll 0% 0% transparent;">
+                    <div style="margin-top:3px;" >
+                        <a:commandButton id="confirma" styleClass="input-button-login input_button"
+                            value="#{infoxMessages['login.trocarSenhaBtn']}"
+                            action="#{passwordRequester.trocarSenha()}"
+                            execute="@form"
+                            limitRender="true" render="DialogMessage @form" />
+                        <h:commandButton id="cancelar" styleClass="input-button-login input_button"
+                            type="button"
+                            value="#{infoxMessages['login.cancelaTrocaSenhaBtn']}"
+                            onclick="#{rich:component('requestPasswordPanel')}.hide();" />
+                    </div>
+                </h:form>
+            </p:tab>
+        </p:accordionPanel>
+    </rich:popupPanel>
+      
+      <rich:popupPanel id="alterPasswordModal" minWidth="370" minHeight="325" headerClass="login-header-modal"
+        header="#{infoxMessages['login.trocarSenhaBtn']}">
         <f:facet name="controls">
           <div style="cursor: pointer;" > 
             <h:graphicImage id="alterPasswordCloseBtn" value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}" 
