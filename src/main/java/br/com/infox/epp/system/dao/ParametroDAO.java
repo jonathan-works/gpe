@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -20,6 +22,7 @@ import br.com.infox.epp.system.entity.Parametro;
 
 @AutoCreate
 @Name(ParametroDAO.NAME)
+@Stateless
 public class ParametroDAO extends DAO<Parametro> {
 
     private static final long serialVersionUID = 1L;

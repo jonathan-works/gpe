@@ -11,6 +11,8 @@
   xmlns:a="http://richfaces.org/a4j"
   xmlns:c="http://java.sun.com/jsp/jstl/core"
   xmlns:wi="http://www.itx.com.br/jsf"
+  xmlns:p="http://primefaces.org/ui"
+  xmlns:infox="http://www.infox.com.br/jsf"
   template="/WEB-INF/xhtml/templates/core/baseTemplate.xhtml">
   <ui:define name="baseHead">
   <ui:param
@@ -18,6 +20,11 @@
       value="#{certificateAuthenticator.certificateLogin}" />
   </ui:define>
   <ui:define name="scripts">
+  	<style>
+		.recaptchatable {
+			display: inline-block;
+		}  	
+  	</style>
     <h:outputScript library="js/components" name="Modal.js" />
   </ui:define>
   <ui:define name="baseBody">
@@ -99,6 +106,12 @@
             </s:div>
           </div>
           <div id="bg_login_inferior" class="bg_login_inferior login">
+
+          	<div style="margin-bottom: 2em; padding-left: 35px; width: 302px">
+	          	<p:captcha id="captcha" label="Captcha" language="pt_BR" validatorMessage="#{infoxMessages['captcha.incorreto']}" requiredMessage="#{infoxMessages['captcha.obrigatorio']}" />
+	          	<p:messages for="captcha" severity="error"/>
+          	</div>
+          	
             <h:panelGroup rendered="#{not useCertLogin}">
               <h:commandButton
                 id="btnEntrar"
