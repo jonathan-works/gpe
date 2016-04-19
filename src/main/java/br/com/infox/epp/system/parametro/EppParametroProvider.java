@@ -43,6 +43,7 @@ public class EppParametroProvider implements Serializable, ParametroProvider {
 		initParametrosExecFluxo();
 		initParametrosSistema();
 		initParametrsoLog();
+	    create("consultaExterna", "ativaConsultaExternaPadrao", FieldType.BOOLEAN);
 	}
 
 	private void initParametrosControleAcesso() {
