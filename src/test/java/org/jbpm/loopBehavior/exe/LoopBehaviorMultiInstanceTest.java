@@ -1,6 +1,6 @@
 package org.jbpm.loopBehavior.exe;
 
-import static org.jbpm.loopBehavior.exe.Debugger.*;
+import static org.jbpm.loopBehavior.exe.Debugger.debug;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,7 +14,7 @@ import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
-import org.jbpm.graph.def.node.loop.LoopConfigurationMultiInstance;
+import org.jbpm.graph.def.node.activity.ParallelMultiInstanceActivityBehavior;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.exe.Token;
@@ -74,14 +74,13 @@ public class LoopBehaviorMultiInstanceTest {
 		}));
 		ev.addAction(action);
 //		taskNode.addEvent(ev);
-		LoopConfigurationMultiInstance loopCharacteristics = new LoopConfigurationMultiInstance();
-		loopCharacteristics.setNoneBehaviorEvent(ev);
-		loopCharacteristics.setIsSequential(Boolean.FALSE);
-		loopCharacteristics.setLoopCardinality("#{9}");
-		loopCharacteristics.setLoopDataInput("#{inputCollection}");
+		ParallelMultiInstanceActivityBehavior se = new ParallelMultiInstanceActivityBehavior();
+		se.setNoneBehaviorEvent(ev);
+		se.setLoopCardinality("#{9}");
+		se.setLoopDataInput("#{inputCollection}");
 //		loopCharacteristics.setLoopDataOutput("#{outputCollection}");
 
-		taskNode.setLoopConfiguration(loopCharacteristics);
+		taskNode.setActivityBehavior(se);
 		taskNode.addTask(new Task("task1"));
 		EndState endState = (EndState) processDefinition.addNode(new EndState("Término"));
 		startNode.addLeavingTransition(taskNode.addArrivingTransition(new Transition(taskNode.getName())));

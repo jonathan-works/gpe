@@ -9,7 +9,8 @@ import org.jbpm.context.def.ContextDefinition;
 import org.jbpm.file.def.FileDefinition;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
-import org.jbpm.graph.def.node.loop.LoopConfigurationStandard;
+import org.jbpm.graph.def.node.activity.ActivityBehavior;
+import org.jbpm.graph.def.node.activity.LoopActivityBehavior;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.exe.Token;
 import org.jbpm.graph.node.EndState;
@@ -24,7 +25,7 @@ import org.junit.Test;
 
 public class LoopBehaviorStandardTest {
 
-	private static ProcessDefinition initProcesssDefinition(LoopConfigurationStandard loopConfiguration) {
+	private static ProcessDefinition initProcesssDefinition(ActivityBehavior activityBehavior) {
 		ProcessDefinition processDefinition = ProcessDefinition.createNewProcessDefinition();
 		processDefinition.addDefinition(new TaskMgmtDefinition());
 		processDefinition.addDefinition(new FileDefinition());
@@ -32,7 +33,7 @@ public class LoopBehaviorStandardTest {
 		processDefinition.setName("teste");
 		StartState startNode = (StartState) processDefinition.addNode(new StartState("Início"));
 		TaskNode taskNode = (TaskNode) processDefinition.addNode(new TaskNode("taskNode"));
-		taskNode.setLoopConfiguration(loopConfiguration);
+		taskNode.setActivityBehavior(activityBehavior);
 		taskNode.addTask(new Task("task1"));
 		EndState endState = (EndState) processDefinition.addNode(new EndState("Término"));
 		startNode.addLeavingTransition(taskNode.addArrivingTransition(new Transition(taskNode.getName())));
@@ -41,7 +42,7 @@ public class LoopBehaviorStandardTest {
 	}
 
 	private ProcessDefinition createLoopEnvironment(String loopCondition, Long loopMaximum, Boolean testBefore) {
-		LoopConfigurationStandard config = new LoopConfigurationStandard();
+		LoopActivityBehavior config = new LoopActivityBehavior();
 		if (loopCondition != null)
 			config.setLoopCondition(loopCondition);
 		if (loopMaximum != null)

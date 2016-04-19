@@ -34,7 +34,7 @@ import org.jbpm.graph.def.GraphElement;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
-import org.jbpm.graph.def.node.loop.Activity;
+import org.jbpm.graph.def.node.activity.Activity;
 import org.jbpm.graph.node.ProcessFactory;
 import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
@@ -246,8 +246,8 @@ public class JpdlXmlWriter {
                     if (taskNode.getTasks() != null) {
                         writeTasks(taskNode.getTasks(), nodeElement);
                     }
-                    if (taskNode.getLoopConfiguration() != null){
-                    	writeLoopConfiguration(taskNode, nodeElement);
+                    if (taskNode.getActivityBehavior() != null) {
+                        writeActivity(taskNode, nodeElement);
                     }
                 }
                 if (node instanceof ProcessState) {
@@ -259,9 +259,13 @@ public class JpdlXmlWriter {
         }
     }
 
-    private void writeLoopConfiguration(Activity activity, Element element) {
-		activity.getLoopConfiguration().write(element);
-	}
+    private void writeActivity(Activity activity, Element nodeElement) {
+        activity.getActivityBehavior().write(nodeElement);
+    }
+
+//    private void writeLoopConfiguration(Activity activity, Element element) {
+//		activity.getLoopConfiguration().write(element);
+//	}
 
 	@SuppressWarnings({ UNCHECKED, RAWTYPES })
     private void writeProcessState(ProcessState node, Element nodeElement) {
@@ -272,9 +276,10 @@ public class JpdlXmlWriter {
         } else { // Publicação
             subProcessName = node.getSubProcessName();
         }
-        if (node.getLoopConfiguration() != null){
-        	writeLoopConfiguration(node, nodeElement);
-        }
+        
+//        if (node.getLoopConfiguration() != null){
+//        	writeLoopConfiguration(node, nodeElement);
+//        }
         subProcess.addAttribute(ELEMENT_NAME, subProcessName);
         subProcess.addAttribute("binding", "late");
         Set variableAccess = (Set) ReflectionsUtil.getValue(node, "variableAccesses");

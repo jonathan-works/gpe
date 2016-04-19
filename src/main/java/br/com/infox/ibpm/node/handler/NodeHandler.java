@@ -4,16 +4,18 @@ import static br.com.infox.epp.processo.status.entity.StatusProcesso.STATUS_PROC
 import static java.text.MessageFormat.format;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.graph.def.Action;
@@ -33,7 +35,10 @@ import org.jbpm.taskmgmt.def.Task;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import br.com.infox.core.messages.InfoxMessages;
+import br.com.infox.core.messages.InfoxMessagesLoader;
 import br.com.infox.core.util.ReflectionsUtil;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
@@ -564,6 +569,47 @@ public class NodeHandler implements Serializable {
     	return true;
     }
     
+    public LoopNodeType getLoopNodeType(){
+        if (!isLoopNode() || !isActivity()){
+            return LoopNodeType.NONE;
+        } else {
+            ActivityBehavior activityBehavior = getActivityBehavior();
+            if (activityBehavior  == null){
+                return LoopNodeType.NONE;
+            }else if (activityBehavior instanceof LoopActivityBehavior){
+                return LoopNodeType.STANDARD;
+            } else if (activityBehavior instanceof MultiInstanceActivityBehavior){
+                return LoopNodeType.MULTIINSTANCE;
+            }
+            return null;
+        }
+    }
+    
+    public void setLoopNodeType(LoopNodeType loopNodeType){
+        if (!isActivity()){
+            return;
+        }
+        switch (loopNodeType) {
+        case MULTIINSTANCE:
+            if (!(isLoopNode() && getActivityBehavior() instanceof SequentialMultiInstanceActivityBehavior)){
+                ((Activity)getNode()).setActivityBehavior(new SequentialMultiInstanceActivityBehavior());
+            } else if (!(isLoopNode() && getActivityBehavior() instanceof ParallelMultiInstanceActivityBehavior)) {
+                ((Activity)getNode()).setActivityBehavior(new ParallelMultiInstanceActivityBehavior());
+            }
+            break;
+        case NONE:
+            ((Activity)getNode()).setActivityBehavior(null);
+            break;
+        case STANDARD:
+            if (!(isLoopNode() && (getActivityBehavior() instanceof LoopActivityBehavior))) {
+                ((Activity)getNode()).setActivityBehavior(new LoopActivityBehavior());
+            }
+            break;
+        default:
+            break;
+        }
+    }
+    
     public boolean isActivity(){
     	return getNode() instanceof Activity;
     }
@@ -576,32 +622,6 @@ public class NodeHandler implements Serializable {
     	return isLoopNode() && ((Activity)getNode()).getLoopConfiguration() instanceof LoopConfigurationMultiInstance;
     }
 
-	public void setMultiInstance(boolean isMultiInstance) {
-		if (isActivity()) {
-			Activity activity = (Activity) getNode();
-			LoopConfiguration loopConfiguration = activity.getLoopConfiguration();
-			if (loopConfiguration != null) {
-				if (isMultiInstance && !(loopConfiguration instanceof LoopConfigurationMultiInstance)) {
-					activity.setLoopConfiguration(new LoopConfigurationMultiInstance());
-				} else if (!isMultiInstance && loopConfiguration instanceof LoopConfigurationMultiInstance) {
-					activity.setLoopConfiguration(new LoopConfigurationStandard());
-				}
-			}
-		}
-	}
-    
-    public void setLoopNode(boolean loopNode){
-    	if (isActivity()){
-    		Activity activity = (Activity)getNode();
-			LoopConfiguration loopConfiguration = activity.getLoopConfiguration();
-			if (loopNode && loopConfiguration == null) {
-					activity.setLoopConfiguration(new LoopConfigurationStandard());
-			} else if (!loopNode && loopConfiguration != null) {
-					activity.setLoopConfiguration(null);
-			}
-    	}
-    }
-    
     public LoopConfiguration getLoopConfiguration(){
     	if (isActivity()){
     		Activity activity = (Activity)getNode();
