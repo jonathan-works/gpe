@@ -40,9 +40,12 @@ import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.query.UsuarioLoginQuery;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.query.AssinaturaDocumentoQuery;
 
 @Entity
@@ -111,8 +114,9 @@ public class AssinaturaDocumento implements Serializable {
         this.signature = signature;
         this.certChain = certChain;
         this.dataAssinatura = new Date();
-        if(documentoBin.getDocumentoList() != null && !documentoBin.getDocumentoList().isEmpty()){
-        	List<ClassificacaoDocumentoPapel> cdps = documentoBin.getDocumentoList().get(0).getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
+        List<Documento> documentos = BeanManager.INSTANCE.getReference(DocumentoManager.class).getDocumentosFromDocumentoBin(documentoBin);
+        if(documentos != null && !documentos.isEmpty()){
+        	List<ClassificacaoDocumentoPapel> cdps = documentos.get(0).getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
             Papel papel = usuarioPerfil.getPerfilTemplate().getPapel();
             for (ClassificacaoDocumentoPapel cdp : cdps) {
             	if (papel.equals(cdp.getPapel())) {
