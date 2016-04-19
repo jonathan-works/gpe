@@ -107,10 +107,12 @@
           </div>
           <div id="bg_login_inferior" class="bg_login_inferior login">
 
-          	<div style="margin-bottom: 2em; padding-left: 35px; width: 302px">
-	          	<p:captcha id="captcha" label="Captcha" language="pt_BR" validatorMessage="#{infoxMessages['captcha.incorreto']}" requiredMessage="#{infoxMessages['captcha.obrigatorio']}" />
-	          	<p:messages for="captcha" severity="error"/>
-          	</div>
+			<h:panelGroup rendered="#{not useCertLogin}">
+	          	<div style="margin-bottom: 2em; padding-left: 35px; width: 302px">
+		          	<p:captcha id="captcha" label="Captcha" language="pt_BR" validatorMessage="#{infoxMessages['captcha.incorreto']}" requiredMessage="#{infoxMessages['captcha.obrigatorio']}" />
+		          	<p:messages for="captcha" severity="error"/>
+	          	</div>
+          	</h:panelGroup>
           	
             <h:panelGroup rendered="#{not useCertLogin}">
               <h:commandButton
