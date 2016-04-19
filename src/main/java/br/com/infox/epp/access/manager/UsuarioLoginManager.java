@@ -41,6 +41,7 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "usuarioLoginManager";
     private static final LogProvider LOG = Logging.getLogProvider(UsuarioLoginManager.class);
+    public static final String USER_ADMIN = "admin";
 
     @Inject
     private PasswordService passwordService;
@@ -178,5 +179,10 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
     public List<UsuarioLogin> getUsuariosLogin(Localizacao localizacao, String... papeis){
     	return getDao().getUsuariosLoginLocalizacaoPapeis(localizacao, papeis);
     }
-
+    
+    public boolean isAdminDefaultPassword() {
+		UsuarioLogin admin = getUsuarioLoginByLogin(USER_ADMIN);
+		String password = passwordService.generatePasswordHash("admin", admin.getSalt());
+		return password.equals(admin.getSenha());
+	}
 }

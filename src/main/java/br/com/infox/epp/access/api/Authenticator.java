@@ -32,6 +32,8 @@ import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.security.management.JpaIdentityStore;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import com.google.common.base.Strings;
+
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.crud.TermoAdesaoAction;
@@ -50,6 +52,7 @@ import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.menu.MenuNavigation;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
@@ -212,10 +215,11 @@ public class Authenticator implements Serializable {
         	getAuthenticatorService().loginWithoutPassword(credentials.getUsername());
         	return;
         }
-            
         if (loginExists(credentials) || ldapLoginExists(credentials)) {
             try {
-                identity.login();
+            	if (validateLoginDefaultUsers()) {
+            		identity.login();
+            	}
             } catch (ELException e) {
                 if (e.getCause() instanceof RedirectException) {
                     LOG.warn("Erro de redirecionamento", e);                        
@@ -575,5 +579,38 @@ public class Authenticator implements Serializable {
             return getUsuarioLogado().getLogin().equals(ParametroUtil.getLoginUsuarioExterno());
         }
         return false;
+    }
+    
+    protected boolean validateLoginDefaultUsers() {
+    	if (ParametroUtil.isProducao()) {
+    		Credentials credentials = Identity.instance().getCredentials();
+    		if (UsuarioLoginManager.USER_ADMIN.equals(credentials.getUsername()) && usuarioLoginManager.isAdminDefaultPassword()) {
+    			FacesMessages.instance().add("Usuário sem permissão de login");
+    			return false;
+    		} else if (ParametroUtil.getLoginUsuarioExterno().equals(credentials.getUsername())) {
+    			FacesMessages.instance().add("Usuário sem permissão de login");
+    			return false;
+    		} else {
+    			String usuarioSistema = null;
+    			String usuarioProcessoSistema = null;
+    			if (!Strings.isNullOrEmpty(Parametros.ID_USUARIO_SISTEMA.getValue())) {
+    				UsuarioLogin u = usuarioLoginManager.find(Integer.valueOf(Parametros.ID_USUARIO_SISTEMA.getValue()));
+    				if (u != null) {
+    					usuarioSistema = u.getLogin();
+    				}
+    			}
+    			if (!Strings.isNullOrEmpty(Parametros.ID_USUARIO_PROCESSO_SISTEMA.getValue())) {
+    				UsuarioLogin u = usuarioLoginManager.find(Integer.valueOf(Parametros.ID_USUARIO_PROCESSO_SISTEMA.getValue()));
+    				if (u != null) {
+    					usuarioProcessoSistema = u.getLogin();
+    				}
+    			}
+    			if (credentials.getUsername().equals(usuarioSistema) || credentials.getUsername().equals(usuarioProcessoSistema)) {
+    				FacesMessages.instance().add("Usuário sem permissão de login");
+        			return false;
+    			}
+    		}
+    	}
+    	return true;
     }
 }
