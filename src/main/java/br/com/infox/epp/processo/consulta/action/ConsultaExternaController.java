@@ -21,6 +21,8 @@ public class ConsultaExternaController extends AbstractController {
     public static final String NAME = "consultaExternaController";
     public static final String TAB_VIEW = "processoExternoView";
 
+    private boolean mostrarCaptcha = true;
+    
     @In
     private DocumentoManager documentoManager;
 
@@ -35,6 +37,7 @@ public class ConsultaExternaController extends AbstractController {
 	}
 
 	public void selectProcesso(Processo processo) {
+        mostrarCaptcha = true;
         setTab(TAB_VIEW);
         setProcesso(processo);
     }
@@ -50,4 +53,12 @@ public class ConsultaExternaController extends AbstractController {
     public void onClickSearchParteTab() {
         setProcesso(null);
     }
+
+	public boolean isMostrarCaptcha() {
+		return mostrarCaptcha;
+	}
+	
+	public void validateCaptcha() {
+		mostrarCaptcha = false;
+	}
 }
