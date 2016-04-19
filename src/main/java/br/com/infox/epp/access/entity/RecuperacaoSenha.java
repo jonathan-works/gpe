@@ -44,6 +44,10 @@ public class RecuperacaoSenha implements Serializable {
 	@Column(name = "dt_criacao", nullable = false)
 	private Date dataCriacao;
 
+	@NotNull
+	@Column(name = "in_utilizado", nullable = false)
+	private Boolean utilizado = false;
+
 	public Integer getId() {
 		return id;
 	}
@@ -74,5 +78,13 @@ public class RecuperacaoSenha implements Serializable {
 
 	public void setDataCriacao(Date dataCriacao) {
 		this.dataCriacao = dataCriacao;
+	}
+
+	public Boolean getUtilizado() {
+		return utilizado;
+	}
+
+	public void setUtilizado(Boolean utilizado) {
+		this.utilizado = utilizado;
 	}
 }

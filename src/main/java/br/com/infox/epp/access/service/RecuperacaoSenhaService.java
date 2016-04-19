@@ -32,6 +32,8 @@ public class RecuperacaoSenhaService implements Serializable {
 
 	@Inject
 	private AccessMailService accessMailService;
+	@Inject
+	private PasswordService passwordService;
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void requisitarCodigoRecuperacao(UsuarioLogin usuario) {
@@ -46,36 +48,51 @@ public class RecuperacaoSenhaService implements Serializable {
 	private String createConteudoRequestNewEmail(RecuperacaoSenha newRequest) {
 		String texto = "<p>Este é um email de recuperação de senha para o usuário <strong>" + newRequest.getUsuarioLogin().getLogin() + "</strong>.</p>"
 				+ "<p>O código para alteração da senha é <strong>" + newRequest.getCodigo() + "</strong></p>"
-				+ "<p>Este código irá expirar em <strong>" + CODE_MINUTES_EXPIRE + " minutos</string></p>"
+				+ "<p>Este código irá expirar em <strong>" + CODE_MINUTES_EXPIRE + " minutos e só poderá ser utilizado uma vez</strong>.</p>"
 				+ "<p>Caso não tenha solicitado uma troca de senha, favor ignorar este email.</p>";
 		return texto;
 	}
 
 	private RecuperacaoSenha createNewRequest(UsuarioLogin usuario) {
 		RecuperacaoSenha rs = new RecuperacaoSenha();
-		rs.setCodigo(generateRequestCode());
+		rs.setCodigo(generateRequestCode(usuario));
 		rs.setDataCriacao(new Date());
 		rs.setUsuarioLogin(usuario);
+		rs.setUtilizado(false);
 		return rs;
 	}
 
-	private String generateRequestCode() {
+	private String generateRequestCode(UsuarioLogin usuario) {
 		String code = RandomStringUtils.randomAlphanumeric(REQUEST_CODE_LENGH);
-		while (codeAlreadyExists(code)) {
+		while (codeAlreadyExists(code, usuario)) {
 			code = RandomStringUtils.randomAlphanumeric(REQUEST_CODE_LENGH);
 		}
 		return code;
 	}
 
-	private Boolean codeAlreadyExists(String code) {
+	private Boolean codeAlreadyExists(String code, UsuarioLogin usuario) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
 		Root<RecuperacaoSenha> rs = cq.from(RecuperacaoSenha.class);
+		cq.select(cb.literal(1));
 		cq.where(cb.equal(rs.get(RecuperacaoSenha_.codigo), code),
+				cb.equal(rs.get(RecuperacaoSenha_.usuarioLogin), usuario),
 				cb.greaterThan(rs.get(RecuperacaoSenha_.dataCriacao), getExpireDate()));
-		return false;
+		List<Integer> resultList = getEntityManager().createQuery(cq).getResultList();
+		return resultList != null && !resultList.isEmpty() && resultList.get(0).equals(1);
 	}
-	
+
+	public RecuperacaoSenha getByCodigoAndUsuario(String codigo, UsuarioLogin usuario) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<RecuperacaoSenha> cq = cb.createQuery(RecuperacaoSenha.class);
+		Root<RecuperacaoSenha> rs = cq.from(RecuperacaoSenha.class);
+		cq.select(rs);
+		cq.where(cb.equal(rs.get(RecuperacaoSenha_.usuarioLogin), usuario),
+				cb.equal(rs.get(RecuperacaoSenha_.codigo), codigo));
+		List<RecuperacaoSenha> resultList = getEntityManager().createQuery(cq).getResultList();
+		return resultList != null && !resultList.isEmpty() ? resultList.get(0) : null;
+	}
+
 	public Boolean verificarValidadeCodigo(String codigo, UsuarioLogin usuario) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
@@ -83,10 +100,25 @@ public class RecuperacaoSenhaService implements Serializable {
 		cq.select(cb.literal(1));
 		cq.where(cb.equal(rs.get(RecuperacaoSenha_.codigo), codigo),
 				cb.equal(rs.get(RecuperacaoSenha_.usuarioLogin), usuario),
+				cb.isFalse(rs.get(RecuperacaoSenha_.utilizado)),
 				cb.greaterThan(rs.get(RecuperacaoSenha_.dataCriacao), getExpireDate()));
 		
 		List<Integer> resultList = getEntityManager().createQuery(cq).getResultList();
 		return resultList != null && !resultList.isEmpty() && resultList.get(0).equals(1);
+	}
+
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void changePassword(UsuarioLogin usuario, String newPassword, String codigo) {
+		passwordService.changePassword(usuario, newPassword);
+		RecuperacaoSenha rs = getByCodigoAndUsuario(codigo, usuario);
+		marcarCodigoUtilizado(rs);
+		getEntityManager().flush();
+	}
+
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	private void marcarCodigoUtilizado(RecuperacaoSenha recuperacaoSenha) {
+		recuperacaoSenha.setUtilizado(true);
+		getEntityManager().merge(recuperacaoSenha);
 	}
 
 	private Date getExpireDate() {

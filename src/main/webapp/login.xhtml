@@ -148,18 +148,14 @@
             </div>
         </f:facet>
         
-        <p:accordionPanel activeIndex="-1">
+        <p:accordionPanel id="esqueciSenhaAccordion" activeIndex="-1">
             <p:tab title="#{infoxMessages['login.solicitarCodigo']}" >
                 <h:outputText value="#{infoxMessages['login.msgSolicitarCodigo']}" />
                 <h:form>
                     <div>
                         <div>
-                            <h:outputLabel for="login" class="login-lbl" value="#{infoxMessages['login.nomeUsuario']}" />
-                            <h:inputText id="login" class="input-text-login" value="#{passwordRequester.login}" />
-                        </div>
-                        <div>
-                            <h:outputLabel for="email" class="login-lbl" value="#{infoxMessages['login.emailUsuario']}" />
-                            <h:inputText id="email" styleClass="input-text-login" value="#{passwordRequester.email}" />
+                            <h:outputLabel for="login" class="login-lbl-popup" value="#{infoxMessages['login.nomeUsuario']}" />
+                            <h:inputText id="login" class="input-text-login-popup" value="#{passwordRequester.login}" />
                         </div>
                     </div>
                     
@@ -167,7 +163,8 @@
                         <a:commandButton id="confirma" styleClass="input-button-login input_button"
                             value="#{infoxMessages['login.requisitarCodigoSenhaBtn']}"
                             action="#{passwordRequester.requisitarCodigoRecuperacao()}"
-                            limitRender="true" render="@form DialogMessage" />
+                            onclick="infox.showLoading();" oncomplete="infox.hideLoading();"
+                            limitRender="true" render="esqueciSenhaAccordion DialogMessage" />
                         <h:commandButton id="cancelar" styleClass="input-button-login input_button"
                             type="button"
                             value="#{infoxMessages['login.cancelaTrocaSenhaBtn']}"
@@ -181,20 +178,20 @@
                 <h:form id="requestPasswordPanelGerarSenhaForm">
                     <div>
                         <div>
-                            <h:outputLabel for="login" class="login-lbl" value="#{infoxMessages['login.nomeUsuario']}" />
-                            <h:inputText id="login" class="input-text-login" value="#{passwordRequester.login}" />
+                            <h:outputLabel for="login" class="login-lbl-popup" value="#{infoxMessages['login.nomeUsuario']}" />
+                            <h:inputText id="login" class="input-text-login-popup" value="#{passwordRequester.login}" />
                         </div>
                         <div>
-                            <h:outputLabel styleClass="login-lbl" for="codigo" class="login-lbl" value="#{infoxMessages['login.codigo']}" />
-                            <h:inputText id="codigo" styleClass="input-text-login" value="#{passwordRequester.codigo}"/>
+                            <h:outputLabel class="login-lbl-popup" for="codigo" value="#{infoxMessages['login.codigo']}" />
+                            <h:inputText id="codigo" styleClass="input-text-login-popup" value="#{passwordRequester.codigo}"/>
                         </div>
                         <div>
-                            <h:outputLabel for="newPass1" class="login-lbl" value="#{infoxMessages['login.novaSenha']}" />
-                            <h:inputSecret id="newPass1" styleClass="input-text-login" value="#{passwordRequester.newPass1}" />
+                            <h:outputLabel for="newPass1" class="login-lbl-popup" value="#{infoxMessages['login.novaSenha']}" />
+                            <h:inputSecret id="newPass1" styleClass="input-text-login-popup" value="#{passwordRequester.newPass1}" />
                         </div>
                         <div>
-                            <h:outputLabel for="newPass2" class="login-lbl" value="#{infoxMessages['login.confirmacaoNovaSenha']}" />
-                            <h:inputSecret id="newPass2" styleClass="input-text-login" value="#{passwordRequester.newPass2}" />
+                            <h:outputLabel for="newPass2" class="login-lbl-popup" value="#{infoxMessages['login.confirmacaoNovaSenha']}" />
+                            <h:inputSecret id="newPass2" styleClass="input-text-login-popup" value="#{passwordRequester.newPass2}" />
                         </div>
                     </div>
       
@@ -202,7 +199,8 @@
                         <a:commandButton id="confirma" styleClass="input-button-login input_button"
                             value="#{infoxMessages['login.trocarSenhaBtn']}"
                             action="#{passwordRequester.trocarSenha()}"
-                            execute="@form"
+                            execute="@form" onclick="infox.showLoading();"
+                            oncomplete="infox.hideLoading(); if(#{not (facesContext.validationFailed)}){#{rich:component('requestPasswordPanel')}.hide();}"
                             limitRender="true" render="DialogMessage @form" />
                         <h:commandButton id="cancelar" styleClass="input-button-login input_button"
                             type="button"
@@ -225,20 +223,20 @@
         <h:form id="alterPasswordGerarSenhaForm" rendered="#{not useCertLogin}">
           <div>
             <div>
-               <h:outputLabel for="username" styleClass="login-lbl" value="#{infoxMessages['login.nomeUsuario']}" />
-               <h:inputText id="username" value="#{credentials.username}" styleClass="input-text-login" />
+               <h:outputLabel for="username" styleClass="login-lbl-popup" value="#{infoxMessages['login.nomeUsuario']}" />
+               <h:inputText id="username" value="#{credentials.username}" styleClass="input-text-login-popup" />
             </div>
             <div>
-               <h:outputLabel for="password" styleClass="login-lbl" value="#{infoxMessages['login.senha']}" />
-               <h:inputSecret id="password" value="#{credentials.password}" styleClass="input-text-login" />
+               <h:outputLabel for="password" styleClass="login-lbl-popup" value="#{infoxMessages['login.senha']}" />
+               <h:inputSecret id="password" value="#{credentials.password}" styleClass="input-text-login-popup" />
             </div>
 	        <div>
-	           <h:outputLabel for="newPassword1" styleClass="login-lbl" value="#{infoxMessages['login.novaSenha']}" />
-	           <h:inputSecret id="newPassword1" styleClass="input-text-login passwd" value="#{authenticator.newPassword1}" />
+	           <h:outputLabel for="newPassword1" styleClass="login-lbl-popup" value="#{infoxMessages['login.novaSenha']}" />
+	           <h:inputSecret id="newPassword1" styleClass="input-text-login-popup passwd" value="#{authenticator.newPassword1}" />
 	        </div>
 	        <div>
-	           <h:outputLabel for="newPassword2" styleClass="login-lbl" value="#{infoxMessages['login.confirmacaoNovaSenha']}" />
-               <h:inputSecret id="newPassword2" styleClass="input-text-login passwd" value="#{authenticator.newPassword2}" />
+	           <h:outputLabel for="newPassword2" styleClass="login-lbl-popup" value="#{infoxMessages['login.confirmacaoNovaSenha']}" />
+               <h:inputSecret id="newPassword2" styleClass="input-text-login-popup passwd" value="#{authenticator.newPassword2}" />
 	        </div>
           </div>
           <div style="margin-top:3px; text-align: center;" >
