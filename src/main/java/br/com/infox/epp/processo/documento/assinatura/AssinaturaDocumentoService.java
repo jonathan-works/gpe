@@ -36,6 +36,7 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException.Motivo;
 import br.com.infox.epp.processo.documento.assinatura.entity.RegistroAssinaturaSuficiente;
+import br.com.infox.epp.processo.documento.dao.AssinaturaDocumentoDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
@@ -67,6 +68,8 @@ public class AssinaturaDocumentoService {
     private AssinaturaDocumentoListenerService assinaturaDocumentoListenerService;
     @Inject
     private PessoaFisicaManager pessoaFisicaManager;
+    @Inject
+    private AssinaturaDocumentoDAO assinaturaDocumentoDAO;
 
     public Boolean isDocumentoAssinado(final Documento documento) {
         final DocumentoBin documentoBin = documento.getDocumentoBin();
@@ -208,7 +211,8 @@ public class AssinaturaDocumentoService {
 
     public boolean isDocumentoAssinado(DocumentoBin documentoBin, Papel papel) {
         boolean result = false;
-        for (AssinaturaDocumento assinaturaDocumento : documentoBin.getAssinaturas()) {
+        List<AssinaturaDocumento> assinaturas = assinaturaDocumentoDAO.listAssinaturaByDocumentoBin(documentoBin);
+        for (AssinaturaDocumento assinaturaDocumento : assinaturas) {
             if (assinaturaDocumento.getUsuarioPerfil().getPerfilTemplate().getPapel().equals(papel)) {
                 result = isSignatureValid(assinaturaDocumento);
                 break;
@@ -256,7 +260,7 @@ public class AssinaturaDocumentoService {
         return null;
     }
 
-	public void assinarDocumento(final DocumentoBin documentoBin, UsuarioPerfil usuarioPerfilAtual, final String certChain,
+	public void assinarDocumento(DocumentoBin documentoBin, UsuarioPerfil usuarioPerfilAtual, final String certChain,
 			String signature) throws CertificadoException, AssinaturaException, DAOException {
 		UsuarioLogin usuario = usuarioPerfilAtual.getUsuarioLogin();
 		verificaCertificadoUsuarioLogado(certChain, usuario);
@@ -264,11 +268,12 @@ public class AssinaturaDocumentoService {
 		AssinaturaDocumento assinaturaDocumento = new AssinaturaDocumento(documentoBin, usuarioPerfilAtual, certChain, signature);
 		List<Documento> documentosNaoSuficientementeAssinados = documentoBinManager.getDocumentosNaoSuficientementeAssinados(documentoBin);
 		documentoBin.getAssinaturas().add(assinaturaDocumento);
+		assinaturaDocumentoDAO.persist(assinaturaDocumento);
 		
 		if (documentoBin.isMinuta()){
 			documentoBin.setMinuta(Boolean.FALSE);
 		}
-		if (isDocumentoTotalmenteAssinado(documentoBin)){ //linha suspeita
+		if (isDocumentoTotalmenteAssinado(documentoBin)){
 			setDocumentoSuficientementeAssinado(documentoBin, usuarioPerfilAtual);
 		}
 		documentoBinManager.update(documentoBin);
