@@ -40,7 +40,7 @@ public class SwimlaneFitter extends Fitter implements Serializable {
     public void removeSwimlane(SwimlaneHandler s) {
         swimlanes.remove(s);
         setCurrentSwimlane(null);
-        getProcessBuilder().getInstance().getTaskMgmtDefinition().getSwimlanes().remove(s.getSwimlane());
+        getProcessBuilder().getInstance().getTaskMgmtDefinition().getSwimlanes().remove(s.getSwimlane().getName());
     }
 
     public SwimlaneHandler getCurrentSwimlane() {

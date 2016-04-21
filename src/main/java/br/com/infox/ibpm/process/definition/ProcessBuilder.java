@@ -54,6 +54,7 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.transaction.Transactional;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.fluxo.manager.RaiaPerfilManager;
@@ -181,6 +182,7 @@ public class ProcessBuilder implements Serializable {
         eventFitter.clear();
     }
 
+    @SuppressWarnings("unchecked")
     public void load(){
     	try {
     		if(!FacesContext.getCurrentInstance().isPostback()){
@@ -371,7 +373,8 @@ public class ProcessBuilder implements Serializable {
             throw new IllegalStateException("O formulário possui campos inválidos, favor corrigí-los.");
         }
     }
-
+    
+    @Transactional
     public void update() {
         exists = true;
         if (fluxo != null) {
@@ -608,18 +611,11 @@ public class ProcessBuilder implements Serializable {
         }
     }
 
-    @SuppressWarnings(UNCHECKED)
     public Number getIdProcessDefinition() {
         if (instance == null || instance.getName() == null) {
             return null;
         }
-        String query = "select max(id_) from jbpm_processdefinition where name_ = :pdName";
-        Query param = JbpmUtil.getJbpmSession().createSQLQuery(query).setParameter("pdName", instance.getName());
-        List<Object> list = param.list();
-        if (list == null || list.size() == 0) {
-            return null;
-        }
-        return (Number) list.get(0);
+        return JbpmUtil.getProcessDefinitionId(instance.getName());
     }
 
     public ProcessDefinition getInstance() {

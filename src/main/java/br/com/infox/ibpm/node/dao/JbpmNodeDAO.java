@@ -1,11 +1,18 @@
 package br.com.infox.ibpm.node.dao;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.hibernate.SQLQuery;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
+import org.jbpm.graph.def.Node;
+import org.jbpm.graph.def.ProcessDefinition;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.ibpm.util.JbpmUtil;
@@ -30,10 +37,17 @@ public class JbpmNodeDAO extends DAO<Void> {
         JbpmUtil.getJbpmSession().flush();
     }
 
-    public Number findNodeIdByIdProcessDefinitionAndName(
-            Number idProcessDefinition, String taskName) {
-        String hql = "select max(id_) from jbpm_node where processdefinition_ = :idProcessDefinition and name_ = :nodeName";
-        return (Number) JbpmUtil.getJbpmSession().createSQLQuery(hql).setParameter("idProcessDefinition", idProcessDefinition).setParameter("nodeName", taskName).uniqueResult();
+    public Number findNodeIdByIdProcessDefinitionAndName(Number idProcessDefinition, String taskName) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Number> cq = cb.createQuery(Number.class);
+        Root<Node> node = cq.from(Node.class);
+        cq.select(cb.max(node.<Long>get("id")));
+        cq.where(
+                cb.equal(node.<ProcessDefinition>get("processDefinition").<Long>get("id"), cb.literal(idProcessDefinition)),
+                cb.equal(node.<String>get("name"), cb.literal(taskName))
+        );
+        List<Number> result = getEntityManager().createQuery(cq).getResultList();
+        return result.isEmpty() ? null : result.get(0);
     }
 
 }

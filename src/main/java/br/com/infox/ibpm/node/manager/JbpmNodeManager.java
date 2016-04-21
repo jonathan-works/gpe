@@ -21,12 +21,12 @@ public class JbpmNodeManager extends Manager<JbpmNodeDAO, Void> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "jbpmNodeManager";
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void atualizarNodesModificados(Map<Number, String> modifiedNodes) {
         getDao().atualizarNodesModificados(modifiedNodes);
     }
 
-    public Number findNodeIdByIdProcessDefinitionAndName(
-            Number idProcessDefinition, String taskName) {
+    public Number findNodeIdByIdProcessDefinitionAndName(Number idProcessDefinition, String taskName) {
         return getDao().findNodeIdByIdProcessDefinitionAndName(idProcessDefinition, taskName);
     }
 

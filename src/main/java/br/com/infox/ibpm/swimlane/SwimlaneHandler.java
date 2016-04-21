@@ -128,7 +128,7 @@ public class SwimlaneHandler implements Serializable {
             return false;
         }
         SwimlaneHandler other = (SwimlaneHandler) obj;
-        return this.getSwimlane().equals(other.getSwimlane());
+        return this.getSwimlane().getKey().equals(other.getSwimlane().getKey());
     }
 
     @Override
