@@ -15,7 +15,6 @@ import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
-import br.com.infox.epp.cdi.config.BeanManager;
 
 public class SeamExpressionResolver implements ExpressionResolver {
 	
@@ -29,13 +28,14 @@ public class SeamExpressionResolver implements ExpressionResolver {
 	}
 	
 	public SeamExpressionResolver(TaskInstance taskInstance) {
-		executionContext = new ExecutionContext(taskInstance.getToken());
+	    Token token = getEntityManager().find(Token.class, taskInstance.getToken().getId());
+	    taskInstance = getEntityManager().find(TaskInstance.class, taskInstance.getId());
+	    executionContext = new ExecutionContext(token);
 		executionContext.setTaskInstance(taskInstance);
 	}
 	
 	public SeamExpressionResolver(ProcessInstance processInstance) {
-		EntityManager entityManager = BeanManager.INSTANCE.getReference(EntityManager.class);
-		TypedQuery<TaskInstance> typedQuery = entityManager.createNamedQuery("TaskMgmtSession.findOpenTasksOfProcessInstance", TaskInstance.class);
+		TypedQuery<TaskInstance> typedQuery = getEntityManager().createNamedQuery("TaskMgmtSession.findOpenTasksOfProcessInstance", TaskInstance.class);
 		List<TaskInstance> list = typedQuery.setMaxResults(1).setParameter("instance", processInstance).getResultList();
 		if (list != null && !list.isEmpty()) {
     		TaskInstance taskInstance = list.get(0);
@@ -48,9 +48,8 @@ public class SeamExpressionResolver implements ExpressionResolver {
 	}
 
 	public SeamExpressionResolver(Long idProcessInstance) {
-	    EntityManager entityManager = EntityManagerProducer.getEntityManager();
 	    String jqpl = "select ti from org.jbpm.taskmgmt.exe.TaskInstance ti inner join fetch ti.token inner join fetch ti.processInstance pi where pi.id = :idProcessInstance and ti.end is null";
-	    TypedQuery<TaskInstance> typedQuery = entityManager.createQuery(jqpl, TaskInstance.class);
+	    TypedQuery<TaskInstance> typedQuery = getEntityManager().createQuery(jqpl, TaskInstance.class);
 	    List<TaskInstance> list = typedQuery.setMaxResults(1).setParameter("idProcessInstance", idProcessInstance).getResultList();
 	    if (list != null && !list.isEmpty()) {
 	    TaskInstance taskInstance = list.get(0);
@@ -58,7 +57,7 @@ public class SeamExpressionResolver implements ExpressionResolver {
     	    executionContext.setTaskInstance(taskInstance);
 	    } else {
 	        // TODO não funciona com split - join
-	        TypedQuery<Token> tokenQuery = entityManager.createQuery("select t from org.jbpm.graph.exe.Token t where t.processInstance.id = :idProcessInstance and t.parent is null", Token.class);
+	        TypedQuery<Token> tokenQuery = getEntityManager().createQuery("select t from org.jbpm.graph.exe.Token t where t.processInstance.id = :idProcessInstance and t.parent is null", Token.class);
 	        Token token = tokenQuery.setParameter("idProcessInstance", idProcessInstance).getSingleResult();
 	        executionContext = new ExecutionContext(token);
 	    }
@@ -88,5 +87,9 @@ public class SeamExpressionResolver implements ExpressionResolver {
 			expression.setValue(value.toString());
 		}
 		expression.setResolved(true);
+	}
+	
+	private EntityManager getEntityManager() {
+	    return EntityManagerProducer.getEntityManager();
 	}
 }
