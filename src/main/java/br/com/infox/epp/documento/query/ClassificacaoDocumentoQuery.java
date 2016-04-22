@@ -26,6 +26,8 @@ public interface ClassificacaoDocumentoQuery {
     String FIND_CLASSIFICACAO_DOCUMENTO_BY_DESCRICAO_QUERY = "select o from ClassificacaoDocumento o where o.descricao like :" + PARAM_DESCRICAO;
     
     String LIST_CLASSIFICACAO_DOCUMENTO_BY_PROCESSO = "listClassificacaoDocumentoByProcesso";
-    String LIST_CLASSIFICACAO_DOCUMENTO_BY_PROCESSO_QUERY = "select distinct(o) from ClassificacaoDocumento o inner join o.documentoList dl"
-    		+ " where dl.processo = :" + PARAM_PROCESSO + " order by o.descricao";
+    String LIST_CLASSIFICACAO_DOCUMENTO_BY_PROCESSO_QUERY = "select distinct(cd) from Documento d "
+    			+ "inner join d.pasta p "
+    			+ "inner join d.classificacaoDocumento cd "
+    		+ " where p.processo = :" + PARAM_PROCESSO + " order by cd.descricao";
 }
