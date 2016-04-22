@@ -10,8 +10,8 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.controller.AbstractController;
-import br.com.infox.epp.captcha.ServicoCaptchaSessao;
 import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.login.ServicoCaptchaSessao;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;

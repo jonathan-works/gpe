@@ -1,4 +1,4 @@
-package br.com.infox.epp.captcha;
+package br.com.infox.epp.login;
 
 import java.io.Serializable;
 
