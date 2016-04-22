@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.LockModeType;
 import javax.persistence.TypedQuery;
@@ -12,9 +11,9 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.core.persistence.PersistenceController;
 
-public abstract class Dao<T, I> {
+public abstract class Dao<T, I> extends PersistenceController {
 
 	private Class<T> entityClass;
 
@@ -36,10 +35,6 @@ public abstract class Dao<T, I> {
 	public <K>  K getSingleResult(TypedQuery<K> typedQuery) {
 		List<K> result = typedQuery.setMaxResults(1).getResultList();
 		return result.isEmpty() ? null : result.get(0);
-	}
-	
-	public EntityManager getEntityManager() {
-		return BeanManager.INSTANCE.getReference(EntityManager.class);
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.MANDATORY)

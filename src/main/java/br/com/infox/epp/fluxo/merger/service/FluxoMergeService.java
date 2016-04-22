@@ -60,7 +60,7 @@ public class FluxoMergeService {
     public ProcessDefinition jpdlToProcessDefinition(String xml) {
         StringReader stringReader = new StringReader(xml);
         InfoxJpdlXmlReader jpdlReader = new InfoxJpdlXmlReader(new InputSource(stringReader));
-        return jpdlReader.readProcessDefinition();
+        return xml == null || xml.isEmpty() ? null : jpdlReader.readProcessDefinition();
     }
 
     public boolean hasActiveNode(ProcessDefinition processDefinition, Node node){
@@ -75,7 +75,7 @@ public class FluxoMergeService {
     public MergePointsBundle publish(Fluxo fluxo, MergePointsBundle mergePointsBundle) {
         String modifiedXml = fluxo.getXml();
         String publishedXml = fluxo.getXmlExecucao();
-        if (publishedXml == null) {
+        if (publishedXml == null || publishedXml.isEmpty()) {
             ProcessDefinition modifiedProcessDef = jpdlToProcessDefinition(modifiedXml);
             modifiedProcessDef.setName(fluxo.getFluxo());
             processBuilder.load(fluxo);
