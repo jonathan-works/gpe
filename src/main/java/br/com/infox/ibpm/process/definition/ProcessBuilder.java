@@ -62,8 +62,8 @@ import br.com.infox.epp.fluxo.merger.model.MergePointsBundle;
 import br.com.infox.epp.fluxo.merger.service.FluxoMergeService;
 import br.com.infox.epp.fluxo.xpdl.FluxoXPDL;
 import br.com.infox.epp.fluxo.xpdl.IllegalXPDLException;
-import br.com.infox.epp.processo.localizacao.manager.ProcessoLocalizacaoIbpmManager;
 import br.com.infox.epp.processo.timer.manager.TaskExpirationManager;
+import br.com.infox.epp.system.log.LogEventListener;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
 import br.com.infox.ibpm.jpdl.JpdlXmlWriter;
 import br.com.infox.ibpm.node.InfoxMailNode;
@@ -110,8 +110,6 @@ public class ProcessBuilder implements Serializable {
     private GenericManager genericManager;
     @Inject
     private RaiaPerfilManager raiaPerfilManager;
-    @Inject
-    private ProcessoLocalizacaoIbpmManager processoLocalizacaoIbpmManager;
     @Inject
     private VariavelClassificacaoDocumentoManager variavelClassificacaoDocumentoManager;
     @Inject
@@ -476,36 +474,50 @@ public class ProcessBuilder implements Serializable {
 
     @SuppressWarnings("unchecked")
 	private void atualizarRaiaPooledActors(Long idProcessDefinition) throws DAOException {
+    	LogEventListener.disableLogForEvent();
 		Session session = JbpmUtil.getJbpmSession();
 		String hql = "select ti from org.jbpm.taskmgmt.exe.TaskInstance ti "
 						 + "inner join ti.processInstance pi "
-						 + "where pi.processDefinition.id = :idProcessDefinition ";
+						 + "where pi.processDefinition.id = :idProcessDefinition "
+						 + "order by ti.id";
 		Query query =  session.createQuery(hql);
 		query.setParameter("idProcessDefinition", idProcessDefinition);
-		List<TaskInstance> taskInstances = (List<TaskInstance>) query.list();
-		for (TaskInstance taskInstance : taskInstances) {
-			if (taskInstance.getTask().getSwimlane() != null){
-				String[] actorIds = taskInstance.getTask().getSwimlane().getPooledActorsExpression().split(",");
-				if (taskInstance.getCreate() != null && taskInstance.getEnd() == null) {
-					taskInstance.setPooledActors(actorIds);
-					processoLocalizacaoIbpmManager.deleteProcessoLocalizacaoIbpmByTaskInstanceId(taskInstance.getId());
-					processoLocalizacaoIbpmManager.addProcessoLocalizacaoIbpmByTaskInstance(taskInstance);
+		int firstResult = 0;
+		int maxResults = 100;
+		query.setFirstResult(firstResult);
+		query.setMaxResults(maxResults);
+		List<TaskInstance> taskInstances = query.list();
+		while (!taskInstances.isEmpty()) {
+			for (TaskInstance taskInstance : taskInstances) {
+				if (taskInstance.getTask().getSwimlane() != null){
+					String[] actorIds = taskInstance.getTask().getSwimlane().getPooledActorsExpression().split(",");
+					if (taskInstance.getCreate() != null && taskInstance.getEnd() == null) {
+						taskInstance.setPooledActors(actorIds);
+					}
+					if (taskInstance.getSwimlaneInstance() != null) {
+					    taskInstance.getSwimlaneInstance().setPooledActors(actorIds);
+					}
 				}
-				if (taskInstance.getSwimlaneInstance() != null) {
-				    taskInstance.getSwimlaneInstance().setPooledActors(actorIds);
+				if (taskInstance.getTask().getPooledActorsExpression() != null){
+					//TODO: REAVALIAR EXPRESSÃO
+				}
+				if (taskInstance.getTask().getActorIdExpression() != null){
+					//TODO: REAVALIAR EXPRESSÃO
+				}
+				if (taskInstance.getTask().getAssignmentDelegation()!= null){
+					//TODO: REAVALIAR EXPRESSÃO
 				}
 			}
-			if (taskInstance.getTask().getPooledActorsExpression() != null){
-				//TODO: REAVALIAR EXPRESSÃO
+			
+			session.flush();
+			for (TaskInstance taskInstance : taskInstances) {
+				session.evict(taskInstance);
 			}
-			if (taskInstance.getTask().getActorIdExpression() != null){
-				//TODO: REAVALIAR EXPRESSÃO
-			}
-			if (taskInstance.getTask().getAssignmentDelegation()!= null){
-				//TODO: REAVALIAR EXPRESSÃO
-			}
+			
+			firstResult += taskInstances.size();
+			taskInstances = query.setFirstResult(firstResult).list();
 		}
-		session.flush();
+		LogEventListener.enableLog();
 	}
 
 	@SuppressWarnings(UNCHECKED)
