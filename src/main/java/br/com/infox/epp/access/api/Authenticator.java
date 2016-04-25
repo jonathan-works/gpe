@@ -31,6 +31,7 @@ import org.jboss.seam.security.Identity;
 import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.security.management.JpaIdentityStore;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.crud.TermoAdesaoAction;
@@ -518,6 +519,11 @@ public class Authenticator implements Serializable {
         }
     }
     
+    public void setColegiadaParaMonocraticaLogadaCombo(Integer idColegiada) {
+        UnidadeDecisoraColegiada decisoraColegiada=EntityManagerProducer.getEntityManager().find(UnidadeDecisoraColegiada.class, idColegiada);
+        setColegiadaParaMonocraticaLogada(decisoraColegiada);
+    }
+    
     public void setColegiadaParaMonocraticaLogada(UnidadeDecisoraColegiada decisoraColegiada) {
         Contexts.getSessionContext().set(COLEGIADA_DA_MONOCRATICA_LOGADA, decisoraColegiada);
         redirectToPainelDoUsuario();
@@ -533,6 +539,16 @@ public class Authenticator implements Serializable {
         } else {
             return new ArrayList<>();
         }
+    }
+    
+    public List<SelectItem> getColegiadaParaMonocraticaLogadaListItems(){
+        List<SelectItem> items = new ArrayList<>();
+        if (isUsuarioLogadoInMonocratica()) {
+            for (UnidadeDecisoraColegiada udc : getMonocraticaLogada().getUnidadeDecisoraColegiadaList()) {
+                items.add(new SelectItem(udc.getIdUnidadeDecisoraColegiada(), udc.toString()));
+            }
+        }
+        return items;
     }
     
     public String getUsuarioPerfilAtualSingle(){

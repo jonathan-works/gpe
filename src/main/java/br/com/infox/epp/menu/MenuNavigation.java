@@ -13,6 +13,8 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.jboss.seam.Component;
 import org.jboss.seam.security.Identity;
 
+import com.google.gson.Gson;
+
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.component.menu.Menu;
 import br.com.infox.epp.access.component.menu.MenuItem;
@@ -38,7 +40,7 @@ public class MenuNavigation implements Serializable, MenuHandler {
 			if (menu.getUrl() != null && !menu.getUrl().trim().isEmpty()) {
 				result.add(menu);
 			}
-			for (MenuItem menuItem : menu.getChildren()) {
+			for (MenuItem menuItem : menu.getItems()) {
 				result.addAll(getActionMenuItemsFor(menuItem));
 			}
 		}
@@ -92,7 +94,7 @@ public class MenuNavigation implements Serializable, MenuHandler {
 		List<MenuItem> navBarMenu = new ArrayList<>();
 		if (mainMenuItem != null) {
 			boolean hasActionItem=false;
-			for (MenuItem menuItem : mainMenuItem.getChildren()) {
+			for (MenuItem menuItem : mainMenuItem.getItems()) {
 				if (menuItem.getUrl() == null || menuItem.getUrl().trim().isEmpty()) {
 					navBarMenu.add(menuItem);
 				}else{
@@ -109,21 +111,12 @@ public class MenuNavigation implements Serializable, MenuHandler {
 
 	@Override
 	public List<MenuItem> getActionMenu() {
-		List<MenuItem> actionMenu = new ArrayList<>();
-		if (navBarItem != null) {
-			if (!Objects.equals(navBarItem, mainMenuItem)){
-				for (MenuItem menuItem : navBarItem.getChildren()) {
-					actionMenu.addAll(getActionMenuItemsFor(menuItem));
-				}
-			} else {
-				for (MenuItem menuItem : navBarItem.getChildren()) {
-					if (menuItem.getUrl() != null && !menuItem.getUrl().isEmpty()){
-						actionMenu.add(menuItem);
-					}
-				}
-			}
-		}
-		return actionMenu;
+		List<MenuItem> dropMenus = ((Menu)Component.getInstance("mainMenu")).getDropMenus();
+        return dropMenus;
+	}
+	
+	public String getActionMenuJson(){
+	    return new Gson().toJson(getActionMenu());
 	}
 
 	@Override
