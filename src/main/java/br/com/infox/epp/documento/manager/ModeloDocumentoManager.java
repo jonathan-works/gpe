@@ -150,6 +150,7 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
                 if (expression == null) {
                 	expression = group;
                 }
+                expression = StringEscapeUtils.unescapeHtml4(expression);
                 String value = "";
                 if (!expression.startsWith("#{modelo:")) {
 	            	Expression expr = new Expression(expression);
@@ -169,7 +170,7 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
 	            	value = value == null ? "" : value;
 	                value = value.replace("\\", "\\\\").replace("$", "\\$");
                 } else {
-                	String titulo = StringEscapeUtils.unescapeHtml4(expression.substring("#{modelo:".length(), expression.length()-1));
+                	String titulo = expression.substring("#{modelo:".length(), expression.length()-1);
                 	ModeloDocumento modeloDocumentoInside = getModeloDocumentoByTitulo(titulo);
                 	if (modeloDocumento != null) {
                 		value = evaluateModeloDocumento(modeloDocumentoInside, modeloDocumentoInside.getModeloDocumento(), resolver);
