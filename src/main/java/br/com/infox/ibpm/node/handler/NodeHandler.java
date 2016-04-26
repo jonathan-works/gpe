@@ -5,9 +5,12 @@ import static java.text.MessageFormat.format;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -28,11 +31,14 @@ import org.jbpm.instantiation.Delegation;
 import org.jbpm.scheduler.def.CancelTimerAction;
 import org.jbpm.scheduler.def.CreateTimerAction;
 import org.jbpm.taskmgmt.def.Task;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import br.com.infox.core.util.ReflectionsUtil;
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
@@ -70,12 +76,50 @@ public class NodeHandler implements Serializable {
         }
 
     }
+    
+    public enum DueDateType {
+        
+        EXPRESSION("Expressao"), DATE("Data"), PERIOD("Periodo");
+        
+        private String label;
+        
+        private DueDateType(String label) {
+            this.label = label;
+        }
+        
+        public String getLabel() {
+            return label;
+        }
+        
+        public static DueDateType[] orderedValues() {
+            return new DueDateType[]{DATE, EXPRESSION, PERIOD};
+        }
+        
+        public static DueDateType toDueDateType(String dueDate) {
+            if (StringUtil.isEmpty(dueDate)) return DATE;
+            if (dueDate.startsWith("#{") || dueDate.startsWith("${")){
+                return EXPRESSION;
+            } else {
+                SimpleDateFormat sdf = new SimpleDateFormat(CreateTimerAction.DUEDATE_FORMAT);
+                try {
+                    sdf.parse(dueDate);
+                    return DATE;
+                } catch (ParseException e) {
+                    return PERIOD;
+                }
+            }
+        }
+        
+    }
 
     private Node node;
     private List<EventHandler> eventList;
     private EventHandler currentEvent;
     private List<CreateTimerAction> timerList = new ArrayList<>();
     private CreateTimerAction currentTimer;
+    private DueDateType dueDateType;
+    private Date dueDateDate;
+    private String dueDateExpression;
     private String dueDateValue;
     private UnitsEnum dueDateUnit;
     private boolean dueDateBusiness;
@@ -238,6 +282,7 @@ public class NodeHandler implements Serializable {
         dueDateBusiness = false;
         dueDateValue = null;
         dueDateUnit = null;
+        dueDateType = DueDateType.toDueDateType(currentTimer.getDueDate());
         setDueDate(currentTimer.getDueDate());
     }
 
@@ -246,21 +291,37 @@ public class NodeHandler implements Serializable {
     }
 
     private void setDueDate(String dueDate) {
-        if (dueDate == null) {
-            return;
+        if (dueDate == null) return;
+        if (getDueDateType() == DueDateType.PERIOD) {
+            dueDateBusiness = dueDate.indexOf(" business ") > -1;
+            String[] s = dueDate.split(" ");
+            dueDateValue = s[0];
+            String unit = s[1];
+            if (s.length > 2) {
+                unit = s[2];
+            }
+            dueDateUnit = UnitsEnum.valueOf(unit);
+        } else if (getDueDateType() == DueDateType.DATE) {
+            dueDateDate = DateTime.parse(dueDate, DateTimeFormat.forPattern(CreateTimerAction.DUEDATE_FORMAT)).toDate();
+        } else if (getDueDateType() == DueDateType.EXPRESSION) {
+            dueDateExpression = dueDate;
         }
-        dueDateBusiness = dueDate.indexOf(" business ") > -1;
-        String[] s = dueDate.split(" ");
-        dueDateValue = s[0];
-        String unit = s[1];
-        if (s.length > 2) {
-            unit = s[2];
-        }
-        dueDateUnit = UnitsEnum.valueOf(unit);
     }
-
+    
     public CreateTimerAction getCurrentTimer() {
         return currentTimer;
+    }
+    
+    public DueDateType getDueDateType() {
+        return dueDateType;
+    }
+
+    public void setDueDateType(DueDateType dueDateType) {
+        this.dueDateType = dueDateType;
+    }
+    
+    public DueDateType[] getDueDateTypeValues() {
+        return DueDateType.orderedValues();
     }
 
     public void setTimerList(List<CreateTimerAction> timerList) {
@@ -329,10 +390,25 @@ public class NodeHandler implements Serializable {
             break;
         }
     }
+    
+    public Date getDueDateDate() {
+        return dueDateDate;
+    }
+
+    public void setDueDateDate(Date dueDateDate) {
+        this.dueDateDate = dueDateDate;
+    }
+
+    public String getDueDateExpression() {
+        return dueDateExpression;
+    }
+
+    public void setDueDateExpression(String dueDateExpression) {
+        this.dueDateExpression = dueDateExpression;
+    }
 
     public void setDueDateValue(String dueDateValue) {
         this.dueDateValue = dueDateValue;
-        setDueDate();
     }
 
     public String getDueDateValue() {
@@ -341,7 +417,6 @@ public class NodeHandler implements Serializable {
 
     public void setDueDateUnit(UnitsEnum dueDateUnit) {
         this.dueDateUnit = dueDateUnit;
-        setDueDate();
     }
 
     public UnitsEnum getDueDateUnit() {
@@ -350,21 +425,30 @@ public class NodeHandler implements Serializable {
 
     public void setDueDateBusiness(boolean dueDateBusiness) {
         this.dueDateBusiness = dueDateBusiness;
-        setDueDate();
     }
 
     public boolean isDueDateBusiness() {
         return dueDateBusiness;
     }
+    
+    public void onChangeDueDateType() {
+        dueDateBusiness = false;
+        dueDateValue = null;
+        dueDateUnit = null;
+        dueDateExpression = null;
+        dueDateDate = null;
+    }
 
-    private void setDueDate() {
-        if (dueDateValue != null && dueDateUnit != null) {
-            String dueDate = dueDateValue
-                    + (dueDateBusiness ? " business " : " ") +
-                    // Tem que ser minúsculo por causa dos mapas businessAmounts
-                    // e calendarFields da classe org.jbpm.calendar.Duration
-                    dueDateUnit.name().toLowerCase();
-            currentTimer.setDueDate(dueDate);
+    public void onChangeDueDate() {
+        if (getDueDateType() == DueDateType.EXPRESSION && getDueDateExpression() != null) {
+            currentTimer.setDueDate(getDueDateExpression());
+        } else if (getDueDateType() == DueDateType.DATE && getDueDateDate() != null) {
+            currentTimer.setDueDate(new DateTime(getDueDateDate().getTime()).toString(CreateTimerAction.DUEDATE_FORMAT));
+        } else {
+            if (dueDateValue != null && dueDateUnit != null) {
+                String dueDate = dueDateValue + (dueDateBusiness ? " business " : " ") + dueDateUnit.name().toLowerCase();
+                currentTimer.setDueDate(dueDate);
+            }
         }
     }
 

@@ -21,14 +21,22 @@ import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Root;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.jboss.seam.Component;
+import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jbpm.context.def.VariableAccess;
+import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.ProcessDefinition;
@@ -41,6 +49,7 @@ import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.jpdl.JpdlException;
 import org.jbpm.jpdl.xml.Problem;
+import org.jbpm.scheduler.def.CreateTimerAction;
 import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
@@ -50,6 +59,7 @@ import org.xml.sax.InputSource;
 
 import com.google.common.base.Strings;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.messages.InfoxMessages;
@@ -455,6 +465,7 @@ public class ProcessBuilder implements Serializable {
                 Events.instance().raiseEvent(POST_DEPLOY_EVENT, instance);
                 taskFitter.checkCurrentTaskPersistenceState();
                 atualizarRaiaPooledActors(instance.getId());
+                atualizarTimer();
                 FacesMessages.instance().clear();
                 FacesMessages.instance().add("Fluxo publicado com sucesso!");
             } catch (Exception e) {
@@ -513,6 +524,44 @@ public class ProcessBuilder implements Serializable {
 		}
 		session.flush();
 	}
+    
+    private void atualizarTimer() throws Exception {
+        EntityManager em = EntityManagerProducer.getEntityManager();
+        String jpql = "delete from org.jbpm.job.Timer timer "
+                + "where exists (select 1 from org.jbpm.graph.exe.ProcessInstance pinst "
+                + "                 where timer.processInstance.id = pinst.id "
+                + "                 and pinst.processDefinition.id = :processDefitinionId )";
+        javax.persistence.Query query = em.createQuery(jpql).setParameter("processDefitinionId", instance.getId());
+        query.executeUpdate();
+        
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
+        Root<TaskInstance> taskInstance = cq.from(TaskInstance.class);
+        Root<CreateTimerAction> createTimeAction = cq.from(CreateTimerAction.class);
+        Join<TaskInstance, Task> task = taskInstance.join("task", JoinType.INNER);
+        Join<TaskInstance, Token> token = taskInstance.join("token", JoinType.INNER);
+        Join<TaskInstance, ProcessInstance> processInstance = taskInstance.join("processInstance", JoinType.INNER);
+        Join<Task, TaskNode> taskNode = task.join("taskNode", JoinType.INNER);
+        Join<TaskNode, Event> event = taskNode.join("events", JoinType.INNER);
+        cq.where(
+            cb.equal(processInstance.<ProcessDefinition>get("processDefinition").get("id"), instance.getId()),
+            cb.isNull(processInstance.get("end")),
+            cb.isNull(taskInstance.get("end")),
+            cb.isNotNull(taskInstance.get("create")),
+            cb.equal(event.get("id"), createTimeAction.<Event>get("event").get("id"))
+        );
+        cq.multiselect(token, createTimeAction, taskNode);
+        List<Object[]> resultList = em.createQuery(cq).getResultList();
+        for (Object[] result : resultList) {
+            Token tokenResult = (Token) result[0];
+            CreateTimerAction createTimerActionResult = (CreateTimerAction) result[1];
+            TaskNode taskNodeResult = (TaskNode) result[2];
+            ExecutionContext executionContext = new ExecutionContext(tokenResult);
+            executionContext.setEventSource(taskNodeResult);
+            createTimerActionResult.execute(executionContext);
+        }
+        em.flush();
+    }
 
 	@SuppressWarnings(UNCHECKED)
     private List<String> getVariaveisDocumento() {

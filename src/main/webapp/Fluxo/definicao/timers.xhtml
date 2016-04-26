@@ -8,6 +8,7 @@
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:p="http://primefaces.org/ui"
 >
     <rich:panel bodyClass="panel">
         <s:div id="timersDiv">
@@ -69,25 +70,13 @@
                 <ui:define name="columns">
                     <rich:column>
                         <f:facet name="header">#{infoxMessages['process.timer']}</f:facet>
-                        <ui:param
-                            name="current"
-                            value="#{row == nodeFitter.nodeHandler.currentTimer}"
-                        />
-                        <ui:param
-                            name="styleTimerName"
-                            value="#{current ? 'font-weight:bold' : ''}"
-                        />
+                        <ui:param name="current" value="#{row == nodeFitter.nodeHandler.currentTimer}"/>
+                        <ui:param name="styleTimerName" value="#{current ? 'font-weight:bold' : ''}"/>
                         <h:form>
                             <s:div>
-                                <a:commandLink
-                                    action="#{node.setCurrentTimer(row)}"
-                                    execute="@this"
-                                    render="timersDiv,timerDiv"
-                                    limitRender="true"
-                                >
-                                    <h:outputText
-                                        value="#{row.timerName}"
-                                    />
+                                <a:commandLink action="#{node.setCurrentTimer(row)}" execute="@this"
+                                    render="timersDiv,timerDiv" limitRender="true">
+                                    <h:outputText value="#{row.timerName}" />
                                 </a:commandLink>
                             </s:div>
                         </h:form>
@@ -98,74 +87,52 @@
         <s:div id="timerDiv">
             <h:form>
                 <s:div rendered="#{not empty node.currentTimer}">
-                    <ui:param
-                        name="timer"
-                        value="#{node.currentTimer}"
-                    />
-                    <wi:inputText
-                        id="name"
-                        value="#{node.timerName}"
-                        label="#{infoxMessages['process.timer.name']}"
-                    >
-                        <a:ajax
-                            execute="@this"
-                            limitRender="true"
-                            event="change"
-                            render="timersTable"
-                        />
+                
+                    <ui:param name="timer" value="#{node.currentTimer}"/>
+                    
+                    <wi:inputText id="name" value="#{node.timerName}" label="#{infoxMessages['process.timer.name']}">
+                        <a:ajax execute="@this" limitRender="true" event="change" render="timersTable"/>
                     </wi:inputText>
-                    <wi:inputText
-                        id="duedate"
-                        value="#{node.dueDateValue}"
-                        widthDiv="50px"
-                        label="#{infoxMessages['process.timer.prazo']}"
-                    >
-                        <a:ajax
-                            execute="@this"
-                            limitRender="true"
-                            event="change"
-                        />
-                    </wi:inputText>
-                    <wi:selectOneMenuEnum
-                        id="unit"
-                        value="#{node.dueDateUnit}"
-                        widthDiv="100px"
-                        label="#{infoxMessages['process.timer.prazo.unidade']}"
-                        items="#{node.dueDateDefaultUnit.values()}"
-                        showLabelSelecione="true"
-                        optionText="label"
-                    >
-                        <a:ajax
-                            execute="@this"
-                            limitRender="true"
-                            event="change"
-                        />
-                    </wi:selectOneMenuEnum>
-                    <wi:selectBooleanCheckbox
-                        id="business"
-                        value="#{node.dueDateBusiness}"
-                        widthDiv="40px"
-                        label="#{infoxMessages['process.timer.business']}"
-                    >
-                        <a:ajax
-                            execute="@this"
-                            limitRender="true"
-                            event="change"
-                        />
-                    </wi:selectBooleanCheckbox>
-                    <wi:selectOneMenu
-                        id="transition"
-                        value="#{timer.transitionName}"
-                        label="#{infoxMessages['process.timer.transition']}"
-                        items="#{node.getTransitions()}"
-                        showLabelSelecione="true"
-                    >
-                        <a:ajax
-                            execute="@this"
-                            limitRender="true"
-                            event="change"
-                        />
+                    
+                    <wi:selectOneMenu id="transition" value="#{timer.transitionName}" label="#{infoxMessages['process.timer.transition']}" 
+                        items="#{node.getTransitions()}" showLabelSelecione="true">
+                        <a:ajax execute="@this" event="change" limitRender="true"/>
                     </wi:selectOneMenu>
+                    
+                    <wi:selectOneRadioEnum id="dueDateTypeRadio" value="#{node.dueDateType}" items="#{node.dueDateTypeValues}">
+                    	<p:ajax process="@this" event="change" update="@(.dueDateTimer)" listener="#{node.onChangeDueDateType}"/>
+                    </wi:selectOneRadioEnum>
+                    
+                    <p:outputPanel styleClass="dueDateTimer">
+	                    <p:outputPanel rendered="#{node.dueDateType eq 'PERIOD'}">
+		                    <wi:inputText id="duedatePeriod" value="#{node.dueDateValue}" widthDiv="50px" label="#{infoxMessages['process.timer.prazo']}">
+		                        <a:ajax execute="@this" limitRender="true" event="change" listener="#{node.onChangeDueDate}"/>
+		                    </wi:inputText>
+		                    
+		                    <wi:selectOneMenuEnum id="unit" value="#{node.dueDateUnit}" widthDiv="100px" label="#{infoxMessages['process.timer.prazo.unidade']}"
+		                        items="#{node.dueDateDefaultUnit.values()}" showLabelSelecione="true" optionText="label">
+		                        <a:ajax execute="@this" limitRender="true" event="change" listener="#{node.onChangeDueDate}"/>
+		                    </wi:selectOneMenuEnum>
+		                    
+		                    <wi:selectBooleanCheckbox id="business" value="#{node.dueDateBusiness}" widthDiv="40px" label="#{infoxMessages['process.timer.business']}">
+		                        <a:ajax execute="@this" limitRender="true" event="change" listener="#{node.onChangeDueDate}"/>
+		                    </wi:selectBooleanCheckbox>
+	                    </p:outputPanel>
+	                    
+	                    <p:outputPanel rendered="#{node.dueDateType eq 'DATE'}">
+		                    <wi:inputDate id="dueDateDate" value="#{node.dueDateDate}" widthDiv="255px" label="#{infoxMessages['process.timer.data']}"
+		                    	pattern="dd/MM/yyyy HH:mm">
+		                        <a:ajax execute="@this" limitRender="true" event="change" listener="#{node.onChangeDueDate}"/>
+		                    </wi:inputDate>
+	                    </p:outputPanel>
+	                    
+	                    <p:outputPanel rendered="#{node.dueDateType eq 'EXPRESSION'}">
+		                    <wi:inputText id="dueDateExpression" value="#{node.dueDateExpression}" widthDiv="50px" label="#{infoxMessages['process.timer.expressao']}">
+		                        <a:ajax execute="@this" limitRender="true" event="change" listener="#{node.onChangeDueDate}"/>
+		                        <f:validator validatorId="javax.faces.elValidator"/>
+		                    </wi:inputText>
+	                    </p:outputPanel>
+                     </p:outputPanel>
                 </s:div>
             </h:form>
         </s:div>
