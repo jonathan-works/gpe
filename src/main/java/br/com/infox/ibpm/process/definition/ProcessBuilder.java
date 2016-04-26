@@ -74,7 +74,6 @@ import br.com.infox.epp.fluxo.merger.model.MergePointsBundle;
 import br.com.infox.epp.fluxo.merger.service.FluxoMergeService;
 import br.com.infox.epp.fluxo.xpdl.FluxoXPDL;
 import br.com.infox.epp.fluxo.xpdl.IllegalXPDLException;
-import br.com.infox.epp.processo.localizacao.manager.ProcessoLocalizacaoIbpmManager;
 import br.com.infox.epp.processo.timer.manager.TaskExpirationManager;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
 import br.com.infox.ibpm.jpdl.JpdlXmlWriter;
@@ -122,8 +121,6 @@ public class ProcessBuilder implements Serializable {
     private GenericManager genericManager;
     @Inject
     private RaiaPerfilManager raiaPerfilManager;
-    @Inject
-    private ProcessoLocalizacaoIbpmManager processoLocalizacaoIbpmManager;
     @Inject
     private VariavelClassificacaoDocumentoManager variavelClassificacaoDocumentoManager;
     @Inject
@@ -508,18 +505,6 @@ public class ProcessBuilder implements Serializable {
 					    taskInstance.getSwimlaneInstance().setPooledActors(actorIds);
 					}
 				}
-				if (taskInstance.getSwimlaneInstance() != null) {
-				    taskInstance.getSwimlaneInstance().setPooledActors(actorIds);
-				}
-			}
-			if (taskInstance.getTask().getPooledActorsExpression() != null){
-				//TODO: REAVALIAR EXPRESSÃO
-			}
-			if (taskInstance.getTask().getActorIdExpression() != null){
-				//TODO: REAVALIAR EXPRESSÃO
-			}
-			if (taskInstance.getTask().getAssignmentDelegation()!= null){
-				//TODO: REAVALIAR EXPRESSÃO
 			}
 		}
 		session.flush();
