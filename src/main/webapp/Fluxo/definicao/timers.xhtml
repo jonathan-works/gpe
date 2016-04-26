@@ -97,7 +97,7 @@
         </s:div>
         <s:div id="timerDiv">
             <h:form>
-                <s:div rendered="#{!empty node.currentTimer}">
+                <s:div rendered="#{not empty node.currentTimer}">
                     <ui:param
                         name="timer"
                         value="#{node.currentTimer}"

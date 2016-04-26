@@ -431,7 +431,7 @@ public class JpdlXmlWriter {
         if ((transitionEvent != null) && (transitionEvent.hasActions())) {
             writeActions(transitionElement, transitionEvent.getActions());
         }
-        if (transition.getCondition() != null && !"".equals(transition.getCondition().trim())) {
+        if (!StringUtil.isEmpty(transition.getCondition())) {
         	transitionElement.addAttribute("condition", transition.getCondition());
         } else {
         	Attribute condition = transitionElement.attribute("condition");
