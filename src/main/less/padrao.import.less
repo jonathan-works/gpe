@@ -1,5 +1,8 @@
+@context-path:"#{pathResolver.contextPath}";
+
 // FUNÇÕES
 @import "functions/epp-mixins.import.less";
+@import "normalizacao/base.import.less";
 
 // COMPONENTES / ÁTOMOS
 @import "atomos/buttons.import.less";
@@ -63,7 +66,7 @@
 @sub-borda-pad:5rem/16;
 @sub-borda-bord-width:0;
 
-@default-font-family:Arial, Verdana, sans-serif;
+@default-font-family:"RobotoDraft","Roboto",sans-serif, Arial, Verdana;
 
 @header-bg-color:#c7d8cd;
 @header-bg-deg-color:#dbe5de;
@@ -157,7 +160,8 @@ h1 {
   margin-top: 0;
 }
 
-#html,#body {
+#html {
+	height:100%;
 }
 
 #body {
@@ -212,6 +216,8 @@ h1 {
 .decoration-div {
   display: inline-block;
   vertical-align: top;
+  overflow: auto;
+  max-width: 100%;
 }
 
 .activeRow {
@@ -389,10 +395,6 @@ img.disabled {
 
 .input {
   &.select {
-    background-color: #FFF;
-    background-repeat: no-repeat;
-    background-position: top;
-    max-width:250rem/16;
     &.filtro-input-select {
       background-color: #FFF;
       padding: 5rem/16;
@@ -894,8 +896,8 @@ option {
     border: 2rem/16 solid #666;
     color: #666;
     text-align: center;
-
-    font: 12rem/16 Arial, sans-serif;
+    font-size:12rem/16;
+    font: @default-font-family;
 }
 
 div.rf-pp-hdr-cnt {

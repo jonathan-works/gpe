@@ -14,6 +14,14 @@
 	vertical-align: top;
 	margin: 0 5px 5px 0;
 	width:284px;
+	@media only screen {
+		@media (max-width: 1024px){
+			display:block;
+			width:auto;
+      margin:0;
+		}
+	}
+	
   &.hidden {
     display:none;
   }
@@ -29,8 +37,14 @@
 .dtable-p {
   &.rf-p{
     display: inline-block;
-    width:calc(~"100% - "291px);
+    width:calc(~"100% - 291px");
     padding:0px;
+    @media only screen {
+      @media (max-width: 1024px){
+        display:block;
+        width:auto;
+      }
+    }
     &.picklist {
       width:100%;
       min-height:478px;
