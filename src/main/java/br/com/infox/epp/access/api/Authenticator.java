@@ -520,6 +520,7 @@ public class Authenticator implements Serializable {
     
     public void setColegiadaParaMonocraticaLogada(UnidadeDecisoraColegiada decisoraColegiada) {
         Contexts.getSessionContext().set(COLEGIADA_DA_MONOCRATICA_LOGADA, decisoraColegiada);
+        redirectToPainelDoUsuario();
     }
     
     public UnidadeDecisoraColegiada getColegiadaParaMonocraticaLogada() {
