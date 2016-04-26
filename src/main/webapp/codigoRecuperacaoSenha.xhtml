@@ -24,6 +24,13 @@
                 </div>
 
                 <div>
+                    <p:captcha id="captcha" label="Captcha" language="pt_BR"
+                        validatorMessage="#{infoxMessages['captcha.incorreto']}"
+                        requiredMessage="#{infoxMessages['captcha.obrigatorio']}" />
+                    <p:messages for="captcha" severity="error"/>
+                </div>
+
+                <div>
                     <a:commandButton id="submitButton" styleClass="buttons"
                         execute="@form" render="@form pageBodyDialogMessage"
                         onclick="infox.showLoading();" oncomplete="infox.hideLoading();"

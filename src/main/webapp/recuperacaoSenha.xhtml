@@ -39,6 +39,14 @@
                         <wi:inputSecret id="pass2" label="#{infoxMessages['login.confirmacaoNovaSenha']}"
                             value="#{recuperacaoSenhaView.pass2}" required="true" />
                     </div>
+
+                    <div>
+                        <p:captcha id="captcha" label="Captcha" language="pt_BR"
+                            validatorMessage="#{infoxMessages['captcha.incorreto']}"
+                            requiredMessage="#{infoxMessages['captcha.obrigatorio']}" />
+                        <p:messages for="captcha" severity="error"/>
+                    </div>
+
                 </div>
                     <a:commandButton id="trocarSenha" styleClass="buttons"
                         value="#{infoxMessages['login.trocarSenhaBtn']}"
