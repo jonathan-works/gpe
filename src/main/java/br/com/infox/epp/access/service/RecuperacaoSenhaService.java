@@ -27,7 +27,6 @@ import br.com.infox.epp.mail.service.AccessMailService;
 public class RecuperacaoSenhaService implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private static final int CODE_MINUTES_EXPIRE = 5; // Esta constante define o número de minutos em que o código será considerado expirado
 	private final int REQUEST_CODE_LENGH = 5;
 
 	@Inject
@@ -36,48 +35,53 @@ public class RecuperacaoSenhaService implements Serializable {
 	private PasswordService passwordService;
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void requisitarCodigoRecuperacao(UsuarioLogin usuario) {
-		RecuperacaoSenha newRequest = createNewRequest(usuario);
+	public void requisitarCodigoRecuperacao(UsuarioLogin usuario, Integer minutesToExpire, String url) {
+		RecuperacaoSenha newRequest = createNewRequest(usuario, minutesToExpire);
 		getEntityManager().persist(newRequest);
 		getEntityManager().flush();
-		String conteudo = createConteudoRequestNewEmail(newRequest);
+		String conteudo = createConteudoRequestNewEmail(newRequest, minutesToExpire, url);
 		String subject = InfoxMessages.getInstance().get("usuario.senha.generated.subject");
 		accessMailService.enviarEmail(conteudo, subject, usuario);
 	}
 
-	private String createConteudoRequestNewEmail(RecuperacaoSenha newRequest) {
+	private String createConteudoRequestNewEmail(RecuperacaoSenha newRequest, Integer minutesToExpire, String url) {
 		String texto = "<p>Este é um email de recuperação de senha para o usuário <strong>" + newRequest.getUsuarioLogin().getLogin() + "</strong>.</p>"
 				+ "<p>O código para alteração da senha é <strong>" + newRequest.getCodigo() + "</strong></p>"
-				+ "<p>Este código irá expirar em <strong>" + CODE_MINUTES_EXPIRE + " minutos e só poderá ser utilizado uma vez</strong>.</p>"
+				+ "<p>Este código irá expirar em <strong>" + minutesToExpire + " minutos e só poderá ser utilizado uma vez</strong>.</p>"
+				+ "<div>"
+					+ "<a href=\"" + url + "/recuperacaoSenha.seam\" target=\"_blank\">"
+						+ "Clique aqui para ir diretamente à página"
+					+ "</a>"
+				+ "</div>"
 				+ "<p>Caso não tenha solicitado uma troca de senha, favor ignorar este email.</p>";
 		return texto;
 	}
 
-	private RecuperacaoSenha createNewRequest(UsuarioLogin usuario) {
+	private RecuperacaoSenha createNewRequest(UsuarioLogin usuario, Integer minutesToExpire) {
 		RecuperacaoSenha rs = new RecuperacaoSenha();
-		rs.setCodigo(generateRequestCode(usuario));
+		rs.setCodigo(generateRequestCode(usuario, minutesToExpire));
 		rs.setDataCriacao(new Date());
 		rs.setUsuarioLogin(usuario);
 		rs.setUtilizado(false);
 		return rs;
 	}
 
-	private String generateRequestCode(UsuarioLogin usuario) {
+	private String generateRequestCode(UsuarioLogin usuario, Integer minutesToExpire) {
 		String code = RandomStringUtils.randomAlphanumeric(REQUEST_CODE_LENGH);
-		while (codeAlreadyExists(code, usuario)) {
+		while (codeAlreadyExists(code, usuario, minutesToExpire)) {
 			code = RandomStringUtils.randomAlphanumeric(REQUEST_CODE_LENGH);
 		}
 		return code;
 	}
 
-	private Boolean codeAlreadyExists(String code, UsuarioLogin usuario) {
+	private Boolean codeAlreadyExists(String code, UsuarioLogin usuario, Integer minutesToExpire) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
 		Root<RecuperacaoSenha> rs = cq.from(RecuperacaoSenha.class);
 		cq.select(cb.literal(1));
 		cq.where(cb.equal(rs.get(RecuperacaoSenha_.codigo), code),
 				cb.equal(rs.get(RecuperacaoSenha_.usuarioLogin), usuario),
-				cb.greaterThan(rs.get(RecuperacaoSenha_.dataCriacao), getExpireDate()));
+				cb.greaterThan(rs.get(RecuperacaoSenha_.dataCriacao), getExpireDate(minutesToExpire)));
 		List<Integer> resultList = getEntityManager().createQuery(cq).getResultList();
 		return resultList != null && !resultList.isEmpty() && resultList.get(0).equals(1);
 	}
@@ -93,7 +97,7 @@ public class RecuperacaoSenhaService implements Serializable {
 		return resultList != null && !resultList.isEmpty() ? resultList.get(0) : null;
 	}
 
-	public Boolean verificarValidadeCodigo(String codigo, UsuarioLogin usuario) {
+	public Boolean verificarValidadeCodigo(String codigo, UsuarioLogin usuario, Integer minutesToExpire) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
 		Root<RecuperacaoSenha> rs = cq.from(RecuperacaoSenha.class);
@@ -101,7 +105,7 @@ public class RecuperacaoSenhaService implements Serializable {
 		cq.where(cb.equal(rs.get(RecuperacaoSenha_.codigo), codigo),
 				cb.equal(rs.get(RecuperacaoSenha_.usuarioLogin), usuario),
 				cb.isFalse(rs.get(RecuperacaoSenha_.utilizado)),
-				cb.greaterThan(rs.get(RecuperacaoSenha_.dataCriacao), getExpireDate()));
+				cb.greaterThan(rs.get(RecuperacaoSenha_.dataCriacao), getExpireDate(minutesToExpire)));
 		
 		List<Integer> resultList = getEntityManager().createQuery(cq).getResultList();
 		return resultList != null && !resultList.isEmpty() && resultList.get(0).equals(1);
@@ -121,8 +125,8 @@ public class RecuperacaoSenhaService implements Serializable {
 		getEntityManager().merge(recuperacaoSenha);
 	}
 
-	private Date getExpireDate() {
-		return new Date(new Date().getTime() - (CODE_MINUTES_EXPIRE  * 60 * 1000));
+	private Date getExpireDate(Integer minutesToExpire) {
+		return new Date(new Date().getTime() - (minutesToExpire * 60 * 1000));
 	}
 
 	private EntityManager getEntityManager() {

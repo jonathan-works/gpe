@@ -164,6 +164,7 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
     	}
     }
     
+    @Deprecated // Não vi nenhuma classe utilizando este método
     public void requisitarNovaSenhaPorEmail(UsuarioLogin usuario, String tipoParametro) throws LoginException, DAOException {
         if (usuario == null) {
             throw new BusinessException("Usuário não encontrado");
