@@ -13,6 +13,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.RandomStringUtils;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
@@ -45,11 +46,13 @@ public class RecuperacaoSenhaService implements Serializable {
 	}
 
 	private String createConteudoRequestNewEmail(RecuperacaoSenha newRequest, Integer minutesToExpire, String url) {
+		String code = newRequest.getUsuarioLogin().getLogin() + ":" + newRequest.getCodigo();
+		String base64 = Base64.encodeBase64URLSafeString(code.getBytes());
 		String texto = "<p>Este é um email de recuperação de senha para o usuário <strong>" + newRequest.getUsuarioLogin().getLogin() + "</strong>.</p>"
 				+ "<p>O código para alteração da senha é <strong>" + newRequest.getCodigo() + "</strong></p>"
 				+ "<p>Este código irá expirar em <strong>" + minutesToExpire + " minutos e só poderá ser utilizado uma vez</strong>.</p>"
 				+ "<div>"
-					+ "<a href=\"" + url + "/recuperacaoSenha.seam\" target=\"_blank\">"
+					+ "<a href=\"" + url + "/recuperacaoSenha.seam?code=" + base64 + "\" target=\"_blank\">"
 						+ "Clique aqui para ir diretamente à página"
 					+ "</a>"
 				+ "</div>"

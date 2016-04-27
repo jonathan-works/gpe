@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.codec.binary.Base64;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.exception.EppConfigurationException;
@@ -50,11 +51,14 @@ public class RecuperacaoSenhaView implements Serializable {
 			login = (String) flash.get("login");
 		} else {
 			Map<String, String> parameterMap = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-			if (parameterMap.containsKey("eppRecuperaSenhaUsuarioHidden")) {
-				login = parameterMap.get("eppRecuperaSenhaUsuarioHidden");
-			}
-			if (parameterMap.containsKey("eppRecuperaSenhaCodigoHidden")) {
-				codigo = parameterMap.get("eppRecuperaSenhaCodigoHidden");
+			if (parameterMap.containsKey("code")) {
+				String code = parameterMap.get("code");
+				String decode = new String(Base64.decodeBase64(code));
+				String[] split = decode.split(":");
+				if (split.length == 2) {
+					login = split[0];
+					codigo = split[1];
+				}
 			}
 		}
 
