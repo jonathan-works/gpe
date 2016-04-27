@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<items>
+    <value>menu.documentacao/documentacao.menuText:/Documentacao/documentacao.seam</value>
+    <value>menu.processo/processo.iniciarMenuText:/Processo/listView.seam</value>
+    <value>menu.processo/processo.consultarMenuText:/Processo/Consulta/listView.seam</value>
+    <value>menu.administracao/menu.contAcesso/papel.menuText:/useradmin/papelListView.seam</value>
+    <value>menu.administracao/menu.contAcesso/recurso.menuText:/useradmin/recursoListView.seam</value>
+    <value>menu.administracao/menu.contAcesso/usuario.menuText:/Usuario/listView.seam</value>
+    <value>menu.administracao/menu.contAcesso/localizacao.menuText:/Localizacao/listView.seam</value>
+    <value>menu.administracao/menu.contAcesso/estrutura.menuText:/Estrutura/listView.seam</value>
+    <value>menu.administracao/menu.contAcesso/perfil.menuText:/Perfil/listView.seam</value>
+    <value>menu.administracao/menu.documentos/menu.modeloDocumento/grupoModeloDocumento.menuText:/GrupoModeloDocumento/listView.seam</value>
+    <value>menu.administracao/menu.documentos/menu.modeloDocumento/tipoModeloDocumento.menuText:/TipoModeloDocumento/listView.seam</value>
+    <value>menu.administracao/menu.documentos/menu.modeloDocumento/modeloDocumento.menuText:/ModeloDocumento/listView.seam</value>
+    <value>menu.administracao/menu.documentos/menu.modeloDocumento/twitterTemplate.menuText:/ModeloDocumento/TwitterTemplate/listView.seam</value>
+    <value>menu.administracao/menu.documentos/tipoProcessoDocumento.menuText:/ClassificacaoDocumento/listView.seam</value>
+    <value>menu.administracao/menu.documentos/variavel.menuText:/Variavel/listView.seam</value>
+    <value>menu.administracao/menu.documentos/localizacaoFisica.menuText:/LocalizacaoFisica/listView.seam</value>
+    <value>menu.administracao/menu.fluxos/fluxo.menuText:/Fluxo/listView.seam</value>
+    <value>menu.administracao/menu.fluxos/menu.agrupamento/natureza.menuText:/Natureza/listView.seam</value>
+    <value>menu.administracao/menu.fluxos/menu.agrupamento/categoria.menuText:/Categoria/listView.seam</value>
+    <value>menu.administracao/menu.fluxos/menu.agrupamento/item.menuText:/Item/listView.seam</value>
+    <value>menu.administracao/menu.fluxos/tipoParte.menuText:/TipoParte/listView.seam</value>
+    <value>menu.administracao/menu.fluxos/signal.menuText:/Sinal/listView.seam</value>
+    <value>menu.administracao/log.logs/log.menuText:/Consulta/Log/list.seam</value>
+    <value>menu.administracao/log.logs/log.erro.menuText:/Consulta/Log/Erro/listView.seam</value>
+    <value>menu.administracao/contaTwitter.twitterSysMenuText:/ContaTwitter/Sistema/listView.seam</value>
+    <value>menu.administracao/calendarioEventos.menuText:/CalendarioEventos/listView.seam</value>
+    <value>menu.administracao/parametro.menuText:/Parametro/listView.seam</value>
+    <value>menu.administracao/prioridadeProcesso.menuText:/PrioridadeProcesso/listView.seam</value>
+    <value>menu.administracao/tipoComunicacao.menuText:/TipoComunicacao/listView.seam</value>
+    <value>menu.administracao/tipoRelacionamentoProcesso.menuText:/TipoRelacionamentoProcesso/listView.seam</value>
+    <value>menu.administracao/menu.unidadeDecisora/unidadeDecisoraMonocratica.menuText:/UnidadeDecisoraMonocratica/listView.seam</value>
+    <value>menu.administracao/menu.unidadeDecisora/unidadeDecisoraColegiada.menuText:/UnidadeDecisoraColegiada/listView.seam</value>
+    <value>menu.administracao/menu.usuario/contaTwitter.twitterMenuText:/ContaTwitter/listView.seam</value>
+    <value>menu.administracao/automaticNodes.menuText:/automaticNodes.seam</value>
+    <value>menu.administracao/quartzJobsInfo.menuText:/quartzJobsInfo.seam</value>
+    <value>menu.administracao/layout.menuText:/layout.seam</value>
+    <value>menu.controle/bam.menuText:/BAM/listView.seam</value>
+    <value>menu.controle/produtividade.menuText:/BAM/Produtividade/listView.seam</value>
+    <value>menu.controle/relatorios.menuText/temposMedios.menuText:/Estatistica/listView.seam</value>
+
+    <value>menu.operacoes/comunicacao.menuText/comunicacoes.menuText:/Comunicacao/listView.seam</value>
+    <value>menu.operacoes/comunicacao.menuText/comunicacoes.impressao.menuText:/Comunicacao/Impressao/listView.seam</value>
+</items>

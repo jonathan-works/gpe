@@ -2,15 +2,15 @@ package br.com.infox.epp.access.component.menu;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
 import org.jboss.seam.Component;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jboss.seam.security.Role;
 import org.jboss.seam.security.permission.Permission;
 import org.jboss.seam.security.permission.PermissionManager;
@@ -19,17 +19,25 @@ import org.jboss.seam.security.permission.PermissionStore;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Recurso;
 import br.com.infox.epp.access.manager.RecursoManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.path.PathResolver;
 import br.com.infox.seam.security.SecurityUtil;
 import br.com.infox.seam.util.ComponentUtil;
 
-class RecursoCreator extends SimpleFileVisitor<Path> {
+public interface RecursoCreator extends FileVisitor<Path>, Serializable {
+    
+}
+
+class RecursoCreatorImpl extends SimpleFileVisitor<Path> implements RecursoCreator {
+    private static final long serialVersionUID = 1L;
+    
     private static final String PAGE_XML_EXTENSION = ".page.xml";
     private static final String XHTML_EXTENSION = ".xhtml";
     private static final String SEAM_EXTENSION = ".seam";
     private static final String ADMIN_ROLE = "admin";
 
-    private static final LogProvider LOG = Logging.getLogProvider(RecursoCreator.class);
+    private static final LogProvider LOG = Logging.getLogProvider(RecursoCreatorImpl.class);
 
     @Override
     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {

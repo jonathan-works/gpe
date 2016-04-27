@@ -102,7 +102,7 @@ public class Menu implements Serializable {
             return;
         }
 
-        RecursoCreator roleCreator = new RecursoCreator();
+        RecursoCreator roleCreator = new RecursoCreatorImpl();
         PathResolver pathResolver = (PathResolver) Component.getInstance(PathResolver.NAME);
         Files.walkFileTree(new File(pathResolver.getContextRealPath()).toPath(), roleCreator);
     }

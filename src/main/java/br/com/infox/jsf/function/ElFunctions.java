@@ -50,5 +50,16 @@ public class ElFunctions {
         }
         return (C) Expressions.instance().createValueExpression(expr).getValue();
     }
+    
+    public static <C> C evaluateExpression(String expression, Class<C> type){
+        if (expression == null || expression.trim().length() == 0) {
+            return null;
+        }
+        String expr = expression.trim();
+        if (!expr.startsWith("#{")) {
+            expr = "#{" + expr + "}";
+        }
+        return Expressions.instance().createValueExpression(expr, type).getValue();
+    }
 
 }

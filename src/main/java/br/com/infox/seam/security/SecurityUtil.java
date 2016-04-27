@@ -57,4 +57,8 @@ public class SecurityUtil implements Serializable {
     public void clearPermissionCache() {
         permissions = new HashMap<>();
     }
+
+    public boolean isLoggedIn() {
+        return Identity.instance().isLoggedIn();
+    }
 }
