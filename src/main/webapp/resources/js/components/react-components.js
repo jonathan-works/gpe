@@ -36,6 +36,9 @@ let MenuItem = React.createClass({
     if (this.props.selected){
       classes.push('ifx-menu-itm-sel');
     }
+    if (this.props.showChildren){
+        classes.push('ifx-menu-itm-show-children');
+    }
 
     var props = Object.assign({}, this.props);
 
