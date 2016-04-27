@@ -120,12 +120,9 @@
                 value="#{infoxMessages['login.entrarBtn']}"
                 styleClass="input-button-login input_button"
                 action="#{loginView.login()}" />
-              <h:commandButton
-                styleClass="input-button-login input_button"
-                id="btnTrocar"
-                type="button"
-                value="#{infoxMessages['login.trocarSenhaBtn']}" 
-                onclick="#{rich:component('alterPasswordModal')}.show();" />
+              <h:button id="btnTrocar" styleClass="input-button-login input_button"
+                outcome="/alteracaoSenha.seam"
+                value="#{infoxMessages['login.trocarSenhaBtn']}" />
               <h:button id="btnRequisitarCodigoSenha" styleClass="input-button-login input_button"
                 outcome="/codigoRecuperacaoSenha.seam"
                 value="#{infoxMessages['login.esqueciSenhaBtn']}"></h:button>
@@ -142,48 +139,6 @@
         </div>
       </h:form>
 
-      <rich:popupPanel id="alterPasswordModal" minWidth="370" minHeight="325" headerClass="login-header-modal"
-        header="#{infoxMessages['login.trocarSenhaBtn']}">
-        <f:facet name="controls">
-          <div style="cursor: pointer;" > 
-            <h:graphicImage id="alterPasswordCloseBtn" value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}" 
-            				onclick="#{rich:component('alterPasswordModal')}.hide();" />
-          </div>
-        </f:facet>	
-        <h:form id="alterPasswordGerarSenhaForm" rendered="#{not useCertLogin}">
-          <div>
-            <div>
-               <h:outputLabel for="username" styleClass="login-lbl-popup" value="#{infoxMessages['login.nomeUsuario']}" />
-               <h:inputText id="username" value="#{credentials.username}" styleClass="input-text-login-popup" />
-            </div>
-            <div>
-               <h:outputLabel for="password" styleClass="login-lbl-popup" value="#{infoxMessages['login.senha']}" />
-               <h:inputSecret id="password" value="#{credentials.password}" styleClass="input-text-login-popup" />
-            </div>
-	        <div>
-	           <h:outputLabel for="newPassword1" styleClass="login-lbl-popup" value="#{infoxMessages['login.novaSenha']}" />
-	           <h:inputSecret id="newPassword1" styleClass="input-text-login-popup passwd" value="#{authenticator.newPassword1}" />
-	        </div>
-	        <div>
-	           <h:outputLabel for="newPassword2" styleClass="login-lbl-popup" value="#{infoxMessages['login.confirmacaoNovaSenha']}" />
-               <h:inputSecret id="newPassword2" styleClass="input-text-login-popup passwd" value="#{authenticator.newPassword2}" />
-	        </div>
-          </div>
-          <div style="margin-top:3px; text-align: center;" >
-            <h:commandButton
-              id="confirma"
-              styleClass="input-button-login input_button"
-              value="#{infoxMessages['login.trocarSenhaBtn']}"
-              action="#{authenticator.login()}" />
-            <h:commandButton
-              styleClass="input-button-login input_button"
-              id="cancelar"
-              type="button"
-              value="#{infoxMessages['login.cancelaTrocaSenhaBtn']}" 
-              onclick="#{rich:component('alterPasswordModal')}.hide();" />
-          </div>
-        </h:form>
-      </rich:popupPanel>
       <rich:popupPanel
         id="mp_formValidar"
         height="100"
