@@ -85,8 +85,11 @@ public class ProcessoDAO extends DAO<Processo> {
 	}
 
 	@Transactional(TransactionPropagationType.REQUIRED)
-	public void atualizarProcessos() {
-		JbpmUtil.getJbpmSession().createSQLQuery(ATUALIZAR_PROCESSOS_QUERY).executeUpdate();
+	public void atualizarProcessos(Long processDefinitionId, String processoDefinitionName) {
+		JbpmUtil.getJbpmSession().createSQLQuery(ATUALIZAR_PROCESSOS_QUERY)
+		    .setParameter("processDefinitionName", processoDefinitionName)
+		    .setParameter("processDefinitionId", processDefinitionId)
+		    .executeUpdate();
 	}
 
 	public void removerProcessoJbpm(Integer idProcesso, Long idJbpm, Long idTaskMgmInstance, Long idToken) throws DAOException {

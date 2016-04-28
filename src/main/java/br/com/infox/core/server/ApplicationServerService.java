@@ -2,6 +2,7 @@ package br.com.infox.core.server;
 
 import java.io.Serializable;
 import java.lang.management.ManagementFactory;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.ejb.Singleton;
 import javax.ejb.TransactionAttribute;
@@ -13,103 +14,100 @@ import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
+import javax.sql.DataSource;
+import javax.transaction.TransactionManager;
 
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
+import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.util.JNDI;
+import br.com.infox.epp.system.EppProperties;
 
 @Singleton
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class ApplicationServerService implements Serializable {
-    
-    private static final long serialVersionUID = 1L;
-    
-    private static final LogProvider LOG = Logging.getLogProvider(ApplicationServerService.class);
-    private static final String JBOSS_HTTP_SOCKET_BINDING = "jboss.as:socket-binding-group=standard-sockets,socket-binding=http";
-    private static final String JBOSS_HTTPS_SOCKET_BINDING = "jboss.as:socket-binding-group=standard-sockets,socket-binding=https";
-    
-    private String basePath;
-    private ObjectName socketBindingMBean;
-    private SocketBindingType sbt;
-    private MBeanServer mBeanServer;
-    
-    public void init() {
-        buildSocketBindingInfo();
-    }
-    
-    public String getBaseResquestUrl() {
-        if (basePath == null) buildSocketBindingInfo();
-        return basePath;
-    }
-    
-    private void buildSocketBindingInfo() {
-        if(sbt != null) return;
+
+	private static final long serialVersionUID = 1L;
+
+	private static final String JBOSS_HTTP_SOCKET_BINDING = "jboss.as:socket-binding-group=standard-sockets,socket-binding=http";
+	private static final String JBOSS_HTTPS_SOCKET_BINDING = "jboss.as:socket-binding-group=standard-sockets,socket-binding=https";
+	private static final String TOMCAT_SERVICE_CONNECTOR = "Catalina:type=Service";
+
+	private boolean isSecure;
+	private String basePath;
+
+	public String getBaseResquestUrl() {
+	    if (basePath == null) {
+	        buildBasePath();
+	    }
+		return basePath;
+	}
+
+	private void buildBasePath() {
+		String host = System.getProperty("jboss.bind.address");
+		Integer port = getServerListeningPort();
+		basePath = (isSecure ? "https://" : "http://") + (host == null ? "0.0.0.0" : host) + ":" + port;
+	}
+
+	private Integer getServerListeningPort() {
+    	MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
         try {
-            mBeanServer = ManagementFactory.getPlatformMBeanServer();
-            socketBindingMBean = new ObjectName(JBOSS_HTTPS_SOCKET_BINDING);
+        	ObjectName socketBindingMBean = new ObjectName(JBOSS_HTTPS_SOCKET_BINDING);
             String  boundAddress = (String) mBeanServer.getAttribute(socketBindingMBean, "boundAddress");
+            isSecure = boundAddress != null;
             if (boundAddress == null) {
-                socketBindingMBean = new ObjectName(JBOSS_HTTP_SOCKET_BINDING);
-                sbt = SocketBindingType.HTTP;
-            } else {
-                sbt = SocketBindingType.HTTPS;
+            	socketBindingMBean = new ObjectName(JBOSS_HTTP_SOCKET_BINDING);
+            	
             }
-            buildBasePath();
-        } catch (MalformedObjectNameException | AttributeNotFoundException | InstanceNotFoundException | MBeanException | ReflectionException e) {
-            LOG.error(e);
+            return (Integer) mBeanServer.getAttribute(socketBindingMBean, "boundPort");
+        } catch (AttributeNotFoundException | InstanceNotFoundException | MBeanException | ReflectionException | MalformedObjectNameException e) {
+    		try {
+				ObjectName socketBindingMBean = new ObjectName(TOMCAT_SERVICE_CONNECTOR);
+				Object service = mBeanServer.getAttribute(socketBindingMBean, "managedResource");
+				Object[] connectors = (Object[]) service.getClass().getMethod("findConnectors").invoke(service);
+				for (Object connector : connectors) {
+					boolean isHttp = connector.getClass().getMethod("getProtocol").invoke(connector).equals("HTTP/1.1");
+					if (isHttp) {
+						isSecure = (boolean) connector.getClass().getMethod("getSecure").invoke(connector);
+						return (Integer) connector.getClass().getMethod("getPort").invoke(connector);
+					}
+				}
+    		} catch (MalformedObjectNameException | InstanceNotFoundException | ReflectionException | AttributeNotFoundException | MBeanException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e1) {
+    			throw new IllegalStateException(e1);
+			}
+    		throw new IllegalStateException(e);
         }
-    }
-    
-    private void buildBasePath() {
-        Integer port = getServerListeningPort();
-        String host = System.getProperty("jboss.bind.address");
-        basePath = sbt.getDescricao() + host + ":" + port;
-    }
-    
-    private Integer getServerListeningPort() {
-        try {
-            Integer port = (Integer) mBeanServer.getAttribute(socketBindingMBean, "boundPort");
-            return port;
-        } catch (AttributeNotFoundException | InstanceNotFoundException | MBeanException | ReflectionException e) {
-            LOG.error(e);
+	}
+	
+	public DataSource getDataSource(String name) {
+	    String datasourcePrefix = EppProperties.getProperty(EppProperties.PROPERTY_DATASOURCE_PREFIX);
+	    return JNDI.lookup(datasourcePrefix.concat(name));
+	}
+	
+	public TransactionManager getTransactionManager() {
+	    TransactionManager transactionManager = JNDI.lookup("java:jboss/TransactionManager"); // JBOSS
+        if (transactionManager == null) {
+            transactionManager = JNDI.lookup("java:comp/TransactionManager"); // TOMCAT
         }
-        return sbt.defaultPort;
-    }
-    
+        return transactionManager;
+	}
+            
     public String getInstanceName() {
-        return System.getProperty("jboss.node.name");
+        String nodeName = System.getProperty("jboss.node.name");
+        if (nodeName == null) {
+            nodeName = System.getProperty("tomcat.node.name");
+        }
+        return nodeName;
     }
     
     public String getLogDir() {
-        return System.getProperty("jboss.server.log.dir");
+        String logDir = System.getProperty("jboss.server.log.dir");
+        if (logDir == null) {
+            logDir = System.getProperty("tomcat.server.log.dir");
+        }
+        return logDir;
     }
-
-    private enum SocketBindingType {
-
-        HTTP("http://", 80), HTTPS("https://", 443);
-
-        private String descricao;
-        private Integer defaultPort;
-
-        SocketBindingType(String description, Integer port) {
-            this.setDescricao(description);
-            this.setDefaultPort(port);
-        }
-
-        public String getDescricao() {
-            return descricao;
-        }
-
-        public void setDescricao(String descricao) {
-            this.descricao = descricao;
-        }
-
-        public Integer getDefaultPort() {
-            return defaultPort;
-        }
-
-        public void setDefaultPort(Integer defaultPort) {
-            this.defaultPort = defaultPort;
-        }
+    
+    public static ApplicationServerService instance() {
+        return BeanManager.INSTANCE.getReference(ApplicationServerService.class);
     }
-
+           
 }

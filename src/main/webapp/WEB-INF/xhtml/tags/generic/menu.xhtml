@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: menu.xhtml 750 2010-08-24 14:10:58Z danielsilva $ -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib" xmlns:wi="http://www.itx.com.br/jsf">
+    <ui:param name="id" value="#{wi:get(id, facesContext.viewRoot.createUniqueId())}" />
+    <s:div id="#{id}" styleClass="boundries">
+        <div class="page-content #{not (not empty menuHandler.actionMenu and menuHandler.actionMenu.size > 1) ? 'ifx-ctx-menu-collapsed' : ''}">
+            <ui:insert />
+        </div>
+        <s:div id="#{id}_nav-bar-menu" styleClass="ifx-menu-container" rendered="#{menuHandler.showMenu}">
+            <h:form>
+                <nav class="ifx-menu-nav">
+                    <ul class="ifx-menu">
+                        <ui:repeat var="menuItem" value="#{menuHandler.navBarMenu}">
+                            <li class="ifx-menu-itm #{menuHandler.isSelected(menuItem) ? 'ifx-menu-itm-active':''}">
+                                <a:commandLink action="#{menuHandler.selectNavBarMenuItem(menuItem)}"
+                                    styleClass="ifx-menu-lnk" execute="@this" render="#{id}" status="dummy">
+                                    <h:outputText styleClass="ifx-menu-lbl" value="#{menuItem.label}" />
+                                </a:commandLink>
+                            </li>
+                        </ui:repeat>
+                        <ui:insert name="custom-content" />
+                        <li class="ifx-menu-itm"><a class="ifx-menu-lnk ifx-menu-hidden" href="javascript:void(0);"><h:outputText
+                                    styleClass="ifx-menu-lbl" value="Menu" /></a>
+                            <ul class="ifx-menu">
+                                <ui:repeat var="menuItem" value="#{menuHandler.mainMenu}">
+                                    <li class="ifx-menu-itm"><a:commandLink
+                                            action="#{menuHandler.selectMainMenuItem(menuItem)}"
+                                            styleClass="ifx-menu-lnk" execute="@this" render="#{id}" status="dummy">
+                                            <h:outputText styleClass="ifx-menu-lbl" value="#{menuItem.label}" />
+                                        </a:commandLink></li>
+                                </ui:repeat>
+                            </ul></li>
+                    </ul>
+                </nav>
+            </h:form>
+        </s:div>
+        <s:div id="#{id}_ctx-menu" styleClass="ifx-ctx-menu-container" rendered="#{menuHandler.showMenu and not empty menuHandler.actionMenu and menuHandler.actionMenu.size > 1}">
+            <h:form>
+                <nav class="ifx-ctx-menu-nav">
+                    <ul class="ifx-ctx-menu">
+                        <ui:repeat var="menuItem" value="#{menuHandler.actionMenu}">
+                            <li
+                                class="ifx-ctx-menu-itm #{menuHandler.isSelected(menuItem) ? 'ifx-ctx-menu-itm-active':''}">
+                                <a:commandLink styleClass="ifx-ctx-menu-lnk" execute="none" status="dummy" render="#{id}"
+                                    action="#{menuItem.url}">
+                                    <h:outputText styleClass="ifx-ctx-menu-lbl" value="#{menuItem.label}" />
+                                </a:commandLink>
+                            </li>
+                        </ui:repeat>
+                    </ul>
+                </nav>
+                <div class="ifx-ctx-menu-collapse"></div>
+            </h:form>
+            
+            <script type="text/javascript">
+            	//<![CDATA[
+            	(function(){
+            		var btnCollapseEvent = function(evt){
+                		var pageContentList = document.getElementById("#{component.parent.id}").querySelectorAll(".page-content");
+                		for(var i=0,l=pageContentList.length; i<l; i++){
+                			var pageContent = pageContentList.item(i);
+                			if (pageContent.classList.contains('ifx-ctx-menu-collapsed')){
+                				pageContent.classList.remove('ifx-ctx-menu-collapsed');
+                			} else {
+                				pageContent.classList.add('ifx-ctx-menu-collapsed');
+                			}
+                		}
+            		};
+            		var buttons = document.getElementById("#{component.id}").querySelectorAll(".ifx-ctx-menu-collapse");
+            		for(var i=0,l=buttons.length; i<l; i++){
+            			buttons.item(i).addEventListener("click", btnCollapseEvent);
+            		}
+            	})();
+            	//]]>
+        	</script>
+        </s:div>
+    </s:div>
+</ui:composition>

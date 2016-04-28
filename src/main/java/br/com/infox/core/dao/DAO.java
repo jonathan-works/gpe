@@ -175,6 +175,15 @@ public abstract class DAO<T> implements Serializable {
         }
     }
 
+    public T persistWithoutFlush(final T object) throws DAOException {
+        try {
+            getEntityManager().persist(object);
+            return object;
+        } catch (Exception e) {
+            throw new DAOException(e);
+        }
+    }
+    
     @Transactional
     public T update(final T object) throws DAOException {
         try {

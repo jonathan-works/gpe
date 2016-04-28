@@ -1,0 +1,202 @@
+@menu-block-size:3em;
+@menu-height:@menu-block-size;
+
+.boundries {
+    font-size:1rem;
+    padding:1em;
+    .flex-displayed-container;
+    > *{
+        display:inline-block;
+        vertical-align:top;
+        position:relative;
+    }
+}
+
+.collapse-ctx-menu(){
+    @resource-url:"/javax.faces.resource/arrow-left.png.seam?ln=styleSkinInfox/all";
+    background-color:@menu-bg-color;
+    background-image:url("@{context-path}\@{resource-url}");
+    background-position:center center;
+    background-repeat:no-repeat;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+    cursor:pointer;
+    &:hover{
+        background-color:lighten(@menu-txt-color,20%);
+    }
+}
+.extend-ctx-menu(){
+    @resource-url:"/javax.faces.resource/arrow-right.png.seam?ln=styleSkinInfox/all";
+    background-image:url("@{context-path}\@{resource-url}");
+}
+
+.page-content{
+    @context-menu-width: 9.6em;
+    @content-translation: @context-menu-width+1;
+    margin-top:@menu-height+(9/8);
+    .transform(translate(@content-translation,0));
+    max-width:calc(100%~" - "@content-translation);
+    width:100%;
+    margin-right:calc(-100%~" + "@content-translation);
+    .z-depth(1);
+    ~ .ifx-menu-container{
+        max-height:@menu-height+(1/8);
+        width:100%;
+        margin-right:-100%;
+    }
+    ~ .ifx-ctx-menu-container{
+        margin-top:@menu-height+(9/8);
+        .ifx-ctx-menu-nav{
+            width:@context-menu-width;
+            .transform-origin(left center);
+            >.ifx-ctx-menu{
+                .z-depth(4);
+                // .transform(translate(calc(-100%~" - "-@menu-block-size), 1em));
+            }
+            
+        }
+        > form {
+            .display-flex();
+            > .ifx-ctx-menu-collapse{
+                .collapse-ctx-menu();
+                width:1em;
+            }
+        }
+    }
+    &.ifx-ctx-menu-collapsed {
+        max-width:inherit;
+        margin-right:-100%;
+        .transform(translate(0,0));
+        ~ .ifx-ctx-menu-container{
+            .transform(translate(calc(~"-@{content-translation}"), 0));
+            > form > .ifx-ctx-menu-collapse{
+                .extend-ctx-menu();
+            }
+        }
+    }
+}
+
+
+.ifx-menu-nav {
+    text-align:right;
+    >.ifx-menu{
+        .z-depth(2);
+    }
+}
+
+.ifx-menu, .ifx-ctx-menu{
+    padding:0;
+    margin:0;
+}
+.ifx-ctx-menu > .ifx-ctx-menu-itm{
+    display: block;
+    cursor: pointer;
+    position: relative;
+    text-align:center;
+}
+.ifx-menu-itm-plain{
+    padding:4em/16;
+    text-align:center;
+}
+.ifx-menu-itm-plain,.ifx-menu-itm{
+    .ifx-menu > & {
+        display:inline-block;
+        vertical-align:top;
+        cursor:pointer;
+        position:relative;
+    }
+}
+
+.ifx-ctx-menu-lnk{
+    padding: 1em;
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+.ifx-menu-itm {
+    text-align:left;
+    >.ifx-menu-lnk{
+        >.ifx-menu-lbl{
+            padding:@menu-height/3;
+            white-space:pre;
+            display:inline-block;
+        }
+        display:block;
+    }
+    >.ifx-menu{
+        .z-depth(4);
+        position:absolute;
+        margin:0.1em;
+        right:0;
+        .transition(all 0.3s ease-in-out);
+        .transform(scale(1,0));
+        .transform-origin(100% 0);
+        >.ifx-menu-itm{
+            display:block;
+        }
+    }
+    &:active,&:hover {
+        >.ifx-menu{
+            .transform(scale(1));
+        }
+    }
+}
+
+
+/* NORMALIZATION*/
+a.ifx-menu-lnk,a.ifx-ctx-menu-lnk {
+  color:inherit;
+  text-decoration:inherit;
+  font-size:inherit;
+}
+@context-path:"#{pathResolver.contextPath}";
+/*MENU COLORING*/
+.ifx-menu-nav {
+  color: @menu-txt-color;
+  background-color: @menu-bg-color;
+  @resource-url:"#{layoutController.getResourceUrl('LOGO_TOPO')}";
+  @image-width:170px;
+  @image-height:75px;
+  background-image:url("@{context-path}\@{resource-url}");
+  background-position:top left;
+  background-repeat:no-repeat;
+  background-size:contain;
+}
+.ifx-menu-itm-plain{
+    background-color: @menu-bg-color;
+    border-color: darken(@menu-bg-color,5%);
+    color: @menu-txt-color;
+}
+.ifx-menu-itm {
+    background-color: @menu-bg-color;
+    border-color: darken(@menu-bg-color,5%);
+    color: @menu-txt-color;
+    >.ifx-menu-lnk{
+        &.ifx-menu-hidden{
+            @resource-url:"#{layoutController.getResourceUrlByPath('/imagens/hamburger.png')}";
+            background-image:url("@{context-path}\@{resource-url}");
+            background-position:center center;
+            background-repeat:no-repeat;
+            width:@menu-block-size;
+            height:@menu-block-size;
+            .ifx-menu-lbl {
+                margin-left:-1000em;
+            }
+        }
+    }
+    &:hover,&.ifx-menu-itm-active {
+        color: @menu-bg-color;
+        background-color: @menu-txt-color;
+        border-color: @menu-bg-color;
+    }
+}
+
+.ifx-ctx-menu-itm{
+    background-color: @menu-bg-color;
+    border-color: darken(@menu-bg-color,5%);
+    color: @menu-txt-color;
+    &:hover,&.ifx-ctx-menu-itm-active {
+        color: @menu-bg-color;
+        background-color: @menu-txt-color;
+        border-color: @menu-bg-color;
+    }
+}

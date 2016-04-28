@@ -8,11 +8,11 @@ import org.hibernate.event.spi.PostUpdateEvent;
 import org.hibernate.event.spi.PostUpdateEventListener;
 import org.jboss.seam.contexts.Context;
 import org.jboss.seam.contexts.Contexts;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 import br.com.infox.epp.system.type.TipoOperacaoLogEnum;
 import br.com.infox.epp.system.util.LogUtil;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 public class LogEventListener implements PostUpdateEventListener, PostInsertEventListener, PostDeleteEventListener {
 
@@ -70,11 +70,14 @@ public class LogEventListener implements PostUpdateEventListener, PostInsertEven
     }
 
     private boolean isLogEnabled() {
-        Context eventContext = Contexts.getEventContext();
-        if (eventContext == null) {
+    	return isLogEnabled(Contexts.getEventContext());
+    }
+    
+    public static boolean isLogEnabled(Context context) {
+        if (context == null) {
             return false;
         }
-        Object test = eventContext.get(ENABLE_LOG_VAR_NAME);
+        Object test = context.get(ENABLE_LOG_VAR_NAME);
         try {
             return test == null || "true".equalsIgnoreCase(test.toString());
         } catch (Exception e) {

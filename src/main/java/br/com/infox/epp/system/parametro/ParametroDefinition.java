@@ -40,14 +40,13 @@ public class ParametroDefinition<T> implements Comparable<ParametroDefinition<T>
 		this(grupo, nome, tipo, keySingularAttribute, labelSingularAttribute, Precedencia.DEFAULT);
 	}
 
-	public ParametroDefinition(String grupo, String nome, FieldType tipo, SingularAttribute<T, ?> code, SingularAttribute<T, ?> label,
-			int precedencia) {
+	public ParametroDefinition(String grupo, String nome, FieldType tipo, SingularAttribute<T, ?> keyAttribute, SingularAttribute<T, ?> labelAttribute, int precedencia) {
 		this.nome = Objects.requireNonNull(nome);
 		this.tipo = Objects.requireNonNull(tipo);
 		this.grupo = Objects.requireNonNull(grupo);
 		this.precedencia = Objects.requireNonNull(precedencia);
-		this.keyAttribute = code;
-		this.labelAttribute = label;
+		this.keyAttribute = keyAttribute;
+		this.labelAttribute = labelAttribute;
 		this.filters = new ArrayList<>();
 	}
 
@@ -112,8 +111,17 @@ public class ParametroDefinition<T> implements Comparable<ParametroDefinition<T>
 			return false;
 		return true;
 	}
-
-	public <V> ParametroDefinition<T> addFilter(Filter<T,?> filter){
+	
+	@SuppressWarnings("unchecked")
+	public ParametroDefinition<T> addFilters(Filter<T,?>... filters){
+		for (int i = 0; i < filters.length; i++) {
+			Filter<T, ?> filter = filters[i];
+			this.filters.add(filter);
+		}
+		return this;
+	}
+	
+	public ParametroDefinition<T> addFilter(Filter<T,?> filter){
 		filters.add(filter);
 		return this;
 	}

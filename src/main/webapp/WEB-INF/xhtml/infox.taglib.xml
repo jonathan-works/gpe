@@ -445,6 +445,10 @@ version="2.0">
         <source>tags/form/fields/inputMoney.xhtml</source>
     </tag>
     <tag>
+        <tag-name>menu</tag-name>
+        <source>tags/generic/menu.xhtml</source>
+    </tag>
+    <tag>
         <tag-name>dynamicFieldSet</tag-name>
         <component>
             <component-type>DynamicFieldSet</component-type>

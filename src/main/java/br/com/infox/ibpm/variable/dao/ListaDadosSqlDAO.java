@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.model.SelectItem;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import org.jboss.seam.ScopeType;
@@ -18,6 +16,8 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Expressions;
+
+import br.com.infox.core.server.ApplicationServerService;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
@@ -28,34 +28,22 @@ public class ListaDadosSqlDAO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "listaDadosSqlDAO";
-	public static final String LISTA_DADOS_DS = "java:jboss/datasources/ListaDadosDataSource";
+	public static final String LISTA_DADOS_DS = "ListaDadosDataSource";
 	
 	private final LogProvider logger = Logging.getLogProvider(ListaDadosSqlDAO.class);
     
     private DataSource dataSource;
     
-    private DataSource createDataSource(){
-		try {
-			InitialContext ic = new InitialContext();
-			dataSource = (DataSource) ic.lookup(LISTA_DADOS_DS);
-		} catch (NamingException e) {
-			logger.error("DominioVariavelTarefaDAO:createDataSource", e);
-		}
-		return dataSource;
-    }
-    
     public DataSource getDataSource() {
     	if (dataSource == null){
-    		dataSource = createDataSource();
+    		dataSource = ApplicationServerService.instance().getDataSource(LISTA_DADOS_DS);
     	}
     	return dataSource;
     }
     
 	public List<SelectItem> getListSelectItem(String nativeQuery) {
     	List<SelectItem> lista = new ArrayList<>();
-    	Connection connection = null;
-    	try {
-			connection = getDataSource().getConnection();
+    	try (Connection connection = getDataSource().getConnection()) {
 			Statement statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE);
 			nativeQuery = addParameters(nativeQuery);
 			ResultSet resultSet = statement.executeQuery(nativeQuery);
@@ -71,14 +59,6 @@ public class ListaDadosSqlDAO implements Serializable {
 			statement.close();
 		} catch (SQLException e) {
 			logger.error("DominioVariavelTarefaDAO:getListSelectItem", e);
-		} finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    logger.error("Closing connection", e);
-                }
-            }
         }
     	return lista;
     }

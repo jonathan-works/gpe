@@ -23,6 +23,11 @@ public class UnauthorizedException extends RuntimeException implements ExcecaoSe
 	public int getStatus() {
 		return Status.UNAUTHORIZED.getStatusCode();
 	}
+
+	@Override
+	public String getCode() {
+		return getErro().getCode();
+	}
 	
 
 }

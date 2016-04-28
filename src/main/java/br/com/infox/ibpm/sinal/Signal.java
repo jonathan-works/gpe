@@ -35,7 +35,11 @@ public class Signal implements Serializable {
     @Column(name = "in_ativo", nullable = false)
     private Boolean ativo;
 
-    public Long getId() {
+    @NotNull
+    @Column(name = "in_sistema", nullable = false)
+    private Boolean sistema;
+    
+	public Long getId() {
         return id;
     }
 
@@ -67,6 +71,14 @@ public class Signal implements Serializable {
         this.ativo = ativo;
     }
     
+    public Boolean getSistema() {
+		return sistema;
+	}
+
+	public void setSistema(Boolean sistema) {
+		this.sistema = sistema;
+	}
+	
     @Override
     public String toString() {
         return getNome();

@@ -16,14 +16,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Root;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.fluxo.entity.Categoria;
+import br.com.infox.epp.fluxo.entity.Categoria_;
 import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.entity.Fluxo_;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
+import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo_;
+import br.com.infox.epp.fluxo.entity.Natureza_;
 
 /**
  * Classe DAO para a entidade NaturezaCategoriaFluxo
@@ -85,5 +96,25 @@ public class NaturezaCategoriaFluxoDAO extends DAO<NaturezaCategoriaFluxo> {
 			return naturezaCategoriaFluxo;
 		}
 		return null;
+	}
+
+	public NaturezaCategoriaFluxo getByCodigos(String descricaoNatureza, String descricaoCategoria, String codigoFluxo) {
+		EntityManager entityManager = getEntityManager();
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<NaturezaCategoriaFluxo> query = cb.createQuery(NaturezaCategoriaFluxo.class);
+		Root<NaturezaCategoriaFluxo> ncf = query.from(NaturezaCategoriaFluxo.class);
+		Join<NaturezaCategoriaFluxo, Natureza> natureza = ncf.join(NaturezaCategoriaFluxo_.natureza, JoinType.INNER);
+		Join<NaturezaCategoriaFluxo, Categoria> categoria = ncf.join(NaturezaCategoriaFluxo_.categoria, JoinType.INNER);
+		Join<NaturezaCategoriaFluxo, Fluxo> fluxo = ncf.join(NaturezaCategoriaFluxo_.fluxo, JoinType.INNER);
+		query.where(
+			cb.equal(natureza.get(Natureza_.natureza), descricaoNatureza),
+			cb.equal(categoria.get(Categoria_.categoria), descricaoCategoria),
+			cb.equal(fluxo.get(Fluxo_.codFluxo), codigoFluxo)
+		);
+		List<NaturezaCategoriaFluxo> result = entityManager.createQuery(query).setMaxResults(1).getResultList();
+		if (result.isEmpty()) {
+			return null;
+		}
+		return result.get(0);
 	}
 }

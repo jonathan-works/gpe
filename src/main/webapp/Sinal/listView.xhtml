@@ -30,7 +30,7 @@
             		</a:commandLink>
             		
             		<a:commandLink execute="@form" render="signalListPanel :pageBodyDialogMessage" 
-            			action="#{signalView.inativar}" limitRender="true" rendered="#{row.ativo}">
+            			action="#{signalView.inativar}" limitRender="true" rendered="#{row.ativo and not row.sistema}">
             			<f:setPropertyActionListener value="#{row.id}" target="#{signalView.id}" />
             			<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="Inativar" styleClass="opacityHover"/>
             		</a:commandLink>
@@ -84,6 +84,7 @@
 				value="#{signalView.nome}" maxlength="200" />
 				
 			<wi:selectSituacaoRadio id="ativo"
+                rendered="#{not signalView.sistema}"
                 label="#{infoxMessages['field.situacao']}"
                 value="#{signalView.ativo}" />
 

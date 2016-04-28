@@ -47,6 +47,7 @@ import br.com.infox.epp.access.service.AuthenticatorService;
 import br.com.infox.epp.access.service.PasswordService;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.menu.MenuNavigation;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.system.util.ParametroUtil;
@@ -205,11 +206,11 @@ public class Authenticator implements Serializable {
     public void login() {
         Identity identity = Identity.instance();
         Credentials credentials = identity.getCredentials();
-            
-            if (cdiAuthenticator.authenticate(credentials.getUsername(), credentials.getPassword())){
-            	getAuthenticatorService().loginWithoutPassword(credentials.getUsername());
-            	return;
-            }
+        
+        if (cdiAuthenticator.authenticate(credentials.getUsername(), credentials.getPassword())){
+        	getAuthenticatorService().loginWithoutPassword(credentials.getUsername());
+        	return;
+        }
             
         if (loginExists(credentials) || ldapLoginExists(credentials)) {
             try {
@@ -219,7 +220,7 @@ public class Authenticator implements Serializable {
                     LOG.warn("Erro de redirecionamento", e);                        
                 } else {
                     LOG.error(e);
-                }
+                }  
             } finally {
 				setNewPassword1(null);
 				setNewPassword2(null);
@@ -341,6 +342,7 @@ public class Authenticator implements Serializable {
         getAuthenticatorService().addRolesAtuais(roleSet);
         setVariaveisDoContexto(usuarioPerfil, roleSet);
         securityUtil.clearPermissionCache();
+        BeanManager.INSTANCE.getReference(MenuNavigation.class).refresh();
         if (!getUsuarioLogado().getProvisorio() && !isUsuarioExterno()) {
         	if (!hasToSignTermoAdesao()) {
         		redirectToPainelDoUsuario();
@@ -407,7 +409,11 @@ public class Authenticator implements Serializable {
      * @return o UsuarioPerfil atual do usuário logado
      */
     public static UsuarioPerfil getUsuarioPerfilAtual() {
-        UsuarioPerfil usuarioPerfil = (UsuarioPerfil) Contexts.getSessionContext().get(USUARIO_PERFIL_ATUAL);
+    	Context context = Contexts.getSessionContext();
+    	if(context == null) {
+    		return null;
+    	}
+        UsuarioPerfil usuarioPerfil = (UsuarioPerfil) context.get(USUARIO_PERFIL_ATUAL);
         if (usuarioPerfil != null) {
             usuarioPerfil = getUsuarioPerfilDAO().find(usuarioPerfil.getIdUsuarioPerfil());
         }

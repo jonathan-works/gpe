@@ -48,5 +48,11 @@ public class NumeracaoDocumentoSequencialDAO extends DAO<NumeracaoDocumentoSeque
         executeNamedQueryUpdate(NumeracaoDocumentoSequencial.DELETE_BY_PROCESSO, params);
         return null;
     }
-	
+
+	public void createNumeracao(Processo processo, Integer valorInicial) {
+		NumeracaoDocumentoSequencial numeracao = new NumeracaoDocumentoSequencial();
+		numeracao.setNextNumero(valorInicial);
+		numeracao.setProcessoRaiz(processo);
+		persist(numeracao);
+	}
 }

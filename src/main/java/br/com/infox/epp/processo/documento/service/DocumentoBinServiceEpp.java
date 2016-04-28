@@ -39,7 +39,7 @@ public class DocumentoBinServiceEpp implements DocumentoBinService {
 	
 	public List<AssinaturaDocumento> carregarAssinaturas(Integer idDocumentoBin) {
 		DocumentoBin documentoBin = getDocumentoBin(idDocumentoBin);
-		return documentoBin.getAssinaturasBanco();			
+		return documentoBin.getAssinaturasAtributo();			
 	}
 	public DocumentoBinario carregarDocumentoBinario(Integer idDocumentoBin) {
 		getDocumentoBin(idDocumentoBin);
@@ -50,7 +50,7 @@ public class DocumentoBinServiceEpp implements DocumentoBinService {
 	@Override
 	public Integer getSize(Integer idDocumentoBin) {
 		DocumentoBin documentoBin = getDocumentoBin(idDocumentoBin);
-		return documentoBin.getSizeBanco();
+		return documentoBin.getSizeAtributo();
 	}
 
 	@Override
@@ -60,12 +60,8 @@ public class DocumentoBinServiceEpp implements DocumentoBinService {
 	}
 
 	@Override
-	public String getNomeArquivo(Integer idDocumentoBin) {
-		return getDocumentoBin(idDocumentoBin).getNomeArquivoBanco();
-	}
-
-	@Override
-	public String getExtensao(Integer idDocumentoBin) {
-		return getDocumentoBin(idDocumentoBin).getExtensaoBanco();
+	public String getHash(Integer idDocumentoBin) {
+		DocumentoBin documentoBin = getDocumentoBin(idDocumentoBin);
+		return documentoBin.getMd5DocumentoAtributo();
 	}
 }

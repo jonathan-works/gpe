@@ -1,6 +1,8 @@
 package br.com.infox.epp.rest;
 
-public class RestException {
+import br.com.infox.epp.ws.exception.ErroServico;
+
+public class RestException implements ErroServico {
     
     private String code;
     private String message;
