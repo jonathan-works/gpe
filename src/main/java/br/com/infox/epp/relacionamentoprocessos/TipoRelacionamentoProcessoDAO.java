@@ -1,4 +1,4 @@
-package br.com.infox.epp.processo.dao;
+package br.com.infox.epp.relacionamentoprocessos;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;

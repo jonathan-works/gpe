@@ -1,4 +1,4 @@
-package br.com.infox.epp.processo.manager;
+package br.com.infox.epp.relacionamentoprocessos;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -11,9 +11,9 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
-import br.com.infox.epp.processo.dao.RelacionamentoDAO;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.Relacionamento;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 
 @AutoCreate
 @Name(RelacionamentoManager.NAME)
@@ -47,6 +47,12 @@ public class RelacionamentoManager extends Manager<RelacionamentoDAO, Relacionam
             throw new DAOException(e);
         }
     }
+    
+	public void remove(Integer idRelacionamento) {
+		Relacionamento relacionamento = relacionamentoDAO.find(idRelacionamento);
+		relacionamentoDAO.remove(relacionamento);
+	}
+
     
 	public void remove(Integer idProcesso, Integer idProcessoInternoRelacionado) {
 		Processo processo = processoManager.find(idProcesso);

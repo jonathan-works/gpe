@@ -1,4 +1,4 @@
-package br.com.infox.epp.processo.dao;
+package br.com.infox.epp.relacionamentoprocessos;
 
 import static br.com.infox.epp.processo.query.ProcessoQuery.ID_PROCESSO;
 import static br.com.infox.epp.processo.query.RelacionamentoProcessoQuery.RELACIONAMENTO_BY_PROCESSO;
@@ -64,9 +64,9 @@ public class RelacionamentoDAO extends DAO<Relacionamento> {
     	getEntityManager().refresh(retorno);
     	return retorno;
     }
-    
-	protected void remove(RelacionamentoProcessoInterno rp1, RelacionamentoProcesso rp2) {
-		Relacionamento relacionamento = getRelacionamento(rp1, rp2);
+
+    @Override
+    public Relacionamento remove(Relacionamento relacionamento) throws DAOException {
 		EntityManager em = getEntityManager();
 		
 		for(RelacionamentoProcesso rp : relacionamento.getRelacionamentosProcessos()) {
@@ -74,6 +74,12 @@ public class RelacionamentoDAO extends DAO<Relacionamento> {
 		}
 		em.remove(relacionamento);
 		em.flush();
+		return relacionamento;
+    }
+    
+	protected void remove(RelacionamentoProcessoInterno rp1, RelacionamentoProcesso rp2) {
+		Relacionamento relacionamento = getRelacionamento(rp1, rp2);
+		remove(relacionamento);
 	}
 
 	public void remove(Processo processo, Processo processoInternoRelacionado) {

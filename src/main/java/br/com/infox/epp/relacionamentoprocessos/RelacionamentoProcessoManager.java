@@ -1,4 +1,4 @@
-package br.com.infox.epp.processo.manager;
+package br.com.infox.epp.relacionamentoprocessos;
 
 import javax.ejb.Stateless;
 
@@ -6,7 +6,6 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
-import br.com.infox.epp.processo.dao.RelacionamentoProcessoDAO;
 import br.com.infox.epp.processo.entity.RelacionamentoProcesso;
 import br.com.infox.epp.processo.entity.RelacionamentoProcessoInterno;
 
