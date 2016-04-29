@@ -1,0 +1,223 @@
+.ifx-menu-nav{
+  font-size:1rem;
+    position:relative;
+}
+
+.ifx-menu{
+  margin:0;
+  list-style:none;
+  padding:0 0 0 0;
+  transition:all 0.3s ease-in-out;
+  transform-origin:left top;
+  > .ifx-menu-filter {
+    width: calc(~"100% - 2em");
+    margin: 0.75em 1em;
+    padding: 0.25em 0;
+    box-sizing: border-box;
+    line-height: 0.75em;
+  }
+}
+.ifx-menu-itm{
+  &:focus,&:active,&:hover, &-sel{
+    background-color:rgba(0,0,0,0.15);
+  }
+  &:not(&-has-children) {
+      font-weight: normal;
+  }
+  &-has-children {
+    font-weight:bolder;
+        background-color: rgba(0, 0, 0, 0.05);
+    &:active,&:hover, &-sel{
+          background-color:rgba(0,0,0,0.25);
+    }
+  }
+  >.ifx-menu {
+    .transform(scale(0));
+    height:0;
+  }
+  &-sel,&:focus,&:active{
+    >.ifx-menu {
+      .transform(scale(1));
+      height:auto;
+    }  
+  }
+}
+.ifx-menu-itm-lnk{
+  box-sizing: border-box;
+  text-decoration: inherit;
+  color: inherit;
+}
+.ifx-menu-itm-lbl{
+  cursor:pointer;
+  display:block;
+  padding:0.75em 1em;
+  color: @menu-txt-color;
+  >*{
+      display:inline-block;
+      vertical-align:middle;
+  }
+}
+
+/* ESPECÍFICO DA TELA  */
+.ifx-menu-container{
+  @menu-block-size:4em;
+  @menu-height:@menu-block-size;
+  @context-menu-width: 17em;
+  @content-translation: @context-menu-width+1;  
+  position:relative;
+  font-size:1rem;  
+  > * {
+    display:inline-block;
+    vertical-align:top;
+  }
+  > .ifx-menu-content,> .ifx-navigation-menu {
+    margin-top:@menu-block-size;
+  }
+  > .ifx-menu-content {
+    .mdl-shadow--2dp;
+    width:calc(~"100% - 1em - @{context-menu-width}");
+    margin-right:-100%;
+    margin-left:@context-menu-width+1;
+    @media only screen {
+      @media (max-width: 1024px){
+        width:calc(~"100% - 2em");
+        margin-left:2em;
+      }
+    }
+  }
+  > .ifx-top-menu {
+      width:100%;
+  }
+  > .ifx-navigation-menu {
+    width:@context-menu-width;
+    margin-right:-@context-menu-width;
+    .transition(all 0.5s ease-in-out);
+    @media only screen {
+      @media (max-width: 1024px){
+        @receding-size:@context-menu-width / (1*@context-menu-width);
+        margin-left:calc(~"-@{context-menu-width} - @{receding-size}");
+        margin-right:@receding-size;
+        &:hover,&:active,&:focus {
+          .transform(translate(@context-menu-width+@receding-size,0));
+        }
+        &:before {
+          content:'';
+          @resource-path:"/resources/styleSkinInfox/all/1x_web/ic_menu_black_18dp.png";
+          background-color:@menu-bg-color;
+          background-image:url("@{context-path}\@{resource-path}");
+          background-position:right top;
+          background-repeat:no-repeat;
+          background-size:contain;
+          position:absolute;
+          width:3em;
+          height:2em;
+          top:0em;
+          right:-3em;
+        }
+      }
+    }
+
+  }
+
+}
+
+
+.ifx-navigation-menu{
+  .mdl-shadow--4dp;
+  position:relative;
+  background-color:@menu-bg-color;
+  display:inline-block;
+
+  .ifx-menu{
+    min-width: 100%;
+    min-height: 100%;
+  }
+  .ifx-menu-itm-lbl{
+    white-space:pre;
+  }
+  .ifx-menu-itm {
+    > .ifx-menu {
+      position:absolute;
+      top:0;
+      left:100%;
+      background-color:@menu-bg-color;
+    }
+  }
+  > .ifx-menu-nav{
+      > .ifx-menu {
+          > .ifx-menu-itm {
+              > .ifx-menu {
+                .mdl-shadow--4dp;
+                overflow-y:auto;
+                overflow-x:hidden;
+                .ifx-menu-itm-has-children{
+                    &:active,&:hover, &-sel{
+                        background-color:rgba(0,0,0,0.25);
+                    }
+                    background-color:rgba(0,0,0,0.15);
+                    padding:0 0 0.2em 0.2em;
+                }
+                .ifx-menu {
+                    position:inherit;
+                    top:inherit;
+                    left:inherit; 
+                }
+              }
+          }
+      }
+  }
+}
+
+.ifx-top-menu{
+    .mdl-shadow--3dp;
+    background-color:@menu-bg-color;
+
+    .ifx-menu-nav{
+        .display-flex();
+        @media only screen {
+          @media (min-width: 1024px){
+            &:before{
+              @margin:5px;
+              margin:@margin;
+              @resource-url:"#{layoutController.getResourceUrl('LOGO_TOPO')}";
+              content:"";
+              width:calc(~"9em - @{margin} - @{margin}");
+              height:calc(~"3em - @{margin} - @{margin}");
+              background-image:url("@{context-path}\@{resource-url}");
+              background-position:left top;
+              background-repeat:no-repeat;
+              background-size:contain;
+            }
+          }
+        }
+        > .ifx-menu {
+            white-space:nowrap;
+            .flex(1);
+            text-align:right;
+            line-height:1em;
+            > .ifx-menu-itm {
+                text-align:left;
+                display:inline-block;
+                position:relative;
+                > .ifx-menu {
+                    .mdl-shadow--3dp;
+                    position:absolute;
+                    display:block;
+                    background-color:@menu-bg-color;
+                    min-width:100%;
+                    .ifx-menu-itm {
+                        display:block;
+                    }
+                }
+                > .ifx-menu-itm-lnk {
+                    > .ifx-menu-itm-lbl {
+                        white-space:pre;
+                    }
+                }
+            }
+        }
+  }
+
+  .ifx-menu-itm {
+  }
+}

@@ -20,10 +20,12 @@ import javax.interceptor.InterceptorBinding;
  */
 public @interface Log {
 	
+	public static final String EMPTY = "";
+	
 	/**
 	 * Define o código do LOG que será gerado
 	 * @return
 	 */
 	@Nonbinding
-	String codigo();
+	String codigo() default EMPTY;
 }

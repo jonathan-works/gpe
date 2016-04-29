@@ -321,6 +321,9 @@ public class AnexarDocumentosView implements Serializable {
 				totalValidations.add(String.format(mensagem, documentoTemporario.getDescricao()));
 				continue;
 			}
+			if (assinaturaDocumentoService.isDocumentoTotalmenteAssinado(documentoTemporario.getDocumentoBin(), documentoTemporario.getClassificacaoDocumento())) {
+				continue;
+			}
 
 			List<ClassificacaoDocumentoPapel> cdpList = classificacaoDocumentoPapelManager
 					.getByClassificacaoDocumento(documentoTemporario.getClassificacaoDocumento());
@@ -336,14 +339,9 @@ public class AnexarDocumentosView implements Serializable {
 								classificacaoDocumentoPapel.getPapel()));
 					}
 				} else if (TipoAssinaturaEnum.S.equals(classificacaoDocumentoPapel.getTipoAssinatura())) {
-					if (isAssinado) {
-						localValidations.clear();
-						break;
-					} else {
-						String mensagem = infoxMessages.get("anexarDocumentos.faltaAssinaturaPapel");
-						localValidations.add(String.format(mensagem, documentoTemporario.getDescricao(),
-								classificacaoDocumentoPapel.getPapel()));
-					}
+					String mensagem = infoxMessages.get("anexarDocumentos.faltaAssinaturaPapel");
+					localValidations.add(String.format(mensagem, documentoTemporario.getDescricao(),
+							classificacaoDocumentoPapel.getPapel()));
 				}
 			}
 			totalValidations.addAll(localValidations);

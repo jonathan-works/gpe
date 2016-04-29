@@ -1,0 +1,141 @@
+.background-image(@base-path:@imgFolder, @image-name){
+  background-image:~"url("%("%s/%s",@base-path,@image-name)~")";
+}
+
+.image(@imgName) {
+  background-image:~"url("%("%s/%s",@imgFolder,@imgName)~")";
+}
+
+.z-depth(@level){
+    box-shadow:0 2px*@level 5px*@level 0 rgba(0,0,0,0.8/@level), 0 2px*@level 10px*@level 0 rgba(0,0,0,0.6/@level);
+}
+
+.transition(...){
+    -o-transition: @arguments;
+    -moz-transition: @arguments;
+    -webkit-transition: @arguments;
+    transition: @arguments;
+}
+
+.transform-origin(...){
+    -o-transform-origin: @arguments;
+    -ms-transform-origin: @arguments;
+    -moz-transform-origin: @arguments;
+    -webkit-transform-origin: @arguments;
+    transform-origin: @arguments;
+}
+
+.transform(...){
+    -o-transform: @arguments;
+    -webkit-transform: @arguments;
+    -ms-transform: @arguments;
+    -moz-transform: @arguments;
+    transform: @arguments;
+}
+.display-inline-flex{
+  display: -webkit-inline-flex;
+  display: inline-flex;  
+}
+.display-flex{
+  display: -webkit-flex;
+  display: flex;  
+}
+.flex(@ratio:1){
+  -moz-flex:@ratio;
+  -webkit-flex: @ratio;
+  -ms-flex: @ratio;
+  flex: @ratio;
+}
+
+.flex-displayed-container {
+  &:extend(.display-flex);
+}
+
+.flex-child(@ratio:1){
+  .flex(@ratio);
+}
+.flex-displayed-child {
+  .flex-child(1);
+}
+
+.central-block-section() {
+  position:absolute;
+  width: 355px;
+  height: 122px;
+}
+
+.bg-dual-block() {
+  position: fixed;
+  height: 50%;
+  width: 100%;
+}
+
+.box-sizing(@value){
+    -webkit-box-sizing:@value;
+    -moz-box-sizing:@value;
+    box-sizing:@value;
+}
+
+.full-scr(){
+  width: 100%;
+  height: 100%;
+}
+
+.linear-gradient(@content){
+  background:-moz-linear-gradient(@content);
+  background:-webkit-linear-gradient(@content);
+  background:-o-linear-gradient(@content);
+  background:-ms-linear-gradient(@content);
+}
+
+.bg-deg-color(@startColor,@endColor) when (@startColor = @endColor){
+  background: @startColor;
+}
+
+.bg-deg-color(@startColor,@endColor) when not (@startColor = @endColor){
+  background: @startColor;
+  .linear-gradient(~"top, "@startColor~" 0%, "@endColor~" 100%");
+  background: linear-gradient(to bottom, @startColor 0%,@endColor 100%);
+}
+
+.btn-deg-color(@startColor,@endColor) when (@startColor = @endColor){
+  background: @startColor;
+}
+
+.btn-deg-color(@startColor,@endColor) when not (@startColor = @endColor){
+  background: @startColor;
+  .linear-gradient(~"top, "@startColor~" 0%, "@endColor~" 100%");
+  background: linear-gradient(to bottom, @startColor 0%,@endColor 100%);
+}
+
+.darken-color-percentage(@atrib,@color,@perc){
+  @{atrib}:hsl(hue(@color),saturation(@color),lightness(@color)*@perc);
+}
+
+.deg-color(@cor) when (luminance(@cor)<=50%){
+    @deg-color:lighten(@cor,30%);
+}
+.deg-color(@cor) when (luminance(@cor)>50%){
+    @deg-color:darken(@cor,30%);
+}
+.mdl-shadow--2dp {
+    box-shadow:0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
+}
+.mdl-shadow--3dp {
+    box-shadow:0 3px 4px 0 rgba(0,0,0,.14),0 3px 3px -2px rgba(0,0,0,.2),0 1px 8px 0 rgba(0,0,0,.12)
+}
+.mdl-shadow--4dp {
+    box-shadow:0 4px 5px 0 rgba(0,0,0,.14),0 1px 10px 0 rgba(0,0,0,.12),0 2px 4px -1px rgba(0,0,0,.2)
+}
+.mdl-shadow--6dp {
+    box-shadow:0 6px 10px 0 rgba(0,0,0,.14),0 1px 18px 0 rgba(0,0,0,.12),0 3px 5px -1px rgba(0,0,0,.2)
+}
+.mdl-shadow--8dp {
+    box-shadow:0 8px 10px 1px rgba(0,0,0,.14),0 3px 14px 2px rgba(0,0,0,.12),0 5px 5px -3px rgba(0,0,0,.2)
+}
+.mdl-shadow--16dp {
+    box-shadow:0 16px 24px 2px rgba(0,0,0,.14),0 6px 30px 5px rgba(0,0,0,.12),0 8px 10px -5px rgba(0,0,0,.2)
+}
+.mdl-shadow--24dp {
+    box-shadow:0 9px 46px 8px rgba(0,0,0,.14),0 11px 15px -7px rgba(0,0,0,.12),0 24px 38px 3px rgba(0,0,0,.2)
+}

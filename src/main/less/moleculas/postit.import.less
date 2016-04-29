@@ -1,0 +1,35 @@
+@post-it-bg-color:#FDFB8C;
+@post-it-border-color:#DEDC65;
+@post-it-shadow-color:#DDD;
+@post-it-border-width:1px;
+@post-it-width:164px;
+@post-it-padding:15px;
+@post-it-margin:0px;
+@post-it-calc-width:(@post-it-width + (2 * @post-it-padding) + (2 * @post-it-margin) + (2 * @post-it-border-width));
+
+.post-it-cont {
+    position:relative;
+    display:block;
+    width:100%;
+}
+.note {
+    width:164px;
+    padding:15px;
+    position:relative;
+    top:0;
+    left:calc(~"100% - "@post-it-calc-width);
+    
+    font-family:@default-font-family;
+    background-color:@post-it-bg-color;
+    border:@post-it-border-width solid @post-it-border-color;
+}
+.post-it-cont:before {
+    background-color:@post-it-shadow-color;
+    right:-3px;
+    top:3px;
+    width:@post-it-calc-width;
+    height:100%;
+    content:"";
+    position:absolute;
+    display:block;
+}

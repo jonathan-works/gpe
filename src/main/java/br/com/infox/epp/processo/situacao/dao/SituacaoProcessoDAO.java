@@ -6,7 +6,6 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.AbstractQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -28,7 +27,7 @@ import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.exe.PooledActor;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao_;
@@ -64,11 +63,7 @@ import br.com.infox.ibpm.type.PooledActorType;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-public class SituacaoProcessoDAO {
-	
-	public EntityManager getEntityManager() {
-		return EntityManagerProducer.getEntityManager();
-	}
+public class SituacaoProcessoDAO extends PersistenceController {
 	
 	public List<FluxoBean> getFluxoList(TipoProcesso tipoProcesso, boolean comunicacoesExpedidas, String numeroProcessoRootFilter) {
 	    CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();

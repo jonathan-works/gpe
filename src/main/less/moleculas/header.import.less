@@ -1,0 +1,16 @@
+@page-header-height:5.5em;
+@menu-height:3em;
+
+.page-header{
+    font-size:1rem;
+    height:@page-header-height;
+    & > .header-logo {
+        height:@page-header-height;
+        width:auto;
+    }
+    & > .header-content{
+        text-align:right;
+        margin-top:-@page-header-height;
+    }
+    padding-bottom:@menu-height;
+}

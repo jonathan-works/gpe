@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,9 @@ import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.DynamicField;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.epp.system.manager.ParametroManager;
@@ -30,7 +33,8 @@ public class ParametroView implements Serializable {
 	private ParametroManager parametroManager;
 	@Inject
 	private ParametroService parametroService;
-	
+	@Inject
+	private InfoxMessages infoxMessages;
 	private String grupo;
 	private Map<String,DynamicField> formFields;
 
@@ -45,7 +49,7 @@ public class ParametroView implements Serializable {
 		this.formFields = new HashMap<>();
 		grupos = new ArrayList<>();
 		for (String grupo : parametroService.listGrupos()) {
-			grupos.add(new SelectItem(grupo, grupo.toUpperCase()));
+			grupos.add(new SelectItem(grupo, infoxMessages.get(String.format("parametro.grupo.%s", grupo))));
 			if (getGrupo() == null){
 				setGrupo(grupo);
 			}
@@ -60,13 +64,24 @@ public class ParametroView implements Serializable {
 	public DynamicField createFormField(ParametroDefinition<?> definicaoParametro) {
 		Parametro parametro = parametroManager.getParametro(definicaoParametro.getNome());
 		if (parametro == null){
-			return null;
+			DynamicField ff = new DynamicField();
+			ff.setId(definicaoParametro.getNome());
+			ff.setType(definicaoParametro.getTipo());
+			ff.setLabel(infoxMessages.get(String.format("parametro.%s.label", definicaoParametro.getNome())));
+			ff.setTooltip(infoxMessages.get(String.format("parametro.%s.descricao", definicaoParametro.getNome())));
+			ff.setPath(MessageFormat.format("{0}.{1}", Introspector.decapitalize(ParametroView.class.getSimpleName()), "formFields"));
+			ff.setValue(null);
+			if (definicaoParametro.getKeyAttribute() != null && definicaoParametro.getLabelAttribute() != null){
+				List<SelectItem> items = parametroService.getItems(definicaoParametro);
+				ff.set("items", items);
+			}
+			return ff;
 		}
 		DynamicField ff = new DynamicField();
 		ff.setId(parametro.getNomeVariavel());
-		ff.setLabel(parametro.getDescricaoVariavel());
 		ff.setType(definicaoParametro.getTipo());
-		ff.setTooltip(parametro.getDescricaoVariavel());
+		ff.setLabel(infoxMessages.get(String.format("parametro.%s.label", definicaoParametro.getNome())));
+		ff.setTooltip(infoxMessages.get(String.format("parametro.%s.descricao", definicaoParametro.getNome())));
 		ff.setPath(MessageFormat.format("{0}.{1}", Introspector.decapitalize(ParametroView.class.getSimpleName()), "formFields"));
 		ff.setValue(parametro.getValorVariavel());
 		if (definicaoParametro.getKeyAttribute() != null && definicaoParametro.getLabelAttribute() != null){
@@ -98,12 +113,20 @@ public class ParametroView implements Serializable {
 	
 	public String publish() {
 		for (Entry<String, DynamicField> entry : formFields.entrySet()) {
-			Parametro parametro = parametroManager.getParametro(entry.getKey()); 
+			Parametro parametro = parametroManager.getParametro(entry.getKey());
 			DynamicField formField = entry.getValue();
-			if (parametro != null) {
-				parametro.setValorVariavel(String.valueOf(formField.getValue()));
-				parametroManager.update(parametro);
+			if (parametro == null){
+				parametro = new Parametro();
+				
+				parametro.setNomeVariavel(formField.getId());
+				parametro.setDescricaoVariavel(String.format("parametro.%s.descricao", formField.getId()));
+				parametro.setUsuarioModificacao(Authenticator.getUsuarioLogado());
+				parametro.setDataAtualizacao(new Date());
+				parametro.setSistema(Boolean.FALSE);
+				parametro.setAtivo(Boolean.TRUE);
 			}
+			parametro.setValorVariavel(String.valueOf(formField.getValue()));
+			parametroManager.update(parametro);
 		}
 		return "";
 	}	

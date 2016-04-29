@@ -38,46 +38,40 @@ public class EppParametroProvider implements Serializable, ParametroProvider {
 	public void init() {
 		parametroDefinitions = new ArrayList<>();
 		initParametrosControleAcesso();
-		initParametrosReCaptcha();
-		initParametrosTwitter();
 		initParametrosComunicacao();
 		initParametrosAnaliseDocumento();
 		initParametrosExecFluxo();
-		initParametrosLDAP();
 		initParametrosSistema();
-		create("loginWebService", "authorizationSecret", FieldType.STRING);
 		initParametrsoLog();
-	    create("externalAuthenticationService","externalAuthenticationServiceUrl", FieldType.STRING);		
 	}
 
-    private void initParametrosControleAcesso() {
-		final String grupo = "controle de acesso";
+	private void initParametrosControleAcesso() {
+		final String grupo = "controleAcesso";
 		create(grupo, "termoAdesao", ModeloDocumento_.tituloModeloDocumento, ModeloDocumento_.tituloModeloDocumento)
 				.addFilter(isTrue(ModeloDocumento_.ativo));
 		create(grupo, "usuarioExternoPodeVerDocExcluido", FieldType.BOOLEAN);
 		create(grupo, "somenteUsuarioInternoVerMotivoExclusaoDoc", FieldType.BOOLEAN);
-	}
-
-	private void initParametrosReCaptcha() {
-		create("recaptcha", "recaptchaPrivateKey", FieldType.STRING);
-		create("recaptcha", "recaptchaPublicKey", FieldType.STRING);
-	}
-
-	private void initParametrosLDAP() {
-		create("ldap", "ldapDomainName", FieldType.STRING);
-		create("ldap", "ldapProviderUrl", FieldType.STRING);
+		create(grupo, "authorizationSecret", FieldType.STRING);
+		create(grupo, "externalAuthenticationServiceUrl", FieldType.STRING);
+		create(grupo, "ldapDomainName", FieldType.STRING);
+		create(grupo, "ldapProviderUrl", FieldType.STRING);
+		create(grupo, "recaptchaPrivateKey", FieldType.STRING);
+		create(grupo, "recaptchaPublicKey", FieldType.STRING);
+		create(grupo, "usuarioInterno", Papel_.nome, Papel_.identificador).addFilter(isFalse(Papel_.termoAdesao));
+		create(grupo, "usuarioExterno", Papel_.nome, Papel_.identificador).addFilter(isTrue(Papel_.termoAdesao));
 	}
 
 	private void initParametrosExecFluxo() {
 		create("fluxo", "idUsuarioProcessoSistema", UsuarioLogin_.nomeUsuario, UsuarioLogin_.idUsuarioLogin)
-				.addFilter(isTrue(UsuarioLogin_.ativo)).addFilter(equal(UsuarioLogin_.tipoUsuario, UsuarioEnum.S))
+				.addFilter(equal(UsuarioLogin_.tipoUsuario, UsuarioEnum.S)).addFilter(isTrue(UsuarioLogin_.ativo))
 				.addFilter(isFalse(UsuarioLogin_.bloqueio));
+		// Não deveria ser configurado por fluxo?
+		create("fluxo", "pastaDocumentoGerado", ModeloPasta_.descricao, ModeloPasta_.nome);
 	}
 
 	private void initParametrosAnaliseDocumento() {
-		create("analise de documento", "codigoFluxoDocumento", Fluxo_.fluxo, Fluxo_.codFluxo)
+		create("analiseDocumento", "codigoFluxoDocumento", Fluxo_.fluxo, Fluxo_.codFluxo)
 				.addFilter(isTrue(Fluxo_.ativo)).addFilter(isTrue(Fluxo_.publicado));
-		;
 	}
 
 	private void initParametrosComunicacao() {
@@ -86,11 +80,6 @@ public class EppParametroProvider implements Serializable, ParametroProvider {
 				.addFilter(isTrue(Localizacao_.ativo));
 		create("comunicacao", "codigoFluxoComunicacao", Fluxo_.fluxo, Fluxo_.codFluxo).addFilter(isTrue(Fluxo_.ativo))
 				.addFilter(isTrue(Fluxo_.publicado));
-	}
-
-	private void initParametrosTwitter() {
-		create("twitter", "oauthConsumerKey", FieldType.STRING);
-		create("twitter", "oauthConsumerSecret", FieldType.STRING);
 	}
 
 	private void initParametrosSistema() {
@@ -107,17 +96,14 @@ public class EppParametroProvider implements Serializable, ParametroProvider {
 				ModeloDocumento_.tituloModeloDocumento).addFilter(isTrue(ModeloDocumento_.ativo));
 		create("sistema", "tituloModeloEmailMudancaSenhaComLogin", ModeloDocumento_.tituloModeloDocumento,
 				ModeloDocumento_.tituloModeloDocumento).addFilter(isTrue(ModeloDocumento_.ativo));
-		create("sistema", "usuarioInterno", Papel_.nome, Papel_.identificador).addFilter(isFalse(Papel_.termoAdesao));
-		create("sistema", "usuarioExterno", Papel_.nome, Papel_.identificador).addFilter(isTrue(Papel_.termoAdesao));
-		create("sistema", "pastaDocumentoGerado", ModeloPasta_.descricao, ModeloPasta_.nome);
 	}
-	
+
 	private void initParametrsoLog() {
-	    create("envioLog", "codigoClienteEnvioLog", FieldType.STRING);
-        create("envioLog", "passwordClienteEnvioLog", FieldType.STRING);
-        create("envioLog", "ativarServicoEnvioLogAutomatico", FieldType.BOOLEAN);
-        create("envioLog", "urlServicoEnvioLogErro", FieldType.STRING);
-    }
+		create("envioLog", "codigoClienteEnvioLog", FieldType.STRING);
+		create("envioLog", "passwordClienteEnvioLog", FieldType.STRING);
+		create("envioLog", "ativarServicoEnvioLogAutomatico", FieldType.BOOLEAN);
+		create("envioLog", "urlServicoEnvioLogErro", FieldType.STRING);
+	}
 
 	public <T> ParametroDefinition<T> create(String grupo, String nome, SingularAttribute<T, ?> keyAttribute,
 			SingularAttribute<T, ?> labelAttribute) {

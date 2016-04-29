@@ -22,18 +22,21 @@
     value="#{not empty processoTarefaList.entity.processo}"
   />
   <ui:define name="head">
-    <h:outputScript
-      name="dojo.js"
-      library="js/dojo"
-    />
-    <h:outputScript
-      name="defaultGauge.js"
-      library="js/dojoCustom/gauges"
-    />
-    <h:outputScript
-      name="progressBarGauge.js"
-      library="js/dojoCustom/gauges"
-    />
+    <ui:remove>
+        <!-- DOJO RETIRADO DO PROJETO. REVER ESTE COMPONENTE -->
+        <h:outputScript
+          name="dojo.js"
+          library="js/dojo"
+        />
+        <h:outputScript
+          name="defaultGauge.js"
+          library="js/dojoCustom/gauges"
+        />
+        <h:outputScript
+          name="progressBarGauge.js"
+          library="js/dojoCustom/gauges"
+        />
+    </ui:remove>
   </ui:define>
   <ui:define name="searchGrid">
     <wi:dataTable
@@ -63,17 +66,20 @@
             value="#{processoEpaNaoFinalizadoList.entity.processo.situacaoPrazo}"
           />
         </wi:searchForm>
-        <dojo:defaultGauge
-          id="processo"
-          max="#{processoEpaNaoFinalizadoList.fluxo.qtPrazo}"
-          width="250"
-          height="200"
-          radius="50"
-          label="#{infoxMessages['bam.medidorProcSel']}"
-          draggable="false"
-          indicatorLabel="#{infoxMessages['bam.tempoMedio']}"
-          value="#{processoEpaNaoFinalizadoList.mediaTempoGastoDesdeInicioProcesso}"
-        />
+        <ui:remove>
+            <!-- DOJO RETIRADO DO PROJETO. REVER ESTE COMPONENTE -->
+            <dojo:defaultGauge
+              id="processo"
+              max="#{processoEpaNaoFinalizadoList.fluxo.qtPrazo}"
+              width="250"
+              height="200"
+              radius="50"
+              label="#{infoxMessages['bam.medidorProcSel']}"
+              draggable="false"
+              indicatorLabel="#{infoxMessages['bam.tempoMedio']}"
+              value="#{processoEpaNaoFinalizadoList.mediaTempoGastoDesdeInicioProcesso}"
+            />
+        </ui:remove>
       </ui:define>
       <ui:define name="headerToolBar" />
       <ui:define name="toolBar">
@@ -177,25 +183,28 @@
     >
       <ui:define name="toolBar"></ui:define>
       <ui:define name="headerToolBar"></ui:define>
-      <wi:columnOutputText
-        columnId="medidor"
-        columnHeader="#{infoxMessages['bam.medidor']}"
-        hideOrder="true"
-        columnWidth="60"
-      >
-        <dojo:progressBarGauge
-          id="#{row.idProcessoTarefa}"
-          width="60"
-          height="13"
-          barWidth="60"
-          barHeight="13"
-          min="0"
-          max="100"
-          value="#{row.porcentagem}"
-          hideTicks="true"
-        >
-        </dojo:progressBarGauge>
-      </wi:columnOutputText>
+      <ui:remove>
+            <!-- DOJO RETIRADO DO PROJETO. REVER ESTE COMPONENTE -->
+          <wi:columnOutputText
+            columnId="medidor"
+            columnHeader="#{infoxMessages['bam.medidor']}"
+            hideOrder="true"
+            columnWidth="60"
+          >
+            <dojo:progressBarGauge
+              id="#{row.idProcessoTarefa}"
+              width="60"
+              height="13"
+              barWidth="60"
+              barHeight="13"
+              min="0"
+              max="100"
+              value="#{row.porcentagem}"
+              hideTicks="true"
+            >
+            </dojo:progressBarGauge>
+          </wi:columnOutputText>
+      </ui:remove>
       <wi:columnOutputText
         columnId="tarefa"
         columnHeader="Tarefa"

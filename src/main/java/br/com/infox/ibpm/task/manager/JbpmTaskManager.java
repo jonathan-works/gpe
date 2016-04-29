@@ -21,6 +21,7 @@ public class JbpmTaskManager extends Manager<JbpmTaskDAO, Void> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "jbpmTaskManager";
 
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void atualizarTarefasModificadas(Map<Number, String> modifiedTasks) {
         getDao().atualizarTarefasModificadas(modifiedTasks);
     }

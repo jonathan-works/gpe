@@ -1,0 +1,56 @@
+.seletorSkinsLogin{
+    text-align:right;
+    font-size:1rem;
+    &>* {
+        display:inline-block;
+        vertical-align:middle;
+        font-size:1em;
+    }
+}
+form#login{
+    text-align:center;
+}
+.blocoCentralLogin {
+    @del-space:1em;    
+    .logo{
+        @img-height:140px;
+        @img-folder:"#{layoutController.getResourceUrl('LOGO_LOGIN')}";
+        background-image:url("@{context-path}\@{img-folder}");
+        background-repeat:no-repeat;
+        background-position:center center;
+        background-size:contain;
+        margin:0 0 @del-space;
+        height:@img-height;
+    }
+    .bg_login_inferior{
+        margin:@del-space;
+    }
+    text-align:center;      
+    padding: @del-space;
+    font-size:1rem;
+    display:inline-block;
+    .z-depth(1);
+}
+.logo-img{
+  display:none;
+}
+
+.login-common-flex{
+    display:block;
+}
+
+.login-lbl {
+  &:extend(.login-common-flex);
+  font-size:1em;
+  margin:0.2em;
+}
+input.input-text-login{
+  text-align:center;
+  font-size:1em;
+  margin:0.2em;
+}
+span.versao{
+    position:fixed;
+    bottom:1em;
+    right:1em;
+}

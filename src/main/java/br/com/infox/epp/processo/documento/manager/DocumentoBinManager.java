@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
 import org.jboss.seam.annotations.AutoCreate;
@@ -36,6 +37,7 @@ import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.dao.DocumentoBinDAO;
+import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.seam.exception.BusinessException;
@@ -59,6 +61,8 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 	private AssinaturaDocumentoService assinaturaDocumentoService;
 	@In
 	private DocumentoBinarioManager documentoBinarioManager;
+	@Inject
+	private DocumentoDAO documentoDAO;
 
 	public DocumentoBin createProcessoDocumentoBin(final Documento documento) throws DAOException {
 		return createProcessoDocumentoBin(documento.getDocumentoBin());
@@ -196,12 +200,13 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 		if (o.isBinario()) {
             o.setMinuta(false);
         }
-		if (!o.getSuficientementeAssinado() && !o.getDocumentoList().isEmpty()) {
-			if (!classificacaoDocumentoPapelManager.classificacaoExigeAssinatura(o.getDocumentoList().get(0).getClassificacaoDocumento()) && !o.isMinuta()) {
+		o = super.persist(o);
+		List<Documento> documentoList = documentoDAO.getDocumentosFromDocumentoBin(o);
+		if (!o.getSuficientementeAssinado() && !documentoList.isEmpty()) {
+			if (!classificacaoDocumentoPapelManager.classificacaoExigeAssinatura(documentoList.get(0).getClassificacaoDocumento()) && !o.isMinuta()) {
 				assinaturaDocumentoService.setDocumentoSuficientementeAssinado(o, Authenticator.getUsuarioPerfilAtual());
 			}
 		}
-		o = super.persist(o);
 		return o;
 	}
 

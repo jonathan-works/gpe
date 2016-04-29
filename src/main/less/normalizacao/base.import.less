@@ -1,0 +1,79 @@
+#normalize-rich-components{
+    .fonts {
+      font-size:inherit;
+      font-family:inherit;
+    }
+    .background{
+      background-repeat: inherit;
+      background-position: inherit;
+      background-color: inherit;
+      background-image: inherit;
+    }
+}
+
+p {
+    img {
+      max-height:100%;
+      max-width:100%;
+    }
+}
+
+body {
+    .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button{
+      #normalize-rich-components > .fonts;
+    }
+    input, select, textarea, button, keygen, isindex, legend, a{
+        #normalize-rich-components > .fonts;
+    }
+
+    button, input[type="reset"], input[type="submit"], input[type="button"], textarea, input[type="text"], input[type="password"], select{
+        #normalize-rich-components > .fonts;
+        #normalize-rich-components > .background;
+    }
+    button:hover, input[type="reset"]:hover, input[type="submit"]:hover, input[type="button"]:hover, button[disabled], input[type="reset"][disabled], input[type="submit"][disabled], input[type="button"][disabled] {
+        #normalize-rich-components > .background;
+    }
+    .rf-p-b {
+      #normalize-rich-components > .fonts;
+      padding:1em;
+    }
+    .rf-p-hdr{
+      #normalize-rich-components > .fonts;
+      padding:2em/11;
+      border-width:1em/11;
+    }
+    .rf-cp-hdr {
+      #normalize-rich-components > .fonts;
+      #normalize-rich-components > .background;
+      padding:2em/11;
+      border-width:1em/11;
+    }
+    .rf-cp-ico {
+      width:16em/11;
+      height:16em/11;
+    }
+    .rf-cp-b{
+      #normalize-rich-components > .fonts;
+      padding:10em/11;
+    }
+    .rf-dt-c,.rf-dt-nd{
+      #normalize-rich-components > .fonts;
+      padding:4em/11;
+    }
+    .rf-dt-hdr-c,.rf-dt-shdr-c,.rf-dt-flt-c,.rf-dt-sftr-c,.rf-dt-ftr-c{
+      #normalize-rich-components > .fonts;
+      #normalize-rich-components > .background;
+      padding:4em/11;
+    }
+    .rf-pp-hdr-cnt, .rf-pp-hdr-cntrls, .rf-pp-cnt{
+      #normalize-rich-components > .fonts;
+    }
+    .rf-trn{
+      #normalize-rich-components > .fonts;
+    }
+
+}
+
+html {
+  font-size:0.8125rem;
+}

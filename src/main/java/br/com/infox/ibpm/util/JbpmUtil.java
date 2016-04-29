@@ -1,12 +1,15 @@
 package br.com.infox.ibpm.util;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
-import static br.com.infox.ibpm.util.JbpmQueries.ALL_TASKS_QUERY;
-import static br.com.infox.ibpm.util.JbpmQueries.PROCESS_NAMES_QUERY;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
 import org.jboss.seam.ScopeType;
@@ -19,10 +22,12 @@ import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.db.GraphSession;
+import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.exe.Token;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.constants.FloatFormatConstants;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.epp.access.entity.Localizacao;
@@ -35,7 +40,6 @@ import br.com.infox.ibpm.task.manager.UsuarioTaskInstanceManager;
 import br.com.infox.ibpm.variable.JbpmVariavelLabel;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-import br.com.infox.seam.transaction.TransactionService;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(JbpmUtil.NAME)
@@ -81,10 +85,20 @@ public class JbpmUtil {
     }
 
     public static Session getJbpmSession() {
-    	// Iniciando transação para evitar erro ao chamar este método fora de uma transação, como ao carregar a combo de subprocessos
-    	// @Transactional(REQUIRED), mas o método é estático
-		TransactionService.beginTransaction();
         return ManagedJbpmContext.instance().getSession();
+    }
+    
+    public static Number getProcessDefinitionId(String processDefinitionName) {
+        EntityManager entityManager = EntityManagerProducer.getEntityManager();
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Number> cq = cb.createQuery(Number.class);
+        Root<ProcessDefinition> processDefinition = cq.from(ProcessDefinition.class);
+        cq.select(cb.max(processDefinition.<Number>get("id")));
+        cq.where(
+            cb.equal(processDefinition.<String>get("name"), cb.literal(processDefinitionName))
+        );
+        List<Number> result = entityManager.createQuery(cq).getResultList();
+        return result.isEmpty() ? null : result.get(0);
     }
 
     @Factory(value = "jbpmMessages", scope = ScopeType.APPLICATION)
@@ -101,16 +115,6 @@ public class JbpmUtil {
             }
         }
         return messagesMap;
-    }
-
-    @SuppressWarnings(UNCHECKED)
-    public List<String> getProcessNames() {
-        return getJbpmSession().createQuery(PROCESS_NAMES_QUERY).list();
-    }
-
-    @SuppressWarnings(UNCHECKED)
-    public List<TaskInstance> getAllTasks() {
-        return getJbpmSession().createQuery(ALL_TASKS_QUERY).list();
     }
 
     @SuppressWarnings(UNCHECKED)
@@ -176,9 +180,9 @@ public class JbpmUtil {
         return VariableType.EDITOR.name().equals(type);
     }
 
-    @SuppressWarnings(UNCHECKED)
     public static List<Token> getTokensOfAutomaticNodesNotEnded() {
-        return getJbpmSession().createQuery(JbpmQueries.TOKENS_OF_AUTOMATIC_NODES_NOT_ENDED_QUERY).list();
+        EntityManager entityManager = EntityManagerProducer.getEntityManager();
+        return entityManager.createQuery(JbpmQueries.TOKENS_OF_AUTOMATIC_NODES_NOT_ENDED_QUERY, Token.class).getResultList();
     }
     
     private DocumentoManager documentoManager() {

@@ -101,48 +101,50 @@
                 </f:facet>
             </ui:define>
         </ui:decorate>
-        <wi:selectBooleanCheckbox
-            id="usaTwitter"
-            value="#{nodeFitter.currentNode.usaTwitter}"
-            label="#{infoxMessages['processBuilder.usaTwitter']}"
-        >
-            <a:ajax
-                event="change"
-                render="mailDiv"
-                execute="@this"
-                limitRender="true"
-            />
-        </wi:selectBooleanCheckbox>
         <ui:param
             name="isExpression"
             value="#{nodeFitter.currentNode.to != null and nodeFitter.currentNode.to.startsWith('{')}"
         />
-        <s:div id="twitterDiv">
-            <s:div
-                rendered="#{nodeFitter.currentNode.usaTwitter}"
-                width="50%"
-            >
-                <wi:selectOneMenuEntity
-                    id="modeloTwitter"
-                    label="Modelo Twitter.."
-                    value="#{nodeFitter.currentNode.modeloTwitter}"
-                    items="#{twitterTemplateList.list()}"
-                    showLabelTodos="true"
-                >
-                    <a:ajax
-                        event="change"
-                        execute="@this"
-                        render="twitterDiv"
-                        limitRender="true"
-                    />
-                </wi:selectOneMenuEntity>
-                <wi:inputTextarea
-                    id="editorModeloTwitter"
-                    readonly="true"
-                    value="#{nodeFitter.currentNode.modeloTwitter.mensagem}"
-                />
-            </s:div>
-        </s:div>
+        <ui:remove>
+	        <wi:selectBooleanCheckbox
+	            id="usaTwitter"
+	            value="#{nodeFitter.currentNode.usaTwitter}"
+	            label="#{infoxMessages['processBuilder.usaTwitter']}"
+	        >
+	            <a:ajax
+	                event="change"
+	                render="mailDiv"
+	                execute="@this"
+	                limitRender="true"
+	            />
+	        </wi:selectBooleanCheckbox>
+	        <s:div id="twitterDiv">
+	            <s:div
+	                rendered="#{nodeFitter.currentNode.usaTwitter}"
+	                width="50%"
+	            >
+	                <wi:selectOneMenuEntity
+	                    id="modeloTwitter"
+	                    label="Modelo Twitter.."
+	                    value="#{nodeFitter.currentNode.modeloTwitter}"
+	                    items="#{twitterTemplateList.list()}"
+	                    showLabelTodos="true"
+	                >
+	                    <a:ajax
+	                        event="change"
+	                        execute="@this"
+	                        render="twitterDiv"
+	                        limitRender="true"
+	                    />
+	                </wi:selectOneMenuEntity>
+	                <wi:inputTextarea
+	                    id="editorModeloTwitter"
+	                    readonly="true"
+	                    value="#{nodeFitter.currentNode.modeloTwitter.mensagem}"
+	                />
+	            </s:div>
+	        </s:div>
+	    </ui:remove>
         <s:div id="modeloDocDiv">
             <wi:selectOneMenuEntity
                 id="modeloDocumento"
@@ -196,6 +198,7 @@
                     value="#{nodeFitter.currentNode.modeloDocumento.modeloDocumento}"
                     label="#{infoxMessages['processBuilder.modeloDocumento']}"
                     readonly="true"
+                    width="625"
                 />
             </s:div>
         </s:div>

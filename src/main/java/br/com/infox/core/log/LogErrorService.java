@@ -6,7 +6,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -21,6 +26,11 @@ import com.google.gson.GsonBuilder;
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.server.ApplicationServerService;
 import br.com.infox.core.util.StringUtil;
+import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.log.LogErro;
 import br.com.infox.epp.log.StatusLog;
 import br.com.infox.epp.log.rest.LogRest;
@@ -44,6 +54,12 @@ public class LogErrorService {
     private LogErroSearch logErroSearch;
     @Inject
     private ParametroDAO parametroDAO;
+    @Inject
+    private UsuarioLoginManager usuarioLoginManager;
+    
+    
+    @Inject
+    private Logger logger;
     
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void saveLog(LogErro logErro) {
@@ -158,5 +174,75 @@ public class LogErrorService {
            }
         }
     }
+    
+    private LogErro createLogErro(String codigoErro, Exception handledException, Exception caughtException, StatusLog statusLog) {
+        LogErro logErro = new LogErro();
+        logErro.setCodigo(codigoErro);
+        logErro.setData(DateTime.now().toDate());
+        logErro.setInstancia(applicationServerService.getInstanceName());
+        String stackTrace = getStacktrace(handledException);
+        if (caughtException != null) {
+            stackTrace += getStacktrace(caughtException);
+        }
+        logErro.setStacktrace(stackTrace);
+        logErro.setStatus(statusLog);
+        return logErro;
+    }
 
+    private String getStacktrace(Exception handledException) {
+        StringWriter sw = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(sw);
+        
+        printWriter.println(getUserAttributes());
+        handledException.printStackTrace(printWriter);
+        
+        return sw.toString();
+    }
+    
+    private String getUserAttributes() {
+    	Localizacao localizacao = Authenticator.getLocalizacaoAtual();
+        UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
+        
+        if(usuarioPerfil == null && localizacao == null) {
+        	UsuarioLogin usuarioSistema = usuarioLoginManager.getUsuarioSistema();
+        	return String.format("Usuario: %s", usuarioSistema.getLogin());
+        }
+        
+        return String.format("Usuario: %s , Localizacao: %s , Perfil: %s", usuarioPerfil.getUsuarioLogin().getLogin(), localizacao.getCodigo(), usuarioPerfil.getPerfilTemplate().getCodigo());
+    }
+    
+    /**
+     * Gera um {@link LogErro}, persiste no banco e envia ao serviço, caso esteja habilitado  
+     */
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public LogErro log(Exception exception) {
+    	return log(exception, null);    	
+    }
+    
+    /**
+     * Gera um {@link LogErro}, persiste no banco e envia ao serviço, caso esteja habilitado  
+     */
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public LogErro log(Exception handledException, Exception caughtException) {
+        String codigoErro = UUID.randomUUID().toString().replace("-", "");
+        logger.log(Level.SEVERE, codigoErro);
+        if (handledException == null) {
+        	return log(new IllegalArgumentException("Exceção nula ao tentar gerar LogErro"));
+        }
+        Parametro parametro = parametroDAO.getParametroByNomeVariavel(Parametros.IS_ATIVO_ENVIO_LOG_AUTOMATICO.getLabel());
+        boolean envioLogAutomatico = "true".equals(parametro.getValorVariavel());  
+
+        LogErro logErro = createLogErro(codigoErro, handledException, caughtException, envioLogAutomatico ? StatusLog.PENDENTE : StatusLog.NENVIADO);
+        try
+        {
+            saveLog(logErro);
+            if(envioLogAutomatico) {
+                send(logErro);        	
+            }        	
+        }
+        catch(Exception e) {
+        	logger.log(Level.SEVERE, "Erro ao gravar LogErro", e);
+        }
+        return logErro;
+    }
 }

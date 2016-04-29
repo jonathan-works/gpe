@@ -163,7 +163,7 @@
                 <f:facet name="header">#{infoxMessages['process.task.var.type']}</f:facet>
                 <h:form id="formVariableType">
                     <wi:selectOneMenu id="type" value="#{var.type}" items="#{taskFitter.typeList}"
-                        optionLabel="#{infoxMessages[item.label]}" widthDiv="100%" hideNoSelectionLabel=""
+                        optionLabel="#{infoxMessages[item.label]}" widthDiv="100%" hideNoSelectionLabel="true"
                         required="true">
                         <a:ajax event="change" execute="true" status=":status" listener="#{t.processVarTypeChange(var)}"
                             render="addVarDiv, @form, pageBodyDialogMessage, varDiv, toolbarVariableForm, resetVariableForm"

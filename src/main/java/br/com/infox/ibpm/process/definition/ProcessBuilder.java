@@ -25,7 +25,7 @@ import javax.inject.Named;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.jboss.seam.Component;
-import org.jboss.seam.core.Events;
+import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jbpm.context.def.VariableAccess;
@@ -33,6 +33,7 @@ import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
+import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.node.EndState;
 import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
@@ -42,6 +43,7 @@ import org.jbpm.jpdl.xml.Problem;
 import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
+import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.richfaces.context.ExtendedPartialViewContext;
 import org.xml.sax.InputSource;
@@ -54,6 +56,7 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cdi.transaction.Transactional;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.fluxo.manager.RaiaPerfilManager;
@@ -62,8 +65,10 @@ import br.com.infox.epp.fluxo.merger.model.MergePointsBundle;
 import br.com.infox.epp.fluxo.merger.service.FluxoMergeService;
 import br.com.infox.epp.fluxo.xpdl.FluxoXPDL;
 import br.com.infox.epp.fluxo.xpdl.IllegalXPDLException;
-import br.com.infox.epp.processo.localizacao.manager.ProcessoLocalizacaoIbpmManager;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.timer.manager.TaskExpirationManager;
+import br.com.infox.epp.tarefa.manager.TarefaJbpmManager;
+import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
 import br.com.infox.ibpm.jpdl.JpdlXmlWriter;
 import br.com.infox.ibpm.node.InfoxMailNode;
@@ -74,6 +79,8 @@ import br.com.infox.ibpm.process.definition.fitter.TaskFitter;
 import br.com.infox.ibpm.process.definition.fitter.TransitionFitter;
 import br.com.infox.ibpm.process.definition.graphical.ProcessBuilderGraph;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
+import br.com.infox.ibpm.swimlane.SwimlaneInstanceSearch;
+import br.com.infox.ibpm.task.dao.TaskInstanceDAO;
 import br.com.infox.ibpm.task.handler.TaskHandler;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.jsf.validator.JsfComponentTreeValidator;
@@ -89,8 +96,6 @@ public class ProcessBuilder implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final LogProvider LOG = Logging.getLogProvider(ProcessBuilder.class);
-
-    public static final String POST_DEPLOY_EVENT = "postDeployEvent";
 
     @Inject
     private EventFitter eventFitter;
@@ -111,8 +116,6 @@ public class ProcessBuilder implements Serializable {
     @Inject
     private RaiaPerfilManager raiaPerfilManager;
     @Inject
-    private ProcessoLocalizacaoIbpmManager processoLocalizacaoIbpmManager;
-    @Inject
     private VariavelClassificacaoDocumentoManager variavelClassificacaoDocumentoManager;
     @Inject
     private ActionMessagesService actionMessagesService;
@@ -122,6 +125,16 @@ public class ProcessBuilder implements Serializable {
     private InfoxMessages infoxMessages;
     @Inject
     private FluxoMergeService fluxoMergeService;
+    @Inject
+    private TaskInstanceDAO taskInstanceDAO;
+    @Inject
+    private SwimlaneInstanceSearch swimlaneInstanceSearch;
+    @Inject
+    private ProcessoManager processoManager;
+    @Inject
+    private TarefaManager tarefaManager;
+    @Inject
+    private TarefaJbpmManager tarefaJbpmManager;
  
     private String id;
     private ProcessDefinition instance;
@@ -183,6 +196,7 @@ public class ProcessBuilder implements Serializable {
         eventFitter.clear();
     }
 
+    @SuppressWarnings("unchecked")
     public void load(){
     	try {
     		if(!FacesContext.getCurrentInstance().isPostback()){
@@ -312,6 +326,9 @@ public class ProcessBuilder implements Serializable {
                 if (Strings.isNullOrEmpty(mailNode.getTo())) {
                     throw new IllegalStateException("O nó de email " + mailNode.getName() + " deve possuir pelo menos um destinatário.");
                 }
+                if (mailNode.getModeloDocumento() == null) {
+                	throw new IllegalStateException("O nó de email " + mailNode.getName() + " deve possuir um modelo de documento associado.");
+                }
             }
         }
     }
@@ -370,7 +387,8 @@ public class ProcessBuilder implements Serializable {
             throw new IllegalStateException("O formulário possui campos inválidos, favor corrigí-los.");
         }
     }
-
+    
+    @Transactional
     public void update() {
         exists = true;
         if (fluxo != null) {
@@ -450,7 +468,7 @@ public class ProcessBuilder implements Serializable {
                 } catch (DAOException e) {
                     LOG.error(".update()", e);
                 }
-                Events.instance().raiseEvent(POST_DEPLOY_EVENT, instance);
+                updatePostDeploy(instance);
                 taskFitter.checkCurrentTaskPersistenceState();
                 atualizarRaiaPooledActors(instance.getId());
                 FacesMessages.instance().clear();
@@ -462,6 +480,12 @@ public class ProcessBuilder implements Serializable {
         }
         return true;
     }
+    
+    public void updatePostDeploy(ProcessDefinition processDefinition) throws DAOException {
+        processoManager.atualizarProcessos(processDefinition.getId(), processDefinition.getName());
+        tarefaManager.encontrarNovasTarefas();
+        tarefaJbpmManager.inserirVersoesTarefas();
+    }
 
     private void deployActions() throws DAOException {
         raiaPerfilManager.atualizarRaias(fluxo, instance.getTaskMgmtDefinition().getSwimlanes());
@@ -471,36 +495,21 @@ public class ProcessBuilder implements Serializable {
         variavelClassificacaoDocumentoManager.publicarClassificacoesDasVariaveis(idFluxo);
     }
 
-    @SuppressWarnings("unchecked")
-	private void atualizarRaiaPooledActors(Long idProcessDefinition) throws DAOException {
-		Session session = JbpmUtil.getJbpmSession();
-		String hql = "select ti from org.jbpm.taskmgmt.exe.TaskInstance ti "
-						 + "inner join ti.processInstance pi "
-						 + "where pi.processDefinition.id = :idProcessDefinition ";
-		Query query =  session.createQuery(hql);
-		query.setParameter("idProcessDefinition", idProcessDefinition);
-		List<TaskInstance> taskInstances = (List<TaskInstance>) query.list();
+	private void atualizarRaiaPooledActors(Long idProcessDefinition) {
+	    Session session = ManagedJbpmContext.instance().getSession();
+	    List<SwimlaneInstance> swimlaneInstances = swimlaneInstanceSearch.getSwimlaneInstancesByProcessDefinition(idProcessDefinition);
+        for (SwimlaneInstance swimlaneInstance : swimlaneInstances) {
+            String[] pooledActorIds = swimlaneInstance.getSwimlane().getPooledActorsExpression().split(",");
+            swimlaneInstance.setPooledActors(pooledActorIds);
+            session.merge(swimlaneInstance);
+        }
+        session.flush();
+        session.clear();
+		List<TaskInstance> taskInstances = taskInstanceDAO.getTaskInstancesOpen(idProcessDefinition);
 		for (TaskInstance taskInstance : taskInstances) {
-			if (taskInstance.getTask().getSwimlane() != null){
-				String[] actorIds = taskInstance.getTask().getSwimlane().getPooledActorsExpression().split(",");
-				if (taskInstance.getCreate() != null && taskInstance.getEnd() == null) {
-					taskInstance.setPooledActors(actorIds);
-					processoLocalizacaoIbpmManager.deleteProcessoLocalizacaoIbpmByTaskInstanceId(taskInstance.getId());
-					processoLocalizacaoIbpmManager.addProcessoLocalizacaoIbpmByTaskInstance(taskInstance);
-				}
-				if (taskInstance.getSwimlaneInstance() != null) {
-				    taskInstance.getSwimlaneInstance().setPooledActors(actorIds);
-				}
-			}
-			if (taskInstance.getTask().getPooledActorsExpression() != null){
-				//TODO: REAVALIAR EXPRESSÃO
-			}
-			if (taskInstance.getTask().getActorIdExpression() != null){
-				//TODO: REAVALIAR EXPRESSÃO
-			}
-			if (taskInstance.getTask().getAssignmentDelegation()!= null){
-				//TODO: REAVALIAR EXPRESSÃO
-			}
+		    ExecutionContext executionContext = new ExecutionContext(taskInstance.getToken());
+            taskInstance.assign(executionContext);
+            session.merge(taskInstance);
 		}
 		session.flush();
 	}
@@ -593,18 +602,11 @@ public class ProcessBuilder implements Serializable {
         }
     }
 
-    @SuppressWarnings(UNCHECKED)
     public Number getIdProcessDefinition() {
         if (instance == null || instance.getName() == null) {
             return null;
         }
-        String query = "select max(id_) from jbpm_processdefinition where name_ = :pdName";
-        Query param = JbpmUtil.getJbpmSession().createSQLQuery(query).setParameter("pdName", instance.getName());
-        List<Object> list = param.list();
-        if (list == null || list.size() == 0) {
-            return null;
-        }
-        return (Number) list.get(0);
+        return JbpmUtil.getProcessDefinitionId(instance.getName());
     }
 
     public ProcessDefinition getInstance() {

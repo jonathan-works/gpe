@@ -12,11 +12,12 @@ import javax.interceptor.InvocationContext;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.webservice.log.entity.LogWebserviceServer;
-import br.com.infox.epp.ws.exception.ExcecaoServico.ErroServico;
+import br.com.infox.epp.ws.exception.ErroServico;
 import br.com.infox.epp.ws.services.LogWebserviceServerManagerNewTransaction;
 import br.com.infox.epp.ws.services.MensagensErroService;;
 
-@Log(codigo = "") @Interceptor
+@Log 
+@Interceptor
 /**
  * Interceptador responsável por gravar log no banco
  * @author paulo
@@ -70,9 +71,9 @@ public class LogInterceptor {
 		}
 		catch(Exception e) {
 			ErroServico erro = mensagensErroService.getErro(e);
-			String codigoErro = erro.getCodigo();
+			String codigoErro = erro.getCode();
 			if(CODIGO_ERRO_INDEFINIDO.equals(codigoErro)) {
-				codigoErro = erro.getMensagem(); 
+				codigoErro = erro.getMessage(); 
 			}
 			token = getToken(ctx);
 			logWsServer.setToken(token);

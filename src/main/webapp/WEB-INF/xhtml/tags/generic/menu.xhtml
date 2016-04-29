@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: menu.xhtml 750 2010-08-24 14:10:58Z danielsilva $ -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib" xmlns:wi="http://www.itx.com.br/jsf">
+    <ui:param name="id" value="#{wi:get(id, facesContext.viewRoot.createUniqueId())}" />
+
+    <script src="//fb.me/react-15.0.1.js"></script>
+    <script src="//fb.me/react-dom-15.0.1.js"></script>
+    
+    <div style="display: none" id="#{id}Functions">
+        <h:form>
+            <a:jsFunction name="#{id}OpenAjuda" execute="@this" render="@this" limitRender="true"
+                actionListener="#{ajudaView.setViewId(facesContext.viewRoot.viewId.replace('.xhtml', '.seam'), true)}"
+                onbegin="infox.showLoading();"
+                oncomplete="openPopUp('helpwnd', '#{pathResolver.contextPath}/help/show.seam?scid=#{conversation.id}', 800,600);infox.hideLoading();">
+            </a:jsFunction>
+            <a:jsFunction name="#{id}PerfilSwitcher" onbegin="infox.showLoading();" oncomplete="infox.hideLoading();">
+                <a:param name="idPerfil" assignTo="#{authenticator.usuarioPerfilAtualCombo}"
+                 converter="javax.faces.Integer" />
+            </a:jsFunction>
+            <a:jsFunction name="#{id}UDCSwitcher" onbegin="infox.showLoading();" oncomplete="infox.hideLoading();">
+                <a:param name="idUDC" assignTo="#{authenticator.colegiadaParaMonocraticaLogadaCombo}"
+                 converter="javax.faces.Integer" />
+            </a:jsFunction>
+            <a:jsFunction name="#{id}SkinSwitcher" onbegin="infox.showLoading();" oncomplete="location.reload(true);">
+                <a:param name="idSkin" assignTo="#{wiSkin.skin}" />
+            </a:jsFunction>
+        </h:form>
+    </div>
+        
+    <div id="#{id}MenuContent">
+        <ui:insert />
+    </div>
+    <div id="#{id}"></div>
+    
+    <h:outputScript name="react-components.js" library="js/components" />
+
+    <script>
+    	(function(){
+        	var #{id}MenuFunctions={
+                handlePerfilClick:function(event, itm){
+                   #{id}PerfilSwitcher(itm);
+                },
+                handleColegiadaClick:function(event, itm){
+                   #{id}UDCSwitcher(itm);
+                },
+                handleOpenAjuda:function(event, itm){
+                   infox.showLoading();
+                   #{id}OpenAjuda();
+                },
+                handleSkinSwapClick:function(event, itm){
+                    infox.showLoading();
+                    #{id}SkinSwitcher(itm);
+                }
+            };
+    		
+             ReactDOM.render(
+                     React.createElement(reactComponents.NavigationMenu, {
+                         "content":"#{id}MenuContent",
+                         "navigationMenuItems":{"items":#{menuHandler.actionMenuJson}},
+                         "topMenuItens":{
+                             items:[
+                                    {"label":"#{infoxMessages['skin.title']}", hideLabel:true, icon:"#{facesContext.externalContext.requestContextPath}/resources/styleSkinInfox/all/1x_web/ic_palette_black_18dp.png", items:[
+                                            <ui:repeat var="selItem" value="#{wiSkin.skinList}">
+                                                {label:"#{selItem.label}", value:"#{selItem.value}", onClick:#{id}MenuFunctions.handleSkinSwapClick },
+                                            </ui:repeat>
+                                    ]},
+                                    {label: "#{infoxMessages['ajuda.ajudaBtn']}", hideLabel:true, icon:"#{facesContext.externalContext.requestContextPath}/resources/styleSkinInfox/all/1x_web/ic_help_black_18dp.png", onClick:#{id}MenuFunctions.handleOpenAjuda},
+                                    {label: "#{infoxMessages['painel.titlePage']}", url: "/epp/Painel/list.seam", hideLabel:true, icon:"#{facesContext.externalContext.requestContextPath}/resources/styleSkinInfox/all/1x_web/ic_home_black_18dp.png"},
+                                    {label: "#{usuarioLogado} &lt;#{authenticator.usuarioPerfilAtualSingle}&gt;", iconAlign:"right", icon:"#{facesContext.externalContext.requestContextPath}/resources/styleSkinInfox/all/1x_web/ic_person_black_18dp.png", "items":[
+                    					{"label":"Perfis", showChildren:true, items:[
+                                              <ui:repeat var="selItem" value="#{authenticator.usuarioPerfilListItems}">
+                                                  {label:"#{selItem.label}", value:"#{selItem.value}", onClick:#{id}MenuFunctions.handlePerfilClick },
+                                              </ui:repeat>
+                    					]},
+                    					<c:if test="#{authenticator.usuarioLogadoInMonocratica}">
+                    					{"label":"Unidades Decisoras Colegiadas", showChildren:true, items:[
+                                            <ui:repeat var="selItem" value="#{authenticator.colegiadaParaMonocraticaLogadaListItems}">
+                                            	{label:"#{selItem.label}", value:"#{selItem.value}", onClick:#{id}MenuFunctions.handleColegiadaClick },
+                                            </ui:repeat>
+                    					]}
+                    					</c:if>
+                    				]},	
+                                    {"label": "#{infoxMessages['menu.logout']}","url": "/epp", hideLabel:true, icon:"#{facesContext.externalContext.requestContextPath}/resources/styleSkinInfox/all/1x_web/ic_power_settings_new_black_18dp.png"}
+                    				]
+                         }
+                     }),
+                     document.getElementById("#{id}")
+            );
+    	})();
+    </script>
+
+</ui:composition>

@@ -15,7 +15,7 @@ public class MenuItem implements Serializable {
 
     private String url;
 
-    private List<MenuItem> children = new ArrayList<MenuItem>();
+    private List<MenuItem> items = new ArrayList<MenuItem>();
 
     public MenuItem(String label, String url) {
         this.label = label;
@@ -52,20 +52,20 @@ public class MenuItem implements Serializable {
 
     @Override
     public String toString() {
-        return label + ":" + getUrl() + " " + children;
+        return label + ":" + getUrl() + " " + items;
     }
 
-    public List<MenuItem> getChildren() {
-        return children;
+    public List<MenuItem> getItems() {
+        return items;
     }
 
     public MenuItem add(MenuItem item) {
         MenuItem auxiliarItem = item;
-        int i = children.indexOf(auxiliarItem);
+        int i = items.indexOf(auxiliarItem);
         if (i != -1) {
-            auxiliarItem = children.get(i);
+            auxiliarItem = items.get(i);
         } else {
-            children.add(auxiliarItem);
+            items.add(auxiliarItem);
         }
         return auxiliarItem;
     }

@@ -1,0 +1,36 @@
+#panel.panel-specs {
+    background-image:none;
+    background-color: @panel-bg-color;
+    color: @panel-txt-color;
+    font-family: @default-font-family;
+}
+
+.rf-p {
+  border-color:@panelBorderColor;
+  & > &-hdr{
+      &:extend(#panel.panel-specs);
+  }
+  &-hdr.dt-form-p-h {
+      &:extend(#panel.panel-specs);
+  }
+}
+
+.rf-cp{
+    &-gr{
+      border-spacing: 0;
+    }
+    &.rf-tgp{
+        padding: 0;
+        border-color:@panelBorderColor;
+    }
+    &-hdr{
+        &-exp&, &-colps&{
+            &:extend(#panel.panel-specs);
+        }
+        &-exp&{
+            background-color:@toggle-panel-bg-color;
+            color:@toggle-panel-txt-color;
+            &:extend(.rf-cp-gr);
+        }
+    }
+}

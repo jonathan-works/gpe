@@ -1,0 +1,154 @@
+@menu-bg-color:#a0c991;
+@menu-txt-color:#030;
+
+@tableBorderColor:#C0C0C0;
+@tableBorderWidth:1px;
+
+@zebra-row-color-odd:#FAFAFA;
+@zebra-row-color-even:#E7E7E7;
+@zebra-row-color-over:#AFAFAF;
+
+
+.dtable-search-form {
+	display: inline-block;
+	vertical-align: top;
+	margin: 0 5px 5px 0;
+	width:284px;
+	@media only screen {
+		@media (max-width: 1024px){
+			display:block;
+			width:auto;
+      margin:0;
+		}
+	}
+	
+  &.hidden {
+    display:none;
+  }
+
+  &.p-list-search {
+    width:100%;
+  }
+}
+.dtable-p-b.rf-p-b {
+	padding: 2px;
+	overflow: auto;
+}
+.dtable-p {
+  &.rf-p{
+    display: inline-block;
+    width:calc(~"100% - 291px");
+    padding:0px;
+    @media only screen {
+      @media (max-width: 1024px){
+        display:block;
+        width:auto;
+      }
+    }
+    &.picklist {
+      width:100%;
+      min-height:478px;
+    }
+    &.full-sized {
+      width:100%;
+    }
+    &.p-list-panel {
+      width:100%;
+    }
+  }
+  &.grid-lateral-editor-ajuda {
+      width: 420px;
+  }
+}
+.rf-dt {
+  &:extend(.rf-dt-c);
+  &.full-sized {
+    width:100%;
+  }
+  &.p-list-dtable {
+    &.dtable {
+      width:100%;
+    }
+  }
+}
+
+.zebra-row {
+  &.rf-dt-r {
+    &:nth-child(odd) {
+      background-color: @zebra-row-color-odd;
+    }
+    &:nth-child(even) {
+      background-color: @zebra-row-color-even;
+    }
+    &:hover{
+      background-color: @zebra-row-color-over;
+    }
+  }
+}
+
+.rf-dt-crud {
+	text-align:center;
+}
+.tb-rprt,.tb-rprt-xls {
+	display:inline-block;
+	margin:0px 3px;
+}
+
+.picklist-div {
+	display:inline-block;
+	vertical-align:bottom;
+	width:calc(~"50% - "7px);
+	margin:0 2px;
+}
+.dt-toolbar-col {
+	width:55px;
+	padding:2px 0px 0px 0px;
+	text-align:center;
+	border-style:solid;
+	&:extend(.rf-dt-c);
+}
+
+.dt-res-count {
+    color:@base-label-color;
+	float: right;
+}
+.rf-dt-thd {
+	border-style:solid;
+	border-width:0px;
+}
+
+.rf-dt-shdr-c {
+	color:#000;
+	&:extend(.rf-dt-c);
+}
+
+.rf-dt-ftr-c {
+	text-align: center;
+	padding: 0px
+}
+
+.rf-dt-sftr-c {
+	text-align: center;
+}
+
+.rf-dt-c {
+  border-color:@tableBorderColor;
+  border-width:@tableBorderWidth;
+}
+.rf-dt-c-left{
+    text-align: left;
+}
+
+.short-margin-top{
+	margin-top: 5px;
+}
+.rf-dt-hdr {
+  background-color:@menu-bg-color;
+  &:extend(.rf-dt-c);
+}
+.rf-dt-shdr {
+  background-color:@menu-bg-color;
+}
+.rf-dt-hdr-c {
+  color:@menu-bg-color;
+}
