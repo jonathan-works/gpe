@@ -34,7 +34,7 @@ import org.jbpm.graph.def.GraphElement;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
-import org.jbpm.graph.def.node.activity.Activity;
+import org.jbpm.graph.node.Activity;
 import org.jbpm.graph.node.ProcessFactory;
 import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
@@ -61,7 +61,7 @@ public class JpdlXmlWriter {
     private static final String DEFAULT_ENCODING = "UTF-8";
     private static final int DEFAULT_IDENT_SIZE = 4;
     private static final String ELEMENT_NAME = "name";
-    static final String JPDL_NAMESPACE = "urn:jbpm.org:jpdl-3.3";
+    static final String JPDL_NAMESPACE = "urn:jbpm.org:jpdl-3.2";
     static final Namespace JBPM_NAMESPACE = new Namespace(null, JPDL_NAMESPACE);
 
     private Writer writer = null;
@@ -92,7 +92,7 @@ public class JpdlXmlWriter {
     }
 
     public void write(ProcessDefinition processDefinition) {
-    	write(processDefinition, false);
+    	write(processDefinition, true);
     }
     
     public void write(ProcessDefinition processDefinition, boolean prettyPrint) {
@@ -277,9 +277,9 @@ public class JpdlXmlWriter {
             subProcessName = node.getSubProcessName();
         }
         
-//        if (node.getLoopConfiguration() != null){
-//        	writeLoopConfiguration(node, nodeElement);
-//        }
+        if (node.getActivityBehavior() != null){
+            node.getActivityBehavior().write(nodeElement);
+        }
         subProcess.addAttribute(ELEMENT_NAME, subProcessName);
         subProcess.addAttribute("binding", "late");
         Set variableAccess = (Set) ReflectionsUtil.getValue(node, "variableAccesses");
@@ -289,8 +289,6 @@ public class JpdlXmlWriter {
     private void writeAssignment(Task task, Element element){
 		if (task.getPooledActorsExpression() != null || task.getActorIdExpression() != null){
 			writeAssignment(element, task.getActorIdExpression(), task.getPooledActorsExpression());
-//			addAttribute(element, "actor-id", task.getActorIdExpression());
-//			addAttribute(element, "pooled-actors", task.getPooledActorsExpression());
 		}
     }
     

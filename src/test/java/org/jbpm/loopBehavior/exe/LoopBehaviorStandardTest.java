@@ -5,12 +5,12 @@ import static org.jbpm.loopBehavior.exe.Debugger.join;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.jbpm.activity.exe.ActivityBehavior;
+import org.jbpm.activity.exe.LoopActivityBehavior;
 import org.jbpm.context.def.ContextDefinition;
 import org.jbpm.file.def.FileDefinition;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
-import org.jbpm.graph.def.node.activity.ActivityBehavior;
-import org.jbpm.graph.def.node.activity.LoopActivityBehavior;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.exe.Token;
 import org.jbpm.graph.node.EndState;

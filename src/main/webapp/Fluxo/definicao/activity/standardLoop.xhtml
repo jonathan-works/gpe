@@ -3,20 +3,27 @@
     xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core"
     xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib" xmlns:wi="http://www.itx.com.br/jsf">
-    <ui:param name="loopConfiguration" value="#{loopElement.loopConfiguration}" />
+    
+    <ui:param name="activityBehavior" value="#{loopElement.activityBehavior}" />
+    
     <h:form id="standardLoopForm">
+    
         <wi:inputText id="loopCondition" label="#{infoxMessages['process.def.activity.loop.condition']}"
-            value="#{loopConfiguration.loopCondition}">
+            value="#{activityBehavior.loopCondition}">
             <a:ajax event="change" execute="@this" render="@form"/>
             <f:validator validatorId="javax.faces.elValidator" />
         </wi:inputText>
-        <wi:selectBooleanCheckbox id="testBefore" value="#{loopConfiguration.testBefore}"
+        
+        <wi:selectBooleanCheckbox id="testBefore" value="#{activityBehavior.testBefore}"
             label="#{infoxMessages['process.def.activity.loop.testBefore']}">
             <a:ajax event="change" execute="@this" render="@form"/>
         </wi:selectBooleanCheckbox>
-        <wi:inputNumber id="loopMaximum" converterId="longConverter" value="#{loopConfiguration.loopMaximum}"
+        
+        <wi:inputNumber id="loopMaximum" converterId="longConverter" value="#{activityBehavior.loopMaximum}"
             label="#{infoxMessages['process.def.activity.loop.maximum']}">
             <a:ajax event="change" execute="@this" render="@form"/>
         </wi:inputNumber>
+        
     </h:form>
+    
 </ui:composition>

@@ -3,44 +3,53 @@
     xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core"
     xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib" xmlns:wi="http://www.itx.com.br/jsf">
-    <ui:param name="loopConfiguration" value="#{loopElement.loopConfiguration}" />
+    
+    <ui:param name="activityBehavior" value="#{loopElement.activityBehavior}" />
+    
     <h:form id="multiInstanceLoopForm">
+    
         <div>
-            <wi:selectBooleanCheckbox id="isSequential" value="#{loopConfiguration.isSequential}"
+            <wi:selectBooleanCheckbox id="isSequential" value="#{activityBehavior.sequential}"
                 label="#{infoxMessages['process.def.activity.loop.isSequential']}">
-                <a:ajax event="change" execute="@this" render="@form" />
+                <a:ajax event="change" execute="@this" render="@form" listener="#{nodeFitter.nodeHandler.onChangeSequential}"/>
             </wi:selectBooleanCheckbox>
             <s:decorate id="behaviorDecoration" template="/WEB-INF/xhtml/components/templates/edit.xhtml"
                 rendered="true" styleClass="decoration-div">
                 <ui:define name="label">#{infoxMessages['process.def.activity.loop.behavior']}</ui:define>
-                <h:selectOneRadio id="behavior" value="#{loopConfiguration.behavior}" styleClass="radio">
-                    <s:selectItems value="#{loopConfiguration.behavior.values()}" var="item" label="#{infoxMessages['process.def.activity.loop.behavior.'.concat(item.name())]}" />
+                <h:selectOneRadio id="behavior" value="#{activityBehavior.multiInstanceBehavior}" styleClass="radio">
+                    <s:selectItems value="#{activityBehavior.multiInstanceBehavior.values()}" var="item" label="#{infoxMessages['process.def.activity.loop.behavior.'.concat(item.name())]}" />
                     <a:ajax event="change" execute="@this" render="@form" />
                     <s:convertEnum />
                 </h:selectOneRadio>
             </s:decorate>
         </div>
-        <wi:inputText id="loopCardinality" value="#{loopConfiguration.loopCardinality}"
+        
+        <wi:inputText id="loopCardinalityExpression" value="#{activityBehavior.loopCardinalityExpression}"
             label="#{infoxMessages['process.def.activity.loop.cardinality']}">
             <a:ajax event="change" execute="@this" render="@form" />
             <f:validator validatorId="javax.faces.elValidator" />
         </wi:inputText>
-        <wi:inputText id="completionCondition" label="#{infoxMessages['process.def.activity.loop.completionCondition']}"
-            value="#{loopConfiguration.completionCondition}">
+        
+        <wi:inputText id="completionConditionExpression" label="#{infoxMessages['process.def.activity.loop.completionCondition']}"
+            value="#{activityBehavior.completionConditionExpression}">
             <a:ajax event="change" execute="@this" render="@form" />
             <f:validator validatorId="javax.faces.elValidator" />
         </wi:inputText>
-        <wi:inputText id="loopDataInput" label="#{infoxMessages['process.def.activity.loop.dataInput']}"
-            value="#{loopConfiguration.loopDataInput}">
+        
+        <wi:inputText id="loopDataInputExpression" label="#{infoxMessages['process.def.activity.loop.dataInput']}"
+            value="#{activityBehavior.loopDataInputExpression}">
             <a:ajax event="change" execute="@this" render="@form" />
             <f:validator validatorId="javax.faces.elValidator" />
         </wi:inputText>
-        <rich:panel rendered="#{loopConfiguration.behavior ne null and loopConfiguration.behavior ne 'A'}"
+        
+        <rich:panel rendered="#{activityBehavior.multiInstanceBehavior ne null and activityBehavior.multiInstanceBehavior ne 'ALL'}"
             header="#{infoxMessages['process.def.activity.loop.event']}">
             <ui:include src="/Fluxo/definicao/event.xhtml">
                 <ui:param name="id" value="loopEvent" />
                 <ui:param name="event" value="#{loopElement.loopEvent}" />
             </ui:include>
         </rich:panel>
+        
     </h:form>
+    
 </ui:composition>

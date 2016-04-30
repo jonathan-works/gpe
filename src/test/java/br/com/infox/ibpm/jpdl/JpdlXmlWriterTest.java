@@ -8,25 +8,18 @@ import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.XMLWriter;
+import org.jbpm.activity.exe.ActivityBehavior;
 import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
-import org.jbpm.graph.def.node.activity.ActivityBehavior;
-import org.jbpm.graph.def.node.loop.LoopConfiguration;
-import org.jbpm.graph.def.node.loop.LoopConfigurationMultiInstance;
-import org.jbpm.graph.def.node.loop.LoopConfigurationMultiInstanceFlowCondition;
-import org.jbpm.graph.def.node.loop.LoopConfigurationStandard;
 import org.jbpm.graph.node.EndState;
 import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
@@ -36,7 +29,6 @@ import org.jbpm.jpdl.JpdlException;
 import org.jbpm.jpdl.xml.JpdlXmlReader;
 import org.jbpm.jpdl.xml.Problem;
 import org.junit.Assert;
-import org.junit.Test;
 
 import com.google.gson.Gson;
 
@@ -151,24 +143,24 @@ public class JpdlXmlWriterTest {
 		validate(criarComStatusProcesso());
 	}
 
-	private List<LoopConfigurationStandard> possibleStdLoopConfigurations() {
-		List<LoopConfigurationStandard> list = new ArrayList<>();
-		list.add(createStdLoopConfiguration("#{true}", 2L, true));
-		list.add(createStdLoopConfiguration("#{true}", null, null));
-		list.add(createStdLoopConfiguration(null, 2L, false));
-		list.add(createStdLoopConfiguration(null, null, null));
-		return list;
-	}
-
-	private List<LoopConfiguration> possibleMultiInstLoopConfigurations(){
-		List<LoopConfiguration> list = new ArrayList<>();
-		for (LoopConfigurationMultiInstanceFlowCondition behavior : LoopConfigurationMultiInstanceFlowCondition.values()) {
-			list.add(createMultiLoopConfiguration(behavior, "#{true}", "entrada", Boolean.TRUE, "", "", "", "", "", ""));
-			list.add(createMultiLoopConfiguration(behavior, "#{true}", "entrada", Boolean.FALSE, "", "", "", "", "", ""));
-		}
-		
-		return list;
-	}
+//	private List<LoopConfigurationStandard> possibleStdLoopConfigurations() {
+//		List<LoopConfigurationStandard> list = new ArrayList<>();
+//		list.add(createStdLoopConfiguration("#{true}", 2L, true));
+//		list.add(createStdLoopConfiguration("#{true}", null, null));
+//		list.add(createStdLoopConfiguration(null, 2L, false));
+//		list.add(createStdLoopConfiguration(null, null, null));
+//		return list;
+//	}
+//
+//	private List<LoopConfiguration> possibleMultiInstLoopConfigurations(){
+//		List<LoopConfiguration> list = new ArrayList<>();
+//		for (LoopConfigurationMultiInstanceFlowCondition behavior : LoopConfigurationMultiInstanceFlowCondition.values()) {
+//			list.add(createMultiLoopConfiguration(behavior, "#{true}", "entrada", Boolean.TRUE, "", "", "", "", "", ""));
+//			list.add(createMultiLoopConfiguration(behavior, "#{true}", "entrada", Boolean.FALSE, "", "", "", "", "", ""));
+//		}
+//		
+//		return list;
+//	}
 	
 //	@Test
 	public void validateMultiInstanceLoop(){
@@ -184,19 +176,19 @@ public class JpdlXmlWriterTest {
 //		}
 	}
 	
-	private String elementToString(LoopConfiguration loopConfiguration){
-		Element element = DocumentHelper.createElement("element");
-		loopConfiguration.write(element);
-		StringWriter writer = new StringWriter();
-		XMLWriter xmlWriter = new XMLWriter(writer);
-		try {
-			xmlWriter.write(element);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		return writer.toString();
-	}
-	
+//	private String elementToString(LoopConfiguration loopConfiguration){
+//		Element element = DocumentHelper.createElement("element");
+//		loopConfiguration.write(element);
+//		StringWriter writer = new StringWriter();
+//		XMLWriter xmlWriter = new XMLWriter(writer);
+//		try {
+//			xmlWriter.write(element);
+//		} catch (IOException e) {
+//			throw new RuntimeException(e);
+//		}
+//		return writer.toString();
+//	}
+//	
 	
 //	@Test
 	public void validateStandardLoop() {
@@ -212,44 +204,44 @@ public class JpdlXmlWriterTest {
 //		}
 	}
 	
-	public static LoopConfigurationMultiInstance createMultiLoopConfiguration(LoopConfigurationMultiInstanceFlowCondition behavior, String completionCondition , String inputDataItem , Boolean isSequential , String loopCardinality , String loopDataInput , String loopDataOutput , String noneBehaviorEventRef , String oneBehaviorEventRef , String outputDataItem){
-		LoopConfigurationMultiInstance lc = new LoopConfigurationMultiInstance();
-		lc.setBehavior(behavior);
-		lc.setCompletionCondition(completionCondition);
-		lc.setInputDataItem(inputDataItem);
-		lc.setIsSequential(isSequential);
-		lc.setLoopCardinality(loopCardinality);
-		lc.setLoopDataInput(loopDataInput);
-		if (LoopConfigurationMultiInstanceFlowCondition.N.equals(behavior)){
-			Event event = new Event();
-			Action action = new Action();
-			action.setActionExpression("#{expression}");
-			event.addAction(action);
-			lc.setNoneBehaviorEvent(event);
-		} else if (LoopConfigurationMultiInstanceFlowCondition.N.equals(behavior)){
-			Event event = new Event();
-			Action action = new Action();
-			action.setActionExpression("#{expression}");
-			event.addAction(action);
-			lc.setOneBehaviorEvent(event);
-		}
-//		lc.setLoopDataOutput(loopDataOutput);
-//		lc.setNoneBehaviorEventRef(noneBehaviorEventRef);
-//		lc.setOneBehaviorEventRef(oneBehaviorEventRef);
-//		lc.setOutputDataItem(outputDataItem);
-		return lc;
-	}
+//	public static LoopConfigurationMultiInstance createMultiLoopConfiguration(LoopConfigurationMultiInstanceFlowCondition behavior, String completionCondition , String inputDataItem , Boolean isSequential , String loopCardinality , String loopDataInput , String loopDataOutput , String noneBehaviorEventRef , String oneBehaviorEventRef , String outputDataItem){
+//		LoopConfigurationMultiInstance lc = new LoopConfigurationMultiInstance();
+//		lc.setBehavior(behavior);
+//		lc.setCompletionCondition(completionCondition);
+//		lc.setInputDataItem(inputDataItem);
+//		lc.setIsSequential(isSequential);
+//		lc.setLoopCardinality(loopCardinality);
+//		lc.setLoopDataInput(loopDataInput);
+//		if (LoopConfigurationMultiInstanceFlowCondition.N.equals(behavior)){
+//			Event event = new Event();
+//			Action action = new Action();
+//			action.setActionExpression("#{expression}");
+//			event.addAction(action);
+//			lc.setNoneBehaviorEvent(event);
+//		} else if (LoopConfigurationMultiInstanceFlowCondition.N.equals(behavior)){
+//			Event event = new Event();
+//			Action action = new Action();
+//			action.setActionExpression("#{expression}");
+//			event.addAction(action);
+//			lc.setOneBehaviorEvent(event);
+//		}
+////		lc.setLoopDataOutput(loopDataOutput);
+////		lc.setNoneBehaviorEventRef(noneBehaviorEventRef);
+////		lc.setOneBehaviorEventRef(oneBehaviorEventRef);
+////		lc.setOutputDataItem(outputDataItem);
+//		return lc;
+//	}
 	
-	public static LoopConfigurationStandard createStdLoopConfiguration(String loopCondition, Long loopMaximum,
-			Boolean testBefore) {
-		LoopConfigurationStandard config = new LoopConfigurationStandard();
-		if (loopCondition != null)
-			config.setLoopCondition(loopCondition);
-		if (loopMaximum != null)
-			config.setLoopMaximum(loopMaximum);
-		if (testBefore != null)
-			config.setTestBefore(testBefore);
-		return config;
-	}
+//	public static LoopConfigurationStandard createStdLoopConfiguration(String loopCondition, Long loopMaximum,
+//			Boolean testBefore) {
+//		LoopConfigurationStandard config = new LoopConfigurationStandard();
+//		if (loopCondition != null)
+//			config.setLoopCondition(loopCondition);
+//		if (loopMaximum != null)
+//			config.setLoopMaximum(loopMaximum);
+//		if (testBefore != null)
+//			config.setTestBefore(testBefore);
+//		return config;
+//	}
 
 }

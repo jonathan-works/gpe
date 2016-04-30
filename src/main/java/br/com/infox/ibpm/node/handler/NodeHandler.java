@@ -4,15 +4,12 @@ import static br.com.infox.epp.processo.status.entity.StatusProcesso.STATUS_PROC
 import static java.text.MessageFormat.format;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,11 +20,9 @@ import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.Transition;
-import org.jbpm.graph.def.node.loop.Activity;
-import org.jbpm.graph.def.node.loop.LoopConfiguration;
-import org.jbpm.graph.def.node.loop.LoopConfigurationMultiInstance;
-import org.jbpm.graph.def.node.loop.LoopConfigurationStandard;
+import org.jbpm.graph.node.Activity;
 import org.jbpm.instantiation.Delegation;
+import org.jbpm.loopBehavior.def.LoopBehaviorModuleDefinition;
 import org.jbpm.scheduler.def.CancelTimerAction;
 import org.jbpm.scheduler.def.CreateTimerAction;
 import org.jbpm.taskmgmt.def.Task;
@@ -35,10 +30,7 @@ import org.jbpm.taskmgmt.def.Task;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import br.com.infox.core.messages.InfoxMessages;
-import br.com.infox.core.messages.InfoxMessagesLoader;
 import br.com.infox.core.util.ReflectionsUtil;
-import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
@@ -615,17 +607,17 @@ public class NodeHandler implements Serializable {
     }
     
     public boolean isLoopNode(){
-    	return isActivity() && ((Activity)getNode()).getLoopConfiguration() != null;
+    	return isActivity() && getActivityBehavior() != null;
     }
     
     public boolean isMultiInstance(){
-    	return isLoopNode() && ((Activity)getNode()).getLoopConfiguration() instanceof LoopConfigurationMultiInstance;
+    	return isLoopNode() && (getActivityBehavior() instanceof MultiInstanceActivityBehavior);
     }
 
-    public LoopConfiguration getLoopConfiguration(){
+    public ActivityBehavior getActivityBehavior(){
     	if (isActivity()){
     		Activity activity = (Activity)getNode();
-    		return activity.getLoopConfiguration();
+    		return activity.getActivityBehavior();
     	}
     	return null;
     }
@@ -641,28 +633,28 @@ public class NodeHandler implements Serializable {
     }
 
 	private EventHandler initializeLoopEvent() {
-		LoopConfigurationMultiInstance configurationMultiInstance = (LoopConfigurationMultiInstance)((Activity)getNode()).getLoopConfiguration();
-		switch (configurationMultiInstance.getBehavior()) {
+	    MultiInstanceActivityBehavior multiInstanceActivityBehavior = (MultiInstanceActivityBehavior)((Activity)getNode()).getActivityBehavior();
+		switch (multiInstanceActivityBehavior.getFlowCondition()) {
 		case N:
-			if (configurationMultiInstance.getNoneBehaviorEvent() == null){
-				configurationMultiInstance.setNoneBehaviorEvent(new Event(getNode(), "noneBehaviorEvent"));
+			if (multiInstanceActivityBehavior.getNoneBehaviorEvent() == null){
+			    multiInstanceActivityBehavior.setNoneBehaviorEvent(new Event(getNode(), "noneBehaviorEvent"));
 			}
-			return new EventHandler(configurationMultiInstance.getNoneBehaviorEvent());
+			return new EventHandler(multiInstanceActivityBehavior.getNoneBehaviorEvent());
 		case O:
-			if (configurationMultiInstance.getOneBehaviorEvent() == null){
-				configurationMultiInstance.setOneBehaviorEvent(new Event(getNode(), "oneBehaviorEvent"));
+			if (multiInstanceActivityBehavior.getOneBehaviorEvent() == null){
+			    multiInstanceActivityBehavior.setOneBehaviorEvent(new Event(getNode(), "oneBehaviorEvent"));
 			}
-			return new EventHandler(configurationMultiInstance.getOneBehaviorEvent());
+			return new EventHandler(multiInstanceActivityBehavior.getOneBehaviorEvent());
 		default:
 			break;
 		}
 		return null;
 	}
     
-    public void setLoopConfiguration(LoopConfiguration loopConfiguration){
+    public void setActivityBehavior(ActivityBehavior activityBehavior){
     	if (isActivity()){
     		Activity activity = (Activity)getNode();
-    		activity.setLoopConfiguration(loopConfiguration);
+    		activity.setActivityBehavior(activityBehavior);
     	}
     }
 }

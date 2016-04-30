@@ -8,13 +8,13 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 import org.jbpm.JbpmException;
+import org.jbpm.activity.exe.ParallelMultiInstanceActivityBehavior;
 import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.ActionHandler;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
-import org.jbpm.graph.def.node.activity.ParallelMultiInstanceActivityBehavior;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.exe.Token;
@@ -76,8 +76,8 @@ public class LoopBehaviorMultiInstanceTest {
 //		taskNode.addEvent(ev);
 		ParallelMultiInstanceActivityBehavior se = new ParallelMultiInstanceActivityBehavior();
 		se.setNoneBehaviorEvent(ev);
-		se.setLoopCardinality("#{9}");
-		se.setLoopDataInput("#{inputCollection}");
+		se.setLoopCardinalityExpression("#{9}");
+		se.setLoopDataInputExpression("#{inputCollection}");
 //		loopCharacteristics.setLoopDataOutput("#{outputCollection}");
 
 		taskNode.setActivityBehavior(se);
