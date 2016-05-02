@@ -82,6 +82,11 @@ public class RelacionamentoProcessoEdit implements Serializable {
     				        "Processo eletrônico com número '" + numeroProcessoRelacionado + "' não encontrado");
     				return;
     			}
+    			else if(p2.equals(processo)) {
+    				FacesMessages.instance().add(Severity.ERROR,
+    				        "Processo não pode se relacionar com ele mesmo");
+    				return;
+    			}
     			rp2 = new RelacionamentoProcessoInterno(relacionamento, p2);
     		}
     		else if(tipoProcessoRelacionado == TipoProcesso.EXTERNO)
