@@ -80,6 +80,7 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 	public void setModeloComunicacao(ModeloComunicacao modeloComunicacao) {
 		this.modeloComunicacao = modeloComunicacao;
 		destinatarioModeloComunicacaoList.setModeloComunicacao(modeloComunicacao);
+		destinatarioModeloComunicacaoList.refresh();
 		setDestinatario(null);
 	}
 	
