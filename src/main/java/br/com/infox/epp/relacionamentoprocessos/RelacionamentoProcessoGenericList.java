@@ -51,7 +51,7 @@ public abstract class RelacionamentoProcessoGenericList<T extends Relacionamento
 
 	@Override
 	protected String getDefaultOrder() {
-		return "r2.id asc";
+		return "r.dataRelacionamento desc";
 	}
 
 	@ExceptionHandled(MethodType.REMOVE)
