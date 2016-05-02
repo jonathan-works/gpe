@@ -22,7 +22,6 @@ import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.jboss.seam.Component;
 import org.jboss.seam.bpm.ManagedJbpmContext;

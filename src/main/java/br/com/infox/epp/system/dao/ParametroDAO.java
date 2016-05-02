@@ -11,15 +11,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.system.entity.Parametro;
+import br.com.infox.epp.system.entity.Parametro_;
 
 @AutoCreate
 @Name(ParametroDAO.NAME)
+@Stateless
 public class ParametroDAO extends DAO<Parametro> {
 
     private static final long serialVersionUID = 1L;
@@ -50,5 +60,19 @@ public class ParametroDAO extends DAO<Parametro> {
     public Parametro removeByValue(String value) throws DAOException {
         Parametro p = getParametroByValorVariavel(value);
         return remove(p);
+    }
+
+    public String getValorParametroByNome(String nome) {
+    	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+    	CriteriaQuery<String> cq = cb.createQuery(String.class);
+    	Root<Parametro> parametro = cq.from(Parametro.class);
+    	cq.select(parametro.get(Parametro_.valorVariavel));
+    	cq.where(cb.equal(parametro.get(Parametro_.nomeVariavel), nome));
+    	TypedQuery<String> typedQuery = getEntityManager().createQuery(cq);
+    	try {
+    		return typedQuery.getSingleResult();
+    	} catch (NoResultException nre) {
+    		return null;
+    	}
     }
 }
