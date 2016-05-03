@@ -9,7 +9,7 @@
     <h:form id="standardLoopForm">
     
         <wi:inputText id="loopCondition" label="#{infoxMessages['process.def.activity.loop.condition']}"
-            value="#{activityBehavior.loopCondition}">
+            value="#{activityBehavior.loopConditionExpression}">
             <a:ajax event="change" execute="@this" render="@form"/>
             <f:validator validatorId="javax.faces.elValidator" />
         </wi:inputText>
@@ -19,7 +19,7 @@
             <a:ajax event="change" execute="@this" render="@form"/>
         </wi:selectBooleanCheckbox>
         
-        <wi:inputNumber id="loopMaximum" converterId="longConverter" value="#{activityBehavior.loopMaximum}"
+        <wi:inputNumber id="loopMaximum" converterId="integerConverter" value="#{activityBehavior.loopMaximum}"
             label="#{infoxMessages['process.def.activity.loop.maximum']}">
             <a:ajax event="change" execute="@this" render="@form"/>
         </wi:inputNumber>

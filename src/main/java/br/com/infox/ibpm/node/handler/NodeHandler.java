@@ -15,6 +15,11 @@ import java.util.regex.Pattern;
 
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
+import org.jbpm.activity.exe.ActivityBehavior;
+import org.jbpm.activity.exe.LoopActivityBehavior;
+import org.jbpm.activity.exe.MultiInstanceActivityBehavior;
+import org.jbpm.activity.exe.ParallelMultiInstanceActivityBehavior;
+import org.jbpm.activity.exe.SequentialMultiInstanceActivityBehavior;
 import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
@@ -22,7 +27,6 @@ import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.Activity;
 import org.jbpm.instantiation.Delegation;
-import org.jbpm.loopBehavior.def.LoopBehaviorModuleDefinition;
 import org.jbpm.scheduler.def.CancelTimerAction;
 import org.jbpm.scheduler.def.CreateTimerAction;
 import org.jbpm.taskmgmt.def.Task;
@@ -583,22 +587,25 @@ public class NodeHandler implements Serializable {
         }
         switch (loopNodeType) {
         case MULTIINSTANCE:
-            if (!(isLoopNode() && getActivityBehavior() instanceof SequentialMultiInstanceActivityBehavior)){
-                ((Activity)getNode()).setActivityBehavior(new SequentialMultiInstanceActivityBehavior());
-            } else if (!(isLoopNode() && getActivityBehavior() instanceof ParallelMultiInstanceActivityBehavior)) {
-                ((Activity)getNode()).setActivityBehavior(new ParallelMultiInstanceActivityBehavior());
-            }
+            ((Activity)getNode()).setActivityBehavior(new ParallelMultiInstanceActivityBehavior());
             break;
         case NONE:
             ((Activity)getNode()).setActivityBehavior(null);
             break;
         case STANDARD:
-            if (!(isLoopNode() && (getActivityBehavior() instanceof LoopActivityBehavior))) {
-                ((Activity)getNode()).setActivityBehavior(new LoopActivityBehavior());
-            }
+            ((Activity)getNode()).setActivityBehavior(new LoopActivityBehavior());
             break;
         default:
             break;
+        }
+    }
+    
+    public void onChangeSequential() {
+        MultiInstanceActivityBehavior mActivityBehavior = MultiInstanceActivityBehavior.class.cast(getActivityBehavior());
+        if (mActivityBehavior.getSequential() && !(mActivityBehavior instanceof SequentialMultiInstanceActivityBehavior)) {
+            ((Activity)getNode()).setActivityBehavior(new SequentialMultiInstanceActivityBehavior(mActivityBehavior));
+        } else if (!mActivityBehavior.getSequential() && !(mActivityBehavior instanceof ParallelMultiInstanceActivityBehavior)) {
+            ((Activity)getNode()).setActivityBehavior(new ParallelMultiInstanceActivityBehavior(mActivityBehavior));
         }
     }
     
@@ -640,14 +647,14 @@ public class NodeHandler implements Serializable {
     }
 
 	private EventHandler initializeLoopEvent() {
-	    MultiInstanceActivityBehavior multiInstanceActivityBehavior = (MultiInstanceActivityBehavior)((Activity)getNode()).getActivityBehavior();
-		switch (multiInstanceActivityBehavior.getFlowCondition()) {
-		case N:
+	    MultiInstanceActivityBehavior multiInstanceActivityBehavior = (MultiInstanceActivityBehavior) getActivityBehavior();
+		switch (multiInstanceActivityBehavior.getEventBehavior()) {
+		case NONE:
 			if (multiInstanceActivityBehavior.getNoneBehaviorEvent() == null){
 			    multiInstanceActivityBehavior.setNoneBehaviorEvent(new Event(getNode(), "noneBehaviorEvent"));
 			}
 			return new EventHandler(multiInstanceActivityBehavior.getNoneBehaviorEvent());
-		case O:
+		case ONE:
 			if (multiInstanceActivityBehavior.getOneBehaviorEvent() == null){
 			    multiInstanceActivityBehavior.setOneBehaviorEvent(new Event(getNode(), "oneBehaviorEvent"));
 			}
@@ -657,7 +664,7 @@ public class NodeHandler implements Serializable {
 		}
 		return null;
 	}
-    
+	
     public void setActivityBehavior(ActivityBehavior activityBehavior){
     	if (isActivity()){
     		Activity activity = (Activity)getNode();
