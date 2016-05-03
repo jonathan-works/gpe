@@ -640,9 +640,13 @@ public class NodeHandler implements Serializable {
     }
     
     public void onChangeEventBehavior() {
-        MultiInstanceActivityBehavior multiInstanceActivityBehavior = (MultiInstanceActivityBehavior)((Activity)getNode()).getActivityBehavior();
+        MultiInstanceActivityBehavior multiInstanceActivityBehavior = (MultiInstanceActivityBehavior) getActivityBehavior();
         multiInstanceActivityBehavior.setNoneBehaviorEvent(null);
         multiInstanceActivityBehavior.setOneBehaviorEvent(null);
+        if (getNode().getEvents() != null) {
+            getNode().getEvents().remove(MultiInstanceActivityBehavior.NONE_EVENT_BEHAVIOR);
+            getNode().getEvents().remove(MultiInstanceActivityBehavior.ONE_EVENT_BEHAVIOR);
+        }
         this.loopEvent = initializeLoopEvent();
     }
 
@@ -651,12 +655,12 @@ public class NodeHandler implements Serializable {
 		switch (multiInstanceActivityBehavior.getEventBehavior()) {
 		case NONE:
 			if (multiInstanceActivityBehavior.getNoneBehaviorEvent() == null){
-			    multiInstanceActivityBehavior.setNoneBehaviorEvent(new Event(getNode(), "noneBehaviorEvent"));
+			    multiInstanceActivityBehavior.setNoneBehaviorEvent(new Event(getNode(), MultiInstanceActivityBehavior.NONE_EVENT_BEHAVIOR));
 			}
 			return new EventHandler(multiInstanceActivityBehavior.getNoneBehaviorEvent());
 		case ONE:
 			if (multiInstanceActivityBehavior.getOneBehaviorEvent() == null){
-			    multiInstanceActivityBehavior.setOneBehaviorEvent(new Event(getNode(), "oneBehaviorEvent"));
+			    multiInstanceActivityBehavior.setOneBehaviorEvent(new Event(getNode(), MultiInstanceActivityBehavior.ONE_EVENT_BEHAVIOR));
 			}
 			return new EventHandler(multiInstanceActivityBehavior.getOneBehaviorEvent());
 		default:

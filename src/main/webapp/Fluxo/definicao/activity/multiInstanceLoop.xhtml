@@ -16,8 +16,8 @@
             <s:decorate id="behaviorDecoration" template="/WEB-INF/xhtml/components/templates/edit.xhtml"
                 rendered="true" styleClass="decoration-div">
                 <ui:define name="label">#{infoxMessages['process.def.activity.loop.behavior']}</ui:define>
-                <h:selectOneRadio id="behavior" value="#{activityBehavior.multiInstanceBehavior}" styleClass="radio">
-                    <s:selectItems value="#{activityBehavior.multiInstanceBehavior.values()}" var="item" label="#{infoxMessages['process.def.activity.loop.behavior.'.concat(item.name())]}" />
+                <h:selectOneRadio id="behavior" value="#{activityBehavior.eventBehavior}" styleClass="radio">
+                    <s:selectItems value="#{activityBehavior.eventBehavior.values()}" var="item" label="#{infoxMessages['process.def.activity.loop.behavior.'.concat(item.name())]}" />
                     <a:ajax event="change" execute="@this" render="@form" listener="#{nodeFitter.nodeHandler.onChangeEventBehavior}"/>
                     <s:convertEnum />
                 </h:selectOneRadio>
@@ -42,7 +42,7 @@
             <f:validator validatorId="javax.faces.elValidator" />
         </wi:inputText>
         
-        <rich:panel rendered="#{activityBehavior.multiInstanceBehavior ne null and activityBehavior.multiInstanceBehavior ne 'ALL'}"
+        <rich:panel rendered="#{activityBehavior.eventBehavior ne null and activityBehavior.eventBehavior ne 'ALL'}"
             header="#{infoxMessages['process.def.activity.loop.event']}">
             <ui:include src="/Fluxo/definicao/event.xhtml">
                 <ui:param name="id" value="loopEvent" />
