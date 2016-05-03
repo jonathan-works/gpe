@@ -88,6 +88,16 @@ public class JbpmUtil {
         return ManagedJbpmContext.instance().getSession();
     }
     
+    public List<String> getProcessDefinitionNames() {
+        EntityManager entityManager = EntityManagerProducer.getEntityManager();
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<String> cq = cb.createQuery(String.class);
+        Root<ProcessDefinition> processDefinition = cq.from(ProcessDefinition.class);
+        cq.select(processDefinition.<String>get("name")).distinct(true);
+        cq.orderBy(cb.asc(processDefinition.<String>get("name")));
+        return entityManager.createQuery(cq).getResultList();
+    }
+    
     public static Number getProcessDefinitionId(String processDefinitionName) {
         EntityManager entityManager = EntityManagerProducer.getEntityManager();
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
