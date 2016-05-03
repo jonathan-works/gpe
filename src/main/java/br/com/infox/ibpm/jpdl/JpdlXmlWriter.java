@@ -263,10 +263,6 @@ public class JpdlXmlWriter {
         activity.getActivityBehavior().write(nodeElement);
     }
 
-//    private void writeLoopConfiguration(Activity activity, Element element) {
-//		activity.getLoopConfiguration().write(element);
-//	}
-
 	@SuppressWarnings({ UNCHECKED, RAWTYPES })
     private void writeProcessState(ProcessState node, Element nodeElement) {
         Element subProcess = addElement(nodeElement, "sub-process");
