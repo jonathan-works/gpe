@@ -43,12 +43,12 @@ public class LoopBehaviorStandardTest {
 
 	private ProcessDefinition createLoopEnvironment(String loopCondition, Long loopMaximum, Boolean testBefore) {
 		LoopActivityBehavior config = new LoopActivityBehavior();
-		if (loopCondition != null)
-			config.setLoopCondition(loopCondition);
-		if (loopMaximum != null)
-			config.setLoopMaximum(loopMaximum);
-		if (testBefore != null)
-			config.setTestBefore(testBefore);
+//		if (loopCondition != null)
+//			config.setLoopCondition(loopCondition);
+//		if (loopMaximum != null)
+//			config.setLoopMaximum(loopMaximum);
+//		if (testBefore != null)
+//			config.setTestBefore(testBefore);
 		return initProcesssDefinition(config);
 	}
 

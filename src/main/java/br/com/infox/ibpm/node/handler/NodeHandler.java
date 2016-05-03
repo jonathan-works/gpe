@@ -631,6 +631,13 @@ public class NodeHandler implements Serializable {
     	}
     	return this.loopEvent;
     }
+    
+    public void onChangeEventBehavior() {
+        MultiInstanceActivityBehavior multiInstanceActivityBehavior = (MultiInstanceActivityBehavior)((Activity)getNode()).getActivityBehavior();
+        multiInstanceActivityBehavior.setNoneBehaviorEvent(null);
+        multiInstanceActivityBehavior.setOneBehaviorEvent(null);
+        this.loopEvent = initializeLoopEvent();
+    }
 
 	private EventHandler initializeLoopEvent() {
 	    MultiInstanceActivityBehavior multiInstanceActivityBehavior = (MultiInstanceActivityBehavior)((Activity)getNode()).getActivityBehavior();

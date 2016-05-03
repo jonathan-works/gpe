@@ -18,7 +18,7 @@
                 <ui:define name="label">#{infoxMessages['process.def.activity.loop.behavior']}</ui:define>
                 <h:selectOneRadio id="behavior" value="#{activityBehavior.multiInstanceBehavior}" styleClass="radio">
                     <s:selectItems value="#{activityBehavior.multiInstanceBehavior.values()}" var="item" label="#{infoxMessages['process.def.activity.loop.behavior.'.concat(item.name())]}" />
-                    <a:ajax event="change" execute="@this" render="@form" />
+                    <a:ajax event="change" execute="@this" render="@form" listener="#{nodeFitter.nodeHandler.onChangeEventBehavior}"/>
                     <s:convertEnum />
                 </h:selectOneRadio>
             </s:decorate>
