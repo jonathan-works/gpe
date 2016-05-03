@@ -45,6 +45,7 @@ import br.com.infox.ibpm.task.handler.GenerateDocumentoHandler;
 import br.com.infox.ibpm.task.handler.GenerateDocumentoHandler.GenerateDocumentoConfiguration;
 import br.com.infox.ibpm.task.handler.StatusHandler;
 import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;
+import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.jbpm.event.EventHandler;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -563,6 +564,10 @@ public class NodeHandler implements Serializable {
     		return retrieveGenerateDocumentoEvent(eventHandler.getEvent()) == null;
     	}
     	return true;
+    }
+    
+    public List<String> getProcessDefinitionNames() {
+        return JbpmUtil.instance().getProcessDefinitionNames();
     }
     
     public LoopNodeType getLoopNodeType(){
