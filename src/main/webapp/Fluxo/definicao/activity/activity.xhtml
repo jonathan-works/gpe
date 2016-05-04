@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib" xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:p="http://primefaces.org/ui">
+    
+    <ui:param name="id" value="#{empty id ? 'id' : id}" />
+    
+    <ui:param name="activity" value="#{loopElement}" />
+    
+    <rich:collapsiblePanel id="activityBehaviorPanel" expanded="true" switchType="client"
+        header="#{infoxMessages['process.def.activity.loopCharacteristics']}" style="">
+        
+        <h:form>
+        	<wi:selectOneMenu id="loopType" onbeforesubmit="infox.showLoading();" oncomplete="infox.hideLoading();"  value="#{activity.activityNodeType}"
+        		items="#{activity.activityNodeTypes}" optionLabel="#{item.label}" label="Comportamento" hideNoSelectionLabel="true">
+                <a:ajax event="change" render="activityBehaviorPanel" execute="@this" onbeforesubmit="infox.showLoading();" 
+                	oncomplete="infox.hideLoading();" listener="#{loopElement.onChangeActivityNodeType}"/>
+        	</wi:selectOneMenu>
+        </h:form>
+        
+        <p:outputPanel rendered="#{not activity.activityNodeType.none}">
+            
+            <s:fragment rendered="#{activity.activityNodeType.multiInstance}">
+                <ui:include src="multiInstance.xhtml" />
+            </s:fragment>
+            
+            <s:fragment rendered="#{activity.activityNodeType.loop}">
+                <ui:include src="loop.xhtml" />
+            </s:fragment>
+            
+        </p:outputPanel>
+        
+    </rich:collapsiblePanel>
+</ui:composition>

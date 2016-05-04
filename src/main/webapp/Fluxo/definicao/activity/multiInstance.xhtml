@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib" xmlns:wi="http://www.itx.com.br/jsf">
+    
+    <ui:param name="activityBehavior" value="#{loopElement.activityBehavior}" />
+    
+    <h:form id="multiInstanceLoopForm">
+    
+        <wi:inputText id="loopCardinalityExpression" value="#{activityBehavior.loopCardinalityExpression}"
+            label="#{infoxMessages['process.def.activity.loop.cardinality']}">
+            <a:ajax event="change" execute="@this" render="@form" />
+            <f:validator validatorId="javax.faces.elValidator" />
+        </wi:inputText>
+        
+        <wi:inputText id="loopDataInputExpression" label="#{infoxMessages['process.def.activity.loop.dataInput']}"
+            value="#{activityBehavior.loopDataInputExpression}">
+            <a:ajax event="change" execute="@this" render="@form" />
+            <f:validator validatorId="javax.faces.elValidator" />
+        </wi:inputText>
+        
+        <wi:inputText id="completionConditionExpression" label="#{infoxMessages['process.def.activity.loop.completionCondition']}"
+            value="#{activityBehavior.completionConditionExpression}">
+            <a:ajax event="change" execute="@this" render="@form" />
+            <f:validator validatorId="javax.faces.elValidator" />
+        </wi:inputText>
+        
+        <s:decorate id="behaviorDecoration" template="/WEB-INF/xhtml/components/templates/edit.xhtml"
+            rendered="true" styleClass="decoration-div">
+            <ui:define name="label">#{infoxMessages['process.def.activity.loop.behavior']}</ui:define>
+            <h:selectOneRadio id="behavior" value="#{activityBehavior.eventBehavior}" styleClass="radio">
+                <s:selectItems value="#{activityBehavior.eventBehavior.values()}" var="item" label="#{infoxMessages['process.def.activity.loop.behavior.'.concat(item.name())]}" />
+                <a:ajax event="change" execute="@this" render="@form" listener="#{nodeFitter.nodeHandler.onChangeEventBehavior}"/>
+                <s:convertEnum />
+            </h:selectOneRadio>
+        </s:decorate>
+        
+        <rich:panel rendered="#{not empty activityBehavior.eventBehavior and activityBehavior.eventBehavior ne 'ALL'}"
+            header="#{infoxMessages['process.def.activity.loop.event']}">
+            <ui:include src="/Fluxo/definicao/event.xhtml">
+                <ui:param name="id" value="multiInstanceEvent" />
+                <ui:param name="event" value="#{loopElement.multiInstanceEvent}" />
+            </ui:include>
+        </rich:panel>
+        
+    </h:form>
+    
+</ui:composition>
