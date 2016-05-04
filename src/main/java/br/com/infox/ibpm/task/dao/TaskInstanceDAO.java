@@ -60,6 +60,7 @@ public class TaskInstanceDAO extends DAO<UsuarioTaskInstance> {
         cq.where(
                 cb.isNull(taskInstance.<Date>get("end")),
                 cb.isNotNull(taskInstance.<Date>get("create")),
+                cb.isNull(processInstance.<Date>get("end")),
                 cb.equal(processInstance.<ProcessDefinition>get("processDefinition").get("id"), cb.literal(processDefinitionId))
         );
         return getEntityManager().createQuery(cq).getResultList();
