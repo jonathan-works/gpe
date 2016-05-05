@@ -36,10 +36,13 @@
           value="VERSÃO: #{gitRepository.describe} / #{gitRepository.buildTime}" />
       </div>
       <div id="seletorSkinLogin" class="seletorSkinsLogin">
-        <button
-          id="consultaExterna"
-          class="input-button-login input_button"
-          onclick="location.href='#{pathResolver.getContextPath()}/ConsultaExterna/listView.seam';">#{infoxMessages['consultaExterna.titlePage']}</button>
+      	<h:form style="display: inline-block;">
+	        <a:commandButton id="consultaExterna"
+	        	styleClass="input-button-login input_button"
+	        	value="#{infoxMessages['consultaExterna.titlePage']}"
+	        	onclick="location.href='#{pathResolver.getContextPath()}/ConsultaExterna/listView.seam';"
+	        	rendered="#{ativaConsultaExternaPadrao == 'true'}"/>
+       	</h:form>
         <ui:include src="/WEB-INF/xhtml/templates/seletorSkins.xhtml">
           <ui:param
             name="id"

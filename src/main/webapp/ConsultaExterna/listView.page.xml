@@ -9,4 +9,6 @@ xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/produc
     converterId="integerConverter" />
     <param name="tab" value="#{consultaExternaController.tab}" />
 
+	<restrict>#{ativaConsultaExternaPadrao == 'true'}</restrict>
+	
 </page>
