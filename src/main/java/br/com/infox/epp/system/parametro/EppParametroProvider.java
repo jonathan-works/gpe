@@ -89,6 +89,7 @@ public class EppParametroProvider implements Serializable, ParametroProvider {
 		create("sistema", "subNomeSistema", FieldType.STRING);
 		create("sistema", "exportarXLS", FieldType.BOOLEAN);
 		create("sistema", "exportarPDF", FieldType.BOOLEAN);
+		create("sistema", "producao", FieldType.BOOLEAN);
 
 		create("sistema", "idUsuarioSistema", UsuarioLogin_.nomeUsuario, UsuarioLogin_.idUsuarioLogin)
 				.addFilter(isTrue(UsuarioLogin_.ativo)).addFilter(equal(UsuarioLogin_.tipoUsuario, UsuarioEnum.S))
