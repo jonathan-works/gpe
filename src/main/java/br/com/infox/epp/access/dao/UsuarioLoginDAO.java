@@ -43,7 +43,7 @@ public class UsuarioLoginDAO extends DAO<UsuarioLogin> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "usuarioLoginDAO";
-
+    
     public UsuarioLogin getUsuarioLoginByEmail(String email) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PARAM_EMAIL, email);
