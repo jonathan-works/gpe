@@ -129,6 +129,8 @@ public class ProcessBuilder implements Serializable {
     private TarefaManager tarefaManager;
     @Inject
     private TarefaJbpmManager tarefaJbpmManager;
+    @Inject
+    private FluxoManager fluxoManager;
 
  
     private String id;
