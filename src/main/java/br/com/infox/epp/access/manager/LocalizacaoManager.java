@@ -5,6 +5,9 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -17,6 +20,7 @@ import br.com.infox.core.persistence.RecursiveManager;
 import br.com.infox.epp.access.dao.LocalizacaoDAO;
 import br.com.infox.epp.access.entity.Estrutura;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.entity.Localizacao_;
 import br.com.infox.epp.access.type.TipoUsoLocalizacaoEnum;
 import br.com.infox.epp.fluxo.manager.RaiaPerfilManager;
 import br.com.infox.epp.unidadedecisora.manager.UnidadeDecisoraMonocraticaManager;
@@ -165,4 +169,13 @@ public class LocalizacaoManager extends Manager<LocalizacaoDAO, Localizacao> {
 		return getDao().getLocalizacoesByEstruturaFilho(estruturaFilho);
 	}
     
+	public List<Localizacao> getAllLocalizacoesExternas() {
+		CriteriaBuilder cb = getDao().getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Localizacao> query = cb.createQuery(Localizacao.class);
+		Root<Localizacao> from = query.from(Localizacao.class);
+		query.where(cb.isNull(from.get(Localizacao_.estruturaPai)),
+				cb.isTrue(from.get(Localizacao_.ativo)));
+		query.orderBy(cb.asc(from.get(Localizacao_.caminhoCompleto)));
+		return getDao().getEntityManager().createQuery(query).getResultList();
+	}
 }
