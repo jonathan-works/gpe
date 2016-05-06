@@ -95,16 +95,33 @@ public class CategoriaEntregaRestService {
 		return item;
 	}
 	
+	/**
+	 * Lista todas as categorias
+	 */
+	public List<Categoria> listCategorias() {
+		List<CategoriaEntrega> categorias = categoriaEntregaSearch.list();
+		
+		return toCategorias(categorias);		
+	}
+
+
+	/**
+	 * Lista as categorias do primeiro nível
+	 */
 	public List<Categoria> getCategoriasRoot() {
 		List<CategoriaEntrega> categoriasRoot = categoriaEntregaSearch.getCategoriaEntregaRoot();
 
+		return toCategorias(categoriasRoot);
+	}
+
+	private List<Categoria> toCategorias(List<CategoriaEntrega> categorias) {
 		List<CategoriaEntregaItem> itens = new ArrayList<>();
-		for(CategoriaEntrega categoria : categoriasRoot) {
+		for(CategoriaEntrega categoria : categorias) {
 			itens.addAll(categoria.getItemsFilhos());
 		}
 		SortedMap<CategoriaEntrega, Categoria> mapaCategorias = new TreeMap<>(new ComparadorCategoriaEntrega());
 		
-		adicionarCategorias(mapaCategorias, categoriasRoot, null);
+		adicionarCategorias(mapaCategorias, categorias, null);
 		adicionarItens(mapaCategorias, itens, null);
 		
 		return new ArrayList<>(mapaCategorias.values());

@@ -37,4 +37,12 @@ public class CategoriaEntregaSearch {
 		cq = cq.select(categoriaEntrega).where(categoriaRoot);
 		return getEntityManager().createQuery(cq).getResultList();
 	}
+	
+	public List<CategoriaEntrega> list() {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<CategoriaEntrega> cq = cb.createQuery(CategoriaEntrega.class);
+		Root<CategoriaEntrega> categoriaEntrega = cq.from(CategoriaEntrega.class);
+		return getEntityManager().createQuery(cq).getResultList();
+	}
+	
 }
