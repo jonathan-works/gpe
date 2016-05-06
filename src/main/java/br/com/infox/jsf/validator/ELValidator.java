@@ -14,10 +14,14 @@ import br.com.infox.core.util.StringUtil;
 
 @FacesValidator("javax.faces.elValidator")
 public class ELValidator implements Validator {
-
+    
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
-        if (StringUtil.isEmpty((String) value)) return;
+        String stringValue = (String) value;
+        if (StringUtil.isEmpty(stringValue)) return;
+        if (!stringValue.matches("#\\{.*?\\}")) {
+            throw new ValidatorException(new FacesMessage("Expressão inválida"));
+        }
         try {
             ELParser.parse((String) value);
         } catch (ELException e) {

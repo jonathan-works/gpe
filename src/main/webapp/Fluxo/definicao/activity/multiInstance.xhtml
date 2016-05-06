@@ -2,47 +2,67 @@
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml"
     xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core"
     xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich"
-    xmlns:s="http://jboss.org/schema/seam/taglib" xmlns:wi="http://www.itx.com.br/jsf">
+    xmlns:s="http://jboss.org/schema/seam/taglib" xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:i="http://java.sun.com/jsf/composite/infox" xmlns:p="http://primefaces.org/ui">
     
-    <ui:param name="activityBehavior" value="#{loopElement.activityBehavior}" />
+    <ui:param name="activityBehavior" value="#{activity.activityBehavior}" />
     
     <h:form id="multiInstanceLoopForm">
     
-        <wi:inputText id="loopCardinalityExpression" value="#{activityBehavior.loopCardinalityExpression}"
-            label="#{infoxMessages['process.def.activity.loop.cardinality']}">
-            <a:ajax event="change" execute="@this" render="@form" />
-            <f:validator validatorId="javax.faces.elValidator" />
-        </wi:inputText>
+    	<i:inputText id="loopCardinalityExpression" label="#{infoxMessages['process.def.activity.loop.cardinality']}" 
+        	value="#{activityBehavior.loopCardinalityExpression}" ajax="true" render="@form"
+        	validatorId="javax.faces.elValidator">
+        	<f:facet name="label">
+        		<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" 
+        			title="#{infoxMessages['process.def.activity.loop.cardinality.help']}" 
+        			style="vertical-align: middle;"/>
+        	</f:facet>
+        </i:inputText>
+        	
+       	<i:inputText id="loopDataInputExpression" label="#{infoxMessages['process.def.activity.loop.dataInput']}" 
+        	value="#{activityBehavior.loopDataInputExpression}" ajax="true" render="@form"
+        	validatorId="javax.faces.elValidator">
+        	<f:facet name="label">
+        		<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" 
+        			title="#{infoxMessages['process.def.activity.loop.dataInput.help']}" 
+        			style="vertical-align: middle;"/>
+        	</f:facet>
+        </i:inputText>
         
-        <wi:inputText id="loopDataInputExpression" label="#{infoxMessages['process.def.activity.loop.dataInput']}"
-            value="#{activityBehavior.loopDataInputExpression}">
-            <a:ajax event="change" execute="@this" render="@form" />
-            <f:validator validatorId="javax.faces.elValidator" />
-        </wi:inputText>
+        <i:inputText id="nomeVariavelInputDataItem" label="#{infoxMessages['process.def.activity.loop.inputDataItem']}" 
+        	value="#{activityBehavior.inputDataItem}" ajax="true" render="@form">
+        	<f:facet name="label">
+        		<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" 
+        			title="#{infoxMessages['process.def.activity.loop.inputDataItem.help']}" 
+        			style="vertical-align: middle;"/>
+        	</f:facet>
+        </i:inputText>
+        	
+        <i:inputText id="completionConditionExpression" label="#{infoxMessages['process.def.activity.loop.completionCondition']}" 
+        	value="#{activityBehavior.completionConditionExpression}" ajax="true" render="@form"
+        	validatorId="javax.faces.elValidator">
+        	<f:facet name="label">
+        		<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" 
+        			title="#{infoxMessages['process.def.activity.loop.completionCondition.help']}" 
+        			style="vertical-align: middle;"/>
+        	</f:facet>
+        </i:inputText>
         
-        <wi:inputText id="completionConditionExpression" label="#{infoxMessages['process.def.activity.loop.completionCondition']}"
-            value="#{activityBehavior.completionConditionExpression}">
-            <a:ajax event="change" execute="@this" render="@form" />
-            <f:validator validatorId="javax.faces.elValidator" />
-        </wi:inputText>
+        <i:selectOneMenu id="eventBehavior"  value="#{activityBehavior.eventBehavior}"
+        		items="#{nodeFitter.nodeHandler.eventBehaviors}" label="#{infoxMessages['process.def.activity.loop.behavior']}" 
+        		itemLabel="#{infoxMessages['process.def.activity.loop.behavior.'.concat(item.name())]}" 
+        		hideNoSelectionLabel="true"	ajax="true" render="@(.eventsPanel)" execute="@this" 
+        		listener="#{nodeFitter.nodeHandler.onChangeEventBehavior}"/>
         
-        <s:decorate id="behaviorDecoration" template="/WEB-INF/xhtml/components/templates/edit.xhtml"
-            rendered="true" styleClass="decoration-div">
-            <ui:define name="label">#{infoxMessages['process.def.activity.loop.behavior']}</ui:define>
-            <h:selectOneRadio id="behavior" value="#{activityBehavior.eventBehavior}" styleClass="radio">
-                <s:selectItems value="#{activityBehavior.eventBehavior.values()}" var="item" label="#{infoxMessages['process.def.activity.loop.behavior.'.concat(item.name())]}" />
-                <a:ajax event="change" execute="@this" render="@form" listener="#{nodeFitter.nodeHandler.onChangeEventBehavior}"/>
-                <s:convertEnum />
-            </h:selectOneRadio>
-        </s:decorate>
-        
-        <rich:panel rendered="#{not empty activityBehavior.eventBehavior and activityBehavior.eventBehavior ne 'ALL'}"
-            header="#{infoxMessages['process.def.activity.loop.event']}">
-            <ui:include src="/Fluxo/definicao/event.xhtml">
-                <ui:param name="id" value="multiInstanceEvent" />
-                <ui:param name="event" value="#{loopElement.multiInstanceEvent}" />
-            </ui:include>
-        </rich:panel>
+        <p:outputPanel styleClass="eventsPanel">
+	        <rich:panel rendered="#{not empty activityBehavior.eventBehavior and activityBehavior.eventBehavior ne 'ALL'}"
+	            header="#{infoxMessages['process.def.activity.loop.event']}">
+	            <ui:include src="/Fluxo/definicao/event.xhtml">
+	                <ui:param name="id" value="multiInstanceEvent" />
+	                <ui:param name="event" value="#{activity.multiInstanceEvent}" />
+	            </ui:include>
+	        </rich:panel>
+	    </p:outputPanel>
         
     </h:form>
     

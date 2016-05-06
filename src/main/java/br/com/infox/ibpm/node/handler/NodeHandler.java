@@ -17,6 +17,7 @@ import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.activity.exe.ActivityBehavior;
 import org.jbpm.activity.exe.MultiInstanceActivityBehavior;
+import org.jbpm.activity.exe.MultiInstanceActivityBehavior.EventBehavior;
 import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
@@ -607,6 +608,10 @@ public class NodeHandler implements Serializable {
 
     public ActivityBehavior getActivityBehavior(){
 		return getActivity().getActivityBehavior();
+    }
+    
+    public EventBehavior[] getEventBehaviors() {
+        return new EventBehavior[] {EventBehavior.ALL, EventBehavior.ONE, EventBehavior.NONE};
     }
     
     public EventHandler getMultiInstanceEvent(){

@@ -2,9 +2,10 @@
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml"
     xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core"
     xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich"
-    xmlns:s="http://jboss.org/schema/seam/taglib" xmlns:wi="http://www.itx.com.br/jsf">
+    xmlns:s="http://jboss.org/schema/seam/taglib" xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:i="http://java.sun.com/jsf/composite/infox">
     
-    <ui:param name="activityBehavior" value="#{loopElement.activityBehavior}" />
+    <ui:param name="activityBehavior" value="#{activity.activityBehavior}" />
     
     <h:form id="standardLoopForm">
     
@@ -12,18 +13,26 @@
             label="#{infoxMessages['process.def.activity.loop.testBefore']}">
             <a:ajax event="change" execute="@this" render="@form"/>
         </wi:selectBooleanCheckbox>
-    
-        <wi:inputText id="loopCondition" label="#{infoxMessages['process.def.activity.loop.condition']}"
-            value="#{activityBehavior.loopConditionExpression}">
-            <a:ajax event="change" execute="@this" render="@form"/>
-            <f:validator validatorId="javax.faces.elValidator" />
-        </wi:inputText>
         
-        <wi:inputNumber id="loopMaximum" converterId="integerConverter" value="#{activityBehavior.loopMaximum}"
-            label="#{infoxMessages['process.def.activity.loop.maximum']}">
-            <a:ajax event="change" execute="@this" render="@form"/>
-        </wi:inputNumber>
-        
+        <i:inputText id="loopCondition" label="#{infoxMessages['process.def.activity.loop.condition']}" 
+        	value="#{activityBehavior.loopConditionExpression}" ajax="true" render="@form"
+        	validatorId="javax.faces.elValidator">
+        	<f:facet name="label">
+        		<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" 
+        			title="#{infoxMessages['process.def.activity.loop.condition.help']}" 
+        			style="vertical-align: middle;"/>
+        	</f:facet>
+        </i:inputText>
+        	
+       	<i:inputNumber id="loopMaximum" label="#{infoxMessages['process.def.activity.loop.maximum']}" 
+        	value="#{activityBehavior.loopMaximum}" ajax="true" render="@form">
+        	<f:facet name="label">
+        		<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" 
+        			title="#{infoxMessages['process.def.activity.loop.maximum.help']}" 
+        			style="vertical-align: middle;"/>
+        	</f:facet>
+        </i:inputNumber>
+         
     </h:form>
     
 </ui:composition>
