@@ -79,7 +79,7 @@ public class NodeHandler implements Serializable {
     
     public enum DueDateType {
         
-        EXPRESSION("Expressao"), DATE("Data"), PERIOD("Periodo");
+        EXPRESSION("Expressão"), DATE("Data"), PERIOD("Período");
         
         private String label;
         
@@ -108,6 +108,18 @@ public class NodeHandler implements Serializable {
                     return PERIOD;
                 }
             }
+        }
+        
+        public boolean isDate() {
+            return this == DATE;
+        }
+        
+        public boolean isExpression() {
+            return this == EXPRESSION;
+        }
+        
+        public boolean isPeriod() {
+            return this == PERIOD;
         }
         
     }

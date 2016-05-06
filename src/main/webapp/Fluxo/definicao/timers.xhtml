@@ -9,7 +9,8 @@
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:p="http://primefaces.org/ui"
->
+	xmlns:i="http://java.sun.com/jsf/composite/infox">
+	
     <rich:panel bodyClass="panel">
         <s:div id="timersDiv">
             <ui:param
@@ -90,47 +91,45 @@
                 
                     <ui:param name="timer" value="#{node.currentTimer}"/>
                     
-                    <wi:inputText id="name" value="#{node.timerName}" label="#{infoxMessages['process.timer.name']}">
-                        <a:ajax execute="@this" limitRender="true" event="change" render="timersTable"/>
-                    </wi:inputText>
+                    <i:inputText  id="name" value="#{node.timerName}" label="#{infoxMessages['process.timer.name']}" 
+                    	ajax="true" render=":processDefinition:timersTable" />
                     
-                    <wi:selectOneMenu id="transition" value="#{timer.transitionName}" label="#{infoxMessages['process.timer.transition']}" 
-                        items="#{node.getTransitions()}" showLabelSelecione="true">
-                        <a:ajax execute="@this" event="change" limitRender="true"/>
-                    </wi:selectOneMenu>
+                    <i:selectOneMenu id="transition" value="#{timer.transitionName}" label="#{infoxMessages['process.timer.transition']}" 
+                        items="#{node.getTransitions()}" showLabelSelecione="true" ajax="true" />
                     
-                    <wi:selectOneRadioEnum id="dueDateTypeRadio" value="#{node.dueDateType}" items="#{node.dueDateTypeValues}">
-                    	<p:ajax process="@this" event="change" update="@(.dueDateTimer)" listener="#{node.onChangeDueDateType}"/>
-                    </wi:selectOneRadioEnum>
+                    <i:selectOneRadio id="dueDateTypeRadio" value="#{node.dueDateType}" items="#{node.dueDateTypeValues}" 
+                    	ajax="true" render="@(.dueDateTimer)" listener="#{nodeFitter.nodeHandler.onChangeDueDateType}" 
+                    	itemLabel="#{item.label}" label="Tipo Expiração"/>
                     
                     <p:outputPanel styleClass="dueDateTimer">
-	                    <p:outputPanel rendered="#{node.dueDateType eq 'PERIOD'}">
-		                    <wi:inputText id="duedatePeriod" value="#{node.dueDateValue}" widthDiv="50px" label="#{infoxMessages['process.timer.prazo']}">
-		                        <a:ajax execute="@this" limitRender="true" event="change" listener="#{node.onChangeDueDate}"/>
-		                    </wi:inputText>
+	                    <p:outputPanel rendered="#{nodeFitter.nodeHandler.dueDateType.period}">
+	                    
+		                    <i:inputText id="duedatePeriod" value="#{nodeFitter.nodeHandler.dueDateValue}" 
+		                    	label="#{infoxMessages['process.timer.prazo']}" ajax="true" listener="#{node.onChangeDueDate}" />
 		                    
-		                    <wi:selectOneMenuEnum id="unit" value="#{node.dueDateUnit}" widthDiv="100px" label="#{infoxMessages['process.timer.prazo.unidade']}"
-		                        items="#{node.dueDateDefaultUnit.values()}" showLabelSelecione="true" optionText="label">
-		                        <a:ajax execute="@this" limitRender="true" event="change" listener="#{node.onChangeDueDate}"/>
-		                    </wi:selectOneMenuEnum>
+		                    <i:selectOneMenu id="unit" value="#{nodeFitter.nodeHandler.dueDateUnit}"  
+		                    	label="#{infoxMessages['process.timer.prazo.unidade']}"
+		                        items="#{node.dueDateDefaultUnit.values()}" itemLabel="#{item.label}" 
+		                        ajax="true" listener="#{nodeFitter.nodeHandler.onChangeDueDate}" />
 		                    
-		                    <wi:selectBooleanCheckbox id="business" value="#{node.dueDateBusiness}" widthDiv="40px" label="#{infoxMessages['process.timer.business']}">
-		                        <a:ajax execute="@this" limitRender="true" event="change" listener="#{node.onChangeDueDate}"/>
-		                    </wi:selectBooleanCheckbox>
+		                    <i:selectBooleanCheckbox id="business" value="#{nodeFitter.nodeHandler.dueDateBusiness}" 
+		                    	label="#{infoxMessages['process.timer.business']}" ajax="true" 
+		                    	listener="#{nodeFitter.nodeHandler.onChangeDueDate}"/>
 	                    </p:outputPanel>
 	                    
-	                    <p:outputPanel rendered="#{node.dueDateType eq 'DATE'}">
-		                    <wi:inputDate id="dueDateDate" value="#{node.dueDateDate}" widthDiv="255px" label="#{infoxMessages['process.timer.data']}"
-		                    	pattern="dd/MM/yyyy HH:mm">
-		                        <a:ajax execute="@this" limitRender="true" event="change" listener="#{node.onChangeDueDate}"/>
+	                    <p:outputPanel rendered="#{node.dueDateType.date}">
+		                    <wi:inputDate id="dueDateDate" value="#{nodeFitter.nodeHandler.dueDateDate}" widthDiv="255px" 
+		                    	label="#{infoxMessages['process.timer.data']}"
+		                    	pattern="dd/MM/yyyy HH:mm" defaultTime="00:00:00">
+		                        <a:ajax execute="@this" limitRender="true" event="change" listener="#{nodeFitter.nodeHandler.onChangeDueDate}"/>
 		                    </wi:inputDate>
 	                    </p:outputPanel>
 	                    
-	                    <p:outputPanel rendered="#{node.dueDateType eq 'EXPRESSION'}">
-		                    <wi:inputText id="dueDateExpression" value="#{node.dueDateExpression}" widthDiv="50px" label="#{infoxMessages['process.timer.expressao']}">
-		                        <a:ajax execute="@this" limitRender="true" event="change" listener="#{node.onChangeDueDate}"/>
-		                        <f:validator validatorId="javax.faces.elValidator"/>
-		                    </wi:inputText>
+	                    <p:outputPanel rendered="#{nodeFitter.nodeHandler.dueDateType.expression}">
+		                    <i:inputText id="dueDateExpression" value="#{node.dueDateExpression}"
+		                    	label="#{infoxMessages['process.timer.expressao']}"
+		                    	validatorId="javax.faces.elValidator" ajax="true"
+		                    	listener="#{nodeFitter.nodeHandler.onChangeDueDate}" />
 	                    </p:outputPanel>
                      </p:outputPanel>
                 </s:div>
