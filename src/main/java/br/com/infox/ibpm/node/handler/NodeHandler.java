@@ -699,7 +699,8 @@ public class NodeHandler implements Serializable {
     }
     
     public boolean isMultiInstance(){
-        return getActivityBehavior() != null && (getActivityBehavior() instanceof MultiInstanceActivityBehavior);
+        return isActivity() && getActivityBehavior() != null 
+                && (getActivityBehavior() instanceof MultiInstanceActivityBehavior);
     }
 
     public ActivityBehavior getActivityBehavior(){

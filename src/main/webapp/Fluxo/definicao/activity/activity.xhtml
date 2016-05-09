@@ -15,7 +15,7 @@
         		oncomplete="infox.hideLoading();" listener="#{nodeFitter.nodeHandler.onChangeActivityNodeType}"/>
     	</h:form>
         
-        <p:outputPanel  styleClass="activityBehaviorPanel" rendered="#{not nodeFitter.nodeHandler.activityNodeType.none}">
+        <p:outputPanel styleClass="activityBehaviorPanel">
             
             <ui:fragment rendered="#{nodeFitter.nodeHandler.activityNodeType.multiInstance}">
                 <ui:include src="multiInstance.xhtml" />
