@@ -12,40 +12,31 @@ public class CategoriaEntregaResourceImpl implements CategoriaEntregaResource {
 
 	@Inject
 	private CategoriaEntregaRestService categoriaEntregaRestService;
-	private Integer idItemPai;
+	private String codigoItemPai;
 	
-	public void setIdItemPai(Integer idItemPai) {
-		this.idItemPai = idItemPai;
+	public void setCodigoItemPai(String codigoItemPai) {
+		this.codigoItemPai = codigoItemPai;
 	}
 	
 	@Override
-	public List<Categoria> getCategorias(Integer idItemPai)
+	public List<Categoria> getCategorias()
 	{
-		if(idItemPai == null) {
-			idItemPai = this.idItemPai;
-		}
-		
-		if(idItemPai == null) {
-			return categoriaEntregaRestService.listCategorias();			
-		}
-		else {
-			return categoriaEntregaRestService.getCategoriasFilhas(idItemPai);			
-		}
+		return categoriaEntregaRestService.getCategoriasFilhas(codigoItemPai);			
 	}
 	
 	@Override
 	public Response novaCategoria(Categoria categoria)
 	{
-		categoriaEntregaRestService.novaCategoria(categoria, idItemPai);
+		categoriaEntregaRestService.novaCategoria(categoria, codigoItemPai);
 		return Response.ok().status(Status.CREATED).build();
 	}
 	
 	@Override
-	public CategoriaEntregaItemResource getItem(Integer id) 
+	public CategoriaEntregaItemResource getItem(String codigo) 
 	{
 		CategoriaEntregaItemResourceImpl itemResource = BeanManager.INSTANCE.getReference(CategoriaEntregaItemResourceImpl.class);
-		itemResource.setIdCategoria(id);
-		itemResource.setIdItemPai(idItemPai);
+		itemResource.setCodigoCategoria(codigo);
+		itemResource.setCodigoItemPai(codigoItemPai);
 		return itemResource;
 	}
 

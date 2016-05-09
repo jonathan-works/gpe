@@ -18,13 +18,13 @@ import javax.ws.rs.core.Response;
 public interface CategoriaEntregaResource {
 
 	@GET
-	public List<Categoria> getCategorias(@QueryParam("idItemPai") Integer idItemPai);
+	public List<Categoria> getCategorias();
 	
 	@POST
 	public Response novaCategoria(Categoria categoria);
 	
-	@Path("{id}/item")
-	public CategoriaEntregaItemResource getItem(@PathParam("id") Integer id); 
+	@Path("{codigo}/item")
+	public CategoriaEntregaItemResource getItem(@PathParam("codigo") String codigo); 
 
 
 

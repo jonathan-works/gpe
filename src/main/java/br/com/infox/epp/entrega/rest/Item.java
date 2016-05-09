@@ -6,7 +6,6 @@ public class Item implements Serializable, Comparable<Item> {
 
 	private static final long serialVersionUID = 1L;
 	
-	private Integer id;
 	private String codigo;	
 	private String descricao;
 	
@@ -67,13 +66,5 @@ public class Item implements Serializable, Comparable<Item> {
 			retorno = getCodigo().compareTo(o.getCodigo());
 		}
 		return retorno;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 }

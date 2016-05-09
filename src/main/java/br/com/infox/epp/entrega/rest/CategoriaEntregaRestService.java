@@ -72,7 +72,6 @@ public class CategoriaEntregaRestService {
 	
 	private Categoria toCategoria(CategoriaEntrega categoriaEntrega, CategoriaEntregaItem itemPai) {
 		Categoria categoria = new Categoria();
-		categoria.setId(categoriaEntrega.getId());
 		categoria.setCodigo(categoriaEntrega.getCodigo());
 		categoria.setDescricao(categoriaEntrega.getDescricao());
 		return categoria;
@@ -80,7 +79,6 @@ public class CategoriaEntregaRestService {
 	
 	private Item toItem(CategoriaEntregaItem categoriaEntregaItem, CategoriaEntregaItem itemPai) {
 		Item item = new Item();
-		item.setId(categoriaEntregaItem.getId());
 		item.setCodigo(categoriaEntregaItem.getCodigo());
 		item.setDescricao(categoriaEntregaItem.getDescricao());
 		return item;
@@ -118,6 +116,11 @@ public class CategoriaEntregaRestService {
 		return new ArrayList<>(mapaCategorias.values());
 	}
 	
+	public List<Categoria> getCategoriasFilhas(String codigoItemPai) {
+		Integer idItemPai = codigoItemPai == null ? null : categoriaEntregaItemSearch.getCategoriaEntregaItemByCodigo(codigoItemPai).getId();
+		return getCategoriasFilhas(idItemPai);
+	}
+	
 	/**
 	 * Retorna uma lista contendo todos as categorias filhas do item com o código informado
 	 * @param codigoItemPai Código do item cujas filhas serão listadas ou nulo caso devam ser retornados as categorias raiz 
@@ -140,6 +143,10 @@ public class CategoriaEntregaRestService {
 	}
 	
 		
+	public CategoriaEntrega novaCategoria(Categoria categoria, String codigoItemPai) {
+		Integer idItemPai = codigoItemPai == null ? null : categoriaEntregaItemSearch.getCategoriaEntregaItemByCodigo(codigoItemPai).getId();
+		return novaCategoria(categoria, idItemPai);
+	}
 	
 	
 	public CategoriaEntrega novaCategoria(Categoria categoria, Integer idItemPai) {
@@ -162,9 +169,15 @@ public class CategoriaEntregaRestService {
 		return categoriaEntrega;		
 	}
 	
+	public CategoriaEntregaItem novoItem(Item item, String codigoItemPai, String codigoCategoria) {
+		CategoriaEntrega categoria = categoriaEntregaSearch.getCategoriaEntregaByCodigo(codigoCategoria);
+		Integer idItemPai = codigoItemPai == null ? null : categoriaEntregaItemSearch.getCategoriaEntregaItemByCodigo(codigoItemPai).getId();
+		return novoItem(item, idItemPai, categoria.getId());		
+	}
+	
 	public CategoriaEntregaItem novoItem(Item item, Integer idItemPai, Integer idCategoria) {
-		CategoriaEntregaItem itemPai = idItemPai == null ? null : categoriaEntregaItemSearch.getEntityManager().find(CategoriaEntregaItem.class, idItemPai);
-		CategoriaEntrega categoria = categoriaEntregaSearch.getEntityManager().find(CategoriaEntrega.class, idCategoria);
+		CategoriaEntregaItem itemPai = idItemPai == null ? null : getEntityManager().find(CategoriaEntregaItem.class, idItemPai);
+		CategoriaEntrega categoria = getEntityManager().find(CategoriaEntrega.class, idCategoria);
 		
 		CategoriaEntregaItem itemBanco = new CategoriaEntregaItem();
 		itemBanco.setCodigo(item.getCodigo());
@@ -181,4 +194,16 @@ public class CategoriaEntregaRestService {
 		return itemBanco;
 	}
 	
+	public void removerCategoria(String codigoCategoria) {
+		CategoriaEntrega categoria = categoriaEntregaSearch.getCategoriaEntregaByCodigo(codigoCategoria);
+		getEntityManager().remove(categoria);
+		getEntityManager().flush();
+	}
+	
+	public void removerItem(String codigoItem) {
+		CategoriaEntregaItem item = categoriaEntregaItemSearch.getCategoriaEntregaItemByCodigo(codigoItem);
+		getEntityManager().remove(item);
+		getEntityManager().flush();
+		
+	}
 }

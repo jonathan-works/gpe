@@ -20,11 +20,11 @@ public class CategoriaEntregaSearch {
 		return EntityManagerProducer.getEntityManager();
 	}
 	
-	public CategoriaEntrega getCategoriaEntregaByCodigo(String codigoLocalizacao) {
+	public CategoriaEntrega getCategoriaEntregaByCodigo(String codigo) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<CategoriaEntrega> cq = cb.createQuery(CategoriaEntrega.class);
 		Root<CategoriaEntrega> categoriaEntrega = cq.from(CategoriaEntrega.class);
-		Predicate codigoIgual = cb.equal(categoriaEntrega.get(CategoriaEntrega_.codigo), codigoLocalizacao);
+		Predicate codigoIgual = cb.equal(categoriaEntrega.get(CategoriaEntrega_.codigo), codigo);
 		cq = cq.select(categoriaEntrega).where(codigoIgual);
 		return getEntityManager().createQuery(cq).getSingleResult();
 	}

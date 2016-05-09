@@ -17,37 +17,38 @@ public class CategoriaEntregaItemResourceImpl implements CategoriaEntregaItemRes
 	private CategoriaEntregaRestService categoriaEntregaRestService;
 	@Context
 	private UriInfo uriInfo;
-	private Integer idCategoria;
-	private Integer idItemPai;
+	private String codigoCategoria;
+	private String codigoItemPai;
 	
 	@POST
 	public Response novoItem(Item item)
 	{
-		CategoriaEntregaItem itemBanco = categoriaEntregaRestService.novoItem(item, idItemPai, idCategoria);
+		CategoriaEntregaItem itemBanco = categoriaEntregaRestService.novoItem(item, codigoItemPai, codigoCategoria);
 		URI location = uriInfo.getAbsolutePathBuilder().path(itemBanco.getCodigo()).build();
 		return Response.created(location).build();
 	}
-
-	public void setIdCategoria(Integer idCategoria) {
-		this.idCategoria = idCategoria;
+	
+	public void setCodigoCategoria(String codigoCategoria) {
+		this.codigoCategoria = codigoCategoria;
 	}
 
-	public void setIdItemPai(Integer idItemPai) {
-		this.idItemPai = idItemPai;
-	}
+	public void setCodigoItemPai(String codigoItemPai) {
+		this.codigoItemPai = codigoItemPai;
+	}		
 
 	@Override
-	public CategoriaEntregaResource getCategoria(Integer id) {
+	public CategoriaEntregaResource getCategoria(String codigoItemPai) {
 		CategoriaEntregaResourceImpl categoriaEntregaResourceImpl = BeanManager.INSTANCE.getReference(CategoriaEntregaResourceImpl.class);
-		categoriaEntregaResourceImpl.setIdItemPai(id);
+		categoriaEntregaResourceImpl.setCodigoItemPai(codigoItemPai);
 		return categoriaEntregaResourceImpl;
 	}
 
 	@Override
-	public CategoriaEntregaItemResource getItem(Integer id) {
+	public CategoriaEntregaItemResource getItem(String codigoItemPai) {
 		CategoriaEntregaItemResourceImpl itemResource = BeanManager.INSTANCE.getReference(CategoriaEntregaItemResourceImpl.class);
-		itemResource.idItemPai = id;
-		itemResource.idCategoria = idCategoria;
+		itemResource.setCodigoItemPai(codigoItemPai);
+		itemResource.setCodigoCategoria(codigoCategoria);
 		return itemResource;
-	}	
+	}
+
 }

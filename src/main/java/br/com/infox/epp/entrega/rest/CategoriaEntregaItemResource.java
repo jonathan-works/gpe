@@ -14,9 +14,9 @@ public interface CategoriaEntregaItemResource {
 	@POST
 	public Response novoItem(Item item);
 
-	@Path("{id}/categoria")
-	public CategoriaEntregaResource getCategoria(@PathParam("id") Integer id); 
+	@Path("{codigo}/categoria")
+	public CategoriaEntregaResource getCategoria(@PathParam("codigo") String codigoItemPai); 
 	
-	@Path("{id}/item")
-	public CategoriaEntregaItemResource getItem(@PathParam("id") Integer id); 
+	@Path("{codigo}/item")
+	public CategoriaEntregaItemResource getItem(@PathParam("codigo") String codigoItemPai); 
 }

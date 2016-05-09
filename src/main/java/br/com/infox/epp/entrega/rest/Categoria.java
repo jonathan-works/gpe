@@ -8,7 +8,6 @@ public class Categoria implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private Integer id;
 	private String codigo;	
 	private String descricao;
 	
@@ -17,7 +16,7 @@ public class Categoria implements Serializable {
 	public Categoria() {
 	}
 	
-	public Categoria(Integer id, String codigo, String descricao) {
+	public Categoria(String codigo, String descricao) {
 		super();
 		this.codigo = codigo;
 		this.descricao = descricao;
@@ -70,13 +69,5 @@ public class Categoria implements Serializable {
 		} else if (!codigo.equals(other.codigo))
 			return false;
 		return true;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 }
