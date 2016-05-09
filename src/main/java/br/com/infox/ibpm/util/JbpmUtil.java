@@ -13,6 +13,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.hibernate.Session;
 import org.jboss.seam.ScopeType;
@@ -26,6 +27,7 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.db.GraphSession;
 import org.jbpm.graph.def.Event;
+import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.ProcessInstance;
@@ -98,7 +100,7 @@ public class JbpmUtil {
     
     public void deleteTimers(ProcessDefinition processDefinition) {
         EntityManager entityManager = EntityManagerProducer.getEntityManager();
-        // Usado JPQL pois no JPA 2.0 nãp têm criteria para DELETE 
+        // Usado JPQL pois no JPA 2.0 nãp têm criteria para DELETE, somente no JPA 2.1
         String jpql = "delete from org.jbpm.job.Timer timer "
                 + "where exists (select 1 from org.jbpm.graph.exe.ProcessInstance pinst "
                 + "                 where timer.processInstance.id = pinst.id "
@@ -111,19 +113,29 @@ public class JbpmUtil {
         EntityManager entityManager = EntityManagerProducer.instance().getEntityManagerTransactional();
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
-        Root<TaskInstance> taskInstance = cq.from(TaskInstance.class);
+        Root<ProcessInstance> processInstance = cq.from(ProcessInstance.class);
+        Root<TaskNode> taskNode = cq.from(TaskNode.class);
         Root<CreateTimerAction> createTimeAction = cq.from(CreateTimerAction.class);
-        Join<TaskInstance, Task> task = taskInstance.join("task", JoinType.INNER);
-        Join<TaskInstance, Token> token = taskInstance.join("token", JoinType.INNER);
-        Join<TaskInstance, ProcessInstance> processInstance = taskInstance.join("processInstance", JoinType.INNER);
-        Join<Task, TaskNode> taskNode = task.join("taskNode", JoinType.INNER);
+        Join<ProcessInstance, Token> token = processInstance.join("rootToken", JoinType.INNER);
         Join<TaskNode, Event> event = taskNode.join("events", JoinType.INNER);
+        
+        Subquery<Integer> subquery = cq.subquery(Integer.class);
+        subquery.select(cb.literal(1));
+        Root<TaskInstance> taskInstance = subquery.from(TaskInstance.class);
+        Join<TaskInstance, Task> task = taskInstance.join("task", JoinType.INNER);
+        subquery.where(
+            cb.equal(task.<TaskNode>get("taskNode").<Long>get("id"), taskNode.<Long>get("id")),
+            cb.isNull(taskInstance.get("end")),
+            cb.isNotNull(taskInstance.get("create"))
+        );
+        
         cq.where(
             cb.equal(processInstance.<ProcessDefinition>get("processDefinition").get("id"), processDefinition.getId()),
+            cb.equal(token.<Node>get("node").<Long>get("id"), taskNode.<Long>get("id")),
             cb.isNull(processInstance.get("end")),
-            cb.isNull(taskInstance.get("end")),
-            cb.isNotNull(taskInstance.get("create")),
-            cb.equal(event.get("id"), createTimeAction.<Event>get("event").get("id"))
+            cb.isNull(token.get("end")),
+            cb.equal(event.get("id"), createTimeAction.<Event>get("event").get("id")),
+            cb.exists(subquery)
         );
         cq.groupBy(token, createTimeAction, taskNode);
         cq.multiselect(token, createTimeAction, taskNode);

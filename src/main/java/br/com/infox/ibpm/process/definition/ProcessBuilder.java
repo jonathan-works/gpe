@@ -513,7 +513,9 @@ public class ProcessBuilder implements Serializable {
            }
            entityManager.flush();
        } finally {
-           entityManager.close();
+           if (entityManager.isOpen()) {
+               entityManager.close();
+           }
        }
 	}
     
