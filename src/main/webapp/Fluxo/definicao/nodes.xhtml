@@ -147,9 +147,9 @@
                                 </ui:include>
                             </s:fragment>
                         </div>
-                        <s:fragment rendered="#{nodeFitter.nodeHandler.activity}">
+                        <ui:fragment rendered="#{nodeFitter.nodeHandler.activity}">
                             <ui:include src="activity/activity.xhtml"/>
-                        </s:fragment>
+                        </ui:fragment>
                         <s:fragment
                             rendered="#{nodeFitter.currentNode.nodeType == 'Task'}">
                             <ui:include src="tasks.xhtml" />

@@ -703,7 +703,11 @@ public class NodeHandler implements Serializable {
     }
 
     public ActivityBehavior getActivityBehavior(){
-		return getActivity().getActivityBehavior();
+        if (getActivity() != null) {
+            return getActivity().getActivityBehavior();
+        } else {
+            return null;
+        }
     }
     
     public EventBehavior[] getEventBehaviors() {

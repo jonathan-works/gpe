@@ -5,8 +5,6 @@
     xmlns:s="http://jboss.org/schema/seam/taglib" xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:p="http://primefaces.org/ui" xmlns:i="http://java.sun.com/jsf/composite/infox">
     
-    <ui:param name="id" value="#{empty id ? 'id' : id}" />
-    
     <rich:collapsiblePanel id="activityBehaviorPanel" expanded="#{not activity.activityNodeType.none}" switchType="client" 
     	header="#{infoxMessages['process.def.activity.loopCharacteristics']}">
     	
@@ -17,7 +15,7 @@
         		oncomplete="infox.hideLoading();" listener="#{nodeFitter.nodeHandler.onChangeActivityNodeType}"/>
     	</h:form>
         
-        <p:outputPanel  styleClass="activityBehaviorPanel">
+        <p:outputPanel  styleClass="activityBehaviorPanel" rendered="#{not nodeFitter.nodeHandler.activityNodeType.none}">
             
             <ui:fragment rendered="#{nodeFitter.nodeHandler.activityNodeType.multiInstance}">
                 <ui:include src="multiInstance.xhtml" />
