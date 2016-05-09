@@ -7,27 +7,25 @@
     
     <ui:param name="id" value="#{empty id ? 'id' : id}" />
     
-    <ui:param name="activity" value="#{nodeFitter.nodeHandler}" />
-    
     <rich:collapsiblePanel id="activityBehaviorPanel" expanded="#{not activity.activityNodeType.none}" switchType="client" 
     	header="#{infoxMessages['process.def.activity.loopCharacteristics']}">
     	
     	<h:form>
-    		<i:selectOneMenu id="loopType"  value="#{activity.activityNodeType}"
-        		items="#{activity.activityNodeTypes}" itemLabel="#{item.label}" label="#{infoxMessages['process.def.activity.loop.type']}" 
+    		<i:selectOneMenu id="loopType"  value="#{nodeFitter.nodeHandler.activityNodeType}"
+        		items="#{nodeFitter.nodeHandler.activityNodeTypes}" itemLabel="#{item.label}" label="#{infoxMessages['process.def.activity.loop.type']}" 
         		hideNoSelectionLabel="true"	ajax="true" render="@(.activityBehaviorPanel)" execute="@this" onstart="infox.showLoading();" 
         		oncomplete="infox.hideLoading();" listener="#{nodeFitter.nodeHandler.onChangeActivityNodeType}"/>
     	</h:form>
         
         <p:outputPanel  styleClass="activityBehaviorPanel">
             
-            <s:fragment rendered="#{activity.activityNodeType.multiInstance}">
+            <ui:fragment rendered="#{nodeFitter.nodeHandler.activityNodeType.multiInstance}">
                 <ui:include src="multiInstance.xhtml" />
-            </s:fragment>
+            </ui:fragment>
             
-            <s:fragment rendered="#{activity.activityNodeType.loop}">
+            <ui:fragment rendered="#{nodeFitter.nodeHandler.activityNodeType.loop}">
                 <ui:include src="loop.xhtml" />
-            </s:fragment>
+            </ui:fragment>
             
         </p:outputPanel>
         

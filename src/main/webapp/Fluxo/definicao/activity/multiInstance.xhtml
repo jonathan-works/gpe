@@ -5,7 +5,7 @@
     xmlns:s="http://jboss.org/schema/seam/taglib" xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:i="http://java.sun.com/jsf/composite/infox" xmlns:p="http://primefaces.org/ui">
     
-    <ui:param name="activityBehavior" value="#{activity.activityBehavior}" />
+    <ui:param name="activityBehavior" value="#{nodeFitter.nodeHandler.activityBehavior}" />
     
     <h:form id="multiInstanceLoopForm">
     
@@ -59,7 +59,7 @@
 	            header="#{infoxMessages['process.def.activity.loop.event']}">
 	            <ui:include src="/Fluxo/definicao/event.xhtml">
 	                <ui:param name="id" value="multiInstanceEvent" />
-	                <ui:param name="event" value="#{activity.multiInstanceEvent}" />
+	                <ui:param name="event" value="#{nodeFitter.nodeHandler.multiInstanceEvent}" />
 	            </ui:include>
 	        </rich:panel>
 	    </p:outputPanel>
