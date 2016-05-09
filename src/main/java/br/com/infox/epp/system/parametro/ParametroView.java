@@ -16,6 +16,8 @@ import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.jboss.seam.contexts.Contexts;
+
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.DynamicField;
 import br.com.infox.epp.access.api.Authenticator;
@@ -127,6 +129,7 @@ public class ParametroView implements Serializable {
 			}
 			parametro.setValorVariavel(String.valueOf(formField.getValue()));
 			parametroManager.update(parametro);
+			Contexts.getApplicationContext().set(parametro.getNomeVariavel().trim(), parametro.getValorVariavel());
 		}
 		return "";
 	}	
