@@ -108,7 +108,7 @@ public class JbpmUtil {
     }
     
     public void createTimers(ProcessDefinition processDefinition) throws Exception {
-        EntityManager entityManager = EntityManagerProducer.getEntityManager();
+        EntityManager entityManager = EntityManagerProducer.instance().getEntityManagerTransactional();
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
         Root<TaskInstance> taskInstance = cq.from(TaskInstance.class);
@@ -125,6 +125,7 @@ public class JbpmUtil {
             cb.isNotNull(taskInstance.get("create")),
             cb.equal(event.get("id"), createTimeAction.<Event>get("event").get("id"))
         );
+        cq.groupBy(token, createTimeAction, taskNode);
         cq.multiselect(token, createTimeAction, taskNode);
         List<Object[]> resultList = entityManager.createQuery(cq).getResultList();
         for (Object[] result : resultList) {
@@ -135,7 +136,6 @@ public class JbpmUtil {
             executionContext.setEventSource(taskNodeResult);
             createTimerActionResult.execute(executionContext);
         }
-        entityManager.flush();
     }
     
     public List<String> getProcessDefinitionNames() {

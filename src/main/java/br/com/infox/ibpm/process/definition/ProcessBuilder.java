@@ -21,10 +21,9 @@ import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.EntityManager;
 
-import org.hibernate.Session;
 import org.jboss.seam.Component;
-import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jbpm.context.def.VariableAccess;
@@ -49,6 +48,7 @@ import org.xml.sax.InputSource;
 
 import com.google.common.base.Strings;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.messages.InfoxMessages;
@@ -497,22 +497,24 @@ public class ProcessBuilder implements Serializable {
     }
 
     private void atualizarRaiaPooledActors(Long idProcessDefinition) {
-       Session session = ManagedJbpmContext.instance().getSession();
-       List<SwimlaneInstance> swimlaneInstances = swimlaneInstanceSearch.getSwimlaneInstancesByProcessDefinition(idProcessDefinition);
-       for (SwimlaneInstance swimlaneInstance : swimlaneInstances) {
-           String[] pooledActorIds = swimlaneInstance.getSwimlane().getPooledActorsExpression().split(",");
-           swimlaneInstance.setPooledActors(pooledActorIds);
-           session.merge(swimlaneInstance);
+       EntityManager entityManager = EntityManagerProducer.instance().getEntityManagerNotManaged();
+       try {
+           List<SwimlaneInstance> swimlaneInstances = swimlaneInstanceSearch.getSwimlaneInstancesByProcessDefinition(idProcessDefinition, entityManager);
+           for (SwimlaneInstance swimlaneInstance : swimlaneInstances) {
+               String[] pooledActorIds = swimlaneInstance.getSwimlane().getPooledActorsExpression().split(",");
+               swimlaneInstance.setPooledActors(pooledActorIds);
+           }
+           entityManager.flush();
+           entityManager.clear();
+           List<TaskInstance> taskInstances = taskInstanceDAO.getTaskInstancesOpen(idProcessDefinition, entityManager);
+           for (TaskInstance taskInstance : taskInstances) {
+               ExecutionContext executionContext = new ExecutionContext(taskInstance.getToken());
+               taskInstance.assign(executionContext);
+           }
+           entityManager.flush();
+       } finally {
+           entityManager.close();
        }
-       session.flush();
-       session.clear();
-       List<TaskInstance> taskInstances = taskInstanceDAO.getTaskInstancesOpen(idProcessDefinition);
-       for (TaskInstance taskInstance : taskInstances) {
-           ExecutionContext executionContext = new ExecutionContext(taskInstance.getToken());
-           taskInstance.assign(executionContext);
-           session.merge(taskInstance);
-       }
-       session.flush();
 	}
     
     private void atualizarTimer() throws Exception {

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
@@ -52,7 +53,11 @@ public class TaskInstanceDAO extends DAO<UsuarioTaskInstance> {
     }
     
     public List<TaskInstance> getTaskInstancesOpen(Long processDefinitionId) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        return getTaskInstancesOpen(processDefinitionId, getEntityManager());
+    }
+    
+    public List<TaskInstance> getTaskInstancesOpen(Long processDefinitionId, EntityManager entityManager) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<TaskInstance> cq = cb.createQuery(TaskInstance.class);
         Root<TaskInstance> taskInstance = cq.from(TaskInstance.class);
         Join<TaskInstance, ProcessInstance> processInstance = taskInstance.join("processInstance", JoinType.INNER);
@@ -63,7 +68,7 @@ public class TaskInstanceDAO extends DAO<UsuarioTaskInstance> {
                 cb.isNull(processInstance.<Date>get("end")),
                 cb.equal(processInstance.<ProcessDefinition>get("processDefinition").get("id"), cb.literal(processDefinitionId))
         );
-        return getEntityManager().createQuery(cq).getResultList();
+        return entityManager.createQuery(cq).getResultList();
     }
 
 }

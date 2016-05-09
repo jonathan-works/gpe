@@ -14,9 +14,14 @@ import javax.inject.Qualifier;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
 
 import br.com.infox.cdi.qualifier.BinaryDatabase;
 import br.com.infox.cdi.qualifier.ViewEntityManager;
+import br.com.infox.core.server.ApplicationServerService;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.jpa.EntityManagerImpl;
@@ -124,6 +129,25 @@ public class EntityManagerProducer {
         LOG_ENTITY_MANAGER_LOCAL.set(null);
     }
 	
+	public EntityManager getEntityManagerNotManaged() {
+	    return new EntityManagerImpl(entityManagerFactory);
+	}
+	
+	public EntityManager getEntityManagerTransactional() {
+	    TransactionManager transactionManager = ApplicationServerService.instance().getTransactionManager();
+        try {
+            Transaction transaction = transactionManager.getTransaction();
+            if (transaction == null) {
+                throw new IllegalStateException("No transaction ");
+            }
+            EntityManagerImpl entityManager = new EntityManagerImpl(entityManagerFactory);
+            transaction.registerSynchronization(entityManager);
+            return entityManager;
+        } catch (SystemException | IllegalStateException | RollbackException e) {
+            throw new IllegalStateException("Error creating entityManagerTransactional", e);
+        }
+    }
+	
 	public static EntityManager getEntityManager() {
 	    return BeanManager.INSTANCE.getReference(EntityManager.class);
 	}
@@ -135,6 +159,10 @@ public class EntityManagerProducer {
 	public static EntityManager getEntityManagerLog() {
         return BeanManager.INSTANCE.getReference(EntityManager.class, LOG_ENTITY_MANAGER);
     }
+	
+	public static EntityManagerProducer instance() {
+	    return BeanManager.INSTANCE.getReference(EntityManagerProducer.class);
+	}
 	
 	@Qualifier
 	@Retention(RetentionPolicy.RUNTIME)
