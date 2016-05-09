@@ -75,9 +75,6 @@ public class CategoriaEntregaRestService {
 		categoria.setId(categoriaEntrega.getId());
 		categoria.setCodigo(categoriaEntrega.getCodigo());
 		categoria.setDescricao(categoriaEntrega.getDescricao());
-		if(itemPai != null) {
-			categoria.setIdItemPai(itemPai.getId());
-		}
 		return categoria;
 	}
 	
@@ -86,12 +83,6 @@ public class CategoriaEntregaRestService {
 		item.setId(categoriaEntregaItem.getId());
 		item.setCodigo(categoriaEntregaItem.getCodigo());
 		item.setDescricao(categoriaEntregaItem.getDescricao());
-		if(itemPai != null) {
-			item.setIdItemPai(itemPai.getId());
-		}
-		if(categoriaEntregaItem.getCategoriaEntrega() != null) {
-			item.setIdCategoria(categoriaEntregaItem.getCategoriaEntrega().getId());
-		}
 		return item;
 	}
 	
@@ -151,15 +142,14 @@ public class CategoriaEntregaRestService {
 		
 	
 	
-	public void novaCategoria(Categoria categoria) {
-		Integer idItemPai = categoria.getIdItemPai();
+	public CategoriaEntrega novaCategoria(Categoria categoria, Integer idItemPai) {
 		if(idItemPai == null) {
 			CategoriaEntrega categoriaEntrega = new CategoriaEntrega();
 			categoriaEntrega.setCodigo(categoria.getCodigo());
 			categoriaEntrega.setDescricao(categoria.getDescricao());
 			getEntityManager().persist(categoriaEntrega);
 			getEntityManager().flush();
-			return;
+			return categoriaEntrega;
 		}
 		CategoriaEntregaItem categoriaEntregaItem = categoriaEntregaItemSearch.getEntityManager().find(CategoriaEntregaItem.class, idItemPai);
 		CategoriaEntrega categoriaEntrega = new CategoriaEntrega();
@@ -169,19 +159,17 @@ public class CategoriaEntregaRestService {
 		getEntityManager().persist(categoriaEntrega);
 		getEntityManager().flush();
 		
+		return categoriaEntrega;		
 	}
 	
-	public void novoItem(Item item) {
-		Integer idItemPai = item.getIdItemPai();
-		Integer idCategoriaPai = item.getIdCategoria();
-		
+	public CategoriaEntregaItem novoItem(Item item, Integer idItemPai, Integer idCategoria) {
 		CategoriaEntregaItem itemPai = idItemPai == null ? null : categoriaEntregaItemSearch.getEntityManager().find(CategoriaEntregaItem.class, idItemPai);
-		CategoriaEntrega categoriaPai = categoriaEntregaSearch.getEntityManager().find(CategoriaEntrega.class, idCategoriaPai);
+		CategoriaEntrega categoria = categoriaEntregaSearch.getEntityManager().find(CategoriaEntrega.class, idCategoria);
 		
 		CategoriaEntregaItem itemBanco = new CategoriaEntregaItem();
 		itemBanco.setCodigo(item.getCodigo());
 		itemBanco.setDescricao(item.getDescricao());
-		itemBanco.setCategoriaEntrega(categoriaPai);
+		itemBanco.setCategoriaEntrega(categoria);
 		getEntityManager().persist(itemBanco);
 		
 		CategoriaItemRelacionamento categoriaItemRelacionamento = new CategoriaItemRelacionamento();
@@ -189,6 +177,8 @@ public class CategoriaEntregaRestService {
 		categoriaItemRelacionamento.setItemPai(itemPai);
 		getEntityManager().persist(categoriaItemRelacionamento);
 		getEntityManager().flush();
+		
+		return itemBanco;
 	}
 	
 }

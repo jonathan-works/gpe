@@ -9,8 +9,6 @@ public class Item implements Serializable, Comparable<Item> {
 	private Integer id;
 	private String codigo;	
 	private String descricao;
-	private Integer idItemPai;
-	private Integer idCategoria;
 	
 	public Item() {
 	}
@@ -77,21 +75,5 @@ public class Item implements Serializable, Comparable<Item> {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public Integer getIdItemPai() {
-		return idItemPai;
-	}
-
-	public void setIdItemPai(Integer idItemPai) {
-		this.idItemPai = idItemPai;
-	}
-
-	public Integer getIdCategoria() {
-		return idCategoria;
-	}
-
-	public void setIdCategoria(Integer idCategoria) {
-		this.idCategoria = idCategoria;
 	}
 }

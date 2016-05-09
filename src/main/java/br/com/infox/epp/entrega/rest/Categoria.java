@@ -11,7 +11,6 @@ public class Categoria implements Serializable {
 	private Integer id;
 	private String codigo;	
 	private String descricao;
-	private Integer idItemPai;	
 	
 	private SortedSet<Item> itens = new TreeSet<>();
 
@@ -79,13 +78,5 @@ public class Categoria implements Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public Integer getIdItemPai() {
-		return idItemPai;
-	}
-
-	public void setIdItemPai(Integer idItemPai) {
-		this.idItemPai = idItemPai;
 	}
 }
