@@ -68,7 +68,7 @@
                                             </ui:repeat>
                                     ]},
                                     {label: "#{infoxMessages['ajuda.ajudaBtn']}", hideLabel:true, icon:"#{facesContext.externalContext.requestContextPath}/resources/styleSkinInfox/all/1x_web/ic_help_black_18dp.png", onClick:#{id}MenuFunctions.handleOpenAjuda},
-                                    {label: "#{infoxMessages['painel.titlePage']}", url: "/epp/Painel/list.seam", hideLabel:true, icon:"#{facesContext.externalContext.requestContextPath}/resources/styleSkinInfox/all/1x_web/ic_home_black_18dp.png"},
+                                    {label: "#{infoxMessages['painel.titlePage']}", url: "#{facesContext.externalContext.context.contextPath}/Painel/list.seam", hideLabel:true, icon:"#{facesContext.externalContext.requestContextPath}/resources/styleSkinInfox/all/1x_web/ic_home_black_18dp.png"},
                                     {label: "#{usuarioLogado} &lt;#{authenticator.usuarioPerfilAtualSingle}&gt;", iconAlign:"right", icon:"#{facesContext.externalContext.requestContextPath}/resources/styleSkinInfox/all/1x_web/ic_person_black_18dp.png", "items":[
                     					{"label":"Perfis", showChildren:true, items:[
                                               <ui:repeat var="selItem" value="#{authenticator.usuarioPerfilListItems}">
@@ -83,7 +83,7 @@
                     					]}
                     					</c:if>
                     				]},	
-                                    {"label": "#{infoxMessages['menu.logout']}","url": "/epp", hideLabel:true, icon:"#{facesContext.externalContext.requestContextPath}/resources/styleSkinInfox/all/1x_web/ic_power_settings_new_black_18dp.png"}
+                                    {"label": "#{infoxMessages['menu.logout']}",url: "#{facesContext.externalContext.context.contextPath}", hideLabel:true, icon:"#{facesContext.externalContext.requestContextPath}/resources/styleSkinInfox/all/1x_web/ic_power_settings_new_black_18dp.png"}
                     				]
                          }
                      }),
