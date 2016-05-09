@@ -35,7 +35,7 @@ public class CategoriaEntregaService {
 		}
 		
 		CategoriaEntregaItem categoriaEntregaItem = categoriaEntregaItemSearch.getCategoriaEntregaItemByCodigo(codigoItemPai);
-		for(CategoriaItemRelacionamento item : categoriaEntregaItem.getItemsFilhos()) {
+		for(CategoriaItemRelacionamento item : categoriaEntregaItem.getItensFilhos()) {
 			retorno.add(item.getItemFilho());
 		}
 		return retorno;

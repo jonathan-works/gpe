@@ -18,7 +18,6 @@ import br.com.infox.epp.entrega.CategoriaEntregaSearch;
 import br.com.infox.epp.entrega.CategoriaEntregaService;
 import br.com.infox.epp.entrega.entity.CategoriaEntrega;
 import br.com.infox.epp.entrega.entity.CategoriaEntregaItem;
-import br.com.infox.epp.entrega.entity.CategoriaItemRelacionamento;
 
 @Stateless
 public class CategoriaEntregaRestService {
@@ -46,43 +45,63 @@ public class CategoriaEntregaRestService {
 		}
 	}
 	
-	private void adicionarItens(Map<CategoriaEntrega, Categoria> mapaCategorias, Collection<CategoriaEntregaItem> itens, CategoriaEntregaItem itemPai) {
+	private void adicionarItens(Map<CategoriaEntrega, Categoria> mapaCategorias, Collection<CategoriaEntregaItem> itens) {
 		for(CategoriaEntregaItem categoriaEntregaItemFilho : itens) {
 			CategoriaEntrega categoriaEntrega = categoriaEntregaItemFilho.getCategoriaEntrega();
 			Categoria categoria = mapaCategorias.get(categoriaEntrega);
 			if(categoria == null) {
-				categoria = toCategoria(categoriaEntrega, itemPai);
+				categoria = toCategoria(categoriaEntrega);
 				mapaCategorias.put(categoriaEntrega, categoria);
 			}
 			
-			Item item = toItem(categoriaEntregaItemFilho, itemPai);
+			Item item = toItem(categoriaEntregaItemFilho);
 			categoria.getItens().add(item);
 		}
 	}
 	
-	private void adicionarCategorias(Map<CategoriaEntrega, Categoria> mapaCategorias, Collection<CategoriaEntrega> categorias, CategoriaEntregaItem itemPai) {
+	private void adicionarCategorias(Map<CategoriaEntrega, Categoria> mapaCategorias, Collection<CategoriaEntrega> categorias) {
 		for(CategoriaEntrega categoriaFilha : categorias) {
 			Categoria categoria = mapaCategorias.get(categoriaFilha);
 			if(categoria == null) {
-				categoria = toCategoria(categoriaFilha, itemPai);
+				categoria = toCategoria(categoriaFilha);
 				mapaCategorias.put(categoriaFilha, categoria);
 			}
 		}
 	}
 	
-	private Categoria toCategoria(CategoriaEntrega categoriaEntrega, CategoriaEntregaItem itemPai) {
+	private Categoria toCategoria(CategoriaEntrega categoriaEntrega) {
 		Categoria categoria = new Categoria();
 		categoria.setCodigo(categoriaEntrega.getCodigo());
 		categoria.setDescricao(categoriaEntrega.getDescricao());
 		return categoria;
 	}
 	
-	private Item toItem(CategoriaEntregaItem categoriaEntregaItem, CategoriaEntregaItem itemPai) {
+	private Item toItem(CategoriaEntregaItem categoriaEntregaItem) {
 		Item item = new Item();
 		item.setCodigo(categoriaEntregaItem.getCodigo());
 		item.setDescricao(categoriaEntregaItem.getDescricao());
 		return item;
 	}
+	
+	public Categoria findByCodigo(String codigo, String codigoItemPai) {
+		CategoriaEntrega categoria = categoriaEntregaSearch.getCategoriaEntregaByCodigo(codigo);
+		Collection<CategoriaEntregaItem> itens = null;
+		if(codigoItemPai == null) {
+			itens = categoria.getItemsFilhos();
+		}
+		else {
+			itens = categoriaEntregaItemSearch.getCategoriaEntregaItemByCodigoPaiAndCodigoCategoria(codigoItemPai, codigo);
+		}
+		
+		SortedMap<CategoriaEntrega, Categoria> mapaCategorias = new TreeMap<>(new ComparadorCategoriaEntrega());
+		adicionarItens(mapaCategorias, itens);
+		
+		List<Categoria> categorias = new ArrayList<>(mapaCategorias.values());
+		if(categorias.isEmpty()) {
+			return toCategoria(categoria);
+		}
+		return categorias.iterator().next();
+	}	
 	
 	/**
 	 * Lista todas as categorias
@@ -103,15 +122,15 @@ public class CategoriaEntregaRestService {
 		return toCategorias(categoriasRoot);
 	}
 
-	private List<Categoria> toCategorias(List<CategoriaEntrega> categorias) {
+	private List<Categoria> toCategorias(Collection<CategoriaEntrega> categorias) {
 		List<CategoriaEntregaItem> itens = new ArrayList<>();
 		for(CategoriaEntrega categoria : categorias) {
 			itens.addAll(categoria.getItemsFilhos());
 		}
 		SortedMap<CategoriaEntrega, Categoria> mapaCategorias = new TreeMap<>(new ComparadorCategoriaEntrega());
 		
-		adicionarCategorias(mapaCategorias, categorias, null);
-		adicionarItens(mapaCategorias, itens, null);
+		adicionarCategorias(mapaCategorias, categorias);
+		adicionarItens(mapaCategorias, itens);
 		
 		return new ArrayList<>(mapaCategorias.values());
 	}
@@ -135,9 +154,9 @@ public class CategoriaEntregaRestService {
 		SortedMap<CategoriaEntrega, Categoria> mapaCategorias = new TreeMap<>(new ComparadorCategoriaEntrega());
 		
 		//Adiciona categorias e itens filhos do item informado
-		adicionarItens(mapaCategorias, categoriaEntregaItens, categoriaEntregaItem);
+		adicionarItens(mapaCategorias, categoriaEntregaItens);
 		//Adiciona as categorias filhas da categoria do item
-		adicionarCategorias(mapaCategorias, categoriaEntregaItem.getCategoriaEntrega().getCategoriasFilhas(), categoriaEntregaItem);
+		adicionarCategorias(mapaCategorias, categoriaEntregaItem.getCategoriaEntrega().getCategoriasFilhas());
 		
 		return new ArrayList<>(mapaCategorias.values());
 	}
@@ -168,42 +187,10 @@ public class CategoriaEntregaRestService {
 		
 		return categoriaEntrega;		
 	}
-	
-	public CategoriaEntregaItem novoItem(Item item, String codigoItemPai, String codigoCategoria) {
-		CategoriaEntrega categoria = categoriaEntregaSearch.getCategoriaEntregaByCodigo(codigoCategoria);
-		Integer idItemPai = codigoItemPai == null ? null : categoriaEntregaItemSearch.getCategoriaEntregaItemByCodigo(codigoItemPai).getId();
-		return novoItem(item, idItemPai, categoria.getId());		
-	}
-	
-	public CategoriaEntregaItem novoItem(Item item, Integer idItemPai, Integer idCategoria) {
-		CategoriaEntregaItem itemPai = idItemPai == null ? null : getEntityManager().find(CategoriaEntregaItem.class, idItemPai);
-		CategoriaEntrega categoria = getEntityManager().find(CategoriaEntrega.class, idCategoria);
 		
-		CategoriaEntregaItem itemBanco = new CategoriaEntregaItem();
-		itemBanco.setCodigo(item.getCodigo());
-		itemBanco.setDescricao(item.getDescricao());
-		itemBanco.setCategoriaEntrega(categoria);
-		getEntityManager().persist(itemBanco);
-		
-		CategoriaItemRelacionamento categoriaItemRelacionamento = new CategoriaItemRelacionamento();
-		categoriaItemRelacionamento.setItemFilho(itemBanco);
-		categoriaItemRelacionamento.setItemPai(itemPai);
-		getEntityManager().persist(categoriaItemRelacionamento);
-		getEntityManager().flush();
-		
-		return itemBanco;
-	}
-	
-	public void removerCategoria(String codigoCategoria) {
+	public void remover(String codigoCategoria) {
 		CategoriaEntrega categoria = categoriaEntregaSearch.getCategoriaEntregaByCodigo(codigoCategoria);
 		getEntityManager().remove(categoria);
 		getEntityManager().flush();
-	}
-	
-	public void removerItem(String codigoItem) {
-		CategoriaEntregaItem item = categoriaEntregaItemSearch.getCategoriaEntregaItemByCodigo(codigoItem);
-		getEntityManager().remove(item);
-		getEntityManager().flush();
-		
-	}
+	}	
 }

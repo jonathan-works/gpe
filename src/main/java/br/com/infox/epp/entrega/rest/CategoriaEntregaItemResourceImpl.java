@@ -1,9 +1,9 @@
 package br.com.infox.epp.entrega.rest;
 
 import java.net.URI;
+import java.util.List;
 
 import javax.inject.Inject;
-import javax.ws.rs.POST;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -14,16 +14,21 @@ import br.com.infox.epp.entrega.entity.CategoriaEntregaItem;
 public class CategoriaEntregaItemResourceImpl implements CategoriaEntregaItemResource {
 
 	@Inject
-	private CategoriaEntregaRestService categoriaEntregaRestService;
+	private CategoriaEntregaItemRestService categoriaEntregaItemRestService;
 	@Context
 	private UriInfo uriInfo;
 	private String codigoCategoria;
 	private String codigoItemPai;
+
+	@Override
+	public List<Item> list() {
+		return categoriaEntregaItemRestService.getFilhos(codigoItemPai, codigoCategoria);
+	}
 	
-	@POST
+	@Override
 	public Response novoItem(Item item)
 	{
-		CategoriaEntregaItem itemBanco = categoriaEntregaRestService.novoItem(item, codigoItemPai, codigoCategoria);
+		CategoriaEntregaItem itemBanco = categoriaEntregaItemRestService.novo(item, codigoItemPai, codigoCategoria);
 		URI location = uriInfo.getAbsolutePathBuilder().path(itemBanco.getCodigo()).build();
 		return Response.created(location).build();
 	}
@@ -49,6 +54,16 @@ public class CategoriaEntregaItemResourceImpl implements CategoriaEntregaItemRes
 		itemResource.setCodigoItemPai(codigoItemPai);
 		itemResource.setCodigoCategoria(codigoCategoria);
 		return itemResource;
+	}
+
+	@Override
+	public Item get(String codigo) {
+		return categoriaEntregaItemRestService.findByCodigo(codigo);
+	}
+
+	@Override
+	public void remove(String codigo) {
+		categoriaEntregaItemRestService.remover(codigo, codigoItemPai);
 	}
 
 }

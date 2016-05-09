@@ -40,4 +40,14 @@ public class CategoriaEntregaResourceImpl implements CategoriaEntregaResource {
 		return itemResource;
 	}
 
+	@Override
+	public Categoria get(String codigo) {
+		return categoriaEntregaRestService.findByCodigo(codigo, codigoItemPai);
+	}
+
+	@Override
+	public void remove(String codigo) {
+		categoriaEntregaRestService.remover(codigo);
+	}
+
 }

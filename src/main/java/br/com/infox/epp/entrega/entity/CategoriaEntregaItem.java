@@ -48,10 +48,10 @@ public class CategoriaEntregaItem implements Serializable {
     private CategoriaEntrega categoriaEntrega;
     
     @OneToMany(mappedBy="itemFilho", fetch=FetchType.LAZY)
-    private Set<CategoriaItemRelacionamento> itemsPais;
+    private Set<CategoriaItemRelacionamento> itensPais;
     
     @OneToMany(mappedBy="itemPai", fetch=FetchType.LAZY)
-    private Set<CategoriaItemRelacionamento> itemsFilhos;
+    private Set<CategoriaItemRelacionamento> itensFilhos;
 
 	public String getCodigo() {
 		return codigo;
@@ -86,13 +86,13 @@ public class CategoriaEntregaItem implements Serializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Set<CategoriaItemRelacionamento> getItemsPais() {
-		return Collections.unmodifiableSet(itemsPais);
+	public Set<CategoriaItemRelacionamento> getItensPais() {
+		return Collections.unmodifiableSet(itensPais);
 	}
 
 	@SuppressWarnings("unchecked")
-	public Set<CategoriaItemRelacionamento> getItemsFilhos() {
-		return Collections.unmodifiableSet(itemsFilhos);
+	public Set<CategoriaItemRelacionamento> getItensFilhos() {
+		return Collections.unmodifiableSet(itensFilhos);
 	}
 
 	@Override
