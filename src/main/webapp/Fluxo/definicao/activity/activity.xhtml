@@ -11,8 +11,19 @@
     	<h:form>
     		<i:selectOneMenu id="loopType"  value="#{nodeFitter.nodeHandler.activityNodeType}"
         		items="#{nodeFitter.nodeHandler.activityNodeTypes}" itemLabel="#{item.label}" label="#{infoxMessages['process.def.activity.loop.type']}" 
-        		hideNoSelectionLabel="true"	ajax="true" render="@(.activityBehaviorPanel)" execute="@this" onstart="infox.showLoading();" 
+        		hideNoSelectionLabel="true"	ajax="true" render="@(.activityBehaviorPanel) @form" execute="@this" onstart="infox.showLoading();" 
         		oncomplete="infox.hideLoading();" listener="#{nodeFitter.nodeHandler.onChangeActivityNodeType}"/>
+        		
+        	<i:help id="variaveisToolTip" rendered="#{not nodeFitter.nodeHandler.activityNodeType.none}" 
+        		style="display:inline-block;">
+        		<div><h:outputText value="Variáveis:" /></div>
+				<ui:repeat var="variavel" value="#{nodeFitter.nodeHandler.activityNodeType.variables}">
+					<div>
+						<h:outputText value="#{variavel.key} - " style="font-weight: bold;"/>
+						<h:outputText value="#{variavel.value}"/>
+					</div>
+				</ui:repeat>
+        	</i:help>
     	</h:form>
         
         <p:outputPanel styleClass="activityBehaviorPanel">
