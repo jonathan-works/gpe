@@ -2,7 +2,6 @@ package br.com.infox.epp.entrega;
 
 import java.util.List;
 
-import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -13,7 +12,6 @@ import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.entrega.entity.CategoriaEntrega;
 import br.com.infox.epp.entrega.entity.CategoriaEntrega_;
 
-@Stateless
 public class CategoriaEntregaSearch {
 
 	public EntityManager getEntityManager() {

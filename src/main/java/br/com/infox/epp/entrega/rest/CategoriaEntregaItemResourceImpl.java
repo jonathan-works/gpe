@@ -55,7 +55,7 @@ public class CategoriaEntregaItemResourceImpl implements CategoriaEntregaItemRes
 	public CategoriaEntregaItemResource getItem(String codigoItemPai) {
 		CategoriaEntregaItemResourceImpl itemResource = BeanManager.INSTANCE.getReference(CategoriaEntregaItemResourceImpl.class);
 		itemResource.setCodigoItemPai(codigoItemPai);
-		itemResource.setCodigoCategoria(codigoCategoria);
+		itemResource.setCodigoCategoria(null);
 		return itemResource;
 	}
 

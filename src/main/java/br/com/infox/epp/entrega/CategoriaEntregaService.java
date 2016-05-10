@@ -1,5 +1,6 @@
 package br.com.infox.epp.entrega;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -10,57 +11,78 @@ import javax.persistence.NoResultException;
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.entrega.entity.CategoriaEntrega;
 import br.com.infox.epp.entrega.entity.CategoriaEntregaItem;
-import br.com.infox.epp.entrega.rest.Categoria;
 import br.com.infox.seam.exception.BusinessException;
 
 @Stateless
 public class CategoriaEntregaService {
-	
+
 	@Inject
 	private CategoriaEntregaSearch categoriaEntregaSearch;
 	@Inject
 	private CategoriaEntregaItemSearch categoriaEntregaItemSearch;
-	
+
 	private EntityManager getEntityManager() {
 		return EntityManagerProducer.getEntityManager();
 	}
-	
-	public List<CategoriaEntrega> getCategoriasEntregaRoot() {
-		return categoriaEntregaSearch.getCategoriaEntregaRoot();
+
+	private CategoriaEntregaItem getItem(String codigo) {
+		try {
+			return categoriaEntregaItemSearch.getCategoriaEntregaItemByCodigo(codigo);
+		} catch (NoResultException e) {
+			throw new BusinessException("Item com código " + codigo + " não encontrado");
+		}
 	}
-	
-	private CategoriaEntrega getCategoria(String codigo) {
+
+	public CategoriaEntrega getCategoria(String codigo) {
 		try {
 			return categoriaEntregaSearch.getCategoriaEntregaByCodigo(codigo);
-		}
-		catch(NoResultException e) {
+		} catch (NoResultException e) {
 			throw new BusinessException("Categoria com código " + codigo + " não encontrada");
 		}
 	}
-	
+
 	public void atualizar(String codigoCategoria, String novaDescricao) {
 		CategoriaEntrega categoria = getCategoria(codigoCategoria);
 		categoria.setDescricao(novaDescricao);
 		getEntityManager().flush();
-	}	
-	
-	public CategoriaEntrega novaCategoria(Categoria categoria, Integer idItemPai) {
-		if(idItemPai == null) {
-			CategoriaEntrega categoriaEntrega = new CategoriaEntrega();
-			categoriaEntrega.setCodigo(categoria.getCodigo());
-			categoriaEntrega.setDescricao(categoria.getDescricao());
-			getEntityManager().persist(categoriaEntrega);
-			getEntityManager().flush();
-			return categoriaEntrega;
+	}
+
+	public void novaCategoria(CategoriaEntrega categoria, String codigoItemPai) {
+		if (codigoItemPai != null) {
+			CategoriaEntregaItem itemPai = getItem(codigoItemPai);
+			categoria.setCategoriaEntregaPai(itemPai.getCategoriaEntrega());
 		}
-		CategoriaEntregaItem categoriaEntregaItem = categoriaEntregaItemSearch.getEntityManager().find(CategoriaEntregaItem.class, idItemPai);
-		CategoriaEntrega categoriaEntrega = new CategoriaEntrega();
-		categoriaEntrega.setCodigo(categoria.getCodigo());
-		categoriaEntrega.setDescricao(categoria.getDescricao());
-		categoriaEntrega.setCategoriaEntregaPai(categoriaEntregaItem.getCategoriaEntrega());
-		getEntityManager().persist(categoriaEntrega);
+
+		getEntityManager().persist(categoria);
 		getEntityManager().flush();
-		
-		return categoriaEntrega;		
-	}	
+	}
+
+	/**
+	 * Lista as categorias do primeiro nível
+	 */
+	public List<CategoriaEntrega> getCategoriasRoot() {
+		return categoriaEntregaSearch.getCategoriaEntregaRoot();
+	}
+
+	public void remover(String codigoCategoria) {
+		CategoriaEntrega categoria = categoriaEntregaSearch.getCategoriaEntregaByCodigo(codigoCategoria);
+		getEntityManager().remove(categoria);
+		getEntityManager().flush();
+	}
+
+	public List<CategoriaEntrega> getCategoriasFilhas(String codigoItemPai) {
+		if (codigoItemPai == null) {
+			return getCategoriasRoot();
+		}
+		CategoriaEntregaItem itemPai = getItem(codigoItemPai);
+
+		return new ArrayList<>(itemPai.getCategoriaEntrega().getCategoriasFilhas());
+	}
+
+	/**
+	 * Lista todas as categorias
+	 */
+	public List<CategoriaEntrega> list() {
+		return categoriaEntregaSearch.list();
+	}
 }

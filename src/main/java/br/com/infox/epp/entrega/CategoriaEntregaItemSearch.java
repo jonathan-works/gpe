@@ -1,8 +1,8 @@
 package br.com.infox.epp.entrega;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -19,26 +19,47 @@ import br.com.infox.epp.entrega.entity.CategoriaEntrega_;
 import br.com.infox.epp.entrega.entity.CategoriaItemRelacionamento;
 import br.com.infox.epp.entrega.entity.CategoriaItemRelacionamento_;
 
-@Stateless
 public class CategoriaEntregaItemSearch {
 
 	public EntityManager getEntityManager() {
 		return EntityManagerProducer.getEntityManager();
 	}
 	
-	public List<CategoriaEntregaItem> getCategoriaEntregaItemByCodigoPaiAndCodigoCategoria(String codigoItemPai, String codigoCategoria) {
+	protected List<CategoriaEntregaItem> findWithFilters(String codigoItemPai, String codigoCategoria) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<CategoriaEntregaItem> cq = cb.createQuery(CategoriaEntregaItem.class);
 		Root<CategoriaEntregaItem> categoriaEntregaItem = cq.from(CategoriaEntregaItem.class);
-		Join<CategoriaEntregaItem, CategoriaItemRelacionamento> relacionamentosPais = categoriaEntregaItem.join(CategoriaEntregaItem_.itensPais);
-		Path<CategoriaEntregaItem> itensPais = relacionamentosPais.join(CategoriaItemRelacionamento_.itemPai);
-		Path<CategoriaEntrega> categoria = categoriaEntregaItem.join(CategoriaEntregaItem_.categoriaEntrega);
 		
-		Predicate codigoPaiIgual = cb.equal(itensPais.get(CategoriaEntregaItem_.codigo), codigoItemPai);
-		Predicate codigoCategoriaIgual = cb.equal(categoria.get(CategoriaEntrega_.codigo), codigoCategoria);
+		List<Predicate> where = new ArrayList<>();
 		
-		cq = cq.select(categoriaEntregaItem).where(codigoPaiIgual, codigoCategoriaIgual);
+		if(codigoItemPai != null) {
+			Join<CategoriaEntregaItem, CategoriaItemRelacionamento> relacionamentosPais = categoriaEntregaItem.join(CategoriaEntregaItem_.itensPais);
+			Path<CategoriaEntregaItem> itensPais = relacionamentosPais.join(CategoriaItemRelacionamento_.itemPai);			
+			Predicate codigoPaiIgual = cb.equal(itensPais.get(CategoriaEntregaItem_.codigo), codigoItemPai);
+			where.add(codigoPaiIgual);
+		}
+		
+		if(codigoCategoria != null) {
+			Path<CategoriaEntrega> categoria = categoriaEntregaItem.join(CategoriaEntregaItem_.categoriaEntrega);			
+			Predicate codigoCategoriaIgual = cb.equal(categoria.get(CategoriaEntrega_.codigo), codigoCategoria);
+			where.add(codigoCategoriaIgual);
+		}
+		
+		cq = cq.select(categoriaEntregaItem).where(where.toArray(new Predicate[0]));
 		return getEntityManager().createQuery(cq).getResultList();
+		
+	}
+	
+	public List<CategoriaEntregaItem> getCategoriaEntregaItemByCodigoCategoria(String codigoCategoria) {
+		return findWithFilters(null, codigoCategoria);		
+	}
+	
+	public List<CategoriaEntregaItem> getCategoriaEntregaItemByCodigoPai(String codigoItemPai) {
+		return findWithFilters(codigoItemPai, null);		
+	}
+	
+	public List<CategoriaEntregaItem> getCategoriaEntregaItemByCodigoPaiAndCodigoCategoria(String codigoItemPai, String codigoCategoria) {
+		return findWithFilters(codigoItemPai, codigoCategoria);
 	}
 	
 	public CategoriaEntregaItem getCategoriaEntregaItemByCodigo(String codigo) {
