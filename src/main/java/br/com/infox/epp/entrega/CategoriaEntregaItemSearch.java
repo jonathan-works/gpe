@@ -50,6 +50,28 @@ public class CategoriaEntregaItemSearch {
 		return getEntityManager().createQuery(cq).getSingleResult();
 	}
 	
+	public List<CategoriaEntregaItem> getCategoriaEntregaItemByDescricaoLike(String descricao) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<CategoriaEntregaItem> cq = cb.createQuery(CategoriaEntregaItem.class);
+		Root<CategoriaEntregaItem> categoriaEntregaItem = cq.from(CategoriaEntregaItem.class);
+		Predicate descricaoLike = cb.like(cb.lower(categoriaEntregaItem.get(CategoriaEntregaItem_.descricao)), "%" + descricao + "%");
+		cq = cq.select(categoriaEntregaItem).where(descricaoLike);
+		return getEntityManager().createQuery(cq).getResultList();
+	}
+	
+	public List<CategoriaEntregaItem> getCategoriaEntregaItemByCodigoCategoriaAndDescricaoLike(String codigoCategoria, String descricao) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<CategoriaEntregaItem> cq = cb.createQuery(CategoriaEntregaItem.class);
+		Root<CategoriaEntregaItem> categoriaEntregaItem = cq.from(CategoriaEntregaItem.class);
+		Path<CategoriaEntrega> categoria = categoriaEntregaItem.join(CategoriaEntregaItem_.categoriaEntrega);
+		
+		Predicate codigoCategoriaIgual = cb.equal(categoria.get(CategoriaEntrega_.codigo), codigoCategoria);
+		Predicate descricaoLike = cb.like(cb.lower(categoriaEntregaItem.get(CategoriaEntregaItem_.descricao)), "%" + descricao + "%");
+		
+		cq = cq.select(categoriaEntregaItem).where(codigoCategoriaIgual, descricaoLike);
+		return getEntityManager().createQuery(cq).getResultList();
+	}
+	
 	public List<CategoriaEntregaItem> list() {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<CategoriaEntregaItem> cq = cb.createQuery(CategoriaEntregaItem.class);

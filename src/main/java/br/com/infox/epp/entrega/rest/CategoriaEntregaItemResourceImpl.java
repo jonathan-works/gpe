@@ -21,7 +21,10 @@ public class CategoriaEntregaItemResourceImpl implements CategoriaEntregaItemRes
 	private String codigoItemPai;
 
 	@Override
-	public List<Item> list() {
+	public List<Item> list(String nomeLike) {
+		if(nomeLike != null) {
+			return categoriaEntregaItemRestService.localizarItensCategoriaContendoDescricao(codigoCategoria, nomeLike);			
+		}
 		return categoriaEntregaItemRestService.getFilhos(codigoItemPai, codigoCategoria);
 	}
 	

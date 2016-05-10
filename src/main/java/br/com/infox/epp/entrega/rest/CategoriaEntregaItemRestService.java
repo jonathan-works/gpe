@@ -3,6 +3,8 @@ package br.com.infox.epp.entrega.rest;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -48,10 +50,12 @@ public class CategoriaEntregaItemRestService {
 		if(itens == null) {
 			return null;
 		}
-		List<Item> retorno = new ArrayList<>();
+		SortedSet<Item> setItens = new TreeSet<>();
 		for(CategoriaEntregaItem item : itens) {
-			retorno.add(toItem(item));
+			setItens.add(toItem(item));
 		}
+		List<Item> retorno = new ArrayList<>();
+		retorno.addAll(setItens);
 		return retorno;
 	}
 	
@@ -129,5 +133,8 @@ public class CategoriaEntregaItemRestService {
 		categoriaEntregaItemService.relacionarItens(codigoItemPai, codigoItem);
 	}
 	
-
+	public List<Item> localizarItensCategoriaContendoDescricao(String codigoCategoria, String descricao) {
+		return toList(categoriaEntregaItemService.localizarItensCategoriaContendoDescricao(codigoCategoria, descricao));
+	}
+	
 }

@@ -75,4 +75,11 @@ public class CategoriaEntregaItemService {
 		
 	}
 	
+	public List<CategoriaEntregaItem> localizarItensCategoriaContendoDescricao(String codigoCategoria, String descricao) {
+		if(codigoCategoria == null) {
+			return categoriaEntregaItemSearch.getCategoriaEntregaItemByDescricaoLike(descricao);
+		}
+		return categoriaEntregaItemSearch.getCategoriaEntregaItemByCodigoCategoriaAndDescricaoLike(codigoCategoria, descricao);
+	}
+	
 }
