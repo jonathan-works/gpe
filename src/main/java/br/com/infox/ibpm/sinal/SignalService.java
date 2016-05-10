@@ -77,10 +77,8 @@ public class SignalService {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void dispatch(String eventType, ExecutionContext executionContext) {
         ProcessInstance currentProcessInstance = executionContext.getProcessInstance().getRoot();
-        
         eventType = Event.getListenerEventType(eventType);
-        startStartStateListeningImpl(eventType);
-        
+        startStartStateListeningImpl(eventType, getSignalParams());
         endSubprocessListening(currentProcessInstance, eventType);
         movimentarTarefasListener(currentProcessInstance.getId(), eventType);        	        	
     }
@@ -112,19 +110,12 @@ public class SignalService {
         return startStartStateListeningImpl(eventType, params);    	
     }
     
-    private List<ProcessInstance> startStartStateListeningImpl(String eventType) {
-    	return startStartStateListening(eventType, null);
-    }
-    
     private List<ProcessInstance> startStartStateListeningImpl(String eventType, List<SignalParam> params) {
         List<SignalNodeBean> signalNodes = getStartStateListening(eventType);
         List<ProcessInstance> processInstances = new ArrayList<>();
         for (SignalNodeBean signalNodeBean : signalNodes) {
             if (signalNodeBean.canExecute()) {
                 ProcessDefinition processDefinition = getEntityManager().find(ProcessDefinition.class, signalNodeBean.getId());
-                if(params == null) {
-                	params = getSignalParams();
-                }
                 ProcessInstance newProcessInstance = processoManager.startJbpmProcess(processDefinition.getName(), signalNodeBean.getListenerConfiguration().getTransitionKey(), params);
                 processInstances.add(newProcessInstance);
             }
@@ -147,7 +138,7 @@ public class SignalService {
             return Collections.emptyList();
         } else {
             DispatcherConfiguration dispatcherConfiguration = DispatcherConfiguration.fromJson(event.getConfiguration());
-            return dispatcherConfiguration.getSignalParams() == null ? Collections.<SignalParam>emptyList() : dispatcherConfiguration.getSignalParams() ;
+            return dispatcherConfiguration.getSignalParams() == null ? Collections.<SignalParam>emptyList() : dispatcherConfiguration.getSignalParams();
         }
     }
 
