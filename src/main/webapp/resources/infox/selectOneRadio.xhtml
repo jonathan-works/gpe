@@ -11,6 +11,7 @@
     	<composite:attribute name="id"/>
     	<composite:attribute name="rendered" default="true"/>
     	<composite:attribute name="label" />
+    	<composite:attribute name="help" />
     	<composite:attribute name="value" type="java.lang.Object"/>
     	<composite:attribute name="items"  type="java.lang.Object"/>
     	<composite:attribute name="itemLabel" default="#{item}" />
@@ -49,6 +50,8 @@
         		<div id="#{cc.attrs.id}LabelDiv" class="property-field-edit-name">
 	        		<h:outputLabel id="#{cc.attrs.id}Label" for="#{cc.attrs.id}Input">
 	        			<h:outputText value="#{cc.attrs.label}" rendered="#{not empty cc.attrs.label}"/>
+	        			<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" 
+        						title="#{cc.attrs.help}" style="vertical-align: middle;" rendered="#{not empty cc.attrs.help}"/>
 	        			<composite:renderFacet name="label" />
 	        		</h:outputLabel>
 	        		<h:outputText styleClass="required" rendered="#{cc.attrs.required}" value="*" />

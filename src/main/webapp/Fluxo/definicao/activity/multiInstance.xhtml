@@ -11,42 +11,19 @@
     
     	<i:inputText id="loopCardinalityExpression" label="#{infoxMessages['process.def.activity.loop.cardinality']}" 
         	value="#{activityBehavior.loopCardinalityExpression}" ajax="true" render="@form"
-        	validatorId="javax.faces.elValidator">
-        	<f:facet name="label">
-        		<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" 
-        			title="#{infoxMessages['process.def.activity.loop.cardinality.help']}" 
-        			style="vertical-align: middle;"/>
-        	</f:facet>
-        </i:inputText>
+        	validatorId="javax.faces.elValidator" help="#{infoxMessages['process.def.activity.loop.cardinality.help']}" />
         	
        	<i:inputText id="loopDataInputExpression" label="#{infoxMessages['process.def.activity.loop.dataInput']}" 
         	value="#{activityBehavior.loopDataInputExpression}" ajax="true" render="@form"
-        	validatorId="javax.faces.elValidator">
-        	<f:facet name="label">
-        		<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" 
-        			title="#{infoxMessages['process.def.activity.loop.dataInput.help']}" 
-        			style="vertical-align: middle;"/>
-        	</f:facet>
-        </i:inputText>
+        	validatorId="javax.faces.elValidator" help="#{infoxMessages['process.def.activity.loop.dataInput.help']}" />
         
         <i:inputText id="nomeVariavelInputDataItem" label="#{infoxMessages['process.def.activity.loop.inputDataItem']}" 
-        	value="#{activityBehavior.inputDataItem}" ajax="true" render="@form">
-        	<f:facet name="label">
-        		<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" 
-        			title="#{infoxMessages['process.def.activity.loop.inputDataItem.help']}" 
-        			style="vertical-align: middle;"/>
-        	</f:facet>
-        </i:inputText>
+        	value="#{activityBehavior.inputDataItem}" ajax="true" render="@form" 
+        	help="#{infoxMessages['process.def.activity.loop.inputDataItem.help']}" />
         	
         <i:inputText id="completionConditionExpression" label="#{infoxMessages['process.def.activity.loop.completionCondition']}" 
         	value="#{activityBehavior.completionConditionExpression}" ajax="true" render="@form"
-        	validatorId="javax.faces.elValidator">
-        	<f:facet name="label">
-        		<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" 
-        			title="#{infoxMessages['process.def.activity.loop.completionCondition.help']}" 
-        			style="vertical-align: middle;"/>
-        	</f:facet>
-        </i:inputText>
+        	validatorId="javax.faces.elValidator" help="#{infoxMessages['process.def.activity.loop.completionCondition.help']}" />
         
         <i:selectOneMenu id="eventBehavior"  value="#{activityBehavior.eventBehavior}"
         		items="#{nodeFitter.nodeHandler.eventBehaviors}" label="#{infoxMessages['process.def.activity.loop.behavior']}" 

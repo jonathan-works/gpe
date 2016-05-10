@@ -12,26 +12,13 @@
     	<composite:attribute name="rendered" default="true"/>
     	<composite:attribute name="label" />
     	<composite:attribute name="help" />
-    	<composite:attribute name="value" type="java.lang.Boolean"/>
-    	<composite:attribute name="disabled" default="false"/>
-    	<composite:attribute name="styleClass"/>
-    	<composite:attribute name="onclick" />
     	<composite:attribute name="required" default="false" />
-    	
-    	<!-- Ajax Attributes -->
-    	<composite:attribute name="ajax" default="false" />
-    	<composite:attribute name="render" default="@this" />
-    	<composite:attribute name="execute" default="@this" />
-    	<composite:attribute name="listener" method-signature="void action" />
-    	<composite:attribute name="immediate" default="false" />
-    	<composite:attribute name="onstart" />
-    	<composite:attribute name="oncomplete" />
     	
     	<composite:facet name="label"/>
     </composite:interface>
 	
     <composite:implementation>
-		<p:outputPanel id="#{cc.attrs.id}" styleClass="decoration-div sel-bool-chk-div" rendered="#{cc.attrs.rendered}">
+		<p:outputPanel id="#{cc.attrs.id}" styleClass="decoration-div inputText-div" rendered="#{cc.attrs.rendered}" >
 			<script type="text/javascript">
 				var id = "#{cc.attrs.id}";
 				var errorClass = $('.' + id + 'ErrorClass');
@@ -53,21 +40,8 @@
 	        		<h:outputText styleClass="required" rendered="#{cc.attrs.required}" value="*" />
 	        		<h:message for="#{cc.attrs.id}Input" styleClass="property-error property-msg #{cc.attrs.id}ErrorClass"/>
         		</div>
-        		<div class="property-field-edit-value #{cc.attrs.id}DivClass">
-	        		<h:selectBooleanCheckbox id="#{cc.attrs.id}Input" styleClass="checkbox #{cc.attrs.styleClass}"
-	      				value="#{cc.attrs.value}" required="#{cc.attrs.required}" disabled="#{cc.attrs.disabled}"
-	      				onclick="#{cc.attrs.onclick}">
-	      				<c:if test="#{cc.attrs.ajax}">
-					    	<c:if test="#{empty cc.getValueExpression('listener')}">
-						    	<p:ajax event="change" process="#{cc.attrs.execute}" update="#{cc.attrs.render}" immediate="#{cc.attrs.immediate}" 
-						    		onstart="#{cc.attrs.onstart}" oncomplete="#{cc.attrs.oncomplete}"/>
-					    	</c:if>
-					    	<c:if test="#{not empty cc.getValueExpression('listener')}">
-						    	<p:ajax event="change" process="#{cc.attrs.execute}" update="#{cc.attrs.render}" immediate="#{cc.attrs.immediate}" 
-						    		onstart="#{cc.attrs.onstart}" oncomplete="#{cc.attrs.oncomplete}" listener="#{cc.attrs.listener}"/>
-					    	</c:if>
-				        </c:if>
-				    </h:selectBooleanCheckbox>
+        		<div class="property-field-edit-value  #{cc.attrs.id}DivClass">
+        			<composite:insertChildren />
         		</div>
         	</div>
         </p:outputPanel>
