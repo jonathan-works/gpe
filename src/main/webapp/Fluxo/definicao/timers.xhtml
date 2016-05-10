@@ -127,8 +127,7 @@
 	                    
 	                    <p:outputPanel rendered="#{nodeFitter.nodeHandler.dueDateType.expression}">
 		                    <i:inputText id="dueDateExpression" value="#{node.dueDateExpression}"
-		                    	label="#{infoxMessages['process.timer.expressao']}"
-		                    	validatorId="javax.faces.elValidator" ajax="true"
+		                    	label="#{infoxMessages['process.timer.expressao']}" ajax="true"
 		                    	listener="#{nodeFitter.nodeHandler.onChangeDueDate}" 
 		                    	help="#{infoxMessages['process.timer.expressao.help']}"/>
 	                    </p:outputPanel>
