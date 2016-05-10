@@ -75,6 +75,7 @@
 		   				<c:if test="#{not empty cc.attrs.validatorId}">
 		   					<f:validator validatorId="#{cc.attrs.validatorId}" />
 		   				</c:if>
+		   				<f:converter converterId="stringConverter" />
 		   			</h:inputText>	
         		</div>
         	</div>
