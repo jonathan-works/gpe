@@ -50,4 +50,10 @@ public class CategoriaEntregaResourceImpl implements CategoriaEntregaResource {
 		categoriaEntregaRestService.remover(codigo);
 	}
 
+	@Override
+	public Response atualizar(Categoria categoria) {
+		categoriaEntregaRestService.atualizar(categoria.getCodigo(), categoria.getDescricao());
+		return Response.noContent().build();
+	}
+
 }

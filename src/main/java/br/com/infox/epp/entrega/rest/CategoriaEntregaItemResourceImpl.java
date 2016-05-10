@@ -66,4 +66,16 @@ public class CategoriaEntregaItemResourceImpl implements CategoriaEntregaItemRes
 		categoriaEntregaItemRestService.remover(codigo, codigoItemPai);
 	}
 
+	@Override
+	public Response atualizar(String codigo, Item item) {
+		categoriaEntregaItemRestService.atualizar(codigo, item.getDescricao());
+		return Response.noContent().build();
+	}
+
+	@Override
+	public Response adicionarRelacionamento(String codigo) {
+		categoriaEntregaItemRestService.relacionarItens(codigoItemPai, codigo);
+		return Response.noContent().build();
+	}
+
 }

@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.entrega.CategoriaEntregaItemSearch;
+import br.com.infox.epp.entrega.CategoriaEntregaItemService;
 import br.com.infox.epp.entrega.CategoriaEntregaSearch;
 import br.com.infox.epp.entrega.CategoriaItemRelacionamentoSearch;
 import br.com.infox.epp.entrega.entity.CategoriaEntrega;
@@ -25,6 +26,8 @@ public class CategoriaEntregaItemRestService {
 	private CategoriaEntregaSearch categoriaEntregaSearch;	
 	@Inject
 	private CategoriaItemRelacionamentoSearch categoriaItemRelacionamentoSearch;
+	@Inject
+	private CategoriaEntregaItemService categoriaEntregaItemService;
 	
 	private EntityManager getEntityManager() {
 		return EntityManagerProducer.getEntityManager();
@@ -116,6 +119,14 @@ public class CategoriaEntregaItemRestService {
 		getEntityManager().flush();
 		
 		return itemBanco;
+	}
+	
+	public void atualizar(String codigoCategoria, String novaDescricao) {
+		categoriaEntregaItemService.atualizar(codigoCategoria, novaDescricao);
+	}
+	
+	public void relacionarItens(String codigoItemPai, String codigoItem) {
+		categoriaEntregaItemService.relacionarItens(codigoItemPai, codigoItem);
 	}
 	
 

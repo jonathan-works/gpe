@@ -14,6 +14,7 @@ import javax.persistence.EntityManager;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.entrega.CategoriaEntregaItemSearch;
+import br.com.infox.epp.entrega.CategoriaEntregaItemService;
 import br.com.infox.epp.entrega.CategoriaEntregaSearch;
 import br.com.infox.epp.entrega.CategoriaEntregaService;
 import br.com.infox.epp.entrega.entity.CategoriaEntrega;
@@ -24,6 +25,8 @@ public class CategoriaEntregaRestService {
 
 	@Inject
 	private CategoriaEntregaService categoriaEntregaService;
+	@Inject
+	private CategoriaEntregaItemService categoriaEntregaItemService;
 	@Inject
 	private CategoriaEntregaItemSearch categoriaEntregaItemSearch;	
 	@Inject
@@ -150,7 +153,7 @@ public class CategoriaEntregaRestService {
 			return getCategoriasRoot();
 		}
 		CategoriaEntregaItem categoriaEntregaItem = categoriaEntregaItemSearch.getEntityManager().find(CategoriaEntregaItem.class, idItemPai);
-		List<CategoriaEntregaItem> categoriaEntregaItens = categoriaEntregaService.getItensFilhos(categoriaEntregaItem.getCodigo());
+		List<CategoriaEntregaItem> categoriaEntregaItens = categoriaEntregaItemService.getItensFilhos(categoriaEntregaItem.getCodigo());
 		SortedMap<CategoriaEntrega, Categoria> mapaCategorias = new TreeMap<>(new ComparadorCategoriaEntrega());
 		
 		//Adiciona categorias e itens filhos do item informado
@@ -161,36 +164,20 @@ public class CategoriaEntregaRestService {
 		return new ArrayList<>(mapaCategorias.values());
 	}
 	
-		
-	public CategoriaEntrega novaCategoria(Categoria categoria, String codigoItemPai) {
-		Integer idItemPai = codigoItemPai == null ? null : categoriaEntregaItemSearch.getCategoriaEntregaItemByCodigo(codigoItemPai).getId();
-		return novaCategoria(categoria, idItemPai);
-	}
-	
-	
-	public CategoriaEntrega novaCategoria(Categoria categoria, Integer idItemPai) {
-		if(idItemPai == null) {
-			CategoriaEntrega categoriaEntrega = new CategoriaEntrega();
-			categoriaEntrega.setCodigo(categoria.getCodigo());
-			categoriaEntrega.setDescricao(categoria.getDescricao());
-			getEntityManager().persist(categoriaEntrega);
-			getEntityManager().flush();
-			return categoriaEntrega;
-		}
-		CategoriaEntregaItem categoriaEntregaItem = categoriaEntregaItemSearch.getEntityManager().find(CategoriaEntregaItem.class, idItemPai);
-		CategoriaEntrega categoriaEntrega = new CategoriaEntrega();
-		categoriaEntrega.setCodigo(categoria.getCodigo());
-		categoriaEntrega.setDescricao(categoria.getDescricao());
-		categoriaEntrega.setCategoriaEntregaPai(categoriaEntregaItem.getCategoriaEntrega());
-		getEntityManager().persist(categoriaEntrega);
-		getEntityManager().flush();
-		
-		return categoriaEntrega;		
-	}
-		
+				
 	public void remover(String codigoCategoria) {
 		CategoriaEntrega categoria = categoriaEntregaSearch.getCategoriaEntregaByCodigo(codigoCategoria);
 		getEntityManager().remove(categoria);
 		getEntityManager().flush();
-	}	
+	}
+	
+	public void atualizar(String codigoCategoria, String novaDescricao) {
+		categoriaEntregaService.atualizar(codigoCategoria, novaDescricao);
+	}
+	
+	public CategoriaEntrega novaCategoria(Categoria categoria, String codigoItemPai) {
+		Integer idItemPai = codigoItemPai == null ? null : categoriaEntregaItemSearch.getCategoriaEntregaItemByCodigo(codigoItemPai).getId();
+		return categoriaEntregaService.novaCategoria(categoria, idItemPai);
+	}
+	
 }

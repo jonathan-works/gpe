@@ -5,6 +5,7 @@ import java.util.List;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -18,6 +19,9 @@ public interface CategoriaEntregaItemResource {
 	@GET
 	public List<Item> list();
 	
+	@POST
+	public Response novoItem(Item item);
+	
 	@GET
 	@Path("{codigo}")
 	public Item get(@PathParam("codigo") String codigo);
@@ -26,9 +30,14 @@ public interface CategoriaEntregaItemResource {
 	@Path("{codigo}")
 	public void remove(@PathParam("codigo") String codigo);
 	
+	@PUT
+	@Path("{codigo}")
+	public Response atualizar(@PathParam("codigo") String codigo, Item item);
+	
 	@POST
-	public Response novoItem(Item item);
-
+	@Path("{codigo}")
+	public Response adicionarRelacionamento(@PathParam("codigo") String codigo);
+	
 	@Path("{codigo}/categoria")
 	public CategoriaEntregaResource getCategoria(@PathParam("codigo") String codigoItemPai); 
 	
