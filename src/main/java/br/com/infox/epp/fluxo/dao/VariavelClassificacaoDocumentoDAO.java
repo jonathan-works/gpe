@@ -119,7 +119,7 @@ public class VariavelClassificacaoDocumentoDAO extends DAO<VariavelClassificacao
     	predicate = cb.and(predicate, cb.not(cb.exists(subquery)));
     	if (nomeClassificacaoDocumento != null) {
     		Path<String> descricao = from.get("descricao");
-    		predicate = cb.and(predicate, cb.like(cb.lower(descricao), nomeClassificacaoDocumento.toLowerCase()));
+    		predicate = cb.and(predicate, cb.like(cb.lower(descricao), nomeClassificacaoDocumento.toLowerCase() + "%"));
     	}
 		return predicate;
 	}

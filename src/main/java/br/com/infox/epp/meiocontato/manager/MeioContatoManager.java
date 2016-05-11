@@ -77,7 +77,7 @@ public class MeioContatoManager extends Manager<MeioContatoDAO, MeioContato>{
 	}
 	
 	public boolean isTelefoneMovel(String numeroTelefone) {
-		Integer valorInicial = Integer.valueOf(numeroTelefone.substring(0, 1));
+		Integer valorInicial = Integer.valueOf(numeroTelefone.trim().substring(0, 1));
 		return valorInicial >= 6 && valorInicial <= 9;
 	}
 }
