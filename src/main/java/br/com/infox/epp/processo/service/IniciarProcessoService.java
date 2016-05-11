@@ -1,6 +1,5 @@
 package br.com.infox.epp.processo.service;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -9,19 +8,13 @@ import java.util.Map;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
-import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.ManagedJbpmContext;
-import org.jboss.seam.bpm.ProcessInstance;
 import org.jbpm.context.exe.ContextInstance;
+import org.jbpm.graph.exe.ProcessInstance;
+import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.StringUtil;
-import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.fluxo.manager.NaturezaManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.entity.Processo;
@@ -29,15 +22,8 @@ import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 
-@AutoCreate
-@Scope(ScopeType.CONVERSATION)
-@Name(IniciarProcessoService.NAME)
 @Stateless
-@Transactional
-@ContextDependency
-public class IniciarProcessoService implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class IniciarProcessoService {
 
 	@Inject
 	private ProcessoManager processoManager;
@@ -48,7 +34,6 @@ public class IniciarProcessoService implements Serializable {
     @Inject
     private MetadadoProcessoManager metadadoProcessoManager;
 
-    public static final String NAME = "iniciarProcessoService";
     public static final String TYPE_MISMATCH_EXCEPTION = "Tipo informado não é uma instância de "
             + "br.com.infox.ibpm.entity.Processo";
 
@@ -68,14 +53,14 @@ public class IniciarProcessoService implements Serializable {
         iniciarProcesso(processo, variaveis, null, null, createDefaultFolders);
     }
     
-    public org.jbpm.graph.exe.ProcessInstance iniciarProcesso(Processo processo, Map<String, Object> variaveis, List<MetadadoProcesso> metadados, String transitionName, 
+    public ProcessInstance iniciarProcesso(Processo processo, Map<String, Object> variaveis, List<MetadadoProcesso> metadados, String transitionName, 
             boolean createDefaultFolders) throws DAOException {
         processo.setDataInicio(new Date());
         if (processo.getIdProcesso() == null) {
             processoManager.persist(processo);
         }
         createMetadadosProcesso(processo, metadados);
-        org.jbpm.graph.exe.ProcessInstance processInstance = criarProcessoJbpm(processo, processo.getNaturezaCategoriaFluxo().getFluxo().getFluxo());
+        ProcessInstance processInstance = criarProcessoJbpm(processo, processo.getNaturezaCategoriaFluxo().getFluxo().getFluxo());
         processo.setIdJbpm(processInstance.getId());
         processoManager.flush();
         inicializarProcessoJbpm(processo, processInstance, variaveis, transitionName);
@@ -99,14 +84,11 @@ public class IniciarProcessoService implements Serializable {
         }
     }
 
-    private org.jbpm.graph.exe.ProcessInstance criarProcessoJbpm(Processo processo, String fluxo) {
-    	BusinessProcess businessProcess = BusinessProcess.instance();
-        businessProcess.createProcess(fluxo, false);
-        org.jbpm.graph.exe.ProcessInstance processInstance = ProcessInstance.instance();
-        return processInstance;
+    private ProcessInstance criarProcessoJbpm(Processo processo, String fluxo) {
+        return ManagedJbpmContext.instance().newProcessInstanceForUpdate(fluxo);
     }
     
-    private void inicializarProcessoJbpm(Processo processo, org.jbpm.graph.exe.ProcessInstance processoJbpm, Map<String, Object> variaveis, String transitionName) {
+    private void inicializarProcessoJbpm(Processo processo, ProcessInstance processoJbpm, Map<String, Object> variaveis, String transitionName) {
         iniciaVariaveisProcesso(processo, variaveis, processoJbpm);
         if (StringUtil.isEmpty(transitionName)) {
             processoJbpm.signal();
@@ -116,7 +98,7 @@ public class IniciarProcessoService implements Serializable {
         iniciaPrimeiraTarefa(processoJbpm);
     }
 
-    private void iniciaVariaveisProcesso(Processo processo, Map<String, Object> variaveis, org.jbpm.graph.exe.ProcessInstance processInstance) {
+    private void iniciaVariaveisProcesso(Processo processo, Map<String, Object> variaveis, ProcessInstance processInstance) {
         ContextInstance contextInstance = processInstance.getContextInstance();
         contextInstance.setVariable(VariaveisJbpmProcessosGerais.PROCESSO, processo.getIdProcesso());
         if (variaveis != null) {
@@ -132,15 +114,12 @@ public class IniciarProcessoService implements Serializable {
         ManagedJbpmContext.instance().getSession().flush();
     }
     
-    private void iniciaPrimeiraTarefa(org.jbpm.graph.exe.ProcessInstance processInstance) {
-        Collection<org.jbpm.taskmgmt.exe.TaskInstance> taskInstances = processInstance.getTaskMgmtInstance().getTaskInstances();
-        org.jbpm.taskmgmt.exe.TaskInstance taskInstance = null;
-        BusinessProcess businessProcess = BusinessProcess.instance();
+ // Chamar popup com id do taskInstance
+    private void iniciaPrimeiraTarefa(ProcessInstance processInstance) {
+        Collection<TaskInstance> taskInstances = processInstance.getTaskMgmtInstance().getTaskInstances();
         if (taskInstances != null && !taskInstances.isEmpty()) {
-            taskInstance = taskInstances.iterator().next();
+            TaskInstance taskInstance = taskInstances.iterator().next();
             long taskInstanceId = taskInstance.getId();
-            businessProcess.setTaskId(taskInstanceId);
-            businessProcess.startTask();
         }
     }
 }

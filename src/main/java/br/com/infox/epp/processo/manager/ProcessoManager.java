@@ -13,7 +13,6 @@ import javax.inject.Inject;
 import org.hibernate.LockMode;
 import org.hibernate.LockOptions;
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.bpm.Actor;
@@ -36,6 +35,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
@@ -47,24 +47,19 @@ import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
-import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
-import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais;
 import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.system.Parametros;
-import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.ibpm.sinal.SignalParam;
 import br.com.infox.ibpm.sinal.SignalParam.Type;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
 import br.com.infox.seam.exception.BusinessRollbackException;
-import br.com.infox.seam.util.ComponentUtil;
 import br.com.infox.util.time.DateRange;
 
 @AutoCreate
@@ -77,21 +72,13 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     public static final String NAME = "processoManager";
     private static final int PORCENTAGEM = 100;
 
-    @In
-    private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
-    @In
-    private DocumentoManager documentoManager;
-    @In
+    @Inject
     private GenericDAO genericDAO;
-    @In
+    @Inject
     private DocumentoBinManager documentoBinManager;
-    @In
-    private MetadadoProcessoManager metadadoProcessoManager;
-    @In
-    private ParametroManager parametroManager;
-    @In
+    @Inject
     private UsuarioLoginManager usuarioLoginManager;
-    @In
+    @Inject
     private ProcessoTarefaManager processoTarefaManager;
     @Inject
     private NaturezaCategoriaFluxoManager naturezaCategoriaFluxoManager;
@@ -390,7 +377,7 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
                 metadados.add(provider.gerarMetadado(signalParam.getName(), signalParam.getParamValue()));
             }
         }
-        ProcessInstance processInstance = ComponentUtil.<IniciarProcessoService>getComponent(IniciarProcessoService.NAME).iniciarProcesso(processo, variaveis, metadados, transitionName, true);
+        ProcessInstance processInstance = BeanManager.INSTANCE.getReference(IniciarProcessoService.class).iniciarProcesso(processo, variaveis, metadados, transitionName, true);
         BusinessProcess.instance().setProcessId(processIdOriginal);
         BusinessProcess.instance().setTaskId(taskIdOriginal);
         

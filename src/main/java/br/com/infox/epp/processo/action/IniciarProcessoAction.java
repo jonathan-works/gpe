@@ -9,13 +9,9 @@ import java.util.List;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.hibernate.TypeMismatchException;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.core.Conversation;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
@@ -26,7 +22,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.bean.ItemBean;
 import br.com.infox.epp.fluxo.entity.Categoria;
@@ -40,28 +36,22 @@ import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.partes.controller.ParticipantesController;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
-import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.ibpm.task.manager.TaskInstanceManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
 
-@Name(IniciarProcessoAction.NAME)
-@Scope(ScopeType.CONVERSATION)
-@Transactional
-@ContextDependency
+@Named
+@ViewScoped
 public class IniciarProcessoAction implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	public static final String NAME = "iniciarProcessoAction";
     private static final LogProvider LOG = Logging.getLogProvider(IniciarProcessoAction.class);
 
-    @In
+    @Inject
     private IniciarProcessoService iniciarProcessoService;
-    @In
+    @Inject
     private InfoxMessages infoxMessages;
-    @In
-    private ProcessoTarefaManager processoTarefaManager;
     @Inject
     private TaskInstanceManager taskInstanceManager;
 
