@@ -13,8 +13,8 @@ namespace("infox",{
 	},openPopUp:function openPopUp(id, url, width, height, top, left) {
 		var featPopUp = ["width=",width || outerWidth,
 			             ",height=",height || outerHeight,
-			             ",top=",top || screen.top || screenY || screenTop || 0,
-			             ",left=",left || screen.left || screenX || screenLeft || 0,
+			             ",top=",top || screen.top || window['screenY'] || window['screenTop'] || 0,
+			             ",left=",left || screen.left || window['screenX'] || window['screenLeft'] || 0,
 			             ",resizable=YES",
 			             ",scrollbars=YES",
 			             ",status=NO",
