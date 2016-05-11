@@ -11,10 +11,10 @@ namespace("infox",{
 			$(args.selector).css(args.style);
 		},args.delay || 1);
 	},openPopUp:function openPopUp(id, url, width, height, top, left) {
-		var featPopUp = ["width=",width,
-			             ",height=",height,
-			             ",top=",top,
-			             ",left=",left,
+		var featPopUp = ["width=",width || outerWidth,
+			             ",height=",height || outerHeight,
+			             ",top=",top || screen.top || window['screenY'] || window['screenTop'] || 0,
+			             ",left=",left || screen.left || window['screenX'] || window['screenLeft'] || 0,
 			             ",resizable=YES",
 			             ",scrollbars=YES",
 			             ",status=NO",

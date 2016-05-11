@@ -76,7 +76,7 @@ public class DarCienciaAction implements Serializable {
 	private Date dataCiencia;
 	private boolean ciencia;
 	private String textoCiencia;
-	private boolean editorCiencia; 
+	private boolean editorCiencia = false; 
 	private ClassificacaoDocumento classificacaoDocumentoCiencia;
 	private boolean assinaDocumentoCiencia;
 	private boolean enviaSemAssinarDocumentoCiencia;
@@ -241,7 +241,7 @@ public class DarCienciaAction implements Serializable {
 	}
 	
 	public List<ClassificacaoDocumento> getClassificacoesDocumentoCiencia() {
-		if (isCiencia()) {
+		if (isCiencia() && classificacoesDocumentoCiencia == null) {
 			boolean isModelo = isEditorCiencia();
 			classificacoesDocumentoCiencia = classificacaoDocumentoFacade.getUseableClassificacaoDocumento(isModelo);
 		}
@@ -303,8 +303,9 @@ public class DarCienciaAction implements Serializable {
 
 	public void setEditorCiencia(boolean editorCiencia) {
 		this.editorCiencia = editorCiencia;
+		setClassificacaoDocumentoCiencia(null);
+		classificacoesDocumentoCiencia = null;
 		if (!isEditorCiencia()){
-			setClassificacaoDocumentoCiencia(null);
 			setTextoCiencia(null);
 		}
 	}

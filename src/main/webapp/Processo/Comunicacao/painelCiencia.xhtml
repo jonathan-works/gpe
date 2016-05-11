@@ -19,40 +19,44 @@
 					<a:ajax event="change" render="dataCienciaDecoration buttonDarCiencia"
 						execute="@this" limitRender="true" />
 				</wi:inputDate>
-	
-				<wi:selectBooleanCheckbox id="editorCiencia"
-					label="#{infoxMessages['comunicacao.adicionarDocumentoEditorCiencia']}"
-					value="#{darCienciaAction.editorCiencia}">
-					<a:ajax event="change" render="@form" limitRender="true"
+				
+				<wi:selectOneRadio id="tipoAnexoBoolean"
+					label="#{infoxMessages['comunicacao.painelCiencia.tipoAnexo']}"
+					value="#{darCienciaAction.editorCiencia}"
+					valueList="false:comunicacao.painelCiencia.upload,true:comunicacao.painelCiencia.texto">
+					<a:ajax event="change" render="classificacaoCienciaDiv documentoCienciaDiv" limitRender="true"
 						execute="@this" />
-				</wi:selectBooleanCheckbox>
-	
-				<wi:selectOneMenuEntity id="classificacaoCiencia" showRequired="true"
-					label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-					showLabelSelecione="true"
-					value="#{darCienciaAction.classificacaoDocumentoCiencia}"
-					items="#{darCienciaAction.classificacoesDocumentoCiencia}">
-					<a:ajax event="change" limitRender="true"
-						render="classificacaoCienciaDecoration buttonDarCiencia documentoCienciaDiv pageBodyDialogMessage"
-						execute="@this" listener="#{documentoUploader.clearUploadFile}" />
-				</wi:selectOneMenuEntity>
-	
+			    </wi:selectOneRadio>
+			    
+				<s:div id="classificacaoCienciaDiv">
+					<wi:selectOneMenuEntity id="classificacaoCiencia" showRequired="true"
+						label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
+						showLabel="#{infoxMessages['comunicacao.painelCiencia.labelSelecione']}"
+						value="#{darCienciaAction.classificacaoDocumentoCiencia}"
+						items="#{darCienciaAction.classificacoesDocumentoCiencia}">
+						<a:ajax event="change" limitRender="true"
+							render="buttonDarCiencia documentoCienciaDiv pageBodyDialogMessage"
+							execute="@this" listener="#{documentoUploader.clearUploadFile}" />
+					</wi:selectOneMenuEntity>
+				</s:div>
+				
 				<s:div id="documentoCienciaDiv">
 					<s:div id="editorArquivoDiv"
-						rendered="#{darCienciaAction.editorCiencia}">
+						rendered="#{darCienciaAction.editorCiencia and not empty darCienciaAction.classificacaoDocumentoCiencia}">
 						<wi:editor id="documentoCienciaTexto" readonly="false"
-							value="#{darCienciaAction.textoCiencia}" required="true" />
+							value="#{darCienciaAction.textoCiencia}" required="true" />							
 					</s:div>
-	
-					<s:div id="anexo"
-						rendered="#{not empty darCienciaAction.classificacaoDocumentoCiencia 
-			 				and not empty darCienciaAction.classificacaoDocumentoCiencia.extensaoArquivosList
-			 				and not darCienciaAction.editorCiencia}">
+					
+					<s:div id="anexoArquivoDiv"
+						rendered="#{not darCienciaAction.editorCiencia and not empty darCienciaAction.classificacaoDocumentoCiencia}">
+			 			<h:outputText value="#{infoxMessages['comunicacao.msgConfigClassificacao']}"
+			 				rendered="#{empty darCienciaAction.classificacaoDocumentoCiencia.extensaoArquivosList}"/>
 						<wi:fileUpload id="documentoComprovacaoCiencia"
 							doneLabel="#{infoxMessages['documento.upload.doneLabel']}"
 							accept="#{darCienciaAction.classificacaoDocumentoCiencia.acceptedTypes}"
 							onclear="infox.showLoading()" oncomplete="infox.hideLoading()"
-							reRender="buttonDarCiencia" />
+							reRender="buttonDarCiencia"
+							rendered="#{not empty darCienciaAction.classificacaoDocumentoCiencia.extensaoArquivosList}" />
 					</s:div>
 				</s:div>
 	

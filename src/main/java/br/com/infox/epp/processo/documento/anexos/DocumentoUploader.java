@@ -17,7 +17,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.io.IOUtils;
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.richfaces.event.FileUploadEvent;
@@ -38,7 +37,6 @@ import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Named
 @ViewScoped
@@ -55,10 +53,10 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
 
 	@Inject
 	private InfoxMessages infoxMessages;
-
-	private DocumentoManager documentoManager = ComponentUtil.getComponent(DocumentoManager.NAME, ScopeType.EVENT);
-	private ExtensaoArquivoManager extensaoArquivoManager = ComponentUtil.getComponent(ExtensaoArquivoManager.NAME,
-			ScopeType.EVENT);
+	@Inject
+	private DocumentoManager documentoManager;
+	@Inject
+	private ExtensaoArquivoManager extensaoArquivoManager;
 
 	private ClassificacaoDocumento classificacaoDocumento;
 	private boolean isValido;
