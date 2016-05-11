@@ -1,7 +1,5 @@
 package br.com.infox.ibpm.task.handler;
 
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +26,6 @@ public class TaskHandler implements Serializable {
 
     private static final long serialVersionUID = 9033256144150197159L;
     private Task task;
-    private String swimlaneName;
     private boolean dirty;
     private List<VariableAccessHandler> variables;
     private Boolean hasTaskPage;
@@ -37,9 +34,6 @@ public class TaskHandler implements Serializable {
     public TaskHandler(Task task) {
         this.task = task;
         if (task != null){
-        	if (task.getSwimlane() != null) {
-        		this.swimlaneName = task.getSwimlane().getName();
-        	}
         	// Para as tarefas já existentes
         	if (task.getTaskController() != null && task.getTaskController().getTaskControllerDelegation() == null) {
         		Delegation delegation = new Delegation(InfoxTaskControllerHandler.class.getName());
@@ -79,7 +73,6 @@ public class TaskHandler implements Serializable {
     }
 
     public void setSwimlaneName(String swimlaneName) {
-        this.swimlaneName = swimlaneName;
         if (swimlaneName == null) {
         	task.setSwimlane(null);
         } else {
@@ -143,7 +136,6 @@ public class TaskHandler implements Serializable {
         return ret;
     }
 
-    @SuppressWarnings(UNCHECKED)
     public Task update() {
         if (task.getTaskController() != null) {
             List<VariableAccess> variableAccesses = task.getTaskController().getVariableAccesses();
@@ -155,7 +147,6 @@ public class TaskHandler implements Serializable {
         return task;
     }
 
-    @SuppressWarnings(UNCHECKED)
     public void newVar() {
         if (!checkNullVariables()) {
             VariableAccess v = new VariableAccess("", "read,write", VariableType.NULL.name() + ":");

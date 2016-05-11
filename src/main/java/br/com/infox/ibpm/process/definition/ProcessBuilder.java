@@ -290,7 +290,6 @@ public class ProcessBuilder implements Serializable {
         }
     }
 
-    @SuppressWarnings(UNCHECKED)
     private void validateVariables() {
         List<Node> nodes = getInstance().getNodes();
         for (Node node : nodes) {
@@ -526,7 +525,6 @@ public class ProcessBuilder implements Serializable {
         JbpmUtil.instance().createTimers(instance);
     }
 
-	@SuppressWarnings(UNCHECKED)
     private List<String> getVariaveisDocumento() {
         List<String> variaveis = new ArrayList<>();
         List<Node> nodes = instance.getNodes();

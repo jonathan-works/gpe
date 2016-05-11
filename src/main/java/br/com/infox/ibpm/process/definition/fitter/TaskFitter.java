@@ -64,27 +64,46 @@ public class TaskFitter extends Fitter implements Serializable {
     public void addTask() {
         Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
         ProcessDefinition process = getProcessBuilder().getInstance();
-        if (currentNode instanceof TaskNode) {
-            getTasks();
-            TaskNode taskNode = (TaskNode) currentNode;
-            Task task = new Task();
-            task.setKey("key_" + UUID.randomUUID().toString());
-            task.setProcessDefinition(process);
-            task.setTaskMgmtDefinition(process.getTaskMgmtDefinition());
-            List<TaskHandler> list = getProcessBuilder().getTaskNodeMap().get(currentNode);
-            task.setName(currentNode.getName());
-            taskNode.addTask(task);
-            taskNode.setEndTasks(true);
-            task.setSwimlane((Swimlane) process.getTaskMgmtDefinition().getSwimlanes().values().iterator().next());
-            task.setTaskController(new TaskController());
-            task.getTaskController().setVariableAccesses(new ArrayList<VariableAccess>());
-            Delegation delegation = new Delegation(InfoxTaskControllerHandler.class.getName());
-            delegation.setProcessDefinition(task.getProcessDefinition());
-            task.getTaskController().setTaskControllerDelegation(delegation);
-            TaskHandler th = new TaskHandler(task);
-            list.add(th);
-            setCurrentTask(th);
-        }
+        getTasks();
+        TaskNode taskNode = (TaskNode) currentNode;
+        Task task = new Task();
+        task.setKey("key_" + UUID.randomUUID().toString());
+        task.setProcessDefinition(process);
+        task.setTaskMgmtDefinition(process.getTaskMgmtDefinition());
+        List<TaskHandler> list = getProcessBuilder().getTaskNodeMap().get(currentNode);
+        task.setName(currentNode.getName());
+        taskNode.addTask(task);
+        taskNode.setEndTasks(true);
+        task.setSwimlane((Swimlane) process.getTaskMgmtDefinition().getSwimlanes().values().iterator().next());
+        task.setTaskController(new TaskController());
+        task.getTaskController().setVariableAccesses(new ArrayList<VariableAccess>());
+        Delegation delegation = new Delegation(InfoxTaskControllerHandler.class.getName());
+        delegation.setProcessDefinition(task.getProcessDefinition());
+        task.getTaskController().setTaskControllerDelegation(delegation);
+        TaskHandler th = new TaskHandler(task);
+        list.add(th);
+        setCurrentTask(th);
+    }
+    
+    public void addStartStateTask() {
+        StartState startState = (StartState) getProcessBuilder().getNodeFitter().getCurrentNode();
+        ProcessDefinition processDefinition = getProcessBuilder().getInstance();
+        getTasks();
+        Task startTask = new Task();
+        startTask.setKey("key_" + UUID.randomUUID().toString());
+        startTask.setProcessDefinition(processDefinition);
+        startTask.setTaskMgmtDefinition(processDefinition.getTaskMgmtDefinition());
+        List<TaskHandler> list = getProcessBuilder().getTaskNodeMap().get(startState);
+        startTask.setName(startState.getName());
+        startTask.setStartState(startState);
+        startTask.setTaskController(new TaskController());
+        startTask.getTaskController().setVariableAccesses(new ArrayList<VariableAccess>());
+        Delegation delegation = new Delegation(InfoxTaskControllerHandler.class.getName());
+        delegation.setProcessDefinition(startTask.getProcessDefinition());
+        startTask.getTaskController().setTaskControllerDelegation(delegation);
+        TaskHandler taskHandler = new TaskHandler(startTask);
+        list.add(taskHandler);
+        setCurrentTask(taskHandler);
     }
 
     public void removeTask(TaskHandler t) {
@@ -187,14 +206,14 @@ public class TaskFitter extends Fitter implements Serializable {
                 taskList = TaskHandler.createList(node);
                 taskNodeMap.put(node, taskList);
             }
-            if (!taskList.isEmpty() && currentTask == null) {
+            if (!taskList.isEmpty()) {
                 setCurrentTask(taskList.get(0));
             }
         } else if (currentNode instanceof StartState) {
             Task startTask = getProcessBuilder().getInstance().getTaskMgmtDefinition().getStartTask();
             startTaskHandler = new TaskHandler(startTask);
             taskList.add(startTaskHandler);
-            if (!taskList.isEmpty() && currentTask == null) {
+            if (!taskList.isEmpty()) {
                 setCurrentTask(taskList.get(0));
             }
         }
