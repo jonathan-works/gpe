@@ -33,9 +33,9 @@ public enum ActivityNodeType implements Displayable {
     private static List<Pair<String, String>> loadVariables(Class<? extends ActivityBehavior> clazz) {
         List<Pair<String, String>> variables = new ArrayList<>();
         if (LoopActivityBehavior.class.equals(clazz)) {
-            variables.add(Pair.of(LoopActivityBehavior.LOOP_COUNTER, "Variável que indica a contagem atual."));
+            variables.add(Pair.of(LoopActivityBehavior.LOOP_COUNTER, "Variável que indica a contagem atual. Inicia com 0."));
         } else if (MultiInstanceActivityBehavior.class.isAssignableFrom(clazz)) {
-            variables.add(Pair.of(MultiInstanceActivityBehavior.LOOP_COUNTER, "Indica a contagem atual."));
+            variables.add(Pair.of(MultiInstanceActivityBehavior.LOOP_COUNTER, "Indica a contagem atual. Inicia com 0."));
             variables.add(Pair.of(MultiInstanceActivityBehavior.NUMBER_OF_INSTANCES, "Indica o total de instâncias criadas ou que serão criadas."));
             variables.add(Pair.of(MultiInstanceActivityBehavior.NUMBER_OF_ACTIVE_INSTANCES, "Indica o número de instâncias ativas."));
             variables.add(Pair.of(MultiInstanceActivityBehavior.NUMBER_OF_COMPLETED_INSTANCES, "Indica o número de instâncias que finalizaram pelo usuário."));
