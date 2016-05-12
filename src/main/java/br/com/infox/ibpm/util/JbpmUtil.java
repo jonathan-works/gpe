@@ -137,8 +137,7 @@ public class JbpmUtil {
             cb.equal(event.get("id"), createTimeAction.<Event>get("event").get("id")),
             cb.exists(subquery)
         );
-        cq.groupBy(token, createTimeAction, taskNode);
-        cq.multiselect(token, createTimeAction, taskNode);
+        cq.multiselect(token, createTimeAction, taskNode).distinct(true);
         List<Object[]> resultList = entityManager.createQuery(cq).getResultList();
         for (Object[] result : resultList) {
             Token tokenResult = (Token) result[0];
