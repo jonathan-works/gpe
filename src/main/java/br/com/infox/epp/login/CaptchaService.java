@@ -124,11 +124,13 @@ public class CaptchaService {
 		else
 		{
 			cookieCaptcha = cookieCaptchaSearch.findByClientId(cookie.getValue());
-			if(!cookieCaptcha.getUsuarios().contains(username)) {
-				cookieCaptcha.getUsuarios().add(username);
-				getEntityManager().persist(cookieCaptcha);
+			if (cookieCaptcha != null) {
+			    if(!cookieCaptcha.getUsuarios().contains(username)) {
+			        cookieCaptcha.getUsuarios().add(username);
+			        getEntityManager().persist(cookieCaptcha);
+			    }
+			    resetTentativasLoginInvalido(cookieCaptcha.getId());
 			}
-			resetTentativasLoginInvalido(cookieCaptcha.getId());
 		}
 	}
 	
