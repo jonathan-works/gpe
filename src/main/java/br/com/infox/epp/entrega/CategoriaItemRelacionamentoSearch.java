@@ -1,6 +1,5 @@
 package br.com.infox.epp.entrega;
 
-import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -14,7 +13,6 @@ import br.com.infox.epp.entrega.entity.CategoriaEntregaItem_;
 import br.com.infox.epp.entrega.entity.CategoriaItemRelacionamento;
 import br.com.infox.epp.entrega.entity.CategoriaItemRelacionamento_;
 
-@Stateless
 public class CategoriaItemRelacionamentoSearch {
 	
 	public EntityManager getEntityManager() {

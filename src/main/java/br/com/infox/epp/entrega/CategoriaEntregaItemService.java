@@ -1,6 +1,8 @@
 package br.com.infox.epp.entrega;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -9,6 +11,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.epp.entrega.DetectorCiclo.Ciclo;
+import br.com.infox.epp.entrega.DetectorCiclo.Ciclo.ToStringDelegate;
+import br.com.infox.epp.entrega.DetectorCiclo.RelacionamentoSource;
 import br.com.infox.epp.entrega.entity.CategoriaEntrega;
 import br.com.infox.epp.entrega.entity.CategoriaEntregaItem;
 import br.com.infox.epp.entrega.entity.CategoriaItemRelacionamento;
@@ -71,15 +76,65 @@ public class CategoriaEntregaItemService {
 		getEntityManager().flush();
 	}
 
+	private Ciclo<CategoriaEntregaItem> getCiclo(CategoriaEntregaItem itemPai, CategoriaEntregaItem itemFilho) {
+		RelacionamentoSource<CategoriaEntregaItem> source = new RelacionamentoSource<CategoriaEntregaItem>() {
+
+			@Override
+			public Collection<CategoriaEntregaItem> getPais(CategoriaEntregaItem item) {
+				Collection<CategoriaEntregaItem> retorno = new HashSet<>();
+				if (item == null) {
+					return retorno;
+				}
+				for (CategoriaItemRelacionamento rel : item.getItensPais()) {
+					retorno.add(rel.getItemPai());
+				}
+				return retorno;
+			}
+
+			@Override
+			public Collection<CategoriaEntregaItem> getFilhos(CategoriaEntregaItem item) {
+				Collection<CategoriaEntregaItem> retorno = new HashSet<>();
+				if (item == null) {
+					return retorno;
+				}
+				for (CategoriaItemRelacionamento rel : item.getItensFilhos()) {
+					retorno.add(rel.getItemFilho());
+				}
+				return retorno;
+			}
+		};
+
+		DetectorCiclo<CategoriaEntregaItem> detectorCiclo = new DetectorCiclo<>(source);
+
+		return detectorCiclo.getCiclo(itemPai, itemFilho);
+	}
+
 	public void relacionarItens(String codigoItemPai, String codigoItem) {
+		// Verifica se os itens já estão relacionados
+		try {
+			categoriaItemRelacionamentoSearch.getByCodigoPaiAndFilho(codigoItemPai, codigoItem);
+			throw new BusinessException("Itens já estão relacionados");
+		} catch (NoResultException e) {
+		}
 		CategoriaEntregaItem itemPai = getItem(codigoItemPai);
 		CategoriaEntregaItem item = getItem(codigoItem);
+
+		Ciclo<CategoriaEntregaItem> ciclo = getCiclo(itemPai, item);
+		if (ciclo != null) {
+			String strCiclo = ciclo.toString(new ToStringDelegate<CategoriaEntregaItem>() {
+				@Override
+				public String toString(CategoriaEntregaItem item) {
+					return item.getCodigo();
+				}
+			});
+			throw new BusinessException("Ciclo detectado: " + strCiclo);
+		}
+
 		CategoriaItemRelacionamento relacionamento = new CategoriaItemRelacionamento();
 		relacionamento.setItemPai(itemPai);
 		relacionamento.setItemFilho(item);
 		getEntityManager().persist(relacionamento);
 		getEntityManager().flush();
-
 	}
 
 	public List<CategoriaEntregaItem> localizarItensCategoriaContendoDescricao(String codigoCategoria,
@@ -98,13 +153,17 @@ public class CategoriaEntregaItemService {
 		if (codigoItemPai == null) {
 			throw new RuntimeException("Não é possível remover um item raiz");
 		}
-		CategoriaItemRelacionamento categoriaItemRelacionamento = categoriaItemRelacionamentoSearch
-				.getByCodigoPaiAndFilho(codigoItemPai, codigoItem);
-
-		getEntityManager().remove(categoriaItemRelacionamento);
-		getEntityManager().flush();
-		return categoriaItemRelacionamento;
-
+		getItem(codigoItem);
+		getItem(codigoItemPai);
+		try {
+			CategoriaItemRelacionamento categoriaItemRelacionamento = categoriaItemRelacionamentoSearch
+					.getByCodigoPaiAndFilho(codigoItemPai, codigoItem);
+			getEntityManager().remove(categoriaItemRelacionamento);
+			getEntityManager().flush();
+			return categoriaItemRelacionamento;
+		} catch (NoResultException e) {
+			throw new RuntimeException("Relacionamento não encontrado");
+		}
 	}
 
 	public List<CategoriaEntregaItem> getFilhos(String codigoItemPai, String codigoCategoria) {
