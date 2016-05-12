@@ -17,14 +17,11 @@ import org.jboss.seam.security.Identity;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.fluxo.bean.ItemBean;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.Natureza;
-import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.manager.NaturezaCategoriaFluxoManager;
-import br.com.infox.epp.processo.action.IniciarProcessoAction;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -37,16 +34,10 @@ public class UsuarioExternoAction {
     
     @In
     private InfoxMessages infoxMessages;
-
-    @In(create = true)
-    private IniciarProcessoAction iniciarProcessoAction;
-
     @In
     private NaturezaCategoriaFluxoManager naturezaCategoriaFluxoManager;
-
     @In
     private GenericManager genericManager;
-
     @In(create = true)
     private TaskInstanceHome taskInstanceHome;
 
@@ -62,9 +53,6 @@ public class UsuarioExternoAction {
         if (!wasLoggedIn) {
             Authenticator.loginUsuarioExterno();
             taskInstanceHome.setUrlRetornoAcessoExterno(urlRetorno);
-            NaturezaCategoriaFluxo naturezaCategoriaFluxo = naturezaCategoriaFluxoManager.getByRelationship(natureza, categoria, fluxo);
-            iniciarProcessoAction.onSelectNatCatFluxo(naturezaCategoriaFluxo);
-            iniciarProcessoAction.onSelectItem(new ItemBean(item));
         } else {
             FacesMessages.instance().add(infoxMessages.get("acessoExterno.LoggedIn"));
         }

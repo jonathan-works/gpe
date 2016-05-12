@@ -1,6 +1,5 @@
 package br.com.infox.epp.processo.service;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +10,6 @@ import javax.inject.Inject;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.graph.exe.ProcessInstance;
-import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.StringUtil;
@@ -33,9 +31,6 @@ public class IniciarProcessoService {
     private PastaManager pastaManager;
     @Inject
     private MetadadoProcessoManager metadadoProcessoManager;
-
-    public static final String TYPE_MISMATCH_EXCEPTION = "Tipo informado não é uma instância de "
-            + "br.com.infox.ibpm.entity.Processo";
 
     public void iniciarProcesso(Processo processo) throws DAOException {
         iniciarProcesso(processo, null, null, null, true);
@@ -95,7 +90,7 @@ public class IniciarProcessoService {
         } else {
             processoJbpm.signal(transitionName);
         }
-        iniciaPrimeiraTarefa(processoJbpm);
+//        iniciaPrimeiraTarefa(processoJbpm);
     }
 
     private void iniciaVariaveisProcesso(Processo processo, Map<String, Object> variaveis, ProcessInstance processInstance) {
@@ -114,12 +109,12 @@ public class IniciarProcessoService {
         ManagedJbpmContext.instance().getSession().flush();
     }
     
- // Chamar popup com id do taskInstance
-    private void iniciaPrimeiraTarefa(ProcessInstance processInstance) {
-        Collection<TaskInstance> taskInstances = processInstance.getTaskMgmtInstance().getTaskInstances();
-        if (taskInstances != null && !taskInstances.isEmpty()) {
-            TaskInstance taskInstance = taskInstances.iterator().next();
-            long taskInstanceId = taskInstance.getId();
-        }
-    }
+// // Chamar popup com id do taskInstance
+//    private void iniciaPrimeiraTarefa(ProcessInstance processInstance) {
+//        Collection<TaskInstance> taskInstances = processInstance.getTaskMgmtInstance().getTaskInstances();
+//        if (taskInstances != null && !taskInstances.isEmpty()) {
+//            TaskInstance taskInstance = taskInstances.iterator().next();
+//            long taskInstanceId = taskInstance.getId();
+//        }
+//    }
 }
