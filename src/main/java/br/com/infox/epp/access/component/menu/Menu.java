@@ -126,14 +126,14 @@ public class Menu implements Serializable {
                 } else {
                     parent = item;
                     if (groups.length == 1) {
-                        parent.setUrl(FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath()+url);
+                        parent.setUrl(url);
                     }
                     dropMenus.add(parent);
                 }
             } else if (i < (groups.length - 1)) {
                 parent = parent.add(item);
             } else {
-                item.setUrl(FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath()+url);
+                item.setUrl(url);
                 parent.getItems().add(item);
             }
         }
