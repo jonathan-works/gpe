@@ -10,33 +10,18 @@
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:p="http://primefaces.org/ui"
+    xmlns:i="http://java.sun.com/jsf/composite/infox"
     template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
     
     <ui:define name="title">#{infoxMessages['processo.titlePage']}</ui:define>
     
     <ui:define name="body">
-        <wi:panel
-            id="iniciarProcessoContentPanel"
-            styleClass="content-block" rendered="false">
-            <s:div id="isCadastrandoPartes">
-                <rich:panel
-                    id="iniciarProcesso"
-                    header="#{infoxMessages['processo.titleFormIniciarProcesso']}">
-                    <ui:include src="ComponentesIniciarProcesso/naturezaCategoria.xhtml" />
-                    <ui:include src="ComponentesIniciarProcesso/itemProcesso.xhtml" />
-                    <ui:include src="ComponentesIniciarProcesso/partesProcesso.xhtml" />
-                </rich:panel>
-                
-            </s:div>
-        </wi:panel>
-        
+    
         <h:form>
+        
 	        <p:dataTable id="natCatProcessoList" var="row" value="#{iniciarProcessoView.naturezaCategoriaFluxoItemList}" 
 	        	selection="#{iniciarProcessoView.naturezaCategoriaFluxoItem}" rowKey="#{row.id}" 
-	        	header="Classificação do processo" responsive="true">
-	        	
-	        	<p:ajax event="rowSelect" listener="#{iniciarProcessoView.onSelectNaturezaCategoriaFluxoItem}" 
-	        		update=":form:msgs" process="@this" partialSubmit="true"/>
+	        	headerText="Classificação do processo" responsive="true" >
 	        	
 	        	<p:column selectionMode="single" style="width:16px; text-align:center"/>
 	        	
@@ -55,95 +40,127 @@
 		        <p:column headerText="#{infoxMessages['categoriaItem.item']}">
 		            <h:outputText value="#{empty row.item ? '-' : row.item}" />
 		        </p:column>
-	        
 	        </p:dataTable>
-	    </h:form>
 	        
-	    <h:form>    
-	        <p:fieldset id="panelAdicionarParticipante" legend="Adicionar Participante ao Processo" toggleable="true" toggleSpeed="300">
+	        <p:fieldset id="panelAdicionarParticipante" legend="Adicionar Participante" toggleable="true" 
+	        	toggleSpeed="300" collapsed="true" style="margin-top: 1.5em;">
 	        
-		        <wi:selectOneRadioEnum id="radioTipoPessoa"	label="#{infoxMessages['pessoa.tipoPessoa']}"
-		           	items="#{iniciarProcessoView.tipoPessoa.values()}" value="#{iniciarProcessoView.tipoPessoa}">
-		           	<f:ajax event="change" render="panelAdicionarParticipante" immediate="true" execute="@this"/>
-		        </wi:selectOneRadioEnum>
+		        <i:selectOneRadio id="radioTipoPessoa"	label="#{infoxMessages['pessoa.tipoPessoa']}"
+		           	items="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa.values()}" 
+		           	value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa}" 
+		           	ajax="true" listener="#{iniciarProcessoView.onChangeTipoPessoa}" itemLabel="#{item.label}" 
+		           	render="@form:loadedByParticipante" style="margin-top: 0.8em;"/>
 	          
-		        <p:outputPanel id="loadedByParticipante" rendered="#{not empty participantesController.tipoPessoa}">
+		        <p:outputPanel id="loadedByParticipante">
 		          		
-		       		<wi:inputCpf id="cpf"
-		                value="#{participantesController.participanteProcesso.pessoa.cpf}"
-		                label="#{infoxMessages['pessoaFisica.cpf']}"
-		                assignTo="participantesController.participanteProcesso.pessoa.cpf"
-		                required="true" rendered="#{participantesController.tipoPessoa eq 'F'}">
-		                <a:ajax event="blur"
-		                    listener="#{participantesController.searchByCpf()}"
-		                    execute="@this" render="nome, email, dataNascimento" limitRender="true"/> 
-		            </wi:inputCpf>
+		       		<i:inputCpf id="cpf" label="#{infoxMessages['pessoaFisica.cpf']}"
+		                value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.codigo}"
+		                required="true" rendered="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa eq 'F'}" 
+		                ajax="true" render="@form:loadedByParticipante" listener="#{iniciarProcessoView.onChangeParticipanteCpf}" />
 		            
-		            <wi:inputCnpj id="cnpj"
-		                value="#{participantesController.participanteProcesso.pessoa.cnpj}"
-		                label="#{infoxMessages['pessoaJuridica.cnpj']}"
-		                assignTo="participantesController.participanteProcesso.pessoa.cnpj"
-		                required="true" rendered="#{participantesController.tipoPessoa eq 'J'}">
-		                <a:ajax event="blur" execute="@this" render="nome, razao"
-		                	limitRender="true" listener="#{participantesController.searchByCnpj()}" />
-		            </wi:inputCnpj>
+		            <i:inputCnpj id="cnpj" label="#{infoxMessages['pessoaJuridica.cnpj']}"
+		                value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.codigo}"
+		                required="true" rendered="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa eq 'J'}"
+		                ajax="true" render="@form:nome @form:razao" listener="#{iniciarProcessoView.onChangeParticipanteCnpj}" />
 		            
-		            <wi:inputText id="nome"
-		                value="#{participantesController.participanteProcesso.pessoa.nome}"
+		            <i:inputText id="nome" value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.nome}"
 		                label="#{participantesController.tipoPessoa eq 'F' ? infoxMessages['pessoaFisica.nome'] : infoxMessages['pessoaJuridica.nomeFantasia']}" 
 		                required="true" />
 		             
-		            <wi:inputEmail id="email"
-		            	value="#{participantesController.email}"
-		            	label="#{infoxMessages['pessoaFisica.email']}" 
-		            	rendered="#{participantesController.tipoPessoa eq 'F'}" 
-		            	required="false"/>
+		            <i:inputEmail id="email" label="#{infoxMessages['pessoaFisica.email']}" 
+		            	value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.email}"
+		            	rendered="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa eq 'F'}" 
+		            	disabled="#{iniciarProcessoView.iniciarProcessoParticipanteVO.meioContatoLoaded}"
+		            	required="false" />
 		            	
-		            <wi:inputText id="razao"
-		                value="#{participantesController.participanteProcesso.pessoa.razaoSocial}"
+		            <i:inputText id="razao"
+		                value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.razaoSocial}"
 		                label="#{infoxMessages['pessoaJuridica.razaoSocial']}" required="true" 
-		                rendered="#{participantesController.tipoPessoa eq 'J'}" />
+		                rendered="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa eq 'J'}" 
+		                disabled="#{iniciarProcessoView.iniciarProcessoParticipanteVO.pessoaLoaded}"/>
 		                
-		            <wi:inputDate id="dataNascimento"
-		                value="#{participantesController.participanteProcesso.pessoa.dataNascimento}"
-		                label="#{infoxMessages['pessoaFisica.dataNascimento']}" 
-		                rendered="#{participantesController.tipoPessoa eq 'F'}"
+		            <wi:inputDate id="dataNascimento" label="#{infoxMessages['pessoaFisica.dataNascimento']}"
+		                value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.dataNascimento}"
+		                rendered="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa eq 'F'}"
+		                disabled="#{iniciarProcessoView.iniciarProcessoParticipanteVO.pessoaLoaded}"
 		                required="false" />
 		                
-		            <wi:selectOneMenuEntity id="tipoPartes"
-						items="#{participantesController.tipoPartes}"
-						value="#{participantesController.participanteProcesso.tipoParte}"
-						label="#{infoxMessages['participanteProcesso.tipoParticipante']}"
-						required="true" showLabelSelecione="true" />
-						
-					<wi:tree id="participanteSuperior"
-		                label="#{infoxMessages['participanteProcesso.superior']}"
-		                assignTo="participantesController.participanteProcesso.participantePai"
-		                tree="#{participanteProcessoTree}" />
+		            <wi:selectOneMenuEntity id="tipoPartes" label="#{infoxMessages['participanteProcesso.tipoParticipante']}"
+						items="#{iniciarProcessoView.tipoParteList}" required="true" showLabelSelecione="true"
+						value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoParte}" />
+					
+				    <p:tree id="participanteSuperior" value="#{iniciarProcessoView.root}" var="node" 
+				    	label="#{infoxMessages['participanteProcesso.superior']}" rendered="false">
+				        <p:treeNode>
+				            <h:outputText value="#{node}" />
+				        </p:treeNode>
+				    </p:tree>
 						
 					<wi:inputDate id="dataInicio"
-						value="#{participantesController.participanteProcesso.dataInicio}"
+						value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.dataInicio}"
 						label="#{infoxMessages['participanteProcesso.dataInicioParticipacao']}"
 						required="false" />
 							
 					<wi:inputDate id="dataFim"
-						value="#{participantesController.participanteProcesso.dataFim}"
+						value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.dataFim}"
 						label="#{infoxMessages['participanteProcesso.dataFimParticipacao']}" 
 						required="false"/>
+						
 		        </p:outputPanel>
 		        
-		         <p:commandButton value="Adicionar Parte" process="panelAdicionarParticipante" update="@form" 
-		         	partialSubmit="true" action="#{iniciarProcessoView.adicionarParticipante}"/>
+		        <div>
+		         	<h:commandButton value="Adicionar Parte" action="#{iniciarProcessoView.adicionarParticipante}" styleClass="buttons">
+		         		<p:ajax process="@form:panelAdicionarParticipante" update="@form:loadedByParticipante @form:participanteList" partialSubmit="true" />
+		         	</h:commandButton>
+		        </div>
 		        
 	        </p:fieldset>
 	        
-	        <p:dataTable id="participanteList" var="row" value="#{iniciarProcessoView.participanteProcessoList}" 
-	        	rowKey="#{row.id}" header="Participantes do Processo" responsive="true">
+		    <p:dataTable id="participanteList" var="row" value="#{iniciarProcessoView.participanteProcessoList}" 
+	        	rowKey="#{row.id}" headerText="Participantes do Processo" responsive="true" style="margin-top: 1.5em;"
+	        	emptyMessage="Sem participantes.">
 	        	
+	        	<p:column style="width:16px; text-align:center" >
+        			<h:commandLink onclick="return confirm('Tem certeza?');" action="#{iniciarProcessoView.removerParticipante(row)}">
+        				<p:ajax update="participanteList" process="participanteList" partialSubmit="true" />
+        				<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="#{infoxMessages['crud.remove']}" />
+        			</h:commandLink>
+	        	</p:column>
 	        	
-	        	
+	        	<p:column headerText="#{infoxMessages['participanteProcesso.nomeParticipante']}" style="text-align:center">
+	        		<ui:param name="qnt" value="#{wi:splitLength(row.caminhoAbsoluto, '\\|')}" />
+		            <h:outputText value="#{row.nome}" 
+		            	style="#{qnt eq 1 ? 'font-weight: bold' : ''}; padding-left:#{1.25 * (qnt-1)}em; display:block; text-align:left;"/>
+		        </p:column>
+		        
+		        <p:column headerText="#{infoxMessages['participanteProcesso.codigo']}" style="text-align:center">
+		            <h:outputText value="#{row.codigoFormatado}" />
+		        </p:column>
+		        
+		        <p:column headerText="#{infoxMessages['participanteProcesso.tipoParticipante']}" style="text-align:center">
+		            <h:outputText value="#{row.tipoParte}" />
+		        </p:column>
+	            
+	            <p:column headerText="#{infoxMessages['participanteProcesso.dataInicio']}" style="text-align:center">
+		            <h:outputText value="#{row.dataInicio}" >
+		            	<f:convertDateTime patter="dd/MM/yyyy"/>
+		            </h:outputText>
+		        </p:column>
+		        
+		        <p:column headerText="#{infoxMessages['participanteProcesso.dataFim']}" style="text-align:center">
+		            <h:outputText value="#{row.dataFim}" >
+		            	<f:convertDateTime patter="dd/MM/yyyy"/>
+		            </h:outputText>
+		        </p:column>
+	            	
 	        </p:dataTable>
-	        
+        
+	        <div style="margin-top: 1.5em;">
+	        	<h:commandButton id="buttonIniciarProcesso" value="Iniciar Processo" action="#{iniciarProcessoView.iniciarProcesso}" styleClass="buttons">
+	        		<p:ajax update="@this :pageBodyDialogMessage" process="@form:natCatProcessoList @this" partialSubmit="true"/>
+	        	</h:commandButton>
+	        </div>
+	       
 	    </h:form>
 		
     </ui:define>

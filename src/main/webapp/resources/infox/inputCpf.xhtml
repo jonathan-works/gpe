@@ -18,14 +18,12 @@
     	<composite:attribute name="required" default="false" />
     	<composite:attribute name="onkeypress" />
     	<composite:attribute name="onkeyup" />
-    	<composite:attribute name="validatorId" />
     	
     	<!-- Ajax Attributes -->
     	<composite:attribute name="ajax" default="false" />
     	<composite:attribute name="render" default="@this" />
     	<composite:attribute name="execute" default="@this" />
     	<composite:attribute name="listener" method-signature="void action" />
-    	<composite:attribute name="immediate" default="false" />
     	<composite:attribute name="onstart" />
     	<composite:attribute name="oncomplete" />
     	
@@ -34,6 +32,7 @@
 	
     <composite:implementation>
 		<p:outputPanel id="#{cc.attrs.id}" styleClass="decoration-div inputText-div" rendered="#{cc.attrs.rendered}" >
+			<h:outputScript library="js" name="components.js" />
 			<script type="text/javascript">
 				var id = "#{cc.attrs.id}";
 				var errorClass = $('.' + id + 'ErrorClass');
@@ -58,10 +57,10 @@
 	        		<h:message for="#{cc.attrs.id}Input" styleClass="property-error property-msg #{cc.attrs.id}ErrorClass"/>
         		</div>
         		<div class="property-field-edit-value  #{cc.attrs.id}DivClass">
-        			<h:inputText id="#{cc.attrs.id}Input" value="#{cc.attrs.value}" styleClass="minimal input text crud #{cc.attrs.styleClass}"
-        				disabled="#{cc.attrs.disabled}" onblur="#{cc.attrs.onblur}" required="#{cc.attrs.required}"
+        			<p:inputMask id="#{cc.attrs.id}Input" value="#{cc.attrs.value}" mask="999.999.999-99" styleClass="minimal input text crud #{cc.attrs.styleClass}"
+        				disabled="#{cc.attrs.disabled}" onblur="#{cc.attrs.onblur}" required="#{cc.attrs.required}" size="15" maxlength="15"
         				onchange="#{cc.attrs.onchange}" onkeypress="#{cc.attrs.onkeypress}" onkeyup="#{cc.attrs.onkeyup}">
-		   				<c:if test="#{cc.attrs.ajax}">
+        				<c:if test="#{cc.attrs.ajax}">
 					    	<c:if test="#{empty cc.getValueExpression('listener')}">
 						    	<p:ajax event="change" process="#{cc.attrs.execute}" update="#{cc.attrs.render}" immediate="#{cc.attrs.immediate}" 
 						    		onstart="#{cc.attrs.onstart}" oncomplete="#{cc.attrs.oncomplete}"/>
@@ -71,11 +70,9 @@
 						    		onstart="#{cc.attrs.onstart}" oncomplete="#{cc.attrs.oncomplete}" listener="#{cc.attrs.listener}"/>
 					    	</c:if>
 				        </c:if>
-		   				<c:if test="#{not empty cc.attrs.validatorId}">
-		   					<f:validator validatorId="#{cc.attrs.validatorId}" />
-		   				</c:if>
-		   				<f:converter converterId="stringConverter" />
-		   			</h:inputText>	
+	   					<f:validator validatorId="cpfValidator" />
+		   				<f:converter converterId="cpfConverter" />
+        			</p:inputMask>
         		</div>
         	</div>
         </p:outputPanel>

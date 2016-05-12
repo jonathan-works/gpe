@@ -1,4 +1,4 @@
-package br.com.infox.epp.processo.action;
+package br.com.infox.epp.processo.iniciar;
 
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
@@ -20,6 +20,10 @@ public class NaturezaCategoriaFluxoItem {
         if (item != null) {
             id += String.valueOf(item.getIdItem());
         }
+        return id;
+    }
+    
+    public String getId() {
         return id;
     }
 

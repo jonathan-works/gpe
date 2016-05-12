@@ -41,7 +41,7 @@ import br.com.infox.epp.fluxo.entity.NatCatFluxoLocalizacao;
 import br.com.infox.epp.fluxo.entity.NatCatFluxoLocalizacao_;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo_;
-import br.com.infox.epp.processo.action.NaturezaCategoriaFluxoItem;
+import br.com.infox.epp.processo.iniciar.NaturezaCategoriaFluxoItem;
 
 @Stateless
 @AutoCreate
@@ -51,16 +51,14 @@ public class NatCatFluxoLocalizacaoDAO extends DAO<NatCatFluxoLocalizacao> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "natCatFluxoLocalizacaoDAO";
 
-    public void deleteByNatCatFluxoAndLocalizacao(NaturezaCategoriaFluxo ncf,
-            Localizacao l) throws DAOException {
+    public void deleteByNatCatFluxoAndLocalizacao(NaturezaCategoriaFluxo ncf, Localizacao l) throws DAOException {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(QUERY_PARAM_NAT_CAT_FLUXO, ncf);
         parameters.put(QUERY_PARAM_LOCALIZACAO, l);
         executeNamedQueryUpdate(DELETE_BY_NAT_CAT_FLUXO_AND_LOCALIZACAO, parameters);
     }
 
-    public NatCatFluxoLocalizacao getByNatCatFluxoAndLocalizacao(
-            NaturezaCategoriaFluxo ncf, Localizacao l) {
+    public NatCatFluxoLocalizacao getByNatCatFluxoAndLocalizacao(NaturezaCategoriaFluxo ncf, Localizacao l) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(QUERY_PARAM_NAT_CAT_FLUXO, ncf);
         parameters.put(QUERY_PARAM_LOCALIZACAO, l);

@@ -175,6 +175,11 @@
       <version>5.3</version>
     </dependency>
     <dependency>
+		<groupId>org.primefaces.themes</groupId>
+		<artifactId>bootstrap</artifactId>
+		<version>1.0.8</version>
+	</dependency>
+    <dependency>
       <groupId>org.jbpm.jbpm3</groupId>
       <artifactId>jbpm-jpdl</artifactId>
       <version>3.4.1</version>
