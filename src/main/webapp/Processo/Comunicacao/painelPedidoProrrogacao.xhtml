@@ -15,18 +15,20 @@
 					label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
 					value="#{pedirProrrogacaoPrazoAction.classificacaoDocumentoProrrogPrazo}"
 					items="#{pedirProrrogacaoPrazoAction.classificacoesDocumentoProrrogacaoPrazo}"
-					showLabelSelecione="true">
+					showLabel="#{infoxMessages['comunicacao.painelPedidoProrrogacao.labelSelecione']}">
 					<a:ajax event="change" limitRender="true" render="@form"
 						execute="@form" />
 				</wi:selectOneMenuEntity>
 				<s:div id="documentoAnexoPedidoProrrogacao"
-					rendered="#{not empty pedirProrrogacaoPrazoAction.classificacaoDocumentoProrrogPrazo 
-		    				and not empty pedirProrrogacaoPrazoAction.classificacaoDocumentoProrrogPrazo.extensaoArquivosList}">
+					rendered="#{not empty pedirProrrogacaoPrazoAction.classificacaoDocumentoProrrogPrazo}">
+		    		<h:outputText value="#{infoxMessages['comunicacao.msgConfigClassificacao']}"
+		    			rendered="#{empty pedirProrrogacaoPrazoAction.classificacaoDocumentoProrrogPrazo.extensaoArquivosList}" />
 					<wi:fileUpload id="documentoProrrogacaoPrazo"
 						doneLabel="#{infoxMessages['documento.upload.doneLabel']}"
 						accept="#{pedirProrrogacaoPrazoAction.classificacaoDocumentoProrrogPrazo.acceptedTypes}"
 						onclear="infox.showLoading()" oncomplete="infox.hideLoading()"
-						reRender="buttonPedirProrrogacao" />
+						reRender="buttonPedirProrrogacao"
+						rendered="#{not empty pedirProrrogacaoPrazoAction.classificacaoDocumentoProrrogPrazo.extensaoArquivosList}" />
 				</s:div>
 				<s:div id="buttonPedirProrrogacao">
 						<wi:commandButton id="gravar"
