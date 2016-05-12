@@ -25,19 +25,22 @@ import br.com.infox.cdi.producer.EntityManagerProducer;
 public class SwimlaneInstanceSearch {
     
     public List<SwimlaneInstance> getSwimlaneInstancesByProcessDefinition(Long processDefinitionId) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        return getSwimlaneInstancesByProcessDefinition(processDefinitionId, getEntityManager());
+    }
+    
+    public List<SwimlaneInstance> getSwimlaneInstancesByProcessDefinition(Long processDefinitionId, EntityManager entityManager) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<SwimlaneInstance> cq = cb.createQuery(SwimlaneInstance.class);
         Root<SwimlaneInstance> swimlaneInstance = cq.from(SwimlaneInstance.class);
         swimlaneInstance.fetch("swimlane", JoinType.INNER);
         Join<SwimlaneInstance, TaskMgmtInstance> taskMgmtInstance = swimlaneInstance.join("taskMgmtInstance", JoinType.INNER);
         Join<TaskMgmtInstance, ProcessInstance> processInstance = taskMgmtInstance.join("processInstance", JoinType.INNER);
-        
         cq.select(swimlaneInstance);
         cq.where(
             cb.equal(processInstance.<ProcessDefinition>get("processDefinition").get("id"), cb.literal(processDefinitionId)),
             cb.isNull(processInstance.<Date>get("end"))
         );
-        return getEntityManager().createQuery(cq).getResultList();
+        return entityManager.createQuery(cq).getResultList();
     }
     
     public EntityManager getEntityManager() {

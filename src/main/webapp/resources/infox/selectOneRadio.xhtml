@@ -1,0 +1,98 @@
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite" >
+    
+    <composite:interface>
+    	
+    	<composite:attribute name="id"/>
+    	<composite:attribute name="rendered" default="true"/>
+    	<composite:attribute name="label" />
+    	<composite:attribute name="help" />
+    	<composite:attribute name="value" type="java.lang.Object"/>
+    	<composite:attribute name="items"  type="java.lang.Object"/>
+    	<composite:attribute name="itemLabel" default="#{item}" />
+    	<composite:attribute name="itemValue" default="#{item}" />
+    	<composite:attribute name="disabled" default="false"/>
+    	<composite:attribute name="styleClass"/>
+    	<composite:attribute name="readonly" default="false"/>
+    	<composite:attribute name="required" default="false" />
+    	<composite:attribute name="validatorId" />
+    	<composite:attribute name="converterId"/>
+    	
+    	<composite:attribute name="ajax" default="false" />
+    	<composite:attribute name="render" default="@this" />
+    	<composite:attribute name="execute" default="@this" />
+    	<composite:attribute name="listener" method-signature="void action" />
+    	<composite:attribute name="immediate" default="false" />
+    	<composite:attribute name="onstart" />
+    	<composite:attribute name="oncomplete" />
+    	
+    	<composite:facet name="label"/>
+    </composite:interface>
+	
+    <composite:implementation>
+		<p:outputPanel id="#{cc.attrs.id}" styleClass="decoration-div sel-one-radio-div" rendered="#{cc.attrs.rendered}">
+			<script type="text/javascript">
+				var id = "#{cc.attrs.id}";
+				var errorClass = $('.' + id + 'ErrorClass');
+				var div = $('.' + id + 'DivClass');
+				if (errorClass.length !== 0) {
+					div.addClass('property-error');
+				} else {
+					div.removeClass('property-error');
+				}
+	    	</script>
+        	<div class="property-field-edit">
+        		<div id="#{cc.attrs.id}LabelDiv" class="property-field-edit-name">
+	        		<h:outputLabel id="#{cc.attrs.id}Label" for="#{cc.attrs.id}Input">
+	        			<h:outputText value="#{cc.attrs.label}" rendered="#{not empty cc.attrs.label}"/>
+	        			<c:if test="#{not empty cc.attrs.help}">
+		        			<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" 
+	        						title="#{cc.attrs.help}" style="vertical-align: middle;"/>
+        				</c:if>
+	        			<composite:renderFacet name="label" />
+	        		</h:outputLabel>
+	        		<h:outputText styleClass="required" rendered="#{cc.attrs.required}" value="*" />
+	        		<h:message for="#{cc.attrs.id}Input" styleClass="property-error property-msg #{cc.attrs.id}ErrorClass"/>
+        		</div>
+        		<div class="property-field-edit-value #{cc.attrs.id}DivClass">
+        			<h:selectOneRadio id="#{cc.attrs.id}Input" value="#{cc.attrs.value}" layout="#{wi:get(direction, 'line')}Direction"
+            			disabled="#{cc.attrs.disabled}" required="#{cc.attrs.required}" onchange="#{cc.attrs.onchange}" 
+            			readonly="#{cc.attrs.readonly}"	styleClass="radio">
+            			<f:selectItems value="#{cc.attrs.items}" var="item" itemLabel="#{cc.attrs.itemLabel}" itemValue="#{cc.attrs.itemValue}" />
+			            <script>
+							invoke(["infox.escapeId"],function(EscapeId) {
+								var id = EscapeId(#{empty value} ? (#{not empty cc.attrs.id} ?
+															"##{rich:clientId(id)}:#{cc.attrs.id}Input:#{empty boxChecked ? 0 : boxChecked}" :
+															"##{rich:clientId(id)}:#{empty boxChecked ? 0 : boxChecked}") :	"");
+								$(id).attr({checked:true});
+							});
+						</script>
+						<c:if test="#{cc.attrs.ajax}">
+					    	<c:if test="#{empty cc.getValueExpression('listener')}">
+						    	<p:ajax event="change" process="#{cc.attrs.execute}" update="#{cc.attrs.render}" immediate="#{cc.attrs.immediate}" 
+						    		onstart="#{cc.attrs.onstart}" oncomplete="#{cc.attrs.oncomplete}"/>
+					    	</c:if>
+					    	<c:if test="#{not empty cc.getValueExpression('listener')}">
+						    	<p:ajax event="change" process="#{cc.attrs.execute}" update="#{cc.attrs.render}" immediate="#{cc.attrs.immediate}" 
+						    		onstart="#{cc.attrs.onstart}" oncomplete="#{cc.attrs.oncomplete}" listener="#{cc.attrs.listener}"/>
+					    	</c:if>
+				        </c:if>
+		   				<c:if test="#{not empty cc.attrs.validatorId}">
+		   					<f:validator validatorId="#{cc.attrs.validatorId}" />
+		   				</c:if>
+		   			    <c:if test="#{not empty cc.attrs.converterId}">
+		   			    	<f:converter converterId="#{cc.attrs.converterId}" />
+		   			    </c:if>
+		   			    <composite:insertChildren />
+			        </h:selectOneRadio>
+        		</div>
+        	</div>
+        </p:outputPanel>
+    </composite:implementation>
+	
+</html>

@@ -8,27 +8,25 @@
 
 <hibernate-configuration>
   <session-factory>
-    <!-- 
-       System Service QA Database PostgreSQL
-       https://wiki.corp.jboss.com/bin/view/IT/SystemServiceQaDatabasePostgresql
-
-       Install PostgreSQL on Fedora
-       http://www.jboss.org/community/docs/DOC-13270
-    -->
-
     <!-- hibernate dialect -->
 
-    <!-- JDBC connection properties (begin) ===
     <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-    <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/jbpmtest</property>
-    <property name="hibernate.connection.username">jbpmtest</property>
-    <property name="hibernate.connection.password"></property>
+    <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/desbd_erik</property>
+    <property name="hibernate.connection.username">postgres</property>
+    <property name="hibernate.connection.password">postgres</property>
+    <property name="dialect">org.hibernate.dialect.PostgresPlusDialect</property>
+    <!-- JDBC connection properties (begin) ===
+<property name="hibernate.connection.driver_class">org.h2.Driver</property>
+<property name="hibernate.connection.url">jdbc:h2:mem:demo;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</property>
+<property name="hibernate.connection.username">sa</property>
+<property name="hibernate.connection.password">sa</property>
+<property name="dialect">org.hibernate.dialect.H2Dialect</property>
     ==== JDBC connection properties (end) -->
-
     <!-- DataSource properties (begin) -->
 <!--     <property name="hibernate.connection.datasource">${epp.datasource.jndi.prefix}${epp.datasource.name}</property> -->
     <!-- DataSource properties (end) -->
-
+<property name="hibernate.cache.use_second_level_cache">false</property>
+<property name="hibernate.cache.region.factory_class">${hibernate.cache.region.class}</property>
     <!-- JTA transaction properties (begin) -->
 <!--    <property name="hibernate.transaction.factory_class">org.hibernate.transaction.JTATransactionFactory</property> 
     <property name="hibernate.cache.region.factory_class">${hibernate.cache.region.class}</property> -->
@@ -47,21 +45,20 @@
     <!-- ################################### -->
     <!-- # common settings                 # -->
     <!-- ################################### -->
-
+    <!-- logging properties --> 
     <!-- Automatic schema creation (begin) ===
     <property name="hibernate.hbm2ddl.auto">create</property>
+	<property name="hibernate.hbm2ddl.auto">validate</property>
+	<property name="hibernate.hbm2ddl.auto">update</property>
     ==== Automatic schema creation (end) -->
+	<property name="hibernate.show_sql">true</property>
+	<property name="hibernate.format_sql">false</property>
+	<property name="hibernate.use_sql_comments">true</property>
 
     <!-- Simple memory-only cache -->
     
     <property name="hibernate.cache.provider_class">org.hibernate.cache.HashtableCacheProvider</property>
     
-    <!-- logging properties --> 
-<!--      <property name="hibernate.show_sql">${desenvolvimento}</property>
-    <property name="hibernate.format_sql">false</property>
-    <property name="hibernate.use_sql_comments">true</property>
-    <property name="hibernate.dialect">${hibernate.dialect}</property>
--->
     <!-- ############################################ -->
     <!-- # mapping files with external dependencies # -->
     <!-- ############################################ -->
@@ -121,7 +118,7 @@
     <mapping resource="org/jbpm/graph/node/MailNode.hbm.xml"/>
     <mapping resource="org/jbpm/graph/node/State.hbm.xml"/>
     <mapping resource="org/jbpm/graph/node/TaskNode.hbm.xml"/>
-    
+
     <!-- context.def mapping files -->
     <mapping resource="org/jbpm/context/def/ContextDefinition.hbm.xml"/>
     <mapping resource="org/jbpm/context/def/VariableAccess.hbm.xml"/>
@@ -166,6 +163,14 @@
     <mapping resource="org/jbpm/context/exe/variableinstance/LongInstance.hbm.xml"/>
     <mapping resource="org/jbpm/context/exe/variableinstance/NullInstance.hbm.xml"/>
     <mapping resource="org/jbpm/context/exe/variableinstance/StringInstance.hbm.xml"/>
+    
+    <!-- loopBehavior.def mapping files -->
+    <mapping resource="org/jbpm/loopBehavior/def/LoopBehaviorModuleDefinition.hbm.xml"/>
+    <mapping resource="org/jbpm/graph/def/node/loop/LoopConfiguration.hbm.xml"/>
+    <mapping resource="org/jbpm/graph/def/node/loop/LoopConfigurationMultiInstance.hbm.xml"/>
+    <mapping resource="org/jbpm/graph/def/node/loop/LoopConfigurationStandard.hbm.xml"/>
+    <!-- loopBehavior.exe mapping files -->
+    <mapping resource="org/jbpm/loopBehavior/exe/LoopBehaviorFactory.hbm.xml"/>
     
     <!-- job mapping files -->
     <mapping resource="org/jbpm/job/Job.hbm.xml"/>

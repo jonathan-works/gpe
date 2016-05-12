@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.jbpm.activity.exe.MultiInstanceActivityBehavior;
 import org.jbpm.graph.action.Script;
 import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
@@ -74,12 +75,18 @@ public class EventHandler implements Serializable {
             return ret;
         }
         for (Event event : events.values()) {
-            if (!event.isListener() && !Event.EVENTTYPE_DISPATCHER.equals(event.getEventType())) {
+            if (!isIgnoreEvent(event)) {
                 EventHandler eh = new EventHandler(event);
                 ret.add(eh);
             }
         }
         return ret;
+    }
+    
+    private static boolean isIgnoreEvent(Event event) {
+        return event.isListener() || Event.EVENTTYPE_DISPATCHER.equals(event.getEventType()) 
+                || MultiInstanceActivityBehavior.NONE_EVENT_BEHAVIOR.equals(event.getEventType()) 
+                || MultiInstanceActivityBehavior.ONE_EVENT_BEHAVIOR.equals(event.getEventType());
     }
 
     @Override

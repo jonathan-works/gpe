@@ -17,11 +17,12 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.metamodel.Metamodel;
+import javax.transaction.Synchronization;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-public class EntityManagerImpl implements EntityManager, Serializable {
+public class EntityManagerImpl implements EntityManager, Serializable, Synchronization {
 
 	private static final long serialVersionUID = 1L;
 	private static final Pattern patternEl = Pattern.compile("#\\{.*?\\}");
@@ -268,4 +269,15 @@ public class EntityManagerImpl implements EntityManager, Serializable {
 		return new ImmutablePair<String, Map<String, Object>>(newQlString, parameters);
 	}
 
+    @Override
+    public void beforeCompletion() {
+        flush();
+    }
+
+    @Override
+    public void afterCompletion(int status) {
+        if (isOpen()) {
+            close();
+        }
+    }
 }

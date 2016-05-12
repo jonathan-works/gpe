@@ -13,6 +13,7 @@ import java.util.UUID;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.node.StartState;
@@ -76,7 +77,7 @@ public class TaskFitter extends Fitter implements Serializable {
             taskNode.setEndTasks(true);
             task.setSwimlane((Swimlane) process.getTaskMgmtDefinition().getSwimlanes().values().iterator().next());
             task.setTaskController(new TaskController());
-            task.getTaskController().setVariableAccesses(new ArrayList<>());
+            task.getTaskController().setVariableAccesses(new ArrayList<VariableAccess>());
             Delegation delegation = new Delegation(InfoxTaskControllerHandler.class.getName());
             delegation.setProcessDefinition(task.getProcessDefinition());
             task.getTaskController().setTaskControllerDelegation(delegation);

@@ -34,6 +34,7 @@ import org.jbpm.graph.def.GraphElement;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
+import org.jbpm.graph.node.Activity;
 import org.jbpm.graph.node.ProcessFactory;
 import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
@@ -91,6 +92,10 @@ public class JpdlXmlWriter {
     }
 
     public void write(ProcessDefinition processDefinition) {
+    	write(processDefinition, true);
+    }
+    
+    public void write(ProcessDefinition processDefinition, boolean prettyPrint) {
         problems = new ArrayList<String>();
         if (processDefinition == null) {
             throw new JbpmException("processDefinition is null");
@@ -104,9 +109,10 @@ public class JpdlXmlWriter {
             Document document = createDomTree(processDefinition);
 
             // write the dom-tree to the given writer
-            OutputFormat outputFormat = OutputFormat.createPrettyPrint();
+            OutputFormat outputFormat = prettyPrint ? OutputFormat.createPrettyPrint() : OutputFormat.createCompactFormat();
             outputFormat.setIndentSize(DEFAULT_IDENT_SIZE);
             outputFormat.setEncoding(DEFAULT_ENCODING);
+            
             XMLWriter xmlWriter = new XMLWriter(writer, outputFormat);
             xmlWriter.write(document);
             xmlWriter.flush();
@@ -240,6 +246,9 @@ public class JpdlXmlWriter {
                     if (taskNode.getTasks() != null) {
                         writeTasks(taskNode.getTasks(), nodeElement);
                     }
+                    if (taskNode.getActivityBehavior() != null) {
+                        writeActivity(taskNode, nodeElement);
+                    }
                 }
                 if (node instanceof ProcessState) {
                     writeProcessState((ProcessState) node, nodeElement);
@@ -250,7 +259,11 @@ public class JpdlXmlWriter {
         }
     }
 
-    @SuppressWarnings({ UNCHECKED, RAWTYPES })
+    private void writeActivity(Activity activity, Element nodeElement) {
+        activity.getActivityBehavior().write(nodeElement);
+    }
+
+	@SuppressWarnings({ UNCHECKED, RAWTYPES })
     private void writeProcessState(ProcessState node, Element nodeElement) {
         Element subProcess = addElement(nodeElement, "sub-process");
         String subProcessName;
@@ -258,6 +271,10 @@ public class JpdlXmlWriter {
             subProcessName = node.getSubProcessDefinition().getName();
         } else { // Publicação
             subProcessName = node.getSubProcessName();
+        }
+        
+        if (node.getActivityBehavior() != null){
+            node.getActivityBehavior().write(nodeElement);
         }
         subProcess.addAttribute(ELEMENT_NAME, subProcessName);
         subProcess.addAttribute("binding", "late");
@@ -268,8 +285,6 @@ public class JpdlXmlWriter {
     private void writeAssignment(Task task, Element element){
 		if (task.getPooledActorsExpression() != null || task.getActorIdExpression() != null){
 			writeAssignment(element, task.getActorIdExpression(), task.getPooledActorsExpression());
-//			addAttribute(element, "actor-id", task.getActorIdExpression());
-//			addAttribute(element, "pooled-actors", task.getPooledActorsExpression());
 		}
     }
     
@@ -416,7 +431,7 @@ public class JpdlXmlWriter {
         if ((transitionEvent != null) && (transitionEvent.hasActions())) {
             writeActions(transitionElement, transitionEvent.getActions());
         }
-        if (transition.getCondition() != null && !"".equals(transition.getCondition().trim())) {
+        if (!StringUtil.isEmpty(transition.getCondition())) {
         	transitionElement.addAttribute("condition", transition.getCondition());
         } else {
         	Attribute condition = transitionElement.attribute("condition");

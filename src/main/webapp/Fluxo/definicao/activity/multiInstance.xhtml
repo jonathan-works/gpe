@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib" xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:i="http://java.sun.com/jsf/composite/infox" xmlns:p="http://primefaces.org/ui">
+    
+    <ui:param name="activityBehavior" value="#{nodeFitter.nodeHandler.activityBehavior}" />
+    
+    <h:form id="multiInstanceLoopForm">
+    
+    	<i:inputText id="loopCardinalityExpression" label="#{infoxMessages['process.def.activity.loop.cardinality']}" 
+        	value="#{activityBehavior.loopCardinalityExpression}" ajax="true" render="@form"
+        	validatorId="javax.faces.elValidator" help="#{infoxMessages['process.def.activity.loop.cardinality.help']}" />
+        	
+       	<i:inputText id="loopDataInputExpression" label="#{infoxMessages['process.def.activity.loop.dataInput']}" 
+        	value="#{activityBehavior.loopDataInputExpression}" ajax="true" render="@form"
+        	validatorId="javax.faces.elValidator" help="#{infoxMessages['process.def.activity.loop.dataInput.help']}" />
+        
+        <i:inputText id="nomeVariavelInputDataItem" label="#{infoxMessages['process.def.activity.loop.inputDataItem']}" 
+        	value="#{activityBehavior.inputDataItem}" ajax="true" render="@form" 
+        	help="#{infoxMessages['process.def.activity.loop.inputDataItem.help']}" />
+        	
+        <i:inputText id="completionConditionExpression" label="#{infoxMessages['process.def.activity.loop.completionCondition']}" 
+        	value="#{activityBehavior.completionConditionExpression}" ajax="true" render="@form"
+        	validatorId="javax.faces.elValidator" help="#{infoxMessages['process.def.activity.loop.completionCondition.help']}" />
+        
+        <i:selectOneMenu id="eventBehavior"  value="#{activityBehavior.eventBehavior}"
+        		items="#{nodeFitter.nodeHandler.eventBehaviors}" label="#{infoxMessages['process.def.activity.loop.behavior']}" 
+        		itemLabel="#{infoxMessages['process.def.activity.loop.behavior.'.concat(item.name())]}" 
+        		hideNoSelectionLabel="true"	ajax="true" render="@(.eventsPanel)" execute="@this" 
+        		listener="#{nodeFitter.nodeHandler.onChangeEventBehavior}"/>
+        
+        <p:outputPanel styleClass="eventsPanel">
+	        <rich:panel rendered="#{not empty activityBehavior.eventBehavior and activityBehavior.eventBehavior ne 'ALL'}"
+	            header="#{infoxMessages['process.def.activity.loop.event']}">
+	            <ui:include src="/Fluxo/definicao/event.xhtml">
+	                <ui:param name="id" value="multiInstanceEvent" />
+	                <ui:param name="event" value="#{nodeFitter.nodeHandler.multiInstanceEvent}" />
+	            </ui:include>
+	        </rich:panel>
+	    </p:outputPanel>
+        
+    </h:form>
+    
+</ui:composition>
