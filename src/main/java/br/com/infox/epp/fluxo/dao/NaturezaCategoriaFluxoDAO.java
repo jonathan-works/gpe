@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -36,27 +37,14 @@ import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo_;
 import br.com.infox.epp.fluxo.entity.Natureza_;
 
-/**
- * Classe DAO para a entidade NaturezaCategoriaFluxo
- * 
- * @author Daniel
- * 
- */
-@Name(NaturezaCategoriaFluxoDAO.NAME)
+@Stateless
 @AutoCreate
+@Name(NaturezaCategoriaFluxoDAO.NAME)
 public class NaturezaCategoriaFluxoDAO extends DAO<NaturezaCategoriaFluxo> {
 
 	private static final long serialVersionUID = -1456893293816945596L;
 	public static final String NAME = "naturezaCategoriaFluxoDAO";
 
-	/**
-	 * Lista todos os registros filtrando por uma natureza.
-	 * 
-	 * @param natureza
-	 *            que se desejar filtrar a seleção.
-	 * @return lista de todos os registros referente a <code>natureza</code>
-	 *         informada.
-	 */
 	public List<NaturezaCategoriaFluxo> listByNatureza(Natureza natureza) {
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put(PARAM_NATUREZA, natureza);

@@ -31,14 +31,6 @@ public interface NatCatFluxoLocalizacaoQuery {
             + QUERY_PARAM_NAT_CAT_FLUXO
             + " and o.localizacao = :" + QUERY_PARAM_LOCALIZACAO;
 
-    String LIST_BY_LOCALIZACAO_AND_PAPEL = "listNatCatFluxoLocalizacaoByLocalizacaoAndPapel";
-    String LIST_BY_LOCALIZACAO_AND_PAPEL_QUERY = "select ncf from NatCatFluxoLocalizacao o "
-            + "inner join o.naturezaCategoriaFluxo ncf "
-            + "inner join ncf.fluxo.fluxoPapelList papelList where "
-            + "o.localizacao = :"
-            + QUERY_PARAM_LOCALIZACAO
-            + " and papelList.papel = :" + QUERY_PARAM_PAPEL;
-
     String LIST_BY_NAT_CAT_FLUXO = "listByNatCatFluxo";
     String LIST_BY_NAT_CAT_FLUXO_QUERY = "select ncfl from NatCatFluxoLocalizacao ncfl "
             + "where ncfl.naturezaCategoriaFluxo = :"

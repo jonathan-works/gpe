@@ -3,22 +3,16 @@ package br.com.infox.epp.fluxo.list;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
+import javax.inject.Named;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.entity.Natureza;
-import br.com.infox.seam.util.ComponentUtil;
 
-@Name(NaturezaList.NAME)
-@BypassInterceptors
-@Scope(ScopeType.PAGE)
+@Named
+@ViewScoped
 public class NaturezaList extends EntityList<Natureza> {
-
-    public static final String NAME = "naturezaList";
 
     private static final long serialVersionUID = 1L;
 
@@ -27,10 +21,6 @@ public class NaturezaList extends EntityList<Natureza> {
 
     private static final String DEFAULT_EJBQL = "select o from Natureza o";
     private static final String DEFAULT_ORDER = "natureza";
-
-    public static final NaturezaList instance() {
-        return ComponentUtil.getComponent(NaturezaList.NAME);
-    }
 
     @Override
     protected void addSearchFields() {
