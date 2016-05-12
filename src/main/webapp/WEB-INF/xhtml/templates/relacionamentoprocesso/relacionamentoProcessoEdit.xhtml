@@ -1,0 +1,43 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:infox="http://www.infox.com.br/jsf"
+	xmlns:f="http://java.sun.com/jsf/core">
+	<wi:dataForm formId="relacionamentoProcessoForm"
+		formTitle="#{infoxMessages['relacionamentoProcesso.titleForm']}"
+		home="#{relacionamentoCrudAction}">
+        <wi:selectOneMenuEnum id="tipoProcessoRelacionado" value="#{relacionamentoProcessoEdit.tipoProcessoRelacionado}"
+            label="#{infoxMessages['relacionamentoProcesso.tipoProcesso']}"
+            items="#{relacionamentoProcessoEdit.tipoProcessoList}" required="true" hideNoSelectionLabel="false"
+            showLabelSelecione="true">
+        </wi:selectOneMenuEnum>
+		<wi:inputText id="labelNumeroProcesso"
+			label="#{infoxMessages['relacionamentoProcesso.numeroProcesso']}"
+			required="true" maxlength="30"
+			value="#{relacionamentoProcessoEdit.numeroProcessoRelacionado}"
+			disabled="#{relacionamentoProcessoEdit.managed}">
+		</wi:inputText>
+		<wi:selectOneMenuEntity id="tipoRelacionamento"
+			value="#{relacionamentoProcessoEdit.instance.tipoRelacionamentoProcesso}"
+			label="#{infoxMessages['tipoRelacionamentoProcesso.tipoRelacionamento']}"
+			items="#{relacionamentoProcessoEdit.tipoRelacionamentoProcessos}"
+			required="true" hideNoSelectionLabel="false"
+			showLabelSelecione="true">
+		</wi:selectOneMenuEntity>
+		<wi:inputTextarea id="motivo"
+			label="#{infoxMessages['relacionamentoProcesso.motivo']}"
+			value="#{relacionamentoProcessoEdit.instance.motivo}" required="true">
+		</wi:inputTextarea>
+		<ui:define name="buttons">
+			<wi:commandButton id="persistButton"
+				action="relacionamentoProcessoEdit.save()"
+				reRender="@form relacionamentoProcessoDiv pageBodyDialogMessage"
+				value="#{relacionamentoProcessoEdit.managed ? messages['crud.update'] : messages['crud.persist']}"
+				execute="@form">
+			</wi:commandButton>
+		</ui:define>
+	</wi:dataForm>
+</ui:composition>

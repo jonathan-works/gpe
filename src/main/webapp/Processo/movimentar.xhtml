@@ -332,107 +332,12 @@
                 id="relacionamentoProcessoTab"
                 name="relacionamentoProcessoTab"
                 rendered="#{home.isManaged()}"
+                actionListener="#{relacionamentoProcessoView.initView(processoEpaHome.instance, false)}"
                 title="#{infoxMessages['relacionamentoProcesso.titleTab']}">
-                <s:div id="relacionamentoProcessoFormDiv">
-                    <wi:dataForm
-                        formId="relacionamentoProcessoForm"
-                        formTitle="#{infoxMessages['relacionamentoProcesso.titleForm']}"
-                        home="#{relacionamentoCrudAction}">
-                        <wi:inputText
-                            id="labelNumeroProcesso"
-                            label="#{infoxMessages['relacionamentoProcesso.numeroProcesso']}"
-                            required="true"
-                            maxlength="30"
-                            value="#{relacionamentoCrudAction.processoRelacionado}"
-                            disabled="#{relacionamentoCrudAction.managed}">
-                        </wi:inputText>
-                        <wi:selectOneMenuEntity
-                            id="tipoRelacionamento"
-                            value="#{relacionamentoCrudAction.instance.tipoRelacionamentoProcesso}"
-                            label="#{infoxMessages['tipoRelacionamentoProcesso.tipoRelacionamento']}"
-                            items="#{relacionamentoCrudAction.tipoRelacionamentoProcessoList}"
-                            required="true"
-                            hideNoSelectionLabel="false"
-                            showLabelSelecione="true">
-                        </wi:selectOneMenuEntity>
-                        <wi:inputTextarea
-                            id="motivo"
-                            label="#{infoxMessages['relacionamentoProcesso.motivo']}"
-                            value="#{relacionamentoCrudAction.instance.motivo}"
-                            required="true">
-                        </wi:inputTextarea>
-                        <wi:selectSituacaoRadio
-                            id="ativo"
-                            label="#{infoxMessages['field.situacao']}"
-                            rendered="#{relacionamentoCrudAction.managed}"
-                            value="#{relacionamentoCrudAction.instance.ativo}" />
-                        <ui:define name="buttons">
-                            <wi:commandButton
-                                id="persistButton"
-                                action="relacionamentoCrudAction.save()"
-                                reRender="relacionamentoProcessoFormDiv relacionamentoProcessoDTDiv pageBodyDialogMessage"
-                                value="#{relacionamentoCrudAction.isManaged() ? messages['crud.update'] : messages['crud.persist']}"
-                                execute="relacionamentoProcessoFormDiv">
-                            </wi:commandButton>
-                            <wi:commandButtonNew newInstanceAction="relacionamentoCrudAction.newInstance()"
-                            					 reRender="relacionamentoProcessoFormDiv"/>
-                        </ui:define>
-                    </wi:dataForm>
-                </s:div>
-                <s:div id="relacionamentoProcessoDTDiv" style="margin-top:10px">
-                    <h:panelGroup
-                        id="dtable"
-                        rendered="#{not empty relacionamentoCrudAction.processo}">
-                        <wi:dataTable
-                            id="relProcDt2"
-                            bean="#{relacionamentoProcessoList}"
-                            values="#{relacionamentoProcessoList.list(15)}"
-                            tableTitle="#{infoxMessages['relacionamentoProcesso.processosRelacionados']}"
-                            rowId="#{row.idRelacionamentoProcesso}"
-                            showSearchForm="false"
-                            panelStyleClass="rel-proc-dt">
-                            <ui:define name="headerToolBar" />
-                            <ui:define name="toolBar">
-                                <wi:toolBarEdit
-                                    id="#{id}Edit"
-                                    action="#{relacionamentoCrudAction.setEditMode(row.numeroProcessoRoot, row.relacionamento.idRelacionamento)}"
-                                    render="relacionamentoProcessoFormDiv pageBodyDialogMessage" />
-                                <wi:toolBar
-                                    id="#{id}Inactivate"
-                                    action="relacionamentoCrudAction.inactive(row.relacionamento)"
-                                    rendered="#{row.relacionamento.ativo}"
-                                    limitToList="true"
-                                    status=":status"
-                                    render="relacionamentoProcessoFormDiv relacionamentoProcessoDTDiv pageBodyDialogMessage"
-                                    onclick="return confirm(\'#{infoxMessages['crud.confirmInactivate']}\');"
-                                    url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
-                                    title="#{infoxMessages['button.inactive']}" />
-                            </ui:define>
-                            <wi:columnOutputText
-                                columnId="numeroProcesso"
-                                columnHeader="#{infoxMessages['relacionamentoProcesso.numeroProcesso']}"
-                                value="#{row.numeroProcessoRoot}" />
-                            <wi:columnOutputText
-                                columnId="motivo"
-                                columnHeader="#{infoxMessages['relacionamentoProcesso.motivo']}"
-                                value="#{row.relacionamento.motivo}" />
-                            <wi:columnOutputText
-                                columnId="nomeUsuario"
-                                columnHeader="#{infoxMessages['relacionamentoProcesso.nomeUsuario']}"
-                                value="#{row.relacionamento.nomeUsuario}" />
-                            <wi:columnOutputText
-                                columnId="dataRelacionamento"
-                                columnHeader="#{infoxMessages['relacionamentoProcesso.dataRelacionamento']}"
-                                value="#{row.relacionamento.dataRelacionamento}" />
-                            <wi:columnOutputText
-                                columnId="ativo"
-                                value="#{row.relacionamento.ativo ? messages['entity.ativo'] : messages['entity.inativo']}"
-                                columnHeader="#{infoxMessages['entity.situacao']}"
-                                columnStyle="text-align:center;"
-                                columnWidth="10%" />
-                        </wi:dataTable>
-                    </h:panelGroup>
-                </s:div>
+                <ui:fragment rendered="#{home.tab eq 'relacionamentoProcessoTab'}">
+					<ui:include
+						src="/WEB-INF/xhtml/templates/relacionamentoprocesso/relacionamentoProcesso.xhtml" />
+                </ui:fragment>
             </infox:tab>
             
         	<ui:include src="abasCustomizadasDoMovimentar.xhtml" />

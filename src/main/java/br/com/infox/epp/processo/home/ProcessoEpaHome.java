@@ -19,7 +19,6 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.cdi.seam.ContextDependency;
-import br.com.infox.epp.processo.action.RelacionamentoCrudAction;
 import br.com.infox.epp.processo.consulta.action.ConsultaController;
 import br.com.infox.epp.processo.documento.action.DocumentoProcessoAction;
 import br.com.infox.epp.processo.documento.action.PastaAction;
@@ -82,8 +81,6 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	private InfoxMessages infoxMessages;
 	@In
 	private VariavelProcessoAction variavelProcessoAction;
-	@In
-	private RelacionamentoCrudAction relacionamentoCrudAction;
 	@In
 	private ConsultaController consultaController;
 	@In
@@ -258,9 +255,6 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 		if((tab == null && getTab() != null) || (tab != null && getTab() == null) || !tab.equals(getTab())){
 			super.setTab(tab);
 			variavelProcessoAction.setProcesso(getInstance());
-	        if (tab.equals("relacionamentoProcessoTab")){
-	        	relacionamentoCrudAction.setProcesso(this.getInstance().getNumeroProcessoRoot());
-	        }
 	        if (tab.equals("tabMovimentacoes")){
 	        	consultaController.setProcesso(this.getInstance());
 	        }
