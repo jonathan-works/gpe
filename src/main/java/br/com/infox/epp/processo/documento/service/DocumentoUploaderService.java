@@ -106,7 +106,7 @@ public class DocumentoUploaderService implements Serializable {
 	
 	public void persist(DocumentoUploadBean documentoUploadBean) throws DAOException {
 		Documento documento = documentoUploadBean.getDocumento();
-        documentoManager.gravarDocumentoNoProcesso(documento.getProcesso(), documento);
+        documentoManager.gravarDocumentoNoProcesso(documento);
 	}
 	
 	//Alteração solicitada no bug #69320 para utilizar a média do tamanho do documento pelo número de páginas e comparar com o limite do tamanho por paǵina 

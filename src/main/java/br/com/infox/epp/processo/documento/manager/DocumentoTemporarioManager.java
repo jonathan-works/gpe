@@ -95,7 +95,7 @@ public class DocumentoTemporarioManager {
         }
         
         if (!documentosParaAnalise.isEmpty()) {
-            Processo processo = documentosParaAnalise.get(0).getProcesso();
+            Processo processo = documentosParaAnalise.get(0).getPasta().getProcesso();
             Documento[] arrayDocumentos = documentosParaAnalise.toArray(new Documento[documentosParaAnalise.size()]);
             Processo processoAnaliseDoc = processoAnaliseDocumentoService.criarProcessoAnaliseDocumentos(processo, arrayDocumentos);
             processoAnaliseDocumentoService.inicializarFluxoDocumento(processoAnaliseDoc, null);
@@ -108,8 +108,8 @@ public class DocumentoTemporarioManager {
         Documento documento = new Documento();
         documento.setClassificacaoDocumento(classificacaoDocumento);
         documento.setDocumentoBin(docBin);
-        documento.setProcesso(dt.getProcesso());
         documento.setDescricao(dt.getDescricao());
+        documento.setPasta(dt.getPasta());
         documento.setNumeroDocumento(documentoManager.getNextNumeracao(documento));
         documento.setAnexo(dt.getAnexo());
         documento.setIdJbpmTask(dt.getIdJbpmTask());
@@ -119,7 +119,6 @@ public class DocumentoTemporarioManager {
         documento.setDataAlteracao(dt.getDataAlteracao());
         documento.setUsuarioAlteracao(dt.getUsuarioAlteracao());
         documento.setExcluido(Boolean.FALSE);
-        documento.setPasta(dt.getPasta());
         documento.setLocalizacao(dt.getLocalizacao());
         return documento;
     }

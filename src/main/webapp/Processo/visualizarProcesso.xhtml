@@ -92,7 +92,7 @@
                 name="tabAnexos"
                 rendered="#{processoEpaHome.managed and security.checkPage('/pages/Processo/abaAnexos')}"
                 status=":status"
-                action="#{documentoList.entity.setProcesso(processoEpaHome.instance)}"
+                action="#{documentoList.setProcesso(processoEpaHome.instance)}"
                 actionListener="#{documentoProcessoAction.onClickDocumentosTab()}"
                 title="#{infoxMessages['processo.documentos']}">
                 <ui:include src="pastaDocumento.xhtml">

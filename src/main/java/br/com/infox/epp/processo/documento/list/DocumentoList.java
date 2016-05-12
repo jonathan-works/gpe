@@ -42,6 +42,8 @@ public class DocumentoList extends EntityList<Documento> {
     @In private PastaManager pastaManager;
     @In private ActionMessagesService actionMessagesService;
     
+    private Processo processo;
+    
     @Override
     public void newInstance() {
     	setEntity(new Documento());
@@ -90,12 +92,11 @@ public class DocumentoList extends EntityList<Documento> {
     }
 
     public Processo getProcesso() {
-        return getEntity().getProcesso();
+        return processo;
     }
 
     public void setProcesso(Processo processo) {
-        Documento documento = getEntity();
-        documento.setProcesso(processo);
+    	this.processo = processo;
     }
 
     public void checkPastaToRemove(Pasta toRemove) {

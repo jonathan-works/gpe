@@ -154,7 +154,8 @@ public class DocumentoUploader extends DocumentoCreator implements FileUploadLis
 	}
 
 	private Documento gravarDocumento(Documento documento) throws DAOException {
-		return documentoManager.gravarDocumentoNoProcesso(getProcesso(), documento, getPasta());
+		documento.setPasta(getPasta());
+		return documentoManager.gravarDocumentoNoProcesso(getProcesso(), documento);
 	}
 
 	@Override

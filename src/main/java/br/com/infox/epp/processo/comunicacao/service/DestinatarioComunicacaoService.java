@@ -61,7 +61,7 @@ public class DestinatarioComunicacaoService implements Serializable{
 				}
 			}
 		} else {
-			Localizacao localizacaoRaiz = localizacaoManager.getLocalizacaoByCodigo(raizLocalizacoesComunicacao);
+			Localizacao localizacaoRaiz = localizacaoManager.getLocalizacaoByNome(raizLocalizacoesComunicacao);
 			if (destinatario.getDestino().getCaminhoCompleto().startsWith(localizacaoRaiz.getCaminhoCompleto())) {
 				return order(MeioExpedicao.values());
 			}
