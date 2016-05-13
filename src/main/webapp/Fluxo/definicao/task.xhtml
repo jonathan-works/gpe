@@ -90,7 +90,7 @@
                         <h:inputText id="varName" rendered="#{!empty var.name or empty t.previousVariables}"
                             value="#{var.name}">
                             <a:ajax execute="@this" event="change"
-                                render="varDiv, varLabel, pageBodyDialogMessage, resetVariableForm" limitRender="true" />
+                                render="varDiv, varLabel, pageBodyDialogMessage,formVariableType, resetVariableForm" limitRender="true" />
                             <f:validator validatorId="jsfComponentIdValidator" />
                         </h:inputText>
                         <h:outputScript>
