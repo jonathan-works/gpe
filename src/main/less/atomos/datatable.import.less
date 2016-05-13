@@ -152,3 +152,18 @@
 .rf-dt-hdr-c {
   color:@menu-bg-color;
 }
+
+.wi-dt-c-row {
+  .display-flex();
+  border: solid @tableBorderColor;
+  border-width:0 0 1px 0;
+  &:last-child {
+    border-width:0;
+  }
+}
+.wi-dt-c-col {
+  .flex(1);
+  &:last-child {
+    text-align: left;
+  }
+}

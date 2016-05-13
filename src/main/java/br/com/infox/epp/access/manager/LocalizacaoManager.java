@@ -169,7 +169,7 @@ public class LocalizacaoManager extends Manager<LocalizacaoDAO, Localizacao> {
 		return getDao().getLocalizacoesByEstruturaFilho(estruturaFilho);
 	}
     
-	public List<Localizacao> getAllLocalizacoesExternas() {
+	public List<Localizacao> getLocalizacoesExternas() {
 		CriteriaBuilder cb = getDao().getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Localizacao> query = cb.createQuery(Localizacao.class);
 		Root<Localizacao> from = query.from(Localizacao.class);
