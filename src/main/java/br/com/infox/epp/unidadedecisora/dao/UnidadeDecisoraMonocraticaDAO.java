@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -29,6 +30,7 @@ import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica_;
 
 @AutoCreate
 @Name(UnidadeDecisoraMonocraticaDAO.NAME)
+@Stateless
 public class UnidadeDecisoraMonocraticaDAO extends DAO<UnidadeDecisoraMonocratica>{
 
 	private static final long serialVersionUID = 1L;
@@ -67,5 +69,14 @@ public class UnidadeDecisoraMonocraticaDAO extends DAO<UnidadeDecisoraMonocratic
 		query.select(udm.get(UnidadeDecisoraMonocratica_.chefeGabinete));
 		query.orderBy(cb.asc(udm.get(UnidadeDecisoraMonocratica_.chefeGabinete).get(PessoaFisica_.nome)));
 		return entityManager.createQuery(query).getResultList();
+	}
+
+	public List<UnidadeDecisoraMonocratica> searchUnidadeDecisoraMonocraticaAtivo() {
+	    CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+	    CriteriaQuery<UnidadeDecisoraMonocratica> cq = cb.createQuery(UnidadeDecisoraMonocratica.class);
+	    Root<UnidadeDecisoraMonocratica> udm = cq.from(UnidadeDecisoraMonocratica.class);
+	    cq.select(udm);
+	    cq.where(cb.isTrue(udm.get(UnidadeDecisoraMonocratica_.ativo)));
+	    return getEntityManager().createQuery(cq).getResultList();
 	}
 }
