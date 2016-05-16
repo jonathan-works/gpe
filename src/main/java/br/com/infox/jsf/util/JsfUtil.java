@@ -11,6 +11,7 @@ import javax.faces.component.UIData;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
+import org.primefaces.context.RequestContext;
 import org.richfaces.component.UIDataTable;
 
 import br.com.infox.epp.cdi.config.BeanManager;
@@ -69,5 +70,16 @@ public class JsfUtil {
     public void render(Collection<String> collection) {
         context.getPartialViewContext().getRenderIds().addAll(collection);
     }
-	
+    
+    public void execute(String script) {
+        RequestContext.getCurrentInstance().execute(script);
+    }
+    
+    public void addFlashParam(String name, Object value) {
+        context.getExternalContext().getFlash().put(name, value);
+    }
+    
+    public <T> T getFlashParam(String name, Class<T> clazz) {
+        return clazz.cast(context.getExternalContext().getFlash().get(name));
+    }
 }

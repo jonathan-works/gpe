@@ -34,6 +34,10 @@ public class NaturezaCategoriaFluxoItem {
     public Item getItem() {
         return item;
     }
+    
+    public boolean hasItem() {
+        return item != null;
+    }
 
     @Override
     public int hashCode() {

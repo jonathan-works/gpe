@@ -320,7 +320,6 @@ public class JpdlXmlWriter {
     	}
 	}
 
-	@SuppressWarnings(UNCHECKED)
     private void writeController(TaskController taskController, Element taskElement) {
         if (taskController != null) {
             Element controller = addElement(taskElement, "controller");

@@ -1,17 +1,28 @@
 package br.com.infox.epp.processo.iniciar;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.meiocontato.entity.MeioContato;
+import br.com.infox.epp.meiocontato.type.TipoMeioContatoEnum;
 import br.com.infox.epp.pessoa.entity.Pessoa;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
+import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.partes.entity.TipoParte;
 import br.com.infox.jsf.converter.CnpjConverter;
 import br.com.infox.jsf.converter.CpfConverter;
 
-public class IniciarProcessoParticipanteVO {
+public class IniciarProcessoParticipanteVO extends DefaultTreeNode {
+    
+    private static final long serialVersionUID = 1L;
     
     private String id;
     private TipoPessoaEnum tipoPessoa = TipoPessoaEnum.F;
@@ -21,22 +32,112 @@ public class IniciarProcessoParticipanteVO {
     private String razaoSocial;
     private Date dataNascimento;
     private TipoParte tipoParte;
-    private IniciarProcessoParticipanteVO participanteSuperior;
     private Date dataInicio;
     private Date dataFim;
-    private String caminhoAbsoluto = "";
     
-    private Integer idPessoa;
-    private Integer idMeioContato;
+    private Pessoa pessoa;
+    private MeioContato meioContato;
+    
+    public IniciarProcessoParticipanteVO() {
+        super();
+        setData(this);
+        setExpanded(true);
+    }
+    
+    public List<ParticipanteProcesso> getListParticipantes(Processo processo) {
+        List<ParticipanteProcesso> participantes = new ArrayList<>();
+        ParticipanteProcesso participante = createParticipanteProcesso(null, processo);
+        participantes.add(participante);
+        resolveChildren(participantes, this.getChildren(), participante, processo);
+        return participantes;
+    }
+    
+    private void resolveChildren(List<ParticipanteProcesso> participantes, List<TreeNode> children, ParticipanteProcesso participantePai, Processo processo) {
+        if (!children.isEmpty()) {
+            for (TreeNode treeNode : children) {
+                IniciarProcessoParticipanteVO participanteVO = (IniciarProcessoParticipanteVO) treeNode;
+                ParticipanteProcesso participanteProcesso = participanteVO.createParticipanteProcesso(participantePai, processo);
+                participantes.add(participanteProcesso);
+                resolveChildren(participantes, treeNode.getChildren(), participanteProcesso, processo);
+            }
+        }
+    }
+    
+    private ParticipanteProcesso createParticipanteProcesso(ParticipanteProcesso participantePai, Processo processo) {
+        ParticipanteProcesso participanteProcesso = new ParticipanteProcesso();
+        participanteProcesso.setNome(nome);
+        participanteProcesso.setParticipantePai(participantePai);
+        participanteProcesso.setTipoParte(tipoParte);
+        participanteProcesso.setDataInicio(dataInicio);
+        participanteProcesso.setDataFim(dataFim);
+        participanteProcesso.setAtivo(true);
+        participanteProcesso.setProcesso(processo);
+        if (TipoPessoaEnum.F.equals(tipoPessoa)) {
+            PessoaFisica pessoaFisica = null;
+            if (isPessoaLoaded()) {
+                pessoaFisica = (PessoaFisica) pessoa;
+                if (pessoaFisica.getDataNascimento() == null && dataNascimento != null) {
+                    pessoaFisica.setDataNascimento(dataNascimento);
+                }
+            } else {
+                pessoaFisica = createPessoaFisica();
+            }
+            if (isMeioContatoLoaded()) {
+                if (meioContato.getMeioContato() == null && email != null) {
+                    meioContato.setMeioContato(email);
+                }
+            } else if (!StringUtil.isEmpty(email)){
+                MeioContato meioContato = new MeioContato(TipoMeioContatoEnum.EM);
+                meioContato.setPessoa(pessoaFisica);
+                meioContato.setMeioContato(email);
+                pessoaFisica.getMeioContatoList().add(meioContato);
+            }
+            participanteProcesso.setPessoa(pessoaFisica);
+        } else if (TipoPessoaEnum.J.equals(tipoPessoa)) {
+            PessoaJuridica pessoaJuridica = null;
+            if (isPessoaLoaded()) {
+                pessoaJuridica = (PessoaJuridica) pessoa;
+                if (pessoaJuridica.getRazaoSocial() == null && razaoSocial != null) {
+                    pessoaJuridica.setRazaoSocial(razaoSocial);
+                }
+            } else {
+                pessoaJuridica = createPessoaJuridica();
+            }
+            participanteProcesso.setPessoa(pessoaJuridica);
+        }
+        return participanteProcesso;
+    }
+
+    private PessoaFisica createPessoaFisica() {
+        PessoaFisica pessoaFisica = new PessoaFisica();
+        pessoaFisica.setCpf(codigo);
+        pessoaFisica.setNome(nome);
+        pessoaFisica.setAtivo(true);
+        pessoaFisica.setDataNascimento(dataNascimento);
+        return pessoaFisica;
+    }
+    
+    private PessoaJuridica createPessoaJuridica() {
+        PessoaJuridica pessoaJuridica = new PessoaJuridica();
+        pessoaJuridica.setAtivo(true);
+        pessoaJuridica.setCnpj(codigo);
+        pessoaJuridica.setNome(nome);
+        pessoaJuridica.setRazaoSocial(razaoSocial);
+        return pessoaJuridica;
+    }
     
     public void adicionar() {
+        if (getParent() != null) {
+            getParent().getChildren().add(this);
+            getParent().setSelected(false);
+        }
+    }
+    
+    public void generateId() {
         id = codigo;
         id += tipoParte.getId();
-        if (participanteSuperior != null) {
-            id += participanteSuperior.getId();
-            this.caminhoAbsoluto = participanteSuperior.getCaminhoAbsoluto() + "|" + getId();
-        } else {
-            this.caminhoAbsoluto = getId();
+        if (getParent() != null) {
+            id += ((IniciarProcessoParticipanteVO) getParent()).getId();
         }
     }
     
@@ -52,38 +153,38 @@ public class IniciarProcessoParticipanteVO {
     
     public void loadMeioContato(MeioContato meioContato) {
         this.email = meioContato.getMeioContato();
-        this.idMeioContato = meioContato.getIdMeioContato();
+        this.meioContato = meioContato;
     }
     
     private void loadPessoa(Pessoa pessoa) {
         this.codigo = pessoa.getCodigo();
         this.nome = pessoa.getNome();
-        this.idPessoa = pessoa.getIdPessoa();
+        this.pessoa = pessoa;
     }
     
     public void limparDadosPessoaFisica() {
-        if (idPessoa != null) {
+        if (isPessoaLoaded()) {
             this.dataNascimento = null;
         }
-        if (idMeioContato != null) {
+        if (isMeioContatoLoaded()) {
             this.email = null;
-            this.idMeioContato = null;
+            this.meioContato = null;
         }
         limparDadosPessoa();
     }
     
     public void limparDadosPessoaJuridica() {
-        if (idPessoa != null) {
+        if (isPessoaLoaded()) {
             this.razaoSocial = null;
         }
         limparDadosPessoa();
     }
     
     public void limparDadosPessoa() {
-        if (idPessoa != null) {
+        if (isPessoaLoaded()) {
             this.nome = null;
             this.codigo = null;
-            this.idPessoa = null;
+            this.pessoa = null;
         }
     }
     
@@ -147,14 +248,6 @@ public class IniciarProcessoParticipanteVO {
         this.tipoParte = tipoParte;
     }
     
-    public IniciarProcessoParticipanteVO getParticipanteSuperior() {
-        return participanteSuperior;
-    }
-
-    public void setParticipanteSuperior(IniciarProcessoParticipanteVO participanteSuperior) {
-        this.participanteSuperior = participanteSuperior;
-    }
-
     public Date getDataInicio() {
         return dataInicio;
     }
@@ -171,16 +264,20 @@ public class IniciarProcessoParticipanteVO {
         this.dataFim = dataFim;
     }
     
-    public String getCaminhoAbsoluto() {
-        return caminhoAbsoluto;
+    public Pessoa getPessoa() {
+        return pessoa;
+    }
+
+    public MeioContato getMeioContato() {
+        return meioContato;
     }
 
     public boolean isPessoaLoaded() {
-        return idPessoa != null;
+        return pessoa != null;
     }
     
     public boolean isMeioContatoLoaded() {
-        return idMeioContato != null;
+        return meioContato != null;
     }
     
     public String getCodigoFormatado() {
@@ -191,6 +288,29 @@ public class IniciarProcessoParticipanteVO {
         } else {
             return codigo;
         }
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!(obj instanceof IniciarProcessoParticipanteVO))
+            return false;
+        IniciarProcessoParticipanteVO other = (IniciarProcessoParticipanteVO) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
     }
     
 }

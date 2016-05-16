@@ -17,6 +17,35 @@
     
     <ui:define name="body">
     
+    	<p:dataTable id="processosCriados" var="row" value="#{iniciarProcessoView.processosCriados}" 
+        	rowKey="#{row.id}" headerText="Processos Criados" responsive="true" 
+        	rendered="#{not empty iniciarProcessoView.processosCriados}">
+        	
+        	<p:column headerText="#{infoxMessages['naturezaCategoriaFluxo.fluxo']}">
+        		<h:form>
+        			<h:commandLink action="#{iniciarProcessoView.iniciarProcesso(row)}">
+        				<h:graphicImage />
+        			</h:commandLink>
+        		</h:form>
+	        </p:column>
+        	
+        	<p:column headerText="#{infoxMessages['naturezaCategoriaFluxo.fluxo']}">
+	            <h:outputText value="#{row.naturezaCategoriaFluxo.fluxo}" />
+	        </p:column>
+	        
+	        <p:column headerText="#{infoxMessages['naturezaCategoriaFluxo.natureza']}">
+	            <h:outputText value="#{row.naturezaCategoriaFluxo.natureza}" />
+	        </p:column>
+	        
+	        <p:column headerText="#{infoxMessages['naturezaCategoriaFluxo.categoria']}">
+	            <h:outputText value="#{row.naturezaCategoriaFluxo.categoria}" />
+	        </p:column>
+	        
+	        <p:column headerText="#{infoxMessages['categoriaItem.item']}">
+	            <h:outputText value="#{empty row.item ? '-' : row.item}" />
+	        </p:column>
+        </p:dataTable>
+    
         <h:form>
         
 	        <p:dataTable id="natCatProcessoList" var="row" value="#{iniciarProcessoView.naturezaCategoriaFluxoItemList}" 
@@ -82,20 +111,14 @@
 		            <wi:inputDate id="dataNascimento" label="#{infoxMessages['pessoaFisica.dataNascimento']}"
 		                value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.dataNascimento}"
 		                rendered="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa eq 'F'}"
-		                disabled="#{iniciarProcessoView.iniciarProcessoParticipanteVO.pessoaLoaded}"
+		                disabled="#{iniciarProcessoView.iniciarProcessoParticipanteVO.pessoaLoaded 
+		                			and not empty iniciarProcessoView.iniciarProcessoParticipanteVO.pessoa.dataNascimento}"
 		                required="false" />
 		                
 		            <wi:selectOneMenuEntity id="tipoPartes" label="#{infoxMessages['participanteProcesso.tipoParticipante']}"
 						items="#{iniciarProcessoView.tipoParteList}" required="true" showLabelSelecione="true"
 						value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoParte}" />
 					
-				    <p:tree id="participanteSuperior" value="#{iniciarProcessoView.root}" var="node" 
-				    	label="#{infoxMessages['participanteProcesso.superior']}" rendered="false">
-				        <p:treeNode>
-				            <h:outputText value="#{node}" />
-				        </p:treeNode>
-				    </p:tree>
-						
 					<wi:inputDate id="dataInicio"
 						value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.dataInicio}"
 						label="#{infoxMessages['participanteProcesso.dataInicioParticipacao']}"
@@ -106,24 +129,68 @@
 						label="#{infoxMessages['participanteProcesso.dataFimParticipacao']}" 
 						required="false"/>
 						
+					<i:inputTree id="participanteSuperior" root="#{iniciarProcessoView.root}" 
+						label="#{infoxMessages['participanteProcesso.superior']}" 
+						value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.parent}" 
+						help="Para desselecionar um item clique ctrl + clique"/>
+						
 		        </p:outputPanel>
 		        
 		        <div>
-		         	<h:commandButton value="Adicionar Parte" action="#{iniciarProcessoView.adicionarParticipante}" styleClass="buttons">
-		         		<p:ajax process="@form:panelAdicionarParticipante" update="@form:loadedByParticipante @form:participanteList" partialSubmit="true" />
+		         	<h:commandButton value="Adicionar" action="#{iniciarProcessoView.adicionarParticipante}" styleClass="buttons">
+		         		<p:ajax process="@form:panelAdicionarParticipante" update="@form:loadedByParticipante @form:participanteList :pageBodyDialogMessage" 
+		         			partialSubmit="true" />
 		         	</h:commandButton>
 		        </div>
 		        
 	        </p:fieldset>
 	        
-		    <p:dataTable id="participanteList" var="row" value="#{iniciarProcessoView.participanteProcessoList}" 
+	        <p:treeTable id="participanteList" value="#{iniciarProcessoView.root}" var="row" emptyMessage="Sem participantes."
+	        	headerText="Participantes do Processo" responsive="true" style="margin-top: 1.5em;">
+	        	
+		        <p:column headerText="#{infoxMessages['participanteProcesso.nomeParticipante']}">
+		            <h:outputText value="#{row.nome}" />
+		        </p:column>
+		        
+		        <p:column headerText="#{infoxMessages['participanteProcesso.codigo']}" style="text-align:center">
+		            <h:outputText value="#{row.codigoFormatado}" />
+		        </p:column>
+		        
+		        <p:column headerText="#{infoxMessages['participanteProcesso.tipoParticipante']}" style="text-align:center">
+		            <h:outputText value="#{row.tipoParte}" />
+		        </p:column>
+	            
+	            <p:column headerText="#{infoxMessages['participanteProcesso.dataInicio']}" style="text-align:center">
+		            <h:outputText value="#{row.dataInicio}" >
+		            	<f:convertDateTime patter="dd/MM/yyyy"/>
+		            </h:outputText>
+		        </p:column>
+		        
+		        <p:column headerText="#{infoxMessages['participanteProcesso.dataFim']}" style="text-align:center">
+		            <h:outputText value="#{row.dataFim}" >
+		            	<f:convertDateTime patter="dd/MM/yyyy"/>
+		            </h:outputText>
+		        </p:column>
+		        
+		        <p:column style="width:16px; text-align:center" >
+        			<h:commandLink onclick="return confirm('Tem certeza? Isso irá remover os participantes inferiores.');" 
+        				action="#{iniciarProcessoView.removerParticipante(row)}">
+        				<p:ajax update="@form:panelAdicionarParticipante participanteList" process="participanteList" partialSubmit="true" />
+        				<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" 
+        					title="#{infoxMessages['crud.remove']}" styleClass="opacityHover"/>
+        			</h:commandLink>
+	        	</p:column>
+		    </p:treeTable>
+	        
+		    <p:dataTable id="participanteListTeste" var="row" value="#{iniciarProcessoView.participanteProcessoList}" 
 	        	rowKey="#{row.id}" headerText="Participantes do Processo" responsive="true" style="margin-top: 1.5em;"
-	        	emptyMessage="Sem participantes.">
+	        	emptyMessage="Sem participantes." rendered="false">
 	        	
 	        	<p:column style="width:16px; text-align:center" >
         			<h:commandLink onclick="return confirm('Tem certeza?');" action="#{iniciarProcessoView.removerParticipante(row)}">
         				<p:ajax update="participanteList" process="participanteList" partialSubmit="true" />
-        				<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="#{infoxMessages['crud.remove']}" />
+        				<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="#{infoxMessages['crud.remove']}" 
+        					styleClass="opacityHover"/>
         			</h:commandLink>
 	        	</p:column>
 	        	
@@ -157,7 +224,8 @@
         
 	        <div style="margin-top: 1.5em;">
 	        	<h:commandButton id="buttonIniciarProcesso" value="Iniciar Processo" action="#{iniciarProcessoView.iniciarProcesso}" styleClass="buttons">
-	        		<p:ajax update="@this :pageBodyDialogMessage" process="@form:natCatProcessoList @this" partialSubmit="true"/>
+	        		<p:ajax update="@this :pageBodyDialogMessage" process="@form:natCatProcessoList @this" partialSubmit="true" 
+	        			onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
 	        	</h:commandButton>
 	        </div>
 	       

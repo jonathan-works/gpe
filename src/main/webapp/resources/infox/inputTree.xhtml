@@ -9,16 +9,28 @@
     <composite:interface>
     	
     	<composite:attribute name="id"/>
-    	<composite:attribute name="rendered" default="true"/>
     	<composite:attribute name="label" />
     	<composite:attribute name="help" />
+    	<composite:attribute name="value" type="java.lang.Object"/>
+    	<composite:attribute name="root" type="java.lang.Object"/>
+    	<composite:attribute name="disabled" default="false"/>
+    	<composite:attribute name="styleClass"/>
     	<composite:attribute name="required" default="false" />
+    	
+    	<!-- Ajax Attributes -->
+    	<composite:attribute name="ajax" default="false" />
+    	<composite:attribute name="render" default="@this" />
+    	<composite:attribute name="execute" default="@this" />
+    	<composite:attribute name="listener" method-signature="void action" />
+    	<composite:attribute name="immediate" default="false" />
+    	<composite:attribute name="onstart" />
+    	<composite:attribute name="oncomplete" />
     	
     	<composite:facet name="label"/>
     </composite:interface>
 	
     <composite:implementation>
-		<p:outputPanel id="#{cc.attrs.id}" styleClass="decoration-div inputText-div" rendered="#{cc.attrs.rendered}" >
+		<p:outputPanel id="#{cc.attrs.id}" styleClass="decoration-div tree-div" rendered="#{cc.attrs.rendered}" >
 			<script type="text/javascript">
 				var id = "#{cc.attrs.id}";
 				var errorClass = $('.' + id + 'ErrorClass');
@@ -36,14 +48,20 @@
 	        			<c:if test="#{not empty cc.attrs.help}">
 		        			<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" 
 	        						title="#{cc.attrs.help}" style="vertical-align: middle;"/>
-	        			</c:if>
+        				</c:if>
 	        			<composite:renderFacet name="label" />
 	        		</h:outputLabel>
 	        		<h:outputText styleClass="required" rendered="#{cc.attrs.required}" value="*" />
 	        		<h:message for="#{cc.attrs.id}Input" styleClass="property-error property-msg #{cc.attrs.id}ErrorClass"/>
         		</div>
-        		<div class="property-field-edit-value  #{cc.attrs.id}DivClass">
-        			<composite:insertChildren />
+        		<div class="property-field-edit-value #{cc.attrs.id}DivClass">
+        			<p:tree id="#{cc.attrs.id}Input" value="#{cc.attrs.root}" var="node" required="#{cc.attrs.required}" 
+        				onchange="#{cc.attrs.onchange}" styleClass="tree-p #{cc.attrs.styleClass}"
+        				selectionMode="single" selection="#{cc.attrs.value}" style="min-height: 17px;">
+				        <p:treeNode icon="ui-icon-person" expandedIcon="ui-icon-carat-1-s" collapsedIcon="ui-icon-carat-1-e">
+				            <h:outputText value="#{node.nome}" />
+				        </p:treeNode>
+				    </p:tree>
         		</div>
         	</div>
         </p:outputPanel>

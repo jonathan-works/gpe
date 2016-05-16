@@ -35,7 +35,6 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
-import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
@@ -49,7 +48,10 @@ import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
+import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
+import br.com.infox.epp.processo.partes.manager.ParticipanteProcessoManager;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais;
 import br.com.infox.epp.processo.type.TipoProcesso;
@@ -85,7 +87,13 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     @Inject
     private FluxoManager fluxoManager;
     @Inject
-    private LocalizacaoManager localizacaoManager; 
+    private LocalizacaoManager localizacaoManager;
+    @Inject
+    private ParticipanteProcessoManager participanteProcessoManager;
+    @Inject
+    private MetadadoProcessoManager metadadoProcessoManager;
+    @Inject
+    private IniciarProcessoService iniciarProcessoService;
     
     public Processo buscarPrimeiroProcesso(Processo p, TipoProcesso tipo) {
         for (Processo filho : p.getFilhos()) {
@@ -321,36 +329,20 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 	}
 	
 	public void movimentarProcessoJBPM(Long taskInstanceId, String transicao) throws DAOException {
-		Long processIdOriginal = BusinessProcess.instance().getProcessId();
-		Long taskIdOriginal = BusinessProcess.instance().getTaskId();
-		BusinessProcess.instance().setProcessId(null);
-		BusinessProcess.instance().setTaskId(null);
 		TaskInstance taskInstanceForUpdate = ManagedJbpmContext.instance().getTaskInstanceForUpdate(taskInstanceId);
 		taskInstanceForUpdate.end(transicao);
-		BusinessProcess.instance().setProcessId(processIdOriginal);
-		BusinessProcess.instance().setTaskId(taskIdOriginal);
 	}
 	
 	public void cancelJbpmSubprocess(Long subProcessInstanceId, String transicao) throws DAOException {
-        Long processIdOriginal = BusinessProcess.instance().getProcessId();
-        Long taskIdOriginal = BusinessProcess.instance().getTaskId();
-        BusinessProcess.instance().setProcessId(null);
-        BusinessProcess.instance().setTaskId(null);
         ProcessInstance processInstanceForUpdate = ManagedJbpmContext.instance().getProcessInstanceForUpdate(subProcessInstanceId);
         processInstanceForUpdate.end(transicao);
         while (processInstanceForUpdate != null) {
             processInstanceForUpdate.getTaskMgmtInstance().cancelAll();
             processInstanceForUpdate = processInstanceForUpdate.getRootToken().getSubProcessInstance();
         }
-        BusinessProcess.instance().setProcessId(processIdOriginal);
-        BusinessProcess.instance().setTaskId(taskIdOriginal);
     }
 	
 	public ProcessInstance startJbpmProcess(String fluxoName, String transitionName, List<SignalParam> params) throws DAOException {
-        Long processIdOriginal = BusinessProcess.instance().getProcessId();
-        Long taskIdOriginal = BusinessProcess.instance().getTaskId();
-        BusinessProcess.instance().setProcessId(null);
-        BusinessProcess.instance().setTaskId(null);
         Fluxo fluxo = fluxoManager.getFluxoByDescricao(fluxoName);
         List<NaturezaCategoriaFluxo> naturezaCategoriaFluxo = naturezaCategoriaFluxoManager.getActiveNaturezaCategoriaFluxoListByFluxo(fluxo);
         Processo processo = new Processo();
@@ -377,12 +369,18 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
                 metadados.add(provider.gerarMetadado(signalParam.getName(), signalParam.getParamValue()));
             }
         }
-        ProcessInstance processInstance = BeanManager.INSTANCE.getReference(IniciarProcessoService.class).iniciarProcesso(processo, variaveis, metadados, transitionName, true);
-        BusinessProcess.instance().setProcessId(processIdOriginal);
-        BusinessProcess.instance().setTaskId(taskIdOriginal);
-        
+        ProcessInstance processInstance = iniciarProcessoService.iniciarProcesso(processo, variaveis, metadados, transitionName, true);
         return processInstance;
     }
+	
+	public void gravarProcesso(Processo processo, List<MetadadoProcesso> metadados, List<ParticipanteProcesso> participantes) {
+	    persist(processo);
+	    for (MetadadoProcesso metadadoProcesso : metadados) {
+	        metadadoProcesso.setProcesso(processo);
+	        metadadoProcessoManager.persist(metadadoProcesso);
+	    }
+        participanteProcessoManager.persistParticipantePessoaMeioContato(participantes);
+	}
 	
 	@Observer({Event.EVENTTYPE_TASK_END})
 	public void atualizarProcessoTarefa(ExecutionContext executionContext) throws DAOException {

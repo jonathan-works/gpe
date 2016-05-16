@@ -1,0 +1,83 @@
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:wi="http://www.itx.com.br/jsf">
+  
+  <ui:param name="id" value="#{formField.id}"/>
+  <ui:param name="controller" value="#{formField.formType}" />
+  <ui:param name="typedValue" value="#{formField.typedValue}"
+  <ui:param name="readonly" value="#{formField.properties.readonly}" />
+  <ui:param name="required" value="#{formField.properties.required}" />
+  
+  <f:subview id="#{id}SubView">
+  
+    <s:div id="#{id}TipoDocDiv">
+    
+	    <wi:selectOneMenuEntity id="#{id}tipoProcessoDocumento"
+			label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
+			items="#{typedValue.classificacoesDocumento}"
+			required="#{not readonly}"
+			showLabelSelecione="true"
+			value="#{typedValue.classificacaoDocumento}"
+			readonly="#{readonly or typedValue.classificacoesDocumento.size eq 1 or typedValue.documento.hasAssinatura()}"
+			disabled="#{readonly or typedValue.classificacoesDocumento.size eq 1 or typedValue.documento.hasAssinatura()}">
+			<a:ajax event="change" render="assinaturaDocumentoDiv#{f.id} #{id}EditorDiv" execute="@this" limitRender="true" />
+		</wi:selectOneMenuEntity>
+      
+    </s:div>
+    
+    <s:div id="#{id}EditorDiv">
+    	<s:div id="#{id}ToolTipDivExterna">
+		    <s:div id="#{id}ToolTipDiv" styleClass="tooltip-parent" style="width: 10px" 
+			  	rendered="#{not empty typedValue.classificacaoDocumento.observacao and not (readonly or typedValue.documento.hasAssinatura())}">
+			  	<h:graphicImage id="#{id}helpEditTipImg" 
+			  		url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
+				<div class="epp-tooltip">
+					<div class="tooltip-panel">
+						<div><h:outputText value="Observação:"/></div>
+						<h:outputText value="#{typedValue.classificacaoDocumento.observacao}"/>
+					</div>
+				</div>
+		    </s:div>
+	    </s:div>
+	    <wi:editor
+	      id="#{formfield.id}"
+	      value="#{typedValue.documento.documentoBin.modeloDocumento}"
+	      readonly="#{readonly or typedValue.documento.hasAssinatura()}" />
+    </s:div>
+    
+    <s:div id="assinaturaDocumentoDiv#{f.id}" >
+    
+	    <s:div id="conteudoAssinatura#{f.id}" rendered="#{typedValue.podeAssinar()}">
+	    
+			<a:jsFunction name="assinar"
+				action="#{controller.assinar()}"
+				execute="@this, assinaturaDocumentoDiv#{f.id}"
+				render="assinaturaDocumentoDiv#{f.id}, #{id}EditorDiv, pageBodyDialogMessage, @form" 
+				oncomplete="infox.hideLoading();"/>
+				
+			<wi:certificadoDigital
+	            id="appletAssinatura"
+				signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
+				reRender="assinaturaDocumentoDiv#{id}, pageBodyDialogMessage"
+				tokenField="#{controller.tokenToSign}"
+				propertyValue="#{formField.typedValue.documento}"
+				propertyTarget="#{controller.documentoToSign}"
+				signableData="#{controller.documentoToSign.documentoBin.md5Documento}"
+				functionPreSign="infox.showLoading();"
+				functionPosSign="assinar();" >
+	       </wi:certificadoDigital>
+	       
+		</s:div>
+	
+	</s:div>
+  
+  </f:subview>
+  
+</ui:composition>

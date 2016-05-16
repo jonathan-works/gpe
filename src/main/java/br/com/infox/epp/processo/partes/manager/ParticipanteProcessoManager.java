@@ -3,11 +3,13 @@ package br.com.infox.epp.processo.partes.manager;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
+import br.com.infox.epp.meiocontato.entity.MeioContato;
 import br.com.infox.epp.pessoa.entity.Pessoa;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.entity.Processo;
@@ -75,5 +77,24 @@ public class ParticipanteProcessoManager extends Manager<ParticipanteProcessoDAO
 		}
 		getDao().getEntityManager().flush();
 	}
+    
+    public void persistParticipantePessoaMeioContato(List<ParticipanteProcesso> participantes) {
+        EntityManager entityManager = getDao().getEntityManager();
+        for (ParticipanteProcesso participanteProcesso : participantes) {
+            entityManager.persist(participanteProcesso);
+            Pessoa pessoa = participanteProcesso.getPessoa();
+            if (pessoa.getIdPessoa() == null) {
+                entityManager.persist(pessoa);
+            } else {
+                pessoa = entityManager.merge(pessoa);
+            }
+            for (MeioContato meioContato : pessoa.getMeioContatoList()) {
+                if (meioContato.getIdMeioContato() == null) {
+                    entityManager.persist(meioContato);
+                }
+            }
+        }
+        entityManager.flush();
+    }
     
 }
