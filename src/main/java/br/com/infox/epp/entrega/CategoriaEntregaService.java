@@ -85,4 +85,5 @@ public class CategoriaEntregaService {
 	public List<CategoriaEntrega> list() {
 		return categoriaEntregaSearch.list();
 	}
+
 }

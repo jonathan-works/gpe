@@ -192,14 +192,18 @@ public class CategoriaEntregaItemService {
 		CategoriaEntregaItem itemPai = codigoItemPai == null ? null : getItem(codigoItemPai);
 
 		item.setCategoriaEntrega(categoria);
+
 		getEntityManager().persist(item);
 
 		CategoriaItemRelacionamento categoriaItemRelacionamento = new CategoriaItemRelacionamento();
 		categoriaItemRelacionamento.setItemFilho(item);
 		categoriaItemRelacionamento.setItemPai(itemPai);
 		getEntityManager().persist(categoriaItemRelacionamento);
-
 		getEntityManager().flush();
 	}
+
+    public List<CategoriaEntregaItem> getItensFilhosComDescricao(String codigoItemPai, String query) {
+        return categoriaEntregaItemSearch.getCategoriaEntregaItemByCodigoPaiAndDescricao(codigoItemPai, query);
+    }
 
 }

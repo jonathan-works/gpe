@@ -1,15 +1,20 @@
 package br.com.infox.epp.entrega;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.SetJoin;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.entrega.entity.CategoriaEntrega;
@@ -19,9 +24,12 @@ import br.com.infox.epp.entrega.entity.CategoriaEntrega_;
 import br.com.infox.epp.entrega.entity.CategoriaItemRelacionamento;
 import br.com.infox.epp.entrega.entity.CategoriaItemRelacionamento_;
 
-public class CategoriaEntregaItemSearch {
+@Stateless
+public class CategoriaEntregaItemSearch implements Serializable{
 
-	public EntityManager getEntityManager() {
+    private static final long serialVersionUID = 1L;
+
+    public EntityManager getEntityManager() {
 		return EntityManagerProducer.getEntityManager();
 	}
 	
@@ -99,6 +107,31 @@ public class CategoriaEntregaItemSearch {
 		cq.from(CategoriaEntregaItem.class);
 		return getEntityManager().createQuery(cq).getResultList();
 	}
+
+    public List<CategoriaEntregaItem> getCategoriaEntregaItemByCodigoPaiAndDescricao(String codigoItemPai, String descricao) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<CategoriaEntregaItem> cq = cb.createQuery(CategoriaEntregaItem.class);
+        From<?,CategoriaEntrega> categoriaEntrega;
+        List<Predicate> predicates = new ArrayList<>();
+        
+        if (codigoItemPai == null){
+            categoriaEntrega = cq.from(CategoriaEntrega.class);
+            Predicate categoriaRoot = cb.isNull(categoriaEntrega.get(CategoriaEntrega_.categoriaEntregaPai));
+            predicates.add(categoriaRoot);
+        } else {
+            Root<CategoriaEntregaItem> categoriaEntregaItemPai = cq.from(CategoriaEntregaItem.class);
+            Join<?, CategoriaEntrega> categoriaEntregaPai = categoriaEntregaItemPai.join(CategoriaEntregaItem_.categoriaEntrega);
+            categoriaEntrega = categoriaEntregaPai.join(CategoriaEntrega_.categoriasFilhas, JoinType.INNER);
+            
+            predicates.add(cb.equal(categoriaEntregaItemPai.get(CategoriaEntregaItem_.codigo), codigoItemPai));
+        }
+        SetJoin<?, CategoriaEntregaItem> items = categoriaEntrega.join(CategoriaEntrega_.itemsFilhos);
+        Predicate descricaoSemelhante = cb.like(cb.lower(items.get(CategoriaEntregaItem_.descricao)), "%"+descricao.toLowerCase()+"%");
+        predicates.add(descricaoSemelhante);
+        
+        cq = cq.select(items).where(predicates.toArray(new Predicate[predicates.size()]));
+        return getEntityManager().createQuery(cq).getResultList();
+    }
 	
 	
 }
