@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: menu.xhtml 750 2010-08-24 14:10:58Z danielsilva $ -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich"
+    xmlns:infox="http://www.infox.com.br/jsf" xmlns:p="http://primefaces.org/ui" xmlns:wi="http://www.itx.com.br/jsf">
+
+    <h:form>
+        <fieldset>
+            <legend>
+                <h:outputText rendered="#{empty categoriaEntregaView.pai}" value="Cadastro" />
+                <h:outputText rendered="#{not empty categoriaEntregaView.pai}" value="Cadastro em: #{categoriaEntregaView.pai.descricao}" />
+            </legend>
+            <fieldset>
+                <legend>Categoria</legend>
+                <span class="dyn-field dyn-field-grp"> <h:inputText style="background-color:rgba(0,0,0,0.05);"
+                        styleClass="dyn-field dyn-field-ipt" id="descricaoCategoria"
+                        value="#{categoriaEntregaView.categoriaDescricao}" maxlength="100" required="true" /> <h:outputLabel
+                        styleClass="dyn-field dyn-field-lbl" for="descricaoCategoria">
+                            Descrição <h:outputText styleClass="required" value="*" />
+                    </h:outputLabel>
+                </span> <span class="dyn-field dyn-field-grp"> <h:inputText style="background-color:rgba(0,0,0,0.05);"
+                        styleClass="dyn-field dyn-field-ipt" id="codigoCategoria"
+                        value="#{categoriaEntregaView.categoriaCodigo}" maxlength="30" required="false" /> <h:outputLabel
+                        styleClass="dyn-field dyn-field-lbl" value="Código" for="codigoCategoria" />
+                </span>
+            </fieldset>
+
+            <infox:div styleClass="required-alert">
+                <img src="#{pathResolver.contextPath}#{layoutController.getResourceUrlByPath('/imagens/mod/balao.png')}" />
+                <span class="required">*</span>
+                <span>#{infoxMessages['form.required']}</span>
+            </infox:div>
+        </fieldset>
+        <h:commandButton action="#{categoriaEntregaView.salvarCategoria}" value="Salvar" styleClass="buttons" />
+    </h:form>
+
+</ui:composition>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: menu.xhtml 750 2010-08-24 14:10:58Z danielsilva $ -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich"
+    xmlns:infox="http://www.infox.com.br/jsf" xmlns:p="http://primefaces.org/ui"
+    xmlns:wi="http://www.itx.com.br/jsf">
+
+    <h:form>
+        <legend>Campos</legend>
+        <fieldset>
+            <h:outputLabel id="labelModeloCertidao" value="Modelo para certidão" for="modeloCertidao" />
+            <h:inputText id="modeloCertidao" />
+            <h:outputLabel id="labelModeloCertidao" value="Data disponibilidade" for="dataInicio" />
+            <f:event listener="#{calendarioEventosCrudAction.validarDatas}" type="postValidate" />
+            <p:calendar id="dataInicio" />
+            <h:outputLabel id="labelModeloCertidao" value="Data limite" for="dataFim" />
+            <p:calendar id="dataFim" />
+        </fieldset>
+    </h:form>
+    
+    <h:form>
+        <legend>Classificações de documentos disponíveis para entrega</legend>
+        <hr></hr>
+    </h:form>
+
+    <h:form>
+        <legend>Configurar papéis responsáveis para entrega</legend>
+        <hr></hr>
+    </h:form>
+
+    <h:form>
+        <legend>Configurar pasta para entrega</legend>
+        <hr></hr>
+    </h:form>
+
+</ui:composition>

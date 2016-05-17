@@ -4,6 +4,7 @@
     <value>menu.processo/processo.iniciarMenuText:/Processo/listView.seam</value>
     <value>menu.processo/processo.consultarMenuText:/Processo/Consulta/listView.seam</value>
     <value>menu.administracao/menu.contAcesso/papel.menuText:/useradmin/papelListView.seam</value>
+    <value>menu.administracao/menu.categoriaEntrega:/CategoriaEntregaItem/listView.seam</value>
     <value>menu.administracao/menu.contAcesso/recurso.menuText:/useradmin/recursoListView.seam</value>
     <value>menu.administracao/menu.contAcesso/usuario.menuText:/Usuario/listView.seam</value>
     <value>menu.administracao/menu.contAcesso/localizacao.menuText:/Localizacao/listView.seam</value>
