@@ -5,7 +5,24 @@ String.prototype.isEmpty = function() {
 namespace("infox",{
 	
 	messageModalStatus: "",
-	
+	trocarSkin:function trocarSkin(basePath, skin){
+	    let links = document.querySelectorAll("link[href*='.css.seam?ln=styleSkinInfox']");
+        for (let i=0,l=links.length; i<l;i++){
+            let itm = links.item(i);
+            let newSkinAddr=[basePath,'javax.faces.resource',[skin,'css','seam'].join('.')].join('/');
+            let queryParams=['ln=styleSkinInfox', 'addr='+Date.now().toString(32)].join('&');
+            itm.setAttribute("href", [newSkinAddr,queryParams].join('?'));
+        }
+	},
+	existeSkin:function hasSkin(basePath, skin){
+        let newSkinAddr=[basePath,'javax.faces.resource',[skin,'css','seam'].join('.')].join('/');
+        let queryParams=['ln=styleSkinInfox', 'addr='+Date.now().toString(32)].join('&');
+
+        let xhr = new XMLHttpRequest();
+        xhr.open('HEAD', [newSkinAddr,queryParams].join('?'), false);
+        xhr.send();
+        return /2\d\d/.test(xhr.status);
+    },
 	applyCSS:function applyCSS(args) {
 		setTimeout(function(){
 			$(args.selector).css(args.style);

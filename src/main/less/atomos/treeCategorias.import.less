@@ -1,0 +1,104 @@
+#action() {
+  .action-container {
+    > * {
+      cursor: pointer;
+      &:hover {
+        background-color: fade(#fff,20);
+      }
+    }
+  }
+}
+#tree-categorias() {
+  .grpd-tree {
+    font-size: 1rem;
+    &-v {
+      .grpd-tree-lst {
+        .prefixed-value(display,flex);
+      }
+    }
+  }
+  .list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    .prefixed-atrib(transform-origin, top, left);
+    .prefixed-atrib(transition, all 0.3s linear);
+    &-cont {}
+    & & {
+      .mdl-shadow--2dp;
+      background-color: fade(#fff,20);
+    }
+    &&-folded {
+      position: absolute;
+      .transform(scale(0));
+    }
+  }
+  .item {
+    #action > .action-container;
+    &-cont {
+      .prefixed-value(display,flex);
+      > * {
+        padding: 1em;
+      }
+    }
+    &&-sel,
+    &:hover {
+      background-color: @transparent-menu-bg-color;
+    }
+    &-lbl {
+      display: inline-block;
+      .prefixed-atrib(flex,1);
+      .prefixed-atrib(transform-origin, left, center);
+      .prefixed-atrib(user-select,none);
+      cursor: pointer;
+    }
+    background-repeat: no-repeat;
+    background-position: 0 1em;
+    padding: 0 0 0 0.3em;
+    background-image: url("../img/ic_keyboard_arrow_right_black_18dp.png");
+    &-has-children {
+      background-image: url("../img/ic_keyboard_arrow_down_black_18dp.png");
+    }
+    &-sel {
+      background-image: url("../img/ic_keyboard_arrow_up_black_18dp.png");
+    }
+  }
+  .group {
+    background-color: @transparent-menu-bg-color;
+    &-cont {
+      .display-flex;
+      white-space: pre;
+      .prefixed-atrib(transform-origin, left top);
+      .prefixed-atrib(transform, rotate(270deg) translate(-100%,0));
+      position: absolute;
+      > * {
+        padding: 0.75em 1em 0.5em;
+      }
+    }
+    &-lbl {
+      display: inline-block;
+      .prefixed-atrib(user-select, none);
+      .prefixed-atrib(flex, 1);
+    }
+  }
+}
+#component {
+  background-color: #AAA;
+  display: inline-block;
+}
+@transparent-menu-bg-color: fade(@menu-bg-color, 20);
+.grpd-tree {
+  #tree-categorias>.grpd-tree;
+}
+.grpd-tree-lst {
+  #tree-categorias>.list;
+}
+.grpd-tree-itm {
+  #tree-categorias>.item;
+}
+.grpd-tree-grp {
+  #tree-categorias>.group;
+}
+.ifx-toolbar {
+  #action > .action-container;
+}
