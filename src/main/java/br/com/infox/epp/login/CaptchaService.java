@@ -95,12 +95,22 @@ public class CaptchaService {
 		secureRandom.nextBytes(bytes);
 		return bin2hex(bytes);
 	}
-
+	
 	@SuppressWarnings("unchecked")
+	private CookieCaptcha persistCookie(String clientId, String username) {
+		CookieCaptcha cookieCaptcha = new CookieCaptcha();
+		cookieCaptcha.setClientId(clientId);
+		cookieCaptcha.setDataCriacao(new Date());
+		cookieCaptcha.setUsuarios(new HashSet<String>(Arrays.asList(new String[] {username})));
+		getEntityManager().persist(cookieCaptcha);
+		getEntityManager().flush();
+		return cookieCaptcha;
+	}
+
 	public void loggedIn(String username) {
 		Cookie cookie = getCookieRequest();
 		
-		CookieCaptcha cookieCaptcha = null;
+		//Adiciona cookie no cliente
 		if (cookie == null) {
 			HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
 					.getResponse();
@@ -112,30 +122,30 @@ public class CaptchaService {
 			cookie.setPath(PATH_COOKIE);
 			cookie.setMaxAge(MAX_AGE_COOKIE);
 
-			response.addCookie(cookie);
-			
-			cookieCaptcha = new CookieCaptcha();
-			cookieCaptcha.setClientId(clientId);
-			cookieCaptcha.setDataCriacao(new Date());
-			cookieCaptcha.setUsuarios(new HashSet<String>(Arrays.asList(new String[] {username})));
-			getEntityManager().persist(cookieCaptcha);
-			getEntityManager().flush();
+			response.addCookie(cookie);			
 		}
-		else
-		{
-			cookieCaptcha = cookieCaptchaSearch.findByClientId(cookie.getValue());
-			if (cookieCaptcha != null) {
-			    if(!cookieCaptcha.getUsuarios().contains(username)) {
-			        cookieCaptcha.getUsuarios().add(username);
-			        getEntityManager().persist(cookieCaptcha);
-			    }
-			    resetTentativasLoginInvalido(cookieCaptcha.getId());
-			}
+		
+		String clientId = cookie.getValue();
+		CookieCaptcha cookieCaptcha = cookieCaptchaSearch.findByClientId(clientId);
+		
+		if (cookieCaptcha == null) {
+			cookieCaptcha = persistCookie(clientId, username);
 		}
+		
+		//Associa usuário logado ao cookie
+	    if(!cookieCaptcha.getUsuarios().contains(username)) {
+	        cookieCaptcha.getUsuarios().add(username);
+	        getEntityManager().persist(cookieCaptcha);
+	    }
+		
+	    resetTentativasLoginInvalido(cookieCaptcha.getId());
 	}
 	
 	protected void resetTentativasLoginInvalido(Integer cookieCaptchaId) {
 		List<LoginInvalido> loginsInvalidos = cookieCaptchaSearch.listTentativasLoginInvalido(cookieCaptchaId);
+		if(loginsInvalidos.size() == 0) {
+			return;
+		}
 		for(LoginInvalido loginInvalido : loginsInvalidos) {
 			getEntityManager().remove(loginInvalido);
 		}
