@@ -24,6 +24,7 @@ import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.documento.entity.ModeloDocumento_;
 import br.com.infox.epp.fluxo.entity.Fluxo_;
 import br.com.infox.epp.fluxo.entity.ModeloPasta_;
+import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.system.parametro.ParametroDefinition.Precedencia;
 
 @Stateless
@@ -98,6 +99,7 @@ public class EppParametroProvider implements Serializable, ParametroProvider {
 				ModeloDocumento_.tituloModeloDocumento).addFilter(isTrue(ModeloDocumento_.ativo));
 		create("sistema", "tituloModeloEmailMudancaSenhaComLogin", ModeloDocumento_.tituloModeloDocumento,
 				ModeloDocumento_.tituloModeloDocumento).addFilter(isTrue(ModeloDocumento_.ativo));
+		create("sistema", Parametros.CODIGO_UF_SISTEMA.getLabel(), FieldType.STRING);
 	}
 
 	private void initParametrsoLog() {

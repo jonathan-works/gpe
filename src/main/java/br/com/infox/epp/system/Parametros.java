@@ -24,7 +24,8 @@ public enum Parametros {
 	PASSWORD_CLIENTE_ENVIO_LOG("passwordClienteEnvioLog"),
 	IS_ATIVO_ENVIO_LOG_AUTOMATICO("ativarServicoEnvioLogAutomatico"),
 	URL_SERVICO_ENVIO_LOG_ERRO("urlServicoEnvioLogErro"),
-	HAS_CONSULTA_EXTERNA_PADRAO("ativaConsultaExternaPadrao");
+	HAS_CONSULTA_EXTERNA_PADRAO("ativaConsultaExternaPadrao"),
+	CODIGO_UF_SISTEMA("codigoUnidadeFederativaSistema");
 	
 	private String label;
 	
