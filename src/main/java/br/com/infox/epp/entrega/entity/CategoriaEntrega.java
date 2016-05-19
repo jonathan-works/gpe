@@ -18,19 +18,19 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.infox.constants.LengthConstants;
-import edu.emory.mathcs.backport.java.util.Collections;
+import java.util.Collections;
 
 @Entity
 @Table(name="tb_categoria_entrega")
 public class CategoriaEntrega implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	
+    private static final long serialVersionUID = 1L;
+    
     @Id
     @SequenceGenerator(allocationSize=1, initialValue=1, name = "GeneratorCategoriaEntrega", sequenceName = "sq_categoria_entrega")
     @GeneratedValue(generator = "GeneratorCategoriaEntrega", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_categoria_entrega", unique = true, nullable = false)
-	private Integer id;
+    private Integer id;
     
     @NotNull
     @Size(max=LengthConstants.CODIGO_DOCUMENTO)
@@ -52,67 +52,65 @@ public class CategoriaEntrega implements Serializable {
     @OneToMany(fetch=FetchType.LAZY, mappedBy="categoriaEntregaPai")
     private Set<CategoriaEntrega> categoriasFilhas;
     
-	public String getCodigo() {
-		return codigo;
-	}
+    public String getCodigo() {
+        return codigo;
+    }
 
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
-	}
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
 
-	public String getDescricao() {
-		return descricao;
-	}
+    public String getDescricao() {
+        return descricao;
+    }
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
 
-	public CategoriaEntrega getCategoriaEntregaPai() {
-		return categoriaEntregaPai;
-	}
+    public CategoriaEntrega getCategoriaEntregaPai() {
+        return categoriaEntregaPai;
+    }
 
-	public void setCategoriaEntregaPai(CategoriaEntrega categoriaEntregaPai) {
-		this.categoriaEntregaPai = categoriaEntregaPai;
-	}
+    public void setCategoriaEntregaPai(CategoriaEntrega categoriaEntregaPai) {
+        this.categoriaEntregaPai = categoriaEntregaPai;
+    }
 
-	public Integer getId() {
-		return id;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	@SuppressWarnings("unchecked")
-	public Set<CategoriaEntregaItem> getItemsFilhos() {
-		return Collections.unmodifiableSet(itemsFilhos);
-	}
+    public Set<CategoriaEntregaItem> getItemsFilhos() {
+        return Collections.unmodifiableSet(itemsFilhos);
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
+        return result;
+    }
 
-	@SuppressWarnings("unchecked")
-	public Set<CategoriaEntrega> getCategoriasFilhas() {
-		return Collections.unmodifiableSet(categoriasFilhas);
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		CategoriaEntrega other = (CategoriaEntrega) obj;
-		if (codigo == null) {
-			if (other.codigo != null)
-				return false;
-		} else if (!codigo.equals(other.codigo))
-			return false;
-		return true;
-	}
+    public Set<CategoriaEntrega> getCategoriasFilhas() {
+        return Collections.unmodifiableSet(categoriasFilhas);
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        CategoriaEntrega other = (CategoriaEntrega) obj;
+        if (codigo == null) {
+            if (other.codigo != null)
+                return false;
+        } else if (!codigo.equals(other.codigo))
+            return false;
+        return true;
+    }
 
 }
