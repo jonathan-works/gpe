@@ -15,15 +15,15 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name="tb_categoria_item_relacionamento")
+@Table(name="tb_categoria_item_relac")
 public class CategoriaItemRelacionamento implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
-    @SequenceGenerator(allocationSize=1, initialValue=1, name = "GeneratorCategoriaItemRelacionamento", sequenceName = "sq_categoria_item_relacionamento")
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = "GeneratorCategoriaItemRelacionamento", sequenceName = "sq_categoria_item_relac")
     @GeneratedValue(generator = "GeneratorCategoriaItemRelacionamento", strategy = GenerationType.SEQUENCE)
-    @Column(name = "id_categoria_item_relacionamento", unique = true, nullable = false)
+    @Column(name = "id_categoria_item_relac", unique = true, nullable = false)
 	private Integer id;
 	
 	@NotNull
