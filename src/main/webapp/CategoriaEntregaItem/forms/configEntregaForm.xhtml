@@ -3,19 +3,39 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core"
     xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich"
-    xmlns:infox="http://www.infox.com.br/jsf" xmlns:p="http://primefaces.org/ui" xmlns:wi="http://www.itx.com.br/jsf">
+    xmlns:i="http://java.sun.com/jsf/composite/infox" xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:p="http://primefaces.org/ui" xmlns:wi="http://www.itx.com.br/jsf">
 
     <h:form>
         <fieldset>
             <legend>Campos</legend>
-            <h:outputLabel id="labelModeloCertidao" value="Modelo para certidão" for="modeloCertidao" />
-            <h:inputText id="modeloCertidao" />
-            <h:outputLabel id="labelModeloCertidao" value="Data disponibilidade" for="dataInicio" />
-            <f:event listener="#{calendarioEventosCrudAction.validarDatas}" type="postValidate" />
-            <p:calendar id="dataInicio" />
-            <h:outputLabel id="labelModeloCertidao" value="Data limite" for="dataFim" />
-            <p:calendar id="dataFim" />
+            <ui:repeat var="item" value="#{categoriaEntregaView.modeloEntregaController.itens}">
+                <i:input label="#{item.categoriaEntrega.descricao}" value="#{item.descricao}">
+                    <h:outputText value="#{item.descricao}" />
+                </i:input>
+            </ui:repeat>
+            <ui:remove>
+                <f:event listener="#{categoriaEntregaView.modeloEntregaController.validarDatas}" type="postValidate" />
+            </ui:remove>
+            <i:inputDate id="dataLiberacao" label="Data de disponibilidade" required="true"
+                value="#{categoriaEntregaView.modeloEntregaController.dataLiberacao}" />
+            <i:inputDate id="dataLimite" label="Data limite para Entrega"
+                value="#{categoriaEntregaView.modeloEntregaController.dataLimite}" />
+            <i:autoComplete id="modeloCertidao" label="Modelo para certidão" required="true"
+                value="#{categoriaEntregaView.modeloEntregaController.modeloCertidao}"
+                converter="br.com.infox.jsf.converter.EntityConverter"
+                completeMethod="#{categoriaEntregaView.modeloEntregaController.completeModeloCertidao}"
+                itemLabel="#{item.tituloModeloDocumento}" itemValue="#{item}" />
+            <infox:div styleClass="required-alert">
+                <img src="#{pathResolver.contextPath}#{layoutController.getResourceUrlByPath('/imagens/mod/balao.png')}" />
+                <span class="required">*</span>
+                <span>#{infoxMessages['form.required']}</span>
+            </infox:div>
         </fieldset>
+
+        <h:commandButton value="Salvar" styleClass="buttons">
+            <p:ajax process="@form" update="@form" />
+        </h:commandButton>
     </h:form>
 
     <h:form>
