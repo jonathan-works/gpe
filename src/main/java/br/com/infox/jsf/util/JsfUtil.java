@@ -1,5 +1,6 @@
 package br.com.infox.jsf.util;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -10,11 +11,13 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.UIData;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import javax.servlet.ServletContext;
 
 import org.primefaces.context.RequestContext;
 import org.richfaces.component.UIDataTable;
 
 import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.seam.exception.ApplicationException;
 
 @Named
 @RequestScoped
@@ -81,5 +84,14 @@ public class JsfUtil {
     
     public <T> T getFlashParam(String name, Class<T> clazz) {
         return clazz.cast(context.getExternalContext().getFlash().get(name));
+    }
+    
+    public void redirect(String path) {
+        ServletContext servletContext = (ServletContext) context.getExternalContext().getContext();
+        try {
+            context.getExternalContext().redirect(servletContext.getContextPath() + path);
+        } catch (IOException e) {
+            throw new ApplicationException("Path does not exists '" + path + "' ", e);
+        }
     }
 }

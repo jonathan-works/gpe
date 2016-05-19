@@ -55,10 +55,11 @@
 	        		<h:message for="#{cc.attrs.id}Input" styleClass="property-error property-msg #{cc.attrs.id}ErrorClass"/>
         		</div>
         		<div class="property-field-edit-value #{cc.attrs.id}DivClass">
-        			<p:tree id="#{cc.attrs.id}Input" value="#{cc.attrs.root}" var="node" required="#{cc.attrs.required}" 
-        				onchange="#{cc.attrs.onchange}" styleClass="tree-p #{cc.attrs.styleClass}"
-        				selectionMode="single" selection="#{cc.attrs.value}" style="min-height: 17px;">
-				        <p:treeNode icon="ui-icon-person" expandedIcon="ui-icon-carat-1-s" collapsedIcon="ui-icon-carat-1-e">
+        			<p:tree id="#{cc.attrs.id}Input" value="#{cc.attrs.root}" required="#{cc.attrs.required}" 
+        				onchange="#{cc.attrs.onchange}" styleClass="tree-p #{cc.attrs.styleClass}" widgetVar="#{cc.attrs.id}Widget"
+        				selectionMode="single" selection="#{cc.attrs.value}" style="min-height: 17px;"
+        				var="node" datakey="#{row.id}">
+				        <p:treeNode icon="ui-icon-person">
 				            <h:outputText value="#{node.nome}" />
 				        </p:treeNode>
 				    </p:tree>

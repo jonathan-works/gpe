@@ -1,36 +1,23 @@
 package br.com.infox.epp.processo.form.type;
 
-import br.com.infox.epp.processo.documento.entity.Documento;
-import br.com.infox.epp.processo.form.FormData;
-import br.com.infox.epp.processo.form.variable.value.PrimitiveTypedValueImpl;
 import br.com.infox.epp.processo.form.variable.value.TypedValue;
+import br.com.infox.epp.processo.form.variable.value.ValueType;
 
 public class UploadFormType extends FileFormType {
     
-    public final static String TYPE_NAME = "upload";
-    
-    public UploadFormType(FormData formData) {
-        super(formData);
-    }
-
-    @Override
-    public String getName() {
-        return TYPE_NAME;
+    public UploadFormType() {
+        super("upload", ValueType.UPLOAD);
     }
 
     @Override
     public TypedValue convertToFormValue(Object value) {
+        if (value instanceof String) {
+            value = Integer.valueOf((String) value);
+        }
+        if (value instanceof Integer) {
+//            Documento documento = getDocumentoManager().find((Integer) value);
+//            return new UploadValueImpl(documento);
+        }
         return null;
     }
-
-    @Override
-    public TypedValue convertToModelValue(TypedValue propertyValue) {
-        Object value = propertyValue.getValue();
-        if (value instanceof Documento) {
-            return new PrimitiveTypedValueImpl.IntegerValue(((Documento) value).getId());
-        }
-        throw new IllegalArgumentException("Impossible convert " + propertyValue);
-    }
-    
-
 }

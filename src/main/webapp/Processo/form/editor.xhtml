@@ -7,36 +7,41 @@
   xmlns:h="http://java.sun.com/jsf/html"
   xmlns:rich="http://richfaces.org/rich"
   xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:p="http://primefaces.org/ui"
   xmlns:wi="http://www.itx.com.br/jsf">
   
-  <ui:param name="id" value="#{formField.id}"/>
-  <ui:param name="controller" value="#{formField.formType}" />
-  <ui:param name="typedValue" value="#{formField.typedValue}"
-  <ui:param name="readonly" value="#{formField.properties.readonly}" />
-  <ui:param name="required" value="#{formField.properties.required}" />
-  
-  <f:subview id="#{id}SubView">
-  
-    <s:div id="#{id}TipoDocDiv">
-    
-	    <wi:selectOneMenuEntity id="#{id}tipoProcessoDocumento"
-			label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-			items="#{typedValue.classificacoesDocumento}"
-			required="#{not readonly}"
-			showLabelSelecione="true"
-			value="#{typedValue.classificacaoDocumento}"
-			readonly="#{readonly or typedValue.classificacoesDocumento.size eq 1 or typedValue.documento.hasAssinatura()}"
-			disabled="#{readonly or typedValue.classificacoesDocumento.size eq 1 or typedValue.documento.hasAssinatura()}">
-			<a:ajax event="change" render="assinaturaDocumentoDiv#{f.id} #{id}EditorDiv" execute="@this" limitRender="true" />
-		</wi:selectOneMenuEntity>
-      
-    </s:div>
-    
-    <s:div id="#{id}EditorDiv">
-    	<s:div id="#{id}ToolTipDivExterna">
-		    <s:div id="#{id}ToolTipDiv" styleClass="tooltip-parent" style="width: 10px" 
-			  	rendered="#{not empty typedValue.classificacaoDocumento.observacao and not (readonly or typedValue.documento.hasAssinatura())}">
-			  	<h:graphicImage id="#{id}helpEditTipImg" 
+  	<ui:param name="varId" value="#{formField.id}"/>
+  	<ui:param name="controller" value="#{formField.type}" />
+  	<ui:param name="typedValue" value="#{formField.typedValue}"/>
+  	<ui:param name="readonly" value="#{formField.properties.readonly}" />
+  	<ui:param name="required" value="#{formField.properties.required}" />
+  	
+	<wi:selectOneMenuEntity id="#{varId}ClassificacaoDocumento"
+		label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
+		items="#{typedValue.classificacoesDocumento}"
+		required="#{not readonly}"
+		showLabelSelecione="true"
+		value="#{typedValue.classificacaoDocumento}"
+		readonly="#{readonly or typedValue.classificacoesDocumento.size eq 1 or typedValue.value.hasAssinatura()}"
+		disabled="#{readonly or typedValue.classificacoesDocumento.size eq 1 or typedValue.value.hasAssinatura()}">
+		<a:ajax event="change" render="#{varId}AssinaturaDocumento #{varId}EditorDiv" execute="@this" limitRender="true" />
+	</wi:selectOneMenuEntity>
+	
+    <wi:selectOneMenuEntity id="#{varId}ModeloDocumento"
+		label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
+		items="#{typedValue.modelosDocumento}"
+		noSelectionLabel="[Selecione o modelo]"
+		value="#{typedValue.modeloDocumento}"
+		rendered="#{not readonly}">
+		<a:ajax event="change" render="#{varId}" execute="@this" limitRender="true" 
+			listener="#{controller.performModeloDocumento(typedValue, formData)}"/>
+	</wi:selectOneMenuEntity>
+	   
+	<p:outputPanel id="#{varId}EditorDiv">
+	   	<s:div id="#{varId}ToolTipDivExterna">
+		    <s:div id="#{varId}ToolTipDiv" styleClass="tooltip-parent" style="width: 10px" 
+			  	rendered="#{not empty typedValue.classificacaoDocumento.observacao and not (readonly or typedValue.value.hasAssinatura())}">
+			  	<h:graphicImage id="#{varId}helpEditTipImg" 
 			  		url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
 				<div class="epp-tooltip">
 					<div class="tooltip-panel">
@@ -46,38 +51,37 @@
 				</div>
 		    </s:div>
 	    </s:div>
-	    <wi:editor
-	      id="#{formfield.id}"
-	      value="#{typedValue.documento.documentoBin.modeloDocumento}"
-	      readonly="#{readonly or typedValue.documento.hasAssinatura()}" />
-    </s:div>
-    
-    <s:div id="assinaturaDocumentoDiv#{f.id}" >
-    
-	    <s:div id="conteudoAssinatura#{f.id}" rendered="#{typedValue.podeAssinar()}">
+	    
+	    <wi:editor id="#{varId}" value="#{typedValue.value.documentoBin.modeloDocumento}"
+	        readonly="#{readonly or typedValue.value.hasAssinatura()}" />
+	        
+	</p:outputPanel>
+	   
+	<p:outputPanel id="#{varId}AssinaturaDocumento" >
+	   
+	    <p:outputPanel rendered="#{typedValue.podeAssinar()}">
 	    
 			<a:jsFunction name="assinar"
 				action="#{controller.assinar()}"
-				execute="@this, assinaturaDocumentoDiv#{f.id}"
-				render="assinaturaDocumentoDiv#{f.id}, #{id}EditorDiv, pageBodyDialogMessage, @form" 
+				execute="@this, #{varId}AssinaturaDocumento"
+				render="#{varId}AssinaturaDocumento, #{varId}EditorDiv, :pageBodyDialogMessage" 
 				oncomplete="infox.hideLoading();"/>
 				
 			<wi:certificadoDigital
 	            id="appletAssinatura"
 				signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
-				reRender="assinaturaDocumentoDiv#{id}, pageBodyDialogMessage"
+				reRender="#{varId}AssinaturaDocumento, :pageBodyDialogMessage"
 				tokenField="#{controller.tokenToSign}"
-				propertyValue="#{formField.typedValue.documento}"
+				propertyValue="#{typedValue.value}"
 				propertyTarget="#{controller.documentoToSign}"
 				signableData="#{controller.documentoToSign.documentoBin.md5Documento}"
 				functionPreSign="infox.showLoading();"
 				functionPosSign="assinar();" >
 	       </wi:certificadoDigital>
 	       
-		</s:div>
+		</p:outputPanel>
 	
-	</s:div>
-  
-  </f:subview>
+	</p:outputPanel>
+		
   
 </ui:composition>

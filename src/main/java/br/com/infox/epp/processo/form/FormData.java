@@ -3,6 +3,7 @@ package br.com.infox.epp.processo.form;
 import java.util.List;
 import java.util.Map;
 
+import br.com.infox.epp.documento.type.ExpressionResolverChain;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.form.type.FormType;
 
@@ -18,8 +19,12 @@ public interface FormData {
     
     Object getVariable(String name);
     
-    void putVariable(String name, Object value);
+    void setVariable(String name, Object value);
     
-    Object evaluate(String expression);
+    void update();
+    
+    Map<String, Object> getVariables();
+    
+    ExpressionResolverChain getExpressionResolver();
     
 }

@@ -203,6 +203,9 @@ public class Processo implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "processo", cascade = {CascadeType.REMOVE})
     private List<Pasta> pastaList = new ArrayList<>();
     
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "processo", cascade = {CascadeType.REMOVE})
+    private List<VariavelInicioProcesso> variaveisInicioProcesso = new ArrayList<>();
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_processo_root")
     private Processo processoRoot;
@@ -406,8 +409,16 @@ public class Processo implements Serializable {
 	public void setPastaList(List<Pasta> pastaList) {
 		this.pastaList = pastaList;
 	}
+	
+	public List<VariavelInicioProcesso> getVariaveisInicioProcesso() {
+        return variaveisInicioProcesso;
+    }
 
-	public boolean hasPartes(){
+    public void setVariaveisInicioProcesso(List<VariavelInicioProcesso> variaveisInicioProcesso) {
+        this.variaveisInicioProcesso = variaveisInicioProcesso;
+    }
+
+    public boolean hasPartes(){
     	return naturezaCategoriaFluxo.getNatureza().getHasPartes();
     }
 	
@@ -416,6 +427,12 @@ public class Processo implements Serializable {
 		return getDataFim() != null;
 	}
 	
+	@Transient
+	public MetadadoProcesso removerMetadado(MetadadoProcessoDefinition metadadoProcessoDefinition) {
+	    MetadadoProcesso metadado = getMetadado(metadadoProcessoDefinition);
+	    getMetadadoProcessoList().remove(metadado);
+	    return metadado;
+	}
 	
 	@Transient
 	public MetadadoProcesso getMetadado(MetadadoProcessoDefinition metadadoProcessoDefinition) {

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns="http://www.w3.org/1999/xhtml"
     xmlns:a="http://richfaces.org/a4j"
@@ -10,8 +9,8 @@
     
     <ui:param name="id" value="#{formField.id}"/>
     
-    <i:inputText label="#{formField.label}" value="#{formField.typedValue.value}" 
-    	required="#{formField.properties.required}" readonly="#{formField.properties.readonly}"
-    	maxlength="200"/>
+    <i:selectOneRadio label="#{formField.label}" 
+    	items="#{selectItemFunctions.createFromString('true:crud.yes,false:crud.no')}" 
+    	disabled="#{not empty readonly and readonly ? true : disabled}" value="#{formField.typedValue.value}" />
     
 </ui:composition>

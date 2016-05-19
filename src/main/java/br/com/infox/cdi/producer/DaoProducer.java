@@ -1,4 +1,3 @@
-package br.com.infox.cdi.producer;
 
 import java.lang.reflect.ParameterizedType;
 

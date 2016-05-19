@@ -7,19 +7,25 @@ import java.util.Map;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.ProcessDefinition;
 
+import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.documento.type.ExpressionResolverChain;
+import br.com.infox.epp.documento.type.SeamExpressionResolver;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.form.type.EditorFormType;
 import br.com.infox.epp.processo.form.type.FormType;
-import br.com.infox.epp.processo.form.type.StringFormType;
+import br.com.infox.epp.processo.form.type.FormTypes;
+import br.com.infox.epp.processo.form.variable.value.TypedValue;
+import br.com.infox.epp.processo.service.VariavelInicioProcessoService;
 import br.com.infox.ibpm.util.JbpmUtil;
 
 public class StartFormDataImpl extends AbstractFormData implements StartFormData {
     
     protected ProcessDefinition processDefinition;
+    protected ExpressionResolverChain expressionResolver;
     
     public StartFormDataImpl(Processo processo, ProcessDefinition processDefinition) {
-        super(processo);
+        super("startForm", processo);
         this.processDefinition = processDefinition;
+        this.expressionResolver = new ExpressionResolverChain(new SeamExpressionResolver());
         createFormFields();
     }
 
@@ -34,26 +40,18 @@ public class StartFormDataImpl extends AbstractFormData implements StartFormData
             formField.setType(formType);
             formField.setId(variableName);
             formField.setLabel(label);
-            formField.setValue(formType.convertToFormValue(getVariable(variableName)));
+            formField.setTypedValue(formType.convertToFormValue(getVariable(variableName)));
             formField.setProperties(createProperties(variableAccess));
+            formType.performValue(formField, this);
             getFormFields().add(formField);
         }
     }
     
     private FormType createFormType(String type) {
-        FormType formType = null;
-        if (EditorFormType.TYPE_NAME.equalsIgnoreCase(type)) {
-            formType = getFormTypes().get(EditorFormType.TYPE_NAME);
-            if (formType == null) {
-                formType = new EditorFormType(this);
-                getFormTypes().put(formType.getName(), formType);
-            }
-        } else if (StringFormType.TYPE_NAME.equalsIgnoreCase(type)) {
-            formType = getFormTypes().get(StringFormType.TYPE_NAME);
-            if (formType == null) {
-                formType = new StringFormType();
-                getFormTypes().put(formType.getName(), formType);
-            }
+        FormType formType = getFormTypes().get(type);
+        if (formType == null) {
+            formType = FormTypes.valueOf(type).create();
+            getFormTypes().put(type, formType);
         }
         return formType;
     }
@@ -63,6 +61,9 @@ public class StartFormDataImpl extends AbstractFormData implements StartFormData
         if (variableAccess.isRequired()) {
             properties.put("required", "true");
         }
+        if (!variableAccess.isWritable()) {
+            properties.put("readonly", "true");
+        }
         return properties;
     }
     
@@ -70,20 +71,41 @@ public class StartFormDataImpl extends AbstractFormData implements StartFormData
     public ProcessDefinition getProcessDefinition() {
         return processDefinition;
     }
+    
+    public Map<String, Object> getVariables() {
+        Map<String, Object> variables = new HashMap<>();
+        for (FormField formField : getFormFields()) {
+            TypedValue typedValue = formField.getTypedValue();
+            variables.put(formField.getId(), typedValue.getType().convertToModelValue(typedValue));
+        }
+        return variables;
+    }
+    
+    @Override
+    public void update() {
+        for (FormField formField : getFormFields()) {
+            formField.getType().performUpdate(formField, this);
+            setVariable(formField.getId(), formField.getTypedValue());
+        }
+    }
 
     @Override
     public Object getVariable(String name) {
-        return null;
+        return getVariavelService().getVariavel(processo, name); 
     }
 
     @Override
-    public void putVariable(String name, Object value) {
-        
+    public void setVariable(String name, Object value) {
+        getVariavelService().setVariavel(processo, name, (TypedValue) value);
+    }
+
+    public VariavelInicioProcessoService getVariavelService() {
+        return BeanManager.INSTANCE.getReference(VariavelInicioProcessoService.class);
     }
 
     @Override
-    public Object evaluate(String expression) {
-        return null;
+    public ExpressionResolverChain getExpressionResolver() {
+        return expressionResolver;
     }
 
 }

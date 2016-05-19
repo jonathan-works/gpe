@@ -6,7 +6,7 @@ public interface PrimitiveTypedValue<T> extends TypedValue {
     
     T getValue();
     
-    Class<T> getType();
+    Class<T> getJavaType();
     
     public static interface BooleanTypedValue extends PrimitiveTypedValue<Boolean> {
     }

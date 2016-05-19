@@ -20,7 +20,7 @@ import br.com.infox.epp.processo.partes.entity.TipoParte;
 import br.com.infox.jsf.converter.CnpjConverter;
 import br.com.infox.jsf.converter.CpfConverter;
 
-public class IniciarProcessoParticipanteVO extends DefaultTreeNode {
+public class IniciarProcessoParticipanteVO extends DefaultTreeNode implements Comparable<IniciarProcessoParticipanteVO> {
     
     private static final long serialVersionUID = 1L;
     
@@ -35,6 +35,7 @@ public class IniciarProcessoParticipanteVO extends DefaultTreeNode {
     private Date dataInicio;
     private Date dataFim;
     
+    private int nivel;
     private Pessoa pessoa;
     private MeioContato meioContato;
     
@@ -129,16 +130,18 @@ public class IniciarProcessoParticipanteVO extends DefaultTreeNode {
     public void adicionar() {
         if (getParent() != null) {
             getParent().getChildren().add(this);
-            getParent().setSelected(false);
         }
     }
     
     public void generateId() {
-        id = codigo;
-        id += tipoParte.getId();
         if (getParent() != null) {
-            id += ((IniciarProcessoParticipanteVO) getParent()).getId();
+            id = ((IniciarProcessoParticipanteVO) getParent()).getId();
+            nivel = ((IniciarProcessoParticipanteVO) getParent()).getNivel() + 1;
+        } else {
+            id = "";
+            nivel = 1;
         }
+        id += codigo + tipoParte.getId();
     }
     
     public void loadPessoaFisica(PessoaFisica pessoaFisica) {
@@ -280,6 +283,10 @@ public class IniciarProcessoParticipanteVO extends DefaultTreeNode {
         return meioContato != null;
     }
     
+    public int getNivel() {
+        return nivel;
+    }
+
     public String getCodigoFormatado() {
         if (TipoPessoaEnum.F.equals(tipoPessoa)) {
             return CpfConverter.format(codigo);
@@ -311,6 +318,11 @@ public class IniciarProcessoParticipanteVO extends DefaultTreeNode {
         } else if (!id.equals(other.id))
             return false;
         return true;
+    }
+
+    @Override
+    public int compareTo(IniciarProcessoParticipanteVO o) {
+        return this.getId().compareTo(o.getId());
     }
     
 }

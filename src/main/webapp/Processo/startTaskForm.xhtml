@@ -17,27 +17,33 @@
     
     <ui:define name="body">
     	
-    	<p:fieldset id="fieldSetVariaveis" legend="Formulário" >
+    	<fieldset id="fieldSetVariaveis">
+    		<legend>Formulário</legend>
+    		
+    		<ui:param name="formData" value="#{iniciarProcessoVariaveisView.formData}"/>
     	
-	    	<h:form>
+	    	<h:form id="#{formData.formKey}">
 	    		
-	    		<ui:repeat var="formField" value="#{iniciarProcessoVariaveisView.formData.formFields}">
+	    		<c:forEach var="formField" items="#{formData.formFields}">
 	    			
-	   				<ui:include src="/Processo/form/string.xhtml" />
-	    		
-	    		</ui:repeat>
+   					<ui:include src="/Processo/form/#{formField.typeName}.xhtml" />
+	   					
+	    		</c:forEach>
 	    		
 	    		<div>
-	    			<p:commandButton styleClass="buttons" action="#{iniciarProcessoVariaveisView.gravar}" 
-	    				value="Gravar" process="@form" update="@form"/>
+	    			<h:commandButton styleClass="buttons" action="#{iniciarProcessoVariaveisView.gravar}" value="Gravar" >
+	    				<p:ajax process="@form" update="@form :pageBodyDialogMessage" onstart="infox.showLoading();" 
+	    					oncomplete="infox.hideLoading();"/>
+	    			</h:commandButton>
 	    		
-	    			<p:commandButton styleClass="buttons" action="#{iniciarProcessoVariaveisView.iniciar}" 
-	    				value="Iniciar" process="@form" update="@form"/>
+	    			<h:commandButton styleClass="buttons" action="#{iniciarProcessoVariaveisView.iniciar}" value="Iniciar" >
+	    				<p:ajax process="@form" update="@form" onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
+	    			</h:commandButton>
 	    		</div>
 	    		
 	    	</h:form>
 	    	
-    	</p:fieldset>
+    	</fieldset>
     	
     </ui:define>
     

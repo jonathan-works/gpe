@@ -15,7 +15,8 @@ public abstract class AbstractFormData implements FormData {
     protected Map<String, FormType> formTypes = new HashMap<>();
     protected List<FormField> formFields = new ArrayList<FormField>();
     
-    public AbstractFormData(Processo processo) {
+    public AbstractFormData(String formKey, Processo processo) {
+        this.formKey = formKey;
         this.processo = processo;
     }
 

@@ -52,6 +52,7 @@ public class IniciarProcessoService {
     
     public ProcessInstance iniciarProcesso(Processo processo, Map<String, Object> variaveis, List<MetadadoProcesso> metadados, String transitionName, 
             boolean createDefaultFolders) throws DAOException {
+        processo = getEntityManager().merge(processo);
         processo.setDataInicio(DateTime.now().toDate());
         createMetadadosProcesso(processo, metadados);
         variaveis = adicionarVariaveisDefault(processo, variaveis);

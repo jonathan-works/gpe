@@ -4,5 +4,5 @@ public interface TypedValue {
 
     Object getValue();
     
-    Class<?> getType();
+    ValueType getType();
 }

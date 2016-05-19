@@ -1,6 +1,5 @@
 package br.com.infox.ibpm.task.home;
 
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static java.text.MessageFormat.format;
 
 import java.io.Serializable;

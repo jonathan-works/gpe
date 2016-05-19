@@ -10,8 +10,10 @@
     
     <ui:param name="id" value="#{formField.id}"/>
     
-    <i:inputText label="#{formField.label}" value="#{formField.typedValue.value}" 
-    	required="#{formField.properties.required}" readonly="#{formField.properties.readonly}"
-    	maxlength="200"/>
+    <wi:inputMoney id="#{id}" value="#{formField.typedValue.value}" 
+		 readonly="#{formField.properties.readonly}"
+		 required="#{formField.properties.required}"
+		 styleClass="#{readonly ? 'readOnly' : styleClass } inputText"
+		 maxlength="20" />
     
 </ui:composition>
