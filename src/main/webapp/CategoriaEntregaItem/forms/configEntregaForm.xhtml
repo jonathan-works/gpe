@@ -3,12 +3,11 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core"
     xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich"
-    xmlns:infox="http://www.infox.com.br/jsf" xmlns:p="http://primefaces.org/ui"
-    xmlns:wi="http://www.itx.com.br/jsf">
+    xmlns:infox="http://www.infox.com.br/jsf" xmlns:p="http://primefaces.org/ui" xmlns:wi="http://www.itx.com.br/jsf">
 
     <h:form>
-        <legend>Campos</legend>
         <fieldset>
+            <legend>Campos</legend>
             <h:outputLabel id="labelModeloCertidao" value="Modelo para certidão" for="modeloCertidao" />
             <h:inputText id="modeloCertidao" />
             <h:outputLabel id="labelModeloCertidao" value="Data disponibilidade" for="dataInicio" />
@@ -18,20 +17,26 @@
             <p:calendar id="dataFim" />
         </fieldset>
     </h:form>
-    
+
     <h:form>
-        <legend>Classificações de documentos disponíveis para entrega</legend>
-        <hr></hr>
+        <fieldset>
+            <legend>Classificações de documentos disponíveis para entrega</legend>
+            <hr></hr>
+        </fieldset>
     </h:form>
 
     <h:form>
-        <legend>Configurar papéis responsáveis para entrega</legend>
-        <hr></hr>
+        <fieldset>
+            <legend>Configurar papéis responsáveis para entrega</legend>
+            <hr></hr>
+        </fieldset>
     </h:form>
 
     <h:form>
-        <legend>Configurar pasta para entrega</legend>
-        <hr></hr>
+        <fieldset>
+            <legend>Configurar pasta para entrega</legend>
+            <hr></hr>
+        </fieldset>
     </h:form>
 
 </ui:composition>

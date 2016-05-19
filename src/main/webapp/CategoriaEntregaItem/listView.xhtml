@@ -38,7 +38,8 @@
                 <ui:param name="itemToolBar" value="[
                     {icon:'#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','edit')}', title:'Editar Item', onSelect:(itm)=>editarItem([{name:'path',value:itm}])},
                     {icon:'#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','add')}', title:'Adicionar Categoria', onSelect:(itm)=>criarCategoria([{name:'path',value:itm}])},
-                    {icon:'#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','remove')}', title:'Remover Item', onSelect:(itm)=>confirm('Certeza?') &amp;&amp; removerItem([{name:'path',value:itm}])}
+                    {icon:'#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','remove')}', title:'Remover Item', onSelect:(itm)=>confirm('Certeza?') &amp;&amp; removerItem([{name:'path',value:itm}])},
+                    {icon:'#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','settings')}', title:'Configurar Entrega de Documentos', onSelect:(itm)=>alert(itm)}
                 ]" />
                 <ui:param name="groupToolBar" value="[
                     {icon:'#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','edit')}', title:'Editar Categoria', onSelect:(itm)=>editarCategoria([{name:'path',value:itm}])},

@@ -9,20 +9,20 @@
         <fieldset>
             <legend>
                 <h:outputText value="Cadastro em: " />
-                <h:outputText rendered="#{not empty categoriaEntregaView.pai}"
-                    value="#{categoriaEntregaView.pai.descricao} : " />
-                <h:outputText value="#{categoriaEntregaView.categoriaDescricao}" />
+                <h:outputText rendered="#{not empty categoriaEntregaView.categoriaEntregaItemController.pai}"
+                    value="#{categoriaEntregaView.categoriaEntregaItemController.pai.descricao} : " />
+                <h:outputText value="#{categoriaEntregaView.categoriaEntregaItemController.categoria.descricao}" />
             </legend>
             <fieldset>
                 <legend>Item</legend>
                 <span class="dyn-field dyn-field-grp"> <h:inputText style="background-color:rgba(0,0,0,0.05);"
                         styleClass="dyn-field dyn-field-ipt" id="descricaoItem"
-                        value="#{categoriaEntregaView.itemDescricao}" maxlength="100" required="true" /> <h:outputLabel
+                        value="#{categoriaEntregaView.categoriaEntregaItemController.descricao}" maxlength="100" required="true" /> <h:outputLabel
                         styleClass="dyn-field dyn-field-lbl" for="descricaoItem">
                         Descrição <h:outputText styleClass="required" value="*" />
                     </h:outputLabel>
                 </span> <span class="dyn-field dyn-field-grp"> <h:inputText style="background-color:rgba(0,0,0,0.05);"
-                        styleClass="dyn-field dyn-field-ipt" id="codigoItem" value="#{categoriaEntregaView.itemCodigo}"
+                        styleClass="dyn-field dyn-field-ipt" id="codigoItem" value="#{categoriaEntregaView.categoriaEntregaItemController.codigo}"
                         maxlength="30" required="false" /> <h:outputLabel styleClass="dyn-field dyn-field-lbl"
                         value="Código" for="codigoItem" />
                 </span>
@@ -33,7 +33,7 @@
                 <span>#{infoxMessages['form.required']}</span>
             </infox:div>
         </fieldset>
-        <h:commandButton action="#{categoriaEntregaView.salvarItem}" value="Salvar" styleClass="buttons" />
+        <h:commandButton action="#{categoriaEntregaView.categoriaEntregaItemController.salvarItem}" value="Salvar" styleClass="buttons" />
     </h:form>
 
 </ui:composition>

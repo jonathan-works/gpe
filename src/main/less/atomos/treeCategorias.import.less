@@ -55,12 +55,12 @@
     background-repeat: no-repeat;
     background-position: 0 1em;
     padding: 0 0 0 0.3em;
-    background-image: url("../img/ic_keyboard_arrow_right_black_18dp.png");
+    background-image:url("#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','keyboard_arrow_right')}");
     &-has-children {
-      background-image: url("../img/ic_keyboard_arrow_down_black_18dp.png");
+      background-image:url("#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','keyboard_arrow_down')}");
     }
     &-sel {
-      background-image: url("../img/ic_keyboard_arrow_up_black_18dp.png");
+      background-image:url("#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','keyboard_arrow_up')}");
     }
   }
   .group {
@@ -82,11 +82,12 @@
     }
   }
 }
-#component {
-  background-color: #AAA;
+.groupedItemsTreeContainer {
+  background-color: @menu-bg-color;
   display: inline-block;
+  vertical-align:top;
 }
-@transparent-menu-bg-color: fade(@menu-bg-color, 20);
+@transparent-menu-bg-color: fade(#fff, 20);
 .grpd-tree {
   #tree-categorias>.grpd-tree;
 }

@@ -951,6 +951,12 @@ input.ui-inputfield {
     box-shadow: none;
 }
 
+.ui-autocomplete {
+  body & &-dropdown,button&-dropdown {
+    width: 18rem/16;
+  }
+}
+
 button.ui-autocomplete-dropdown {
   width: 18rem/16;
   border: 2rem/16 outset rgb(221, 221, 221);
@@ -959,6 +965,22 @@ button.ui-autocomplete-dropdown {
 
 .ui-icon.ui-icon-triangle-1-s {
   background-image: none
+}
+
+.mdl-selectfield{
+  font-family:'Roboto','Helvetica','Arial',sans-serif;
+  position:relative;
+}
+
+select{
+  font-family:inherit;
+  background-color: transparent;
+  width: 100%;
+  padding: 4px 0;
+  font-size: 16px;
+  color: rgba(0,0,0, 0.26);
+  border: none;
+  border-bottom: 1px solid rgba(0,0,0, 0.12);
 }
 
 .ui-autocomplete-dropdown.ui-button {
