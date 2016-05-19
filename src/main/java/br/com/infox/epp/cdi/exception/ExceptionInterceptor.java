@@ -26,6 +26,8 @@ public class ExceptionInterceptor implements Serializable {
 			Object result = context.proceed();
 			switch (annotation.value()) {
 			case INACTIVE:
+				FacesMessages.instance().add(annotation.inactivatedMessage());
+				break;
 			case REMOVE:
 				FacesMessages.instance().add(annotation.removedMessage());
 				break;

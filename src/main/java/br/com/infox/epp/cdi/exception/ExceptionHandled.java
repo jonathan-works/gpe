@@ -23,6 +23,8 @@ public @interface ExceptionHandled {
 	@Nonbinding
 	String removedMessage() default "#{infoxMessages['entity_deleted']}";
 	@Nonbinding
+	String inactivatedMessage() default "#{infoxMessages['entity_inactived']}";
+	@Nonbinding
 	MethodType value() default MethodType.UNSPECIFIED;
 	
 	public enum MethodType {
