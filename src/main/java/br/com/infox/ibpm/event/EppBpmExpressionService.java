@@ -15,6 +15,7 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.comunicacao.prazo.ContabilizadorPrazo;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
+import br.com.infox.ibpm.event.External.ExpressionType;
 import br.com.infox.ibpm.sinal.SignalService;
 
 @Stateless
@@ -62,10 +63,22 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
     public void dispatchSignal(String codigoSinal) throws DAOException {
         signalService.dispatch(codigoSinal);
     }
+    
+    @External(expressionType = ExpressionType.RAIA_DINAMICA, tooltip = "Teste", value = {
+    	@Parameter(defaultValue = "'Teste'", label = "Teste", tooltip = "Teste")
+    })
+    public void concatenarConfigRaiaDinamica(String... configuracoes) {
+    	
+    }
 
     @Override
     public List<ExternalMethod> getExternalMethods() {
-        return BpmExpressionServiceConsumer.instance().getExternalMethods(this);
+    	return BpmExpressionServiceConsumer.instance().getExternalMethods(this, ExpressionType.GERAL);
     }
+
+	@Override
+	public List<ExternalMethod> getExternalRaiaDinamicaMethods() {
+		return BpmExpressionServiceConsumer.instance().getExternalMethods(this, ExpressionType.RAIA_DINAMICA);
+	}
     
 }

@@ -13,5 +13,9 @@ public @interface External {
 	
 	Parameter [] value () default {};
 	String tooltip () default "";
+	ExpressionType expressionType() default ExpressionType.GERAL;
 
+	public static enum ExpressionType {
+		GERAL, RAIA_DINAMICA;
+	}
 }

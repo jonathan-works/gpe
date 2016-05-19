@@ -19,10 +19,19 @@
                 showLabelSelecione="false" value="#{t.swimlaneName}" label="#{infoxMessages['process.def.assignment.type.swimlane']}">
                 <a:ajax event="change" execute="@this" limitRender="true" render="@form" />
             </wi:selectOneMenu>
-            <wi:inputText id="pooledActorsExpression" value="#{t.pooledActorsExpression}"
+	        <ui:include src="helpers/expressoesAjuda.xhtml">
+				<ui:param name="id" value="expressoesAjudaRaiaDinamicaPopUpPanel" />
+				<ui:param name="methods" value="#{bpmExpressionService.externalRaiaDinamicaMethods}" />
+				<ui:param name="targetExpressionFieldClass" value="pooledActorsExpression" />
+			</ui:include>
+            <wi:inputText id="pooledActorsExpression" value="#{t.pooledActorsExpression}" styleClass="pooledActorsExpression"
                 label="#{infoxMessages['process.def.assignment.type.pooledActorsExpression']}">
                 <a:ajax event="change" execute="@this" limitRender="true" render="@form" />
             </wi:inputText>
+            <div style="display: inline-block">
+	            <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}"
+	                onclick="#{rich:component('expressoesAjudaRaiaDinamicaPopUpPanel')}.show();" />
+	        </div>
         </h:form>
     </rich:collapsiblePanel>
     <rich:collapsiblePanel expanded="false" switchType="client" header="#{infoxMessages['process.task.prazos']}">
