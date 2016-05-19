@@ -113,7 +113,7 @@ public class OracleSafeNamesTest {
         for (String string : problems) {
             sb.append(string).append("\n");
         }
-        Assert.assertEquals(sb.toString(), problems.isEmpty());
+        Assert.assertTrue(sb.toString(), problems.isEmpty());
     }
     
     public static void main(String[] args) {
