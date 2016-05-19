@@ -72,10 +72,12 @@ public class JbpmExpressionResolver implements ExpressionResolver {
 			expression.setValue(value.toString());
 		}
 		expression.setResolved(true);
+		expression.setOriginalValue(value);
 	}
 
 	private void resolveAsVariableType(Expression expression, Object value, VariableInfo variableInfo) {
 		expression.setResolved(true);
+		expression.setOriginalValue(value);
 		switch (variableInfo.getVariableType()) {
 		case DATE:
 		    expression.setValue(new SimpleDateFormat("dd/MM/yyyy").format(value));
@@ -115,6 +117,7 @@ public class JbpmExpressionResolver implements ExpressionResolver {
 		    break;
 		default:
 			expression.setResolved(false);
+			expression.setOriginalValue(null);
 		    break;
 		}
 	}

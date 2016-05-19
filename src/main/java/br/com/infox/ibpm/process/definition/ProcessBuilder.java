@@ -308,6 +308,8 @@ public class ProcessBuilder implements Serializable {
                             throw new IllegalStateException("A variável " + tokens[1] + " da tarefa " + node.getName() + " é do tipo data mas não possui tipo de validação");
                         } else if (VariableType.ENUMERATION.name().equals(tokens[0]) && tokens.length < 3) {
                             throw new IllegalStateException("A variável " + tokens[1] + " da tarefa " + node.getName() + " é do tipo lista de dados mas não possui lista de valores definida");
+                        } else if (VariableType.ENUMERATION_MULTIPLE.name().equals(tokens[0]) && tokens.length < 3) {
+                            throw new IllegalStateException("A variável " + tokens[1] + " da tarefa " + node.getName() + " é do tipo lista de dados (múltipla) mas não possui lista de valores definida");
                         } else if (VariableType.FRAGMENT.name().equals(tokens[0]) && tokens.length < 3) {
                             System.out.println(tokens);
                             throw new IllegalStateException(MessageFormat.format(infoxMessages.get("processDefinition.variable.list.error"), tokens[1], node.getName()));

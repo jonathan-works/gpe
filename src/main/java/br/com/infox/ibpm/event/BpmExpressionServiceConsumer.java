@@ -23,7 +23,7 @@ public final class BpmExpressionServiceConsumer {
         List<ExternalMethod> methods = new ArrayList<>();
         for (Method method : bpmExpressionService.getClass().getMethods()) {
             if (method.isAnnotationPresent(External.class) && method.getAnnotation(External.class).expressionType() == expressionType) {
-                methods.add(new ExternalMethod(method));
+            	methods.add(new ExternalMethod(method));
             }
         }
         return methods;

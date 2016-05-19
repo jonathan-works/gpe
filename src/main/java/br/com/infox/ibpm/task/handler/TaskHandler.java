@@ -15,6 +15,8 @@ import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
 
+import com.google.common.base.Strings;
+
 import br.com.infox.epp.documento.list.associative.AssociativeModeloDocumentoList;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
@@ -64,7 +66,11 @@ public class TaskHandler implements Serializable {
     }
     public void setPooledActorsExpression(String expression){
     	if (task != null){
-    		task.setPooledActorsExpression(expression);
+    		if (!Strings.isNullOrEmpty(expression)) {
+    			task.setPooledActorsExpression(expression);
+    		} else {
+    			task.setPooledActorsExpression(null);
+    		}
     	}
     }
 
