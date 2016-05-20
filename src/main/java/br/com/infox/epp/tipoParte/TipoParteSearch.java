@@ -1,5 +1,7 @@
 package br.com.infox.epp.tipoParte;
 
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -10,6 +12,8 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.epp.documento.entity.ModeloDocumento;
+import br.com.infox.epp.documento.entity.ModeloDocumento_;
 import br.com.infox.epp.processo.partes.entity.TipoParte;
 import br.com.infox.epp.processo.partes.entity.TipoParte_;
 
@@ -32,5 +36,17 @@ public class TipoParteSearch {
 	private EntityManager getEntityManager() {
 		return EntityManagerProducer.getEntityManager();
 	}
+
+    public List<TipoParte> findTipoParteWithDescricaoLike(String pattern) {
+        EntityManager em = EntityManagerProducer.getEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<TipoParte> cq = cb.createQuery(TipoParte.class);
+        Root<TipoParte> tipoParte = cq.from(TipoParte.class);
+
+        cq = cq.select(tipoParte).where(cb.like(cb.lower(tipoParte.get(TipoParte_.descricao)),
+                cb.lower(cb.literal("%" + pattern.toLowerCase() + "%"))));
+
+        return em.createQuery(cq).getResultList();
+    }
 
 }
