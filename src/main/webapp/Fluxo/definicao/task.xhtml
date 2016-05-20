@@ -223,6 +223,16 @@
                             <f:converter converterId="fragmentConfigurationConverter" />
                         </wi:selectOneMenu>
                     </rich:panel>
+                    <rich:panel header="Valor" id="definicaoDefaultValue" rendered="#{var.type eq 'PARAMETER'}">
+                        <h:form>
+                            <div id="input">
+                                <wi:inputText id="inputDefaultValue" label="Valor padrão da variável" value="#{var.value}" />
+                            </div>
+                            <div id="buttons">
+                                <a:commandButton id="submit" styleClass="buttons" value="Gravar" execute="@form" render="varDiv pageBodyDialogMessage" />
+                            </div>
+                        </h:form>
+                    </rich:panel>
                 </h:form>
             </rich:column>
         </rich:dataTable>
