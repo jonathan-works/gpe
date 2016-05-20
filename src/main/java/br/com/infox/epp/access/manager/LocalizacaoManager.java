@@ -170,11 +170,19 @@ public class LocalizacaoManager extends Manager<LocalizacaoDAO, Localizacao> {
 	}
     
 	public List<Localizacao> getLocalizacoesExternas() {
+		return getLocalizacoesExternasByRaiz(null);
+	}
+	
+	public List<Localizacao> getLocalizacoesExternasByRaiz(Localizacao localizacaoRaiz) {
 		CriteriaBuilder cb = getDao().getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Localizacao> query = cb.createQuery(Localizacao.class);
 		Root<Localizacao> from = query.from(Localizacao.class);
 		query.where(cb.isNull(from.get(Localizacao_.estruturaPai)),
 				cb.isTrue(from.get(Localizacao_.ativo)));
+		if (localizacaoRaiz != null) {
+			query.where(query.getRestriction(),
+					cb.like(from.get(Localizacao_.caminhoCompleto), localizacaoRaiz.getCaminhoCompleto() + "%"));
+		}
 		query.orderBy(cb.asc(from.get(Localizacao_.caminhoCompleto)));
 		return getDao().getEntityManager().createQuery(query).getResultList();
 	}
