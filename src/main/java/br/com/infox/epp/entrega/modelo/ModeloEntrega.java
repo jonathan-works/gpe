@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,6 +23,7 @@ import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.entrega.entity.CategoriaEntregaItem;
+import br.com.infox.epp.fluxo.entity.ModeloPasta;
 
 @Entity
 @Table(name="tb_modelo_entrega")
@@ -36,13 +38,22 @@ public class ModeloEntrega implements Serializable {
     @GeneratedValue(generator = GENERATOR_NAME, strategy = GenerationType.SEQUENCE)
     @Column(name = "id_modelo_entrega", unique = true, nullable = false)
     private Integer id;
-    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="dt_limite_entrega",  nullable=false)
     private Date dataLimite;
+    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="dt_liberacao",  nullable=true)
     private Date dataLiberacao;
+    
+    @NotNull
+    @Column(name="in_ativo", nullable=false)
+    private Boolean ativo;
+    
+    @NotNull
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="id_modelo_pasta")
+    private ModeloPasta modeloPasta;
     
     @NotNull
     @ManyToOne(fetch=FetchType.LAZY)
@@ -55,12 +66,12 @@ public class ModeloEntrega implements Serializable {
     @OneToMany(fetch=FetchType.LAZY)
     private List<CategoriaEntregaItem> itens;
 
-    @OneToMany(fetch=FetchType.LAZY)
     @JoinColumn(name="id_modelo_entrega")
+    @OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL})
     private List<TipoResponsavelEntrega> tiposResponsaveis;
     
-    @OneToMany(fetch=FetchType.LAZY)
     @JoinColumn(name="id_modelo_entrega")
+    @OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL})
     private List<ClassificacaoDocumentoEntrega> documentosEntrega;
 
     public Integer getId() {
@@ -86,7 +97,12 @@ public class ModeloEntrega implements Serializable {
     public void setDataLiberacao(Date dataLiberacao) {
         this.dataLiberacao = dataLiberacao;
     }
-
+    public Boolean getAtivo() {
+        return ativo;
+    }
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
     public ModeloDocumento getModeloCertidao() {
         return modeloCertidao;
     }
@@ -94,7 +110,12 @@ public class ModeloEntrega implements Serializable {
     public void setModeloCertidao(ModeloDocumento modeloCertidao) {
         this.modeloCertidao = modeloCertidao;
     }
-
+    public ModeloPasta getModeloPasta() {
+        return modeloPasta;
+    }
+    public void setModeloPasta(ModeloPasta modeloPasta) {
+        this.modeloPasta = modeloPasta;
+    }
     public List<CategoriaEntregaItem> getItens() {
         return itens;
     }

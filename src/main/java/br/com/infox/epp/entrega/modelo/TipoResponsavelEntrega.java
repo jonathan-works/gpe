@@ -31,6 +31,11 @@ public class TipoResponsavelEntrega {
     @NotNull
     @Column(name="in_obrigatorio", nullable=false)
     private Boolean obrigatorio;
+    
+    @NotNull
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="id_modelo_entrega", nullable=false)
+    private ModeloEntrega modeloEntrega;
 
     public Integer getId() {
         return id;
@@ -54,6 +59,14 @@ public class TipoResponsavelEntrega {
 
     public void setObrigatorio(Boolean obrigatorio) {
         this.obrigatorio = obrigatorio;
+    }
+
+    public ModeloEntrega getModeloEntrega() {
+        return modeloEntrega;
+    }
+
+    public void setModeloEntrega(ModeloEntrega modeloEntrega) {
+        this.modeloEntrega = modeloEntrega;
     }
 
     @Override

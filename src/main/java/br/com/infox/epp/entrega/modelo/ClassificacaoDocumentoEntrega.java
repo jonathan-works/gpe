@@ -38,6 +38,10 @@ public class ClassificacaoDocumentoEntrega implements Serializable {
     @NotNull
     @Column(name="in_obrigatorio", nullable=false)
     private Boolean obrigatorio;
+    @NotNull
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="id_modelo_entrega", nullable=false)
+    private ModeloEntrega modeloEntrega;
 
     public Integer getId() {
         return id;
@@ -63,12 +67,26 @@ public class ClassificacaoDocumentoEntrega implements Serializable {
         this.multiplosDocumentos = multiplosDocumentos;
     }
 
+    public Boolean getObrigatorio() {
+        return obrigatorio;
+    }
+    public void setObrigatorio(Boolean obrigatorio) {
+        this.obrigatorio = obrigatorio;
+    }
+    
+    public ModeloEntrega getModeloEntrega() {
+        return modeloEntrega;
+    }
+
+    public void setModeloEntrega(ModeloEntrega modeloEntrega) {
+        this.modeloEntrega = modeloEntrega;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((obrigatorio == null) ? 0 : obrigatorio.hashCode());
         return result;
     }
 
@@ -85,11 +103,6 @@ public class ClassificacaoDocumentoEntrega implements Serializable {
             if (other.id != null)
                 return false;
         } else if (!id.equals(other.id))
-            return false;
-        if (obrigatorio == null) {
-            if (other.obrigatorio != null)
-                return false;
-        } else if (!obrigatorio.equals(other.obrigatorio))
             return false;
         return true;
     }
