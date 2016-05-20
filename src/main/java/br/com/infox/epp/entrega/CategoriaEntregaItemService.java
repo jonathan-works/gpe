@@ -75,10 +75,11 @@ public class CategoriaEntregaItemService {
 		return retorno;
 	}
 
-	public void atualizar(String codigoItem, String novaDescricao) {
+	public CategoriaEntregaItem atualizar(String codigoItem, String novaDescricao) {
 		CategoriaEntregaItem item = getItem(codigoItem);
 		item.setDescricao(novaDescricao);
 		getEntityManager().flush();
+		return item;
 	}
 
 	private Ciclo<CategoriaEntregaItem> getCiclo(CategoriaEntregaItem itemPai, CategoriaEntregaItem itemFilho) {
@@ -152,7 +153,17 @@ public class CategoriaEntregaItemService {
 	}
 
 	/**
-	 * Remove o relacionamento entre dos itens
+	 * Remove um item
+	 */
+	public CategoriaEntregaItem remover(String codigoItem) {
+		CategoriaEntregaItem item = getItem(codigoItem);
+		getEntityManager().remove(item);
+		getEntityManager().flush();
+		return item;
+	}
+	
+	/**
+	 * Remove o relacionamento entre dois itens
 	 */
 	public CategoriaItemRelacionamento remover(String codigoItem, String codigoItemPai) {
 		if (codigoItemPai == null) {
@@ -193,8 +204,8 @@ public class CategoriaEntregaItemService {
 			return categoriaEntregaItemSearch.list();
 		}
 	}
-
-	public void novo(CategoriaEntregaItem item, String codigoItemPai, String codigoCategoria) {
+	
+	public void novo(CategoriaEntregaItem item, String codigoItemPai, String codigoCategoria, boolean persistirRelacionamento) {
 		if (codigoCategoria == null) {
 			throw new BusinessException("'codigoCategoria' deve ser informado");
 		}
@@ -209,12 +220,26 @@ public class CategoriaEntregaItemService {
 		item.setCategoriaEntrega(categoria);
 
 		getEntityManager().persist(item);
-
-		CategoriaItemRelacionamento categoriaItemRelacionamento = new CategoriaItemRelacionamento();
-		categoriaItemRelacionamento.setItemFilho(item);
-		categoriaItemRelacionamento.setItemPai(itemPai);
-		getEntityManager().persist(categoriaItemRelacionamento);
 		getEntityManager().flush();
+		if(persistirRelacionamento) {
+			CategoriaItemRelacionamento categoriaItemRelacionamento = new CategoriaItemRelacionamento();
+			categoriaItemRelacionamento.setItemFilho(item);
+			categoriaItemRelacionamento.setItemPai(itemPai);
+			getEntityManager().persist(categoriaItemRelacionamento);
+			getEntityManager().flush();			
+		}
+	}
+	
+	/**
+	 * Cria um novo item filho da categoria especificada associado ao item informado 
+	 * @param item Item ao qual o item deve estar associado. Caso seja nulo adiciona um item relacionado ao root
+	 */
+	public void novo(CategoriaEntregaItem item, String codigoItemPai, String codigoCategoria) {
+		novo(item, codigoItemPai, codigoCategoria, true);
+	}
+
+	public void novo(CategoriaEntregaItem item, String codigoCategoria) {
+		novo(item, null, codigoCategoria, false);
 	}
 
     public List<CategoriaEntregaItem> getItensFilhosComDescricao(String codigoItemPai, String query) {

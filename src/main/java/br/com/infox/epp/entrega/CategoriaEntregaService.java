@@ -22,8 +22,8 @@ public class CategoriaEntregaService {
 	private CategoriaEntregaSearch categoriaEntregaSearch;
 	@Inject
 	private CategoriaEntregaItemSearch categoriaEntregaItemSearch;
-	@Inject 
-	ParametroManager parametroManager;
+	@Inject
+	private ParametroManager parametroManager;
 
 	private EntityManager getEntityManager() {
 		return EntityManagerProducer.getEntityManager();

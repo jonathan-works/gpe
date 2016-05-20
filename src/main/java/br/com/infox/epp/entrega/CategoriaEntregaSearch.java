@@ -18,7 +18,6 @@ import br.com.infox.epp.entrega.entity.CategoriaEntregaItem;
 import br.com.infox.epp.entrega.entity.CategoriaEntregaItem_;
 import br.com.infox.epp.entrega.entity.CategoriaEntrega_;
 
-@Stateless
 public class CategoriaEntregaSearch extends PersistenceController {
 
 	public CategoriaEntrega getCategoriaEntregaByCodigo(String codigo) {
