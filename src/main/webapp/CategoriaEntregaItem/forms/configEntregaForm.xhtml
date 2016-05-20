@@ -5,51 +5,148 @@
     xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich"
     xmlns:i="http://java.sun.com/jsf/composite/infox" xmlns:infox="http://www.infox.com.br/jsf"
     xmlns:p="http://primefaces.org/ui" xmlns:wi="http://www.itx.com.br/jsf">
-
-    <h:form>
+    <fieldset>
+        <legend>Configuração de Entrega de Documentos</legend>
+        <ui:repeat var="item" value="#{categoriaEntregaView.modeloEntregaController.itens}">
+            <i:input label="#{item.categoriaEntrega.descricao}" value="#{item.descricao}">
+                <h:outputText value="#{item.descricao}" />
+            </i:input>
+        </ui:repeat>
+        <h:form>
         <fieldset>
             <legend>Campos</legend>
-            <ui:repeat var="item" value="#{categoriaEntregaView.modeloEntregaController.itens}">
-                <i:input label="#{item.categoriaEntrega.descricao}" value="#{item.descricao}">
-                    <h:outputText value="#{item.descricao}" />
-                </i:input>
-            </ui:repeat>
             <ui:remove>
                 <f:event listener="#{categoriaEntregaView.modeloEntregaController.validarDatas}" type="postValidate" />
             </ui:remove>
-            <i:inputDate id="dataLiberacao" label="Data de disponibilidade" required="true"
-                value="#{categoriaEntregaView.modeloEntregaController.dataLiberacao}" />
-            <i:inputDate id="dataLimite" label="Data limite para Entrega"
-                value="#{categoriaEntregaView.modeloEntregaController.dataLimite}" />
-            <i:autoComplete id="modeloCertidao" label="Modelo para certidão" required="true"
-                value="#{categoriaEntregaView.modeloEntregaController.modeloCertidao}"
-                converter="br.com.infox.jsf.converter.EntityConverter"
-                completeMethod="#{categoriaEntregaView.modeloEntregaController.completeModeloCertidao}"
-                itemLabel="#{item.tituloModeloDocumento}" itemValue="#{item}" />
-            <infox:div styleClass="required-alert">
-                <img src="#{pathResolver.contextPath}#{layoutController.getResourceUrlByPath('/imagens/mod/balao.png')}" />
-                <span class="required">*</span>
-                <span>#{infoxMessages['form.required']}</span>
-            </infox:div>
+            <p:fragment autoUpdate="true">
+                <i:inputDate id="dataLiberacao" label="Data de disponibilidade" required="true"
+                    value="#{categoriaEntregaView.modeloEntregaController.dataLiberacao}" />
+                <i:inputDate id="dataLimite" label="Data limite para Entrega"
+                    value="#{categoriaEntregaView.modeloEntregaController.dataLimite}" />
+                <i:autoComplete id="modeloCertidao" label="Modelo para certidão" required="true"
+                    value="#{categoriaEntregaView.modeloEntregaController.modeloCertidao}"
+                    converter="br.com.infox.jsf.converter.EntityConverter"
+                    completeMethod="#{categoriaEntregaView.modeloEntregaController.completeModeloCertidao}"
+                    itemLabel="#{item.tituloModeloDocumento}" itemValue="#{item}" />
+                <i:autoComplete id="pasta" required="true"
+                    value="#{categoriaEntregaView.modeloEntregaController.modeloPasta}"
+                    converter="br.com.infox.jsf.converter.EntityConverter"
+                    completeMethod="#{categoriaEntregaView.modeloEntregaController.completeModeloPasta}"
+                    itemLabel="#{item.descricao}" itemValue="#{item}">
+                    <f:facet name="label">
+                     <img src="#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','create_new_folder')}" /> Pasta
+                    </f:facet>
+                </i:autoComplete>
+                <i:selectOneRadio required="true" label="Ativo"
+                    items="#{selectItemFunctions.createFromString('true:entity.ativo,false:entity.inativo')}"
+                    value="#{categoriaEntregaView.modeloEntregaController.ativo}" />
+            </p:fragment>
+
+            <i:input label="Classificações de Documento Disponíveis">
+                <fieldset>
+                    <div>
+                        <i:autoComplete id="classificacaoDocumento"
+                            value="#{categoriaEntregaView.modeloEntregaController.classificacaoDocumentoEntrega}"
+                            converter="br.com.infox.jsf.converter.EntityConverter"
+                            completeMethod="#{categoriaEntregaView.modeloEntregaController.completeClassificacaoDocumento}"
+                            itemLabel="#{item.codigoDocumento.concat(' - ').concat(item.descricao)}" itemValue="#{item}" />
+                        <h:commandButton styleClass="buttons" value="Adicionar"
+                            action="#{categoriaEntregaView.modeloEntregaController.adicionarDocumentoEntrega}">
+                            <p:ajax process="@parent" update="@parent" />
+                        </h:commandButton>
+                    </div>
+                    <h:dataTable var="item" value="#{categoriaEntregaView.modeloEntregaController.classificacoesDocumentosEntrega}"
+                        styleClass="rf-dt dtable rf-dt-crud" headerClass="rf-dt-thd" rowClasses="rf-dt-r zebra-row">
+                        <f:facet name="footer">#{categoriaEntregaView.modeloEntregaController.classificacoesDocumentosEntrega.size()} Registro(s)</f:facet>
+                        <h:column styleClass="rf-dt-c dt-toolbar-col" headerClass="rf-dt-shdr-c">
+                            <div class="ifx-toolbar">
+                                <h:commandLink styleClass="buttons">
+                                    <p:ajax process="@parent" update="@parent" />
+                                    <img src="#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','edit')}" />
+                                </h:commandLink>
+                            </div>
+                        </h:column>
+                        <h:column styleClass="rf-dt-c" headerClass="rf-dt-shdr-c" >
+                            <f:facet name="header">Classificação de Documento</f:facet>
+                            #{item.classificacaoDocumento.codigoDocumento} - #{item.classificacaoDocumento.descricao}
+                        </h:column>
+                        <h:column styleClass="rf-dt-c" headerClass="rf-dt-shdr-c">
+                            <f:facet name="header">Obrigatório?</f:facet>
+                            #{item.obrigatorio ? infoxMessages['crud.yes']:infoxMessages['crud.no']}
+                        </h:column>
+                        <h:column styleClass="rf-dt-c" headerClass="rf-dt-shdr-c">
+                            <f:facet name="header">Permite entrega de múltiplos documentos?</f:facet>
+                            #{item.multiplosDocumentos ? infoxMessages['crud.yes']:infoxMessages['crud.no']}
+                        </h:column>
+                    </h:dataTable>
+                </fieldset>
+            </i:input>
+            <i:input label="Tipos de Responsáveis">
+                <fieldset>
+                <div>
+                    <i:autoComplete id="tipoResponsavel"
+                        value="#{categoriaEntregaView.modeloEntregaController.tipoResponsavel}"
+                        converter="br.com.infox.jsf.converter.EntityConverter"
+                        completeMethod="#{categoriaEntregaView.modeloEntregaController.completeTipoResponsavel}"
+                        itemLabel="#{item.identificador.concat(' - ').concat(item.descricao)}"
+                        itemValue="#{item}" />
+                    <h:commandButton styleClass="buttons" value="Adicionar"
+                        action="#{categoriaEntregaView.modeloEntregaController.adicionarResponsavel}">
+                        <p:ajax process="@parent" update="@parent" />
+                    </h:commandButton>
+                </div>
+                <h:dataTable var="item" value="#{categoriaEntregaView.modeloEntregaController.tiposResponsaveis}"
+                    styleClass="rf-dt dtable rf-dt-crud" headerClass="rf-dt-thd" rowClasses="rf-dt-r zebra-row">
+                    <f:facet name="footer">#{categoriaEntregaView.modeloEntregaController.tiposResponsaveis.size()} Registro(s)</f:facet>
+                    <h:column styleClass="rf-dt-c dt-toolbar-col" headerClass="rf-dt-shdr-c">
+                        <div class="ifx-toolbar">
+                            <h:commandLink styleClass="buttons">
+                                <p:ajax process="@parent" update="@parent" />
+                                <img src="#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','edit')}" />
+                            </h:commandLink>
+                        </div>
+                    </h:column>
+                    <h:column styleClass="rf-dt-c" headerClass="rf-dt-shdr-c" >
+                        <f:facet name="header">Tipo de Responsável</f:facet>
+                        #{item.tipoParte.identificador} - #{item.tipoParte.descricao}
+                    </h:column>
+                    <h:column styleClass="rf-dt-c" headerClass="rf-dt-shdr-c">
+                        <f:facet name="header">Obrigatório?</f:facet>
+                        #{item.obrigatorio ? infoxMessages['crud.yes']:infoxMessages['crud.no']}
+                    </h:column>
+                </h:dataTable>
+            </fieldset>
+            </i:input>
         </fieldset>
 
-        <h:commandButton value="Salvar" styleClass="buttons">
+        <infox:div styleClass="required-alert">
+            <img src="#{pathResolver.contextPath}#{layoutController.getResourceUrlByPath('/imagens/mod/balao.png')}" />
+            <span class="required">*</span>
+            <span>#{infoxMessages['form.required']}</span>
+        </infox:div>
+        <h:commandButton value="Salvar" styleClass="buttons"
+            action="#{categoriaEntregaView.modeloEntregaController.save}">
             <p:ajax process="@form" update="@form" />
         </h:commandButton>
+        <input type="button" class="buttons" value="Voltar"></input>
     </h:form>
-
+    </fieldset>
+    <ui:remove>
     <h:form>
         <fieldset>
             <legend>Classificações de documentos disponíveis para entrega</legend>
-            <hr></hr>
         </fieldset>
     </h:form>
 
     <h:form>
         <fieldset>
             <legend>Configurar papéis responsáveis para entrega</legend>
-            <hr></hr>
+            
         </fieldset>
+        <h:commandButton value="Adicionar Responsável" styleClass="buttons"
+            action="#{categoriaEntregaView.modeloEntregaController.adicionarResponsavel}">
+            <p:ajax process="@form" update="@form" />
+        </h:commandButton>
     </h:form>
 
     <h:form>
@@ -58,5 +155,5 @@
             <hr></hr>
         </fieldset>
     </h:form>
-
+    </ui:remove>
 </ui:composition>

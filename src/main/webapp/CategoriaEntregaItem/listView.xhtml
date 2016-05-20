@@ -28,7 +28,7 @@
                 <p:remoteCommand name="configurarModeloEntrega" process="@this" update="@this @parent:@parent:formFields"
                     onstart="infox.showLoading();" actionListener="#{categoriaEntregaView.configurarModeloEntrega}" oncomplete="infox.hideLoading();" />
             </h:form>
-            
+            <div style="display:inline-block;vertical-align:top;">
             <ui:include src="groupedItemsTree.xhtml">
                 <ui:param name="id" value="componente" />
                 <ui:param name="config"
@@ -52,12 +52,11 @@
                 ]"
                 />
             </ui:include>
-            
-            <div style="display:inline-block;vertical-align:top;padding:0.25em;">
-                <infox:div id="formFields">
-                    <ui:include src="forms/#{categoriaEntregaView.view}" />
-                </infox:div>
             </div>
+            
+            <infox:div id="formFields" style="display:inline-block;vertical-align:top;">
+                <ui:include src="forms/#{categoriaEntregaView.view}" />
+            </infox:div>
         </infox:div>
     </ui:define>
 </ui:composition>
