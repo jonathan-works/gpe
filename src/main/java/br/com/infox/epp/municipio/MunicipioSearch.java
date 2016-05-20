@@ -41,7 +41,8 @@ public class MunicipioSearch {
 		Root<Municipio> from = query.from(Municipio.class);
 		Join<Municipio, Estado> estado = from.join(Municipio_.estado);
 		query.where(cb.isTrue(from.get(Municipio_.ativo)));
-		if (Parametros.CODIGO_UF_SISTEMA != null && !Parametros.CODIGO_UF_SISTEMA.getValue().equals("-1")) {
+		if (Parametros.CODIGO_UF_SISTEMA != null && !Parametros.CODIGO_UF_SISTEMA.getValue().trim().isEmpty() &&
+				!Parametros.CODIGO_UF_SISTEMA.getValue().equals("-1")) {
 			query.where(query.getRestriction(), cb.equal(estado.get(Estado_.codigo), Parametros.CODIGO_UF_SISTEMA.getValue()));
 		}
 		return getEntityManager().createQuery(query).getResultList();
