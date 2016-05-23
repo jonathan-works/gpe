@@ -238,10 +238,11 @@ public class TaskHandler implements Serializable {
         	var.setIniciaVazia(false);
         }
         if (var.getType().equals(VariableType.PARAMETER)) {
+            var.setIniciaVazia(false);
             var.setWritable(false);
             var.setRequired(false);
-            var.setIniciaVazia(false);
             var.setHidden(true);
+            var.setReadable(true);
         }
     }
 
