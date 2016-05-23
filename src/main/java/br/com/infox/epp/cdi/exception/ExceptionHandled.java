@@ -14,6 +14,7 @@ import javax.interceptor.InterceptorBinding;
 @Target({ ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ExceptionHandled {
+    
 	@Nonbinding
 	String lockExceptionMessage() default "";
 	@Nonbinding
@@ -26,8 +27,15 @@ public @interface ExceptionHandled {
 	String inactivatedMessage() default "#{infoxMessages['entity_inactived']}";
 	@Nonbinding
 	MethodType value() default MethodType.UNSPECIFIED;
+	@Nonbinding
+    String errorMessage() default "";
+	@Nonbinding
+    String successMessage() default "";
+	@Nonbinding
+    boolean createLogErro() default false;
 	
 	public enum MethodType {
 		PERSIST, UPDATE, REMOVE, INACTIVE, UNSPECIFIED;
 	}
+	
 }

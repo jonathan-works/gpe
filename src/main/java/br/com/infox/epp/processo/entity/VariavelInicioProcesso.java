@@ -35,10 +35,10 @@ public class VariavelInicioProcesso implements Serializable {
     @Column(name = "nm_variavel", nullable = false)
     private String name;
     
-    @Column(name = "value")
+    @Column(name = "vl_variavel")
     private String value;
     
-    @Column(name = "type")
+    @Column(name = "ds_tipo")
     private String type;
 
     public Long getId() {

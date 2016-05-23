@@ -1,12 +1,8 @@
 package br.com.infox.epp.processo.iniciar;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -16,23 +12,19 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.taskmgmt.def.Task;
-import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.joda.time.DateTime;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 import br.com.infox.core.exception.EppConfigurationException;
-import br.com.infox.core.log.LogErrorService;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
-import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.dao.NatCatFluxoLocalizacaoDAO;
-import br.com.infox.epp.log.LogErro;
 import br.com.infox.epp.meiocontato.entity.MeioContato;
 import br.com.infox.epp.meiocontato.manager.MeioContatoManager;
 import br.com.infox.epp.meiocontato.type.TipoMeioContatoEnum;
@@ -45,31 +37,22 @@ import br.com.infox.epp.processo.dao.ProcessoSearch;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
-import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.partes.entity.TipoParte;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
-import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
-import br.com.infox.epp.processo.status.dao.StatusProcessoDao;
-import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.tipoParte.TipoParteSearch;
 import br.com.infox.ibpm.util.JbpmUtil;
-import br.com.infox.jsf.util.JsfUtil;
-import br.com.infox.seam.path.PathResolver;
-import br.com.infox.seam.util.ComponentUtil;
+import br.com.infox.seam.exception.BusinessException;
 import edu.emory.mathcs.backport.java.util.Collections;
 
 @Named
 @ViewScoped
-public class IniciarProcessoView implements Serializable {
+public class IniciarProcessoView extends AbstractIniciarProcesso {
 
 	private static final long serialVersionUID = 1L;
 	
-	private static final Logger LOG = Logger.getLogger(IniciarProcessoView.class.getName());
-	private static final String SCRIPT = "open('{contextPath}/Processo/movimentar.seam?idProcesso={idProcesso}&idTaskInstance={idTaskInstance}', '{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');";
-
     @Inject
     private NatCatFluxoLocalizacaoDAO natCatFluxoLocalizacaoDAO;
     @Inject
@@ -81,19 +64,9 @@ public class IniciarProcessoView implements Serializable {
     @Inject
     private TipoParteSearch tipoParteSearch;
     @Inject
-    private SituacaoProcessoDAO situacaoProcessoDAO;
-    @Inject
     private ProcessoManager processoManager;
     @Inject
-    private LogErrorService logErrorService;
-    @Inject
-    private JsfUtil jsfUtil;
-    @Inject
     private IniciarProcessoService iniciarProcessoService;
-    @Inject
-    private StatusProcessoDao statusProcessoDao;
-    @Inject
-    private MetadadoProcessoManager metadadoProcessoManager;
     @Inject
     private ProcessoSearch processoSearch;
 
@@ -132,93 +105,64 @@ public class IniciarProcessoView implements Serializable {
         processo.setDataInicio(DateTime.now().toDate());
     }
     
-    @ExceptionHandled(value = MethodType.UNSPECIFIED)
+    @ExceptionHandled
     public void removerProcesso(Processo processo) {
         processoManager.remove(processo);
         processosCriados.remove(processo);
     }
     
-    @ExceptionHandled(value = MethodType.UNSPECIFIED)
-    public String iniciarProcesso(Processo processo) {
+    @ExceptionHandled
+    public String iniciar(Processo processo) {
         String processDefinitionName = processo.getNaturezaCategoriaFluxo().getFluxo().getFluxo();
         ProcessDefinition processDefinition = JbpmUtil.instance().findLatestProcessDefinition(processDefinitionName);
         Task startTask = processDefinition.getTaskMgmtDefinition().getStartTask();
-        if (startTask.getTaskController() != null && startTask.getTaskController().getVariableAccesses() != null
-                && !startTask.getTaskController().getVariableAccesses().isEmpty()) {
+        if (hasStartTaskForm(startTask)) {
             jsfUtil.addFlashParam("processo", processo);
             return "/Processo/startTaskForm.seam";
         } else {
             ProcessInstance processInstance = iniciarProcessoService.iniciarProcesso(processo);
-            metadadoProcessoManager.removerMetadado(EppMetadadoProvider.STATUS_PROCESSO, processo);
             openMovimentarIfAccessible(processInstance);
             return "/Painel/list.seam?faces-redirect=true";
         }
     }
 
-    public String iniciarProcesso() {
+    @ExceptionHandled(createLogErro = true)
+    public String iniciar() {
         if (naturezaCategoriaFluxoItem == null) {
-            FacesMessages.instance().add("Selecione um Agrupamento de Fluxo, por favor!");
-            return "";
+            throw new BusinessException("Selecione um Agrupamento de Fluxo, por favor!");
         }
-        try {
-            processo.setNaturezaCategoriaFluxo(naturezaCategoriaFluxoItem.getNaturezaCategoriaFluxo());
-            List<ParticipanteProcesso> participantes = new ArrayList<>();
-            if (!root.isLeaf()) {
-                for (TreeNode treeNode : root.getChildren()) {
-                    IniciarProcessoParticipanteVO participanteVO = (IniciarProcessoParticipanteVO) treeNode;
-                    participantes.addAll(participanteVO.getListParticipantes(processo));
-                }
+        processo.setNaturezaCategoriaFluxo(naturezaCategoriaFluxoItem.getNaturezaCategoriaFluxo());
+        List<ParticipanteProcesso> participantes = new ArrayList<>();
+        if (!root.isLeaf()) {
+            for (TreeNode treeNode : root.getChildren()) {
+                IniciarProcessoParticipanteVO participanteVO = (IniciarProcessoParticipanteVO) treeNode;
+                participantes.addAll(participanteVO.getListParticipantes(processo));
             }
-            List<MetadadoProcesso> metadados = new ArrayList<>();
-            MetadadoProcessoProvider processoProvider = new MetadadoProcessoProvider();
-            if (naturezaCategoriaFluxoItem.hasItem()) {
-                MetadadoProcesso item = processoProvider.gerarMetadado(EppMetadadoProvider.ITEM_DO_PROCESSO, naturezaCategoriaFluxoItem.getItem().getIdItem().toString());
-                metadados.add(item);
-            }
-            String processDefinitionName = processo.getNaturezaCategoriaFluxo().getFluxo().getFluxo();
-            ProcessDefinition processDefinition = JbpmUtil.instance().findLatestProcessDefinition(processDefinitionName);
-            Task startTask = processDefinition.getTaskMgmtDefinition().getStartTask();
-            if (startTask.getTaskController() != null) {
-                StatusProcesso statusProcesso = statusProcessoDao.getStatusProcesso("Não Iniciado");
-                MetadadoProcesso metadadoStatus = processoProvider.gerarMetadado(EppMetadadoProvider.STATUS_PROCESSO, statusProcesso.getIdStatusProcesso().toString());
-                metadados.add(metadadoStatus);
-                processoManager.gravarProcesso(processo, metadados, participantes);
-                jsfUtil.addFlashParam("processo", processo);
-                return "/Processo/startTaskForm.seam";
-            } else {
-                processoManager.gravarProcesso(processo, metadados, participantes);
-                ProcessInstance processInstance = iniciarProcessoService.iniciarProcesso(processo);
-                metadadoProcessoManager.removerMetadado(EppMetadadoProvider.STATUS_PROCESSO, processo);
-                openMovimentarIfAccessible(processInstance);
-                return "/Painel/list.seam?faces-redirect=true";
-            }
-        } catch (Exception e) {
-            createLogErro(e);
-            return "";
+        }
+        List<MetadadoProcesso> metadados = new ArrayList<>();
+        MetadadoProcessoProvider processoProvider = new MetadadoProcessoProvider();
+        if (naturezaCategoriaFluxoItem.hasItem()) {
+            MetadadoProcesso item = processoProvider.gerarMetadado(EppMetadadoProvider.ITEM_DO_PROCESSO, naturezaCategoriaFluxoItem.getItem().getIdItem().toString());
+            metadados.add(item);
+        }
+        String processDefinitionName = processo.getNaturezaCategoriaFluxo().getFluxo().getFluxo();
+        ProcessDefinition processDefinition = JbpmUtil.instance().findLatestProcessDefinition(processDefinitionName);
+        Task startTask = processDefinition.getTaskMgmtDefinition().getStartTask();
+        if (hasStartTaskForm(startTask)) {
+            processoManager.gravarProcesso(processo, metadados, participantes);
+            jsfUtil.addFlashParam("processo", processo);
+            return "/Processo/startTaskForm.seam";
+        } else {
+            processoManager.gravarProcesso(processo, metadados, participantes);
+            ProcessInstance processInstance = iniciarProcessoService.iniciarProcesso(processo);
+            openMovimentarIfAccessible(processInstance);
+            return "/Painel/list.seam?faces-redirect=true";
         }
     }
     
-    private void createLogErro(Exception e) {
-        LogErro logErro = logErrorService.log(e);
-        LOG.log(Level.SEVERE, logErro.getCodigo(), e);
-        FacesMessages.instance().add("Código de Erro: " + logErro.getCodigo() + " Mensagem: " + e.getMessage());
-    }
-
-    private void openMovimentarIfAccessible(ProcessInstance processInstance) {
-        Collection<TaskInstance> taskInstances = processInstance.getTaskMgmtInstance().getTaskInstances();
-        if (taskInstances != null) {
-            for (TaskInstance taskInstance : taskInstances) {
-                boolean canOpenTask = situacaoProcessoDAO.canOpenTask(taskInstance.getId(), null, false);
-                if (canOpenTask) {
-                    PathResolver pathResolver = ComponentUtil.getComponent(PathResolver.NAME);
-                    String script = SCRIPT.replace("{contextPath}", pathResolver.getContextPath())
-                            .replace("{idTaskInstance}", String.valueOf(taskInstance.getId()))
-                            .replace("{idProcesso}", processo.getIdProcesso().toString());
-                    jsfUtil.execute(script);
-                    break;
-                }
-            }
-        }
+    private boolean hasStartTaskForm(Task startTask) {
+        return startTask.getTaskController() != null && startTask.getTaskController().getVariableAccesses() != null
+                && !startTask.getTaskController().getVariableAccesses().isEmpty();
     }
     
     public void onSelectNaturezaCategoriaFluxoItem() {

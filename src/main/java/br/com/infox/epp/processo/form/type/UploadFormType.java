@@ -15,6 +15,7 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.service.DocumentoUploaderService;
 import br.com.infox.epp.processo.form.FormData;
+import br.com.infox.epp.processo.form.FormField;
 import br.com.infox.epp.processo.form.variable.value.TypedValue;
 import br.com.infox.epp.processo.form.variable.value.UploadValueImpl;
 import br.com.infox.epp.processo.form.variable.value.ValueType;
@@ -47,12 +48,14 @@ public class UploadFormType extends FileFormType {
     public void processFileUpload(FileUploadEvent fileUploadEvent) {
         UploadedFile file = fileUploadEvent.getUploadedFile();
         UIComponent uploadFile = fileUploadEvent.getComponent();
-        UploadValueImpl typedValue = (UploadValueImpl) uploadFile.getAttributes().get("typedValue");
+        FormField formField = (FormField) uploadFile.getAttributes().get("formField");
         FormData formData = (FormData) uploadFile.getAttributes().get("formData");
+        UploadValueImpl typedValue = (UploadValueImpl) formField.getTypedValue();
         try {
             ClassificacaoDocumento classificacao = typedValue.getClassificacaoDocumento();
             getDocumentoUploadService().validaDocumento(file, classificacao, file.getData());
             getFileVariableHandler().gravarDocumento(file, uploadFile.getId(), typedValue, formData.getProcesso());
+            formData.setVariable(formField.getId(), typedValue);
         } catch (BusinessRollbackException e) {
              LOG.log(Level.SEVERE, "Erro ao remover o documento existente", e);
              if (e.getCause() instanceof DAOException) {

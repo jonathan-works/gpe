@@ -6,6 +6,7 @@ import java.util.Map;
 import br.com.infox.epp.documento.type.ExpressionResolverChain;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.form.type.FormType;
+import br.com.infox.epp.processo.form.variable.value.TypedValue;
 
 public interface FormData {
     
@@ -19,7 +20,7 @@ public interface FormData {
     
     Object getVariable(String name);
     
-    void setVariable(String name, Object value);
+    void setVariable(String name, TypedValue value);
     
     void update();
     
