@@ -63,15 +63,15 @@ public class ModeloEntrega implements Serializable {
     @JoinTable(name="tb_modelo_entrega_item", 
             joinColumns=@JoinColumn(name="id_modelo_entrega"), 
             inverseJoinColumns=@JoinColumn(name="id_categoria_entrega_item"))
-    @OneToMany(fetch=FetchType.LAZY)
+    @OneToMany(fetch=FetchType.LAZY, cascade={})
     private List<CategoriaEntregaItem> itens;
 
     @JoinColumn(name="id_modelo_entrega")
-    @OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL})
+    @OneToMany(fetch=FetchType.LAZY, orphanRemoval=true, cascade=CascadeType.ALL)
     private List<TipoResponsavelEntrega> tiposResponsaveis;
     
     @JoinColumn(name="id_modelo_entrega")
-    @OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL})
+    @OneToMany(fetch=FetchType.LAZY, orphanRemoval=true, cascade=CascadeType.ALL)
     private List<ClassificacaoDocumentoEntrega> documentosEntrega;
 
     public Integer getId() {
