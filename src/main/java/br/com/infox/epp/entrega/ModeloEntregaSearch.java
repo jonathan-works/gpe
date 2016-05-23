@@ -6,7 +6,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Predicate;
@@ -45,6 +44,10 @@ public class ModeloEntregaSearch {
     
     private EntityManager getEntityManager(){
         return EntityManagerProducer.getEntityManager();
+    }
+
+    public ModeloEntrega findById(Integer id) {
+        return getEntityManager().find(ModeloEntrega.class, id);
     }
 
 }
