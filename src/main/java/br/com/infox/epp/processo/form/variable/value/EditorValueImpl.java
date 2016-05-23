@@ -12,6 +12,7 @@ public class EditorValueImpl extends FileTypedValue {
     
     public EditorValueImpl(Documento documento) {
         super(documento, ValueType.EDITOR);
+        this.classificacaoDocumento = documento.getClassificacaoDocumento();
     }
     
     public ModeloDocumento getModeloDocumento() {

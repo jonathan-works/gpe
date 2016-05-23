@@ -17,4 +17,6 @@ public interface FormType {
     
     void performUpdate(FormField formField, FormData formData);
     
+    boolean isPersistable();
+    
 }

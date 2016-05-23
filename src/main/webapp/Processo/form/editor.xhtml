@@ -64,7 +64,7 @@
 			<a:jsFunction name="assinar"
 				action="#{controller.assinar()}"
 				execute="@this, #{varId}AssinaturaDocumento"
-				render="#{varId}AssinaturaDocumento, #{varId}EditorDiv, :pageBodyDialogMessage" 
+				render="#{varId}Div, :pageBodyDialogMessage" 
 				oncomplete="infox.hideLoading();"/>
 				
 			<wi:certificadoDigital
@@ -82,6 +82,5 @@
 		</p:outputPanel>
 	
 	</p:outputPanel>
-		
   
 </ui:composition>

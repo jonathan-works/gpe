@@ -16,7 +16,6 @@ public abstract class FileTypedValue implements TypedValue {
     public FileTypedValue(Documento documento, ValueType valueType) {
         this.valueType = valueType;
         this.documento = documento;
-        this.classificacaoDocumento = documento.getClassificacaoDocumento();
     }
     
     @Override
@@ -61,7 +60,7 @@ public abstract class FileTypedValue implements TypedValue {
     }
     
     public boolean podeAssinar() {
-        return documento.getId() != null 
+        return documento != null && documento.getId() != null 
                 && documento.isDocumentoAssinavel(Authenticator.getPapelAtual())
                 && !documento.isDocumentoAssinado(Authenticator.getPapelAtual());
     }

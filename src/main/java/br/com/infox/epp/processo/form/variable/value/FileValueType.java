@@ -18,8 +18,11 @@ public abstract class FileValueType implements ValueType {
     @Override
     public TypedValue convertToModelValue(TypedValue propertyValue) {
         Object value = propertyValue.getValue();
+        if (value == null) {
+            return new PrimitiveTypedValue.IntegerValue(null);
+        }
         if (value instanceof Documento) {
-            return new PrimitiveTypedValueImpl.IntegerValue(((Documento) value).getId());
+            return new PrimitiveTypedValue.IntegerValue(((Documento) value).getId());
         }
         throw new IllegalArgumentException("Impossible convert " + propertyValue);
     }
@@ -27,7 +30,7 @@ public abstract class FileValueType implements ValueType {
     @Override
     public String convertToStringValue(TypedValue propertyValue) {
         TypedValue typedValue = convertToModelValue(propertyValue);
-        return typedValue.getValue().toString();
+        return typedValue.getValue() == null ? null : typedValue.getValue().toString();
     }
     
     public static class EditorValueType extends FileValueType {

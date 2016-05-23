@@ -27,6 +27,13 @@ public abstract class PrimitiveValueType implements ValueType {
         return propertyValue.getValue() == null ? "" : propertyValue.getValue().toString();
     }
     
+    public static class NullValueType extends PrimitiveValueType {
+        
+        public NullValueType() {
+            super("null");
+        }
+    }
+    
     public static class BooleanValueType extends PrimitiveValueType {
 
         public BooleanValueType() {
@@ -45,6 +52,13 @@ public abstract class PrimitiveValueType implements ValueType {
 
         public IntegerValueType() {
             super(Integer.class.getSimpleName().toLowerCase());
+        }
+    }
+    
+    public static class LongValueType extends PrimitiveValueType {
+
+        public LongValueType() {
+            super(Long.class.getSimpleName().toLowerCase());
         }
     }
     

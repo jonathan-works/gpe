@@ -9,7 +9,6 @@
     <composite:interface>
     	
     	<composite:attribute name="id"/>
-    	<composite:attribute name="rendered" default="true"/>
     	<composite:attribute name="label" />
     	<composite:attribute name="help" />
     	<composite:attribute name="required" default="false" />
@@ -18,7 +17,7 @@
     </composite:interface>
 	
     <composite:implementation>
-		<p:outputPanel id="#{cc.attrs.id}" styleClass="decoration-div inputText-div" rendered="#{cc.attrs.rendered}" >
+		<p:outputPanel id="#{cc.attrs.id}" styleClass="decoration-div" rendered="#{cc.attrs.rendered}" >
 			<script type="text/javascript">
 				var id = "#{cc.attrs.id}";
 				var errorClass = $('.' + id + 'ErrorClass');
@@ -33,13 +32,13 @@
         		<div class="property-field-edit-name">
 	        		<h:outputLabel id="#{cc.attrs.id}Label" for="#{cc.attrs.id}Input">
 	        			<h:outputText value="#{cc.attrs.label} " rendered="#{not empty cc.attrs.label}"/>
+	        			<h:outputText styleClass="required" rendered="#{cc.attrs.required}" value="*" />
 	        			<c:if test="#{not empty cc.attrs.help}">
 		        			<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" 
 	        						title="#{cc.attrs.help}" style="vertical-align: middle;"/>
 	        			</c:if>
 	        			<composite:renderFacet name="label" />
 	        		</h:outputLabel>
-	        		<h:outputText styleClass="required" rendered="#{cc.attrs.required}" value="*" />
 	        		<h:message for="#{cc.attrs.id}Input" styleClass="property-error property-msg #{cc.attrs.id}ErrorClass"/>
         		</div>
         		<div class="property-field-edit-value  #{cc.attrs.id}DivClass">

@@ -78,12 +78,25 @@ public abstract class FileFormType implements FormType {
         }
     }
     
+    public Documento getDocumentoToSign() {
+        return documentoToSign;
+    }
+
     public void setDocumentoToSign(Documento documentoToSign) {
         this.documentoToSign = documentoToSign;
     }
 
+    public String getTokenToSign() {
+        return tokenToSign;
+    }
+
     public void setTokenToSign(String tokenToSign) {
         this.tokenToSign = tokenToSign;
+    }
+
+    @Override
+    public boolean isPersistable() {
+        return true;
     }
 
     private CertificateSignatures getCertificateSignatures() {

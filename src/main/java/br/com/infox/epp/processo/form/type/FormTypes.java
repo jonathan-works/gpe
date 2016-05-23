@@ -2,8 +2,11 @@ package br.com.infox.epp.processo.form.type;
 
 import br.com.infox.epp.processo.form.type.PrimitiveFormType.BooleanFormType;
 import br.com.infox.epp.processo.form.type.PrimitiveFormType.DateFormType;
+import br.com.infox.epp.processo.form.type.PrimitiveFormType.EnumerationFormType;
+import br.com.infox.epp.processo.form.type.PrimitiveFormType.FrameFormType;
 import br.com.infox.epp.processo.form.type.PrimitiveFormType.IntegerFormType;
 import br.com.infox.epp.processo.form.type.PrimitiveFormType.MonetaryFormType;
+import br.com.infox.epp.processo.form.type.PrimitiveFormType.PageFormType;
 import br.com.infox.epp.processo.form.type.PrimitiveFormType.StringFormType;
 import br.com.infox.epp.processo.form.type.PrimitiveFormType.StructuredTextFormType;
 import br.com.infox.epp.processo.form.type.PrimitiveFormType.TextFormType;
@@ -17,6 +20,9 @@ public enum FormTypes {
     DATE(DateFormType.class),
     MONETARY(MonetaryFormType.class),
     STRUCTURED_TEXT(StructuredTextFormType.class),
+    ENUMERATION(EnumerationFormType.class),
+    FRAME(FrameFormType.class),
+    PAGE(PageFormType.class),
     EDITOR(EditorFormType.class),
     FILE(UploadFormType.class);
     

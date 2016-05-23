@@ -1,16 +1,29 @@
 package br.com.infox.epp.processo.form.variable.value;
 
+import br.com.infox.epp.processo.form.variable.value.FileValueType.EditorValueType;
+import br.com.infox.epp.processo.form.variable.value.FileValueType.UploadValueType;
+import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.BooleanValueType;
+import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.DateValueType;
+import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.DoubleValueType;
+import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.IntegerValueType;
+import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.LongValueType;
+import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.NullValueType;
+import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.StringValueType;
+
 public interface ValueType {
     
-    public static ValueType STRING = new PrimitiveValueType.StringValueType();
-    public static ValueType INTEGER = new PrimitiveValueType.IntegerValueType();
-    public static ValueType DOUBLE = new PrimitiveValueType.DoubleValueType();
-    public static ValueType BOOLEAN = new PrimitiveValueType.BooleanValueType();
-    public static ValueType DATE = new PrimitiveValueType.DateValueType();
-    public static ValueType EDITOR = new FileValueType.EditorValueType();
-    public static ValueType UPLOAD = new FileValueType.UploadValueType();
+    public static PrimitiveValueType NULL = new NullValueType();
+    public static PrimitiveValueType STRING = new StringValueType();
+    public static PrimitiveValueType INTEGER = new IntegerValueType();
+    public static PrimitiveValueType LONG = new LongValueType();
+    public static PrimitiveValueType DOUBLE = new DoubleValueType();
+    public static PrimitiveValueType BOOLEAN = new BooleanValueType();
+    public static PrimitiveValueType DATE = new DateValueType();
     
-    public static ValueType[] TYPES = {STRING, INTEGER, DOUBLE, BOOLEAN, DATE, EDITOR};
+    public static FileValueType EDITOR = new EditorValueType();
+    public static FileValueType UPLOAD = new UploadValueType();
+    
+    public static ValueType[] TYPES = {NULL, STRING, INTEGER,LONG, DOUBLE, BOOLEAN, DATE, EDITOR, UPLOAD};
     
     String getName();
     
