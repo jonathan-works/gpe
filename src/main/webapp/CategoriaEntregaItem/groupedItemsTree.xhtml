@@ -13,7 +13,7 @@
     <div id="#{id}" class="groupedItemsTreeContainer"></div>
         <script>
         (function(){
-            let TreeCategorias = reactComponents.TreeCategorias;
+            let TreeCategorias = window['react-components'].TreeCategorias;
             ReactDOM.render(React.createElement(TreeCategorias, {
                 config:#{config},
                 groupToolBar:#{groupToolBar},

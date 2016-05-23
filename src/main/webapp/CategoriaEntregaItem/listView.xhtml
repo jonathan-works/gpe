@@ -25,10 +25,10 @@
                     onstart="infox.showLoading();" actionListener="#{categoriaEntregaView.removerItem}" oncomplete="infox.hideLoading();" />
                 <p:remoteCommand name="removerCategoria" process="@this" update="@parent:@parent"
                     onstart="infox.showLoading();" actionListener="#{categoriaEntregaView.removerCategoria}" oncomplete="infox.hideLoading();" />
-                <p:remoteCommand name="configurarModeloEntrega" process="@this" update="@this @parent:@parent:formFields"
+                <p:remoteCommand name="configurarModeloEntrega" process="@this" update="@this @form:@parent"
                     onstart="infox.showLoading();" actionListener="#{categoriaEntregaView.configurarModeloEntrega}" oncomplete="infox.hideLoading();" />
             </h:form>
-            <div style="display:inline-block;vertical-align:top;">
+            <infox:div style="display:inline-block;vertical-align:top;" rendered="#{'configEntregaForm.xhtml' ne categoriaEntregaView.view}">
             <ui:include src="groupedItemsTree.xhtml">
                 <ui:param name="id" value="componente" />
                 <ui:param name="config"
@@ -52,7 +52,7 @@
                 ]"
                 />
             </ui:include>
-            </div>
+            </infox:div>
             
             <infox:div id="formFields" style="display:inline-block;vertical-align:top;">
                 <ui:include src="forms/#{categoriaEntregaView.view}" />
