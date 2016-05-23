@@ -82,19 +82,7 @@
                                 </h:commandLink>
                             </p:column>
                             <p:column headerText="Classificação de Documento">
-                                <p:cellEditor>
-                                    <f:facet name="output">
-                                        <h:outputText
-                                            value="#{item.classificacaoDocumento.codigoDocumento} - #{item.classificacaoDocumento.descricao}" />
-                                    </f:facet>
-                                    <f:facet name="input">
-                                        <i:autoComplete value="#{item.classificacaoDocumento}"
-                                            converter="br.com.infox.jsf.converter.EntityConverter" dropdownMode="blank"
-                                            completeMethod="#{categoriaEntregaView.modeloEntregaController.classificacaoDocumentoEntregaController.completeClassificacaoDocumento}"
-                                            itemLabel="#{item.codigoDocumento} - #{item.descricao}"
-                                            itemValue="#{item}" />
-                                    </f:facet>
-                                </p:cellEditor>
+                                <h:outputText value="#{item.classificacaoDocumento.codigoDocumento} - #{item.classificacaoDocumento.descricao}" />
                             </p:column>
                             <p:column headerText="Obrigatório?">
                                 <p:cellEditor>
@@ -161,19 +149,7 @@
                             </p:column>
                             <p:column>
                                 <f:facet name="header">Tipo de Responsável</f:facet>
-                                <p:cellEditor>
-                                    <f:facet name="output">
-                                        <h:outputText
-                                            value="#{item.tipoParte.identificador} - #{item.tipoParte.descricao}" />
-                                    </f:facet>
-                                    <f:facet name="input">
-                                        <i:autoComplete value="#{item.tipoParte}"
-                                            converter="br.com.infox.jsf.converter.EntityConverter" dropdownMode="blank"
-                                            completeMethod="#{categoriaEntregaView.modeloEntregaController.tipoResponsavelEntregaController.completeTipoResponsavel}"
-                                            itemLabel="#{item.identificador.concat(' - ').concat(item.descricao)}"
-                                            itemValue="#{item}" />
-                                    </f:facet>
-                                </p:cellEditor>
+                                <h:outputText value="#{item.tipoParte.identificador} - #{item.tipoParte.descricao}" />
                             </p:column>
                             <p:column headerText="Obrigatório?">
                                 <p:cellEditor>
