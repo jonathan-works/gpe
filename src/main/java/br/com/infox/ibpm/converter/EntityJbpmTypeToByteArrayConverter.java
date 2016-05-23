@@ -17,6 +17,7 @@ import org.jbpm.context.exe.Converter;
 
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.ibpm.type.EntityJbpmType;
 
 public class EntityJbpmTypeToByteArrayConverter implements Converter {
@@ -65,7 +66,7 @@ public class EntityJbpmTypeToByteArrayConverter implements Converter {
 		Object id = EntityUtil.getIdValue(o);
     	EntityJbpmType entityJbpmType = new EntityJbpmType();
     	entityJbpmType.setId(id);
-    	entityJbpmType.setEntity(o.getClass());
+    	entityJbpmType.setEntity(HibernateUtil.removeProxy(o).getClass());
     	return entityJbpmType;
 	}
 	
