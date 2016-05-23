@@ -82,7 +82,7 @@
 }
 .bg-deg-color(@startColor, @endColor) when not (@startColor = @endColor) {
   background: @startColor;
-  .linear-gradient(~ "top, "@startColor~" 0%, "@endColor~" 100%");
+  .linear-gradient(~"top, "@startColor~" 0%, "@endColor~" 100%");
   background: linear-gradient(to bottom, @startColor 0%,@endColor 100%);
 }
 .btn-deg-color(@startColor, @endColor) when (@startColor = @endColor) {
