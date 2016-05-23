@@ -3,9 +3,11 @@
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml"
     xmlns:wi="http://www.itx.com.br/jsf" xmlns:h="http://java.sun.com/jsf/html"
     xmlns:infox="http://www.infox.com.br/jsf" xmlns:p="http://primefaces.org/ui"
+    xmlns:rich="http://richfaces.org/rich"
     template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
     <ui:define name="title">Categorias de Entrega</ui:define>
     <ui:define name="body">
+        <p:calendar style="display:none" />
         <infox:div id="categoriaEntregaItem">
             <h:form>
                 <p:remoteCommand name="editarItem" process="@this" update="@form:@parent:formFields" async="true" 
@@ -23,8 +25,10 @@
                     onstart="infox.showLoading();" actionListener="#{categoriaEntregaView.removerItem}" oncomplete="infox.hideLoading();" />
                 <p:remoteCommand name="removerCategoria" process="@this" update="@parent:@parent"
                     onstart="infox.showLoading();" actionListener="#{categoriaEntregaView.removerCategoria}" oncomplete="infox.hideLoading();" />
+                <p:remoteCommand name="configurarModeloEntrega" process="@this" update="@this @form:@parent"
+                    onstart="infox.showLoading();" actionListener="#{categoriaEntregaView.configurarModeloEntrega}" oncomplete="infox.hideLoading();" />
             </h:form>
-            
+            <infox:div style="display:inline-block;vertical-align:top;" rendered="#{'configEntregaForm.xhtml' ne categoriaEntregaView.view}">
             <ui:include src="groupedItemsTree.xhtml">
                 <ui:param name="id" value="componente" />
                 <ui:param name="config"
@@ -38,7 +42,8 @@
                 <ui:param name="itemToolBar" value="[
                     {icon:'#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','edit')}', title:'Editar Item', onSelect:(itm)=>editarItem([{name:'path',value:itm}])},
                     {icon:'#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','add')}', title:'Adicionar Categoria', onSelect:(itm)=>criarCategoria([{name:'path',value:itm}])},
-                    {icon:'#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','remove')}', title:'Remover Item', onSelect:(itm)=>confirm('Certeza?') &amp;&amp; removerItem([{name:'path',value:itm}])}
+                    {icon:'#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','remove')}', title:'Remover Item', onSelect:(itm)=>confirm('Certeza?') &amp;&amp; removerItem([{name:'path',value:itm}])},
+                    {icon:'#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','settings')}', title:'Configurar Entrega de Documentos', onSelect:(itm)=>configurarModeloEntrega([{name:'path',value:itm}])}
                 ]" />
                 <ui:param name="groupToolBar" value="[
                     {icon:'#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','edit')}', title:'Editar Categoria', onSelect:(itm)=>editarCategoria([{name:'path',value:itm}])},
@@ -47,12 +52,11 @@
                 ]"
                 />
             </ui:include>
+            </infox:div>
             
-            <div style="display:inline-block;vertical-align:top;padding:0.25em;">
-                <infox:div id="formFields">
-                    <ui:include src="forms/#{categoriaEntregaView.view}" />
-                </infox:div>
-            </div>
+            <infox:div id="formFields" style="display:inline-block;vertical-align:top;">
+                <ui:include src="forms/#{categoriaEntregaView.view}" />
+            </infox:div>
         </infox:div>
     </ui:define>
 </ui:composition>

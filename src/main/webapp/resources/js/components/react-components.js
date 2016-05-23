@@ -1,5 +1,14 @@
-var reactComponents =
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["react-components"] = factory();
+	else
+		root["react-components"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 
@@ -45,86 +54,102 @@ var reactComponents =
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(1);
-	module.exports = __webpack_require__(1);
+	module.exports={
+	    NavigationMenu:__webpack_require__(1),
+	    TreeCategorias:__webpack_require__(8)
+	};
 
 
 /***/ },
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports={
-	    NavigationMenu:__webpack_require__(2),
-	    TreeCategorias:__webpack_require__(9)
-	};
+	let UnorderedMenu = __webpack_require__(2);
+	let MenuConstants = __webpack_require__(6);
+
+	const NavMenu = React.createClass({
+	  getDefaultProps: function() {
+	    return {
+	      "level": 0,
+	      "showChildren": false,
+	      "labelFilter": ""
+	    };
+	  },
+	  render: function() {
+	    return React.DOM.nav({
+	      className: MenuConstants.CSS_CLASSES.NAV_MENU
+	    }, React.createElement(UnorderedMenu, Object.assign({}, this.props)));
+	  }
+	});
+
+	const MenuContent = React.createClass({
+	  renderContent: function(container) {
+	    let content = document.getElementById(this.props.selector);
+	    if (content) {
+	      container.appendChild(content);
+	    } else {
+	      let nodeList = document.querySelectorAll(this.props.selector);
+	      for (let i = 0, l = nodeList.length; i < l; i++) {
+	        container.appendChild(nodeList.item(i));
+	      }
+	    }
+	  },
+	  render: function() {
+	    return React.DOM.main({
+	      ref: this.renderContent,
+	      className: MenuConstants.CSS_CLASSES.MENU_CONTENT
+	    });
+	  }
+	});
+
+	const Header = React.createClass({
+	  displayName:'Header',
+	  render:function(){
+	    return React.DOM.div({
+	      className: MenuConstants.CSS_CLASSES.HEADER
+	    }, React.createElement(NavMenu, this.props));
+	  }
+	});
+
+	const Drawer = React.createClass({
+	  displayName:'Drawer',
+	  getInitialState:function(){
+	    return {};
+	  },
+	  updateRefs:function(ref){
+	    this.setState({concreteObject:ref});
+	  },
+	  updateHeight:function(){
+	  },
+	  render:function(){
+	    return React.DOM.div({
+	      className: MenuConstants.CSS_CLASSES.DRAWER,
+	      ref:this.updateRefs,
+	    }, React.createElement(NavMenu, this.props));
+	  }
+	});
+
+	let NavigationMenu = React.createClass({
+	  render: function() {
+	    return React.DOM.div({
+	        className: MenuConstants.CSS_CLASSES.FIXED_HEAD_DRAWER
+	      }, React.createElement(MenuContent, this.props.content),
+	      React.createElement(Header, this.props.topMenu),
+	      React.createElement(Drawer, this.props.navigationMenu)
+	    );
+	  }
+	});
+
+	module.exports = NavigationMenu;
 
 
 /***/ },
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	let UnorderedMenu = __webpack_require__(3);
-
-	const NavMenu = React.createClass({
-	  getDefaultProps:function(){
-	      return {
-	          "level":0,
-	          "showChildren":false,
-	          "labelFilter":""
-	      };
-	  },
-	  render:function(){
-	    return React.createElement('nav', {
-	      className: 'ifx-menu-nav'
-	    }, React.createElement(UnorderedMenu, Object.assign({},this.props)));
-	  }
-	});
-
-	const MenuContent = React.createClass({
-	  renderContent:function(container){
-	    let content = document.getElementById(this.props.content);
-	    if (content){
-	      container.appendChild(content);
-	    } else {
-	      let nodeList = document.querySelectorAll(this.props.content);
-	      for(let i=0,l=nodeList.length; i<l; i++){
-	        container.appendChild(nodeList.item(i));
-	      }
-	    }
-	  },
-	  render:function(){
-	    return React.createElement('div',{
-	      ref:this.renderContent,
-	      className:'ifx-menu-content'
-	    });
-	  }
-	});
-
-	let NavigationMenu = React.createClass({
-	  render: function() {
-	    return React.createElement('div',{
-	      className:'ifx-menu-container'
-	    }, React.createElement(MenuContent,{
-	      content:this.props.content
-	    }), React.createElement('div',{
-	      className:'ifx-navigation-menu'
-	    }, React.createElement('div',{className:'ifx-navigation-menu-overlay'}),
-	       React.createElement(NavMenu,this.props.navigationMenuItems)
-	    ), 
-	    React.createElement('div',{
-	      className:'ifx-top-menu'
-	    }, React.createElement(NavMenu,this.props.topMenuItens)));
-	  }
-	});
-
-	module.exports=NavigationMenu;
-
-/***/ },
-/* 3 */
-/***/ function(module, exports, __webpack_require__) {
-
-	let MenuItem=__webpack_require__(4);
-	let MenuFilter=__webpack_require__(8);
+	let MenuItem=__webpack_require__(3);
+	let MenuFilter=__webpack_require__(7);
+	var MenuConstants=__webpack_require__(6);
 
 	const hasChildWithContent = function(menuItem, content) {
 	  var result = false;
@@ -175,7 +200,8 @@ var reactComponents =
 	          "items":resultItem.items,
 	          "level":level+1,
 	          "showFilter":resultItem.showFilter,
-	          "labelFilter":labelFilter
+	          "labelFilter":labelFilter,
+	          'searchPlaceholder':this.props.searchPlaceholder
 	        });
 	      }
 	      return React.createElement(MenuItem, resultItem);
@@ -188,12 +214,13 @@ var reactComponents =
 	    return {'selected':'', 'labelFilter':'', 'filterId':Date.now.toString(36)};
 	  },
 	  render:function(){
-	    return React.createElement('ul', {
-	      className: 'ifx-menu',
+	    return React.DOM.ul( {
+	      className: MenuConstants.CSS_CLASSES.MENU,
 	      style:this.props.style,
 	      ref:(ref)=>this.unorderedMenu=ref
 	    }, React.createElement(MenuFilter,{
 	        key:this.state.filterId,
+	        labelFilterPlaceholder:this.props.searchPlaceholder,
 	        labelFilter:this.state.labelFilter,
 	        onFilter:this.handleLabelFilter
 	    }), this.getFilteredItems(this.state.labelFilter));
@@ -207,8 +234,8 @@ var reactComponents =
 
 	var NoFilterMenu=React.createClass(Object.assign(BaseMenuMixin, {
 	  render:function(){
-	    return React.createElement('ul', {
-	      className: 'ifx-menu',
+	    return React.DOM.ul( {
+	      className: MenuConstants.CSS_CLASSES.MENU,
 	      style:this.props.style,
 	      ref:(ref)=>this.unorderedMenu=ref
 	    }, this.getFilteredItems(this.props.labelFilter));
@@ -231,11 +258,12 @@ var reactComponents =
 	}));
 	module.exports=UnorderedMenu;
 
+
 /***/ },
-/* 4 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	let MenuLink = __webpack_require__(5);
+	let MenuLink = __webpack_require__(4);
 	let MenuItem = React.createClass({
 
 	  handleClick:function(event){
@@ -258,18 +286,19 @@ var reactComponents =
 	      submenu = this.props.submenu;
 	    }
 
-	    return React.createElement('li', {
+	    return React.DOM.li( {
 	        className: classes.join(' ')
 	      }, React.createElement(MenuLink, props), submenu);
 	  }
 	});
 	module.exports=MenuItem;
 
+
 /***/ },
-/* 5 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	let MenuText = __webpack_require__(6);
+	let MenuText = __webpack_require__(5);
 	let MenuLink = React.createClass({
 	  getInitialState: function() {
 	    return {
@@ -285,7 +314,7 @@ var reactComponents =
 	    if (this.state.selected){
 	      linkClasses.push('ifx-menu-itm-lnk-sel');
 	    }
-	    return React.createElement('a', {
+	    return React.DOM.a( {
 	      className: linkClasses.join(' '),
 	      href: this.props.url,
 	      title: this.props.label,
@@ -295,26 +324,27 @@ var reactComponents =
 	});
 	module.exports=MenuLink;
 
+
 /***/ },
-/* 6 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	let MenuConstants = __webpack_require__(7);
+	let MenuConstants = __webpack_require__(6);
 	const LeftIconText = React.createClass({
 	    render:function(){
 	        var labelProperties = {
 	            className:MenuConstants.CSS_CLASSES.ITEM_LABEL
 	        };
 	        if (this.props.icon){
-	            return React.createElement('span', labelProperties,
-	                React.createElement('img',{
+	            return React.DOM.span( labelProperties,
+	                React.DOM.img({
 	                    className:MenuConstants.CSS_CLASSES.ITEM_LABEL_ICON,
 	                    title:this.props.label,
 	                    src:this.props.icon
-	                }), this.props.hideLabel ? undefined: React.createElement('span', {'className':MenuConstants.CSS_CLASSES.ITEM_LABEL_TEXT}, this.props.label)
+	                }), this.props.hideLabel ? undefined: React.DOM.span( {'className':MenuConstants.CSS_CLASSES.ITEM_LABEL_TEXT}, this.props.label)
 	            );
 	        } else {
-	            return React.createElement('span', labelProperties, this.props.hideLabel ? undefined: React.createElement('span', {'className':MenuConstants.CSS_CLASSES.ITEM_LABEL_TEXT}, this.props.label));
+	            return React.DOM.span( labelProperties, this.props.hideLabel ? undefined: React.DOM.span( {'className':MenuConstants.CSS_CLASSES.ITEM_LABEL_TEXT}, this.props.label));
 	        }
 	    }
 	});
@@ -324,16 +354,16 @@ var reactComponents =
 	            className:MenuConstants.CSS_CLASSES.ITEM_LABEL
 	        };
 	        if (this.props.icon){
-	            return React.createElement('span', labelProperties,
-	                this.props.hideLabel ? undefined: React.createElement('span', {'className':MenuConstants.CSS_CLASSES.ITEM_LABEL_TEXT}, this.props.label),
-	                React.createElement('img',{
+	            return React.DOM.span( labelProperties,
+	                this.props.hideLabel ? undefined: React.DOM.span( {'className':MenuConstants.CSS_CLASSES.ITEM_LABEL_TEXT}, this.props.label),
+	                React.DOM.img({
 	                    className:MenuConstants.CSS_CLASSES.ITEM_LABEL_ICON,
 	                    title:this.props.label,
 	                    src:this.props.icon
 	                })
 	            );
 	        } else {
-	            return React.createElement('span', labelProperties, this.props.hideLabel ? undefined: React.createElement('span', {'className':MenuConstants.CSS_CLASSES.ITEM_LABEL_TEXT}, this.props.label));
+	            return React.DOM.span( labelProperties, this.props.hideLabel ? undefined: React.DOM.span( {'className':MenuConstants.CSS_CLASSES.ITEM_LABEL_TEXT}, this.props.label));
 	        }
 	    }
 	});
@@ -349,21 +379,30 @@ var reactComponents =
 	});
 	module.exports=MenuText;
 
+
 /***/ },
-/* 7 */
+/* 6 */
 /***/ function(module, exports) {
+
+	var menu='ifx-menu';
 
 	module.exports={
 	    CSS_CLASSES:{
-	        ITEM_LABEL:'ifx-menu-itm-lbl',
-	        ITEM_LABEL_ICON:'ifx-menu-itm-lbl-icon',
-	        ITEM_LABEL_TEXT:'ifx-menu-itm-lbl-text'
+	        ITEM_LABEL:menu+'-itm-lbl',
+	        ITEM_LABEL_ICON:menu+'-itm-lbl-icon',
+	        ITEM_LABEL_TEXT:menu+'-itm-lbl-text',
+	        MENU:menu+'',
+	        NAV_MENU:menu+'-nav',
+	        MENU_CONTENT:'ifx-menu-content',
+	        DRAWER:'ifx-navigation-menu',
+	        HEADER:'ifx-top-menu',
+	        FIXED_HEAD_DRAWER:'ifx-menu-container'
 	    }
 	};
 
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports) {
 
 	let MenuFilter = React.createClass({
@@ -371,7 +410,7 @@ var reactComponents =
 	        this.props.onFilter(event.target.value);
 	    },
 	    render: function () {
-	        return React.createElement('input', {
+	        return React.DOM.input( {
 	            value: this.props.labelFilter,
 	            placeholder: this.props.labelFilterPlaceholder || 'Your query here...',
 	            className: 'ifx-menu-filter',
@@ -382,19 +421,20 @@ var reactComponents =
 	});
 	module.exports=MenuFilter;
 
+
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	let componentes = __webpack_require__(10);
-	let Constants = __webpack_require__(11);
-	let TreeCategoriasStore = __webpack_require__(12);
-	let TreeCategoriasActions = __webpack_require__(28);
-	let ConfigFacade = __webpack_require__(36);
+	let componentes = __webpack_require__(9);
+	let Constants = __webpack_require__(10);
+	let TreeCategoriasStore = __webpack_require__(11);
+	let TreeCategoriasActions = __webpack_require__(27);
+	let ConfigFacade = __webpack_require__(35);
 
-	componentes.Categoria = __webpack_require__(37);
-	componentes.Item = __webpack_require__(41);
-	componentes.Groups = __webpack_require__(42);
+	componentes.Categoria = __webpack_require__(36);
+	componentes.Item = __webpack_require__(40);
+	componentes.Groups = __webpack_require__(41);
 
 	let TreeCategorias = React.createClass({
 	  'displayName': 'TreeCategorias',
@@ -459,14 +499,14 @@ var reactComponents =
 
 
 /***/ },
-/* 10 */
+/* 9 */
 /***/ function(module, exports) {
 
 	module.exports={};
 
 
 /***/ },
-/* 11 */
+/* 10 */
 /***/ function(module, exports) {
 
 	const TreeConstants={
@@ -493,11 +533,11 @@ var reactComponents =
 
 
 /***/ },
-/* 12 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	let alt = __webpack_require__(13);
-	let TreeCategoriasActions = __webpack_require__(28);
+	let alt = __webpack_require__(12);
+	let TreeCategoriasActions = __webpack_require__(27);
 
 	function GroupItemProxy(categoria, items, stateHolder) {
 	  return {
@@ -601,15 +641,15 @@ var reactComponents =
 
 
 /***/ },
-/* 13 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Alt = __webpack_require__(14);
+	var Alt = __webpack_require__(13);
 	module.exports = new Alt();
 
 
 /***/ },
-/* 14 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -618,25 +658,25 @@ var reactComponents =
 	  value: true
 	});
 
-	var _flux = __webpack_require__(15);
+	var _flux = __webpack_require__(14);
 
-	var _StateFunctions = __webpack_require__(19);
+	var _StateFunctions = __webpack_require__(18);
 
 	var StateFunctions = _interopRequireWildcard(_StateFunctions);
 
-	var _functions = __webpack_require__(20);
+	var _functions = __webpack_require__(19);
 
 	var fn = _interopRequireWildcard(_functions);
 
-	var _store = __webpack_require__(21);
+	var _store = __webpack_require__(20);
 
 	var store = _interopRequireWildcard(_store);
 
-	var _AltUtils = __webpack_require__(22);
+	var _AltUtils = __webpack_require__(21);
 
 	var utils = _interopRequireWildcard(_AltUtils);
 
-	var _actions = __webpack_require__(26);
+	var _actions = __webpack_require__(25);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
@@ -991,7 +1031,7 @@ var reactComponents =
 	module.exports = exports['default'];
 
 /***/ },
-/* 15 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -1003,11 +1043,11 @@ var reactComponents =
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 
-	module.exports.Dispatcher = __webpack_require__(16);
+	module.exports.Dispatcher = __webpack_require__(15);
 
 
 /***/ },
-/* 16 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -1029,7 +1069,7 @@ var reactComponents =
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var invariant = __webpack_require__(18);
+	var invariant = __webpack_require__(17);
 
 	var _prefix = 'ID_';
 
@@ -1241,10 +1281,10 @@ var reactComponents =
 	})();
 
 	module.exports = Dispatcher;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(17)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
 
 /***/ },
-/* 17 */
+/* 16 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -1341,7 +1381,7 @@ var reactComponents =
 
 
 /***/ },
-/* 18 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -1393,10 +1433,10 @@ var reactComponents =
 	};
 
 	module.exports = invariant;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(17)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
 
 /***/ },
-/* 19 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1409,7 +1449,7 @@ var reactComponents =
 	exports.saveInitialSnapshot = saveInitialSnapshot;
 	exports.filterSnapshots = filterSnapshots;
 
-	var _functions = __webpack_require__(20);
+	var _functions = __webpack_require__(19);
 
 	var fn = _interopRequireWildcard(_functions);
 
@@ -1473,7 +1513,7 @@ var reactComponents =
 	}
 
 /***/ },
-/* 20 */
+/* 19 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1514,7 +1554,7 @@ var reactComponents =
 	}
 
 /***/ },
-/* 21 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1527,19 +1567,19 @@ var reactComponents =
 	exports.createStoreFromObject = createStoreFromObject;
 	exports.createStoreFromClass = createStoreFromClass;
 
-	var _AltUtils = __webpack_require__(22);
+	var _AltUtils = __webpack_require__(21);
 
 	var utils = _interopRequireWildcard(_AltUtils);
 
-	var _functions = __webpack_require__(20);
+	var _functions = __webpack_require__(19);
 
 	var fn = _interopRequireWildcard(_functions);
 
-	var _AltStore = __webpack_require__(23);
+	var _AltStore = __webpack_require__(22);
 
 	var _AltStore2 = _interopRequireDefault(_AltStore);
 
-	var _StoreMixin = __webpack_require__(25);
+	var _StoreMixin = __webpack_require__(24);
 
 	var _StoreMixin2 = _interopRequireDefault(_StoreMixin);
 
@@ -1731,7 +1771,7 @@ var reactComponents =
 	}
 
 /***/ },
-/* 22 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1750,7 +1790,7 @@ var reactComponents =
 	exports.fsa = fsa;
 	exports.dispatch = dispatch;
 
-	var _functions = __webpack_require__(20);
+	var _functions = __webpack_require__(19);
 
 	var fn = _interopRequireWildcard(_functions);
 
@@ -1852,7 +1892,7 @@ var reactComponents =
 	function NoopClass() {}
 
 /***/ },
-/* 23 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1861,11 +1901,11 @@ var reactComponents =
 	  value: true
 	});
 
-	var _functions = __webpack_require__(20);
+	var _functions = __webpack_require__(19);
 
 	var fn = _interopRequireWildcard(_functions);
 
-	var _transmitter = __webpack_require__(24);
+	var _transmitter = __webpack_require__(23);
 
 	var _transmitter2 = _interopRequireDefault(_transmitter);
 
@@ -2008,7 +2048,7 @@ var reactComponents =
 	module.exports = exports['default'];
 
 /***/ },
-/* 24 */
+/* 23 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2056,7 +2096,7 @@ var reactComponents =
 
 
 /***/ },
-/* 25 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2065,11 +2105,11 @@ var reactComponents =
 	  value: true
 	});
 
-	var _transmitter = __webpack_require__(24);
+	var _transmitter = __webpack_require__(23);
 
 	var _transmitter2 = _interopRequireDefault(_transmitter);
 
-	var _functions = __webpack_require__(20);
+	var _functions = __webpack_require__(19);
 
 	var fn = _interopRequireWildcard(_functions);
 
@@ -2297,7 +2337,7 @@ var reactComponents =
 	module.exports = exports['default'];
 
 /***/ },
-/* 26 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2307,15 +2347,15 @@ var reactComponents =
 	});
 	exports['default'] = makeAction;
 
-	var _functions = __webpack_require__(20);
+	var _functions = __webpack_require__(19);
 
 	var fn = _interopRequireWildcard(_functions);
 
-	var _AltUtils = __webpack_require__(22);
+	var _AltUtils = __webpack_require__(21);
 
 	var utils = _interopRequireWildcard(_AltUtils);
 
-	var _isPromise = __webpack_require__(27);
+	var _isPromise = __webpack_require__(26);
 
 	var _isPromise2 = _interopRequireDefault(_isPromise);
 
@@ -2384,7 +2424,7 @@ var reactComponents =
 	module.exports = exports['default'];
 
 /***/ },
-/* 27 */
+/* 26 */
 /***/ function(module, exports) {
 
 	module.exports = isPromise;
@@ -2395,11 +2435,11 @@ var reactComponents =
 
 
 /***/ },
-/* 28 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
-	let alt = __webpack_require__(13);
-	let CategoriaSource = __webpack_require__(29);
+	let alt = __webpack_require__(12);
+	let CategoriaSource = __webpack_require__(28);
 
 	let TreeCategoriasActionBase = function() {
 	  this.generateActions('fetchChildrenForItemSuccess', 'fetchChildrenForItemFail', 'fetchCategoriasSuccess', 'fetchCategoriasFail');
@@ -2428,11 +2468,11 @@ var reactComponents =
 
 
 /***/ },
-/* 29 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const request = __webpack_require__(30);
-	const ConfigFacade = __webpack_require__(36);
+	const request = __webpack_require__(29);
+	const ConfigFacade = __webpack_require__(35);
 
 	module.exports = {
 	  getAll: function() {
@@ -2492,17 +2532,17 @@ var reactComponents =
 
 
 /***/ },
-/* 30 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module dependencies.
 	 */
 
-	var Emitter = __webpack_require__(31);
-	var reduce = __webpack_require__(32);
-	var requestBase = __webpack_require__(33);
-	var isObject = __webpack_require__(34);
+	var Emitter = __webpack_require__(30);
+	var reduce = __webpack_require__(31);
+	var requestBase = __webpack_require__(32);
+	var isObject = __webpack_require__(33);
 
 	/**
 	 * Root reference for iframes.
@@ -2551,7 +2591,7 @@ var reactComponents =
 	 * Expose `request`.
 	 */
 
-	var request = module.exports = __webpack_require__(35).bind(null, Request);
+	var request = module.exports = __webpack_require__(34).bind(null, Request);
 
 	/**
 	 * Determine XHR.
@@ -3575,7 +3615,7 @@ var reactComponents =
 
 
 /***/ },
-/* 31 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -3744,7 +3784,7 @@ var reactComponents =
 
 
 /***/ },
-/* 32 */
+/* 31 */
 /***/ function(module, exports) {
 
 	
@@ -3773,13 +3813,13 @@ var reactComponents =
 	};
 
 /***/ },
-/* 33 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module of mixed-in functions shared between node and client code
 	 */
-	var isObject = __webpack_require__(34);
+	var isObject = __webpack_require__(33);
 
 	/**
 	 * Clear previous timeout.
@@ -3945,7 +3985,7 @@ var reactComponents =
 
 
 /***/ },
-/* 34 */
+/* 33 */
 /***/ function(module, exports) {
 
 	/**
@@ -3964,7 +4004,7 @@ var reactComponents =
 
 
 /***/ },
-/* 35 */
+/* 34 */
 /***/ function(module, exports) {
 
 	// The node and browser modules expose versions of this with the
@@ -4002,7 +4042,7 @@ var reactComponents =
 
 
 /***/ },
-/* 36 */
+/* 35 */
 /***/ function(module, exports) {
 
 	let config={};
@@ -4018,11 +4058,11 @@ var reactComponents =
 
 
 /***/ },
-/* 37 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const Constants = __webpack_require__(11);
-	const ToolBar = __webpack_require__(38);
+	const Constants = __webpack_require__(10);
+	const ToolBar = __webpack_require__(37);
 
 	module.exports = React.createClass({
 	  'displayName': 'Group',
@@ -4067,11 +4107,11 @@ var reactComponents =
 
 
 /***/ },
-/* 38 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const Constants = __webpack_require__(39);
-	const ToolBarItem = __webpack_require__(40);
+	const Constants = __webpack_require__(38);
+	const ToolBarItem = __webpack_require__(39);
 
 	module.exports = React.createClass({
 	  'displayName': 'Toolbar',
@@ -4102,7 +4142,7 @@ var reactComponents =
 
 
 /***/ },
-/* 39 */
+/* 38 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -4114,10 +4154,10 @@ var reactComponents =
 
 
 /***/ },
-/* 40 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const Constants = __webpack_require__(39);
+	const Constants = __webpack_require__(38);
 
 	module.exports = React.createClass({
 	  'displayName': 'ToolBarItem',
@@ -4143,12 +4183,12 @@ var reactComponents =
 
 
 /***/ },
-/* 41 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const Constants = __webpack_require__(11);
-	const ToolBar = __webpack_require__(38);
-	let componentes = __webpack_require__(10);
+	const Constants = __webpack_require__(10);
+	const ToolBar = __webpack_require__(37);
+	let componentes = __webpack_require__(9);
 
 	module.exports = React.createClass({
 	  'displayName': 'Item',
@@ -4239,11 +4279,11 @@ var reactComponents =
 
 
 /***/ },
-/* 42 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const Constants = __webpack_require__(11);
-	let componentes = __webpack_require__(10);
+	const Constants = __webpack_require__(10);
+	let componentes = __webpack_require__(9);
 
 	module.exports = React.createClass({
 	  'displayName': 'Groups',
@@ -4311,4 +4351,6 @@ var reactComponents =
 
 
 /***/ }
-/******/ ]);
+/******/ ])
+});
+;

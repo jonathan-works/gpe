@@ -50,38 +50,40 @@
                     #{id}SkinSwitcher(itm);
                 }
             };
-    		
+    		var menuConfig={
+                    "content":{selector:"#{id}MenuContent"},
+                    "navigationMenu":{searchPlaceholder:"Digite sua busca aqui...","items":#{menuHandler.actionMenuJson}},
+                    "topMenu":{
+                        searchPlaceholder:"Digite sua busca aqui...",
+                        items:[
+                               {"label":"#{infoxMessages['skin.title']}", hideLabel:true, icon:"#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','palette')}", items:[
+                                       <ui:repeat var="selItem" value="#{wiSkin.skinList}">
+                                           {label:"#{selItem.label}", value:"#{selItem.value}", onClick:#{id}MenuFunctions.handleSkinSwapClick },
+                                       </ui:repeat>
+                               ]},
+                               {label: "#{infoxMessages['ajuda.ajudaBtn']}", hideLabel:true, icon:"#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','help')}", onClick:#{id}MenuFunctions.handleOpenAjuda},
+                               {label: "#{infoxMessages['painel.titlePage']}", url: "#{facesContext.externalContext.context.contextPath}/Painel/list.seam", hideLabel:true, icon:"#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','home')}"},
+                               {label: "#{usuarioLogado} &lt;#{authenticator.usuarioPerfilAtualSingle}&gt;", iconAlign:"right", icon:"#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','person')}", "items":[
+               					{"label":"Perfis", showChildren:true, items:[
+                                         <ui:repeat var="selItem" value="#{authenticator.usuarioPerfilListItems}">
+                                             {label:"#{selItem.label}", value:"#{selItem.value}", onClick:#{id}MenuFunctions.handlePerfilClick },
+                                         </ui:repeat>
+               					]},
+               					<c:if test="#{authenticator.usuarioLogadoInMonocratica}">
+               					{"label":"Unidades Decisoras Colegiadas", showChildren:true, items:[
+                                       <ui:repeat var="selItem" value="#{authenticator.colegiadaParaMonocraticaLogadaListItems}">
+                                       	{label:"#{selItem.label}", value:"#{selItem.value}", onClick:#{id}MenuFunctions.handleColegiadaClick },
+                                       </ui:repeat>
+               					]}
+               					</c:if>
+               				]},	
+                               {"label": "#{infoxMessages['menu.logout']}","url": "#{facesContext.externalContext.context.contextPath}", hideLabel:true, icon:"#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','power_settings_new')}"}
+               				]
+                    }
+                };
              ReactDOM.render(
-                     React.createElement(reactComponents.NavigationMenu, {
-                         "content":"#{id}MenuContent",
-                         "navigationMenuItems":{"items":#{menuHandler.actionMenuJson}},
-                         "topMenuItens":{
-                             items:[
-                                    {"label":"#{infoxMessages['skin.title']}", hideLabel:true, icon:"#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','palette')}", items:[
-                                            <ui:repeat var="selItem" value="#{wiSkin.skinList}">
-                                                {label:"#{selItem.label}", value:"#{selItem.value}", onClick:#{id}MenuFunctions.handleSkinSwapClick },
-                                            </ui:repeat>
-                                    ]},
-                                    {label: "#{infoxMessages['ajuda.ajudaBtn']}", hideLabel:true, icon:"#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','help')}", onClick:#{id}MenuFunctions.handleOpenAjuda},
-                                    {label: "#{infoxMessages['painel.titlePage']}", url: "#{facesContext.externalContext.context.contextPath}/Painel/list.seam", hideLabel:true, icon:"#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','home')}"},
-                                    {label: "#{usuarioLogado} &lt;#{authenticator.usuarioPerfilAtualSingle}&gt;", iconAlign:"right", icon:"#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','person')}", "items":[
-                    					{"label":"Perfis", showChildren:true, items:[
-                                              <ui:repeat var="selItem" value="#{authenticator.usuarioPerfilListItems}">
-                                                  {label:"#{selItem.label}", value:"#{selItem.value}", onClick:#{id}MenuFunctions.handlePerfilClick },
-                                              </ui:repeat>
-                    					]},
-                    					<c:if test="#{authenticator.usuarioLogadoInMonocratica}">
-                    					{"label":"Unidades Decisoras Colegiadas", showChildren:true, items:[
-                                            <ui:repeat var="selItem" value="#{authenticator.colegiadaParaMonocraticaLogadaListItems}">
-                                            	{label:"#{selItem.label}", value:"#{selItem.value}", onClick:#{id}MenuFunctions.handleColegiadaClick },
-                                            </ui:repeat>
-                    					]}
-                    					</c:if>
-                    				]},	
-                                    {"label": "#{infoxMessages['menu.logout']}","url": "#{facesContext.externalContext.context.contextPath}", hideLabel:true, icon:"#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','power_settings_new')}"}
-                    				]
-                         }
-                     }),
+                     
+                     React.createElement(window['react-components'].NavigationMenu, menuConfig),
                      document.getElementById("#{id}")
             );
     	})();
