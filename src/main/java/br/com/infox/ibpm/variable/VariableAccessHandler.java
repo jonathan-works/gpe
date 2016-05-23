@@ -56,6 +56,7 @@ public class VariableAccessHandler implements Serializable {
     private VariableAccess variableAccess;
     private String name;
     private String label;
+    private String value;
     private VariableType type;
     private boolean[] access;
     private List<Integer> modeloList;
@@ -78,6 +79,7 @@ public class VariableAccessHandler implements Serializable {
             String[] tokens = mappedName.split(":");
             this.type = VariableType.valueOf(tokens[0]);
             this.name = variableAccess.getVariableName();
+            this.value = variableAccess.getValue();
             switch (type) {
                 case DATE:
                     if (tokens.length < 3) {
@@ -169,6 +171,15 @@ public class VariableAccessHandler implements Serializable {
                 setMappedName(auxiliarName, type);
             }
         }
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+        variableAccess.setValue(value);
     }
 
     private void changeModeloDocumentoAction(String newName) {
