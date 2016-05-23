@@ -47,8 +47,9 @@ public class CategoriaEntregaView implements Serializable {
         return categoriaEntregaItemController;
     }
     
-    private void clear() {
+    public void clear() {
         currentView = CurrentView.CREATE_CATEGORIA;
+        modeloEntregaController.clear();
     }
 
     private String[] getPath() {
