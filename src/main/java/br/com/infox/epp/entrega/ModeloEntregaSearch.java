@@ -35,7 +35,9 @@ public class ModeloEntregaSearch {
         
         List<Predicate> predicates=new ArrayList<>();
         if (items.size() > 0){
-            predicates.add(cb.equal(sq1, sq2));
+            predicates.add(cb.equal(sq1, items.size()));
+            predicates.add(cb.equal(sq2, items.size()));
+            //predicates.add(cb.equal(sq1, sq2));// Está implícito
         }
         cq=cq.select(from).where(predicates.toArray(new Predicate[predicates.size()]));
         List<ModeloEntrega> list = getEntityManager().createQuery(cq).setMaxResults(1).setFirstResult(0).getResultList();
