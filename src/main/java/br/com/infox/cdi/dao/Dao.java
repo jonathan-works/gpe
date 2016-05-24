@@ -13,7 +13,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.PersistenceController;
 
-public abstract class Dao<T, I> extends PersistenceController {
+public class Dao<T, I> extends PersistenceController {
 
 	private Class<T> entityClass;
 
