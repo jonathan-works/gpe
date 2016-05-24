@@ -6,22 +6,39 @@
     xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:a="http://richfaces.org/a4j"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:i="http://java.sun.com/jsf/composite/infox"
+    xmlns:f="http://java.sun.com/jsf/core"
 >
-    <rich:panel bodyClass="panel">
+    <rich:panel bodyClass="panel" >
         <h:form>
-            <wi:selectOneMenu
-                id="cmbSubProcessName"
+            <i:selectOneMenu id="cmbSubProcessName"
                 label="#{infoxMessages['process.subprocess']}"
                 items="#{nodeFitter.nodeHandler.processDefinitionNames}"
-                showLabelSelecione="true"
-                value="#{nodeFitter.nodeHandler.subProcessName}"
-            >
-                <a:ajax
-                    event="change"
-                    execute="@this"
-                    limitRender="true"
-                />
-            </wi:selectOneMenu>
+                value="#{nodeFitter.nodeHandler.subProcessName}" ajax="true" execute="@this"
+                render="@(.startVariablesTableClass)" />
         </h:form>
+        
+        <p:outputPanel styleClass="startVariablesTableClass">
+        	<p:outputPanel rendered="#{nodeFitter.nodeHandler.startVariablesSubProcess.size() gt 0}">
+	        	<fieldset>
+	        		<legend class="name">Variáveis de Início</legend>
+		        	<rich:dataTable id="startVariablesTable" var="variable" value="#{nodeFitter.nodeHandler.startVariablesSubProcess}"
+			           	style="width:100%;" >
+			           	
+			       		<h:column>
+			       			<f:facet name="header">Nome</f:facet>
+			       			<h:outputText value="#{variable.key}"/>
+			       		</h:column>
+			       		
+			       		<h:column>
+			       			<f:facet name="header">Tipo</f:facet>
+			       			<h:outputText value="#{infoxMessages[variable.value.label]}"/>
+			       		</h:column>
+			       	</rich:dataTable>
+		       	</fieldset>
+	       	</p:outputPanel>
+        </p:outputPanel>
+        
     </rich:panel>
 </ui:composition>

@@ -10,21 +10,25 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.activity.exe.ActivityBehavior;
 import org.jbpm.activity.exe.MultiInstanceActivityBehavior;
 import org.jbpm.activity.exe.MultiInstanceActivityBehavior.EventBehavior;
+import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
+import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.Activity;
 import org.jbpm.instantiation.Delegation;
@@ -45,6 +49,7 @@ import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.manager.StatusProcessoManager;
+import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.GenerateDocumentoHandler;
 import br.com.infox.ibpm.task.handler.GenerateDocumentoHandler.GenerateDocumentoConfiguration;
 import br.com.infox.ibpm.task.handler.StatusHandler;
@@ -140,6 +145,7 @@ public class NodeHandler implements Serializable {
     private ClassificacaoDocumento classificacaoDocumento;
 	private EventHandler multiInstanceEvent;
 	private ActivityNodeType activityNodeType;
+	private List<Pair<String, VariableType>> startVariablesSubProcess;
 
     public NodeHandler(Node node) {
         this.node = node;
@@ -501,10 +507,36 @@ public class NodeHandler implements Serializable {
 
     public void setSubProcessName(String subProcessName) {
         ReflectionsUtil.setValue(node, "subProcessName", subProcessName);
+        onChangeSubProcess(subProcessName);
     }
 
     public String getSubProcessName() {
         return ReflectionsUtil.getStringValue(node, "subProcessName");
+    }
+    
+    private void onChangeSubProcess(String subProcessName) {
+        String processDefinitionName = getSubProcessName();
+        if (StringUtil.isEmpty(processDefinitionName)) startVariablesSubProcess = Collections.emptyList();
+        ProcessDefinition processDefinition = JbpmUtil.instance().findLatestProcessDefinition(processDefinitionName);
+        Task startTask = processDefinition.getTaskMgmtDefinition().getStartTask();
+        if (startTask != null && startTask.getTaskController() != null 
+                && startTask.getTaskController().getVariableAccesses() != null) {
+            List<Pair<String, VariableType>> variables = new ArrayList<>();
+            for (VariableAccess variableAccess : startTask.getTaskController().getVariableAccesses()) {
+                String type = variableAccess.getMappedName().split(":")[0];
+                variables.add(Pair.of(variableAccess.getVariableName(), VariableType.valueOf(type)));
+            }
+            startVariablesSubProcess = variables;
+        } else {
+            startVariablesSubProcess = Collections.emptyList();
+        }
+    }
+    
+    public List<Pair<String, VariableType>> getStartVariablesSubProcess() {
+        if (startVariablesSubProcess == null) {
+            onChangeSubProcess(getSubProcessName());
+        }
+        return startVariablesSubProcess;
     }
 
     public List<String> getPreviousVariables() {
