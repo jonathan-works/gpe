@@ -3,11 +3,9 @@ package br.com.infox.epp.processo.iniciar;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jbpm.graph.def.ProcessDefinition;
-import org.jbpm.graph.exe.ProcessInstance;
 
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
@@ -15,7 +13,6 @@ import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.form.StartFormData;
 import br.com.infox.epp.processo.form.StartFormDataImpl;
-import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.ibpm.util.JbpmUtil;
 
 @Named
@@ -24,9 +21,6 @@ public class IniciarProcessoVariaveisView extends AbstractIniciarProcesso {
 
     private static final long serialVersionUID = 1L;
 
-    @Inject
-    private IniciarProcessoService iniciarProcessoService;
-    
     private Processo processo;
     private ProcessDefinition processDefinition;
     private StartFormData formData;
@@ -51,8 +45,7 @@ public class IniciarProcessoVariaveisView extends AbstractIniciarProcesso {
     public String iniciar() {
         formData.update();
         Map<String, Object> variables = formData.getVariables();
-        ProcessInstance processInstance = iniciarProcessoService.iniciarProcesso(processo, variables);
-        openMovimentarIfAccessible(processInstance);
+        iniciarProcesso(processo, variables);
         return "/Painel/list.seam?faces-redirect=true";
     }
     

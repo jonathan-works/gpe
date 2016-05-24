@@ -16,16 +16,38 @@
     <ui:define name="title">#{infoxMessages['processo.titlePage']}</ui:define>
     
     <ui:define name="body">
+    
+    	<fieldset>
+    		<legend class="name">Processo</legend>
+    			
+    		<wi:outputText id="numero" value="#{iniciarProcessoVariaveisView.processo.numeroProcesso}" 
+    			label="#{infoxMessages['processo.numero']}"/>
+    		
+    		<wi:outputText id="fluxo" value="#{iniciarProcessoVariaveisView.processo.naturezaCategoriaFluxo.fluxo}" 
+    			label="#{infoxMessages['naturezaCategoriaFluxo.fluxo']}"/>
+    		
+    		<wi:outputText id="natureza" value="#{iniciarProcessoVariaveisView.processo.naturezaCategoriaFluxo.natureza}" 
+    			label="#{infoxMessages['naturezaCategoriaFluxo.natureza']}"/>
+    		
+    		<wi:outputText id="categoria" value="#{iniciarProcessoVariaveisView.processo.naturezaCategoriaFluxo.categoria}" 
+    			label="#{infoxMessages['naturezaCategoriaFluxo.categoria']}"/>
+    			
+    		<wi:outputText id="dataCadastro" value="#{iniciarProcessoVariaveisView.processo.dataInicio}" 
+    			label="#{infoxMessages['processo.dataCadastro']}">
+    			<f:convertDateTime pattern="dd/MM/yyyy kk:mm"/>
+    		</wi:outputText>	
+    			
+    	</fieldset>
     	
-    	<fieldset id="fieldSetVariaveis">
-    		<legend class="name">Formulário</legend>
+    	<fieldset>
+    		<legend class="name">#{infoxMessages['process.def.var.form']}</legend>
     		
     		<ui:param name="formData" value="#{iniciarProcessoVariaveisView.formData}"/>
     	
 	    	<h:form id="#{formData.formKey}">
 	    		
 	    		<c:forEach var="formField" items="#{formData.formFields}">
-	    			<p:outputPanel id="#{formField.id}Div" style="display: inline-block; margin: 20px 10px; vertical-align: top;">
+	    			<p:outputPanel id="#{formField.id}Div" style="display: inline-block; margin: 10px 10px; vertical-align: top;">
    						<ui:include src="/Processo/form/#{formField.typeName}.xhtml" />
 	   				</p:outputPanel>
 	    		</c:forEach>
@@ -37,7 +59,7 @@
 	    			</h:commandButton>
 	    		
 	    			<h:commandButton styleClass="buttons" action="#{iniciarProcessoVariaveisView.iniciar}" value="Iniciar" >
-	    				<p:ajax process="@form" update="@form" onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
+	    				<p:ajax process="@form" update="@form :pageBodyDialogMessage" onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
 	    			</h:commandButton>
 	    		</div>
 	    		

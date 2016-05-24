@@ -10,7 +10,6 @@ import javax.inject.Named;
 
 import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.graph.def.ProcessDefinition;
-import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.taskmgmt.def.Task;
 import org.joda.time.DateTime;
 import org.primefaces.model.DefaultTreeNode;
@@ -41,7 +40,8 @@ import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.partes.entity.TipoParte;
-import br.com.infox.epp.processo.service.IniciarProcessoService;
+import br.com.infox.epp.processo.status.entity.StatusProcesso;
+import br.com.infox.epp.processo.status.manager.StatusProcessoSearch;
 import br.com.infox.epp.tipoParte.TipoParteSearch;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.seam.exception.BusinessException;
@@ -66,9 +66,9 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     @Inject
     private ProcessoManager processoManager;
     @Inject
-    private IniciarProcessoService iniciarProcessoService;
-    @Inject
     private ProcessoSearch processoSearch;
+    @Inject
+    private StatusProcessoSearch statusProcessoSearch;
 
     private List<Processo> processosCriados;
     private List<NaturezaCategoriaFluxoItem> naturezaCategoriaFluxoItemList;
@@ -120,8 +120,7 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
             jsfUtil.addFlashParam("processo", processo);
             return "/Processo/startTaskForm.seam";
         } else {
-            ProcessInstance processInstance = iniciarProcessoService.iniciarProcesso(processo);
-            openMovimentarIfAccessible(processInstance);
+            iniciarProcesso(processo);
             return "/Painel/list.seam?faces-redirect=true";
         }
     }
@@ -145,6 +144,9 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
             MetadadoProcesso item = processoProvider.gerarMetadado(EppMetadadoProvider.ITEM_DO_PROCESSO, naturezaCategoriaFluxoItem.getItem().getIdItem().toString());
             metadados.add(item);
         }
+        StatusProcesso statusNaoIniciado = statusProcessoSearch.getStatusByName(StatusProcesso.STATUS_NAO_INICIADO);
+        MetadadoProcesso metatadoStatus = processoProvider.gerarMetadado(EppMetadadoProvider.STATUS_PROCESSO, statusNaoIniciado.getIdStatusProcesso().toString());
+        metadados.add(metatadoStatus);
         String processDefinitionName = processo.getNaturezaCategoriaFluxo().getFluxo().getFluxo();
         ProcessDefinition processDefinition = JbpmUtil.instance().findLatestProcessDefinition(processDefinitionName);
         Task startTask = processDefinition.getTaskMgmtDefinition().getStartTask();
@@ -154,8 +156,7 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
             return "/Processo/startTaskForm.seam";
         } else {
             processoManager.gravarProcesso(processo, metadados, participantes);
-            ProcessInstance processInstance = iniciarProcessoService.iniciarProcesso(processo);
-            openMovimentarIfAccessible(processInstance);
+            iniciarProcesso(processo);
             return "/Painel/list.seam?faces-redirect=true";
         }
     }

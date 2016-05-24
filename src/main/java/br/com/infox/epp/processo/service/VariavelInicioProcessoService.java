@@ -4,6 +4,7 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+import javax.persistence.Query;
 
 import br.com.infox.cdi.dao.Dao;
 import br.com.infox.core.persistence.PersistenceController;
@@ -44,5 +45,11 @@ public class VariavelInicioProcessoService extends PersistenceController {
         }
     }
     
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void removeAll(Processo processo) {
+        String jpql = "delete from VariavelInicioProcesso var where var.processo.idProcesso = :idProcesso ";
+        Query query = getEntityManager().createQuery(jpql).setParameter("idProcesso", processo.getIdProcesso());
+        query.executeUpdate();
+    }
 
 }

@@ -1,8 +1,13 @@
 package br.com.infox.epp.processo.service;
 
+import java.util.Map;
+
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
+
+import org.jbpm.graph.exe.ProcessInstance;
 
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
@@ -12,7 +17,12 @@ import br.com.infox.epp.processo.type.TipoProcesso;
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class ProcessoService {
-
+    
+    @Inject
+    private IniciarProcessoService iniciarProcessoService;
+    @Inject
+    private VariavelInicioProcessoService variavelInicioProcessoService;
+    
 	public boolean isTipoProcessoDocumento(Processo processo) {
 		return isTipoProcesso(TipoProcesso.DOCUMENTO.toString(), processo);
 	}
@@ -29,6 +39,14 @@ public class ProcessoService {
 		    return byName.equals(tpProcesso);
 		}
 		return false; 
+	}
+	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public ProcessInstance iniciarProcessoRemoverMetadadoStatus(Processo processo, Map<String, Object> variables) {
+	    processo.removerMetadado(EppMetadadoProvider.STATUS_PROCESSO);
+	    variavelInicioProcessoService.removeAll(processo);
+	    ProcessInstance processInstance = iniciarProcessoService.iniciarProcesso(processo, variables);
+	    return processInstance;
 	}
 	
 }

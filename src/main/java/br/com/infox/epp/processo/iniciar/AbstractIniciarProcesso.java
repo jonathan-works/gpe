@@ -2,6 +2,7 @@ package br.com.infox.epp.processo.iniciar;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -9,6 +10,7 @@ import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.service.ProcessoService;
 import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
 import br.com.infox.jsf.util.JsfUtil;
 import br.com.infox.seam.path.PathResolver;
@@ -24,12 +26,21 @@ public abstract class AbstractIniciarProcesso implements Serializable {
     protected JsfUtil jsfUtil;
     @Inject
     protected SituacaoProcessoDAO situacaoProcessoDAO;
-    
-    public abstract Processo getProcesso();
+    @Inject
+    protected ProcessoService processoService;
     
     public abstract String iniciar();
     
-    protected void openMovimentarIfAccessible(ProcessInstance processInstance) {
+    protected void iniciarProcesso(Processo processo) {
+        iniciarProcesso(processo, null);
+    }
+    
+    protected void iniciarProcesso(Processo processo, Map<String, Object> variables) {
+        ProcessInstance processInstance = processoService.iniciarProcessoRemoverMetadadoStatus(processo, variables);
+        openMovimentarIfAccessible(processInstance, processo);
+    }
+    
+    protected void openMovimentarIfAccessible(ProcessInstance processInstance, Processo processo) {
         Collection<TaskInstance> taskInstances = processInstance.getTaskMgmtInstance().getTaskInstances();
         if (taskInstances != null) {
             for (TaskInstance taskInstance : taskInstances) {
@@ -38,13 +49,12 @@ public abstract class AbstractIniciarProcesso implements Serializable {
                     PathResolver pathResolver = ComponentUtil.getComponent(PathResolver.NAME);
                     String script = SCRIPT.replace("{contextPath}", pathResolver.getContextPath())
                             .replace("{idTaskInstance}", String.valueOf(taskInstance.getId()))
-                            .replace("{idProcesso}", getProcesso().getIdProcesso().toString());
+                            .replace("{idProcesso}", processo.getIdProcesso().toString());
                     jsfUtil.execute(script);
                     break;
                 }
             }
         }
     }
-    
 
 }

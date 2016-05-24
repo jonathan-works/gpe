@@ -18,7 +18,7 @@
     <ui:define name="body">
     	
     	<fieldset id="processoCriadosField">
-    		<legend class="ui-dialog-title">Processos Criados</legend>
+    		<legend class="name">#{infoxMessages['processo.processos']}</legend>
     		
 	    	<p:dataTable id="processosCriados" var="row" value="#{iniciarProcessoView.processosCriados}" 
 	        	rowKey="#{row.id}" headerText="Processos Criados" responsive="true" 
@@ -32,14 +32,14 @@
 	        				<h:graphicImage value="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" 
 	        					title="Remover" styleClass="opacityHover"/>
 	        			</h:commandLink>
-	        			<h:commandLink action="#{iniciarProcessoView.iniciarProcesso(row)}">
+	        			<h:commandLink action="#{iniciarProcessoView.iniciar(row)}">
 	        				<h:graphicImage value="#{layoutController.getResourceUrlByPath('/imagens/jbpm/StartState.gif')}" 
 	        					title="Continuar" styleClass="opacityHover"/>
 	        			</h:commandLink>
 	        		</h:form>
 		        </p:column>
 	        	
-	        	<p:column headerText="#{infoxMessages['processo.numeroProcesso']}" style="text-align:center">
+	        	<p:column headerText="#{infoxMessages['processo.numero']}" style="text-align:center">
 		            <h:outputText value="#{row.numeroProcesso}" />
 		        </p:column>
 		        
@@ -55,7 +55,7 @@
 		            <h:outputText value="#{row.naturezaCategoriaFluxo.categoria}" />
 		        </p:column>
 		        
-		        <p:column headerText="Data Cadastro" style="text-align:center">
+		        <p:column headerText="#{infoxMessages['processo.dataCadastro']}" style="text-align:center">
 		            <h:outputText value="#{row.dataInicio}" >
 		            	<f:convertDateTime pattern="dd/MM/yyyy kk:mm"/>
 		            </h:outputText>
@@ -70,12 +70,12 @@
 	    </fieldset>
 	    
 	    <fieldset id="criarProcessosField" style="margin-top: 1.5em;">
-			<legend>Novo Processo</legend>
+			<legend class="name">#{infoxMessages['processo.novoProcesso']}</legend>
 	        
 	        <h:form id="iniciarProcessoForm">
 		        <p:dataTable id="natCatProcessoList" var="row" value="#{iniciarProcessoView.naturezaCategoriaFluxoItemList}" 
 		        	selection="#{iniciarProcessoView.naturezaCategoriaFluxoItem}" rowKey="#{row.id}" 
-		        	headerText="Classificação do processo" responsive="true" >
+		        	headerText="#{infoxMessages['processo.classificacao']}" responsive="true" >
 		        	
 		        	<p:column selectionMode="single" style="width:16px; text-align:center"/>
 		        	
@@ -98,7 +98,7 @@
 		        
 		        <p:dataTable id="participanteList" value="#{iniciarProcessoView.participanteProcessoList}" 
 		        	var="row" emptyMessage="Sem participantes."
-		        	headerText="Participantes do Processo" responsive="true" style="margin-top: 1.5em;">
+		        	headerText="#{infoxMessages['participanteProcesso.participantes']}" responsive="true" style="margin-top: 1.5em;">
 		        	
 		        	<p:column style="width:30px; text-align:center" >
 		        		<f:facet name="header">
@@ -144,7 +144,8 @@
 			    </p:dataTable>
 			    
 			    <div style="margin-top:1em;">
-		        	<h:commandButton id="buttonIniciarProcesso" value="Iniciar Processo" action="#{iniciarProcessoView.iniciarProcesso}" styleClass="buttons">
+		        	<h:commandButton id="buttonIniciarProcesso" value="#{infoxMessages['processo.iniciarBtn']}" 
+		        		action="#{iniciarProcessoView.iniciar}" styleClass="buttons">
 		        		<p:ajax update="@this :pageBodyDialogMessage" process="@form:natCatProcessoList @this" partialSubmit="true" 
 		        			onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
 		        	</h:commandButton>
@@ -153,8 +154,9 @@
 		    </h:form>
 		</fieldset>
 		
-		<p:dialog id="novoParticipanteDialog" header="Novo Participante" widgetVar="dialogAdicionarParticipante" 
-			modal="true" closeOnEscape="true" width="60%" height="90%" fitViewport="true" responsive="true">
+		<p:dialog id="novoParticipanteDialog" header="#{infoxMessages['participanteProcesso.novoParticipante']}" 
+			widgetVar="dialogAdicionarParticipante" fitViewport="true" responsive="true"
+			modal="true" closeOnEscape="true" width="60%" height="90%" >
 			
 			<h:form>
 		        <i:selectOneRadio id="radioTipoPessoa"	label="#{infoxMessages['pessoa.tipoPessoa']}"
@@ -220,7 +222,7 @@
 		        </p:outputPanel>
 		        
 		        <div>
-		         	<h:commandButton value="Adicionar" action="#{iniciarProcessoView.adicionarParticipante}" styleClass="buttons">
+		         	<h:commandButton value="#{infoxMessages['button.add']}" action="#{iniciarProcessoView.adicionarParticipante}" styleClass="buttons">
 		         		<p:ajax process="@form" update="@form:loadedByParticipante :pageBodyDialogMessage :iniciarProcessoForm:participanteList" 
 		         			partialSubmit="true" />
 		         	</h:commandButton>

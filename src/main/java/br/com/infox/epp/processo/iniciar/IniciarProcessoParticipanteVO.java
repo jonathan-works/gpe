@@ -42,7 +42,6 @@ public class IniciarProcessoParticipanteVO extends DefaultTreeNode implements Co
     public IniciarProcessoParticipanteVO() {
         super();
         setData(this);
-        setExpanded(true);
     }
     
     public List<ParticipanteProcesso> getListParticipantes(Processo processo) {
