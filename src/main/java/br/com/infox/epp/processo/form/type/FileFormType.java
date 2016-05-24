@@ -9,8 +9,10 @@ import br.com.infox.certificado.bean.CertificateSignatureBean;
 import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
 import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
 import br.com.infox.certificado.exception.CertificadoException;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
@@ -26,6 +28,7 @@ import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
 import br.com.infox.epp.processo.form.variable.value.FileTypedValue;
 import br.com.infox.epp.processo.form.variable.value.ValueType;
+import br.com.infox.seam.exception.BusinessException;
 
 public abstract class FileFormType implements FormType {
     
@@ -51,7 +54,6 @@ public abstract class FileFormType implements FormType {
     
     @Override
     public void performUpdate(FormField formField, FormData formData) {
-        
     }
     
     @Override
@@ -65,6 +67,16 @@ public abstract class FileFormType implements FormType {
             typedValue.setClassificacaoDocumento(classificacoes.get(0));
         }
     }
+    
+    @Override
+    public void validate(FormField formField, FormData formData) throws BusinessException {
+        FileTypedValue typedValue = (FileTypedValue) formField.getTypedValue();
+        Documento documento = typedValue.getValue();
+        boolean assinaturaVariavelOk = validarAssinaturaDocumento(documento);
+        if (!assinaturaVariavelOk) {
+            throw new BusinessException(String.format(InfoxMessages.getInstance().get("assinaturaDocumento.faltaAssinatura"), formField.getLabel()));
+        }
+    }
 
     @ExceptionHandled(value = MethodType.UNSPECIFIED)
     public void assinar() throws DAOException, CertificadoException, AssinaturaException {
@@ -76,6 +88,13 @@ public abstract class FileFormType implements FormType {
             getAssinaturaDocumentoService().assinarDocumento(documentoToSign, Authenticator.getUsuarioPerfilAtual(),
                     signatureBean.getCertChain(), signatureBean.getSignature());
         }
+    }
+    
+    protected boolean validarAssinaturaDocumento(Documento documento) {
+        Papel papel = Authenticator.getPapelAtual();
+        boolean isValid = getAssinaturaDocumentoService().isDocumentoTotalmenteAssinado(documento)
+                || !documento.isAssinaturaObrigatoria(papel) || documento.isDocumentoAssinado(papel);
+        return isValid;
     }
     
     public Documento getDocumentoToSign() {
@@ -99,11 +118,11 @@ public abstract class FileFormType implements FormType {
         return true;
     }
 
-    private CertificateSignatures getCertificateSignatures() {
+    protected CertificateSignatures getCertificateSignatures() {
         return BeanManager.INSTANCE.getReference(CertificateSignatures.class);
     }
     
-    private AssinaturaDocumentoService getAssinaturaDocumentoService() {
+    protected AssinaturaDocumentoService getAssinaturaDocumentoService() {
         return BeanManager.INSTANCE.getReference(AssinaturaDocumentoService.class);
     }
     

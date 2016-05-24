@@ -15,6 +15,8 @@ import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.log.LogErro;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.exception.BusinessException;
+import br.com.infox.seam.exception.BusinessRollbackException;
 
 @ExceptionHandled
 @Interceptor
@@ -48,7 +50,9 @@ public class ExceptionInterceptor implements Serializable {
 				break;
 			}
 			return result;
-		} catch (Exception e) {
+		} catch (BusinessException | BusinessRollbackException e) {
+		    FacesMessages.instance().add(e.getMessage());
+	    } catch (Exception e) {
 		    if (annotation.createLogErro()) {
 		        createLogErro(e);
 		    } else {

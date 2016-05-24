@@ -18,8 +18,8 @@ public abstract class PrimitiveValueType implements ValueType {
     }
     
     @Override
-    public Object convertToModelValue(TypedValue propertyValue) {
-        return propertyValue.getValue();
+    public TypedValue convertToModelValue(TypedValue propertyValue) {
+        return propertyValue;
     }
 
     @Override

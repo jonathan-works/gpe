@@ -12,8 +12,11 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.form.type.FormType;
 import br.com.infox.epp.processo.form.type.FormTypes;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.seam.exception.BusinessException;
 
 public abstract class AbstractFormData implements FormData {
+    
+    protected static final String PATH = "/Processo/form/%s.xhtml";
     
     protected String formKey;
     protected Processo processo;
@@ -26,20 +29,32 @@ public abstract class AbstractFormData implements FormData {
     }
     
     protected void createFormFields(List<VariableAccess> variableAccesses, ProcessDefinition processDefinition) {
-        for (VariableAccess variableAccess : variableAccesses) {
-            String type = variableAccess.getMappedName().split(":")[0];
-            String variableName = variableAccess.getVariableName();
-            String label = JbpmUtil.instance().getMessages().get(processDefinition.getName() + ":" + variableName);
-            FormField formField = new FormField();
-            FormType formType = createFormType(type);
-            formField.setType(formType);
-            formField.setId(variableName);
-            formField.setLabel(label);
-            formField.setTypedValue(formType.convertToFormValue(getVariable(variableName)));
-            formField.setProperties(createProperties(variableAccess));
-            formType.performValue(formField, this);
-            getFormFields().add(formField);
+        VariableAccess variableTaskPage = getTaskPage(variableAccesses);
+        if (variableTaskPage != null) {
+            createFormField(processDefinition, variableTaskPage);
+        } else {
+            for (VariableAccess variableAccess : variableAccesses) {
+                createFormField(processDefinition, variableAccess);
+            } 
         }
+    }
+
+    private void createFormField(ProcessDefinition processDefinition, VariableAccess variableAccess) {
+        String type = variableAccess.getMappedName().split(":")[0];
+        String variableName = variableAccess.getVariableName();
+        String label = JbpmUtil.instance().getMessages().get(processDefinition.getName() + ":" + variableName);
+        FormField formField = new FormField();
+        FormType formType = createFormType(type);
+        formField.setType(formType);
+        formField.setId(variableName);
+        formField.setLabel(label);
+        formField.setTypedValue(formType.convertToFormValue(getVariable(variableName)));
+        formField.setProperties(createProperties(variableAccess));
+        formType.performValue(formField, this);
+        if (formField.getPath() == null) {
+            formField.setPath(String.format(PATH, formType.getName()));
+        }
+        getFormFields().add(formField);
     }
     
     protected FormType createFormType(String type) {
@@ -64,6 +79,23 @@ public abstract class AbstractFormData implements FormData {
             properties.put("extendedProperties", tokens[2]);
         }
         return properties;
+    }
+    
+    @Override
+    public void validate() throws BusinessException {
+        for (FormField formField : getFormFields()) {
+            formField.getType().validate(formField, this);
+        }
+    }
+    
+    protected VariableAccess getTaskPage(List<VariableAccess> variableAccesses) {
+        for (VariableAccess variableAccess : variableAccesses) {
+            String type = variableAccess.getMappedName().split(":")[0];
+            if ("TASK_PAGE".equalsIgnoreCase(type)) {
+                return variableAccess;
+            }
+        }
+        return null;
     }
 
     public String getFormKey() {

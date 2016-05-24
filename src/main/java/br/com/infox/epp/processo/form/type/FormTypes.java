@@ -9,6 +9,7 @@ import br.com.infox.epp.processo.form.type.PrimitiveFormType.MonetaryFormType;
 import br.com.infox.epp.processo.form.type.PrimitiveFormType.PageFormType;
 import br.com.infox.epp.processo.form.type.PrimitiveFormType.StringFormType;
 import br.com.infox.epp.processo.form.type.PrimitiveFormType.StructuredTextFormType;
+import br.com.infox.epp.processo.form.type.PrimitiveFormType.TaskPageFormType;
 import br.com.infox.epp.processo.form.type.PrimitiveFormType.TextFormType;
 
 public enum FormTypes {
@@ -24,7 +25,8 @@ public enum FormTypes {
     FRAME(FrameFormType.class),
     PAGE(PageFormType.class),
     EDITOR(EditorFormType.class),
-    FILE(UploadFormType.class);
+    FILE(UploadFormType.class),
+    TASKPAGE(TaskPageFormType.class);
     
     private Class<? extends FormType> formTypeClass;
     

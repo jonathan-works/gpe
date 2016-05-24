@@ -39,9 +39,9 @@ public class StartFormDataImpl extends AbstractFormData implements StartFormData
     public Map<String, Object> getVariables() {
         Map<String, Object> variables = new HashMap<>();
         for (FormField formField : getFormFields()) {
-            if (formField.getType().isPersistable()) {
-                TypedValue typedValue = formField.getTypedValue();
-                variables.put(formField.getId(), typedValue.getType().convertToModelValue(typedValue));
+            TypedValue typedValue = formField.getTypedValue();
+            if (formField.getType().isPersistable() && typedValue.getValue() != null) {
+                variables.put(formField.getId(), typedValue.getType().convertToModelValue(typedValue).getValue());
             }
         }
         return variables;

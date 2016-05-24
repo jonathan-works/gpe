@@ -44,6 +44,7 @@ public class IniciarProcessoVariaveisView extends AbstractIniciarProcesso {
     @ExceptionHandled(createLogErro = true)
     public String iniciar() {
         formData.update();
+        formData.validate();
         Map<String, Object> variables = formData.getVariables();
         iniciarProcesso(processo, variables);
         return "/Painel/list.seam?faces-redirect=true";

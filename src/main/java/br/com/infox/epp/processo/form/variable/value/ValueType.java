@@ -27,7 +27,7 @@ public interface ValueType {
     
     String getName();
     
-    Object convertToModelValue(TypedValue propertyValue);
+    TypedValue convertToModelValue(TypedValue propertyValue);
     
     String convertToStringValue(TypedValue propertyValue);
 

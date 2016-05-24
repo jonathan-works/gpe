@@ -16,10 +16,12 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.service.DocumentoUploaderService;
 import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
+import br.com.infox.epp.processo.form.variable.value.FileTypedValue;
 import br.com.infox.epp.processo.form.variable.value.TypedValue;
 import br.com.infox.epp.processo.form.variable.value.UploadValueImpl;
 import br.com.infox.epp.processo.form.variable.value.ValueType;
 import br.com.infox.ibpm.variable.file.FileVariableHandler;
+import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.exception.BusinessRollbackException;
 
 public class UploadFormType extends FileFormType {
@@ -66,6 +68,18 @@ public class UploadFormType extends FileFormType {
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "", e);
             getActionMessagesService().handleGenericException(e, "Registro alterado por outro usuário, tente novamente");
+        }
+    }
+    
+    @Override
+    public void validate(FormField formField, FormData formData) throws BusinessException {
+        FileTypedValue typedValue = (FileTypedValue) formField.getTypedValue(); 
+        String required = formField.getProperties().get("required");
+        if ("true".equals(required) && typedValue.getValue() == null) {
+            throw new BusinessException("O arquivo do campo " + formField.getLabel() + " é obrigatório");
+        }
+        if (typedValue.getValue() != null) {
+            super.validate(formField, formData);
         }
     }
     

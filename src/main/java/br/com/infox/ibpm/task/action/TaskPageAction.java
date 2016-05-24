@@ -66,7 +66,6 @@ public class TaskPageAction implements Serializable {
         }
     }
 
-    @SuppressWarnings(UNCHECKED)
     private List<VariableAccess> getVariableAccesses(TaskInstance taskInstance) {
         if (taskInstance != null) {
             TaskController taskController = taskInstance.getTask().getTaskController();

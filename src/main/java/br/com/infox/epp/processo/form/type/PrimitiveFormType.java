@@ -21,6 +21,8 @@ import br.com.infox.ibpm.variable.dao.ListaDadosSqlDAO;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
 import br.com.infox.ibpm.variable.type.ValidacaoDataEnum;
+import br.com.infox.seam.exception.BusinessException;
+import br.com.infox.seam.path.PathResolver;
 import br.com.infox.seam.util.ComponentUtil;
 
 public abstract class PrimitiveFormType implements FormType {
@@ -55,6 +57,11 @@ public abstract class PrimitiveFormType implements FormType {
     
     @Override
     public void performUpdate(FormField formField, FormData formData) {
+       // do nothing
+    }
+    
+    @Override
+    public void validate(FormField formField, FormData formData) throws BusinessException {
        // do nothing
     }
     
@@ -216,6 +223,32 @@ public abstract class PrimitiveFormType implements FormType {
         public boolean isPersistable() {
             return false;
         }
+    }
+    
+    public static class TaskPageFormType extends PrimitiveFormType {
+        
+        public TaskPageFormType() {
+            super("taskPage", ValueType.NULL);
+        }
+        
+        @Override
+        public void performValue(FormField formField, FormData formData) {
+            PathResolver pathResolver = ComponentUtil.getComponent(PathResolver.NAME);
+            String taskPagePath = "/WEB-INF/taskpages/" + formField.getId() + ".xhtml";
+            String taskPageUrl = pathResolver.getRealPath(taskPagePath);
+            formField.setPath(taskPageUrl);
+        }
+
+        @Override
+        public TypedValue convertToFormValue(Object value) {
+            return NullValue.INSTANCE;
+        }
+        
+        @Override
+        public boolean isPersistable() {
+            return false;
+        }
+        
     }
     
     public static class EnumerationFormType extends PrimitiveFormType {

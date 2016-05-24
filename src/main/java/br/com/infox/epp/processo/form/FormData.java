@@ -7,6 +7,7 @@ import br.com.infox.epp.documento.type.ExpressionResolverChain;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.form.type.FormType;
 import br.com.infox.epp.processo.form.variable.value.TypedValue;
+import br.com.infox.seam.exception.BusinessException;
 
 public interface FormData {
     
@@ -27,5 +28,7 @@ public interface FormData {
     Map<String, Object> getVariables();
     
     ExpressionResolverChain getExpressionResolver();
+    
+    void validate() throws BusinessException;
     
 }

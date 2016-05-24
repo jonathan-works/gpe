@@ -47,12 +47,18 @@
 	    	<h:form id="#{formData.formKey}">
 	    		
 	    		<c:forEach var="formField" items="#{formData.formFields}">
+	    		
 	    			<p:outputPanel id="#{formField.id}Div" style="display: inline-block; margin: 10px 10px; vertical-align: top;">
-   						<ui:include src="/Processo/form/#{formField.typeName}.xhtml" />
+	    				
+						<ui:include src="#{formField.typePath}" />
+	   					
 	   				</p:outputPanel>
+	   				
 	    		</c:forEach>
 	    		
 	    		<div>
+	    			<h:commandButton styleClass="buttons" action="/Processo/listView.seam?faces-redirect=true" value="Voltar" />
+	    			
 	    			<h:commandButton styleClass="buttons" action="#{iniciarProcessoVariaveisView.gravar}" value="Gravar" >
 	    				<p:ajax process="@form" update="@form :pageBodyDialogMessage" onstart="infox.showLoading();" 
 	    					oncomplete="infox.hideLoading();"/>
