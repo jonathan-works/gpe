@@ -22,7 +22,6 @@ import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
 import br.com.infox.ibpm.variable.type.ValidacaoDataEnum;
 import br.com.infox.seam.exception.BusinessException;
-import br.com.infox.seam.path.PathResolver;
 import br.com.infox.seam.util.ComponentUtil;
 
 public abstract class PrimitiveFormType implements FormType {
@@ -233,10 +232,7 @@ public abstract class PrimitiveFormType implements FormType {
         
         @Override
         public void performValue(FormField formField, FormData formData) {
-            PathResolver pathResolver = ComponentUtil.getComponent(PathResolver.NAME);
-            String taskPagePath = "/WEB-INF/taskpages/" + formField.getId() + ".xhtml";
-            String taskPageUrl = pathResolver.getRealPath(taskPagePath);
-            formField.setPath(taskPageUrl);
+            formField.setPath("/WEB-INF/taskpages/" + formField.getId() + ".xhtml");
         }
 
         @Override

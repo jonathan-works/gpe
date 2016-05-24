@@ -26,7 +26,7 @@ public enum FormTypes {
     PAGE(PageFormType.class),
     EDITOR(EditorFormType.class),
     FILE(UploadFormType.class),
-    TASKPAGE(TaskPageFormType.class);
+    TASK_PAGE(TaskPageFormType.class);
     
     private Class<? extends FormType> formTypeClass;
     

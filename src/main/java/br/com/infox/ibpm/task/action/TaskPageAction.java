@@ -1,7 +1,5 @@
 package br.com.infox.ibpm.task.action;
 
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
-
 import java.io.File;
 import java.io.Serializable;
 import java.util.Collections;

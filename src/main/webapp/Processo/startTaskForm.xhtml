@@ -50,7 +50,7 @@
 	    		
 	    			<p:outputPanel id="#{formField.id}Div" style="display: inline-block; margin: 10px 10px; vertical-align: top;">
 	    				
-						<ui:include src="#{formField.typePath}" />
+						<ui:include src="#{formField.path}" />
 	   					
 	   				</p:outputPanel>
 	   				
@@ -60,12 +60,12 @@
 	    			<h:commandButton styleClass="buttons" action="/Processo/listView.seam?faces-redirect=true" value="Voltar" />
 	    			
 	    			<h:commandButton styleClass="buttons" action="#{iniciarProcessoVariaveisView.gravar}" value="Gravar" >
-	    				<p:ajax process="@form" update="@form :pageBodyDialogMessage" onstart="infox.showLoading();" 
+	    				<a:ajax execute="@form" render="@form :pageBodyDialogMessage" onsubmit="infox.showLoading();" 
 	    					oncomplete="infox.hideLoading();"/>
 	    			</h:commandButton>
 	    		
 	    			<h:commandButton styleClass="buttons" action="#{iniciarProcessoVariaveisView.iniciar}" value="Iniciar" >
-	    				<p:ajax process="@form" update="@form :pageBodyDialogMessage" onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
+	    				<a:ajax execute="@form" render="@form :pageBodyDialogMessage" onsubmit="infox.showLoading();" oncomplete="infox.hideLoading();"/>
 	    			</h:commandButton>
 	    		</div>
 	    		

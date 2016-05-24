@@ -22,7 +22,8 @@
     		
 	    	<p:dataTable id="processosCriados" var="row" value="#{iniciarProcessoView.processosCriados}" 
 	        	rowKey="#{row.id}" headerText="Processos Criados" responsive="true" 
-	        	rendered="#{not empty iniciarProcessoView.processosCriados}">
+	        	rendered="#{not empty iniciarProcessoView.processosCriados}"
+	        	paginator="#{iniciarProcessoView.processosCriados.size() gt 10}" rows="10">
 	        	
 	        	<p:column headerText="#{infoxMessages['naturezaCategoriaFluxo.fluxo']}" style="width:36px; text-align:center">
 	        		<h:form>
@@ -75,7 +76,7 @@
 	        <h:form id="iniciarProcessoForm">
 		        <p:dataTable id="natCatProcessoList" var="row" value="#{iniciarProcessoView.naturezaCategoriaFluxoItemList}" 
 		        	selection="#{iniciarProcessoView.naturezaCategoriaFluxoItem}" rowKey="#{row.id}" 
-		        	headerText="#{infoxMessages['processo.classificacao']}" responsive="true" >
+		        	responsive="true" rows="10" paginator="#{iniciarProcessoView.naturezaCategoriaFluxoItemList.size() gt 10}">
 		        	
 		        	<p:column selectionMode="single" style="width:16px; text-align:center"/>
 		        	

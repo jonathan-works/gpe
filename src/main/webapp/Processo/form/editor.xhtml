@@ -31,9 +31,10 @@
 		label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
 		items="#{typedValue.modelosDocumento}"
 		noSelectionLabel="[Selecione o modelo]"
+		required="false"
 		value="#{typedValue.modeloDocumento}"
 		rendered="#{not readonly}">
-		<a:ajax event="change" render="#{varId}" execute="@this" limitRender="true" 
+		<a:ajax event="change" render="#{varId}EditorDiv" execute="@this" limitRender="true" 
 			listener="#{controller.performModeloDocumento(typedValue, formData)}"/>
 	</wi:selectOneMenuEntity>
 	   
@@ -53,7 +54,8 @@
 	    </s:div>
 	    
 	    <wi:editor id="#{varId}" value="#{typedValue.value.documentoBin.modeloDocumento}"
-	        readonly="#{readonly or typedValue.value.hasAssinatura()}" />
+	        readonly="#{readonly or typedValue.value.hasAssinatura()}" 
+	        label="#{formField.label}"/>
 	        
 	</p:outputPanel>
 	   
