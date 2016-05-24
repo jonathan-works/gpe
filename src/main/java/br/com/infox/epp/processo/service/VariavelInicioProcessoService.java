@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.persistence.Query;
 
 import br.com.infox.cdi.dao.Dao;
+import br.com.infox.cdi.qualifier.GenericDao;
 import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.VariavelInicioProcesso;
@@ -18,7 +19,7 @@ public class VariavelInicioProcessoService extends PersistenceController {
     
     @Inject
     private VariavelInicioProcessoSearch variavelInicioProcessoSearch;
-    @Inject 
+    @Inject @GenericDao
     private Dao<VariavelInicioProcesso, Long> dao;
     
     public Object getVariavel(Processo processo, String name) {
