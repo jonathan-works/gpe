@@ -33,7 +33,7 @@
 		noSelectionLabel="[Selecione o modelo]"
 		required="false"
 		value="#{typedValue.modeloDocumento}"
-		rendered="#{not readonly}">
+		rendered="#{not readonly and not typedValue.value.hasAssinatura()}">
 		<a:ajax event="change" render="#{varId}EditorDiv" execute="@this" limitRender="true" 
 			listener="#{controller.performModeloDocumento(typedValue, formData)}"/>
 	</wi:selectOneMenuEntity>
