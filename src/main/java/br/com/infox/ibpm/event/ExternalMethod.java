@@ -18,7 +18,11 @@ public class ExternalMethod {
         this.name = method.getName();
         this.tooltip = external.tooltip();
         this.parameters = Arrays.asList(external.value());
-        this.expression = getMethodExpressionExample(method);
+        if (external.example().isEmpty()) {
+        	this.expression = getMethodExpressionExample(method);
+        } else {
+        	this.expression = external.example();
+        }
     }
 
     private String getMethodExpressionExample(Method method) {

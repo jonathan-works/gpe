@@ -19,6 +19,7 @@ public class ArbitraryExpressionResolver implements ExpressionResolver {
 		if (value != null) {
 			expression.setValue(value);
 			expression.setResolved(true);
+			expression.setOriginalValue(value);
 		}
 		return expression;
 	}

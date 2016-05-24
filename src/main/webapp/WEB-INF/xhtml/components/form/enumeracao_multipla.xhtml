@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:s="http://jboss.org/schema/seam/taglib">
+    <ui:param name="template" value="#{empty template ? '/WEB-INF/xhtml/components/templates/edit.xhtml' : template}" />
+    <s:decorate id="#{id}Decoration" template="#{template}" rendered="#{empty rendered or rendered}">
+        <ui:define name="label">#{label}</ui:define>
+        <p:selectManyMenu id="#{id}" value="#{value}" required="#{required}" onchange="#{onchange}" 
+            disabled="#{disabled or readonly}" readonly="#{readonly}" filterMatchMode="contains" showCheckbox="true" filter="true">
+
+            <f:selectItems value="#{props.items}" />
+            
+        </p:selectManyMenu>
+    </s:decorate>
+</ui:composition>

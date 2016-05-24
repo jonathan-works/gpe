@@ -64,11 +64,12 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
         signalService.dispatch(codigoSinal);
     }
     
-    @External(expressionType = ExpressionType.RAIA_DINAMICA, tooltip = "Teste", value = {
-    	@Parameter(defaultValue = "'Teste'", label = "Teste", tooltip = "Teste")
-    })
-    public void concatenarConfigRaiaDinamica(String... configuracoes) {
-    	
+	@External(expressionType = ExpressionType.RAIA_DINAMICA, 
+		tooltip = "process.events.expression.stringListBuilder.tooltip",
+		example = "#{bpmExpressionService.stringListBuilder().add(variavelString).add('string').add(variavelListaString).build()}"
+	)
+    public StringListBuilder stringListBuilder() {
+		return new StringListBuilder();
     }
 
     @Override

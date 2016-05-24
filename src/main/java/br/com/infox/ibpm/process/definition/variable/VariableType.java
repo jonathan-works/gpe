@@ -19,6 +19,7 @@ public enum VariableType {
     MONETARY(format(DEFAULT_LOCALE,"monetary"), format(DEFAULT_PATH,"numberMoney")),
     FILE(format(DEFAULT_LOCALE, "file"), format(DEFAULT_PATH, "fileUpload")),
     ENUMERATION(format(DEFAULT_LOCALE,"enum"), format(DEFAULT_PATH,"enumeracao")),
+    ENUMERATION_MULTIPLE(format(DEFAULT_LOCALE,"enum_multiple"), format(DEFAULT_PATH,"enumeracao_multipla")),
     FRAGMENT(format(DEFAULT_LOCALE, "fragment"), format(DEFAULT_PATH, "fragment"));
     
     private String label;

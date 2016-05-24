@@ -4,6 +4,7 @@ public class Expression {
 	private String expression;
 	private boolean resolved;
 	private String value;
+	private Object originalValue;
 	
 	public Expression(String expression) {
 		if (expression == null || expression.isEmpty()) {
@@ -34,5 +35,13 @@ public class Expression {
 	
 	public void setValue(String value) {
 		this.value = value;
+	}
+	
+	public Object getOriginalValue() {
+		return originalValue;
+	}
+	
+	public void setOriginalValue(Object originalValue) {
+		this.originalValue = originalValue;
 	}
 }

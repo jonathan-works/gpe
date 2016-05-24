@@ -44,21 +44,22 @@ final class TaskVariableRetriever extends TaskVariable {
             case FRAGMENT:
                 variable = getConteudoFragment(variable);
                 break;
-                case EDITOR:
-                    variable = getConteudoEditor(variable);
-                    break;
-                case FILE:
-                    variable = getNomeFileUploaded(variable);
-                default:
-                    break;
+            case EDITOR:
+                variable = getConteudoEditor(variable);
+                break;
+            case FILE:
+                variable = getNomeFileUploaded(variable);
+                break;
+            default:
+                break;
             }
         } else if (VariableType.FRAGMENT.equals(type)){
-                variable = getConteudoFragment(variable);
+            variable = getConteudoFragment(variable);
         }
         return variable;
     }
 
-    private Object getConteudoFragment(Object variable) {
+	private Object getConteudoFragment(Object variable) {
         Object result = variable;
         if (result == null) {
             FragmentConfigurationCollector collector = BeanManager.INSTANCE.getReference(FragmentConfigurationCollector.class);
@@ -96,7 +97,7 @@ final class TaskVariableRetriever extends TaskVariable {
         }
         return variable;
     }
-
+    
     public void retrieveVariableContent() {
         variable = getConteudo();
     }
