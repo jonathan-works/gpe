@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: menu.xhtml 750 2010-08-24 14:10:58Z danielsilva $ -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich"
+    xmlns:i="http://java.sun.com/jsf/composite/infox" xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:p="http://primefaces.org/ui" xmlns:wi="http://www.itx.com.br/jsf">
+    
+    <ui:param name="controller" value="#{wi:get(restricaoCategoriaEntregaItemController, null)}" />
+    
+    <infox:div rendered="#{not empty controller}">
+        <fieldset>
+            <legend>#{controller.categoriaEntregaItem.categoriaEntrega.descricao}: #{controller.categoriaEntregaItem.descricao}</legend>
+            Content aqui
+        </fieldset>
+    </infox:div>
+
+</ui:composition>

@@ -1,5 +1,7 @@
 package br.com.infox.epp.localizacao;
 
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -26,6 +28,21 @@ public class LocalizacaoSearch {
 		cq = cq.select(estrutura).where(cb.and(codigoIgual, ativo));
 		return getEntityManager().createQuery(cq).getSingleResult();
 	}
+
+        public List<Localizacao> getLocalizacoesExternasWithDescricaoLike(Localizacao localizacaoRaiz, String descricao) {
+                CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+                CriteriaQuery<Localizacao> query = cb.createQuery(Localizacao.class);
+                Root<Localizacao> from = query.from(Localizacao.class);
+                query.where(cb.isNull(from.get(Localizacao_.estruturaPai)),
+                                cb.isTrue(from.get(Localizacao_.ativo)),
+                                        cb.like(cb.lower(from.get(Localizacao_.localizacao)), "%"+descricao.toLowerCase()+"%"));
+                if (localizacaoRaiz != null) {
+                        query.where(query.getRestriction(),
+                                        cb.like(from.get(Localizacao_.caminhoCompleto), localizacaoRaiz.getCaminhoCompleto() + "%"));
+                }
+                query.orderBy(cb.asc(from.get(Localizacao_.caminhoCompleto)));
+                return getEntityManager().createQuery(query).getResultList();
+        }
 
 	private EntityManager getEntityManager() {
 		return EntityManagerProducer.getEntityManager();
