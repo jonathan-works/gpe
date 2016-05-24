@@ -10,7 +10,7 @@
         <rich:dataTable value="#{taskFitter.currentTask.variables}" id="startStateVarTable" 
         	styleClass="tabelaVariaveis" var="var" style="width: 100%;">
             
-            <rich:column styleClass="dr-table-subheader rich-table-subheader">
+            <rich:column styleClass="dr-table-subheader rich-table-subheader" style="text-align: center;">
             
                 <f:facet name="header">
                     <h:form>
@@ -25,12 +25,12 @@
                     <h:form id="toolbarVariableForm">
                         <a:commandLink action="#{taskFitter.currentTask.removeVar(var)}" execute="@this"
                             onclick="return confirm(\'#{infoxMessages['processBuilder.confirm']}\');"
-                            render="startStateVarTable nodeEventeventSubView" limitRender="true" styleClass="opacityHover">
+                            render="startStateVarTable nodeEventeventSubView" limitRender="true" styleClass="opacityHover" style="margin: 0px 2px;">
                             <h:graphicImage title="#{infoxMessages['process.task.removeVariable']}"
               					url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" />
                         </a:commandLink>
                         <a:commandLink id="setCurrentVariableLink" execute="@this" render="actionTemplate"
-                            limitRender="true" status=":status"
+                            limitRender="true" status=":status" style="margin: 0px 2px;"
                             action="#{taskFitter.currentTask.setCurrentVariable(var)}" styleClass="opacityHover"
                             oncomplete="#{rich:component('actionTemplatePanel')}.show()"
                             rendered="#{var.type eq 'EDITOR'}">
@@ -40,7 +40,7 @@
               					rendered="#{not empty var.modeloList}" url="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}" />
                         </a:commandLink>
                         <a:commandLink id="setVariableForVariavelClassificacaoDocumentoLink" execute="@this"
-                            limitRender="true" render="classificacoesParaVariavelPanel"
+                            limitRender="true" render="classificacoesParaVariavelPanel" style="margin: 0px 2px;"
                             styleClass="opacityHover" oncomplete="#{rich:component('classificacoesParaVariavelPanel')}.show()"
                             rendered="#{var.type eq 'EDITOR' or var.type eq 'FILE'}" >
                             <h:graphicImage title="#{infoxMessages['variavelClassificacaoDocumento.gerenciarClassificacoes']}"

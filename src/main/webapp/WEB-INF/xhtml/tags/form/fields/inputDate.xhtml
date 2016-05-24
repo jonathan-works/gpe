@@ -43,7 +43,7 @@
             styleClass="date"
             defaultTime="#{defaultTime}"
             resetTimeOnDateSelect="#{empty defaultTime ? false : true}"
-            inputStyle="#{datePattern.contains('HH')? 'width:120px;' : 'width:85px;'}"
+            inputStyle="#{datePattern.contains('HH')? 'width:130px;' : 'width:100px;'}"
             inputClass="#{id}maskDate date"
             datePattern="#{datePattern}"
             oninputblur="validarData(this); #{dataCorrenteMenor ? 'validarDataPassada(this);' : ''}#{oninputblur}"
