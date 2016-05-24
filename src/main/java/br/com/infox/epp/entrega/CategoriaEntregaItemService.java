@@ -11,6 +11,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.entrega.DetectorCiclo.Ciclo;
 import br.com.infox.epp.entrega.DetectorCiclo.Ciclo.ToStringDelegate;
 import br.com.infox.epp.entrega.DetectorCiclo.RelacionamentoSource;
@@ -30,6 +32,8 @@ public class CategoriaEntregaItemService {
 	private CategoriaEntregaService categoriaEntregaService;
 	@Inject
 	private CategoriaItemRelacionamentoSearch categoriaItemRelacionamentoSearch;
+	@Inject
+	private LocalizacaoManager localizacaoManager;
 
 	private EntityManager getEntityManager() {
 		return EntityManagerProducer.getEntityManager();
@@ -204,6 +208,12 @@ public class CategoriaEntregaItemService {
 
     public List<CategoriaEntregaItem> getItensFilhosComDescricao(String codigoItemPai, String query) {
         return categoriaEntregaItemSearch.getCategoriaEntregaItemByCodigoPaiAndDescricao(codigoItemPai, query);
+    }
+    
+    public List<CategoriaEntregaItem> getByCodigoCategoriaAndCodigoLocalizacao(String codigoCategoria, String codigoLocalizacao) {
+    	CategoriaEntrega categoriaEntrega = categoriaEntregaSearch.getCategoriaEntregaByCodigo(codigoCategoria);
+    	Localizacao localizacao = localizacaoManager.getLocalizacaoByCodigo(codigoLocalizacao);
+    	return categoriaEntregaItemSearch.getByCategoriaAndLocalizacao(categoriaEntrega, localizacao);
     }
 
 }

@@ -17,6 +17,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.SetJoin;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.entrega.entity.CategoriaEntrega;
 import br.com.infox.epp.entrega.entity.CategoriaEntregaItem;
 import br.com.infox.epp.entrega.entity.CategoriaEntregaItem_;
@@ -132,6 +133,19 @@ public class CategoriaEntregaItemSearch implements Serializable{
         cq = cq.select(items).where(predicates.toArray(new Predicate[predicates.size()]));
         return getEntityManager().createQuery(cq).getResultList();
     }
+    
+    public List<CategoriaEntregaItem> getByCategoriaAndLocalizacao(CategoriaEntrega categoria, Localizacao localizacao) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<CategoriaEntregaItem> cq = cb.createQuery(CategoriaEntregaItem.class);
+        Root<CategoriaEntregaItem> categoriaEntregaItem = cq.from(CategoriaEntregaItem.class);
+		
+        Predicate categoriaIgual = cb.equal(categoriaEntregaItem.get(CategoriaEntregaItem_.categoriaEntrega), categoria);
+		Predicate itemPossuiLocalizacao = cb.isMember(localizacao, categoriaEntregaItem.get(CategoriaEntregaItem_.restricoes));
+		cq.select(categoriaEntregaItem).where(categoriaIgual, itemPossuiLocalizacao);
+		
+		return getEntityManager().createQuery(cq).getResultList();
+    }
+    
 	
 	
 }
