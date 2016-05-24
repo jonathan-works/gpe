@@ -1,6 +1,5 @@
 package br.com.infox.ibpm.task.view;
 
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.ibpm.process.definition.variable.constants.VariableConstants.DEFAULT_PATH;
 import static java.text.MessageFormat.format;
 
@@ -66,7 +65,6 @@ public class TaskInstanceView implements Serializable {
 
     private TaskInstance taskInstance;
 
-    @SuppressWarnings(UNCHECKED)
     @Unwrap
     public Form getTaskForm() {
         getTaskInstance();

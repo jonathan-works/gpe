@@ -25,12 +25,18 @@ public class TipoParteSearch {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<TipoParte> cq = cb.createQuery(TipoParte.class);
 		Root<TipoParte> tipoParte = cq.from(TipoParte.class);
-
 		Predicate identificadorIgual = cb.equal(tipoParte.get(TipoParte_.identificador), identificador);
-
 		cq.select(tipoParte).where(identificadorIgual);
-
 		return getEntityManager().createQuery(cq).getSingleResult();
+	}
+	
+	public List<TipoParte> findAll() {
+	    CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<TipoParte> cq = cb.createQuery(TipoParte.class);
+        Root<TipoParte> tipoParte = cq.from(TipoParte.class);
+        cq.select(tipoParte);
+        cq.orderBy(cb.asc(tipoParte.get(TipoParte_.descricao)));
+        return getEntityManager().createQuery(cq).getResultList();
 	}
 
 	private EntityManager getEntityManager() {

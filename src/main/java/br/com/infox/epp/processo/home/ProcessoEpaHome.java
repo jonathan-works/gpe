@@ -30,7 +30,6 @@ import br.com.infox.epp.processo.documento.list.PastaList;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaRestricaoAction;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
@@ -63,8 +62,6 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "processoEpaHome";
 
-	@In
-	private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
 	@In
 	private ProcessoManager processoManager;
 	@In

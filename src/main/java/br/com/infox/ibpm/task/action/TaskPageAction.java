@@ -1,7 +1,5 @@
 package br.com.infox.ibpm.task.action;
 
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
-
 import java.io.File;
 import java.io.Serializable;
 import java.util.Collections;
@@ -66,7 +64,6 @@ public class TaskPageAction implements Serializable {
         }
     }
 
-    @SuppressWarnings(UNCHECKED)
     private List<VariableAccess> getVariableAccesses(TaskInstance taskInstance) {
         if (taskInstance != null) {
             TaskController taskController = taskInstance.getTask().getTaskController();

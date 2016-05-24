@@ -60,6 +60,13 @@ public class MeioContato implements Serializable {
 	@JoinColumn(name = "id_pessoa", nullable = false)
 	private Pessoa pessoa;
 	
+	public MeioContato() {
+	}
+	
+	public MeioContato(TipoMeioContatoEnum tipoMeioContato) {
+	    this.tipoMeioContato = tipoMeioContato;
+    }
+	
 	public Integer getIdMeioContato() {
 		return idMeioContato;
 	}

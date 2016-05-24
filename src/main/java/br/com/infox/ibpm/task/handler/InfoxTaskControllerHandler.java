@@ -11,9 +11,9 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import br.com.infox.ibpm.variable.VariableAccessHandler;
 
 public class InfoxTaskControllerHandler implements TaskControllerHandler {
+    
 	private static final long serialVersionUID = 1L;
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void initializeTaskVariables(TaskInstance taskInstance, ContextInstance contextInstance, Token token) {
 		List<VariableAccess> variableAccesses = taskInstance.getTask().getTaskController().getVariableAccesses();
@@ -30,7 +30,6 @@ public class InfoxTaskControllerHandler implements TaskControllerHandler {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void submitTaskVariables(TaskInstance taskInstance, ContextInstance contextInstance, Token token) {
 		List<VariableAccess> variableAccesses = taskInstance.getTask().getTaskController().getVariableAccesses();

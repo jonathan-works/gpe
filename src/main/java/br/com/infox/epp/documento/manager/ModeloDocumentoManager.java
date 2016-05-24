@@ -79,8 +79,7 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
         return getDao().getModeloDocumentoByGrupoAndTipo(grupo, tipo);
     }
 
-    public List<ModeloDocumento> getModelosDocumentoInListaModelo(
-            String listaModelos) {
+    public List<ModeloDocumento> getModelosDocumentoInListaModelo(String listaModelos) {
         String[] tokens = listaModelos.split(",");
         List<Integer> ids = new ArrayList<>();
         for (String token : tokens) {

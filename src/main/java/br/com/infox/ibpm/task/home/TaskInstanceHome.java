@@ -1,6 +1,5 @@
 package br.com.infox.ibpm.task.home;
 
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static java.text.MessageFormat.format;
 
 import java.io.Serializable;
@@ -190,7 +189,6 @@ public class TaskInstanceHome implements Serializable {
 		}
 	}
 
-	@SuppressWarnings(UNCHECKED)
 	private void retrieveVariables() {
 		TaskController taskController = taskInstance.getTask().getTaskController();
 		if (taskController != null) {
@@ -323,7 +321,6 @@ public class TaskInstanceHome implements Serializable {
 		return (taskInstance != null) && (taskInstance.getTask() != null);
 	}
 
-	@SuppressWarnings(UNCHECKED)
 	private void updateVariables(TaskController taskController) {
 		updateVariablesEditorContent();
 		List<VariableAccess> list = taskController.getVariableAccesses();
@@ -928,7 +925,6 @@ public class TaskInstanceHome implements Serializable {
 		this.taskCompleted = taskCompleted;
 	}
 
-	@SuppressWarnings(UNCHECKED)
 	public Object getValueOfVariableFromTaskInstance(String variableName) {
 		TaskController taskController = getCurrentTaskInstance().getTask().getTaskController();
 		if (taskController != null) {

@@ -150,8 +150,7 @@ public abstract class Pessoa implements Serializable {
     }
 
     @Transient
-    private MeioContato getMeioContatoListByTipoMeioContato(
-            TipoMeioContatoEnum meioContatoEnum) {
+    private MeioContato getMeioContatoListByTipoMeioContato(TipoMeioContatoEnum meioContatoEnum) {
         List<MeioContato> meioContatoList = getMeioContatoList();
         for (MeioContato meioContato : meioContatoList) {
             if (meioContato.getTipoMeioContato() == meioContatoEnum) {

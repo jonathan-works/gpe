@@ -175,15 +175,20 @@
       <version>5.3</version>
     </dependency>
     <dependency>
+		<groupId>org.primefaces.themes</groupId>
+		<artifactId>bootstrap</artifactId>
+		<version>1.0.8</version>
+	</dependency>
+    <dependency>
       <groupId>org.jbpm.jbpm3</groupId>
       <artifactId>jbpm-jpdl</artifactId>
-      <version>3.4.1</version>
+      <version>3.4.2</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.jbpm.jbpm3</groupId>
       <artifactId>jbpm-identity</artifactId>
-      <version>3.4.1</version>
+      <version>3.4.2</version>
       <scope>compile</scope>
       <type>jar</type>
     </dependency>

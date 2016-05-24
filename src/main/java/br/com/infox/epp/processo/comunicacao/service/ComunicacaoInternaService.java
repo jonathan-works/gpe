@@ -13,7 +13,6 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.bpm.BusinessProcess;
 import org.joda.time.DateTime;
 
@@ -41,7 +40,6 @@ import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.ibpm.type.PooledActorType;
 import br.com.infox.seam.exception.BusinessException;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -67,6 +65,8 @@ public class ComunicacaoInternaService {
     private PastaManager pastaManager;
     @Inject
     private PdfManager pdfManager;
+    @Inject
+    private IniciarProcessoService iniciarProcessoService;
     
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void gravarDestinatario(DestinatarioModeloComunicacao destinatarioModeloComunicacao) {
@@ -154,7 +154,7 @@ public class ComunicacaoInternaService {
         Long taskIdOriginal = BusinessProcess.instance().getTaskId();
         BusinessProcess.instance().setProcessId(null);
         BusinessProcess.instance().setTaskId(null);
-        getIniciarProcessoService().iniciarProcesso(processo, variables, false);
+        iniciarProcessoService.iniciarProcesso(processo, variables, false);
         BusinessProcess.instance().setProcessId(processIdOriginal);
         BusinessProcess.instance().setTaskId(taskIdOriginal);
 
@@ -185,7 +185,7 @@ public class ComunicacaoInternaService {
         Long taskIdOriginal = BusinessProcess.instance().getTaskId();
         BusinessProcess.instance().setProcessId(null);
         BusinessProcess.instance().setTaskId(null);
-        getIniciarProcessoService().iniciarProcesso(processo, variables, false);
+        iniciarProcessoService.iniciarProcesso(processo, variables, false);
         BusinessProcess.instance().setProcessId(processIdOriginal);
         BusinessProcess.instance().setTaskId(taskIdOriginal);
 
@@ -245,10 +245,6 @@ public class ComunicacaoInternaService {
         Fluxo fluxo = fluxoManager.getFluxoByCodigo(Parametros.CODIGO_FLUXO_COMUNICACAO_INTERNA.getValue());
         List<NaturezaCategoriaFluxo> ncfs = naturezaCategoriaFluxoManager.getActiveNaturezaCategoriaFluxoListByFluxo(fluxo);
         return ncfs.get(0);
-    }
-    
-    private IniciarProcessoService getIniciarProcessoService() {
-        return ComponentUtil.getComponent(IniciarProcessoService.NAME, ScopeType.CONVERSATION);
     }
     
 }

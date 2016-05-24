@@ -149,6 +149,12 @@ public class JbpmUtil {
         }
     }
     
+    public ProcessDefinition findLatestProcessDefinition(String name) {
+      return EntityManagerProducer.getEntityManager()
+              .createNamedQuery("GraphSession.findLatestProcessDefinitionQuery", ProcessDefinition.class)
+              .setParameter("name", name).setMaxResults(1).getSingleResult();
+    }
+    
     public List<String> getProcessDefinitionNames() {
         EntityManager entityManager = EntityManagerProducer.getEntityManager();
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();

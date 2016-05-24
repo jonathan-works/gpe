@@ -47,7 +47,8 @@ public class MetadadoProcessoManager extends Manager<MetadadoProcessoDAO, Metada
 	}
 	
 	public void removerMetadado(MetadadoProcessoDefinition definition, Processo processo) throws DAOException {
-		getDao().removerMetadado(definition, processo);
+	    processo.removerMetadado(definition);
+	    getDao().removerMetadado(definition, processo);
 	}
 
 	public void persistMetadados(MetadadoProcessoProvider metadadoProcessoProvider, List<MetadadoProcesso> metadados) throws DAOException {

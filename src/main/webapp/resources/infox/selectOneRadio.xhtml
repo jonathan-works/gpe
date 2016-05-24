@@ -19,7 +19,6 @@
     	<composite:attribute name="disabled" default="false"/>
     	<composite:attribute name="styleClass"/>
     	<composite:attribute name="readonly" default="false"/>
-    	<composite:attribute name="required" default="false" />
     	<composite:attribute name="validatorId" />
     	<composite:attribute name="converterId"/>
     	
@@ -27,7 +26,6 @@
     	<composite:attribute name="render" default="@this" />
     	<composite:attribute name="execute" default="@this" />
     	<composite:attribute name="listener" method-signature="void action" />
-    	<composite:attribute name="immediate" default="false" />
     	<composite:attribute name="onstart" />
     	<composite:attribute name="oncomplete" />
     	
@@ -35,7 +33,8 @@
     </composite:interface>
 	
     <composite:implementation>
-		<p:outputPanel id="#{cc.attrs.id}" styleClass="decoration-div sel-one-radio-div" rendered="#{cc.attrs.rendered}">
+		<p:outputPanel id="#{cc.attrs.id}" styleClass="decoration-div sel-one-radio-div" rendered="#{cc.attrs.rendered}" 
+			style="#{cc.attrs.style}">
 			<script type="text/javascript">
 				var id = "#{cc.attrs.id}";
 				var errorClass = $('.' + id + 'ErrorClass');

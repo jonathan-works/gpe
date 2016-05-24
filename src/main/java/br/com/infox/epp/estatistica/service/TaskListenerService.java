@@ -7,7 +7,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Transactional;
-import org.jbpm.JbpmContext;
+import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.exe.TaskInstance;
@@ -53,7 +53,7 @@ public class TaskListenerService implements Serializable {
         String taskName = taskInstance.getTask().getName();
         String procDefName = taskInstance.getProcessInstance().getProcessDefinition().getName();
         Tarefa tarefa = tarefaManager.getTarefa(taskName, procDefName);
-        JbpmContext.getCurrentJbpmContext().getSession().flush();
+        ManagedJbpmContext.instance().getSession().flush();
         ProcessoTarefa pTarefa = new ProcessoTarefa();
         pTarefa.setProcesso(processoManager.find(processo.getIdProcesso()));
         pTarefa.setTarefa(tarefa);

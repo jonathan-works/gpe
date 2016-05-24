@@ -2,31 +2,23 @@ package br.com.infox.epp.fluxo.list;
 
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Named;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NatCatFluxoLocalizacao;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
-import br.com.infox.seam.util.ComponentUtil;
 
-@Name(NatCatFluxoLocalizacaoList.NAME)
-@Scope(ScopeType.PAGE)
+@Named
+@ViewScoped
 public class NatCatFluxoLocalizacaoList extends EntityList<NatCatFluxoLocalizacao> {
-
-    public static final String NAME = "natCatFluxoLocalizacaoList";
 
     private static final long serialVersionUID = 1L;
 
     private static final String DEFAULT_EJBQL = "select o from NatCatFluxoLocalizacao o";
     private static final String DEFAULT_ORDER = "naturezaCategoriaFluxo.natureza";
-
-    public static final NatCatFluxoLocalizacaoList instance() {
-        return ComponentUtil.getComponent(NAME);
-    }
 
     public void setFluxo(Fluxo fluxo) {
         newInstance();

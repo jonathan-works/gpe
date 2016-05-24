@@ -1,0 +1,115 @@
+<ui:composition
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:rich="http://richfaces.org/rich"
+  xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:p="http://primefaces.org/ui"
+  xmlns:wi="http://www.itx.com.br/jsf"
+  xmlns:i="http://java.sun.com/jsf/composite/infox">
+	
+	<ui:param name="varId" value="#{formField.id}"/>
+  	<ui:param name="controller" value="#{formField.type}" />
+  	<ui:param name="typedValue" value="#{formField.typedValue}"/>
+  	<ui:param name="required" value="#{formField.properties.required}" />
+	<ui:param name="readonly" value="#{formField.properties.readonly}" />
+    
+    <wi:selectOneMenuEntity id="#{varId}ClassificacaoDocumento"
+	     label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
+	     value="#{typedValue.classificacaoDocumento}"
+	     items="#{typedValue.classificacoesDocumento}"
+	     showLabelSelecione="true" required="false"
+	     rendered="#{not readonly and not typedValue.value.hasAssinatura() and not typedValue.value.documentoBin.suficientementeAssinado}"
+	     disabled="#{typedValue.classificacoesDocumento.size eq 1}">
+	     <a:ajax render="#{varId}UploadDiv #{varId}assinaturaDocumentoDiv" event="change" execute="@this" limitRender="true" />
+    </wi:selectOneMenuEntity>
+ 
+	 <p:outputPanel id="#{varId}UploadDiv">
+	 
+	     <i:input id="#{varId}" required="#{formField.properties.required}" label="#{formField.label}"
+	 		rendered="#{not empty typedValue.classificacaoDocumento and not readonly and not typedValue.value.hasAssinatura() 
+	 					and not typedValue.value.documentoBin.suficientementeAssinado}">
+	 		<f:facet name="label">
+				<p:outputPanel id="#{varId}ToolTipDiv" styleClass="tooltip-parent" style="width:10px; display:inline-block; margin-left:10px;">
+					<h:graphicImage id="#{varId}HelpEditTipImg" url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
+					<div class="epp-tooltip">
+						<div class="tooltip-panel">
+							<s:div rendered="#{empty typedValue.classificacaoDocumento}">
+								<h:outputText value="Selecione uma classificação de documento" />
+							</s:div>
+							<s:div rendered="#{not empty typedValue.classificacaoDocumento}">
+								<div><h:outputText value="Extensões Aceitas:"/></div>
+								<ui:repeat var="documento" value="#{typedValue.classificacaoDocumento.acceptedTypesList}">
+									<div><h:outputText value="#{documento}" styleClass="tooltip-panel-div"/></div>
+								</ui:repeat>
+								<s:div styleClass="tooltip-panel-top" rendered="#{not empty typedValue.classificacaoDocumento.observacao}">
+									<div>
+										<h:outputText value="Observação:"/>
+									</div>
+									<h:outputText value="#{typedValue.classificacaoDocumento.observacao}" />
+								</s:div>
+							</s:div>
+						</div>
+					</div>
+				</p:outputPanel>
+	 		</f:facet>
+	 		<rich:fileUpload id="#{varId}Input" execute="@this" status=":status" limitRender="true"
+		       required="#{wi:get(required, false)}" fileUploadListener="#{controller.processFileUpload}"
+		       addLabel="#{infoxMessages['processoDocumento.addLabel']}" clearAllLabel="#{infoxMessages['processoDocumento.clearAllLabel']}"
+		       clearLabel="#{infoxMessages['processoDocumento.clearLabel']}"
+		       doneLabel="#{empty doneLabel ? infoxMessages['processoDocumento.doneLabel'] : doneLabel}"
+		       uploadLabel="#{infoxMessages['processoDocumento.uploadLabel']}"
+		       sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}"
+		       maxFilesQuantity="10" listHeight="50px" immediateUpload="true" noDuplicate="true"
+		       render="pageBodyDialogMessage, #{varId}UploadDiv, #{varId}assinaturaDocumentoDiv"
+		       acceptedTypes="#{typedValue.classificacaoDocumento.acceptedTypes}"
+		       ontyperejected="new infox.Messages({'timeout': 3000}).dialog(\'#{infoxMessages['processoDocumento.extensaoNaoPermitida']}\')">
+		       <f:attribute name="formField" value="#{formField}" />
+		       <f:attribute name="formData" value="#{formData}" />
+		    </rich:fileUpload>
+	 	  </i:input>
+	
+		  <ui:fragment rendered="#{not empty typedValue.value}">
+		      <h:outputLabel for="#{varId}fieldSet" value="#{formField.label}" styleClass="name"
+		  	      rendered="#{readonly or typedValue.value.hasAssinatura() or typedValue.value.documentoBin.suficientementeAssinado}"/>
+		      <fieldset id="#{varId}fieldSet">
+	             <legend>Documento Anexado #{typedValue.value.hasAssinatura() ? '(já assinado, não pode ser substituído)' : ''}</legend>
+	             <h:outputText value="#{infoxMessages['processoDocumento.classificacaoDocumento']}: #{typedValue.value.classificacaoDocumento.descricao}"/>
+	             <br />
+	             <h:outputText id="file#{varId}" value="Documento: #{typedValue.value.documentoBin.nomeArquivo}"/>
+	            	<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}" title="Visualizar" 
+	            		style="cursor: pointer" onclick="infox.openPopUp('documento', '#{typedValue.getUrlDownload()}');" />
+	          </fieldset>
+	      </ui:fragment>
+	    
+	</p:outputPanel>
+
+    <p:outputPanel id="#{varId}assinaturaDocumentoDiv" >
+	   
+	    <p:outputPanel id="#{varId}conteudoAssinatura" rendered="#{typedValue.podeAssinar()}">
+			
+			<a:jsFunction name="assinar" action="#{controller.assinar()}"
+				execute="@this, #{varId}assinaturaDocumentoDiv"
+				render="#{varId}Div, pageBodyDialogMessage"
+				oncomplete="infox.hideLoading();"/>
+				
+			<wi:certificadoDigital
+	            id="#{varId}CertificadoDigital"
+				signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
+				reRender="pageBodyDialogMessage, #{varId}UploadDiv, #{varId}ClassificacaoDocumento"
+				tokenField="#{controller.tokenToSign}"
+				propertyValue="#{typedValue.value}"
+				propertyTarget="#{controller.documentoToSign}"
+				signableData="#{controller.documentoToSign.documentoBin.md5Documento}"
+				functionPreSign="infox.showLoading();"
+				functionPosSign="assinar();" >
+	       </wi:certificadoDigital>
+	       
+		</p:outputPanel>
+		
+	</p:outputPanel>
+  
+ </ui:composition>

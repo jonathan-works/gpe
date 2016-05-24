@@ -16,7 +16,6 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.faces.FacesException;
-import javax.faces.el.EvaluationException;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
