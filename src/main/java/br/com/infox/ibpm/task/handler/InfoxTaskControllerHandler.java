@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.context.exe.ContextInstance;
+import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.Token;
+import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.taskmgmt.def.TaskControllerHandler;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
@@ -23,7 +25,19 @@ public class InfoxTaskControllerHandler implements TaskControllerHandler {
 				contextInstance.setVariable(variableAccess.getVariableName(), null);
 				taskInstance.setVariableLocally(variableAccess.getMappedName(), null);
 			} else if (variableAccess.isReadable()) {
-				taskInstance.setVariableLocally(variableAccess.getMappedName(), contextInstance.getVariable(variableAccess.getVariableName()));
+			    String defaultValue = variableAccess.getValue();
+                if (defaultValue != null) {
+                    String substring = defaultValue.substring(0, 2);
+                    if (substring.equals("#{") || substring.equals("${")) {
+                        ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
+                        Object evaluate = JbpmExpressionEvaluator.evaluate(defaultValue, executionContext);
+                        taskInstance.setVariableLocally(variableAccess.getVariableName(), evaluate);
+                    } else {
+                        taskInstance.setVariableLocally(variableAccess.getVariableName(), defaultValue);
+                    }
+			    } else {
+			        taskInstance.setVariableLocally(variableAccess.getMappedName(), contextInstance.getVariable(variableAccess.getVariableName()));
+			    }
 			} else {
 				taskInstance.setVariableLocally(variableAccess.getMappedName(), null);
 			}

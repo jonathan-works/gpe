@@ -233,8 +233,16 @@ public class TaskHandler implements Serializable {
     public void processVarTypeChange(VariableAccessHandler var) {
         clearHasTaskPage();
         var.limparModelos();
+        var.setValue(null);
         if (!var.podeIniciarVazia()) {
         	var.setIniciaVazia(false);
+        }
+        if (var.getType().equals(VariableType.PARAMETER)) {
+            var.setIniciaVazia(false);
+            var.setWritable(false);
+            var.setRequired(false);
+            var.setHidden(true);
+            var.setReadable(true);
         }
     }
 

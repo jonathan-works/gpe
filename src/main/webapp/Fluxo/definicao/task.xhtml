@@ -135,7 +135,7 @@
             </rich:column>
             <rich:column>
                 <f:facet name="header">#{infoxMessages['process.task.var.modo']}</f:facet>
-                <h:form>
+                <h:form rendered="#{var.type ne 'PARAMETER'}">
                     <h:selectBooleanCheckbox id="writable" styleClass="checkbox" value="#{var.writable}">
                         <a:ajax execute="@this" limitRender="true" event="change"
                             render="readable,writable,resetVariableForm" />
@@ -144,7 +144,7 @@
             </rich:column>
             <rich:column>
                 <f:facet name="header">#{infoxMessages['process.task.var.required']}</f:facet>
-                <h:form>
+                <h:form rendered="#{var.type ne 'PARAMETER'}">
                     <h:selectBooleanCheckbox id="required" styleClass="checkbox" value="#{var.required}">
                         <a:ajax execute="@this" limitRender="true" event="change" render="readable,writable,hidden" />
                     </h:selectBooleanCheckbox>
@@ -152,7 +152,7 @@
             </rich:column>
             <rich:column>
                 <f:facet name="header">#{infoxMessages['process.task.var.hidden']}</f:facet>
-                <h:form>
+                <h:form rendered="#{var.type ne 'PARAMETER'}">
                     <h:selectBooleanCheckbox id="hidden" styleClass="checkbox" value="#{var.hidden}">
                         <a:ajax execute="@this" limitRender="true" event="change" render="readable,writable,required" />
                     </h:selectBooleanCheckbox>
@@ -160,7 +160,7 @@
             </rich:column>
             <rich:column>
                 <f:facet name="header">Inicia vazia?</f:facet>
-                <h:form id="resetVariableForm">
+                <h:form id="resetVariableForm" rendered="#{var.type ne 'PARAMETER'}">
                     <h:selectBooleanCheckbox id="resetVariable" rendered="#{var.podeIniciarVazia()}"
                         styleClass="checkbox" style="align: center" value="#{var.iniciaVazia}">
                         <a:ajax execute="@this" limitRender="true" event="change"
@@ -175,7 +175,7 @@
                         optionLabel="#{infoxMessages[item.label]}" widthDiv="100%" hideNoSelectionLabel="true"
                         required="true" disabled="#{empty var.name}">
                         <a:ajax event="change" execute="true" status=":status" listener="#{t.processVarTypeChange(var)}"
-                            render="addVarDiv, @form, pageBodyDialogMessage, varDiv, toolbarVariableForm, resetVariableForm"
+                            render="varTable, addVarDiv, @form, pageBodyDialogMessage, varDiv, toolbarVariableForm, resetVariableForm"
                             limitRender="true" />
                     </wi:selectOneMenu>
                     <a:jsFunction name="renderDominio" execute="@this" render="definicaoDominio" limitRender="true"
@@ -223,6 +223,13 @@
                             <f:converter converterId="fragmentConfigurationConverter" />
                         </wi:selectOneMenu>
                     </rich:panel>
+                    <h:form rendered="#{var.type eq 'PARAMETER'}">
+                        <div id="input">
+                            <wi:inputText id="inputDefaultValue" label="Valor padrão da variável" value="#{var.value}">
+                                <a:ajax event="change" execute="@this" status=":status" limitRender="true" />
+                            </wi:inputText>
+                        </div>
+                    </h:form>
                 </h:form>
             </rich:column>
         </rich:dataTable>
