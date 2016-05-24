@@ -23,10 +23,11 @@ public class ModeloPastaSearch implements Serializable {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<ModeloPasta> cq = cb.createQuery(ModeloPasta.class);
         Root<ModeloPasta> modelo = cq.from(ModeloPasta.class);
-        
-        Predicate descricaoLike = cb.like(cb.lower(modelo.get(ModeloPasta_.descricao)),
-                cb.lower(cb.literal("%" + descricao.toLowerCase() + "%")));
-        cq = cq.select(modelo).where(descricaoLike);
+        cq = cq.select(modelo);
+        if (descricao != null && !descricao.trim().isEmpty()) {
+            Predicate descricaoLike = cb.like(cb.lower(modelo.get(ModeloPasta_.nome)), "%" + descricao.toLowerCase() + "%");
+            cq = cq.where(descricaoLike);
+        }
         return getEntityManager().createQuery(cq).getResultList();
     }
 
