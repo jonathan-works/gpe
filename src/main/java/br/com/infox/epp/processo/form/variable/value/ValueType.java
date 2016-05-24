@@ -8,6 +8,7 @@ import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.DoubleVa
 import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.IntegerValueType;
 import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.LongValueType;
 import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.NullValueType;
+import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.StringArrayValueType;
 import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.StringValueType;
 
 public interface ValueType {
@@ -19,6 +20,7 @@ public interface ValueType {
     public static PrimitiveValueType DOUBLE = new DoubleValueType();
     public static PrimitiveValueType BOOLEAN = new BooleanValueType();
     public static PrimitiveValueType DATE = new DateValueType();
+    public static PrimitiveValueType STRING_ARRAY = new StringArrayValueType();
     
     public static FileValueType EDITOR = new EditorValueType();
     public static FileValueType UPLOAD = new UploadValueType();

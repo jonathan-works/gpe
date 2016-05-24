@@ -1,28 +1,17 @@
 package br.com.infox.epp.processo.form.type;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
-import javax.faces.model.SelectItem;
-
-import org.jboss.seam.Component;
 
 import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
 import br.com.infox.epp.processo.form.variable.value.PrimitiveTypedValue;
-import br.com.infox.epp.processo.form.variable.value.PrimitiveTypedValue.EnumerationValue;
 import br.com.infox.epp.processo.form.variable.value.PrimitiveTypedValue.NullValue;
 import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType;
 import br.com.infox.epp.processo.form.variable.value.TypedValue;
 import br.com.infox.epp.processo.form.variable.value.ValueType;
-import br.com.infox.ibpm.variable.dao.ListaDadosSqlDAO;
-import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
-import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
 import br.com.infox.ibpm.variable.type.ValidacaoDataEnum;
 import br.com.infox.seam.exception.BusinessException;
-import br.com.infox.seam.util.ComponentUtil;
 
 public abstract class PrimitiveFormType implements FormType {
     
@@ -244,49 +233,6 @@ public abstract class PrimitiveFormType implements FormType {
         public boolean isPersistable() {
             return false;
         }
-        
     }
     
-    public static class EnumerationFormType extends PrimitiveFormType {
-
-        public EnumerationFormType() {
-            super("enumeration", ValueType.STRING);
-        }
-
-        @Override
-        public TypedValue convertToFormValue(Object value) {
-            if (value == null) {
-                return new PrimitiveTypedValue.EnumerationValue(null);
-            } else if (value instanceof String) {
-                return new PrimitiveTypedValue.EnumerationValue((String) value);
-            }
-            throw new IllegalArgumentException("");
-        }
-        
-        @Override
-        public void performValue(FormField formField, FormData formData) {
-            super.performValue(formField, formData);
-            EnumerationValue typedValue = (EnumerationValue) formField.getTypedValue();
-            Integer idDocminio = Integer.valueOf(formField.getProperties().get("extendedProperties"));
-            DominioVariavelTarefaManager dominioVariavelTarefaManager = getDominioVariavelTarefaManager();
-            List<SelectItem> selectItens = new ArrayList<>();
-            DominioVariavelTarefa dominio = dominioVariavelTarefaManager.find(idDocminio);
-            if (dominio.isDominioSqlQuery()) {
-                ListaDadosSqlDAO listaDadosSqlDAO = ComponentUtil.getComponent(ListaDadosSqlDAO.NAME);
-                selectItens.addAll(listaDadosSqlDAO.getListSelectItem(dominio.getDominio()));
-            } else {
-                String[] itens = dominio.getDominio().split(";");
-                for (String item : itens) {
-                    String[] pair = item.split("=");
-                    selectItens.add(new SelectItem(pair[1], pair[0]));
-                }
-            }
-            typedValue.setSelectItems(selectItens);
-        }
-        
-        protected DominioVariavelTarefaManager getDominioVariavelTarefaManager() {
-            return  (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
-        }
-    }
-
 }

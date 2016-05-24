@@ -86,6 +86,13 @@ public abstract class PrimitiveTypedValue<T> implements TypedValue {
         }
     }
     
+    public static class StringArrayValue extends PrimitiveTypedValue<String[]> {
+
+        public StringArrayValue(String[] value) {
+            super(value, String[].class, ValueType.STRING_ARRAY);
+        }
+    }
+    
     public static class EnumerationValue extends StringValue {
         
         protected List<SelectItem> selectItems;
@@ -101,6 +108,22 @@ public abstract class PrimitiveTypedValue<T> implements TypedValue {
         public void setSelectItems(List<SelectItem> selectItems) {
             this.selectItems = selectItems;
         }
+    }
+    
+    public static class EnumerationMultipleValue extends StringArrayValue {
         
+        protected List<SelectItem> selectItems;
+
+        public EnumerationMultipleValue(String[] value) {
+            super(value);
+        }
+
+        public List<SelectItem> getSelectItems() {
+            return selectItems;
+        }
+
+        public void setSelectItems(List<SelectItem> selectItems) {
+            this.selectItems = selectItems;
+        }
     }
 }
