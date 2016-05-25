@@ -65,7 +65,7 @@ public class CategoriaEntregaController implements Serializable {
     public void criar(String codigoPai){
         clear();
         this.modo=Modo.CRIAR;
-        if (codigoPai != null){
+        if (codigoPai != null && !codigoPai.isEmpty()){
             this.pai = categoriaEntregaItemSearch.getCategoriaEntregaItemByCodigo(codigoPai);
         }
     }

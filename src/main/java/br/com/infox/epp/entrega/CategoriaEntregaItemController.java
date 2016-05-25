@@ -1,6 +1,7 @@
 package br.com.infox.epp.entrega;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.ejb.EJBException;
 import javax.faces.application.FacesMessage;
@@ -10,6 +11,7 @@ import javax.persistence.NoResultException;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
+import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
 import br.com.infox.epp.entrega.entity.CategoriaEntrega;
 import br.com.infox.epp.entrega.entity.CategoriaEntregaItem;
 import br.com.infox.log.LogProvider;
@@ -33,10 +35,13 @@ public class CategoriaEntregaItemController implements Serializable {
 
     private Modo modo;
 
+    private CategoriaEntregaItem categoriaEntregaItem;
+
     private void clear() {
         this.codigo = null;
         this.descricao = null;
         this.pai = null;
+        this.categoriaEntregaItem=null;
     }
 
     private CategoriaEntregaItem prepareItemForSave() {
@@ -63,7 +68,7 @@ public class CategoriaEntregaItemController implements Serializable {
         clear();
         this.modo = Modo.CRIAR;
         this.categoria = categoriaEntregaSearch.getCategoriaEntregaByCodigo(codigoCategoria);
-        if (codigoPai != null) {
+        if (codigoPai != null && !codigoPai.isEmpty()) {
             try {
                 pai = categoriaEntregaItemSearch.getCategoriaEntregaItemByCodigo(codigoPai);
             } catch (NoResultException e) {
@@ -76,32 +81,41 @@ public class CategoriaEntregaItemController implements Serializable {
         clear();
         this.modo = Modo.EDITAR;
         if (codigoItem != null) {
-            setItem(categoriaEntregaItemSearch.getCategoriaEntregaItemByCodigo(codigoItem));
+            setItem(codigoItem);
         }
     }
 
+    private void setItem(String codigo){
+        setItem(categoriaEntregaItemSearch.getCategoriaEntregaItemByCodigo(codigo));
+    }
+    
     private void setItem(CategoriaEntregaItem item) {
         this.codigo = item.getCodigo();
         this.descricao = item.getDescricao();
         this.categoria = item.getCategoriaEntrega();
     }
 
+    public boolean isModoCriar(){
+        return Modo.CRIAR.equals(modo);
+    }
+    
+    @ExceptionHandled(MethodType.PERSIST)
+    public void relacionarItem(){
+        String codigoItemPai = pai == null ? null : pai.getCodigo();
+        categoriaEntregaItemService.relacionarItens(codigoItemPai, getCategoriaEntregaItem().getCodigo());
+        clear();
+    }
+    
     @ExceptionHandled
     public void salvarItem() {
         CategoriaEntregaItem item = prepareItemForSave();
         String codigoItemPai = pai == null ? null : pai.getCodigo();
         String resultMessageKey="";
         if (Modo.CRIAR.equals(modo)) {
-            if (codigo == null) {
-                codigo = CategoriaEntregaView.generateCodigo(descricao);
-            }
-
             item.setCodigo(codigo);
             item.setDescricao(descricao);
             if (item.getId() == null) {
                 categoriaEntregaItemService.novo(item, codigoItemPai, categoria.getCodigo());
-            } else {
-                categoriaEntregaItemService.relacionarItens(codigoItemPai, codigo);
             }
             resultMessageKey="entity_created";
         } else if (Modo.EDITAR.equals(modo)) {
@@ -131,7 +145,19 @@ public class CategoriaEntregaItemController implements Serializable {
     public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
+    
+    public CategoriaEntregaItem getCategoriaEntregaItem() {
+        return categoriaEntregaItem;
+    }
+    
+    public void setCategoriaEntregaItem(CategoriaEntregaItem categoriaEntregaItem){
+        this.categoriaEntregaItem=categoriaEntregaItem;
+    }
 
+    public List<CategoriaEntregaItem> completeItem(String descricao){
+        return categoriaEntregaItemSearch.getCategoriaEntregaItemByCodigoCategoriaAndDescricaoLike(getCategoria().getCodigo(), descricao);
+    }
+    
     private static enum Modo {
         CRIAR, EDITAR
     }

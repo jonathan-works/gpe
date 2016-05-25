@@ -25,7 +25,7 @@
             </infox:div>
         </fieldset>
         <h:commandButton action="#{categoriaEntregaView.categoriaEntregaController.salvarCategoria}" value="Salvar" styleClass="buttons">
-            <p:ajax process="@form" update="@form :pageBodyDialogMessage" onstart="infox.showLoading();" oncomplete="infox.hideLoading();" />
+            <p:ajax process="@form" update="@this :pageBodyDialogMessage" onstart="infox.showLoading();" onerror="infox.hideLoading();" onsuccess="refreshCategoriaEntregaForm();" />
         </h:commandButton>
     </h:form>
 

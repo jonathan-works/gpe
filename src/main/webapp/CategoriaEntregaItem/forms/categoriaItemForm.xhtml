@@ -6,28 +6,62 @@
     xmlns:infox="http://www.infox.com.br/jsf" xmlns:p="http://primefaces.org/ui" xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:i="http://java.sun.com/jsf/composite/infox">
 
-    <h:form>
-        <fieldset>
-            <legend>
-                <h:outputText value="Cadastro em: " />
-                <h:outputText rendered="#{not empty categoriaEntregaView.categoriaEntregaItemController.pai}"
-                    value="#{categoriaEntregaView.categoriaEntregaItemController.pai.descricao} : " />
-                <h:outputText value="#{categoriaEntregaView.categoriaEntregaItemController.categoria.descricao}" />
-            </legend>
+    <fieldset>
+        <legend>
+            <h:outputText value="Cadastro em: " />
+            <h:outputText rendered="#{not empty categoriaEntregaView.categoriaEntregaItemController.pai}"
+                value="#{categoriaEntregaView.categoriaEntregaItemController.pai.descricao} : " />
+            <h:outputText value="#{categoriaEntregaView.categoriaEntregaItemController.categoria.descricao}" />
+        </legend>
+        <infox:div rendered="#{categoriaEntregaView.categoriaEntregaItemController.modoCriar}">
+            <h:form>
             <fieldset>
-                <legend>Item</legend>
-                <i:inputText id="codigoItem" required="true" label="Código"  value="#{categoriaEntregaView.categoriaEntregaItemController.codigo}" />
-                <i:inputText id="descricaoItem" required="true" label="Descrição" value="#{categoriaEntregaView.categoriaEntregaItemController.descricao}" />
+                <legend>Selecionar um</legend>
+                    <i:autoComplete id="codigoItem" required="true" label="Item"
+                        value="#{categoriaEntregaView.categoriaEntregaItemController.categoriaEntregaItem}"
+                        converter="br.com.infox.jsf.converter.EntityConverter"
+                        itemLabel="#{item.descricao}" dropdownMode="blank"
+                        completeMethod="#{categoriaEntregaView.categoriaEntregaItemController.completeItem}">
+                        <f:facet name="itemtip">
+                            Categoria:#{item.categoriaEntrega.descricao} Codigo:#{item.codigo} Descrição:#{item.descricao}
+                        </f:facet>
+                    </i:autoComplete>
+                </fieldset>
+            <infox:div styleClass="required-alert">
+                <img src="#{pathResolver.contextPath}#{layoutController.getResourceUrlByPath('/imagens/mod/balao.png')}" />
+                <span class="required">*</span>
+                <span>#{infoxMessages['form.required']}</span>
+            </infox:div>
+                <h:commandButton action="#{categoriaEntregaView.categoriaEntregaItemController.relacionarItem}" value="Adicionar"
+                styleClass="buttons">
+                <p:ajax process="@form" update="@this :pageBodyDialogMessage" onstart="infox.showLoading();" 
+                onerror="infox.hideLoading();" onsuccess="refreshCategoriaEntregaForm();" />
+            </h:commandButton>
+            </h:form>
+            ou
+        </infox:div>
+        <h:form>
+            <fieldset>
+                <legend>
+                    <h:outputText rendered="#{categoriaEntregaView.categoriaEntregaItemController.modoCriar}" value="Criar Item"/>
+                    <h:outputText rendered="#{not categoriaEntregaView.categoriaEntregaItemController.modoCriar}" value="Editar Item"/>
+                </legend>
+                <i:inputText id="codigoItem" required="true" label="Código"
+                    value="#{categoriaEntregaView.categoriaEntregaItemController.codigo}" />
+                <i:inputText id="descricaoItem" required="true" label="Descrição"
+                    value="#{categoriaEntregaView.categoriaEntregaItemController.descricao}" />
             </fieldset>
             <infox:div styleClass="required-alert">
                 <img src="#{pathResolver.contextPath}#{layoutController.getResourceUrlByPath('/imagens/mod/balao.png')}" />
                 <span class="required">*</span>
                 <span>#{infoxMessages['form.required']}</span>
             </infox:div>
-        </fieldset>
-        <h:commandButton action="#{categoriaEntregaView.categoriaEntregaItemController.salvarItem}" value="Salvar" styleClass="buttons">
-            <p:ajax process="@form" update="@form :pageBodyDialogMessage" onstart="infox.showLoading();" oncomplete="infox.hideLoading();" />
-        </h:commandButton>
-    </h:form>
+            <h:commandButton action="#{categoriaEntregaView.categoriaEntregaItemController.salvarItem}" value="Salvar"
+                styleClass="buttons">
+                <p:ajax process="@form" update="@this :pageBodyDialogMessage" onstart="infox.showLoading();" 
+                onerror="infox.hideLoading();" onsuccess="refreshCategoriaEntregaForm();" />
+            </h:commandButton>
+        </h:form>
+    </fieldset>
 
 </ui:composition>

@@ -9,7 +9,6 @@
     <ui:define name="body">
         <p:calendar style="display:none" />
         <infox:div id="categoriaEntregaItem">
-            <h:commandButton type="button" styleClass="buttons" onclick="criarCategoria([{name:'path',value:'/'}])" value="Criar Categoria" />
             <h:form>
                 <p:remoteCommand name="editarItem" process="@this" update="@form:@parent:formFields :pageBodyDialogMessage" async="true" 
                 actionListener="#{categoriaEntregaView.editarItem}"
@@ -26,10 +25,14 @@
                     onstart="infox.showLoading();" actionListener="#{categoriaEntregaView.removerItem}" oncomplete="infox.hideLoading();" />
                 <p:remoteCommand name="removerCategoria" process="@this" update="@parent:@parent :pageBodyDialogMessage"
                     onstart="infox.showLoading();" actionListener="#{categoriaEntregaView.removerCategoria}" oncomplete="infox.hideLoading();" />
-                <p:remoteCommand name="configurarModeloEntrega" process="@this" update="@this @form:@parent :pageBodyDialogMessage"
+                <p:remoteCommand name="configurarModeloEntrega" process="@this" update="@form:@parent :pageBodyDialogMessage"
                     onstart="infox.showLoading();" actionListener="#{categoriaEntregaView.configurarModeloEntrega}" oncomplete="infox.hideLoading();" />
+                <p:remoteCommand name="refreshCategoriaEntregaForm" actionListener="#{categoriaEntregaView.clear}" process="@this" update="@form:@parent" onstart="infox.showLoading" oncomplete="infox.hideLoading();" />
             </h:form>
             <infox:div style="display:inline-block;vertical-align:top;" rendered="#{'configEntregaForm.xhtml' ne categoriaEntregaView.view}">
+            <div>
+                <h:commandButton type="button" styleClass="buttons" onclick="criarCategoria([{name:'path',value:'/'}])" value="Criar Categoria" />
+            </div>
             <ui:include src="groupedItemsTree.xhtml">
                 <ui:param name="id" value="componente" />
                 <ui:param name="config"

@@ -176,8 +176,9 @@
                 action="#{categoriaEntregaView.modeloEntregaController.save}">
                 <p:ajax process="@form" update="@form :pageBodyDialogMessage" onstart="infox.showLoading();" oncomplete="infox.hideLoading();" />
             </h:commandButton>
-            <h:commandButton value="Voltar" styleClass="buttons" action="#{categoriaEntregaView.clear}">
-                <p:ajax process="@this" update=":categoriaEntregaItem" onstart="infox.showLoading();" oncomplete="infox.hideLoading();" />
+            <h:commandButton type="reset" value="Voltar" styleClass="buttons" action="#{categoriaEntregaView.clear}">
+                <p:ajax immediate="true" process="@this" update="@this :pageBodyDialogMessage" onstart="infox.showLoading();" 
+                onerror="infox.hideLoading();" onsuccess="refreshCategoriaEntregaForm();" />
             </h:commandButton>
         </h:form>
     </fieldset>
