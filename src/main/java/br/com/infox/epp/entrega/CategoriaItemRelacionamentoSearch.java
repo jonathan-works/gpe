@@ -23,13 +23,17 @@ public class CategoriaItemRelacionamentoSearch {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<CategoriaItemRelacionamento> cq = cb.createQuery(CategoriaItemRelacionamento.class);
 		Root<CategoriaItemRelacionamento> categoriaItemRelacionamento = cq.from(CategoriaItemRelacionamento.class);
-		Path<CategoriaEntregaItem> itemPai = categoriaItemRelacionamento.join(CategoriaItemRelacionamento_.itemPai);
 		Path<CategoriaEntregaItem> itemFilho = categoriaItemRelacionamento.join(CategoriaItemRelacionamento_.itemFilho);
-		
-		Predicate codigoPaiIgual = cb.equal(itemPai.get(CategoriaEntregaItem_.codigo), codigoPai);
+		Predicate filtroPai;
+		if (codigoPai!=null){
+		    Path<CategoriaEntregaItem> itemPai = categoriaItemRelacionamento.join(CategoriaItemRelacionamento_.itemPai);		    
+		    filtroPai = cb.equal(itemPai.get(CategoriaEntregaItem_.codigo), codigoPai);
+		} else {
+		    filtroPai = cb.isNull(categoriaItemRelacionamento.get(CategoriaItemRelacionamento_.itemPai));
+		}
 		Predicate codigoFilhoIgual = cb.equal(itemFilho.get(CategoriaEntregaItem_.codigo), codigoFilho);
 		
-		cq = cq.select(categoriaItemRelacionamento).where(codigoPaiIgual, codigoFilhoIgual);
+		cq = cq.select(categoriaItemRelacionamento).where(filtroPai, codigoFilhoIgual);
 		return getEntityManager().createQuery(cq).getSingleResult();
 	}
 

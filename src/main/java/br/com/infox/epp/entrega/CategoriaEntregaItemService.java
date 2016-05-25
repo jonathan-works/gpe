@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.entrega.DetectorCiclo.Ciclo;
@@ -155,7 +156,17 @@ public class CategoriaEntregaItemService {
 	 */
 	public CategoriaItemRelacionamento remover(String codigoItem, String codigoItemPai) {
 		if (codigoItemPai == null) {
-			throw new RuntimeException("Não é possível remover um item raiz");
+		    CategoriaItemRelacionamento rel;
+		    try {
+		        rel = categoriaItemRelacionamentoSearch.getByCodigoPaiAndFilho(codigoItemPai, codigoItem);
+		    } catch (NoResultException e){
+		        throw new BusinessException(DAOException.MSG_FOREIGN_KEY_VIOLATION);
+		    }
+		    CategoriaEntregaItem item = getItem(codigoItem);
+		    getEntityManager().remove(rel);
+		    getEntityManager().remove(item);
+		    getEntityManager().flush();
+			return null;
 		}
 		getItem(codigoItem);
 		getItem(codigoItemPai);
