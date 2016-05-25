@@ -20,6 +20,8 @@ import br.com.infox.epp.entrega.DetectorCiclo.RelacionamentoSource;
 import br.com.infox.epp.entrega.entity.CategoriaEntrega;
 import br.com.infox.epp.entrega.entity.CategoriaEntregaItem;
 import br.com.infox.epp.entrega.entity.CategoriaItemRelacionamento;
+import br.com.infox.epp.system.entity.Parametro;
+import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.seam.exception.BusinessException;
 
 @Stateless
@@ -35,6 +37,9 @@ public class CategoriaEntregaItemService {
 	private CategoriaItemRelacionamentoSearch categoriaItemRelacionamentoSearch;
 	@Inject
 	private LocalizacaoManager localizacaoManager;
+	
+	@Inject 
+	ParametroManager parametroManager;
 
 	private EntityManager getEntityManager() {
 		return EntityManagerProducer.getEntityManager();
@@ -46,6 +51,12 @@ public class CategoriaEntregaItemService {
 		} catch (NoResultException e) {
 			throw new BusinessException("Item com código " + codigo + " não encontrado");
 		}
+	}
+	
+	public CategoriaEntregaItem getItemByNomeParametro(String nomeParametro) {
+		Parametro parametro = parametroManager.getParametro(nomeParametro);
+		String codigo = parametro.getValorVariavel();
+		return getItem(codigo);
 	}
 
 	/**

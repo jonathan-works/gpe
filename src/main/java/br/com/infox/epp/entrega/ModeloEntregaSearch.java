@@ -61,10 +61,18 @@ public class ModeloEntregaSearch extends PersistenceController {
         List<ModeloEntrega> list = getEntityManager().createQuery(cq).setMaxResults(1).setFirstResult(0).getResultList();
         return (list == null || list.isEmpty()) ? null : list.get(0);
     }
-
+	
     public ModeloEntrega findById(Long id) {
-        return getEntityManager().find(ModeloEntrega.class, id);
+       return getEntityManager().find(ModeloEntrega.class, id);
     }
+    
+	public List<ModeloEntrega> findAll(){
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+	    CriteriaQuery<ModeloEntrega> cq = cb.createQuery(ModeloEntrega.class);
+	    cq.from(ModeloEntrega.class);
+	    return getEntityManager().createQuery(cq).getResultList();
+	}
+
     
     public List<ModeloEntrega> getAgendasvencidas() {
         return getAgendasvencidas(DateTime.now().toDate());
