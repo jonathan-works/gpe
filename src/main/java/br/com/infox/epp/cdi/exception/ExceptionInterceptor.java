@@ -2,6 +2,7 @@ package br.com.infox.epp.cdi.exception;
 
 import java.io.Serializable;
 
+import javax.ejb.EJBException;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
@@ -52,7 +53,10 @@ public class ExceptionInterceptor implements Serializable {
 			return result;
 		} catch (BusinessException | BusinessRollbackException e) {
 		    FacesMessages.instance().add(e.getMessage());
-	    } catch (Exception e) {
+		} catch (Exception e) {
+                    if (e.getCause() != null && e.getCause() instanceof Exception){
+                        e = (Exception) e.getCause();
+                    }
 		    if (annotation.createLogErro()) {
 		        createLogErro(e);
 		    } else {

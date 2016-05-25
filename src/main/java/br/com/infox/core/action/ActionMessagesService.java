@@ -8,6 +8,7 @@ import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.persistence.PersistenceException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
@@ -82,6 +83,9 @@ public class ActionMessagesService implements Serializable {
         return null;
     }
 
+    private void handlePersistenceException(Exception exception) {
+        handleDAOException(new DAOException(exception));
+    }
     private StatusMessages getMessagesHandler() {
         return FacesMessages.instance();
     }
@@ -92,9 +96,12 @@ public class ActionMessagesService implements Serializable {
 		} else if (exception instanceof DAOException) {
 			handleDAOException((DAOException) exception);
 		} else if (exception instanceof EJBException) {
-			handleException(exception.getCause().getMessage(), exception);
+		        handleException(exception.getCause().getMessage(), exception);
+		} else if (exception instanceof PersistenceException) {
+		        handlePersistenceException(exception);
 		} else {
 			handleException(exception.getMessage(), exception);
 		}
 	}
+
 }
