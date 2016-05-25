@@ -19,6 +19,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.documento.entity.ModeloDocumento;
@@ -38,9 +39,12 @@ public class ModeloEntrega implements Serializable {
     @GeneratedValue(generator = GENERATOR_NAME, strategy = GenerationType.SEQUENCE)
     @Column(name = "id_modelo_entrega", unique = true, nullable = false)
     private Integer id;
+    
+    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="dt_limite_entrega",  nullable=false)
     private Date dataLimite;
+    
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="dt_liberacao",  nullable=true)
@@ -59,6 +63,15 @@ public class ModeloEntrega implements Serializable {
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="id_modelo_certidao")
     private ModeloDocumento modeloCertidao;
+    
+    @NotNull
+    @Column(name="in_sinal_disparado", nullable = false)
+    private Boolean sinalDisparado = false;
+
+    @NotNull
+    @Version
+    @Column(name="nr_version", nullable = false)
+    private Integer version;
 
     @JoinTable(name="tb_modelo_entrega_item", 
             joinColumns=@JoinColumn(name="id_modelo_entrega"), 
@@ -116,6 +129,22 @@ public class ModeloEntrega implements Serializable {
     public void setModeloPasta(ModeloPasta modeloPasta) {
         this.modeloPasta = modeloPasta;
     }
+    public Boolean getSinalDisparado() {
+        return sinalDisparado;
+    }
+
+    public void setSinalDisparado(Boolean sinalDisparado) {
+        this.sinalDisparado = sinalDisparado;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
     public List<CategoriaEntregaItem> getItens() {
         return itens;
     }
