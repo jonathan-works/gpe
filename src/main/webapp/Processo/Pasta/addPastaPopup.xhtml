@@ -13,13 +13,13 @@
             #{rich:jQuery('addPastaInputName')}.val('');
             #{rich:jQuery('addPastaInputDescricao')}.val('');
             #{rich:jQuery('addPastaInputOrdemNumber')}.val('');
-            $('.errorFields.errors').remove();
-            $('.errors').removeClass('errors');
+            $('.property-error.property-msg').remove();
+            $('.property-error').removeClass('property-error');
         }
     </script>
     
 	<rich:popupPanel id="addPastaPanel" moveable="true" show="false"
-        resizeable="true" minWidth="290" minHeight="280"
+        resizeable="true" minWidth="355" minHeight="360"
         header="#{infoxMessages['pasta.add']}"
         onbeforeshow="clearAddPastaFields();"
         onbeforehide="clearAddPastaFields();">

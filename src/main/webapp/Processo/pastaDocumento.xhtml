@@ -172,8 +172,8 @@
 		      var maxlength = 4000;
 		      #{rich:jQuery('motivoExclusaoRestauracao')}.val('');
 		      #{rich:jQuery('motivoExclusaoRestauracaocounterDiv')}.text('(0 / '+maxlength+')');
-		      $('.errorFields.errors').remove();
-		      $('.errors').removeClass('errors');
+		      $('.property-error.property-msg').remove();
+	          $('.property-error').removeClass('property-error');
 		  }
 		  
 		  function setValuesToExcludeRestore(isExclusao, idDocumento, numeroDocumento, dsDocumento, classificacao) {
