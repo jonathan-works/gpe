@@ -18,9 +18,9 @@
     <composite:attribute name="valueChangeListener" />
     <composite:attribute name="placeholder" />
     <composite:attribute name="completeMethod" required="true" method-signature="java.util.List action(java.lang.String)"/>
-    <composite:attribute name="var" />
-    <composite:attribute name="itemLabel" type="java.lang.String" />
-    <composite:attribute name="itemValue" type="java.lang.Object" />
+    <composite:attribute name="var" default="item"/>
+    <composite:attribute name="itemLabel" type="java.lang.String" default="#{item}"/>
+    <composite:attribute name="itemValue" type="java.lang.Object" default="#{item}" />
     <composite:attribute name="maxResults" default="100"/>
     <composite:attribute name="minQueryLength" />
     <composite:attribute name="queryDelay" default="300" />
@@ -37,14 +37,17 @@
 
     <!-- Ajax Attributes -->
     <composite:attribute name="ajax" default="false" />
+    <composite:attribute name="event" type="java.lang.String" default="change" />
     <composite:attribute name="render" default="@this" />
     <composite:attribute name="execute" default="@this" />
     <composite:attribute name="listener" method-signature="void action" />
     <composite:attribute name="immediate" default="false" />
+    <composite:attribute name="partialSubmit" default="false" />
     <composite:attribute name="onstart" />
     <composite:attribute name="oncomplete"/>
 
     <composite:facet name="label" />
+    <composite:facet name="itemtip" />
 </composite:interface>
 
 <composite:implementation>
@@ -91,6 +94,21 @@
                     <c:if test="#{not empty cc.attrs.converter}">
                         <f:converter converterId="#{cc.attrs.converter}" />
                     </c:if>
+                    <c:if test="#{cc.attrs.ajax}">
+					    	<c:if test="#{empty cc.getValueExpression('listener')}">
+						    	<p:ajax event="change" process="#{cc.attrs.execute}" update="#{cc.attrs.render}" immediate="#{cc.attrs.immediate}" 
+						    		partialSubmit="#{cc.attrs.partialSubmit}"
+                                    onstart="#{cc.attrs.onstart}" oncomplete="#{cc.attrs.oncomplete}"/>
+					    	</c:if>
+					    	<c:if test="#{not empty cc.getValueExpression('listener')}">
+						    	<p:ajax event="change" process="#{cc.attrs.execute}" update="#{cc.attrs.render}" immediate="#{cc.attrs.immediate}"
+                                    partialSubmit="#{cc.attrs.partialSubmit}" 
+						    		onstart="#{cc.attrs.onstart}" oncomplete="#{cc.attrs.oncomplete}" listener="#{cc.attrs.listener}"/>
+					    	</c:if>
+			        </c:if>
+                    <f:facet name="itemtip">
+                        <composite:renderFacet name="itemtip" />
+                    </f:facet>
                 </p:autoComplete>
             </div>
         </div>
