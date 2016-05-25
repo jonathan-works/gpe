@@ -127,17 +127,19 @@ public class CategoriaEntregaItemSearch extends PersistenceController {
         return getEntityManager().createQuery(cq).getResultList();
     }
     
-    public List<CategoriaEntregaItem> getByCategoriaAndLocalizacao(CategoriaEntrega categoria, Localizacao localizacao) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<CategoriaEntregaItem> cq = cb.createQuery(CategoriaEntregaItem.class);
-        Root<CategoriaEntregaItem> categoriaEntregaItem = cq.from(CategoriaEntregaItem.class);
-		
-        Predicate categoriaIgual = cb.equal(categoriaEntregaItem.get(CategoriaEntregaItem_.categoriaEntrega), categoria);
-		Predicate itemPossuiLocalizacao = cb.isMember(localizacao, categoriaEntregaItem.get(CategoriaEntregaItem_.restricoes));
+	public List<CategoriaEntregaItem> getByCategoriaAndLocalizacao(CategoriaEntrega categoria,Localizacao localizacao) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<CategoriaEntregaItem> cq = cb.createQuery(CategoriaEntregaItem.class);
+		Root<CategoriaEntregaItem> categoriaEntregaItem = cq.from(CategoriaEntregaItem.class);
+
+		Predicate categoriaIgual = cb.equal(categoriaEntregaItem.get(CategoriaEntregaItem_.categoriaEntrega),
+				categoria);
+		Predicate itemPossuiLocalizacao = cb.isMember(localizacao,
+				categoriaEntregaItem.get(CategoriaEntregaItem_.restricoes));
 		cq.select(categoriaEntregaItem).where(categoriaIgual, itemPossuiLocalizacao);
-		
+
 		return getEntityManager().createQuery(cq).getResultList();
-    }
+	}
     
 	
 	
