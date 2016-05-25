@@ -71,6 +71,8 @@ public class TipoResponsavelEntregaController implements Serializable {
     
     @ExceptionHandled
     public void adicionar() {
+        if (getTipoResponsavel() == null)
+            return;
         TipoResponsavelEntrega tipoResponsavelEntrega = new TipoResponsavelEntrega();
         tipoResponsavelEntrega.setObrigatorio(Boolean.TRUE.equals(getObrigatorio()));
         tipoResponsavelEntrega.setTipoParte(getTipoResponsavel());

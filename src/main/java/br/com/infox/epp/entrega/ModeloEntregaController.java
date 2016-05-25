@@ -8,8 +8,11 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.modelo.ModeloDocumentoSearch;
@@ -32,7 +35,8 @@ public class ModeloEntregaController implements Serializable {
     @Inject private ModeloEntregaService modeloEntregaService;
     @Inject private ClassificacaoDocumentoEntregaController classificacaoDocumentoEntregaController;
     @Inject private TipoResponsavelEntregaController tipoResponsavelEntregaController;
-
+    @Inject private InfoxMessages messages;
+    
     private Integer id;
     private List<CategoriaEntregaItem> itens;
     private Date dataLimite;
@@ -159,12 +163,17 @@ public class ModeloEntregaController implements Serializable {
     @ExceptionHandled
     public void save() {
         ModeloEntrega modeloEntrega = new ModeloEntrega();
+        String resultMessageKey="entity_created";
         if (id != null) {
             modeloEntrega = modeloEntregaSearch.findById(id);
+            if (modeloEntrega.getId()!=null){
+                resultMessageKey="entity_updated";
+            }
         }
         applyChanges(modeloEntrega);
         modeloEntregaService.salvarModeloEntrega(modeloEntrega);
         initModeloEntrega(modeloEntrega);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(messages.get(resultMessageKey)));
     }
 
 }

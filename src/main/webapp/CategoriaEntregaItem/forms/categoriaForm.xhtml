@@ -3,7 +3,8 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core"
     xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich"
-    xmlns:infox="http://www.infox.com.br/jsf" xmlns:p="http://primefaces.org/ui" xmlns:wi="http://www.itx.com.br/jsf">
+    xmlns:infox="http://www.infox.com.br/jsf" xmlns:p="http://primefaces.org/ui" xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:i="http://java.sun.com/jsf/composite/infox">
 
     <h:form>
         <fieldset>
@@ -13,17 +14,8 @@
             </legend>
             <fieldset>
                 <legend>Categoria</legend>
-                <span class="dyn-field dyn-field-grp"> <h:inputText style="background-color:rgba(0,0,0,0.05);"
-                        styleClass="dyn-field dyn-field-ipt" id="descricaoCategoria"
-                        value="#{categoriaEntregaView.categoriaEntregaController.descricao}" maxlength="100" required="true" /> <h:outputLabel
-                        styleClass="dyn-field dyn-field-lbl" for="descricaoCategoria">
-                            Descrição <h:outputText styleClass="required" value="*" />
-                    </h:outputLabel>
-                </span> <span class="dyn-field dyn-field-grp"> <h:inputText style="background-color:rgba(0,0,0,0.05);"
-                        styleClass="dyn-field dyn-field-ipt" id="codigoCategoria"
-                        value="#{categoriaEntregaView.categoriaEntregaController.codigo}" maxlength="30" required="false" /> <h:outputLabel
-                        styleClass="dyn-field dyn-field-lbl" value="Código" for="codigoCategoria" />
-                </span>
+                <i:inputText id="codigoCategoria" required="true" label="Código"  value="#{categoriaEntregaView.categoriaEntregaController.codigo}" />
+                <i:inputText id="descricaoCategoria" required="true" label="Descrição" value="#{categoriaEntregaView.categoriaEntregaController.descricao}" />
             </fieldset>
 
             <infox:div styleClass="required-alert">
@@ -32,7 +24,9 @@
                 <span>#{infoxMessages['form.required']}</span>
             </infox:div>
         </fieldset>
-        <h:commandButton action="#{categoriaEntregaView.categoriaEntregaController.salvarCategoria}" value="Salvar" styleClass="buttons" />
+        <h:commandButton action="#{categoriaEntregaView.categoriaEntregaController.salvarCategoria}" value="Salvar" styleClass="buttons">
+            <p:ajax process="@form" update="@form :pageBodyDialogMessage" onstart="infox.showLoading();" oncomplete="infox.hideLoading();" />
+        </h:commandButton>
     </h:form>
 
 </ui:composition>

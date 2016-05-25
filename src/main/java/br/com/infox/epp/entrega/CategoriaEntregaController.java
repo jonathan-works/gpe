@@ -2,8 +2,11 @@ package br.com.infox.epp.entrega;
 
 import java.io.Serializable;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.entrega.entity.CategoriaEntrega;
 import br.com.infox.epp.entrega.entity.CategoriaEntregaItem;
@@ -20,6 +23,7 @@ public class CategoriaEntregaController implements Serializable {
     @Inject private CategoriaEntregaService categoriaEntregaService;
     @Inject private CategoriaEntregaSearch categoriaEntregaSearch;
     @Inject private CategoriaEntregaItemSearch categoriaEntregaItemSearch;
+    @Inject private InfoxMessages messages;
     
     private Modo modo;
     
@@ -33,16 +37,17 @@ public class CategoriaEntregaController implements Serializable {
     public void salvarCategoria() {
         CategoriaEntrega categoria = new CategoriaEntrega();
         String codigoItemPai = pai == null ? null : pai.getCodigo();
+        String resultMessageKey="";
         if (Modo.CRIAR.equals(modo)){
-            if (codigo == null){
-                codigo = CategoriaEntregaView.generateCodigo(descricao);
-            }
             categoria.setCodigo(codigo);
             categoria.setDescricao(descricao);
             categoriaEntregaService.novaCategoria(categoria, codigoItemPai);
+            resultMessageKey="entity_created";
         } else if (Modo.EDITAR.equals(modo)){
             categoriaEntregaService.atualizar(codigo, descricao);
+            resultMessageKey="entity_updated";
         }
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(messages.get(resultMessageKey)));
         clear();
     }
 

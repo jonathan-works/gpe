@@ -3,7 +3,8 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core"
     xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich"
-    xmlns:infox="http://www.infox.com.br/jsf" xmlns:p="http://primefaces.org/ui" xmlns:wi="http://www.itx.com.br/jsf">
+    xmlns:infox="http://www.infox.com.br/jsf" xmlns:p="http://primefaces.org/ui" xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:i="http://java.sun.com/jsf/composite/infox">
 
     <h:form>
         <fieldset>
@@ -15,17 +16,8 @@
             </legend>
             <fieldset>
                 <legend>Item</legend>
-                <span class="dyn-field dyn-field-grp"> <h:inputText style="background-color:rgba(0,0,0,0.05);"
-                        styleClass="dyn-field dyn-field-ipt" id="descricaoItem"
-                        value="#{categoriaEntregaView.categoriaEntregaItemController.descricao}" maxlength="100" required="true" /> <h:outputLabel
-                        styleClass="dyn-field dyn-field-lbl" for="descricaoItem">
-                        Descrição <h:outputText styleClass="required" value="*" />
-                    </h:outputLabel>
-                </span> <span class="dyn-field dyn-field-grp"> <h:inputText style="background-color:rgba(0,0,0,0.05);"
-                        styleClass="dyn-field dyn-field-ipt" id="codigoItem" value="#{categoriaEntregaView.categoriaEntregaItemController.codigo}"
-                        maxlength="30" required="false" /> <h:outputLabel styleClass="dyn-field dyn-field-lbl"
-                        value="Código" for="codigoItem" />
-                </span>
+                <i:inputText id="codigoItem" required="true" label="Código"  value="#{categoriaEntregaView.categoriaEntregaItemController.codigo}" />
+                <i:inputText id="descricaoItem" required="true" label="Descrição" value="#{categoriaEntregaView.categoriaEntregaItemController.descricao}" />
             </fieldset>
             <infox:div styleClass="required-alert">
                 <img src="#{pathResolver.contextPath}#{layoutController.getResourceUrlByPath('/imagens/mod/balao.png')}" />
@@ -33,7 +25,9 @@
                 <span>#{infoxMessages['form.required']}</span>
             </infox:div>
         </fieldset>
-        <h:commandButton action="#{categoriaEntregaView.categoriaEntregaItemController.salvarItem}" value="Salvar" styleClass="buttons" />
+        <h:commandButton action="#{categoriaEntregaView.categoriaEntregaItemController.salvarItem}" value="Salvar" styleClass="buttons">
+            <p:ajax process="@form" update="@form :pageBodyDialogMessage" onstart="infox.showLoading();" oncomplete="infox.hideLoading();" />
+        </h:commandButton>
     </h:form>
 
 </ui:composition>

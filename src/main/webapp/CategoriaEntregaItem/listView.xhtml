@@ -3,29 +3,30 @@
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml"
     xmlns:wi="http://www.itx.com.br/jsf" xmlns:h="http://java.sun.com/jsf/html"
     xmlns:infox="http://www.infox.com.br/jsf" xmlns:p="http://primefaces.org/ui"
-    xmlns:rich="http://richfaces.org/rich"
+    xmlns:rich="http://richfaces.org/rich" xmlns:c="http://java.sun.com/jsp/jstl/core"
     template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
     <ui:define name="title">Categorias de Entrega</ui:define>
     <ui:define name="body">
         <p:calendar style="display:none" />
         <infox:div id="categoriaEntregaItem">
+            <h:commandButton type="button" styleClass="buttons" onclick="criarCategoria([{name:'path',value:'/'}])" value="Criar Categoria" />
             <h:form>
-                <p:remoteCommand name="editarItem" process="@this" update="@form:@parent:formFields" async="true" 
+                <p:remoteCommand name="editarItem" process="@this" update="@form:@parent:formFields :pageBodyDialogMessage" async="true" 
                 actionListener="#{categoriaEntregaView.editarItem}"
                 onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
-                <p:remoteCommand name="editarCategoria" process="@this" update="@form:@parent:formFields" async="true" 
+                <p:remoteCommand name="editarCategoria" process="@this" update="@form:@parent:formFields :pageBodyDialogMessage" async="true" 
                 actionListener="#{categoriaEntregaView.editarCategoria}"
                 onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
                 
-                <p:remoteCommand name="criarItem" process="@this" update="@form:@parent:formFields" onstart="infox.showLoading();"
+                <p:remoteCommand name="criarItem" process="@this" update="@form:@parent:formFields :pageBodyDialogMessage" onstart="infox.showLoading();"
                     actionListener="#{categoriaEntregaView.criarItem}" oncomplete="infox.hideLoading();" />
-                <p:remoteCommand name="criarCategoria" process="@this" update="@form:@parent:formFields" onstart="infox.showLoading();"
+                <p:remoteCommand name="criarCategoria" process="@this" update="@form:@parent:formFields :pageBodyDialogMessage" onstart="infox.showLoading();"
                     actionListener="#{categoriaEntregaView.criarCategoria}" oncomplete="infox.hideLoading();" />
-                <p:remoteCommand name="removerItem" process="@this" update="@parent:@parent"
+                <p:remoteCommand name="removerItem" process="@this" update="@parent:@parent :pageBodyDialogMessage"
                     onstart="infox.showLoading();" actionListener="#{categoriaEntregaView.removerItem}" oncomplete="infox.hideLoading();" />
-                <p:remoteCommand name="removerCategoria" process="@this" update="@parent:@parent"
+                <p:remoteCommand name="removerCategoria" process="@this" update="@parent:@parent :pageBodyDialogMessage"
                     onstart="infox.showLoading();" actionListener="#{categoriaEntregaView.removerCategoria}" oncomplete="infox.hideLoading();" />
-                <p:remoteCommand name="configurarModeloEntrega" process="@this" update="@this @form:@parent"
+                <p:remoteCommand name="configurarModeloEntrega" process="@this" update="@this @form:@parent :pageBodyDialogMessage"
                     onstart="infox.showLoading();" actionListener="#{categoriaEntregaView.configurarModeloEntrega}" oncomplete="infox.hideLoading();" />
             </h:form>
             <infox:div style="display:inline-block;vertical-align:top;" rendered="#{'configEntregaForm.xhtml' ne categoriaEntregaView.view}">
@@ -55,7 +56,9 @@
             </infox:div>
             
             <infox:div id="formFields" style="display:inline-block;vertical-align:top;">
-                <ui:include src="forms/#{categoriaEntregaView.view}" />
+                <c:if test="#{not empty categoriaEntregaView.view}">
+                    <ui:include src="forms/#{categoriaEntregaView.view}" />
+                </c:if>
             </infox:div>
         </infox:div>
     </ui:define>

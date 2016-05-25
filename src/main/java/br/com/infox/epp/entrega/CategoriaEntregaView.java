@@ -14,6 +14,7 @@ import org.apache.commons.lang3.ObjectUtils;
 
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
+import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
 
 @Named
 @ViewScoped
@@ -48,7 +49,7 @@ public class CategoriaEntregaView implements Serializable {
     }
     
     public void clear() {
-        currentView = CurrentView.CREATE_CATEGORIA;
+        currentView = CurrentView.NONE;
         modeloEntregaController.clear();
     }
 
@@ -80,7 +81,7 @@ public class CategoriaEntregaView implements Serializable {
         }
     }
 
-    @ExceptionHandled
+    @ExceptionHandled(MethodType.REMOVE)
     public void removerCategoria() {
         clear();
         String[] path = getPath();
@@ -111,7 +112,7 @@ public class CategoriaEntregaView implements Serializable {
         }
     }
 
-    @ExceptionHandled
+    @ExceptionHandled(MethodType.REMOVE)
     public void removerItem() {
         clear();
         String[] path = getPath();
@@ -173,10 +174,11 @@ public class CategoriaEntregaView implements Serializable {
         case EDIT_ITEM:
             return "categoriaItemForm.xhtml";
         case EDIT_CATEGORIA:
-        case NONE:
         case CREATE_CATEGORIA:
-        default:
             return "categoriaForm.xhtml";
+        case NONE:
+        default:
+            return "";
         }
     }
 

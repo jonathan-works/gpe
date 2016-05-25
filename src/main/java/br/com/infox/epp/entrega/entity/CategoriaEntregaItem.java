@@ -36,12 +36,12 @@ public class CategoriaEntregaItem implements Serializable {
     private Integer id;
     
     @NotNull
-    @Size(max=LengthConstants.CODIGO_DOCUMENTO)
+    @Size(max=LengthConstants.CODIGO_DOCUMENTO, min=1)
     @Column(name="cd_categoria_entrega_item")
     private String codigo;
     
     @NotNull
-    @Size(max=LengthConstants.DESCRICAO_PADRAO)
+    @Size(max=LengthConstants.DESCRICAO_PADRAO, min=1)
     @Column(name="ds_categoria_entrega_item")
     private String descricao;
     

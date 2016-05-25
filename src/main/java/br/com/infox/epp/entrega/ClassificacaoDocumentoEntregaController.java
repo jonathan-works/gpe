@@ -88,6 +88,8 @@ public class ClassificacaoDocumentoEntregaController implements Serializable {
     
     @ExceptionHandled
     public void adicionar() {
+        if (getClassificacaoDocumento() == null)
+            return;
         ClassificacaoDocumentoEntrega classificacaoDocumentoEntrega = new ClassificacaoDocumentoEntrega();
         classificacaoDocumentoEntrega.setClassificacaoDocumento(getClassificacaoDocumento());
         classificacaoDocumentoEntrega.setMultiplosDocumentos(Boolean.TRUE.equals(getMultiplosDocumentos()));
