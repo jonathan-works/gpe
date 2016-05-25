@@ -27,6 +27,7 @@ import org.jboss.seam.international.StatusMessages;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.component.tree.LocalizacaoTreeHandler;
 import br.com.infox.epp.access.crud.LocalizacaoCrudAction;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
@@ -152,6 +153,7 @@ public class PastaRestricaoAction implements Serializable {
 	}
 	
 	public void newRestricaoInstance() {
+	    ComponentUtil.<LocalizacaoTreeHandler>getComponent(LocalizacaoTreeHandler.NAME).clearTree(); 
 	    setRestricaoInstance(new PastaRestricao());
 	    setAlvoRestricaoPapel(new Papel());
 	    setAlvoRestricaoLocalizacao(new Localizacao());
