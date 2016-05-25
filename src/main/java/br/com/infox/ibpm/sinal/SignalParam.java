@@ -10,6 +10,12 @@ public class SignalParam {
     private String valueExpression;
     private Type type;
     
+    public SignalParam(String name, Object value, Type type) {
+    	this.name = name;
+   		this.value = value;
+    	this.type = type;
+    }
+    
     public SignalParam(String name, String value, Type type) {
         this.name = name;
         if (value.startsWith("#") || value.startsWith("$")) {
