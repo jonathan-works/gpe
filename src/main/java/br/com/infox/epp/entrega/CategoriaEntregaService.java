@@ -11,6 +11,8 @@ import javax.persistence.NoResultException;
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.entrega.entity.CategoriaEntrega;
 import br.com.infox.epp.entrega.entity.CategoriaEntregaItem;
+import br.com.infox.epp.system.entity.Parametro;
+import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.seam.exception.BusinessException;
 
 @Stateless
@@ -20,6 +22,8 @@ public class CategoriaEntregaService {
 	private CategoriaEntregaSearch categoriaEntregaSearch;
 	@Inject
 	private CategoriaEntregaItemSearch categoriaEntregaItemSearch;
+	@Inject 
+	ParametroManager parametroManager;
 
 	private EntityManager getEntityManager() {
 		return EntityManagerProducer.getEntityManager();
@@ -85,5 +89,10 @@ public class CategoriaEntregaService {
 	public List<CategoriaEntrega> list() {
 		return categoriaEntregaSearch.list();
 	}
-
+	
+	public CategoriaEntrega getCategoriaByNomeParametro(String nomeParametro) {
+		Parametro parametro = parametroManager.getParametro(nomeParametro);
+		String codigo = parametro.getValorVariavel();
+		return getCategoria(codigo);
+	}
 }
