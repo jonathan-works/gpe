@@ -8,7 +8,6 @@
     
     <composite:interface>
     	
-    	<composite:attribute name="id"/>
     	<composite:attribute name="label" />
     	<composite:attribute name="help" />
     	<composite:attribute name="required" default="false" />
@@ -17,7 +16,7 @@
     </composite:interface>
 	
     <composite:implementation>
-		<p:outputPanel id="#{cc.attrs.id}" styleClass="decoration-div" rendered="#{cc.attrs.rendered}" >
+		<p:outputPanel id="#{cc.attrs.id}" styleClass="decoration-div">
 			<script type="text/javascript">
 				var id = "#{cc.attrs.id}";
 				var errorClass = $('.' + id + 'ErrorClass');

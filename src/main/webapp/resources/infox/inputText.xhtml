@@ -15,7 +15,7 @@
     	<composite:attribute name="disabled" default="false"/>
     	<composite:attribute name="styleClass"/>
     	<composite:attribute name="onblur" />
-    	<composite:attribute name="required" default="false" />
+    	<composite:attribute name="placeholder" type="java.lang.String" />
     	<composite:attribute name="required" default="false" />
     	<composite:attribute name="onkeypress" />
     	<composite:attribute name="onkeyup" />
@@ -35,16 +35,6 @@
 	
     <composite:implementation>
 		<p:outputPanel id="#{cc.attrs.id}" styleClass="decoration-div inputText-div" rendered="#{cc.attrs.rendered}" >
-			<script type="text/javascript">
-				var id = "#{cc.attrs.id}";
-				var errorClass = $('.' + id + 'ErrorClass');
-				var div = $('.' + id + 'DivClass');
-				if (errorClass.length !== 0) {
-					div.addClass('property-error');
-				} else {
-					div.removeClass('property-error');
-				}
-	    	</script>
         	<div class="property-field-edit">
         		<div class="property-field-edit-name">
 	        		<h:outputLabel id="#{cc.attrs.id}Label" for="#{cc.attrs.id}Input">
@@ -81,6 +71,19 @@
         		</div>
         	</div>
         </p:outputPanel>
+        <script type="text/javascript">
+            (function(){
+                var id = "#{cc.attrs.id}";
+                var errorClass = $('.' + id + 'ErrorClass');
+                var div = $('.' + id + 'DivClass');
+                if (errorClass.length !== 0) {
+                    div.addClass('property-error');
+                } else {
+                    div.removeClass('property-error');
+                }
+                document.getElementById("#{p:component(cc.attrs.id.concat('Input'))}").placeholder="#{cc.attrs.placeholder}";
+            })();
+        </script>
     </composite:implementation>
 	
 </html>
