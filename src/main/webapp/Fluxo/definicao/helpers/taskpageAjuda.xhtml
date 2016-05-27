@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:rich="http://richfaces.org/rich">
+
+    <script type="text/javascript">
+        function onshowTaskpageAjudaPopup() {
+            var value = $('.taskpageAjudaPopup');
+            var width = $(window).width() * 0.85;
+            var height = $(window).height() * 0.85;
+            var top = (($(window).height() - height) / 3);
+            var left = (($(window).width() - width) / 2);
+            value.css('width', width + 'px');
+            value.css('height', height + 'px');
+            value.css('top', top + 'px');
+            value.css('left', left + 'px');
+            $('.rf-pp-cnt-scrlr').css('width', '100%');
+            $('.rf-pp-cnt-scrlr').css('height', '100%');
+        }
+    </script>
+
+    <rich:popupPanel id="taskpageAjudaPopup"
+        modal="true" header="#{infoxMessages['process.taskpage.popupHeader']} - #{taskpage.name}" resizeable="true"
+        styleClass="taskpageAjudaPopup" onshow="onshowTaskpageAjudaPopup();">
+
+        <f:facet name="controls">
+            <h:graphicImage styleClass="mp-close"
+                value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
+                onclick="#{rich:component('taskpageAjudaPopup')}.hide();" />
+        </f:facet>
+
+        <rich:panel styleClass="content-block" style="margin: 1.5em 0 0">
+            <div class="property-field-edit">
+                <h:outputText styleClass="property-field-edit-name" value="#{infoxMessages['process.taskpage.name']}" />
+                <h:outputText styleClass="property-field-edit-value" value="#{taskpage.name}" />
+            </div>
+        </rich:panel>
+        
+        <rich:panel rendered="#{not empty taskpage.description}" styleClass="content-block" style="margin: 1.5em 0 0">
+            <div class="property-field-edit">
+                <h:outputText styleClass="property-field-edit-name" value="#{infoxMessages['process.taskpage.description']}" />
+                <h:outputText styleClass="property-field-edit-value" value="#{taskpage.description}" />
+            </div>
+        </rich:panel>
+        <rich:panel styleClass="content-block" style="margin: 1.5em 0 0">
+            <div class="property-field-edit">
+                <h:outputText styleClass="property-field-edit-name" value="#{infoxMessages['process.taskpage.parameters']}" />
+                <ui:repeat var="parameter" value="#{taskpage.parameters}">
+                    <rich:panel styleClass="content-block" style="margin: 1.5em 0 0">
+                        <div class="property-field-edit" style="display: inline-block; margin-left: 1em">
+                            <h:outputText styleClass="property-field-edit-name" value="#{infoxMessages['process.taskpage.parameter.name']}" />
+                            <h:outputText styleClass="property-field-edit-value" value="#{parameter.name}" />
+                        </div>
+                        <div class="property-field-edit" style="display: inline-block; margin-left: 1em">
+                            <h:outputText styleClass="property-field-edit-name" value="#{infoxMessages['process.taskpage.parameter.type']}" />
+                            <h:outputText styleClass="property-field-edit-value" value="#{parameter.type}" />
+                        </div>
+                        <h:panelGroup rendered="#{not empty parameter.description}" style="display: inline-block; margin-left: 1em">
+                            <div class="property-field-edit">
+                                <h:outputText styleClass="property-field-edit-name" value="#{infoxMessages['process.taskpage.parameter.description']}" />
+                                <h:outputText styleClass="property-field-edit-value" value="#{parameter.description}" />
+                            </div>
+                        </h:panelGroup>
+                    </rich:panel>
+                </ui:repeat>
+            </div>
+        </rich:panel>
+    </rich:popupPanel>
+</ui:composition>

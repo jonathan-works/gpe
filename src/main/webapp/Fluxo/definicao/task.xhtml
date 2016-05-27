@@ -120,7 +120,7 @@
                             <a:ajax status=":status" listener="#{var.copyVariable()}" event="selectitem"
                                 render="varDiv,writable,varLabel,formVariableType,resetVariableForm" limitRender="true" />
                         </rich:autocomplete>
-                        <s:div rendered="#{var.type eq 'TASK_PAGE' and taskpageMapLoader.getTaskpage(var.name) ne null}" style="display: inline-block">
+                        <s:div rendered="#{(var.type eq 'TASK_PAGE' or var.type eq 'FRAME') and taskpageMapLoader.getTaskpage(var.name) ne null}" style="display: inline-block">
                             <ui:include src="helpers/taskpageAjuda.xhtml">
                                 <ui:param name="taskpage" value="#{taskpageMapLoader.getTaskpage(var.name)}" />
                             </ui:include>
