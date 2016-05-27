@@ -24,6 +24,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.PostPersist;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -62,9 +63,8 @@ public class Pasta implements Serializable, Cloneable {
     @Size(max=250)
     private String descricao;
     
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_processo", nullable = false)
+    @JoinColumn(name = "id_processo")
     private Processo processo;
     
     @NotNull
@@ -83,7 +83,14 @@ public class Pasta implements Serializable, Cloneable {
     private Integer ordem;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pasta")
-    private List<Documento> documentosList; 
+    private List<Documento> documentosList = new ArrayList<>(0); 
+    
+    @PostPersist
+    private void postPersist() {
+        if (!processo.getPastaList().contains(this)) {
+            processo.getPastaList().add(this);
+        }
+    }
 
     public Integer getId() {
         return id;

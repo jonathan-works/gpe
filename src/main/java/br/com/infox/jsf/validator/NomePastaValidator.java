@@ -28,9 +28,8 @@ public class NomePastaValidator implements Validator {
         if (idProcesso == null) {
             throw new ValidatorException(new FacesMessage("Erro ao validar nome da pasta"));
         }
-
-        ProcessoManager processoManager = BeanManager.INSTANCE.getReference(ProcessoManager.class);
-        Processo processo = processoManager.find(idProcesso);
+        
+        Processo processo = getProcessoManager().find(idProcesso);
         for (Pasta pasta : processo.getPastaList()) {
             if (idPasta != null && pasta.getId().equals(idPasta))
                 continue;
@@ -39,4 +38,9 @@ public class NomePastaValidator implements Validator {
             }
         }
     }
+    
+    protected ProcessoManager getProcessoManager() {
+        return BeanManager.INSTANCE.getReference(ProcessoManager.class);
+    }
+    
 }
