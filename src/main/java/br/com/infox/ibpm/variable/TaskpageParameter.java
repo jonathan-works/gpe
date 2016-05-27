@@ -15,6 +15,6 @@ public @interface TaskpageParameter {
 
     String name (); // nome do parâmetro
     String type () default "String"; // class type do parêmetro
-    String tooltip () default ""; // descrição opcional para o parâmetro
+    String description () default ""; // descrição opcional para o parâmetro
 
 }

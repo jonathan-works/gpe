@@ -10,11 +10,13 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import javax.inject.Named;
 
 import org.reflections.Reflections;
 
 @Singleton
 @Startup
+@Named
 public class TaskpageMapLoader implements Serializable {
     private static final long serialVersionUID = 1L;
 

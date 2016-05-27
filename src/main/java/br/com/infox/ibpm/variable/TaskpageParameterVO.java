@@ -7,17 +7,17 @@ public class TaskpageParameterVO implements Serializable {
 
     private String name;
     private String type;
-    private String tooltip;
+    private String description;
 
-    public TaskpageParameterVO(String name, String type, String tooltip) {
+    public TaskpageParameterVO(String name, String type, String description) {
         super();
         this.name = name;
         this.type = type;
-        this.tooltip = tooltip;
+        this.description = description;
     }
 
     public TaskpageParameterVO(TaskpageParameter parameter) {
-        this(parameter.name(), parameter.type(), parameter.tooltip());
+        this(parameter.name(), parameter.type(), parameter.description());
     }
 
     public String getName() {
@@ -36,12 +36,12 @@ public class TaskpageParameterVO implements Serializable {
         this.type = type;
     }
 
-    public String getTooltip() {
-        return tooltip;
+    public String getDescription() {
+        return description;
     }
 
-    public void setTooltip(String tooltip) {
-        this.tooltip = tooltip;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override
