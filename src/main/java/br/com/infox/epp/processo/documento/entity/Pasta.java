@@ -87,7 +87,7 @@ public class Pasta implements Serializable, Cloneable {
     
     @PostPersist
     private void postPersist() {
-        if (!processo.getPastaList().contains(this)) {
+        if (processo != null && !processo.getPastaList().contains(this)) {
             processo.getPastaList().add(this);
         }
     }
