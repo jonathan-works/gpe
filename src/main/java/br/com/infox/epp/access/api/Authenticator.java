@@ -464,6 +464,9 @@ public class Authenticator implements Serializable {
      * @return usuário logado
      */
     public static UsuarioLogin getUsuarioLogado() {
+    	if(Contexts.getSessionContext() == null) {
+    		return null;
+    	}
         UsuarioLogin usuario = (UsuarioLogin) Contexts.getSessionContext().get("usuarioLogado");
         if (usuario == null) {
             return null;

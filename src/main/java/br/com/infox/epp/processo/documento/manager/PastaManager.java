@@ -108,6 +108,10 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
         return pastaList;
     }
     
+    public Pasta createFromModelo(ModeloPasta modeloPasta) throws DAOException {
+    	return createPastaFromModelo(modeloPasta, null);
+    }
+    
     protected Pasta createFromModelo(ModeloPasta modeloPasta, Processo processo) throws DAOException {
         return createPastaFromModelo(modeloPasta, processo.getProcessoRoot());
     }

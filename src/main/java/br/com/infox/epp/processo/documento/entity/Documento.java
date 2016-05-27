@@ -60,12 +60,11 @@ import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
-import br.com.infox.epp.system.Parametros;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Entity
 @Table(name = Documento.TABLE_NAME)
@@ -199,8 +198,8 @@ public class Documento implements Serializable, Cloneable {
     }
 
 	private UsuarioLogin getUsuarioSistema() {
-		UsuarioLoginManager usuarioLoginManager = ComponentUtil.getComponent(UsuarioLoginManager.NAME);
-		return usuarioLoginManager.find(Integer.valueOf(Parametros.ID_USUARIO_SISTEMA.getValue()));
+		UsuarioLoginManager usuarioLoginManager = BeanManager.INSTANCE.getReference(UsuarioLoginManager.class);
+		return usuarioLoginManager.getUsuarioSistema();
 	}
     
 	public Integer getId() {

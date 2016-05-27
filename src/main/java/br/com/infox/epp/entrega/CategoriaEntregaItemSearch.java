@@ -3,7 +3,6 @@ package br.com.infox.epp.entrega;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -25,7 +24,6 @@ import br.com.infox.epp.entrega.entity.CategoriaEntrega_;
 import br.com.infox.epp.entrega.entity.CategoriaItemRelacionamento;
 import br.com.infox.epp.entrega.entity.CategoriaItemRelacionamento_;
 
-@Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class CategoriaEntregaItemSearch extends PersistenceController {
 
