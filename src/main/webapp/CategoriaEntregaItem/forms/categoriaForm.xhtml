@@ -27,6 +27,10 @@
         <h:commandButton action="#{categoriaEntregaView.categoriaEntregaController.salvarCategoria}" value="Salvar" styleClass="buttons">
             <p:ajax process="@form" update="@this :pageBodyDialogMessage" onstart="infox.showLoading();" onerror="infox.hideLoading();" onsuccess="refreshCategoriaEntregaForm();" />
         </h:commandButton>
+        <h:commandButton type="reset" value="Voltar" styleClass="buttons" action="#{categoriaEntregaView.clear}">
+            <p:ajax immediate="true" process="@this" update="@this :pageBodyDialogMessage" onstart="infox.showLoading();" 
+            onerror="infox.hideLoading();" onsuccess="refreshCategoriaEntregaForm();" />
+        </h:commandButton>
     </h:form>
 
 </ui:composition>

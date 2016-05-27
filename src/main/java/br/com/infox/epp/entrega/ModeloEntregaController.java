@@ -44,8 +44,6 @@ public class ModeloEntregaController implements Serializable {
     private ModeloDocumento modeloCertidao;
     private Boolean ativo;
     private ModeloPasta modeloPasta;
-    
-
 
     @PostConstruct
     public void init() {

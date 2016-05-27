@@ -74,10 +74,10 @@
                                 <p:rowEditor style="display: inline-block;vertical-align: bottom;" />
                                 <h:commandLink
                                     action="#{categoriaEntregaView.modeloEntregaController.classificacaoDocumentoEntregaController.remover(item)}"
-                                    onclick="if(!confirm('Deseja inativar este registro?')) return false;">
+                                    onclick="if(!confirm('#{infoxMessages['crud.confirmRemove']}')) return false;">
                                     <h:graphicImage
                                         url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
-                                        title="#{infoxMessages['button.remove']}" />
+                                        title="#{infoxMessages['button.delete']}" />
                                     <p:ajax process="@this" update="@parent:@parent:@parent" />
                                 </h:commandLink>
                             </p:column>
@@ -140,10 +140,10 @@
                                 <p:rowEditor style="display: inline-block;vertical-align: bottom;" />
                                 <h:commandLink
                                     action="#{categoriaEntregaView.modeloEntregaController.tipoResponsavelEntregaController.remover(item)}"
-                                    onclick="if(!confirm('Deseja inativar este registro?')) return false;">
+                                    onclick="if(!confirm('#{infoxMessages['crud.confirmRemove']}')) return false;">
                                     <h:graphicImage
                                         url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
-                                        title="#{infoxMessages['button.remove']}" />
+                                        title="#{infoxMessages['button.delete']}" />
                                     <p:ajax process="@this" update="@parent:@parent:@parent" />
                                 </h:commandLink>
                             </p:column>
