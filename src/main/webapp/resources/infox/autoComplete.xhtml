@@ -4,8 +4,6 @@
 
 <composite:interface>
 
-    <composite:attribute name="id" />
-    <composite:attribute name="rendered" default="true" />
     <composite:attribute name="label" />
     <composite:attribute name="help" />
     <composite:attribute name="value" />
@@ -17,16 +15,17 @@
     <composite:attribute name="converter" />
     <composite:attribute name="valueChangeListener" />
     <composite:attribute name="placeholder" />
+    <composite:attribute name="scrollHeight" type="java.lang.Integer" />
     <composite:attribute name="completeMethod" required="true" method-signature="java.util.List action(java.lang.String)"/>
     <composite:attribute name="var" default="item"/>
     <composite:attribute name="itemLabel" type="java.lang.String" default="#{item}"/>
     <composite:attribute name="itemValue" type="java.lang.Object" default="#{item}" />
     <composite:attribute name="maxResults" default="100"/>
-    <composite:attribute name="minQueryLength" />
+    <composite:attribute name="minQueryLength" default="0" type="java.lang.Integer" />
     <composite:attribute name="queryDelay" default="300" />
     <composite:attribute name="forceSelection" default="false" />
-    <composite:attribute name="dropdown" default="true" />
-    <composite:attribute name="dropdownMode" default="current" />
+    <composite:attribute name="dropdown" default="false" />
+    <composite:attribute name="dropdownMode" default="blank" />
     <composite:attribute name="multiple" default="false" />
     <composite:attribute name="maxlength" />
 
@@ -51,17 +50,7 @@
 </composite:interface>
 
 <composite:implementation>
-    <p:outputPanel id="#{cc.attrs.id}" styleClass="decoration-div inputText-div" rendered="#{cc.attrs.rendered}">
-        <script type="text/javascript">
-				var id = "#{cc.attrs.id}";
-				var errorClass = $('.' + id + 'ErrorClass');
-				var div = $('.' + id + 'DivClass');
-				if (errorClass.length !== 0) {
-					div.addClass('property-error');
-				} else {
-					div.removeClass('property-error');
-				}
-	    	</script>
+    <p:outputPanel id="#{cc.attrs.id}" styleClass="decoration-div inputText-div">
         <div class="property-field-edit">
             <div class="property-field-edit-name">
                 <h:outputLabel id="#{cc.attrs.id}Label" for="#{cc.attrs.id}Input">
@@ -82,7 +71,7 @@
                     readonly="#{cc.attrs.readonly}" onblur="#{cc.attrs.onblur}" onselect="#{cc.attrs.onselect}"
                     required="#{cc.attrs.required}" onchange="#{cc.attrs.onchange}" onkeypress="#{cc.attrs.onkeypress}"
                     onkeyup="#{cc.attrs.onkeyup}" placeholder="#{cc.attrs.placeholder}"
-                    var="item" itemLabel="#{cc.attrs.itemLabel}" itemValue="#{cc.attrs.itemValue}"
+                    var="#{cc.attrs.var}" itemLabel="#{cc.attrs.itemLabel}" itemValue="#{cc.attrs.itemValue}"
                     completeMethod="#{cc.attrs.completeMethod}"
                     maxResults="#{cc.attrs.maxResults}" minQueryLength="#{cc.attrs.minQueryLength}" 
                     queryDelay="#{cc.attrs.queryDelay}"
@@ -106,13 +95,27 @@
 						    		onstart="#{cc.attrs.onstart}" oncomplete="#{cc.attrs.oncomplete}" listener="#{cc.attrs.listener}"/>
 					    	</c:if>
 			        </c:if>
-                    <f:facet name="itemtip">
-                        <composite:renderFacet name="itemtip" />
-                    </f:facet>
+                    <c:if test="#{not empty cc.facets.itemtip}">
+                        <f:facet name="itemtip">
+                            <composite:renderFacet name="itemtip" />
+                        </f:facet>
+                    </c:if>
                 </p:autoComplete>
             </div>
         </div>
     </p:outputPanel>
+    <script type="text/javascript">
+    (function(){
+        var id = "#{cc.attrs.id}";
+        var errorClass = $('.' + id + 'ErrorClass');
+        var div = $('.' + id + 'DivClass');
+        if (errorClass.length !== 0) {
+            div.addClass('property-error');
+        } else {
+            div.removeClass('property-error');
+        }
+    })();
+    </script>
 </composite:implementation>
 
 </html>
