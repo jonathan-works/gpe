@@ -16,7 +16,7 @@
     <a:commandLink action="#{home.remove(row)}" rendered="#{canEdit}"
         limitRender="true" status=":status"
         render=":#{gridId}#{empty listReRender ? '' : (',').concat(listReRender)}"
-        onclick="if(!confirm('Deseja remover este registro?')) return false;">
+        onclick="if(!confirm('#{infoxMessages['crud.confirmRemove']}')) return false;">
 
         <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="Remover registro" />
         <f:param name="firstResult" value="#{bean.firstResult}" />
