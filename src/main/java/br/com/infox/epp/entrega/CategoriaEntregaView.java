@@ -24,6 +24,7 @@ public class CategoriaEntregaView implements Serializable {
 
     @Inject private CategoriaEntregaService categoriaEntregaService;
     @Inject private CategoriaEntregaItemService categoriaEntregaItemService;
+    @Inject private RestricaoCategoriaEntregaItemController restricaoCategoriaEntregaItemController;
 
     @Inject private CategoriaEntregaController categoriaEntregaController;
     @Inject private CategoriaEntregaItemController categoriaEntregaItemController;
@@ -36,6 +37,10 @@ public class CategoriaEntregaView implements Serializable {
         clear();
     }
 
+    public RestricaoCategoriaEntregaItemController getRestricaoCategoriaEntregaItemController() {
+        return restricaoCategoriaEntregaItemController;
+    }
+    
     public ModeloEntregaController getModeloEntregaController() {
         return modeloEntregaController;
     }
@@ -132,6 +137,16 @@ public class CategoriaEntregaView implements Serializable {
             categoriaEntregaItemController.iniciaModoEditar(path[path.length-1]);
         }
     }
+    
+    @ExceptionHandled
+    public void configRestricaoItem(){
+        clear();
+        this.currentView = CurrentView.CONFIG_RESTRICAO_ITEM;
+        String[] path = getPath();
+        if (path != null) {
+            restricaoCategoriaEntregaItemController.init(path[path.length-1]);
+        }
+    }
 
 /*
     public List<CategoriaEntrega> completeCategoria(String query) {
@@ -176,7 +191,8 @@ public class CategoriaEntregaView implements Serializable {
         case EDIT_CATEGORIA:
         case CREATE_CATEGORIA:
             return "categoriaForm.xhtml";
-        case NONE:
+        case CONFIG_RESTRICAO_ITEM:
+            return "restricaoCategoriaItemForm.xhtml";
         default:
             return "";
         }
@@ -185,5 +201,5 @@ public class CategoriaEntregaView implements Serializable {
 }
 
 enum CurrentView {
-    NONE, CREATE_CATEGORIA, EDIT_CATEGORIA, CREATE_ITEM, EDIT_ITEM, CONFIG_ENTREGA_FIELDS
+    NONE, CREATE_CATEGORIA, EDIT_CATEGORIA, CREATE_ITEM, EDIT_ITEM, CONFIG_RESTRICAO_ITEM, CONFIG_ENTREGA_FIELDS
 }

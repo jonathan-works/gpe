@@ -16,15 +16,15 @@ public class RestricaoCategoriaEntregaItemController implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
-    @Inject
-    private LocalizacaoSearch localizacaoSearch;
-    @Inject
-    private CategoriaEntregaItemSearch categoriaEntregaItemSearch;
+    @Inject private LocalizacaoSearch localizacaoSearch;
+    @Inject private CategoriaEntregaItemSearch categoriaEntregaItemSearch;
     @Inject private ModeloEntregaService modeloEntregaService;
     
     private CategoriaEntregaItem categoriaEntregaItem;
     
     private List<Localizacao> restricoes;
+
+    private Localizacao restricao;
     
     public void clear(){
         restricoes = new ArrayList<>();
@@ -46,8 +46,17 @@ public class RestricaoCategoriaEntregaItemController implements Serializable {
         return localizacoes;
     }
     
-    public void adicionar(Localizacao localizacao){
-        restricoes.add(localizacao);
+    public Localizacao getRestricao(){
+        return this.restricao;
+    }
+    
+    public void setRestricao(Localizacao restricao) {
+        this.restricao = restricao;
+    }
+    
+    public void adicionar(){
+        restricoes.add(this.restricao);
+        setRestricao(null);
     }
 
     public void remover(Localizacao localizacao){
