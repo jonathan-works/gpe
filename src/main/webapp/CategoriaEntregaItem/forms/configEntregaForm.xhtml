@@ -8,7 +8,7 @@
     <fieldset>
         <legend>Configuração de Entrega de Documentos</legend>
         <ui:repeat var="item" value="#{categoriaEntregaView.modeloEntregaController.itens}">
-            <i:input label="#{item.categoriaEntrega.descricao}" value="#{item.descricao}">
+            <i:input label="#{item.categoriaEntrega.descricao}">
                 <h:outputText value="#{item.descricao}" />
             </i:input>
         </ui:repeat>
@@ -24,6 +24,7 @@
                     <i:inputDate id="dataLimite" label="Data limite para Entrega"
                         value="#{categoriaEntregaView.modeloEntregaController.dataLimite}" />
                     <i:autoComplete id="modeloCertidao" label="Modelo para certidão" required="true"
+                        dropdown="true"
                         value="#{categoriaEntregaView.modeloEntregaController.modeloCertidao}"
                         converter="br.com.infox.jsf.converter.EntityConverter"
                         completeMethod="#{categoriaEntregaView.modeloEntregaController.completeModeloCertidao}"
@@ -49,6 +50,7 @@
                             <i:autoComplete id="classificacaoDocumento"
                                 value="#{categoriaEntregaView.modeloEntregaController.classificacaoDocumentoEntregaController.classificacaoDocumento}"
                                 converter="br.com.infox.jsf.converter.EntityConverter"
+                                dropdown="true" dropdownMode="current"
                                 completeMethod="#{categoriaEntregaView.modeloEntregaController.classificacaoDocumentoEntregaController.completeClassificacaoDocumento}"
                                 itemLabel="#{item.codigoDocumento.concat(' - ').concat(item.descricao)}"
                                 itemValue="#{item}" />
@@ -115,6 +117,7 @@
                             <i:autoComplete id="tipoResponsavel"
                                 value="#{categoriaEntregaView.modeloEntregaController.tipoResponsavelEntregaController.tipoResponsavel}"
                                 converter="br.com.infox.jsf.converter.EntityConverter"
+                                dropdown="true" dropdownMode="current"
                                 completeMethod="#{categoriaEntregaView.modeloEntregaController.tipoResponsavelEntregaController.completeTipoResponsavel}"
                                 itemLabel="#{item.identificador.concat(' - ').concat(item.descricao)}"
                                 itemValue="#{item}" />
