@@ -103,14 +103,14 @@
                             <f:validator validatorId="jsfComponentIdValidator" />
                         </h:inputText>
                         <h:outputScript>
-                function customFilter(subString, value) {
-                    if (subString.length >= 1) {
-                        if (value.indexOf(subString) != -1)
-                            return true;
-                    } else
-                        return false;
-                };
-            </h:outputScript>
+                            function customFilter(subString, value) {
+                                if (subString.length >= 1) {
+                                    if (value.indexOf(subString) != -1)
+                                        return true;
+                                } else
+                                    return false;
+                            };
+                        </h:outputScript>
                         <rich:autocomplete value="#{var.name}"
                             rendered="#{empty var.name and !empty t.previousVariables}" selectFirst="false"
                             autocompleteList="#{t.previousVariables}" mode="client" minChars="2"
@@ -120,6 +120,13 @@
                             <a:ajax status=":status" listener="#{var.copyVariable()}" event="selectitem"
                                 render="varDiv,writable,varLabel,formVariableType,resetVariableForm" limitRender="true" />
                         </rich:autocomplete>
+                        <s:div rendered="#{var.type eq 'TASK_PAGE' and taskpageMapLoader.getTaskpage(var.name) ne null}" style="display: inline-block">
+                            <ui:include src="helpers/taskpageAjuda.xhtml">
+                                <ui:param name="taskpage" value="#{taskpageMapLoader.getTaskpage(var.name)}" />
+                            </ui:include>
+                            <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}"
+                                onclick="#{rich:component('taskpageAjudaPopup')}.show();" />
+                        </s:div>
                     </s:div>
                 </h:form>
             </rich:column>
