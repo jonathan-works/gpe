@@ -1,48 +1,49 @@
 /* CORES DAS ABAS */
-.ui-widget-header {
-
-    & >.ui-state-default.ui-corner-top{
-        background-color: @infox-tab-bg-color;
-        background-image: none;
-        border:solid #ccc;
-        border-width:0 0 5px;
-        border-radius:0;
-        margin:0 0 0 2px;
-        padding:0;
-        &>a {
-            color: @infox-tab-txt-color;
-            text-shadow: none;
-        }
-        &.ui-tabs-active.ui-state-active{
-            margin:0 0 0 2px;
-            padding:0;
-            border-bottom-color: @infox-tab-txt-color;
-        }
-
-        &.ui-state-disabled{
-            &>a {
-                color: lighten(@infox-tab-txt-color,50%);
+#abas() {
+    .tabs {
+        .ui-tabs {
+            background-image: none;
+            background-color: inherit;
+            border-style: none;
+            .ui-tabs-nav {
+                background-image: none;
+                background-color: inherit;
+                border-style: none;
+                display: inline-block;
+                padding: 0 5px;
+                margin: 0 0 1px;
+                &.ui-widget-header {
+                    margin: 0;
+                    padding: 0;
+                    li {
+                        background-color: @infox-tab-bg-color;
+                        background-image: none;
+                        border: solid #ccc;
+                        border-width: 0 0 5px;
+                        border-radius: 0;
+                        margin: 0 0 0 2px;
+                        padding: 0;
+                        & > a {
+                            color: @infox-tab-txt-color;
+                            text-shadow: none;
+                        }
+                        &.ui-state-active {
+                            margin: 0 0 0 2px;
+                            padding: 0;
+                            border-width: 0 0 5px;
+                            border-bottom-color: @infox-tab-txt-color;
+                        }
+                    }
+                }
+            }
+            .ui-tabs-panel {
+              margin: .25em 0;
+              padding: .25em .5em;
+              border-width: 1px 0;
             }
         }
     }
 }
-
-.ui-widget-content.ui-tabs {
-    background-image:none;
-    background-color:inherit;
-    border-style:none;
-    .ui-tabs-nav{
-        background-image:none;
-        background-color:inherit;
-        border-style:none;
-        display:inline-block;
-        padding:0 5px;
-        margin:0 0 1px;
-    }
-    .ui-tabs-panel {
-        border-width:1px 0;
-        margin:-1px 0 0 4px;
-        overflow-x: auto;
-        overflow-y: visible;
-    }
+body {
+    #abas > .tabs;
 }
