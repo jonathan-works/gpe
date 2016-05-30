@@ -1,23 +1,32 @@
 package br.com.infox.epp.entrega;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.ListJoin;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
-import br.com.infox.cdi.producer.EntityManagerProducer;
+import org.joda.time.DateTime;
+
+import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.epp.entrega.entity.CategoriaEntregaItem;
 import br.com.infox.epp.entrega.modelo.ModeloEntrega;
 import br.com.infox.epp.entrega.modelo.ModeloEntrega_;
 
-public class ModeloEntregaSearch {
+@Stateless
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+public class ModeloEntregaSearch extends PersistenceController {
 
     public ModeloEntrega findWithItems(List<CategoriaEntregaItem> items) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
@@ -43,13 +52,31 @@ public class ModeloEntregaSearch {
         List<ModeloEntrega> list = getEntityManager().createQuery(cq).setMaxResults(1).setFirstResult(0).getResultList();
         return (list == null || list.isEmpty()) ? null : list.get(0);
     }
-    
-    private EntityManager getEntityManager(){
-        return EntityManagerProducer.getEntityManager();
-    }
 
     public ModeloEntrega findById(Integer id) {
         return getEntityManager().find(ModeloEntrega.class, id);
+    }
+    
+    public List<ModeloEntrega> getAgendasvencidas() {
+        return getAgendasvencidas(DateTime.now().toDate());
+    }
+
+    public List<ModeloEntrega> getAgendasvencidas(Date data) {
+        EntityManager entityManager = getEntityManager();
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<ModeloEntrega> cq = cb.createQuery(ModeloEntrega.class);
+
+        Root<ModeloEntrega> modeloEntrega = cq.from(ModeloEntrega.class);
+        Predicate prazoExpirado = cb.lessThan(modeloEntrega.get(ModeloEntrega_.dataLimite), data);
+        Predicate sinalNaoDisparado = cb.isFalse(modeloEntrega.get(ModeloEntrega_.sinalDisparado));
+
+        Predicate restricoes = cb.and(prazoExpirado, sinalNaoDisparado,
+        		cb.isTrue(modeloEntrega.get(ModeloEntrega_.ativo)));
+
+        Order ordem = cb.asc(modeloEntrega.get(ModeloEntrega_.dataLimite));
+
+        cq = cq.select(modeloEntrega).where(restricoes).orderBy(ordem);
+        return entityManager.createQuery(cq).getResultList();
     }
 
 }

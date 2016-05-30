@@ -1,11 +1,11 @@
 package br.com.infox.epp.entrega;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
@@ -16,7 +16,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.SetJoin;
 
-import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.entrega.entity.CategoriaEntrega;
 import br.com.infox.epp.entrega.entity.CategoriaEntregaItem;
@@ -26,14 +26,9 @@ import br.com.infox.epp.entrega.entity.CategoriaItemRelacionamento;
 import br.com.infox.epp.entrega.entity.CategoriaItemRelacionamento_;
 
 @Stateless
-public class CategoriaEntregaItemSearch implements Serializable{
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+public class CategoriaEntregaItemSearch extends PersistenceController {
 
-    private static final long serialVersionUID = 1L;
-
-    public EntityManager getEntityManager() {
-		return EntityManagerProducer.getEntityManager();
-	}
-	
 	protected List<CategoriaEntregaItem> findWithFilters(String codigoItemPai, String codigoCategoria) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<CategoriaEntregaItem> cq = cb.createQuery(CategoriaEntregaItem.class);

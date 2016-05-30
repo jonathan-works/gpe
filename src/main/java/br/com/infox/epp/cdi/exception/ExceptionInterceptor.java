@@ -2,7 +2,6 @@ package br.com.infox.epp.cdi.exception;
 
 import java.io.Serializable;
 
-import javax.ejb.EJBException;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;

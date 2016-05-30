@@ -1,11 +1,9 @@
 package br.com.infox.epp.entrega;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
@@ -14,21 +12,15 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.epp.entrega.entity.CategoriaEntrega;
 import br.com.infox.epp.entrega.entity.CategoriaEntregaItem;
 import br.com.infox.epp.entrega.entity.CategoriaEntregaItem_;
 import br.com.infox.epp.entrega.entity.CategoriaEntrega_;
 
 @Stateless
-public class CategoriaEntregaSearch implements Serializable {
+public class CategoriaEntregaSearch extends PersistenceController {
 
-    private static final long serialVersionUID = 1L;
-
-    public EntityManager getEntityManager() {
-		return EntityManagerProducer.getEntityManager();
-	}
-	
 	public CategoriaEntrega getCategoriaEntregaByCodigo(String codigo) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<CategoriaEntrega> cq = cb.createQuery(CategoriaEntrega.class);

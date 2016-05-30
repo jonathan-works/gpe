@@ -16,9 +16,12 @@ public class RestricaoCategoriaEntregaItemController implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
-    @Inject private LocalizacaoSearch localizacaoSearch;
-    @Inject private CategoriaEntregaItemSearch categoriaEntregaItemSearch;
-    @Inject private ModeloEntregaService modeloEntregaService;
+    @Inject 
+    private LocalizacaoSearch localizacaoSearch;
+    @Inject 
+    private CategoriaEntregaItemSearch categoriaEntregaItemSearch;
+    @Inject 
+    private ModeloEntregaService modeloEntregaService;
     
     private CategoriaEntregaItem categoriaEntregaItem;
     

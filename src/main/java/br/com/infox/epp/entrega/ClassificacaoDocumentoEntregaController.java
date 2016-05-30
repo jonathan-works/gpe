@@ -13,10 +13,12 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.entrega.modelo.ClassificacaoDocumentoEntrega;
 
 public class ClassificacaoDocumentoEntregaController implements Serializable {
+	
     private static final long serialVersionUID = 1L;
 
-    @Inject private ClassificacaoDocumentoSearch classificacaoDocumentoSearch;
-    @Inject private ModeloEntregaService modeloEntregaService;
+    @Inject 
+    private ClassificacaoDocumentoSearch classificacaoDocumentoSearch;
+    
     private ClassificacaoDocumento classificacaoDocumento;
     private Boolean multiplosDocumentos;
     private Boolean obrigatorio;
