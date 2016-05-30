@@ -1,7 +1,8 @@
+
 #normalize-rich-components(){
     .fonts {
-      font-size:inherit;
-      font-family:inherit;
+      font-size:1em;
+      font-family:@default-font-family;
     }
     .background{
       background-repeat: inherit;
@@ -11,15 +12,38 @@
     }
 }
 
+#normalize-infox-components(){
+  .default {
+    .ui-widget-content,
+    .ui-widget-header,
+    .ui-state-default,
+    .ui-widget-content .ui-state-default,
+    .ui-widget-header .ui-state-default {
+        border-color: @standard-border-color;
+    }
+  }
+}
+
+#normalize-prime-components() {
+  .picklist {
+    .ui-picklist {
+      .ui-picklist-list {
+        width: initial;
+      }
+    }
+  }
+}
+
 p {
     img {
       max-height:100%;
       max-width:100%;
     }
 }
-
 body {
-    .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button{
+    #normalize-prime-components > .picklist;
+    #normalize-infox-components > .default;
+    .ui-widget, .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button{
       #normalize-rich-components > .fonts;
     }
     input, select, textarea, button, keygen, isindex, legend, a{
@@ -30,11 +54,13 @@ body {
         #normalize-rich-components > .fonts;
         #normalize-rich-components > .background;
     }
+    textarea, input[type="text"], input[type="password"], select{
+        #normalize-rich-components > .fonts;
+        #normalize-rich-components > .background;
+        border-radius:3px;
+    }
     button:hover, input[type="reset"]:hover, input[type="submit"]:hover, input[type="button"]:hover, button[disabled], input[type="reset"][disabled], input[type="submit"][disabled], input[type="button"][disabled] {
         #normalize-rich-components > .background;
-    }
-    .rf-au {
-     font-size: 1rem;
     }
     .rf-p-b {
       #normalize-rich-components > .fonts;
@@ -75,10 +101,26 @@ body {
       #normalize-rich-components > .fonts;
     }
 
+    .ui-inputfield,
+    .ui-widget-content .ui-inputfield,
+    .ui-widget-header .ui-inputfield {
+        .prefixed-atrib(box-shadow, initial);
+    }
+    .ui-inputfield.ui-state-focus,
+    .ui-widget-content .ui-inputfield.ui-state-focus,
+    .ui-widget-header .ui-inputfield.ui-state-focus {
+        border-color: @standard-border-color;
+        outline: initial;
+        .prefixed-atrib(box-shadow, initial);
+
+    }
+
+}
+html {
+  font-size:0.8125rem;
 }
 /*
 html {
-  font-size:0.8125rem;
   @media
   only screen and (-webkit-min-device-pixel-ratio: 2),
   only screen and (   min--moz-device-pixel-ratio: 2),

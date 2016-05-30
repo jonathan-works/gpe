@@ -1,8 +1,12 @@
-.ui-picklist {
-    div& &-list{
-        width:inherit;
+#picklist() {
+  .picklist {
+    & &-filter-container span.ui-icon{
+        top:2.63px;
     }
-    div& &-filter{
-        width:calc(~"100% - 20px");
-    }
+  }
+}
+
+
+.ui-picklist{
+    #picklist > .picklist;
 }

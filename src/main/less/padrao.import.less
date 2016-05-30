@@ -39,7 +39,10 @@
 @import "atomos/snackbar.import.less";
 @import "atomos/defaultCRUD.import.less";
 @import "atomos/abas.import.less";
+@import "atomos/auto-complete.import.less";
+@import "atomos/selectManyMenu.import.less";
 @import "atomos/panel.import.less";
+@import "atomos/picklist.import.less";
 @import "atomos/toolbar.import.less";
 
 // GRUPOS DE COMPONENTES / MOLÉCULAS
@@ -63,9 +66,13 @@
 @import "paginas/termoAdesao.import.less";
 @import "paginas/help.import.less";
 @import "paginas/painelUsuario.import.less";
+@import "font.import.less";
 
 @imgFolder:~"#{pathResolver.contextPath}/#{wiSkin.imageFolder}";
 @contextPath:~"#{pathResolver.contextPath}";
+
+@standard-border-color:#c0c0c0;
+
 @baseBgColor:#c3d9e4;
 @baseDegBgColor:#acc8be;
 
@@ -91,7 +98,7 @@
 @sub-borda-pad:5rem/16;
 @sub-borda-bord-width:0;
 
-@default-font-family:"RobotoDraft","Roboto",sans-serif, Arial, Verdana;
+@default-font-family:"RobotoDraft","Roboto";
 
 @header-bg-color:#c7d8cd;
 @header-bg-deg-color:#dbe5de;
@@ -201,24 +208,13 @@ h1 {
 .viewColumn {
   vertical-align: top;
 }
-.property-field-edit-name {
-  &:extend(.viewColumn);
+.property-field-edit-name , .property.field.view .name{
   font-weight: bold;
-  margin: 0;
-
-  padding: 0;
-  color: @base-label-color;
-  display: block;
-}
-.name {
-  &:extend(.property-field-edit-name);
 }
 
 .property-field-edit-value {
-  min-width: 140rem/16;
-  padding: 4rem/16;
-  color: #000;
-  display: block;
+  font-size:1em;
+  padding: 1em/4 0;
   &.property-error {
     padding: 3rem/16;
   }
@@ -241,8 +237,6 @@ h1 {
 .decoration-div {
   display: inline-block;
   vertical-align: top;
-  overflow: auto;
-  max-width: 100%;
 }
 
 .activeRow {
@@ -418,32 +412,8 @@ img.disabled {
   padding: 0 0 0 25rem/16;
 }
 
-.input {
-  &.select {
-    &.filtro-input-select {
-      background-color: #FFF;
-      padding: 5rem/16;
-      width: 193rem/16;
-      font-size: 16rem/16;
-    }
-    &.usuario-perfil{
-      width:auto;
-    }
-  }
-
-  &.crud {
-    height:15rem/16;
-    width: 250rem/16;
-    border-width: 1rem/16;
-    color: #000;
-    background-repeat: no-repeat;
-    background-position: top left;
-  }
-}
-
 .rich-calendar-input {
   border-width: 0;
-  color: #000;
   background-repeat: no-repeat;
   background-position: top left;
 }
@@ -965,27 +935,9 @@ input.ui-inputfield {
   border-radius : 0;
 }
 
-
-.ui-autocomplete-dropdown {
-    background-image: none;
-}
-
 .ui-state-hover {
     box-shadow: none;
 }
-
-.ui-autocomplete {
-  body & &-dropdown,button&-dropdown {
-    width: 18rem/16;
-  }
-}
-
-button.ui-autocomplete-dropdown {
-  width: 18rem/16;
-  border: 2rem/16 outset rgb(221, 221, 221);
-  background-color: rgb(231, 231, 231);
-}
-
 .ui-icon.ui-icon-triangle-1-s {
   background-image: none
 }
@@ -1003,8 +955,4 @@ select{
   color: rgba(0,0,0, 0.26);
   border: none;
   border-bottom: 1px solid rgba(0,0,0, 0.12);
-}
-
-.ui-autocomplete-dropdown.ui-button {
-  background-image: ~"url(#{pathResolver.contextPath}/resources/styleSkinInfox/all/caret-down.png)";
 }

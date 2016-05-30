@@ -1,0 +1,30 @@
+.ui-autocomplete-dropdown {
+    background-image: none;
+}
+
+.ui-autocomplete {
+  vertical-align:middle;
+  button.ui-autocomplete-dropdown {
+    width: 18px;
+    height: 18px;
+    position: relative;
+    background-image: ~"url(#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','arrow_drop_down_circle')})";
+    background-repeat: no-repeat;
+    background-position:center center;
+    background-color:transparent;
+    border-width:0;
+    box-shadow:initial;
+    display:inline-block;
+    vertical-align:middle;
+    opacity:0.5;
+    &:hover{
+      opacity:1;
+    }
+  }
+}
+
+button.ui-autocomplete-dropdown {
+  width: 18rem/16;
+  border: 2rem/16 outset rgb(221, 221, 221);
+  background-color: rgb(231, 231, 231);
+}
