@@ -533,7 +533,7 @@ public class NodeHandler implements Serializable {
     }
     
     public List<Pair<String, VariableType>> getStartVariablesSubProcess() {
-        if (startVariablesSubProcess == null) {
+        if (startVariablesSubProcess == null && getSubProcessName() != null) {
             onChangeSubProcess(getSubProcessName());
         }
         return startVariablesSubProcess;
