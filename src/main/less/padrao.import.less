@@ -39,7 +39,10 @@
 @import "atomos/snackbar.import.less";
 @import "atomos/defaultCRUD.import.less";
 @import "atomos/abas.import.less";
+@import "atomos/auto-complete.import.less";
+@import "atomos/selectManyMenu.import.less";
 @import "atomos/panel.import.less";
+@import "atomos/picklist.import.less";
 @import "atomos/toolbar.import.less";
 
 // GRUPOS DE COMPONENTES / MOLÉCULAS
@@ -63,6 +66,7 @@
 @import "paginas/termoAdesao.import.less";
 @import "paginas/help.import.less";
 @import "paginas/painelUsuario.import.less";
+@import "font.import.less";
 
 @imgFolder:~"#{pathResolver.contextPath}/#{wiSkin.imageFolder}";
 @contextPath:~"#{pathResolver.contextPath}";
@@ -94,7 +98,7 @@
 @sub-borda-pad:5rem/16;
 @sub-borda-bord-width:0;
 
-@default-font-family:"RobotoDraft","Roboto",sans-serif, Arial, Verdana;
+@default-font-family:"RobotoDraft","Roboto";
 
 @header-bg-color:#c7d8cd;
 @header-bg-deg-color:#dbe5de;
@@ -204,24 +208,13 @@ h1 {
 .viewColumn {
   vertical-align: top;
 }
-.property-field-edit-name {
-  &:extend(.viewColumn);
+.property-field-edit-name , .property.field.view .name{
   font-weight: bold;
-  margin: 0;
-  padding: 0;
-  color: @base-label-color;
-  display: block;
-  font-size:0.85em;
-}
-.name {
-  &:extend(.property-field-edit-name);
 }
 
 .property-field-edit-value {
-  min-width: 140rem/16;
+  font-size:1em;
   padding: 1em/4 0;
-  color: @base-label-color;
-  display: block;
   &.property-error {
     padding: 3rem/16;
   }
@@ -417,15 +410,6 @@ img.disabled {
   background-position: left center;
   background-image:url("#{pathResolver.contextPath}/#{wiSkin.imageFolder}/btn-calendario.png");
   padding: 0 0 0 25rem/16;
-}
-
-.input {
-
-  &.crud {
-    background-repeat: no-repeat;
-    background-position: top left;
-    border-radius:3px;
-  }
 }
 
 .rich-calendar-input {
@@ -951,37 +935,9 @@ input.ui-inputfield {
   border-radius : 0;
 }
 
-
-.ui-autocomplete-dropdown {
-    background-image: none;
-}
-
 .ui-state-hover {
     box-shadow: none;
 }
-
-.ui-autocomplete {
-  button.ui-autocomplete-dropdown {
-    width: 18px;
-    height: 18px;
-    position: relative;
-    background-image: ~"url(#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','arrow_drop_down_circle')})";
-    background-repeat: no-repeat;
-    background-position:center center;
-    background-color:transparent;
-    border-width:0;
-    box-shadow:initial;
-    display:inline-block;
-    vertical-align:top;
-  }
-}
-
-button.ui-autocomplete-dropdown {
-  width: 18rem/16;
-  border: 2rem/16 outset rgb(221, 221, 221);
-  background-color: rgb(231, 231, 231);
-}
-
 .ui-icon.ui-icon-triangle-1-s {
   background-image: none
 }
@@ -999,8 +955,4 @@ select{
   color: rgba(0,0,0, 0.26);
   border: none;
   border-bottom: 1px solid rgba(0,0,0, 0.12);
-}
-
-.ui-autocomplete-dropdown.ui-button {
-  background-image: ~"url(#{pathResolver.contextPath}/resources/styleSkinInfox/all/caret-down.png)";
 }

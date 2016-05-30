@@ -1,7 +1,8 @@
+
 #normalize-rich-components(){
     .fonts {
-      font-size:inherit;
-      font-family:inherit;
+      font-size:1em;
+      font-family:@default-font-family;
     }
     .background{
       background-repeat: inherit;
@@ -42,7 +43,7 @@ p {
 body {
     #normalize-prime-components > .picklist;
     #normalize-infox-components > .default;
-    .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button{
+    .ui-widget, .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button{
       #normalize-rich-components > .fonts;
     }
     input, select, textarea, button, keygen, isindex, legend, a{
@@ -52,6 +53,11 @@ body {
     button, input[type="reset"], input[type="submit"], input[type="button"], textarea, input[type="text"], input[type="password"], select{
         #normalize-rich-components > .fonts;
         #normalize-rich-components > .background;
+    }
+    textarea, input[type="text"], input[type="password"], select{
+        #normalize-rich-components > .fonts;
+        #normalize-rich-components > .background;
+        border-radius:3px;
     }
     button:hover, input[type="reset"]:hover, input[type="submit"]:hover, input[type="button"]:hover, button[disabled], input[type="reset"][disabled], input[type="submit"][disabled], input[type="button"][disabled] {
         #normalize-rich-components > .background;
@@ -93,6 +99,20 @@ body {
     }
     .rf-trn{
       #normalize-rich-components > .fonts;
+    }
+
+    .ui-inputfield,
+    .ui-widget-content .ui-inputfield,
+    .ui-widget-header .ui-inputfield {
+        .prefixed-atrib(box-shadow, initial);
+    }
+    .ui-inputfield.ui-state-focus,
+    .ui-widget-content .ui-inputfield.ui-state-focus,
+    .ui-widget-header .ui-inputfield.ui-state-focus {
+        border-color: @standard-border-color;
+        outline: initial;
+        .prefixed-atrib(box-shadow, initial);
+
     }
 
 }
