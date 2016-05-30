@@ -49,7 +49,6 @@ public class EditorFormType extends FileFormType {
         Documento documento = editorValue.getValue();
         if (documento.getId() == null) {
             documento.setDescricao(formField.getLabel());
-            documento.setProcesso(formData.getProcesso());
             documento.setClassificacaoDocumento(editorValue.getClassificacaoDocumento());
             getDocumentoBinManager().createProcessoDocumentoBin(documento);
             getDocumentoManager().gravarDocumentoNoProcesso(formData.getProcesso(), documento);
