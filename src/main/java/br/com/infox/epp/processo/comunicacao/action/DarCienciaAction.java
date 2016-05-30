@@ -165,7 +165,6 @@ public class DarCienciaAction implements Serializable {
 		} else {
 			documento = documentoUploader.getDocumento();
 			documento.setDescricao(documento.getDocumentoBin().getNomeArquivo());
-			documento.setProcesso(getDestinatarioModeloComunicacao(getDestinatario()).getProcesso().getProcessoRoot());
 			documentoUploader.clear();
 		}
 		return documento;

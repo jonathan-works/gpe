@@ -34,7 +34,7 @@ public class FileVariableHandler {
 	private DocumentoBinManager documentoBinManager;
 	@Inject
 	private DocumentoManager documentoManager;
-	
+
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void gravarDocumento(UploadedFile file, String variableFieldName) {
 		TaskInstanceHome taskInstanceHome = TaskInstanceHome.instance();

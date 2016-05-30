@@ -324,7 +324,7 @@ public class AssinaturaDocumentoService {
     public void assinarGravarDocumento(Documento documento,
             final UsuarioPerfil perfilAtual, final String certChain,
             final String signature) throws DAOException, CertificadoException, AssinaturaException {
-    	documento = documentoManager.gravarDocumentoNoProcesso(documento.getProcesso(), documento);
+    	documento = documentoManager.gravarDocumentoNoProcesso(documento);
     	assinarDocumento(documento.getDocumentoBin(), perfilAtual, certChain, signature);
     }
 

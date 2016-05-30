@@ -39,8 +39,8 @@ public interface SigiloDocumentoPermissaoQuery {
             + QUERY_PARAM_USUARIO;
 
     String NAMED_QUERY_DOCUMENTOS_PERMITIDOS = "SigiloDocumentoPermissao.documentosPermitidos";
-    String QUERY_DOCUMENTOS_PERMITIDOS = "select o from Documento o "
-            + "where o.processo = :"
+    String QUERY_DOCUMENTOS_PERMITIDOS = "select o from Documento o inner join o.pasta p "
+            + "where p.processo = :"
             + QUERY_PARAM_PROCESSO
             + " and (not exists (select 1 from SigiloDocumento s where s.ativo = true and s.documento = o) or "
             + "exists (select 1 from SigiloDocumentoPermissao sp where sp.usuario = :"

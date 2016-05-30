@@ -23,7 +23,6 @@ import br.com.infox.epp.processo.consulta.action.ConsultaController;
 import br.com.infox.epp.processo.documento.action.DocumentoProcessoAction;
 import br.com.infox.epp.processo.documento.action.PastaAction;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
-import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.list.DocumentoList;
 import br.com.infox.epp.processo.documento.list.PastaList;
@@ -176,10 +175,6 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 		String ret = super.remove();
 		newInstance();
 		return ret;
-	}
-
-	public List<Documento> getProcessoDocumentoList() {
-		return getInstance() == null ? null : getInstance().getDocumentoList();
 	}
 
 	public boolean hasPartes() {

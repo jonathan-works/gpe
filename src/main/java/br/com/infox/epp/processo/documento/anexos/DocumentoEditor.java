@@ -37,7 +37,8 @@ public class DocumentoEditor extends DocumentoCreator implements Serializable {
     @Override
     protected Documento gravarDocumento() throws DAOException {
     	if (getDocumento().getId() == null) {
-    		return documentoManager.gravarDocumentoNoProcesso(getProcesso(), getDocumento(), getPasta());
+    		getDocumento().setPasta(getPasta());
+    		return documentoManager.gravarDocumentoNoProcesso(getProcesso(), getDocumento());
     	} else {
     		return documentoManager.update(getDocumento());
     	}

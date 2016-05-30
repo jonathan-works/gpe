@@ -64,7 +64,6 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
-import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -102,11 +101,6 @@ public class Documento implements Serializable, Cloneable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_documento_bin", nullable = false)
     private DocumentoBin documentoBin;
-    
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_processo", nullable = false)
-    private Processo processo;
     
     @NotNull
     @Size(max = LengthConstants.DESCRICAO_PADRAO)
@@ -152,8 +146,9 @@ public class Documento implements Serializable, Cloneable {
     @Column(name="in_excluido", nullable = false)
     private Boolean excluido;
     
+    @NotNull
     @ManyToOne
-    @JoinColumn(name="id_pasta")
+    @JoinColumn(name="id_pasta", nullable = false)
     private Pasta pasta;
     
     @ManyToOne(fetch = FetchType.LAZY)
@@ -230,14 +225,6 @@ public class Documento implements Serializable, Cloneable {
 
 	public void setDocumentoBin(DocumentoBin documentoBin) {
 		this.documentoBin = documentoBin;
-	}
-
-	public Processo getProcesso() {
-		return processo;
-	}
-
-	public void setProcesso(Processo processo) {
-		this.processo = processo;
 	}
 
 	public String getDescricao() {
@@ -357,7 +344,7 @@ public class Documento implements Serializable, Cloneable {
 		if (getDocumentoBin() == null) {
 			return false;
 		}
-    	if(getProcesso() != null && getProcesso().isFinalizado()) {
+		if(getPasta().getProcesso() != null && getPasta().getProcesso().isFinalizado()) {
     		return false;
     	}
     	List<ClassificacaoDocumentoPapel> papeis = getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
@@ -374,7 +361,7 @@ public class Documento implements Serializable, Cloneable {
     	if (getDocumentoBin() == null || getDocumentoBin().isMinuta()) {
 			return false;
 		}
-    	if(getProcesso() != null && getProcesso().isFinalizado()) {
+    	if(getPasta().getProcesso() != null && getPasta().getProcesso().isFinalizado()) {
     		return false;
     	}
     	List<ClassificacaoDocumentoPapel> papeis = getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
@@ -485,7 +472,6 @@ public class Documento implements Serializable, Cloneable {
 	public Documento makeCopy() throws CloneNotSupportedException {
 		Documento cDocumento = (Documento) clone();
 		cDocumento.setId(null);
-		cDocumento.setProcesso(null);
 		List<HistoricoStatusDocumento> cList = new ArrayList<>();
 		for (HistoricoStatusDocumento hsd : cDocumento.getHistoricoStatusDocumentoList()) {
 			HistoricoStatusDocumento cHistorico = hsd.makeCopy();
