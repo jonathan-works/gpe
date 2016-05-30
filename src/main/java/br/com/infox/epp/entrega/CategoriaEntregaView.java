@@ -3,8 +3,10 @@ package br.com.infox.epp.entrega;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -12,6 +14,10 @@ import javax.inject.Named;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.ObjectUtils;
 
+import br.com.infox.core.token.AccessToken;
+import br.com.infox.core.token.AccessTokenAuthenticationInterceptor;
+import br.com.infox.core.token.AccessTokenManager;
+import br.com.infox.core.token.TokenRequester;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
@@ -29,12 +35,42 @@ public class CategoriaEntregaView implements Serializable {
     @Inject private CategoriaEntregaController categoriaEntregaController;
     @Inject private CategoriaEntregaItemController categoriaEntregaItemController;
     @Inject private ModeloEntregaController modeloEntregaController;
+    @Inject private AccessTokenManager accessTokenManager;
     
     private CurrentView currentView;
 
+    private AccessToken accessToken;
+
     @PostConstruct
+    @ExceptionHandled
     public void init() {
         clear();
+        createToken();
+    }
+
+    @PreDestroy
+    @ExceptionHandled
+    public void destroy(){
+        accessTokenManager.remove(accessToken);
+    }
+    
+    private void createToken() {
+        AccessToken accessToken = new AccessToken();
+        accessToken.setToken(UUID.randomUUID());
+        accessToken.setTokenRequester(TokenRequester.UNSPECIFIED);
+        accessTokenManager.persist(accessToken);
+        this.accessToken = accessToken;
+    }
+    
+    public String getAccessTokenName() {
+        return AccessTokenAuthenticationInterceptor.NOME_TOKEN_HEADER_HTTP;
+    }
+    
+    public String getAccessTokenValue() {
+        if (accessToken == null){
+            return "";
+        }
+        return accessToken.getToken().toString();
     }
 
     public RestricaoCategoriaEntregaItemController getRestricaoCategoriaEntregaItemController() {

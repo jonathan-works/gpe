@@ -40,7 +40,7 @@
             </div>
             <i:groupedItemsTree baseUrl="#{facesContext.externalContext.requestContextPath}/rest"
                 path="#{facesContext.externalContext.requestContextPath}/rest" groupDelimiter="categoria" itemDelimiter="item">
-                <f:facet name="headers">{}</f:facet>
+                <f:facet name="headers">{"#{categoriaEntregaView.accessTokenName}":"#{categoriaEntregaView.accessTokenValue}"}</f:facet>
                 <f:facet name="groupToolBar">
                 [
                     {icon:'#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','edit')}', title:'Editar Categoria', onSelect:(itm)=>editarCategoria([{name:'path',value:itm}])},

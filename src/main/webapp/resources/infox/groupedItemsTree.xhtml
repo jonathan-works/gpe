@@ -31,10 +31,18 @@
     				"headers":{}
                 }
             };
-            <c:if test="#{not empty cc.attrs.path}">treeConfig.config.path="#{cc.attrs.path}";</c:if>
-            <c:if test="#{not empty cc.facets.headers}">treeConfig.config.headers="#{cc.facets.headers}";</c:if>
-            <c:if test="#{not empty cc.facets.groupToolBar}">treeConfig.groupToolBar=#{elFunctions.evaluateExpressions(cc.facets.groupToolBar)};</c:if>
-            <c:if test="#{not empty cc.facets.itemToolBar}">treeConfig.itemToolBar=#{elFunctions.evaluateExpressions(cc.facets.itemToolBar)};</c:if>
+            <c:if test="#{not empty cc.attrs.path}">
+            treeConfig.config.path="#{cc.attrs.path}";
+            </c:if>
+            <c:if test="#{not empty cc.facets.headers}">
+            treeConfig.config.headers=#{elFunctions.evaluateExpressions(cc.facets.headers)};
+            </c:if>
+            <c:if test="#{not empty cc.facets.groupToolBar}">
+            treeConfig.groupToolBar=#{elFunctions.evaluateExpressions(cc.facets.groupToolBar)};
+            </c:if>
+            <c:if test="#{not empty cc.facets.itemToolBar}">
+            treeConfig.itemToolBar=#{elFunctions.evaluateExpressions(cc.facets.itemToolBar)};
+            </c:if>
             var TreeCategorias = window['react-components'].TreeCategorias;
             ReactDOM.render(React.createElement(TreeCategorias, treeConfig), document.getElementById('#{cc.clientId}'));
         })()

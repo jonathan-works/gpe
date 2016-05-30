@@ -11,12 +11,15 @@ import java.util.TreeMap;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import br.com.infox.core.token.AccessTokenAuthentication;
+import br.com.infox.core.token.TokenRequester;
 import br.com.infox.epp.entrega.CategoriaEntregaItemService;
 import br.com.infox.epp.entrega.CategoriaEntregaService;
 import br.com.infox.epp.entrega.entity.CategoriaEntrega;
 import br.com.infox.epp.entrega.entity.CategoriaEntregaItem;
 
 @Stateless
+@AccessTokenAuthentication(TokenRequester.UNSPECIFIED)
 public class CategoriaEntregaRestService {
 
 	@Inject
