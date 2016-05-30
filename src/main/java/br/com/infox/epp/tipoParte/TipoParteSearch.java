@@ -12,8 +12,6 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
-import br.com.infox.epp.documento.entity.ModeloDocumento;
-import br.com.infox.epp.documento.entity.ModeloDocumento_;
 import br.com.infox.epp.processo.partes.entity.TipoParte;
 import br.com.infox.epp.processo.partes.entity.TipoParte_;
 

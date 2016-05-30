@@ -15,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -22,6 +24,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
+import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.entrega.entity.CategoriaEntregaItem;
 import br.com.infox.epp.fluxo.entity.ModeloPasta;
@@ -40,7 +43,6 @@ public class ModeloEntrega implements Serializable {
     @Column(name = "id_modelo_entrega", unique = true, nullable = false)
     private Integer id;
     
-    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="dt_limite_entrega",  nullable=false)
     private Date dataLimite;
@@ -87,6 +89,14 @@ public class ModeloEntrega implements Serializable {
     @OneToMany(fetch=FetchType.LAZY, orphanRemoval=true, cascade=CascadeType.ALL)
     private List<ClassificacaoDocumentoEntrega> documentosEntrega;
 
+    @PrePersist
+    @PreUpdate
+    private void setDataLimiteEndOfDay() {
+		if (getDataLimite() != null) {
+			setDataLimite(DateUtil.getEndOfDay(getDataLimite()));
+		}
+	}
+    
     public Integer getId() {
         return id;
     }

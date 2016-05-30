@@ -1,23 +1,22 @@
 package br.com.infox.epp.documento.pasta;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.epp.fluxo.entity.ModeloPasta;
 import br.com.infox.epp.fluxo.entity.ModeloPasta_;
 
 @Stateless
-public class ModeloPastaSearch implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+public class ModeloPastaSearch extends PersistenceController {
 
     public List<ModeloPasta> modeloPastaWithDescricaoLike(String descricao) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
@@ -29,10 +28,6 @@ public class ModeloPastaSearch implements Serializable {
             cq = cq.where(descricaoLike);
         }
         return getEntityManager().createQuery(cq).getResultList();
-    }
-
-    private EntityManager getEntityManager() {
-        return EntityManagerProducer.getEntityManager();
     }
 
 }

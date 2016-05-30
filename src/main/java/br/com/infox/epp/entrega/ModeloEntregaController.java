@@ -6,8 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -23,19 +21,26 @@ import br.com.infox.epp.entrega.modelo.ModeloEntrega;
 import br.com.infox.epp.entrega.modelo.TipoResponsavelEntrega;
 import br.com.infox.epp.fluxo.entity.ModeloPasta;
 
-@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class ModeloEntregaController implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Inject private ModeloDocumentoSearch modeloDocumentoSearch;
-    @Inject private ModeloPastaSearch modeloPastaSearch;
-    @Inject private CategoriaEntregaItemSearch categoriaEntregaItemSearch;
-    @Inject private ModeloEntregaSearch modeloEntregaSearch;
-    @Inject private ModeloEntregaService modeloEntregaService;
-    @Inject private ClassificacaoDocumentoEntregaController classificacaoDocumentoEntregaController;
-    @Inject private TipoResponsavelEntregaController tipoResponsavelEntregaController;
-    @Inject private InfoxMessages messages;
+    @Inject
+    private ModeloDocumentoSearch modeloDocumentoSearch;
+    @Inject
+    private ModeloPastaSearch modeloPastaSearch;
+    @Inject
+    private CategoriaEntregaItemSearch categoriaEntregaItemSearch;
+    @Inject
+    private ModeloEntregaSearch modeloEntregaSearch;
+    @Inject
+    private ModeloEntregaService modeloEntregaService;
+    @Inject
+    private ClassificacaoDocumentoEntregaController classificacaoDocumentoEntregaController;
+    @Inject
+    private TipoResponsavelEntregaController tipoResponsavelEntregaController;
+    @Inject
+    private InfoxMessages messages;
     
     private Integer id;
     private List<CategoriaEntregaItem> itens;

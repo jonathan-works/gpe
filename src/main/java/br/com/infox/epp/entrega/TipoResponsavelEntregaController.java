@@ -13,10 +13,12 @@ import br.com.infox.epp.processo.partes.entity.TipoParte;
 import br.com.infox.epp.tipoParte.TipoParteSearch;
 
 public class TipoResponsavelEntregaController implements Serializable {
+	
     private static final long serialVersionUID = 1L;
 
-    @Inject private TipoParteSearch tipoParteSearch;
-    @Inject private ModeloEntregaService modeloEntregaService;
+    @Inject 
+    private TipoParteSearch tipoParteSearch;
+    
     private TipoParte tipoResponsavel;
     private Boolean obrigatorio;
     private TipoResponsavelEntrega tipoResponsavelEntrega;

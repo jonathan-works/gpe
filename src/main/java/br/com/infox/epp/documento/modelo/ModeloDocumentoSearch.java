@@ -1,22 +1,21 @@
 package br.com.infox.epp.documento.modelo;
 
-import java.io.Serializable;
 import java.util.List;
 
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento_;
 
 @Stateless
-public class ModeloDocumentoSearch implements Serializable{
-
-    private static final long serialVersionUID = 1L;
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+public class ModeloDocumentoSearch extends PersistenceController {
 
     public List<ModeloDocumento> getModeloDocumentoWithTituloLike(String titulo) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
@@ -27,11 +26,5 @@ public class ModeloDocumentoSearch implements Serializable{
                 cb.lower(cb.literal("%" + titulo.toLowerCase() + "%"))));
         return getEntityManager().createQuery(cq).getResultList();
     }
-
-    private EntityManager getEntityManager() {
-        return EntityManagerProducer.getEntityManager();
-    }
-    
-    
 
 }
