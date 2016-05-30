@@ -652,6 +652,7 @@
     <db.classifier>postgresql</db.classifier>
     <optional.oracle.module>true</optional.oracle.module>
     <session.factory.jndi>java:/sessionFactoryEPA</session.factory.jndi>
+    <epp.quartz.schedulerDelay>600</epp.quartz.schedulerDelay>
   </properties>
   <profiles>
     <profile>
@@ -666,6 +667,7 @@
         <log.jbpm>INFO</log.jbpm>
         <log.hibernate.sql>INFO</log.hibernate.sql>
         <dep.classifier>dev</dep.classifier>
+        <epp.quartz.schedulerDelay>90</epp.quartz.schedulerDelay>
       </properties>
     </profile>
     <profile>
