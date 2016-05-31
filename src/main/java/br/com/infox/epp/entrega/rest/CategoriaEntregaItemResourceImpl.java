@@ -8,9 +8,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import br.com.infox.core.token.AccessTokenAuthentication;
+import br.com.infox.core.token.TokenRequester;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.entrega.entity.CategoriaEntregaItem;
 
+@AccessTokenAuthentication(TokenRequester.UNSPECIFIED)
 public class CategoriaEntregaItemResourceImpl implements CategoriaEntregaItemResource {
 
 	@Inject

@@ -6,8 +6,11 @@ import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import br.com.infox.core.token.AccessTokenAuthentication;
+import br.com.infox.core.token.TokenRequester;
 import br.com.infox.epp.cdi.config.BeanManager;
 
+@AccessTokenAuthentication(TokenRequester.UNSPECIFIED)
 public class CategoriaEntregaResourceImpl implements CategoriaEntregaResource {
 
 	@Inject

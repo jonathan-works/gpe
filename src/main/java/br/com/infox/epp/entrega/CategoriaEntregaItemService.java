@@ -12,8 +12,6 @@ import javax.persistence.NoResultException;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.token.AccessTokenAuthentication;
-import br.com.infox.core.token.TokenRequester;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.entrega.DetectorCiclo.Ciclo;
@@ -25,7 +23,6 @@ import br.com.infox.epp.entrega.entity.CategoriaItemRelacionamento;
 import br.com.infox.seam.exception.BusinessException;
 
 @Stateless
-@AccessTokenAuthentication(TokenRequester.UNSPECIFIED)
 public class CategoriaEntregaItemService {
 
 	@Inject
