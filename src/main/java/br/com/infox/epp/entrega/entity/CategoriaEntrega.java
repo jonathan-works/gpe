@@ -30,7 +30,7 @@ public class CategoriaEntrega implements Serializable {
     @SequenceGenerator(allocationSize=1, initialValue=1, name = "GeneratorCategoriaEntrega", sequenceName = "sq_categoria_entrega")
     @GeneratedValue(generator = "GeneratorCategoriaEntrega", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_categoria_entrega", unique = true, nullable = false)
-    private Integer id;
+    private Long id;
     
     @NotNull
     @Size(max=LengthConstants.CODIGO_DOCUMENTO, min=1)
@@ -76,7 +76,7 @@ public class CategoriaEntrega implements Serializable {
         this.categoriaEntregaPai = categoriaEntregaPai;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 

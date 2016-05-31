@@ -21,6 +21,7 @@
                         value="#{categoriaEntregaView.categoriaEntregaItemController.categoriaEntregaItem}"
                         converter="br.com.infox.jsf.converter.EntityConverter"
                         itemLabel="#{item.descricao}" dropdownMode="blank"
+                        forceSelection="true"
                         completeMethod="#{categoriaEntregaView.categoriaEntregaItemController.completeItem}">
                         <f:facet name="itemtip">
                             Categoria:#{item.categoriaEntrega.descricao} Codigo:#{item.codigo} Descrição:#{item.descricao}

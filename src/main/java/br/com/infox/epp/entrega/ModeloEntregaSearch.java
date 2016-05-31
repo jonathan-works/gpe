@@ -53,7 +53,7 @@ public class ModeloEntregaSearch extends PersistenceController {
         return (list == null || list.isEmpty()) ? null : list.get(0);
     }
 
-    public ModeloEntrega findById(Integer id) {
+    public ModeloEntrega findById(Long id) {
         return getEntityManager().find(ModeloEntrega.class, id);
     }
     

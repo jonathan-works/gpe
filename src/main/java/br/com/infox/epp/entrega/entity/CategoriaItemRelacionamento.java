@@ -24,7 +24,7 @@ public class CategoriaItemRelacionamento implements Serializable {
     @SequenceGenerator(allocationSize=1, initialValue=1, name = "GeneratorCategoriaItemRelacionamento", sequenceName = "sq_categoria_item_relac")
     @GeneratedValue(generator = "GeneratorCategoriaItemRelacionamento", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_categoria_item_relac", unique = true, nullable = false)
-	private Integer id;
+	private Long id;
 	
 	@NotNull
 	@ManyToOne(fetch=FetchType.LAZY)
@@ -35,7 +35,7 @@ public class CategoriaItemRelacionamento implements Serializable {
 	@JoinColumn(name="id_categoria_item_pai")
 	private CategoriaEntregaItem itemPai;
 	
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 

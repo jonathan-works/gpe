@@ -41,7 +41,7 @@ public class ModeloEntrega implements Serializable {
     @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR_NAME, sequenceName = "sq_modelo_entrega")
     @GeneratedValue(generator = GENERATOR_NAME, strategy = GenerationType.SEQUENCE)
     @Column(name = "id_modelo_entrega", unique = true, nullable = false)
-    private Integer id;
+    private Long id;
     
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="dt_limite_entrega",  nullable=false)
@@ -97,11 +97,11 @@ public class ModeloEntrega implements Serializable {
 		}
 	}
     
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

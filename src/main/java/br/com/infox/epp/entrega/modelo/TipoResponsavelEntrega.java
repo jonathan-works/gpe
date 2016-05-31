@@ -22,7 +22,7 @@ public class TipoResponsavelEntrega {
     @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR_NAME, sequenceName = "sq_modelo_entrega_responsavel")
     @GeneratedValue(generator = GENERATOR_NAME, strategy = GenerationType.SEQUENCE)
     @Column(name = "id_modelo_entrega_responsavel", unique = true, nullable = false)
-    private Integer id;
+    private Long id;
     
     @NotNull
     @ManyToOne(fetch=FetchType.LAZY)
@@ -37,11 +37,11 @@ public class TipoResponsavelEntrega {
     @JoinColumn(name="id_modelo_entrega", nullable=false)
     private ModeloEntrega modeloEntrega;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -42,7 +42,7 @@ public class ModeloEntregaController implements Serializable {
     @Inject
     private InfoxMessages messages;
     
-    private Integer id;
+    private Long id;
     private List<CategoriaEntregaItem> itens;
     private Date dataLimite;
     private Date dataLiberacao;

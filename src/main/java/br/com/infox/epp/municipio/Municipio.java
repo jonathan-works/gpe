@@ -27,7 +27,7 @@ public class Municipio implements Serializable {
 	@SequenceGenerator(allocationSize = 1, initialValue = 1, name = "MunicipioGenerator", sequenceName = "sq_municipio")
 	@GeneratedValue(generator = "MunicipioGenerator", strategy = GenerationType.SEQUENCE)
 	@Column(name = "id_municipio", unique = true, nullable = false)
-	private Integer id;
+	private Long id;
 
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -46,7 +46,7 @@ public class Municipio implements Serializable {
 	@Column(name="in_ativo")
 	private Boolean ativo;
 	
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 	
