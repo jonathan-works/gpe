@@ -14,6 +14,7 @@
     	<composite:attribute name="itemDelimiter" type="java.lang.String" default="item"/>
     	
     	<composite:facet name="headers" default="{}"/>
+    	<composite:facet name="queries" default="[]"/>
     	<composite:facet name="itemToolBar" default="[]" type="java.util.Map"/>
     	<composite:facet name="groupToolBar" default="[]" type="java.util.Map"/>
     </composite:interface>
@@ -28,7 +29,8 @@
     				"url":"#{cc.attrs.baseUrl}",
     				"groupDelimiter":"#{cc.attrs.groupDelimiter}",
     				"itemDelimiter":"#{cc.attrs.itemDelimiter}",
-    				"headers":{}
+    				"headers":{},
+    				"queries":[]
                 }
             };
             <c:if test="#{not empty cc.attrs.path}">
@@ -42,6 +44,9 @@
             </c:if>
             <c:if test="#{not empty cc.facets.itemToolBar}">
             treeConfig.itemToolBar=#{elFunctions.evaluateExpressions(cc.facets.itemToolBar)};
+            </c:if>
+            <c:if test="#{not empty cc.facets.queries}">
+            treeConfig.config.queries=#{elFunctions.evaluateExpressions(cc.facets.queries)};
             </c:if>
             var TreeCategorias = window['react-components'].TreeCategorias;
             ReactDOM.render(React.createElement(TreeCategorias, treeConfig), document.getElementById('#{cc.clientId}'));

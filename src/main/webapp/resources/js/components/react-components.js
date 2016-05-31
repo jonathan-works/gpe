@@ -1296,6 +1296,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var queueIndex = -1;
 
 	function cleanUpNextTick() {
+	    if (!draining || !currentQueue) {
+	        return;
+	    }
 	    draining = false;
 	    if (currentQueue.length) {
 	        queue = currentQueue.concat(queue);
@@ -2477,28 +2480,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = {
 	  getAll: function() {
 	    return new Promise((res, rej) => {
-	      request
+	      var getRequest=request
 	        .get(`${ConfigFacade.config.url}/${ConfigFacade.config.groupDelimiter}`)
-	        .set(ConfigFacade.config.headers || {})
-	        .end((err, response) => {
-	          if (err) {
-	            rej(err);
-	            return;
-	          }
-	          if (response.status === 200) {
+	        .set(ConfigFacade.config.headers || {});
+	      var queries = ConfigFacade.config.queries || [];
+	      queries.forEach((query) => getRequest.query(query) );
 
-	            res(JSON.parse(response.xhr.responseText));
-	          } else {
-	            rej(response.xhr.responseText);
-	          }
-	        });
+	      getRequest.end((err, response) => {
+	        if (err) {
+	          rej(err);
+	          return;
+	        }
+	        if (response.status === 200) {
+	          res(JSON.parse(response.xhr.responseText));
+	        } else {
+	          rej(response.xhr.responseText);
+	        }
+	      });
 	    });
 	  },
 	  get: function(codigo) {
 	    return new Promise((res, rej) => {
-	      request.get(`${ConfigFacade.config.url}/${ConfigFacade.config.groupDelimiter}/${codigo}`)
-	        .set(ConfigFacade.config.headers || {})
-	        .end((err, response) => {
+	      var getRequest=request.get(`${ConfigFacade.config.url}/${ConfigFacade.config.groupDelimiter}/${codigo}`)
+	        .set(ConfigFacade.config.headers || {});
+	      var queries = ConfigFacade.config.queries || [];
+	      queries.forEach((query) => getRequest.query(query) );
+	      getRequest.end((err, response) => {
 	          if (err) {
 	            rej(err);
 	            return;
@@ -2513,9 +2520,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  },
 	  getWithParent: function(item) {
 	    return new Promise((res, rej) => {
-	      request.get(`${ConfigFacade.config.url}/${ConfigFacade.config.itemDelimiter}/${item.codigo}/${ConfigFacade.config.groupDelimiter}`)
-	        .set(ConfigFacade.config.headers || {})
-	        .end((err, response) => {
+	      var getRequest=request.get(`${ConfigFacade.config.url}/${ConfigFacade.config.itemDelimiter}/${item.codigo}/${ConfigFacade.config.groupDelimiter}`)
+	        .set(ConfigFacade.config.headers || {});
+
+	      var queries = ConfigFacade.config.queries || [];
+	      queries.forEach((query) => getRequest.query(query) );
+	      getRequest.end((err, response) => {
 	          if (err) {
 	            rej(err);
 	            return;
