@@ -10,86 +10,86 @@
     xmlns:infox="http://www.infox.com.br/jsf"
     xmlns:p="http://primefaces.org/ui">
 
-    <infox:div rendered="#{not checkListView.hasPrestacao}">
-        <h:outputText value="#{infoxMessages['checkListPC.pcNotFound']}" />
+    <infox:div rendered="#{not checklistView.hasPrestacao}">
+        <h:outputText value="#{infoxMessages['checklist.pcNotFound']}" />
     </infox:div>
 
-    <infox:div id="checkListMessage">
-        <h:outputText value="#{checkListView.message}" rendered="#{not empty checkListView.message}" />
+    <infox:div id="checklistMessage">
+        <h:outputText value="#{checklistView.message}" rendered="#{not empty checklistView.message}" />
     </infox:div>
 
-    <infox:div rendered="#{checkListView.hasPrestacao}">
+    <infox:div rendered="#{checklistView.hasPrestacao}">
         <h:form id="blocoSituacaoForm">
-            <wi:selectOneMenuEnum id="blocoSituacaoMenu" label="#{infoxMessages['checkListPC.blocoSituacao.label']}"
-                value="#{checkListView.situacaoBloco}"
-                items="#{checkListView.situacaoCheckListOptions}"/>
+            <wi:selectOneMenuEnum id="blocoSituacaoMenu" label="#{infoxMessages['checklist.blocoSituacao.label']}"
+                value="#{checklistView.situacaoBloco}"
+                items="#{checklistView.situacaoCheckListOptions}"/>
 
             <a:commandButton id="blocoSituacaoButton" styleClass="buttons"
-                value="#{infoxMessages['checkListPC.blocoSituacao.button']}" onclick="infox.showLoading();"
-                actionListener="#{checkListView.setBlockSituacao()}"
+                value="#{infoxMessages['checklist.blocoSituacao.button']}" onclick="infox.showLoading();"
+                actionListener="#{checklistView.setBlockSituacao()}"
                 oncomplete="infox.hideLoading();" execute="@form"
-                render="checkListMessage pageBodyDialogMessage @form checkListTable" />
+                render="checklistMessage pageBodyDialogMessage @form checklistTable" />
         </h:form>
-        <h:form id="checkListTableform">
-            <p:dataTable id="checkListTable" widgetVar="checkListTable"
-                var="row" rowKey="#{row.id}" rowIndexVar="rowNumber" value="#{checkListView.documentoList}"
+        <h:form id="checklistTableform">
+            <p:dataTable id="checklistTable" widgetVar="checklistTable"
+                var="row" rowKey="#{row.id}" rowIndexVar="rowNumber" value="#{checklistView.documentoList}"
                 paginator="true" rows="20" lazy="true" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}"
                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {JumpToPageDropdown} {NextPageLink} {LastPageLink} {CurrentPageReport}"
                 currentPageReportTemplate="Página {currentPage} de {totalPages} em {totalRecords} registros" >
                 
                 <p:column styleClass="dt-toolbar-col" exportable="false">
-                    <a:commandLink id="downloadDocumentoPC" style="margin-right: 0.5em;"
+                    <a:commandLink id="downloadDocumento" style="margin-right: 0.5em;"
                         onclick="infox.showLoading();" execute="@this" render="@this" limitRender="true"
                         oncomplete="infox.hideLoading(); window.open('#{pathResolver.contextPath}/PdfReadOnly/downloadDocumento.seam');">
                         <infox:flashcopy />
-                        <h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" title="#{row.documentoPC.documentoBin}" styleClass="opacityHover"/>
-                        <f:setPropertyActionListener value="#{row.documentoPC.documentoBin}" target="#{flash.documentoBin}" />
+                        <h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" title="#{row.documento.documentoBin}" styleClass="opacityHover"/>
+                        <f:setPropertyActionListener value="#{row.documento.documentoBin}" target="#{flash.documentoBin}" />
                     </a:commandLink>
                 </p:column>
                 
-                <p:column headerText="#{infoxMessages['checkListPC.classificacaoDocumento']}" filterBy="#{row.documentoPC.classificacaoDocumento}">
+                <p:column headerText="#{infoxMessages['checklist.classificacaoDocumento']}" filterBy="#{row.documento.classificacaoDocumento}">
                     <f:facet name="filter">
-                        <h:selectOneMenu id="filterClassificacao" onchange="PF('checkListTable').filter()" style="max-width: 100%;">
+                        <h:selectOneMenu id="filterClassificacao" onchange="PF('checklistTable').filter()" style="max-width: 100%;">
                             <f:selectItem itemLabel="[Todos]" noSelectionOption="true" />
-                            <f:selectItems value="#{checkListView.classificacoesDocumento}" />
+                            <f:selectItems value="#{checklistView.classificacoesDocumento}" />
                         </h:selectOneMenu>
                     </f:facet>
-                    <h:outputText value="#{row.documentoPC.classificacaoDocumento}" />
+                    <h:outputText value="#{row.documento.classificacaoDocumento}" />
                 </p:column>
                 
-                <p:column headerText="#{infoxMessages['checkListPC.documento']}" filterBy="#{row.documentoPC.descricao}">
+                <p:column headerText="#{infoxMessages['checklist.documento']}" filterBy="#{row.documento.descricao}">
                     <f:facet name="filter">
-                        <h:inputText id="filterNomeDocumento" onchange="PF('checkListTable').filter()" style="max-width: 100%;" />
+                        <h:inputText id="filterNomeDocumento" onchange="PF('checklistTable').filter()" style="max-width: 100%;" />
                     </f:facet>
-                    <h:outputText value="#{row.documentoPC.descricao}" />
+                    <h:outputText value="#{row.documento.descricao}" />
                 </p:column>
                 
-                <p:column headerText="#{infoxMessages['checkListPC.situacao']}" filterBy="#{row.situacao}" style="width: 345px">
+                <p:column headerText="#{infoxMessages['checklist.situacao']}" filterBy="#{row.situacao}" style="width: 345px">
                     <f:facet name="filter">
-                        <h:selectOneMenu id="filterSituacao" onchange="PF('checkListTable').filter()" style="max-width: 100%;">
+                        <h:selectOneMenu id="filterSituacao" onchange="PF('checklistTable').filter()" style="max-width: 100%;">
                             <f:selectItem itemLabel="[Todos]" noSelectionOption="true" />
-                            <f:selectItems value="#{checkListView.situacoesCompletas}" />
+                            <f:selectItems value="#{checklistView.situacoesCompletas}" />
                         </h:selectOneMenu>
                     </f:facet>
                     <h:panelGroup id="selectSituacao">
-                        <h:selectOneRadio id="selectSituacaoRadio" value="#{row.situacao}" styleClass="checkListRadio"
+                        <h:selectOneRadio id="selectSituacaoRadio" value="#{row.situacao}" styleClass="checklistRadio"
                             layout="lineDirection" style="border: none">
-                            <f:selectItems value="#{checkListView.situacoes}" />
-                            <a:ajax event="change" execute="@this" render="checkListMessage pageBodyDialogMessage :movimentarTabPanel:checkListTableform:checkListTable:#{rowNumber}:textArea :movimentarTabPanel:checkListTableform:checkListTable:#{rowNumber}:selectSituacao"
+                            <f:selectItems value="#{checklistView.situacoes}" />
+                            <a:ajax event="change" execute="@this" render="checklistMessage pageBodyDialogMessage :movimentarTabPanel:checklistTableform:checklistTable:#{rowNumber}:textArea :movimentarTabPanel:checklistTableform:checklistTable:#{rowNumber}:selectSituacao"
                                 onbegin="infox.showLoading();" oncomplete="infox.hideLoading();"
-                                listener="#{checkListView.onChangeSituacao(row)}" />
+                                listener="#{checklistView.onChangeSituacao(row)}" />
                         </h:selectOneRadio>
                     </h:panelGroup>
                 </p:column>
                 
-                <p:column headerText="#{infoxMessages['checkListPC.comentarios']}">
+                <p:column headerText="#{infoxMessages['checklist.comentarios']}">
                     <h:panelGroup id="textArea" styleClass="textAreaPanel#{row.id}">
                         <h:inputTextarea rows="3" cols="30" rendered="#{row.situacao eq 'NCO' or row.situacao eq 'NVE'}"
                             value="#{row.comentario}">
                             <a:ajax event="change" limitRender="true" execute="@this"
-                                render="checkListMessage pageBodyDialogMessage"
+                                render="checklistMessage pageBodyDialogMessage"
                                 onbegin="infox.showLoading();" oncomplete="infox.hideLoading();"
-                                listener="#{checkListView.onChangeComentario(row)}" />
+                                listener="#{checklistView.onChangeComentario(row)}" />
                         </h:inputTextarea>
                     </h:panelGroup>
                 </p:column>
@@ -99,12 +99,12 @@
     
     <h:form id="taskButtonsForm">
         <ui:include src="/WEB-INF/xhtml/components/form/buttons/taskButtons.xhtml">
-            <ui:param name="taskEndAction" value="checkListView.endTask" />
+            <ui:param name="taskEndAction" value="checklistView.endTask" />
         </ui:include>
     </h:form>
 
     <style type="text/css">
-        table.checkListRadio td {
+        table.checklistRadio td {
             border: none;
             padding: 0px;
         }

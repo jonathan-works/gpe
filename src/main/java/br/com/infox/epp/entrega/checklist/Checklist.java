@@ -16,6 +16,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.entrega.documentos.Entrega;
 
 @Entity
 @Table(name = "tb_checklist")
@@ -31,8 +32,10 @@ public class Checklist implements Serializable {
     @Column(name = "id_checklist", nullable = false, updatable = false, unique = true)
     private Integer id;
 
-    // TODO falta pegar integração das tarefas de Gabriel e Paulo aonde a entidade Entrega estará no core
-    // private Entrega entrega;
+    @NotNull
+    @JoinColumn(name = "id_entrega")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Entrega entrega;
 
     @NotNull
     @Column(name = "dt_criacao", nullable = false)
@@ -51,14 +54,13 @@ public class Checklist implements Serializable {
         this.id = id;
     }
 
-    // TODO descomentar depois
-//    public Entrega getEntrega() {
-//        return entrega;
-//    }
-//
-//    public void setEntrega(Entrega entrega) {
-//        this.entrega = entrega;
-//    }
+    public Entrega getEntrega() {
+        return entrega;
+    }
+
+    public void setEntrega(Entrega entrega) {
+        this.entrega = entrega;
+    }
 
     public Date getDataCriacao() {
         return dataCriacao;
