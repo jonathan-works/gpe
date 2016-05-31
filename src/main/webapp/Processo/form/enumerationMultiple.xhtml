@@ -15,8 +15,15 @@
   	<ui:param name="readonly" value="#{formField.properties.readonly}" />
   	<ui:param name="required" value="#{formField.properties.required}" />
   	
+  	<style type="text/css">
+  		.selectManyMenu {
+  			width: 300px;
+  		}
+  	</style>
+  	
   	<i:selectManyMenu id="#{varId}" value="#{typedValue.value}" required="#{required}"
         disabled="#{disabled or readonly}" readonly="#{readonly}" 
-        items="#{typedValue.selectItems}" label="#{formField.label}"/>
+        items="#{typedValue.selectItems}" label="#{formField.label}"
+        styleClass="selectManyMenu"/>
     
 </ui:composition>

@@ -19,27 +19,27 @@
     
     	<fieldset>
     		<legend class="name">Processo</legend>
+    		
+    		<i:outputText id="numeroProcesso" value="#{iniciarProcessoVariaveisView.processo.numeroProcesso}" 
+    			label="#{infoxMessages['processo.numero']}" styleDiv="margin: 5px 20px;"/>
+    		
+    		<i:outputText id="fluxo" value="#{iniciarProcessoVariaveisView.processo.naturezaCategoriaFluxo.fluxo}" 
+    			label="#{infoxMessages['naturezaCategoriaFluxo.fluxo']}" styleDiv="margin: 5px 20px;"/>
+    		
+    		<i:outputText id="natureza" value="#{iniciarProcessoVariaveisView.processo.naturezaCategoriaFluxo.natureza}" 
+    			label="#{infoxMessages['naturezaCategoriaFluxo.natureza']}" styleDiv="margin: 5px 20px;"/>
+    		
+    		<i:outputText id="categoria" value="#{iniciarProcessoVariaveisView.processo.naturezaCategoriaFluxo.categoria}" 
+    			label="#{infoxMessages['naturezaCategoriaFluxo.categoria']}" styleDiv="margin: 5px 20px;"/>
     			
-    		<wi:outputText id="numero" value="#{iniciarProcessoVariaveisView.processo.numeroProcesso}" 
-    			label="#{infoxMessages['processo.numero']}"/>
-    		
-    		<wi:outputText id="fluxo" value="#{iniciarProcessoVariaveisView.processo.naturezaCategoriaFluxo.fluxo}" 
-    			label="#{infoxMessages['naturezaCategoriaFluxo.fluxo']}"/>
-    		
-    		<wi:outputText id="natureza" value="#{iniciarProcessoVariaveisView.processo.naturezaCategoriaFluxo.natureza}" 
-    			label="#{infoxMessages['naturezaCategoriaFluxo.natureza']}"/>
-    		
-    		<wi:outputText id="categoria" value="#{iniciarProcessoVariaveisView.processo.naturezaCategoriaFluxo.categoria}" 
-    			label="#{infoxMessages['naturezaCategoriaFluxo.categoria']}"/>
-    			
-    		<wi:outputText id="dataCadastro" value="#{iniciarProcessoVariaveisView.processo.dataInicio}" 
-    			label="#{infoxMessages['processo.dataCadastro']}">
-    			<f:convertDateTime pattern="dd/MM/yyyy kk:mm"/>
-    		</wi:outputText>	
+    		<i:outputText id="dataCadastro" value="#{iniciarProcessoVariaveisView.processo.dataInicio}" 
+    			label="#{infoxMessages['processo.dataCadastro']}" styleDiv="margin: 5px 20px;">
+    			<f:convertDateTime for="@this" pattern="dd/MM/yyyy kk:mm"/>
+    		</i:outputText>	
     			
     	</fieldset>
     	
-    	<fieldset>
+    	<fieldset style="margin-top: 1em;">
     		<legend class="name">#{infoxMessages['process.def.var.form']}</legend>
     		
     		<ui:param name="formData" value="#{iniciarProcessoVariaveisView.formData}"/>
@@ -57,7 +57,7 @@
 	    		</c:forEach>
 	    		
 	    		<div>
-	    			<h:commandButton styleClass="buttons" action="/Processo/listView.seam?faces-redirect=true" value="Voltar" />
+	    			<h:commandButton styleClass="buttons" action="/Processo/listView.seam?faces-redirect=true" value="Voltar" immediate="true"/>
 	    			
 	    			<h:commandButton styleClass="buttons" action="#{iniciarProcessoVariaveisView.gravar}" value="Gravar" >
 	    				<a:ajax execute="@form" render="@form :pageBodyDialogMessage" onsubmit="infox.showLoading();" 
