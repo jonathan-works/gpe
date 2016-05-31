@@ -8,11 +8,14 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.AbstractQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.From;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
@@ -20,7 +23,12 @@ import javax.persistence.criteria.Subquery;
 import org.joda.time.DateTime;
 
 import br.com.infox.core.persistence.PersistenceController;
+import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.entity.Localizacao_;
 import br.com.infox.epp.entrega.entity.CategoriaEntregaItem;
+import br.com.infox.epp.entrega.entity.CategoriaEntregaItem_;
+import br.com.infox.epp.entrega.entity.CategoriaItemRelacionamento;
+import br.com.infox.epp.entrega.entity.CategoriaItemRelacionamento_;
 import br.com.infox.epp.entrega.modelo.ModeloEntrega;
 import br.com.infox.epp.entrega.modelo.ModeloEntrega_;
 
@@ -77,6 +85,48 @@ public class ModeloEntregaSearch extends PersistenceController {
 
         cq = cq.select(modeloEntrega).where(restricoes).orderBy(ordem);
         return entityManager.createQuery(cq).getResultList();
+    }
+    
+    public List<CategoriaEntregaItem> getCategoriasEItensComEntrega(String codigoItemPai, String codigoLocalizacao, Date data){
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        
+        CriteriaQuery<CategoriaEntregaItem> cq = cb.createQuery(CategoriaEntregaItem.class);
+        Root<ModeloEntrega> modeloEntrega = cq.from(ModeloEntrega.class);
+        From<?, CategoriaEntregaItem> itens = modeloEntrega.join(ModeloEntrega_.itens, JoinType.INNER);
+        From<?, CategoriaItemRelacionamento> relacPais = itens.join(CategoriaEntregaItem_.itensPais, JoinType.INNER);
+        From<?, CategoriaEntregaItem> pai = relacPais.join(CategoriaItemRelacionamento_.itemPai, JoinType.INNER);
+        
+        Subquery<?> sqComRestricao = createSubQueryVerificaRestricaoLocalizacao(codigoLocalizacao, cq);
+        
+        Predicate existsComRestricao = cb.exists(sqComRestricao);
+        
+        Predicate filtroPai;
+        if (codigoItemPai != null && !codigoItemPai.trim().isEmpty()){
+            filtroPai = cb.equal(pai.get(CategoriaEntregaItem_.codigo), codigoItemPai);
+        } else {
+            filtroPai = cb.isNull(pai);
+        }
+        
+        Path<Date> dataLimite = modeloEntrega.get(ModeloEntrega_.dataLimite);
+        Path<Date> dataLiberacao = modeloEntrega.get(ModeloEntrega_.dataLiberacao);
+        
+        Predicate dataLimiteNotNullEDataNoIntervalo= cb.and(cb.isNotNull(dataLimite), cb.between(cb.literal(data), dataLiberacao, dataLimite));
+        Predicate dataLimiteNullEDataPosterior=cb.and(cb.isNull(dataLimite),cb.lessThanOrEqualTo(dataLiberacao, data));
+        Predicate dataValida = cb.or(dataLimiteNotNullEDataNoIntervalo, dataLimiteNullEDataPosterior);
+        
+        cq = cq.select(itens).where(existsComRestricao, filtroPai, dataValida);
+        return getEntityManager().createQuery(cq).getResultList();
+    }
+
+    private Subquery<?> createSubQueryVerificaRestricaoLocalizacao(String codigoLocalizacao, AbstractQuery<?> mainQuery) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        Subquery<Long> sqComRestricao = mainQuery.subquery(Long.class);
+        Root<ModeloEntrega> modeloEntregaInterno = sqComRestricao.from(ModeloEntrega.class);
+        From<?, CategoriaEntregaItem> itensInterno = modeloEntregaInterno.join(ModeloEntrega_.itens, JoinType.INNER);
+        From<?, Localizacao> restricoes = itensInterno.join(CategoriaEntregaItem_.restricoes, JoinType.INNER);
+        Predicate localizacaoIgualItm = cb.equal(restricoes.get(Localizacao_.codigo), codigoLocalizacao);
+        sqComRestricao = sqComRestricao.select(cb.literal(1L)).where(localizacaoIgualItm);
+        return sqComRestricao;
     }
 
 }
