@@ -25,6 +25,7 @@ import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.exception.EppConfigurationException;
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
@@ -353,6 +354,9 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         }
         processo.setLocalizacao(localizacao);
         processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
+        if(naturezaCategoriaFluxo == null || naturezaCategoriaFluxo.isEmpty())
+        	throw new EppConfigurationException("O fluxo "+ fluxoName + " não possui natureza, categoria, fluxo cadastrados.");
+        
         processo.setNaturezaCategoriaFluxo(naturezaCategoriaFluxo.get(0));
         UsuarioLogin usuarioLogin = Authenticator.getUsuarioLogado();
         if (usuarioLogin == null) {
