@@ -22,7 +22,7 @@ import javax.transaction.Synchronization;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-public class EntityManagerImpl implements EntityManager, Serializable, Synchronization {
+public class EntityManagerImpl implements EntityManagerSerializable, Serializable, Synchronization {
 
 	private static final long serialVersionUID = 1L;
 	private static final Pattern patternEl = Pattern.compile("#\\{.*?\\}");
