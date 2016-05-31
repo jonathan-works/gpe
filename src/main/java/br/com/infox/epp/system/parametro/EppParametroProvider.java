@@ -54,6 +54,7 @@ public class EppParametroProvider implements Serializable, ParametroProvider {
 		create(grupo, "usuarioExternoPodeVerDocExcluido", FieldType.BOOLEAN);
 		create(grupo, "somenteUsuarioInternoVerMotivoExclusaoDoc", FieldType.BOOLEAN);
 		create(grupo, "authorizationSecret", FieldType.STRING);
+		create(grupo, "webserviceToken", FieldType.STRING);
 		create(grupo, "externalAuthenticationServiceUrl", FieldType.STRING);
 		create(grupo, "ldapDomainName", FieldType.STRING);
 		create(grupo, "ldapProviderUrl", FieldType.STRING);
