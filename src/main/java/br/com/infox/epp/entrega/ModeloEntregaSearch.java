@@ -94,30 +94,41 @@ public class ModeloEntregaSearch extends PersistenceController {
         Root<ModeloEntrega> modeloEntrega = cq.from(ModeloEntrega.class);
         From<?, CategoriaEntregaItem> itens = modeloEntrega.join(ModeloEntrega_.itens, JoinType.INNER);
         From<?, CategoriaItemRelacionamento> relacPais = itens.join(CategoriaEntregaItem_.itensPais, JoinType.INNER);
-        From<?, CategoriaEntregaItem> pai = relacPais.join(CategoriaItemRelacionamento_.itemPai, JoinType.INNER);
+        
         
         Subquery<?> sqComRestricao = createSubQueryVerificaRestricaoLocalizacao(codigoLocalizacao, cq);
         
-        Predicate existsComRestricao = cb.exists(sqComRestricao);
+        Predicate filtroRestricoes = cb.or(cb.exists(sqComRestricao), 
+                cb.not(cb.exists(createSubQueryVerificaAusenciaRestricoes(cq))));
         
         Predicate filtroPai;
         if (codigoItemPai != null && !codigoItemPai.trim().isEmpty()){
+            From<?, CategoriaEntregaItem> pai = relacPais.join(CategoriaItemRelacionamento_.itemPai, JoinType.INNER);
             filtroPai = cb.equal(pai.get(CategoriaEntregaItem_.codigo), codigoItemPai);
         } else {
-            filtroPai = cb.isNull(pai);
+            filtroPai = cb.isNull(relacPais.get(CategoriaItemRelacionamento_.itemPai));
         }
         
         Path<Date> dataLimite = modeloEntrega.get(ModeloEntrega_.dataLimite);
         Path<Date> dataLiberacao = modeloEntrega.get(ModeloEntrega_.dataLiberacao);
         
         Predicate dataLimiteNotNullEDataNoIntervalo= cb.and(cb.isNotNull(dataLimite), cb.between(cb.literal(data), dataLiberacao, dataLimite));
-        Predicate dataLimiteNullEDataPosterior=cb.and(cb.isNull(dataLimite),cb.lessThanOrEqualTo(dataLiberacao, data));
+        Predicate dataLimiteNullEDataPosterior=cb.and(cb.isNull(dataLimite), cb.lessThanOrEqualTo(dataLiberacao, data));
         Predicate dataValida = cb.or(dataLimiteNotNullEDataNoIntervalo, dataLimiteNullEDataPosterior);
-        
-        cq = cq.select(itens).where(existsComRestricao, filtroPai, dataValida);
+        cq = cq.select(itens).where(filtroRestricoes, filtroPai, dataValida);
         return getEntityManager().createQuery(cq).getResultList();
     }
-
+    
+    private Subquery<?> createSubQueryVerificaAusenciaRestricoes(AbstractQuery<?> mainQuery){
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        Subquery<Long> sqSemRestricao = mainQuery.subquery(Long.class);
+        Root<ModeloEntrega> modeloEntregaInterno = sqSemRestricao.from(ModeloEntrega.class);
+        From<?, CategoriaEntregaItem> itensInterno = modeloEntregaInterno.join(ModeloEntrega_.itens, JoinType.INNER);
+        itensInterno.join(CategoriaEntregaItem_.restricoes, JoinType.INNER);
+        Root<?> root = mainQuery.getRoots().iterator().next();
+        return sqSemRestricao.select(cb.literal(1L)).where(cb.equal(root, modeloEntregaInterno));
+    }
+    
     private Subquery<?> createSubQueryVerificaRestricaoLocalizacao(String codigoLocalizacao, AbstractQuery<?> mainQuery) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Subquery<Long> sqComRestricao = mainQuery.subquery(Long.class);
@@ -125,7 +136,9 @@ public class ModeloEntregaSearch extends PersistenceController {
         From<?, CategoriaEntregaItem> itensInterno = modeloEntregaInterno.join(ModeloEntrega_.itens, JoinType.INNER);
         From<?, Localizacao> restricoes = itensInterno.join(CategoriaEntregaItem_.restricoes, JoinType.INNER);
         Predicate localizacaoIgualItm = cb.equal(restricoes.get(Localizacao_.codigo), codigoLocalizacao);
-        sqComRestricao = sqComRestricao.select(cb.literal(1L)).where(localizacaoIgualItm);
+        Root<?> root = mainQuery.getRoots().iterator().next();
+        
+        sqComRestricao = sqComRestricao.select(cb.literal(1L)).where(localizacaoIgualItm, cb.equal(root, modeloEntregaInterno));
         return sqComRestricao;
     }
 
