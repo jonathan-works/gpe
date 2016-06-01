@@ -5,7 +5,6 @@ import java.util.Date;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
@@ -13,7 +12,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioLogin_;
 import br.com.infox.epp.access.type.UsuarioEnum;
@@ -22,25 +21,33 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica_;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-public class UsuarioLoginSearch {
-
-	private EntityManager getEntityManager() {
-		return EntityManagerProducer.getEntityManager();
-	}
+public class UsuarioLoginSearch extends PersistenceController {
 
 	public UsuarioLogin getUsuarioLoginByPessoaFisica(PessoaFisica pessoaFisica) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<UsuarioLogin> cq = cb.createQuery(UsuarioLogin.class);
+		Root<UsuarioLogin> usuario = createQueryGetUsuarioByPessoaFisica(pessoaFisica, cb, cq);
+		cq.select(usuario);
 		
+		return getEntityManager().createQuery(cq).getSingleResult();
+	}
+	
+	public String getLoginByPessoaFisica(PessoaFisica pessoaFisica) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<String> cq = cb.createQuery(String.class);
+		Root<UsuarioLogin> usuario = createQueryGetUsuarioByPessoaFisica(pessoaFisica, cb, cq);
+		cq.select(usuario.get(UsuarioLogin_.login));
+		return getEntityManager().createQuery(cq).getSingleResult();
+	}
+
+	private Root<UsuarioLogin> createQueryGetUsuarioByPessoaFisica(PessoaFisica pessoaFisica, CriteriaBuilder cb, CriteriaQuery<?> cq) {
 		Root<UsuarioLogin> usuario = cq.from(UsuarioLogin.class);
-		
 		Predicate ativo = usuarioAtivo(cb, usuario);
 		Predicate humano = cb.equal(usuario.get(UsuarioLogin_.tipoUsuario), UsuarioEnum.H);
 		Predicate pessoaIgual = cb.equal(usuario.get(UsuarioLogin_.pessoaFisica), pessoaFisica);
+		cq.where(cb.and(ativo, humano, pessoaIgual));
 		
-		cq = cq.select(usuario).where(cb.and(ativo, humano, pessoaIgual));
-		
-		return getEntityManager().createQuery(cq).getSingleResult();
+		return usuario;
 	}
 
 	public UsuarioLogin getUsuarioLoginByCpf(String cpf) {
