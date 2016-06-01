@@ -20,6 +20,7 @@ import javax.validation.constraints.NotNull;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.entrega.modelo.ModeloEntrega;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 
 @Entity
@@ -62,6 +63,18 @@ public class Entrega implements Serializable {
 	
 	@OneToMany(mappedBy = "entrega", fetch = FetchType.LAZY)
 	private List<EntregaResponsavel> responsaveis;
+	
+	@ManyToOne
+	@JoinColumn(name="id_certidao_entrega")
+	private DocumentoBin certidaoEntrega;
+
+	public DocumentoBin getCertidaoEntrega() {
+		return certidaoEntrega;
+	}
+
+	public void setCertidaoEntrega(DocumentoBin certidaoEntrega) {
+		this.certidaoEntrega = certidaoEntrega;
+	}
 
 	public Long getId() {
 		return id;

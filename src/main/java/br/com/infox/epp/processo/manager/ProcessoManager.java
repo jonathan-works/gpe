@@ -369,6 +369,7 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
                 metadados.add(provider.gerarMetadado(signalParam.getName(), signalParam.getParamValue()));
             }
         }
+        persist(processo);
         ProcessInstance processInstance = iniciarProcessoService.iniciarProcesso(processo, variaveis, metadados, transitionName, true);
         return processInstance;
     }

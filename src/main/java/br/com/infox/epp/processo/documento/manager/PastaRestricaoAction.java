@@ -153,7 +153,10 @@ public class PastaRestricaoAction implements Serializable {
 	}
 	
 	public void newRestricaoInstance() {
-	    ComponentUtil.<LocalizacaoTreeHandler>getComponent(LocalizacaoTreeHandler.NAME).clearTree(); 
+		LocalizacaoTreeHandler localizacaoTreeHandler = ComponentUtil.<LocalizacaoTreeHandler>getComponent(LocalizacaoTreeHandler.NAME);
+		if(localizacaoTreeHandler != null) {
+			localizacaoTreeHandler.clearTree(); 
+		}
 	    setRestricaoInstance(new PastaRestricao());
 	    setAlvoRestricaoPapel(new Papel());
 	    setAlvoRestricaoLocalizacao(new Localizacao());
