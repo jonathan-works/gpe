@@ -14,6 +14,8 @@ import javax.inject.Named;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.comunicacao.prazo.ContabilizadorPrazo;
+import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.ibpm.event.External.ExpressionType;
 import br.com.infox.ibpm.sinal.SignalService;
@@ -29,6 +31,8 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
     private PastaManager pastaManager = BeanManager.INSTANCE.getReference(PastaManager.class);
     @Inject
     private SignalService signalService;
+    @Inject
+    private DocumentoManager documentoManager;
 
     @External(tooltip = "process.events.expression.atribuirCiencia.tooltip")
     public void atribuirCiencia() {
@@ -70,6 +74,21 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
 	)
     public StringListBuilder stringListBuilder() {
 		return new StringListBuilder();
+    }
+	
+	@External(expressionType = ExpressionType.GERAL, value = {
+        @Parameter(defaultValue = "'Nome variável editor/upload'", label = "process.events.expression.param.suficientementeAssinado.label", 
+                tooltip = "process.events.expression.param.suficientementeAssinado.tooltip", selectable = true)
+    })
+    public boolean isDocumentoSuficientementeAssinado(Integer idDocumento) throws DAOException {
+	    boolean suficientementeAssinado = false;
+	    if (idDocumento != null) {
+	        Documento documento = documentoManager.find(idDocumento);
+	        if (documento != null) {
+	            suficientementeAssinado = documento.getDocumentoBin().getSuficientementeAssinado();
+	        }
+	    }
+	    return suficientementeAssinado;
     }
 
     @Override
