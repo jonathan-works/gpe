@@ -54,47 +54,54 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports={
-	    NavigationMenu:__webpack_require__(1),
-	    TreeCategorias:__webpack_require__(8)
-	};
+	'use strict';
 
+	module.exports = {
+	    NavigationMenu: __webpack_require__(1),
+	    TreeCategorias: __webpack_require__(42)
+	};
 
 /***/ },
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	let UnorderedMenu = __webpack_require__(2);
-	let MenuConstants = __webpack_require__(6);
+	'use strict';
 
-	const NavMenu = React.createClass({
-	  getDefaultProps: function() {
+	var UnorderedMenu = __webpack_require__(2);
+	var MenuConstants = __webpack_require__(6);
+
+	var NavMenu = React.createClass({
+	  displayName: 'NavMenu',
+
+	  getDefaultProps: function getDefaultProps() {
 	    return {
 	      "level": 0,
 	      "showChildren": false,
 	      "labelFilter": ""
 	    };
 	  },
-	  render: function() {
+	  render: function render() {
 	    return React.DOM.nav({
 	      className: MenuConstants.CSS_CLASSES.NAV_MENU
 	    }, React.createElement(UnorderedMenu, Object.assign({}, this.props)));
 	  }
 	});
 
-	const MenuContent = React.createClass({
-	  renderContent: function(container) {
-	    let content = document.getElementById(this.props.selector);
+	var MenuContent = React.createClass({
+	  displayName: 'MenuContent',
+
+	  renderContent: function renderContent(container) {
+	    var content = document.getElementById(this.props.selector);
 	    if (content) {
 	      container.appendChild(content);
 	    } else {
-	      let nodeList = document.querySelectorAll(this.props.selector);
-	      for (let i = 0, l = nodeList.length; i < l; i++) {
+	      var nodeList = document.querySelectorAll(this.props.selector);
+	      for (var i = 0, l = nodeList.length; i < l; i++) {
 	        container.appendChild(nodeList.item(i));
 	      }
 	    }
 	  },
-	  render: function() {
+	  render: function render() {
 	    return React.DOM.main({
 	      ref: this.renderContent,
 	      className: MenuConstants.CSS_CLASSES.MENU_CONTENT
@@ -102,56 +109,55 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 
-	const Header = React.createClass({
-	  displayName:'Header',
-	  render:function(){
+	var Header = React.createClass({
+	  displayName: 'Header',
+	  render: function render() {
 	    return React.DOM.div({
 	      className: MenuConstants.CSS_CLASSES.HEADER
 	    }, React.createElement(NavMenu, this.props));
 	  }
 	});
 
-	const Drawer = React.createClass({
-	  displayName:'Drawer',
-	  getInitialState:function(){
+	var Drawer = React.createClass({
+	  displayName: 'Drawer',
+	  getInitialState: function getInitialState() {
 	    return {};
 	  },
-	  updateRefs:function(ref){
-	    this.setState({concreteObject:ref});
+	  updateRefs: function updateRefs(ref) {
+	    this.setState({ concreteObject: ref });
 	  },
-	  updateHeight:function(){
-	  },
-	  render:function(){
+	  updateHeight: function updateHeight() {},
+	  render: function render() {
 	    return React.DOM.div({
 	      className: MenuConstants.CSS_CLASSES.DRAWER,
-	      ref:this.updateRefs,
+	      ref: this.updateRefs
 	    }, React.createElement(NavMenu, this.props));
 	  }
 	});
 
-	let NavigationMenu = React.createClass({
-	  render: function() {
+	var NavigationMenu = React.createClass({
+	  displayName: 'NavigationMenu',
+
+	  render: function render() {
 	    return React.DOM.div({
-	        className: MenuConstants.CSS_CLASSES.FIXED_HEAD_DRAWER
-	      }, React.createElement(MenuContent, this.props.content),
-	      React.createElement(Header, this.props.topMenu),
-	      React.createElement(Drawer, this.props.navigationMenu)
-	    );
+	      className: MenuConstants.CSS_CLASSES.FIXED_HEAD_DRAWER
+	    }, React.createElement(MenuContent, this.props.content), React.createElement(Header, this.props.topMenu), React.createElement(Drawer, this.props.navigationMenu));
 	  }
 	});
 
 	module.exports = NavigationMenu;
 
-
 /***/ },
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	let MenuItem=__webpack_require__(3);
-	let MenuFilter=__webpack_require__(7);
-	var MenuConstants=__webpack_require__(6);
+	'use strict';
 
-	const hasChildWithContent = function(menuItem, content) {
+	var MenuItem = __webpack_require__(3);
+	var MenuFilter = __webpack_require__(7);
+	var MenuConstants = __webpack_require__(6);
+
+	var hasChildWithContent = function hasChildWithContent(menuItem, content) {
 	  var result = false;
 	  var childCount = (menuItem.items || []).length;
 	  if (childCount === 0 && new RegExp((content || '').toLowerCase()).test(menuItem.label.toLowerCase())) {
@@ -163,45 +169,49 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return result;
 	};
 
-	const BaseMenuMixin = {
-	  handleSelect:function(label){
+	var BaseMenuMixin = {
+	  handleSelect: function handleSelect(label) {
 	    this.unorderedMenu.addEventListener('mouseleave', this.handleMouseLeave);
 	    this.unorderedMenu.addEventListener('mouseenter', this.handleMouseEnter);
 	    var state = Object.assign({}, this.state);
-	    if (state.selected === label){
+	    if (state.selected === label) {
 	      state.selected = '';
 	    } else {
 	      state.selected = label || '';
 	    }
 	    this.setState(state);
 	  },
-	  handleMouseLeave:function(event){
-	    this.state.hideTimer = setTimeout(()=>{
-	      this.handleSelect();
-	      clearTimeout(this.state.hideTimer);
+	  handleMouseLeave: function handleMouseLeave(event) {
+	    var _this = this;
+
+	    this.state.hideTimer = setTimeout(function () {
+	      _this.handleSelect();
+	      clearTimeout(_this.state.hideTimer);
 	    }, 1000);
 	  },
-	  handleMouseEnter:function(event){
+	  handleMouseEnter: function handleMouseEnter(event) {
 	    clearTimeout(this.state.hideTimer);
 	  },
-	  getFilteredItems:function(labelFilter){
+	  getFilteredItems: function getFilteredItems(labelFilter) {
+	    var _this2 = this;
+
 	    var level = this.props.level || 0;
-	    return (this.props.items || []).filter((itm) => {
+	    return (this.props.items || []).filter(function (itm) {
 	      return hasChildWithContent(itm, labelFilter);
-	    }).map((itm) => {
+	    }).map(function (itm) {
 	      var resultItem = Object.assign({}, itm);
 	      resultItem.key = resultItem.label;
 	      resultItem.level = level;
-	      resultItem.labelFilter = labelFilter||'';
-	      resultItem.onSelect = this.handleSelect;
-	      resultItem.selected = (this.state.selected === resultItem.label || resultItem.labelFilter.trim() !== '');
-	      if ((itm.items||[]).length > 0){
-	        resultItem.submenu = React.createElement(UnorderedMenu,{
-	          "items":resultItem.items,
-	          "level":level+1,
-	          "showFilter":resultItem.showFilter,
-	          "labelFilter":labelFilter,
-	          'searchPlaceholder':this.props.searchPlaceholder
+	      resultItem.labelFilter = labelFilter || '';
+	      resultItem.onSelect = _this2.handleSelect;
+	      resultItem.selected = _this2.state.selected === resultItem.label || resultItem.labelFilter.trim() !== '';
+	      if ((itm.items || []).length > 0) {
+	        resultItem.submenu = React.createElement(UnorderedMenu, {
+	          "items": resultItem.items,
+	          "level": level + 1,
+	          "showFilter": resultItem.showFilter,
+	          "labelFilter": labelFilter,
+	          'searchPlaceholder': _this2.props.searchPlaceholder
 	        });
 	      }
 	      return React.createElement(MenuItem, resultItem);
@@ -209,335 +219,276 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	};
 
-	const FilterMenu = React.createClass(Object.assign(BaseMenuMixin, {
-	  getInitialState: function() {
-	    return {'selected':'', 'labelFilter':'', 'filterId':Date.now.toString(36)};
+	var FilterMenu = React.createClass(Object.assign(BaseMenuMixin, {
+	  getInitialState: function getInitialState() {
+	    return { 'selected': '', 'labelFilter': '', 'filterId': Date.now.toString(36) };
 	  },
-	  render:function(){
-	    return React.DOM.ul( {
+	  render: function render() {
+	    var _this3 = this;
+
+	    return React.DOM.ul({
 	      className: MenuConstants.CSS_CLASSES.MENU,
-	      style:this.props.style,
-	      ref:(ref)=>this.unorderedMenu=ref
-	    }, React.createElement(MenuFilter,{
-	        key:this.state.filterId,
-	        labelFilterPlaceholder:this.props.searchPlaceholder,
-	        labelFilter:this.state.labelFilter,
-	        onFilter:this.handleLabelFilter
+	      style: this.props.style,
+	      ref: function ref(_ref) {
+	        return _this3.unorderedMenu = _ref;
+	      }
+	    }, React.createElement(MenuFilter, {
+	      key: this.state.filterId,
+	      labelFilterPlaceholder: this.props.searchPlaceholder,
+	      labelFilter: this.state.labelFilter,
+	      onFilter: this.handleLabelFilter
 	    }), this.getFilteredItems(this.state.labelFilter));
 	  },
-	  handleLabelFilter:function(labelFilter){
+	  handleLabelFilter: function handleLabelFilter(labelFilter) {
 	    var state = Object.assign({}, this.state);
 	    state.labelFilter = labelFilter;
 	    this.setState(state);
 	  }
 	}));
 
-	var NoFilterMenu=React.createClass(Object.assign(BaseMenuMixin, {
-	  render:function(){
-	    return React.DOM.ul( {
+	var NoFilterMenu = React.createClass(Object.assign(BaseMenuMixin, {
+	  render: function render() {
+	    var _this4 = this;
+
+	    return React.DOM.ul({
 	      className: MenuConstants.CSS_CLASSES.MENU,
-	      style:this.props.style,
-	      ref:(ref)=>this.unorderedMenu=ref
+	      style: this.props.style,
+	      ref: function ref(_ref2) {
+	        return _this4.unorderedMenu = _ref2;
+	      }
 	    }, this.getFilteredItems(this.props.labelFilter));
 	  }
 	}));
 
-	const UnorderedMenu = React.createClass(Object.assign(BaseMenuMixin, {
-	  render: function() {
-	    var menuProps = Object.assign({},this.props);
-	    menuProps.style={
+	var UnorderedMenu = React.createClass(Object.assign(BaseMenuMixin, {
+	  render: function render() {
+	    var menuProps = Object.assign({}, this.props);
+	    menuProps.style = {
 	      // 'maxHeight':(innerHeight - 13*parseInt(0+/\d*/.exec(getComputedStyle(document.body)['font-size'])[0]))
 	    };
-	    if (menuProps.showFilter || menuProps.level === 1){
+	    if (menuProps.showFilter || menuProps.level === 1) {
 	      return React.createElement(FilterMenu, Object.assign({}, menuProps));
 	    }
-	    menuProps.onMouseLeave=this.handleMouseLeave;
-	    menuProps.onMouseEnter=this.handleMouseEnter;
+	    menuProps.onMouseLeave = this.handleMouseLeave;
+	    menuProps.onMouseEnter = this.handleMouseEnter;
 	    return React.createElement(NoFilterMenu, Object.assign({}, menuProps));
 	  }
 	}));
-	module.exports=UnorderedMenu;
-
+	module.exports = UnorderedMenu;
 
 /***/ },
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	let MenuLink = __webpack_require__(4);
-	let MenuItem = React.createClass({
+	'use strict';
 
-	  handleClick:function(event){
+	var MenuLink = __webpack_require__(4);
+	var MenuItem = React.createClass({
+	  displayName: 'MenuItem',
+
+
+	  handleClick: function handleClick(event) {
 	    this.props.onSelect(this.props.label);
 	  },
 
-	  render: function() {
-	    var classes=['ifx-menu-itm'];
-	    if (this.props.selected){
+	  render: function render() {
+	    var classes = ['ifx-menu-itm'];
+	    if (this.props.selected) {
 	      classes.push('ifx-menu-itm-sel');
 	    }
 
 	    var props = Object.assign({}, this.props);
 
-	    let submenu;
+	    var submenu = void 0;
 
-	    if ((props.items || []).length > 0){
+	    if ((props.items || []).length > 0) {
 	      classes.push('ifx-menu-itm-has-children');
-	      props.onClick=this.handleClick;
+	      props.onClick = this.handleClick;
 	      submenu = this.props.submenu;
 	    }
 
-	    return React.DOM.li( {
-	        className: classes.join(' ')
-	      }, React.createElement(MenuLink, props), submenu);
+	    return React.DOM.li({
+	      className: classes.join(' ')
+	    }, React.createElement(MenuLink, props), submenu);
 	  }
 	});
-	module.exports=MenuItem;
-
+	module.exports = MenuItem;
 
 /***/ },
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	let MenuText = __webpack_require__(5);
-	let MenuLink = React.createClass({
-	  getInitialState: function() {
+	'use strict';
+
+	var MenuText = __webpack_require__(5);
+	var MenuLink = React.createClass({
+	  displayName: 'MenuLink',
+
+	  getInitialState: function getInitialState() {
 	    return {
 	      selected: false
 	    };
 	  },
-	  handleClick:function(event){
-	    this.setState({selected:true});
-	    (this.props.onClick||function(){}).apply(this, [event, this.props.url||this.props.value]);
+	  handleClick: function handleClick(event) {
+	    this.setState({ selected: true });
+	    (this.props.onClick || function () {}).apply(this, [event, this.props.url || this.props.value]);
 	  },
-	  render:function(){
-	    var linkClasses=['ifx-menu-itm-lnk'];
-	    if (this.state.selected){
+	  render: function render() {
+	    var linkClasses = ['ifx-menu-itm-lnk'];
+	    if (this.state.selected) {
 	      linkClasses.push('ifx-menu-itm-lnk-sel');
 	    }
-	    return React.DOM.a( {
+	    return React.DOM.a({
 	      className: linkClasses.join(' '),
 	      href: this.props.url,
 	      title: this.props.label,
 	      onClick: this.handleClick
-	    }, React.createElement(MenuText,this.props));
+	    }, React.createElement(MenuText, this.props));
 	  }
 	});
-	module.exports=MenuLink;
-
+	module.exports = MenuLink;
 
 /***/ },
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	let MenuConstants = __webpack_require__(6);
-	const LeftIconText = React.createClass({
-	    render:function(){
+	'use strict';
+
+	var MenuConstants = __webpack_require__(6);
+	var LeftIconText = React.createClass({
+	    displayName: 'LeftIconText',
+
+	    render: function render() {
 	        var labelProperties = {
-	            className:MenuConstants.CSS_CLASSES.ITEM_LABEL
+	            className: MenuConstants.CSS_CLASSES.ITEM_LABEL
 	        };
-	        if (this.props.icon){
-	            return React.DOM.span( labelProperties,
-	                React.DOM.img({
-	                    className:MenuConstants.CSS_CLASSES.ITEM_LABEL_ICON,
-	                    title:this.props.label,
-	                    src:this.props.icon
-	                }), this.props.hideLabel ? undefined: React.DOM.span( {'className':MenuConstants.CSS_CLASSES.ITEM_LABEL_TEXT}, this.props.label)
-	            );
+	        if (this.props.icon) {
+	            return React.DOM.span(labelProperties, React.DOM.img({
+	                className: MenuConstants.CSS_CLASSES.ITEM_LABEL_ICON,
+	                title: this.props.label,
+	                src: this.props.icon
+	            }), this.props.hideLabel ? undefined : React.DOM.span({ 'className': MenuConstants.CSS_CLASSES.ITEM_LABEL_TEXT }, this.props.label));
 	        } else {
-	            return React.DOM.span( labelProperties, this.props.hideLabel ? undefined: React.DOM.span( {'className':MenuConstants.CSS_CLASSES.ITEM_LABEL_TEXT}, this.props.label));
+	            return React.DOM.span(labelProperties, this.props.hideLabel ? undefined : React.DOM.span({ 'className': MenuConstants.CSS_CLASSES.ITEM_LABEL_TEXT }, this.props.label));
 	        }
 	    }
 	});
-	const RightIconText = React.createClass({
-	    render:function(){
+	var RightIconText = React.createClass({
+	    displayName: 'RightIconText',
+
+	    render: function render() {
 	        var labelProperties = {
-	            className:MenuConstants.CSS_CLASSES.ITEM_LABEL
+	            className: MenuConstants.CSS_CLASSES.ITEM_LABEL
 	        };
-	        if (this.props.icon){
-	            return React.DOM.span( labelProperties,
-	                this.props.hideLabel ? undefined: React.DOM.span( {'className':MenuConstants.CSS_CLASSES.ITEM_LABEL_TEXT}, this.props.label),
-	                React.DOM.img({
-	                    className:MenuConstants.CSS_CLASSES.ITEM_LABEL_ICON,
-	                    title:this.props.label,
-	                    src:this.props.icon
-	                })
-	            );
+	        if (this.props.icon) {
+	            return React.DOM.span(labelProperties, this.props.hideLabel ? undefined : React.DOM.span({ 'className': MenuConstants.CSS_CLASSES.ITEM_LABEL_TEXT }, this.props.label), React.DOM.img({
+	                className: MenuConstants.CSS_CLASSES.ITEM_LABEL_ICON,
+	                title: this.props.label,
+	                src: this.props.icon
+	            }));
 	        } else {
-	            return React.DOM.span( labelProperties, this.props.hideLabel ? undefined: React.DOM.span( {'className':MenuConstants.CSS_CLASSES.ITEM_LABEL_TEXT}, this.props.label));
+	            return React.DOM.span(labelProperties, this.props.hideLabel ? undefined : React.DOM.span({ 'className': MenuConstants.CSS_CLASSES.ITEM_LABEL_TEXT }, this.props.label));
 	        }
 	    }
 	});
 
-	let MenuText = React.createClass({
-	    render:function(){
-	        if (/left/.test((this.props['icon-align']||'left').toLowerCase())){
+	var MenuText = React.createClass({
+	    displayName: 'MenuText',
+
+	    render: function render() {
+	        if (/left/.test((this.props['icon-align'] || 'left').toLowerCase())) {
 	            return React.createElement(LeftIconText, this.props);
 	        } else {
 	            return React.createElement(RightIconText, this.props);
 	        }
 	    }
 	});
-	module.exports=MenuText;
-
+	module.exports = MenuText;
 
 /***/ },
 /* 6 */
 /***/ function(module, exports) {
 
-	var menu='ifx-menu';
+	'use strict';
 
-	module.exports={
-	    CSS_CLASSES:{
-	        ITEM_LABEL:menu+'-itm-lbl',
-	        ITEM_LABEL_ICON:menu+'-itm-lbl-icon',
-	        ITEM_LABEL_TEXT:menu+'-itm-lbl-text',
-	        MENU:menu+'',
-	        NAV_MENU:menu+'-nav',
-	        MENU_CONTENT:'ifx-menu-content',
-	        DRAWER:'ifx-navigation-menu',
-	        HEADER:'ifx-top-menu',
-	        FIXED_HEAD_DRAWER:'ifx-menu-container'
+	var menu = 'ifx-menu';
+
+	module.exports = {
+	    CSS_CLASSES: {
+	        ITEM_LABEL: menu + '-itm-lbl',
+	        ITEM_LABEL_ICON: menu + '-itm-lbl-icon',
+	        ITEM_LABEL_TEXT: menu + '-itm-lbl-text',
+	        MENU: menu + '',
+	        NAV_MENU: menu + '-nav',
+	        MENU_CONTENT: 'ifx-menu-content',
+	        DRAWER: 'ifx-navigation-menu',
+	        HEADER: 'ifx-top-menu',
+	        FIXED_HEAD_DRAWER: 'ifx-menu-container'
 	    }
 	};
-
 
 /***/ },
 /* 7 */
 /***/ function(module, exports) {
 
-	let MenuFilter = React.createClass({
-	    handleChange: function (event) {
+	'use strict';
+
+	var MenuFilter = React.createClass({
+	    displayName: 'MenuFilter',
+
+	    handleChange: function handleChange(event) {
 	        this.props.onFilter(event.target.value);
 	    },
-	    render: function () {
-	        return React.DOM.input( {
+	    render: function render() {
+	        return React.DOM.input({
 	            value: this.props.labelFilter,
 	            placeholder: this.props.labelFilterPlaceholder || 'Your query here...',
 	            className: 'ifx-menu-filter',
 	            onChange: this.handleChange,
-	            autoFocus:true
+	            autoFocus: true
 	        });
 	    }
 	});
-	module.exports=MenuFilter;
-
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	let componentes = __webpack_require__(9);
-	let Constants = __webpack_require__(10);
-	let TreeCategoriasStore = __webpack_require__(11);
-	let TreeCategoriasActions = __webpack_require__(27);
-	let ConfigFacade = __webpack_require__(35);
-
-	componentes.Categoria = __webpack_require__(36);
-	componentes.Item = __webpack_require__(40);
-	componentes.Groups = __webpack_require__(41);
-
-	let TreeCategorias = React.createClass({
-	  'displayName': 'TreeCategorias',
-	  propTypes: {
-	    orientation: React.PropTypes.oneOf(['horizontal', 'vertical']),
-	    servicePath: React.PropTypes.string,
-	    groupToolBar: React.PropTypes.arrayOf(React.PropTypes.shape({
-	      icon: React.PropTypes.string,
-	      title: React.PropTypes.string.isRequired,
-	      onSelect: React.PropTypes.func.isRequired
-	    })),
-	    itemToolBar: React.PropTypes.arrayOf(React.PropTypes.shape({
-	      icon: React.PropTypes.string,
-	      title: React.PropTypes.string.isRequired,
-	      onSelect: React.PropTypes.func.isRequired
-	    })),
-	    config: React.PropTypes.object.isRequired
-	  },
-	  getInitialState: function() {
-	    return TreeCategoriasStore.getState();
-	  },
-	  componentDidMount: function() {
-	    ConfigFacade.config=this.props.config;
-	    TreeCategoriasStore.listen(this.onChange);
-	    TreeCategoriasActions.fetchCategorias();
-	  },
-	  componentWillUnmount: function() {
-	    TreeCategoriasStore.unlisten(this.onChange);
-	  },
-	  onChange: function(state) {
-	    this.setState(state);
-	  },
-	  render: function() {
-	    let props = Object.assign({}, this.state);
-	    props.groupToolBar = this.props.groupToolBar;
-	    props.itemToolBar = this.props.itemToolBar;
-	    let children = props.groupItems.map((groupItem) => {
-	      let obj = Object.assign({}, groupItem);
-	      obj.key = [props.codigo || '', obj.group.codigo].join(':');
-	      obj.folded = props.folded;
-	      obj.path = props.path || Constants.PATH_SEPARATOR;
-	      obj.groupToolBar = props.groupToolBar;
-	      obj.itemToolBar = props.itemToolBar;
-	      return React.createElement(componentes.Groups,
-	        obj
-	      );
-	    });
-	    let treeClasses = [Constants.CSS.GROUPED_TREE];
-	    if ((this.props.orientation || 'vertical') === 'horizontal') {
-	      treeClasses.push(Constants.CSS.GROUPED_TREE_HORIZONTAL);
-	    } else {
-	      treeClasses.push(Constants.CSS.GROUPED_TREE_VERTICAL);
-	    }
-	    return React.DOM.section({
-	        className: treeClasses.join(' ')
-	      },
-	      children
-	    );
-	  }
-	});
-	module.exports = TreeCategorias;
-
+	module.exports = MenuFilter;
 
 /***/ },
+/* 8 */,
 /* 9 */
 /***/ function(module, exports) {
 
-	module.exports={};
+	'use strict';
 
-
-/***/ },
-/* 10 */
-/***/ function(module, exports) {
-
-	const TreeConstants={
-	  PATH_SEPARATOR:'/',
-	  CSS:{
-	    ITEM:'grpd-tree-itm',
-	    ITEM_HAS_CHILDREN:'grpd-tree-itm-has-children',
-	    ITEM_CONTENT:'grpd-tree-itm-cont',
-	    ITEM_LABEL:'grpd-tree-itm-lbl',
-	    ITEM_SELECTED:'grpd-tree-itm-sel',
-	    LIST:'grpd-tree-lst',
-	    LIST_CONTENT:'grpd-tree-lst-cont',
-	    LIST_FOLDED:'grpd-tree-lst-folded',
-	    GROUP:'grpd-tree-grp',
-	    GROUP_ROTATED:'grpd-tree-grp-rot',
-	    GROUP_LABEL:'grpd-tree-grp-lbl',
-	    GROUP_CONTENT:'grpd-tree-grp-cont',
-	    GROUPED_TREE:'grpd-tree',
-	    GROUPED_TREE_HORIZONTAL:'grpd-tree-h',
-	    GROUPED_TREE_VERTICAL:'grpd-tree-v'
+	var TreeConstants = {
+	  PATH_SEPARATOR: '/',
+	  CSS: {
+	    ITEM: 'grpd-tree-itm',
+	    ITEM_HAS_CHILDREN: 'grpd-tree-itm-has-children',
+	    ITEM_CONTENT: 'grpd-tree-itm-cont',
+	    ITEM_LABEL: 'grpd-tree-itm-lbl',
+	    ITEM_SELECTED: 'grpd-tree-itm-sel',
+	    LIST: 'grpd-tree-lst',
+	    LIST_CONTENT: 'grpd-tree-lst-cont',
+	    LIST_FOLDED: 'grpd-tree-lst-folded',
+	    GROUP: 'grpd-tree-grp',
+	    GROUP_ROTATED: 'grpd-tree-grp-rot',
+	    GROUP_LABEL: 'grpd-tree-grp-lbl',
+	    GROUP_CONTENT: 'grpd-tree-grp-cont',
+	    GROUPED_TREE: 'grpd-tree',
+	    GROUPED_TREE_IS_LOADING: 'grpd-tree-is-loading',
+	    GROUPED_TREE_HORIZONTAL: 'grpd-tree-h',
+	    GROUPED_TREE_VERTICAL: 'grpd-tree-v'
 	  }
 	};
 	module.exports = TreeConstants;
 
-
 /***/ },
-/* 11 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	let alt = __webpack_require__(12);
-	let TreeCategoriasActions = __webpack_require__(27);
+	'use strict';
+
+	var alt = __webpack_require__(11);
+	var TreeCategoriasActions = __webpack_require__(26);
 
 	function GroupItemProxy(categoria, items, stateHolder) {
 	  return {
@@ -545,28 +496,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return stateHolder._categoria.get(categoria.codigo);
 	    },
 	    get items() {
-	      return items.map(item => stateHolder._item.get(item.codigo));
+	      return items.map(function (item) {
+	        return stateHolder._item.get(item.codigo);
+	      });
 	    }
 	  };
 	}
 
-	function TreeCategoriasStateHolder() {
-	  this._categoria = new Map();
-	  this._item = new Map();
-	  this._group = new Map();
-	}
+	function TreeCategoriasStateHolder() {}
 	TreeCategoriasStateHolder.prototype = {
-	  registerCategoria: function(categoria) {
-	    let _categoria = {
+	  registerCategoria: function registerCategoria(categoria) {
+	    var _this = this;
+
+	    var _categoria = {
 	      codigo: categoria.codigo,
 	      descricao: categoria.descricao
 	    };
-	    (categoria.itens||[]).forEach(item => this.registerItem(item));
+	    (categoria.itens || []).forEach(function (item) {
+	      return _this.registerItem(item);
+	    });
 	    this._categoria.set(_categoria.codigo, _categoria);
 	    return _categoria;
 	  },
-	  registerItem: function(item) {
-	    let _item = {
+	  registerItem: function registerItem(item) {
+	    var _item = {
 	      codigo: item.codigo,
 	      descricao: item.descricao
 	    };
@@ -574,32 +527,37 @@ return /******/ (function(modules) { // webpackBootstrap
 	    TreeCategoriasActions.fetchChildrenForItem(item);
 	    return _item;
 	  },
-	  registerGroups: function(categorias, itemPai) {
-	    let groups = categorias.map(categoria => {
-	      this.registerCategoria(categoria);
-	      return new GroupItemProxy(categoria, categoria.itens, this);
+	  registerGroups: function registerGroups(categorias, itemPai) {
+	    var _this2 = this;
+
+	    var groups = categorias.map(function (categoria) {
+	      _this2.registerCategoria(categoria);
+	      return new GroupItemProxy(categoria, categoria.itens, _this2);
 	    });
-	    let codigoPai = (itemPai || {}).codigo || '';
+	    var codigoPai = (itemPai || {}).codigo || '';
 	    if (codigoPai !== '') {
-	      let pai = this._item.get(codigoPai);
+	      var pai = this._item.get(codigoPai);
 	      pai.groupItems = groups;
 	      this._item.set(codigoPai, pai);
 	    }
 	    this._group.set(codigoPai, groups);
 	    return groups;
 	  },
-	  registerInitialState: function(groupItems) {
+	  registerInitialState: function registerInitialState(groupItems) {
+	    this._categoria = new Map();
+	    this._item = new Map();
+	    this._group = new Map();
 	    this.registerGroups(groupItems);
 	    return this.getState();
 	  },
-	  getState: function(state) {
+	  getState: function getState(state) {
 	    return {
 	      groupItems: this._group.get('')
 	    };
 	  }
 	};
 
-	let TreeCategoriasStoreBase = {
+	var TreeCategoriasStoreBase = {
 	  displayName: 'TreeCategoriasStore',
 	  _stateHolder: new TreeCategoriasStateHolder(),
 	  _promises: [],
@@ -611,45 +569,57 @@ return /******/ (function(modules) { // webpackBootstrap
 	    handleFetchChildrenForItemFail: TreeCategoriasActions.FETCH_CHILDREN_FOR_ITEM_FAIL
 	  },
 	  state: {
-	    groupItems: []
+	    groupItems: [],
+	    loading: true
 	  },
-	  handleFetchChildrenForItemSuccess: function(args) {
-	    let categorias = args[0];
-	    let itemPai = args[1];
-	    this._stateHolder.registerGroups(categorias, itemPai);
+	  _updateState: function _updateState() {
+	    var _this3 = this;
+
 	    clearTimeout(this._timeout);
-	    this._timeout = setTimeout(() => this.setState(Object.assign({}, this._stateHolder.getState())), 500);
+	    this._timeout = setTimeout(function () {
+	      return _this3.setState(Object.assign({}, { loading: false }, _this3._stateHolder.getState()));
+	    }, 500);
+	  },
+	  handleFetchChildrenForItemSuccess: function handleFetchChildrenForItemSuccess(args) {
+	    var categorias = args[0];
+	    var itemPai = args[1];
+	    this._stateHolder.registerGroups(categorias, itemPai);
+	    this._updateState();
 	    this.preventDefault();
 	  },
-	  handleFetchChildrenForItemFail: function(fail) {
+	  handleFetchChildrenForItemFail: function handleFetchChildrenForItemFail(fail) {
 	    console.error(fail);
 	  },
-	  handleFetchCategoriasSuccess: function(categorias) {
-	    let state = this._stateHolder.registerInitialState(categorias);
-	    this.setState(Object.assign({}, state));
-	    state.groupItems.forEach(group => group.items.forEach(item => TreeCategoriasActions.fetchChildrenForItem(item)));
+	  handleFetchCategoriasSuccess: function handleFetchCategoriasSuccess(categorias) {
+	    var state = this._stateHolder.registerInitialState(categorias);
+	    state.groupItems.forEach(function (group) {
+	      return group.items.forEach(function (item) {
+	        return TreeCategoriasActions.fetchChildrenForItem(item);
+	      });
+	    });
+	    this._updateState();
+	    this.preventDefault();
 	  },
-	  handleFetchCategoriasFail: function(fail) {
+	  handleFetchCategoriasFail: function handleFetchCategoriasFail(fail) {
 	    console.error(fail);
 	  },
 	  publicMethods: {}
 	};
 
-	let TreeCategoriasStore = alt.createStore(TreeCategoriasStoreBase, TreeCategoriasStoreBase.displayName);
-	window.treeStore = TreeCategoriasStore;
+	var TreeCategoriasStore = alt.createStore(TreeCategoriasStoreBase, TreeCategoriasStoreBase.displayName);
 	module.exports = TreeCategoriasStore;
 
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var Alt = __webpack_require__(12);
+	module.exports = new Alt();
 
 /***/ },
 /* 12 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Alt = __webpack_require__(13);
-	module.exports = new Alt();
-
-
-/***/ },
-/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -658,25 +628,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _flux = __webpack_require__(14);
+	var _flux = __webpack_require__(13);
 
-	var _StateFunctions = __webpack_require__(18);
+	var _StateFunctions = __webpack_require__(17);
 
 	var StateFunctions = _interopRequireWildcard(_StateFunctions);
 
-	var _functions = __webpack_require__(19);
+	var _functions = __webpack_require__(18);
 
 	var fn = _interopRequireWildcard(_functions);
 
-	var _store = __webpack_require__(20);
+	var _store = __webpack_require__(19);
 
 	var store = _interopRequireWildcard(_store);
 
-	var _AltUtils = __webpack_require__(21);
+	var _AltUtils = __webpack_require__(20);
 
 	var utils = _interopRequireWildcard(_AltUtils);
 
-	var _actions = __webpack_require__(25);
+	var _actions = __webpack_require__(24);
 
 	var _actions2 = _interopRequireDefault(_actions);
 
@@ -1031,7 +1001,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 14 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -1043,11 +1013,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 
-	module.exports.Dispatcher = __webpack_require__(15);
+	module.exports.Dispatcher = __webpack_require__(14);
 
 
 /***/ },
-/* 15 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -1069,7 +1039,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var invariant = __webpack_require__(17);
+	var invariant = __webpack_require__(16);
 
 	var _prefix = 'ID_';
 
@@ -1281,10 +1251,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	})();
 
 	module.exports = Dispatcher;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(15)))
 
 /***/ },
-/* 16 */
+/* 15 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -1384,7 +1354,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 17 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -1436,10 +1406,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = invariant;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(16)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(15)))
 
 /***/ },
-/* 18 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1452,7 +1422,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.saveInitialSnapshot = saveInitialSnapshot;
 	exports.filterSnapshots = filterSnapshots;
 
-	var _functions = __webpack_require__(19);
+	var _functions = __webpack_require__(18);
 
 	var fn = _interopRequireWildcard(_functions);
 
@@ -1516,7 +1486,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 19 */
+/* 18 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1557,7 +1527,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 20 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1570,19 +1540,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.createStoreFromObject = createStoreFromObject;
 	exports.createStoreFromClass = createStoreFromClass;
 
-	var _AltUtils = __webpack_require__(21);
+	var _AltUtils = __webpack_require__(20);
 
 	var utils = _interopRequireWildcard(_AltUtils);
 
-	var _functions = __webpack_require__(19);
+	var _functions = __webpack_require__(18);
 
 	var fn = _interopRequireWildcard(_functions);
 
-	var _AltStore = __webpack_require__(22);
+	var _AltStore = __webpack_require__(21);
 
 	var _AltStore2 = _interopRequireDefault(_AltStore);
 
-	var _StoreMixin = __webpack_require__(24);
+	var _StoreMixin = __webpack_require__(23);
 
 	var _StoreMixin2 = _interopRequireDefault(_StoreMixin);
 
@@ -1774,7 +1744,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 21 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1793,7 +1763,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.fsa = fsa;
 	exports.dispatch = dispatch;
 
-	var _functions = __webpack_require__(19);
+	var _functions = __webpack_require__(18);
 
 	var fn = _interopRequireWildcard(_functions);
 
@@ -1895,7 +1865,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	function NoopClass() {}
 
 /***/ },
-/* 22 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1904,11 +1874,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _functions = __webpack_require__(19);
+	var _functions = __webpack_require__(18);
 
 	var fn = _interopRequireWildcard(_functions);
 
-	var _transmitter = __webpack_require__(23);
+	var _transmitter = __webpack_require__(22);
 
 	var _transmitter2 = _interopRequireDefault(_transmitter);
 
@@ -2051,7 +2021,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 23 */
+/* 22 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2099,7 +2069,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 24 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2108,11 +2078,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _transmitter = __webpack_require__(23);
+	var _transmitter = __webpack_require__(22);
 
 	var _transmitter2 = _interopRequireDefault(_transmitter);
 
-	var _functions = __webpack_require__(19);
+	var _functions = __webpack_require__(18);
 
 	var fn = _interopRequireWildcard(_functions);
 
@@ -2340,7 +2310,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 25 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2350,15 +2320,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	exports['default'] = makeAction;
 
-	var _functions = __webpack_require__(19);
+	var _functions = __webpack_require__(18);
 
 	var fn = _interopRequireWildcard(_functions);
 
-	var _AltUtils = __webpack_require__(21);
+	var _AltUtils = __webpack_require__(20);
 
 	var utils = _interopRequireWildcard(_AltUtils);
 
-	var _isPromise = __webpack_require__(26);
+	var _isPromise = __webpack_require__(25);
 
 	var _isPromise2 = _interopRequireDefault(_isPromise);
 
@@ -2427,7 +2397,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 26 */
+/* 25 */
 /***/ function(module, exports) {
 
 	module.exports = isPromise;
@@ -2438,55 +2408,75 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 27 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
-	let alt = __webpack_require__(12);
-	let CategoriaSource = __webpack_require__(28);
+	'use strict';
 
-	let TreeCategoriasActionBase = function() {
+	var alt = __webpack_require__(11);
+	var CategoriaSource = __webpack_require__(27);
+
+	var TreeCategoriasActionBase = function TreeCategoriasActionBase() {
 	  this.generateActions('fetchChildrenForItemSuccess', 'fetchChildrenForItemFail', 'fetchCategoriasSuccess', 'fetchCategoriasFail');
 	};
 	TreeCategoriasActionBase.prototype = {
 	  displayName: 'TreeCategoriasAction',
-	  fetchCategorias: function() {
-	    return CategoriaSource.getAll().then(
-	      this.fetchCategoriasSuccess
-	    ).catch(
-	      this.fetchCategoriasFail
-	    );
+	  fetchCategorias: function fetchCategorias() {
+	    return CategoriaSource.getAll().then(this.fetchCategoriasSuccess).catch(this.fetchCategoriasFail);
 	  },
-	  fetchChildrenForItem: function(item) {
-	    return CategoriaSource.getWithParent(item).then(categorias=>
-	      this.fetchChildrenForItemSuccess.apply(this,[categorias,item])
-	    ).catch(
-	      this.fetchChildrenForItemFail
-	    );
+	  fetchChildrenForItem: function fetchChildrenForItem(item) {
+	    var _this = this;
+
+	    return CategoriaSource.getWithParent(item).then(function (categorias) {
+	      return _this.fetchChildrenForItemSuccess.apply(_this, [categorias, item]);
+	    }).catch(this.fetchChildrenForItemFail);
 	  }
 	};
 
-	let TreeCategoriasAction = alt.createActions(TreeCategoriasActionBase, TreeCategoriasActionBase.displayName);
-
+	var TreeCategoriasAction = alt.createActions(TreeCategoriasActionBase, TreeCategoriasActionBase.displayName);
 	module.exports = TreeCategoriasAction;
 
-
 /***/ },
-/* 28 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const request = __webpack_require__(29);
-	const ConfigFacade = __webpack_require__(35);
+	'use strict';
+
+	var request = __webpack_require__(28);
+	var ConfigFacade = __webpack_require__(34);
 
 	module.exports = {
-	  getAll: function() {
-	    return new Promise((res, rej) => {
-	      var getRequest=request
-	        .get(`${ConfigFacade.config.url}/${ConfigFacade.config.groupDelimiter}`)
-	        .set(ConfigFacade.config.headers || {});
+	  getAll: function getAll() {
+	    return new Promise(function (res, rej) {
+	      var getRequest = request.get(ConfigFacade.config.url + '/' + ConfigFacade.config.groupDelimiter).set(ConfigFacade.config.headers || {});
 	      var queries = ConfigFacade.config.queries || [];
-	      queries.forEach((query) => getRequest.query(query) );
+	      queries.forEach(function (query) {
+	        return getRequest.query(query);
+	      });
 
-	      getRequest.end((err, response) => {
+	      getRequest.end(function (err, response) {
+	        if (err) {
+	          console.dir(err);
+	          rej(err);
+	          return;
+	        }
+	        if (response.status === 200) {
+	          res(JSON.parse(response.xhr.responseText));
+	        } else {
+	          console.dir(response);
+	          rej(response.xhr.responseText);
+	        }
+	      });
+	    });
+	  },
+	  get: function get(codigo) {
+	    return new Promise(function (res, rej) {
+	      var getRequest = request.get(ConfigFacade.config.url + '/' + ConfigFacade.config.groupDelimiter + '/' + codigo).set(ConfigFacade.config.headers || {});
+	      var queries = ConfigFacade.config.queries || [];
+	      queries.forEach(function (query) {
+	        return getRequest.query(query);
+	      });
+	      getRequest.end(function (err, response) {
 	        if (err) {
 	          rej(err);
 	          return;
@@ -2499,60 +2489,43 @@ return /******/ (function(modules) { // webpackBootstrap
 	      });
 	    });
 	  },
-	  get: function(codigo) {
-	    return new Promise((res, rej) => {
-	      var getRequest=request.get(`${ConfigFacade.config.url}/${ConfigFacade.config.groupDelimiter}/${codigo}`)
-	        .set(ConfigFacade.config.headers || {});
-	      var queries = ConfigFacade.config.queries || [];
-	      queries.forEach((query) => getRequest.query(query) );
-	      getRequest.end((err, response) => {
-	          if (err) {
-	            rej(err);
-	            return;
-	          }
-	          if (response.status === 200) {
-	            res(JSON.parse(response.xhr.responseText));
-	          } else {
-	            rej(response.xhr.responseText);
-	          }
-	        });
-	    });
-	  },
-	  getWithParent: function(item) {
-	    return new Promise((res, rej) => {
-	      var getRequest=request.get(`${ConfigFacade.config.url}/${ConfigFacade.config.itemDelimiter}/${item.codigo}/${ConfigFacade.config.groupDelimiter}`)
-	        .set(ConfigFacade.config.headers || {});
+	  getWithParent: function getWithParent(item) {
+	    return new Promise(function (res, rej) {
+	      var getRequest = request.get(ConfigFacade.config.url + '/' + ConfigFacade.config.itemDelimiter + '/' + item.codigo + '/' + ConfigFacade.config.groupDelimiter).set(ConfigFacade.config.headers || {});
 
 	      var queries = ConfigFacade.config.queries || [];
-	      queries.forEach((query) => getRequest.query(query) );
-	      getRequest.end((err, response) => {
-	          if (err) {
-	            rej(err);
-	            return;
-	          }
-	          if (response.status === 200) {
-	            res(JSON.parse(response.xhr.responseText));
-	          } else {
-	            rej(response.xhr.responseText);
-	          }
-	        });
+	      queries.forEach(function (query) {
+	        return getRequest.query(query);
+	      });
+	      getRequest.end(function (err, response) {
+	        if (err) {
+	          console.dir(err);
+	          rej(err);
+	          return;
+	        }
+	        if (response.status === 200) {
+	          res(JSON.parse(response.xhr.responseText));
+	        } else {
+	          console.dir(response);
+	          rej(response.xhr.responseText);
+	        }
+	      });
 	    });
 	  }
 	};
 
-
 /***/ },
-/* 29 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module dependencies.
 	 */
 
-	var Emitter = __webpack_require__(30);
-	var reduce = __webpack_require__(31);
-	var requestBase = __webpack_require__(32);
-	var isObject = __webpack_require__(33);
+	var Emitter = __webpack_require__(29);
+	var reduce = __webpack_require__(30);
+	var requestBase = __webpack_require__(31);
+	var isObject = __webpack_require__(32);
 
 	/**
 	 * Root reference for iframes.
@@ -2601,7 +2574,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Expose `request`.
 	 */
 
-	var request = module.exports = __webpack_require__(34).bind(null, Request);
+	var request = module.exports = __webpack_require__(33).bind(null, Request);
 
 	/**
 	 * Determine XHR.
@@ -3625,7 +3598,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 30 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -3794,7 +3767,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 31 */
+/* 30 */
 /***/ function(module, exports) {
 
 	
@@ -3823,13 +3796,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 32 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module of mixed-in functions shared between node and client code
 	 */
-	var isObject = __webpack_require__(33);
+	var isObject = __webpack_require__(32);
 
 	/**
 	 * Clear previous timeout.
@@ -3995,7 +3968,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 33 */
+/* 32 */
 /***/ function(module, exports) {
 
 	/**
@@ -4014,7 +3987,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 34 */
+/* 33 */
 /***/ function(module, exports) {
 
 	// The node and browser modules expose versions of this with the
@@ -4052,27 +4025,39 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 35 */
+/* 34 */
 /***/ function(module, exports) {
 
-	let config={};
+	"use strict";
+
+	var config = {};
 
 	module.exports = {
-	  get config(){
+	  get config() {
 	    return Object.assign({}, config);
 	  },
-	  set config(newConfig){
+	  set config(newConfig) {
 	    config = Object.assign({}, newConfig);
 	  }
 	};
 
-
 /***/ },
+/* 35 */,
 /* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const Constants = __webpack_require__(10);
-	const ToolBar = __webpack_require__(37);
+	'use strict';
+
+	var Constants = __webpack_require__(9);
+	var ToolBar = __webpack_require__(37);
+	var ToolBarItem = __webpack_require__(39);
+
+	var mapToolBarItem = function mapToolBarItem(item, i) {
+	  var params = [[this.props.path, this.props.codigo, Constants.PATH_SEPARATOR].join('')];
+	  return React.createElement(ToolBarItem, { key: [this.props.codigo, item.title].join(''),
+	    icon: item.icon, title: item.title, params: params,
+	    onSelect: item.onSelect });
+	};
 
 	module.exports = React.createClass({
 	  'displayName': 'Group',
@@ -4086,123 +4071,135 @@ return /******/ (function(modules) { // webpackBootstrap
 	      onSelect: React.PropTypes.func.isRequired
 	    }))
 	  },
-	  applyRefsCss: function(obj) {
+	  applyRefsCss: function applyRefsCss(obj) {
 	    if (obj) {
-	      let groupContent = getComputedStyle(obj.querySelector("." + Constants.CSS.GROUP_CONTENT));
+	      var groupContent = getComputedStyle(obj.querySelector("." + Constants.CSS.GROUP_CONTENT));
 	      obj.style.minHeight = groupContent.width;
 	      obj.style.minWidth = groupContent.height;
 	    }
 	  },
-	  render: function() {
-	    return React.DOM.div({
-	      className: Constants.CSS.GROUP,
-	      ref: this.applyRefsCss
-	    }, React.DOM.div({
-	        className: Constants.CSS.GROUP_CONTENT
-	      }, React.DOM.label({
-	        className: Constants.CSS.GROUP_LABEL
-	      }, this.props.descricao),
-	      React.createElement(ToolBar, {
-	        codigo: this.props.codigo,
-	        itens: (this.props.groupToolBar || []).map((item) => {
-	          let itm = Object.assign({}, item);
-	          itm.params = [
-	            [this.props.path, this.props.codigo, Constants.PATH_SEPARATOR].join('')
-	          ];
-	          return itm;
-	        })
-	      })));
+	  render: function render() {
+	    var toolBarItems = (this.props.groupToolBar || []).map(mapToolBarItem.bind(this));
+	    return React.createElement(
+	      'div',
+	      { className: Constants.CSS.GROUP, ref: this.applyRefsCss },
+	      React.createElement(
+	        'div',
+	        { className: Constants.CSS.GROUP_CONTENT },
+	        React.createElement(
+	          'label',
+	          { className: Constants.CSS.GROUP_LABEL },
+	          this.props.descricao
+	        ),
+	        React.createElement(
+	          ToolBar,
+	          { codigo: this.props.codigo },
+	          toolBarItems
+	        )
+	      )
+	    );
 	  }
 	});
-
 
 /***/ },
 /* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const Constants = __webpack_require__(38);
-	const ToolBarItem = __webpack_require__(39);
+	'use strict';
+
+	var Constants = __webpack_require__(38);
 
 	module.exports = React.createClass({
 	  'displayName': 'Toolbar',
 	  propTypes: {
 	    codigo: React.PropTypes.string.isRequired,
-	    itens: React.PropTypes.arrayOf(React.PropTypes.shape({
-	      icon: React.PropTypes.string,
-	      title: React.PropTypes.string.isRequired,
-	      params: React.PropTypes.array.isRequired,
-	      onSelect: React.PropTypes.func.isRequired
-	    }))
+	    children: React.PropTypes.arrayOf(React.PropTypes.element)
 	  },
-	  render: function() {
-	    let toolBar = this.props.itens.map((item, i) => {
-	      return React.createElement(ToolBarItem, {
-	        key: [this.props.codigo, item.title].join(''),
-	        icon: item.icon,
-	        title: item.title,
-	        params: item.params,
-	        onSelect: item.onSelect
-	      });
-	    });
-	    return React.DOM.span({
-	      className: Constants.CSS.TOOL_BAR
-	    }, toolBar);
+	  render: function render() {
+	    return React.createElement(
+	      'span',
+	      { className: Constants.CSS.TOOL_BAR },
+	      React.Children.toArray(this.props.children)
+	    );
 	  }
 	});
-
 
 /***/ },
 /* 38 */
 /***/ function(module, exports) {
 
+	'use strict';
+
 	module.exports = {
-	  CSS:{
-	    TOOL_BAR:'ifx-toolbar',
-	    TOOL_BAR_ITM:'ifx-toolbar-itm'
+	  CSS: {
+	    TOOL_BAR: 'ifx-toolbar',
+	    TOOL_BAR_ITM: 'ifx-toolbar-itm'
 	  }
 	};
-
 
 /***/ },
 /* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const Constants = __webpack_require__(38);
+	'use strict';
+
+	var Constants = __webpack_require__(38);
 
 	module.exports = React.createClass({
 	  'displayName': 'ToolBarItem',
 	  propTypes: {
 	    icon: React.PropTypes.string,
-	    params:React.PropTypes.array.isRequired,
+	    params: React.PropTypes.array.isRequired,
 	    title: React.PropTypes.string.isRequired,
 	    onSelect: React.PropTypes.func.isRequired
 	  },
-	  handleItemSelect:function(event){
-	    this.props.onSelect.apply(this,this.props.params);
+	  handleItemSelect: function handleItemSelect(event) {
+	    this.props.onSelect.apply(this, this.props.params);
 	    event.preventDefault();
 	  },
-	  render: function() {
-	    return React.DOM.img({
-	      className:Constants.CSS.TOOL_BAR_ITM,
+	  render: function render() {
+	    return React.createElement('img', { src: this.props.icon,
+	      className: Constants.CSS.TOOL_BAR_ITM,
 	      title: this.props.title,
-	      src: this.props.icon,
-	      onClick: this.handleItemSelect
-	    });
+	      onClick: this.handleItemSelect });
 	  }
 	});
-
 
 /***/ },
 /* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const Constants = __webpack_require__(10);
-	const ToolBar = __webpack_require__(37);
-	let componentes = __webpack_require__(9);
+	'use strict';
+
+	var Constants = __webpack_require__(9);
+	var ToolBar = __webpack_require__(37);
+	var ToolBarItem = __webpack_require__(39);
+
+	var mapToolBarItem = function mapToolBarItem(item, i) {
+	  var params = [this.props.path];
+	  return React.createElement(ToolBarItem, { key: [this.props.codigo, item.title].join(''),
+	    icon: item.icon, title: item.title, params: params,
+	    onSelect: item.onSelect });
+	};
+
+	var filterToolBarItems = function filterToolBarItems(item) {
+	  var result = true;
+	  var conditions = item.conditions || [];
+	  for (var i = 0, l = conditions.length; i < l; i++) {
+	    var cond = conditions[i];
+	    if (cond.hasOwnProperty('leaf')) {
+	      result = result && (cond.leaf && !this.props.hasChildren || !cond.leaf && this.props.hasChildren);
+	    }
+	    if (!result) {
+	      break;
+	    }
+	  }
+	  return result;
+	};
 
 	module.exports = React.createClass({
 	  'displayName': 'Item',
-	  getInitialState: function() {
+	  getInitialState: function getInitialState() {
 	    return {
 	      showCreateForm: false,
 	      showEditForm: false
@@ -4213,8 +4210,105 @@ return /******/ (function(modules) { // webpackBootstrap
 	    descricao: React.PropTypes.string.isRequired,
 	    path: React.PropTypes.string.isRequired,
 	    selected: React.PropTypes.bool,
+	    hasChildren: React.PropTypes.bool.isRequired,
 	    onSelect: React.PropTypes.func,
-	    groupItems: React.PropTypes.array,
+	    itemToolBar: React.PropTypes.arrayOf(React.PropTypes.shape({
+	      icon: React.PropTypes.string,
+	      title: React.PropTypes.string.isRequired,
+	      onSelect: React.PropTypes.func.isRequired
+	    }))
+	  },
+	  handleLabelClick: function handleLabelClick(event) {
+	    if (this.props.hasChildren) {
+	      this.props.onSelect(event, this.props.codigo);
+	    }
+	    event.preventDefault();
+	  },
+	  handleShowCreateForm: function handleShowCreateForm(event) {
+	    var state = Object.assign({}, this.state);
+	    state.showCreateForm = !state.showCreateForm;
+	    state.showEditForm = false;
+	    this.setState(state);
+	  },
+	  handleShowEditForm: function handleShowEditForm(event) {
+	    var state = Object.assign({}, this.state);
+	    state.showCreateForm = false;
+	    state.showEditForm = !state.showEditForm;
+	    this.setState(state);
+	  },
+	  render: function render() {
+	    var listItemClasses = [Constants.CSS.ITEM];
+	    if (this.props.selected) {
+	      listItemClasses.push(Constants.CSS.ITEM_SELECTED);
+	    }
+	    if (this.props.hasChildren) {
+	      listItemClasses.push(Constants.CSS.ITEM_HAS_CHILDREN);
+	    }
+
+	    var toolBarItems = (this.props.itemToolBar || []).filter(filterToolBarItems.bind(this)).map(mapToolBarItem.bind(this));
+	    return React.createElement(
+	      'li',
+	      { className: listItemClasses.join(' ') },
+	      React.createElement(
+	        'div',
+	        { className: Constants.CSS.ITEM_CONTENT },
+	        React.createElement(
+	          'label',
+	          { className: Constants.CSS.ITEM_LABEL, onMouseUp: this.handleLabelClick },
+	          this.props.descricao
+	        ),
+	        React.createElement(
+	          ToolBar,
+	          { codigo: this.props.codigo },
+	          toolBarItems
+	        )
+	      ),
+	      React.Children.toArray(this.props.children)
+	    );
+	  }
+	});
+
+/***/ },
+/* 41 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var Constants = __webpack_require__(9);
+	var Group = __webpack_require__(36);
+	var Item = __webpack_require__(40);
+
+	var mapItems = function mapItems(item) {
+	  var _this = this;
+
+	  var itemPath = [this.props.path, item.codigo, Constants.PATH_SEPARATOR].join('');
+
+	  var childrenGroups = (item.groupItems || []).map(function (group) {
+	    var groupsProps = Object.assign({}, group);
+	    groupsProps.key = [item.codigo || '', group.group.codigo].join(':');
+	    groupsProps.folded = _this.state.selected !== item.codigo;
+	    groupsProps.path = itemPath || Constants.PATH_SEPARATOR;
+	    groupsProps.groupToolBar = _this.props.groupToolBar;
+	    groupsProps.itemToolBar = _this.props.itemToolBar;
+	    return React.createElement(Groups, groupsProps);
+	  });
+
+	  return React.createElement(
+	    Item,
+	    { key: itemPath, codigo: item.codigo, descricao: item.descricao, hasChildren: childrenGroups.length > 0,
+	      itemToolBar: this.props.itemToolBar, path: itemPath, onSelect: this.handleItemSelect,
+	      selected: this.state.selected === item.codigo },
+	    childrenGroups
+	  );
+	};
+
+	var Groups = React.createClass({
+	  'displayName': 'Groups',
+	  propTypes: {
+	    folded: React.PropTypes.bool,
+	    group: React.PropTypes.object.isRequired,
+	    items: React.PropTypes.array.isRequired,
+	    path: React.PropTypes.string.isRequired,
 	    groupToolBar: React.PropTypes.arrayOf(React.PropTypes.shape({
 	      icon: React.PropTypes.string,
 	      title: React.PropTypes.string.isRequired,
@@ -4226,139 +4320,186 @@ return /******/ (function(modules) { // webpackBootstrap
 	      onSelect: React.PropTypes.func.isRequired
 	    }))
 	  },
-	  handleLabelClick: function(event) {
-	    if ((this.props.groupItems || []).length > 0) {
-	      this.props.onSelect(event, this.props.codigo);
-	    }
-	    event.preventDefault();
-	  },
-	  handleShowCreateForm: function(event) {
-	    let state = Object.assign({}, this.state);
-	    state.showCreateForm = !state.showCreateForm;
-	    state.showEditForm = false;
-	    this.setState(state);
-	  },
-	  handleShowEditForm: function(event) {
-	    let state = Object.assign({}, this.state);
-	    state.showCreateForm = false;
-	    state.showEditForm = !state.showEditForm;
-	    this.setState(state);
-	  },
-	  render: function() {
-	    let toolBar = React.createElement(ToolBar, {
-	      codigo: this.props.codigo,
-	      itens: (this.props.itemToolBar || []).map((item) => {
-	        let itm = Object.assign({}, item);
-	        itm.params = [this.props.path];
-	        return itm;
-	      })
-	    });
-	    let children = (this.props.groupItems || []).map((group) => {
-	      let obj = Object.assign({}, group);
-	      obj.key = [this.props.codigo || '', group.group.codigo].join(':');
-	      obj.folded = !this.props.selected;
-	      obj.path = this.props.path || Constants.PATH_SEPARATOR;
-	      obj.groupToolBar = this.props.groupToolBar;
-	      obj.itemToolBar = this.props.itemToolBar;
-	      return React.createElement(componentes.Groups,
-	        obj
-	      );
-	    });
-	    let listItemClasses = [Constants.CSS.ITEM];
-	    if (this.props.selected) {
-	      listItemClasses.push(Constants.CSS.ITEM_SELECTED);
-	    }
-	    if ((this.props.groupItems || []).length > 0) {
-	      listItemClasses.push(Constants.CSS.ITEM_HAS_CHILDREN);
-	    }
-
-	    return React.DOM.li({
-	        className: listItemClasses.join(' ')
-	      }, React.DOM.div({
-	          className: Constants.CSS.ITEM_CONTENT
-	        },
-	        React.DOM.label({
-	          className: Constants.CSS.ITEM_LABEL,
-	          onMouseUp: this.handleLabelClick,
-	          title: this.props.path
-	        }, this.props.descricao), toolBar),
-	      children
-	    );
-	  }
-	});
-
-
-/***/ },
-/* 41 */
-/***/ function(module, exports, __webpack_require__) {
-
-	const Constants = __webpack_require__(10);
-	let componentes = __webpack_require__(9);
-
-	module.exports = React.createClass({
-	  'displayName': 'Groups',
-	  propTypes: {
-	    folded:React.PropTypes.bool,
-	    group:React.PropTypes.object.isRequired,
-	    items:React.PropTypes.array.isRequired,
-	    path:React.PropTypes.string.isRequired,
-	    groupToolBar:React.PropTypes.arrayOf(React.PropTypes.shape({
-	      icon:React.PropTypes.string,
-	      title:React.PropTypes.string.isRequired,
-	      onSelect:React.PropTypes.func.isRequired
-	    })),
-	    itemToolBar:React.PropTypes.arrayOf(React.PropTypes.shape({
-	      icon:React.PropTypes.string,
-	      title:React.PropTypes.string.isRequired,
-	      onSelect:React.PropTypes.func.isRequired
-	    }))
-	  },
-	  'getInitialState': function() {
+	  'getInitialState': function getInitialState() {
 	    return {
 	      'selected': ''
 	    };
 	  },
-	  'selectItem': function(item) {
-	    let state = Object.assign({}, this.state);
+	  'selectItem': function selectItem(item) {
+	    var state = Object.assign({}, this.state);
 	    state.selected = state.selected === item ? '' : item;
 	    this.setState(state);
 	  },
-	  'handleItemSelect': function(evt, item) {
+	  'handleItemSelect': function handleItemSelect(evt, item) {
 	    this.selectItem(item);
 	  },
-	  render: function() {
-	    let classesLista = [Constants.CSS.LIST];
+	  render: function render() {
+	    var classesLista = [Constants.CSS.LIST];
 
 	    if (this.props.folded) {
 	      classesLista.push(Constants.CSS.LIST_FOLDED);
 	    }
-	    let groupProps = Object.assign({}, this.props.group);
-	    groupProps.path=this.props.path;
-	    groupProps.groupToolBar=this.props.groupToolBar;
-	    return React.DOM.ul({
-	        className: classesLista.join(' ')
-	      },
-	      React.createElement(componentes.Categoria, groupProps),
-	      React.DOM.div({
-	        className:Constants.CSS.LIST_CONTENT
-	      }, this.props.items.map((item) => {
-	        let itemPath=[this.props.path, item.codigo, Constants.PATH_SEPARATOR].join('');
-	        return React.createElement(componentes.Item, {
-	          key: itemPath,
-	          codigo: item.codigo,
-	          descricao: item.descricao,
-	          groupItems: item.groupItems,
-	          groupToolBar: this.props.groupToolBar,
-	          itemToolBar: this.props.itemToolBar,
-	          path: itemPath,
-	          onSelect: this.handleItemSelect,
-	          selected: this.state.selected === item.codigo
-	        });
-	      }))
+	    var groupProps = Object.assign({}, this.props.group);
+	    groupProps.path = this.props.path;
+	    groupProps.groupToolBar = this.props.groupToolBar;
+
+	    var items = this.props.items.map(mapItems.bind(this));
+
+	    return React.createElement(
+	      'ul',
+	      { className: classesLista.join(' ') },
+	      React.createElement(Group, groupProps),
+	      React.createElement(
+	        'div',
+	        { className: Constants.CSS.LIST_CONTENT },
+	        items
+	      )
+	    );
+	  }
+	});
+	module.exports = Groups;
+
+/***/ },
+/* 42 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var Constants = __webpack_require__(9);
+	var TreeCategoriasStore = __webpack_require__(10);
+	var TreeCategoriasActions = __webpack_require__(26);
+	var ConfigFacade = __webpack_require__(34);
+	var Spinner = __webpack_require__(43);
+
+	var Groups = __webpack_require__(41);
+
+	var TreeCategorias = React.createClass({
+	  'displayName': 'TreeCategorias',
+	  propTypes: {
+	    orientation: React.PropTypes.oneOf(['horizontal', 'vertical']),
+	    servicePath: React.PropTypes.string,
+	    groupToolBar: React.PropTypes.arrayOf(React.PropTypes.shape({
+	      icon: React.PropTypes.string,
+	      title: React.PropTypes.string.isRequired,
+	      onSelect: React.PropTypes.func.isRequired
+	    })),
+	    itemToolBar: React.PropTypes.arrayOf(React.PropTypes.shape({
+	      icon: React.PropTypes.string,
+	      title: React.PropTypes.string.isRequired,
+	      onSelect: React.PropTypes.func.isRequired
+	    })),
+	    config: React.PropTypes.object.isRequired
+	  },
+	  getInitialState: function getInitialState() {
+	    return TreeCategoriasStore.getState();
+	  },
+	  componentDidMount: function componentDidMount() {
+	    ConfigFacade.config = this.props.config;
+	    TreeCategoriasStore.listen(this.onChange);
+	    TreeCategoriasActions.fetchCategorias();
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    TreeCategoriasStore.unlisten(this.onChange);
+	  },
+	  onChange: function onChange(state) {
+	    this.setState(state);
+	  },
+	  handleRenderRef: function handleRenderRef(domReference) {
+	    domReference.parentNode.refresh = function () {
+	      return TreeCategoriasActions.fetchCategorias();
+	    };
+	  },
+	  render: function render() {
+	    var props = Object.assign({}, this.state);
+	    props.groupToolBar = this.props.groupToolBar;
+	    props.itemToolBar = this.props.itemToolBar;
+	    var treeClasses = [Constants.CSS.GROUPED_TREE];
+	    if ((this.props.orientation || 'vertical') === 'horizontal') {
+	      treeClasses.push(Constants.CSS.GROUPED_TREE_HORIZONTAL);
+	    } else {
+	      treeClasses.push(Constants.CSS.GROUPED_TREE_VERTICAL);
+	    }
+	    var children = void 0;
+	    if (this.state.loading) {
+	      treeClasses.push(Constants.CSS.GROUPED_TREE_VERTICAL);
+	      children = React.createElement(Spinner, null);
+	    } else {
+	      children = props.groupItems.map(function (groupItem) {
+	        var obj = Object.assign({}, groupItem);
+	        obj.key = [props.codigo || '', obj.group.codigo].join(':');
+	        obj.folded = props.folded;
+	        obj.path = props.path || Constants.PATH_SEPARATOR;
+	        obj.groupToolBar = props.groupToolBar;
+	        obj.itemToolBar = props.itemToolBar;
+	        return React.createElement(Groups, obj);
+	      });
+	      children.unshift(React.createElement(Spinner, null));
+	    }
+	    return React.createElement(
+	      'section',
+	      { className: treeClasses.join(' '), ref: this.handleRenderRef },
+	      children
+	    );
+	  }
+	});
+	module.exports = TreeCategorias;
+
+/***/ },
+/* 43 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var LAYER_COUNT = 4;
+	var CssClasses_ = {
+	  CONTAINER: 'spinner',
+	  LAYER: 'spinner-layer',
+	  CIRCLE_CLIPPER: 'spinner-circle-clipper',
+	  CIRCLE: 'spinner-circle',
+	  GAP_PATCH: 'spinner-gap-patch',
+	  LEFT: 'spinner-left',
+	  RIGHT: 'spinner-right'
+	};
+
+	var CircleOwner = React.createClass({
+	  displayName: 'CircleOwner',
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: this.props.classNames.join(' ') },
+	      React.createElement('div', { className: CssClasses_.CIRCLE })
 	    );
 	  }
 	});
 
+	var Layer = React.createClass({
+	  displayName: 'CircleOwner',
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: [CssClasses_.LAYER, CssClasses_.LAYER + '-' + this.props.index].join(' ') },
+	      React.createElement(CircleOwner, { classNames: [CssClasses_.CIRCLE_CLIPPER, CssClasses_.LEFT] }),
+	      React.createElement(CircleOwner, { classNames: [CssClasses_.GAP_PATCH] }),
+	      React.createElement(CircleOwner, { classNames: [CssClasses_.CIRCLE_CLIPPER, CssClasses_.RIGHT] })
+	    );
+	  }
+	});
+
+	var Spinner = React.createClass({
+	  displayName: 'Spinner',
+	  render: function render() {
+	    var layers = [];
+	    for (var i = 1; i <= LAYER_COUNT; i++) {
+	      layers.push(React.createElement(Layer, { key: i, index: i }));
+	    }
+	    return React.createElement(
+	      'div',
+	      { className: CssClasses_.CONTAINER },
+	      layers
+	    );
+	  }
+	});
+	module.exports = Spinner;
 
 /***/ }
 /******/ ])
