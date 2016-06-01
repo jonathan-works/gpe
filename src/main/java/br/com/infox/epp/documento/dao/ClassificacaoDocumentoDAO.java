@@ -204,6 +204,7 @@ public class ClassificacaoDocumentoDAO extends DAO<ClassificacaoDocumento> {
         cq.select(cd);
         cq.where(cb.equal(d.get(Documento_.pasta), pasta));
         cq.orderBy(cb.asc(cd.get(ClassificacaoDocumento_.descricao)));
+        cq.distinct(true);
         return getEntityManager().createQuery(cq).getResultList();
     }
 }

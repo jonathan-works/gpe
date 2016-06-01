@@ -16,7 +16,6 @@ import br.com.infox.epp.entrega.documentos.Entrega;
 import br.com.infox.hibernate.util.HibernateUtil;
 
 @Stateless
-@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class ChecklistService {
 
     @Inject

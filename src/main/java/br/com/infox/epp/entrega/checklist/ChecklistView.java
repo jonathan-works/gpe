@@ -52,13 +52,11 @@ public class ChecklistView implements Serializable {
     private TaskInstance taskInstance;
     private boolean hasEntrega;
 
-    // TODO verificar controle dos filtros
     // Controle dos filtros
     private SelectItem[] classificacoesDocumento;
     private SelectItem[] situacoes;
     private SelectItem[] situacoesCompletas;
 
-    // TODO verificar controle do checklist
     // Controle do CheckList
     private Checklist checklist;
     private LazyDataModel<ChecklistDoc> documentoList;
@@ -66,7 +64,7 @@ public class ChecklistView implements Serializable {
     private String message;
     private ChecklistSituacao situacaoBloco;
 
-    // TODO falta testar
+    // TODO falta testar verificação de novos documentos?
     @PostConstruct
     private void init() {
         entrega = retieveEntrega();
@@ -77,6 +75,7 @@ public class ChecklistView implements Serializable {
             hasEntrega = true;
             message = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("checklistMessage");
             checklist = checklistService.getByEntrega(entrega);
+            documentoList = new ChecklistDocLazyDataModel(checklist);
         }
         usuarioLogado = Authenticator.getUsuarioLogado();
     }
@@ -100,7 +99,6 @@ public class ChecklistView implements Serializable {
         return null;
     }
 
-    // TODO testar onChangeSituacao
     public void onChangeSituacao(ChecklistDoc clDoc) {
         try {
             clDoc.setUsuarioAlteracao(usuarioLogado);
@@ -160,7 +158,6 @@ public class ChecklistView implements Serializable {
         }
     }
 
- // TODO testar mudanças de situação em bloco
     @SuppressWarnings("unchecked")
     public void setBlockSituacao() {
         ArrayList<ChecklistDoc> list = (ArrayList<ChecklistDoc>) documentoList.getWrappedData();
@@ -172,7 +169,6 @@ public class ChecklistView implements Serializable {
         System.out.println(situacaoBloco.getLabel());
     }
 
-    // TODO testar montagem da lista de classificações de documento
     public SelectItem[] getClassificacoesDocumento() {
         if (classificacoesDocumento == null) {
             List<ClassificacaoDocumento> classificacoes = classificacaoDocumentoDAO.getClassificacoesDocumentoByPasta(entrega.getPasta());
@@ -197,7 +193,6 @@ public class ChecklistView implements Serializable {
         return situacoes;
     }
 
- // TODO verificar método
     public SelectItem[] getSituacoesCompletas() {
         if (situacoesCompletas == null) {
             ChecklistSituacao[] values = ChecklistSituacao.values();
@@ -210,7 +205,6 @@ public class ChecklistView implements Serializable {
         return situacoesCompletas;
     }
 
- // TODO verificar método
     public ChecklistSituacao[] getChecklistSituacaoOptions() {
         return ChecklistSituacao.getValues();
     }

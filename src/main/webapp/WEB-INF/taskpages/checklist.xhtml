@@ -18,7 +18,7 @@
         <h:form id="blocoSituacaoForm">
             <wi:selectOneMenuEnum id="blocoSituacaoMenu" label="#{infoxMessages['checklist.blocoSituacao.label']}"
                 value="#{checklistView.situacaoBloco}"
-                items="#{checklistView.situacaoCheckListOptions}"/>
+                items="#{checklistView.checklistSituacaoOptions}"/>
 
             <a:commandButton id="blocoSituacaoButton" styleClass="buttons"
                 value="#{infoxMessages['checklist.blocoSituacao.button']}" onclick="infox.showLoading();"
