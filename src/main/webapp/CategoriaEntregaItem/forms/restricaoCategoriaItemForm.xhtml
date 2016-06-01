@@ -24,7 +24,7 @@
                     <p:ajax process="@parent" update="@parent" />
                 </h:commandButton>
             </div>
-            <p:dataTable var="item" styleClass="ifx-dataTable" reflow="true" rows="5" paginator="true"
+            <p:dataTable var="item" styleClass="ifx-dataTable" reflow="true" rows="15" paginator="true"
                 value="#{categoriaEntregaView.restricaoCategoriaEntregaItemController.restricoes}" emptyMessage=""
                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {JumpToPageDropdown} {NextPageLink} {LastPageLink}">
                 <f:facet name="footer">
@@ -44,7 +44,14 @@
                     </h:commandLink>
                 </p:column>
                 <p:column headerText="Localização">
-                    <h:outputText value="#{item.caminhoCompletoFormatado}" />
+                    <span class="tooltip-parent">
+                        <h:outputText value="#{item.localizacao}" />
+                        <span class="epp-tooltip">
+                            <span class="tooltip-panel">
+                                #{item.caminhoCompletoFormatado}
+                            </span>
+                        </span>
+                    </span>
                 </p:column>
             </p:dataTable>
         </fieldset>

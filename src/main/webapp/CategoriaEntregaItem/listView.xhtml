@@ -14,31 +14,34 @@
             <h:form>
                 <p:remoteCommand name="editarItem" process="@this" update="@form:@parent:formFields :pageBodyDialogMessage" async="true" 
                 actionListener="#{categoriaEntregaView.editarItem}"
-                onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
+                onstart="infox.showLoading();" onsuccess="infox.hideLoading();" onerror="infox.hideLoading();"/>
                 <p:remoteCommand name="configuraRestricaoItem" process="@this" update="@form:@parent:formFields :pageBodyDialogMessage" async="true" 
                 actionListener="#{categoriaEntregaView.configRestricaoItem}"
-                onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
+                onstart="infox.showLoading();" onsuccess="infox.hideLoading();" onerror="infox.hideLoading();"/>
                 <p:remoteCommand name="editarCategoria" process="@this" update="@form:@parent:formFields :pageBodyDialogMessage" async="true" 
                 actionListener="#{categoriaEntregaView.editarCategoria}"
-                onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
+                onstart="infox.showLoading();" onsuccess="infox.hideLoading();" onerror="infox.hideLoading();"/>
                 
                 <p:remoteCommand name="criarItem" process="@this" update="@form:@parent:formFields :pageBodyDialogMessage" onstart="infox.showLoading();"
-                    actionListener="#{categoriaEntregaView.criarItem}" oncomplete="infox.hideLoading();" />
+                    actionListener="#{categoriaEntregaView.criarItem}" onsuccess="infox.hideLoading();" onerror="infox.hideLoading();" />
                 <p:remoteCommand name="criarCategoria" process="@this" update="@form:@parent:formFields :pageBodyDialogMessage" onstart="infox.showLoading();"
-                    actionListener="#{categoriaEntregaView.criarCategoria}" oncomplete="infox.hideLoading();" />
+                    actionListener="#{categoriaEntregaView.criarCategoria}" onsuccess="infox.hideLoading();" onerror="infox.hideLoading();" />
                 <p:remoteCommand name="removerItem" process="@this" update="@parent:@parent :pageBodyDialogMessage"
-                    onstart="infox.showLoading();" actionListener="#{categoriaEntregaView.removerItem}" oncomplete="infox.hideLoading();" />
+                    onstart="infox.showLoading();" actionListener="#{categoriaEntregaView.removerItem}" onsuccess="infox.hideLoading();" onerror="infox.hideLoading();" />
                 <p:remoteCommand name="removerCategoria" process="@this" update="@parent:@parent :pageBodyDialogMessage"
-                    onstart="infox.showLoading();" actionListener="#{categoriaEntregaView.removerCategoria}" oncomplete="infox.hideLoading();" />
+                    onstart="infox.showLoading();" actionListener="#{categoriaEntregaView.removerCategoria}" onsuccess="infox.hideLoading();" onerror="infox.hideLoading();" />
                 <p:remoteCommand name="configurarModeloEntrega" process="@this" update="@form:@parent :pageBodyDialogMessage"
-                    onstart="infox.showLoading();" actionListener="#{categoriaEntregaView.configurarModeloEntrega}" oncomplete="infox.hideLoading();" />
-                <p:remoteCommand name="refreshCategoriaEntregaForm" actionListener="#{categoriaEntregaView.clear}" process="@this" update="@form:@parent" onstart="infox.showLoading" oncomplete="infox.hideLoading();" />
+                    onstart="infox.showLoading();" actionListener="#{categoriaEntregaView.configurarModeloEntrega}" onsuccess="infox.hideLoading();" onerror="infox.hideLoading();" />
+                
+                <p:remoteCommand name="refreshCategoriaEntregaForm" actionListener="#{categoriaEntregaView.clear}"
+                    process="@this" update="@form:@parent:formFields :pageBodyDialogMessage"
+                    onstart="infox.showLoading" onsuccess="infox.hideLoading();document.getElementById('itemsTree').refresh();" onerror="infox.hideLoading();document.getElementById('itemsTree').refresh();" />
             </h:form>
             <infox:div style="display:inline-block;vertical-align:top;" rendered="#{'configEntregaForm.xhtml' ne categoriaEntregaView.view}">
             <div>
                 <h:commandButton type="button" styleClass="buttons" onclick="criarCategoria([{name:'path',value:'/'}])" value="Criar Categoria" />
             </div>
-            <i:groupedItemsTree baseUrl="#{facesContext.externalContext.requestContextPath}/rest"
+            <i:groupedItemsTree id="itemsTree" baseUrl="#{facesContext.externalContext.requestContextPath}/rest"
                 path="#{facesContext.externalContext.requestContextPath}/rest" groupDelimiter="categoria" itemDelimiter="item">
                 <f:facet name="headers">{"#{categoriaEntregaView.accessTokenName}":"#{categoriaEntregaView.accessTokenValue}"}</f:facet>
                 <f:facet name="groupToolBar">
