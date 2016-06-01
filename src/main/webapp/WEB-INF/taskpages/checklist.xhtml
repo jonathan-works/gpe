@@ -10,15 +10,11 @@
     xmlns:infox="http://www.infox.com.br/jsf"
     xmlns:p="http://primefaces.org/ui">
 
-    <infox:div rendered="#{not checklistView.hasPrestacao}">
-        <h:outputText value="#{infoxMessages['checklist.pcNotFound']}" />
-    </infox:div>
-
     <infox:div id="checklistMessage">
         <h:outputText value="#{checklistView.message}" rendered="#{not empty checklistView.message}" />
     </infox:div>
 
-    <infox:div rendered="#{checklistView.hasPrestacao}">
+    <infox:div rendered="#{checklistView.hasEntrega}">
         <h:form id="blocoSituacaoForm">
             <wi:selectOneMenuEnum id="blocoSituacaoMenu" label="#{infoxMessages['checklist.blocoSituacao.label']}"
                 value="#{checklistView.situacaoBloco}"

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -21,8 +22,9 @@ import org.primefaces.model.LazyDataModel;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.documento.dao.ClassificacaoDocumentoDAO;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.entrega.documentos.Entrega;
-import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.variable.Taskpage;
 import br.com.infox.ibpm.variable.TaskpageParameter;
@@ -33,26 +35,22 @@ import br.com.infox.ibpm.variable.TaskpageParameter;
 public class ChecklistView implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private static final String PARAMETER_PASTA_CHECKLIST = "pastaChecklist";
     private static final String PARAMETER_CHECKLIST_ENTREGA = "checklistEntrega";
 
     @Inject
     private ChecklistService checklistService;
     @Inject
     private ChecklistSearch checklistSearch;
+    @Inject
+    private ClassificacaoDocumentoDAO classificacaoDocumentoDAO;
 
     // Parameters
     @TaskpageParameter(name = PARAMETER_CHECKLIST_ENTREGA, type = "Entrega", description = "checklist.parameter.entrega.description")
     private Entrega entrega;
-    // TODO verificar a necessidade da pasta como parâmetro
-    //      talvez seja útil para, encontrado o processo através da entrega, olhar uma pasta específica daquele processo?
-    @TaskpageParameter(name = PARAMETER_PASTA_CHECKLIST, description = "checklist.parameter.pasta.description")
-    private Pasta pasta;
 
-    // TODO verificar controladores
     // Controle geral
     private TaskInstance taskInstance;
-    private boolean hasPrestacao; // TODO verificar a utilidade deste controlador
+    private boolean hasEntrega;
 
     // TODO verificar controle dos filtros
     // Controle dos filtros
@@ -68,26 +66,18 @@ public class ChecklistView implements Serializable {
     private String message;
     private ChecklistSituacao situacaoBloco;
 
-    // FIXME ajustar inicialização do checklist
-    // TODO fazer verificação de documentos novos
+    // TODO falta testar
     @PostConstruct
     private void init() {
         entrega = retieveEntrega();
         if (entrega == null) {
+            hasEntrega = false;
             message = "Não foi possível encontrar uma Entrega de Documentos associada a este processo.";
         } else {
+            hasEntrega = true;
             message = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("checklistMessage");
-            
+            checklist = checklistService.getByEntrega(entrega);
         }
-//        prestacaoContas = prestacaoContasDao.getByProcesso(processo.getIdProcesso());
-//        setHasPrestacao(prestacaoContas != null);
-//        if (isHasPrestacao()) {
-//            checklist = checklistPCSearch.getByPrestacaoContas(prestacaoContas.getId());
-//            if (checklist == null) {
-//                checklist = checklistService.initCheckList(prestacaoContas);
-//            }
-//            documentoList = new ChecklistDocLazyDataModel(checklist);
-//        }
         usuarioLogado = Authenticator.getUsuarioLogado();
     }
 
@@ -110,7 +100,7 @@ public class ChecklistView implements Serializable {
         return null;
     }
 
-    // TODO verificar método
+    // TODO testar onChangeSituacao
     public void onChangeSituacao(ChecklistDoc clDoc) {
         try {
             clDoc.setUsuarioAlteracao(usuarioLogado);
@@ -137,7 +127,7 @@ public class ChecklistView implements Serializable {
         }
     }
 
- // TODO verificar método
+    // TODO testar onChangeComentario
     public void onChangeComentario(ChecklistDoc clDoc) {
         try {
             clDoc.setUsuarioAlteracao(usuarioLogado);
@@ -161,7 +151,7 @@ public class ChecklistView implements Serializable {
         }
     }
 
- // TODO verificar método
+ // TODO testar finalização da taskpage checklist
     public void endTask() {
         if (checklistSearch.hasItemSemSituacao(checklist)) {
             FacesMessages.instance().add("Todos os documentos devem ter a situação informada.");
@@ -170,7 +160,7 @@ public class ChecklistView implements Serializable {
         }
     }
 
- // TODO verificar método
+ // TODO testar mudanças de situação em bloco
     @SuppressWarnings("unchecked")
     public void setBlockSituacao() {
         ArrayList<ChecklistDoc> list = (ArrayList<ChecklistDoc>) documentoList.getWrappedData();
@@ -182,20 +172,19 @@ public class ChecklistView implements Serializable {
         System.out.println(situacaoBloco.getLabel());
     }
 
-    // FIXME ajustar método que vai em documentoPCDao
-//    public SelectItem[] getClassificacoesDocumento() {
-//        if (classificacoesDocumento == null) {
-//            List<ClassificacaoDocumento> classificacoes = documentoPCDao.getClassificacoesDocumentoPCListByPrestacaoContas(prestacaoContas);
-//            classificacoesDocumento = new SelectItem[classificacoes.size()];
-//            for (int i = 0; i < classificacoes.size(); i++) {
-//                ClassificacaoDocumento classificacaoDocumento = classificacoes.get(i);
-//                classificacoesDocumento[i] = new SelectItem(classificacaoDocumento.getId(), classificacaoDocumento.toString());
-//            }
-//        }
-//        return classificacoesDocumento;
-//    }
+    // TODO testar montagem da lista de classificações de documento
+    public SelectItem[] getClassificacoesDocumento() {
+        if (classificacoesDocumento == null) {
+            List<ClassificacaoDocumento> classificacoes = classificacaoDocumentoDAO.getClassificacoesDocumentoByPasta(entrega.getPasta());
+            classificacoesDocumento = new SelectItem[classificacoes.size()];
+            for (int i = 0; i < classificacoes.size(); i++) {
+                ClassificacaoDocumento classificacaoDocumento = classificacoes.get(i);
+                classificacoesDocumento[i] = new SelectItem(classificacaoDocumento.getId(), classificacaoDocumento.toString());
+            }
+        }
+        return classificacoesDocumento;
+    }
 
- // TODO verificar método
     public SelectItem[] getSituacoes() {
         if (situacoes == null) {
             ChecklistSituacao[] values = ChecklistSituacao.getValues();
@@ -226,12 +215,8 @@ public class ChecklistView implements Serializable {
         return ChecklistSituacao.getValues();
     }
 
-    public boolean isHasPrestacao() {
-        return hasPrestacao;
-    }
-
-    public void setHasPrestacao(boolean hasPrestacao) {
-        this.hasPrestacao = hasPrestacao;
+    public boolean isHasEntrega() {
+        return hasEntrega;
     }
 
     public LazyDataModel<ChecklistDoc> getDocumentoList() {
