@@ -107,7 +107,13 @@ public class CategoriaEntregaItem implements Serializable {
     public Set<CategoriaItemRelacionamento> getItensFilhos() {
         return Collections.unmodifiableSet(itensFilhos);
     }
+    
     @Override
+	public String toString() {
+		return descricao;
+	}
+
+	@Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
