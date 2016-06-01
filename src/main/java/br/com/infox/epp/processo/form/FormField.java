@@ -13,7 +13,6 @@ public class FormField {
     protected FormType type;
     protected TypedValue defaultValue;
     protected TypedValue typedValue;
-    protected String path;
     protected Map<String, String> properties = new HashMap<String, String>();
 
     public String getId() {
@@ -45,13 +44,9 @@ public class FormField {
     }
     
     public String getPath() {
-        return path;
+        return type.getPath();
     }
     
-    public void setPath(String path) {
-        this.path = path;
-    }
-
     public TypedValue getDefaultValue() {
         return defaultValue;
     }

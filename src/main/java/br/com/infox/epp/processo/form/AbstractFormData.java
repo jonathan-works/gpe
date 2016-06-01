@@ -16,8 +16,6 @@ import br.com.infox.seam.exception.BusinessException;
 
 public abstract class AbstractFormData implements FormData {
     
-    protected static final String PATH = "/Processo/form/%s.xhtml";
-    
     protected String formKey;
     protected Processo processo;
     protected Map<String, FormType> formTypes = new HashMap<>();
@@ -51,9 +49,6 @@ public abstract class AbstractFormData implements FormData {
         formField.setTypedValue(formType.convertToFormValue(getVariable(variableName)));
         formField.setProperties(createProperties(variableAccess));
         formType.performValue(formField, this);
-        if (formField.getPath() == null) {
-            formField.setPath(String.format(PATH, formType.getName()));
-        }
         getFormFields().add(formField);
     }
     

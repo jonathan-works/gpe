@@ -16,10 +16,12 @@ import br.com.infox.seam.exception.BusinessException;
 public abstract class PrimitiveFormType implements FormType {
     
     protected String name;
+    protected String path;
     protected ValueType valueType;
     
-    public PrimitiveFormType(String name, ValueType valueType) {
+    public PrimitiveFormType(String name, String path, ValueType valueType) {
         this.name = name;
+        this.path = path;
         this.valueType = valueType;
     }
     
@@ -36,6 +38,11 @@ public abstract class PrimitiveFormType implements FormType {
     @Override
     public boolean isPersistable() {
         return true;
+    }
+    
+    @Override
+    public String getPath() {
+        return path;
     }
     
     @Override
@@ -56,7 +63,11 @@ public abstract class PrimitiveFormType implements FormType {
     public static class StringFormType extends PrimitiveFormType {
         
         public StringFormType() {
-            super("string", ValueType.STRING);
+            super("string", "/Processo/form/string.xhtml", ValueType.STRING);
+        }
+        
+        public StringFormType(String name, String path) {
+            super(name, path, ValueType.STRING);
         }
 
         @Override
@@ -72,24 +83,22 @@ public abstract class PrimitiveFormType implements FormType {
     
     public static class TextFormType extends StringFormType {
         
-        @Override
-        public String getName() {
-            return "text";
+        public TextFormType() {
+            super("text", "/Processo/form/text.xhtml");
         }
     }
     
     public static class StructuredTextFormType extends StringFormType {
         
-        @Override
-        public String getName() {
-            return "structuredText";
+        public StructuredTextFormType() {
+            super("structuredText", "/Processo/form/structuredText.xhtml");
         }
     }
     
     public static class BooleanFormType extends PrimitiveFormType {
         
         public BooleanFormType() {
-            super("boolean", ValueType.BOOLEAN);
+            super("boolean", "/Processo/form/boolean.xhtml", ValueType.BOOLEAN);
         }
         
         @Override
@@ -106,7 +115,7 @@ public abstract class PrimitiveFormType implements FormType {
     public static class IntegerFormType extends PrimitiveFormType {
         
         public IntegerFormType() {
-            super("integer", ValueType.INTEGER);
+            super("integer", "/Processo/form/integer.xhtml", ValueType.INTEGER);
         }
 
         @Override
@@ -121,7 +130,7 @@ public abstract class PrimitiveFormType implements FormType {
     public static class DateFormType extends PrimitiveFormType {
         
         public DateFormType() {
-            super("date", ValueType.DATE);
+            super("date", "/Processo/form/date.xhtml", ValueType.DATE);
         }
         
         @Override
@@ -153,7 +162,7 @@ public abstract class PrimitiveFormType implements FormType {
     public static class MonetaryFormType extends PrimitiveFormType {
         
         public MonetaryFormType() {
-            super("monetary", ValueType.DOUBLE);
+            super("monetary", "/Processo/form/monetary.xhtml", ValueType.DOUBLE);
         }
         
         @Override
@@ -168,7 +177,7 @@ public abstract class PrimitiveFormType implements FormType {
     public static class FrameFormType extends PrimitiveFormType {
         
         public FrameFormType() {
-            super("frame", ValueType.NULL);
+            super("frame", "/Processo/form/frame.xhtml", ValueType.NULL);
         }
         
         @Override
@@ -192,7 +201,7 @@ public abstract class PrimitiveFormType implements FormType {
     public static class PageFormType extends PrimitiveFormType {
         
         public PageFormType() {
-            super("page", ValueType.NULL);
+            super("page", "/Processo/form/page.xhtml", ValueType.NULL);
         }
         
         @Override
@@ -216,12 +225,12 @@ public abstract class PrimitiveFormType implements FormType {
     public static class TaskPageFormType extends PrimitiveFormType {
         
         public TaskPageFormType() {
-            super("taskPage", ValueType.NULL);
+            super("taskPage", "", ValueType.NULL);
         }
         
         @Override
         public void performValue(FormField formField, FormData formData) {
-            formField.setPath("/WEB-INF/taskpages/" + formField.getId() + ".xhtml");
+            this.path = "/WEB-INF/taskpages/" + formField.getId() + ".xhtml";
         }
 
         @Override

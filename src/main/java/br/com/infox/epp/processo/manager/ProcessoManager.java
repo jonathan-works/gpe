@@ -47,6 +47,7 @@ import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
+import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
@@ -95,6 +96,8 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     private MetadadoProcessoManager metadadoProcessoManager;
     @Inject
     private IniciarProcessoService iniciarProcessoService;
+    @Inject
+    private PastaManager pastaManager;
     
     public Processo buscarPrimeiroProcesso(Processo p, TipoProcesso tipo) {
         for (Processo filho : p.getFilhos()) {
@@ -378,13 +381,14 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         return processInstance;
     }
 	
-	public void gravarProcesso(Processo processo, List<MetadadoProcesso> metadados, List<ParticipanteProcesso> participantes) {
+	public void gravarProcessoMetadadoParticipantePasta(Processo processo, List<MetadadoProcesso> metadados, List<ParticipanteProcesso> participantes) {
 	    persist(processo);
 	    for (MetadadoProcesso metadadoProcesso : metadados) {
 	        metadadoProcesso.setProcesso(processo);
 	        metadadoProcessoManager.persist(metadadoProcesso);
 	    }
         participanteProcessoManager.persistParticipantePessoaMeioContato(participantes);
+        pastaManager.createDefaultFolders(processo);
 	}
 	
 	@Observer({Event.EVENTTYPE_TASK_END})

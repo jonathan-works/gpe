@@ -29,7 +29,7 @@ public class UploadFormType extends FileFormType {
     private static final Logger LOG = Logger.getLogger(UploadFormType.class.getName());
     
     public UploadFormType() {
-        super("upload", ValueType.UPLOAD);
+        super("upload", "/Processo/form/upload.xhtml", ValueType.UPLOAD);
     }
 
     @Override

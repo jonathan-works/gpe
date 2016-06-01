@@ -25,8 +25,8 @@ import br.com.infox.seam.util.ComponentUtil;
 
 public abstract class EnumFormType extends PrimitiveFormType {
     
-    public EnumFormType(String name, ValueType valueType) {
-        super(name, valueType);
+    public EnumFormType(String name, String path, ValueType valueType) {
+        super(name, path, valueType);
     }
     
     @Override
@@ -67,7 +67,7 @@ public abstract class EnumFormType extends PrimitiveFormType {
     public static class EnumerationFormType extends EnumFormType {
 
         public EnumerationFormType() {
-            super("enumeration", ValueType.STRING);
+            super("enumeration", "/Processo/form/enumeration.xhtml", ValueType.STRING);
         }
 
         @Override
@@ -90,7 +90,7 @@ public abstract class EnumFormType extends PrimitiveFormType {
     public static class EnumerationMultipleFormType extends EnumFormType {
         
         public EnumerationMultipleFormType() {
-            super("enumerationMultiple", ValueType.STRING_ARRAY);
+            super("enumerationMultiple", "/Processo/form/enumerationMultiple.xhtml", ValueType.STRING_ARRAY);
         }
         
         @Override

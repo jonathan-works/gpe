@@ -10,6 +10,8 @@ public interface FormType {
     
     String getName();
     
+    String getPath();
+    
     ValueType getValueType();
     
     TypedValue convertToFormValue(Object value);

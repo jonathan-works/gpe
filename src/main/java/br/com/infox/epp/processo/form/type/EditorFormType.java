@@ -21,7 +21,7 @@ import br.com.infox.epp.processo.form.variable.value.ValueType;
 public class EditorFormType extends FileFormType {
 
     public EditorFormType() {
-        super("editor", ValueType.EDITOR);
+        super("editor", "/Processo/form/editor.xhtml", ValueType.EDITOR);
     }
     
     @Override

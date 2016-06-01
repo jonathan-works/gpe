@@ -151,11 +151,11 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
         ProcessDefinition processDefinition = JbpmUtil.instance().findLatestProcessDefinition(processDefinitionName);
         Task startTask = processDefinition.getTaskMgmtDefinition().getStartTask();
         if (hasStartTaskForm(startTask)) {
-            processoManager.gravarProcesso(processo, metadados, participantes);
+            processoManager.gravarProcessoMetadadoParticipantePasta(processo, metadados, participantes);
             jsfUtil.addFlashParam("processo", processo);
             return "/Processo/startTaskForm.seam";
         } else {
-            processoManager.gravarProcesso(processo, metadados, participantes);
+            processoManager.gravarProcessoMetadadoParticipantePasta(processo, metadados, participantes);
             iniciarProcesso(processo);
             return "/Painel/list.seam?faces-redirect=true";
         }

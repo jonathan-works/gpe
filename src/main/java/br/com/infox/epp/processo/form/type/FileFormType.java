@@ -33,13 +33,15 @@ import br.com.infox.seam.exception.BusinessException;
 public abstract class FileFormType implements FormType {
     
     protected String name;
+    protected String path;
     protected ValueType valueType;
     protected Documento documentoToSign;
     protected String tokenToSign;
     
-    public FileFormType(String name, ValueType valueType) {
+    public FileFormType(String name, String path, ValueType valueType) {
         this.name = name;
         this.valueType = valueType;
+        this.path = path;
     }
     
     @Override
@@ -50,6 +52,11 @@ public abstract class FileFormType implements FormType {
     @Override
     public ValueType getValueType() {
         return valueType;
+    }
+    
+    @Override
+    public String getPath() {
+        return path;
     }
     
     @Override
@@ -87,6 +94,8 @@ public abstract class FileFormType implements FormType {
             CertificateSignatureBean signatureBean = certificateSignatureBundle.getSignatureBeanList().get(0);
             getAssinaturaDocumentoService().assinarDocumento(documentoToSign, Authenticator.getUsuarioPerfilAtual(),
                     signatureBean.getCertChain(), signatureBean.getSignature());
+            setDocumentoToSign(null);
+            setTokenToSign(null);
         }
     }
     
