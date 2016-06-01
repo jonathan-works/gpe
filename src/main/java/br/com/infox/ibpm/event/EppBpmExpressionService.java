@@ -3,6 +3,7 @@ package br.com.infox.ibpm.event;
 import static br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais.PROCESSO;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -90,6 +91,14 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
 	    }
 	    return suficientementeAssinado;
     }
+	
+	@External(expressionType = ExpressionType.RAIA_DINAMICA, 
+        tooltip = "process.events.expression.toList.tooltip",
+        example = "#{bpmExpressionService.toList(variavel).put(variavelLista).put(variavel2))}"
+    )
+    public Collection<Object> toList(Object object) {
+	    return new ObjectCollection(object.getClass()).put(object);
+    }
 
     @Override
     public List<ExternalMethod> getExternalMethods() {
@@ -100,5 +109,5 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
 	public List<ExternalMethod> getExternalRaiaDinamicaMethods() {
 		return BpmExpressionServiceConsumer.instance().getExternalMethods(this, ExpressionType.RAIA_DINAMICA);
 	}
-    
+	
 }
