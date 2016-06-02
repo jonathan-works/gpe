@@ -5,6 +5,7 @@ import static br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider.
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -284,9 +285,14 @@ public class PrazoComunicacaoService {
     	return getDataLimiteCumprimento(comunicacao);
     }
     
-    public Date getDataMaximaRespostaComunicacao(Processo processo) {
-        Integer qtMaximoDias = comunicacaoSearch.getMaximoDiasCienciaMaisPrazo(processo.getIdProcesso()); 
-        return calcularPrazoDeCumprimento(DateTime.now().toDate(), qtMaximoDias);
+    public Date getDataMaximaRespostaComunicacao(Integer idProcesso, String taskName) {
+        Map<String, Object> mapCienciaPrazo = comunicacaoSearch.getMaximoDiasCienciaMaisPrazo(idProcesso, taskName);
+        if (!mapCienciaPrazo.isEmpty()) {
+            Date dataLimiteCiencia = (Date) mapCienciaPrazo.get("dataLimiteCiencia");
+            Integer maiorPrazo = (Integer) mapCienciaPrazo.get("maiorPrazo");
+            return calcularPrazoDeCumprimento(dataLimiteCiencia, maiorPrazo);
+        } else {
+            return DateTime.now().plusDays(1).toDate();
+        }
     }
-    
 }

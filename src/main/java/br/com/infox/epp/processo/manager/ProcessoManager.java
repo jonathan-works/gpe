@@ -325,8 +325,8 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 		return getDao().listProcessosComunicacaoAguardandoCumprimento();
 	}
 	
-	public Processo getProcessoEpaByIdJbpm(Long idJbpm) {
-		return getDao().getProcessoEpaByIdJbpm(idJbpm);
+	public Processo getProcessoByIdJbpm(Long idJbpm) {
+		return getDao().getProcessoByIdJbpm(idJbpm);
 	}
 	
 	public void movimentarProcessoJBPM(Long taskInstanceId, String transicao) throws DAOException {

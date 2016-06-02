@@ -15,15 +15,17 @@ import javax.inject.Named;
 
 import org.jbpm.graph.exe.ExecutionContext;
 
+
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.util.StringUtil;
+import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.comunicacao.prazo.ContabilizadorPrazo;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
-import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.ibpm.event.External.ExpressionType;
 import br.com.infox.ibpm.sinal.SignalService;
 
@@ -42,8 +44,8 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
     protected DocumentoManager documentoManager;
     @Inject
     protected PrazoComunicacaoService prazoComunicacaoService;
-    @Inject
-    protected ProcessoManager processoManager;
+    @Inject 
+    protected UsuarioLoginManager usuarioLoginManager;
 
     @External(tooltip = "process.events.expression.atribuirCiencia.tooltip")
     public void atribuirCiencia() {
@@ -114,11 +116,34 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
         tooltip = "process.events.expression.dataMaximaRespostaComunicacao.tooltip"
 	)
     public Date dataMaximaRespostaComunicacao() throws DAOException {
-	    ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
-	    Integer idProcesso = (Integer) executionContext.getContextInstance().getVariable("processo");
-	    Processo processo = processoManager.find(idProcesso);
-	    Date dataMaxima = prazoComunicacaoService.getDataMaximaRespostaComunicacao(processo);
-	    return dataMaxima;
+	    return dataMaximaRespostaComunicacao(null);
+    }
+	
+	@External(expressionType = ExpressionType.GERAL,
+        tooltip = "process.events.expression.dataMaximaRespostaComunicacao.tooltip",
+        value = {
+            @Parameter(defaultValue = "'Nome da Tarefa'", selectable = true)
+        }
+    )
+    public Date dataMaximaRespostaComunicacao(String taskName) throws DAOException {
+        ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
+        Integer idProcesso = (Integer) executionContext.getContextInstance().getVariable("processo");
+        Date dataMaxima = prazoComunicacaoService.getDataMaximaRespostaComunicacao(idProcesso, taskName);
+        return dataMaxima;
+    }
+	
+	@External(expressionType = ExpressionType.GERAL,
+        tooltip = "process.events.expression.getUsuarioComLogin.tooltip",
+        value = {
+            @Parameter(defaultValue = "'Login do usuário'", selectable = true)
+        }
+    )
+    public UsuarioLogin getUsuarioComLogin(String login) throws DAOException {
+	    UsuarioLogin usuarioLogin = null;
+	    if (!StringUtil.isEmpty(login)) {
+	        usuarioLogin = usuarioLoginManager.getUsuarioLoginByLogin(login);
+	    }
+        return usuarioLogin;
     }
 
     @Override

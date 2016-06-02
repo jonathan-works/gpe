@@ -133,14 +133,14 @@ public class ProcessoDAO extends DAO<Processo> {
 		return find(processo.getIdProcesso());
 	}
 
-	public Processo getProcessoEpaByIdJbpm(Long idJbpm) {
+	public Processo getProcessoByIdJbpm(Long idJbpm) {
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put(PARAM_ID_JBPM, idJbpm);
 		return getNamedSingleResult(PROCESSO_EPA_BY_ID_JBPM, parameters);
 	}
 
 	public List<PessoaFisica> getPessoaFisicaList() {
-		Processo pe = getProcessoEpaByIdJbpm(ProcessInstance.instance().getId());
+		Processo pe = getProcessoByIdJbpm(ProcessInstance.instance().getId());
 		List<PessoaFisica> pessoaFisicaList = new ArrayList<PessoaFisica>();
 		for (ParticipanteProcesso participante : pe.getParticipantes()) {
 			if (participante.getPessoa().getTipoPessoa().equals(TipoPessoaEnum.F)) {
@@ -151,7 +151,7 @@ public class ProcessoDAO extends DAO<Processo> {
 	}
 
 	public List<PessoaJuridica> getPessoaJuridicaList() {
-		Processo processo = getProcessoEpaByIdJbpm(ProcessInstance.instance().getId());
+		Processo processo = getProcessoByIdJbpm(ProcessInstance.instance().getId());
 		List<PessoaJuridica> pessoaJuridicaList = new ArrayList<PessoaJuridica>();
 		for (ParticipanteProcesso participante : processo.getParticipantes()) {
 			if (participante.getPessoa().getTipoPessoa().equals(TipoPessoaEnum.J)) {
@@ -162,7 +162,7 @@ public class ProcessoDAO extends DAO<Processo> {
 	}
 	
 	public boolean hasPartes(Long idJbpm) {
-		Processo pe = getProcessoEpaByIdJbpm(idJbpm);
+		Processo pe = getProcessoByIdJbpm(idJbpm);
 		return (pe != null) && (pe.hasPartes());
 	}
 

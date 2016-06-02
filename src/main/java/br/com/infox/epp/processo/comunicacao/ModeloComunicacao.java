@@ -97,6 +97,9 @@ public class ModeloComunicacao implements Serializable, Cloneable {
 	@Column(name = "in_enviar_relatoria", nullable = false)
 	private Boolean enviarRelatoria = Boolean.FALSE;
 	
+	@Column(name = "cd_task_key", nullable = true)
+    private String taskKey;
+	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modeloComunicacao")
 	private List<DestinatarioModeloComunicacao> destinatarios = new ArrayList<>(0);
 	
@@ -199,7 +202,15 @@ public class ModeloComunicacao implements Serializable, Cloneable {
 		this.minuta = minuta;
 	}
 	
-	public Boolean getEnviarRelatoria() {
+    public String getTaskKey() {
+        return taskKey;
+    }
+
+    public void setTaskKey(String taskKey) {
+        this.taskKey = taskKey;
+    }
+
+    public Boolean getEnviarRelatoria() {
 		return enviarRelatoria;
 	}
 

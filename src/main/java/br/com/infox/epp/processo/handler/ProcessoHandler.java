@@ -233,7 +233,7 @@ public class ProcessoHandler implements Serializable {
 
     public Collection<MovimentacoesBean> getMovimentacoes(){
     	org.jbpm.graph.exe.ProcessInstance processoJbpm = ProcessInstance.instance().getRoot();
-    	Processo processo = processoManager.getProcessoEpaByIdJbpm(processoJbpm.getId());
+    	Processo processo = processoManager.getProcessoByIdJbpm(processoJbpm.getId());
     	
         List<TaskInstance> list = getTaskInstanceListMovimentacoes(processo);
         

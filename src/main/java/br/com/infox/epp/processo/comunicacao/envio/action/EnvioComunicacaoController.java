@@ -158,17 +158,20 @@ public class EnvioComunicacaoController implements Serializable {
 	}
 
 	private void initModelo(Long idModelo) {
+	    org.jbpm.taskmgmt.exe.TaskInstance taskInstance = TaskInstance.instance();
 		if (idModelo == null) { // Nova comunicação
-			org.jbpm.taskmgmt.exe.TaskInstance taskInstance = TaskInstance.instance();
 			if (taskInstance != null) { // Nova comunicação na aba de saída
 				ContextInstance context = taskInstance.getContextInstance();
 				Token taskToken = taskInstance.getToken();
 				idModelo = (Long) context.getVariable(idModeloComunicacaoVariableName, taskToken);
 			}
 		}
-		if (idModelo == null) { // Nova Comunicação fora da aba de saída, pois o idModelo continua nulo
+		if (idModelo == null) {
 			this.modeloComunicacao = new ModeloComunicacao();
-			this.modeloComunicacao.setProcesso(processoManager.getProcessoByNumero(processoManager.getNumeroProcessoByIdJbpm(processInstanceId)));
+			this.modeloComunicacao.setProcesso(processoManager.getProcessoByIdJbpm(processInstanceId));
+			if (taskInstance != null) {
+			    this.modeloComunicacao.setTaskKey(taskInstance.getTask().getKey());
+			}
 		} else { // Comunicação existente
 			this.modeloComunicacao = modeloComunicacaoManager.find(idModelo);
 			setFinalizada(modeloComunicacao.getFinalizada() != null ? modeloComunicacao.getFinalizada() : false);

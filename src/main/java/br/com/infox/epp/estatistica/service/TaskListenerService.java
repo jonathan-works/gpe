@@ -42,7 +42,7 @@ public class TaskListenerService implements Serializable {
 
     @Observer(Event.EVENTTYPE_TASK_CREATE)
     public void onCreateJbpmTask(ExecutionContext context) {
-        Processo processo = processoManager.getProcessoEpaByIdJbpm(context.getProcessInstance().getRoot().getId());
+        Processo processo = processoManager.getProcessoByIdJbpm(context.getProcessInstance().getRoot().getId());
         if (processo != null) {
             TaskInstance taskInstance = context.getTaskInstance();
             createProcessoTarefa(processo, taskInstance);
@@ -79,7 +79,7 @@ public class TaskListenerService implements Serializable {
     	if(context.getProcessInstance().getSuperProcessToken() != null) 
     		return;
     	
-        Processo processo = processoManager.getProcessoEpaByIdJbpm(context.getProcessInstance().getRoot().getId());
+        Processo processo = processoManager.getProcessoByIdJbpm(context.getProcessInstance().getRoot().getId());
         if (processo == null) {
             throw new ApplicationException("Erro ao criar o processo - Defição de fluxo imcompleta. Contate o administrador do sistema.");
         }

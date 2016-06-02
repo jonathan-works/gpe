@@ -26,7 +26,7 @@ public class CaixaJbpmEventHandler {
     	Node nodeFrom = executionContext.getTransition().getFrom();
 	    Caixa caixa = caixaManager.getCaixaByDestinationNodeKeyNodeAnterior(nodeTo.getKey(), nodeFrom.getKey());
 	    if (caixa != null) {
-	        Processo processo = processoManager.getProcessoEpaByIdJbpm(executionContext.getProcessInstance().getId());
+	        Processo processo = processoManager.getProcessoByIdJbpm(executionContext.getProcessInstance().getId());
 	        if (caixa != null) {
 	            processo.setCaixa(caixa);
 	            processoManager.update(processo);
@@ -35,7 +35,7 @@ public class CaixaJbpmEventHandler {
     }
     
    public void removeCaixaDoProcesso(@Observes @TaskEnd ExecutionContext context) throws DAOException {
-       Processo processo = processoManager.getProcessoEpaByIdJbpm(context.getProcessInstance().getRoot().getId());
+       Processo processo = processoManager.getProcessoByIdJbpm(context.getProcessInstance().getRoot().getId());
        processo.setCaixa(null);
        processoManager.update(processo);
    }

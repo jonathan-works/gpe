@@ -16,7 +16,6 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.transaction.SystemException;
 
-import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.transaction.Transaction;
 import org.jbpm.context.exe.ContextInstance;
@@ -96,13 +95,9 @@ public class ComunicacaoService {
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void expedirComunicacao(ModeloComunicacao modeloComunicacao) throws DAOException {
-		Long processIdOriginal = BusinessProcess.instance().getProcessId();
-		Long taskIdOriginal = BusinessProcess.instance().getTaskId();
 		for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
 			expedirComunicacao(destinatario);
 		}
-		BusinessProcess.instance().setProcessId(processIdOriginal);
-		BusinessProcess.instance().setTaskId(taskIdOriginal);
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -120,13 +115,7 @@ public class ComunicacaoService {
 		processoManager.persist(processo);
 		destinatario.setProcesso(processo);
 		
-		Long processIdOriginal = BusinessProcess.instance().getProcessId(); // Para caso tenha sido expedido para apenas um destinatário
-		Long taskIdOriginal = BusinessProcess.instance().getTaskId();
-		BusinessProcess.instance().setProcessId(null);
-		BusinessProcess.instance().setTaskId(null);
 		iniciarProcessoService.iniciarProcesso(processo, createVariaveisJbpm(destinatario));
-		BusinessProcess.instance().setProcessId(processIdOriginal);
-		BusinessProcess.instance().setTaskId(taskIdOriginal);
 
 		criarMetadados(destinatario, processo);
 		

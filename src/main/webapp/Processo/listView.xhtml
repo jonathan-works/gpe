@@ -179,7 +179,7 @@
 		                ajax="true" render="@form:nome @form:razao" listener="#{iniciarProcessoView.onChangeParticipanteCnpj}" />
 		            
 		            <i:inputText id="nome" value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.nome}"
-		                label="#{participantesController.tipoPessoa eq 'F' ? infoxMessages['pessoaFisica.nome'] : infoxMessages['pessoaJuridica.nomeFantasia']}" 
+		                label="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa eq 'F' ? infoxMessages['pessoaFisica.nome'] : infoxMessages['pessoaJuridica.nomeFantasia']}" 
 		                required="true" />
 		             
 		            <i:inputEmail id="email" label="#{infoxMessages['pessoaFisica.email']}" 
