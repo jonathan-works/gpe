@@ -26,6 +26,7 @@ public class SerieEventos implements Serializable {
     @GeneratedValue(generator = "SerieEventosGenerator", strategy = GenerationType.SEQUENCE)
     @Column(name = "id_serie_eventos", unique = true, nullable = false)
     private Integer id;
+    
     @Enumerated(EnumType.STRING)
     @NotNull
     @Column(name = "tp_serie", nullable = false)

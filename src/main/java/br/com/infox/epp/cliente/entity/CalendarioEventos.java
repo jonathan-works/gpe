@@ -91,6 +91,7 @@ public class CalendarioEventos implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "dt_inicio", nullable = false)
     private Date dataInicio;
+    
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "dt_fim", nullable = false)
     private Date dataFim;

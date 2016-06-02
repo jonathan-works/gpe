@@ -13,6 +13,7 @@ import javax.inject.Inject;
 
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.context.exe.ContextInstance;
+import org.joda.time.DateTime;
 
 import br.com.infox.certificado.bean.CertificateSignatureBean;
 import br.com.infox.certificado.exception.CertificadoException;
@@ -24,6 +25,7 @@ import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.dao.ComunicacaoSearch;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
@@ -41,8 +43,7 @@ import br.com.infox.util.time.DateRange;
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class PrazoComunicacaoService {
-	public static final String NAME = "prazoComunicacaoService";
-	
+    
 	@Inject
 	private CalendarioEventosManager calendarioEventosManager;
 	@Inject
@@ -53,6 +54,8 @@ public class PrazoComunicacaoService {
 	private DocumentoManager documentoManager;
 	@Inject
 	private AssinaturaDocumentoService assinaturaDocumentoService;
+	@Inject
+	private ComunicacaoSearch comunicacaoSearch;
 
 	public Date contabilizarPrazoCiencia(Processo comunicacao) {
 		DestinatarioModeloComunicacao destinatario = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.DESTINATARIO);
@@ -279,6 +282,11 @@ public class PrazoComunicacaoService {
     
     public Date getPrazoLimiteParaResposta(Processo comunicacao){
     	return getDataLimiteCumprimento(comunicacao);
+    }
+    
+    public Date getDataMaximaRespostaComunicacao(Processo processo) {
+        Integer qtMaximoDias = comunicacaoSearch.getMaximoDiasCienciaMaisPrazo(processo.getIdProcesso()); 
+        return calcularPrazoDeCumprimento(DateTime.now().toDate(), qtMaximoDias);
     }
     
 }
