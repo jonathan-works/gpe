@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.entrega.documentos.Entrega;
 
 @Named
 @Stateless
@@ -21,11 +22,11 @@ public class ChecklistVariableService implements Serializable {
     private ChecklistSearch checklistSearch;
 
     // TODO testar existeItemNaoConforme
-    public Boolean existeItemNaoConforme(Long idEntrega) {
-        if (idEntrega == null) {
+    public Boolean existeItemNaoConforme(Entrega entrega) {
+        if (entrega == null || entrega.getId() == null) {
             return false;
         }
-        Checklist cl = checklistSearch.getByIdEntrega(idEntrega);
+        Checklist cl = checklistSearch.getByIdEntrega(entrega.getId());
         return cl == null ? false : checklistSearch.hasItemNaoConforme(cl);
     }
 

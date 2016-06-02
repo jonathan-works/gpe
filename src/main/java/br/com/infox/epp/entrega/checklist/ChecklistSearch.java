@@ -25,7 +25,6 @@ import br.com.infox.epp.processo.documento.entity.Documento_;
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class ChecklistSearch {
 
-    // TODO check if need this method
     public Checklist getByIdEntrega(Long idEntrega) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Checklist> cq = cb.createQuery(Checklist.class);
