@@ -58,7 +58,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	module.exports = {
 	    NavigationMenu: __webpack_require__(1),
-	    TreeCategorias: __webpack_require__(8)
+	    TreeCategorias: __webpack_require__(8),
+	    Spinner: __webpack_require__(35)
 	};
 
 /***/ },
