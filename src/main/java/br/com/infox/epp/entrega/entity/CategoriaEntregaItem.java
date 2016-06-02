@@ -117,7 +117,7 @@ public class CategoriaEntregaItem implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
+        result = prime * result + ((getCodigo() == null) ? 0 : getCodigo().hashCode());
         return result;
     }
 
@@ -127,13 +127,13 @@ public class CategoriaEntregaItem implements Serializable {
             return true;
         if (obj == null)
             return false;
-        if (getClass() != obj.getClass())
+        if (!(obj instanceof CategoriaEntregaItem))
             return false;
         CategoriaEntregaItem other = (CategoriaEntregaItem) obj;
-        if (codigo == null) {
-            if (other.codigo != null)
+        if (getCodigo() == null) {
+            if (other.getCodigo() != null)
                 return false;
-        } else if (!codigo.equals(other.codigo))
+        } else if (!getCodigo().equals(other.getCodigo()))
             return false;
         return true;
     }
