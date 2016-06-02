@@ -4,6 +4,7 @@ import static br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais.PRO
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -12,12 +13,17 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.jbpm.graph.exe.ExecutionContext;
+
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.comunicacao.prazo.ContabilizadorPrazo;
+import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
+import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.ibpm.event.External.ExpressionType;
 import br.com.infox.ibpm.sinal.SignalService;
 
@@ -31,9 +37,13 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
     private ContabilizadorPrazo contabilizadorPrazo = BeanManager.INSTANCE.getReference(ContabilizadorPrazo.class);
     private PastaManager pastaManager = BeanManager.INSTANCE.getReference(PastaManager.class);
     @Inject
-    private SignalService signalService;
+    protected SignalService signalService;
     @Inject
-    private DocumentoManager documentoManager;
+    protected DocumentoManager documentoManager;
+    @Inject
+    protected PrazoComunicacaoService prazoComunicacaoService;
+    @Inject
+    protected ProcessoManager processoManager;
 
     @External(tooltip = "process.events.expression.atribuirCiencia.tooltip")
     public void atribuirCiencia() {
@@ -98,6 +108,17 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
     )
     public Collection<Object> toList(Object object) {
 	    return new ObjectCollection(object.getClass()).put(object);
+    }
+	
+	@External(expressionType = ExpressionType.GERAL,
+        tooltip = "process.events.expression.dataMaximaRespostaComunicacao.tooltip"
+	)
+    public Date dataMaximaRespostaComunicacao() throws DAOException {
+	    ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
+	    Integer idProcesso = (Integer) executionContext.getContextInstance().getVariable("processo");
+	    Processo processo = processoManager.find(idProcesso);
+	    Date dataMaxima = prazoComunicacaoService.getDataMaximaRespostaComunicacao(processo);
+	    return dataMaxima;
     }
 
     @Override

@@ -36,12 +36,14 @@ public class ProcessoSearch extends PersistenceController {
         cq.where(
             cb.equal(metaddoProcesso.get(MetadadoProcesso_.metadadoType), cb.literal(EppMetadadoProvider.STATUS_PROCESSO.getMetadadoType())),
             cb.equal(statusProcesso.get(StatusProcesso_.idStatusProcesso).as(String.class), metaddoProcesso.get(MetadadoProcesso_.valor)),
-            cb.equal(statusProcesso.get(StatusProcesso_.nome), cb.literal("Não Iniciado")),
+            cb.equal(statusProcesso.get(StatusProcesso_.nome), cb.literal(StatusProcesso.STATUS_NAO_INICIADO)),
             cb.equal(processo.get(Processo_.usuarioCadastro).get(UsuarioLogin_.idUsuarioLogin), cb.literal(usuarioLogin.getIdUsuarioLogin())),
             cb.isNull(processo.get(Processo_.idJbpm)),
             cb.isNull(processo.get(Processo_.dataFim))
         );
         return getEntityManager().createQuery(cq).getResultList();
     }
+    
+    
 
 }
