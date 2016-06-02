@@ -169,7 +169,7 @@ public class EnvioComunicacaoController implements Serializable {
 		if (idModelo == null) {
 			this.modeloComunicacao = new ModeloComunicacao();
 			this.modeloComunicacao.setProcesso(processoManager.getProcessoByIdJbpm(processInstanceId));
-			if (taskInstance != null) {
+			if (taskInstance != null && inTask) {
 			    this.modeloComunicacao.setTaskKey(taskInstance.getTask().getKey());
 			}
 		} else { // Comunicação existente
