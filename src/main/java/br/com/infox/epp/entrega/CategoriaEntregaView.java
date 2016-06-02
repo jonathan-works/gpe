@@ -51,7 +51,7 @@ public class CategoriaEntregaView implements Serializable {
     @PreDestroy
     @ExceptionHandled
     public void destroy(){
-        accessTokenManager.remove(accessToken);
+        accessTokenManager.removeAsynchronous(accessToken);
     }
     
     private void createToken() {

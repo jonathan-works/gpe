@@ -1,5 +1,6 @@
 package br.com.infox.core.token;
 
+import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -20,6 +21,12 @@ public class AccessTokenManager {
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void remove(AccessToken accessToken) {
 		accessTokenDao.remove(accessToken);
+	}
+
+	@Asynchronous
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void removeAsynchronous(AccessToken accessToken) {
+	    accessTokenDao.remove(accessToken);
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
