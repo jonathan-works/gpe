@@ -16,6 +16,7 @@
     <composite:attribute name="valueChangeListener" />
     <composite:attribute name="placeholder" />
     <composite:attribute name="scrollHeight" type="java.lang.Integer" />
+    <composite:attribute name="emptyMessage" type="java.lang.String" default="#{infoxMessages['list.defaultNoDataLabel']}"/>
     <composite:attribute name="completeMethod" required="true" method-signature="java.util.List action(java.lang.String)"/>
     <composite:attribute name="var" default="item"/>
     <composite:attribute name="itemLabel" type="java.lang.String" default="#{item}"/>
@@ -74,7 +75,7 @@
                     var="#{cc.attrs.var}" itemLabel="#{cc.attrs.itemLabel}" itemValue="#{cc.attrs.itemValue}"
                     completeMethod="#{cc.attrs.completeMethod}"
                     maxResults="#{cc.attrs.maxResults}" minQueryLength="#{cc.attrs.minQueryLength}" 
-                    queryDelay="#{cc.attrs.queryDelay}"
+                    queryDelay="#{cc.attrs.queryDelay}" emptyMessage="#{cc.attrs.emptyMessage}"
                     forceSelection="#{cc.attrs.forceSelection}" dropdown="#{cc.attrs.dropdown}"
                     dropdownMode="#{cc.attrs.dropdownMode}" multiple="#{cc.attrs.multiple}">
                     <c:if test="#{not empty cc.attrs.validator}">
