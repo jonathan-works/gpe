@@ -132,6 +132,8 @@ public class VariavelProcessoService {
     }
 
     private String formatarValor(Object variable) {
+    	if(variable == null)
+    		return "";
     	if (variable instanceof Date) {
     		return new SimpleDateFormat("dd/MM/yyyy").format(variable);
     	} else if (variable instanceof Boolean) {
