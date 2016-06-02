@@ -64,7 +64,6 @@ public class ChecklistView implements Serializable {
     private String message;
     private ChecklistSituacao situacaoBloco;
 
-    // TODO falta testar verificação de novos documentos?
     @PostConstruct
     private void init() {
         entrega = retieveEntrega();
@@ -92,7 +91,7 @@ public class ChecklistView implements Serializable {
         if (taskInstance.hasVariable(PARAMETER_CHECKLIST_ENTREGA)) {
             return (Entrega) taskInstance.getVariable(PARAMETER_CHECKLIST_ENTREGA);
         }
-        String nameVariableEntrega = "nomeVariableEntrega"; // FIXME isso aqui precisa ser alterado após ser feita a refatoração do ObserverPrestacaoContas
+        String nameVariableEntrega = "entrega"; // FIXME isso aqui precisa ser alterado após ser feita a refatoração do ObserverPrestacaoContas
         if (taskInstance.hasVariable(nameVariableEntrega)) {
             return (Entrega) taskInstance.getVariable(nameVariableEntrega);
         }
@@ -125,7 +124,6 @@ public class ChecklistView implements Serializable {
         }
     }
 
-    // TODO testar onChangeComentario
     public void onChangeComentario(ChecklistDoc clDoc) {
         try {
             clDoc.setUsuarioAlteracao(usuarioLogado);
@@ -149,7 +147,6 @@ public class ChecklistView implements Serializable {
         }
     }
 
- // TODO testar finalização da taskpage checklist
     public void endTask() {
         if (checklistSearch.hasItemSemSituacao(checklist)) {
             FacesMessages.instance().add("Todos os documentos devem ter a situação informada.");

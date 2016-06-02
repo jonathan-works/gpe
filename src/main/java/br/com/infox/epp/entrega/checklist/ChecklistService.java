@@ -1,6 +1,7 @@
 package br.com.infox.epp.entrega.checklist;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -13,6 +14,7 @@ import org.hibernate.dialect.Dialect;
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.entrega.documentos.Entrega;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.hibernate.util.HibernateUtil;
 
 @Stateless
@@ -32,12 +34,29 @@ public class ChecklistService {
         if (checklist == null) {
             checklist = initChecklist(entrega);
         } else {
-            // TODO adicionar verificação de documentos novos
+            verifyNovosDocumentos(checklist);
         }
         return checklist;
     }
 
-    // TODO falta testar
+    private void verifyNovosDocumentos(Checklist checklist) {
+        List<Documento> documentosNovos = checklistSearch.getNovosDocumentos(checklist);
+        if (documentosNovos != null && !documentosNovos.isEmpty()) {
+            initNovosDocumentos(checklist, documentosNovos);
+        }
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    private void initNovosDocumentos(Checklist checklist, List<Documento> documentosNovos) {
+        for (Documento doc : documentosNovos) {
+            ChecklistDoc clDoc = new ChecklistDoc();
+            clDoc.setChecklist(checklist);
+            clDoc.setDocumento(doc);
+            getEntityManager().persist(clDoc);
+        }
+        getEntityManager().flush();
+    }
+
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Checklist initChecklist(Entrega entrega) {
         Checklist checkList = new Checklist();
@@ -51,7 +70,6 @@ public class ChecklistService {
         return checkList;
     }
 
-    // TODO testar essa mágica
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     private void initChecklistDoc(Checklist checkList, Entrega entrega) {
         Dialect dialect = HibernateUtil.getDialect();

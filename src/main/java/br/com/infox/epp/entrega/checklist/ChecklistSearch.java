@@ -12,6 +12,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
@@ -36,7 +37,6 @@ public class ChecklistSearch {
         return (resultList != null && !resultList.isEmpty()) ? resultList.get(0) : null;
     }
 
-    // TODO verificar método
     public Boolean hasItemNaoConforme(Checklist cl) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
@@ -52,18 +52,6 @@ public class ChecklistSearch {
         }
     }
 
-    // TODO vertificar pois não está sendo utilizado
-    public List<ChecklistDoc> getChecklistDoc(Integer idChecklist) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<ChecklistDoc> cq = cb.createQuery(ChecklistDoc.class);
-        Root<ChecklistDoc> clDoc = cq.from(ChecklistDoc.class);
-        Join<ChecklistDoc, Checklist> cl = clDoc.join(ChecklistDoc_.checklist, JoinType.INNER);
-        cq.select(clDoc);
-        cq.where(cb.equal(cl.get(Checklist_.id), idChecklist));
-        return getEntityManager().createQuery(cq).getResultList();
-    }
-
-    // TODO verificar método
     public List<ChecklistDoc> getChecklistDocByChecklistSituacao(Checklist cl, ChecklistSituacao situacao) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<ChecklistDoc> cq = cb.createQuery(ChecklistDoc.class);
@@ -77,7 +65,6 @@ public class ChecklistSearch {
         return getEntityManager().createQuery(cq).getResultList();
     }
 
-    // TODO verificar método
     public boolean hasItemSemSituacao(Checklist checklist) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
@@ -92,8 +79,24 @@ public class ChecklistSearch {
             return false;
         }
     }
-
+    
     private EntityManager getEntityManager() {
         return EntityManagerProducer.getEntityManager();
+    }
+
+    public List<Documento> getNovosDocumentos(Checklist checklist) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Documento> cq = cb.createQuery(Documento.class);
+        Root<Documento> doc = cq.from(Documento.class);
+
+        Subquery<Integer> existsClDoc = cq.subquery(Integer.class);
+        existsClDoc.select(cb.literal(1));
+        Root<ChecklistDoc> clDoc = existsClDoc.from(ChecklistDoc.class);
+        existsClDoc.where(cb.equal(clDoc.get(ChecklistDoc_.documento), doc));
+
+        cq.select(doc);
+        cq.where(cb.not(cb.exists(existsClDoc)),
+                cb.equal(doc.get(Documento_.pasta), checklist.getEntrega().getPasta()));
+        return getEntityManager().createQuery(cq).getResultList();
     }
 }

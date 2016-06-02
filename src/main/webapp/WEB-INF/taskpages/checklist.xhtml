@@ -34,12 +34,23 @@
                 currentPageReportTemplate="Página {currentPage} de {totalPages} em {totalRecords} registros" >
                 
                 <p:column styleClass="dt-toolbar-col" exportable="false">
-                    <a:commandLink id="downloadDocumento" style="margin-right: 0.5em;"
+                    <a:commandLink id="downloadDocumento" rendered="#{row.documento.documentoBin.extensao ne null}" 
+                        style="margin-right: 0.5em;" title="#{row.documento.descricao}"
                         onclick="infox.showLoading();" execute="@this" render="@this" limitRender="true"
                         oncomplete="infox.hideLoading(); window.open('#{pathResolver.contextPath}/PdfReadOnly/downloadDocumento.seam');">
                         <infox:flashcopy />
                         <h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" title="#{row.documento.documentoBin}" styleClass="opacityHover"/>
                         <f:setPropertyActionListener value="#{row.documento.documentoBin}" target="#{flash.documentoBin}" />
+                    </a:commandLink>
+                    
+                    <a:commandLink id="viewEditor" rendered="#{row.documento.documentoBin.extensao eq null}"
+                        style="margin-right: 0.5em;" title="#{row.documento.descricao}"
+                        onclick="infox.showLoading();" execute="@this" render="@this" limitRender="true"
+                        oncomplete="infox.hideLoading(); infox.openPopUp('PopUpDocumentoBin', '#{pathResolver.contextPath}/Processo/baixarDocumento.seam','1024');">
+                        <infox:flashcopy />
+                        <h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" title="#{row.documento.documentoBin}" styleClass="opacityHover" />
+                        <f:setPropertyActionListener value="#{row.documento.id}" target="#{flash.idDocumento}" />
+                        <f:setPropertyActionListener value="#{false}" target="#{flash.binario}" />
                     </a:commandLink>
                 </p:column>
                 
