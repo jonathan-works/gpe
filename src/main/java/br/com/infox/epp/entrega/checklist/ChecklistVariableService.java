@@ -9,7 +9,6 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.entrega.documentos.Entrega;
 
 @Named
@@ -21,7 +20,6 @@ public class ChecklistVariableService implements Serializable {
     @Inject
     private ChecklistSearch checklistSearch;
 
-    // TODO testar existeItemNaoConforme
     public Boolean existeItemNaoConforme(Entrega entrega) {
         if (entrega == null || entrega.getId() == null) {
             return false;
@@ -30,35 +28,35 @@ public class ChecklistVariableService implements Serializable {
         return cl == null ? false : checklistSearch.hasItemNaoConforme(cl);
     }
 
-    // TODO verificar método
+    public String getNaoConformeList(Entrega entrega) {
+        return getNaoConformeList(entrega.getId());
+    }
+
     public String getNaoConformeList(Long idEntrega) {
         Checklist checklist = checklistSearch.getByIdEntrega(idEntrega);
         if (checklist == null) {
             return "";
         }
         List<ChecklistDoc> clDocList = checklistSearch.getChecklistDocByChecklistSituacao(checklist, ChecklistSituacao.NCO);
-        String response = "";
-        response += "<ul>";
-        ClassificacaoDocumento classificacaoAnterior = null;
-        // FIXME ajustar formatação de lista para tabela
-        for (ChecklistDoc clDoc : clDocList) {
-            ClassificacaoDocumento classificacaoAtual = clDoc.getDocumento().getClassificacaoDocumento();
-            if (classificacaoAnterior == null) {
-                response += "<li>Classificação de Documento: " + clDoc.getDocumento().getClassificacaoDocumento().getDescricao();
-                response += "<ul><li>Documento: " + clDoc.getDocumento().getDescricao();
-                response += "<ul><li>Comentário: " + (clDoc.getComentario() != null ? clDoc.getComentario() : "") +  "</li></ul></li></ul>";
-            } else if (!classificacaoAtual.equals(classificacaoAnterior)) {
-                response += "</li>";
-                response += "<li>Classificação de Documento: " + clDoc.getDocumento().getClassificacaoDocumento().getDescricao();
-                response += "<ul><li>Documento: " + clDoc.getDocumento().getDescricao() + ". ";
-                response += "<ul><li>Comentário: " + (clDoc.getComentario() != null ? clDoc.getComentario() : "") +  "</li></ul></li></ul>";
-            } else {
-                response += "<ul><li>Documento: " + clDoc.getDocumento().getDescricao() + ". ";
-                response += "<ul><li>Comentário: " + (clDoc.getComentario() != null ? clDoc.getComentario() : "") +  "</li></ul></li></ul>";
-            }
-            classificacaoAnterior = classificacaoAtual;
+        if (clDocList == null || clDocList.isEmpty()) {
+            return "";
         }
-        response += "</li></ul>";
+        String response = "<table border=\"1\" style=\"border-collapse: collapse;-\">";
+        response += "<thead>";
+        response += "<th>Classificação de Documento</th>";
+        response += "<th>Incluído por</th>";
+        response += "<th>Situação</th>";
+        response += "<th>Motivo</th>";
+        response += "</thead><tbody>"; 
+        for (ChecklistDoc clDoc : clDocList) {
+            response += "<tr>";
+            response += "<td>" + clDoc.getDocumento().getClassificacaoDocumento().getDescricao() + "</td>";
+            response += "<td>" + clDoc.getDocumento().getUsuarioInclusao().getNomeUsuario() + "</td>";
+            response += "<td>" + clDoc.getSituacao().getLabel() + "</td>";
+            response += "<td>" + clDoc.getComentario() + "</td>";
+            response += "</tr>";
+        }
+        response += "</tbody></table>";
         return response;
     }
 }
