@@ -8,7 +8,6 @@
     
     <composite:interface>
     	
-    	<composite:attribute name="id"/>
     	<composite:attribute name="label" />
     	<composite:attribute name="help" />
     	<composite:attribute name="value" type="java.lang.String"/>
@@ -18,6 +17,8 @@
     	<composite:attribute name="placeholder" type="java.lang.String" />
     	<composite:attribute name="required" default="false" />
     	<composite:attribute name="onkeypress" />
+    	<composite:attribute name="oninput" />
+    	<composite:attribute name="onchange" />
     	<composite:attribute name="onkeyup" />
     	<composite:attribute name="validatorId" />
     	
@@ -34,7 +35,7 @@
     </composite:interface>
 	
     <composite:implementation>
-		<p:outputPanel id="#{cc.attrs.id}" styleClass="decoration-div inputText-div" rendered="#{cc.attrs.rendered}" >
+		<p:outputPanel id="#{cc.attrs.id}" styleClass="decoration-div inputText-div">
         	<div class="property-field-edit">
         		<div class="property-field-edit-name">
 	        		<h:outputLabel id="#{cc.attrs.id}Label" for="#{cc.attrs.id}Input">
@@ -51,7 +52,7 @@
         		<div class="property-field-edit-value  #{cc.attrs.id}DivClass">
         			<h:inputText id="#{cc.attrs.id}Input" value="#{cc.attrs.value}" styleClass="minimal input text crud #{cc.attrs.styleClass}"
         				disabled="#{cc.attrs.disabled}" onblur="#{cc.attrs.onblur}" required="#{cc.attrs.required}"
-        				onchange="#{cc.attrs.onchange}" onkeypress="#{cc.attrs.onkeypress}" onkeyup="#{cc.attrs.onkeyup}" 
+        				onchange="#{cc.attrs.onchange}" onkeypress="#{cc.attrs.onkeypress}" onkeyup="#{cc.attrs.onkeyup}"
         				readonly="#{cc.attrs.readonly}">
 		   				<c:if test="#{cc.attrs.ajax}">
 					    	<c:if test="#{empty cc.getValueExpression('listener')}">
@@ -81,7 +82,7 @@
                 } else {
                     div.removeClass('property-error');
                 }
-                document.getElementById("#{p:component(cc.attrs.id.concat('Input'))}").placeholder="#{cc.attrs.placeholder}";
+                document.getElementById("#{cc.clientId}:#{cc.attrs.id}Input").placeholder="#{cc.attrs.placeholder}";
             })();
         </script>
     </composite:implementation>
