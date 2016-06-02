@@ -20,8 +20,8 @@ public interface ModeloEntregaRest {
     List<Categoria> getCategoria(@QueryParam("localizacao") String codigoLocalizacao, @QueryParam("data") String data);
     
     @GET
-    @Path("/item/{codigo}/categoria")
-    List<Categoria> getCategoria(@PathParam("codigo") String codigoItemPai, @QueryParam("localizacao") String codigoLocalizacao, @QueryParam("data") String data); 
+    @Path("/item/{codigo}")
+    ModeloEntregaRest getCategoria(@PathParam("codigo") String codigoItemPai, @QueryParam("localizacao") String codigoLocalizacao, @QueryParam("data") String data); 
     
     
 }
