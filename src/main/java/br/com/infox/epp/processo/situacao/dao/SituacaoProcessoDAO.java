@@ -397,8 +397,11 @@ public class SituacaoProcessoDAO extends PersistenceController {
             cb.equal(taskInstance.<Long>get("id"), taskInstances.<Long>get("id")),
             cb.or(
                 cb.and(
-                    cb.equal(pooledActor.<String>get("actorId"), cb.literal(perfilTemplate.getId().toString())),
-                    cb.isNull(pooledActor.get("type"))
+                    cb.isNull(pooledActor.get("type")),
+                    cb.or(
+                        cb.equal(pooledActor.<String>get("actorId"), cb.literal(perfilTemplate.getId().toString())),
+                        cb.equal(pooledActor.<String>get("actorId"), cb.literal(perfilTemplate.getCodigo()))
+                    )
                 ),
                 cb.and(
                     cb.equal(pooledActor.<String>get("actorId"), cb.literal(login)),
