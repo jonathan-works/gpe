@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.enterprise.inject.New;
+import javax.enterprise.util.AnnotationLiteral;
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -25,8 +26,6 @@ public class ModeloEntregaRestImpl implements ModeloEntregaRest {
     @Inject
     private ModeloEntregaRestService modeloEntregaRestService;
     
-    @New @Inject private ModeloEntregaRestImpl modeloEntregaRestImpl;
-    
     private String codigoItemPai;
     
     public void setCodigoItemPai(String codigoItemPai) {
@@ -39,21 +38,25 @@ public class ModeloEntregaRestImpl implements ModeloEntregaRest {
     }
 
     @Override
-    public ModeloEntregaRest getCategoria(String codigoItemPai, String codigoLocalizacao, String data) {
+    public ModeloEntregaRest getCategoria(String codigoItemPai) {
+        ModeloEntregaRestImpl modeloEntregaRestImpl = BeanManager.INSTANCE.getReference(ModeloEntregaRestImpl.class);
         modeloEntregaRestImpl.setCodigoItemPai(codigoItemPai);
         return modeloEntregaRestImpl;
     }
 
     private List<Categoria> getCategoriasResponse(String codigoItemPai, String codigoLocalizacao, String data) {
-        try {
-            Date date = new SimpleDateFormat(DATE_FORMAT).parse(data);
-            return modeloEntregaRestService.getCategoriasFilhas(codigoItemPai, codigoLocalizacao, date);
-        } catch (ParseException e) {
-            JsonObject obj = new JsonObject();
-            obj.addProperty("errorMessage", MessageFormat.format("Date should be in \"{0}\" format", DATE_FORMAT));
-            String responseEntity = new Gson().toJson(obj);
-            throw new WebApplicationException(Response.status(400).entity(responseEntity).build());
+        Date date=null;
+        if (data!= null){
+            try {
+                date = new SimpleDateFormat(DATE_FORMAT).parse(data);
+            } catch (ParseException e) {
+                JsonObject obj = new JsonObject();
+                obj.addProperty("errorMessage", MessageFormat.format("Date should be in \"{0}\" format", DATE_FORMAT));
+                String responseEntity = new Gson().toJson(obj);
+                throw new WebApplicationException(Response.status(400).entity(responseEntity).build());
+            }
         }
+        return modeloEntregaRestService.getCategoriasFilhas(codigoItemPai, codigoLocalizacao, date);
     }
 
 }

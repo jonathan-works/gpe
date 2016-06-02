@@ -4439,14 +4439,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    onSelect: item.onSelect });
 	};
 
+	var isLeafFilter = function isLeafFilter(cond) {
+	  return !cond.hasOwnProperty('isLeaf') || cond.isLeaf && !this.props.hasChildren || !cond.isLeaf && this.props.hasChildren;
+	};
+
 	var filterToolBarItems = function filterToolBarItems(item) {
 	  var result = true;
 	  var conditions = item.conditions || [];
 	  for (var i = 0, l = conditions.length; i < l; i++) {
-	    var cond = conditions[i];
-	    if (cond.hasOwnProperty('leaf')) {
-	      result = result && (cond.leaf && !this.props.hasChildren || !cond.leaf && this.props.hasChildren);
-	    }
+	    var condition = conditions[i] || {};
+	    result = result && isLeafFilter.bind(this)(condition);
 	    if (!result) {
 	      break;
 	    }

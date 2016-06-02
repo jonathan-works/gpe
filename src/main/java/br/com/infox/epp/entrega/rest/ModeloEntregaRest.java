@@ -19,9 +19,7 @@ public interface ModeloEntregaRest {
     @Path("/categoria")
     List<Categoria> getCategoria(@QueryParam("localizacao") String codigoLocalizacao, @QueryParam("data") String data);
     
-    @GET
     @Path("/item/{codigo}")
-    ModeloEntregaRest getCategoria(@PathParam("codigo") String codigoItemPai, @QueryParam("localizacao") String codigoLocalizacao, @QueryParam("data") String data); 
-    
+    ModeloEntregaRest getCategoria(@PathParam("codigo") String codigoItemPai); 
     
 }
