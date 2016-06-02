@@ -58,7 +58,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	module.exports = {
 	    NavigationMenu: __webpack_require__(1),
-	    TreeCategorias: __webpack_require__(42)
+	    TreeCategorias: __webpack_require__(8)
 	};
 
 /***/ },
@@ -452,7 +452,92 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = MenuFilter;
 
 /***/ },
-/* 8 */,
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var Constants = __webpack_require__(9);
+	var TreeCategoriasStore = __webpack_require__(10);
+	var TreeCategoriasActions = __webpack_require__(26);
+	var ConfigFacade = __webpack_require__(34);
+	var Spinner = __webpack_require__(35);
+
+	var Groups = __webpack_require__(36);
+
+	var TreeCategorias = React.createClass({
+	  'displayName': 'TreeCategorias',
+	  propTypes: {
+	    orientation: React.PropTypes.oneOf(['horizontal', 'vertical']),
+	    servicePath: React.PropTypes.string,
+	    groupToolBar: React.PropTypes.arrayOf(React.PropTypes.shape({
+	      icon: React.PropTypes.string,
+	      title: React.PropTypes.string.isRequired,
+	      onSelect: React.PropTypes.func.isRequired
+	    })),
+	    itemToolBar: React.PropTypes.arrayOf(React.PropTypes.shape({
+	      icon: React.PropTypes.string,
+	      title: React.PropTypes.string.isRequired,
+	      onSelect: React.PropTypes.func.isRequired
+	    })),
+	    config: React.PropTypes.object.isRequired
+	  },
+	  getInitialState: function getInitialState() {
+	    return TreeCategoriasStore.getState();
+	  },
+	  componentDidMount: function componentDidMount() {
+	    ConfigFacade.config = this.props.config;
+	    TreeCategoriasStore.listen(this.onChange);
+	    TreeCategoriasActions.fetchCategorias();
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    TreeCategoriasStore.unlisten(this.onChange);
+	  },
+	  onChange: function onChange(state) {
+	    this.setState(state);
+	  },
+	  handleRenderRef: function handleRenderRef(domReference) {
+	    var _this = this;
+
+	    domReference.parentNode.refresh = function () {
+	      _this.setState(Object.assign({}, _this.state, { loading: true }));
+	      TreeCategoriasActions.fetchCategorias();
+	    };
+	  },
+	  render: function render() {
+	    var props = Object.assign({}, this.state);
+	    props.groupToolBar = this.props.groupToolBar;
+	    props.itemToolBar = this.props.itemToolBar;
+	    var treeClasses = [Constants.CSS.GROUPED_TREE];
+	    if ((this.props.orientation || 'vertical') === 'horizontal') {
+	      treeClasses.push(Constants.CSS.GROUPED_TREE_HORIZONTAL);
+	    } else {
+	      treeClasses.push(Constants.CSS.GROUPED_TREE_VERTICAL);
+	    }
+	    var children = props.groupItems.map(function (groupItem) {
+	      var obj = Object.assign({}, groupItem);
+	      obj.key = [props.codigo || '', obj.group.codigo].join(':');
+	      obj.folded = props.folded;
+	      obj.path = props.path || Constants.PATH_SEPARATOR;
+	      obj.groupToolBar = props.groupToolBar;
+	      obj.itemToolBar = props.itemToolBar;
+	      return React.createElement(Groups, obj);
+	    });
+	    if (this.state.loading) {
+	      treeClasses.push(Constants.CSS.GROUPED_TREE_IS_LOADING);
+	      var key = children.length;
+	      children.push(React.createElement(Spinner, { key: key, active: true }));
+	    }
+	    return React.createElement(
+	      'section',
+	      { className: treeClasses.join(' '), ref: this.handleRenderRef },
+	      children
+	    );
+	  }
+	});
+	module.exports = TreeCategorias;
+
+/***/ },
 /* 9 */
 /***/ function(module, exports) {
 
@@ -577,7 +662,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    clearTimeout(this._timeout);
 	    this._timeout = setTimeout(function () {
-	      return _this3.setState(Object.assign({}, { loading: false }, _this3._stateHolder.getState()));
+	      return _this3.setState(Object.assign({}, _this3._stateHolder.getState(), { loading: false }));
 	    }, 500);
 	  },
 	  handleFetchChildrenForItemSuccess: function handleFetchChildrenForItemSuccess(args) {
@@ -588,7 +673,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.preventDefault();
 	  },
 	  handleFetchChildrenForItemFail: function handleFetchChildrenForItemFail(fail) {
-	    console.error(fail);
+	    console.log(fail);
 	  },
 	  handleFetchCategoriasSuccess: function handleFetchCategoriasSuccess(categorias) {
 	    var state = this._stateHolder.registerInitialState(categorias);
@@ -601,7 +686,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.preventDefault();
 	  },
 	  handleFetchCategoriasFail: function handleFetchCategoriasFail(fail) {
-	    console.error(fail);
+	    console.log(fail);
 	  },
 	  publicMethods: {}
 	};
@@ -4042,15 +4127,187 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 35 */,
+/* 35 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var LAYER_COUNT = 4;
+	var CssClasses_ = {
+	  CONTAINER: 'spinner',
+	  LAYER: 'spinner-layer',
+	  CIRCLE_CLIPPER: 'spinner-circle-clipper',
+	  CIRCLE: 'spinner-circle',
+	  GAP_PATCH: 'spinner-gap-patch',
+	  LEFT: 'spinner-left',
+	  RIGHT: 'spinner-right',
+	  IS_ACTIVE: 'is-active'
+	};
+
+	var CircleOwner = React.createClass({
+	  displayName: 'CircleOwner',
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: this.props.classNames.join(' ') },
+	      React.createElement('div', { className: CssClasses_.CIRCLE })
+	    );
+	  }
+	});
+
+	var Layer = React.createClass({
+	  displayName: 'CircleOwner',
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: [CssClasses_.LAYER, CssClasses_.LAYER + '-' + this.props.index].join(' ') },
+	      React.createElement(CircleOwner, { classNames: [CssClasses_.CIRCLE_CLIPPER, CssClasses_.LEFT] }),
+	      React.createElement(CircleOwner, { classNames: [CssClasses_.GAP_PATCH] }),
+	      React.createElement(CircleOwner, { classNames: [CssClasses_.CIRCLE_CLIPPER, CssClasses_.RIGHT] })
+	    );
+	  }
+	});
+
+	var Spinner = React.createClass({
+	  displayName: 'Spinner',
+	  propTypes: {
+	    active: React.PropTypes.bool
+	  },
+	  getInitialState: function getInitialState() {
+	    return { active: !!this.props.active };
+	  },
+	  handleRenderRef: function handleRenderRef(domReference) {
+	    var _this = this;
+
+	    if (domReference !== null) {
+	      domReference._mdl = {
+	        start: function start() {
+	          return _this.setState({ active: true });
+	        },
+	        stop: function stop() {
+	          return _this.setState({ active: false });
+	        }
+	      };
+	    }
+	  },
+	  render: function render() {
+	    var layers = [];
+	    for (var i = 1; i <= LAYER_COUNT; i++) {
+	      layers.push(React.createElement(Layer, { key: i, index: i }));
+	    }
+	    var classNames = [CssClasses_.CONTAINER];
+	    if (this.state.active) {
+	      classNames.push(CssClasses_.IS_ACTIVE);
+	    }
+	    return React.createElement(
+	      'div',
+	      { ref: this.handleRenderRef, className: classNames.join(' ') },
+	      layers
+	    );
+	  }
+	});
+	module.exports = Spinner;
+
+/***/ },
 /* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var Constants = __webpack_require__(9);
-	var ToolBar = __webpack_require__(37);
-	var ToolBarItem = __webpack_require__(39);
+	var Group = __webpack_require__(37);
+	var Item = __webpack_require__(41);
+
+	var mapItems = function mapItems(item) {
+	  var _this = this;
+
+	  var itemPath = [this.props.path, item.codigo, Constants.PATH_SEPARATOR].join('');
+
+	  var childrenGroups = (item.groupItems || []).map(function (group) {
+	    var groupsProps = Object.assign({}, group);
+	    groupsProps.key = [item.codigo || '', group.group.codigo].join(':');
+	    groupsProps.folded = _this.state.selected !== item.codigo;
+	    groupsProps.path = itemPath || Constants.PATH_SEPARATOR;
+	    groupsProps.groupToolBar = _this.props.groupToolBar;
+	    groupsProps.itemToolBar = _this.props.itemToolBar;
+	    return React.createElement(Groups, groupsProps);
+	  });
+
+	  return React.createElement(
+	    Item,
+	    { key: itemPath, codigo: item.codigo, descricao: item.descricao, hasChildren: childrenGroups.length > 0,
+	      itemToolBar: this.props.itemToolBar, path: itemPath, onSelect: this.handleItemSelect,
+	      selected: this.state.selected === item.codigo },
+	    childrenGroups
+	  );
+	};
+
+	var Groups = React.createClass({
+	  'displayName': 'Groups',
+	  propTypes: {
+	    folded: React.PropTypes.bool,
+	    group: React.PropTypes.object.isRequired,
+	    items: React.PropTypes.array.isRequired,
+	    path: React.PropTypes.string.isRequired,
+	    groupToolBar: React.PropTypes.arrayOf(React.PropTypes.shape({
+	      icon: React.PropTypes.string,
+	      title: React.PropTypes.string.isRequired,
+	      onSelect: React.PropTypes.func.isRequired
+	    })),
+	    itemToolBar: React.PropTypes.arrayOf(React.PropTypes.shape({
+	      icon: React.PropTypes.string,
+	      title: React.PropTypes.string.isRequired,
+	      onSelect: React.PropTypes.func.isRequired
+	    }))
+	  },
+	  'getInitialState': function getInitialState() {
+	    return {
+	      'selected': ''
+	    };
+	  },
+	  'selectItem': function selectItem(item) {
+	    var state = Object.assign({}, this.state);
+	    state.selected = state.selected === item ? '' : item;
+	    this.setState(state);
+	  },
+	  'handleItemSelect': function handleItemSelect(evt, item) {
+	    this.selectItem(item);
+	  },
+	  render: function render() {
+	    var classesLista = [Constants.CSS.LIST];
+
+	    if (this.props.folded) {
+	      classesLista.push(Constants.CSS.LIST_FOLDED);
+	    }
+	    var groupProps = Object.assign({}, this.props.group);
+	    groupProps.path = this.props.path;
+	    groupProps.groupToolBar = this.props.groupToolBar;
+
+	    var items = this.props.items.map(mapItems.bind(this));
+
+	    return React.createElement(
+	      'ul',
+	      { className: classesLista.join(' ') },
+	      React.createElement(Group, groupProps),
+	      React.createElement(
+	        'div',
+	        { className: Constants.CSS.LIST_CONTENT },
+	        items
+	      )
+	    );
+	  }
+	});
+	module.exports = Groups;
+
+/***/ },
+/* 37 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var Constants = __webpack_require__(9);
+	var ToolBar = __webpack_require__(38);
+	var ToolBarItem = __webpack_require__(40);
 
 	var mapToolBarItem = function mapToolBarItem(item, i) {
 	  var params = [[this.props.path, this.props.codigo, Constants.PATH_SEPARATOR].join('')];
@@ -4102,12 +4359,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Constants = __webpack_require__(38);
+	var Constants = __webpack_require__(39);
 
 	module.exports = React.createClass({
 	  'displayName': 'Toolbar',
@@ -4125,7 +4382,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4138,12 +4395,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Constants = __webpack_require__(38);
+	var Constants = __webpack_require__(39);
 
 	module.exports = React.createClass({
 	  'displayName': 'ToolBarItem',
@@ -4166,14 +4423,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var Constants = __webpack_require__(9);
-	var ToolBar = __webpack_require__(37);
-	var ToolBarItem = __webpack_require__(39);
+	var ToolBar = __webpack_require__(38);
+	var ToolBarItem = __webpack_require__(40);
 
 	var mapToolBarItem = function mapToolBarItem(item, i) {
 	  var params = [this.props.path];
@@ -4267,239 +4524,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    );
 	  }
 	});
-
-/***/ },
-/* 41 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var Constants = __webpack_require__(9);
-	var Group = __webpack_require__(36);
-	var Item = __webpack_require__(40);
-
-	var mapItems = function mapItems(item) {
-	  var _this = this;
-
-	  var itemPath = [this.props.path, item.codigo, Constants.PATH_SEPARATOR].join('');
-
-	  var childrenGroups = (item.groupItems || []).map(function (group) {
-	    var groupsProps = Object.assign({}, group);
-	    groupsProps.key = [item.codigo || '', group.group.codigo].join(':');
-	    groupsProps.folded = _this.state.selected !== item.codigo;
-	    groupsProps.path = itemPath || Constants.PATH_SEPARATOR;
-	    groupsProps.groupToolBar = _this.props.groupToolBar;
-	    groupsProps.itemToolBar = _this.props.itemToolBar;
-	    return React.createElement(Groups, groupsProps);
-	  });
-
-	  return React.createElement(
-	    Item,
-	    { key: itemPath, codigo: item.codigo, descricao: item.descricao, hasChildren: childrenGroups.length > 0,
-	      itemToolBar: this.props.itemToolBar, path: itemPath, onSelect: this.handleItemSelect,
-	      selected: this.state.selected === item.codigo },
-	    childrenGroups
-	  );
-	};
-
-	var Groups = React.createClass({
-	  'displayName': 'Groups',
-	  propTypes: {
-	    folded: React.PropTypes.bool,
-	    group: React.PropTypes.object.isRequired,
-	    items: React.PropTypes.array.isRequired,
-	    path: React.PropTypes.string.isRequired,
-	    groupToolBar: React.PropTypes.arrayOf(React.PropTypes.shape({
-	      icon: React.PropTypes.string,
-	      title: React.PropTypes.string.isRequired,
-	      onSelect: React.PropTypes.func.isRequired
-	    })),
-	    itemToolBar: React.PropTypes.arrayOf(React.PropTypes.shape({
-	      icon: React.PropTypes.string,
-	      title: React.PropTypes.string.isRequired,
-	      onSelect: React.PropTypes.func.isRequired
-	    }))
-	  },
-	  'getInitialState': function getInitialState() {
-	    return {
-	      'selected': ''
-	    };
-	  },
-	  'selectItem': function selectItem(item) {
-	    var state = Object.assign({}, this.state);
-	    state.selected = state.selected === item ? '' : item;
-	    this.setState(state);
-	  },
-	  'handleItemSelect': function handleItemSelect(evt, item) {
-	    this.selectItem(item);
-	  },
-	  render: function render() {
-	    var classesLista = [Constants.CSS.LIST];
-
-	    if (this.props.folded) {
-	      classesLista.push(Constants.CSS.LIST_FOLDED);
-	    }
-	    var groupProps = Object.assign({}, this.props.group);
-	    groupProps.path = this.props.path;
-	    groupProps.groupToolBar = this.props.groupToolBar;
-
-	    var items = this.props.items.map(mapItems.bind(this));
-
-	    return React.createElement(
-	      'ul',
-	      { className: classesLista.join(' ') },
-	      React.createElement(Group, groupProps),
-	      React.createElement(
-	        'div',
-	        { className: Constants.CSS.LIST_CONTENT },
-	        items
-	      )
-	    );
-	  }
-	});
-	module.exports = Groups;
-
-/***/ },
-/* 42 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var Constants = __webpack_require__(9);
-	var TreeCategoriasStore = __webpack_require__(10);
-	var TreeCategoriasActions = __webpack_require__(26);
-	var ConfigFacade = __webpack_require__(34);
-	var Spinner = __webpack_require__(43);
-
-	var Groups = __webpack_require__(41);
-
-	var TreeCategorias = React.createClass({
-	  'displayName': 'TreeCategorias',
-	  propTypes: {
-	    orientation: React.PropTypes.oneOf(['horizontal', 'vertical']),
-	    servicePath: React.PropTypes.string,
-	    groupToolBar: React.PropTypes.arrayOf(React.PropTypes.shape({
-	      icon: React.PropTypes.string,
-	      title: React.PropTypes.string.isRequired,
-	      onSelect: React.PropTypes.func.isRequired
-	    })),
-	    itemToolBar: React.PropTypes.arrayOf(React.PropTypes.shape({
-	      icon: React.PropTypes.string,
-	      title: React.PropTypes.string.isRequired,
-	      onSelect: React.PropTypes.func.isRequired
-	    })),
-	    config: React.PropTypes.object.isRequired
-	  },
-	  getInitialState: function getInitialState() {
-	    return TreeCategoriasStore.getState();
-	  },
-	  componentDidMount: function componentDidMount() {
-	    ConfigFacade.config = this.props.config;
-	    TreeCategoriasStore.listen(this.onChange);
-	    TreeCategoriasActions.fetchCategorias();
-	  },
-	  componentWillUnmount: function componentWillUnmount() {
-	    TreeCategoriasStore.unlisten(this.onChange);
-	  },
-	  onChange: function onChange(state) {
-	    this.setState(state);
-	  },
-	  handleRenderRef: function handleRenderRef(domReference) {
-	    domReference.parentNode.refresh = function () {
-	      return TreeCategoriasActions.fetchCategorias();
-	    };
-	  },
-	  render: function render() {
-	    var props = Object.assign({}, this.state);
-	    props.groupToolBar = this.props.groupToolBar;
-	    props.itemToolBar = this.props.itemToolBar;
-	    var treeClasses = [Constants.CSS.GROUPED_TREE];
-	    if ((this.props.orientation || 'vertical') === 'horizontal') {
-	      treeClasses.push(Constants.CSS.GROUPED_TREE_HORIZONTAL);
-	    } else {
-	      treeClasses.push(Constants.CSS.GROUPED_TREE_VERTICAL);
-	    }
-	    var children = void 0;
-	    if (this.state.loading) {
-	      treeClasses.push(Constants.CSS.GROUPED_TREE_VERTICAL);
-	      children = React.createElement(Spinner, null);
-	    } else {
-	      children = props.groupItems.map(function (groupItem) {
-	        var obj = Object.assign({}, groupItem);
-	        obj.key = [props.codigo || '', obj.group.codigo].join(':');
-	        obj.folded = props.folded;
-	        obj.path = props.path || Constants.PATH_SEPARATOR;
-	        obj.groupToolBar = props.groupToolBar;
-	        obj.itemToolBar = props.itemToolBar;
-	        return React.createElement(Groups, obj);
-	      });
-	      children.unshift(React.createElement(Spinner, null));
-	    }
-	    return React.createElement(
-	      'section',
-	      { className: treeClasses.join(' '), ref: this.handleRenderRef },
-	      children
-	    );
-	  }
-	});
-	module.exports = TreeCategorias;
-
-/***/ },
-/* 43 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var LAYER_COUNT = 4;
-	var CssClasses_ = {
-	  CONTAINER: 'spinner',
-	  LAYER: 'spinner-layer',
-	  CIRCLE_CLIPPER: 'spinner-circle-clipper',
-	  CIRCLE: 'spinner-circle',
-	  GAP_PATCH: 'spinner-gap-patch',
-	  LEFT: 'spinner-left',
-	  RIGHT: 'spinner-right'
-	};
-
-	var CircleOwner = React.createClass({
-	  displayName: 'CircleOwner',
-	  render: function render() {
-	    return React.createElement(
-	      'div',
-	      { className: this.props.classNames.join(' ') },
-	      React.createElement('div', { className: CssClasses_.CIRCLE })
-	    );
-	  }
-	});
-
-	var Layer = React.createClass({
-	  displayName: 'CircleOwner',
-	  render: function render() {
-	    return React.createElement(
-	      'div',
-	      { className: [CssClasses_.LAYER, CssClasses_.LAYER + '-' + this.props.index].join(' ') },
-	      React.createElement(CircleOwner, { classNames: [CssClasses_.CIRCLE_CLIPPER, CssClasses_.LEFT] }),
-	      React.createElement(CircleOwner, { classNames: [CssClasses_.GAP_PATCH] }),
-	      React.createElement(CircleOwner, { classNames: [CssClasses_.CIRCLE_CLIPPER, CssClasses_.RIGHT] })
-	    );
-	  }
-	});
-
-	var Spinner = React.createClass({
-	  displayName: 'Spinner',
-	  render: function render() {
-	    var layers = [];
-	    for (var i = 1; i <= LAYER_COUNT; i++) {
-	      layers.push(React.createElement(Layer, { key: i, index: i }));
-	    }
-	    return React.createElement(
-	      'div',
-	      { className: CssClasses_.CONTAINER },
-	      layers
-	    );
-	  }
-	});
-	module.exports = Spinner;
 
 /***/ }
 /******/ ])
