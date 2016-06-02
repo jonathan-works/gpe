@@ -17,6 +17,6 @@ public @interface External {
 	String example() default "";
 
 	public static enum ExpressionType {
-		GERAL, RAIA_DINAMICA, EVENTOS;
+		GERAL, RAIA_DINAMICA, EVENTOS, GATEWAY;
 	}
 }

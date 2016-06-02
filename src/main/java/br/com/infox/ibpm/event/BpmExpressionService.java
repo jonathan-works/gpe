@@ -7,5 +7,6 @@ public abstract class BpmExpressionService {
 
     public abstract List<ExternalMethod> getExternalMethods();
     public abstract List<ExternalMethod> getExternalRaiaDinamicaMethods();
+    public abstract List<ExternalMethod> getExternalGatewayMethods();
 
 }

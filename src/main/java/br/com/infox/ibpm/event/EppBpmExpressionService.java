@@ -109,5 +109,9 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
 	public List<ExternalMethod> getExternalRaiaDinamicaMethods() {
 		return BpmExpressionServiceConsumer.instance().getExternalMethods(this, ExpressionType.RAIA_DINAMICA);
 	}
-	
+s
+	@Override
+	public List<ExternalMethod> getExternalGatewayMethods() {
+	    return BpmExpressionServiceConsumer.instance().getExternalMethods(this, ExpressionType.GATEWAY);
+	}
 }

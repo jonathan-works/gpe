@@ -8,7 +8,9 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
     xmlns:wi="http://www.itx.com.br/jsf">
-    
+
+    <ui:param name="selectable" value="#{wi:get(selectable, 'true')}" />
+
     <script type="text/javascript">
         function onshowPopup#{id}() {
             var value = $('.#{id}');
@@ -27,15 +29,16 @@
     
     <rich:popupPanel id="#{id}" modal="true" header="#{infoxMessages['process.events.expression.title']}" resizeable="true"
         styleClass="#{id}" onshow="onshowPopup#{id}();">
-        <script type="text/javascript">
-	    	function onSelectBpmnExpression#{id}(obj) {
-	    		var text = $($(obj).children().get(1)).text();
-	    		#{rich:component(id)}.hide();
-	    		$('.#{targetExpressionFieldClass}').val(text);
-	    		$('.#{targetExpressionFieldClass}').change();
-	    	}
-	    </script>
-	    
+        <h:panelGroup rendered="selectable">
+            <script type="text/javascript">
+    	    	function onSelectBpmnExpression#{id}(obj) {
+    	    		var text = $($(obj).children().get(1)).text();
+    	    		#{rich:component(id)}.hide();
+    	    		$('.#{targetExpressionFieldClass}').val(text);
+    	    		$('.#{targetExpressionFieldClass}').change();
+    	    	}
+    	    </script>
+	    </h:panelGroup>
         <f:facet name="controls">
             <h:graphicImage styleClass="mp-close"
                 value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
@@ -48,10 +51,18 @@
 	                <h:outputText styleClass="property-field-edit-name" value="#{infoxMessages[method.name]}" />
 	                <h:outputText styleClass="property-field-edit-value" value="#{infoxMessages[method.tooltip]}" />
 	            </div>
-	            <div style="margin: 1em 0 0" onclick="onSelectBpmnExpression#{id}(this)">
-	                <h:outputText styleClass="property-field-edit-name" value="#{infoxMessages['process.events.expression.example']}" />
-	                <h:outputText styleClass="property-field-edit-value" style="cursor: pointer;" value="#{method.expression}" title="Selecionar"/>
-	            </div>
+                <h:panelGroup rendered="#{selectable}">
+    	            <div style="margin: 1em 0 0" onclick="onSelectBpmnExpression#{id}(this)">
+    	                <h:outputText styleClass="property-field-edit-name" value="#{infoxMessages['process.events.expression.example']}" />
+    	                <h:outputText styleClass="property-field-edit-value" style="cursor: pointer;" value="#{method.expression}" title="Selecionar"/>
+    	            </div>
+                </h:panelGroup>
+                <h:panelGroup rendered="#{not selectable}">
+    	            <div style="margin: 1em 0 0">
+    	                <h:outputText styleClass="property-field-edit-name" value="#{infoxMessages['process.events.expression.example']}" />
+    	                <h:outputText styleClass="property-field-edit-value" value="#{method.expression}" />
+    	            </div>
+                </h:panelGroup>
 	            <s:div style="margin: 1em 0 0;" rendered="#{not empty method.getParameters()}">
 	                <h:outputText styleClass="property-field-edit-name" value="#{infoxMessages['process.events.expression.parameters']}" />
 	                <div style="padding: 0 0 0 1.5em;">
