@@ -10,7 +10,7 @@
     <ui:define name="title">Categorias de Entrega</ui:define>
     <ui:define name="body">
         <p:calendar style="display:none" />
-        <infox:div id="categoriaEntregaItem">
+        <infox:div id="categoriaEntregaItem" styleClass="mdl-shadow--2dp">
             <h:form>
                 <p:remoteCommand name="editarItem" process="@this" update="@form:@parent:formFields :pageBodyDialogMessage" async="true" 
                 actionListener="#{categoriaEntregaView.editarItem}"
