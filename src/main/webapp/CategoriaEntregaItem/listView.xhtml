@@ -39,11 +39,11 @@
                     onerror="document.getElementById('itemsTree').refresh();infox.hideLoading();" />
 
                 <p:remoteCommand name="refreshCategoriaEntregaTree" actionListener="#{categoriaEntregaView.clear}"
-                    process="@this" update=":formFields :pageBodyDialogMessage" onstart="infox.showLoading();"
+                    process="@this" update=":formFields" onstart="infox.showLoading();"
                     onsuccess="infox.hideLoading();document.getElementById('itemsTree').refresh();"
                     onerror="infox.hideLoading();document.getElementById('itemsTree').refresh();" />
                 <p:remoteCommand name="refreshCategoriaEntregaForm" actionListener="#{categoriaEntregaView.clear}"
-                    process="@this" update="@form:@parent :pageBodyDialogMessage" onstart="infox.showLoading();"
+                    process="@this" update="@form:@parent" onstart="infox.showLoading();"
                     onsuccess="infox.hideLoading();" onerror="infox.hideLoading();" />
             </h:form>
             <infox:div style="display:inline-block;vertical-align:top;" rendered="#{'configEntregaForm.xhtml' ne categoriaEntregaView.view}">

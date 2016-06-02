@@ -70,7 +70,7 @@ public class CategoriaEntregaItemSearch extends PersistenceController {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<CategoriaEntregaItem> cq = cb.createQuery(CategoriaEntregaItem.class);
 		Root<CategoriaEntregaItem> categoriaEntregaItem = cq.from(CategoriaEntregaItem.class);
-		Predicate codigoIgual = cb.equal(categoriaEntregaItem.get(CategoriaEntregaItem_.codigo), codigo);
+		Predicate codigoIgual = cb.equal(cb.upper(categoriaEntregaItem.get(CategoriaEntregaItem_.codigo)), codigo.toUpperCase());
 		cq = cq.select(categoriaEntregaItem).where(codigoIgual);
 		return getEntityManager().createQuery(cq).getSingleResult();
 	}

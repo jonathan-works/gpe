@@ -3,7 +3,6 @@ package br.com.infox.epp.entrega;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ejb.Stateless;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
@@ -24,7 +23,8 @@ public class CategoriaEntregaSearch extends PersistenceController {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<CategoriaEntrega> cq = cb.createQuery(CategoriaEntrega.class);
 		Root<CategoriaEntrega> categoriaEntrega = cq.from(CategoriaEntrega.class);
-		Predicate codigoIgual = cb.equal(categoriaEntrega.get(CategoriaEntrega_.codigo), codigo);
+		
+		Predicate codigoIgual = cb.equal(cb.upper(categoriaEntrega.get(CategoriaEntrega_.codigo)), codigo.toUpperCase());
 		cq = cq.select(categoriaEntrega).where(codigoIgual);
 		return getEntityManager().createQuery(cq).getSingleResult();
 	}

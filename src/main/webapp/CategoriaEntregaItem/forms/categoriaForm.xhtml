@@ -14,7 +14,8 @@
             </legend>
             <fieldset>
                 <legend>Categoria</legend>
-                <i:inputText id="codigoCategoria" required="true" label="Código"  value="#{categoriaEntregaView.categoriaEntregaController.codigo}" />
+                <i:inputText id="codigoCategoria" required="true" label="Código"  value="#{categoriaEntregaView.categoriaEntregaController.codigo}" 
+                onchange="this.value=this.value.toUpperCase();" onkeyup="this.value=this.value.toUpperCase();"/>
                 <i:inputText id="descricaoCategoria" required="true" label="Descrição" value="#{categoriaEntregaView.categoriaEntregaController.descricao}" />
             </fieldset>
 
@@ -25,11 +26,14 @@
             </infox:div>
         </fieldset>
         <h:commandButton action="#{categoriaEntregaView.categoriaEntregaController.salvarCategoria}" value="Salvar" styleClass="buttons">
-            <p:ajax process="@form" update="@this :pageBodyDialogMessage" onstart="infox.showLoading();" onerror="infox.hideLoading();" onsuccess="refreshCategoriaEntregaForm();" />
+            <p:ajax process="@form" update="@this :pageBodyDialogMessage"
+                onstart="infox.showLoading();" onerror="infox.hideLoading();" 
+                onsuccess="refreshCategoriaEntregaForm();infox.hideLoading();" />
         </h:commandButton>
         <h:commandButton type="reset" value="Voltar" styleClass="buttons" action="#{categoriaEntregaView.clear}">
-            <p:ajax immediate="true" process="@this" update="@this :pageBodyDialogMessage" onstart="infox.showLoading();" 
-            onerror="infox.hideLoading();" onsuccess="refreshCategoriaEntregaForm();" />
+            <p:ajax immediate="true" process="@this" update="@this :pageBodyDialogMessage" 
+            onstart="infox.showLoading();" onerror="infox.hideLoading();" 
+            onsuccess="refreshCategoriaEntregaTree();" />
         </h:commandButton>
     </h:form>
 

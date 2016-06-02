@@ -47,7 +47,8 @@
                     <h:outputText rendered="#{categoriaEntregaView.categoriaEntregaItemController.modoCriar}" value="Criar Item"/>
                     <h:outputText rendered="#{not categoriaEntregaView.categoriaEntregaItemController.modoCriar}" value="Editar Item"/>
                 </legend>
-                <i:inputText id="codigoItem" required="true" label="Código"
+                <i:inputText id="codigoItem" required="true" label="Código" 
+                    onchange="this.value=this.value.toUpperCase();" onkeyup="this.value=this.value.toUpperCase();"
                     value="#{categoriaEntregaView.categoriaEntregaItemController.codigo}" />
                 <i:inputText id="descricaoItem" required="true" label="Descrição"
                     value="#{categoriaEntregaView.categoriaEntregaItemController.descricao}" />
@@ -57,14 +58,15 @@
                 <span class="required">*</span>
                 <span>#{infoxMessages['form.required']}</span>
             </infox:div>
-            <h:commandButton action="#{categoriaEntregaView.categoriaEntregaItemController.salvarItem}" value="Salvar"
-                styleClass="buttons">
-                <p:ajax process="@form" update="@this :pageBodyDialogMessage" onstart="infox.showLoading();" 
-                onerror="infox.hideLoading();" onsuccess="refreshCategoriaEntregaTree();" />
+            <h:commandButton action="#{categoriaEntregaView.categoriaEntregaItemController.salvarItem}" value="Salvar" styleClass="buttons">
+                <p:ajax process="@form" update="@this :pageBodyDialogMessage" 
+                    onstart="infox.showLoading();" onerror="infox.hideLoading();" 
+                    onsuccess="refreshCategoriaEntregaTree();infox.hideLoading();" />
             </h:commandButton>
             <h:commandButton type="reset" value="Voltar" styleClass="buttons" action="#{categoriaEntregaView.clear}">
-                <p:ajax immediate="true" process="@this" update="@this :pageBodyDialogMessage" onstart="infox.showLoading();" 
-                onerror="infox.hideLoading();" onsuccess="refreshCategoriaEntregaTree();" />
+                <p:ajax immediate="true" process="@this" update="@this :pageBodyDialogMessage" 
+                onstart="infox.showLoading();" onerror="infox.hideLoading();" 
+                onsuccess="refreshCategoriaEntregaTree();infox.hideLoading();" />
             </h:commandButton>
         </h:form>
     </fieldset>
