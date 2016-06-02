@@ -6,19 +6,19 @@ namespace("infox",{
 	
 	messageModalStatus: "",
 	trocarSkin:function trocarSkin(basePath, skin){
-	    let links = document.querySelectorAll("link[href*='.css.seam?ln=styleSkinInfox']");
-        for (let i=0,l=links.length; i<l;i++){
-            let itm = links.item(i);
-            let newSkinAddr=[basePath,'javax.faces.resource',[skin,'css','seam'].join('.')].join('/');
-            let queryParams=['ln=styleSkinInfox', 'addr='+Date.now().toString(32)].join('&');
+	    var links = document.querySelectorAll("link[href*='.css.seam?ln=styleSkinInfox']");
+        for (var i=0,l=links.length; i<l;i++){
+            var itm = links.item(i);
+            var newSkinAddr=[basePath,'javax.faces.resource',[skin,'css','seam'].join('.')].join('/');
+            var queryParams=['ln=styleSkinInfox', 'addr='+Date.now().toString(32)].join('&');
             itm.setAttribute("href", [newSkinAddr,queryParams].join('?'));
         }
 	},
 	existeSkin:function hasSkin(basePath, skin){
-        let newSkinAddr=[basePath,'javax.faces.resource',[skin,'css','seam'].join('.')].join('/');
-        let queryParams=['ln=styleSkinInfox', 'addr='+Date.now().toString(32)].join('&');
+        var newSkinAddr=[basePath,'javax.faces.resource',[skin,'css','seam'].join('.')].join('/');
+        var queryParams=['ln=styleSkinInfox', 'addr='+Date.now().toString(32)].join('&');
 
-        let xhr = new XMLHttpRequest();
+        var xhr = new XMLHttpRequest();
         xhr.open('HEAD', [newSkinAddr,queryParams].join('?'), false);
         xhr.send();
         return /2\d\d/.test(xhr.status);
