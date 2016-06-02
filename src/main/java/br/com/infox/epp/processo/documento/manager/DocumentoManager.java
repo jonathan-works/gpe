@@ -83,7 +83,24 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     }
 
     public Documento gravarDocumentoNoProcesso(Processo processo, Documento documento) throws DAOException {
-        documento.setDocumentoBin(this.documentoBinManager.createProcessoDocumentoBin(documento));
+    	documento = gravarDocumento(documento);
+        if (processo != null) {
+        	if (documento.getPasta() == null) {
+        		documento.setPasta(pastaManager.getDefaultFolder(processo));
+        	} else if (!processo.equals(documento.getPasta().getProcesso())) {
+        		throw new BusinessRollbackException("O processo informado e o processo da pasta do documento são diferentes");
+        	}
+        }
+        documento.setNumeroDocumento(getNextNumeracao(documento));
+        return update(documento);
+    }
+    
+    public Documento gravarDocumentoNoProcesso(Documento documento) throws DAOException {
+    	return gravarDocumentoNoProcesso(null, documento);
+    }
+    
+    public Documento gravarDocumento(Documento documento) {
+    	documento.setDocumentoBin(this.documentoBinManager.createProcessoDocumentoBin(documento));
         if (documento.getUsuarioInclusao() == null) {
         	documento.setUsuarioInclusao(Authenticator.getUsuarioLogado());
         }
@@ -94,20 +111,8 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
             long idJbpmTask = TaskInstance.instance().getId();
             documento.setIdJbpmTask(idJbpmTask);
         }
-        if (processo != null) {
-        	if (documento.getPasta() == null) {
-        		documento.setPasta(pastaManager.getDefaultFolder(processo));
-        	} else if (!processo.equals(documento.getPasta().getProcesso())) {
-        		throw new BusinessRollbackException("O processo informado e o processo da pasta do documento são diferentes");
-        	}
-        }
-        documento.setNumeroDocumento(getNextNumeracao(documento));
         persist(documento);
         return documento;
-    }
-    
-    public Documento gravarDocumentoNoProcesso(Documento documento) throws DAOException {
-    	return gravarDocumentoNoProcesso(null, documento);
     }
     
     public Documento createDocumento(Processo processo, String label, DocumentoBin bin, ClassificacaoDocumento classificacaoDocumento)
