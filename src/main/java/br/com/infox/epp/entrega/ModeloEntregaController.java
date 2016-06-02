@@ -1,5 +1,7 @@
 package br.com.infox.epp.entrega;
 
+import static java.text.MessageFormat.format;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -7,8 +9,14 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
+import javax.faces.component.ValueHolder;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ComponentSystemEvent;
 import javax.inject.Inject;
+
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage.Severity;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
@@ -53,6 +61,22 @@ public class ModeloEntregaController implements Serializable {
     @PostConstruct
     public void init() {
         clear();
+    }
+
+    public void validarDatas(final ComponentSystemEvent event) {
+        final UIComponent panel = event.getComponent();
+        final String datePattern = "{0}:{0}Input";
+        final ValueHolder dataInicioComponent = (ValueHolder) panel.findComponent(format(datePattern, "dataLiberacao"));
+        final ValueHolder dataFimComponent = (ValueHolder) panel.findComponent(format(datePattern, "dataLimite"));
+        Date dataInicio = (Date) dataInicioComponent.getLocalValue();
+        if (dataInicio != null) {
+            Date dataFim = (Date) dataFimComponent.getLocalValue();
+            dataFim = dataFim == null ? new Date(dataInicio.getTime()) : dataFim;
+            if (dataInicio.after(dataFim)) {
+                FacesMessages.instance().add(Severity.ERROR, "A data de liberação deve ser anterior à data limite.");
+                FacesContext.getCurrentInstance().renderResponse();
+            }
+        }
     }
 
     public void iniciarConfiguracao(String[] path) {

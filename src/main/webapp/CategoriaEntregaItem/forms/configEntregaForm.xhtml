@@ -15,9 +15,7 @@
         <h:form>
             <fieldset>
                 <legend>Campos</legend>
-                <ui:remove>
-                    <f:event listener="#{categoriaEntregaView.modeloEntregaController.validarDatas}" type="postValidate" />
-                </ui:remove>
+                <f:event listener="#{categoriaEntregaView.modeloEntregaController.validarDatas}" type="postValidate" />
                 <p:fragment autoUpdate="true">
                     <i:inputDate id="dataLiberacao" label="Data de disponibilidade" required="true"
                         value="#{categoriaEntregaView.modeloEntregaController.dataLiberacao}" />
