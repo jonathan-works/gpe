@@ -26,16 +26,25 @@
                     actionListener="#{categoriaEntregaView.criarItem}" onsuccess="infox.hideLoading();" onerror="infox.hideLoading();" />
                 <p:remoteCommand name="criarCategoria" process="@this" update="@form:@parent:formFields :pageBodyDialogMessage" onstart="infox.showLoading();"
                     actionListener="#{categoriaEntregaView.criarCategoria}" onsuccess="infox.hideLoading();" onerror="infox.hideLoading();" />
-                <p:remoteCommand name="removerItem" process="@this" update="@parent:@parent :pageBodyDialogMessage"
-                    onstart="infox.showLoading();" actionListener="#{categoriaEntregaView.removerItem}" onsuccess="infox.hideLoading();" onerror="infox.hideLoading();" />
-                <p:remoteCommand name="removerCategoria" process="@this" update="@parent:@parent :pageBodyDialogMessage"
-                    onstart="infox.showLoading();" actionListener="#{categoriaEntregaView.removerCategoria}" onsuccess="infox.hideLoading();" onerror="infox.hideLoading();" />
                 <p:remoteCommand name="configurarModeloEntrega" process="@this" update="@form:@parent :pageBodyDialogMessage"
                     onstart="infox.showLoading();" actionListener="#{categoriaEntregaView.configurarModeloEntrega}" onsuccess="infox.hideLoading();" onerror="infox.hideLoading();" />
-                
+
+                <p:remoteCommand name="removerItem" process="@this" update=":pageBodyDialogMessage"
+                    actionListener="#{categoriaEntregaView.removerItem}" onstart="infox.showLoading();"
+                    onsuccess="infox.hideLoading();document.getElementById('itemsTree').refresh();"
+                    onerror="infox.hideLoading();document.getElementById('itemsTree').refresh();" />
+                <p:remoteCommand name="removerCategoria" process="@this" update=":pageBodyDialogMessage"
+                    onstart="infox.showLoading();" actionListener="#{categoriaEntregaView.removerCategoria}"
+                    onsuccess="document.getElementById('itemsTree').refresh();infox.hideLoading();"
+                    onerror="document.getElementById('itemsTree').refresh();infox.hideLoading();" />
+
+                <p:remoteCommand name="refreshCategoriaEntregaTree" actionListener="#{categoriaEntregaView.clear}"
+                    process="@this" update=":formFields :pageBodyDialogMessage" onstart="infox.showLoading();"
+                    onsuccess="infox.hideLoading();document.getElementById('itemsTree').refresh();"
+                    onerror="infox.hideLoading();document.getElementById('itemsTree').refresh();" />
                 <p:remoteCommand name="refreshCategoriaEntregaForm" actionListener="#{categoriaEntregaView.clear}"
-                    process="@this" update="@form:@parent:formFields :pageBodyDialogMessage"
-                    onstart="infox.showLoading" onsuccess="infox.hideLoading();document.getElementById('itemsTree').refresh();" onerror="infox.hideLoading();document.getElementById('itemsTree').refresh();" />
+                    process="@this" update="@form:@parent :pageBodyDialogMessage" onstart="infox.showLoading();"
+                    onsuccess="infox.hideLoading();" onerror="infox.hideLoading();" />
             </h:form>
             <infox:div style="display:inline-block;vertical-align:top;" rendered="#{'configEntregaForm.xhtml' ne categoriaEntregaView.view}">
             <div>

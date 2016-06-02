@@ -27,7 +27,7 @@
                         converter="br.com.infox.jsf.converter.EntityConverter"
                         completeMethod="#{categoriaEntregaView.modeloEntregaController.completeModeloCertidao}"
                         itemLabel="#{item.tituloModeloDocumento}" itemValue="#{item}" />
-                    <i:autoComplete id="pasta" required="true"
+                    <i:autoComplete id="pasta" required="true" dropdown="true"
                         value="#{categoriaEntregaView.modeloEntregaController.modeloPasta}"
                         converter="br.com.infox.jsf.converter.EntityConverter"
                         completeMethod="#{categoriaEntregaView.modeloEntregaController.completeModeloPasta}"
