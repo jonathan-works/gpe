@@ -9,7 +9,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -27,10 +26,10 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
-import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.Activity;
+import org.jbpm.graph.node.TaskNode;
 import org.jbpm.instantiation.Delegation;
 import org.jbpm.scheduler.def.CancelTimerAction;
 import org.jbpm.scheduler.def.CreateTimerAction;
@@ -255,7 +254,7 @@ public class NodeHandler implements Serializable {
     }
 
     public boolean isSystemNode() {
-        return this.node.getNodeType().equals(NodeType.Node);
+        return node.getClass().equals(Node.class);
     }
 
     public String getEventType() {
@@ -275,18 +274,13 @@ public class NodeHandler implements Serializable {
     public List<String> getSupportedEventTypes() {
         List<String> list = new ArrayList<>();
         if (!isSystemNode()) {
-            List<String> nodeEvents = Arrays.asList(new Node().getSupportedEventTypes());
-            List<String> eventTypes = new ArrayList<>(nodeEvents);
-            List<String> taskEvents = Arrays.asList(new Task().getSupportedEventTypes());
-            eventTypes.addAll(new ArrayList<>(taskEvents));
-            List<String> currentEvents = new ArrayList<>();
-            Collection<Event> values = node.getEvents().values();
-            for (Event event : values) {
-                currentEvents.add(event.getEventType());
+            list.addAll(Arrays.asList(node.getSupportedEventTypes()));
+            if (node.getClass().equals(TaskNode.class)) {
+                list.addAll(Arrays.asList(new Task().getSupportedEventTypes()));
             }
-            for (String type : eventTypes) {
-                if (!currentEvents.contains(type)) {
-                    list.add(type);
+            for (Event event : node.getEvents().values()) {
+                if (list.contains(event.getEventType())) {
+                    list.remove(event.getEventType());
                 }
             }
         } else {
