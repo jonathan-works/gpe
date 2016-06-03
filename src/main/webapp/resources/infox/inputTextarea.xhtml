@@ -22,6 +22,7 @@
     	<composite:attribute name="onkeypress" />
     	<composite:attribute name="onkeyup" />
     	<composite:attribute name="validatorId" />
+    	<composite:attribute name="showCounter" default="true"/>
     	
     	<!-- Ajax Attributes -->
     	<composite:attribute name="ajax" default="false" />
@@ -83,9 +84,11 @@
 	   				  </c:if>
 		   			<f:converter converterId="stringConverter" />
 				    </h:inputTextarea>
-				    <div id="#{id}counterDiv">
-				      ( #{empty cc.attrs.value ? 0 : cc.attrs.value.length()} / #{maxlength} )
-				    </div>
+				    <c:if test="#{cc.attrs.showCounter}">
+					    <div id="#{id}counterDiv">
+					      ( #{empty cc.attrs.value ? 0 : cc.attrs.value.length()} / #{maxlength} )
+					    </div>
+				    </c:if>
         		</div>
         	</div>
         </p:outputPanel>

@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jboss.seam.faces.FacesMessages;
+import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.taskmgmt.def.Task;
 import org.joda.time.DateTime;
@@ -43,6 +44,7 @@ import br.com.infox.epp.processo.partes.entity.TipoParte;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.manager.StatusProcessoSearch;
 import br.com.infox.epp.tipoParte.TipoParteSearch;
+import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.seam.exception.BusinessException;
 import edu.emory.mathcs.backport.java.util.Collections;
@@ -162,8 +164,20 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     }
     
     private boolean hasStartTaskForm(Task startTask) {
-        return startTask.getTaskController() != null && startTask.getTaskController().getVariableAccesses() != null
-                && !startTask.getTaskController().getVariableAccesses().isEmpty();
+        return startTask.getTaskController() != null 
+                && startTask.getTaskController().getVariableAccesses() != null
+                && !startTask.getTaskController().getVariableAccesses().isEmpty()
+                && !containsOnlyParameterVariable(startTask);
+    }
+    
+    private boolean containsOnlyParameterVariable(Task startTask) {
+        List<VariableAccess> variableAccesses = startTask.getTaskController().getVariableAccesses();
+        for (VariableAccess variableAccess : variableAccesses) {
+            if (!variableAccess.getMappedName().startsWith(VariableType.PARAMETER.name())) {
+                return false;
+            }
+        }
+        return true;
     }
     
     public void onSelectNaturezaCategoriaFluxoItem() {

@@ -11,6 +11,7 @@ import org.jbpm.graph.def.ProcessDefinition;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.form.type.FormType;
 import br.com.infox.epp.processo.form.type.FormTypes;
+import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.seam.exception.BusinessException;
 
@@ -32,8 +33,11 @@ public abstract class AbstractFormData implements FormData {
             createFormField(processDefinition, variableTaskPage);
         } else {
             for (VariableAccess variableAccess : variableAccesses) {
-                createFormField(processDefinition, variableAccess);
-            } 
+                String type = variableAccess.getMappedName().split(":")[0];
+                if (!VariableType.PARAMETER.name().equals(type)) {
+                    createFormField(processDefinition, variableAccess);
+                }
+            }
         }
     }
 

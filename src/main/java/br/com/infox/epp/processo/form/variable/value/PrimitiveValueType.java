@@ -89,6 +89,13 @@ public abstract class PrimitiveValueType implements ValueType {
         }
     }
     
+    public static class ParameterValueType extends PrimitiveValueType {
+
+        public ParameterValueType() {
+            super("parameter", String.class);
+        }
+    }
+    
     public static class DateValueType extends PrimitiveValueType {
         
         public static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");

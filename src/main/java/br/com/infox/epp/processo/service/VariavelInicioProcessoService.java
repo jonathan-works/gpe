@@ -22,12 +22,8 @@ public class VariavelInicioProcessoService extends PersistenceController {
     @Inject @GenericDao
     private Dao<VariavelInicioProcesso, Long> dao;
     
-    public Object getVariavel(Processo processo, String name) {
-        VariavelInicioProcesso variavel = variavelInicioProcessoSearch.getVariavelInicioProcesso(processo, name);
-        if (variavel != null) {
-            return variavel.getTypedValue();
-        }
-        return null;
+    public VariavelInicioProcesso getVariavel(Processo processo, String name) {
+        return variavelInicioProcessoSearch.getVariavelInicioProcesso(processo, name);
     }
     
     @TransactionAttribute(TransactionAttributeType.REQUIRED)

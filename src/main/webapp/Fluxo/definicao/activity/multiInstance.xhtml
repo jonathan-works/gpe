@@ -13,9 +13,10 @@
         	value="#{activityBehavior.loopCardinalityExpression}" ajax="true" render="@form"
         	validatorId="javax.faces.elValidator" help="#{infoxMessages['process.def.activity.loop.cardinality.help']}" />
         	
-       	<i:inputText id="loopDataInputExpression" label="#{infoxMessages['process.def.activity.loop.dataInput']}" 
+       	<i:inputTextarea id="loopDataInputExpression" label="#{infoxMessages['process.def.activity.loop.dataInput']}" 
         	value="#{activityBehavior.loopDataInputExpression}" ajax="true" render="@form"
-        	validatorId="javax.faces.elValidator" help="#{infoxMessages['process.def.activity.loop.dataInput.help']}" />
+        	validatorId="javax.faces.elValidator" help="#{infoxMessages['process.def.activity.loop.dataInput.help']}" 
+        	rows="1" cols="40" showCounter="false"/>
         
         <i:inputText id="nomeVariavelInputDataItem" label="#{infoxMessages['process.def.activity.loop.inputDataItem']}" 
         	value="#{activityBehavior.inputDataItem}" ajax="true" render="@form" 

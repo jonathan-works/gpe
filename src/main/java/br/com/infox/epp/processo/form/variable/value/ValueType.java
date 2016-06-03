@@ -8,11 +8,15 @@ import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.LongValu
 import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.NullValueType;
 import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.StringArrayValueType;
 import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.StringValueType;
+import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.ParameterValueType;
+import br.com.infox.epp.processo.form.variable.value.ObjectValueType.JPAValueType;
+import br.com.infox.epp.processo.form.variable.value.ObjectValueType.JSONValueType;
 
 public interface ValueType {
     
     public static PrimitiveValueType NULL = new NullValueType();
     public static PrimitiveValueType STRING = new StringValueType();
+    public static PrimitiveValueType PARAMETER = new ParameterValueType();
     public static PrimitiveValueType INTEGER = new IntegerValueType();
     public static PrimitiveValueType LONG = new LongValueType();
     public static PrimitiveValueType DOUBLE = new DoubleValueType();
@@ -22,7 +26,10 @@ public interface ValueType {
     
     public static FileValueType FILE = new FileValueType();
     
-    public static ValueType[] TYPES = {STRING, INTEGER, LONG, DOUBLE, BOOLEAN, DATE, FILE, STRING_ARRAY};
+    public static ObjectValueType JPA = new JPAValueType();
+    public static ObjectValueType JSON = new JSONValueType();
+    
+    public static ValueType[] TYPES = {NULL, STRING, PARAMETER, INTEGER, LONG, DOUBLE, BOOLEAN, DATE, FILE, STRING_ARRAY, JPA, JSON};
     
     String getName();
     

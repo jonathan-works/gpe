@@ -26,14 +26,19 @@
 		        	<rich:dataTable id="startVariablesTable" var="variable" value="#{nodeFitter.nodeHandler.startVariablesSubProcess}"
 			           	style="width:100%;" >
 			           	
-			       		<h:column>
+			       		<h:column style="text-align:center;">
 			       			<f:facet name="header">Nome</f:facet>
-			       			<h:outputText value="#{variable.key}"/>
+			       			<h:outputText value="#{variable.key}" />
 			       		</h:column>
 			       		
-			       		<h:column>
+			       		<h:column style="text-align:center;">
 			       			<f:facet name="header">Tipo</f:facet>
-			       			<h:outputText value="#{infoxMessages[variable.value.label]}"/>
+			       			<h:outputText value="#{infoxMessages[variable.value.key.label]}"/>
+			       		</h:column>
+			       		
+			       		<h:column style="text-align:center;">
+			       			<f:facet name="header">Obrigatória</f:facet>
+			       			<h:outputText value="#{variable.value.value ? 'Sim' : 'Não'}" />
 			       		</h:column>
 			       	</rich:dataTable>
 		       	</fieldset>

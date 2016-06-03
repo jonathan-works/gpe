@@ -78,18 +78,8 @@
             </rich:column>
             
             <rich:column>
-                <f:facet name="header">#{infoxMessages['process.task.var.modo']}</f:facet>
-                <h:form>
-                    <h:selectBooleanCheckbox id="writable" styleClass="checkbox" value="#{var.writable}">
-                        <a:ajax execute="@this" limitRender="true" event="change"
-                            render="readable,writable,resetVariableForm" />
-                    </h:selectBooleanCheckbox>
-                </h:form>
-            </rich:column>
-            
-            <rich:column>
                 <f:facet name="header">#{infoxMessages['process.task.var.required']}</f:facet>
-                <h:form>
+                <h:form rendered="#{var.type ne 'PARAMETER'}">
                     <h:selectBooleanCheckbox id="required" styleClass="checkbox" value="#{var.required}">
                         <a:ajax execute="@this" limitRender="true" event="change" render="readable,writable,hidden" />
                     </h:selectBooleanCheckbox>
@@ -150,6 +140,13 @@
                                 render="addVarDiv, @this, pageBodyDialogMessage, varDiv" limitRender="true" />
                             <f:converter converterId="fragmentConfigurationConverter" />
                         </wi:selectOneMenu>
+                    </rich:panel>
+                    <rich:panel rendered="#{var.type eq 'PARAMETER'}">
+                        <div id="input">
+                            <wi:inputText id="inputDefaultValue" label="Valor padrão da variável" value="#{var.value}">
+                                <a:ajax event="change" execute="@this" status=":status" limitRender="true" />
+                            </wi:inputText>
+                        </div>
                     </rich:panel>
                 </h:form>
             </rich:column>
