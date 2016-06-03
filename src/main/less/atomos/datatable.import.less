@@ -219,3 +219,24 @@
 .rf-dt-hdr-c {
 	color: @menu-bg-color;
 }
+@media only screen {
+	@media (max-width:736px) {
+	    .rf-dt-shdr{
+	        display:none;
+	    }
+	    .rf-dt-c.dt-toolbar-col{
+	        width:initial;
+	    }
+	    .rf-dt-c{
+	        display:block;
+	    }
+	    .rf-dt-c .rf-dt-c-shdr-c{
+	        font-weight:bold;
+	    }
+	}
+	@media (min-width:737px) {
+		.rf-dt-c .rf-dt-c-shdr-c{
+        display:none;
+    }
+	}
+}
