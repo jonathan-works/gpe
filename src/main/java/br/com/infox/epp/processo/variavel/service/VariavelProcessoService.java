@@ -30,6 +30,8 @@ import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @Stateless
 @Name(VariavelProcessoService.NAME)
@@ -46,6 +48,8 @@ public class VariavelProcessoService {
     private ProcessoManager processoManager;
     @Inject
     private ProcessoTarefaManager processoTarefaManager;
+    
+    private final LogProvider LOG = Logging.getLogProvider(VariavelProcessoService.class);
 
     public List<VariavelProcesso> getVariaveis(Processo processo) {
         List<VariavelProcesso> variaveis = new ArrayList<>();
@@ -113,18 +117,24 @@ public class VariavelProcessoService {
             if (variable != null) {
                 variavelProcesso.setValor(formatarValor(variable));
             } else {
-                List<MetadadoProcesso> metadados = metadadoProcessoManager.getMetadadoProcessoByType(processo,
-                        definicao.getNome());
-                if (metadados != null && metadados.size() > 0) {
-                    setValor(processo, metadados, variavelProcesso);
-                } else {
-                    final String valorPadrao = definicao.getValorPadrao();
-                    if (valorPadrao != null) {
-                        setValor(valorPadrao, processo, variavelProcesso);
-                    } else {
-                        variavelProcesso = null;
-                    }
-                }
+            	try{
+	                List<MetadadoProcesso> metadados = metadadoProcessoManager.getMetadadoProcessoByType(processo,
+	                        definicao.getNome());
+	                
+	                if (metadados != null && metadados.size() > 0) {
+	                    setValor(processo, metadados, variavelProcesso);
+	                } else {
+	                    final String valorPadrao = definicao.getValorPadrao();
+	                    if (valorPadrao != null) {
+	                        setValor(valorPadrao, processo, variavelProcesso);
+	                    } else {
+	                        variavelProcesso = null;
+	                    }
+	                }
+            	}catch(Exception e){
+            		variavelProcesso = null;
+            		LOG.error("Não foi possível recuperar o metadado "+ definicao.getNome() + " do processo id="+ processo.getIdProcesso().toString(), e);
+            	}
             }
             return variavelProcesso;
         }
