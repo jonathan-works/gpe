@@ -136,7 +136,7 @@
 	}
 }
 .rf-dt {
-	&:extend(.rf-dt-c);
+	&:extend(.rf-dt-rc-common);
 	&.full-sized {
 		width: 100%;
 	}
@@ -148,11 +148,13 @@
 }
 .zebra-row {
 	&.rf-dt-r {
-		&:nth-child(odd) {
-			background-color: @zebra-row-color-odd;
-		}
-		&:nth-child(even) {
-			background-color: @zebra-row-color-even;
+		@media (min-width:737px){
+			&:nth-child(odd) {
+				background-color: @zebra-row-color-odd;
+			}
+			&:nth-child(even) {
+				background-color: @zebra-row-color-even;
+			}
 		}
 		&:hover {
 			background-color: @zebra-row-color-over;
@@ -178,7 +180,13 @@
 	padding: 2px 0 0;
 	text-align: center;
 	border-style: solid;
-	&:extend(.rf-dt-c);
+	&.rf-dt-c {
+		@media only screen {
+			@media (max-width:736px) {
+	        width:initial;
+			}
+		}
+	}
 }
 .dt-res-count {
 	color: @base-label-color;
@@ -190,7 +198,7 @@
 }
 .rf-dt-shdr-c {
 	color: #000;
-	&:extend(.rf-dt-c);
+	&:extend(.rf-dt-rc-common);
 }
 .rf-dt-ftr-c {
 	text-align: center;
@@ -199,9 +207,27 @@
 .rf-dt-sftr-c {
 	text-align: center;
 }
-.rf-dt-c {
+.rf-dt-rc-common{
 	border-color: @tableBorderColor;
 	border-width: @tableBorderWidth;
+}
+.rf-dt-c {
+	&:extend(.rf-dt-rc-common);
+	@media only screen {
+		@media (max-width:736px) {
+			display:block;
+		}
+	}
+	.rf-dt-c-shdr-c{
+		@media only screen {
+			@media (max-width:736px) {
+				font-weight:bold;
+			}
+			@media (min-width:737px) {
+				display:none;
+			}
+		}
+	}
 }
 .rf-dt-c-left {
 	text-align: left;
@@ -211,32 +237,16 @@
 }
 .rf-dt-hdr {
 	background-color: @menu-bg-color;
-	&:extend(.rf-dt-c);
+	&:extend(.rf-dt-rc-common);
 }
 .rf-dt-shdr {
 	background-color: @menu-bg-color;
+	@media only screen {
+		@media (max-width:736px) {
+			display:none;
+		}
+	}
 }
 .rf-dt-hdr-c {
 	color: @menu-bg-color;
-}
-@media only screen {
-	@media (max-width:736px) {
-	    .rf-dt-shdr{
-	        display:none;
-	    }
-	    .rf-dt-c.dt-toolbar-col{
-	        width:initial;
-	    }
-	    .rf-dt-c{
-	        display:block;
-	    }
-	    .rf-dt-c .rf-dt-c-shdr-c{
-	        font-weight:bold;
-	    }
-	}
-	@media (min-width:737px) {
-		.rf-dt-c .rf-dt-c-shdr-c{
-        display:none;
-    }
-	}
 }
