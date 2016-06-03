@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -15,9 +19,12 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.fluxo.entity.ModeloPasta;
 import br.com.infox.epp.fluxo.manager.ModeloPastaManager;
 import br.com.infox.epp.processo.documento.dao.PastaDAO;
+import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.Documento_;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.entity.PastaRestricao;
 import br.com.infox.epp.processo.documento.filter.DocumentoFilter;
+import br.com.infox.epp.processo.documento.numeration.NumeracaoDocumentoSequencialManager;
 import br.com.infox.epp.processo.documento.service.DocumentoService;
 import br.com.infox.epp.processo.documento.type.PastaRestricaoEnum;
 import br.com.infox.epp.processo.entity.Processo;
@@ -25,6 +32,7 @@ import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
+import br.com.infox.seam.exception.BusinessRollbackException;
 
 @AutoCreate
 @Name(PastaManager.NAME)
@@ -44,6 +52,10 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     private ModeloPastaManager modeloPastaManager;
     @In
     private ProcessoManager processoManager;
+    @In
+    private DocumentoManager documentoManager;
+    @In
+    private NumeracaoDocumentoSequencialManager numeracaoDocumentoSequencialManager;
     
     public Pasta getDefaultFolder(Processo processo) throws DAOException {
         Pasta pasta = getDefault(processo);
@@ -209,4 +221,50 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
             pastaRestricaoManager.update(pastaRestricao);
         }
     }
+    
+    public Pasta copiarPastaDocumentosParaProcesso(Pasta pasta, Processo processo) {
+    	try {
+	    	Pasta copia = pasta.makeCopy();
+	    	copia.setProcesso(processo);
+	    	persist(copia);
+	    	for (Documento documento : copia.getDocumentosList()) {
+	    		documentoManager.persist(documento);
+	    	}
+	    	List<PastaRestricao> restricoes = pastaRestricaoManager.copyRestricoes(pasta, copia);
+	    	for (PastaRestricao restricao : restricoes) {
+	    		pastaRestricaoManager.persist(restricao);
+	    	}
+	    	return copia;
+    	} catch (CloneNotSupportedException e) {
+    		throw new BusinessRollbackException(e);
+    	}
+    }
+    
+	public void renumerarDocumentos(Pasta pasta) {
+		EntityManager entityManager = getDao().getEntityManager();
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Documento> query = cb.createQuery(Documento.class);
+		Root<Documento> root = query.from(Documento.class);
+		query.where(cb.equal(root.get(Documento_.pasta), pasta), cb.isNull(root.get(Documento_.numeroDocumento)));
+		query.orderBy(cb.asc(root.get(Documento_.dataInclusao)));
+		List<Documento> documentos = entityManager.createQuery(query).getResultList();
+		
+		for (Documento documento : documentos) {
+			documento.setNumeroDocumento(numeracaoDocumentoSequencialManager.getNextNumeracaoDocumentoSequencial(pasta.getProcesso()));
+			documentoManager.update(documento);
+		}
+	}
+	
+	public void copiarDocumentos(Pasta original, Pasta novaPasta) {
+		try {
+			for (Documento documento : original.getDocumentosList()) {
+				Documento copia = documento.makeCopy();
+				copia.setNumeroDocumento(null);
+				copia.setPasta(novaPasta);
+				documentoManager.persist(copia);
+			}
+		} catch (CloneNotSupportedException e) {
+    		throw new BusinessRollbackException(e);
+    	}
+	}
 }

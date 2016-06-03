@@ -1,6 +1,7 @@
 package br.com.infox.epp.entrega.documentos;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -60,7 +61,7 @@ public class Entrega implements Serializable {
 	private UsuarioLogin usuarioEntrega;
 	
 	@OneToMany(mappedBy = "entrega", fetch = FetchType.LAZY)
-	private List<EntregaResponsavel> responsaveis;
+	private List<EntregaResponsavel> responsaveis = new ArrayList<>();
 	
 	@ManyToOne
 	@JoinColumn(name="id_certidao_entrega")
