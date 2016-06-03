@@ -24,18 +24,16 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.dao.ClassificacaoDocumentoDAO;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.entrega.EntregaService;
 import br.com.infox.epp.entrega.documentos.Entrega;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.variable.Taskpage;
-import br.com.infox.ibpm.variable.TaskpageParameter;
 
 @Named
 @ViewScoped
 @Taskpage(name = "checklist", description = "checklist.description")
 public class ChecklistView implements Serializable {
     private static final long serialVersionUID = 1L;
-
-    private static final String PARAMETER_CHECKLIST_ENTREGA = "checklistEntrega";
 
     @Inject
     private ChecklistService checklistService;
@@ -44,12 +42,9 @@ public class ChecklistView implements Serializable {
     @Inject
     private ClassificacaoDocumentoDAO classificacaoDocumentoDAO;
 
-    // Parameters
-    @TaskpageParameter(name = PARAMETER_CHECKLIST_ENTREGA, type = "Entrega", description = "checklist.parameter.entrega.description")
-    private Entrega entrega;
-
     // Controle geral
     private TaskInstance taskInstance;
+    private Entrega entrega;
     private boolean hasEntrega;
 
     // Controle dos filtros
@@ -88,10 +83,7 @@ public class ChecklistView implements Serializable {
      */
     private Entrega retieveEntrega() {
         taskInstance = TaskInstanceHome.instance().getCurrentTaskInstance();
-        if (taskInstance.hasVariable(PARAMETER_CHECKLIST_ENTREGA)) {
-            return (Entrega) taskInstance.getVariable(PARAMETER_CHECKLIST_ENTREGA);
-        }
-        String nameVariableEntrega = "entrega"; // FIXME isso aqui precisa ser alterado após ser feita a refatoração do ObserverPrestacaoContas
+        String nameVariableEntrega = EntregaService.PARAMETRO_ENTREGA_ENTREGA;
         if (taskInstance.hasVariable(nameVariableEntrega)) {
             return (Entrega) taskInstance.getVariable(nameVariableEntrega);
         }
