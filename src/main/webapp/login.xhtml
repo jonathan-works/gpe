@@ -110,7 +110,7 @@
           </div>
           <div id="bg_login_inferior" class="bg_login_inferior login">
 
-			<h:panelGroup rendered="false">
+			<h:panelGroup rendered="#{loginView.mostrarCaptcha and not useCertLogin}">
 	          	<div style="margin-bottom: 2em; padding-left: 35px; width: 302px">
 		          	<p:captcha id="captcha" label="Captcha" language="pt_BR" validatorMessage="#{infoxMessages['captcha.incorreto']}" requiredMessage="#{infoxMessages['captcha.obrigatorio']}" />
 		          	<p:messages for="captcha" severity="error"/>
