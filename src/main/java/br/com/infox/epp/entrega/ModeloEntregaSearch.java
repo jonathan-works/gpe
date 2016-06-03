@@ -106,6 +106,7 @@ public class ModeloEntregaSearch extends PersistenceController {
         List<Predicate> filtros = new ArrayList<>();
         
         filtros.add(createFiltroPai(relacPais, codigoItemPai));
+        filtros.add(cb.isTrue(modeloEntrega.get(ModeloEntrega_.ativo)));
         
         if (codigoLocalizacao != null) {
             Predicate filtroModeloEntregaComRestricao = createFiltroModeloEntregaComRestricao(cq, modeloEntrega, codigoLocalizacao);
