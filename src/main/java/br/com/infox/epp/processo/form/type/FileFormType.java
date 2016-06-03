@@ -82,13 +82,16 @@ public abstract class FileFormType implements FormType {
 
     @ExceptionHandled(value = MethodType.UNSPECIFIED)
     public void assinar() throws DAOException, CertificadoException, AssinaturaException {
-        CertificateSignatureBundleBean certificateSignatureBundle = getCertificateSignatures().get(tokenToSign);
-        if (certificateSignatureBundle.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
-            FacesMessages.instance().add("Erro ao assinar");
-        } else {
-            CertificateSignatureBean signatureBean = certificateSignatureBundle.getSignatureBeanList().get(0);
-            getAssinaturaDocumentoService().assinarDocumento(documentoToSign, Authenticator.getUsuarioPerfilAtual(),
-                    signatureBean.getCertChain(), signatureBean.getSignature());
+        try {
+            CertificateSignatureBundleBean certificateSignatureBundle = getCertificateSignatures().get(tokenToSign);
+            if (certificateSignatureBundle.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
+                FacesMessages.instance().add("Erro ao assinar");
+            } else {
+                CertificateSignatureBean signatureBean = certificateSignatureBundle.getSignatureBeanList().get(0);
+                getAssinaturaDocumentoService().assinarDocumento(documentoToSign, Authenticator.getUsuarioPerfilAtual(),
+                        signatureBean.getCertChain(), signatureBean.getSignature());
+            }
+        } finally {
             setDocumentoToSign(null);
             setTokenToSign(null);
         }
