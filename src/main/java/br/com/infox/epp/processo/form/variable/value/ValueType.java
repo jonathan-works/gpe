@@ -22,12 +22,12 @@ public interface ValueType {
     
     public static FileValueType FILE = new FileValueType();
     
-    public static ValueType[] TYPES = {NULL, STRING, INTEGER,LONG, DOUBLE, BOOLEAN, DATE, FILE};
+    public static ValueType[] TYPES = {STRING, INTEGER, LONG, DOUBLE, BOOLEAN, DATE, FILE, STRING_ARRAY};
     
     String getName();
     
-    TypedValue convertToModelValue(TypedValue propertyValue);
+    Object convertToModelValue(Object propertyValue);
     
-    String convertToStringValue(TypedValue propertyValue);
+    String convertToStringValue(Object propertyValue);
 
 }

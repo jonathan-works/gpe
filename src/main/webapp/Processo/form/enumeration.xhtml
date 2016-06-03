@@ -10,12 +10,9 @@
     xmlns:i="http://java.sun.com/jsf/composite/infox">
     
     <ui:param name="varId" value="#{formField.id}"/>
-  	<ui:param name="controller" value="#{formField.type}" />
-  	<ui:param name="typedValue" value="#{formField.typedValue}"/>
   	<ui:param name="readonly" value="#{formField.properties.readonly}" />
-  	<ui:param name="required" value="#{formField.properties.required}" />
   	
-  	<i:selectOneMenu id="#{varId}" value="#{typedValue.value}" required="#{required}"
+  	<i:selectOneMenu id="#{varId}" value="#{formField.value}" required="#{formField.properties.required}"
         disabled="#{disabled or readonly}" readonly="#{readonly}" noSelectionLabel="#{infoxMessages['crud.select.select']}"
         items="#{formField.properties.selectItems}" label="#{formField.label}"/>
     

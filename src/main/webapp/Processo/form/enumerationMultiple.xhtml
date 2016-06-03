@@ -10,10 +10,7 @@
     xmlns:i="http://java.sun.com/jsf/composite/infox">
     
     <ui:param name="varId" value="#{formField.id}"/>
-  	<ui:param name="controller" value="#{formField.type}" />
-  	<ui:param name="typedValue" value="#{formField.typedValue}"/>
   	<ui:param name="readonly" value="#{formField.properties.readonly}" />
-  	<ui:param name="required" value="#{formField.properties.required}" />
   	
   	<style type="text/css">
   		.selectManyMenu {
@@ -21,7 +18,7 @@
   		}
   	</style>
   	
-  	<i:selectManyMenu id="#{varId}" value="#{typedValue.value}" required="#{required}"
+  	<i:selectManyMenu id="#{varId}" value="#{formField.value}" required="#{formField.properties.required}"
         disabled="#{disabled or readonly}" readonly="#{readonly}" 
         items="#{formField.properties.selectItems}" label="#{formField.label}"
         styleClass="selectManyMenu"/>

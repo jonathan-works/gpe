@@ -11,6 +11,6 @@
     
     <i:selectOneRadio label="#{formField.label}" 
     	items="#{selectItemFunctions.createFromString('true:crud.yes,false:crud.no')}" 
-    	disabled="#{not empty readonly and readonly ? true : disabled}" value="#{formField.typedValue.value}" />
+    	disabled="#{not empty readonly and readonly ? true : disabled}" value="#{formField.value}" />
     
 </ui:composition>

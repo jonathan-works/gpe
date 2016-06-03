@@ -12,8 +12,6 @@ import com.google.gson.GsonBuilder;
 
 import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
-import br.com.infox.epp.processo.form.variable.value.PrimitiveTypedValue;
-import br.com.infox.epp.processo.form.variable.value.TypedValue;
 import br.com.infox.epp.processo.form.variable.value.ValueType;
 import br.com.infox.ibpm.variable.dao.ListaDadosSqlDAO;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
@@ -67,13 +65,8 @@ public abstract class EnumFormType extends PrimitiveFormType {
         }
 
         @Override
-        public TypedValue convertToFormValue(Object value) {
-            if (value == null) {
-                return new PrimitiveTypedValue.StringValue(null);
-            } else if (value instanceof String) {
-                return new PrimitiveTypedValue.StringValue((String) value);
-            }
-            throw new IllegalArgumentException("Cannot convert '" + value + "' to String");
+        public Object convertToFormValue(Object value) {
+            return value;
         }
     }
     
@@ -84,17 +77,17 @@ public abstract class EnumFormType extends PrimitiveFormType {
         }
         
         @Override
-        public TypedValue convertToFormValue(Object value) {
+        public Object convertToFormValue(Object value) {
             if (value == null) {
-                return new PrimitiveTypedValue.StringArrayValue(null);
+                return null;
             } 
             Gson GSON = new GsonBuilder().create();
             if (value instanceof String) {
                 String[] array = GSON.fromJson((String) value, String[].class);
-                return new PrimitiveTypedValue.StringArrayValue(array);
+                return array;
             }
             if (value instanceof String[]) {
-                return new PrimitiveTypedValue.StringArrayValue((String[]) value);
+                return value;
             }
             throw new IllegalArgumentException("Cannot convert '" + value + "' to String[]");
         }

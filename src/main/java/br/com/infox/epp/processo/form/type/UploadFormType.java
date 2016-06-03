@@ -16,7 +16,6 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.service.DocumentoUploaderService;
 import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
-import br.com.infox.epp.processo.form.variable.value.FileValue;
 import br.com.infox.epp.processo.form.variable.value.TypedValue;
 import br.com.infox.ibpm.variable.file.FileVariableHandler;
 import br.com.infox.seam.exception.BusinessException;
@@ -32,18 +31,18 @@ public class UploadFormType extends FileFormType {
     }
 
     @Override
-    public TypedValue convertToFormValue(Object value) {
+    public Object convertToFormValue(Object value) {
         if (value == null) {
-            return new FileValue(null);
+            return null;
         }
         if (value instanceof String) {
             value = Integer.valueOf((String) value);
         }
         if (value instanceof Integer) {
             Documento documento = getDocumentoManager().find((Integer) value);
-            return new FileValue(documento);
+            return documento;
         }
-        return new FileValue(null);
+        return null;
     }
     
     public void processFileUpload(FileUploadEvent fileUploadEvent) {
@@ -55,7 +54,7 @@ public class UploadFormType extends FileFormType {
         try {
             getDocumentoUploadService().validaDocumento(file, classificacao, file.getData());
             getFileVariableHandler().gravarDocumento(file, uploadFile.getId(), formField, formData.getProcesso());
-            formData.setVariable(formField.getId(), formField.getTypedValue());
+            formData.setVariable(formField.getId(), new TypedValue(formField.getValue(), formField.getType().getValueType()));
         } catch (BusinessRollbackException e) {
              LOG.log(Level.SEVERE, "Erro ao remover o documento existente", e);
              if (e.getCause() instanceof DAOException) {
@@ -71,18 +70,17 @@ public class UploadFormType extends FileFormType {
     
     @Override
     public void validate(FormField formField, FormData formData) throws BusinessException {
-        FileValue typedValue = (FileValue) formField.getTypedValue(); 
         String required = formField.getProperty("required", String.class);
-        if ("true".equals(required) && typedValue.getValue() == null) {
+        if ("true".equals(required) && formField.getValue() == null) {
             throw new BusinessException("O arquivo do campo " + formField.getLabel() + " é obrigatório");
         }
-        if (typedValue.getValue() != null) {
+        if (formField.getValue() != null) {
             super.validate(formField, formData);
         }
     }
     
     public String getUrlDownload(FormField formfield) {
-        Documento documento = formfield.getValue(Documento.class);
+        Documento documento = formfield.getTypedValue(Documento.class);
         PathResolver pathResolver = BeanManager.INSTANCE.getReference(PathResolver.class);
         return String.format("%s/downloadDocumento.seam?id=%d", pathResolver.getContextPath(), documento.getId());
     }

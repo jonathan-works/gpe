@@ -4,15 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.infox.epp.processo.form.type.FormType;
-import br.com.infox.epp.processo.form.variable.value.TypedValue;
 
 public class FormField {
     
     protected String id;
     protected String label;
     protected FormType type;
-    protected TypedValue defaultValue;
-    protected TypedValue typedValue;
+    protected Object defaultValue;
+    protected Object value;
     protected Map<String, Object> properties = new HashMap<>();
 
     public String getId() {
@@ -47,24 +46,24 @@ public class FormField {
         return type.getPath();
     }
     
-    public TypedValue getDefaultValue() {
+    public Object getDefaultValue() {
         return defaultValue;
     }
 
-       public void setDefaultValue(TypedValue defaultValue) {
+    public void setDefaultValue(Object defaultValue) {
         this.defaultValue = defaultValue;
     }
 
-    public TypedValue getTypedValue() {
-        return typedValue;
+    public Object getValue() {
+        return value;
     }
 
-    public void setTypedValue(TypedValue typedValue) {
-        this.typedValue = typedValue;
+    public void setValue(Object value) {
+        this.value = value;
     }
-    
-    public <T> T getValue(Class<T> type) {
-        return type.cast(typedValue.getValue());
+
+    public <T> T getTypedValue(Class<T> type) {
+        return type.cast(value);
     }
 
     public Map<String, Object> getProperties() {

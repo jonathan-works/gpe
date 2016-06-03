@@ -1,6 +1,8 @@
 package br.com.infox.epp.processo.form.variable.value;
 
+import java.lang.reflect.Constructor;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -10,9 +12,11 @@ import com.google.gson.GsonBuilder;
 public abstract class PrimitiveValueType implements ValueType {
     
     protected String name;
+    protected Class<?> javaType;
     
-    public PrimitiveValueType(String name) {
+    public PrimitiveValueType(String name, Class<?> javaType) {
         this.name = name;
+        this.javaType = javaType;
     }
     
     @Override
@@ -21,54 +25,67 @@ public abstract class PrimitiveValueType implements ValueType {
     }
     
     @Override
-    public TypedValue convertToModelValue(TypedValue propertyValue) {
+    public Object convertToModelValue(Object propertyValue) {
+        if (propertyValue == null) return null;
+        if ((propertyValue instanceof String) && javaType != null) {
+            try {
+                Constructor<?> constructor = javaType.getConstructor(String.class);
+                if (constructor != null) {
+                    return constructor.newInstance(propertyValue);
+                }
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Cannot convert " + propertyValue + " to " + javaType.getName());
+            }
+        }
         return propertyValue;
     }
-
+    
     @Override
-    public String convertToStringValue(TypedValue propertyValue) {
-        return propertyValue.getValue() == null ? "" : propertyValue.getValue().toString();
+    public String convertToStringValue(Object propertyValue) {
+        return propertyValue == null ? null : propertyValue.toString();
     }
     
     public static class NullValueType extends PrimitiveValueType {
-        
+
         public NullValueType() {
-            super("null");
+            super("null", null);
         }
+        
     }
     
     public static class BooleanValueType extends PrimitiveValueType {
 
         public BooleanValueType() {
-            super(Boolean.class.getSimpleName().toLowerCase());
+            super(Boolean.class.getSimpleName().toLowerCase(), Boolean.class);
         }
+        
     }
     
     public static class DoubleValueType extends PrimitiveValueType {
 
         public DoubleValueType() {
-            super(Double.class.getSimpleName().toLowerCase());
+            super(Double.class.getSimpleName().toLowerCase(), Double.class);
         }
     }
     
     public static class IntegerValueType extends PrimitiveValueType {
 
         public IntegerValueType() {
-            super(Integer.class.getSimpleName().toLowerCase());
+            super(Integer.class.getSimpleName().toLowerCase(), Integer.class);
         }
     }
     
     public static class LongValueType extends PrimitiveValueType {
 
         public LongValueType() {
-            super(Long.class.getSimpleName().toLowerCase());
+            super(Long.class.getSimpleName().toLowerCase(), Long.class);
         }
     }
     
     public static class StringValueType extends PrimitiveValueType {
 
         public StringValueType() {
-            super(String.class.getSimpleName().toLowerCase());
+            super(String.class.getSimpleName().toLowerCase(), String.class);
         }
     }
     
@@ -77,12 +94,30 @@ public abstract class PrimitiveValueType implements ValueType {
         public static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
         public DateValueType() {
-            super(Date.class.getSimpleName().toLowerCase());
+            super(Date.class.getSimpleName().toLowerCase(), Date.class);
         }
         
         @Override
-        public String convertToStringValue(TypedValue propertyValue) {
-            return DATE_FORMAT.format(propertyValue.getValue());
+        public Object convertToModelValue(Object value) {
+            if (value != null) {
+                return null;
+            }
+            if (value instanceof String) {
+                try {
+                    return DATE_FORMAT.parse((String) value);
+                } catch (ParseException e) {
+                    throw new IllegalArgumentException("Cannot parse " + value + " to Date");
+                }
+            }
+            if (value instanceof Date) {
+                return value;
+            }
+            throw new IllegalArgumentException("Cannot parse " + value + " to Date");
+        }
+        
+        @Override
+        public String convertToStringValue(Object propertyValue) {
+            return DATE_FORMAT.format(propertyValue);
         }
     }
     
@@ -91,40 +126,36 @@ public abstract class PrimitiveValueType implements ValueType {
         private static final Gson GSON = new GsonBuilder().create();
         
         public StringArrayValueType() {
-            super("stringArray");
+            super("stringArray", String[].class);
         }
         
         @Override
-        public TypedValue convertToModelValue(TypedValue propertyValue) {
-            Object object = propertyValue.getValue();
-            if (object == null) {
-                return new PrimitiveTypedValue.StringArrayValue(null);
+        public Object convertToModelValue(Object value) {
+            if (value == null) {
+                return null;
             }
-            if (object instanceof String) {
-                String[] array = GSON.fromJson((String) object, String[].class);
-                return new PrimitiveTypedValue.StringArrayValue(array);
+            if (value instanceof String) {
+                String[] array = GSON.fromJson((String) value, String[].class);
+                return array;
             } 
-            if (object instanceof String[]) {
-                return new PrimitiveTypedValue.StringArrayValue((String[]) object);
+            if (value instanceof String[]) {
+                return value;
             }
-            throw new IllegalArgumentException("Cannot convert '" + object + "' to String[]");
+            throw new IllegalArgumentException("Cannot convert '" + value + "' to String[]");
         }
 
         @Override
-        public String convertToStringValue(TypedValue propertyValue) {
-            Object object = propertyValue.getValue();
-            if (object == null) {
+        public String convertToStringValue(Object value) {
+            if (value == null) {
                 return null;
             }
-            if (object instanceof String) {
-                return (String) object;
+            if (value instanceof String) {
+                return (String) value;
             }
-            if (object instanceof String[]) {
-                return GSON.toJson(object);
+            if (value instanceof String[]) {
+                return GSON.toJson(value);
             }
-            throw new IllegalArgumentException("Cannot convert '" + object + "' to String");
+            throw new IllegalArgumentException("Cannot convert '" + value + "' to String");
         }
-        
     }
-    
 }

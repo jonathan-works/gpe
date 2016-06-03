@@ -12,7 +12,6 @@
   
   	<ui:param name="varId" value="#{formField.id}"/>
   	<ui:param name="controller" value="#{formField.type}" />
-  	<ui:param name="typedValue" value="#{formField.typedValue}"/>
   	<ui:param name="readonly" value="#{formField.properties.readonly}" />
   	<ui:param name="required" value="#{formField.properties.required}" />
   	<ui:param name="classificacoesDocumento" value="#{formField.properties.classificacoesDocumento}"/>
@@ -24,8 +23,8 @@
 		required="#{not readonly}"
 		showLabelSelecione="true"
 		value="#{formField.properties.classificacaoDocumento}"
-		readonly="#{readonly or classificacoesDocumento.size eq 1 or typedValue.value.hasAssinatura()}"
-		disabled="#{readonly or classificacoesDocumento.size eq 1 or typedValue.value.hasAssinatura()}">
+		readonly="#{readonly or classificacoesDocumento.size eq 1 or formField.value.hasAssinatura()}"
+		disabled="#{readonly or classificacoesDocumento.size eq 1 or formField.value.hasAssinatura()}">
 		<a:ajax event="change" render="#{varId}AssinaturaDocumento #{varId}EditorDiv" execute="@this" limitRender="true" />
 	</wi:selectOneMenuEntity>
 	
@@ -35,7 +34,7 @@
 		noSelectionLabel="[Selecione o modelo]"
 		required="false"
 		value="#{formField.properties.modeloDocumento}"
-		rendered="#{not readonly and not typedValue.value.hasAssinatura()}">
+		rendered="#{not readonly and not formField.value.hasAssinatura()}">
 		<a:ajax event="change" render="#{varId}EditorDiv" execute="@this" limitRender="true" 
 			listener="#{controller.performModeloDocumento(formField, formData)}"/>
 	</wi:selectOneMenuEntity>
@@ -43,7 +42,7 @@
 	<p:outputPanel id="#{varId}EditorDiv">
 	   	<s:div id="#{varId}ToolTipDivExterna">
 		    <s:div id="#{varId}ToolTipDiv" styleClass="tooltip-parent" style="width: 10px" 
-			  	rendered="#{not empty formField.properties.classificacaoDocumento.observacao and not (readonly or typedValue.value.hasAssinatura())}">
+			  	rendered="#{not empty formField.properties.classificacaoDocumento.observacao and not (readonly or formField.value.hasAssinatura())}">
 			  	<h:graphicImage id="#{varId}helpEditTipImg" 
 			  		url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
 				<div class="epp-tooltip">
@@ -55,8 +54,8 @@
 		    </s:div>
 	    </s:div>
 	    
-	    <wi:editor id="#{varId}" value="#{typedValue.value.documentoBin.modeloDocumento}"
-	        readonly="#{readonly or typedValue.value.hasAssinatura()}" 
+	    <wi:editor id="#{varId}" value="#{formField.value.documentoBin.modeloDocumento}"
+	        readonly="#{readonly or formField.value.hasAssinatura()}" 
 	        label="#{formField.label}"/>
 	        
 	</p:outputPanel>
@@ -76,7 +75,7 @@
 				signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
 				reRender="#{varId}AssinaturaDocumento, :pageBodyDialogMessage"
 				tokenField="#{controller.tokenToSign}"
-				propertyValue="#{typedValue.value}"
+				propertyValue="#{formField.value}"
 				propertyTarget="#{controller.documentoToSign}"
 				signableData="#{controller.documentoToSign.documentoBin.md5Documento}"
 				functionPreSign="infox.showLoading();"

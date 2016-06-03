@@ -73,7 +73,7 @@ public abstract class FileFormType implements FormType {
     
     @Override
     public void validate(FormField formField, FormData formData) throws BusinessException {
-        Documento documento = (Documento) formField.getTypedValue().getValue();
+        Documento documento = formField.getTypedValue(Documento.class);
         boolean assinaturaVariavelOk = validarAssinaturaDocumento(documento);
         if (!assinaturaVariavelOk) {
             throw new BusinessException(String.format(InfoxMessages.getInstance().get("assinaturaDocumento.faltaAssinatura"), formField.getLabel()));
@@ -105,7 +105,7 @@ public abstract class FileFormType implements FormType {
     }
     
     public boolean podeAssinar(FormField formField) {
-        Documento documento = formField.getValue(Documento.class);
+        Documento documento = formField.getTypedValue(Documento.class);
         return documento != null && documento.getId() != null 
                 && documento.isDocumentoAssinavel(Authenticator.getPapelAtual())
                 && !documento.isDocumentoAssinado(Authenticator.getPapelAtual());

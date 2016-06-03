@@ -70,7 +70,7 @@ public class FileVariableHandler {
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void gravarDocumento(UploadedFile file, String variableFieldName, FormField formField, Processo processo) {
-	    Documento documento = formField.getValue(Documento.class);
+	    Documento documento = formField.getTypedValue(Documento.class);
 	    ClassificacaoDocumento classificacaoDocumento = formField.getProperty("classificacaoDocumento", ClassificacaoDocumento.class);
         if (documento != null) {
             try {
@@ -82,7 +82,7 @@ public class FileVariableHandler {
         documento = createDocumento(file, classificacaoDocumento);
         try {
             documentoManager.gravarDocumentoNoProcesso(processo, documento);
-            formField.getTypedValue().setValue(documento);
+            formField.setValue(documento);
         } catch (DAOException | BusinessException e) {
             throw new BusinessRollbackException(e);
         }

@@ -1,14 +1,7 @@
 package br.com.infox.epp.processo.form.type;
 
-import java.text.ParseException;
-import java.util.Date;
-
 import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
-import br.com.infox.epp.processo.form.variable.value.PrimitiveTypedValue;
-import br.com.infox.epp.processo.form.variable.value.PrimitiveTypedValue.NullValue;
-import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType;
-import br.com.infox.epp.processo.form.variable.value.TypedValue;
 import br.com.infox.epp.processo.form.variable.value.ValueType;
 import br.com.infox.ibpm.variable.type.ValidacaoDataEnum;
 import br.com.infox.seam.exception.BusinessException;
@@ -46,6 +39,11 @@ public abstract class PrimitiveFormType implements FormType {
     }
     
     @Override
+    public Object convertToFormValue(Object value) {
+        return value;
+    }
+    
+    @Override
     public void performValue(FormField formField, FormData formData) {
         // do nothing
     }
@@ -68,16 +66,6 @@ public abstract class PrimitiveFormType implements FormType {
         
         public StringFormType(String name, String path) {
             super(name, path, ValueType.STRING);
-        }
-
-        @Override
-        public TypedValue convertToFormValue(Object value) {
-            if (value == null) {
-                return new PrimitiveTypedValue.StringValue(null);
-            } else if (value instanceof String) {
-                return new PrimitiveTypedValue.StringValue((String) value);
-            }
-            throw new IllegalArgumentException("Object " + value + " cannot be converted");
         }
     }
     
@@ -102,13 +90,11 @@ public abstract class PrimitiveFormType implements FormType {
         }
         
         @Override
-        public TypedValue convertToFormValue(Object value) {
+        public Object convertToFormValue(Object value) {
             if (value == null) {
                 value = Boolean.FALSE;
-            } else if (value instanceof String) {
-                value = Boolean.valueOf((String) value);
             }
-            return new PrimitiveTypedValue.BooleanValue((Boolean) value);
+            return value;
         }
     }
     
@@ -116,14 +102,6 @@ public abstract class PrimitiveFormType implements FormType {
         
         public IntegerFormType() {
             super("integer", "/Processo/form/integer.xhtml", ValueType.INTEGER);
-        }
-
-        @Override
-        public TypedValue convertToFormValue(Object value) {
-            if (value != null && (value instanceof String)) {
-                value = Integer.valueOf((String) value);
-            }
-            return new PrimitiveTypedValue.IntegerValue((Integer) value);
         }
     }
     
@@ -146,31 +124,12 @@ public abstract class PrimitiveFormType implements FormType {
             formField.getProperties().put("validatorId", validacaoData.getValidatorId());
         }
         
-        @Override
-        public TypedValue convertToFormValue(Object value) {
-            if (value != null && (value instanceof String)) {
-                try {
-                    value = PrimitiveValueType.DateValueType.DATE_FORMAT.parse((String) value);
-                } catch (ParseException e) {
-                    throw new IllegalArgumentException("Invalid dateFormat " + value);
-                }
-            }
-            return new PrimitiveTypedValue.DateValue((Date) value);
-        }
     }
     
     public static class MonetaryFormType extends PrimitiveFormType {
         
         public MonetaryFormType() {
             super("monetary", "/Processo/form/monetary.xhtml", ValueType.DOUBLE);
-        }
-        
-        @Override
-        public TypedValue convertToFormValue(Object value) {
-            if (value != null && (value instanceof String)) {
-                value = Double.valueOf((String) value);
-            }
-            return new PrimitiveTypedValue.DoubleValue((Double) value);
         }
     }
     
@@ -187,11 +146,6 @@ public abstract class PrimitiveFormType implements FormType {
             formField.getProperties().put("framePath", framePath);
         }
 
-        @Override
-        public TypedValue convertToFormValue(Object value) {
-            return NullValue.INSTANCE;
-        }
-        
         @Override
         public boolean isPersistable() {
             return false;
@@ -212,11 +166,6 @@ public abstract class PrimitiveFormType implements FormType {
         }
 
         @Override
-        public TypedValue convertToFormValue(Object value) {
-            return NullValue.INSTANCE;
-        }
-        
-        @Override
         public boolean isPersistable() {
             return false;
         }
@@ -233,11 +182,6 @@ public abstract class PrimitiveFormType implements FormType {
             this.path = "/WEB-INF/taskpages/" + formField.getId() + ".xhtml";
         }
 
-        @Override
-        public TypedValue convertToFormValue(Object value) {
-            return NullValue.INSTANCE;
-        }
-        
         @Override
         public boolean isPersistable() {
             return false;

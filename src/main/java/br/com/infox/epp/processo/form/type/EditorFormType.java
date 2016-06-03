@@ -15,8 +15,6 @@ import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
 import br.com.infox.epp.processo.form.StartFormData;
 import br.com.infox.epp.processo.form.TaskFormData;
-import br.com.infox.epp.processo.form.variable.value.FileValue;
-import br.com.infox.epp.processo.form.variable.value.TypedValue;
 
 public class EditorFormType extends FileFormType {
 
@@ -30,14 +28,14 @@ public class EditorFormType extends FileFormType {
         List<ModeloDocumento> modelos = readModelosDocumento(formField, formData);
         formField.addProperty("modelosDocumento", modelos);
         formField.addProperty("modeloDocumento", null);
-        Documento documento = formField.getValue(Documento.class);
+        Documento documento = formField.getTypedValue(Documento.class);
         if (documento != null && documento.getId() != null) {
             formField.addProperty("classificacaoDocumento", documento.getClassificacaoDocumento());
         }
     }
     
     public void performModeloDocumento(FormField formField, FormData formFata) {
-        Documento documento = (Documento) formField.getTypedValue().getValue();
+        Documento documento = formField.getTypedValue(Documento.class);
         ModeloDocumento modeloDocumento = formField.getProperty("modeloDocumento", ModeloDocumento.class);
         String evaluatedModelo = "";
         if (modeloDocumento != null) {
@@ -49,7 +47,7 @@ public class EditorFormType extends FileFormType {
     @Override
     public void performUpdate(FormField formField, FormData formData) {
         super.performUpdate(formField, formData);
-        Documento documento = formField.getValue(Documento.class);
+        Documento documento = formField.getTypedValue(Documento.class);
         ClassificacaoDocumento classificacaoDocumento = formField.getProperty("classificacaoDocumento", ClassificacaoDocumento.class);
         if (documento.getId() == null) {
             documento.setDescricao(formField.getLabel());
@@ -62,22 +60,22 @@ public class EditorFormType extends FileFormType {
             }
             DocumentoBin documentoBin = getDocumentoBinManager().update(documento.getDocumentoBin());
             documento.setDocumentoBin(documentoBin);
-            formField.getTypedValue().setValue(documento);
+            formField.setValue(documento);
         }
     }
     
     @Override
-    public TypedValue convertToFormValue(Object value) {
+    public Object convertToFormValue(Object value) {
         if (value == null) {
             Documento documento = createNewDocumento();
-            return new FileValue(documento);
+            return documento;
         } else {
             if (value instanceof String) {
                 value = Integer.valueOf((String) value);
             }
             if (value instanceof Integer) {
                 Documento documento = getDocumentoManager().find((Integer) value);
-                return new FileValue(documento);
+                return documento;
             }
         }
         throw new IllegalArgumentException("Cannot convert " + value + " to Documento");

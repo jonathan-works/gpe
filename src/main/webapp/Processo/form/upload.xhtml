@@ -13,7 +13,6 @@
 	
 	<ui:param name="varId" value="#{formField.id}"/>
   	<ui:param name="controller" value="#{formField.type}" />
-  	<ui:param name="typedValue" value="#{formField.typedValue}"/>
   	<ui:param name="required" value="#{formField.properties.required}" />
 	<ui:param name="readonly" value="#{formField.properties.readonly}" />
 	<ui:param name="classificacoesDocumento" value="#{formField.properties.classificacoesDocumento}"/>
@@ -23,7 +22,7 @@
 	     value="#{formField.properties.classificacaoDocumento}"
 	     items="#{classificacoesDocumento}"
 	     showLabelSelecione="true" required="false"
-	     rendered="#{not readonly and not typedValue.value.hasAssinatura() and not typedValue.value.documentoBin.suficientementeAssinado}"
+	     rendered="#{not readonly and not formField.value.hasAssinatura() and not formField.value.documentoBin.suficientementeAssinado}"
 	     disabled="#{classificacoesDocumento.size eq 1}">
 	     <a:ajax render="#{varId}UploadDiv #{varId}assinaturaDocumentoDiv" event="change" execute="@this" limitRender="true" />
     </wi:selectOneMenuEntity>
@@ -31,8 +30,8 @@
 	 <p:outputPanel id="#{varId}UploadDiv">
 	 
 	     <i:input id="#{varId}" required="#{formField.properties.required}" label="#{formField.label}"
-	 		rendered="#{not empty formField.properties.classificacaoDocumento and not readonly and not typedValue.value.hasAssinatura() 
-	 					and not typedValue.value.documentoBin.suficientementeAssinado}">
+	 		rendered="#{not empty formField.properties.classificacaoDocumento and not readonly and not formField.value.hasAssinatura() 
+	 					and not formField.value.documentoBin.suficientementeAssinado}">
 	 		<f:facet name="label">
 				<p:outputPanel id="#{varId}ToolTipDiv" styleClass="tooltip-parent" style="width:10px; display:inline-block; margin-left:10px;">
 					<h:graphicImage id="#{varId}HelpEditTipImg" url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
@@ -73,14 +72,14 @@
 		    </rich:fileUpload>
 	 	  </i:input>
 	
-		  <ui:fragment rendered="#{not empty typedValue.value}">
+		  <ui:fragment rendered="#{not empty formField.value}">
 		      <h:outputLabel for="#{varId}fieldSet" value="#{formField.label}" styleClass="name"
-		  	      rendered="#{readonly or typedValue.value.hasAssinatura() or typedValue.value.documentoBin.suficientementeAssinado}"/>
+		  	      rendered="#{readonly or formField.value.hasAssinatura() or formField.value.documentoBin.suficientementeAssinado}"/>
 		      <fieldset id="#{varId}fieldSet">
-	             <legend>Documento Anexado #{typedValue.value.hasAssinatura() ? '(já assinado, não pode ser substituído)' : ''}</legend>
-	             <h:outputText value="#{infoxMessages['processoDocumento.classificacaoDocumento']}: #{typedValue.value.classificacaoDocumento.descricao}"/>
+	             <legend>Documento Anexado #{formField.value.hasAssinatura() ? '(já assinado, não pode ser substituído)' : ''}</legend>
+	             <h:outputText value="#{infoxMessages['processoDocumento.classificacaoDocumento']}: #{formField.value.classificacaoDocumento.descricao}"/>
 	             <br />
-	             <h:outputText id="file#{varId}" value="Documento: #{typedValue.value.documentoBin.nomeArquivo}"/>
+	             <h:outputText id="file#{varId}" value="Documento: #{formField.value.documentoBin.nomeArquivo}"/>
 	            	<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}" title="Visualizar" 
 	            		style="cursor: pointer" onclick="infox.openPopUp('documento', '#{controller.getUrlDownload(formField)}');" />
 	          </fieldset>
@@ -102,7 +101,7 @@
 				signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
 				reRender="pageBodyDialogMessage, #{varId}UploadDiv, #{varId}ClassificacaoDocumento"
 				tokenField="#{controller.tokenToSign}"
-				propertyValue="#{typedValue.value}"
+				propertyValue="#{formField.value}"
 				propertyTarget="#{controller.documentoToSign}"
 				signableData="#{controller.documentoToSign.documentoBin.md5Documento}"
 				functionPreSign="infox.showLoading();"

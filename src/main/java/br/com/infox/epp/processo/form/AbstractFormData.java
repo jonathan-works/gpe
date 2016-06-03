@@ -46,7 +46,7 @@ public abstract class AbstractFormData implements FormData {
         formField.setType(formType);
         formField.setId(variableName);
         formField.setLabel(label);
-        formField.setTypedValue(formType.convertToFormValue(getVariable(variableName)));
+        formField.setValue(formType.convertToFormValue(getVariable(variableName)));
         formField.setProperties(createProperties(variableAccess));
         formType.performValue(formField, this);
         getFormFields().add(formField);

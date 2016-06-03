@@ -25,23 +25,23 @@ public class VariavelInicioProcessoService extends PersistenceController {
     public Object getVariavel(Processo processo, String name) {
         VariavelInicioProcesso variavel = variavelInicioProcessoSearch.getVariavelInicioProcesso(processo, name);
         if (variavel != null) {
-            return variavel.getValue();
+            return variavel.getTypedValue();
         }
         return null;
     }
     
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void setVariavel(Processo processo, String name, TypedValue value) {
+    public void setVariavel(Processo processo, String name, TypedValue typedValue) {
         VariavelInicioProcesso variavel = variavelInicioProcessoSearch.getVariavelInicioProcesso(processo, name);
         if (variavel == null) {
             variavel = new VariavelInicioProcesso();
             variavel.setName(name);
             variavel.setProcesso(processo);
-            variavel.setType(value.getType().getName());
-            variavel.setValue(value.getType().convertToStringValue(value));
+            variavel.setType(typedValue.getType().getName());
+            variavel.setValue(typedValue.getType().convertToStringValue(typedValue.getValue()));
             dao.persist(variavel);
         } else {
-            variavel.setValue(value.getType().convertToStringValue(value));
+            variavel.setValue(typedValue.getType().convertToStringValue(typedValue.getValue()));
             dao.update(variavel);
         }
     }

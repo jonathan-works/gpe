@@ -84,7 +84,7 @@
 		   			<f:converter converterId="stringConverter" />
 				    </h:inputTextarea>
 				    <div id="#{id}counterDiv">
-				      (0 / #{maxlength})
+				      ( #{empty cc.attrs.value ? 0 : cc.attrs.value.length()} / #{maxlength} )
 				    </div>
         		</div>
         	</div>
