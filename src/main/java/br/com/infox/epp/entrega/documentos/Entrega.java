@@ -42,8 +42,7 @@ public class Entrega implements Serializable {
 	@JoinColumn(name = "id_localizacao", nullable = false)
 	private Localizacao localizacao;
 
-	@NotNull
-	@Column(name = "dt_entrega", nullable = false)
+	@Column(name = "dt_entrega")
 	private Date dataEntrega;
 
 	@NotNull
@@ -56,7 +55,6 @@ public class Entrega implements Serializable {
 	@JoinColumn(name = "id_pasta", nullable = false)
 	private Pasta pasta;
 
-	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_usuario_entrega")
 	private UsuarioLogin usuarioEntrega;
