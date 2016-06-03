@@ -26,16 +26,23 @@
                         value="#{categoriaEntregaView.modeloEntregaController.modeloCertidao}"
                         converter="br.com.infox.jsf.converter.EntityConverter"
                         completeMethod="#{categoriaEntregaView.modeloEntregaController.completeModeloCertidao}"
-                        itemLabel="#{item.tituloModeloDocumento}" itemValue="#{item}" />
+                        itemLabel="#{item.tituloModeloDocumento}" itemValue="#{item}">
+                        <f:facet name="itemtip">
+                            <i:input label="#{infoxMessages['modeloDocumento.tipoModeloDocumento']}">
+                                <h:outputText value="#{item.tipoModeloDocumento}" />
+                            </i:input>
+                        </f:facet>
+                    </i:autoComplete>
                     <i:autoComplete id="pasta" required="true" dropdown="true"
                         value="#{categoriaEntregaView.modeloEntregaController.modeloPasta}"
                         converter="br.com.infox.jsf.converter.EntityConverter"
                         completeMethod="#{categoriaEntregaView.modeloEntregaController.completeModeloPasta}"
-                        itemLabel="#{item.nome}" itemValue="#{item}">
-                        <f:facet name="label">
-                            <img
-                                src="#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','create_new_folder')}" /> Pasta
-                    </f:facet>
+                        itemLabel="#{item.nome}" itemValue="#{item}" label="Pasta">
+                        <f:facet name="itemtip">
+                            <i:input label="#{infoxMessages['fluxo.descricao']}">
+                                <h:outputText value="#{item.fluxo}" />
+                            </i:input>
+                        </f:facet>
                     </i:autoComplete>
                     <i:selectOneRadio required="true" label="Ativo"
                         items="#{selectItemFunctions.createFromString('true:entity.ativo,false:entity.inativo')}"
@@ -50,8 +57,14 @@
                                 converter="br.com.infox.jsf.converter.EntityConverter"
                                 dropdown="true" dropdownMode="current"
                                 completeMethod="#{categoriaEntregaView.modeloEntregaController.classificacaoDocumentoEntregaController.completeClassificacaoDocumento}"
-                                itemLabel="#{item.codigoDocumento.concat(' - ').concat(item.descricao)}"
-                                itemValue="#{item}" />
+                                itemLabel="#{item.descricao}"
+                                itemValue="#{item}">
+                                <f:facet name="itemtip">
+                                    <i:input label="#{infoxMessages['tipoProcessoDocumento.codigoDocumento']}">
+                                        <h:outputText value="#{item.codigoDocumento}" />
+                                    </i:input>
+                                </f:facet>
+                            </i:autoComplete>
                             <h:commandButton styleClass="buttons" value="Adicionar"
                                 action="#{categoriaEntregaView.modeloEntregaController.classificacaoDocumentoEntregaController.adicionar}">
                                 <p:ajax process="@parent" update="@parent" />
@@ -117,8 +130,14 @@
                                 converter="br.com.infox.jsf.converter.EntityConverter"
                                 dropdown="true" dropdownMode="current"
                                 completeMethod="#{categoriaEntregaView.modeloEntregaController.tipoResponsavelEntregaController.completeTipoResponsavel}"
-                                itemLabel="#{item.identificador.concat(' - ').concat(item.descricao)}"
-                                itemValue="#{item}" />
+                                itemLabel="#{item.descricao}"
+                                itemValue="#{item}">
+                                <f:facet name="itemtip">
+                                    <i:input label="#{infoxMessages['tipoParte.identificador']}">
+                                        <h:outputText value="#{item.identificador}" />
+                                    </i:input>
+                                </f:facet>
+                            </i:autoComplete>
                             <h:commandButton styleClass="buttons" value="Adicionar"
                                 action="#{categoriaEntregaView.modeloEntregaController.tipoResponsavelEntregaController.adicionar}">
                                 <p:ajax process="@parent" update="@parent" />
