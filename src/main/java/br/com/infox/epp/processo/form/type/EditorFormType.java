@@ -6,6 +6,7 @@ import java.util.List;
 import org.jbpm.graph.def.Event;
 
 import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -14,27 +15,30 @@ import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
 import br.com.infox.epp.processo.form.StartFormData;
 import br.com.infox.epp.processo.form.TaskFormData;
-import br.com.infox.epp.processo.form.variable.value.EditorValueImpl;
+import br.com.infox.epp.processo.form.variable.value.FileValue;
 import br.com.infox.epp.processo.form.variable.value.TypedValue;
-import br.com.infox.epp.processo.form.variable.value.ValueType;
 
 public class EditorFormType extends FileFormType {
 
     public EditorFormType() {
-        super("editor", "/Processo/form/editor.xhtml", ValueType.EDITOR);
+        super("editor", "/Processo/form/editor.xhtml");
     }
     
     @Override
     public void performValue(FormField formField, FormData formData) {
         super.performValue(formField, formData);
-        EditorValueImpl typedValue = (EditorValueImpl) formField.getTypedValue();
         List<ModeloDocumento> modelos = readModelosDocumento(formField, formData);
-        typedValue.setModelosDocumento(modelos);
+        formField.addProperty("modelosDocumento", modelos);
+        formField.addProperty("modeloDocumento", null);
+        Documento documento = formField.getValue(Documento.class);
+        if (documento != null && documento.getId() != null) {
+            formField.addProperty("classificacaoDocumento", documento.getClassificacaoDocumento());
+        }
     }
     
-    public void performModeloDocumento(EditorValueImpl editorValue, FormData formFata) {
-        Documento documento = editorValue.getValue();
-        ModeloDocumento modeloDocumento = editorValue.getModeloDocumento();
+    public void performModeloDocumento(FormField formField, FormData formFata) {
+        Documento documento = (Documento) formField.getTypedValue().getValue();
+        ModeloDocumento modeloDocumento = formField.getProperty("modeloDocumento", ModeloDocumento.class);
         String evaluatedModelo = "";
         if (modeloDocumento != null) {
             evaluatedModelo = getModeloDocumentoManager().evaluateModeloDocumento(modeloDocumento, formFata.getExpressionResolver());
@@ -45,18 +49,20 @@ public class EditorFormType extends FileFormType {
     @Override
     public void performUpdate(FormField formField, FormData formData) {
         super.performUpdate(formField, formData);
-        EditorValueImpl editorValue = (EditorValueImpl) formField.getTypedValue();
-        Documento documento = editorValue.getValue();
+        Documento documento = formField.getValue(Documento.class);
+        ClassificacaoDocumento classificacaoDocumento = formField.getProperty("classificacaoDocumento", ClassificacaoDocumento.class);
         if (documento.getId() == null) {
             documento.setDescricao(formField.getLabel());
-            documento.setClassificacaoDocumento(editorValue.getClassificacaoDocumento());
+            documento.setClassificacaoDocumento(classificacaoDocumento);
             getDocumentoBinManager().createProcessoDocumentoBin(documento);
             getDocumentoManager().gravarDocumentoNoProcesso(formData.getProcesso(), documento);
         } else {
-            if (!documento.getClassificacaoDocumento().equals(editorValue.getClassificacaoDocumento())) {
-                getDocumentoManager().update(documento);
+            if (!documento.getClassificacaoDocumento().equals(classificacaoDocumento)) {
+                documento = getDocumentoManager().update(documento);
             }
-            getDocumentoBinManager().update(documento.getDocumentoBin());
+            DocumentoBin documentoBin = getDocumentoBinManager().update(documento.getDocumentoBin());
+            documento.setDocumentoBin(documentoBin);
+            formField.getTypedValue().setValue(documento);
         }
     }
     
@@ -64,17 +70,17 @@ public class EditorFormType extends FileFormType {
     public TypedValue convertToFormValue(Object value) {
         if (value == null) {
             Documento documento = createNewDocumento();
-            return new EditorValueImpl(documento);
+            return new FileValue(documento);
         } else {
             if (value instanceof String) {
                 value = Integer.valueOf((String) value);
             }
             if (value instanceof Integer) {
                 Documento documento = getDocumentoManager().find((Integer) value);
-                return new EditorValueImpl(documento);
+                return new FileValue(documento);
             }
         }
-        return null;
+        throw new IllegalArgumentException("Cannot convert " + value + " to Documento");
     }
 
     private Documento createNewDocumento() {

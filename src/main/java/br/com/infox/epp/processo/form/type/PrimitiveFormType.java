@@ -136,7 +136,7 @@ public abstract class PrimitiveFormType implements FormType {
         @Override
         public void performValue(FormField formField, FormData formData) {
             super.performValue(formField, formData);
-            String extendedProperties = formField.getProperties().get("extendedProperties");
+            String extendedProperties = (String) formField.getProperties().get("extendedProperties");
             ValidacaoDataEnum validacaoData = null;
             if (extendedProperties == null) {
                 validacaoData = ValidacaoDataEnum.L;

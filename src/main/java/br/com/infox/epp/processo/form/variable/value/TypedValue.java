@@ -4,5 +4,7 @@ public interface TypedValue {
 
     Object getValue();
     
+    void setValue(Object object);
+    
     ValueType getType();
 }

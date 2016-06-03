@@ -19,7 +19,7 @@ import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.form.variable.value.UploadValueImpl;
+import br.com.infox.epp.processo.form.FormField;
 import br.com.infox.epp.processo.home.ProcessoEpaHome;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.seam.exception.BusinessException;
@@ -69,18 +69,20 @@ public class FileVariableHandler {
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void gravarDocumento(UploadedFile file, String variableFieldName, UploadValueImpl typedValue, Processo processo) {
-        if (typedValue.getValue() != null) {
+	public void gravarDocumento(UploadedFile file, String variableFieldName, FormField formField, Processo processo) {
+	    Documento documento = formField.getValue(Documento.class);
+	    ClassificacaoDocumento classificacaoDocumento = formField.getProperty("classificacaoDocumento", ClassificacaoDocumento.class);
+        if (documento != null) {
             try {
-                removeDocumento(typedValue.getValue());
+                removeDocumento(documento);
             } catch (DAOException e) {
                 throw new BusinessRollbackException(e);
             }
         }
-        Documento documento = createDocumento(file, typedValue.getClassificacaoDocumento());
+        documento = createDocumento(file, classificacaoDocumento);
         try {
             documentoManager.gravarDocumentoNoProcesso(processo, documento);
-            typedValue.setValue(documento);
+            formField.getTypedValue().setValue(documento);
         } catch (DAOException | BusinessException e) {
             throw new BusinessRollbackException(e);
         }

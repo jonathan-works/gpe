@@ -13,7 +13,7 @@ public class FormField {
     protected FormType type;
     protected TypedValue defaultValue;
     protected TypedValue typedValue;
-    protected Map<String, String> properties = new HashMap<String, String>();
+    protected Map<String, Object> properties = new HashMap<>();
 
     public String getId() {
         return id;
@@ -62,16 +62,24 @@ public class FormField {
     public void setTypedValue(TypedValue typedValue) {
         this.typedValue = typedValue;
     }
+    
+    public <T> T getValue(Class<T> type) {
+        return type.cast(typedValue.getValue());
+    }
 
-    public Map<String, String> getProperties() {
+    public Map<String, Object> getProperties() {
         return properties;
     }
     
-    public void setProperties(Map<String, String> properties) {
+    public void setProperties(Map<String, Object> properties) {
         this.properties = properties;
     }
+    
+    public <T> T getProperty(String key, Class<T> type) {
+        return type.cast(properties.get(key));
+    }
 
-    public void addProperties(String key, String value) {
+    public void addProperty(String key, Object value) {
         properties.put(key, value);
     }
 }

@@ -1,9 +1,6 @@
 package br.com.infox.epp.processo.form.variable.value;
 
 import java.util.Date;
-import java.util.List;
-
-import javax.faces.model.SelectItem;
 
 public abstract class PrimitiveTypedValue<T> implements TypedValue {
 
@@ -31,8 +28,8 @@ public abstract class PrimitiveTypedValue<T> implements TypedValue {
         return value;
     }
     
-    public void setValue(T value) {
-        this.value = value;
+    public void setValue(Object value) {
+        this.value = javaType.cast(value);
     }
     
     public static class NullValue extends PrimitiveTypedValue<Void>  {
@@ -93,37 +90,4 @@ public abstract class PrimitiveTypedValue<T> implements TypedValue {
         }
     }
     
-    public static class EnumerationValue extends StringValue {
-        
-        protected List<SelectItem> selectItems;
-
-        public EnumerationValue(String value) {
-            super(value);
-        }
-
-        public List<SelectItem> getSelectItems() {
-            return selectItems;
-        }
-
-        public void setSelectItems(List<SelectItem> selectItems) {
-            this.selectItems = selectItems;
-        }
-    }
-    
-    public static class EnumerationMultipleValue extends StringArrayValue {
-        
-        protected List<SelectItem> selectItems;
-
-        public EnumerationMultipleValue(String[] value) {
-            super(value);
-        }
-
-        public List<SelectItem> getSelectItems() {
-            return selectItems;
-        }
-
-        public void setSelectItems(List<SelectItem> selectItems) {
-            this.selectItems = selectItems;
-        }
-    }
 }

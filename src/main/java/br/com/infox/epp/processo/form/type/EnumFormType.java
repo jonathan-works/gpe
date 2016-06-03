@@ -13,8 +13,6 @@ import com.google.gson.GsonBuilder;
 import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
 import br.com.infox.epp.processo.form.variable.value.PrimitiveTypedValue;
-import br.com.infox.epp.processo.form.variable.value.PrimitiveTypedValue.EnumerationMultipleValue;
-import br.com.infox.epp.processo.form.variable.value.PrimitiveTypedValue.EnumerationValue;
 import br.com.infox.epp.processo.form.variable.value.TypedValue;
 import br.com.infox.epp.processo.form.variable.value.ValueType;
 import br.com.infox.ibpm.variable.dao.ListaDadosSqlDAO;
@@ -39,25 +37,23 @@ public abstract class EnumFormType extends PrimitiveFormType {
         return true;
     }
     
-    public abstract void setSelectItems(List<SelectItem> selectItens, TypedValue typedValue);
-
     @Override
     public void performValue(FormField formField, FormData formData) {
-        Integer idDominio = Integer.valueOf(formField.getProperties().get("extendedProperties"));
+        Integer idDominio = Integer.valueOf((String)formField.getProperties().get("extendedProperties"));
         DominioVariavelTarefaManager dominioVariavelTarefaManager = getDominioVariavelTarefaManager();
-        List<SelectItem> selectItens = new ArrayList<>();
+        List<SelectItem> selectItems = new ArrayList<>();
         DominioVariavelTarefa dominio = dominioVariavelTarefaManager.find(idDominio);
         if (dominio.isDominioSqlQuery()) {
             ListaDadosSqlDAO listaDadosSqlDAO = ComponentUtil.getComponent(ListaDadosSqlDAO.NAME);
-            selectItens.addAll(listaDadosSqlDAO.getListSelectItem(dominio.getDominio()));
+            selectItems.addAll(listaDadosSqlDAO.getListSelectItem(dominio.getDominio()));
         } else {
             String[] itens = dominio.getDominio().split(";");
             for (String item : itens) {
                 String[] pair = item.split("=");
-                selectItens.add(new SelectItem(pair[1], pair[0]));
+                selectItems.add(new SelectItem(pair[1], pair[0]));
             }
         }
-        setSelectItems(selectItens, formField.getTypedValue());
+        formField.addProperty("selectItems", selectItems);
     }
         
     protected DominioVariavelTarefaManager getDominioVariavelTarefaManager() {
@@ -73,17 +69,11 @@ public abstract class EnumFormType extends PrimitiveFormType {
         @Override
         public TypedValue convertToFormValue(Object value) {
             if (value == null) {
-                return new PrimitiveTypedValue.EnumerationValue(null);
+                return new PrimitiveTypedValue.StringValue(null);
             } else if (value instanceof String) {
-                return new PrimitiveTypedValue.EnumerationValue((String) value);
+                return new PrimitiveTypedValue.StringValue((String) value);
             }
             throw new IllegalArgumentException("Cannot convert '" + value + "' to String");
-        }
-
-        @Override
-        public void setSelectItems(List<SelectItem> selectItens, TypedValue typedValue) {
-            EnumerationValue enumValue = (EnumerationValue) typedValue;
-            enumValue.setSelectItems(selectItens);
         }
     }
     
@@ -96,24 +86,17 @@ public abstract class EnumFormType extends PrimitiveFormType {
         @Override
         public TypedValue convertToFormValue(Object value) {
             if (value == null) {
-                return new PrimitiveTypedValue.EnumerationMultipleValue(null);
+                return new PrimitiveTypedValue.StringArrayValue(null);
             } 
             Gson GSON = new GsonBuilder().create();
             if (value instanceof String) {
                 String[] array = GSON.fromJson((String) value, String[].class);
-                return new PrimitiveTypedValue.EnumerationMultipleValue(array);
+                return new PrimitiveTypedValue.StringArrayValue(array);
             }
             if (value instanceof String[]) {
-                return new PrimitiveTypedValue.EnumerationMultipleValue((String[]) value);
+                return new PrimitiveTypedValue.StringArrayValue((String[]) value);
             }
             throw new IllegalArgumentException("Cannot convert '" + value + "' to String[]");
         }
-
-        @Override
-        public void setSelectItems(List<SelectItem> selectItens, TypedValue typedValue) {
-            EnumerationMultipleValue enumValue = (EnumerationMultipleValue) typedValue;
-            enumValue.setSelectItems(selectItens);
-        }
     }
-
 }

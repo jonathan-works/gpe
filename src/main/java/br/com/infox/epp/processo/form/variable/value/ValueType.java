@@ -1,7 +1,5 @@
 package br.com.infox.epp.processo.form.variable.value;
 
-import br.com.infox.epp.processo.form.variable.value.FileValueType.EditorValueType;
-import br.com.infox.epp.processo.form.variable.value.FileValueType.UploadValueType;
 import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.BooleanValueType;
 import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.DateValueType;
 import br.com.infox.epp.processo.form.variable.value.PrimitiveValueType.DoubleValueType;
@@ -22,10 +20,9 @@ public interface ValueType {
     public static PrimitiveValueType DATE = new DateValueType();
     public static PrimitiveValueType STRING_ARRAY = new StringArrayValueType();
     
-    public static FileValueType EDITOR = new EditorValueType();
-    public static FileValueType UPLOAD = new UploadValueType();
+    public static FileValueType FILE = new FileValueType();
     
-    public static ValueType[] TYPES = {NULL, STRING, INTEGER,LONG, DOUBLE, BOOLEAN, DATE, EDITOR, UPLOAD};
+    public static ValueType[] TYPES = {NULL, STRING, INTEGER,LONG, DOUBLE, BOOLEAN, DATE, FILE};
     
     String getName();
     

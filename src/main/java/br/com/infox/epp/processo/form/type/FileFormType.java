@@ -26,7 +26,6 @@ import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
-import br.com.infox.epp.processo.form.variable.value.FileTypedValue;
 import br.com.infox.epp.processo.form.variable.value.ValueType;
 import br.com.infox.seam.exception.BusinessException;
 
@@ -34,13 +33,11 @@ public abstract class FileFormType implements FormType {
     
     protected String name;
     protected String path;
-    protected ValueType valueType;
     protected Documento documentoToSign;
     protected String tokenToSign;
     
-    public FileFormType(String name, String path, ValueType valueType) {
+    public FileFormType(String name, String path) {
         this.name = name;
-        this.valueType = valueType;
         this.path = path;
     }
     
@@ -51,7 +48,7 @@ public abstract class FileFormType implements FormType {
     
     @Override
     public ValueType getValueType() {
-        return valueType;
+        return ValueType.FILE;
     }
     
     @Override
@@ -65,20 +62,18 @@ public abstract class FileFormType implements FormType {
     
     @Override
     public void performValue(FormField formField, FormData formData) {
-        FileTypedValue typedValue = (FileTypedValue) formField.getTypedValue();
         String variableName = formField.getId();
         Integer idFluxo = formData.getProcesso().getNaturezaCategoriaFluxo().getFluxo().getIdFluxo();
         List<ClassificacaoDocumento> classificacoes = getVariavelClassificacaoDocumentoManager().listClassificacoesPublicadasDaVariavel(variableName, idFluxo);
-        typedValue.setClassificacoesDocumento(classificacoes);
+        formField.addProperty("classificacoesDocumento", classificacoes);
         if (classificacoes.size() == 1) {
-            typedValue.setClassificacaoDocumento(classificacoes.get(0));
+            formField.addProperty("classificacaoDocumento", classificacoes.get(0));
         }
     }
     
     @Override
     public void validate(FormField formField, FormData formData) throws BusinessException {
-        FileTypedValue typedValue = (FileTypedValue) formField.getTypedValue();
-        Documento documento = typedValue.getValue();
+        Documento documento = (Documento) formField.getTypedValue().getValue();
         boolean assinaturaVariavelOk = validarAssinaturaDocumento(documento);
         if (!assinaturaVariavelOk) {
             throw new BusinessException(String.format(InfoxMessages.getInstance().get("assinaturaDocumento.faltaAssinatura"), formField.getLabel()));
@@ -104,6 +99,13 @@ public abstract class FileFormType implements FormType {
         boolean isValid = getAssinaturaDocumentoService().isDocumentoTotalmenteAssinado(documento)
                 || !documento.isAssinaturaObrigatoria(papel) || documento.isDocumentoAssinado(papel);
         return isValid;
+    }
+    
+    public boolean podeAssinar(FormField formField) {
+        Documento documento = formField.getValue(Documento.class);
+        return documento != null && documento.getId() != null 
+                && documento.isDocumentoAssinavel(Authenticator.getPapelAtual())
+                && !documento.isDocumentoAssinado(Authenticator.getPapelAtual());
     }
     
     public Documento getDocumentoToSign() {

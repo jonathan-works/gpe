@@ -16,40 +16,41 @@
   	<ui:param name="typedValue" value="#{formField.typedValue}"/>
   	<ui:param name="required" value="#{formField.properties.required}" />
 	<ui:param name="readonly" value="#{formField.properties.readonly}" />
+	<ui:param name="classificacoesDocumento" value="#{formField.properties.classificacoesDocumento}"/>
     
     <wi:selectOneMenuEntity id="#{varId}ClassificacaoDocumento"
 	     label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-	     value="#{typedValue.classificacaoDocumento}"
-	     items="#{typedValue.classificacoesDocumento}"
+	     value="#{formField.properties.classificacaoDocumento}"
+	     items="#{classificacoesDocumento}"
 	     showLabelSelecione="true" required="false"
 	     rendered="#{not readonly and not typedValue.value.hasAssinatura() and not typedValue.value.documentoBin.suficientementeAssinado}"
-	     disabled="#{typedValue.classificacoesDocumento.size eq 1}">
+	     disabled="#{classificacoesDocumento.size eq 1}">
 	     <a:ajax render="#{varId}UploadDiv #{varId}assinaturaDocumentoDiv" event="change" execute="@this" limitRender="true" />
     </wi:selectOneMenuEntity>
  
 	 <p:outputPanel id="#{varId}UploadDiv">
 	 
 	     <i:input id="#{varId}" required="#{formField.properties.required}" label="#{formField.label}"
-	 		rendered="#{not empty typedValue.classificacaoDocumento and not readonly and not typedValue.value.hasAssinatura() 
+	 		rendered="#{not empty formField.properties.classificacaoDocumento and not readonly and not typedValue.value.hasAssinatura() 
 	 					and not typedValue.value.documentoBin.suficientementeAssinado}">
 	 		<f:facet name="label">
 				<p:outputPanel id="#{varId}ToolTipDiv" styleClass="tooltip-parent" style="width:10px; display:inline-block; margin-left:10px;">
 					<h:graphicImage id="#{varId}HelpEditTipImg" url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
 					<div class="epp-tooltip">
 						<div class="tooltip-panel">
-							<s:div rendered="#{empty typedValue.classificacaoDocumento}">
+							<s:div rendered="#{empty formField.properties.classificacaoDocumento}">
 								<h:outputText value="Selecione uma classificação de documento" />
 							</s:div>
-							<s:div rendered="#{not empty typedValue.classificacaoDocumento}">
+							<s:div rendered="#{not empty formField.properties.classificacaoDocumento}">
 								<div><h:outputText value="Extensões Aceitas:"/></div>
-								<ui:repeat var="documento" value="#{typedValue.classificacaoDocumento.acceptedTypesList}">
+								<ui:repeat var="documento" value="#{formField.properties.classificacaoDocumento.acceptedTypesList}">
 									<div><h:outputText value="#{documento}" styleClass="tooltip-panel-div"/></div>
 								</ui:repeat>
-								<s:div styleClass="tooltip-panel-top" rendered="#{not empty typedValue.classificacaoDocumento.observacao}">
+								<s:div styleClass="tooltip-panel-top" rendered="#{not empty formField.properties.classificacaoDocumento.observacao}">
 									<div>
 										<h:outputText value="Observação:"/>
 									</div>
-									<h:outputText value="#{typedValue.classificacaoDocumento.observacao}" />
+									<h:outputText value="#{formField.properties.classificacaoDocumento.observacao}" />
 								</s:div>
 							</s:div>
 						</div>
@@ -65,7 +66,7 @@
 		       sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}"
 		       maxFilesQuantity="10" listHeight="50px" immediateUpload="true" noDuplicate="true"
 		       render="pageBodyDialogMessage, #{varId}UploadDiv, #{varId}assinaturaDocumentoDiv"
-		       acceptedTypes="#{typedValue.classificacaoDocumento.acceptedTypes}"
+		       acceptedTypes="#{formField.properties.classificacaoDocumento.acceptedTypes}"
 		       ontyperejected="new infox.Messages({'timeout': 3000}).dialog(\'#{infoxMessages['processoDocumento.extensaoNaoPermitida']}\')">
 		       <f:attribute name="formField" value="#{formField}" />
 		       <f:attribute name="formData" value="#{formData}" />
@@ -81,7 +82,7 @@
 	             <br />
 	             <h:outputText id="file#{varId}" value="Documento: #{typedValue.value.documentoBin.nomeArquivo}"/>
 	            	<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}" title="Visualizar" 
-	            		style="cursor: pointer" onclick="infox.openPopUp('documento', '#{typedValue.getUrlDownload()}');" />
+	            		style="cursor: pointer" onclick="infox.openPopUp('documento', '#{controller.getUrlDownload(formField)}');" />
 	          </fieldset>
 	      </ui:fragment>
 	    
@@ -89,7 +90,7 @@
 
     <p:outputPanel id="#{varId}assinaturaDocumentoDiv" >
 	   
-	    <p:outputPanel id="#{varId}conteudoAssinatura" rendered="#{typedValue.podeAssinar()}">
+	    <p:outputPanel id="#{varId}conteudoAssinatura" rendered="#{controller.podeAssinar(formField)}">
 			
 			<a:jsFunction name="assinar" action="#{controller.assinar()}"
 				execute="@this, #{varId}assinaturaDocumentoDiv"

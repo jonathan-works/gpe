@@ -61,8 +61,8 @@ public abstract class AbstractFormData implements FormData {
         return formType;
     }
     
-    protected Map<String, String> createProperties(VariableAccess variableAccess) {
-        Map<String, String> properties = new HashMap<>();
+    protected Map<String, Object> createProperties(VariableAccess variableAccess) {
+        Map<String, Object> properties = new HashMap<>();
         if (variableAccess.isRequired()) {
             properties.put("required", "true");
         }

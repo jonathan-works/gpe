@@ -2,17 +2,11 @@ package br.com.infox.epp.processo.form.variable.value;
 
 import br.com.infox.epp.processo.documento.entity.Documento;
 
-public abstract class FileValueType implements ValueType {
-    
-    protected String name;
-    
-    public FileValueType(String name) {
-        this.name = name;
-    }
+public class FileValueType implements ValueType {
     
     @Override
     public String getName() {
-        return name;
+        return "file";
     }
     
     @Override
@@ -33,19 +27,4 @@ public abstract class FileValueType implements ValueType {
         return typedValue.getValue() == null ? null : typedValue.getValue().toString();
     }
     
-    public static class EditorValueType extends FileValueType {
-
-        public EditorValueType() {
-            super("editor");
-        }
-        
-    }
-    
-    public static class UploadValueType extends FileValueType {
-
-        public UploadValueType() {
-            super("upload");
-        }
-        
-    }
 }

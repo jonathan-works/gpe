@@ -23,7 +23,7 @@
   	
   	<i:selectManyMenu id="#{varId}" value="#{typedValue.value}" required="#{required}"
         disabled="#{disabled or readonly}" readonly="#{readonly}" 
-        items="#{typedValue.selectItems}" label="#{formField.label}"
+        items="#{formField.properties.selectItems}" label="#{formField.label}"
         styleClass="selectManyMenu"/>
     
 </ui:composition>

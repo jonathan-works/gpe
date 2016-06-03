@@ -17,6 +17,6 @@
   	
   	<i:selectOneMenu id="#{varId}" value="#{typedValue.value}" required="#{required}"
         disabled="#{disabled or readonly}" readonly="#{readonly}" noSelectionLabel="#{infoxMessages['crud.select.select']}"
-        items="#{typedValue.selectItems}" label="#{formField.label}"/>
+        items="#{formField.properties.selectItems}" label="#{formField.label}"/>
     
 </ui:composition>
