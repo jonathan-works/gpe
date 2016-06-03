@@ -15,6 +15,7 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.fluxo.entity.ModeloPasta;
 import br.com.infox.epp.fluxo.manager.ModeloPastaManager;
 import br.com.infox.epp.processo.documento.dao.PastaDAO;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.entity.PastaRestricao;
 import br.com.infox.epp.processo.documento.filter.DocumentoFilter;
@@ -25,6 +26,7 @@ import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
+import br.com.infox.seam.exception.BusinessRollbackException;
 
 @AutoCreate
 @Name(PastaManager.NAME)
@@ -44,6 +46,8 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     private ModeloPastaManager modeloPastaManager;
     @In
     private ProcessoManager processoManager;
+    @In
+    private DocumentoManager documentoManager;
     
     public Pasta getDefaultFolder(Processo processo) throws DAOException {
         Pasta pasta = getDefault(processo);
@@ -208,5 +212,22 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
             pastaRestricao.setRead(true);
             pastaRestricaoManager.update(pastaRestricao);
         }
+    }
+    
+    public void copiarPastaDocumentosParaProcesso(Pasta pasta, Processo processo) {
+    	try {
+	    	Pasta copia = pasta.makeCopy();
+	    	copia.setProcesso(processo);
+	    	persist(pasta);
+	    	for (Documento documento : pasta.getDocumentosList()) {
+	    		documentoManager.persist(documento);
+	    	}
+	    	List<PastaRestricao> restricoes = pastaRestricaoManager.copyRestricoes(pasta, copia);
+	    	for (PastaRestricao restricao : restricoes) {
+	    		pastaRestricaoManager.persist(restricao);
+	    	}
+    	} catch (CloneNotSupportedException e) {
+    		throw new BusinessRollbackException(e);
+    	}
     }
 }
