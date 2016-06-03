@@ -21,7 +21,8 @@ import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 
 @Stateless
 public class EntregaService {
-	
+    public static final String PARAMETRO_ENTREGA_ENTREGA = "entrega";
+
 	@Inject
 	private ModeloDocumentoManager modeloDocumentoManager;
 	@Inject

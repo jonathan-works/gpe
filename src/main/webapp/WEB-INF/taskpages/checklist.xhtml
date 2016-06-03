@@ -1,0 +1,119 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:p="http://primefaces.org/ui">
+
+    <infox:div id="checklistMessage">
+        <h:outputText value="#{checklistView.message}" rendered="#{not empty checklistView.message}" />
+    </infox:div>
+
+    <infox:div rendered="#{checklistView.hasEntrega}">
+        <h:form id="blocoSituacaoForm">
+            <wi:selectOneMenuEnum id="blocoSituacaoMenu" label="#{infoxMessages['checklist.blocoSituacao.label']}"
+                value="#{checklistView.situacaoBloco}"
+                items="#{checklistView.checklistSituacaoOptions}"/>
+
+            <a:commandButton id="blocoSituacaoButton" styleClass="buttons"
+                value="#{infoxMessages['checklist.blocoSituacao.button']}" onclick="infox.showLoading();"
+                actionListener="#{checklistView.setBlockSituacao()}"
+                oncomplete="infox.hideLoading();" execute="@form"
+                render="checklistMessage pageBodyDialogMessage @form checklistTable" />
+        </h:form>
+        <h:form id="checklistTableform">
+            <p:dataTable id="checklistTable" widgetVar="checklistTable"
+                var="row" rowKey="#{row.id}" rowIndexVar="rowNumber" value="#{checklistView.documentoList}"
+                paginator="true" rows="20" lazy="true" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}"
+                paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {JumpToPageDropdown} {NextPageLink} {LastPageLink} {CurrentPageReport}"
+                currentPageReportTemplate="Página {currentPage} de {totalPages} em {totalRecords} registros" >
+                
+                <p:column styleClass="dt-toolbar-col" exportable="false">
+                    <a:commandLink id="downloadDocumento" rendered="#{row.documento.documentoBin.extensao ne null}" 
+                        style="margin-right: 0.5em;" title="#{row.documento.descricao}"
+                        onclick="infox.showLoading();" execute="@this" render="@this" limitRender="true"
+                        oncomplete="infox.hideLoading(); window.open('#{pathResolver.contextPath}/PdfReadOnly/downloadDocumento.seam');">
+                        <infox:flashcopy />
+                        <h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" title="#{row.documento.documentoBin}" styleClass="opacityHover"/>
+                        <f:setPropertyActionListener value="#{row.documento.documentoBin}" target="#{flash.documentoBin}" />
+                    </a:commandLink>
+                    
+                    <a:commandLink id="viewEditor" rendered="#{row.documento.documentoBin.extensao eq null}"
+                        style="margin-right: 0.5em;" title="#{row.documento.descricao}"
+                        onclick="infox.showLoading();" execute="@this" render="@this" limitRender="true"
+                        oncomplete="infox.hideLoading(); infox.openPopUp('PopUpDocumentoBin', '#{pathResolver.contextPath}/Processo/baixarDocumento.seam','1024');">
+                        <infox:flashcopy />
+                        <h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" title="#{row.documento.documentoBin}" styleClass="opacityHover" />
+                        <f:setPropertyActionListener value="#{row.documento.id}" target="#{flash.idDocumento}" />
+                        <f:setPropertyActionListener value="#{false}" target="#{flash.binario}" />
+                    </a:commandLink>
+                </p:column>
+                
+                <p:column headerText="#{infoxMessages['checklist.classificacaoDocumento']}" filterBy="#{row.documento.classificacaoDocumento}">
+                    <f:facet name="filter">
+                        <h:selectOneMenu id="filterClassificacao" onchange="PF('checklistTable').filter()" style="max-width: 100%;">
+                            <f:selectItem itemLabel="[Todos]" noSelectionOption="true" />
+                            <f:selectItems value="#{checklistView.classificacoesDocumento}" />
+                        </h:selectOneMenu>
+                    </f:facet>
+                    <h:outputText value="#{row.documento.classificacaoDocumento}" />
+                </p:column>
+                
+                <p:column headerText="#{infoxMessages['checklist.documento']}" filterBy="#{row.documento.descricao}">
+                    <f:facet name="filter">
+                        <h:inputText id="filterNomeDocumento" onchange="PF('checklistTable').filter()" style="max-width: 100%;" />
+                    </f:facet>
+                    <h:outputText value="#{row.documento.descricao}" />
+                </p:column>
+                
+                <p:column headerText="#{infoxMessages['checklist.situacao']}" filterBy="#{row.situacao}" style="width: 345px">
+                    <f:facet name="filter">
+                        <h:selectOneMenu id="filterSituacao" onchange="PF('checklistTable').filter()" style="max-width: 100%;">
+                            <f:selectItem itemLabel="[Todos]" noSelectionOption="true" />
+                            <f:selectItems value="#{checklistView.situacoesCompletas}" />
+                        </h:selectOneMenu>
+                    </f:facet>
+                    <h:panelGroup id="selectSituacao">
+                        <h:selectOneRadio id="selectSituacaoRadio" value="#{row.situacao}" styleClass="checklistRadio"
+                            layout="lineDirection" style="border: none">
+                            <f:selectItems value="#{checklistView.situacoes}" />
+                            <a:ajax event="change" execute="@this" render="checklistMessage pageBodyDialogMessage :movimentarTabPanel:checklistTableform:checklistTable:#{rowNumber}:textArea :movimentarTabPanel:checklistTableform:checklistTable:#{rowNumber}:selectSituacao"
+                                onbegin="infox.showLoading();" oncomplete="infox.hideLoading();"
+                                listener="#{checklistView.onChangeSituacao(row)}" />
+                        </h:selectOneRadio>
+                    </h:panelGroup>
+                </p:column>
+                
+                <p:column headerText="#{infoxMessages['checklist.comentarios']}">
+                    <h:panelGroup id="textArea" styleClass="textAreaPanel#{row.id}">
+                        <h:inputTextarea rows="3" cols="30" rendered="#{row.situacao eq 'NCO' or row.situacao eq 'NVE'}"
+                            value="#{row.comentario}">
+                            <a:ajax event="change" limitRender="true" execute="@this"
+                                render="checklistMessage pageBodyDialogMessage"
+                                onbegin="infox.showLoading();" oncomplete="infox.hideLoading();"
+                                listener="#{checklistView.onChangeComentario(row)}" />
+                        </h:inputTextarea>
+                    </h:panelGroup>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </infox:div>
+    
+    <h:form id="taskButtonsForm">
+        <ui:include src="/WEB-INF/xhtml/components/form/buttons/taskButtons.xhtml">
+            <ui:param name="taskEndAction" value="checklistView.endTask" />
+        </ui:include>
+    </h:form>
+
+    <style type="text/css">
+        table.checklistRadio td {
+            border: none;
+            padding: 0px;
+        }
+    </style>
+</ui:composition>

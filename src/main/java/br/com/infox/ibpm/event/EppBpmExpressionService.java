@@ -15,17 +15,20 @@ import javax.inject.Named;
 
 import org.jbpm.graph.exe.ExecutionContext;
 
-
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.entrega.checklist.ChecklistSituacao;
+import br.com.infox.epp.entrega.checklist.ChecklistVariableService;
+import br.com.infox.epp.entrega.documentos.Entrega;
 import br.com.infox.epp.processo.comunicacao.prazo.ContabilizadorPrazo;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.ibpm.event.External.ExpressionType;
 import br.com.infox.ibpm.sinal.SignalService;
 
@@ -46,6 +49,10 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
     protected PrazoComunicacaoService prazoComunicacaoService;
     @Inject 
     protected UsuarioLoginManager usuarioLoginManager;
+    @Inject
+    private ChecklistVariableService checklistVariableService;
+    @Inject
+    protected ProcessoManager processoManager;
 
     @External(tooltip = "process.events.expression.atribuirCiencia.tooltip")
     public void atribuirCiencia() {
@@ -144,6 +151,19 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
 	        usuarioLogin = usuarioLoginManager.getUsuarioLoginByLogin(login);
 	    }
         return usuarioLogin;
+    }
+
+   /**
+     * Baseado no processo, procura a Entrega referente e verifica se o checklist respectivo tem
+     * algum item marcado com {@link ChecklistSituacao} 'Não Conforme'.
+     * @param Entrega entrega a ser considerada na EL
+     * @return
+     */
+    @External(expressionType = ExpressionType.GATEWAY,
+            tooltip = "process.events.expression.checklist.hasNaoConforme.tooltip",
+            example = "#{bpmExpressionService.checklistHasItemNaoConforme(entrega)}")
+    public Boolean checklistHasItemNaoConforme(Entrega entrega) {
+        return checklistVariableService.existeItemNaoConforme(entrega);
     }
 
     @Override
