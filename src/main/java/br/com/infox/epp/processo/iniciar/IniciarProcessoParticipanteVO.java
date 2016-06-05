@@ -183,11 +183,8 @@ public class IniciarProcessoParticipanteVO extends DefaultTreeNode implements Co
     }
     
     public void limparDadosPessoa() {
-        if (isPessoaLoaded()) {
-            this.nome = null;
-            this.codigo = null;
-            this.pessoa = null;
-        }
+        this.nome = null;
+        this.pessoa = null;
     }
     
     public String getId() {
