@@ -83,7 +83,7 @@ public class IniciarProcessoParticipanteVO extends DefaultTreeNode implements Co
                 pessoaFisica = createPessoaFisica();
             }
             if (isMeioContatoLoaded()) {
-                if (meioContato.getMeioContato() == null && email != null) {
+                if (StringUtil.isEmpty(meioContato.getMeioContato()) && email != null) {
                     meioContato.setMeioContato(email);
                 }
             } else if (!StringUtil.isEmpty(email)){
@@ -154,7 +154,7 @@ public class IniciarProcessoParticipanteVO extends DefaultTreeNode implements Co
     }
     
     public void loadMeioContato(MeioContato meioContato) {
-        this.email = meioContato.getMeioContato();
+        this.email = meioContato == null ? null : meioContato.getMeioContato();
         this.meioContato = meioContato;
     }
     

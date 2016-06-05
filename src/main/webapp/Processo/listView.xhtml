@@ -178,9 +178,9 @@
 		                required="true" rendered="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa eq 'J'}"
 		                ajax="true" render="@form:nome @form:razao" listener="#{iniciarProcessoView.onChangeParticipanteCnpj}" />
 		            
-		            <i:inputText id="nome" value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.nome}"
+		            <i:inputText id="nome" value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.nome}" required="true"
 		                label="#{iniciarProcessoView.iniciarProcessoParticipanteVO.tipoPessoa eq 'F' ? infoxMessages['pessoaFisica.nome'] : infoxMessages['pessoaJuridica.nomeFantasia']}" 
-		                required="true" />
+		                disabled="#{iniciarProcessoView.iniciarProcessoParticipanteVO.pessoaLoaded}"/>
 		             
 		            <i:inputEmail id="email" label="#{infoxMessages['pessoaFisica.email']}" 
 		            	value="#{iniciarProcessoView.iniciarProcessoParticipanteVO.email}"

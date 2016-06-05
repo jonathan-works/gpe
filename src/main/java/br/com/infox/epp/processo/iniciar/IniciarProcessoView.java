@@ -197,9 +197,7 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
         if (pessoaFisica != null) {
             iniciarProcessoParticipanteVO.loadPessoaFisica(pessoaFisica);
             MeioContato meioContato = meioContatoManager.getMeioContatoByPessoaAndTipo(pessoaFisica, TipoMeioContatoEnum.EM);
-            if (meioContato != null) {
-                iniciarProcessoParticipanteVO.loadMeioContato(meioContato);
-            }
+            iniciarProcessoParticipanteVO.loadMeioContato(meioContato);
         } else {
             iniciarProcessoParticipanteVO.limparDadosPessoaFisica();
         }
