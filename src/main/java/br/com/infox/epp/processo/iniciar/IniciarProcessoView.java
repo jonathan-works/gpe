@@ -109,7 +109,7 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     
     @ExceptionHandled
     public void removerProcesso(Processo processo) {
-        processoManager.remove(processo);
+        processoManager.removerProcessoNaoIniciado(processo);
         processosCriados.remove(processo);
     }
     

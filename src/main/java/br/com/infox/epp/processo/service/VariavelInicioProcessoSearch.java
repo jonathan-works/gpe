@@ -31,4 +31,15 @@ public class VariavelInicioProcessoSearch extends PersistenceController {
         List<VariavelInicioProcesso> result = getEntityManager().createQuery(cq).setMaxResults(1).getResultList();
         return result.isEmpty() ? null : result.get(0);
     }
+    
+    public List<VariavelInicioProcesso> findAll(Processo processo) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<VariavelInicioProcesso> cq = cb.createQuery(VariavelInicioProcesso.class);
+        Root<VariavelInicioProcesso> variavelInicioProcesso = cq.from(VariavelInicioProcesso.class);
+        cq.select(variavelInicioProcesso);
+        cq.where(
+            cb.equal(variavelInicioProcesso.get(VariavelInicioProcesso_.processo).get(Processo_.idProcesso), cb.literal(processo.getIdProcesso()))
+        );
+        return getEntityManager().createQuery(cq).getResultList();
+    }
 }

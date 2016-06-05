@@ -71,7 +71,7 @@ public class StartFormDataImpl extends AbstractFormData implements StartFormData
     @Override
     public void update() {
         for (FormField formField : getFormFields()) {
-            if (formField.getType().isPersistable()) {
+            if (formField.getType().isPersistable() && formField.getValue() != null) {
                 formField.getType().performUpdate(formField, this);
                 setVariable(formField.getId(), new TypedValue(formField.getValue(), formField.getType().getValueType()));
             }

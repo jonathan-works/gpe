@@ -46,8 +46,10 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
+import br.com.infox.epp.processo.documento.numeration.NumeracaoDocumentoSequencialManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
@@ -56,6 +58,7 @@ import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.partes.manager.ParticipanteProcessoManager;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais;
+import br.com.infox.epp.processo.service.VariavelInicioProcessoService;
 import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
@@ -98,6 +101,10 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     private IniciarProcessoService iniciarProcessoService;
     @Inject
     private PastaManager pastaManager;
+    @Inject
+    private VariavelInicioProcessoService variavelInicioProcessoService;
+    @Inject
+    protected NumeracaoDocumentoSequencialManager numeracaoDocumentoSequencialManager;
     
     public Processo buscarPrimeiroProcesso(Processo p, TipoProcesso tipo) {
         for (Processo filho : p.getFilhos()) {
@@ -389,6 +396,16 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 	    }
         participanteProcessoManager.persistParticipantePessoaMeioContato(participantes);
         pastaManager.createDefaultFolders(processo);
+	}
+	
+	public void removerProcessoNaoIniciado(Processo processo) {
+	    variavelInicioProcessoService.removeAll(processo);
+	    numeracaoDocumentoSequencialManager.removeByProcesso(processo);
+	    for (Pasta pasta : processo.getPastaList()) {
+	        pastaManager.deleteComRestricoes(pasta);
+	    }
+	    processo.getPastaList().clear();
+	    remove(processo);
 	}
 	
 	@Observer({Event.EVENTTYPE_TASK_END})

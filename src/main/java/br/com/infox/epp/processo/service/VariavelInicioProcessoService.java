@@ -1,17 +1,24 @@
 package br.com.infox.epp.processo.service;
 
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
-import javax.persistence.Query;
 
 import br.com.infox.cdi.dao.Dao;
 import br.com.infox.cdi.qualifier.GenericDao;
 import br.com.infox.core.persistence.PersistenceController;
+import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.VariavelInicioProcesso;
 import br.com.infox.epp.processo.form.variable.value.TypedValue;
+import br.com.infox.epp.processo.form.variable.value.ValueType;
+import br.com.infox.epp.processo.form.variable.value.ValueTypes;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -19,6 +26,12 @@ public class VariavelInicioProcessoService extends PersistenceController {
     
     @Inject
     private VariavelInicioProcessoSearch variavelInicioProcessoSearch;
+    @Inject
+    private DocumentoManager documentoManager;
+    @Inject
+    private DocumentoBinManager documentoBinManager;
+    @Inject 
+    private DocumentoBinarioManager documentoBinarioManager;
     @Inject @GenericDao
     private Dao<VariavelInicioProcesso, Long> dao;
     
@@ -44,9 +57,21 @@ public class VariavelInicioProcessoService extends PersistenceController {
     
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void removeAll(Processo processo) {
-        String jpql = "delete from VariavelInicioProcesso var where var.processo.idProcesso = :idProcesso ";
-        Query query = getEntityManager().createQuery(jpql).setParameter("idProcesso", processo.getIdProcesso());
-        query.executeUpdate();
+        List<VariavelInicioProcesso> variaveis = variavelInicioProcessoSearch.findAll(processo);
+        for (VariavelInicioProcesso variavel : variaveis) {
+            ValueType valueType = ValueTypes.create(variavel.getType());
+            if (valueType == ValueType.FILE) {
+                Integer idDocumento = (Integer) variavel.getTypedValue();
+                if (idDocumento != null) {
+                    Documento documento = documentoManager.find(idDocumento);
+                    documentoManager.remove(documento);
+                    documentoBinManager.remove(documento.getDocumentoBin());
+                    if (documento.getDocumentoBin().isBinario()) {
+                        documentoBinarioManager.remove(documento.getDocumentoBin().getId());
+                    }
+                }
+            }
+            dao.remove(variavel);
+        }
     }
-
 }

@@ -81,18 +81,19 @@ public class ParticipanteProcessoManager extends Manager<ParticipanteProcessoDAO
     public void persistParticipantePessoaMeioContato(List<ParticipanteProcesso> participantes) {
         EntityManager entityManager = getDao().getEntityManager();
         for (ParticipanteProcesso participanteProcesso : participantes) {
-            entityManager.persist(participanteProcesso);
             Pessoa pessoa = participanteProcesso.getPessoa();
             if (pessoa.getIdPessoa() == null) {
                 entityManager.persist(pessoa);
             } else {
                 pessoa = entityManager.merge(pessoa);
+                participanteProcesso.setPessoa(pessoa);
             }
             for (MeioContato meioContato : pessoa.getMeioContatoList()) {
                 if (meioContato.getIdMeioContato() == null) {
                     entityManager.persist(meioContato);
                 }
             }
+            entityManager.persist(participanteProcesso);
         }
         entityManager.flush();
     }

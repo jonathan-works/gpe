@@ -106,7 +106,7 @@ public abstract class PrimitiveValueType implements ValueType {
         
         @Override
         public Object convertToModelValue(Object value) {
-            if (value != null) {
+            if (value == null) {
                 return null;
             }
             if (value instanceof String) {
