@@ -368,7 +368,7 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
 
     @Transient
     public boolean isDecisoraMonocratica() {
-        return !getUnidadeDecisoraMonocratica().isEmpty();
+        return !getUnidadeDecisoraMonocratica().isEmpty() && getUnidadeDecisoraMonocratica().get(0).getAtivo();
     }
 
     @Transient
@@ -382,7 +382,7 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
 
     @Transient
     public boolean isDecisoraColegiada() {
-        return !getUnidadeDecisoraColegiada().isEmpty();
+        return !getUnidadeDecisoraColegiada().isEmpty() && getUnidadeDecisoraColegiada().get(0).getAtivo();
     }
 
 }
