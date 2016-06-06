@@ -151,7 +151,6 @@ public abstract class Pessoa implements Serializable {
 
     @Transient
     public MeioContato getMeioContato(TipoMeioContatoEnum meioContatoEnum) {
-        List<MeioContato> meioContatoList = getMeioContatoList();
         for (MeioContato meioContato : meioContatoList) {
             if (meioContato.getTipoMeioContato() == meioContatoEnum) {
                 return meioContato;

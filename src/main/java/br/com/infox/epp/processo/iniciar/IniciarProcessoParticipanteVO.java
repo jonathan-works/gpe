@@ -88,11 +88,11 @@ public class IniciarProcessoParticipanteVO extends DefaultTreeNode implements Co
                 }
             } else if (!StringUtil.isEmpty(email)){
                 MeioContato meioContato = new MeioContato(TipoMeioContatoEnum.EM);
-                meioContato.setPessoa(pessoaFisica);
+                meioContato.setPessoa(pessoa);
                 meioContato.setMeioContato(email);
                 pessoaFisica.getMeioContatoList().add(meioContato);
             }
-            participanteProcesso.setPessoa(pessoaFisica);
+            participanteProcesso.setPessoa(pessoa);
         } else if (TipoPessoaEnum.J.equals(tipoPessoa)) {
             PessoaJuridica pessoaJuridica = null;
             if (isPessoaLoaded()) {
