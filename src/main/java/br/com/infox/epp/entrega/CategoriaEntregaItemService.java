@@ -10,7 +10,10 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
+import com.google.common.base.Strings;
+
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.core.exception.EppConfigurationException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
@@ -56,6 +59,9 @@ public class CategoriaEntregaItemService {
 	public CategoriaEntregaItem getItemByNomeParametro(String nomeParametro) {
 		Parametro parametro = parametroManager.getParametro(nomeParametro);
 		String codigo = parametro.getValorVariavel();
+		if (Strings.isNullOrEmpty(codigo)) {
+			throw new EppConfigurationException("O parâmetro " + nomeParametro + " não está configurado");
+		}
 		return getItem(codigo);
 	}
 

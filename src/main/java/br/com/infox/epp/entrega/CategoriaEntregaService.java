@@ -8,7 +8,10 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
+import com.google.common.base.Strings;
+
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.core.exception.EppConfigurationException;
 import br.com.infox.epp.entrega.entity.CategoriaEntrega;
 import br.com.infox.epp.entrega.entity.CategoriaEntregaItem;
 import br.com.infox.epp.system.entity.Parametro;
@@ -93,6 +96,9 @@ public class CategoriaEntregaService {
 	public CategoriaEntrega getCategoriaByNomeParametro(String nomeParametro) {
 		Parametro parametro = parametroManager.getParametro(nomeParametro);
 		String codigo = parametro.getValorVariavel();
+		if (Strings.isNullOrEmpty(codigo)) {
+			throw new EppConfigurationException("O parâmetro " + nomeParametro + " não está configurado");
+		}
 		return getCategoria(codigo);
 	}
 }
