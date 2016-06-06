@@ -7,7 +7,6 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import br.com.infox.epp.documento.type.ExpressionResolverChain;
 import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.form.variable.value.TypedValue;
 
 public class TaskFormDataImpl extends AbstractFormData implements TaskFormData {
     
@@ -31,14 +30,13 @@ public class TaskFormDataImpl extends AbstractFormData implements TaskFormData {
     }
 
     @Override
-    public void setVariable(String name, TypedValue value) {
-        taskInstance.setVariable(name, value.getValue());
+    public void setVariable(String name, Object value) {
+        taskInstance.setVariable(name, value);
     }
 
     @Override
     public void update() {
         // TODO Auto-generated method stub
-        
     }
 
     @Override

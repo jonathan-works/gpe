@@ -10,6 +10,7 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.meiocontato.entity.MeioContato;
+import br.com.infox.epp.meiocontato.type.TipoMeioContatoEnum;
 import br.com.infox.epp.pessoa.entity.Pessoa;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.entity.Processo;
@@ -81,18 +82,23 @@ public class ParticipanteProcessoManager extends Manager<ParticipanteProcessoDAO
     public void persistParticipantePessoaMeioContato(List<ParticipanteProcesso> participantes) {
         EntityManager entityManager = getDao().getEntityManager();
         for (ParticipanteProcesso participanteProcesso : participantes) {
-            entityManager.persist(participanteProcesso);
             Pessoa pessoa = participanteProcesso.getPessoa();
+            MeioContato emailContato = pessoa.getMeioContato(TipoMeioContatoEnum.EM);
             if (pessoa.getIdPessoa() == null) {
                 entityManager.persist(pessoa);
             } else {
                 pessoa = entityManager.merge(pessoa);
+                participanteProcesso.setPessoa(pessoa);
             }
-            for (MeioContato meioContato : pessoa.getMeioContatoList()) {
-                if (meioContato.getIdMeioContato() == null) {
-                    entityManager.persist(meioContato);
+            if (emailContato != null) {
+                if (emailContato.getIdMeioContato() == null) {
+                    entityManager.persist(emailContato);
+                } else {
+                    entityManager.merge(emailContato);
+                    
                 }
             }
+            entityManager.persist(participanteProcesso);
         }
         entityManager.flush();
     }

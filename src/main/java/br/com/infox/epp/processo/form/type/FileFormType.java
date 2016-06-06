@@ -26,20 +26,19 @@ import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
-import br.com.infox.epp.processo.form.variable.value.FileTypedValue;
 import br.com.infox.epp.processo.form.variable.value.ValueType;
 import br.com.infox.seam.exception.BusinessException;
 
 public abstract class FileFormType implements FormType {
     
     protected String name;
-    protected ValueType valueType;
+    protected String path;
     protected Documento documentoToSign;
     protected String tokenToSign;
     
-    public FileFormType(String name, ValueType valueType) {
+    public FileFormType(String name, String path) {
         this.name = name;
-        this.valueType = valueType;
+        this.path = path;
     }
     
     @Override
@@ -49,7 +48,12 @@ public abstract class FileFormType implements FormType {
     
     @Override
     public ValueType getValueType() {
-        return valueType;
+        return ValueType.FILE;
+    }
+    
+    @Override
+    public String getPath() {
+        return path;
     }
     
     @Override
@@ -58,20 +62,18 @@ public abstract class FileFormType implements FormType {
     
     @Override
     public void performValue(FormField formField, FormData formData) {
-        FileTypedValue typedValue = (FileTypedValue) formField.getTypedValue();
         String variableName = formField.getId();
         Integer idFluxo = formData.getProcesso().getNaturezaCategoriaFluxo().getFluxo().getIdFluxo();
         List<ClassificacaoDocumento> classificacoes = getVariavelClassificacaoDocumentoManager().listClassificacoesPublicadasDaVariavel(variableName, idFluxo);
-        typedValue.setClassificacoesDocumento(classificacoes);
+        formField.addProperty("classificacoesDocumento", classificacoes);
         if (classificacoes.size() == 1) {
-            typedValue.setClassificacaoDocumento(classificacoes.get(0));
+            formField.addProperty("classificacaoDocumento", classificacoes.get(0));
         }
     }
     
     @Override
     public void validate(FormField formField, FormData formData) throws BusinessException {
-        FileTypedValue typedValue = (FileTypedValue) formField.getTypedValue();
-        Documento documento = typedValue.getValue();
+        Documento documento = formField.getTypedValue(Documento.class);
         boolean assinaturaVariavelOk = validarAssinaturaDocumento(documento);
         if (!assinaturaVariavelOk) {
             throw new BusinessException(String.format(InfoxMessages.getInstance().get("assinaturaDocumento.faltaAssinatura"), formField.getLabel()));
@@ -80,13 +82,18 @@ public abstract class FileFormType implements FormType {
 
     @ExceptionHandled(value = MethodType.UNSPECIFIED)
     public void assinar() throws DAOException, CertificadoException, AssinaturaException {
-        CertificateSignatureBundleBean certificateSignatureBundle = getCertificateSignatures().get(tokenToSign);
-        if (certificateSignatureBundle.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
-            FacesMessages.instance().add("Erro ao assinar");
-        } else {
-            CertificateSignatureBean signatureBean = certificateSignatureBundle.getSignatureBeanList().get(0);
-            getAssinaturaDocumentoService().assinarDocumento(documentoToSign, Authenticator.getUsuarioPerfilAtual(),
-                    signatureBean.getCertChain(), signatureBean.getSignature());
+        try {
+            CertificateSignatureBundleBean certificateSignatureBundle = getCertificateSignatures().get(tokenToSign);
+            if (certificateSignatureBundle.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
+                FacesMessages.instance().add("Erro ao assinar");
+            } else {
+                CertificateSignatureBean signatureBean = certificateSignatureBundle.getSignatureBeanList().get(0);
+                getAssinaturaDocumentoService().assinarDocumento(documentoToSign, Authenticator.getUsuarioPerfilAtual(),
+                        signatureBean.getCertChain(), signatureBean.getSignature());
+            }
+        } finally {
+            setDocumentoToSign(null);
+            setTokenToSign(null);
         }
     }
     
@@ -95,6 +102,13 @@ public abstract class FileFormType implements FormType {
         boolean isValid = getAssinaturaDocumentoService().isDocumentoTotalmenteAssinado(documento)
                 || !documento.isAssinaturaObrigatoria(papel) || documento.isDocumentoAssinado(papel);
         return isValid;
+    }
+    
+    public boolean podeAssinar(FormField formField) {
+        Documento documento = formField.getTypedValue(Documento.class);
+        return documento != null && documento.getId() != null 
+                && documento.isDocumentoAssinavel(Authenticator.getPapelAtual())
+                && !documento.isDocumentoAssinado(Authenticator.getPapelAtual());
     }
     
     public Documento getDocumentoToSign() {

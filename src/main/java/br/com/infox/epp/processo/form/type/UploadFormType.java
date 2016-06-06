@@ -16,35 +16,33 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.service.DocumentoUploaderService;
 import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
-import br.com.infox.epp.processo.form.variable.value.FileTypedValue;
 import br.com.infox.epp.processo.form.variable.value.TypedValue;
-import br.com.infox.epp.processo.form.variable.value.UploadValueImpl;
-import br.com.infox.epp.processo.form.variable.value.ValueType;
 import br.com.infox.ibpm.variable.file.FileVariableHandler;
 import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.exception.BusinessRollbackException;
+import br.com.infox.seam.path.PathResolver;
 
 public class UploadFormType extends FileFormType {
     
     private static final Logger LOG = Logger.getLogger(UploadFormType.class.getName());
     
     public UploadFormType() {
-        super("upload", ValueType.UPLOAD);
+        super("upload", "/Processo/form/upload.xhtml");
     }
 
     @Override
-    public TypedValue convertToFormValue(Object value) {
+    public Object convertToFormValue(Object value) {
         if (value == null) {
-            return new UploadValueImpl(null);
+            return null;
         }
         if (value instanceof String) {
             value = Integer.valueOf((String) value);
         }
         if (value instanceof Integer) {
             Documento documento = getDocumentoManager().find((Integer) value);
-            return new UploadValueImpl(documento);
+            return documento;
         }
-        return new UploadValueImpl(null);
+        return null;
     }
     
     public void processFileUpload(FileUploadEvent fileUploadEvent) {
@@ -52,12 +50,11 @@ public class UploadFormType extends FileFormType {
         UIComponent uploadFile = fileUploadEvent.getComponent();
         FormField formField = (FormField) uploadFile.getAttributes().get("formField");
         FormData formData = (FormData) uploadFile.getAttributes().get("formData");
-        UploadValueImpl typedValue = (UploadValueImpl) formField.getTypedValue();
+        ClassificacaoDocumento classificacao = formField.getProperty("classificacaoDocumento", ClassificacaoDocumento.class);
         try {
-            ClassificacaoDocumento classificacao = typedValue.getClassificacaoDocumento();
             getDocumentoUploadService().validaDocumento(file, classificacao, file.getData());
-            getFileVariableHandler().gravarDocumento(file, uploadFile.getId(), typedValue, formData.getProcesso());
-            formData.setVariable(formField.getId(), typedValue);
+            getFileVariableHandler().gravarDocumento(file, uploadFile.getId(), formField, formData.getProcesso());
+            formData.setVariable(formField.getId(), new TypedValue(formField.getValue(), formField.getType().getValueType()));
         } catch (BusinessRollbackException e) {
              LOG.log(Level.SEVERE, "Erro ao remover o documento existente", e);
              if (e.getCause() instanceof DAOException) {
@@ -73,14 +70,19 @@ public class UploadFormType extends FileFormType {
     
     @Override
     public void validate(FormField formField, FormData formData) throws BusinessException {
-        FileTypedValue typedValue = (FileTypedValue) formField.getTypedValue(); 
-        String required = formField.getProperties().get("required");
-        if ("true".equals(required) && typedValue.getValue() == null) {
+        String required = formField.getProperty("required", String.class);
+        if ("true".equals(required) && formField.getValue() == null) {
             throw new BusinessException("O arquivo do campo " + formField.getLabel() + " é obrigatório");
         }
-        if (typedValue.getValue() != null) {
+        if (formField.getValue() != null) {
             super.validate(formField, formData);
         }
+    }
+    
+    public String getUrlDownload(FormField formfield) {
+        Documento documento = formfield.getTypedValue(Documento.class);
+        PathResolver pathResolver = BeanManager.INSTANCE.getReference(PathResolver.class);
+        return String.format("%s/downloadDocumento.seam?id=%d", pathResolver.getContextPath(), documento.getId());
     }
     
     protected DocumentoUploaderService getDocumentoUploadService() {

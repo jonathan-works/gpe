@@ -11,12 +11,11 @@ import org.jbpm.graph.def.ProcessDefinition;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.form.type.FormType;
 import br.com.infox.epp.processo.form.type.FormTypes;
+import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.seam.exception.BusinessException;
 
 public abstract class AbstractFormData implements FormData {
-    
-    protected static final String PATH = "/Processo/form/%s.xhtml";
     
     protected String formKey;
     protected Processo processo;
@@ -34,8 +33,11 @@ public abstract class AbstractFormData implements FormData {
             createFormField(processDefinition, variableTaskPage);
         } else {
             for (VariableAccess variableAccess : variableAccesses) {
-                createFormField(processDefinition, variableAccess);
-            } 
+                String type = variableAccess.getMappedName().split(":")[0];
+                if (!VariableType.PARAMETER.name().equals(type)) {
+                    createFormField(processDefinition, variableAccess);
+                }
+            }
         }
     }
 
@@ -48,12 +50,9 @@ public abstract class AbstractFormData implements FormData {
         formField.setType(formType);
         formField.setId(variableName);
         formField.setLabel(label);
-        formField.setTypedValue(formType.convertToFormValue(getVariable(variableName)));
+        formField.setValue(formType.convertToFormValue(getVariable(variableName)));
         formField.setProperties(createProperties(variableAccess));
         formType.performValue(formField, this);
-        if (formField.getPath() == null) {
-            formField.setPath(String.format(PATH, formType.getName()));
-        }
         getFormFields().add(formField);
     }
     
@@ -66,8 +65,8 @@ public abstract class AbstractFormData implements FormData {
         return formType;
     }
     
-    protected Map<String, String> createProperties(VariableAccess variableAccess) {
-        Map<String, String> properties = new HashMap<>();
+    protected Map<String, Object> createProperties(VariableAccess variableAccess) {
+        Map<String, Object> properties = new HashMap<>();
         if (variableAccess.isRequired()) {
             properties.put("required", "true");
         }

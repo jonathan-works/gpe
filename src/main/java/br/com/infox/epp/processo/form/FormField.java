@@ -4,17 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.infox.epp.processo.form.type.FormType;
-import br.com.infox.epp.processo.form.variable.value.TypedValue;
 
 public class FormField {
     
     protected String id;
     protected String label;
     protected FormType type;
-    protected TypedValue defaultValue;
-    protected TypedValue typedValue;
-    protected String path;
-    protected Map<String, String> properties = new HashMap<String, String>();
+    protected Object defaultValue;
+    protected Object value;
+    protected Map<String, Object> properties = new HashMap<>();
 
     public String getId() {
         return id;
@@ -45,38 +43,42 @@ public class FormField {
     }
     
     public String getPath() {
-        return path;
+        return type.getPath();
     }
     
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public TypedValue getDefaultValue() {
+    public Object getDefaultValue() {
         return defaultValue;
     }
 
-       public void setDefaultValue(TypedValue defaultValue) {
+    public void setDefaultValue(Object defaultValue) {
         this.defaultValue = defaultValue;
     }
 
-    public TypedValue getTypedValue() {
-        return typedValue;
+    public Object getValue() {
+        return value;
     }
 
-    public void setTypedValue(TypedValue typedValue) {
-        this.typedValue = typedValue;
+    public void setValue(Object value) {
+        this.value = value;
     }
 
-    public Map<String, String> getProperties() {
+    public <T> T getTypedValue(Class<T> type) {
+        return type.cast(value);
+    }
+
+    public Map<String, Object> getProperties() {
         return properties;
     }
     
-    public void setProperties(Map<String, String> properties) {
+    public void setProperties(Map<String, Object> properties) {
         this.properties = properties;
     }
+    
+    public <T> T getProperty(String key, Class<T> type) {
+        return type.cast(properties.get(key));
+    }
 
-    public void addProperties(String key, String value) {
+    public void addProperty(String key, Object value) {
         properties.put(key, value);
     }
 }

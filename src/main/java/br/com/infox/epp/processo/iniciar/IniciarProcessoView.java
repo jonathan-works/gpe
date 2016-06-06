@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jboss.seam.faces.FacesMessages;
+import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.taskmgmt.def.Task;
 import org.joda.time.DateTime;
@@ -43,6 +44,7 @@ import br.com.infox.epp.processo.partes.entity.TipoParte;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.manager.StatusProcessoSearch;
 import br.com.infox.epp.tipoParte.TipoParteSearch;
+import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.seam.exception.BusinessException;
 import edu.emory.mathcs.backport.java.util.Collections;
@@ -107,7 +109,7 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
     
     @ExceptionHandled
     public void removerProcesso(Processo processo) {
-        processoManager.remove(processo);
+        processoManager.removerProcessoNaoIniciado(processo);
         processosCriados.remove(processo);
     }
     
@@ -151,19 +153,31 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
         ProcessDefinition processDefinition = JbpmUtil.instance().findLatestProcessDefinition(processDefinitionName);
         Task startTask = processDefinition.getTaskMgmtDefinition().getStartTask();
         if (hasStartTaskForm(startTask)) {
-            processoManager.gravarProcesso(processo, metadados, participantes);
+            processoManager.gravarProcessoMetadadoParticipantePasta(processo, metadados, participantes);
             jsfUtil.addFlashParam("processo", processo);
             return "/Processo/startTaskForm.seam";
         } else {
-            processoManager.gravarProcesso(processo, metadados, participantes);
+            processoManager.gravarProcessoMetadadoParticipantePasta(processo, metadados, participantes);
             iniciarProcesso(processo);
             return "/Painel/list.seam?faces-redirect=true";
         }
     }
     
     private boolean hasStartTaskForm(Task startTask) {
-        return startTask.getTaskController() != null && startTask.getTaskController().getVariableAccesses() != null
-                && !startTask.getTaskController().getVariableAccesses().isEmpty();
+        return startTask.getTaskController() != null 
+                && startTask.getTaskController().getVariableAccesses() != null
+                && !startTask.getTaskController().getVariableAccesses().isEmpty()
+                && !containsOnlyParameterVariable(startTask);
+    }
+    
+    private boolean containsOnlyParameterVariable(Task startTask) {
+        List<VariableAccess> variableAccesses = startTask.getTaskController().getVariableAccesses();
+        for (VariableAccess variableAccess : variableAccesses) {
+            if (!variableAccess.getMappedName().startsWith(VariableType.PARAMETER.name())) {
+                return false;
+            }
+        }
+        return true;
     }
     
     public void onSelectNaturezaCategoriaFluxoItem() {
@@ -183,9 +197,7 @@ public class IniciarProcessoView extends AbstractIniciarProcesso {
         if (pessoaFisica != null) {
             iniciarProcessoParticipanteVO.loadPessoaFisica(pessoaFisica);
             MeioContato meioContato = meioContatoManager.getMeioContatoByPessoaAndTipo(pessoaFisica, TipoMeioContatoEnum.EM);
-            if (meioContato != null) {
-                iniciarProcessoParticipanteVO.loadMeioContato(meioContato);
-            }
+            iniciarProcessoParticipanteVO.loadMeioContato(meioContato);
         } else {
             iniciarProcessoParticipanteVO.limparDadosPessoaFisica();
         }

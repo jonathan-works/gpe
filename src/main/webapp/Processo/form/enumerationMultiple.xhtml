@@ -12,8 +12,15 @@
     <ui:param name="varId" value="#{formField.id}"/>
   	<ui:param name="readonly" value="#{formField.properties.readonly}" />
   	
-  	<i:selectOneMenu id="#{varId}" value="#{formField.value}" required="#{formField.properties.required}"
-        disabled="#{disabled or readonly}" readonly="#{readonly}" noSelectionLabel="#{infoxMessages['crud.select.select']}"
-        items="#{formField.properties.selectItems}" label="#{formField.label}"/>
+  	<style type="text/css">
+  		.selectManyMenu {
+  			width: 300px;
+  		}
+  	</style>
+  	
+  	<i:selectManyMenu id="#{varId}" value="#{formField.value}" required="#{formField.properties.required}"
+        disabled="#{disabled or readonly}" readonly="#{readonly}" 
+        items="#{formField.properties.selectItems}" label="#{formField.label}"
+        styleClass="selectManyMenu"/>
     
 </ui:composition>

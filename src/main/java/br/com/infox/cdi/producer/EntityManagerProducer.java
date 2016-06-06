@@ -128,11 +128,11 @@ public class EntityManagerProducer {
         LOG_ENTITY_MANAGER_LOCAL.set(null);
     }
 	
-	public javax.persistence.EntityManager getEntityManagerNotManaged() {
+	public EntityManager getEntityManagerNotManaged() {
 	    return new EntityManagerImpl(entityManagerFactory);
 	}
 	
-	public javax.persistence.EntityManager getEntityManagerTransactional() {
+	public EntityManager getEntityManagerTransactional() {
 	    TransactionManager transactionManager = ApplicationServerService.instance().getTransactionManager();
         try {
             Transaction transaction = transactionManager.getTransaction();
@@ -146,6 +146,10 @@ public class EntityManagerProducer {
             throw new IllegalStateException("Error creating entityManagerTransactional", e);
         }
     }
+	
+	public EntityManagerFactory getEntityManagerFactory() {
+	    return entityManagerFactory;
+	}
 	
 	public static EntityManager getEntityManager() {
 	    return BeanManager.INSTANCE.getReference(EntityManager.class);

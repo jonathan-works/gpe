@@ -144,7 +144,7 @@ public class NodeHandler implements Serializable {
     private ClassificacaoDocumento classificacaoDocumento;
 	private EventHandler multiInstanceEvent;
 	private ActivityNodeType activityNodeType;
-	private List<Pair<String, VariableType>> startVariablesSubProcess;
+	private List<Pair<String, Pair<VariableType, Boolean>>> startVariablesSubProcess;
 
     public NodeHandler(Node node) {
         this.node = node;
@@ -515,10 +515,10 @@ public class NodeHandler implements Serializable {
         Task startTask = processDefinition.getTaskMgmtDefinition().getStartTask();
         if (startTask != null && startTask.getTaskController() != null 
                 && startTask.getTaskController().getVariableAccesses() != null) {
-            List<Pair<String, VariableType>> variables = new ArrayList<>();
+            List<Pair<String, Pair<VariableType, Boolean>>> variables = new ArrayList<>();
             for (VariableAccess variableAccess : startTask.getTaskController().getVariableAccesses()) {
                 String type = variableAccess.getMappedName().split(":")[0];
-                variables.add(Pair.of(variableAccess.getVariableName(), VariableType.valueOf(type)));
+                variables.add(Pair.of(variableAccess.getVariableName(), Pair.of(VariableType.valueOf(type), variableAccess.isRequired())));
             }
             startVariablesSubProcess = variables;
         } else {
@@ -526,7 +526,7 @@ public class NodeHandler implements Serializable {
         }
     }
     
-    public List<Pair<String, VariableType>> getStartVariablesSubProcess() {
+    public List<Pair<String, Pair<VariableType, Boolean>>> getStartVariablesSubProcess() {
         if (startVariablesSubProcess == null && getSubProcessName() != null) {
             onChangeSubProcess(getSubProcessName());
         }

@@ -12,56 +12,57 @@
   
   	<ui:param name="varId" value="#{formField.id}"/>
   	<ui:param name="controller" value="#{formField.type}" />
-  	<ui:param name="typedValue" value="#{formField.typedValue}"/>
   	<ui:param name="readonly" value="#{formField.properties.readonly}" />
   	<ui:param name="required" value="#{formField.properties.required}" />
+  	<ui:param name="classificacoesDocumento" value="#{formField.properties.classificacoesDocumento}"/>
+  	<ui:param name="modelosDocumento" value="#{formField.properties.modelosDocumento}"/>
   	
 	<wi:selectOneMenuEntity id="#{varId}ClassificacaoDocumento"
 		label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-		items="#{typedValue.classificacoesDocumento}"
+		items="#{classificacoesDocumento}"
 		required="#{not readonly}"
 		showLabelSelecione="true"
-		value="#{typedValue.classificacaoDocumento}"
-		readonly="#{readonly or typedValue.classificacoesDocumento.size eq 1 or typedValue.value.hasAssinatura()}"
-		disabled="#{readonly or typedValue.classificacoesDocumento.size eq 1 or typedValue.value.hasAssinatura()}">
+		value="#{formField.properties.classificacaoDocumento}"
+		readonly="#{readonly or classificacoesDocumento.size eq 1 or formField.value.hasAssinatura()}"
+		disabled="#{readonly or classificacoesDocumento.size eq 1 or formField.value.hasAssinatura()}">
 		<a:ajax event="change" render="#{varId}AssinaturaDocumento #{varId}EditorDiv" execute="@this" limitRender="true" />
 	</wi:selectOneMenuEntity>
 	
     <wi:selectOneMenuEntity id="#{varId}ModeloDocumento"
 		label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-		items="#{typedValue.modelosDocumento}"
+		items="#{formField.properties.modelosDocumento}"
 		noSelectionLabel="[Selecione o modelo]"
 		required="false"
-		value="#{typedValue.modeloDocumento}"
-		rendered="#{not readonly and not typedValue.value.hasAssinatura()}">
+		value="#{formField.properties.modeloDocumento}"
+		rendered="#{not readonly and not formField.value.hasAssinatura()}">
 		<a:ajax event="change" render="#{varId}EditorDiv" execute="@this" limitRender="true" 
-			listener="#{controller.performModeloDocumento(typedValue, formData)}"/>
+			listener="#{controller.performModeloDocumento(formField, formData)}"/>
 	</wi:selectOneMenuEntity>
 	   
 	<p:outputPanel id="#{varId}EditorDiv">
 	   	<s:div id="#{varId}ToolTipDivExterna">
 		    <s:div id="#{varId}ToolTipDiv" styleClass="tooltip-parent" style="width: 10px" 
-			  	rendered="#{not empty typedValue.classificacaoDocumento.observacao and not (readonly or typedValue.value.hasAssinatura())}">
+			  	rendered="#{not empty formField.properties.classificacaoDocumento.observacao and not (readonly or formField.value.hasAssinatura())}">
 			  	<h:graphicImage id="#{varId}helpEditTipImg" 
 			  		url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
 				<div class="epp-tooltip">
 					<div class="tooltip-panel">
 						<div><h:outputText value="Observação:"/></div>
-						<h:outputText value="#{typedValue.classificacaoDocumento.observacao}"/>
+						<h:outputText value="#{formField.properties.classificacaoDocumento.observacao}"/>
 					</div>
 				</div>
 		    </s:div>
 	    </s:div>
 	    
-	    <wi:editor id="#{varId}" value="#{typedValue.value.documentoBin.modeloDocumento}"
-	        readonly="#{readonly or typedValue.value.hasAssinatura()}" 
+	    <wi:editor id="#{varId}" value="#{formField.value.documentoBin.modeloDocumento}"
+	        readonly="#{readonly or formField.value.hasAssinatura()}" 
 	        label="#{formField.label}"/>
 	        
 	</p:outputPanel>
 	   
 	<p:outputPanel id="#{varId}AssinaturaDocumento" >
 	   
-	    <p:outputPanel rendered="#{typedValue.podeAssinar()}">
+	    <p:outputPanel rendered="#{controller.podeAssinar(formField)}">
 	    
 			<a:jsFunction name="assinar"
 				action="#{controller.assinar()}"
@@ -74,7 +75,7 @@
 				signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
 				reRender="#{varId}AssinaturaDocumento, :pageBodyDialogMessage"
 				tokenField="#{controller.tokenToSign}"
-				propertyValue="#{typedValue.value}"
+				propertyValue="#{formField.value}"
 				propertyTarget="#{controller.documentoToSign}"
 				signableData="#{controller.documentoToSign.documentoBin.md5Documento}"
 				functionPreSign="infox.showLoading();"

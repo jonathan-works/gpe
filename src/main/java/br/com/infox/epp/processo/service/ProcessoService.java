@@ -52,7 +52,7 @@ public class ProcessoService extends PersistenceController {
 	    metadadoProcessoManager.remove(metadadoStatus);
 	    processo.removerMetadado(EppMetadadoProvider.STATUS_PROCESSO);
 	    variavelInicioProcessoService.removeAll(processo);
-	    ProcessInstance processInstance = iniciarProcessoService.iniciarProcesso(processo, variables);
+	    ProcessInstance processInstance = iniciarProcessoService.iniciarProcesso(processo, variables, false);
 	    return processInstance;
 	}
 	

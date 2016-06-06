@@ -14,6 +14,9 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import br.com.infox.epp.processo.form.variable.value.ValueType;
+import br.com.infox.epp.processo.form.variable.value.ValueTypes;
+
 @Entity
 @Table(name = "tb_variavel_inicio_processo")
 public class VariavelInicioProcesso implements Serializable {
@@ -79,6 +82,11 @@ public class VariavelInicioProcesso implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+    
+    public Object getTypedValue() {
+        ValueType valueType = ValueTypes.create(type);
+        return valueType.convertToModelValue(value);
     }
 
     @Override

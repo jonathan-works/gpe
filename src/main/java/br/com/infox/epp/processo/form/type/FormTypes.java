@@ -1,8 +1,9 @@
 package br.com.infox.epp.processo.form.type;
 
+import br.com.infox.epp.processo.form.type.EnumFormType.EnumerationFormType;
+import br.com.infox.epp.processo.form.type.EnumFormType.EnumerationMultipleFormType;
 import br.com.infox.epp.processo.form.type.PrimitiveFormType.BooleanFormType;
 import br.com.infox.epp.processo.form.type.PrimitiveFormType.DateFormType;
-import br.com.infox.epp.processo.form.type.PrimitiveFormType.EnumerationFormType;
 import br.com.infox.epp.processo.form.type.PrimitiveFormType.FrameFormType;
 import br.com.infox.epp.processo.form.type.PrimitiveFormType.IntegerFormType;
 import br.com.infox.epp.processo.form.type.PrimitiveFormType.MonetaryFormType;
@@ -26,7 +27,8 @@ public enum FormTypes {
     PAGE(PageFormType.class),
     EDITOR(EditorFormType.class),
     FILE(UploadFormType.class),
-    TASK_PAGE(TaskPageFormType.class);
+    TASK_PAGE(TaskPageFormType.class),
+    ENUMERATION_MULTIPLE(EnumerationMultipleFormType.class);
     
     private Class<? extends FormType> formTypeClass;
     

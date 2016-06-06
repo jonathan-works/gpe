@@ -83,16 +83,16 @@ public class IniciarProcessoParticipanteVO extends DefaultTreeNode implements Co
                 pessoaFisica = createPessoaFisica();
             }
             if (isMeioContatoLoaded()) {
-                if (meioContato.getMeioContato() == null && email != null) {
+                if (StringUtil.isEmpty(meioContato.getMeioContato()) && email != null) {
                     meioContato.setMeioContato(email);
                 }
             } else if (!StringUtil.isEmpty(email)){
                 MeioContato meioContato = new MeioContato(TipoMeioContatoEnum.EM);
-                meioContato.setPessoa(pessoaFisica);
+                meioContato.setPessoa(pessoa);
                 meioContato.setMeioContato(email);
                 pessoaFisica.getMeioContatoList().add(meioContato);
             }
-            participanteProcesso.setPessoa(pessoaFisica);
+            participanteProcesso.setPessoa(pessoa);
         } else if (TipoPessoaEnum.J.equals(tipoPessoa)) {
             PessoaJuridica pessoaJuridica = null;
             if (isPessoaLoaded()) {
@@ -154,7 +154,7 @@ public class IniciarProcessoParticipanteVO extends DefaultTreeNode implements Co
     }
     
     public void loadMeioContato(MeioContato meioContato) {
-        this.email = meioContato.getMeioContato();
+        this.email = meioContato == null ? null : meioContato.getMeioContato();
         this.meioContato = meioContato;
     }
     
@@ -183,11 +183,8 @@ public class IniciarProcessoParticipanteVO extends DefaultTreeNode implements Co
     }
     
     public void limparDadosPessoa() {
-        if (isPessoaLoaded()) {
-            this.nome = null;
-            this.codigo = null;
-            this.pessoa = null;
-        }
+        this.nome = null;
+        this.pessoa = null;
     }
     
     public String getId() {

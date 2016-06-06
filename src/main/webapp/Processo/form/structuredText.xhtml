@@ -9,11 +9,9 @@
     xmlns:wi="http://www.itx.com.br/jsf">
     
     <ui:param name="varId" value="#{formField.id}"/>
-    <ui:param name="typedValue" value="#{formField.typedValue}"/>
     <ui:param name="readonly" value="#{formField.properties.readonly}" />
-    <ui:param name="required" value="#{formField.properties.required}" />
     
-    <wi:editor id="#{varId}" value="#{typedValue.value}" label="#{formField.label}"
-        disabled="#{disabled}" required="#{required}" readonly="#{readonly}" />
+    <wi:editor id="#{varId}" value="#{formField.value}" label="#{formField.label}"
+        disabled="#{disabled}" required="#{formField.properties.required}" readonly="#{readonly}" />
     
 </ui:composition>

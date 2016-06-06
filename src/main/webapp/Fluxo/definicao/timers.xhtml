@@ -126,9 +126,9 @@
 	                    </p:outputPanel>
 	                    
 	                    <p:outputPanel rendered="#{nodeFitter.nodeHandler.dueDateType.expression}">
-		                    <i:inputText id="dueDateExpression" value="#{node.dueDateExpression}"
-		                    	label="#{infoxMessages['process.timer.expressao']}" ajax="true"
-		                    	listener="#{nodeFitter.nodeHandler.onChangeDueDate}" 
+		                    <i:inputTextarea id="dueDateExpression" value="#{node.dueDateExpression}"
+		                    	label="#{infoxMessages['process.timer.expressao']}" ajax="true" showCounter="false"
+		                    	listener="#{nodeFitter.nodeHandler.onChangeDueDate}" rows="1" cols="60"
 		                    	help="#{infoxMessages['process.timer.expressao.help']}"/>
 	                    </p:outputPanel>
                      </p:outputPanel>
