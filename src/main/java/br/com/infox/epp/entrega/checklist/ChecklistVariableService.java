@@ -28,16 +28,18 @@ public class ChecklistVariableService implements Serializable {
         return cl == null ? false : checklistSearch.hasItemNaoConforme(cl);
     }
 
-    public String getNaoConformeList(Entrega entrega) {
-        return getNaoConformeList(entrega.getId());
+    public String listBySituacao(Entrega entrega, String codigoSituacao) {
+        return listBySituacao(entrega.getId(), codigoSituacao);
     }
 
-    public String getNaoConformeList(Long idEntrega) {
+    public String listBySituacao(Long idEntrega, String codigoSituacao) {
+        ChecklistSituacao situacao = ChecklistSituacao.valueOf(codigoSituacao);
+        if (situacao == null) return "";
         Checklist checklist = checklistSearch.getByIdEntrega(idEntrega);
         if (checklist == null) {
             return "";
         }
-        List<ChecklistDoc> clDocList = checklistSearch.getChecklistDocByChecklistSituacao(checklist, ChecklistSituacao.NCO);
+        List<ChecklistDoc> clDocList = checklistSearch.getChecklistDocByChecklistSituacao(checklist, situacao);
         if (clDocList == null || clDocList.isEmpty()) {
             return "";
         }
@@ -45,15 +47,13 @@ public class ChecklistVariableService implements Serializable {
         response += "<thead>";
         response += "<th>Classificação de Documento</th>";
         response += "<th>Incluído por</th>";
-        response += "<th>Situação</th>";
         response += "<th>Motivo</th>";
         response += "</thead><tbody>"; 
         for (ChecklistDoc clDoc : clDocList) {
             response += "<tr>";
             response += "<td>" + clDoc.getDocumento().getClassificacaoDocumento().getDescricao() + "</td>";
             response += "<td>" + clDoc.getDocumento().getUsuarioInclusao().getNomeUsuario() + "</td>";
-            response += "<td>" + clDoc.getSituacao().getLabel() + "</td>";
-            response += "<td>" + clDoc.getComentario() + "</td>";
+            response += "<td>" + (clDoc.getComentario() == null ? "" : clDoc.getComentario()) + "</td>";
             response += "</tr>";
         }
         response += "</tbody></table>";
