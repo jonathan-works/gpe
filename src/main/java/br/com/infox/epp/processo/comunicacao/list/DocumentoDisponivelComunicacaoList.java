@@ -60,7 +60,7 @@ public class DocumentoDisponivelComunicacaoList extends EntityList<Documento> im
 
     @Override
     protected void addSearchFields() {
-        addSearchField("pasta", SearchCriteria.IGUAL);
+        addSearchField("pasta.id", SearchCriteria.IGUAL);
     }
 
     @Override
@@ -126,7 +126,14 @@ public class DocumentoDisponivelComunicacaoList extends EntityList<Documento> im
         Documento entity = getEntity();
         if (entity.getPasta() == null) {
             try {
-                entity.setPasta(pastaManager.getDefaultFolder(processo));
+                Pasta defaultFolder = pastaManager.getDefaultFolder(processo);
+                if (defaultFolder != null) {
+                    entity.setPasta(defaultFolder);
+                } else {
+                    Pasta pasta = new Pasta();
+                    pasta.setId(-1);
+                    entity.setPasta(pasta);
+                }
             } catch (DAOException e) {
                 LOG.error("", e);
                 actionMessagesService.handleDAOException(e);
