@@ -1,10 +1,3 @@
-@import "padrao.import.less";
-@import "colors.import.less";
-
-@base-color-1:#000;
-@base-color-2:#fff;
-@base-border-color:#000;
-
 @standard-border-color:@base-border-color;
 @input-border-color:@base-border-color;
 @bgColorSelect:lighten(@base-color-2,45%);
@@ -55,7 +48,7 @@
 @bg-color-item-selecionado: @base-color-1;
 
 //  Cores dos botões do sistema
-@button-txt-color:contrast(@base-color-1, @base-color-1, @base-color-2);
+@button-txt-color:contrast(@base-color-1, #333, #eee);
 @button-bg-color:@base-color-1;
 @button-bg-deg-color:@base-color-2;
 
@@ -70,8 +63,8 @@
 @baseDegBgColor:@base-color-1;
 
 // Cores do quadro padrão
-@sub-borda-bg-color:@base-color-1;
-@sub-borda-bg-deg-color:@base-color-1;
+@sub-borda-bg-color:screen(@base-color-1,#ccc);
+@sub-borda-bg-deg-color:screen(@base-color-1,#999);
 
 // Cores dos paineis
 @panel-bg-color:@base-color-2;

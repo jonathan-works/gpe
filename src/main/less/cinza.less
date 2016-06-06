@@ -1,75 +1,98 @@
 @import "padrao.import.less";
 @import "colors.import.less";
 
-@bgColorSelect:#f2f2f2;
-@button-txt-color:#333;
-@button-bg-color:#aaa;
-@button-bg-deg-color:#aaa;
-@button-border-color:#a8a8a8;
-@bgColorSelect:#f2f2f2;
-@borderColorInputTree:#4d4d4d;
-@bgColorInputTextareaSelect:#f5f5f5;
-@borderColorInputTextareaSelect:#dddddd;
-@bgColorRequired:#808080;
-@headerBackgroundColor:#e3e3e3;
-@headerTextColor:#6a6a6a;
-@panelBorderColor:#c0c0c0;
-@tableBorderColor:#c0c0c0;
-@baseBgColor:#d3d3d3;
-@baseDegBgColor:#bababa;
-@login-label-color:#616161;
-@base-label-color:#616161;
-@base-label-color-selecionado: #616161;
-@panel-border-color:#ccc;
+@base-color-1:#000;
+@base-color-2:#fff;
+@base-border-color:#000;
 
-@zebra-row-color-odd:#fafafa;
-@zebra-row-color-even:#e7e7e7;
-@zebra-row-color-over:#afafaf;
-@dt-toolbar-column-border-color:#cccccc;
-@rf-dt-col-shdr-cont-color:#000000;
-@header-bg-color:#d0d0d0;
-@header-bg-deg-color:#e0e0e0;
-@menu-bg-color:#adadad;
-@menu-txt-color:#1a1a1a;
-@menu-nav-txt-color: #1a1a1a;
-@login-label-color:#616161;
-@login-corpoSuperior-bg-color:#d9d9d9;
-@login-corpoSuperior-bg-deg-color:#c9c9c9;
-@login-corpoInferior-bg-color:#d3d3d3;
-@login-corpoInferior-bg-deg-color:#c1c1c1;
-@central-block-top-right-section-bg-color:#aeaeae;
-@central-block-top-right-section-bg-deg-color:#c4c4c4;
-@central-block-bottom-right-section-bg-color:#cfcfcf;
-@central-block-bottom-right-section-bg-deg-color:#c5c5c5;
-@input-text-login-bg-color:#f6f6f6;
-@input-text-login-bg-deg-color:#ffffff;
-@input-text-login-bord-color:#cdcdcd;
+@standard-border-color:@base-border-color;
+@input-border-color:@base-border-color;
+@bgColorSelect:darken(@base-color-2,45%);
 
-@sub-borda-bg-color:greyscale(#80a991);
-@sub-borda-bg-deg-color:greyscale(#bbcec2);
-@sub-borda-title-color:greyscale(#FFF);
+@borderColorInputTree:@base-color-2;
+@bgColorInputTextareaSelect:darken(@base-color-2,45%);
+@borderColorInputTextareaSelect:darken(@base-color-2,45%);
+@bg-color-required:#F00;
+@headerBackgroundColor:darken(@base-color-2,45%);
+@headerTextColor:lighten(@base-color-1,10%);
+@panelBorderColor:@base-border-color;
+@tableBorderColor:@base-border-color;
+@tableBorderWidth:1px;
 
-@pp-hdr-bg-color:greyscale(#a0c991);
-@pp-hdr-txt-color:greyscale(#030);
+@panel-border-color:@base-border-color;
 
-@cal-bg-color:greyscale(#a0c991);
-@cal-txt-color:greyscale(#030);
-@cal-bg-color-today:greyscale(#030);
+@base-bg-color:@base-color-1;
+@base-bg-color:@base-color-1;
+@baseDegBgColor:@base-color-1;
 
-@file-upload-btns-bg-color:greyscale(#c3d9e4);
-@file-upload-hdr-bg-color:greyscale(#a0c991);
+@dt-toolbar-column-border-color:@base-border-color;
+@rf-dt-col-shdr-cont-color:@base-color-2;
 
-@ctx-menu-bg-color:greyscale(#a0c991);
-@ctx-menu-txt-color:greyscale(#030);
+@header-bg-color:darken(@base-color-2,45%);
+@header-bg-deg-color:darken(@base-color-2,45%);
 
-@expr-wiz-Transition-color:greyscale(#44F);
-@expr-wiz-String-color:greyscale(#66F);
-@expr-wiz-Boolean-color:greyscale(#A00);
-@expr-wiz-Arith-color:greyscale(#040);
+@pp-hdr-bg-color:@base-color-1;
+@pp-hdr-txt-color:@base-color-2;
 
-@bg-color-item-selecionado: @menu-bg-color;
-@infox-tab-bg-color:@menu-bg-color;
-@infox-tab-txt-color:@menu-txt-color;
+@cal-bg-color:@base-color-1;
+@cal-txt-color:@base-color-2;
 
-@panel-bg-color:@menu-bg-color;
-@panel-txt-color:@menu-txt-color;
+@file-upload-btns-bg-color:darken(@base-color-2,45%);
+@file-upload-hdr-bg-color:@base-color-1;
+
+@ctx-menu-bg-color:@base-color-2;
+@ctx-menu-txt-color:@base-color-1;
+
+@expr-wiz-Transition-color:#44F;
+@expr-wiz-String-color:#66F;
+@expr-wiz-Boolean-color:#A00;
+@expr-wiz-Arith-color:#040;
+
+//  Novas variáveis
+@base-label-color: @base-color-2;
+@base-label-color-selecionado: @base-color-2;
+@cal-bg-color-today:@base-color-2;
+@bg-color-item-selecionado: @base-color-1;
+
+//  Cores dos botões do sistema
+@button-txt-color:contrast(@base-color-1, @base-color-1, @base-color-2);
+@button-bg-color:@base-color-1;
+@button-bg-deg-color:@base-color-2;
+
+@button-border-color:@base-color-1;
+
+// Cores do fundo padrão do cabeçalho
+@header-bg-color:@base-color-1;
+@header-bg-deg-color:@base-color-1;
+
+// Cores do fundo padrão do sistema
+@base-bg-color:@base-color-1;
+@baseDegBgColor:@base-color-1;
+
+// Cores do quadro padrão
+@sub-borda-bg-color:@base-color-1;
+@sub-borda-bg-deg-color:@base-color-1;
+
+// Cores dos paineis
+@panel-bg-color:@base-color-2;
+@panel-txt-color:@base-color-1;
+
+@toggle-panel-bg-color:@base-color-2;
+@toggle-panel-txt-color:@base-color-1;
+
+// Cores do menu
+@menu-bg-color:@base-color-1;
+@menu-txt-color:@base-color-2;
+@menu-nav-txt-color:@base-color-2; // OLD
+
+// Cores das abas
+@infox-tab-bg-color:@base-color-1;
+@infox-tab-txt-color:@base-color-2;
+
+@panel-bg-color:@base-color-2;
+@panel-txt-color:@base-color-1;
+
+@input-text-login-bord-color:darken(@base-color-2,45%);
+
+@sub-borda-bg-color:@base-color-2;
+@sub-borda-title-color:@base-color-1;

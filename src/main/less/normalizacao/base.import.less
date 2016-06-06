@@ -1,4 +1,18 @@
-
+#normalize-html(){
+  .standard{
+    option[disabled="disabled"] {
+      text-decoration: line-through;
+    }
+    input, select, textarea, button, keygen, isindex, legend, a{
+        #normalize-rich-components > .fonts;
+    }
+  }
+  .standard-colors{
+    option {
+      background-color:@bgColorSelect;
+    }
+  }
+}
 #normalize-rich-components(){
     .fonts {
       font-size:1em;
@@ -7,7 +21,7 @@
     .background{
       background-repeat: inherit;
       background-position: inherit;
-      background-color: inherit;
+      background-color: initial;
       background-image: inherit;
     }
 }
@@ -26,10 +40,28 @@
 
 #normalize-prime-components() {
   .picklist {
-    .ui-picklist {
-      .ui-picklist-list {
+    & &-list {
         width: initial;
-      }
+    }
+  }
+
+  .inputfield{
+    .prefixed-atrib(box-shadow, initial);
+    .ui-widget-content &, .ui-widget-header & {
+        .prefixed-atrib(box-shadow, initial);
+    }
+    &.ui-state-focus,
+    .ui-widget-content &.ui-state-focus,
+    .ui-widget-header &.ui-state-focus {
+      .prefixed-atrib(box-shadow, initial);
+      outline: initial;
+    }
+  }
+  .inputfield-colors{
+    &.ui-state-focus,
+    .ui-widget-content &.ui-state-focus,
+    .ui-widget-header &.ui-state-focus {
+      border-color: @standard-border-color;
     }
   }
 }
@@ -41,13 +73,10 @@ p {
     }
 }
 body {
+    #normalize-html > .standard;
     #normalize-prime-components > .picklist;
-    #normalize-infox-components > .default;
     .ui-widget, .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button{
       #normalize-rich-components > .fonts;
-    }
-    input, select, textarea, button, keygen, isindex, legend, a{
-        #normalize-rich-components > .fonts;
     }
 
     button, input[type="reset"], input[type="submit"], input[type="button"], textarea, input[type="text"], input[type="password"], select{
@@ -65,15 +94,6 @@ body {
     .rf-au{
       #normalize-rich-components > .fonts;
       #normalize-rich-components > .background;
-    }
-    .rf-p-b {
-      #normalize-rich-components > .fonts;
-      padding:1em;
-    }
-    .rf-p-hdr{
-      #normalize-rich-components > .fonts;
-      padding:2em/11;
-      border-width:1em/11;
     }
     .rf-cp-hdr {
       #normalize-rich-components > .fonts;
@@ -98,41 +118,7 @@ body {
       #normalize-rich-components > .background;
       padding:4em/11;
     }
-    .rf-pp-hdr-cnt, .rf-pp-hdr-cntrls, .rf-pp-cnt{
-      #normalize-rich-components > .fonts;
-    }
-    .rf-trn{
-      #normalize-rich-components > .fonts;
-    }
-
-    .ui-inputfield,
-    .ui-widget-content .ui-inputfield,
-    .ui-widget-header .ui-inputfield {
-        .prefixed-atrib(box-shadow, initial);
-    }
-    .ui-inputfield.ui-state-focus,
-    .ui-widget-content .ui-inputfield.ui-state-focus,
-    .ui-widget-header .ui-inputfield.ui-state-focus {
-        border-color: @standard-border-color;
-        outline: initial;
-        .prefixed-atrib(box-shadow, initial);
-
-    }
-
 }
 html {
   font-size:0.8125rem;
 }
-/*
-html {
-  @media
-  only screen and (-webkit-min-device-pixel-ratio: 2),
-  only screen and (   min--moz-device-pixel-ratio: 2),
-  only screen and (     -o-min-device-pixel-ratio: 2/1),
-  only screen and (        min-device-pixel-ratio: 2),
-  only screen and (                min-resolution: 192dpi),
-  only screen and (                min-resolution: 2dppx){
-    font-size:0.8125rem*2;
-  }
-}
-*/

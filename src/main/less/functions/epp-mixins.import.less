@@ -16,6 +16,11 @@
 
 }
 
+.opacity(@value:100){
+  opacity:@value/100;
+  filter: ~"alpha(opacity = @{value})";
+}
+
 .prefixed-atrib(@atrib;@rest ...) {
   -webkit-@{atrib}: ~"@{rest}";
   -moz-@{atrib}: ~"@{rest}";

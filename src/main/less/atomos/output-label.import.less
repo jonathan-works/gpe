@@ -1,0 +1,17 @@
+#output-label() {
+  .primefaces{
+      font-family: @default-font-family;
+      &.property-field-edit-name{
+        font-size: 11rem/16;
+      }
+  }
+  .primefaces-colors{
+    &-rfi {
+      color:@bg-color-required;
+    }
+  }
+}
+
+.ui-outputlabel {
+  #output-label > .primefaces;
+}
