@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <infinispan xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="urn:infinispan:config:5.0">
+        xsi:schemaLocation="urn:infinispan:config:5.2 http://www.infinispan.org/schemas/infinispan-config-5.2.xsd"
+        xmlns="urn:infinispan:config:5.2">
 
 	<global>
 		<transport
 			transportClass="org.infinispan.remoting.transport.jgroups.JGroupsTransport"
 			clusterName="infinispan-hibernate-cluster" distributedSyncTimeout="50000">
-			<!-- Note that the JGroups transport uses sensible defaults if no configuration 
-				property is defined. -->
+			<!-- Note that the JGroups transport uses sensible defaults if no configuration property is defined. -->
 			<properties>
-				<!-- TODO: Change to udp.xml once streaming transfer requirement has 
-					been removed. -->
+				<!-- TODO: Change to udp.xml once streaming transfer requirement has been removed.
 				<property name="configurationFile" value="flush-udp.xml" />
+				 -->
 			</properties>
 			<!-- See the JGroupsTransport javadocs for more flags -->
 		</transport>
@@ -20,15 +20,11 @@
 	<!-- Default configuration is appropriate for entity/collection caching. -->
 	<namedCache name="entity">
 		<clustering mode="invalidation">
-			<stateRetrieval fetchInMemoryState="false" timeout="20000" />
+			<stateTransfer fetchInMemoryState="false" timeout="20000" />
 			<sync replTimeout="20000" />
 		</clustering>
-		<locking isolationLevel="READ_COMMITTED" concurrencyLevel="1000"
-			lockAcquisitionTimeout="15000" useLockStriping="false" />
-		<!-- Eviction configuration. WakeupInterval defines how often the eviction 
-			thread runs, in milliseconds. 0 means the eviction thread will never run. 
-			A separate executor is used for eviction in each cache. -->
-		<eviction wakeUpInterval="5000" maxEntries="10000" strategy="LRU" />
+		<locking isolationLevel="READ_COMMITTED" concurrencyLevel="1000" lockAcquisitionTimeout="15000" useLockStriping="false" />
+		<eviction maxEntries="10000" strategy="LRU" />
 		<expiration maxIdle="100000" />
 		<lazyDeserialization enabled="true" />
 		<transaction transactionMode="NON_TRANSACTIONAL" />
@@ -36,12 +32,8 @@
 
 	<!-- A config appropriate for query caching. Does not replicate queries. -->
 	<namedCache name="local-query">
-		<locking isolationLevel="READ_COMMITTED" concurrencyLevel="1000"
-			lockAcquisitionTimeout="15000" useLockStriping="false" />
-		<!--Eviction configuration. WakeupInterval defines how often the eviction 
-			thread runs, in milliseconds. 0 means the eviction thread will never run. 
-			A separate executor is used for eviction in each cache. -->
-		<eviction wakeUpInterval="5000" maxEntries="10000" strategy="LRU" />
+		<locking isolationLevel="READ_COMMITTED" concurrencyLevel="1000" lockAcquisitionTimeout="15000" useLockStriping="false" />
+		<eviction maxEntries="10000" strategy="LRU" />
 		<expiration maxIdle="100000" />
 		<transaction transactionMode="NON_TRANSACTIONAL" />
 	</namedCache>
@@ -51,14 +43,12 @@
 		CacheMode=LOCAL. -->
 	<namedCache name="timestamps">
 		<clustering mode="replication">
-			<stateRetrieval fetchInMemoryState="true" timeout="20000" />
+			<stateTransfer fetchInMemoryState="true" timeout="20000" />
 			<async />
 		</clustering>
-		<locking isolationLevel="READ_COMMITTED" concurrencyLevel="1000"
-			lockAcquisitionTimeout="15000" useLockStriping="false" />
+		<locking isolationLevel="READ_COMMITTED" concurrencyLevel="1000" lockAcquisitionTimeout="15000" useLockStriping="false" />
 		<lazyDeserialization enabled="true" />
-		<!-- Don't ever evict modification timestamps -->
-		<eviction wakeUpInterval="0" strategy="NONE" />
+		<eviction strategy="NONE" />
 	</namedCache>
 
 </infinispan>
