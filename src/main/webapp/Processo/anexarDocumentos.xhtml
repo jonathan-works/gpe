@@ -265,7 +265,7 @@
 								rendered="#{isModelo and not row.documentoBin.minuta}"
 								status=":status" styleClass="opacityHover"
 								onclick="infox.showLoading();" render="@this"
-								oncomplete="infox.hideLoading(); window.open('#{pathResolver.contextPath}/downloadDocumento.seam?id=#{row.documentoBin.id}&amp;binario=true');">
+								oncomplete="infox.hideLoading(); window.open('#{pathResolver.contextPath}/Processo/downloadDocumento.seam');">
 								<infox:flashcopy />
 								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
 								<f:setPropertyActionListener value="#{row}"
