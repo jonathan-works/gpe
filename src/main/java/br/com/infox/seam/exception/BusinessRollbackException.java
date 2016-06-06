@@ -1,6 +1,11 @@
 package br.com.infox.seam.exception;
 
-public class BusinessRollbackException extends RuntimeException {
+import org.jboss.seam.annotations.ApplicationException;
+
+@ApplicationException(rollback = true, end = false)
+@javax.ejb.ApplicationException(rollback = true)
+public class BusinessRollbackException extends BusinessException {
+    
 	private static final long serialVersionUID = 1L;
 
 	public BusinessRollbackException() {

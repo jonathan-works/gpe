@@ -197,9 +197,6 @@ public class Processo implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "processo", cascade = {CascadeType.REMOVE})
     private List<Pasta> pastaList = new ArrayList<>();
     
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "processo", cascade = {CascadeType.REMOVE})
-    private List<VariavelInicioProcesso> variaveisInicioProcesso = new ArrayList<>();
-    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_processo_root")
     private Processo processoRoot;
@@ -396,14 +393,6 @@ public class Processo implements Serializable {
 		this.pastaList = pastaList;
 	}
 	
-	public List<VariavelInicioProcesso> getVariaveisInicioProcesso() {
-        return variaveisInicioProcesso;
-    }
-
-    public void setVariaveisInicioProcesso(List<VariavelInicioProcesso> variaveisInicioProcesso) {
-        this.variaveisInicioProcesso = variaveisInicioProcesso;
-    }
-
     public boolean hasPartes(){
     	return naturezaCategoriaFluxo.getNatureza().getHasPartes();
     }
