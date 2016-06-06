@@ -84,6 +84,9 @@ public class Municipio implements Serializable {
 	
 	@Override
 	public String toString() {
-		return getNome();
+		StringBuilder sb = new StringBuilder(getNome());
+		sb.append(" - ");
+		sb.append(getEstado().getCodigo());
+		return sb.toString();
 	}
 }
