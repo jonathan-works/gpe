@@ -223,4 +223,19 @@ public class EntregaSearch extends PersistenceController {
 		query.where(query.getRestriction(), cb.equal(root.get(ClassificacaoDocumentoEntrega_.modeloEntrega), modeloEntrega));
 		return entityManager.createQuery(query).getSingleResult();
 	}
+	
+	public List<EntregaResponsavel> getResponsaveisEntrega(Entrega entrega, EntregaResponsavel responsavelVinculadoPai) {
+		EntityManager entityManager = getEntityManager();
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<EntregaResponsavel> query = cb.createQuery(EntregaResponsavel.class);
+		Root<EntregaResponsavel> root = query.from(EntregaResponsavel.class);
+		query.where(cb.equal(root.get(EntregaResponsavel_.entrega), entrega));
+		if (responsavelVinculadoPai == null) {
+			query.where(query.getRestriction(), cb.isNull(root.get(EntregaResponsavel_.responsavelVinculado)));
+		} else {
+			query.where(query.getRestriction(), cb.equal(root.get(EntregaResponsavel_.responsavelVinculado), responsavelVinculadoPai));
+		}
+		query.orderBy(cb.asc(root.get(EntregaResponsavel_.nome)));
+		return entityManager.createQuery(query).getResultList();
+	}
 }
