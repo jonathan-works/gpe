@@ -105,6 +105,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  render: function render() {
 	    return React.DOM.main({
 	      ref: this.renderContent,
+	      "data-title": this.props.title,
 	      className: MenuConstants.CSS_CLASSES.MENU_CONTENT
 	    });
 	  }
@@ -140,9 +141,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  displayName: 'NavigationMenu',
 
 	  render: function render() {
+	    var contentProps = Object.assign({}, this.props.content);
+	    contentProps.title = document.head.querySelector("title").textContent;
 	    return React.DOM.div({
 	      className: MenuConstants.CSS_CLASSES.FIXED_HEAD_DRAWER
-	    }, React.createElement(MenuContent, this.props.content), React.createElement(Header, this.props.topMenu), React.createElement(Drawer, this.props.navigationMenu));
+	    }, React.createElement(MenuContent, contentProps), React.createElement(Header, this.props.topMenu), React.createElement(Drawer, this.props.navigationMenu));
 	  }
 	});
 
@@ -421,6 +424,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        ITEM_LABEL_TEXT: menu + '-itm-lbl-text',
 	        MENU: menu + '',
 	        NAV_MENU: menu + '-nav',
+	        PAGE_TITLE: 'ifx-page-title',
 	        MENU_CONTENT: 'ifx-menu-content',
 	        DRAWER: 'ifx-navigation-menu',
 	        HEADER: 'ifx-top-menu',
