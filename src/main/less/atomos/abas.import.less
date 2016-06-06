@@ -1,49 +1,55 @@
 /* CORES DAS ABAS */
 #abas() {
-    .tabs {
-        .ui-tabs {
-            background-image: none;
-            background-color: inherit;
-            border-style: none;
-            .ui-tabs-nav {
-                background-image: none;
-                background-color: inherit;
-                border-style: none;
-                display: inline-block;
-                padding: 0 5px;
-                margin: 0 0 1px;
-                &.ui-widget-header {
-                    margin: 0;
-                    padding: 0;
-                    li {
-                        background-color: @infox-tab-bg-color;
-                        background-image: none;
-                        border: solid #ccc;
-                        border-width: 0 0 5px;
-                        border-radius: 0;
-                        margin: 0 0 0 2px;
-                        padding: 0;
-                        & > a {
-                            color: @infox-tab-txt-color;
-                            text-shadow: none;
-                        }
-                        &.ui-state-active {
-                            margin: 0 0 0 2px;
-                            padding: 0;
-                            border-width: 0 0 5px;
-                            border-bottom-color: @infox-tab-txt-color;
-                        }
-                    }
-                }
-            }
-            .ui-tabs-panel {
-              margin: .25em 0;
-              padding: .25em .5em;
-              border-width: 1px 0;
-            }
-        }
+    .standard {
+      background-image: initial;
+      background-color: initial;
+      border-style: initial;
+      & &-panel {
+          margin: 0.25em 0;
+          padding: 0.25em 0.5em;
+          border-width: 1px 0;
+      }
+      & &-nav {
+          background-image: initial;
+          background-color: initial;
+          border-style: initial;
+          display: inline-block;
+          padding: 0 5px;
+          margin: 0 0 1px;
+      }
+      & &-nav.ui-widget-header {
+          margin: 0;
+          padding: 0;
+          li.ui-state-default,li.ui-state-active {
+            margin: 0 0 0 2px;
+            padding: 0;
+            border-width: 0 0 5px;
+            border-radius: 0;
+          }
+          li.ui-state-default {
+              background-image: initial;
+              border: solid #ccc;
+              > a {
+                  text-shadow: initial;
+              }
+          }
+      }
+    }
+    .standard-colors {
+      & &-nav.ui-widget-header {
+          li.ui-state-default {
+              background-color: @infox-tab-bg-color;
+              border: solid #ccc;
+              > a {
+                  color: @infox-tab-txt-color;
+              }
+          }
+          li.ui-state-active {
+              border-bottom-color: @infox-tab-txt-color;
+          }
+      }
     }
 }
-body {
-    #abas > .tabs;
+.ui-tabs {
+    #abas > .standard;
 }

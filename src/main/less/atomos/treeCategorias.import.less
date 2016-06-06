@@ -1,10 +1,14 @@
+.transparent-bg-color(@cor:@menu-bg-color,@fade:4) when (luminance(@cor)<=50%) {
+  @transparent-menu-bg-color: fade(#fff,@fade);
+}
+.transparent-bg-color(@cor:@menu-bg-color,@fade:4) when (luminance(@cor) > 50%) {
+  @transparent-menu-bg-color: fade(#000,@fade);
+}
+
 #action() {
   .action-container {
     > * {
       cursor: pointer;
-      &:hover {
-        background-color: fade(#fff,20);
-      }
     }
   }
 }
@@ -24,9 +28,12 @@
     .prefixed-atrib(transform-origin, top, left);
     .prefixed-atrib(transition, all 0.3s linear);
     &-cont {}
+    section > & {
+      background-color: @menu-bg-color;
+    }
     & & {
-      .mdl-shadow--2dp;
-      background-color: fade(#fff,20);
+      .transparent-bg-color;
+      background-color: @transparent-menu-bg-color;
     }
     &&-folded {
       position: absolute;
@@ -41,8 +48,12 @@
         padding: 1em;
       }
     }
-    &&-sel,
+    &&-sel {
+      .transparent-bg-color;
+      background-color: @transparent-menu-bg-color;
+    }
     &:hover {
+      .transparent-bg-color(@fade:8);
       background-color: @transparent-menu-bg-color;
     }
     &-lbl {
@@ -55,15 +66,16 @@
     background-repeat: no-repeat;
     background-position: 0 1em;
     padding: 0 0 0 0.3em;
-    background-image:url("#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','keyboard_arrow_right')}");
+    .material-design-icon('keyboard_arrow_right');
     &-has-children {
-      background-image:url("#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','keyboard_arrow_down')}");
+      .material-design-icon('keyboard_arrow_down');
     }
     &-sel {
-      background-image:url("#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','keyboard_arrow_up')}");
+      .material-design-icon('keyboard_arrow_up');
     }
   }
   .group {
+    .transparent-bg-color;
     background-color: @transparent-menu-bg-color;
     &-cont {
       .display-flex;
@@ -83,11 +95,9 @@
   }
 }
 .groupedItemsTreeContainer {
-  background-color: @menu-bg-color;
   display: inline-block;
   vertical-align:top;
 }
-@transparent-menu-bg-color: fade(#fff, 20);
 .grpd-tree {
   #tree-categorias>.grpd-tree;
 }

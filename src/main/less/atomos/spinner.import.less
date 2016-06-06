@@ -1,17 +1,18 @@
 .spinner {
-    display: inline-block;
+    display:none;
     position: relative;
     width: 28px;
-    height: 28px
-}
-
-.spinner:not(.is-upgraded).is-active:after {
-    content: ""
-}
-
-.spinner.is-upgraded.is-active {
-    -webkit-animation: spinner-container-rotate 1568.23529412ms linear infinite;
-    animation: spinner-container-rotate 1568.23529412ms linear infinite
+    height: 28px;
+    &.is-active {
+      display: inline-block;
+    }
+    &:not(.is-upgraded).is-active:after {
+      content: ""
+    }
+    &.is-upgraded.is-active {
+      -webkit-animation: spinner-container-rotate 1568.23529412ms linear infinite;
+      animation: spinner-container-rotate 1568.23529412ms linear infinite
+    }
 }
 
 @-webkit-keyframes spinner-container-rotate {

@@ -470,7 +470,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  'displayName': 'TreeCategorias',
 	  propTypes: {
 	    orientation: React.PropTypes.oneOf(['horizontal', 'vertical']),
-	    servicePath: React.PropTypes.string,
 	    groupToolBar: React.PropTypes.arrayOf(React.PropTypes.shape({
 	      icon: React.PropTypes.string,
 	      title: React.PropTypes.string.isRequired,
@@ -524,14 +523,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	      obj.itemToolBar = props.itemToolBar;
 	      return React.createElement(Groups, obj);
 	    });
-	    if (this.state.loading) {
+	    var isLoading = this.state.loading;
+	    if (isLoading) {
 	      treeClasses.push(Constants.CSS.GROUPED_TREE_IS_LOADING);
-	      var key = children.length;
-	      children.push(React.createElement(Spinner, { key: key, active: true }));
+	    } else if (children === null || children.length === 0) {
+	      children = this.props.config.emptyMessage || '';
 	    }
 	    return React.createElement(
 	      'section',
 	      { className: treeClasses.join(' '), ref: this.handleRenderRef },
+	      React.createElement(Spinner, { active: isLoading }),
 	      children
 	    );
 	  }
@@ -4174,19 +4175,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  propTypes: {
 	    active: React.PropTypes.bool
 	  },
-	  getInitialState: function getInitialState() {
-	    return { active: !!this.props.active };
-	  },
 	  handleRenderRef: function handleRenderRef(domReference) {
-	    var _this = this;
-
 	    if (domReference !== null) {
 	      domReference._mdl = {
 	        start: function start() {
-	          return _this.setState({ active: true });
+	          return domReference.classList.add(CssClasses_.IS_ACTIVE);
 	        },
 	        stop: function stop() {
-	          return _this.setState({ active: false });
+	          return domReference.classList.remove(CssClasses_.IS_ACTIVE);
 	        }
 	      };
 	    }
@@ -4197,7 +4193,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      layers.push(React.createElement(Layer, { key: i, index: i }));
 	    }
 	    var classNames = [CssClasses_.CONTAINER];
-	    if (this.state.active) {
+	    if (this.props.active) {
 	      classNames.push(CssClasses_.IS_ACTIVE);
 	    }
 	    return React.createElement(
@@ -4329,21 +4325,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	      onSelect: React.PropTypes.func.isRequired
 	    }))
 	  },
-	  applyRefsCss: function applyRefsCss(obj) {
-	    if (obj) {
-	      var groupContent = getComputedStyle(obj.querySelector("." + Constants.CSS.GROUP_CONTENT));
-	      obj.style.minHeight = groupContent.width;
-	      obj.style.minWidth = groupContent.height;
+	  updateStyle: function updateStyle() {
+	    if (this.domElements && this.domElements.groupContent && this.domElements.group) {
+	      var groupContentStyle = getComputedStyle(this.domElements.groupContent);
+	      this.domElements.group.style.minHeight = groupContentStyle.width;
+	      this.domElements.group.style.minWidth = groupContentStyle.height;
 	    }
+	  },
+	  referenceGroup: function referenceGroup(domElement) {
+	    this.domElements = Object.assign({}, this.domElements, { group: domElement });
+	    this.updateStyle();
+	  },
+	  referenceGroupContent: function referenceGroupContent(domElement) {
+	    this.domElements = Object.assign({}, this.domElements, { groupContent: domElement });
+	    this.updateStyle();
 	  },
 	  render: function render() {
 	    var toolBarItems = (this.props.groupToolBar || []).map(mapToolBarItem.bind(this));
 	    return React.createElement(
 	      'div',
-	      { className: Constants.CSS.GROUP, ref: this.applyRefsCss },
+	      { className: Constants.CSS.GROUP, ref: this.referenceGroup },
 	      React.createElement(
 	        'div',
-	        { className: Constants.CSS.GROUP_CONTENT },
+	        { className: Constants.CSS.GROUP_CONTENT, ref: this.referenceGroupContent },
 	        React.createElement(
 	          'label',
 	          { className: Constants.CSS.GROUP_LABEL },

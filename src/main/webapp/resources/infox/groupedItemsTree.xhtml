@@ -10,6 +10,7 @@
     	<composite:attribute name="help" />
     	<composite:attribute name="baseUrl" type="java.lang.String" required="true" />
     	<composite:attribute name="path" type="java.lang.String" />
+    	<composite:attribute name="emptyMessage" type="java.lang.String" default="#{infoxMessages['list.defaultNoDataLabel']}"/>
     	<composite:attribute name="groupDelimiter" type="java.lang.String" default="group"/>
     	<composite:attribute name="itemDelimiter" type="java.lang.String" default="item"/>
     	
@@ -29,6 +30,7 @@
     				"url":"#{cc.attrs.baseUrl}",
     				"groupDelimiter":"#{cc.attrs.groupDelimiter}",
     				"itemDelimiter":"#{cc.attrs.itemDelimiter}",
+    				"emptyMessage":"#{cc.attrs.emptyMessage}",
     				"headers":{},
     				"queries":[]
                 }

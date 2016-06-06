@@ -1,3 +1,7 @@
+.material-design-icon(@name,@dpr:'1x', @color:'black', @size:'18dp'){
+  background-image:~"url(#{layoutController.getMaterialDesignIconUrl('@{dpr}','@{color}','@{size}','@{name}')})";
+}
+
 .background-image(@base-path:@imgFolder, @image-name) {
   background-image: ~"url("%("%s/%s",@base-path,@image-name)~")";
 }
