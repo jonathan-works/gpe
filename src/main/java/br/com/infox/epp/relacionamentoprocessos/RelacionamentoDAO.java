@@ -19,9 +19,9 @@ import br.com.infox.epp.processo.entity.RelacionamentoProcesso;
 import br.com.infox.epp.processo.entity.RelacionamentoProcessoExterno;
 import br.com.infox.epp.processo.entity.RelacionamentoProcessoInterno;
 
+@Stateless
 @AutoCreate
 @Name(RelacionamentoDAO.NAME)
-@Stateless
 public class RelacionamentoDAO extends DAO<Relacionamento> {
 
 	public static final String NAME = "relacionamentoDAO";

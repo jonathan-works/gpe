@@ -27,9 +27,9 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.epp.system.entity.Parametro_;
 
+@Stateless
 @AutoCreate
 @Name(ParametroDAO.NAME)
-@Stateless
 public class ParametroDAO extends DAO<Parametro> {
 
     private static final long serialVersionUID = 1L;

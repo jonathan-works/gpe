@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -14,18 +16,14 @@ import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.FluxoPapel;
 
-@Name(FluxoPapelDAO.NAME)
+@Stateless
 @AutoCreate
+@Name(FluxoPapelDAO.NAME)
 public class FluxoPapelDAO extends DAO<FluxoPapel> {
+    
     private static final long serialVersionUID = 1L;
     public static final String NAME = "fluxoPapelDAO";
 
-    /**
-     * Lista todos os papeis relacionados a um determinado fluxo.
-     * 
-     * @param fluxo que se deseja obter os papeis.
-     * @return
-     */
     public List<FluxoPapel> listByFluxo(Fluxo fluxo) {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(PARAM_FLUXO, fluxo);

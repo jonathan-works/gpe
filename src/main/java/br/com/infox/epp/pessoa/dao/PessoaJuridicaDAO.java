@@ -13,9 +13,9 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 
-@Name(PessoaJuridicaDAO.NAME)
-@AutoCreate
 @Stateless
+@AutoCreate
+@Name(PessoaJuridicaDAO.NAME)
 public class PessoaJuridicaDAO extends DAO<PessoaJuridica> {
 
     private static final long serialVersionUID = 1L;

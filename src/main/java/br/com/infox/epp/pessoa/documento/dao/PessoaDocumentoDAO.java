@@ -9,6 +9,8 @@ import static br.com.infox.epp.pessoa.documento.query.PessoaDocumentoQuery.USUAR
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -18,6 +20,7 @@ import br.com.infox.epp.pessoa.documento.entity.PessoaDocumento;
 import br.com.infox.epp.pessoa.documento.type.TipoPesssoaDocumentoEnum;
 import br.com.infox.epp.pessoa.entity.Pessoa;
 
+@Stateless
 @AutoCreate
 @Name(PessoaDocumentoDAO.NAME)
 public class PessoaDocumentoDAO extends DAO<PessoaDocumento> {

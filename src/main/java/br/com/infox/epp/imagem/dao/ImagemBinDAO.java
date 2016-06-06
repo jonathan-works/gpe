@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -18,8 +19,9 @@ import br.com.infox.core.util.FileUtil;
 import br.com.infox.epp.imagem.entity.ImagemBin;
 import br.com.infox.epp.imagem.query.ImagemBinQuery;
 
-@Name(ImagemBinDAO.NAME)
+@Stateless
 @AutoCreate
+@Name(ImagemBinDAO.NAME)
 public class ImagemBinDAO extends DAO<ImagemBin> {
 
     private static final long serialVersionUID = 1L;
@@ -38,14 +40,6 @@ public class ImagemBinDAO extends DAO<ImagemBin> {
         persist(imagemBin);
     }
 
-    /**
-     * Metodo que recebe um array de bytes e um File indicando o destino e salva
-     * os bytes no arquivo de destino.
-     * 
-     * @param bytesOrigem
-     * @param fileDestino
-     * @throws IOException
-     */
     public void saveFile(byte[] bytesOrigem, File fileDestino) throws IOException {
         fileDestino.createNewFile();
         OutputStream out = null;

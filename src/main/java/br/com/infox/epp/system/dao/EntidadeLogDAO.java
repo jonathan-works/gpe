@@ -4,6 +4,8 @@ import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -11,8 +13,9 @@ import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.system.entity.EntityLog;
 
-@Name(EntidadeLogDAO.NAME)
+@Stateless
 @AutoCreate
+@Name(EntidadeLogDAO.NAME)
 public class EntidadeLogDAO extends DAO<EntityLog> {
 
     private static final long serialVersionUID = 1L;

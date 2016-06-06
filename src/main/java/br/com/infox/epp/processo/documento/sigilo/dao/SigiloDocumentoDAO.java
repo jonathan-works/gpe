@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
@@ -18,9 +18,9 @@ import br.com.infox.epp.processo.documento.sigilo.entity.SigiloDocumento;
 import br.com.infox.epp.processo.documento.sigilo.query.SigiloDocumentoQuery;
 import br.com.infox.epp.processo.entity.Processo;
 
-@Name(SigiloDocumentoDAO.NAME)
+@Stateless
 @AutoCreate
-@Scope(ScopeType.EVENT)
+@Name(SigiloDocumentoDAO.NAME)
 public class SigiloDocumentoDAO extends DAO<SigiloDocumento> {
 
     private static final long serialVersionUID = 1L;

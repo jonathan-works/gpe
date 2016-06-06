@@ -13,8 +13,8 @@ import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.entity.Processo;
 
-@AutoCreate
 @Stateless
+@AutoCreate
 @Name(NumeracaoDocumentoSequencialDAO.NAME)
 public class NumeracaoDocumentoSequencialDAO extends DAO<NumeracaoDocumentoSequencial> {
 	

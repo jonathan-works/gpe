@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -13,8 +15,9 @@ import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.Natureza;
 
-@Name(CategoriaDAO.NAME)
+@Stateless
 @AutoCreate
+@Name(CategoriaDAO.NAME)
 public class CategoriaDAO extends DAO<Categoria> {
 
     private static final long serialVersionUID = -7175831474709085125L;

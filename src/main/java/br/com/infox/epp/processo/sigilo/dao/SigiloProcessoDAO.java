@@ -8,6 +8,8 @@ import static br.com.infox.epp.processo.sigilo.query.SigiloProcessoQuery.QUERY_P
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -16,6 +18,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.sigilo.entity.SigiloProcesso;
 
+@Stateless
 @AutoCreate
 @Name(SigiloProcessoDAO.NAME)
 public class SigiloProcessoDAO extends DAO<SigiloProcesso> {

@@ -34,11 +34,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.TransactionPropagationType;
 import org.jboss.seam.annotations.Transactional;
@@ -64,16 +64,16 @@ import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
+@Stateless
 @AutoCreate
 @Name(ProcessoDAO.NAME)
-@Stateless
 public class ProcessoDAO extends DAO<Processo> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "processoDAO";
 	private static final LogProvider LOG = Logging.getLogProvider(ProcessoDAO.class);
 	
-	@In
+	@Inject
 	private FluxoDAO fluxoDAO;
 
 	public Processo findProcessosByIdProcessoAndIdUsuario(int idProcesso, Integer idUsuarioLogin, Long idTask) {
@@ -191,7 +191,6 @@ public class ProcessoDAO extends DAO<Processo> {
 		return getNamedSingleResult(GET_PROCESSO_BY_NUMERO_PROCESSO, parameters);
 	}
 
-	@Transactional
 	public Processo persistProcessoComNumero(Processo processo) throws DAOException {
 		try {
 			processo.setNumeroProcesso("");

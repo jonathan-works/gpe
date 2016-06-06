@@ -3,6 +3,7 @@ package br.com.infox.epp.processo.documento.dao;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -14,6 +15,7 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.documento.entity.DocumentoBinario;
 import br.com.infox.epp.processo.documento.query.DocumentoBinarioQuery;
 
+@Stateless
 @AutoCreate
 @Name(DocumentoBinarioDAO.NAME)
 public class DocumentoBinarioDAO extends DAO<DocumentoBinario> {
@@ -30,14 +32,6 @@ public class DocumentoBinarioDAO extends DAO<DocumentoBinario> {
         return find(idDocumentoBin).getDocumentoBinario();
     }
 
-    /**
-     * Grava o arquivo binário na base de arquivos Bin com o respctivo Id da
-     * tabela ProcessoDocumentoBin.
-     * 
-     * @param idDocumentoBinario Id da Tabela
-     * @param file Arquivo do tipo byte[]
-     * @throws DAOException
-     */
     public DocumentoBinario gravarBinario(int idDocumentoBinario, byte[] file) throws DAOException {
         return persist(createDocumentoBinario(idDocumentoBinario, file));
     }

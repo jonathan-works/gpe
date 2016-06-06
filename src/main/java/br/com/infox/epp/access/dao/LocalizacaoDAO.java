@@ -28,14 +28,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.TypedQuery;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
@@ -43,9 +42,9 @@ import br.com.infox.epp.access.entity.Estrutura;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.type.TipoUsoLocalizacaoEnum;
 
-@Name(LocalizacaoDAO.NAME)
-@Scope(ScopeType.EVENT)
+@Stateless
 @AutoCreate
+@Name(LocalizacaoDAO.NAME)
 public class LocalizacaoDAO extends DAO<Localizacao> {
 
     private static final long serialVersionUID = 1L;

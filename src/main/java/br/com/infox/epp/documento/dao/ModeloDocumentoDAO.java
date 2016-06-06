@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
@@ -33,9 +34,11 @@ import br.com.infox.epp.documento.entity.TipoModeloDocumentoPapel;
 import br.com.infox.epp.documento.entity.TipoModeloDocumentoPapel_;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento_;
 
-@Name(ModeloDocumentoDAO.NAME)
+@Stateless
 @AutoCreate
+@Name(ModeloDocumentoDAO.NAME)
 public class ModeloDocumentoDAO extends DAO<ModeloDocumento> {
+    
     private static final long serialVersionUID = -39703831180567768L;
     public static final String NAME = "modeloDocumentoDAO";
 

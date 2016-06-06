@@ -14,8 +14,8 @@ import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 
 @Stateless
-@Name(PessoaFisicaDAO.NAME)
 @AutoCreate
+@Name(PessoaFisicaDAO.NAME)
 public class PessoaFisicaDAO extends DAO<PessoaFisica> {
 
     private static final long serialVersionUID = 1L;

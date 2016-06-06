@@ -29,8 +29,8 @@ import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica_;
 
 @AutoCreate
-@Name(UnidadeDecisoraMonocraticaDAO.NAME)
 @Stateless
+@Name(UnidadeDecisoraMonocraticaDAO.NAME)
 public class UnidadeDecisoraMonocraticaDAO extends DAO<UnidadeDecisoraMonocratica>{
 
 	private static final long serialVersionUID = 1L;

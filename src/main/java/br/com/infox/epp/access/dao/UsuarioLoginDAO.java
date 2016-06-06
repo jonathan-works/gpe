@@ -36,9 +36,9 @@ import br.com.infox.epp.access.query.UsuarioLoginQuery;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import edu.emory.mathcs.backport.java.util.Arrays;
 
-@Name(UsuarioLoginDAO.NAME)
-@AutoCreate
 @Stateless
+@AutoCreate
+@Name(UsuarioLoginDAO.NAME)
 public class UsuarioLoginDAO extends DAO<UsuarioLogin> {
 
     private static final long serialVersionUID = 1L;

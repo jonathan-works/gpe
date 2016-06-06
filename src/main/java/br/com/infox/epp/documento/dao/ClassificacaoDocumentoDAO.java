@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.AbstractQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -47,6 +48,7 @@ import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.hibernate.util.HibernateUtil;
 
+@Stateless
 @AutoCreate
 @Name(ClassificacaoDocumentoDAO.NAME)
 public class ClassificacaoDocumentoDAO extends DAO<ClassificacaoDocumento> {

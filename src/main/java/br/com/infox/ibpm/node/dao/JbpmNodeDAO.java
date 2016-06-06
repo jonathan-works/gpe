@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.ejb.Stateless;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -17,8 +18,9 @@ import org.jbpm.graph.def.ProcessDefinition;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.ibpm.util.JbpmUtil;
 
-@Name(JbpmNodeDAO.NAME)
+@Stateless
 @AutoCreate
+@Name(JbpmNodeDAO.NAME)
 public class JbpmNodeDAO extends DAO<Void> {
 
     private static final long serialVersionUID = 1L;

@@ -2,6 +2,7 @@ package br.com.infox.epp.access.dao;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -14,9 +15,11 @@ import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.entity.Permissao;
 import br.com.infox.epp.access.entity.Permissao_;
 
-@Name(PermissaoDAO.NAME)
+@Stateless
 @AutoCreate
+@Name(PermissaoDAO.NAME)
 public class PermissaoDAO extends DAO<Permissao> {
+    
     public static final String NAME = "PermissaoDAO";
     private static final long serialVersionUID = 1L;
 

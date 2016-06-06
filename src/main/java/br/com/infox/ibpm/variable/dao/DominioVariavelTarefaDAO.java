@@ -1,15 +1,15 @@
 package br.com.infox.ibpm.variable.dao;
 
-import org.jboss.seam.ScopeType;
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 
+@Stateless
 @AutoCreate
-@Scope(ScopeType.EVENT)
 @Name(DominioVariavelTarefaDAO.NAME)
 public class DominioVariavelTarefaDAO extends DAO<DominioVariavelTarefa> {
 

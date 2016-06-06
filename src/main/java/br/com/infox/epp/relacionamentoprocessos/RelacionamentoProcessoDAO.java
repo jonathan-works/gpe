@@ -23,9 +23,9 @@ import br.com.infox.epp.processo.entity.RelacionamentoProcessoInterno_;
 import br.com.infox.epp.processo.entity.RelacionamentoProcesso_;
 import br.com.infox.epp.processo.entity.Relacionamento_;
 
+@Stateless
 @AutoCreate
 @Name(RelacionamentoProcessoDAO.NAME)
-@Stateless
 public class RelacionamentoProcessoDAO extends DAO<RelacionamentoProcesso> {
 
     private static final long serialVersionUID = 1L;
@@ -57,10 +57,6 @@ public class RelacionamentoProcessoDAO extends DAO<RelacionamentoProcesso> {
         return result != null;
     }
     
-    /**
-     * Retorna uma lista contendo todos os processos relacionados ao processo informado 
-     * @param classe Retorna apenas processos da classe informada (caso seja nula todos os processos relacionados são retornados)
-     */
     @SuppressWarnings("unchecked")
 	public <T extends RelacionamentoProcesso> List<T> getListProcessosRelacionados(Processo processo, Class<T> classe) {
     	EntityManager entityManager = getEntityManager();

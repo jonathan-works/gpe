@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -22,8 +24,9 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.BloqueioUsuario;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 
-@Name(BloqueioUsuarioDAO.NAME)
+@Stateless
 @AutoCreate
+@Name(BloqueioUsuarioDAO.NAME)
 public class BloqueioUsuarioDAO extends DAO<BloqueioUsuario> {
 
     private static final long serialVersionUID = 1L;

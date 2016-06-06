@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -22,8 +24,9 @@ import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.entity.Permissao;
 import br.com.infox.epp.access.entity.Recurso;
 
-@Name(RecursoDAO.NAME)
+@Stateless
 @AutoCreate
+@Name(RecursoDAO.NAME)
 public class RecursoDAO extends DAO<Recurso> {
 
     private static final long serialVersionUID = 1L;

@@ -12,8 +12,8 @@ import org.jboss.seam.annotations.Transactional;
 import br.com.infox.core.util.EntityUtil;
 
 @Stateless
-@Name(GenericDAO.NAME)
 @AutoCreate
+@Name(GenericDAO.NAME)
 public class GenericDAO extends DAO<Object> {
 
     public static final String NAME = "genericDAO";

@@ -59,8 +59,8 @@ import br.com.infox.epp.processo.documento.sigilo.service.SigiloDocumentoService
 import br.com.infox.epp.processo.entity.Processo;
 
 @AutoCreate
-@Name(DocumentoDAO.NAME)
 @Stateless
+@Name(DocumentoDAO.NAME)
 public class DocumentoDAO extends DAO<Documento> {
 
     private static final long serialVersionUID = 1L;

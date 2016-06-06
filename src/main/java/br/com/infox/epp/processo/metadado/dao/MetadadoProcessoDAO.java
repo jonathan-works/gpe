@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -18,6 +20,7 @@ import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.query.MetadadoProcessoQuery;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoDefinition;
 
+@Stateless
 @AutoCreate
 @Name(MetadadoProcessoDAO.NAME)
 public class MetadadoProcessoDAO extends DAO<MetadadoProcesso> {

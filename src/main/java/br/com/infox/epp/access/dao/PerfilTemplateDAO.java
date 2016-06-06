@@ -6,11 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -22,15 +20,10 @@ import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.PerfilTemplate_;
 import br.com.infox.epp.access.query.PerfilTemplateQuery;
-import br.com.infox.epp.documento.entity.ModeloDocumento;
-import br.com.infox.epp.documento.entity.ModeloDocumento_;
-import br.com.infox.epp.documento.entity.TipoModeloDocumento;
-import br.com.infox.epp.documento.entity.TipoModeloDocumentoPapel;
-import br.com.infox.epp.documento.entity.TipoModeloDocumentoPapel_;
-import br.com.infox.epp.documento.entity.TipoModeloDocumento_;
 
-@Name(PerfilTemplateDAO.NAME)
+@Stateless
 @AutoCreate
+@Name(PerfilTemplateDAO.NAME)
 public class PerfilTemplateDAO extends DAO<PerfilTemplate> {
 
     private static final long serialVersionUID = 1L;

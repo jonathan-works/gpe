@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -18,6 +19,7 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel_;
 import br.com.infox.epp.documento.query.ClassificacaoDocumentoPapelQuery;
 
+@Stateless
 @AutoCreate
 @Name(ClassificacaoDocumentoPapelDAO.NAME)
 public class ClassificacaoDocumentoPapelDAO extends DAO<ClassificacaoDocumentoPapel> {

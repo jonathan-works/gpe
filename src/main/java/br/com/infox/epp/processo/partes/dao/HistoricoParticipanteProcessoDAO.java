@@ -1,21 +1,24 @@
 package br.com.infox.epp.processo.partes.dao;
 
+import static br.com.infox.epp.processo.partes.query.HistoricoParticipanteProcessoQuery.HAS_HISTORICO_BY_PARTICIPANTE;
+import static br.com.infox.epp.processo.partes.query.HistoricoParticipanteProcessoQuery.LIST_BY_PARTICIPANTE_PROCESSO;
+import static br.com.infox.epp.processo.partes.query.HistoricoParticipanteProcessoQuery.PARAM_PARTICIPANTE_PROCESSO;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.processo.partes.entity.HistoricoParticipanteProcesso;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
-import static br.com.infox.epp.processo.partes.query.HistoricoParticipanteProcessoQuery.*;
 
+@Stateless
 @AutoCreate
-@Scope(ScopeType.EVENT)
 @Name(HistoricoParticipanteProcessoDAO.NAME)
 public class HistoricoParticipanteProcessoDAO extends DAO<HistoricoParticipanteProcesso> {
 

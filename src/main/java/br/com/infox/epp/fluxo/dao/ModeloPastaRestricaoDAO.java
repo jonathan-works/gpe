@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -14,7 +16,7 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.fluxo.entity.ModeloPasta;
 import br.com.infox.epp.fluxo.entity.ModeloPastaRestricao;
 
-
+@Stateless
 @AutoCreate
 @Name(ModeloPastaRestricaoDAO.NAME)
 public class ModeloPastaRestricaoDAO extends DAO<ModeloPastaRestricao>{

@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -31,6 +33,7 @@ import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.filter.DocumentoFilter;
 import br.com.infox.epp.processo.entity.Processo;
 
+@Stateless
 @AutoCreate
 @Name(PastaDAO.NAME)
 public class PastaDAO extends DAO<Pasta> {

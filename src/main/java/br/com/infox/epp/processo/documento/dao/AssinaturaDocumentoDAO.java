@@ -22,9 +22,9 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.hibernate.util.HibernateUtil;
 
-@Name(AssinaturaDocumentoDAO.NAME)
 @Stateless
 @AutoCreate
+@Name(AssinaturaDocumentoDAO.NAME)
 public class AssinaturaDocumentoDAO extends DAO<AssinaturaDocumento> {
     
     public static final String NAME = "assinaturaDocumentoDAO";
