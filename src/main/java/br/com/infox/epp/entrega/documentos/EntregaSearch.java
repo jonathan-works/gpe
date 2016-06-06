@@ -214,4 +214,13 @@ public class EntregaSearch extends PersistenceController {
         }
 	}
 	
+	public ClassificacaoDocumentoEntrega getClassificacaoDocumentoEntrega(ClassificacaoDocumento classificacaoDocumento, ModeloEntrega modeloEntrega) {
+		EntityManager entityManager = getEntityManager();
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<ClassificacaoDocumentoEntrega> query = cb.createQuery(ClassificacaoDocumentoEntrega.class);
+		Root<ClassificacaoDocumentoEntrega> root = query.from(ClassificacaoDocumentoEntrega.class);
+		query.where(cb.equal(root.get(ClassificacaoDocumentoEntrega_.classificacaoDocumento), classificacaoDocumento));
+		query.where(query.getRestriction(), cb.equal(root.get(ClassificacaoDocumentoEntrega_.modeloEntrega), modeloEntrega));
+		return entityManager.createQuery(query).getSingleResult();
+	}
 }
