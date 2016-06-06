@@ -83,7 +83,6 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     }
 
     public Documento gravarDocumentoNoProcesso(Processo processo, Documento documento) throws DAOException {
-    	documento = gravarDocumento(documento);
         if (processo != null) {
         	if (documento.getPasta() == null) {
         		documento.setPasta(pastaManager.getDefaultFolder(processo));
@@ -92,7 +91,7 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
         	}
         }
         documento.setNumeroDocumento(getNextNumeracao(documento));
-        return update(documento);
+        return gravarDocumento(documento);
     }
     
     public Documento gravarDocumentoNoProcesso(Documento documento) throws DAOException {
