@@ -399,7 +399,7 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 	}
 	
 	public void removerProcessoNaoIniciado(Processo processo) {
-	    variavelInicioProcessoService.removeAll(processo);
+	    variavelInicioProcessoService.removeAllWithContent(processo);
 	    numeracaoDocumentoSequencialManager.removeByProcesso(processo);
 	    for (Pasta pasta : processo.getPastaList()) {
 	        pastaManager.deleteComRestricoes(pasta);

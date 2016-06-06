@@ -59,6 +59,14 @@ public class VariavelInicioProcessoService extends PersistenceController {
     public void removeAll(Processo processo) {
         List<VariavelInicioProcesso> variaveis = variavelInicioProcessoSearch.findAll(processo);
         for (VariavelInicioProcesso variavel : variaveis) {
+            dao.remove(variavel);
+        }
+    }
+    
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void removeAllWithContent(Processo processo) {
+        List<VariavelInicioProcesso> variaveis = variavelInicioProcessoSearch.findAll(processo);
+        for (VariavelInicioProcesso variavel : variaveis) {
             ValueType valueType = ValueTypes.create(variavel.getType());
             if (valueType == ValueType.FILE) {
                 Integer idDocumento = (Integer) variavel.getTypedValue();

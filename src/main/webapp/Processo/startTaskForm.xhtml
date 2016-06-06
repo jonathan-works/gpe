@@ -65,7 +65,7 @@
 	    			</h:commandButton>
 	    		
 	    			<h:commandButton styleClass="buttons" action="#{iniciarProcessoVariaveisView.iniciar}" value="Iniciar" >
-	    				<a:ajax execute="@form" render="@form :pageBodyDialogMessage" onsubmit="infox.showLoading();" oncomplete="infox.hideLoading();"/>
+	    				<p:ajax process="@form" update="@form :pageBodyDialogMessage" onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
 	    			</h:commandButton>
 	    		</div>
 	    		
