@@ -16,7 +16,6 @@ import javax.inject.Named;
 import javax.persistence.OptimisticLockException;
 
 import org.jboss.seam.faces.FacesMessages;
-import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.primefaces.model.LazyDataModel;
 
 import br.com.infox.epp.access.api.Authenticator;
@@ -24,8 +23,11 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.dao.ClassificacaoDocumentoDAO;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
-import br.com.infox.epp.entrega.EntregaService;
 import br.com.infox.epp.entrega.documentos.Entrega;
+import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.home.MovimentarController;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.variable.Taskpage;
 
@@ -41,9 +43,10 @@ public class ChecklistView implements Serializable {
     private ChecklistSearch checklistSearch;
     @Inject
     private ClassificacaoDocumentoDAO classificacaoDocumentoDAO;
+    @Inject
+    private MovimentarController movimentarController;
 
     // Controle geral
-    private TaskInstance taskInstance;
     private Entrega entrega;
     private boolean hasEntrega;
 
@@ -82,12 +85,13 @@ public class ChecklistView implements Serializable {
      * @return Entrega, caso encontre, null caso contrário.
      */
     private Entrega retieveEntrega() {
-        taskInstance = TaskInstanceHome.instance().getCurrentTaskInstance();
-        String nameVariableEntrega = EntregaService.PARAMETRO_ENTREGA_ENTREGA;
-        if (taskInstance.hasVariable(nameVariableEntrega)) {
-            return (Entrega) taskInstance.getVariable(nameVariableEntrega);
+        Processo processo = movimentarController.getProcesso();
+        MetadadoProcesso metadadoEntrega = processo.getMetadado(EppMetadadoProvider.ENTREGA);
+        if (metadadoEntrega == null) {
+            return null;
+        } else {
+            return metadadoEntrega.getValue();
         }
-        return null;
     }
 
     public void onChangeSituacao(ChecklistDoc clDoc) {
