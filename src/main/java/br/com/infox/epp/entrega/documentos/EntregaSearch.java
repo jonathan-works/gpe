@@ -34,6 +34,7 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.Documento_;
 import br.com.infox.epp.processo.partes.entity.TipoParte;
 import br.com.infox.epp.processo.partes.entity.TipoParte_;
+import br.com.infox.seam.exception.BusinessException;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -200,8 +201,7 @@ public class EntregaSearch extends PersistenceController {
 	}
 
 	public boolean existeEntregaModeloLocalizacao(ModeloEntrega modeloEntrega, Localizacao localizacao){
-		EntityManager entityManager = getEntityManager();
-		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Integer> query =  cb.createQuery(Integer.class);
 		query.select(cb.literal(1));
 		Root<Entrega> entrega = query.from(Entrega.class);
@@ -211,6 +211,19 @@ public class EntregaSearch extends PersistenceController {
             return result == 1;
         } catch (NoResultException nre) {
             return false;
+        }
+	}
+	
+	public Entrega getEntregaByModeloLocalizacao(ModeloEntrega modeloEntrega, Localizacao localizacao) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Entrega> query =  cb.createQuery(Entrega.class);
+		Root<Entrega> entrega = query.from(Entrega.class);
+		query.where(cb.equal(entrega.get(Entrega_.localizacao), localizacao),cb.equal(entrega.get(Entrega_.modeloEntrega), modeloEntrega));
+		query.select(entrega);
+		try {
+            return getEntityManager().createQuery(query).getSingleResult();
+        } catch (NoResultException nre) {
+            throw new BusinessException("Não foi encontrada Entrega para essa Localização e Modelo de Entrega");
         }
 	}
 	
