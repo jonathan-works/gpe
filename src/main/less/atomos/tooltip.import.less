@@ -1,0 +1,39 @@
+#tooltip() {
+    .standard {
+        &-parent:hover > .epp-tooltip {
+          	display: block;
+          	visibility:visible;
+        }
+        &-panel {
+            max-width: 450rem/16;
+            max-height: 130rem/16;
+            overflow: auto;
+            padding: 2px;
+            border-width:1px;
+            border-style:solid;
+
+            &-panel-div {
+              margin-left:20rem/16;
+            }
+
+            &-panel-top {
+              margin-top:5rem/16;
+            }
+        }
+    }
+    .standard-colors {
+        &-panel {
+            border-color:#000;
+        }
+    }
+}
+
+.epp-tooltip {
+	  display: none;
+	  visibility:hidden;
+	  position: absolute;
+	  z-index: 9001;
+}
+.tooltip {
+    #tooltip > .standard;
+}

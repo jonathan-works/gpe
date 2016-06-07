@@ -1,6 +1,30 @@
 #crud-form(){
   .standard{
-
+    .property {
+      &-field-edit-name , &.field.view .name {
+        font-weight: bold;
+      }
+      &-field-edit-value {
+        font-size:1em;
+        padding: 1em/4 0;
+      }
+      &-field-edit {
+        margin: 0 15rem/16 15rem/16 0;
+      }
+      &-field-edit-value&-error {
+        padding: 3rem/16;
+      }
+      &-error {
+        border: 1px solid #f00;
+        border-radius: 5rem/16;
+      }
+      &-error&-msg {
+          background-color: #FFFFE0;
+          display: inline-block;
+          margin: 0 0 1px 20rem/16;
+          padding: 2px;
+      }
+    }
   }
   .standard-colors{
     .required {
@@ -8,3 +32,5 @@
     }
   }
 }
+
+#crud-form > .standard;

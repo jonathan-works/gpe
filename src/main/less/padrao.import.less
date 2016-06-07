@@ -15,8 +15,11 @@
 @import "atomos/context-menu.import.less";
 @import "atomos/file-upload.import.less";
 @import "atomos/datatable.import.less";
+@import "atomos/dataGrid.import.less";
+@import "atomos/dataScroller.import.less";
 @import "atomos/messages.import.less";
 @import "atomos/input-text.import.less";
+@import "atomos/input-number-slider.import.less";
 @import "atomos/output-label.import.less";
 @import "atomos/snackbar.import.less";
 @import "atomos/spinner.import.less";
@@ -45,6 +48,7 @@
 // PÁGINAS
 @import "paginas/login.import.less";
 @import "paginas/movimentar.import.less";
+@import "paginas/bam.import.less";
 @import "paginas/paginator.import.less";
 @import "paginas/processDefinition.import.less";
 @import "paginas/termoAdesao.import.less";
@@ -76,7 +80,7 @@
 @imgFolder:~"#{pathResolver.contextPath}/#{wiSkin.imageFolder}";
 @contextPath:~"#{pathResolver.contextPath}";
 
-@tableBorderWidth:1rem/16;
+@tableBorderWidth:1px;
 
 @sub-borda-marg:8rem/16;
 @sub-borda-pad:5rem/16;
@@ -85,9 +89,6 @@
 @default-font-family:"RobotoDraft","Roboto";
 
 //LAYOUT GERAL DA PÁGINA
-.width-5 {
-  width: 5rem/16;
-}
 
 .text-center {
   text-align: center;
@@ -117,14 +118,6 @@
 .padding-top-10 {
   padding-top: 10rem/16;
 }
-
-.property-field-edit {
-  margin: 0 15rem/16 15rem/16 0;
-}
-.property.field.edit {
-    &:extend(.property-field-edit);
-}
-
 .organized {
   display: inline-block;
   vertical-align: top;
@@ -187,29 +180,50 @@ h1 {
 .viewColumn {
   vertical-align: top;
 }
-.property-field-edit-name , .property.field.view .name{
-  font-weight: bold;
-}
 
-.property-field-edit-value {
-  font-size:1em;
-  padding: 1em/4 0;
-  &.property-error {
+.property {
+  &-field-edit-name , &.field.view .name{ {
+    font-weight: bold;
+  }
+  &-field-edit-value {
+    font-size:1em;
+    padding: 1em/4 0;
+  }
+  &-field-edit {
+    margin: 0 15rem/16 15rem/16 0;
+  }
+  &-field-edit-value&-error {
     padding: 3rem/16;
   }
+  &-error {
+    border: 1px solid #f00;
+    border-radius: 5rem/16;
+  }
+  .property-error.property-msg {
+      background-color: #FFFFE0;
+      display: inline-block;
+      margin: 0 0 1px 20rem/16;
+      padding: 2px;
+  }
 }
+
 .value {
   &:extend(.property-field-edit-value);
 }
 
+.property.field.edit {
+    &:extend(.property-field-edit);
+}
+
+
 .property-error {
-  border: 1rem/16 solid #f00;
+  border: 1px solid #f00;
   border-radius: 5rem/16;
   &.property-msg {
     background-color: #FFFFE0;
     display: inline-block;
-    margin: 0 0 1rem/16 20rem/16;
-    padding: 2rem/16;
+    margin: 0 0 1px 20rem/16;
+    padding: 2px;
   }
 }
 
@@ -249,11 +263,7 @@ h1 {
 }
 
 .folderSelected {
-  border: solid 1rem/16 transparent !important;
-}
-
-.highlight {
-  font-weight: bold;
+  border: solid 1px transparent !important;
 }
 
 // BAM
@@ -273,12 +283,15 @@ h1 {
   background-color: #f00;
 }
 
-#help .highlight,#pagina .highlight {
-  background-color: #ffa;
+.highlight {
+  font-weight: bold;
+  #help &,#pagina & {
+    background-color: #ffa;
+  }
 }
 
 .defaultCell {
-  padding: 2rem/16 3rem/16 0 3rem/16;
+  padding: 2px 3rem/16 0 3rem/16;
 }
 
 .painelLog {
@@ -287,58 +300,35 @@ h1 {
   border: none;
 }
 
-.rich-spinner-button {
-  height: 7rem/16;
-  width: 13rem/16 !important;
-}
-
-.rf-tab.tarefasDiv .rf-tab-cnt {
-  width: 310rem/16;
-  height: 450rem/16;
-  border-bottom-color: #C0C0C0;
-  border-left-color: #C0C0C0;
-  border-right-color: #C0C0C0;
-}
-
-// Retira o sombreamento do ModalPanel
-.noMaskClass .rich-mpnl-mask-div {
-  display: none;
-}
-
 .columnDataListToolBar {
   width: 40rem/16;
-  padding: 2rem/16 0 0 0;
+  padding: 2px 0 0 0;
   text-align: center;
-  border:1rem/16 solid #CCC;
+  border:1px solid #CCC;
 }
 
 .transpToolBar {
   width: 100%;
   text-align: center;
-  opacity: 0.3;
-  filter: ~"alpha(opacity = 30)";
+  .opacity(30);
+  &:hover {
+    .opacity(100);
+  }
 }
 
 #status {
   position: fixed;
-  top:0;
-  left:0;
-}
-
-.transpToolBar:hover {
-  opacity: 1.0;
-  filter: ~"alpha(opacity = 100)";
+  top:50%;
+  left:50%;
+  .prefixed-atrib(transform, translate( -50%, -50% ));
 }
 
 .opacityHover {
-  opacity: 0.6;
-  filter: ~"alpha(opacity = 60)";
-}
-
-.opacityHover:hover {
-  opacity: 1.0;
-  filter: ~"alpha(opacity = 100)";
-  cursor: pointer;
+  .opacity(60);
+  &:hover{
+    .opacity(100);
+    cursor: pointer;
+  }
 }
 
 .pointerRow:hover {
@@ -346,8 +336,7 @@ h1 {
 }
 
 img.disabled {
-  opacity: 0.3;
-  filter: ~"alpha(opacity = 30)";
+  .opacity(30);
 }
 
 .transparency {
@@ -391,12 +380,6 @@ img.disabled {
   padding: 0 0 0 25rem/16;
 }
 
-.rich-calendar-input {
-  border-width: 0;
-  background-repeat: no-repeat;
-  background-position: top left;
-}
-
 .linkButton {
   padding: 3rem/16 12rem/16;
 }
@@ -417,28 +400,28 @@ img.disabled {
   position: fixed;
   z-index: 1;
   background-color: #000;
-  opacity: 0.75;
+  .opacity(75);
 }
 
-#atividadeParteDiv form {
-  left: 50%;
-  top: 50%;
-  height: 136rem/16;
-  width: 284rem/16;
-  margin: -68rem/16 0 0 -197rem/16;
-  position: fixed;
-  z-index: 2;
-}
-
-#atividadeParteDiv input[type="button"],#atividadeParteDiv input[type="submit"],#atividadeParteDiv form {
-  background-color: #FFF;
-}
-
-#atividadeParteDiv form .rich-panel {
-  height: 100rem/16;
-  margin: 0;
-  max-width: 99%;
-  padding-top: 0;
+#atividadeParteDiv {
+    form {
+        left: 50%;
+        top: 50%;
+        height: 136rem/16;
+        width: 284rem/16;
+        margin: -68rem/16 0 0 -197rem/16;
+        position: fixed;
+        z-index: 2;
+        .rich-panel {
+          height: 100rem/16;
+          margin: 0;
+          max-width: 99%;
+          padding-top: 0;
+        }
+    }
+    input[type="button"],input[type="submit"],form {
+      background-color: #FFF;
+    }
 }
 
 .expressionDiv span:hover {
@@ -474,9 +457,6 @@ img.disabled {
   padding-left: 10rem/16;
 }
 
-span.rf-ds-btn {
-  background:#fff;
-}
 .suggest {
   padding-right: 20rem/16;
   border-width: 0;
@@ -484,29 +464,31 @@ span.rf-ds-btn {
   background-position: top;
 }
 
-.modPesqEsq {
-  width: 38rem/16;
-  height: 25rem/16;
-  margin-top: 0;
-  background-repeat: no-repeat;
-}
+.modPesq{
+  &Esq {
+    width: 38rem/16;
+    height: 25rem/16;
+    margin-top: 0;
+    background-repeat: no-repeat;
+  }
 
-.modPesqBg {
-  background-repeat: repeat-x;
-}
+  &Bg {
+    background-repeat: repeat-x;
+  }
 
-.modPesqInputText {
-  border-width: 0;
-  width: 134rem/16;
-  height: 16rem/16;
-  padding-left: 3rem/16;
-  background-repeat: no-repeat;
-  background-color: transparent;
-  color: #FFF;
+  &InputText {
+    border-width: 0;
+    width: 134rem/16;
+    height: 16rem/16;
+    padding-left: 3rem/16;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    color: #FFF;
+  }
 }
 
 .required {
-  padding-left: 2rem/16;
+  padding-left: 2px;
 }
 
 //detalheLog.xhtml, documentoHTML.xhtml
@@ -546,8 +528,6 @@ span.rf-ds-btn {
   margin-top: 15rem/16;
 }
 
-#painel-usuario > .standard;
-
 .p-caixas-b {
   color: @menu-txt-color;
   font-size: 13rem/16;
@@ -559,22 +539,14 @@ span.rf-ds-btn {
   visibility: hidden;
 }
 
-.grid-img,.grid-img-div {
-  width: 100%;
-}
-
-.grid-img-div {
-  height: 100%;
-  overflow: hidden;
-}
-
-.rf-dg-c {
-  width: 16%;
-  height: 20%;
-}
-
-.rf-dg.d-grid-img {
-  width: 400rem/16;
+.grid-img{
+  &,&-div {
+    width: 100%;
+  }
+  &-div {
+    height: 100%;
+    overflow: hidden;
+  }
 }
 
 .cursor-pointer {
@@ -591,7 +563,7 @@ span.rf-ds-btn {
   position: absolute;
   color: #f00;
   right: 250rem/16;
-  top: 2rem/16;
+  top: 2px;
 }
 
 .status-ajuda {
@@ -618,9 +590,6 @@ form {
 }
 
 //  Fim do workaround RF-12332
-.rf-tr {
-  text-align: left;
-}
 
 .img-panel-cont {
   display: inline-block;
@@ -636,43 +605,9 @@ form {
 .gaugeContainer.organized {
   width:210rem/16;
 }
-.rf-p {
-  &.dtable-p.bam-table {
-    width:calc(~"100% - 212rem/16");
-  }
-}
-
-.epp-tooltip {
-	display: none;
-	visibility:hidden;
-	position: absolute;
-	z-index: 9001;
-}
-
-.tooltip-parent:hover > .epp-tooltip {
-	display: block;
-	visibility:visible;
-}
-
-.tooltip-panel {
-	max-width: 450rem/16;
-	max-height: 130rem/16;
-	background-color: #ffc;
-	overflow: auto;
-	padding: 2rem/16;
-	border:1rem/16 solid #000;
-}
 
 .panel-relative {
 	position: relative;
-}
-
-.tooltip-panel-div {
-	margin-left:20rem/16;
-}
-
-.tooltip-panel-top {
-	margin-top:5rem/16;
 }
 
 .texto-tachado{
@@ -681,7 +616,7 @@ form {
 }
 
 .caixa-drag{
-  border: 1rem/16 solid @menu-txt-color;
+  border: 1px solid @menu-txt-color;
   background-color: @menu-bg-color;
   color: @menu-txt-color;
   cursor: all-scroll;
@@ -707,24 +642,6 @@ form {
     &:extend(.input-text);
 }
 
-.rf-tr-nd.rf-drp-hlight {
-  border: 1rem/16 solid @menu-txt-color;
-}
-
-.process-panel-dt{
-  &.rf-dt{
-    font-size:12rem/16;
-    width:98%;
-  }
-}
-
-.rf-insl > .rf-insl-trc-cntr > .rf-insl-trc {
-  background-image:none;
-  background-color:@menu-bg-color;
-}
-.rf-pick-src > .rf-pick-src-cptn,.rf-pick-tgt > .rf-pick-tgt-cptn {
-  color: @menu-txt-color;
-}
 .palette-img-inpt{
   cursor:pointer;
 }
@@ -758,10 +675,10 @@ form {
 
     width: 12rem/16;
     height: 12rem/16;
-    padding: 2rem/16;
+    padding: 2px;
 
     background: #fff;
-    border: 2rem/16 solid #666;
+    border: 2px solid #666;
     color: #666;
     text-align: center;
     font-size:12rem/16;

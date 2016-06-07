@@ -60,6 +60,18 @@
       padding: 0px;
     }
   }
+  .rich-tree {
+    text-align: left;
+    &-nd.rf-drp-hlight {
+      border-width: 1px;
+      border-style: solid;
+    }
+  }
+  .rich-tree-colors {
+    &-nd.rf-drp-hlight {
+      border-color:@menu-txt-color;
+    }
+  }
 }
 
 #tree-node() {
@@ -85,4 +97,8 @@
 }
 .tree{
   #tree > .standard;
+}
+
+.rf-tr {
+  #tree > .rich-tree;
 }
