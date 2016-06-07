@@ -275,6 +275,10 @@ public class AnexarDocumentosView implements Serializable {
 	}
 
 	public void persistUpload() {
+	    if (pastaDefault == null) {
+	        FacesMessages.instance().add("Erro ao gravar documento. Este processo não possui nenhuma Pasta.");
+	        return;
+	    }
 		try {
 			for (DadosUpload dadosUpload : dadosUploader) {
 				DocumentoTemporario documentoGerado = gravarArquivoUpload(dadosUpload);
@@ -309,6 +313,10 @@ public class AnexarDocumentosView implements Serializable {
 			if (getDocumentoEditor().getId() == null) {
 				getDocumentoEditor().setProcesso(getProcesso());
 				if (getDocumentoEditor().getPasta() == null) {
+				    if (pastaDefault == null) {
+				        FacesMessages.instance().add("Erro ao gravar documento. Este processo não possui nenhuma Pasta.");
+				        return;
+				    }
 					getDocumentoEditor().setPasta(pastaDefault);
 				}
 				getDocumentoEditor().getDocumentoBin().setMarcadores(marcadoresEditor != null ? new HashSet<>(marcadoresEditor) : new HashSet<Marcador>());
