@@ -82,6 +82,12 @@ public class NodeFitter extends Fitter implements Serializable {
     private Map<Number, String> modifiedNodes = new HashMap<Number, String>();
     private List<ClassificacaoDocumento> classificacoesDocumento;
     private List<Signal> signals;
+    
+    //Controlle dos Observadores de sinal
+    private String codigoCatchSignal;
+    private String transicaoCatchSignal;
+    private String condicaoCatchSignal;
+    private boolean managedCatchSignal = false;
 
     @Inject
     private JbpmNodeManager jbpmNodeManager;
@@ -626,7 +632,7 @@ public class NodeFitter extends Fitter implements Serializable {
         for (Signal signal : signals) {
             String eventType = Event.getListenerEventType(signal.getCodigo());
             if (currentNode.getEvents() == null || (signal.getAtivo()
-                    && !currentNode.getEvents().containsKey(eventType))) {
+                    && (!currentNode.getEvents().containsKey(eventType)) || signal.getCodigo().equals(getCodigoCatchSignal()))) {
                 sinaisDisponiveis.add(signal);
             }
         }
@@ -690,20 +696,20 @@ public class NodeFitter extends Fitter implements Serializable {
         return Type.values();
     }
     
-    public void addCatchSignal(ActionEvent actionEvent) {
-        Map<String, String> request = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-        String inputNome = (String) actionEvent.getComponent().getAttributes().get("listenerValue");
-        String inputTransicao = (String) actionEvent.getComponent().getAttributes().get("transitionValue");
-        String inputCondition = (String) actionEvent.getComponent().getAttributes().get("conditionValue");
-        String codigo = request.get(inputNome);
-        String transitionKey = request.get(inputTransicao);
-        String condition = request.get(inputCondition);
-        Event event = new Event(Event.getListenerEventType(codigo));
-        SignalConfigurationBean signalConfigurationBean = new SignalConfigurationBean(transitionKey, condition);
+    public void addCatchSignal() {
+        Event event = new Event(Event.getListenerEventType(codigoCatchSignal));
+        SignalConfigurationBean signalConfigurationBean = new SignalConfigurationBean(transicaoCatchSignal, condicaoCatchSignal);
         event.setConfiguration(signalConfigurationBean.toJson());
         currentNode.addEvent(event);
-        JsfUtil.clear(inputNome, inputTransicao, inputCondition);
+        clearCacheCatchSignal();
     }
+
+	private void clearCacheCatchSignal() {
+		codigoCatchSignal = null;
+        transicaoCatchSignal = null;
+        condicaoCatchSignal = null;
+        managedCatchSignal = false;
+	}
     
     public void addDispatcherSignal(ActionEvent actionEvent) {
         Map<String, String> request = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
@@ -745,7 +751,29 @@ public class NodeFitter extends Fitter implements Serializable {
     }
     
     public void removeCatchSignal(Event event) {
+        if (getCodigoSignalByEvent(event).equals(codigoCatchSignal)){
+        	clearCacheCatchSignal();
+        }
         currentNode.removeEvent(event);
+    }
+    
+    public void selectCatchSignal(Event event) {
+    	setCodigoCatchSignal(getCodigoSignalByEvent(event));
+    	SignalConfigurationBean signalConfigurationBean = SignalConfigurationBean.fromJson(event.getConfiguration());
+    	setTransicaoCatchSignal(signalConfigurationBean.getTransitionKey());
+    	setCondicaoCatchSignal(signalConfigurationBean.getCondition());
+    	setManagedCatchSignal(true);
+    }
+
+	private String getCodigoSignalByEvent(Event event) {
+		return event.getEventType().substring(Event.EVENTTYPE_LISTENER.length() + 1);
+	}
+    
+    public void saveCatchSignal() {
+    	Event event = currentNode.getEvent(Event.getListenerEventType(getCodigoCatchSignal())); 
+    	SignalConfigurationBean signalConfigurationBean = new SignalConfigurationBean(transicaoCatchSignal, condicaoCatchSignal);
+        event.setConfiguration(signalConfigurationBean.toJson());
+    	clearCacheCatchSignal();
     }
     
     public void removeDispatchSignal() {
@@ -759,5 +787,37 @@ public class NodeFitter extends Fitter implements Serializable {
         dispatcherConfiguration.getSignalParams().remove(signalParam);
         event.setConfiguration(dispatcherConfiguration.toJson());
     }
+
+	public String getCodigoCatchSignal() {
+		return codigoCatchSignal;
+	}
+
+	public void setCodigoCatchSignal(String codigoCatchSignal) {
+		this.codigoCatchSignal = codigoCatchSignal;
+	}
+
+	public String getTransicaoCatchSignal() {
+		return transicaoCatchSignal;
+	}
+
+	public void setTransicaoCatchSignal(String transicaoCatchSignal) {
+		this.transicaoCatchSignal = transicaoCatchSignal;
+	}
+
+	public String getCondicaoCatchSignal() {
+		return condicaoCatchSignal;
+	}
+
+	public void setCondicaoCatchSignal(String condicaoCatchSignal) {
+		this.condicaoCatchSignal = condicaoCatchSignal;
+	}
+
+	public boolean isManagedCatchSignal() {
+		return this.managedCatchSignal;
+	}
+	
+	public void setManagedCatchSignal(boolean managedCatchSignal) {
+		this.managedCatchSignal = managedCatchSignal;
+	}
     
 }
