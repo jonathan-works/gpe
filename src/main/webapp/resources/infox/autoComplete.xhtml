@@ -29,6 +29,8 @@
     <composite:attribute name="dropdownMode" default="blank" />
     <composite:attribute name="multiple" default="false" />
     <composite:attribute name="maxlength" />
+    <composite:attribute name="inputStyle" />
+    <composite:attribute name="inputStyleClass" />
 
     <composite:attribute name="onselect" />
     <composite:attribute name="onblur" />
@@ -73,7 +75,7 @@
                     required="#{cc.attrs.required}" onchange="#{cc.attrs.onchange}" onkeypress="#{cc.attrs.onkeypress}"
                     onkeyup="#{cc.attrs.onkeyup}" placeholder="#{cc.attrs.placeholder}"
                     var="#{cc.attrs.var}" itemLabel="#{cc.attrs.itemLabel}" itemValue="#{cc.attrs.itemValue}"
-                    completeMethod="#{cc.attrs.completeMethod}"
+                    completeMethod="#{cc.attrs.completeMethod}" inputStyle="#{cc.attrs.inputStyle}" inputStyleClass="#{cc.attrs.inputStyleClass}"
                     maxResults="#{cc.attrs.maxResults}" minQueryLength="#{cc.attrs.minQueryLength}" 
                     queryDelay="#{cc.attrs.queryDelay}" emptyMessage="#{cc.attrs.emptyMessage}"
                     forceSelection="#{cc.attrs.forceSelection}" dropdown="#{cc.attrs.dropdown}"
