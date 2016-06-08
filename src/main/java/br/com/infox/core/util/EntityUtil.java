@@ -22,6 +22,7 @@ import javax.persistence.Transient;
 import org.jboss.seam.util.Reflections;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
@@ -161,13 +162,24 @@ public final class EntityUtil implements Serializable {
     }
 
     /**
+     * Método utilizado como alternativa mais recente para {@link #getEntityClass(Object)}
+     * @param entity
+     * @return
+     */
+    public static Class<?> getClass(Object entity) {
+    	return HibernateUtil.getClass(entity);
+    }
+    
+    /**
      * Metodo que devolve a classe da entidade. Caso a entidade seja um proxy
      * (javassist), retorna a classe pai usando o
      * {@link java.lang.Class#getSuperclass() getSuperclass}
+     * Método substituído por {@link #getClass(Object)}
      * 
      * @param entity
      * @return
      */
+    @Deprecated
     public static Class<?> getEntityClass(Object entity) {
         Class<?> cl = entity.getClass();
         if (cl.getName().indexOf("javassist") > -1) {

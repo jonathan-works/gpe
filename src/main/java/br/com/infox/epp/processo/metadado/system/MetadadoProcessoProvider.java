@@ -80,6 +80,7 @@ public class MetadadoProcessoProvider {
 	        metadadoProcesso.setVisivel(false);
 	    }
 	    if (EntityUtil.isEntity(value)) {
+	    	metadadoProcesso.setClassType(EntityUtil.getClass(value));
 	        metadadoProcesso.setValor(EntityUtil.getIdentifier(value).toString());
 	    } else if (value.getClass().isAssignableFrom(Enum.class)) {
 	        Enum<?> enums = (Enum<?>) value;
