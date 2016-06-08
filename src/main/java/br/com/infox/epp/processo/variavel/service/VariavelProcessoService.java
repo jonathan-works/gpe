@@ -20,6 +20,7 @@ import org.jboss.seam.core.Expressions.ValueExpression;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
@@ -27,6 +28,7 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
+import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
@@ -216,5 +218,13 @@ public class VariavelProcessoService {
         variavelProcesso.setLabel(definicao.getLabel());
         variavelProcesso.setNome(definicao.getNome());
         return variavelProcesso;
+    }
+
+    public UsuarioLogin getUsuarioCadastro(Processo processo) {
+        return processo.getUsuarioCadastro();
+    }
+
+    public PrioridadeProcesso getPrioridadeProcesso(Processo processo) {
+        return processo.getPrioridadeProcesso();
     }
 }
