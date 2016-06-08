@@ -166,6 +166,7 @@
     <mapping resource="org/jbpm/context/exe/variableinstance/LongInstance.hbm.xml"/>
     <mapping resource="org/jbpm/context/exe/variableinstance/NullInstance.hbm.xml"/>
     <mapping resource="org/jbpm/context/exe/variableinstance/StringInstance.hbm.xml"/>
+    <mapping resource="org/jbpm/context/exe/variableinstance/JpaInstance.hbm.xml"/> 
     
     <!-- job mapping files -->
     <mapping resource="org/jbpm/job/Job.hbm.xml"/>

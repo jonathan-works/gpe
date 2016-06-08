@@ -13,13 +13,13 @@
 
   <list name="jbpm.types" singleton="true">
   
-  	<!-- EntityTypeJbpm -->
+    <!-- EntityTypeJbpm -->
     <jbpm-type>
       <matcher>
-        <bean class="br.com.infox.ibpm.type.matcher.EntityJbpmTypeMatcher" />
+        <bean class="br.com.infox.ibpm.type.matcher.JpaTypeMatcher" />
       </matcher>
-      <converter class="br.com.infox.ibpm.converter.EntityJbpmTypeToByteArrayConverter" />
-      <variable-instance class="org.jbpm.context.exe.variableinstance.ByteArrayInstance" />
+      <converter class="br.com.infox.ibpm.converter.JpaConverter" />
+      <variable-instance class="org.jbpm.context.exe.variableinstance.JpaInstance" />
     </jbpm-type>
   
     <!-- java.lang.String -->
