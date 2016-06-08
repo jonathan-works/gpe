@@ -15,11 +15,13 @@ import javax.inject.Named;
 
 import org.jbpm.graph.exe.ExecutionContext;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.entrega.EntregaResponsavelService;
 import br.com.infox.epp.entrega.checklist.ChecklistSituacao;
 import br.com.infox.epp.entrega.checklist.ChecklistVariableService;
 import br.com.infox.epp.entrega.documentos.Entrega;
@@ -28,6 +30,7 @@ import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.ibpm.event.External.ExpressionType;
 import br.com.infox.ibpm.sinal.SignalService;
@@ -50,9 +53,11 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
     @Inject 
     protected UsuarioLoginManager usuarioLoginManager;
     @Inject
-    private ChecklistVariableService checklistVariableService;
+    protected ChecklistVariableService checklistVariableService;
     @Inject
     protected ProcessoManager processoManager;
+    @Inject
+    protected EntregaResponsavelService entregaResponsavelService;
 
     @External(tooltip = "process.events.expression.atribuirCiencia.tooltip")
     public void atribuirCiencia() {
@@ -164,6 +169,17 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
             example = "#{bpmExpressionService.checklistHasItemNaoConforme(entrega)}")
     public Boolean checklistHasItemNaoConforme(Entrega entrega) {
         return checklistVariableService.existeItemNaoConforme(entrega);
+    }
+
+    @External(expressionType = ExpressionType.GERAL, tooltip = "teste",
+            value = {
+                    @Parameter(defaultValue = "entrega", selectable = false, label = "Entrega", tooltip = "Entrega de Documentos que irá prover os Responsáveis")
+            })
+    public void addParticipanteFromResponsavelEntrega(Entrega entrega) {
+        ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
+        Integer idProcesso = (Integer) executionContext.getContextInstance().getVariable("processo");
+        Processo processo = EntityManagerProducer.getEntityManager().find(Processo.class, idProcesso);
+        entregaResponsavelService.adicionaParticipantes(processo, entrega);
     }
 
     @Override
