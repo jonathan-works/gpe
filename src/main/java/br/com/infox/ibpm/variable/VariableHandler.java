@@ -1,7 +1,5 @@
 package br.com.infox.ibpm.variable;
 
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +10,6 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.ManagedJbpmContext;
-
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
-
 import org.jboss.seam.util.Strings;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
@@ -23,6 +17,8 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(VariableHandler.NAME)
@@ -46,7 +42,6 @@ public class VariableHandler implements Serializable {
         return getVariables(taskId, true);
     }
 
-    @SuppressWarnings(UNCHECKED)
     private List<Variavel> getVariables(long taskId, boolean readOnly) {
         List<Variavel> ret = new ArrayList<Variavel>();
         TaskInstance taskInstance = ManagedJbpmContext.instance().getTaskInstanceForUpdate(taskId);

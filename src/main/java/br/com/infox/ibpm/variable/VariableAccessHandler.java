@@ -26,9 +26,8 @@ import org.jbpm.graph.def.GraphElement;
 import org.jbpm.taskmgmt.def.Task;
 
 import br.com.infox.core.list.EntityList;
-import br.com.infox.core.manager.GenericManager;
-import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.ReflectionsUtil;
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.VariavelTipoModelo;
@@ -41,8 +40,6 @@ import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
 import br.com.infox.ibpm.variable.type.ValidacaoDataEnum;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
 
 public class VariableAccessHandler implements Serializable {
@@ -52,7 +49,6 @@ public class VariableAccessHandler implements Serializable {
     private static final String COMMA = ",";
     private static final long serialVersionUID = -4113688503786103974L;
     private static final String PREFIX = "#{modeloDocumento.set('";
-    private static final LogProvider LOG = Logging.getLogProvider(VariableAccessHandler.class);
     private VariableAccess variableAccess;
     private String name;
     private String label;
@@ -534,7 +530,6 @@ public class VariableAccessHandler implements Serializable {
         }
     }
 
-    @SuppressWarnings(UNCHECKED)
     public static List<VariableAccessHandler> getList(Task task) {
         List<VariableAccessHandler> ret = new ArrayList<>();
         if (task.getTaskController() == null) {
@@ -582,40 +577,14 @@ public class VariableAccessHandler implements Serializable {
     }
 
     public void setLabel(String label) {
-        String labelAuxiliar = label.trim();
-        if (!labelAuxiliar.equals(this.label) && !"".equals(labelAuxiliar)) {
-            this.label = labelAuxiliar;
-            storeLabel(name, labelAuxiliar);
-        }
-    }
-
-    // TODO verificar por que tem registro duplicado na base
-    private void storeLabel(String name, String label) {
-        Map<String, String> map = ComponentUtil.getComponent("jbpmMessages");
-        final String mappedVariableName = format("{0}:{1}", task.getProcessDefinition().getName(), name);
-        final String old = map.get(mappedVariableName);
-        if (!label.equals(old)) {
-            map.put(mappedVariableName, label);
-            JbpmVariavelLabel j = new JbpmVariavelLabel();
-            j.setNomeVariavel(mappedVariableName);
-            j.setLabelVariavel(label);
-            try {
-                genericManager().persist(j);
-            } catch (DAOException e) {
-                LOG.error(format("Não foi possível gravar a JbpmVariavelLabel: {0}", j), e);
-            }
-        }
+        variableAccess.setLabel(label.trim());
     }
 
     public String getLabel() {
-        if (!"".equals(name)) {
+        if (StringUtil.isEmpty(variableAccess.getLabel()) && !StringUtil.isEmpty(name)) {
             setLabel(VariableHandler.getLabel(format("{0}:{1}", task.getProcessDefinition().getName(), name)));
         }
         return this.label;
-    }
-
-    public GenericManager genericManager() {
-        return ComponentUtil.getComponent(GenericManager.NAME);
     }
 
     public boolean isFragment() {

@@ -388,7 +388,7 @@ public class TaskInstanceHome implements Serializable {
 		documento.setPasta(pastaManager.getDefaultFolder(processoEpaHome.getInstance()));
 		documento.setNumeroDocumento(documentoManager.getNextNumeracao(documento));
 		documento.setIdJbpmTask(getCurrentTaskInstance().getId());
-		String descricao = JbpmUtil.instance().getMessages().get(processoEpaHome.getInstance().getNaturezaCategoriaFluxo().getFluxo().getFluxo() + ":" + variableAccess.getMappedName().split(":")[1]);
+		String descricao = variableAccess.getLabel();
 		documento.setDescricao(descricao == null ? "-" : descricao);
 		documentoManager.persist(documento);
 	}
@@ -655,8 +655,7 @@ public class TaskInstanceHome implements Serializable {
 				VariableAccess var = (VariableAccess) object;
 				if (var.isRequired() && var.getMappedName().split(":")[0].equals("FILE")
 						&& getInstance().get(getFieldName(var.getVariableName())) == null) {
-					String label = JbpmUtil.instance().getMessages()
-							.get(taskInstance.getProcessInstance().getProcessDefinition().getName() + ":" + var.getVariableName());
+					String label = var.getLabel();
 					FacesMessages.instance().add("O arquivo do campo " + label + " é obrigatório");
 					return false;
 				}

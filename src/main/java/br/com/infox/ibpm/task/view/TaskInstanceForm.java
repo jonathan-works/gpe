@@ -113,8 +113,7 @@ public class TaskInstanceForm implements Serializable {
                         ff.setProperties(props);
                         form.getFields().add(ff);
                     }
-                    String label = JbpmUtil.instance().getMessages()
-                            .get(taskInstance.getProcessInstance().getProcessDefinition().getName() + ":" + name);
+                    String label = var.getLabel();
                     FormField ff = new FormField();
                     ff.setFormId(form.getFormId());
                     ff.setId(var.getVariableName() + "-" + taskInstance.getId());
