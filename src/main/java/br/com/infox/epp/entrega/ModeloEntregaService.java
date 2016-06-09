@@ -59,10 +59,9 @@ public class ModeloEntregaService {
     public void sinalizarAgendaVencida(ModeloEntrega modeloEntrega) {
     	modeloEntregaDao.lock(modeloEntrega, LockModeType.PESSIMISTIC_FORCE_INCREMENT);
         FimPrazoModeloEntregaEvent modeloEntregaEvent = new FimPrazoModeloEntregaEvent();
-        modeloEntregaEvent.setModeloEntrega(modeloEntrega);
-        eventoPrazoExpirado.fire(modeloEntregaEvent);
         modeloEntrega.setSinalDisparado(Boolean.TRUE);
-        modeloEntregaDao.update(modeloEntrega);
+        modeloEntregaEvent.setModeloEntrega(modeloEntregaDao.update(modeloEntrega));
+        eventoPrazoExpirado.fire(modeloEntregaEvent);
     }
 
     public void sinalizarAgendasVencidas() {
