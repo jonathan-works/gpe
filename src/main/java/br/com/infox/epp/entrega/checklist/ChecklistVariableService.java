@@ -43,7 +43,7 @@ public class ChecklistVariableService implements Serializable {
         if (clDocList == null || clDocList.isEmpty()) {
             return "";
         }
-        String response = "<table border=\"1\" style=\"border-collapse: collapse;-\">";
+        String response = "<table border=\"1\" style=\"border-collapse: collapse; width: 100%\">";
         response += "<thead>";
         response += "<th>Classificação de Documento</th>";
         response += "<th>Incluído por</th>";
@@ -51,8 +51,8 @@ public class ChecklistVariableService implements Serializable {
         response += "</thead><tbody>"; 
         for (ChecklistDoc clDoc : clDocList) {
             response += "<tr>";
-            response += "<td>" + clDoc.getDocumento().getClassificacaoDocumento().getDescricao() + "</td>";
-            response += "<td>" + clDoc.getDocumento().getUsuarioInclusao().getNomeUsuario() + "</td>";
+            response += "<td style=\"text-align: center;\">" + clDoc.getDocumento().getClassificacaoDocumento().getDescricao() + "</td>";
+            response += "<td style=\"text-align: center;\">" + clDoc.getDocumento().getUsuarioInclusao().getNomeUsuario() + "</td>";
             response += "<td>" + (clDoc.getComentario() == null ? "" : clDoc.getComentario()) + "</td>";
             response += "</tr>";
         }
