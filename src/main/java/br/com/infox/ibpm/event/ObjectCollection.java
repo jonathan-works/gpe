@@ -1,10 +1,13 @@
 package br.com.infox.ibpm.event;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-public class ObjectCollection implements Collection<Object> {
+public class ObjectCollection implements Collection<Object>, Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     private Collection<Object> list;
     private Class<?> type;
