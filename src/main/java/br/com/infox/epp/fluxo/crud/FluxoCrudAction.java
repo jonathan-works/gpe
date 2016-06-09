@@ -6,19 +6,26 @@ import java.util.Date;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.action.AbstractAction;
 import br.com.infox.core.crud.AbstractCrudAction;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
 @Name(FluxoCrudAction.NAME)
+@ContextDependency
 public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
+
+    @Inject
+    private DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
 
     private static final long serialVersionUID = 1L;
     private static final String DESCRICAO_FLUXO_COMPONENT_ID = "defaultTabPanel:fluxoForm:descricaoFluxoDecoration:descricaoFluxo";
@@ -108,5 +115,13 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
         super.newInstance();
         getInstance().setPublicado(false);
         this.replica = false;
+    }
+
+    @Override
+    protected void afterSave(String ret) {
+        super.afterSave(ret);
+        if (PERSISTED.equals(ret)) {
+            definicaoVariavelProcessoManager.createDefaultDefinicaoVariavelProcessoList(getInstance());
+        }
     }
 }

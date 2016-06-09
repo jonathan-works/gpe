@@ -1,5 +1,6 @@
 package br.com.infox.epp.fluxo.manager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -100,5 +101,33 @@ public class DefinicaoVariavelProcessoManager {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void remove(DefinicaoVariavelProcesso definicaoVariavelProcesso) throws DAOException {
     	definicaoVariavelProcessoDAO.remove(definicaoVariavelProcesso);
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public List<DefinicaoVariavelProcesso> createDefaultDefinicaoVariavelProcessoList(Fluxo fluxo) {
+        List<DefinicaoVariavelProcesso> dvpList = new ArrayList<>(7);
+        dvpList.add(createDefaultDefinicaoVariavelProcesso(fluxo, "numeroProcesso", "Número do Processo", null, 0));
+        dvpList.add(createDefaultDefinicaoVariavelProcesso(fluxo, "usuarioCadastro", "Usuário Solicitante", "#{variavelProcessoService.getUsuarioCadastro}", 1));
+        dvpList.add(createDefaultDefinicaoVariavelProcesso(fluxo, "dataInicioProcesso", "Data Início", null, 2));
+        dvpList.add(createDefaultDefinicaoVariavelProcesso(fluxo, "naturezaProcesso", "Natureza", null, 3));
+        dvpList.add(createDefaultDefinicaoVariavelProcesso(fluxo, "categoriaProcesso", "Categoria", null, 4));
+        dvpList.add(createDefaultDefinicaoVariavelProcesso(fluxo, "prioridadeProcesso", "Prioridade do Processo", "#{variavelProcessoService.getPrioridadeProcesso}", 5));
+        dvpList.add(createDefaultDefinicaoVariavelProcesso(fluxo, "itemProcesso", "Item", null, 6));
+        return dvpList;
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    private DefinicaoVariavelProcesso createDefaultDefinicaoVariavelProcesso(Fluxo fluxo, String nome, String label, String valorPadrao, Integer ordem) {
+        DefinicaoVariavelProcesso dvp = new DefinicaoVariavelProcesso();
+        dvp.setNome(nome);
+        dvp.setLabel(label);
+        dvp.setFluxo(fluxo);
+        dvp.setVisivel(false);
+        dvp.setVisivelPainel(true);
+        dvp.setValorPadrao(valorPadrao);
+        dvp.setOrdem(ordem);
+        dvp.setVersion(0L);
+        persist(dvp);
+        return dvp;
     }
 }
