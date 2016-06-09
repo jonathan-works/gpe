@@ -1,6 +1,7 @@
 package br.com.infox.epp.entrega.modelo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +13,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
@@ -26,7 +26,6 @@ import javax.validation.constraints.NotNull;
 
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
-import br.com.infox.epp.entrega.entity.CategoriaEntregaItem;
 import br.com.infox.epp.fluxo.entity.ModeloPasta;
 
 @Entity
@@ -75,11 +74,8 @@ public class ModeloEntrega implements Serializable {
     @Column(name="nr_version", nullable = false)
     private Integer version;
 
-    @JoinTable(name="tb_modelo_entrega_item", 
-            joinColumns=@JoinColumn(name="id_modelo_entrega"), 
-            inverseJoinColumns=@JoinColumn(name="id_categoria_entrega_item"))
-    @OneToMany(fetch=FetchType.LAZY, cascade={})
-    private List<CategoriaEntregaItem> itens;
+    @OneToMany(fetch=FetchType.LAZY, mappedBy = "modeloEntrega")
+    private List<ModeloEntregaItem> itens = new ArrayList<>();
 
     @JoinColumn(name="id_modelo_entrega")
     @OneToMany(fetch=FetchType.LAZY, orphanRemoval=true, cascade=CascadeType.ALL)
@@ -155,13 +151,13 @@ public class ModeloEntrega implements Serializable {
         this.version = version;
     }
 
-    public List<CategoriaEntregaItem> getItens() {
-        return itens;
-    }
-
-    public void setItens(List<CategoriaEntregaItem> itens) {
-        this.itens = itens;
-    }
+    public List<ModeloEntregaItem> getItens() {
+		return itens;
+	}
+    
+    public void setItens(List<ModeloEntregaItem> itens) {
+		this.itens = itens;
+	}
 
     public List<TipoResponsavelEntrega> getTiposResponsaveis() {
         return tiposResponsaveis;
@@ -183,7 +179,7 @@ public class ModeloEntrega implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
 		return result;
 	}
 
@@ -193,13 +189,13 @@ public class ModeloEntrega implements Serializable {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof ModeloEntrega))
 			return false;
 		ModeloEntrega other = (ModeloEntrega) obj;
-		if (id == null) {
-			if (other.id != null)
+		if (getId() == null) {
+			if (other.getId() != null)
 				return false;
-		} else if (!id.equals(other.id))
+		} else if (!getId().equals(other.getId()))
 			return false;
 		return true;
 	}

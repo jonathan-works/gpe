@@ -26,6 +26,7 @@ import br.com.infox.epp.documento.pasta.ModeloPastaSearch;
 import br.com.infox.epp.entrega.entity.CategoriaEntregaItem;
 import br.com.infox.epp.entrega.modelo.ClassificacaoDocumentoEntrega;
 import br.com.infox.epp.entrega.modelo.ModeloEntrega;
+import br.com.infox.epp.entrega.modelo.ModeloEntregaItem;
 import br.com.infox.epp.entrega.modelo.TipoResponsavelEntrega;
 import br.com.infox.epp.fluxo.entity.ModeloPasta;
 
@@ -111,7 +112,10 @@ public class ModeloEntregaController implements Serializable {
         classificacaoDocumentoEntregaController.setClassificacoesDocumentosEntrega(modeloEntrega.getDocumentosEntrega());
         tipoResponsavelEntregaController.setTiposResponsaveis(modeloEntrega.getTiposResponsaveis());
         this.ativo=modeloEntrega.getAtivo();
-        this.itens = modeloEntrega.getItens();
+        this.itens = new ArrayList<>();
+        for (ModeloEntregaItem modeloEntregaItem : modeloEntrega.getItens()) {
+        	this.itens.add(modeloEntregaItem.getItem());
+        }
     }
 
     public List<CategoriaEntregaItem> getItens() {
@@ -170,7 +174,18 @@ public class ModeloEntregaController implements Serializable {
         for (ClassificacaoDocumentoEntrega classificacaoDocumentoEntrega : classificacaoDocumentoEntregaController.getClassificacoesDocumentosEntrega()) {
             classificacaoDocumentoEntrega.setModeloEntrega(modeloEntrega);
         }
-        modeloEntrega.setItens(getItens());
+
+        CategoriaEntregaItem itemPai = null;
+        for (CategoriaEntregaItem item : getItens()) {
+        	ModeloEntregaItem modeloEntregaItem = new ModeloEntregaItem();
+        	modeloEntregaItem.setItem(item);
+        	modeloEntregaItem.setModeloEntrega(modeloEntrega);
+        	modeloEntregaItem.setItemPai(itemPai);
+        	modeloEntrega.getItens().add(modeloEntregaItem);
+        	
+        	// A lista de itens inicial ao criar o modelo está na ordem da hierarquia
+        	itemPai = item;
+        }
         modeloEntrega.setDataLimite(getDataLimite());
         modeloEntrega.setDataLiberacao(getDataLiberacao());
         modeloEntrega.setModeloCertidao(getModeloCertidao());

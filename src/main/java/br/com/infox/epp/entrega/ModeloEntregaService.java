@@ -19,6 +19,7 @@ import br.com.infox.cdi.qualifier.GenericDao;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.entrega.entity.CategoriaEntregaItem;
 import br.com.infox.epp.entrega.modelo.ModeloEntrega;
+import br.com.infox.epp.entrega.modelo.ModeloEntregaItem;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
@@ -39,11 +40,16 @@ public class ModeloEntregaService {
     private ModeloEntregaSearch modeloEntregaSearch;
     @Inject
     private SinalizarAgendaService sinalizarAgendaService;
-    
+    @Inject
+    @GenericDao
+    private Dao<ModeloEntregaItem, Long> modeloEntregaItemDao;
     
     public ModeloEntrega salvarModeloEntrega(ModeloEntrega modeloEntrega){
         if (modeloEntrega.getId() == null) {
             modeloEntregaDao.persist(modeloEntrega);
+            for (ModeloEntregaItem item : modeloEntrega.getItens()) {
+            	modeloEntregaItemDao.persist(item);
+            }
         } else {
             modeloEntrega = modeloEntregaDao.update(modeloEntrega);
         }
