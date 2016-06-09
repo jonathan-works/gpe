@@ -36,7 +36,6 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
-import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
@@ -71,7 +70,6 @@ import br.com.infox.util.time.DateRange;
 
 @AutoCreate
 @Stateless
-@ContextDependency
 @Name(ProcessoManager.NAME)
 public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 

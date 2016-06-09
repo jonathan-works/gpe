@@ -62,13 +62,16 @@ public class LogErrorService extends PersistenceController {
             getEntityManager().flush();
         } catch (Exception e) {
             logErro.setId(null);
-            File dir = new File(applicationServerService.getLogDir());
-            File file = new File(dir, LOG_ERRO_FILE_NAME);
-            try ( FileWriter fileWriter = new FileWriter(file, true)){
-                String data = new GsonBuilder().create().toJson(logErro) + "\n";
-                fileWriter.write(data, 0, data.getBytes().length);
-                fileWriter.flush();
-            } catch (IOException e1) { // do nothing
+            String logPath = applicationServerService.getLogDir();
+            if (!StringUtil.isEmpty(logPath)) {
+                File dir = new File(applicationServerService.getLogDir());
+                File file = new File(dir, LOG_ERRO_FILE_NAME);
+                try ( FileWriter fileWriter = new FileWriter(file, true)){
+                    String data = new GsonBuilder().create().toJson(logErro) + "\n";
+                    fileWriter.write(data, 0, data.getBytes().length);
+                    fileWriter.flush();
+                } catch (Exception e1) { // do nothing
+                }
             }
             throw e;
         }
