@@ -5,7 +5,9 @@ import static br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais.PRO
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -31,7 +33,10 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.entity.TipoRelacionamentoProcesso;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.epp.relacionamentoprocessos.RelacionamentoProcessoManager;
+import br.com.infox.epp.relacionamentoprocessos.TipoRelacionamentoProcessoManager;
 import br.com.infox.ibpm.event.External.ExpressionType;
 import br.com.infox.ibpm.sinal.SignalService;
 
@@ -58,6 +63,10 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
     protected ProcessoManager processoManager;
     @Inject
     protected EntregaResponsavelService entregaResponsavelService;
+    @Inject
+    private TipoRelacionamentoProcessoManager tipoRelacionamentoProcessoManager;
+    @Inject
+    private RelacionamentoProcessoManager relacionamentoProcessoManager;
 
     @External(tooltip = "process.events.expression.atribuirCiencia.tooltip")
     public void atribuirCiencia() {
@@ -189,6 +198,25 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
         Processo processo = EntityManagerProducer.getEntityManager().find(Processo.class, idProcesso);
         entregaResponsavelService.adicionaParticipantes(processo, entrega);
     }
+    
+    @External(expressionType = ExpressionType.GERAL,
+    		tooltip = "process.events.expression.relacionarProcessosPorMetadados.tooltip", value = {
+    		@Parameter(defaultValue = "tipoRelacionamento", label = "process.events.expression.param.relacionamento.tipoRelacionamento.label", tooltip = "process.events.expression.param.relacionamento.tipoRelacionamento.tooltip"),
+    		@Parameter(defaultValue = "motivo", label = "process.events.expression.param.relacionamento.motivo.label", tooltip = "process.events.expression.param.relacionamento.motivo.tooltip"),
+            @Parameter(defaultValue = "metadados", label = "process.events.expression.param.relacionamento.metadados.label", tooltip = "process.events.expression.param.relacionamento.metadados.tooltip") 
+	})
+    public void relacionarProcessosPorMetadados(String tipoRelacionamento, String motivo, Map<String, Object> metadados) {
+    	ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
+        Integer idProcesso = (Integer) executionContext.getContextInstance().getVariable("processo");
+        
+        Map<String, Object> parametrosMetadados = new HashMap<String, Object>();
+        parametrosMetadados.putAll(metadados);
+
+        TipoRelacionamentoProcesso tipoRelacionamentoProcesso = tipoRelacionamentoProcessoManager.findByCodigo(tipoRelacionamento);
+        
+        relacionamentoProcessoManager.relacionarProcessosPorMetadados(idProcesso, tipoRelacionamentoProcesso, motivo, parametrosMetadados);
+    }
+    
 
     @Override
     public List<ExternalMethod> getExternalMethods() {

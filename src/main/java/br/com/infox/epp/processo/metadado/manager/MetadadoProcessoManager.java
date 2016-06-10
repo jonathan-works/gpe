@@ -5,18 +5,21 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.dao.MetadadoProcessoDAO;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoDefinition;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.seam.util.ComponentUtil;
 
 @AutoCreate
@@ -28,6 +31,11 @@ public class MetadadoProcessoManager extends Manager<MetadadoProcessoDAO, Metada
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "metadadoProcessoManager";
 	
+    @Inject
+    private EppMetadadoProvider eppMetadadoProvider;
+    @Inject
+    private ComunicacaoMetadadoProvider comunicacaoMetadadoProvider;
+    
 	public List<MetadadoProcesso> getListMetadadoVisivelByProcesso(Processo processo) {
 		return getDao().getListMetadadoVisivelByProcesso(processo);
 	}
@@ -67,4 +75,11 @@ public class MetadadoProcessoManager extends Manager<MetadadoProcessoDAO, Metada
 	    }
 	}
 	
+	public MetadadoProcessoDefinition getMetadadoProcessoDefinition(String nomeMetadado) {
+		MetadadoProcessoDefinition retorno = eppMetadadoProvider.getDefinicoesMetadados().get(nomeMetadado);
+		if(retorno == null) {
+			retorno = comunicacaoMetadadoProvider.getDefinicoesMetadados().get(nomeMetadado);
+		}
+		return retorno;
+	}
 }

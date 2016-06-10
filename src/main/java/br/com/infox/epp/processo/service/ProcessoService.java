@@ -33,7 +33,9 @@ public class ProcessoService extends PersistenceController {
     @Inject
     private MetadadoProcessoManager metadadoProcessoManager;
     @Inject
-    private ProcessoSearch processoSearch; 
+    private ProcessoSearch processoSearch;
+    @Inject
+    private EppMetadadoProvider eppMetadadoProvider;
     
 	public boolean isTipoProcessoDocumento(Processo processo) {
 		return isTipoProcesso(TipoProcesso.DOCUMENTO.toString(), processo);
@@ -63,19 +65,29 @@ public class ProcessoService extends PersistenceController {
 	    ProcessInstance processInstance = iniciarProcessoService.iniciarProcesso(processo, variables, false);
 	    return processInstance;
 	}
-	
+		
 	/**
 	 * Localiza os processos que contêm todos os metadados informados
 	 * @param definicoesMetadados Definições específicas de metadados que serão utilizados para converter valores para pesquisa no banco
 	 * @param metadados Mapa contendo chaves e valores dos metadados que serão utilizados como filtro na pesquisa
 	 * @return Lista de processos contendo todos os metadados informados
 	 */
-	public List<Processo> getProcessosContendoMetadados(Map<String, MetadadoProcessoDefinition> definicoesMetadados, Map<String, Object> metadados) {
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public List<Processo> getProcessosContendoMetadados(Map<String, Object> metadados) {
 		Map<String, ValorMetadado> valoresMetadadosBanco = new HashMap<>();
 		for(String metadado : metadados.keySet()) {
 			Object valorOriginal = metadados.get(metadado);
 			
-			Class<?> classe = MetadadoProcessoProvider.getClasseMetadado(definicoesMetadados, metadado, valorOriginal);
+			Map<String, MetadadoProcessoDefinition> definicoesMetadados = eppMetadadoProvider.getDefinicoesMetadados();
+			
+			MetadadoProcessoDefinition metadadoProcessoDefinition = metadadoProcessoManager.getMetadadoProcessoDefinition(metadado);
+			Class<?> classe = null;
+			if(metadadoProcessoDefinition != null) {
+				classe = metadadoProcessoManager.getMetadadoProcessoDefinition(metadado).getClassType();				
+			}
+			else {
+				classe = MetadadoProcessoProvider.getClasseMetadado(definicoesMetadados, metadado, valorOriginal);				
+			}
 			String valor = MetadadoProcessoProvider.getValorMetadado(metadado, valorOriginal);
 			
 			ValorMetadado valorMetadadoBanco = new ValorMetadado(classe, valor);

@@ -14,14 +14,12 @@ import br.com.infox.core.manager.Manager;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
-import br.com.infox.epp.cdi.transaction.Transactional;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.Relacionamento;
 import br.com.infox.epp.processo.entity.RelacionamentoProcesso;
 import br.com.infox.epp.processo.entity.RelacionamentoProcessoInterno;
 import br.com.infox.epp.processo.entity.TipoRelacionamentoProcesso;
 import br.com.infox.epp.processo.manager.ProcessoManager;
-import br.com.infox.epp.processo.metadado.system.MetadadoProcessoDefinition;
 import br.com.infox.epp.processo.service.ProcessoService;
 
 @Stateless
@@ -109,14 +107,13 @@ public class RelacionamentoProcessoManager extends Manager<RelacionamentoProcess
 	 * @param definicoesMetadados Definições específicas de metadados que serão utilizados para converter valores para pesquisa no banco
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	@Transactional
-	public void relacionarProcessosPorMetadados(Integer idProcesso, TipoRelacionamentoProcesso tipoRelacionamento, String motivo, Map<String, MetadadoProcessoDefinition> definicoesMetadados, Map<String, Object> metadados) {
+	public void relacionarProcessosPorMetadados(Integer idProcesso, TipoRelacionamentoProcesso tipoRelacionamento, String motivo, Map<String, Object> metadados) {
 		Processo processo = processoManager.find(idProcesso);
 		if(processo == null) {
 			throw new ValidationException("Processo não encontrado");
 		}
 		
-		List<Processo> processos = processoService.getProcessosContendoMetadados(definicoesMetadados, metadados);
+		List<Processo> processos = processoService.getProcessosContendoMetadados(metadados);
 		for(Processo processoRelacionado : processos) {
 			String numeroProcesso = processo.getNumeroProcesso();
 			String numeroProcessoRelacionado = processoRelacionado.getNumeroProcesso();
