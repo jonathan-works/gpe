@@ -16,7 +16,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.entrega.documentos.Entrega;
+import br.com.infox.epp.processo.documento.entity.Pasta;
+import br.com.infox.epp.processo.entity.Processo;
 
 @Entity
 @Table(name = "tb_checklist")
@@ -33,9 +34,14 @@ public class Checklist implements Serializable {
     private Integer id;
 
     @NotNull
-    @JoinColumn(name = "id_entrega")
+    @JoinColumn(name = "id_processo")
     @ManyToOne(fetch = FetchType.LAZY)
-    private Entrega entrega;
+    private Processo processo;
+
+    @NotNull
+    @JoinColumn(name = "id_pasta")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Pasta pasta;
 
     @NotNull
     @Column(name = "dt_criacao", nullable = false)
@@ -54,12 +60,20 @@ public class Checklist implements Serializable {
         this.id = id;
     }
 
-    public Entrega getEntrega() {
-        return entrega;
+    public Processo getProcesso() {
+        return processo;
     }
 
-    public void setEntrega(Entrega entrega) {
-        this.entrega = entrega;
+    public void setProcesso(Processo processo) {
+        this.processo = processo;
+    }
+
+    public Pasta getPasta() {
+        return pasta;
+    }
+
+    public void setPasta(Pasta pasta) {
+        this.pasta = pasta;
     }
 
     public Date getDataCriacao() {

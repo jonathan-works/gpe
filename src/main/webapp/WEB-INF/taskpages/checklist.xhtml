@@ -14,7 +14,7 @@
         <h:outputText value="#{checklistView.message}" rendered="#{not empty checklistView.message}" />
     </infox:div>
 
-    <infox:div rendered="#{checklistView.hasEntrega}">
+    <infox:div rendered="#{checklistView.hasPasta}">
         <h:form id="blocoSituacaoForm">
             <wi:selectOneMenuEnum id="blocoSituacaoMenu" label="#{infoxMessages['checklist.blocoSituacao.label']}"
                 value="#{checklistView.situacaoBloco}"

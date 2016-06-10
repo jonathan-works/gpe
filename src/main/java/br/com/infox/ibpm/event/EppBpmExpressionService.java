@@ -183,9 +183,9 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
      */
     @External(expressionType = ExpressionType.GATEWAY,
             tooltip = "process.events.expression.checklist.hasNaoConforme.tooltip",
-            example = "#{bpmExpressionService.checklistHasItemNaoConforme(entrega)}")
-    public Boolean checklistHasItemNaoConforme(Entrega entrega) {
-        return checklistVariableService.existeItemNaoConforme(entrega);
+            example = "#{bpmExpressionService.checklistHasItemNaoConforme('Documentos do Processo')}")
+    public Boolean checklistHasItemNaoConforme(String nomePasta) {
+        return checklistVariableService.existeItemNaoConforme(nomePasta);
     }
 
     @External(expressionType = ExpressionType.GERAL, tooltip = "teste",

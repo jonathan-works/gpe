@@ -21,15 +21,14 @@ import org.primefaces.model.LazyDataModel;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.documento.dao.ClassificacaoDocumentoDAO;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
-import br.com.infox.epp.entrega.documentos.Entrega;
+import br.com.infox.epp.processo.documento.entity.Pasta;
+import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.home.MovimentarController;
-import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
-import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.variable.Taskpage;
+import br.com.infox.ibpm.variable.TaskpageParameter;
 
 @Named
 @ViewScoped
@@ -37,18 +36,25 @@ import br.com.infox.ibpm.variable.Taskpage;
 public class ChecklistView implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    private static final String PARAMETER_PASTA = "pastaChecklist";
+
     @Inject
     private ChecklistService checklistService;
     @Inject
     private ChecklistSearch checklistSearch;
     @Inject
-    private ClassificacaoDocumentoDAO classificacaoDocumentoDAO;
-    @Inject
     private MovimentarController movimentarController;
+    @Inject
+    private TaskInstanceHome taskInstanceHome;
+    @Inject
+    private PastaManager pastaManager;
+
+    @TaskpageParameter(name = PARAMETER_PASTA, description = "Pasta a ser considerada no checklist")
+    private Pasta pasta;
 
     // Controle geral
-    private Entrega entrega;
-    private boolean hasEntrega;
+    private Processo processo;
+    private boolean hasPasta;
 
     // Controle dos filtros
     private SelectItem[] classificacoesDocumento;
@@ -64,33 +70,35 @@ public class ChecklistView implements Serializable {
 
     @PostConstruct
     private void init() {
-        entrega = retieveEntrega();
-        if (entrega == null) {
-            hasEntrega = false;
-            message = "Não foi possível encontrar uma Entrega de Documentos associada a este processo.";
+        processo = movimentarController.getProcesso();
+        pasta = retrievePasta();
+        if (pasta == null) {
+            hasPasta = false;
         } else {
-            hasEntrega = true;
+            hasPasta = true;
             message = (String) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("checklistMessage");
-            checklist = checklistService.getByEntrega(entrega);
+            checklist = checklistService.getByProcessoPasta(processo, pasta);
             documentoList = new ChecklistDocLazyDataModel(checklist);
         }
         usuarioLogado = Authenticator.getUsuarioLogado();
     }
 
     /**
-     * Tenta recuperar a Entrega baseado no processo em que está.
-     * Primeiro é tentado através do Parâmetro {@link ChecklistView.PARAMETER_CHECKLIST_ENTREGA}
+     * Tenta recuperar a Pasta baseado no Parâmetro {@link ChecklistView.PARAMETER_CHECKLIST_ENTREGA}
      * Caso não encontre, é tentado através da variável preenchida pelo listener
-     * 
-     * @return Entrega, caso encontre, null caso contrário.
+     * @return Pasta, caso encontre, null caso contrário.
      */
-    private Entrega retieveEntrega() {
-        Processo processo = movimentarController.getProcesso();
-        MetadadoProcesso metadadoEntrega = processo.getMetadado(EppMetadadoProvider.ENTREGA);
-        if (metadadoEntrega == null) {
+    private Pasta retrievePasta() {
+        Object nomePasta = taskInstanceHome.getCurrentTaskInstance().getVariable(PARAMETER_PASTA);
+        if (nomePasta == null) {
+            message = "Não foi possível recuperar o parâmetro com o nome da pasta.";
             return null;
         } else {
-            return metadadoEntrega.getValue();
+            Pasta pasta = pastaManager.getPastaByNome((String) nomePasta, processo);
+            if (pasta == null) {
+                message = "Não foi possível encontrar uma pasta com o nomne " + nomePasta + " neste processo.";
+            }
+            return pasta;
         }
     }
 
@@ -164,7 +172,7 @@ public class ChecklistView implements Serializable {
 
     public SelectItem[] getClassificacoesDocumento() {
         if (classificacoesDocumento == null) {
-            List<ClassificacaoDocumento> classificacoes = classificacaoDocumentoDAO.getClassificacoesDocumentoByPasta(entrega.getPasta());
+            List<ClassificacaoDocumento> classificacoes = checklistSearch.listClassificacaoDocumento(checklist);
             classificacoesDocumento = new SelectItem[classificacoes.size()];
             for (int i = 0; i < classificacoes.size(); i++) {
                 ClassificacaoDocumento classificacaoDocumento = classificacoes.get(i);
@@ -202,8 +210,8 @@ public class ChecklistView implements Serializable {
         return ChecklistSituacao.getValues();
     }
 
-    public boolean isHasEntrega() {
-        return hasEntrega;
+    public boolean isHasPasta() {
+        return hasPasta;
     }
 
     public LazyDataModel<ChecklistDoc> getDocumentoList() {
