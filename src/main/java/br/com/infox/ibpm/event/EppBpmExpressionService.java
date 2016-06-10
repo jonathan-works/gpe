@@ -101,6 +101,14 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
 		return new StringListBuilder();
     }
 	
+	@External(expressionType = ExpressionType.GERAL, 
+			tooltip = "process.events.expression.objectMapBuilder.tooltip",
+			example = "#{bpmExpressionService.objectMapBuilder().add(chave,valor).add(chave,valor).build()}"
+		)
+    public ObjectMapBuilder objectMapBuilder() {
+		return new ObjectMapBuilder();
+    }
+	
 	@External(expressionType = ExpressionType.GERAL, value = {
         @Parameter(defaultValue = "'Nome variável editor/upload'", label = "process.events.expression.param.suficientementeAssinado.label", 
                 tooltip = "process.events.expression.param.suficientementeAssinado.tooltip", selectable = true)

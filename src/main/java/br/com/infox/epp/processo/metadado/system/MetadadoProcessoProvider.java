@@ -66,6 +66,43 @@ public class MetadadoProcessoProvider {
 		metadado.setValor(valor);
 		return metadado;
 	}
+
+	/**
+	 * Classe que deve ser utilizada no atributo 'classType' do metadado {@link MetadadoProcesso#setClassType(Class)}
+	 */
+	public static Class<?> getClasseMetadado(Map<String, MetadadoProcessoDefinition> definicoesMetadados, String nome, Object value) {
+	    MetadadoProcessoDefinition metadadoProcessoDefinition = definicoesMetadados.get(nome);
+	    if (metadadoProcessoDefinition != null) {
+	    	return metadadoProcessoDefinition.getClassType();
+	    }
+	    else if (EntityUtil.isEntity(value)) {
+	    	return EntityUtil.getClass(value);
+	    }
+	    else {
+	    	return value.getClass();
+	    }
+	}
+	
+	/**
+	 * Valor que deve ser utilizado no atributo 'valor' do metadado {@link MetadadoProcesso#setValor(String)}
+	 */
+	public static String getValorMetadado(String nome, Object value) {
+	    if (EntityUtil.isEntity(value)) {
+	        return EntityUtil.getIdentifier(value).toString();
+	    } else if (value.getClass().isAssignableFrom(Enum.class)) {
+	        Enum<?> enums = (Enum<?>) value;
+	        return enums.name();
+	    } else if (value.getClass().isAssignableFrom(Date.class)) {
+	        Date data = (Date) value;
+	        return new DateTime(data.getTime()).toString(MetadadoProcesso.DATE_PATTERN);
+	    } else if (value.getClass().isAssignableFrom(TipoProcesso.class)) {
+	        TipoProcesso tipoProcesso = (TipoProcesso) value;
+	        return tipoProcesso.value();
+	    } else {
+	        return value.toString();
+	    }
+	}
+	
 	
 	public MetadadoProcesso gerarMetadado(String nome, Object value) {
 	    MetadadoProcesso metadadoProcesso = null;
@@ -74,26 +111,12 @@ public class MetadadoProcessoProvider {
 	        metadadoProcesso = gerarMetadado(metadadoProcessoDefinition);
 	    } else {
 	        metadadoProcesso = new MetadadoProcesso();
-	        metadadoProcesso.setClassType(value.getClass());
+	        metadadoProcesso.setClassType(getClasseMetadado(getDefinicoesMetadados(), nome, value));
 	        metadadoProcesso.setProcesso(getProcesso());
 	        metadadoProcesso.setMetadadoType(nome);
 	        metadadoProcesso.setVisivel(false);
 	    }
-	    if (EntityUtil.isEntity(value)) {
-	    	metadadoProcesso.setClassType(EntityUtil.getClass(value));
-	        metadadoProcesso.setValor(EntityUtil.getIdentifier(value).toString());
-	    } else if (value.getClass().isAssignableFrom(Enum.class)) {
-	        Enum<?> enums = (Enum<?>) value;
-	        metadadoProcesso.setValor(enums.name());
-	    } else if (value.getClass().isAssignableFrom(Date.class)) {
-	        Date data = (Date) value;
-	        metadadoProcesso.setValor(new DateTime(data.getTime()).toString(MetadadoProcesso.DATE_PATTERN));
-	    } else if (value.getClass().isAssignableFrom(TipoProcesso.class)) {
-	        TipoProcesso tipoProcesso = (TipoProcesso) value;
-	        metadadoProcesso.setValor(tipoProcesso.value());
-	    } else {
-	        metadadoProcesso.setValor(value.toString());
-	    }
+	    metadadoProcesso.setValor(getValorMetadado(nome, value));
 	    return metadadoProcesso;
 	}
 	

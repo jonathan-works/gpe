@@ -1,27 +1,22 @@
 package br.com.infox.epp.relacionamentoprocessos;
 
-import java.lang.reflect.InvocationTargetException;
-
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Name;
-
-import br.com.infox.core.manager.Manager;
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.Relacionamento;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 
-@AutoCreate
-@Name(RelacionamentoManager.NAME)
 @Stateless
-public class RelacionamentoManager extends Manager<RelacionamentoDAO, Relacionamento> {
+@TransactionAttribute(TransactionAttributeType.REQUIRED)
+public class RelacionamentoManager {
 
     public static final String NAME = "relacionamentoManager";
-    private static final long serialVersionUID = 1L;
     
     @Inject
     private RelacionamentoDAO relacionamentoDAO;
@@ -29,21 +24,17 @@ public class RelacionamentoManager extends Manager<RelacionamentoDAO, Relacionam
     @Inject
     private ProcessoManager processoManager;
 
-    public Relacionamento getRelacionamentoByProcesso(Processo processo) {
-        Relacionamento relacionamento = null;
-        if (processo != null) {
-            relacionamento = getDao().getRelacionamentoByProcesso(processo);
-        }
-        return relacionamento;
+    public EntityManager getEntityManager() {
+    	return EntityManagerProducer.getEntityManager();
     }
-
-    @Override
+    
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Relacionamento persist(final Relacionamento o) throws DAOException {
-        final RelacionamentoDAO relacionamentoDAO = getDao();
-        relacionamentoDAO.persist(o);
+        getEntityManager().persist(o);
+        getEntityManager().flush();
         try {
-            return relacionamentoDAO.find(EntityUtil.getId(o).getReadMethod().invoke(o));
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            return getEntityManager().find(Relacionamento.class, o.getIdRelacionamento());
+        } catch (IllegalArgumentException e) {
             throw new DAOException(e);
         }
     }
@@ -63,6 +54,5 @@ public class RelacionamentoManager extends Manager<RelacionamentoDAO, Relacionam
 	public void remove(Integer idProcesso, String numeroProcessoExterno) {
 		Processo processo = processoManager.find(idProcesso);
 		relacionamentoDAO.remove(processo, numeroProcessoExterno);
-	}
-    
+	}    
 }

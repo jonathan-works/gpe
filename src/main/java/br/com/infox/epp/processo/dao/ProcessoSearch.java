@@ -1,6 +1,8 @@
 package br.com.infox.epp.processo.dao;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -9,7 +11,10 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -44,6 +49,57 @@ public class ProcessoSearch extends PersistenceController {
         return getEntityManager().createQuery(cq).getResultList();
     }
     
+    public static class ValorMetadado {
+    	private Class<?> classe;
+    	private String valor;
+		
+    	public ValorMetadado(Class<?> classe, String valor) {
+			super();
+			this.classe = classe;
+			this.valor = valor;
+		}
+
+		public Class<?> getClasse() {
+			return classe;
+		}
+
+		public String getValor() {
+			return valor;
+		}
+    }
+    
+    public List<Processo> getProcessosContendoMetadados(Map<String, ValorMetadado> metadados) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Processo> cq = cb.createQuery(Processo.class);
+        Root<Processo> processo = cq.from(Processo.class);
+        
+        List<Predicate> where = new ArrayList<>();
+        
+        for(String nomeMetadado : metadados.keySet()) {
+        	ValorMetadado valorMetadado = metadados.get(nomeMetadado);
+        	Class<?> classe = valorMetadado.getClasse();
+        	String valor = valorMetadado.getValor();
+        	
+        	Subquery<Integer> subquery = cq.subquery(Integer.class);
+        	Root<Processo> processoSubquery = subquery.from(Processo.class);
+        	Path<MetadadoProcesso> metadado = processoSubquery.join(Processo_.metadadoProcessoList);
+        	
+        	subquery.select(cb.literal(1));
+        	subquery.where(
+        			cb.equal(processo.get(Processo_.idProcesso), processoSubquery.get(Processo_.idProcesso)),
+        			cb.equal(metadado.get(MetadadoProcesso_.metadadoType), nomeMetadado),
+        			cb.equal(metadado.get(MetadadoProcesso_.classType), classe),
+        			cb.equal(metadado.get(MetadadoProcesso_.valor), valor)
+        	);
+        	
+        	where.add(cb.exists(subquery));
+        }
+        
+        cq.where(
+        		where.toArray(new Predicate[0])
+        );
+        return getEntityManager().createQuery(cq).getResultList();
+    }
     
 
 }
