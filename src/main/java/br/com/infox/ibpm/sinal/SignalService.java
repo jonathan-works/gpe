@@ -121,10 +121,9 @@ public class SignalService {
         Token token = new Token();
         token.setProcessInstance(new ProcessInstance());
         ExecutionContext executionContext = new ExecutionContext(token);
-        ExecutionContext.pushCurrentContext(executionContext);
         ContextInstance contextInstance = executionContext.getContextInstance();
         for (SignalParam signalParam : params) {
-            contextInstance.setVariableLocally(signalParam.getName(), signalParam.getValue());
+            contextInstance.setTransientVariable(signalParam.getName(), signalParam.getValue());
         }
         return executionContext;
     }
