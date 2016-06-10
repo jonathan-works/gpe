@@ -113,7 +113,7 @@ public class ModeloEntregaController implements Serializable {
         tipoResponsavelEntregaController.setTiposResponsaveis(modeloEntrega.getTiposResponsaveis());
         this.ativo=modeloEntrega.getAtivo();
         this.itens = new ArrayList<>();
-        for (ModeloEntregaItem modeloEntregaItem : modeloEntrega.getItens()) {
+        for (ModeloEntregaItem modeloEntregaItem : modeloEntrega.getItensModelo()) {
         	this.itens.add(modeloEntregaItem.getItem());
         }
     }
@@ -181,7 +181,7 @@ public class ModeloEntregaController implements Serializable {
         	modeloEntregaItem.setItem(item);
         	modeloEntregaItem.setModeloEntrega(modeloEntrega);
         	modeloEntregaItem.setItemPai(itemPai);
-        	modeloEntrega.getItens().add(modeloEntregaItem);
+        	modeloEntrega.getItensModelo().add(modeloEntregaItem);
         	
         	// A lista de itens inicial ao criar o modelo está na ordem da hierarquia
         	itemPai = item;

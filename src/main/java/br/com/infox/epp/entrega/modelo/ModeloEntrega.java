@@ -21,11 +21,13 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
+import br.com.infox.epp.entrega.entity.CategoriaEntregaItem;
 import br.com.infox.epp.fluxo.entity.ModeloPasta;
 
 @Entity
@@ -75,7 +77,7 @@ public class ModeloEntrega implements Serializable {
     private Integer version;
 
     @OneToMany(fetch=FetchType.LAZY, mappedBy = "modeloEntrega")
-    private List<ModeloEntregaItem> itens = new ArrayList<>();
+    private List<ModeloEntregaItem> itensModelo = new ArrayList<>();
 
     @JoinColumn(name="id_modelo_entrega")
     @OneToMany(fetch=FetchType.LAZY, orphanRemoval=true, cascade=CascadeType.ALL)
@@ -151,12 +153,12 @@ public class ModeloEntrega implements Serializable {
         this.version = version;
     }
 
-    public List<ModeloEntregaItem> getItens() {
-		return itens;
+    public List<ModeloEntregaItem> getItensModelo() {
+		return itensModelo;
 	}
     
-    public void setItens(List<ModeloEntregaItem> itens) {
-		this.itens = itens;
+    public void setItensModelo(List<ModeloEntregaItem> itens) {
+		this.itensModelo = itens;
 	}
 
     public List<TipoResponsavelEntrega> getTiposResponsaveis() {
@@ -174,6 +176,15 @@ public class ModeloEntrega implements Serializable {
     public void setDocumentosEntrega(List<ClassificacaoDocumentoEntrega> documentosEntrega) {
         this.documentosEntrega = documentosEntrega;
     }
+    
+    @Transient
+    public List<CategoriaEntregaItem> getItens() {
+		List<CategoriaEntregaItem> categoriaItens = new ArrayList<>();
+		for (ModeloEntregaItem itemModelo : getItensModelo()) {
+			categoriaItens.add(itemModelo.getItem());
+		}
+		return categoriaItens;
+	}
 
 	@Override
 	public int hashCode() {

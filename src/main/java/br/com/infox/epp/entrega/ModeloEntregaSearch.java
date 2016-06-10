@@ -45,11 +45,11 @@ public class ModeloEntregaSearch extends PersistenceController {
         
         Subquery<Long> sq1 = cq.subquery(Long.class);
         Root<ModeloEntrega> me1 = sq1.from(ModeloEntrega.class);
-        sq1=sq1.select(cb.count(me1.join(ModeloEntrega_.itens,JoinType.INNER))).where(cb.equal(me1, from));
+        sq1=sq1.select(cb.count(me1.join(ModeloEntrega_.itensModelo,JoinType.INNER))).where(cb.equal(me1, from));
         
         Subquery<Long> sq2 = cq.subquery(Long.class);
         Root<ModeloEntrega> me2 = sq2.from(ModeloEntrega.class);
-        Join<ModeloEntrega, ModeloEntregaItem> modeloEntregaItens2 = me2.join(ModeloEntrega_.itens, JoinType.INNER);
+        Join<ModeloEntrega, ModeloEntregaItem> modeloEntregaItens2 = me2.join(ModeloEntrega_.itensModelo, JoinType.INNER);
         Join<ModeloEntregaItem, CategoriaEntregaItem> itms2 = modeloEntregaItens2.join(ModeloEntregaItem_.item, JoinType.INNER);
         sq2=sq2.select(cb.count(itms2)).where(itms2.in(items), cb.equal(me2, from));
         
@@ -103,7 +103,7 @@ public class ModeloEntregaSearch extends PersistenceController {
         
         CriteriaQuery<CategoriaEntregaItem> cq = cb.createQuery(CategoriaEntregaItem.class);
         Root<ModeloEntrega> modeloEntrega = cq.from(ModeloEntrega.class);
-        From<?, ModeloEntregaItem> modeloEntregaItem = modeloEntrega.join(ModeloEntrega_.itens, JoinType.INNER);
+        From<?, ModeloEntregaItem> modeloEntregaItem = modeloEntrega.join(ModeloEntrega_.itensModelo, JoinType.INNER);
         From<?, CategoriaEntregaItem> itens = modeloEntregaItem.join(ModeloEntregaItem_.item, JoinType.INNER);
         From<?, CategoriaItemRelacionamento> relacPais = itens.join(CategoriaEntregaItem_.itensPais, JoinType.INNER);
         

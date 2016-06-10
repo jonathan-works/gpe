@@ -47,7 +47,7 @@ public class ModeloEntregaService {
     public ModeloEntrega salvarModeloEntrega(ModeloEntrega modeloEntrega){
         if (modeloEntrega.getId() == null) {
             modeloEntregaDao.persist(modeloEntrega);
-            for (ModeloEntregaItem item : modeloEntrega.getItens()) {
+            for (ModeloEntregaItem item : modeloEntrega.getItensModelo()) {
             	modeloEntregaItemDao.persist(item);
             }
         } else {
