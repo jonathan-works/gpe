@@ -18,6 +18,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
 import org.jboss.seam.bpm.ManagedJbpmContext;
+import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
@@ -117,12 +118,14 @@ public class SignalService {
     }
     
     private ExecutionContext createExecutionContext(List<SignalParam> params) {
-        ExecutionContext executionContext = new ExecutionContext(new Token());
-        TaskInstance taskInstance = new TaskInstance();
+        Token token = new Token();
+        token.setProcessInstance(new ProcessInstance());
+        ExecutionContext executionContext = new ExecutionContext(token);
+        ExecutionContext.pushCurrentContext(executionContext);
+        ContextInstance contextInstance = executionContext.getContextInstance();
         for (SignalParam signalParam : params) {
-            taskInstance.setVariable(signalParam.getName(), signalParam.getValue());
+            contextInstance.setVariableLocally(signalParam.getName(), signalParam.getValue());
         }
-        executionContext.setTaskInstance(taskInstance);
         return executionContext;
     }
 
