@@ -2,6 +2,8 @@ package br.com.infox.epp.entrega.modelo.rest;
 
 import javax.inject.Inject;
 
+import org.jboss.seam.contexts.Lifecycle;
+
 import br.com.infox.epp.entrega.ModeloEntregaService;
 
 public class AgendaEntregaTimerResourceImpl implements AgendaEntregaTimerResource {
@@ -11,7 +13,12 @@ public class AgendaEntregaTimerResourceImpl implements AgendaEntregaTimerResourc
 
     @Override
     public void processAgendaEntrega() {
-        modeloEntregaService.sinalizarAgendasVencidas();
+    	Lifecycle.beginCall();
+    	try {
+    		modeloEntregaService.sinalizarAgendasVencidas();
+    	} finally {
+			Lifecycle.endCall();
+		}
     }
 
 }
