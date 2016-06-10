@@ -30,10 +30,7 @@ import br.com.infox.core.server.ApplicationServerService;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
-import br.com.infox.epp.access.manager.UsuarioLoginManager;
-import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.log.LogErro;
 import br.com.infox.epp.log.StatusLog;
 import br.com.infox.epp.log.rest.LogRest;
@@ -204,15 +201,11 @@ public class LogErrorService extends PersistenceController {
     
     private String getUserAttributes() {
         Localizacao localizacao = Authenticator.getLocalizacaoAtual();
-        UsuarioLogin usuario = Authenticator.getUsuarioLogado();
         UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
-        if (usuarioPerfil == null) {
-        	UsuarioLoginManager usuarioLoginManager = BeanManager.INSTANCE.getReference(UsuarioLoginManager.class);
-    		usuario = usuarioLoginManager.getUsuarioSistema();
-    		usuarioPerfil = usuario.getUsuarioPerfilList().get(0);
-    		localizacao = usuarioPerfil.getLocalizacao();
-        }
-        return String.format(ERROR_MESSAGE_FORMAT, usuario.getLogin(), localizacao.getCodigo(), usuarioPerfil.getPerfilTemplate().getCodigo());
+        String codigoLocalizacao = localizacao == null ? "" : localizacao.getCodigo();
+        String login = usuarioPerfil == null ? Thread.currentThread().getName() : usuarioPerfil.getUsuarioLogin().getLogin();
+        String perfil = usuarioPerfil == null ? "" : usuarioPerfil.getPerfilTemplate().getCodigo();
+        return String.format(ERROR_MESSAGE_FORMAT, login, codigoLocalizacao, perfil);
     }
     
     private Throwable getHandledException(Throwable throwable) {
