@@ -94,7 +94,7 @@ public class EntregaSearch extends PersistenceController {
 		cq.orderBy(cb.asc(pessoa.get(Pessoa_.nome)));
 		
 		if (!query.matches("\\d+")) {
-			cq.where(cb.like(cb.lower(pessoa.get(PessoaFisica_.nome)), "%" + query.toLowerCase() + "%"));
+			cq.where(cb.like(cb.lower(pessoa.get(Pessoa_.nome)), "%" + query.toLowerCase() + "%"));
 		} else {
 			Subquery<Integer> pessoaFisicaQuery = cq.subquery(Integer.class);
 			Root<PessoaFisica> pessoaFisica = pessoaFisicaQuery.from(PessoaFisica.class);
