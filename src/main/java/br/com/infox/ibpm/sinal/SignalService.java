@@ -107,9 +107,25 @@ public class SignalService {
     
     public List<ProcessInstance> startStartStateListening(String eventType, List<SignalParam> params) {
         eventType = Event.getListenerEventType(eventType);
-        return startStartStateListeningImpl(eventType, params);    	
+        ExecutionContext executionContext = createExecutionContext(params);
+        ExecutionContext.pushCurrentContext(executionContext);
+        try {
+            return startStartStateListeningImpl(eventType, params);    	
+        } finally {
+            ExecutionContext.popCurrentContext(executionContext);
+        }
     }
     
+    private ExecutionContext createExecutionContext(List<SignalParam> params) {
+        ExecutionContext executionContext = new ExecutionContext(new Token());
+        TaskInstance taskInstance = new TaskInstance();
+        for (SignalParam signalParam : params) {
+            taskInstance.setVariable(signalParam.getName(), signalParam.getValue());
+        }
+        executionContext.setTaskInstance(taskInstance);
+        return executionContext;
+    }
+
     private List<ProcessInstance> startStartStateListeningImpl(String eventType, List<SignalParam> params) {
         List<SignalNodeBean> signalNodes = getStartStateListening(eventType);
         List<ProcessInstance> processInstances = new ArrayList<>();
