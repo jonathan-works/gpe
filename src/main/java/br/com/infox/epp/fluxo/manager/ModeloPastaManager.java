@@ -3,6 +3,8 @@ package br.com.infox.epp.fluxo.manager;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
@@ -16,6 +18,7 @@ import br.com.infox.epp.fluxo.entity.ModeloPasta;
 import br.com.infox.epp.fluxo.entity.ModeloPastaRestricao;
 import br.com.infox.epp.processo.documento.type.PastaRestricaoEnum;
 
+@Stateless
 @Name(ModeloPastaManager.NAME)
 @AutoCreate
 public class ModeloPastaManager extends Manager<ModeloPastaDAO, ModeloPasta>{
@@ -25,13 +28,17 @@ public class ModeloPastaManager extends Manager<ModeloPastaDAO, ModeloPasta>{
 
 	@In
 	private ModeloPastaRestricaoManager modeloPastaRestricaoManager;
-		
+
 	public List<ModeloPasta> getByFluxo(Fluxo fluxo){
 		List<ModeloPasta> modeloPastaList = getDao().getByFluxo(fluxo);
 		if (modeloPastaList == null) {
-			modeloPastaList = new ArrayList<ModeloPasta>();
+			modeloPastaList = new ArrayList<ModeloPasta>(0);
 		}
 		return modeloPastaList;
+	}
+
+	public List<ModeloPasta> getByIdFluxo(Integer idFluxo) {
+	    return getDao().getByIdFluxo(idFluxo);
 	}
 
 	@Override
@@ -66,6 +73,7 @@ public class ModeloPastaManager extends Manager<ModeloPastaDAO, ModeloPasta>{
 	
 	public void deleteComRestricoes(ModeloPasta modelo) throws DAOException{
 		modeloPastaRestricaoManager.deleteByModeloPasta(modelo);
+		modelo.getFluxo().getModeloPastaList().remove(modelo);
 		remove(modelo);
 	}
 }
