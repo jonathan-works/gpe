@@ -94,14 +94,18 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
         Processo root = processo.getProcessoRoot();
         List<Pasta> pastaList = root.getPastaList();
         List<ModeloPasta> modeloPastaList = modeloPastaManager.getByFluxo(processo.getNaturezaCategoriaFluxo().getFluxo());
+        Pasta padraoFromModelo = null;
         for (ModeloPasta modeloPasta : modeloPastaList) {
-            pastaList.add(createFromModelo(modeloPasta, processo));
+            Pasta createFromModelo = createFromModelo(modeloPasta, root);
+            pastaList.add(createFromModelo);
+            if (modeloPasta.getPadrao()) {
+                padraoFromModelo = createFromModelo;
+            }
         }
-        Pasta padrao = getDefault(processo.getProcessoRoot());
-        if (padrao == null && !pastaList.isEmpty()) {
-            padrao = pastaList.get(0);
-            documentoService.setDefaultFolder(padrao);
-            metadadoProcessoManager.addMetadadoProcesso(processo, EppMetadadoProvider.PASTA_DEFAULT, padrao.getId().toString());
+        Pasta padrao = processo.getMetadado(EppMetadadoProvider.PASTA_DEFAULT).getValue();
+        if (padrao == null && padraoFromModelo != null) {
+            documentoService.setDefaultFolder(padraoFromModelo);
+            metadadoProcessoManager.addMetadadoProcesso(processo, EppMetadadoProvider.PASTA_DEFAULT, padraoFromModelo.getId().toString());
         }
         return pastaList;
     }
