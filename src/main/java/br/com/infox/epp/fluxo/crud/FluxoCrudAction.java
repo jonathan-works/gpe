@@ -121,7 +121,6 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
         getInstance().setPublicado(false);
         this.replica = false;
     }
-    }
     
     @Override
     protected void afterSave(String ret) {
@@ -129,4 +128,5 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
         if (PERSISTED.equals(ret)) {
             definicaoVariavelProcessoManager.createDefaultDefinicaoVariavelProcessoList(getInstance());
         }
+    }
 }
