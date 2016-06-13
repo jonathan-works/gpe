@@ -10,6 +10,7 @@ import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.jboss.seam.ScopeType;
@@ -52,7 +53,7 @@ public class ModeloPastaRestricaoAction implements Serializable {
 	
     @In
     private FluxoManager fluxoManager;
-    @In
+    @Inject
     private ModeloPastaManager modeloPastaManager;
     @In
     private ActionMessagesService actionMessagesService;
@@ -69,22 +70,23 @@ public class ModeloPastaRestricaoAction implements Serializable {
     @In(StatusMessages.COMPONENT_NAME)
     private StatusMessages statusMessage;
 
-	
 	private ModeloPasta instance;
 	private List<ModeloPasta> listModeloPastas;
 	private Fluxo fluxo;
 	private Integer id;
 	private List<ModeloPastaRestricao> restricoes;
 	private ModeloPastaRestricao restricaoInstance;
+	private Boolean semModelo = true;
+	private ModeloPasta modeloPadrao;
 	
 	private Papel alvoRestricaoPapel;
 	private Localizacao alvoRestricaoLocalizacao;
 	private Boolean alvoRestricaoParticipante;
 	
 	public void init(final Fluxo fluxo) {
-		newInstance();
 		newRestricaoInstance();
 		setFluxo(fluxo);
+		newInstance();
 		// Isto está aqui para evitar erro ao editar uma restrição do tipo localização na primeira vez que entra na tela,
 		// causado pela injeção a este componente que
 		// está presente em LocalizaccaoTreehandler.getEntityToIgnore
@@ -96,6 +98,7 @@ public class ModeloPastaRestricaoAction implements Serializable {
 		getInstance().setRemovivel(true);
 		getInstance().setEditavel(true);
 		getInstance().setSistema(true);
+		getInstance().setPadrao(semModelo);
 	}
 	
 	public void newRestricaoInstance() {
@@ -116,6 +119,13 @@ public class ModeloPastaRestricaoAction implements Serializable {
 		try {
 			if (prePersist()) {
 				persistNovoModeloPasta();
+				if (getInstance().getPadrao()) {
+				    if (modeloPadrao != null) {
+				        modeloPadrao.setPadrao(false);
+				        modeloPastaManager.update(modeloPadrao);
+				    }
+				    modeloPadrao = getInstance();
+				}
 				getFluxo().getModeloPastaList().add(getInstance());
 				initModeloPastaList(getFluxo());
 				newInstance();
@@ -135,6 +145,11 @@ public class ModeloPastaRestricaoAction implements Serializable {
 	public void update() {
 		try {
 			updateModeloPasta();
+			if (getInstance().getPadrao() && !getInstance().equals(modeloPadrao)) {
+			    modeloPadrao.setPadrao(false);
+			    modeloPastaManager.update(modeloPadrao);
+			    modeloPadrao = getInstance();
+			}
 			statusMessage.add(StatusMessage.Severity.INFO, infoxMessages.get("modeloPasta.updated"));
 		} catch (DAOException e) {
 			LOG.error(e);
@@ -148,10 +163,10 @@ public class ModeloPastaRestricaoAction implements Serializable {
 	
 	public void removeModeloPasta(ModeloPasta modelo) {
 		try {
-			if (modeloPastaManager == null) {
-				modeloPastaManager = ComponentUtil.getComponent(ModeloPastaManager.NAME);
-			}
 			modeloPastaManager.deleteComRestricoes(modelo);
+			if (modelo.equals(modeloPadrao)) {
+			    modeloPadrao = null;
+			}
 			if (modelo.equals(getInstance())) {
 			    newInstance();
 			}
@@ -398,7 +413,19 @@ public class ModeloPastaRestricaoAction implements Serializable {
 
 	protected void initModeloPastaList(Fluxo fluxo) {
 		modeloPastaList.getEntity().setFluxo(fluxo);
-		setListModeloPastas(modeloPastaManager.getByFluxo(fluxo));
+		listModeloPastas = modeloPastaManager.getByFluxo(fluxo);
+		semModelo = listModeloPastas == null || listModeloPastas.isEmpty();
+		if (!semModelo) {
+    		for (ModeloPasta modeloPasta : listModeloPastas) {
+                if (modeloPasta.getPadrao()) {
+                    modeloPadrao = modeloPasta;
+                    break;
+                }
+    		}
+        }
 	}
 
+	public boolean isSemModelo() {
+	    return semModelo;
+	}
 }

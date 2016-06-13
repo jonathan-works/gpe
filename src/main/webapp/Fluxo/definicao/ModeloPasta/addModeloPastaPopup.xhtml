@@ -25,7 +25,8 @@
 	    moveable="true"
 	    show="false"
 	    resizeable="true"
-	    minHeight="360" minWidth="290"
+	    minHeight="300" minWidth="200"
+        width="530"
 	    header="#{infoxMessages['modeloPasta.new']}"
         onbeforeshow="clearAddModeloPastaFields();"
 	    onbeforehide="clearAddModeloPastaFields();">
@@ -67,7 +68,11 @@
             <wi:selectBooleanCheckbox id="modeloPastaEditavel"
                 label="#{infoxMessages['modeloPasta.editavel']}"
                 value="#{modeloPastaRestricaoAction.instance.editavel}" />
-	        <br />
+            <wi:selectBooleanCheckbox id="modeloPastaPadrao"
+                rendered="#{not modeloPastaRestricaoAction.semModelo}"
+                label="#{infoxMessages['modeloPasta.padrao']}"
+                value="#{modeloPastaRestricaoAction.instance.padrao}" />
+	        <div />
 	        <wi:commandButton
                 id="addModeloPastaButton"
                 action="#{modeloPastaRestricaoAction.persist()}"

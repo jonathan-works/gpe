@@ -1,8 +1,5 @@
 package br.com.infox.epp.fluxo.entity;
 
-import static br.com.infox.epp.fluxo.query.ModeloPastaQuery.GET_BY_FLUXO;
-import static br.com.infox.epp.fluxo.query.ModeloPastaQuery.GET_BY_FLUXO_QUERY;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,8 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -20,7 +15,6 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = ModeloPasta.TABLE_NAME)
-@NamedQueries(@NamedQuery(name = GET_BY_FLUXO, query=GET_BY_FLUXO_QUERY))
 public class ModeloPasta {
     protected static final String TABLE_NAME = "tb_modelo_pasta";
     private static final String SEQUENCE_NAME = "sq_modelo_pasta";
@@ -60,8 +54,10 @@ public class ModeloPasta {
     
     @Column(name = "nr_ordem")
     private Integer ordem;
-    
-    
+
+    @Column(name = "in_padrao")
+    private Boolean padrao;
+
     public Integer getId() {
         return id;
     }
@@ -126,7 +122,15 @@ public class ModeloPasta {
 	public void setOrdem(Integer ordem) {
 		this.ordem = ordem;
 	}
-	
+
+	public Boolean getPadrao() {
+        return padrao;
+    }
+
+	public void setPadrao(Boolean padrao) {
+        this.padrao = padrao;
+    }
+
 	@Override
 	public String toString() {
 		return getNome();
