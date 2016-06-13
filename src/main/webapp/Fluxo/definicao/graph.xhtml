@@ -18,9 +18,17 @@
 	<h:outputStylesheet name="bootstrap-theme.min.css" library="modelador/css" />
 	<h:outputScript name="bootstrap.min.js" library="modelador" />
 
-	<div id="react-app" style="background-color: white"></div>
+	<div id="modelador" style="background-color: white; height: 600px"></div>
 	<h:outputScript name="bundle.js" library="modelador" />
+	
+	<h:form id="modeladorForm">
+		<h:inputHidden id="bpmn" value="#{bpmnView.fluxo.bpmnXml}" />
+	</h:form>
+	
 	<script>
-        var modeler = new InfoxBpmnModeler('react-app', '#{bpmnView.restApiUrl}', '#{bpmnView.token}');
+        var modeler = new InfoxBpmnModeler({
+        	'appContainerId': 'modelador',
+        	'bpmn': document.getElementById("#{rich:clientId('bpmn')}").value
+        });
     </script>
 </ui:composition>

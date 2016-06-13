@@ -59,6 +59,7 @@ import br.com.infox.epp.fluxo.merger.model.MergePointsBundle;
 import br.com.infox.epp.fluxo.merger.service.FluxoMergeService;
 import br.com.infox.epp.fluxo.xpdl.FluxoXPDL;
 import br.com.infox.epp.fluxo.xpdl.IllegalXPDLException;
+import br.com.infox.epp.modeler.converter.JpdlBpmnConverter;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.timer.manager.TaskExpirationManager;
 import br.com.infox.epp.tarefa.manager.TarefaJbpmManager;
@@ -216,6 +217,10 @@ public class ProcessBuilder implements Serializable {
             instance.setName(fluxo.getFluxo());
             exists = true;
             this.id = newId;
+            if (fluxo.getBpmnXml() == null) {
+            	fluxo.setBpmnXml(new JpdlBpmnConverter().convert(xml));
+            	fluxo = fluxoManager.update(fluxo); // TODO melhorar isso
+            }
         }
     }
 
