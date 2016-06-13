@@ -16,12 +16,13 @@
                     value="#{categoriaEntregaView.restricaoCategoriaEntregaItemController.restricao}"
                     converter="br.com.infox.jsf.converter.EntityConverter"
                     completeMethod="#{categoriaEntregaView.restricaoCategoriaEntregaItemController.completeLocalizacao}"
-                    dropdownMode="blank" itemLabel="#{item.localizacao}" itemValue="#{item}">
+                    dropdownMode="blank" itemLabel="#{item.localizacao}" itemValue="#{item}"
+                    forceSelection="true">
                     <f:facet name="itemtip">#{item.caminhoCompletoFormatado}</f:facet>
                 </i:autoComplete>
                 <h:commandButton styleClass="buttons" value="Adicionar"
                     action="#{categoriaEntregaView.restricaoCategoriaEntregaItemController.adicionar}">
-                    <p:ajax process="@parent" update="@parent" />
+                    <p:ajax process="@parent" update="@parent :pageBodyDialogMessage" />
                 </h:commandButton>
             </div>
             <p:dataTable var="item" styleClass="ifx-dataTable" reflow="true" rows="15" paginator="true"

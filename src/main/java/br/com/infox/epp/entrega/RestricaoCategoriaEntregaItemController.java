@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.jboss.seam.faces.FacesMessages;
+
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.entrega.entity.CategoriaEntregaItem;
@@ -58,7 +60,11 @@ public class RestricaoCategoriaEntregaItemController implements Serializable {
     }
     
     public void adicionar(){
-        restricoes.add(this.restricao);
+    	if (getRestricao() != null) {
+    		restricoes.add(this.restricao);
+    	} else {
+    		FacesMessages.instance().add("É necessário selecionar uma localização para adicionar. ");
+    	}
         setRestricao(null);
     }
 
