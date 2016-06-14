@@ -27,7 +27,7 @@ public class ParticipantesProcessoController extends AbstractParticipantesContro
 	private static final long serialVersionUID = 1L;
 	private static final int QUANTIDADE_INFINITA_PARTES = 0;
     private static final int QUANTIDADE_MINIMA_PARTES = 1;
-    protected static final String NAME = "participantesProcessoController";
+    public static final String NAME = "participantesProcessoController";
 
     @Inject
     protected TipoParteManager tipoParteManager;
