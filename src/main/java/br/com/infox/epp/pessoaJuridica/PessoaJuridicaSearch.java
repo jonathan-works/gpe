@@ -33,5 +33,16 @@ public class PessoaJuridicaSearch {
 		List<PessoaJuridica> pessoas = getEntityManager().createQuery(cq).setMaxResults(1).getResultList();
 		return pessoas == null || pessoas.isEmpty() ? null : pessoas.get(0);
 	}
+	
+	public List<PessoaJuridica> getPessoasJuridicaByCnpjOuNome(String cnpjOuNome, int maxResult) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<PessoaJuridica> cq = cb.createQuery(PessoaJuridica.class);
+		Root<PessoaJuridica> pj = cq.from(PessoaJuridica.class);
+		Predicate igualCnpj = cb.equal(pj.get(PessoaJuridica_.cnpj), cnpjOuNome);
+		Predicate contendoNome = cb.like(cb.lower(pj.get(PessoaJuridica_.nome)), "%" + cnpjOuNome.toLowerCase() + "%");
+		Predicate ativo = cb.isTrue(pj.get(PessoaJuridica_.ativo));
+		cq.where(cb.or(igualCnpj, contendoNome), ativo);
+		return getEntityManager().createQuery(cq).setMaxResults(maxResult).getResultList();
+	}
 
 }
