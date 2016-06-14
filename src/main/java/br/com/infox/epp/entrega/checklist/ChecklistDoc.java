@@ -34,7 +34,7 @@ public class ChecklistDoc implements Serializable {
     @SequenceGenerator(allocationSize = 1, initialValue = 1, name = GENERATOR_NAME, sequenceName = SEQUENCE_NAME)
     @GeneratedValue(generator = GENERATOR_NAME, strategy = GenerationType.SEQUENCE)
     @Column(name = "id_checklist_doc", nullable = false)
-    private Integer id;
+    private Long id;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
@@ -65,11 +65,11 @@ public class ChecklistDoc implements Serializable {
     @Column(name = "nr_version", nullable = false)
     private Long version = 0L;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

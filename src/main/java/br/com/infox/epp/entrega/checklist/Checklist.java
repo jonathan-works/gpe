@@ -31,7 +31,7 @@ public class Checklist implements Serializable {
     @SequenceGenerator(allocationSize = 1, initialValue = 1, name = GENERATOR_NAME, sequenceName = SEQUENCE_NAME)
     @GeneratedValue(generator = GENERATOR_NAME, strategy = GenerationType.SEQUENCE)
     @Column(name = "id_checklist", nullable = false, updatable = false, unique = true)
-    private Integer id;
+    private Long id;
 
     @NotNull
     @JoinColumn(name = "id_processo")
@@ -52,11 +52,11 @@ public class Checklist implements Serializable {
     @JoinColumn(name = "id_usuario_criacao", nullable = false)
     private UsuarioLogin usuarioCriacao;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

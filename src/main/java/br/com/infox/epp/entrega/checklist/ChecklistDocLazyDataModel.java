@@ -32,7 +32,7 @@ public class ChecklistDocLazyDataModel extends LazyDataModel<ChecklistDoc> {
     private final String JOIN_CLASSIFICACAO_DOCUMENTO_ALIAS = "classificacaoDocumento";
 
     private Checklist cl;
-    private Map<Integer, ChecklistDoc> cache;
+    private Map<Long, ChecklistDoc> cache;
 
     public ChecklistDocLazyDataModel() {}
 
@@ -43,7 +43,7 @@ public class ChecklistDocLazyDataModel extends LazyDataModel<ChecklistDoc> {
 
     @Override
     public ChecklistDoc getRowData(String rowKey) {
-        return cache.get(Integer.parseInt(rowKey));
+        return cache.get(Long.parseLong(rowKey));
     }
 
     @Override
