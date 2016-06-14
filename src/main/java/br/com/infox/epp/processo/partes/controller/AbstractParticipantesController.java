@@ -2,14 +2,13 @@ package br.com.infox.epp.processo.partes.controller;
 
 import java.io.Serializable;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
+import javax.inject.Inject;
+
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.cdi.transaction.Transactional;
 import br.com.infox.epp.meiocontato.entity.MeioContato;
 import br.com.infox.epp.meiocontato.manager.MeioContatoManager;
 import br.com.infox.epp.meiocontato.type.TipoMeioContatoEnum;
@@ -28,8 +27,6 @@ import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
 
-@Scope(ScopeType.CONVERSATION)
-@Transactional
 public abstract class AbstractParticipantesController implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -38,17 +35,17 @@ public abstract class AbstractParticipantesController implements Serializable {
 	protected static final String RECURSO_VISUALIZAR = "/pages/Processo/exibirDetalhesParticipanteProcesso";
 	private static final LogProvider LOG = Logging.getLogProvider(AbstractParticipantesController.class);
 	
-    @In
+    @Inject
     protected PessoaFisicaManager pessoaFisicaManager;
-    @In
+    @Inject
     protected PessoaJuridicaManager pessoaJuridicaManager;
-    @In
+    @Inject
     protected ParticipanteProcessoManager participanteProcessoManager;
-    @In
+    @Inject
     protected MeioContatoManager meioContatoManager;
-    @In
+    @Inject
     protected ProcessoManager processoManager;
-    @In
+    @Inject
     protected ActionMessagesService actionMessagesService;
     
     private ParticipanteProcesso participanteProcesso = new ParticipanteProcesso();
@@ -117,6 +114,7 @@ public abstract class AbstractParticipantesController implements Serializable {
     	return podeAdicionarPartesFisicas() && podeAdicionarPartesJuridicas();
     }
     
+    @Transactional
     public void includeParticipanteProcesso(){
 		try {
 			getParticipanteProcesso().setProcesso(getProcesso());
