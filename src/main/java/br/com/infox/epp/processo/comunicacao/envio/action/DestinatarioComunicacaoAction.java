@@ -228,6 +228,7 @@ public class DestinatarioComunicacaoAction implements Serializable{
 		destinatariosExcluidos = new ArrayList<>();
 		PessoaFisica relator = getRelator();
 		processoPossuiRelator = relator != null;
+		perfisSelecionados =  new HashMap<>();
 		for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
 			if (destinatario.getDestinatario() != null) {
 				participanteProcessoComunicacaoList.adicionarIdPessoa(destinatario.getDestinatario().getIdPessoa());
