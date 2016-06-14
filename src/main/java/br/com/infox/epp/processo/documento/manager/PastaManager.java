@@ -102,7 +102,8 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
                 padraoFromModelo = createFromModelo;
             }
         }
-        Pasta padrao = processo.getMetadado(EppMetadadoProvider.PASTA_DEFAULT).getValue();
+        MetadadoProcesso metadadoPastaDefault = processo.getMetadado(EppMetadadoProvider.PASTA_DEFAULT);
+        Pasta padrao = metadadoPastaDefault == null ? null : (Pasta) metadadoPastaDefault.getValue();
         if (padrao == null && padraoFromModelo != null) {
             documentoService.setDefaultFolder(padraoFromModelo);
             metadadoProcessoManager.addMetadadoProcesso(processo, EppMetadadoProvider.PASTA_DEFAULT, padraoFromModelo.getId().toString());
@@ -270,5 +271,9 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
 		} catch (CloneNotSupportedException e) {
     		throw new BusinessRollbackException(e);
     	}
+	}
+
+	public Boolean isPadraoEmAlgumProcesso(Pasta pasta) {
+	    return getDao().isPadraoEmAlgumProcesso(pasta);
 	}
 }

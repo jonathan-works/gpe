@@ -4,12 +4,15 @@ import static java.text.MessageFormat.format;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.jboss.seam.ScopeType;
@@ -41,6 +44,9 @@ import br.com.infox.epp.processo.documento.list.DocumentoList;
 import br.com.infox.epp.processo.documento.type.PastaRestricaoEnum;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
@@ -73,19 +79,26 @@ public class PastaRestricaoAction implements Serializable {
     private StatusMessages statusMessage;
 	@In
 	private InfoxMessages infoxMessages;
+	@Inject
+	private MetadadoProcessoManager metadadoProcessoManager;
 	
 	private static final LogProvider LOG = Logging.getLogProvider(PastaRestricaoAction.class);
 	
-	private Pasta instance;
-	private List<Pasta> pastaList;
-	private Processo processo;
-	private Integer id;
-	private List<PastaRestricao> restricoes;
-	private Boolean pastaSelecionada = false;
-	private PastaRestricao restricaoInstance;
-	private Papel alvoRestricaoPapel;
-	private Localizacao alvoRestricaoLocalizacao;
 	private Boolean alvoRestricaoParticipante;
+	private Boolean pastaSelecionada = false;
+	private Boolean pastaSelecionadaPadrao = false;
+	private Boolean adicionarPastaPadrao = false;
+	private List<Pasta> pastaList;
+	private List<PastaRestricao> restricoes;
+	private Localizacao alvoRestricaoLocalizacao;
+	private Integer id;
+	private Papel alvoRestricaoPapel;
+	private Pasta instance;
+	private Pasta padrao;
+	private PastaRestricao restricaoInstance;
+	private Processo processo;
+	private Processo processoReal;
+	private Map<Integer, Boolean> canRemoveMap = new HashMap<>();
 	
 	@Create
 	public void create() {
@@ -100,12 +113,23 @@ public class PastaRestricaoAction implements Serializable {
 	    newInstance();
 	    newRestricaoInstance();
 	}
-	
+
+	protected void retrievePadrao() {
+	    MetadadoProcesso metadadoPastaDefault = processoReal.getMetadado(EppMetadadoProvider.PASTA_DEFAULT);
+	    padrao = metadadoPastaDefault == null ? null : (Pasta) metadadoPastaDefault.getValue();
+	}
+
+	public boolean isPastaDefault(Pasta pasta) {
+	    return pasta.equals(padrao);
+	}
+
     public void setProcesso(Processo processo) {
         this.processo = processo.getProcessoRoot();
+        this.processoReal = processo;
         try {
             initPastaList(processo);
             clearInstances();
+            retrievePadrao();
         } catch (DAOException e) {
             LOG.error(e);
             actionMessagesService.handleDAOException(e);
@@ -122,8 +146,9 @@ public class PastaRestricaoAction implements Serializable {
             UIViewRoot viewRoot = context.getViewRoot();
             List<UIComponent> children = viewRoot.getChildren();
             resetInputValues(children);
-            
+
             setInstance((Pasta) BeanUtils.cloneBean(pasta));
+            pastaSelecionadaPadrao = isPastaDefault(getInstance());
         } catch (IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
             LOG.error(e);
             statusMessage.add(Severity.INFO, "Erro ao selecionar pasta.");
@@ -212,6 +237,9 @@ public class PastaRestricaoAction implements Serializable {
 	public void updatePasta() {
 		try {
 			atualizarPasta();
+			if (pastaSelecionadaPadrao && !getInstance().equals(padrao)) {
+			    setInstanceAsPastaPadrao();
+			}
 			statusMessage.add(Severity.INFO, "Pasta atualizada com sucesso.");
 		} catch (DAOException e) {
 		    LOG.error(e);
@@ -221,6 +249,18 @@ public class PastaRestricaoAction implements Serializable {
 
 	protected void atualizarPasta() throws DAOException {
 		pastaManager.update(getInstance());
+	}
+
+	protected void setInstanceAsPastaPadrao() {
+	    MetadadoProcesso metadadoPastaDefault = processoReal.getMetadado(EppMetadadoProvider.PASTA_DEFAULT);
+	    if (metadadoPastaDefault == null) {
+	        metadadoProcessoManager.addMetadadoProcesso(processoReal, EppMetadadoProvider.PASTA_DEFAULT, getInstance().getId().toString());
+	    } else {
+	        metadadoPastaDefault.setValor(getInstance().getId().toString());
+	        metadadoProcessoManager.update(metadadoPastaDefault);
+	    }
+	    padrao = getInstance();
+	    canRemoveMap.clear();
 	}
 
 	public void removePasta(Pasta pasta) {
@@ -242,11 +282,16 @@ public class PastaRestricaoAction implements Serializable {
 	}
 
 	public Boolean canRemovePasta(Pasta pasta) {
-		if (pasta.getRemovivel()) {
+	    if (canRemoveMap.containsKey(pasta.getId())) {
+	        return canRemoveMap.get(pasta.getId());
+	    }
+	    Boolean response = false;
+		if (pasta.getRemovivel() && !pastaManager.isPadraoEmAlgumProcesso(pasta)) {
 			List<Documento> documentoList = pasta.getDocumentosList();
-			return (documentoList == null || documentoList.isEmpty());
+			response = (documentoList == null || documentoList.isEmpty());
 		}
-		return false;
+		canRemoveMap.put(pasta.getId(), response);
+		return response;
 	}
 
 	public Boolean canEditRestricao(PastaRestricao restricao) {
@@ -468,5 +513,21 @@ public class PastaRestricaoAction implements Serializable {
 
     public void setRestricaoInstance(PastaRestricao restricaoInstance) {
         this.restricaoInstance = restricaoInstance;
+    }
+
+    public Boolean getPastaSelecionadaPadrao() {
+        return pastaSelecionadaPadrao;
+    }
+
+    public void setPastaSelecionadaPadrao(Boolean pastaSelecionadaPadrao) {
+        this.pastaSelecionadaPadrao = pastaSelecionadaPadrao;
+    }
+
+    public Boolean getAdicionarPastaPadrao() {
+        return adicionarPastaPadrao;
+    }
+
+    public void setAdicionarPastaPadrao(Boolean adicionarPastaPadrao) {
+        this.adicionarPastaPadrao = adicionarPastaPadrao;
     }
 }
