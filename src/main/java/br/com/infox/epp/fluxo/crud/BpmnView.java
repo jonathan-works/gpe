@@ -6,8 +6,10 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
+import br.com.infox.epp.modeler.converter.BpmnJpdlService;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 
 @Named
@@ -17,6 +19,8 @@ public class BpmnView implements Serializable {
 	
 	@Inject
 	private FluxoManager fluxoManager;
+	@Inject
+	private BpmnJpdlService bpmnJpdlService;
 	
 	private Fluxo fluxo;
 
@@ -36,7 +40,9 @@ public class BpmnView implements Serializable {
 		}
 	}
 	
-	public String getEscapedBpmn() {
-		return fluxo.getBpmnXml();
+	@ExceptionHandled(successMessage = "Fluxo salvo com sucesso!")
+	public void update() {
+		bpmnJpdlService.atualizarDefinicaoJpdl(fluxo);
+		refresh();
 	}
 }

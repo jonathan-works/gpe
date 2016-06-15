@@ -22,7 +22,10 @@
 	<h:outputScript name="bundle.js" library="modelador" />
 	
 	<h:form id="modeladorForm">
-		<h:inputHidden id="bpmn" value="#{bpmnView.fluxo.bpmnXml}" />
+		<h:inputHidden id="bpmn" value="#{bpmnView.fluxo.bpmn}" />
+		<h:inputHidden id="svg" value="#{bpmnView.fluxo.svg}" />
+		<a:jsFunction name="updateBpmn" execute="@form" render=":processDefinition :pageBodyDialogMessage" limitRender="true"
+			oncomplete="infox.hideLoading()" action="#{bpmnView.update}"/>
 	</h:form>
 	
 	<script>

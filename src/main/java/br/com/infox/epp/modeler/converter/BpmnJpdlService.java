@@ -2,9 +2,7 @@ package br.com.infox.epp.modeler.converter;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.Serializable;
 import java.io.StringReader;
-import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,7 +37,6 @@ import org.jbpm.graph.node.Join;
 import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
-import org.jbpm.jpdl.xml.JpdlXmlWriter;
 import org.jbpm.taskmgmt.def.Swimlane;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -52,17 +49,22 @@ import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
+import br.com.infox.ibpm.jpdl.JpdlXmlWriter;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-public class BpmnJpdlService implements Serializable {
-	private static final long serialVersionUID = 1L;
+public class BpmnJpdlService {
 	
 	@Inject
 	private FluxoManager fluxoManager;
 
+	public Fluxo atualizarDefinicaoJpdl(Fluxo fluxo) {
+		fluxo.setXml(JpdlXmlWriter.toString(getUpdatedJbpmDefinitionFromBpmn(fluxo)));
+		return fluxoManager.update(fluxo);
+	}
+	
 	public ProcessDefinition getUpdatedJbpmDefinitionFromBpmn(Fluxo fluxo) {
-		BpmnModelInstance bpmn = Bpmn.readModelFromStream(new ByteArrayInputStream(fluxo.getBpmnXml().getBytes(StandardCharsets.UTF_8)));
+		BpmnModelInstance bpmn = Bpmn.readModelFromStream(new ByteArrayInputStream(fluxo.getBpmn().getBytes(StandardCharsets.UTF_8)));
 		Document jpdlDoc = loadXml(fluxo.getXml());
 		
 		List<String> jpdlNodeKeys = new ArrayList<>();
@@ -218,9 +220,7 @@ public class BpmnJpdlService implements Serializable {
 	private Document loadXml(String xml) {
 		if (xml == null) {
 			ProcessDefinition processDefinition = fluxoManager.createInitialProcessDefinition();
-			StringWriter writer = new StringWriter();
-			new JpdlXmlWriter(writer).write(processDefinition);
-			xml = writer.toString();
+			xml = JpdlXmlWriter.toString(processDefinition);
 		}
 		SAXBuilder builder = new SAXBuilder();
 		try {

@@ -217,8 +217,8 @@ public class ProcessBuilder implements Serializable {
             instance.setName(fluxo.getFluxo());
             exists = true;
             this.id = newId;
-            if (fluxo.getBpmnXml() == null) {
-            	fluxo.setBpmnXml(new JpdlBpmnConverter().convert(xml));
+            if (fluxo.getBpmn() == null) {
+            	fluxo.setBpmn(new JpdlBpmnConverter().convert(xml));
             	fluxo = fluxoManager.update(fluxo); // TODO melhorar isso
             }
         }

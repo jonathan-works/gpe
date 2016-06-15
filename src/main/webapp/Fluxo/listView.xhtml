@@ -81,7 +81,7 @@
                         action="#{fluxoMergeView.deploy(row)}"
                         onclick="if (!confirm('#{infoxMessages['fluxo.publicar.confirm']}')) { return false; }"
                         onbegin="infox.showLoading();"
-                        rendered="#{not row.bpmn and not (row.xml eq row.xmlExecucao and row.publicado)}"
+                        rendered="#{not (row.xml eq row.xmlExecucao and row.publicado)}"
                         render="pageBody"
                         oncomplete="infox.hideLoading();opener.refreshPage();">
                         <wi:toolBarGraphicImage title="#{infoxMessages['processBuilder.deployBtn']}" url="#{layoutController.getResourceUrlByPath('/imagens/deploy.png')}" />
@@ -144,8 +144,8 @@
                 <wi:commandButton
                     id="definicao"
                     value="#{infoxMessages['fluxo.definicao']}" reRender="@this"
-                    rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.replica and not fluxoCrudAction.instance.bpmn}"
-                    oncomplete="openPopUp('processDefinition', '#{pathResolver.getContextPath()}/Fluxo/definicao/processDefinition.seam#/bpmn/#{fluxoCrudAction.instance.idFluxo}',1300,850);">
+                    rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.replica}"
+                    oncomplete="openPopUp('processDefinition', '#{pathResolver.getContextPath()}/Fluxo/definicao/processDefinition.seam',1300,850);">
                     <f:setPropertyActionListener value="#{fluxoCrudAction.instance}" target="#{flash.fluxo}"></f:setPropertyActionListener>
                   	<infox:flashcopy />
                 </wi:commandButton>

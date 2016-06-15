@@ -117,17 +117,22 @@
       <a:jsFunction
         name="updateFluxo"
         actionListener="#{processBuilder.prepareUpdate}"
-        action="#{processBuilder.update}"></a:jsFunction>
+        action="#{processBuilder.update}"
+        oncomplete="infox.hideLoading()"
+        rendered="#{processBuilder.tab ne 'graphTab'}"/>
+      <!-- Função updateBpmn definida no graph.xhtml -->
+      <a:jsFunction
+        name="updateFluxo"
+        actionListener="#{processBuilder.prepareUpdate}"
+        action="#{processBuilder.update}"
+        oncomplete="updateBpmn();"
+        rendered="#{processBuilder.tab eq 'graphTab'}"/>
       <a:commandButton
         id="gravar"
         value="#{infoxMessages['processBuilder.saveBtn']}"
-        rendered="#{processBuilder.exists and processBuilder.tab ne 'graphTab'}"
+        rendered="#{processBuilder.exists}"
         styleClass="buttons #{wi:get(styleClass, '')}"
-        onclick="checkIfEditorExists();" />
-      <a:commandButton id="gravarBpmn" value="#{infoxMessages['processBuilder.saveBtn']}"
-      	rendered="#{processBuilder.exists and processBuilder.tab eq 'graphTab'}" 
-      	styleClass="buttons" onclick="infox.showLoading(); modeler.updateBpmn()"
-      	oncomplete="infox.hideLoading()"/>
+        onclick="infox.showLoading(); checkIfEditorExists();" />
       <a:commandButton
         id="novoProcesso"
         actionListener="#{processBuilder.prepareUpdate}"
