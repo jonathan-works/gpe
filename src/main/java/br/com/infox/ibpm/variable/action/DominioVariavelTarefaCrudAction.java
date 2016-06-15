@@ -14,9 +14,7 @@ import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
 @Scope(ScopeType.CONVERSATION)
 @AutoCreate
 public class DominioVariavelTarefaCrudAction extends AbstractCrudAction<DominioVariavelTarefa, DominioVariavelTarefaManager> {
-    /**
-     * 
-     */
+
     private static final long serialVersionUID = 1L;
 
     public static final String NAME = "dominioVariavelTarefaCrudAction";
@@ -40,4 +38,5 @@ public class DominioVariavelTarefaCrudAction extends AbstractCrudAction<DominioV
         newInstance();
         setTab("search");
     }
+    
 }
