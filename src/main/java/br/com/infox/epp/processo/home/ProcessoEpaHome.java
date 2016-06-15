@@ -260,7 +260,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	        	pastaAction.setProcesso(this.getInstance().getProcessoRoot());
 	        }
 	        if (tab.equals("tabPastaRestricao")) {
-	        	pastaRestricaoAction.setProcesso(this.getInstance().getProcessoRoot());
+	        	pastaRestricaoAction.setProcesso(this.getInstance());
 	        	pastaList.setProcesso(this.getInstance().getProcessoRoot());
 			}
 		}

@@ -22,7 +22,7 @@
                 label="#{infoxMessages['modeloPasta.nome']}" />
             <wi:inputText id="descricao" value="#{modeloPastaList.entity.descricao}"
                 label="#{infoxMessages['modeloPasta.descricao']}" />
-                   
+            <div />
             <ui:define name="buttons">
 				<wi:commandButton id="searchButton"
 					value="#{infoxMessages['button.pesquisar']}"
@@ -45,7 +45,7 @@
                     action="#{modeloPastaRestricaoAction.newInstance()}"
                     reRender="modeloPastaRestricaoDiv" />
                 </ui:define>
-                     
+
             </wi:searchForm>
         </ui:define>
 
@@ -58,7 +58,7 @@
 				<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['modeloPasta.select']}" />
 			</a:commandLink>
 			<wi:toolBar action="#{modeloPastaRestricaoAction.removeModeloPasta(row)}"
-                limitToList="true" status=":status"
+                rendered="#{not row.padrao or modeloPastaRestricaoAction.listModeloPastas.size() eq 1}" limitToList="true" status=":status"
                 reRender="modeloPastaTable modeloPastaRestricaoDiv"
                 onclick="if (confirm('#{infoxMessages['crud.confirmRemove']}')) {infox.showLoading(); return true;} else return false;"
                 oncomplete="infox.hideLoading();"
@@ -83,6 +83,10 @@
 	       	columnId="ordem"
 	        columnHeader="#{infoxMessages['modeloPasta.ordem']}"
       		value="#{row.ordem}" />
+        <wi:columnBoolean
+            columnId="padrao"
+            columnHeader="#{infoxMessages['modeloPasta.padrao']}"
+            value="#{row.padrao}" />
       	
       	<ui:include src="ModeloPasta/modeloPastaListColunaAdicionais.xhtml"/>
       	
@@ -126,6 +130,14 @@
 	            <wi:selectBooleanCheckbox id="editModeloPastaEditavel"
 	                label="#{infoxMessages['modeloPasta.editavel']}"
 	                value="#{modeloPastaRestricaoAction.instance.editavel}" />
+	            <wi:selectBooleanCheckbox id="editModeloPastaPadrao"
+                    rendered="#{not modeloPastaRestricaoAction.instance.padrao}"
+	                label="#{infoxMessages['modeloPasta.padrao']}"
+	                value="#{modeloPastaRestricaoAction.instance.padrao}" />
+                <wi:outputText id="outputModeloPastaPadrao"
+                    rendered="#{modeloPastaRestricaoAction.instance.padrao}"
+                    label="#{infoxMessages['modeloPasta.padrao']}"
+                    value="#{infoxMessages['crud.yes']}" />
 	            
 	            <ui:include src="ModeloPasta/modeloPastaAtributosAdicionais.xhtml"/>
 	            

@@ -180,7 +180,7 @@ public class ConsultaController extends AbstractController {
         	documentoProcessoAction.setListClassificacaoDocumento(null);
         }
         if(tab.equals("tabPastaRestricao")) {
-            pastaRestricaoAction.setProcesso(getProcesso().getProcessoRoot());
+            pastaRestricaoAction.setProcesso(getProcesso());
             pastaList.setProcesso(getProcesso().getProcessoRoot());
         }
     }

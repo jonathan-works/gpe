@@ -94,14 +94,19 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
         Processo root = processo.getProcessoRoot();
         List<Pasta> pastaList = root.getPastaList();
         List<ModeloPasta> modeloPastaList = modeloPastaManager.getByFluxo(processo.getNaturezaCategoriaFluxo().getFluxo());
+        Pasta padraoFromModelo = null;
         for (ModeloPasta modeloPasta : modeloPastaList) {
-            pastaList.add(createFromModelo(modeloPasta, processo));
+            Pasta createFromModelo = createFromModelo(modeloPasta, root);
+            pastaList.add(createFromModelo);
+            if (modeloPasta.getPadrao()) {
+                padraoFromModelo = createFromModelo;
+            }
         }
-        Pasta padrao = getDefault(processo.getProcessoRoot());
-        if (padrao == null && !pastaList.isEmpty()) {
-            padrao = pastaList.get(0);
-            documentoService.setDefaultFolder(padrao);
-            metadadoProcessoManager.addMetadadoProcesso(processo, EppMetadadoProvider.PASTA_DEFAULT, padrao.getId().toString());
+        MetadadoProcesso metadadoPastaDefault = processo.getMetadado(EppMetadadoProvider.PASTA_DEFAULT);
+        Pasta padrao = metadadoPastaDefault == null ? null : (Pasta) metadadoPastaDefault.getValue();
+        if (padrao == null && padraoFromModelo != null) {
+            documentoService.setDefaultFolder(padraoFromModelo);
+            metadadoProcessoManager.addMetadadoProcesso(processo, EppMetadadoProvider.PASTA_DEFAULT, padraoFromModelo.getId().toString());
         }
         return pastaList;
     }
@@ -267,4 +272,13 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     		throw new BusinessRollbackException(e);
     	}
 	}
+
+	public Boolean isPadraoEmAlgumProcesso(Pasta pasta) {
+	    return getDao().isPadraoEmAlgumProcesso(pasta);
+	}
+
+    public void removeMetadadoPadrao(Pasta pasta) {
+        List<MetadadoProcesso> metadadoList = getDao().listMetadadoPastaDefault(pasta);
+        metadadoProcessoManager.removeAll(metadadoList);
+    }
 }

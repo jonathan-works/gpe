@@ -82,4 +82,8 @@ public class MetadadoProcessoManager extends Manager<MetadadoProcessoDAO, Metada
 		}
 		return retorno;
 	}
+
+    public void removeAll(List<MetadadoProcesso> metadadoList) {
+        getDao().removeAll(metadadoList);
+    }
 }

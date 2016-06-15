@@ -54,4 +54,11 @@ public class MetadadoProcessoDAO extends DAO<MetadadoProcesso> {
 		params.put(MetadadoProcessoQuery.PARAM_PROCESSO, processo);
 		executeNamedQueryUpdate(MetadadoProcessoQuery.REMOVER_METADADO, params);
 	}
+
+    public void removeAll(List<MetadadoProcesso> metadadoList) {
+        for (MetadadoProcesso metadadoProcesso : metadadoList) {
+            removeWithoutFlush(metadadoProcesso);
+        }
+        flush();
+    }
 }
