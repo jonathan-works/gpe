@@ -45,12 +45,13 @@ import com.google.gson.JsonSyntaxException;
 
 import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.core.util.StringUtil;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
-import br.com.infox.epp.processo.status.manager.StatusProcessoManager;
+import br.com.infox.epp.processo.status.manager.StatusProcessoSearch;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.GenerateDocumentoHandler;
 import br.com.infox.ibpm.task.handler.GenerateDocumentoHandler.GenerateDocumentoConfiguration;
@@ -168,12 +169,12 @@ public class NodeHandler implements Serializable {
                 if (actionDelegation != null) {
                 	if (StatusHandler.class.getName().equals(actionDelegation.getClassName())) {
                         String configuration = actionDelegation.getConfiguration();
-                        Pattern pattern = Pattern.compile("<statusProcesso>(\\d+)</statusProcesso>");
+                        Pattern pattern = Pattern.compile("<statusProcesso>(.+?)</statusProcesso>");
                         Matcher matcher = pattern.matcher(configuration);
                         if (matcher.find()) {
                             String status = matcher.group(1);
-                            StatusProcessoManager manager = ComponentUtil.getComponent(StatusProcessoManager.NAME);
-                            this.statusProcesso = manager.find(Integer.parseInt(status, 10));
+                            StatusProcessoSearch search = BeanManager.INSTANCE.getReference(StatusProcessoSearch.class);
+                            this.statusProcesso = search.getStatusByName(status);
                         }
                     } else if (GenerateDocumentoHandler.class.getName().equals(actionDelegation.getClassName())) {
                     	String configuration = new GenerateDocumentoHandler().parseJbpmConfiguration(actionDelegation.getConfiguration());
@@ -568,7 +569,7 @@ public class NodeHandler implements Serializable {
                     actionDelegation.setConfigType("constructor");
                     actionDelegation.setConfiguration(MessageFormat.format(
                             "<statusProcesso>{0}</statusProcesso>",
-                            statusProcesso.getIdStatusProcesso()));
+                            statusProcesso.getNome()));
                 }
             }
         } else if (statusProcesso != null) {
@@ -663,7 +664,7 @@ public class NodeHandler implements Serializable {
         delegation.setConfigType("constructor");
         delegation.setConfiguration(MessageFormat.format(
                 "<statusProcesso>{0}</statusProcesso>",
-                statusProcesso.getIdStatusProcesso()));
+                statusProcesso.getNome()));
         action.setActionDelegation(delegation);
         event.addAction(action);
         return event;
