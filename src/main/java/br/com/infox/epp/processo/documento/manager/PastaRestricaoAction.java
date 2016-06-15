@@ -84,10 +84,11 @@ public class PastaRestricaoAction implements Serializable {
 	
 	private static final LogProvider LOG = Logging.getLogProvider(PastaRestricaoAction.class);
 	
+	private Boolean adicionarPastaPadrao = false;
 	private Boolean alvoRestricaoParticipante;
 	private Boolean pastaSelecionada = false;
 	private Boolean pastaSelecionadaPadrao = false;
-	private Boolean adicionarPastaPadrao = false;
+	private Boolean semPasta = false;
 	private List<Pasta> pastaList;
 	private List<PastaRestricao> restricoes;
 	private Localizacao alvoRestricaoLocalizacao;
@@ -138,6 +139,7 @@ public class PastaRestricaoAction implements Serializable {
 
 	protected void initPastaList(Processo processo) throws DAOException {
 		this.pastaList = pastaManager.getByProcesso(processo.getProcessoRoot());
+		semPasta = pastaList == null || pastaList.isEmpty();
 	}
 
 	public void selectPasta(Pasta pasta){
@@ -214,8 +216,13 @@ public class PastaRestricaoAction implements Serializable {
 	    getInstance().setProcesso(processo);
 		getInstance().setSistema(false);
 		persistirNovaPasta();
+		if (adicionarPastaPadrao || semPasta) {
+		    setInstanceAsPastaPadrao();
+		}
 		setPastaList(pastaManager.getByProcesso(processo));
 		setPastaSelecionada(false);
+		setSemPasta(false);
+		setAdicionarPastaPadrao(false);
 		return true;
 	}
 
@@ -228,6 +235,7 @@ public class PastaRestricaoAction implements Serializable {
 			if (prePersist()) {
 				statusMessage.add(StatusMessage.Severity.INFO, "Pasta adicionada com sucesso.");
 			}
+			canRemoveMap.clear();
 		} catch (DAOException e) {
 		    LOG.error(e);
 			actionMessagesService.handleDAOException(e);
@@ -273,7 +281,12 @@ public class PastaRestricaoAction implements Serializable {
 			if (pasta.equals(getInstance())) {
 			    newInstance();
 			}
-			setPastaList(pastaManager.getByProcesso(processo.getProcessoRoot()));
+			if (pasta.equals(padrao)) {
+			    removeMetadadoPadrao(pasta);
+			    retrievePadrao();
+			}
+			initPastaList(processo);
+			canRemoveMap.clear();
 			FacesMessages.instance().add(Severity.INFO, "Pasta removida com sucesso.");
 		} catch (DAOException e) {
 		    LOG.error(e);
@@ -281,14 +294,28 @@ public class PastaRestricaoAction implements Serializable {
 		}
 	}
 
+	private void removeMetadadoPadrao(Pasta pasta) {
+        pastaManager.removeMetadadoPadrao(pasta);
+    }
+
+    /**
+	 * Verifica se uma pasta pode ser removida.
+	 * A regra implementada é:
+	 * <ul><li>O atributo 'removivel' da Pasta deve ser true</li>
+	 *     <li>Não pode ter nenhum documento dentro da Pasta</li>
+	 *     <li>Caso exista mais de uma pasta no processo, esta não pode ser a pasta padrão, observando inclusive os eventuais processos filhos</li></ul>
+	 * @param pasta
+	 * @return true, caso possa ser remomível, falso caso contrário.
+	 */
 	public Boolean canRemovePasta(Pasta pasta) {
 	    if (canRemoveMap.containsKey(pasta.getId())) {
 	        return canRemoveMap.get(pasta.getId());
 	    }
 	    Boolean response = false;
-		if (pasta.getRemovivel() && !pastaManager.isPadraoEmAlgumProcesso(pasta)) {
+		if (pasta.getRemovivel()) {
 			List<Documento> documentoList = pasta.getDocumentosList();
-			response = (documentoList == null || documentoList.isEmpty());
+			response = (documentoList == null || documentoList.isEmpty())
+			        && (pastaList.size() == 1 || !pastaManager.isPadraoEmAlgumProcesso(pasta));
 		}
 		canRemoveMap.put(pasta.getId(), response);
 		return response;
@@ -529,5 +556,13 @@ public class PastaRestricaoAction implements Serializable {
 
     public void setAdicionarPastaPadrao(Boolean adicionarPastaPadrao) {
         this.adicionarPastaPadrao = adicionarPastaPadrao;
+    }
+
+    public Boolean getSemPasta() {
+        return semPasta;
+    }
+
+    public void setSemPasta(Boolean semPasta) {
+        this.semPasta = semPasta;
     }
 }

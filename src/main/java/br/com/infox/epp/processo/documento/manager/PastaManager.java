@@ -276,4 +276,9 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
 	public Boolean isPadraoEmAlgumProcesso(Pasta pasta) {
 	    return getDao().isPadraoEmAlgumProcesso(pasta);
 	}
+
+    public void removeMetadadoPadrao(Pasta pasta) {
+        List<MetadadoProcesso> metadadoList = getDao().listMetadadoPastaDefault(pasta);
+        metadadoProcessoManager.removeAll(metadadoList);
+    }
 }

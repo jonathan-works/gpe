@@ -135,4 +135,14 @@ public class PastaDAO extends DAO<Pasta> {
             return false;
         }
     }
+
+    public List<MetadadoProcesso> listMetadadoPastaDefault(Pasta pasta) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<MetadadoProcesso> cq = cb.createQuery(MetadadoProcesso.class);
+        Root<MetadadoProcesso> mp = cq.from(MetadadoProcesso.class);
+        cq.select(mp);
+        cq.where(cb.equal(mp.get(MetadadoProcesso_.metadadoType), EppMetadadoProvider.PASTA_DEFAULT.getMetadadoType()),
+                cb.equal(mp.get(MetadadoProcesso_.valor), pasta.getId().toString()));
+        return getEntityManager().createQuery(cq).getResultList();
+    }
 }
