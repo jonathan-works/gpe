@@ -55,7 +55,8 @@ public class ModeloPasta {
     @Column(name = "nr_ordem")
     private Integer ordem;
 
-    @Column(name = "in_padrao")
+    @NotNull
+    @Column(name = "in_padrao", nullable = false)
     private Boolean padrao;
 
     public Integer getId() {
