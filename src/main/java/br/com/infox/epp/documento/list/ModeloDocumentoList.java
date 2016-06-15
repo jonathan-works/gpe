@@ -35,6 +35,7 @@ public class ModeloDocumentoList extends EntityList<ModeloDocumento> {
         addSearchField("ativo", SearchCriteria.IGUAL);
         addSearchField("tipoModeloDocumento", SearchCriteria.IGUAL);
         addSearchField("tituloModeloDocumento", SearchCriteria.CONTENDO);
+        addSearchField("codigo", SearchCriteria.CONTENDO);
         // TODO verificar de onde veio esse validaPapel
         addSearchField("validaPapel", SearchCriteria.IGUAL, R1);
     }

@@ -29,6 +29,9 @@
                     <wi:inputText id="tituloModeloDocumento" maxlength="80"
                         label="#{infoxMessages['modeloDocumento.tituloModeloDocumento']}"
                         value="#{modeloDocumentoList.entity.tituloModeloDocumento}" />
+                   	<wi:inputText id="codigoModeloDocumento" maxlength="30"
+                        label="#{infoxMessages['modeloDocumento.codigoModelo']}"
+                        value="#{modeloDocumentoList.entity.codigo}" />
                     <wi:selectOneMenuEntity id="tipoModeloDocumento"
                         label="#{infoxMessages['modeloDocumento.tipoModeloDocumento']}"
                         value="#{modeloDocumentoList.entity.tipoModeloDocumento}"
@@ -45,6 +48,9 @@
             <wi:columnOutputText columnId="tituloModeloDocumento"
                 columnHeader="#{infoxMessages['modeloDocumento.tituloModeloDocumento']}"
                 value="#{row.tituloModeloDocumento}" />
+			<wi:columnOutputText columnId="codigo"
+                columnHeader="#{infoxMessages['modeloDocumento.codigoModelo']}"
+                value="#{row.codigo}" />
             <wi:columnOutputText columnId="tipoModeloDocumento"
                 columnHeader="#{infoxMessages['modeloDocumento.tipoModeloDocumento']}"
                 value="#{row.tipoModeloDocumento}" />
@@ -67,6 +73,10 @@
                 items="#{modeloDocumentoCrudAction.tiposModeloDocumentoPermitidos}"
                 required="true" inactiveCond="#{!item.ativo}"
                 showLabelSelecione="true" />
+             <wi:inputText id="codigoModeloDocumento" maxlength="30"
+                label="#{infoxMessages['modeloDocumento.codigoModelo']}"
+                value="#{modeloDocumentoCrudAction.instance.codigo}"
+                required="true" />
             <wi:inputText id="tituloModeloDocumento" maxlength="80"
                 label="#{infoxMessages['modeloDocumento.tituloModeloDocumento']}"
                 value="#{modeloDocumentoCrudAction.instance.tituloModeloDocumento}"

@@ -32,6 +32,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import br.com.infox.constants.LengthConstants;
+
 @Entity
 @Table(name = TABLE_MODELO_DOCUMENTO)
 @NamedQueries(value = {
@@ -43,19 +45,38 @@ public class ModeloDocumento implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Id
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_MODELO_DOCUMENTO)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
+    @Column(name = ID_MODELO_DOCUMENTO, unique = true, nullable = false)
     private int idModeloDocumento;
+    
+    @NotNull
+    @Size(min = 1, max = LengthConstants.DESCRICAO_PEQUENA)
+    @Column(name = "cd_modelo_documento", nullable = false, unique = true)
+    private String codigo;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = ID_TIPO_MODELO_DOCUMENTO, nullable = false)
+    @NotNull
     private TipoModeloDocumento tipoModeloDocumento;
+    
+    @Column(name = TITULO_MODELO_DOCUMENTO, nullable = false, length = 80)
+    @Size(max = 80)
+    @NotNull
     private String tituloModeloDocumento;
+    
+    @Column(name = CONTEUDO_MODELO_DOCUMENTO, nullable = false)
+    @NotNull
     private String modeloDocumento;
+    
+    @Column(name = ATIVO, nullable = false)
+    @NotNull
     private Boolean ativo;
 
     public ModeloDocumento() {
     }
 
-    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_MODELO_DOCUMENTO)
-    @Id
-    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
-    @Column(name = ID_MODELO_DOCUMENTO, unique = true, nullable = false)
     public int getIdModeloDocumento() {
         return this.idModeloDocumento;
     }
@@ -64,10 +85,15 @@ public class ModeloDocumento implements java.io.Serializable {
         this.idModeloDocumento = idModeloDocumento;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = ID_TIPO_MODELO_DOCUMENTO, nullable = false)
-    @NotNull
-    public TipoModeloDocumento getTipoModeloDocumento() {
+    public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+
+	public TipoModeloDocumento getTipoModeloDocumento() {
         return this.tipoModeloDocumento;
     }
 
@@ -75,9 +101,6 @@ public class ModeloDocumento implements java.io.Serializable {
         this.tipoModeloDocumento = tipoModeloDocumento;
     }
 
-    @Column(name = TITULO_MODELO_DOCUMENTO, nullable = false, length = 80)
-    @Size(max = 80)
-    @NotNull
     public String getTituloModeloDocumento() {
         return this.tituloModeloDocumento;
     }
@@ -86,8 +109,6 @@ public class ModeloDocumento implements java.io.Serializable {
         this.tituloModeloDocumento = tituloModeloDocumento;
     }
 
-    @Column(name = CONTEUDO_MODELO_DOCUMENTO, nullable = false)
-    @NotNull
     public String getModeloDocumento() {
         return this.modeloDocumento;
     }
@@ -96,8 +117,6 @@ public class ModeloDocumento implements java.io.Serializable {
         this.modeloDocumento = modeloDocumento;
     }
 
-    @Column(name = ATIVO, nullable = false)
-    @NotNull
     public Boolean getAtivo() {
         return this.ativo;
     }
