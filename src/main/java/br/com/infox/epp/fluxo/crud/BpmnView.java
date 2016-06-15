@@ -2,8 +2,12 @@ package br.com.infox.epp.fluxo.crud;
 
 import java.io.Serializable;
 
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
@@ -42,7 +46,11 @@ public class BpmnView implements Serializable {
 	
 	@ExceptionHandled(successMessage = "Fluxo salvo com sucesso!")
 	public void update() {
-		bpmnJpdlService.atualizarDefinicaoJpdl(fluxo);
+		String json = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("bpmnInformation");
+		JsonObject bpmnInfo = new Gson().fromJson(json, JsonObject.class);
+		fluxo.setBpmn(bpmnInfo.get("bpmn").getAsString());
+		fluxo.setSvg(bpmnInfo.get("svg").getAsString());
+		fluxo = bpmnJpdlService.atualizarDefinicaoJpdl(fluxo);
 		refresh();
 	}
 }

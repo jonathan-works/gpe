@@ -257,7 +257,9 @@ public class ProcessBuilder implements Serializable {
             throw new AbortProcessingException("processBuilder.prepareUpdate(event)", e);
         }
 
-        context.getRenderIds().add(processDefinitionTabPanel.getClientId(facesContext));
+        String processDefinitionTabPanelClientId = processDefinitionTabPanel.getClientId(facesContext);
+        context.getRenderIds().add(processDefinitionTabPanelClientId + ":propriedadesTab");
+        context.getRenderIds().add(processDefinitionTabPanelClientId + ":nodesTab");
         context.getRenderIds().add(messages.getClientId(facesContext));
     }
 
