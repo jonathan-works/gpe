@@ -202,7 +202,7 @@ public class SituacaoProcessoDAO extends PersistenceController {
         }
     }
 	
-	private void appendSigiloProcessoFilter(AbstractQuery<?> principalQuery, Path<Processo> processo) {
+	protected void appendSigiloProcessoFilter(AbstractQuery<?> principalQuery, Path<Processo> processo) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Subquery<Integer> existsSigiloProcesso = principalQuery.subquery(Integer.class);
         Root<SigiloProcesso> sigiloProcesso = existsSigiloProcesso.from(SigiloProcesso.class);
@@ -316,7 +316,7 @@ public class SituacaoProcessoDAO extends PersistenceController {
         return subquery;
     }
 	
-    private void appendTipoProcessoFilter(AbstractQuery<?> abstractQuery, TipoProcesso tipoProcesso, Path<Processo> processo) {
+    protected void appendTipoProcessoFilter(AbstractQuery<?> abstractQuery, TipoProcesso tipoProcesso, Path<Processo> processo) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
         Root<MetadadoProcesso> metadado = subquery.from(MetadadoProcesso.class);
