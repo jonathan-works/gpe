@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.NoResultException;
 
+import org.apache.commons.digester.substitution.VariableExpander;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -23,7 +26,9 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
+import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
+import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
@@ -34,6 +39,7 @@ import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.exception.BusinessException;
 
 @Stateless
 @Name(VariavelProcessoService.NAME)
@@ -50,6 +56,8 @@ public class VariavelProcessoService {
     private ProcessoManager processoManager;
     @Inject
     private ProcessoTarefaManager processoTarefaManager;
+    @Inject
+    private FluxoManager fluxoManager;
     
     private final LogProvider LOG = Logging.getLogProvider(VariavelProcessoService.class);
 
@@ -81,7 +89,25 @@ public class VariavelProcessoService {
 
     public VariavelProcesso getVariavelProcesso(Processo processo, String nome, Long idTaskInstance) {
     	DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager = BeanManager.INSTANCE.getReference(DefinicaoVariavelProcessoManager.class);
-        DefinicaoVariavelProcesso definicao = definicaoVariavelProcessoManager.getDefinicao(processo.getNaturezaCategoriaFluxo().getFluxo(), nome);
+    	DefinicaoVariavelProcesso definicao = null;
+    	definicao = definicaoVariavelProcessoManager.getDefinicao(processo.getNaturezaCategoriaFluxo().getFluxo(), nome);
+    	if(definicao == null){
+    		//TODO: melhorar código pois foi feito rapidamente...
+    		//caso não encontre a definição no processo, procura na definicao do subprocesso.
+    		ProcessInstance subrProcessInstance = processoManager.findProcessByTaskInstance(idTaskInstance);
+    		Object variable = subrProcessInstance.getContextInstance().getVariable(nome);
+    		Fluxo subFluxo = fluxoManager.getFluxoByDescricao(subrProcessInstance.getProcessDefinition().getName());
+    		if(variable != null){
+    			definicao =  definicaoVariavelProcessoManager.getDefinicao(subFluxo, nome);
+    			VariavelProcesso variavelProcesso = inicializaVariavelProcesso(definicao);
+    			variavelProcesso.setValor(formatarValor(variable));
+    		}else{
+    			definicao = definicaoVariavelProcessoManager.getDefinicao(subFluxo, nome);
+    		}
+    	}
+    	if(definicao == null)
+    		throw new BusinessException("Não foi possível encontrar a definição da variável " + nome);
+    	
         TaskInstance taskInstance = ManagedJbpmContext.instance().getTaskInstance(idTaskInstance);
         return getPrimeiraVariavelProcessoAncestral(processo, definicao, taskInstance);
     }

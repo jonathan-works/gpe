@@ -52,8 +52,9 @@ public class DefinicaoVariavelProcessoDAO extends Dao<DefinicaoVariavelProcesso,
     }
 
     public DefinicaoVariavelProcesso getDefinicao(Fluxo fluxo, String nome) {
-        return getEntityManager().createNamedQuery(DEFINICAO_BY_FLUXO, DefinicaoVariavelProcesso.class).setParameter(PARAM_FLUXO, fluxo)
-        		.setParameter(PARAM_NOME, nome).setMaxResults(1).getResultList().get(0);
+        				List<DefinicaoVariavelProcesso> resultList = getEntityManager().createNamedQuery(DEFINICAO_BY_FLUXO, DefinicaoVariavelProcesso.class).setParameter(PARAM_FLUXO, fluxo)
+        		.setParameter(PARAM_NOME, nome).setMaxResults(1).getResultList();
+        				return resultList == null || resultList.isEmpty() ? null : resultList.get(0);
     }
     
     public List<DefinicaoVariavelProcesso> getDefinicaoVariavelProcessoListByIdProcesso(Integer idProcesso) {

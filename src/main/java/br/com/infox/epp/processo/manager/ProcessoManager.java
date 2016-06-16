@@ -351,6 +351,11 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         }
     }
 	
+	public ProcessInstance findProcessByTaskInstance(Long idProcessInstance){
+		TaskInstance taskInstance = ManagedJbpmContext.instance().getTaskInstance(idProcessInstance);
+		return taskInstance.getProcessInstance();
+	}
+	
 	public ProcessInstance startJbpmProcess(String fluxoName, String transitionName, List<SignalParam> params) throws DAOException {
         Fluxo fluxo = fluxoManager.getFluxoByDescricao(fluxoName);
         List<NaturezaCategoriaFluxo> naturezaCategoriaFluxo = naturezaCategoriaFluxoManager.getActiveNaturezaCategoriaFluxoListByFluxo(fluxo);
