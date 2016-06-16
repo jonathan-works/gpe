@@ -22,7 +22,7 @@
     		
 	    	<p:dataTable id="processosCriados" var="row" value="#{iniciarProcessoView.processosCriados}" 
 	        	rowKey="#{row.id}" headerText="Processos Criados" responsive="true" 
-	        	rendered="#{not empty iniciarProcessoView.processosCriados}"
+	        	rendered="#{not empty iniciarProcessoView.processosCriados}" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}"
 	        	paginator="#{iniciarProcessoView.processosCriados.size() gt 10}" rows="10">
 	        	
 	        	<p:column headerText="#{infoxMessages['naturezaCategoriaFluxo.fluxo']}" style="width:36px; text-align:center">
