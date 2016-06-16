@@ -6,7 +6,7 @@ import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.Map;
 
-import org.bouncycastle.asn1.DERObjectIdentifier;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.certificado.util.DigitalSignatureUtils;
@@ -73,8 +73,8 @@ public abstract class CertJUS implements Certificado {
     }
     
     private void parseSubjectAlternativeNames(X509Certificate mainCertificate) throws CertificadoException {
-        Map<DERObjectIdentifier, String> otherNames = CertificateUtil.parseSubjectAlternativeNames(mainCertificate);
-        for (DERObjectIdentifier oid : otherNames.keySet()) {
+        Map<ASN1ObjectIdentifier, String> otherNames = CertificateUtil.parseSubjectAlternativeNames(mainCertificate);
+        for (ASN1ObjectIdentifier oid : otherNames.keySet()) {
             parseCertificateData(oid, otherNames.get(oid));
         }
     }
@@ -91,5 +91,5 @@ public abstract class CertJUS implements Certificado {
         }
     }
     
-    protected abstract void parseCertificateData(DERObjectIdentifier oid, String info) throws CertificadoException;
+    protected abstract void parseCertificateData(ASN1ObjectIdentifier oid, String info) throws CertificadoException;
 }

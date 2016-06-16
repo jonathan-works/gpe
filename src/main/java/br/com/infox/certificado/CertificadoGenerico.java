@@ -6,7 +6,7 @@ import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.Map;
 
-import org.bouncycastle.asn1.DERObjectIdentifier;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.certificado.util.DigitalSignatureUtils;
@@ -39,8 +39,8 @@ public class CertificadoGenerico implements Certificado, CertificadoDadosPessoaF
     }
     
     private void parseSubjectAlternativeNames(X509Certificate mainCertificate) throws CertificadoException {
-        Map<DERObjectIdentifier, String> otherNames = CertificateUtil.parseSubjectAlternativeNames(mainCertificate);
-        for (DERObjectIdentifier oid : otherNames.keySet()) {
+        Map<ASN1ObjectIdentifier, String> otherNames = CertificateUtil.parseSubjectAlternativeNames(mainCertificate);
+        for (ASN1ObjectIdentifier oid : otherNames.keySet()) {
         	this.dadosPessoaFisica = CertificateUtil.parseDadosPessoaFisica(oid, otherNames.get(oid), this.dadosPessoaFisica);
         }
     }
