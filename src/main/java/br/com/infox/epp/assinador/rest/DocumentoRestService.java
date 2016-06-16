@@ -3,18 +3,21 @@ package br.com.infox.epp.assinador.rest;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
-import br.com.infox.epp.assinador.CMSAdapter;
+import br.com.infox.epp.assinador.AssinadorService;
 import br.com.infox.epp.assinador.CertificateSignatureGroupService;
 import br.com.infox.epp.assinador.CertificateSignatureService;
 import br.com.infox.epp.assinador.DadosAssinaturaLegada;
 import br.com.infox.epp.certificado.entity.CertificateSignature;
 import br.com.infox.epp.certificado.entity.CertificateSignatureGroup;
+import br.com.infox.epp.certificado.entity.TipoAssinatura;
 
+@Stateless
 public class DocumentoRestService {
 	
 	@Inject
@@ -24,7 +27,7 @@ public class DocumentoRestService {
 	@Inject
 	private CertificateSignatureService certificateSignatureService;
 	@Inject
-	private CMSAdapter cmsAdapter;
+	AssinadorService assinadorService;
 	
 	public EntityManager getEntityManager() {
 		return EntityManagerProducer.getEntityManager();
@@ -53,17 +56,21 @@ public class DocumentoRestService {
 		}
 		catch(NoResultException e) {
 			certificateSignature = new CertificateSignature();
+			certificateSignature.setSignatureType(TipoAssinatura.PKCS7);
 			certificateSignature.setUuid(documento.getUuid().toString());
 			CertificateSignatureGroup group = groupService.findByToken(tokenGrupo);
 			certificateSignature.setCertificateSignatureGroup(group);
 			getEntityManager().persist(certificateSignature);
 		}
 		
-		byte[] assinatura = documento.getAssinatura();
-		DadosAssinaturaLegada dadosAssinaturaLegada = cmsAdapter.convert(assinatura);
+		Assinatura assinatura = documento.getAssinatura();
+		byte[] signature = assinatura.getAssinatura();
+		DadosAssinaturaLegada dadosAssinaturaLegada = assinadorService.getDadosAssinaturaLegada(signature);
 
 		certificateSignature.setCertificateChain(dadosAssinaturaLegada.getCertChain());
 		certificateSignature.setSignature(dadosAssinaturaLegada.getSignature());
+		
+		
 		return certificateSignature;		
 	}
 	

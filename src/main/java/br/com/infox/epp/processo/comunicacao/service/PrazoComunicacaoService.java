@@ -23,6 +23,7 @@ import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.certificado.entity.TipoAssinatura;
 import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
@@ -162,7 +163,7 @@ public class PrazoComunicacaoService {
     		return;
     	}
 		gravarDocumentoCiencia(comunicacao, documentoCiencia);
-		assinaturaDocumentoService.assinarDocumento(documentoCiencia.getDocumentoBin(), usuarioPerfil, signatureBean.getCertChain(), signatureBean.getSignature());
+		assinaturaDocumentoService.assinarDocumento(documentoCiencia.getDocumentoBin(), usuarioPerfil, signatureBean.getCertChain(), signatureBean.getSignature(), TipoAssinatura.MD5_ASSINADO);
 		darCienciaDocumentoGravado(comunicacao, dataCiencia, usuarioPerfil.getUsuarioLogin());
 	}
 

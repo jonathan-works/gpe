@@ -1,5 +1,7 @@
 package br.com.infox.epp.assinador;
 
+import java.io.Serializable;
+
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -10,7 +12,9 @@ import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.certificado.entity.CertificateSignatureGroup;
 import br.com.infox.epp.certificado.entity.CertificateSignatureGroup_;
 
-public class CertificateSignatureGroupSearch {
+public class CertificateSignatureGroupSearch implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	public EntityManager getEntityManager() {
 		return EntityManagerProducer.getEntityManager();

@@ -21,6 +21,7 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.certificado.entity.TipoAssinatura;
 import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
@@ -114,7 +115,7 @@ public class RespostaComunicacaoService {
 	public void assinarEnviarProrrogacaoPrazo(Documento documento, Processo comunicacao, CertificateSignatureBean signatureBean, UsuarioPerfil usuarioPerfil) 
 			throws DAOException, CertificadoException, AssinaturaException{
 		documentoManager.gravarDocumentoNoProcesso(comunicacao.getProcessoRoot(), documento);
-		assinaturaDocumentoService.assinarDocumento(documento.getDocumentoBin(), usuarioPerfil, signatureBean.getCertChain(), signatureBean.getSignature());
+		assinaturaDocumentoService.assinarDocumento(documento.getDocumentoBin(), usuarioPerfil, signatureBean.getCertChain(), signatureBean.getSignature(), TipoAssinatura.MD5_ASSINADO);
 		enviarPedidoProrrogacaoDocumentoGravado(documento, comunicacao);
 	}
 	

@@ -4,36 +4,38 @@ import javax.inject.Inject;
 
 import br.com.infox.epp.assinador.CertificateSignatureGroupService;
 import br.com.infox.epp.cdi.config.BeanManager;
-import br.com.infox.epp.certificado.entity.CertificateSignatureGroup;
 import br.com.infox.epp.rest.RestException;
 
 public class TokenAssinaturaResourceImpl implements TokenAssinaturaResource {
 
-	private CertificateSignatureGroup group;
+	private String token;
 	@Inject
 	private CertificateSignatureGroupService groupService;
 	
 	
-	public void setGroup(CertificateSignatureGroup group) {
-		this.group = group;
+	public void setToken(String token) {
+		this.token = token;
 	}
 
 	@Override
 	public void cancelar() {
-		groupService.cancelar(group.getToken());
+		groupService.cancelar(token);
 	}
 
 	@Override
 	public void erroProcessamento(RestException erro) {
-		groupService.erroProcessamento(group.getToken(), erro.getMessage());
+		groupService.erroProcessamento(token, erro.getMessage());
 	}
 
 	@Override
 	public DocumentoRest getDocumentoRest() {
 		DocumentoRestImpl documentoRestImpl = BeanManager.INSTANCE.getReference(DocumentoRestImpl.class);
-		documentoRestImpl.setGroup(group);
+		documentoRestImpl.setTokenGrupo(token);
 		return documentoRestImpl;
 	}
 
-	
+	@Override
+	public void processamentoFinalizado() {
+		groupService.processamentoFinalizado(token);
+	}
 }

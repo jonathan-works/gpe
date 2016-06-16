@@ -4,7 +4,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
-import br.com.infox.epp.certificado.entity.CertificateSignatureGroup;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 
@@ -12,10 +12,8 @@ public class DocumentoResourceImpl implements DocumentoResource {
 
 	@Inject
 	private DocumentoBinarioManager documentoBinarioManager;
-	@Inject
-	private DocumentoRestService documentoRestService;
 		
-	private CertificateSignatureGroup group;
+	private String tokenGrupo;
 
 	private DocumentoBin documentoBin;
 
@@ -23,8 +21,8 @@ public class DocumentoResourceImpl implements DocumentoResource {
 		this.documentoBin = documentoBin;
 	}	
 
-	public void setCertificateSignatureGroup(CertificateSignatureGroup certificateSignatureGroup) {
-		this.group = certificateSignatureGroup;
+	public void setTokenGrupo(String tokenGrupo) {
+		this.tokenGrupo = tokenGrupo;
 	}
 	
 	public byte[] getBinario() {
@@ -60,21 +58,16 @@ public class DocumentoResourceImpl implements DocumentoResource {
 	public String getSHA256Hex() {
 		return DigestUtils.sha256Hex(getBinario());
 	}
-	
-	private void assinar(byte[] signature) {
-		Documento documento = new Documento(documentoBin.getUuid(), signature);
-		documentoRestService.criarOuAtualizarAssinatura(documento, group.getToken());
-	}
-	
-	@Override
-	public void setAssinaturaCms(byte[] assinatura) {
-		assinar(assinatura);
-	}
 
 	@Override
-	public void setAssinaturaPkcs7(byte[] assinatura) {
-		assinar(assinatura);
+	public AssinaturaRest getAssinaturaRest() {
+		AssinaturaRestImpl assinaturaRestImpl = BeanManager.INSTANCE.getReference(AssinaturaRestImpl.class);
+		
+		assinaturaRestImpl.setDocuemntoBin(documentoBin);
+		assinaturaRestImpl.setTokenGrupo(tokenGrupo);
+		
+		return assinaturaRestImpl;
 	}
-
+	
 
 }

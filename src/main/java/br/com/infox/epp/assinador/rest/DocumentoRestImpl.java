@@ -8,7 +8,6 @@ import javax.persistence.NoResultException;
 import javax.ws.rs.core.Response;
 
 import br.com.infox.epp.cdi.config.BeanManager;
-import br.com.infox.epp.certificado.entity.CertificateSignatureGroup;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 
@@ -19,21 +18,20 @@ public class DocumentoRestImpl implements DocumentoRest {
 	@Inject
 	private DocumentoBinManager documentoBinManager;
 	
-	private CertificateSignatureGroup group;
+	private String tokenGrupo;
 
-	public void setGroup(CertificateSignatureGroup group) {
-		this.group = group;
+	public void setTokenGrupo(String tokenGrupo) {
+		this.tokenGrupo = tokenGrupo;
 	}
-	
 
 	@Override
 	public List<Documento> listar() {
-		return documentoRestService.listarAssinaturas(group.getToken());
+		return documentoRestService.listarAssinaturas(tokenGrupo);
 	}
 
 	@Override
 	public Response atualizarDocumentosLote(List<Documento> documentos) {
-		documentoRestService.criarOuAtualizarAssinaturasLote(documentos, group.getToken());
+		documentoRestService.criarOuAtualizarAssinaturasLote(documentos, tokenGrupo);
 		return Response.noContent().build();
 	}
 
@@ -45,7 +43,7 @@ public class DocumentoRestImpl implements DocumentoRest {
 			throw new NoResultException();
 		}
 		documentoResourceImpl.setDocumentoBin(documentoBin);
-		documentoResourceImpl.setCertificateSignatureGroup(group);
+		documentoResourceImpl.setTokenGrupo(tokenGrupo);
 		return documentoResourceImpl;
 	}
 	

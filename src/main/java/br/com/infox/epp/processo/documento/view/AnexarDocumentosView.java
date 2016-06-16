@@ -40,6 +40,7 @@ import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.certificado.DefaultSignableDocumentImpl;
 import br.com.infox.epp.certificado.SignDocuments;
 import br.com.infox.epp.certificado.SignableDocument;
+import br.com.infox.epp.certificado.entity.TipoAssinatura;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
@@ -472,7 +473,7 @@ public class AnexarDocumentosView implements Serializable {
 				if (docBin != null) {
 					if (!isAssinadoPor(docBin, usuarioPerfil)) {
 						assinaturaDocumentoService.assinarDocumento(docBin, usuarioPerfil, bean.getCertChain(),
-								bean.getSignature());
+								bean.getSignature(), TipoAssinatura.MD5_ASSINADO);
 					}
 				} else {
 					throw new ApplicationException("Documento não localizado!");
@@ -610,6 +611,14 @@ public class AnexarDocumentosView implements Serializable {
 
 	public void setTokenAssinatura(String tokenAssinatura) {
 		this.tokenAssinatura = tokenAssinatura;
+	}
+	
+	public List<DocumentoBin> getDocumentoBinsAssinaveis() {
+		List<DocumentoBin> retorno = new ArrayList<>();
+		for(DocumentoTemporario documentoTemporario : getDocumentosAssinaveis()) {
+			retorno.add(documentoTemporario.getDocumentoBin());
+		}
+		return retorno;
 	}
 
 	public List<DocumentoTemporario> getDocumentosAssinaveis() {

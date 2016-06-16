@@ -5,6 +5,8 @@ package br.com.infox.epp.certificado.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -32,7 +34,6 @@ public class CertificateSignature {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_sign_grp", nullable=false)
     private CertificateSignatureGroup certificateSignatureGroup;
-    @NotNull
     @Column(name="ds_cert_chain", nullable=false)
     private String certificateChain;
     @Column(name="ds_signature")
@@ -41,6 +42,10 @@ public class CertificateSignature {
     private String signedData;
     @Column(name="ds_uuid")
     private String uuid;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name="tp_signature")
+    private TipoAssinatura signatureType = TipoAssinatura.MD5_ASSINADO;
     
     public Integer getIdCertificateSignature() {
         return idCertificateSignature;
@@ -80,7 +85,15 @@ public class CertificateSignature {
         this.uuid = uuid;
     }
     
-    @Override
+    public TipoAssinatura getSignatureType() {
+		return signatureType;
+	}
+    
+	public void setSignatureType(TipoAssinatura signatureType) {
+		this.signatureType = signatureType;
+	}
+	
+	@Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;

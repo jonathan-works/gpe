@@ -5,9 +5,9 @@ import java.util.UUID;
 public class Documento {
 	
 	private UUID uuid;
-	private byte[] assinatura;
-	
-	public Documento(UUID uuid, byte[] assinatura) {
+	private Assinatura assinatura;
+
+	public Documento(UUID uuid, Assinatura assinatura) {
 		super();
 		this.uuid = uuid;
 		this.assinatura = assinatura;
@@ -19,10 +19,12 @@ public class Documento {
 	public void setUuid(UUID uuid) {
 		this.uuid = uuid;
 	}
-	public byte[] getAssinatura() {
+	
+	public Assinatura getAssinatura() {
 		return assinatura;
 	}
-	public void setAssinatura(byte[] assinatura) {
+	
+	public void setAssinatura(Assinatura assinatura) {
 		this.assinatura = assinatura;
-	}	
+	}
 }

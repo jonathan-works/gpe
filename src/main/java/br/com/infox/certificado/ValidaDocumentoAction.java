@@ -30,6 +30,7 @@ import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.certificado.entity.TipoAssinatura;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
@@ -144,7 +145,7 @@ public class ValidaDocumentoAction implements Serializable {
 				for (CertificateSignatureBean certificateSignatureBean : bundle.getSignatureBeanList()) {
 					if (certificateSignatureBean.getDocumentMD5().equals(documentoBin.getMd5Documento())) {
 						assinaturaDocumentoService.assinarDocumento(documentoBin, usuarioPerfil, certificateSignatureBean.getCertChain(),
-								certificateSignatureBean.getSignature());
+								certificateSignatureBean.getSignature(), TipoAssinatura.MD5_ASSINADO);
 						setPodeIniciarFluxoAnaliseDocumentos(assinaturaDocumentoService.isDocumentoTotalmenteAssinado(getDocumento()));
 						break;
 					}

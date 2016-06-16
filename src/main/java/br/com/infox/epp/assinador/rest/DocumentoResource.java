@@ -40,14 +40,6 @@ public interface DocumentoResource {
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	public byte[] getSHA256();
 	
-	@Path("cms")
-	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
-	@POST
-	public void setAssinaturaCms(byte[] assinatura);
-	
-	@Path("pkcs7")
-	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
-	@POST
-	public void setAssinaturaPkcs7(byte[] assinatura);
-
+	@Path("assinatura")
+	public AssinaturaRest getAssinaturaRest();
 }

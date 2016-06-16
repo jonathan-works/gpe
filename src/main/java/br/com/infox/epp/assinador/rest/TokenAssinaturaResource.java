@@ -23,6 +23,13 @@ public interface TokenAssinaturaResource {
 	@POST
 	public void erroProcessamento(RestException erro);
 	
+	/**
+	 * Indica que o processamento foi finalizado com sucesso
+	 */
+	@Path("processado")
+	@POST
+	public void processamentoFinalizado();
+	
 	@Path("documento")
 	@Produces(MediaType.APPLICATION_JSON)
 	public DocumentoRest getDocumentoRest();

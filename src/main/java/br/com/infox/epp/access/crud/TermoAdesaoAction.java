@@ -27,6 +27,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.service.AuthenticatorService;
+import br.com.infox.epp.certificado.entity.TipoAssinatura;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
@@ -94,7 +95,7 @@ public class TermoAdesaoAction implements Serializable {
             
             UsuarioPerfil perfil = papelManager.getPerfilTermoAdesao(usuarioLogin);
             if (perfil != null) {
-                assinaturaDocumentoService.assinarDocumento(bin, perfil, certChain, signature);
+                assinaturaDocumentoService.assinarDocumento(bin, perfil, certChain, signature, TipoAssinatura.MD5_ASSINADO);
                 PessoaFisica pessoaFisica = usuarioLogin.getPessoaFisica();
                 pessoaFisica.setTermoAdesao(bin);
             }

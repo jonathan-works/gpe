@@ -23,7 +23,7 @@
       			<f:setPropertyActionListener value="#{propertyValue}" target="#{propertyTarget}" />
       </a:commandButton>
 
-      <ui:param name="parameter" value="#{empty documentBundleToken ? (empty documentData ? 'md5='.concat(signableData) : 'multiSign='.concat(documentData)) : 'bundleToken='.concat(documentBundleToken)}" />
+      <ui:param name="parameter" value="#{empty documentList ? (empty documentBundleToken ? (empty documentData ? 'md5='.concat(signableData) : 'multiSign='.concat(documentData)) : 'bundleToken='.concat(documentBundleToken)) : 'bundleToken='.concat(assinadorController.criarListaDocumentos(documentList))}" />
 
       <h:outputScript name="cookies.min.js" library="js" />  
       <h:outputScript>
