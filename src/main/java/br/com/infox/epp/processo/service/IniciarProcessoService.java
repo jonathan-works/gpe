@@ -72,6 +72,7 @@ public class IniciarProcessoService {
             for (MetadadoProcesso metadadoProcesso : metadados) {
                 metadadoProcesso.setProcesso(processo);
                 metadadoProcessoManager.persist(metadadoProcesso);
+                processo.getMetadadoProcessoList().add(metadadoProcesso);
             }
         }
     }
