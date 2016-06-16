@@ -59,6 +59,7 @@ import br.com.infox.epp.fluxo.merger.model.MergePointsBundle;
 import br.com.infox.epp.fluxo.merger.service.FluxoMergeService;
 import br.com.infox.epp.fluxo.xpdl.FluxoXPDL;
 import br.com.infox.epp.fluxo.xpdl.IllegalXPDLException;
+import br.com.infox.epp.modeler.converter.BpmnJpdlService;
 import br.com.infox.epp.modeler.converter.JpdlBpmnConverter;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.timer.manager.TaskExpirationManager;
@@ -132,7 +133,9 @@ public class ProcessBuilder implements Serializable {
     private TarefaJbpmManager tarefaJbpmManager;
     @Inject
     private FluxoManager fluxoManager;
-
+    @Inject
+    private BpmnJpdlService bpmnJpdlService;
+    
  
     private String id;
     private ProcessDefinition instance;
@@ -155,7 +158,7 @@ public class ProcessBuilder implements Serializable {
         id = null;
         exists = false;
         clear();
-        instance = fluxoManager.createInitialProcessDefinition();
+        instance = bpmnJpdlService.createInitialProcessDefinition();
         taskFitter.setStarTaskHandler(new TaskHandler(instance.getTaskMgmtDefinition().getStartTask()));
         eventFitter.addEvents();
         taskFitter.getTasks();
@@ -190,7 +193,7 @@ public class ProcessBuilder implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			LOG.error(e);
+			LOG.error("Erro ao carregar o fluxo", e);
 		}
     }
     public void load(Fluxo fluxo) {
@@ -217,10 +220,10 @@ public class ProcessBuilder implements Serializable {
             instance.setName(fluxo.getFluxo());
             exists = true;
             this.id = newId;
-            if (fluxo.getBpmn() == null) {
-            	fluxo.setBpmn(new JpdlBpmnConverter().convert(xml));
-            	fluxo = fluxoManager.update(fluxo); // TODO melhorar isso
-            }
+        }
+        if (this.fluxo.getBpmn() == null && this.fluxo.getXml() != null) {
+        	this.fluxo.setBpmn(new JpdlBpmnConverter().convert(this.fluxo.getXml()));
+        	this.fluxo = fluxoManager.update(this.fluxo); // TODO melhorar isso
         }
     }
 
@@ -541,6 +544,8 @@ public class ProcessBuilder implements Serializable {
 
     public void clearDefinition() {
         fluxo.setXml(null);
+        fluxo.setBpmn(null);
+        fluxo.setSvg(null);
         load(fluxo);
     }
 

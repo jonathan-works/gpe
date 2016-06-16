@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -19,11 +20,14 @@ import javax.inject.Inject;
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.GatewayDirection;
+import org.camunda.bpm.model.bpmn.builder.ProcessBuilder;
 import org.camunda.bpm.model.bpmn.impl.BpmnModelConstants;
 import org.camunda.bpm.model.bpmn.instance.FlowElement;
 import org.camunda.bpm.model.bpmn.instance.FlowNode;
 import org.camunda.bpm.model.bpmn.instance.Lane;
+import org.camunda.bpm.model.bpmn.instance.LaneSet;
 import org.camunda.bpm.model.bpmn.instance.ParallelGateway;
+import org.camunda.bpm.model.bpmn.instance.Process;
 import org.camunda.bpm.model.bpmn.instance.SequenceFlow;
 import org.camunda.bpm.model.bpmn.instance.UserTask;
 import org.jbpm.graph.def.Node;
@@ -38,6 +42,7 @@ import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Swimlane;
+import org.jbpm.taskmgmt.def.Task;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -45,11 +50,13 @@ import org.jdom2.filter.ElementFilter;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.XMLOutputter;
 
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
 import br.com.infox.ibpm.jpdl.JpdlXmlWriter;
+import br.com.infox.ibpm.util.BpmUtil;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -57,15 +64,102 @@ public class BpmnJpdlService {
 	
 	@Inject
 	private FluxoManager fluxoManager;
+	@Inject
+	private InfoxMessages infoxMessages;
 
+	public String createInitialBpmn() {
+    	String processKey = BpmUtil.generateKey();
+    	ProcessBuilder builder = Bpmn.createProcess(processKey);
+    	String sequenceFlowKey = BpmUtil.generateKey();
+    	builder
+    		.startEvent(BpmUtil.generateKey()).name(infoxMessages.get("process.node.first"))
+    		.sequenceFlowId(sequenceFlowKey).condition(infoxMessages.get("process.node.last"), "")
+    		.endEvent(BpmUtil.generateKey()).name(infoxMessages.get("process.node.last"));
+    	
+    	BpmnModelInstance bpmn = builder.done();
+    	
+    	((SequenceFlow) bpmn.getModelElementById(sequenceFlowKey)).removeConditionExpression();
+    	
+    	Process process = bpmn.getModelElementById(processKey);
+    	LaneSet laneSet = bpmn.newInstance(LaneSet.class);
+    	process.getLaneSets().add(laneSet);
+    	Lane solicitante = bpmn.newInstance(Lane.class);
+    	solicitante.setId(BpmUtil.generateKey());
+    	solicitante.setName("Solicitante");
+    	laneSet.getLanes().add(solicitante);
+        
+        return Bpmn.convertToString(bpmn);
+    }
+    
+    public ProcessDefinition createInitialProcessDefinition() {
+    	ProcessDefinition processDefinition = convertBpmnToProcessDefinition(createInitialBpmn());
+    	Swimlane laneSolicitante = processDefinition.getTaskMgmtDefinition().getSwimlanes().values().iterator().next();
+    	laneSolicitante.setActorIdExpression("#{actor.id}");
+    	
+    	Task startTask = new Task("Tarefa inicial");
+        startTask.setKey(BpmUtil.generateKey());
+        startTask.setSwimlane(laneSolicitante);
+        processDefinition.getTaskMgmtDefinition().setStartTask(startTask);
+        return processDefinition;
+    }
+	
 	public Fluxo atualizarDefinicaoJpdl(Fluxo fluxo) {
-		fluxo.setXml(JpdlXmlWriter.toString(getUpdatedJbpmDefinitionFromBpmn(fluxo)));
+		fluxo.setXml(JpdlXmlWriter.toString(getUpdatedJbpmDefinitionFromBpmn(fluxo.getBpmn(), fluxo.getXml())));
 		return fluxoManager.update(fluxo);
 	}
 	
-	public ProcessDefinition getUpdatedJbpmDefinitionFromBpmn(Fluxo fluxo) {
-		BpmnModelInstance bpmn = Bpmn.readModelFromStream(new ByteArrayInputStream(fluxo.getBpmn().getBytes(StandardCharsets.UTF_8)));
-		Document jpdlDoc = loadXml(fluxo.getXml());
+	public ProcessDefinition convertBpmnToProcessDefinition(String bpmnXml) {
+		BpmnModelInstance bpmn = Bpmn.readModelFromStream(new ByteArrayInputStream(bpmnXml.getBytes(StandardCharsets.UTF_8)));
+		Process process = bpmn.getModelElementsByType(Process.class).iterator().next();
+		ProcessDefinition processDefinition = ProcessDefinition.createNewProcessDefinition();
+		processDefinition.setKey(process.getId());
+		processDefinition.setName(process.getName());
+
+		Map<String, Swimlane> swimlanes = new HashMap<>();
+		
+		// Copiar raias
+		Collection<Lane> lanes = bpmn.getModelElementsByType(Lane.class);
+		for (Lane lane : lanes) {
+			Swimlane swimlane = new Swimlane(lane.getName());
+			swimlane.setKey(lane.getId());
+			swimlane.setTaskMgmtDefinition(processDefinition.getTaskMgmtDefinition());
+			processDefinition.getTaskMgmtDefinition().addSwimlane(swimlane);
+			swimlanes.put(swimlane.getKey(), swimlane);
+		}
+		
+		// Copiar nós
+		Collection<FlowNode> nodes = bpmn.getModelElementsByType(FlowNode.class);
+		for (FlowNode flowNode : nodes) {
+			Node node = createNode(flowNode, processDefinition);
+			processDefinition.addNode(node);
+			if (node.getNodeType().equals(NodeType.Task)) {
+				for (Lane lane : bpmn.getModelElementsByType(Lane.class)) {
+					if (lane.getFlowNodeRefs().contains(flowNode)) {
+						((TaskNode) node).getTasks().iterator().next().setSwimlane(swimlanes.get(lane.getId()));
+					}
+				}
+			}
+		}
+		
+		// Copiar transições
+		Collection<SequenceFlow> sequenceFlows = bpmn.getModelElementsByType(SequenceFlow.class);
+		for (SequenceFlow sequenceFlow : sequenceFlows) {
+			Node from = processDefinition.getNode(sequenceFlow.getSource().getId());
+			Node to = processDefinition.getNode(sequenceFlow.getTarget().getId());
+			Transition transition = new Transition(getLabel(sequenceFlow));
+			transition.setKey(sequenceFlow.getId());
+			transition.setFrom(from);
+			transition.setTo(to);
+			from.addLeavingTransition(transition);
+			to.addArrivingTransition(transition);
+		}
+		
+		return processDefinition;
+	}
+	
+	public ProcessDefinition getUpdatedJbpmDefinitionFromBpmn(String bpmnXml, String jpdlXml) {
+		BpmnModelInstance bpmn = Bpmn.readModelFromStream(new ByteArrayInputStream(bpmnXml.getBytes(StandardCharsets.UTF_8)));
+		Document jpdlDoc = loadXml(jpdlXml);
 		
 		List<String> jpdlNodeKeys = new ArrayList<>();
 		List<String> bpmnNodeKeys = new ArrayList<>();
@@ -148,6 +242,10 @@ public class BpmnJpdlService {
 						}
 					}
 				}
+			} else {
+				Node node = processDefinition.getNode(bpmnNodeKey);
+				FlowNode flowNode = bpmn.getModelElementById(bpmnNodeKey);
+				node.setName(flowNode.getName());
 			}
 		}
 	}
@@ -219,7 +317,9 @@ public class BpmnJpdlService {
 
 	private Document loadXml(String xml) {
 		if (xml == null) {
-			ProcessDefinition processDefinition = fluxoManager.createInitialProcessDefinition();
+			ProcessDefinition processDefinition = ProcessDefinition.createNewProcessDefinition();
+			processDefinition.setKey(BpmUtil.generateKey());
+			processDefinition.setName(processDefinition.getKey());
 			xml = JpdlXmlWriter.toString(processDefinition);
 		}
 		SAXBuilder builder = new SAXBuilder();

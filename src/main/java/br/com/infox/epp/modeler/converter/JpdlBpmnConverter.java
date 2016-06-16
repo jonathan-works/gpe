@@ -203,17 +203,17 @@ public class JpdlBpmnConverter {
 			collaboration.addChildElement(participant);
 			modelInstance.getDefinitions().addChildElement(collaboration);
 		}
+		for (Swimlane swimlane : processDefinition.getTaskMgmtDefinition().getSwimlanes().values()) {
+			Lane lane = modelInstance.newInstance(Lane.class);
+			lane.setName(swimlane.getName());
+			lane.setId(swimlane.getKey());
+			laneSet.getLanes().add(lane);
+		}
 		for (TaskNode taskNode : taskNodes) {
 			Swimlane swimlane = taskNode.getTask(taskNode.getName()).getSwimlane();
 			if (swimlane != null) {
 				UserTask userTask = modelInstance.getModelElementById(taskNode.getKey());
 				Lane lane = modelInstance.getModelElementById(swimlane.getKey());
-				if (lane == null) {
-					lane = modelInstance.newInstance(Lane.class);
-					lane.setName(swimlane.getName());
-					lane.setId(swimlane.getKey());
-					laneSet.getLanes().add(lane);
-				}
 				lane.getFlowNodeRefs().add(userTask);
 				nodesToLanes.put(userTask.getId(), lane);
 			}
@@ -281,8 +281,10 @@ public class JpdlBpmnConverter {
 			}
 		} else if (leftBean.lane != null) {
 			return leftBean.lane;
-		} else {
+		} else if (rightBean.lane != null) {
 			return rightBean.lane;
+		} else {
+			return node.getModelInstance().getModelElementsByType(Lane.class).iterator().next();
 		}
 	}
 	

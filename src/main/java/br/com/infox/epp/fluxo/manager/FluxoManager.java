@@ -10,20 +10,12 @@ import java.util.Set;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
-import org.jbpm.graph.def.ProcessDefinition;
-import org.jbpm.graph.def.Transition;
-import org.jbpm.graph.node.EndState;
-import org.jbpm.graph.node.StartState;
-import org.jbpm.taskmgmt.def.Swimlane;
-import org.jbpm.taskmgmt.def.Task;
 
 import br.com.infox.core.manager.Manager;
-import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
@@ -32,7 +24,6 @@ import br.com.infox.epp.fluxo.dao.FluxoDAO;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.FluxoPapel;
 import br.com.infox.epp.fluxo.entity.RaiaPerfil;
-import br.com.infox.ibpm.util.BpmUtil;
 
 @Name(FluxoManager.NAME)
 @AutoCreate
@@ -47,8 +38,6 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
 
     @In
     private RaiaPerfilManager raiaPerfilManager;
-    @Inject
-    private InfoxMessages infoxMessages;
     
     private boolean isValidDataFim(Fluxo fluxo, Date now){
         final Date date = fluxo.getDataFimPublicacao();
@@ -137,34 +126,5 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
         Date now = new Date();
         return fluxo.getPublicado() && isValidDataInicio(fluxo, now) && isValidDataFim(fluxo, now)
                 && isValidUsuarioPerfil(fluxo, usuarioPerfil);
-    }
-
-    public ProcessDefinition createInitialProcessDefinition() {
-    	ProcessDefinition processDefinition = ProcessDefinition.createNewProcessDefinition();
-    	processDefinition.setKey(BpmUtil.generateKey());
-        Swimlane laneSolicitante = new Swimlane("Solicitante");
-        laneSolicitante.setKey(BpmUtil.generateKey());
-        laneSolicitante.setActorIdExpression("#{actor.id}");
-
-        Task startTask = new Task("Tarefa inicial");
-        startTask.setKey(BpmUtil.generateKey());
-        startTask.setSwimlane(laneSolicitante);
-        processDefinition.getTaskMgmtDefinition().setStartTask(startTask);
-
-        StartState startState = new StartState(infoxMessages.get("process.node.first"));
-        startState.setKey(BpmUtil.generateKey());
-        processDefinition.addNode(startState);
-        EndState endState = new EndState(infoxMessages.get("process.node.last"));
-        endState.setKey(BpmUtil.generateKey());
-        processDefinition.addNode(endState);
-        Transition t = new Transition();
-        t.setKey(BpmUtil.generateKey());
-        t.setName(endState.getName());
-        t.setTo(endState);
-        startState.addLeavingTransition(t);
-        endState.addArrivingTransition(t);
-        processDefinition.getTaskMgmtDefinition().addSwimlane(laneSolicitante);
-        
-        return processDefinition;
     }
 }
