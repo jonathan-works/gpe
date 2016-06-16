@@ -192,6 +192,9 @@ public class ProcessBuilder implements Serializable {
                 	actionMessagesService.handleGenericException(e);
 				}
             }
+               if (taskInstance.getSwimlaneInstance().getId() == 0) {
+            	   entityManager.persist(taskInstance.getSwimlaneInstance());
+               }
         }
     }
     

@@ -71,7 +71,7 @@ public class SwimlaneHandler implements Serializable {
                 if (!first) {
                     sb.append(",");
                 }
-                sb.append(perfil.getId());
+                sb.append(perfil.getCodigo());
                 first = false;
             }
             String expression = sb.toString();
@@ -91,11 +91,11 @@ public class SwimlaneHandler implements Serializable {
             SwimlaneHandler sh = new SwimlaneHandler(swimlane);
             sh.setPerfilList(new ArrayList<PerfilTemplate>());
             String exp = swimlane.getPooledActorsExpression();
-            if (exp != null && !exp.isEmpty()) {
+            if (exp != null && !exp.isEmpty()) { //TODO verificar se existe alguma base com isso ainda, se não existir retirar esse if
                 String[] perfis = exp.split(",");
                 if (!perfis[0].startsWith("#")) { // Se começar com # é expressão com perfis, fluxo antigo
                     for (String perfil : perfis) {
-                        sh.getPerfilList().add(perfilManager().find(Integer.valueOf(perfil)));
+                        sh.getPerfilList().add(perfilManager().getPerfilTemplateByCodigo(perfil));
                     }
                 }
             }

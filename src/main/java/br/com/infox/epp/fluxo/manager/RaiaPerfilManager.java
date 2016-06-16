@@ -55,7 +55,7 @@ public class RaiaPerfilManager extends Manager<RaiaPerfilDAO, RaiaPerfil> {
                 RaiaPerfil raiaPerfil = new RaiaPerfil();
                 raiaPerfil.setFluxo(fluxo);
                 raiaPerfil.setNomeRaia(swimlane.getName());
-                raiaPerfil.setPerfilTemplate(perfilTemplateDAO.getReference(Integer.valueOf(perfil)));
+                raiaPerfil.setPerfilTemplate(perfilTemplateDAO.getPerfilTemplateByCodigo(perfil));
                 persist(raiaPerfil);
             }
         }
