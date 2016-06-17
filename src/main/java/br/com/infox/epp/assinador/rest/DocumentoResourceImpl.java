@@ -63,7 +63,6 @@ public class DocumentoResourceImpl implements DocumentoResource {
 	public AssinaturaRest getAssinaturaRest() {
 		AssinaturaRestImpl assinaturaRestImpl = BeanManager.INSTANCE.getReference(AssinaturaRestImpl.class);
 		
-		assinaturaRestImpl.setDocuemntoBin(documentoBin);
 		assinaturaRestImpl.setTokenGrupo(tokenGrupo);
 		
 		return assinaturaRestImpl;

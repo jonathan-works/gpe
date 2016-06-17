@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
-import javax.ws.rs.core.Response;
 
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
@@ -26,13 +25,7 @@ public class DocumentoRestImpl implements DocumentoRest {
 
 	@Override
 	public List<Documento> listar() {
-		return documentoRestService.listarAssinaturas(tokenGrupo);
-	}
-
-	@Override
-	public Response atualizarDocumentosLote(List<Documento> documentos) {
-		documentoRestService.criarOuAtualizarAssinaturasLote(documentos, tokenGrupo);
-		return Response.noContent().build();
+		return documentoRestService.listarDocumentos(tokenGrupo);
 	}
 
 	@Override

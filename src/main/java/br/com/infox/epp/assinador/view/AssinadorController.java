@@ -7,8 +7,10 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import br.com.infox.epp.assinador.AssinadorService;
+import br.com.infox.epp.assinador.CertificateSignatureGroupService;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.certificado.entity.CertificateSignatureGroup;
+import br.com.infox.epp.certificado.enums.CertificateSignatureGroupStatus;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 
 @Named
@@ -19,6 +21,10 @@ public class AssinadorController implements Serializable {
 	
 	@Inject
 	private AssinadorService assinadorService;
+	@Inject
+	private CertificateSignatureGroupService certificateSignatureGroupService;
+	
+	private String token;
 	
 	/*public String getDocumentosParaAssinar() {
 		List<SignableDocument> documentsToSign = new ArrayList<>();
@@ -36,6 +42,18 @@ public class AssinadorController implements Serializable {
 	
 	public String criarListaDocumentos(List<DocumentoBin> listaDocumentos) {
 		CertificateSignatureGroup certificateSignatureGroup = assinadorService.criarListaDocumentos(listaDocumentos);
+		this.token = certificateSignatureGroup.getToken();
 		return certificateSignatureGroup.getToken();
 	}
+	
+	public boolean isFinalizado() {
+		CertificateSignatureGroup certificateSignatureGroup = certificateSignatureGroupService.findByToken(token);
+		return certificateSignatureGroup.getStatus() != CertificateSignatureGroupStatus.W;
+	}
+	
+	public boolean isSucesso() {
+		CertificateSignatureGroup certificateSignatureGroup = certificateSignatureGroupService.findByToken(token);
+		return certificateSignatureGroup.getStatus() == CertificateSignatureGroupStatus.S;
+	}
+	
 }

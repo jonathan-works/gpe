@@ -42,24 +42,7 @@ public class CMSAdapter {
 		}
     }
     
-    public String getCertChain(Iterator<X509CertificateHolder> signerCertificates, Store<X509CertificateHolder> certStore) {
-    	List<X509Certificate> certChain = new ArrayList<>();
-		X509CertificateHolder signerCertificate = signerCertificates.next();
-		certChain.add(toX509Certificate(signerCertificate));
-		X500Name issuer = signerCertificate.getIssuer();
-		while(issuer != null) {
-			@SuppressWarnings("unchecked")
-			X509CertificateHolder issuerCert = (X509CertificateHolder)certStore.getMatches(new AttributeCertificateIssuer(issuer)).iterator().next();
-			certChain.add(toX509Certificate(issuerCert));
-			
-			X500Name lastIssuer = issuer;
-			issuer = issuerCert.getIssuer();
-			if(lastIssuer.equals(issuer)) {
-				issuer = null;
-			}
-		}
-		
-		
+    public String getCertChainBase64(List<X509Certificate> certChain) {
 		CertificateFactory cf = null;
 		try {
 			cf = CertificateFactory.getInstance(X509_CERTIFICATE_TYPE);
@@ -77,6 +60,26 @@ public class CMSAdapter {
 		return Base64.encodeBase64String(encoded);
     }
     
+    private List<X509Certificate> getCertChain(Iterator<X509CertificateHolder> signerCertificates, Store<X509CertificateHolder> certStore) {
+    	List<X509Certificate> certChain = new ArrayList<>();
+    	X509CertificateHolder signerCertificate = signerCertificates.next();
+    	certChain.add(toX509Certificate(signerCertificate));
+    	X500Name issuer = signerCertificate.getIssuer();
+    	while(issuer != null) {
+    		@SuppressWarnings("unchecked")
+    		X509CertificateHolder issuerCert = (X509CertificateHolder)certStore.getMatches(new AttributeCertificateIssuer(issuer)).iterator().next();
+    		certChain.add(toX509Certificate(issuerCert));
+    		
+    		X500Name lastIssuer = issuer;
+    		issuer = issuerCert.getIssuer();
+    		if(lastIssuer.equals(issuer)) {
+    			issuer = null;
+    		}
+    	}
+    	
+    	return certChain;
+    }
+    
     @SuppressWarnings("unchecked")
 	public DadosAssinaturaLegada convert(byte[] signature) {
 		try {
@@ -89,12 +92,11 @@ public class CMSAdapter {
 				SignerInformation signer = signers.next();
 				Iterator<X509CertificateHolder> signerCertificates = certStore.getMatches(signer.getSID()).iterator();				
 					
-					String certChain = getCertChain(signerCertificates, certStore);
+					List<X509Certificate> certChain = getCertChain(signerCertificates, certStore);
+					String certChainBase64 = getCertChainBase64(certChain);
 					String signatureBase64 = Base64.encodeBase64String(signature);
 					
-					return new DadosAssinaturaLegada(certChain, signatureBase64);
-				
-				
+					return new DadosAssinaturaLegada(certChain, certChainBase64, signatureBase64);
 			}
 			
 		} catch (CMSException e) {

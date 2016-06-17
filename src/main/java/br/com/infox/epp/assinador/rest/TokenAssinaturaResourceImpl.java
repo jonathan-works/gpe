@@ -29,6 +29,7 @@ public class TokenAssinaturaResourceImpl implements TokenAssinaturaResource {
 
 	@Override
 	public DocumentoRest getDocumentoRest() {
+		groupService.validarToken(token);
 		DocumentoRestImpl documentoRestImpl = BeanManager.INSTANCE.getReference(DocumentoRestImpl.class);
 		documentoRestImpl.setTokenGrupo(token);
 		return documentoRestImpl;
@@ -37,5 +38,13 @@ public class TokenAssinaturaResourceImpl implements TokenAssinaturaResource {
 	@Override
 	public void processamentoFinalizado() {
 		groupService.processamentoFinalizado(token);
+	}
+
+	@Override
+	public AssinaturaRest getAssinaturaRest() {
+		groupService.validarToken(token);
+		AssinaturaRestImpl assinaturaRestImpl = BeanManager.INSTANCE.getReference(AssinaturaRestImpl.class);
+		assinaturaRestImpl.setTokenGrupo(token);
+		return assinaturaRestImpl;
 	}
 }

@@ -1,9 +1,9 @@
 package br.com.infox.epp.assinador.rest;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
-
-import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 
 public class AssinaturaRestImpl implements AssinaturaRest {
 
@@ -11,11 +11,6 @@ public class AssinaturaRestImpl implements AssinaturaRest {
 	private DocumentoRestService documentoRestService;
 	
 	private String tokenGrupo;
-	private DocumentoBin documentoBin;
-	
-	public void setDocuemntoBin(DocumentoBin documentoBin) {
-		this.documentoBin = documentoBin;
-	}
 	
 	public void setTokenGrupo(String tokenGrupo) {
 		this.tokenGrupo = tokenGrupo;
@@ -23,8 +18,13 @@ public class AssinaturaRestImpl implements AssinaturaRest {
 
 	@Override
 	public Response novaAssinatura(Assinatura assinatura) {
-		Documento documento = new Documento(documentoBin.getUuid(), assinatura);
-		documentoRestService.criarOuAtualizarAssinatura(documento, tokenGrupo);
+		documentoRestService.assinarDocumento(assinatura, tokenGrupo);
+		return Response.noContent().build();
+	}
+
+	@Override
+	public Response assinarDocumentosLote(List<Assinatura> assinaturas) {
+		documentoRestService.assinarDocumentos(assinaturas, tokenGrupo);
 		return Response.noContent().build();
 	}
 	

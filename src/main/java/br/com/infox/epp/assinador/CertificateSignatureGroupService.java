@@ -1,7 +1,6 @@
 package br.com.infox.epp.assinador;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -25,6 +24,8 @@ public class CertificateSignatureGroupService implements Serializable {
 
 	@Inject
 	private CertificateSignatureGroupSearch certificateSignatureGroupSearch;
+	@Inject
+	private TokenAssinaturaService tokenAssinaturaService;
 
 	private static final int TOKEN_LIFESPAN = 8;
 
@@ -85,31 +86,17 @@ public class CertificateSignatureGroupService implements Serializable {
 	public boolean isTokenExpired(String token) {
 		return isTokenExpired(findByToken(token));
 	}
-
-	private void expirarToken(CertificateSignatureGroup group) {
-		group.setStatus(CertificateSignatureGroupStatus.X);
-		getEntityManager().flush();
-	}
-
-	public void expirarToken(String token) {
-		expirarToken(findByToken(token));
-
-	}
-
+	
 	public CertificateSignatureGroup findByToken(String token) {
 		CertificateSignatureGroup group = certificateSignatureGroupSearch.findByToken(token);
 
 		if (group.getStatus() == CertificateSignatureGroupStatus.W && isTokenExpired(group)) {
-			expirarToken(group);
+			tokenAssinaturaService.expirarToken(token);
 		}
 
 		return group;
 	}
 
-	public void cancelar(String token) {
-		erroProcessamento(token, "Operação cancelada pelo assinador");
-	}
-	
 	private void setStatus(String token, CertificateSignatureGroupStatus status) {
 		CertificateSignatureGroup certificateSignatureGroup = findByToken(token);
 		certificateSignatureGroup.setStatus(status);
@@ -117,13 +104,31 @@ public class CertificateSignatureGroupService implements Serializable {
 		getEntityManager().persist(certificateSignatureGroup);
 		getEntityManager().flush();		
 	}
+	
+	public void apagarGrupo(String token) {
+		CertificateSignatureGroup certificateSignatureGroup = findByToken(token);
+		
+		for(CertificateSignature certificateSignature : certificateSignatureGroup.getCertificateSignatureList()) {
+			getEntityManager().remove(certificateSignature);			
+		}
+		
+		getEntityManager().remove(certificateSignatureGroup);
+		getEntityManager().flush();
+	}
 
+	public void cancelar(String token) {
+		erroProcessamento(token, "Operação cancelada pelo assinador");
+	}
+	
 	public void erroProcessamento(String token, String mensagem) {
 		setStatus(token, CertificateSignatureGroupStatus.E);
+		//Grupo não deve ser apagado nesse momento para manter compatibilidade com código antigo
+		//apagarGrupo(token);
 	}
 	
 	public void processamentoFinalizado(String token) {
 		setStatus(token, CertificateSignatureGroupStatus.S);
+		//apagarGrupo(token);
 	}
 
 }

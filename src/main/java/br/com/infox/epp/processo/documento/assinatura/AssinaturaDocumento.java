@@ -118,6 +118,7 @@ public class AssinaturaDocumento implements Serializable {
         this.nomeUsuarioPerfil = this.usuarioPerfil.getPerfilTemplate().getDescricao();
         this.signature = signature;
         this.certChain = certChain;
+        this.signatureType = signatureType;
         this.dataAssinatura = new Date();
         List<Documento> documentos = BeanManager.INSTANCE.getReference(DocumentoManager.class).getDocumentosFromDocumentoBin(documentoBin);
         if(documentos != null && !documentos.isEmpty()){

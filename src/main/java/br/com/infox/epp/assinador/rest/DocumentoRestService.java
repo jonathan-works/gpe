@@ -2,6 +2,7 @@ package br.com.infox.epp.assinador.rest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -21,8 +22,6 @@ import br.com.infox.epp.certificado.entity.TipoAssinatura;
 public class DocumentoRestService {
 	
 	@Inject
-	private CertificateSignatureAdapter certificateSignatureAdapter;
-	@Inject
 	private CertificateSignatureGroupService groupService;
 	@Inject
 	private CertificateSignatureService certificateSignatureService;
@@ -36,54 +35,53 @@ public class DocumentoRestService {
 	private List<Documento> toDocumentoList(List<CertificateSignature> signatures) {
 		List<Documento> retorno = new ArrayList<>();
 		for(CertificateSignature signature : signatures) {
-			Documento documento = certificateSignatureAdapter.convert(signature);
+			Documento documento = new Documento(UUID.fromString(signature.getUuid()));
 			retorno.add(documento);
 		}
 		return retorno;		
 	}
 	
-	List<Documento> listarAssinaturas(String token) {
+	public List<Documento> listarDocumentos(String token) {
 		CertificateSignatureGroup group = groupService.findByToken(token);
 		List<CertificateSignature> signatures = group.getCertificateSignatureList();
 		return toDocumentoList(signatures);
 		
 	}
 	
-	private CertificateSignature getOrCreateAssinatura(Documento documento, String tokenGrupo) {
+	private CertificateSignature updateCertificateSignature(String tokenGrupo, UUID uuid, byte[] signature) {
 		CertificateSignature certificateSignature = null;
 		try {
-			certificateSignature = certificateSignatureService.findByTokenAndUUID(tokenGrupo, documento.getUuid().toString());			
+			certificateSignature = certificateSignatureService.findByTokenAndUUID(tokenGrupo, uuid.toString());			
 		}
 		catch(NoResultException e) {
-			certificateSignature = new CertificateSignature();
-			certificateSignature.setSignatureType(TipoAssinatura.PKCS7);
-			certificateSignature.setUuid(documento.getUuid().toString());
-			CertificateSignatureGroup group = groupService.findByToken(tokenGrupo);
-			certificateSignature.setCertificateSignatureGroup(group);
-			getEntityManager().persist(certificateSignature);
+			throw new RuntimeException("CertificateSignature não encontrado");
 		}
 		
-		Assinatura assinatura = documento.getAssinatura();
-		byte[] signature = assinatura.getAssinatura();
 		DadosAssinaturaLegada dadosAssinaturaLegada = assinadorService.getDadosAssinaturaLegada(signature);
 
-		certificateSignature.setCertificateChain(dadosAssinaturaLegada.getCertChain());
+		certificateSignature.setSignatureType(TipoAssinatura.PKCS7);
+		certificateSignature.setCertificateChain(dadosAssinaturaLegada.getCertChainBase64());
 		certificateSignature.setSignature(dadosAssinaturaLegada.getSignature());
-		
 		
 		return certificateSignature;		
 	}
 	
-	public void criarOuAtualizarAssinatura(Documento documento, String tokenGrupo) {
-		getOrCreateAssinatura(documento, tokenGrupo);
+	private void assinarDocumentoSemFlush(Assinatura assinatura, String tokenGrupo) {
+		if(tokenGrupo != null) {
+			updateCertificateSignature(tokenGrupo, assinatura.getUuidDocumento(), assinatura.getAssinatura());
+		}
+		assinadorService.assinarDocumento(assinatura.getUuidDocumento(), assinatura.getCodigoPerfil(), assinatura.getCodigoLocalizacao(), assinatura.getAssinatura());
+	}
+	
+	public void assinarDocumento(Assinatura assinatura, String tokenGrupo) {
+		assinarDocumentoSemFlush(assinatura, tokenGrupo);
 		getEntityManager().flush();
 	}
 	
-	public void criarOuAtualizarAssinaturasLote(List<Documento> documentos, String tokenGrupo) {
-		for(Documento documento : documentos) {
-			getOrCreateAssinatura(documento, tokenGrupo);
+	public void assinarDocumentos(List<Assinatura> assinaturas, String tokenGrupo) {
+		for(Assinatura assinatura : assinaturas) {
+			assinarDocumentoSemFlush(assinatura, tokenGrupo);
 		}
 		getEntityManager().flush();
 	}
-
 }

@@ -18,7 +18,7 @@ public interface TokenAssinaturaResource {
 	/**
 	 * Indica que ocorreu um erro no processamento de assinatura do documento
 	 */
-	@Path("erro")
+	@Path("/erro")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@POST
 	public void erroProcessamento(RestException erro);
@@ -26,11 +26,14 @@ public interface TokenAssinaturaResource {
 	/**
 	 * Indica que o processamento foi finalizado com sucesso
 	 */
-	@Path("processado")
+	@Path("/processado")
 	@POST
 	public void processamentoFinalizado();
 	
-	@Path("documento")
+	@Path("/documento")
 	@Produces(MediaType.APPLICATION_JSON)
 	public DocumentoRest getDocumentoRest();
+	
+	@Path("/assinatura")
+	public AssinaturaRest getAssinaturaRest();
 }
