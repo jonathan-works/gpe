@@ -19,7 +19,7 @@ public class BpmnJpdlTranslation {
 	private BpmnModelInstance bpmnModel;
 	private ProcessDefinition processDefinition;
 	
-	private List<Transition> jpdlTransitions;
+	private Map<String, Transition> jpdlTransitions;
 	
 	private List<FlowNode> newNodes;
 	private List<Node> nodesToRemove;
@@ -75,7 +75,7 @@ public class BpmnJpdlTranslation {
 	private void loadTransitions() {
 		newTransitions = new ArrayList<>();
 		transitionsToRemove = new ArrayList<>();
-		jpdlTransitions = new ArrayList<>();
+		jpdlTransitions = new HashMap<>();
 		Map<String, SequenceFlow> sequenceFlows = new HashMap<>();
 		Map<String, Transition> transitions = new HashMap<>();
 		
@@ -87,7 +87,7 @@ public class BpmnJpdlTranslation {
 				if (node.getLeavingTransitions() != null) {
 					for (Transition transition : node.getLeavingTransitions()) {
 						transitions.put(transition.getKey(), transition);
-						jpdlTransitions.add(transition);
+						jpdlTransitions.put(transition.getKey(), transition);
 					}
 				}
 			}
@@ -163,4 +163,8 @@ public class BpmnJpdlTranslation {
 	public Map<String, Swimlane> getSwimlanes() {
 		return swimlanes;
 	}
-}
+	
+	public Map<String, Transition> getJpdlTransitions() {
+		return jpdlTransitions;
+	}
+}	

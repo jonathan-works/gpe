@@ -23,6 +23,7 @@ import org.jbpm.taskmgmt.def.TaskController;
 import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.ibpm.task.handler.InfoxTaskControllerHandler;
 import br.com.infox.ibpm.util.BpmUtil;
+import br.com.infox.seam.exception.BusinessRollbackException;
 
 public class NodeFactory {
 	public static Node createNode(FlowNode flowNode, ProcessDefinition processDefinition) {
@@ -62,7 +63,13 @@ public class NodeFactory {
 				node = new Fork(getLabel(flowNode));
 			} else if (direction == GatewayDirection.Converging) {
 				node = new Join(getLabel(flowNode));
+			} else {
+				throw new BusinessRollbackException("Direção de gateway paralelo desconhecida: " + direction);
 			}
+		}
+		
+		if (node == null) {
+			throw new BusinessRollbackException("Tipo de nó desconhecido: " + flowNode.getElementType().getTypeName());
 		}
 		
 		node.setKey(flowNode.getId());

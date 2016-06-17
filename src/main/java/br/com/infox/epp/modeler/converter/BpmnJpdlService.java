@@ -21,16 +21,19 @@ import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
+import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
 
 import br.com.infox.core.messages.InfoxMessages;
+import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
 import br.com.infox.ibpm.jpdl.JpdlXmlWriter;
 import br.com.infox.ibpm.util.BpmUtil;
+import br.com.infox.seam.exception.BusinessRollbackException;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -100,16 +103,75 @@ public class BpmnJpdlService {
 			translation.getSwimlanes().remove(swimlane.getKey());
 		}
 		for (Transition transition : translation.getTransitionsToRemove()) {
+			translation.getJpdlTransitions().remove(transition);
 			transition.getFrom().removeLeavingTransition(transition);
+			transition.getTo().removeArrivingTransition(transition);
+			translation.getJpdlTransitions().remove(transition.getKey());
 		}
 		
 		createSwimlanes(translation, processDefinition);
 		createNodes(translation, processDefinition);
 		createTransitions(translation, processDefinition);
 		
+		updateSwimlanes(translation, bpmnModel, processDefinition);
+		updateNodes(translation, bpmnModel, processDefinition);
+		updateTransitions(translation, bpmnModel, processDefinition);
+		
 		return processDefinition;
 	}
 	
+	private void updateTransitions(BpmnJpdlTranslation translation, BpmnModelInstance bpmnModel, ProcessDefinition processDefinition) {
+		for (SequenceFlow sequenceFlow : bpmnModel.getModelElementsByType(SequenceFlow.class)) {
+			Transition transition = translation.getJpdlTransitions().get(sequenceFlow.getId());
+			if (!transition.getName().equals(NodeFactory.getLabel(sequenceFlow))) {
+				transition.setName(NodeFactory.getLabel(sequenceFlow));
+			}
+			if (sequenceFlow.getConditionExpression() != null) {
+				transition.setCondition(sequenceFlow.getConditionExpression().getTextContent());
+			}
+			
+			Node oldTo = transition.getTo();
+			Node oldFrom = transition.getFrom();
+			Node newTo = processDefinition.getNode(sequenceFlow.getTarget().getId());
+			Node newFrom = processDefinition.getNode(sequenceFlow.getSource().getId());
+			
+			oldTo.removeArrivingTransition(transition);
+			oldFrom.removeLeavingTransition(transition);
+			transition.setFrom(newFrom);
+			transition.setTo(newTo);
+			newTo.addArrivingTransition(transition);
+			newFrom.addLeavingTransition(transition);
+		}
+	}
+
+	private void updateSwimlanes(BpmnJpdlTranslation translation, BpmnModelInstance bpmnModel, ProcessDefinition processDefinition) {
+		for (Lane lane : bpmnModel.getModelElementsByType(Lane.class)) {
+			Swimlane swimlane = translation.getSwimlanes().get(lane.getId());
+			processDefinition.getTaskMgmtDefinition().getSwimlanes().remove(swimlane.getName());
+			ReflectionsUtil.setValue(swimlane, "name", lane.getName());
+			processDefinition.getTaskMgmtDefinition().addSwimlane(swimlane);
+		}
+	}
+	
+	private void updateNodes(BpmnJpdlTranslation translation, BpmnModelInstance bpmnModel, ProcessDefinition processDefinition) {
+		for (FlowNode flowNode : bpmnModel.getModelElementsByType(FlowNode.class)) {
+			Node node = processDefinition.getNode(flowNode.getId());
+			node.setName(NodeFactory.getLabel(flowNode));
+			if (node instanceof ProcessState) {
+				ReflectionsUtil.setValue(node, "subProcessName", flowNode.getName());
+			} else if (node.getNodeType().equals(NodeType.Task)) {
+				TaskNode taskNode = (TaskNode) node;
+				if (taskNode.getTasks().size() > 1) {
+					throw new BusinessRollbackException("Nós de tarefa com mais de uma task não são suportados");
+				}
+				Lane lane = translation.getNodesToLanes().get(node.getKey());
+				Task task = taskNode.getTasks().iterator().next();
+				task.setSwimlane(translation.getSwimlanes().get(lane.getId()));
+				task.setName(taskNode.getName());
+			}
+		}
+	}
+
 	private void createSwimlanes(BpmnJpdlTranslation translation, ProcessDefinition processDefinition) {
 		for (Lane lane : translation.getNewLanes()) {
 			Swimlane swimlane = new Swimlane(lane.getName());
@@ -141,11 +203,16 @@ public class BpmnJpdlService {
 			Node from = processDefinition.getNode(sequenceFlow.getSource().getId());
 			Node to = processDefinition.getNode(sequenceFlow.getTarget().getId());
 			Transition transition = new Transition(NodeFactory.getLabel(sequenceFlow));
+			if (sequenceFlow.getConditionExpression() != null) {
+				transition.setCondition(sequenceFlow.getConditionExpression().getTextContent());
+			}
 			transition.setKey(sequenceFlow.getId());
 			transition.setFrom(from);
 			transition.setTo(to);
 			from.addLeavingTransition(transition);
 			to.addArrivingTransition(transition);
+			
+			translation.getJpdlTransitions().put(transition.getKey(), transition);
 		}
 	}
 
