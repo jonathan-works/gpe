@@ -49,7 +49,7 @@ import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
-import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.documento.modelo.ModeloDocumentoSearch;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.manager.StatusProcessoSearch;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
@@ -180,10 +180,10 @@ public class NodeHandler implements Serializable {
                     	String configuration = new GenerateDocumentoHandler().parseJbpmConfiguration(actionDelegation.getConfiguration());
                     	try {
                     		GenerateDocumentoConfiguration generateDocumentoConfiguration = new Gson().fromJson(configuration, GenerateDocumentoConfiguration.class);
-                            ModeloDocumentoManager modeloDocumentoManager = ComponentUtil.getComponent(ModeloDocumentoManager.NAME);
+                    		ModeloDocumentoSearch modeloDocumentoSearch = BeanManager.INSTANCE.getReference(ModeloDocumentoSearch.class);
                             ClassificacaoDocumentoManager classificacaoDocumentoManager = ComponentUtil.getComponent(ClassificacaoDocumentoManager.NAME);
-                            this.modeloDocumento = modeloDocumentoManager.find(generateDocumentoConfiguration.getIdModeloDocumento());
-                            this.classificacaoDocumento = classificacaoDocumentoManager.find(generateDocumentoConfiguration.getIdClassificacaoDocumento());
+                            this.modeloDocumento = modeloDocumentoSearch.getModeloDocumentoByCodigo(generateDocumentoConfiguration.getCodigoModeloDocumento());
+                            this.classificacaoDocumento = classificacaoDocumentoManager.findByCodigo(generateDocumentoConfiguration.getCodigoClassificacaoDocumento());
                         } catch (JsonSyntaxException e) {
                         	LOG.warn("Erro ao ler configuração da action GenerateDocumento no nó " + this.node.getName(), e);
                         }
@@ -599,8 +599,8 @@ public class NodeHandler implements Serializable {
                 } else {
                     actionDelegation.setConfigType("constructor");
                     GenerateDocumentoConfiguration configuration = new GenerateDocumentoConfiguration();
-                    configuration.setIdClassificacaoDocumento(classificacaoDocumento.getId());
-                    configuration.setIdModeloDocumento(modeloDocumento.getIdModeloDocumento());
+                    configuration.setCodigoClassificacaoDocumento(classificacaoDocumento.getCodigoDocumento());
+                    configuration.setCodigoModeloDocumento(modeloDocumento.getCodigo());
                     actionDelegation.setConfiguration(new Gson().toJson(configuration));
                 }
             }
@@ -682,8 +682,8 @@ public class NodeHandler implements Serializable {
         Delegation delegation = new Delegation(GenerateDocumentoHandler.class.getName());
         delegation.setConfigType("constructor");
         GenerateDocumentoConfiguration configuration = new GenerateDocumentoConfiguration();
-        configuration.setIdClassificacaoDocumento(classificacaoDocumento.getId());
-        configuration.setIdModeloDocumento(modeloDocumento.getIdModeloDocumento());
+        configuration.setCodigoClassificacaoDocumento(classificacaoDocumento.getCodigoDocumento());
+        configuration.setCodigoModeloDocumento(modeloDocumento.getCodigo());
         delegation.setConfiguration(new Gson().toJson(configuration));
         action.setActionDelegation(delegation);
         event.addAction(action);
