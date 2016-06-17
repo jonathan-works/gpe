@@ -18,7 +18,6 @@ import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.instantiation.Delegation;
-import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
 
@@ -61,30 +60,6 @@ public class TaskFitter extends Fitter implements Serializable {
     @Inject
     private TaskExpirationManager taskExpirationManager;
     
-    public void addTask() {
-        Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
-        ProcessDefinition process = getProcessBuilder().getInstance();
-        getTasks();
-        TaskNode taskNode = (TaskNode) currentNode;
-        Task task = new Task();
-            task.setKey(BpmUtil.generateKey());
-        task.setProcessDefinition(process);
-        task.setTaskMgmtDefinition(process.getTaskMgmtDefinition());
-        List<TaskHandler> list = getProcessBuilder().getTaskNodeMap().get(currentNode);
-        task.setName(currentNode.getName());
-        taskNode.addTask(task);
-        taskNode.setEndTasks(true);
-        task.setSwimlane((Swimlane) process.getTaskMgmtDefinition().getSwimlanes().values().iterator().next());
-        task.setTaskController(new TaskController());
-        task.getTaskController().setVariableAccesses(new ArrayList<VariableAccess>());
-        Delegation delegation = new Delegation(InfoxTaskControllerHandler.class.getName());
-        delegation.setProcessDefinition(task.getProcessDefinition());
-        task.getTaskController().setTaskControllerDelegation(delegation);
-        TaskHandler th = new TaskHandler(task);
-        list.add(th);
-        setCurrentTask(th);
-    }
-    
     public void addStartStateTask() {
         StartState startState = (StartState) getProcessBuilder().getNodeFitter().getCurrentNode();
         ProcessDefinition processDefinition = getProcessBuilder().getInstance();
@@ -106,19 +81,6 @@ public class TaskFitter extends Fitter implements Serializable {
         setCurrentTask(taskHandler);
     }
 
-    public void removeTask(TaskHandler t) {
-        Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
-        if (currentNode instanceof TaskNode) {
-            TaskNode tn = (TaskNode) currentNode;
-            tn.getTasks().remove(t.getTask());
-            getProcessBuilder().getTaskNodeMap().remove(currentNode);
-        }
-
-        if (currentTask != null && currentTask.equals(t)) {
-            clear();
-        }
-    }
-
     public TaskHandler getCurrentTask() {
         return currentTask;
     }
@@ -138,6 +100,7 @@ public class TaskFitter extends Fitter implements Serializable {
         return tarefaAtual;
     }
 
+    // TODO: Verificar isso aqui #72877
     public void setTaskName(String taskName) {
         if (this.taskName != null && !this.taskName.equals(taskName)) {
             if (currentTask != null && currentTask.getTask() != null) {
@@ -231,6 +194,7 @@ public class TaskFitter extends Fitter implements Serializable {
         }
     }
 
+    // TODO #72877
     public void updateTarefas() {
         for (Tarefa tarefa : tarefasModificadas) {
             try {
@@ -259,10 +223,6 @@ public class TaskFitter extends Fitter implements Serializable {
         return null;
     }
     
-    public boolean canChangeCurrentTaskName() {
-        return currentTask != null && !getProcessBuilder().existemProcessosAssociadosAoFluxo();
-    }
-
     public List<VariableType> getTypeList() {
         if (typeList == null) {
             typeList = Arrays.asList(VariableType.values());

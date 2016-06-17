@@ -3,22 +3,9 @@
     xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core"
     xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib" xmlns:wi="http://www.itx.com.br/jsf">
-    <s:div id="taskDiv">
-        <h:form>
-            <wi:inputText id="taskName" value="#{taskFitter.taskName}" widthDiv="230px"
-                label="#{infoxMessages['process.task.name']}" converterId="nodeNameConverter" required="true">
-                <a:ajax event="change" render="nodesDiv" limitRender="true" execute="@this"
-                    listener="#{nodeFitter.setCurrentNodeName(taskFitter.taskName)}" />
-                <f:validator validatorId="taskNameValidator" />
-            </wi:inputText>
-        </h:form>
-    </s:div>
     <rich:collapsiblePanel expanded="true" switchType="client" header="#{infoxMessages['process.task.responsavel']}">
         <h:form>
-            <wi:selectOneMenu id="swimlaneTask" valueItems="#{swimlaneFitter.swimlaneList}" widthDiv="230px"
-                showLabelSelecione="false" value="#{t.swimlaneName}" label="#{infoxMessages['process.def.assignment.type.swimlane']}">
-                <a:ajax event="change" execute="@this" limitRender="true" render="@form" />
-            </wi:selectOneMenu>
+            <wi:outputText id="swimlaneTask" value="#{t.swimlaneName}" label="#{infoxMessages['process.def.assignment.type.swimlane']}" />
 	        <ui:include src="helpers/expressoesAjuda.xhtml">
 				<ui:param name="id" value="expressoesAjudaRaiaDinamicaPopUpPanel" />
 				<ui:param name="methods" value="#{bpmExpressionService.externalRaiaDinamicaMethods}" />

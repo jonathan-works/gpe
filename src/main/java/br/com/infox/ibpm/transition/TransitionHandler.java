@@ -30,6 +30,7 @@ public class TransitionHandler implements Serializable {
         return transition.getName();
     }
 
+    // #72877
     public void setName(String name) {
         name = name.trim();
         if (name != null && !name.equals(transition.getName())) {
@@ -44,22 +45,12 @@ public class TransitionHandler implements Serializable {
         return transition;
     }
 
-    public void setFrom(String from) {
-    	Node node = BeanManager.INSTANCE.getReference(NodeFitter.class).getNodeByName(from);
-        transition.setFrom(node);
-    }
-
     public String getFrom() {
         return transition.getFrom() == null ? null : transition.getFrom().toString();
     }
 
     public String getFromName() {
         return transition.getFrom() == null ? null : transition.getFrom().getName();
-    }
-
-    public void setTo(String to) {
-    	Node node = BeanManager.INSTANCE.getReference(NodeFitter.class).getNodeByName(to);
-        transition.setTo(node);
     }
 
     public String getTo() {

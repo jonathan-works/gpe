@@ -502,6 +502,7 @@ public class NodeHandler implements Serializable {
         return currentTimer.getTimerName();
     }
 
+    // #72877
     public void setSubProcessName(String subProcessName) {
         ReflectionsUtil.setValue(node, "subProcessName", subProcessName);
         onChangeSubProcess(subProcessName);

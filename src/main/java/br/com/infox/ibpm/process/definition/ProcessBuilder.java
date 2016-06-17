@@ -223,7 +223,7 @@ public class ProcessBuilder implements Serializable {
         }
         if (this.fluxo.getBpmn() == null && this.fluxo.getXml() != null) {
         	this.fluxo.setBpmn(new JpdlBpmnConverter().convert(this.fluxo.getXml()));
-        	this.fluxo = fluxoManager.update(this.fluxo); // TODO melhorar isso
+        	this.fluxo = fluxoManager.update(this.fluxo); // TODO melhorar isso #72877
         }
     }
 

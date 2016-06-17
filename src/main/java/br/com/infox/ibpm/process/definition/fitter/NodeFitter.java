@@ -14,7 +14,6 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -30,7 +29,6 @@ import org.jbpm.graph.node.Decision;
 import org.jbpm.graph.node.EndState;
 import org.jbpm.graph.node.Fork;
 import org.jbpm.graph.node.Join;
-import org.jbpm.graph.node.NodeTypes;
 import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
@@ -56,10 +54,7 @@ import br.com.infox.ibpm.sinal.SignalDao;
 import br.com.infox.ibpm.sinal.SignalParam;
 import br.com.infox.ibpm.sinal.SignalParam.Type;
 import br.com.infox.ibpm.transition.TransitionHandler;
-import br.com.infox.ibpm.util.BpmUtil;
 import br.com.infox.jsf.util.JsfUtil;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Named
@@ -67,15 +62,10 @@ import br.com.infox.seam.util.ComponentUtil;
 public class NodeFitter extends Fitter implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private static final LogProvider LOG = Logging.getLogProvider(NodeFitter.class);
 
     private List<Node> nodes;
     private List<SelectItem> nodesItems;
     private Map<Node, String> nodeMessageMap = new HashMap<Node, String>();
-    private Node oldNodeTransition;
-    private String newNodeName;
-    private String newNodeType = NodeTypeConstants.TASK;
-    private Node newNodeAfter;
     private Node currentNode;
     private NodeHandler nodeHandler;
     private String nodeName;
@@ -109,8 +99,9 @@ public class NodeFitter extends Fitter implements Serializable {
         signals = signalDao.findAll();
     }
     
+    // #72877
     public void addNewNode() {
-        Class<? extends Node> nodeType = NodeTypes.getNodeType(getNodeType(newNodeType));
+        /*Class<? extends Node> nodeType = NodeTypes.getNodeType(getNodeType(newNodeType));
         if (nodeType == null) return;
         
         ProcessDefinition processDefinition = getProcessBuilder().getInstance();
@@ -165,7 +156,7 @@ public class NodeFitter extends Fitter implements Serializable {
              * transição altera seu hashcode causando erros
              */
             // INÍCIO BLOCO //
-            node.addLeavingTransition(transition);
+            /*node.addLeavingTransition(transition);
             to.removeArrivingTransition(oldT);
             newNodeTransition.setName(node.getName());
             node.addArrivingTransition(oldT);
@@ -183,19 +174,20 @@ public class NodeFitter extends Fitter implements Serializable {
         nodesItems = null;
         setCurrentNode(node);
         if (nodeType.equals(TaskNode.class)) {
-            getProcessBuilder().getTaskFitter().addTask();
+//            getProcessBuilder().getTaskFitter().addTask();
         } else if (nodeType.equals(StartState.class)) {
             getProcessBuilder().getTaskFitter().addStartStateTask();
         }
         getProcessBuilder().getTransitionFitter().clearNewNodeTransition();
         getProcessBuilder().getTransitionFitter().clear();
-        getProcessBuilder().getTransitionFitter().checkTransitions();
+        getProcessBuilder().getTransitionFitter().checkTransitions();*/
     }
 
     public List<ModeloDocumento> getModeloDocumentoList() {
         return ((ModeloDocumentoManager) ComponentUtil.getComponent(ModeloDocumentoManager.NAME)).getModeloDocumentoList();
     }
 
+    // #72877
     private void handleForkNode(Node fork) {
         try {
             Node join = Join.class.newInstance();
@@ -213,10 +205,7 @@ public class NodeFitter extends Fitter implements Serializable {
         }
     }
 
-    public void transitionChangeListener(ValueChangeEvent e) {
-    	oldNodeTransition = getNodeByName((String) e.getOldValue());
-    }
-
+    // #72877
     private void removeTransition(Transition transition) {
         Node to = transition.getTo();
         if (to != null) {
@@ -243,13 +232,7 @@ public class NodeFitter extends Fitter implements Serializable {
         }
     }
 
-    private void removeTransitions(Collection<Transition> transitions) {
-        while (transitions.size() > 0) {
-            Transition t = transitions.iterator().next();
-            removeTransition(t);
-        }
-    }
-
+    // #72877
     public void removeNode(Node node) {
         if (fluxoMergeService.hasActiveNode(ProcessBuilder.instance().getInstance(), node)) {
             FacesMessages.instance().clear();
@@ -273,11 +256,11 @@ public class NodeFitter extends Fitter implements Serializable {
                     }
                 }
             }
-            removeTransitions(transitions);
+//            removeTransitions(transitions);
         }
         Collection<Transition> transitionSet = node.getArrivingTransitions();
         if (transitionSet != null) {
-            removeTransitions(transitionSet);
+//            removeTransitions(transitionSet);
         }
         if (join != null) {
             removeNode(join);
@@ -313,26 +296,6 @@ public class NodeFitter extends Fitter implements Serializable {
         setCurrentNode(getNodes().get(i));
     }
 
-    public String getNewNodeName() {
-        return newNodeName;
-    }
-
-    public void setNewNodeName(String newName) {
-        if (newName != null) {
-            this.newNodeName = newName.trim();
-        } else {
-            this.newNodeName = null;
-        }
-    }
-
-    public String getNewNodeType() {
-        return newNodeType;
-    }
-
-    public void setNewNodeType(String newNodeType) {
-        this.newNodeType = newNodeType;
-    }
-
     public Map<Node, String> getNodeMessageMap() {
         return nodeMessageMap;
     }
@@ -343,10 +306,6 @@ public class NodeFitter extends Fitter implements Serializable {
 
     public String getMessage(Node n) {
         return nodeMessageMap.get(n);
-    }
-
-    public Node getOldNodeTransition() {
-        return oldNodeTransition;
     }
 
     public List<Node> getNodes() {
@@ -398,41 +357,6 @@ public class NodeFitter extends Fitter implements Serializable {
         this.nodesItems = nodesList;
     }
 
-    public List<SelectItem> getNodesTransitionItems(String type) {
-        List<SelectItem> nodeItemsList = new ArrayList<SelectItem>();
-        for (Node node : getNodes(type)) {
-            nodeItemsList.add(new SelectItem(node, node.getName()));
-        }
-        Collections.sort(nodeItemsList, bySelectItemLabelAsc());
-        nodeItemsList.add(0, new SelectItem(null, "Selecione..."));
-        return nodeItemsList;
-    }
-
-    public void setNewNodeAfter(String newNodeAfter) {
-        for (Node node : getNodes()) {
-            if (node.toString().equals(newNodeAfter)) {
-                this.newNodeAfter = node;
-            }
-        }
-    }
-
-    public String getNewNodeAfter() {
-        return this.newNodeAfter == null ? null : this.newNodeAfter.toString();
-    }
-
-    public void setNodeName(String nodeName) {
-        if (this.nodeName != null && !this.nodeName.equals(nodeName)) {
-            if (currentNode != null) {
-                currentNode.setName(nodeName);
-                Number idNodeModificado = jbpmNodeManager.findNodeIdByIdProcessDefinitionAndName(getProcessBuilder().getIdProcessDefinition(), nodeName);
-                if (idNodeModificado != null) {
-                    modifiedNodes.put(idNodeModificado, nodeName);
-                }
-            }
-            this.nodeName = nodeName;
-        }
-    }
-
     public String getNodeName() {
         if (currentNode != null) {
             nodeName = currentNode.getName();
@@ -449,7 +373,6 @@ public class NodeFitter extends Fitter implements Serializable {
         this.currentNode = cNode;
         taskFitter.getTasks();
         nodeHandler = new NodeHandler(cNode);
-        newNodeType = NodeTypeConstants.TASK;
         getProcessBuilder().getTransitionFitter().clearArrivingAndLeavingTransitions();
         getProcessBuilder().getTaskFitter().setTypeList(null);
         if (taskFitter.getCurrentTask() != null) {
@@ -469,20 +392,6 @@ public class NodeFitter extends Fitter implements Serializable {
             }
         }
         return type;
-    }
-
-    public List<String[]> getNodeTypes() {
-        List<String[]> list = new ArrayList<String[]>();
-        list.add(new String[] { NodeTypeConstants.START_STATE, infoxMessages.get("process.node.type.start") });
-        list.add(new String[] { NodeTypeConstants.TASK, infoxMessages.get("process.node.type.task") });
-        list.add(new String[] { NodeTypeConstants.DECISION, infoxMessages.get("process.node.type.decision") });
-        list.add(new String[] { NodeTypeConstants.MAIL_NODE, infoxMessages.get("process.node.type.mail") });
-        list.add(new String[] { NodeTypeConstants.FORK, infoxMessages.get("process.node.type.fork") });
-        list.add(new String[] { NodeTypeConstants.JOIN, infoxMessages.get("process.node.type.join") });
-        list.add(new String[] { NodeTypeConstants.PROCESS_STATE, infoxMessages.get("process.node.type.subprocess") });
-        list.add(new String[] { NodeTypeConstants.NODE, infoxMessages.get("process.node.type.system") });
-        list.add(new String[] { NodeTypeConstants.END_STATE, infoxMessages.get("process.node.type.end") });
-        return list;
     }
 
     public String getNodeType(String nodeType) {
@@ -574,22 +483,6 @@ public class NodeFitter extends Fitter implements Serializable {
         nodesItems = null;
     }
 
-    public void setCurrentNodeName(String name) {
-        if (name != null) {
-            getCurrentNode().setName(name.trim());
-        } else {
-            getCurrentNode().setName(null);
-        }
-    }
-    
-    public boolean canRemove(Node node) {
-        String nodeType = node.getNodeType().toString();
-        if (nodeType.equals(NodeTypeConstants.START_STATE) || nodeType.equals(NodeTypeConstants.JOIN)) {
-            return false;
-        }
-        return !getProcessBuilder().existemProcessosAssociadosAoFluxo();
-    }
-    
     public List<StatusProcesso> getStatusProcessoList() {
         return statusProcessoManager.findAll();
     }

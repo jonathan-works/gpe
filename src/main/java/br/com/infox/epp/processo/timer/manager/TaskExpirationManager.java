@@ -38,6 +38,7 @@ public class TaskExpirationManager extends Manager<TaskExpirationDAO, TaskExpira
      * @param oldName
      * @param newName
      */
+    // #72877
     @Observer(TransitionHandler.EVENT_JBPM_TRANSITION_NAME_CHANGED)
     public void updateTransitionName(Fluxo fluxo, String taskName, String oldName, String newName) {
         TaskExpiration te = getDao().getByFluxoAndTaskName(fluxo, taskName);

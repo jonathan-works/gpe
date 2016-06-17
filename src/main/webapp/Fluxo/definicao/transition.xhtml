@@ -31,102 +31,22 @@
             styleClass="#{nodeFitter.currentNode.nodeType eq 'Decision' and type eq 'to' ? 'dtable rf-dt-crud' : 'tabelaVariaveis'}"
             rowKeyVar="rowNumber"
             var="transicaoHandler">
-            <rich:column
-                styleClass="dr-table-subheader rich-table-subheader"
-                rendered="#{type eq 'to'}">
-                <f:facet name="header">
-                    <h:form>
-                        <a:commandLink
-                            action="#{transitionFitter.addTransition(type)}"
-                            execute="@this"
-                            rendered="#{type.equals('to')}"
-                            render="transition#{type}Table,nodesDiv"
-                            limitRender="true">
-                            <h:graphicImage
-                                title="#{infoxMessages['process.transition.add']}"
-                                url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}" />
-                        </a:commandLink>
-                    </h:form>
-                </f:facet>
-                <div>
-                    <div>
-                        <h:form>
-                            <h:graphicImage
-                                title="#{infoxMessages['process.transition.remove']}"
-                                url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
-                                styleClass="opacityHover"
-                                rendered="#{type eq 'to'}">
-                                <a:ajax
-                                    event="click"
-                                    listener="#{transitionFitter.removeTransition(transicaoHandler, type)}"
-                                    execute="@this"
-                                    onbeforesubmit="if(!confirm('Confirma?')) return false;"
-                                    render="transition#{type}Table,nodesDiv"
-                                    limitRender="true" />
-                            </h:graphicImage>
-                        </h:form>
-                    </div>
-                </div>
-            </rich:column>
             <rich:column rendered="#{type=='from'}">
                 <f:facet name="header">#{infoxMessages['process.transition.origin']}</f:facet>
-                <h:form>
-                    <h:selectOneMenu
-                        id="from"
-                        valueChangeListener="#{nodeFitter.transitionChangeListener}"
-                        rendered="#{empty transicaoHandler.from}"
-                        value="#{transicaoHandler.from}">
-                        <f:selectItems
-                            value="#{nodeFitter.getNodesTransitionItems(type)}"
-                            var="v" />
-                        <a:ajax
-                            event="change"
-                            execute="@this"
-                            render="transitionName,nodesDiv"
-                            listener="#{transitionFitter.changeTransition(transicaoHandler, type)}"
-                            limitRender="true" />
-                    </h:selectOneMenu>
-                    <h:outputText
-                        rendered="#{!empty transicaoHandler.from}"
-                        value="#{transicaoHandler.fromName}" />
-                </h:form>
+                <h:outputText
+                    rendered="#{!empty transicaoHandler.from}"
+                    value="#{transicaoHandler.fromName}" />
             </rich:column>
             <rich:column rendered="#{type=='to'}">
                 <f:facet name="header">#{infoxMessages['process.transition.destination']}</f:facet>
-                <h:form>
-                    <h:selectOneMenu
-                        id="to"
-                        valueChangeListener="#{nodeFitter.transitionChangeListener}"
-                        rendered="#{empty transicaoHandler.to}"
-                        required="true"
-                        value="#{transicaoHandler.to}">
-                        <f:selectItems
-                            value="#{nodeFitter.getNodesTransitionItems(type)}"
-                            var="v" />
-                        <a:ajax
-                            event="change"
-                            execute="@this"
-                            render="transitionName,nodesDiv"
-                            listener="#{transitionFitter.changeTransition(transicaoHandler, type)}"
-                            limitRender="true" />
-                    </h:selectOneMenu>
-                    <h:outputText
-                        rendered="#{!empty transicaoHandler.to}"
-                        value="#{transicaoHandler.toName}" />
-                </h:form>
+                <h:outputText
+                    rendered="#{!empty transicaoHandler.to}"
+                    value="#{transicaoHandler.toName}" />
             </rich:column>
             <rich:column id="transitionName">
                 <f:facet name="header">#{infoxMessages['process.transition.name']}</f:facet>
                 <h:form>
-                    <h:inputText
-                        value="#{transicaoHandler.name}"
-                        required="true">
-                        <a:ajax
-                            event="change"
-                            execute="@this"
-                            render="transition#{type}Table"
-                            limitRender="true" />
-                    </h:inputText>
+                    <h:outputText value="#{transicaoHandler.name}" />
                     <a:commandLink
                         render="nodesDiv"
                         title="#{infoxMessages['process.transition.goto']}"

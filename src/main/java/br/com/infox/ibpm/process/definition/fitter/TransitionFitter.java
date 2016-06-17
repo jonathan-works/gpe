@@ -51,35 +51,6 @@ public class TransitionFitter extends Fitter implements Serializable {
     private List<TransitionHandler> transitionList;
     private List<String[]> transitionNames;
 
-    public void changeTransition(TransitionHandler th, String type) {
-        Node oldNodeTransition = getProcessBuilder().getNodeFitter().getOldNodeTransition();
-        Transition t = th.getTransition();
-        if ("from".equals(type)) {
-            if (t.getFrom() != null) {
-                t.getFrom().addLeavingTransition(t);
-            }
-            if (oldNodeTransition != null) {
-                oldNodeTransition.removeLeavingTransition(t);
-            }
-        } else {
-            Node to = t.getTo();
-            if (to != null) {
-                to.addArrivingTransition(t);
-            }
-            if (oldNodeTransition != null) {
-                oldNodeTransition.removeArrivingTransition(t);
-            }
-            t.setTo(to);
-        }
-        if (t.getName() == null || "".equals(t.getName())) {
-            try {
-                t.setName(t.getTo().getName());
-            } catch (Exception e) {
-                LOG.error("changeTransition()", e);
-            }
-        }
-    }
-
     public void checkTransitions() {
         List<Node> nodes = getProcessBuilder().getNodeFitter().getNodes();
         clear();

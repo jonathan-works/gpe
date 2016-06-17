@@ -14,7 +14,6 @@ import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.manager.PerfilTemplateManager;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.ibpm.swimlane.SwimlaneHandler;
-import br.com.infox.ibpm.util.BpmUtil;
 
 @Named
 @ViewScoped
@@ -28,20 +27,6 @@ public class SwimlaneFitter extends Fitter implements Serializable {
 
     @Inject
     private PerfilTemplateManager perfilTemplateManager;
-
-    public void addSwimlane() {
-        Swimlane s = new Swimlane("Raia " + (swimlanes.size() + 1));
-        s.setKey(BpmUtil.generateKey());
-        setCurrentSwimlane(new SwimlaneHandler(s));
-        getProcessBuilder().getInstance().getTaskMgmtDefinition().addSwimlane(s);
-        swimlanes.add(currentSwimlane);
-    }
-
-    public void removeSwimlane(SwimlaneHandler s) {
-        swimlanes.remove(s);
-        setCurrentSwimlane(null);
-        getProcessBuilder().getInstance().getTaskMgmtDefinition().getSwimlanes().remove(s.getSwimlane().getName());
-    }
 
     public SwimlaneHandler getCurrentSwimlane() {
         return currentSwimlane;

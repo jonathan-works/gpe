@@ -19,6 +19,7 @@
   		<c:set property="fluxo" target="#{processBuilder}" value="#{flash.fluxo}"></c:set>
   		<c:set property="fluxo" target="#{definicaoVariavelProcessoAction}" value="#{flash.fluxo}"></c:set>
   		<c:set property="fluxo" target="#{variavelClassificacaoDocumentoAction}" value="#{flash.fluxo}"></c:set>
+  		<c:set property="fluxo" target="#{bpmnView}" value="#{flash.fluxo}"></c:set>
  		 <f:metadata>
 	  			<f:event listener="#{processBuilder.load()}" type="preRenderView" />
   		</f:metadata>
@@ -90,7 +91,6 @@
         id="nodesTab"
         rendered="#{processBuilder.exists}"
         title="#{infoxMessages['processBuilder.nodes']}"
-        action="#{bpmnView.refresh}"
         render="processDefinitionButtonsForm">
         <ui:include src="nodes.xhtml" />
       </infox:tab>
@@ -98,7 +98,6 @@
         name="graphTab"
         id="graphTab"
         title="#{infoxMessages['processBuilder.graph']}"
-        action="#{bpmnView.setFluxo(processBuilder.fluxo)}"
         render="processDefinitionButtonsForm">
         <ui:include src="graph.xhtml" />
       </infox:tab>
