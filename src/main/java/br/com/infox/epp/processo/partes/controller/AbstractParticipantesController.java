@@ -69,7 +69,7 @@ public abstract class AbstractParticipantesController implements Serializable {
 
     public abstract boolean apenasPessoaJuridica();
     
-    protected void afterSaveParticipante(){};
+    protected void afterSaveParticipante(ParticipanteProcesso participanteProcesso){};
 
 	public void searchByCpf() {
         String cpf = getParticipanteProcesso().getPessoa().getCodigo();
@@ -135,7 +135,7 @@ public abstract class AbstractParticipantesController implements Serializable {
 		    setProcesso(processoManager.merge(getProcesso()));
 		    processoManager.refresh(getProcesso());
 		    participanteProcessoManager.flush();
-		    afterSaveParticipante();
+		    afterSaveParticipante(getParticipanteProcesso());
 		} catch (DAOException e) {
 		    actionMessagesService.handleDAOException(e);
 		    LOG.error("Não foi possível inserir a pessoa " + getParticipanteProcesso().getPessoa(), e);
