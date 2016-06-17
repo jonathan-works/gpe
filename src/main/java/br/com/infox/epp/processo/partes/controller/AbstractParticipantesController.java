@@ -131,11 +131,11 @@ public abstract class AbstractParticipantesController implements Serializable {
 	    	if (getParticipanteProcesso().getPessoa().getTipoPessoa() == TipoPessoaEnum.F) {
 	    		includeMeioContato(getParticipanteProcesso().getPessoa());
 	    	}
-		    participanteProcessoManager.persist(getParticipanteProcesso());
+		    ParticipanteProcesso participantePersist = participanteProcessoManager.persist(getParticipanteProcesso());
 		    setProcesso(processoManager.merge(getProcesso()));
 		    processoManager.refresh(getProcesso());
 		    participanteProcessoManager.flush();
-		    afterSaveParticipante(getParticipanteProcesso());
+		    afterSaveParticipante(participantePersist);
 		} catch (DAOException e) {
 		    actionMessagesService.handleDAOException(e);
 		    LOG.error("Não foi possível inserir a pessoa " + getParticipanteProcesso().getPessoa(), e);
