@@ -20,11 +20,21 @@ import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.core.Expressions;
 import org.jboss.seam.core.Expressions.MethodExpression;
 import org.jboss.seam.core.Expressions.ValueExpression;
+import org.jbpm.bytes.ByteArray;
+import org.jbpm.context.exe.JbpmType;
+import org.jbpm.context.exe.VariableInstance;
+import org.jbpm.context.exe.converter.BytesToByteArrayConverter;
+import org.jbpm.context.exe.converter.SerializableToByteArrayConverter;
+import org.jbpm.context.exe.matcher.SerializableMatcher;
+import org.jbpm.context.exe.variableinstance.ByteArrayInstance;
+import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.ProcessInstance;
+import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.documento.type.SeamExpressionResolver;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
@@ -37,6 +47,7 @@ import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
+import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
@@ -95,15 +106,8 @@ public class VariavelProcessoService {
     		//TODO: melhorar código pois foi feito rapidamente...
     		//caso não encontre a definição no processo, procura na definicao do subprocesso.
     		ProcessInstance subrProcessInstance = processoManager.findProcessByTaskInstance(idTaskInstance);
-    		Object variable = subrProcessInstance.getContextInstance().getVariable(nome);
     		Fluxo subFluxo = fluxoManager.getFluxoByDescricao(subrProcessInstance.getProcessDefinition().getName());
-    		if(variable != null){
-    			definicao =  definicaoVariavelProcessoManager.getDefinicao(subFluxo, nome);
-    			VariavelProcesso variavelProcesso = inicializaVariavelProcesso(definicao);
-    			variavelProcesso.setValor(formatarValor(variable));
-    		}else{
-    			definicao = definicaoVariavelProcessoManager.getDefinicao(subFluxo, nome);
-    		}
+   			definicao = definicaoVariavelProcessoManager.getDefinicao(subFluxo, nome);
     	}
     	if(definicao == null)
     		throw new BusinessException("Não foi possível encontrar a definição da variável " + nome);
@@ -137,13 +141,17 @@ public class VariavelProcessoService {
             Object variable;
             if (taskInstance != null) {
             	// Aqui já pega do processInstance caso não tenha na taskInstance por causa da hierarquia de VariableContainer do jBPM
-            	variable = taskInstance.getVariable(definicao.getNome());
+            	if(definicao.getNome().startsWith("#")){
+            		variable = JbpmExpressionEvaluator.evaluate(definicao.getNome(),new ExecutionContext(taskInstance.getToken()));
+            	}else{
+            		variable = taskInstance.getVariable(definicao.getNome());
+            	}
             } else {
             	variable = processInstance.getContextInstance().getVariable(definicao.getNome());
             }
             VariavelProcesso variavelProcesso = inicializaVariavelProcesso(definicao);
             if (variable != null) {
-                variavelProcesso.setValor(formatarValor(variable));
+            	 variavelProcesso.setValor(formatarValor(variable));
             } else {
             	try{
 	                List<MetadadoProcesso> metadados = metadadoProcessoManager.getMetadadoProcessoByType(processo,
