@@ -105,7 +105,8 @@ public class ProcessoHandler implements Serializable {
 		List<TaskInstance> taskInstanceList = new ArrayList<>();
 		
 		for(org.jbpm.graph.exe.ProcessInstance processInstance : processInstances) {
-			taskInstanceList.addAll(processInstance.getTaskMgmtInstance().getTaskInstances());
+			if(processInstance.getTaskMgmtInstance().getTaskInstances() != null)
+				taskInstanceList.addAll(processInstance.getTaskMgmtInstance().getTaskInstances());
 		}
         return taskInstanceList;
     }
