@@ -34,8 +34,6 @@ public class ProcessoService extends PersistenceController {
     private MetadadoProcessoManager metadadoProcessoManager;
     @Inject
     private ProcessoSearch processoSearch;
-    @Inject
-    private EppMetadadoProvider eppMetadadoProvider;
     
 	public boolean isTipoProcessoDocumento(Processo processo) {
 		return isTipoProcesso(TipoProcesso.DOCUMENTO.toString(), processo);
@@ -78,9 +76,12 @@ public class ProcessoService extends PersistenceController {
 		for(String metadado : metadados.keySet()) {
 			Object valorOriginal = metadados.get(metadado);
 			
-			Map<String, MetadadoProcessoDefinition> definicoesMetadados = eppMetadadoProvider.getDefinicoesMetadados();
-			
 			MetadadoProcessoDefinition metadadoProcessoDefinition = metadadoProcessoManager.getMetadadoProcessoDefinition(metadado);
+			Map<String, MetadadoProcessoDefinition> definicoesMetadados = new HashMap<>();
+			if(metadadoProcessoDefinition != null) {
+				definicoesMetadados.put(metadado, metadadoProcessoDefinition);				
+			}
+			
 			Class<?> classe = null;
 			if(metadadoProcessoDefinition != null) {
 				classe = metadadoProcessoManager.getMetadadoProcessoDefinition(metadado).getClassType();				
