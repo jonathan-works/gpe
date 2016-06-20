@@ -14,6 +14,8 @@ import br.com.infox.epp.assinador.AssinadorService;
 import br.com.infox.epp.assinador.CertificateSignatureGroupService;
 import br.com.infox.epp.assinador.CertificateSignatureService;
 import br.com.infox.epp.assinador.DadosAssinaturaLegada;
+import br.com.infox.epp.assinador.api.Assinatura;
+import br.com.infox.epp.assinador.api.Documento;
 import br.com.infox.epp.certificado.entity.CertificateSignature;
 import br.com.infox.epp.certificado.entity.CertificateSignatureGroup;
 import br.com.infox.epp.certificado.entity.TipoAssinatura;

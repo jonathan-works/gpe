@@ -1,4 +1,4 @@
-package br.com.infox.epp.assinador.rest;
+package br.com.infox.epp.assinador.api;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;

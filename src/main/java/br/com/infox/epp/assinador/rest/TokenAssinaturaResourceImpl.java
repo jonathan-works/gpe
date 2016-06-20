@@ -3,6 +3,9 @@ package br.com.infox.epp.assinador.rest;
 import javax.inject.Inject;
 
 import br.com.infox.epp.assinador.CertificateSignatureGroupService;
+import br.com.infox.epp.assinador.api.AssinaturaRest;
+import br.com.infox.epp.assinador.api.DocumentoRest;
+import br.com.infox.epp.assinador.api.TokenAssinaturaResource;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.rest.RestException;
 

@@ -1,4 +1,4 @@
-package br.com.infox.epp.assinador.rest;
+package br.com.infox.epp.assinador.api;
 
 import java.util.UUID;
 

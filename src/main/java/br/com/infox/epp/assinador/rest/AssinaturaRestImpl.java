@@ -5,6 +5,9 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 
+import br.com.infox.epp.assinador.api.Assinatura;
+import br.com.infox.epp.assinador.api.AssinaturaRest;
+
 public class AssinaturaRestImpl implements AssinaturaRest {
 
 	@Inject

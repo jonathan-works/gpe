@@ -4,6 +4,8 @@ import javax.inject.Inject;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
+import br.com.infox.epp.assinador.api.AssinaturaRest;
+import br.com.infox.epp.assinador.api.DocumentoResource;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;

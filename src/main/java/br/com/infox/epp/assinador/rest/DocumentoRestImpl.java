@@ -6,6 +6,9 @@ import java.util.UUID;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
 
+import br.com.infox.epp.assinador.api.Documento;
+import br.com.infox.epp.assinador.api.DocumentoResource;
+import br.com.infox.epp.assinador.api.DocumentoRest;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;

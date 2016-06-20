@@ -1,7 +1,8 @@
-package br.com.infox.epp.assinador.rest;
+package br.com.infox.epp.assinador.api;
 
 import javax.ws.rs.Path;
 
+import br.com.infox.epp.assinador.rest.AssinaturaRestImpl;
 import br.com.infox.epp.cdi.config.BeanManager;
 
 /**
