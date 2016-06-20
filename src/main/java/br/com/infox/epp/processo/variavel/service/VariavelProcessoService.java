@@ -141,7 +141,7 @@ public class VariavelProcessoService {
             Object variable;
             if (taskInstance != null) {
             	// Aqui já pega do processInstance caso não tenha na taskInstance por causa da hierarquia de VariableContainer do jBPM
-            	if(definicao.getNome().startsWith("#")){
+            	if(definicao.getNome().startsWith("#") || definicao.getNome().startsWith("$")){
             		variable = JbpmExpressionEvaluator.evaluate(definicao.getNome(),new ExecutionContext(taskInstance.getToken()));
             	}else{
             		variable = taskInstance.getVariable(definicao.getNome());
