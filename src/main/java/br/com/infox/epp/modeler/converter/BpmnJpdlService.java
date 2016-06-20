@@ -11,16 +11,22 @@ import javax.inject.Inject;
 
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
+import org.camunda.bpm.model.bpmn.GatewayDirection;
 import org.camunda.bpm.model.bpmn.builder.ProcessBuilder;
+import org.camunda.bpm.model.bpmn.impl.BpmnModelConstants;
 import org.camunda.bpm.model.bpmn.instance.FlowNode;
 import org.camunda.bpm.model.bpmn.instance.Lane;
 import org.camunda.bpm.model.bpmn.instance.LaneSet;
+import org.camunda.bpm.model.bpmn.instance.ParallelGateway;
 import org.camunda.bpm.model.bpmn.instance.Process;
 import org.camunda.bpm.model.bpmn.instance.SequenceFlow;
+import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
+import org.jbpm.graph.node.Fork;
+import org.jbpm.graph.node.Join;
 import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Swimlane;
@@ -168,8 +174,38 @@ public class BpmnJpdlService {
 				Task task = taskNode.getTasks().iterator().next();
 				task.setSwimlane(translation.getSwimlanes().get(lane.getId()));
 				task.setName(taskNode.getName());
+			} else if (flowNode.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_PARALLEL_GATEWAY)) {
+				ParallelGateway gateway = (ParallelGateway) flowNode;
+				if (node.getNodeType().equals(NodeType.Fork) && gateway.getGatewayDirection() == GatewayDirection.Converging) {
+					copyAndRemoveNode(processDefinition, node, new Join());
+				} else if (node.getNodeType().equals(NodeType.Join) && gateway.getGatewayDirection() == GatewayDirection.Diverging) {
+					copyAndRemoveNode(processDefinition, node, new Fork());
+				}
 			}
 		}
+	}
+
+	private void copyAndRemoveNode(ProcessDefinition processDefinition, Node oldNode, Node newNode) {
+		newNode.setName(oldNode.getName());
+		newNode.setKey(oldNode.getKey());
+		newNode.setDescription(oldNode.getDescription());
+		if (oldNode.getArrivingTransitions() != null) {
+			for (Transition transition : oldNode.getArrivingTransitions()) {
+				newNode.addArrivingTransition(transition);
+			}
+		}
+		if (oldNode.getLeavingTransitions() != null) {
+			for (Transition transition : oldNode.getLeavingTransitions()) {
+				newNode.addLeavingTransition(transition);
+			}
+		}
+		if (oldNode.getEvents() != null) {
+			for (Event event : oldNode.getEvents().values()) {
+				newNode.addEvent(event);
+			}
+		}
+		processDefinition.removeNode(oldNode);
+		processDefinition.addNode(newNode);
 	}
 
 	private void createSwimlanes(BpmnJpdlTranslation translation, ProcessDefinition processDefinition) {

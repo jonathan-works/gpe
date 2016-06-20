@@ -15,6 +15,7 @@
 		<h:inputHidden id="bpmn" value="#{bpmnView.fluxo.bpmn}" />
 		<p:remoteCommand name="doUpdate" process="@this" update=":processDefinition :pageBodyDialogMessage" action="#{bpmnView.update}"
 			oncomplete="infox.hideLoading()"/>
+		<p:remoteCommand name="configure" process="@this" update=":processDefinition :pageBodyDialogMessage" action="#{bpmnView.configure}" />
 		<script>
 			function updateBpmn() {
 				doUpdate([{name: 'bpmnInformation', value: JSON.stringify(modeler.getBpmnInformation())}]);

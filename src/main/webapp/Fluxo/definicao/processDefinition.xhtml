@@ -12,7 +12,6 @@
   xmlns:infox="http://www.infox.com.br/jsf"
   template="/WEB-INF/xhtml/templates/minimal.xhtml">
  
-  
   <ui:define name="title">#{infoxMessages['fluxo.titlePage']}: #{processBuilder.instance.name}</ui:define>
   <ui:define name="head">
   <c:if test="#{not empty flash.fluxo}">
@@ -21,7 +20,7 @@
   		<c:set property="fluxo" target="#{variavelClassificacaoDocumentoAction}" value="#{flash.fluxo}"></c:set>
   		<c:set property="fluxo" target="#{bpmnView}" value="#{flash.fluxo}"></c:set>
  		 <f:metadata>
-	  			<f:event listener="#{processBuilder.load()}" type="preRenderView" />
+ 		 	<f:event listener="#{processBuilder.load()}" type="preRenderView" />
   		</f:metadata>
   </c:if>
     <h:outputScript

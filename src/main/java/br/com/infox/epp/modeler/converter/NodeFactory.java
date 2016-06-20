@@ -20,7 +20,10 @@ import org.jbpm.instantiation.Delegation;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
 
+import com.google.common.base.Strings;
+
 import br.com.infox.core.util.ReflectionsUtil;
+import br.com.infox.ibpm.node.InfoxMailNode;
 import br.com.infox.ibpm.task.handler.InfoxTaskControllerHandler;
 import br.com.infox.ibpm.util.BpmUtil;
 import br.com.infox.seam.exception.BusinessRollbackException;
@@ -64,8 +67,13 @@ public class NodeFactory {
 			} else if (direction == GatewayDirection.Converging) {
 				node = new Join(getLabel(flowNode));
 			} else {
-				throw new BusinessRollbackException("Direção de gateway paralelo desconhecida: " + direction);
+				throw new BusinessRollbackException("Tipo de nó fork/join não informado (id: " + flowNode.getId() +
+					(!Strings.isNullOrEmpty(flowNode.getName()) ? ", nome: " + flowNode.getName() : "") + "): " + direction);
 			}
+		} else if (flowNode.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_SEND_TASK)) {
+			node = new InfoxMailNode();
+			node.setName(getLabel(flowNode));
+			node.setKey(flowNode.getId());
 		}
 		
 		if (node == null) {

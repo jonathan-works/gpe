@@ -15,6 +15,7 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.modeler.converter.BpmnJpdlService;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
+import br.com.infox.ibpm.process.definition.fitter.NodeFitter;
 
 @Named
 @ViewScoped
@@ -52,5 +53,11 @@ public class BpmnView implements Serializable {
 		fluxo.setSvg(bpmnInfo.get("svg").getAsString());
 		fluxo = bpmnJpdlService.atualizarDefinicaoJpdl(fluxo);
 		refresh();
+	}
+	
+	public void configure() {
+		String key = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("key");
+		ProcessBuilder.instance().setTab("nodesTab");
+		ProcessBuilder.instance().getNodeFitter().setNodeIndex(key);
 	}
 }

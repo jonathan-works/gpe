@@ -292,8 +292,13 @@ public class NodeFitter extends Fitter implements Serializable {
         return null;
     }
 
-    public void setNodeIndex(Integer i) {
-        setCurrentNode(getNodes().get(i));
+    public void setNodeIndex(String key) {
+    	for (Node node : getNodes()) {
+    		if (node.getKey().equals(key)) {
+    			setCurrentNode(node);
+    			break;
+    		}
+    	}
     }
 
     public Map<Node, String> getNodeMessageMap() {
