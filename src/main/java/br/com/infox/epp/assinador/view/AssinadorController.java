@@ -26,20 +26,6 @@ public class AssinadorController implements Serializable {
 	
 	private String token;
 	
-	/*public String getDocumentosParaAssinar() {
-		List<SignableDocument> documentsToSign = new ArrayList<>();
-		if (documentosSelecionados != null) {
-			for (DocumentoPC documento : documentosSelecionados) {
-				documentsToSign.add(new DefaultSignableDocumentImpl(documento.getDocumentoBin()));
-			}
-		}
-		SignDocuments multiSign = new SignDocuments(documentsToSign);
-		String token = UUID.randomUUID().toString();
-		Cache<String, String> documentosAssinatura = CertificadoDigitalMapSingleton.getCache(CertificadoDigitalJNLPServlet.DOCUMENTOS_ASSINATURA);
-		documentosAssinatura.put(token, multiSign.getDocumentData());
-		return token;
-	}*/
-	
 	public String criarListaDocumentos(List<DocumentoBin> listaDocumentos) {
 		CertificateSignatureGroup certificateSignatureGroup = assinadorService.criarListaDocumentos(listaDocumentos);
 		this.token = certificateSignatureGroup.getToken();
