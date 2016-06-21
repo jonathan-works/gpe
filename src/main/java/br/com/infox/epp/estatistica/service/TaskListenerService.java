@@ -3,15 +3,17 @@ package br.com.infox.epp.estatistica.service;
 import java.io.Serializable;
 import java.util.Date;
 
-import org.jboss.seam.annotations.In;
+import javax.ejb.Stateless;
+import javax.enterprise.event.Observes;
+import javax.inject.Inject;
+
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Observer;
-import org.jboss.seam.annotations.Transactional;
-import org.jboss.seam.bpm.ManagedJbpmContext;
-import org.jbpm.graph.def.Event;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.bpm.cdi.qualifier.Events.ProcessEnd;
+import br.com.infox.bpm.cdi.qualifier.Events.TaskCreate;
+import br.com.infox.cdi.producer.JbpmContextProducer;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
@@ -24,7 +26,7 @@ import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.ApplicationException;
 
 @Name(TaskListenerService.NAME)
-@Transactional
+@Stateless
 public class TaskListenerService implements Serializable {
 
     private static final LogProvider LOG = Logging.getLogProvider(TaskListenerService.class);
@@ -33,15 +35,14 @@ public class TaskListenerService implements Serializable {
 
     public static final String NAME = "taskListenerAction";
 
-    @In
+    @Inject
     private ProcessoTarefaManager processoTarefaManager;
-    @In
+    @Inject
     private TarefaManager tarefaManager;
-    @In
+    @Inject
     private ProcessoManager processoManager;
 
-    @Observer(Event.EVENTTYPE_TASK_CREATE)
-    public void onCreateJbpmTask(ExecutionContext context) {
+    public void onCreateJbpmTask(@Observes @TaskCreate ExecutionContext context) {
         Processo processo = processoManager.getProcessoByIdJbpm(context.getProcessInstance().getRoot().getId());
         if (processo != null) {
             TaskInstance taskInstance = context.getTaskInstance();
@@ -53,7 +54,7 @@ public class TaskListenerService implements Serializable {
         String taskName = taskInstance.getTask().getName();
         String procDefName = taskInstance.getProcessInstance().getProcessDefinition().getName();
         Tarefa tarefa = tarefaManager.getTarefa(taskName, procDefName);
-        ManagedJbpmContext.instance().getSession().flush();
+        JbpmContextProducer.getJbpmContext().getSession().flush();
         ProcessoTarefa pTarefa = new ProcessoTarefa();
         pTarefa.setProcesso(processoManager.find(processo.getIdProcesso()));
         pTarefa.setTarefa(tarefa);
@@ -73,8 +74,7 @@ public class TaskListenerService implements Serializable {
         }
     }
 
-    @Observer(Event.EVENTTYPE_PROCESS_END)
-    public void onEndProcess(ExecutionContext context) throws DAOException {
+    public void onEndProcess(@Observes @ProcessEnd ExecutionContext context) throws DAOException {
     	//Se for um subprocesso não faz nada
     	if(context.getProcessInstance().getSuperProcessToken() != null) 
     		return;

@@ -5,12 +5,11 @@ import java.io.StringWriter;
 import java.util.Date;
 import java.util.Random;
 
+import javax.transaction.TransactionManager;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.contexts.Lifecycle;
-import org.jboss.seam.transaction.Transaction;
-import org.jboss.seam.transaction.UserTransaction;
 import org.jbpm.JbpmConfiguration;
 import org.jbpm.JbpmContext;
 import org.jbpm.db.JobSession;
@@ -20,6 +19,8 @@ import org.jbpm.persistence.db.DbPersistenceService;
 import org.jbpm.persistence.db.StaleObjectLogConfigurer;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.cdi.producer.JbpmContextProducer;
+import br.com.infox.core.server.ApplicationServerService;
 
 public class EppJobExecutorThread extends Thread implements Deactivable {
 
@@ -60,9 +61,11 @@ public class EppJobExecutorThread extends Thread implements Deactivable {
 
     protected void executeJob(Job job) throws Exception {
         Lifecycle.beginCall();
-        UserTransaction transaction = Transaction.instance();
-        transaction.begin();
-        JbpmContext jbpmContext = ManagedJbpmContext.instance();
+        TransactionManager transactionManager = ApplicationServerService.instance().getTransactionManager();
+        if (transactionManager.getTransaction() == null) {
+            transactionManager.begin();
+        }
+        JbpmContext jbpmContext = JbpmContextProducer.getJbpmContext();
         try {
             // reattach job to persistence context
             JobSession jobSession = jbpmContext.getJobSession();
@@ -83,14 +86,14 @@ public class EppJobExecutorThread extends Thread implements Deactivable {
                 log.debug("executing " + job);
             if (job.execute(jbpmContext))
                 jobSession.deleteJob(job);
-            transaction.commit();
+            transactionManager.commit();
         } catch (Exception e) {
             jbpmContext.setRollbackOnly();
-            transaction.rollback();
+            transactionManager.rollback();
             throw e;
         } catch (Error e) {
             jbpmContext.setRollbackOnly();
-            transaction.rollback();
+            transactionManager.rollback();
             throw e;
         } finally {
             Lifecycle.endCall();

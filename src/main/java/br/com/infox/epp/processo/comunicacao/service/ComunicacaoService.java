@@ -16,8 +16,6 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.transaction.SystemException;
 
-import org.jboss.seam.bpm.BusinessProcess;
-import org.jboss.seam.bpm.BusinessProcessInterceptor;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.transaction.Transaction;
 import org.jbpm.context.exe.ContextInstance;
@@ -49,7 +47,6 @@ import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.handler.ProcessoHandler;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
@@ -127,8 +124,6 @@ public class ComunicacaoService {
 		if (!modeloComunicacao.getDestinatarios().contains(destinatario)) {
 			modeloComunicacao.getDestinatarios().add(destinatario);
 		}
-		BusinessProcess.instance().resumeProcess(modeloComunicacao.getProcesso().getIdJbpm());
-		
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
