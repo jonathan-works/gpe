@@ -615,6 +615,9 @@ public class AnexarDocumentosView implements Serializable {
 	
 	public List<DocumentoBin> getDocumentoBinsAssinaveis() {
 		List<DocumentoBin> retorno = new ArrayList<>();
+		if(getDocumentosAssinaveis() == null) {
+			return retorno;
+		}
 		for(DocumentoTemporario documentoTemporario : getDocumentosAssinaveis()) {
 			retorno.add(documentoTemporario.getDocumentoBin());
 		}
