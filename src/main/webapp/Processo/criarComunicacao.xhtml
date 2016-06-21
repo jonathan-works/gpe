@@ -8,8 +8,8 @@
     xmlns:rich="http://richfaces.org/rich"
     template="/WEB-INF/xhtml/templates/minimal.xhtml">
 
-	<ui:define name="pageTitle">Criar Comunicação - Processo #{modeloComunicacaoAction.modeloComunicacao.processo.numeroProcessoRoot}</ui:define>
-	<ui:define name="title">Criar Comunicação - Processo #{modeloComunicacaoAction.modeloComunicacao.processo.numeroProcessoRoot}</ui:define>
+	<ui:define name="pageTitle"><h:outputText value="Criar Comunicação - Processo #{modeloComunicacaoAction.modeloComunicacao.processo.numeroProcessoRoot}" /></ui:define>
+	<ui:define name="title"><h:outputText value="Criar Comunicação - Processo #{modeloComunicacaoAction.modeloComunicacao.processo.numeroProcessoRoot}" /></ui:define>
 
 	<ui:define name="body">
 		<ui:include src="/WEB-INF/taskpages/enviarComunicacao.xhtml" />
