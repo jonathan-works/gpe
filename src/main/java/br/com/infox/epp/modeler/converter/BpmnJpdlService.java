@@ -3,6 +3,9 @@ package br.com.infox.epp.modeler.converter;
 import java.io.ByteArrayInputStream;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -109,6 +112,8 @@ public class BpmnJpdlService {
 			translation.getSwimlanes().remove(swimlane.getKey());
 		}
 		for (Transition transition : translation.getTransitionsToRemove()) {
+			removeListeners(transition.getFrom(), transition);
+			// TODO: Remover Task Expiration
 			translation.getJpdlTransitions().remove(transition);
 			transition.getFrom().removeLeavingTransition(transition);
 			transition.getTo().removeArrivingTransition(transition);
@@ -262,4 +267,19 @@ public class BpmnJpdlService {
 			return new InfoxJpdlXmlReader(new StringReader(xml)).readProcessDefinition();
 		}
 	}
+	
+	private void removeListeners(Node node, Transition transition) {
+        Map<String, Event> events = node.getEvents();
+        if (events == null) return;
+        List<Event> removeEvents = new ArrayList<>();
+        for (Event event : events.values()) {
+            if (event.isListener() && event.getConfiguration().contains(transition.getKey())) {
+                removeEvents.add(event);
+            }
+        }
+        for (Event event : removeEvents) {
+            node.removeEvent(event);
+        }
+    }
+
 }

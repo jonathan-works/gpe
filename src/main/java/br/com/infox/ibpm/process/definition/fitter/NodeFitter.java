@@ -1,11 +1,8 @@
 package br.com.infox.ibpm.process.definition.fitter;
 
-import static br.com.infox.core.comparators.Comparators.bySelectItemLabelAsc;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -14,7 +11,6 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -23,8 +19,6 @@ import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
-import org.jbpm.graph.def.ProcessDefinition;
-import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.Decision;
 import org.jbpm.graph.node.EndState;
 import org.jbpm.graph.node.Fork;
@@ -33,20 +27,16 @@ import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 
-import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
-import br.com.infox.epp.fluxo.merger.service.FluxoMergeService;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.manager.StatusProcessoManager;
 import br.com.infox.ibpm.node.InfoxMailNode;
 import br.com.infox.ibpm.node.constants.NodeTypeConstants;
 import br.com.infox.ibpm.node.handler.NodeHandler;
-import br.com.infox.ibpm.node.manager.JbpmNodeManager;
-import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.sinal.DispatcherConfiguration;
 import br.com.infox.ibpm.sinal.Signal;
 import br.com.infox.ibpm.sinal.SignalConfigurationBean;
@@ -64,7 +54,6 @@ public class NodeFitter extends Fitter implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private List<Node> nodes;
-    private List<SelectItem> nodesItems;
     private Map<Node, String> nodeMessageMap = new HashMap<Node, String>();
     private Node currentNode;
     private NodeHandler nodeHandler;
@@ -80,17 +69,9 @@ public class NodeFitter extends Fitter implements Serializable {
     private boolean managedCatchSignal = false;
 
     @Inject
-    private JbpmNodeManager jbpmNodeManager;
-    @Inject
-    private TransitionFitter transitionFitter;
-    @Inject
     private StatusProcessoManager statusProcessoManager;
     @Inject
     private ClassificacaoDocumentoFacade classificacaoDocumentoFacade;
-    @Inject
-    private InfoxMessages infoxMessages;
-    @Inject
-    private FluxoMergeService fluxoMergeService;
     @Inject
     private SignalDao signalDao; 
     
@@ -98,190 +79,21 @@ public class NodeFitter extends Fitter implements Serializable {
     private void init() {
         signals = signalDao.findAll();
     }
-    
-    // #72877
-    public void addNewNode() {
-        /*Class<? extends Node> nodeType = NodeTypes.getNodeType(getNodeType(newNodeType));
-        if (nodeType == null) return;
-        
-        ProcessDefinition processDefinition = getProcessBuilder().getInstance();
-        Node node = null;
-        try {
-            node = nodeType.newInstance();
-        } catch (Exception e) {
-            LOG.error("addNewNode()", e);
-            return;
-        }
-        if (nodeType.equals(InfoxMailNode.class) || nodeType.equals(Node.class)){
-            node.setAsync(true);
-        }
-        node.setName(newNodeName);
-        node.setKey(BpmUtil.generateKey());
-        processDefinition.addNode(node);
-        nodes = processDefinition.getNodes();
-        // Se foi informado newNodeAfter, procura para inserir
-        if (newNodeAfter != null) {
-            int i = nodes.indexOf(newNodeAfter);
-            processDefinition.reorderNode(nodes.indexOf(node), i + 1);
-        } else {
-            // Senão coloca antes do primeiro EndState
-            int i = nodes.size() - 1;
-            do {
-                i--;
-            } while (nodes.get(i) instanceof EndState);
-            processDefinition.reorderNode(nodes.indexOf(node), i + 1);
-        }
-        // insere o novo nó entre os nós da transição selecionada
-        // Se for EndState, liga apenas ao newNodeAfter
-        TransitionHandler newNodeTransition = getProcessBuilder().getTransitionFitter().getNewNodeTransition();
-        if (nodeType.equals(EndState.class)) {
-            Transition transition = new Transition();
-            transition.setFrom(newNodeAfter);
-            node.addArrivingTransition(transition);
-            transition.setName(node.getName());
-            transition.setKey(BpmUtil.generateKey());
-            newNodeAfter.addLeavingTransition(transition);
-        } else if (newNodeTransition != null && newNodeTransition.getTransition() != null) {
-            Transition transition = new Transition();
-            Transition oldT = newNodeTransition.getTransition();
-            transition.setDescription(oldT.getDescription());
-            Node to = newNodeTransition.getTransition().getTo();
-            transition.setName(to.getName());
-            transition.setKey(BpmUtil.generateKey());
-            transition.setProcessDefinition(oldT.getProcessDefinition());
-
-            /*
-             * Não reordenar as linhas de código marcadas pelo bloco abaixo
-             * (ver tarefa #35099) A alteração dos atributos from e name da
-             * transição altera seu hashcode causando erros
-             */
-            // INÍCIO BLOCO //
-            /*node.addLeavingTransition(transition);
-            to.removeArrivingTransition(oldT);
-            newNodeTransition.setName(node.getName());
-            node.addArrivingTransition(oldT);
-            to.addArrivingTransition(transition);
-            // FIM BLOCO //
-        }
-
-        if (nodeType.equals(Fork.class)) {
-            handleForkNode(node);
-        }
-
-        newNodeName = null;
-        newNodeType = null;
-        newNodeAfter = null;
-        nodesItems = null;
-        setCurrentNode(node);
-        if (nodeType.equals(TaskNode.class)) {
-//            getProcessBuilder().getTaskFitter().addTask();
-        } else if (nodeType.equals(StartState.class)) {
-            getProcessBuilder().getTaskFitter().addStartStateTask();
-        }
-        getProcessBuilder().getTransitionFitter().clearNewNodeTransition();
-        getProcessBuilder().getTransitionFitter().clear();
-        getProcessBuilder().getTransitionFitter().checkTransitions();*/
-    }
 
     public List<ModeloDocumento> getModeloDocumentoList() {
         return ((ModeloDocumentoManager) ComponentUtil.getComponent(ModeloDocumentoManager.NAME)).getModeloDocumentoList();
-    }
-
-    // #72877
-    private void handleForkNode(Node fork) {
-        try {
-            Node join = Join.class.newInstance();
-            join.setName(fork.getName() + " (Junção)");
-            ProcessDefinition processo = getProcessBuilder().getInstance();
-            processo.addNode(join);
-            List<Node> nodes = processo.getNodes();
-            processo.reorderNode(nodes.indexOf(join), nodes.indexOf(fork) + 1);
-            
-            Transition t = (Transition) fork.getLeavingTransitions().get(0);
-            fork.removeLeavingTransition(t);
-            join.addLeavingTransition(t);
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    // #72877
-    private void removeTransition(Transition transition) {
-        Node to = transition.getTo();
-        if (to != null) {
-            to.removeArrivingTransition(transition);
-        }
-        Node from = transition.getFrom();
-        if (from != null) {
-            removeListener(from, transition);
-            from.removeLeavingTransition(transition);
-        }
-    }
-    
-    public void removeListener(Node node, Transition transition) {
-        Map<String, Event> events = node.getEvents();
-        if (events == null) return;
-        List<Event> removeEvents = new ArrayList<>();
-        for (Event event : events.values()) {
-            if (event.isListener() && event.getConfiguration().contains(transition.getKey())) {
-                removeEvents.add(event);
-            }
-        }
-        for (Event event : removeEvents) {
-            node.removeEvent(event);
-        }
-    }
-
-    // #72877
-    public void removeNode(Node node) {
-        if (fluxoMergeService.hasActiveNode(ProcessBuilder.instance().getInstance(), node)) {
-            FacesMessages.instance().clear();
-            FacesMessages.instance().add("Esta ação não pode ser executada enquanto o nó possuir atividade em fluxo instanciado");
-            return;
-        }
-        nodes.remove(node);
-        getProcessBuilder().getInstance().removeNode(node);
-        if (node.equals(currentNode)) {
-            currentNode = null;
-        }
-        nodeMessageMap.clear();
-        List<Transition> transitions = node.getLeavingTransitions();
-        Node join = null;
-        if (transitions != null) {
-            if (node.getNodeType().equals(NodeType.Fork)) {
-                for (Transition t : transitions) {
-                    if (t.getTo().getNodeType().equals(NodeType.Join)) {
-                        join = t.getTo();
-                        break;
-                    }
-                }
-            }
-//            removeTransitions(transitions);
-        }
-        Collection<Transition> transitionSet = node.getArrivingTransitions();
-        if (transitionSet != null) {
-//            removeTransitions(transitionSet);
-        }
-        if (join != null) {
-            removeNode(join);
-        }
-
-        this.nodesItems = null;
-        transitionFitter.clear();
     }
 
     public void moveUp(Node node) {
         int i = nodes.indexOf(node);
         getProcessBuilder().getInstance().reorderNode(i, i - 1);
         nodes = null;
-        nodesItems = null;
     }
 
     public void moveDown(Node node) {
         int i = nodes.indexOf(node);
         getProcessBuilder().getInstance().reorderNode(i, i + 1);
         nodes = null;
-        nodesItems = null;
     }
 
     public NodeHandler getNodeHandler() {
@@ -341,25 +153,6 @@ public class NodeFitter extends Fitter implements Serializable {
             }
         }
         return nodeList;
-    }
-
-    public List<SelectItem> getNodesItems() {
-        if (nodesItems == null) {
-            List<Node> list = getProcessBuilder().getInstance().getNodes();
-            if (list != null) {
-                nodesItems = new ArrayList<SelectItem>();
-                for (Node node : list) {
-                    nodesItems.add(new SelectItem(node.toString(), node.getName()));
-                }
-                Collections.sort(nodesItems, bySelectItemLabelAsc());
-                nodesItems.add(0,new SelectItem(null, infoxMessages.get("process.task.select")));
-            }
-        }
-        return nodesItems;
-    }
-
-    public void setNodesItems(List<SelectItem> nodesList) {
-        this.nodesItems = nodesList;
     }
 
     public String getNodeName() {
@@ -476,16 +269,10 @@ public class NodeFitter extends Fitter implements Serializable {
         this.modifiedNodes = modifiedNodes;
     }
 
-    public void modifyNodes() {
-        jbpmNodeManager.atualizarNodesModificados(modifiedNodes);
-        modifiedNodes = new HashMap<Number, String>();
-    }
-
     @Override
     public void clear() {
         currentNode = null;
         nodes = null;
-        nodesItems = null;
     }
 
     public List<StatusProcesso> getStatusProcessoList() {

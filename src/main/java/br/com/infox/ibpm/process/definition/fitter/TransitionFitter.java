@@ -20,25 +20,16 @@ import org.jbpm.graph.node.EndState;
 import org.jbpm.graph.node.StartState;
 
 import br.com.infox.core.messages.InfoxMessages;
-import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.processo.timer.TaskExpiration;
-import br.com.infox.epp.processo.timer.manager.TaskExpirationManager;
 import br.com.infox.ibpm.transition.TransitionHandler;
 import br.com.infox.ibpm.util.BpmUtil;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 @Named
 @ViewScoped
 public class TransitionFitter extends Fitter implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private static final LogProvider LOG = Logging.getLogProvider(TransitionFitter.class);
 
-    @Inject
-    private TaskExpirationManager taskExpirationManager;
     @Inject
     private InfoxMessages infoxMessages;
 
@@ -89,22 +80,6 @@ public class TransitionFitter extends Fitter implements Serializable {
             }
             leavingTransitions.add(new TransitionHandler(t));
         }
-        checkTransitions();
-    }
-
-    public void removeTransition(TransitionHandler th, String type) {
-        Node currentNode = getProcessBuilder().getNodeFitter().getCurrentNode();
-        Transition transition = th.getTransition();
-        if ("from".equals(type) && transition.getFrom() != null) {
-            transition.getFrom().removeLeavingTransition(transition);
-        } else if ("to".equals(type) && transition.getTo() != null) {
-            transition.getTo().removeArrivingTransition(transition);
-        }
-        clearArrivingAndLeavingTransitions();
-        currentNode.removeArrivingTransition(transition);
-        currentNode.removeLeavingTransition(transition);
-        removeTaskExpiration(currentNode.getName(), th.getName());
-        getProcessBuilder().getNodeFitter().removeListener(currentNode, transition);
         checkTransitions();
     }
 
@@ -223,17 +198,4 @@ public class TransitionFitter extends Fitter implements Serializable {
         arrivingTransitions = null;
         leavingTransitions = null;
     }
-    
-    private void removeTaskExpiration(String taskName, String transition) {
-        Fluxo fluxo = getProcessBuilder().getFluxo();
-        try {
-            TaskExpiration te = taskExpirationManager.getByFluxoAndTaskName(fluxo, taskName);
-            if (te != null && te.getTransition().equals(transition)) {
-                taskExpirationManager.remove(te);
-            }
-        } catch (DAOException e) {
-            LOG.error("transitionFitter.removeTaskExpiration()", e);
-        }
-    }
-    
 }

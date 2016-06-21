@@ -15,7 +15,6 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.modeler.converter.BpmnJpdlService;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
-import br.com.infox.ibpm.process.definition.fitter.NodeFitter;
 
 @Named
 @ViewScoped

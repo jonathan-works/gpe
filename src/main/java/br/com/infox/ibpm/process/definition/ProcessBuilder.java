@@ -225,6 +225,8 @@ public class ProcessBuilder implements Serializable {
         	this.fluxo.setBpmn(new JpdlBpmnConverter().convert(this.fluxo.getXml()));
         	this.fluxo = fluxoManager.update(this.fluxo); // TODO melhorar isso #72877
         }
+        nodeFitter.clear();
+        transitionFitter.clear();
     }
 
     private ProcessDefinition parseInstance(String newXml) {
@@ -392,7 +394,6 @@ public class ProcessBuilder implements Serializable {
                 // verifica a consistencia do fluxo para evitar salva-lo com
                 // erros.
                 parseInstance(xmlDef);
-                modifyNodesAndTasks();
                 fluxo.setXml(xmlDef);
                 try {
                     genericManager.update(fluxo);
@@ -417,11 +418,6 @@ public class ProcessBuilder implements Serializable {
 
         this.id = cdFluxo;
         this.exists = true;
-    }
-
-    private void modifyNodesAndTasks() {
-        nodeFitter.modifyNodes();
-        taskFitter.modifyTasks();
     }
 
     public boolean deploy() {
@@ -663,14 +659,6 @@ public class ProcessBuilder implements Serializable {
     public void setFluxo(Fluxo fluxo) {
 		this.fluxo = fluxo;
 	}
-
-	public void getPaintedGraph() {
-//        try {
-//            getProcessBuilderGraph().paintGraph();
-//        } catch (IOException e) {
-//            throw new AbortProcessingException(e);
-//        }
-    }
 
     public ProcessBuilderGraph getProcessBuilderGraph() {
         return processBuilderGraph;
