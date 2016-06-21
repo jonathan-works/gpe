@@ -212,6 +212,7 @@
     <mapping resource="org/jbpm/taskmgmt/log/SwimlaneLog.hbm.xml"/>
     <mapping resource="org/jbpm/taskmgmt/log/SwimlaneCreateLog.hbm.xml"/>
     <mapping resource="org/jbpm/taskmgmt/log/SwimlaneAssignLog.hbm.xml"/>
+    <mapping resource="org/jbpm/taskmgmt/log/TaskAssigneeLog.hbm.xml"/>
 
     <!-- ################## -->
     <!-- # cache settings # -->
