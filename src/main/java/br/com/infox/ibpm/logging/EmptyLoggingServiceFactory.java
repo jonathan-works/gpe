@@ -3,7 +3,7 @@ package br.com.infox.ibpm.logging;
 import org.jbpm.svc.Service;
 import org.jbpm.svc.ServiceFactory;
 
-public class LoggingServiceFactory implements ServiceFactory {
+public class EmptyLoggingServiceFactory implements ServiceFactory {
 
     private static final long serialVersionUID = 1L;
 
@@ -11,7 +11,7 @@ public class LoggingServiceFactory implements ServiceFactory {
     }
 
     public Service openService() {
-        return new LoggingServiceImpl();
+        return new EmptyLoggingService();
     }
 
 }
