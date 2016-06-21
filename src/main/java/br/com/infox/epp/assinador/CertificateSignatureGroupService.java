@@ -1,6 +1,7 @@
 package br.com.infox.epp.assinador;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -87,7 +88,24 @@ public class CertificateSignatureGroupService implements Serializable {
 		return isTokenExpired(findByToken(token));
 	}
 	
-	public CertificateSignatureGroup findByToken(String token) {
+	public CertificateSignatureGroupStatus getStatus(String token) {
+		CertificateSignatureGroup certificateSignatureGroup = findByToken(token);
+		return certificateSignatureGroup.getStatus();
+	}
+	
+	/**
+	 * Retorna uma lista contendo os UUIDs dos documentos desse grupo 
+	 */
+	public List<UUID> getDocumentos(String token) {
+		CertificateSignatureGroup group = findByToken(token);
+		List<UUID> retorno = new ArrayList<>();
+		for(CertificateSignature certificateSignature : group.getCertificateSignatureList()) {
+			retorno.add(UUID.fromString(certificateSignature.getUuid()));			
+		}
+		return retorno;
+	}
+	
+	private CertificateSignatureGroup findByToken(String token) {
 		CertificateSignatureGroup group = certificateSignatureGroupSearch.findByToken(token);
 
 		if (group.getStatus() == CertificateSignatureGroupStatus.W && isTokenExpired(group)) {

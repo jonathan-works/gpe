@@ -463,67 +463,6 @@ public class AnexarDocumentosView implements Serializable {
 		}
 	}
 
-	public void signDocuments() {
-		try {
-			CertificateSignatureBundleBean bundle = getSignatureBundle();
-
-			UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
-			for (CertificateSignatureBean bean : bundle.getSignatureBeanList()) {
-				DocumentoBin docBin = getDocumentoTemporarioByUuid(bean.getDocumentUuid());
-				if (docBin != null) {
-					if (!isAssinadoPor(docBin, usuarioPerfil)) {
-						assinaturaDocumentoService.assinarDocumento(docBin, usuarioPerfil, bean.getCertChain(),
-								bean.getSignature(), TipoAssinatura.MD5_ASSINADO);
-					}
-				} else {
-					throw new ApplicationException("Documento não localizado!");
-				}
-			}
-			setDocumentoTemporarioList(loadDocumentoTemporarioList());
-			FacesMessages.instance().add(InfoxMessages.getInstance().get("anexarDocumentos.sucessoAssinatura"));
-			setDocumentosAssinaveis(new ArrayList<DocumentoTemporario>());
-		}catch(AssinaturaException | CertificadoException e){
-			LOG.error("Erro signDocuments ", e);
-			FacesMessages.instance().add(Severity.ERROR,e.getMessage());
-		}catch (Exception e) {
-			LOG.error("Erro signDocuments ", e);
-			FacesMessages.instance().add(Severity.ERROR,
-					InfoxMessages.getInstance().get("anexarDocumentos.erroAssinarDocumentos"));
-		}
-	}
-
-	private boolean isAssinadoPor(DocumentoBin docBin, UsuarioPerfil usuarioPerfil) {
-		List<AssinaturaDocumento> assinaturas = docBin.getAssinaturas();
-		if (assinaturas != null) {
-			for (AssinaturaDocumento assinatura : assinaturas) {
-				if (usuarioPerfil.equals(assinatura.getUsuarioPerfil())) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	private DocumentoBin getDocumentoTemporarioByUuid(String uuid) {
-		for (DocumentoTemporario documentoTemporario : documentosAssinaveis) {
-			UUID wrapperUuid = documentoTemporario.getDocumentoBin().getUuid();
-			if (uuid.equals(wrapperUuid.toString()))
-				return documentoBinManager.getByUUID(wrapperUuid);
-		}
-		return null;
-	}
-
-	private CertificateSignatureBundleBean getSignatureBundle() throws CertificadoException {
-		CertificateSignatureBundleBean bundle = certificateSignatures.get(tokenAssinatura);
-		if (bundle == null) {
-			throw new CertificadoException(infoxMessages.get("assinatura.error.hashExpired"));
-		} else if (CertificateSignatureBundleStatus.ERROR.equals(bundle.getStatus())
-				|| CertificateSignatureBundleStatus.UNKNOWN.equals(bundle.getStatus())) {
-			throw new CertificadoException("Erro de Certificado " + bundle);
-		}
-		return bundle;
-	}
-
 	public void selectSignableDocuments() {
 		documentosAssinaveis = new ArrayList<DocumentoTemporario>();
 		documentosNaoAssinaveis = new ArrayList<DocumentoTemporario>();

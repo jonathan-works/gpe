@@ -47,13 +47,13 @@ public class AssinadorController implements Serializable {
 	}
 	
 	public boolean isFinalizado() {
-		CertificateSignatureGroup certificateSignatureGroup = certificateSignatureGroupService.findByToken(token);
-		return certificateSignatureGroup.getStatus() != CertificateSignatureGroupStatus.W;
+		CertificateSignatureGroupStatus status = certificateSignatureGroupService.getStatus(token);
+		return status != CertificateSignatureGroupStatus.W;
 	}
 	
 	public boolean isSucesso() {
-		CertificateSignatureGroup certificateSignatureGroup = certificateSignatureGroupService.findByToken(token);
-		return certificateSignatureGroup.getStatus() == CertificateSignatureGroupStatus.S;
+		CertificateSignatureGroupStatus status = certificateSignatureGroupService.getStatus(token);
+		return status == CertificateSignatureGroupStatus.S;
 	}
 	
 }

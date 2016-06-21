@@ -11,13 +11,12 @@ import javax.persistence.NoResultException;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.assinador.AssinadorService;
-import br.com.infox.epp.assinador.CertificateSignatureGroupService;
 import br.com.infox.epp.assinador.CertificateSignatureService;
 import br.com.infox.epp.assinador.DadosAssinaturaLegada;
+import br.com.infox.epp.assinador.CertificateSignatureGroupService;
 import br.com.infox.epp.assinador.api.Assinatura;
 import br.com.infox.epp.assinador.api.Documento;
 import br.com.infox.epp.certificado.entity.CertificateSignature;
-import br.com.infox.epp.certificado.entity.CertificateSignatureGroup;
 import br.com.infox.epp.certificado.entity.TipoAssinatura;
 
 @Stateless
@@ -34,20 +33,14 @@ public class DocumentoRestService {
 		return EntityManagerProducer.getEntityManager();
 	}
 	
-	private List<Documento> toDocumentoList(List<CertificateSignature> signatures) {
+	public List<Documento> listarDocumentos(String token) {
+		List<UUID> documentos = groupService.getDocumentos(token);
 		List<Documento> retorno = new ArrayList<>();
-		for(CertificateSignature signature : signatures) {
-			Documento documento = new Documento(UUID.fromString(signature.getUuid()));
+		for(UUID uuid : documentos) {
+			Documento documento = new Documento(uuid);
 			retorno.add(documento);
 		}
-		return retorno;		
-	}
-	
-	public List<Documento> listarDocumentos(String token) {
-		CertificateSignatureGroup group = groupService.findByToken(token);
-		List<CertificateSignature> signatures = group.getCertificateSignatureList();
-		return toDocumentoList(signatures);
-		
+		return retorno;
 	}
 	
 	private CertificateSignature updateCertificateSignature(String tokenGrupo, UUID uuid, byte[] signature) {
