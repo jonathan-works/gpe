@@ -28,7 +28,6 @@ import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.BusinessProcess;
-import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
@@ -313,11 +312,6 @@ public class TaskInstanceHome implements Serializable {
 		// motivo dá um NullPointerException
 		// ao finalizar a tarefa, algo relacionado às mensagens do Seam
 		taskInstanceManager.flush();
-		// Adicionada chamada direta ao save do JbpmContext para forçar o log
-		// do motor antes da chamada padrão, que ocorre no @Destroy
-		// isso evita que o log tente ser processado em momento sem transação
-		org.jbpm.graph.exe.ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(getCurrentTaskInstance().getProcessInstance().getId());
-		ManagedJbpmContext.instance().save(processInstance);
 	}
 
 	private boolean possuiTask() {
