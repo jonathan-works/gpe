@@ -180,7 +180,7 @@ public class LogErrorService extends PersistenceController {
         LogErro logErro = new LogErro();
         logErro.setCodigo(codigo);
         logErro.setData(DateTime.now().toDate());
-        logErro.setInstancia(applicationServerService.getInstanceName());
+        logErro.setInstancia(applicationServerService.getInstanceName() == null ? Thread.currentThread().getName() : applicationServerService.getInstanceName());
         logErro.setStatus(enviarLog ? StatusLog.PENDENTE : StatusLog.NENVIADO);
         logErro.setStacktrace(getStacktrace(handledException));
         saveLog(logErro);
