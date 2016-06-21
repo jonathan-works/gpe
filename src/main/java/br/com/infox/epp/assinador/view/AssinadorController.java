@@ -6,11 +6,11 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import br.com.infox.epp.assinador.AssinadorGroupService;
+import br.com.infox.epp.assinador.AssinadorGroupService.StatusToken;
 import br.com.infox.epp.assinador.AssinadorService;
-import br.com.infox.epp.assinador.CertificateSignatureGroupService;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.certificado.entity.CertificateSignatureGroup;
-import br.com.infox.epp.certificado.enums.CertificateSignatureGroupStatus;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 
 @Named
@@ -22,7 +22,7 @@ public class AssinadorController implements Serializable {
 	@Inject
 	private AssinadorService assinadorService;
 	@Inject
-	private CertificateSignatureGroupService certificateSignatureGroupService;
+	private AssinadorGroupService groupService;
 	
 	private String token;
 	
@@ -47,13 +47,13 @@ public class AssinadorController implements Serializable {
 	}
 	
 	public boolean isFinalizado() {
-		CertificateSignatureGroupStatus status = certificateSignatureGroupService.getStatus(token);
-		return status != CertificateSignatureGroupStatus.W;
+		StatusToken status = groupService.getStatus(token);
+		return status != StatusToken.AGUARDANDO_ASSINATURA;
 	}
 	
 	public boolean isSucesso() {
-		CertificateSignatureGroupStatus status = certificateSignatureGroupService.getStatus(token);
-		return status == CertificateSignatureGroupStatus.S;
+		StatusToken status = groupService.getStatus(token);
+		return status == StatusToken.SUCESSO;
 	}
 	
 }

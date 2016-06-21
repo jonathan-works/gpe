@@ -2,7 +2,7 @@ package br.com.infox.epp.assinador.rest;
 
 import javax.inject.Inject;
 
-import br.com.infox.epp.assinador.CertificateSignatureGroupService;
+import br.com.infox.epp.assinador.AssinadorGroupService;
 import br.com.infox.epp.assinador.api.AssinaturaRest;
 import br.com.infox.epp.assinador.api.DocumentoRest;
 import br.com.infox.epp.assinador.api.TokenAssinaturaResource;
@@ -13,7 +13,7 @@ public class TokenAssinaturaResourceImpl implements TokenAssinaturaResource {
 
 	private String token;
 	@Inject
-	private CertificateSignatureGroupService groupService;
+	private AssinadorGroupService groupService;
 	
 	
 	public void setToken(String token) {

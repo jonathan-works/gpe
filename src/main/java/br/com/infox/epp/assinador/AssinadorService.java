@@ -32,7 +32,7 @@ public class AssinadorService implements Serializable {
 	public static final String NOME_CACHE_DOCUMENTOS="AssinadorService.listaDocumentos";
 	
 	@Inject
-	private CertificateSignatureGroupService certificateSignatureGroupService;
+	private AssinadorGroupService groupService;
 	@Inject
 	private CMSAdapter cmsAdapter;
 	@Inject
@@ -49,7 +49,7 @@ public class AssinadorService implements Serializable {
 	private AssinaturaDocumentoService assinaturaDocumentoService;
 
 	public CertificateSignatureGroup criarListaDocumentos(List<DocumentoBin> listaDocumentos) {
-		return certificateSignatureGroupService.createNewGroup(listaDocumentos);
+		return groupService.createNewGroup(listaDocumentos);
 	}
 	
 	public DadosAssinaturaLegada getDadosAssinaturaLegada(byte[] signature) {

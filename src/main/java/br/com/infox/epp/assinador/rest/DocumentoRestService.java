@@ -10,10 +10,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.epp.assinador.AssinadorGroupService;
 import br.com.infox.epp.assinador.AssinadorService;
 import br.com.infox.epp.assinador.CertificateSignatureService;
 import br.com.infox.epp.assinador.DadosAssinaturaLegada;
-import br.com.infox.epp.assinador.CertificateSignatureGroupService;
 import br.com.infox.epp.assinador.api.Assinatura;
 import br.com.infox.epp.assinador.api.Documento;
 import br.com.infox.epp.certificado.entity.CertificateSignature;
@@ -23,7 +23,7 @@ import br.com.infox.epp.certificado.entity.TipoAssinatura;
 public class DocumentoRestService {
 	
 	@Inject
-	private CertificateSignatureGroupService groupService;
+	private AssinadorGroupService groupService;
 	@Inject
 	private CertificateSignatureService certificateSignatureService;
 	@Inject

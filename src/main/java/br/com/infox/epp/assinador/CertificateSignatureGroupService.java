@@ -19,7 +19,7 @@ import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.util.time.DateRange;
 
 @Stateless
-public class CertificateSignatureGroupService implements Serializable {
+public class CertificateSignatureGroupService implements AssinadorGroupService, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -57,10 +57,10 @@ public class CertificateSignatureGroupService implements Serializable {
 
 	public void validarToken(String token) {
 		CertificateSignatureGroup group = findByToken(token);
-		if(group == null) {
+		if (group == null) {
 			throw new ValidationException("Token inválido");
 		}
-		
+
 		CertificateSignatureGroupStatus status = group.getStatus();
 
 		// Status válido
@@ -87,24 +87,35 @@ public class CertificateSignatureGroupService implements Serializable {
 	public boolean isTokenExpired(String token) {
 		return isTokenExpired(findByToken(token));
 	}
-	
-	public CertificateSignatureGroupStatus getStatus(String token) {
+
+	public StatusToken getStatus(String token) {
 		CertificateSignatureGroup certificateSignatureGroup = findByToken(token);
-		return certificateSignatureGroup.getStatus();
+		switch (certificateSignatureGroup.getStatus()) {
+		case X:
+			return StatusToken.EXPIRADO;
+		case S:
+			return StatusToken.SUCESSO;
+		case E:
+			return StatusToken.ERRO;
+		case W:
+			return StatusToken.AGUARDANDO_ASSINATURA;
+		default:
+			return StatusToken.DESCONHECIDO;
+		}
 	}
-	
+
 	/**
-	 * Retorna uma lista contendo os UUIDs dos documentos desse grupo 
+	 * Retorna uma lista contendo os UUIDs dos documentos desse grupo
 	 */
 	public List<UUID> getDocumentos(String token) {
 		CertificateSignatureGroup group = findByToken(token);
 		List<UUID> retorno = new ArrayList<>();
-		for(CertificateSignature certificateSignature : group.getCertificateSignatureList()) {
-			retorno.add(UUID.fromString(certificateSignature.getUuid()));			
+		for (CertificateSignature certificateSignature : group.getCertificateSignatureList()) {
+			retorno.add(UUID.fromString(certificateSignature.getUuid()));
 		}
 		return retorno;
 	}
-	
+
 	private CertificateSignatureGroup findByToken(String token) {
 		CertificateSignatureGroup group = certificateSignatureGroupSearch.findByToken(token);
 
@@ -120,16 +131,16 @@ public class CertificateSignatureGroupService implements Serializable {
 		certificateSignatureGroup.setStatus(status);
 
 		getEntityManager().persist(certificateSignatureGroup);
-		getEntityManager().flush();		
+		getEntityManager().flush();
 	}
-	
+
 	public void apagarGrupo(String token) {
 		CertificateSignatureGroup certificateSignatureGroup = findByToken(token);
-		
-		for(CertificateSignature certificateSignature : certificateSignatureGroup.getCertificateSignatureList()) {
-			getEntityManager().remove(certificateSignature);			
+
+		for (CertificateSignature certificateSignature : certificateSignatureGroup.getCertificateSignatureList()) {
+			getEntityManager().remove(certificateSignature);
 		}
-		
+
 		getEntityManager().remove(certificateSignatureGroup);
 		getEntityManager().flush();
 	}
@@ -137,16 +148,17 @@ public class CertificateSignatureGroupService implements Serializable {
 	public void cancelar(String token) {
 		erroProcessamento(token, "Operação cancelada pelo assinador");
 	}
-	
+
 	public void erroProcessamento(String token, String mensagem) {
 		setStatus(token, CertificateSignatureGroupStatus.E);
-		//Grupo não deve ser apagado nesse momento para manter compatibilidade com código antigo
-		//apagarGrupo(token);
+		// Grupo não deve ser apagado nesse momento para manter compatibilidade
+		// com código antigo
+		// apagarGrupo(token);
 	}
-	
+
 	public void processamentoFinalizado(String token) {
 		setStatus(token, CertificateSignatureGroupStatus.S);
-		//apagarGrupo(token);
+		// apagarGrupo(token);
 	}
 
 }
