@@ -18,25 +18,24 @@ public final class JbpmContextProducer {
      */
     public static JbpmContext getJbpmContext() {
         JbpmContext jbpmContext = JbpmConfiguration.getInstance().getCurrentJbpmContext();
-        return jbpmContext == null ? createJbpmContext(true) : jbpmContext;
+        return jbpmContext == null ? createJbpmContextTransactional() : jbpmContext;
     }
     
     /* 
      * Returns JbpmContext created. Remember to close on final execution.
      */
     public static JbpmContext getJbpmContextNotManaged() {
-        return createJbpmContext(false);
+        return createNewJbpmContext();
     }
     
-    private static JbpmContext createJbpmContext(boolean managed) {
-        JbpmContext jbpmContext = JbpmConfiguration.getInstance().getCurrentJbpmContext();
-        if (jbpmContext == null || jbpmContext.isClosed()) {
-            jbpmContext = JbpmConfiguration.getInstance().createJbpmContext();
-            if (managed) {
-                registerSynchronization(jbpmContext);
-            }
-        }
+    public static JbpmContext createJbpmContextTransactional() {
+        JbpmContext jbpmContext = JbpmConfiguration.getInstance().createJbpmContext();
+        registerSynchronization(jbpmContext);
         return jbpmContext;
+    }
+    
+    public static JbpmContext createNewJbpmContext() {
+        return JbpmConfiguration.getInstance().createJbpmContext();
     }
     
     private static void registerSynchronization(JbpmContext jbpmContext) {
@@ -61,7 +60,7 @@ public final class JbpmContextProducer {
 
         @Override
         public void beforeCompletion() {
-            jbpmContext.getSession().flush();        
+            jbpmContext.getSession().flush();     
         }
 
         @Override

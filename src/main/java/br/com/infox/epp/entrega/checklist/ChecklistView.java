@@ -96,7 +96,7 @@ public class ChecklistView implements Serializable {
         } else {
             Pasta pasta = pastaManager.getPastaByNome((String) nomePasta, processo);
             if (pasta == null) {
-                message = "Não foi possível encontrar uma pasta com o nomne " + nomePasta + " neste processo.";
+                message = "Não foi possível encontrar uma pasta com o nome " + nomePasta + " neste processo.";
             }
             return pasta;
         }

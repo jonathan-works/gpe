@@ -466,6 +466,7 @@ public class EnvioComunicacaoController implements Serializable {
 	}
 	
 	public boolean isUsuarioLogadoNaLocalizacaoPerfilResponsavel() {
+		modeloComunicacaoManager.refresh(modeloComunicacao);
 		boolean usuarioLogadoNaLocalizacaoResponsavel = Authenticator.getLocalizacaoAtual().equals(modeloComunicacao.getLocalizacaoResponsavelAssinatura());
 		PerfilTemplate perfilUsuarioLogado = Authenticator.getUsuarioPerfilAtual().getPerfilTemplate();
 		PerfilTemplate perfilResponsavelAssinatura = modeloComunicacao.getPerfilResponsavelAssinatura();
