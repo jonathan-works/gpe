@@ -23,6 +23,7 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSOS_FILHO_BY_T
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSOS_FILHO_NOT_ENDED_BY_TIPO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_BY_NUMERO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_EPA_BY_ID_JBPM;
+import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_JBPM_LOG;
 import static br.com.infox.epp.processo.query.ProcessoQuery.REMOVER_PROCESSO_JBMP;
 import static br.com.infox.epp.processo.query.ProcessoQuery.TEMPO_GASTO_PROCESSO_EPP_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.TEMPO_MEDIO_PROCESSO_BY_FLUXO_AND_SITUACAO;
@@ -99,6 +100,12 @@ public class ProcessoDAO extends DAO<Processo> {
 		params.put(PARAM_ID_TASKMGMINSTANCE, idTaskMgmInstance);
 		params.put(PARAM_ID_TOKEN, idToken);
 		executeNamedQueryUpdate(REMOVER_PROCESSO_JBMP, params);
+	}
+
+	public void removeLogJbpm(Long idToken) {
+		Map<String, Object> params = new HashMap<>(1);
+		params.put(PARAM_ID_TOKEN, idToken);
+		executeNamedQueryUpdate(REMOVER_JBPM_LOG, params);
 	}
 
 	public Object[] getIdTaskMgmInstanceAndIdTokenByidJbpm(Long idJbpm) {
