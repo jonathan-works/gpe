@@ -11,7 +11,9 @@ import org.jbpm.graph.action.Script;
 import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.GraphElement;
+import org.jbpm.scheduler.def.CancelTimerAction;
 
+import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.ibpm.node.handler.NodeHandler;
 import br.com.infox.jbpm.action.ActionTemplateHandler;
 
@@ -127,6 +129,9 @@ public class EventHandler implements Serializable {
     public void removeAction(Action a) {
         event.removeAction(a);
         actionList = null;
+        if (a.getProcessDefinition() != null) {
+        	a.getProcessDefinition().removeAction(a);
+        }
     }
 
     public List<Action> getActions() {
@@ -135,9 +140,9 @@ public class EventHandler implements Serializable {
             if (actionList != null) {
                 for (Iterator<Action> it = actionList.iterator(); it.hasNext();) {
                     Action action = it.next();
-                    if (NodeHandler.GENERATE_DOCUMENTO_ACTION_NAME.equals(action.getName())) {
+                    if (NodeHandler.GENERATE_DOCUMENTO_ACTION_NAME.equals(action.getName()) || action instanceof CancelTimerAction || 
+                    		StatusProcesso.STATUS_PROCESSO_ACTION_NAME.equals(action.getName())) {
                         it.remove();
-                        break;
                     }
                 }
             }

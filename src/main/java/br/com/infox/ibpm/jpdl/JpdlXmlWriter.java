@@ -358,6 +358,9 @@ public class JpdlXmlWriter {
             if (!StringUtil.isEmpty(va.getLabel())) {
             	addAttribute(ve, "label", va.getLabel());
             }
+            if (!StringUtil.isEmpty(va.getConfiguration())) {
+            	addAttribute(ve, "configuration", va.getConfiguration());
+            }
         }
     }
 
@@ -520,6 +523,9 @@ public class JpdlXmlWriter {
         boolean valid = false;
         if (writeTimer(parentElement, action)) {
             return false;
+        }
+        if (action instanceof CancelTimerAction) {
+        	return false;
         }
         
         String actionName = ActionTypes.getActionName(action.getClass());

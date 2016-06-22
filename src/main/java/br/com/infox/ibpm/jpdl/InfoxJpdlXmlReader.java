@@ -49,7 +49,7 @@ public class InfoxJpdlXmlReader extends JpdlXmlReader {
     		StringBuilder sb = new StringBuilder(e.getMessage());
     		for (Object o : e.getProblems()) {
     			sb.append("\n");
-    			sb.append(((Problem) o).getDescription());
+    			sb.append(((Problem) o).getDescription() + " (severidade: " + ((Problem) o).getLevel() + ")");
     		}
     		ReflectionsUtil.setValue(e, "detailMessage", sb.toString());
     		throw e;

@@ -1,7 +1,5 @@
 package br.com.infox.ibpm.task.handler;
 
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -64,49 +62,53 @@ public class TaskHandlerVisitor {
             if (NodeType.Task.equals(type)) {
                 TaskNode tn = (TaskNode) from;
                 addTaskNodeVariables(tn);
+            }else if (NodeType.StartState.equals(type)) {
+            	addTaskVariables(false, from.getProcessDefinition().getTaskMgmtDefinition().getStartTask());
             }
-            // TODO: Esse equals funciona?
-            if (!type.equals(NodeType.StartState)) {
+            
+            if (!NodeType.StartState.equals(type)) {
                 addVariables(from.getArrivingTransitions());
             }
         }
     }
 
-    @SuppressWarnings(UNCHECKED)
     private void addTaskNodeVariables(TaskNode tn) {
         boolean filtered = types != null && !types.isEmpty();
-        for (Object o : tn.getTasks()) {
-            Task tsk = (Task) o;
-            TaskController tc = tsk.getTaskController();
-            if (tc != null) {
-                List<VariableAccess> accesses = tc.getVariableAccesses();
-                for (VariableAccess v : accesses) {
-                    String mappedName = v.getMappedName();
-                    if (v.isWritable() && !mappedName.startsWith(VariableType.PAGE.name() + ":") 
-                            && ((isMapped && !mappedName.startsWith(VariableType.NULL.name() + ":")) || !isMapped)) {
-                        String name;
-                        if (isMapped) {
-                            name = mappedName;
-                        } else {
-                            name = v.getVariableName();
-                        }
-                        if (name != null && !"".equals(name)
-                                && !variableList.contains(name)) {
-                            if (filtered) {
-                                if (types.contains(mappedName.split(":")[0])) {
-                                    variableList.add(name);
-                                }
-                            } else {
-                                variableList.add(name);
-                            }
-                        }
-                    }
-                }
-            }
-            if (!visitedTasks.contains(tsk)) {
-                visit(tsk);
-            }
+        for (Task tsk : tn.getTasks()) {
+            addTaskVariables(filtered, tsk);
         }
     }
+
+	private void addTaskVariables(boolean filtered, Task tsk) {
+		TaskController tc = tsk.getTaskController();
+		if (tc != null) {
+		    List<VariableAccess> accesses = tc.getVariableAccesses();
+		    for (VariableAccess v : accesses) {
+		        String mappedName = v.getMappedName();
+		        if (v.isWritable() && !mappedName.startsWith(VariableType.PAGE.name() + ":") 
+		                && ((isMapped && !mappedName.startsWith(VariableType.NULL.name() + ":")) || !isMapped)) {
+		            String name;
+		            if (isMapped) {
+		                name = mappedName;
+		            } else {
+		                name = v.getVariableName();
+		            }
+		            if (name != null && !"".equals(name)
+		                    && !variableList.contains(name)) {
+		                if (filtered) {
+		                    if (types.contains(mappedName.split(":")[0])) {
+		                        variableList.add(name);
+		                    }
+		                } else {
+		                    variableList.add(name);
+		                }
+		            }
+		        }
+		    }
+		}
+		if (!visitedTasks.contains(tsk)) {
+		    visit(tsk);
+		}
+	}
 
 }

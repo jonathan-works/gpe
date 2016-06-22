@@ -565,6 +565,9 @@ public class NodeHandler implements Serializable {
                 event = this.node.getEvent(Event.EVENTTYPE_NODE_ENTER);
                 if (statusProcesso == null) {
                     event.removeAction(action);
+                    if (action.getProcessDefinition() != null) {
+                    	action.getProcessDefinition().removeAction(action);
+                    }
                 } else {
                     actionDelegation.setConfigType("constructor");
                     actionDelegation.setConfiguration(MessageFormat.format(
@@ -596,6 +599,9 @@ public class NodeHandler implements Serializable {
                 event = this.node.getEvent(Event.EVENTTYPE_NODE_LEAVE);
                 if (modeloDocumento == null) {
                     event.removeAction(action);
+                    if (action.getProcessDefinition() != null) {
+                    	action.getProcessDefinition().removeAction(action);
+                    }
                 } else {
                     actionDelegation.setConfigType("constructor");
                     GenerateDocumentoConfiguration configuration = new GenerateDocumentoConfiguration();
@@ -626,12 +632,14 @@ public class NodeHandler implements Serializable {
     private Action retrieveStatusProcessoEvent(Event event) {
         List<?> actions = event.getActions();
         Action result = null;
-        for (Object object : actions) {
-            Action action = (Action) object;
-            if (STATUS_PROCESSO_ACTION_NAME.equals(action.getName())) {
-                result = action;
-                break;
-            }
+        if (actions != null) {
+	        for (Object object : actions) {
+	            Action action = (Action) object;
+	            if (STATUS_PROCESSO_ACTION_NAME.equals(action.getName())) {
+	                result = action;
+	                break;
+	            }
+	        }
         }
         return result;
     }
@@ -691,8 +699,12 @@ public class NodeHandler implements Serializable {
     }
     
     public boolean canRemoveEvent(EventHandler eventHandler) {
-    	if (eventHandler != null && eventHandler.getEvent().getEventType().equals(Event.EVENTTYPE_NODE_LEAVE)) {
-    		return retrieveGenerateDocumentoEvent(eventHandler.getEvent()) == null;
+    	if (eventHandler != null) {
+    		if (eventHandler.getEvent().getEventType().equals(Event.EVENTTYPE_NODE_LEAVE)) {
+    			return retrieveGenerateDocumentoEvent(eventHandler.getEvent()) == null;
+    		} else if (eventHandler.getEvent().getEventType().equals(Event.EVENTTYPE_NODE_ENTER)) {
+    			return retrieveStatusProcessoEvent(eventHandler.getEvent()) == null;
+    		}
     	}
     	return true;
     }

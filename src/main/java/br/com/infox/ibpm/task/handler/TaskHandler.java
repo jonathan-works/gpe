@@ -18,7 +18,6 @@ import br.com.infox.epp.documento.list.associative.AssociativeModeloDocumentoLis
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.variable.VariableAccessHandler;
-import br.com.infox.jbpm.action.ActionTemplateHandler;
 import br.com.infox.seam.util.ComponentUtil;
 
 public class TaskHandler implements Serializable {
@@ -99,15 +98,6 @@ public class TaskHandler implements Serializable {
         currentVariable = var;
         AssociativeModeloDocumentoList associativeModeloDocumentoList = ComponentUtil.getComponent(AssociativeModeloDocumentoList.NAME);
         associativeModeloDocumentoList.refreshModelosAssociados();
-        StringBuilder sb = new StringBuilder();
-        sb.append("#{modeloDocumento.set('").append(currentVariable.getName()).append("'");
-        if (currentVariable.getModeloList() != null) {
-            for (Integer i : currentVariable.getModeloList()) {
-                sb.append(",").append(i);
-            }
-        }
-        sb.append(")}");
-        ActionTemplateHandler.instance().setCurrentActionTemplate(sb.toString());
     }
 
     public VariableAccessHandler getCurrentVariable() {
@@ -220,7 +210,7 @@ public class TaskHandler implements Serializable {
 
     public void processVarTypeChange(VariableAccessHandler var) {
         clearHasTaskPage();
-        var.limparModelos();
+        var.limparConfiguracoes();
         var.setValue(null);
         if (!var.podeIniciarVazia()) {
         	var.setIniciaVazia(false);

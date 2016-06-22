@@ -33,8 +33,8 @@ public class AssociativeModeloDocumentoList extends AbstractPageableList<ModeloD
         return taskFitter == null
                 || taskFitter.getCurrentTask() == null
                 || taskFitter.getCurrentTask().getCurrentVariable() == null
-                || taskFitter.getCurrentTask().getCurrentVariable().getModeloDocumentoList() == null
-                || taskFitter.getCurrentTask().getCurrentVariable().getModeloDocumentoList().isEmpty();
+                || taskFitter.getCurrentTask().getCurrentVariable().getModeloEditorHandler().getModeloDocumentoList() == null
+                || taskFitter.getCurrentTask().getCurrentVariable().getModeloEditorHandler().getModeloDocumentoList().isEmpty();
     }
 
     @Override
@@ -55,7 +55,7 @@ public class AssociativeModeloDocumentoList extends AbstractPageableList<ModeloD
         removeSearchCriteria("modelosAssociados");
         if (!validateFitter()) {
             addSearchCriteria("modelosAssociados", "o not in :modelosAssociados");
-            modelosAssociados.addAll(taskFitter.getCurrentTask().getCurrentVariable().getModeloDocumentoList());
+            modelosAssociados.addAll(taskFitter.getCurrentTask().getCurrentVariable().getModeloEditorHandler().getModeloDocumentoList());
             addParameter("modelosAssociados", modelosAssociados);
         }
     }

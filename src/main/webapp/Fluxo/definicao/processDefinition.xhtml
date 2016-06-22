@@ -152,11 +152,17 @@
         height="550"
         width="920">
         <c:if
-          test="#{!empty actionTemplate.fileName or !empty taskFitter.currentTask.currentVariable}">
+          test="#{!empty actionTemplate.fileName}">
           <ui:include src="actions/#{actionTemplate.fileName}" />
         </c:if>
       </wi:modalPanel>
     </s:div>
+    <wi:modalPanel
+        id="modeloDocumentoVariavelEditorPanel"
+        height="550"
+        width="920">
+       <ui:include src="actions/setModeloDocumento.xhtml" />
+    </wi:modalPanel>
     <wi:modalPanel
       id="dominioVariavelTarefaPanel"
       height="550"

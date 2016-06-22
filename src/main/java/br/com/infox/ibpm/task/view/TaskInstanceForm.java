@@ -100,6 +100,7 @@ public class TaskInstanceForm implements Serializable {
                         continue;
                     }
                     String name = tokens[1];
+                    //FIXME Colocar aqui pra pegar o modelo dos properties
                     Object variable = JbpmUtil.getProcessVariable(name + "Modelo");
                     if (variable != null) {
                         FormField ff = new FormField();

@@ -19,7 +19,7 @@
                         bodyClass="dtable-p-b"
                         styleClass="dtable-p picklist">
                         <rich:dataTable
-                            value="#{variavel.modeloDocumentoList}"
+                            value="#{variavel.modeloEditorHandler.modeloDocumentoList}"
                             id="associatedModeloDocumentoVariavelList"
                             rowKeyVar="key"
                             styleClass="dtable rf-dt-crud picklist-dt"
@@ -32,7 +32,7 @@
                                 <h:form>
                                     <a:commandLink limitRender="true"
                                         render="divM2MVar, modeloDocumentoDiv"
-                                        action="#{variavel.removeModelo(row)}">
+                                        action="#{variavel.modeloEditorHandler.removeModelo(row)}">
                                         <h:graphicImage
                                             url="#{layoutController.getResourceUrlByPath('/imagens/grid/copyRight.gif')}"
                                             title="#{infoxMessages['button.delete']}" />
@@ -69,7 +69,7 @@
                             <h:form>
                                 <a:commandLink limitRender="true"
                                     render="divM2MVar"
-                                    action="#{variavel.addModelo(row)}">
+                                    action="#{variavel.modeloEditorHandler.addModelo(row)}">
                                     <h:graphicImage
                                         url="#{layoutController.getResourceUrlByPath('/imagens/grid/copyLeft.gif')}"
                                         title="#{infoxMessages['button.add']}" />
