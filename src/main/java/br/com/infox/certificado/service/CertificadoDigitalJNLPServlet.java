@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -56,9 +57,12 @@ public class CertificadoDigitalJNLPServlet extends HttpServlet {
 	
 	private void generateJnlp(HttpServletRequest request, Writer responseWriter, String uuid) {
 		Map<String, Object> params = new HashMap<>();
-
 		String urlEpp = request.getRequestURL().toString().replace(SERVLET_PATH, "");
-
+		//caso a requisição seja redirecionada pega o protocolo utilizado originalmente. Precisa que o parâmetro ProxyPreserveHost = On esteja configurado no apache.
+		String originalRequestProtocol = request.getHeader("X_FORWARDED_PROTO");
+		if( originalRequestProtocol != null){
+			urlEpp = urlEpp.replace("http://", originalRequestProtocol + "://");
+		}
 		CertificateSignatureConfigBean config = new CertificateSignatureConfigBean();
 		config.setUrl(urlEpp + "/rest" + CertificadoDigitalWS.PATH);
 		config.setToken(uuid);
