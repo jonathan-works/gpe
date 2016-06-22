@@ -17,7 +17,6 @@ import br.com.infox.epp.certificado.entity.CertificateSignature;
 import br.com.infox.epp.certificado.entity.CertificateSignatureGroup;
 import br.com.infox.epp.certificado.entity.TipoAssinatura;
 import br.com.infox.epp.certificado.enums.CertificateSignatureGroupStatus;
-import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.util.time.DateRange;
 
 @Stateless
@@ -38,7 +37,7 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
 		return EntityManagerProducer.getEntityManager();
 	}
 
-	public CertificateSignatureGroup createNewGroup(List<DocumentoBin> documentos) {
+	public String createNewGroup(List<UUID> documentos) {
 		String uuid = UUID.randomUUID().toString();
 		CertificateSignatureGroup certificateSignatureGroup = new CertificateSignatureGroup();
 		certificateSignatureGroup.setToken(uuid);
@@ -47,16 +46,16 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
 
 		getEntityManager().persist(certificateSignatureGroup);
 
-		for (DocumentoBin documentoBin : documentos) {
+		for (UUID documento : documentos) {
 			CertificateSignature certificateSignature = new CertificateSignature();
 			certificateSignature.setCertificateSignatureGroup(certificateSignatureGroup);
-			certificateSignature.setUuid(documentoBin.getUuid().toString());
+			certificateSignature.setUuid(documento.toString());
 			getEntityManager().persist(certificateSignature);
 		}
 
 		getEntityManager().flush();
 
-		return certificateSignatureGroup;
+		return certificateSignatureGroup.getToken();
 	}
 
 	public void validarToken(String token) {

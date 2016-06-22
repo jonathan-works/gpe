@@ -3,16 +3,13 @@ package br.com.infox.epp.assinador;
 import java.util.List;
 import java.util.UUID;
 
-import br.com.infox.epp.certificado.entity.CertificateSignatureGroup;
-import br.com.infox.epp.processo.documento.entity.DocumentoBin;
-
 public interface AssinadorGroupService {
 	
 	public enum StatusToken {
 		ERRO, SUCESSO, DESCONHECIDO, AGUARDANDO_ASSINATURA, EXPIRADO 
 	}
 
-	public CertificateSignatureGroup createNewGroup(List<DocumentoBin> documentos);
+	public String createNewGroup(List<UUID> documentos);
 	
 	public void validarToken(String token);
 	

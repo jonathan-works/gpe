@@ -1,6 +1,7 @@
 package br.com.infox.epp.assinador;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,7 +19,6 @@ import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.PerfilTemplateManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
-import br.com.infox.epp.certificado.entity.CertificateSignatureGroup;
 import br.com.infox.epp.certificado.entity.TipoAssinatura;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
@@ -48,8 +48,12 @@ public class AssinadorService implements Serializable {
 	@Inject
 	private AssinaturaDocumentoService assinaturaDocumentoService;
 
-	public CertificateSignatureGroup criarListaDocumentos(List<DocumentoBin> listaDocumentos) {
-		return groupService.createNewGroup(listaDocumentos);
+	public String criarListaDocumentos(List<DocumentoBin> listaDocumentos) {
+		List<UUID> uuids = new ArrayList<>();
+		for (DocumentoBin documentoBin : listaDocumentos) {
+			uuids.add(documentoBin.getUuid());
+		}
+		return groupService.createNewGroup(uuids);
 	}
 	
 	public DadosAssinaturaLegada getDadosAssinaturaLegada(byte[] signature) {

@@ -10,7 +10,6 @@ import br.com.infox.epp.assinador.AssinadorGroupService;
 import br.com.infox.epp.assinador.AssinadorGroupService.StatusToken;
 import br.com.infox.epp.assinador.AssinadorService;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.certificado.entity.CertificateSignatureGroup;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 
 @Named
@@ -27,9 +26,8 @@ public class AssinadorController implements Serializable {
 	private String token;
 	
 	public String criarListaDocumentos(List<DocumentoBin> listaDocumentos) {
-		CertificateSignatureGroup certificateSignatureGroup = assinadorService.criarListaDocumentos(listaDocumentos);
-		this.token = certificateSignatureGroup.getToken();
-		return certificateSignatureGroup.getToken();
+		this.token = assinadorService.criarListaDocumentos(listaDocumentos);
+		return this.token;
 	}
 	
 	public boolean isFinalizado() {
