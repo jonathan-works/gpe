@@ -29,4 +29,6 @@ public interface AssinadorGroupService {
 	public void erroProcessamento(String token, String mensagem);
 	
 	public void processamentoFinalizado(String token);
+	
+	public void atualizarAssinaturaTemporaria(String tokenGrupo, UUID uuid, DadosAssinaturaLegada dadosAssinaturaLegada);
 }

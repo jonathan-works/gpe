@@ -9,11 +9,13 @@ import java.util.UUID;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.validation.ValidationException;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.certificado.entity.CertificateSignature;
 import br.com.infox.epp.certificado.entity.CertificateSignatureGroup;
+import br.com.infox.epp.certificado.entity.TipoAssinatura;
 import br.com.infox.epp.certificado.enums.CertificateSignatureGroupStatus;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.util.time.DateRange;
@@ -25,6 +27,8 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
 
 	@Inject
 	private CertificateSignatureGroupSearch certificateSignatureGroupSearch;
+	@Inject
+	private CertificateSignatureService certificateSignatureService;
 	@Inject
 	private TokenAssinaturaService tokenAssinaturaService;
 
@@ -159,6 +163,22 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
 	public void processamentoFinalizado(String token) {
 		setStatus(token, CertificateSignatureGroupStatus.S);
 		// apagarGrupo(token);
+	}
+
+	@Override
+	public void atualizarAssinaturaTemporaria(String tokenGrupo, UUID uuid,
+			DadosAssinaturaLegada dadosAssinaturaLegada) {
+		CertificateSignature certificateSignature = null;
+		try {
+			certificateSignature = certificateSignatureService.findByTokenAndUUID(tokenGrupo, uuid.toString());			
+		}
+		catch(NoResultException e) {
+			throw new RuntimeException("CertificateSignature não encontrado");
+		}
+		
+		certificateSignature.setSignatureType(TipoAssinatura.PKCS7);
+		certificateSignature.setCertificateChain(dadosAssinaturaLegada.getCertChainBase64());
+		certificateSignature.setSignature(dadosAssinaturaLegada.getSignature());
 	}
 
 }
