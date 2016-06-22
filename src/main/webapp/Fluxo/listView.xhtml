@@ -10,6 +10,7 @@
     xmlns:infox="http://www.infox.com.br/jsf"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:p="http://primefaces.org/ui"
     template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
     <ui:define name="title">#{infoxMessages['fluxo.titlePage']}</ui:define>
     <ui:param
@@ -155,6 +156,43 @@
                     value="#{infoxMessages['importarXPDL.button']}"
                     rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.replica}"
                     onclick="openPopUp('importarXPDL', '#{pathResolver.getContextPath()}/Fluxo/importar/importarXPDL.seam?scid=#{conversation.id}',1300,850);" />
+                    
+                <wi:commandButton id="importarBpmn" value="Importar BPMN" onclick="#{rich:component('modalImportBpmn')}.show(); return false;"/>
+                
+                <rich:popupPanel id="modalImportBpmn" autosized="true" maxHeight="600" modal="true" header="Importar BPMN">
+				    <f:facet name="controls">
+				        <h:graphicImage styleClass="mp-close"
+				            value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
+				            onmouseup="#{rich:component('modalImportBpmn')}.hide();" />
+				    </f:facet>
+				    <c:set property="fluxo" target="#{bpmnUploader}" value="#{fluxoCrudAction.instance}" />
+				    <h:form enctype="multipart/form-data">
+					    <rich:fileUpload execute="@this" limitRender="true" acceptedTypes="bpmn"
+					          tipMessage="#{infoxMessages['fluxo.xpdl.tipMessage']}"
+					          maxFilesQuantity="1" fileUploadListener="#{bpmnUploader.processFileUpload}"
+					          immediateUpload="true" listWidth="260px" listHeight="58px"
+					          noDuplicate="true" addLabel="#{infoxMessages['button.add']}"
+					          clearAllLabel="#{infoxMessages['fileUpload.clearAll']}"
+					          clearLabel="#{infoxMessages['fileUpload.clear']}"
+					          uploadLabel="#{infoxMessages['fileUpload.upload']}"
+					          doneLabel="#{infoxMessages['fileUpload.done']}"
+					          sizeExceededLabel="#{infoxMessages['fileUpload.error.size']}"
+					          validatorMessage="#{infoxMessages['fileUpload.error.validator']}"
+					          requiredMessage="#{infoxMessages['fileUpload.error.required']}"
+					          ontyperejected="new infox.Messages({'timeout': 3000}).dialog(\'#{infoxMessages['fluxo.xpdl.error.fileExtension']}\')"
+					          render="importarButtonDiv" id="bpmnFileUpload">
+					          <f:facet name="label">
+					            <h:outputText value="{_KB}KB de {KB}KB" />
+					          </f:facet>
+						</rich:fileUpload>
+						<p:outputPanel layout="block" id="importarButtonDiv">
+							<a:commandButton value="Importar" action="#{bpmnUploader.importar}" execute="@this" limitRender="true"
+								render="pageBodyDialogMessage importarButtonDiv" 
+								oncomplete="infox.hideLoading(); #{rich:component('bpmnFileUpload')}.clearButton.click(); #{rich:component('modalImportBpmn')}.hide()"
+								onclick="infox.showLoading();" rendered="#{not empty bpmnUploader.bpmn}" styleClass="buttons"/>
+						</p:outputPanel>
+					</h:form>
+				</rich:popupPanel>
             </ui:define>
         </wi:dataForm>
     </ui:define>

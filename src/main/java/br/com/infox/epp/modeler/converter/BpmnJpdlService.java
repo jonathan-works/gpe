@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -95,6 +96,13 @@ public class BpmnJpdlService {
 		fluxo.setXml(JpdlXmlWriter.toString(getUpdatedJbpmDefinitionFromBpmn(fluxo.getBpmn(), fluxo.getXml())));
 		return fluxoManager.update(fluxo);
 	}
+    
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public Fluxo importarBpmn(Fluxo fluxo, String bpmn) {
+    	fluxo.setBpmn(bpmn);
+		fluxo.setXml(JpdlXmlWriter.toString(getUpdatedJbpmDefinitionFromBpmn(fluxo.getBpmn(), null)));
+		return fluxoManager.update(fluxo);
+	}
 	
 	private ProcessDefinition getUpdatedJbpmDefinitionFromBpmn(String bpmnXml, String jpdlXml) {
 		BpmnModelInstance bpmnModel = Bpmn.readModelFromStream(new ByteArrayInputStream(bpmnXml.getBytes(StandardCharsets.UTF_8)));
@@ -103,6 +111,13 @@ public class BpmnJpdlService {
 	}
 	
 	private ProcessDefinition getUpdatedJbpmDefinitionFromBpmn(BpmnModelInstance bpmnModel, ProcessDefinition processDefinition) {
+		BizagiBpmnAdapter bizagiBpmnAdapter = new BizagiBpmnAdapter();
+		bizagiBpmnAdapter.checkAndConvert(bpmnModel);
+		Collection<Process> processes = bpmnModel.getModelElementsByType(Process.class);
+		if (processes.size() != 1) {
+			throw new BusinessRollbackException("O BPMN deve conter apenas 1 processo");
+		}
+		
 		BpmnJpdlTranslation translation = new BpmnJpdlTranslation(bpmnModel, processDefinition);
 		for (Node node : translation.getNodesToRemove()) {
 			processDefinition.removeNode(node);

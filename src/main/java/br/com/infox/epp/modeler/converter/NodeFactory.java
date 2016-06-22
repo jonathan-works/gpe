@@ -1,5 +1,6 @@
 package br.com.infox.epp.modeler.converter;
 
+import java.text.MessageFormat;
 import java.util.HashSet;
 
 import org.camunda.bpm.model.bpmn.GatewayDirection;
@@ -67,8 +68,19 @@ public class NodeFactory {
 			} else if (direction == GatewayDirection.Converging) {
 				node = new Join(getLabel(flowNode));
 			} else {
-				throw new BusinessRollbackException("Tipo de nó fork/join não informado (id: " + flowNode.getId() +
-					(!Strings.isNullOrEmpty(flowNode.getName()) ? ", nome: " + flowNode.getName() : "") + "): " + direction);
+				if (flowNode.getIncoming().size() > 1 && flowNode.getOutgoing().size() == 1) {
+					node = new Join(getLabel(flowNode));
+				} else if (flowNode.getIncoming().size() == 1 && flowNode.getOutgoing().size() > 1) {
+					node = new Fork(getLabel(flowNode));
+				} else {
+					if (!Strings.isNullOrEmpty(flowNode.getName())) {
+						String msg = "Impossível determinar se o gateway paralelo com id ''{0}'' e nome ''{1}'' é Fork ou Join";
+						throw new BusinessRollbackException(MessageFormat.format(msg, flowNode.getId(), flowNode.getName()));
+					} else {
+						String msg = "Impossível determinar se o gateway paralelo com id ''{0}'' é Fork ou Join";
+						throw new BusinessRollbackException(MessageFormat.format(msg, flowNode.getId()));
+					}
+				}
 			}
 		} else if (flowNode.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_SEND_TASK)) {
 			node = new InfoxMailNode();
