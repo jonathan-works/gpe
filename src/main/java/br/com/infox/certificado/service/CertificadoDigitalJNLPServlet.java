@@ -3,7 +3,6 @@ package br.com.infox.certificado.service;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.samskivert.mustache.Mustache;
 
-import br.com.infox.certificado.bean.CertificateSignatureConfigBean;
+import br.com.infox.epp.assinador.api.ConfiguracoesAssinador;
 
 
 @WebServlet(urlPatterns = CertificadoDigitalJNLPServlet.SERVLET_PATH)
@@ -29,11 +28,15 @@ public class CertificadoDigitalJNLPServlet extends HttpServlet {
 	private static final String SIGN_COOKIE_NAME = "br.com.infox.epp.sign.token";
 	public static final String DOCUMENTOS_ASSINATURA="DocumentoView.documentosAssinatura";
 	
+	public static final String PARAMETRO_TOKEN = "token";
+	public static final String PARAMETRO_CODIGO_PERFIL = "codigoPerfil";
+	public static final String PARAMETRO_CODIGO_LOCALIZACAO = "codigoLocalizacao";
+	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		resp.setContentType("application/x-java-jnlp-file");
 		resp.setHeader("Content-disposition", "attachment; filename=\"certificado_digital.jnlp\"");
-		final String token = req.getParameter("token");
+		final String token = req.getParameter(PARAMETRO_TOKEN);
 		
 		Cookie cookie = new Cookie(SIGN_COOKIE_NAME, token);
 		cookie.setMaxAge(COOKIE_MAX_AGE);
@@ -45,16 +48,20 @@ public class CertificadoDigitalJNLPServlet extends HttpServlet {
 	private void generateJnlp(HttpServletRequest request, Writer responseWriter, String token) {
 		Map<String, Object> params = new HashMap<>();
 		String urlEpp = request.getRequestURL().toString().replace(SERVLET_PATH, "");
+		String codigoPerfil = request.getParameter(PARAMETRO_CODIGO_PERFIL);
+		String codigoLocalizacao = request.getParameter(PARAMETRO_CODIGO_LOCALIZACAO);
+
+		ConfiguracoesAssinador config = new ConfiguracoesAssinador();
+		
 		//caso a requisição seja redirecionada pega o protocolo utilizado originalmente. Precisa que o parâmetro ProxyPreserveHost = On esteja configurado no apache.
 		String originalRequestProtocol = request.getHeader("X_FORWARDED_PROTO");
 		if( originalRequestProtocol != null){
 			urlEpp = urlEpp.replace("http://", originalRequestProtocol + "://");
 		}
-		CertificateSignatureConfigBean config = new CertificateSignatureConfigBean();
 		config.setUrl(urlEpp + "/rest");
 		config.setToken(token);
-		config.setMd5s(new ArrayList<String>());
-		config.setMultiSign(new HashMap<String, String>());
+		config.setCodigoPerfil(codigoPerfil);
+		config.setCodigoLocalizacao(codigoLocalizacao);
 		
 		params.put("urlEpp", urlEpp);
 		params.put("config", new Gson().toJson(config));

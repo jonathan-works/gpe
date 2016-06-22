@@ -14,7 +14,7 @@
   <h:panelGroup id="#{empty id ? 'divApplet' : id}">
     <s:fragment rendered="#{empty rendered ? true : rendered}">
 
-      <h:inputHidden id="#{id}Token" value="#{tokenField}" />
+      <h:inputHidden id="#{id}Token" value="" />
       <a:commandButton type="button" styleClass="buttons" disabled="#{disableb}" onbegin="infox.showLoading();" style="#{signButtonStyle}"
       		action="#{elFunctions.invokeMethod(preSignAction)}" execute="#{execute}" rendered="#{empty rendered? 'true' : rendered}"
       		oncomplete="infox.hideLoading(); if (#{!facesContext.validationFailed}) {infox.CertDig.#{id}.init();}"
@@ -23,26 +23,36 @@
       			<f:setPropertyActionListener value="#{propertyValue}" target="#{propertyTarget}" />
       </a:commandButton>
 
-      <ui:param name="parameter" value="#{'token='.concat(assinadorController.criarListaDocumentos(documentList))}" />
+      <ui:param name="token" value="#{assinadorController.criarListaDocumentos(documentList)}" />
+      <ui:param name="parameter" value="#{assinadorController.getParametrosServletJNLP(token)}" />
 
       <h:outputScript name="cookies.min.js" library="js" />  
       <h:outputScript>
-          namespace('infox.CertDig.#{id}', {  
+			function apagarGrupo() {
+				$.ajax({
+					type: 'DELETE',
+				    url: '#{assinadorController.getApagarGrupoURL(token)}',
+				    data: '',
+				    success: function(msg){
+				    }
+				});
+			}
+          	namespace('infox.CertDig.#{id}', {  
   	          init: function() {  
   	              #{functionPreSign};
-  	        	  location.href='#{certificadoDigitalPathResolver.JNLPUrl}?#{parameter}';
+  	        	  location.href='#{assinadorController.JNLPUrl}?#{parameter}';
   	        	  var intervalId = setInterval(function() {  
   	        	      var token = Cookies.get('br.com.infox.epp.sign.token');
   	        	      #{rich:element(id.concat('Token'))}.value = token;  
-  	        	      $.get('#{certificadoDigitalPathResolver.certificadoWSBasePath}/' + token, function(status) {
-   	        		      if (status === 'SUCCESS' || status === 'ERROR') {  
+  	        	      $.get('#{assinadorController.getTokenStatusURL(token)}', function(status) {
+   	        		      if (status !== 'AGUARDANDO_ASSINATURA') {  
 	  	        		      clearInterval(intervalId);
-	  	        		      #{functionPosSign};
+	  	        		      apagarGrupo();
+	  	        		      #{functionPosSign};	  	        		      
   	        	  	      }
   			  	      });  
   		          }, 2000);  
-                     setTimeout(function() { clearInterval(intervalId);}, 8000 * 60);
-  		   }  
+  		   	}  
   	   });  
 	  </h:outputScript>
     </s:fragment>

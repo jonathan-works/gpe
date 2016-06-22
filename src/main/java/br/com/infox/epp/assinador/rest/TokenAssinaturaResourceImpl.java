@@ -21,7 +21,7 @@ public class TokenAssinaturaResourceImpl implements TokenAssinaturaResource {
 	}
 
 	@Override
-	public void cancelar() {
+	public void processamentoCancelado() {
 		groupService.cancelar(token);
 	}
 
@@ -49,5 +49,15 @@ public class TokenAssinaturaResourceImpl implements TokenAssinaturaResource {
 		AssinaturaRestImpl assinaturaRestImpl = BeanManager.INSTANCE.getReference(AssinaturaRestImpl.class);
 		assinaturaRestImpl.setTokenGrupo(token);
 		return assinaturaRestImpl;
+	}
+
+	@Override
+	public String getStatus() {
+		return groupService.getStatus(token).toString();
+	}
+
+	@Override
+	public void apagar() {
+		groupService.apagarGrupo(token);
 	}
 }

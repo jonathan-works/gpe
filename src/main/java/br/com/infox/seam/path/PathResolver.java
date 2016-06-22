@@ -2,8 +2,10 @@ package br.com.infox.seam.path;
 
 import java.io.Serializable;
 
+import javax.ejb.Stateless;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.ApplicationPath;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -12,10 +14,12 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.ServletLifecycle;
 
 import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.ws.RestApplication;
 
 @Name(PathResolver.NAME)
 @Scope(ScopeType.APPLICATION)
 @AutoCreate
+@Stateless
 public class PathResolver implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -55,6 +59,11 @@ public class PathResolver implements Serializable {
         FacesContext fc = FacesContext.getCurrentInstance();
         String viewId = fc.getViewRoot().getViewId();
         return viewId.substring(0, viewId.lastIndexOf('/') + 1);
+    }
+    
+    public String getRestBaseUrl() {
+    	ApplicationPath applicationPath = RestApplication.class.getAnnotation(ApplicationPath.class);
+    	return getUrlProject() + applicationPath.value();
     }
 
     public String getUrlProject() {
