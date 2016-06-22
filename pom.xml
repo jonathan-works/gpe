@@ -667,6 +667,35 @@
 	</properties>
 	<profiles>
 		<profile>
+        <id>assinatura-rest</id>
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>2.6</version>
+                    <executions>
+                      <execution>
+                        <phase>package</phase>
+                        <goals>
+                          <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                          <classifier>assinatura-rest</classifier>
+                          <includes>
+                            <include>**/br/com/infox/epp/assinador/api/**/*.class</include>
+                            <include>**/br/com/infox/epp/rest/RestException.class</include>
+                            <include>**/br/com/infox/epp/ws/exception/ErroServico.class</include>
+                            <include>**/br/com/infox/epp/ws/exception/ErroServicoImpl.class</include>
+                          </includes>
+                        </configuration>
+                      </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </build>
+    </profile>
+    <profile>
 			<id>producao</id>
 		</profile>
 		<profile>
