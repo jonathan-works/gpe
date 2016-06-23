@@ -23,6 +23,7 @@ public class Assinatura {
 		super();
 		this.assinatura = assinatura;
 		this.codigoPerfil = codigoPerfil;
+		this.uuidDocumento = uuidDocumento;
 	}
 	
 	public byte[] getAssinatura() {
