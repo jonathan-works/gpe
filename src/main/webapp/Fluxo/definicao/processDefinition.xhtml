@@ -94,11 +94,11 @@
         <ui:include src="nodes.xhtml" />
       </infox:tab>
       <infox:tab
-        name="graphTab"
-        id="graphTab"
-        title="#{infoxMessages['processBuilder.graph']}"
+        name="modeladorTab"
+        id="modeladorTab"
+        title="#{infoxMessages['processBuilder.modelador']}"
         render="processDefinitionButtonsForm">
-        <ui:include src="graph.xhtml" />
+        <ui:include src="modelador.xhtml" />
       </infox:tab>
     </infox:tabPanel>
     <h:form id="processDefinitionButtonsForm">
@@ -117,14 +117,14 @@
         actionListener="#{processBuilder.prepareUpdate}"
         action="#{processBuilder.update}"
         oncomplete="infox.hideLoading()"
-        rendered="#{processBuilder.tab ne 'graphTab'}"/>
+        rendered="#{processBuilder.tab ne 'modeladorTab'}"/>
       <!-- Função updateBpmn definida no graph.xhtml -->
       <a:jsFunction
         name="updateFluxo"
         actionListener="#{processBuilder.prepareUpdate}"
         action="#{processBuilder.update}"
         oncomplete="updateBpmn();"
-        rendered="#{processBuilder.tab eq 'graphTab'}"/>
+        rendered="#{processBuilder.tab eq 'modeladorTab'}"/>
       <a:commandButton
         id="gravar"
         value="#{infoxMessages['processBuilder.saveBtn']}"

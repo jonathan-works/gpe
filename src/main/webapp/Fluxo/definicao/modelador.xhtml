@@ -2,6 +2,7 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:a="http://richfaces.org/a4j"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
 	<h:outputScript name="jquery.js" library="js" />
@@ -11,14 +12,19 @@
 	
 	<p:outputPanel layout="block" id="modelador" style="background-color: white; height: 600px" />
 	
+	<h:inputHidden id="bpmn" value="#{bpmnView.fluxo.bpmn}" />
+	
 	<h:form id="modeladorForm">
-		<h:inputHidden id="bpmn" value="#{bpmnView.fluxo.bpmn}" />
-		<p:remoteCommand name="doUpdate" process="@this" update=":processDefinition :pageBodyDialogMessage" action="#{bpmnView.update}"
-			oncomplete="infox.hideLoading()"/>
-		<p:remoteCommand name="configure" process="@this" update=":processDefinition :pageBodyDialogMessage" action="#{bpmnView.configure}" />
+		<a:jsFunction name="doUpdate" execute="@this" render=":processDefinition :pageBodyDialogMessage" action="#{bpmnView.update}"
+			oncomplete="infox.hideLoading()">
+			<a:param name="bpmnInformation" assignTo="#{bpmnView.bpmnInformation}"/>
+		</a:jsFunction>
+		<a:jsFunction name="configureElement" execute="@this" render=":processDefinition :pageBodyDialogMessage" action="#{bpmnView.configureElement}">
+			<a:param name="elementKey" assignTo="#{bpmnView.elementKey}" />
+		</a:jsFunction>
 		<script>
 			function updateBpmn() {
-				doUpdate([{name: 'bpmnInformation', value: JSON.stringify(modeler.getBpmnInformation())}]);
+				doUpdate(JSON.stringify(modeler.getBpmnInformation()));
 			}
 		</script>
 	</h:form>

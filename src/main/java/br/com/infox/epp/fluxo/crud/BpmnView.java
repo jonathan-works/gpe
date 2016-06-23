@@ -2,7 +2,6 @@ package br.com.infox.epp.fluxo.crud;
 
 import java.io.Serializable;
 
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -27,6 +26,9 @@ public class BpmnView implements Serializable {
 	private BpmnJpdlService bpmnJpdlService;
 	
 	private Fluxo fluxo;
+	
+	private String bpmnInformation;
+	private String elementKey;
 
 	public Fluxo getFluxo() {
 		return fluxo;
@@ -46,17 +48,33 @@ public class BpmnView implements Serializable {
 	
 	@ExceptionHandled(successMessage = "Fluxo salvo com sucesso!")
 	public void update() {
-		String json = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("bpmnInformation");
-		JsonObject bpmnInfo = new Gson().fromJson(json, JsonObject.class);
+		JsonObject bpmnInfo = new Gson().fromJson(bpmnInformation, JsonObject.class);
 		fluxo.setBpmn(bpmnInfo.get("bpmn").getAsString());
 		fluxo.setSvg(bpmnInfo.get("svg").getAsString());
-		fluxo = bpmnJpdlService.atualizarDefinicaoJpdl(fluxo);
+		fluxo = bpmnJpdlService.atualizarDefinicao(fluxo);
 		refresh();
+		bpmnInformation = null;
 	}
 	
-	public void configure() {
-		String key = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("key");
+	public void configureElement() {
 		ProcessBuilder.instance().setTab("nodesTab");
-		ProcessBuilder.instance().getNodeFitter().setNodeIndex(key);
+		ProcessBuilder.instance().getNodeFitter().setCurrentNodeByKey(elementKey);
+		elementKey = null;
+	}
+	
+	public String getBpmnInformation() {
+		return bpmnInformation;
+	}
+	
+	public void setBpmnInformation(String bpmnInformation) {
+		this.bpmnInformation = bpmnInformation;
+	}
+	
+	public String getElementKey() {
+		return elementKey;
+	}
+	
+	public void setElementKey(String elementKey) {
+		this.elementKey = elementKey;
 	}
 }

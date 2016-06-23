@@ -2,6 +2,8 @@ package br.com.infox.epp.fluxo.bpmn;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -16,6 +18,7 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.modeler.converter.BpmnJpdlService;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.exception.BusinessException;
 
 @Named
 @ViewScoped
@@ -28,6 +31,8 @@ public class BpmnUploader implements Serializable {
 	
 	private String bpmn;
 	private Fluxo fluxo;
+	private List<String> mensagens;
+	private boolean fluxoImportado;
 	
 	public void processFileUpload(FileUploadEvent event) {
 		try {
@@ -42,6 +47,10 @@ public class BpmnUploader implements Serializable {
 	public void importar() {
 		try {
 			fluxo = bpmnJpdlService.importarBpmn(fluxo, bpmn);
+			fluxoImportado = true;
+		} catch (BusinessException e) {
+			mensagens = new ArrayList<>();
+			mensagens.add(e.getMessage());
 		} finally {
 			bpmn = null;
 		}
@@ -57,5 +66,18 @@ public class BpmnUploader implements Serializable {
 	
 	public void setFluxo(Fluxo fluxo) {
 		this.fluxo = fluxo;
+	}
+	
+	public List<String> getMensagens() {
+		return mensagens;
+	}
+	
+	public void clearMessages() {
+		mensagens = null;
+		fluxoImportado = false;
+	}
+	
+	public boolean isFluxoImportado() {
+		return fluxoImportado;
 	}
 }

@@ -157,16 +157,20 @@
                     rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.replica}"
                     onclick="openPopUp('importarXPDL', '#{pathResolver.getContextPath()}/Fluxo/importar/importarXPDL.seam?scid=#{conversation.id}',1300,850);" />
                     
-                <wi:commandButton id="importarBpmn" value="Importar BPMN" onclick="#{rich:component('modalImportBpmn')}.show(); return false;"/>
+                <wi:commandButton id="importarBpmn" value="#{infoxMessages['fluxo.importarBpmn']}" onclick="#{rich:component('modalImportBpmn')}.show(); return false;"/>
                 
-                <rich:popupPanel id="modalImportBpmn" autosized="true" maxHeight="600" modal="true" header="Importar BPMN">
+                <rich:popupPanel id="modalImportBpmn" width="450" height="450" maxHeight="600" modal="true" header="#{infoxMessages['fluxo.importarBpmn']}"
+                	onbeforehide="clearBpmnImportMessages()">
 				    <f:facet name="controls">
 				        <h:graphicImage styleClass="mp-close"
 				            value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
-				            onmouseup="#{rich:component('modalImportBpmn')}.hide();" />
+				            onclick="#{rich:component('modalImportBpmn')}.hide(); clearBpmnImportMessages();" />
 				    </f:facet>
 				    <c:set property="fluxo" target="#{bpmnUploader}" value="#{fluxoCrudAction.instance}" />
 				    <h:form enctype="multipart/form-data">
+				    	<a:jsFunction name="clearBpmnImportMessages" action="#{bpmnUploader.clearMessages}" execute="@this" limitRender="true" 
+				    		render="mensagensImportacaoBpmn" oncomplete="#{rich:component('bpmnFileUpload')}.clearButton.click()"/>
+				    	
 					    <rich:fileUpload execute="@this" limitRender="true" acceptedTypes="bpmn"
 					          tipMessage="#{infoxMessages['fluxo.xpdl.tipMessage']}"
 					          maxFilesQuantity="1" fileUploadListener="#{bpmnUploader.processFileUpload}"
@@ -185,11 +189,27 @@
 					            <h:outputText value="{_KB}KB de {KB}KB" />
 					          </f:facet>
 						</rich:fileUpload>
+						<s:div id="mensagensImportacaoBpmn">
+					        <rich:panel header="Mensagens" rendered="#{not empty bpmnUploader.mensagens}">
+					        	<ul>
+					        		<ui:repeat value="#{bpmnUploader.mensagens}" var="mensagem">
+						            	<li><h:outputText value="#{mensagem}" /></li>
+					            	</ui:repeat>
+					          	</ul>
+					        </rich:panel>
+					      </s:div>
 						<p:outputPanel layout="block" id="importarButtonDiv">
-							<a:commandButton value="Importar" action="#{bpmnUploader.importar}" execute="@this" limitRender="true"
-								render="pageBodyDialogMessage importarButtonDiv" 
-								oncomplete="infox.hideLoading(); #{rich:component('bpmnFileUpload')}.clearButton.click(); #{rich:component('modalImportBpmn')}.hide()"
+							<a:commandButton value="#{infoxMessages['fluxo.importar']}" action="#{bpmnUploader.importar}" execute="@this"
+								limitRender="true" render="pageBodyDialogMessage importarButtonDiv mensagensImportacaoBpmn" 
+								oncomplete="infox.hideLoading(); closeModalBpmn();"
 								onclick="infox.showLoading();" rendered="#{not empty bpmnUploader.bpmn}" styleClass="buttons"/>
+							<script>
+								function closeModalBpmn() {
+									if (#{bpmnUploader.fluxoImportado}) {
+										#{rich:component('modalImportBpmn')}.hide();
+									}
+								}
+							</script>
 						</p:outputPanel>
 					</h:form>
 				</rich:popupPanel>

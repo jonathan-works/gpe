@@ -46,7 +46,6 @@ public class TaskFitter extends Fitter implements Serializable {
     private TaskHandler startTaskHandler;
     private TaskHandler currentTask;
     private String taskName;
-    private Map<Number, String> modifiedTasks = new HashMap<>();
     private Tarefa tarefaAtual;
     private Set<Tarefa> tarefasModificadas = new HashSet<>();
     private boolean currentJbpmTaskPersisted;
@@ -100,28 +99,6 @@ public class TaskFitter extends Fitter implements Serializable {
         return tarefaAtual;
     }
 
-    // TODO: Verificar isso aqui #72877
-    public void setTaskName(String taskName) {
-        if (this.taskName != null && !this.taskName.equals(taskName)) {
-            if (currentTask != null && currentTask.getTask() != null) {
-                currentTask.getTask().setName(taskName);
-                Number idTaskModificada = getTaskId(getProcessBuilder().getIdProcessDefinition(), getTaskName());
-                if (idTaskModificada != null) {
-                    modifiedTasks.put(idTaskModificada, taskName);
-                }
-            }
-            if (taskExpiration != null && taskExpiration.getId() != null) {
-                taskExpiration.setTarefa(taskName);
-                try {
-                    taskExpirationManager.update(taskExpiration);
-                } catch (DAOException e) {
-                    LOG.error("taskFitter.setTaskName", e);
-                }
-            }
-            this.taskName = taskName;
-        }
-    }
-
     public String getTaskName() {
         if (currentTask != null && currentTask.getTask() != null) {
             taskName = currentTask.getTask().getName();
@@ -139,19 +116,6 @@ public class TaskFitter extends Fitter implements Serializable {
 
     public void setStarTaskHandler(TaskHandler startTask) {
         startTaskHandler = startTask;
-    }
-
-    public Map<Number, String> getModifiedTasks() {
-        return modifiedTasks;
-    }
-
-    public void setModifiedTasks(Map<Number, String> modifiedTasks) {
-        this.modifiedTasks = modifiedTasks;
-    }
-
-    public void modifyTasks() {
-        jbpmTaskManager.atualizarTarefasModificadas(modifiedTasks);
-        modifiedTasks = new HashMap<Number, String>();
     }
 
     public List<TaskHandler> getTasks() {
@@ -194,7 +158,6 @@ public class TaskFitter extends Fitter implements Serializable {
         }
     }
 
-    // TODO #72877
     public void updateTarefas() {
         for (Tarefa tarefa : tarefasModificadas) {
             try {

@@ -5,13 +5,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.jboss.seam.core.Events;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.Transition;
 
 import br.com.infox.epp.cdi.config.BeanManager;
-import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.fitter.NodeFitter;
 
 public class TransitionHandler implements Serializable {
@@ -28,17 +26,6 @@ public class TransitionHandler implements Serializable {
 
     public String getName() {
         return transition.getName();
-    }
-
-    // #72877
-    public void setName(String name) {
-        name = name.trim();
-        if (name != null && !name.equals(transition.getName())) {
-            Events.instance().raiseEvent(EVENT_JBPM_TRANSITION_NAME_CHANGED,
-                    ProcessBuilder.instance().getFluxo(), transition.getFrom().getName(),
-                    transition.getName(), name);
-            transition.setName(name);
-        }
     }
 
     public Transition getTransition() {

@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -18,10 +17,12 @@ import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.GatewayDirection;
 import org.camunda.bpm.model.bpmn.builder.ProcessBuilder;
 import org.camunda.bpm.model.bpmn.impl.BpmnModelConstants;
+import org.camunda.bpm.model.bpmn.instance.Collaboration;
 import org.camunda.bpm.model.bpmn.instance.FlowNode;
 import org.camunda.bpm.model.bpmn.instance.Lane;
 import org.camunda.bpm.model.bpmn.instance.LaneSet;
 import org.camunda.bpm.model.bpmn.instance.ParallelGateway;
+import org.camunda.bpm.model.bpmn.instance.Participant;
 import org.camunda.bpm.model.bpmn.instance.Process;
 import org.camunda.bpm.model.bpmn.instance.SequenceFlow;
 import org.jbpm.graph.def.Event;
@@ -54,11 +55,12 @@ public class BpmnJpdlService {
 	@Inject
 	private InfoxMessages infoxMessages;
 
-	public BpmnModelInstance createInitialBpmn() {
+	public BpmnModelInstance createInitialBpmn(String processName) {
     	String processKey = BpmUtil.generateKey();
     	ProcessBuilder builder = Bpmn.createProcess(processKey);
     	String sequenceFlowKey = BpmUtil.generateKey();
     	builder
+    		.name(processName)
     		.startEvent(BpmUtil.generateKey()).name(infoxMessages.get("process.node.first"))
     		.sequenceFlowId(sequenceFlowKey).condition(infoxMessages.get("process.node.last"), "")
     		.endEvent(BpmUtil.generateKey()).name(infoxMessages.get("process.node.last"));
@@ -76,11 +78,22 @@ public class BpmnJpdlService {
     	solicitante.setName("Solicitante");
     	laneSet.getLanes().add(solicitante);
     	
+    	Collaboration collaboration = bpmn.newInstance(Collaboration.class);
+    	collaboration.setId(BpmUtil.generateKey());
+    	collaboration.setClosed(false);
+    	Participant participant = bpmn.newInstance(Participant.class);
+    	participant.setId(BpmUtil.generateKey());
+    	participant.setName(processName);
+    	participant.setProcess(process);
+    	collaboration.getParticipants().add(participant);
+    	bpmn.getDefinitions().addChildElement(collaboration);
+    	
     	return bpmn;
     }
     
-    public ProcessDefinition createInitialProcessDefinition() {
-    	ProcessDefinition processDefinition = getUpdatedJbpmDefinitionFromBpmn(createInitialBpmn(), loadOrCreateProcessDefinition(null));
+    public ProcessDefinition createInitialProcessDefinition(String processName) {
+    	ProcessDefinition processDefinition = loadOrCreateProcessDefinition(null);
+    	updateDefinitionsFromBpmn(createInitialBpmn(processName), processDefinition);
     	Swimlane laneSolicitante = processDefinition.getTaskMgmtDefinition().getSwimlanes().values().iterator().next();
     	laneSolicitante.setActorIdExpression("#{actor.id}");
     	
@@ -92,30 +105,47 @@ public class BpmnJpdlService {
     }
 	
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public Fluxo atualizarDefinicaoJpdl(Fluxo fluxo) {
-		fluxo.setXml(JpdlXmlWriter.toString(getUpdatedJbpmDefinitionFromBpmn(fluxo.getBpmn(), fluxo.getXml())));
+	public Fluxo atualizarDefinicao(Fluxo fluxo) {
+    	BpmnModelInstance bpmnModel = Bpmn.readModelFromStream(new ByteArrayInputStream(fluxo.getBpmn().getBytes(StandardCharsets.UTF_8)));
+    	ProcessDefinition processDefinition = loadOrCreateProcessDefinition(fluxo.getXml());
+    	updateDefinitionsFromBpmn(bpmnModel, processDefinition);
+    	atualizarNomeFluxo(fluxo, bpmnModel, processDefinition);
+		fluxo.setXml(JpdlXmlWriter.toString(processDefinition));
+		fluxo.setBpmn(Bpmn.convertToString(bpmnModel));
 		return fluxoManager.update(fluxo);
 	}
     
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public Fluxo importarBpmn(Fluxo fluxo, String bpmn) {
-    	fluxo.setBpmn(bpmn);
-		fluxo.setXml(JpdlXmlWriter.toString(getUpdatedJbpmDefinitionFromBpmn(fluxo.getBpmn(), null)));
+		BpmnModelInstance bpmnModel = Bpmn.readModelFromStream(new ByteArrayInputStream(bpmn.getBytes(StandardCharsets.UTF_8)));
+    	ProcessDefinition processDefinition = loadOrCreateProcessDefinition(null);
+    	updateDefinitionsFromBpmn(bpmnModel, processDefinition);
+
+    	Process process = bpmnModel.getModelElementsByType(Process.class).iterator().next();
+    	processDefinition.setKey(process.getId());
+		atualizarNomeFluxo(fluxo, bpmnModel, processDefinition);
+    	
+		fluxo.setXml(JpdlXmlWriter.toString(processDefinition));
+		fluxo.setBpmn(Bpmn.convertToString(bpmnModel));
 		return fluxoManager.update(fluxo);
 	}
-	
-	private ProcessDefinition getUpdatedJbpmDefinitionFromBpmn(String bpmnXml, String jpdlXml) {
-		BpmnModelInstance bpmnModel = Bpmn.readModelFromStream(new ByteArrayInputStream(bpmnXml.getBytes(StandardCharsets.UTF_8)));
-		ProcessDefinition processDefinition = loadOrCreateProcessDefinition(jpdlXml);
-		return getUpdatedJbpmDefinitionFromBpmn(bpmnModel, processDefinition);
+
+	public void atualizarNomeFluxo(Fluxo fluxo, BpmnModelInstance bpmnModel, ProcessDefinition processDefinition) {
+		Process process = bpmnModel.getModelElementsByType(Process.class).iterator().next();
+		process.setName(fluxo.getFluxo());
+		processDefinition.setName(fluxo.getFluxo());
+		Participant participant = bpmnModel.getModelElementsByType(Participant.class).iterator().next();
+		participant.setName(fluxo.getFluxo());
 	}
 	
-	private ProcessDefinition getUpdatedJbpmDefinitionFromBpmn(BpmnModelInstance bpmnModel, ProcessDefinition processDefinition) {
+	private void updateDefinitionsFromBpmn(BpmnModelInstance bpmnModel, ProcessDefinition processDefinition) {
 		BizagiBpmnAdapter bizagiBpmnAdapter = new BizagiBpmnAdapter();
 		bizagiBpmnAdapter.checkAndConvert(bpmnModel);
-		Collection<Process> processes = bpmnModel.getModelElementsByType(Process.class);
-		if (processes.size() != 1) {
+		if (bpmnModel.getModelElementsByType(Process.class).size() != 1) {
 			throw new BusinessRollbackException("O BPMN deve conter apenas 1 processo");
+		}
+		if (bpmnModel.getModelElementsByType(Participant.class).size() != 1) {
+			throw new BusinessRollbackException("O BPMN deve conter apenas 1 participante");
 		}
 		
 		BpmnJpdlTranslation translation = new BpmnJpdlTranslation(bpmnModel, processDefinition);
@@ -128,7 +158,6 @@ public class BpmnJpdlService {
 		}
 		for (Transition transition : translation.getTransitionsToRemove()) {
 			removeListeners(transition.getFrom(), transition);
-			// TODO: Remover Task Expiration
 			translation.getJpdlTransitions().remove(transition);
 			transition.getFrom().removeLeavingTransition(transition);
 			transition.getTo().removeArrivingTransition(transition);
@@ -142,8 +171,6 @@ public class BpmnJpdlService {
 		updateSwimlanes(translation, bpmnModel, processDefinition);
 		updateNodes(translation, bpmnModel, processDefinition);
 		updateTransitions(translation, bpmnModel, processDefinition);
-		
-		return processDefinition;
 	}
 	
 	private void updateTransitions(BpmnJpdlTranslation translation, BpmnModelInstance bpmnModel, ProcessDefinition processDefinition) {

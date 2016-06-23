@@ -100,16 +100,11 @@ public class NodeFitter extends Fitter implements Serializable {
         return nodeHandler;
     }
 
-    public Integer getNodeIndex() {
-        return null;
-    }
-
-    public void setNodeIndex(String key) {
-    	for (Node node : getNodes()) {
-    		if (node.getKey().equals(key)) {
-    			setCurrentNode(node);
-    			break;
-    		}
+    public void setCurrentNodeByKey(String key) {
+    	if (key == null) {
+    		setCurrentNode(null);
+    	} else {
+    		setCurrentNode(getProcessBuilder().getInstance().getNode(key));
     	}
     }
 

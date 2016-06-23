@@ -3,8 +3,10 @@ package br.com.infox.ibpm.process.definition;
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static java.text.MessageFormat.format;
 
+import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,6 +23,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 
+import org.camunda.bpm.model.bpmn.Bpmn;
+import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.jboss.seam.Component;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
@@ -89,6 +93,7 @@ public class ProcessBuilder implements Serializable {
 
     private static final String PROCESS_DEFINITION_TABPANEL_ID = ":processDefinition";
     private static final String PROCESS_DEFINITION_MESSAGES_ID = ":pageBodyDialogMessage";
+    private static final String MODELADOR_TAB_NAME = "modeladorTab";
 
     private static final long serialVersionUID = 1L;
     private static final LogProvider LOG = Logging.getLogProvider(ProcessBuilder.class);
@@ -158,7 +163,7 @@ public class ProcessBuilder implements Serializable {
         id = null;
         exists = false;
         clear();
-        instance = bpmnJpdlService.createInitialProcessDefinition();
+        instance = bpmnJpdlService.createInitialProcessDefinition(getFluxo().getFluxo());
         taskFitter.setStarTaskHandler(new TaskHandler(instance.getTaskMgmtDefinition().getStartTask()));
         eventFitter.addEvents();
         taskFitter.getTasks();
@@ -220,10 +225,15 @@ public class ProcessBuilder implements Serializable {
             instance.setName(fluxo.getFluxo());
             exists = true;
             this.id = newId;
+            if (fluxo.getBpmn() != null) {
+            	BpmnModelInstance bpmnModel = Bpmn.readModelFromStream(new ByteArrayInputStream(fluxo.getBpmn().getBytes(StandardCharsets.UTF_8)));
+            	bpmnJpdlService.atualizarNomeFluxo(fluxo, bpmnModel, instance);
+            	fluxo.setBpmn(Bpmn.convertToString(bpmnModel));
+            }
         }
         if (this.fluxo.getBpmn() == null && this.fluxo.getXml() != null) {
         	this.fluxo.setBpmn(new JpdlBpmnConverter().convert(this.fluxo.getXml()));
-        	this.fluxo = fluxoManager.update(this.fluxo); // TODO melhorar isso #72877
+        	this.fluxo = fluxoManager.update(this.fluxo);
         }
         nodeFitter.clear();
         transitionFitter.clear();
@@ -262,10 +272,11 @@ public class ProcessBuilder implements Serializable {
             throw new AbortProcessingException("processBuilder.prepareUpdate(event)", e);
         }
 
-        String processDefinitionTabPanelClientId = processDefinitionTabPanel.getClientId(facesContext);
-        context.getRenderIds().add(processDefinitionTabPanelClientId + ":propriedadesTab");
-        context.getRenderIds().add(processDefinitionTabPanelClientId + ":nodesTab");
-        context.getRenderIds().add(messages.getClientId(facesContext));
+        if (!MODELADOR_TAB_NAME.equals(tab)) {
+        	String processDefinitionTabPanelClientId = processDefinitionTabPanel.getClientId(facesContext);
+            context.getRenderIds().add(processDefinitionTabPanelClientId);
+            context.getRenderIds().add(messages.getClientId(facesContext));
+        }
     }
 
     private void validateTaskExpiration() {
@@ -685,6 +696,8 @@ public class ProcessBuilder implements Serializable {
             final String xmlDef = fluxoXPDL.toJPDL(codFluxo);
             parseInstance(xmlDef);
             fluxo.setXml(xmlDef);
+            fluxo.setBpmn(null);
+            fluxo.setSvg(null);
             FluxoManager fluxoManager = (FluxoManager) Component.getInstance(FluxoManager.NAME);
             fluxoManager.update(fluxo);
 

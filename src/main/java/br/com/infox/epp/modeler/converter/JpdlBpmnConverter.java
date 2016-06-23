@@ -197,10 +197,12 @@ public class JpdlBpmnConverter {
 		if (collaboration == null) {
 			collaboration = modelInstance.newInstance(Collaboration.class);
 			collaboration.setId(BpmUtil.generateKey());
+			collaboration.setClosed(false);
 			Participant participant = modelInstance.newInstance(Participant.class);
 			participant.setId(BpmUtil.generateKey());
 			participant.setProcess((Process) modelInstance.getDefinitions().getModelInstance().getModelElementById(processId));
-			collaboration.addChildElement(participant);
+			participant.setName(process.getName());
+			collaboration.getParticipants().add(participant);
 			modelInstance.getDefinitions().addChildElement(collaboration);
 		}
 		for (Swimlane swimlane : processDefinition.getTaskMgmtDefinition().getSwimlanes().values()) {
