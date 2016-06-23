@@ -20,9 +20,6 @@ import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.GraphElement;
 import org.jbpm.taskmgmt.def.Task;
 
-import com.google.gson.Gson;
-
-import br.com.infox.bpm.temp.ConfiguracoesVariaveisFluxo.DataConfig;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.fluxo.crud.VariavelClassificacaoDocumentoAction;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
@@ -30,7 +27,6 @@ import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
-import br.com.infox.ibpm.variable.type.ValidacaoDataEnum;
 
 public class VariableAccessHandler implements Serializable {
 
@@ -47,13 +43,13 @@ public class VariableAccessHandler implements Serializable {
     private Task task;
     private DominioVariavelTarefa dominioVariavelTarefa;
     private boolean possuiDominio = false;
-    private ValidacaoDataEnum validacaoDataEnum;
     private boolean isData = false;
     private boolean isFile;
     private boolean fragment;
     private FragmentConfiguration fragmentConfiguration;
     
     private VariableEditorModeloHandler modeloEditorHandler = new VariableEditorModeloHandler();
+    private VariableDataHandler dataHandler = new VariableDataHandler();
     
     public VariableAccessHandler(VariableAccess variableAccess, Task task) {
         this.task = task;
@@ -66,11 +62,7 @@ public class VariableAccessHandler implements Serializable {
             this.value = variableAccess.getValue();
             switch (type) {
                 case DATE:
-                    if (tokens.length < 3) {
-                    setValidacaoDataEnum(ValidacaoDataEnum.L);
-                    } else {
-                    setValidacaoDataEnum(ValidacaoDataEnum.valueOf(tokens[2]));
-                    }
+                    getDataHandler().init(this.variableAccess);
                     break;
                 case ENUMERATION:
                 case ENUMERATION_MULTIPLE:
@@ -131,9 +123,7 @@ public class VariableAccessHandler implements Serializable {
             this.name = auxiliarName;
             variableAccess.setVariableName(auxiliarName);
             
-            if (isData || type == VariableType.DATE) {
-                setValidacaoDataEnum(validacaoDataEnum);
-            } else if (isFragment()){
+            if (isFragment()){
                 setFragmentConfiguration(fragmentConfiguration);
             } else if (isPossuiDominio()) {
                 setDominioVariavelTarefa(dominioVariavelTarefa);
@@ -356,11 +346,7 @@ public class VariableAccessHandler implements Serializable {
                     }
                     break;
                     case DATE:
-                        if (tokens.length < 3) {
-                            setValidacaoDataEnum(ValidacaoDataEnum.L);
-                        } else {
-                            setValidacaoDataEnum(ValidacaoDataEnum.valueOf(tokens[2]));
-                        }
+                        getDataHandler().init(getVariableAccess());
                     break;
                     case ENUMERATION:
                     case ENUMERATION_MULTIPLE:
@@ -418,22 +404,6 @@ public class VariableAccessHandler implements Serializable {
         return isFile;
     }
 
-    public ValidacaoDataEnum[] getTypeDateValues() {
-        return ValidacaoDataEnum.values();
-    }
-
-    public ValidacaoDataEnum getValidacaoDataEnum() {
-        return validacaoDataEnum;
-    }
-
-    public void setValidacaoDataEnum(ValidacaoDataEnum validacaoDataEnum) {
-        if ((this.validacaoDataEnum = validacaoDataEnum) != null && name != null) {
-            setMappedName(name, type, this.validacaoDataEnum.toString());
-        } else {
-            setMappedName(name, type);
-        }
-    }
-
     private void setMappedName(String name, VariableType type, Object... extra) {
         if (name == null) {
             throw new IllegalStateException("Existe uma variável sem nome na tarefa ");
@@ -449,7 +419,8 @@ public class VariableAccessHandler implements Serializable {
     	getVariableAccess().setConfiguration(null);
         getModeloEditorHandler().init(getVariableAccess());
         VariavelClassificacaoDocumentoAction v = BeanManager.INSTANCE.getReference(VariavelClassificacaoDocumentoAction.class);
-        v.setCurrentVariable(variableAccess);
+        v.setCurrentVariable(getVariableAccess());
+        getDataHandler().init(getVariableAccess());
         //FIXME aqui tem que limpar tudo que é específico, toda vez que mudar o tipo da variável
     }
 
@@ -480,6 +451,14 @@ public class VariableAccessHandler implements Serializable {
 
 	public VariableEditorModeloHandler getModeloEditorHandler() {
 		return modeloEditorHandler;
+	}
+
+	public VariableDataHandler getDataHandler() {
+		return dataHandler;
+	}
+
+	public void setDataHandler(VariableDataHandler dataHandler) {
+		this.dataHandler = dataHandler;
 	}
     
 }

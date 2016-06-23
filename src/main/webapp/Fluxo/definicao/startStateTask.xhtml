@@ -102,8 +102,8 @@
                         oncomplete="hideLoading();" onbegin="showLoading();" />
                     <rich:panel id="definicaoTipoData" rendered="#{var.data}">
                         <wi:selectOneMenuEnum id="tipoDeData" label="#{infoxMessages['data.tipoData']}"
-                            showLabelSelecione="true" items="#{var.getTypeDateValues()}"
-                            value="#{var.validacaoDataEnum}">
+                            showLabelSelecione="true" items="#{var.dataHandler.getTypeDateValues()}"
+                            value="#{var.dataHandler.validacaoDataEnum}">
                             <a:ajax event="change" execute="@this" status=":status" listener="#{taskFitter.currentTask.clearHasTaskPage()}"
                                 render="addVarDiv, @this, pageBodyDialogMessage, varDiv" limitRender="true" />
                         </wi:selectOneMenuEnum>

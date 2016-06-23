@@ -151,6 +151,7 @@ public class TaskInstanceForm implements Serializable {
                     }
                         break;
                     case DATE: {
+                    	//FIXME colocar aqui pra pegar do configuration
                         if (tokens.length < 3) {
                             ff.getProperties().put("tipoValidacao", ValidacaoDataEnum.L.name());
                         } else {
