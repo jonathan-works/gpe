@@ -32,5 +32,49 @@ public class ClassificacaoDocumentoSearch extends PersistenceController {
 
         return em.createQuery(cq).getResultList();
     }
+    
+    public List<ClassificacaoDocumento> listClassificacoesDocumentoDisponiveisVariavelFluxo(List<String> codigosClassificacoesAdicionadas, 
+    		TipoDocumentoEnum tipoDocumento, String nomeClassificacaoDocumento, int start, int max) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<ClassificacaoDocumento> cq = cb.createQuery(ClassificacaoDocumento.class);
+		Root<ClassificacaoDocumento> from = createQueryClassificacaoDocumentoNotInList(codigosClassificacoesAdicionadas, tipoDocumento,
+				nomeClassificacaoDocumento, cb, cq);
+    	cq.select(from);
+    	return getEntityManager().createQuery(cq).setFirstResult(start).setMaxResults(max).getResultList();
+    }
+    
+    public Long countClassificacoesDocumentoDisponiveisVariavelFluxo(List<String> codigosClassificacoesAdicionadas, TipoDocumentoEnum tipoDocumento,
+    		String nomeClassificacaoDocumento) {
+    	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+		Root<ClassificacaoDocumento> from = createQueryClassificacaoDocumentoNotInList(codigosClassificacoesAdicionadas, tipoDocumento,
+				nomeClassificacaoDocumento, cb, cq);
+		cq.select(cb.count(from.get(ClassificacaoDocumento_.id)));
+		return getEntityManager().createQuery(cq).getSingleResult();
+	}
+
+	private Root<ClassificacaoDocumento> createQueryClassificacaoDocumentoNotInList(List<String> codigosClassificacoesAdicionadas, 
+			TipoDocumentoEnum tipoDocumento, String nomeClassificacaoDocumento, CriteriaBuilder cb,	CriteriaQuery<?> cq) {
+		Root<ClassificacaoDocumento> from = cq.from(ClassificacaoDocumento.class);
+		cq.where(cb.and(cb.isTrue(from.get(ClassificacaoDocumento_.ativo)),
+    			cb.isFalse(from.get(ClassificacaoDocumento_.sistema)),
+    			from.get(ClassificacaoDocumento_.inTipoDocumento).in(TipoDocumentoEnum.T, tipoDocumento)));
+		if (codigosClassificacoesAdicionadas != null && !codigosClassificacoesAdicionadas.isEmpty()) {
+			cq.where(cq.getRestriction(), from.get(ClassificacaoDocumento_.codigoDocumento).in(codigosClassificacoesAdicionadas).not());
+		}
+    	if (nomeClassificacaoDocumento != null) {
+    		cq.where(cq.getRestriction(),
+    				cb.like(cb.lower(from.get(ClassificacaoDocumento_.descricao)), cb.literal("%" + nomeClassificacaoDocumento.toLowerCase() + "%")));
+    	}
+		return from;
+	}
+	
+	public List<ClassificacaoDocumento> findByListCodigos(List<String> codigosClassificacoesDocumento) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<ClassificacaoDocumento> cq = cb.createQuery(ClassificacaoDocumento.class);
+		Root<ClassificacaoDocumento> from = cq.from(ClassificacaoDocumento.class);
+		cq.where(from.get(ClassificacaoDocumento_.codigoDocumento).in(codigosClassificacoesDocumento));
+		return getEntityManager().createQuery(cq).getResultList();
+	}
 
 }

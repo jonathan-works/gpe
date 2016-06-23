@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.form.type;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.seam.faces.FacesMessages;
@@ -18,7 +19,6 @@ import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
-import br.com.infox.epp.fluxo.manager.VariavelClassificacaoDocumentoManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -64,7 +64,8 @@ public abstract class FileFormType implements FormType {
     public void performValue(FormField formField, FormData formData) {
         String variableName = formField.getId();
         Integer idFluxo = formData.getProcesso().getNaturezaCategoriaFluxo().getFluxo().getIdFluxo();
-        List<ClassificacaoDocumento> classificacoes = getVariavelClassificacaoDocumentoManager().listClassificacoesPublicadasDaVariavel(variableName, idFluxo);
+        //FIXME ver como pegar esse valor da variavel
+        List<ClassificacaoDocumento> classificacoes = new ArrayList<ClassificacaoDocumento>();// getVariavelClassificacaoDocumentoManager().listClassificacoesPublicadasDaVariavel(variableName, idFluxo);
         formField.addProperty("classificacoesDocumento", classificacoes);
         if (classificacoes.size() == 1) {
             formField.addProperty("classificacaoDocumento", classificacoes.get(0));
@@ -150,10 +151,6 @@ public abstract class FileFormType implements FormType {
     
     protected ClassificacaoDocumentoFacade getClassificacaoDocumentoFacade() {
         return BeanManager.INSTANCE.getReference(ClassificacaoDocumentoFacade.class);
-    }
-    
-    protected VariavelClassificacaoDocumentoManager getVariavelClassificacaoDocumentoManager() {
-        return BeanManager.INSTANCE.getReference(VariavelClassificacaoDocumentoManager.class);
     }
     
 }

@@ -1,123 +1,140 @@
 package br.com.infox.epp.fluxo.crud;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-import br.com.infox.log.Log;
-import br.com.infox.log.Logging;
-import br.com.infox.core.action.ActionMessagesService;
+import org.jbpm.context.def.VariableAccess;
+
+import com.google.gson.Gson;
+
 import br.com.infox.core.list.Pageable;
-import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.util.StringUtil;
+import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.documento.ClassificacaoDocumentoSearch;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
-import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.fluxo.entity.VariavelClassificacaoDocumento;
-import br.com.infox.epp.fluxo.manager.VariavelClassificacaoDocumentoManager;
-import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
+import br.com.infox.ibpm.variable.VariableEditorModeloHandler;
+import br.com.infox.ibpm.variable.VariableEditorModeloHandler.EditorConfig;
 
-@Name(VariavelClassificacaoDocumentoAction.NAME)
-@Scope(ScopeType.PAGE)
-@Transactional
+@Named
+@ViewScoped
 public class VariavelClassificacaoDocumentoAction implements Serializable, Pageable {
 	
-    public static final String NAME = "variavelClassificacaoDocumentoAction";
     private static final long serialVersionUID = 1L;
-    private static final Log LOG = Logging.getLog(VariavelClassificacaoDocumentoAction.class);
     private static final int MAX_RESULTS = 10;
     
-    @In
-    private VariavelClassificacaoDocumentoManager variavelClassificacaoDocumentoManager;
-    @In
-    private ActionMessagesService actionMessagesService;
+    @Inject
+    private ClassificacaoDocumentoSearch classificacaoDocumentoSearch;
     
-    private VariavelClassificacaoDocumento variavelClassificacaoDocumento = new VariavelClassificacaoDocumento();
-    private String currentVariable;
-    private TipoDocumentoEnum tipoDocumento;
     private List<ClassificacaoDocumento> classificacoesDisponiveis;
-    private List<VariavelClassificacaoDocumento> classificacoesDaVariavel;
+    private List<ClassificacaoDocumento> classificacoesDaVariavel;
     private int page = 1;
     private int pageCount;
     private Long total;
     private String nomeClassificacaoDocumento;
+    private VariableAccess currentVariable;
     
-    public VariavelClassificacaoDocumento getVariavelClassificacaoDocumento() {
-        return variavelClassificacaoDocumento;
-    }
     
-    public void setCurrentVariable(String currentVariable) {
-        this.currentVariable = currentVariable;
-        clearSearch();
-    }
-    
-    public String getCurrentVariable() {
-        return currentVariable;
-    }
-    
-    public void setCurrentVariableType(VariableType currentVariableType) {
-        if (currentVariableType == VariableType.EDITOR) {
-            tipoDocumento = TipoDocumentoEnum.P;
-        } else if (currentVariableType == VariableType.FILE) {
-            tipoDocumento = TipoDocumentoEnum.D;
+    private TipoDocumentoEnum getTipoDocumento() {
+        if (isEditor()) {
+            return TipoDocumentoEnum.P;
+        } else {
+            return TipoDocumentoEnum.D;
         }
     }
     
-    public void adicionarClassificacao(ClassificacaoDocumento classificacao) {
-        variavelClassificacaoDocumento.setVariavel(currentVariable);
-        variavelClassificacaoDocumento.setClassificacaoDocumento(classificacao);
-        variavelClassificacaoDocumento.setFluxo(getFluxo());
-        variavelClassificacaoDocumento.setPublicado(false);
-        variavelClassificacaoDocumento.setRemoverNaPublicacao(false);
-        try {
-            variavelClassificacaoDocumentoManager.persist(variavelClassificacaoDocumento);
-            clearSearch();
-        } catch (DAOException e) {
-            LOG.error("", e);
-            actionMessagesService.handleDAOException(e);
-        }
-        variavelClassificacaoDocumento = new VariavelClassificacaoDocumento();
+    private void updateListaVariaveisEditor() {
+		EditorConfig configuration = null;
+		if (!StringUtil.isEmpty(getCurrentVariable().getConfiguration())) {
+			configuration = VariableEditorModeloHandler.fromJson(getCurrentVariable().getConfiguration());
+		} 
+		if (!getClassificacoesDaVariavel().isEmpty()) {
+			if (configuration ==  null) {
+				configuration = new EditorConfig();
+			}
+			configuration.setCodigosClassificacaoDocumento(new ArrayList<String>());
+			for (ClassificacaoDocumento classificacao : getClassificacoesDaVariavel()) {
+				configuration.getCodigosClassificacaoDocumento().add(classificacao.getCodigoDocumento());
+			}
+			getCurrentVariable().setConfiguration(VariableEditorModeloHandler.toJson(configuration));
+		} else {
+			if (configuration != null) {
+				if (configuration.getCodigosModeloDocumento() != null && !configuration.getCodigosModeloDocumento().isEmpty()) {
+					configuration.setCodigosClassificacaoDocumento(null);
+					getCurrentVariable().setConfiguration(VariableEditorModeloHandler.toJson(configuration));
+				} else {
+					getCurrentVariable().setConfiguration(null);
+				}
+			}
+		}
     }
     
-    public void removerClassificacao(VariavelClassificacaoDocumento variavelClassificacaoDocumento) {
-        try {
-            // Refresh para atualizar o status de publicado da variável, por causa do cache do Hibernate
-            variavelClassificacaoDocumentoManager.refresh(variavelClassificacaoDocumento);
-            variavelClassificacaoDocumentoManager.remove(variavelClassificacaoDocumento);
-            clearSearch();
-        } catch (DAOException e) {
-            LOG.error("", e);
-            actionMessagesService.handleDAOException(e);
-        }
+    private List<String> getCodigosClassificacoesVariavel() {
+    	if (!StringUtil.isEmpty(getCurrentVariable().getConfiguration())) {
+    		if (isEditor()) {
+    			return VariableEditorModeloHandler.fromJson(getCurrentVariable().getConfiguration()).getCodigosClassificacaoDocumento();
+    		} else {//FIXME não pode pegar só do editor
+    			
+    		}
+		}
+    	return null;
+    }
+    
+    private boolean isEditor() {
+    	return VariableType.EDITOR.name().equals(getCurrentVariable().getType());
+    }
+    
+    public void adicionarClassificacao(ClassificacaoDocumento classificacaoDocumento) {
+    	getClassificacoesDaVariavel().add(classificacaoDocumento);
+    	//FIXME atualiza a configuracao dependendo se for pra editor ou upload
+    	if (isEditor()) {
+    		updateListaVariaveisEditor();
+    	}
+    	this.classificacoesDisponiveis = null;
+    }
+    
+    public void removerClassificacao(ClassificacaoDocumento classificacaoDocumento) {
+    	getClassificacoesDaVariavel().remove(classificacaoDocumento);
+    	//FIXME atualiza a configuracao dependendo se for pra editor ou upload
+    	if (isEditor()) {
+    		updateListaVariaveisEditor();
+    	}
+    	this.classificacoesDisponiveis = null;
     }
     
     public List<ClassificacaoDocumento> getClassificacoesDisponiveis() {
         if (classificacoesDisponiveis == null) {
-            Integer idFluxo = getFluxo().getIdFluxo();
-            this.total = variavelClassificacaoDocumentoManager.totalClassificacoesDisponiveisParaVariavel(idFluxo, currentVariable, tipoDocumento, nomeClassificacaoDocumento);
+        	List<String> codigosAdicionadas = getCodigosClassificacoesVariavel();
+            this.total = classificacaoDocumentoSearch.countClassificacoesDocumentoDisponiveisVariavelFluxo(codigosAdicionadas, getTipoDocumento(), 
+            		getNomeClassificacaoDocumento()); 
             this.pageCount = Long.valueOf(total / MAX_RESULTS + (total % MAX_RESULTS != 0 ? 1 : 0)).intValue();
             int start = (this.page - 1) * MAX_RESULTS;
-            classificacoesDisponiveis = variavelClassificacaoDocumentoManager.listClassificacoesDisponiveisParaVariavel(idFluxo, currentVariable, tipoDocumento, nomeClassificacaoDocumento, start, MAX_RESULTS);
+            classificacoesDisponiveis = classificacaoDocumentoSearch.listClassificacoesDocumentoDisponiveisVariavelFluxo(codigosAdicionadas, 
+            		getTipoDocumento(), getNomeClassificacaoDocumento(), start, MAX_RESULTS);
         }
         return classificacoesDisponiveis;
     }
     
-    public List<VariavelClassificacaoDocumento> getClassificacoesDaVariavel() {
+    public List<ClassificacaoDocumento> getClassificacoesDaVariavel() {
         if (classificacoesDaVariavel == null) {
-            classificacoesDaVariavel = variavelClassificacaoDocumentoManager.listVariavelClassificacao(currentVariable, getFluxo().getIdFluxo());
+        	if (getCodigosClassificacoesVariavel() != null) {
+        		this.classificacoesDaVariavel = classificacaoDocumentoSearch.findByListCodigos(getCodigosClassificacoesVariavel());
+        	} else {
+        		this.classificacoesDaVariavel = new ArrayList<ClassificacaoDocumento>();
+        	}
         }
-        return classificacoesDaVariavel;
+        return this.classificacoesDaVariavel;
     }
     
     public void clearSearch() {
         resetSearch();
-        nomeClassificacaoDocumento = null;
-        classificacoesDaVariavel = null;
+        this.nomeClassificacaoDocumento = null;
+        this.classificacoesDaVariavel = null;
     }
     
     public void resetSearch() {
@@ -163,8 +180,34 @@ public class VariavelClassificacaoDocumentoAction implements Serializable, Pagea
     public void setNomeClassificacaoDocumento(String nomeClassificacaoDocumento) {
         this.nomeClassificacaoDocumento = nomeClassificacaoDocumento;
     }
-    
-    private Fluxo getFluxo() {
-    	return ProcessBuilder.instance().getFluxo();
-    }
+
+	public VariableAccess getCurrentVariable() {
+		return currentVariable;
+	}
+
+	public void setCurrentVariable(VariableAccess currentVariable) {
+		this.currentVariable = currentVariable;
+		this.classificacoesDaVariavel = null;
+		this.classificacoesDisponiveis = null;
+	}
+
+	public static UploadConfig fromJson(String configuration) {
+		return new Gson().fromJson(configuration, UploadConfig.class);
+	}
+	
+	public static String toJson(UploadConfig configuration) {
+		return new Gson().toJson(configuration, UploadConfig.class);
+	}
+	
+	public static class UploadConfig {
+		private List<String> codigosClassificacaoDocumento;
+
+		public List<String> getCodigosClassificacaoDocumento() {
+			return codigosClassificacaoDocumento;
+		}
+
+		public void setCodigosClassificacaoDocumento(List<String> codigosClassificacaoDocumento) {
+			this.codigosClassificacaoDocumento = codigosClassificacaoDocumento;
+		}
+	}
 }

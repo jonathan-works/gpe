@@ -1,5 +1,6 @@
 package br.com.infox.epp.documento.facade;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -19,7 +20,6 @@ import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
-import br.com.infox.epp.fluxo.manager.VariavelClassificacaoDocumentoManager;
 
 @Stateless
 @AutoCreate
@@ -27,13 +27,10 @@ import br.com.infox.epp.fluxo.manager.VariavelClassificacaoDocumentoManager;
 @Name(ClassificacaoDocumentoFacade.NAME)
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class ClassificacaoDocumentoFacade {
+	public static final String NAME = "classificacaoDocumentoFacade";
 
     @Inject
     private ClassificacaoDocumentoManager classificacaoDocumentoManager;
-    @Inject
-    private VariavelClassificacaoDocumentoManager variavelClassificacaoDocumentoManager;
-
-    public static final String NAME = "classificacaoDocumentoFacade";
 
     public TipoDocumentoEnum[] getTipoDocumentoEnumValues() {
         return TipoDocumentoEnum.values();
@@ -52,8 +49,8 @@ public class ClassificacaoDocumentoFacade {
     }
 
     public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo, String nomeVariavel, Integer idFluxo) {
-    	if (nomeVariavel != null) {
-	        List<ClassificacaoDocumento> classificacoes = variavelClassificacaoDocumentoManager.listClassificacoesPublicadasDaVariavel(nomeVariavel, idFluxo);
+    	if (nomeVariavel != null) {//FIXME isso aqui tem que pegar da variavel, talvez passar somente o nome não seja mais ideal
+	        List<ClassificacaoDocumento> classificacoes = new ArrayList<ClassificacaoDocumento>();//variavelClassificacaoDocumentoManager.listClassificacoesPublicadasDaVariavel(nomeVariavel, idFluxo);
 	        if (!classificacoes.isEmpty()) {
 	            return classificacoes;
 	        }

@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 
 import br.com.infox.bpm.temp.ConfiguracoesVariaveisFluxo.DataConfig;
 import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.fluxo.crud.VariavelClassificacaoDocumentoAction;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;

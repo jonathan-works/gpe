@@ -9,7 +9,7 @@
     xmlns:a="http://richfaces.org/a4j">
     <s:div id="variavelClassificacaoDocumentoDiv" rendered="#{not empty variavelClassificacaoDocumentoAction.currentVariable}">
         <rich:panel
-            header="Classificações de documento da variável #{variavelClassificacaoDocumentoAction.currentVariable}">
+            header="Classificações de documento da variável #{variavelClassificacaoDocumentoAction.currentVariable.label}">
             <div class="picklist-div">
                 <rich:panel
                     header="#{infoxMessages['variavelClassificacaoDocumento.tableTitle']}"
@@ -25,7 +25,7 @@
                         <wi:columnOutputText hideOrder="true"
                             columnId="classificacaoDocumento"
                             columnHeader="#{infoxMessages['variavelClassificacaoDocumento.classificacaoDocumento']}"
-                            value="#{row.classificacaoDocumento.descricao}" />
+                            value="#{row.descricao}" />
                         <rich:column styleClass="dt-toolbar-col">
                             <h:form>
                                 <a:commandLink limitRender="true"

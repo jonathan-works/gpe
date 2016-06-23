@@ -72,8 +72,7 @@
                             <h:graphicImage
                                 title="#{infoxMessages['variavelClassificacaoDocumento.gerenciarClassificacoes']}"
                                 status=":status" url="#{layoutController.getResourceUrlByPath('/imagens/hamburger.png')}" />
-                            <f:setPropertyActionListener value="#{var.name}" target="#{variavelClassificacaoDocumentoAction.currentVariable}" />
-                            <f:setPropertyActionListener value="#{var.type}" target="#{variavelClassificacaoDocumentoAction.currentVariableType}" />
+                            <f:setPropertyActionListener value="#{var.variableAccess}" target="#{variavelClassificacaoDocumentoAction.currentVariable}" />
                         </a:commandLink>
                     </h:form>
                 </div>
