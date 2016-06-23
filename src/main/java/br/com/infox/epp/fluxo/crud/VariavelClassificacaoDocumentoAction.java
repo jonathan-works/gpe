@@ -48,7 +48,28 @@ public class VariavelClassificacaoDocumentoAction implements Serializable, Pagea
         }
     }
     
-    private void updateListaVariaveisEditor() {
+	private void updateConfiguracoesClassificacoes() {
+		if (isEditor()) {
+    		updateListaClassificacoesEditor();
+    	} else {
+    		updateListaClassificacoesUpload();
+    	}
+	}
+    
+    private void updateListaClassificacoesUpload() {
+    	if (!getClassificacoesDaVariavel().isEmpty()) {
+    		UploadConfig configuration = new UploadConfig();
+    		configuration.setCodigosClassificacaoDocumento(new ArrayList<String>());
+    		for (ClassificacaoDocumento classificacao : getClassificacoesDaVariavel()) {
+				configuration.getCodigosClassificacaoDocumento().add(classificacao.getCodigoDocumento());
+			}
+    		getCurrentVariable().setConfiguration(toJsonUploadConfig(configuration));
+    	} else {
+    		getCurrentVariable().setConfiguration(null);
+    	}
+	}
+    
+    private void updateListaClassificacoesEditor() {
 		EditorConfig configuration = null;
 		if (!StringUtil.isEmpty(getCurrentVariable().getConfiguration())) {
 			configuration = VariableEditorModeloHandler.fromJson(getCurrentVariable().getConfiguration());
@@ -78,8 +99,8 @@ public class VariavelClassificacaoDocumentoAction implements Serializable, Pagea
     	if (!StringUtil.isEmpty(getCurrentVariable().getConfiguration())) {
     		if (isEditor()) {
     			return VariableEditorModeloHandler.fromJson(getCurrentVariable().getConfiguration()).getCodigosClassificacaoDocumento();
-    		} else {//FIXME não pode pegar só do editor
-    			
+    		} else {
+    			return fromJsonUploadConfig(getCurrentVariable().getConfiguration()).getCodigosClassificacaoDocumento();
     		}
 		}
     	return null;
@@ -91,19 +112,13 @@ public class VariavelClassificacaoDocumentoAction implements Serializable, Pagea
     
     public void adicionarClassificacao(ClassificacaoDocumento classificacaoDocumento) {
     	getClassificacoesDaVariavel().add(classificacaoDocumento);
-    	//FIXME atualiza a configuracao dependendo se for pra editor ou upload
-    	if (isEditor()) {
-    		updateListaVariaveisEditor();
-    	}
+    	updateConfiguracoesClassificacoes();
     	this.classificacoesDisponiveis = null;
     }
-    
-    public void removerClassificacao(ClassificacaoDocumento classificacaoDocumento) {
+
+	public void removerClassificacao(ClassificacaoDocumento classificacaoDocumento) {
     	getClassificacoesDaVariavel().remove(classificacaoDocumento);
-    	//FIXME atualiza a configuracao dependendo se for pra editor ou upload
-    	if (isEditor()) {
-    		updateListaVariaveisEditor();
-    	}
+    	updateConfiguracoesClassificacoes();
     	this.classificacoesDisponiveis = null;
     }
     
@@ -191,11 +206,11 @@ public class VariavelClassificacaoDocumentoAction implements Serializable, Pagea
 		this.classificacoesDisponiveis = null;
 	}
 
-	public static UploadConfig fromJson(String configuration) {
+	public static UploadConfig fromJsonUploadConfig(String configuration) {
 		return new Gson().fromJson(configuration, UploadConfig.class);
 	}
 	
-	public static String toJson(UploadConfig configuration) {
+	public static String toJsonUploadConfig(UploadConfig configuration) {
 		return new Gson().toJson(configuration, UploadConfig.class);
 	}
 	
