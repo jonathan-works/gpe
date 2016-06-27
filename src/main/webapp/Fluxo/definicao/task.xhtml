@@ -171,9 +171,8 @@
                             render="varTable, addVarDiv, @form, pageBodyDialogMessage, varDiv, toolbarVariableForm, resetVariableForm"
                             limitRender="true" />
                     </wi:selectOneMenu>
-                    <a:jsFunction name="renderDominio" execute="@this" render="definicaoDominio" limitRender="true"
-                        oncomplete="hideLoading();" onbegin="showLoading();"
-                        action="#{dominioVariavelTarefaCrudAction.reset}" />
+                    <a:jsFunction name="renderDominio" execute="@this" render="varTable" limitRender="true"
+                        oncomplete="hideLoading();" onbegin="showLoading();" />
                     <a:jsFunction name="renderData" execute="@this" render="definicaoTipoData" limitRender="true"
                         oncomplete="hideLoading();" onbegin="showLoading();" />
                     <rich:panel id="definicaoTipoData" rendered="#{var.data}">
@@ -185,27 +184,25 @@
                         </wi:selectOneMenuEnum>
                     </rich:panel>
                     <rich:panel id="definicaoDominio" rendered="#{var.possuiDominio}">
-                        <ui:param name="dominio" value="#{var.dominioVariavelTarefa}" />
+                        <ui:param name="dominio" value="#{var.dominioHandler.dominioVariavelTarefa}" />
                         <ui:param name="params"
                             value="#{not empty dominio ? '?id='.concat(dominio.id).concat('&amp;tab=form') : ''}" />
                         <f:facet name="header">
                             <h:outputText value="Valor" />
                         </f:facet>
                         <wi:outputText id="dominioAtual" label="Valor atual"
-                            value="#{empty var.dominioVariavelTarefa ? 'Nenhum' : var.dominioVariavelTarefa.nome}" />
+                            value="#{empty var.dominioHandler.dominioVariavelTarefa ? 'Nenhum' : var.dominioHandler.dominioVariavelTarefa.nome}" />
                         <div />
                         <a:commandLink value="Configurar valor" onclick="showLoading()" limitRender="true"
                             render="dominioVariavelTarefaPanel" execute="@this"
                             oncomplete="hideLoading();#{rich:component('dominioVariavelTarefaPanel')}.show()"
                             style="padding-right: 5px">
-                            <f:setPropertyActionListener target="#{dominioVariavelTarefaCrudAction.currentVariable}"
-                                value="#{var}" />
+                            <f:setPropertyActionListener target="#{dominioVariavelTarefaCrudAction.currentVariable}" value="#{var}" />
                         </a:commandLink>
                         <a:commandLink value="Remover valor" onclick="showLoading()" limitRender="true"
                             render="definicaoDominio" execute="@this" oncomplete="hideLoading();"
-                            rendered="#{not empty var.dominioVariavelTarefa}">
-                            <f:setPropertyActionListener target="#{var.dominioVariavelTarefa}" value="#{null}" />
-                        </a:commandLink>
+                            rendered="#{not empty var.dominioHandler.dominioVariavelTarefa}"
+                            action="#{var.dominioHandler.setDominioVariavelTarefa(null)}" />
                     </rich:panel>
                     <rich:panel id="definicaoFragmento" rendered="#{var.fragment}">
                         <wi:selectOneMenu id="tipoDeFragmento" value="#{var.fragmentConfiguration}"

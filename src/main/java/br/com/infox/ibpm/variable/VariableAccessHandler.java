@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.seam.Component;
 import org.jboss.seam.contexts.ServletLifecycle;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
@@ -25,8 +24,6 @@ import br.com.infox.epp.fluxo.crud.VariavelClassificacaoDocumentoAction;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;
-import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
-import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
 
 public class VariableAccessHandler implements Serializable {
 
@@ -34,14 +31,12 @@ public class VariableAccessHandler implements Serializable {
 	public static final String EVENT_JBPM_VARIABLE_NAME_CHANGED = "jbpmVariableNameChanged";
     private static final String COMMA = ",";
     private static final long serialVersionUID = -4113688503786103974L;
-    public static final String PREFIX = "#{modeloDocumento.set('"; //FIXME REMOVER ISSO AQUI E VER ONDE DA ERRO
     private VariableAccess variableAccess;
     private String name;
     private VariableType type;
     private String value;
     private boolean[] access;
     private Task task;
-    private DominioVariavelTarefa dominioVariavelTarefa;
     private boolean possuiDominio = false;
     private boolean isData = false;
     private boolean isFile;
@@ -50,6 +45,7 @@ public class VariableAccessHandler implements Serializable {
     
     private VariableEditorModeloHandler modeloEditorHandler = new VariableEditorModeloHandler();
     private VariableDataHandler dataHandler = new VariableDataHandler();
+    private VariableDominioEnumerationHandler dominioHandler = new VariableDominioEnumerationHandler();
     
     public VariableAccessHandler(VariableAccess variableAccess, Task task) {
         this.task = task;
@@ -66,10 +62,7 @@ public class VariableAccessHandler implements Serializable {
                     break;
                 case ENUMERATION:
                 case ENUMERATION_MULTIPLE:
-                    if (tokens.length >= 3) {
-                        DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
-                        this.dominioVariavelTarefa = dominioVariavelTarefaManager.find(Integer.valueOf(tokens[2]));
-                    }
+                	getDominioHandler().init(getVariableAccess());
                     break;
                 case FRAGMENT:
                     if (tokens.length >= 3) {
@@ -125,8 +118,6 @@ public class VariableAccessHandler implements Serializable {
             
             if (isFragment()){
                 setFragmentConfiguration(fragmentConfiguration);
-            } else if (isPossuiDominio()) {
-                setDominioVariavelTarefa(dominioVariavelTarefa);
             } else {
                 setMappedName(auxiliarName, type);
             }
@@ -140,19 +131,6 @@ public class VariableAccessHandler implements Serializable {
     public void setValue(String value) {
         this.value = value;
         variableAccess.setValue(value);
-    }
-
-    public DominioVariavelTarefa getDominioVariavelTarefa() {
-        return dominioVariavelTarefa;
-    }
-
-    public void setDominioVariavelTarefa(DominioVariavelTarefa dominioVariavelTarefa) {
-        this.dominioVariavelTarefa = dominioVariavelTarefa;
-        if (this.dominioVariavelTarefa != null && name != null) {
-            setMappedName(name, type, this.dominioVariavelTarefa.getId());
-        } else {
-            setMappedName(name, type);
-        }
     }
 
     public VariableAccess update() {
@@ -350,10 +328,7 @@ public class VariableAccessHandler implements Serializable {
                     break;
                     case ENUMERATION:
                     case ENUMERATION_MULTIPLE:
-                        if (tokens.length >= 3) {
-                            DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
-                            setDominioVariavelTarefa(dominioVariavelTarefaManager.find(Integer.valueOf(tokens[2])));
-                        }
+                        getDominioHandler().init(getVariableAccess());
                     break;
                     default:
                     break;
@@ -421,6 +396,7 @@ public class VariableAccessHandler implements Serializable {
         VariavelClassificacaoDocumentoAction v = BeanManager.INSTANCE.getReference(VariavelClassificacaoDocumentoAction.class);
         v.setCurrentVariable(getVariableAccess());
         getDataHandler().init(getVariableAccess());
+        getDominioHandler().init(getVariableAccess());
         //FIXME aqui tem que limpar tudo que é específico, toda vez que mudar o tipo da variável
     }
 
@@ -459,6 +435,14 @@ public class VariableAccessHandler implements Serializable {
 
 	public void setDataHandler(VariableDataHandler dataHandler) {
 		this.dataHandler = dataHandler;
+	}
+
+	public VariableDominioEnumerationHandler getDominioHandler() {
+		return dominioHandler;
+	}
+
+	public void setDominioHandler(VariableDominioEnumerationHandler dominioHandler) {
+		this.dominioHandler = dominioHandler;
 	}
     
 }
