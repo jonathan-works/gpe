@@ -47,6 +47,10 @@ public class CertificateSignature {
     @Column(name="tp_signature")
     private TipoAssinatura signatureType = TipoAssinatura.MD5_ASSINADO;
     
+    @Enumerated(EnumType.STRING)
+    @Column(name="tp_data")
+    private TipoDados dataType;
+    
     public Integer getIdCertificateSignature() {
         return idCertificateSignature;
     }
@@ -93,6 +97,13 @@ public class CertificateSignature {
 		this.signatureType = signatureType;
 	}
 	
+	public TipoDados getDataType() {
+		return dataType;
+	}
+	public void setDataType(TipoDados dataType) {
+		this.dataType = dataType;
+	}
+	
 	@Override
     public int hashCode() {
         final int prime = 31;
@@ -125,5 +136,6 @@ public class CertificateSignature {
     public static final String TABLE_NAME = "tb_cert_sign";
     private static final String SEQUENCE_NAME = "sq_cert_sign";
     private static final String GENERATOR_NAME = "CertificateSignatureGenerator";
+
 
 }

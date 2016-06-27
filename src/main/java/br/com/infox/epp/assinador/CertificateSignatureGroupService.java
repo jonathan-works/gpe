@@ -16,6 +16,7 @@ import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.certificado.entity.CertificateSignature;
 import br.com.infox.epp.certificado.entity.CertificateSignatureGroup;
 import br.com.infox.epp.certificado.entity.TipoAssinatura;
+import br.com.infox.epp.certificado.entity.TipoDados;
 import br.com.infox.epp.certificado.enums.CertificateSignatureGroupStatus;
 import br.com.infox.util.time.DateRange;
 
@@ -50,6 +51,7 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
 			CertificateSignature certificateSignature = new CertificateSignature();
 			certificateSignature.setCertificateSignatureGroup(certificateSignatureGroup);
 			certificateSignature.setUuid(documento.toString());
+			certificateSignature.setDataType(TipoDados.DOCUMENTO_BIN);
 			getEntityManager().persist(certificateSignature);
 		}
 
