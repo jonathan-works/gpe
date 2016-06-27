@@ -60,8 +60,6 @@ public class CertificadoDigitalJNLPServlet extends HttpServlet {
 		}
 		config.setUrl(urlEpp + "/rest");
 		config.setToken(token);
-		config.setCodigoPerfil(codigoPerfil);
-		config.setCodigoLocalizacao(codigoLocalizacao);
 		
 		params.put("urlEpp", urlEpp);
 		params.put("config", new Gson().toJson(config));

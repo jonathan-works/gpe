@@ -3,11 +3,9 @@ package br.com.infox.epp.assinador.rest;
 import javax.inject.Inject;
 
 import br.com.infox.epp.assinador.AssinadorGroupService;
-import br.com.infox.epp.assinador.api.AssinaturaRest;
-import br.com.infox.epp.assinador.api.DocumentoRest;
+import br.com.infox.epp.assinador.api.AssinavelResource;
 import br.com.infox.epp.assinador.api.TokenAssinaturaResource;
 import br.com.infox.epp.cdi.config.BeanManager;
-import br.com.infox.epp.rest.RestException;
 
 public class TokenAssinaturaResourceImpl implements TokenAssinaturaResource {
 
@@ -26,38 +24,15 @@ public class TokenAssinaturaResourceImpl implements TokenAssinaturaResource {
 	}
 
 	@Override
-	public void erroProcessamento(RestException erro) {
-		groupService.erroProcessamento(token, erro.getMessage());
-	}
-
-	@Override
-	public DocumentoRest getDocumentoRest() {
-		groupService.validarToken(token);
-		DocumentoRestImpl documentoRestImpl = BeanManager.INSTANCE.getReference(DocumentoRestImpl.class);
-		documentoRestImpl.setTokenGrupo(token);
-		return documentoRestImpl;
-	}
-
-	@Override
-	public void processamentoFinalizado() {
-		groupService.processamentoFinalizado(token);
-	}
-
-	@Override
-	public AssinaturaRest getAssinaturaRest() {
-		groupService.validarToken(token);
-		AssinaturaRestImpl assinaturaRestImpl = BeanManager.INSTANCE.getReference(AssinaturaRestImpl.class);
-		assinaturaRestImpl.setTokenGrupo(token);
-		return assinaturaRestImpl;
-	}
-
-	@Override
 	public String getStatus() {
 		return groupService.getStatus(token).toString();
 	}
 
 	@Override
-	public void apagar() {
-		groupService.apagarGrupo(token);
+	public AssinavelResource getAssinavelResource() {
+		groupService.validarToken(token);
+		AssinavelResourceImpl assinavelResourceImpl = BeanManager.INSTANCE.getReference(AssinavelResourceImpl.class);
+		assinavelResourceImpl.setTokenGrupo(token);
+		return assinavelResourceImpl;
 	}
 }

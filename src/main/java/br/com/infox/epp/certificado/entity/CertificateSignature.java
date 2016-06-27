@@ -17,6 +17,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import br.com.infox.epp.certificado.enums.CertificateSignatureGroupStatus;
+
 /**
  * @author erikliberal
  *
@@ -50,6 +52,20 @@ public class CertificateSignature {
     @Enumerated(EnumType.STRING)
     @Column(name="tp_data")
     private TipoDados dataType;
+    
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tp_status")
+    private CertificateSignatureGroupStatus status;
+    
+    @Column(name="cd_erro")
+    private String codigoErro;
+    
+    @Column(name="ds_erro")
+    private String mensagemErro;
+    
+    @Column(name="sha256")
+    private byte[] sha256;
     
     public Integer getIdCertificateSignature() {
         return idCertificateSignature;
@@ -137,5 +153,29 @@ public class CertificateSignature {
     private static final String SEQUENCE_NAME = "sq_cert_sign";
     private static final String GENERATOR_NAME = "CertificateSignatureGenerator";
 
+	public CertificateSignatureGroupStatus getStatus() {
+		return status;
+	}
+	public void setStatus(CertificateSignatureGroupStatus status) {
+		this.status = status;
+	}
+	public String getCodigoErro() {
+		return codigoErro;
+	}
+	public void setCodigoErro(String codigoErro) {
+		this.codigoErro = codigoErro;
+	}
+	public String getMensagemErro() {
+		return mensagemErro;
+	}
+	public void setMensagemErro(String mensagemErro) {
+		this.mensagemErro = mensagemErro;
+	}
+	public byte[] getSha256() {
+		return sha256;
+	}
+	public void setSha256(byte[] sha256) {
+		this.sha256 = sha256;
+	}
 
 }

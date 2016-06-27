@@ -496,8 +496,11 @@
 					<wi:certificadoDigital id="assinarButton"
 						rendered="#{not empty anexarDocumentosView.documentosAssinaveis}"
 						documentList="#{anexarDocumentosView.documentoBinsAssinaveis}"
-						functionPreSign="infox.showLoading('Aguardando Usuário');"
-						functionPosSign="infox.hideLoading(); #{rich:component('assinarDocumentosPopUpPanel')}.hide(); desmarcarMarcarTodos();" />
+						doneAction=""
+						execute=""
+						render=""
+						oncomplete="#{rich:component('assinarDocumentosPopUpPanel')}.hide(); desmarcarMarcarTodos();"
+						/>
 
 					<a:commandButton id="cancelarAssinaturaButton" styleClass="buttons"
 						value="#{infoxMessages['button.cancelar']}"

@@ -9,6 +9,8 @@ public interface AssinadorGroupService {
 		ERRO, SUCESSO, DESCONHECIDO, AGUARDANDO_ASSINATURA, EXPIRADO 
 	}
 
+	public String createNewGroupWithBinary(List<byte[]> documentos);
+	
 	public String createNewGroup(List<UUID> documentos);
 	
 	public void validarToken(String token);
@@ -17,15 +19,15 @@ public interface AssinadorGroupService {
 	
 	public StatusToken getStatus(String token);
 	
-	public List<UUID> getDocumentos(String token);
+	public List<UUID> getAssinaveis(String token);
+	
+	public byte[] getSha256(String token, UUID uuidAssinavel); 
 	
 	public void apagarGrupo(String token);
 	
 	public void cancelar(String token);
 	
-	public void erroProcessamento(String token, String mensagem);
+	public void erroProcessamento(String token, UUID uuidAssinavel, String codigoErro,  String mensagem);
 	
-	public void processamentoFinalizado(String token);
-	
-	public void atualizarAssinaturaTemporaria(String tokenGrupo, UUID uuid, DadosAssinaturaLegada dadosAssinaturaLegada);
+	public void atualizarAssinaturaTemporaria(String tokenGrupo, UUID uuidAssinavel, DadosAssinaturaLegada dadosAssinaturaLegada);
 }

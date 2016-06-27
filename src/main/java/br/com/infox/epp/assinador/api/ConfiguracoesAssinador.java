@@ -4,8 +4,6 @@ public class ConfiguracoesAssinador {
 	
 	private String url;
 	private String token;
-	private String codigoPerfil;
-	private String codigoLocalizacao;
 	
 	public String getUrl() {
 		return url;
@@ -18,17 +16,5 @@ public class ConfiguracoesAssinador {
 	}
 	public void setToken(String token) {
 		this.token = token;
-	}
-	public String getCodigoPerfil() {
-		return codigoPerfil;
-	}
-	public void setCodigoPerfil(String codigoPerfil) {
-		this.codigoPerfil = codigoPerfil;
-	}
-	public String getCodigoLocalizacao() {
-		return codigoLocalizacao;
-	}
-	public void setCodigoLocalizacao(String codigoLocalizacao) {
-		this.codigoLocalizacao = codigoLocalizacao;
 	}
 }

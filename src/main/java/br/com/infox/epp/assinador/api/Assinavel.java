@@ -2,15 +2,15 @@ package br.com.infox.epp.assinador.api;
 
 import java.util.UUID;
 
-public class Documento {
+public class Assinavel {
 	
 	private UUID uuid;
 
-	public Documento() {
+	public Assinavel() {
 		
 	}
 	
-	public Documento(UUID uuid) {
+	public Assinavel(UUID uuid) {
 		super();
 		this.uuid = uuid;
 	}

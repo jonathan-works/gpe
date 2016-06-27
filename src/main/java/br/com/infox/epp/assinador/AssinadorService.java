@@ -92,6 +92,22 @@ public class AssinadorService implements Serializable {
 		return retorno;
 	}
 	
+	public void apagarGrupo(String token) {
+		groupService.apagarGrupo(token);
+	}
+	
+	public void cancelar(String tokenGrupo) {
+		groupService.cancelar(tokenGrupo);
+	}
+	
+	public void assinarAssinavel(String tokenGrupo, UUID uuidAssinavel, byte[] signature) {
+		DadosAssinaturaLegada dadosAssinaturaLegada = cmsAdapter.convert(signature);
+		groupService.atualizarAssinaturaTemporaria(tokenGrupo, uuidAssinavel, dadosAssinaturaLegada);
+	}
+	
+	public void erroProcessamento(String token, UUID uuidAssinavel, String codigo, String mensagem) {
+		groupService.erroProcessamento(token, uuidAssinavel, codigo, mensagem);
+	}
 	
 	public void assinarDocumento(UUID uuidDocumento, String codigoPerfil, String codigoLocalizacao, byte[] signature) {
 		DocumentoBin documentoBin = documentoBinManager.getByUUID(uuidDocumento);
@@ -112,5 +128,12 @@ public class AssinadorService implements Serializable {
 		}		
 	}
 	
+	public List<UUID> listarAssinaveis(String tokenGrupo) {
+		return groupService.getAssinaveis(tokenGrupo);
+	}
+	
+	public byte[] getSha256(String tokenGrupo, UUID uuidAssinavel) {
+		return groupService.getSha256(tokenGrupo, uuidAssinavel);		
+	}
 	
 }
