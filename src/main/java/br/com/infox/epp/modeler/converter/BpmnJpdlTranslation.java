@@ -20,6 +20,7 @@ public class BpmnJpdlTranslation {
 	private ProcessDefinition processDefinition;
 	
 	private Map<String, Transition> jpdlTransitions;
+	private Map<String, Integer> nodeOrder;
 	
 	private List<FlowNode> newNodes;
 	private List<Node> nodesToRemove;
@@ -108,6 +109,7 @@ public class BpmnJpdlTranslation {
 	private void loadNodes() {
 		newNodes = new ArrayList<>();
 		nodesToRemove = new ArrayList<>();
+		nodeOrder = new HashMap<>();
 		Map<String, FlowNode> flowNodes = new HashMap<>();
 		Map<String, Node> nodes = new HashMap<>();
 		
@@ -115,8 +117,10 @@ public class BpmnJpdlTranslation {
 			flowNodes.put(flowNode.getId(), flowNode);
 		}
 		if (processDefinition.getNodes() != null) {
+			int i = 0;
 			for (Node node : processDefinition.getNodes()) {
 				nodes.put(node.getKey(), node);
+				nodeOrder.put(node.getKey(), i++);
 			}
 		}
 		
@@ -166,5 +170,9 @@ public class BpmnJpdlTranslation {
 	
 	public Map<String, Transition> getJpdlTransitions() {
 		return jpdlTransitions;
+	}
+	
+	public Map<String, Integer> getNodeOrder() {
+		return nodeOrder;
 	}
 }	
