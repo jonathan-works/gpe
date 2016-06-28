@@ -43,11 +43,12 @@ public class BpmnUploader implements Serializable {
 		}
 	}
 	
-	@ExceptionHandled(successMessage = "Fluxo importado com sucesso")
+	@ExceptionHandled
 	public void importar() {
 		try {
 			fluxo = bpmnJpdlService.importarBpmn(fluxo, bpmn);
 			fluxoImportado = true;
+			FacesMessages.instance().add("Fluxo importado com sucesso");
 		} catch (BusinessException e) {
 			mensagens = new ArrayList<>();
 			mensagens.add(e.getMessage());
