@@ -71,6 +71,7 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
 		certificateSignature.setUuid(UUID.randomUUID().toString());
 		certificateSignature.setStatus(certificateSignatureGroup.getStatus());
 		certificateSignature.setSha256(DigestUtils.sha256(data));
+		certificateSignature.setSignatureType(TipoAssinatura.PKCS7);
 		
 		getEntityManager().persist(certificateSignature);
 		

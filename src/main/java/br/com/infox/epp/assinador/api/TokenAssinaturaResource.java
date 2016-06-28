@@ -6,12 +6,12 @@ import javax.ws.rs.Path;
 
 public interface TokenAssinaturaResource {
 	
-	@Path("/cancelado")
+	@Path("cancelado")
 	@POST
 	public void processamentoCancelado();
 	
 	@GET
-	@Path("/status")
+	@Path("status")
 	public String getStatus();
 	
 	@Path("assinavel")

@@ -25,20 +25,11 @@
 
       <ui:param name="token" value="#{assinadorController.criarListaDocumentos(documentList)}" />
       <ui:param name="parameter" value="#{assinadorController.getParametrosServletJNLP(token)}" />
-      <a:jsFunction name="#{id}OnComplete" action="#{assinadorController.removerToken(token)}" />
+      <a:jsFunction name="#{id}OnComplete" action="#{assinadorController.apagarToken(token)}" />
 	  <a:jsFunction name="#{id}DoneAction" action="#{elFunctions.invokeMethod(doneAction)}" execute="#{wi:get(execute, '@this')}" render="#{wi:get(render, '@this')}"
 	  	onbegin="infox.showLoading('Aguardando Usuário');" oncomplete="#{id}OnComplete; infox.hideLoading(); #{wi:get(oncomplete, ';')}" />
       <h:outputScript name="cookies.min.js" library="js" />  
       <h:outputScript>
-			function apagarGrupo() {
-				$.ajax({
-					type: 'DELETE',
-				    url: '#{assinadorController.getApagarGrupoURL(token)}',
-				    data: '',
-				    success: function(msg){
-				    }
-				});
-			}
           	namespace('infox.CertDig.#{id}', {  
   	          init: function() {  
   	              #{functionPreSign};

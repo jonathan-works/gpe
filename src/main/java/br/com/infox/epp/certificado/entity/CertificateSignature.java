@@ -47,7 +47,7 @@ public class CertificateSignature {
     
     @Enumerated(EnumType.STRING)
     @Column(name="tp_signature")
-    private TipoAssinatura signatureType = TipoAssinatura.MD5_ASSINADO;
+    private TipoAssinatura signatureType = TipoAssinatura.PKCS7;
     
     @Enumerated(EnumType.STRING)
     @Column(name="tp_data")

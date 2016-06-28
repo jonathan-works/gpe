@@ -8,7 +8,6 @@ import javax.ws.rs.core.Response;
 import br.com.infox.epp.assinador.AssinadorService;
 import br.com.infox.epp.assinador.api.Assinatura;
 import br.com.infox.epp.assinador.api.AssinaturaResource;
-import br.com.infox.epp.rest.RestException;
 
 public class AssinaturaResourceImpl implements AssinaturaResource {
 	
@@ -25,12 +24,6 @@ public class AssinaturaResourceImpl implements AssinaturaResource {
 	@Override
 	public Response assinar(Assinatura assinatura) {
 		assinadorService.assinarAssinavel(tokenGrupo, uuidAssinavel, assinatura.getAssinatura());
-		return Response.noContent().build();
-	}
-
-	@Override
-	public Response erro(RestException erro) {
-		assinadorService.erroProcessamento(tokenGrupo, uuidAssinavel, erro.getCode(), erro.getMessage());
 		return Response.noContent().build();
 	}
 

@@ -48,8 +48,6 @@ public class CertificadoDigitalJNLPServlet extends HttpServlet {
 	private void generateJnlp(HttpServletRequest request, Writer responseWriter, String token) {
 		Map<String, Object> params = new HashMap<>();
 		String urlEpp = request.getRequestURL().toString().replace(SERVLET_PATH, "");
-		String codigoPerfil = request.getParameter(PARAMETRO_CODIGO_PERFIL);
-		String codigoLocalizacao = request.getParameter(PARAMETRO_CODIGO_LOCALIZACAO);
 
 		ConfiguracoesAssinador config = new ConfiguracoesAssinador();
 		

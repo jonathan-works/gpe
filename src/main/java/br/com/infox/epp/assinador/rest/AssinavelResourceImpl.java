@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.inject.Inject;
+import javax.ws.rs.core.Response;
 
 import org.apache.commons.codec.binary.Hex;
 
@@ -12,6 +13,8 @@ import br.com.infox.epp.assinador.AssinadorService;
 import br.com.infox.epp.assinador.api.AssinaturaResource;
 import br.com.infox.epp.assinador.api.Assinavel;
 import br.com.infox.epp.assinador.api.AssinavelResource;
+import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.rest.RestException;
 
 public class AssinavelResourceImpl implements AssinavelResource {
 
@@ -47,11 +50,18 @@ public class AssinavelResourceImpl implements AssinavelResource {
 
 	@Override
 	public AssinaturaResource getAssinaturaResource(UUID uuid) {
-		AssinaturaResourceImpl assinaturaResourceImpl = new AssinaturaResourceImpl();
+		AssinaturaResourceImpl assinaturaResourceImpl = BeanManager.INSTANCE.getReference(AssinaturaResourceImpl.class);
 		assinaturaResourceImpl.setTokenGrupo(tokenGrupo);
 		assinaturaResourceImpl.setUuidAssinavel(uuid);
 		return assinaturaResourceImpl;
 	}
+	
+	@Override
+	public Response erro(UUID uuidAssinavel, RestException erro) {
+		assinadorService.erroProcessamento(tokenGrupo, uuidAssinavel, erro.getCode(), erro.getMessage());
+		return Response.noContent().build();
+	}
+	
 
 	public void setTokenGrupo(String tokenGrupo) {
 		this.tokenGrupo = tokenGrupo;

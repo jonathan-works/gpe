@@ -54,6 +54,10 @@ public class AssinadorController implements Serializable {
 		return String.format("%s=%s&%s=%s&%s=%s", PARAMETRO_TOKEN, token, PARAMETRO_CODIGO_PERFIL, codigoPerfil, PARAMETRO_CODIGO_LOCALIZACAO, codigoLocalizacao);
 	}
 	
+	public void apagarToken(String token) {
+		groupService.apagarGrupo(token);
+	}
+	
 	
 	public String getURITokenResource(String token, String nomeMetodo) {
 		Method metodo;
@@ -71,10 +75,6 @@ public class AssinadorController implements Serializable {
 	
 	public String getTokenStatusURL(String token) {
 		return getURITokenResource(token, "getStatus");
-	}
-	
-	public String getApagarGrupoURL(String token) {
-		return getURITokenResource(token, "apagar");
 	}
 	
 	public String getJNLPUrl() {
