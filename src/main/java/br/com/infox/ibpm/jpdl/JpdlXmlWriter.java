@@ -265,7 +265,6 @@ public class JpdlXmlWriter {
 
 	@SuppressWarnings({ UNCHECKED, RAWTYPES })
     private void writeProcessState(ProcessState node, Element nodeElement) {
-        Element subProcess = addElement(nodeElement, "sub-process");
         String subProcessName;
         if (node.getSubProcessDefinition() != null) { // Importação
             subProcessName = node.getSubProcessDefinition().getName();
@@ -276,10 +275,14 @@ public class JpdlXmlWriter {
         if (node.getActivityBehavior() != null){
             node.getActivityBehavior().write(nodeElement);
         }
-        subProcess.addAttribute(ELEMENT_NAME, subProcessName);
-        subProcess.addAttribute("binding", "late");
-        Set variableAccess = (Set) ReflectionsUtil.getValue(node, "variableAccesses");
-        writeVariables(nodeElement, variableAccess);
+        
+        if (subProcessName != null) {
+        	Element subProcess = addElement(nodeElement, "sub-process");
+	        subProcess.addAttribute(ELEMENT_NAME, subProcessName);
+	        subProcess.addAttribute("binding", "late");
+	        Set variableAccess = (Set) ReflectionsUtil.getValue(node, "variableAccesses");
+	        writeVariables(nodeElement, variableAccess);
+        }
     }
    
     private void writeAssignment(Task task, Element element){

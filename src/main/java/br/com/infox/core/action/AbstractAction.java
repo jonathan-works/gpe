@@ -89,10 +89,13 @@ public abstract class AbstractAction<T, M extends Manager<? extends DAO<T>, T>> 
                 getManager().update(t);
                 ret = UPDATED;
             }
-        } catch (final DAOException daoException) {
-            final String msg = isPersist ? "persist()" : "update()";
-            LOG.error(msg, daoException);
-            ret = actionMessagesService.handleDAOException(daoException);
+        } catch (Exception e) {
+        	final String msg = isPersist ? "persist()" : "update()";
+            LOG.error(msg, e);
+            actionMessagesService.handleGenericException(e,  "Registro alterado por outro usuário, tente novamente");
+            if (e instanceof DAOException && ((DAOException) e).getDatabaseErrorCode() != null) {
+            	ret = ((DAOException) e).getDatabaseErrorCode().toString();
+            }
         }
 
         return ret;

@@ -7,7 +7,6 @@ import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -30,27 +29,20 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Node;
-import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.ProcessDefinition;
-import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.exe.ExecutionContext;
-import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.jpdl.JpdlException;
 import org.jbpm.jpdl.xml.Problem;
 import org.jbpm.taskmgmt.def.Task;
-import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.richfaces.context.ExtendedPartialViewContext;
 import org.xml.sax.InputSource;
 
-import com.google.common.base.Strings;
-
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.manager.GenericManager;
-import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.config.BeanManager;
@@ -71,7 +63,6 @@ import br.com.infox.epp.tarefa.manager.TarefaJbpmManager;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
 import br.com.infox.ibpm.jpdl.JpdlXmlWriter;
-import br.com.infox.ibpm.node.InfoxMailNode;
 import br.com.infox.ibpm.process.definition.fitter.EventFitter;
 import br.com.infox.ibpm.process.definition.fitter.NodeFitter;
 import br.com.infox.ibpm.process.definition.fitter.SwimlaneFitter;
@@ -91,9 +82,9 @@ import br.com.infox.log.Logging;
 @ViewScoped
 public class ProcessBuilder implements Serializable {
 
-    private static final String PROCESS_DEFINITION_TABPANEL_ID = ":processDefinition";
+    private static final String MODELADOR_FORM_ID = ":modeladorForm";
+	private static final String PROCESS_DEFINITION_TABPANEL_ID = ":processDefinition";
     private static final String PROCESS_DEFINITION_MESSAGES_ID = ":pageBodyDialogMessage";
-    private static final String MODELADOR_TAB_NAME = "modeladorTab";
 
     private static final long serialVersionUID = 1L;
     private static final LogProvider LOG = Logging.getLogProvider(ProcessBuilder.class);
@@ -122,8 +113,6 @@ public class ProcessBuilder implements Serializable {
     private ActionMessagesService actionMessagesService;
     @Inject
     private TaskExpirationManager taskExpirationManager;
-    @Inject
-    private InfoxMessages infoxMessages;
     @Inject
     private FluxoMergeService fluxoMergeService;
     @Inject
@@ -253,30 +242,21 @@ public class ProcessBuilder implements Serializable {
     }
 
     public void prepareUpdate(ActionEvent event) {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        UIComponent processDefinitionTabPanel = facesContext.getViewRoot().findComponent(PROCESS_DEFINITION_TABPANEL_ID);
-        UIComponent messages = facesContext.getViewRoot().findComponent(PROCESS_DEFINITION_MESSAGES_ID);
-        ExtendedPartialViewContext context = ExtendedPartialViewContext.getInstance(facesContext);
+        ExtendedPartialViewContext context = ExtendedPartialViewContext.getInstance(FacesContext.getCurrentInstance());
 
         try {
             validateJsfTree();
-            validateJbpmGraph();
-            validateMailNode();
-            validateVariables();
-            validateSubProcessNode();
             validateTaskExpiration();
         } catch (IllegalStateException e) {
             FacesMessages.instance().clearGlobalMessages();
             FacesMessages.instance().add(e.getMessage());
-            context.getRenderIds().add(messages.getClientId(facesContext));
+            context.getRenderIds().add(PROCESS_DEFINITION_MESSAGES_ID);
             throw new AbortProcessingException("processBuilder.prepareUpdate(event)", e);
         }
 
-        if (!MODELADOR_TAB_NAME.equals(tab)) {
-        	String processDefinitionTabPanelClientId = processDefinitionTabPanel.getClientId(facesContext);
-            context.getRenderIds().add(processDefinitionTabPanelClientId);
-            context.getRenderIds().add(messages.getClientId(facesContext));
-        }
+        context.getRenderIds().add(PROCESS_DEFINITION_TABPANEL_ID);
+        context.getRenderIds().add(MODELADOR_FORM_ID);
+        context.getRenderIds().add(PROCESS_DEFINITION_MESSAGES_ID);
     }
 
     private void validateTaskExpiration() {
@@ -292,97 +272,6 @@ public class ProcessBuilder implements Serializable {
         } catch (DAOException de) {
             throw new IllegalStateException(de);
         }
-    }
-
-    private void validateVariables() {
-        List<Node> nodes = getInstance().getNodes();
-        for (Node node : nodes) {
-            if (node.getNodeType().equals(NodeType.Task)) {
-                TaskController taskController = ((TaskNode) node).getTask(node.getName()).getTaskController();
-                if (taskController != null) {
-                    List<VariableAccess> variables = taskController.getVariableAccesses();
-                    for (VariableAccess variable : variables) {
-                        String[] tokens = variable.getMappedName().split(":");
-                        if (tokens.length == 1) {
-                            throw new IllegalStateException("Existe uma variável sem nome na tarefa " + node.getName()); 
-                        } else if (VariableType.NULL.name().equals(tokens[0])) {
-                            throw new IllegalStateException("A variável " + tokens[1] + " da tarefa " + node.getName() + " não possui tipo");
-                        } else if (VariableType.DATE.name().equals(tokens[0]) && tokens.length < 3) {
-                            throw new IllegalStateException("A variável " + tokens[1] + " da tarefa " + node.getName() + " é do tipo data mas não possui tipo de validação");
-                        } else if (VariableType.ENUMERATION.name().equals(tokens[0]) && tokens.length < 3) {
-                            throw new IllegalStateException("A variável " + tokens[1] + " da tarefa " + node.getName() + " é do tipo lista de dados mas não possui lista de valores definida");
-                        } else if (VariableType.ENUMERATION_MULTIPLE.name().equals(tokens[0]) && tokens.length < 3) {
-                            throw new IllegalStateException("A variável " + tokens[1] + " da tarefa " + node.getName() + " é do tipo lista de dados (múltipla) mas não possui lista de valores definida");
-                        } else if (VariableType.FRAGMENT.name().equals(tokens[0]) && tokens.length < 3) {
-                            System.out.println(tokens);
-                            throw new IllegalStateException(MessageFormat.format(infoxMessages.get("processDefinition.variable.list.error"), tokens[1], node.getName()));
-                        } 
-                    }
-                }
-            }
-        }
-    }
-
-    private void validateMailNode() {
-        List<Node> nodes = getInstance().getNodes();
-        for (Node node : nodes) {
-            if (node instanceof InfoxMailNode) {
-                InfoxMailNode mailNode = (InfoxMailNode) node;
-                if (Strings.isNullOrEmpty(mailNode.getTo())) {
-                    throw new IllegalStateException("O nó de email " + mailNode.getName() + " deve possuir pelo menos um destinatário.");
-                }
-                if (mailNode.getModeloDocumento() == null) {
-                    throw new IllegalStateException("O nó de email " + mailNode.getName() + " deve possuir um modelo de documento associado.");
-                }
-            }
-        }
-    }
-    
-    private void validateSubProcessNode() {
-        List<Node> nodes = getInstance().getNodes();
-        for (Node node : nodes) {
-            if (node instanceof ProcessState) {
-                ProcessState subprocess = (ProcessState) node;
-                if (Strings.isNullOrEmpty(subprocess.getSubProcessName())) {
-                    throw new IllegalStateException("O nó " + subprocess.getName() + " é do tipo subprocesso e deve possuir um fluxo associado.");
-                }
-            }
-        }
-    }
-
-    private void validateJbpmGraph() {
-        List<Node> nodes = getInstance().getNodes();
-        for (Node node : nodes) {
-            if (!node.getNodeType().equals(NodeType.EndState)
-                    && (node.getLeavingTransitions() == null || node.getLeavingTransitions().isEmpty())) {
-                throw new IllegalStateException("Existe algum nó na definição que não possui transição de saída.");
-            }
-        }
-
-        Node start = getInstance().getStartState();
-        Set<Node> visitedNodes = new HashSet<>();
-        if (!findPathToEndState(start, visitedNodes, false)) {
-            throw new IllegalStateException("Fluxo mal-definido, não há como alcançar o nó de término.");
-        }
-    }
-
-    private boolean findPathToEndState(Node node, Set<Node> visitedNodes,
-            boolean hasFoundEndState) {
-        if (node.getNodeType().equals(NodeType.EndState)) {
-            return true;
-        }
-
-        if (!visitedNodes.contains(node)) {
-            visitedNodes.add(node);
-
-            List<Transition> transitions = node.getLeavingTransitions();
-            for (Transition t : transitions) {
-                if (t.getTo() != null) {
-                    hasFoundEndState = findPathToEndState(t.getTo(), visitedNodes, hasFoundEndState);
-                }
-            }
-        }
-        return hasFoundEndState;
     }
 
     private void validateJsfTree() {
@@ -407,7 +296,7 @@ public class ProcessBuilder implements Serializable {
                 parseInstance(xmlDef);
                 fluxo.setXml(xmlDef);
                 try {
-                    genericManager.update(fluxo);
+                    fluxo = (Fluxo) genericManager.update(fluxo);
                 } catch (DAOException e) {
                     LOG.error(".update()", e);
                 }
@@ -737,5 +626,13 @@ public class ProcessBuilder implements Serializable {
     
     public String getTypeLabel(String type) {
         return VariableType.valueOf(type).getLabel();
+    }
+    
+    public void setIdFluxo(Integer idFluxo) {
+    	if (idFluxo == null) {
+    		fluxo = null;
+    	} else {
+    		fluxo = fluxoManager.find(idFluxo);
+    	}
     }
 }

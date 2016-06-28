@@ -15,6 +15,7 @@ import br.com.infox.epp.fluxo.dao.DefinicaoVariavelProcessoDAO;
 import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
+import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.log.Log;
 import br.com.infox.log.Logging;
 
@@ -32,21 +33,16 @@ public class DefinicaoVariavelProcessoAction implements Serializable {
     @Inject
     private ActionMessagesService actionMessagesService;
     
-    private Fluxo fluxo;
     private DefinicaoVariavelProcesso variavel;
     private List<DefinicaoVariavelProcesso> variaveis;
     private int page = 1;
     private int maxPages;
     private Integer maiorOrdem;
-
-    public void setFluxo(Fluxo fluxo) {
-        this.fluxo = fluxo;
-    }
-
+    
     public void adicionarVariavel() {
         variavel = new DefinicaoVariavelProcesso();
         variavel.setOrdem(getMaiorOrdem() + 1);
-        variavel.setFluxo(fluxo);
+        variavel.setFluxo(getFluxo());
     }
 
     public void persist() {
@@ -99,10 +95,10 @@ public class DefinicaoVariavelProcessoAction implements Serializable {
 
     public List<DefinicaoVariavelProcesso> listVariaveis(int maxResults) {
         if (variaveis == null) {
-            int total = definicaoVariavelProcessoManager.getTotalVariaveisByFluxo(fluxo).intValue();
+            int total = definicaoVariavelProcessoManager.getTotalVariaveisByFluxo(getFluxo()).intValue();
             calcMaxPages(maxResults, total);
             int start = calcStart(maxResults);
-            variaveis = definicaoVariavelProcessoManager.listVariaveisByFluxo(fluxo, start, maxResults);
+            variaveis = definicaoVariavelProcessoManager.listVariaveisByFluxo(getFluxo(), start, maxResults);
         }
         return variaveis;
     }
@@ -161,7 +157,7 @@ public class DefinicaoVariavelProcessoAction implements Serializable {
     
     public Integer getMaiorOrdem() {
     	if (maiorOrdem == null) {
-    		maiorOrdem = definicaoVariavelProcessoDAO.getMaiorOrdem(fluxo);
+    		maiorOrdem = definicaoVariavelProcessoDAO.getMaiorOrdem(getFluxo());
     	}
 		return maiorOrdem;
 	}
@@ -184,5 +180,9 @@ public class DefinicaoVariavelProcessoAction implements Serializable {
     		actionMessagesService.handleDAOException(e);
     		LOG.error("", e);
     	}
+    }
+    
+    private Fluxo getFluxo() {
+    	return ProcessBuilder.instance().getFluxo();
     }
 }

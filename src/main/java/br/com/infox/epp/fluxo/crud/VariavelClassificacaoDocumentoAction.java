@@ -19,6 +19,7 @@ import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.VariavelClassificacaoDocumento;
 import br.com.infox.epp.fluxo.manager.VariavelClassificacaoDocumentoManager;
+import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 
 @Name(VariavelClassificacaoDocumentoAction.NAME)
@@ -39,7 +40,6 @@ public class VariavelClassificacaoDocumentoAction implements Serializable, Pagea
     private VariavelClassificacaoDocumento variavelClassificacaoDocumento = new VariavelClassificacaoDocumento();
     private String currentVariable;
     private TipoDocumentoEnum tipoDocumento;
-    private Fluxo fluxo;
     private List<ClassificacaoDocumento> classificacoesDisponiveis;
     private List<VariavelClassificacaoDocumento> classificacoesDaVariavel;
     private int page = 1;
@@ -71,7 +71,7 @@ public class VariavelClassificacaoDocumentoAction implements Serializable, Pagea
     public void adicionarClassificacao(ClassificacaoDocumento classificacao) {
         variavelClassificacaoDocumento.setVariavel(currentVariable);
         variavelClassificacaoDocumento.setClassificacaoDocumento(classificacao);
-        variavelClassificacaoDocumento.setFluxo(fluxo);
+        variavelClassificacaoDocumento.setFluxo(getFluxo());
         variavelClassificacaoDocumento.setPublicado(false);
         variavelClassificacaoDocumento.setRemoverNaPublicacao(false);
         try {
@@ -96,14 +96,9 @@ public class VariavelClassificacaoDocumentoAction implements Serializable, Pagea
         }
     }
     
-    public void setFluxo(Fluxo fluxo) {
-        this.fluxo = fluxo;
-        clearSearch();
-    }
-    
     public List<ClassificacaoDocumento> getClassificacoesDisponiveis() {
         if (classificacoesDisponiveis == null) {
-            Integer idFluxo = fluxo.getIdFluxo();
+            Integer idFluxo = getFluxo().getIdFluxo();
             this.total = variavelClassificacaoDocumentoManager.totalClassificacoesDisponiveisParaVariavel(idFluxo, currentVariable, tipoDocumento, nomeClassificacaoDocumento);
             this.pageCount = Long.valueOf(total / MAX_RESULTS + (total % MAX_RESULTS != 0 ? 1 : 0)).intValue();
             int start = (this.page - 1) * MAX_RESULTS;
@@ -114,7 +109,7 @@ public class VariavelClassificacaoDocumentoAction implements Serializable, Pagea
     
     public List<VariavelClassificacaoDocumento> getClassificacoesDaVariavel() {
         if (classificacoesDaVariavel == null) {
-            classificacoesDaVariavel = variavelClassificacaoDocumentoManager.listVariavelClassificacao(currentVariable, fluxo.getIdFluxo());
+            classificacoesDaVariavel = variavelClassificacaoDocumentoManager.listVariavelClassificacao(currentVariable, getFluxo().getIdFluxo());
         }
         return classificacoesDaVariavel;
     }
@@ -167,5 +162,9 @@ public class VariavelClassificacaoDocumentoAction implements Serializable, Pagea
     
     public void setNomeClassificacaoDocumento(String nomeClassificacaoDocumento) {
         this.nomeClassificacaoDocumento = nomeClassificacaoDocumento;
+    }
+    
+    private Fluxo getFluxo() {
+    	return ProcessBuilder.instance().getFluxo();
     }
 }

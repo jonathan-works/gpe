@@ -23,7 +23,6 @@ import org.jbpm.taskmgmt.def.TaskController;
 
 import com.google.common.base.Strings;
 
-import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.ibpm.node.InfoxMailNode;
 import br.com.infox.ibpm.task.handler.InfoxTaskControllerHandler;
 import br.com.infox.ibpm.util.BpmUtil;
@@ -53,12 +52,7 @@ public class NodeFactory {
 		} else if (flowNode.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_EXCLUSIVE_GATEWAY)) {
 			node = new Decision(getLabel(flowNode));
 		} else if (flowNode.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_SUB_PROCESS)) {
-			if (flowNode.getName() == null) {
-				node = new ProcessState();
-			} else {
-				node = new ProcessState(flowNode.getName());
-				ReflectionsUtil.setValue(node, "subProcessName", flowNode.getName());
-			}
+			node = new ProcessState(getLabel(flowNode));
 		} else if (flowNode.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_INTERMEDIATE_THROW_EVENT)) {
 			node = new Node(getLabel(flowNode));
 		} else if (flowNode.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_PARALLEL_GATEWAY)) {

@@ -32,7 +32,6 @@ import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.Fork;
 import org.jbpm.graph.node.Join;
-import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
@@ -179,9 +178,6 @@ public class BpmnJpdlService {
 			if (!transition.getName().equals(NodeFactory.getLabel(sequenceFlow))) {
 				transition.setName(NodeFactory.getLabel(sequenceFlow));
 			}
-			if (sequenceFlow.getConditionExpression() != null) {
-				transition.setCondition(sequenceFlow.getConditionExpression().getTextContent());
-			}
 			
 			Node oldTo = transition.getTo();
 			Node oldFrom = transition.getFrom();
@@ -201,7 +197,7 @@ public class BpmnJpdlService {
 		for (Lane lane : bpmnModel.getModelElementsByType(Lane.class)) {
 			Swimlane swimlane = translation.getSwimlanes().get(lane.getId());
 			processDefinition.getTaskMgmtDefinition().getSwimlanes().remove(swimlane.getName());
-			ReflectionsUtil.setValue(swimlane, "name", lane.getName());
+			ReflectionsUtil.setValue(swimlane, "name", lane.getName() != null ? lane.getName() : lane.getId());
 			processDefinition.getTaskMgmtDefinition().addSwimlane(swimlane);
 		}
 	}
@@ -209,10 +205,18 @@ public class BpmnJpdlService {
 	private void updateNodes(BpmnJpdlTranslation translation, BpmnModelInstance bpmnModel, ProcessDefinition processDefinition) {
 		for (FlowNode flowNode : bpmnModel.getModelElementsByType(FlowNode.class)) {
 			Node node = processDefinition.getNode(flowNode.getId());
-			node.setName(NodeFactory.getLabel(flowNode));
-			if (node instanceof ProcessState) {
-				ReflectionsUtil.setValue(node, "subProcessName", flowNode.getName());
-			} else if (node.getNodeType().equals(NodeType.Task)) {
+			String label = NodeFactory.getLabel(flowNode);
+			if (label.equals(flowNode.getId()) && !label.equals(node.getName())) {
+				// workaround para o comportamento do método hasNode do ProcessDefinition
+				int index = processDefinition.getNodes().indexOf(node);
+				processDefinition.removeNode(node);
+				node.setName(label);
+				processDefinition.addNode(node);
+				processDefinition.reorderNode(processDefinition.getNodes().indexOf(node), index);
+			} else {
+				node.setName(label);
+			}
+			if (node.getNodeType().equals(NodeType.Task)) {
 				TaskNode taskNode = (TaskNode) node;
 				if (taskNode.getTasks().size() > 1) {
 					throw new BusinessRollbackException("Nós de tarefa com mais de uma task não são suportados");
@@ -257,7 +261,7 @@ public class BpmnJpdlService {
 
 	private void createSwimlanes(BpmnJpdlTranslation translation, ProcessDefinition processDefinition) {
 		for (Lane lane : translation.getNewLanes()) {
-			Swimlane swimlane = new Swimlane(lane.getName());
+			Swimlane swimlane = new Swimlane(lane.getName() != null ? lane.getName() : lane.getId());
 			swimlane.setKey(lane.getId());
 			swimlane.setTaskMgmtDefinition(processDefinition.getTaskMgmtDefinition());
 			processDefinition.getTaskMgmtDefinition().addSwimlane(swimlane);

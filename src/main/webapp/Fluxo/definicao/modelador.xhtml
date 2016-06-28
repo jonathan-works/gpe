@@ -14,25 +14,17 @@
 	
 	<h:inputHidden id="bpmn" value="#{bpmnView.fluxo.bpmn}" />
 	
-	<h:form id="modeladorForm">
-		<a:jsFunction name="doUpdate" execute="@this" render=":processDefinition :pageBodyDialogMessage" action="#{bpmnView.update}"
-			oncomplete="infox.hideLoading()">
-			<a:param name="bpmnInformation" assignTo="#{bpmnView.bpmnInformation}"/>
-		</a:jsFunction>
-		<a:jsFunction name="configureElement" execute="@this" render=":processDefinition :pageBodyDialogMessage" action="#{bpmnView.configureElement}">
-			<a:param name="elementKey" assignTo="#{bpmnView.elementKey}" />
-		</a:jsFunction>
-		<script>
-			function updateBpmn() {
-				doUpdate(JSON.stringify(modeler.getBpmnInformation()));
-			}
-		</script>
-	</h:form>
-	
 	<script>
-        var modeler = new InfoxBpmnModeler({
+		var bpmn;
+		if (!window.modeler) {
+			bpmn = document.getElementById("#{rich:clientId('bpmn')}").value;
+		} else {
+			bpmn = window.modeler.getBpmnInformation().bpmn;
+		}
+        window.modeler = new InfoxBpmnModeler({
         	'container': document.getElementById("#{rich:clientId('modelador')}"),
-        	'bpmn': document.getElementById("#{rich:clientId('bpmn')}").value
+        	'bpmn': bpmn,
+        	'configureElement': configureElement
         });
     </script>
 </ui:composition>

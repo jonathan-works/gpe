@@ -14,15 +14,12 @@
  
   <ui:define name="title">#{infoxMessages['fluxo.titlePage']}: #{processBuilder.instance.name}</ui:define>
   <ui:define name="head">
-  <c:if test="#{not empty flash.fluxo}">
-  		<c:set property="fluxo" target="#{processBuilder}" value="#{flash.fluxo}"></c:set>
-  		<c:set property="fluxo" target="#{definicaoVariavelProcessoAction}" value="#{flash.fluxo}"></c:set>
-  		<c:set property="fluxo" target="#{variavelClassificacaoDocumentoAction}" value="#{flash.fluxo}"></c:set>
-  		<c:set property="fluxo" target="#{bpmnView}" value="#{flash.fluxo}"></c:set>
- 		 <f:metadata>
- 		 	<f:event listener="#{processBuilder.load()}" type="preRenderView" />
-  		</f:metadata>
-  </c:if>
+	<c:if test="#{not empty flash.idFluxo}">
+		<c:set property="idFluxo" target="#{processBuilder}" value="#{flash.idFluxo}"></c:set>
+		<f:metadata>
+			<f:event listener="#{processBuilder.load()}" type="preRenderView" />
+		</f:metadata>
+	</c:if>
     <h:outputScript
       name="jbpmGraph.js"
       library="js" />
@@ -36,6 +33,20 @@
     <ui:param
       name="def"
       value="#{processBuilder.instance}" />
+   	 <h:form id="modeladorForm">
+		<a:jsFunction name="doUpdate" execute="@this" render=":processDefinition @form :pageBodyDialogMessage" action="#{bpmnView.update}"
+			oncomplete="infox.hideLoading()" actionListener="#{processBuilder.prepareUpdate}">
+			<a:param name="bpmnInformation" assignTo="#{bpmnView.bpmnInformation}"/>
+		</a:jsFunction>
+		<a:jsFunction name="configureElement" execute="@this" render=":processDefinition :pageBodyDialogMessage" action="#{bpmnView.configureElement}">
+			<a:param name="elementKey" assignTo="#{bpmnView.elementKey}" />
+		</a:jsFunction>
+		<script>
+			function updateBpmn() {
+				doUpdate(JSON.stringify(modeler.getBpmnInformation()));
+			}
+		</script>
+	</h:form>
     <infox:tabPanel
       switchType="ajax"
       activeTab="#{processBuilder.tab}"
@@ -109,22 +120,18 @@
               infox.editor[key].instance.fire("blur");
             }
           }
-          updateFluxo();
+          if (window.modeler) {
+          	updateBpmn();
+          } else {
+            updateFluxo();
+          }
         }
       </h:outputScript>
       <a:jsFunction
         name="updateFluxo"
         actionListener="#{processBuilder.prepareUpdate}"
         action="#{processBuilder.update}"
-        oncomplete="infox.hideLoading()"
-        rendered="#{processBuilder.tab ne 'modeladorTab'}"/>
-      <!-- Função updateBpmn definida no graph.xhtml -->
-      <a:jsFunction
-        name="updateFluxo"
-        actionListener="#{processBuilder.prepareUpdate}"
-        action="#{processBuilder.update}"
-        oncomplete="updateBpmn();"
-        rendered="#{processBuilder.tab eq 'modeladorTab'}"/>
+        oncomplete="infox.hideLoading()"/>
       <a:commandButton
         id="gravar"
         value="#{infoxMessages['processBuilder.saveBtn']}"
@@ -144,6 +151,7 @@
         value="#{infoxMessages['processBuilder.newBtn']}"
         render=":processDefinition, @form"
         onclick="return confirm('#{infoxMessages['processBuilder.confirmNew']}');"
+        onbeforedomupdate="delete window.modeler;"
         rendered="#{processBuilder.exists}"
         styleClass="buttons #{wi:get(styleClass, '')}" />
     </h:form>

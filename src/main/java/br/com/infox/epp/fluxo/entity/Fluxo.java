@@ -71,6 +71,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -146,6 +147,11 @@ public class Fluxo implements Serializable {
     
     @Column(name = "ds_svg")
     private String svg;
+    
+    @NotNull
+    @Version
+    @Column(name = "nr_version", nullable = false)
+    private Long version;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = FLUXO_ATTRIBUTE)
     private List<FluxoPapel> fluxoPapelList = new ArrayList<FluxoPapel>(0);
@@ -268,6 +274,30 @@ public class Fluxo implements Serializable {
     public void setDataFimPublicacao(final Date dataFimPublicacao) {
         this.dataFimPublicacao = dataFimPublicacao;
     }
+    
+    public String getBpmn() {
+		return bpmn;
+	}
+    
+    public void setBpmn(String bpmn) {
+		this.bpmn = bpmn;
+	}
+    
+    public String getSvg() {
+		return svg;
+	}
+    
+    public void setSvg(String svg) {
+		this.svg = svg;
+	}
+    
+    public Long getVersion() {
+		return version;
+	}
+    
+    public void setVersion(Long version) {
+		this.version = version;
+	}
 
     @Override
     public String toString() {
@@ -329,20 +359,4 @@ public class Fluxo implements Serializable {
             return "";
         }
     }
-
-    public String getBpmn() {
-		return bpmn;
-	}
-    
-    public void setBpmn(String bpmn) {
-		this.bpmn = bpmn;
-	}
-    
-    public String getSvg() {
-		return svg;
-	}
-    
-    public void setSvg(String svg) {
-		this.svg = svg;
-	}
 }

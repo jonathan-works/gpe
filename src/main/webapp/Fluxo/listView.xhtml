@@ -147,7 +147,7 @@
                     value="#{infoxMessages['fluxo.definicao']}" reRender="@this"
                     rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.replica}"
                     oncomplete="openPopUp('processDefinition', '#{pathResolver.getContextPath()}/Fluxo/definicao/processDefinition.seam',1300,850);">
-                    <f:setPropertyActionListener value="#{fluxoCrudAction.instance}" target="#{flash.fluxo}"></f:setPropertyActionListener>
+                    <f:setPropertyActionListener value="#{fluxoCrudAction.instance.idFluxo}" target="#{flash.idFluxo}" />
                   	<infox:flashcopy />
                 </wi:commandButton>
                 
