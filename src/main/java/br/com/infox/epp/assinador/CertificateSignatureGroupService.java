@@ -18,7 +18,6 @@ import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.certificado.entity.CertificateSignature;
 import br.com.infox.epp.certificado.entity.CertificateSignatureGroup;
 import br.com.infox.epp.certificado.entity.TipoAssinatura;
-import br.com.infox.epp.certificado.entity.TipoDados;
 import br.com.infox.epp.certificado.enums.CertificateSignatureGroupStatus;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
@@ -99,7 +98,7 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
 			byte[] bin = getBinario(documentoBin);
 			
 			CertificateSignature certificateSignature = newCertificateSignature(certificateSignatureGroup, UUID.randomUUID(), bin);
-			certificateSignature.setDataType(TipoDados.DOCUMENTO_BIN);
+			certificateSignature.setDocumentoBin(documentoBin);
 			certificateSignature.setStatus(certificateSignatureGroup.getStatus());
 		}
 

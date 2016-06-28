@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.certificado.enums.CertificateSignatureGroupStatus;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 
 /**
  * @author erikliberal
@@ -49,10 +50,6 @@ public class CertificateSignature {
     @Column(name="tp_signature")
     private TipoAssinatura signatureType = TipoAssinatura.PKCS7;
     
-    @Enumerated(EnumType.STRING)
-    @Column(name="tp_data")
-    private TipoDados dataType;
-    
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "tp_status")
@@ -64,8 +61,12 @@ public class CertificateSignature {
     @Column(name="ds_erro")
     private String mensagemErro;
     
-    @Column(name="sha256")
+    @Column(name="ob_sha256")
     private byte[] sha256;
+    
+    @ManyToOne
+    @JoinColumn(name="id_documento_bin")
+    private DocumentoBin documentoBin;
     
     public Integer getIdCertificateSignature() {
         return idCertificateSignature;
@@ -111,13 +112,6 @@ public class CertificateSignature {
     
 	public void setSignatureType(TipoAssinatura signatureType) {
 		this.signatureType = signatureType;
-	}
-	
-	public TipoDados getDataType() {
-		return dataType;
-	}
-	public void setDataType(TipoDados dataType) {
-		this.dataType = dataType;
 	}
 	
 	@Override
@@ -176,6 +170,12 @@ public class CertificateSignature {
 	}
 	public void setSha256(byte[] sha256) {
 		this.sha256 = sha256;
+	}
+	public DocumentoBin getDocumentoBin() {
+		return documentoBin;
+	}
+	public void setDocumentoBin(DocumentoBin documentoBin) {
+		this.documentoBin = documentoBin;
 	}
 
 }
