@@ -1,109 +1,88 @@
 package br.com.infox.epp.fluxo.monitor;
 
-import java.io.StringWriter;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import br.com.infox.core.controller.AbstractController;
+import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.core.controller.Controller;
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.fluxo.entity.Fluxo;
 
 @Named
 @ViewScoped
-public class MonitorProcessoView extends AbstractController {
+public class MonitorProcessoView implements Controller {
     private static final long serialVersionUID = 1L;
 
     @Inject
     private MonitorProcessoSearch monitorProcessoSearch;
+    @Inject
+    private MonitorProcessoService monitorProcessoService;
 
-    private Document doc;
-    private String modified;
+    // view controll
+    private String tab;
+    private Fluxo fluxo;
+    private List<Fluxo> fluxoList;
+
+    // svg controll
+    private String svg;
 
     @PostConstruct
     private void init() {
-        List<MonitorProcessoDTO> monitorProcessoList = monitorProcessoSearch.listByFluxo(423L);
+        fluxoList = monitorProcessoSearch.getFluxoList();
+        // TODO remover a linha abaixo
+        selectFluxo(EntityManagerProducer.getEntityManager().find(Fluxo.class, 2));
+    }
 
+    public void selectFluxo(Fluxo f) {
+        fluxo = f;
         try {
-            String uri = "/home/avner/tmp/diagrama/diagram.svg";
-            
-            DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
-            f.setValidating(false);
-            f.setNamespaceAware(true);
-            f.setFeature("http://xml.org/sax/features/namespaces", false);
-            f.setFeature("http://xml.org/sax/features/validation", false);
-            f.setFeature("http://apache.org/xml/features/nonvalidating/load-dtd-grammar", false);
-            f.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-
-            DocumentBuilder documentBuilder = f.newDocumentBuilder();
-            doc = documentBuilder.parse(uri);
-
-            for (MonitorProcessoDTO mpDTO: monitorProcessoList) {
-                XPath xPath =  XPathFactory.newInstance().newXPath();
-                String elementId = mpDTO.getKey();
-                NodeList nodeList = (NodeList) xPath.compile("//g[@data-element-id='" + elementId + "']/g").evaluate(doc, XPathConstants.NODESET);
-                Node item = nodeList.item(0);
-                
-                Element circle = createCircleElement(doc, "15", "60", "21", "blue", "2", "white");
-                item.appendChild(circle);
-
-                Element text = createTextElement(doc, "63", "16", "blue", mpDTO.getQuantidade().toString());
-                item.appendChild(text);
-            }
-
-            modified = documentToString(doc);
+            svg = monitorProcessoService.createSvgMonitoramentoProcesso(fluxo);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private Element createCircleElement(Document doc, String r, String cy, String cx, String stroke, String strokeWidth, String fill) {
-        Element circle = doc.createElement("circle");
-        circle.setAttribute("r", r);
-        circle.setAttribute("cy", cy);
-        circle.setAttribute("cx", cx);
-        circle.setAttribute("stroke", stroke);
-        circle.setAttribute("stroke-width", strokeWidth);
-        circle.setAttribute("fill", fill);
-        return circle;
+    public List<Fluxo> getFluxoList() {
+        return fluxoList;
     }
 
-    private Element createTextElement(Document doc, String y, String x, String fill, String textContent) {
-        Element text = doc.createElement("text");
-        text.setAttribute("y", y);
-        text.setAttribute("x", x);
-        text.setAttribute("fill", fill);
-        text.setTextContent(textContent);
-        return text;
+    public String getSvg() {
+        return svg;
     }
 
-    private String documentToString(Document doc) throws TransformerException {
-        DOMSource domSource = new DOMSource(doc);
-        StringWriter writer = new StringWriter();
-        StreamResult result = new StreamResult(writer);
-        TransformerFactory tf = TransformerFactory.newInstance();
-        Transformer transformer = tf.newTransformer();
-        transformer.transform(domSource,  result);
-        return writer.toString();    
+    @Override
+    public String getTab() {
+        return tab;
+    }
+
+    @Override
+    public void setTab(String tab) {
+        this.tab = tab;
+    }
+
+    @Override
+    public void onClickSearchTab() {
+        // TODO falta implementar
+        svg = null;
+        fluxo = null;
+    }
+
+    @Override
+    public void onClickFormTab() {
+        // TODO acredito que será inútil
+    }
+
+    @Override
+    public Object getId() {
+        // TODO provavelmente inútil
+        return null;
     }
     
-    public String getSvgModified() {
-        return modified;
+    @Override
+    public void setId(Object id) {
+        // TODO provavelmente inútil
     }
 }

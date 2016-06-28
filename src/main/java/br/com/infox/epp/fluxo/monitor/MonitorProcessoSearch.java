@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
@@ -16,9 +17,15 @@ import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.entity.Fluxo_;
 
 @Stateless
 public class MonitorProcessoSearch {
+
+    private EntityManager getEntityManager() {
+        return EntityManagerProducer.getEntityManager();
+    }
 
     public List<MonitorProcessoDTO> listByFluxo(Long processdefinition) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
@@ -36,7 +43,25 @@ public class MonitorProcessoSearch {
         return getEntityManager().createQuery(cq).getResultList();
     }
 
-    private EntityManager getEntityManager() {
-        return EntityManagerProducer.getEntityManager();
+    public List<Fluxo> getFluxoList() {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Fluxo> cq = cb.createQuery(Fluxo.class);
+        Root<Fluxo> f = cq.from(Fluxo.class);
+        cq.select(f);
+        cq.where(cb.isTrue(f.get(Fluxo_.publicado)));
+
+        return getEntityManager().createQuery(cq).getResultList();
+    }
+
+    public ProcessDefinition getProcessDefinitionByFluxo(Fluxo f) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<ProcessDefinition> cq = cb.createQuery(ProcessDefinition.class);
+        Root<ProcessDefinition> pd = cq.from(ProcessDefinition.class);
+        cq.select(pd);
+        cq.where(cb.equal(pd.get("name"), f.getFluxo()));
+        cq.orderBy(cb.desc(pd.get("version")));
+        TypedQuery<ProcessDefinition> query = getEntityManager().createQuery(cq);
+        List<ProcessDefinition> fluxoList = query.getResultList();
+        return fluxoList != null && !fluxoList.isEmpty() ? fluxoList.get(-0) : null;
     }
 }
