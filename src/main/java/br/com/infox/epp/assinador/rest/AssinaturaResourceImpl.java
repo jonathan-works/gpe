@@ -23,7 +23,7 @@ public class AssinaturaResourceImpl implements AssinaturaResource {
 
 	@Override
 	public Response assinar(Assinatura assinatura) {
-		assinadorService.assinarAssinavel(tokenGrupo, uuidAssinavel, assinatura.getAssinatura());
+		assinadorService.setAssinaturaAssinavel(tokenGrupo, uuidAssinavel, assinatura.getAssinatura());
 		return Response.noContent().build();
 	}
 

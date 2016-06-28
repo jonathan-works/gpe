@@ -14,7 +14,7 @@
   <h:panelGroup id="#{empty id ? 'divApplet' : id}">
     <s:fragment rendered="#{empty rendered ? true : rendered}">
 
-      <h:inputHidden id="#{id}Token" value="" />
+      <h:inputHidden id="#{id}Token" value="#{idToken}" />
       <a:commandButton type="button" styleClass="buttons" disabled="#{disableb}" onbegin="infox.showLoading();" style="#{signButtonStyle}"
       		action="#{elFunctions.invokeMethod(preSignAction)}" execute="#{execute}" rendered="#{empty rendered? 'true' : rendered}"
       		oncomplete="infox.hideLoading(); if (#{!facesContext.validationFailed}) {infox.CertDig.#{id}.init();}"
@@ -26,12 +26,13 @@
       <ui:param name="token" value="#{assinadorController.criarListaDocumentos(documentList)}" />
       <ui:param name="parameter" value="#{assinadorController.getParametrosServletJNLP(token)}" />
       <a:jsFunction name="#{id}OnComplete" action="#{assinadorController.apagarToken(token)}" />
-	  <a:jsFunction name="#{id}DoneAction" action="#{elFunctions.invokeMethod(doneAction)}" execute="#{wi:get(execute, '@this')}" render="#{wi:get(render, '@this')}"
+	  <a:jsFunction name="#{id}DoneAction" action="#{elFunctions.invokeMethod(wi:get(doneAction,'assinadorController.assinaturasRecebidas'))}" execute="#{wi:get(execute, '@this')}" render="#{wi:get(render, '@this')}"
 	  	onbegin="infox.showLoading('Aguardando Usuário');" oncomplete="#{id}OnComplete; infox.hideLoading(); #{wi:get(oncomplete, ';')}" />
       <h:outputScript name="cookies.min.js" library="js" />  
       <h:outputScript>
           	namespace('infox.CertDig.#{id}', {  
   	          init: function() {  
+  	              infox.showLoading();
   	              #{functionPreSign};
   	        	  location.href='#{assinadorController.JNLPUrl}?#{parameter}';
   	        	  var intervalId = setInterval(function() {
@@ -40,6 +41,7 @@
   	        	      $.get('#{assinadorController.getTokenStatusURL(token)}', function(status) {
    	        		      if (status !== 'AGUARDANDO_ASSINATURA') {  
 	  	        		      clearInterval(intervalId);
+	  	        		      infox.hideLoading();
 	  	        		      #{id}DoneAction;
   	        	  	      }
   			  	      });  

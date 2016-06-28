@@ -8,9 +8,12 @@ import java.util.UUID;
 import javax.inject.Inject;
 import javax.validation.ValidationException;
 
+import org.apache.commons.codec.binary.Base64;
+
 import br.com.infox.certificado.CertificadoGenerico;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -19,6 +22,8 @@ import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.PerfilTemplateManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
+import br.com.infox.epp.assinador.AssinadorGroupService.DadosAssinatura;
+import br.com.infox.epp.assinador.AssinadorGroupService.StatusToken;
 import br.com.infox.epp.certificado.entity.TipoAssinatura;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
@@ -100,13 +105,71 @@ public class AssinadorService implements Serializable {
 		groupService.cancelar(tokenGrupo);
 	}
 	
-	public void assinarAssinavel(String tokenGrupo, UUID uuidAssinavel, byte[] signature) {
+	public void setAssinaturaAssinavel(String tokenGrupo, UUID uuidAssinavel, byte[] signature) {
 		DadosAssinaturaLegada dadosAssinaturaLegada = cmsAdapter.convert(signature);
 		groupService.atualizarAssinaturaTemporaria(tokenGrupo, uuidAssinavel, dadosAssinaturaLegada);
 	}
 	
+	public List<DadosAssinatura> getDadosAssinatura(String tokenGrupo) {
+		return groupService.getDadosAssinatura(tokenGrupo);
+	}
+	
+	public void assinar(String tokenGrupo, UsuarioPerfil usuarioPerfil) throws AssinaturaException {
+		List<DadosAssinatura> dadosAssinaturas = groupService.getDadosAssinatura(tokenGrupo);
+		for(DadosAssinatura dadosAssinatura : dadosAssinaturas) {
+			assinar(dadosAssinatura, usuarioPerfil);
+		}
+	}
+	
+	public void assinar(String tokenGrupo, UUID uuidAssinavel, UsuarioPerfil usuarioPerfil) throws AssinaturaException {
+		DadosAssinatura dadosAssinatura = groupService.getDadosAssinatura(tokenGrupo, uuidAssinavel);
+		assinar(dadosAssinatura, usuarioPerfil);
+	}
+	
+	protected void assinar(DadosAssinatura dadosAssinatura, UsuarioPerfil usuarioPerfil) throws AssinaturaException {		
+		validarAssinatura(dadosAssinatura, usuarioPerfil.getUsuarioLogin());
+		Integer idDocumentoBin = dadosAssinatura.getIdDocumentoBin(); 
+		if(idDocumentoBin != null) {
+			DocumentoBin documentoBin = documentoBinManager.find(idDocumentoBin);
+			assinarDocumento(documentoBin, usuarioPerfil.getPerfilTemplate().getCodigo(), usuarioPerfil.getLocalizacao().getCodigo(), dadosAssinatura.getAssinatura());
+		}
+	}
+	
+	public void validarGrupo(String tokenGrupo, UsuarioLogin usuarioLogin) throws AssinaturaException {
+		List<DadosAssinatura> dadosAssinaturas = groupService.getDadosAssinatura(tokenGrupo);
+		for(DadosAssinatura dadosAssinatura : dadosAssinaturas) {
+			validarAssinatura(dadosAssinatura, usuarioLogin);
+		}
+	}
+	
+    protected void validarAssinatura(DadosAssinatura dadosAssinatura, UsuarioLogin usuarioLogin) throws AssinaturaException {
+    	if(dadosAssinatura.getStatus() != StatusToken.SUCESSO) {
+    		if(dadosAssinatura.getMensagemErro() != null) {
+    			throw new AssinaturaException(dadosAssinatura.getMensagemErro());
+    		}
+    		else {
+    			throw new AssinaturaException("Status da assinatura inválido: " + dadosAssinatura.getStatus().toString());
+    		}
+    	}
+    	validarAssinatura(dadosAssinatura.getCertChain(), usuarioLogin, dadosAssinatura.getAssinatura());
+    }
+	
+    public void validarAssinatura(byte[] certChain, UsuarioLogin usuario, byte[] signature) throws AssinaturaException {
+    	String certChainBase64 = Base64.encodeBase64String(certChain);
+    	try {
+			assinaturaDocumentoService.validarCertificado(certChainBase64, usuario);
+		} catch (CertificadoException e) {
+			throw new AssinaturaException(e);
+		}
+    }
+    
 	public void erroProcessamento(String token, UUID uuidAssinavel, String codigo, String mensagem) {
 		groupService.erroProcessamento(token, uuidAssinavel, codigo, mensagem);
+	}
+	
+	public void assinarDocumento(UUID uuidDocumento, byte[] signature) {
+		UsuarioPerfil usuarioLogado = Authenticator.getUsuarioPerfilAtual();
+		assinarDocumento(uuidDocumento, usuarioLogado.getPerfilTemplate().getCodigo(), usuarioLogado.getLocalizacao().getCodigo(), signature);
 	}
 	
 	public void assinarDocumento(UUID uuidDocumento, String codigoPerfil, String codigoLocalizacao, byte[] signature) {
@@ -114,7 +177,10 @@ public class AssinadorService implements Serializable {
 		if(documentoBin == null) {
 			throw new ValidationException("UUID inválido");
 		}
-		
+		assinarDocumento(documentoBin, codigoPerfil, codigoLocalizacao, signature);
+	}
+	
+	public void assinarDocumento(DocumentoBin documentoBin, String codigoPerfil, String codigoLocalizacao, byte[] signature) {
 		DadosAssinaturaLegada dadosAssinaturaLegada = cmsAdapter.convert(signature);
 		String certChainBase64 = dadosAssinaturaLegada.getCertChainBase64();
 		String signatureBase64 = dadosAssinaturaLegada.getSignature();
@@ -125,8 +191,9 @@ public class AssinadorService implements Serializable {
 			assinaturaDocumentoService.assinarDocumento(documentoBin, usuarioPerfil, certChainBase64, signatureBase64, TipoAssinatura.PKCS7);
 		} catch (DAOException | CertificadoException | AssinaturaException e) {
 			throw new RuntimeException("Erro ao assinar documento", e);
-		}		
+		}				
 	}
+
 	
 	public List<UUID> listarAssinaveis(String tokenGrupo) {
 		return groupService.getAssinaveis(tokenGrupo);

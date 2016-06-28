@@ -263,6 +263,15 @@ public class AssinaturaDocumentoService {
         }
         return null;
     }
+    
+    public void validarCertificado(String certChain, UsuarioLogin usuario) throws CertificadoException, AssinaturaException {
+		verificaCertificadoUsuarioLogado(certChain, usuario);
+		checkValidadeCertificado(certChain);    	
+    }
+    
+    public void validarCertificado(String certChain) throws CertificadoException {
+		checkValidadeCertificado(certChain);    	
+    }
 
 	public void assinarDocumento(DocumentoBin documentoBin, UsuarioPerfil usuarioPerfilAtual, final String certChain,
 			String signature, TipoAssinatura tipoAssinatura) throws CertificadoException, AssinaturaException, DAOException {

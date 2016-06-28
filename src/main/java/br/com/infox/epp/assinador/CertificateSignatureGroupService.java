@@ -13,6 +13,7 @@ import javax.persistence.NoResultException;
 import javax.validation.ValidationException;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.jboss.seam.util.Base64;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.certificado.entity.CertificateSignature;
@@ -139,10 +140,9 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
 	public boolean isTokenExpired(String token) {
 		return isTokenExpired(findByToken(token));
 	}
-
-	public StatusToken getStatus(String token) {
-		CertificateSignatureGroup certificateSignatureGroup = findByToken(token);
-		switch (certificateSignatureGroup.getStatus()) {
+	
+	private StatusToken getStatusToken(CertificateSignatureGroupStatus status) {
+		switch (status) {
 		case X:
 			return StatusToken.EXPIRADO;
 		case S:
@@ -153,7 +153,12 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
 			return StatusToken.AGUARDANDO_ASSINATURA;
 		default:
 			return StatusToken.DESCONHECIDO;
-		}
+		}		
+	}
+	
+	public StatusToken getStatus(String token) {
+		CertificateSignatureGroup certificateSignatureGroup = findByToken(token);
+		return getStatusToken(certificateSignatureGroup.getStatus());
 	}
 
 	/**
@@ -279,6 +284,32 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
 		certificateSignature.setCodigoErro(codigoErro);
 		certificateSignature.setMensagemErro(mensagem);
 		atualizarCertificateSignature(certificateSignature);		
+	}
+	
+	private DadosAssinatura toDadosAssinatura(CertificateSignature cs) {
+		UUID uuid = UUID.fromString(cs.getUuid());
+		StatusToken status = getStatusToken(cs.getStatus());
+		Integer idDocumentoBin = cs.getDocumentoBin() == null ? null : cs.getDocumentoBin().getId();
+		byte[] signature = cs.getSignature() == null ? null : Base64.decode(cs.getSignature());
+		byte[] certChain = cs.getCertificateChain() == null ? null : Base64.decode(cs.getCertificateChain());
+		
+		return new DadosAssinatura(uuid, status, cs.getCodigoErro(), cs.getMensagemErro(), cs.getSignatureType(), idDocumentoBin, signature, certChain);
+	}
+
+	@Override
+	public List<DadosAssinatura> getDadosAssinatura(String token) {
+		CertificateSignatureGroup group = findByToken(token);
+		List<DadosAssinatura> retorno = new ArrayList<>();
+		for (CertificateSignature certificateSignature : group.getCertificateSignatureList()) {
+			retorno.add(toDadosAssinatura(certificateSignature));
+		}
+		return retorno;
+	}
+
+	@Override
+	public DadosAssinatura getDadosAssinatura(String token, UUID uuidAssinavel) {		
+		CertificateSignature certificateSignature = findCertificateSignature(token, uuidAssinavel);
+		return toDadosAssinatura(certificateSignature);
 	}
 
 }
