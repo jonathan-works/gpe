@@ -83,7 +83,7 @@
                         onclick="if (!confirm('#{infoxMessages['fluxo.publicar.confirm']}')) { return false; }"
                         onbegin="infox.showLoading();"
                         rendered="#{not (row.xml eq row.xmlExecucao and row.publicado)}"
-                        render="pageBody"
+                        render="fluxoListPanel pageBodyDialogMessage modalDeployForm"
                         oncomplete="infox.hideLoading();opener.refreshPage();">
                         <wi:toolBarGraphicImage title="#{infoxMessages['processBuilder.deployBtn']}" url="#{layoutController.getResourceUrlByPath('/imagens/deploy.png')}" />
                     </a:commandLink>
@@ -92,6 +92,35 @@
                 </h:form>
             </ui:define>
         </wi:dataTable>
+        
+        <rich:popupPanel id="modalDeploy" width="450" height="450" maxHeight="600" modal="true" header="Problemas na Publicação"
+			onbeforehide="clearMergePointsBundle()">
+			<f:facet name="controls">
+			    <h:graphicImage styleClass="mp-close"
+			        value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
+			        onclick="#{rich:component('modalDeploy')}.hide();" />
+			</f:facet>
+			<h:form id="modalDeployForm">
+				<s:div rendered="#{not empty fluxoMergeView.mergePointsBundle and not empty fluxoMergeView.mergePointsBundle.invalidMergePoints}">
+					<h:outputText value="Os nós abaixo são necessários:" />
+					<rich:dataTable value="#{fluxoMergeView.mergePointsBundle.invalidMergePoints}" var="row" styleClass="dtable rf-dt-crud full-sized"
+						rowClasses="zebra-row">
+						<rich:column>
+							<f:facet name="header">Nome do Nó</f:facet>
+							<h:outputText value="#{row.name}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">Quantidade de Instâncias</f:facet>
+							<h:outputText value="#{row.count}" />
+						</rich:column>
+					</rich:dataTable>
+					<a:jsFunction name="clearMergePointsBundle" action="#{fluxoMergeView.clear}" execute="@this" render="@form" limitRender="true" />
+					<script>
+						#{rich:component('modalDeploy')}.show();
+					</script>
+				</s:div>
+			</h:form>
+		</rich:popupPanel>
     </ui:define>
     <ui:define name="form">
         <wi:dataForm
@@ -164,7 +193,7 @@
 				    <f:facet name="controls">
 				        <h:graphicImage styleClass="mp-close"
 				            value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
-				            onclick="#{rich:component('modalImportBpmn')}.hide(); clearBpmnImportMessages();" />
+				            onclick="#{rich:component('modalImportBpmn')}.hide();" />
 				    </f:facet>
 				    <c:set property="fluxo" target="#{bpmnUploader}" value="#{fluxoCrudAction.instance}" />
 				    <h:form enctype="multipart/form-data">
