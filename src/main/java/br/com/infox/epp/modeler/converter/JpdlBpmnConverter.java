@@ -4,25 +4,27 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.GatewayDirection;
-import org.camunda.bpm.model.bpmn.builder.AbstractFlowNodeBuilder;
-import org.camunda.bpm.model.bpmn.builder.ProcessBuilder;
-import org.camunda.bpm.model.bpmn.impl.BpmnModelConstants;
 import org.camunda.bpm.model.bpmn.instance.Activity;
 import org.camunda.bpm.model.bpmn.instance.Collaboration;
+import org.camunda.bpm.model.bpmn.instance.EndEvent;
+import org.camunda.bpm.model.bpmn.instance.ExclusiveGateway;
 import org.camunda.bpm.model.bpmn.instance.FlowNode;
 import org.camunda.bpm.model.bpmn.instance.Lane;
 import org.camunda.bpm.model.bpmn.instance.LaneSet;
+import org.camunda.bpm.model.bpmn.instance.ParallelGateway;
 import org.camunda.bpm.model.bpmn.instance.Participant;
 import org.camunda.bpm.model.bpmn.instance.Process;
+import org.camunda.bpm.model.bpmn.instance.SendTask;
 import org.camunda.bpm.model.bpmn.instance.SequenceFlow;
+import org.camunda.bpm.model.bpmn.instance.ServiceTask;
 import org.camunda.bpm.model.bpmn.instance.StartEvent;
+import org.camunda.bpm.model.bpmn.instance.SubProcess;
 import org.camunda.bpm.model.bpmn.instance.UserTask;
 import org.camunda.bpm.model.bpmn.instance.bpmndi.BpmnDiagram;
 import org.camunda.bpm.model.bpmn.instance.bpmndi.BpmnEdge;
@@ -32,7 +34,6 @@ import org.camunda.bpm.model.bpmn.instance.dc.Bounds;
 import org.camunda.bpm.model.bpmn.instance.di.Waypoint;
 import org.camunda.bpm.model.xml.ModelInstance;
 import org.jbpm.graph.def.Node;
-import org.jbpm.graph.def.Node.NodeType;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.node.ProcessState;
@@ -42,6 +43,7 @@ import org.jbpm.taskmgmt.def.Swimlane;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
 import br.com.infox.ibpm.node.InfoxMailNode;
 import br.com.infox.ibpm.util.BpmUtil;
+import br.com.infox.seam.exception.BusinessRollbackException;
 
 public class JpdlBpmnConverter {
 	
@@ -58,8 +60,8 @@ public class JpdlBpmnConverter {
 	private static final int FLOW_NODE_X_OFFSET = 30;
 	
 	private ProcessDefinition processDefinition;
-	private List<TaskNode> taskNodes = new LinkedList<>();
 	private StartEvent startEvent;
+	private List<Transition> jpdlTransitions;
 	private Map<String, Lane> nodesToLanes = new HashMap<>();
 	private double maxWidth = 0d;
 	private List<FlowNode> orderedNodes = new ArrayList<>();
@@ -69,68 +71,86 @@ public class JpdlBpmnConverter {
 	
 	public String convert(String processDefinitionXml) {
 		processDefinition = new InfoxJpdlXmlReader(new StringReader(processDefinitionXml)).readProcessDefinition();
-		ProcessBuilder builder = Bpmn.createProcess(processDefinition.getKey()).name(processDefinition.getName());
-		AbstractFlowNodeBuilder<?, ?> flowNodeBuilder = builder.startEvent(processDefinition.getStartState().getKey());
+		BpmnModelInstance bpmnModel = Bpmn.createProcess(processDefinition.getKey()).name(processDefinition.getName()).done();
 
-		visit(processDefinition.getStartState(), flowNodeBuilder, null, new HashMap<String, Boolean>());
+		resolveLanes(bpmnModel, processDefinition.getKey());
+		jpdlTransitions = new ArrayList<>();
+		Process process = bpmnModel.getModelElementById(processDefinition.getKey());
+		createFlowElements(process);
+		resolveTransitions(process);
 		
-		BpmnModelInstance modelInstance = builder.done();
-		startEvent = modelInstance.getModelElementById(processDefinition.getStartState().getKey());
-		resolveLanes(modelInstance, processDefinition.getKey());
-		createDiagram(modelInstance);
+		startEvent = bpmnModel.getModelElementById(processDefinition.getStartState().getKey());
+		createDiagram(bpmnModel);
 		
-		Collection<SequenceFlow> sequenceFlows = modelInstance.getModelElementsByType(SequenceFlow.class);
-		for (SequenceFlow sequenceFlow : sequenceFlows) {
-			if (sequenceFlow.getConditionExpression() != null) {
-				sequenceFlow.removeConditionExpression();
-			}
-		}
-
-		modelInstance.getDefinitions().getDomElement().registerNamespace("xsi", BpmnModelConstants.XSI_NS);
-		String bpmn = Bpmn.convertToString(modelInstance);
+		String bpmn = Bpmn.convertToString(bpmnModel);
 		return bpmn;
 	}
 	
-	private void visit(Node node, AbstractFlowNodeBuilder<?, ?> parentBuilder, Transition originTransition, Map<String, Boolean> markedNodes) {
-		markedNodes.put(node.getKey(), true);
-		AbstractFlowNodeBuilder<?, ?> currentBuilder = null;
-		
-		if (originTransition != null) {
-			parentBuilder.sequenceFlowId(originTransition.getKey()).condition(originTransition.getName(), "");
+	private void resolveTransitions(Process process) {
+		ModelInstance bpmnModel = process.getModelInstance();
+		for (Transition transition : jpdlTransitions) {
+			SequenceFlow sequenceFlow = bpmnModel.newInstance(SequenceFlow.class);
+			FlowNode source = transition.getFrom() != null ? (FlowNode) bpmnModel.getModelElementById(transition.getFrom().getKey()) : null;
+			FlowNode target = transition.getTo() != null ? (FlowNode) bpmnModel.getModelElementById(transition.getTo().getKey()) : null;
+			
+			sequenceFlow.setName(transition.getName());
+			sequenceFlow.setId(transition.getKey());
+			sequenceFlow.setSource(source);
+			sequenceFlow.setTarget(target);
+			process.addChildElement(sequenceFlow);
+			
+			if (source != null) {
+				source.getOutgoing().add(sequenceFlow);
+			}
+			if (target != null) {
+				target.getIncoming().add(sequenceFlow);
+			}
 		}
-		
-		if (node.getNodeType().equals(NodeType.StartState)) {
-			currentBuilder = parentBuilder;
-		} else if (node.getNodeType().equals(NodeType.Decision)) {
-			currentBuilder = parentBuilder.exclusiveGateway(node.getKey());
-		} else if (node.getNodeType().equals(NodeType.Task)) {
-			currentBuilder = parentBuilder.userTask(node.getKey());
-			taskNodes.add((TaskNode) node);
-		} else if (node.getNodeType().equals(NodeType.Node)) {
-			currentBuilder = parentBuilder.serviceTask(node.getKey());
-		} else if (node.getNodeType().equals(NodeType.EndState)) {
-			currentBuilder = parentBuilder.endEvent(node.getKey());
-		} else if (node instanceof ProcessState) {
-			currentBuilder = parentBuilder.subProcess(node.getKey());
-		} else if (node instanceof InfoxMailNode) {
-			currentBuilder = parentBuilder.sendTask(node.getKey());
-		} else if (node.getNodeType().equals(NodeType.Fork)) {
-			currentBuilder = parentBuilder.parallelGateway(node.getKey()).gatewayDirection(GatewayDirection.Diverging);
-		} else if (node.getNodeType().equals(NodeType.Join)) {
-			currentBuilder = parentBuilder.parallelGateway(node.getKey()).gatewayDirection(GatewayDirection.Converging);
-		}
-		
-		currentBuilder.name(node.getName());
-		
-		if (node.getLeavingTransitions() != null) {
-			for (Transition transition : node.getLeavingTransitions()) {
-				Node next = transition.getTo();
-				if (next != null) {
-					if (!markedNodes.containsKey(next.getKey())) {
-						visit(next, currentBuilder, transition, markedNodes);
-					} else {
-						currentBuilder.sequenceFlowId(transition.getKey()).condition(transition.getName(), "").connectTo(next.getKey());
-					}
+	}
+
+	private void createFlowElements(Process process) {
+		ModelInstance modelInstance = process.getModelInstance();
+		for (Node node : processDefinition.getNodes()) {
+			FlowNode flowNode;
+			if (node.getNodeType().equals(Node.NodeType.Task)) {
+				flowNode = modelInstance.newInstance(UserTask.class);
+			} else if (node.getNodeType().equals(Node.NodeType.Decision)) {
+				flowNode = modelInstance.newInstance(ExclusiveGateway.class);
+			} else if (node.getNodeType().equals(Node.NodeType.Fork)) {
+				flowNode = modelInstance.newInstance(ParallelGateway.class);
+				((ParallelGateway) flowNode).setGatewayDirection(GatewayDirection.Diverging);
+			} else if (node.getNodeType().equals(Node.NodeType.Join)) {
+				flowNode = modelInstance.newInstance(ParallelGateway.class);
+				((ParallelGateway) flowNode).setGatewayDirection(GatewayDirection.Converging);
+			} else if (node.getNodeType().equals(Node.NodeType.StartState)) {
+				flowNode = modelInstance.newInstance(StartEvent.class);
+			} else if (node.getNodeType().equals(Node.NodeType.EndState)) {
+				flowNode = modelInstance.newInstance(EndEvent.class);
+			} else if (node instanceof ProcessState) {
+				flowNode = modelInstance.newInstance(SubProcess.class);
+			} else if (node instanceof InfoxMailNode) {
+				flowNode = modelInstance.newInstance(SendTask.class);
+			} else if (node.getNodeType().equals(Node.NodeType.Node)) { // Deve ser o último if pois outros nós, como o subprocesso, também têm tipo Node
+				flowNode = modelInstance.newInstance(ServiceTask.class);
+			} else {
+				throw new BusinessRollbackException("Tipo de nó desconhecido: " + node.getClass().getCanonicalName());
+			}
+
+			flowNode.setId(node.getKey());
+			flowNode.setName(node.getName());
+			process.addChildElement(flowNode);
+			
+			if (node.getNodeType().equals(Node.NodeType.Task)) {
+				TaskNode taskNode = (TaskNode) node;
+				Swimlane swimlane = taskNode.getTasks().iterator().next().getSwimlane();
+				Lane lane = modelInstance.getModelElementById(swimlane.getKey());
+				lane.getFlowNodeRefs().add(flowNode);
+				nodesToLanes.put(node.getKey(), lane);
+			}
+			
+			if (node.getLeavingTransitions() != null) {
+				for (Transition transition : node.getLeavingTransitions()) {
+					jpdlTransitions.add(transition);
 				}
 			}
 		}
@@ -162,15 +182,6 @@ public class JpdlBpmnConverter {
 			lane.setName(swimlane.getName());
 			lane.setId(swimlane.getKey());
 			laneSet.getLanes().add(lane);
-		}
-		for (TaskNode taskNode : taskNodes) {
-			Swimlane swimlane = taskNode.getTask(taskNode.getName()).getSwimlane();
-			if (swimlane != null) {
-				UserTask userTask = modelInstance.getModelElementById(taskNode.getKey());
-				Lane lane = modelInstance.getModelElementById(swimlane.getKey());
-				lane.getFlowNodeRefs().add(userTask);
-				nodesToLanes.put(userTask.getId(), lane);
-			}
 		}
 	}
 	
@@ -235,7 +246,12 @@ public class JpdlBpmnConverter {
 		BpmnPlane plane = modelInstance.newInstance(BpmnPlane.class);
 		plane.setBpmnElement(collaboration);
 		diagram.setBpmnPlane(plane);
-		
+
+		for (FlowNode flowNode : modelInstance.getModelElementsByType(FlowNode.class)) {
+			if (!orderedNodes.contains(flowNode)) {
+				orderedNodes.add(flowNode);
+			}
+		}
 		Map<String, Integer> totalNodes = new HashMap<>();
 		for (FlowNode flowNode : orderedNodes) {		
 			createNodeShape(flowNode, plane, totalNodes);
