@@ -11,7 +11,6 @@ import org.jbpm.graph.node.TaskNode;
 import org.jbpm.instantiation.Delegation;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
-import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
 
 import com.google.common.base.Strings;
 
@@ -70,17 +69,6 @@ public class TaskHandler implements Serializable {
 
     public String getSwimlaneName() {
         return task == null || task.getSwimlane() == null ? null : task.getSwimlane().getName();
-    }
-
-    public void setSwimlaneName(String swimlaneName) {
-        if (swimlaneName == null) {
-        	task.setSwimlane(null);
-        } else {
-            if (task.getTaskMgmtDefinition() == null) {
-                task.setTaskMgmtDefinition(new TaskMgmtDefinition());
-            }
-            task.setSwimlane(task.getTaskMgmtDefinition().getSwimlane(swimlaneName));
-        }
     }
 
     public boolean isDirty() {
@@ -248,9 +236,11 @@ public class TaskHandler implements Serializable {
 
     public List<String> getTransitions() {
 	    List<String> transitions = new ArrayList<>();
-	    List<Transition> leavingTransitions = this.task.getTaskNode().getLeavingTransitions();
-	    for (Transition leavingTransition : leavingTransitions) {
-	        transitions.add(leavingTransition.getName());
+	    if (this.task.getTaskNode().getLeavingTransitions() != null) {
+	    	List<Transition> leavingTransitions = this.task.getTaskNode().getLeavingTransitions();
+	    	for (Transition leavingTransition : leavingTransitions) {
+		        transitions.add(leavingTransition.getName());
+		    }
 	    }
 	    return transitions;
 	}

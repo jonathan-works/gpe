@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.JbpmContext;
 import org.jbpm.graph.action.ActionTypes;
@@ -106,9 +107,9 @@ public class InfoxMailNode extends MailNode {
             String[] att = string.split("=");
             if (att.length < 2) {
                 continue;
-            } else if ("idModeloDocumento".equals(att[0])) {
+            } else if ("idModeloDocumento".equals(att[0]) && Contexts.isApplicationContextActive()) {
                 modeloDocumento = modeloDocumentoManager().find(Integer.parseInt(att[1]));
-            } else if ("idTwitterTemplate".equals(att[0])) {
+            } else if ("idTwitterTemplate".equals(att[0]) && Contexts.isApplicationContextActive()) {
                 modeloTwitter = twitterTemplateManager().find(Integer.parseInt(att[1]));
                 usaTwitter = true;
             }

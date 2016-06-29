@@ -9,7 +9,6 @@ import java.util.Map;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.taskmgmt.def.Swimlane;
 
-import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.manager.PerfilTemplateManager;
 import br.com.infox.seam.util.ComponentUtil;
@@ -37,13 +36,6 @@ public class SwimlaneHandler implements Serializable {
 
     public String getName() {
         return swimlane.getName();
-    }
-
-    public void setName(String name) {
-        Map<String, Swimlane> swimlanes = swimlane.getTaskMgmtDefinition().getSwimlanes();
-        swimlanes.remove(swimlane.getName());
-        ReflectionsUtil.setValue(swimlane, "name", name);
-        swimlane.getTaskMgmtDefinition().addSwimlane(swimlane);
     }
 
     public void setPerfil(PerfilTemplate perfilTemplate) {

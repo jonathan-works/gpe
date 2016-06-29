@@ -26,32 +26,9 @@
                             name="id"
                             value="nodesTable" />
                         <ui:define name="headerToolBar">
-                            <h:form>
-                                <a:commandLink
-                                    action="#{nodeFitter.setCurrentNode(null)}"
-                                    render="nodesDiv"
-                                    limitRender="true">
-                                    <h:graphicImage
-                                        title="#{infoxMessages['process.node.add']}"
-                                        url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}" />
-                                </a:commandLink>
-                            </h:form>
                         </ui:define>
                         <ui:define name="toolBar">
                             <h:form>
-                                <h:graphicImage
-                                    title="#{infoxMessages['process.node.remove']}"
-                                    url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
-                                    styleClass="opacityHover"
-                                    rendered="#{not (row.nodeType eq 'StartState' or row.nodeType eq 'Join')}">
-                                    <a:ajax
-                                        event="click"
-                                        listener="#{nodeFitter.removeNode(row)}"
-                                        onbeforesubmit="return confirm(\'#{infoxMessages['processBuilder.confirm']}\');"
-                                        execute="@this"
-                                        render="nodesDiv, pageBodyDialogMessage"
-                                        limitRender="true" />
-                                </h:graphicImage>
                                 <h:graphicImage
                                     title="#{infoxMessages['process.node.up']}"
                                     rendered="#{key != 0}"
@@ -255,101 +232,6 @@
                             </rich:collapsiblePanel>
                         </h:form>
 					</rich:panel>
-
-                    <rich:panel
-                        header="#{infoxMessages['process.node.new']}"
-                        rendered="#{empty nodeFitter.currentNode}">
-                        <rich:dataTable
-                            id="nodeTypes"
-                            value="#{nodeFitter.nodeTypes}"
-                            var="node">
-                            <f:facet name="header">
-                                <h:outputText
-                                    value="#{infoxMessages['process.node.type']}" />
-                            </f:facet>
-                            <rich:column>
-                                <c:set var="pathResource" value="/imagens/jbpm/#{node[0]}.gif" />
-                                <h:graphicImage
-                                    url="#{layoutController.getResourceUrlByPath(pathResource)}" />
-                            </rich:column>
-                            <rich:column>
-                                <h:outputText value="#{node[1]}" />
-                            </rich:column>
-                            <rich:column>
-                                <h:form>
-                                <c:set var="pathResource" value="/imagens/jbpm/#{nodeFitter.newNodeType == node[0] ? 'checked' : 'unchecked'}.gif" />
-                                <h:graphicImage
-                                        url="#{layoutController.getResourceUrlByPath(pathResource)}" >
-                                        <a:ajax
-                                            event="click"
-                                            listener="#{nodeFitter.setNewNodeType(node[0])}"
-                                            execute="@this"
-                                            render="nodeTypes,inTransition"
-                                            limitRender="true" />
-                                    </h:graphicImage>
-                                </h:form>
-                            </rich:column>
-                        </rich:dataTable>
-                        <s:div>
-                            <h:form>
-                                <s:decorate
-                                    template="/WEB-INF/xhtml/components/templates/edit.xhtml"
-                                    id="newNodeNameDecoration">
-                                    <ui:define name="label">#{infoxMessages['process.node.name']}</ui:define>
-                                    <h:inputText
-                                        id="newNodeName"
-                                        styleClass="inputText"
-                                        value="#{nodeFitter.newNodeName}"
-                                        maxlength="150"
-                                        required="true">
-                                        <a:ajax
-                                            event="change"
-                                            execute="@this"
-                                            render="newNodeNameDecoration"
-                                            limitRender="true" />
-                                        <f:validator
-                                            validatorId="nodeNameValidator" />
-                                        <f:converter
-                                            converterId="nodeNameConverter" />
-                                    </h:inputText>
-                                </s:decorate>
-                                <s:decorate
-                                    template="/WEB-INF/xhtml/components/templates/edit.xhtml"
-                                    id="afterDecoration">
-                                    <ui:define name="label">#{infoxMessages['process.node.after']}</ui:define>
-                                    <h:selectOneMenu
-                                        id="after" style="width:75%;"
-                                        value="#{nodeFitter.newNodeAfter}"
-                                        required="true">
-                                        <f:selectItems
-                                            value="#{nodeFitter.nodesItems}" />
-                                    </h:selectOneMenu>
-                                </s:decorate>
-                                <s:div id="inTransition">
-                                    <s:decorate
-                                        rendered="#{nodeFitter.newNodeType != 'EndState'}"
-                                        template="/WEB-INF/xhtml/components/templates/edit.xhtml"
-                                        id="inTransitionDecoration">
-                                        <ui:define name="label">#{infoxMessages['process.node.at']}</ui:define>
-                                        <h:selectOneMenu
-                                            id="inTransition" style="width:75%;"
-                                            value="#{transitionFitter.newNodeTransitionName}"
-                                            required="true">
-                                            <f:selectItems
-                                                value="#{transitionFitter.getTransitionsItems(nodeFitter.getNodes())}" />
-                                        </h:selectOneMenu>
-                                    </s:decorate>
-                                </s:div>
-                                <a:commandButton
-                                    styleClass="buttons"
-                                    value="#{infoxMessages['process.node.insert']}"
-                                    render="nodesDiv"
-                                    execute="@form"
-                                    action="#{nodeFitter.addNewNode()}"
-                                    limitRender="true" />
-                            </h:form>
-                        </s:div>
-                    </rich:panel>
                 </s:div>
             </s:div>
         </s:div>

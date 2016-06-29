@@ -8,8 +8,8 @@
     </context-param>
 	<!-- JSF -->
 	<context-param>
-	   <param-name>com.sun.faces.numberOfLogicalViews</param-name>
-	   <param-value>8</param-value>
+		<param-name>com.sun.faces.numberOfLogicalViews</param-name>
+		<param-value>8</param-value>
 	</context-param>
 	<context-param>
 		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
@@ -146,4 +146,16 @@
     	<persistence-unit-ref-name>EPAPersistenceUnit</persistence-unit-ref-name>
         <persistence-unit-name>EPAPersistenceUnit</persistence-unit-name>
     </persistence-unit-ref>
+	<filter>
+		<filter-name>CORS</filter-name>
+		<filter-class>com.thetransactioncompany.cors.CORSFilter</filter-class>
+		<init-param>
+			<param-name>cors.supportedMethods</param-name>
+			<param-value>GET, POST, HEAD, PUT, DELETE, OPTIONS</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>CORS</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 </web-app>

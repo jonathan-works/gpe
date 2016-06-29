@@ -12,35 +12,7 @@
         <ui:decorate template="dataTable.xhtml">
             <ui:param name="values" value="#{swimlaneFitter.swimlanes}" />
             <ui:param name="id" value="swimlanesTable" />
-            <ui:define name="headerToolBar">
-                <h:form>
-                    <a:commandLink
-                        action="#{swimlaneFitter.addSwimlane}"
-                        execute="@this"
-                        render="swimlanesForm, swimlanesTable"
-                        limitRender="true">
-                        <h:graphicImage
-                            title="#{infoxMessages['processBuilder.addSwimlane']}"
-                            url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}" />
-                    </a:commandLink>
-                </h:form>
-            </ui:define>
-
-            <ui:define name="toolBar">
-                <h:form>
-                    <h:graphicImage
-                        title="#{infoxMessages['processBuilder.removeSwimlane']}"
-                        url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
-                        styleClass="opacityHover pointer">
-                        <a:ajax event="click"
-                            listener="#{swimlaneFitter.removeSwimlane(row)}"
-                            execute="@this"
-                            onbeforesubmit="return confirm('#{infoxMessages['processBuilder.confirm']}')"
-                            render="swimlanesForm, swimlanesTable"
-                            limitRender="true" />
-                    </h:graphicImage>
-                </h:form>
-            </ui:define>
+            <ui:param name="showToolbar" value="false"/>
 
             <ui:define name="columns">
                 <rich:column>
@@ -48,13 +20,11 @@
                         <f:facet name="header">#{infoxMessages['processBuilder.swimlanes']}</f:facet>
                         <ui:param name="current"
                             value="#{row == swimlaneFitter.currentSwimlane}" />
-                        <ui:param name="styleNodeName"
-                            value="#{current ? 'font-weight:bold' : ''}" />
                         <a:commandLink
                             action="#{swimlaneFitter.setCurrentSwimlane(row)}"
-                            execute="@this" render="swimlanesForm,"
-                            styleClass="link"
-                            limitRender="true">
+                            execute="@this" render="swimlanesForm @form"
+                            styleClass="link" limitRender="true"
+                            style="#{current ? 'font-weight:bold' : ''}">
                             <h:outputText value="#{row.swimlane.name}" />
                         </a:commandLink>
                     </h:form>
@@ -65,12 +35,6 @@
 
     <h:form id="swimlanesForm" styleClass="swimlane-form">
         <s:div rendered="#{!empty swimlaneFitter.currentSwimlane}">
-            <wi:inputText id="swimlaneName"
-                label="#{infoxMessages['processBuilder.swimlane.name']}"
-                value="#{swimlaneFitter.currentSwimlane.name}">
-                <a:ajax event="change" execute="@this"
-                    limitRender="true" />
-            </wi:inputText>
             <ui:decorate template="dataTable.xhtml">
                 <ui:param name="values"
                     value="#{swimlaneFitter.currentSwimlane.perfilList}" />

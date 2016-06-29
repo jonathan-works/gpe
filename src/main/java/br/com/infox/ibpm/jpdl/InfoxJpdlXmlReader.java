@@ -1,5 +1,6 @@
 package br.com.infox.ibpm.jpdl;
 
+import java.io.Reader;
 import java.net.URL;
 
 import org.dom4j.Element;
@@ -30,6 +31,10 @@ public class InfoxJpdlXmlReader extends JpdlXmlReader {
     public InfoxJpdlXmlReader(InputSource source) {
         super(source);
     }
+    
+    public InfoxJpdlXmlReader(Reader reader) {
+    	super(reader);
+	}
 
     @Override
     /**

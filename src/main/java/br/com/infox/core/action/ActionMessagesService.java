@@ -96,9 +96,9 @@ public class ActionMessagesService implements Serializable {
 		} else if (exception instanceof DAOException) {
 			handleDAOException((DAOException) exception);
 		} else if (exception instanceof EJBException) {
-		        handleException(exception.getCause().getMessage(), exception);
+			handleException(exception.getCause().getMessage(), exception);
 		} else if (exception instanceof PersistenceException) {
-		        handlePersistenceException(exception);
+			handlePersistenceException(exception);
 		} else {
 			handleException(exception.getMessage(), exception);
 		}

@@ -6,7 +6,7 @@
 
     <rich:dataTable value="#{values}" id="#{id}" rowKeyVar="key"
         styleClass="#{styleClass}" var="row" rowClasses="#{rowClasses}" rowClass="#{rowClass}">
-        <rich:column styleClass="dr-dt-sh">
+        <rich:column styleClass="dr-dt-sh" rendered="#{empty showToolbar ? true : showToolbar}">
             <f:facet name="header">
                 <ui:insert name="headerToolBar" />
             </f:facet>
