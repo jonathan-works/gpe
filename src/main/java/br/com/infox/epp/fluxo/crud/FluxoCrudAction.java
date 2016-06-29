@@ -19,8 +19,10 @@ import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
+import br.com.infox.epp.fluxo.xpdl.FluxoExporterService;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.exception.BusinessException;
 
 @Name(FluxoCrudAction.NAME)
 @ContextDependency
@@ -28,6 +30,8 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
 
     @Inject
     private DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
+    @Inject
+    private FluxoExporterService fluxoExporterService;
 
     private static final long serialVersionUID = 1L;
     private static final String DESCRICAO_FLUXO_COMPONENT_ID = "defaultTabPanel:fluxoForm:descricaoFluxoDecoration:descricaoFluxo";
@@ -129,4 +133,13 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
             definicaoVariavelProcessoManager.createDefaultDefinicaoVariavelProcessoList(getInstance());
         }
     }
+    
+    public void exportarFluxo() {
+    	try {
+    		fluxoExporterService.exportarFluxo(getInstance());
+    	} catch (BusinessException e) {
+    		FacesMessages.instance().add("Não foi possível exportar o fluxo. " + e.getMessage());
+			LOG.error("Erro ao exportar fluxo.", e);
+		}
+	}
 }

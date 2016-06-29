@@ -60,7 +60,7 @@ public class DominioVariavelTarefaCrudAction implements Serializable {
 		setDominio(null);
 	}
 	
-	public void setDominioConfig() {//FIXME talvez precise mandar um init aqui
+	public void setDominioConfig() {
 		getCurrentVariable().getDominioHandler().setDominioVariavelTarefa(createInstance());
 		newInstance();
 		setTab(TAB_SEARCH);

@@ -170,6 +170,12 @@
                     action="fluxoCrudAction.criarReplica()"
                     reRender="#{wi:get(reRender, 'pageBody, modalPanelMessages')}"
                     rendered="#{fluxoCrudAction.managed or fluxoCrudAction.replica}"
+                    value="#{infoxMessages['fluxo.duplicar']}" />
+                <a:commandButton
+                    id="exportButton"
+                    styleClass="buttons" type="button"
+                    action="#{fluxoCrudAction.exportarFluxo}"
+                    rendered="#{fluxoCrudAction.managed}"
                     value="#{infoxMessages['fluxo.exportar']}" />
                 <wi:commandButton
                     id="definicao"
