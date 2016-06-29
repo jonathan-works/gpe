@@ -213,7 +213,7 @@
 					          </f:facet>
 						</rich:fileUpload>
 						<s:div id="mensagensImportacaoBpmn">
-					        <rich:panel header="Mensagens" rendered="#{not empty bpmnUploader.mensagens}">
+					        <rich:panel header="Problemas na Importação" rendered="#{not empty bpmnUploader.mensagens}">
 					        	<ul>
 					        		<ui:repeat value="#{bpmnUploader.mensagens}" var="mensagem">
 						            	<li><h:outputText value="#{mensagem}" /></li>
@@ -225,7 +225,8 @@
 							<a:commandButton value="#{infoxMessages['fluxo.importar']}" action="#{bpmnUploader.importar}" execute="@this"
 								limitRender="true" render="pageBodyDialogMessage importarButtonDiv mensagensImportacaoBpmn" 
 								oncomplete="infox.hideLoading(); closeModalBpmn();"
-								onclick="infox.showLoading();" rendered="#{not empty bpmnUploader.bpmn}" styleClass="buttons"/>
+								onclick="if (!confirm('Atenção: ao importar o fluxo, as configurações do fluxo antigo serão perdidas. Deseja continuar?')) return false; infox.showLoading();"
+								rendered="#{not empty bpmnUploader.bpmn}" styleClass="buttons"/>
 							<script>
 								function closeModalBpmn() {
 									if (#{bpmnUploader.fluxoImportado}) {
