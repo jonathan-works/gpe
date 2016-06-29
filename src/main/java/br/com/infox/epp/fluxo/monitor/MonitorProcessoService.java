@@ -1,11 +1,9 @@
 package br.com.infox.epp.fluxo.monitor;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
-import java.util.Scanner;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -37,30 +35,14 @@ public class MonitorProcessoService {
     @Inject
     private MonitorProcessoSearch monitorProcessoSearch;
 
-    // TODO verificar este número de exceptions
     public String createSvgMonitoramentoProcesso(Fluxo fluxo) throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
-        // TODO descomentar a linha abaixo após Gabriel integrar o modelador
-//        Document svgDocument = createDocument(mockSVG(f.getSvg()));
-        Document svgDocument = createDocument(mockSVG());
+        Document svgDocument = createDocument(fluxo.getSvgExecucao());
         ProcessDefinition processDefinition = monitorProcessoSearch.getProcessDefinitionByFluxo(fluxo);
-        List<MonitorProcessoDTO> homanTaskList = monitorProcessoSearch.listTarefaByFluxo(processDefinition.getId());
+        List<MonitorProcessoDTO> humanTaskList = monitorProcessoSearch.listTarefaByFluxo(processDefinition.getId());
         List<MonitorProcessoDTO> automaticNodeList = monitorProcessoSearch.listNosAutomaticosErro(processDefinition.getId());
-        adicionaInformacoesTarefaHumana(svgDocument, homanTaskList);
+        adicionaInformacoesTarefaHumana(svgDocument, humanTaskList);
         adicionaInformacoesNosAutomaticos(svgDocument, automaticNodeList);
         return documentToString(svgDocument);
-    }
-
-    // TODO remover método após Gabriel integrar o modelador
-    private String mockSVG() {
-        try {
-            String filename = "/home/avner/tmp/diagrama/diagram.svg";
-            @SuppressWarnings("resource")
-            String svgString = new Scanner(new File(filename)).useDelimiter("\\Z").next();
-            return svgString;
-        } catch (Exception e) {
-            System.out.println("deu ruim");
-            return null;
-        }
     }
 
     private void adicionaInformacoesTarefaHumana(Document doc, List<MonitorProcessoDTO> monitorProcessoList) throws XPathExpressionException {

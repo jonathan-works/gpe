@@ -1,52 +1,45 @@
 package br.com.infox.epp.fluxo.monitor;
 
-import java.util.List;
-
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import br.com.infox.cdi.producer.EntityManagerProducer;
+import org.jboss.seam.faces.FacesMessages;
+
 import br.com.infox.core.controller.Controller;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @Named
 @ViewScoped
 public class MonitorProcessoView implements Controller {
     private static final long serialVersionUID = 1L;
 
-    @Inject
-    private MonitorProcessoSearch monitorProcessoSearch;
+    private static final String MONITOR_TAB = "monitorTab";
+
     @Inject
     private MonitorProcessoService monitorProcessoService;
 
-    // view controll
-    private String tab;
+    private LogProvider LOG = Logging.getLogProvider(MonitorProcessoView.class);
+
     private Fluxo fluxo;
-    private List<Fluxo> fluxoList;
-
-    // svg controll
     private String svg;
-
-    @PostConstruct
-    private void init() {
-        fluxoList = monitorProcessoSearch.getFluxoList();
-        // TODO remover a linha abaixo
-        selectFluxo(EntityManagerProducer.getEntityManager().find(Fluxo.class, 2));
-    }
+    private String tab;
 
     public void selectFluxo(Fluxo f) {
         fluxo = f;
         try {
             svg = monitorProcessoService.createSvgMonitoramentoProcesso(fluxo);
+            tab = MONITOR_TAB;
         } catch (Exception e) {
-            e.printStackTrace();
+            FacesMessages.instance().add("Não foi possível carregar o arquivo svg.");
+            LOG.error("Erro ao tentar carregar SVG do fluxo " + fluxo.getCodFluxo(), e);
         }
     }
 
-    public List<Fluxo> getFluxoList() {
-        return fluxoList;
+    public Fluxo getFluxo() {
+        return fluxo;
     }
 
     public String getSvg() {
@@ -65,24 +58,16 @@ public class MonitorProcessoView implements Controller {
 
     @Override
     public void onClickSearchTab() {
-        // TODO falta implementar
         svg = null;
         fluxo = null;
     }
 
     @Override
-    public void onClickFormTab() {
-        // TODO acredito que será inútil
-    }
+    public void onClickFormTab() {}
 
     @Override
-    public Object getId() {
-        // TODO provavelmente inútil
-        return null;
-    }
+    public Object getId() {return null;}
     
     @Override
-    public void setId(Object id) {
-        // TODO provavelmente inútil
-    }
+    public void setId(Object id) {}
 }

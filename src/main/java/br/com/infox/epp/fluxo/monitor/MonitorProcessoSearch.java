@@ -22,7 +22,6 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.fluxo.entity.Fluxo_;
 import br.com.infox.ibpm.util.JbpmUtil;
 
 @Stateless
@@ -65,16 +64,6 @@ public class MonitorProcessoSearch {
             resultList.add(mpDTO);
         }
         return resultList;
-    }
-
-    public List<Fluxo> getFluxoList() {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<Fluxo> cq = cb.createQuery(Fluxo.class);
-        Root<Fluxo> f = cq.from(Fluxo.class);
-        cq.select(f);
-        cq.where(cb.isTrue(f.get(Fluxo_.publicado)));
-
-        return getEntityManager().createQuery(cq).getResultList();
     }
 
     public ProcessDefinition getProcessDefinitionByFluxo(Fluxo f) {

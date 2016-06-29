@@ -51,6 +51,7 @@
             <value>menu.controle/bam.menuText:/BAM/listView.seam</value>
             <value>menu.controle/produtividade.menuText:/BAM/Produtividade/listView.seam</value>
             <value>menu.controle/relatorios.menuText/temposMedios.menuText:/Estatistica/listView.seam</value>
+            <value>menu.controle/monitorProcesso.menuText:/MonitorProcesso/listView.seam</value>
             
 			<value>menu.operacoes/comunicacao.menuText/comunicacoes.menuText:/Comunicacao/listView.seam</value>
 			<value>menu.operacoes/comunicacao.menuText/comunicacoes.impressao.menuText:/Comunicacao/Impressao/listView.seam</value>
