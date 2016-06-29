@@ -5,9 +5,8 @@
     <service name="persistence">
        <factory>
           <bean class="org.jbpm.persistence.jta.JtaDbPersistenceServiceFactory">
-             <field name="isCurrentSessionEnabled"><false/></field>
-             <field name="sessionFactoryJndiName">
-             	<string>${session.factory.jndi}</string>
+             <field name="sessionExpression">
+             	<string>#{hibernateSession}</string>
              </field>
           </bean>
        </factory>
@@ -15,7 +14,7 @@
     <service name="tx" factory="org.jbpm.tx.TxServiceFactory" />
     <service name="message" factory="org.jbpm.msg.db.DbMessageServiceFactory" />
     <service name="scheduler" factory="org.jbpm.scheduler.db.DbSchedulerServiceFactory" />
-    <service name="logging" factory="br.com.infox.ibpm.logging.LoggingServiceFactory" />
+    <service name="logging" factory="org.jbpm.logging.db.DbLoggingServiceFactory" />
     <service name="authentication" factory="org.jbpm.security.authentication.DefaultAuthenticationServiceFactory" />
   </jbpm-context>
   

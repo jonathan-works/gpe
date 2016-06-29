@@ -19,6 +19,8 @@ import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
+import org.hibernate.Session;
+
 import br.com.infox.core.server.ApplicationServerService;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.config.BeanManager;
@@ -57,6 +59,13 @@ public class EntityManagerProducer {
 	    }
 	    return entityManager;
 	}
+	
+	@Produces
+    @Named("hibernateSession")
+    private Session createHibernateSession() {
+	    EntityManager entityManager = EntityManagerProducer.getEntityManager();
+        return entityManager.unwrap(Session.class);
+    }
 	
 	@Produces
 	@BinaryDatabase
@@ -123,9 +132,9 @@ public class EntityManagerProducer {
         if (entityManager != null && entityManager.isOpen()) {
             entityManager.close();
         }
-        BIN_ENTITY_MANAGER_LOCAL.set(null);
-        ENTITY_MANAGER_LOCAL.set(null);
-        LOG_ENTITY_MANAGER_LOCAL.set(null);
+        BIN_ENTITY_MANAGER_LOCAL.remove();
+        ENTITY_MANAGER_LOCAL.remove();
+        LOG_ENTITY_MANAGER_LOCAL.remove();
     }
 	
 	public EntityManager getEntityManagerNotManaged() {

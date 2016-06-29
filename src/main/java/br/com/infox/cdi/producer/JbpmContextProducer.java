@@ -1,11 +1,11 @@
 package br.com.infox.cdi.producer;
 
 import javax.transaction.RollbackException;
-import javax.transaction.Status;
 import javax.transaction.Synchronization;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 
+import org.hibernate.Session;
 import org.jbpm.JbpmConfiguration;
 import org.jbpm.JbpmContext;
 
@@ -17,25 +17,17 @@ public final class JbpmContextProducer {
      * Returns JbpmContext threadLocal if exists else create a new one and register onto Transaction
      */
     public static JbpmContext getJbpmContext() {
-        JbpmContext jbpmContext = JbpmConfiguration.getInstance().getCurrentJbpmContext();
-        return jbpmContext == null ? createJbpmContextTransactional() : jbpmContext;
-    }
-    
-    /* 
-     * Returns JbpmContext created. Remember to close on final execution.
-     */
-    public static JbpmContext getJbpmContextNotManaged() {
-        return createNewJbpmContext();
+        JbpmContext jbpmContext = JbpmContext.getCurrentJbpmContext();
+        if (jbpmContext == null || jbpmContext.isClosed()) {
+            jbpmContext = createJbpmContextTransactional();
+        }
+        return jbpmContext;
     }
     
     public static JbpmContext createJbpmContextTransactional() {
         JbpmContext jbpmContext = JbpmConfiguration.getInstance().createJbpmContext();
         registerSynchronization(jbpmContext);
         return jbpmContext;
-    }
-    
-    public static JbpmContext createNewJbpmContext() {
-        return JbpmConfiguration.getInstance().createJbpmContext();
     }
     
     private static void registerSynchronization(JbpmContext jbpmContext) {
@@ -60,16 +52,13 @@ public final class JbpmContextProducer {
 
         @Override
         public void beforeCompletion() {
-            jbpmContext.autoSave();
-            jbpmContext.getSession().flush();
+            Session session = jbpmContext.getSession();
+            jbpmContext.close();
+            session.flush();
         }
 
         @Override
         public void afterCompletion(int status) {
-            if (status != Status.STATUS_COMMITTED) {
-                jbpmContext.setRollbackOnly();
-            }
-            jbpmContext.close();
         }
     }
 
