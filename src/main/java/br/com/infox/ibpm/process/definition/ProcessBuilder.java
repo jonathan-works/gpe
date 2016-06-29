@@ -339,6 +339,7 @@ public class ProcessBuilder implements Serializable {
                 JbpmUtil.getGraphSession().deployProcessDefinition(instance);
                 JbpmUtil.getJbpmSession().flush();
                 fluxo.setXmlExecucao(fluxo.getXml());
+                fluxo.setSvgExecucao(fluxo.getSvg());
                 if (!fluxo.getPublicado()){
                     fluxo.setPublicado(Boolean.TRUE);
                 }

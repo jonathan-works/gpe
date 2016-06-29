@@ -147,7 +147,10 @@ public class Fluxo implements Serializable {
     
     @Column(name = "ds_svg")
     private String svg;
-    
+
+    @Column(name = "ds_svg_exec")
+    private String svgExecucao;
+
     @NotNull
     @Version
     @Column(name = "nr_version", nullable = false)
@@ -290,7 +293,15 @@ public class Fluxo implements Serializable {
     public void setSvg(String svg) {
 		this.svg = svg;
 	}
-    
+
+    public String getSvgExecucao() {
+        return svgExecucao;
+    }
+
+    public void setSvgExecucao(String svgExecucao) {
+        this.svgExecucao = svgExecucao;
+    }
+
     public Long getVersion() {
 		return version;
 	}
