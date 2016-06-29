@@ -701,6 +701,7 @@
         <epp.mail.session>openejb:Resource/mail/${epp.name}</epp.mail.session>
         <epp.transactionManager.jndi>java:comp/TransactionManager</epp.transactionManager.jndi>
         <session.factory.jndi>java:comp/env/EPAPersistenceUnit</session.factory.jndi>
+        <userTransaction.jndi>java:comp/UserTransaction</userTransaction.jndi>
       </properties>
       <dependencies>
         <dependency>
@@ -713,6 +714,9 @@
     </profile>
     <profile>
       <id>jboss-eap</id>
+      <properties>
+        <userTransaction.jndi>java:jboss/UserTransaction</userTransaction.jndi>
+      </properties>
       <activation>
         <activeByDefault>true</activeByDefault>
       </activation>
