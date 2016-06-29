@@ -1,8 +1,5 @@
 package br.com.infox.ibpm.process.definition;
 
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
-import static java.text.MessageFormat.format;
-
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.io.StringReader;
@@ -24,7 +21,6 @@ import javax.persistence.EntityManager;
 
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
-import org.jboss.seam.Component;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jbpm.context.def.VariableAccess;
@@ -53,8 +49,6 @@ import br.com.infox.epp.fluxo.manager.RaiaPerfilManager;
 import br.com.infox.epp.fluxo.manager.VariavelClassificacaoDocumentoManager;
 import br.com.infox.epp.fluxo.merger.model.MergePointsBundle;
 import br.com.infox.epp.fluxo.merger.service.FluxoMergeService;
-import br.com.infox.epp.fluxo.xpdl.FluxoXPDL;
-import br.com.infox.epp.fluxo.xpdl.IllegalXPDLException;
 import br.com.infox.epp.modeler.converter.BpmnJpdlService;
 import br.com.infox.epp.modeler.converter.JpdlBpmnConverter;
 import br.com.infox.epp.processo.manager.ProcessoManager;
@@ -140,9 +134,6 @@ public class ProcessBuilder implements Serializable {
     private String tab;
 
     private Fluxo fluxo;
-
-    private Boolean importacaoConcluida;
-    private Set<String> mensagensImportacao;
 
     public void newInstance() {
         instance = null;
@@ -562,62 +553,6 @@ public class ProcessBuilder implements Serializable {
 
     public ProcessBuilderGraph getProcessBuilderGraph() {
         return processBuilderGraph;
-    }
-
-    public Set<String> getMensagensImportacao() {
-        return mensagensImportacao;
-    }
-
-    public Boolean getImportacaoConcluida() {
-        return importacaoConcluida;
-    }
-
-    @SuppressWarnings(UNCHECKED)
-    public void importarXPDL(byte[] bytes, Fluxo fluxo) {
-        FluxoXPDL fluxoXPDL = null;
-        mensagensImportacao = new HashSet<>();
-        try {
-            importacaoConcluida = false;
-
-            fluxoXPDL = FluxoXPDL.createInstance(bytes);
-            final String codFluxo = fluxo.getCodFluxo();
-
-            final String xmlDef = fluxoXPDL.toJPDL(codFluxo);
-            parseInstance(xmlDef);
-            fluxo.setXml(xmlDef);
-            fluxo.setBpmn(null);
-            fluxo.setSvg(null);
-            FluxoManager fluxoManager = (FluxoManager) Component.getInstance(FluxoManager.NAME);
-            fluxoManager.update(fluxo);
-
-            this.importacaoConcluida = true;
-        } catch (JpdlException e) {
-            List<Problem> problems = e.getProblems();
-            mensagensImportacao = new HashSet<>();
-            for (Problem object : problems) {
-                mensagensImportacao.add(format("{0}", object.toString()));
-            }
-        } catch (IllegalXPDLException | IllegalArgumentException | DAOException e) {
-            LOG.error("Erro ao importar arquivo XPDL. " + e.getMessage(), e);
-            if ((e instanceof IllegalXPDLException || e instanceof IllegalArgumentException) && e.getMessage() != null) {
-                mensagensImportacao.add(e.getMessage());
-            }
-            if (fluxoXPDL != null) {
-                mensagensImportacao.addAll(fluxoXPDL.getMensagens());
-                StringBuilder sb = new StringBuilder("Foram encontrados erros ao importar o XPDL:\n");
-                for (String mensagem : mensagensImportacao) {
-                    sb.append("\t");
-                    sb.append(mensagem);
-                    sb.append("\n");
-                }
-                LOG.error(sb.toString());
-            }
-        }
-    }
-
-    public void clearImportacao() {
-        importacaoConcluida = null;
-        mensagensImportacao = null;
     }
 
     public boolean existemProcessosAssociadosAoFluxo() {

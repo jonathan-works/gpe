@@ -180,12 +180,6 @@
                   	<infox:flashcopy />
                 </wi:commandButton>
                 
-                <wi:commandButton
-                    id="importarXPDL"
-                    value="#{infoxMessages['importarXPDL.button']}"
-                    rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.replica}"
-                    onclick="openPopUp('importarXPDL', '#{pathResolver.getContextPath()}/Fluxo/importar/importarXPDL.seam?scid=#{conversation.id}',1300,850);" />
-                    
                 <wi:commandButton id="importarBpmn" value="#{infoxMessages['fluxo.importarBpmn']}" onclick="#{rich:component('modalImportBpmn')}.show(); return false;"/>
                 
                 <rich:popupPanel id="modalImportBpmn" width="450" height="450" maxHeight="600" modal="true" header="#{infoxMessages['fluxo.importarBpmn']}"
