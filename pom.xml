@@ -193,13 +193,13 @@
 		<dependency>
 			<groupId>org.jbpm.jbpm3</groupId>
 			<artifactId>jbpm-jpdl</artifactId>
-      <version>3.4.5-2</version>
+            <version>3.4.5-3</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jbpm.jbpm3</groupId>
 			<artifactId>jbpm-identity</artifactId>
-      <version>3.4.5-2</version>
+            <version>3.4.5-3</version>
 			<scope>compile</scope>
 			<type>jar</type>
 		</dependency>
