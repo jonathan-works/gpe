@@ -255,8 +255,10 @@ public class BpmnJpdlService {
 				newNode.addEvent(event);
 			}
 		}
+		int index = processDefinition.getNodes().indexOf(oldNode);
 		processDefinition.removeNode(oldNode);
 		processDefinition.addNode(newNode);
+		processDefinition.reorderNode(processDefinition.getNodes().indexOf(newNode), index);
 	}
 
 	private void createSwimlanes(BpmnJpdlTranslation translation, ProcessDefinition processDefinition) {
@@ -273,9 +275,6 @@ public class BpmnJpdlService {
 		for (FlowNode flowNode : translation.getNewNodes()) {
 			Node node = NodeFactory.createNode(flowNode, processDefinition);
 			processDefinition.addNode(node);
-			if (translation.getNodeOrder().containsKey(node.getKey())) {
-				processDefinition.reorderNode(processDefinition.getNodes().indexOf(node), translation.getNodeOrder().get(node.getKey()));
-			}
 			if (node.getNodeType().equals(NodeType.Task)) {
 				if (translation.getNodesToLanes().containsKey(node.getKey())) {
 					Lane lane = translation.getNodesToLanes().get(node.getKey());
