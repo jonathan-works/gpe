@@ -43,8 +43,10 @@ public class MonitorProcessoService {
 //        Document svgDocument = createDocument(mockSVG(f.getSvg()));
         Document svgDocument = createDocument(mockSVG());
         ProcessDefinition processDefinition = monitorProcessoSearch.getProcessDefinitionByFluxo(fluxo);
-        List<MonitorProcessoDTO> monitorProcessoList = monitorProcessoSearch.listByFluxo(processDefinition.getId());
-        adicionaInformacoes(svgDocument, monitorProcessoList);
+        List<MonitorProcessoDTO> homanTaskList = monitorProcessoSearch.listTarefaByFluxo(processDefinition.getId());
+        List<MonitorProcessoDTO> automaticNodeList = monitorProcessoSearch.listNosAutomaticosErro(processDefinition.getId());
+        adicionaInformacoesTarefaHumana(svgDocument, homanTaskList);
+        adicionaInformacoesNosAutomaticos(svgDocument, automaticNodeList);
         return documentToString(svgDocument);
     }
 
@@ -61,7 +63,7 @@ public class MonitorProcessoService {
         }
     }
 
-    private void adicionaInformacoes(Document doc, List<MonitorProcessoDTO> monitorProcessoList) throws XPathExpressionException {
+    private void adicionaInformacoesTarefaHumana(Document doc, List<MonitorProcessoDTO> monitorProcessoList) throws XPathExpressionException {
         for (MonitorProcessoDTO mpDTO: monitorProcessoList) {
             XPath xPath =  XPathFactory.newInstance().newXPath();
             String elementId = mpDTO.getKey();
@@ -72,6 +74,21 @@ public class MonitorProcessoService {
             item.appendChild(circle);
 
             Element text = createTextElement(doc, "63", "16", "blue", mpDTO.getQuantidade().toString());
+            item.appendChild(text);
+        }
+    }
+
+    private void adicionaInformacoesNosAutomaticos(Document doc, List<MonitorProcessoDTO> monitorProcessoList) throws XPathExpressionException {
+        for (MonitorProcessoDTO mpDTO : monitorProcessoList) {
+            XPath xPath =  XPathFactory.newInstance().newXPath();
+            String elementId = mpDTO.getKey();
+            NodeList nodeList = (NodeList) xPath.compile("//g[@data-element-id='" + elementId + "']/g").evaluate(doc, XPathConstants.NODESET);
+            Node item = nodeList.item(0);
+
+            Element circle = createCircleElement(doc, "15", "60", "21", "red", "2", "white");
+            item.appendChild(circle);
+
+            Element text = createTextElement(doc, "63", "16", "red", mpDTO.getQuantidade().toString());
             item.appendChild(text);
         }
     }
