@@ -23,7 +23,11 @@ import br.com.infox.epp.assinador.AssinadorGroupService.StatusToken;
 import br.com.infox.epp.assinador.AssinadorService;
 import br.com.infox.epp.assinador.api.TokenAssinaturaResource;
 import br.com.infox.epp.assinador.api.TokenAssinaturaRest;
+import br.com.infox.epp.assinador.assinavel.AssinavelDocumentoBinProvider;
+import br.com.infox.epp.assinador.assinavel.AssinavelGenericoProvider;
+import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.certificado.entity.CertificateSignatureGroup;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.seam.path.PathResolver;
@@ -42,11 +46,35 @@ public class AssinadorController implements Serializable {
 	private PathResolver pathResolver;
 	
 	private String token;
+	
+	public String getToken() {
+		return token;
+	}
 
-
-	public String criarListaDocumentos(List<DocumentoBin> listaDocumentos) {
+	public void resetToken() {
+		StatusToken status = groupService.getStatus(token);
+		this.token = null;
+	}
+	
+	public String criarGrupoAssinatura(String textoAssinavel) {
+		return criarGrupoAssinatura(new AssinavelGenericoProvider(textoAssinavel));		
+	}
+	
+	public String criarGrupoAssinatura(List<String> textoAssinavelList) {
+		return criarGrupoAssinatura(new AssinavelGenericoProvider(textoAssinavelList));		
+	}
+	
+	public String criarGrupoAssinaturaWithDocumentoBin(DocumentoBin documentoBin) {
+		return criarGrupoAssinatura(new AssinavelDocumentoBinProvider(documentoBin));		
+	}
+	
+	public String criarGrupoAssinaturaWithDocumentoBin(List<DocumentoBin> documentoBinList) {
+		return criarGrupoAssinatura(new AssinavelDocumentoBinProvider(documentoBinList));		
+	}
+	
+	public String criarGrupoAssinatura(AssinavelProvider assinavelProvider) {
 		if(token == null) {
-			token = assinadorService.criarListaDocumentos(listaDocumentos);
+			token = assinadorService.criarListaAssinaveis(assinavelProvider);
 		}
 		return token;
 	}

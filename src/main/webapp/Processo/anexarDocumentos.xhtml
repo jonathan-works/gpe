@@ -4,6 +4,7 @@
 	xmlns:infox="http://www.infox.com.br/jsf"
 	xmlns:wi="http://www.itx.com.br/jsf"
 	xmlns:rich="http://richfaces.org/rich"
+	xmlns:i="http://java.sun.com/jsf/composite/infox"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:f="http://java.sun.com/jsf/core"
@@ -493,11 +494,20 @@
 
 			<div align="center">
 				<h:form>
+					<a:jsFunction name="assinarForm"
+						actionListener="#{anexarDocumentosView.signDocuments}"
+						action="#{elFunctions.invokeMethod(actionPosSign)}"
+						execute="@this assinarButtonToken"
+						render="pageBodyDialogMessage documentoDiv assinarDocumentosPopUpPanelOutput"
+						onbegin="infox.showLoading('Assinando Documento(s)');"
+						oncomplete="infox.hideLoading(); #{rich:component('assinarDocumentosPopUpPanel')}.hide(); desmarcarMarcarTodos();" />
+
 					<wi:certificadoDigital id="assinarButton"
 						rendered="#{not empty anexarDocumentosView.documentosAssinaveis}"
-						documentList="#{anexarDocumentosView.documentoBinsAssinaveis}"
-						oncomplete="#{rich:component('assinarDocumentosPopUpPanel')}.hide(); desmarcarMarcarTodos();"
-						/>
+						tokenField="#{anexarDocumentosView.tokenAssinatura}"
+						documentoBinList="#{anexarDocumentosView.documentoBinList}"
+						functionPreSign="infox.showLoading('Aguardando Usuário');"
+						functionPosSign="assinarForm();" />
 
 					<a:commandButton id="cancelarAssinaturaButton" styleClass="buttons"
 						value="#{infoxMessages['button.cancelar']}"

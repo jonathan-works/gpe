@@ -3,6 +3,7 @@ package br.com.infox.epp.assinador;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,10 +13,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.validation.ValidationException;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.jboss.seam.util.Base64;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.epp.assinador.assinavel.AssinavelDocumentoBinSource;
+import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
+import br.com.infox.epp.assinador.assinavel.AssinavelSource;
+import br.com.infox.epp.assinador.assinavel.TipoHash;
 import br.com.infox.epp.certificado.entity.CertificateSignature;
 import br.com.infox.epp.certificado.entity.CertificateSignatureGroup;
 import br.com.infox.epp.certificado.entity.TipoAssinatura;
@@ -65,13 +69,21 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
 		return certificateSignatureGroup;
 	}
 	
-	private CertificateSignature newCertificateSignature(CertificateSignatureGroup certificateSignatureGroup, UUID uuid, byte[] data) {
+	private CertificateSignature newCertificateSignature(CertificateSignatureGroup certificateSignatureGroup, AssinavelSource assinavelSource) {
 		CertificateSignature certificateSignature = new CertificateSignature();
 		certificateSignature.setCertificateSignatureGroup(certificateSignatureGroup);
 		certificateSignature.setUuid(UUID.randomUUID().toString());
 		certificateSignature.setStatus(certificateSignatureGroup.getStatus());
-		certificateSignature.setSha256(DigestUtils.sha256(data));
+		certificateSignature.setSha256(assinavelSource.digest(TipoHash.SHA256));
 		certificateSignature.setSignatureType(TipoAssinatura.PKCS7);
+		
+		if(assinavelSource instanceof AssinavelDocumentoBinSource) {
+			Integer idDocumentoBin = ((AssinavelDocumentoBinSource)assinavelSource).getIdDocumentoBin();
+			DocumentoBin documentoBin = documentoBinManager.find(idDocumentoBin);
+			certificateSignature.setDocumentoBin(documentoBin);
+			//Deve ser o UUID documentoBin para funcionar com código legado
+			certificateSignature.setUuid(documentoBin.getUuid().toString());
+		}
 		
 		getEntityManager().persist(certificateSignature);
 		
@@ -79,33 +91,17 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
 	}
 
 	@Override
-	public String createNewGroupWithBinary(List<byte[]> assinaveis) {
+	public String createNewGroupWithAssinavelProvider(AssinavelProvider assinavelProvider) {
 		CertificateSignatureGroup certificateSignatureGroup = createNewGroup();
 		
-		for (byte[] assinavel : assinaveis) {			
-			newCertificateSignature(certificateSignatureGroup, UUID.randomUUID(), assinavel);
+		Iterator<AssinavelSource> it = assinavelProvider.getAssinaveis().iterator();
+		while(it.hasNext()) {
+			AssinavelSource source = it.next();
+			newCertificateSignature(certificateSignatureGroup, source);
 		}
-
 		getEntityManager().flush();
 		
 		return certificateSignatureGroup.getToken();		
-	}
-	
-	public String createNewGroup(List<UUID> documentos) {
-		CertificateSignatureGroup certificateSignatureGroup = createNewGroup();
-
-		for (UUID documento : documentos) {
-			DocumentoBin documentoBin = documentoBinManager.getByUUID(documento);
-			byte[] bin = getBinario(documentoBin);
-			
-			CertificateSignature certificateSignature = newCertificateSignature(certificateSignatureGroup, UUID.randomUUID(), bin);
-			certificateSignature.setDocumentoBin(documentoBin);
-			certificateSignature.setStatus(certificateSignatureGroup.getStatus());
-		}
-
-		getEntityManager().flush();
-
-		return certificateSignatureGroup.getToken();
 	}
 
 	public void validarToken(String token) {

@@ -18,7 +18,6 @@ import br.com.infox.epp.rest.RestException;
 @Consumes(MediaType.APPLICATION_JSON)
 public interface AssinavelResource {
 
-	@Path("/")
 	@GET
 	public List<Assinavel> listarAssinaveis();
 	

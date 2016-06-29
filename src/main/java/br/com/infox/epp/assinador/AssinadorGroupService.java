@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.apache.commons.codec.binary.Base64;
 
+import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
 import br.com.infox.epp.certificado.entity.TipoAssinatura;
 
 public interface AssinadorGroupService {
@@ -84,10 +85,8 @@ public interface AssinadorGroupService {
 		}
 
 	}
-
-	public String createNewGroupWithBinary(List<byte[]> documentos);
-
-	public String createNewGroup(List<UUID> documentos);
+	
+	public String createNewGroupWithAssinavelProvider(AssinavelProvider assinavelProvider);
 
 	public void validarToken(String token);
 

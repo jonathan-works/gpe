@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 import javax.ejb.EJBException;
 import javax.faces.context.FacesContext;
@@ -15,12 +16,17 @@ import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage.Severity;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.richfaces.event.FileUploadEvent;
 import org.richfaces.model.UploadedFile;
 
 import br.com.infox.certificado.CertificateSignatures;
+import br.com.infox.certificado.bean.CertificateSignatureBean;
+import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
+import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
+import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
@@ -28,11 +34,13 @@ import br.com.infox.core.util.ArrayUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.certificado.DefaultSignableDocumentImpl;
 import br.com.infox.epp.certificado.SignDocuments;
 import br.com.infox.epp.certificado.SignableDocument;
+import br.com.infox.epp.certificado.entity.TipoAssinatura;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
@@ -42,7 +50,9 @@ import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.documento.type.ExpressionResolver;
 import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.bean.DadosUpload;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.DocumentoTemporario;
@@ -60,6 +70,7 @@ import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.ibpm.task.home.VariableTypeResolver;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.exception.ApplicationException;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Named
@@ -452,6 +463,67 @@ public class AnexarDocumentosView implements Serializable {
 		}
 	}
 
+	public void signDocuments() {
+		try {
+			CertificateSignatureBundleBean bundle = getSignatureBundle();
+
+			UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
+			for (CertificateSignatureBean bean : bundle.getSignatureBeanList()) {
+				DocumentoBin docBin = getDocumentoTemporarioByUuid(bean.getDocumentUuid());
+				if (docBin != null) {
+					if (!isAssinadoPor(docBin, usuarioPerfil)) {
+						assinaturaDocumentoService.assinarDocumento(docBin, usuarioPerfil, bean.getCertChain(),
+								bean.getSignature(), TipoAssinatura.PKCS7);
+					}
+				} else {
+					throw new ApplicationException("Documento não localizado!");
+				}
+			}
+			setDocumentoTemporarioList(loadDocumentoTemporarioList());
+			FacesMessages.instance().add(InfoxMessages.getInstance().get("anexarDocumentos.sucessoAssinatura"));
+			setDocumentosAssinaveis(new ArrayList<DocumentoTemporario>());
+		}catch(AssinaturaException | CertificadoException e){
+			LOG.error("Erro signDocuments ", e);
+			FacesMessages.instance().add(Severity.ERROR,e.getMessage());
+		}catch (Exception e) {
+			LOG.error("Erro signDocuments ", e);
+			FacesMessages.instance().add(Severity.ERROR,
+					InfoxMessages.getInstance().get("anexarDocumentos.erroAssinarDocumentos"));
+		}
+	}
+
+	private boolean isAssinadoPor(DocumentoBin docBin, UsuarioPerfil usuarioPerfil) {
+		List<AssinaturaDocumento> assinaturas = docBin.getAssinaturas();
+		if (assinaturas != null) {
+			for (AssinaturaDocumento assinatura : assinaturas) {
+				if (usuarioPerfil.equals(assinatura.getUsuarioPerfil())) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private DocumentoBin getDocumentoTemporarioByUuid(String uuid) {
+		for (DocumentoTemporario documentoTemporario : documentosAssinaveis) {
+			UUID wrapperUuid = documentoTemporario.getDocumentoBin().getUuid();
+			if (uuid.equals(wrapperUuid.toString()))
+				return documentoBinManager.getByUUID(wrapperUuid);
+		}
+		return null;
+	}
+
+	private CertificateSignatureBundleBean getSignatureBundle() throws CertificadoException {
+		CertificateSignatureBundleBean bundle = certificateSignatures.get(tokenAssinatura);
+		if (bundle == null) {
+			throw new CertificadoException(infoxMessages.get("assinatura.error.hashExpired"));
+		} else if (CertificateSignatureBundleStatus.ERROR.equals(bundle.getStatus())
+				|| CertificateSignatureBundleStatus.UNKNOWN.equals(bundle.getStatus())) {
+			throw new CertificadoException("Erro de Certificado " + bundle);
+		}
+		return bundle;
+	}
+
 	public void selectSignableDocuments() {
 		documentosAssinaveis = new ArrayList<DocumentoTemporario>();
 		documentosNaoAssinaveis = new ArrayList<DocumentoTemporario>();
@@ -469,6 +541,14 @@ public class AnexarDocumentosView implements Serializable {
 				}
 			}
 		}
+	}
+	
+	public List<DocumentoBin> getDocumentoBinList() {
+		List<DocumentoBin> retorno = new ArrayList<>();
+		for (DocumentoTemporario documentoTemporario : documentosAssinaveis) {
+			retorno.add(documentoTemporario.getDocumentoBin());
+		}
+		return retorno;
 	}
 
 	public String getSignDocuments() {
@@ -539,17 +619,6 @@ public class AnexarDocumentosView implements Serializable {
 
 	public void setTokenAssinatura(String tokenAssinatura) {
 		this.tokenAssinatura = tokenAssinatura;
-	}
-	
-	public List<DocumentoBin> getDocumentoBinsAssinaveis() {
-		List<DocumentoBin> retorno = new ArrayList<>();
-		if(getDocumentosAssinaveis() == null) {
-			return retorno;
-		}
-		for(DocumentoTemporario documentoTemporario : getDocumentosAssinaveis()) {
-			retorno.add(documentoTemporario.getDocumentoBin());
-		}
-		return retorno;
 	}
 
 	public List<DocumentoTemporario> getDocumentosAssinaveis() {

@@ -14,7 +14,10 @@
   <h:panelGroup id="#{empty id ? 'divApplet' : id}">
     <s:fragment rendered="#{empty rendered ? true : rendered}">
 
-      <h:inputHidden id="#{id}Token" value="#{idToken}" />
+      <h:inputHidden id="#{id}Token" value="#{tokenField}" />
+      
+      <a:jsFunction name="resetToken" action="#{assinadorController.resetToken()}" />
+      
       <a:commandButton type="button" styleClass="buttons" disabled="#{disableb}" onbegin="infox.showLoading();" style="#{signButtonStyle}"
       		action="#{elFunctions.invokeMethod(preSignAction)}" execute="#{execute}" rendered="#{empty rendered? 'true' : rendered}"
       		oncomplete="infox.hideLoading(); if (#{!facesContext.validationFailed}) {infox.CertDig.#{id}.init();}"
@@ -23,30 +26,27 @@
       			<f:setPropertyActionListener value="#{propertyValue}" target="#{propertyTarget}" />
       </a:commandButton>
 
-      <ui:param name="token" value="#{assinadorController.criarListaDocumentos(documentList)}" />
-      <ui:param name="parameter" value="#{assinadorController.getParametrosServletJNLP(token)}" />
-      <a:jsFunction name="#{id}OnComplete" action="#{assinadorController.apagarToken(token)}" />
-	  <a:jsFunction name="#{id}DoneAction" action="#{elFunctions.invokeMethod(wi:get(doneAction,'assinadorController.assinaturasRecebidas'))}" execute="#{wi:get(execute, '@this')}" render="#{wi:get(render, '@this')}"
-	  	onbegin="infox.showLoading('Aguardando Usuário');" oncomplete="#{id}OnComplete; infox.hideLoading(); #{wi:get(oncomplete, ';')}" />
+      <ui:param name="parameter" value="#{'token='.concat(empty textoAssinavelList ? (empty documentoBinList ? assinadorController.criarGrupoAssinatura(assinavelProvider) : assinadorController.criarGrupoAssinaturaWithDocumentoBin(documentoBinList)) : assinadorController.criarGrupoAssinatura(textoAssinavelList))}" />
+
       <h:outputScript name="cookies.min.js" library="js" />  
       <h:outputScript>
-          	namespace('infox.CertDig.#{id}', {  
+          namespace('infox.CertDig.#{id}', {  
   	          init: function() {  
-  	              infox.showLoading();
   	              #{functionPreSign};
   	        	  location.href='#{assinadorController.JNLPUrl}?#{parameter}';
-  	        	  var intervalId = setInterval(function() {
+  	        	  var intervalId = setInterval(function() {  
   	        	      var token = Cookies.get('br.com.infox.epp.sign.token');
   	        	      #{rich:element(id.concat('Token'))}.value = token;  
-  	        	      $.get('#{assinadorController.getTokenStatusURL(token)}', function(status) {
-   	        		      if (status !== 'AGUARDANDO_ASSINATURA') {  
+  	        	      $.get('#{pathResolver.getRestBaseUrl()}' + '/tokenAssinatura/' + token + '/status', function(status) {
+   	        		      if (status === 'SUCESSO' || status === 'ERRO') {  
 	  	        		      clearInterval(intervalId);
-	  	        		      infox.hideLoading();
-	  	        		      #{id}DoneAction;
+	  	        		      #{functionPosSign};
+	  	        		      resetToken();
   	        	  	      }
   			  	      });  
   		          }, 2000);  
-  		   	}  
+                     setTimeout(function() { clearInterval(intervalId); resetToken();}, 8000 * 60);
+  		   }  
   	   });  
 	  </h:outputScript>
     </s:fragment>
