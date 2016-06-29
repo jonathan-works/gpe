@@ -141,11 +141,7 @@ public class VariavelProcessoService {
             Object variable;
             if (taskInstance != null) {
             	// Aqui já pega do processInstance caso não tenha na taskInstance por causa da hierarquia de VariableContainer do jBPM
-            	if(definicao.getNome().startsWith("#") || definicao.getNome().startsWith("$")){
-            		variable = JbpmExpressionEvaluator.evaluate(definicao.getNome(),new ExecutionContext(taskInstance.getToken()));
-            	}else{
             		variable = taskInstance.getVariable(definicao.getNome());
-            	}
             } else {
             	variable = processInstance.getContextInstance().getVariable(definicao.getNome());
             }
@@ -162,7 +158,17 @@ public class VariavelProcessoService {
 	                } else {
 	                    final String valorPadrao = definicao.getValorPadrao();
 	                    if (valorPadrao != null) {
-	                        setValor(valorPadrao, processo, variavelProcesso);
+	                    	Object valorJbpmExpressionEvaluator = null;
+	                    	if(valorPadrao.startsWith("#") || valorPadrao.startsWith("$")){
+	                    		valorJbpmExpressionEvaluator = JbpmExpressionEvaluator.evaluate(valorPadrao,new ExecutionContext(taskInstance.getToken()));
+		                		if(valorJbpmExpressionEvaluator != null){
+		                			variavelProcesso.setValor(formatarValor(valorJbpmExpressionEvaluator));
+		                		}
+		                	}
+	                    	
+	                    	if(valorJbpmExpressionEvaluator == null){
+	                    		setValor(valorPadrao, processo, variavelProcesso);
+	                    	}
 	                    } else {
 	                        variavelProcesso = null;
 	                    }
@@ -220,7 +226,7 @@ public class VariavelProcessoService {
             ValueExpression<Object> valueExpression = expressions.createValueExpression(valorPadrao);
             value = valueExpression.getValue();
         } catch (Exception e) {
-            MethodExpression<Object> methodExpression = expressions.createMethodExpression(valorPadrao, Object.class, Processo.class);
+        	MethodExpression<Object> methodExpression = expressions.createMethodExpression(valorPadrao, Object.class, Processo.class);
             value = methodExpression.invoke(processo);
         }
         variavelProcesso.setValor(value != null ? value.toString() : null);
