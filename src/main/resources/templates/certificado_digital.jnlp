@@ -13,7 +13,7 @@
 		<j2se version="1.7+" />
 		<jar href="certificado_digital.jar" main="true" />
 	</resources>
-	<application-desc main-class="br.com.infox.server.Main">
+	<application-desc main-class="br.com.infox.assinador.gui.SignerDesktopApplication">
 		<argument>{{ config }}</argument>
 	</application-desc>
 </jnlp>
