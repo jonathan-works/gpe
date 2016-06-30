@@ -52,7 +52,7 @@ public class AssinadorController implements Serializable {
 	}
 
 	public void resetToken() {
-		StatusToken status = groupService.getStatus(token);
+		apagarToken(token);
 		this.token = null;
 	}
 	

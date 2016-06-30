@@ -40,11 +40,14 @@ public class CertificateSignatureGroupManager extends Manager<CertificateSignatu
     }
 
     public CertificateSignatureGroup getByToken(String token) throws CertificateException {
-    	//FIXME: Remover o clear depois de descobrir porque as entidades ficam na cache de primeiro nível durante o escopo da view 
-    	getDao().clear();
         CertificateSignatureGroup group = getDao().getByToken(token);
         if (group == null) {
-            throw new CertificateException("certificate.token.invalid");
+        	throw new CertificateException("certificate.token.invalid");
+        }
+    	//FIXME: Remover o refresh depois de descobrir uma forma melhor de localizar os objetos sem utilizar o cache da sessão
+        getDao().refresh(group);
+        for(CertificateSignature cs : group.getCertificateSignatureList()) {
+        	getDao().getEntityManager().refresh(cs);        	
         }
         if (isTokenExpired(group)) {
             throw new CertificateException("certificate.token.expired");
