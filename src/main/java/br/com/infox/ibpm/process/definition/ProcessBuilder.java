@@ -62,7 +62,6 @@ import br.com.infox.ibpm.process.definition.fitter.NodeFitter;
 import br.com.infox.ibpm.process.definition.fitter.SwimlaneFitter;
 import br.com.infox.ibpm.process.definition.fitter.TaskFitter;
 import br.com.infox.ibpm.process.definition.fitter.TransitionFitter;
-import br.com.infox.ibpm.process.definition.graphical.ProcessBuilderGraph;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.swimlane.SwimlaneInstanceSearch;
 import br.com.infox.ibpm.task.dao.TaskInstanceDAO;
@@ -93,8 +92,6 @@ public class ProcessBuilder implements Serializable {
     private TaskFitter taskFitter;
     @Inject
     private NodeFitter nodeFitter;
-    @Inject
-    private ProcessBuilderGraph processBuilderGraph;
     @Inject
     private JsfComponentTreeValidator jsfComponentTreeValidator;
     @Inject
@@ -147,7 +144,6 @@ public class ProcessBuilder implements Serializable {
         taskFitter.setStarTaskHandler(new TaskHandler(instance.getTaskMgmtDefinition().getStartTask()));
         eventFitter.addEvents();
         taskFitter.getTasks();
-        processBuilderGraph.clear();
     }
 
     private void clear() {
@@ -295,7 +291,6 @@ public class ProcessBuilder implements Serializable {
             taskFitter.updateTarefas();
             FacesMessages.instance().add("Fluxo salvo com sucesso!");
         }
-        processBuilderGraph.clear();
     }
     
     public void updateFluxo(String cdFluxo) {
@@ -551,10 +546,6 @@ public class ProcessBuilder implements Serializable {
     public void setFluxo(Fluxo fluxo) {
 		this.fluxo = fluxo;
 	}
-
-    public ProcessBuilderGraph getProcessBuilderGraph() {
-        return processBuilderGraph;
-    }
 
     public boolean existemProcessosAssociadosAoFluxo() {
         return fluxoMergeService.hasActiveNode(getInstance(), nodeFitter.getCurrentNode());
