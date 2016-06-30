@@ -1,11 +1,10 @@
 package br.com.infox.epp.fluxo.monitor;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-
-import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.entity.Fluxo;
@@ -23,19 +22,33 @@ public class MonitorProcessoView implements Serializable {
     private LogProvider LOG = Logging.getLogProvider(MonitorProcessoView.class);
 
     private Fluxo fluxo;
-    private String svg;
+    private boolean success;
+    private MonitorProcessoDTO monitor;
 
     public void selectFluxo(Fluxo f) {
         fluxo = f;
         try {
-            svg = monitorProcessoService.createSvgMonitoramentoProcesso(fluxo);
+            monitor = monitorProcessoService.createSvgMonitoramentoProcesso(fluxo);
+            success = true;
         } catch (Exception e) {
-            FacesMessages.instance().add("Não foi possível carregar o arquivo svg.");
+            success = false;
             LOG.error("Erro ao tentar carregar SVG do fluxo " + fluxo.getCodFluxo(), e);
         }
     }
 
     public String getSvg() {
-        return svg;
+        return monitor.getSvg();
+    }
+
+    public String getFluxoNome() {
+        return fluxo.getFluxo();
+    }
+
+    public String getFluxoDescricao() {
+        return monitor.getProcessDefinition().getDescription();
+    }
+
+    public boolean isSuccess() {
+        return success;
     }
 }

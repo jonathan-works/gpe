@@ -381,7 +381,7 @@
         <infox:tab 
             name="monitorTab"
             id="monitorTab"
-            title="#{infoxMessages['monitorProcesso.grafico']}"
+            title="#{infoxMessages['monitorProcesso.title']}"
             rendered="#{home.isManaged() and not fluxoCrudAction.replica and not empty home.instance.svgExecucao}"
             action="#{monitorProcessoView.selectFluxo(home.instance)}">
             <ui:include src="definicao/monitorProcesso.xhtml" />

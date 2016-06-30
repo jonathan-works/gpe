@@ -35,18 +35,20 @@ public class MonitorProcessoService {
     @Inject
     private MonitorProcessoSearch monitorProcessoSearch;
 
-    public String createSvgMonitoramentoProcesso(Fluxo fluxo) throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
+    public MonitorProcessoDTO createSvgMonitoramentoProcesso(Fluxo fluxo) throws TransformerException,
+            ParserConfigurationException, SAXException, IOException, XPathExpressionException {
         Document svgDocument = createDocument(fluxo.getSvgExecucao());
         ProcessDefinition processDefinition = monitorProcessoSearch.getProcessDefinitionByFluxo(fluxo);
-        List<MonitorProcessoDTO> humanTaskList = monitorProcessoSearch.listTarefaByFluxo(processDefinition.getId());
-        List<MonitorProcessoDTO> automaticNodeList = monitorProcessoSearch.listNosAutomaticosErro(processDefinition.getId());
+        List<MonitorTarefaDTO> humanTaskList = monitorProcessoSearch.listTarefaHumanaByProcessDefinition(processDefinition.getId());
+        List<MonitorTarefaDTO> automaticNodeList = monitorProcessoSearch.listNosAutomaticosByProcessDefinition(processDefinition.getId());
         adicionaInformacoesTarefaHumana(svgDocument, humanTaskList);
         adicionaInformacoesNosAutomaticos(svgDocument, automaticNodeList);
-        return documentToString(svgDocument);
+        String svg = documentToString(svgDocument);
+        return new MonitorProcessoDTO(fluxo, processDefinition, humanTaskList, automaticNodeList, svg);
     }
 
-    private void adicionaInformacoesTarefaHumana(Document doc, List<MonitorProcessoDTO> monitorProcessoList) throws XPathExpressionException {
-        for (MonitorProcessoDTO mpDTO: monitorProcessoList) {
+    private void adicionaInformacoesTarefaHumana(Document doc, List<MonitorTarefaDTO> monitorProcessoList) throws XPathExpressionException {
+        for (MonitorTarefaDTO mpDTO: monitorProcessoList) {
             XPath xPath =  XPathFactory.newInstance().newXPath();
             String elementId = mpDTO.getKey();
             NodeList nodeList = (NodeList) xPath.compile("//g[@data-element-id='" + elementId + "']/g").evaluate(doc, XPathConstants.NODESET);
@@ -60,8 +62,8 @@ public class MonitorProcessoService {
         }
     }
 
-    private void adicionaInformacoesNosAutomaticos(Document doc, List<MonitorProcessoDTO> monitorProcessoList) throws XPathExpressionException {
-        for (MonitorProcessoDTO mpDTO : monitorProcessoList) {
+    private void adicionaInformacoesNosAutomaticos(Document doc, List<MonitorTarefaDTO> monitorProcessoList) throws XPathExpressionException {
+        for (MonitorTarefaDTO mpDTO : monitorProcessoList) {
             XPath xPath =  XPathFactory.newInstance().newXPath();
             String elementId = mpDTO.getKey();
             NodeList nodeList = (NodeList) xPath.compile("//g[@data-element-id='" + elementId + "']/g").evaluate(doc, XPathConstants.NODESET);

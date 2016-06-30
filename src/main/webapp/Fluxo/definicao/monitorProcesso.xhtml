@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
     xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:ui="http://java.sun.com/jsf/facelets">
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf">
 
-    <div style="margin-top: 2em;">
-        <h:outputText value="#{monitorProcessoView.svg}" escape="false" />
-    </div>
+    <h:panelGroup rendered="#{monitorProcessoView.success}">
+        <fieldset id="fluxoDadosFieldset">
+            <legend>#{infoxMessages['monitorProcesso.fluxo.dados']}</legend>
+            <wi:outputText id="fluxoNome"
+                label="#{infoxMessages['monitorProcesso.fluxo.nome']}"
+                value="#{monitorProcessoView.fluxoNome}" />
+
+            <wi:outputText id="fluxoDescricao"
+                label="#{infoxMessages['monitorProcesso.fluxo.descricao']}"
+                value="#{monitorProcessoView.fluxoDescricao}" />
+        </fieldset>
+
+        <div style="margin-top: 2em;">
+            <h:outputText value="#{monitorProcessoView.svg}" escape="false" />
+        </div>
+    </h:panelGroup>
+
+    <h:panelGroup rendered="#{not monitorProcessoView.success}">
+        Não foi possível carregar o monitoramento deste fluxo. Favor contatar o administrador do sistema.
+    </h:panelGroup>
 </ui:composition>
