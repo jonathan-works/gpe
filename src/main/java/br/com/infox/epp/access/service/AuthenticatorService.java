@@ -40,8 +40,6 @@ import br.com.infox.epp.access.manager.CertificateManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
-import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
-import br.com.infox.epp.processo.documento.assinatura.AssinaturaException.Motivo;
 import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -175,11 +173,6 @@ public class AuthenticatorService {
                 pessoaFisica.setCertChain(certChain);
                 pessoaFisicaManager.merge(pessoaFisica);
                 pessoaFisicaManager.flush();
-            } else {
-                if (!pessoaFisica.getCertChain().equals(certChain)) {
-                    AssinaturaException ex = new AssinaturaException(Motivo.CERTIFICADO_USUARIO_DIFERENTE_CADASTRO);
-                    throw new RedirectToLoginApplicationException(ex.getMessage());
-                }
             }
             if (signature == null && termoAdesao) {
                 throw new RedirectToLoginApplicationException(infoxMessages.get("login.termoAdesao.failed"));

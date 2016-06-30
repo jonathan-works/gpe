@@ -13,9 +13,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.UriBuilder;
 
-import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.international.StatusMessage;
-
 import br.com.infox.certificado.service.CertificadoDigitalJNLPServlet;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.assinador.AssinadorGroupService;
@@ -27,8 +24,6 @@ import br.com.infox.epp.assinador.assinavel.AssinavelDocumentoBinProvider;
 import br.com.infox.epp.assinador.assinavel.AssinavelGenericoProvider;
 import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.certificado.entity.CertificateSignatureGroup;
-import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.seam.path.PathResolver;
 
@@ -47,15 +42,6 @@ public class AssinadorController implements Serializable {
 	
 	private String token;
 	
-	public String getToken() {
-		return token;
-	}
-
-	public void resetToken() {
-		apagarToken(token);
-		this.token = null;
-	}
-	
 	public String criarGrupoAssinatura(String textoAssinavel) {
 		return criarGrupoAssinatura(new AssinavelGenericoProvider(textoAssinavel));		
 	}
@@ -73,9 +59,7 @@ public class AssinadorController implements Serializable {
 	}
 	
 	public String criarGrupoAssinatura(AssinavelProvider assinavelProvider) {
-		if(token == null) {
-			token = assinadorService.criarListaAssinaveis(assinavelProvider);
-		}
+		token = assinadorService.criarListaAssinaveis(assinavelProvider);
 		return token;
 	}
 
@@ -86,19 +70,9 @@ public class AssinadorController implements Serializable {
 		return String.format("%s=%s&%s=%s&%s=%s", PARAMETRO_TOKEN, token, PARAMETRO_CODIGO_PERFIL, codigoPerfil, PARAMETRO_CODIGO_LOCALIZACAO, codigoLocalizacao);
 	}
 	
-	public void apagarToken(String token) {
+	public void apagarGrupo() {
 		groupService.apagarGrupo(token);
 	}
-	
-	public void assinaturasRecebidas() {
-		try {
-			assinadorService.assinar(token, Authenticator.getUsuarioPerfilAtual());
-		} catch (AssinaturaException e) {
-			FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Erro ao assinar: " + e.getMessage());
-		}
-		FacesMessages.instance().add(StatusMessage.Severity.INFO, "Assinatura completada com sucesso");
-	}
-	
 	
 	public String getURITokenResource(String token, String nomeMetodo) {
 		Method metodo;

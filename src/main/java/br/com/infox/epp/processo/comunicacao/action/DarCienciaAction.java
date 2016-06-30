@@ -25,6 +25,9 @@ import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.assinador.assinavel.AssinavelDocumentoBinProvider;
+import br.com.infox.epp.assinador.assinavel.AssinavelGenericoProvider;
+import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
@@ -71,6 +74,8 @@ public class DarCienciaAction implements Serializable {
 	protected ActionMessagesService actionMessagesService;
 	@Inject
 	private EntityManager entityManager;
+	
+	private AssinavelProvider assinavelProvider;
 
 	private List<ClassificacaoDocumento> classificacoesDocumentoCiencia;
 	private DestinatarioBean destinatario;
@@ -215,17 +220,6 @@ public class DarCienciaAction implements Serializable {
 		FacesMessages.instance().add(infoxMessages.get("comunicacao.msg.sucesso.ciencia"));
 	}
 	
-	public void updateSignableCiencia() {
-		if (signableDocumentoCiencia == null || signableDocumentoCiencia.isEmpty()) {
-			if (isEditorCiencia() && getTextoCiencia() != null && !getTextoCiencia().isEmpty()) {
-				setSignableDocumentoCiencia(MD5Encoder.encode(getTextoCiencia()));
-			} else if (documentoUploader.getDocumento() != null) {
-				documentoUploader.getDocumento().getDocumentoBin().setMd5Documento(MD5Encoder.encode(documentoUploader.getDocumento().getDocumentoBin().getProcessoDocumento()));
-				setSignableDocumentoCiencia(documentoUploader.getDocumento().getDocumentoBin().getMd5Documento());
-			}
-		}
-	}
-	
 	protected DestinatarioModeloComunicacao getDestinatarioModeloComunicacao(DestinatarioBean bean) {
 		return entityManager.find(DestinatarioModeloComunicacao.class, bean.getIdDestinatario());
 	}
@@ -333,6 +327,22 @@ public class DarCienciaAction implements Serializable {
 
 	public void setSignableDocumentoCiencia(String signableDocumentoCiencia) {
 		this.signableDocumentoCiencia = signableDocumentoCiencia;
+	}
+
+	public AssinavelProvider getAssinavelProvider() {
+		if (signableDocumentoCiencia == null || signableDocumentoCiencia.isEmpty()) {
+			if (isEditorCiencia() && getTextoCiencia() != null && !getTextoCiencia().isEmpty()) {
+				assinavelProvider = new AssinavelGenericoProvider(getTextoCiencia());
+			} else if (documentoUploader.getDocumento() != null) {
+				documentoUploader.getDocumento().getDocumentoBin().setMd5Documento(MD5Encoder.encode(documentoUploader.getDocumento().getDocumentoBin().getProcessoDocumento()));
+				assinavelProvider = new AssinavelDocumentoBinProvider(documentoUploader.getDocumento().getDocumentoBin());
+			}
+		}
+		return assinavelProvider;
+	}
+
+	public void setAssinavelProvider(AssinavelProvider assinavelProvider) {
+		this.assinavelProvider = assinavelProvider;
 	}
 	
 }

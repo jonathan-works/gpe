@@ -36,7 +36,7 @@
                         <wi:certificadoDigital
                             id="termoAdesao"
                             tokenField="#{termoAdesaoAction.token}"
-                            signableData="#{termoAdesaoAction.md5Sum}"
+                            textoAssinavelList="#{termoAdesaoAction.termoAdesao}"
                             functionPreSign="infox.showLoading();"
                             functionPosSign="assinarTermo();infox.hideLoading();"
                             signButtonCaption="#{infoxMessages['login.assinarTermoAdesao']}" />

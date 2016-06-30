@@ -143,9 +143,9 @@ public class ValidaDocumentoAction implements Serializable {
 			try {
 				CertificateSignatureBundleBean bundle = getSignature();
 				for (CertificateSignatureBean certificateSignatureBean : bundle.getSignatureBeanList()) {
-					if (certificateSignatureBean.getDocumentMD5().equals(documentoBin.getMd5Documento())) {
+					if (certificateSignatureBean.getDocumentUuid().equals(documentoBin.getUuid().toString())) {
 						assinaturaDocumentoService.assinarDocumento(documentoBin, usuarioPerfil, certificateSignatureBean.getCertChain(),
-								certificateSignatureBean.getSignature(), TipoAssinatura.MD5_ASSINADO);
+								certificateSignatureBean.getSignature(), TipoAssinatura.PKCS7);
 						setPodeIniciarFluxoAnaliseDocumentos(assinaturaDocumentoService.isDocumentoTotalmenteAssinado(getDocumento()));
 						break;
 					}

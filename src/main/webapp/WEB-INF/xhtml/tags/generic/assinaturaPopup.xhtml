@@ -73,7 +73,7 @@
 						<a:jsFunction name="assinar"
 							actionListener="#{validaDocumentoAction.assinaDocumento(authenticator.getUsuarioPerfilAtual())}"
 							action="#{elFunctions.invokeMethod(actionPosSign)}"
-							execute="@this appletAssinaturaToken"
+							execute="@this"
 							render="mp_ass, pageBodyDialogMessage, assinaturaListCont, conteudoAssinatura, #{afterRender}"
 							oncomplete="infox.hideLoading();" />
 	
@@ -81,7 +81,7 @@
 	            			id="appletAssinatura"
 							signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
 							tokenField="#{validaDocumentoAction.token}"
-							signableData="#{validaDocumentoAction.documentoBin.md5Documento}"
+							documentoBinList="#{validaDocumentoAction.documentoBin}"
 							functionPreSign="infox.showLoading();"
 							functionPosSign="assinar();"
 							rendered="#{validaDocumentoAction.podeAssinar()}" >

@@ -306,14 +306,14 @@ public class AssinaturaDocumentoService {
             final UsuarioPerfil perfilAtual, final String certChain,
             final String signature) throws CertificadoException,
             AssinaturaException, DAOException {
-        assinarDocumento(documento.getDocumentoBin(), perfilAtual, certChain, signature, TipoAssinatura.MD5_ASSINADO);
+        assinarDocumento(documento.getDocumentoBin(), perfilAtual, certChain, signature, TipoAssinatura.PKCS7);
     }
     
     public void assinarGravarDocumento(Documento documento,
             final UsuarioPerfil perfilAtual, final String certChain,
             final String signature) throws DAOException, CertificadoException, AssinaturaException {
     	documento = documentoManager.gravarDocumentoNoProcesso(documento);
-    	assinarDocumento(documento.getDocumentoBin(), perfilAtual, certChain, signature, TipoAssinatura.MD5_ASSINADO);
+    	assinarDocumento(documento.getDocumentoBin(), perfilAtual, certChain, signature, TipoAssinatura.PKCS7);
     }
 
     public boolean isDocumentoAssinado(Integer idDocumento, PerfilTemplate perfilTemplate) {

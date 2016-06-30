@@ -95,7 +95,7 @@ public class TermoAdesaoAction implements Serializable {
             
             UsuarioPerfil perfil = papelManager.getPerfilTermoAdesao(usuarioLogin);
             if (perfil != null) {
-                assinaturaDocumentoService.assinarDocumento(bin, perfil, certChain, signature, TipoAssinatura.MD5_ASSINADO);
+                assinaturaDocumentoService.assinarDocumento(bin, perfil, certChain, signature, TipoAssinatura.PKCS7);
                 PessoaFisica pessoaFisica = usuarioLogin.getPessoaFisica();
                 pessoaFisica.setTermoAdesao(bin);
             }
