@@ -3,6 +3,7 @@ package br.com.infox.epp.fluxo.monitor;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -118,5 +119,13 @@ public class MonitorProcessoService {
         Transformer transformer = tf.newTransformer();
         transformer.transform(domSource,  result);
         return writer.toString();
+    }
+
+    public List<MonitorProcessoInstanceDTO> listInstances(ProcessDefinition processDefinition) {
+        List<MonitorProcessoInstanceDTO> humanTaskList = monitorProcessoSearch.listInstanciasTarefaHumana(processDefinition.getId());
+        List<MonitorProcessoInstanceDTO> automaticNodeList = monitorProcessoSearch.listInstanciasNoAutomatico(processDefinition.getId());
+        List<MonitorProcessoInstanceDTO> resultList = new ArrayList<>(humanTaskList);
+        resultList.addAll(automaticNodeList);
+        return resultList;
     }
 }

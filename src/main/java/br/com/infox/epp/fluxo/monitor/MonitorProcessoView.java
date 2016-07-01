@@ -24,14 +24,17 @@ public class MonitorProcessoView implements Serializable {
     private Fluxo fluxo;
     private boolean success;
     private MonitorProcessoDTO monitor;
+    private List<MonitorProcessoInstanceDTO> instances;
 
     public void selectFluxo(Fluxo f) {
         fluxo = f;
         try {
             monitor = monitorProcessoService.createSvgMonitoramentoProcesso(fluxo);
+            instances = monitorProcessoService.listInstances(monitor.getProcessDefinition());
             success = true;
         } catch (Exception e) {
             success = false;
+            instances = null;
             LOG.error("Erro ao tentar carregar SVG do fluxo " + fluxo.getCodFluxo(), e);
         }
     }
@@ -50,5 +53,9 @@ public class MonitorProcessoView implements Serializable {
 
     public boolean isSuccess() {
         return success;
+    }
+
+    public List<MonitorProcessoInstanceDTO> getInstances() {
+        return instances;
     }
 }

@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
     xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:wi="http://www.itx.com.br/jsf">
+
+    <h:panelGroup rendered="#{not monitorProcessoView.success}">
+        #{infoxMessages['monitorProcesso.erroCsv']}
+    </h:panelGroup>
 
     <h:panelGroup rendered="#{monitorProcessoView.success}">
         <fieldset id="fluxoDadosFieldset">
@@ -21,7 +27,30 @@
         </div>
     </h:panelGroup>
 
-    <h:panelGroup rendered="#{not monitorProcessoView.success}">
-        Não foi possível carregar o monitoramento deste fluxo. Favor contatar o administrador do sistema.
-    </h:panelGroup>
+    <p:dataTable id="instanciaDataTable"
+        value="#{monitorProcessoView.instances}" var="row">
+
+        <p:column id="state" style="width:36px; text-align:center">
+            <h:panelGroup rendered="#{row.state eq 'ERROR'}">
+                <div class="circle" style="background-color: red; border-color: #a00" />
+            </h:panelGroup>
+            <h:panelGroup rendered="#{row.state eq 'OK'}">
+                <div class="circle" style="background-color: green; border-color: #060" />
+            </h:panelGroup>
+        </p:column>
+
+        <p:column id="numero" headerText="#{infoxMessages['monitorProcesso.instance.numeroProcesso']}">
+            <h:outputText value="#{row.numero}" />
+        </p:column>
+
+        <p:column id="nodeName" headerText="#{infoxMessages['monitorProcesso.instance.nodeName']}">
+            <h:outputText value="#{row.nodeName}" />
+        </p:column>
+
+        <p:column id="dataInicio" headerText="#{infoxMessages['monitorProcesso.instance.dataInicio']}">
+            <h:outputText value="#{row.dataInicio}">
+                <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+            </h:outputText>
+        </p:column>
+    </p:dataTable>
 </ui:composition>
