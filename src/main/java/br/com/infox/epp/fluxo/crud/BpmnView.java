@@ -48,11 +48,8 @@ public class BpmnView implements Serializable {
 		String newBpmnXml = bpmnInfo.get("bpmn").getAsString();
 		
 		if (!newProcessDefinitionXml.equals(fluxo.getXml()) || !newBpmnXml.equals(fluxo.getBpmn())) {
-			fluxo.setXml(newProcessDefinitionXml);
-			fluxo.setBpmn(newBpmnXml);
-			fluxo.setSvg(bpmnInfo.get("svg").getAsString());
 			try {
-				fluxo = bpmnJpdlService.atualizarDefinicao(fluxo);
+				fluxo = bpmnJpdlService.atualizarDefinicao(fluxo, newProcessDefinitionXml, newBpmnXml, bpmnInfo.get("svg").getAsString());
 			} catch (JpdlException e) {
 				logJpdlException(e);
 				return;

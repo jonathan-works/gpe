@@ -41,6 +41,7 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
+import br.com.infox.epp.fluxo.service.HistoricoProcessDefinitionService;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
 import br.com.infox.ibpm.jpdl.JpdlXmlWriter;
 import br.com.infox.ibpm.util.BpmUtil;
@@ -55,6 +56,8 @@ public class BpmnJpdlService {
 	private FluxoManager fluxoManager;
 	@Inject
 	private InfoxMessages infoxMessages;
+	@Inject
+	private HistoricoProcessDefinitionService historicoProcessDefinitionService;
 
 	public BpmnModelInstance createInitialBpmn(String processName) {
     	String processKey = BpmUtil.generateKey();
@@ -122,18 +125,20 @@ public class BpmnJpdlService {
     }
 	
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public Fluxo atualizarDefinicao(Fluxo fluxo) {
-    	BpmnModelInstance bpmnModel = Bpmn.readModelFromStream(new ByteArrayInputStream(fluxo.getBpmn().getBytes(StandardCharsets.UTF_8)));
-    	ProcessDefinition processDefinition = loadOrCreateProcessDefinition(fluxo.getXml());
+	public Fluxo atualizarDefinicao(Fluxo fluxo, String newProcessDefinitionXml, String newBpmnXml, String newSvg) {
+    	BpmnModelInstance bpmnModel = Bpmn.readModelFromStream(new ByteArrayInputStream(newBpmnXml.getBytes(StandardCharsets.UTF_8)));
+    	ProcessDefinition processDefinition = loadOrCreateProcessDefinition(newProcessDefinitionXml);
     	updateDefinitionsFromBpmn(bpmnModel, processDefinition);
     	atualizarNomeFluxo(fluxo, bpmnModel, processDefinition);
     	
-    	String newProcessDefinitionXml = JpdlXmlWriter.toString(processDefinition);
+    	newProcessDefinitionXml = JpdlXmlWriter.toString(processDefinition);
     	// Validar consistência do JPDL
 		InfoxJpdlXmlReader.readProcessDefinition(newProcessDefinitionXml);
-    	
+
+		historicoProcessDefinitionService.registrarHistorico(fluxo);
 		fluxo.setXml(newProcessDefinitionXml);
 		fluxo.setBpmn(Bpmn.convertToString(bpmnModel));
+		fluxo.setSvg(newSvg);
 		return fluxoManager.update(fluxo);
 	}
     
@@ -146,8 +151,10 @@ public class BpmnJpdlService {
     	Process process = bpmnModel.getModelElementsByType(Process.class).iterator().next();
     	processDefinition.setKey(process.getId());
 		atualizarNomeFluxo(fluxo, bpmnModel, processDefinition);
+		historicoProcessDefinitionService.registrarHistorico(fluxo);
 		fluxo.setXml(JpdlXmlWriter.toString(processDefinition));
 		fluxo.setBpmn(Bpmn.convertToString(bpmnModel));
+		fluxo.setSvg(null);
 		return fluxoManager.update(fluxo);
 	}
 

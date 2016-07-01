@@ -19,7 +19,6 @@ import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
-import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.fluxo.dao.FluxoDAO;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.FluxoPapel;
@@ -29,7 +28,6 @@ import br.com.infox.epp.fluxo.entity.RaiaPerfil;
 @AutoCreate
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-@ContextDependency
 public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
 
     private static final long serialVersionUID = -6521661616139554331L;

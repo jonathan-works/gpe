@@ -16,6 +16,7 @@
   <ui:define name="head">
 	<c:if test="#{not empty flash.idFluxo}">
 		<c:set property="idFluxo" target="#{processBuilder}" value="#{flash.idFluxo}"></c:set>
+		<c:set property="idFluxo" target="#{historicoProcessDefinitionList}" value="#{flash.idFluxo}"></c:set>
 		<f:metadata>
 			<f:event listener="#{processBuilder.load()}" type="preRenderView" />
 		</f:metadata>
@@ -88,6 +89,7 @@
           header="#{infoxMessages['processBuilder.definicaoVariavelProcesso']}">
           <ui:include src="definicaoVariavelProcesso.xhtml" />
         </rich:panel>
+        <ui:include src="historico.xhtml" />
         <rich:panel
           styleClass="SwimlanePanel"
           header="#{infoxMessages['processBuilder.swimlanes']}">
@@ -168,5 +170,14 @@
       width="920">
       <ui:include src="actions/addClassificacaoDocumento.xhtml" />
     </wi:modalPanel>
+    
+    <rich:popupPanel id="modalVisualizarHistorico" width="950" height="650" maxHeight="600" modal="true" header="Histórico">
+		<f:facet name="controls">
+		    <h:graphicImage styleClass="mp-close"
+		        value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
+		        onclick="#{rich:component('modalVisualizarHistorico')}.hide();" />
+		</f:facet>
+		<ui:include src="visualizarHistorico.xhtml" />
+	</rich:popupPanel>
   </ui:define>
 </ui:composition>
