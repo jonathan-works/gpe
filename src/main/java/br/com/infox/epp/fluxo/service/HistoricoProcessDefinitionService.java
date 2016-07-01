@@ -77,7 +77,7 @@ public class HistoricoProcessDefinitionService {
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void limparHistoricos(Fluxo fluxo) {
 		try {
-			historicoProcessDefinitionDao.getEntityManager().createQuery("delete o from HistoricoProcessDefinition o where o.fluxo = :fluxo")
+			historicoProcessDefinitionDao.getEntityManager().createQuery("delete from HistoricoProcessDefinition where fluxo = :fluxo")
 				.setParameter("fluxo", fluxo).executeUpdate();
 			historicoProcessDefinitionDao.getEntityManager().flush();
 		} catch (Exception e) {
