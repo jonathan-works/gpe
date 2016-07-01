@@ -36,12 +36,12 @@ public class MonitorProcessoService {
     @Inject
     private MonitorProcessoSearch monitorProcessoSearch;
 
-    public MonitorProcessoDTO createSvgMonitoramentoProcesso(Fluxo fluxo) throws TransformerException,
+    public MonitorProcessoDTO createSvgMonitoramentoProcesso(Fluxo fluxo, String key) throws TransformerException,
             ParserConfigurationException, SAXException, IOException, XPathExpressionException {
         Document svgDocument = createDocument(fluxo.getSvgExecucao());
         ProcessDefinition processDefinition = monitorProcessoSearch.getProcessDefinitionByFluxo(fluxo);
-        List<MonitorTarefaDTO> humanTaskList = monitorProcessoSearch.listTarefaHumanaByProcessDefinition(processDefinition.getId());
-        List<MonitorTarefaDTO> automaticNodeList = monitorProcessoSearch.listNosAutomaticosByProcessDefinition(processDefinition.getId());
+        List<MonitorTarefaDTO> humanTaskList = monitorProcessoSearch.listTarefaHumanaByProcessDefinition(processDefinition.getId(), key);
+        List<MonitorTarefaDTO> automaticNodeList = monitorProcessoSearch.listNosAutomaticosByProcessDefinition(processDefinition.getId(), key);
         adicionaInformacoesTarefaHumana(svgDocument, humanTaskList);
         adicionaInformacoesNosAutomaticos(svgDocument, automaticNodeList);
         String svg = documentToString(svgDocument);
@@ -54,6 +54,8 @@ public class MonitorProcessoService {
             String elementId = mpDTO.getKey();
             NodeList nodeList = (NodeList) xPath.compile("//g[@data-element-id='" + elementId + "']/g").evaluate(doc, XPathConstants.NODESET);
             Node item = nodeList.item(0);
+
+            ((Element) item).setAttribute("onclick", "filterElement([{name:'elementId', value:'" + elementId + "'}])");
 
             Element circle = createCircleElement(doc, "15", "60", "21", "blue", "2", "white");
             item.appendChild(circle);
@@ -69,6 +71,8 @@ public class MonitorProcessoService {
             String elementId = mpDTO.getKey();
             NodeList nodeList = (NodeList) xPath.compile("//g[@data-element-id='" + elementId + "']/g").evaluate(doc, XPathConstants.NODESET);
             Node item = nodeList.item(0);
+
+            ((Element) item).setAttribute("onclick", "filterElement([{name:'elementId', value:'" + elementId + "'}])");
 
             Element circle = createCircleElement(doc, "15", "60", "21", "red", "2", "white");
             item.appendChild(circle);
@@ -121,9 +125,9 @@ public class MonitorProcessoService {
         return writer.toString();
     }
 
-    public List<MonitorProcessoInstanceDTO> listInstances(ProcessDefinition processDefinition) {
-        List<MonitorProcessoInstanceDTO> humanTaskList = monitorProcessoSearch.listInstanciasTarefaHumana(processDefinition.getId());
-        List<MonitorProcessoInstanceDTO> automaticNodeList = monitorProcessoSearch.listInstanciasNoAutomatico(processDefinition.getId());
+    public List<MonitorProcessoInstanceDTO> listInstances(ProcessDefinition processDefinition, String key) {
+        List<MonitorProcessoInstanceDTO> humanTaskList = monitorProcessoSearch.listInstanciasTarefaHumana(processDefinition.getId(), key);
+        List<MonitorProcessoInstanceDTO> automaticNodeList = monitorProcessoSearch.listInstanciasNoAutomatico(processDefinition.getId(), key);
         List<MonitorProcessoInstanceDTO> resultList = new ArrayList<>(humanTaskList);
         resultList.addAll(automaticNodeList);
         return resultList;

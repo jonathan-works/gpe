@@ -2,9 +2,13 @@ package br.com.infox.epp.fluxo.monitor;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.entity.Fluxo;
@@ -24,13 +28,17 @@ public class MonitorProcessoView implements Serializable {
     private Fluxo fluxo;
     private boolean success;
     private MonitorProcessoDTO monitor;
+    private MonitorProcessoDTO filterMonitor;
     private List<MonitorProcessoInstanceDTO> instances;
+    private List<MonitorProcessoInstanceDTO> filterInstances;
+    private boolean filter;
 
     public void selectFluxo(Fluxo f) {
         fluxo = f;
+        filter = false;
         try {
-            monitor = monitorProcessoService.createSvgMonitoramentoProcesso(fluxo);
-            instances = monitorProcessoService.listInstances(monitor.getProcessDefinition());
+            monitor = monitorProcessoService.createSvgMonitoramentoProcesso(fluxo, null);
+            instances = monitorProcessoService.listInstances(monitor.getProcessDefinition(), null);
             success = true;
         } catch (Exception e) {
             success = false;
@@ -39,8 +47,29 @@ public class MonitorProcessoView implements Serializable {
         }
     }
 
+    public void filterElement() {
+        try {
+            Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+            String elementId = params.get("elementId");
+            filterMonitor = monitorProcessoService.createSvgMonitoramentoProcesso(fluxo, elementId);
+            filterInstances = monitorProcessoService.listInstances(monitor.getProcessDefinition(), elementId);
+            filter = true;
+        } catch (Exception e) {
+            success = false;
+            instances = null;
+            FacesMessages.instance().add("Não foi possível filtrar o fluxo pela tarefa selecionada. Favor tentar novamente");
+            LOG.error("Erro ao tentar filtrar SVG do fluxo " + fluxo.getCodFluxo(), e);
+        }
+    }
+
+    public void resetFilter() {
+        filter = false;
+        filterMonitor = null;
+        filterInstances = null;
+    }
+
     public String getSvg() {
-        return monitor.getSvg();
+        return !filter ? monitor.getSvg() : filterMonitor.getSvg();
     }
 
     public String getFluxoNome() {
@@ -55,7 +84,11 @@ public class MonitorProcessoView implements Serializable {
         return success;
     }
 
+    public boolean isFilter() {
+        return filter;
+    }
+
     public List<MonitorProcessoInstanceDTO> getInstances() {
-        return instances;
+        return !filter ? instances : filterInstances;
     }
 }
