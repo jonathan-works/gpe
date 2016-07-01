@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:wi="http://www.itx.com.br/jsf">
+    
+    <wi:dataTable id="historicos" values="#{historicoProcessDefinitionList.list(5)}" showSearchForm="false" bean="#{historicoProcessDefinitionList}"
+    	hideOrder="true" tableTitle="#{infoxMessages['process.historico']}">
+    	<ui:define name="headerToolBar" />
+    	<ui:define name="toolBar">
+    		<h:form>
+    			<a:commandLink execute="@this" render="painelVisualizacaoHistoricoDiv" action="#{historicoProcessDefinitionView.selecionarHistorico(row)}"
+    				oncomplete="#{rich:component('modalVisualizarHistorico')}.show()" rendered="#{not empty row.svg}">
+    				<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="Visualizar" />
+    			</a:commandLink>
+    			<a:commandLink action="#{historicoProcessDefinitionView.restaurar(row)}" execute="@this" limitRender="true"
+    				render="pageBodyDialogMessage processDefinition modeladorForm" onbeforedomupdate="delete window.modeler;"
+    				onclick="return confirm('Deseja restaurar a definição de processo para a versão selecionada?')">
+    				<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/time_16.png')}" title="#{infoxMessages['process.historico.restaurar']}"/>
+    			</a:commandLink>
+    		</h:form>
+    	</ui:define>
+    	
+    	<wi:columnOutputText columnId="revisao" value="#{row.revisao}" columnHeader="#{infoxMessages['process.historico.revisao']}" />
+    	<wi:columnDateTime columnId="dataAlteracao" value="#{row.dataAlteracao}" columnHeader="#{infoxMessages['process.historico.dataAlteracao']}" showTime="true"/>
+    </wi:dataTable>
+</ui:composition>

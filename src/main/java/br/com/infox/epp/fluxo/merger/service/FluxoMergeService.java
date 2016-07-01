@@ -41,6 +41,7 @@ import br.com.infox.epp.fluxo.manager.RaiaPerfilManager;
 import br.com.infox.epp.fluxo.manager.VariavelClassificacaoDocumentoManager;
 import br.com.infox.epp.fluxo.merger.model.MergePoint;
 import br.com.infox.epp.fluxo.merger.model.MergePointsBundle;
+import br.com.infox.epp.fluxo.service.HistoricoProcessDefinitionService;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.tarefa.manager.TarefaJbpmManager;
 import br.com.infox.epp.tarefa.manager.TarefaManager;
@@ -74,6 +75,8 @@ public class FluxoMergeService {
     private TarefaJbpmManager tarefaJbpmManager;
     @Inject
     private ProcessoManager processoManager;
+    @Inject
+    private HistoricoProcessDefinitionService historicoProcessDefinitionService;
 
     private List<MergePoint> getMergePoints(ProcessDefinition processDefinition){
         TypedQuery<MergePoint> query = entityManager.createQuery(GET_MERGE_POINTS_QUERY, MergePoint.class);
@@ -168,6 +171,8 @@ public class FluxoMergeService {
             
             JbpmUtil.instance().deleteTimers(newProcessDefinition);
             JbpmUtil.instance().createTimers(newProcessDefinition);
+            
+            historicoProcessDefinitionService.limparHistoricos(fluxo);
         } catch (Exception e) {
             fluxo.setPublicado(false);
             throw new BusinessRollbackException(e);

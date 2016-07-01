@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:wi="http://www.itx.com.br/jsf">
+    
+    <p:outputPanel layout="block" id="painelVisualizacaoHistoricoDiv">
+    	<p:outputPanel layout="block" rendered="#{not empty historicoProcessDefinitionView.historicoSelecionado}">
+    		<ui:param name="historico" value="#{historicoProcessDefinitionView.historicoSelecionado}" />
+    		<h:outputText value="Histórico nº #{historico.revisao} em #{historicoProcessDefinitionView.dataAlteracaoFormatada}" 
+    			style="font-weight: bold"/>
+    		<div />
+    		<h:form>
+    			<a:commandButton value="#{infoxMessages['process.historico.restaurar']}" action="#{historicoProcessDefinitionView.restaurar(historico)}" 
+    				execute="@this" limitRender="true" oncomplete="#{rich:component('modalVisualizarHistorico')}.hide()" styleClass="buttons"
+    				render="pageBodyDialogMessage painelVisualizacaoHistoricoDiv processDefinition modeladorForm" onbeforedomupdate="delete window.modeler;"/>
+    		</h:form>
+    		<h:outputText value="#{historico.svg}" escape="false" />
+    	</p:outputPanel>
+    </p:outputPanel>
+    
+</ui:composition>

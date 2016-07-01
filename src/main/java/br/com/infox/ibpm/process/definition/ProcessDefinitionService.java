@@ -15,6 +15,7 @@ import org.jbpm.graph.def.ProcessDefinition;
 
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
+import br.com.infox.epp.fluxo.service.HistoricoProcessDefinitionService;
 import br.com.infox.epp.modeler.converter.BpmnJpdlService;
 import br.com.infox.epp.modeler.converter.JpdlBpmnConverter;
 import br.com.infox.epp.tarefa.entity.Tarefa;
@@ -32,9 +33,13 @@ public class ProcessDefinitionService {
 	private TarefaManager tarefaManager;
 	@Inject
 	private BpmnJpdlService bpmnJpdlService;
+	@Inject
+	private HistoricoProcessDefinitionService historicoProcessDefinitionService;
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public Fluxo atualizarDefinicao(Fluxo fluxo, Collection<Tarefa> tarefasModificadas) {
+	public Fluxo atualizarDefinicao(Fluxo fluxo, String newProcessDefinitionXml, Collection<Tarefa> tarefasModificadas) {
+		historicoProcessDefinitionService.registrarHistorico(fluxo);
+		fluxo.setXml(newProcessDefinitionXml);
 		fluxo = fluxoManager.update(fluxo);
 		if (tarefasModificadas != null) {
 			for (Tarefa tarefa : tarefasModificadas) {

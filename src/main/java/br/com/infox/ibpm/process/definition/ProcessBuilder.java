@@ -26,6 +26,7 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.list.HistoricoProcessDefinitionList;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.processo.timer.manager.TaskExpirationManager;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
@@ -68,6 +69,8 @@ public class ProcessBuilder implements Serializable {
     private TaskExpirationManager taskExpirationManager;
     @Inject
     private FluxoManager fluxoManager;
+    @Inject
+    private HistoricoProcessDefinitionList historicoProcessDefinitionList;
     @Inject
     private ProcessDefinitionService processDefinitionService;
     @Inject
@@ -119,6 +122,7 @@ public class ProcessBuilder implements Serializable {
 	        instance = InfoxJpdlXmlReader.readProcessDefinition(fluxo.getXml());
 	        taskFitter.setStarTaskHandler(new TaskHandler(instance.getTaskMgmtDefinition().getStartTask()));
 	        taskFitter.getTasks();
+	        historicoProcessDefinitionList.refresh();
     	} catch (JpdlException e) {
     		logJpdlException(e);
     	} catch (Exception e) {
@@ -178,8 +182,8 @@ public class ProcessBuilder implements Serializable {
                 	// verifica a consistencia do fluxo para evitar salva-lo com
                     // erros.
                     InfoxJpdlXmlReader.readProcessDefinition(xmlDef);
-                    fluxo.setXml(xmlDef);
-                    fluxo = processDefinitionService.atualizarDefinicao(fluxo, taskFitter.getTarefasModificadas());
+                    fluxo = processDefinitionService.atualizarDefinicao(fluxo, xmlDef, taskFitter.getTarefasModificadas());
+                    historicoProcessDefinitionList.refresh();
                     FacesMessages.instance().add("Fluxo salvo com sucesso!");
                 } catch (JpdlException e) {
                     logJpdlException(e);
