@@ -13,6 +13,7 @@ import org.jbpm.JbpmConfiguration;
 import org.jbpm.JbpmContext;
 
 import br.com.infox.core.server.ApplicationServerService;
+import br.com.infox.jbpm.application.JbpmContextReaper;
 
 public final class JbpmContextProducer {
     
@@ -25,7 +26,7 @@ public final class JbpmContextProducer {
         JbpmContext jbpmContext = JbpmContext.getCurrentJbpmContext();
         if (jbpmContext == null || jbpmContext.isClosed()) {
             jbpmContext = JbpmConfiguration.getInstance().createJbpmContext();
-            JbpmContextReaper.start(jbpmContext, Thread.currentThread());
+            JbpmContextReaper.getInstance().register(jbpmContext, Thread.currentThread());
         }
         if (!registeredJbpmContext.contains(jbpmContext)) {
             registerSynchronization(jbpmContext);
@@ -73,35 +74,4 @@ public final class JbpmContextProducer {
         }
     }
     
-    private static class JbpmContextReaper extends Thread {
-        
-        private JbpmContext jbpmContext; 
-        private Thread thread;
-        
-        public static synchronized void start(JbpmContext jbpmContext, Thread thread) {
-            new JbpmContextReaper(jbpmContext, thread).start();
-        }
-        
-        private JbpmContextReaper(JbpmContext jbpmContext, Thread thread) {
-            this.jbpmContext = jbpmContext;
-            this.thread = thread;
-        }
-        
-        @Override
-        public void run() {
-            while (thread.getState() == State.RUNNABLE) {
-                sleep();
-            }
-            jbpmContext.closeQuietly();
-        }
-        
-        private void sleep() {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-            }
-        }
-        
-    }
-
 }
