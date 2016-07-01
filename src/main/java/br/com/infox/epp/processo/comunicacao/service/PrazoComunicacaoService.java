@@ -16,13 +16,13 @@ import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.context.exe.ContextInstance;
 import org.joda.time.DateTime;
 
-import br.com.infox.certificado.bean.CertificateSignatureBean;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.assinador.AssinadorGroupService.DadosAssinatura;
 import br.com.infox.epp.certificado.entity.TipoAssinatura;
 import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
@@ -157,13 +157,13 @@ public class PrazoComunicacaoService {
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void darCienciaManualAssinar(Processo comunicacao, Date dataCiencia, Documento documentoCiencia, CertificateSignatureBean signatureBean, UsuarioPerfil usuarioPerfil) 
+	public void darCienciaManualAssinar(Processo comunicacao, Date dataCiencia, Documento documentoCiencia, DadosAssinatura dadosAssinatura, UsuarioPerfil usuarioPerfil) 
 			throws DAOException, CertificadoException, AssinaturaException{
 		if (comunicacao.getMetadado(ComunicacaoMetadadoProvider.DATA_CIENCIA) != null) {
     		return;
     	}
 		gravarDocumentoCiencia(comunicacao, documentoCiencia);
-		assinaturaDocumentoService.assinarDocumento(documentoCiencia.getDocumentoBin(), usuarioPerfil, signatureBean.getCertChain(), signatureBean.getSignature(), TipoAssinatura.MD5_ASSINADO);
+		assinaturaDocumentoService.assinarDocumento(documentoCiencia.getDocumentoBin(), usuarioPerfil, dadosAssinatura.getCertChainBase64(), dadosAssinatura.getAssinaturaBase64(), TipoAssinatura.PKCS7);
 		darCienciaDocumentoGravado(comunicacao, dataCiencia, usuarioPerfil.getUsuarioLogin());
 	}
 

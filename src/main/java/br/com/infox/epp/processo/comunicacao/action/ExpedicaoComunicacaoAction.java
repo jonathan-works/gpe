@@ -31,6 +31,7 @@ import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacaoManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.transaction.TransactionService;
@@ -104,8 +105,8 @@ public class ExpedicaoComunicacaoAction implements Serializable {
 		this.destinatario = destinatario;
 	}
 	
-	public String getMd5Comunicacao() {
-		return getDocumentoComunicacao().getDocumentoBin().getMd5Documento();
+	public DocumentoBin getDocumentoBinComunicacao() {
+		return getDocumentoComunicacao().getDocumentoBin();
 	}
 	
 	public String getToken() {

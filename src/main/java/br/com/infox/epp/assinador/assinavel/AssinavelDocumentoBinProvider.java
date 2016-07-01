@@ -2,18 +2,17 @@ package br.com.infox.epp.assinador.assinavel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
+import br.com.infox.epp.assinador.DocumentoBinAssinavelService;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
-import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 
 public class AssinavelDocumentoBinProvider implements AssinavelProvider {
 	
 	private List<AssinavelSource> assinaveis;
 	private List<DocumentoBin> documentos;
-	private DocumentoBinarioManager documentoBinarioManager;
+	private DocumentoBinAssinavelService documentoBinAssinavelService;
 	
 	public AssinavelDocumentoBinProvider(List<DocumentoBin> documentos) {
 		super();
@@ -25,10 +24,10 @@ public class AssinavelDocumentoBinProvider implements AssinavelProvider {
 	}
 	
 	private byte[] getBinario(DocumentoBin documentoBin) {
-		if(documentoBinarioManager == null) {
-			documentoBinarioManager = BeanManager.INSTANCE.getReference(DocumentoBinarioManager.class);
+		if(documentoBinAssinavelService == null) {
+			documentoBinAssinavelService = BeanManager.INSTANCE.getReference(DocumentoBinAssinavelService.class);
 		}
-		return documentoBinarioManager.getData(documentoBin.getId());
+		return  documentoBinAssinavelService.getDadosAssinaveis(documentoBin.getId());
 	}
 	
 	public class AssinavelDocumentoBinSourceImpl implements AssinavelDocumentoBinSource {
@@ -41,9 +40,9 @@ public class AssinavelDocumentoBinProvider implements AssinavelProvider {
 		}
 
 		@Override
-		public byte[] digest(TipoHash tipoHash) {
+		public byte[] dataToSign(TipoSignedData tipoHash) {
 				byte[] data = getBinario(documentoBin);
-				return tipoHash.digest(data); 
+				return tipoHash.dataToSign(data); 
 		}
 
 		@Override
@@ -54,7 +53,7 @@ public class AssinavelDocumentoBinProvider implements AssinavelProvider {
 	}
 	
 	@Override
-	public Collection<AssinavelSource> getAssinaveis() {
+	public List<AssinavelSource> getAssinaveis() {
 		if(assinaveis == null) {
 			assinaveis = new ArrayList<>();
 			for(DocumentoBin documento : documentos) {

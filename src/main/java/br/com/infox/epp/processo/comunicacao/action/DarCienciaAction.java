@@ -14,10 +14,6 @@ import org.jboss.seam.international.StatusMessage.Severity;
 
 import com.google.common.base.Strings;
 
-import br.com.infox.certificado.CertificateSignatures;
-import br.com.infox.certificado.bean.CertificateSignatureBean;
-import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
-import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.exception.EppSystemException;
@@ -25,7 +21,9 @@ import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.assinador.assinavel.AssinavelDocumentoBinProvider;
+import br.com.infox.epp.assinador.AssinadorGroupService.DadosAssinatura;
+import br.com.infox.epp.assinador.AssinadorGroupService.StatusToken;
+import br.com.infox.epp.assinador.AssinadorService;
 import br.com.infox.epp.assinador.assinavel.AssinavelGenericoProvider;
 import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
 import br.com.infox.epp.cdi.ViewScoped;
@@ -59,7 +57,7 @@ public class DarCienciaAction implements Serializable {
 	@Inject
 	private AssinaturaDocumentoService assinaturaDocumentoService;
 	@Inject
-	private CertificateSignatures certificateSignatures;
+	private AssinadorService assinadorService;
 	@Inject
 	private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager = ComponentUtil.getComponent(ClassificacaoDocumentoPapelManager.NAME);
 	@Inject
@@ -127,11 +125,11 @@ public class DarCienciaAction implements Serializable {
 	public void assinarDarCiencia(){
 		try {
 			validarCiencia();
-			CertificateSignatureBundleBean bundle = getSignatureBundle(tokenAssinaturaDocumentoCiencia);
-			CertificateSignatureBean signatureBean = bundle.getSignatureBeanList().get(0);
-			validaDocumentoAssinatura(signatureBean);
+			List<DadosAssinatura> dadosAssinaturaList = getDadosAssinatura(tokenAssinaturaDocumentoCiencia);
+			DadosAssinatura dadosAssinatura = dadosAssinaturaList.get(0);
+			validaDocumentoAssinatura(dadosAssinaturaList);
 			Documento documentoCiencia = criarDocumentoCiencia();
-			darCienciaManualAssinar(signatureBean, documentoCiencia);
+			darCienciaManualAssinar(dadosAssinatura, documentoCiencia);
 			finalizaCiencia();
 		} catch (CertificadoException | AssinaturaException e) {
 			FacesMessages.instance().add(Severity.ERROR, e.getMessage());
@@ -143,20 +141,20 @@ public class DarCienciaAction implements Serializable {
 		}
 	}
 
-	protected void darCienciaManualAssinar(CertificateSignatureBean signatureBean, Documento documentoCiencia)
+	protected void darCienciaManualAssinar(DadosAssinatura dadosAssinatura, Documento documentoCiencia)
 			throws CertificadoException, AssinaturaException {
 		prazoComunicacaoService.darCienciaManualAssinar(getDestinatarioModeloComunicacao(getDestinatario()).getProcesso(), getDataCiencia(), documentoCiencia, 
-				signatureBean, Authenticator.getUsuarioPerfilAtual());
+				dadosAssinatura, Authenticator.getUsuarioPerfilAtual());
 	}
 	
-	protected CertificateSignatureBundleBean getSignatureBundle(String token) throws CertificadoException {
-	    CertificateSignatureBundleBean bundle = certificateSignatures.get(token);
-	    if (bundle == null) {
+	protected List<DadosAssinatura> getDadosAssinatura(String token) throws CertificadoException {
+		StatusToken status = assinadorService.getStatus(token);
+	    if (status == StatusToken.EXPIRADO) {
 	        throw new CertificadoException(infoxMessages.get("assinatura.error.hasExpired"));
-	    } else if (CertificateSignatureBundleStatus.ERROR.equals(bundle.getStatus()) || CertificateSignatureBundleStatus.UNKNOWN.equals(bundle.getStatus())) {
-	        throw new CertificadoException("Erro de certificado " + bundle);
+	    } else if (StatusToken.ERRO.equals(status) || StatusToken.DESCONHECIDO.equals(status)) {
+	        throw new CertificadoException("Erro de certificado " + token);
 	    }
-        return bundle;
+        return assinadorService.getDadosAssinatura(token);
     }
 		    
 	protected Documento criarDocumentoCiencia() {
@@ -177,21 +175,14 @@ public class DarCienciaAction implements Serializable {
 		return documento;
 	}
 	
-	protected void validaDocumentoAssinatura(CertificateSignatureBean signatureBean) throws CertificadoException {
+	protected void validaDocumentoAssinatura(List<DadosAssinatura> dadosAssinatura) throws CertificadoException {
+		if(!assinadorService.validarDadosAssinados(dadosAssinatura, getAssinavelProvider())) {
+			throw new CertificadoException("Documento recebido difere do documento enviado para assinatura.");			
+		}
 		if (!isEditorCiencia()) {
-			DocumentoBin bin = documentoUploader.getDocumento().getDocumentoBin();
-			if (!bin.getMd5Documento().equals(signatureBean.getDocumentMD5())){
-				throw new CertificadoException("Documento recebido difere do documento enviado para assinatura.");
-				
-			} 
 			if (!documentoUploader.isValido()) {
 				throw new EppSystemException(DocumentoErrorCode.INVALID_DOCUMENT_TYPE);
 			}
-		} else {
-			String md5Editor = MD5Encoder.encode(getTextoCiencia());
-			if (!md5Editor.equals(signatureBean.getDocumentMD5())){
-				throw new CertificadoException("Documento recebido difere do documento enviado para assinatura.");
-			} 
 		}
 	}
 
@@ -334,8 +325,9 @@ public class DarCienciaAction implements Serializable {
 			if (isEditorCiencia() && getTextoCiencia() != null && !getTextoCiencia().isEmpty()) {
 				assinavelProvider = new AssinavelGenericoProvider(getTextoCiencia());
 			} else if (documentoUploader.getDocumento() != null) {
-				documentoUploader.getDocumento().getDocumentoBin().setMd5Documento(MD5Encoder.encode(documentoUploader.getDocumento().getDocumentoBin().getProcessoDocumento()));
-				assinavelProvider = new AssinavelDocumentoBinProvider(documentoUploader.getDocumento().getDocumentoBin());
+				byte[] data = documentoUploader.getDocumento().getDocumentoBin().getProcessoDocumento();
+				documentoUploader.getDocumento().getDocumentoBin().setMd5Documento(MD5Encoder.encode(data));
+				assinavelProvider = new AssinavelGenericoProvider(data);
 			}
 		}
 		return assinavelProvider;

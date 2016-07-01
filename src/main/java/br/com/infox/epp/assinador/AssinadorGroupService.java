@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.apache.commons.codec.binary.Base64;
 
 import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
+import br.com.infox.epp.assinador.assinavel.TipoSignedData;
 import br.com.infox.epp.certificado.entity.TipoAssinatura;
 
 public interface AssinadorGroupService {
@@ -23,9 +24,11 @@ public interface AssinadorGroupService {
 		private Integer idDocumentoBin;
 		private byte[] certChain;
 		private byte[] assinatura;
+		private byte[] signedData;
+		private TipoSignedData tipoSignedData;
 
 		public DadosAssinatura(UUID uuid, StatusToken statusToken, String codigoErro, String mensagemErro,
-				TipoAssinatura tipoAssinatura, Integer idDocumentoBin, byte[] assinatura, byte[] certChain) {
+				TipoAssinatura tipoAssinatura, Integer idDocumentoBin, byte[] assinatura, byte[] certChain, byte[] signedData, TipoSignedData tipoSignedData) {
 			super();
 			this.uuid = uuid;
 			this.status = statusToken;
@@ -35,6 +38,8 @@ public interface AssinadorGroupService {
 			this.idDocumentoBin = idDocumentoBin;
 			this.certChain = certChain;
 			this.assinatura = assinatura;
+			this.signedData = signedData;
+			this.tipoSignedData = tipoSignedData;
 		}
 
 		public String getCodigoErro() {
@@ -84,11 +89,21 @@ public interface AssinadorGroupService {
 			return status;
 		}
 
+		public byte[] getSignedData() {
+			return signedData;
+		}
+
+		public TipoSignedData getTipoSignedData() {
+			return tipoSignedData;
+		}
+
 	}
 	
 	public String createNewGroupWithAssinavelProvider(AssinavelProvider assinavelProvider);
 
 	public void validarToken(String token);
+	
+	public void validarNovoToken(String token);
 
 	public boolean isTokenExpired(String token);
 

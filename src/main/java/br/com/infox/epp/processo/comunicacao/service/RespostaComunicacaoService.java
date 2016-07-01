@@ -15,12 +15,12 @@ import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.graph.exe.ProcessInstance;
 
-import br.com.infox.certificado.bean.CertificateSignatureBean;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.assinador.AssinadorGroupService.DadosAssinatura;
 import br.com.infox.epp.certificado.entity.TipoAssinatura;
 import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
@@ -112,10 +112,11 @@ public class RespostaComunicacaoService {
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void assinarEnviarProrrogacaoPrazo(Documento documento, Processo comunicacao, CertificateSignatureBean signatureBean, UsuarioPerfil usuarioPerfil) 
+	public void assinarEnviarProrrogacaoPrazo(Documento documento, Processo comunicacao, List<DadosAssinatura> dadosAssinaturaList, UsuarioPerfil usuarioPerfil) 
 			throws DAOException, CertificadoException, AssinaturaException{
 		documentoManager.gravarDocumentoNoProcesso(comunicacao.getProcessoRoot(), documento);
-		assinaturaDocumentoService.assinarDocumento(documento.getDocumentoBin(), usuarioPerfil, signatureBean.getCertChain(), signatureBean.getSignature(), TipoAssinatura.MD5_ASSINADO);
+		DadosAssinatura dadosAssinatura = dadosAssinaturaList.get(0);
+		assinaturaDocumentoService.assinarDocumento(documento.getDocumentoBin(), usuarioPerfil, dadosAssinatura.getCertChainBase64(), dadosAssinatura.getAssinaturaBase64(), TipoAssinatura.MD5_ASSINADO);
 		enviarPedidoProrrogacaoDocumentoGravado(documento, comunicacao);
 	}
 	

@@ -19,14 +19,13 @@ import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.assinador.assinavel.AssinavelDocumentoBinSource;
 import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
 import br.com.infox.epp.assinador.assinavel.AssinavelSource;
-import br.com.infox.epp.assinador.assinavel.TipoHash;
+import br.com.infox.epp.assinador.assinavel.TipoSignedData;
 import br.com.infox.epp.certificado.entity.CertificateSignature;
 import br.com.infox.epp.certificado.entity.CertificateSignatureGroup;
 import br.com.infox.epp.certificado.entity.TipoAssinatura;
 import br.com.infox.epp.certificado.enums.CertificateSignatureGroupStatus;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
-import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.util.time.DateRange;
 
 @Stateless
@@ -45,7 +44,7 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
 	@Inject
 	private DocumentoBinManager documentoBinManager;
 	@Inject
-	private DocumentoBinarioManager documentoBinarioManager;
+	private DocumentoBinAssinavelService documentoBinAssinavelService;
 
 	private static final int TOKEN_LIFESPAN = 8;
 
@@ -54,7 +53,7 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
 	}
 
 	public byte[] getBinario(DocumentoBin documentoBin) {
-		return documentoBinarioManager.getData(documentoBin.getId());
+		return documentoBinAssinavelService.getDadosAssinaveis(documentoBin.getId());
 	}
 	
 	private CertificateSignatureGroup createNewGroup() {
@@ -74,7 +73,7 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
 		certificateSignature.setCertificateSignatureGroup(certificateSignatureGroup);
 		certificateSignature.setUuid(UUID.randomUUID().toString());
 		certificateSignature.setStatus(certificateSignatureGroup.getStatus());
-		certificateSignature.setSha256(assinavelSource.digest(TipoHash.SHA256));
+		certificateSignature.setSha256(assinavelSource.dataToSign(TipoSignedData.SHA256));
 		certificateSignature.setSignatureType(TipoAssinatura.PKCS7);
 		
 		if(assinavelSource instanceof AssinavelDocumentoBinSource) {
@@ -103,8 +102,35 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
 		
 		return certificateSignatureGroup.getToken();		
 	}
-
+	
+	@Override
 	public void validarToken(String token) {
+		CertificateSignatureGroup group = findByToken(token);
+		if (group == null) {
+			throw new ValidationException("Token inválido");
+		}
+
+		CertificateSignatureGroupStatus status = group.getStatus();
+
+		// Status válido
+		if (status == CertificateSignatureGroupStatus.S) {
+			return;
+		}
+
+		switch (group.getStatus()) {
+		case X:
+			throw new ValidationException("Token expirado");
+		case W:
+			throw new ValidationException("Token não assinado");
+		case E:
+			throw new ValidationException("Erro na assinatura do token");
+		default:
+			throw new ValidationException("Token com status desconhecido");
+		}
+	}
+	
+	@Override
+	public void validarNovoToken(String token) {
 		CertificateSignatureGroup group = findByToken(token);
 		if (group == null) {
 			throw new ValidationException("Token inválido");
@@ -126,7 +152,6 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
 		default:
 			throw new ValidationException("Token com status desconhecido");
 		}
-
 	}
 
 	private boolean isTokenExpired(CertificateSignatureGroup group) {
@@ -154,6 +179,7 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
 	
 	public StatusToken getStatus(String token) {
 		CertificateSignatureGroup certificateSignatureGroup = findByToken(token);
+		getEntityManager().refresh(certificateSignatureGroup);
 		return getStatusToken(certificateSignatureGroup.getStatus());
 	}
 
@@ -168,10 +194,21 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
 		}
 		return retorno;
 	}
+	
+	private void refresh(CertificateSignatureGroup group) {
+		getEntityManager().refresh(group);
+		List<CertificateSignature> certificateSignatures = group.getCertificateSignatureList();
+		if(certificateSignatures != null) {
+			for(CertificateSignature cs : certificateSignatures) {
+				getEntityManager().refresh(cs);
+			}
+		}
+	}
 
 	private CertificateSignatureGroup findByToken(String token) {
 		CertificateSignatureGroup group = certificateSignatureGroupSearch.findByToken(token);
-
+		refresh(group);
+		
 		if (group.getStatus() == CertificateSignatureGroupStatus.W && isTokenExpired(group)) {
 			tokenAssinaturaService.expirarToken(token);
 		}
@@ -289,7 +326,7 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
 		byte[] signature = cs.getSignature() == null ? null : Base64.decode(cs.getSignature());
 		byte[] certChain = cs.getCertificateChain() == null ? null : Base64.decode(cs.getCertificateChain());
 		
-		return new DadosAssinatura(uuid, status, cs.getCodigoErro(), cs.getMensagemErro(), cs.getSignatureType(), idDocumentoBin, signature, certChain);
+		return new DadosAssinatura(uuid, status, cs.getCodigoErro(), cs.getMensagemErro(), cs.getSignatureType(), idDocumentoBin, signature, certChain, cs.getSha256(), TipoSignedData.SHA256);
 	}
 
 	@Override

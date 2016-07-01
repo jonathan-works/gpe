@@ -1,6 +1,7 @@
 package br.com.infox.epp.assinador;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,12 +24,16 @@ import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
 import br.com.infox.epp.assinador.AssinadorGroupService.DadosAssinatura;
 import br.com.infox.epp.assinador.AssinadorGroupService.StatusToken;
+import br.com.infox.epp.assinador.assinavel.AssinavelDocumentoBinProvider;
+import br.com.infox.epp.assinador.assinavel.AssinavelGenericoProvider;
 import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
+import br.com.infox.epp.assinador.assinavel.AssinavelSource;
 import br.com.infox.epp.certificado.entity.TipoAssinatura;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
+import edu.emory.mathcs.backport.java.util.Arrays;
 
 public class AssinadorService implements Serializable {
 	
@@ -149,6 +154,43 @@ public class AssinadorService implements Serializable {
     	}
     	validarAssinatura(dadosAssinatura.getCertChain(), usuarioLogin, dadosAssinatura.getAssinatura());
     }
+    
+    public boolean validarDadosAssinadosByText(List<DadosAssinatura> dadosAssinatura, List<String> textList) {
+    	return validarDadosAssinados(dadosAssinatura, new AssinavelGenericoProvider(textList));
+    }
+    
+    public boolean validarDadosAssinadosByData(List<DadosAssinatura> dadosAssinatura, List<byte[]> dataList) {
+    	return validarDadosAssinados(dadosAssinatura, new AssinavelGenericoProvider(dataList.toArray(new byte[][] {})));
+    }
+    
+    public boolean validarDadosAssinados(List<DadosAssinatura> dadosAssinatura, List<DocumentoBin> documentoBinList) {
+    	return validarDadosAssinados(dadosAssinatura, new AssinavelDocumentoBinProvider(documentoBinList));
+    }
+    
+    /**
+     * Valida se os dados assinados foram os dados representados pelo assinavelProvider 
+     */
+    public boolean validarDadosAssinados(List<DadosAssinatura> dadosAssinatura, AssinavelProvider assinavelProvider) {
+    	List<AssinavelSource> assinaveis = assinavelProvider.getAssinaveis();
+    	if(dadosAssinatura.size() != assinaveis.size()) {
+    		return false;
+    	}
+    	Iterator<DadosAssinatura> itDadosAssinatura = dadosAssinatura.iterator();
+    	Iterator<AssinavelSource> itAssinaveis = assinaveis.iterator();
+    	
+    	while(itDadosAssinatura.hasNext()) {
+    		DadosAssinatura signed = itDadosAssinatura.next();
+    		AssinavelSource sourceToSign = itAssinaveis.next();
+    		
+    		byte[] dataToSign = sourceToSign.dataToSign(signed.getTipoSignedData());
+    		
+    		if(!Arrays.equals(dataToSign, signed.getSignedData())) {
+    			return false;
+    		}
+    	}
+    	
+    	return true;
+    }
 	
     public void validarAssinatura(byte[] certChain, UsuarioLogin usuario, byte[] signature) throws AssinaturaException {
     	String certChainBase64 = Base64.encodeBase64String(certChain);
@@ -197,6 +239,18 @@ public class AssinadorService implements Serializable {
 	
 	public byte[] getSha256(String tokenGrupo, UUID uuidAssinavel) {
 		return groupService.getSha256(tokenGrupo, uuidAssinavel);		
+	}
+	
+	public StatusToken getStatus(String token) {
+		return groupService.getStatus(token);
+	}
+	
+	public void validarNovoToken(String token) {
+		groupService.validarNovoToken(token);
+	}
+	
+	public void validarToken(String token) {
+		groupService.validarToken(token);
 	}
 	
 }

@@ -3,7 +3,6 @@ package br.com.infox.epp.assinador.assinavel;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 public class AssinavelGenericoProvider implements AssinavelProvider {
@@ -15,6 +14,10 @@ public class AssinavelGenericoProvider implements AssinavelProvider {
 		this(Arrays.asList(texto));
 	}
 
+	public AssinavelGenericoProvider(byte[]... data) {
+		dataList = Arrays.asList(data);
+	}
+	
 	public AssinavelGenericoProvider(List<String> textos) {
 		dataList = new ArrayList<>();
 		for(String texto : textos) {
@@ -32,13 +35,13 @@ public class AssinavelGenericoProvider implements AssinavelProvider {
 		}
 
 		@Override
-		public byte[] digest(TipoHash tipoHash) {
-				return tipoHash.digest(data); 
+		public byte[] dataToSign(TipoSignedData tipoHash) {
+				return tipoHash.dataToSign(data); 
 		}
 	}
 	
 	@Override
-	public Collection<AssinavelSource> getAssinaveis() {
+	public List<AssinavelSource> getAssinaveis() {
 		if(assinaveis == null) {
 			assinaveis = new ArrayList<>();
 			for(byte[] data : dataList) {

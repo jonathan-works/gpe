@@ -1,7 +1,7 @@
 package br.com.infox.epp.assinador.assinavel;
 
-import java.util.Collection;
+import java.util.List;
 
 public interface AssinavelProvider {
-	public Collection<AssinavelSource> getAssinaveis();
+	public List<AssinavelSource> getAssinaveis();
 }
