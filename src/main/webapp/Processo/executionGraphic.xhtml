@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui">
+    
+    <wi:panel id="panelGraphicExecution">
+    
+    	<h:outputText value="#{graphicExecutionView.svg}" escape="false"/>
+    	
+    	<h:form>
+    		<p:remoteCommand name="onSelectGraphElement" actionListener="#{graphicExecutionView.onSelectGraphElement}" />
+    	</h:form>
+    	
+    	<p:dialog header="Informações" widgetVar="dialogInformacoes" modal="true" height="100">
+    		<p:ajax event="close" update="@none" listener="#{graphicExecutionView.onCloseInformacoes}" />
+    		
+		    <h:outputText value="This is a Modal Dialog." />
+		</p:dialog>  
+    
+    </wi:panel>
+    
+</ui:composition>
