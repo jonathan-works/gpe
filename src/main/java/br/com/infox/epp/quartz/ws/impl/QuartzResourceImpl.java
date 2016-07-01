@@ -6,17 +6,13 @@ import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
-import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.contexts.Lifecycle;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.Token;
-import org.jbpm.taskmgmt.exe.TaskInstance;
-import org.joda.time.DateTime;
 
 import br.com.infox.cdi.producer.JbpmContextProducer;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.access.entity.BloqueioUsuario;
 import br.com.infox.epp.access.manager.BloqueioUsuarioManager;
 import br.com.infox.epp.calendario.CalendarioEventosService;
@@ -25,12 +21,8 @@ import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
-import br.com.infox.epp.processo.timer.TaskExpiration;
-import br.com.infox.epp.processo.timer.manager.TaskExpirationManager;
 import br.com.infox.epp.quartz.ws.BamResource;
 import br.com.infox.epp.quartz.ws.QuartzResource;
-import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
-import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
@@ -43,10 +35,6 @@ public class QuartzResourceImpl implements QuartzResource {
     
     @Inject
     private BloqueioUsuarioManager bloqueioUsuarioManager;
-    @Inject
-    private ProcessoTarefaManager processoTarefaManager;
-    @Inject
-    private TaskExpirationManager taskExpirationManager;
     @Inject
     private PrazoComunicacaoService prazoComunicacaoService;
     @Inject
@@ -73,34 +61,6 @@ public class QuartzResourceImpl implements QuartzResource {
         }
     }
     
-    @Override
-    @Transactional
-	public void taskExpirationProcessor() {
-		Lifecycle.beginCall();
-		JbpmContextProducer.createJbpmContextTransactional();
-		try {
-			List<ProcessoTarefa> processoTarefaList = processoTarefaManager.getWithTaskExpiration();
-			for (ProcessoTarefa processoTarefa : processoTarefaList) {
-				TaskExpiration taskExpiration = this.taskExpirationManager.getByFluxoAndTaskName(
-						processoTarefa.getProcesso().getNaturezaCategoriaFluxo().getFluxo(),
-						processoTarefa.getTarefa().getTarefa());
-				if (taskExpiration != null) {
-					DateTime expirationDate = new DateTime(DateUtil.getEndOfDay(taskExpiration.getExpiration()));
-					if (expirationDate.isBeforeNow()) {
-						TaskInstance taskInstance = ManagedJbpmContext.instance().getTaskInstanceForUpdate(processoTarefa.getTaskInstance());
-						try {
-							processoTarefaManager.finalizarInstanciaTarefa(taskInstance, taskExpiration.getTransition());
-						} catch (DAOException e) {
-							LOG.error("quartzRestImpl.processTaskExpiration()", e);
-						}
-					}
-				}
-			}
-		} finally {
-			Lifecycle.endCall();
-		}
-	}
-
     @Override
     @Transactional
     public BamResource getBamResource() {

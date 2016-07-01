@@ -1,7 +1,6 @@
 package br.com.infox.epp.fluxo.merger.service;
 
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -23,7 +22,6 @@ import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
-import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.SwimlaneInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
@@ -37,7 +35,6 @@ import br.com.infox.epp.cdi.transaction.Transactional.TxType;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.fluxo.manager.RaiaPerfilManager;
-import br.com.infox.epp.fluxo.manager.VariavelClassificacaoDocumentoManager;
 import br.com.infox.epp.fluxo.merger.model.MergePoint;
 import br.com.infox.epp.fluxo.merger.model.MergePointsBundle;
 import br.com.infox.epp.fluxo.service.HistoricoProcessDefinitionService;
@@ -64,8 +61,6 @@ public class FluxoMergeService {
     private RaiaPerfilManager raiaPerfilManager;
     @Inject
     private SwimlaneInstanceSearch swimlaneInstanceSearch;
-    @Inject
-    private VariavelClassificacaoDocumentoManager variavelClassificacaoDocumentoManager;
     @Inject
     private TaskInstanceDAO taskInstanceDAO;
     @Inject
@@ -149,10 +144,6 @@ public class FluxoMergeService {
     private void doDeploy(Fluxo fluxo, ProcessDefinition newProcessDefinition) {
 	    try {
 	    	raiaPerfilManager.atualizarRaias(fluxo, newProcessDefinition.getTaskMgmtDefinition().getSwimlanes());
-	        Integer idFluxo = fluxo.getIdFluxo();
-	        List<String> variaveis = getVariaveisDocumento(newProcessDefinition);
-	        variavelClassificacaoDocumentoManager.removerClassificacoesDeVariaveisObsoletas(idFluxo, variaveis);
-	        variavelClassificacaoDocumentoManager.publicarClassificacoesDasVariaveis(idFluxo);
 	        
             JbpmUtil.getGraphSession().deployProcessDefinition(newProcessDefinition);
             JbpmUtil.getJbpmSession().flush();
@@ -189,6 +180,9 @@ public class FluxoMergeService {
            entityManager.flush();
            List<TaskInstance> taskInstances = taskInstanceDAO.getTaskInstancesOpen(idProcessDefinition, entityManager);
            for (TaskInstance taskInstance : taskInstances) {
+        	   if (taskInstance.getSwimlaneInstance().getId() == 0) {
+            	   entityManager.persist(taskInstance.getSwimlaneInstance());
+               }
                ExecutionContext executionContext = new ExecutionContext(taskInstance.getToken());
                taskInstance.assign(executionContext);
                if (taskInstance.getSwimlaneInstance() != null && taskInstance.getSwimlaneInstance().getId() == 0) {
@@ -202,32 +196,6 @@ public class FluxoMergeService {
            }
        }
 	}
-    
-    private List<String> getVariaveisDocumento(ProcessDefinition processDefinition) {
-        List<String> variaveis = new ArrayList<>();
-        List<Node> nodes = processDefinition.getNodes();
-        for (Node node : nodes) {
-            if (!(node instanceof TaskNode)) {
-                continue;
-            }
-            TaskNode taskNode = (TaskNode) node;
-            Set<Task> tasks = taskNode.getTasks();
-            for (Task task : tasks) {
-                if (task.getTaskController() == null) {
-                    continue;
-                }
-                List<VariableAccess> variableAccesses = task.getTaskController().getVariableAccesses();
-                for (VariableAccess variableAccess : variableAccesses) {
-                    String[] mappedName = variableAccess.getMappedName().split(":");
-                    VariableType type = VariableType.valueOf(mappedName[0]);
-                    if (type == VariableType.EDITOR || type == VariableType.FILE) {
-                        variaveis.add(variableAccess.getVariableName());
-                    }
-                }
-            }
-        }
-        return variaveis;
-    }
     
     private void updatePostDeploy(ProcessDefinition processDefinition) {
         processoManager.atualizarProcessos(processDefinition.getId(), processDefinition.getName());

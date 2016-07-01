@@ -20,6 +20,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.bpm.ManagedJbpmContext;
+import org.jboss.seam.contexts.Contexts;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.db.GraphSession;
@@ -35,6 +36,7 @@ import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.cdi.producer.JbpmContextProducer;
 import br.com.infox.constants.FloatFormatConstants;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -89,7 +91,11 @@ public class JbpmUtil {
     }
 
     public static Session getJbpmSession() {
-        return ManagedJbpmContext.instance().getSession();
+    	if (Contexts.isEventContextActive()) {
+    		return ManagedJbpmContext.instance().getSession();
+    	} else {
+    		return JbpmContextProducer.getJbpmContext().getSession();
+    	}
     }
     
     public void deleteTimers(ProcessDefinition processDefinition) {

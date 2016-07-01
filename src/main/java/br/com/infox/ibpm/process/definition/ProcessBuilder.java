@@ -1,9 +1,7 @@
 package br.com.infox.ibpm.process.definition;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -14,21 +12,17 @@ import javax.inject.Named;
 
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
-import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
-import org.jbpm.graph.node.TaskNode;
 import org.jbpm.jpdl.JpdlException;
 import org.jbpm.jpdl.xml.Problem;
 import org.richfaces.context.ExtendedPartialViewContext;
 
 import br.com.infox.core.action.ActionMessagesService;
-import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.list.HistoricoProcessDefinitionList;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
-import br.com.infox.epp.processo.timer.manager.TaskExpirationManager;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
 import br.com.infox.ibpm.jpdl.JpdlXmlWriter;
 import br.com.infox.ibpm.process.definition.fitter.EventFitter;
@@ -65,8 +59,6 @@ public class ProcessBuilder implements Serializable {
     private NodeFitter nodeFitter;
     @Inject
     private JsfComponentTreeValidator jsfComponentTreeValidator;
-    @Inject
-    private TaskExpirationManager taskExpirationManager;
     @Inject
     private FluxoManager fluxoManager;
     @Inject
@@ -136,7 +128,6 @@ public class ProcessBuilder implements Serializable {
 
         try {
             validateJsfTree();
-            validateTaskExpiration();
         } catch (IllegalStateException e) {
             FacesMessages.instance().clearGlobalMessages();
             FacesMessages.instance().add(e.getMessage());
@@ -147,21 +138,6 @@ public class ProcessBuilder implements Serializable {
         context.getRenderIds().add(PROCESS_DEFINITION_TABPANEL_ID);
         context.getRenderIds().add(MODELADOR_FORM_ID);
         context.getRenderIds().add(PROCESS_DEFINITION_MESSAGES_ID);
-    }
-
-    private void validateTaskExpiration() {
-        Set<String> taskNames = new HashSet<>();
-        List<Node> nodes = instance.getNodes();
-        for (Node node : nodes) {
-            if (node instanceof TaskNode) {
-                taskNames.add(node.getName());
-            }
-        }
-        try {
-            taskExpirationManager.clearUnusedTaskExpirations(fluxo, taskNames);
-        } catch (DAOException de) {
-            throw new IllegalStateException(de);
-        }
     }
 
     private void validateJsfTree() {
@@ -192,9 +168,6 @@ public class ProcessBuilder implements Serializable {
                 	actionMessagesService.handleGenericException(e);
 				}
             }
-               if (taskInstance.getSwimlaneInstance().getId() == 0) {
-            	   entityManager.persist(taskInstance.getSwimlaneInstance());
-               }
         }
     }
     

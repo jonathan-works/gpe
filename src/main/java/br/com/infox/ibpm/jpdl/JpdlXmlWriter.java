@@ -58,8 +58,8 @@ public class JpdlXmlWriter {
 
     private static final LogProvider LOG = Logging.getLogProvider(JpdlXmlWriter.class);
 
-    private static final String DEFAULT_ENCODING = "UTF-8";
-    private static final int DEFAULT_IDENT_SIZE = 4;
+    public static final String DEFAULT_ENCODING = "UTF-8";
+    public static final int DEFAULT_IDENT_SIZE = 4;
     private static final String ELEMENT_NAME = "name";
     static final String JPDL_NAMESPACE = "urn:jbpm.org:jpdl-3.2";
     static final Namespace JBPM_NAMESPACE = new Namespace(null, JPDL_NAMESPACE);

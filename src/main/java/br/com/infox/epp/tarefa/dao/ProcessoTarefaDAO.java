@@ -7,13 +7,12 @@ import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.GET_PROCESSO_TAR
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PARAM_CATEGORIA;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PARAM_ID_PROCESSO;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PARAM_ID_TAREFA;
-import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PROCESSO_TAREFA_ABERTO;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PROCESSOS_TAREFA;
+import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PROCESSO_TAREFA_ABERTO;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PROCESSO_TAREFA_BY_ID_PROCESSO_AND_ID_TAREFA;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.QUERY_PARAM_PROCESSO;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.QUERY_PARAM_TASKINSTANCE;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.QUERY_PARAM_TIPO_PRAZO;
-import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.TAREFA_COM_EXPIRACAO;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.TAREFA_ENDED;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.TAREFA_PROXIMA_LIMITE;
@@ -87,10 +86,6 @@ public class ProcessoTarefaDAO extends DAO<ProcessoTarefa> {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(QUERY_PARAM_PROCESSO, processo);
         return getNamedSingleResult(DATA_INICIO_PRIMEIRA_TAREFA, parameters);
-    }
-
-    public List<ProcessoTarefa> getWithTaskExpiration() {
-        return getNamedResultList(TAREFA_COM_EXPIRACAO);
     }
 
     public ProcessoTarefa getProcessoTarefaAberto(Processo processo, Integer idTarefa) {
