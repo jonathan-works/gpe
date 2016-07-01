@@ -82,7 +82,7 @@
                         action="#{fluxoMergeView.deploy(row)}"
                         onclick="if (!confirm('#{infoxMessages['fluxo.publicar.confirm']}')) { return false; }"
                         onbegin="infox.showLoading();"
-                        rendered="#{not (row.xml eq row.xmlExecucao and row.publicado)}"
+                        rendered="#{not empty row.xml and (row.xml ne row.xmlExecucao or not row.publicado)}"
                         render="fluxoListPanel pageBodyDialogMessage modalDeployForm"
                         oncomplete="infox.hideLoading();opener.refreshPage();">
                         <wi:toolBarGraphicImage title="#{infoxMessages['processBuilder.deployBtn']}" url="#{layoutController.getResourceUrlByPath('/imagens/deploy.png')}" />

@@ -25,6 +25,7 @@ import org.camunda.bpm.model.bpmn.instance.ParallelGateway;
 import org.camunda.bpm.model.bpmn.instance.Participant;
 import org.camunda.bpm.model.bpmn.instance.Process;
 import org.camunda.bpm.model.bpmn.instance.SequenceFlow;
+import org.jbpm.graph.action.Script;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
@@ -43,6 +44,7 @@ import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.ibpm.jpdl.InfoxJpdlXmlReader;
 import br.com.infox.ibpm.jpdl.JpdlXmlWriter;
 import br.com.infox.ibpm.util.BpmUtil;
+import br.com.infox.jbpm.event.JbpmEvents;
 import br.com.infox.seam.exception.BusinessRollbackException;
 
 @Stateless
@@ -92,6 +94,7 @@ public class BpmnJpdlService {
     
     public ProcessDefinition createInitialProcessDefinition(String processName) {
     	ProcessDefinition processDefinition = loadOrCreateProcessDefinition(null);
+    	processDefinition.setName(processName);
     	updateDefinitionsFromBpmn(createInitialBpmn(processName), processDefinition);
     	Swimlane laneSolicitante = processDefinition.getTaskMgmtDefinition().getSwimlanes().values().iterator().next();
     	laneSolicitante.setActorIdExpression("#{actor.id}");
@@ -100,6 +103,21 @@ public class BpmnJpdlService {
         startTask.setKey(BpmUtil.generateKey());
         startTask.setSwimlane(laneSolicitante);
         processDefinition.getTaskMgmtDefinition().setStartTask(startTask);
+        
+        String[] supportedEvents = processDefinition.getSupportedEventTypes();
+		for (String eventType : supportedEvents) {
+			Script action = new Script();
+			Event event = processDefinition.getEvent(eventType);
+			if (event == null) {
+				event = new Event(eventType);
+				processDefinition.addEvent(event);
+			}
+			action.setAsync(false);
+			if (action instanceof Script) {
+				action.setExpression(JbpmEvents.PATH_TO_JBPM_EVENTS_RAISER);
+			}
+			event.addAction(action);
+		}
         return processDefinition;
     }
 	
@@ -109,7 +127,12 @@ public class BpmnJpdlService {
     	ProcessDefinition processDefinition = loadOrCreateProcessDefinition(fluxo.getXml());
     	updateDefinitionsFromBpmn(bpmnModel, processDefinition);
     	atualizarNomeFluxo(fluxo, bpmnModel, processDefinition);
-		fluxo.setXml(JpdlXmlWriter.toString(processDefinition));
+    	
+    	String newProcessDefinitionXml = JpdlXmlWriter.toString(processDefinition);
+    	// Validar consistência do JPDL
+		InfoxJpdlXmlReader.readProcessDefinition(newProcessDefinitionXml);
+    	
+		fluxo.setXml(newProcessDefinitionXml);
 		fluxo.setBpmn(Bpmn.convertToString(bpmnModel));
 		return fluxoManager.update(fluxo);
 	}
@@ -123,7 +146,6 @@ public class BpmnJpdlService {
     	Process process = bpmnModel.getModelElementsByType(Process.class).iterator().next();
     	processDefinition.setKey(process.getId());
 		atualizarNomeFluxo(fluxo, bpmnModel, processDefinition);
-    	
 		fluxo.setXml(JpdlXmlWriter.toString(processDefinition));
 		fluxo.setBpmn(Bpmn.convertToString(bpmnModel));
 		return fluxoManager.update(fluxo);

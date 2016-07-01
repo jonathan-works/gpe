@@ -7,15 +7,11 @@ import java.util.List;
 
 import javax.inject.Named;
 
-import org.jbpm.graph.action.Script;
-import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
-import org.jbpm.graph.def.ProcessDefinition;
 
 import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.jbpm.event.EventHandler;
-import br.com.infox.jbpm.event.JbpmEvents;
 
 @Named
 @ViewScoped
@@ -25,30 +21,6 @@ public class EventFitter extends Fitter implements Serializable {
 
 	private List<EventHandler> eventList;
 	private EventHandler currentEvent;
-
-	public void addEvents() {
-		ProcessDefinition processDefinition = getProcessBuilder().getInstance();
-		String[] supportedEvents = processDefinition.getSupportedEventTypes();
-		for (String e : supportedEvents) {
-			addEvent(processDefinition, e, JbpmEvents.PATH_TO_JBPM_EVENTS_RAISER, new Script());
-		}
-	}
-
-	private void addEvent(ProcessDefinition processDefinition, String eventType, String expression, Action action) {
-		Event event = processDefinition.getEvent(eventType);
-		if (event == null) {
-			event = new Event(eventType);
-			processDefinition.addEvent(event);
-		}
-		action.setAsync(false);
-		if (action instanceof Script) {
-			Script script = (Script) action;
-			script.setExpression(expression);
-		} else {
-			action.setActionExpression(expression);
-		}
-		event.addAction(action);
-	}
 
 	public EventHandler getCurrentEvent() {
 		return currentEvent;

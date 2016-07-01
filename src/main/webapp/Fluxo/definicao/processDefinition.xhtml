@@ -12,7 +12,7 @@
   xmlns:infox="http://www.infox.com.br/jsf"
   template="/WEB-INF/xhtml/templates/minimal.xhtml">
  
-  <ui:define name="title">#{infoxMessages['fluxo.titlePage']}: #{processBuilder.instance.name}</ui:define>
+  <ui:define name="title">#{infoxMessages['fluxo.titlePage']}: #{empty processBuilder.instance ? '' : processBuilder.instance.name}</ui:define>
   <ui:define name="head">
 	<c:if test="#{not empty flash.idFluxo}">
 		<c:set property="idFluxo" target="#{processBuilder}" value="#{flash.idFluxo}"></c:set>
@@ -64,7 +64,7 @@
             <wi:inputText
               id="codFluxo"
               label="#{infoxMessages['fluxo.codFluxo']}"
-              value="#{processBuilder.id}"
+              value="#{processBuilder.fluxo.codFluxo}"
               readonly="true">
               <f:validator validatorId="jsfComponentIdValidator" />
             </wi:inputText>
@@ -85,21 +85,18 @@
           </h:form>
         </rich:panel>
         <rich:panel
-          header="#{infoxMessages['processBuilder.definicaoVariavelProcesso']}"
-          rendered="#{processBuilder.exists}">
+          header="#{infoxMessages['processBuilder.definicaoVariavelProcesso']}">
           <ui:include src="definicaoVariavelProcesso.xhtml" />
         </rich:panel>
         <rich:panel
           styleClass="SwimlanePanel"
-          header="#{infoxMessages['processBuilder.swimlanes']}"
-          rendered="#{processBuilder.exists}">
+          header="#{infoxMessages['processBuilder.swimlanes']}">
           <ui:include src="swimlanes.xhtml" />
         </rich:panel>
       </infox:tab>
       <infox:tab
         name="nodesTab"
         id="nodesTab"
-        rendered="#{processBuilder.exists}"
         title="#{infoxMessages['processBuilder.nodes']}"
         render="processDefinitionButtonsForm">
         <ui:include src="nodes.xhtml" />
@@ -131,20 +128,13 @@
         name="updateFluxo"
         actionListener="#{processBuilder.prepareUpdate}"
         action="#{processBuilder.update}"
+        render="pageBodyDialogMessage"
         oncomplete="infox.hideLoading()"/>
       <a:commandButton
         id="gravar"
         value="#{infoxMessages['processBuilder.saveBtn']}"
-        rendered="#{processBuilder.exists}"
         styleClass="buttons #{wi:get(styleClass, '')}"
         onclick="infox.showLoading(); checkIfEditorExists();" />
-      <a:commandButton
-        id="novoProcesso"
-        actionListener="#{processBuilder.prepareUpdate}"
-        action="#{processBuilder.update}"
-        value="#{infoxMessages['processBuilder.saveBtn']}"
-        rendered="#{!processBuilder.exists}"
-        styleClass="buttons #{wi:get(styleClass, '')}" />
       <a:commandButton
         id="new"
         action="#{processBuilder.clearDefinition}"
@@ -152,7 +142,6 @@
         render=":processDefinition, @form"
         onclick="return confirm('#{infoxMessages['processBuilder.confirmNew']}');"
         onbeforedomupdate="delete window.modeler;"
-        rendered="#{processBuilder.exists}"
         styleClass="buttons #{wi:get(styleClass, '')}" />
     </h:form>
     <s:div id="actionTemplate">
@@ -179,7 +168,5 @@
       width="920">
       <ui:include src="actions/addClassificacaoDocumento.xhtml" />
     </wi:modalPanel>
-    
-    
   </ui:define>
 </ui:composition>

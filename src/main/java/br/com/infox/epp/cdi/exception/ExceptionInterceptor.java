@@ -62,7 +62,11 @@ public class ExceptionInterceptor implements Serializable {
 		        LOG.error("", e);
 		        ActionMessagesService actionMessagesService = BeanManager.INSTANCE.getReference(ActionMessagesService.class);
 		        if (actionMessagesService != null) {
-		            actionMessagesService.handleGenericException(e, annotation.lockExceptionMessage());
+		            if (annotation.lockExceptionMessage() != null) {
+		            	actionMessagesService.handleGenericException(e, annotation.lockExceptionMessage());
+		            } else {
+		            	actionMessagesService.handleGenericException(e);
+		            }
 		        }
 		    }
 		    if (!StringUtil.isEmpty(annotation.errorMessage())) {

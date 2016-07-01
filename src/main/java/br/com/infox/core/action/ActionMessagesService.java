@@ -90,6 +90,10 @@ public class ActionMessagesService implements Serializable {
         return FacesMessages.instance();
     }
     
+    public void handleGenericException(Exception exception) {
+    	handleGenericException(exception, "Registro alterado por outro usuário, tente novamente");
+    }
+    
     public void handleGenericException(Exception exception, String lockExceptionMessage) {
 		if (ExceptionUtil.isLockException(exception)) {
 			FacesMessages.instance().add(lockExceptionMessage);

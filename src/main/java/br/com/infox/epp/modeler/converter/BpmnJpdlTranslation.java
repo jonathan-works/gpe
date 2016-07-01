@@ -110,6 +110,11 @@ public class BpmnJpdlTranslation {
 		nodesToRemove = new ArrayList<>();
 		Map<String, FlowNode> flowNodes = new HashMap<>();
 		Map<String, Node> nodes = new HashMap<>();
+		if (processDefinition.getNodes() != null) {
+			for (Node node : processDefinition.getNodes()) {
+				nodes.put(node.getKey(), node);
+			}
+		}
 		
 		for (FlowNode flowNode : bpmnModel.getModelElementsByType(FlowNode.class)) {
 			flowNodes.put(flowNode.getId(), flowNode);

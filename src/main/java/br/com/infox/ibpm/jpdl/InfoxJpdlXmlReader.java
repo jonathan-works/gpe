@@ -1,6 +1,7 @@
 package br.com.infox.ibpm.jpdl;
 
 import java.io.Reader;
+import java.io.StringReader;
 import java.net.URL;
 
 import org.dom4j.Element;
@@ -73,7 +74,8 @@ public class InfoxJpdlXmlReader extends JpdlXmlReader {
         }
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     protected TaskController readTaskController(Element taskControllerElement) {
     	TaskController taskController = new TaskController();
         if (taskControllerElement.attributeValue("class") != null) {
@@ -83,5 +85,10 @@ public class InfoxJpdlXmlReader extends JpdlXmlReader {
 	    }
         taskController.setVariableAccesses(readVariableAccesses(taskControllerElement));
         return taskController;
+    }
+    
+    public static ProcessDefinition readProcessDefinition(String xml) {
+    	StringReader reader = new StringReader(xml);
+    	return new InfoxJpdlXmlReader(reader).readProcessDefinition();
     }
 }
