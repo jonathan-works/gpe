@@ -56,7 +56,7 @@ public class JpdlBpmnConverter {
 	private static final int LANE_HEIGHT = 200;
 	private static final int PARTICIPANT_X = 200;
 	private static final int PARTICIPANT_Y = 150;
-	private static final int PARTICIPANT_LANE_OFFSET = 30;
+	public static final int PARTICIPANT_LANE_OFFSET = 30;
 	private static final int FLOW_NODE_X_OFFSET = 30;
 	
 	private ProcessDefinition processDefinition;

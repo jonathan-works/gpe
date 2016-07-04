@@ -48,10 +48,18 @@ public class BizagiBpmnAdapter {
 				process.getParentElement().removeChildElement(process);
 			}
 		}
-		
+
+		Participant processParticipant = bpmnModel.getModelElementsByType(Participant.class).iterator().next();
+		BpmnDiagram diagram = definitions.getBpmDiagrams().iterator().next();
+		BpmnShape processParticipantShape = getShapeForElement(processParticipant.getId(), diagram);
 		for (Lane lane : bpmnModel.getModelElementsByType(Lane.class)) {
 			Collection<FlowNode> nodes = getNodesInLaneGraphically(lane, definitions);
 			lane.getFlowNodeRefs().addAll(nodes);
+			BpmnShape laneShape = getShapeForElement(lane.getId(), diagram);
+			Bounds laneBounds = laneShape.getBounds();
+			laneBounds.setX(laneBounds.getX() + JpdlBpmnConverter.PARTICIPANT_LANE_OFFSET);
+			laneBounds.setWidth(processParticipantShape.getBounds().getWidth() - JpdlBpmnConverter.PARTICIPANT_LANE_OFFSET);
+			laneShape.setBounds(laneBounds);
 		}
 	}
 	
