@@ -49,8 +49,8 @@ public class JpdlBpmnConverter {
 	
 	private static final int FLOW_NODE_Y_OFFSET = 10;
 	private static final int FLOW_NODE_INTER_DISTANCE = 200;
-	private static final int ACTIVITY_WIDTH = 120;
-	private static final int ACTIVITY_HEIGHT = 100;
+	private static final int ACTIVITY_WIDTH = 100;
+	private static final int ACTIVITY_HEIGHT = 80;
 	private static final int GENERAL_FLOWNODE_HEIGHT = 50;
 	private static final int GENERAL_FLOWNODE_WIDTH = GENERAL_FLOWNODE_HEIGHT;
 	private static final int LANE_HEIGHT = 200;
