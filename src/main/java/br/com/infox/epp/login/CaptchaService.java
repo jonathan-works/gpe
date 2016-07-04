@@ -136,6 +136,7 @@ public class CaptchaService {
 	    if(!cookieCaptcha.getUsuarios().contains(username)) {
 	        cookieCaptcha.getUsuarios().add(username);
 	        getEntityManager().persist(cookieCaptcha);
+	        getEntityManager().flush();
 	    }
 		
 	    resetTentativasLoginInvalido(cookieCaptcha.getId());
