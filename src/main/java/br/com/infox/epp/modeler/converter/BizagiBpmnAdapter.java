@@ -29,7 +29,7 @@ public class BizagiBpmnAdapter {
 		Collection<Process> processes = bpmnModel.getModelElementsByType(Process.class);
 		Collection<Participant> participants = bpmnModel.getModelElementsByType(Participant.class);
 		for (Process process : processes) {
-			if (process.getChildElementsByType(LaneSet.class).isEmpty()) {
+			if (process.getChildElementsByType(FlowNode.class).isEmpty()) {
 				Iterator<Participant> it = participants.iterator();
 				while (it.hasNext()) {
 					Participant participant = it.next();
