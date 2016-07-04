@@ -6,6 +6,7 @@ import static java.text.MessageFormat.format;
 import java.io.Serializable;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.security.auth.login.LoginException;
@@ -17,15 +18,16 @@ import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.security.Identity;
 
-import br.com.infox.certificado.CertificateSignatures;
-import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
-import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.service.AuthenticatorService;
+import br.com.infox.epp.assinador.AssinadorGroupService.StatusToken;
+import br.com.infox.epp.assinador.AssinadorService;
+import br.com.infox.epp.assinador.DadosAssinatura;
 import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -47,15 +49,27 @@ public class CertificateAuthenticator implements Serializable {
     @Inject
     private AuthenticatorService authenticatorService;
     @Inject
-    private CertificateSignatures certificateSignatures;
-    @Inject
     private InfoxMessages infoxMessages;
+    @Inject
+    private AssinadorService assinadorService;
 
     public void authenticate() {
         try {
-            CertificateSignatureBundleBean bundle = getSignatureBundle();
-            String certChain = bundle.getSignatureBeanList().get(0).getCertChain();
+        	List<DadosAssinatura> dadosAssinaturaList = assinadorService.getDadosAssinatura(token);
+        	
+            if (dadosAssinaturaList.size() == 0) {
+                throw new CertificadoException(infoxMessages.get("login.sign.error"));
+            }
+        	DadosAssinatura dadosAssinatura = dadosAssinaturaList.get(0);
+            if (dadosAssinatura == null || dadosAssinatura.getStatus() != StatusToken.SUCESSO) {
+                throw new CertificadoException(infoxMessages.get("login.sign.error") + dadosAssinatura);
+            }
+        	
+        	
+            String certChain = dadosAssinatura.getCertChainBase64();
             UsuarioLogin usuarioLogin = authenticatorService.getUsuarioLoginFromCertChain(certChain);
+            
+            assinadorService.validarAssinaturas(dadosAssinaturaList, usuarioLogin);
             authenticatorService.signatureAuthentication(usuarioLogin, null, certChain, false);
             Events events = Events.instance();
             events.raiseEvent(Identity.EVENT_LOGIN_SUCCESSFUL, new Object[1]);
@@ -67,19 +81,11 @@ public class CertificateAuthenticator implements Serializable {
             LOG.error(AUTHENTICATE, e);
             throw new RedirectToLoginApplicationException(
                     format(infoxMessages.get(AuthenticatorService.CERTIFICATE_ERROR_UNKNOWN), e.getMessage()), e);
-        } catch (CertificadoException | LoginException | DAOException e) {
+        } catch (CertificadoException | LoginException | DAOException | AssinaturaException e) {
             LOG.error(AUTHENTICATE, e);
             throw new RedirectToLoginApplicationException(e.getMessage(), e);
         }
 
-    }
-
-    private CertificateSignatureBundleBean getSignatureBundle() throws CertificadoException {
-        CertificateSignatureBundleBean bundle = certificateSignatures.get(token);
-        if (bundle == null || bundle.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
-            throw new CertificadoException(infoxMessages.get("login.sign.error") + bundle);
-        }
-        return bundle;
     }
 
     public String getToken() {
