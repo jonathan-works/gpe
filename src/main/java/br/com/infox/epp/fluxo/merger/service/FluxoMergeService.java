@@ -191,9 +191,6 @@ public class FluxoMergeService {
            entityManager.clear();
            List<TaskInstance> taskInstances = taskInstanceDAO.getTaskInstancesOpen(idProcessDefinition, entityManager);
            for (TaskInstance taskInstance : taskInstances) {
-        	   if (taskInstance.getSwimlaneInstance().getId() == 0) {
-        		   entityManager.persist(taskInstance.getSwimlaneInstance());
-        	   }
                ExecutionContext executionContext = new ExecutionContext(taskInstance.getToken());
                taskInstance.assign(executionContext);
            }
