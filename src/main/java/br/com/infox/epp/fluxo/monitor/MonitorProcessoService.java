@@ -60,7 +60,7 @@ public class MonitorProcessoService {
             Element circle = createCircleElement(doc, "15", "60", "21", "blue", "2", "white");
             item.appendChild(circle);
 
-            Element text = createTextElement(doc, "63", "16", "blue", mpDTO.getQuantidade().toString());
+            Element text = createTextElement(doc, "66", "14", "blue", "style=\"font-size: 13px;\"", mpDTO.getQuantidade().toString());
             item.appendChild(text);
         }
     }
@@ -77,7 +77,7 @@ public class MonitorProcessoService {
             Element circle = createCircleElement(doc, "15", "60", "21", "red", "2", "white");
             item.appendChild(circle);
 
-            Element text = createTextElement(doc, "63", "16", "red", mpDTO.getQuantidade().toString());
+            Element text = createTextElement(doc, "66", "14", "red", "style=\"font-size: 13px;\"", mpDTO.getQuantidade().toString());
             item.appendChild(text);
         }
     }
@@ -106,11 +106,12 @@ public class MonitorProcessoService {
         return circle;
     }
 
-    private Element createTextElement(Document doc, String y, String x, String fill, String textContent) {
+    private Element createTextElement(Document doc, String y, String x, String fill, String style, String textContent) {
         Element text = doc.createElement("text");
         text.setAttribute("y", y);
         text.setAttribute("x", x);
         text.setAttribute("fill", fill);
+        text.setAttribute("style", style);
         text.setTextContent(textContent);
         return text;
     }

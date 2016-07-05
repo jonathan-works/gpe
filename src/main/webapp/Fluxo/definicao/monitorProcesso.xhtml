@@ -3,6 +3,7 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:p="http://primefaces.org/ui"
+    xmlns:a="http://richfaces.org/a4j"
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:wi="http://www.itx.com.br/jsf">
 
@@ -44,13 +45,27 @@
     <p:dataTable id="instanciaDataTable"
         value="#{monitorProcessoView.instances}" var="row">
 
-        <p:column id="state" style="width:36px; text-align:center">
+        <p:column id="state" styleClass="dt-toolbar-col" style="width: 60px">
             <h:panelGroup rendered="#{row.state eq 'ERROR'}">
-                <div class="circle" style="background-color: red; border-color: #a00" />
+                <div class="circle" style="background-color: red; border-color: #a00; display: inline-block;" />
+                <h:form style="display: inline-block">
+                    <p:commandLink action="#{monitorProcessoView.executeNode(row)}" update=":pageBody">
+                        <h:graphicImage title="#{infoxMessages['monitorProcesso.icon.retry']}"
+                            url="#{layoutController.getMaterialDesignIcon('1x','black','18dp','replay')}" />
+                    </p:commandLink>
+                </h:form>
             </h:panelGroup>
+
             <h:panelGroup rendered="#{row.state eq 'OK'}">
-                <div class="circle" style="background-color: green; border-color: #060" />
+                <div class="circle" style="background-color: green; border-color: #060; display: inline-block;" />
             </h:panelGroup>
+
+            <h:form style="display: inline-block;">
+                <p:commandLink update=":pageBody">
+                    <h:graphicImage title="#{infoxMessages['monitorProcesso.icon.showGraph']}"
+                        url="#{layoutController.getMaterialDesignIcon('1x','black','18dp','call_made')}" />
+                </p:commandLink>
+            </h:form>
         </p:column>
 
         <p:column id="numero" headerText="#{infoxMessages['monitorProcesso.instance.numeroProcesso']}">

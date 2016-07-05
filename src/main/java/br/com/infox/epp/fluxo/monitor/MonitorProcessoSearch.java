@@ -63,7 +63,7 @@ public class MonitorProcessoSearch {
         Join<Task, Node> n = task.join("taskNode", JoinType.INNER);
         Root<StringInstance> vi = cq.from(StringInstance.class);
 
-        cq.select(cb.construct(MonitorProcessoInstanceDTO.class, vi.get("value"), task.get("name"), ti.get("start"), cb.literal("OK")));
+        cq.select(cb.construct(MonitorProcessoInstanceDTO.class, vi.get("value"), task.get("name"), ti.get("start"), cb.literal("OK"), t.get("id")));
 
         Predicate where = cq.getRestriction();
         where = cb.and(cb.equal(task.get("processDefinition").get("id"), processDefinition),
@@ -112,7 +112,7 @@ public class MonitorProcessoSearch {
             where += "and node.key = :key";
         }
 
-        String qlString = "select new br.com.infox.epp.fluxo.monitor.MonitorProcessoInstanceDTO(si.value, node.name, token.start, 'ERROR') "
+        String qlString = "select new br.com.infox.epp.fluxo.monitor.MonitorProcessoInstanceDTO(si.value, node.name, token.start, 'ERROR', token.id) "
                 + "from org.jbpm.graph.exe.Token token, org.jbpm.context.exe.variableinstance.StringInstance si "
                     + "inner join token.node node " + where;
 

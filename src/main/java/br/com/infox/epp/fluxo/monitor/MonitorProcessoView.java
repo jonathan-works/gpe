@@ -12,6 +12,7 @@ import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.processo.node.AutomaticNodeService;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
@@ -20,6 +21,8 @@ import br.com.infox.log.Logging;
 public class MonitorProcessoView implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    @Inject
+    private AutomaticNodeService automaticNodeService;
     @Inject
     private MonitorProcessoService monitorProcessoService;
 
@@ -32,6 +35,7 @@ public class MonitorProcessoView implements Serializable {
     private List<MonitorProcessoInstanceDTO> instances;
     private List<MonitorProcessoInstanceDTO> filterInstances;
     private boolean filter;
+    private String filterKey;
 
     public void selectFluxo(Fluxo f) {
         fluxo = f;
@@ -48,9 +52,14 @@ public class MonitorProcessoView implements Serializable {
     }
 
     public void filterElement() {
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        String elementId = params.get("elementId");
+        filterKey = elementId;
+        filterElement(filterKey);
+    }
+
+    private void filterElement(String elementId) {
         try {
-            Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-            String elementId = params.get("elementId");
             filterMonitor = monitorProcessoService.createSvgMonitoramentoProcesso(fluxo, elementId);
             filterInstances = monitorProcessoService.listInstances(monitor.getProcessDefinition(), elementId);
             filter = true;
@@ -66,6 +75,19 @@ public class MonitorProcessoView implements Serializable {
         filter = false;
         filterMonitor = null;
         filterInstances = null;
+    }
+
+    public void executeNode(MonitorProcessoInstanceDTO row) {
+        try {
+            automaticNodeService.executeNode(row.getTokenId());
+        } catch (Exception e) {
+            FacesMessages.instance().add("Erro ao tentar executar o nó" + e.getMessage() );
+        }
+        if (filter) {
+            filterElement(filterKey);
+        } else {
+            selectFluxo(fluxo);
+        }
     }
 
     public String getSvg() {

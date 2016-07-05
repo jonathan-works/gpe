@@ -8,13 +8,15 @@ public class MonitorProcessoInstanceDTO {
     private String nodeName;
     private Date dataInicio;
     private MonitorProcessoState state;
+    private Long tokenId;
 
-    public MonitorProcessoInstanceDTO(String numero, String nodeName, Date dataInicio, String state) {
+    public MonitorProcessoInstanceDTO(String numero, String nodeName, Date dataInicio, String state, Long tokenId) {
         super();
         this.numero = numero;
         this.nodeName = nodeName;
         this.dataInicio = dataInicio;
         this.state = MonitorProcessoState.valueOf(state);
+        this.tokenId = tokenId;
     }
 
     public String getNumero() {
@@ -47,5 +49,13 @@ public class MonitorProcessoInstanceDTO {
 
     public void setState(MonitorProcessoState state) {
         this.state = state;
+    }
+
+    public Long getTokenId() {
+        return tokenId;
+    }
+
+    public void setTokenId(Long tokenId) {
+        this.tokenId = tokenId;
     }
 }

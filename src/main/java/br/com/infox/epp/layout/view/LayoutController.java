@@ -40,4 +40,8 @@ public class LayoutController implements Serializable {
 	    return String.format("%s/resources/styleSkinInfox/all/%s_web/ic_%s_%s_%s.png", urlBase, dpir, nome, cor, res); 
 	}
 
+	public String getMaterialDesignIcon(String dpir, String cor, String res, String nome) {
+	    String urlBase = "";
+	    return String.format("%s/resources/styleSkinInfox/all/%s_web/ic_%s_%s_%s.png", urlBase, dpir, nome, cor, res); 
+	}
 }
