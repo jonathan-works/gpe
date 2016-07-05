@@ -506,7 +506,6 @@ public class ProcessBuilder implements Serializable {
                swimlaneInstance.setPooledActors(pooledActorIds);
            }
            entityManager.flush();
-           entityManager.clear();
            List<TaskInstance> taskInstances = taskInstanceDAO.getTaskInstancesOpen(idProcessDefinition, entityManager);
            for (TaskInstance taskInstance : taskInstances) {
                ExecutionContext executionContext = new ExecutionContext(taskInstance.getToken());
