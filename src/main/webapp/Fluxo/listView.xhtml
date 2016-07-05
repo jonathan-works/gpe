@@ -180,7 +180,8 @@
                   	<infox:flashcopy />
                 </wi:commandButton>
                 
-                <wi:commandButton id="importarBpmn" value="#{infoxMessages['fluxo.importarBpmn']}" onclick="#{rich:component('modalImportBpmn')}.show(); return false;"/>
+                <wi:commandButton id="importarBpmn" value="#{infoxMessages['fluxo.importarBpmn']}" onclick="#{rich:component('modalImportBpmn')}.show(); return false;"
+                	rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.replica}"/>
                 
                 <rich:popupPanel id="modalImportBpmn" width="450" height="450" maxHeight="600" modal="true" header="#{infoxMessages['fluxo.importarBpmn']}"
                 	onbeforehide="clearBpmnImportMessages()">
