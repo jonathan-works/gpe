@@ -63,7 +63,7 @@ public class EppJobExecutorThread extends Thread implements Deactivable {
         if (transactionManager.getTransaction() == null) {
             transactionManager.begin();
         }
-        JbpmContext jbpmContext = JbpmContextProducer.createJbpmContextTransactional();
+        JbpmContext jbpmContext = JbpmContextProducer.getJbpmContext();
         try {
             // reattach job to persistence context
             JobSession jobSession = jbpmContext.getJobSession();
