@@ -207,6 +207,7 @@
     <mapping resource="org/jbpm/context/log/variableinstance/HibernateStringUpdateLog.hbm.xml"/>
     <mapping resource="org/jbpm/context/log/variableinstance/LongUpdateLog.hbm.xml"/>
     <mapping resource="org/jbpm/context/log/variableinstance/StringUpdateLog.hbm.xml"/>
+    <mapping resource="org/jbpm/context/log/variableinstance/JpaUpdateLog.hbm.xml"/>
     <mapping resource="org/jbpm/taskmgmt/log/TaskLog.hbm.xml"/>
     <mapping resource="org/jbpm/taskmgmt/log/TaskCreateLog.hbm.xml"/>
     <mapping resource="org/jbpm/taskmgmt/log/TaskAssignLog.hbm.xml"/>

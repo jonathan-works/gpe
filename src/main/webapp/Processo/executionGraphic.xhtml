@@ -10,14 +10,17 @@
     
     	<h:outputText value="#{graphicExecutionView.svg}" escape="false"/>
     	
-    	<h:form>
-    		<p:remoteCommand name="onSelectGraphElement" actionListener="#{graphicExecutionView.onSelectGraphElement}" />
+    	<h:form id="formRemoteGraphElement">
+    		<p:remoteCommand name="onSelectGraphElement" update="@parent:@parent:dialogInformacoes" 
+    			actionListener="#{graphicExecutionView.onSelectGraphElement}" oncomplete="infox.hideLoading(); PF('dialogInformacoes').show();" 
+    			onstart="infox.showLoading();"/>
     	</h:form>
     	
-    	<p:dialog header="Informações" widgetVar="dialogInformacoes" modal="true" height="100">
+    	<p:dialog id="dialogInformacoes" header="Informações" widgetVar="dialogInformacoes" modal="true" height="100">
     		<p:ajax event="close" update="@none" listener="#{graphicExecutionView.onCloseInformacoes}" />
     		
-		    <h:outputText value="This is a Modal Dialog." />
+    		
+		    <h:outputText value="#{graphicExecutionView.selectedGraphImage.key}" />
 		</p:dialog>  
     
     </wi:panel>

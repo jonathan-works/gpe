@@ -1,18 +1,19 @@
-package br.com.infox.bpm.cdi.qualifier;
+package br.com.infox.jbpm.graphic;
 
 import java.awt.Point;
-import java.io.Serializable;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -23,8 +24,12 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
@@ -39,41 +44,22 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
-import br.com.infox.core.util.ObjectUtil;
-import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
-import br.com.infox.jsf.util.JsfUtil;
 
-@Named
-@ViewScoped
-public class GraphicExecutionView implements Serializable {
-    
-    private static final long serialVersionUID = 1L;
+@Stateless
+@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+public class GraphicExecutionService {
     
     @Inject
     private FluxoManager fluxoManager;
-    @Inject
-    private JsfUtil jsfUtil;
     
-    private Map<String, GraphImageBean> graphImageBeans;
-    private TaskInstance taskInstance;
-    private String svg;
-    
-    public void loadSvg() {
-        graphImageBeans = new HashMap<>();
+    public String performGraphicExecution(TaskInstance taskInstance, Map<String, GraphImageBean> graphImageBeans) throws TransformerFactoryConfigurationError {
         String svg = fluxoManager.getFluxoByDescricao(taskInstance.getProcessInstance().getProcessDefinition().getName()).getSvgExecucao();
         try {
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            docFactory.setValidating(false);
-            docFactory.setNamespaceAware(true);
-            docFactory.setFeature("http://xml.org/sax/features/namespaces", false);
-            docFactory.setFeature("http://xml.org/sax/features/validation", false);
-            docFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-dtd-grammar", false);
-            docFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-            Document document = docBuilder.parse(IOUtils.toInputStream(svg));
+            Document document = createDocument(svg);
             
             XPath xPath =  XPathFactory.newInstance().newXPath();
             
@@ -83,7 +69,7 @@ public class GraphicExecutionView implements Serializable {
             
             List<GraphImageBean> graphImageBeanList = getGraphImageBeanList(tokens);
             
-            graphImageBeanList.add(new GraphImageBean(token.getNode().getKey(), GraphImageBean.Type.NODE, true, token));
+            graphImageBeanList.add(new GraphImageBean(token.getNode().getKey(), token, GraphImageBean.Type.NODE, true));
             
             for (GraphImageBean graphElementBean : graphImageBeanList) {
                 
@@ -95,28 +81,48 @@ public class GraphicExecutionView implements Serializable {
                     Element newChild = null;
                     if (token.getNode().getKey().equals(graphElementBean.getKey())) {
                         newChild = createCurrentNodeElement(graphNode, document, 6);
-                        newChild.setAttribute("style", "stroke-width: 2; fill: #ff0000; fill-opacity: 0.18; stroke: #ff0000; cursor: pointer;");
+                        newChild.setAttribute("style", "stroke-width: 2; fill: #ff0000; fill-opacity: 0.18; stroke: #ff0000;");
+                        node.appendChild(newChild);
                     } else {
-                        newChild = createCurrentNodeElement(graphNode, document, 0);
-                        newChild.setAttribute("style", "fill: transparent; cursor: pointer;");
                         Node attrStyle = graphNode.getAttributes().getNamedItem("stroke");
                         attrStyle.setTextContent("#FF0000");
                     }
-                    newChild.setAttribute("onclick", "onSelectGraphElement(" + getParameters(graphElementBean) + ")");
-                    node.appendChild(newChild);
+                    if (!"path".equals(graphNode.getNodeName())) {
+                        Node styleNode = node.getAttributes().getNamedItem("style");
+                        styleNode.setTextContent(styleNode.getTextContent() + " cursor: pointer;");
+                        ((Element) node).setAttribute("onclick", "onSelectGraphElement(" + getParameters(graphElementBean) + ")");
+                    }
                 }
             }
             
-            StringWriter stringWriter = new StringWriter();
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            DOMSource source = new DOMSource(document);
-            StreamResult result = new StreamResult(stringWriter);
-            transformer.transform(source, result);
-            this.svg = stringWriter.toString();
+            return writeDocumentToString(document);
         } catch (Exception e) {
-            this.svg = e.getMessage();
+            return "Erro ao renderizar gráfico: " + e.getMessage();
         }
+    }
+
+    private String writeDocumentToString(Document document)
+            throws TransformerFactoryConfigurationError, TransformerConfigurationException, TransformerException {
+        StringWriter stringWriter = new StringWriter();
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        DOMSource source = new DOMSource(document);
+        StreamResult result = new StreamResult(stringWriter);
+        transformer.transform(source, result);
+        return stringWriter.toString();
+    }
+
+    private Document createDocument(String svg) throws ParserConfigurationException, SAXException, IOException {
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        docFactory.setValidating(false);
+        docFactory.setNamespaceAware(true);
+        docFactory.setFeature("http://xml.org/sax/features/namespaces", false);
+        docFactory.setFeature("http://xml.org/sax/features/validation", false);
+        docFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-dtd-grammar", false);
+        docFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+        Document document = docBuilder.parse(IOUtils.toInputStream(svg));
+        return document;
     }
     
     public List<GraphImageBean> getGraphImageBeanList(Collection<Long> tokensId) {
@@ -208,97 +214,8 @@ public class GraphicExecutionView implements Serializable {
         return newChild;
     }
     
-    public void onSelectGraphElement() {
-        String key = jsfUtil.getRequestParameter("key");
-        GraphImageBean graphImageBean = graphImageBeans.get(key);
-        System.out.println(key);
-    }
-    
-    public void onCloseInformacoes() {
-        
-    }
-    
-    public TaskInstance getTaskInstance() {
-        return taskInstance;
-    }
-
-    public void setTaskInstance(TaskInstance taskInstance) {
-        if (!ObjectUtil.equals(this.taskInstance, taskInstance)) {
-            this.taskInstance = taskInstance;
-            loadSvg();
-        }
-    }
-    
-    public String getSvg() {
-        return svg;
-    }
-
-    public void setSvg(String svg) {
-        this.svg = svg;
-    }
-    
     private String getParameters(GraphImageBean graphImageBean) {
         return "[{name: 'key', value:'" + graphImageBean.getKey() + "'}]";
-    }
-
-    private static class GraphImageBean {
-        
-        private String key;
-        private Token token;
-        private Type type;
-        private Boolean isCurrent;
-        
-        public GraphImageBean(String key, Type type, Token token) {
-            this(key, type, false, token);
-        }
-        
-        public GraphImageBean(String key, Type type, Boolean isCurrent, Token token) {
-            this.key = key;
-            this.type = type;
-            this.isCurrent = isCurrent;
-            this.token = token;
-        }
-        
-        public String getKey() {
-            return key;
-        }
-        
-        public Type getType() {
-            return type;
-        }
-
-        public Boolean isCurrent() {
-            return isCurrent;
-        }
-        
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + ((key == null) ? 0 : key.hashCode());
-            return result;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj == null)
-                return false;
-            if (!(obj instanceof GraphImageBean))
-                return false;
-            GraphImageBean other = (GraphImageBean) obj;
-            if (key == null) {
-                if (other.key != null)
-                    return false;
-            } else if (!key.equals(other.key))
-                return false;
-            return true;
-        }
-
-        private enum Type {
-            NODE, TRANSITION;
-        }
     }
 
 }
