@@ -1,18 +1,15 @@
 package br.com.infox.epp.assinador.api;
 
-import java.util.UUID;
-
 import javax.validation.constraints.NotNull;
 
 public class Assinatura {
 	@NotNull
 	private byte[] assinatura;
 	
-	protected Assinatura() {
-		
+	public Assinatura() {
 	}
 	
-	public Assinatura(byte[] assinatura, String codigoPerfil, String codigoLocalizacao, UUID uuidDocumento) {
+	public Assinatura(byte[] assinatura) {
 		super();
 		this.assinatura = assinatura;
 	}
@@ -20,4 +17,7 @@ public class Assinatura {
 	public byte[] getAssinatura() {
 		return assinatura;
 	}
+	public void setAssinatura(byte[] assinatura) {
+            this.assinatura = assinatura;
+        }
 }
