@@ -83,6 +83,7 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 public class Documento implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 1L;
+    public static final int TAMANHO_MAX_DESCRICAO_DOCUMENTO = 260;
     public static final String TABLE_NAME = "tb_documento";
 
     @Id
@@ -102,8 +103,8 @@ public class Documento implements Serializable, Cloneable {
     private DocumentoBin documentoBin;
     
     @NotNull
-    @Size(max = LengthConstants.DESCRICAO_PADRAO)
-    @Column(name = "ds_documento", nullable = false, length = LengthConstants.DESCRICAO_PADRAO)
+    @Size(max = TAMANHO_MAX_DESCRICAO_DOCUMENTO)
+    @Column(name = "ds_documento", nullable = false, length = TAMANHO_MAX_DESCRICAO_DOCUMENTO)
     private String descricao;
     
     @Column(name = "nr_documento", nullable = true)

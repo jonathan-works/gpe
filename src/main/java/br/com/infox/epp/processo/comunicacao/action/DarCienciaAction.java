@@ -7,6 +7,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
+import javax.validation.ConstraintViolation;
 
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
@@ -125,7 +126,7 @@ public class DarCienciaAction implements Serializable {
 			CertificateSignatureBean signatureBean = bundle.getSignatureBeanList().get(0);
 			validaDocumentoAssinatura(signatureBean);
 			Documento documentoCiencia = criarDocumentoCiencia();
-			assinarDarCiencia(signatureBean, documentoCiencia);
+			darCienciaManualAssinar(signatureBean, documentoCiencia);
 			finalizaCiencia();
 		} catch (CertificadoException | AssinaturaException e) {
 			FacesMessages.instance().add(Severity.ERROR, e.getMessage());
@@ -137,7 +138,7 @@ public class DarCienciaAction implements Serializable {
 		}
 	}
 
-	protected void assinarDarCiencia(CertificateSignatureBean signatureBean, Documento documentoCiencia)
+	protected void darCienciaManualAssinar(CertificateSignatureBean signatureBean, Documento documentoCiencia)
 			throws CertificadoException, AssinaturaException {
 		prazoComunicacaoService.darCienciaManualAssinar(getDestinatarioModeloComunicacao(getDestinatario()).getProcesso(), getDataCiencia(), documentoCiencia, 
 				signatureBean, Authenticator.getUsuarioPerfilAtual());
@@ -164,7 +165,8 @@ public class DarCienciaAction implements Serializable {
 			bin.setModeloDocumento(textoCiencia);
 		} else {
 			documento = documentoUploader.getDocumento();
-			documento.setDescricao(documento.getDocumentoBin().getNomeArquivo());
+			String nomeArquivo = documento.getDocumentoBin().getNomeArquivo();
+			documento.setDescricao(nomeArquivo.length() > Documento.TAMANHO_MAX_DESCRICAO_DOCUMENTO ? nomeArquivo.substring(0, Documento.TAMANHO_MAX_DESCRICAO_DOCUMENTO -1) : nomeArquivo);
 			documentoUploader.clear();
 		}
 		return documento;
