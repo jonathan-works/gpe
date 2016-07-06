@@ -192,6 +192,9 @@ public class FluxoMergeService {
            for (TaskInstance taskInstance : taskInstances) {
                ExecutionContext executionContext = new ExecutionContext(taskInstance.getToken());
                taskInstance.assign(executionContext);
+               if (taskInstance.getSwimlaneInstance() != null && taskInstance.getSwimlaneInstance().getId() == 0) {
+            	   entityManager.persist(taskInstance.getSwimlaneInstance());
+               }
            }
            entityManager.flush();
        } finally {
