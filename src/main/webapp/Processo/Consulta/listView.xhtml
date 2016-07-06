@@ -10,6 +10,7 @@
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:infox="http://www.infox.com.br/jsf"
     template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
     <ui:define name="title">#{infoxMessages['processo.titlePage']}</ui:define>
     <ui:define name="body">
@@ -23,11 +24,17 @@
                     tableTitle="#{infoxMessages['processo.tableTitle']}"
                     id="processoEpaList"
                     rowId="#{row.idProcesso}"
-                    hideOrder="true">
+                    hideOrder="true"
+                    showGrid="#{not empty processoEpaList.fluxo}">
                     <ui:define name="searchForm">
                         <wi:searchForm
                             formId="pesquisarProcessoEpaForm"
                             formTitle="#{infoxMessages['searchForm.title']}">
+                            <wi:selectOneMenuEntity
+                                id="fluxo"
+                                label="#{infoxMessages['processo.fluxo']}"
+                                value="#{processoEpaList.fluxo}"
+                                items="#{processoEpaList.fluxos}" />
                             <wi:inputText
                                 id="numeroProcesso"
                                 label="#{infoxMessages['processoEpa.numeroProcesso']}"
@@ -78,35 +85,9 @@
                                 url="#{layoutController.getResourceUrlByPath('/imagens/priority.gif')}" />
                         </a:commandLink>
                     </ui:define>
-                    <wi:columnOutputText
-                        columnId="numeroProcesso"
-                        columnHeader="#{infoxMessages['processo.numeroProcesso']}"
-                        value="#{row.numeroProcessoRoot}" />
-                    <wi:columnOutputText
-                        columnId="prioridadeProcesso"
-                        columnHeader="#{infoxMessages['processo.prioridadeProcesso']}"
-                        value="#{row.prioridadeProcesso}" />
-                    <wi:columnOutputText
-                        columnId="usuarioCadastro"
-                        columnHeader="#{infoxMessages['processo.usuarioCadastroProcesso']}"
-                        value="#{row.usuarioCadastro}" />
-                    <wi:columnDateTime
-                        columnId="dataInicioProcesso"
-                        columnHeader="#{infoxMessages['processo.dataInicio']}"
-                        value="#{row.dataInicio}" />
-                    <wi:columnDateTime
-                        columnId="dataFimProcesso"
-                        columnHeader="#{infoxMessages['processo.dataFim']}"
-                        value="#{row.dataFim}" />
-                    <wi:columnOutputText
-                        columnId="naturezaCategoriaFluxo"
-                        columnHeader="#{infoxMessages['processo.naturezaCategoriaFluxo']}"
-                        value="#{row.naturezaCategoriaFluxo}" />
-                    <wi:columnOutputText
-                        columnId="statusProcesso"
-                        columnHeader="#{infoxMessages['processoEpa.status']}"
-                        value="#{processoEpaList.getStatusProcesso(row)}" />
+					<infox:dynamicColumns columns="#{processoEpaList.dynamicColumns}" />
                 </wi:dataTable>
+                #{processoEpaList.clearMensagensValidacao()}
             </wi:panel>
         </h:form>
         <rich:popupPanel

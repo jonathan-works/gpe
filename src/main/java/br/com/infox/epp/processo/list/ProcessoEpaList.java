@@ -2,27 +2,41 @@ package br.com.infox.epp.processo.list;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
 
+import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
+import javax.inject.Inject;
+import javax.inject.Named;
 
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.security.Identity;
+
+import br.com.infox.componentes.column.DynamicColumnModel;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcesso;
+import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoRecursos;
+import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoSearch;
+import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.sigilo.manager.SigiloProcessoPermissaoManager;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
+import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
+import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
+import br.com.infox.epp.system.Parametros;
+import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.util.time.Periodo;
 
-@Name(ProcessoEpaList.NAME)
-@BypassInterceptors
-@Scope(ScopeType.PAGE)
+@Named
+@ViewScoped
 public class ProcessoEpaList extends EntityList<Processo> {
     public static final String NAME = "processoEpaList";
 
@@ -35,12 +49,24 @@ public class ProcessoEpaList extends EntityList<Processo> {
     private static final String R2 = "cast(dataInicio as date) <= #{processoEpaList.dataInicio.to}";
     private static final String R3 = "cast(dataFim as date) >= #{processoEpaList.dataFim.from}";
     private static final String R4 = "cast(dataFim as date) <= #{processoEpaList.dataFim.to}";
+    private static final String R5 = "naturezaCategoriaFluxo.fluxo = #{processoEpaList.fluxo}";
+    private static final String DYNAMIC_COLUMN_EXPRESSION = "#'{'processoEpaList.getValor(row, ''{0}'')'}";
 
+    @Inject
+    private VariavelProcessoService variavelProcessoService;
+    @Inject
+    private DefinicaoVariavelProcessoSearch definicaoVariavelProcessoSearch;
+    @Inject
+    private FluxoManager fluxoManager;
+    
     private List<UsuarioLogin> listaUsuarios;
+    private List<DynamicColumnModel> dynamicColumns;
+    private Fluxo fluxo;
+    private List<Fluxo> fluxos;
+    private List<String> controleMensagensValidacao = new ArrayList<>();
     
     private Periodo dataInicio;
     private Periodo dataFim;
-
     
     @Override
     protected void addSearchFields() {
@@ -50,6 +76,7 @@ public class ProcessoEpaList extends EntityList<Processo> {
         addSearchField("dataInicioAte", SearchCriteria.MENOR_IGUAL, R2);
         addSearchField("dataFimDe", SearchCriteria.MAIOR_IGUAL, R3);
         addSearchField("dataFimAte", SearchCriteria.MENOR_IGUAL, R4);
+        addSearchField("fluxo", SearchCriteria.IGUAL, R5);
         iniciaListaUsuarios();
     }
     
@@ -58,6 +85,7 @@ public class ProcessoEpaList extends EntityList<Processo> {
     	super.newInstance();
     	dataInicio = new Periodo();
     	dataFim = new Periodo();
+    	setFluxo(null);
     }
     
     public Periodo getDataInicio() {
@@ -83,8 +111,6 @@ public class ProcessoEpaList extends EntityList<Processo> {
         sb.append("join o.usuarioCadastro user");
         listaUsuarios = getEntityManager().createQuery(sb.toString()).getResultList();
     }
-
-
 
     @Override
     protected String getDefaultEjbql() {
@@ -114,4 +140,52 @@ public class ProcessoEpaList extends EntityList<Processo> {
         return mp != null ? (StatusProcesso) mp.getValue() : null;
     }
     
+    public Fluxo getFluxo() {
+		return fluxo;
+	}
+    
+    public void setFluxo(Fluxo fluxo) {
+    	if (!Objects.equals(fluxo, this.fluxo)) {
+			this.fluxo = fluxo;
+			dynamicColumns = null;
+    	}
+	}
+    
+    public List<DynamicColumnModel> getDynamicColumns() {
+    	if (dynamicColumns == null) {
+    		dynamicColumns = new ArrayList<>();
+    		for (DefinicaoVariavelProcesso definicaoVariavel : definicaoVariavelProcessoSearch.getDefinicoesVariaveis(fluxo, 
+    				DefinicaoVariavelProcessoRecursos.CONSULTA_PROCESSOS.getIdentificador(), Identity.instance().hasRole(Parametros.PAPEL_USUARIO_EXTERNO.getValue()))) {
+    			DynamicColumnModel model = new DynamicColumnModel(definicaoVariavel.getLabel(), MessageFormat.format(DYNAMIC_COLUMN_EXPRESSION, definicaoVariavel.getNome()));
+    			dynamicColumns.add(model);
+    		}
+    	}
+		return dynamicColumns;
+	}
+    
+    public String getValor(Processo processo, String nomeVariavel) {
+    	try {
+	    	VariavelProcesso variavel = variavelProcessoService.getVariavelProcesso(processo.getIdProcesso(), nomeVariavel);
+	    	if (variavel != null) {
+	    		return variavel.getValor();
+	    	}
+    	} catch (BusinessException e) {
+    		if (!controleMensagensValidacao.contains(e.getMessage())) {
+    			FacesMessages.instance().add(e.getMessage());
+    			controleMensagensValidacao.add(e.getMessage());
+    		}
+    	}
+    	return null;
+    }
+    
+    public List<Fluxo> getFluxos() {
+    	if (fluxos == null) {
+    		fluxos = fluxoManager.getFluxosAtivosList();
+    	}
+		return fluxos;
+	}
+    
+    public void clearMensagensValidacao() {
+    	controleMensagensValidacao = new ArrayList<>();
+    }
 }
