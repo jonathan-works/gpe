@@ -260,6 +260,12 @@
 			<groupId>org.apache.solr</groupId>
 			<artifactId>solr-core</artifactId>
 			<version>3.6.2</version>
+      <exclusions>
+          <exclusion>
+              <artifactId>servlet-api</artifactId>
+              <groupId>javax.servlet</groupId>
+          </exclusion>
+      </exclusions>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.jxls</groupId>
