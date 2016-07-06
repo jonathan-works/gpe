@@ -2,21 +2,23 @@ package br.com.infox.epp.fluxo.monitor;
 
 import java.util.Date;
 
+import org.jbpm.graph.exe.Token;
+
 public class MonitorProcessoInstanceDTO {
 
     private String numero;
     private String nodeName;
     private Date dataInicio;
     private MonitorProcessoState state;
-    private Long tokenId;
+    private Token token;
 
-    public MonitorProcessoInstanceDTO(String numero, String nodeName, Date dataInicio, String state, Long tokenId) {
+    public MonitorProcessoInstanceDTO(String numero, String nodeName, Date dataInicio, String state, Token token) {
         super();
         this.numero = numero;
         this.nodeName = nodeName;
         this.dataInicio = dataInicio;
         this.state = MonitorProcessoState.valueOf(state);
-        this.tokenId = tokenId;
+        this.token = token;
     }
 
     public String getNumero() {
@@ -51,11 +53,11 @@ public class MonitorProcessoInstanceDTO {
         this.state = state;
     }
 
-    public Long getTokenId() {
-        return tokenId;
+    public Token getToken() {
+        return token;
     }
 
-    public void setTokenId(Long tokenId) {
-        this.tokenId = tokenId;
+    public void setToken(Token token) {
+        this.token = token;
     }
 }

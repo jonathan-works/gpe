@@ -4,6 +4,7 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:p="http://primefaces.org/ui"
     xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:wi="http://www.itx.com.br/jsf">
 
@@ -28,21 +29,34 @@
                 value="#{monitorProcessoView.fluxoDescricao}" />
         </fieldset>
 
-        <h:panelGroup rendered="#{monitorProcessoView.filter}">
-            <h:form>
-                <p:commandButton id="resetFilter"
-                    value="#{infoxMessages['monitorProcesso.filter.reset']}"
-                    action="#{monitorProcessoView.resetFilter}"
-                    update=":pageBody" />
-            </h:form>
+        <h:panelGroup rendered="#{not monitorProcessoView.executionGraphic}">
+            <h:panelGroup rendered="#{monitorProcessoView.filter}">
+                <h:form>
+                    <p:commandButton id="resetFilter"
+                        value="#{infoxMessages['monitorProcesso.filter.reset']}"
+                        action="#{monitorProcessoView.resetFilter}"
+                        update=":pageBody" />
+                </h:form>
+            </h:panelGroup>
+
+            <div style="margin-top: 2em;">
+                <h:outputText value="#{monitorProcessoView.svg}" escape="false" />
+            </div>
         </h:panelGroup>
 
-        <div style="margin-top: 2em;">
-            <h:outputText value="#{monitorProcessoView.svg}" escape="false" />
-        </div>
+        <h:panelGroup rendered="#{monitorProcessoView.executionGraphic}">
+            <h:form>
+                <p:commandButton id="closeGraphicexecution"
+                    value="#{infoxMessages['monitorProcesso.graphic.close']}"
+                    action="#{monitorProcessoView.closeGraph}"
+                    update=":pageBody" />
+            </h:form>
+            <ui:include src="/Processo/executionGraphic.xhtml" />
+        </h:panelGroup>
     </h:panelGroup>
 
     <p:dataTable id="instanciaDataTable"
+        rendered="#{not monitorProcessoView.executionGraphic}"
         value="#{monitorProcessoView.instances}" var="row">
 
         <p:column id="state" styleClass="dt-toolbar-col" style="width: 60px">
@@ -61,7 +75,8 @@
             </h:panelGroup>
 
             <h:form style="display: inline-block;">
-                <p:commandLink update=":pageBody">
+                <p:commandLink action="#{monitorProcessoView.viewGraph(row)}" update=":pageBody"
+                    onstart="infox.showLoading();" oncomplete="infox.hideLoading();">
                     <h:graphicImage title="#{infoxMessages['monitorProcesso.icon.showGraph']}"
                         url="#{layoutController.getMaterialDesignIcon('1x','black','18dp','call_made')}" />
                 </p:commandLink>

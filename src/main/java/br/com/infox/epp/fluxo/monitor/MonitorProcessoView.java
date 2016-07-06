@@ -13,6 +13,7 @@ import org.jboss.seam.faces.FacesMessages;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.processo.node.AutomaticNodeService;
+import br.com.infox.jbpm.graphic.GraphicExecutionView;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
@@ -25,6 +26,8 @@ public class MonitorProcessoView implements Serializable {
     private AutomaticNodeService automaticNodeService;
     @Inject
     private MonitorProcessoService monitorProcessoService;
+    @Inject
+    private GraphicExecutionView graphicExecutionView;
 
     private LogProvider LOG = Logging.getLogProvider(MonitorProcessoView.class);
 
@@ -36,6 +39,7 @@ public class MonitorProcessoView implements Serializable {
     private List<MonitorProcessoInstanceDTO> filterInstances;
     private boolean filter;
     private String filterKey;
+    private boolean executionGraphic;
 
     public void selectFluxo(Fluxo f) {
         fluxo = f;
@@ -79,7 +83,7 @@ public class MonitorProcessoView implements Serializable {
 
     public void executeNode(MonitorProcessoInstanceDTO row) {
         try {
-            automaticNodeService.executeNode(row.getTokenId());
+            automaticNodeService.executeNode(row.getToken().getId());
         } catch (Exception e) {
             FacesMessages.instance().add("Erro ao tentar executar o nó" + e.getMessage() );
         }
@@ -88,6 +92,15 @@ public class MonitorProcessoView implements Serializable {
         } else {
             selectFluxo(fluxo);
         }
+    }
+
+    public void viewGraph(MonitorProcessoInstanceDTO row) {
+        executionGraphic = true;
+        graphicExecutionView.setToken(row.getToken());
+    }
+
+    public void closeGraph() {
+        executionGraphic = false;
     }
 
     public String getSvg() {
@@ -112,5 +125,9 @@ public class MonitorProcessoView implements Serializable {
 
     public List<MonitorProcessoInstanceDTO> getInstances() {
         return !filter ? instances : filterInstances;
+    }
+
+    public boolean isExecutionGraphic() {
+        return executionGraphic;
     }
 }
