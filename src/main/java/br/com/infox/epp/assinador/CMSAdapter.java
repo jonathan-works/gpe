@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.validation.ValidationException;
 
+import org.apache.commons.codec.binary.Base64;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.cert.AttributeCertificateIssuer;
 import org.bouncycastle.cert.X509CertificateHolder;
@@ -19,8 +20,6 @@ import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.cms.SignerInformation;
 import org.bouncycastle.util.Store;
-
-import com.auth0.jwt.internal.org.apache.commons.codec.binary.Base64;
 
 public class CMSAdapter {
 
