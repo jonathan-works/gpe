@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
+import java.util.Arrays;
 import java.util.Map;
 
 import javax.ejb.Stateless;
@@ -21,13 +22,15 @@ import javax.ws.rs.core.Response.Status;
 
 import org.jboss.seam.servlet.ContextualHttpServletRequest;
 
-import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.JWTVerifyException;
 
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.service.AuthenticatorService;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.usuario.UsuarioLoginSearch;
+import br.com.infox.jwt.JWTUtils;
+import br.com.infox.jwt.claims.InfoxPrivateClaims;
+import br.com.infox.jwt.verifiers.Verifiers;
 
 @Stateless
 public class LoginRestService {
@@ -61,29 +64,16 @@ public class LoginRestService {
 		return baseUrl + "/Painel/list.seam";
 	}
 
-	public static final String URI_LOGIN = "http://www.infox.com.br/login";
-	public static final String URI_CPF = "http://www.infox.com.br/cpf";
-
 	private UsuarioLogin authenticateUser(String jwt) {
 		byte[] secret = parametroManager.getValorParametro("authorizationSecret").getBytes(StandardCharsets.UTF_8);
-
-		Map<String, Object> decodedPayload;
 		try {
-			decodedPayload = new JWTVerifier(secret).verify(jwt);
-			if (!decodedPayload.containsKey("exp")) {
-				throw new JWTVerifyException("The JWT token must have expiration date");
-			}
-			if (!decodedPayload.containsKey("iat")) {
-				throw new JWTVerifyException("The JWT token must have an issued at date");
-			}
-			if (!decodedPayload.containsKey(URI_LOGIN) && !decodedPayload.containsKey(URI_CPF)) {
-				throw new JWTVerifyException("JWT Token expected one of '" + URI_LOGIN + "' or '" + URI_CPF + "'");
-			}
-			String login = (String) decodedPayload.get(URI_LOGIN);
+		    Map<String, Object> decodedPayload = JWTUtils.verify(secret, jwt, 
+		            Arrays.asList(Verifiers.anyOf(InfoxPrivateClaims.CPF, InfoxPrivateClaims.LOGIN)));
+			String login = (String) decodedPayload.get(InfoxPrivateClaims.LOGIN.getClaim());
 			if (login != null) {
 				return usuarioLoginSearch.getUsuarioByLogin(login);
 			}
-			String cpf = (String) decodedPayload.get(URI_CPF);
+			String cpf = (String) decodedPayload.get(InfoxPrivateClaims.CPF.getClaim());
 			if (cpf != null) {
 				return usuarioLoginSearch.getUsuarioLoginByCpf(cpf);
 			}
