@@ -1,0 +1,70 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui">
+    
+    <wi:panel id="panelGraphicExecution" styleClass="content-block">
+    
+    	<h:outputText value="#{graphicExecutionView.svg}" escape="false"/>
+    	
+    	<h:form id="formRemoteGraphElement">
+    		<p:remoteCommand name="onSelectNodeElement" update="@parent:@parent:dialogInformacoes" 
+    			actionListener="#{graphicExecutionView.onSelectNodeElement}" oncomplete="infox.hideLoading(); PF('dialogInformacoes').show();" 
+    			onstart="infox.showLoading();"/>
+    	</h:form>
+    	
+    	<p:dialog id="dialogInformacoes" header="#{graphicExecutionView.nodeGraphImage.nodeLog.node.name}" 
+    		widgetVar="dialogInformacoes" modal="true" fitViewport="true" responsive="true"	width="40%">
+    		<p:ajax event="close" update="@none" listener="#{graphicExecutionView.onCloseInformacoes}" />
+    		
+	    	<fieldset>
+		    	<legend>#{messages['graphicExecution.dataExecucao']}</legend>
+		    	<p:panelGrid columns="2" layout="grid" rendered="#{graphicExecutionView.nodeGraphImage.notEndNodeAndStartNode}">
+			
+					<h:outputText value="#{messages['graphicExecution.entradaNo']}" style="font-weight: bold;"/> 
+	    			<h:outputText value="#{messages['graphicExecution.saidaNo']}" style="font-weight: bold;"/> 
+	    			
+	    			
+	    			<h:outputText value="#{graphicExecutionView.nodeGraphImage.nodeLog.enter}">
+	    				<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+	    			</h:outputText> 
+	    			
+	    			<h:outputText value="#{graphicExecutionView.nodeGraphImage.nodeLog.leave}" rendered="#{not graphicExecutionView.nodeGraphImage.current}">
+	    				<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+	    			</h:outputText> 
+				
+				</p:panelGrid>
+				
+				<p:outputPanel rendered="#{graphicExecutionView.nodeGraphImage.startNode}">
+				
+					<h:outputText value="#{graphicExecutionView.nodeGraphImage.nodeLog.enter}">
+	    				<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+	    			</h:outputText> 
+				
+				</p:outputPanel>
+				
+				<p:outputPanel rendered="#{graphicExecutionView.nodeGraphImage.endNode}">
+				
+					<h:outputText value="#{graphicExecutionView.nodeGraphImage.nodeLog.enter}">
+	    				<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+	    			</h:outputText> 
+				
+				</p:outputPanel>
+	    	</fieldset>
+				    		
+	    	<p:outputPanel rendered="#{not empty graphicExecutionView.getUsuariosExecutaramNo()}" style="margin-top: 1rem;">
+		    	<fieldset>
+		    		<legend>#{messages['graphicExecution.executorNo']}</legend>
+		    		
+		    		<h:outputText value="#{graphicExecutionView.getUsuariosExecutaramNo()}"/>
+		    	</fieldset>
+	    	</p:outputPanel>
+	    	
+		</p:dialog>  
+    
+    </wi:panel>
+    
+</ui:composition>

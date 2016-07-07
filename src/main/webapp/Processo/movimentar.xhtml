@@ -253,6 +253,15 @@
                 <ui:include
                     src="/WEB-INF/xhtml/components/grid/movimentacoesProcessoGrid.xhtml" />
             </infox:tab>
+            <infox:tab
+                id="tabGraficoExecucao"
+                name="tabGraficoExecucao"
+                rendered="#{processoEpaHome.managed}"
+                status=":status"
+                title="#{infoxMessages['movimentar.graficoExecucao.titleTab']}">
+                <c:set property="token" target="#{graphicExecutionView}" value="#{taskInstanceHome.currentTaskInstance.token}"/>
+                <ui:include src="executionGraphic.xhtml" />
+            </infox:tab>
             
             <ui:param
                 name="action"

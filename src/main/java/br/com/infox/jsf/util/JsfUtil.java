@@ -86,6 +86,10 @@ public class JsfUtil {
         return clazz.cast(context.getExternalContext().getFlash().get(name));
     }
     
+    public String getRequestParameter(String name) {
+        return context.getExternalContext().getRequestParameterMap().get(name);
+    }
+    
     public void redirect(String path) {
         ServletContext servletContext = (ServletContext) context.getExternalContext().getContext();
         try {
