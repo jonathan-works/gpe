@@ -25,7 +25,9 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -153,6 +155,12 @@ public class Documento implements Serializable, Cloneable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_localizacao")
     private Localizacao localizacao;
+    
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name="tb_tag_processo_documento", joinColumns=@JoinColumn(name="id_documento", referencedColumnName="id_documento"))
+    @JoinColumn(name = "id_tag_processo", referencedColumnName = "id_tag_processo")
+    @Column(name = "cd_tag_processo")
+    private List<String> tags;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "documento", cascade = CascadeType.REMOVE)
     @OrderBy(value="dataAlteracao DESC")
