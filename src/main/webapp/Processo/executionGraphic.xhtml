@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <ui:composition
     xmlns="http://www.w3.org/1999/xhtml"
     xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -7,7 +6,7 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:p="http://primefaces.org/ui">
     
-    <wi:panel id="panelGraphicExecution">
+    <wi:panel id="panelGraphicExecution" styleClass="content-block">
     
     	<h:outputText value="#{graphicExecutionView.svg}" escape="false"/>
     	
@@ -22,11 +21,11 @@
     		<p:ajax event="close" update="@none" listener="#{graphicExecutionView.onCloseInformacoes}" />
     		
 	    	<fieldset>
-		    	<legend>Data de Execução</legend>
+		    	<legend>#{messages['graphicExecution.dataExecucao']}</legend>
 		    	<p:panelGrid columns="2" layout="grid" rendered="#{graphicExecutionView.nodeGraphImage.notEndNodeAndStartNode}">
 			
-					<h:outputText value="Entrada do nó" style="font-weight: bold;"/> 
-	    			<h:outputText value="Saída do nó" style="font-weight: bold;"/> 
+					<h:outputText value="#{messages['graphicExecution.entradaNo']}" style="font-weight: bold;"/> 
+	    			<h:outputText value="#{messages['graphicExecution.saidaNo']}" style="font-weight: bold;"/> 
 	    			
 	    			
 	    			<h:outputText value="#{graphicExecutionView.nodeGraphImage.nodeLog.enter}">
@@ -58,7 +57,7 @@
 				    		
 	    	<p:outputPanel rendered="#{not empty graphicExecutionView.getUsuariosExecutaramNo()}" style="margin-top: 1rem;">
 		    	<fieldset>
-		    		<legend>Executor do Nó</legend>
+		    		<legend>#{messages['graphicExecution.executorNo']}</legend>
 		    		
 		    		<h:outputText value="#{graphicExecutionView.getUsuariosExecutaramNo()}"/>
 		    	</fieldset>
