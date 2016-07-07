@@ -88,7 +88,8 @@
         <rich:collapsiblePanel
             switchType="client" rendered="#{checkPermission}"
             header="#{infoxMessages['processo.titleView']} #{processoEpaHome.instance.numeroProcessoRoot} - #{taskInstance.processInstance.processDefinition.name} - #{taskInstance.name} "
-            expanded="false">
+            expanded="true">
+            <ui:include src="linkAplicacaoExterna.xhtml" />
             <h:panelGrid columns="2"  width="100%"  columnClasses="viewColumn">
             
             	<wi:outputText
