@@ -377,6 +377,15 @@
             action="#{modeloPastaRestricaoAction.init(fluxoCrudAction.instance)}">
 	        <ui:include src="definicao/modeloPastaRestricao.xhtml" />	        
       	</infox:tab>
+
+        <infox:tab 
+            name="monitorTab"
+            id="monitorTab"
+            title="#{infoxMessages['monitorProcesso.title']}"
+            rendered="#{home.isManaged() and not fluxoCrudAction.replica and not empty home.instance.svgExecucao}"
+            action="#{monitorProcessoView.selectFluxo(home.instance)}">
+            <ui:include src="definicao/monitorProcesso.xhtml" />
+        </infox:tab>
     </ui:define>
 </ui:composition>
 
