@@ -15,13 +15,9 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Selection;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -37,17 +33,24 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.io.IOUtils;
-import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.exe.Token;
+import org.jbpm.graph.log.NodeLog;
 import org.jbpm.graph.log.TransitionLog;
+import org.jbpm.graph.node.TaskNode;
+import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.exe.TaskInstance;
+import org.joda.time.DateTime;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.core.util.StringUtil;
+import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioLogin_;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
+import br.com.infox.hibernate.util.HibernateUtil;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
@@ -56,20 +59,21 @@ public class GraphicExecutionService {
     @Inject
     private FluxoManager fluxoManager;
     
-    public String performGraphicExecution(TaskInstance taskInstance, Map<String, GraphImageBean> graphImageBeans) throws TransformerFactoryConfigurationError {
-        String svg = fluxoManager.getFluxoByDescricao(taskInstance.getProcessInstance().getProcessDefinition().getName()).getSvgExecucao();
+    public String performGraphicExecution(Token token, Map<String, GraphImageBean> graphImageBeans) throws TransformerFactoryConfigurationError {
+        String svg = fluxoManager.getFluxoByDescricao(token.getProcessInstance().getProcessDefinition().getName()).getSvgExecucao();
         try {
             Document document = createDocument(svg);
             
             XPath xPath =  XPathFactory.newInstance().newXPath();
             
-            Token token = taskInstance.getToken();
-            
             Set<Long> tokens = getTokens(token);
             
             List<GraphImageBean> graphImageBeanList = getGraphImageBeanList(tokens);
             
-            graphImageBeanList.add(new GraphImageBean(token.getNode().getKey(), token, GraphImageBean.Type.NODE, true));
+            NodeLog nodeLog = new NodeLog(token.getNode(), token.getNodeEnter(), DateTime.now().toDate());
+            nodeLog.setToken(token);
+            
+            graphImageBeanList.add(new NodeGraphImage(nodeLog, true));
             
             for (GraphImageBean graphElementBean : graphImageBeanList) {
                 
@@ -90,7 +94,7 @@ public class GraphicExecutionService {
                     if (!"path".equals(graphNode.getNodeName())) {
                         Node styleNode = node.getAttributes().getNamedItem("style");
                         styleNode.setTextContent(styleNode.getTextContent() + " cursor: pointer;");
-                        ((Element) node).setAttribute("onclick", "onSelectGraphElement(" + getParameters(graphElementBean) + ")");
+                        ((Element) node).setAttribute("onclick", "onSelectNodeElement(" + getParameters(graphElementBean) + ")");
                     }
                 }
             }
@@ -126,54 +130,60 @@ public class GraphicExecutionService {
     }
     
     public List<GraphImageBean> getGraphImageBeanList(Collection<Long> tokensId) {
-        EntityManager entityManager = EntityManagerProducer.getEntityManager();
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Tuple> cq = cb.createTupleQuery();
-        
-        Root<TransitionLog> transitionLog = cq.from(TransitionLog.class);
-        Join<TransitionLog, Token> token = transitionLog.join("token", JoinType.INNER);
-        Join<TransitionLog, Transition> transition = transitionLog.join("transition", JoinType.INNER);
-        Join<TransitionLog, org.jbpm.graph.def.Node> sourceNode = transitionLog.join("sourceNode", JoinType.INNER);
-        
-        Selection<String> sourceNodeKeySelection = sourceNode.<String>get("key").alias("sourceNodeKey");
-        Selection<String> transitionKeySelection = transition.<String>get("key").alias("transitionKey");
-        Selection<Token> tokenSelection = token.alias("token");
-        
-        cq.select(cb.tuple(sourceNodeKeySelection, transitionKeySelection, tokenSelection));
-        
-        cq.where(
-              transitionLog.<Token>get("token").<String>get("id").in(tokensId)
-        );
-        
-        cq.orderBy(cb.asc(transitionLog.get("date")));
-        
-        List<Tuple> keys = entityManager.createQuery(cq).getResultList();
         List<GraphImageBean> graphImageBeans = new ArrayList<>();
-        
-        for (Tuple key : keys) {
-            String sourceNodeKey= key.get("sourceNodeKey", String.class);
-            String transitionKey = key.get("transitionKey", String.class);
-            Token tokenKey = key.get("token", Token.class);
-            
-            graphImageBeans.add(new GraphImageBean(sourceNodeKey, GraphImageBean.Type.NODE, tokenKey));
-            graphImageBeans.add(new GraphImageBean(transitionKey, GraphImageBean.Type.TRANSITION, tokenKey));
+        List<TransitionLog> transitionLogs = listTransitionsLogged(tokensId);
+        for (TransitionLog transitionLog : transitionLogs) {
+            graphImageBeans.add(new TransitionGraphImage(transitionLog));
         }
-        
+        List<NodeLog> nodesLog = listNodesLogged(tokensId);
+        for (NodeLog nodeLog : nodesLog) {
+            graphImageBeans.add(new NodeGraphImage(nodeLog));
+        }
         return graphImageBeans;
+    }
+
+    private List<TransitionLog> listTransitionsLogged(Collection<Long> tokensId) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<TransitionLog> cq = cb.createQuery(TransitionLog.class);
+        Root<TransitionLog> transitionLog = cq.from(TransitionLog.class);
+        transitionLog.fetch("token");
+        transitionLog.fetch("transition");
+        cq.select(transitionLog);
+        cq.where(
+            transitionLog.<Token>get("token").<String>get("id").in(tokensId)
+        );
+        return getEntityManager().createQuery(cq).getResultList();
+    }
+    
+    private List<NodeLog> listNodesLogged(Collection<Long> tokensId) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<NodeLog> cq = cb.createQuery(NodeLog.class);
+        Root<NodeLog> nodeLog = cq.from(NodeLog.class);
+        nodeLog.fetch("token");
+        nodeLog.fetch("node");
+        cq.select(nodeLog);
+        cq.where(
+            nodeLog.<Token>get("token").<String>get("id").in(tokensId)
+        );
+        return getEntityManager().createQuery(cq).getResultList();
+    }
+
+    private EntityManager getEntityManager() {
+        return EntityManagerProducer.getEntityManager();
     }
     
     private Set<Long> getTokens(Token token) {
         Set<Long> tokens = new HashSet<>();
         tokens.add(token.getId());
-        while (token.getParent() != null) {
-            token = token.getParent();
-            tokens.add(token.getId());
-        }
         if (token.getChildren() != null) {
             Collection<Token> children = token.getChildren().values();
             for (Token child : children) {
                 tokens.add(child.getId());
             }
+        }
+        while (token.getParent() != null) {
+            token = token.getParent();
+            tokens.add(token.getId());
         }
         return tokens;
     }
@@ -212,6 +222,24 @@ public class GraphicExecutionService {
             newChild.setAttribute("d", graphNode.getAttributes().getNamedItem("d").getTextContent());
         }
         return newChild;
+    }
+    
+    public String getUsuariosExecutaramNo(NodeGraphImage nodeGraphImage) {
+        TaskNode taskNode = (TaskNode) HibernateUtil.removeProxy(nodeGraphImage.getNode());
+        Token token = nodeGraphImage.getToken();
+        Set<Task> tasks = taskNode.getTasks();
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<String> cq = cb.createQuery(String.class);
+        Root<TaskInstance> taskInstance = cq.from(TaskInstance.class);
+        Root<UsuarioLogin> usuarioLogin = cq.from(UsuarioLogin.class);
+        cq.select(usuarioLogin.get(UsuarioLogin_.nomeUsuario));
+        cq.where(
+            cb.equal(taskInstance.<Token>get("token").<Long>get("id"), cb.literal(token.getId())),
+            taskInstance.<Task>get("task").in(tasks),
+            cb.equal(usuarioLogin.get(UsuarioLogin_.login), taskInstance.<String>get("assignee"))
+        );
+        List<String> resultList = getEntityManager().createQuery(cq).getResultList();
+        return StringUtil.concatList(resultList, ", ");
     }
     
     private String getParameters(GraphImageBean graphImageBean) {

@@ -4,6 +4,7 @@
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:wi="http://www.itx.com.br/jsf"
     xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
     xmlns:p="http://primefaces.org/ui">
     
     <wi:panel id="panelGraphicExecution">
@@ -11,16 +12,58 @@
     	<h:outputText value="#{graphicExecutionView.svg}" escape="false"/>
     	
     	<h:form id="formRemoteGraphElement">
-    		<p:remoteCommand name="onSelectGraphElement" update="@parent:@parent:dialogInformacoes" 
-    			actionListener="#{graphicExecutionView.onSelectGraphElement}" oncomplete="infox.hideLoading(); PF('dialogInformacoes').show();" 
+    		<p:remoteCommand name="onSelectNodeElement" update="@parent:@parent:dialogInformacoes" 
+    			actionListener="#{graphicExecutionView.onSelectNodeElement}" oncomplete="infox.hideLoading(); PF('dialogInformacoes').show();" 
     			onstart="infox.showLoading();"/>
     	</h:form>
     	
-    	<p:dialog id="dialogInformacoes" header="Informações" widgetVar="dialogInformacoes" modal="true" height="100">
+    	<p:dialog id="dialogInformacoes" header="#{graphicExecutionView.nodeGraphImage.nodeLog.node.name}" 
+    		widgetVar="dialogInformacoes" modal="true" fitViewport="true" responsive="true"	width="40%">
     		<p:ajax event="close" update="@none" listener="#{graphicExecutionView.onCloseInformacoes}" />
     		
-    		
-		    <h:outputText value="#{graphicExecutionView.selectedGraphImage.key}" />
+	    	<fieldset>
+		    	<legend>Data de Execução</legend>
+		    	<p:panelGrid columns="2" layout="grid" rendered="#{graphicExecutionView.nodeGraphImage.notEndNodeAndStartNode}">
+			
+					<h:outputText value="Entrada do nó" style="font-weight: bold;"/> 
+	    			<h:outputText value="Saída do nó" style="font-weight: bold;"/> 
+	    			
+	    			
+	    			<h:outputText value="#{graphicExecutionView.nodeGraphImage.nodeLog.enter}">
+	    				<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+	    			</h:outputText> 
+	    			
+	    			<h:outputText value="#{graphicExecutionView.nodeGraphImage.nodeLog.leave}" rendered="#{not graphicExecutionView.nodeGraphImage.current}">
+	    				<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+	    			</h:outputText> 
+				
+				</p:panelGrid>
+				
+				<p:outputPanel rendered="#{graphicExecutionView.nodeGraphImage.startNode}">
+				
+					<h:outputText value="#{graphicExecutionView.nodeGraphImage.nodeLog.enter}">
+	    				<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+	    			</h:outputText> 
+				
+				</p:outputPanel>
+				
+				<p:outputPanel rendered="#{graphicExecutionView.nodeGraphImage.endNode}">
+				
+					<h:outputText value="#{graphicExecutionView.nodeGraphImage.nodeLog.enter}">
+	    				<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+	    			</h:outputText> 
+				
+				</p:outputPanel>
+	    	</fieldset>
+				    		
+	    	<p:outputPanel rendered="#{not empty graphicExecutionView.getUsuariosExecutaramNo()}" style="margin-top: 1rem;">
+		    	<fieldset>
+		    		<legend>Executor do Nó</legend>
+		    		
+		    		<h:outputText value="#{graphicExecutionView.getUsuariosExecutaramNo()}"/>
+		    	</fieldset>
+	    	</p:outputPanel>
+	    	
 		</p:dialog>  
     
     </wi:panel>

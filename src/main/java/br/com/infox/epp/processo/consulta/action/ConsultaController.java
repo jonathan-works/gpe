@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Remove;
-import javax.ejb.Stateful;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -29,7 +28,6 @@ import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 import br.com.infox.ibpm.task.manager.UsuarioTaskInstanceManager;
 
-@Stateful
 @AutoCreate
 @Name(ConsultaController.NAME)
 public class ConsultaController extends AbstractController {

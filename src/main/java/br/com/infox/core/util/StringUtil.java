@@ -1,5 +1,6 @@
 package br.com.infox.core.util;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.jboss.seam.util.Strings;
@@ -29,7 +30,7 @@ public final class StringUtil {
     	return string;
     }
 
-    public static <E> String concatList(List<E> list, String delimitador) {
+    public static <E> String concatList(Collection<E> list, String delimitador) {
         StringBuilder sb = new StringBuilder();
         for (E object : list) {
             if (sb.length() > 0) {

@@ -259,7 +259,7 @@
                 rendered="#{processoEpaHome.managed}"
                 status=":status"
                 title="#{infoxMessages['movimentar.graficoExecucao.titleTab']}">
-                <c:set property="taskInstance" target="#{graphicExecutionView}" value="#{taskInstanceHome.currentTaskInstance}"/>
+                <c:set property="token" target="#{graphicExecutionView}" value="#{taskInstanceHome.currentTaskInstance.token}"/>
                 <ui:include src="executionGraphic.xhtml" />
             </infox:tab>
             

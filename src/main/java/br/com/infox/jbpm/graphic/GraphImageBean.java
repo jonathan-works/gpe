@@ -2,41 +2,24 @@ package br.com.infox.jbpm.graphic;
 
 import org.jbpm.graph.exe.Token;
 
-
-public class GraphImageBean {
+public abstract class GraphImageBean {
     
     private String key;
     private Token token;
-    private Type type;
-    private Boolean isCurrent;
     
-    public GraphImageBean(String key, Token token, Type type, Boolean isCurrent) {
+    public GraphImageBean(String key, Token token) {
         this.key = key;
         this.token = token;
-        this.type = type;
-        this.isCurrent = isCurrent;
-    }
-
-    public GraphImageBean(String key, Type type, Token token) {
-        this(key, token, type, false);
     }
 
     public String getKey() {
         return key;
     }
 
-    public Type getType() {
-        return type;
-    }
-
     public Token getToken() {
         return token;
     }
-
-    public Boolean isCurrent() {
-        return isCurrent;
-    }
-
+    
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -61,8 +44,5 @@ public class GraphImageBean {
             return false;
         return true;
     }
-
-    public enum Type {
-        NODE, TRANSITION;
-    }
+    
 }

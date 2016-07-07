@@ -7,7 +7,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.jbpm.taskmgmt.exe.TaskInstance;
+import org.jbpm.graph.exe.Token;
 
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.jsf.util.JsfUtil;
@@ -23,35 +23,42 @@ public class GraphicExecutionView implements Serializable {
     @Inject
     private JsfUtil jsfUtil;
     
-    private GraphImageBean selectedGraphImage;
+    private NodeGraphImage nodeGraphImage;
     private Map<String, GraphImageBean> graphImageBeans;
-    private TaskInstance taskInstance;
+    private Token token;
     
     public String getSvg() {
         graphImageBeans = new HashMap<>();
-        String svg = graphicExecutionService.performGraphicExecution(taskInstance, graphImageBeans); 
+        String svg = graphicExecutionService.performGraphicExecution(token, graphImageBeans); 
         return svg;
     }
 
-    public void onSelectGraphElement() {
+    public void onSelectNodeElement() {
         String key = jsfUtil.getRequestParameter("key");
-        selectedGraphImage = graphImageBeans.get(key);
+        nodeGraphImage = (NodeGraphImage) graphImageBeans.get(key);
+    }
+    
+    public String getUsuariosExecutaramNo() {
+        if (nodeGraphImage != null && nodeGraphImage.isTaskNode()) {
+            return graphicExecutionService.getUsuariosExecutaramNo(nodeGraphImage);
+        }
+        return null;
     }
     
     public void onCloseInformacoes() {
-        selectedGraphImage = null;
+        nodeGraphImage = null;
     }
     
-    public TaskInstance getTaskInstance() {
-        return taskInstance;
-    }
-    
-    public void setTaskInstance(TaskInstance taskInstance) {
-        this.taskInstance = taskInstance;
+    public Token getToken() {
+        return token;
     }
 
-    public GraphImageBean getSelectedGraphImage() {
-        return selectedGraphImage;
+    public void setToken(Token token) {
+        this.token = token;
+    }
+    
+    public NodeGraphImage getNodeGraphImage() {
+        return nodeGraphImage;
     }
 
 }
