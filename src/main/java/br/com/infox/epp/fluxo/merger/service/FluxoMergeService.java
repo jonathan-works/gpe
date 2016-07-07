@@ -22,6 +22,7 @@ import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.node.ProcessState;
+import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
@@ -239,30 +240,38 @@ public class FluxoMergeService {
     private void validateVariables(ProcessDefinition processDefinition) {
         List<Node> nodes = processDefinition.getNodes();
         for (Node node : nodes) {
+        	TaskController taskController = null; 
             if (node.getNodeType().equals(NodeType.Task)) {
-                TaskController taskController = ((TaskNode) node).getTask(node.getName()).getTaskController();
-                if (taskController != null) {
-                    List<VariableAccess> variables = taskController.getVariableAccesses();
-                    for (VariableAccess variable : variables) {
-                        String[] tokens = variable.getMappedName().split(":");
-                        if (tokens.length == 1) {
-                            throw new BusinessRollbackException("Existe uma variável sem nome na tarefa " + node.getName()); 
-                        } else if (VariableType.NULL.name().equals(tokens[0])) {
-                            throw new BusinessRollbackException("A variável " + tokens[1] + " da tarefa " + node.getName() + " não possui tipo");
-                        } else if (VariableType.DATE.name().equals(tokens[0]) && tokens.length < 3) {
-                            throw new BusinessRollbackException("A variável " + tokens[1] + " da tarefa " + node.getName() + " é do tipo data mas não possui tipo de validação");
-                        } else if (VariableType.ENUMERATION.name().equals(tokens[0]) && tokens.length < 3) {
-                            throw new BusinessRollbackException("A variável " + tokens[1] + " da tarefa " + node.getName() + " é do tipo lista de dados mas não possui lista de valores definida");
-                        } else if (VariableType.ENUMERATION_MULTIPLE.name().equals(tokens[0]) && tokens.length < 3) {
-                            throw new BusinessRollbackException("A variável " + tokens[1] + " da tarefa " + node.getName() + " é do tipo lista de dados (múltipla) mas não possui lista de valores definida");
-                        } else if (VariableType.FRAGMENT.name().equals(tokens[0]) && tokens.length < 3) {
-                            throw new BusinessRollbackException(MessageFormat.format(InfoxMessages.getInstance().get("processDefinition.variable.list.error"), tokens[1], node.getName()));
-                        }
-                    }
-                }
+                taskController = ((TaskNode) node).getTask(node.getName()).getTaskController();
+                validadeVariableAcess(node, taskController);
+            }else if(node.getNodeType().equals(NodeType.StartState)){
+            	taskController = ((StartState)node).getProcessDefinition().getTaskMgmtDefinition().getStartTask().getTaskController();
+            	validadeVariableAcess(node, taskController);
             }
         }
     }
+
+	private void validadeVariableAcess(Node node, TaskController taskController) {
+		if (taskController != null) {
+		    List<VariableAccess> variables = taskController.getVariableAccesses();
+		    for (VariableAccess variable : variables) {
+		        String[] tokens = variable.getMappedName().split(":");
+		        if (tokens.length == 1) {
+		            throw new BusinessRollbackException("Existe uma variável sem nome na tarefa " + node.getName()); 
+		        } else if (VariableType.NULL.name().equals(tokens[0])) {
+		            throw new BusinessRollbackException("A variável " + tokens[1] + " da tarefa " + node.getName() + " não possui tipo");
+		        } else if (VariableType.DATE.name().equals(tokens[0]) && tokens.length < 3) {
+		            throw new BusinessRollbackException("A variável " + tokens[1] + " da tarefa " + node.getName() + " é do tipo data mas não possui tipo de validação");
+		        } else if (VariableType.ENUMERATION.name().equals(tokens[0]) && tokens.length < 3) {
+		            throw new BusinessRollbackException("A variável " + tokens[1] + " da tarefa " + node.getName() + " é do tipo lista de dados mas não possui lista de valores definida");
+		        } else if (VariableType.ENUMERATION_MULTIPLE.name().equals(tokens[0]) && tokens.length < 3) {
+		            throw new BusinessRollbackException("A variável " + tokens[1] + " da tarefa " + node.getName() + " é do tipo lista de dados (múltipla) mas não possui lista de valores definida");
+		        } else if (VariableType.FRAGMENT.name().equals(tokens[0]) && tokens.length < 3) {
+		            throw new BusinessRollbackException(MessageFormat.format(InfoxMessages.getInstance().get("processDefinition.variable.list.error"), tokens[1], node.getName()));
+		        }
+		    }
+		}
+	}
     
     private void validateSubProcessNode(ProcessDefinition processDefinition) {
         List<Node> nodes = processDefinition.getNodes();

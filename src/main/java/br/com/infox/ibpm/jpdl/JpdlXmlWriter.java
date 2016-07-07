@@ -340,6 +340,9 @@ public class JpdlXmlWriter {
             return;
         }
         for (VariableAccess va : list) {
+        	if(StringUtil.isEmpty(va.getMappedName()) || StringUtil.isEmpty(va.getVariableName())){
+        		continue;
+        	}
             Element ve = addElement(controller, "variable");
             addAttribute(ve, ELEMENT_NAME, va.getVariableName());
             addAttribute(ve, "mapped-name", va.getMappedName());
