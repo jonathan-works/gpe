@@ -14,14 +14,13 @@ import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.security.Identity;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoRecursos;
-import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoRecursos.RecursoVariavel;
 import br.com.infox.epp.processo.consulta.action.ConsultaController;
 import br.com.infox.epp.processo.documento.action.DocumentoProcessoAction;
 import br.com.infox.epp.processo.documento.action.PastaAction;
@@ -42,7 +41,6 @@ import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.processo.variavel.action.VariavelProcessoAction;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
-import br.com.infox.epp.system.Parametros;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.context.ContextFacade;
@@ -100,6 +98,8 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	private SituacaoProcessoDAO situacaoProcessoDAO;
 	@Inject
 	private VariavelProcessoService variavelProcessoService;
+	@Inject
+	private PapelManager papelManager;
 
 	private DocumentoBin documentoBin = new DocumentoBin();
 	private String observacaoMovimentacao;
@@ -127,7 +127,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	public List<VariavelProcesso> getVariaveisDetalhe() {
 		if (variaveisDetalhe == null) {
 			variaveisDetalhe = variavelProcessoService.getVariaveis(instance, 
-					DefinicaoVariavelProcessoRecursos.DETALHE_PROCESSO.getIdentificador(), Identity.instance().hasRole(Parametros.PAPEL_USUARIO_EXTERNO.getValue()));
+					DefinicaoVariavelProcessoRecursos.DETALHE_PROCESSO.getIdentificador(), papelManager.isUsuarioExterno(Authenticator.getPapelAtual().getIdentificador()));
 		}
 		return variaveisDetalhe;
     }

@@ -20,11 +20,15 @@ import br.com.infox.componentes.column.DynamicColumnModel;
 import br.com.infox.core.list.DataList;
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.core.util.StringUtil;
+import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcesso;
-import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoManager;
+import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoRecursos;
+import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoSearch;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.Natureza;
+import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.painel.FluxoBean;
 import br.com.infox.epp.painel.PanelDefinition;
 import br.com.infox.epp.painel.TaskBean;
@@ -55,7 +59,11 @@ public class ConsultaProcessoList extends DataList<TaskBean> {
     @Inject
     protected VariavelProcessoService variavelProcessoService;
     @Inject
-    protected DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
+    protected DefinicaoVariavelProcessoSearch definicaoVariavelProcessoSearch;
+    @Inject
+    private FluxoManager fluxoManager;
+    @Inject
+    private PapelManager papelManager;
 
     private String numeroProcesso;
     private String numeroProcessoRoot;
@@ -169,7 +177,8 @@ public class ConsultaProcessoList extends DataList<TaskBean> {
         if (fluxoBean != null) {
             dynamicColumns = new ArrayList<>();
             Integer idFluxo = Integer.valueOf(fluxoBean.getProcessDefinitionId());
-            List<DefinicaoVariavelProcesso> definicoes = definicaoVariavelProcessoManager.getDefinicaoVariavelProcessoVisivelPainel(idFluxo);
+            List<DefinicaoVariavelProcesso> definicoes = definicaoVariavelProcessoSearch.getDefinicoesVariaveis(fluxoManager.find(idFluxo),
+            		DefinicaoVariavelProcessoRecursos.PAINEL_INTERNO.getIdentificador(), papelManager.isUsuarioExterno(Authenticator.getPapelAtual().getIdentificador()));
             for (DefinicaoVariavelProcesso definicao : definicoes) {
                 DynamicColumnModel columnModel = new DynamicColumnModel(definicao.getLabel(), String.format(DYNAMIC_COLUMN_EXPRESSION, definicao.getNome()));
                 dynamicColumns.add(columnModel);

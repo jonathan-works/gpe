@@ -12,11 +12,11 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
-import org.jboss.seam.security.Identity;
 
 import br.com.infox.core.controller.AbstractController;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoRecursos;
 import br.com.infox.epp.processo.documento.action.DocumentoProcessoAction;
 import br.com.infox.epp.processo.documento.action.PastaAction;
@@ -31,7 +31,6 @@ import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
-import br.com.infox.epp.system.Parametros;
 import br.com.infox.ibpm.task.manager.UsuarioTaskInstanceManager;
 
 @Stateful
@@ -64,6 +63,8 @@ public class ConsultaController extends AbstractController {
     private UsuarioTaskInstanceManager usuarioTaskInstanceManager;
     @Inject
     private VariavelProcessoService variavelProcessoService;
+    @Inject
+    private PapelManager papelManager;
     
     private Processo processo;
     private boolean showAllDocuments = false;
@@ -191,7 +192,7 @@ public class ConsultaController extends AbstractController {
 	public List<VariavelProcesso> getVariaveisDetalhe() {
 		if (variaveisDetalhe == null) {
 			variaveisDetalhe = variavelProcessoService.getVariaveis(processo, 
-				DefinicaoVariavelProcessoRecursos.DETALHE_PROCESSO.getIdentificador(), Identity.instance().hasRole(Parametros.PAPEL_USUARIO_EXTERNO.getValue()));
+				DefinicaoVariavelProcessoRecursos.DETALHE_PROCESSO.getIdentificador(), papelManager.isUsuarioExterno(Authenticator.getPapelAtual().getIdentificador()));
 		}
 		return variaveisDetalhe;
 	}

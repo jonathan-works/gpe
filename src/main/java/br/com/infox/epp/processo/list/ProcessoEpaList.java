@@ -12,12 +12,13 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jboss.seam.faces.FacesMessages;
-import org.jboss.seam.security.Identity;
 
 import br.com.infox.componentes.column.DynamicColumnModel;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoRecursos;
@@ -31,7 +32,6 @@ import br.com.infox.epp.processo.sigilo.manager.SigiloProcessoPermissaoManager;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
-import br.com.infox.epp.system.Parametros;
 import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.util.time.Periodo;
 
@@ -58,6 +58,8 @@ public class ProcessoEpaList extends EntityList<Processo> {
     private DefinicaoVariavelProcessoSearch definicaoVariavelProcessoSearch;
     @Inject
     private FluxoManager fluxoManager;
+    @Inject
+    private PapelManager papelManager;
     
     private List<UsuarioLogin> listaUsuarios;
     private List<DynamicColumnModel> dynamicColumns;
@@ -155,7 +157,7 @@ public class ProcessoEpaList extends EntityList<Processo> {
     	if (dynamicColumns == null) {
     		dynamicColumns = new ArrayList<>();
     		for (DefinicaoVariavelProcesso definicaoVariavel : definicaoVariavelProcessoSearch.getDefinicoesVariaveis(fluxo, 
-    				DefinicaoVariavelProcessoRecursos.CONSULTA_PROCESSOS.getIdentificador(), Identity.instance().hasRole(Parametros.PAPEL_USUARIO_EXTERNO.getValue()))) {
+    				DefinicaoVariavelProcessoRecursos.CONSULTA_PROCESSOS.getIdentificador(), papelManager.isUsuarioExterno(Authenticator.getPapelAtual().getIdentificador()))) {
     			DynamicColumnModel model = new DynamicColumnModel(definicaoVariavel.getLabel(), MessageFormat.format(DYNAMIC_COLUMN_EXPRESSION, definicaoVariavel.getNome()));
     			dynamicColumns.add(model);
     		}

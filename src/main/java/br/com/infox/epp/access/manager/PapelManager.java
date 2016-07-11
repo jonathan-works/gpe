@@ -10,6 +10,9 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.security.management.IdentityStore;
 
+import com.google.common.base.Strings;
+
+import br.com.infox.core.exception.EppConfigurationException;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.RolesMap;
@@ -20,6 +23,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.TipoModeloDocumento;
+import br.com.infox.epp.system.Parametros;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Name(PapelManager.NAME)
@@ -102,5 +106,21 @@ public class PapelManager extends Manager<PapelDAO, Papel> {
         List<String> roles = getIdentificadoresPapeisMembros(identificadorPapelBase);
         roles.add(identificadorPapelBase);
         return roles;
+    }
+    
+    public boolean isUsuarioExterno(String identificador) {
+    	String identificadorUsuarioExterno = Parametros.PAPEL_USUARIO_EXTERNO.getValue();
+    	if (Strings.isNullOrEmpty(identificadorUsuarioExterno)) {
+    		throw new EppConfigurationException("O parâmetro " + Parametros.PAPEL_USUARIO_EXTERNO.getLabel() + " não está configurado");
+    	}
+    	return isPapelHerdeiro(identificador, identificadorUsuarioExterno);
+    }
+    
+    public boolean isUsuarioInterno(String identificador) {
+    	String identificadorUsuarioInterno = Parametros.PAPEL_USUARIO_INTERNO.getValue();
+    	if (Strings.isNullOrEmpty(identificadorUsuarioInterno)) {
+    		throw new EppConfigurationException("O parâmetro " + Parametros.PAPEL_USUARIO_INTERNO.getLabel() + " não está configurado");
+    	}
+    	return isPapelHerdeiro(identificador, identificadorUsuarioInterno);
     }
 }

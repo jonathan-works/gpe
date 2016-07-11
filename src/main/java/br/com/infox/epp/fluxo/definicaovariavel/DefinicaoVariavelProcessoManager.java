@@ -12,7 +12,6 @@ import br.com.infox.cdi.dao.Dao;
 import br.com.infox.cdi.qualifier.GenericDao;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.fluxo.manager.FluxoManager;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -28,14 +27,7 @@ public class DefinicaoVariavelProcessoManager {
     @Inject
     @GenericDao
     private Dao<DefinicaoVariavelProcessoRecurso, Long> definicaoVariavelProcessoRecursoDAO;
-    @Inject
-    private FluxoManager fluxoManager;
 
-    public List<DefinicaoVariavelProcesso> getDefinicaoVariavelProcessoVisivelPainel(Integer idFluxo) {
-        return definicaoVariavelProcessoSearch.getDefinicoesVariaveis(fluxoManager.find(idFluxo), 
-        		DefinicaoVariavelProcessoRecursos.PAINEL_INTERNO.getIdentificador(), false);
-    }
-    
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void persist(DefinicaoVariavelProcesso definicaoVariavelProcesso) throws DAOException {
     	definicaoVariavelProcessoDAO.persist(definicaoVariavelProcesso);
