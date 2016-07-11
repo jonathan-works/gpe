@@ -51,7 +51,7 @@ public class FileDownloader implements Serializable {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
         response.setContentType(contentType);
-        if (!contentType.equals("text/html")) {
+        if (!contentType.equals("text/html") && !contentType.equals("application/pdf")) {
             response.setHeader("Content-disposition", "attachment; filename=\""
                     + fileName + "\"");
         }

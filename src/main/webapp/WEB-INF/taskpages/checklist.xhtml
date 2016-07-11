@@ -37,7 +37,7 @@
                     <a:commandLink id="downloadDocumento" rendered="#{row.documento.documentoBin.extensao ne null}" 
                         style="margin-right: 0.5em;" title="#{row.documento.descricao}"
                         onclick="infox.showLoading();" execute="@this" render="@this" limitRender="true"
-                        oncomplete="infox.hideLoading(); window.open('#{pathResolver.contextPath}/PdfReadOnly/downloadDocumento.seam');">
+                        oncomplete="infox.hideLoading(); infox.openPopUp('download#{row.documento.documentoBin.id}', '#{pathResolver.contextPath}/downloadDocumento.seam?id=#{row.documento.documentoBin.id}&amp;binario=true',screen.availWidth,screen.availHeight);">
                         <infox:flashcopy />
                         <h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" title="#{row.documento.documentoBin}" styleClass="opacityHover"/>
                         <f:setPropertyActionListener value="#{row.documento.documentoBin}" target="#{flash.documentoBin}" />
