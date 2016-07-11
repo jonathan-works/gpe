@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.linkExterno;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -21,13 +22,14 @@ public class LinkAplicacaoExternaViewController implements Serializable{
     
     @Inject
     private LinkAplicacaoExternaService service;
+    @Inject
+    private LinkAplicacaoExternaSearch search;
     
     private LinkAplicacaoExterna entity;
     private Processo processo;
 
     @PostConstruct
     public void init(){
-        criar();
     }
     
     public Processo getProcesso() {
@@ -46,6 +48,14 @@ public class LinkAplicacaoExternaViewController implements Serializable{
         this.entity = entity;
     }
 
+    public String retrieveUrlWithToken(LinkAplicacaoExterna link){
+        return service.appendJWTTokenToUrlQuery(link);
+    }
+    
+    public List<LinkAplicacaoExterna> getLinks(){
+        return search.carregarLinksAplicacaoExternaAtivos(getProcesso());
+    }
+    
     @ExceptionHandled
     public void carregar(Integer id){
         LinkAplicacaoExterna linkAplicacaoExterna = service.findById(id);
@@ -61,10 +71,12 @@ public class LinkAplicacaoExternaViewController implements Serializable{
     @ExceptionHandled(MethodType.PERSIST)
     public void salvar(){
         service.salvar(getEntity());
+        setEntity(null);
     }
     @ExceptionHandled(MethodType.REMOVE)
     public void remover(){
         service.remover(getEntity());
+        setEntity(null);
     }
     @ExceptionHandled(MethodType.REMOVE)
     public void remover(LinkAplicacaoExterna link){

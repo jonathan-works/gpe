@@ -4,15 +4,20 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import br.com.infox.epp.processo.entity.Processo;
+
 @Entity
-@Table(name = "tb_link_applicacao")
+@Table(name = "tb_link_aplicacao")
 public class LinkAplicacaoExterna implements Serializable {
 
     private static final String GENERATOR = "LinkApplicacaoExternaGenerator";
@@ -40,6 +45,11 @@ public class LinkAplicacaoExterna implements Serializable {
     @NotNull 
     @Column(name = "in_ativo", nullable = false, unique = false) 
     private Boolean ativo;
+    
+    @NotNull
+    @ManyToOne(optional=false, cascade={}, fetch=FetchType.LAZY)
+    @JoinColumn(name="id_processo")
+    private Processo processo;
 
     public Integer getId() {
         return id;
@@ -79,6 +89,14 @@ public class LinkAplicacaoExterna implements Serializable {
 
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
+    }
+
+    public Processo getProcesso() {
+        return processo;
+    }
+
+    public void setProcesso(Processo processo) {
+        this.processo = processo;
     }
 
     @Override
