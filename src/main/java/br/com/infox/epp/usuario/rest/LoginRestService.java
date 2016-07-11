@@ -22,8 +22,6 @@ import javax.ws.rs.core.Response.Status;
 
 import org.jboss.seam.servlet.ContextualHttpServletRequest;
 
-import com.auth0.jwt.JWTVerifyException;
-
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.service.AuthenticatorService;
 import br.com.infox.epp.system.manager.ParametroManager;
@@ -77,7 +75,7 @@ public class LoginRestService {
 			if (cpf != null) {
 				return usuarioLoginSearch.getUsuarioLoginByCpf(cpf);
 			}
-		} catch (NoSuchAlgorithmException | SignatureException | JWTVerifyException | InvalidKeyException e) {
+		} catch (NoSuchAlgorithmException | SignatureException | InvalidKeyException e) {
 			throw new WebApplicationException(Response.status(Status.UNAUTHORIZED).entity(produceErrorJson(e.getMessage())).build());
 		} catch (IllegalStateException | PersistenceException e) {
 			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(produceErrorJson(e.getMessage())).build());

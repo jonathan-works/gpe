@@ -4,8 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import com.auth0.jwt.JWTVerifyException;
-
 import br.com.infox.jwt.claims.JWTClaim;
 
 public class AnyOfJWTClaimVerifier implements JWTClaimVerifier {
@@ -23,7 +21,7 @@ public class AnyOfJWTClaimVerifier implements JWTClaimVerifier {
     }
     
     @Override
-    public void verify(Map<String, Object> payload) throws JWTVerifyException {
+    public void verify(Map<String, Object> payload) {
         StringBuilder sb = new StringBuilder();
         boolean first = true;
         
@@ -39,7 +37,7 @@ public class AnyOfJWTClaimVerifier implements JWTClaimVerifier {
             first=false;
         }
         
-        throw new JWTVerifyException(String.format(errorMessagePattern, sb.toString()));
+        throw new IllegalArgumentException(String.format(errorMessagePattern, sb.toString()));
     }
 
 }
