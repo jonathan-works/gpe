@@ -7,7 +7,9 @@
 	xmlns:a="http://richfaces.org/a4j"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:rich="http://richfaces.org/rich"
-	xmlns:wi="http://www.itx.com.br/jsf">
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:i="http://java.sun.com/jsf/composite/infox">
 
 	<ui:param name="pastaDocumentoRenderId"
 		value="#{empty pastaDocumentoRenderId ? '' : pastaDocumentoRenderId}" />
@@ -22,39 +24,29 @@
 	<rich:collapsiblePanel expanded="true"
 		header="#{infoxMessages['searchForm.title']}" switchType="client">
 		<h:form>
-			<div style="display: inline-block">
-				<h:outputText
-					value="#{infoxMessages['documentoProcesso.classificacaoDocumento']}"
-					styleClass="name" />
-				<h:selectOneMenu id="classificacaoDocumento"
-					value="#{documentoProcessoAction.documentoFilter.idClassificacaoDocumento}"
-					styleClass="input select">
-					<f:selectItem noSelectionOption="true" itemValue="#{null}"
-						itemLabel="#{infoxMessages['crud.select.all']}" />
-					<f:selectItems
-						value="#{documentoProcessoAction.listClassificacaoDocumento}"
-						var="item" itemLabel="#{item.descricao}" itemValue="#{item.id}" />
-					<f:converter converterId="javax.faces.Integer" />
-				</h:selectOneMenu>
+			<i:selectOneMenu id="classificacaoFilter" label="#{infoxMessages['documentoProcesso.classificacaoDocumento']}" 
+				value="#{documentoProcessoAction.documentoFilter.idClassificacaoDocumento}"
+				items="#{documentoProcessoAction.listClassificacaoDocumento}"
+				noSelectionLabel="#{infoxMessages['crud.select.all']}"
+				converterId="javax.faces.Integer"
+				itemLabel="#{item.descricao}" itemValue="#{item.id}"/>
+			
+			<i:inputNumber id="numeroDocumentoFilter" label="#{infoxMessages['documentoProcesso.numeroDocumento']}"
+				value="#{documentoProcessoAction.documentoFilter.numeroDocumento}"/>
+			
+			<i:autoComplete id="marcadorFilter" label="Marcadores" multiple="true" 
+				value="#{documentoProcessoAction.documentoFilter.marcadores}" 
+	        	completeMethod="#{documentoProcessoAction.autoCompleteMarcadores}"/>
+			
+			<div>
+				<h:commandButton id="btnFiltrarDocumentos"
+					value="#{infoxMessages['button.pesquisar']}"
+					action="#{documentoProcessoAction.filtrarDocumentos()}"
+					styleClass="buttons buttons">
+					<f:ajax immediate="true" execute="@form"
+						render=":#{pastaDocumentoRenderId}:documentoListSearchForm :#{pastaDocumentoRenderId}:documentoListPanel @form" />
+				</h:commandButton>
 			</div>
-			<div style="display: inline-block; margin-left: 10px;">
-				<h:outputText
-					value="#{infoxMessages['documentoProcesso.numeroDocumento']}"
-					styleClass="name" />
-				<h:inputText id="numeroDocumentoPesquisa"
-					value="#{documentoProcessoAction.documentoFilter.numeroDocumento}"
-					styleClasse="input text">
-					<f:converter converterId="javax.faces.Integer" />
-				</h:inputText>
-			</div>
-			<div />
-			<h:commandButton id="btnFiltrarDocumentos"
-				value="#{infoxMessages['button.pesquisar']}"
-				action="#{documentoProcessoAction.filtrarDocumentos()}"
-				styleClass="buttons buttons">
-				<f:ajax immediate="true" execute="@form"
-					render=":#{pastaDocumentoRenderId}:documentoListSearchForm :#{pastaDocumentoRenderId}:documentoListPanel @form" />
-			</h:commandButton>
 
 		</h:form>
 	</rich:collapsiblePanel>
@@ -63,7 +55,7 @@
 		<wi:dataTable values="#{documentoList.list(15)}"
 			bean="#{documentoList}" id="documentoList"
 			showGrid="#{pastaAction.isShowGrid()}"
-			tableTitle="#{empty documentoList.entity.pasta ? '' : documentoList.entity.pasta.nome}"
+			tableTitle="#{empty documentoList.pasta ? '' : documentoList.pasta.nome}"
 			rowId="#{row.id}" showSearchForm="true">
 
 			<ui:define name="searchForm">

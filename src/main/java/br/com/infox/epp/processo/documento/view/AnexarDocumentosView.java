@@ -3,11 +3,13 @@ package br.com.infox.epp.processo.documento.view;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -58,6 +60,8 @@ import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoTemporarioManager;
 import br.com.infox.epp.processo.documento.service.DocumentoUploaderService;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.marcador.Marcador;
+import br.com.infox.epp.processo.marcador.MarcadorSearch;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
@@ -91,6 +95,8 @@ public class AnexarDocumentosView implements Serializable {
 	private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
 	@Inject
 	private InfoxMessages infoxMessages;
+	@Inject
+	private MarcadorSearch marcadorSearch;
 
 	// Propriedades da classe
 	private Processo processo;
@@ -101,6 +107,7 @@ public class AnexarDocumentosView implements Serializable {
 	// Controle do uploader
 	private ClassificacaoDocumento classificacaoDocumentoUploader;
 	private Pasta pastaUploader;
+	private List<Marcador> marcadoresUpload;
 	private List<DadosUpload> dadosUploader = new ArrayList<>();
 	private boolean showUploader;
 
@@ -142,6 +149,26 @@ public class AnexarDocumentosView implements Serializable {
 		setModeloDocumento(null);
 		setShowModeloDocumentoCombo(false);
 	}
+	
+	public List<Marcador> autoCompleteMarcadoresUpload(String query) {
+	    Marcador marcadorTemp = new Marcador(query);
+	    List<Marcador> marcadores = marcadorSearch.listMarcadorByProcessoAndCodigo(getProcesso().getIdProcesso(), query);
+        if (!marcadores.contains(marcadorTemp)) {
+            marcadores.add(0, marcadorTemp);
+        }
+        if (marcadoresUpload != null) {
+            marcadores.removeAll(marcadoresUpload);
+        }
+	    return marcadores;
+    }
+	
+	public void onMarcadorSelectUpload(AjaxBehaviorEvent ajaxEvent) {
+	    
+	}
+	
+	public void onMarcadorUnselectUpload(AjaxBehaviorEvent ajaxEvent) {
+        
+    }
 
 	public void fileUploadListener(FileUploadEvent fileUploadEvent) throws IOException {
 		UploadedFile uploadedFile = fileUploadEvent.getUploadedFile();
@@ -234,6 +261,7 @@ public class AnexarDocumentosView implements Serializable {
 		try {
 			for (DadosUpload dadosUpload : dadosUploader) {
 				DocumentoTemporario documentoGerado = gravarArquivoUpload(dadosUpload);
+				documentoGerado.getDocumentoBin().setMarcadores(new HashSet<>(marcadoresUpload));
 				getDocumentoTemporarioList().add(new DocumentoTemporarioWrapper(documentoGerado));
 			}
 			resetUploader();
@@ -671,8 +699,16 @@ public class AnexarDocumentosView implements Serializable {
 	public void setClassificacaoDocumentoUploader(ClassificacaoDocumento classificacaoDocumentoUploader) {
 		this.classificacaoDocumentoUploader = classificacaoDocumentoUploader;
 	}
+	
+    public List<Marcador> getMarcadoresUpload() {
+        return marcadoresUpload;
+    }
 
-	private void createExpressionResolver() {
+    public void setMarcadoresUpload(List<Marcador> marcadoresUpload) {
+        this.marcadoresUpload = marcadoresUpload;
+    }
+
+    private void createExpressionResolver() {
 		if (processoReal != null) {
 			VariableTypeResolver variableTypeResolver = ComponentUtil.getComponent(VariableTypeResolver.NAME);
 			EntityManager entityManager = BeanManager.INSTANCE.getReference(EntityManager.class);

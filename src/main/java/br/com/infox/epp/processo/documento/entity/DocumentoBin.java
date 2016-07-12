@@ -5,7 +5,9 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -15,9 +17,13 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
@@ -40,6 +46,7 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.assinatura.entity.RegistroAssinaturaSuficiente;
 import br.com.infox.epp.processo.documento.query.DocumentoBinQuery;
 import br.com.infox.epp.processo.documento.service.DocumentoBinService;
+import br.com.infox.epp.processo.marcador.Marcador;
 import br.com.infox.hibernate.UUIDGenericType;
 
 @Entity
@@ -102,11 +109,21 @@ public class DocumentoBin implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataSuficientementeAssinado;
     
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @JoinTable(name = "tb_marcador_documento_bin", 
+            joinColumns=@JoinColumn(name="id_documento_bin", referencedColumnName="id_documento_bin"),
+            inverseJoinColumns=@JoinColumn(name="id_marcador", referencedColumnName="id_marcador"))
+    @OrderBy(value = "cd_marcador")
+    private Set<Marcador> marcadores = new HashSet<>(1);
+    
     @OneToMany(fetch= FetchType.LAZY, mappedBy="documentoBin", cascade = {CascadeType.REMOVE})
     private List<RegistroAssinaturaSuficiente> registrosAssinaturaSuficiente = new ArrayList<>();
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "documentoBin")
     private List<Documento> documentoList = new ArrayList<>();
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "documentoBin")
+    private List<DocumentoTemporario> documentoTemporarioList = new ArrayList<>();
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "documentoBin", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private List<AssinaturaDocumento> assinaturas = new ArrayList<>();
@@ -232,7 +249,15 @@ public class DocumentoBin implements Serializable {
 		this.documentoList = documentoList;
 	}
 	
-	public DocumentoBinService getDocumentoBinService() {
+    public List<DocumentoTemporario> getDocumentoTemporarioList() {
+        return documentoTemporarioList;
+    }
+
+    public void setDocumentoTemporarioList(List<DocumentoTemporario> documentoTemporarioList) {
+        this.documentoTemporarioList = documentoTemporarioList;
+    }
+
+    public DocumentoBinService getDocumentoBinService() {
 		if(documentoBinService == null) {
 			documentoBinService = BeanManager.INSTANCE.getReference(DocumentoBinService.class);
 		}
@@ -297,8 +322,16 @@ public class DocumentoBin implements Serializable {
 	public void setDataSuficientementeAssinado(Date dataSuficientementeAssinado) {
 		this.dataSuficientementeAssinado = dataSuficientementeAssinado;
 	}
+	
+	public Set<Marcador> getMarcadores() {
+        return marcadores;
+    }
 
-	public List<RegistroAssinaturaSuficiente> getRegistrosAssinaturaSuficiente() {
+    public void setMarcadores(Set<Marcador> marcadores) {
+        this.marcadores = marcadores;
+    }
+
+    public List<RegistroAssinaturaSuficiente> getRegistrosAssinaturaSuficiente() {
 		return registrosAssinaturaSuficiente;
 	}
 

@@ -8,7 +8,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:a="http://richfaces.org/a4j">
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:i="http://java.sun.com/jsf/composite/infox">
 
 	<!-- Div com os formulários para upload e editor -->
 	<div id="anexarDocumentosDiv"
@@ -35,7 +37,16 @@
 					value="#{anexarDocumentosView.pastaUploader}"
 					items="#{pastaAction.getPastaListComRestricaoEscrita()}">
 				</wi:selectOneMenuEntity>
-
+				
+				<p:autoComplete id="marcadorFilter" label="Marcadores" multiple="true" 
+					value="#{anexarDocumentosView.marcadoresUpload}" 
+		        	completeMethod="#{anexarDocumentosView.autoCompleteMarcadoresUpload}"
+		        	converter="#{br.com.infox.conveter.Marcador}" itemLabel="#{item.codigo}" var="item"
+		        	minQueryLength="3" queryDelay="600">
+		        	<p:ajax event="itemSelect" update="@this" process="@this" listener="#{anexarDocumentosView.onMarcadorSelectUpload}"/>
+		        	<p:ajax event="itemSelect" update="@this" process="@this" listener="#{anexarDocumentosView.onMarcadorSelectUpload}"/>
+		        </p:autoComplete>
+				
 				<s:div id="uploadArquivoDiv">
 					<s:div id="uploadArquivoTooltipDiv"
 						rendered="#{anexarDocumentosView.showUploader}">

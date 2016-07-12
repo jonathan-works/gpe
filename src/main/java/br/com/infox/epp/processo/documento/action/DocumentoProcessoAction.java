@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.ejb.Remove;
-import javax.ejb.Stateful;
 import javax.inject.Inject;
 
 import org.jboss.seam.ScopeType;
@@ -22,6 +20,7 @@ import org.jboss.seam.security.Identity;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.manager.PapelManager;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -32,6 +31,7 @@ import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.HistoricoStatusDocumentoManager;
 import br.com.infox.epp.processo.documento.type.TipoAlteracaoDocumento;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.marcador.MarcadorSearch;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.seam.security.SecurityUtil;
 import br.com.infox.seam.util.ComponentUtil;
@@ -40,7 +40,7 @@ import br.com.infox.seam.util.ComponentUtil;
 @Name(DocumentoProcessoAction.NAME)
 @Scope(ScopeType.CONVERSATION)
 @Transactional
-@Stateful
+@ContextDependency
 public class DocumentoProcessoAction implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -55,22 +55,21 @@ public class DocumentoProcessoAction implements Serializable {
 	private DocumentoFilter documentoFilter = new DocumentoFilter();
 	private List<String> identificadoresPapeisHerdeirosUsuarioExterno;
 	
-	@In
+	@Inject
 	private DocumentoManager documentoManager;
-	@In
+	@Inject
 	private ActionMessagesService actionMessagesService;
 	@Inject
 	private SecurityUtil securityUtil;
-	@In
+	@Inject
 	private HistoricoStatusDocumentoManager historicoStatusDocumentoManager;
-	@In
+	@Inject
 	private ClassificacaoDocumentoManager classificacaoDocumentoManager;
+	@Inject
+	protected MarcadorSearch marcadorSearch; 
 	@In
 	private DocumentoList documentoList;
 		
-	@Remove
-	public void destroy() {}
-	
 	public void exclusaoRestauracaoDocumento(){
 		if (idDocumentoAlter == null){
 			FacesMessages.instance().add("Não existe documento para alterar");
@@ -89,13 +88,17 @@ public class DocumentoProcessoAction implements Serializable {
 		}
 	}
 	
+	public List<String> autoCompleteMarcadores(String query) {
+	    return marcadorSearch.listByProcessoAndCodigo(getProcesso().getIdProcesso(), query);
+	}
+	
 	public void onClickDocumentosTab(){
 		cache.clear();
 		documentoList.setProcesso(getProcesso());
 		documentoList.refresh();
 	}
 	
-	public String getMotivoExclusaoRestauracao() {
+    public String getMotivoExclusaoRestauracao() {
 		return motivoExclusaoRestauracao;
 	}
 	
@@ -128,10 +131,9 @@ public class DocumentoProcessoAction implements Serializable {
 		this.idDocumentoAlter = idDocumentoAlter;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List<HistoricoStatusDocumento> getListHistoricoStatusDocumento(){
 		if (processoDocumentoSelected == null) {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		} else {
 			return historicoStatusDocumentoManager.getListHistoricoByDocumento(getProcessoDocumentoSelected());
 		}
@@ -157,7 +159,6 @@ public class DocumentoProcessoAction implements Serializable {
 		if (listClassificacaoDocumento == null) {
 			listClassificacaoDocumento = classificacaoDocumentoManager.getClassificacaoDocumentoListByProcesso(processo);
 		}
-			
 		return listClassificacaoDocumento;
 	}
 	
@@ -167,18 +168,23 @@ public class DocumentoProcessoAction implements Serializable {
 	
 	public void filtrarDocumentos() {
 		if (documentoFilter.getIdClassificacaoDocumento() != null) {
-			documentoList.getEntity().setClassificacaoDocumento(classificacaoDocumentoManager
-					.find(documentoFilter.getIdClassificacaoDocumento()));
+			documentoList.setClassificacaoDocumento(classificacaoDocumentoManager.find(documentoFilter.getIdClassificacaoDocumento()));
+		} else {
+			documentoList.setClassificacaoDocumento(null);
 		}
-		else {
-			documentoList.getEntity().setClassificacaoDocumento(null);
-		}
+		
 		if (documentoFilter.getNumeroDocumento() != null) {
-			documentoList.getEntity().setNumeroDocumento(documentoFilter.getNumeroDocumento());
+			documentoList.setNumeroDocumento(documentoFilter.getNumeroDocumento());
+		} else {
+			documentoList.setNumeroDocumento(null);
 		}
-		else {
-			documentoList.getEntity().setNumeroDocumento(null);
+		
+		if (documentoFilter.getMarcadores() != null) {
+		    documentoList.setCodigoMarcadores(documentoFilter.getMarcadores());
+		} else {
+		    documentoList.setCodigoMarcadores(null);
 		}
+		documentoList.refresh();
 	}
 	
 	public Processo getProcesso() {
@@ -189,7 +195,7 @@ public class DocumentoProcessoAction implements Serializable {
 		this.processo = processo;
 	}
 	
-	public DocumentoFilter getDocumentoFilter() {
+    public DocumentoFilter getDocumentoFilter() {
 		return documentoFilter;
 	}
 
