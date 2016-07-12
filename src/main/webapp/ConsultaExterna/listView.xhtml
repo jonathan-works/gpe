@@ -47,8 +47,8 @@
                             searchAction="consultaProcessoExterno.exibirTable()">
                             <wi:inputText id="numeroProcesso"
                                 label="#{infoxMessages['processoEpp.numeroProcesso']}"
-                                value="#{consultaProcessoExterno.entity.numeroProcesso}"
-                                minlength="1" maxlength="15"
+                                value="#{consultaProcessoExterno.numeroProcesso}"
+                                minlength="1"
                                 required="true" />
                         </wi:searchForm>
                     </ui:define>
@@ -58,24 +58,7 @@
                             title="#{infoxMessages['button.selecionar']}" action="#{consultaExternaController.selectProcesso(row)}"/>
                     </ui:define>
 
-                    <wi:columnOutputText columnId="numeroProcesso"
-                        columnHeader="#{infoxMessages['processo.numeroProcesso']}"
-                        value="#{row.numeroProcessoRoot}" hideOrder="true" />
-                    <wi:columnOutputText columnId="usuarioCadastro"
-                        columnHeader="#{infoxMessages['processo.usuarioCadastroProcesso']}"
-                        value="#{row.usuarioCadastro}"
-                        hideOrder="true" />
-                    <wi:columnDateTime columnId="dataInicioProcesso"
-                        columnHeader="#{infoxMessages['processo.dataInicio']}"
-                        value="#{row.dataInicio}" hideOrder="true" />
-                    <wi:columnDateTime columnId="dataFimProcesso"
-                        columnHeader="#{infoxMessages['processo.dataFim']}"
-                        value="#{row.dataFim}" hideOrder="true" />
-                    <wi:columnOutputText
-                        columnId="naturezaCategoriaFluxo"
-                        columnHeader="#{infoxMessages['processo.naturezaCategoriaFluxo']}"
-                        value="#{row.naturezaCategoriaFluxo}"
-                        hideOrder="true" />
+                    <infox:dynamicColumns columns="#{consultaProcessoExterno.dynamicColumns}" />
                 </wi:dataTable>
             </infox:tab>
 

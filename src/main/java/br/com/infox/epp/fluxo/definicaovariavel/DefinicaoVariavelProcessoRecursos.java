@@ -19,6 +19,7 @@ public class DefinicaoVariavelProcessoRecursos {
 		recursos.add(DETALHE_PROCESSO);
 		recursos.add(MOVIMENTAR);
 		recursos.add(PAINEL_INTERNO);
+		recursos.add(CONSULTA_EXTERNA);
 		
 		Collections.sort(recursos, new Comparator<RecursoVariavel>() {
 			@Override
@@ -34,6 +35,7 @@ public class DefinicaoVariavelProcessoRecursos {
 	public static final RecursoVariavel CONSULTA_PROCESSOS = new RecursoVariavel("consultaProcessos", "Consulta Interna de Processos");
 	public static final RecursoVariavel MOVIMENTAR = new RecursoVariavel("movimentar", "Aba de Variáveis da tela de Movimentação de Processos");
 	public static final RecursoVariavel DETALHE_PROCESSO = new RecursoVariavel("detalheProcesso", "Detalhe do Processo");
+	public static final RecursoVariavel CONSULTA_EXTERNA = new RecursoVariavel("consultaExterna", "Consulta Externa");
 	
 	public static class RecursoVariavel {
 		private String identificador;
