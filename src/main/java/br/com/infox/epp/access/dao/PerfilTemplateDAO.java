@@ -69,6 +69,15 @@ public class PerfilTemplateDAO extends DAO<PerfilTemplate> {
         param.put(PerfilTemplateQuery.PARAM_DESCRICAO, descricaoPerfil);
         param.put(PerfilTemplateQuery.PARAM_LOCALIZACAO, idLocalizacao);
         return getNamedSingleResult(PerfilTemplateQuery.GET_BY_LOCALIZACAO_PAI_DESCRICAO, param);
-    }    
+    }
+    
+    public Boolean existePerfilTemplateByCodigo(String codigo) {
+    	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+    	CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+    	Root<PerfilTemplate> from = cq.from(PerfilTemplate.class);
+    	cq.where(cb.equal(from.get(PerfilTemplate_.codigo), cb.literal(codigo)));
+    	cq.select(cb.count(from));
+    	return getEntityManager().createQuery(cq).getSingleResult() > 0;
+    }
 
 }

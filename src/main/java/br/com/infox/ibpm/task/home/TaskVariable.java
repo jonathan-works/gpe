@@ -16,8 +16,8 @@ abstract class TaskVariable {
 
     public TaskVariable(VariableAccess variableAccess, TaskInstance taskInstance) {
         this.variableAccess = variableAccess;
-        this.type = VariableType.valueOf(variableAccess.getMappedName().split(":")[0]);
-        this.name = variableAccess.getMappedName().split(":")[1];
+        this.type = VariableType.valueOf(variableAccess.getType());
+        this.name = variableAccess.getVariableName();
         this.taskInstance = taskInstance;
     }
 

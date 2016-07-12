@@ -5,17 +5,17 @@ import java.util.List;
 
 import javax.faces.model.SelectItem;
 
-import org.jboss.seam.Component;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
 import br.com.infox.epp.processo.form.variable.value.ValueType;
+import br.com.infox.ibpm.variable.VariableDominioEnumerationHandler;
+import br.com.infox.ibpm.variable.dao.DominioVariavelTarefaSearch;
 import br.com.infox.ibpm.variable.dao.ListaDadosSqlDAO;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
-import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
 import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -37,10 +37,9 @@ public abstract class EnumFormType extends PrimitiveFormType {
     
     @Override
     public void performValue(FormField formField, FormData formData) {
-        Integer idDominio = Integer.valueOf((String)formField.getProperties().get("extendedProperties"));
-        DominioVariavelTarefaManager dominioVariavelTarefaManager = getDominioVariavelTarefaManager();
+    	String codigo = VariableDominioEnumerationHandler.fromJson((String) formField.getProperties().get("configuration")).getCodigoDominio();
+        DominioVariavelTarefa dominio = getDominioVariavelTarefaSearch().findByCodigo(codigo);
         List<SelectItem> selectItems = new ArrayList<>();
-        DominioVariavelTarefa dominio = dominioVariavelTarefaManager.find(idDominio);
         if (dominio.isDominioSqlQuery()) {
             ListaDadosSqlDAO listaDadosSqlDAO = ComponentUtil.getComponent(ListaDadosSqlDAO.NAME);
             selectItems.addAll(listaDadosSqlDAO.getListSelectItem(dominio.getDominio()));
@@ -54,8 +53,8 @@ public abstract class EnumFormType extends PrimitiveFormType {
         formField.addProperty("selectItems", selectItems);
     }
         
-    protected DominioVariavelTarefaManager getDominioVariavelTarefaManager() {
-        return  (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
+    protected DominioVariavelTarefaSearch getDominioVariavelTarefaSearch() {
+    	return BeanManager.INSTANCE.getReference(DominioVariavelTarefaSearch.class);
     }
     
     public static class EnumerationFormType extends EnumFormType {

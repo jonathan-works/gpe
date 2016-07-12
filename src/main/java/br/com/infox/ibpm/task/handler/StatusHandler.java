@@ -73,5 +73,9 @@ public class StatusHandler implements ActionHandler, CustomAction {
         }
         processo.getMetadadoProcessoList().add(statusMetadado);
     }
+    
+    public String getCodigoStatusProcesso() {
+		return this.codigoStatusProcesso;
+	}
 
 }

@@ -70,9 +70,8 @@ public abstract class AbstractFormData implements FormData {
         if (!variableAccess.isWritable()) {
             properties.put("readonly", "true");
         }
-        String[] tokens = variableAccess.getMappedName().split(":");
-        if (tokens.length > 2) {
-            properties.put("extendedProperties", tokens[2]);
+        if (variableAccess.getConfiguration() != null && !variableAccess.getConfiguration().isEmpty()) {
+        	properties.put("configuration", variableAccess.getConfiguration());
         }
         return properties;
     }

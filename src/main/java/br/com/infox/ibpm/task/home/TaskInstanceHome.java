@@ -28,7 +28,6 @@ import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.BusinessProcess;
-import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.transaction.Transaction;
@@ -60,6 +59,7 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.documento.modelo.ModeloDocumentoSearch;
 import br.com.infox.epp.documento.type.ExpressionResolverChain;
 import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
@@ -83,6 +83,7 @@ import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
 import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
+import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.action.TaskPageAction;
 import br.com.infox.ibpm.task.dao.TaskConteudoDAO;
 import br.com.infox.ibpm.task.entity.TaskConteudo;
@@ -91,6 +92,7 @@ import br.com.infox.ibpm.task.view.Form;
 import br.com.infox.ibpm.task.view.FormField;
 import br.com.infox.ibpm.task.view.TaskInstanceForm;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.ibpm.variable.VariableEditorModeloHandler;
 import br.com.infox.ibpm.variable.VariableHandler;
 import br.com.infox.ibpm.variable.entity.VariableInfo;
 import br.com.infox.ibpm.variable.file.FileVariableHandler;
@@ -156,6 +158,8 @@ public class TaskInstanceHome implements Serializable {
 	@Inject
 	private FileVariableHandler fileVariableHandler;
 	@Inject
+	private ModeloDocumentoSearch modeloDocumentoSearch;
+	@Inject
 	private ActionMessagesService actionMessagesService;
 
 	private TaskInstance taskInstance;
@@ -170,6 +174,8 @@ public class TaskInstanceHome implements Serializable {
 	private Map<String, Documento> variaveisDocumento;
 	private Documento documentoToSign;
 	private String tokenToSign;
+	
+	private Map<String, VariableAccess> mapVarAccess;
 
 	private URL urlRetornoAcessoExterno;
 
@@ -188,9 +194,11 @@ public class TaskInstanceHome implements Serializable {
 
 	private void retrieveVariables() {
 		TaskController taskController = taskInstance.getTask().getTaskController();
+		mapVarAccess = new HashMap<>();
 		if (taskController != null) {
 			List<VariableAccess> list = taskController.getVariableAccesses();
 			for (VariableAccess variableAccess : list) {
+				mapVarAccess.put(variableAccess.getVariableName(), variableAccess);
 				retrieveVariable(variableAccess);
 			}
 			// Atualizar as transições possiveis. Isso é preciso, pois as
@@ -215,36 +223,22 @@ public class TaskInstanceHome implements Serializable {
 				}
 			} else {
 				documento = new Documento();
-				loadClassificacaoDocumentoDefault(variableRetriever, documento);
+				loadClassificacaoDocumentoDefault(variableAccess.getVariableName(), documento);
 				if (variableRetriever.isEditor()) {
 					documento.setDocumentoBin(new DocumentoBin());
 				}
 			}
 			variaveisDocumento.put(getFieldName(variableRetriever.getName()), documento);
-			if (variableRetriever.isEditor() && documento.getId() == null) {
-				setModeloWhenExists(variableRetriever, documento);
-			}
 		}
 	}
 
-	private void loadClassificacaoDocumentoDefault(TaskVariableRetriever variableRetriever, Documento documento) {
-		Integer idFluxo = processoEpaHome.getInstance().getNaturezaCategoriaFluxo().getFluxo().getIdFluxo();
-		List<ClassificacaoDocumento> classificacoes = getUseableClassificacaoDocumento(false, variableRetriever.getName(), idFluxo);
+	private void loadClassificacaoDocumentoDefault(String variableName, Documento documento) {
+		List<ClassificacaoDocumento> classificacoes = getUseableClassificacaoDocumento(variableName);
 		if (classificacoes != null && classificacoes.size() == 1) {
 			documento.setClassificacaoDocumento(classificacoes.get(0));
 		}
 	}
 
-	private void setModeloWhenExists(TaskVariableRetriever variableRetriever, Documento documentoEditor) {
-		String modelo = getModeloFromProcessInstance(variableRetriever.getName());
-		if (modelo != null) {
-			if (!variableRetriever.hasVariable()) {
-				setModeloDocumento(getModeloDocumentoFromModelo(modelo));
-				assignModeloDocumento(getFieldName(variableRetriever.getName()));
-			}
-		}
-	}
-	
 	private void setModeloReadonly(String variavelEditor) {
 		Form form = ComponentUtil.getComponent(TaskInstanceForm.NAME);
 		String variavelComboModelo = variavelEditor + "Modelo";
@@ -254,15 +248,6 @@ public class TaskInstanceHome implements Serializable {
 				break;
 			}
 		}
-	}
-
-	private String getModeloFromProcessInstance(String variableName) {
-		return (String) ProcessInstance.instance().getContextInstance().getVariable(variableName + "Modelo");
-	}
-
-	private ModeloDocumento getModeloDocumentoFromModelo(String modelo) {
-		String s = modelo.split(",")[0].trim();
-		return modeloDocumentoManager.find(Integer.parseInt(s));
 	}
 
 	@Factory("menuMovimentar")
@@ -653,7 +638,7 @@ public class TaskInstanceHome implements Serializable {
 			List<?> list = taskController.getVariableAccesses();
 			for (Object object : list) {
 				VariableAccess var = (VariableAccess) object;
-				if (var.isRequired() && var.getMappedName().split(":")[0].equals("FILE")
+				if (var.isRequired() && VariableType.FILE.equals(VariableType.valueOf(var.getType()))
 						&& getInstance().get(getFieldName(var.getVariableName())) == null) {
 					String label = var.getLabel();
 					FacesMessages.instance().add("O arquivo do campo " + label + " é obrigatório");
@@ -821,15 +806,14 @@ public class TaskInstanceHome implements Serializable {
 		}
 	}
 
-	public List<ModeloDocumento> getModeloItems(String variavel) {
-		if (!variavel.endsWith("Modelo")) {
+	public List<ModeloDocumento> getModeloItems(String idComboModelo) {
+		String suffixComboModelo = "Modelo";
+		if (!idComboModelo.endsWith(suffixComboModelo)) {
 			return null;
 		}
-		if (variavel.contains("-")) {
-			variavel = variavel.split("-")[0];
-		}
-		String listaModelos = (String) taskInstance.getContextInstance().getVariable(variavel);
-		return modeloDocumentoManager.getModelosDocumentoInListaModelo(listaModelos);
+		String variableName = idComboModelo.substring(0, idComboModelo.length() - suffixComboModelo.length());
+		VariableAccess var = mapVarAccess.get(variableName);
+		return modeloDocumentoSearch.getModeloDocumentoListByListCodigos(VariableEditorModeloHandler.fromJson(var.getConfiguration()).getCodigosModeloDocumento());
 	}
 
 	public void assignModeloDocumento(String id) {
@@ -949,8 +933,15 @@ public class TaskInstanceHome implements Serializable {
 		return classificacaoDocumentoFacade.getTipoAssinaturaEnumValues();
 	}
 
-	public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo, String nomeVariavel, Integer idFluxo) {
-		return classificacaoDocumentoFacade.getUseableClassificacaoDocumento(isModelo, nomeVariavel, idFluxo);
+	public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(String variableName) {
+		VariableAccess var = mapVarAccess.get(variableName);
+		boolean isModelo = VariableType.EDITOR.equals(VariableType.valueOf(var.getType()));
+		String configuration = var.getConfiguration();
+		List<String> listCodigos = null;
+		if (configuration != null && !configuration.isEmpty()) {
+			listCodigos = VariableEditorModeloHandler.fromJson(configuration).getCodigosClassificacaoDocumento();
+		}
+		return classificacaoDocumentoFacade.getUseableClassificacaoDocumentoVariavel(listCodigos, isModelo);
 	}
 
 	public void setVariavelDocumentoToSign(String variavelDocumentoToSign) {

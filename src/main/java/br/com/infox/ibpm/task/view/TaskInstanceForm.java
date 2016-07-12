@@ -11,7 +11,6 @@ import java.util.Map;
 
 import javax.faces.model.SelectItem;
 
-import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -25,13 +24,14 @@ import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.process.definition.variable.constants.VariableConstants;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
-import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.variable.FragmentConfiguration;
 import br.com.infox.ibpm.variable.FragmentConfigurationCollector;
+import br.com.infox.ibpm.variable.VariableDataHandler;
+import br.com.infox.ibpm.variable.VariableDominioEnumerationHandler;
+import br.com.infox.ibpm.variable.VariableEditorModeloHandler;
+import br.com.infox.ibpm.variable.dao.DominioVariavelTarefaSearch;
 import br.com.infox.ibpm.variable.dao.ListaDadosSqlDAO;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
-import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
-import br.com.infox.ibpm.variable.type.ValidacaoDataEnum;
 import br.com.infox.seam.util.ComponentUtil;
 
 /**
@@ -95,15 +95,16 @@ public class TaskInstanceForm implements Serializable {
             for (VariableAccess var : list) {
                 if (var.isReadable() && var.isWritable() && !var.getAccess().hasAccess("hidden")) {
                     String[] tokens = var.getMappedName().split(":");
-                    VariableType type = VariableType.valueOf(tokens[0]);
+                    VariableType type = VariableType.valueOf(var.getType());
                     if (VariableType.TASK_PAGE.equals(type)){
                         continue;
                     }
-                    String name = tokens[1];
-                    //FIXME Colocar aqui pra pegar o modelo dos properties
-                    Object variable = JbpmUtil.getProcessVariable(name + "Modelo");
-                    if (variable != null) {
-                        FormField ff = new FormField();
+                    String name = var.getVariableName();
+                    String label = var.getLabel();
+                    if (VariableType.EDITOR.equals(type) && var.getConfiguration() != null && !var.getConfiguration().isEmpty() && 
+                    		VariableEditorModeloHandler.fromJson(var.getConfiguration()).getCodigosModeloDocumento() != null &&
+                    		!VariableEditorModeloHandler.fromJson(var.getConfiguration()).getCodigosModeloDocumento().isEmpty()) {
+                    	FormField ff = new FormField();
                         ff.setFormId(form.getFormId());
                         ff.setId(name + "Modelo");
                         ff.setLabel("Modelo");
@@ -114,7 +115,6 @@ public class TaskInstanceForm implements Serializable {
                         ff.setProperties(props);
                         form.getFields().add(ff);
                     }
-                    String label = var.getLabel();
                     FormField ff = new FormField();
                     ff.setFormId(form.getFormId());
                     ff.setId(var.getVariableName() + "-" + taskInstance.getId());
@@ -132,10 +132,9 @@ public class TaskInstanceForm implements Serializable {
                         break;
                     case ENUMERATION_MULTIPLE:
                     case ENUMERATION: {
-                        DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component
-                                .getInstance(DominioVariavelTarefaManager.NAME);
-                        Integer id = Integer.valueOf(tokens[2]);
-                        DominioVariavelTarefa dominio = dominioVariavelTarefaManager.find(id);
+                        DominioVariavelTarefaSearch dominioVariavelTarefaSearch = BeanManager.INSTANCE.getReference(DominioVariavelTarefaSearch.class);;
+                        DominioVariavelTarefa dominio = dominioVariavelTarefaSearch.findByCodigo(
+                        		VariableDominioEnumerationHandler.fromJson(var.getConfiguration()).getCodigoDominio());
                         List<SelectItem> selectItens = new ArrayList<>();
                         if (dominio.isDominioSqlQuery()) {
                             ListaDadosSqlDAO listaDadosSqlDAO = ComponentUtil.getComponent(ListaDadosSqlDAO.NAME);
@@ -151,12 +150,7 @@ public class TaskInstanceForm implements Serializable {
                     }
                         break;
                     case DATE: {
-                    	//FIXME colocar aqui pra pegar do configuration
-                        if (tokens.length < 3) {
-                            ff.getProperties().put("tipoValidacao", ValidacaoDataEnum.L.name());
-                        } else {
-                            ff.getProperties().put("tipoValidacao", tokens[2]);
-                        }
+                        ff.getProperties().put("tipoValidacao", VariableDataHandler.fromJson(var.getConfiguration()).getTipoValidacaoData());
                     }
                         break;
                     case FRAGMENT: {

@@ -1,6 +1,5 @@
 package br.com.infox.epp.processo.form.type;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.seam.faces.FacesMessages;
@@ -27,6 +26,7 @@ import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
 import br.com.infox.epp.processo.form.variable.value.ValueType;
+import br.com.infox.ibpm.variable.VariableEditorModeloHandler;
 import br.com.infox.seam.exception.BusinessException;
 
 public abstract class FileFormType implements FormType {
@@ -62,10 +62,12 @@ public abstract class FileFormType implements FormType {
     
     @Override
     public void performValue(FormField formField, FormData formData) {
-        String variableName = formField.getId();
-        Integer idFluxo = formData.getProcesso().getNaturezaCategoriaFluxo().getFluxo().getIdFluxo();
-        //FIXME ver como pegar esse valor da variavel
-        List<ClassificacaoDocumento> classificacoes = new ArrayList<ClassificacaoDocumento>();// getVariavelClassificacaoDocumentoManager().listClassificacoesPublicadasDaVariavel(variableName, idFluxo);
+    	String configuration = (String) formField.getProperties().get("configuration");
+    	List<String> codigos = null;
+        if (configuration != null && !configuration.isEmpty()) {
+            codigos = VariableEditorModeloHandler.fromJson(configuration).getCodigosClassificacaoDocumento(); 
+        } 
+        List<ClassificacaoDocumento> classificacoes = getClassificacaoDocumentoFacade().getUseableClassificacaoDocumentoVariavel(codigos, false);
         formField.addProperty("classificacoesDocumento", classificacoes);
         if (classificacoes.size() == 1) {
             formField.addProperty("classificacaoDocumento", classificacoes.get(0));

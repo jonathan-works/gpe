@@ -25,4 +25,13 @@ public class DominioVariavelTarefaSearch extends PersistenceController{
 		}
 		return null;
 	}
+	
+	public Boolean existeDominioByCodigo(String codigo) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+		Root<DominioVariavelTarefa> from = cq.from(DominioVariavelTarefa.class);
+		cq.where(cb.equal(from.get(DominioVariavelTarefa_.codigo), codigo));
+		cq.select(cb.count(from));
+		return getEntityManager().createQuery(cq).getSingleResult() > 0;
+	}
 }

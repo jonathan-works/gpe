@@ -91,7 +91,7 @@ public class SwimlaneHandler implements Serializable {
             SwimlaneHandler sh = new SwimlaneHandler(swimlane);
             sh.setPerfilList(new ArrayList<PerfilTemplate>());
             String exp = swimlane.getPooledActorsExpression();
-            if (exp != null && !exp.isEmpty()) { //TODO verificar se existe alguma base com isso ainda, se não existir retirar esse if
+            if (exp != null && !exp.isEmpty()) { //FIXME verificar se existe alguma base com isso ainda, se não existir retirar esse if
                 String[] perfis = exp.split(",");
                 if (!perfis[0].startsWith("#")) { // Se começar com # é expressão com perfis, fluxo antigo
                     for (String perfil : perfis) {

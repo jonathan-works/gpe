@@ -9,8 +9,6 @@ import javax.inject.Named;
 
 import org.jbpm.context.def.VariableAccess;
 
-import com.google.gson.Gson;
-
 import br.com.infox.core.list.Pageable;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.cdi.ViewScoped;
@@ -19,7 +17,7 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.variable.VariableEditorModeloHandler;
-import br.com.infox.ibpm.variable.VariableEditorModeloHandler.EditorConfig;
+import br.com.infox.ibpm.variable.VariableEditorModeloHandler.FileConfig;
 
 @Named
 @ViewScoped
@@ -58,25 +56,25 @@ public class VariavelClassificacaoDocumentoAction implements Serializable, Pagea
     
     private void updateListaClassificacoesUpload() {
     	if (!getClassificacoesDaVariavel().isEmpty()) {
-    		UploadConfig configuration = new UploadConfig();
+    		FileConfig configuration = new FileConfig();
     		configuration.setCodigosClassificacaoDocumento(new ArrayList<String>());
     		for (ClassificacaoDocumento classificacao : getClassificacoesDaVariavel()) {
 				configuration.getCodigosClassificacaoDocumento().add(classificacao.getCodigoDocumento());
 			}
-    		getCurrentVariable().setConfiguration(toJsonUploadConfig(configuration));
+    		getCurrentVariable().setConfiguration(VariableEditorModeloHandler.toJson(configuration));
     	} else {
     		getCurrentVariable().setConfiguration(null);
     	}
 	}
     
     private void updateListaClassificacoesEditor() {
-		EditorConfig configuration = null;
+		FileConfig configuration = null;
 		if (!StringUtil.isEmpty(getCurrentVariable().getConfiguration())) {
 			configuration = VariableEditorModeloHandler.fromJson(getCurrentVariable().getConfiguration());
 		} 
 		if (!getClassificacoesDaVariavel().isEmpty()) {
 			if (configuration ==  null) {
-				configuration = new EditorConfig();
+				configuration = new FileConfig();
 			}
 			configuration.setCodigosClassificacaoDocumento(new ArrayList<String>());
 			for (ClassificacaoDocumento classificacao : getClassificacoesDaVariavel()) {
@@ -97,11 +95,7 @@ public class VariavelClassificacaoDocumentoAction implements Serializable, Pagea
     
     private List<String> getCodigosClassificacoesVariavel() {
     	if (!StringUtil.isEmpty(getCurrentVariable().getConfiguration())) {
-    		if (isEditor()) {
-    			return VariableEditorModeloHandler.fromJson(getCurrentVariable().getConfiguration()).getCodigosClassificacaoDocumento();
-    		} else {
-    			return fromJsonUploadConfig(getCurrentVariable().getConfiguration()).getCodigosClassificacaoDocumento();
-    		}
+			return VariableEditorModeloHandler.fromJson(getCurrentVariable().getConfiguration()).getCodigosClassificacaoDocumento();
 		}
     	return null;
     }
@@ -206,23 +200,4 @@ public class VariavelClassificacaoDocumentoAction implements Serializable, Pagea
 		this.classificacoesDisponiveis = null;
 	}
 
-	public static UploadConfig fromJsonUploadConfig(String configuration) {
-		return new Gson().fromJson(configuration, UploadConfig.class);
-	}
-	
-	public static String toJsonUploadConfig(UploadConfig configuration) {
-		return new Gson().toJson(configuration, UploadConfig.class);
-	}
-	
-	public static class UploadConfig {
-		private List<String> codigosClassificacaoDocumento;
-
-		public List<String> getCodigosClassificacaoDocumento() {
-			return codigosClassificacaoDocumento;
-		}
-
-		public void setCodigosClassificacaoDocumento(List<String> codigosClassificacaoDocumento) {
-			this.codigosClassificacaoDocumento = codigosClassificacaoDocumento;
-		}
-	}
 }

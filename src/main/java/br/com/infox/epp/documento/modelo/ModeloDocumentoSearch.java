@@ -38,5 +38,22 @@ public class ModeloDocumentoSearch extends PersistenceController {
 		}
 		return null;
 	}
-
+    
+    public List<ModeloDocumento> getModeloDocumentoListByListCodigos(List<String> codigos) {
+    	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<ModeloDocumento> cq = cb.createQuery(ModeloDocumento.class);
+		Root<ModeloDocumento> fromModelo = cq.from(ModeloDocumento.class);
+		cq.where(fromModelo.get(ModeloDocumento_.codigo).in(codigos));
+		return getEntityManager().createQuery(cq).getResultList();
+	}
+    
+    public Boolean existeModeloByCodigo(String codigo) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+		Root<ModeloDocumento> from = cq.from(ModeloDocumento.class);
+		cq.where(cb.equal(from.get(ModeloDocumento_.codigo), cb.literal(codigo)));
+		cq.select(cb.count(from));
+		return getEntityManager().createQuery(cq).getSingleResult() > 0;
+	}
+    
 }

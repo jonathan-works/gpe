@@ -23,13 +23,13 @@
       <wi:selectOneMenuEntity
         id="#{f.id}tipoProcessoDocumento"
         label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-        items="#{home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo)}"
+        items="#{home.getUseableClassificacaoDocumento(taskInstanceHome.getVariableName(id))}"
         required="#{not readonly}"
         showLabelSelecione="true"
         value="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento}"
-        readonly="#{readonly or home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo).size eq 1 
+        readonly="#{readonly or home.getUseableClassificacaoDocumento(taskInstanceHome.getVariableName(id)).size eq 1 
         			or taskInstanceHome.variaveisDocumento[id].hasAssinatura()}"
-        disabled="#{readonly or home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo).size eq 1 
+        disabled="#{readonly or home.getUseableClassificacaoDocumento(taskInstanceHome.getVariableName(id)).size eq 1 
         			or taskInstanceHome.variaveisDocumento[id].hasAssinatura()}">
         <a:ajax
           event="change"

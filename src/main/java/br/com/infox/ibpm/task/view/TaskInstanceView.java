@@ -10,7 +10,6 @@ import java.util.Map;
 
 import javax.faces.model.SelectItem;
 
-import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -27,9 +26,10 @@ import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.variable.FragmentConfiguration;
 import br.com.infox.ibpm.variable.FragmentConfigurationCollector;
+import br.com.infox.ibpm.variable.VariableDominioEnumerationHandler;
+import br.com.infox.ibpm.variable.dao.DominioVariavelTarefaSearch;
 import br.com.infox.ibpm.variable.dao.ListaDadosSqlDAO;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
-import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
@@ -85,8 +85,8 @@ public class TaskInstanceView implements Serializable {
                 final boolean isWritable = var.isWritable();
                 final boolean isReadable = var.isReadable();
                 if (isReadable && !isWritable) {
-                    String[] tokens = var.getMappedName().split(":");
-                    VariableType type = VariableType.valueOf(tokens[0]);
+                	String[] tokens = var.getMappedName().split(":");
+                    VariableType type = VariableType.valueOf(var.getType());
                     if (VariableType.TASK_PAGE.equals(type)){
                         continue;
                     }
@@ -123,9 +123,8 @@ public class TaskInstanceView implements Serializable {
                         {
                             ff.setType(type.name());
                             ff.setValue(value);
-                            DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
-                            Integer id = Integer.valueOf(tokens[2]);
-                            DominioVariavelTarefa dominio = dominioVariavelTarefaManager.find(id);
+                            DominioVariavelTarefaSearch dominioVariavelTarefaSearch = BeanManager.INSTANCE.getReference(DominioVariavelTarefaSearch.class);
+                            DominioVariavelTarefa dominio = dominioVariavelTarefaSearch.findByCodigo(VariableDominioEnumerationHandler.fromJson(var.getConfiguration()).getCodigoDominio());
 
                             List<SelectItem> selectItens = new ArrayList<>();
                             if (dominio.isDominioSqlQuery()){

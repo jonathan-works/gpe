@@ -1,6 +1,5 @@
 package br.com.infox.epp.documento.facade;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -14,6 +13,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.documento.ClassificacaoDocumentoSearch;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
@@ -31,6 +31,8 @@ public class ClassificacaoDocumentoFacade {
 
     @Inject
     private ClassificacaoDocumentoManager classificacaoDocumentoManager;
+    @Inject
+    private ClassificacaoDocumentoSearch classificacaoDocumentoSearch;
 
     public TipoDocumentoEnum[] getTipoDocumentoEnumValues() {
         return TipoDocumentoEnum.values();
@@ -48,16 +50,6 @@ public class ClassificacaoDocumentoFacade {
         return TipoAssinaturaEnum.values();
     }
 
-    public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo, String nomeVariavel, Integer idFluxo) {
-    	if (nomeVariavel != null) {//FIXME isso aqui tem que pegar da variavel, talvez passar somente o nome não seja mais ideal
-	        List<ClassificacaoDocumento> classificacoes = new ArrayList<ClassificacaoDocumento>();//variavelClassificacaoDocumentoManager.listClassificacoesPublicadasDaVariavel(nomeVariavel, idFluxo);
-	        if (!classificacoes.isEmpty()) {
-	            return classificacoes;
-	        }
-    	}
-        return getUseableClassificacaoDocumento(isModelo);
-    }
-    
     public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo) {
         return classificacaoDocumentoManager.getUseableClassificacaoDocumento(isModelo, Authenticator.getPapelAtual());
     }
@@ -69,5 +61,16 @@ public class ClassificacaoDocumentoFacade {
     public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(TipoDocumentoEnum tipoDocumento){
         return classificacaoDocumentoManager.getClassificacoesDocumentoCruds(tipoDocumento);
     }
+    
+    public List<ClassificacaoDocumento> getUseableClassificacaoDocumentoVariavel(List<String> codigos, boolean isModelo) {
+		List<ClassificacaoDocumento> classificacoes = null;
+		if (codigos != null && !codigos.isEmpty()) {
+			classificacoes = classificacaoDocumentoSearch.findByListCodigos(codigos);
+		}
+		if (classificacoes == null || classificacoes.isEmpty()) {
+			classificacoes = getUseableClassificacaoDocumento(isModelo);
+		}
+		return classificacoes;
+	}
     
 }

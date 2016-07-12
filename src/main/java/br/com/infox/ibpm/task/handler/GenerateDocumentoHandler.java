@@ -86,6 +86,10 @@ public class GenerateDocumentoHandler implements ActionHandler, CustomAction {
 		}
 	}
 	
+	public GenerateDocumentoConfiguration getConfiguration() {
+		return this.configuration;
+	}
+	
 	public static class GenerateDocumentoConfiguration {
 		private String codigoModeloDocumento;
 		private String codigoClassificacaoDocumento;

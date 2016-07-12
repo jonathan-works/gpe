@@ -33,25 +33,23 @@ public class VariableEditorModeloHandler {
     private void carregarModeloList() {
     	modeloDocumentoList = new ArrayList<>();
     	if (!StringUtil.isEmpty(this.variableAccess.getConfiguration())) {
-    		EditorConfig configuracoes = fromJson(this.variableAccess.getConfiguration());
+    		FileConfig configuracoes = fromJson(this.variableAccess.getConfiguration());
     		if (configuracoes.getCodigosModeloDocumento() != null && !configuracoes.getCodigosModeloDocumento().isEmpty()) {
 	    		ModeloDocumentoSearch modeloDocumentoSearch = BeanManager.INSTANCE.getReference(ModeloDocumentoSearch.class);
-	    		for (String codigoModelo : configuracoes.getCodigosModeloDocumento()) {
-	    			modeloDocumentoList.add(modeloDocumentoSearch.getModeloDocumentoByCodigo(codigoModelo));
-	    		}
+	    		modeloDocumentoList.addAll(modeloDocumentoSearch.getModeloDocumentoListByListCodigos(configuracoes.getCodigosModeloDocumento()));
     		}
     	}
     }
     
     public void updateModelo() {
-		EditorConfig configuration = null;
+		FileConfig configuration = null;
 		if (!StringUtil.isEmpty(this.variableAccess.getConfiguration())) {
 			configuration = fromJson(this.variableAccess.getConfiguration());
 		} 
 		
 		if (!getModeloDocumentoList().isEmpty()) {
 			if (configuration ==  null) {
-				configuration = new EditorConfig();
+				configuration = new FileConfig();
 			}
 			configuration.setCodigosModeloDocumento(new ArrayList<String>());
 			for (ModeloDocumento modelo : getModeloDocumentoList()) {
@@ -103,15 +101,15 @@ public class VariableEditorModeloHandler {
         return modeloDocumentoList;
     }
 	
-	public static EditorConfig fromJson(String configuration) {
-		return new Gson().fromJson(configuration, EditorConfig.class);
+	public static FileConfig fromJson(String configuration) {
+		return new Gson().fromJson(configuration, FileConfig.class);
 	}
 	
-	public static String toJson(EditorConfig configuration) {
-		return new Gson().toJson(configuration, EditorConfig.class);
+	public static String toJson(FileConfig configuration) {
+		return new Gson().toJson(configuration, FileConfig.class);
 	}
 	
-	public static class EditorConfig {
+	public static class FileConfig {
 		private List<String> codigosModeloDocumento;
 		private List<String> codigosClassificacaoDocumento;
 

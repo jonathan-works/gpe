@@ -76,5 +76,14 @@ public class ClassificacaoDocumentoSearch extends PersistenceController {
 		cq.where(from.get(ClassificacaoDocumento_.codigoDocumento).in(codigosClassificacoesDocumento));
 		return getEntityManager().createQuery(cq).getResultList();
 	}
+	
+	public Boolean existeClassificacaoByCodigo(String codigo) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+		Root<ClassificacaoDocumento> from = cq.from(ClassificacaoDocumento.class);
+		cq.where(cb.equal(from.get(ClassificacaoDocumento_.codigoDocumento), cb.literal(codigo)));
+		cq.select(cb.count(from));
+		return getEntityManager().createQuery(cq).getSingleResult() > 0;
+	}
 
 }

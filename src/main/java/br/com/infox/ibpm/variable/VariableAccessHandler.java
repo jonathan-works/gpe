@@ -397,7 +397,6 @@ public class VariableAccessHandler implements Serializable {
         v.setCurrentVariable(getVariableAccess());
         getDataHandler().init(getVariableAccess());
         getDominioHandler().init(getVariableAccess());
-        //TODO aqui tem que limpar tudo que é específico, toda vez que mudar o tipo da variável
     }
 
     public FragmentConfiguration getFragmentConfiguration() {
