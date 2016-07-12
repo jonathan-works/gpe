@@ -5,7 +5,6 @@ import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.SecureRandom;
@@ -16,7 +15,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.crypto.Cipher;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -30,13 +28,13 @@ import br.com.infox.jwt.encryption.Algorithm;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-public class Jwt implements JWTBuilder {
+class JWTBuilderImpl implements JWTBuilder {
 
     private byte[] privateKey;
     private Map<JWTClaim, Object> claims;
     private Algorithm algorithm;
 
-    private Jwt() {
+    JWTBuilderImpl() {
         claims = new HashMap<>();
         try {
             KeyPair keyPair = KeyPairGenerator.getInstance("RSA").generateKeyPair();
@@ -47,9 +45,8 @@ public class Jwt implements JWTBuilder {
             setPrivateKey(privateKey);
         }
     }
-
-    @Override
-    public String build() {
+    
+    String buildWithJwtBuilder(){
         io.jsonwebtoken.JwtBuilder builder = Jwts.builder();
         builder.setHeaderParam("typ","JWT");
         for (Entry<JWTClaim, Object> claim : claims.entrySet()) {
@@ -58,6 +55,7 @@ public class Jwt implements JWTBuilder {
             jwtClaim.validator().validate(value);
             builder = builder.claim(jwtClaim.getClaim(), value);
         }
+        
         switch (algorithm) {
         case HS384:
             return builder.signWith(SignatureAlgorithm.HS384, this.privateKey).compact();
@@ -74,6 +72,14 @@ public class Jwt implements JWTBuilder {
         }
     }
 
+    @Override
+    public String build(){
+        String header = encodedHeader();
+        String payload = encodedPayload();
+        String signature = encodedSignature(String.format("%s.%s", header,payload));
+        return String.format("%s.%s.%s", header,payload,signature);
+    }
+
     private PrivateKey getPrivateKey(){
         try {
             PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(this.privateKey);
@@ -84,10 +90,6 @@ public class Jwt implements JWTBuilder {
         }
     }
     
-    public static JWTBuilder builder() {
-        return new Jwt();
-    }
-
     @Override
     public JWTBuilder setPrivateKey(String privateKey) {
         this.privateKey = privateKey.getBytes(StandardCharsets.UTF_8);
@@ -118,18 +120,7 @@ public class Jwt implements JWTBuilder {
         return this;
     }
 
-    public static JWTParser parser(){
-        return new JwtParserImpl();
-    }
-
-}
-
-class JWTSigner {
-    byte[] privateKey;
-    Map<JWTClaim, Object> claims;
-    Algorithm algorithm;
-    
-    String encodedPayload() {
+    private String encodedPayload() {
         JsonObject payload = new JsonObject();
         Gson gson = new Gson();
         for (Entry<JWTClaim, Object> entry : claims.entrySet()) {
@@ -142,7 +133,7 @@ class JWTSigner {
         return Base64.encodeBase64URLSafeString(new Gson().toJson(payload).getBytes(StandardCharsets.UTF_8));
     }
 
-    String encodedHeader() {
+    private String encodedHeader() {
         if (algorithm == null) { // default the algorithm if not specified
             algorithm = Algorithm.HS256;
         }
@@ -153,7 +144,7 @@ class JWTSigner {
         return Base64.encodeBase64URLSafeString(new Gson().toJson(header).getBytes(StandardCharsets.UTF_8));
     }
 
-    String encodedSignature(String unsignedJWT) {
+    private String encodedSignature(String unsignedJWT) {
         byte[] signature = null;
         switch (algorithm) {
         case HS256:
@@ -172,7 +163,7 @@ class JWTSigner {
         return Base64.encodeBase64URLSafeString(signature);
     }
 
-    static byte[] signRSA(Algorithm algorithm, String msg, byte[] secretKey) {
+    private static byte[] signRSA(Algorithm algorithm, String msg, byte[] secretKey) {
         try {
             Signature signature = Signature.getInstance(algorithm.getValue());
             PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(secretKey);
@@ -182,19 +173,13 @@ class JWTSigner {
             signature.initSign(pvtKey);
             byte[] bytesToSign = msg.getBytes(StandardCharsets.UTF_8);
             signature.update(bytesToSign);
-
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] digested = digest.digest(bytesToSign);
-
-            Cipher cipher = Cipher.getInstance("RSA");
-            cipher.init(Cipher.ENCRYPT_MODE, pvtKey);
-            return cipher.doFinal(digested);
+            return signature.sign();
         } catch (Exception e) {
             throw new IllegalArgumentException("Unsupported arguments", e);
         }
     }
 
-    static byte[] signHmac(Algorithm algorithm, String msg, byte[] secret) {
+    private static byte[] signHmac(Algorithm algorithm, String msg, byte[] secret) {
         try {
             Mac mac = Mac.getInstance(algorithm.getValue());
             mac.init(new SecretKeySpec(secret, algorithm.getValue()));
@@ -203,5 +188,5 @@ class JWTSigner {
             throw new IllegalArgumentException("Unsupported arguments", e);
         }
     }
-
+    
 }
