@@ -492,7 +492,9 @@ public class JpdlXmlWriter {
     			actionDelegation.getConfiguration() != null) { 
 	    	addAttribute(actionElement, "name", action.getName());
 			addAttribute(actionElement, "class", actionDelegation.getClassName());
-	    	addAttribute(actionElement, "async", "true");
+	    	if (action.isAsyncExclusive() || action.isAsync()) {
+	    		addAttribute(actionElement, "async", "true");
+	    	}
 	    	addAttribute(actionElement, "config-type", "constructor");
 
 	    	String configuration = actionDelegation.getConfiguration();
