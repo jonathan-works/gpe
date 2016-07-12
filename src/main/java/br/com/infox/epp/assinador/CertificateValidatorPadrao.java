@@ -1,7 +1,6 @@
 package br.com.infox.epp.assinador;
 
 import java.security.InvalidAlgorithmParameterException;
-import java.security.Security;
 import java.security.cert.CertPath;
 import java.security.cert.CertPathValidator;
 import java.security.cert.CertPathValidatorException;

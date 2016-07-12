@@ -21,7 +21,6 @@ import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.assinador.AssinadorGroupService.StatusToken;
 import br.com.infox.epp.assinador.AssinadorService;
 import br.com.infox.epp.assinador.DadosAssinatura;
 import br.com.infox.epp.assinador.assinavel.AssinavelGenericoProvider;
@@ -125,7 +124,7 @@ public class DarCienciaAction implements Serializable {
 	public void assinarDarCiencia(){
 		try {
 			validarCiencia();
-			List<DadosAssinatura> dadosAssinaturaList = getDadosAssinatura(tokenAssinaturaDocumentoCiencia);
+			List<DadosAssinatura> dadosAssinaturaList = assinadorService.getDadosAssinatura(tokenAssinaturaDocumentoCiencia);
 			DadosAssinatura dadosAssinatura = dadosAssinaturaList.get(0);
 			validaDocumentoAssinatura(dadosAssinaturaList);
 			Documento documentoCiencia = criarDocumentoCiencia();
@@ -147,16 +146,6 @@ public class DarCienciaAction implements Serializable {
 				dadosAssinatura, Authenticator.getUsuarioPerfilAtual());
 	}
 	
-	protected List<DadosAssinatura> getDadosAssinatura(String token) throws CertificadoException {
-		StatusToken status = assinadorService.getStatus(token);
-	    if (status == StatusToken.EXPIRADO) {
-	        throw new CertificadoException(infoxMessages.get("assinatura.error.hasExpired"));
-	    } else if (StatusToken.ERRO.equals(status) || StatusToken.DESCONHECIDO.equals(status)) {
-	        throw new CertificadoException("Erro de certificado " + token);
-	    }
-        return assinadorService.getDadosAssinatura(token);
-    }
-		    
 	protected Documento criarDocumentoCiencia() {
 		Documento documento = null;
 		if (isEditorCiencia()) {	

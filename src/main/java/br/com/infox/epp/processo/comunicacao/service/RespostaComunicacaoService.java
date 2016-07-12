@@ -116,7 +116,7 @@ public class RespostaComunicacaoService {
 			throws DAOException, CertificadoException, AssinaturaException{
 		documentoManager.gravarDocumentoNoProcesso(comunicacao.getProcessoRoot(), documento);
 		DadosAssinatura dadosAssinatura = dadosAssinaturaList.get(0);
-		assinaturaDocumentoService.assinarDocumento(documento.getDocumentoBin(), usuarioPerfil, dadosAssinatura.getCertChainBase64(), dadosAssinatura.getAssinaturaBase64(), TipoAssinatura.PKCS7);
+		assinaturaDocumentoService.assinarDocumento(documento.getDocumentoBin(), usuarioPerfil, dadosAssinatura.getCertChainBase64(), dadosAssinatura.getAssinaturaBase64(), TipoAssinatura.PKCS7, dadosAssinatura.getSignedData());
 		enviarPedidoProrrogacaoDocumentoGravado(documento, comunicacao);
 	}
 	

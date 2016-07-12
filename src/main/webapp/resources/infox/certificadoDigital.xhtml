@@ -50,7 +50,7 @@
                     location.href='#{assinadorController.JNLPUrl}?token='+token;
                     var intervalId = setInterval(function() {
                       $.get('#{pathResolver.restBaseUrl}' + '/tokenAssinatura/' + token + '/status', function(status) {
-                          if (status === 'SUCESSO' || status === 'ERRO') {  
+                          if (status !== 'AGUARDANDO_ASSINATURA') {  
                               clearInterval(intervalId);
                               executarAcaoAssinatura();
                           }

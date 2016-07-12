@@ -12,16 +12,13 @@ import java.util.Map;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import org.apache.commons.codec.binary.Base64;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.util.Strings;
 
-import br.com.infox.certificado.Certificado;
-import br.com.infox.certificado.CertificadoDadosPessoaFisica;
-import br.com.infox.certificado.CertificadoFactory;
 import br.com.infox.certificado.ValidaDocumento;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.manager.GenericManager;
@@ -31,14 +28,13 @@ import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.CertificateManager;
+import br.com.infox.epp.assinador.ValidadorAssinatura;
+import br.com.infox.epp.assinador.ValidadorUsuarioCertificado;
 import br.com.infox.epp.certificado.entity.TipoAssinatura;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
-import br.com.infox.epp.pessoa.entity.PessoaFisica;
-import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
-import br.com.infox.epp.processo.documento.assinatura.AssinaturaException.Motivo;
 import br.com.infox.epp.processo.documento.assinatura.entity.RegistroAssinaturaSuficiente;
 import br.com.infox.epp.processo.documento.dao.AssinaturaDocumentoDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -71,10 +67,12 @@ public class AssinaturaDocumentoService {
     @In
     private AssinaturaDocumentoListenerService assinaturaDocumentoListenerService;
     @Inject
-    private PessoaFisicaManager pessoaFisicaManager;
-    @Inject
     private AssinaturaDocumentoDAO assinaturaDocumentoDAO;
-
+    @Inject
+    private ValidadorAssinatura validadorAssinatura;
+    @Inject
+    private ValidadorUsuarioCertificado validadorUsuarioCertificado;
+    
     public Boolean isDocumentoAssinado(final Documento documento) {
         final DocumentoBin documentoBin = documento.getDocumentoBin();
         return documentoBin != null
@@ -227,42 +225,9 @@ public class AssinaturaDocumentoService {
 
     public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded,
             UsuarioLogin usuarioLogado) throws CertificadoException, AssinaturaException {
-        if (Strings.isEmpty(certChainBase64Encoded)) {
-            throw new AssinaturaException(Motivo.SEM_CERTIFICADO);
-        }
-        if (usuarioLogado.getPessoaFisica() == null) {
-            throw new AssinaturaException(Motivo.USUARIO_SEM_PESSOA_FISICA);
-        }
-        if (Strings.isEmpty(usuarioLogado.getPessoaFisica().getCertChain())) {
-            final Certificado certificado = CertificadoFactory.createCertificado(certChainBase64Encoded); 
-            if (!(certificado instanceof CertificadoDadosPessoaFisica)) {
-                throw new CertificadoException("Este certificado não é de pessoa física");
-            }
-            final String cpfCertificado = ((CertificadoDadosPessoaFisica) certificado).getCPF();
-            if (cpfCertificado.equals(usuarioLogado.getPessoaFisica().getCpf()
-                    .replace(".", "").replace("-", ""))) {
-                usuarioLogado.getPessoaFisica().setCertChain(certChainBase64Encoded);
-            } else {
-                throw new AssinaturaException(Motivo.CADASTRO_USUARIO_NAO_ASSINADO);
-            }
-        }
-        PessoaFisica pessoaFisicaCertificado = getPessoaFisicaFromCertChain(certChainBase64Encoded);
-        if (!usuarioLogado.getPessoaFisica().equals(pessoaFisicaCertificado)) {
-            throw new AssinaturaException(Motivo.CPF_CERTIFICADO_DIFERENTE_USUARIO);
-        }
-        if (!pessoaFisicaCertificado.checkCertChain(certChainBase64Encoded)) {
-            throw new AssinaturaException(Motivo.CERTIFICADO_USUARIO_DIFERENTE_CADASTRO);
-        }
+    	validadorUsuarioCertificado.verificaCertificadoUsuarioLogado(certChainBase64Encoded, usuarioLogado);
     }
     
-    private PessoaFisica getPessoaFisicaFromCertChain(String certChain) throws CertificadoException {
-        Certificado c = CertificadoFactory.createCertificado(certChain);
-        String cpf = new StringBuilder(((CertificadoDadosPessoaFisica) c).getCPF()).insert(9, '-').insert(6, '.').insert(3, '.').toString();
-        if (cpf != null) {
-            return pessoaFisicaManager.getByCpf(cpf);
-        }
-        return null;
-    }
     
     public void validarCertificado(String certChain, UsuarioLogin usuario) throws CertificadoException, AssinaturaException {
 		verificaCertificadoUsuarioLogado(certChain, usuario);
@@ -274,10 +239,9 @@ public class AssinaturaDocumentoService {
     }
 
 	public void assinarDocumento(DocumentoBin documentoBin, UsuarioPerfil usuarioPerfilAtual, final String certChain,
-			String signature, TipoAssinatura tipoAssinatura) throws CertificadoException, AssinaturaException, DAOException {
+			String signature, TipoAssinatura tipoAssinatura, byte[] signedData) throws CertificadoException, AssinaturaException, DAOException {
 		UsuarioLogin usuario = usuarioPerfilAtual.getUsuarioLogin();
-		verificaCertificadoUsuarioLogado(certChain, usuario);
-		checkValidadeCertificado(certChain);
+		validadorAssinatura.validarAssinatura(signedData, Base64.decodeBase64(signature), usuario);
 
 		AssinaturaDocumento assinaturaDocumento = new AssinaturaDocumento(documentoBin, usuarioPerfilAtual, certChain, signature, tipoAssinatura);
 		List<Documento> documentosNaoSuficientementeAssinados = documentoBinManager.getDocumentosNaoSuficientementeAssinados(documentoBin);
@@ -304,16 +268,16 @@ public class AssinaturaDocumentoService {
 
     public void assinarDocumento(final Documento documento,
             final UsuarioPerfil perfilAtual, final String certChain,
-            final String signature) throws CertificadoException,
+            final String signature, byte[] signedData) throws CertificadoException,
             AssinaturaException, DAOException {
-        assinarDocumento(documento.getDocumentoBin(), perfilAtual, certChain, signature, TipoAssinatura.PKCS7);
+        assinarDocumento(documento.getDocumentoBin(), perfilAtual, certChain, signature, TipoAssinatura.PKCS7, signedData);
     }
     
     public void assinarGravarDocumento(Documento documento,
             final UsuarioPerfil perfilAtual, final String certChain,
-            final String signature) throws DAOException, CertificadoException, AssinaturaException {
+            final String signature, byte[] signedData) throws DAOException, CertificadoException, AssinaturaException {
     	documento = documentoManager.gravarDocumentoNoProcesso(documento);
-    	assinarDocumento(documento.getDocumentoBin(), perfilAtual, certChain, signature, TipoAssinatura.PKCS7);
+    	assinarDocumento(documento.getDocumentoBin(), perfilAtual, certChain, signature, TipoAssinatura.PKCS7, signedData);
     }
 
     public boolean isDocumentoAssinado(Integer idDocumento, PerfilTemplate perfilTemplate) {

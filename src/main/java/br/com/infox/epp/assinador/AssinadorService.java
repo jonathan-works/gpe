@@ -1,22 +1,17 @@
 package br.com.infox.epp.assinador;
 
 import java.io.Serializable;
-import java.security.cert.CertPathValidatorException;
-import java.security.cert.CertPathValidatorException.BasicReason;
-import java.security.cert.CertPathValidatorException.Reason;
-import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.validation.ValidationException;
 
 import br.com.infox.certificado.CertificadoGenerico;
 import br.com.infox.certificado.exception.CertificadoException;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
@@ -37,7 +32,6 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
-import br.com.infox.epp.system.util.ParametroUtil;
 
 public class AssinadorService implements Serializable {
 
@@ -62,10 +56,12 @@ public class AssinadorService implements Serializable {
 	@Inject
 	private AssinaturaDocumentoService assinaturaDocumentoService;
 	@Inject
-	private CertificateValidator certificateValidator;
+	private InfoxMessages infoxMessages;
 
+	
+	
 	@Inject
-	private Logger logger;
+	private ValidadorAssinatura validadorAssinatura;
 
 	public String criarListaAssinaveis(AssinavelProvider assinavelProvider) {
 		return groupService.createNewGroupWithAssinavelProvider(assinavelProvider);
@@ -121,8 +117,14 @@ public class AssinadorService implements Serializable {
 		groupService.atualizarAssinaturaTemporaria(tokenGrupo, uuidAssinavel, dadosAssinaturaLegada);
 	}
 
-	public List<DadosAssinatura> getDadosAssinatura(String tokenGrupo) {
-		return groupService.getDadosAssinatura(tokenGrupo);
+	public List<DadosAssinatura> getDadosAssinatura(String tokenGrupo) throws AssinaturaException {
+		List<DadosAssinatura> retorno = groupService.getDadosAssinatura(tokenGrupo);
+		
+		for(DadosAssinatura dados : retorno) {
+			validarStatus(dados);			
+		}
+		
+		return retorno;
 	}
 
 	public void assinar(String tokenGrupo, UsuarioPerfil usuarioPerfil) throws AssinaturaException {
@@ -137,13 +139,15 @@ public class AssinadorService implements Serializable {
 		assinar(dadosAssinatura, usuarioPerfil);
 	}
 
-	protected void assinar(DadosAssinatura dadosAssinatura, UsuarioPerfil usuarioPerfil) throws AssinaturaException {
-		validarAssinatura(dadosAssinatura, usuarioPerfil.getUsuarioLogin());
+	public void assinar(DadosAssinatura dadosAssinatura, UsuarioPerfil usuarioPerfil) throws AssinaturaException {
 		Integer idDocumentoBin = dadosAssinatura.getIdDocumentoBin();
 		if (idDocumentoBin != null) {
 			DocumentoBin documentoBin = documentoBinManager.find(idDocumentoBin);
 			assinarDocumento(documentoBin, usuarioPerfil.getPerfilTemplate().getCodigo(),
-					usuarioPerfil.getLocalizacao().getCodigo(), dadosAssinatura.getAssinatura());
+					usuarioPerfil.getLocalizacao().getCodigo(), dadosAssinatura.getAssinatura(), dadosAssinatura.getSignedData());
+		}
+		else {
+			validarAssinatura(dadosAssinatura, usuarioPerfil.getUsuarioLogin());			
 		}
 	}
 
@@ -154,17 +158,25 @@ public class AssinadorService implements Serializable {
 		}
 	}
 
-	public void validarAssinatura(DadosAssinatura dadosAssinatura, UsuarioLogin usuarioLogin)
-			throws AssinaturaException {
+	private void validarStatus(DadosAssinatura dadosAssinatura) throws AssinaturaException {
 		if (dadosAssinatura.getStatus() != StatusToken.SUCESSO) {
 			if (dadosAssinatura.getMensagemErro() != null) {
 				throw new AssinaturaException(dadosAssinatura.getMensagemErro());
-			} else {
+			} 
+			else if (dadosAssinatura.getStatus() == StatusToken.EXPIRADO) {
+		        throw new AssinaturaException(infoxMessages.get("assinatura.error.hasExpired"));
+		    }
+			else {
 				throw new AssinaturaException(
 						"Status da assinatura inválido: " + dadosAssinatura.getStatus().toString());
 			}
-		}
-		validarAssinatura(dadosAssinatura.getSignedData(), dadosAssinatura.getAssinatura(), usuarioLogin);
+		}		
+	}
+	
+	public void validarAssinatura(DadosAssinatura dadosAssinatura, UsuarioLogin usuarioLogin)
+			throws AssinaturaException {
+		validarStatus(dadosAssinatura);
+		validadorAssinatura.validarAssinatura(dadosAssinatura.getSignedData(), dadosAssinatura.getAssinatura(), usuarioLogin);
 	}
 
 	public boolean validarDadosAssinadosByText(List<DadosAssinatura> dadosAssinatura, List<String> textList) {
@@ -205,45 +217,9 @@ public class AssinadorService implements Serializable {
 		return true;
 	}
 
-	public void validarAssinatura(byte[] signedData, byte[] signature, UsuarioLogin usuario)
-			throws AssinaturaException {
-		DadosAssinaturaLegada dadosAssinaturaLegada = getDadosAssinaturaLegada(signature);
-		String certChainBase64 = dadosAssinaturaLegada.getCertChainBase64();
-		try {
-			assinaturaDocumentoService.verificaCertificadoUsuarioLogado(certChainBase64, usuario);
-			validarCertificado(dadosAssinaturaLegada.getCertChain());
-		} catch (CertificadoException e) {
-			throw new AssinaturaException(e);
-		}
-	}
-	
 	public void validarAssinaturas(List<DadosAssinatura> dadosAssinaturaList, UsuarioLogin usuarioLogin) throws AssinaturaException {
 		for(DadosAssinatura dadosAssinatura : dadosAssinaturaList) {
 			validarAssinatura(dadosAssinatura, usuarioLogin);
-		}
-	}
-
-	public void validarCertificado(List<X509Certificate> x509Certificates) throws CertificadoException {
-		try {
-			certificateValidator.validarCertificado(x509Certificates);
-		} catch (CertPathValidatorException e) {
-			Reason reason = e.getReason();
-			if (reason == BasicReason.EXPIRED) {
-				logger.log(Level.SEVERE, "Certificado expirado", e);
-				if (ParametroUtil.isProducao()) {
-					throw new CertificadoException("Certificado expirado. ");
-				}
-			} else if (reason == BasicReason.NOT_YET_VALID) {
-				logger.log(Level.SEVERE, "Certificado ainda não válido", e);
-				if (ParametroUtil.isProducao()) {
-					throw new CertificadoException("O certificado ainda não está válido. ");
-				}
-			} else {
-				logger.log(Level.SEVERE, "Erro ao verificar a validade do certificado", e);
-				if (ParametroUtil.isProducao()) {
-					throw new CertificadoException(e.getMessage());
-				}
-			}
 		}
 	}
 
@@ -251,22 +227,22 @@ public class AssinadorService implements Serializable {
 		groupService.erroProcessamento(token, uuidAssinavel, codigo, mensagem);
 	}
 
-	public void assinarDocumento(UUID uuidDocumento, byte[] signature) {
+	public void assinarDocumento(UUID uuidDocumento, byte[] signature, byte[] signedData) {
 		UsuarioPerfil usuarioLogado = Authenticator.getUsuarioPerfilAtual();
 		assinarDocumento(uuidDocumento, usuarioLogado.getPerfilTemplate().getCodigo(),
-				usuarioLogado.getLocalizacao().getCodigo(), signature);
+				usuarioLogado.getLocalizacao().getCodigo(), signature, signedData);
 	}
 
-	public void assinarDocumento(UUID uuidDocumento, String codigoPerfil, String codigoLocalizacao, byte[] signature) {
+	public void assinarDocumento(UUID uuidDocumento, String codigoPerfil, String codigoLocalizacao, byte[] signature, byte[] signedData) {
 		DocumentoBin documentoBin = documentoBinManager.getByUUID(uuidDocumento);
 		if (documentoBin == null) {
 			throw new ValidationException("UUID inválido");
 		}
-		assinarDocumento(documentoBin, codigoPerfil, codigoLocalizacao, signature);
+		assinarDocumento(documentoBin, codigoPerfil, codigoLocalizacao, signature, signedData);
 	}
 
 	public void assinarDocumento(DocumentoBin documentoBin, String codigoPerfil, String codigoLocalizacao,
-			byte[] signature) {
+			byte[] signature, byte[] signedData) {
 		DadosAssinaturaLegada dadosAssinaturaLegada = cmsAdapter.convert(signature);
 		String certChainBase64 = dadosAssinaturaLegada.getCertChainBase64();
 		String signatureBase64 = dadosAssinaturaLegada.getSignature();
@@ -275,7 +251,7 @@ public class AssinadorService implements Serializable {
 
 		try {
 			assinaturaDocumentoService.assinarDocumento(documentoBin, usuarioPerfil, certChainBase64, signatureBase64,
-					TipoAssinatura.PKCS7);
+					TipoAssinatura.PKCS7, signedData);
 		} catch (DAOException | CertificadoException | AssinaturaException e) {
 			throw new RuntimeException("Erro ao assinar documento", e);
 		}
@@ -299,6 +275,17 @@ public class AssinadorService implements Serializable {
 
 	public void validarToken(String token) {
 		groupService.validarToken(token);
+	}
+	
+	/**
+	 * Valida e assina todos os assináveis agrupados por um token
+	 * @param tokenGrupo
+	 */
+	public void assinarToken(String tokenGrupo, UsuarioPerfil usuarioPerfil) throws AssinaturaException {
+		List<DadosAssinatura> dadosAssinaturaList = getDadosAssinatura(tokenGrupo);
+		for(DadosAssinatura dadosAssinatura : dadosAssinaturaList) {
+			assinar(dadosAssinatura, usuarioPerfil);
+		}
 	}
 
 }

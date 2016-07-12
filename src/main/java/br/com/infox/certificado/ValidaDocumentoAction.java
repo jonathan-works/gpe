@@ -17,20 +17,18 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.jboss.seam.international.StatusMessage.Severity;
 
-import br.com.infox.certificado.bean.CertificateSignatureBean;
-import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.certificado.exception.ValidaDocumentoException;
 import br.com.infox.core.action.ActionMessagesService;
-import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.assinador.AssinadorService;
+import br.com.infox.epp.assinador.DadosAssinatura;
 import br.com.infox.epp.cdi.seam.ContextDependency;
-import br.com.infox.epp.certificado.entity.TipoAssinatura;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
@@ -75,7 +73,7 @@ public class ValidaDocumentoAction implements Serializable {
 	@Inject
 	private AssinaturaDocumentoManager assinaturaDocumentoManager;
 	@Inject
-	private CertificateSignatures certificateSignatures;
+	private AssinadorService assinadorService;
 	@Inject
 	private ProcessoAnaliseDocumentoService processoAnaliseDocumentoService;
 	@Inject
@@ -141,18 +139,18 @@ public class ValidaDocumentoAction implements Serializable {
 	public void assinaDocumento(UsuarioPerfil usuarioPerfil) {
 		if (this.documentoBin != null && usuarioPerfil.getAtivo() && !isAssinadoPor(usuarioPerfil)) {
 			try {
-				CertificateSignatureBundleBean bundle = getSignature();
-				for (CertificateSignatureBean certificateSignatureBean : bundle.getSignatureBeanList()) {
-					if (certificateSignatureBean.getDocumentUuid().equals(documentoBin.getUuid().toString())) {
-						assinaturaDocumentoService.assinarDocumento(documentoBin, usuarioPerfil, certificateSignatureBean.getCertChain(),
-								certificateSignatureBean.getSignature(), TipoAssinatura.PKCS7);
+				List<DadosAssinatura> dadosAssinaturaList = assinadorService.getDadosAssinatura(token);
+				for (DadosAssinatura dadosAssinatura : dadosAssinaturaList) {
+					Integer idDocumentoBin = dadosAssinatura.getIdDocumentoBin();
+					if (idDocumentoBin != null && idDocumentoBin.equals(documentoBin.getId())) {
+						assinadorService.assinar(dadosAssinatura, usuarioPerfil);
 						setPodeIniciarFluxoAnaliseDocumentos(assinaturaDocumentoService.isDocumentoTotalmenteAssinado(getDocumento()));
 						break;
 					}
 				}
 				listAssinaturaDocumento = null;
 				setPodeIniciarFluxoAnaliseDocumentos(validaPodeIniciarFluxoAnalise());
-			} catch (CertificadoException | AssinaturaException | DAOException e) {
+			} catch (AssinaturaException | DAOException e) {
 				LOG.error("assinaDocumento(String, String, UsuarioPerfil)", e);
 				FacesMessages.instance().add(Severity.ERROR, e.getMessage());
 				throw new AbortProcessingException();
@@ -231,22 +229,6 @@ public class ValidaDocumentoAction implements Serializable {
 
 	public void setToken(String token) {
 		this.token = token;
-	}
-
-	private CertificateSignatureBundleBean getSignature() throws CertificadoException {
-		CertificateSignatureBundleBean bundle = certificateSignatures.get(getToken());
-		if (bundle == null) {
-			throw new CertificadoException(InfoxMessages.getInstance().get("assinatura.error.hashExpired"));
-		} else {
-			switch (bundle.getStatus()) {
-			case ERROR:
-			case UNKNOWN:
-				throw new CertificadoException(InfoxMessages.getInstance().get("assinatura.error.unknown"));
-			default:
-				break;
-			}
-		}
-		return bundle;
 	}
 
 	public Integer getIdDocumento() {

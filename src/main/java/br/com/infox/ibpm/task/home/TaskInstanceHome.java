@@ -55,6 +55,8 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.assinador.assinavel.AssinavelDocumentoBinProvider;
+import br.com.infox.epp.assinador.assinavel.TipoSignedData;
 import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
@@ -543,8 +545,11 @@ public class TaskInstanceHome implements Serializable {
 		} else {
 			CertificateSignatureBean signatureBean = certificateSignatureBundle.getSignatureBeanList().get(0);
 			try {
+				DocumentoBin documentoBin = getDocumentoToSign().getDocumentoBin();
+				AssinavelDocumentoBinProvider assinavelDocumentoBinProvider = new AssinavelDocumentoBinProvider(documentoBin);
+				byte[] signedData = assinavelDocumentoBinProvider.getAssinaveis().get(0).dataToSign(TipoSignedData.SHA256);
 				assinaturaDocumentoService.assinarDocumento(getDocumentoToSign(), Authenticator.getUsuarioPerfilAtual(),
-						signatureBean.getCertChain(), signatureBean.getSignature());
+						signatureBean.getCertChain(), signatureBean.getSignature(), signedData);
 				for (String variavel : variaveisDocumento.keySet()) {
 					if (documentoToSign.equals(variaveisDocumento.get(variavel))) {
 						setModeloReadonly(variavel.split("-")[0]);

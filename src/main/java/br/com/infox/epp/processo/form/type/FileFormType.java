@@ -5,14 +5,11 @@ import java.util.List;
 import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.certificado.CertificateSignatures;
-import br.com.infox.certificado.bean.CertificateSignatureBean;
-import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
-import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
-import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.assinador.AssinadorService;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
@@ -81,16 +78,16 @@ public abstract class FileFormType implements FormType {
     }
 
     @ExceptionHandled(value = MethodType.UNSPECIFIED)
-    public void assinar() throws DAOException, CertificadoException, AssinaturaException {
+    public void assinar() throws DAOException, AssinaturaException {
         try {
-            CertificateSignatureBundleBean certificateSignatureBundle = getCertificateSignatures().get(tokenToSign);
-            if (certificateSignatureBundle.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
+        	AssinadorService assinadorService = BeanManager.INSTANCE.getReference(AssinadorService.class);
+        	try {
+        		assinadorService.assinarToken(tokenToSign, Authenticator.getUsuarioPerfilAtual());
+        	}
+        	catch(AssinaturaException e) {
                 FacesMessages.instance().add("Erro ao assinar");
-            } else {
-                CertificateSignatureBean signatureBean = certificateSignatureBundle.getSignatureBeanList().get(0);
-                getAssinaturaDocumentoService().assinarDocumento(documentoToSign, Authenticator.getUsuarioPerfilAtual(),
-                        signatureBean.getCertChain(), signatureBean.getSignature());
-            }
+                throw e;
+        	}
         } finally {
             setDocumentoToSign(null);
             setTokenToSign(null);

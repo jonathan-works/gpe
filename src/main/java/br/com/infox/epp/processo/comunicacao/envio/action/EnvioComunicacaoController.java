@@ -22,11 +22,6 @@ import org.jbpm.graph.exe.Token;
 
 import com.google.common.base.Strings;
 
-import br.com.infox.certificado.CertificateSignatures;
-import br.com.infox.certificado.bean.CertificateSignatureBean;
-import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
-import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
-import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.exception.EppConfigurationException;
 import br.com.infox.core.messages.InfoxMessages;
@@ -39,6 +34,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.PerfilTemplateManager;
+import br.com.infox.epp.assinador.AssinadorService;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.localizacao.LocalizacaoSearch;
@@ -82,7 +78,8 @@ public class EnvioComunicacaoController implements Serializable {
 	private static final String CODIGO_PERFIL_ASSINATURA = "perfilAssinatura";
 	
 	private AssinaturaDocumentoService assinaturaDocumentoService = ComponentUtil.getComponent(AssinaturaDocumentoService.NAME);
-	private CertificateSignatures certificateSignatures = ComponentUtil.getComponent(CertificateSignatures.NAME);
+	@Inject
+	private AssinadorService assinadorService;
 	
 	@Inject
 	private DocumentoComunicacaoAction documentoComunicacaoAction;
@@ -358,8 +355,7 @@ public class EnvioComunicacaoController implements Serializable {
 		try {
 			if (destinatario != null) {
 				if (!isComunicacaoSuficientementeAssinada()) {
-					CertificateSignatureBean signatureBean = getCertificateSignatureBean();
-					assinaturaDocumentoService.assinarDocumento(destinatario.getDocumentoComunicacao(), Authenticator.getUsuarioPerfilAtual(), signatureBean.getCertChain(), signatureBean.getSignature());
+					assinadorService.assinarToken(token, Authenticator.getUsuarioPerfilAtual());
 					clearAssinaturas();
 				}
 				if (isComunicacaoSuficientementeAssinada()) {
@@ -378,9 +374,6 @@ public class EnvioComunicacaoController implements Serializable {
 		} catch (DAOException e) {
 			LOG.error("Erro ao expedir comunicação", e);
 			actionMessagesService.handleDAOException(e);
-		} catch (CertificadoException e) {
-			LOG.error("Erro ao expedir comunicação", e);
-			actionMessagesService.handleException("Erro ao expedir comunicação. " + e.getMessage(), e);
 		} catch (AssinaturaException e) {
 			LOG.error("Erro ao expedir comunicação", e);
 			FacesMessages.instance().add(e.getMessage());
@@ -419,15 +412,6 @@ public class EnvioComunicacaoController implements Serializable {
 		} catch (CloneNotSupportedException e) {
 			FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.erro.recuperaModelo"));
 		}
-	}
-	
-	private CertificateSignatureBean getCertificateSignatureBean() throws DAOException {
-		CertificateSignatureBundleBean certificateSignatureBundleBean = certificateSignatures.get(token);
-		if (certificateSignatureBundleBean.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
-		    throw new DAOException(InfoxMessages.getInstance().get("comunicacao.assinar.erro"));
-		}
-		CertificateSignatureBean signatureBean = certificateSignatureBundleBean.getSignatureBeanList().get(0);
-		return signatureBean;
 	}
 	
 	public List<Localizacao> getLocalizacoesDisponiveisAssinatura(String query) {

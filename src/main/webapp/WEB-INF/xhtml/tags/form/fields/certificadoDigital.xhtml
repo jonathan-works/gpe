@@ -26,7 +26,9 @@
       			<f:setPropertyActionListener
       				value="#{empty textoAssinavelList ? (empty documentoBinList ? assinadorController.criarGrupoAssinatura(assinavelProvider) : assinadorController.criarGrupoAssinaturaWithDocumentoBin(documentoBinList)) : assinadorController.criarGrupoAssinatura(textoAssinavelList)}"
       				target="#{tokenField}" />
+      			<f:setPropertyActionListener value="#{propertyValue}" target="#{propertyTarget}" />      				
       </a:commandButton>
+      
 
       <h:outputScript>
           namespace('infox.CertDig.#{id}', {  

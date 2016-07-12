@@ -49,13 +49,12 @@
                             execute="@this, assinaturaDocumentoDiv#{f.id}"
                             render="assinaturaDocumentoDiv#{f.id}, #{id}EditorDiv, pageBodyDialogMessage, @form"
                             oncomplete="infox.hideLoading();" />
-
-                        <wi:certificadoDigital id="appletAssinatura"
+                        <wi:certificadoDigital id="botaoAssinatura"
                             signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
                             reRender="assinaturaDocumentoDiv#{f.id}, pageBodyDialogMessage"
                             tokenField="#{taskInstanceHome.tokenToSign}" propertyValue="#{f.id}"
                             propertyTarget="#{taskInstanceHome.variavelDocumentoToSign}"
-                            documentoBinList="#{taskInstanceHome.documentoToSign.documentoBin}"
+                            documentoBinList="#{taskInstanceHome.variaveisDocumento[id].documentoBin}"
                             functionPreSign="infox.showLoading();" functionPosSign="assinar();">
                         </wi:certificadoDigital>
 
