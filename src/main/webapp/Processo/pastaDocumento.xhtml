@@ -43,7 +43,7 @@
 						value="#{documentoProcessoAction.documentoFilter.marcadores}" 
 			        	completeMethod="#{documentoProcessoAction.autoCompleteMarcadores}"
 			        	itemLabel="#{item}" itemValue="#{item}" var="item"
-			        	minQueryLength="3" queryDelay="600">
+			        	minQueryLength="3" queryDelay="600" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
 			        	<p:ajax event="itemSelect" update="@this" processo="@this" />
 			        	<p:ajax event="itemUnselect" update="@this" processo="@this" />
 			        </p:autoComplete>

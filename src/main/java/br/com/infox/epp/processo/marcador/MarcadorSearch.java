@@ -138,20 +138,20 @@ public class MarcadorSearch extends PersistenceController {
         return getEntityManager().createQuery(cq).getResultList();
     }
     
-    public List<Marcador> listByEntrega(Long idEntrega) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<String> cq = cb.createQuery(String.class);
-        Root<Documento> documento = cq.from(Documento.class);
-        Join<Documento, Marcador> marcador = documento.join(Documento_.marcadores, JoinType.INNER);
-        Expression<String> codigo = marcador.get(Marcador_.codigo);
-        cq.select(codigo);
-        cq.where(
-            cb.equal(marcador.get(Marcador_.processo).get(Processo_.idProcesso), cb.literal(idProcesso))
-        );
-        cq.groupBy(codigo);
-        cq.orderBy(cb.desc(cb.count(documento)));
-        return getEntityManager().createQuery(cq).getResultList();
-    }
+//    public List<Marcador> listByEntrega(Long idEntrega) {
+//        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+//        CriteriaQuery<String> cq = cb.createQuery(String.class);
+//        Root<Documento> documento = cq.from(Documento.class);
+//        Join<Documento, Marcador> marcador = documento.join(Documento_.marcadores, JoinType.INNER);
+//        Expression<String> codigo = marcador.get(Marcador_.codigo);
+//        cq.select(codigo);
+//        cq.where(
+//            cb.equal(marcador.get(Marcador_.processo).get(Processo_.idProcesso), cb.literal(idProcesso))
+//        );
+//        cq.groupBy(codigo);
+//        cq.orderBy(cb.desc(cb.count(documento)));
+//        return getEntityManager().createQuery(cq).getResultList();
+//    }
     
 //    public List<String> listByEntregaAndCodigo(Integer idProcesso, String codigoMarcador) {
 //        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();

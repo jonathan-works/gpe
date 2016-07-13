@@ -1,16 +1,25 @@
 package br.com.infox.epp.processo.marcador;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 
 @Entity
 @Table(name = "tb_marcador")
@@ -28,6 +37,12 @@ public class Marcador implements Serializable {
     @Size(max = 255)
     @Column(name = "cd_marcador")   
     private String codigo;
+    
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @JoinTable(name = "tb_marcador_documento_bin", 
+            joinColumns=@JoinColumn(name="id_marcador", referencedColumnName="id_marcador"),
+            inverseJoinColumns=@JoinColumn(name="id_documento_bin", referencedColumnName="id_documento_bin"))
+    private Set<DocumentoBin> documentoBinList = new HashSet<>(1);
     
     public Marcador() {
     }
@@ -52,6 +67,14 @@ public class Marcador implements Serializable {
         this.codigo = codigo;
     }
     
+    public Set<DocumentoBin> getDocumentoBinList() {
+        return documentoBinList;
+    }
+
+    public void setDocumentoBinList(Set<DocumentoBin> documentoBinList) {
+        this.documentoBinList = documentoBinList;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
