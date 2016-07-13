@@ -5,12 +5,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.NoResultException;
 
-import org.apache.commons.digester.substitution.VariableExpander;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -20,24 +17,15 @@ import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.core.Expressions;
 import org.jboss.seam.core.Expressions.MethodExpression;
 import org.jboss.seam.core.Expressions.ValueExpression;
-import org.jbpm.bytes.ByteArray;
-import org.jbpm.context.exe.JbpmType;
-import org.jbpm.context.exe.VariableInstance;
-import org.jbpm.context.exe.converter.BytesToByteArrayConverter;
-import org.jbpm.context.exe.converter.SerializableToByteArrayConverter;
-import org.jbpm.context.exe.matcher.SerializableMatcher;
-import org.jbpm.context.exe.variableinstance.ByteArrayInstance;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.cdi.config.BeanManager;
-import br.com.infox.epp.documento.type.SeamExpressionResolver;
-import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
+import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcesso;
+import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoSearch;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
@@ -47,7 +35,6 @@ import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
-import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
@@ -69,19 +56,18 @@ public class VariavelProcessoService {
     private ProcessoTarefaManager processoTarefaManager;
     @Inject
     private FluxoManager fluxoManager;
+    @Inject
+    private DefinicaoVariavelProcessoSearch definicaoVariavelProcessoSearch;
     
     private final LogProvider LOG = Logging.getLogProvider(VariavelProcessoService.class);
 
-    public List<VariavelProcesso> getVariaveis(Processo processo) {
+    public List<VariavelProcesso> getVariaveis(Processo processo, String recursoVariavel, boolean usuarioExterno) {
         List<VariavelProcesso> variaveis = new ArrayList<>();
-        DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager = BeanManager.INSTANCE.getReference(DefinicaoVariavelProcessoManager.class);
-        List<DefinicaoVariavelProcesso> definicaoVariavelList = definicaoVariavelProcessoManager
-                .listVariaveisByFluxo(processo.getNaturezaCategoriaFluxo().getFluxo());
+        Fluxo fluxo = processo.getNaturezaCategoriaFluxo().getFluxo();
+        List<DefinicaoVariavelProcesso> definicaoVariavelList = definicaoVariavelProcessoSearch.getDefinicoesVariaveis(fluxo, recursoVariavel, usuarioExterno);
         
         for (DefinicaoVariavelProcesso definicao : definicaoVariavelList) {
-            if (definicao.getVisivel()) {
-            	variaveis.add(getPrimeiraVariavelProcessoAncestral(processo, definicao, null));
-            }
+        	variaveis.add(getPrimeiraVariavelProcessoAncestral(processo, definicao, null));
         }
 
         return variaveis;
@@ -99,20 +85,19 @@ public class VariavelProcessoService {
     }
 
     public VariavelProcesso getVariavelProcesso(Processo processo, String nome, Long idTaskInstance) {
-    	DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager = BeanManager.INSTANCE.getReference(DefinicaoVariavelProcessoManager.class);
     	DefinicaoVariavelProcesso definicao = null;
-    	definicao = definicaoVariavelProcessoManager.getDefinicao(processo.getNaturezaCategoriaFluxo().getFluxo(), nome);
-    	if(definicao == null){
+    	definicao = definicaoVariavelProcessoSearch.getDefinicao(processo.getNaturezaCategoriaFluxo().getFluxo(), nome);
+    	if(definicao == null && idTaskInstance != null){
     		//TODO: melhorar código pois foi feito rapidamente...
     		//caso não encontre a definição no processo, procura na definicao do subprocesso.
     		ProcessInstance subrProcessInstance = processoManager.findProcessByTaskInstance(idTaskInstance);
     		Fluxo subFluxo = fluxoManager.getFluxoByDescricao(subrProcessInstance.getProcessDefinition().getName());
-   			definicao = definicaoVariavelProcessoManager.getDefinicao(subFluxo, nome);
+   			definicao = definicaoVariavelProcessoSearch.getDefinicao(subFluxo, nome);
     	}
     	if(definicao == null)
     		throw new BusinessException("Não foi possível encontrar a definição da variável " + nome);
     	
-        TaskInstance taskInstance = ManagedJbpmContext.instance().getTaskInstance(idTaskInstance);
+        TaskInstance taskInstance = idTaskInstance != null ? ManagedJbpmContext.instance().getTaskInstance(idTaskInstance) : null;
         return getPrimeiraVariavelProcessoAncestral(processo, definicao, taskInstance);
     }
 
@@ -197,8 +182,7 @@ public class VariavelProcessoService {
 	public List<VariavelProcesso> getVariaveisHierquiaProcesso(Integer idProcesso) {
         List<VariavelProcesso> variaveis = new ArrayList<>();
         Processo processo = processoManager.find(idProcesso);
-        DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager = BeanManager.INSTANCE.getReference(DefinicaoVariavelProcessoManager.class);
-        List<DefinicaoVariavelProcesso> definicaoVariavelList = definicaoVariavelProcessoManager
+        List<DefinicaoVariavelProcesso> definicaoVariavelList = definicaoVariavelProcessoSearch
                 .listVariaveisByFluxo(processo.getNaturezaCategoriaFluxo().getFluxo());
         
         for (DefinicaoVariavelProcesso definicao : definicaoVariavelList) {

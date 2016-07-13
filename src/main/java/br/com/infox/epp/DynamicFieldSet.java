@@ -117,6 +117,7 @@ public class DynamicFieldSet extends UIComponentBase {
 		UISelectItem emptyItem = new UISelectItem();
 		emptyItem.setValueExpression("itemLabel", DynamicFieldSetUtil.createValueExpression("#{messages['crud.select.select']}", Object.class));
 		emptyItem.setItemValue(null);
+		emptyItem.setNoSelectionOption(true);
 		menu.getChildren().add(emptyItem);
 		UISelectItems selectItems = new UISelectItems();
 		String expression = format("#'{'{0}[''{1}'']'.options.items}'", formField.getPath(), formField.getId());

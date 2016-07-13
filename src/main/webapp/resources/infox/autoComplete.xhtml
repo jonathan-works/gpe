@@ -88,12 +88,12 @@
                     </c:if>
                     <c:if test="#{cc.attrs.ajax}">
 					    	<c:if test="#{empty cc.getValueExpression('listener')}">
-						    	<p:ajax event="change" process="#{cc.attrs.execute}" update="#{cc.attrs.render}" immediate="#{cc.attrs.immediate}" 
+						    	<p:ajax event="#{cc.attrs.event}" process="#{cc.attrs.execute}" update="#{cc.attrs.render}" immediate="#{cc.attrs.immediate}" 
 						    		partialSubmit="#{cc.attrs.partialSubmit}"
                                     onstart="#{cc.attrs.onstart}" oncomplete="#{cc.attrs.oncomplete}"/>
 					    	</c:if>
 					    	<c:if test="#{not empty cc.getValueExpression('listener')}">
-						    	<p:ajax event="change" process="#{cc.attrs.execute}" update="#{cc.attrs.render}" immediate="#{cc.attrs.immediate}"
+						    	<p:ajax event="#{cc.attrs.event}" process="#{cc.attrs.execute}" update="#{cc.attrs.render}" immediate="#{cc.attrs.immediate}"
                                     partialSubmit="#{cc.attrs.partialSubmit}" 
 						    		onstart="#{cc.attrs.onstart}" oncomplete="#{cc.attrs.oncomplete}" listener="#{cc.attrs.listener}"/>
 					    	</c:if>
