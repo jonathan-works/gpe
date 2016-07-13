@@ -34,6 +34,8 @@ import br.com.infox.epp.fluxo.exportador.FluxoConfiguration;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.manager.StatusProcessoSearch;
 import br.com.infox.ibpm.node.handler.NodeHandler;
+import br.com.infox.ibpm.sinal.DispatcherConfiguration;
+import br.com.infox.ibpm.sinal.SignalSearch;
 import br.com.infox.ibpm.task.handler.GenerateDocumentoHandler;
 import br.com.infox.ibpm.task.handler.GenerateDocumentoHandler.GenerateDocumentoConfiguration;
 import br.com.infox.ibpm.task.handler.StatusHandler;
@@ -64,6 +66,8 @@ public class FluxoImporterService {
 	private DominioVariavelTarefaSearch dominioVariavelTarefaSearch;
 	@Inject
 	private DefinicaoVariavelProcessoDAO definicaoVariavelProcessoDAO;
+	@Inject
+	private SignalSearch signalSearch;
 	
 	public Fluxo importarFluxo(HashMap<String, String> xmls, Fluxo fluxo) {
 		String xpdl = xmls.get(FluxoConfiguration.FLUXO_XML);
@@ -108,11 +112,65 @@ public class FluxoImporterService {
 		List<String> erros = new ArrayList<String>();
 		validaConfiguracaoRaiaPerfil(doc, erros);
 		validaActions(doc, erros);
+		validaEvents(doc, erros);
+		validaMailNode(doc, erros);
 		validaVariaveis(doc, erros);
 		if (!erros.isEmpty()) {
 			throw new ValidationException(erros);
 		}
 	}
+	
+	private void validaMailNode(Document doc, List<String> erros) {
+		for (Element mailNode : doc.getDescendants(new ElementFilter("mail-node"))) {
+			String configurationModelo = mailNode.getChild("text", mailNode.getNamespace()).getText();
+			if (configurationModelo.startsWith("{codigoModeloDocumento=")) {
+				configurationModelo = configurationModelo.substring(0, configurationModelo.length() - 1);
+				String[] att = configurationModelo.split("=");
+				String codigo = att[1];
+				if (!modeloDocumentoSearch.existeModeloByCodigo(codigo)) {
+					StringBuilder msgErro = new StringBuilder();
+					msgErro.append("Não foi encontrado o modelo de documento com código '");
+					msgErro.append(codigo);
+					msgErro.append("' utilizado no nó de email '");
+					msgErro.append(mailNode.getAttributeValue("name"));
+					msgErro.append("'");
+		        	erros.add(msgErro.toString());
+				}
+			}
+		}
+	}
+
+	private void validaEvents(Document doc, List<String> erros) {
+		for (Element event : doc.getDescendants(new ElementFilter("event"))) {
+			String eventType = event.getAttributeValue("type");
+			if (eventType != null && !eventType.isEmpty()) {
+				if (eventType.startsWith("listener-")) {
+					String codigo = eventType.replaceFirst("listener-", "");
+					if (!signalSearch.existeSignalByCodigo(codigo)) {
+						StringBuilder msgErro = new StringBuilder();
+						msgErro.append("Não foi encontrado o sinal com código '");
+						msgErro.append(codigo);
+						msgErro.append("' utilizado em um observador de sinal do nó '");
+						msgErro.append(event.getParentElement().getAttributeValue("name"));
+						msgErro.append("'");
+			        	erros.add(msgErro.toString());
+					}
+				} else if (eventType.equals("dispatcher")) {
+					String codigo = DispatcherConfiguration.fromJson(event.getAttributeValue("configuration")).getCodigoSinal();
+					if (!signalSearch.existeSignalByCodigo(codigo)) {
+						StringBuilder msgErro = new StringBuilder();
+						msgErro.append("Não foi encontrado o sinal com código '");
+						msgErro.append(codigo);
+						msgErro.append("' utilizado em um observador de sinal do nó '");
+						msgErro.append(event.getParentElement().getAttributeValue("name"));
+						msgErro.append("'");
+			        	erros.add(msgErro.toString());
+					}
+				}
+			}
+		}
+	}
+
 	private void validaVariaveis(Document doc, List<String> erros) {
         for (Element variableNode : doc.getDescendants(new ElementFilter("variable"))) {
         	String typeName = variableNode.getAttributeValue("type");
