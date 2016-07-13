@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -45,6 +46,7 @@ import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.exception.BusinessRollbackException;
+import br.com.infox.seam.exception.ValidationException;
 
 @Stateless
 public class FluxoImporterService {
@@ -103,25 +105,25 @@ public class FluxoImporterService {
 	}
 	
 	private void validarExistenciaCodigos(Document doc) {
-		StringBuilder msgErro = new StringBuilder();
-		validaConfiguracaoRaiaPerfil(doc, msgErro);
-		validaActions(doc, msgErro);
-		validaVariaveis(doc, msgErro);
-		if (msgErro.length() > 0) {
-			throw new BusinessException(msgErro.toString());
+		List<String> erros = new ArrayList<String>();
+		validaConfiguracaoRaiaPerfil(doc, erros);
+		validaActions(doc, erros);
+		validaVariaveis(doc, erros);
+		if (!erros.isEmpty()) {
+			throw new ValidationException(erros);
 		}
 	}
-	private void validaVariaveis(Document doc, StringBuilder msgErro) {
+	private void validaVariaveis(Document doc, List<String> erros) {
         for (Element variableNode : doc.getDescendants(new ElementFilter("variable"))) {
         	String typeName = variableNode.getAttributeValue("type");
 			switch (typeName) {
 			case "EDITOR":
 			case "FILE": 
-				validaFileConfiguration(variableNode, msgErro);
+				validaFileConfiguration(variableNode, erros);
 				break;
 			case "ENUMERATION_MULTIPLE":
 			case "ENUMERATION": 
-				validaDominioConfiguration(variableNode, msgErro);
+				validaDominioConfiguration(variableNode, erros);
 				break;
 			default:
 				break;
@@ -129,107 +131,118 @@ public class FluxoImporterService {
 		}
 	}
 
-	private void validaDominioConfiguration(Element variableNode, StringBuilder msgErro) {
+	private void validaDominioConfiguration(Element variableNode, List<String> erros) {
 		EnumerationConfig configuration = VariableDominioEnumerationHandler.fromJson(variableNode.getAttributeValue("configuration"));
 		if (!dominioVariavelTarefaSearch.existeDominioByCodigo(configuration.getCodigoDominio())) {
-			msgErro.append("Não foi encontrado o domínio de dados com o código ");
+			StringBuilder msgErro = new StringBuilder();
+			msgErro.append("Não foi encontrado o domínio de dados com o código '");
 			msgErro.append(configuration.getCodigoDominio());
-			msgErro.append(" utilizado na variável ");
+			msgErro.append("' utilizado na variável '");
         	msgErro.append(variableNode.getAttributeValue("name"));
-        	msgErro.append(" do nó ");
+        	msgErro.append("' do nó '");
 			msgErro.append(variableNode.getParentElement().getParentElement().getParentElement().getAttributeValue("name"));
-        	msgErro.append(". \n");
+			msgErro.append("'");
+        	erros.add(msgErro.toString());
 		}
 	}
 
-	private void validaFileConfiguration(Element variableNode, StringBuilder msgErro) {
+	private void validaFileConfiguration(Element variableNode, List<String> erros) {
 		FileConfig configuration = VariableEditorModeloHandler.fromJson(variableNode.getAttributeValue("configuration"));
 		if (configuration.getCodigosModeloDocumento() != null && !configuration.getCodigosModeloDocumento().isEmpty()) {
-			int initialLength = msgErro.length();
+			StringBuilder msgErro = new StringBuilder();
 			for (String codigo : configuration.getCodigosModeloDocumento()) {
 				if (!modeloDocumentoSearch.existeModeloByCodigo(codigo)) {
+					msgErro.append("'");
 					msgErro.append(codigo);
-					msgErro.append(" ,");
+					msgErro.append("', ");
 				}
 			}
-			if (msgErro.length() > initialLength) {
-	        	msgErro.insert(initialLength,"Não foram encontrados modelos de documento com os códigos ");
+			if (msgErro.length() > 0) {
+	        	msgErro.insert(0,"Não foram encontrados modelos de documento com os códigos: ");
 	        	msgErro.setLength(msgErro.length() - 2);
-	        	msgErro.append(" utilizados na variável ");
+	        	msgErro.append(". Utilizados na variável '");
 	        	msgErro.append(variableNode.getAttributeValue("name"));
-	        	msgErro.append(" do nó ");
+	        	msgErro.append("' do nó '");
 				msgErro.append(variableNode.getParentElement().getParentElement().getParentElement().getAttributeValue("name"));
-	        	msgErro.append(". \n");
+				msgErro.append("'");
+	        	erros.add(msgErro.toString());
 	        }
 		}
 		if (configuration.getCodigosClassificacaoDocumento() != null && !configuration.getCodigosClassificacaoDocumento().isEmpty()) {
-			int initialLength = msgErro.length();
+			StringBuilder msgErro = new StringBuilder();
 			for (String codigo : configuration.getCodigosClassificacaoDocumento()) {
 				if (!classificacaoDocumentoSearch.existeClassificacaoByCodigo(codigo)) {
+					msgErro.append("'");
 					msgErro.append(codigo);
-					msgErro.append(" ,");
+					msgErro.append("', ");
 				}
 			}
-			if (msgErro.length() > initialLength) {
-	        	msgErro.insert(initialLength,"Não foram encontradas classificações de documento com os códigos ");
+			if (msgErro.length() > 0) {
+	        	msgErro.insert(0,"Não foram encontradas classificações de documento com os códigos: ");
 	        	msgErro.setLength(msgErro.length() - 2);
-	        	msgErro.append(" utilizadas na variável ");
+	        	msgErro.append(". Utilizadas na variável '");
 	        	msgErro.append(variableNode.getAttributeValue("name"));
-	        	msgErro.append(" do nó ");
+	        	msgErro.append("' do nó '");
 				msgErro.append(variableNode.getParentElement().getParentElement().getParentElement().getAttributeValue("name"));
-	        	msgErro.append(". \n");
+	        	msgErro.append("'");
+				erros.add(msgErro.toString());
 	        }
 		}
 	}
 
-	private void validaActions(Document doc, StringBuilder msgErro) {
+	private void validaActions(Document doc, List<String> erros) {
 		for (Element action : doc.getDescendants(new ElementFilter("action"))) {
 			String actionName = action.getAttributeValue("name");
 			if (actionName != null && !actionName.isEmpty()) {
-				validaConfiguracaoStatusProcesso(action, msgErro);
-				validaConfiguracaoGeracaoDocumento(action, msgErro);
+				validaConfiguracaoStatusProcesso(action, erros);
+				validaConfiguracaoGeracaoDocumento(action, erros);
 			}
 		}
 	}
 
-	private void validaConfiguracaoGeracaoDocumento(Element action, StringBuilder msgErro) {
+	private void validaConfiguracaoGeracaoDocumento(Element action, List<String> erros) {
 		if (NodeHandler.GENERATE_DOCUMENTO_ACTION_NAME.equals(action.getAttributeValue("name"))) {
 			GenerateDocumentoConfiguration configuration = new GenerateDocumentoHandler(action.getText()).getConfiguration();
 			if (!classificacaoDocumentoSearch.existeClassificacaoByCodigo(configuration.getCodigoClassificacaoDocumento())) {
-				msgErro.append("Não foi encontrada a classificação de documento com o código ");
+				StringBuilder msgErro = new StringBuilder();
+				msgErro.append("Não foi encontrada a classificação de documento com o código '");
 				msgErro.append(configuration.getCodigoClassificacaoDocumento());
-				msgErro.append(" utilizada para geração de documento no nó ");
+				msgErro.append("' utilizada para geração de documento no nó '");
 				msgErro.append(action.getParentElement().getParentElement().getAttributeValue("name"));
-				msgErro.append(". \n");
+				msgErro.append("'");
+				erros.add(msgErro.toString());
 			}
 			if (!modeloDocumentoSearch.existeModeloByCodigo(configuration.getCodigoModeloDocumento())) {
-				msgErro.append("Não foi encontrado o modelo de documento com o código ");
+				StringBuilder msgErro = new StringBuilder();
+				msgErro.append("Não foi encontrado o modelo de documento com o código '");
 				msgErro.append(configuration.getCodigoModeloDocumento());
-				msgErro.append(" utilizada para geração de documento no nó ");
+				msgErro.append("' utilizada para geração de documento no nó '");
 				msgErro.append(action.getParentElement().getParentElement().getAttributeValue("name"));
-				msgErro.append(". \n");
+				msgErro.append("'");
+				erros.add(msgErro.toString());
 			}
 		}
 	}
 
-	private void validaConfiguracaoStatusProcesso(Element action, StringBuilder msgErro) {
-		int initialLength = msgErro.length();
+	private void validaConfiguracaoStatusProcesso(Element action, List<String> erros) {
+		StringBuilder msgErro = new StringBuilder();
 		if (StatusProcesso.STATUS_PROCESSO_ACTION_NAME.equals(action.getAttributeValue("name"))) {
 			String codigo = new StatusHandler(action.getText()).getCodigoStatusProcesso();
 			if (!statusProcessoSearch.existeStatusProcessoByNome(codigo)) {
+				msgErro.append("'");
 				msgErro.append(codigo);
-				msgErro.append(" ,");
+				msgErro.append("', ");
 			}
 		}
-		if (msgErro.length() > initialLength) {
-        	msgErro.insert(initialLength,"Não foram encontrados status do processo com os nomes: ");
+		if (msgErro.length() > 0) {
+        	msgErro.insert(0,"Não foram encontrados status do processo com os nomes: ");
         	msgErro.setLength(msgErro.length() - 2);
-        	msgErro.append(". \n");
+        	erros.add(msgErro.toString());
         }
 	}
 
-	private void validaConfiguracaoRaiaPerfil(Document doc, StringBuilder msgErro) {
-		int initialLength = msgErro.length();
+	private void validaConfiguracaoRaiaPerfil(Document doc, List<String> erros) {
+		StringBuilder msgErro = new StringBuilder();
 		for (Element swinlaneNode : doc.getDescendants(new ElementFilter("swimlane"))) {
         	for (Element assignment : swinlaneNode.getChildren("assignment", swinlaneNode.getNamespace())) {
         		String listaCodigos = assignment.getAttributeValue("pooled-actors");
@@ -237,17 +250,18 @@ public class FluxoImporterService {
         			String[] codigos = listaCodigos.split(",");
         			for (String codigo : codigos) {
         				if (!perfilTemplateDAO.existePerfilTemplateByCodigo(codigo)) {
+        					msgErro.append("'");
         					msgErro.append(codigo);
-        					msgErro.append(" ,");
+        					msgErro.append("', ");
         				}
         			}
 				}
 			}
         }
-        if (msgErro.length() > initialLength) {
-        	msgErro.insert(initialLength,"Não foram encontrados perfis com os códigos: ");
+        if (msgErro.length() > 0) {
+        	msgErro.insert(0,"Não foram encontrados perfis com os códigos: ");
         	msgErro.setLength(msgErro.length() - 2);
-        	msgErro.append(". \n");
+        	erros.add(msgErro.toString());
         }
 	}
 	

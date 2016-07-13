@@ -66,6 +66,7 @@ public class MigraTaskExpirationToTimer implements Serializable {
 		} catch (Exception e) {
 			Logging.getLogProvider(MigraTaskExpirationToTimer.class).error("", e);
 			transactionManager.rollback();
+			throw e;
 		} finally {
 			Lifecycle.endCall();
 		}
@@ -103,16 +104,22 @@ public class MigraTaskExpirationToTimer implements Serializable {
 		for (Fluxo fluxo : getFluxos()) {
 			List<Object[]> taskExpirations = getTaskExpirationsByIdFluxo(fluxo.getIdFluxo());
 			if (taskExpirations != null && !taskExpirations.isEmpty()) {
-				String xmlExecucao = adicionaTimer(fluxo.getXmlExecucao(), taskExpirations);
-				if (!fluxo.getXmlExecucao().equals(xmlExecucao)) {
-					fluxo.setXmlExecucao(xmlExecucao);
+				if (fluxo.getXmlExecucao() != null && !fluxo.getXmlExecucao().isEmpty()) {
+					String xmlExecucao = adicionaTimer(fluxo.getXmlExecucao(), taskExpirations);
+					if (!fluxo.getXmlExecucao().equals(xmlExecucao)) {
+						fluxo.setXmlExecucao(xmlExecucao);
+					}
 				}
-				String xml = adicionaTimer(fluxo.getXml(), taskExpirations);
-				if (!fluxo.getXml().equals(xml)) {
-					fluxo.setXml(xml);
+				if (fluxo.getXml() != null && !fluxo.getXml().isEmpty()) {
+					String xml = adicionaTimer(fluxo.getXml(), taskExpirations);
+					if (!fluxo.getXml().equals(xml)) {
+						fluxo.setXml(xml);
+					}
 				}
 			}
-			fluxo = publishTimerToDefinition(fluxo);
+			if (fluxo.getXmlExecucao() != null && !fluxo.getXmlExecucao().isEmpty()) {
+				fluxo = publishTimerToDefinition(fluxo);
+			}
 			getEntityManager().merge(fluxo);
 		}
 	}

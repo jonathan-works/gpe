@@ -25,6 +25,7 @@ import br.com.infox.epp.modeler.converter.BpmnJpdlService;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
+import br.com.infox.seam.exception.ValidationException;
 
 @Named
 @ViewScoped
@@ -65,6 +66,7 @@ public class FluxoUploader implements Serializable{
 				}
 				validaEppFluxoFile();
 			}
+			clearMessages();
 		} catch (IOException | BusinessException e) {
 			LOG.error("Erro no upload", e);
 			FacesMessages.instance().add("Erro ao realizar upload: " + e.getMessage());
@@ -90,13 +92,14 @@ public class FluxoUploader implements Serializable{
 			}
 			fluxoImportado = true;
 			FacesMessages.instance().add("Fluxo importado com sucesso");
+		} catch (ValidationException e) {
+			mensagens = new ArrayList<>(e.getValidationMessages());
 		} catch (BusinessException e) {
 			mensagens = new ArrayList<>();
 			mensagens.add(e.getMessage());
 		} finally {
 			bpmn = null;
 			eppFluxoFile = null;
-			tipoImportBpmn = true;
 		}
 	}
 	
