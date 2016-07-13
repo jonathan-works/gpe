@@ -34,9 +34,21 @@
 			<i:inputNumber id="numeroDocumentoFilter" label="#{infoxMessages['documentoProcesso.numeroDocumento']}"
 				value="#{documentoProcessoAction.documentoFilter.numeroDocumento}"/>
 			
-			<i:autoComplete id="marcadorFilter" label="Marcadores" multiple="true" 
-				value="#{documentoProcessoAction.documentoFilter.marcadores}" 
-	        	completeMethod="#{documentoProcessoAction.autoCompleteMarcadores}"/>
+	        <div class="property-field-edit" style="display: inline-block;">
+				<div class="property-field-edit-name">
+					<h:outputLabel value="Marcadores" for="marcadorUpload"/>
+				</div>
+				<div class="property-field-edit-value">
+					<p:autoComplete id="marcadorFilter" label="Marcadores" multiple="true" 
+						value="#{documentoProcessoAction.documentoFilter.marcadores}" 
+			        	completeMethod="#{documentoProcessoAction.autoCompleteMarcadores}"
+			        	itemLabel="#{item}" itemValue="#{item}" var="item"
+			        	minQueryLength="3" queryDelay="600">
+			        	<p:ajax event="itemSelect" update="@this" processo="@this" />
+			        	<p:ajax event="itemUnselect" update="@this" processo="@this" />
+			        </p:autoComplete>
+		        </div>
+			</div>
 			
 			<div>
 				<h:commandButton id="btnFiltrarDocumentos"

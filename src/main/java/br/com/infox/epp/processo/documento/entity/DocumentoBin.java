@@ -109,7 +109,7 @@ public class DocumentoBin implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataSuficientementeAssinado;
     
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinTable(name = "tb_marcador_documento_bin", 
             joinColumns=@JoinColumn(name="id_documento_bin", referencedColumnName="id_documento_bin"),
             inverseJoinColumns=@JoinColumn(name="id_marcador", referencedColumnName="id_marcador"))

@@ -51,14 +51,28 @@ public class DocumentoTemporarioDao extends Dao<DocumentoTemporario, Integer> {
 				DocumentoBin documentoBin = toRemove.getDocumentoBin();
 				getEntityManager().remove(toRemove);
 				documentoBinManager.remove(documentoBin);
-				documentoBinarioManager.remove(documentoBin.getId());
+				if (documentoBin.isBinario()) {
+				    documentoBinarioManager.remove(documentoBin.getId());
+				}
 			}
 			getEntityManager().flush();
 		} catch (Exception e) {
-		    e.printStackTrace();
 			throw new DAOException(e);
 		}
 	}
+    
+    @TransactionAttribute(TransactionAttributeType.MANDATORY)
+    public void removeAllSomenteTemporario(List<DocumentoTemporario> documentoTemporarioList) throws DAOException {
+        try {
+            for (DocumentoTemporario documentoTemporario : documentoTemporarioList) {
+                DocumentoTemporario toRemove = getEntityManager().merge(documentoTemporario);
+                getEntityManager().remove(toRemove);
+            }
+            getEntityManager().flush();
+        } catch (Exception e) {
+            throw new DAOException(e);
+        }
+    }
     
     public DocumentoTemporario loadById(Integer id) {
         TypedQuery<DocumentoTemporario> query = getEntityManager().createNamedQuery(LOAD_BY_ID, DocumentoTemporario.class);

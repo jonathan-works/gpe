@@ -88,7 +88,7 @@ public class PastaDAO extends DAO<Pasta> {
 		}
 		if (documentoFilter.getMarcadores() != null) {
 		    for (String codigoMarcador : documentoFilter.getMarcadores()) {
-		        baseQuery = baseQuery + FILTER_MARCADOR_DOCUMENTO.replace(PARAM_CODIGO_MARCADOR, codigoMarcador);
+		        baseQuery = baseQuery + FILTER_MARCADOR_DOCUMENTO.replace("{" + PARAM_CODIGO_MARCADOR + "}", codigoMarcador);
 		    }
 		}
 		return baseQuery;

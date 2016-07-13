@@ -89,7 +89,7 @@ public class DocumentoProcessoAction implements Serializable {
 	}
 	
 	public List<String> autoCompleteMarcadores(String query) {
-	    return marcadorSearch.listByProcessoAndCodigo(getProcesso().getIdProcesso(), query);
+	    return marcadorSearch.listMarcadoresDocumentoProcesso(getProcesso().getIdProcesso(), query, documentoFilter.getMarcadores());
 	}
 	
 	public void onClickDocumentosTab(){

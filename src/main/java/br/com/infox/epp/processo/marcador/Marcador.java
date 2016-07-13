@@ -26,7 +26,7 @@ public class Marcador implements Serializable {
     
     @NotNull
     @Size(max = 255)
-    @Column(name = "cd_marcador")
+    @Column(name = "cd_marcador")   
     private String codigo;
     
     public Marcador() {
@@ -51,7 +51,7 @@ public class Marcador implements Serializable {
     public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
-
+    
     @Override
     public int hashCode() {
         final int prime = 31;

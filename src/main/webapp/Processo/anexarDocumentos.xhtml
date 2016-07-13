@@ -38,14 +38,23 @@
 					items="#{pastaAction.getPastaListComRestricaoEscrita()}">
 				</wi:selectOneMenuEntity>
 				
-				<p:autoComplete id="marcadorFilter" label="Marcadores" multiple="true" 
-					value="#{anexarDocumentosView.marcadoresUpload}" 
-		        	completeMethod="#{anexarDocumentosView.autoCompleteMarcadoresUpload}"
-		        	converter="#{br.com.infox.conveter.Marcador}" itemLabel="#{item.codigo}" var="item"
-		        	minQueryLength="3" queryDelay="600">
-		        	<p:ajax event="itemSelect" update="@this" process="@this" listener="#{anexarDocumentosView.onMarcadorSelectUpload}"/>
-		        	<p:ajax event="itemSelect" update="@this" process="@this" listener="#{anexarDocumentosView.onMarcadorSelectUpload}"/>
-		        </p:autoComplete>
+				<c:if test="#{anexarDocumentosView.isPermittedAddMarcador()}">
+					<div class="property-field-edit">
+						<div class="property-field-edit-name">
+							<h:outputLabel value="Marcadores" for="marcadorUpload"/>
+						</div>
+						<div class="property-field-edit-value">
+							<p:autoComplete id="marcadorUpload" label="Marcadores" multiple="true" 
+								value="#{anexarDocumentosView.marcadoresUpload}" 
+					        	completeMethod="#{anexarDocumentosView.autoCompleteMarcadoresUpload}"
+					        	converter="br.com.infox.converter.marcador" itemLabel="#{item.codigo}" itemValue="#{item}" var="item"
+					        	minQueryLength="3" queryDelay="600">
+					        	<p:ajax event="itemSelect" update="@this" processo="@this" />
+					        	<p:ajax event="itemUnselect" update="@this" processo="@this" />
+					        </p:autoComplete>
+				        </div>
+					</div>
+				</c:if>
 				
 				<s:div id="uploadArquivoDiv">
 					<s:div id="uploadArquivoTooltipDiv"
@@ -175,6 +184,24 @@
 					items="#{pastaAction.getPastaListComRestricaoEscrita()}"
 					rendered="#{security.checkPage('/pages/Pasta/moverDocumento')}"
 					disabled="#{not minuta}" />
+				
+				<c:if test="#{anexarDocumentosView.isPermittedAddMarcador()}">
+					<div class="property-field-edit">
+						<div class="property-field-edit-name">
+							<h:outputLabel value="Marcadores" for="marcadorEditor"/>
+						</div>
+						<div class="property-field-edit-value">
+							<p:autoComplete id="marcadorEditor" label="Marcadores" multiple="true" 
+								value="#{anexarDocumentosView.marcadoresEditor}" 
+					        	completeMethod="#{anexarDocumentosView.autoCompleteMarcadoresEditor}"
+					        	converter="br.com.infox.converter.marcador" itemLabel="#{item.codigo}" itemValue="#{item}" var="item"
+					        	minQueryLength="3" queryDelay="600">
+					        	<p:ajax event="itemSelect" update="@this" processo="@this" />
+					        	<p:ajax event="itemUnselect" update="@this" processo="@this" />
+					        </p:autoComplete>
+				        </div>
+					</div>
+				</c:if>
 
 				<s:div id="selectModeloDocumentoDiv">
 					<wi:selectOneMenuEntity id="editorModeloDocumento" required="false"
