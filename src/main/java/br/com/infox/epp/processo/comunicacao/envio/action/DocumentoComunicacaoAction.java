@@ -188,7 +188,7 @@ public class DocumentoComunicacaoAction implements Serializable {
 	}
 	
     public List<String> autoCompleteMarcadores(String query) {
-        List<String> marcadores = marcadorSearch.listByProcessoAndCodigo(modeloComunicacao.getProcesso().getIdProcesso(), query, modeloComunicacao.getCodigosMarcadores());
+        List<String> marcadores = marcadorSearch.listCodigoByProcessoAndNotInListCodigos(modeloComunicacao.getProcesso().getIdProcesso(), query, modeloComunicacao.getCodigosMarcadores());
         if (!marcadores.contains(query) && (modeloComunicacao.getCodigosMarcadores() == null || !modeloComunicacao.getCodigosMarcadores().contains(query))) {
             marcadores.add(0, query);
         }

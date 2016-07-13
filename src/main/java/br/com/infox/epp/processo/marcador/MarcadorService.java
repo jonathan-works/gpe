@@ -32,7 +32,7 @@ public class MarcadorService {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void createMarcadores(DocumentoBin documentoBin, List<String> codigoMarcadores, Processo processo) {
         if (codigoMarcadores == null || codigoMarcadores.isEmpty()) return;
-        List<Marcador> listMarcadores = marcadorSearch.listByProcessoAndCodigosMarcadores(processo.getIdProcesso(), codigoMarcadores);
+        List<Marcador> listMarcadores = marcadorSearch.listMarcadorByProcessoAndInCodigosMarcadores(processo.getIdProcesso(), codigoMarcadores);
         for (String codigoMarcador : codigoMarcadores) {
             Marcador marcadorTemp = new Marcador(codigoMarcador);
             int index = -1;

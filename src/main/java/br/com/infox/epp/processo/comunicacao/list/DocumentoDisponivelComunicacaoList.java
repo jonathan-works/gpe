@@ -67,7 +67,7 @@ public class DocumentoDisponivelComunicacaoList extends DataList<Documento> impl
     private String filterPasta = PastaQuery.FILTER_SUFICIENTEMENTE_ASSINADO + PastaQuery.FILTER_SIGILO + PastaQuery.FILTER_EXCLUIDO;
 
     public List<String> autoCompleteMarcadores(String query) {
-        return marcadorSearch.listMarcadoresDocumentoProcesso(getProcesso().getIdProcesso(), query, codigoMarcadores);
+        return marcadorSearch.listCodigoMarcadorFromDocumentoByProcessoAndCodigoAndNotInCodigos(getProcesso().getIdProcesso(), query, codigoMarcadores);
     }
     
     @Override

@@ -15,6 +15,8 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import br.com.infox.core.persistence.PersistenceController;
+import br.com.infox.epp.entrega.documentos.Entrega;
+import br.com.infox.epp.entrega.documentos.Entrega_;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin_;
@@ -29,7 +31,7 @@ import br.com.infox.epp.processo.entity.Processo_;
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class MarcadorSearch extends PersistenceController {
     
-    public List<String> listByProcesso(Integer idProcesso) {
+    public List<String> listCodigoByProcesso(Integer idProcesso) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<String> cq = cb.createQuery(String.class);
         Root<DocumentoBin> documentoBin = cq.from(DocumentoBin.class);
@@ -50,7 +52,7 @@ public class MarcadorSearch extends PersistenceController {
         return getEntityManager().createQuery(cq).getResultList();
     }
     
-    public List<Marcador> listByProcessoAndCodigosMarcadores(Integer idProcesso, Collection<String> codigoMarcadores) {
+    public List<Marcador> listMarcadorByProcessoAndInCodigosMarcadores(Integer idProcesso, Collection<String> codigoMarcadores) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Marcador> cq = cb.createQuery(Marcador.class);
         Root<DocumentoBin> documentoBin = cq.from(DocumentoBin.class);
@@ -71,11 +73,11 @@ public class MarcadorSearch extends PersistenceController {
         return getEntityManager().createQuery(cq).getResultList();
     }
     
-    public List<String> listByProcessoAndCodigo(Integer idProcesso, String codigoMarcador) {
-        return listByProcessoAndCodigo(idProcesso, codigoMarcador, null);
+    public List<String> listCodigoByProcessoAndCodigo(Integer idProcesso, String codigoMarcador) {
+        return listCodigoByProcessoAndNotInListCodigos(idProcesso, codigoMarcador, null);
     }
     
-    public List<String> listByProcessoAndCodigo(Integer idProcesso, String codigoMarcador, Collection<String> codigoMarcadores) {
+    public List<String> listCodigoByProcessoAndNotInListCodigos(Integer idProcesso, String codigoMarcador, Collection<String> codigoMarcadores) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<String> cq = cb.createQuery(String.class);
         Root<DocumentoBin> documentoBin = cq.from(DocumentoBin.class);
@@ -85,22 +87,22 @@ public class MarcadorSearch extends PersistenceController {
         Join<DocumentoBin, Marcador> marcador = documentoBin.join(DocumentoBin_.marcadores, JoinType.INNER);
         Expression<String> codigo = marcador.get(Marcador_.codigo);
         cq.select(codigo).distinct(true);
-        cq.where(
-            cb.or(
-                cb.equal(documento.get(Documento_.pasta).get(Pasta_.id), pasta.get(Pasta_.id)),
-                cb.equal(documentoTemporario.get(DocumentoTemporario_.pasta).get(Pasta_.id), pasta.get(Pasta_.id))
-            ),
-            cb.isNotNull(pasta.get(Pasta_.processo)),
-            cb.equal(pasta.get(Pasta_.processo).get(Processo_.idProcesso), cb.literal(idProcesso)),
-            cb.like(marcador.get(Marcador_.codigo), cb.literal("%" + codigoMarcador + "%"))
-        );
+        Predicate predicate = cb.and(
+                                  cb.or(
+                                      cb.equal(documento.get(Documento_.pasta).get(Pasta_.id), pasta.get(Pasta_.id)),
+                                      cb.equal(documentoTemporario.get(DocumentoTemporario_.pasta).get(Pasta_.id), pasta.get(Pasta_.id))
+                                  ),
+                                  cb.isNotNull(pasta.get(Pasta_.processo)),
+                                  cb.equal(pasta.get(Pasta_.processo).get(Processo_.idProcesso), cb.literal(idProcesso)),
+                                  cb.like(marcador.get(Marcador_.codigo), cb.literal("%" + codigoMarcador + "%"))
+                              );
         if (codigoMarcadores != null && !codigoMarcadores.isEmpty()) {
-            Predicate where = cq.getRestriction();
-            cq.where(
-                where,
-                cb.not(marcador.get(Marcador_.codigo).in(codigoMarcadores))
-            );
+            predicate = cb.and(
+                            predicate,
+                            cb.not(marcador.get(Marcador_.codigo).in(codigoMarcadores))
+                        );
         }
+        cq.where(predicate);
         return getEntityManager().createQuery(cq).getResultList();
     }
     
@@ -162,7 +164,7 @@ public class MarcadorSearch extends PersistenceController {
         return getEntityManager().createQuery(cq).getResultList();
     }
 
-    public List<String> listMarcadoresDocumentoProcesso(Integer idProcesso, String codigoMarcador, List<String> codigoMarcadores) {
+    public List<String> listCodigoMarcadorFromDocumentoByProcessoAndCodigoAndNotInCodigos(Integer idProcesso, String codigoMarcador, List<String> codigoMarcadores) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<String> cq = cb.createQuery(String.class);
         Root<DocumentoBin> documentoBin = cq.from(DocumentoBin.class);
@@ -185,35 +187,76 @@ public class MarcadorSearch extends PersistenceController {
         return getEntityManager().createQuery(cq).getResultList();
     }
     
-//    public List<Marcador> listByEntrega(Long idEntrega) {
-//        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-//        CriteriaQuery<String> cq = cb.createQuery(String.class);
-//        Root<Documento> documento = cq.from(Documento.class);
-//        Join<Documento, Marcador> marcador = documento.join(Documento_.marcadores, JoinType.INNER);
-//        Expression<String> codigo = marcador.get(Marcador_.codigo);
-//        cq.select(codigo);
-//        cq.where(
-//            cb.equal(marcador.get(Marcador_.processo).get(Processo_.idProcesso), cb.literal(idProcesso))
-//        );
-//        cq.groupBy(codigo);
-//        cq.orderBy(cb.desc(cb.count(documento)));
-//        return getEntityManager().createQuery(cq).getResultList();
-//    }
+    public List<String> listCodigoMarcadorByEntrega(Long idEntrega) {
+        return listCodigoByEntregaAndCodigoAndNotInListCodigo(idEntrega, null, null);
+    }
     
-//    public List<String> listByEntregaAndCodigo(Integer idProcesso, String codigoMarcador) {
-//        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-//        CriteriaQuery<String> cq = cb.createQuery(String.class);
-//        Root<Documento> documento = cq.from(Documento.class);
-//        Join<Documento, Marcador> marcador = documento.join(Documento_.marcadores, JoinType.INNER);
-//        Expression<String> codigo = marcador.get(Marcador_.codigo);
-//        cq.select(codigo);
-//        cq.where(
-//            cb.equal(marcador.get(Marcador_.processo).get(Processo_.idProcesso), cb.literal(idProcesso)),
-//            cb.like(marcador.get(Marcador_.codigo), cb.literal("%" + codigoMarcador + "%"))
-//        );
-//        cq.groupBy(codigo);
-//        cq.orderBy(cb.desc(cb.count(documento)));
-//        return getEntityManager().createQuery(cq).getResultList();
-//    }
-
+    public List<String> listCodigoMarcadorByEntregaAndCodigo(Long idEntrega, String codigoMarcador) {
+        return listCodigoByEntregaAndCodigoAndNotInListCodigo(idEntrega, codigoMarcador, null);
+    }
+    
+    public List<String> listCodigoByEntregaAndCodigoAndNotInListCodigo(Long idEntrega, String codigoMarcador, List<String> codigosMarcadores) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<String> cq = cb.createQuery(String.class);
+        Root<DocumentoBin> documentoBin = cq.from(DocumentoBin.class);
+        Root<Entrega> entrega = cq.from(Entrega.class);
+        Join<DocumentoBin, Documento> documento = documentoBin.join(DocumentoBin_.documentoList, JoinType.INNER);
+        Join<Documento, Pasta> pasta = documento.join(Documento_.pasta, JoinType.INNER);
+        Join<DocumentoBin, Marcador> marcador = documentoBin.join(DocumentoBin_.marcadores, JoinType.INNER);
+        cq.select(marcador.get(Marcador_.codigo));
+        Predicate predicate = cb.and(
+                                  cb.equal(pasta.get(Pasta_.id), entrega.get(Entrega_.pasta).get(Pasta_.id)),
+                                  cb.equal(entrega.get(Entrega_.id), cb.literal(idEntrega))
+                              );
+        if (codigoMarcador != null) {
+            predicate = cb.and( predicate, 
+                            cb.like(marcador.get(Marcador_.codigo), cb.literal("%" + codigoMarcador + "%"))
+                        );
+        }
+        
+        if (codigosMarcadores != null && !codigosMarcadores.isEmpty()) {
+            predicate = cb.and( predicate, 
+                            cb.not(marcador.get(Marcador_.codigo).in(codigosMarcadores))
+                        );
+        }
+        cq.where(predicate);
+        return getEntityManager().createQuery(cq).getResultList();
+    }
+    
+    public List<Marcador> listMarcadorByEntrega(Long idEntrega) {
+        return listMarcadorByEntregaAndCodigoAndNotInListCodigo(idEntrega, null, null);
+    }
+    
+    public List<Marcador> listMarcadorByEntregaAndCodigo(Long idEntrega, String codigoMarcador) {
+        return listMarcadorByEntregaAndCodigoAndNotInListCodigo(idEntrega, codigoMarcador, null);
+    }
+    
+    public List<Marcador> listMarcadorByEntregaAndCodigoAndNotInListCodigo(Long idEntrega, String codigoMarcador, List<String> codigosMarcadores) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Marcador> cq = cb.createQuery(Marcador.class);
+        Root<DocumentoBin> documentoBin = cq.from(DocumentoBin.class);
+        Root<Entrega> entrega = cq.from(Entrega.class);
+        Join<DocumentoBin, Documento> documento = documentoBin.join(DocumentoBin_.documentoList, JoinType.INNER);
+        Join<Documento, Pasta> pasta = documento.join(Documento_.pasta, JoinType.INNER);
+        Join<DocumentoBin, Marcador> marcador = documentoBin.join(DocumentoBin_.marcadores, JoinType.INNER);
+        cq.select(marcador);
+        Predicate predicate = cb.and(
+                                  cb.equal(pasta.get(Pasta_.id), entrega.get(Entrega_.pasta).get(Pasta_.id)),
+                                  cb.equal(entrega.get(Entrega_.id), cb.literal(idEntrega))
+                              );
+        if (codigoMarcador != null) {
+            predicate = cb.and( predicate, 
+                            cb.like(marcador.get(Marcador_.codigo), cb.literal("%" + codigoMarcador + "%"))
+                        );
+        }
+        
+        if (codigosMarcadores != null && !codigosMarcadores.isEmpty()) {
+            predicate = cb.and( predicate, 
+                            cb.not(marcador.get(Marcador_.codigo).in(codigosMarcadores))
+                        );
+        }
+        cq.where(predicate);
+        return getEntityManager().createQuery(cq).getResultList();
+    }
+    
 }
