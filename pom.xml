@@ -425,6 +425,7 @@
           <include>**/*.properties</include>
           <include>**/*.csv</include>
           <include>**/*.sql</include>
+          <include>/rsa-keypair/**/*</include>
 				</includes>
 			</testResource>
 			<testResource>
