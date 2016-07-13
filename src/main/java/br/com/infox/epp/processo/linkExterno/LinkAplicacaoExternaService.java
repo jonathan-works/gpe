@@ -1,32 +1,38 @@
 package br.com.infox.epp.processo.linkExterno;
 
-import java.net.URISyntaxException;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map.Entry;
 
-import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 
-import org.apache.http.client.utils.URIBuilder;
+import org.jgroups.util.UUID;
+import org.joda.time.DateTime;
 
 import br.com.infox.cdi.dao.Dao;
-import br.com.infox.jwt.JWTUtils;
-import br.com.infox.seam.exception.BusinessException;
+import br.com.infox.cdi.qualifier.GenericDao;
+import br.com.infox.core.exception.SystemExceptionFactory;
+import br.com.infox.core.net.UrlBuilder;
+import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.system.Parametros;
+import br.com.infox.jwt.JWT;
+import br.com.infox.jwt.JWTBuilder;
+import br.com.infox.jwt.claims.JWTClaim;
+import br.com.infox.jwt.claims.JWTRegisteredClaims;
+import br.com.infox.jwt.encryption.Algorithm;
+import br.com.infox.seam.path.PathResolver;
+import br.com.infox.security.rsa.RSAErrorCodes;
+import br.com.infox.security.rsa.RSAUtil;
 
 @Stateless
 public class LinkAplicacaoExternaService {
 
-    //TODO: Remover inicialização e retirar comentário da injeção quando houver um DaoProvider 
-    //@javax.inject.Inject 
+    @Inject
+    @GenericDao
     private Dao<LinkAplicacaoExterna, Integer> dao;
-    
-    @PostConstruct
-    public void init(){
-        dao = new Dao<LinkAplicacaoExterna, Integer>(LinkAplicacaoExterna.class) {};
-    }
     
     public LinkAplicacaoExterna findById(Integer id) {
         return dao.findById(id);
@@ -35,7 +41,11 @@ public class LinkAplicacaoExternaService {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void salvar(LinkAplicacaoExterna entity) {
         entity.setAtivo(Boolean.TRUE);
-        dao.persist(entity);
+        if (entity.getId() != null) {
+            dao.update(dao.findById(entity.getId()));
+        } else {
+            dao.persist(entity);
+        }
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -45,23 +55,38 @@ public class LinkAplicacaoExternaService {
     }
     
     String appendQueriesToUrl(String urlString, Collection<Entry<String,String>> queries){
-        try {
-            if (!urlString.matches("^\\w+://.+")){
-                urlString = String.format("http://%s", urlString);
-            }
-            URIBuilder uriBuilder = new URIBuilder(urlString);
-            for (Entry<String, String> entry : queries) {
-                uriBuilder.addParameter(entry.getKey(), entry.getValue());
-            }
-            return uriBuilder.build().toString();
-        } catch (URISyntaxException e) {
-            throw new BusinessException("linkAplicacaoExterna.malformed.url",e);
-        }
+        return new UrlBuilder(urlString).queries(queries).build();
     }
     
-    public String appendJWTTokenToUrlQuery(LinkAplicacaoExterna linkAplicacaoExterna){
-        HashMap<String, String> hashMap = new HashMap<String,String>();
-        return appendQueriesToUrl(linkAplicacaoExterna.getUrl(), hashMap.entrySet());
+    public String appendJWTTokenToUrlQuery(LinkAplicacaoExterna linkAplicacaoExterna, Collection<Entry<JWTClaim,Object>> claims){
+        String jwtToken = generateTokenFor(claims);
+        return new UrlBuilder(linkAplicacaoExterna.getUrl()).query("epp.auth.jwt", jwtToken).build();
+    }
+
+    private byte[] getPrivateKey(){
+        String base64RsaKey = Parametros.EPP_API_RSA_PRIVATE_KEY.getValue();
+        if (base64RsaKey == null || base64RsaKey.isEmpty()){
+            throw SystemExceptionFactory.create(RSAErrorCodes.INVALID_PRIVATE_KEY_STRUCTURE)
+            .set(Parametros.EPP_API_RSA_PRIVATE_KEY.getLabel(), base64RsaKey);
+        }
+        return RSAUtil.getPrivateKeyFromBase64(base64RsaKey).getEncoded();
+    }
+    
+    String generateTokenFor(Collection<Entry<JWTClaim, Object>> claims) {
+        JWTBuilder jwtBuilder = JWT.builder();
+        DateTime issuedDate = new DateTime();
+        
+        jwtBuilder.addClaim(JWTRegisteredClaims.ISSUER, BeanManager.INSTANCE.getReference(PathResolver.class).getUrlProject());
+        String string = "uid";
+        jwtBuilder.addClaim(JWTRegisteredClaims.JWT_ID, string);
+        jwtBuilder.addClaim(JWTRegisteredClaims.ISSUED_AT, issuedDate.toDate().getTime() / 1000);
+        jwtBuilder.addClaim(JWTRegisteredClaims.EXPIRATION_DATE, issuedDate.plusMinutes(1).toDate().getTime() / 1000);
+        jwtBuilder.setAlgorithm(Algorithm.RS256).setPrivateKey(getPrivateKey());
+        for (Iterator<Entry<JWTClaim, Object>> iterator = claims.iterator(); iterator.hasNext();) {
+            Entry<JWTClaim, Object> entry = iterator.next();
+            jwtBuilder.addClaim(entry.getKey(), entry.getValue());
+        }
+        return jwtBuilder.build();
     }
     
 }

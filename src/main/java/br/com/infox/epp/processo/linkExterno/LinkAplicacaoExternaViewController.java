@@ -1,7 +1,10 @@
 package br.com.infox.epp.processo.linkExterno;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -9,10 +12,15 @@ import javax.inject.Named;
 
 import com.google.gson.Gson;
 
+import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.jwt.JWT;
+import br.com.infox.jwt.claims.InfoxPrivateClaims;
+import br.com.infox.jwt.claims.JWTClaim;
 
 @Named
 @ViewScoped
@@ -49,7 +57,13 @@ public class LinkAplicacaoExternaViewController implements Serializable{
     }
 
     public String retrieveUrlWithToken(LinkAplicacaoExterna link){
-        return service.appendJWTTokenToUrlQuery(link);
+        List<Entry<JWTClaim, Object>> claims = new ArrayList<>();
+        UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
+        claims.add(JWT.claim(InfoxPrivateClaims.LOGIN, usuarioLogado.getLogin()));
+        if (usuarioLogado.getPessoaFisica() != null) {
+            claims.add(JWT.claim(InfoxPrivateClaims.CPF,usuarioLogado.getPessoaFisica().getCpf().replaceAll("\\D", "")));
+        }
+        return service.appendJWTTokenToUrlQuery(link, claims);
     }
     
     public List<LinkAplicacaoExterna> getLinks(){
@@ -65,7 +79,9 @@ public class LinkAplicacaoExternaViewController implements Serializable{
     
     @ExceptionHandled
     public void criar(){
-        setEntity(new LinkAplicacaoExterna());
+        LinkAplicacaoExterna link = new LinkAplicacaoExterna();
+        link.setProcesso(getProcesso());
+        setEntity(link);
     }
     
     @ExceptionHandled(MethodType.PERSIST)
