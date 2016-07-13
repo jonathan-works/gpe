@@ -36,16 +36,16 @@
 			
 	        <div class="property-field-edit" style="display: inline-block;">
 				<div class="property-field-edit-name">
-					<h:outputLabel value="Marcadores" for="marcadorUpload"/>
+					<h:outputLabel value="#{infoxMessages['marcador.marcadores']}" for="marcadorFilter"/>
 				</div>
 				<div class="property-field-edit-value">
-					<p:autoComplete id="marcadorFilter" label="Marcadores" multiple="true" 
+					<p:autoComplete id="marcadorFilter" multiple="true" 
 						value="#{documentoProcessoAction.documentoFilter.marcadores}" 
 			        	completeMethod="#{documentoProcessoAction.autoCompleteMarcadores}"
 			        	itemLabel="#{item}" itemValue="#{item}" var="item"
 			        	minQueryLength="3" queryDelay="600" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
-			        	<p:ajax event="itemSelect" update="@this" processo="@this" />
-			        	<p:ajax event="itemUnselect" update="@this" processo="@this" />
+			        	<p:ajax event="itemSelect" update="@this" process="@this" />
+			        	<p:ajax event="itemUnselect" update="@this" process="@this" />
 			        </p:autoComplete>
 		        </div>
 			</div>
@@ -62,6 +62,7 @@
 
 		</h:form>
 	</rich:collapsiblePanel>
+	
 	<div style="margin-top: 5px;" />
 	<s:div id="documentoListDiv">
 		<wi:dataTable values="#{documentoList.list(15)}"

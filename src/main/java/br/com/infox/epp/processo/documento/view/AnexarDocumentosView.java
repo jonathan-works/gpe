@@ -31,7 +31,6 @@ import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.ArrayUtil;
-import br.com.infox.core.util.ArrayUtil.ListConversor;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
@@ -63,6 +62,7 @@ import br.com.infox.epp.processo.documento.service.DocumentoUploaderService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.marcador.Marcador;
 import br.com.infox.epp.processo.marcador.MarcadorSearch;
+import br.com.infox.epp.processo.marcador.MarcadorService;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
@@ -70,7 +70,6 @@ import br.com.infox.ibpm.task.home.VariableTypeResolver;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.ApplicationException;
-import br.com.infox.seam.security.SecurityUtil;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Named
@@ -100,7 +99,7 @@ public class AnexarDocumentosView implements Serializable {
 	@Inject
 	private MarcadorSearch marcadorSearch;
 	@Inject
-	private SecurityUtil securityUtil;
+	private MarcadorService marcadorService;
 
 	// Propriedades da classe
 	private Processo processo;
@@ -142,15 +141,6 @@ public class AnexarDocumentosView implements Serializable {
 	private String order;
 	private static final String DEFAULT_ORDER = "o.id";
 	
-	private ListConversor<Marcador, String> listConversorMarcador = new ListConversor<Marcador, String>() {
-
-        @Override
-        public String convert(Marcador T) {
-            return T.getCodigo();
-        }
-	    
-    };
-	
 	public void newEditorInstance() {
 		DocumentoTemporario newEditor = new DocumentoTemporario();
 		newEditor.setDocumentoBin(new DocumentoBin());
@@ -174,7 +164,7 @@ public class AnexarDocumentosView implements Serializable {
 
     private List<Marcador> autoCompleteMarcadores(String query, List<Marcador> marcadoresSelectionados) {
         Marcador marcadorTemp = new Marcador(query);
-        List<String> codigosMarcadores = ArrayUtil.convertToList(marcadoresSelectionados, listConversorMarcador);
+        List<String> codigosMarcadores = ArrayUtil.convertToList(marcadoresSelectionados, MarcadorService.CONVERT_MARCADOR_CODIGO);
         List<Marcador> marcadores = marcadorSearch.listMarcadorByProcessoAndCodigo(getProcesso().getIdProcesso(), query, codigosMarcadores);
         if (!marcadores.contains(marcadorTemp) 
                 && (marcadoresSelectionados == null || !marcadoresSelectionados.contains(marcadorTemp))) {
@@ -184,7 +174,7 @@ public class AnexarDocumentosView implements Serializable {
     }
 	
 	public boolean isPermittedAddMarcador() {
-	    return securityUtil.isPermitted("AnexarDocumentosProcesso/adicionarMarcador");
+	    return marcadorService.isPermittedAdicionarMarcador();
 	}
 	
 	public void fileUploadListener(FileUploadEvent fileUploadEvent) throws IOException {

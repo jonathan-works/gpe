@@ -32,8 +32,9 @@ import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.documento.manager.PastaRestricaoManager;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.marcador.MarcadorSearch;
+import br.com.infox.epp.processo.marcador.MarcadorService;
 import br.com.infox.epp.system.Parametros;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Named(DocumentoComunicacaoAction.NAME)
 @Stateful
@@ -56,8 +57,12 @@ public class DocumentoComunicacaoAction implements Serializable {
 	private PapelManager papelManager;
 	@Inject
 	private PastaRestricaoManager pastaRestricaoManager;
-	
-	private DocumentoDisponivelComunicacaoList documentoDisponivelComunicacaoList = ComponentUtil.getComponent(DocumentoDisponivelComunicacaoList.NAME);
+	@Inject
+	private DocumentoDisponivelComunicacaoList documentoDisponivelComunicacaoList;
+	@Inject
+    private MarcadorService marcadorService;
+	@Inject
+	private MarcadorSearch marcadorSearch;
 	
 	private ModeloComunicacao modeloComunicacao;
 	
@@ -181,6 +186,18 @@ public class DocumentoComunicacaoAction implements Serializable {
 		}
 		return pastas;
 	}
+	
+    public List<String> autoCompleteMarcadores(String query) {
+        List<String> marcadores = marcadorSearch.listByProcessoAndCodigo(modeloComunicacao.getProcesso().getIdProcesso(), query, modeloComunicacao.getCodigosMarcadores());
+        if (!marcadores.contains(query) && (modeloComunicacao.getCodigosMarcadores() == null || !modeloComunicacao.getCodigosMarcadores().contains(query))) {
+            marcadores.add(0, query);
+        }
+        return marcadores;
+    }
+	
+	public boolean isPermittedAddMarcador() {
+        return marcadorService.isPermittedAdicionarMarcador();
+    }
 
 	public boolean canSee(Pasta pasta) {
 	    PastaRestricaoBean restricaoBean = restricoesPasta.get(pasta.getId());
@@ -205,4 +222,5 @@ public class DocumentoComunicacaoAction implements Serializable {
 	public void setModelosDocumento(List<ModeloDocumento> modelosDocumento) {
 		this.modelosDocumento = modelosDocumento;
 	}
+	
 }

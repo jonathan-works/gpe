@@ -7,7 +7,9 @@
       xmlns:rich="http://richfaces.org/rich"
       xmlns:a="http://richfaces.org/a4j"
       xmlns:s="http://jboss.org/schema/seam/taglib"
-      xmlns:infox="http://www.infox.com.br/jsf">
+      xmlns:infox="http://www.infox.com.br/jsf"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<h:outputScript library="js" name="components.js" />
 	<s:div style="background-color: white; padding-top: 20px; margin-bottom: 20px; padding-left: 10px; padding-right: 10px;">
@@ -243,6 +245,44 @@
 					: infoxMessages['comunicacao.anexarDocumentos']}"
 				switchType="client" style="margin-top:1em;"
 				rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada or not empty envioComunicacaoController.modeloComunicacao.documentos}">
+				
+				<rich:panel header="#{infoxMessages['searchForm.title']}" style="margin-bottom: 1rem;">
+					<h:form>
+				        <div class="property-field-edit" style="display: inline-block;">
+							<div class="property-field-edit-name">
+								<h:outputLabel value="#{infoxMessages['marcador.marcadores']}" for="marcadorFilter"/>
+							</div>
+							<div class="property-field-edit-value">
+								<p:autoComplete id="marcadorFilter" multiple="true" 
+									value="#{documentoDisponivelComunicacaoList.codigoMarcadores}" 
+						        	completeMethod="#{documentoDisponivelComunicacaoList.autoCompleteMarcadores}"
+						        	itemLabel="#{item}" itemValue="#{item}" var="item"
+						        	minQueryLength="3" queryDelay="600" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
+						        	<p:ajax event="itemSelect" update="@this" process="@this" />
+						        	<p:ajax event="itemUnselect" update="@this" process="@this" />
+						        </p:autoComplete>
+					        </div>
+						</div>
+						
+						<div>
+							<h:commandButton id="btnFiltrarDocumentos"
+								value="#{infoxMessages['button.pesquisar']}"
+								action="#{documentoDisponivelComunicacaoList.refresh()}"
+								styleClass="buttons buttons">
+								<f:ajax immediate="true" execute="@form" render="@form :documentosProcessoPanel :documentosProcessoSearchForm" />
+							</h:commandButton>
+							
+							<h:commandButton id="btnLimparFiltro"
+								value="#{infoxMessages['button.limpar']}"
+								action="#{documentoDisponivelComunicacaoList.newInstance()}"
+								styleClass="buttons buttons">
+								<f:ajax immediate="true" execute="@form" render="@form :documentosProcessoPanel :documentosProcessoSearchForm" />
+							</h:commandButton>
+						</div>
+			
+					</h:form>
+				</rich:panel>
+				
 				<wi:dataTable id="documentosProcesso" values="#{documentoDisponivelComunicacaoList.list(10)}" 
 					bean="#{documentoDisponivelComunicacaoList}" rowId="#{row.id}"
 					showGrid="#{not envioComunicacaoController.modeloComunicacao.finalizada}"
@@ -378,6 +418,25 @@
 						<a:ajax event="change" render="comunicacaoEditorDiv" execute="@this" limitRender="true"
 							listener="#{documentoComunicacaoAction.assignModeloDocumento}"/>
 					</wi:selectOneMenuEntity>
+					<c:if test="#{documentoComunicacaoAction.isPermittedAddMarcador()}">
+						<div class="property-field-edit" style="display: inline-block;">
+							<div class="property-field-edit-name">
+								<h:outputLabel value="#{infoxMessages['marcador.marcadores']}" for="marcadorEditor"/>
+							</div>
+							<div class="property-field-edit-value">
+								<p:autoComplete id="marcadorEditor" multiple="true" 
+									value="#{envioComunicacaoController.modeloComunicacao.codigosMarcadores}" 
+						        	completeMethod="#{documentoComunicacaoAction.autoCompleteMarcadores}"
+						        	itemLabel="#{item}" itemValue="#{item}" var="item" 
+						        	readonly="#{not envioComunicacaoController.modeloComunicacao.minuta}"
+						        	disabled="#{not envioComunicacaoController.modeloComunicacao.minuta}"
+						        	minQueryLength="3" queryDelay="600" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
+						        	<p:ajax event="itemSelect" update="@this" process="@this" />
+						        	<p:ajax event="itemUnselect" update="@this" process="@this" />
+						        </p:autoComplete>
+					        </div>
+						</div>
+					</c:if>
 					<s:div>
 						<wi:selectBooleanRadio id="minuta" value="#{envioComunicacaoController.modeloComunicacao.minuta}"
 							label="#{infoxMessages['comunicacao.minutaLabel']}" 
