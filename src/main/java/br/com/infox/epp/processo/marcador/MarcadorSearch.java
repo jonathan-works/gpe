@@ -56,7 +56,7 @@ public class MarcadorSearch extends PersistenceController {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Marcador> cq = cb.createQuery(Marcador.class);
         Root<DocumentoBin> documentoBin = cq.from(DocumentoBin.class);
-        Root<Pasta> pasta = cq.from(Pasta.class); 
+        Root<Pasta> pasta = cq.from(Pasta.class);
         Join<DocumentoBin, Documento> documento = documentoBin.join(DocumentoBin_.documentoList, JoinType.LEFT);
         Join<DocumentoBin, DocumentoTemporario> documentoTemporario = documentoBin.join(DocumentoBin_.documentoTemporarioList, JoinType.LEFT);
         Join<DocumentoBin, Marcador> marcador = documentoBin.join(DocumentoBin_.marcadores, JoinType.INNER);
@@ -161,10 +161,10 @@ public class MarcadorSearch extends PersistenceController {
                 cb.not(marcador.get(Marcador_.codigo).in(codigoMarcadores))
             );
         }
-        return getEntityManager().createQuery(cq).getResultList();
+        return getEntityManager().createQuery(cq).setMaxResults(20).getResultList();
     }
 
-    public List<String> listCodigoMarcadorFromDocumentoByProcessoAndCodigoAndNotInCodigos(Integer idProcesso, String codigoMarcador, List<String> codigoMarcadores) {
+    public List<String> listCodigoFromDocumentoByProcessoAndCodigoAndNotInCodigos(Integer idProcesso, String codigoMarcador, List<String> codigoMarcadores) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<String> cq = cb.createQuery(String.class);
         Root<DocumentoBin> documentoBin = cq.from(DocumentoBin.class);
@@ -172,7 +172,7 @@ public class MarcadorSearch extends PersistenceController {
         Join<Documento, Pasta> pasta = documento.join(Documento_.pasta, JoinType.INNER); 
         Join<DocumentoBin, Marcador> marcador = documentoBin.join(DocumentoBin_.marcadores, JoinType.INNER);
         Expression<String> codigo = marcador.get(Marcador_.codigo);
-        cq.select(codigo).distinct(true);
+        cq.select(codigo);
         cq.where(
             cb.equal(pasta.get(Pasta_.processo).get(Processo_.idProcesso), cb.literal(idProcesso)),
             cb.like(marcador.get(Marcador_.codigo), cb.literal("%" + codigoMarcador + "%"))
@@ -184,7 +184,9 @@ public class MarcadorSearch extends PersistenceController {
                 cb.not(marcador.get(Marcador_.codigo).in(codigoMarcadores))
             );
         }
-        return getEntityManager().createQuery(cq).getResultList();
+        cq.groupBy(codigo);
+        cq.orderBy(cb.desc(cb.countDistinct(documentoBin.get(DocumentoBin_.id))));
+        return getEntityManager().createQuery(cq).setMaxResults(20).getResultList();
     }
     
     public List<String> listCodigoMarcadorByEntrega(Long idEntrega) {
