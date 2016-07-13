@@ -9,11 +9,13 @@ import java.util.Map.Entry;
 import javax.faces.application.ResourceDependencies;
 import javax.faces.application.ResourceDependency;
 import javax.faces.component.FacesComponent;
+import javax.faces.component.UICommand;
 import javax.faces.component.UIComponentBase;
 import javax.faces.component.UIInput;
 import javax.faces.component.UIOutput;
 import javax.faces.component.UISelectItem;
 import javax.faces.component.UISelectItems;
+import javax.faces.component.html.HtmlCommandLink;
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.component.html.HtmlPanelGroup;
 import javax.faces.component.html.HtmlSelectBooleanCheckbox;
@@ -22,7 +24,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
 import org.primefaces.component.calendar.Calendar;
-import org.primefaces.component.inputtext.InputText;
 import org.primefaces.component.outputlabel.OutputLabel;
 
 @FacesComponent(value = "DynamicFieldSet")
@@ -62,12 +63,31 @@ public class DynamicFieldSet extends UIComponentBase {
 					getChildren().add(parent);
 					createInput(formField, parent);
 					createLabel(formField, parent);
+					createActions(formField, parent);
 				}
 			}
 		}
 	}
 
-	private UIOutput createLabel(DynamicField formField, HtmlPanelGroup parent) {
+        private void createActions(DynamicField formField, HtmlPanelGroup parent) {
+	    HtmlPanelGroup actionsGroup = new HtmlPanelGroup();
+	    
+	    for (DynamicFieldAction action : formField.getActions()) {
+	        actionsGroup.getChildren().add(createAction(action, parent));
+            }
+	    parent.getChildren().add(actionsGroup);
+        }
+
+    private UICommand createAction(DynamicFieldAction action, HtmlPanelGroup parent) {
+        HtmlCommandLink command = new HtmlCommandLink();
+        if (action.getIcon()==null)
+            command.setValue(action.getLabel());
+        command.setActionExpression(DynamicFieldSetUtil.createMethodExpression(action.getAction(), Void.class));
+        parent.getChildren().add(command);
+        return command;
+    }
+
+    private UIOutput createLabel(DynamicField formField, HtmlPanelGroup parent) {
 		OutputLabel label = new OutputLabel();
 		label.setStyleClass(LABEL_STYLE_CLASS);
 		label.setFor(toId(formField.getId()));
@@ -101,7 +121,7 @@ public class DynamicFieldSet extends UIComponentBase {
 			return createStringInput(formField);
 		default:
 			{
-				InputText input = new InputText();
+			        HtmlInputText input = new HtmlInputText();
 				input.setStyleClass(INPUT_STYLE_CLASS);
 				input.setTitle(formField.getTooltip());
 				input.setDisabled(true);
@@ -130,6 +150,7 @@ public class DynamicFieldSet extends UIComponentBase {
 		HtmlInputText input = new HtmlInputText();
 		input.setStyleClass(INPUT_STYLE_CLASS);
 		input.setTitle(formField.getTooltip());
+		input.setReadonly(Boolean.TRUE.equals(formField.get("readonly")));
 		return input;
 	}
 

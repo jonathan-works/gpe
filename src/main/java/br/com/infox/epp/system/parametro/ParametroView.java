@@ -20,6 +20,7 @@ import org.jboss.seam.contexts.Contexts;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.DynamicField;
+import br.com.infox.epp.DynamicFieldAction;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.system.entity.Parametro;
@@ -62,34 +63,30 @@ public class ParametroView implements Serializable {
 		this.grupo = grupo;
 		refreshFormFields(parametroService.getParametros(grupo));
 	}
-
+	
 	public DynamicField createFormField(ParametroDefinition<?> definicaoParametro) {
+	    if (definicaoParametro.isSistema())
+	        return null;
+	    
 		Parametro parametro = parametroManager.getParametro(definicaoParametro.getNome());
-		if (parametro == null){
-			DynamicField ff = new DynamicField();
-			ff.setId(definicaoParametro.getNome());
-			ff.setType(definicaoParametro.getTipo());
-			ff.setLabel(infoxMessages.get(String.format("parametro.%s.label", definicaoParametro.getNome())));
-			ff.setTooltip(infoxMessages.get(String.format("parametro.%s.descricao", definicaoParametro.getNome())));
-			ff.setPath(MessageFormat.format("{0}.{1}", Introspector.decapitalize(ParametroView.class.getSimpleName()), "formFields"));
-			ff.setValue(null);
-			if (definicaoParametro.getKeyAttribute() != null && definicaoParametro.getLabelAttribute() != null){
-				List<SelectItem> items = parametroService.getItems(definicaoParametro);
-				ff.set("items", items);
-			}
-			return ff;
-		}
 		DynamicField ff = new DynamicField();
-		ff.setId(parametro.getNomeVariavel());
+		ff.setId(definicaoParametro.getNome());
 		ff.setType(definicaoParametro.getTipo());
-		ff.setLabel(infoxMessages.get(String.format("parametro.%s.label", definicaoParametro.getNome())));
-		ff.setTooltip(infoxMessages.get(String.format("parametro.%s.descricao", definicaoParametro.getNome())));
-		ff.setPath(MessageFormat.format("{0}.{1}", Introspector.decapitalize(ParametroView.class.getSimpleName()), "formFields"));
-		ff.setValue(parametro.getValorVariavel());
-		if (definicaoParametro.getKeyAttribute() != null && definicaoParametro.getLabelAttribute() != null){
-			List<SelectItem> items = parametroService.getItems(definicaoParametro);
-			ff.set("items", items);
-		}
+                ff.set("readonly", definicaoParametro);
+                ff.setLabel(infoxMessages.get(String.format("parametro.%s.label", definicaoParametro.getNome())));
+                ff.setTooltip(infoxMessages.get(String.format("parametro.%s.descricao", definicaoParametro.getNome())));
+                ff.setPath(MessageFormat.format("{0}.{1}", Introspector.decapitalize(ParametroView.class.getSimpleName()), "formFields"));
+                if (definicaoParametro.getKeyAttribute() != null && definicaoParametro.getLabelAttribute() != null){
+                    List<SelectItem> items = parametroService.getItems(definicaoParametro);
+                    ff.set("items", items);
+                }
+                for (Entry<String, String> action : definicaoParametro.getActions()) {
+                    String label = infoxMessages.get(String.format("parametro.%s.actions.%s", definicaoParametro.getNome(), action.getKey()));
+                    String actionListener = action.getValue();
+                    ff.addAction(new DynamicFieldAction(null, label, actionListener));
+                }
+                ff.setValue(parametro == null ? null : parametro.getValorVariavel());
+		ff.set("actions", definicaoParametro.getActions());
 		return ff;
 	}
 	

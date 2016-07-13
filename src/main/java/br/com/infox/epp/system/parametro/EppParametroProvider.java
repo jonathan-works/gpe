@@ -38,6 +38,10 @@ public class EppParametroProvider implements Serializable, ParametroProvider {
 	@PostConstruct
 	public void init() {
 		parametroDefinitions = new ArrayList<>();
+		for (Parametros parametro : Parametros.values()) {
+                    if (parametro.getParametroDefinition() != null)
+                        parametroDefinitions.add(parametro.getParametroDefinition());
+                }
 		initParametrosControleAcesso();
 		initParametrosComunicacao();
 		initParametrosAnaliseDocumento();
