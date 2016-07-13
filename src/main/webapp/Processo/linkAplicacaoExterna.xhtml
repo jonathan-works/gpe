@@ -1,38 +1,80 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:infox="http://www.infox.com.br/jsf"
-    xmlns:p="http://primefaces.org/ui"
-	xmlns:wi="http://www.itx.com.br/jsf">
-    <ui:param name="processo" value="#{wi:get(processo, processoEpaHome.instance)}"></ui:param>
-    <f:event type="preRenderView" listener="#{linkAplicacaoExternaViewController.setProcesso(processo)}" />
-    <infox:div id="linkAplicacaoExternaContainer">
-        <h:form>
-            <fieldset>
-                <legend><h:outputText value="#{infoxMessages['crud.linkAplicacaoExterna.form']}" /></legend>
-                <p:outputPanel rendered="#{not empty linkAplicacaoExternaViewController.entity}">
-                    <wi:inputText id="codigo" label="#{infoxMessages['crud.linkAplicacaoExterna.codigo']}" value="#{linkAplicacaoExternaViewController.entity.codigo}" required="true"/>
-                    <wi:inputText id="descricao" label="#{infoxMessages['crud.linkAplicacaoExterna.descricao']}" value="#{linkAplicacaoExternaViewController.entity.descricao}" required="true"/>
-                    <wi:inputText id="url" label="#{infoxMessages['crud.linkAplicacaoExterna.url']}" value="#{linkAplicacaoExternaViewController.entity.url}" required="true"/>
-                    <h:commandButton styleClass="buttons" value="#{infoxMessages['crud.persist']}" action="#{linkAplicacaoExternaViewController.salvar}">
-                        <p:ajax update="@form:@parent :pageBodyDialogMessage" process="@parent" />
-                    </h:commandButton>
-                </p:outputPanel>
-                <p:outputPanel rendered="#{empty linkAplicacaoExternaViewController.entity}">
-                    <h:commandButton styleClass="buttons" value="#{infoxMessages['crud.new']}" action="#{linkAplicacaoExternaViewController.criar}">
-                        <p:ajax update="@form :pageBodyDialogMessage" process="@this" />
-                    </h:commandButton>
-                </p:outputPanel>
-            </fieldset>
-        </h:form>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:infox="http://www.infox.com.br/jsf" xmlns:p="http://primefaces.org/ui" xmlns:wi="http://www.itx.com.br/jsf">
+    <infox:div id="linkAplicacaoExternaContainer"
+        rendered="#{security.checkPage('/pages/Processo/linkAplicacaoExternaView')}">
+        <ui:param name="processo" value="#{wi:get(processo, processoEpaHome.instance)}"></ui:param>
+        <f:event type="preRenderView" listener="#{linkAplicacaoExternaViewController.setProcesso(processo)}" />
+
         <fieldset>
-            <legend><h:outputText value="#{infoxMessages['crud.linkAplicacaoExterna.pageTitle']}" /></legend>
-            <ui:repeat var="link" value="#{linkAplicacaoExternaViewController.links}">
-                <h:commandButton type="button" styleClass="buttons" value="#{link.descricao}" onclick="infox.openPopUp('#{link.descricao}','#{linkAplicacaoExternaViewController.retrieveUrlWithToken(link)}')"/>
-            </ui:repeat>
+            <legend>
+                <div style="display: inline-block; vertical-align: middle; font-weight: bold;">
+                    <h:outputText value="#{infoxMessages['crud.linkAplicacaoExterna.pageTitle']}" />
+                </div>
+                <p:outputPanel style="display:inline-block;vertical-align:middle;padding:0 0.5em;"
+                    rendered="#{security.checkPage('/pages/Processo/linkAplicacaoExternaEdit') and empty linkAplicacaoExternaViewController.entity}">
+                    <h:form>
+                        <h:commandLink styleClass="buttons" action="#{linkAplicacaoExternaViewController.criar}">
+                            <h:graphicImage title="#{infoxMessages['crud.new']}"
+                                url="#{layoutController.getMaterialDesignIconJSFUrl('1x','black','18dp','add')}" />
+                            <p:ajax update="@form:@parent:@parent :pageBodyDialogMessage" process="@this" />
+                        </h:commandLink>
+                    </h:form>
+                </p:outputPanel>
+            </legend>
+            <h:form rendered="#{security.checkPage('/pages/Processo/linkAplicacaoExternaEdit')}">
+                <p:outputPanel rendered="#{not empty linkAplicacaoExternaViewController.entity}">
+                    <fieldset>
+                        <legend>
+                            <h:outputText value="#{infoxMessages['crud.linkAplicacaoExterna.form']}" />
+                        </legend>
+                        <wi:inputText id="codigo" label="#{infoxMessages['crud.linkAplicacaoExterna.codigo']}"
+                            value="#{linkAplicacaoExternaViewController.entity.codigo}" required="true" />
+                        <wi:inputText id="descricao" label="#{infoxMessages['crud.linkAplicacaoExterna.descricao']}"
+                            value="#{linkAplicacaoExternaViewController.entity.descricao}" required="true" />
+                        <wi:inputText id="url" label="#{infoxMessages['crud.linkAplicacaoExterna.url']}"
+                            value="#{linkAplicacaoExternaViewController.entity.url}" required="true" />
+                        <h:commandButton styleClass="buttons" value="#{infoxMessages['crud.update']}"
+                            action="#{linkAplicacaoExternaViewController.salvar}">
+                            <p:ajax update="@form:@parent :pageBodyDialogMessage" process="@parent" />
+                        </h:commandButton>
+                    </fieldset>
+                </p:outputPanel>
+            </h:form>
+            <h:form>
+                <ui:repeat var="link" value="#{linkAplicacaoExternaViewController.links}">
+                    <div style="display: inline-block;">
+                        <div style="display: inline-block; vertical-align: middle;">
+                            <h:commandButton type="button" styleClass="buttons" value="#{link.descricao}"
+                                onclick="infox.openPopUp('#{link.descricao}','#{linkAplicacaoExternaViewController.retrieveUrlWithToken(link)}')" />
+                        </div>
+                        <div style="display: inline-block; vertical-align: middle;">
+                            <div style="height: 0.85em;">
+                                <h:commandLink action="#{linkAplicacaoExternaViewController.setEntity(link)}"
+                                    rendered="#{security.checkPage('/pages/Processo/linkAplicacaoExternaEdit')}">
+                                    <h:graphicImage style="width:auto;height:100%;"
+                                        url="#{layoutController.getMaterialDesignIconJSFUrl('1x','black','18dp','edit')}"
+                                        title="#{infoxMessages['button.selecionar']}" />
+                                    <p:ajax update="@form:@parent :pageBodyDialogMessage" process="@this" />
+                                </h:commandLink>
+                            </div>
+                            <div style="height: 0.85em;">
+                                <h:commandLink action="#{linkAplicacaoExternaViewController.remover(link)}"
+                                    rendered="#{security.checkPage('/pages/Processo/linkAplicacaoExternaEdit')}"
+                                    onclick="return confirm('#{messages['crud.confirmRemove']}');">
+                                    <h:graphicImage style="width:auto;height:100%;"
+                                        title="#{infoxMessages['crud.remove']}"
+                                        url="#{layoutController.getMaterialDesignIconJSFUrl('1x','black','18dp','delete')}" />
+
+                                    <p:ajax update="@form:@parent :pageBodyDialogMessage" process="@this" />
+                                </h:commandLink>
+                            </div>
+                        </div>
+                    </div>
+                </ui:repeat>
+            </h:form>
         </fieldset>
     </infox:div>
 </ui:composition>
