@@ -54,4 +54,13 @@ public class UsuarioRestImpl implements UsuarioRest {
 		}
 	}
 
+    @Override
+    public Response loginGet(String jwt) {
+        try {
+            return Response.seeOther(new URI(loginRestService.loginWithRSA(jwt))).build();
+        } catch (URISyntaxException e) {
+            throw new WebApplicationException(e, Status.UNAUTHORIZED);
+        }
+    }
+
 }
