@@ -5,6 +5,9 @@ import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Iterator;
 
+import br.com.infox.core.exception.SystemExceptionFactory;
+import br.com.infox.jwt.JWTErrorCodes;
+
 public enum JWTRegisteredClaims implements JWTClaim {
     EXPIRATION_DATE("exp",BasicJWTValidators.INT_DATE),
     ISSUED_AT("iat",BasicJWTValidators.INT_DATE),
@@ -40,21 +43,24 @@ class BasicJWTValidators {
         @Override
         public void validate(Object value) {
             if (!(value instanceof String))
-                throw new IllegalArgumentException(String.format("Value [ %s ] is not a string",value));
+                throw SystemExceptionFactory.create(JWTErrorCodes.INVALID_CLAIM).set("value", value)
+                .set("expected","string");
         }
     };
     public static final JWTValidator STRING_OR_URI = new JWTValidator(){
         @Override
         public void validate(Object value) {
             if (!(value instanceof String))
-                throw new IllegalArgumentException(String.format("Value [ %s ] is not a string",value));
+                throw SystemExceptionFactory.create(JWTErrorCodes.INVALID_CLAIM).set("value", value)
+                .set("expected","string");
             String stringOrUri = (String) value;
             if (!stringOrUri.contains(":"))
                 return;
             try {
                 new URI(stringOrUri);
             } catch (URISyntaxException e) {
-                throw new IllegalArgumentException(String.format("Value [ %s ] is not a valid URI",value));
+                throw SystemExceptionFactory.create(JWTErrorCodes.INVALID_CLAIM).set("value", value)
+                .set("expected","URI");
             }
         }
         
@@ -81,11 +87,13 @@ class BasicJWTValidators {
             if (value == null)
                 return;
             if (!(value instanceof Number)) {
-                throw new IllegalArgumentException(String.format("Value [ %s ] must be an instance of Number", value));
+                throw SystemExceptionFactory.create(JWTErrorCodes.INVALID_CLAIM).set("value", value)
+                    .set("expected","number");
             }
             long longValue = ((Number) value).longValue();
             if (longValue < 0)
-                throw new IllegalArgumentException(String.format("Value [ %s ] must be non-negative", value));
+                throw SystemExceptionFactory.create(JWTErrorCodes.INVALID_CLAIM).set("value", value)
+                    .set("expected","positive number");
         }
         
     };

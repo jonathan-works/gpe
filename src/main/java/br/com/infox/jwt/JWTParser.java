@@ -5,7 +5,6 @@ import java.util.Map;
 
 public interface JWTParser {
     Map<String, Object> parse(String jwt);
-    JWTParser setKey(String key);
     JWTParser setKey(byte[] key);
     JWTParser setKey(Key key);
 }

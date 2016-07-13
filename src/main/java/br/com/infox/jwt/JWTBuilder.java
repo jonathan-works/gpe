@@ -11,7 +11,6 @@ public interface JWTBuilder {
 
     JWTBuilder addClaim(JWTClaim claim, Object value);
     JWTBuilder setAlgorithm(Algorithm algorithm);
-    JWTBuilder setPrivateKey(String privateKey);
     JWTBuilder setPrivateKey(byte[] privateKey);
     JWTBuilder setPrivateKey(PrivateKey privateKey);
 }

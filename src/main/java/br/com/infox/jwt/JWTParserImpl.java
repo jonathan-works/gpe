@@ -14,8 +14,11 @@ import org.apache.commons.codec.binary.Base64;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import br.com.infox.core.exception.SystemExceptionFactory;
 import br.com.infox.jwt.encryption.Algorithm;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureException;
 
 class JWTParserImpl implements JWTParser {
 
@@ -24,19 +27,26 @@ class JWTParserImpl implements JWTParser {
     @Override
     public Map<String, Object> parse(String jwt) {
         Algorithm algorithm = retrieveAlgorithm(jwt);
+        JwtParser jwtParser = Jwts.parser();
         switch (algorithm) {
         case HS256:
         case HS384:
         case HS512:
-            return Jwts.parser().setSigningKey(key).parseClaimsJws(jwt).getBody();
+            jwtParser = jwtParser.setSigningKey(key);
+            break;
         case RS256:
         case RS384:
         case RS512:
-            return Jwts.parser().setSigningKey(getValidationKey(key)).parseClaimsJws(jwt).getBody();
-        default:
+            jwtParser = jwtParser.setSigningKey(getValidationKey(key));
             break;
+        default:
+            throw SystemExceptionFactory.create(JWTErrorCodes.UNSUPPORTED_ALGORITHM);
         }
-        throw new IllegalArgumentException(String.format("Invalid JWT string [ %s ]",jwt));
+        try {
+            return jwtParser.parseClaimsJws(jwt).getBody();
+        } catch (SignatureException e){
+            throw SystemExceptionFactory.create(JWTErrorCodes.SIGNATURE_VERIFICATION_ERROR, e);
+        }
     }
 
     private Algorithm retrieveAlgorithm(String jwt) {
@@ -44,7 +54,7 @@ class JWTParserImpl implements JWTParser {
         try {
             return Algorithm.valueOf(algorithmName);
         } catch (Exception e){
-            throw new IllegalArgumentException(String.format("Unsupported algorithm type [ %s ]", algorithmName),e);
+            throw SystemExceptionFactory.create(JWTErrorCodes.UNSUPPORTED_ALGORITHM);
         }
     }
 
@@ -55,7 +65,7 @@ class JWTParserImpl implements JWTParser {
             JsonObject header = new Gson().fromJson(decodedHeaderJson, JsonObject.class);
             return header.get("alg").getAsString();
         } catch (Exception e){
-            throw new IllegalArgumentException(String.format("Unable to extract algorithm name from JWT string [ %s ]", jwt),e);
+            throw SystemExceptionFactory.create(JWTErrorCodes.FAILED_TO_PARSE_ALGORITHM);
         }
     }
 
@@ -70,16 +80,13 @@ class JWTParserImpl implements JWTParser {
                 X509EncodedKeySpec keySpec = new X509EncodedKeySpec(key);
               validationKey=keyFactory.generatePublic(keySpec);
             }
-        } catch (InvalidKeySpecException | NoSuchAlgorithmException e){
-            throw new IllegalArgumentException(String.format("Invalid RSA key [ %s ]", Base64.encodeBase64String(key)), e);
+        } catch (InvalidKeySpecException e){
+            throw SystemExceptionFactory.create(JWTErrorCodes.INVALID_RSA_KEY, e)
+                .set("base64Key", Base64.encodeBase64String(key));
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("failed to load 'RSA' keyfactory instance",e);
         }
         return validationKey;
-    }
-    
-    @Override
-    public JWTParser setKey(String key) {
-        this.key = Base64.decodeBase64(key);
-        return this;
     }
 
     @Override

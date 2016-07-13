@@ -3,8 +3,6 @@ package br.com.infox.jwt;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.SecureRandom;
@@ -23,6 +21,7 @@ import org.apache.commons.codec.binary.Base64;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import br.com.infox.core.exception.SystemExceptionFactory;
 import br.com.infox.jwt.claims.JWTClaim;
 import br.com.infox.jwt.encryption.Algorithm;
 import io.jsonwebtoken.Jwts;
@@ -36,14 +35,9 @@ class JWTBuilderImpl implements JWTBuilder {
 
     JWTBuilderImpl() {
         claims = new HashMap<>();
-        try {
-            KeyPair keyPair = KeyPairGenerator.getInstance("RSA").generateKeyPair();
-            setPrivateKey(keyPair.getPrivate());
-        } catch (NoSuchAlgorithmException e) {
-            byte[] privateKey = new byte[2048];
-            new SecureRandom().nextBytes(privateKey);
-            setPrivateKey(privateKey);
-        }
+        byte[] privateKey = new byte[2048];
+        new SecureRandom().nextBytes(privateKey);
+        setPrivateKey(privateKey);
     }
     
     String buildWithJwtBuilder(){
@@ -86,16 +80,11 @@ class JWTBuilderImpl implements JWTBuilder {
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             return keyFactory.generatePrivate(privateKeySpec);
         } catch (InvalidKeySpecException | NoSuchAlgorithmException e){
-            throw new IllegalStateException("NOT A VALID RSA KEY");
+            throw SystemExceptionFactory.create(JWTErrorCodes.INVALID_RSA_KEY).set("value", Base64.encodeBase64String(privateKey))
+            .set("expected","string");
         }
     }
     
-    @Override
-    public JWTBuilder setPrivateKey(String privateKey) {
-        this.privateKey = privateKey.getBytes(StandardCharsets.UTF_8);
-        return this;
-    }
-
     @Override
     public JWTBuilder setPrivateKey(byte[] privateKey) {
         this.privateKey = privateKey;
@@ -158,7 +147,7 @@ class JWTBuilderImpl implements JWTBuilder {
             signature = signRSA(algorithm, unsignedJWT, privateKey);
             break;
         default:
-            throw new IllegalArgumentException("Unsupported signing method");
+            throw SystemExceptionFactory.create(JWTErrorCodes.UNSUPPORTED_ALGORITHM).set("algorithm", algorithm);
         }
         return Base64.encodeBase64URLSafeString(signature);
     }

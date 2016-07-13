@@ -1,5 +1,7 @@
 package br.com.infox.jwt.claims;
 
+import br.com.infox.core.exception.SystemExceptionFactory;
+import br.com.infox.jwt.JWTErrorCodes;
 public enum InfoxPrivateClaims implements JWTClaim {
     LOGIN("login",BasicJWTValidators.STRING),
     CPF("cpf",InfoxJWTValidators.CPF);
@@ -29,7 +31,8 @@ class InfoxJWTValidators {
         @Override
         public void validate(Object value) {
             if (value == null || String.valueOf(value).trim().isEmpty())
-                throw new IllegalArgumentException(String.format("Value [ %s ] is invalid", value));
+                throw SystemExceptionFactory.create(JWTErrorCodes.INVALID_CLAIM).set("value", value)
+                    .set("expected","valid cpf");
         }
         
     };
