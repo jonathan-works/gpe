@@ -207,7 +207,7 @@
 					          sizeExceededLabel="#{infoxMessages['fileUpload.error.size']}"
 					          validatorMessage="#{infoxMessages['fileUpload.error.validator']}"
 					          requiredMessage="#{infoxMessages['fileUpload.error.required']}"
-					          ontyperejected="new infox.Messages({'timeout': 3000}).dialog(\'#{infoxMessages['fluxo.xpdl.error.fileExtension']}\')"
+					          ontyperejected="new infox.Messages({'timeout': 3000}).dialog('Apenas arquivos BPMN são permitidos')"
 					          render="importarButtonDiv" id="bpmnFileUpload">
 					          <f:facet name="label">
 					            <h:outputText value="{_KB}KB de {KB}KB" />
