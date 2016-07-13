@@ -1,61 +1,53 @@
 package br.com.infox.epp.processo.consulta.list;
 
-import java.util.Map;
+import java.util.Objects;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-import br.com.infox.core.list.EntityList;
-import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.core.list.DataList;
+import br.com.infox.core.list.RestrictionType;
+import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.sigilo.manager.SigiloProcessoPermissaoManager;
 
-@Name(ConsultaProcessoExternoPorPartes.NAME)
-@Scope(ScopeType.PAGE)
-public class ConsultaProcessoExternoPorPartes extends EntityList<Processo> {
+@Named
+@ViewScoped
+public class ConsultaProcessoExternoPorPartes extends DataList<Processo> {
 
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "consultaProcessoExternoPorPartes";
-
-    private static final String DEFAULT_EJBQL = "select o from Processo o inner join o.naturezaCategoriaFluxo ncf inner join ncf.natureza n where n.hasPartes = true and o.processoPai is null "
-            + "and "
-            + SigiloProcessoPermissaoManager.getPermissaoConditionFragment();
-    private static final String DEFAULT_ORDER = "o.dataInicio ASC";
-
-    private String nomePartes;
 
     private static final String R1 = "exists (select pp from ParticipanteProcesso pp "
             + "where lower(pp.nome) like lower(concat('%', #{consultaProcessoExternoPorPartes.nomePartes}, '%'))"
             + " and pp.processo = o)";
 
+    @Inject
+    private ConsultaProcessoDynamicColumnsController consultaProcessoDynamicColumnsController;
+    
     private boolean exibirTable = false;
-
+    private Fluxo fluxo;
+    private String nomePartes;
+    
     @Override
-    public void newInstance() {
-        nomePartes = "";
-        super.newInstance();
-    }
-
-    @Override
-    protected void addSearchFields() {
-        addSearchField("nome", SearchCriteria.CONTENDO, R1);
-
+    protected void addRestrictionFields() {
+    	addRestrictionField("nomePartes", R1);
+    	addRestrictionField("fluxo", "ncf.fluxo", RestrictionType.igual);
     }
 
     @Override
     protected String getDefaultEjbql() {
-        return DEFAULT_EJBQL;
+        return "select o from Processo o inner join o.naturezaCategoriaFluxo ncf";
     }
 
     @Override
     protected String getDefaultOrder() {
-        return DEFAULT_ORDER;
+        return "o.dataInicio";
     }
-
+    
     @Override
-    protected Map<String, String> getCustomColumnsOrder() {
-        return null;
+    protected String getDefaultWhere() {
+    	return "where o.processoPai is null and o.idJbpm is not null and " + SigiloProcessoPermissaoManager.getPermissaoConditionFragment();
     }
 
     public void exibirTable() {
@@ -78,5 +70,16 @@ public class ConsultaProcessoExternoPorPartes extends EntityList<Processo> {
     public void setNomePartes(String nomePartes) {
         this.nomePartes = nomePartes;
     }
-
+    
+    public Fluxo getFluxo() {
+		return fluxo;
+	}
+    
+    public void setFluxo(Fluxo fluxo) {
+    	if (fluxo == null || !Objects.equals(fluxo, this.fluxo)) {
+    		this.fluxo = fluxo;
+    		nomePartes = null;
+    		consultaProcessoDynamicColumnsController.setFluxo(fluxo);
+    	}
+	}
 }

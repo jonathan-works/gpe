@@ -1,6 +1,5 @@
 package br.com.infox.epp.processo.list;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -18,21 +17,13 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
 
-import org.jboss.seam.faces.FacesMessages;
-
 import com.google.common.base.Strings;
 
-import br.com.infox.componentes.column.DynamicColumnModel;
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
-import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioLogin_;
-import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcesso;
-import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoRecursos;
-import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoSearch;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.Categoria_;
 import br.com.infox.epp.fluxo.entity.Fluxo;
@@ -43,6 +34,7 @@ import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo_;
 import br.com.infox.epp.fluxo.entity.Natureza_;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaFisica_;
+import br.com.infox.epp.processo.consulta.list.ConsultaProcessoDynamicColumnsController;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.Processo_;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
@@ -51,13 +43,10 @@ import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.sigilo.manager.SigiloProcessoPermissaoManager;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.entity.StatusProcesso_;
-import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
-import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada_;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica_;
-import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.util.time.Periodo;
 
 @Named
@@ -93,18 +82,11 @@ public class ProcessoEpaList extends EntityList<Processo> {
     		+ "and mp.valor = cast(#{processoEpaList.statusProcesso.idStatusProcesso} as string) "
     		+ "and mp.metadadoType = '" + EppMetadadoProvider.STATUS_PROCESSO.getMetadadoType() + "'"
     		+ ")";
-    private static final String DYNAMIC_COLUMN_EXPRESSION = "#'{'processoEpaList.getValor(row, ''{0}'')'}";
 
     @Inject
-    private VariavelProcessoService variavelProcessoService;
-    @Inject
-    private DefinicaoVariavelProcessoSearch definicaoVariavelProcessoSearch;
-    @Inject
-    private PapelManager papelManager;
+    private ConsultaProcessoDynamicColumnsController consultaProcessoDynamicColumnsController;
     
-    private List<DynamicColumnModel> dynamicColumns;
     private Fluxo fluxo;
-    private List<String> controleMensagensValidacao = new ArrayList<>();
     
     private Periodo dataInicio;
     private Periodo dataFim;
@@ -196,7 +178,6 @@ public class ProcessoEpaList extends EntityList<Processo> {
     public void setFluxo(Fluxo fluxo) {
     	if (fluxo == null || !Objects.equals(fluxo, this.fluxo)) {
 			this.fluxo = fluxo;
-			dynamicColumns = null;
 			dataInicio = new Periodo();
 	    	dataFim = new Periodo();
 	    	setCategoria(null);
@@ -205,36 +186,10 @@ public class ProcessoEpaList extends EntityList<Processo> {
 	    	setStatusProcesso(null);
 	    	setUnidadeDecisoraColegiada(null);
 	    	setUnidadeDecisoraMonocratica(null);
+	    	consultaProcessoDynamicColumnsController.setFluxo(fluxo);
 	    	super.newInstance();
     	}
 	}
-    
-    public List<DynamicColumnModel> getDynamicColumns() {
-    	if (dynamicColumns == null) {
-    		dynamicColumns = new ArrayList<>();
-    		for (DefinicaoVariavelProcesso definicaoVariavel : definicaoVariavelProcessoSearch.getDefinicoesVariaveis(fluxo, 
-    				DefinicaoVariavelProcessoRecursos.CONSULTA_PROCESSOS.getIdentificador(), papelManager.isUsuarioExterno(Authenticator.getPapelAtual().getIdentificador()))) {
-    			DynamicColumnModel model = new DynamicColumnModel(definicaoVariavel.getLabel(), MessageFormat.format(DYNAMIC_COLUMN_EXPRESSION, definicaoVariavel.getNome()));
-    			dynamicColumns.add(model);
-    		}
-    	}
-		return dynamicColumns;
-	}
-    
-    public String getValor(Processo processo, String nomeVariavel) {
-    	try {
-	    	VariavelProcesso variavel = variavelProcessoService.getVariavelProcesso(processo.getIdProcesso(), nomeVariavel);
-	    	if (variavel != null) {
-	    		return variavel.getValor();
-	    	}
-    	} catch (BusinessException e) {
-    		if (!controleMensagensValidacao.contains(e.getMessage())) {
-    			FacesMessages.instance().add(e.getMessage());
-    			controleMensagensValidacao.add(e.getMessage());
-    		}
-    	}
-    	return null;
-    }
     
     public List<Fluxo> getFluxos(String search) {
     	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
@@ -251,10 +206,6 @@ public class ProcessoEpaList extends EntityList<Processo> {
     	return getEntityManager().createQuery(query).getResultList();
 	}
     
-    public void clearMensagensValidacao() {
-    	controleMensagensValidacao = new ArrayList<>();
-    }
-
 	public PessoaFisica getRelator() {
 		return relator;
 	}

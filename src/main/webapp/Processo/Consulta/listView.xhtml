@@ -39,7 +39,7 @@
 								</h:outputLabel>
 							</div>
                             <p:autoComplete	id="fluxo" value="#{processoEpaList.fluxo}" scrollHeight="300"
-								completeMethod="#{processoEpaList.getFluxos}" forceSelection="true"
+								completeMethod="#{consultaProcessoDynamicColumnsController.getFluxos}" forceSelection="true"
 								var="item" itemLabel="#{item.fluxo}" itemValue="#{item}" converter="br.com.infox.jsf.converter.EntityConverter"
 								minQueryLength="3" dropdown="true">
 								<p:ajax event="itemSelect" process="@this" update="processoEpaContentPanel" onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
@@ -133,9 +133,9 @@
                                 url="#{layoutController.getResourceUrlByPath('/imagens/priority.gif')}" />
                         </a:commandLink>
                     </ui:define>
-					<infox:dynamicColumns columns="#{processoEpaList.dynamicColumns}" />
+					<infox:dynamicColumns columns="#{consultaProcessoDynamicColumnsController.dynamicColumns}" />
                 </wi:dataTable>
-                #{processoEpaList.clearMensagensValidacao()}
+                #{consultaProcessoDynamicColumnsController.clearMensagensValidacao()}
             </wi:panel>
         </h:form>
         <rich:popupPanel
