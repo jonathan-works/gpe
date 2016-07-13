@@ -193,7 +193,7 @@
 				    <c:set property="fluxo" target="#{bpmnUploader}" value="#{fluxoCrudAction.instance}" />
 				    <h:form enctype="multipart/form-data">
 				    	<a:jsFunction name="clearBpmnImportMessages" action="#{bpmnUploader.clearMessages}" execute="@this" limitRender="true" 
-				    		render="mensagensImportacaoBpmn" oncomplete="#{rich:component('bpmnFileUpload')}.clearButton.click()"/>
+				    		render="mensagensImportacaoBpmn importarButtonDiv" oncomplete="#{rich:component('bpmnFileUpload')}.clearButton.click()"/>
 				    	
 					    <rich:fileUpload execute="@this" limitRender="true" acceptedTypes="bpmn"
 					          tipMessage="#{infoxMessages['fluxo.xpdl.tipMessage']}"

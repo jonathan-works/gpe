@@ -76,6 +76,7 @@ public class BpmnUploader implements Serializable {
 	public void clearMessages() {
 		mensagens = null;
 		fluxoImportado = false;
+		bpmn = null;
 	}
 	
 	public boolean isFluxoImportado() {
