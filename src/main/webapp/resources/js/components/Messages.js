@@ -57,8 +57,10 @@ namespace("infox.Messages", function Messages(args) {
 		clearTimeout(timer);
 		$(".d-msg-c").text(msg);
 		$_showDialog();
-		timer = setTimeout($_hideDialog, timeout);
-			$(".d-msg").attr('infox-dialog', false);
+		if (timeout !== -1) {
+			timer = setTimeout($_hideDialog, timeout);
+		}
+		$(".d-msg").attr('infox-dialog', false);
 	}
 	return Messages;
 });
