@@ -325,10 +325,17 @@
 							</rich:list>
 						</rich:panel>
 					</ui:define>
-					<rich:column>
-						<f:facet name="header">#{infoxMessages['documentoProcesso.processoDocumento']}</f:facet>
-						<h:outputText value="#{row.descricao}" />
-					</rich:column>
+					<wi:column hideOrder="true"
+						columnHeader="#{infoxMessages['documentoProcesso.processoDocumento']}">
+						<div align="center">
+							<h:outputText value="#{row.descricao}" style="display: block;" />
+							<ui:repeat var="marcador"
+								value="#{row.documentoBin.marcadoresList}">
+								<h:outputText value="#{marcador.codigo} "
+									styleClass="marcadorLabel" />
+							</ui:repeat>
+						</div>
+					</wi:column>
 					<rich:column>
 						<f:facet name="header">#{infoxMessages['processoDocumento.classificacaoDocumento']}</f:facet>
 						<h:outputText value="#{row.classificacaoDocumento.descricao}" />

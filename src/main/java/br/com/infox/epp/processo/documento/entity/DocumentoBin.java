@@ -323,6 +323,14 @@ public class DocumentoBin implements Serializable {
 		this.dataSuficientementeAssinado = dataSuficientementeAssinado;
 	}
 	
+	public List<Marcador> getMarcadoresList(){
+		if(this.marcadores == null || this.marcadores.isEmpty())
+    		return new ArrayList<Marcador>();
+    	List<Marcador> marcadoresList = new ArrayList<Marcador>();
+    	marcadoresList.addAll(marcadores);
+    	return marcadoresList;
+	}
+	
 	public Set<Marcador> getMarcadores() {
         return marcadores;
     }

@@ -516,7 +516,7 @@
                 <exclude>**/*.import.less</exclude>
               </excludes>
             </configuration>
-						<phase>prepare-package</phase>
+						<phase>compile</phase>
             <goals>
               <goal>compile</goal>
             </goals>

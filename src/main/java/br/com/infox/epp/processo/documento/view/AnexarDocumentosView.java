@@ -261,8 +261,8 @@ public class AnexarDocumentosView implements Serializable {
 		retorno.setClassificacaoDocumento(classificacaoDocumentoUploader);
 		retorno.setPasta(pastaUploader == null ? pastaDefault : pastaUploader);
 		retorno.setProcesso(processo);
-		retorno.getDocumentoBin().setMarcadores(new HashSet<>(marcadoresUpload));
-		documentoTemporarioManager.gravarDocumentoTemporario(retorno, dadosUpload.getDadosArquivo());
+		retorno.getDocumentoBin().setMarcadores(marcadoresUpload != null ? new HashSet<>(marcadoresUpload) : new HashSet<Marcador>());
+		documentoTemporarioManager.gravarDocumentoTemporario(retorno, dadosUpload.getDadosArquivo()); 
 		return retorno;
 	}
 
@@ -302,7 +302,7 @@ public class AnexarDocumentosView implements Serializable {
 				if (getDocumentoEditor().getPasta() == null) {
 					getDocumentoEditor().setPasta(pastaDefault);
 				}
-				getDocumentoEditor().getDocumentoBin().setMarcadores(new HashSet<>(marcadoresEditor));
+				getDocumentoEditor().getDocumentoBin().setMarcadores(marcadoresEditor != null ? new HashSet<>(marcadoresEditor) : new HashSet<Marcador>());
 				documentoTemporarioManager.gravarDocumentoTemporario(getDocumentoEditor());
 				getDocumentoTemporarioList().add(new DocumentoTemporarioWrapper(getDocumentoEditor()));
 				newEditorInstance();

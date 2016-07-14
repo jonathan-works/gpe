@@ -341,10 +341,18 @@
 						<wi:columnOutputText columnId="classificacaoDocumento.descricao"
 							columnHeader="#{infoxMessages['anexarDocumentos.classificacao']}"
 							value="#{row.classificacaoDocumento}" />
-
-						<wi:columnOutputText columnId="descricao"
-							columnHeader="#{infoxMessages['anexarDocumentos.descricao']}"
-							value="#{row.descricao}" />
+							
+						<wi:column columnId="descricao"
+							columnHeader="#{infoxMessages['anexarDocumentos.descricao']}">
+							<div align="center">
+								<h:outputText value="#{row.descricao}" style="display: block;" />
+								<ui:repeat var="marcador"
+									value="#{row.documentoBin.marcadoresList}">
+									<h:outputText value="#{marcador.codigo} "
+										styleClass="marcadorLabel" />
+								</ui:repeat>
+							</div>
+						</wi:column>
 
 						<wi:columnOutputText columnId="dataInclusao"
 							columnHeader="#{infoxMessages['anexarDocumentos.data']}"

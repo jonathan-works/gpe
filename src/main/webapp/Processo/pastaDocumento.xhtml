@@ -160,11 +160,19 @@
 				columnId="classificacaoDocumento"
 				columnHeader="#{infoxMessages['documentoProcesso.classificacaoDocumento']}"
 				value="#{row.classificacaoDocumento}" />
-			<wi:columnOutputText
-				styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
-				columnId="descricao"
-				columnHeader="#{infoxMessages['documentoProcesso.descricao']}"
-				value="#{row.descricao}" />
+
+			<wi:column columnId="descricao"
+				columnHeader="#{infoxMessages['documentoProcesso.descricao']}">
+				<div align="center">
+					<h:outputText value="#{row.descricao}" style="display: block;" />
+					<ui:repeat var="marcador"
+						value="#{row.documentoBin.marcadoresList}">
+						<h:outputText value="#{marcador.codigo} "
+							style=" #{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+							styleClass="marcadorLabel" />
+					</ui:repeat>
+				</div>
+			</wi:column>
 			<wi:columnOutputText
 				styleOutputText="#{row.excluido ? 'text-decoration:line-through; color:red;' : ''}"
 				columnId="processoDocumentoBin.sizeFormatado"
