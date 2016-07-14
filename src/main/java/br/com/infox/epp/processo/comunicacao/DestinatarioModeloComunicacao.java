@@ -211,4 +211,11 @@ public class DestinatarioModeloComunicacao implements Serializable, Cloneable {
 		}
 		return false;
 	}
+
+	@Override
+	public String toString() {
+		return  getNome();
+	}
+	
+	
 }

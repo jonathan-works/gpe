@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.ejb.Remove;
 import javax.ejb.Stateful;
+import javax.inject.Inject;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -15,6 +16,8 @@ import org.jboss.seam.faces.Redirect;
 import br.com.infox.core.controller.AbstractController;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.manager.PapelManager;
+import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoRecursos;
 import br.com.infox.epp.processo.documento.action.DocumentoProcessoAction;
 import br.com.infox.epp.processo.documento.action.PastaAction;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -24,9 +27,10 @@ import br.com.infox.epp.processo.documento.manager.PastaRestricaoAction;
 import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoPermissaoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
-import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
+import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
+import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 import br.com.infox.ibpm.task.manager.UsuarioTaskInstanceManager;
 
 @Stateful
@@ -57,12 +61,16 @@ public class ConsultaController extends AbstractController {
     private PastaList pastaList;
     @In
     private UsuarioTaskInstanceManager usuarioTaskInstanceManager;
+    @Inject
+    private VariavelProcessoService variavelProcessoService;
+    @Inject
+    private PapelManager papelManager;
     
     private Processo processo;
     private boolean showAllDocuments = false;
-    private List<MetadadoProcesso> detalhesMetadados;
     private boolean showBackButton = true;
     private List<Localizacao> localizacoesProcesso;
+    private List<VariavelProcesso> variaveisDetalhe;
 
 	public boolean isShowBackButton() {
 		return showBackButton;
@@ -141,13 +149,6 @@ public class ConsultaController extends AbstractController {
         }
     }
     
-    public List<MetadadoProcesso> getDetalhesMetadados() {
-    	if (detalhesMetadados == null) {
-    		detalhesMetadados = metadadoProcessoManager.getListMetadadoVisivelByProcesso(getProcesso());
-    	}
-    	return detalhesMetadados;
-    }
-    
     public List<Localizacao> getLocalizacoes() {
         if (localizacoesProcesso == null) {
             localizacoesProcesso = usuarioTaskInstanceManager.getLocalizacoes(getProcesso());
@@ -180,7 +181,7 @@ public class ConsultaController extends AbstractController {
         	documentoProcessoAction.setListClassificacaoDocumento(null);
         }
         if(tab.equals("tabPastaRestricao")) {
-            pastaRestricaoAction.setProcesso(getProcesso().getProcessoRoot());
+            pastaRestricaoAction.setProcesso(getProcesso());
             pastaList.setProcesso(getProcesso().getProcessoRoot());
         }
     }
@@ -188,4 +189,11 @@ public class ConsultaController extends AbstractController {
 	@Remove
 	public void remove(){}
     
+	public List<VariavelProcesso> getVariaveisDetalhe() {
+		if (variaveisDetalhe == null) {
+			variaveisDetalhe = variavelProcessoService.getVariaveis(processo, 
+				DefinicaoVariavelProcessoRecursos.DETALHE_PROCESSO.getIdentificador(), papelManager.isUsuarioExterno(Authenticator.getPapelAtual().getIdentificador()));
+		}
+		return variaveisDetalhe;
+	}
 }

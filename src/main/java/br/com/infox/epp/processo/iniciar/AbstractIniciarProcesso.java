@@ -12,6 +12,7 @@ import org.jbpm.taskmgmt.exe.TaskInstance;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.service.ProcessoService;
 import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
+import br.com.infox.ibpm.task.manager.TaskInstanceManager;
 import br.com.infox.jsf.util.JsfUtil;
 import br.com.infox.seam.path.PathResolver;
 import br.com.infox.seam.util.ComponentUtil;
@@ -28,6 +29,8 @@ public abstract class AbstractIniciarProcesso implements Serializable {
     protected SituacaoProcessoDAO situacaoProcessoDAO;
     @Inject
     protected ProcessoService processoService;
+    @Inject
+    protected TaskInstanceManager taskInstanceManager; 
     
     public abstract String iniciar();
     
@@ -51,6 +54,7 @@ public abstract class AbstractIniciarProcesso implements Serializable {
                             .replace("{idTaskInstance}", String.valueOf(taskInstance.getId()))
                             .replace("{idProcesso}", processo.getIdProcesso().toString());
                     jsfUtil.execute(script);
+                    taskInstanceManager.atribuirTarefa(taskInstance.getId());
                     break;
                 }
             }

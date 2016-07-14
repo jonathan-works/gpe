@@ -8,10 +8,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
@@ -25,8 +25,6 @@ import br.com.infox.epp.documento.entity.Variavel;
 import br.com.infox.epp.documento.type.Expression;
 import br.com.infox.epp.documento.type.ExpressionResolver;
 import br.com.infox.epp.documento.type.SeamExpressionResolver;
-import br.com.infox.epp.processo.documento.manager.DocumentoManager;
-import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
@@ -39,18 +37,13 @@ import br.com.infox.log.Logging;
 @Name(ModeloDocumentoManager.NAME)
 @AutoCreate
 public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDocumento> {
+    
     private static final long serialVersionUID = 4455754174682600299L;
     private static final LogProvider LOG = Logging.getLogProvider(ModeloDocumentoManager.class);
     public static final String NAME = "modeloDocumentoManager";
 
-    @In
+    @Inject
     private VariavelDAO variavelDAO;
-    
-    @In
-    private DominioVariavelTarefaManager dominioVariavelTarefaManager;
-    
-    @In
-    private DocumentoManager documentoManager;
     
     //TODO verificar se esse método ainda é utilizado, senão, remover
     public String getConteudoModeloDocumento(ModeloDocumento modeloDocumento) {

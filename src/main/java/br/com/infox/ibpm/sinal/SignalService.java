@@ -18,6 +18,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
 import org.jboss.seam.bpm.ManagedJbpmContext;
+import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
@@ -84,32 +85,57 @@ public class SignalService {
     }
     
     private void endSubprocessListening(ProcessInstance processInstance, String eventType) {
-        List<Long> subprocessInstanceIds = getSubprocessInstanceIds(Arrays.asList(processInstance.getId()));
-        while (!subprocessInstanceIds.isEmpty()) {
-            List<SignalNodeBean> signalNodes = getSubprocessListening(subprocessInstanceIds, eventType);
-            for (SignalNodeBean signalNodeBean : signalNodes) {
-                if (signalNodeBean.canExecute()) {
-                    processoManager.cancelJbpmSubprocess(signalNodeBean.getId(), signalNodeBean.getListenerConfiguration().getTransitionKey());
+        Processo processo = processoManager.getProcessoByIdJbpm(processInstance.getId());
+        while (processo != null) {
+            List<Long> subprocessInstanceIds = getSubprocessInstanceIds(Arrays.asList(processo.getIdJbpm()));
+            while (!subprocessInstanceIds.isEmpty()) {
+                List<SignalNodeBean> signalNodes = getSubprocessListening(subprocessInstanceIds, eventType);
+                for (SignalNodeBean signalNodeBean : signalNodes) {
+                    if (signalNodeBean.canExecute()) {
+                        processoManager.cancelJbpmSubprocess(signalNodeBean.getId(), signalNodeBean.getListenerConfiguration().getTransitionKey());
+                    }
                 }
+                subprocessInstanceIds = getSubprocessInstanceIds(subprocessInstanceIds);
             }
-            subprocessInstanceIds = getSubprocessInstanceIds(subprocessInstanceIds);
+            processo = processo.getProcessoPai();
         }
     }
     
     private void movimentarTarefasListener(Long processInstanceId, String eventType) throws DAOException {
-        List<SignalNodeBean> signalNodes = getTasksListening(processInstanceId, eventType);
-        for (SignalNodeBean signalNodeBean : signalNodes) {
-            if (signalNodeBean.canExecute()) {
-                processoManager.movimentarProcessoJBPM(signalNodeBean.getId(), signalNodeBean.getListenerConfiguration().getTransitionKey());
+        Processo processo = processoManager.getProcessoByIdJbpm(processInstanceId);
+        while (processo != null) {
+            List<SignalNodeBean> signalNodes = getTasksListening(processo.getIdJbpm(), eventType);
+            for (SignalNodeBean signalNodeBean : signalNodes) {
+                if (signalNodeBean.canExecute()) {
+                    processoManager.movimentarProcessoJBPM(signalNodeBean.getId(), signalNodeBean.getListenerConfiguration().getTransitionKey());
+                }
             }
+            processo = processo.getProcessoPai();
         }
     }
     
     public List<ProcessInstance> startStartStateListening(String eventType, List<SignalParam> params) {
         eventType = Event.getListenerEventType(eventType);
-        return startStartStateListeningImpl(eventType, params);    	
+        ExecutionContext executionContext = createExecutionContext(params);
+        ExecutionContext.pushCurrentContext(executionContext);
+        try {
+            return startStartStateListeningImpl(eventType, params);    	
+        } finally {
+            ExecutionContext.popCurrentContext(executionContext);
+        }
     }
     
+    private ExecutionContext createExecutionContext(List<SignalParam> params) {
+        Token token = new Token();
+        token.setProcessInstance(new ProcessInstance());
+        ExecutionContext executionContext = new ExecutionContext(token);
+        ContextInstance contextInstance = executionContext.getContextInstance();
+        for (SignalParam signalParam : params) {
+            contextInstance.setTransientVariable(signalParam.getName(), signalParam.getValue());
+        }
+        return executionContext;
+    }
+
     private List<ProcessInstance> startStartStateListeningImpl(String eventType, List<SignalParam> params) {
         List<SignalNodeBean> signalNodes = getStartStateListening(eventType);
         List<ProcessInstance> processInstances = new ArrayList<>();

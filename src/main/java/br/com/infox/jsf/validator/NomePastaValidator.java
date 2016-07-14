@@ -1,5 +1,6 @@
 package br.com.infox.jsf.validator;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
@@ -11,6 +12,7 @@ import javax.faces.validator.ValidatorException;
 
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.documento.entity.Pasta;
+import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 
@@ -30,7 +32,8 @@ public class NomePastaValidator implements Validator {
         }
         
         Processo processo = getProcessoManager().find(idProcesso);
-        for (Pasta pasta : processo.getPastaList()) {
+        List<Pasta> pastaList = getPastaManager().getByProcesso(processo);
+        for (Pasta pasta : pastaList) {
             if (idPasta != null && pasta.getId().equals(idPasta))
                 continue;
             if (pasta.getNome().equals(nome)) {
@@ -42,5 +45,8 @@ public class NomePastaValidator implements Validator {
     protected ProcessoManager getProcessoManager() {
         return BeanManager.INSTANCE.getReference(ProcessoManager.class);
     }
-    
+
+    protected PastaManager getPastaManager() {
+        return BeanManager.INSTANCE.getReference(PastaManager.class);
+    }
 }

@@ -99,8 +99,10 @@ public class ActionMessagesService implements Serializable {
 		        handleException(exception.getCause().getMessage(), exception);
 		} else if (exception instanceof PersistenceException) {
 		        handlePersistenceException(exception);
-		} else {
+		} else if (exception.getMessage() != null) {
 			handleException(exception.getMessage(), exception);
+		} else {
+			handleException(exception.toString(), exception);
 		}
 	}
 

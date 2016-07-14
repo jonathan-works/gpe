@@ -17,22 +17,26 @@ import javax.persistence.criteria.Subquery;
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento_;
-import br.com.infox.epp.entrega.documentos.Entrega;
-import br.com.infox.epp.entrega.documentos.Entrega_;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.Documento_;
+import br.com.infox.epp.processo.documento.entity.Pasta;
+import br.com.infox.epp.processo.documento.entity.Pasta_;
+import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.entity.Processo_;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class ChecklistSearch {
 
-    public Checklist getByIdEntrega(Long idEntrega) {
+    public Checklist getByIdProcessoIdPasta(Integer idProcesso, Integer idPasta) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Checklist> cq = cb.createQuery(Checklist.class);
         Root<Checklist> cl = cq.from(Checklist.class);
-        Join<Checklist, Entrega> pc = cl.join(Checklist_.entrega, JoinType.INNER);
+        Join<Checklist, Pasta> pasta = cl.join(Checklist_.pasta, JoinType.INNER);
+        Join<Checklist, Processo> proc = cl.join(Checklist_.processo, JoinType.INNER);
         cq.select(cl);
-        cq.where(cb.equal(pc.get(Entrega_.id), idEntrega));
+        cq.where(cb.equal(pasta.get(Pasta_.id), idPasta),
+                cb.equal(proc.get(Processo_.idProcesso), idProcesso));
         List<Checklist> resultList = getEntityManager().createQuery(cq).getResultList();
         return (resultList != null && !resultList.isEmpty()) ? resultList.get(0) : null;
     }
@@ -79,10 +83,6 @@ public class ChecklistSearch {
             return false;
         }
     }
-    
-    private EntityManager getEntityManager() {
-        return EntityManagerProducer.getEntityManager();
-    }
 
     public List<Documento> getNovosDocumentos(Checklist checklist) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
@@ -96,7 +96,26 @@ public class ChecklistSearch {
 
         cq.select(doc);
         cq.where(cb.not(cb.exists(existsClDoc)),
-                cb.equal(doc.get(Documento_.pasta), checklist.getEntrega().getPasta()));
+                cb.equal(doc.get(Documento_.pasta), checklist.getPasta()));
         return getEntityManager().createQuery(cq).getResultList();
+    }
+
+    public List<ClassificacaoDocumento> listClassificacaoDocumento(Checklist checklist) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<ClassificacaoDocumento> cq = cb.createQuery(ClassificacaoDocumento.class);
+
+        Root<ChecklistDoc> clDoc = cq.from(ChecklistDoc.class);
+        Join<ChecklistDoc, Documento> doc = clDoc.join(ChecklistDoc_.documento, JoinType.INNER);
+        Join<Documento, ClassificacaoDocumento> classDoc = doc.join(Documento_.classificacaoDocumento, JoinType.INNER);
+
+        cq.select(classDoc);
+        cq.where(cb.equal(clDoc.get(ChecklistDoc_.checklist), checklist));
+        cq.orderBy(cb.asc(classDoc.get(ClassificacaoDocumento_.descricao)));
+
+        return getEntityManager().createQuery(cq).getResultList();
+    }
+
+    private EntityManager getEntityManager() {
+        return EntityManagerProducer.getEntityManager();
     }
 }

@@ -23,6 +23,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
+import javax.persistence.NoResultException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -30,8 +35,12 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.processo.documento.entity.Pasta;
+import br.com.infox.epp.processo.documento.entity.Pasta_;
 import br.com.infox.epp.processo.documento.filter.DocumentoFilter;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso_;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 
 @Stateless
 @AutoCreate
@@ -102,5 +111,38 @@ public class PastaDAO extends DAO<Pasta> {
         params.put(PARAM_PROCESSO, processo);
         params.put(PARAM_DESCRICAO, descricao);
         return getNamedSingleResult(GET_BY_PROCESSO_AND_DESCRICAO, params);
+    }
+
+    public Boolean isPadraoEmAlgumProcesso(Pasta pasta) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Integer> cq = cb.createQuery(Integer.class);
+        cq.select(cb.literal(1));
+        Root<Pasta> p = cq.from(Pasta.class);
+
+        Subquery<Integer> existsMetadado = cq.subquery(Integer.class);
+        existsMetadado.select(cb.literal(1));
+        Root<MetadadoProcesso> mp = existsMetadado.from(MetadadoProcesso.class);
+        existsMetadado.where(
+            cb.equal(mp.get(MetadadoProcesso_.metadadoType), EppMetadadoProvider.PASTA_DEFAULT.getMetadadoType()),
+            cb.equal(p.get(Pasta_.id).as(String.class), mp.get(MetadadoProcesso_.valor))
+        );
+
+        cq.where(cb.exists(existsMetadado), cb.equal(p.get(Pasta_.id), pasta.getId()));
+        try {
+            Integer result = getEntityManager().createQuery(cq).getSingleResult();
+            return result.equals(1);
+        } catch (NoResultException nre) {
+            return false;
+        }
+    }
+
+    public List<MetadadoProcesso> listMetadadoPastaDefault(Pasta pasta) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<MetadadoProcesso> cq = cb.createQuery(MetadadoProcesso.class);
+        Root<MetadadoProcesso> mp = cq.from(MetadadoProcesso.class);
+        cq.select(mp);
+        cq.where(cb.equal(mp.get(MetadadoProcesso_.metadadoType), EppMetadadoProvider.PASTA_DEFAULT.getMetadadoType()),
+                cb.equal(mp.get(MetadadoProcesso_.valor), pasta.getId().toString()));
+        return getEntityManager().createQuery(cq).getResultList();
     }
 }

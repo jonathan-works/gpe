@@ -5,7 +5,9 @@ import static br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais.PRO
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -15,11 +17,15 @@ import javax.inject.Named;
 
 import org.jbpm.graph.exe.ExecutionContext;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.core.net.UrlBuilder;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.persistence.GenericDatabaseErrorCode;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.entrega.EntregaResponsavelService;
 import br.com.infox.epp.entrega.checklist.ChecklistSituacao;
 import br.com.infox.epp.entrega.checklist.ChecklistVariableService;
 import br.com.infox.epp.entrega.documentos.Entrega;
@@ -28,7 +34,13 @@ import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
+import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.entity.TipoRelacionamentoProcesso;
+import br.com.infox.epp.processo.linkExterno.LinkAplicacaoExterna;
+import br.com.infox.epp.processo.linkExterno.LinkAplicacaoExternaService;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.epp.relacionamentoprocessos.RelacionamentoProcessoManager;
+import br.com.infox.epp.relacionamentoprocessos.TipoRelacionamentoProcessoManager;
 import br.com.infox.ibpm.event.External.ExpressionType;
 import br.com.infox.ibpm.sinal.SignalService;
 
@@ -50,9 +62,17 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
     @Inject 
     protected UsuarioLoginManager usuarioLoginManager;
     @Inject
-    private ChecklistVariableService checklistVariableService;
+    protected ChecklistVariableService checklistVariableService;
     @Inject
     protected ProcessoManager processoManager;
+    @Inject
+    protected EntregaResponsavelService entregaResponsavelService;
+    @Inject
+    private TipoRelacionamentoProcessoManager tipoRelacionamentoProcessoManager;
+    @Inject
+    private RelacionamentoProcessoManager relacionamentoProcessoManager;
+    @Inject
+    private LinkAplicacaoExternaService linkAplicacaoExternaService;
 
     @External(tooltip = "process.events.expression.atribuirCiencia.tooltip")
     public void atribuirCiencia() {
@@ -94,6 +114,14 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
 	)
     public StringListBuilder stringListBuilder() {
 		return new StringListBuilder();
+    }
+	
+	@External(expressionType = ExpressionType.GERAL, 
+			tooltip = "process.events.expression.objectMapBuilder.tooltip",
+			example = "#{bpmExpressionService.objectMapBuilder().add(chave,valor).add(chave,valor).build()}"
+		)
+    public ObjectMapBuilder objectMapBuilder() {
+		return new ObjectMapBuilder();
     }
 	
 	@External(expressionType = ExpressionType.GERAL, value = {
@@ -161,9 +189,70 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
      */
     @External(expressionType = ExpressionType.GATEWAY,
             tooltip = "process.events.expression.checklist.hasNaoConforme.tooltip",
-            example = "#{bpmExpressionService.checklistHasItemNaoConforme(entrega)}")
-    public Boolean checklistHasItemNaoConforme(Entrega entrega) {
-        return checklistVariableService.existeItemNaoConforme(entrega);
+            example = "#{bpmExpressionService.checklistHasItemNaoConforme('Documentos do Processo')}")
+    public Boolean checklistHasItemNaoConforme(String nomePasta) {
+        return checklistVariableService.existeItemNaoConforme(nomePasta);
+    }
+
+    @External(expressionType = ExpressionType.GERAL, tooltip = "teste",
+            value = {
+                    @Parameter(defaultValue = "entrega", selectable = false, label = "Entrega", tooltip = "Entrega de Documentos que irá prover os Responsáveis")
+            })
+    public void addParticipanteFromResponsavelEntrega(Entrega entrega) {
+        ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
+        Integer idProcesso = (Integer) executionContext.getContextInstance().getVariable("processo");
+        Processo processo = EntityManagerProducer.getEntityManager().find(Processo.class, idProcesso);
+        entregaResponsavelService.adicionaParticipantes(processo, entrega);
+    }
+    
+    @External(expressionType = ExpressionType.GERAL,
+    		tooltip = "process.events.expression.relacionarProcessosPorMetadados.tooltip", value = {
+    		@Parameter(defaultValue = "tipoRelacionamento", label = "process.events.expression.param.relacionamento.tipoRelacionamento.label", tooltip = "process.events.expression.param.relacionamento.tipoRelacionamento.tooltip"),
+    		@Parameter(defaultValue = "motivo", label = "process.events.expression.param.relacionamento.motivo.label", tooltip = "process.events.expression.param.relacionamento.motivo.tooltip"),
+            @Parameter(defaultValue = "metadados", label = "process.events.expression.param.relacionamento.metadados.label", tooltip = "process.events.expression.param.relacionamento.metadados.tooltip") 
+	})
+    public void relacionarProcessosPorMetadados(String tipoRelacionamento, String motivo, Map<String, Object> metadados) {
+    	ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
+        Integer idProcesso = (Integer) executionContext.getContextInstance().getVariable("processo");
+        
+        Map<String, Object> parametrosMetadados = new HashMap<String, Object>();
+        parametrosMetadados.putAll(metadados);
+
+        TipoRelacionamentoProcesso tipoRelacionamentoProcesso = tipoRelacionamentoProcessoManager.findByCodigo(tipoRelacionamento);
+        
+        relacionamentoProcessoManager.relacionarProcessosPorMetadados(idProcesso, tipoRelacionamentoProcesso, motivo, parametrosMetadados);
+    }
+
+    @External(expressionType = ExpressionType.GERAL, tooltip = "process.events.expression.urlBuilder.tooltip", example = "#{bpmExpressionService.urlBuilder(baseUrl).path(variavelString).query('string').path('string').query(variavelListaString).build()}", value = {
+            @Parameter(defaultValue = "urlBase", label = "process.events.expression.urlBuilder.param.urlBase.label", tooltip = "process.events.expression.urlBuilder.param.urlBase.tooltip", selectable = false),
+            @Parameter(defaultValue = "urlBase", label = "process.events.expression.urlBuilder.param.path.label", tooltip = "process.events.expression.urlBuilder.param.path.tooltip", selectable = false),
+            @Parameter(defaultValue = "urlBase", label = "process.events.expression.urlBuilder.param.query.label", tooltip = "process.events.expression.urlBuilder.param.query.tooltip", selectable = false)})
+    public UrlBuilder urlBuilder(String baseUrl) {
+        return new UrlBuilder(baseUrl);
+    }
+
+    @External(expressionType = ExpressionType.GERAL
+            , example ="#{bpmExpressionService.criarLink(variavelCodigo, 'Aplicacao externa X', bpmExpressionService.urlBuilder(baseUrl).path(variavelString).query('string').build())}", tooltip = "process.events.expression.linkAplicacaoExterna.tooltip", value = {
+            @Parameter(defaultValue = "codigo", label = "process.events.expression.linkAplicacaoExterna.param.codigo.label", tooltip = "process.events.expression.param.linkAplicacaoExterna.codigo.tooltip"),
+            @Parameter(defaultValue = "descricao", label = "process.events.expression.linkAplicacaoExterna.param.descricao.label", tooltip = "process.events.expression.param.linkAplicacaoExterna.codigo.tooltip"),
+            @Parameter(defaultValue = "url", label = "process.events.expression.linkAplicacaoExterna.param.url.label", tooltip = "process.events.expression.param.linkAplicacaoExterna.codigo.tooltip") })
+    public void criarLink(String codigo, String descricao, String url) {
+        ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
+        Integer idProcesso = (Integer) executionContext.getContextInstance().getVariable("processo");
+        Processo processo = EntityManagerProducer.getEntityManager().find(Processo.class, idProcesso);
+
+        LinkAplicacaoExterna link = new LinkAplicacaoExterna();
+        link.setCodigo(codigo);
+        link.setDescricao(descricao);
+        link.setUrl(url);
+        link.setProcesso(processo);
+        try {
+            linkAplicacaoExternaService.salvar(link);
+        } catch (DAOException e){
+            if (!GenericDatabaseErrorCode.UNIQUE_VIOLATION.equals(e.getDatabaseErrorCode())){
+                throw e;
+            }
+        }
     }
 
     @Override

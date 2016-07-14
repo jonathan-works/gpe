@@ -49,8 +49,12 @@ public class ComunicacaoSearch extends PersistenceController {
         Join<Processo, MetadadoProcesso> limiteCiencia = processo.join(Processo_.metadadoProcessoList, JoinType.INNER);
         
         Expression<Date> dataCiencia = cb.function("to_date", Date.class, limiteCiencia.get(MetadadoProcesso_.valor));
-        Expression<Integer> maiorPrazo = cb.max(destinatarioComunicacao.get(DestinatarioModeloComunicacao_.prazo));
-        Expression<Date> maiorPrazoComCiencia = cb.function("DataUtilAdd", Date.class, cb.literal("day"), maiorPrazo, dataCiencia);  
+        Expression<Object> maiorPrazo = cb.selectCase().when(
+                                                cb.max(destinatarioComunicacao.get(DestinatarioModeloComunicacao_.prazo)).isNull(), cb.literal(0))
+                                        .otherwise(
+                                                cb.max(destinatarioComunicacao.get(DestinatarioModeloComunicacao_.prazo))
+                                         );
+        Expression<Date> maiorPrazoComCiencia = cb.function("DataUtilAdd", Date.class, cb.literal("day"), maiorPrazo, dataCiencia);
         
         cq.select(cb.tuple(dataCiencia.alias("dataLimiteCiencia"), maiorPrazo.alias("maiorPrazo")));
         

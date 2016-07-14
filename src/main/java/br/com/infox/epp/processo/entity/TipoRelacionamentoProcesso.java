@@ -22,13 +22,16 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import br.com.infox.constants.LengthConstants;
+
 @Entity
 @Table(name = TABLE_NAME, uniqueConstraints = @UniqueConstraint(columnNames = { TIPO_RELACIONAMENTO }))
 public class TipoRelacionamentoProcesso implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private Integer idTipoRelacionamento;
-    private String tipoRelacionamento;
+    private Integer idTipoRelacionamento;    
+    private String codigo;
+	private String tipoRelacionamento;
     private Boolean ativo;
 
     @Id
@@ -65,41 +68,43 @@ public class TipoRelacionamentoProcesso implements Serializable {
     }
 
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = (prime
-                * result)
-                + ((idTipoRelacionamento == null) ? 0 : idTipoRelacionamento
-                        .hashCode());
-        return result;
-    }
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
+		return result;
+	}
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final TipoRelacionamentoProcesso other = (TipoRelacionamentoProcesso) obj;
-        if (idTipoRelacionamento == null) {
-            if (other.idTipoRelacionamento != null) {
-                return false;
-            }
-        } else if (!idTipoRelacionamento.equals(other.idTipoRelacionamento)) {
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TipoRelacionamentoProcesso other = (TipoRelacionamentoProcesso) obj;
+		if (codigo == null) {
+			if (other.codigo != null)
+				return false;
+		} else if (!codigo.equals(other.codigo))
+			return false;
+		return true;
+	}
 
-    @Override
+	@Override
     public String toString() {
         return tipoRelacionamento;
     }
 
+    @NotNull
+    @Size(min = FLAG, max = LengthConstants.CODIGO_DOCUMENTO)
+    @Column(name = "cd_tipo_relaciona_processo")
+    public String getCodigo() {
+    	return codigo;
+    }
+    
+    public void setCodigo(String codigo) {
+    	this.codigo = codigo;
+    }
 }

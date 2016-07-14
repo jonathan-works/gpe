@@ -108,6 +108,7 @@ public class ComunicacaoAction implements Serializable {
 		try {
 			comunicacaoService.excluirComunicacao(modeloComunicacao);
 			envioComunicacaoController.init(); //para recarregar a página de tarefa
+			modeloComunicacaoRascunhoList.refresh();
 			FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.sucesso.exclusao"));
 		} catch (DAOException e) {
 			LOG.error("Erro ao excluir comunicação", e);

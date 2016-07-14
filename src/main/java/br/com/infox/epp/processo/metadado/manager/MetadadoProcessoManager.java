@@ -1,10 +1,14 @@
 package br.com.infox.epp.processo.metadado.manager;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.enterprise.inject.Any;
+import javax.enterprise.inject.Instance;
+import javax.inject.Inject;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -28,6 +32,10 @@ public class MetadadoProcessoManager extends Manager<MetadadoProcessoDAO, Metada
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "metadadoProcessoManager";
 	
+	@Any
+    @Inject
+    private Instance<MetadadoProcessoProvider> metadadoProviderInstances;
+    
 	public List<MetadadoProcesso> getListMetadadoVisivelByProcesso(Processo processo) {
 		return getDao().getListMetadadoVisivelByProcesso(processo);
 	}
@@ -67,4 +75,19 @@ public class MetadadoProcessoManager extends Manager<MetadadoProcessoDAO, Metada
 	    }
 	}
 	
+	public MetadadoProcessoDefinition getMetadadoProcessoDefinition(String nomeMetadado) {
+		Iterator<MetadadoProcessoProvider> metadadosProviders = metadadoProviderInstances.iterator();
+		while (metadadosProviders.hasNext()) {
+			MetadadoProcessoProvider provider = metadadosProviders.next();
+			MetadadoProcessoDefinition retorno = provider.getDefinicoesMetadados().get(nomeMetadado);
+			if (retorno != null) {
+				return retorno;
+			}
+		}
+		return null;
+	}
+
+    public void removeAll(List<MetadadoProcesso> metadadoList) {
+        getDao().removeAll(metadadoList);
+    }
 }

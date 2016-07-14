@@ -16,7 +16,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.entrega.documentos.Entrega;
+import br.com.infox.epp.processo.documento.entity.Pasta;
+import br.com.infox.epp.processo.entity.Processo;
 
 @Entity
 @Table(name = "tb_checklist")
@@ -30,12 +31,17 @@ public class Checklist implements Serializable {
     @SequenceGenerator(allocationSize = 1, initialValue = 1, name = GENERATOR_NAME, sequenceName = SEQUENCE_NAME)
     @GeneratedValue(generator = GENERATOR_NAME, strategy = GenerationType.SEQUENCE)
     @Column(name = "id_checklist", nullable = false, updatable = false, unique = true)
-    private Integer id;
+    private Long id;
 
     @NotNull
-    @JoinColumn(name = "id_entrega")
+    @JoinColumn(name = "id_processo")
     @ManyToOne(fetch = FetchType.LAZY)
-    private Entrega entrega;
+    private Processo processo;
+
+    @NotNull
+    @JoinColumn(name = "id_pasta")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Pasta pasta;
 
     @NotNull
     @Column(name = "dt_criacao", nullable = false)
@@ -46,20 +52,28 @@ public class Checklist implements Serializable {
     @JoinColumn(name = "id_usuario_criacao", nullable = false)
     private UsuarioLogin usuarioCriacao;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Entrega getEntrega() {
-        return entrega;
+    public Processo getProcesso() {
+        return processo;
     }
 
-    public void setEntrega(Entrega entrega) {
-        this.entrega = entrega;
+    public void setProcesso(Processo processo) {
+        this.processo = processo;
+    }
+
+    public Pasta getPasta() {
+        return pasta;
+    }
+
+    public void setPasta(Pasta pasta) {
+        this.pasta = pasta;
     }
 
     public Date getDataCriacao() {

@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -24,32 +25,37 @@ public class Estado implements Serializable {
 	@SequenceGenerator(allocationSize = 1, initialValue = 1, name = "EstadoGenerator", sequenceName = "sq_estado")
 	@GeneratedValue(generator = "EstadoGenerator", strategy = GenerationType.SEQUENCE)
 	@Column(name = "id_estado", unique = true, nullable = false)
-	private Integer id;
+	private Long id; // no tce-pe anteriormente referenciado como id_estado (na entidade java idEstado)
 	
 	@NotNull
 	@Size(min = 1, max = 2)
 	@Column(name = "cd_estado", nullable = false, length = 2)
-	private String codigo;
+	private String codigo;//no tce-pe anteriormente referenciado como sg_estado (na entidade java sigla)
 	
 	@NotNull
 	@Size(min = 1, max = 30)
 	@Column(name = "ds_estado", nullable = false, length = LengthConstants.DESCRICAO_PEQUENA)
-	private String nome;
+	private String nome; //no tce-pe anteriormente referenciado como nm_estado
 	
 	@NotNull
 	@Size(min = 1, max = 2)
 	@Column(name = "cd_estado_ibge", nullable = false, length = 2)
-	private String codigoIBGE;
+	private String codigoIBGE; //no tce-pe anteriormente referenciado como cd_ibge
 	
 	@Column(name = "in_ativo")
 	private Boolean ativo;
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	@Transient
+	public String getSigla(){
+		return this.codigo; //compatibilidade com o tce-pe
 	}
 
 	public String getCodigo() {
@@ -83,4 +89,11 @@ public class Estado implements Serializable {
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
 	}
+
+	@Override
+	public String toString() {
+		return  nome;
+	}
+	
+	
 }

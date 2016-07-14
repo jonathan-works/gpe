@@ -76,10 +76,6 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
         return getDao().getLoginUsuarioByTaskInstance(taskInstance);
     }
     
-    public String getNomeUsuarioByIdTarefa(Integer idTarefa, Integer idProcesso) {
-    	return getDao().getNomeUsuarioByIdTarefa(idTarefa, idProcesso);
-    }
-    
     public String getNomeUsuarioByTaskInstance(TaskInstance taskInstance) {
         return getDao().getNomeUsuarioByTaskInstance(taskInstance);
     }

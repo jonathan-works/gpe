@@ -38,6 +38,10 @@ public class EppParametroProvider implements Serializable, ParametroProvider {
 	@PostConstruct
 	public void init() {
 		parametroDefinitions = new ArrayList<>();
+		for (Parametros parametro : Parametros.values()) {
+                    if (parametro.getParametroDefinition() != null)
+                        parametroDefinitions.add(parametro.getParametroDefinition());
+                }
 		initParametrosControleAcesso();
 		initParametrosComunicacao();
 		initParametrosAnaliseDocumento();
@@ -60,8 +64,8 @@ public class EppParametroProvider implements Serializable, ParametroProvider {
 		create(grupo, "ldapProviderUrl", FieldType.STRING);
 		create(grupo, "recaptchaPrivateKey", FieldType.STRING);
 		create(grupo, "recaptchaPublicKey", FieldType.STRING);
-		create(grupo, "usuarioInterno", Papel_.nome, Papel_.identificador).addFilter(isFalse(Papel_.termoAdesao));
-		create(grupo, "usuarioExterno", Papel_.nome, Papel_.identificador).addFilter(isTrue(Papel_.termoAdesao));
+		create(grupo, "usuarioInterno", Papel_.nome, Papel_.identificador);
+		create(grupo, "usuarioExterno", Papel_.nome, Papel_.identificador);
 	}
 
 	private void initParametrosExecFluxo() {

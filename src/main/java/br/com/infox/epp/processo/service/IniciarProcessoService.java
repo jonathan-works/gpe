@@ -8,11 +8,12 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import org.jboss.seam.bpm.ManagedJbpmContext;
+import org.jbpm.JbpmContext;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.joda.time.DateTime;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.cdi.producer.JbpmContextProducer;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.fluxo.manager.NaturezaManager;
@@ -30,7 +31,7 @@ public class IniciarProcessoService {
     private PastaManager pastaManager;
     @Inject
     private MetadadoProcessoManager metadadoProcessoManager;
-
+    
     public ProcessInstance iniciarProcesso(Processo processo) throws DAOException {
         return iniciarProcesso(processo, null, null, null, true);
     }
@@ -63,7 +64,7 @@ public class IniciarProcessoService {
         }
         getEntityManager().flush();
         movimentarProcesso(processInstance, transitionName);
-        ManagedJbpmContext.instance().getSession().flush();
+        getJbpmContext().getSession().flush();
         return processInstance;
     }
 
@@ -72,13 +73,14 @@ public class IniciarProcessoService {
             for (MetadadoProcesso metadadoProcesso : metadados) {
                 metadadoProcesso.setProcesso(processo);
                 metadadoProcessoManager.persist(metadadoProcesso);
+                processo.getMetadadoProcessoList().add(metadadoProcesso);
             }
         }
     }
 
-    protected ProcessInstance criarProcessInstance(Processo processo, Map<String, Object> variaveis) {
+    protected ProcessInstance criarProcessInstance(Processo processo, Map<String, Object> variables) {
         String processDefinitionName = processo.getNaturezaCategoriaFluxo().getFluxo().getFluxo();
-        ProcessInstance processInstance = ManagedJbpmContext.instance().newProcessInstanceForUpdate(processDefinitionName, variaveis);
+        ProcessInstance processInstance = getJbpmContext().newProcessInstanceForUpdate(processDefinitionName, variables);
         return processInstance;
     }
     
@@ -104,5 +106,9 @@ public class IniciarProcessoService {
     
     protected EntityManager getEntityManager() {
         return EntityManagerProducer.getEntityManager();
+    }
+    
+    protected JbpmContext getJbpmContext() {
+        return JbpmContextProducer.getJbpmContext();
     }
 }

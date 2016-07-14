@@ -90,7 +90,7 @@
                                 <h:form>
                                     <a:commandLink
                                         action="#{nodeFitter.setCurrentNode(row)}"
-                                        render="divNodesGeral"
+                                        render="divNodesGeral pageBodyDialogMessage"
                                         execute="@this"
                                         onbegin="infox.showLoading('Carregando dados da tarefa...');"
                                         oncomplete="infox.hideLoading();"

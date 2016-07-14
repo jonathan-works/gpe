@@ -12,8 +12,8 @@ import javax.persistence.criteria.AbstractQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
@@ -30,6 +30,8 @@ import br.com.infox.epp.entrega.entity.CategoriaEntregaItem_;
 import br.com.infox.epp.entrega.entity.CategoriaItemRelacionamento;
 import br.com.infox.epp.entrega.entity.CategoriaItemRelacionamento_;
 import br.com.infox.epp.entrega.modelo.ModeloEntrega;
+import br.com.infox.epp.entrega.modelo.ModeloEntregaItem;
+import br.com.infox.epp.entrega.modelo.ModeloEntregaItem_;
 import br.com.infox.epp.entrega.modelo.ModeloEntrega_;
 
 @Stateless
@@ -43,11 +45,12 @@ public class ModeloEntregaSearch extends PersistenceController {
         
         Subquery<Long> sq1 = cq.subquery(Long.class);
         Root<ModeloEntrega> me1 = sq1.from(ModeloEntrega.class);
-        sq1=sq1.select(cb.count(me1.join(ModeloEntrega_.itens,JoinType.INNER))).where(cb.equal(me1, from));
+        sq1=sq1.select(cb.count(me1.join(ModeloEntrega_.itensModelo,JoinType.INNER))).where(cb.equal(me1, from));
         
         Subquery<Long> sq2 = cq.subquery(Long.class);
         Root<ModeloEntrega> me2 = sq2.from(ModeloEntrega.class);
-        ListJoin<ModeloEntrega, CategoriaEntregaItem> itms2 = me2.join(ModeloEntrega_.itens,JoinType.INNER);
+        Join<ModeloEntrega, ModeloEntregaItem> modeloEntregaItens2 = me2.join(ModeloEntrega_.itensModelo, JoinType.INNER);
+        Join<ModeloEntregaItem, CategoriaEntregaItem> itms2 = modeloEntregaItens2.join(ModeloEntregaItem_.item, JoinType.INNER);
         sq2=sq2.select(cb.count(itms2)).where(itms2.in(items), cb.equal(me2, from));
         
         List<Predicate> predicates=new ArrayList<>();
@@ -100,17 +103,18 @@ public class ModeloEntregaSearch extends PersistenceController {
         
         CriteriaQuery<CategoriaEntregaItem> cq = cb.createQuery(CategoriaEntregaItem.class);
         Root<ModeloEntrega> modeloEntrega = cq.from(ModeloEntrega.class);
-        From<?, CategoriaEntregaItem> itens = modeloEntrega.join(ModeloEntrega_.itens, JoinType.INNER);
+        From<?, ModeloEntregaItem> modeloEntregaItem = modeloEntrega.join(ModeloEntrega_.itensModelo, JoinType.INNER);
+        From<?, CategoriaEntregaItem> itens = modeloEntregaItem.join(ModeloEntregaItem_.item, JoinType.INNER);
         From<?, CategoriaItemRelacionamento> relacPais = itens.join(CategoriaEntregaItem_.itensPais, JoinType.INNER);
         
         List<Predicate> filtros = new ArrayList<>();
         
-        filtros.add(createFiltroPai(relacPais, codigoItemPai));
+        filtros.add(createFiltroPai(relacPais, modeloEntregaItem, codigoItemPai));
         filtros.add(cb.isTrue(modeloEntrega.get(ModeloEntrega_.ativo)));
         
         if (codigoLocalizacao != null) {
-            Predicate filtroModeloEntregaComRestricao = createFiltroModeloEntregaComRestricao(cq, modeloEntrega, codigoLocalizacao);
-            Predicate filtroModeloEntregaSemRestricao = createFiltroModeloEntregaSemRestricao(cq, modeloEntrega);
+            Predicate filtroModeloEntregaComRestricao = createFiltroModeloEntregaComRestricao(cq, itens, codigoLocalizacao);
+            Predicate filtroModeloEntregaSemRestricao = createFiltroModeloEntregaSemRestricao(cq, itens);
             Predicate filtroRestricoes = cb.or(filtroModeloEntregaComRestricao, filtroModeloEntregaSemRestricao);
             filtros.add(filtroRestricoes);
         }
@@ -122,12 +126,15 @@ public class ModeloEntregaSearch extends PersistenceController {
         return getEntityManager().createQuery(cq).getResultList();
     }
 
-    private Predicate createFiltroPai(From<?, CategoriaItemRelacionamento> categegoriaItemRelacionamento, String codigoItemPai) {
+    private Predicate createFiltroPai(From<?, CategoriaItemRelacionamento> categegoriaItemRelacionamento, From<?, ModeloEntregaItem> modeloEntregaItem, String codigoItemPai) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         
         if (codigoItemPai != null && !codigoItemPai.trim().isEmpty()){
             From<?, CategoriaEntregaItem> pai = categegoriaItemRelacionamento.join(CategoriaItemRelacionamento_.itemPai, JoinType.INNER);
-            return cb.equal(pai.get(CategoriaEntregaItem_.codigo), codigoItemPai);
+            return cb.and(
+            	cb.equal(pai.get(CategoriaEntregaItem_.codigo), codigoItemPai),
+            	cb.equal(pai, modeloEntregaItem.get(ModeloEntregaItem_.itemPai))
+            );
         } else {
             return cb.isNull(categegoriaItemRelacionamento.get(CategoriaItemRelacionamento_.itemPai));
         }
@@ -144,31 +151,36 @@ public class ModeloEntregaSearch extends PersistenceController {
         return dataValida;
     }
 
-    private Predicate createFiltroModeloEntregaSemRestricao(AbstractQuery<?> originalQuery, From<?,ModeloEntrega> modeloEntregaExterno) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        
-        Subquery<Long> sqSemRestricao = originalQuery.subquery(Long.class);
-        Root<ModeloEntrega> modeloEntregaInterno = sqSemRestricao.from(ModeloEntrega.class);
-        From<?, CategoriaEntregaItem> itensInterno = modeloEntregaInterno.join(ModeloEntrega_.itens, JoinType.INNER);
-        itensInterno.join(CategoriaEntregaItem_.restricoes, JoinType.INNER);
-        
-        sqSemRestricao = sqSemRestricao.select(cb.literal(1L)).where(cb.equal(modeloEntregaExterno, modeloEntregaInterno));
-        return cb.not(cb.exists(sqSemRestricao));
+    private Predicate createFiltroModeloEntregaSemRestricao(AbstractQuery<?> originalQuery, Path<CategoriaEntregaItem> itemOriginal) {
+    	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+    	Subquery<Integer> subquery = originalQuery.subquery(Integer.class);
+    	Root<CategoriaEntregaItem> item = subquery.from(CategoriaEntregaItem.class);
+    	item.join(CategoriaEntregaItem_.restricoes, JoinType.INNER);
+    	subquery.select(cb.literal(1));
+    	subquery.where(cb.equal(item, itemOriginal));
+    	return cb.exists(subquery).not();
     }
 
-    private Predicate createFiltroModeloEntregaComRestricao(AbstractQuery<?> originalQuery,
-            From<?,ModeloEntrega> modeloEntregaExterno, String codigoLocalizacao) {
+    private Predicate createFiltroModeloEntregaComRestricao(AbstractQuery<?> originalQuery, Path<CategoriaEntregaItem> itemOriginal, String codigoLocalizacao) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        
-        Subquery<Long> sqComRestricao = originalQuery.subquery(Long.class);
-        Root<ModeloEntrega> modeloEntregaInterno = sqComRestricao.from(ModeloEntrega.class);
-        From<?, CategoriaEntregaItem> itensInterno = modeloEntregaInterno.join(ModeloEntrega_.itens, JoinType.INNER);
-        From<?, Localizacao> restricoes = itensInterno.join(CategoriaEntregaItem_.restricoes, JoinType.INNER);
-        
-        Predicate localizacaoIgualItm = cb.equal(restricoes.get(Localizacao_.codigo), codigoLocalizacao);
-        
-        sqComRestricao = sqComRestricao.select(cb.literal(1L)).where(localizacaoIgualItm, cb.equal(modeloEntregaExterno, modeloEntregaInterno));
-        return cb.exists(sqComRestricao);
+        Subquery<Integer> subquery = originalQuery.subquery(Integer.class);
+        Root<CategoriaEntregaItem> item = subquery.from(CategoriaEntregaItem.class);
+        Join<CategoriaEntregaItem, Localizacao> restricoes = item.join(CategoriaEntregaItem_.restricoes, JoinType.INNER);
+        subquery.where(cb.equal(item, itemOriginal), cb.equal(restricoes.get(Localizacao_.codigo), codigoLocalizacao));
+        subquery.select(cb.literal(1));
+        return cb.exists(subquery);
     }
-
+    
+    public boolean itemPertenceAoModelo(CategoriaEntregaItem item, ModeloEntrega modeloEntrega) {
+    	EntityManager entityManager = getEntityManager();
+    	CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+    	CriteriaQuery<Integer> query = cb.createQuery(Integer.class);
+    	Root<ModeloEntregaItem> modeloEntregaItem = query.from(ModeloEntregaItem.class);
+    	query.where(
+    		cb.equal(modeloEntregaItem.get(ModeloEntregaItem_.modeloEntrega), modeloEntrega),
+    		cb.equal(modeloEntregaItem.get(ModeloEntregaItem_.item), item)
+    	);
+    	query.select(cb.literal(1));
+    	return !entityManager.createQuery(query).setMaxResults(1).getResultList().isEmpty();
+    }
 }

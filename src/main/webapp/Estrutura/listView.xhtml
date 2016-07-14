@@ -95,13 +95,6 @@
           value="#{estruturaCrudAction.localizacaoFilho.ativo}" />
         <ui:define name="buttons">
           <wi:commandButton
-            rendered="#{not empty estruturaCrudAction.localizacaoFilho.idLocalizacao}"
-            execute="@this"
-            reRender="localizacoesTab, pageBodyDialogMessage"
-            action="estruturaCrudAction.novaLocalizacao"
-            value="#{infoxMessages['crud.new']}"
-            id="newLocalizacaoButton" />
-          <wi:commandButton
             rendered="#{empty estruturaCrudAction.localizacaoFilho.idLocalizacao}"
             reRender="localizacoesTab, pageBodyDialogMessage"
             action="estruturaCrudAction.adicionarLocalizacao"
@@ -113,6 +106,13 @@
             action="estruturaCrudAction.atualizarLocalizacao"
             id="updateLocalizacaoButton"
             value="#{infoxMessages['crud.update']}" />
+          <wi:commandButton
+            rendered="#{not empty estruturaCrudAction.localizacaoFilho.idLocalizacao}"
+            execute="@this"
+            reRender="localizacoesTab, pageBodyDialogMessage"
+            action="estruturaCrudAction.novaLocalizacao"
+            value="#{infoxMessages['crud.new']}"
+            id="newLocalizacaoButton" />
         </ui:define>
       </wi:dataForm>
       <wi:dataTable

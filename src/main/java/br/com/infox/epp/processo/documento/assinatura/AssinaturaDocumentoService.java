@@ -17,7 +17,6 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.certificado.Certificado;
@@ -55,7 +54,6 @@ import br.com.infox.seam.util.ComponentUtil;
 @AutoCreate
 @Scope(ScopeType.STATELESS)
 @Name(AssinaturaDocumentoService.NAME)
-@Transactional
 public class AssinaturaDocumentoService {
 
     private static final LogProvider LOG = Logging.getLogProvider(AssinaturaDocumentoService.class);

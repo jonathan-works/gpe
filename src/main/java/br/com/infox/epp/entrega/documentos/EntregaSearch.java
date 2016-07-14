@@ -34,6 +34,7 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.Documento_;
 import br.com.infox.epp.processo.partes.entity.TipoParte;
 import br.com.infox.epp.processo.partes.entity.TipoParte_;
+import br.com.infox.seam.exception.BusinessException;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -93,7 +94,7 @@ public class EntregaSearch extends PersistenceController {
 		cq.orderBy(cb.asc(pessoa.get(Pessoa_.nome)));
 		
 		if (!query.matches("\\d+")) {
-			cq.where(cb.like(cb.lower(pessoa.get(PessoaFisica_.nome)), "%" + query.toLowerCase() + "%"));
+			cq.where(cb.like(cb.lower(pessoa.get(Pessoa_.nome)), "%" + query.toLowerCase() + "%"));
 		} else {
 			Subquery<Integer> pessoaFisicaQuery = cq.subquery(Integer.class);
 			Root<PessoaFisica> pessoaFisica = pessoaFisicaQuery.from(PessoaFisica.class);
@@ -200,8 +201,7 @@ public class EntregaSearch extends PersistenceController {
 	}
 
 	public boolean existeEntregaModeloLocalizacao(ModeloEntrega modeloEntrega, Localizacao localizacao){
-		EntityManager entityManager = getEntityManager();
-		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Integer> query =  cb.createQuery(Integer.class);
 		query.select(cb.literal(1));
 		Root<Entrega> entrega = query.from(Entrega.class);
@@ -214,4 +214,41 @@ public class EntregaSearch extends PersistenceController {
         }
 	}
 	
+	public Entrega getEntregaByModeloLocalizacao(ModeloEntrega modeloEntrega, Localizacao localizacao) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Entrega> query =  cb.createQuery(Entrega.class);
+		Root<Entrega> entrega = query.from(Entrega.class);
+		query.where(cb.equal(entrega.get(Entrega_.localizacao), localizacao),cb.equal(entrega.get(Entrega_.modeloEntrega), modeloEntrega));
+		query.select(entrega);
+		try {
+            return getEntityManager().createQuery(query).getSingleResult();
+        } catch (NoResultException nre) {
+            throw new BusinessException("Não foi encontrada Entrega para essa Localização e Modelo de Entrega");
+        }
+	}
+	
+	public ClassificacaoDocumentoEntrega getClassificacaoDocumentoEntrega(ClassificacaoDocumento classificacaoDocumento, ModeloEntrega modeloEntrega) {
+		EntityManager entityManager = getEntityManager();
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<ClassificacaoDocumentoEntrega> query = cb.createQuery(ClassificacaoDocumentoEntrega.class);
+		Root<ClassificacaoDocumentoEntrega> root = query.from(ClassificacaoDocumentoEntrega.class);
+		query.where(cb.equal(root.get(ClassificacaoDocumentoEntrega_.classificacaoDocumento), classificacaoDocumento));
+		query.where(query.getRestriction(), cb.equal(root.get(ClassificacaoDocumentoEntrega_.modeloEntrega), modeloEntrega));
+		return entityManager.createQuery(query).getSingleResult();
+	}
+	
+	public List<EntregaResponsavel> getResponsaveisEntrega(Entrega entrega, EntregaResponsavel responsavelVinculadoPai) {
+		EntityManager entityManager = getEntityManager();
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<EntregaResponsavel> query = cb.createQuery(EntregaResponsavel.class);
+		Root<EntregaResponsavel> root = query.from(EntregaResponsavel.class);
+		query.where(cb.equal(root.get(EntregaResponsavel_.entrega), entrega));
+		if (responsavelVinculadoPai == null) {
+			query.where(query.getRestriction(), cb.isNull(root.get(EntregaResponsavel_.responsavelVinculado)));
+		} else {
+			query.where(query.getRestriction(), cb.equal(root.get(EntregaResponsavel_.responsavelVinculado), responsavelVinculadoPai));
+		}
+		query.orderBy(cb.asc(root.get(EntregaResponsavel_.nome)));
+		return entityManager.createQuery(query).getResultList();
+	}
 }

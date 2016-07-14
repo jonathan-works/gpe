@@ -22,6 +22,7 @@
                     label="#{infoxMessages['pasta.nome']}" />
                 <wi:inputText id="descricao" value="#{pastaList.entity.descricao}"
                     label="#{infoxMessages['pasta.descricao']}" />
+                <div />
                 <ui:define name="buttons">
 					<wi:commandButton id="searchButton"
 						value="#{infoxMessages['button.pesquisar']}"
@@ -74,6 +75,10 @@
 	       	columnId="ordem"
 	        columnHeader="#{infoxMessages['pasta.ordem']}"
       		value="#{row.ordem}" />
+        <wi:columnBoolean
+            columnId="padrao"
+            columnHeader="#{infoxMessages['pasta.padrao']}"
+            value="#{pastaRestricaoAction.isPastaDefault(row)}" />
       		
       	<ui:include src="Pasta/pastaListColunasAdicionais.xhtml"/>
 
@@ -93,12 +98,14 @@
                     <f:attribute name="idProcesso" value="#{pastaRestricaoAction.processo.idProcesso}" />
                     <f:attribute name="idPasta" value="#{pastaRestricaoAction.instance.id}" />
                 </wi:inputText>
+
                 <wi:inputText id="editPastaInputDescricao"
                     value="#{pastaRestricaoAction.instance.descricao}"
                     required="false" maxlength="250"
                     disabled="#{not pastaRestricaoAction.instance.editavel}"
                     label="#{infoxMessages['pasta.descricao']}">
                 </wi:inputText>
+
                 <wi:inputNumber id="editPastaInputOrdem"
                     value="#{pastaRestricaoAction.instance.ordem}"
                     disabled="#{not pastaRestricaoAction.instance.editavel}"
@@ -107,23 +114,33 @@
                     <f:attribute name="idProcesso" value="#{pastaRestricaoAction.processo.idProcesso}" />
                     <f:attribute name="idPasta" value="#{pastaRestricaoAction.instance.id}" />
                 </wi:inputNumber>
-                
+
+                <wi:selectBooleanCheckbox id="padraoInput"
+                    rendered="#{not pastaRestricaoAction.pastaSelecionadaPadrao}"
+                    label="#{infoxMessages['pasta.padrao']}"
+                    value="#{pastaRestricaoAction.pastaSelecionadaPadrao}" />
+                <wi:outputText id="outputPadraoInput"
+                    rendered="#{pastaRestricaoAction.pastaSelecionadaPadrao}"
+                    label="#{infoxMessages['pasta.padrao']}"
+                    value="#{infoxMessages['crud.yes']}" />
+
                 <ui:include src="Pasta/pastaAtributosAdicionais.xhtml"/>
-                
+
                 <wi:commandButton id="editPastaButton"
                     action="#{pastaRestricaoAction.updatePasta()}"
                     rendered="#{pastaRestricaoAction.instance.editavel}"
                     execute="@form" onclick="infox.showLoading();" oncomplete="infox.hideLoading();"
                     value="#{infoxMessages['pasta.edit']}"
                     reRender="@form pastaTable pastaTablePanel pastaRestricaoDiv pageBodyDialogMessage" />
+
             </h:form>
-    
+
             <!-- Lista de restrições -->
     		<wi:dataTable id="pastaRestricaoTable"
     			values="#{pastaRestricaoAction.restricoes}" rowId="#{row.id}"
     			showSearchForm="false" showGrid="#{pastaRestricaoAction.pastaSelecionada}"
     			tableTitle="#{infoxMessages['pasta.restricoes']} - #{pastaRestricaoAction.instance}">
-    
+
     			<ui:define name="headerToolBar" />
     			<ui:define name="toolBar">
                     <wi:toolBar id="viewPastaRestricao"

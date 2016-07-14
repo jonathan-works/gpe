@@ -17,21 +17,27 @@ import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.core.Expressions;
 import org.jboss.seam.core.Expressions.MethodExpression;
 import org.jboss.seam.core.Expressions.ValueExpression;
+import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.ProcessInstance;
+import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.epp.cdi.config.BeanManager;
-import br.com.infox.epp.fluxo.entity.DefinicaoVariavelProcesso;
-import br.com.infox.epp.fluxo.manager.DefinicaoVariavelProcessoManager;
+import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcesso;
+import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoSearch;
+import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
+import br.com.infox.epp.processo.prioridade.entity.PrioridadeProcesso;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.exception.BusinessException;
 
 @Stateless
 @Name(VariavelProcessoService.NAME)
@@ -48,19 +54,20 @@ public class VariavelProcessoService {
     private ProcessoManager processoManager;
     @Inject
     private ProcessoTarefaManager processoTarefaManager;
+    @Inject
+    private FluxoManager fluxoManager;
+    @Inject
+    private DefinicaoVariavelProcessoSearch definicaoVariavelProcessoSearch;
     
     private final LogProvider LOG = Logging.getLogProvider(VariavelProcessoService.class);
 
-    public List<VariavelProcesso> getVariaveis(Processo processo) {
+    public List<VariavelProcesso> getVariaveis(Processo processo, String recursoVariavel, boolean usuarioExterno) {
         List<VariavelProcesso> variaveis = new ArrayList<>();
-        DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager = BeanManager.INSTANCE.getReference(DefinicaoVariavelProcessoManager.class);
-        List<DefinicaoVariavelProcesso> definicaoVariavelList = definicaoVariavelProcessoManager
-                .listVariaveisByFluxo(processo.getNaturezaCategoriaFluxo().getFluxo());
+        Fluxo fluxo = processo.getNaturezaCategoriaFluxo().getFluxo();
+        List<DefinicaoVariavelProcesso> definicaoVariavelList = definicaoVariavelProcessoSearch.getDefinicoesVariaveis(fluxo, recursoVariavel, usuarioExterno);
         
         for (DefinicaoVariavelProcesso definicao : definicaoVariavelList) {
-            if (definicao.getVisivel()) {
-            	variaveis.add(getPrimeiraVariavelProcessoAncestral(processo, definicao, null));
-            }
+        	variaveis.add(getPrimeiraVariavelProcessoAncestral(processo, definicao, null));
         }
 
         return variaveis;
@@ -78,9 +85,19 @@ public class VariavelProcessoService {
     }
 
     public VariavelProcesso getVariavelProcesso(Processo processo, String nome, Long idTaskInstance) {
-    	DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager = BeanManager.INSTANCE.getReference(DefinicaoVariavelProcessoManager.class);
-        DefinicaoVariavelProcesso definicao = definicaoVariavelProcessoManager.getDefinicao(processo.getNaturezaCategoriaFluxo().getFluxo(), nome);
-        TaskInstance taskInstance = ManagedJbpmContext.instance().getTaskInstance(idTaskInstance);
+    	DefinicaoVariavelProcesso definicao = null;
+    	definicao = definicaoVariavelProcessoSearch.getDefinicao(processo.getNaturezaCategoriaFluxo().getFluxo(), nome);
+    	if(definicao == null && idTaskInstance != null){
+    		//TODO: melhorar código pois foi feito rapidamente...
+    		//caso não encontre a definição no processo, procura na definicao do subprocesso.
+    		ProcessInstance subrProcessInstance = processoManager.findProcessByTaskInstance(idTaskInstance);
+    		Fluxo subFluxo = fluxoManager.getFluxoByDescricao(subrProcessInstance.getProcessDefinition().getName());
+   			definicao = definicaoVariavelProcessoSearch.getDefinicao(subFluxo, nome);
+    	}
+    	if(definicao == null)
+    		throw new BusinessException("Não foi possível encontrar a definição da variável " + nome);
+    	
+        TaskInstance taskInstance = idTaskInstance != null ? ManagedJbpmContext.instance().getTaskInstance(idTaskInstance) : null;
         return getPrimeiraVariavelProcessoAncestral(processo, definicao, taskInstance);
     }
 
@@ -109,13 +126,13 @@ public class VariavelProcessoService {
             Object variable;
             if (taskInstance != null) {
             	// Aqui já pega do processInstance caso não tenha na taskInstance por causa da hierarquia de VariableContainer do jBPM
-            	variable = taskInstance.getVariable(definicao.getNome());
+            		variable = taskInstance.getVariable(definicao.getNome());
             } else {
             	variable = processInstance.getContextInstance().getVariable(definicao.getNome());
             }
             VariavelProcesso variavelProcesso = inicializaVariavelProcesso(definicao);
             if (variable != null) {
-                variavelProcesso.setValor(formatarValor(variable));
+            	 variavelProcesso.setValor(formatarValor(variable));
             } else {
             	try{
 	                List<MetadadoProcesso> metadados = metadadoProcessoManager.getMetadadoProcessoByType(processo,
@@ -126,7 +143,17 @@ public class VariavelProcessoService {
 	                } else {
 	                    final String valorPadrao = definicao.getValorPadrao();
 	                    if (valorPadrao != null) {
-	                        setValor(valorPadrao, processo, variavelProcesso);
+	                    	Object valorJbpmExpressionEvaluator = null;
+	                    	if(valorPadrao.startsWith("#") || valorPadrao.startsWith("$")){
+	                    		valorJbpmExpressionEvaluator = JbpmExpressionEvaluator.evaluate(valorPadrao,new ExecutionContext(taskInstance.getToken()));
+		                		if(valorJbpmExpressionEvaluator != null){
+		                			variavelProcesso.setValor(formatarValor(valorJbpmExpressionEvaluator));
+		                		}
+		                	}
+	                    	
+	                    	if(valorJbpmExpressionEvaluator == null){
+	                    		setValor(valorPadrao, processo, variavelProcesso);
+	                    	}
 	                    } else {
 	                        variavelProcesso = null;
 	                    }
@@ -155,8 +182,7 @@ public class VariavelProcessoService {
 	public List<VariavelProcesso> getVariaveisHierquiaProcesso(Integer idProcesso) {
         List<VariavelProcesso> variaveis = new ArrayList<>();
         Processo processo = processoManager.find(idProcesso);
-        DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager = BeanManager.INSTANCE.getReference(DefinicaoVariavelProcessoManager.class);
-        List<DefinicaoVariavelProcesso> definicaoVariavelList = definicaoVariavelProcessoManager
+        List<DefinicaoVariavelProcesso> definicaoVariavelList = definicaoVariavelProcessoSearch
                 .listVariaveisByFluxo(processo.getNaturezaCategoriaFluxo().getFluxo());
         
         for (DefinicaoVariavelProcesso definicao : definicaoVariavelList) {
@@ -184,7 +210,7 @@ public class VariavelProcessoService {
             ValueExpression<Object> valueExpression = expressions.createValueExpression(valorPadrao);
             value = valueExpression.getValue();
         } catch (Exception e) {
-            MethodExpression<Object> methodExpression = expressions.createMethodExpression(valorPadrao, Object.class, Processo.class);
+        	MethodExpression<Object> methodExpression = expressions.createMethodExpression(valorPadrao, Object.class, Processo.class);
             value = methodExpression.invoke(processo);
         }
         variavelProcesso.setValor(value != null ? value.toString() : null);
@@ -216,5 +242,13 @@ public class VariavelProcessoService {
         variavelProcesso.setLabel(definicao.getLabel());
         variavelProcesso.setNome(definicao.getNome());
         return variavelProcesso;
+    }
+
+    public UsuarioLogin getUsuarioCadastro(Processo processo) {
+        return processo.getUsuarioCadastro();
+    }
+
+    public PrioridadeProcesso getPrioridadeProcesso(Processo processo) {
+        return processo.getPrioridadeProcesso();
     }
 }

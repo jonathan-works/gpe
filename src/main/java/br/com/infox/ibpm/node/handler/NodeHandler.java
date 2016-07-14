@@ -16,7 +16,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.persistence.NoResultException;
+
 import org.apache.commons.lang3.tuple.Pair;
+import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 import org.jbpm.activity.exe.ActivityBehavior;
@@ -511,18 +514,24 @@ public class NodeHandler implements Serializable {
     private void onChangeSubProcess(String subProcessName) {
         String processDefinitionName = getSubProcessName();
         if (StringUtil.isEmpty(processDefinitionName)) startVariablesSubProcess = Collections.emptyList();
-        ProcessDefinition processDefinition = JbpmUtil.instance().findLatestProcessDefinition(processDefinitionName);
-        Task startTask = processDefinition.getTaskMgmtDefinition().getStartTask();
-        if (startTask != null && startTask.getTaskController() != null 
-                && startTask.getTaskController().getVariableAccesses() != null) {
-            List<Pair<String, Pair<VariableType, Boolean>>> variables = new ArrayList<>();
-            for (VariableAccess variableAccess : startTask.getTaskController().getVariableAccesses()) {
-                String type = variableAccess.getMappedName().split(":")[0];
-                variables.add(Pair.of(variableAccess.getVariableName(), Pair.of(VariableType.valueOf(type), variableAccess.isRequired())));
-            }
-            startVariablesSubProcess = variables;
-        } else {
-            startVariablesSubProcess = Collections.emptyList();
+        try{
+        	ProcessDefinition processDefinition = JbpmUtil.instance().findLatestProcessDefinition(processDefinitionName);
+        	Task startTask = processDefinition.getTaskMgmtDefinition().getStartTask();
+        	if (startTask != null && startTask.getTaskController() != null 
+        			&& startTask.getTaskController().getVariableAccesses() != null) {
+        		List<Pair<String, Pair<VariableType, Boolean>>> variables = new ArrayList<>();
+        		for (VariableAccess variableAccess : startTask.getTaskController().getVariableAccesses()) {
+        			String type = variableAccess.getMappedName().split(":")[0];
+        			variables.add(Pair.of(variableAccess.getVariableName(), Pair.of(VariableType.valueOf(type), variableAccess.isRequired())));
+        		}
+        		startVariablesSubProcess = variables;
+        	} else {
+        		startVariablesSubProcess = Collections.emptyList();
+        	}
+        }catch(NoResultException e){
+        	FacesMessages.instance().add("Não foi possível encontrar o fluxo: " + subProcessName);
+        	LOG.warn("Não foi possível encontrar o fluxo: " + subProcessName);
+        	startVariablesSubProcess = Collections.emptyList();
         }
     }
     

@@ -13,8 +13,9 @@ import org.hibernate.dialect.Dialect;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.entrega.documentos.Entrega;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.Pasta;
+import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.hibernate.util.HibernateUtil;
 
 @Stateless
@@ -26,13 +27,13 @@ public class ChecklistService {
     /**
      * Método que retorna o {@link Checklist}.
      * Caso já exista, retorna o já existente. Caso não exista, cria um checklist.
-     * @param entrega {@link Entrega} que o checklist deve se basear.
+     * @param pasta {@link Pasta} que o checklist deve se basear.
      * @return {@link Checklist}
      */
-    public Checklist getByEntrega(Entrega entrega) {
-        Checklist checklist = checklistSearch.getByIdEntrega(entrega.getId());
+    public Checklist getByProcessoPasta(Processo processo, Pasta pasta) {
+        Checklist checklist = checklistSearch.getByIdProcessoIdPasta(processo.getIdProcesso(), pasta.getId());
         if (checklist == null) {
-            checklist = initChecklist(entrega);
+            checklist = initChecklist(processo, pasta);
         } else {
             verifyNovosDocumentos(checklist);
         }
@@ -58,20 +59,21 @@ public class ChecklistService {
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Checklist initChecklist(Entrega entrega) {
+    public Checklist initChecklist(Processo processo, Pasta pasta) {
         Checklist checkList = new Checklist();
         checkList.setDataCriacao(new Date());
         checkList.setUsuarioCriacao(Authenticator.getUsuarioLogado());
-        checkList.setEntrega(entrega);
+        checkList.setPasta(pasta);
+        checkList.setProcesso(processo);
         getEntityManager().persist(checkList);
         getEntityManager().flush();
-        initChecklistDoc(checkList, entrega);
+        initChecklistDoc(checkList, pasta);
         getEntityManager().flush();
         return checkList;
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    private void initChecklistDoc(Checklist checkList, Entrega entrega) {
+    private void initChecklistDoc(Checklist checkList, Pasta pasta) {
         Dialect dialect = HibernateUtil.getDialect();
         String nextVal = dialect.getSequenceNextValString("sq_checklist_doc");
         String sql = "INSERT INTO tb_checklist_doc (id_checklist_doc, id_checklist, id_documento, nr_version) "
@@ -80,7 +82,7 @@ public class ChecklistService {
                 + "WHERE d.id_pasta = :idPastaEntrega";
         getEntityManager().createNativeQuery(sql)
                 .setParameter("idChecklist", checkList.getId())
-                .setParameter("idPastaEntrega", entrega.getPasta().getId())
+                .setParameter("idPastaEntrega", pasta.getId())
                 .executeUpdate();
     }
 

@@ -5,21 +5,16 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
-import javax.ws.rs.WebApplicationException;
 
-import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.contexts.Lifecycle;
-import org.jboss.seam.transaction.Transaction;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.Token;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.joda.time.DateTime;
 
-import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.cdi.producer.JbpmContextProducer;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.access.entity.BloqueioUsuario;
@@ -82,8 +77,9 @@ public class QuartzResourceImpl implements QuartzResource {
     @Transactional
 	public void taskExpirationProcessor() {
 		Lifecycle.beginCall();
+		JbpmContextProducer.createJbpmContextTransactional();
 		try {
-			List<ProcessoTarefa> processoTarefaList = this.processoTarefaManager.getWithTaskExpiration();
+			List<ProcessoTarefa> processoTarefaList = processoTarefaManager.getWithTaskExpiration();
 			for (ProcessoTarefa processoTarefa : processoTarefaList) {
 				TaskExpiration taskExpiration = this.taskExpirationManager.getByFluxoAndTaskName(
 						processoTarefa.getProcesso().getNaturezaCategoriaFluxo().getFluxo(),
@@ -93,8 +89,7 @@ public class QuartzResourceImpl implements QuartzResource {
 					if (expirationDate.isBeforeNow()) {
 						TaskInstance taskInstance = ManagedJbpmContext.instance().getTaskInstanceForUpdate(processoTarefa.getTaskInstance());
 						try {
-							this.processoTarefaManager.finalizarInstanciaTarefa(taskInstance,
-									taskExpiration.getTransition());
+							processoTarefaManager.finalizarInstanciaTarefa(taskInstance, taskExpiration.getTransition());
 						} catch (DAOException e) {
 							LOG.error("quartzRestImpl.processTaskExpiration()", e);
 						}
@@ -116,6 +111,7 @@ public class QuartzResourceImpl implements QuartzResource {
     @Transactional
     public void retryAutomaticNodes() {
         Lifecycle.beginCall();
+        JbpmContextProducer.createJbpmContextTransactional();
         try {
             List<Token> tokens = JbpmUtil.getTokensOfAutomaticNodesNotEnded();
             for (Token token : tokens) {
@@ -129,48 +125,25 @@ public class QuartzResourceImpl implements QuartzResource {
     }
 
     @Override
+    @Transactional(timeout = 30000)
     public void processContagemPrazoComunicacao() {
         Lifecycle.beginCall();
+        JbpmContextProducer.createJbpmContextTransactional();
         try {
-            UserTransaction transaction = Transaction.instance();
-            try {
-                transaction.setTransactionTimeout(30000);
-                transaction.begin();
-                analisarProcessosAguardandoCiencia();
-                analisarProcessosAguardandoCumprimento();
-                transaction.commit();
-            } catch (Exception e) {
-                try {
-                    transaction.rollback();
-                } catch (IllegalStateException | SecurityException | SystemException e1) {
-                    throw new WebApplicationException(e1, 500);
-                }
-                throw new WebApplicationException(e, 500);
-            } 
+            analisarProcessosAguardandoCiencia();
+            analisarProcessosAguardandoCumprimento();
         } finally {
             Lifecycle.endCall();
         }
     }
     
     @Override
+    @Transactional(timeout = 30000)
     public void processUpdateCalendarioSync() {
         Lifecycle.beginCall();
         try {
-            UserTransaction transaction = Transaction.instance();
-            try {
-                transaction.setTransactionTimeout(30000);
-                transaction.begin();
-                calendarioEventosService.atualizarSeries();
-                calendarioEventosService.removeOrphanSeries();
-                transaction.commit();
-            } catch (Exception e) {
-                try {
-                    transaction.rollback();
-                } catch (IllegalStateException | SecurityException | SystemException e1) {
-                    throw new WebApplicationException(e1, 500);
-                }
-                throw new WebApplicationException(e, 500);
-            }
+            calendarioEventosService.atualizarSeries();
+            calendarioEventosService.removeOrphanSeries();
         } finally {
             Lifecycle.endCall();
         }

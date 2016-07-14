@@ -62,13 +62,16 @@ public class LogErrorService extends PersistenceController {
             getEntityManager().flush();
         } catch (Exception e) {
             logErro.setId(null);
-            File dir = new File(applicationServerService.getLogDir());
-            File file = new File(dir, LOG_ERRO_FILE_NAME);
-            try ( FileWriter fileWriter = new FileWriter(file, true)){
-                String data = new GsonBuilder().create().toJson(logErro) + "\n";
-                fileWriter.write(data, 0, data.getBytes().length);
-                fileWriter.flush();
-            } catch (IOException e1) { // do nothing
+            String logPath = applicationServerService.getLogDir();
+            if (!StringUtil.isEmpty(logPath)) {
+                File dir = new File(applicationServerService.getLogDir());
+                File file = new File(dir, LOG_ERRO_FILE_NAME);
+                try ( FileWriter fileWriter = new FileWriter(file, true)){
+                    String data = new GsonBuilder().create().toJson(logErro) + "\n";
+                    fileWriter.write(data, 0, data.getBytes().length);
+                    fileWriter.flush();
+                } catch (Exception e1) { // do nothing
+                }
             }
             throw e;
         }
@@ -177,7 +180,7 @@ public class LogErrorService extends PersistenceController {
         LogErro logErro = new LogErro();
         logErro.setCodigo(codigo);
         logErro.setData(DateTime.now().toDate());
-        logErro.setInstancia(applicationServerService.getInstanceName());
+        logErro.setInstancia(applicationServerService.getInstanceName() == null ? Thread.currentThread().getName() : applicationServerService.getInstanceName());
         logErro.setStatus(enviarLog ? StatusLog.PENDENTE : StatusLog.NENVIADO);
         logErro.setStacktrace(getStacktrace(handledException));
         saveLog(logErro);
@@ -199,7 +202,10 @@ public class LogErrorService extends PersistenceController {
     private String getUserAttributes() {
         Localizacao localizacao = Authenticator.getLocalizacaoAtual();
         UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
-        return String.format(ERROR_MESSAGE_FORMAT, usuarioPerfil.getUsuarioLogin().getLogin(), localizacao.getCodigo(), usuarioPerfil.getPerfilTemplate().getCodigo());
+        String codigoLocalizacao = localizacao == null ? "" : localizacao.getCodigo();
+        String login = usuarioPerfil == null ? Thread.currentThread().getName() : usuarioPerfil.getUsuarioLogin().getLogin();
+        String perfil = usuarioPerfil == null ? "" : usuarioPerfil.getPerfilTemplate().getCodigo();
+        return String.format(ERROR_MESSAGE_FORMAT, login, codigoLocalizacao, perfil);
     }
     
     private Throwable getHandledException(Throwable throwable) {

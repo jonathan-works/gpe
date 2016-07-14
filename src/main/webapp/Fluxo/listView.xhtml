@@ -294,6 +294,14 @@
             action="#{modeloPastaRestricaoAction.init(fluxoCrudAction.instance)}">
 	        <ui:include src="definicao/modeloPastaRestricao.xhtml" />	        
       	</infox:tab>
+      	<infox:tab
+	        name="definicaoVariaveisTab"
+	        id="definicaoVariaveisTab"
+	        title="#{infoxMessages['processBuilder.definicaoVariavelProcesso']}"
+	        rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.replica}"
+            action="#{definicaoVariavelProcessoAction.init(fluxoCrudAction.instance)}">
+	        <ui:include src="definicaoVariavelProcesso.xhtml" />	        
+      	</infox:tab>
     </ui:define>
 </ui:composition>
 

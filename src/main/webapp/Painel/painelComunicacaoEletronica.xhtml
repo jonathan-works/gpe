@@ -51,43 +51,7 @@
 						</a:outputPanel>
 					</wi:searchForm>
                 </ui:define>
-    
-                <wi:columnOutputText
-                  columnId="numeroProcesso"
-                  columnHeader="#{infoxMessages['consultaProcesso.numeroProcesso']}"
-                  value="#{row.numeroProcessoRoot}" 
-                  columnRendered="#{painelUsuarioController.exibirColunasPadrao}"/>
-                  
-                <wi:columnOutputText
-                  columnId="usuarioSolicitante"
-                  columnHeader="#{infoxMessages['consultaProcesso.usuarioCadastroProcesso']}"
-                  value="#{row.nomeUsuarioSolicitante}" 
-                  columnRendered="#{painelUsuarioController.exibirColunasPadrao}"/>
-                  
-                <wi:columnDateTime
-                  columnId="dataInicio"
-                  columnHeader="#{infoxMessages['consultaProcesso.dataInicio']}"
-                  value="#{row.dataInicio}"
-                  columnRendered="#{painelUsuarioController.exibirColunasPadrao}" />
-                  
-                <wi:columnOutputText
-                  columnId="natureza"
-                  columnHeader="#{infoxMessages['consultaProcesso.natureza']}"
-                  value="#{row.nomeNatureza}"
-                  columnRendered="#{painelUsuarioController.exibirColunasPadrao}" />
-                  
-                <wi:columnOutputText
-                  columnId="categoria"
-                  columnHeader="#{infoxMessages['consultaProcesso.categoria']}"
-                  value="#{row.nomeCategoria}"
-                  columnRendered="#{painelUsuarioController.exibirColunasPadrao}" />
-                  
-                <wi:columnOutputText
-                  columnId="destinatario"
-                  columnHeader="#{infoxMessages['consultaProcesso.destinatario']}"
-                  value="#{consultaProcessoList.getVariavelProcesso(row, 'destinatarioComunicacao.nome')}"
-                  columnRendered="#{painelUsuarioController.exibirColunasPadrao}"/>
-                  
+
                 <infox:dynamicColumns columns="#{consultaProcessoList.dynamicColumns}" />
                 
                 <ui:define name="headerToolBar">

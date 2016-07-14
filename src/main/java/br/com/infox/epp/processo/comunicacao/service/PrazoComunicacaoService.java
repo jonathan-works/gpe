@@ -252,7 +252,7 @@ public class PrazoComunicacaoService {
     }
     
     public Date getDataLimiteCumprimentoInicial(Processo comunicacao){
-    	return getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO);
+    	return getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO_INICIAL);
     }
     
     public String getStatusProrrogacaoFormatado(Processo comunicacao){

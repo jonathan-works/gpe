@@ -222,6 +222,7 @@ public class EnvioComunicacaoController implements Serializable {
 
 	private void clear() {
 		destinatario = null;
+		localizacaoSubTree.clearTree();
 		initLocalizacaoRaiz();
 		initDestinatarioComunicacaoAction();
 		initDocumentoComunicacaoAction();
@@ -279,6 +280,8 @@ public class EnvioComunicacaoController implements Serializable {
 			setIdModeloVariable(null);
 			documentoComunicacaoAction.resetEntityState();
 			destinatarioComunicacaoAction.resetEntityState();
+			destinatarioComunicacaoAction.setLocalizacao(null);
+			destinatarioComunicacaoAction.setPerfilDestino(null);
 		}
 	}
 
@@ -463,6 +466,7 @@ public class EnvioComunicacaoController implements Serializable {
 	}
 	
 	public boolean isUsuarioLogadoNaLocalizacaoPerfilResponsavel() {
+		modeloComunicacaoManager.refresh(modeloComunicacao);
 		boolean usuarioLogadoNaLocalizacaoResponsavel = Authenticator.getLocalizacaoAtual().equals(modeloComunicacao.getLocalizacaoResponsavelAssinatura());
 		PerfilTemplate perfilUsuarioLogado = Authenticator.getUsuarioPerfilAtual().getPerfilTemplate();
 		PerfilTemplate perfilResponsavelAssinatura = modeloComunicacao.getPerfilResponsavelAssinatura();

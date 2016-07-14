@@ -4,9 +4,9 @@ import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
-import javax.enterprise.event.Event;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
-import javax.persistence.LockModeType;
 import javax.persistence.OptimisticLockException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -19,10 +19,14 @@ import br.com.infox.cdi.qualifier.GenericDao;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.entrega.entity.CategoriaEntregaItem;
 import br.com.infox.epp.entrega.modelo.ModeloEntrega;
-import br.com.infox.epp.events.FimPrazoModeloEntregaEvent;
+import br.com.infox.epp.entrega.modelo.ModeloEntregaItem;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @Stateless
 public class ModeloEntregaService {
+	
+	private static final LogProvider LOG = Logging.getLogProvider(ModeloEntregaService.class);
 	
     @Inject
     @GenericDao
@@ -34,12 +38,18 @@ public class ModeloEntregaService {
     private CategoriaEntregaItemSearch categoriaEntregaItemSearch;
     @Inject 
     private ModeloEntregaSearch modeloEntregaSearch;
-    @Inject 
-    private Event<FimPrazoModeloEntregaEvent> eventoPrazoExpirado;
+    @Inject
+    private SinalizarAgendaService sinalizarAgendaService;
+    @Inject
+    @GenericDao
+    private Dao<ModeloEntregaItem, Long> modeloEntregaItemDao;
     
     public ModeloEntrega salvarModeloEntrega(ModeloEntrega modeloEntrega){
         if (modeloEntrega.getId() == null) {
             modeloEntregaDao.persist(modeloEntrega);
+            for (ModeloEntregaItem item : modeloEntrega.getItensModelo()) {
+            	modeloEntregaItemDao.persist(item);
+            }
         } else {
             modeloEntrega = modeloEntregaDao.update(modeloEntrega);
         }
@@ -56,23 +66,24 @@ public class ModeloEntregaService {
         return categoriaEntregaItemDao.update(categoriaEntregaItem);
     }
     
-    public void sinalizarAgendaVencida(ModeloEntrega modeloEntrega) {
-    	modeloEntregaDao.lock(modeloEntrega, LockModeType.PESSIMISTIC_FORCE_INCREMENT);
-        FimPrazoModeloEntregaEvent modeloEntregaEvent = new FimPrazoModeloEntregaEvent();
-        modeloEntregaEvent.setModeloEntrega(modeloEntrega);
-        eventoPrazoExpirado.fire(modeloEntregaEvent);
-        modeloEntrega.setSinalDisparado(Boolean.TRUE);
-        modeloEntregaDao.update(modeloEntrega);
-    }
-
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public void sinalizarAgendasVencidas() {
         sinalizarAgendasVencidas(new Date());
     }
     
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public void sinalizarAgendasVencidas(Date data) {
         try {
             for (ModeloEntrega modeloEntrega : modeloEntregaSearch.getAgendasvencidas(data)) {
-                sinalizarAgendaVencida(modeloEntrega);
+                try {
+                	sinalizarAgendaService.sinalizarAgendaVencida(modeloEntrega);
+                } catch (Exception e) {
+                	if (e instanceof OptimisticLockException) {
+                		throw e;
+                	} else {
+                		LOG.error("Erro ao sinalizar agenda do modelo de entrega " + modeloEntrega.getId(), e);
+                	}
+				}
             }
         } catch (OptimisticLockException e) {
             Gson gson = new Gson();
