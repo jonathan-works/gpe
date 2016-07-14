@@ -16,7 +16,6 @@ public class DefinicaoVariavelProcessoList extends DataList<DefinicaoVariavelPro
 	
 	private String nome;
 	private String label;
-	private Boolean visivelPainel;
 	
 	@Override
 	protected String getDefaultOrder() {
@@ -37,7 +36,6 @@ public class DefinicaoVariavelProcessoList extends DataList<DefinicaoVariavelPro
 	protected void addRestrictionFields() {
 		addRestrictionField("nome", RestrictionType.contendoLower);
 		addRestrictionField("label", RestrictionType.contendoLower);
-		addRestrictionField("visivelPainel", RestrictionType.igual);
 	}
 	
 	public Fluxo getFluxo() {
@@ -62,13 +60,5 @@ public class DefinicaoVariavelProcessoList extends DataList<DefinicaoVariavelPro
 	
 	public void setLabel(String label) {
 		this.label = label;
-	}
-	
-	public Boolean getVisivelPainel() {
-		return visivelPainel;
-	}
-	
-	public void setVisivelPainel(Boolean visivelPainel) {
-		this.visivelPainel = visivelPainel;
 	}
 }

@@ -22,7 +22,7 @@
 	                   	execute="@form" render="definicoesVariaveisPanel" limitRender="true">
 	                	<a:param assignTo="#{definicaoVariavelProcessoList.page}" value="1" />
 	               	</a:commandButton>
-	               	<a:commandButton id="clearButton" onclick="$('##{formId}').clearForm();showLoading();" 
+	               	<a:commandButton id="clearButton" onclick="#{rich:jQuery('pesquisarDefinicoesVariaveisForm')}.clearForm();showLoading();" 
 	               		oncomplete="hideLoading();"
 	               		action="#{definicaoVariavelProcessoList.newInstance()}" value="#{infoxMessages['button.limpar']}" execute="@this"
 	                	render="definicoesVariaveisPanel" styleClass="buttons" />
