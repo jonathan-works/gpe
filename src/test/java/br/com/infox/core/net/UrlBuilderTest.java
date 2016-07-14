@@ -26,31 +26,25 @@ public class UrlBuilderTest {
         queries.add(new SimpleImmutableEntry<String, String>("quér2", "é algo com um monte de valor inválido"));
         for (String url : URL_VALIDAS_SEM_QUERIES) {
             String treatedURL = new UrlBuilder(url).queries(queries).build();
+            String[] split = treatedURL.split("\\?");
+            Assert.assertTrue(String.format("Invalid url [%s] must contain [%s]", treatedURL, url), treatedURL.contains(url));
             for (int i = 0, l = queries.size(); i < l; i++) {
                 Entry<String, String> query = queries.get(i);
-                String failMessage = String.format("Failed to append query [ %s=%s ] to [ %s ]", query.getKey(),
-                        query.getValue(), url);
                 String encodedKey = StringUtil.encodeToUrlSafeString(query.getKey());
                 String encodedValue = StringUtil.encodeToUrlSafeString(query.getValue());
-                String message = failMessage + " key[ " + encodedKey + " ] value[ " + encodedValue + " ]";
-                if (i == 0) {
-                    Assert.assertTrue(message, treatedURL.contains(String.format("?%s=%s", encodedKey, encodedValue)));
-                } else {
-                    Assert.assertTrue(message, treatedURL.contains(String.format("&%s=%s", encodedKey, encodedValue)));
-                }
+                
+                Assert.assertTrue("Query not found in URL", split[1].contains(String.format("%s=%s",encodedKey, encodedValue)));
             }
         }
         for (String url : URL_VALIDAS_COM_QUERIES) {
             String treatedURL = new UrlBuilder(url).queries(queries).build();
+            String[] split = treatedURL.split("\\?");
+            Assert.assertTrue(String.format("Invalid url [%s] must contain [%s]", treatedURL, url), treatedURL.contains(url));
             for (int i = 0, l = queries.size(); i < l; i++) {
                 Entry<String, String> query = queries.get(i);
-                String failMessage = String.format("Failed to append query [ %s=%s ] to [ %s ]", query.getKey(),
-                        query.getValue(), url);
                 String encodedKey = StringUtil.encodeToUrlSafeString(query.getKey());
                 String encodedValue = StringUtil.encodeToUrlSafeString(query.getValue());
-                String message = failMessage + " key[ " + encodedKey + " ] value[ " + encodedValue + " ]";
-                System.out.println(treatedURL);
-                Assert.assertTrue(message, treatedURL.contains(String.format("&%s=%s", encodedKey, encodedValue)));
+                Assert.assertTrue("Query not found in URL", split[1].contains(String.format("%s=%s",encodedKey, encodedValue)));
             }
         }
     }
