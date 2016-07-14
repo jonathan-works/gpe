@@ -51,7 +51,8 @@ public class NodeFactory {
 			node = new Node(getLabel(flowNode));
 		} else if (flowNode.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_EXCLUSIVE_GATEWAY)) {
 			node = new Decision(getLabel(flowNode));
-		} else if (flowNode.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_SUB_PROCESS)) {
+		} else if (flowNode.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_SUB_PROCESS) ||
+				flowNode.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_CALL_ACTIVITY)) {
 			node = new ProcessState(getLabel(flowNode));
 		} else if (flowNode.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_INTERMEDIATE_THROW_EVENT)) {
 			node = new Node(getLabel(flowNode));
