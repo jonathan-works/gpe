@@ -26,7 +26,7 @@ import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcesso;
-import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoRecursos;
+import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoRecursos.RecursoVariavel;
 import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoSearch;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Fluxo_;
@@ -58,6 +58,7 @@ public class ConsultaProcessoDynamicColumnsController implements Serializable {
     private List<String> controleMensagensValidacao = new ArrayList<>();
 	private List<DynamicColumnModel> dynamicColumns;
 	private Fluxo fluxo;
+	private RecursoVariavel recurso;
 	
 	public List<DynamicColumnModel> getDynamicColumns() {
     	if (dynamicColumns == null) {
@@ -65,15 +66,17 @@ public class ConsultaProcessoDynamicColumnsController implements Serializable {
     		if (fluxo == null && flash.containsKey("idFluxo")) {
     			// Botão Voltar da Consulta de Processos
 	    		setFluxo(fluxoManager.find(flash.get("idFluxo")));
+	    		setRecurso((RecursoVariavel) flash.get("recurso"));
     		}
-    		dynamicColumns = new ArrayList<>();
-    		boolean usuarioExterno = Authenticator.getPapelAtual() != null ? papelManager.isUsuarioExterno(Authenticator.getPapelAtual().getIdentificador()) : true;
-    		List<DefinicaoVariavelProcesso> definicoes = definicaoVariavelProcessoSearch.getDefinicoesVariaveis(fluxo, 
-    				DefinicaoVariavelProcessoRecursos.CONSULTA_PROCESSOS.getIdentificador(), usuarioExterno);
-    		
-    		for (DefinicaoVariavelProcesso definicaoVariavel : definicoes) {
-    			DynamicColumnModel model = new DynamicColumnModel(definicaoVariavel.getLabel(), MessageFormat.format(DYNAMIC_COLUMN_EXPRESSION, definicaoVariavel.getNome()));
-    			dynamicColumns.add(model);
+    		if (fluxo != null && recurso != null) {
+    			dynamicColumns = new ArrayList<>();
+        		boolean usuarioExterno = Authenticator.getPapelAtual() != null ? papelManager.isUsuarioExterno(Authenticator.getPapelAtual().getIdentificador()) : true;
+        		List<DefinicaoVariavelProcesso> definicoes = definicaoVariavelProcessoSearch.getDefinicoesVariaveis(fluxo, recurso.getIdentificador(), usuarioExterno);
+        		
+        		for (DefinicaoVariavelProcesso definicaoVariavel : definicoes) {
+        			DynamicColumnModel model = new DynamicColumnModel(definicaoVariavel.getLabel(), MessageFormat.format(DYNAMIC_COLUMN_EXPRESSION, definicaoVariavel.getNome()));
+        			dynamicColumns.add(model);
+        		}
     		}
     	}
 		return dynamicColumns;
@@ -123,5 +126,15 @@ public class ConsultaProcessoDynamicColumnsController implements Serializable {
     		clearMensagensValidacao();
         	dynamicColumns = null;
     	}
+	}
+    
+    public RecursoVariavel getRecurso() {
+		return recurso;
+	}
+    
+    public void setRecurso(RecursoVariavel recurso) {
+		this.recurso = recurso;
+		dynamicColumns = null;
+		clearMensagensValidacao();
 	}
 }

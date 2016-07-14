@@ -27,6 +27,7 @@ import br.com.infox.core.list.SearchCriteria;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioLogin_;
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoRecursos;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.Categoria_;
 import br.com.infox.epp.fluxo.entity.Fluxo;
@@ -104,12 +105,14 @@ public class ProcessoEpaList extends EntityList<Processo> {
     private StatusProcesso statusProcesso;
     
     @PostConstruct
+    @Override
     public void init() {
     	super.init();
     	Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
     	if (flash.containsKey("idFluxo")) {
     		setFluxo(fluxoManager.find(flash.get("idFluxo")));
     	}
+    	consultaProcessoDynamicColumnsController.setRecurso(DefinicaoVariavelProcessoRecursos.CONSULTA_PROCESSOS);
     }
     
     @Override

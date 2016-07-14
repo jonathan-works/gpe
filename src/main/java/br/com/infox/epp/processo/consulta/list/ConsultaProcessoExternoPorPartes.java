@@ -2,12 +2,14 @@ package br.com.infox.epp.processo.consulta.list;
 
 import java.util.Objects;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import br.com.infox.core.list.DataList;
 import br.com.infox.core.list.RestrictionType;
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoRecursos;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.sigilo.manager.SigiloProcessoPermissaoManager;
@@ -28,6 +30,13 @@ public class ConsultaProcessoExternoPorPartes extends DataList<Processo> {
     private boolean exibirTable = false;
     private Fluxo fluxo;
     private String nomePartes;
+    
+    @PostConstruct
+    @Override
+    public void init() {
+    	super.init();
+    	consultaProcessoDynamicColumnsController.setRecurso(DefinicaoVariavelProcessoRecursos.CONSULTA_EXTERNA);
+    }
     
     @Override
     protected void addRestrictionFields() {

@@ -8,6 +8,7 @@ import java.util.List;
 import javax.ejb.Remove;
 import javax.ejb.Stateful;
 import javax.faces.context.FacesContext;
+import javax.faces.context.Flash;
 import javax.inject.Inject;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -215,8 +216,15 @@ public class ConsultaController extends AbstractController {
 			String path = url.getPath();
 			String contextPath = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
 			String redirectUrl = path.substring(path.indexOf(contextPath) + contextPath.length()).replace(".seam", ".xhtml");
-			FacesContext.getCurrentInstance().getExternalContext().getFlash().put("idFluxo", processo.getNaturezaCategoriaFluxo().getFluxo().getIdFluxo());
-			Redirect.instance().setConversationPropagationEnabled(false);
+			if (redirectUrl.equals("/Processo/Consulta/listView.xhtml")) {
+				Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
+				flash.put("idFluxo", processo.getNaturezaCategoriaFluxo().getFluxo().getIdFluxo());
+				flash.put("recurso", DefinicaoVariavelProcessoRecursos.CONSULTA_PROCESSOS);
+				Redirect.instance().setConversationPropagationEnabled(false);
+				Redirect.instance().getParameters().clear();
+			} else {
+				Redirect.instance().setConversationPropagationEnabled(true);
+			}
 	        Redirect.instance().setViewId(redirectUrl);
 	        Redirect.instance().execute();
 		} catch (MalformedURLException e) {

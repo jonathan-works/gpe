@@ -124,7 +124,7 @@
       		<p:remoteCommand name="redirectToView" action="#{consultaController.redirectToView}" process="@this" />
               <wi:commandButton
               	id="btnVoltar" rendered="#{consultaController.showBackButton}"
-                onclick="redirectToView([{name: 'url', value: window.document.referrer}]); return false;"
+                onclick="infox.showLoading(); redirectToView([{name: 'url', value: window.document.referrer}]); return false;"
                 value="#{infoxMessages['page.return']}" />
          </h:form>
       </div>
