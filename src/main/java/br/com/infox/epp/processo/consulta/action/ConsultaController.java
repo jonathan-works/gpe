@@ -1,10 +1,13 @@
 package br.com.infox.epp.processo.consulta.action;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Remove;
 import javax.ejb.Stateful;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import org.jboss.seam.annotations.AutoCreate;
@@ -71,6 +74,7 @@ public class ConsultaController extends AbstractController {
     private boolean showBackButton = true;
     private List<Localizacao> localizacoesProcesso;
     private List<VariavelProcesso> variaveisDetalhe;
+    private String url;
 
 	public boolean isShowBackButton() {
 		return showBackButton;
@@ -195,5 +199,28 @@ public class ConsultaController extends AbstractController {
 				DefinicaoVariavelProcessoRecursos.DETALHE_PROCESSO.getIdentificador(), papelManager.isUsuarioExterno(Authenticator.getPapelAtual().getIdentificador()));
 		}
 		return variaveisDetalhe;
+	}
+	
+	public String getUrl() {
+		return url;
+	}
+	
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	
+	public void redirectToView() {
+		try {
+			URL url = new URL(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("url"));
+			String path = url.getPath();
+			String contextPath = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
+			String redirectUrl = path.substring(path.indexOf(contextPath) + contextPath.length()).replace(".seam", ".xhtml");
+			FacesContext.getCurrentInstance().getExternalContext().getFlash().put("idFluxo", processo.getNaturezaCategoriaFluxo().getFluxo().getIdFluxo());
+			Redirect.instance().setConversationPropagationEnabled(false);
+	        Redirect.instance().setViewId(redirectUrl);
+	        Redirect.instance().execute();
+		} catch (MalformedURLException e) {
+			FacesMessages.instance().add("URL de retorno mal-formada: " + FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("url"));
+		}
 	}
 }

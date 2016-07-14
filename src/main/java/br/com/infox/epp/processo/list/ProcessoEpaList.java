@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
+import javax.faces.context.Flash;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.NoResultException;
@@ -32,6 +35,7 @@ import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo_;
 import br.com.infox.epp.fluxo.entity.Natureza_;
+import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaFisica_;
 import br.com.infox.epp.processo.consulta.list.ConsultaProcessoDynamicColumnsController;
@@ -85,6 +89,8 @@ public class ProcessoEpaList extends EntityList<Processo> {
 
     @Inject
     private ConsultaProcessoDynamicColumnsController consultaProcessoDynamicColumnsController;
+    @Inject
+    private FluxoManager fluxoManager;
     
     private Fluxo fluxo;
     
@@ -96,6 +102,15 @@ public class ProcessoEpaList extends EntityList<Processo> {
     private Natureza natureza;
     private Categoria categoria;
     private StatusProcesso statusProcesso;
+    
+    @PostConstruct
+    public void init() {
+    	super.init();
+    	Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
+    	if (flash.containsKey("idFluxo")) {
+    		setFluxo(fluxoManager.find(flash.get("idFluxo")));
+    	}
+    }
     
     @Override
     protected void addSearchFields() {

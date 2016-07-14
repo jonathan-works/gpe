@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.faces.context.FacesContext;
+import javax.faces.context.Flash;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -30,6 +32,7 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Fluxo_;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo_;
+import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.Processo_;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
@@ -49,6 +52,8 @@ public class ConsultaProcessoDynamicColumnsController implements Serializable {
     private VariavelProcessoService variavelProcessoService;
     @Inject
     private PapelManager papelManager;
+    @Inject
+    private FluxoManager fluxoManager;
 
     private List<String> controleMensagensValidacao = new ArrayList<>();
 	private List<DynamicColumnModel> dynamicColumns;
@@ -56,6 +61,11 @@ public class ConsultaProcessoDynamicColumnsController implements Serializable {
 	
 	public List<DynamicColumnModel> getDynamicColumns() {
     	if (dynamicColumns == null) {
+    		Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
+    		if (fluxo == null && flash.containsKey("idFluxo")) {
+    			// Botão Voltar da Consulta de Processos
+	    		setFluxo(fluxoManager.find(flash.get("idFluxo")));
+    		}
     		dynamicColumns = new ArrayList<>();
     		boolean usuarioExterno = Authenticator.getPapelAtual() != null ? papelManager.isUsuarioExterno(Authenticator.getPapelAtual().getIdentificador()) : true;
     		List<DefinicaoVariavelProcesso> definicoes = definicaoVariavelProcessoSearch.getDefinicoesVariaveis(fluxo, 
