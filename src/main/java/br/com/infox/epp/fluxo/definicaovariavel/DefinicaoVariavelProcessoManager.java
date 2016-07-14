@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import br.com.infox.cdi.dao.Dao;
 import br.com.infox.cdi.qualifier.GenericDao;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoRecursos.RecursoVariavel;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 
 @Stateless
@@ -27,6 +28,8 @@ public class DefinicaoVariavelProcessoManager {
     @Inject
     @GenericDao
     private Dao<DefinicaoVariavelProcessoRecurso, Long> definicaoVariavelProcessoRecursoDAO;
+    @Inject
+    private DefinicaoVariavelProcessoRecursos definicaoVariavelProcessoRecursos;
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void persist(DefinicaoVariavelProcesso definicaoVariavelProcesso) throws DAOException {
@@ -68,16 +71,15 @@ public class DefinicaoVariavelProcessoManager {
         dvp.setValorPadrao(valorPadrao);
         dvp.setVersion(0L);
         persist(dvp);
-        DefinicaoVariavelProcessoRecurso definicaoVariavelProcessoRecurso = new DefinicaoVariavelProcessoRecurso();
-        definicaoVariavelProcessoRecurso.setDefinicaoVariavelProcesso(dvp);
-        definicaoVariavelProcessoRecurso.setRecurso(DefinicaoVariavelProcessoRecursos.PAINEL_INTERNO.getIdentificador());
-        definicaoVariavelProcessoRecurso.setOrdem(ordem);
-        definicaoVariavelProcessoRecursoDAO.persist(definicaoVariavelProcessoRecurso);
-        definicaoVariavelProcessoRecurso = new DefinicaoVariavelProcessoRecurso();
-        definicaoVariavelProcessoRecurso.setDefinicaoVariavelProcesso(dvp);
-        definicaoVariavelProcessoRecurso.setRecurso(DefinicaoVariavelProcessoRecursos.CONSULTA_PROCESSOS.getIdentificador());
-        definicaoVariavelProcessoRecurso.setOrdem(ordem);
-        definicaoVariavelProcessoRecursoDAO.persist(definicaoVariavelProcessoRecurso);
+        for (RecursoVariavel recurso : definicaoVariavelProcessoRecursos.getRecursosDisponiveis()) {
+        	DefinicaoVariavelProcessoRecurso definicaoVariavelProcessoRecurso = new DefinicaoVariavelProcessoRecurso();
+            definicaoVariavelProcessoRecurso.setDefinicaoVariavelProcesso(dvp);
+            definicaoVariavelProcessoRecurso.setRecurso(recurso.getIdentificador());
+            definicaoVariavelProcessoRecurso.setOrdem(ordem);
+            boolean visivelExterno = !nome.equals("prioridadeProcesso") && !nome.equals("usuarioCadastro");
+            definicaoVariavelProcessoRecurso.setVisivelUsuarioExterno(visivelExterno);
+            definicaoVariavelProcessoRecursoDAO.persist(definicaoVariavelProcessoRecurso);
+        }
         return dvp;
     }
 
