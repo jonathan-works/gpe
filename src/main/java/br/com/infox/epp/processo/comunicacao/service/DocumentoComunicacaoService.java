@@ -38,6 +38,7 @@ import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.marcador.MarcadorService;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.ibpm.task.home.VariableTypeResolver;
 import br.com.infox.seam.util.ComponentUtil;
@@ -58,6 +59,8 @@ public class DocumentoComunicacaoService {
 	private PrazoComunicacaoService prazoComunicacaoService;
 	@Inject
 	private GenericManager genericManager;
+	@Inject
+	private MarcadorService marcadorService;
 	
 	private PapelManager papelManager = ComponentUtil.getComponent(PapelManager.NAME);
 	private ClassificacaoDocumentoManager classificacaoDocumentoManager = ComponentUtil.getComponent(ClassificacaoDocumentoManager.NAME);
@@ -141,6 +144,7 @@ public class DocumentoComunicacaoService {
 			for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
 				String textoComunicacaoDestinatario = evaluateComunicacao(destinatario);
 				DocumentoBin bin = documentoBinManager.createProcessoDocumentoBin("Comunicação", textoComunicacaoDestinatario);
+				marcadorService.createMarcadores(bin, modeloComunicacao.getCodigosMarcadores(), processoRaiz);
 				Documento documentoComunicacao = documentoManager.createDocumento(processoRaiz, "Comunicação", bin, modeloComunicacao.getClassificacaoComunicacao());
 				destinatario.setDocumentoComunicacao(documentoComunicacao);
 				genericManager.update(destinatario);

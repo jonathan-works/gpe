@@ -338,8 +338,8 @@ public class Documento implements Serializable, Cloneable {
 	public void setLocalizacao(Localizacao localizacao) {
 		this.localizacao = localizacao;
 	}
-	
-	public boolean isDocumentoAssinavel(Papel papel){
+
+    public boolean isDocumentoAssinavel(Papel papel){
 		if (getDocumentoBin() == null) {
 			return false;
 		}

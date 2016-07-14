@@ -26,6 +26,7 @@ import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.home.MovimentarController;
+import br.com.infox.epp.processo.marcador.MarcadorSearch;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.ibpm.variable.Taskpage;
 import br.com.infox.ibpm.variable.TaskpageParameter;
@@ -48,6 +49,8 @@ public class ChecklistView implements Serializable {
     private TaskInstanceHome taskInstanceHome;
     @Inject
     private PastaManager pastaManager;
+    @Inject
+    private MarcadorSearch marcadorSearch;
 
     @TaskpageParameter(name = PARAMETER_PASTA, description = "Pasta a ser considerada no checklist")
     private Pasta pasta;
@@ -63,7 +66,7 @@ public class ChecklistView implements Serializable {
 
     // Controle do CheckList
     private Checklist checklist;
-    private LazyDataModel<ChecklistDoc> documentoList;
+    private ChecklistDocLazyDataModel documentoList;
     private UsuarioLogin usuarioLogado;
     private String message;
     private ChecklistSituacao situacaoBloco;
@@ -100,6 +103,10 @@ public class ChecklistView implements Serializable {
             }
             return pasta;
         }
+    }
+    
+    public List<String> autoCompleteMarcadores(String query) {
+        return marcadorSearch.listByPastaAndCodigo(pasta.getId(), query, documentoList.getCodigosMarcadores());
     }
 
     public void onChangeSituacao(ChecklistDoc clDoc) {
@@ -216,10 +223,6 @@ public class ChecklistView implements Serializable {
 
     public LazyDataModel<ChecklistDoc> getDocumentoList() {
         return documentoList;
-    }
-
-    public void setDocumentoList(LazyDataModel<ChecklistDoc> documentoList) {
-        this.documentoList = documentoList;
     }
 
     public String getMessage() {

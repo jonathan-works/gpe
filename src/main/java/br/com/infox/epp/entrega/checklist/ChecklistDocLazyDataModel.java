@@ -11,7 +11,9 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
@@ -20,7 +22,11 @@ import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento_;
 import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin_;
 import br.com.infox.epp.processo.documento.entity.Documento_;
+import br.com.infox.epp.processo.marcador.Marcador;
+import br.com.infox.epp.processo.marcador.Marcador_;
 
 public class ChecklistDocLazyDataModel extends LazyDataModel<ChecklistDoc> {
     private static final long serialVersionUID = 1L;
@@ -32,6 +38,7 @@ public class ChecklistDocLazyDataModel extends LazyDataModel<ChecklistDoc> {
     private final String JOIN_CLASSIFICACAO_DOCUMENTO_ALIAS = "classificacaoDocumento";
 
     private Checklist cl;
+    private List<String> codigosMarcadores;
     private Map<Long, ChecklistDoc> cache;
 
     public ChecklistDocLazyDataModel() {}
@@ -76,6 +83,9 @@ public class ChecklistDocLazyDataModel extends LazyDataModel<ChecklistDoc> {
             appendNomeDocumentoFilter(cq, cb, nome);
             appendNomeDocumentoFilter(cqCount, cb, nome);
         }
+        if (codigosMarcadores != null && !codigosMarcadores.isEmpty()) {
+            appendMarcadorFilter(cq, cb, codigosMarcadores);
+        }
 
         TypedQuery<ChecklistDoc> query = getEntityManager().createQuery(cq);
         query = query.setFirstResult(first).setMaxResults(pageSize);
@@ -116,6 +126,30 @@ public class ChecklistDocLazyDataModel extends LazyDataModel<ChecklistDoc> {
         String pattern = "%" + nome.toLowerCase() + "%";
         cq.where(cq.getRestriction(), cb.like(cb.lower(documento.get(Documento_.descricao)), pattern));
     }
+    
+    @SuppressWarnings("unchecked")
+    private void appendMarcadorFilter(CriteriaQuery<?> cq, CriteriaBuilder cb, List<String> codigosMarcadores) {
+        Root<ChecklistDoc> clDoc = (Root<ChecklistDoc>) cq.getRoots().iterator().next();
+        Join<ChecklistDoc, Documento> documento = (Join<ChecklistDoc, Documento>) retrieveJoin(clDoc.getJoins(), JOIN_DOCUMENTO__ALIAS);
+        Predicate predicate = cq.getRestriction();
+        for (String codigoMarcador : codigosMarcadores) {
+            Subquery<Integer> subqueryExistsMarcador = createSubQueryExistsMarcador(cq, cb, documento, codigoMarcador);
+            predicate = cb.and(predicate, cb.exists(subqueryExistsMarcador));
+        }
+        cq.where(predicate);
+    }
+
+    private Subquery<Integer> createSubQueryExistsMarcador(CriteriaQuery<?> cq, CriteriaBuilder cb, Join<ChecklistDoc, Documento> documento, String codigoMarcador) {
+        Subquery<Integer> subQuery = cq.subquery(Integer.class);
+        subQuery.select(cb.literal(1));
+        Root<DocumentoBin> documentoBin = subQuery.from(DocumentoBin.class);
+        Join<DocumentoBin, Marcador> marcador = documentoBin.join(DocumentoBin_.marcadores, JoinType.INNER);
+        subQuery.where(
+            cb.equal(marcador.get(Marcador_.codigo), cb.literal(codigoMarcador)),
+            cb.equal(documentoBin.get(DocumentoBin_.id), documento.get(Documento_.documentoBin).get(DocumentoBin_.id))
+        );
+        return subQuery;
+    }
 
     private void createQueryGetChecklistDocByCheckList(CriteriaQuery<?> cq, CriteriaBuilder cb, boolean order) {
         Root<ChecklistDoc> clDoc = cq.from(ChecklistDoc.class);
@@ -128,6 +162,10 @@ public class ChecklistDocLazyDataModel extends LazyDataModel<ChecklistDoc> {
             cq.orderBy(cb.asc(cd.get(ClassificacaoDocumento_.descricao)), cb.asc(dpc.get(Documento_.descricao)));
         }
         cq.where(cb.equal(cl.get(Checklist_.id), this.cl.getId()));
+    }
+    
+    public void clearFiltros() {
+        this.codigosMarcadores = null;
     }
 
     private Join<?, ?> retrieveJoin(Set<Join<ChecklistDoc, ?>> joins, String alias) {
@@ -143,4 +181,13 @@ public class ChecklistDocLazyDataModel extends LazyDataModel<ChecklistDoc> {
     private EntityManager getEntityManager() {
         return EntityManagerProducer.getEntityManager();
     }
+
+    public List<String> getCodigosMarcadores() {
+        return codigosMarcadores;
+    }
+
+    public void setCodigosMarcadores(List<String> codigosMarcadores) {
+        this.codigosMarcadores = codigosMarcadores;
+    }
+    
 }

@@ -2,6 +2,8 @@ package br.com.infox.epp.processo.documento.manager;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -12,6 +14,7 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.HistoricoStatusDocumento;
 import br.com.infox.epp.processo.documento.type.TipoAlteracaoDocumento;
 
+@Stateless
 @AutoCreate
 @Name(HistoricoStatusDocumentoManager.NAME)
 public class HistoricoStatusDocumentoManager extends Manager<HistoricoStatusDocumentoDAO, HistoricoStatusDocumento>{

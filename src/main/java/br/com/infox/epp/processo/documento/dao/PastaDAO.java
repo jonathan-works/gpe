@@ -1,6 +1,6 @@
 package br.com.infox.epp.processo.documento.dao;
 
-import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_CLASSIFICACAO_DOCUMENTO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.*;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_EXCLUIDO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_NUMERO_DOCUMENTO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_SIGILO;
@@ -85,6 +85,11 @@ public class PastaDAO extends DAO<Pasta> {
 		if (documentoFilter.getNumeroDocumento() != null) {
 			baseQuery = baseQuery + FILTER_NUMERO_DOCUMENTO;
 			parameters.put(PARAM_NUMERO_DOCUMENTO, documentoFilter.getNumeroDocumento());
+		}
+		if (documentoFilter.getMarcadores() != null) {
+		    for (String codigoMarcador : documentoFilter.getMarcadores()) {
+		        baseQuery = baseQuery + FILTER_MARCADOR_DOCUMENTO.replace("{" + PARAM_CODIGO_MARCADOR + "}", codigoMarcador);
+		    }
 		}
 		return baseQuery;
 	}

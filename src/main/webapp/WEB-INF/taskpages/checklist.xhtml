@@ -14,7 +14,49 @@
         <h:outputText value="#{checklistView.message}" rendered="#{not empty checklistView.message}" />
     </infox:div>
 
-    <infox:div rendered="#{checklistView.hasPasta}">
+    <p:panel rendered="#{checklistView.hasPasta}" style="margin-top: 1rem; margin-bottom: 1rem;">
+    	<p:panel header="#{infoxMessages['searchForm.title']}" style="margin-bottom: 1rem;">
+    		<h:form id="formFiltros">
+	    		<div class="property-field-edit" style="display: inline-block;">
+					<div class="property-field-edit-name">
+						<h:outputLabel value="#{infoxMessages['marcador.marcadores']}" for="marcadorFilter"/>
+					</div>
+					<div class="property-field-edit-value">
+						<p:autoComplete id="marcadorFilter" multiple="true" inputStyle="display: inline-block;"
+							value="#{checklistView.documentoList.codigosMarcadores}" 
+				        	completeMethod="#{checklistView.autoCompleteMarcadores}"
+				        	itemLabel="#{item}" itemValue="#{item}" var="item" dropdown="true"
+				        	minQueryLength="3" queryDelay="600" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
+				        	<p:ajax event="itemSelect" update="@this" process="@this" />
+				        	<p:ajax event="itemUnselect" update="@this" process="@this" />
+				        </p:autoComplete>
+				        <style type="text/css">
+				    		.ui-autocomplete-multiple-container.ui-widget.ui-inputfield.ui-state-default.ui-corner-all {
+				    			display: inline-block;
+				    			vertical-align: middle;
+				    		}
+				    		.ui-button-icon-primary.ui-icon.ui-icon-triangle-1-s {
+				    			vertical-align: middle;
+				    		}
+				    	</style>
+			        </div>
+				</div>
+				<div>
+					<h:commandButton id="btnFiltrarDocumentos"
+						value="#{infoxMessages['button.pesquisar']}"
+						styleClass="buttons buttons">
+						<f:ajax immediate="true" execute="@form" render="@form :movimentarTabPanel:checklistTableform" />
+					</h:commandButton>
+					
+					<h:commandButton id="btnLimparFiltro"
+						value="#{infoxMessages['button.limpar']}"
+						action="#{checklistView.documentoList.clearFiltros()}"
+						styleClass="buttons buttons">
+						<f:ajax immediate="true" execute="@form" render="@form :movimentarTabPanel:checklistTableform" />
+					</h:commandButton>
+				</div>
+			</h:form>
+    	</p:panel>
         <h:form id="blocoSituacaoForm">
             <wi:selectOneMenuEnum id="blocoSituacaoMenu" label="#{infoxMessages['checklist.blocoSituacao.label']}"
                 value="#{checklistView.situacaoBloco}"
@@ -102,7 +144,7 @@
                 </p:column>
             </p:dataTable>
         </h:form>
-    </infox:div>
+    </p:panel>
     
     <h:form id="taskButtonsForm">
         <ui:include src="/WEB-INF/xhtml/components/form/buttons/taskButtons.xhtml">

@@ -8,7 +8,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:a="http://richfaces.org/a4j">
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:i="http://java.sun.com/jsf/composite/infox">
 
 	<!-- Div com os formulários para upload e editor -->
 	<div id="anexarDocumentosDiv"
@@ -35,7 +37,25 @@
 					value="#{anexarDocumentosView.pastaUploader}"
 					items="#{pastaAction.getPastaListComRestricaoEscrita()}">
 				</wi:selectOneMenuEntity>
-
+				
+				<c:if test="#{anexarDocumentosView.isPermittedAddMarcador()}">
+					<div class="property-field-edit">
+						<div class="property-field-edit-name">
+							<h:outputLabel value="#{infoxMessages['marcador.marcadores']}" for="marcadorUpload"/>
+						</div>
+						<div class="property-field-edit-value">
+							<p:autoComplete id="marcadorUpload" multiple="true" 
+								value="#{anexarDocumentosView.marcadoresUpload}" 
+					        	completeMethod="#{anexarDocumentosView.autoCompleteMarcadoresUpload}"
+					        	converter="br.com.infox.converter.marcador" itemLabel="#{item.codigo}" itemValue="#{item}" var="item"
+					        	minQueryLength="3" queryDelay="600" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
+					        	<p:ajax event="itemSelect" update="@this" process="@this" />
+					        	<p:ajax event="itemUnselect" update="@this" process="@this" />
+					        </p:autoComplete>
+				        </div>
+					</div>
+				</c:if>
+				
 				<s:div id="uploadArquivoDiv">
 					<s:div id="uploadArquivoTooltipDiv"
 						rendered="#{anexarDocumentosView.showUploader}">
@@ -164,6 +184,24 @@
 					items="#{pastaAction.getPastaListComRestricaoEscrita()}"
 					rendered="#{security.checkPage('/pages/Pasta/moverDocumento')}"
 					disabled="#{not minuta}" />
+				
+				<c:if test="#{anexarDocumentosView.isPermittedAddMarcador()}">
+					<div class="property-field-edit">
+						<div class="property-field-edit-name">
+							<h:outputLabel value="#{infoxMessages['marcador.marcadores']}" for="marcadorEditor"/>
+						</div>
+						<div class="property-field-edit-value">
+							<p:autoComplete id="marcadorEditor" multiple="true" 
+								value="#{anexarDocumentosView.marcadoresEditor}" 
+					        	completeMethod="#{anexarDocumentosView.autoCompleteMarcadoresEditor}"
+					        	converter="br.com.infox.converter.marcador" itemLabel="#{item.codigo}" itemValue="#{item}" var="item"
+					        	minQueryLength="3" queryDelay="600" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
+					        	<p:ajax event="itemSelect" update="@this" process="@this" />
+					        	<p:ajax event="itemUnselect" update="@this" process="@this" />
+					        </p:autoComplete>
+				        </div>
+					</div>
+				</c:if>
 
 				<s:div id="selectModeloDocumentoDiv">
 					<wi:selectOneMenuEntity id="editorModeloDocumento" required="false"
