@@ -54,12 +54,12 @@
                                 rendered="#{not empty processoEpaList.fluxo}"/>
                             <div />
 							<i:autoComplete	id="natureza" value="#{processoEpaList.natureza}" scrollHeight="300"
-								completeMethod="#{processoEpaList.getNaturezas}" forceSelection="true" label="#{infoxMessages['processo.natureza']}"
+								completeMethod="#{processoEpaList.getNaturezas}" forceSelection="true" label="#{infoxMessages['consultaProcesso.natureza']}"
 								var="item" itemLabel="#{item.natureza}" itemValue="#{item}" converter="br.com.infox.jsf.converter.EntityConverter"
 								rendered="#{not empty processoEpaList.fluxo}" minQueryLength="3" dropdown="true" />
                             <div />
                             <i:autoComplete	id="categoria" value="#{processoEpaList.categoria}" scrollHeight="300"
-								completeMethod="#{processoEpaList.getCategorias}" forceSelection="true" label="#{infoxMessages['processo.categoria']}"
+								completeMethod="#{processoEpaList.getCategorias}" forceSelection="true" label="#{infoxMessages['consultaProcesso.categoria']}"
 								var="item" itemLabel="#{item.categoria}" itemValue="#{item}" converter="br.com.infox.jsf.converter.EntityConverter"
 								rendered="#{not empty processoEpaList.fluxo}" minQueryLength="3" dropdown="true" />
                             <div />
