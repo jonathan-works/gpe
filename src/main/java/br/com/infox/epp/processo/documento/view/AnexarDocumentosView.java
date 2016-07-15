@@ -163,7 +163,7 @@ public class AnexarDocumentosView implements Serializable {
     }
 
     private List<Marcador> autoCompleteMarcadores(String query, List<Marcador> marcadoresSelectionados) {
-        Marcador marcadorTemp = new Marcador(query);
+        Marcador marcadorTemp = new Marcador(query.toUpperCase());
         List<String> codigosMarcadores = ArrayUtil.convertToList(marcadoresSelectionados, MarcadorService.CONVERT_MARCADOR_CODIGO);
         List<Marcador> marcadores = marcadorSearch.listMarcadorByProcessoAndCodigo(getProcesso().getIdProcesso(), query, codigosMarcadores);
         if (!marcadores.contains(marcadorTemp) 

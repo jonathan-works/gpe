@@ -106,7 +106,7 @@ public class ChecklistView implements Serializable {
     }
     
     public List<String> autoCompleteMarcadores(String query) {
-        return marcadorSearch.listByPastaAndCodigo(pasta.getId(), query, documentoList.getCodigosMarcadores());
+        return marcadorSearch.listByPastaAndCodigo(pasta.getId(), query.toUpperCase(), documentoList.getCodigosMarcadores());
     }
 
     public void onChangeSituacao(ChecklistDoc clDoc) {

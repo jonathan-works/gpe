@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -43,6 +44,11 @@ public class Marcador implements Serializable {
             joinColumns=@JoinColumn(name="id_marcador", referencedColumnName="id_marcador"),
             inverseJoinColumns=@JoinColumn(name="id_documento_bin", referencedColumnName="id_documento_bin"))
     private Set<DocumentoBin> documentoBinList = new HashSet<>(1);
+    
+    @PrePersist
+    public void prePersist() {
+    	setCodigo(getCodigo().toUpperCase());
+    }
     
     public Marcador() {
     }

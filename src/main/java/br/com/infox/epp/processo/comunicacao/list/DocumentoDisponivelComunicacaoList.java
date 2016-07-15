@@ -74,7 +74,7 @@ public class DocumentoDisponivelComunicacaoList extends DataList<Documento> impl
     protected void addAdditionalClauses(StringBuilder sb) {
         if (codigoMarcadores != null) {
             for (String codigoMarcador : codigoMarcadores) {
-                sb.append(" and ").append(MARCADOR_FILTER.replace("{codigoMarcador}", codigoMarcador));
+                sb.append(" and ").append(MARCADOR_FILTER.replace("{codigoMarcador}", codigoMarcador.toUpperCase()));
             }
         }
     }
@@ -180,7 +180,7 @@ public class DocumentoDisponivelComunicacaoList extends DataList<Documento> impl
     	String newFilterPasta = filterPasta;
     	if (codigoMarcadores != null) {
     	    for (String codigoMarcador : codigoMarcadores) {
-    	        newFilterPasta += PastaQuery.FILTER_MARCADOR_DOCUMENTO.replace("{" + PastaQuery.PARAM_CODIGO_MARCADOR + "}", codigoMarcador);
+    	        newFilterPasta += PastaQuery.FILTER_MARCADOR_DOCUMENTO.replace("{" + PastaQuery.PARAM_CODIGO_MARCADOR + "}", codigoMarcador.toUpperCase());
     	    }
     	}
         int totalDocumentosPasta = pastaManager.getTotalDocumentosPasta(pasta, newFilterPasta, paramsPasta);

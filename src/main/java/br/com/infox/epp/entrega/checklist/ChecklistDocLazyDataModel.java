@@ -145,7 +145,7 @@ public class ChecklistDocLazyDataModel extends LazyDataModel<ChecklistDoc> {
         Root<DocumentoBin> documentoBin = subQuery.from(DocumentoBin.class);
         Join<DocumentoBin, Marcador> marcador = documentoBin.join(DocumentoBin_.marcadores, JoinType.INNER);
         subQuery.where(
-            cb.equal(marcador.get(Marcador_.codigo), cb.literal(codigoMarcador)),
+            cb.equal(marcador.get(Marcador_.codigo), cb.upper(cb.literal(codigoMarcador))),
             cb.equal(documentoBin.get(DocumentoBin_.id), documento.get(Documento_.documentoBin).get(DocumentoBin_.id))
         );
         return subQuery;

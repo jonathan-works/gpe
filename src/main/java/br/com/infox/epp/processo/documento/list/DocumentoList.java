@@ -78,7 +78,7 @@ public class DocumentoList extends DataList<Documento> {
     protected void addAdditionalClauses(StringBuilder sb) {
         if (codigoMarcadores != null) {
             for (String codigoMarcador : codigoMarcadores) {
-                sb.append(" and ").append(MARCADOR_FILTER.replace("{codigoMarcador}", codigoMarcador));
+                sb.append(" and ").append(MARCADOR_FILTER.replace("{codigoMarcador}", codigoMarcador.toUpperCase()));
             }
         }
     }

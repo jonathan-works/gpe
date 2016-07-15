@@ -1,6 +1,8 @@
 package br.com.infox.epp.processo.marcador;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -68,7 +70,7 @@ public class MarcadorSearch extends PersistenceController {
             ),
             cb.isNotNull(pasta.get(Pasta_.processo)),
             cb.equal(pasta.get(Pasta_.processo).get(Processo_.idProcesso), cb.literal(idProcesso)),
-            marcador.get(Marcador_.codigo).in(codigoMarcadores)
+            marcador.get(Marcador_.codigo).in(upperStrings(codigoMarcadores))
         );
         return getEntityManager().createQuery(cq).getResultList();
     }
@@ -94,12 +96,12 @@ public class MarcadorSearch extends PersistenceController {
                                   ),
                                   cb.isNotNull(pasta.get(Pasta_.processo)),
                                   cb.equal(pasta.get(Pasta_.processo).get(Processo_.idProcesso), cb.literal(idProcesso)),
-                                  cb.like(marcador.get(Marcador_.codigo), cb.literal("%" + codigoMarcador + "%"))
+                                  cb.like(marcador.get(Marcador_.codigo), cb.upper(cb.literal("%" + codigoMarcador + "%")))
                               );
         if (codigoMarcadores != null && !codigoMarcadores.isEmpty()) {
             predicate = cb.and(
                             predicate,
-                            cb.not(marcador.get(Marcador_.codigo).in(codigoMarcadores))
+                            cb.not(marcador.get(Marcador_.codigo).in(upperStrings(codigoMarcadores)))
                         );
         }
         cq.where(predicate);
@@ -120,13 +122,13 @@ public class MarcadorSearch extends PersistenceController {
                 cb.equal(documento.get(Documento_.pasta).get(Pasta_.id), cb.literal(idPasta)),
                 cb.equal(documentoTemporario.get(DocumentoTemporario_.pasta).get(Pasta_.id), cb.literal(idPasta))
             ),
-            cb.like(marcador.get(Marcador_.codigo), cb.literal("%" + codigoMarcador + "%"))
+            cb.like(marcador.get(Marcador_.codigo), cb.upper(cb.literal("%" + codigoMarcador + "%")))
         );
         if (codigoMarcadores != null && !codigoMarcadores.isEmpty()) {
             Predicate where = cq.getRestriction();
             cq.where(
                 where,
-                cb.not(marcador.get(Marcador_.codigo).in(codigoMarcadores))
+                cb.not(marcador.get(Marcador_.codigo).in(upperStrings(codigoMarcadores)))
             );
         }
         return getEntityManager().createQuery(cq).getResultList();
@@ -152,13 +154,13 @@ public class MarcadorSearch extends PersistenceController {
             ),
             cb.isNotNull(pasta.get(Pasta_.processo)),
             cb.equal(pasta.get(Pasta_.processo).get(Processo_.idProcesso), cb.literal(idProcesso)),
-            cb.like(marcador.get(Marcador_.codigo), cb.literal("%" + codigoMarcador + "%"))
+            cb.like(marcador.get(Marcador_.codigo), cb.upper(cb.literal("%" + codigoMarcador + "%")))
         );
         if (codigoMarcadores != null && !codigoMarcadores.isEmpty()) {
             Predicate where = cq.getRestriction();
             cq.where(
                 where,
-                cb.not(marcador.get(Marcador_.codigo).in(codigoMarcadores))
+                cb.not(marcador.get(Marcador_.codigo).in(upperStrings(codigoMarcadores)))
             );
         }
         return getEntityManager().createQuery(cq).setMaxResults(20).getResultList();
@@ -175,13 +177,13 @@ public class MarcadorSearch extends PersistenceController {
         cq.select(codigo);
         cq.where(
             cb.equal(pasta.get(Pasta_.processo).get(Processo_.idProcesso), cb.literal(idProcesso)),
-            cb.like(marcador.get(Marcador_.codigo), cb.literal("%" + codigoMarcador + "%"))
+            cb.like(marcador.get(Marcador_.codigo), cb.upper(cb.literal("%" + codigoMarcador + "%")))
         );
         if (codigoMarcadores != null && !codigoMarcadores.isEmpty()) {
             Predicate where = cq.getRestriction();
             cq.where(
                 where,
-                cb.not(marcador.get(Marcador_.codigo).in(codigoMarcadores))
+                cb.not(marcador.get(Marcador_.codigo).in(upperStrings(codigoMarcadores)))
             );
         }
         cq.groupBy(codigo);
@@ -212,13 +214,13 @@ public class MarcadorSearch extends PersistenceController {
                               );
         if (codigoMarcador != null) {
             predicate = cb.and( predicate, 
-                            cb.like(marcador.get(Marcador_.codigo), cb.literal("%" + codigoMarcador + "%"))
+                            cb.like(marcador.get(Marcador_.codigo), cb.upper(cb.literal("%" + codigoMarcador + "%")))
                         );
         }
         
         if (codigosMarcadores != null && !codigosMarcadores.isEmpty()) {
             predicate = cb.and( predicate, 
-                            cb.not(marcador.get(Marcador_.codigo).in(codigosMarcadores))
+                            cb.not(marcador.get(Marcador_.codigo).in(upperStrings(codigosMarcadores)))
                         );
         }
         cq.where(predicate);
@@ -248,13 +250,13 @@ public class MarcadorSearch extends PersistenceController {
                               );
         if (codigoMarcador != null) {
             predicate = cb.and( predicate, 
-                            cb.like(marcador.get(Marcador_.codigo), cb.literal("%" + codigoMarcador + "%"))
+                            cb.like(marcador.get(Marcador_.codigo), cb.upper(cb.literal("%" + codigoMarcador + "%")))
                         );
         }
         
         if (codigosMarcadores != null && !codigosMarcadores.isEmpty()) {
             predicate = cb.and( predicate, 
-                            cb.not(marcador.get(Marcador_.codigo).in(codigosMarcadores))
+                            cb.not(marcador.get(Marcador_.codigo).in(upperStrings(codigosMarcadores)))
                         );
         }
         cq.where(predicate);
@@ -275,9 +277,18 @@ public class MarcadorSearch extends PersistenceController {
         cq.where(
         	cb.equal(entrega.get(Entrega_.id), cb.literal(idEntrega)),
         	cb.equal(pasta.get(Pasta_.id), entrega.get(Entrega_.pasta).get(Pasta_.id)),
-            marcador.get(Marcador_.codigo).in(codigoMarcadores)
+            marcador.get(Marcador_.codigo).in(upperStrings(codigoMarcadores))
         );
         return getEntityManager().createQuery(cq).getResultList();
+    }
+    
+    private List<String> upperStrings(Collection<String> strings) {
+    	List<String> stringsUpperCase = new ArrayList<String>();
+    	Iterator<String> it = strings.iterator();
+    	while (it.hasNext()) {
+    		stringsUpperCase.add(it.next().toUpperCase());
+    	}
+    	return stringsUpperCase;
     }
     
 }

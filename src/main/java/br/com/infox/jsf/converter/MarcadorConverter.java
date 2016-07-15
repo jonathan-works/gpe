@@ -37,6 +37,7 @@ public class MarcadorConverter implements Converter {
         }
         if (value instanceof Marcador) {
             Marcador marcador = (Marcador) value;
+            marcador.setCodigo(marcador.getCodigo().toUpperCase());
             marcadoresView.get(component.getClientId()).put(marcador.getCodigo(), marcador);
             return marcador.getCodigo();
         }
