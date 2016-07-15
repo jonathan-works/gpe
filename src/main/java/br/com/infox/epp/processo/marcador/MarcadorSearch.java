@@ -261,4 +261,23 @@ public class MarcadorSearch extends PersistenceController {
         return getEntityManager().createQuery(cq).getResultList();
     }
     
+    public List<Marcador> listMarcadorByEntregaAndInCodigosMarcadores(Long idEntrega, Collection<String> codigoMarcadores) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Marcador> cq = cb.createQuery(Marcador.class);
+        
+        Root<DocumentoBin> documentoBin = cq.from(DocumentoBin.class);
+        Root<Entrega> entrega = cq.from(Entrega.class);
+        Join<DocumentoBin, Documento> documento = documentoBin.join(DocumentoBin_.documentoList, JoinType.INNER);
+        Join<Documento, Pasta> pasta = documento.join(Documento_.pasta, JoinType.INNER);
+        Join<DocumentoBin, Marcador> marcador = documentoBin.join(DocumentoBin_.marcadores, JoinType.INNER);
+        cq.select(marcador);
+        
+        cq.where(
+        	cb.equal(entrega.get(Entrega_.id), cb.literal(idEntrega)),
+        	cb.equal(pasta.get(Pasta_.id), entrega.get(Entrega_.pasta).get(Pasta_.id)),
+            marcador.get(Marcador_.codigo).in(codigoMarcadores)
+        );
+        return getEntityManager().createQuery(cq).getResultList();
+    }
+    
 }

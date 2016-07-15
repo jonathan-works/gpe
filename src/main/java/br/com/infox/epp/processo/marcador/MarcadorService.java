@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import br.com.infox.cdi.dao.Dao;
 import br.com.infox.cdi.qualifier.GenericDao;
 import br.com.infox.core.util.ArrayUtil.ListConversor;
+import br.com.infox.epp.entrega.documentos.Entrega;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.seam.security.SecurityUtil;
@@ -33,17 +34,28 @@ public class MarcadorService {
     public void createMarcadores(DocumentoBin documentoBin, List<String> codigoMarcadores, Processo processo) {
         if (codigoMarcadores == null || codigoMarcadores.isEmpty()) return;
         List<Marcador> listMarcadores = marcadorSearch.listMarcadorByProcessoAndInCodigosMarcadores(processo.getIdProcesso(), codigoMarcadores);
-        for (String codigoMarcador : codigoMarcadores) {
+        addMarcadoresToDocumentoBin(documentoBin, codigoMarcadores, listMarcadores);
+    }
+
+	private void addMarcadoresToDocumentoBin(DocumentoBin documentoBin, List<String> codigoMarcadores, List<Marcador> listMarcadoresExistentes) {
+		for (String codigoMarcador : codigoMarcadores) {
             Marcador marcadorTemp = new Marcador(codigoMarcador);
             int index = -1;
-            if ((index = listMarcadores.indexOf(marcadorTemp)) != -1) {
-                marcadorTemp = listMarcadores.get(index);
+            if ((index = listMarcadoresExistentes.indexOf(marcadorTemp)) != -1) {
+                marcadorTemp = listMarcadoresExistentes.get(index);
             } else {
                 marcadorDao.persist(marcadorTemp);
             }
             documentoBin.getMarcadores().add(marcadorTemp);
         }
-    }
+	}
+    
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void createMarcadoresByEntrega(DocumentoBin documentoBin, List<String> codigoMarcadores, Entrega entrega) {
+    	if (codigoMarcadores == null || codigoMarcadores.isEmpty()) return;
+    	List<Marcador> listMarcadores = marcadorSearch.listMarcadorByEntregaAndInCodigosMarcadores(entrega.getId(), codigoMarcadores);
+        addMarcadoresToDocumentoBin(documentoBin, codigoMarcadores, listMarcadores);
+	}
     
     public static ListConversor<Marcador, String> CONVERT_MARCADOR_CODIGO = new ListConversor<Marcador, String>() {
         @Override
