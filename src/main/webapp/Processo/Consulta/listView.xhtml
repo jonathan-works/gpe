@@ -27,12 +27,13 @@
                     id="processoEpaList"
                     rowId="#{row.idProcesso}"
                     hideOrder="true"
-                    showGrid="#{not empty processoEpaList.fluxo}"
+                    showGrid="#{not empty processoEpaList.fluxo or not empty processoEpaList.entity.numeroProcesso}"
                     inForm="true">
                     <ui:define name="searchForm">
                         <wi:searchForm
                             formId="pesquisarProcessoEpaForm"
-                            formTitle="#{infoxMessages['searchForm.title']}">
+                            formTitle="#{infoxMessages['searchForm.title']}"
+                            searchAction="processoEpaList.search">
                             <div class="property-field-edit-name">
 								<h:outputLabel id="fluxoLabel" for="fluxo">
 									<h:outputText value="#{infoxMessages['processo.fluxo']}" />
@@ -49,9 +50,7 @@
                                 id="numeroProcesso"
                                 label="#{infoxMessages['processoEpa.numeroProcesso']}"
                                 value="#{processoEpaList.entity.numeroProcesso}"
-                                minlength="1"
-                                maxlength="15" 
-                                rendered="#{not empty processoEpaList.fluxo}"/>
+                                minlength="1"/>
                             <div />
 							<i:autoComplete	id="natureza" value="#{processoEpaList.natureza}" scrollHeight="300"
 								completeMethod="#{processoEpaList.getNaturezas}" forceSelection="true" label="#{infoxMessages['consultaProcesso.natureza']}"

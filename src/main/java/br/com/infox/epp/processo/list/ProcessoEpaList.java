@@ -272,6 +272,15 @@ public class ProcessoEpaList extends EntityList<Processo> {
 		this.statusProcesso = statusProcesso;
 	}
 	
+	public void search() {
+		if (fluxo == null && !Strings.isNullOrEmpty(getEntity().getNumeroProcesso())) {
+			List<Processo> results = getResultList();
+			if (!results.isEmpty()) {
+				consultaProcessoDynamicColumnsController.setFluxo(results.get(0).getNaturezaCategoriaFluxo().getFluxo());
+			}
+		}
+	}
+	
 	public List<Categoria> getCategorias(String search) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Categoria> query = cb.createQuery(Categoria.class);
