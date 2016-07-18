@@ -11,7 +11,7 @@ import javax.validation.ValidationException;
 import javax.validation.Validator;
 
 import br.com.infox.epp.ws.exception.ValidacaoException;
-import br.com.infox.epp.ws.messages.WSMessages;
+import br.com.infox.epp.ws.services.MensagensErroService;
 
 /**
  * Interceptor responsável por validar parâmetros anotados com
@@ -24,8 +24,6 @@ import br.com.infox.epp.ws.messages.WSMessages;
 @Interceptor
 public class ValidacaoInterceptor {
 
-	private static final String MSG_TEMPLATE_CODE = "ME_ATTR_%s_INVALIDO";
-
 	private <T> void validar(T bean) throws ValidationException {
 		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 		Set<ConstraintViolation<T>> errors = validator.validate(bean);
@@ -33,9 +31,7 @@ public class ValidacaoInterceptor {
 		if(errors.size() > 0) {
 			ValidacaoException excecao = new ValidacaoException();
 			for (ConstraintViolation<T> violation : errors) {
-				String name = String.format(MSG_TEMPLATE_CODE, violation.getPropertyPath().toString().toUpperCase());
-				WSMessages mensagem = WSMessages.valueOf(name);
-				excecao.adicionar(mensagem.codigo(), mensagem.label());
+				excecao.adicionar(MensagensErroService.CODIGO_VALIDACAO, "O atributo " + violation.getPropertyPath() + violation.getMessage());
 			}
 			throw excecao;			
 		}
