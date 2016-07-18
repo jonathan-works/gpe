@@ -140,9 +140,12 @@ public class AssinadorService implements Serializable {
 	}
 
 	public void assinar(DadosAssinatura dadosAssinatura, UsuarioPerfil usuarioPerfil) throws AssinaturaException {
-		Integer idDocumentoBin = dadosAssinatura.getIdDocumentoBin();
-		if (idDocumentoBin != null) {
-			DocumentoBin documentoBin = documentoBinManager.find(idDocumentoBin);
+		UUID uuidDocumentoBin = dadosAssinatura.getUuidDocumentoBin();
+		if (uuidDocumentoBin != null) {
+			DocumentoBin documentoBin = documentoBinManager.getByUUID(uuidDocumentoBin);
+			if(documentoBin == null) {
+				throw new RuntimeException("Documento com UUID " + uuidDocumentoBin + " não encontrado no banco de dados");
+			}
 			assinarDocumento(documentoBin, usuarioPerfil.getPerfilTemplate().getCodigo(),
 					usuarioPerfil.getLocalizacao().getCodigo(), dadosAssinatura.getAssinatura(), dadosAssinatura.getSignedData());
 		}
@@ -278,7 +281,7 @@ public class AssinadorService implements Serializable {
 	}
 	
 	/**
-	 * Valida e assina todos os assináveis agrupados por um token
+	 * Valida e assina todos os assináveis agrupados por um token além de apagar o grupo depois de assiná-lo
 	 * @param tokenGrupo
 	 */
 	public void assinarToken(String tokenGrupo, UsuarioPerfil usuarioPerfil) throws AssinaturaException {
@@ -286,6 +289,7 @@ public class AssinadorService implements Serializable {
 		for(DadosAssinatura dadosAssinatura : dadosAssinaturaList) {
 			assinar(dadosAssinatura, usuarioPerfil);
 		}
+		apagarGrupo(tokenGrupo);
 	}
 
 }

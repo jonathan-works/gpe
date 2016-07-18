@@ -79,9 +79,7 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
 		if(assinavelSource instanceof AssinavelDocumentoBinSource) {
 			Integer idDocumentoBin = ((AssinavelDocumentoBinSource)assinavelSource).getIdDocumentoBin();
 			DocumentoBin documentoBin = documentoBinManager.find(idDocumentoBin);
-			certificateSignature.setDocumentoBin(documentoBin);
-			//Deve ser o UUID documentoBin para funcionar com código legado
-			certificateSignature.setUuid(documentoBin.getUuid().toString());
+			certificateSignature.setUuidDocumentoBin(documentoBin.getUuid());
 		}
 		
 		getEntityManager().persist(certificateSignature);
@@ -322,11 +320,11 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
 	private DadosAssinatura toDadosAssinatura(CertificateSignature cs) {
 		UUID uuid = UUID.fromString(cs.getUuid());
 		StatusToken status = getStatusToken(cs.getStatus());
-		Integer idDocumentoBin = cs.getDocumentoBin() == null ? null : cs.getDocumentoBin().getId();
+		UUID uuidDocumentoBin = cs.getUuidDocumentoBin();
 		byte[] signature = cs.getSignature() == null ? null : Base64.decode(cs.getSignature());
 		byte[] certChain = cs.getCertificateChain() == null ? null : Base64.decode(cs.getCertificateChain());
 		
-		return new DadosAssinatura(uuid, status, cs.getCodigoErro(), cs.getMensagemErro(), cs.getSignatureType(), idDocumentoBin, signature, certChain, cs.getSha256(), TipoSignedData.SHA256);
+		return new DadosAssinatura(uuid, status, cs.getCodigoErro(), cs.getMensagemErro(), cs.getSignatureType(), uuidDocumentoBin, signature, certChain, cs.getSha256(), TipoSignedData.SHA256);
 	}
 
 	@Override

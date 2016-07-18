@@ -14,21 +14,21 @@ public class DadosAssinatura {
 	private String codigoErro;
 	private String mensagemErro;
 	private TipoAssinatura tipoAssinatura;
-	private Integer idDocumentoBin;
+	private UUID uuidDocumentoBin;
 	private byte[] certChain;
 	private byte[] assinatura;
 	private byte[] signedData;
 	private TipoSignedData tipoSignedData;
 
 	public DadosAssinatura(UUID uuid, StatusToken statusToken, String codigoErro, String mensagemErro,
-			TipoAssinatura tipoAssinatura, Integer idDocumentoBin, byte[] assinatura, byte[] certChain, byte[] signedData, TipoSignedData tipoSignedData) {
+			TipoAssinatura tipoAssinatura, UUID uuidDocumentoBin, byte[] assinatura, byte[] certChain, byte[] signedData, TipoSignedData tipoSignedData) {
 		super();
 		this.uuid = uuid;
 		this.status = statusToken;
 		this.codigoErro = codigoErro;
 		this.mensagemErro = mensagemErro;
 		this.tipoAssinatura = tipoAssinatura;
-		this.idDocumentoBin = idDocumentoBin;
+		this.uuidDocumentoBin = uuidDocumentoBin;
 		this.certChain = certChain;
 		this.assinatura = assinatura;
 		this.signedData = signedData;
@@ -47,8 +47,8 @@ public class DadosAssinatura {
 		return tipoAssinatura;
 	}
 
-	public Integer getIdDocumentoBin() {
-		return idDocumentoBin;
+	public UUID getUuidDocumentoBin() {
+		return uuidDocumentoBin;
 	}
 
 	protected String toBase64(byte[] data) {

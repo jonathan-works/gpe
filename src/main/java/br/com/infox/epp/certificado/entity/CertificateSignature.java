@@ -3,6 +3,8 @@
  */
 package br.com.infox.epp.certificado.entity;
 
+import java.util.UUID;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -18,7 +20,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import br.com.infox.epp.certificado.enums.CertificateSignatureGroupStatus;
-import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 
 /**
  * @author erikliberal
@@ -64,9 +65,9 @@ public class CertificateSignature {
     @Column(name="ob_sha256")
     private byte[] sha256;
     
-    @ManyToOne
-    @JoinColumn(name="id_documento_bin")
-    private DocumentoBin documentoBin;
+    @JoinColumn()
+    @Column(name="ds_uuid_documento_bin")
+    private UUID uuidDocumentoBin;
     
     public Integer getIdCertificateSignature() {
         return idCertificateSignature;
@@ -171,11 +172,11 @@ public class CertificateSignature {
 	public void setSha256(byte[] sha256) {
 		this.sha256 = sha256;
 	}
-	public DocumentoBin getDocumentoBin() {
-		return documentoBin;
+	public UUID getUuidDocumentoBin() {
+		return uuidDocumentoBin;
 	}
-	public void setDocumentoBin(DocumentoBin documentoBin) {
-		this.documentoBin = documentoBin;
+	public void setUuidDocumentoBin(UUID uuidDocumentoBin) {
+		this.uuidDocumentoBin = uuidDocumentoBin;
 	}
 
 }

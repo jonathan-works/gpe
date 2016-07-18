@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 import javax.ejb.EJBException;
 import javax.faces.context.FacesContext;
@@ -467,7 +468,7 @@ public class AnexarDocumentosView implements Serializable {
 
 			UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
 			for (DadosAssinatura dadosAssinatura : dadosAssinaturaList) {
-				DocumentoBin docBin =  getDocumentoTemporarioByIdDocumentoBin(dadosAssinatura.getIdDocumentoBin());
+				DocumentoBin docBin =  getDocumentoTemporarioByUuid(dadosAssinatura.getUuidDocumentoBin());
 				if (docBin != null) {
 					if (!isAssinadoPor(docBin, usuarioPerfil)) {
 						assinadorService.assinar(dadosAssinatura, usuarioPerfil);
@@ -501,11 +502,11 @@ public class AnexarDocumentosView implements Serializable {
 		return false;
 	}
 
-	private DocumentoBin getDocumentoTemporarioByIdDocumentoBin(Integer idDocumentoBin) {
+	private DocumentoBin getDocumentoTemporarioByUuid(UUID uuid) {
 		for (DocumentoTemporario documentoTemporario : documentosAssinaveis) {
-			Integer id = documentoTemporario.getDocumentoBin().getId();
-			if (id.equals(idDocumentoBin))
-				return documentoBinManager.find(idDocumentoBin);
+			UUID wrapperUuid = documentoTemporario.getDocumentoBin().getUuid();
+			if (uuid.equals(wrapperUuid))
+				return documentoBinManager.getByUUID(wrapperUuid);
 		}
 		return null;
 	}

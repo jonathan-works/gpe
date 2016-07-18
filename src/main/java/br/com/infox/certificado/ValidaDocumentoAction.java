@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.UUID;
 
 import javax.faces.event.AbortProcessingException;
 import javax.inject.Inject;
@@ -141,8 +142,8 @@ public class ValidaDocumentoAction implements Serializable {
 			try {
 				List<DadosAssinatura> dadosAssinaturaList = assinadorService.getDadosAssinatura(token);
 				for (DadosAssinatura dadosAssinatura : dadosAssinaturaList) {
-					Integer idDocumentoBin = dadosAssinatura.getIdDocumentoBin();
-					if (idDocumentoBin != null && idDocumentoBin.equals(documentoBin.getId())) {
+					UUID uuidDocumentoBin = dadosAssinatura.getUuidDocumentoBin();
+					if (uuidDocumentoBin != null && uuidDocumentoBin.equals(documentoBin.getUuid())) {
 						assinadorService.assinar(dadosAssinatura, usuarioPerfil);
 						setPodeIniciarFluxoAnaliseDocumentos(assinaturaDocumentoService.isDocumentoTotalmenteAssinado(getDocumento()));
 						break;
