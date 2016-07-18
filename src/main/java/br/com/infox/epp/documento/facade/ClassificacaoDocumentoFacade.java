@@ -9,7 +9,6 @@ import javax.inject.Inject;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
@@ -29,7 +28,7 @@ import br.com.infox.epp.fluxo.manager.VariavelClassificacaoDocumentoManager;
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class ClassificacaoDocumentoFacade {
 
-    @In
+    @Inject
     private ClassificacaoDocumentoManager classificacaoDocumentoManager;
     @Inject
     private VariavelClassificacaoDocumentoManager variavelClassificacaoDocumentoManager;

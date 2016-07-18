@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -33,6 +35,7 @@ import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.query.ProcessoTarefaQuery;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 
+@Stateless
 @AutoCreate
 @Name(ProcessoTarefaDAO.NAME)
 public class ProcessoTarefaDAO extends DAO<ProcessoTarefa> {

@@ -1,6 +1,5 @@
 package br.com.infox.ibpm.task.home;
 
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static java.text.MessageFormat.format;
 
 import java.io.Serializable;
@@ -84,7 +83,6 @@ import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
 import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
-import br.com.infox.epp.tarefa.manager.TarefaManager;
 import br.com.infox.ibpm.task.action.TaskPageAction;
 import br.com.infox.ibpm.task.dao.TaskConteudoDAO;
 import br.com.infox.ibpm.task.entity.TaskConteudo;
@@ -120,36 +118,34 @@ public class TaskInstanceHome implements Serializable {
 	private static final String URL_DOWNLOAD_BINARIO = "{0}/downloadDocumento.seam?id={1}";
 	private static final String URL_DOWNLOAD_HTML = "{0}/Painel/documentoHTML.seam?id={1}";
 
-	@In
+	@Inject
 	private ProcessoManager processoManager;
-	@In
+	@Inject
 	private ProcessoTarefaManager processoTarefaManager;
-	@In
+	@Inject
 	private TaskInstanceManager taskInstanceManager;
-	@In
+	@Inject
 	private ModeloDocumentoManager modeloDocumentoManager;
-	@In
+	@Inject
 	private AssinaturaDocumentoService assinaturaDocumentoService;
 	@In
 	private VariableTypeResolver variableTypeResolver;
-	@In(create = true)
+	@Inject
 	private ClassificacaoDocumentoFacade classificacaoDocumentoFacade;
-	@In
+	@Inject
 	private DocumentoManager documentoManager;
-	@In
+	@Inject
 	private PastaManager pastaManager; 
-	@In
+	@Inject
 	private DocumentoBinManager documentoBinManager;
-	@In
+	@Inject
 	private InfoxMessages infoxMessages;
-	@In
+	@Inject
 	private CertificateSignatures certificateSignatures;
 	@In
 	private PathResolver pathResolver;
 	@In
 	private ProcessoEpaHome processoEpaHome;
-	@In
-	private TarefaManager tarefaManager;
 	@In
 	private ProcessoHandler processoHandler;
 	
@@ -190,7 +186,6 @@ public class TaskInstanceHome implements Serializable {
 		}
 	}
 
-	@SuppressWarnings(UNCHECKED)
 	private void retrieveVariables() {
 		TaskController taskController = taskInstance.getTask().getTaskController();
 		if (taskController != null) {
@@ -323,7 +318,6 @@ public class TaskInstanceHome implements Serializable {
 		return (taskInstance != null) && (taskInstance.getTask() != null);
 	}
 
-	@SuppressWarnings(UNCHECKED)
 	private void updateVariables(TaskController taskController) {
 		updateVariablesEditorContent();
 		List<VariableAccess> list = taskController.getVariableAccesses();
@@ -391,10 +385,9 @@ public class TaskInstanceHome implements Serializable {
 		}
 		documentoBin.setMd5Documento(MD5Encoder.encode(documentoBin.getModeloDocumento()));
 		documentoBinManager.persist(documentoBin);
-		documento.setProcesso(processoEpaHome.getInstance());
+		documento.setPasta(pastaManager.getDefaultFolder(processoEpaHome.getInstance()));
 		documento.setNumeroDocumento(documentoManager.getNextNumeracao(documento));
 		documento.setIdJbpmTask(getCurrentTaskInstance().getId());
-		documento.setPasta(pastaManager.getDefaultFolder(processoEpaHome.getInstance()));
 		String descricao = JbpmUtil.instance().getMessages().get(processoEpaHome.getInstance().getNaturezaCategoriaFluxo().getFluxo().getFluxo() + ":" + variableAccess.getMappedName().split(":")[1]);
 		documento.setDescricao(descricao == null ? "-" : descricao);
 		documentoManager.persist(documento);
@@ -928,7 +921,6 @@ public class TaskInstanceHome implements Serializable {
 		this.taskCompleted = taskCompleted;
 	}
 
-	@SuppressWarnings(UNCHECKED)
 	public Object getValueOfVariableFromTaskInstance(String variableName) {
 		TaskController taskController = getCurrentTaskInstance().getTask().getTaskController();
 		if (taskController != null) {

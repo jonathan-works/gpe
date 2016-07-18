@@ -8,10 +8,10 @@ public interface DocumentoQuery {
 
     String NEXT_SEQUENCIAL = "getNextSequencial";
     String NEXT_SEQUENCIAL_QUERY = "select max(pd.numeroDocumento) from Documento pd "
-            + "inner join pd.classificacaoDocumento tpd where pd.processo = :"
+            + "inner join pd.classificacaoDocumento tpd inner join pd.pasta p where p.processo = :"
             + PARAM_PROCESSO
             + " and tpd.tipoNumeracao=:"
-            + PARAM_TIPO_NUMERACAO + " group by pd.processo";
+            + PARAM_TIPO_NUMERACAO + " group by p.processo";
 
     String ID_JBPM_TASK_PARAM = "idJbpmTask";
     String USUARIO_PARAM = "usuario";
@@ -37,22 +37,22 @@ public interface DocumentoQuery {
     String DATA_INCLUSAO = "dataInclusao";
     
     String LIST_DOCUMENTO_BY_PROCESSO = "listProcessoDocumentoByProcesso";
-    String LIST_DOCUMENTO_BY_PROCESSO_QUERY = "select o from Documento o " +
-    		"where o.processo = :" + PARAM_PROCESSO + " and o.documentoBin.minuta = false";
+    String LIST_DOCUMENTO_BY_PROCESSO_QUERY = "select o from Documento o inner join o.pasta p " +
+    		"where p.processo = :" + PARAM_PROCESSO + " and o.documentoBin.minuta = false";
     
     String LIST_DOCUMENTO_MINUTA_BY_PROCESSO = "listProcessoDocumentoMinutaByProcesso";
-    String LIST_DOCUMENTO_MINUTA_BY_PROCESSO_QUERY = "select o from Documento o " +
-    		"where o.processo = :" + PARAM_PROCESSO + " and o.documentoBin.minuta = true";
+    String LIST_DOCUMENTO_MINUTA_BY_PROCESSO_QUERY = "select o from Documento o inner join o.pasta p " +
+    		"where p.processo = :" + PARAM_PROCESSO + " and o.documentoBin.minuta = true";
     
     String LIST_DOCUMENTO_BY_TASKINSTANCE = "listDocumentoByTaskInstance";
     String lIST_DOCUMENTO_BY_TASKINSTANCE_QUERY = "select o from Documento o where idJbpmTask = :" + ID_JBPM_TASK_PARAM;
     
     String TOTAL_DOCUMENTOS_PROCESSO = "Documento.totalDocumentosProcesso";
-    String TOTAL_DOCUMENTOS_PROCESSO_QUERY = "select count(o) from Documento o where o.processo = :" + PARAM_PROCESSO 
+    String TOTAL_DOCUMENTOS_PROCESSO_QUERY = "select count(o) from Documento o inner join o.pasta p where p.processo = :" + PARAM_PROCESSO 
     		+ " and o.documentoBin.minuta = false";
     
     String DOCUMENTOS_SESSAO_ANEXAR = "Documento.documentosSessaoAnexar";
-    String DOCUMENTOS_SESSAO_ANEXAR_QUERY = "select o from Documento o where o.processo = :" + PARAM_PROCESSO
+    String DOCUMENTOS_SESSAO_ANEXAR_QUERY = "select o from Documento o inner join o.pasta p where p.processo = :" + PARAM_PROCESSO
     		+ " and (o.documentoBin.minuta = true or o.id in (:" + PARAM_IDS_DOCUMENTO + "))";
 
     String DOCUMENTOS_POR_CLASSIFICACAO_DOCUMENTO_ORDENADOS_POR_DATA_INCLUSAO = "Documento.porClassificacaoDocumentoOrdenadosPorDataInclusao";

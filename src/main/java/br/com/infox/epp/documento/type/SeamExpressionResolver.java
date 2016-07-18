@@ -86,6 +86,7 @@ public class SeamExpressionResolver implements ExpressionResolver {
 		} else {
 			expression.setValue(value.toString());
 		}
+		expression.setOriginalValue(value);
 		expression.setResolved(true);
 	}
 	

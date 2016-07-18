@@ -41,41 +41,14 @@
         </wi:inputTextarea>
         <div style="display: inline-block">
             <h:graphicImage id="#{id}helpEditTipImg" url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}"
-                onclick="#{rich:component('expressoesAjudaPopUpPanel')}.show();" />
+                onclick="#{rich:component('expressoesAjudaGeralPopUpPanel')}.show();" />
         </div>
     </s:div>
-    <script type="text/javascript">
-        function onshowPopup() {
-            var value = $('.expressoesAjudaPopUpPanel');
-            var width = $(window).width() * 0.85;
-            var height = $(window).height() * 0.85;
-            var top = (($(window).height() - height) / 3);
-            var left = (($(window).width() - width) / 2);
-            value.css('width', width + 'px');
-            value.css('height', height + 'px');
-            value.css('top', top + 'px');
-            value.css('left', left + 'px');
-            $('.rf-pp-cnt-scrlr').css('width', '100%');
-            $('.rf-pp-cnt-scrlr').css('height', '100%');
-        }
-    </script>
-    <rich:popupPanel id="expressoesAjudaPopUpPanel" modal="true" header="#{infoxMessages['process.events.expression.title']}" resizeable="true"
-        styleClass="expressoesAjudaPopUpPanel" onshow="onshowPopup();">
-        
-        <script type="text/javascript">
-	    	function onSelectBpmnExpression(obj) {
-	    		var text = $($(obj).children().get(1)).text();
-	    		#{rich:component('expressoesAjudaPopUpPanel')}.hide();
-	    		$('.textAreaExpressionAction').text(text);
-	    		$('.textAreaExpressionAction').change();
-	    	}
-	    </script>
-	    
-        <f:facet name="controls">
-            <h:graphicImage id="assinarDocumentosPopUpPanelCloseBtn" styleClass="mp-close"
-                value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
-                onclick="#{rich:component('expressoesAjudaPopUpPanel')}.hide();" />
-        </f:facet>
-        <ui:include src="actionHelp.xhtml" />
-    </rich:popupPanel>
+
+	<ui:include src="../helpers/expressoesAjuda.xhtml">
+		<ui:param name="id" value="expressoesAjudaGeralPopUpPanel" />
+		<ui:param name="methods" value="#{bpmExpressionService.externalMethods}" />
+		<ui:param name="targetExpressionFieldClass" value="textAreaExpressionAction" />
+	</ui:include>
+
 </ui:composition>

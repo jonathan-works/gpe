@@ -19,10 +19,19 @@
                 showLabelSelecione="false" value="#{t.swimlaneName}" label="#{infoxMessages['process.def.assignment.type.swimlane']}">
                 <a:ajax event="change" execute="@this" limitRender="true" render="@form" />
             </wi:selectOneMenu>
-            <wi:inputText id="pooledActorsExpression" value="#{t.pooledActorsExpression}"
+	        <ui:include src="helpers/expressoesAjuda.xhtml">
+				<ui:param name="id" value="expressoesAjudaRaiaDinamicaPopUpPanel" />
+				<ui:param name="methods" value="#{bpmExpressionService.externalRaiaDinamicaMethods}" />
+				<ui:param name="targetExpressionFieldClass" value="pooledActorsExpression" />
+			</ui:include>
+            <wi:inputTextarea id="pooledActorsExpression" value="#{t.pooledActorsExpression}" styleClass="pooledActorsExpression"
                 label="#{infoxMessages['process.def.assignment.type.pooledActorsExpression']}">
                 <a:ajax event="change" execute="@this" limitRender="true" render="@form" />
-            </wi:inputText>
+            </wi:inputTextarea>
+            <div style="display: inline-block">
+	            <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}"
+	                onclick="#{rich:component('expressoesAjudaRaiaDinamicaPopUpPanel')}.show();" />
+	        </div>
         </h:form>
     </rich:collapsiblePanel>
     <rich:collapsiblePanel expanded="false" switchType="client" header="#{infoxMessages['process.task.prazos']}">
@@ -94,14 +103,14 @@
                             <f:validator validatorId="jsfComponentIdValidator" />
                         </h:inputText>
                         <h:outputScript>
-                function customFilter(subString, value) {
-                    if (subString.length >= 1) {
-                        if (value.indexOf(subString) != -1)
-                            return true;
-                    } else
-                        return false;
-                };
-            </h:outputScript>
+                            function customFilter(subString, value) {
+                                if (subString.length >= 1) {
+                                    if (value.indexOf(subString) != -1)
+                                        return true;
+                                } else
+                                    return false;
+                            };
+                        </h:outputScript>
                         <rich:autocomplete value="#{var.name}"
                             rendered="#{empty var.name and !empty t.previousVariables}" selectFirst="false"
                             autocompleteList="#{t.previousVariables}" mode="client" minChars="2"
@@ -111,6 +120,13 @@
                             <a:ajax status=":status" listener="#{var.copyVariable()}" event="selectitem"
                                 render="varDiv,writable,varLabel,formVariableType,resetVariableForm" limitRender="true" />
                         </rich:autocomplete>
+                        <s:div rendered="#{(var.type eq 'TASK_PAGE' or var.type eq 'FRAME') and taskpageMapLoader.getTaskpage(var.name) ne null}" style="display: inline-block">
+                            <ui:include src="helpers/taskpageAjuda.xhtml">
+                                <ui:param name="taskpage" value="#{taskpageMapLoader.getTaskpage(var.name)}" />
+                            </ui:include>
+                            <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}"
+                                onclick="#{rich:component('taskpageAjudaPopup')}.show();" />
+                        </s:div>
                     </s:div>
                 </h:form>
             </rich:column>
@@ -126,7 +142,7 @@
             </rich:column>
             <rich:column>
                 <f:facet name="header">#{infoxMessages['process.task.var.modo']}</f:facet>
-                <h:form>
+                <h:form rendered="#{var.type ne 'PARAMETER'}">
                     <h:selectBooleanCheckbox id="writable" styleClass="checkbox" value="#{var.writable}">
                         <a:ajax execute="@this" limitRender="true" event="change"
                             render="readable,writable,resetVariableForm" />
@@ -135,7 +151,7 @@
             </rich:column>
             <rich:column>
                 <f:facet name="header">#{infoxMessages['process.task.var.required']}</f:facet>
-                <h:form>
+                <h:form rendered="#{var.type ne 'PARAMETER'}">
                     <h:selectBooleanCheckbox id="required" styleClass="checkbox" value="#{var.required}">
                         <a:ajax execute="@this" limitRender="true" event="change" render="readable,writable,hidden" />
                     </h:selectBooleanCheckbox>
@@ -143,7 +159,7 @@
             </rich:column>
             <rich:column>
                 <f:facet name="header">#{infoxMessages['process.task.var.hidden']}</f:facet>
-                <h:form>
+                <h:form rendered="#{var.type ne 'PARAMETER'}">
                     <h:selectBooleanCheckbox id="hidden" styleClass="checkbox" value="#{var.hidden}">
                         <a:ajax execute="@this" limitRender="true" event="change" render="readable,writable,required" />
                     </h:selectBooleanCheckbox>
@@ -151,7 +167,7 @@
             </rich:column>
             <rich:column>
                 <f:facet name="header">Inicia vazia?</f:facet>
-                <h:form id="resetVariableForm">
+                <h:form id="resetVariableForm" rendered="#{var.type ne 'PARAMETER'}">
                     <h:selectBooleanCheckbox id="resetVariable" rendered="#{var.podeIniciarVazia()}"
                         styleClass="checkbox" style="align: center" value="#{var.iniciaVazia}">
                         <a:ajax execute="@this" limitRender="true" event="change"
@@ -166,7 +182,7 @@
                         optionLabel="#{infoxMessages[item.label]}" widthDiv="100%" hideNoSelectionLabel="true"
                         required="true" disabled="#{empty var.name}">
                         <a:ajax event="change" execute="true" status=":status" listener="#{t.processVarTypeChange(var)}"
-                            render="addVarDiv, @form, pageBodyDialogMessage, varDiv, toolbarVariableForm, resetVariableForm"
+                            render="varTable, addVarDiv, @form, pageBodyDialogMessage, varDiv, toolbarVariableForm, resetVariableForm"
                             limitRender="true" />
                     </wi:selectOneMenu>
                     <a:jsFunction name="renderDominio" execute="@this" render="definicaoDominio" limitRender="true"
@@ -214,6 +230,13 @@
                             <f:converter converterId="fragmentConfigurationConverter" />
                         </wi:selectOneMenu>
                     </rich:panel>
+                    <h:form rendered="#{var.type eq 'PARAMETER'}">
+                        <div id="input">
+                            <wi:inputText id="inputDefaultValue" label="Valor padrão da variável" value="#{var.value}">
+                                <a:ajax event="change" execute="@this" status=":status" limitRender="true" />
+                            </wi:inputText>
+                        </div>
+                    </h:form>
                 </h:form>
             </rich:column>
         </rich:dataTable>

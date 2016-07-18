@@ -1,9 +1,43 @@
-.ui-icone-filtro-global-painel {
-	vertical-align: middle;
-	cursor: pointer;
-	position:absolute; 
-	top:0; 
-	right:0; 
-	max-width: 16px; 
-	max-height: 16px;
+#painel-usuario() {
+	.standard {
+		.ui-icone-filtro-global-painel {
+			vertical-align: middle;
+			cursor: pointer;
+			position: absolute;
+			top: 0;
+			right: 0;
+			max-width: 16px;
+			max-height: 16px;
+		}
+		.tarefa-tree-lbl {
+			white-space: pre-wrap;
+		}
+		.tree-tarefas {
+			font-size: 13rem/16;
+			text-transform: uppercase;
+			font-weight: bold;
+			padding-bottom: 113rem/16;
+		}
+		.p-caixas {
+		  padding-bottom: 113rem/16;
+		  width: 20%;
+		  display: inline-block;
+		  vertical-align: top;
+		}
+	}
+	.standard-colors {
+		.fluxo-sel {
+			background-color: @base-txt-color;
+			color: @base-bg-color;
+		}
+		.tree-tarefas {
+			color: @base-txt-color;
+		}
+		.p-caixas {
+		  color: @base-txt-color;
+		  background-color: @base-bg-color;
+		}
+	}
 }
+
+#painel-usuario > .standard;

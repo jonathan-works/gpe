@@ -21,6 +21,7 @@ public class StatusProcesso implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final String TABLE_NAME = "tb_status_processo";
 	public static final String STATUS_PROCESSO_ACTION_NAME = "setStatusProcessoAction";
+	public static final String STATUS_NAO_INICIADO = "Não Iniciado";
 
 	@Id
 	@SequenceGenerator(allocationSize=1, initialValue=1, name="generator", sequenceName="sq_status_processo")

@@ -17,7 +17,6 @@
   <ui:define name="head">
   <c:if test="#{not empty flash.fluxo}">
   		<c:set property="fluxo" target="#{processBuilder}" value="#{flash.fluxo}"></c:set>
-  		<c:set property="fluxo" target="#{definicaoVariavelProcessoAction}" value="#{flash.fluxo}"></c:set>
   		<c:set property="fluxo" target="#{variavelClassificacaoDocumentoAction}" value="#{flash.fluxo}"></c:set>
  		 <f:metadata>
 	  			<f:event listener="#{processBuilder.load()}" type="preRenderView" />
@@ -71,11 +70,6 @@
                 execute="@this" />
             </wi:inputTextarea>
           </h:form>
-        </rich:panel>
-        <rich:panel
-          header="#{infoxMessages['processBuilder.definicaoVariavelProcesso']}"
-          rendered="#{processBuilder.exists}">
-          <ui:include src="definicaoVariavelProcesso.xhtml" />
         </rich:panel>
         <rich:panel
           styleClass="SwimlanePanel"

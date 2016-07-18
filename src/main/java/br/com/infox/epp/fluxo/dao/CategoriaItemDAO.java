@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -17,8 +19,9 @@ import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.CategoriaItem;
 import br.com.infox.epp.fluxo.entity.Item;
 
-@Name(CategoriaItemDAO.NAME)
+@Stateless
 @AutoCreate
+@Name(CategoriaItemDAO.NAME)
 public class CategoriaItemDAO extends DAO<CategoriaItem> {
 
     private static final long serialVersionUID = 1L;

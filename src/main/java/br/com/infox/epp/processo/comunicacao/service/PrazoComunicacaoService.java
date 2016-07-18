@@ -5,6 +5,7 @@ import static br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider.
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -13,6 +14,7 @@ import javax.inject.Inject;
 
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.context.exe.ContextInstance;
+import org.joda.time.DateTime;
 
 import br.com.infox.certificado.bean.CertificateSignatureBean;
 import br.com.infox.certificado.exception.CertificadoException;
@@ -24,6 +26,7 @@ import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.dao.ComunicacaoSearch;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
@@ -41,8 +44,7 @@ import br.com.infox.util.time.DateRange;
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class PrazoComunicacaoService {
-	public static final String NAME = "prazoComunicacaoService";
-	
+    
 	@Inject
 	private CalendarioEventosManager calendarioEventosManager;
 	@Inject
@@ -53,6 +55,8 @@ public class PrazoComunicacaoService {
 	private DocumentoManager documentoManager;
 	@Inject
 	private AssinaturaDocumentoService assinaturaDocumentoService;
+	@Inject
+	private ComunicacaoSearch comunicacaoSearch;
 
 	public Date contabilizarPrazoCiencia(Processo comunicacao) {
 		DestinatarioModeloComunicacao destinatario = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.DESTINATARIO);
@@ -248,7 +252,7 @@ public class PrazoComunicacaoService {
     }
     
     public Date getDataLimiteCumprimentoInicial(Processo comunicacao){
-    	return getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO);
+    	return getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO_INICIAL);
     }
     
     public String getStatusProrrogacaoFormatado(Processo comunicacao){
@@ -281,4 +285,14 @@ public class PrazoComunicacaoService {
     	return getDataLimiteCumprimento(comunicacao);
     }
     
+    public Date getDataMaximaRespostaComunicacao(Integer idProcesso, String taskName) {
+        Map<String, Object> mapCienciaPrazo = comunicacaoSearch.getMaximoDiasCienciaMaisPrazo(idProcesso, taskName);
+        if (!mapCienciaPrazo.isEmpty()) {
+            Date dataLimiteCiencia = (Date) mapCienciaPrazo.get("dataLimiteCiencia");
+            Integer maiorPrazo = (Integer) mapCienciaPrazo.get("maiorPrazo");
+            return calcularPrazoDeCumprimento(dataLimiteCiencia, maiorPrazo);
+        } else {
+            return DateTime.now().plusDays(1).toDate();
+        }
+    }
 }

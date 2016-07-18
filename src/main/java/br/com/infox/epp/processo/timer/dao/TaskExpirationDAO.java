@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -19,9 +21,11 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.processo.timer.TaskExpiration;
 
-@Name(TaskExpirationDAO.NAME)
+@Stateless
 @AutoCreate
+@Name(TaskExpirationDAO.NAME)
 public class TaskExpirationDAO extends DAO<TaskExpiration> {
+    
     static final String NAME = "taskExpirationDAO";
     private static final long serialVersionUID = 1L;
     

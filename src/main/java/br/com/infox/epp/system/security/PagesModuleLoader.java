@@ -32,7 +32,7 @@ public class PagesModuleLoader implements Serializable {
 	public void init() {
 		try {
 			Pages pages = (Pages) Component.getInstance("org.jboss.seam.navigation.pages");
-			Enumeration<URL> urls = getClass().getClassLoader().getResources("/pages_xml.txt");
+			Enumeration<URL> urls = getClass().getClassLoader().getResources("pages_xml.txt");
 			while (urls.hasMoreElements()) {
 				URL url = urls.nextElement();
 				try (Scanner scanner = new Scanner(url.openStream())) {

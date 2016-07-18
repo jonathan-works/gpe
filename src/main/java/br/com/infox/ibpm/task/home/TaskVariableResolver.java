@@ -32,6 +32,7 @@ final class TaskVariableResolver extends TaskVariable {
 		this.value = value;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void resolve() {
 		if (value != null) {
 			switch (type) {

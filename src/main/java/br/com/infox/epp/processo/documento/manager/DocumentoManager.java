@@ -29,6 +29,7 @@ import br.com.infox.epp.processo.documento.numeration.NumeracaoDocumentoSequenci
 import br.com.infox.epp.processo.documento.type.TipoAlteracaoDocumento;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.seam.exception.BusinessRollbackException;
 
 @Stateless
 @AutoCreate
@@ -82,9 +83,23 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     }
 
     public Documento gravarDocumentoNoProcesso(Processo processo, Documento documento) throws DAOException {
-        documento.setProcesso(processo);
+        if (processo != null) {
+        	if (documento.getPasta() == null) {
+        		documento.setPasta(pastaManager.getDefaultFolder(processo));
+        	} else if (!processo.equals(documento.getPasta().getProcesso())) {
+        		throw new BusinessRollbackException("O processo informado e o processo da pasta do documento são diferentes");
+        	}
+        }
         documento.setNumeroDocumento(getNextNumeracao(documento));
-        documento.setDocumentoBin(this.documentoBinManager.createProcessoDocumentoBin(documento));
+        return gravarDocumento(documento);
+    }
+    
+    public Documento gravarDocumentoNoProcesso(Documento documento) throws DAOException {
+    	return gravarDocumentoNoProcesso(null, documento);
+    }
+    
+    public Documento gravarDocumento(Documento documento) {
+    	documento.setDocumentoBin(this.documentoBinManager.createProcessoDocumentoBin(documento));
         if (documento.getUsuarioInclusao() == null) {
         	documento.setUsuarioInclusao(Authenticator.getUsuarioLogado());
         }
@@ -95,17 +110,7 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
             long idJbpmTask = TaskInstance.instance().getId();
             documento.setIdJbpmTask(idJbpmTask);
         }
-        documento.setPasta(pastaManager.getDefaultFolder(processo));
         persist(documento);
-        return documento;
-    }
-
-    public Documento gravarDocumentoNoProcesso(Processo processo, Documento documento, Pasta pasta) throws DAOException {
-        gravarDocumentoNoProcesso(processo, documento);
-        if (pasta != null) {
-            documento.setPasta(pasta);
-            update(documento);
-        }
         return documento;
     }
     
@@ -115,7 +120,6 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
         doc.setDocumentoBin(bin);
         doc.setDataInclusao(new Date());
         doc.setUsuarioInclusao(Authenticator.getUsuarioLogado());
-        doc.setProcesso(processo);
         doc.setDescricao(label);
         doc.setExcluido(Boolean.FALSE);
         doc.setPasta(pastaManager.getDefaultFolder(processo));
@@ -129,7 +133,7 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     }
 
     public Integer getNextNumeracao(Documento documento) throws DAOException {
-        return numeracaoDocumentoSequencialManager.getNextNumeracaoDocumentoSequencial(documento.getProcesso());
+        return numeracaoDocumentoSequencialManager.getNextNumeracaoDocumentoSequencial(documento.getPasta().getProcesso());
     }
 
     public List<Documento> getAnexosPublicos(long idJbpmTask) {
@@ -138,6 +142,10 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
 
     public List<Documento> getListDocumentoByProcesso(Processo processo) {
         return getDao().getListDocumentoByProcesso(processo);
+    }
+    
+    public List<Documento> getListAllDocumentoByProcesso(Processo processo) {
+        return getDao().getListAllDocumentoByProcesso(processo);
     }
     
     public List<Documento> getListDocumentoMinutaByProcesso(Processo processo) {
@@ -204,13 +212,12 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
 		return isAssinavel && !assinadoPor;
     }
     
-	public Documento copiarDocumento(Documento original, Processo novoProcesso, Pasta novaPasta) throws CloneNotSupportedException {
+	public Documento copiarDocumento(Documento original, Pasta novaPasta) throws CloneNotSupportedException {
 		Documento cDoc = original.makeCopy();
         cDoc.setPasta(novaPasta);
         cDoc.setNumeroDocumento(null);
         cDoc.setDataInclusao(DateTime.now().toDate());
         cDoc.setUsuarioInclusao(null);
-        cDoc.setProcesso(novoProcesso);
         return persist(cDoc);
 	}
 }

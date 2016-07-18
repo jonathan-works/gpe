@@ -9,19 +9,19 @@
      xmlns:rich="http://richfaces.org/rich"
      xmlns:s="http://jboss.org/schema/seam/taglib">
 		<c:forEach
-         items="#{subMenu.children}"
+         items="#{subMenu.items}"
          var="sub">
 			<rich:menuItem
              submitMode="server"
              label="#{sub.label}"
              action="#{conversationFacade.endBeforeRedirect(sub.url)}"
              execute="@this"
-             rendered="#{empty sub.children}">
+             rendered="#{empty sub.items}">
 			</rich:menuItem>
 	
 			<rich:menuGroup
              value="#{sub.label}"
-             rendered="#{!empty sub.children}">
+             rendered="#{!empty sub.items}">
 				<ui:include
                  src="/WEB-INF/xhtml/templates/subMenu.xhtml">
 					<ui:param

@@ -27,7 +27,8 @@ public enum WSMessages {
 	ME_ATTR_PAPEL_INVALIDO("ME0018", "Atributo papel inválido"),
 	ME_USUARIO_JA_POSSUI_PERFIL_ASSOCIADO("ME0019", "Usuário já possui perfil associado"),
 	ME_LOCALIZACAO_DA_ESTRUTURA_INEXISTENTE("ME0020", "Localização da Estrutura não existe"),
-	ME_ATRIBUTO_INVALIDO("ME0021", "Atributo inválido detectado");
+	ME_ATRIBUTO_INVALIDO("ME0021", "Atributo inválido detectado"),
+	ME_OBJETO_NAO_ENCONTRADO("ME0022", "Objeto não encontrado");
 	
 	
 	private final String codigo;

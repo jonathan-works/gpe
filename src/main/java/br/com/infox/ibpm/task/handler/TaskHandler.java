@@ -1,7 +1,5 @@
 package br.com.infox.ibpm.task.handler;
 
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +13,8 @@ import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.def.TaskMgmtDefinition;
 
+import com.google.common.base.Strings;
+
 import br.com.infox.epp.documento.list.associative.AssociativeModeloDocumentoList;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
@@ -26,7 +26,6 @@ public class TaskHandler implements Serializable {
 
     private static final long serialVersionUID = 9033256144150197159L;
     private Task task;
-    private String swimlaneName;
     private boolean dirty;
     private List<VariableAccessHandler> variables;
     private Boolean hasTaskPage;
@@ -35,9 +34,6 @@ public class TaskHandler implements Serializable {
     public TaskHandler(Task task) {
         this.task = task;
         if (task != null){
-        	if (task.getSwimlane() != null) {
-        		this.swimlaneName = task.getSwimlane().getName();
-        	}
         	// Para as tarefas já existentes
         	if (task.getTaskController() != null && task.getTaskController().getTaskControllerDelegation() == null) {
         		Delegation delegation = new Delegation(InfoxTaskControllerHandler.class.getName());
@@ -64,7 +60,11 @@ public class TaskHandler implements Serializable {
     }
     public void setPooledActorsExpression(String expression){
     	if (task != null){
-    		task.setPooledActorsExpression(expression);
+    		if (!Strings.isNullOrEmpty(expression)) {
+    			task.setPooledActorsExpression(expression);
+    		} else {
+    			task.setPooledActorsExpression(null);
+    		}
     	}
     }
 
@@ -73,7 +73,6 @@ public class TaskHandler implements Serializable {
     }
 
     public void setSwimlaneName(String swimlaneName) {
-        this.swimlaneName = swimlaneName;
         if (swimlaneName == null) {
         	task.setSwimlane(null);
         } else {
@@ -137,7 +136,6 @@ public class TaskHandler implements Serializable {
         return ret;
     }
 
-    @SuppressWarnings(UNCHECKED)
     public Task update() {
         if (task.getTaskController() != null) {
             List<VariableAccess> variableAccesses = task.getTaskController().getVariableAccesses();
@@ -149,7 +147,6 @@ public class TaskHandler implements Serializable {
         return task;
     }
 
-    @SuppressWarnings(UNCHECKED)
     public void newVar() {
         if (!checkNullVariables()) {
             VariableAccess v = new VariableAccess("", "read,write", VariableType.NULL.name() + ":");
@@ -236,8 +233,16 @@ public class TaskHandler implements Serializable {
     public void processVarTypeChange(VariableAccessHandler var) {
         clearHasTaskPage();
         var.limparModelos();
+        var.setValue(null);
         if (!var.podeIniciarVazia()) {
         	var.setIniciaVazia(false);
+        }
+        if (var.getType().equals(VariableType.PARAMETER)) {
+            var.setIniciaVazia(false);
+            var.setWritable(false);
+            var.setRequired(false);
+            var.setHidden(true);
+            var.setReadable(true);
         }
     }
 

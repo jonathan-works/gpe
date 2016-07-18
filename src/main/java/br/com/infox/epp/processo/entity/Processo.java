@@ -34,7 +34,6 @@ import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSOS_FILHO_BY_T
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSOS_FILHO_BY_TIPO_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSOS_FILHO_NOT_ENDED_BY_TIPO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSOS_FILHO_NOT_ENDED_BY_TIPO_QUERY;
-import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_ATTRIBUTE;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_BY_NUMERO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_BY_NUMERO_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.PROCESSO_EPA_BY_ID_JBPM;
@@ -86,7 +85,6 @@ import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.painel.caixa.Caixa;
-import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoDefinition;
@@ -188,10 +186,6 @@ public class Processo implements Serializable {
     
     @OneToMany(mappedBy = "processo", fetch = FetchType.LAZY)
     private List<ProcessoTarefa> processoTarefaList = new ArrayList<ProcessoTarefa>(0);
-    
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = PROCESSO_ATTRIBUTE)
-    @OrderBy("dataInclusao DESC")
-    private List<Documento> documentoList = new ArrayList<Documento>(0);
     
     @OneToMany(mappedBy = "processo", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE })
     @OrderBy(value = "ds_caminho_absoluto")
@@ -375,14 +369,6 @@ public class Processo implements Serializable {
 		this.processoTarefaList = processoTarefaList;
 	}
 
-	public List<Documento> getDocumentoList() {
-		return documentoList;
-	}
-
-	public void setDocumentoList(List<Documento> documentoList) {
-		this.documentoList = documentoList;
-	}
-
 	public List<ParticipanteProcesso> getParticipantes() {
 		return participantes;
 	}
@@ -406,8 +392,8 @@ public class Processo implements Serializable {
 	public void setPastaList(List<Pasta> pastaList) {
 		this.pastaList = pastaList;
 	}
-
-	public boolean hasPartes(){
+	
+    public boolean hasPartes(){
     	return naturezaCategoriaFluxo.getNatureza().getHasPartes();
     }
 	
@@ -416,6 +402,12 @@ public class Processo implements Serializable {
 		return getDataFim() != null;
 	}
 	
+	@Transient
+	public MetadadoProcesso removerMetadado(MetadadoProcessoDefinition metadadoProcessoDefinition) {
+	    MetadadoProcesso metadado = getMetadado(metadadoProcessoDefinition);
+	    getMetadadoProcessoList().remove(metadado);
+	    return metadado;
+	}
 	
 	@Transient
 	public MetadadoProcesso getMetadado(MetadadoProcessoDefinition metadadoProcessoDefinition) {

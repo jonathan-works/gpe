@@ -15,11 +15,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.AbstractQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
@@ -40,9 +42,13 @@ import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacaoClassificacaoDocumento;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacaoClassificacaoDocumento_;
+import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.Documento_;
+import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.hibernate.util.HibernateUtil;
 
+@Stateless
 @AutoCreate
 @Name(ClassificacaoDocumentoDAO.NAME)
 public class ClassificacaoDocumentoDAO extends DAO<ClassificacaoDocumento> {
@@ -191,5 +197,16 @@ public class ClassificacaoDocumentoDAO extends DAO<ClassificacaoDocumento> {
         HibernateUtil.enableCache(typedQuery);
 		return typedQuery.getResultList();
     }
-    
+
+    public List<ClassificacaoDocumento> getClassificacoesDocumentoByPasta(Pasta pasta) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<ClassificacaoDocumento> cq = cb.createQuery(ClassificacaoDocumento.class);
+        Root<Documento> d = cq.from(Documento.class);
+        Join<Documento, ClassificacaoDocumento> cd = d.join(Documento_.classificacaoDocumento, JoinType.INNER);
+        cq.select(cd);
+        cq.where(cb.equal(d.get(Documento_.pasta), pasta));
+        cq.orderBy(cb.asc(cd.get(ClassificacaoDocumento_.descricao)));
+        cq.distinct(true);
+        return getEntityManager().createQuery(cq).getResultList();
+    }
 }

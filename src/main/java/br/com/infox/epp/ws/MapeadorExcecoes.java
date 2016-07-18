@@ -4,6 +4,7 @@ import static br.com.infox.epp.ws.services.MensagensErroService.CODIGO_ERRO_INDE
 
 import javax.ejb.EJBException;
 import javax.inject.Inject;
+import javax.persistence.NoResultException;
 import javax.validation.ValidationException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
@@ -34,15 +35,15 @@ public class MapeadorExcecoes implements ExceptionMapper<Throwable> {
 	private MensagensErroService mensagensService;
 
 	private Throwable getExcecao(Throwable e) {
-		if(e instanceof EJBException && e.getCause() != null) {
+		if (e instanceof EJBException && e.getCause() != null) {
 			return e.getCause();
 		}
 		return e;
 	}
-	
+
 	private int getStatus(Throwable e) {
 		if (e != null && ExcecaoServico.class.isAssignableFrom(e.getClass())) {
-			return ((ExcecaoServico)e).getStatus();
+			return ((ExcecaoServico) e).getStatus();
 		} else {
 			return Status.INTERNAL_SERVER_ERROR.getStatusCode();
 		}
@@ -54,9 +55,11 @@ public class MapeadorExcecoes implements ExceptionMapper<Throwable> {
 		if (e instanceof WebApplicationException) {
 			WebApplicationException exception = (WebApplicationException) e;
 			return exception.getResponse();
-		}
-		else if (e instanceof ValidationException) {
+		} else if (e instanceof ValidationException) {
 			WebApplicationException wae = buildWebApplicationException((ValidationException) e);
+			return wae.getResponse();
+		} else if (e instanceof NoResultException) {
+			WebApplicationException wae = buildWebApplicationException((NoResultException) e);
 			return wae.getResponse();
 		} else {
 			ErroServico erro = mensagensService.getErro(e);
@@ -73,7 +76,16 @@ public class MapeadorExcecoes implements ExceptionMapper<Throwable> {
 	private WebApplicationException buildWebApplicationException(ValidationException ve) {
 		RestException re = new RestException(WSMessages.ME_ATRIBUTO_INVALIDO.codigo(), ve.getMessage());
 		Gson gson = new GsonBuilder().create();
-		Response response = Response.status(Status.BAD_REQUEST.getStatusCode()).entity(gson.toJson(re)).type(MediaType.APPLICATION_JSON).build();
+		Response response = Response.status(Status.BAD_REQUEST.getStatusCode()).entity(gson.toJson(re))
+				.type(MediaType.APPLICATION_JSON).build();
+		return new WebApplicationException(response);
+	}
+	
+	private WebApplicationException buildWebApplicationException(NoResultException e) {
+		RestException re = new RestException(WSMessages.ME_OBJETO_NAO_ENCONTRADO.codigo(), WSMessages.ME_OBJETO_NAO_ENCONTRADO.label());
+		Gson gson = new GsonBuilder().create();
+		Response response = Response.status(Status.NOT_FOUND.getStatusCode()).entity(gson.toJson(re))
+				.type(MediaType.APPLICATION_JSON).build();
 		return new WebApplicationException(response);
 	}
 }

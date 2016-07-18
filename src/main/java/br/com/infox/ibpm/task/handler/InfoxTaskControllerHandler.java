@@ -4,16 +4,18 @@ import java.util.List;
 
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.context.exe.ContextInstance;
+import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.Token;
+import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.taskmgmt.def.TaskControllerHandler;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.ibpm.variable.VariableAccessHandler;
 
 public class InfoxTaskControllerHandler implements TaskControllerHandler {
+    
 	private static final long serialVersionUID = 1L;
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void initializeTaskVariables(TaskInstance taskInstance, ContextInstance contextInstance, Token token) {
 		List<VariableAccess> variableAccesses = taskInstance.getTask().getTaskController().getVariableAccesses();
@@ -23,14 +25,25 @@ public class InfoxTaskControllerHandler implements TaskControllerHandler {
 				contextInstance.setVariable(variableAccess.getVariableName(), null);
 				taskInstance.setVariableLocally(variableAccess.getMappedName(), null);
 			} else if (variableAccess.isReadable()) {
-				taskInstance.setVariableLocally(variableAccess.getMappedName(), contextInstance.getVariable(variableAccess.getVariableName()));
+			    String defaultValue = variableAccess.getValue();
+                if (defaultValue != null) {
+                    String substring = defaultValue.substring(0, 2);
+                    if (substring.equals("#{") || substring.equals("${")) {
+                        ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
+                        Object evaluate = JbpmExpressionEvaluator.evaluate(defaultValue, executionContext);
+                        taskInstance.setVariableLocally(variableAccess.getVariableName(), evaluate);
+                    } else {
+                        taskInstance.setVariableLocally(variableAccess.getVariableName(), defaultValue);
+                    }
+			    } else {
+			        taskInstance.setVariableLocally(variableAccess.getMappedName(), contextInstance.getVariable(variableAccess.getVariableName()));
+			    }
 			} else {
 				taskInstance.setVariableLocally(variableAccess.getMappedName(), null);
 			}
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void submitTaskVariables(TaskInstance taskInstance, ContextInstance contextInstance, Token token) {
 		List<VariableAccess> variableAccesses = taskInstance.getTask().getTaskController().getVariableAccesses();

@@ -8,7 +8,6 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.fluxo.dao.NatCatFluxoLocalizacaoDAO;
 import br.com.infox.epp.fluxo.entity.NatCatFluxoLocalizacao;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
@@ -160,18 +159,11 @@ public class NatCatFluxoLocalizacaoManager extends Manager<NatCatFluxoLocalizaca
         }
     }
 
-    public List<NaturezaCategoriaFluxo> listByLocalizacaoAndPapel(
-            Localizacao l, Papel p) {
-        return getDao().listByLocalizacaoAndPapel(l, p);
-    }
-
-    public List<NatCatFluxoLocalizacao> listByNaturezaCategoriaFluxo(
-            NaturezaCategoriaFluxo ncf) {
+    public List<NatCatFluxoLocalizacao> listByNaturezaCategoriaFluxo(NaturezaCategoriaFluxo ncf) {
         return getDao().listByNaturezaCategoriaFluxo(ncf);
     }
 
-    public boolean existsNatCatFluxoLocalizacao(NaturezaCategoriaFluxo ncf,
-            Localizacao localizacao) {
+    public boolean existsNatCatFluxoLocalizacao(NaturezaCategoriaFluxo ncf, Localizacao localizacao) {
         return getDao().existsNatCatFluxoLocalizacao(ncf, localizacao);
     }
 

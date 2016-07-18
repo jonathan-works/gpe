@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.Query;
@@ -30,8 +32,9 @@ import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
-@Name(AjudaDAO.NAME)
+@Stateless
 @AutoCreate
+@Name(AjudaDAO.NAME)
 public class AjudaDAO extends DAO<Ajuda> {
 
     private static final long serialVersionUID = 1L;

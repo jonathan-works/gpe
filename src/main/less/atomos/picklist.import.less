@@ -1,0 +1,22 @@
+#picklist() {
+
+  .standard {
+  }
+  .standard-colors {
+    &-src > &-src-cptn,&-tgt > &-tgt-cptn {
+      color: @menu-txt-color;
+    }
+  }
+
+  .primefaces {
+    & &-filter-container span.ui-icon{
+        top:2.63px;
+    }
+  }
+  .primefaces-colors{
+  }
+}
+
+.ui-picklist{
+    #picklist > .primefaces;
+}

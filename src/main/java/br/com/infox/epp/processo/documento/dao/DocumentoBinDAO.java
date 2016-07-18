@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -18,6 +20,7 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.query.DocumentoBinQuery;
 
+@Stateless
 @AutoCreate
 @Name(DocumentoBinDAO.NAME)
 public class DocumentoBinDAO extends DAO<DocumentoBin> {

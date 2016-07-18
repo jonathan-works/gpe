@@ -1,64 +1,73 @@
-div.rf-cal-edtr-btn-sel {
-  background-image: none;
-  background-color:darken(@cal-bg-color,10%);
-  color:lighten(@cal-bg-color,10%);  
+#calendar() {
+    .standard {
+        div&-edtr-btn-sel {
+            background-image: none;
+        }
+        img&-btn.hidden {
+            display: none;
+        }
+    }
+    .standard-colors {
+        div&-edtr-btn-sel {
+            background-color: darken(@cal-bg-color,10%);
+            color: lighten(@cal-bg-color,10%);
+        }
+        td&-monthpicker-ok,
+        td&-monthpicker-cancel {
+            background-color: lighten(@cal-bg-color,10%);
+            color: darken(@cal-bg-color,10%);
+        }
+        div&-time-btn {
+            background: lighten(@cal-bg-color,10%);
+        }
+        &-popup {
+            background-color: @cal-bg-color;
+            color: @cal-txt-color;
+        }
+        &-c {
+            background-color: #fff;
+        }
+        td&-hdr-month {
+            background-color: @cal-bg-color;
+            color: @cal-txt-color;
+        }
+        td&-tl {
+            background-color: @cal-bg-color;
+            color: @cal-txt-color;
+        }
+        td&-hdr {
+            background-color: #fff;
+        }
+        td&-day-lbl {
+            background-color: #fff;
+        }
+        td&-ftr {
+            background-color: #ffffff;
+        }
+        td&-tl-ftr {
+            background: #fff;
+        }
+        td&-holiday {
+            background-color: lighten(@cal-bg-color,10%);
+            color: darken(@cal-bg-color,10%);
+        }
+        &-tl-btn&-tl-btn-hov {
+            background-color: lighten(@cal-bg-color,10%);
+            color: @cal-txt-color;
+        }
+        td&-hov {
+            background-color: lighten(@cal-bg-color,15%);
+        }
+        td&-today {
+            color: #fff;
+            background-color: @cal-bg-color-today;
+        }
+        td&-sel {
+            background-color: @cal-bg-color;
+            color: @cal-txt-color;
+        }
+    }
 }
-td.rf-cal-monthpicker-ok,
-td.rf-cal-monthpicker-cancel {
-  background-color:lighten(@cal-bg-color,10%);
-  color:darken(@cal-bg-color,10%);
-}
-div.rf-cal-time-btn {
-  background:lighten(@cal-bg-color,10%);
-}
-img.rf-cal-btn.hidden {
-  display: none;
-}
-.rf-cal-popup {
-  background-color:@cal-bg-color;
-  color:@cal-txt-color;
-}
-.rf-cal-c {
-  background-color: #fff;
-}
-td.rf-cal-hdr-month {
-  background-color:@cal-bg-color;
-  color:@cal-txt-color;
-}
-td.rf-cal-tl {
-  background-color:@cal-bg-color;
-  color:@cal-txt-color;
-}
-td.rf-cal-hdr {
-  background-color: #fff;
-}
-td.rf-cal-day-lbl {
-  background-color: #fff;
-}
-td.rf-cal-ftr {
-  background-color: #ffffff;
-}
-td.rf-cal-tl-ftr {
-  background: #fff;
-}
-td.rf-cal-holiday {
-  background-color:lighten(@cal-bg-color,10%);
-  color:darken(@cal-bg-color,10%);
-}
-.rf-cal-tl-btn {
-  &.rf-cal-tl-btn-hov{
-    background-color:lighten(@cal-bg-color,10%);
-    color:@cal-txt-color;
-  }
-}
-td.rf-cal-hov {
-  background-color:lighten(@cal-bg-color,15%);
-}
-td.rf-cal-today {
-  color:#fff;
-  background-color:@cal-bg-color-today;
-}
-td.rf-cal-sel {
-  background-color:@cal-bg-color;
-  color:@cal-txt-color;
+.rf-cal {
+    #calendar > .standard;
 }

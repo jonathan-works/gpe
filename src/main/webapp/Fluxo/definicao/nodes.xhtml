@@ -90,7 +90,7 @@
                                 <h:form>
                                     <a:commandLink
                                         action="#{nodeFitter.setCurrentNode(row)}"
-                                        render="divNodesGeral"
+                                        render="divNodesGeral pageBodyDialogMessage"
                                         execute="@this"
                                         onbegin="infox.showLoading('Carregando dados da tarefa...');"
                                         oncomplete="infox.hideLoading();"
@@ -147,18 +147,21 @@
                                 </ui:include>
                             </s:fragment>
                         </div>
-                        <s:fragment
-                            rendered="#{nodeFitter.currentNode.nodeType == 'Task'}">
+                        <ui:fragment rendered="#{nodeFitter.currentNode.nodeType == 'StartState'}">
+                            <ui:include src="startStateTask.xhtml" />
+                        </ui:fragment>
+                        <ui:fragment rendered="#{nodeFitter.nodeHandler.activity}">
+                            <ui:include src="activity/activity.xhtml"/>
+                        </ui:fragment>
+                        <ui:fragment rendered="#{nodeFitter.currentNode.nodeType == 'Task'}">
                             <ui:include src="tasks.xhtml" />
-                        </s:fragment>
-                        <s:fragment
-                            rendered="#{nodeFitter.currentNode.nodeType == 'Task'}">
+                        </ui:fragment>
+                        <ui:fragment rendered="#{nodeFitter.currentNode.nodeType == 'Task'}">
                             <ui:include src="timers.xhtml" />
-                        </s:fragment>
-                        <s:fragment
-                            rendered="#{nodeFitter.currentNode.nodeType == 'Task'}">
+                        </ui:fragment>
+                        <ui:fragment rendered="#{nodeFitter.currentNode.nodeType == 'Task'}">
                             <ui:include src="expirations.xhtml" />
-                        </s:fragment>
+                        </ui:fragment>
                         <s:div rendered="#{! empty nodeFitter.nodeForm}">
                             <h:form>
                                 <ui:include

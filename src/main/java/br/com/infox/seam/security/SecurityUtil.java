@@ -44,6 +44,10 @@ public class SecurityUtil implements Serializable {
         return hasPermission;
     }
     
+    public boolean isPermitted(String resource) {
+        return Identity.instance().hasPermission(resource, "access");
+    }
+    
     public boolean checkPage() {
         HttpServletRequest request = ServletContexts.instance().getRequest();
         String servletPath = request.getServletPath();
@@ -56,5 +60,9 @@ public class SecurityUtil implements Serializable {
     
     public void clearPermissionCache() {
         permissions = new HashMap<>();
+    }
+
+    public boolean isLoggedIn() {
+        return Identity.instance().isLoggedIn();
     }
 }

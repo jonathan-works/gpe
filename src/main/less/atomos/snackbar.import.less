@@ -1,0 +1,40 @@
+#snackbar(){
+  .standard {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    cursor: default;
+    background-color: #323232;
+    z-index: 3;
+    display: block;
+    .prefixed-value(display,flex);
+    .prefixed-value(justify-content, space-between);
+    font-family: @default-font-family;
+    will-change: transform;
+    .prefixed-atrib(transform, translate(0,80px));
+    .prefixed-atrib(transition, ~"transform .25s cubic-bezier(.4,0,1,1)");
+    pointer-events: none;
+
+    min-width: 288px;
+    max-width: 568px;
+    border-radius: 2px;
+    .prefixed-atrib(transform, translate(-50%,80px));
+
+    &-active{
+      .prefixed-atrib(transform, translate(0,0));
+      pointer-events: auto;
+      .prefixed-atrib(transition, ~"transform .25s cubic-bezier(0,0,.2,1)");
+    }
+
+    &-text{
+      padding: 14px 12px 14px 24px;
+      vertical-align: middle;
+      color: #fff;
+      float: left;
+    }
+  }
+}
+
+.mdl-snackbar {
+  #snackbar > .standard;
+}

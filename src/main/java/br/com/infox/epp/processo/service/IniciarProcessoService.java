@@ -1,146 +1,114 @@
 package br.com.infox.epp.processo.service;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
-import org.jboss.seam.bpm.BusinessProcess;
-import org.jboss.seam.bpm.ManagedJbpmContext;
-import org.jboss.seam.bpm.ProcessInstance;
-import org.jbpm.context.exe.ContextInstance;
+import org.jbpm.JbpmContext;
+import org.jbpm.graph.exe.ProcessInstance;
+import org.joda.time.DateTime;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.cdi.producer.JbpmContextProducer;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.StringUtil;
-import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.fluxo.manager.NaturezaManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 
-@AutoCreate
-@Scope(ScopeType.CONVERSATION)
-@Name(IniciarProcessoService.NAME)
 @Stateless
-@Transactional
-@ContextDependency
-public class IniciarProcessoService implements Serializable {
+public class IniciarProcessoService {
 
-	private static final long serialVersionUID = 1L;
-
-	@Inject
-	private ProcessoManager processoManager;
     @Inject
     private NaturezaManager naturezaManager;
     @Inject
     private PastaManager pastaManager;
     @Inject
     private MetadadoProcessoManager metadadoProcessoManager;
-
-    public static final String NAME = "iniciarProcessoService";
-    public static final String TYPE_MISMATCH_EXCEPTION = "Tipo informado não é uma instância de "
-            + "br.com.infox.ibpm.entity.Processo";
-
-    public void iniciarProcesso(Processo processo) throws DAOException {
-        iniciarProcesso(processo, null, null, null, true);
+    
+    public ProcessInstance iniciarProcesso(Processo processo) throws DAOException {
+        return iniciarProcesso(processo, null, null, null, true);
     }
     
-    public void iniciarProcesso(Processo processo, String transitionName) throws DAOException {
-        iniciarProcesso(processo, null, null, transitionName, true);
+    public ProcessInstance iniciarProcesso(Processo processo, String transitionName) throws DAOException {
+        return iniciarProcesso(processo, null, null, transitionName, true);
     }
     
-    public void iniciarProcesso(Processo processo, Map<String, Object> variaveis) throws DAOException {
-        iniciarProcesso(processo, variaveis, null, null, true);
+    public ProcessInstance iniciarProcesso(Processo processo, Map<String, Object> variaveis) throws DAOException {
+        return iniciarProcesso(processo, variaveis, null, null, true);
+    }
+    public ProcessInstance iniciarProcesso(Processo processo, List<MetadadoProcesso> metadados) throws DAOException {
+        return iniciarProcesso(processo, null, metadados, null, true);
     }
     
-    public void iniciarProcesso(Processo processo, Map<String, Object> variaveis, boolean createDefaultFolders) throws DAOException {
-        iniciarProcesso(processo, variaveis, null, null, createDefaultFolders);
+    public ProcessInstance iniciarProcesso(Processo processo, Map<String, Object> variaveis, boolean createDefaultFolders) throws DAOException {
+        return iniciarProcesso(processo, variaveis, null, null, createDefaultFolders);
     }
     
-    public org.jbpm.graph.exe.ProcessInstance iniciarProcesso(Processo processo, Map<String, Object> variaveis, List<MetadadoProcesso> metadados, String transitionName, 
+    public ProcessInstance iniciarProcesso(Processo processo, Map<String, Object> variaveis, List<MetadadoProcesso> metadados, String transitionName, 
             boolean createDefaultFolders) throws DAOException {
-        processo.setDataInicio(new Date());
-        if (processo.getIdProcesso() == null) {
-            processoManager.persist(processo);
-        }
+        processo.setDataInicio(DateTime.now().toDate());
         createMetadadosProcesso(processo, metadados);
-        org.jbpm.graph.exe.ProcessInstance processInstance = criarProcessoJbpm(processo, processo.getNaturezaCategoriaFluxo().getFluxo().getFluxo());
+        variaveis = adicionarVariaveisDefault(processo, variaveis);
+        ProcessInstance processInstance = criarProcessInstance(processo, variaveis);
         processo.setIdJbpm(processInstance.getId());
-        processoManager.flush();
-        inicializarProcessoJbpm(processo, processInstance, variaveis, transitionName);
-        processo.setNumeroProcesso(String.valueOf(processo.getIdProcesso()));
-        if (processo.getProcessoPai() == null) {
-            processInstance.getContextInstance().setVariable(VariaveisJbpmProcessosGerais.NUMERO_PROCESSO, processo.getNumeroProcesso());
-        }
         naturezaManager.lockNatureza(processo.getNaturezaCategoriaFluxo().getNatureza());
-        processoManager.update(processo);
         if (createDefaultFolders) {
             pastaManager.createDefaultFolders(processo);
         }
+        getEntityManager().flush();
+        movimentarProcesso(processInstance, transitionName);
+        getJbpmContext().getSession().flush();
         return processInstance;
     }
 
-    private void createMetadadosProcesso(Processo processo, List<MetadadoProcesso> metadados) {
-        if (metadados == null) return;
-        for (MetadadoProcesso metadadoProcesso : metadados) {
-            metadadoProcesso.setProcesso(processo);
-            metadadoProcessoManager.persist(metadadoProcesso);
-        }
-    }
-
-    private org.jbpm.graph.exe.ProcessInstance criarProcessoJbpm(Processo processo, String fluxo) {
-    	BusinessProcess businessProcess = BusinessProcess.instance();
-        businessProcess.createProcess(fluxo, false);
-        org.jbpm.graph.exe.ProcessInstance processInstance = ProcessInstance.instance();
-        return processInstance;
-    }
-    
-    private void inicializarProcessoJbpm(Processo processo, org.jbpm.graph.exe.ProcessInstance processoJbpm, Map<String, Object> variaveis, String transitionName) {
-        iniciaVariaveisProcesso(processo, variaveis, processoJbpm);
-        if (StringUtil.isEmpty(transitionName)) {
-            processoJbpm.signal();
-        } else {
-            processoJbpm.signal(transitionName);
-        }
-        iniciaPrimeiraTarefa(processoJbpm);
-    }
-
-    private void iniciaVariaveisProcesso(Processo processo, Map<String, Object> variaveis, org.jbpm.graph.exe.ProcessInstance processInstance) {
-        ContextInstance contextInstance = processInstance.getContextInstance();
-        contextInstance.setVariable(VariaveisJbpmProcessosGerais.PROCESSO, processo.getIdProcesso());
-        if (variaveis != null) {
-            for (String variavel : variaveis.keySet()) {
-                contextInstance.setVariable(variavel, variaveis.get(variavel));
+    protected void createMetadadosProcesso(Processo processo, List<MetadadoProcesso> metadados) {
+        if (metadados != null) {
+            for (MetadadoProcesso metadadoProcesso : metadados) {
+                metadadoProcesso.setProcesso(processo);
+                metadadoProcessoManager.persist(metadadoProcesso);
+                processo.getMetadadoProcessoList().add(metadadoProcesso);
             }
         }
-        if (processo.getProcessoPai() == null) {
-        	contextInstance.setVariable(VariaveisJbpmProcessosGerais.NATUREZA, processo.getNaturezaCategoriaFluxo().getNatureza().getNatureza());
-        	contextInstance.setVariable(VariaveisJbpmProcessosGerais.CATEGORIA, processo.getNaturezaCategoriaFluxo().getCategoria().getCategoria());
-        }
-    	contextInstance.setVariable(VariaveisJbpmProcessosGerais.DATA_INICIO_PROCESSO, processo.getDataInicio());
-        ManagedJbpmContext.instance().getSession().flush();
+    }
+
+    protected ProcessInstance criarProcessInstance(Processo processo, Map<String, Object> variables) {
+        String processDefinitionName = processo.getNaturezaCategoriaFluxo().getFluxo().getFluxo();
+        ProcessInstance processInstance = getJbpmContext().newProcessInstanceForUpdate(processDefinitionName, variables);
+        return processInstance;
     }
     
-    private void iniciaPrimeiraTarefa(org.jbpm.graph.exe.ProcessInstance processInstance) {
-        Collection<org.jbpm.taskmgmt.exe.TaskInstance> taskInstances = processInstance.getTaskMgmtInstance().getTaskInstances();
-        org.jbpm.taskmgmt.exe.TaskInstance taskInstance = null;
-        BusinessProcess businessProcess = BusinessProcess.instance();
-        if (taskInstances != null && !taskInstances.isEmpty()) {
-            taskInstance = taskInstances.iterator().next();
-            long taskInstanceId = taskInstance.getId();
-            businessProcess.setTaskId(taskInstanceId);
-            businessProcess.startTask();
+    protected Map<String, Object> adicionarVariaveisDefault(Processo processo, Map<String, Object> variaveis) {
+        if (variaveis == null) variaveis = new HashMap<>();
+        variaveis.put(VariaveisJbpmProcessosGerais.PROCESSO, processo.getIdProcesso());
+        variaveis.put(VariaveisJbpmProcessosGerais.DATA_INICIO_PROCESSO, processo.getDataInicio());
+        if (processo.getProcessoPai() == null) {
+            variaveis.put(VariaveisJbpmProcessosGerais.NATUREZA, processo.getNaturezaCategoriaFluxo().getNatureza().getNatureza());
+            variaveis.put(VariaveisJbpmProcessosGerais.CATEGORIA, processo.getNaturezaCategoriaFluxo().getCategoria().getCategoria());
+            variaveis.put(VariaveisJbpmProcessosGerais.NUMERO_PROCESSO, processo.getNumeroProcesso());
         }
+        return variaveis;
+    }
+    
+    protected void movimentarProcesso(ProcessInstance processInstance, String transitionName) {
+        if (StringUtil.isEmpty(transitionName)) {
+            processInstance.signal();
+        } else {
+            processInstance.signal(transitionName);
+        }
+    }
+    
+    protected EntityManager getEntityManager() {
+        return EntityManagerProducer.getEntityManager();
+    }
+    
+    protected JbpmContext getJbpmContext() {
+        return JbpmContextProducer.getJbpmContext();
     }
 }

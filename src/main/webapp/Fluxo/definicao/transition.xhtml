@@ -29,6 +29,7 @@
             value="#{values}"
             id="transition#{type}Table"
             styleClass="#{nodeFitter.currentNode.nodeType eq 'Decision' and type eq 'to' ? 'dtable rf-dt-crud' : 'tabelaVariaveis'}"
+            rowKeyVar="rowNumber"
             var="transicaoHandler">
             <rich:column
                 styleClass="dr-table-subheader rich-table-subheader"
@@ -142,9 +143,20 @@
                 </h:form>
             </rich:column>
             <rich:column id="conditionColumn" rendered="#{type eq 'to' and nodeFitter.currentNode.nodeType eq 'Decision'}" style="width: 40%">
-                <f:facet name="header">#{infoxMessages['process.transition.condition']}</f:facet>
+                <f:facet name="header">
+                    #{infoxMessages['process.transition.condition']}
+                    <ui:include src="helpers/expressoesAjuda.xhtml">
+                        <ui:param name="id" value="expressoesAjudaGatewayPopupPanel#{transicaoHandler.name}" />
+                        <ui:param name="methods" value="#{bpmExpressionService.externalGatewayMethods}" />
+                        <ui:param name="selectable" value="false" />
+                    </ui:include>
+                    <div style="display: inline-block">
+                        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}"
+                            onclick="#{rich:component('expressoesAjudaGatewayPopupPanel'.concat(transicaoHandler.name))}.show();" />
+                    </div>
+                </f:facet>
                 <h:form>
-	                <h:inputTextarea value="#{transicaoHandler.transition.condition}" maxlength="1000" style="width: 100%">
+	                <h:inputTextarea value="#{transicaoHandler.transition.condition}" maxlength="1000" style="width: 100%" styleClass="textAreaexpressoesAjudaGatewayPopupPanel#{transicaoHandler.name}">
 	                    <a:ajax event="change" execute="@this" render="transition#{type}Table" limitRender="true" />
 	                </h:inputTextarea>
                 </h:form>

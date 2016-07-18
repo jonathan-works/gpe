@@ -1,0 +1,124 @@
+#normalize-html(){
+  .standard{
+    option[disabled="disabled"] {
+      text-decoration: line-through;
+    }
+    input, select, textarea, button, keygen, isindex, legend, a{
+        #normalize-rich-components > .fonts;
+    }
+  }
+  .standard-colors{
+    option {
+      background-color:@bgColorSelect;
+    }
+  }
+}
+#normalize-rich-components(){
+    .fonts {
+      font-size:1em;
+      font-family:@default-font-family;
+    }
+    .background{
+      background-repeat: inherit;
+      background-position: inherit;
+      background-color: #fff;
+      background-image: inherit;
+    }
+}
+
+#normalize-infox-components(){
+  .default {
+    .ui-widget-content,
+    .ui-widget-header,
+    .ui-state-default,
+    .ui-widget-content .ui-state-default,
+    .ui-widget-header .ui-state-default {
+        border-color: @standard-border-color;
+    }
+  }
+}
+
+#normalize-prime-components() {
+  .picklist {
+    & &-list {
+        width: initial;
+    }
+  }
+
+  .inputfield{
+    .prefixed-atrib(box-shadow, initial);
+    .ui-widget-content &, .ui-widget-header & {
+        .prefixed-atrib(box-shadow, initial);
+    }
+    &.ui-state-focus,
+    .ui-widget-content &.ui-state-focus,
+    .ui-widget-header &.ui-state-focus {
+      .prefixed-atrib(box-shadow, initial);
+      outline: initial;
+    }
+  }
+  .inputfield-colors{
+    &.ui-state-focus,
+    .ui-widget-content &.ui-state-focus,
+    .ui-widget-header &.ui-state-focus {
+      border-color: @standard-border-color;
+    }
+  }
+}
+
+p {
+    img {
+      max-height:100%;
+      max-width:100%;
+    }
+}
+body {
+    #normalize-html > .standard;
+    #normalize-prime-components > .picklist;
+    .ui-widget, .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button{
+      #normalize-rich-components > .fonts;
+    }
+
+    button, input[type="reset"], input[type="submit"], input[type="button"], textarea, input[type="text"], input[type="password"], select{
+        #normalize-rich-components > .fonts;
+        #normalize-rich-components > .background;
+    }
+    textarea, input[type="text"], input[type="password"], select{
+        #normalize-rich-components > .fonts;
+        #normalize-rich-components > .background;
+        border-radius:3px;
+    }
+    button:hover, input[type="reset"]:hover, input[type="submit"]:hover, input[type="button"]:hover, button[disabled], input[type="reset"][disabled], input[type="submit"][disabled], input[type="button"][disabled] {
+        #normalize-rich-components > .background;
+    }
+    .rf-au{
+      #normalize-rich-components > .fonts;
+      #normalize-rich-components > .background;
+    }
+    .rf-cp-hdr {
+      #normalize-rich-components > .fonts;
+      #normalize-rich-components > .background;
+      padding:2em/11;
+      border-width:1em/11;
+    }
+    .rf-cp-ico {
+      width:16em/11;
+      height:16em/11;
+    }
+    .rf-cp-b{
+      #normalize-rich-components > .fonts;
+      padding:10em/11;
+    }
+    .rf-dt-c,.rf-dt-nd{
+      #normalize-rich-components > .fonts;
+      padding:4em/11;
+    }
+    .rf-dt-hdr-c,.rf-dt-shdr-c,.rf-dt-flt-c,.rf-dt-sftr-c,.rf-dt-ftr-c{
+      #normalize-rich-components > .fonts;
+      #normalize-rich-components > .background;
+      padding:4em/11;
+    }
+}
+html {
+  font-size:0.8125rem;
+}

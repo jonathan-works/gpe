@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich" xmlns:p="http://primefaces.org/ui" xmlns:i="http://java.sun.com/jsf/composite/infox"
+    xmlns:s="http://jboss.org/schema/seam/taglib">
+    
+    <ui:param name="varId" value="#{formField.id}"/>
+  	<ui:param name="readonly" value="#{formField.properties.readonly}" />
+  	
+  	<style type="text/css">
+  		.selectManyMenu {
+  			width: 300px;
+  		}
+  	</style>
+  	
+  	<i:selectManyMenu id="#{id}" value="#{value}" required="#{required}"
+        disabled="#{disabled or readonly}" readonly="#{readonly}"
+        items="#{props.items}" label="#{label}" styleClass="selectManyMenu"/>
+    
+</ui:composition>

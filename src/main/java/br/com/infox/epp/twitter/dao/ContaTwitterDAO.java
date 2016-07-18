@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -21,8 +23,9 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.twitter.entity.ContaTwitter;
 
-@Name(ContaTwitterDAO.NAME)
+@Stateless
 @AutoCreate
+@Name(ContaTwitterDAO.NAME)
 public class ContaTwitterDAO extends DAO<ContaTwitter> {
 
     private static final long serialVersionUID = 1L;

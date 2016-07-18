@@ -10,6 +10,7 @@
   xmlns:wi="http://www.itx.com.br/jsf"
   xmlns:c="http://java.sun.com/jsp/jstl/core"
   xmlns:infox="http://www.infox.com.br/jsf"
+  xmlns:p="http://primefaces.org/ui"
   template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml" >
   
   <ui:define name="title">#{infoxMessages['consultaProcesso.titlePage']}</ui:define>
@@ -38,16 +39,9 @@
           id="usuarioCadastro"
           label="#{infoxMessages['processo.usuarioCadastroProcesso']}"
           value="#{consultaController.processo.usuarioCadastro}" />
-       <ui:repeat var="metadado" value="#{consultaController.detalhesMetadados}" >
-     		<wi:outputText id="metadado#{metadado.metadadoType}"
-	           	label="#{metadadoMessages[metadado.metadadoType]}"
-	           	value="#{metadado}" rendered="#{metadado.classType.canonicalName ne 'java.util.Date'}"/>
-	        <wi:outputText id="metadado#{metadado.metadadoType}Date"
-	           	label="#{metadadoMessages[metadado.metadadoType]}"
-	           	value="#{metadado.value}" rendered="#{metadado.classType.canonicalName eq 'java.util.Date'}">
-				<f:convertDateTime pattern="dd/MM/yyyy kk:mm" />
-			</wi:outputText>
-       </ui:repeat>
+       	<ui:repeat var="variavel" value="#{consultaController.variaveisDetalhe}" >
+        	<wi:outputText id="variavel#{variavel.nome}" label="#{variavel.label}" value="#{variavel.valor}"/>
+       	</ui:repeat>
     </h:panelGrid>
     </rich:collapsiblePanel>
     <infox:tabPanel
@@ -126,10 +120,13 @@
       </infox:tab>
       <ui:include src="/Processo/Consulta/abasCustomizadasDoDetalheDoProcesso.xhtml"/>
       <div>
+      	<h:form>
+      		<p:remoteCommand name="redirectToView" action="#{consultaController.redirectToView}" process="@this" />
               <wi:commandButton
               	id="btnVoltar" rendered="#{consultaController.showBackButton}"
-                onclick="infox.redirect({url:window.document.referrer})"
+                onclick="infox.showLoading(); redirectToView([{name: 'url', value: window.document.referrer}]); return false;"
                 value="#{infoxMessages['page.return']}" />
+         </h:form>
       </div>
     </infox:tabPanel>
 

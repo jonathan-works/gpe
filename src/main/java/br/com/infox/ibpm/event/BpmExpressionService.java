@@ -6,5 +6,7 @@ public abstract class BpmExpressionService {
     public final static String NAME = "bpmExpressionService";
 
     public abstract List<ExternalMethod> getExternalMethods();
+    public abstract List<ExternalMethod> getExternalRaiaDinamicaMethods();
+    public abstract List<ExternalMethod> getExternalGatewayMethods();
 
 }

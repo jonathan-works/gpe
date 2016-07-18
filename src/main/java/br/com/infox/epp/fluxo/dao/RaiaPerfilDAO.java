@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -15,8 +17,9 @@ import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.RaiaPerfil;
 import br.com.infox.epp.fluxo.query.RaiaPerfilQuery;
 
-@Name(RaiaPerfilDAO.NAME)
+@Stateless
 @AutoCreate
+@Name(RaiaPerfilDAO.NAME)
 public class RaiaPerfilDAO extends DAO<RaiaPerfil> {
 
     private static final long serialVersionUID = 1L;

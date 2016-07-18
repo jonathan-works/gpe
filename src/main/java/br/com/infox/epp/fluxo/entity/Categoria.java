@@ -39,78 +39,81 @@ import br.com.infox.hibernate.util.HibernateUtil;
 @NamedQueries(value = { @NamedQuery(name = LIST_PROCESSO_EPP_BY_CATEGORIA, query = LIST_PROCESSO_EPA_BY_CATEGORIA_QUERY), 
 @NamedQuery(name = LIST_CATEGORIAS_BY_NATUREZA, query = LIST_CATEGORIAS_BY_NATUREZA_QUERY) })
 public class Categoria implements Serializable {
+    
     private static final long serialVersionUID = 1L;
 
+    @Id
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_CATEGORIA)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
+    @Column(name = ID_CATEGORIA, unique = true, nullable = false)
     private Integer idCategoria;
+
+    @NotNull
+    @Size(min = LengthConstants.FLAG, max = LengthConstants.DESCRICAO_PEQUENA)
+    @Column(name = DESCRICAO_CATEGORIA, length = LengthConstants.DESCRICAO_PEQUENA, nullable = false)
     private String categoria;
+    
+    @NotNull
+    @Column(name = ATIVO, nullable = false)
     private Boolean ativo;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = CATEGORIA_ATTRIBUTE)
     private List<NaturezaCategoriaFluxo> naturezaCategoriaFluxoList = new ArrayList<>(0);
+    
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = CATEGORIA_ATTRIBUTE, cascade = CascadeType.ALL)
     private List<CategoriaItem> categoriaItemList = new ArrayList<>();
 
     public Categoria() {
     }
 
-    public Categoria(final String categoria, final Boolean ativo) {
+    public Categoria(String categoria, Boolean ativo) {
         this.categoria = categoria;
         this.ativo = ativo;
     }
-
-    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_CATEGORIA)
-    @Id
-    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
-    @Column(name = ID_CATEGORIA, unique = true, nullable = false)
+    
     public Integer getIdCategoria() {
         return idCategoria;
     }
 
-    public void setIdCategoria(final Integer idCategoria) {
+    public void setIdCategoria(Integer idCategoria) {
         this.idCategoria = idCategoria;
     }
 
-    @Column(name = DESCRICAO_CATEGORIA, length = LengthConstants.DESCRICAO_PEQUENA, nullable = false)
-    @Size(min = LengthConstants.FLAG, max = LengthConstants.DESCRICAO_PEQUENA)
-    @NotNull
     public String getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(final String categoria) {
+    public void setCategoria(String categoria) {
         this.categoria = categoria;
     }
 
-    @Column(name = ATIVO, nullable = false)
-    @NotNull
     public Boolean getAtivo() {
         return ativo;
     }
 
-    public void setAtivo(final Boolean ativo) {
+    public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
     }
 
-    @Override
-    public String toString() {
-        return categoria;
-    }
-
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = CATEGORIA_ATTRIBUTE, cascade = CascadeType.ALL)
     public List<CategoriaItem> getCategoriaItemList() {
         return categoriaItemList;
     }
 
-    public void setCategoriaItemList(final List<CategoriaItem> categoriaItemList) {
+    public void setCategoriaItemList(List<CategoriaItem> categoriaItemList) {
         this.categoriaItemList = categoriaItemList;
     }
 
-    public void setNaturezaCategoriaFluxoList(
-            final List<NaturezaCategoriaFluxo> naturezaCategoriaFluxoList) {
+    public void setNaturezaCategoriaFluxoList(List<NaturezaCategoriaFluxo> naturezaCategoriaFluxoList) {
         this.naturezaCategoriaFluxoList = naturezaCategoriaFluxoList;
     }
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = CATEGORIA_ATTRIBUTE)
     public List<NaturezaCategoriaFluxo> getNaturezaCategoriaFluxoList() {
         return naturezaCategoriaFluxoList;
+    }
+    
+    @Override
+    public String toString() {
+        return categoria;
     }
 
     @Override
@@ -118,12 +121,12 @@ public class Categoria implements Serializable {
         final int prime = 31;
         int result = 1;
         result = (prime * result)
-                + ((idCategoria == null) ? 0 : idCategoria.hashCode());
+                + ((getIdCategoria() == null) ? 0 : getIdCategoria().hashCode());
         return result;
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
@@ -134,7 +137,7 @@ public class Categoria implements Serializable {
             return false;
         }
         final Categoria other = (Categoria) HibernateUtil.removeProxy(obj);
-        if (idCategoria != other.idCategoria) {
+        if (getIdCategoria() != other.getIdCategoria()) {
             return false;
         }
         return true;

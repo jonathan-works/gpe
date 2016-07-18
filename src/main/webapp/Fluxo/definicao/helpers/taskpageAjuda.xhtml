@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    xmlns:rich="http://richfaces.org/rich">
+
+    <script type="text/javascript">
+        function onshowTaskpageAjudaPopup() {
+            var value = $('.taskpageAjudaPopup');
+            var width = $(window).width() * 0.85;
+            var height = $(window).height() * 0.85;
+            var top = (($(window).height() - height) / 3);
+            var left = (($(window).width() - width) / 2);
+            value.css('width', width + 'px');
+            value.css('height', height + 'px');
+            value.css('top', top + 'px');
+            value.css('left', left + 'px');
+            $('.rf-pp-cnt-scrlr').css('width', '100%');
+            $('.rf-pp-cnt-scrlr').css('height', '100%');
+        }
+    </script>
+
+    <rich:popupPanel id="taskpageAjudaPopup"
+        modal="true" header="#{infoxMessages['process.taskpage.popupHeader']} - #{taskpage.name}" resizeable="true"
+        styleClass="taskpageAjudaPopup" onshow="onshowTaskpageAjudaPopup();">
+
+        <f:facet name="controls">
+            <h:graphicImage styleClass="mp-close"
+                value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
+                onclick="#{rich:component('taskpageAjudaPopup')}.hide();" />
+        </f:facet>
+
+        <rich:panel styleClass="content-block" style="margin: 1.5em 0 0">
+            <wi:outputText id="takspageName"
+                label="#{infoxMessages['process.taskpage.name']}"
+                value="#{infoxMessages[taskpage.name]}" />
+        </rich:panel>
+
+        <rich:panel rendered="#{not empty taskpage.description}" styleClass="content-block" style="margin: 1.5em 0 0">
+            <wi:outputText id="taskpageDescription"
+                label="#{infoxMessages['process.taskpage.description']}"
+                value="#{infoxMessages[taskpage.description]}" />
+        </rich:panel>
+        <rich:panel styleClass="content-block" style="margin: 1.5em 0 0">
+            <div class="property-field-edit">
+                <h:outputText styleClass="property-field-edit-name" value="#{infoxMessages['process.taskpage.parameters']}" />
+                <ui:repeat var="parameter" value="#{taskpage.parameters}">
+                    <rich:panel styleClass="content-block" style="margin: 1.5em 0 0">
+                        <wi:outputText id="paramterName"
+                            label="#{infoxMessages['process.taskpage.parameter.name']}"
+                            value="#{infoxMessages[parameter.name]}" />
+
+                        <wi:outputText id="paramterType"
+                            label="#{infoxMessages['process.taskpage.parameter.type']}"
+                            value="#{infoxMessages[parameter.type]}" />
+
+                        <h:panelGroup rendered="#{not empty parameter.description}">
+                            <wi:outputText id="parameterDescription"
+                                label="#{infoxMessages['process.taskpage.parameter.description']}"
+                                value="#{infoxMessages[parameter.description]}" />
+                        </h:panelGroup>
+                    </rich:panel>
+                </ui:repeat>
+            </div>
+        </rich:panel>
+    </rich:popupPanel>
+</ui:composition>

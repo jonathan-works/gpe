@@ -9,6 +9,8 @@ import static br.com.infox.epp.certificado.query.CertificateSignatureGroupQuery.
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -19,6 +21,7 @@ import br.com.infox.epp.certificado.entity.CertificateSignatureGroup;
  * @author erikliberal
  *
  */
+@Stateless
 @AutoCreate
 @Name(CertificateSignatureGroupDAO.NAME)
 public class CertificateSignatureGroupDAO extends DAO<CertificateSignatureGroup>{

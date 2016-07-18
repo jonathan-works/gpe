@@ -13,7 +13,6 @@ import javax.inject.Inject;
 import org.hibernate.LockMode;
 import org.hibernate.LockOptions;
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.bpm.Actor;
@@ -26,6 +25,7 @@ import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.dao.GenericDAO;
+import br.com.infox.core.exception.EppConfigurationException;
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
@@ -36,7 +36,6 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
-import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
@@ -46,30 +45,31 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
 import br.com.infox.epp.processo.dao.ProcessoDAO;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
-import br.com.infox.epp.processo.documento.manager.DocumentoManager;
+import br.com.infox.epp.processo.documento.manager.PastaManager;
+import br.com.infox.epp.processo.documento.numeration.NumeracaoDocumentoSequencialManager;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
+import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
+import br.com.infox.epp.processo.partes.manager.ParticipanteProcessoManager;
 import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais;
+import br.com.infox.epp.processo.service.VariavelInicioProcessoService;
 import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.system.Parametros;
-import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.ibpm.sinal.SignalParam;
 import br.com.infox.ibpm.sinal.SignalParam.Type;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
 import br.com.infox.seam.exception.BusinessRollbackException;
-import br.com.infox.seam.util.ComponentUtil;
 import br.com.infox.util.time.DateRange;
 
 @AutoCreate
 @Stateless
-@ContextDependency
 @Name(ProcessoManager.NAME)
 public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 
@@ -77,28 +77,32 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
     public static final String NAME = "processoManager";
     private static final int PORCENTAGEM = 100;
 
-    @In
-    private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
-    @In
-    private DocumentoManager documentoManager;
-    @In
+    @Inject
     private GenericDAO genericDAO;
-    @In
+    @Inject
     private DocumentoBinManager documentoBinManager;
-    @In
-    private MetadadoProcessoManager metadadoProcessoManager;
-    @In
-    private ParametroManager parametroManager;
-    @In
+    @Inject
     private UsuarioLoginManager usuarioLoginManager;
-    @In
+    @Inject
     private ProcessoTarefaManager processoTarefaManager;
     @Inject
     private NaturezaCategoriaFluxoManager naturezaCategoriaFluxoManager;
     @Inject
     private FluxoManager fluxoManager;
     @Inject
-    private LocalizacaoManager localizacaoManager; 
+    private LocalizacaoManager localizacaoManager;
+    @Inject
+    private ParticipanteProcessoManager participanteProcessoManager;
+    @Inject
+    private MetadadoProcessoManager metadadoProcessoManager;
+    @Inject
+    private IniciarProcessoService iniciarProcessoService;
+    @Inject
+    private PastaManager pastaManager;
+    @Inject
+    private VariavelInicioProcessoService variavelInicioProcessoService;
+    @Inject
+    protected NumeracaoDocumentoSequencialManager numeracaoDocumentoSequencialManager;
     
     public Processo buscarPrimeiroProcesso(Processo p, TipoProcesso tipo) {
         for (Processo filho : p.getFilhos()) {
@@ -329,41 +333,30 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
 		return getDao().listProcessosComunicacaoAguardandoCumprimento();
 	}
 	
-	public Processo getProcessoEpaByIdJbpm(Long idJbpm) {
-		return getDao().getProcessoEpaByIdJbpm(idJbpm);
+	public Processo getProcessoByIdJbpm(Long idJbpm) {
+		return getDao().getProcessoByIdJbpm(idJbpm);
 	}
 	
 	public void movimentarProcessoJBPM(Long taskInstanceId, String transicao) throws DAOException {
-		Long processIdOriginal = BusinessProcess.instance().getProcessId();
-		Long taskIdOriginal = BusinessProcess.instance().getTaskId();
-		BusinessProcess.instance().setProcessId(null);
-		BusinessProcess.instance().setTaskId(null);
 		TaskInstance taskInstanceForUpdate = ManagedJbpmContext.instance().getTaskInstanceForUpdate(taskInstanceId);
 		taskInstanceForUpdate.end(transicao);
-		BusinessProcess.instance().setProcessId(processIdOriginal);
-		BusinessProcess.instance().setTaskId(taskIdOriginal);
 	}
 	
 	public void cancelJbpmSubprocess(Long subProcessInstanceId, String transicao) throws DAOException {
-        Long processIdOriginal = BusinessProcess.instance().getProcessId();
-        Long taskIdOriginal = BusinessProcess.instance().getTaskId();
-        BusinessProcess.instance().setProcessId(null);
-        BusinessProcess.instance().setTaskId(null);
         ProcessInstance processInstanceForUpdate = ManagedJbpmContext.instance().getProcessInstanceForUpdate(subProcessInstanceId);
         processInstanceForUpdate.end(transicao);
         while (processInstanceForUpdate != null) {
             processInstanceForUpdate.getTaskMgmtInstance().cancelAll();
             processInstanceForUpdate = processInstanceForUpdate.getRootToken().getSubProcessInstance();
         }
-        BusinessProcess.instance().setProcessId(processIdOriginal);
-        BusinessProcess.instance().setTaskId(taskIdOriginal);
     }
 	
+	public ProcessInstance findProcessByTaskInstance(Long idProcessInstance){
+		TaskInstance taskInstance = ManagedJbpmContext.instance().getTaskInstance(idProcessInstance);
+		return taskInstance.getProcessInstance();
+	}
+	
 	public ProcessInstance startJbpmProcess(String fluxoName, String transitionName, List<SignalParam> params) throws DAOException {
-        Long processIdOriginal = BusinessProcess.instance().getProcessId();
-        Long taskIdOriginal = BusinessProcess.instance().getTaskId();
-        BusinessProcess.instance().setProcessId(null);
-        BusinessProcess.instance().setTaskId(null);
         Fluxo fluxo = fluxoManager.getFluxoByDescricao(fluxoName);
         List<NaturezaCategoriaFluxo> naturezaCategoriaFluxo = naturezaCategoriaFluxoManager.getActiveNaturezaCategoriaFluxoListByFluxo(fluxo);
         Processo processo = new Processo();
@@ -374,6 +367,9 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
         }
         processo.setLocalizacao(localizacao);
         processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
+        if(naturezaCategoriaFluxo == null || naturezaCategoriaFluxo.isEmpty())
+        	throw new EppConfigurationException("O fluxo "+ fluxoName + " não possui natureza, categoria, fluxo cadastrados.");
+        
         processo.setNaturezaCategoriaFluxo(naturezaCategoriaFluxo.get(0));
         UsuarioLogin usuarioLogin = Authenticator.getUsuarioLogado();
         if (usuarioLogin == null) {
@@ -390,12 +386,30 @@ public class ProcessoManager extends Manager<ProcessoDAO, Processo> {
                 metadados.add(provider.gerarMetadado(signalParam.getName(), signalParam.getParamValue()));
             }
         }
-        ProcessInstance processInstance = ComponentUtil.<IniciarProcessoService>getComponent(IniciarProcessoService.NAME).iniciarProcesso(processo, variaveis, metadados, transitionName, true);
-        BusinessProcess.instance().setProcessId(processIdOriginal);
-        BusinessProcess.instance().setTaskId(taskIdOriginal);
-        
+        persist(processo);
+        ProcessInstance processInstance = iniciarProcessoService.iniciarProcesso(processo, variaveis, metadados, transitionName, true);
         return processInstance;
     }
+	
+	public void gravarProcessoMetadadoParticipantePasta(Processo processo, List<MetadadoProcesso> metadados, List<ParticipanteProcesso> participantes) {
+	    persist(processo);
+	    for (MetadadoProcesso metadadoProcesso : metadados) {
+	        metadadoProcesso.setProcesso(processo);
+	        metadadoProcessoManager.persist(metadadoProcesso);
+	    }
+        participanteProcessoManager.persistParticipantePessoaMeioContato(participantes);
+        pastaManager.createDefaultFolders(processo);
+	}
+	
+	public void removerProcessoNaoIniciado(Processo processo) {
+	    variavelInicioProcessoService.removeAllWithContent(processo);
+	    numeracaoDocumentoSequencialManager.removeByProcesso(processo);
+	    for (Pasta pasta : processo.getPastaList()) {
+	        pastaManager.deleteComRestricoes(pasta);
+	    }
+	    processo.getPastaList().clear();
+	    remove(processo);
+	}
 	
 	@Observer({Event.EVENTTYPE_TASK_END})
 	public void atualizarProcessoTarefa(ExecutionContext executionContext) throws DAOException {

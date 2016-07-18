@@ -10,27 +10,27 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.faces.FacesException;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.servlet.ServletException;
 
 import org.joda.time.DateTime;
 
 import com.google.gson.GsonBuilder;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.core.server.ApplicationServerService;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
-import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.log.LogErro;
 import br.com.infox.epp.log.StatusLog;
 import br.com.infox.epp.log.rest.LogRest;
@@ -43,8 +43,9 @@ import br.com.infox.ws.factory.RestClientFactory;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-public class LogErrorService {
+public class LogErrorService extends PersistenceController {
     
+    public final static String ERROR_MESSAGE_FORMAT = "Usuario: %s , Localizacao: %s , Perfil: %s \n";
     public static final String LOG_ERRO_FILE_NAME = "logErro.log";
     private static final String LOG_ERRO_TEMP_FILE_NAME = "logErroTmp.log";
     
@@ -54,27 +55,23 @@ public class LogErrorService {
     private LogErroSearch logErroSearch;
     @Inject
     private ParametroDAO parametroDAO;
-    @Inject
-    private UsuarioLoginManager usuarioLoginManager;
     
-    
-    @Inject
-    private Logger logger;
-    
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void saveLog(LogErro logErro) {
+    private void saveLog(LogErro logErro) {
         try {
             getEntityManager().persist(logErro);
             getEntityManager().flush();
         } catch (Exception e) {
             logErro.setId(null);
-            File dir = new File(applicationServerService.getLogDir());
-            File file = new File(dir, LOG_ERRO_FILE_NAME);
-            try ( FileWriter fileWriter = new FileWriter(file, true)){
-                String data = new GsonBuilder().create().toJson(logErro) + "\n";
-                fileWriter.write(data, 0, data.getBytes().length);
-                fileWriter.flush();
-            } catch (IOException e1) { // do nothing
+            String logPath = applicationServerService.getLogDir();
+            if (!StringUtil.isEmpty(logPath)) {
+                File dir = new File(applicationServerService.getLogDir());
+                File file = new File(dir, LOG_ERRO_FILE_NAME);
+                try ( FileWriter fileWriter = new FileWriter(file, true)){
+                    String data = new GsonBuilder().create().toJson(logErro) + "\n";
+                    fileWriter.write(data, 0, data.getBytes().length);
+                    fileWriter.flush();
+                } catch (Exception e1) { // do nothing
+                }
             }
             throw e;
         }
@@ -175,74 +172,47 @@ public class LogErrorService {
         }
     }
     
-    private LogErro createLogErro(String codigoErro, Exception handledException, Exception caughtException, StatusLog statusLog) {
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public LogErro log(Throwable exception) {
+        Throwable handledException = getHandledException(exception);
+        String codigo = UUID.randomUUID().toString().replace("-", "");
+        boolean enviarLog = "true".equals(Parametros.IS_ATIVO_ENVIO_LOG_AUTOMATICO.getValue());
         LogErro logErro = new LogErro();
-        logErro.setCodigo(codigoErro);
+        logErro.setCodigo(codigo);
         logErro.setData(DateTime.now().toDate());
-        logErro.setInstancia(applicationServerService.getInstanceName());
-        String stackTrace = getStacktrace(handledException);
-        if (caughtException != null) {
-            stackTrace += getStacktrace(caughtException);
+        logErro.setInstancia(applicationServerService.getInstanceName() == null ? Thread.currentThread().getName() : applicationServerService.getInstanceName());
+        logErro.setStatus(enviarLog ? StatusLog.PENDENTE : StatusLog.NENVIADO);
+        logErro.setStacktrace(getStacktrace(handledException));
+        saveLog(logErro);
+        if (enviarLog) {
+            try {
+                send(logErro);
+            } catch (Exception e) {}
         }
-        logErro.setStacktrace(stackTrace);
-        logErro.setStatus(statusLog);
         return logErro;
     }
-
-    private String getStacktrace(Exception handledException) {
+    
+    private String getStacktrace(Throwable exception) {
         StringWriter sw = new StringWriter();
         PrintWriter printWriter = new PrintWriter(sw);
-        
-        printWriter.println(getUserAttributes());
-        handledException.printStackTrace(printWriter);
-        
-        return sw.toString();
+        exception.printStackTrace(printWriter);
+        return getUserAttributes() + sw.toString();
     }
     
     private String getUserAttributes() {
-    	Localizacao localizacao = Authenticator.getLocalizacaoAtual();
+        Localizacao localizacao = Authenticator.getLocalizacaoAtual();
         UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
-        
-        if(usuarioPerfil == null && localizacao == null) {
-        	UsuarioLogin usuarioSistema = usuarioLoginManager.getUsuarioSistema();
-        	return String.format("Usuario: %s", usuarioSistema.getLogin());
-        }
-        
-        return String.format("Usuario: %s , Localizacao: %s , Perfil: %s", usuarioPerfil.getUsuarioLogin().getLogin(), localizacao.getCodigo(), usuarioPerfil.getPerfilTemplate().getCodigo());
+        String codigoLocalizacao = localizacao == null ? "" : localizacao.getCodigo();
+        String login = usuarioPerfil == null ? Thread.currentThread().getName() : usuarioPerfil.getUsuarioLogin().getLogin();
+        String perfil = usuarioPerfil == null ? "" : usuarioPerfil.getPerfilTemplate().getCodigo();
+        return String.format(ERROR_MESSAGE_FORMAT, login, codigoLocalizacao, perfil);
     }
     
-    /**
-     * Gera um {@link LogErro}, persiste no banco e envia ao serviço, caso esteja habilitado  
-     */
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public LogErro log(Exception exception) {
-    	return log(exception, null);    	
-    }
-    
-    /**
-     * Gera um {@link LogErro}, persiste no banco e envia ao serviço, caso esteja habilitado  
-     */
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public LogErro log(Exception handledException, Exception caughtException) {
-        String codigoErro = UUID.randomUUID().toString().replace("-", "");
-        logger.log(Level.SEVERE, codigoErro);
-        if (handledException == null) {
-        	return log(new IllegalArgumentException("Exceção nula ao tentar gerar LogErro"));
+    private Throwable getHandledException(Throwable throwable) {
+        if ((throwable instanceof EJBException) || (throwable instanceof FacesException) || (throwable instanceof ServletException)) {
+            return getHandledException(throwable.getCause());
+        } else {
+            return throwable;
         }
-        Parametro parametro = parametroDAO.getParametroByNomeVariavel(Parametros.IS_ATIVO_ENVIO_LOG_AUTOMATICO.getLabel());
-        boolean envioLogAutomatico = "true".equals(parametro.getValorVariavel());  
-
-        LogErro logErro = createLogErro(codigoErro, handledException, caughtException, envioLogAutomatico ? StatusLog.PENDENTE : StatusLog.NENVIADO);
-        try
-        {
-            saveLog(logErro);
-            if(envioLogAutomatico) {
-                send(logErro);        	
-            }        	
-        }
-        catch(Exception e) {
-        	logger.log(Level.SEVERE, "Erro ao gravar LogErro", e);
-        }
-        return logErro;
     }
 }

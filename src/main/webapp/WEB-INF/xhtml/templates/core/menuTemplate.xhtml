@@ -11,13 +11,10 @@
     <ui:define name="baseBody">
         <h:outputScript library="js" name="jqueryExt.js" />
         <wi:menu id="menu" menuHandler="#{menuNavigation}">
-            <ui:define name="custom-content">
-                <li  class="ifx-menu-itm-plain">
-                    <ui:include src="/WEB-INF/xhtml/templates/painelUsuario.xhtml" />
-                </li>
-            </ui:define>
             <s:div styleClass="pageBody" id="pageBody">
-                <ui:insert name="body" />
+                <div>
+                    <ui:insert name="body" />
+                </div>
                 <wi:messages formId="pageBody" rendered="#{empty showMsg ? true : showMsg}" globalOnly="true" />
             </s:div>
         </wi:menu>

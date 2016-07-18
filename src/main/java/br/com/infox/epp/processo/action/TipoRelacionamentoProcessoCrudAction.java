@@ -6,7 +6,7 @@ import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.epp.processo.entity.TipoRelacionamentoProcesso;
-import br.com.infox.epp.processo.manager.TipoRelacionamentoProcessoManager;
+import br.com.infox.epp.relacionamentoprocessos.TipoRelacionamentoProcessoManager;
 
 @Name(TipoRelacionamentoProcessoCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)

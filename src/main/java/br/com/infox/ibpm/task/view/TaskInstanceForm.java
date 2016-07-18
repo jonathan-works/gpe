@@ -65,7 +65,6 @@ public class TaskInstanceForm implements Serializable {
     private TaskInstance taskInstance;
     
     @Unwrap
-    @SuppressWarnings("unchecked")
     public Form getTaskForm() {
         getTaskInstance();
         if (form != null || taskInstance == null) {
@@ -131,6 +130,7 @@ public class TaskInstanceForm implements Serializable {
                     case FRAME:
                         setPageProperties(name, ff, "xhtml", "urlFrame");
                         break;
+                    case ENUMERATION_MULTIPLE:
                     case ENUMERATION: {
                         DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component
                                 .getInstance(DominioVariavelTarefaManager.NAME);
@@ -139,7 +139,7 @@ public class TaskInstanceForm implements Serializable {
                         List<SelectItem> selectItens = new ArrayList<>();
                         if (dominio.isDominioSqlQuery()) {
                             ListaDadosSqlDAO listaDadosSqlDAO = ComponentUtil.getComponent(ListaDadosSqlDAO.NAME);
-                            selectItens.addAll(listaDadosSqlDAO.getListSelectItem(dominio.getDominio()));
+                            selectItens.addAll(listaDadosSqlDAO.getListSelectItem(dominio.getDominio(), taskInstance));
                         } else {
                             String[] itens = dominio.getDominio().split(";");
                             for (String item : itens) {

@@ -7,14 +7,17 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.context.FacesContext;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import org.jboss.seam.Component;
 import org.jboss.seam.contexts.Contexts;
+import org.jboss.seam.core.Expressions;
 import org.jboss.seam.security.Identity;
 import org.richfaces.event.DropEvent;
 
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.system.PropertiesLoader;
 import br.com.infox.log.LogProvider;
@@ -99,7 +102,7 @@ public class Menu implements Serializable {
             return;
         }
 
-        RecursoCreator roleCreator = new RecursoCreator();
+        RecursoCreator roleCreator = new RecursoCreatorImpl();
         PathResolver pathResolver = (PathResolver) Component.getInstance(PathResolver.NAME);
         Files.walkFileTree(new File(pathResolver.getContextRealPath()).toPath(), roleCreator);
     }
@@ -111,7 +114,9 @@ public class Menu implements Serializable {
         for (int i = 0; i < groups.length; i++) {
             String label = groups[i];
             if (!label.startsWith("#{infoxMessages['")) {
-                label = "#{infoxMessages['" + label + "']}";
+                label = InfoxMessages.getInstance().get(label);
+            } else {
+                label = Expressions.instance().createValueExpression(label, String.class).getValue();
             }
             MenuItem item = new MenuItem(label);
             if (i == 0) {
@@ -129,11 +134,11 @@ public class Menu implements Serializable {
                 parent = parent.add(item);
             } else {
                 item.setUrl(url);
-                parent.getChildren().add(item);
+                parent.getItems().add(item);
             }
         }
     }
-
+    
     private String getFormatedKey(String key) {
         if (key.startsWith("/")) {
             return key.substring(1);

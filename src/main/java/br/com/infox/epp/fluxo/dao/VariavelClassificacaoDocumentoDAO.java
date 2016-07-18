@@ -23,9 +23,9 @@ import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.fluxo.entity.VariavelClassificacaoDocumento;
 import br.com.infox.epp.fluxo.query.VariavelClassificacaoDocumentoQuery;
 
-@Name(VariavelClassificacaoDocumentoDAO.NAME)
-@AutoCreate
 @Stateless
+@AutoCreate
+@Name(VariavelClassificacaoDocumentoDAO.NAME)
 public class VariavelClassificacaoDocumentoDAO extends DAO<VariavelClassificacaoDocumento> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "variavelClassificacaoDocumentoDAO";

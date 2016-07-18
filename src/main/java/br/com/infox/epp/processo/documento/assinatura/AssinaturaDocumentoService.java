@@ -1,5 +1,8 @@
 package br.com.infox.epp.processo.documento.assinatura;
 
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateExpiredException;
+import java.security.cert.CertificateNotYetValidException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,7 +17,6 @@ import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.util.Strings;
 
 import br.com.infox.certificado.Certificado;
@@ -28,6 +30,7 @@ import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.access.manager.CertificateManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
@@ -42,6 +45,7 @@ import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
+import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.util.ComponentUtil;
@@ -50,7 +54,6 @@ import br.com.infox.seam.util.ComponentUtil;
 @AutoCreate
 @Scope(ScopeType.STATELESS)
 @Name(AssinaturaDocumentoService.NAME)
-@Transactional
 public class AssinaturaDocumentoService {
 
     private static final LogProvider LOG = Logging.getLogProvider(AssinaturaDocumentoService.class);
@@ -264,6 +267,7 @@ public class AssinaturaDocumentoService {
 			String signature) throws CertificadoException, AssinaturaException, DAOException {
 		UsuarioLogin usuario = usuarioPerfilAtual.getUsuarioLogin();
 		verificaCertificadoUsuarioLogado(certChain, usuario);
+		checkValidadeCertificado(certChain);
 
 		AssinaturaDocumento assinaturaDocumento = new AssinaturaDocumento(documentoBin, usuarioPerfilAtual, certChain, signature);
 		List<Documento> documentosNaoSuficientementeAssinados = documentoBinManager.getDocumentosNaoSuficientementeAssinados(documentoBin);
@@ -318,7 +322,7 @@ public class AssinaturaDocumentoService {
     public void assinarGravarDocumento(Documento documento,
             final UsuarioPerfil perfilAtual, final String certChain,
             final String signature) throws DAOException, CertificadoException, AssinaturaException {
-    	documento = documentoManager.gravarDocumentoNoProcesso(documento.getProcesso(), documento);
+    	documento = documentoManager.gravarDocumentoNoProcesso(documento);
     	assinarDocumento(documento.getDocumentoBin(), perfilAtual, certChain, signature);
     }
 
@@ -407,5 +411,26 @@ public class AssinaturaDocumentoService {
 	    	return false;
     	}
     	return true;
+    }
+    
+    private void checkValidadeCertificado(String certChain) throws CertificadoException {
+        try {
+            CertificateManager.instance().verificaCertificado(certChain);
+        } catch (CertificateExpiredException e) {
+        	LOG.error("Certificado expirado", e);
+            if (ParametroUtil.isProducao()) {
+    			throw new CertificadoException("Certificado expirado. ");
+            }
+        } catch (CertificateNotYetValidException e) {
+        	LOG.error("Certificado ainda não válido", e);
+            if (ParametroUtil.isProducao()) {
+    			throw new CertificadoException("O certificado ainda não está válido. ");
+            }
+		} catch (CertificateException e) {
+            LOG.error("Erro ao verificar a validade do certificado", e);
+            if (ParametroUtil.isProducao()) {
+    			throw new CertificadoException(e.getMessage());
+            }
+        }
     }
 }

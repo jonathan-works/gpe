@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -11,8 +13,9 @@ import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.entity.Estrutura;
 import br.com.infox.epp.access.query.EstruturaQuery;
 
-@Name(EstruturaDAO.NAME)
+@Stateless
 @AutoCreate
+@Name(EstruturaDAO.NAME)
 public class EstruturaDAO extends DAO<Estrutura> {
 
     private static final long serialVersionUID = 1L;

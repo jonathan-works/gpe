@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -16,6 +18,7 @@ import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.HistoricoStatusDocumento;
 
+@Stateless
 @AutoCreate
 @Name(HistoricoStatusDocumentoDAO.NAME)
 public class HistoricoStatusDocumentoDAO extends DAO<HistoricoStatusDocumento> {

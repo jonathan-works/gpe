@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
 import javax.faces.model.SelectItem;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -28,8 +29,9 @@ import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.tarefa.entity.Tarefa;
 
-@Name(TarefaDAO.NAME)
+@Stateless
 @AutoCreate
+@Name(TarefaDAO.NAME)
 public class TarefaDAO extends DAO<Tarefa> {
 
     private static final long serialVersionUID = 1L;

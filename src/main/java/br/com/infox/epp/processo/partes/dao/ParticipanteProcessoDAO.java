@@ -29,10 +29,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.pessoa.entity.Pessoa;
@@ -43,10 +41,9 @@ import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso_;
 import br.com.infox.epp.processo.partes.entity.TipoParte;
 
-@AutoCreate
-@Scope(ScopeType.EVENT)
-@Name(ParticipanteProcessoDAO.NAME)
 @Stateless
+@AutoCreate
+@Name(ParticipanteProcessoDAO.NAME)
 public class ParticipanteProcessoDAO extends DAO<ParticipanteProcesso> {
 
     private static final long serialVersionUID = 1L;

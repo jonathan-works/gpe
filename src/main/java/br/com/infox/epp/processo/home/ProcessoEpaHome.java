@@ -18,20 +18,19 @@ import org.jboss.seam.faces.FacesMessages;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.cdi.seam.ContextDependency;
-import br.com.infox.epp.processo.action.RelacionamentoCrudAction;
+import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoRecursos;
 import br.com.infox.epp.processo.consulta.action.ConsultaController;
 import br.com.infox.epp.processo.documento.action.DocumentoProcessoAction;
 import br.com.infox.epp.processo.documento.action.PastaAction;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
-import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.list.DocumentoList;
 import br.com.infox.epp.processo.documento.list.PastaList;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaRestricaoAction;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.localizacao.dao.ProcessoLocalizacaoIbpmDAO;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
@@ -40,6 +39,8 @@ import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
 import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
 import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.processo.variavel.action.VariavelProcessoAction;
+import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
+import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.context.ContextFacade;
@@ -65,8 +66,6 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	public static final String NAME = "processoEpaHome";
 
 	@In
-	private ProcessoLocalizacaoIbpmDAO processoLocalizacaoIbpmDAO;
-	@In
 	private ProcessoManager processoManager;
 	@In
 	private AssinaturaDocumentoService assinaturaDocumentoService;
@@ -83,8 +82,6 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	@In
 	private VariavelProcessoAction variavelProcessoAction;
 	@In
-	private RelacionamentoCrudAction relacionamentoCrudAction;
-	@In
 	private ConsultaController consultaController;
 	@In
 	private PastaAction pastaAction;
@@ -99,11 +96,15 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	
 	@Inject
 	private SituacaoProcessoDAO situacaoProcessoDAO;
+	@Inject
+	private VariavelProcessoService variavelProcessoService;
+	@Inject
+	private PapelManager papelManager;
 
 	private DocumentoBin documentoBin = new DocumentoBin();
 	private String observacaoMovimentacao;
 	private boolean iniciaExterno;
-	private List<MetadadoProcesso> detalhesMetadados;
+	private List<VariavelProcesso> variaveisDetalhe;
 	private Boolean inTabExpedidas;
 
 	private Long idTaskInstance;
@@ -123,12 +124,13 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 		}
 	}
 
-	public List<MetadadoProcesso> getDetalhesMetadados() {
-		if (detalhesMetadados == null) {
-			detalhesMetadados = metadadoProcessoManager.getListMetadadoVisivelByProcesso(getInstance());
+	public List<VariavelProcesso> getVariaveisDetalhe() {
+		if (variaveisDetalhe == null) {
+			variaveisDetalhe = variavelProcessoService.getVariaveis(instance, 
+					DefinicaoVariavelProcessoRecursos.DETALHE_PROCESSO.getIdentificador(), papelManager.isUsuarioExterno(Authenticator.getPapelAtual().getIdentificador()));
 		}
-		return detalhesMetadados;
-	}
+		return variaveisDetalhe;
+    }
 	
 	public void visualizarTarefaProcesso() {
 		processoManager.visualizarTask(instance, getIdTaskInstance(), Authenticator.getUsuarioPerfilAtual());
@@ -182,10 +184,6 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 		String ret = super.remove();
 		newInstance();
 		return ret;
-	}
-
-	public List<Documento> getProcessoDocumentoList() {
-		return getInstance() == null ? null : getInstance().getDocumentoList();
 	}
 
 	public boolean hasPartes() {
@@ -258,9 +256,6 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 		if((tab == null && getTab() != null) || (tab != null && getTab() == null) || !tab.equals(getTab())){
 			super.setTab(tab);
 			variavelProcessoAction.setProcesso(getInstance());
-	        if (tab.equals("relacionamentoProcessoTab")){
-	        	relacionamentoCrudAction.setProcesso(this.getInstance().getNumeroProcessoRoot());
-	        }
 	        if (tab.equals("tabMovimentacoes")){
 	        	consultaController.setProcesso(this.getInstance());
 	        }
@@ -274,7 +269,7 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	        	pastaAction.setProcesso(this.getInstance().getProcessoRoot());
 	        }
 	        if (tab.equals("tabPastaRestricao")) {
-	        	pastaRestricaoAction.setProcesso(this.getInstance().getProcessoRoot());
+	        	pastaRestricaoAction.setProcesso(this.getInstance());
 	        	pastaList.setProcesso(this.getInstance().getProcessoRoot());
 			}
 		}

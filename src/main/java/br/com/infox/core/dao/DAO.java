@@ -36,14 +36,6 @@ public abstract class DAO<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * Busca o registro na entidade informada.
-     * 
-     * @param <T>
-     * @param c Entidade
-     * @param id do registro
-     * @return objeto encontrado.
-     */
     public T find(Object id) {
         if (id == null) {
             return null;
@@ -86,23 +78,10 @@ public abstract class DAO<T> implements Serializable {
         return result.isEmpty() ? null : result.get(0);
     }
 
-    /**
-     * Verifica se o entityManager contém o objeto informado.
-     * 
-     * @param o objeto a ser verificado.
-     * @return true se contiver.
-     */
     public boolean contains(final Object o) {
         return getEntityManager().contains(o);
     }
 
-    /**
-     * Obtém todos os registros da entidade informada.
-     * 
-     * @param <E>
-     * @param clazz entidade
-     * @return lista de todos os registros da entidade
-     */
     public List<T> findAll() {
         Class<T> clazz = getEntityClass();
         final StringBuilder sb = new StringBuilder();
@@ -164,7 +143,6 @@ public abstract class DAO<T> implements Serializable {
         }
     }
 
-    @Transactional
     public T persist(final T object) throws DAOException {
         try {
             getEntityManager().persist(object);
@@ -184,7 +162,6 @@ public abstract class DAO<T> implements Serializable {
         }
     }
     
-    @Transactional
     public T update(final T object) throws DAOException {
         try {
             final T res = getEntityManager().merge(object);
@@ -195,7 +172,6 @@ public abstract class DAO<T> implements Serializable {
         }
     }
 
-    @Transactional
     public T remove(final T object) throws DAOException {
         try {
             getEntityManager().remove(object);
@@ -206,7 +182,6 @@ public abstract class DAO<T> implements Serializable {
         }
     }
 
-    @Transactional
     public T removeWithoutFlush(final T object) {
 		getEntityManager().remove(object);
 		return object;

@@ -4,6 +4,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.infox.ibpm.event.External.ExpressionType;
+
 public final class BpmExpressionServiceConsumer {
 
     private static final class LazyLoader {
@@ -17,11 +19,11 @@ public final class BpmExpressionServiceConsumer {
     private BpmExpressionServiceConsumer() {
     }
 
-    public final List<ExternalMethod> getExternalMethods(BpmExpressionService bpmExpressionService){
+    public final List<ExternalMethod> getExternalMethods(BpmExpressionService bpmExpressionService, ExpressionType expressionType){
         List<ExternalMethod> methods = new ArrayList<>();
         for (Method method : bpmExpressionService.getClass().getMethods()) {
-            if (method.isAnnotationPresent(External.class)) {
-                methods.add(new ExternalMethod(method));
+            if (method.isAnnotationPresent(External.class) && method.getAnnotation(External.class).expressionType() == expressionType) {
+            	methods.add(new ExternalMethod(method));
             }
         }
         return methods;

@@ -13,13 +13,18 @@
   xmlns:wi="http://www.itx.com.br/jsf"
   xmlns:cc="http://java.sun.com/jsf/composite/components"
   xmlns:infox="http://www.infox.com.br/jsf"
+  xmlns:p="http://primefaces.org/ui"
   template="/WEB-INF/xhtml/templates/minimal.xhtml">
 
   <ui:define name="body">
       <h:form rendered="#{not documentoValidator.acessoBloqueado}">
         <cc:inputUUID value="#{documentoValidator.uuid}" id="uuid" label="Código de Validação" />
         <div />
-        <infox:recaptcha triesListener="documentoValidator.incrementTries" />
+        
+        <div style="margin-bottom: 1em; margin-left: 4px; width: 302px">
+			<p:captcha id="captcha" label="Captcha" language="pt_BR" validatorMessage="#{infoxMessages['captcha.incorreto']}" requiredMessage="#{infoxMessages['captcha.obrigatorio']}" />
+			<p:messages for="captcha" />
+        </div>
         <div />
         <ui:param name="tentativasRestantes" value="#{3 - documentoValidator.tentativas}" />
         <h:outputText rendered="#{documentoValidator.tentativas gt 0}" 

@@ -5,6 +5,8 @@ import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.Stateless;
+
 import org.apache.lucene.analysis.br.BrazilianAnalyzer;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
@@ -34,8 +36,9 @@ import br.com.infox.ibpm.task.entity.TaskConteudo;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.variable.VariableHandler;
 
-@Name(TaskConteudoDAO.NAME)
+@Stateless
 @AutoCreate
+@Name(TaskConteudoDAO.NAME)
 public class TaskConteudoDAO extends DAO<TaskConteudo> {
 
     private static final long serialVersionUID = 1L;
@@ -44,7 +47,6 @@ public class TaskConteudoDAO extends DAO<TaskConteudo> {
     @In
     private SigiloProcessoService sigiloProcessoService;
 
-    @SuppressWarnings(UNCHECKED)
     private String extractConteudo(Long taskId) {
         Session session = ManagedJbpmContext.instance().getSession();
         TaskInstance ti = (TaskInstance) session.get(TaskInstance.class, taskId);

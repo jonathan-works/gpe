@@ -26,6 +26,9 @@
             <ui:define name="searchForm">
                 <wi:searchForm formId="pesquisarTipoRelacionamentoProcessoForm"
                     formTitle="#{infoxMessages['searchForm.title']}">
+                    <wi:inputText id="codigo"
+                        value="#{tipoRelacionamentoProcessoList.entity.codigo}"
+                        label="#{infoxMessages['tipoRelacionamentoProcesso.codigo']}" />
                     <wi:inputText id="tipoRelacionamento"
                         value="#{tipoRelacionamentoProcessoList.entity.tipoRelacionamento}"
                         label="#{infoxMessages['tipoRelacionamentoProcesso.tipoRelacionamento']}" />
@@ -34,6 +37,11 @@
                         value="#{tipoRelacionamentoProcessoList.entity.ativo}" />
                 </wi:searchForm>
             </ui:define>
+            <wi:columnOutputText
+                columnId="codigo"
+                columnHeader="#{infoxMessages['tipoRelacionamentoProcesso.codigo']}"
+                value="#{row.codigo}"
+            />
             <wi:columnOutputText
                 columnId="tipoRelacionamento"
                 columnHeader="#{infoxMessages['tipoRelacionamentoProcesso.tipoRelacionamento']}"
@@ -51,6 +59,14 @@
     <ui:define name="form">
         <wi:dataForm formId="tipoRelacionamentoProcessoForm"
             formTitle="#{infoxMessages['form.title']}">
+            <wi:inputText
+                id="codigo"
+                label="#{infoxMessages['tipoRelacionamentoProcesso.codigo']}"
+                disabled="#{tipoRelacionamentoProcessoCrudAction.managed}"
+                value="#{tipoRelacionamentoProcessoCrudAction.instance.codigo}"
+                
+                required="true"
+                maxlength="30" />
             <wi:inputText
                 id="tipoRelacionamento"
                 label="#{infoxMessages['tipoRelacionamentoProcesso.tipoRelacionamento']}"

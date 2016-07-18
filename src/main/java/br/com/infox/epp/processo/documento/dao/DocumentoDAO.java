@@ -26,6 +26,8 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 
 import org.apache.lucene.analysis.br.BrazilianAnalyzer;
@@ -50,12 +52,15 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.entity.Documento_;
+import br.com.infox.epp.processo.documento.entity.Pasta;
+import br.com.infox.epp.processo.documento.entity.Pasta_;
 import br.com.infox.epp.processo.documento.sigilo.service.SigiloDocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
 
 @AutoCreate
-@Name(DocumentoDAO.NAME)
 @Stateless
+@Name(DocumentoDAO.NAME)
 public class DocumentoDAO extends DAO<Documento> {
 
     private static final long serialVersionUID = 1L;
@@ -99,6 +104,15 @@ public class DocumentoDAO extends DAO<Documento> {
         Map<String, Object> params = new HashMap<>(1);
         params.put(PARAM_PROCESSO, processo);
         return getNamedResultList(LIST_DOCUMENTO_BY_PROCESSO, params);
+    }
+    
+    public List<Documento> getListAllDocumentoByProcesso(Processo processo) {
+    	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+    	CriteriaQuery<Documento> query = cb.createQuery(Documento.class);
+    	Root<Documento> doc = query.from(Documento.class);
+    	Join<Documento, Pasta> pasta = doc.join(Documento_.pasta, JoinType.INNER);
+    	query.where(cb.equal(pasta.get(Pasta_.processo), processo));
+    	return getEntityManager().createQuery(query).getResultList();
     }
     
     public List<Documento> getListDocumentoMinutaByProcesso(Processo processo) {

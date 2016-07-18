@@ -34,11 +34,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.TransactionPropagationType;
 import org.jboss.seam.annotations.Transactional;
@@ -64,16 +64,16 @@ import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
+@Stateless
 @AutoCreate
 @Name(ProcessoDAO.NAME)
-@Stateless
 public class ProcessoDAO extends DAO<Processo> {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "processoDAO";
 	private static final LogProvider LOG = Logging.getLogProvider(ProcessoDAO.class);
 	
-	@In
+	@Inject
 	private FluxoDAO fluxoDAO;
 
 	public Processo findProcessosByIdProcessoAndIdUsuario(int idProcesso, Integer idUsuarioLogin, Long idTask) {
@@ -133,14 +133,14 @@ public class ProcessoDAO extends DAO<Processo> {
 		return find(processo.getIdProcesso());
 	}
 
-	public Processo getProcessoEpaByIdJbpm(Long idJbpm) {
+	public Processo getProcessoByIdJbpm(Long idJbpm) {
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put(PARAM_ID_JBPM, idJbpm);
 		return getNamedSingleResult(PROCESSO_EPA_BY_ID_JBPM, parameters);
 	}
 
 	public List<PessoaFisica> getPessoaFisicaList() {
-		Processo pe = getProcessoEpaByIdJbpm(ProcessInstance.instance().getId());
+		Processo pe = getProcessoByIdJbpm(ProcessInstance.instance().getId());
 		List<PessoaFisica> pessoaFisicaList = new ArrayList<PessoaFisica>();
 		for (ParticipanteProcesso participante : pe.getParticipantes()) {
 			if (participante.getPessoa().getTipoPessoa().equals(TipoPessoaEnum.F)) {
@@ -151,7 +151,7 @@ public class ProcessoDAO extends DAO<Processo> {
 	}
 
 	public List<PessoaJuridica> getPessoaJuridicaList() {
-		Processo processo = getProcessoEpaByIdJbpm(ProcessInstance.instance().getId());
+		Processo processo = getProcessoByIdJbpm(ProcessInstance.instance().getId());
 		List<PessoaJuridica> pessoaJuridicaList = new ArrayList<PessoaJuridica>();
 		for (ParticipanteProcesso participante : processo.getParticipantes()) {
 			if (participante.getPessoa().getTipoPessoa().equals(TipoPessoaEnum.J)) {
@@ -162,7 +162,7 @@ public class ProcessoDAO extends DAO<Processo> {
 	}
 	
 	public boolean hasPartes(Long idJbpm) {
-		Processo pe = getProcessoEpaByIdJbpm(idJbpm);
+		Processo pe = getProcessoByIdJbpm(idJbpm);
 		return (pe != null) && (pe.hasPartes());
 	}
 
@@ -191,7 +191,6 @@ public class ProcessoDAO extends DAO<Processo> {
 		return getNamedSingleResult(GET_PROCESSO_BY_NUMERO_PROCESSO, parameters);
 	}
 
-	@Transactional
 	public Processo persistProcessoComNumero(Processo processo) throws DAOException {
 		try {
 			processo.setNumeroProcesso("");

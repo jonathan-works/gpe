@@ -29,7 +29,7 @@ public class PathResolver implements Serializable {
         return fc.getExternalContext().getRequestContextPath();
     }
 
-    public final String getContextPath(String relativePath) {
+    public String getContextPath(String relativePath) {
         FacesContext fc = FacesContext.getCurrentInstance();
         return fc.getExternalContext().getRequestContextPath() + relativePath;
     }

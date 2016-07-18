@@ -40,7 +40,7 @@ public interface FluxoQuery {
 
     String LIST_ATIVOS = "listFluxoAtivo";
     String LIST_ATIVOS_QUERY = "select o from Fluxo o "
-            + "where o.ativo = true";
+            + "where o.ativo = true order by o.fluxo";
 
     String COUNT_PROCESSOS_BY_FLUXO = "countProcessosByFluxo";
     String COUNT_PROCESSOS_BY_FLUXO_QUERY = "select count(o) from Processo o where o.naturezaCategoriaFluxo.fluxo = :fluxo";

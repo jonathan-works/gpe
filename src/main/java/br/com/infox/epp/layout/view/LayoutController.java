@@ -3,6 +3,7 @@ package br.com.infox.epp.layout.view;
 import java.io.Serializable;
 
 import javax.enterprise.context.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -33,5 +34,17 @@ public class LayoutController implements Serializable {
 		String skin = skinSessaoManager.getSkin();
 		return layoutManager.getResourceUrlByPath(skin, path);
 	}
+	
+	public String getMaterialDesignIconJSFUrl(String dpir, String cor, String res, String nome){
+            return String.format("/resources/styleSkinInfox/all/%s_web/ic_%s_%s_%s.png", dpir, nome, cor, res);
+	}
+	
+	public String getMaterialDesignIconUrl(String dpir, String cor, String res, String nome){
+	    String urlBase=FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
+	    return String.format("%s/resources/styleSkinInfox/all/%s_web/ic_%s_%s_%s.png", urlBase, dpir, nome, cor, res); 
+	}
 
+	public String getMaterialDesignIconJsfUrl(String dpir, String cor, String res, String nome){
+	    return String.format("/resources/styleSkinInfox/all/%s_web/ic_%s_%s_%s.png", dpir, nome, cor, res); 
+	}
 }

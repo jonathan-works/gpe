@@ -2,6 +2,7 @@ package br.com.infox.epp.documento.dao;
 
 import java.util.List;
 
+import javax.ejb.Stateless;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
@@ -17,8 +18,9 @@ import br.com.infox.epp.documento.entity.VariavelTipoModelo;
 import br.com.infox.epp.documento.entity.VariavelTipoModelo_;
 import br.com.infox.epp.documento.entity.Variavel_;
 
-@Name(VariavelDAO.NAME)
+@Stateless
 @AutoCreate
+@Name(VariavelDAO.NAME)
 public class VariavelDAO extends DAO<Variavel> {
 
     public static final String NAME = "variavelDAO";

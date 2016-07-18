@@ -31,18 +31,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
 import javax.persistence.Query;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.tarefa.type.PrazoEnum;
 
+@Stateless
 @AutoCreate
-@Scope(ScopeType.EVENT)
 @Name(ProdutividadeDAO.NAME)
 public class ProdutividadeDAO extends DAO<ProdutividadeBean> {
 

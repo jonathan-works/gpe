@@ -21,11 +21,9 @@ import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.EntityManager;
 
-import org.hibernate.Query;
-import org.hibernate.Session;
 import org.jboss.seam.Component;
-import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jbpm.context.def.VariableAccess;
@@ -50,6 +48,7 @@ import org.xml.sax.InputSource;
 
 import com.google.common.base.Strings;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.messages.InfoxMessages;
@@ -135,6 +134,7 @@ public class ProcessBuilder implements Serializable {
     private TarefaManager tarefaManager;
     @Inject
     private TarefaJbpmManager tarefaJbpmManager;
+
  
     private String id;
     private ProcessDefinition instance;
@@ -290,7 +290,6 @@ public class ProcessBuilder implements Serializable {
         }
     }
 
-    @SuppressWarnings(UNCHECKED)
     private void validateVariables() {
         List<Node> nodes = getInstance().getNodes();
         for (Node node : nodes) {
@@ -308,6 +307,8 @@ public class ProcessBuilder implements Serializable {
                             throw new IllegalStateException("A variável " + tokens[1] + " da tarefa " + node.getName() + " é do tipo data mas não possui tipo de validação");
                         } else if (VariableType.ENUMERATION.name().equals(tokens[0]) && tokens.length < 3) {
                             throw new IllegalStateException("A variável " + tokens[1] + " da tarefa " + node.getName() + " é do tipo lista de dados mas não possui lista de valores definida");
+                        } else if (VariableType.ENUMERATION_MULTIPLE.name().equals(tokens[0]) && tokens.length < 3) {
+                            throw new IllegalStateException("A variável " + tokens[1] + " da tarefa " + node.getName() + " é do tipo lista de dados (múltipla) mas não possui lista de valores definida");
                         } else if (VariableType.FRAGMENT.name().equals(tokens[0]) && tokens.length < 3) {
                             System.out.println(tokens);
                             throw new IllegalStateException(MessageFormat.format(infoxMessages.get("processDefinition.variable.list.error"), tokens[1], node.getName()));
@@ -327,7 +328,7 @@ public class ProcessBuilder implements Serializable {
                     throw new IllegalStateException("O nó de email " + mailNode.getName() + " deve possuir pelo menos um destinatário.");
                 }
                 if (mailNode.getModeloDocumento() == null) {
-                	throw new IllegalStateException("O nó de email " + mailNode.getName() + " deve possuir um modelo de documento associado.");
+                    throw new IllegalStateException("O nó de email " + mailNode.getName() + " deve possuir um modelo de documento associado.");
                 }
             }
         }
@@ -471,6 +472,7 @@ public class ProcessBuilder implements Serializable {
                 updatePostDeploy(instance);
                 taskFitter.checkCurrentTaskPersistenceState();
                 atualizarRaiaPooledActors(instance.getId());
+                atualizarTimer();
                 FacesMessages.instance().clear();
                 FacesMessages.instance().add("Fluxo publicado com sucesso!");
             } catch (Exception e) {
@@ -495,26 +497,36 @@ public class ProcessBuilder implements Serializable {
         variavelClassificacaoDocumentoManager.publicarClassificacoesDasVariaveis(idFluxo);
     }
 
-	private void atualizarRaiaPooledActors(Long idProcessDefinition) {
-	    Session session = ManagedJbpmContext.instance().getSession();
-	    List<SwimlaneInstance> swimlaneInstances = swimlaneInstanceSearch.getSwimlaneInstancesByProcessDefinition(idProcessDefinition);
-        for (SwimlaneInstance swimlaneInstance : swimlaneInstances) {
-            String[] pooledActorIds = swimlaneInstance.getSwimlane().getPooledActorsExpression().split(",");
-            swimlaneInstance.setPooledActors(pooledActorIds);
-            session.merge(swimlaneInstance);
-        }
-        session.flush();
-        session.clear();
-		List<TaskInstance> taskInstances = taskInstanceDAO.getTaskInstancesOpen(idProcessDefinition);
-		for (TaskInstance taskInstance : taskInstances) {
-		    ExecutionContext executionContext = new ExecutionContext(taskInstance.getToken());
-            taskInstance.assign(executionContext);
-            session.merge(taskInstance);
-		}
-		session.flush();
+    private void atualizarRaiaPooledActors(Long idProcessDefinition) {
+       EntityManager entityManager = EntityManagerProducer.instance().getEntityManagerNotManaged();
+       try {
+           List<SwimlaneInstance> swimlaneInstances = swimlaneInstanceSearch.getSwimlaneInstancesByProcessDefinition(idProcessDefinition, entityManager);
+           for (SwimlaneInstance swimlaneInstance : swimlaneInstances) {
+               String[] pooledActorIds = swimlaneInstance.getSwimlane().getPooledActorsExpression().split(",");
+               swimlaneInstance.setPooledActors(pooledActorIds);
+           }
+           entityManager.flush();
+           List<TaskInstance> taskInstances = taskInstanceDAO.getTaskInstancesOpen(idProcessDefinition, entityManager);
+           for (TaskInstance taskInstance : taskInstances) {
+               ExecutionContext executionContext = new ExecutionContext(taskInstance.getToken());
+               taskInstance.assign(executionContext);
+               if (taskInstance.getSwimlaneInstance() != null && taskInstance.getSwimlaneInstance().getId() == 0) {
+            	   entityManager.persist(taskInstance.getSwimlaneInstance());
+               }
+           }
+           entityManager.flush();
+       } finally {
+           if (entityManager.isOpen()) {
+               entityManager.close();
+           }
+       }
 	}
+    
+    private void atualizarTimer() throws Exception {
+        JbpmUtil.instance().deleteTimers(instance);
+        JbpmUtil.instance().createTimers(instance);
+    }
 
-	@SuppressWarnings(UNCHECKED)
     private List<String> getVariaveisDocumento() {
         List<String> variaveis = new ArrayList<>();
         List<Node> nodes = instance.getNodes();

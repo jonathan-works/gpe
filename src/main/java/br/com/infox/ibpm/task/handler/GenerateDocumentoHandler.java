@@ -59,7 +59,7 @@ public class GenerateDocumentoHandler implements ActionHandler, CustomAction {
 		ClassificacaoDocumentoManager classificacaoDocumentoManager = ComponentUtil.getComponent(ClassificacaoDocumentoManager.NAME);
 		PastaManager pastaManager = ComponentUtil.getComponent(PastaManager.NAME);
 		ProcessoManager processoManager = ComponentUtil.getComponent(ProcessoManager.NAME);
-		Processo processo = processoManager.getProcessoEpaByIdJbpm(executionContext.getProcessInstance().getId());
+		Processo processo = processoManager.getProcessoByIdJbpm(executionContext.getProcessInstance().getId());
 		Processo processoRaiz = processo.getProcessoRoot();
 		ClassificacaoDocumento classificacaoDocumento = classificacaoDocumentoManager.find(configuration.idClassificacaoDocumento);
 		try {

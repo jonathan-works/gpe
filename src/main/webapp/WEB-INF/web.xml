@@ -2,6 +2,10 @@
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+    <context-param>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>bootstrap</param-value>
+    </context-param>
 	<!-- JSF -->
 	<context-param>
 	   <param-name>com.sun.faces.numberOfLogicalViews</param-name>
@@ -58,14 +62,16 @@
 		<param-name>org.richfaces.fileUpload.createTempFiles</param-name>
 		<param-value>true</param-value>
 	</context-param>
-	<context-param>
-		<param-name>COMPONENTES.recaptchaPrivateKey</param-name>
-		<param-value>#{recaptchaPrivateKey}</param-value>
-	</context-param>
-	<context-param>
-		<param-name>COMPONENTES.recaptchaPublicKey</param-name>
-		<param-value>#{recaptchaPublicKey}</param-value>
-	</context-param>
+
+    <context-param>
+        <param-name>COMPONENTES.recaptchaPrivateKey</param-name>
+        <param-value>#{recaptchaPrivateKey}</param-value>
+    </context-param>
+    <context-param>
+        <param-name>COMPONENTES.recaptchaPublicKey</param-name>
+        <param-value>#{recaptchaPublicKey}</param-value>
+    </context-param>
+    
 	<filter>
 		<filter-name>Seam Filter</filter-name>
 		<filter-class>org.jboss.seam.servlet.SeamFilter</filter-class>
@@ -87,6 +93,11 @@
 	<listener>
 		<listener-class>org.jboss.seam.servlet.SeamListener</listener-class>
 	</listener>
+    <!-- Listener for EppServletCaptchaParameters after seam listener -->
+    <listener>
+        <listener-class>br.com.infox.jsf.events.EppServletCaptchaParameters</listener-class>
+    </listener>
+    
 	<servlet>
 		<servlet-name>Seam Resource Servlet</servlet-name>
 		<servlet-class>org.jboss.seam.servlet.SeamResourceServlet</servlet-class>

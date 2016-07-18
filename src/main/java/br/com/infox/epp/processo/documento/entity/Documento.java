@@ -60,13 +60,11 @@ import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
-import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.system.Parametros;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Entity
 @Table(name = Documento.TABLE_NAME)
@@ -102,11 +100,6 @@ public class Documento implements Serializable, Cloneable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_documento_bin", nullable = false)
     private DocumentoBin documentoBin;
-    
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_processo", nullable = false)
-    private Processo processo;
     
     @NotNull
     @Size(max = LengthConstants.DESCRICAO_PADRAO)
@@ -152,8 +145,9 @@ public class Documento implements Serializable, Cloneable {
     @Column(name="in_excluido", nullable = false)
     private Boolean excluido;
     
+    @NotNull
     @ManyToOne
-    @JoinColumn(name="id_pasta")
+    @JoinColumn(name="id_pasta", nullable = false)
     private Pasta pasta;
     
     @ManyToOne(fetch = FetchType.LAZY)
@@ -204,8 +198,8 @@ public class Documento implements Serializable, Cloneable {
     }
 
 	private UsuarioLogin getUsuarioSistema() {
-		UsuarioLoginManager usuarioLoginManager = ComponentUtil.getComponent(UsuarioLoginManager.NAME);
-		return usuarioLoginManager.find(Integer.valueOf(Parametros.ID_USUARIO_SISTEMA.getValue()));
+		UsuarioLoginManager usuarioLoginManager = BeanManager.INSTANCE.getReference(UsuarioLoginManager.class);
+		return usuarioLoginManager.getUsuarioSistema();
 	}
     
 	public Integer getId() {
@@ -230,14 +224,6 @@ public class Documento implements Serializable, Cloneable {
 
 	public void setDocumentoBin(DocumentoBin documentoBin) {
 		this.documentoBin = documentoBin;
-	}
-
-	public Processo getProcesso() {
-		return processo;
-	}
-
-	public void setProcesso(Processo processo) {
-		this.processo = processo;
 	}
 
 	public String getDescricao() {
@@ -352,12 +338,12 @@ public class Documento implements Serializable, Cloneable {
 	public void setLocalizacao(Localizacao localizacao) {
 		this.localizacao = localizacao;
 	}
-	
-	public boolean isDocumentoAssinavel(Papel papel){
+
+    public boolean isDocumentoAssinavel(Papel papel){
 		if (getDocumentoBin() == null) {
 			return false;
 		}
-    	if(getProcesso() != null && getProcesso().isFinalizado()) {
+		if(getPasta().getProcesso() != null && getPasta().getProcesso().isFinalizado()) {
     		return false;
     	}
     	List<ClassificacaoDocumentoPapel> papeis = getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
@@ -374,7 +360,7 @@ public class Documento implements Serializable, Cloneable {
     	if (getDocumentoBin() == null || getDocumentoBin().isMinuta()) {
 			return false;
 		}
-    	if(getProcesso() != null && getProcesso().isFinalizado()) {
+    	if(getPasta().getProcesso() != null && getPasta().getProcesso().isFinalizado()) {
     		return false;
     	}
     	List<ClassificacaoDocumentoPapel> papeis = getClassificacaoDocumento().getClassificacaoDocumentoPapelList();
@@ -485,7 +471,6 @@ public class Documento implements Serializable, Cloneable {
 	public Documento makeCopy() throws CloneNotSupportedException {
 		Documento cDocumento = (Documento) clone();
 		cDocumento.setId(null);
-		cDocumento.setProcesso(null);
 		List<HistoricoStatusDocumento> cList = new ArrayList<>();
 		for (HistoricoStatusDocumento hsd : cDocumento.getHistoricoStatusDocumentoList()) {
 			HistoricoStatusDocumento cHistorico = hsd.makeCopy();

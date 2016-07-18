@@ -1,75 +1,98 @@
 @import "padrao.import.less";
+@import "colors.import.less";
 
-@bgColorSelect:#FFF;
-@button-border-color:#FFF;
-@button-bg-color:#FFF;
-@button-txt-color:#000;
-@borderColorInputTree:#000;
-@bgColorInputTextareaSelect:#FFF;
-@borderColorInputTextareaSelect:#FFF;
-@bgColorRequired:#FFF;
-@headerBackgroundColor:#FFF;
-@headerTextColor:#000;
-@panelBorderColor:#FFF;
-@tableBorderColor:#FFF;
-@baseBgColor:#FFF;
-@baseDegBgColor:#FFF;
-@login-label-color:#000;
+@base-color-1:#000;
+@base-color-2:#fff;
+@base-border-color:#000;
 
-@panel-border-color:#ccc;
+@standard-border-color:@base-border-color;
+@input-border-color:@base-border-color;
+@bgColorSelect:lighten(@base-color-2,45%);
 
-@zebra-row-color-odd:#FFF;
-@zebra-row-color-even:#FFF;
-@zebra-row-color-over:#FFF;
-@dt-toolbar-column-border-color:#FFF;
-@rf-dt-col-shdr-cont-color:#000;
-@header-bg-color:#FFF;
-@header-bg-deg-color:#FFF;
-@menu-bg-color:#FFF;
-@menu-txt-color:#000;
-@login-label-color:#000;
-@login-corpoSuperior-bg-color:#FFF;
-@login-corpoSuperior-bg-deg-color:#FFF;
-@login-corpoInferior-bg-color:#FFF;
-@login-corpoInferior-bg-deg-color:#FFF;
-@central-block-top-right-section-bg-color:#FFF;
-@central-block-top-right-section-bg-deg-color:#FFF;
-@central-block-bottom-right-section-bg-color:#FFF;
-@central-block-bottom-right-section-bg-deg-color:#FFF;
-@input-text-login-bg-color:#FFF;
-@input-text-login-bg-deg-color:#FFF;
-@input-text-login-bord-color:#FFF;
+@borderColorInputTree:@base-color-2;
+@bgColorInputTextareaSelect:lighten(@base-color-2,45%);
+@borderColorInputTextareaSelect:lighten(@base-color-2,45%);
+@bg-color-required:#F00;
+@headerBackgroundColor:lighten(@base-color-2,45%);
+@headerTextColor:lighten(@base-color-1,10%);
+@panelBorderColor:@base-border-color;
+@tableBorderColor:@base-border-color;
+@tableBorderWidth:1px;
 
-@sub-borda-bg-color:#333;
-@sub-borda-bg-deg-color:#333;
-@sub-borda-title-color:#FFF;
+@panel-border-color:@base-border-color;
 
-@pp-hdr-bg-color:#FFF;
-@pp-hdr-txt-color:#000;
+@base-bg-color:@base-color-1;
+@base-txt-color:@base-color-2;
+@baseDegBgColor:@base-color-1;
 
-@cal-bg-color:#FFF;
-@cal-txt-color:#000;
+@dt-toolbar-column-border-color:@base-border-color;
+@rf-dt-col-shdr-cont-color:@base-color-2;
 
-@file-upload-btns-bg-color:#FFF;
-@file-upload-hdr-bg-color:#FFF;
+@header-bg-color:lighten(@base-color-2,45%);
+@header-bg-deg-color:lighten(@base-color-2,45%);
 
-@ctx-menu-bg-color:#FFF;
-@ctx-menu-txt-color:#000;
+@pp-hdr-bg-color:@base-color-1;
+@pp-hdr-txt-color:@base-color-2;
 
-@expr-wiz-Transition-color:#FFF;
-@expr-wiz-String-color:#FFF;
-@expr-wiz-Boolean-color:#FFF;
-@expr-wiz-Arith-color:#FFF;
+@cal-bg-color:@base-color-1;
+@cal-txt-color:@base-color-2;
 
-/* Novas variáveis */
-@base-label-color: #000;
-@base-label-color-selecionado: #FFF;
-@bg-color-item-selecionado: #000;
-@menu-nav-txt-color: #000;
-@cal-bg-color-today:#777;
+@file-upload-btns-bg-color:lighten(@base-color-2,45%);
+@file-upload-hdr-bg-color:@base-color-1;
 
-@infox-tab-bg-color:@menu-bg-color;
-@infox-tab-txt-color:@menu-txt-color;
+@ctx-menu-bg-color:@base-color-2;
+@ctx-menu-txt-color:@base-color-1;
 
-@panel-bg-color:@menu-bg-color;
-@panel-txt-color:@menu-txt-color;
+@expr-wiz-Transition-color:#44F;
+@expr-wiz-String-color:#66F;
+@expr-wiz-Boolean-color:#A00;
+@expr-wiz-Arith-color:#040;
+
+//  Novas variáveis
+@base-label-color: @base-color-2;
+@base-label-color-selecionado: @base-color-2;
+@cal-bg-color-today:@base-color-2;
+@bg-color-item-selecionado: @base-color-1;
+
+//  Cores dos botões do sistema
+@button-txt-color:contrast(@base-color-1, @base-color-1, @base-color-2);
+@button-bg-color:@base-color-1;
+@button-bg-deg-color:@base-color-2;
+
+@button-border-color:@base-color-1;
+
+// Cores do fundo padrão do cabeçalho
+@header-bg-color:@base-color-1;
+@header-bg-deg-color:@base-color-1;
+
+// Cores do fundo padrão do sistema
+@base-bg-color:@base-color-1;
+@baseDegBgColor:@base-color-1;
+
+// Cores do quadro padrão
+@sub-borda-bg-color:@base-color-1;
+@sub-borda-bg-deg-color:@base-color-1;
+
+// Cores dos paineis
+@panel-bg-color:@base-color-2;
+@panel-txt-color:@base-color-1;
+
+@toggle-panel-bg-color:@base-color-2;
+@toggle-panel-txt-color:@base-color-1;
+
+// Cores do menu
+@menu-bg-color:@base-color-1;
+@menu-txt-color:@base-color-2;
+@menu-nav-txt-color:@base-color-2; // OLD
+
+// Cores das abas
+@infox-tab-bg-color:@base-color-1;
+@infox-tab-txt-color:@base-color-2;
+
+@panel-bg-color:@base-color-2;
+@panel-txt-color:@base-color-1;
+
+@input-text-login-bord-color:lighten(@base-color-2,45%);
+
+@sub-borda-bg-color:@base-color-2;
+@sub-borda-title-color:@base-color-1;

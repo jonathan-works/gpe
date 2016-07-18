@@ -266,7 +266,7 @@ public class ValidaDocumentoAction implements Serializable {
 	}
 
 	public void inicarAnaliseDocumento() {
-		Processo processo = getDocumento().getProcesso();
+		Processo processo = getDocumento().getPasta().getProcesso();
 		if (processo != null) {
 			try {
 				Processo processoAnalise = processoAnaliseDocumentoService.criarProcessoAnaliseDocumentos(processo, getDocumento());
@@ -301,7 +301,7 @@ public class ValidaDocumentoAction implements Serializable {
 	}
 
 	private boolean existeProcessoAnaliseByDocumento(Documento documento) {
-		List<Processo> listProcesso = processoDAO.getProcessosFilhosByTipo(documento.getProcesso(),
+		List<Processo> listProcesso = processoDAO.getProcessosFilhosByTipo(documento.getPasta().getProcesso(),
 				TipoProcesso.DOCUMENTO.toString());
 		for (Processo processo : listProcesso) {
 		    List<MetadadoProcesso> documentosEmAnalise = processo.getMetadadoList(EppMetadadoProvider.DOCUMENTO_EM_ANALISE);

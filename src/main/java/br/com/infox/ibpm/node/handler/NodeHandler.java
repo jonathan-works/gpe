@@ -5,41 +5,58 @@ import static java.text.MessageFormat.format;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.persistence.NoResultException;
+
+import org.apache.commons.lang3.tuple.Pair;
+import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
+import org.jbpm.activity.exe.ActivityBehavior;
+import org.jbpm.activity.exe.MultiInstanceActivityBehavior;
+import org.jbpm.activity.exe.MultiInstanceActivityBehavior.EventBehavior;
+import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.Node;
-import org.jbpm.graph.def.Node.NodeType;
+import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
+import org.jbpm.graph.node.Activity;
+import org.jbpm.graph.node.TaskNode;
 import org.jbpm.instantiation.Delegation;
 import org.jbpm.scheduler.def.CancelTimerAction;
 import org.jbpm.scheduler.def.CreateTimerAction;
 import org.jbpm.taskmgmt.def.Task;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import br.com.infox.core.util.ReflectionsUtil;
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.manager.StatusProcessoManager;
+import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.handler.GenerateDocumentoHandler;
 import br.com.infox.ibpm.task.handler.GenerateDocumentoHandler.GenerateDocumentoConfiguration;
-import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.ibpm.task.handler.StatusHandler;
 import br.com.infox.ibpm.task.handler.TaskHandlerVisitor;
+import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.jbpm.event.EventHandler;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -66,18 +83,71 @@ public class NodeHandler implements Serializable {
         }
 
     }
+    
+    public enum DueDateType {
+        
+        EXPRESSION("Expressão"), DATE("Data"), PERIOD("Período");
+        
+        private String label;
+        
+        private DueDateType(String label) {
+            this.label = label;
+        }
+        
+        public String getLabel() {
+            return label;
+        }
+        
+        public static DueDateType[] orderedValues() {
+            return new DueDateType[]{DATE, EXPRESSION, PERIOD};
+        }
+        
+        public static DueDateType toDueDateType(String dueDate) {
+            if (StringUtil.isEmpty(dueDate)) return DATE;
+            if (dueDate.startsWith("#{") || dueDate.startsWith("${")){
+                return EXPRESSION;
+            } else {
+                SimpleDateFormat sdf = new SimpleDateFormat(CreateTimerAction.DUEDATE_FORMAT);
+                try {
+                    sdf.parse(dueDate);
+                    return DATE;
+                } catch (ParseException e) {
+                    return PERIOD;
+                }
+            }
+        }
+        
+        public boolean isDate() {
+            return this == DATE;
+        }
+        
+        public boolean isExpression() {
+            return this == EXPRESSION;
+        }
+        
+        public boolean isPeriod() {
+            return this == PERIOD;
+        }
+        
+    }
 
     private Node node;
     private List<EventHandler> eventList;
     private EventHandler currentEvent;
     private List<CreateTimerAction> timerList = new ArrayList<>();
     private CreateTimerAction currentTimer;
+    private DueDateType dueDateType;
+    private Date dueDateDate;
+    private String dueDateExpression;
     private String dueDateValue;
     private UnitsEnum dueDateUnit;
     private boolean dueDateBusiness;
     private StatusProcesso statusProcesso;
     private ModeloDocumento modeloDocumento;
     private ClassificacaoDocumento classificacaoDocumento;
+	private EventHandler multiInstanceEvent;
+	private ActivityNodeType activityNodeType;
+	private List<Pair<String, Pair<VariableType, Boolean>>> startVariablesSubProcess;
 
     public NodeHandler(Node node) {
         this.node = node;
@@ -187,7 +257,7 @@ public class NodeHandler implements Serializable {
     }
 
     public boolean isSystemNode() {
-        return this.node.getNodeType().equals(NodeType.Node);
+        return node.getClass().equals(Node.class);
     }
 
     public String getEventType() {
@@ -207,18 +277,13 @@ public class NodeHandler implements Serializable {
     public List<String> getSupportedEventTypes() {
         List<String> list = new ArrayList<>();
         if (!isSystemNode()) {
-            List<String> nodeEvents = Arrays.asList(new Node().getSupportedEventTypes());
-            List<String> eventTypes = new ArrayList<>(nodeEvents);
-            List<String> taskEvents = Arrays.asList(new Task().getSupportedEventTypes());
-            eventTypes.addAll(new ArrayList<>(taskEvents));
-            List<String> currentEvents = new ArrayList<>();
-            Collection<Event> values = node.getEvents().values();
-            for (Event event : values) {
-                currentEvents.add(event.getEventType());
+            list.addAll(Arrays.asList(node.getSupportedEventTypes()));
+            if (node.getClass().equals(TaskNode.class)) {
+                list.addAll(Arrays.asList(new Task().getSupportedEventTypes()));
             }
-            for (String type : eventTypes) {
-                if (!currentEvents.contains(type)) {
-                    list.add(type);
+            for (Event event : node.getEvents().values()) {
+                if (list.contains(event.getEventType())) {
+                    list.remove(event.getEventType());
                 }
             }
         } else {
@@ -232,6 +297,7 @@ public class NodeHandler implements Serializable {
         dueDateBusiness = false;
         dueDateValue = null;
         dueDateUnit = null;
+        dueDateType = DueDateType.toDueDateType(currentTimer.getDueDate());
         setDueDate(currentTimer.getDueDate());
     }
 
@@ -240,21 +306,37 @@ public class NodeHandler implements Serializable {
     }
 
     private void setDueDate(String dueDate) {
-        if (dueDate == null) {
-            return;
+        if (dueDate == null) return;
+        if (getDueDateType() == DueDateType.PERIOD) {
+            dueDateBusiness = dueDate.indexOf(" business ") > -1;
+            String[] s = dueDate.split(" ");
+            dueDateValue = s[0];
+            String unit = s[1];
+            if (s.length > 2) {
+                unit = s[2];
+            }
+            dueDateUnit = UnitsEnum.valueOf(unit);
+        } else if (getDueDateType() == DueDateType.DATE) {
+            dueDateDate = DateTime.parse(dueDate, DateTimeFormat.forPattern(CreateTimerAction.DUEDATE_FORMAT)).toDate();
+        } else if (getDueDateType() == DueDateType.EXPRESSION) {
+            dueDateExpression = dueDate;
         }
-        dueDateBusiness = dueDate.indexOf(" business ") > -1;
-        String[] s = dueDate.split(" ");
-        dueDateValue = s[0];
-        String unit = s[1];
-        if (s.length > 2) {
-            unit = s[2];
-        }
-        dueDateUnit = UnitsEnum.valueOf(unit);
     }
-
+    
     public CreateTimerAction getCurrentTimer() {
         return currentTimer;
+    }
+    
+    public DueDateType getDueDateType() {
+        return dueDateType;
+    }
+
+    public void setDueDateType(DueDateType dueDateType) {
+        this.dueDateType = dueDateType;
+    }
+    
+    public DueDateType[] getDueDateTypeValues() {
+        return DueDateType.orderedValues();
     }
 
     public void setTimerList(List<CreateTimerAction> timerList) {
@@ -323,10 +405,25 @@ public class NodeHandler implements Serializable {
             break;
         }
     }
+    
+    public Date getDueDateDate() {
+        return dueDateDate;
+    }
+
+    public void setDueDateDate(Date dueDateDate) {
+        this.dueDateDate = dueDateDate;
+    }
+
+    public String getDueDateExpression() {
+        return dueDateExpression;
+    }
+
+    public void setDueDateExpression(String dueDateExpression) {
+        this.dueDateExpression = dueDateExpression;
+    }
 
     public void setDueDateValue(String dueDateValue) {
         this.dueDateValue = dueDateValue;
-        setDueDate();
     }
 
     public String getDueDateValue() {
@@ -335,7 +432,6 @@ public class NodeHandler implements Serializable {
 
     public void setDueDateUnit(UnitsEnum dueDateUnit) {
         this.dueDateUnit = dueDateUnit;
-        setDueDate();
     }
 
     public UnitsEnum getDueDateUnit() {
@@ -344,21 +440,30 @@ public class NodeHandler implements Serializable {
 
     public void setDueDateBusiness(boolean dueDateBusiness) {
         this.dueDateBusiness = dueDateBusiness;
-        setDueDate();
     }
 
     public boolean isDueDateBusiness() {
         return dueDateBusiness;
     }
+    
+    public void onChangeDueDateType() {
+        dueDateBusiness = false;
+        dueDateValue = null;
+        dueDateUnit = null;
+        dueDateExpression = null;
+        dueDateDate = null;
+    }
 
-    private void setDueDate() {
-        if (dueDateValue != null && dueDateUnit != null) {
-            String dueDate = dueDateValue
-                    + (dueDateBusiness ? " business " : " ") +
-                    // Tem que ser minúsculo por causa dos mapas businessAmounts
-                    // e calendarFields da classe org.jbpm.calendar.Duration
-                    dueDateUnit.name().toLowerCase();
-            currentTimer.setDueDate(dueDate);
+    public void onChangeDueDate() {
+        if (getDueDateType() == DueDateType.EXPRESSION && getDueDateExpression() != null) {
+            currentTimer.setDueDate(getDueDateExpression());
+        } else if (getDueDateType() == DueDateType.DATE && getDueDateDate() != null) {
+            currentTimer.setDueDate(new DateTime(getDueDateDate().getTime()).toString(CreateTimerAction.DUEDATE_FORMAT));
+        } else {
+            if (dueDateValue != null && dueDateUnit != null) {
+                String dueDate = dueDateValue + (dueDateBusiness ? " business " : " ") + dueDateUnit.name().toLowerCase();
+                currentTimer.setDueDate(dueDate);
+            }
         }
     }
 
@@ -399,10 +504,42 @@ public class NodeHandler implements Serializable {
 
     public void setSubProcessName(String subProcessName) {
         ReflectionsUtil.setValue(node, "subProcessName", subProcessName);
+        onChangeSubProcess(subProcessName);
     }
 
     public String getSubProcessName() {
         return ReflectionsUtil.getStringValue(node, "subProcessName");
+    }
+    
+    private void onChangeSubProcess(String subProcessName) {
+        String processDefinitionName = getSubProcessName();
+        if (StringUtil.isEmpty(processDefinitionName)) startVariablesSubProcess = Collections.emptyList();
+        try{
+        	ProcessDefinition processDefinition = JbpmUtil.instance().findLatestProcessDefinition(processDefinitionName);
+        	Task startTask = processDefinition.getTaskMgmtDefinition().getStartTask();
+        	if (startTask != null && startTask.getTaskController() != null 
+        			&& startTask.getTaskController().getVariableAccesses() != null) {
+        		List<Pair<String, Pair<VariableType, Boolean>>> variables = new ArrayList<>();
+        		for (VariableAccess variableAccess : startTask.getTaskController().getVariableAccesses()) {
+        			String type = variableAccess.getMappedName().split(":")[0];
+        			variables.add(Pair.of(variableAccess.getVariableName(), Pair.of(VariableType.valueOf(type), variableAccess.isRequired())));
+        		}
+        		startVariablesSubProcess = variables;
+        	} else {
+        		startVariablesSubProcess = Collections.emptyList();
+        	}
+        }catch(NoResultException e){
+        	FacesMessages.instance().add("Não foi possível encontrar o fluxo: " + subProcessName);
+        	LOG.warn("Não foi possível encontrar o fluxo: " + subProcessName);
+        	startVariablesSubProcess = Collections.emptyList();
+        }
+    }
+    
+    public List<Pair<String, Pair<VariableType, Boolean>>> getStartVariablesSubProcess() {
+        if (startVariablesSubProcess == null && getSubProcessName() != null) {
+            onChangeSubProcess(getSubProcessName());
+        }
+        return startVariablesSubProcess;
     }
 
     public List<String> getPreviousVariables() {
@@ -562,4 +699,95 @@ public class NodeHandler implements Serializable {
     public List<String> getProcessDefinitionNames() {
         return JbpmUtil.instance().getProcessDefinitionNames();
     }
+    
+    public ActivityNodeType[] getActivityNodeTypes() {
+        return ActivityNodeType.values();
+    }
+    
+    public ActivityNodeType getActivityNodeType() {
+        if (activityNodeType == null) {
+            activityNodeType = ActivityNodeType.fromActivity(getActivityBehavior());
+        }
+        return activityNodeType;
+    }
+
+    public void setActivityNodeType(ActivityNodeType activityNodeType) {
+        this.activityNodeType = activityNodeType;
+    }
+    
+    public void onChangeActivityNodeType() {
+        getActivity().setActivityBehavior(getActivityNodeType().createActivity());
+        getActivity().setActivityBehaviorClass(null);
+        getActivity().setConfiguration(null);
+        if (getNode().getEvents() != null) {
+            getNode().getEvents().remove(MultiInstanceActivityBehavior.NONE_EVENT_BEHAVIOR);
+            getNode().getEvents().remove(MultiInstanceActivityBehavior.ONE_EVENT_BEHAVIOR);
+        }
+    }
+    
+    public boolean isActivity(){
+        return (getNode() instanceof Activity);
+    }
+    
+    public Activity getActivity() {
+        return Activity.class.cast(getNode());               
+    }
+    
+    public boolean isMultiInstance(){
+        return isActivity() && getActivityBehavior() != null 
+                && (getActivityBehavior() instanceof MultiInstanceActivityBehavior);
+    }
+
+    public ActivityBehavior getActivityBehavior(){
+        if (isActivity() && getActivity() != null) {
+            return getActivity().getActivityBehavior();
+        } else {
+            return null;
+        }
+    }
+    
+    public EventBehavior[] getEventBehaviors() {
+        return new EventBehavior[] {EventBehavior.ALL, EventBehavior.ONE, EventBehavior.NONE};
+    }
+    
+    public EventHandler getMultiInstanceEvent(){
+    	if (!isMultiInstance()){
+    		return null;
+    	}
+    	if (this.multiInstanceEvent == null){
+	    	this.multiInstanceEvent = initializeLoopEvent();
+    	}
+    	return this.multiInstanceEvent;
+    }
+    
+    public void onChangeEventBehavior() {
+        MultiInstanceActivityBehavior multiInstanceActivityBehavior = (MultiInstanceActivityBehavior) getActivityBehavior();
+        multiInstanceActivityBehavior.setNoneBehaviorEvent(null);
+        multiInstanceActivityBehavior.setOneBehaviorEvent(null);
+        if (getNode().getEvents() != null) {
+            getNode().getEvents().remove(MultiInstanceActivityBehavior.NONE_EVENT_BEHAVIOR);
+            getNode().getEvents().remove(MultiInstanceActivityBehavior.ONE_EVENT_BEHAVIOR);
+        }
+        this.multiInstanceEvent = initializeLoopEvent();
+    }
+
+	private EventHandler initializeLoopEvent() {
+	    MultiInstanceActivityBehavior multiInstanceActivityBehavior = (MultiInstanceActivityBehavior) getActivityBehavior();
+		switch (multiInstanceActivityBehavior.getEventBehavior()) {
+		case NONE:
+			if (multiInstanceActivityBehavior.getNoneBehaviorEvent() == null){
+			    multiInstanceActivityBehavior.setNoneBehaviorEvent(new Event(getNode(), MultiInstanceActivityBehavior.NONE_EVENT_BEHAVIOR));
+			}
+			return new EventHandler(multiInstanceActivityBehavior.getNoneBehaviorEvent());
+		case ONE:
+			if (multiInstanceActivityBehavior.getOneBehaviorEvent() == null){
+			    multiInstanceActivityBehavior.setOneBehaviorEvent(new Event(getNode(), MultiInstanceActivityBehavior.ONE_EVENT_BEHAVIOR));
+			}
+			return new EventHandler(multiInstanceActivityBehavior.getOneBehaviorEvent());
+		default:
+			break;
+		}
+		return null;
+	}
+	
 }

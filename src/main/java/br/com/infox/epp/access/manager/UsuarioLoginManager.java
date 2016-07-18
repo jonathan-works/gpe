@@ -41,6 +41,7 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "usuarioLoginManager";
     private static final LogProvider LOG = Logging.getLogProvider(UsuarioLoginManager.class);
+    public static final String USER_ADMIN = "admin";
 
     @Inject
     private PasswordService passwordService;
@@ -116,15 +117,14 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
     public UsuarioLogin persist(UsuarioLogin usuario, boolean sendMail){
     	validarPermanencia(usuario);
         try {
-            Object id = EntityUtil.getIdValue(getDao().persist(usuario));
-            UsuarioLogin persisted = find(id);
+            UsuarioLogin persisted = getDao().persist(usuario);
             String password = usuario.getSenha();
             passwordService.changePassword(persisted, password);
             if (sendMail){
             	accessMailService.enviarEmailDeMudancaDeSenha("email", persisted, password);
             }
 	    return persisted;
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+        } catch (IllegalArgumentException e) {
             throw new DAOException(e);
         }
     }
@@ -161,6 +161,7 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
     	}
     }
     
+    @Deprecated // Não vi nenhuma classe utilizando este método
     public void requisitarNovaSenhaPorEmail(UsuarioLogin usuario, String tipoParametro) throws LoginException, DAOException {
         if (usuario == null) {
             throw new BusinessException("Usuário não encontrado");
@@ -174,5 +175,10 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
     public List<UsuarioLogin> getUsuariosLogin(Localizacao localizacao, String... papeis){
     	return getDao().getUsuariosLoginLocalizacaoPapeis(localizacao, papeis);
     }
-
+    
+    public boolean isAdminDefaultPassword() {
+		UsuarioLogin admin = getUsuarioLoginByLogin(USER_ADMIN);
+		String password = passwordService.generatePasswordHash("admin", admin.getSalt());
+		return password.equals(admin.getSenha());
+	}
 }

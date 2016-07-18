@@ -24,6 +24,7 @@ import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.documento.entity.ModeloDocumento_;
 import br.com.infox.epp.fluxo.entity.Fluxo_;
 import br.com.infox.epp.fluxo.entity.ModeloPasta_;
+import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.system.parametro.ParametroDefinition.Precedencia;
 
 @Stateless
@@ -37,12 +38,17 @@ public class EppParametroProvider implements Serializable, ParametroProvider {
 	@PostConstruct
 	public void init() {
 		parametroDefinitions = new ArrayList<>();
+		for (Parametros parametro : Parametros.values()) {
+                    if (parametro.getParametroDefinition() != null)
+                        parametroDefinitions.add(parametro.getParametroDefinition());
+                }
 		initParametrosControleAcesso();
 		initParametrosComunicacao();
 		initParametrosAnaliseDocumento();
 		initParametrosExecFluxo();
 		initParametrosSistema();
 		initParametrsoLog();
+	    create("consultaExterna", "ativaConsultaExternaPadrao", FieldType.BOOLEAN);
 	}
 
 	private void initParametrosControleAcesso() {
@@ -52,13 +58,14 @@ public class EppParametroProvider implements Serializable, ParametroProvider {
 		create(grupo, "usuarioExternoPodeVerDocExcluido", FieldType.BOOLEAN);
 		create(grupo, "somenteUsuarioInternoVerMotivoExclusaoDoc", FieldType.BOOLEAN);
 		create(grupo, "authorizationSecret", FieldType.STRING);
+		create(grupo, "webserviceToken", FieldType.STRING);
 		create(grupo, "externalAuthenticationServiceUrl", FieldType.STRING);
 		create(grupo, "ldapDomainName", FieldType.STRING);
 		create(grupo, "ldapProviderUrl", FieldType.STRING);
 		create(grupo, "recaptchaPrivateKey", FieldType.STRING);
 		create(grupo, "recaptchaPublicKey", FieldType.STRING);
-		create(grupo, "usuarioInterno", Papel_.nome, Papel_.identificador).addFilter(isFalse(Papel_.termoAdesao));
-		create(grupo, "usuarioExterno", Papel_.nome, Papel_.identificador).addFilter(isTrue(Papel_.termoAdesao));
+		create(grupo, "usuarioInterno", Papel_.nome, Papel_.identificador);
+		create(grupo, "usuarioExterno", Papel_.nome, Papel_.identificador);
 	}
 
 	private void initParametrosExecFluxo() {
@@ -88,6 +95,7 @@ public class EppParametroProvider implements Serializable, ParametroProvider {
 		create("sistema", "subNomeSistema", FieldType.STRING);
 		create("sistema", "exportarXLS", FieldType.BOOLEAN);
 		create("sistema", "exportarPDF", FieldType.BOOLEAN);
+		create("sistema", "producao", FieldType.BOOLEAN);
 
 		create("sistema", "idUsuarioSistema", UsuarioLogin_.nomeUsuario, UsuarioLogin_.idUsuarioLogin)
 				.addFilter(isTrue(UsuarioLogin_.ativo)).addFilter(equal(UsuarioLogin_.tipoUsuario, UsuarioEnum.S))
@@ -96,6 +104,7 @@ public class EppParametroProvider implements Serializable, ParametroProvider {
 				ModeloDocumento_.tituloModeloDocumento).addFilter(isTrue(ModeloDocumento_.ativo));
 		create("sistema", "tituloModeloEmailMudancaSenhaComLogin", ModeloDocumento_.tituloModeloDocumento,
 				ModeloDocumento_.tituloModeloDocumento).addFilter(isTrue(ModeloDocumento_.ativo));
+		create("sistema", Parametros.CODIGO_UF_SISTEMA.getLabel(), FieldType.STRING);
 	}
 
 	private void initParametrsoLog() {

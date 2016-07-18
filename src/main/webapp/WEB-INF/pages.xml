@@ -69,7 +69,7 @@
         </redirect>
     </exception>
 
-    <exception>
+    <exception log="false" >
         <redirect view-id="/errorUnexpected.xhtml">
 			<message>Erro inesperado, por favor tente novamente.</message>
         </redirect>

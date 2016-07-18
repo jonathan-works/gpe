@@ -12,11 +12,14 @@ import org.richfaces.model.UploadedFile;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.FileUtil;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
+import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.form.FormField;
 import br.com.infox.epp.processo.home.ProcessoEpaHome;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.seam.exception.BusinessException;
@@ -26,11 +29,12 @@ import br.com.infox.seam.util.ComponentUtil;
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class FileVariableHandler {
+    
 	@Inject
 	private DocumentoBinManager documentoBinManager;
 	@Inject
 	private DocumentoManager documentoManager;
-	
+
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void gravarDocumento(UploadedFile file, String variableFieldName) {
 		TaskInstanceHome taskInstanceHome = TaskInstanceHome.instance();
@@ -43,7 +47,7 @@ public class FileVariableHandler {
                 throw new BusinessRollbackException(e);
             }
         }
-        Documento documento = createDocumento(file, variableFieldName);
+        Documento documento = createDocumento(file, TaskInstanceHome.instance().getVariaveisDocumento().get(variableFieldName).getClassificacaoDocumento());
         try {
             documentoManager.gravarDocumentoNoProcesso(processoEpaHome.getInstance(), documento);
             taskInstanceHome.getInstance().put(variableFieldName, documento.getId());
@@ -64,24 +68,52 @@ public class FileVariableHandler {
         taskInstanceHome.update();
 	}
 	
-	private Documento createDocumento(final UploadedFile file, final String id) {
-        Documento pd = new Documento();
-        pd.setDescricao(file.getName());
-        pd.setAnexo(true);
-        pd.setDocumentoBin(createDocumentoBin(file));
-        pd.setClassificacaoDocumento(TaskInstanceHome.instance().getVariaveisDocumento().get(id).getClassificacaoDocumento());
-        pd.setUsuarioInclusao(Authenticator.getUsuarioLogado());
-        pd.setLocalizacao(Authenticator.getLocalizacaoAtual());
-        return pd;
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void gravarDocumento(UploadedFile file, String variableFieldName, FormField formField, Processo processo) {
+	    Documento documento = formField.getTypedValue(Documento.class);
+	    ClassificacaoDocumento classificacaoDocumento = formField.getProperty("classificacaoDocumento", ClassificacaoDocumento.class);
+        if (documento != null) {
+            try {
+                removeDocumento(documento);
+            } catch (DAOException e) {
+                throw new BusinessRollbackException(e);
+            }
+        }
+        documento = createDocumento(file, classificacaoDocumento);
+        try {
+            documentoManager.gravarDocumentoNoProcesso(processo, documento);
+            formField.setValue(documento);
+        } catch (DAOException | BusinessException e) {
+            throw new BusinessRollbackException(e);
+        }
+    }
+	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void removeDocumento(Documento documento) throws DAOException {
+        DocumentoBinarioManager documentoBinarioManager = ComponentUtil.getComponent(DocumentoBinarioManager.NAME);
+        documentoManager.remove(documento);
+        documentoBinManager.remove(documento.getDocumentoBin());
+        documentoBinarioManager.remove(documento.getDocumentoBin().getId());
+    }
+	
+	private Documento createDocumento(UploadedFile file, ClassificacaoDocumento classificacaoDocumento) {
+        Documento documento = new Documento();
+        documento.setDescricao(file.getName());
+        documento.setAnexo(true);
+        documento.setDocumentoBin(createDocumentoBin(file));
+        documento.setClassificacaoDocumento(classificacaoDocumento);
+        documento.setUsuarioInclusao(Authenticator.getUsuarioLogado());
+        documento.setLocalizacao(Authenticator.getLocalizacaoAtual());
+        return documento;
     }
 
-    private DocumentoBin createDocumentoBin(final UploadedFile file) {
-        DocumentoBin pdb = new DocumentoBin();
-        pdb.setNomeArquivo(file.getName());
-        pdb.setExtensao(FileUtil.getFileType(file.getName()));
-        pdb.setSize(Long.valueOf(file.getSize()).intValue());
-        pdb.setProcessoDocumento(file.getData());
-        pdb.setDataInclusao(new Date());
-        return pdb;
+    private DocumentoBin createDocumentoBin(UploadedFile file) {
+        DocumentoBin documentoBin = new DocumentoBin();
+        documentoBin.setNomeArquivo(file.getName());
+        documentoBin.setExtensao(FileUtil.getFileType(file.getName()));
+        documentoBin.setSize(Long.valueOf(file.getSize()).intValue());
+        documentoBin.setProcessoDocumento(file.getData());
+        documentoBin.setDataInclusao(new Date());
+        return documentoBin;
     }
 }

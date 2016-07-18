@@ -3,7 +3,7 @@
   <groupId>br.com.infox.epp</groupId>
   <artifactId>epp</artifactId>
   <packaging>war</packaging>
-  <version>2.12.2-15</version>
+  <version>2.12.2-SNAPSHOT</version>
   <name>epp</name>
   <url>http://www.infox.com.br</url>
   <dependencyManagement>
@@ -11,7 +11,7 @@
       <dependency>
         <groupId>org.jboss.seam</groupId>
         <artifactId>bom</artifactId>
-        <version>2.3.9-4</version>
+        <version>2.3.9-6</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -44,9 +44,9 @@
       <version>1.8.3</version>
     </dependency>
     <dependency>
-      <groupId>com.auth0</groupId>
-      <artifactId>java-jwt</artifactId>
-      <version>2.1.0</version>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt</artifactId>
+      <version>0.6.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.pdfbox</groupId>
@@ -57,7 +57,7 @@
       <groupId>org.jboss.seam</groupId>
       <artifactId>jboss-seam</artifactId>
       <scope>compile</scope>
-      <version>2.3.9-4</version><!--$NO-MVN-MAN-VER$ -->
+      <version>2.3.9-6</version><!--$NO-MVN-MAN-VER$ -->
       <type>jar</type>
       <exclusions>
         <exclusion>
@@ -172,18 +172,23 @@
     <dependency>
       <groupId>org.primefaces</groupId>
       <artifactId>primefaces</artifactId>
-      <version>5.2</version>
+      <version>5.3</version>
     </dependency>
+    <dependency>
+		<groupId>org.primefaces.themes</groupId>
+		<artifactId>bootstrap</artifactId>
+		<version>1.0.8</version>
+	</dependency>
     <dependency>
       <groupId>org.jbpm.jbpm3</groupId>
       <artifactId>jbpm-jpdl</artifactId>
-      <version>3.3.4-7</version>
+      <version>3.4.4</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.jbpm.jbpm3</groupId>
       <artifactId>jbpm-identity</artifactId>
-      <version>3.3.4</version>
+      <version>3.4.4</version>
       <scope>compile</scope>
       <type>jar</type>
     </dependency>
@@ -420,6 +425,7 @@
           <include>**/*.properties</include>
           <include>**/*.csv</include>
           <include>**/*.sql</include>
+          <include>/rsa-keypair/**/*</include>
 				</includes>
 			</testResource>
 			<testResource>
@@ -510,7 +516,7 @@
                 <exclude>**/*.import.less</exclude>
               </excludes>
             </configuration>
-						<phase>prepare-package</phase>
+						<phase>compile</phase>
             <goals>
               <goal>compile</goal>
             </goals>
@@ -647,6 +653,7 @@
     <db.classifier>postgresql</db.classifier>
     <optional.oracle.module>true</optional.oracle.module>
     <session.factory.jndi>java:/sessionFactoryEPA</session.factory.jndi>
+    <epp.quartz.schedulerDelay>600</epp.quartz.schedulerDelay>
   </properties>
   <profiles>
     <profile>
@@ -661,6 +668,7 @@
         <log.jbpm>INFO</log.jbpm>
         <log.hibernate.sql>INFO</log.hibernate.sql>
         <dep.classifier>dev</dep.classifier>
+        <epp.quartz.schedulerDelay>90</epp.quartz.schedulerDelay>
       </properties>
     </profile>
     <profile>

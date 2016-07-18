@@ -13,13 +13,13 @@
             #{rich:jQuery('addPastaInputName')}.val('');
             #{rich:jQuery('addPastaInputDescricao')}.val('');
             #{rich:jQuery('addPastaInputOrdemNumber')}.val('');
-            $('.errorFields.errors').remove();
-            $('.errors').removeClass('errors');
+            $('.property-error.property-msg').remove();
+            $('.property-error').removeClass('property-error');
         }
     </script>
     
 	<rich:popupPanel id="addPastaPanel" moveable="true" show="false"
-        resizeable="true" minWidth="290" minHeight="280"
+        resizeable="true" minWidth="200" minHeight="300" width="530"
         header="#{infoxMessages['pasta.add']}"
         onbeforeshow="clearAddPastaFields();"
         onbeforehide="clearAddPastaFields();">
@@ -47,6 +47,11 @@
                 <f:validator validatorId="ordemPastaValidator" />
                 <f:attribute name="idProcesso" value="#{pastaRestricaoAction.processo.idProcesso}" />
             </wi:inputNumber>
+            <wi:selectBooleanCheckbox id="addpastaPadrao"
+                rendered="#{not pastaRestricaoAction.semPasta}"
+                label="#{infoxMessages['pasta.padrao']}"
+                value="#{pastaRestricaoAction.adicionarPastaPadrao}" />
+            <div />
             <wi:commandButton id="addPastaButton"
             	style="margin-top: 1em;"
                 action="#{pastaRestricaoAction.persistPasta()}"

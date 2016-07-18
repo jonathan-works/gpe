@@ -1,8 +1,14 @@
 package br.com.infox.core.util;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.jboss.seam.util.Strings;
+
+import br.com.infox.seam.exception.BusinessException;
 
 public final class StringUtil {
 
@@ -50,6 +56,21 @@ public final class StringUtil {
             builder.replace(index, index + from.length(), to);
             index += to.length();
             index = builder.indexOf(from, index);
+        }
+    }
+
+    public static String encodeToUrlSafeString(String string) {
+        try {
+            return URLEncoder.encode(string, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            throw new BusinessException("StringUtil.encodeToUrlSafeString",e);
+        }
+    }
+    public static String decodeFromUrlSafeString(String string){
+        try {
+            return URLDecoder.decode(string, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            throw new BusinessException("StringUtil.decodeFromUrlSafeString",e);
         }
     }
     

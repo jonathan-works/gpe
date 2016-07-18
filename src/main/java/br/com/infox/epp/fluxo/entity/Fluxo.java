@@ -99,39 +99,51 @@ public class Fluxo implements Serializable {
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_FLUXO, unique = true, nullable = false)
     private Integer idFluxo;
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = ID_USUARIO_PUBLICACAO)
     private UsuarioLogin usuarioPublicacao;
+    
     @Column(name = CODIGO_FLUXO, length = DESCRICAO_PEQUENA, nullable = false)
     @Size(min = FLAG, max = DESCRICAO_PEQUENA)
     @NotNull
     private String codFluxo;
+    
     @Column(name = DESCRICAO_FLUXO, nullable = false, length = DESCRICAO_PADRAO, unique = true)
     @Size(min = FLAG, max = DESCRICAO_PADRAO)
     @NotNull
     private String fluxo;
+    
     @Column(name = ATIVO, nullable = false)
     @NotNull
     private Boolean ativo;
+    
     @Column(name = PRAZO, nullable = true)
     @NotNull
     private Integer qtPrazo;
+    
     @Column(name = PUBLICADO, nullable = false)
     @NotNull
     private Boolean publicado;
+    
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = DATA_INICIO_PUBLICACAO, nullable = false)
     @NotNull
     private Date dataInicioPublicacao;
+    
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = DATA_FIM_PUBLICACAO)
     private Date dataFimPublicacao;
+    
     @Column(name = XML_FLUXO)
     private String xml;
+    
     @Column(name = XML_FLUXO_EXECUCAO)
     private String xmlExecucao;
+    
     @OneToMany(fetch = FetchType.LAZY, mappedBy = FLUXO_ATTRIBUTE)
     private List<FluxoPapel> fluxoPapelList = new ArrayList<FluxoPapel>(0);
+    
     @OneToMany(fetch = FetchType.LAZY, mappedBy = FLUXO_ATTRIBUTE)
     private List<ModeloPasta> modeloPastaList = new ArrayList<>(0); 
 

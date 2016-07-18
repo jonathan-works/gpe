@@ -3,79 +3,90 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:a="http://richfaces.org/a4j" xmlns:c="http://java.sun.com/jsp/jstl/core"
     xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich"
+    xmlns:infox="http://www.infox.com.br/jsf"
     xmlns:s="http://jboss.org/schema/seam/taglib" xmlns:wi="http://www.itx.com.br/jsf">
     <ui:param name="id" value="#{wi:get(id, facesContext.viewRoot.createUniqueId())}" />
-    <s:div id="#{id}" styleClass="boundries">
-        <div class="page-content #{not (not empty menuHandler.actionMenu and menuHandler.actionMenu.size > 1) ? 'ifx-ctx-menu-collapsed' : ''}">
-            <ui:insert />
-        </div>
-        <s:div id="#{id}_nav-bar-menu" styleClass="ifx-menu-container" rendered="#{menuHandler.showMenu}">
-            <h:form>
-                <nav class="ifx-menu-nav">
-                    <ul class="ifx-menu">
-                        <ui:repeat var="menuItem" value="#{menuHandler.navBarMenu}">
-                            <li class="ifx-menu-itm #{menuHandler.isSelected(menuItem) ? 'ifx-menu-itm-active':''}">
-                                <a:commandLink action="#{menuHandler.selectNavBarMenuItem(menuItem)}"
-                                    styleClass="ifx-menu-lnk" execute="@this" render="#{id}" status="dummy">
-                                    <h:outputText styleClass="ifx-menu-lbl" value="#{menuItem.label}" />
-                                </a:commandLink>
-                            </li>
-                        </ui:repeat>
-                        <ui:insert name="custom-content" />
-                        <li class="ifx-menu-itm"><a class="ifx-menu-lnk ifx-menu-hidden" href="javascript:void(0);"><h:outputText
-                                    styleClass="ifx-menu-lbl" value="Menu" /></a>
-                            <ul class="ifx-menu">
-                                <ui:repeat var="menuItem" value="#{menuHandler.mainMenu}">
-                                    <li class="ifx-menu-itm"><a:commandLink
-                                            action="#{menuHandler.selectMainMenuItem(menuItem)}"
-                                            styleClass="ifx-menu-lnk" execute="@this" render="#{id}" status="dummy">
-                                            <h:outputText styleClass="ifx-menu-lbl" value="#{menuItem.label}" />
-                                        </a:commandLink></li>
-                                </ui:repeat>
-                            </ul></li>
-                    </ul>
-                </nav>
-            </h:form>
-        </s:div>
-        <s:div id="#{id}_ctx-menu" styleClass="ifx-ctx-menu-container" rendered="#{menuHandler.showMenu and not empty menuHandler.actionMenu and menuHandler.actionMenu.size > 1}">
-            <h:form>
-                <nav class="ifx-ctx-menu-nav">
-                    <ul class="ifx-ctx-menu">
-                        <ui:repeat var="menuItem" value="#{menuHandler.actionMenu}">
-                            <li
-                                class="ifx-ctx-menu-itm #{menuHandler.isSelected(menuItem) ? 'ifx-ctx-menu-itm-active':''}">
-                                <a:commandLink styleClass="ifx-ctx-menu-lnk" execute="none" status="dummy" render="#{id}"
-                                    action="#{menuItem.url}">
-                                    <h:outputText styleClass="ifx-ctx-menu-lbl" value="#{menuItem.label}" />
-                                </a:commandLink>
-                            </li>
-                        </ui:repeat>
-                    </ul>
-                </nav>
-                <div class="ifx-ctx-menu-collapse"></div>
-            </h:form>
-            
-            <script type="text/javascript">
-            	//<![CDATA[
-            	(function(){
-            		var btnCollapseEvent = function(evt){
-                		var pageContentList = document.getElementById("#{component.parent.id}").querySelectorAll(".page-content");
-                		for(var i=0,l=pageContentList.length; i<l; i++){
-                			var pageContent = pageContentList.item(i);
-                			if (pageContent.classList.contains('ifx-ctx-menu-collapsed')){
-                				pageContent.classList.remove('ifx-ctx-menu-collapsed');
-                			} else {
-                				pageContent.classList.add('ifx-ctx-menu-collapsed');
-                			}
-                		}
-            		};
-            		var buttons = document.getElementById("#{component.id}").querySelectorAll(".ifx-ctx-menu-collapse");
-            		for(var i=0,l=buttons.length; i<l; i++){
-            			buttons.item(i).addEventListener("click", btnCollapseEvent);
-            		}
-            	})();
-            	//]]>
-        	</script>
-        </s:div>
-    </s:div>
+   
+    <div style="display: none" id="#{id}Functions">
+        <h:form>
+            <a:jsFunction name="#{id}OpenAjuda" execute="@this" render="@this" limitRender="true"
+                actionListener="#{ajudaView.setViewId(facesContext.viewRoot.viewId.replace('.xhtml', '.seam'), true)}"
+                onbegin="infox.showLoading();"
+                oncomplete="openPopUp('helpwnd', '#{pathResolver.contextPath}/help/show.seam?scid=#{conversation.id}', 800,600);infox.hideLoading();">
+            </a:jsFunction>
+            <a:jsFunction name="#{id}PerfilSwitcher" onbegin="infox.showLoading();" oncomplete="infox.hideLoading();">
+                <a:param name="idPerfil" assignTo="#{authenticator.usuarioPerfilAtualCombo}"
+                 converter="javax.faces.Integer" />
+            </a:jsFunction>
+            <a:jsFunction name="#{id}UDCSwitcher" onbegin="infox.showLoading();" oncomplete="infox.hideLoading();">
+                <a:param name="idUDC" assignTo="#{authenticator.colegiadaParaMonocraticaLogadaCombo}"
+                 converter="javax.faces.Integer" />
+            </a:jsFunction>
+            <a:jsFunction name="#{id}SkinSwitcher" onbegin="infox.showLoading();" oncomplete="location.reload(true);">
+                <a:param name="idSkin" assignTo="#{wiSkin.skin}" />
+            </a:jsFunction>
+        </h:form>
+    </div>
+        
+    <div id="#{id}MenuContent">
+        <ui:insert />
+    </div>
+    <div id="#{id}"></div>
+    <script>
+    	(function(){
+        	var #{id}MenuFunctions={
+                handlePerfilClick:function(event, itm){
+                   #{id}PerfilSwitcher(itm);
+                },
+                handleColegiadaClick:function(event, itm){
+                   #{id}UDCSwitcher(itm);
+                },
+                handleOpenAjuda:function(event, itm){
+                   infox.showLoading();
+                   #{id}OpenAjuda();
+                },
+                handleSkinSwapClick:function(event, itm){
+                    infox.showLoading();
+                    #{id}SkinSwitcher(itm);
+                }
+            };
+    		var menuConfig={
+                    "content":{selector:"#{id}MenuContent"},
+                    "navigationMenu":{searchPlaceholder:"Digite sua busca aqui...","items":#{menuHandler.actionMenuJson}},
+                    "topMenu":{
+                        searchPlaceholder:"Digite sua busca aqui...",
+                        items:[
+                               {"label":"#{infoxMessages['skin.title']}", hideLabel:true, icon:"#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','palette')}", items:[
+                                       <ui:repeat var="selItem" value="#{wiSkin.skinList}">
+                                           {label:"#{selItem.label}", value:"#{selItem.value}", onClick:#{id}MenuFunctions.handleSkinSwapClick },
+                                       </ui:repeat>
+                               ]},
+                               {label: "#{infoxMessages['ajuda.ajudaBtn']}", hideLabel:true, icon:"#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','help')}", onClick:#{id}MenuFunctions.handleOpenAjuda},
+                               {label: "#{infoxMessages['painel.titlePage']}", url: "#{facesContext.externalContext.context.contextPath}/Painel/list.seam", hideLabel:true, icon:"#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','home')}"},
+                               {label: "#{usuarioLogado} &lt;#{authenticator.usuarioPerfilAtualSingle}&gt;", iconAlign:"right", icon:"#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','person')}", "items":[
+               					{"label":"Perfis", showChildren:true, items:[
+                                         <ui:repeat var="selItem" value="#{authenticator.usuarioPerfilListItems}">
+                                             {label:"#{selItem.label}", value:"#{selItem.value}", onClick:#{id}MenuFunctions.handlePerfilClick },
+                                         </ui:repeat>
+               					]},
+               					<c:if test="#{authenticator.usuarioLogadoInMonocratica}">
+               					{"label":"Unidades Decisoras Colegiadas", showChildren:true, items:[
+                                       <ui:repeat var="selItem" value="#{authenticator.colegiadaParaMonocraticaLogadaListItems}">
+                                       	{label:"#{selItem.label}", value:"#{selItem.value}", onClick:#{id}MenuFunctions.handleColegiadaClick },
+                                       </ui:repeat>
+               					]}
+               					</c:if>
+               				]},	
+                               {"label": "#{infoxMessages['menu.logout']}","url": "#{facesContext.externalContext.context.contextPath}", hideLabel:true, icon:"#{layoutController.getMaterialDesignIconUrl('1x','black','18dp','power_settings_new')}"}
+               				]
+                    }
+                };
+             ReactDOM.render(
+                     
+                     React.createElement(window['react-components'].NavigationMenu, menuConfig),
+                     document.getElementById("#{id}")
+            );
+    	})();
+    </script>
+
 </ui:composition>

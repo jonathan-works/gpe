@@ -121,7 +121,7 @@
     <mapping resource="org/jbpm/graph/node/MailNode.hbm.xml"/>
     <mapping resource="org/jbpm/graph/node/State.hbm.xml"/>
     <mapping resource="org/jbpm/graph/node/TaskNode.hbm.xml"/>
-
+    
     <!-- context.def mapping files -->
     <mapping resource="org/jbpm/context/def/ContextDefinition.hbm.xml"/>
     <mapping resource="org/jbpm/context/def/VariableAccess.hbm.xml"/>
@@ -166,7 +166,8 @@
     <mapping resource="org/jbpm/context/exe/variableinstance/LongInstance.hbm.xml"/>
     <mapping resource="org/jbpm/context/exe/variableinstance/NullInstance.hbm.xml"/>
     <mapping resource="org/jbpm/context/exe/variableinstance/StringInstance.hbm.xml"/>
-
+    <mapping resource="org/jbpm/context/exe/variableinstance/JpaInstance.hbm.xml"/> 
+    
     <!-- job mapping files -->
     <mapping resource="org/jbpm/job/Job.hbm.xml"/>
     <mapping resource="org/jbpm/job/Timer.hbm.xml"/>

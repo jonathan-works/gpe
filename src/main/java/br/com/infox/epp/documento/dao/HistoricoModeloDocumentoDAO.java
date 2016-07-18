@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -16,8 +18,9 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.documento.entity.HistoricoModeloDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 
-@Name(HistoricoModeloDocumentoDAO.NAME)
+@Stateless
 @AutoCreate
+@Name(HistoricoModeloDocumentoDAO.NAME)
 public class HistoricoModeloDocumentoDAO extends DAO<HistoricoModeloDocumento> {
 
     private static final long serialVersionUID = 1L;

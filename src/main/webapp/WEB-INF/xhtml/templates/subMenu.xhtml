@@ -9,10 +9,10 @@
   xmlns:rich="http://richfaces.org/rich"
   xmlns:s="http://jboss.org/schema/seam/taglib">
   <c:forEach
-    items="#{subMenu.children}"
+    items="#{subMenu.items}"
     var="sub">
     <li class="menu-itm"><h:panelGroup
-        rendered="#{empty sub.children}">
+        rendered="#{empty sub.items}">
         <a:commandLink
             styleClass="menu-lnk"
             execute="@this"
@@ -22,7 +22,7 @@
             <h:outputText value="#{sub.label}" />
           </div>
         </a:commandLink>
-      </h:panelGroup> <h:panelGroup rendered="#{not empty sub.children}">
+      </h:panelGroup> <h:panelGroup rendered="#{not empty sub.items}">
         <div class="menu-itm-lbl sub-menu-lbl" id="#{sub.label}">
           <h:outputText value="#{sub.label}" />
         </div>

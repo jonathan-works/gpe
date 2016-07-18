@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -41,9 +42,11 @@ import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso_;
 import br.com.infox.epp.system.Parametros;
 
-@Name(ModeloComunicacaoDAO.NAME)
+@Stateless
 @AutoCreate
+@Name(ModeloComunicacaoDAO.NAME)
 public class ModeloComunicacaoDAO extends DAO<ModeloComunicacao> {
+    
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "modeloComunicacaoDAO";
 	

@@ -20,7 +20,6 @@ import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
@@ -57,7 +56,6 @@ import br.com.infox.ibpm.sinal.SignalConfigurationBean;
 import br.com.infox.ibpm.sinal.SignalDao;
 import br.com.infox.ibpm.sinal.SignalParam;
 import br.com.infox.ibpm.sinal.SignalParam.Type;
-import br.com.infox.ibpm.task.handler.TaskHandler;
 import br.com.infox.ibpm.transition.TransitionHandler;
 import br.com.infox.jsf.util.JsfUtil;
 import br.com.infox.log.LogProvider;
@@ -69,7 +67,6 @@ import br.com.infox.seam.util.ComponentUtil;
 public class NodeFitter extends Fitter implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    public static final String SET_CURRENT_NODE_EVENT = "NodeFitter.setCurrentNode";
     private static final LogProvider LOG = Logging.getLogProvider(NodeFitter.class);
 
     private List<Node> nodes;
@@ -85,6 +82,12 @@ public class NodeFitter extends Fitter implements Serializable {
     private Map<Number, String> modifiedNodes = new HashMap<Number, String>();
     private List<ClassificacaoDocumento> classificacoesDocumento;
     private List<Signal> signals;
+    
+    //Controlle dos Observadores de sinal
+    private String codigoCatchSignal;
+    private String transicaoCatchSignal;
+    private String condicaoCatchSignal;
+    private boolean managedCatchSignal = false;
 
     @Inject
     private JbpmNodeManager jbpmNodeManager;
@@ -107,84 +110,86 @@ public class NodeFitter extends Fitter implements Serializable {
     }
     
     public void addNewNode() {
-        Class<?> nodeType = NodeTypes.getNodeType(getNodeType(newNodeType));
-        ProcessDefinition processo = getProcessBuilder().getInstance();
-        if (nodeType != null) {
-            Node node = null;
-            try {
-                node = (Node) nodeType.newInstance();
-            } catch (Exception e) {
-                LOG.error("addNewNode()", e);
-                return;
-            }
-            if (nodeType.equals(InfoxMailNode.class) || nodeType.equals(Node.class)){
-                node.setAsync(true);
-            }
-            node.setName(newNodeName);
-            node.setKey("key_" + UUID.randomUUID().toString());
-            processo.addNode(node);
-            nodes = processo.getNodes();
-            // Se foi informado newNodeAfter, procura para inserir
-            if (newNodeAfter != null) {
-                int i = nodes.indexOf(newNodeAfter);
-                processo.reorderNode(nodes.indexOf(node), i + 1);
-            } else {
-                // Senão coloca antes do primeiro EndState
-                int i = nodes.size() - 1;
-                do {
-                    i--;
-                } while (nodes.get(i) instanceof EndState);
-                processo.reorderNode(nodes.indexOf(node), i + 1);
-            }
-            // insere o novo nó entre os nós da transição selecionada
-            // Se for EndState, liga apenas ao newNodeAfter
-            TransitionHandler newNodeTransition = getProcessBuilder().getTransitionFitter().getNewNodeTransition();
-            if (nodeType.equals(EndState.class)) {
-                Transition t = new Transition();
-                t.setFrom(newNodeAfter);
-                node.addArrivingTransition(t);
-                t.setName(node.getName());
-                t.setKey("key_" + UUID.randomUUID().toString());
-                newNodeAfter.addLeavingTransition(t);
-            } else if (newNodeTransition != null && newNodeTransition.getTransition() != null) {
-                Transition t = new Transition();
-                Transition oldT = newNodeTransition.getTransition();
-                t.setDescription(oldT.getDescription());
-                Node to = newNodeTransition.getTransition().getTo();
-                t.setName(to.getName());
-                t.setKey("key_" + UUID.randomUUID().toString());
-                t.setProcessDefinition(oldT.getProcessDefinition());
-
-                /*
-                 * Não reordenar as linhas de código marcadas pelo bloco abaixo
-                 * (ver tarefa #35099) A alteração dos atributos from e name da
-                 * transição altera seu hashcode causando erros
-                 */
-                // INÍCIO BLOCO //
-                node.addLeavingTransition(t);
-                to.removeArrivingTransition(oldT);
-                newNodeTransition.setName(node.getName());
-                node.addArrivingTransition(oldT);
-                to.addArrivingTransition(t);
-                // FIM BLOCO //
-            }
-
-            if (nodeType.equals(Fork.class)) {
-                handleForkNode(node);
-            }
-
-            newNodeName = null;
-            newNodeType = null;
-            newNodeAfter = null;
-            nodesItems = null;
-            setCurrentNode(node);
-            if (nodeType.equals(TaskNode.class)) {
-                getProcessBuilder().getTaskFitter().addTask();
-            }
-            getProcessBuilder().getTransitionFitter().clearNewNodeTransition();
-            getProcessBuilder().getTransitionFitter().clear();
-            getProcessBuilder().getTransitionFitter().checkTransitions();
+        Class<? extends Node> nodeType = NodeTypes.getNodeType(getNodeType(newNodeType));
+        if (nodeType == null) return;
+        
+        ProcessDefinition processDefinition = getProcessBuilder().getInstance();
+        Node node = null;
+        try {
+            node = nodeType.newInstance();
+        } catch (Exception e) {
+            LOG.error("addNewNode()", e);
+            return;
         }
+        if (nodeType.equals(InfoxMailNode.class) || nodeType.equals(Node.class)){
+            node.setAsync(true);
+        }
+        node.setName(newNodeName);
+        node.setKey("key_" + UUID.randomUUID().toString());
+        processDefinition.addNode(node);
+        nodes = processDefinition.getNodes();
+        // Se foi informado newNodeAfter, procura para inserir
+        if (newNodeAfter != null) {
+            int i = nodes.indexOf(newNodeAfter);
+            processDefinition.reorderNode(nodes.indexOf(node), i + 1);
+        } else {
+            // Senão coloca antes do primeiro EndState
+            int i = nodes.size() - 1;
+            do {
+                i--;
+            } while (nodes.get(i) instanceof EndState);
+            processDefinition.reorderNode(nodes.indexOf(node), i + 1);
+        }
+        // insere o novo nó entre os nós da transição selecionada
+        // Se for EndState, liga apenas ao newNodeAfter
+        TransitionHandler newNodeTransition = getProcessBuilder().getTransitionFitter().getNewNodeTransition();
+        if (nodeType.equals(EndState.class)) {
+            Transition transition = new Transition();
+            transition.setFrom(newNodeAfter);
+            node.addArrivingTransition(transition);
+            transition.setName(node.getName());
+            transition.setKey("key_" + UUID.randomUUID().toString());
+            newNodeAfter.addLeavingTransition(transition);
+        } else if (newNodeTransition != null && newNodeTransition.getTransition() != null) {
+            Transition transition = new Transition();
+            Transition oldT = newNodeTransition.getTransition();
+            transition.setDescription(oldT.getDescription());
+            Node to = newNodeTransition.getTransition().getTo();
+            transition.setName(to.getName());
+            transition.setKey("key_" + UUID.randomUUID().toString());
+            transition.setProcessDefinition(oldT.getProcessDefinition());
+
+            /*
+             * Não reordenar as linhas de código marcadas pelo bloco abaixo
+             * (ver tarefa #35099) A alteração dos atributos from e name da
+             * transição altera seu hashcode causando erros
+             */
+            // INÍCIO BLOCO //
+            node.addLeavingTransition(transition);
+            to.removeArrivingTransition(oldT);
+            newNodeTransition.setName(node.getName());
+            node.addArrivingTransition(oldT);
+            to.addArrivingTransition(transition);
+            // FIM BLOCO //
+        }
+
+        if (nodeType.equals(Fork.class)) {
+            handleForkNode(node);
+        }
+
+        newNodeName = null;
+        newNodeType = null;
+        newNodeAfter = null;
+        nodesItems = null;
+        setCurrentNode(node);
+        if (nodeType.equals(TaskNode.class)) {
+            getProcessBuilder().getTaskFitter().addTask();
+        } else if (nodeType.equals(StartState.class)) {
+            getProcessBuilder().getTaskFitter().addStartStateTask();
+        }
+        getProcessBuilder().getTransitionFitter().clearNewNodeTransition();
+        getProcessBuilder().getTransitionFitter().clear();
+        getProcessBuilder().getTransitionFitter().checkTransitions();
     }
 
     public List<ModeloDocumento> getModeloDocumentoList() {
@@ -440,26 +445,16 @@ public class NodeFitter extends Fitter implements Serializable {
     }
 
     public void setCurrentNode(Node cNode) {
-        TaskFitter tf = getProcessBuilder().getTaskFitter();
+        TaskFitter taskFitter = getProcessBuilder().getTaskFitter();
         this.currentNode = cNode;
-        tf.getTasks();
-        tf.clear();
-        Map<Node, List<TaskHandler>> taskNodeMap = getProcessBuilder().getTaskNodeMap();
-        if (taskNodeMap != null && taskNodeMap.containsKey(cNode)) {
-            List<TaskHandler> list = taskNodeMap.get(cNode);
-            if (!list.isEmpty()) {
-                tf.setCurrentTask(list.get(0));
-            }
-        }
+        taskFitter.getTasks();
         nodeHandler = new NodeHandler(cNode);
         newNodeType = NodeTypeConstants.TASK;
         getProcessBuilder().getTransitionFitter().clearArrivingAndLeavingTransitions();
         getProcessBuilder().getTaskFitter().setTypeList(null);
-        if (tf.getCurrentTask() != null) {
-            tf.getCurrentTask().clearHasTaskPage();
+        if (taskFitter.getCurrentTask() != null) {
+            taskFitter.getCurrentTask().clearHasTaskPage();
         }
-
-        Events.instance().raiseEvent(SET_CURRENT_NODE_EVENT);
     }
 
     public String getNodeForm() {
@@ -637,7 +632,7 @@ public class NodeFitter extends Fitter implements Serializable {
         for (Signal signal : signals) {
             String eventType = Event.getListenerEventType(signal.getCodigo());
             if (currentNode.getEvents() == null || (signal.getAtivo()
-                    && !currentNode.getEvents().containsKey(eventType))) {
+                    && (!currentNode.getEvents().containsKey(eventType)) || signal.getCodigo().equals(getCodigoCatchSignal()))) {
                 sinaisDisponiveis.add(signal);
             }
         }
@@ -701,20 +696,20 @@ public class NodeFitter extends Fitter implements Serializable {
         return Type.values();
     }
     
-    public void addCatchSignal(ActionEvent actionEvent) {
-        Map<String, String> request = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-        String inputNome = (String) actionEvent.getComponent().getAttributes().get("listenerValue");
-        String inputTransicao = (String) actionEvent.getComponent().getAttributes().get("transitionValue");
-        String inputCondition = (String) actionEvent.getComponent().getAttributes().get("conditionValue");
-        String codigo = request.get(inputNome);
-        String transitionKey = request.get(inputTransicao);
-        String condition = request.get(inputCondition);
-        Event event = new Event(Event.getListenerEventType(codigo));
-        SignalConfigurationBean signalConfigurationBean = new SignalConfigurationBean(transitionKey, condition);
+    public void addCatchSignal() {
+        Event event = new Event(Event.getListenerEventType(codigoCatchSignal));
+        SignalConfigurationBean signalConfigurationBean = new SignalConfigurationBean(transicaoCatchSignal, condicaoCatchSignal);
         event.setConfiguration(signalConfigurationBean.toJson());
         currentNode.addEvent(event);
-        JsfUtil.clear(inputNome, inputTransicao, inputCondition);
+        clearCacheCatchSignal();
     }
+
+	private void clearCacheCatchSignal() {
+		codigoCatchSignal = null;
+        transicaoCatchSignal = null;
+        condicaoCatchSignal = null;
+        managedCatchSignal = false;
+	}
     
     public void addDispatcherSignal(ActionEvent actionEvent) {
         Map<String, String> request = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
@@ -756,7 +751,29 @@ public class NodeFitter extends Fitter implements Serializable {
     }
     
     public void removeCatchSignal(Event event) {
+        if (getCodigoSignalByEvent(event).equals(codigoCatchSignal)){
+        	clearCacheCatchSignal();
+        }
         currentNode.removeEvent(event);
+    }
+    
+    public void selectCatchSignal(Event event) {
+    	setCodigoCatchSignal(getCodigoSignalByEvent(event));
+    	SignalConfigurationBean signalConfigurationBean = SignalConfigurationBean.fromJson(event.getConfiguration());
+    	setTransicaoCatchSignal(signalConfigurationBean.getTransitionKey());
+    	setCondicaoCatchSignal(signalConfigurationBean.getCondition());
+    	setManagedCatchSignal(true);
+    }
+
+	private String getCodigoSignalByEvent(Event event) {
+		return event.getEventType().substring(Event.EVENTTYPE_LISTENER.length() + 1);
+	}
+    
+    public void saveCatchSignal() {
+    	Event event = currentNode.getEvent(Event.getListenerEventType(getCodigoCatchSignal())); 
+    	SignalConfigurationBean signalConfigurationBean = new SignalConfigurationBean(transicaoCatchSignal, condicaoCatchSignal);
+        event.setConfiguration(signalConfigurationBean.toJson());
+    	clearCacheCatchSignal();
     }
     
     public void removeDispatchSignal() {
@@ -770,5 +787,37 @@ public class NodeFitter extends Fitter implements Serializable {
         dispatcherConfiguration.getSignalParams().remove(signalParam);
         event.setConfiguration(dispatcherConfiguration.toJson());
     }
+
+	public String getCodigoCatchSignal() {
+		return codigoCatchSignal;
+	}
+
+	public void setCodigoCatchSignal(String codigoCatchSignal) {
+		this.codigoCatchSignal = codigoCatchSignal;
+	}
+
+	public String getTransicaoCatchSignal() {
+		return transicaoCatchSignal;
+	}
+
+	public void setTransicaoCatchSignal(String transicaoCatchSignal) {
+		this.transicaoCatchSignal = transicaoCatchSignal;
+	}
+
+	public String getCondicaoCatchSignal() {
+		return condicaoCatchSignal;
+	}
+
+	public void setCondicaoCatchSignal(String condicaoCatchSignal) {
+		this.condicaoCatchSignal = condicaoCatchSignal;
+	}
+
+	public boolean isManagedCatchSignal() {
+		return this.managedCatchSignal;
+	}
+	
+	public void setManagedCatchSignal(boolean managedCatchSignal) {
+		this.managedCatchSignal = managedCatchSignal;
+	}
     
 }

@@ -1,6 +1,5 @@
 package br.com.infox.ibpm.task.view;
 
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import static br.com.infox.ibpm.process.definition.variable.constants.VariableConstants.DEFAULT_PATH;
 import static java.text.MessageFormat.format;
 
@@ -66,7 +65,6 @@ public class TaskInstanceView implements Serializable {
 
     private TaskInstance taskInstance;
 
-    @SuppressWarnings(UNCHECKED)
     @Unwrap
     public Form getTaskForm() {
         getTaskInstance();
@@ -124,8 +122,9 @@ public class TaskInstanceView implements Serializable {
                         }
                             break;
                         case ENUMERATION:
+                        case ENUMERATION_MULTIPLE:
                         {
-                            ff.setType(VariableType.ENUMERATION.name());
+                            ff.setType(type.name());
                             ff.setValue(value);
                             DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
                             Integer id = Integer.valueOf(tokens[2]);
@@ -134,7 +133,7 @@ public class TaskInstanceView implements Serializable {
                             List<SelectItem> selectItens = new ArrayList<>();
                             if (dominio.isDominioSqlQuery()){
                             	ListaDadosSqlDAO listaDadosSqlDAO = ComponentUtil.getComponent(ListaDadosSqlDAO.NAME);
-                            	selectItens.addAll(listaDadosSqlDAO.getListSelectItem(dominio.getDominio()));
+                            	selectItens.addAll(listaDadosSqlDAO.getListSelectItem(dominio.getDominio(), taskInstance));
                             } else {
                             	String[] itens = dominio.getDominio().split(";");
                             	for (String item : itens) {

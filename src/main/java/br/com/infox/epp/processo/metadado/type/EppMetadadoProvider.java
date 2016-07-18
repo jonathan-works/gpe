@@ -2,6 +2,7 @@ package br.com.infox.epp.processo.metadado.type;
 
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
+import br.com.infox.epp.entrega.documentos.Entrega;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -47,4 +48,7 @@ public class EppMetadadoProvider extends MetadadoProcessoProvider {
 	
 	public static final MetadadoProcessoDefinition DOCUMENTO_EM_ANALISE = 
 			new MetadadoProcessoDefinition("documentoEmAnalise", Documento.class);
+
+	public static final MetadadoProcessoDefinition ENTREGA =
+	        new MetadadoProcessoDefinition("entrega", Entrega.class);
 }

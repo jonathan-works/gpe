@@ -7,9 +7,13 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.hibernate.Session;
 import org.jboss.seam.ScopeType;
@@ -22,9 +26,15 @@ import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.db.GraphSession;
+import org.jbpm.graph.def.Event;
+import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
+import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.exe.Token;
+import org.jbpm.graph.node.TaskNode;
+import org.jbpm.scheduler.def.CreateTimerAction;
+import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
@@ -86,6 +96,63 @@ public class JbpmUtil {
 
     public static Session getJbpmSession() {
         return ManagedJbpmContext.instance().getSession();
+    }
+    
+    public void deleteTimers(ProcessDefinition processDefinition) {
+        EntityManager entityManager = EntityManagerProducer.getEntityManager();
+        // Usado JPQL pois no JPA 2.0 nãp têm criteria para DELETE, somente no JPA 2.1
+        String jpql = "delete from org.jbpm.job.Timer timer "
+                + "where exists (select 1 from org.jbpm.graph.exe.ProcessInstance pinst "
+                + "                 where timer.processInstance.id = pinst.id "
+                + "                 and pinst.processDefinition.id = :processDefitinionId )";
+        Query query = entityManager.createQuery(jpql).setParameter("processDefitinionId", processDefinition.getId());
+        query.executeUpdate();
+    }
+    
+    public void createTimers(ProcessDefinition processDefinition) throws Exception {
+        EntityManager entityManager = EntityManagerProducer.instance().getEntityManagerTransactional();
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
+        Root<ProcessInstance> processInstance = cq.from(ProcessInstance.class);
+        Root<TaskNode> taskNode = cq.from(TaskNode.class);
+        Root<CreateTimerAction> createTimeAction = cq.from(CreateTimerAction.class);
+        Join<ProcessInstance, Token> token = processInstance.join("rootToken", JoinType.INNER);
+        Join<TaskNode, Event> event = taskNode.join("events", JoinType.INNER);
+        
+        Subquery<Integer> subquery = cq.subquery(Integer.class);
+        subquery.select(cb.literal(1));
+        Root<TaskInstance> taskInstance = subquery.from(TaskInstance.class);
+        Join<TaskInstance, Task> task = taskInstance.join("task", JoinType.INNER);
+        subquery.where(
+            cb.equal(task.<TaskNode>get("taskNode").<Long>get("id"), taskNode.<Long>get("id")),
+            cb.isNull(taskInstance.get("end")),
+            cb.isNotNull(taskInstance.get("create"))
+        );
+        
+        cq.where(
+            cb.equal(processInstance.<ProcessDefinition>get("processDefinition").get("id"), processDefinition.getId()),
+            cb.equal(token.<Node>get("node").<Long>get("id"), taskNode.<Long>get("id")),
+            cb.isNull(processInstance.get("end")),
+            cb.isNull(token.get("end")),
+            cb.equal(event.get("id"), createTimeAction.<Event>get("event").get("id")),
+            cb.exists(subquery)
+        );
+        cq.multiselect(token, createTimeAction, taskNode).distinct(true);
+        List<Object[]> resultList = entityManager.createQuery(cq).getResultList();
+        for (Object[] result : resultList) {
+            Token tokenResult = (Token) result[0];
+            CreateTimerAction createTimerActionResult = (CreateTimerAction) result[1];
+            TaskNode taskNodeResult = (TaskNode) result[2];
+            ExecutionContext executionContext = new ExecutionContext(tokenResult);
+            executionContext.setEventSource(taskNodeResult);
+            createTimerActionResult.execute(executionContext);
+        }
+    }
+    
+    public ProcessDefinition findLatestProcessDefinition(String name) {
+      return EntityManagerProducer.getEntityManager()
+              .createNamedQuery("GraphSession.findLatestProcessDefinitionQuery", ProcessDefinition.class)
+              .setParameter("name", name).setMaxResults(1).getSingleResult();
     }
     
     public List<String> getProcessDefinitionNames() {

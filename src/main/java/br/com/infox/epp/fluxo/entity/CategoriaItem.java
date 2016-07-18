@@ -35,14 +35,25 @@ import javax.validation.constraints.NotNull;
     @NamedQuery(name = LIST_BY_CATEGORIA, query = LIST_BY_CATEGORIA_QUERY),
     @NamedQuery(name = COUNT_BY_CATEGORIA_ITEM, query = COUNT_BY_CATEGORIA_ITEM_QUERY) })
 public class CategoriaItem implements Serializable {
+    
     private static final long serialVersionUID = 1L;
 
+    @Id
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_CATEGORIA_ITEM)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
+    @Column(name = ID_CATEGORIA_ITEM, unique = true, nullable = false)
     private Integer idCategoriaItem;
+    
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = ID_ITEM, nullable = false)
     private Categoria categoria;
+   
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = ID_CATEGORIA, nullable = false)
     private Item item;
 
     public CategoriaItem() {
-
     }
 
     public CategoriaItem(Categoria categoria, Item item) {
@@ -50,10 +61,6 @@ public class CategoriaItem implements Serializable {
         this.item = item;
     }
 
-    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_CATEGORIA_ITEM)
-    @Id
-    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
-    @Column(name = ID_CATEGORIA_ITEM, unique = true, nullable = false)
     public Integer getIdCategoriaItem() {
         return idCategoriaItem;
     }
@@ -62,9 +69,6 @@ public class CategoriaItem implements Serializable {
         this.idCategoriaItem = idCategoriaItem;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = ID_ITEM, nullable = false)
-    @NotNull
     public Item getItem() {
         return item;
     }
@@ -77,8 +81,6 @@ public class CategoriaItem implements Serializable {
         this.categoria = categoria;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = ID_CATEGORIA, nullable = false)
     public Categoria getCategoria() {
         return categoria;
     }

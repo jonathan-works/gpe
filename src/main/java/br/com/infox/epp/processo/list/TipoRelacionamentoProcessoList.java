@@ -21,6 +21,7 @@ public class TipoRelacionamentoProcessoList extends EntityList<TipoRelacionament
 
     @Override
     protected void addSearchFields() {
+        addSearchField("codigo", SearchCriteria.CONTENDO);
         addSearchField("tipoRelacionamento", SearchCriteria.CONTENDO);
         addSearchField("ativo", SearchCriteria.IGUAL);
     }

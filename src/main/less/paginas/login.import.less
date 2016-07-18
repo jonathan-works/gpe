@@ -10,46 +10,41 @@
 form#login{
     text-align:center;
 }
-.bg_login_inferior{
-    padding:1.5em;
-}
 .blocoCentralLogin {
-  @img-folder:"#{layoutController.getResourceUrl('LOGO_LOGIN')}";
-  text-align:center;  
-  background-image:url("@{context-path}\@{img-folder}");
-  background-repeat:no-repeat;
-  background-position:top center;
-  background-size:390px auto;
-  @img-width:370px;
-  @img-height:140px;
-  @padding:1em;
-  padding: calc(~"@{img-height} + @{padding}") @padding @padding;
-  font-size:1rem;
-  display:inline-block;
-  .z-depth(1);
+    @del-space:1em;    
+    .logo{
+        @img-height:140px;
+        @img-folder:"#{layoutController.getResourceUrl('LOGO_LOGIN')}";
+        background-image:url("@{context-path}\@{img-folder}");
+        background-repeat:no-repeat;
+        background-position:center center;
+        background-size:contain;
+        margin:0 0 @del-space;
+        height:@img-height;
+    }
+    .bg_login_inferior{
+        margin:@del-space;
+    }
+    text-align:center;      
+    padding: @del-space;
+    font-size:1rem;
+    display:inline-block;
+    .z-depth(1);
 }
 .logo-img{
   display:none;
 }
-.bg_login{
-  text-align:center;
-  display:inline-block;
-  position:relative;
-}
 
 .login-common-flex{
-    display:inline-block;
-    vertical-align:top;
+    display:block;
 }
 
 .login-lbl {
   &:extend(.login-common-flex);
   font-size:1em;
   margin:0.2em;
-  width:100%;
 }
 input.input-text-login{
-  &:extend(.login-common-flex);
   text-align:center;
   font-size:1em;
   margin:0.2em;

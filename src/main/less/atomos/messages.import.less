@@ -45,12 +45,12 @@
 
 .d-msg {
     position:fixed;
-    left:calc(~"50% - @{d-msgs-width}/2");
-    top:5em;
+    left:50%;
+    top:50%;
+		.prefixed-atrib(transform, translate( -50%, -50% ));
     display: inline-block;
     color:@panel-bg-color;
     background-color:@panel-txt-color;
-    .z-depth(1);
 	&.hidden {
         display:none;
   }

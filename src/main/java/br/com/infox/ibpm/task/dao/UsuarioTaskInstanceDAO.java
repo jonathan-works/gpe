@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
@@ -13,8 +15,9 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
 import br.com.infox.ibpm.task.query.UsuarioTaskInstanceQuery;
 
-@Name(UsuarioTaskInstanceDAO.NAME)
+@Stateless
 @AutoCreate
+@Name(UsuarioTaskInstanceDAO.NAME)
 public class UsuarioTaskInstanceDAO extends DAO<UsuarioTaskInstance> {
 
     private static final long serialVersionUID = 1L;

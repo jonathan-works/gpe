@@ -13,5 +13,10 @@ public @interface External {
 	
 	Parameter [] value () default {};
 	String tooltip () default "";
+	ExpressionType expressionType() default ExpressionType.EVENTOS;
+	String example() default "";
 
+	public static enum ExpressionType {
+		GERAL, RAIA_DINAMICA, EVENTOS, GATEWAY;
+	}
 }

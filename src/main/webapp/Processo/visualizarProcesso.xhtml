@@ -49,16 +49,9 @@
                     label="#{infoxMessages['processo.usuarioCadastroProcesso']}"
                     value="#{processoEpaHome.instance.usuarioCadastro}" />
                     
-                <ui:repeat var="metadado" value="#{processoEpaHome.detalhesMetadados}" >
-            		<wi:outputText id="metadado#{metadado.metadadoType}"
-                    	label="#{metadadoMessages[metadado.metadadoType]}"
-                    	value="#{metadado}" rendered="#{metadado.classType.canonicalName ne 'java.util.Date'}"/>
-                    <wi:outputText id="metadado#{metadado.metadadoType}Date"
-                    	label="#{metadadoMessages[metadado.metadadoType]}"
-                    	value="#{metadado.value}" rendered="#{metadado.classType.canonicalName eq 'java.util.Date'}">
-							<f:convertDateTime pattern="dd/MM/yyyy kk:mm" />
-					</wi:outputText>
-            	</ui:repeat>
+               	<ui:repeat var="variavel" value="#{processoEpaHome.variaveisDetalhe}" >
+		        	<wi:outputText id="variavel#{variavel.nome}" label="#{variavel.label}" value="#{variavel.valor}"/>
+		      	</ui:repeat>
                     
             </h:panelGrid>
         </rich:collapsiblePanel>
@@ -92,7 +85,7 @@
                 name="tabAnexos"
                 rendered="#{processoEpaHome.managed and security.checkPage('/pages/Processo/abaAnexos')}"
                 status=":status"
-                action="#{documentoList.entity.setProcesso(processoEpaHome.instance)}"
+                action="#{documentoList.setProcesso(processoEpaHome.instance)}"
                 actionListener="#{documentoProcessoAction.onClickDocumentosTab()}"
                 title="#{infoxMessages['processo.documentos']}">
                 <ui:include src="pastaDocumento.xhtml">
