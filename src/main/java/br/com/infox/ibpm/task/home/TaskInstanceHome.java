@@ -576,7 +576,7 @@ public class TaskInstanceHome implements Serializable {
 		} catch (Exception ex) {
 			String action = "atribuir a taskInstance corrente ao currentTaskInstance: ";
 			LOG.warn(action, ex);
-			throw new ApplicationException(ApplicationException.createMessage(action + ex.getLocalizedMessage(),
+			throw new ApplicationException(ApplicationException.createMessage(action + infoxMessages.get(ex.getLocalizedMessage()),
 					"setCurrentTaskInstance()", "TaskInstanceHome", "BPM"), ex);
 		}
 	}
