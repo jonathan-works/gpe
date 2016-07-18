@@ -14,9 +14,7 @@
   <h:panelGroup id="#{empty id ? 'divApplet' : id}">
     <s:fragment rendered="#{empty rendered ? true : rendered}">
 
-      <h:inputHidden id="#{id}Token" value="#{tokenField}" />
-      
-      <a:jsFunction name="apagarGrupo" action="#{assinadorController.apagarGrupo()}" />
+      <a:jsFunction name="apagarGrupo" action="#{assinadorController.apagarGrupo()}" execute="@none" render="@none" />
       
       <a:commandButton type="button" styleClass="buttons" disabled="#{disableb}" onbegin="infox.showLoading();" style="#{signButtonStyle}"
       		action="#{elFunctions.invokeMethod(preSignAction)}" execute="#{execute}" rendered="#{empty rendered? 'true' : rendered}"
@@ -38,14 +36,13 @@
   	        	  var intervalId = setInterval(function() {  
   	        	      var token = '#{tokenField}';  
   	        	      $.get('#{pathResolver.getRestBaseUrl()}' + '/tokenAssinatura/' + token + '/status', function(status) {
-   	        		      if (status === 'SUCESSO' || status === 'ERRO') {  
+   	        		      if (status !== 'AGUARDANDO_ASSINATURA') {  
 	  	        		      clearInterval(intervalId);
 	  	        		      #{functionPosSign};
-	  	        		      //apagarGrupo();
+	  	        		      apagarGrupo();
   	        	  	      }
   			  	      });  
   		          }, 2000);  
-                     setTimeout(function() { clearInterval(intervalId); resetToken();}, 8000 * 60);
   		   }  
   	   });  
 	  </h:outputScript>

@@ -104,7 +104,7 @@
                         signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
                         reRender="pageBodyDialogMessage, @form" tokenField="#{taskInstanceHome.tokenToSign}"
                         propertyValue="#{f.id}" propertyTarget="#{taskInstanceHome.variavelDocumentoToSign}"
-                        documentoBinList="#{taskInstanceHome.documentoToSign.documentoBin}"
+                        documentoBinList="#{taskInstanceHome.variaveisDocumento[id].documentoBin}"
                         functionPreSign="infox.showLoading();" functionPosSign="assinar();">
                     </wi:certificadoDigital>
                 </p:outputPanel>

@@ -19,7 +19,10 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.Type;
+
 import br.com.infox.epp.certificado.enums.CertificateSignatureGroupStatus;
+import br.com.infox.hibernate.UUIDGenericType;
 
 /**
  * @author erikliberal
@@ -65,8 +68,8 @@ public class CertificateSignature {
     @Column(name="ob_sha256")
     private byte[] sha256;
     
-    @JoinColumn()
     @Column(name="ds_uuid_documento_bin")
+    @Type(type = UUIDGenericType.TYPE_NAME)
     private UUID uuidDocumentoBin;
     
     public Integer getIdCertificateSignature() {

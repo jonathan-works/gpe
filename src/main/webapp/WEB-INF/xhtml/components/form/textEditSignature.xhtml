@@ -47,7 +47,7 @@
                         rendered="#{taskInstanceHome.podeAssinarDocumento(f.id.split('-')[0])}">
                         <a:jsFunction name="assinar" action="#{taskInstanceHome.assinarDocumento()}"
                             execute="@this, assinaturaDocumentoDiv#{f.id}"
-                            render="assinaturaDocumentoDiv#{f.id}, #{id}EditorDiv, pageBodyDialogMessage, @form"
+				render="assinaturaDocumentoDiv#{f.id}, #{id}EditorDiv, pageBodyDialogMessage, @form, botaoAssinatura" 
                             oncomplete="infox.hideLoading();" />
                         <wi:certificadoDigital id="botaoAssinatura"
                             signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
