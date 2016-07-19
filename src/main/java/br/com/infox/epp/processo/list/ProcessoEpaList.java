@@ -31,7 +31,6 @@ import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoRecurso
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.Categoria_;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.fluxo.entity.Fluxo_;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo_;
