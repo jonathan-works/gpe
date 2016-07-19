@@ -1,14 +1,21 @@
 package br.com.infox.core.persistence;
 
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import org.jboss.seam.annotations.ApplicationException;
+
+import br.com.infox.epp.system.EppProperties;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @ApplicationException(end = false, rollback = false)
 @javax.ejb.ApplicationException(rollback = true)
 public class DAOException extends RuntimeException {
-
     private static final long serialVersionUID = 1L;
+    private static final LogProvider LOG = Logging.getLogProvider(DAOException.class);
+    
     public static final String MSG_UNIQUE_VIOLATION = "#{infoxMessages['constraintViolation.uniqueViolation']}";
     public static final String MSG_FOREIGN_KEY_VIOLATION = "#{infoxMessages['constraintViolation.foreignKeyViolation']}";
     public static final String MSG_NOT_NULL_VIOLATION = "#{infoxMessages['constraintViolation.notNullViolation']}";
@@ -84,12 +91,20 @@ public class DAOException extends RuntimeException {
             current = current.getCause();
         }
         if (current != null) {
+        	Properties properties = new Properties();
+            try {
+                properties.load(getClass().getResourceAsStream("/epp.properties"));
+            } catch (IOException e) {
+                LOG.error("Erro ao carregar o arquivo epp.properties", e);
+            }
             this.sqlException = (SQLException) current;
-            String exceptionClassName = this.sqlException.getClass().getCanonicalName();
-            if (exceptionClassName.equals("com.microsoft.sqlserver.jdbc.SQLServerException")) {
+            String banco = properties.getProperty(EppProperties.PROPERTY_TIPO_BANCO_DADOS);
+            if ("SQLServer".equals(banco)) {
                 return new SqlServer2012ErrorCodeAdaptor().resolve(sqlException);
-            } else if (exceptionClassName.equals("org.postgresql.util.PSQLException")) {
+            } else if ("PostgreSQL".equals(banco)) {
                 return new PostgreSQLErrorCodeAdaptor().resolve(sqlException);
+            } else if ("Oracle".equals(banco)) {
+            	return new OracleErrorAdaptor().resolve(sqlException);
             }
         }
         return null;
