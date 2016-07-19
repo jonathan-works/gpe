@@ -245,8 +245,11 @@ public class FluxoMergeService {
                 taskController = ((TaskNode) node).getTask(node.getName()).getTaskController();
                 validadeVariableAcess(node, taskController);
             }else if(node.getNodeType().equals(NodeType.StartState)){
-            	taskController = ((StartState)node).getProcessDefinition().getTaskMgmtDefinition().getStartTask().getTaskController();
-            	validadeVariableAcess(node, taskController);
+            	Task startTask = ((StartState)node).getProcessDefinition().getTaskMgmtDefinition().getStartTask();
+				if (startTask != null) {
+	            	taskController = startTask.getTaskController();
+	            	validadeVariableAcess(node, taskController);
+				}
             }
         }
     }
