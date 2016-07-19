@@ -2,12 +2,15 @@ package br.com.infox.epp.assinador;
 
 import java.security.Security;
 import java.security.cert.CertPath;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.ValidationException;
 
@@ -19,7 +22,12 @@ import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
 import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.cms.SignerInformation;
+import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoVerifierBuilder;
+import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.util.Store;
+
+import br.com.infox.epp.assinador.assinavel.TipoSignedData;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 
 public class CMSAdapter {
 
@@ -77,6 +85,32 @@ public class CMSAdapter {
     	}
     	
     	return certChain;
+    }
+    
+    @SuppressWarnings("unchecked")
+	public boolean validarAssinatura(byte[] signedData, TipoSignedData tipoSignedData, byte[] signature) throws AssinaturaException {
+		try {
+			Map<String, byte[]> hashes = new HashMap<>();
+			hashes.put(tipoSignedData.getOid(), signedData);
+			
+			CMSSignedData cmsSignedData = new CMSSignedData(hashes, signature);
+			Store<X509CertificateHolder> certStore = cmsSignedData.getCertificates();
+			Iterator<SignerInformation> signers = cmsSignedData.getSignerInfos().getSigners().iterator();
+
+			if(!signers.hasNext()) {
+				throw new AssinaturaException("Nenhuma assinatura encontrada");
+			}
+			
+			SignerInformation signerInformation = signers.next();
+			Iterator<X509CertificateHolder> signerCertificates = certStore.getMatches(signerInformation.getSID()).iterator();				
+				
+			Certificate cert = new JcaX509CertificateConverter().getCertificate(signerCertificates.next());
+			boolean valido = signerInformation.verify(new JcaSimpleSignerInfoVerifierBuilder().setProvider("BC").build(cert.getPublicKey()));
+			
+			return valido;
+		} catch (CMSException | CertificateException | OperatorCreationException e) {
+			throw new AssinaturaException("Erro na assinatura", e);
+		}
     }
     
     @SuppressWarnings("unchecked")

@@ -13,7 +13,6 @@ import br.com.infox.certificado.CertificadoGenerico;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -27,6 +26,7 @@ import br.com.infox.epp.assinador.assinavel.AssinavelDocumentoBinProvider;
 import br.com.infox.epp.assinador.assinavel.AssinavelGenericoProvider;
 import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
 import br.com.infox.epp.assinador.assinavel.AssinavelSource;
+import br.com.infox.epp.assinador.assinavel.TipoSignedData;
 import br.com.infox.epp.certificado.entity.TipoAssinatura;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
@@ -147,7 +147,7 @@ public class AssinadorService implements Serializable {
 				throw new RuntimeException("Documento com UUID " + uuidDocumentoBin + " não encontrado no banco de dados");
 			}
 			assinarDocumento(documentoBin, usuarioPerfil.getPerfilTemplate().getCodigo(),
-					usuarioPerfil.getLocalizacao().getCodigo(), dadosAssinatura.getAssinatura(), dadosAssinatura.getSignedData());
+					usuarioPerfil.getLocalizacao().getCodigo(), dadosAssinatura.getAssinatura(), dadosAssinatura.getSignedData(), dadosAssinatura.getTipoSignedData());
 		}
 		else {
 			validarAssinatura(dadosAssinatura, usuarioPerfil.getUsuarioLogin());			
@@ -179,7 +179,7 @@ public class AssinadorService implements Serializable {
 	public void validarAssinatura(DadosAssinatura dadosAssinatura, UsuarioLogin usuarioLogin)
 			throws AssinaturaException {
 		validarStatus(dadosAssinatura);
-		validadorAssinatura.validarAssinatura(dadosAssinatura.getSignedData(), dadosAssinatura.getAssinatura(), usuarioLogin);
+		validadorAssinatura.validarAssinatura(dadosAssinatura.getSignedData(), dadosAssinatura.getTipoSignedData(), dadosAssinatura.getAssinatura(), usuarioLogin);
 	}
 
 	public boolean validarDadosAssinadosByText(List<DadosAssinatura> dadosAssinatura, List<String> textList) {
@@ -230,22 +230,8 @@ public class AssinadorService implements Serializable {
 		groupService.erroProcessamento(token, uuidAssinavel, codigo, mensagem);
 	}
 
-	public void assinarDocumento(UUID uuidDocumento, byte[] signature, byte[] signedData) {
-		UsuarioPerfil usuarioLogado = Authenticator.getUsuarioPerfilAtual();
-		assinarDocumento(uuidDocumento, usuarioLogado.getPerfilTemplate().getCodigo(),
-				usuarioLogado.getLocalizacao().getCodigo(), signature, signedData);
-	}
-
-	public void assinarDocumento(UUID uuidDocumento, String codigoPerfil, String codigoLocalizacao, byte[] signature, byte[] signedData) {
-		DocumentoBin documentoBin = documentoBinManager.getByUUID(uuidDocumento);
-		if (documentoBin == null) {
-			throw new ValidationException("UUID inválido");
-		}
-		assinarDocumento(documentoBin, codigoPerfil, codigoLocalizacao, signature, signedData);
-	}
-
 	public void assinarDocumento(DocumentoBin documentoBin, String codigoPerfil, String codigoLocalizacao,
-			byte[] signature, byte[] signedData) {
+			byte[] signature, byte[] signedData, TipoSignedData tipoSignedData) {
 		DadosAssinaturaLegada dadosAssinaturaLegada = cmsAdapter.convert(signature);
 		String certChainBase64 = dadosAssinaturaLegada.getCertChainBase64();
 		String signatureBase64 = dadosAssinaturaLegada.getSignature();
@@ -254,7 +240,7 @@ public class AssinadorService implements Serializable {
 
 		try {
 			assinaturaDocumentoService.assinarDocumento(documentoBin, usuarioPerfil, certChainBase64, signatureBase64,
-					TipoAssinatura.PKCS7, signedData);
+					TipoAssinatura.PKCS7, signedData, tipoSignedData);
 		} catch (DAOException | CertificadoException | AssinaturaException e) {
 			throw new RuntimeException("Erro ao assinar documento", e);
 		}

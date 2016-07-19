@@ -30,6 +30,7 @@ import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.CertificateManager;
 import br.com.infox.epp.assinador.ValidadorAssinatura;
 import br.com.infox.epp.assinador.ValidadorUsuarioCertificado;
+import br.com.infox.epp.assinador.assinavel.TipoSignedData;
 import br.com.infox.epp.certificado.entity.TipoAssinatura;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
@@ -239,9 +240,9 @@ public class AssinaturaDocumentoService {
     }
 
 	public void assinarDocumento(DocumentoBin documentoBin, UsuarioPerfil usuarioPerfilAtual, final String certChain,
-			String signature, TipoAssinatura tipoAssinatura, byte[] signedData) throws CertificadoException, AssinaturaException, DAOException {
+			String signature, TipoAssinatura tipoAssinatura, byte[] signedData, TipoSignedData tipoSignedData) throws CertificadoException, AssinaturaException, DAOException {
 		UsuarioLogin usuario = usuarioPerfilAtual.getUsuarioLogin();
-		validadorAssinatura.validarAssinatura(signedData, Base64.decodeBase64(signature), usuario);
+		validadorAssinatura.validarAssinatura(signedData, tipoSignedData, Base64.decodeBase64(signature), usuario);
 
 		AssinaturaDocumento assinaturaDocumento = new AssinaturaDocumento(documentoBin, usuarioPerfilAtual, certChain, signature, tipoAssinatura);
 		List<Documento> documentosNaoSuficientementeAssinados = documentoBinManager.getDocumentosNaoSuficientementeAssinados(documentoBin);
@@ -265,20 +266,6 @@ public class AssinaturaDocumentoService {
 			throw new DAOException(e);
 		}
 	}
-
-    public void assinarDocumento(final Documento documento,
-            final UsuarioPerfil perfilAtual, final String certChain,
-            final String signature, byte[] signedData) throws CertificadoException,
-            AssinaturaException, DAOException {
-        assinarDocumento(documento.getDocumentoBin(), perfilAtual, certChain, signature, TipoAssinatura.PKCS7, signedData);
-    }
-    
-    public void assinarGravarDocumento(Documento documento,
-            final UsuarioPerfil perfilAtual, final String certChain,
-            final String signature, byte[] signedData) throws DAOException, CertificadoException, AssinaturaException {
-    	documento = documentoManager.gravarDocumentoNoProcesso(documento);
-    	assinarDocumento(documento.getDocumentoBin(), perfilAtual, certChain, signature, TipoAssinatura.PKCS7, signedData);
-    }
 
     public boolean isDocumentoAssinado(Integer idDocumento, PerfilTemplate perfilTemplate) {
         Documento documento = documentoManager.find(idDocumento);

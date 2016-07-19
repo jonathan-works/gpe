@@ -163,7 +163,7 @@ public class PrazoComunicacaoService {
     		return;
     	}
 		gravarDocumentoCiencia(comunicacao, documentoCiencia);
-		assinaturaDocumentoService.assinarDocumento(documentoCiencia.getDocumentoBin(), usuarioPerfil, dadosAssinatura.getCertChainBase64(), dadosAssinatura.getAssinaturaBase64(), TipoAssinatura.PKCS7, dadosAssinatura.getSignedData());
+		assinaturaDocumentoService.assinarDocumento(documentoCiencia.getDocumentoBin(), usuarioPerfil, dadosAssinatura.getCertChainBase64(), dadosAssinatura.getAssinaturaBase64(), TipoAssinatura.PKCS7, dadosAssinatura.getSignedData(), dadosAssinatura.getTipoSignedData());
 		darCienciaDocumentoGravado(comunicacao, dataCiencia, usuarioPerfil.getUsuarioLogin());
 	}
 

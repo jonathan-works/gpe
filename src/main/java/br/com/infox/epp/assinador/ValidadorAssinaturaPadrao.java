@@ -17,6 +17,7 @@ import br.com.infox.certificado.CertificadoDadosPessoaFisica;
 import br.com.infox.certificado.CertificadoFactory;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.assinador.assinavel.TipoSignedData;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
@@ -105,22 +106,23 @@ public class ValidadorAssinaturaPadrao implements ValidadorAssinatura, Validador
 	}
 
 	@Override
-	public void validarAssinatura(byte[] signedData, byte[] signature) throws AssinaturaException {
+	public void validarAssinatura(byte[] signedData, TipoSignedData tipoSignedData, byte[] signature) throws AssinaturaException {
 		DadosAssinaturaLegada dadosAssinaturaLegada = cmsAdapter.convert(signature);
 		try {
 			validarCertificado(dadosAssinaturaLegada.getCertChain());
+			cmsAdapter.validarAssinatura(signedData, tipoSignedData, signature);
 		} catch (CertificadoException e) {
 			throw new AssinaturaException(e);
 		}
 	}
 
 	@Override
-	public void validarAssinatura(byte[] signedData, byte[] signature, UsuarioLogin usuario)
+	public void validarAssinatura(byte[] signedData, TipoSignedData tipoSignedData, byte[] signature, UsuarioLogin usuario)
 			throws AssinaturaException {
 		DadosAssinaturaLegada dadosAssinaturaLegada = cmsAdapter.convert(signature);
 		String certChainBase64 = dadosAssinaturaLegada.getCertChainBase64();
 		verificaCertificadoUsuarioLogado(certChainBase64, usuario);
-		validarAssinatura(signedData, signature);
+		validarAssinatura(signedData, tipoSignedData, signature);
 	}
 
 }
