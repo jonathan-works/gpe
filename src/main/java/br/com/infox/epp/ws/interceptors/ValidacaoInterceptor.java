@@ -1,5 +1,7 @@
 package br.com.infox.epp.ws.interceptors;
 
+import static java.text.MessageFormat.format;
+
 import java.util.Set;
 
 import javax.interceptor.AroundInvoke;
@@ -31,7 +33,7 @@ public class ValidacaoInterceptor {
 		if(errors.size() > 0) {
 			ValidacaoException excecao = new ValidacaoException();
 			for (ConstraintViolation<T> violation : errors) {
-				excecao.adicionar(MensagensErroService.CODIGO_VALIDACAO, "O atributo " + violation.getPropertyPath() + violation.getMessage());
+				excecao.adicionar(MensagensErroService.CODIGO_VALIDACAO, format("{0}: {1}; ", violation.getPropertyPath(), violation.getMessage()));
 			}
 			throw excecao;			
 		}

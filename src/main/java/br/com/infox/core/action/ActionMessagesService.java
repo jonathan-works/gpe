@@ -95,7 +95,7 @@ public class ActionMessagesService implements Serializable {
     private String getMessageForBeanViolationException(ConstraintViolationException e) {
         StringBuilder sb = new StringBuilder();
     	for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
-            sb.append(format("{0}: {1}", violation.getPropertyPath(), violation.getMessage()));
+            sb.append(format("{0}: {1}; ", violation.getPropertyPath(), violation.getMessage()));
         }
         return sb.toString();
     }

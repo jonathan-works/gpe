@@ -63,17 +63,13 @@ public class MensagensErroService {
 		}
 		if(ExcecaoMultiplaServico.class.isAssignableFrom(excecao.getClass())) {
 			return getErrosExcecao((ExcecaoMultiplaServico) excecao);
-		}
-		else if(ExcecaoServico.class.isAssignableFrom(excecao.getClass())) {
+		} else if(ExcecaoServico.class.isAssignableFrom(excecao.getClass())) {
 			return getErrosExcecao((ExcecaoServico) excecao);
-		}
-		else if(WebApplicationException.class.isAssignableFrom(excecao.getClass())) {
+		} else if(WebApplicationException.class.isAssignableFrom(excecao.getClass())) {
 			return getErrosExcecao((WebApplicationException) excecao);
 		} else if(DAOException.class.isAssignableFrom(excecao.getClass())) {
 			return getErrosExcecao((DAOException) excecao);
-		}
-		else
-		{
+		} else {
 			return getErrosExcecao(excecao);
 		}
 	}
