@@ -6,16 +6,23 @@ import java.util.List;
 
 import br.com.infox.epp.assinador.DocumentoBinAssinavelService;
 import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.documento.DocumentoBinDataProvider;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 
 public class AssinavelDocumentoBinProvider implements AssinavelProvider {
 	
 	private List<AssinavelSource> assinaveis;
 	private List<DocumentoBin> documentos;
-	private DocumentoBinAssinavelService documentoBinAssinavelService;
+	private DocumentoBinDataProvider documentoBinDataProvider;
+	
+	public AssinavelDocumentoBinProvider(List<DocumentoBin> documentos, DocumentoBinDataProvider documentoBinDataProvider) {
+		super();
+		this.documentos = documentos;
+		this.documentoBinDataProvider = documentoBinDataProvider;		
+	}
 	
 	public AssinavelDocumentoBinProvider(List<DocumentoBin> documentos) {
-		super();
+		this(documentos, BeanManager.INSTANCE.getReference(DocumentoBinAssinavelService.class));
 		this.documentos = documentos;
 	}
 
@@ -24,10 +31,7 @@ public class AssinavelDocumentoBinProvider implements AssinavelProvider {
 	}
 	
 	private byte[] getBinario(DocumentoBin documentoBin) {
-		if(documentoBinAssinavelService == null) {
-			documentoBinAssinavelService = BeanManager.INSTANCE.getReference(DocumentoBinAssinavelService.class);
-		}
-		return  documentoBinAssinavelService.getDadosAssinaveis(documentoBin.getId());
+		return documentoBinDataProvider.getBytes(documentoBin.getUuid());
 	}
 	
 	public class AssinavelDocumentoBinSourceImpl implements AssinavelDocumentoBinSource {

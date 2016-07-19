@@ -43,8 +43,6 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
 	private TokenAssinaturaService tokenAssinaturaService;
 	@Inject
 	private DocumentoBinManager documentoBinManager;
-	@Inject
-	private DocumentoBinAssinavelService documentoBinAssinavelService;
 
 	private static final int TOKEN_LIFESPAN = 8;
 
@@ -52,10 +50,6 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
 		return EntityManagerProducer.getEntityManager();
 	}
 
-	public byte[] getBinario(DocumentoBin documentoBin) {
-		return documentoBinAssinavelService.getDadosAssinaveis(documentoBin.getId());
-	}
-	
 	private CertificateSignatureGroup createNewGroup() {
 		String uuid = UUID.randomUUID().toString();
 		CertificateSignatureGroup certificateSignatureGroup = new CertificateSignatureGroup();

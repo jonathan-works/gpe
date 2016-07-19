@@ -1,12 +1,16 @@
 package br.com.infox.epp.assinador;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import br.com.infox.epp.processo.documento.dao.DocumentoBinDAO;
+import br.com.infox.epp.documento.DocumentoBinDataProvider;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 
 /**
@@ -15,20 +19,30 @@ import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
  *
  */
 @Stateless
-public class DocumentoBinAssinavelService {
+public class DocumentoBinAssinavelService implements DocumentoBinDataProvider {
 
 	@Inject
-	private DocumentoBinarioManager documentoBinarioManager;
+	private DocumentoBinManager documentoBinManager;
 	@Inject
-	private DocumentoBinDAO documentoBinDAO;
+	private DocumentoBinarioManager documentoBinarioManager;
 	
-	public byte[] getDadosAssinaveis(Integer idDocumentoBin) {
-		DocumentoBin documentoBin = documentoBinDAO.find(idDocumentoBin);
+	private byte[] getDadosAssinaveis(DocumentoBin documentoBin) {
 		if(documentoBin.isBinario()) {
 			return documentoBinarioManager.getData(documentoBin.getId());
 		}
 		else {
 			return documentoBin.getModeloDocumento().getBytes(StandardCharsets.UTF_8);			
 		}
+	}
+
+	@Override
+	public byte[] getBytes(UUID uuidDocumentoBin) {
+		DocumentoBin documentoBin = documentoBinManager.getByUUID(uuidDocumentoBin);
+		return getDadosAssinaveis(documentoBin);
+	}
+
+	@Override
+	public InputStream getInputStream(UUID uuidDocumentoBin) {
+		return new ByteArrayInputStream(getBytes(uuidDocumentoBin));
 	}
 }
