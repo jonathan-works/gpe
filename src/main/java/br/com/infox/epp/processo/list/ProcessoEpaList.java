@@ -209,21 +209,6 @@ public class ProcessoEpaList extends EntityList<Processo> {
     	}
 	}
     
-    public List<Fluxo> getFluxos(String search) {
-    	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-    	CriteriaQuery<Fluxo> query = cb.createQuery(Fluxo.class);
-    	Root<Processo> processo = query.from(Processo.class);
-    	Join<Processo, NaturezaCategoriaFluxo> ncf = processo.join(Processo_.naturezaCategoriaFluxo, JoinType.INNER);
-    	Join<NaturezaCategoriaFluxo, Fluxo> fluxo = ncf.join(NaturezaCategoriaFluxo_.fluxo, JoinType.INNER);
-    	query.select(fluxo);
-    	query.orderBy(cb.asc(fluxo.get(Fluxo_.fluxo)));
-    	query.distinct(true);
-    	if (!Strings.isNullOrEmpty(search)) {
-    		query.where(cb.like(cb.lower(fluxo.get(Fluxo_.fluxo)), "%" + search.toLowerCase() + "%"));
-    	}
-    	return getEntityManager().createQuery(query).getResultList();
-	}
-    
 	public PessoaFisica getRelator() {
 		return relator;
 	}

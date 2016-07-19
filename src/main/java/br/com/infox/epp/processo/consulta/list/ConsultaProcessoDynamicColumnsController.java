@@ -15,6 +15,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.jboss.seam.faces.FacesMessages;
 
@@ -100,15 +101,20 @@ public class ConsultaProcessoDynamicColumnsController implements Serializable {
     public List<Fluxo> getFluxos(String search) {
     	CriteriaBuilder cb = EntityManagerProducer.getEntityManager().getCriteriaBuilder();
     	CriteriaQuery<Fluxo> query = cb.createQuery(Fluxo.class);
-    	Root<Processo> processo = query.from(Processo.class);
-    	Join<Processo, NaturezaCategoriaFluxo> ncf = processo.join(Processo_.naturezaCategoriaFluxo, JoinType.INNER);
-    	Join<NaturezaCategoriaFluxo, Fluxo> fluxo = ncf.join(NaturezaCategoriaFluxo_.fluxo, JoinType.INNER);
-    	query.select(fluxo);
+    	Root<Fluxo> fluxo = query.from(Fluxo.class);
     	query.orderBy(cb.asc(fluxo.get(Fluxo_.fluxo)));
-    	query.distinct(true);
+    	
+    	Subquery<Integer> subquery = query.subquery(Integer.class);
+    	Root<Processo> processo = subquery.from(Processo.class);
+    	Join<Processo, NaturezaCategoriaFluxo> ncf = processo.join(Processo_.naturezaCategoriaFluxo, JoinType.INNER);
+    	subquery.select(cb.literal(1));
+    	subquery.where(cb.equal(ncf.get(NaturezaCategoriaFluxo_.fluxo), fluxo));
+    	
+    	query.where(cb.exists(subquery));
     	if (!Strings.isNullOrEmpty(search)) {
-    		query.where(cb.like(cb.lower(fluxo.get(Fluxo_.fluxo)), "%" + search.toLowerCase() + "%"));
+    		query.where(query.getRestriction(), cb.like(cb.lower(fluxo.get(Fluxo_.fluxo)), "%" + search.toLowerCase() + "%"));
     	}
+    	
     	return EntityManagerProducer.getEntityManager().createQuery(query).getResultList();
 	}
     
