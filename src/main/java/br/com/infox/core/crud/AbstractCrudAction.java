@@ -286,7 +286,7 @@ public abstract class AbstractCrudAction<T, M extends Manager<? extends DAO<T>, 
         final GenericDatabaseErrorCode errorCode = daoException.getDatabaseErrorCode();
         if (errorCode != null) {
             getMessagesHandler().clear();
-            getMessagesHandler().add(daoException.getLocalizedMessage());
+            getMessagesHandler().add(infoxMessages.get(daoException.getLocalizedMessage()));
         }
     }
 

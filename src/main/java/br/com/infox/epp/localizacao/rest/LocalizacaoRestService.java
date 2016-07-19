@@ -1,16 +1,10 @@
 package br.com.infox.epp.localizacao.rest;
 
-import static br.com.infox.epp.ws.RestUtils.produceErrorJson;
-
 import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
-import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.localizacao.EstruturaSearch;
@@ -43,12 +37,7 @@ public class LocalizacaoRestService {
 		}
 		localizacao.setAtivo(Boolean.TRUE);
 		
-		try {
-			localizacaoManager.persist(localizacao);
-		} catch (DAOException e) {
-			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(produceErrorJson(e.getMessage())).build());
-		}
-		
+		localizacaoManager.persist(localizacao);
 		return new LocalizacaoDTO(localizacao);
 	}
 
@@ -59,22 +48,14 @@ public class LocalizacaoRestService {
 		if (localizacaoDTO.getCodigoEstrutura() != null){
 			localizacao.setEstruturaFilho(estruturaSearch.getEstruturaByNome(localizacaoDTO.getCodigoEstrutura()));
 		}
-		try {
-			return new LocalizacaoDTO(localizacaoManager.update(localizacao));
-		} catch (DAOException e) {
-			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(produceErrorJson(e.getMessage())).build());
-		}
+		return new LocalizacaoDTO(localizacaoManager.update(localizacao));
 	}
 	
 
 	public void removerLocalizacao(String codigoLocalizacao) {
 		Localizacao localizacao = localizacaoSearch.getLocalizacaoByCodigo(codigoLocalizacao);
 		localizacao.setAtivo(Boolean.FALSE);
-		try {
-			localizacaoManager.update(localizacao);
-		} catch (DAOException e) {
-			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(produceErrorJson(e.getMessage())).build());
-		}
+		localizacaoManager.update(localizacao);
 	}
 
 	public LocalizacaoDTO getLocalizacao(String codigoLocalizacao) {
