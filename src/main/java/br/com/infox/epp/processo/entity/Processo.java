@@ -1,8 +1,14 @@
 package br.com.infox.epp.processo.entity;
 
 import static br.com.infox.constants.LengthConstants.NUMERACAO_PROCESSO;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS1;
+import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS2;
+import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS3;
+import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS4;
+import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY1;
+import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY2;
+import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY3;
+import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY4;
 import static br.com.infox.epp.processo.query.ProcessoQuery.COUNT_PARTES_ATIVAS_DO_PROCESSO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.COUNT_PARTES_ATIVAS_DO_PROCESSO_QUERY;
 import static br.com.infox.epp.processo.query.ProcessoQuery.DATA_FIM;
@@ -98,7 +104,10 @@ import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 @Entity
 @Table(name = TABLE_PROCESSO)
 @NamedNativeQueries(value = {
-    @NamedNativeQuery(name = ATUALIZAR_PROCESSOS, query = ATUALIZAR_PROCESSOS_QUERY),
+    @NamedNativeQuery(name = ATUALIZAR_PROCESSOS1, query = ATUALIZAR_PROCESSOS_QUERY1),
+    @NamedNativeQuery(name = ATUALIZAR_PROCESSOS2, query = ATUALIZAR_PROCESSOS_QUERY2),
+    @NamedNativeQuery(name = ATUALIZAR_PROCESSOS3, query = ATUALIZAR_PROCESSOS_QUERY3),
+    @NamedNativeQuery(name = ATUALIZAR_PROCESSOS4, query = ATUALIZAR_PROCESSOS_QUERY4),
     @NamedNativeQuery(name = REMOVER_PROCESSO_JBMP, query = REMOVER_PROCESSO_JBMP_QUERY),
     @NamedNativeQuery(name = REMOVER_JBPM_LOG, query = REMOVER_JBPM_LOG_QUERY),
     @NamedNativeQuery(name = GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST, query = GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST_QUERY),

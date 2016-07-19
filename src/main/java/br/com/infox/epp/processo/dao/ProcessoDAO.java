@@ -1,7 +1,10 @@
 package br.com.infox.epp.processo.dao;
 
 import static br.com.infox.constants.WarningConstants.UNCHECKED;
-import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY;
+import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY1;
+import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY2;
+import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY3;
+import static br.com.infox.epp.processo.query.ProcessoQuery.ATUALIZAR_PROCESSOS_QUERY4;
 import static br.com.infox.epp.processo.query.ProcessoQuery.GET_ID_TASKMGMINSTANCE_AND_ID_TOKEN_BY_PROCINST;
 import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_ID_PROCESSO_AND_ID_USUARIO;
 import static br.com.infox.epp.processo.query.ProcessoQuery.GET_PROCESSO_BY_NUMERO_PROCESSO;
@@ -87,9 +90,17 @@ public class ProcessoDAO extends DAO<Processo> {
 
 	@Transactional(TransactionPropagationType.REQUIRED)
 	public void atualizarProcessos(Long processDefinitionId, String processoDefinitionName) {
-		JbpmUtil.getJbpmSession().createSQLQuery(ATUALIZAR_PROCESSOS_QUERY)
+		JbpmUtil.getJbpmSession().createSQLQuery(ATUALIZAR_PROCESSOS_QUERY1)
 		    .setParameter("processDefinitionName", processoDefinitionName)
 		    .setParameter("processDefinitionId", processDefinitionId)
+		    .executeUpdate();
+		JbpmUtil.getJbpmSession().createSQLQuery(ATUALIZAR_PROCESSOS_QUERY2)
+		    .setParameter("processDefinitionName", processoDefinitionName)
+		    .executeUpdate();
+		JbpmUtil.getJbpmSession().createSQLQuery(ATUALIZAR_PROCESSOS_QUERY3)
+		    .setParameter("processDefinitionName", processoDefinitionName)
+		    .executeUpdate();
+		JbpmUtil.getJbpmSession().createSQLQuery(ATUALIZAR_PROCESSOS_QUERY4)
 		    .executeUpdate();
 	}
 
