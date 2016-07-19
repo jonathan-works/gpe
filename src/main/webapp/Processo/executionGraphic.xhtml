@@ -7,8 +7,9 @@
     xmlns:p="http://primefaces.org/ui">
     
     <wi:panel id="panelGraphicExecution" styleClass="content-block">
-    
-    	<h:outputText value="#{graphicExecutionView.svg}" escape="false"/>
+		<div style="overflow: auto;">
+	    	<h:outputText value="#{graphicExecutionView.svg}" escape="false"/>
+		</div>    
     	
     	<h:form id="formRemoteGraphElement">
     		<p:remoteCommand name="onSelectNodeElement" update="@parent:@parent:dialogInformacoes" 
