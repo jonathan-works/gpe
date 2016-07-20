@@ -22,7 +22,6 @@ import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.jboss.seam.Component;
 import org.jboss.seam.bpm.ManagedJbpmContext;
@@ -504,7 +503,6 @@ public class ProcessBuilder implements Serializable {
             session.merge(swimlaneInstance);
         }
         session.flush();
-        session.clear();
 		List<TaskInstance> taskInstances = taskInstanceDAO.getTaskInstancesOpen(idProcessDefinition);
 		for (TaskInstance taskInstance : taskInstances) {
 		    ExecutionContext executionContext = new ExecutionContext(taskInstance.getToken());
