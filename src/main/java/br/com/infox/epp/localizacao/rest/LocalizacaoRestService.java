@@ -44,7 +44,7 @@ public class LocalizacaoRestService {
 	public LocalizacaoDTO atualizarLocalizacao(String codigoLocalizacao, LocalizacaoDTO localizacaoDTO) {
 		Localizacao localizacao = localizacaoSearch.getLocalizacaoByCodigo(codigoLocalizacao);
 		localizacao.setLocalizacao(localizacaoDTO.getNome());
-		localizacao.setLocalizacaoPai(localizacaoSearch.getLocalizacaoByCodigo(localizacaoDTO.getCodigo()));
+		localizacao.setLocalizacaoPai(localizacaoSearch.getLocalizacaoByCodigo(localizacaoDTO.getCodigoLocalizacaoSuperior()));
 		if (localizacaoDTO.getCodigoEstrutura() != null){
 			localizacao.setEstruturaFilho(estruturaSearch.getEstruturaByNome(localizacaoDTO.getCodigoEstrutura()));
 		}
