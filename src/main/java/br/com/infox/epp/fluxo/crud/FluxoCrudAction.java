@@ -50,6 +50,7 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
         fluxo.setPublicado(false);
         getManager().detach(fluxo);
         fluxo.setIdFluxo(null);
+        fluxo.setXmlExecucao(null);
         setId(null);
         final String ret = save();
         if (AbstractAction.PERSISTED.equals(ret)) {
