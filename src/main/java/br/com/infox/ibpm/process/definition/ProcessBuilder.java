@@ -500,14 +500,15 @@ public class ProcessBuilder implements Serializable {
         for (SwimlaneInstance swimlaneInstance : swimlaneInstances) {
             String[] pooledActorIds = swimlaneInstance.getSwimlane().getPooledActorsExpression().split(",");
             swimlaneInstance.setPooledActors(pooledActorIds);
-            session.merge(swimlaneInstance);
         }
         session.flush();
 		List<TaskInstance> taskInstances = taskInstanceDAO.getTaskInstancesOpen(idProcessDefinition);
 		for (TaskInstance taskInstance : taskInstances) {
 		    ExecutionContext executionContext = new ExecutionContext(taskInstance.getToken());
             taskInstance.assign(executionContext);
-            session.merge(taskInstance);
+            if (taskInstance.getSwimlaneInstance() != null && taskInstance.getSwimlaneInstance().getId() == 0) {
+                session.save(taskInstance.getSwimlaneInstance());
+            }
 		}
 		session.flush();
 	}
