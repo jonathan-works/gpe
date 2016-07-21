@@ -260,9 +260,11 @@ public class ModeloComunicacao implements Serializable, Cloneable {
 	
     public void setCodigosMarcadores(List<String> codigosMarcadores) {
         this.codigosMarcadores = new ArrayList<>();
-        for (String codigo : codigosMarcadores) {
-			this.codigosMarcadores.add(codigo.toUpperCase());
-		}
+        if (codigosMarcadores != null) {
+        	for (String codigo : codigosMarcadores) {
+    			this.codigosMarcadores.add(codigo.toUpperCase());
+    		}
+        }
         updateColumnCodigoMarcadoresString();
     }
     
