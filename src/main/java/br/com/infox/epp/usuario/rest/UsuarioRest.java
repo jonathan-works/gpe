@@ -7,6 +7,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -32,6 +33,10 @@ public interface UsuarioRest {
 	@Path("/signin")
 	Response login(@HeaderParam(JWT_TOKEN_NAME) String jwt);
 
+	@GET
+	@Path("/signin")
+	Response loginGet(@QueryParam("epp.auth.jwt") String jwt);
+	
 	// @Path("/{cpf}/perfil/{codigo}")
 	// PerfilResource getPerfilResource(@PathParam("cpf") String cpf,
 	// @PathParam("codigo") String codigo);

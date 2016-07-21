@@ -8,6 +8,7 @@ public interface PastaQuery {
     String PARAM_CLASSIFICACAO_DOCUMENTO = "classificacaoDocumento";
     String PARAM_NOME = "nome";
     String PARAM_NUMERO_DOCUMENTO = "numeroDocumento";
+    String PARAM_CODIGO_MARCADOR = "codigoMarcador";
     String PARAM_DESCRICAO = "descricao";
     String PARAM_USUARIO_PERMISSAO = "usuarioPermissao";
     
@@ -22,6 +23,7 @@ public interface PastaQuery {
     
     String FILTER_CLASSIFICACAO_DOCUMENTO = " and o.classificacaoDocumento.id = :" + PARAM_CLASSIFICACAO_DOCUMENTO;
     String FILTER_NUMERO_DOCUMENTO = " and o.numeroDocumento = :" + PARAM_NUMERO_DOCUMENTO;
+    String FILTER_MARCADOR_DOCUMENTO = " and exists (select 1 from DocumentoBin docBin inner join docBin.marcadores marc where docBin.id = bin.id and marc.codigo = '{" + PARAM_CODIGO_MARCADOR + "}' ) ";
     String TOTAL_DOCUMENTOS_PASTA_CLASSIFICACAO_DOCUMENTO_QUERY = "select count(o) from Documento o inner join o.documentoBin bin "
     		+ " where o.pasta = :" + PARAM_PASTA
     		+ " and o.classificacaoDocumento = :" + PARAM_CLASSIFICACAO_DOCUMENTO

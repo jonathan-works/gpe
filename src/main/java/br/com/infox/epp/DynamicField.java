@@ -1,7 +1,9 @@
 package br.com.infox.epp;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.metamodel.SingularAttribute;
 
@@ -17,10 +19,11 @@ public class DynamicField {
 	private SingularAttribute<?, String> keyAttribute;
 	private SingularAttribute<?, String> labelAttribute;
 	private final Map<String, Object> options;
-
+	private final Set<DynamicFieldAction> actions;
 	public DynamicField() {
 		this.options = new HashMap<>();
 		this.previousValue = null;
+		this.actions = new HashSet<>();
 	}
 
 	public String getId() {
@@ -94,7 +97,15 @@ public class DynamicField {
 		this.labelAttribute = labelAttribute;
 	}
 
-	public void set(String key, Object value) {
+	public void addAction(DynamicFieldAction action){
+	    actions.add(action);
+	}
+	
+	public Set<DynamicFieldAction> getActions() {
+            return actions;
+        }
+
+        public void set(String key, Object value) {
 		this.options.put(key, value);
 	}
 

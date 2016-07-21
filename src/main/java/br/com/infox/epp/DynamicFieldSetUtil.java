@@ -11,6 +11,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import javax.el.ExpressionFactory;
+import javax.el.MethodExpression;
 import javax.el.ValueExpression;
 import javax.faces.application.Application;
 import javax.faces.context.FacesContext;
@@ -77,5 +78,13 @@ class DynamicFieldSetUtil {
 		ExpressionFactory expressionFactory = application.getExpressionFactory();
 		return expressionFactory.createValueExpression(context.getELContext(), expression, expectedType);
 	}
+
+     static MethodExpression createMethodExpression(String expression, Class<?> expectedReturnType) {
+         FacesContext context = FacesContext.getCurrentInstance();
+         Application application = context.getApplication();
+         ExpressionFactory expressionFactory = application.getExpressionFactory();
+         Class<?>[] expectedParamTypes={};
+        return expressionFactory.createMethodExpression(context.getELContext(), expression, expectedReturnType, expectedParamTypes);
+    }
 
 }

@@ -9,6 +9,7 @@ import javax.transaction.Synchronization;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 
+import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.JbpmConfiguration;
 import org.jbpm.JbpmContext;
 

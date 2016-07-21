@@ -11,17 +11,26 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 import javax.persistence.TypedQuery;
 
 import br.com.infox.cdi.dao.Dao;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.DocumentoTemporario;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.entity.Processo;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class DocumentoTemporarioDao extends Dao<DocumentoTemporario, Integer> {
+    
+    @Inject
+    protected DocumentoBinManager documentoBinManager;
+    @Inject
+    protected DocumentoBinarioManager documentoBinarioManager;
 
     public DocumentoTemporarioDao() {
         super(DocumentoTemporario.class);
@@ -39,13 +48,31 @@ public class DocumentoTemporarioDao extends Dao<DocumentoTemporario, Integer> {
 		try {
 			for (DocumentoTemporario documentoTemporario : documentoTemporarioList) {
 				DocumentoTemporario toRemove = getEntityManager().merge(documentoTemporario);
+				DocumentoBin documentoBin = toRemove.getDocumentoBin();
 				getEntityManager().remove(toRemove);
+				documentoBinManager.remove(documentoBin);
+				if (documentoBin.isBinario()) {
+				    documentoBinarioManager.remove(documentoBin.getId());
+				}
 			}
 			getEntityManager().flush();
 		} catch (Exception e) {
 			throw new DAOException(e);
 		}
 	}
+    
+    @TransactionAttribute(TransactionAttributeType.MANDATORY)
+    public void removeAllSomenteTemporario(List<DocumentoTemporario> documentoTemporarioList) throws DAOException {
+        try {
+            for (DocumentoTemporario documentoTemporario : documentoTemporarioList) {
+                DocumentoTemporario toRemove = getEntityManager().merge(documentoTemporario);
+                getEntityManager().remove(toRemove);
+            }
+            getEntityManager().flush();
+        } catch (Exception e) {
+            throw new DAOException(e);
+        }
+    }
     
     public DocumentoTemporario loadById(Integer id) {
         TypedQuery<DocumentoTemporario> query = getEntityManager().createNamedQuery(LOAD_BY_ID, DocumentoTemporario.class);

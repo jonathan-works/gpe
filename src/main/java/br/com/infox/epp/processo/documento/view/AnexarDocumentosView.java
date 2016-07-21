@@ -3,6 +3,7 @@ package br.com.infox.epp.processo.documento.view;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -29,6 +30,7 @@ import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.util.ArrayUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
@@ -58,6 +60,9 @@ import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoTemporarioManager;
 import br.com.infox.epp.processo.documento.service.DocumentoUploaderService;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.marcador.Marcador;
+import br.com.infox.epp.processo.marcador.MarcadorSearch;
+import br.com.infox.epp.processo.marcador.MarcadorService;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
@@ -91,6 +96,10 @@ public class AnexarDocumentosView implements Serializable {
 	private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
 	@Inject
 	private InfoxMessages infoxMessages;
+	@Inject
+	private MarcadorSearch marcadorSearch;
+	@Inject
+	private MarcadorService marcadorService;
 
 	// Propriedades da classe
 	private Processo processo;
@@ -101,6 +110,7 @@ public class AnexarDocumentosView implements Serializable {
 	// Controle do uploader
 	private ClassificacaoDocumento classificacaoDocumentoUploader;
 	private Pasta pastaUploader;
+	private List<Marcador> marcadoresUpload;
 	private List<DadosUpload> dadosUploader = new ArrayList<>();
 	private boolean showUploader;
 
@@ -109,6 +119,7 @@ public class AnexarDocumentosView implements Serializable {
 	private List<ModeloDocumento> modeloDocumentoList;
 	private ModeloDocumento modeloDocumento;
 	private boolean showModeloDocumentoCombo;
+	private List<Marcador> marcadoresEditor;
 	private ExpressionResolver expressionResolver;
 
 	// Controle da assinatura
@@ -142,7 +153,30 @@ public class AnexarDocumentosView implements Serializable {
 		setModeloDocumento(null);
 		setShowModeloDocumentoCombo(false);
 	}
+	
+	public List<Marcador> autoCompleteMarcadoresUpload(String query) {
+	    return autoCompleteMarcadores(query, marcadoresUpload);
+    }
+	
+	public List<Marcador> autoCompleteMarcadoresEditor(String query) {
+        return autoCompleteMarcadores(query, marcadoresEditor);
+    }
 
+    private List<Marcador> autoCompleteMarcadores(String query, List<Marcador> marcadoresSelectionados) {
+        Marcador marcadorTemp = new Marcador(query.toUpperCase());
+        List<String> codigosMarcadores = ArrayUtil.convertToList(marcadoresSelectionados, MarcadorService.CONVERT_MARCADOR_CODIGO);
+        List<Marcador> marcadores = marcadorSearch.listMarcadorByProcessoAndCodigo(getProcesso().getIdProcesso(), query, codigosMarcadores);
+        if (!marcadores.contains(marcadorTemp) 
+                && (marcadoresSelectionados == null || !marcadoresSelectionados.contains(marcadorTemp))) {
+            marcadores.add(0, marcadorTemp);
+        }
+        return marcadores;
+    }
+	
+	public boolean isPermittedAddMarcador() {
+	    return marcadorService.isPermittedAdicionarMarcador();
+	}
+	
 	public void fileUploadListener(FileUploadEvent fileUploadEvent) throws IOException {
 		UploadedFile uploadedFile = fileUploadEvent.getUploadedFile();
 		try {
@@ -184,6 +218,7 @@ public class AnexarDocumentosView implements Serializable {
 		classificacaoDocumentoUploader = null;
 		pastaUploader = null;
 		showUploader = false;
+		marcadoresUpload = null;
 	}
 
 	public void clearUploadFile() {
@@ -226,7 +261,8 @@ public class AnexarDocumentosView implements Serializable {
 		retorno.setClassificacaoDocumento(classificacaoDocumentoUploader);
 		retorno.setPasta(pastaUploader == null ? pastaDefault : pastaUploader);
 		retorno.setProcesso(processo);
-		documentoTemporarioManager.gravarDocumentoTemporario(retorno, dadosUpload.getDadosArquivo());
+		retorno.getDocumentoBin().setMarcadores(marcadoresUpload != null ? new HashSet<>(marcadoresUpload) : new HashSet<Marcador>());
+		documentoTemporarioManager.gravarDocumentoTemporario(retorno, dadosUpload.getDadosArquivo()); 
 		return retorno;
 	}
 
@@ -266,6 +302,7 @@ public class AnexarDocumentosView implements Serializable {
 				if (getDocumentoEditor().getPasta() == null) {
 					getDocumentoEditor().setPasta(pastaDefault);
 				}
+				getDocumentoEditor().getDocumentoBin().setMarcadores(marcadoresEditor != null ? new HashSet<>(marcadoresEditor) : new HashSet<Marcador>());
 				documentoTemporarioManager.gravarDocumentoTemporario(getDocumentoEditor());
 				getDocumentoTemporarioList().add(new DocumentoTemporarioWrapper(getDocumentoEditor()));
 				newEditorInstance();
@@ -274,6 +311,7 @@ public class AnexarDocumentosView implements Serializable {
 				documentoTemporarioManager.update(wrapper.getDocumentoTemporario());
 				newEditorInstance();
 			}
+			marcadoresEditor = null;
 		} catch (DAOException e) {
 			FacesMessages.instance().add("Não foi possível atualizar o arquivo. Tente novamente");
 			LOG.error("Erro ao atualizar documento temporário", e);
@@ -282,8 +320,7 @@ public class AnexarDocumentosView implements Serializable {
 
 	public void onClickExcluirButton() {
 		List<DocumentoTemporario> documentosMarcados = new ArrayList<>();
-		for (Iterator<DocumentoTemporarioWrapper> iterator = getDocumentoTemporarioList().iterator(); iterator
-				.hasNext();) {
+		for (Iterator<DocumentoTemporarioWrapper> iterator = getDocumentoTemporarioList().iterator(); iterator.hasNext();) {
 			DocumentoTemporarioWrapper wrapper = iterator.next();
 			if (wrapper.getCheck()) {
 				documentosMarcados.add(wrapper.getDocumentoTemporario());
@@ -297,6 +334,11 @@ public class AnexarDocumentosView implements Serializable {
 			documentoTemporarioManager.removeAll(documentosMarcados);
 			newEditorInstance();
 		} catch (DAOException e) {
+		    for (DocumentoTemporario documentoTemporario : documentosMarcados) {
+		        DocumentoTemporarioWrapper documentoTemporarioWrapper = new DocumentoTemporarioWrapper(documentoTemporario);
+		        documentoTemporarioWrapper.setCheck(true);
+		        getDocumentoTemporarioList().add(documentoTemporarioWrapper);
+		    }
 			FacesMessages.instance().add("Não foi possível remover os documentos marcados. Tente novamente");
 			LOG.error("Erro ao excluir documentos temporários", e);
 		}
@@ -356,7 +398,7 @@ public class AnexarDocumentosView implements Serializable {
 				documentoTemporarioParaEnviar.add(wrapper.getDocumentoTemporario());
 			}
 			documentoTemporarioManager.transformarEmDocumento(documentoTemporarioParaEnviar);
-			documentoTemporarioManager.removeAll(documentoTemporarioParaEnviar);
+			documentoTemporarioManager.removeAllSomenteTemporario(documentoTemporarioParaEnviar);
 			getDocumentoTemporarioList().removeAll(getDocumentosParaEnviar());
 			FacesMessages.instance().add("Documento(s) enviado(s) com sucesso!");
 		} catch (DAOException e) {
@@ -587,8 +629,16 @@ public class AnexarDocumentosView implements Serializable {
 	public void setShowModeloDocumentoCombo(boolean showModeloDocumentoCombo) {
 		this.showModeloDocumentoCombo = showModeloDocumentoCombo;
 	}
+	
+	public List<Marcador> getMarcadoresEditor() {
+        return marcadoresEditor;
+    }
 
-	public List<String> getFaltaAssinar() {
+    public void setMarcadoresEditor(List<Marcador> marcadoresEditor) {
+        this.marcadoresEditor = marcadoresEditor;
+    }
+
+    public List<String> getFaltaAssinar() {
 		return faltaAssinar;
 	}
 
@@ -671,8 +721,16 @@ public class AnexarDocumentosView implements Serializable {
 	public void setClassificacaoDocumentoUploader(ClassificacaoDocumento classificacaoDocumentoUploader) {
 		this.classificacaoDocumentoUploader = classificacaoDocumentoUploader;
 	}
+	
+    public List<Marcador> getMarcadoresUpload() {
+        return marcadoresUpload;
+    }
 
-	private void createExpressionResolver() {
+    public void setMarcadoresUpload(List<Marcador> marcadoresUpload) {
+        this.marcadoresUpload = marcadoresUpload;
+    }
+
+    private void createExpressionResolver() {
 		if (processoReal != null) {
 			VariableTypeResolver variableTypeResolver = ComponentUtil.getComponent(VariableTypeResolver.NAME);
 			EntityManager entityManager = BeanManager.INSTANCE.getReference(EntityManager.class);

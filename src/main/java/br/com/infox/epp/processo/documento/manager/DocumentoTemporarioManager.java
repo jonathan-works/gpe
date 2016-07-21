@@ -3,6 +3,7 @@ package br.com.infox.epp.processo.documento.manager;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -12,6 +13,7 @@ import javax.inject.Inject;
 import org.jboss.seam.bpm.TaskInstance;
 
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
@@ -24,10 +26,11 @@ import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.DocumentoTemporario;
 import br.com.infox.epp.processo.documento.service.ProcessoAnaliseDocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.marcador.Marcador;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-public class DocumentoTemporarioManager {
+public class DocumentoTemporarioManager extends PersistenceController {
     
     private static final String RECURSO_ANEXAR_DOCUMENTO_SEM_ANALISE = "anexarDocumentoSemAnalise";
     
@@ -49,6 +52,7 @@ public class DocumentoTemporarioManager {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void gravarDocumentoTemporario(DocumentoTemporario documentoTemporario, byte[] data) throws DAOException {
         documentoTemporario.getDocumentoBin().setProcessoDocumento(data);
+        gravarMarcadoresNaoPersistidos(documentoTemporario);
         gravarDocumentoTemporario(documentoTemporario);
     }
 
@@ -77,9 +81,14 @@ public class DocumentoTemporarioManager {
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void removeAll(List<DocumentoTemporario> documentoTemporarioList) throws DAOException {
-		documentoTemporarioDao.removeAll(documentoTemporarioList);
+	public void removeAllSomenteTemporario(List<DocumentoTemporario> documentoTemporarioList) throws DAOException {
+		documentoTemporarioDao.removeAllSomenteTemporario(documentoTemporarioList);
 	}
+    
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void removeAll(List<DocumentoTemporario> documentoTemporarioList) throws DAOException {
+        documentoTemporarioDao.removeAll(documentoTemporarioList);
+    }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void transformarEmDocumento(List<DocumentoTemporario> documentosParaEnviar) throws DAOException {
@@ -99,6 +108,20 @@ public class DocumentoTemporarioManager {
             Documento[] arrayDocumentos = documentosParaAnalise.toArray(new Documento[documentosParaAnalise.size()]);
             Processo processoAnaliseDoc = processoAnaliseDocumentoService.criarProcessoAnaliseDocumentos(processo, arrayDocumentos);
             processoAnaliseDocumentoService.inicializarFluxoDocumento(processoAnaliseDoc, null);
+        }
+    }
+    
+    private void gravarMarcadoresNaoPersistidos(DocumentoTemporario documentoTemporario) {
+        Set<Marcador> marcadores = documentoTemporario.getDocumentoBin().getMarcadores();
+        boolean mustBeFlushed = false;
+        for (Marcador marcador : marcadores) {
+            if (marcador.getId() == null) {
+                mustBeFlushed = true;
+                getEntityManager().persist(marcador);
+            }
+        }
+        if (mustBeFlushed) {
+            getEntityManager().flush();
         }
     }
 

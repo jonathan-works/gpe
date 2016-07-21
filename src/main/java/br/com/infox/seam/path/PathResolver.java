@@ -58,6 +58,11 @@ public class PathResolver implements Serializable {
     public String getUrlProject() {
         HttpServletRequest rc = getRequest();
         String url = rc.getRequestURL().toString();
+        //caso a requisição seja redirecionada pega o protocolo utilizado originalmente. Precisa que o parâmetro ProxyPreserveHost = On esteja configurado no apache.
+  		String originalRequestProtocol = rc.getHeader("X_FORWARDED_PROTO");
+  		if( originalRequestProtocol != null){
+  			url = url.replace("http://", originalRequestProtocol + "://");
+  		}
         String protEnd = "://";
         int pos = url.indexOf(protEnd) + protEnd.length() + 1;
         return url.substring(0, url.indexOf('/', pos)) + rc.getContextPath();

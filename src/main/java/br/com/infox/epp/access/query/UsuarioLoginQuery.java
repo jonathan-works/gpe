@@ -49,12 +49,6 @@ public interface UsuarioLoginQuery {
             + PARAM_ID;
 
     String ID_PROCESSO_PARAM = "idProcesso";
-    String NOME_USUARIO_BY_ID_TAREFA = "getActorIdTarefaAtualByProcesso";
-    String NOME_USUARIO_BY_ID_TAREFA_QUERY = "SELECT DISTINCT ul.nm_usuario "
-            + "FROM tb_usuario_login ul "
-            + "JOIN tb_usuario_taskinstance uti ON (ul.id_usuario_login=uti.id_usuario_login) "
-            + "JOIN vs_situacao_processo sp ON (uti.id_taskinstance = sp.id_task_instance) "
-            + "WHERE id_processo=:" + ID_PROCESSO_PARAM + " and sp.id_tarefa = :" + PARAM_ID_TAREFA;
 
     String USUARIO_BY_ID_TASK_INSTANCE = "getUsuarioByIdTaskInstance";
     String USUARIO_BY_ID_TASK_INSTANCE_QUERY = "SELECT DISTINCT ul.ds_login FROM tb_usuario_login ul "

@@ -88,7 +88,7 @@
         <rich:collapsiblePanel
             switchType="client" rendered="#{checkPermission}"
             header="#{infoxMessages['processo.titleView']} #{processoEpaHome.instance.numeroProcessoRoot} - #{taskInstance.processInstance.processDefinition.name} - #{taskInstance.name} "
-            expanded="false">
+            expanded="true">
             <h:panelGrid columns="2"  width="100%"  columnClasses="viewColumn">
             
             	<wi:outputText
@@ -98,18 +98,14 @@
                     <f:convertDateTime pattern="dd/MM/yyyy kk:mm" />
                 </wi:outputText>
                 
-            	<ui:repeat var="metadado" value="#{processoEpaHome.detalhesMetadados}" >
-            		<wi:outputText id="metadado#{metadado.metadadoType}"
-                    	label="#{metadadoMessages[metadado.metadadoType]}"
-                    	value="#{metadado}" rendered="#{metadado.classType.canonicalName ne 'java.util.Date'}"/>
-                    <wi:outputText id="metadado#{metadado.metadadoType}Date"
-                    	label="#{metadadoMessages[metadado.metadadoType]}"
-                    	value="#{metadado.value}" rendered="#{metadado.classType.canonicalName eq 'java.util.Date'}">
-							<f:convertDateTime pattern="dd/MM/yyyy kk:mm" />
-					</wi:outputText>                     	
+            	<ui:repeat var="variavel" value="#{processoEpaHome.variaveisDetalhe}" >
+            		<wi:outputText id="variavel#{variavel.nome}"
+                    	label="#{variavel.label}"
+                    	value="#{variavel.valor}"/>
             	</ui:repeat>
             	
             </h:panelGrid>
+            <ui:include src="linkAplicacaoExterna.xhtml" />
         </rich:collapsiblePanel>
         <h:form>
             <a:jsFunction

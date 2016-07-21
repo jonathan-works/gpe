@@ -34,14 +34,17 @@ public class MenuNavigation implements Serializable {
     
     @ExceptionHandled
     public void refresh() {
-        if (!pagesChecked && securityUtil.isLoggedIn()) {
-            menuService.discoverAndCreateRoles();
-        }
-        this.dropMenus = menuService.getMenuItemList();
-        pagesChecked = true;
+        dropMenus = null;
     }
     
     public List<MenuItemDTO> getActionMenu() {
+        if (dropMenus == null){
+            if (!pagesChecked && securityUtil.isLoggedIn()) {
+                menuService.discoverAndCreateRoles();
+                pagesChecked = true;
+            }
+            this.dropMenus = menuService.getMenuItemList();
+        }
         return dropMenus;
     }
 

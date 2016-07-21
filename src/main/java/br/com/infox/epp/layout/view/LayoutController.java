@@ -35,6 +35,10 @@ public class LayoutController implements Serializable {
 		return layoutManager.getResourceUrlByPath(skin, path);
 	}
 	
+	public String getMaterialDesignIconJSFUrl(String dpir, String cor, String res, String nome){
+            return String.format("/resources/styleSkinInfox/all/%s_web/ic_%s_%s_%s.png", dpir, nome, cor, res);
+	}
+	
 	public String getMaterialDesignIconUrl(String dpir, String cor, String res, String nome){
 	    String urlBase=FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
 	    return String.format("%s/resources/styleSkinInfox/all/%s_web/ic_%s_%s_%s.png", urlBase, dpir, nome, cor, res); 
@@ -42,6 +46,10 @@ public class LayoutController implements Serializable {
 
 	public String getMaterialDesignIcon(String dpir, String cor, String res, String nome) {
 	    String urlBase = "";
-	    return String.format("%s/resources/styleSkinInfox/all/%s_web/ic_%s_%s_%s.png", urlBase, dpir, nome, cor, res); 
+	    return String.format("%s/resources/styleSkinInfox/all/%s_web/ic_%s_%s_%s.png", urlBase, dpir, nome, cor, res);
+	}
+	
+	public String getMaterialDesignIconJsfUrl(String dpir, String cor, String res, String nome){
+	    return String.format("/resources/styleSkinInfox/all/%s_web/ic_%s_%s_%s.png", dpir, nome, cor, res); 
 	}
 }
