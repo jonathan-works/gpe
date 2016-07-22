@@ -26,6 +26,7 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.cdi.seam.ContextDependency;
@@ -315,7 +316,9 @@ public class ValidaDocumentoAction implements Serializable {
 	}
 
 	private boolean papelInclusaoPossuiRecursoAnexar(Documento documento) {
-		Papel papelInclusao = documento.getPerfilTemplate().getPapel();
+		PerfilTemplate perfilTemplate = documento.getPerfilTemplate();
+		if (perfilTemplate == null) return true;
+        Papel papelInclusao = perfilTemplate.getPapel();
 		if(papelInclusao.getRecursos().contains(RECURSO_ANEXAR_DOCUMENTO_SEM_ANALISE))
 			return true;
 		

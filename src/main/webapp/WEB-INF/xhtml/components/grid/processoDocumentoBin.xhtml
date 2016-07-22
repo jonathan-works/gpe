@@ -36,6 +36,6 @@
             <f:setPropertyActionListener value="#{true}" target="#{flash.binario}" />
         </a:commandLink>
         
-        <wi:toolBarAssinatura idDocumento="#{row.id}" styleClass="opacityHover" renderedLock="#{not empty bin.assinaturas}" />
+        <wi:toolBarAssinatura idDocumento="#{row.id}" styleClass="opacityHover" renderedLock="#{bin.suficientementeAssinado}" />
     </span>
 </ui:composition>
