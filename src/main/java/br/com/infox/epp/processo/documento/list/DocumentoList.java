@@ -115,7 +115,7 @@ public class DocumentoList extends DataList<Documento> {
     }
 
     public void checkPastaToRemove(Pasta toRemove) {
-        if (pasta.equals(toRemove)) {
+        if (toRemove.equals(pasta)) {
             setPasta(pastaManager.getDefault(getProcesso()));
         }
     }
