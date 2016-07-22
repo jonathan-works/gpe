@@ -1,9 +1,10 @@
 package br.com.infox.epp.processo.documento.manager;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -26,7 +27,6 @@ import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.DocumentoTemporario;
 import br.com.infox.epp.processo.documento.service.ProcessoAnaliseDocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.marcador.Marcador;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -50,10 +50,16 @@ public class DocumentoTemporarioManager extends PersistenceController {
     private DocumentoTemporarioDao documentoTemporarioDao;
     
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void gravarDocumentoTemporario(DocumentoTemporario documentoTemporario, byte[] data) throws DAOException {
-        documentoTemporario.getDocumentoBin().setProcessoDocumento(data);
-        gravarMarcadoresNaoPersistidos(documentoTemporario);
-        gravarDocumentoTemporario(documentoTemporario);
+    public void gravarDocumentoTemporario(DocumentoTemporario documentoTemporario, InputStream inputStream) throws DAOException, IOException {
+    	DocumentoBin processoDocumentoBin = documentoBinManager.createProcessoDocumentoBin(documentoTemporario.getDocumentoBin(), inputStream);
+        documentoTemporario.setDocumentoBin(processoDocumentoBin);
+    	if (TaskInstance.instance() != null) {
+    		documentoTemporario.setIdJbpmTask(TaskInstance.instance().getId());
+    	}
+    	if (documentoTemporario.getPasta() == null) {
+    		documentoTemporario.setPasta(pastaManager.getDefault(documentoTemporario.getProcesso()));
+    	}
+    	documentoTemporarioDao.persist(documentoTemporario);
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -111,20 +117,6 @@ public class DocumentoTemporarioManager extends PersistenceController {
         }
     }
     
-    private void gravarMarcadoresNaoPersistidos(DocumentoTemporario documentoTemporario) {
-        Set<Marcador> marcadores = documentoTemporario.getDocumentoBin().getMarcadores();
-        boolean mustBeFlushed = false;
-        for (Marcador marcador : marcadores) {
-            if (marcador.getId() == null) {
-                mustBeFlushed = true;
-                getEntityManager().persist(marcador);
-            }
-        }
-        if (mustBeFlushed) {
-            getEntityManager().flush();
-        }
-    }
-
     private Documento createDocumento(DocumentoTemporario dt) throws DAOException {
         ClassificacaoDocumento classificacaoDocumento = classificacaoDocumentoManager.find(dt.getClassificacaoDocumento().getId());
         DocumentoBin docBin = documentoBinManager.find(dt.getDocumentoBin().getId());

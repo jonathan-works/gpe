@@ -99,15 +99,19 @@
 							maxFilesQuantity="20" immediateUpload="true" noDuplicate="true"
 							render="uploadArquivoAnexarButton pageBodyDialogMessage"
 							acceptedTypes="#{anexarDocumentosView.classificacaoDocumentoUploader.acceptedTypes}"
+							serverErrorLabel="Erro no envio"
+							onerror="processErrorMessage(this);"
 							onuploadcomplete="infox.hideLoading(); addClearEventUploadModelo();"
 							rendered="#{not empty anexarDocumentosView.classificacaoDocumentoUploader.extensaoArquivosList}">
 						</rich:fileUpload>
 						
 						<script type="text/javascript">
-                            var upload = #{rich:component('uploadArquivo')};
-                            upload.serverErrorProcLabel = 'Falha no Envio';
+							function processErrorMessage(uploader) {
+								var message = event.currentTarget.getResponseHeader('Error-Message');
+								uploader.serverErrorProcLabel = message;
+							}
                         </script>
-
+						
                         <a:jsFunction id="onClickClearItemList" name="onClickClearItemList" render="uploadArquivoAnexarButton"
                             actionListener="#{anexarDocumentosView.removeDocumentoUpload}" immediate="true" onbegin="infox.showLoading();"
                             oncomplete="infox.hideLoading();">

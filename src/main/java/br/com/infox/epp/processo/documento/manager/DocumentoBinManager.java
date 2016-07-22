@@ -55,11 +55,11 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 
 	@In
 	private PathResolver pathResolver;
-	@In
+	@Inject
 	private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
-	@In
+	@Inject
 	private AssinaturaDocumentoService assinaturaDocumentoService;
-	@In
+	@Inject
 	private DocumentoBinarioManager documentoBinarioManager;
 	@Inject
 	private DocumentoDAO documentoDAO;
