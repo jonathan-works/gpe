@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.validation.ValidationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -20,10 +19,6 @@ public class UsuarioPerfilRestImpl implements UsuarioPerfilRest {
 	
 	@Override
 	public List<UsuarioPerfilDTO> listar(String usuario) {
-		if(usuario == null) {
-			throw new ValidationException("usuario deve ser informado ");
-		}
-		
 		return usuarioPerfilRestService.listar(usuario);
 	}
 	
