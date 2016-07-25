@@ -1,10 +1,8 @@
 package br.com.infox.epp.pessoa.rest;
 
-import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import javax.xml.ws.WebServiceContext;
 
 import br.com.infox.epp.ws.interceptors.TokenAuthentication;
 import br.com.infox.epp.ws.interceptors.TokenAuthentication.TipoExcecao;
@@ -16,8 +14,6 @@ public class PessoaJuridicaRestImpl implements PessoaJuridicaRest {
     private PessoaJuridicaResourceImpl pessoaJuridicaResourceImpl;
     @Inject
     private PessoaJuridicaRestService pessoaJuridicaRestService;
-    @Resource
-    private WebServiceContext webServiceContext;
 
     @Override
     public Response add(UriInfo uriInfo, PessoaJuridicaDTO pjDTO) {
