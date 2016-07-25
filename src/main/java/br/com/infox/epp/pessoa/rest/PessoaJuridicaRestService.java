@@ -6,7 +6,6 @@ import javax.ws.rs.WebApplicationException;
 
 import br.com.infox.epp.pessoa.dao.PessoaJuridicaDAO;
 import br.com.infox.epp.pessoa.entity.PessoaJuridica;
-import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 
 @Stateless
 public class PessoaJuridicaRestService {
@@ -37,16 +36,13 @@ public class PessoaJuridicaRestService {
         return new PessoaJuridicaDTO(pj.getNome(), pj.getCnpj(), pj.getRazaoSocial());
     }
 
-    public void edit(PessoaJuridicaDTO pjDTO) {
-        PessoaJuridica pj = pessoaJuridicaDAO.searchByCnpj(pjDTO.getCnpj());
+    public void edit(String cnpj, PessoaJuridicaDTO pjDTO) {
+        PessoaJuridica pj = pessoaJuridicaDAO.searchByCnpj(cnpj);
         if (pj == null || !pj.getAtivo()) {
             throw new WebApplicationException(404);
         }
-        pj.setAtivo(true);
-        pj.setCnpj(pjDTO.getCnpj());
         pj.setNome(pjDTO.getNomeFantasia());
         pj.setRazaoSocial(pjDTO.getRazaoSocial());
-        pj.setTipoPessoa(TipoPessoaEnum.J);
         pessoaJuridicaDAO.update(pj);
     }
 

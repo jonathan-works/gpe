@@ -19,7 +19,7 @@ public class PessoaJuridicaResourceImpl implements PessoaJuridicaResource {
 
     @Override
     public Response edit(PessoaJuridicaDTO pjDTO) {
-        pessoaJuridicaRestService.edit(pjDTO);
+        pessoaJuridicaRestService.edit(cnpj, pjDTO);
         return Response.ok().build();
     }
 
