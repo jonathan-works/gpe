@@ -17,6 +17,7 @@ import br.com.infox.epp.processo.documento.service.DocumentoUploaderService;
 import br.com.infox.ibpm.task.home.TaskInstanceHome;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.exception.BusinessRollbackException;
 
 @Name(FileUpload.NAME)
@@ -46,7 +47,11 @@ public class FileUpload implements FileUploadListener {
         	 if (e.getCause() instanceof DAOException) {
         		 actionMessagesService.handleDAOException((DAOException) e.getCause());
         	 } else {
-        		 actionMessagesService.handleException("Erro ao substituir o documento", e);
+        		 String msg = "Erro ao substituir o documento";
+        		 if (e.getCause() instanceof BusinessException) {
+        			 msg = e.getCause().getMessage();
+        		 }
+				actionMessagesService.handleException(msg, e);
         	 }
         } catch (FileUploadException e) {
         	LOG.error("", e);
