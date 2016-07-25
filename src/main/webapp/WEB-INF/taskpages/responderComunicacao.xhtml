@@ -38,39 +38,25 @@
 	
 	<h:form id="editorRespostaComunicacaoForm" style="margin-top:1em">
 		<rich:collapsiblePanel header="#{infoxMessages['comunicacao.editor']}" switchType="client" id="painelEditor">
-			<ui:param name="minuta" 
-				value="#{empty respostaComunicacaoAction.documentoEdicao.id or 
-							respostaComunicacaoAction.documentoEdicao.documentoBin.minuta}" />
-			<s:div>
-				<wi:inputText id="descricao" value="#{respostaComunicacaoAction.documentoEdicao.descricao}"
-					required="true" label="#{infoxMessages['processo.anexarDocumentoDescricao']}" 
-					readonly="#{not minuta}" disabled="#{not minuta}"/>
-			</s:div>
-			<wi:selectOneMenuEntity id="modeloDocumento" value="#{respostaComunicacaoAction.modeloDocumento}" 
-				label="#{infoxMessages['modeloDocumento.modeloDocumento']}"
-				noSelectionLabel="[Selecione o modelo]" items="#{respostaComunicacaoAction.modeloDocumentoList}"
-				readonly="#{not minuta}" disabled="#{not minuta}">
-				<a:ajax event="change" render="respostaComunicacaoDiv" execute="@this" limitRender="true"
-					listener="#{respostaComunicacaoAction.assignModeloDocumento}"/>
+			<ui:param name="minuta" value="#{empty respostaComunicacaoAction.documentoEdicao.id or 
+				respostaComunicacaoAction.documentoEdicao.documentoBin.minuta}" />
+			<wi:inputText id="descricao" value="#{respostaComunicacaoAction.documentoEdicao.descricao}"
+				required="true" label="#{infoxMessages['processo.anexarDocumentoDescricao']}" 
+				readonly="#{not minuta}" disabled="#{not minuta}"/>
+			<wi:selectOneMenuEntity id="classificacao"
+ 				label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
+	      		items="#{respostaComunicacaoAction.classificacoesEditor}"
+	      		showLabelSelecione="true"
+	      		required="true"
+	      		value="#{respostaComunicacaoAction.classificacaoDocumentoEditor}"
+	      		readonly="#{not minuta}"
+				disabled="#{not minuta}">
+				<a:ajax event="change"
+					render="tooltipComunicacao minutaDiv"
+					execute="@this"
+					limitRender="true" />
 			</wi:selectOneMenuEntity>
-			
-			<s:div>
- 				<wi:selectOneMenuEntity id="classificacao"
-	  				label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-		      		items="#{respostaComunicacaoAction.classificacoesEditor}"
-		      		showLabelSelecione="true"
-		      		required="true"
-		      		value="#{respostaComunicacaoAction.documentoEdicao.classificacaoDocumento}"
-		      		readonly="#{not minuta}"
-   					disabled="#{not minuta}">
-   					<a:ajax event="change"
-      					render="tooltipComunicacao minutaDiv"
-      					execute="@this"
-      					limitRender="true" />
-  				</wi:selectOneMenuEntity>
-			</s:div>
-					
-			<s:div id="tooltipComunicacao">
+			<s:div id="tooltipComunicacao" style="display: inline-block;">
 		   		<s:div styleClass="tooltip-parent" style="width: 10px" 
 		  			rendered="#{not empty respostaComunicacaoAction.documentoEdicao.classificacaoDocumento.observacao}">
 		  		<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
@@ -82,10 +68,17 @@
 					</div>
 		   		</s:div>
 			</s:div>
-			<s:div id ="minutaDiv">
-			<wi:selectBooleanRadio id="minuta" value="#{respostaComunicacaoAction.documentoEdicao.documentoBin.minuta}" 
-				label="#{infoxMessages['processoDocumentoBin.minuta']}" disabled="#{not minuta}"
-				rendered="#{not assinaturaDocumentoService.precisaAssinatura(respostaComunicacaoAction.documentoEdicao.classificacaoDocumento)}" />
+			<s:div id="minutaDiv">
+				<wi:selectOneMenuEntity id="modeloDocumento" value="#{respostaComunicacaoAction.modeloDocumento}" 
+					label="#{infoxMessages['modeloDocumento.modeloDocumento']}"
+					noSelectionLabel="[Selecione o modelo]" items="#{respostaComunicacaoAction.modeloDocumentoList}"
+					rendered="#{minuta and not empty respostaComunicacaoAction.modeloDocumentoList}">
+					<a:ajax event="change" render="respostaComunicacaoDiv" execute="@this" limitRender="true"
+						listener="#{respostaComunicacaoAction.assignModeloDocumento}"/>
+				</wi:selectOneMenuEntity>
+				<wi:selectBooleanRadio id="minuta" value="#{respostaComunicacaoAction.documentoEdicao.documentoBin.minuta}" 
+					label="#{infoxMessages['processoDocumentoBin.minuta']}" disabled="#{not minuta}"
+					rendered="#{not assinaturaDocumentoService.precisaAssinatura(respostaComunicacaoAction.documentoEdicao.classificacaoDocumento)}" />
 			</s:div>
 			<s:div id="respostaComunicacaoDiv">
 				<wi:editor id="respostaComunicacao" readonly="#{not minuta}" 
