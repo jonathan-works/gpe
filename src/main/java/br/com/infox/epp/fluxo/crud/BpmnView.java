@@ -1,11 +1,14 @@
 package br.com.infox.epp.fluxo.crud;
 
+import java.io.ByteArrayInputStream;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.camunda.bpm.model.bpmn.Bpmn;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jbpm.jpdl.JpdlException;
@@ -46,6 +49,7 @@ public class BpmnView implements Serializable {
 		
 		String newProcessDefinitionXml = JpdlXmlWriter.toString(ProcessBuilder.instance().getInstance());
 		String newBpmnXml = bpmnInfo.get("bpmn").getAsString();
+		newBpmnXml = Bpmn.convertToString(Bpmn.readModelFromStream(new ByteArrayInputStream(newBpmnXml.getBytes(StandardCharsets.UTF_8))));
 		
 		if (!newProcessDefinitionXml.equals(fluxo.getXml()) || !newBpmnXml.equals(fluxo.getBpmn())) {
 			try {
