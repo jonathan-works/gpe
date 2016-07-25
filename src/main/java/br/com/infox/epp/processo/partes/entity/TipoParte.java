@@ -33,13 +33,13 @@ public class TipoParte implements Serializable {
     private Long id;
     
     @NotNull
-    @Size(max = 30)
-    @Column(name = "nm_tipo_parte", nullable = false, unique = true, length = 30)
+    @Size(min= 1, max = 50)
+    @Column(name = "nm_tipo_parte", nullable = false, unique = true, length = 500)
     private String identificador;
     
     @NotNull
-    @Size(max = 50)
-    @Column(name = "ds_tipo_parte", nullable = false, length = 50)
+    @Size(min = 1, max = 200)
+    @Column(name = "ds_tipo_parte", nullable = false, length = 200)
     private String descricao;
 
     public Long getId() {

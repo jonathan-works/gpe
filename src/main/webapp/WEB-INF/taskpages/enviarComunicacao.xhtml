@@ -269,14 +269,16 @@
 								value="#{infoxMessages['button.pesquisar']}"
 								action="#{documentoDisponivelComunicacaoList.refresh()}"
 								styleClass="buttons buttons">
-								<f:ajax immediate="true" execute="@form" render="@form :documentosProcessoPanel :documentosProcessoSearchForm" />
+								<p:ajax immediate="true" process="@form" update="@form @(.documentos-disponiveis-comunicacao)" 
+									onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
 							</h:commandButton>
 							
 							<h:commandButton id="btnLimparFiltro"
 								value="#{infoxMessages['button.limpar']}"
 								action="#{documentoDisponivelComunicacaoList.newInstance()}"
 								styleClass="buttons buttons">
-								<f:ajax immediate="true" execute="@form" render="@form :documentosProcessoPanel :documentosProcessoSearchForm" />
+								<p:ajax immediate="true" process="@form" update="@form @(.documentos-disponiveis-comunicacao)" 
+									onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
 							</h:commandButton>
 						</div>
 			
@@ -284,7 +286,8 @@
 				</rich:panel>
 				
 				<wi:dataTable id="documentosProcesso" values="#{documentoDisponivelComunicacaoList.list(10)}" 
-					bean="#{documentoDisponivelComunicacaoList}" rowId="#{row.id}"
+					bean="#{documentoDisponivelComunicacaoList}" rowId="#{row.id}" 
+					searchFormStyleClass="documentos-disponiveis-comunicacao" panelStyleClass="documentos-disponiveis-comunicacao"
 					showGrid="#{not envioComunicacaoController.modeloComunicacao.finalizada}"
 					tableTitle="#{infoxMessages['comunicacao.documentosDisponiveis']}">
 					<ui:define name="headerToolBar" />

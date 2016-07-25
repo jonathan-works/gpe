@@ -1,7 +1,5 @@
 package br.com.infox.epp.usuario.rest;
 
-import static br.com.infox.epp.ws.RestUtils.produceErrorJson;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -9,10 +7,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
-import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.type.UsuarioEnum;
@@ -47,11 +42,7 @@ public class UsuarioLoginRestService {
 		PessoaFisica pessoaFisica = pessoaFisicaSearch.getByCpf(cpf);
 		aplicarValores(usuarioDTO, pessoaFisica);
 		aplicarValores(usuarioDTO, usuarioLogin);
-		try {
-			usuarioLoginManager.update(usuarioLogin);
-		} catch (DAOException e) {
-			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(produceErrorJson(e.getMessage())).build());
-		}
+		usuarioLoginManager.update(usuarioLogin);
 	}
 
 	public UsuarioDTO getUsuarioByCpf(String cpf) {
@@ -63,22 +54,14 @@ public class UsuarioLoginRestService {
 	public void removerUsuario(String cpf) {
 		UsuarioLogin usuarioLogin = usuarioSearch.getUsuarioLoginByCpf(cpf);
 		usuarioLogin.setAtivo(Boolean.FALSE);
-		try {
-			usuarioLoginManager.update(usuarioLogin);
-		} catch (DAOException e) {
-			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(produceErrorJson(e.getMessage())).build());
-		}
+		usuarioLoginManager.update(usuarioLogin);
 	}
 	
 	private PessoaFisica getPessoaFisica(UsuarioDTO usuarioDTO) {
 		PessoaFisica pessoaFisica = pessoaFisicaSearch.getByCpf(usuarioDTO.getCpf());
 		if (pessoaFisica == null){
 			pessoaFisica = aplicarValores(usuarioDTO, new PessoaFisica());
-			try {
-				pessoaFisicaManager.persist(pessoaFisica);
-			} catch (DAOException e) {
-				throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(produceErrorJson(e.getMessage())).build());
-			}
+			pessoaFisicaManager.persist(pessoaFisica);
 		}
 		return pessoaFisica;
 	}
@@ -88,11 +71,7 @@ public class UsuarioLoginRestService {
 		usuarioLogin.setAtivo(Boolean.TRUE);
 		usuarioLogin.setBloqueio(Boolean.FALSE);
 		usuarioLogin.setProvisorio(Boolean.FALSE);
-		try {
-			usuarioLoginManager.persist(usuarioLogin, sendPasswordToMail);
-		} catch (Exception e) {
-			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(produceErrorJson(e.getMessage())).build());
-		}
+		usuarioLoginManager.persist(usuarioLogin, sendPasswordToMail);
 	}
 	
 	public void adicionarUsuario(UsuarioDTO usuarioDTO) {

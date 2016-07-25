@@ -6,6 +6,8 @@ import java.util.Collection;
 import javax.ejb.EJBException;
 import javax.ws.rs.WebApplicationException;
 
+import br.com.infox.core.action.ActionMessagesService;
+import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.ws.exception.ErroServico;
 import br.com.infox.epp.ws.exception.ErroServicoImpl;
 import br.com.infox.epp.ws.exception.ExcecaoMultiplaServico;
@@ -19,7 +21,9 @@ import br.com.infox.epp.ws.exception.ExcecaoServicoImpl;
  */
 public class MensagensErroService {
 	
-	public static String CODIGO_ERRO_INDEFINIDO = "ME0000";   
+	public static String CODIGO_ERRO_INDEFINIDO = "ME0000";
+	public static String CODIGO_DAO_EXCEPTION = "ME0001";
+	public static String CODIGO_VALIDACAO = "ME0002";
 	
 	private Collection<ErroServico> getErrosExcecao(ExcecaoMultiplaServico excecao) {
 		return excecao.getErros();
@@ -44,6 +48,12 @@ public class MensagensErroService {
 		return Arrays.asList(erro);
 	}
 	
+	private Collection<ErroServico> getErrosExcecao(DAOException exception) {
+		ActionMessagesService actionMessagesService = new ActionMessagesService();
+		ErroServico erro = new ErroServicoImpl(CODIGO_DAO_EXCEPTION, actionMessagesService.getMessageForDAOException(exception));
+		return Arrays.asList(erro);
+	}
+	
 	/**
 	 * Retorna os erros associados a uma exceção
 	 */
@@ -53,15 +63,13 @@ public class MensagensErroService {
 		}
 		if(ExcecaoMultiplaServico.class.isAssignableFrom(excecao.getClass())) {
 			return getErrosExcecao((ExcecaoMultiplaServico) excecao);
-		}
-		else if(ExcecaoServico.class.isAssignableFrom(excecao.getClass())) {
+		} else if(ExcecaoServico.class.isAssignableFrom(excecao.getClass())) {
 			return getErrosExcecao((ExcecaoServico) excecao);
-		}
-		else if(WebApplicationException.class.isAssignableFrom(excecao.getClass())) {
+		} else if(WebApplicationException.class.isAssignableFrom(excecao.getClass())) {
 			return getErrosExcecao((WebApplicationException) excecao);
-		}
-		else
-		{
+		} else if(DAOException.class.isAssignableFrom(excecao.getClass())) {
+			return getErrosExcecao((DAOException) excecao);
+		} else {
 			return getErrosExcecao(excecao);
 		}
 	}
