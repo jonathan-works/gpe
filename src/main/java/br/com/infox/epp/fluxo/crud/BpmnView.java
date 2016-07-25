@@ -58,7 +58,9 @@ public class BpmnView implements Serializable {
 				logJpdlException(e);
 				return;
 			}
+			String currentNodeKey = ProcessBuilder.instance().getNodeFitter().getCurrentNode() != null ? ProcessBuilder.instance().getNodeFitter().getCurrentNode().getKey() : null;
 			ProcessBuilder.instance().load(fluxo);
+			ProcessBuilder.instance().getNodeFitter().setCurrentNodeByKey(currentNodeKey);
 			bpmnInformation = null;
 			FacesMessages.instance().add("Fluxo salvo com sucesso!");
 		}
