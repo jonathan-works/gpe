@@ -30,9 +30,9 @@ public class DocumentoList extends DataList<Documento> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "documentoList";
     
-    private static final String DEFAULT_EJBQL = "select o from Documento o inner join o.documentoBin bin ";
+    protected static final String DEFAULT_EJBQL = "select o from Documento o inner join o.documentoBin bin ";
 
-    private static final String DEFAULT_WHERE = "where bin.minuta = false "
+    protected static final String DEFAULT_WHERE = "where bin.minuta = false "
             + "and (not exists (select 1 from SigiloDocumento s where s.ativo = true and s.documento = o) "
             + "     or exists (select 1 from SigiloDocumentoPermissao sp where sp.usuario = #{usuarioLogado} and sp.ativo = true "
             + "     and sp.sigiloDocumento = (select s from SigiloDocumento s where s.ativo = true and s.documento = o))"
