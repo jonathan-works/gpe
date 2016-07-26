@@ -15,6 +15,8 @@ import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
 import javax.sql.DataSource;
+import javax.transaction.SystemException;
+import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
 import br.com.infox.epp.cdi.config.BeanManager;
@@ -88,6 +90,14 @@ public class ApplicationServerService implements Serializable {
             transactionManager = JNDI.lookup("java:comp/TransactionManager"); // TOMCAT
         }
         return transactionManager;
+	}
+	
+	public Transaction getTransaction() {
+	    try {
+            return getTransactionManager().getTransaction();
+        } catch (SystemException e) {
+            return null;
+        }
 	}
             
     public String getInstanceName() {

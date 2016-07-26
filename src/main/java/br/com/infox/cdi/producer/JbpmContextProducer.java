@@ -1,7 +1,9 @@
 package br.com.infox.cdi.producer;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Set;
 
 import javax.transaction.RollbackException;
 import javax.transaction.Status;
@@ -9,15 +11,15 @@ import javax.transaction.Synchronization;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 
-import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.JbpmConfiguration;
 import org.jbpm.JbpmContext;
+import org.jbpm.graph.exe.ProcessInstance;
 
 import br.com.infox.core.server.ApplicationServerService;
 
 public final class JbpmContextProducer {
     
-    private static final Map<Transaction, JbpmContext> registeredJbpmContext = new ConcurrentHashMap<>();
+    private static final Map<Transaction, JbpmContext> registeredJbpmContext = Collections.synchronizedMap(new HashMap<Transaction, JbpmContext>());
     
     public synchronized static JbpmContext getJbpmContext() {
         Transaction transaction = getTransaction();
@@ -40,7 +42,7 @@ public final class JbpmContextProducer {
     
     private static void registerSynchronization(JbpmContext jbpmContext, Transaction transaction) {
         try {
-            transaction.registerSynchronization(new JbpmContextSynchronization(jbpmContext));
+            transaction.registerSynchronization(new JbpmContextSynchronization(transaction, jbpmContext));
         } catch (IllegalStateException | RollbackException | SystemException e) {
             throw new IllegalStateException("Error synchronizing jbpmContext ", e);
         }
@@ -65,9 +67,11 @@ public final class JbpmContextProducer {
     
     private static class JbpmContextSynchronization implements Synchronization {
         
+        private Transaction transaction;
         private JbpmContext jbpmContext;
         
-        public JbpmContextSynchronization(JbpmContext jbpmContext) {
+        public JbpmContextSynchronization(Transaction transaction, JbpmContext jbpmContext) {
+            this.transaction = transaction;
             this.jbpmContext = jbpmContext;
         }
 
@@ -75,13 +79,20 @@ public final class JbpmContextProducer {
         public void beforeCompletion() {
             jbpmContext.close();
         }
-
+        
         @Override
         public void afterCompletion(int status) {
-            try {
-                Transaction transaction  = ApplicationServerService.instance().getTransactionManager().getTransaction();
-                registeredJbpmContext.remove(transaction);
-            } catch (SystemException e) { }
+            if (Status.STATUS_COMMITTED == status) clearLogs();
+            registeredJbpmContext.remove(transaction);
+        }
+
+        private void clearLogs() {
+            Set<ProcessInstance> autoSaveProcessInstances = jbpmContext.getAutoSaveProcessInstances();
+            if (autoSaveProcessInstances != null) {
+                for (ProcessInstance processInstance : autoSaveProcessInstances) {
+                    processInstance.getLoggingInstance().getLogs().clear();
+                }
+            }
         }
     }
     
