@@ -17,6 +17,7 @@ import br.com.infox.epp.meiocontato.entity.MeioContato;
 import br.com.infox.epp.meiocontato.manager.MeioContatoManager;
 import br.com.infox.epp.meiocontato.type.TipoMeioContatoEnum;
 import br.com.infox.epp.pessoa.documento.dao.PessoaDocumentoDAO;
+import br.com.infox.epp.pessoa.documento.dao.PessoaDocumentoSearch;
 import br.com.infox.epp.pessoa.documento.entity.PessoaDocumento;
 import br.com.infox.epp.pessoa.documento.type.TipoPesssoaDocumentoEnum;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
@@ -47,6 +48,8 @@ public class UsuarioLoginRestService {
 	@Inject
 	private PessoaDocumentoDAO pessoaDocumentoDAO;
 	@Inject
+	private PessoaDocumentoSearch pessoaDocumentoSearch;
+	@Inject
 	private MeioContatoManager meioContatoManager;
 	@Inject
 	private MeioContatoDAO meioContatoDAO;
@@ -64,7 +67,9 @@ public class UsuarioLoginRestService {
 	public UsuarioDTO getUsuarioByCpf(String cpf) {
 		UsuarioLogin usuarioLogin = usuarioSearch.getUsuarioLoginByCpf(cpf);
 		PessoaFisica pessoaFisica = pessoaFisicaSearch.getByCpf(cpf);
-		return new UsuarioDTO(usuarioLogin, pessoaFisica);
+		List<PessoaDocumento> pessoaDocumentoList = pessoaDocumentoSearch.getDocumentosByPessoa(pessoaFisica);
+		List<MeioContato> meioContatoList = meioContatoManager.getByPessoa(pessoaFisica);
+		return new UsuarioDTO(usuarioLogin, pessoaFisica, pessoaDocumentoList, meioContatoList);
 	}
 
 	public void removerUsuario(String cpf) {

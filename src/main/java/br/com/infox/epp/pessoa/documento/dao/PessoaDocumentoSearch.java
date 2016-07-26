@@ -3,6 +3,8 @@ package br.com.infox.epp.pessoa.documento.dao;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -13,7 +15,8 @@ import br.com.infox.epp.pessoa.documento.entity.PessoaDocumento_;
 import br.com.infox.epp.pessoa.entity.Pessoa;
 
 @Stateless
-public class PessoaDocumentoSearch extends PersistenceController{
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+public class PessoaDocumentoSearch extends PersistenceController {
 
 	public List<PessoaDocumento> getDocumentosByPessoa(Pessoa pessoa) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();

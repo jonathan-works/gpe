@@ -67,6 +67,20 @@ public class UsuarioDTO implements Serializable{
 		if (pessoaFisica.getEstadoCivil() != null) {
 			this.estadoCivil = pessoaFisica.getEstadoCivil().name();
 		}
+		List<PessoaDocumento> pessoaDocumentoList = pessoaFisica.getPessoaDocumentoList();
+		if (pessoaDocumentoList != null) {
+			setDocumentos(new ArrayList<PessoaDocumentoDTO>());
+			for (PessoaDocumento pessoaDocumento : pessoaDocumentoList) {
+				getDocumentos().add(new PessoaDocumentoDTO(pessoaDocumento));
+			}
+		}
+		List<MeioContato> meioContatoList = pessoaFisica.getMeioContatoList();
+		if (meioContatoList != null) {
+			setMeiosContato(new ArrayList<MeioContatoDTO>());
+			for (MeioContato meioContato : meioContatoList) {
+				getMeiosContato().add(new MeioContatoDTO(meioContato));
+			}
+		}
 	}
 
 	public String getNome() {
