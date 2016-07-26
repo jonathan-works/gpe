@@ -27,7 +27,9 @@ public class RestUtils {
 	
 	public static String generateLocationURL(UriInfo uriInfo, String codigo) {
 		StringBuilder sb = new StringBuilder(uriInfo.getAbsolutePath().toString());
-		sb.append("/");
+		if (sb.toString().lastIndexOf("/") != sb.length() -1){
+			sb.append("/");
+		}
 		sb.append(codigo);
 		return sb.toString();
 	}

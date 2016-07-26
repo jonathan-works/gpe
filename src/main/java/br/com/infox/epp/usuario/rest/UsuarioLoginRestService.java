@@ -75,7 +75,13 @@ public class UsuarioLoginRestService {
 	}
 	
 	public void adicionarUsuario(UsuarioDTO usuarioDTO) {
-		adicionarUsuario(usuarioDTO, false);
+		UsuarioLogin usuarioLogin = usuarioSearch.getUsuarioLoginByCpfWhenExists(usuarioDTO.getCpf());
+		if (usuarioLogin != null && !usuarioLogin.getAtivo()) {
+			usuarioLogin.setAtivo(Boolean.TRUE);
+			usuarioLoginManager.update(aplicarValores(usuarioDTO, usuarioLogin));
+		} else {
+			adicionarUsuario(usuarioDTO, false);
+		}
 	}
 
 	private UsuarioLogin aplicarValores(UsuarioDTO usuarioDTO, UsuarioLogin usuarioLogin) {
