@@ -44,7 +44,15 @@ public class UsuarioDTO implements Serializable{
 	}
 
 	public UsuarioDTO(UsuarioLogin usuarioLogin, PessoaFisica pessoaFisica, List<PessoaDocumento> documentos, List<MeioContato> meiosContato){
-		this(usuarioLogin, pessoaFisica);
+		this.nome = usuarioLogin.getNomeUsuario();
+		this.cpf = pessoaFisica.getCpf();
+		this.email = usuarioLogin.getEmail();
+		if (pessoaFisica.getDataNascimento() != null) {
+			this.dataNascimento = new SimpleDateFormat(DATE_PATTERN).format(pessoaFisica.getDataNascimento());
+		}
+		if (pessoaFisica.getEstadoCivil() != null) {
+			this.estadoCivil = pessoaFisica.getEstadoCivil().name();
+		}
 		if (documentos != null && !documentos.isEmpty()){
 			for (PessoaDocumento pessoaDocumento : documentos) {
 				this.documentos.add(new PessoaDocumentoDTO(pessoaDocumento));
