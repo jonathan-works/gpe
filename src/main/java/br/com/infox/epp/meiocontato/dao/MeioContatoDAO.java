@@ -56,4 +56,13 @@ public class MeioContatoDAO extends DAO<MeioContato> {
         parameters.put(PARAM_VALOR, valor);
         return (Long) getNamedSingleResult(EXISTE_MEIO_CONTATO_BY_PESSOA_TIPO_VALOR, parameters) > 0;
     }
+    
+    public void adicionaMeioContatos(List<MeioContato> contatos) {
+		if (contatos != null && !contatos.isEmpty()) {
+	    	for (MeioContato meioContato : contatos) {
+				getEntityManager().persist(meioContato);
+			}
+			getEntityManager().flush();
+		}
+	}
 }
