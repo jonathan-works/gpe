@@ -35,10 +35,11 @@ import br.com.infox.epp.ws.bean.UsuarioSenhaBean;
 import br.com.infox.epp.ws.interceptors.Log;
 import br.com.infox.epp.ws.interceptors.TokenAuthentication;
 import br.com.infox.epp.ws.interceptors.ValidarParametros;
+import br.com.infox.epp.ws.interceptors.TokenAuthentication.TipoExcecao;
 import br.com.infox.epp.ws.messages.CodigosServicos;
 
 @Stateless
-@TokenAuthentication
+@TokenAuthentication(tipoExcecao=TipoExcecao.STRING)
 @ValidarParametros
 public class UsuarioRestService {
 

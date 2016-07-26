@@ -7,7 +7,7 @@ public enum WSMessages {
 	
 	MS_SUCESSO_INSERIR("MS0001", "Registro Inserido com Sucesso"),
 	MS_SUCESSO_ATUALIZAR("MS0002", "Registro Atualizado com Sucesso"),
-	ME_TOKEN_INVALIDO("ME0001", "Token inválido"),
+	ME_TOKEN_INVALIDO("ME0001", "Token de autenticação inválido"),
 	ME_ATTR_NOME_INVALIDO("ME0002", "Atributo nome inválido"),
 	ME_ATTR_CPF_INVALIDO("ME0003", "Atributo CPF inválido"),
 	ME_ATTR_EMAIL_INVALIDO("ME0004", "Atributo email inválido"),

@@ -9,13 +9,9 @@ import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import br.com.infox.epp.cdi.config.BeanManager;
-import br.com.infox.epp.rest.RestException;
 import br.com.infox.epp.ws.autenticacao.AutenticadorToken;
 import br.com.infox.epp.ws.exception.UnauthorizedException;
 import br.com.infox.epp.ws.interceptors.TokenAuthentication.TipoExcecao;
@@ -39,6 +35,13 @@ public class TokenAuthenticationInterceptor {
 		return anotacao;
 	}
 	
+	private String getMediaType(TipoExcecao tipoExcecao) {
+		switch (tipoExcecao) {
+		case STRING: return MediaType.TEXT_PLAIN;
+		default: return MediaType.APPLICATION_JSON;
+		}
+	}
+	
 	@AroundInvoke
 	private Object atenticarPorToken(InvocationContext ctx) throws Exception {
 		TokenAuthentication anotacao = getAnotacao(ctx);
@@ -55,15 +58,9 @@ public class TokenAuthenticationInterceptor {
 			autenticadorToken.validarToken(req);			
 		}
 		catch(UnauthorizedException e) {
-			if(anotacao.tipoExcecao() == TipoExcecao.STRING) {
-				throw e;
-			}
-			else
-			{
-				RestException excecao = new RestException(e.getErro().getCode(), e.getErro().getMessage());
-				Response response = Response.status(Status.UNAUTHORIZED).entity(excecao).type(MediaType.APPLICATION_JSON).build();
-				throw new WebApplicationException(response);				
-			}
+			String mediaType = getMediaType(anotacao.tipoExcecao());
+			e.setMediaType(mediaType);
+			throw e;
 		}
 		
 		return ctx.proceed();

@@ -27,4 +27,9 @@ public class RestException implements ErroServico {
     public void setMessage(String message) {
         this.message = message;
     }
+    
+    @Override
+    public String toString() {
+    	return String.format("%s: %s", code, message);
+    }
 }

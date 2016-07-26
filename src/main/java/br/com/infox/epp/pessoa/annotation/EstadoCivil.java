@@ -19,7 +19,7 @@ import br.com.infox.epp.pessoa.validator.EstadoCivilValidator;
 @Constraint(validatedBy = EstadoCivilValidator.class)
 public @interface EstadoCivil {
 	
-	String message() default "{br.com.infox.epp.ws.security.annotation.EstadoCivil}";
+	String message() default "formato inválido";
 	
 	Class<?>[] groups() default {};
 	

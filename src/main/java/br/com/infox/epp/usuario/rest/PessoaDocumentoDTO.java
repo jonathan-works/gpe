@@ -20,6 +20,9 @@ public class PessoaDocumentoDTO {
 	private String tipo;
 	private String orgaoExpedidor;
 
+	public PessoaDocumentoDTO() {
+	}
+	
 	public PessoaDocumentoDTO(PessoaDocumento pessoaDocumento) {
 		this.documento = pessoaDocumento.getDocumento();
 		this.dataEmissao = new SimpleDateFormat(DATE_PATTERN).format(pessoaDocumento.getDataEmissao());

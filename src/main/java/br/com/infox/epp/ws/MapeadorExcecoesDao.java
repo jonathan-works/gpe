@@ -1,5 +1,8 @@
 package br.com.infox.epp.ws;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -17,8 +20,12 @@ public class MapeadorExcecoesDao implements ExceptionMapper<DAOException> {
 	@Inject
 	private MensagensErroService mensagensErroService;
 	
+	@Inject
+	private Logger logger;
+	
 	@Override
 	public Response toResponse(DAOException exception) {
+		logger.log(Level.SEVERE, exception.getMessage(), exception);
 		String erroMsg = new Gson().toJson(mensagensErroService.getErro(exception));
 		if (exception.getDatabaseErrorCode() != null) {
 			return Response.status(Status.CONFLICT).entity(erroMsg).build();

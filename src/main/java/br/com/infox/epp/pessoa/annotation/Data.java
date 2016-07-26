@@ -24,7 +24,7 @@ public @interface Data {
 	
 	String pattern();
 	
-	String message() default "{br.com.infox.epp.ws.security.annotation.Data}";
+	String message() default "formato inválido";
 	
 	Class<?>[] groups() default {};
 	

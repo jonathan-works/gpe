@@ -41,8 +41,12 @@ public class ValidacaoInterceptor {
 
 	@AroundInvoke
 	private Object validar(InvocationContext ctx) throws Exception {
-		for (Object valor : ctx.getParameters()) {
-			validar(valor);
+		if(ctx.getParameters() != null) {
+			for (Object valor : ctx.getParameters()) {
+				if(valor != null) {
+					validar(valor);					
+				}
+			}	
 		}
 		return ctx.proceed();
 	}

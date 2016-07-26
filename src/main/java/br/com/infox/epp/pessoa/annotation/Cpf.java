@@ -20,7 +20,7 @@ public @interface Cpf {
 	
 	String pattern() default "^[0-9]{11}$";
 	
-	String message() default "{br.com.infox.epp.pessoa.annotation.Cpf}";
+	String message() default "formato inválido";
 	
 	Class<?>[] groups() default {};
 	

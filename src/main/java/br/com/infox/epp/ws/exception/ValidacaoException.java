@@ -2,6 +2,7 @@ package br.com.infox.epp.ws.exception;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.validation.ValidationException;
@@ -25,7 +26,7 @@ public class ValidacaoException extends ValidationException implements ExcecaoMu
 		super();
 	}
 	public ValidacaoException(String codigo, String mensagem) {
-		this();
+		super(mensagem);
 		adicionar(codigo, mensagem);
 	}
 	
@@ -64,8 +65,23 @@ public class ValidacaoException extends ValidationException implements ExcecaoMu
 	}
 	@Override
 	public String getCode() {
-		return getCode();
+		return getErro().getCode();
 	}
 	
-
+	@Override
+	public String getMessage() {
+		if(super.getMessage() != null) {
+			return super.getMessage();
+		}
+		String mensagem = "";
+		Iterator<ErroServico> it = getErros().iterator();
+		while(it.hasNext()) {
+			ErroServico erro = it.next();
+			mensagem += erro.getMessage();
+			if(it.hasNext()) {
+				mensagem += "\n";
+			}
+		}
+		return mensagem;
+	}
 }
