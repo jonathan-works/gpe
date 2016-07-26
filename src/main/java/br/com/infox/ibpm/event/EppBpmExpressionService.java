@@ -39,10 +39,12 @@ import br.com.infox.epp.processo.entity.TipoRelacionamentoProcesso;
 import br.com.infox.epp.processo.linkExterno.LinkAplicacaoExterna;
 import br.com.infox.epp.processo.linkExterno.LinkAplicacaoExternaService;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais;
 import br.com.infox.epp.relacionamentoprocessos.RelacionamentoProcessoManager;
 import br.com.infox.epp.relacionamentoprocessos.TipoRelacionamentoProcessoManager;
 import br.com.infox.ibpm.event.External.ExpressionType;
 import br.com.infox.ibpm.sinal.SignalService;
+import br.com.infox.ibpm.variable.JbpmVariavelLabel;
 
 @Stateless
 @Named(BpmExpressionService.NAME)
@@ -76,12 +78,16 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
 
     @External(tooltip = "process.events.expression.atribuirCiencia.tooltip")
     public void atribuirCiencia() {
-        contabilizadorPrazo.atribuirCiencia();
+    	Integer idProcesso = (Integer) ExecutionContext.currentExecutionContext().getContextInstance().getVariable(VariaveisJbpmProcessosGerais.PROCESSO);
+    	Processo comunicacao = processoManager.find(idProcesso);
+        contabilizadorPrazo.atribuirCiencia(comunicacao);
     }
 
     @External(tooltip = "process.events.expression.atribuirCumprimento.tooltip")
     public void atribuirCumprimento() {
-        contabilizadorPrazo.atribuirCumprimento();
+    	Integer idProcesso = (Integer) ExecutionContext.currentExecutionContext().getContextInstance().getVariable(VariaveisJbpmProcessosGerais.PROCESSO);
+    	Processo comunicacao = processoManager.find(idProcesso);
+        contabilizadorPrazo.atribuirCumprimento(comunicacao);
     }
 
     @External(value = {
