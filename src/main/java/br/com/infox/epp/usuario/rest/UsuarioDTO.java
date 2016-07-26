@@ -61,8 +61,12 @@ public class UsuarioDTO implements Serializable{
 		this.nome = usuarioLogin.getNomeUsuario();
 		this.cpf = pessoaFisica.getCpf();
 		this.email = usuarioLogin.getEmail();
-		this.dataNascimento = new SimpleDateFormat(DATE_PATTERN).format(pessoaFisica.getDataNascimento());
-		this.estadoCivil = pessoaFisica.getEstadoCivil().name();
+		if (pessoaFisica.getDataNascimento() != null) {
+			this.dataNascimento = new SimpleDateFormat(DATE_PATTERN).format(pessoaFisica.getDataNascimento());
+		}
+		if (pessoaFisica.getEstadoCivil() != null) {
+			this.estadoCivil = pessoaFisica.getEstadoCivil().name();
+		}
 	}
 
 	public String getNome() {
