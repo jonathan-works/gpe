@@ -246,7 +246,7 @@
 				switchType="client" style="margin-top:1em;"
 				rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada or not empty envioComunicacaoController.modeloComunicacao.documentos}">
 				
-				<rich:panel header="#{infoxMessages['searchForm.title']}" style="margin-bottom: 1rem;">
+				<rich:panel header="#{infoxMessages['searchForm.title']}" style="margin-bottom: 1rem;" rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
 					<h:form>
 				        <div class="property-field-edit" style="display: inline-block;">
 							<div class="property-field-edit-name">
