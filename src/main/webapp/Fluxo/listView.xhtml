@@ -226,7 +226,7 @@
 							<a:commandButton value="#{infoxMessages['fluxo.importar']}" action="#{bpmnUploader.importar}" execute="@this"
 								limitRender="true" render="pageBodyDialogMessage importarButtonDiv mensagensImportacaoBpmn" 
 								oncomplete="infox.hideLoading(); closeModalBpmn();"
-								onclick="if (!confirm('Atenção: ao importar o fluxo, as configurações do fluxo antigo serão perdidas. Deseja continuar?')) return false; infox.showLoading();"
+								onclick="infox.showLoading();"
 								rendered="#{not empty bpmnUploader.bpmn}" styleClass="buttons"/>
 							<script>
 								function closeModalBpmn() {

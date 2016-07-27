@@ -156,7 +156,7 @@ public class BpmnJpdlService {
 			throw new BusinessRollbackException("O BPMN deve conter apenas 1 participante");
 		}
 		
-    	ProcessDefinition processDefinition = loadOrCreateProcessDefinition(null);
+    	ProcessDefinition processDefinition = loadOrCreateProcessDefinition(fluxo.getXml());
     	updateDefinitionsFromBpmn(bpmnModel, processDefinition);
 
     	Process process = bpmnModel.getModelElementsByType(Process.class).iterator().next();
