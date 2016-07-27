@@ -112,7 +112,7 @@ public class ModeloComunicacao implements Serializable, Cloneable {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modeloComunicacao")
 	private List<DestinatarioModeloComunicacao> destinatarios = new ArrayList<>(0);
 	
-	@OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "modeloComunicacao")
+	@OneToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, fetch = FetchType.LAZY, mappedBy = "modeloComunicacao")
 	private List<DocumentoModeloComunicacao> documentos = new ArrayList<>(0);
 	
 	@Transient
