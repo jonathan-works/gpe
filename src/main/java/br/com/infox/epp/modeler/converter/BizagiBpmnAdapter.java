@@ -129,12 +129,13 @@ public class BizagiBpmnAdapter {
 			if (bizagiShape.getBpmnLabel() != null) {
 				BpmnLabel label = normalizedModel.newInstance(BpmnLabel.class);
 				label.setId(bizagiShape.getBpmnLabel().getId());
-				if (bizagiShape.getBpmnLabel().getBounds() != null) {
+				Bounds labelBounds = bizagiShape.getBpmnLabel().getBounds();
+				if (labelBounds != null && labelBounds.getX() != 0 && labelBounds.getY() != 0) {
 					Bounds bounds = normalizedModel.newInstance(Bounds.class);
-					bounds.setX(bizagiShape.getBpmnLabel().getBounds().getX() + MODELER_OFFSET_X);
-					bounds.setY(bizagiShape.getBpmnLabel().getBounds().getY() + MODELER_OFFSET_Y);
-					bounds.setWidth(bizagiShape.getBpmnLabel().getBounds().getWidth());
-					bounds.setHeight(bizagiShape.getBpmnLabel().getBounds().getHeight());
+					bounds.setX(labelBounds.getX() + MODELER_OFFSET_X);
+					bounds.setY(labelBounds.getY() + MODELER_OFFSET_Y);
+					bounds.setWidth(labelBounds.getWidth());
+					bounds.setHeight(labelBounds.getHeight());
 					label.setBounds(bounds);
 				}
 				shape.setBpmnLabel(label);
@@ -160,12 +161,13 @@ public class BizagiBpmnAdapter {
 			if (bizagiEdge.getBpmnLabel() != null) {
 				BpmnLabel label = normalizedModel.newInstance(BpmnLabel.class);
 				label.setId(bizagiEdge.getBpmnLabel().getId());
-				if (bizagiEdge.getBpmnLabel().getBounds() != null) {
+				Bounds labelBounds = bizagiEdge.getBpmnLabel().getBounds();
+				if (labelBounds != null && labelBounds.getX() != 0 && labelBounds.getY() != 0) {
 					Bounds bounds = normalizedModel.newInstance(Bounds.class);
-					bounds.setX(bizagiEdge.getBpmnLabel().getBounds().getX() + MODELER_OFFSET_X);
-					bounds.setY(bizagiEdge.getBpmnLabel().getBounds().getY() + MODELER_OFFSET_Y);
-					bounds.setWidth(bizagiEdge.getBpmnLabel().getBounds().getWidth());
-					bounds.setHeight(bizagiEdge.getBpmnLabel().getBounds().getHeight());
+					bounds.setX(labelBounds.getX() + MODELER_OFFSET_X);
+					bounds.setY(labelBounds.getY() + MODELER_OFFSET_Y);
+					bounds.setWidth(labelBounds.getWidth());
+					bounds.setHeight(labelBounds.getHeight());
 					label.setBounds(bounds);
 				}
 				edge.setBpmnLabel(label);
