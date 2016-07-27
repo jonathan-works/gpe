@@ -62,7 +62,9 @@ public final class JbpmContextProducer {
 
         @Override
         public void beforeCompletion() {
-            jbpmContext.getSession().flush();     
+            if (!jbpmContext.isClosed()) {
+                jbpmContext.getSession().flush();     
+            }
         }
 
         @Override
