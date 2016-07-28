@@ -16,7 +16,7 @@ import org.jbpm.taskmgmt.def.Swimlane;
 
 import com.google.common.base.Strings;
 
-public class BpmnJpdlTranslation {
+class BpmnJpdlTranslation {
 	
 	private BpmnModelInstance bpmnModel;
 	private ProcessDefinition processDefinition;

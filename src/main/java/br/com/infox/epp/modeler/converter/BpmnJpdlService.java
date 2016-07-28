@@ -145,9 +145,10 @@ public class BpmnJpdlService {
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public Fluxo importarBpmn(Fluxo fluxo, String bpmn) {
 		BpmnModelInstance bpmnModel = Bpmn.readModelFromStream(new ByteArrayInputStream(bpmn.getBytes(StandardCharsets.UTF_8)));
-		BizagiBpmnAdapter bizagiBpmnAdapter = new BizagiBpmnAdapter();
-		
-		bpmnModel = bizagiBpmnAdapter.checkAndConvert(bpmnModel);
+		BpmnAdapter[] adapters = getAdapters();
+		for (BpmnAdapter adapter : adapters) {
+			bpmnModel = adapter.checkAndConvert(bpmnModel);
+		}
 
 		if (bpmnModel.getModelElementsByType(Process.class).size() != 1) {
 			throw new BusinessRollbackException("O BPMN deve conter apenas 1 processo");
@@ -366,4 +367,11 @@ public class BpmnJpdlService {
         }
     }
 
+	private BpmnAdapter[] getAdapters() {
+		return new BpmnAdapter[] {
+			new BizagiBpmnAdapter(),
+			new BpmnNodesAdapter(),
+			new BpmnDiagramAdapter()
+		};
+	}
 }

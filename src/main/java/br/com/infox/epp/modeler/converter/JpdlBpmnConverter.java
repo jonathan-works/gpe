@@ -47,17 +47,8 @@ import br.com.infox.seam.exception.BusinessRollbackException;
 
 public class JpdlBpmnConverter {
 	
-	private static final int FLOW_NODE_Y_OFFSET = 10;
 	private static final int FLOW_NODE_INTER_DISTANCE = 200;
-	private static final int ACTIVITY_WIDTH = 100;
-	private static final int ACTIVITY_HEIGHT = 80;
-	private static final int GENERAL_FLOWNODE_HEIGHT = 50;
-	private static final int GENERAL_FLOWNODE_WIDTH = GENERAL_FLOWNODE_HEIGHT;
 	private static final int LANE_HEIGHT = 200;
-	private static final int PARTICIPANT_X = 200;
-	private static final int PARTICIPANT_Y = 150;
-	public static final int PARTICIPANT_LANE_OFFSET = 30;
-	private static final int FLOW_NODE_X_OFFSET = 30;
 	
 	private ProcessDefinition processDefinition;
 	private StartEvent startEvent;
@@ -264,16 +255,16 @@ public class JpdlBpmnConverter {
 		plane.addChildElement(participantShape);
 		Bounds participantBounds = modelInstance.newInstance(Bounds.class);
 		participantShape.setBounds(participantBounds);
-		participantBounds.setX(PARTICIPANT_X);
-		participantBounds.setY(PARTICIPANT_Y);
-		participantBounds.setWidth(maxWidth + PARTICIPANT_LANE_OFFSET);
+		participantBounds.setX(DiagramUtil.PARTICIPANT_X);
+		participantBounds.setY(DiagramUtil.PARTICIPANT_Y);
+		participantBounds.setWidth(maxWidth + DiagramUtil.PARTICIPANT_LANE_OFFSET);
 		participantBounds.setHeight(LANE_HEIGHT * lanes.size());
 		
 		for (Lane lane : lanes) {
 			if (!totalNodes.containsKey(lane.getId()) || totalNodes.get(lane.getId()) == 0) {
 				createLaneShape(lane, plane);
 			}
-			laneShapes.get(lane.getId()).getBounds().setWidth(participantBounds.getWidth() - PARTICIPANT_LANE_OFFSET);
+			laneShapes.get(lane.getId()).getBounds().setWidth(participantBounds.getWidth() - DiagramUtil.PARTICIPANT_LANE_OFFSET);
 		}
 		
 		Collection<FlowNode> nodes = modelInstance.getModelElementsByType(FlowNode.class);
@@ -313,8 +304,8 @@ public class JpdlBpmnConverter {
 		shape.setBpmnElement(flowNode);
 		Bounds bounds = modelInstance.newInstance(Bounds.class);
 		shape.setBounds(bounds);
-		bounds.setWidth(flowNode instanceof Activity ? ACTIVITY_WIDTH : GENERAL_FLOWNODE_WIDTH);
-		bounds.setHeight(flowNode instanceof Activity ? ACTIVITY_HEIGHT : GENERAL_FLOWNODE_HEIGHT);
+		bounds.setWidth(flowNode instanceof Activity ? DiagramUtil.ACTIVITY_WIDTH : DiagramUtil.GENERAL_FLOWNODE_WIDTH);
+		bounds.setHeight(flowNode instanceof Activity ? DiagramUtil.ACTIVITY_HEIGHT : DiagramUtil.GENERAL_FLOWNODE_HEIGHT);
 		
 		Lane lane = nodesToLanes.get(flowNode.getId());
 		if (lane == null) {
@@ -331,8 +322,8 @@ public class JpdlBpmnConverter {
 		
 		BpmnShape lastLane = lastLaneShape;
 		BpmnShape laneShape = createLaneShape(lane, plane);
-		bounds.setX(laneShape.getBounds().getX() + FLOW_NODE_X_OFFSET + (FLOW_NODE_INTER_DISTANCE * (totalNodes - 1)));
-		bounds.setY(laneShape.getBounds().getY() + FLOW_NODE_Y_OFFSET);
+		bounds.setX(laneShape.getBounds().getX() + DiagramUtil.FLOW_NODE_X_OFFSET + (FLOW_NODE_INTER_DISTANCE * (totalNodes - 1)));
+		bounds.setY(laneShape.getBounds().getY() + DiagramUtil.FLOW_NODE_Y_OFFSET);
 		if (lastLane != null && !lastLane.equals(laneShape)) {
 			bounds.setX(bounds.getX() + maxXFromPreviousLane);
 		} else {
@@ -356,8 +347,8 @@ public class JpdlBpmnConverter {
 		laneShape.setBpmnElement(lane);
 		Bounds laneBounds = modelInstance.newInstance(Bounds.class);
 		laneShape.setBounds(laneBounds);
-		laneBounds.setX(PARTICIPANT_X + PARTICIPANT_LANE_OFFSET);
-		laneBounds.setY(lastLaneShape == null ? PARTICIPANT_Y : lastLaneShape.getBounds().getY() + LANE_HEIGHT);
+		laneBounds.setX(DiagramUtil.PARTICIPANT_X + DiagramUtil.PARTICIPANT_LANE_OFFSET);
+		laneBounds.setY(lastLaneShape == null ? DiagramUtil.PARTICIPANT_Y : lastLaneShape.getBounds().getY() + LANE_HEIGHT);
 		laneBounds.setHeight(LANE_HEIGHT);
 		laneShapes.put(lane.getId(), laneShape);
 		lastLaneShape = laneShape;
