@@ -23,8 +23,8 @@ public class EntityConverter implements javax.faces.convert.Converter, Serializa
     }
     
     public String getAsString(FacesContext facesContext, UIComponent cmp, Object value) throws ConverterException {
-        if (value == null) {
-            return null;
+        if (value == null || (value instanceof String && ((String)value).isEmpty())) {
+            return "";
         }
         if (!EntityUtil.isEntity(value)){
             throw new ConverterException(new FacesMessage("Must be an entity"));
