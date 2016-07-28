@@ -252,6 +252,9 @@ public class EnvioComunicacaoController implements Serializable {
 		if (modeloComunicacao.getDestinatarios().isEmpty()) {
 			msg.append("Nenhum destinatário foi selecionado.\n");
 		}
+		if (!modeloComunicacao.isMinuta() && modeloComunicacao.getClassificacaoComunicacao() == null){
+			msg.append("Escolha a classificação de documento.\n");
+		}
 		if (!modeloComunicacao.isMinuta() && Strings.isNullOrEmpty(modeloComunicacao.getTextoComunicacao())){
 			msg.append("O documento do editor não é minuta mas não existe texto no editor.\n");
 		}
