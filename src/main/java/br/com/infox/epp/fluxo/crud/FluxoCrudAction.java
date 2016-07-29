@@ -91,6 +91,9 @@ public class FluxoCrudAction implements Controller {
     
     @Override
     public void onClickSearchTab() {
+    	if (isManaged()) {
+    		fluxoManager.detach(getInstance());
+    	}
     	newInstance();
     }
     
