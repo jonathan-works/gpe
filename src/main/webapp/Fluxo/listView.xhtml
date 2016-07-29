@@ -88,7 +88,15 @@
                         <wi:toolBarGraphicImage title="#{infoxMessages['processBuilder.deployBtn']}" url="#{layoutController.getResourceUrlByPath('/imagens/deploy.png')}" />
                     </a:commandLink>
                 <wi:toolBarEdit id="fluxoListedit" />
-                <wi:toolBarInactive />
+                <a:commandLink id="inativar"
+                        action="#{fluxoCrudAction.inactive(row)}"
+                        onclick="return confirm(\'#{infoxMessages['crud.confirmInactivate']}\');"
+                        onbegin="infox.showLoading();"
+                        rendered="#{row.ativo}"
+                        render="fluxoListPanel pageBodyDialogMessage"
+                        oncomplete="infox.hideLoading();">
+                        <wi:toolBarGraphicImage title="#{infoxMessages['button.inactive']}" url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" />
+                    </a:commandLink>
                 </h:form>
             </ui:define>
         </wi:dataTable>
@@ -162,84 +170,123 @@
                 label="#{infoxMessages['field.situacao']}"
                 value="#{fluxoCrudAction.instance.ativo}" />
             <ui:define name="buttons">
-                <wi:commandButtonSave
-                    rendered="#{not fluxoCrudAction.replica}" />
-                <wi:commandButtonNew />
-                <wi:commandButton
-                    id="updateButton"
-                    action="fluxoCrudAction.criarReplica()"
-                    reRender="#{wi:get(reRender, 'pageBody, modalPanelMessages')}"
-                    rendered="#{fluxoCrudAction.managed or fluxoCrudAction.replica}"
-                    value="#{infoxMessages['fluxo.exportar']}" />
+                <a:commandButton value="#{infoxMessages['crud.persist']}" action="#{fluxoCrudAction.persist}" execute="@form"
+					limitRender="true" render="pageBodyDialogMessage @form" rendered="#{not fluxoCrudAction.managed}"
+					oncomplete="infox.hideLoading();" onclick="infox.showLoading();" styleClass="buttons"/>
+					
+				<a:commandButton value="#{infoxMessages['crud.update']}" action="#{fluxoCrudAction.update}" execute="@form"
+					limitRender="true" render="pageBodyDialogMessage @form" rendered="#{fluxoCrudAction.managed}"
+					oncomplete="infox.hideLoading();" onclick="infox.showLoading();" styleClass="buttons"/>
+					
+                <a:commandButton value="#{infoxMessages['crud.new']}" action="#{fluxoCrudAction.newInstance}" execute="@this"
+					limitRender="true" render="pageBodyDialogMessage @form"
+					oncomplete="infox.hideLoading();" onclick="infox.showLoading();" styleClass="buttons"/>
+					
+                <wi:commandButton id="botaoGerarReplica" action="fluxoCrudAction.gerarReplica()" reRender="modalReplicaForm"
+                    rendered="#{fluxoCrudAction.managed}" value="#{infoxMessages['fluxo.exportar']}" oncomplete="#{rich:component('modalReplica')}.show()"/>
                 <wi:commandButton
                     id="definicao"
                     value="#{infoxMessages['fluxo.definicao']}" reRender="@this"
-                    rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.replica}"
-                    oncomplete="openPopUp('processDefinition', '#{pathResolver.getContextPath()}/Fluxo/definicao/processDefinition.seam',1300,850);">
-                    <f:setPropertyActionListener value="#{fluxoCrudAction.instance.idFluxo}" target="#{flash.idFluxo}" />
-                  	<infox:flashcopy />
+                    rendered="#{fluxoCrudAction.managed}"
+                    onclick="openPopUp('processDefinition', '#{pathResolver.getContextPath()}/Fluxo/definicao/processDefinition.seam?cid=#{fluxoController.conversationId}',1300,850); return false;">
                 </wi:commandButton>
                 
                 <wi:commandButton id="importarBpmn" value="#{infoxMessages['fluxo.importarBpmn']}" onclick="#{rich:component('modalImportBpmn')}.show(); return false;"
-                	rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.replica}"/>
-                
-                <rich:popupPanel id="modalImportBpmn" width="450" height="450" maxHeight="600" modal="true" header="#{infoxMessages['fluxo.importarBpmn']}"
-                	onbeforehide="clearBpmnImportMessages()">
-				    <f:facet name="controls">
-				        <h:graphicImage styleClass="mp-close"
-				            value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
-				            onclick="#{rich:component('modalImportBpmn')}.hide();" />
-				    </f:facet>
-				    <c:set property="fluxo" target="#{bpmnUploader}" value="#{fluxoCrudAction.instance}" />
-				    <h:form enctype="multipart/form-data">
-				    	<a:jsFunction name="clearBpmnImportMessages" action="#{bpmnUploader.clearMessages}" execute="@this" limitRender="true" 
-				    		render="mensagensImportacaoBpmn importarButtonDiv" oncomplete="#{rich:component('bpmnFileUpload')}.clearButton.click()"/>
-				    	
-					    <rich:fileUpload execute="@this" limitRender="true" acceptedTypes="bpmn"
-					          tipMessage="#{infoxMessages['fluxo.xpdl.tipMessage']}"
-					          maxFilesQuantity="1" fileUploadListener="#{bpmnUploader.processFileUpload}"
-					          immediateUpload="true" listWidth="260px" listHeight="58px"
-					          noDuplicate="true" addLabel="#{infoxMessages['button.add']}"
-					          clearAllLabel="#{infoxMessages['fileUpload.clearAll']}"
-					          clearLabel="#{infoxMessages['fileUpload.clear']}"
-					          uploadLabel="#{infoxMessages['fileUpload.upload']}"
-					          doneLabel="#{infoxMessages['fileUpload.done']}"
-					          sizeExceededLabel="#{infoxMessages['fileUpload.error.size']}"
-					          validatorMessage="#{infoxMessages['fileUpload.error.validator']}"
-					          requiredMessage="#{infoxMessages['fileUpload.error.required']}"
-					          ontyperejected="new infox.Messages().dialog('Apenas arquivos BPMN são permitidos')"
-					          render="importarButtonDiv" id="bpmnFileUpload">
-					          <f:facet name="label">
-					            <h:outputText value="{_KB}KB de {KB}KB" />
-					          </f:facet>
-						</rich:fileUpload>
-						<s:div id="mensagensImportacaoBpmn">
-					        <rich:panel header="Problemas na Importação" rendered="#{not empty bpmnUploader.mensagens}">
-					        	<ul>
-					        		<ui:repeat value="#{bpmnUploader.mensagens}" var="mensagem">
-						            	<li><h:outputText value="#{mensagem}" /></li>
-					            	</ui:repeat>
-					          	</ul>
-					        </rich:panel>
-					      </s:div>
-						<p:outputPanel layout="block" id="importarButtonDiv">
-							<a:commandButton value="#{infoxMessages['fluxo.importar']}" action="#{bpmnUploader.importar}" execute="@this"
-								limitRender="true" render="pageBodyDialogMessage importarButtonDiv mensagensImportacaoBpmn" 
-								oncomplete="infox.hideLoading(); closeModalBpmn();"
-								onclick="if (!confirm('Atenção: ao importar o fluxo, as configurações do fluxo antigo serão perdidas. Deseja continuar?')) return false; infox.showLoading();"
-								rendered="#{not empty bpmnUploader.bpmn}" styleClass="buttons"/>
-							<script>
-								function closeModalBpmn() {
-									if (#{bpmnUploader.fluxoImportado}) {
-										#{rich:component('modalImportBpmn')}.hide();
-									}
-								}
-							</script>
-						</p:outputPanel>
-					</h:form>
-				</rich:popupPanel>
+                	rendered="#{fluxoCrudAction.managed}"/>
             </ui:define>
         </wi:dataForm>
+        
+        <rich:popupPanel id="modalImportBpmn" width="450" height="450" maxHeight="600" modal="true" header="#{infoxMessages['fluxo.importarBpmn']}"
+             onbeforehide="clearBpmnImportMessages()">
+		    <f:facet name="controls">
+		        <h:graphicImage styleClass="mp-close"
+		            value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
+		            onclick="#{rich:component('modalImportBpmn')}.hide();" />
+		    </f:facet>
+		    <h:form enctype="multipart/form-data">
+		    	<a:jsFunction name="clearBpmnImportMessages" action="#{bpmnUploader.clearMessages}" execute="@this" limitRender="true" 
+		    		render="mensagensImportacaoBpmn importarButtonDiv" oncomplete="#{rich:component('bpmnFileUpload')}.clearButton.click()"/>
+		    	
+			    <rich:fileUpload execute="@this" limitRender="true" acceptedTypes="bpmn"
+			          tipMessage="#{infoxMessages['fluxo.xpdl.tipMessage']}"
+			          maxFilesQuantity="1" fileUploadListener="#{bpmnUploader.processFileUpload}"
+			          immediateUpload="true" listWidth="260px" listHeight="58px"
+			          noDuplicate="true" addLabel="#{infoxMessages['button.add']}"
+			          clearAllLabel="#{infoxMessages['fileUpload.clearAll']}"
+			          clearLabel="#{infoxMessages['fileUpload.clear']}"
+			          uploadLabel="#{infoxMessages['fileUpload.upload']}"
+			          doneLabel="#{infoxMessages['fileUpload.done']}"
+			          sizeExceededLabel="#{infoxMessages['fileUpload.error.size']}"
+			          validatorMessage="#{infoxMessages['fileUpload.error.validator']}"
+			          requiredMessage="#{infoxMessages['fileUpload.error.required']}"
+			          ontyperejected="new infox.Messages().dialog('Apenas arquivos BPMN são permitidos')"
+			          render="importarButtonDiv" id="bpmnFileUpload">
+			          <f:facet name="label">
+			            <h:outputText value="{_KB}KB de {KB}KB" />
+			          </f:facet>
+				</rich:fileUpload>
+				<s:div id="mensagensImportacaoBpmn">
+			        <rich:panel header="Problemas na Importação" rendered="#{not empty bpmnUploader.mensagens}">
+			        	<ul>
+			        		<ui:repeat value="#{bpmnUploader.mensagens}" var="mensagem">
+				            	<li><h:outputText value="#{mensagem}" /></li>
+			            	</ui:repeat>
+			          	</ul>
+			        </rich:panel>
+			      </s:div>
+				<p:outputPanel layout="block" id="importarButtonDiv">
+					<a:commandButton value="#{infoxMessages['fluxo.importar']}" action="#{bpmnUploader.importar}" execute="@this"
+						limitRender="true" render="pageBodyDialogMessage importarButtonDiv mensagensImportacaoBpmn" 
+						oncomplete="infox.hideLoading(); closeModalBpmn();"
+						onclick="infox.showLoading();"
+						rendered="#{not empty bpmnUploader.bpmn}" styleClass="buttons"/>
+					<script>
+						function closeModalBpmn() {
+							if (#{bpmnUploader.fluxoImportado}) {
+								#{rich:component('modalImportBpmn')}.hide();
+							}
+						}
+					</script>
+				</p:outputPanel>
+			</h:form>
+		</rich:popupPanel>
+		
+		<rich:popupPanel id="modalReplica" width="450" height="200" maxHeight="200" modal="true" header="#{infoxMessages['fluxo.exportar']}">
+		    <f:facet name="controls">
+		        <h:graphicImage styleClass="mp-close"
+		            value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
+		            onclick="#{rich:component('modalReplica')}.hide();" />
+		    </f:facet>
+		    <h:form id="modalReplicaForm">
+		    	<wi:inputText
+	                id="codFluxo"
+	                value="#{fluxoCrudAction.replica.codFluxo}"
+	                required="true"
+	                label="#{infoxMessages['fluxo.codFluxo']}"
+	                maxlength="30">
+                	<f:validator validatorId="jsfComponentIdValidator" />
+	            </wi:inputText>
+	            <wi:inputText
+	                id="descricaoFluxo"
+	                required="true"
+	                label="#{infoxMessages['fluxo.descricao']}"
+	                value="#{fluxoCrudAction.replica.fluxo}" 
+	                maxlength="100" />
+	            <div />
+				<a:commandButton value="#{infoxMessages['fluxo.exportar']}" action="#{fluxoCrudAction.gravarReplica}" execute="@form"
+					limitRender="true" render="pageBodyDialogMessage @form fluxoForm" 
+					oncomplete="infox.hideLoading(); closeModalBpmn();"
+					onclick="infox.showLoading();"
+					styleClass="buttons"/>
+				<script>
+					function closeModalBpmn() {
+						if (#{empty fluxoCrudAction.replica}) {
+							#{rich:component('modalReplica')}.hide();
+						}
+					}
+				</script>
+			</h:form>
+		</rich:popupPanel>
     </ui:define>
     <ui:define name="tabs">
         <ui:param
@@ -247,8 +294,8 @@
             value="#{fluxoPapelAction}" />
         <infox:tab
             id="fluxoPapelTab"
-            rendered="#{home.isManaged() and not fluxoCrudAction.replica}"
-            action="#{action.init(fluxoCrudAction.instance)}"
+            rendered="#{home.isManaged()}"
+            action="#{action.init()}"
             title="#{infoxMessages['fluxoPapel.titleTab']}"
             name="fluxoPapelTab">
             <wi:dataForm
@@ -299,7 +346,7 @@
         <infox:tab
             id="natCatFluxoLoc"
             name="natCatFluxoLoc"
-            rendered="#{home.managed and not fluxoCrudAction.replica}"
+            rendered="#{home.managed}"
             title="#{infoxMessages['localizacao.titleView']}">
             <s:div id="natCatFluxoLocDiv">
                 <div>
@@ -373,16 +420,16 @@
 	        name="modeloPastasTab"
 	        id="modeloPastasTab"
 	        title="#{infoxMessages['modeloPasta.tabTitle']}"
-	        rendered="#{home.isManaged() and not fluxoCrudAction.replica}"
-            action="#{modeloPastaRestricaoAction.init(fluxoCrudAction.instance)}">
+	        rendered="#{home.isManaged()}"
+            action="#{modeloPastaRestricaoAction.init()}">
 	        <ui:include src="definicao/modeloPastaRestricao.xhtml" />	        
       	</infox:tab>
       	<infox:tab
 	        name="definicaoVariaveisTab"
 	        id="definicaoVariaveisTab"
 	        title="#{infoxMessages['processBuilder.definicaoVariavelProcesso']}"
-	        rendered="#{fluxoCrudAction.managed and not fluxoCrudAction.replica}"
-            action="#{definicaoVariavelProcessoAction.init(fluxoCrudAction.instance)}">
+	        rendered="#{fluxoCrudAction.managed}"
+            action="#{definicaoVariavelProcessoAction.init()}">
 	        <ui:include src="definicaoVariavelProcesso.xhtml" />	        
       	</infox:tab>
 
@@ -390,8 +437,8 @@
             name="monitorTab"
             id="monitorTab"
             title="#{infoxMessages['monitorProcesso.title']}"
-            rendered="#{home.isManaged() and not fluxoCrudAction.replica and not empty home.instance.svgExecucao}"
-            action="#{monitorProcessoView.selectFluxo(home.instance)}">
+            rendered="#{home.isManaged() and not empty home.instance.svgExecucao}"
+            action="#{monitorProcessoView.selectFluxo()}">
             <ui:include src="definicao/monitorProcesso.xhtml" />
         </infox:tab>
     </ui:define>

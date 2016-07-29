@@ -10,8 +10,8 @@ import javax.inject.Named;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
+import br.com.infox.epp.fluxo.crud.FluxoController;
 import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoRecursos.RecursoVariavel;
-import br.com.infox.epp.fluxo.entity.Fluxo;
 
 @Named
 @ViewScoped
@@ -27,22 +27,22 @@ public class DefinicaoVariavelProcessoAction implements Serializable {
     private DefinicaoVariavelProcessoSearch definicaoVariavelProcessoSearch;
     @Inject
     private DefinicaoVariavelProcessoRecursos definicaoVariavelProcessoRecursos;
+    @Inject
+    private FluxoController fluxoController;
     
-    private Fluxo fluxo;
     private DefinicaoVariavelProcesso variavel;
     private List<DefinicaoVariavelProcessoRecursoBean> recursos;
     private DefinicaoVariavelProcessoRecursoBean recurso;
 
-    public void init(Fluxo fluxo) {
-    	this.fluxo = fluxo;
-    	definicaoVariavelProcessoList.setFluxo(fluxo);
+    public void init() {
+    	definicaoVariavelProcessoList.setFluxo(fluxoController.getFluxo());
     	definicaoVariavelProcessoList.refresh();
     	novaVariavel();
     }
     
     public void novaVariavel() {
         variavel = new DefinicaoVariavelProcesso();
-        variavel.setFluxo(fluxo);
+        variavel.setFluxo(fluxoController.getFluxo());
         recursos = null;
         recurso = null;
     }

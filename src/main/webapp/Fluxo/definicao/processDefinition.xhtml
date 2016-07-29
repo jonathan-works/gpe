@@ -14,13 +14,9 @@
  
   <ui:define name="title">#{infoxMessages['fluxo.titlePage']}: #{empty processBuilder.instance ? '' : processBuilder.instance.name}</ui:define>
   <ui:define name="head">
-	<c:if test="#{not empty flash.idFluxo}">
-		<c:set property="idFluxo" target="#{processBuilder}" value="#{flash.idFluxo}"></c:set>
-		<c:set property="idFluxo" target="#{historicoProcessDefinitionList}" value="#{flash.idFluxo}"></c:set>
-		<f:metadata>
-			<f:event listener="#{processBuilder.load()}" type="preRenderView" />
-		</f:metadata>
-	</c:if>
+	<f:metadata>
+		<f:event listener="#{processBuilder.load()}" type="preRenderView" />
+	</f:metadata>
     <h:outputScript
       name="jbpmGraph.js"
       library="js" />

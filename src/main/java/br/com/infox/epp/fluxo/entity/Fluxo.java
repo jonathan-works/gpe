@@ -370,4 +370,17 @@ public class Fluxo implements Serializable {
             return "";
         }
     }
+    
+    public Fluxo makeCopy() {
+    	Fluxo fluxo = new Fluxo();
+    	fluxo.setAtivo(getAtivo());
+    	fluxo.setBpmn(getBpmn());
+    	fluxo.setDataFimPublicacao(getDataFimPublicacao());
+    	fluxo.setDataInicioPublicacao(getDataInicioPublicacao());
+    	fluxo.setPublicado(false);
+    	fluxo.setQtPrazo(getQtPrazo());
+    	fluxo.setSvg(getSvg());
+    	fluxo.setXml(getXml());
+    	return fluxo;
+    }
 }

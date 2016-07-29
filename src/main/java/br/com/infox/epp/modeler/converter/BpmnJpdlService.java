@@ -145,7 +145,19 @@ public class BpmnJpdlService {
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public Fluxo importarBpmn(Fluxo fluxo, String bpmn) {
 		BpmnModelInstance bpmnModel = Bpmn.readModelFromStream(new ByteArrayInputStream(bpmn.getBytes(StandardCharsets.UTF_8)));
-    	ProcessDefinition processDefinition = loadOrCreateProcessDefinition(null);
+		BpmnAdapter[] adapters = getAdapters();
+		for (BpmnAdapter adapter : adapters) {
+			bpmnModel = adapter.checkAndConvert(bpmnModel);
+		}
+
+		if (bpmnModel.getModelElementsByType(Process.class).size() != 1) {
+			throw new BusinessRollbackException("O BPMN deve conter apenas 1 processo");
+		}
+		if (bpmnModel.getModelElementsByType(Participant.class).size() != 1) {
+			throw new BusinessRollbackException("O BPMN deve conter apenas 1 participante");
+		}
+		
+    	ProcessDefinition processDefinition = loadOrCreateProcessDefinition(fluxo.getXml());
     	updateDefinitionsFromBpmn(bpmnModel, processDefinition);
 
     	Process process = bpmnModel.getModelElementsByType(Process.class).iterator().next();
@@ -172,15 +184,6 @@ public class BpmnJpdlService {
 	}
 	
 	private void updateDefinitionsFromBpmn(BpmnModelInstance bpmnModel, ProcessDefinition processDefinition) {
-		BizagiBpmnAdapter bizagiBpmnAdapter = new BizagiBpmnAdapter();
-		bizagiBpmnAdapter.checkAndConvert(bpmnModel);
-		if (bpmnModel.getModelElementsByType(Process.class).size() != 1) {
-			throw new BusinessRollbackException("O BPMN deve conter apenas 1 processo");
-		}
-		if (bpmnModel.getModelElementsByType(Participant.class).size() != 1) {
-			throw new BusinessRollbackException("O BPMN deve conter apenas 1 participante");
-		}
-		
 		BpmnJpdlTranslation translation = new BpmnJpdlTranslation(bpmnModel, processDefinition);
 		for (Node node : translation.getNodesToRemove()) {
 			processDefinition.removeNode(node);
@@ -364,4 +367,11 @@ public class BpmnJpdlService {
         }
     }
 
+	private BpmnAdapter[] getAdapters() {
+		return new BpmnAdapter[] {
+			new BizagiBpmnAdapter(),
+			new BpmnNodesAdapter(),
+			new BpmnDiagramAdapter()
+		};
+	}
 }

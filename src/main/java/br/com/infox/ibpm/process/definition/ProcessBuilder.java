@@ -25,6 +25,7 @@ import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.fluxo.crud.FluxoController;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.list.HistoricoProcessDefinitionList;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
@@ -75,10 +76,11 @@ public class ProcessBuilder implements Serializable {
     private ProcessDefinitionService processDefinitionService;
     @Inject
     private ActionMessagesService actionMessagesService;
+    @Inject
+    private FluxoController fluxoController;
  
     private ProcessDefinition instance;
     private String tab;
-    private Fluxo fluxo;
 
     private void clear() {
         swimlaneFitter.clear();
@@ -117,7 +119,8 @@ public class ProcessBuilder implements Serializable {
 
     public void load(Fluxo fluxo) {
     	try {
-	        this.fluxo = processDefinitionService.loadDefinicoes(fluxo);
+    		fluxoController.setFluxo(processDefinitionService.loadDefinicoes(fluxo));
+    		fluxo = getFluxo();
 	        clear();
 	        instance = InfoxJpdlXmlReader.readProcessDefinition(fluxo.getXml());
 	        taskFitter.setStarTaskHandler(new TaskHandler(instance.getTaskMgmtDefinition().getStartTask()));
@@ -158,7 +161,7 @@ public class ProcessBuilder implements Serializable {
             }
         }
         try {
-            taskExpirationManager.clearUnusedTaskExpirations(fluxo, taskNames);
+            taskExpirationManager.clearUnusedTaskExpirations(getFluxo(), taskNames);
         } catch (DAOException de) {
             throw new IllegalStateException(de);
         }
@@ -173,6 +176,7 @@ public class ProcessBuilder implements Serializable {
     }
     
     public void update() {
+    	Fluxo fluxo = getFluxo();
         if (fluxo != null) {
             String xmlDef = JpdlXmlWriter.toString(instance);
             String xmlFluxo = fluxo.getXml();
@@ -182,7 +186,7 @@ public class ProcessBuilder implements Serializable {
                 	// verifica a consistencia do fluxo para evitar salva-lo com
                     // erros.
                     InfoxJpdlXmlReader.readProcessDefinition(xmlDef);
-                    fluxo = processDefinitionService.atualizarDefinicao(fluxo, xmlDef, taskFitter.getTarefasModificadas());
+                    fluxoController.setFluxo(processDefinitionService.atualizarDefinicao(fluxo, xmlDef, taskFitter.getTarefasModificadas()));
                     historicoProcessDefinitionList.refresh();
                     FacesMessages.instance().add("Fluxo salvo com sucesso!");
                 } catch (JpdlException e) {
@@ -196,9 +200,10 @@ public class ProcessBuilder implements Serializable {
     }
     
     public void clearDefinition() {
-        fluxo.setXml(null);
-        fluxo.setBpmn(null);
-        fluxo.setSvg(null);
+    	Fluxo fluxo = getFluxo();
+    	fluxo.setXml(null);
+    	fluxo.setBpmn(null);
+    	fluxo.setSvg(null);
         load(fluxo);
     }
 
@@ -238,14 +243,14 @@ public class ProcessBuilder implements Serializable {
     }
 
     public Fluxo getFluxo() {
-        return this.fluxo;
+        return fluxoController.getFluxo();
     }
 
     public void setIdFluxo(Integer idFluxo) {
     	if (idFluxo == null) {
-    		fluxo = null;
+    		fluxoController.setFluxo(null);
     	} else {
-    		fluxo = fluxoManager.find(idFluxo);
+    		fluxoController.setFluxo(fluxoManager.find(idFluxo));
     	}
     }
 }
