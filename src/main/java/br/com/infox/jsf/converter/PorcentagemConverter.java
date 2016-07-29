@@ -25,7 +25,7 @@ public class PorcentagemConverter implements Converter{
         FORMATTER = DecimalFormat.getPercentInstance(new Locale("pt", "BR"));
         FORMATTER.setParseIntegerOnly(false);
         FORMATTER.setMaximumFractionDigits(2);
-        FORMATTER.setRoundingMode(RoundingMode.FLOOR);
+        FORMATTER.setRoundingMode(RoundingMode.HALF_EVEN);
     }
 	
 	@Override
