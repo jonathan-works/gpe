@@ -96,7 +96,8 @@ public class BpmnJpdlService {
     }
     
     public ProcessDefinition createInitialProcessDefinition(String processName) {
-    	ProcessDefinition processDefinition = loadOrCreateProcessDefinition(null);
+    	ProcessDefinition processDefinition = ProcessDefinition.createNewProcessDefinition();
+    	processDefinition.setKey(BpmUtil.generateKey());
     	processDefinition.setName(processName);
     	updateDefinitionsFromBpmn(createInitialBpmn(processName), processDefinition);
     	Swimlane laneSolicitante = processDefinition.getTaskMgmtDefinition().getSwimlanes().values().iterator().next();
@@ -344,10 +345,7 @@ public class BpmnJpdlService {
 
 	private ProcessDefinition loadOrCreateProcessDefinition(String xml) {
 		if (xml == null) {
-			ProcessDefinition processDefinition = ProcessDefinition.createNewProcessDefinition();
-			processDefinition.setKey(BpmUtil.generateKey());
-			processDefinition.setName(processDefinition.getKey());
-			return processDefinition;
+			return createInitialProcessDefinition(BpmUtil.generateKey());
 		} else {
 			return new InfoxJpdlXmlReader(new StringReader(xml)).readProcessDefinition();
 		}
