@@ -172,12 +172,12 @@ public class QuartzJobsInfo implements Serializable {
         try {
             String sql = "UPDATE QRTZ_TRIGGERS SET NEXT_FIRE_TIME = :nextFireTime WHERE JOB_NAME = :jobName AND JOB_GROUP = :groupName";
             Calendar nextFireTime = Calendar.getInstance();
-            nextFireTime.roll(Calendar.MINUTE, -1);
+            nextFireTime.add(Calendar.MINUTE, -1);
             getEntityManager().createNativeQuery(sql).setParameter("nextFireTime", nextFireTime.getTime().getTime())
                     .setParameter("jobName", jobName).setParameter("groupName", groupName).executeUpdate();
-            FacesMessages.instance().add(Severity.INFO, "Job executado com sucesso: " + jobName);
+            FacesMessages.instance().add(Severity.INFO, "Job agendado para execução: " + jobName);
         } catch (Exception e) {
-            FacesMessages.instance().add(Severity.ERROR, "Erro ao executar job " + jobName, e);
+            FacesMessages.instance().add(Severity.ERROR, "Erro ao agendar job " + jobName, e);
             LOG.error(".triggerJob()", e);
         }
     }

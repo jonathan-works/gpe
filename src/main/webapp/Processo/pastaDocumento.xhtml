@@ -72,7 +72,15 @@
 			rowId="#{row.id}" showSearchForm="true">
 
 			<ui:define name="searchForm">
-				<rich:panel header="Pastas">
+				<rich:panel>
+					<f:facet name="header">
+						<h:panelGroup>
+							<h:outputText value="Pastas" />
+							<ui:repeat var="tag" value="#{documentoProcessoAction.documentoFilter.marcadores}">
+								<h:outputText value="#{tag}" styleClass="marcadorLabel" style="top: 3px;margin-left: 3px;"/>
+							</ui:repeat>
+						</h:panelGroup>
+					</f:facet>
 					<rich:list value="#{pastaAction.pastaList}" styleClass="folder-ul"
 						rowClass="folder-li" var="pasta">
 						<s:div rendered="#{pastaAction.canSee(pasta)}"

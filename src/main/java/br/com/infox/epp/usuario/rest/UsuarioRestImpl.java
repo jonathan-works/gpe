@@ -7,30 +7,41 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.ws.RestUtils;
+import br.com.infox.epp.ws.bean.UsuarioBean;
+import br.com.infox.epp.ws.bean.UsuarioSenhaBean;
+import br.com.infox.epp.ws.services.UsuarioRestService;
+
 public class UsuarioRestImpl implements UsuarioRest {
 
 	@Inject
-	private UsuarioLoginRestService usuarioRestService;
+	private UsuarioLoginRestService usuarioLoginRestService;
 	@Inject
 	private UsuarioResource usuarioResource;
 	@Inject
 	private LoginRestService loginRestService;
+	//Servico movido devido ao bug #74700
+	@Inject
+	private UsuarioRestService usuarioRestService;
 
 	@Override
-	public Response adicionarUsuario(UsuarioDTO usuarioDTO) {
-		usuarioRestService.adicionarUsuario(usuarioDTO);
-		return Response.ok().build();
+	public Response adicionarUsuario(UriInfo uriInfo, UsuarioDTO usuarioDTO) {
+		usuarioLoginRestService.adicionarUsuario(usuarioDTO);
+		return Response.ok().status(Status.CREATED).header(HttpHeaders.LOCATION, RestUtils.generateLocationURL(uriInfo,usuarioDTO.getCpf())).build();
 	}
 
 	@Override
 	public Response getUsuarios() {
-		return Response.ok(usuarioRestService.getUsuarios()).build();
+		return Response.ok(usuarioLoginRestService.getUsuarios()).build();
 	}
 
 	@Override
@@ -62,5 +73,15 @@ public class UsuarioRestImpl implements UsuarioRest {
             throw new WebApplicationException(e, Status.UNAUTHORIZED);
         }
     }
+
+    @Override
+	public String gravarUsuario(String token, UsuarioBean bean) throws DAOException {
+		return usuarioRestService.gravarUsuario(bean);
+	}
+	
+    @Override
+	public String atualizarSenha(String token, UsuarioSenhaBean bean) throws DAOException {
+		return usuarioRestService.atualizarSenha(bean);
+	}
 
 }

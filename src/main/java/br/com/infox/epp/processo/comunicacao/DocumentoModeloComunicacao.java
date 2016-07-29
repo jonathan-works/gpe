@@ -2,6 +2,7 @@ package br.com.infox.epp.processo.comunicacao;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,7 +31,7 @@ public class DocumentoModeloComunicacao implements Serializable, Cloneable {
 	@Column(name = "id_documento_modelo_comunic")
 	private Long id;
 	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@ManyToOne(cascade = CascadeType.PERSIST , fetch = FetchType.LAZY, optional = false)
 	@NotNull
 	@JoinColumn(name = "id_documento", nullable = false)
 	private Documento documento;

@@ -65,7 +65,7 @@ public class DefinicaoVariavelProcessoAction implements Serializable {
 	}
 
     public boolean isPersisted() {
-        return variavel.getId() != null;
+        return variavel != null && variavel.getId() != null;
     }
 
     @ExceptionHandled(MethodType.REMOVE)

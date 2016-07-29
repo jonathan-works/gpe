@@ -148,6 +148,7 @@ public class AnexarDocumentosView implements Serializable {
 		if (pastaDefault != null) {
 			newEditor.setPasta(pastaDefault);
 		}
+		marcadoresEditor = null;
 		setDocumentoEditor(newEditor);
 		setModeloDocumentoList(null);
 		setModeloDocumento(null);
@@ -305,12 +306,11 @@ public class AnexarDocumentosView implements Serializable {
 				getDocumentoEditor().getDocumentoBin().setMarcadores(marcadoresEditor != null ? new HashSet<>(marcadoresEditor) : new HashSet<Marcador>());
 				documentoTemporarioManager.gravarDocumentoTemporario(getDocumentoEditor());
 				getDocumentoTemporarioList().add(new DocumentoTemporarioWrapper(getDocumentoEditor()));
-				newEditorInstance();
 			} else {
 				DocumentoTemporarioWrapper wrapper = (DocumentoTemporarioWrapper) getDocumentoEditor();
 				documentoTemporarioManager.update(wrapper.getDocumentoTemporario());
-				newEditorInstance();
 			}
+			newEditorInstance();
 			marcadoresEditor = null;
 		} catch (DAOException e) {
 			FacesMessages.instance().add("Não foi possível atualizar o arquivo. Tente novamente");

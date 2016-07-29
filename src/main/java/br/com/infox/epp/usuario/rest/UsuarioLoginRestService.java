@@ -1,21 +1,25 @@
 package br.com.infox.epp.usuario.rest;
 
-import static br.com.infox.epp.ws.RestUtils.produceErrorJson;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
-import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.type.UsuarioEnum;
+import br.com.infox.epp.meiocontato.dao.MeioContatoDAO;
+import br.com.infox.epp.meiocontato.entity.MeioContato;
+import br.com.infox.epp.meiocontato.manager.MeioContatoManager;
+import br.com.infox.epp.meiocontato.type.TipoMeioContatoEnum;
+import br.com.infox.epp.pessoa.documento.dao.PessoaDocumentoDAO;
+import br.com.infox.epp.pessoa.documento.dao.PessoaDocumentoSearch;
+import br.com.infox.epp.pessoa.documento.entity.PessoaDocumento;
+import br.com.infox.epp.pessoa.documento.type.TipoPesssoaDocumentoEnum;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.pessoa.type.EstadoCivilEnum;
@@ -41,74 +45,79 @@ public class UsuarioLoginRestService {
 	private PessoaFisicaManager pessoaFisicaManager;
 	@Inject
 	private PessoaFisicaSearch pessoaFisicaSearch;
+	@Inject
+	private PessoaDocumentoDAO pessoaDocumentoDAO;
+	@Inject
+	private PessoaDocumentoSearch pessoaDocumentoSearch;
+	@Inject
+	private MeioContatoManager meioContatoManager;
+	@Inject
+	private MeioContatoDAO meioContatoDAO;
 	
 	public void atualizarUsuario(String cpf, UsuarioDTO usuarioDTO) {
 		UsuarioLogin usuarioLogin = usuarioSearch.getUsuarioLoginByCpf(cpf);
 		PessoaFisica pessoaFisica = pessoaFisicaSearch.getByCpf(cpf);
-		aplicarValores(usuarioDTO, pessoaFisica);
-		aplicarValores(usuarioDTO, usuarioLogin);
-		try {
-			usuarioLoginManager.update(usuarioLogin);
-		} catch (DAOException e) {
-			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(produceErrorJson(e.getMessage())).build());
-		}
+		aplicarValoresPessoaFisica(usuarioDTO, pessoaFisica);
+		aplicarValoresUsuarioLogin(usuarioDTO, usuarioLogin);
+		aplicarValoresPessoaDocumento(usuarioDTO.getDocumentos(), pessoaFisica);
+		aplicarValoresMeioContato(usuarioDTO.getMeiosContato(), pessoaFisica);
+		usuarioLoginManager.update(usuarioLogin);
 	}
 
 	public UsuarioDTO getUsuarioByCpf(String cpf) {
 		UsuarioLogin usuarioLogin = usuarioSearch.getUsuarioLoginByCpf(cpf);
 		PessoaFisica pessoaFisica = pessoaFisicaSearch.getByCpf(cpf);
-		return new UsuarioDTO(usuarioLogin, pessoaFisica);
+		List<PessoaDocumento> pessoaDocumentoList = pessoaDocumentoSearch.getDocumentosByPessoa(pessoaFisica);
+		List<MeioContato> meioContatoList = meioContatoManager.getByPessoa(pessoaFisica);
+		return new UsuarioDTO(usuarioLogin, pessoaFisica, pessoaDocumentoList, meioContatoList);
 	}
 
 	public void removerUsuario(String cpf) {
 		UsuarioLogin usuarioLogin = usuarioSearch.getUsuarioLoginByCpf(cpf);
 		usuarioLogin.setAtivo(Boolean.FALSE);
-		try {
-			usuarioLoginManager.update(usuarioLogin);
-		} catch (DAOException e) {
-			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(produceErrorJson(e.getMessage())).build());
-		}
+		usuarioLoginManager.update(usuarioLogin);
 	}
 	
 	private PessoaFisica getPessoaFisica(UsuarioDTO usuarioDTO) {
 		PessoaFisica pessoaFisica = pessoaFisicaSearch.getByCpf(usuarioDTO.getCpf());
 		if (pessoaFisica == null){
-			pessoaFisica = aplicarValores(usuarioDTO, new PessoaFisica());
-			try {
-				pessoaFisicaManager.persist(pessoaFisica);
-			} catch (DAOException e) {
-				throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(produceErrorJson(e.getMessage())).build());
-			}
+			pessoaFisica = aplicarValoresPessoaFisica(usuarioDTO, new PessoaFisica());
+			pessoaFisicaManager.persist(pessoaFisica);
 		}
 		return pessoaFisica;
 	}
 	
 	public void adicionarUsuario(UsuarioDTO usuarioDTO, boolean sendPasswordToMail) {
-		UsuarioLogin usuarioLogin = aplicarValores(usuarioDTO, new UsuarioLogin());
+		UsuarioLogin usuarioLogin = aplicarValoresUsuarioLogin(usuarioDTO, new UsuarioLogin());
 		usuarioLogin.setAtivo(Boolean.TRUE);
 		usuarioLogin.setBloqueio(Boolean.FALSE);
 		usuarioLogin.setProvisorio(Boolean.FALSE);
-		try {
-			usuarioLoginManager.persist(usuarioLogin, sendPasswordToMail);
-		} catch (Exception e) {
-			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(produceErrorJson(e.getMessage())).build());
-		}
+		usuarioLoginManager.persist(usuarioLogin, sendPasswordToMail);
 	}
 	
 	public void adicionarUsuario(UsuarioDTO usuarioDTO) {
-		adicionarUsuario(usuarioDTO, false);
+		UsuarioLogin usuarioLogin = usuarioSearch.getUsuarioLoginByCpfWhenExists(usuarioDTO.getCpf());
+		if (usuarioLogin != null && !usuarioLogin.getAtivo()) {
+			usuarioLogin.setAtivo(Boolean.TRUE);
+			usuarioLoginManager.update(aplicarValoresUsuarioLogin(usuarioDTO, usuarioLogin));
+		} else {
+			adicionarUsuario(usuarioDTO, false);
+		}
 	}
 
-	private UsuarioLogin aplicarValores(UsuarioDTO usuarioDTO, UsuarioLogin usuarioLogin) {
+	private UsuarioLogin aplicarValoresUsuarioLogin(UsuarioDTO usuarioDTO, UsuarioLogin usuarioLogin) {
 		usuarioLogin.setEmail(usuarioDTO.getEmail());
 		usuarioLogin.setNomeUsuario(usuarioDTO.getNome());
 		usuarioLogin.setLogin(usuarioDTO.getCpf());
 		usuarioLogin.setTipoUsuario(UsuarioEnum.H);
-		usuarioLogin.setPessoaFisica(getPessoaFisica(usuarioDTO));
+		PessoaFisica pessoaFisica = getPessoaFisica(usuarioDTO);
+		usuarioLogin.setPessoaFisica(pessoaFisica);
+		aplicarValoresPessoaDocumento(usuarioDTO.getDocumentos(), pessoaFisica);
+		aplicarValoresMeioContato(usuarioDTO.getMeiosContato(), pessoaFisica);
 		return usuarioLogin;
 	}
-	
-	private PessoaFisica aplicarValores(UsuarioDTO usuarioDTO, PessoaFisica pessoaFisica) {
+
+	private PessoaFisica aplicarValoresPessoaFisica(UsuarioDTO usuarioDTO, PessoaFisica pessoaFisica) {
 		pessoaFisica.setNome(usuarioDTO.getNome());
 		pessoaFisica.setCpf(usuarioDTO.getCpf());
 		pessoaFisica.setTipoPessoa(TipoPessoaEnum.F);
@@ -127,6 +136,39 @@ public class UsuarioLoginRestService {
 			pessoaFisica.setDataNascimento(null);
 		}
 		return pessoaFisica;
+	}
+	
+	private void aplicarValoresPessoaDocumento(List<PessoaDocumentoDTO> documentos, PessoaFisica pessoaFisica) {
+		pessoaDocumentoDAO.removeAllDocumentosByPessoa(pessoaFisica);
+		if (documentos != null && !documentos.isEmpty()) {
+			List<PessoaDocumento> pessoaDocumentos = new ArrayList<PessoaDocumento>();
+			for (PessoaDocumentoDTO pessoaDocumentoDTO : documentos) {
+				PessoaDocumento pessoaDoc = new PessoaDocumento();
+				pessoaDoc.setPessoa(pessoaFisica);
+				pessoaDoc.setDocumento(pessoaDocumentoDTO.getDocumento());
+				try {
+					pessoaDoc.setDataEmissao(new SimpleDateFormat(ConstantesDTO.DATE_PATTERN).parse(pessoaDocumentoDTO.getDataEmissao()));
+				} catch (ParseException e) {
+					throw new WebApplicationException(e, 400); //TODO ver depois pra colocar isso aqui num mapper
+				}
+				pessoaDoc.setTipoDocumento(TipoPesssoaDocumentoEnum.valueOf(pessoaDocumentoDTO.getTipo()));
+				pessoaDoc.setOrgaoEmissor(pessoaDocumentoDTO.getDocumento());
+				pessoaDocumentos.add(pessoaDoc);
+			}
+			pessoaDocumentoDAO.adicionaDocumentos(pessoaDocumentos);
+		}
+	}
+	
+	private void aplicarValoresMeioContato(List<MeioContatoDTO> meiosContato, PessoaFisica pessoaFisica) {
+		meioContatoManager.removeMeioContatoByPessoa(pessoaFisica);
+		if (meiosContato != null && !meiosContato.isEmpty()) {
+			List<MeioContato> meioContatoList = new ArrayList<>();
+			for (MeioContatoDTO meioContatoDTO : meiosContato) {
+				meioContatoList.add(meioContatoManager.createMeioContato(
+						meioContatoDTO.getMeioContato(), pessoaFisica, TipoMeioContatoEnum.valueOf(meioContatoDTO.getTipo())));
+			}
+			meioContatoDAO.adicionaMeioContatos(meioContatoList);
+		}
 	}
 
 	public List<UsuarioDTO> getUsuarios() {

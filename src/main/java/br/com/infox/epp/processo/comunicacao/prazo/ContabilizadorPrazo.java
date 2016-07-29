@@ -1,4 +1,4 @@
-	package br.com.infox.epp.processo.comunicacao.prazo;
+package br.com.infox.epp.processo.comunicacao.prazo;
 
 import java.util.Date;
 
@@ -37,8 +37,7 @@ public class ContabilizadorPrazo {
     private UsuarioLoginManager usuarioLoginManager;
     
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void atribuirCiencia() {
-    	Processo comunicacao = JbpmUtil.getProcesso();
+    public void atribuirCiencia(Processo comunicacao) {
     	UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
     	Date dataCiencia = DateTime.now().toDate();
     	if (usuarioLogado == null) {
@@ -61,8 +60,7 @@ public class ContabilizadorPrazo {
 	}
     
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void atribuirCumprimento() {
-    	Processo comunicacao = JbpmUtil.getProcesso();
+    public void atribuirCumprimento(Processo comunicacao) {
     	Date dataCumprimento = DateTime.now().toDate();
 		MetadadoProcesso metadadoCumprimento = comunicacao.getMetadado(ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO);
 		if (metadadoCumprimento != null) {

@@ -246,7 +246,7 @@
 				switchType="client" style="margin-top:1em;"
 				rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada or not empty envioComunicacaoController.modeloComunicacao.documentos}">
 				
-				<rich:panel header="#{infoxMessages['searchForm.title']}" style="margin-bottom: 1rem;">
+				<rich:panel header="#{infoxMessages['searchForm.title']}" style="margin-bottom: 1rem;" rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
 					<h:form>
 				        <div class="property-field-edit" style="display: inline-block;">
 							<div class="property-field-edit-name">
@@ -269,14 +269,16 @@
 								value="#{infoxMessages['button.pesquisar']}"
 								action="#{documentoDisponivelComunicacaoList.refresh()}"
 								styleClass="buttons buttons">
-								<f:ajax immediate="true" execute="@form" render="@form :documentosProcessoPanel :documentosProcessoSearchForm" />
+								<p:ajax immediate="true" process="@form" update="@form @(.documentos-disponiveis-comunicacao)" 
+									onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
 							</h:commandButton>
 							
 							<h:commandButton id="btnLimparFiltro"
 								value="#{infoxMessages['button.limpar']}"
 								action="#{documentoDisponivelComunicacaoList.newInstance()}"
 								styleClass="buttons buttons">
-								<f:ajax immediate="true" execute="@form" render="@form :documentosProcessoPanel :documentosProcessoSearchForm" />
+								<p:ajax immediate="true" process="@form" update="@form @(.documentos-disponiveis-comunicacao)" 
+									onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
 							</h:commandButton>
 						</div>
 			
@@ -284,7 +286,8 @@
 				</rich:panel>
 				
 				<wi:dataTable id="documentosProcesso" values="#{documentoDisponivelComunicacaoList.list(10)}" 
-					bean="#{documentoDisponivelComunicacaoList}" rowId="#{row.id}"
+					bean="#{documentoDisponivelComunicacaoList}" rowId="#{row.id}" 
+					searchFormStyleClass="documentos-disponiveis-comunicacao" panelStyleClass="documentos-disponiveis-comunicacao"
 					showGrid="#{not envioComunicacaoController.modeloComunicacao.finalizada}"
 					tableTitle="#{infoxMessages['comunicacao.documentosDisponiveis']}">
 					<ui:define name="headerToolBar" />
@@ -312,21 +315,16 @@
 								<h:form rendered="#{documentoComunicacaoAction.canSee(pasta)}"
 									styleClass="rf-tr-nd">
 									<a:commandLink render="documentosProcessoPanel, documentosProcessoSearchForm"
-										execute="@form"	styleClass="folder" limitRender="true">
-				  		              <h:graphicImage
-				                          url="#{layoutController.getResourceUrlByPath('/imagens/folder.png')}"
-				                          rendered="true"
-				                          title="#{pasta}" />
-										<f:attribute name="pastaToSelect" value="#{pasta}" />
-										<f:actionListener type="br.com.infox.epp.processo.comunicacao.list.DocumentoDisponivelComunicacaoList" />
+										execute="@form"	styleClass="folder" limitRender="true" action="#{documentoDisponivelComunicacaoList.setPasta(pasta)}">
+				  		              <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/folder.png')}"
+				                          rendered="true" title="#{pasta}" />
 										<h:outputText value="#{eventCache.get('documentoDisponivelComunicacaoList.getTextoPasta(pasta)', pasta.id)}" class="folder" />
 									</a:commandLink>
 								</h:form>
 							</rich:list>
 						</rich:panel>
 					</ui:define>
-					<wi:column hideOrder="true"
-						columnHeader="#{infoxMessages['documentoProcesso.processoDocumento']}">
+					<wi:column hideOrder="true"	columnHeader="#{infoxMessages['documentoProcesso.processoDocumento']}">
 						<div align="center">
 							<h:outputText value="#{row.descricao}" style="display: block;" />
 							<ui:repeat var="marcador"
@@ -368,25 +366,31 @@
                                 </ui:include>
                             </h:form> 
 						</rich:column>
+						<wi:column hideOrder="true" columnHeader="#{infoxMessages['documentoProcesso.processoDocumento']}">
+							<div align="center">
+								<h:outputText value="#{row.documento.descricao}" style="display: block;" />
+								<ui:repeat var="marcador"
+									value="#{row.documento.documentoBin.marcadoresList}">
+									<h:outputText value="#{marcador.codigo} "
+										styleClass="marcadorLabel" />
+								</ui:repeat>
+							</div>
+						</wi:column>
+	                    <rich:column>
+	                        <f:facet name="header">#{infoxMessages['documentoProcesso.pastaDocumento']}</f:facet>
+	                        <h:outputText value="#{row.documento.pasta}" />
+	                    </rich:column>
 						<rich:column>
-						<f:facet name="header">#{infoxMessages['documentoProcesso.processoDocumento']}</f:facet>
-						<h:outputText value="#{row.documento.descricao}" />
-					</rich:column>
-                    <rich:column>
-                        <f:facet name="header">#{infoxMessages['documentoProcesso.pastaDocumento']}</f:facet>
-                        <h:outputText value="#{row.documento.pasta}" />
-                    </rich:column>
-					<rich:column>
-						<f:facet name="header">#{infoxMessages['processoDocumento.classificacaoDocumento']}</f:facet>
-						<h:outputText value="#{row.documento.classificacaoDocumento.descricao}" />
-					</rich:column>
-					<rich:column>
-						<f:facet name="header">#{infoxMessages['processoDocumento.tamanho']}</f:facet>
-						<h:outputText value="#{row.documento.documentoBin.sizeFormatado}" />
-					</rich:column>
-					</rich:dataTable>
-				</rich:panel>
-			</rich:collapsiblePanel>
+							<f:facet name="header">#{infoxMessages['processoDocumento.classificacaoDocumento']}</f:facet>
+							<h:outputText value="#{row.documento.classificacaoDocumento.descricao}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">#{infoxMessages['processoDocumento.tamanho']}</f:facet>
+							<h:outputText value="#{row.documento.documentoBin.sizeFormatado}" />
+						</rich:column>
+						</rich:dataTable>
+					</rich:panel>
+				</rich:collapsiblePanel>
 			
 			<!-- Ofício da Comunicação -->
 			<h:form id="documentoComunicacaoForm">

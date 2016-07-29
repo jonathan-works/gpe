@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
@@ -64,6 +65,20 @@ public class UsuarioLoginSearch extends PersistenceController {
 		cq = cq.select(usuario).where(cb.and(ativo, humano, cpfIgual));
 		
 		return getEntityManager().createQuery(cq).getSingleResult();
+	}
+	
+	public UsuarioLogin getUsuarioLoginByCpfWhenExists(String cpf) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<UsuarioLogin> cq = cb.createQuery(UsuarioLogin.class);
+		Root<UsuarioLogin> usuario = cq.from(UsuarioLogin.class);
+		Join<UsuarioLogin, PessoaFisica> pessoa = usuario.join(UsuarioLogin_.pessoaFisica);
+		cq.where(cb.equal(usuario.get(UsuarioLogin_.tipoUsuario), UsuarioEnum.H),
+				cb.equal(pessoa.get(PessoaFisica_.cpf), cpf));
+		try {
+			return getEntityManager().createQuery(cq).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
 	}
 
 	private Predicate usuarioAtivo(CriteriaBuilder cb, Path<UsuarioLogin> usuario) {

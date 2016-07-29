@@ -7,9 +7,11 @@ import static br.com.infox.epp.pessoa.documento.query.PessoaDocumentoQuery.PESSO
 import static br.com.infox.epp.pessoa.documento.query.PessoaDocumentoQuery.USUARIO_POR_DOCUMENTO_E_TIPO;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -28,6 +30,9 @@ public class PessoaDocumentoDAO extends DAO<PessoaDocumento> {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "pessoaDocumentoDAO";
 	
+	@Inject
+	private PessoaDocumentoSearch pessoaDocumentoSearch;
+	
 	public PessoaDocumento searchPessoaDocumentoByPessoaTipoDocumento(Pessoa pessoa, 
 			TipoPesssoaDocumentoEnum tipoDocumento) {
 		Map<String, Object> parameters = new HashMap<>();
@@ -41,6 +46,25 @@ public class PessoaDocumentoDAO extends DAO<PessoaDocumento> {
 		parameters.put(PARAM_MATRICULA, valorDocumento);
 		parameters.put(PARAM_TPDOCUMENTO, dm);
 		return getNamedSingleResult(USUARIO_POR_DOCUMENTO_E_TIPO, parameters);
+	}
+	
+	public void removeAllDocumentosByPessoa(Pessoa pessoa) {
+		List<PessoaDocumento> documentos = pessoaDocumentoSearch.getDocumentosByPessoa(pessoa);
+		if (documentos != null && !documentos.isEmpty()) {
+			for (PessoaDocumento doc : documentos) {
+				getEntityManager().remove(doc);
+			}
+			getEntityManager().flush();
+		}
+	}
+	
+	public void adicionaDocumentos(List<PessoaDocumento> documentos) {
+		if (documentos != null && !documentos.isEmpty()) {
+			for (PessoaDocumento pessoaDocumento : documentos) {
+				getEntityManager().persist(pessoaDocumento);
+			}
+			getEntityManager().flush();
+		}
 	}
 
 }

@@ -20,7 +20,7 @@ public @interface Telefone {
 	
 	String pattern() default "\\d{10,11}";
 	
-	String message() default "{br.com.infox.epp.meiocontato.annotation.Telefone}";
+	String message() default "formato inválido";
 	
 	Class<?>[] groups() default {};
 	

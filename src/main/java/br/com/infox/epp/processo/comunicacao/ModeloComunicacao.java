@@ -107,12 +107,12 @@ public class ModeloComunicacao implements Serializable, Cloneable {
     private String taskKey;
 	
 	@Column(name = "cd_marcadores", nullable = true)
-	private String codigosMarcadoresString;
+	private String codigosMarcadoresString = "";
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modeloComunicacao")
 	private List<DestinatarioModeloComunicacao> destinatarios = new ArrayList<>(0);
 	
-	@OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "modeloComunicacao")
+	@OneToMany(cascade = {CascadeType.REMOVE, CascadeType.PERSIST}, fetch = FetchType.LAZY, mappedBy = "modeloComunicacao")
 	private List<DocumentoModeloComunicacao> documentos = new ArrayList<>(0);
 	
 	@Transient
@@ -260,6 +260,8 @@ public class ModeloComunicacao implements Serializable, Cloneable {
 	
     public void setCodigosMarcadores(List<String> codigosMarcadores) {
         this.codigosMarcadores = new ArrayList<>();
+        if(codigosMarcadores == null)
+        	return ;
         for (String codigo : codigosMarcadores) {
 			this.codigosMarcadores.add(codigo.toUpperCase());
 		}

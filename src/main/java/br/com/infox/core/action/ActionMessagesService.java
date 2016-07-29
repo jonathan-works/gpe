@@ -13,7 +13,6 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
@@ -34,9 +33,6 @@ public class ActionMessagesService implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "actionMessagesService";
     
-    @In
-    private InfoxMessages infoxMessages;
-
     public String handleException(final String msg, final Exception e){
         final StatusMessages messages = getMessagesHandler();
         messages.clearGlobalMessages();
@@ -49,38 +45,59 @@ public class ActionMessagesService implements Serializable {
         final StatusMessages messages = getMessagesHandler();
         messages.clearGlobalMessages();
         messages.clear();
-        for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
-            final String message = format("{0}: {1}", violation.getPropertyPath(), violation.getMessage());
-            messages.add(message);
-        }
+        messages.add(getMessageForBeanViolationException(e));
         return null;
     }
 
     public String handleDAOException(final DAOException daoException) {
         final GenericDatabaseErrorCode errorCode = daoException.getDatabaseErrorCode();
         final StatusMessages messages = getMessagesHandler();
+        String message = getMessageForDAOException(daoException);
+        
         if (errorCode != null) {
-            final String ret = errorCode.toString();
-            messages.clearGlobalMessages();
-            messages.add(daoException.getLocalizedMessage());
-            return ret;
+        	messages.clearGlobalMessages();
+        	messages.add(message);
+            return errorCode.toString();
         } else {
-            String pattern = infoxMessages.get("entity.error.save");
-            if (!pattern.contains("{")) {
-            	pattern = "{0}";
-            }
             if (daoException.getMessage() != null) {
-                messages.add(StatusMessage.Severity.ERROR, format(pattern, daoException.getMessage()), daoException);
+                messages.add(StatusMessage.Severity.ERROR, message, daoException);
             } else {
                 final Throwable cause = daoException.getCause();
                 if (cause instanceof ConstraintViolationException) {
                     return handleBeanViolationException((ConstraintViolationException) cause);
                 } else {
-                    messages.add(StatusMessage.Severity.ERROR, format(pattern, cause.getMessage()), cause);
+                    messages.add(StatusMessage.Severity.ERROR, message, cause);
                 }
             }
         }
         return null;
+    }
+    
+    public String getMessageForDAOException(DAOException exception) {
+        if (exception.getDatabaseErrorCode() != null) {
+            return getInfoxMessages().get(exception.getLocalizedMessage());
+        } else {
+            String pattern = getInfoxMessages().get("entity.error.save");
+            if (!pattern.contains("{")) {
+            	pattern = "{0}";
+            }
+            Throwable cause = exception.getCause();
+            if (cause instanceof ConstraintViolationException) {
+                return getMessageForBeanViolationException((ConstraintViolationException) cause);
+            } else if (exception.getMessage() != null) {
+            	return format(pattern, exception.getMessage());
+            } else {
+                return format(pattern, cause.getMessage());
+            }
+        }
+    }
+    
+    private String getMessageForBeanViolationException(ConstraintViolationException e) {
+        StringBuilder sb = new StringBuilder();
+    	for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
+            sb.append(format("{0}: {1}; ", violation.getPropertyPath(), violation.getMessage()));
+        }
+        return sb.toString();
     }
 
     private void handlePersistenceException(Exception exception) {
@@ -109,5 +126,9 @@ public class ActionMessagesService implements Serializable {
 			handleException(exception.toString(), exception);
 		}
 	}
+    
+    private InfoxMessages getInfoxMessages() {
+    	return InfoxMessages.getInstance();
+    }
 
 }

@@ -7,9 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.ActionListener;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -31,7 +28,7 @@ import br.com.infox.epp.processo.marcador.MarcadorSearch;
 
 @Named
 @ViewScoped
-public class DocumentoDisponivelComunicacaoList extends DataList<Documento> implements ActionListener {
+public class DocumentoDisponivelComunicacaoList extends DataList<Documento> {
     
     private static final long serialVersionUID = 1L;
     private static final LogProvider LOG = Logging.getLogProvider(DocumentoDisponivelComunicacaoList.class);
@@ -160,16 +157,6 @@ public class DocumentoDisponivelComunicacaoList extends DataList<Documento> impl
                 LOG.error("", e);
                 actionMessagesService.handleDAOException(e);
             }
-        }
-    }
-
-    @Override
-    public void processAction(ActionEvent event) throws AbortProcessingException {
-        Map<String, Object> attributes = event.getComponent().getAttributes();
-        Object o = attributes.get("pastaToSelect");
-        if (o instanceof Pasta) {
-            setPasta((Pasta) o);
-            return;
         }
     }
 

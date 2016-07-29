@@ -21,7 +21,7 @@ public @interface Email {
 	
 	String pattern() default ".+@.+\\.[a-z]+";
 	
-	String message() default "Email em formato inválido.";
+	String message() default "formato inválido.";
 	
 	Class<?>[] groups() default {};
 	
