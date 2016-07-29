@@ -14,6 +14,7 @@ import org.richfaces.event.FileUploadEvent;
 
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
+import br.com.infox.epp.fluxo.crud.FluxoController;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.modeler.converter.BpmnJpdlService;
 import br.com.infox.log.LogProvider;
@@ -28,9 +29,10 @@ public class BpmnUploader implements Serializable {
 
 	@Inject
 	private BpmnJpdlService bpmnJpdlService;
+	@Inject
+	private FluxoController fluxoController;
 	
 	private String bpmn;
-	private Fluxo fluxo;
 	private List<String> mensagens;
 	private boolean fluxoImportado;
 	
@@ -46,7 +48,7 @@ public class BpmnUploader implements Serializable {
 	@ExceptionHandled
 	public void importar() {
 		try {
-			fluxo = bpmnJpdlService.importarBpmn(fluxo, bpmn);
+			fluxoController.setFluxo(bpmnJpdlService.importarBpmn(getFluxo(), bpmn));
 			fluxoImportado = true;
 			FacesMessages.instance().add("Fluxo importado com sucesso");
 		} catch (BusinessException e) {
@@ -62,11 +64,7 @@ public class BpmnUploader implements Serializable {
 	}
 	
 	public Fluxo getFluxo() {
-		return fluxo;
-	}
-	
-	public void setFluxo(Fluxo fluxo) {
-		this.fluxo = fluxo;
+		return fluxoController.getFluxo();
 	}
 	
 	public List<String> getMensagens() {

@@ -34,12 +34,14 @@ public class BpmnView implements Serializable {
 	
 	@Inject
 	private BpmnJpdlService bpmnJpdlService;
+	@Inject
+	private FluxoController fluxoController;
 	
 	private String bpmnInformation;
 	private String elementKey;
 
 	public Fluxo getFluxo() {
-		return ProcessBuilder.instance().getFluxo();
+		return fluxoController.getFluxo();
 	}
 	
 	@ExceptionHandled
@@ -53,7 +55,8 @@ public class BpmnView implements Serializable {
 		
 		if (!newProcessDefinitionXml.equals(fluxo.getXml()) || !newBpmnXml.equals(fluxo.getBpmn())) {
 			try {
-				fluxo = bpmnJpdlService.atualizarDefinicao(fluxo, newProcessDefinitionXml, newBpmnXml, bpmnInfo.get("svg").getAsString());
+				fluxoController.setFluxo(bpmnJpdlService.atualizarDefinicao(fluxo, newProcessDefinitionXml, newBpmnXml, bpmnInfo.get("svg").getAsString()));
+				fluxo = getFluxo();
 			} catch (JpdlException e) {
 				logJpdlException(e);
 				return;
