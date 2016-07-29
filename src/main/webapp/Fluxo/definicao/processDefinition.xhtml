@@ -14,6 +14,7 @@
  
   <ui:define name="title">#{infoxMessages['fluxo.titlePage']}: #{empty processBuilder.instance ? '' : processBuilder.instance.name}</ui:define>
   <ui:define name="head">
+  	<c:set property="idFluxo" target="#{historicoProcessDefinitionList}" value="#{fluxoController.fluxo.idFluxo}" />
 	<f:metadata>
 		<f:event listener="#{processBuilder.load()}" type="preRenderView" />
 	</f:metadata>
@@ -122,7 +123,7 @@
         name="updateFluxo"
         actionListener="#{processBuilder.prepareUpdate}"
         action="#{processBuilder.update}"
-        render="pageBodyDialogMessage"
+        render="pageBodyDialogMessage :processDefinition"
         oncomplete="infox.hideLoading()"/>
       <a:commandButton
         id="gravar"
