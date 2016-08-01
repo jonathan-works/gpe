@@ -30,7 +30,8 @@ public enum Parametros {
     HAS_CONSULTA_EXTERNA_PADRAO("ativaConsultaExternaPadrao"),
     CODIGO_UF_SISTEMA("codigoUnidadeFederativaSistema"),
     EPP_API_RSA_PRIVATE_KEY("controleAcesso","eppApiPrivateKey"),
-    EPP_API_RSA_PUBLIC_KEY("controleAcesso","eppApiPublicKey");
+    EPP_API_RSA_PUBLIC_KEY("controleAcesso","eppApiPublicKey"),
+    ATIVAR_MASSIVE_REINDEX("ativarMassiveReindex");
 
     private final String label;
     private final ParametroDefinition<?> parametroDefinition;
