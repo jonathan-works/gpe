@@ -43,6 +43,7 @@ import br.com.infox.epp.access.query.UsuarioLoginQuery;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
@@ -67,12 +68,22 @@ public class AssinaturaDocumento implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = UsuarioLoginQuery.ID_USUARIO, nullable = false)
     private UsuarioLogin usuario;
-	
+
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario_perfil", nullable = false)
     private UsuarioPerfil usuarioPerfil;
 	
+	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_pessoa_fisica", nullable = false)
+	private PessoaFisica pessoaFisica;
+
+	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_papel", nullable = false)
+	private Papel papel;
+
 	@NotNull
 	@Size(max = NOME_ATRIBUTO)
 	@Column(name = COL_NOME_USUARIO, nullable = false, length = NOME_ATRIBUTO)
@@ -151,6 +162,22 @@ public class AssinaturaDocumento implements Serializable {
 
     public void setUsuarioPerfil(UsuarioPerfil usuarioPerfil) {
         this.usuarioPerfil = usuarioPerfil;
+    }
+
+    public PessoaFisica getPessoaFisica() {
+        return pessoaFisica;
+    }
+
+    public void setPessoaFisica(PessoaFisica pessoaFisica) {
+        this.pessoaFisica = pessoaFisica;
+    }
+
+    public Papel getPapel() {
+        return papel;
+    }
+
+    public void setPapel(Papel papel) {
+        this.papel = papel;
     }
 
     public String getNomeUsuario() {
