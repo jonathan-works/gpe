@@ -164,8 +164,8 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
                 } else {
                 	String titulo = expression.substring("#{modelo:".length(), expression.length()-1);
                 	ModeloDocumento modeloDocumentoInside = getModeloDocumentoByTitulo(titulo);
-                	if (modeloDocumento != null) {
-                		value = evaluateModeloDocumento(modeloDocumentoInside, modeloDocumentoInside.getModeloDocumento(), resolver);
+                	if (modeloDocumentoInside != null) {
+                		value = evaluateModeloDocumento(modeloDocumentoInside, resolver);
                 	} else {
                 		value = value == null ? "" : value;
                 		value = value.replace("\\", "\\\\").replace("$", "\\$");
