@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ValidationException;
 
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
@@ -32,6 +33,7 @@ import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.assinador.AssinadorService;
 import br.com.infox.epp.assinador.DadosAssinatura;
+import br.com.infox.epp.assinador.DocumentoBinAssinavelService;
 import br.com.infox.epp.assinador.assinavel.AssinavelDocumentoBinProvider;
 import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
 import br.com.infox.epp.cdi.ViewScoped;
@@ -480,7 +482,7 @@ public class AnexarDocumentosView implements Serializable {
 			setDocumentoTemporarioList(loadDocumentoTemporarioList());
 			FacesMessages.instance().add(InfoxMessages.getInstance().get("anexarDocumentos.sucessoAssinatura"));
 			setDocumentosAssinaveis(new ArrayList<DocumentoTemporario>());
-		}catch(AssinaturaException e){
+		}catch(AssinaturaException | ValidationException e){
 			LOG.error("Erro signDocuments ", e);
 			FacesMessages.instance().add(Severity.ERROR,e.getMessage());
 		}catch (Exception e) {

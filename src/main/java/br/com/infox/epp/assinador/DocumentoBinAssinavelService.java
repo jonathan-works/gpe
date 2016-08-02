@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
+import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
@@ -19,6 +20,7 @@ import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
  *
  */
 @Stateless
+@LocalBean
 public class DocumentoBinAssinavelService implements DocumentoBinDataProvider {
 
 	@Inject
