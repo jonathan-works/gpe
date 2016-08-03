@@ -185,7 +185,7 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     
     private void atualizarSuficienciaAssinatura(Documento o ) throws DAOException{
         if (!o.getDocumentoBin().getSuficientementeAssinado() && assinaturaDocumentoService.isDocumentoTotalmenteAssinado(o)) {
-            assinaturaDocumentoService.setDocumentoSuficientementeAssinado(o.getDocumentoBin(), Authenticator.getUsuarioPerfilAtual());
+            documentoBinManager.setDocumentoSuficientementeAssinado(o.getDocumentoBin(), Authenticator.getUsuarioPerfilAtual());
         }
     }
     
