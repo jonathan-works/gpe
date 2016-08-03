@@ -19,6 +19,8 @@ public class MetadadosResource {
 	// FIXME: Arrumar outra forma de gerar etag a partir de um resource no WAR
 	public MetadadosResource(URL urlResourceWar) {
 		URLConnection conexao;
+		if(urlResourceWar == null)
+			throw new RuntimeException("Não foi possível identicar a urlResourceWAR");
 		try {
 			conexao = urlResourceWar.openConnection();
 			try {
