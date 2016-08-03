@@ -213,7 +213,7 @@ public class ComunicacaoInternaService {
             if (destinatario.getDestinatario() != null) {
                 destinatarios.add(PooledActorType.USER.toPooledActorId(destinatario.getDestinatario().getUsuarioLogin().getLogin()));
             } else if (destinatario.getPerfilDestino() != null && destinatario.getDestino() != null) {
-                destinatarios.add(PooledActorType.GROUP.toPooledActorId(destinatario.getDestino().getCodigo()+"&"+destinatario.getPerfilDestino().getId()));
+                destinatarios.add(PooledActorType.GROUP.toPooledActorId(destinatario.getDestino().getCodigo()+"&"+destinatario.getPerfilDestino().getCodigo()));
             } else {
                 destinatarios.add(PooledActorType.LOCAL.toPooledActorId(destinatario.getDestino().getCodigo()));
             }
