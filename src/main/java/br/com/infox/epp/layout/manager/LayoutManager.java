@@ -242,8 +242,10 @@ public class LayoutManager {
 		if (resourceBin != null) {
 			return new MetadadosResource(resourceBin);
 		}
-
-		URL url = LayoutManager.class.getResource(getUrlJava(codigoSkin, codigoResource));
+		String urlJava = getUrlJava(codigoSkin, codigoResource);
+		URL url = LayoutManager.class.getResource(urlJava);
+		if(url == null)
+			throw new RuntimeException("Não foi possível recuperar o recurso: " + urlJava);
 		return new MetadadosResource(url);
 	}
 
