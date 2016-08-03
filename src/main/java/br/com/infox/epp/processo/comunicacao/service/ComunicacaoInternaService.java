@@ -231,7 +231,7 @@ public class ComunicacaoInternaService {
         if (destinatario.getDestinatario() != null) {
             destinatarioVariable = PooledActorType.USER.toPooledActorId(destinatario.getDestinatario().getUsuarioLogin().getLogin());
         } else if (destinatario.getPerfilDestino() != null && destinatario.getDestino() != null) {
-            destinatarioVariable = PooledActorType.GROUP.toPooledActorId(destinatario.getDestino().getCodigo()+"&"+destinatario.getPerfilDestino().getId());
+            destinatarioVariable = PooledActorType.GROUP.toPooledActorId(destinatario.getDestino().getCodigo()+"&"+destinatario.getPerfilDestino().getCodigo());
         } else {
             destinatarioVariable = PooledActorType.LOCAL.toPooledActorId(destinatario.getDestino().getCodigo());
         }
