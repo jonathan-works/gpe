@@ -13,11 +13,14 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
+import javax.faces.component.UIComponent;
+import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 
 import org.jboss.seam.faces.FacesMessages;
+import org.richfaces.component.UICommandLink;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
@@ -36,6 +39,8 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.path.PathResolver;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Named
 @Stateful
@@ -45,6 +50,7 @@ public class ComunicacaoAction implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "comunicacaoAction";
 	private static final LogProvider LOG = Logging.getLogProvider(ComunicacaoAction.class);
+	private static final String OPEN_CRIAR_COMUNICACAO = "infox.openPopUp('comunicacao%d', '%s/Processo/criarComunicacao.seam?idModeloComunicacao=%d','1024'); return false; ";
 	
 	@Inject
 	private ProcessoAnaliseDocumentoService processoAnaliseDocumentoService;
@@ -93,10 +99,18 @@ public class ComunicacaoAction implements Serializable {
 		setProcesso(JbpmUtil.getProcesso());
 	}
 	
-	public void reabrirComunicacao(ModeloComunicacao modeloComunicacao) {
+	public void reabrirComunicacao(ActionEvent actionEvent) {
 		try {
-			comunicacaoService.reabrirComunicacao(modeloComunicacao);
-			envioComunicacaoController.init(); //para recarregar a página de tarefa
+			UIComponent component = actionEvent.getComponent();
+			ModeloComunicacao newModelo = comunicacaoService.reabrirComunicacao((ModeloComunicacao) component.getAttributes().get("modeloComunicacao"));
+			
+			envioComunicacaoController.init();
+			modeloComunicacaoRascunhoList.refresh();
+			UICommandLink commandLink = (UICommandLink) component;
+			PathResolver pathResolver = ComponentUtil.getComponent(PathResolver.NAME);
+			String oncomplete = commandLink.getOncomplete();
+			commandLink.setOncomplete(oncomplete + String.format(OPEN_CRIAR_COMUNICACAO, newModelo.getId(), pathResolver.getContextPath(), newModelo.getId()));
+
 			FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.sucesso.reabertura"));
 		} catch (DAOException | CloneNotSupportedException e) {
 			LOG.error("Erro ao rebarir comunicação", e);

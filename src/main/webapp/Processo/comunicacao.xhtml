@@ -29,10 +29,11 @@
 						<a:commandLink execute="@this"
 							rendered="#{comunicacaoAction.podeReabrirComunicacao(row)}"
 							render=":pageBodyDialogMessage rascunhosTablePanel"
-							action="#{comunicacaoAction.reabrirComunicacao(row)}"
+							actionListener="#{comunicacaoAction.reabrirComunicacao}"
 							onclick="infox.showLoading();"
-							oncomplete="infox.hideLoading(); infox.openPopUp('comunicacao#{row.id}', '#{pathResolver.contextPath}/Processo/criarComunicacao.seam?idModeloComunicacao=#{row.id}','1024'); return false;">
+							oncomplete="infox.hideLoading(); ">
 							<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/mod/edit.png')}" title="#{infoxMessages['comunicacao.reabrir']}"/>
+							<f:attribute name="modeloComunicacao" value="#{row}"></f:attribute>
 						</a:commandLink>						
 						<a:commandLink execute="@this"
 							rendered="#{comunicacaoAction.podeExcluirModeloComunicacao(row)}"
