@@ -12,8 +12,8 @@ public interface HistoricoModeloDocumentoQuery {
     String CONTEUDO_MODELO_DOCUMENTO = "ds_modelo_documento";
 
     String LIST_MODELO = "listModeloDocumento";
-    String LIST_MODELO_QUERY = "select distinct o.modeloDocumento from HistoricoModeloDocumento o";
-
+    String LIST_MODELO_QUERY = "select o from ModeloDocumento o where o.idModeloDocumento in ( select h.modeloDocumento.idModeloDocumento from HistoricoModeloDocumento h where h.modeloDocumento = o )";
+    
     String LIST_USUARIO = "listUsarioAlteracao";
     String LIST_USUARIO_PARAM_MODELO = "modeloDocumento";
     String LIST_USUARIO_QUERY = "select distinct o.usuarioAlteracao from HistoricoModeloDocumento o where o.modeloDocumento=:"
