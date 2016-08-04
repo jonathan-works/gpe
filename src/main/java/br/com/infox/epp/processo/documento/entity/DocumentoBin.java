@@ -353,8 +353,8 @@ public class DocumentoBin implements Serializable {
 	public boolean isAssinadoPor(UsuarioPerfil usuarioPerfil) {
         if (getAssinaturas() == null || getAssinaturas().isEmpty()) return false;
         for (AssinaturaDocumento assinatura : getAssinaturas()) {
-            if (usuarioPerfil.getPerfilTemplate().getPapel().equals(assinatura.getUsuarioPerfil().getPerfilTemplate().getPapel())
-            		&& usuarioPerfil.getUsuarioLogin().equals(assinatura.getUsuario())) {
+            if (usuarioPerfil.getPerfilTemplate().getPapel().equals(assinatura.getPapel())
+            		&& assinatura.getPessoaFisica().equals(usuarioPerfil.getUsuarioLogin().getPessoaFisica())) {
                 return true;
             }
         }

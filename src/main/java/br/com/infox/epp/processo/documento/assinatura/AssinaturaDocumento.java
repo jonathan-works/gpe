@@ -37,9 +37,7 @@ import javax.validation.constraints.Size;
 import br.com.infox.certificado.CertificadoFactory;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.epp.access.entity.Papel;
-import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
-import br.com.infox.epp.access.query.UsuarioLoginQuery;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
@@ -63,16 +61,6 @@ public class AssinaturaDocumento implements Serializable {
     @GeneratedValue(generator = "AssinaturaDocumentoGenerator", strategy = GenerationType.SEQUENCE)
     @Column(name = COL_ID_ASSINATURA, unique = true, nullable = false)
     private Integer idAssinatura;
-	
-	@NotNull
-	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = UsuarioLoginQuery.ID_USUARIO, nullable = false)
-    private UsuarioLogin usuario;
-
-	@NotNull
-	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_usuario_perfil", nullable = false)
-    private UsuarioPerfil usuarioPerfil;
 	
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -118,10 +106,10 @@ public class AssinaturaDocumento implements Serializable {
 
     public AssinaturaDocumento(DocumentoBin documentoBin, UsuarioPerfil usuarioPerfil, String certChain, String signature) throws CertificadoException {
         this.documentoBin=documentoBin;
-        this.usuario = usuarioPerfil.getUsuarioLogin();
+        this.pessoaFisica = usuarioPerfil.getUsuarioLogin().getPessoaFisica();
         this.nomeUsuario = CertificadoFactory.createCertificado(certChain).getNome();
-        this.usuarioPerfil = usuarioPerfil;
-        this.nomeUsuarioPerfil = this.usuarioPerfil.getPerfilTemplate().getDescricao();
+        this.papel = usuarioPerfil.getPerfilTemplate().getPapel();
+        this.nomeUsuarioPerfil = usuarioPerfil.getPerfilTemplate().getDescricao();
         this.signature = signature;
         this.certChain = certChain;
         this.dataAssinatura = new Date();
@@ -146,22 +134,6 @@ public class AssinaturaDocumento implements Serializable {
 
     public void setIdAssinatura(Integer idAssinatura) {
         this.idAssinatura = idAssinatura;
-    }
-
-    public UsuarioLogin getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(UsuarioLogin usuario) {
-        this.usuario = usuario;
-    }
-
-    public UsuarioPerfil getUsuarioPerfil() {
-        return usuarioPerfil;
-    }
-
-    public void setUsuarioPerfil(UsuarioPerfil usuarioPerfil) {
-        this.usuarioPerfil = usuarioPerfil;
     }
 
     public PessoaFisica getPessoaFisica() {

@@ -80,7 +80,7 @@ public class AssinaturaDocumentoService {
         boolean result = false;
         try {
             verificaCertificadoUsuarioLogado(assinatura.getCertChain(),
-                    assinatura.getUsuario());
+                    assinatura.getPessoaFisica());
             result = true;
         } catch (CertificadoException | AssinaturaException e) {
             LOG.error(e.getMessage(), e);
@@ -183,7 +183,7 @@ public class AssinaturaDocumentoService {
         for (AssinaturaDocumento assinaturaDocumento : documento.getDocumentoBin().getAssinaturas()) {
             Papel papel = usuarioLocalizacao.getPerfilTemplate().getPapel();
             UsuarioLogin usuario = usuarioLocalizacao.getUsuarioLogin();
-            if (result = (assinaturaDocumento.getUsuarioPerfil().getPerfilTemplate().getPapel().equals(papel) && assinaturaDocumento.getUsuario().equals(usuario))) {
+            if (result = (assinaturaDocumento.getPapel().equals(papel) && assinaturaDocumento.getPessoaFisica().equals(usuario.getPessoaFisica()))) {
                 break;
             }
         }
@@ -200,7 +200,7 @@ public class AssinaturaDocumentoService {
     	}
     	boolean result = false;
         for (AssinaturaDocumento assinaturaDocumento : documentoBin.getAssinaturas()) {
-            if (assinaturaDocumento.getUsuario().equals(usuarioLogin)) {
+            if (assinaturaDocumento.getPessoaFisica().equals(usuarioLogin.getPessoaFisica())) {
                 result = isSignatureValid(assinaturaDocumento);
                 break;
             }
@@ -212,7 +212,7 @@ public class AssinaturaDocumentoService {
         boolean result = false;
         List<AssinaturaDocumento> assinaturas = assinaturaDocumentoDAO.listAssinaturaByDocumentoBin(documentoBin);
         for (AssinaturaDocumento assinaturaDocumento : assinaturas) {
-            if (assinaturaDocumento.getUsuarioPerfil().getPerfilTemplate().getPapel().equals(papel)) {
+            if (assinaturaDocumento.getPapel().equals(papel)) {
                 result = isSignatureValid(assinaturaDocumento);
                 break;
             }
@@ -221,28 +221,28 @@ public class AssinaturaDocumentoService {
     }
 
     public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded,
-            UsuarioLogin usuarioLogado) throws CertificadoException, AssinaturaException {
+            PessoaFisica pessoaFisica) throws CertificadoException, AssinaturaException {
         if (Strings.isEmpty(certChainBase64Encoded)) {
             throw new AssinaturaException(Motivo.SEM_CERTIFICADO);
         }
-        if (usuarioLogado.getPessoaFisica() == null) {
+        if (pessoaFisica == null) {
             throw new AssinaturaException(Motivo.USUARIO_SEM_PESSOA_FISICA);
         }
-        if (Strings.isEmpty(usuarioLogado.getPessoaFisica().getCertChain())) {
+        if (Strings.isEmpty(pessoaFisica.getCertChain())) {
             final Certificado certificado = CertificadoFactory.createCertificado(certChainBase64Encoded); 
             if (!(certificado instanceof CertificadoDadosPessoaFisica)) {
                 throw new CertificadoException("Este certificado não é de pessoa física");
             }
             final String cpfCertificado = ((CertificadoDadosPessoaFisica) certificado).getCPF();
-            if (cpfCertificado.equals(usuarioLogado.getPessoaFisica().getCpf()
+            if (cpfCertificado.equals(pessoaFisica.getCpf()
                     .replace(".", "").replace("-", ""))) {
-                usuarioLogado.getPessoaFisica().setCertChain(certChainBase64Encoded);
+                pessoaFisica.setCertChain(certChainBase64Encoded);
             } else {
                 throw new AssinaturaException(Motivo.CADASTRO_USUARIO_NAO_ASSINADO);
             }
         }
         PessoaFisica pessoaFisicaCertificado = getPessoaFisicaFromCertChain(certChainBase64Encoded);
-        if (!usuarioLogado.getPessoaFisica().equals(pessoaFisicaCertificado)) {
+        if (!pessoaFisica.equals(pessoaFisicaCertificado)) {
             throw new AssinaturaException(Motivo.CPF_CERTIFICADO_DIFERENTE_USUARIO);
         }
         if (!pessoaFisicaCertificado.checkCertChain(certChainBase64Encoded)) {
@@ -262,7 +262,7 @@ public class AssinaturaDocumentoService {
 	public void assinarDocumento(DocumentoBin documentoBin, UsuarioPerfil usuarioPerfilAtual, final String certChain,
 			String signature) throws CertificadoException, AssinaturaException, DAOException {
 		UsuarioLogin usuario = usuarioPerfilAtual.getUsuarioLogin();
-		verificaCertificadoUsuarioLogado(certChain, usuario);
+		verificaCertificadoUsuarioLogado(certChain, usuario.getPessoaFisica());
 		checkValidadeCertificado(certChain);
 
 		AssinaturaDocumento assinaturaDocumento = new AssinaturaDocumento(documentoBin, usuarioPerfilAtual, certChain, signature);
@@ -350,8 +350,8 @@ public class AssinaturaDocumentoService {
     public boolean isDocumentoAssinado(DocumentoBin documentoBin, Papel papel, UsuarioLogin usuario) {
         boolean result = false;
         for (AssinaturaDocumento assinaturaDocumento : documentoBin.getAssinaturas()) {
-            if (assinaturaDocumento.getUsuarioPerfil().getPerfilTemplate().getPapel().equals(papel) && 
-            		assinaturaDocumento.getUsuarioPerfil().getUsuarioLogin().equals(usuario)) {
+            if (assinaturaDocumento.getPapel().equals(papel) && 
+            		assinaturaDocumento.getPessoaFisica().equals(usuario.getPessoaFisica())) {
                 result = isSignatureValid(assinaturaDocumento);
                 break;
             }

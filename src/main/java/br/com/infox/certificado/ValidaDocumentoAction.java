@@ -129,7 +129,7 @@ public class ValidaDocumentoAction implements Serializable {
 		final List<AssinaturaDocumento> assinaturas = getListAssinaturaDocumento();
 		if (assinaturas != null) {
 			for (final AssinaturaDocumento assinatura : assinaturas) {
-				if (result = assinatura.getUsuario().equals(usuarioLogin)) {
+				if (result = assinatura.getPessoaFisica().equals(usuarioLogin.getPessoaFisica())) {
 					break;
 				}
 			}
