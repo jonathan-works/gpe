@@ -13,14 +13,11 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
-import javax.faces.component.UIComponent;
-import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 
 import org.jboss.seam.faces.FacesMessages;
-import org.richfaces.component.UICommandLink;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
@@ -37,6 +34,7 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.service.ProcessoAnaliseDocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.jsf.util.JsfUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.path.PathResolver;
@@ -50,7 +48,7 @@ public class ComunicacaoAction implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "comunicacaoAction";
 	private static final LogProvider LOG = Logging.getLogProvider(ComunicacaoAction.class);
-	private static final String OPEN_CRIAR_COMUNICACAO = "infox.openPopUp('comunicacao%d', '%s/Processo/criarComunicacao.seam?idModeloComunicacao=%d','1024'); return false; ";
+	private static final String OPEN_CRIAR_COMUNICACAO = "infox.openPopUp('comunicacao%d', '%s/Processo/criarComunicacao.seam?idModeloComunicacao=%d','1024'); ";
 	
 	@Inject
 	private ProcessoAnaliseDocumentoService processoAnaliseDocumentoService;
@@ -68,6 +66,8 @@ public class ComunicacaoAction implements Serializable {
 	private EntityManager entityManager;
 	@Inject
 	private EnvioComunicacaoController envioComunicacaoController;
+	@Inject
+	private JsfUtil jsfUtil;
 	
 	private List<ModeloComunicacao> comunicacoes;
 	private Processo processo;
@@ -99,17 +99,14 @@ public class ComunicacaoAction implements Serializable {
 		setProcesso(JbpmUtil.getProcesso());
 	}
 	
-	public void reabrirComunicacao(ActionEvent actionEvent) {
+	public void reabrirComunicacao(ModeloComunicacao modeloComunicacao) {
 		try {
-			UIComponent component = actionEvent.getComponent();
-			ModeloComunicacao newModelo = comunicacaoService.reabrirComunicacao((ModeloComunicacao) component.getAttributes().get("modeloComunicacao"));
+			ModeloComunicacao modeloNovo = comunicacaoService.reabrirComunicacao(modeloComunicacao);
 			
+			PathResolver pathResolver = ComponentUtil.getComponent(PathResolver.NAME);
+			jsfUtil.execute(String.format(OPEN_CRIAR_COMUNICACAO, modeloNovo.getId(), pathResolver.getContextPath(), modeloNovo.getId()));
 			envioComunicacaoController.init();
 			modeloComunicacaoRascunhoList.refresh();
-			UICommandLink commandLink = (UICommandLink) component;
-			PathResolver pathResolver = ComponentUtil.getComponent(PathResolver.NAME);
-			String oncomplete = commandLink.getOncomplete();
-			commandLink.setOncomplete(oncomplete + String.format(OPEN_CRIAR_COMUNICACAO, newModelo.getId(), pathResolver.getContextPath(), newModelo.getId()));
 
 			FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.sucesso.reabertura"));
 		} catch (DAOException | CloneNotSupportedException e) {
