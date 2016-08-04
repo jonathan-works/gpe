@@ -5,7 +5,7 @@
 
 <composite:interface type="certificadoDigital">
     <composite:attribute name="tokenField" type="java.lang.String" required="true" />
-    <composite:attribute name="assinavelProvider" type="br.com.infox.epp.assinador.assinavel.AssinavelProvider" />
+    <composite:attribute name="assinavelProvider" type="br.com.infox.epp.assinador.assinavel.AssinavelProvider" required="true" />
     <composite:attribute name="value" type="java.lang.String" default="Assinar Digitalmente" />
     <composite:attribute name="action" />
     <composite:attribute name="execute" default="@this" />
@@ -20,22 +20,21 @@
     <infox:div rendered="#{not empty cc.attrs.signAction}">
         <a:jsFunction name="executarAcaoAssinatura"
             actionListener="#{cc.attrs.signAction}"
-            execute="#{cc.attrs.execute}"
+            execute="token #{cc.attrs.execute}"
             render="#{cc.attrs.render}"
             oncomplete="#{cc.attrs.oncomplete}" />
     </infox:div>
     <infox:div rendered="#{empty cc.attrs.signAction}">
         <a:jsFunction name="executarAcaoAssinatura"
             actionListener="#{assinadorController.assinaturasRecebidas(cc.attrs.token)}"
-            execute="#{cc.attrs.execute}"
+            execute="token #{cc.attrs.execute}"
             render="#{cc.attrs.render}"
             oncomplete="#{cc.attrs.oncomplete}" />
     </infox:div>
     <h:inputHidden id="token" value="#{cc.attrs.tokenField}" />
     <h:commandButton type="button" styleClass="buttons" value="#{cc.attrs.value}"
         oncomplete="window['callback-#{cc.clientId}']();">
-        <f:setPropertyActionListener value="#{assinadorController.criarGrupoAssinatura(cc.attrs.assinavelProvider)}"
-            target="#{cc.attrs.token}" />
+        <f:setPropertyActionListener value="#{assinadorController.criarGrupoAssinatura(cc.attrs.assinavelProvider)}" target="#{cc.attrs.token}" />
         <f:setPropertyActionListener value="#{cc.attrs.token}" target="#{cc.attrs.tokenField}" />
         <f:ajax event="click" execute="@this" render="#{cc.attrs.id}:token" onevent="function(event){
             if (event.status==='begin'){
@@ -52,7 +51,7 @@
                       $.get('#{pathResolver.restBaseUrl}' + '/tokenAssinatura/' + token + '/status', function(status) {
                           if (status !== 'AGUARDANDO_ASSINATURA') {  
                               clearInterval(intervalId);
-                              executarAcaoAssinatura();
+                              executarAcaoAssinatura(token);
                           }
                       });  
                   }, 2000);

@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
 import java.util.List;
+import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.security.auth.login.LoginException;
@@ -24,6 +25,8 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.service.AuthenticatorService;
 import br.com.infox.epp.assinador.AssinadorGroupService.StatusToken;
+import br.com.infox.epp.assinador.assinavel.AssinavelGenericoProvider;
+import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
 import br.com.infox.epp.assinador.AssinadorService;
 import br.com.infox.epp.assinador.DadosAssinatura;
 import br.com.infox.epp.cdi.seam.ContextDependency;
@@ -52,10 +55,11 @@ public class CertificateAuthenticator implements Serializable {
     private InfoxMessages infoxMessages;
     @Inject
     private AssinadorService assinadorService;
+    private AssinavelProvider assinavelProvider;
 
     public void authenticate() {
         try {
-        	List<DadosAssinatura> dadosAssinaturaList = assinadorService.getDadosAssinatura(token);
+        	List<DadosAssinatura> dadosAssinaturaList = assinadorService.getDadosAssinatura(getToken());
         	
             if (dadosAssinaturaList.size() == 0) {
                 throw new CertificadoException(infoxMessages.get("login.sign.error"));
@@ -88,6 +92,13 @@ public class CertificateAuthenticator implements Serializable {
 
     }
 
+    public AssinavelProvider getAssinavelProvider(){
+        if (this.assinavelProvider == null){
+            this.assinavelProvider = new AssinavelGenericoProvider(UUID.randomUUID().toString());
+        }
+        return this.assinavelProvider;
+    }
+    
     public String getToken() {
         return token;
     }
