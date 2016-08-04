@@ -146,7 +146,7 @@
         width="920">
         <c:if
           test="#{!empty actionTemplate.fileName or !empty taskFitter.currentTask.currentVariable}">
-          <ui:include src="actions/#{actionTemplate.fileName}" />
+          <ui:include src="/Fluxo/definicao/actions/setModeloDocumento.xhtml" />
         </c:if>
       </wi:modalPanel>
     </s:div>

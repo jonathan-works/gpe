@@ -69,11 +69,12 @@
                             <h:form>
                                 <a:commandLink limitRender="true"
                                     render="divM2MVar"
-                                    action="#{variavel.addModelo(row)}">
+                                    action="#{processBuilder.taskFitter.currentTask.currentVariable.addModelo(row)}">
                                     <h:graphicImage
                                         url="#{layoutController.getResourceUrlByPath('/imagens/grid/copyLeft.gif')}"
                                         title="#{infoxMessages['button.add']}" />
                                 </a:commandLink>
+                                
                             </h:form>
                         </ui:define>
                         <wi:columnOutputText
