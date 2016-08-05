@@ -144,7 +144,7 @@ public class VariavelProcessoService {
 	                    final String valorPadrao = definicao.getValorPadrao();
 	                    if (valorPadrao != null) {
 	                    	Object valorJbpmExpressionEvaluator = null;
-	                    	if(valorPadrao.startsWith("#") || valorPadrao.startsWith("$")){
+	                    	if((valorPadrao.startsWith("#") || valorPadrao.startsWith("$")) && taskInstance != null ){
 	                    		valorJbpmExpressionEvaluator = JbpmExpressionEvaluator.evaluate(valorPadrao,new ExecutionContext(taskInstance.getToken()));
 		                		if(valorJbpmExpressionEvaluator != null){
 		                			variavelProcesso.setValor(formatarValor(valorJbpmExpressionEvaluator));
