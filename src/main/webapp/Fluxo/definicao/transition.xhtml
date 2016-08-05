@@ -76,7 +76,9 @@
                     </div>
                 </f:facet>
                 <h:form>
-	                <h:inputTextarea value="#{transicaoHandler.transition.condition}" maxlength="1000" style="width: 100%" styleClass="textAreaexpressoesAjudaGatewayPopupPanel#{transicaoHandler.name}">
+	                <h:inputTextarea value="#{transicaoHandler.transition.condition}" maxlength="1000" style="width: 100%"
+	                 styleClass="textAreaexpressoesAjudaGatewayPopupPanel#{transicaoHandler.name}"
+	                 converter="stringConverter">
 	                    <a:ajax event="change" execute="@this" render="transition#{type}Table" limitRender="true" />
 	                </h:inputTextarea>
                 </h:form>
