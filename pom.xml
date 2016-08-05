@@ -650,6 +650,7 @@
 		<epp.datasource.jndi.prefix>java:jboss/datasources/</epp.datasource.jndi.prefix>
 		<epp.transaction.class>org.hibernate.transaction.JBossTransactionManagerLookup</epp.transaction.class>
 		<hibernate.cache.region.class>org.jboss.as.jpa.hibernate4.infinispan.InfinispanRegionFactory</hibernate.cache.region.class>
+		<userTransaction.jndi>java:jboss/UserTransaction</userTransaction.jndi>
 		<epp.mail.session>java:jboss/mail/${epp.name}</epp.mail.session>
 		<epp.transactionManager.jndi>java:jboss/TransactionManager</epp.transactionManager.jndi>
 		<desenvolvimento>false</desenvolvimento>
@@ -726,9 +727,6 @@
 		</profile>
 		<profile>
 			<id>jboss-eap</id>
-      <properties>
-        <userTransaction.jndi>java:jboss/UserTransaction</userTransaction.jndi>
-      </properties>
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
