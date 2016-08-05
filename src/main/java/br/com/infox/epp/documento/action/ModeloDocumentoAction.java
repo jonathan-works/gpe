@@ -4,6 +4,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Startup;
+import org.jbpm.graph.exe.ExecutionContext;
 
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
@@ -60,6 +61,7 @@ public class ModeloDocumentoAction extends ActionTemplate {
     }
 
     public void set(String variavel, int... idModeloDocumento) {
+    	ExecutionContext currentExecutionContext = ExecutionContext.currentExecutionContext();
         String variavelModelo = variavel + "Modelo";
         StringBuilder s = new StringBuilder();
         for (int i : idModeloDocumento) {
@@ -68,11 +70,11 @@ public class ModeloDocumentoAction extends ActionTemplate {
             }
             s.append(i);
         }
-        Object valor = JbpmUtil.getProcessVariable(variavelModelo);
+        Object valor = currentExecutionContext.getContextInstance().getVariable(variavelModelo);
         if (valor == null) {
-            JbpmUtil.createProcessVariable(variavelModelo, s.toString());
+        	currentExecutionContext.getContextInstance().setVariable(variavelModelo, s.toString());
         } else {
-            JbpmUtil.setProcessVariable(variavelModelo, valor + ","
+        	currentExecutionContext.getContextInstance().setVariable(variavelModelo, valor + ","
                     + s.toString());
         }
     }
