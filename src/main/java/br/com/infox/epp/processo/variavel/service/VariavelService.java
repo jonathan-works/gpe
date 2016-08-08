@@ -10,6 +10,9 @@ import org.jboss.seam.annotations.Scope;
 @Name(VariavelService.NAME)
 @Scope(ScopeType.EVENT)
 @Install(precedence=Install.APPLICATION)
+/**
+ * Classe extendida no tcepeextended, verificar outros projetos antes de modificar
+ */
 public class VariavelService implements Serializable {
 
 	public static final String NAME = "variavelService";
