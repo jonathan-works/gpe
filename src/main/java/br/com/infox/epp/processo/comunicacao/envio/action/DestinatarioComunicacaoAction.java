@@ -21,6 +21,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.localizacao.LocalizacaoSearch;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
@@ -32,6 +33,7 @@ import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
+import br.com.infox.epp.usuario.UsuarioLoginSearch;
 import br.com.infox.hibernate.util.HibernateUtil;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -52,7 +54,12 @@ public class DestinatarioComunicacaoAction implements Serializable{
 	private UsuarioPerfilManager usuarioPerfilManager;
 	@Inject
 	private DestinatarioComunicacaoService destinatarioComunicacaoService;
+	@Inject
+	private LocalizacaoSearch localizacaoSearch;
+	@Inject
+	private UsuarioLoginSearch usuarioLoginSearch;
 	
+	private Localizacao localizacaoRaizComunicacao;
 	private List<Integer> idsLocalizacoesSelecionadas = new ArrayList<>();
 	private Map<Localizacao, List<PerfilTemplate>> perfisSelecionados = new HashMap<>();
 	private List<DestinatarioModeloComunicacao> destinatariosExcluidos = new ArrayList<>();
@@ -61,9 +68,11 @@ public class DestinatarioComunicacaoAction implements Serializable{
 	private boolean processoPossuiRelator;
 	private Localizacao localizacao;
 	private PerfilTemplate perfilDestino;
+	private boolean existeUsuarioNoDestino = true;
 	
-	public void init() {
+	public void init(Localizacao localizacaoRaizComunicacao) {
 		initEntityLists();
+		this.localizacaoRaizComunicacao = localizacaoRaizComunicacao;
 	}
 	
 	@Remove
@@ -97,7 +106,11 @@ public class DestinatarioComunicacaoAction implements Serializable{
 		}
 	}
 	
-	public void adicionarDestino(Localizacao localizacao, PerfilTemplate perfilDestino) {
+	public boolean existeUsuarioDestino() {
+		return existeUsuarioNoDestino;
+	}
+	
+	public void adicionarDestino() {
 		DestinatarioModeloComunicacao destinatario = new DestinatarioModeloComunicacao();
         destinatario.setModeloComunicacao(modeloComunicacao);
         destinatario.setDestino(localizacao);
@@ -192,6 +205,13 @@ public class DestinatarioComunicacaoAction implements Serializable{
 		return processoPossuiRelator;
 	}
 	
+	public List<Localizacao> getLocalizacoesDisponiveis(String query) {
+		if (localizacaoRaizComunicacao != null && query != null && !query.isEmpty()) {
+			return localizacaoSearch.getLocalizacoesByRaizWithDescricaoLike(localizacaoRaizComunicacao, query, EnvioComunicacaoController.MAX_RESULTS);
+		}
+		return Collections.emptyList();
+	}
+	
 	public List<PerfilTemplate> getPerfisPermitidos() {
 		if (modeloComunicacao.getLocalizacaoResponsavelAssinatura() == null) {
 			return Collections.emptyList();
@@ -212,6 +232,7 @@ public class DestinatarioComunicacaoAction implements Serializable{
 	
 	public void setLocalizacao(Localizacao localizacao) {
 		this.localizacao = localizacao;
+		setPerfilDestino(null);
 	}
 	
 	public PerfilTemplate getPerfilDestino() {
@@ -220,6 +241,7 @@ public class DestinatarioComunicacaoAction implements Serializable{
 	
 	public void setPerfilDestino(PerfilTemplate perfilDestino) {
 	    this.perfilDestino = perfilDestino;
+		existeUsuarioNoDestino = usuarioLoginSearch.existsUsuarioWithLocalizacaoPerfil(localizacao, perfilDestino);
 	}
 	
 	private void initEntityLists() {

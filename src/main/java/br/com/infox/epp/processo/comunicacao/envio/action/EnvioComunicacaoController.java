@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.comunicacao.envio.action;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -31,7 +32,6 @@ import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.access.component.tree.LocalizacaoSubTreeHandler;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.PerfilTemplate;
@@ -40,6 +40,7 @@ import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.localizacao.LocalizacaoSearch;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
@@ -52,6 +53,7 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.system.Parametros;
+import br.com.infox.epp.usuario.UsuarioLoginSearch;
 import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -67,9 +69,9 @@ public class EnvioComunicacaoController implements Serializable {
 	public static final String NAME = "envioComunicacaoController";
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(EnvioComunicacaoController.class);
+	public static final int MAX_RESULTS = 15;
 	
 	private TipoComunicacaoManager tipoComunicacaoManager = ComponentUtil.getComponent(TipoComunicacaoManager.NAME);
-	private LocalizacaoSubTreeHandler localizacaoSubTree = ComponentUtil.getComponent(LocalizacaoSubTreeHandler.NAME);
 	private AssinaturaDocumentoService assinaturaDocumentoService = ComponentUtil.getComponent(AssinaturaDocumentoService.NAME);
 	private CertificateSignatures certificateSignatures = ComponentUtil.getComponent(CertificateSignatures.NAME);
 	
@@ -87,6 +89,10 @@ public class EnvioComunicacaoController implements Serializable {
 	protected LocalizacaoManager localizacaoManager;
 	@Inject
 	private ActionMessagesService actionMessagesService;
+	@Inject
+	private LocalizacaoSearch localizacaoSearch;
+	@Inject
+	private UsuarioLoginSearch usuarioLoginSearch;
 	
 	private String raizLocalizacoesComunicacao = Parametros.RAIZ_LOCALIZACOES_COMUNICACAO.getValue();
 	private Localizacao localizacaoRaizComunicacao;
@@ -105,6 +111,7 @@ public class EnvioComunicacaoController implements Serializable {
 	private boolean minuta = true;
 	private String idModeloComunicacaoVariableName;
 	private boolean isNew = true;
+	private boolean existeUsuarioLocalizacaoAssinatura = true;
 	
 	@PostConstruct
 	public void init() {
@@ -136,15 +143,13 @@ public class EnvioComunicacaoController implements Serializable {
 	
 	private void initDestinatarioComunicacaoAction() {
 		destinatarioComunicacaoAction.setModeloComunicacao(modeloComunicacao);
-		destinatarioComunicacaoAction.init();		
+		destinatarioComunicacaoAction.init(getLocalizacaoRaizComunicacao());		
 	}
 	
 	private void initLocalizacaoRaiz() {
 		try {
 			localizacaoRaizComunicacao = localizacaoManager.getLocalizacaoByNome(raizLocalizacoesComunicacao);
-			if (localizacaoRaizComunicacao != null) {
-				localizacaoSubTree.setIdLocalizacaoPai(localizacaoRaizComunicacao.getIdLocalizacao());
-			} else {
+			if (localizacaoRaizComunicacao == null) {
 				FacesMessages.instance().add("O parâmetro raizLocalizacoesComunicacao não foi definido.");
 			}
 		} catch (DAOException e) {
@@ -222,7 +227,6 @@ public class EnvioComunicacaoController implements Serializable {
 
 	private void clear() {
 		destinatario = null;
-		localizacaoSubTree.clearTree();
 		initLocalizacaoRaiz();
 		initDestinatarioComunicacaoAction();
 		initDocumentoComunicacaoAction();
@@ -329,7 +333,7 @@ public class EnvioComunicacaoController implements Serializable {
 			isNew = false;
 			resetEntityState();
 			clear();
-			destinatarioComunicacaoAction.init();
+			destinatarioComunicacaoAction.init(getLocalizacaoRaizComunicacao());
 			FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.sucesso.reabertura"));
 		} catch (DAOException | CloneNotSupportedException e) {
 			LOG.error("Erro ao rebarir comunicação", e);
@@ -363,6 +367,13 @@ public class EnvioComunicacaoController implements Serializable {
 		CertificateSignatureBean signatureBean = certificateSignatureBundleBean.getSignatureBeanList().get(0);
 		return signatureBean;
 	}
+	
+	public List<Localizacao> getLocalizacoesDisponiveisAssinatura(String query) {
+		if (localizacaoRaizComunicacao != null && query != null && !query.isEmpty()) {
+			return localizacaoSearch.getLocalizacoesByRaizWithDescricaoLike(Authenticator.getLocalizacaoAtual(), query, MAX_RESULTS);
+		}
+		return Collections.emptyList();
+	}
 
 	public List<TipoComunicacao> getTiposComunicacao() {
 		if (tiposComunicacao == null) {
@@ -392,7 +403,6 @@ public class EnvioComunicacaoController implements Serializable {
 		if (!this.finalizada) {
 			modeloComunicacao.setLocalizacaoResponsavelAssinatura(null);
 			modeloComunicacao.setPerfilResponsavelAssinatura(null);
-			localizacaoSubTree.clearTree();
 		}
 	}
 	
@@ -491,5 +501,16 @@ public class EnvioComunicacaoController implements Serializable {
 	
 	public Long getJbpmProcessId() {
 		return JbpmUtil.getProcesso().getIdJbpm();
+	}
+	
+	public boolean existeUsuarioLocalizacaoAssinatura() {
+		return existeUsuarioLocalizacaoAssinatura;
+	}
+	
+	public void verificaExistenciaUsuario() {
+		if (getModeloComunicacao().getLocalizacaoResponsavelAssinatura() != null) {
+			existeUsuarioLocalizacaoAssinatura = usuarioLoginSearch.existsUsuarioWithLocalizacaoPerfil(getModeloComunicacao().getLocalizacaoResponsavelAssinatura(),
+					getModeloComunicacao().getPerfilResponsavelAssinatura());
+		}
 	}
 }

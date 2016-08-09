@@ -29,20 +29,35 @@ public class LocalizacaoSearch {
 		return getEntityManager().createQuery(cq).getSingleResult();
 	}
 
-        public List<Localizacao> getLocalizacoesExternasWithDescricaoLike(Localizacao localizacaoRaiz, String descricao) {
-                CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-                CriteriaQuery<Localizacao> query = cb.createQuery(Localizacao.class);
-                Root<Localizacao> from = query.from(Localizacao.class);
-                query.where(cb.isNull(from.get(Localizacao_.estruturaPai)),
-                                cb.isTrue(from.get(Localizacao_.ativo)),
-                                        cb.like(cb.lower(from.get(Localizacao_.localizacao)), "%"+descricao.toLowerCase()+"%"));
-                if (localizacaoRaiz != null) {
-                        query.where(query.getRestriction(),
-                                        cb.like(from.get(Localizacao_.caminhoCompleto), localizacaoRaiz.getCaminhoCompleto() + "%"));
-                }
-                query.orderBy(cb.asc(from.get(Localizacao_.caminhoCompleto)));
-                return getEntityManager().createQuery(query).getResultList();
-        }
+    public List<Localizacao> getLocalizacoesExternasWithDescricaoLike(Localizacao localizacaoRaiz, String descricao) {
+        CriteriaQuery<Localizacao> query = createQueryLocalizacaoExternaByRaizDescricao(localizacaoRaiz, descricao);
+        return getEntityManager().createQuery(query).getResultList();
+    }
+    
+    private CriteriaQuery<Localizacao> createQueryLocalizacaoExternaByRaizDescricao(Localizacao localizacaoRaiz, String descricao) {
+    	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+    	CriteriaQuery<Localizacao> query = cb.createQuery(Localizacao.class);
+    	Root<Localizacao> from = query.from(Localizacao.class);
+    	query.where(cb.isNull(from.get(Localizacao_.estruturaPai)),
+    			cb.isTrue(from.get(Localizacao_.ativo)),
+    			cb.like(cb.lower(from.get(Localizacao_.localizacao)), "%"+descricao.toLowerCase()+"%"));
+    	if (localizacaoRaiz != null) {
+    		query.where(query.getRestriction(),
+    				cb.like(from.get(Localizacao_.caminhoCompleto), localizacaoRaiz.getCaminhoCompleto() + "%"));
+    	}
+    	query.orderBy(cb.asc(from.get(Localizacao_.caminhoCompleto)));
+    	return query;
+    }
+    
+    @SuppressWarnings("unchecked")
+	public List<Localizacao> getLocalizacoesByRaizWithDescricaoLike(Localizacao localizacaoRaiz, String descricao, Integer maxResults) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+    	CriteriaQuery<Localizacao> query = createQueryLocalizacaoExternaByRaizDescricao(localizacaoRaiz, descricao);
+        Root<Localizacao> localizacao = (Root<Localizacao>) query.getRoots().iterator().next();
+        query.where(query.getRestriction(),
+        		cb.isNotNull(localizacao.get(Localizacao_.estruturaFilho)));
+        return getEntityManager().createQuery(query).setMaxResults(maxResults).getResultList();
+    }
 
 	private EntityManager getEntityManager() {
 		return EntityManagerProducer.getEntityManager();
