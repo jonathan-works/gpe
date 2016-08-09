@@ -1,7 +1,5 @@
 package br.com.infox.epp.tarefa.entity;
 
-import static br.com.infox.epp.tarefa.query.TarefaQuery.NOVAS_TAREFAS;
-import static br.com.infox.epp.tarefa.query.TarefaQuery.NOVAS_TAREFAS_QUERY;
 import static br.com.infox.epp.tarefa.query.TarefaQuery.TAREFA_BY_ID_JBPM_TASK;
 import static br.com.infox.epp.tarefa.query.TarefaQuery.TAREFA_BY_ID_JBPM_TASK_QUERY;
 import static br.com.infox.epp.tarefa.query.TarefaQuery.TAREFA_BY_TAREFA_AND_FLUXO;
@@ -20,8 +18,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedNativeQueries;
-import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -38,8 +34,6 @@ import br.com.infox.epp.tarefa.type.PrazoEnum;
 
 @Entity
 @Table(name = Tarefa.TABLE_NAME)
-@NamedNativeQueries({
-    @NamedNativeQuery(name = NOVAS_TAREFAS, query = NOVAS_TAREFAS_QUERY) })
 @NamedQueries({
     @NamedQuery(name = TAREFA_BY_TAREFA_AND_FLUXO, query = TAREFA_BY_TAREFA_AND_FLUXO_QUERY),
     @NamedQuery(name = TAREFA_BY_ID_JBPM_TASK, query = TAREFA_BY_ID_JBPM_TASK_QUERY) })

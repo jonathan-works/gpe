@@ -49,7 +49,8 @@
                 </legend>
                 <i:inputText id="codigoItem" required="true" label="Código" 
                     onchange="this.value=this.value.toUpperCase();" onkeyup="this.value=this.value.toUpperCase();"
-                    value="#{categoriaEntregaView.categoriaEntregaItemController.codigo}" />
+                    value="#{categoriaEntregaView.categoriaEntregaItemController.codigo}"
+                    disabled="#{not categoriaEntregaView.categoriaEntregaItemController.modoCriar}" />
                 <i:inputText id="descricaoItem" required="true" label="Descrição"
                     value="#{categoriaEntregaView.categoriaEntregaItemController.descricao}" />
             </fieldset>

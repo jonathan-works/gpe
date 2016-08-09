@@ -102,7 +102,7 @@ public class EnvioComunicacaoController implements Serializable {
 	private Boolean comunicacaoSuficientementeAssinada;
 	private DestinatarioModeloComunicacao destinatario;
 	private boolean inTask = false;
-	private boolean minuta = true;
+	private boolean minuta;
 	private String idModeloComunicacaoVariableName;
 	private boolean isNew = true;
 	
@@ -179,6 +179,7 @@ public class EnvioComunicacaoController implements Serializable {
 			BusinessProcess.instance().setProcessId(processInstanceId);
 			isNew = false;
 		}
+		minuta = modeloComunicacao.isMinuta();
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -205,6 +206,7 @@ public class EnvioComunicacaoController implements Serializable {
 			clear();
 			FacesMessages.instance().add("Registro gravado com sucesso");
 			isNew = false;
+			minuta = modeloComunicacao.isMinuta();
 		} catch (Exception e) {
 			LOG.error("Erro ao gravar comunicação ", e);
 			if (e instanceof DAOException) {
@@ -276,9 +278,8 @@ public class EnvioComunicacaoController implements Serializable {
 	private void resetEntityState() {
 		this.finalizada = false;
 		modeloComunicacao.setFinalizada(false);
-		this.minuta = true;
-		modeloComunicacao.setMinuta(true);
 		if (isNew) {
+			minuta = true;
 			modeloComunicacao.setId(null);
 			setIdModeloVariable(null);
 			documentoComunicacaoAction.resetEntityState();
@@ -286,6 +287,7 @@ public class EnvioComunicacaoController implements Serializable {
 			destinatarioComunicacaoAction.setLocalizacao(null);
 			destinatarioComunicacaoAction.setPerfilDestino(null);
 		}
+		modeloComunicacao.setMinuta(minuta);
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -327,6 +329,7 @@ public class EnvioComunicacaoController implements Serializable {
 		try {
 			modeloComunicacao = comunicacaoService.reabrirComunicacao(getModeloComunicacao());
 			isNew = false;
+			minuta = true;
 			resetEntityState();
 			clear();
 			destinatarioComunicacaoAction.init();
@@ -475,14 +478,6 @@ public class EnvioComunicacaoController implements Serializable {
 		PerfilTemplate perfilResponsavelAssinatura = modeloComunicacao.getPerfilResponsavelAssinatura();
 		boolean usuarioLogadoNoPerfilResponsavel = perfilResponsavelAssinatura == null || perfilUsuarioLogado.equals(perfilResponsavelAssinatura);
 		return usuarioLogadoNaLocalizacaoResponsavel && usuarioLogadoNoPerfilResponsavel;
-	}
-	
-	public boolean isMinuta() {
-		return minuta;
-	}
-	
-	public void setMinuta(boolean minuta) {
-		this.minuta = minuta;
 	}
 	
 	public boolean isPrazoComunicacaoRequired(){

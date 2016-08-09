@@ -71,6 +71,7 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
@@ -99,6 +100,7 @@ import br.com.infox.log.Logging;
 import br.com.infox.seam.context.ContextFacade;
 import br.com.infox.seam.exception.ApplicationException;
 import br.com.infox.seam.exception.BusinessException;
+import br.com.infox.seam.exception.BusinessRollbackException;
 import br.com.infox.seam.path.PathResolver;
 import br.com.infox.seam.util.ComponentUtil;
 import br.com.itx.component.AbstractHome;
@@ -385,7 +387,11 @@ public class TaskInstanceHome implements Serializable {
 		}
 		documentoBin.setMd5Documento(MD5Encoder.encode(documentoBin.getModeloDocumento()));
 		documentoBinManager.persist(documentoBin);
-		documento.setPasta(pastaManager.getDefaultFolder(processoEpaHome.getInstance()));
+		Pasta defaultFolder = pastaManager.getDefaultFolder(processoEpaHome.getInstance());
+		if (defaultFolder == null) {
+			throw new BusinessRollbackException(infoxMessages.get("documento.erro.processSemPasta"));
+		}
+		documento.setPasta(defaultFolder);
 		documento.setNumeroDocumento(documentoManager.getNextNumeracao(documento));
 		documento.setIdJbpmTask(getCurrentTaskInstance().getId());
 		String descricao = JbpmUtil.instance().getMessages().get(processoEpaHome.getInstance().getNaturezaCategoriaFluxo().getFluxo().getFluxo() + ":" + variableAccess.getMappedName().split(":")[1]);

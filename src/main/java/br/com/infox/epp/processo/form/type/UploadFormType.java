@@ -60,7 +60,7 @@ public class UploadFormType extends FileFormType {
              if (e.getCause() instanceof DAOException) {
                  getActionMessagesService().handleDAOException((DAOException) e.getCause());
              } else {
-                 getActionMessagesService().handleException("Erro ao substituir o documento", e);
+                 getActionMessagesService().handleException("Erro ao substituir o documento." + e.getMessage(), e);
              }
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "", e);

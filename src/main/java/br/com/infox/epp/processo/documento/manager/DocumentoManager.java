@@ -12,6 +12,7 @@ import org.jboss.seam.bpm.TaskInstance;
 import org.joda.time.DateTime;
 
 import br.com.infox.core.manager.Manager;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
@@ -85,7 +86,11 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     public Documento gravarDocumentoNoProcesso(Processo processo, Documento documento) throws DAOException {
         if (processo != null) {
         	if (documento.getPasta() == null) {
-        		documento.setPasta(pastaManager.getDefaultFolder(processo));
+        		Pasta defaultFolder = pastaManager.getDefaultFolder(processo);
+				if (defaultFolder == null) {
+					throw new BusinessRollbackException(InfoxMessages.getInstance().get("documento.erro.processSemPasta"));
+				}
+        		documento.setPasta(defaultFolder);
         	} else if (!processo.equals(documento.getPasta().getProcesso())) {
         		throw new BusinessRollbackException("O processo informado e o processo da pasta do documento são diferentes");
         	}
@@ -122,7 +127,11 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
         doc.setUsuarioInclusao(Authenticator.getUsuarioLogado());
         doc.setDescricao(label);
         doc.setExcluido(Boolean.FALSE);
-        doc.setPasta(pastaManager.getDefaultFolder(processo));
+        Pasta defaultFolder = pastaManager.getDefaultFolder(processo);
+		if (defaultFolder == null) {
+			throw new BusinessRollbackException(InfoxMessages.getInstance().get("documento.erro.processSemPasta"));
+		}
+        doc.setPasta(defaultFolder);
         doc.setClassificacaoDocumento(classificacaoDocumentoManager.getReference(classificacaoDocumento.getId()));
         doc.setNumeroDocumento(numeracaoDocumentoSequencialManager.getNextNumeracaoDocumentoSequencial(processo));
         return persist(doc);
@@ -176,7 +185,7 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
     
     private void atualizarSuficienciaAssinatura(Documento o ) throws DAOException{
         if (!o.getDocumentoBin().getSuficientementeAssinado() && assinaturaDocumentoService.isDocumentoTotalmenteAssinado(o)) {
-            assinaturaDocumentoService.setDocumentoSuficientementeAssinado(o.getDocumentoBin(), Authenticator.getUsuarioPerfilAtual());
+            documentoBinManager.setDocumentoSuficientementeAssinado(o.getDocumentoBin(), Authenticator.getUsuarioPerfilAtual());
         }
     }
     

@@ -233,9 +233,6 @@ public class JpdlXmlWriter {
         Iterator<org.jbpm.graph.def.Node> iter = nodes.iterator();
         while (iter.hasNext()) {
             org.jbpm.graph.def.Node node = iter.next();
-            if (node.getNodeType().equals(org.jbpm.graph.def.Node.NodeType.Node)){
-                node.setAsync(true);
-            }
             if (!(node instanceof StartState)) {
                 Element nodeElement = addElement(parentElement, ProcessFactory.getTypeName(node));
                 if (node instanceof TaskNode) {

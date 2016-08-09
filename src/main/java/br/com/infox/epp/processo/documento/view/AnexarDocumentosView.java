@@ -8,13 +8,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import javax.ejb.EJBException;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.IOUtils;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jbpm.graph.exe.ExecutionContext;
@@ -181,20 +181,26 @@ public class AnexarDocumentosView implements Serializable {
 	public void fileUploadListener(FileUploadEvent fileUploadEvent) throws IOException {
 		UploadedFile uploadedFile = fileUploadEvent.getUploadedFile();
 		try {
-			byte[] dadosArquivo = IOUtils.toByteArray(uploadedFile.getInputStream());
-			DadosUpload dadosUpload = new DadosUpload(uploadedFile, dadosArquivo);
-			documentoUploaderService.validaDocumento(dadosUpload.getUploadedFile(), classificacaoDocumentoUploader,	dadosUpload.getDadosArquivo());
+			DadosUpload dadosUpload = new DadosUpload(uploadedFile);
+			documentoUploaderService.validaDocumento(dadosUpload.getUploadedFile(), classificacaoDocumentoUploader);
 			dadosUploader.add(dadosUpload);
 		} catch (Exception e) {
+			if (e instanceof EJBException) {
+				e = (Exception) e.getCause();
+			}
 			FacesMessages.instance().add(e.getMessage());
 			HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
-            response.sendError(415);
+			response.addHeader("Error-Message", "Falha: " + e.getMessage());
+            response.sendError(500);
 		}
 	}
 	
 	public void removeDocumentoUpload() {
         String fileName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("fileName");
         if ("ALL_FILES".equals(fileName)) {
+            for (DadosUpload dadosUpload : dadosUploader) {
+            	dadosUpload.delete();
+            }
             dadosUploader.clear();
         } else if (fileName != null) {
             DadosUpload dadosUploadToRemove = null;
@@ -206,6 +212,7 @@ public class AnexarDocumentosView implements Serializable {
             }
             if (dadosUploadToRemove != null) {
                 dadosUploader.remove(dadosUploadToRemove);
+                dadosUploadToRemove.delete();
             }
         }
     }
@@ -263,15 +270,20 @@ public class AnexarDocumentosView implements Serializable {
 		retorno.setPasta(pastaUploader == null ? pastaDefault : pastaUploader);
 		retorno.setProcesso(processo);
 		retorno.getDocumentoBin().setMarcadores(marcadoresUpload != null ? new HashSet<>(marcadoresUpload) : new HashSet<Marcador>());
-		documentoTemporarioManager.gravarDocumentoTemporario(retorno, dadosUpload.getDadosArquivo()); 
+		documentoTemporarioManager.gravarDocumentoTemporario(retorno, dadosUpload.getUploadedFile().getInputStream()); 
 		return retorno;
 	}
 
 	public void persistUpload() {
+	    if (pastaDefault == null) {
+	        FacesMessages.instance().add(infoxMessages.get("documento.erro.processSemPasta"));
+	        return;
+	    }
 		try {
 			for (DadosUpload dadosUpload : dadosUploader) {
 				DocumentoTemporario documentoGerado = gravarArquivoUpload(dadosUpload);
 				getDocumentoTemporarioList().add(new DocumentoTemporarioWrapper(documentoGerado));
+				dadosUpload.getUploadedFile().delete();
 			}
 			resetUploader();
 		} catch (DAOException e) {
@@ -301,6 +313,10 @@ public class AnexarDocumentosView implements Serializable {
 			if (getDocumentoEditor().getId() == null) {
 				getDocumentoEditor().setProcesso(getProcesso());
 				if (getDocumentoEditor().getPasta() == null) {
+				    if (pastaDefault == null) {
+				        FacesMessages.instance().add(infoxMessages.get("documento.erro.processSemPasta"));
+				        return;
+				    }
 					getDocumentoEditor().setPasta(pastaDefault);
 				}
 				getDocumentoEditor().getDocumentoBin().setMarcadores(marcadoresEditor != null ? new HashSet<>(marcadoresEditor) : new HashSet<Marcador>());

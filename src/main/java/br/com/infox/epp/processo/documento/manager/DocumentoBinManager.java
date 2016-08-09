@@ -28,20 +28,25 @@ import com.lowagie.text.pdf.PdfStamper;
 
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.file.reader.InfoxPdfReader;
+import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.entity.DocumentoBinario;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
+import br.com.infox.epp.processo.documento.assinatura.entity.RegistroAssinaturaSuficiente;
 import br.com.infox.epp.processo.documento.dao.DocumentoBinDAO;
 import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.path.PathResolver;
+import br.com.infox.seam.util.ComponentUtil;
 import net.glxn.qrgen.QRCode;
 import net.glxn.qrgen.image.ImageType;
 
@@ -55,11 +60,9 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 
 	@In
 	private PathResolver pathResolver;
-	@In
+	@Inject
 	private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
-	@In
-	private AssinaturaDocumentoService assinaturaDocumentoService;
-	@In
+	@Inject
 	private DocumentoBinarioManager documentoBinarioManager;
 	@Inject
 	private DocumentoDAO documentoDAO;
@@ -204,10 +207,31 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 		List<Documento> documentoList = documentoDAO.getDocumentosFromDocumentoBin(o);
 		if (!o.getSuficientementeAssinado() && !documentoList.isEmpty()) {
 			if (!classificacaoDocumentoPapelManager.classificacaoExigeAssinatura(documentoList.get(0).getClassificacaoDocumento()) && !o.isMinuta()) {
-				assinaturaDocumentoService.setDocumentoSuficientementeAssinado(o, Authenticator.getUsuarioPerfilAtual());
+				this.setDocumentoSuficientementeAssinado(o, Authenticator.getUsuarioPerfilAtual());
 			}
 		}
 		return o;
+	}
+	
+	
+	public void setDocumentoSuficientementeAssinado(DocumentoBin documentoBin, UsuarioPerfil usuarioPerfilAtual) throws DAOException {
+		documentoBin.setSuficientementeAssinado(Boolean.TRUE);
+		documentoBin.setDataSuficientementeAssinado(new Date());
+		List<RegistroAssinaturaSuficiente> registrosAssinaturaSuficiente = documentoBin.getRegistrosAssinaturaSuficiente();
+		List<Documento> documentoList = documentoDAO.getDocumentosFromDocumentoBin(documentoBin);
+		GenericManager genericManager = ComponentUtil.getComponent(GenericManager.NAME);
+        if (!(documentoList == null || documentoList.isEmpty()) && usuarioPerfilAtual != null) {
+            Documento documento = documentoList.get(0);
+            for (ClassificacaoDocumentoPapel classificacaoDocumentoPapel : documento.getClassificacaoDocumento().getClassificacaoDocumentoPapelList()) {
+                RegistroAssinaturaSuficiente registroAssinaturaSuficiente = new RegistroAssinaturaSuficiente();
+                registroAssinaturaSuficiente.setDocumentoBin(documentoBin);
+                registroAssinaturaSuficiente.setPapel(usuarioPerfilAtual.getPerfilTemplate().getPapel().getNome());
+                registroAssinaturaSuficiente.setTipoAssinatura(classificacaoDocumentoPapel.getTipoAssinatura());
+                registrosAssinaturaSuficiente.add(registroAssinaturaSuficiente);
+                genericManager.persist(registroAssinaturaSuficiente);
+            }
+        }
+        update(documentoBin);
 	}
 
 	public List<Documento> getDocumentosNaoSuficientementeAssinados(DocumentoBin documentoBin) {

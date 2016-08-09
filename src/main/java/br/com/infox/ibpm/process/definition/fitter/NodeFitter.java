@@ -121,9 +121,6 @@ public class NodeFitter extends Fitter implements Serializable {
             LOG.error("addNewNode()", e);
             return;
         }
-        if (nodeType.equals(InfoxMailNode.class) || nodeType.equals(Node.class)){
-            node.setAsync(true);
-        }
         node.setName(newNodeName);
         node.setKey("key_" + UUID.randomUUID().toString());
         processDefinition.addNode(node);

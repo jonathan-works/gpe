@@ -31,7 +31,6 @@ import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoRecurso
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.Categoria_;
 import br.com.infox.epp.fluxo.entity.Fluxo;
-import br.com.infox.epp.fluxo.entity.Fluxo_;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo_;
@@ -207,21 +206,6 @@ public class ProcessoEpaList extends EntityList<Processo> {
 	    	consultaProcessoDynamicColumnsController.setFluxo(fluxo);
 	    	super.newInstance();
     	}
-	}
-    
-    public List<Fluxo> getFluxos(String search) {
-    	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-    	CriteriaQuery<Fluxo> query = cb.createQuery(Fluxo.class);
-    	Root<Processo> processo = query.from(Processo.class);
-    	Join<Processo, NaturezaCategoriaFluxo> ncf = processo.join(Processo_.naturezaCategoriaFluxo, JoinType.INNER);
-    	Join<NaturezaCategoriaFluxo, Fluxo> fluxo = ncf.join(NaturezaCategoriaFluxo_.fluxo, JoinType.INNER);
-    	query.select(fluxo);
-    	query.orderBy(cb.asc(fluxo.get(Fluxo_.fluxo)));
-    	query.distinct(true);
-    	if (!Strings.isNullOrEmpty(search)) {
-    		query.where(cb.like(cb.lower(fluxo.get(Fluxo_.fluxo)), "%" + search.toLowerCase() + "%"));
-    	}
-    	return getEntityManager().createQuery(query).getResultList();
 	}
     
 	public PessoaFisica getRelator() {

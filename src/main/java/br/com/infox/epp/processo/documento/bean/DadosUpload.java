@@ -1,23 +1,23 @@
 package br.com.infox.epp.processo.documento.bean;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.codec.binary.Base64;
 import org.richfaces.model.UploadedFile;
 
+
 public class DadosUpload {
+	
+	private static final Logger logger = Logger.getLogger(DadosUpload.class.getCanonicalName());
     
     private String fileNameEncoded;
     private UploadedFile uploadedFile;
-    private byte[] dadosArquivo;
     
     public DadosUpload(UploadedFile uploadedFile) {
-        this(uploadedFile, null);
-    }
-
-    public DadosUpload(UploadedFile uploadedFile, byte[] dadosArquivo) {
         this.uploadedFile = uploadedFile;
-        this.dadosArquivo = dadosArquivo;
         this.fileNameEncoded = Base64.encodeBase64String(uploadedFile.getName().getBytes(Charset.forName("UTF-8")));
     }
 
@@ -25,12 +25,18 @@ public class DadosUpload {
         return uploadedFile;
     }
 
-    public byte[] getDadosArquivo() {
-        return dadosArquivo;
-    }
-    
     public String getFileNameEncoded() {
         return fileNameEncoded;
+    }
+    
+    public void delete() {
+    	if (uploadedFile != null) {
+    		try {
+				uploadedFile.delete();
+			} catch (IOException e) {
+				logger.log(Level.WARNING, e.getMessage(), e);
+			}
+    	}
     }
 
     @Override

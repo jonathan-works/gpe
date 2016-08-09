@@ -19,7 +19,7 @@ import br.com.infox.constants.LengthConstants;
 
 @Entity
 @Table(name = "tb_municipio")
-public class Municipio implements Serializable {
+public class Municipio implements Serializable, Comparable<Municipio> {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -88,5 +88,18 @@ public class Municipio implements Serializable {
 		sb.append(" - ");
 		sb.append(getEstado().getCodigo());
 		return sb.toString();
+	}
+
+	@Override
+	public int compareTo(Municipio o) {
+		if (getNome() == null) {
+			if (o.getNome() == null) {
+				return 0;
+			}
+			return -1;
+		} else if (o.getNome() == null) {
+			return 1;
+		}
+		return nome.compareTo(o.getNome());
 	}
 }

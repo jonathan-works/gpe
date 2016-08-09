@@ -44,18 +44,33 @@ public class HistoricoModeloDocumento implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private int idHistoricoModeloDocumento;
-    private ModeloDocumento modeloDocumento;
-    private UsuarioLogin usuarioAlteracao;
-    private Date dataAlteracao;
-    private String tituloModeloDocumento;
-    private String descricaoModeloDocumento;
-    private Boolean ativo;
-
     @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_HISTORICO_MODELO_DOCUMENTO)
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_HISTORICO_MODELO_DOCUMENTO, unique = true, nullable = false)
+    private int idHistoricoModeloDocumento;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = ID_MODELO_DOCUMENTO)
+    private ModeloDocumento modeloDocumento;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = ID_USUARIO_ALTERACAO)
+    private UsuarioLogin usuarioAlteracao;
+    
+    @Column(name = DATA_ALTERACAO, nullable = false)
+    private Date dataAlteracao;
+    
+    @Column(name = TITULO_MODELO_DOCUMENTO, nullable = false, length = 250)
+    @Size(max = 250)
+    private String tituloModeloDocumento;
+    
+    @Column(name = CONTEUDO_MODELO_DOCUMENTO, nullable = false)
+    private String descricaoModeloDocumento;
+    
+    @Column(name = ATIVO, nullable = false)
+    private Boolean ativo;
+
     public int getIdHistoricoModeloDocumento() {
         return idHistoricoModeloDocumento;
     }
@@ -64,8 +79,6 @@ public class HistoricoModeloDocumento implements java.io.Serializable {
         this.idHistoricoModeloDocumento = idHistoricoModeloDocumento;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = ID_MODELO_DOCUMENTO)
     public ModeloDocumento getModeloDocumento() {
         return modeloDocumento;
     }
@@ -74,8 +87,6 @@ public class HistoricoModeloDocumento implements java.io.Serializable {
         this.modeloDocumento = modeloDocumento;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = ID_USUARIO_ALTERACAO)
     public UsuarioLogin getUsuarioAlteracao() {
         return usuarioAlteracao;
     }
@@ -84,7 +95,6 @@ public class HistoricoModeloDocumento implements java.io.Serializable {
         this.usuarioAlteracao = usuarioAlteracao;
     }
 
-    @Column(name = DATA_ALTERACAO, nullable = false)
     public Date getDataAlteracao() {
         return dataAlteracao;
     }
@@ -101,8 +111,6 @@ public class HistoricoModeloDocumento implements java.io.Serializable {
         return DateFormat.getDateInstance().format(dataAlteracao);
     }
 
-    @Column(name = TITULO_MODELO_DOCUMENTO, nullable = false, length = 80)
-    @Size(max = 80)
     public String getTituloModeloDocumento() {
         return tituloModeloDocumento;
     }
@@ -111,7 +119,6 @@ public class HistoricoModeloDocumento implements java.io.Serializable {
         this.tituloModeloDocumento = tituloModeloDocumento;
     }
 
-    @Column(name = CONTEUDO_MODELO_DOCUMENTO, nullable = false)
     public String getDescricaoModeloDocumento() {
         return descricaoModeloDocumento;
     }
@@ -120,7 +127,6 @@ public class HistoricoModeloDocumento implements java.io.Serializable {
         this.descricaoModeloDocumento = descricaoModeloDocumento;
     }
 
-    @Column(name = ATIVO, nullable = false)
     public Boolean getAtivo() {
         return ativo;
     }

@@ -137,8 +137,9 @@ public class Localizacao implements Serializable, Recursive<Localizacao> {
         this.idLocalizacao = idLocalizacao;
     }
 
-    @Column(name = "cd_localizacao", nullable=true, length=LengthConstants.DESCRICAO_ENTIDADE)
+    @Column(name = "cd_localizacao", nullable=false, length=LengthConstants.DESCRICAO_ENTIDADE)
     @Size(max=LengthConstants.DESCRICAO_ENTIDADE)
+    @NotNull
     public String getCodigo() {
         return codigo;
     }

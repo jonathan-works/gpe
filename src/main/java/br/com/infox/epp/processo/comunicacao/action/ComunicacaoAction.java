@@ -34,8 +34,11 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.service.ProcessoAnaliseDocumentoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.jsf.util.JsfUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.path.PathResolver;
+import br.com.infox.seam.util.ComponentUtil;
 
 @Named
 @Stateful
@@ -45,6 +48,7 @@ public class ComunicacaoAction implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "comunicacaoAction";
 	private static final LogProvider LOG = Logging.getLogProvider(ComunicacaoAction.class);
+	private static final String OPEN_CRIAR_COMUNICACAO = "infox.openPopUp('comunicacao%d', '%s/Processo/criarComunicacao.seam?idModeloComunicacao=%d','1024'); ";
 	
 	@Inject
 	private ProcessoAnaliseDocumentoService processoAnaliseDocumentoService;
@@ -62,6 +66,8 @@ public class ComunicacaoAction implements Serializable {
 	private EntityManager entityManager;
 	@Inject
 	private EnvioComunicacaoController envioComunicacaoController;
+	@Inject
+	private JsfUtil jsfUtil;
 	
 	private List<ModeloComunicacao> comunicacoes;
 	private Processo processo;
@@ -95,8 +101,13 @@ public class ComunicacaoAction implements Serializable {
 	
 	public void reabrirComunicacao(ModeloComunicacao modeloComunicacao) {
 		try {
-			comunicacaoService.reabrirComunicacao(modeloComunicacao);
-			envioComunicacaoController.init(); //para recarregar a página de tarefa
+			ModeloComunicacao modeloNovo = comunicacaoService.reabrirComunicacao(modeloComunicacao);
+			
+			PathResolver pathResolver = ComponentUtil.getComponent(PathResolver.NAME);
+			jsfUtil.execute(String.format(OPEN_CRIAR_COMUNICACAO, modeloNovo.getId(), pathResolver.getContextPath(), modeloNovo.getId()));
+			envioComunicacaoController.init();
+			modeloComunicacaoRascunhoList.refresh();
+
 			FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.sucesso.reabertura"));
 		} catch (DAOException | CloneNotSupportedException e) {
 			LOG.error("Erro ao rebarir comunicação", e);
