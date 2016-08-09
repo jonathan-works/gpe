@@ -9,13 +9,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.event.Observes;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.NonUniqueResultException;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
@@ -24,8 +22,6 @@ import com.lowagie.text.DocumentException;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.access.component.tree.LocalizacaoSubTreeHandler;
-import br.com.infox.epp.access.component.tree.LocalizacaoSubTreeHandler.LocalizacaoSubTreeSelectEvent;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
@@ -37,6 +33,7 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.localizacao.LocalizacaoSearch;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
@@ -48,8 +45,8 @@ import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacaoManager;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.system.Parametros;
+import br.com.infox.epp.usuario.UsuarioLoginSearch;
 import br.com.infox.seam.exception.BusinessException;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Named
 @ViewScoped
@@ -78,7 +75,12 @@ public class EnvioComunicacaoInternaView implements Serializable {
     private ComunicacaoInternaService comunicacaoInternaService;
     @Inject
     private ModeloDocumentoManager modeloDocumentoManager;
+    @Inject
+    private LocalizacaoSearch localizacaoSearch;
+    @Inject
+    private UsuarioLoginSearch usuarioLoginSearch;
     
+    private Localizacao localizacaoRaiz;
     private ModeloComunicacao modeloComunicacao;
     private TipoComunicacao tipoComunicacao;
     private Boolean expedida;
@@ -89,6 +91,7 @@ public class EnvioComunicacaoInternaView implements Serializable {
     private PerfilTemplate perfilDestino;
     private PessoaFisica pessoaDestinatario;
     private Boolean individual;
+    private boolean existeUsuarioDestino = true;
     
     //Variáveis de tela para o documento da Comunicação
     private ClassificacaoDocumento classificacaoDocumento;
@@ -140,10 +143,8 @@ public class EnvioComunicacaoInternaView implements Serializable {
 
     private void initLocalizacaoRaiz() {
         try {
-            Localizacao localizacaoRaiz = localizacaoManager.getLocalizacaoByCodigo(getCodigoRaizLocalizacoesComunicacaoInterna());
-            if (localizacaoRaiz != null) {
-                getLocalizacaoSubTree().setIdLocalizacaoPai(localizacaoRaiz.getIdLocalizacao());
-            } else {
+            localizacaoRaiz = localizacaoManager.getLocalizacaoByCodigo(getCodigoRaizLocalizacoesComunicacaoInterna());
+            if (localizacaoRaiz == null) {
                 FacesMessages.instance().add("O parâmetro raizLocalizacoesComunicacao não foi definido.");
             }
         } catch (DAOException e) {
@@ -169,11 +170,11 @@ public class EnvioComunicacaoInternaView implements Serializable {
         }
     }
     
-    public void onChangeLocalizacao(@Observes @LocalizacaoSubTreeSelectEvent Localizacao localizacao) {
-        if (localizacao == null) {
+    public void onChangeLocalizacao() {
+        if (getLocalizacaoDestino() == null) {
             perfisPermitidos = Collections.emptyList();
         } else {
-            perfisPermitidos = usuarioPerfilManager.getPerfisPermitidos(localizacao);
+            perfisPermitidos = usuarioPerfilManager.getPerfisPermitidos(getLocalizacaoDestino());
         }
     }
     
@@ -182,8 +183,13 @@ public class EnvioComunicacaoInternaView implements Serializable {
             pessoasDestinatario = Collections.emptyList();
         } else {
             pessoasDestinatario = usuarioPerfilManager.getPessoasPermitidos(getLocalizacaoDestino(), getPerfilDestino());
+            existeUsuarioDestino = usuarioLoginSearch.existsUsuarioWithLocalizacaoPerfil(getLocalizacaoDestino(), getPerfilDestino());
         }
     }
+    
+    public boolean existeUsuarioDestino() {
+		return existeUsuarioDestino;
+	}
     
     public void onChangeTipoComunicacao() {
         if (getTipoComunicacao() != null && !getTipoComunicacao().equals(getModeloComunicacao().getTipoComunicacao())) {
@@ -254,7 +260,6 @@ public class EnvioComunicacaoInternaView implements Serializable {
         setPessoaDestinatario(null);
         setLocalizacaoDestino(null);
         setPerfilDestino(null);
-        getLocalizacaoSubTree().clearTree();
     }
 
     @ExceptionHandled(value = MethodType.REMOVE, removedMessage="Destinatário removido com sucesso!")
@@ -293,7 +298,15 @@ public class EnvioComunicacaoInternaView implements Serializable {
         setLocalizacaoDestino(null);
         setPerfilDestino(null);
         setPessoaDestinatario(null);
+        existeUsuarioDestino = true;
     }
+    
+    public List<Localizacao> getLocalizacoesDisponiveis(String query) {
+    	if (query != null && !query.isEmpty()) {
+    		return localizacaoSearch.getLocalizacoesByRaizWithDescricaoLike(localizacaoRaiz, query, 15);
+    	}
+    	return Collections.emptyList();
+	}
     
     public List<ClassificacaoDocumento> getClassificacoes() {
         return classificacoes;
@@ -413,10 +426,6 @@ public class EnvioComunicacaoInternaView implements Serializable {
     
     public boolean isTaskPage() {
         return taskPage;
-    }
-
-    public LocalizacaoSubTreeHandler getLocalizacaoSubTree() {
-        return ComponentUtil.getComponent(LocalizacaoSubTreeHandler.NAME, ScopeType.PAGE);
     }
 
 }

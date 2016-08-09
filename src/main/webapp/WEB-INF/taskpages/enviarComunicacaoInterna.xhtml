@@ -8,6 +8,7 @@
       xmlns:s="http://jboss.org/schema/seam/taglib"
       xmlns:infox="http://www.infox.com.br/jsf"
       xmlns:p="http://primefaces.org/ui"
+      xmlns:i="http://java.sun.com/jsf/composite/infox"
       xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<h:outputScript library="js" name="components.js" />
@@ -43,48 +44,59 @@
 			<div id="destinatariosPanel" style="vertical-align: top; margin-top: 1em; width: 100%;">
 				<rich:panel header="#{infoxMessages['comunicacao.localizacoes']}" switchType="client">
 				    <h:form>
-	                      <wi:tree
-	                          id="localizacao"
-	                          assignTo="envioComunicacaoInternaView.localizacaoDestino"
-	                          tree="#{localizacaoSubTree}"
-	                          icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
-	                          iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
-	                          label="#{infoxMessages['comunicacao.localizacoes']}"
-	                          required="true"
-	                          render="perfisPermitidosDestinoDecoration pessoasPermitidosDestinoDecoration" />
-	                          
-	                      <wi:selectOneMenuEntity
-	                          id="perfisPermitidosDestino"
+	                      <i:autoComplete id="localizacao"
+	                      	label="#{infoxMessages['comunicacao.localizacoes']}"
+	                      	value="#{envioComunicacaoInternaView.localizacaoDestino}"
+	                      	required="true"
+	                      	completeMethod="#{envioComunicacaoInternaView.getLocalizacoesDisponiveis}"
+	                      	converter="org.jboss.seam.ui.EntityConverter"
+	                      	var="item" itemLabel="#{item.localizacao}" itemValue="#{item}" forceSelection="true"
+	                      	ajax="true" event="itemSelect" render="@(.opcoes-destino)"
+	                      	listener="#{envioComunicacaoInternaView.onChangeLocalizacao}">
+	                      	<f:facet name="itemtip">
+	                      	     <h:outputText value="#{item.caminhoCompletoFormatado}" />
+	                      	</f:facet>
+	                      </i:autoComplete>
+            			
+	                      <p:outputPanel styleClass="opcoes-destino" style="display: inline;">
+	                      	<i:selectOneMenu id="perfisPermitidosDestino"
 	                          value="#{envioComunicacaoInternaView.perfilDestino}"
 	                          label="#{infoxMessages['usuarioPerfil.perfil']}"
 	                          items="#{envioComunicacaoInternaView.perfisDestino}"
-	                          showLabelSelecione="true"
+	                          converterId="org.jboss.seam.ui.EntityConverter"
 	                          required="true"
-	                          disabled="#{empty envioComunicacaoInternaView.localizacaoDestino}">
-	                          <a:ajax event="change" render="pessoasPermitidosDestinoDecoration" execute="@this" limitRender="true" 
-	                              listener="#{envioComunicacaoInternaView.onChangePerfilDestino}"/>
-	                      </wi:selectOneMenuEntity>
+	                          disabled="#{empty envioComunicacaoInternaView.localizacaoDestino}"
+	                          ajax="true" render="@(.pessoas-destino) @(.buttons-destino)" 
+                              listener="#{envioComunicacaoInternaView.onChangePerfilDestino}"/>
 	                          
-	                      <wi:selectOneMenuEntity
-	                          id="pessoasPermitidosDestino"
+	                      	<i:selectOneMenu id="pessoasPermitidosDestino" styleClass="pessoas-destino"
 	                          value="#{envioComunicacaoInternaView.pessoaDestinatario}"
 	                          label="Destinatário"
 	                          items="#{envioComunicacaoInternaView.pessoasDestinatario}"
-	                          showLabelSelecione="true"
 	                          disabled="#{empty envioComunicacaoInternaView.localizacaoDestino or empty envioComunicacaoInternaView.perfilDestino}"/>
-	                          
+	                      </p:outputPanel>
+	                      
 	                      <wi:selectBooleanCheckbox id="comunicacaoIndividual" label="Individual?" 
 	                      	value="#{envioComunicacaoInternaView.individual}"/>
 	                      
-	                      <div>
-		                      <a:commandButton id="adicionarLocalizacao" render="@form, pageBodyDialogMessage panelDestinatariosComunicacao" 
-		                      	  value="#{infoxMessages['button.add']}" styleClass="buttons" execute="@form"
+	                      <p:outputPanel styleClass="buttons-destino">
+		                      <a:commandButton id="adicionarLocalizacao" styleClass="buttons"
+		                      	  render="@form, pageBodyDialogMessage panelDestinatariosComunicacao"
+		                      	  value="#{infoxMessages['button.add']}" execute="@form"
+		                      	  rendered="#{envioComunicacaoInternaView.existeUsuarioDestino()}"
+				        	      action="#{envioComunicacaoInternaView.adicionarDestinatarioComunicacao}" />
+				        	  <a:commandButton id="adicionarLocalizacaoWithConfirmation" styleClass="buttons"
+		                      	  render="@form, pageBodyDialogMessage panelDestinatariosComunicacao"
+		                      	  value="#{infoxMessages['button.add']}" execute="@form"
+		                      	  rendered="#{not envioComunicacaoInternaView.existeUsuarioDestino()}"
+		                      	  onclick="if(confirm('Não existem usuários no destino selecionado. Deseja continuar?')) {infox.showLoading();} else {return false};"
+		                      	  oncomplete="infox.hideLoading();"
 				        	      action="#{envioComunicacaoInternaView.adicionarDestinatarioComunicacao}" />
 				        	      
 				        	  <a:commandButton id="limparDestinoDestinatario" render="@form" execute="@this" 
 				        	  	action="#{envioComunicacaoInternaView.clearDestinoDestinatario}" limitRender="true"
 				        	  	value="Limpar" styleClass="buttons"/>
-			        	  </div>
+			        	  </p:outputPanel>
 			        </h:form>
 				</rich:panel>
 				
