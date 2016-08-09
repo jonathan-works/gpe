@@ -21,7 +21,7 @@ public interface ModeloDocumentoQuery {
     String PARAM_GRUPO = "grupo";
     String PARAM_TIPO = "tipo";
     String MODELO_BY_GRUPO_AND_TIPO = "listModeloDocumentoByGrupoAndTipo";
-    String MODELO_BY_GRUPO_AND_TIPO_QUERY = "select distinct o from ModeloDocumento o where "
+    String MODELO_BY_GRUPO_AND_TIPO_QUERY = "select o from ModeloDocumento o where "
             + "o.tipoModeloDocumento.grupoModeloDocumento = :"
             + PARAM_GRUPO
             + " and o.tipoModeloDocumento = :"
