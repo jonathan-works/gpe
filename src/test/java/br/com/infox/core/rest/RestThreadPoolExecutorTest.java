@@ -6,13 +6,21 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import br.com.infox.epp.system.Parametros;
+
 public class RestThreadPoolExecutorTest {
     
     private static RestThreadPoolExecutor executor;
     
     @Before
     public void init(){
-        RestThreadPoolExecutorImpl executorImpl = new RestThreadPoolExecutorImpl();
+        RestThreadPoolExecutorImpl executorImpl = new RestThreadPoolExecutorImpl(){
+            private static final long serialVersionUID = 1L;
+            @Override
+            protected String getValor(Parametros parametro) {
+                return null;
+            }
+        };
         executorImpl.init();
         executor = executorImpl;
     }
@@ -27,13 +35,16 @@ public class RestThreadPoolExecutorTest {
         return new Thread(){
             @Override
             public void run() {
-                Future<Integer> future = executor.submit(task, value);
-                while(!future.isDone() && !future.isCancelled()){
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        break;
+                try {
+                    Future<Integer> future = executor.submit(task, value);
+                    while(!future.isDone() && !future.isCancelled()){
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            break;
+                        }
                     }
+                } catch (Exception e){
                 }
             }
         };
@@ -64,7 +75,7 @@ public class RestThreadPoolExecutorTest {
 
     @Test
     public void testStandardExecution(){
-        for(int i=0;i<RestThreadPoolExecutor.BASE_MAX_QUEUE+5;i++){
+        for(int i=0;i<RestThreadPoolExecutor.BASE_MAXIMUM_POOL_SIZE+5;i++){
             final int val = i;
             execute(getTestRunnable(), val);
         }

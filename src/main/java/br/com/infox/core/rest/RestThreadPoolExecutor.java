@@ -5,9 +5,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionHandler;
 
 public interface RestThreadPoolExecutor {
-    
-    int BASE_MAX_QUEUE = 10;
-    
+    String NAME ="restThreadPoolExecutor"; 
+    int BASE_MAXIMUM_POOL_SIZE = 10;
     
     <T> Future<T> submit(Callable<T> task);
 
