@@ -146,4 +146,9 @@
     	<persistence-unit-ref-name>EPAPersistenceUnit</persistence-unit-ref-name>
         <persistence-unit-name>EPAPersistenceUnit</persistence-unit-name>
     </persistence-unit-ref>
+
+	<mime-mapping>
+		<extension>woff</extension>
+		<mime-type>application/font-woff</mime-type>
+	</mime-mapping>    
 </web-app>
