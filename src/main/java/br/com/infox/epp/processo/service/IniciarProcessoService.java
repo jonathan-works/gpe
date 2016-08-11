@@ -21,6 +21,8 @@ import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
+import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 
 @Stateless
 public class IniciarProcessoService {
@@ -54,6 +56,7 @@ public class IniciarProcessoService {
     public ProcessInstance iniciarProcesso(Processo processo, Map<String, Object> variaveis, List<MetadadoProcesso> metadados, String transitionName, 
             boolean createDefaultFolders) throws DAOException {
         processo.setDataInicio(DateTime.now().toDate());
+        adicionarMetadadosDefault(processo, metadados);
         createMetadadosProcesso(processo, metadados);
         variaveis = adicionarVariaveisDefault(processo, variaveis);
         ProcessInstance processInstance = criarProcessInstance(processo, variaveis);
@@ -83,7 +86,15 @@ public class IniciarProcessoService {
         ProcessInstance processInstance = getJbpmContext().newProcessInstanceForUpdate(processDefinitionName, variables);
         return processInstance;
     }
-    
+
+    protected void adicionarMetadadosDefault(Processo processo, List<MetadadoProcesso> metadados) {
+        MetadadoProcessoProvider mpp = new MetadadoProcessoProvider(processo);
+        metadados.add(mpp.gerarMetadado(EppMetadadoProvider.CATEGORIA, processo.getNaturezaCategoriaFluxo().getCategoria().getIdCategoria().toString()));
+        metadados.add(mpp.gerarMetadado(EppMetadadoProvider.NATUREZA, processo.getNaturezaCategoriaFluxo().getNatureza().getIdNatureza().toString()));
+    }
+
+    // TODO Deprecated pois NATUREZA e CATEGORIA agora são metadados, é necessário verificar como os clientes utilizam estas variáveis antes de remover elas daqui
+    @Deprecated
     protected Map<String, Object> adicionarVariaveisDefault(Processo processo, Map<String, Object> variaveis) {
         if (variaveis == null) variaveis = new HashMap<>();
         variaveis.put(VariaveisJbpmProcessosGerais.PROCESSO, processo.getIdProcesso());
