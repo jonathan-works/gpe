@@ -6,12 +6,16 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.epp.access.entity.Estrutura;
+import br.com.infox.epp.access.entity.Estrutura_;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Localizacao_;
 
@@ -44,8 +48,23 @@ public class LocalizacaoSearch {
                 return getEntityManager().createQuery(query).getResultList();
         }
 
+    public Localizacao getLocalizacaoByPaiAndEstrutura(Localizacao locPai, String nomeEstrutura) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Localizacao> cq = cb.createQuery(Localizacao.class);
+        Root<Localizacao> loc = cq.from(Localizacao.class);
+        Join<Localizacao, Estrutura> estrutura = loc.join(Localizacao_.estruturaFilho);
+        cq.select(loc);
+        cq.where(cb.equal(loc.get(Localizacao_.localizacaoPai), locPai),
+                cb.equal(estrutura.get(Estrutura_.nome), nomeEstrutura));
+
+        try {
+            return getEntityManager().createQuery(cq).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
 	private EntityManager getEntityManager() {
 		return EntityManagerProducer.getEntityManager();
 	}
-
 }

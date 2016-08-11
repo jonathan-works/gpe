@@ -44,7 +44,6 @@ import br.com.infox.epp.relacionamentoprocessos.RelacionamentoProcessoManager;
 import br.com.infox.epp.relacionamentoprocessos.TipoRelacionamentoProcessoManager;
 import br.com.infox.ibpm.event.External.ExpressionType;
 import br.com.infox.ibpm.sinal.SignalService;
-import br.com.infox.ibpm.variable.JbpmVariavelLabel;
 
 @Stateless
 @Named(BpmExpressionService.NAME)
