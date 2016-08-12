@@ -145,6 +145,7 @@ public class NodeHandler implements Serializable {
     private StatusProcesso statusProcesso;
     private ModeloDocumento modeloDocumento;
     private ClassificacaoDocumento classificacaoDocumento;
+    private String codigoPasta;
 	private EventHandler multiInstanceEvent;
 	private ActivityNodeType activityNodeType;
 	private List<Pair<String, Pair<VariableType, Boolean>>> startVariablesSubProcess;
@@ -183,6 +184,7 @@ public class NodeHandler implements Serializable {
                             ClassificacaoDocumentoManager classificacaoDocumentoManager = ComponentUtil.getComponent(ClassificacaoDocumentoManager.NAME);
                             this.modeloDocumento = modeloDocumentoManager.find(generateDocumentoConfiguration.getIdModeloDocumento());
                             this.classificacaoDocumento = classificacaoDocumentoManager.find(generateDocumentoConfiguration.getIdClassificacaoDocumento());
+                        	this.codigoPasta = generateDocumentoConfiguration.getCodigoPasta();
                         } catch (JsonSyntaxException e) {
                         	LOG.warn("Erro ao ler configuração da action GenerateDocumento no nó " + this.node.getName(), e);
                         }
@@ -620,6 +622,28 @@ public class NodeHandler implements Serializable {
     		setModeloDocumento(null);
     	}
     	this.classificacaoDocumento = classificacaoDocumento;
+	}
+    
+    public String getCodigoPasta() {
+		return this.codigoPasta;
+	}
+    
+    public void setCodigoPasta(String codigoPasta) { //TODO Ajustar quando integrar a branch do exportador
+    	Action action = null;
+        if (this.node.hasEvent(Event.EVENTTYPE_NODE_LEAVE)) {
+            action = retrieveGenerateDocumentoEvent(this.node.getEvent(Event.EVENTTYPE_NODE_LEAVE));
+            Delegation actionDelegation = action.getActionDelegation();
+            if (actionDelegation != null && GenerateDocumentoHandler.class.getName().equals(actionDelegation.getClassName())) {
+            	actionDelegation.setConfigType("constructor");
+            	GenerateDocumentoConfiguration configuration = new GenerateDocumentoConfiguration();
+            	configuration.setIdClassificacaoDocumento(classificacaoDocumento.getId());
+            	configuration.setIdModeloDocumento(modeloDocumento.getIdModeloDocumento());
+            	configuration.setCodigoPasta(codigoPasta);
+            	actionDelegation.setConfiguration(new Gson().toJson(configuration));
+            }
+        } 
+    	
+    	this.codigoPasta = codigoPasta;
 	}
 
     private Action retrieveStatusProcessoEvent(Event event) {
