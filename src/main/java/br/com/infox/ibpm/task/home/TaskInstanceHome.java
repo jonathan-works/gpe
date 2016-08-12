@@ -928,7 +928,8 @@ public class TaskInstanceHome implements Serializable {
 	}
 
 	public Object getValueOfVariableFromTaskInstance(String variableName) {
-		TaskController taskController = getCurrentTaskInstance().getTask().getTaskController();
+		TaskInstance taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
+        TaskController taskController = taskInstance.getTask().getTaskController();
 		if (taskController != null) {
 			List<VariableAccess> variables = taskController.getVariableAccesses();
 			for (VariableAccess variable : variables) {
