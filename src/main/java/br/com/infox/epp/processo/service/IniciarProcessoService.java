@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.jbpm.JbpmContext;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.joda.time.DateTime;
@@ -56,8 +58,9 @@ public class IniciarProcessoService {
     public ProcessInstance iniciarProcesso(Processo processo, Map<String, Object> variaveis, List<MetadadoProcesso> metadados, String transitionName, 
             boolean createDefaultFolders) throws DAOException {
         processo.setDataInicio(DateTime.now().toDate());
-        adicionarMetadadosDefault(processo, metadados);
-        createMetadadosProcesso(processo, metadados);
+        List<MetadadoProcesso> metadadosProcesso = ObjectUtils.defaultIfNull(metadados, new ArrayList<MetadadoProcesso>());
+        adicionarMetadadosDefault(processo, metadadosProcesso);
+        createMetadadosProcesso(processo, metadadosProcesso);
         variaveis = adicionarVariaveisDefault(processo, variaveis);
         ProcessInstance processInstance = criarProcessInstance(processo, variaveis);
         processo.setIdJbpm(processInstance.getId());
