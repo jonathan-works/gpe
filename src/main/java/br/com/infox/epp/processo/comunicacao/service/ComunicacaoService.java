@@ -56,6 +56,7 @@ import br.com.infox.epp.processo.service.IniciarProcessoService;
 import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
+import br.com.infox.hibernate.util.HibernateUtil;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -357,6 +358,9 @@ public class ComunicacaoService {
 		variaveis.put(VariaveisJbpmComunicacao.MEIO_EXPEDICAO, destinatario.getMeioExpedicao().getLabel());
 		variaveis.put(VariaveisJbpmComunicacao.CODIGO_MEIO_EXPEDICAO, destinatario.getMeioExpedicao().name());
 		variaveis.put(VariaveisJbpmComunicacao.NOME_DESTINATARIO, destinatario.getNome());
+		if(destinatario.getTipoParte() != null) {
+			variaveis.put(VariaveisJbpmComunicacao.TIPO_PARTICIPANTE_COMUNICACAO, HibernateUtil.removeProxy(destinatario.getTipoParte()));
+		}
 		if(destinatario.getDestinatario() != null && destinatario.getDestinatario().getUsuarioLogin() != null){
 			variaveis.put(VariaveisJbpmComunicacao.EMAIL_DESTINATARIO, destinatario.getDestinatario().getUsuarioLogin().getEmail());
 		}

@@ -89,6 +89,7 @@ public class DestinatarioComunicacaoAction implements Serializable{
 			// A query sempre retorna PessoaFisica
 			destinatario.setDestinatario(pessoaFisicaManager.merge((PessoaFisica) HibernateUtil.removeProxy(participante.getPessoa())));
 			destinatario.setPrazo(getPrazoDefaultByTipoComunicacao(modeloComunicacao.getTipoComunicacao()));
+			destinatario.setTipoParte(participante.getTipoParte());
 			participanteProcessoComunicacaoList.adicionarIdPessoa(destinatario.getDestinatario().getIdPessoa());
 			modeloComunicacao.getDestinatarios().add(destinatario);
 		} catch (DAOException e) {

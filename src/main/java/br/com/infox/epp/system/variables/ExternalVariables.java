@@ -6,36 +6,35 @@ import static br.com.infox.epp.access.api.Authenticator.getUsuarioPerfilAtual;
 
 import java.io.Serializable;
 import java.text.DateFormat;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.jboss.seam.Component;
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Factory;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.meiocontato.dao.MeioContatoDAO;
+import br.com.infox.epp.meiocontato.entity.MeioContato;
+import br.com.infox.epp.meiocontato.type.TipoMeioContatoEnum;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.home.ProcessoEpaHome;
+import br.com.infox.util.time.DateWrapper;
 
-/**
- * @author erikliberal Classe criada para gerenciar variáveis que deverão ser
- *         utilizadas pelo usuário final, a exemplo em modelos de documento. Por
- *         motivos de segurança todos os valores resultantes devem ser tipos
- *         primitivos ou encapsulamento de valores primitivos
- */
 @Name(ExternalVariables.NAME)
-@Scope(ScopeType.EVENT)
 public class ExternalVariables implements Serializable {
+	
     private static final long serialVersionUID = 1L;
-
-    private static final String NULL_STRING = "-";
-    private static final int INT_ZERO_VALUE = 0;
 
     private static final String PARTES_PROCESSO_ATUAL = "partesProcessoAtual";
     private static final String PAPEL_USUARIO_LOGADO = "papelUsuarioLogado";
     private static final String NUMERO_PROCESSO_ATUAL = "numeroProcessoAtual";
     private static final String USUARIO_LOGADO = "usuarioLogado";
+    private static final String CPF_PESSOA_LOGADA = "CPF_pessoa_logada";
+    private static final String DATA_NASCIMENTO_PESSOA_LOGADA = "Data_nascimento_pessoa_logada";
+    private static final String TELEFONE_PESSOA_LOGADA = "Telefone_pessoa_logada";
     private static final String LOCALIZACAO_USUARIO_LOGADO = "localizacaoUsuarioLogado";
     private static final String PERFIL_USUARIO_LOGADO = "perfilUsuarioLogado";
     private static final String DATA_ATUAL = "dataAtual";
@@ -58,7 +57,48 @@ public class ExternalVariables implements Serializable {
     public String getUsuarioLogado() {
         return extractObjectStringValue(Authenticator.getUsuarioLogado());
     }
-
+    
+    @Factory(CPF_PESSOA_LOGADA) 
+    public String getCpfPessoaLogada() {
+    	UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
+    	if (usuarioLogado != null && usuarioLogado.getPessoaFisica() != null) {
+    		return usuarioLogado.getPessoaFisica().getCodigoFormatado();
+    	} else {
+    		return "-";
+    	}
+    }
+    
+    @Factory(DATA_NASCIMENTO_PESSOA_LOGADA) 
+    public String getDataNascimentoPessoaLogada() {
+    	UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
+    	if (usuarioLogado != null && usuarioLogado.getPessoaFisica() != null && usuarioLogado.getPessoaFisica().getDataNascimento() != null) {
+    		Date dataNascimento = usuarioLogado.getPessoaFisica().getDataNascimento();
+    		return new DateWrapper(dataNascimento).toString("dd/MM/yyyy");
+    	} else {
+    		return "-";
+    	}
+    }
+    
+    @Factory(TELEFONE_PESSOA_LOGADA) 
+    public String getTelefonePessoaLogada() {
+    	UsuarioLogin usuarioLogado = Authenticator.getUsuarioLogado();
+    	if (usuarioLogado != null && usuarioLogado.getPessoaFisica() != null) {
+    		MeioContato telefone = getMeioContatoDAO().getMeioContatoByPessoaAndTipo(usuarioLogado.getPessoaFisica(), TipoMeioContatoEnum.TF);
+    		if (telefone != null) {
+    			return telefone.getMeioContato();
+    		} else {
+    			telefone = getMeioContatoDAO().getMeioContatoByPessoaAndTipo(usuarioLogado.getPessoaFisica(), TipoMeioContatoEnum.TM);
+    			if (telefone != null) {
+    				return telefone.getMeioContato();
+    			} else {
+    				return "-";
+    			}
+    		}
+     	} else {
+    		return "-";
+    	}
+    }
+    
     @Factory(LOCALIZACAO_USUARIO_LOGADO)
     public String getLocalizacaoUsuarioLogado() {
         return extractObjectStringValue(getLocalizacaoAtual());
@@ -78,14 +118,14 @@ public class ExternalVariables implements Serializable {
     public String getEmailUsuarioLogado() {
         return extractObjectStringValue(Authenticator.getUsuarioLogado().getEmail());
     }
-
+    
     @Factory(NUMERO_PROCESSO_ATUAL)
     public String getNumeroProcessoAtual() {
         final Processo processo = ((ProcessoEpaHome) Component
                 .getInstance(ProcessoEpaHome.NAME)).getInstance();
         String result;
         if (processo == null) {
-            result = NULL_STRING;
+            result = "-";
         } else {
             result = processo.getNumeroProcesso();
         }
@@ -98,7 +138,7 @@ public class ExternalVariables implements Serializable {
                 .getInstance(ProcessoEpaHome.NAME)).getInstance();
         String result;
         if (processo == null) {
-            result = NULL_STRING;
+            result = "-";
         } else {
             result = extractObjectStringValue(processo.getParticipantes());
         }
@@ -108,7 +148,7 @@ public class ExternalVariables implements Serializable {
     private String extractObjectStringValue(Object object) {
         String result;
         if (object == null) {
-            result = NULL_STRING;
+            result = "-";
         } else {
             result = object.toString();
         }
@@ -117,12 +157,15 @@ public class ExternalVariables implements Serializable {
 
     private String getCurrentDateFormattedValue(final int style) {
         final GregorianCalendar gregorianCalendar = new GregorianCalendar();
-        gregorianCalendar.set(GregorianCalendar.MILLISECOND, INT_ZERO_VALUE);
-        gregorianCalendar.set(GregorianCalendar.SECOND, INT_ZERO_VALUE);
-        gregorianCalendar.set(GregorianCalendar.MINUTE, INT_ZERO_VALUE);
-        gregorianCalendar.set(GregorianCalendar.HOUR_OF_DAY, INT_ZERO_VALUE);
-        return DateFormat.getDateInstance(style).format(
-                gregorianCalendar.getTime());
+        gregorianCalendar.set(GregorianCalendar.MILLISECOND, 0);
+        gregorianCalendar.set(GregorianCalendar.SECOND, 0);
+        gregorianCalendar.set(GregorianCalendar.MINUTE, 0);
+        gregorianCalendar.set(GregorianCalendar.HOUR_OF_DAY, 0);
+        return DateFormat.getDateInstance(style).format(gregorianCalendar.getTime());
+    }
+    
+    private MeioContatoDAO getMeioContatoDAO() {
+    	return BeanManager.INSTANCE.getReference(MeioContatoDAO.class);
     }
 
 }
