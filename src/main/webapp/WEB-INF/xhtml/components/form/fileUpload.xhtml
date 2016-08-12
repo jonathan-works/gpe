@@ -20,7 +20,7 @@
         id="#{f.id}tipoProcessoDocumento"
         label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
         value="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento}"
-        items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumento(false, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo)}"
+        items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumento(false, taskInstanceHome.getVariableName(id), taskInstanceHome.currentTaskInstance)}"
         required="true"
         showLabelSelecione="true"
         rendered="#{not readonly}">

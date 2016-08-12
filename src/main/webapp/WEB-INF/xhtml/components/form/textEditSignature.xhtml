@@ -23,7 +23,7 @@
       <wi:selectOneMenuEntity
         id="#{f.id}tipoProcessoDocumento"
         label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-        items="#{home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), taskInstanceHome.getIdfluxo(home.currentTaskInstance))}"
+        items="#{home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), taskInstanceHome.currentTaskInstance)}"
         required="#{not readonly}"
         showLabelSelecione="true"
         value="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento}"
