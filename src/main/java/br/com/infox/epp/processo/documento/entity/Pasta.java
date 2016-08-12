@@ -55,6 +55,11 @@ public class Pasta implements Serializable, Cloneable {
     private Integer id;
     
     @NotNull
+    @Column(name = "cd_pasta", nullable = false)
+    @Size(max=250)
+    private String codigo;
+    
+    @NotNull
     @Column(name = "nm_pasta", nullable = false)
     @Size(max=250)
     private String nome;
@@ -108,7 +113,15 @@ public class Pasta implements Serializable, Cloneable {
         this.processo = processo;
     }
 
-    public String getNome() {
+    public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+
+	public String getNome() {
         return nome;
     }
 
