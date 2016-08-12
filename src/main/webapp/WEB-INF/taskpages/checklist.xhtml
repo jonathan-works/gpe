@@ -96,7 +96,7 @@
                     </a:commandLink>
                 </p:column>
                 
-                <p:column headerText="#{infoxMessages['checklist.classificacaoDocumento']}" filterBy="#{row.documento.classificacaoDocumento}">
+                <p:column styleClass="#{row.documento.excluido ? 'inativo' : ''}" headerText="#{infoxMessages['checklist.classificacaoDocumento']}" filterBy="#{row.documento.classificacaoDocumento}">
                     <f:facet name="filter">
                         <h:selectOneMenu id="filterClassificacao" onchange="PF('checklistTable').filter()" style="max-width: 100%;">
                             <f:selectItem itemLabel="[Todos]" noSelectionOption="true" />
@@ -106,7 +106,7 @@
                     <h:outputText value="#{row.documento.classificacaoDocumento}" />
                 </p:column>
                 
-                <p:column headerText="#{infoxMessages['checklist.documento']}" filterBy="#{row.documento.descricao}">
+                <p:column styleClass="#{row.documento.excluido ? 'inativo' : ''}" headerText="#{infoxMessages['checklist.documento']}" filterBy="#{row.documento.descricao}">
                     <f:facet name="filter">
                         <h:inputText id="filterNomeDocumento" onchange="PF('checklistTable').filter()" style="max-width: 100%;" />
                     </f:facet>
@@ -120,7 +120,7 @@
                             <f:selectItems value="#{checklistView.situacoesCompletas}" />
                         </h:selectOneMenu>
                     </f:facet>
-                    <h:panelGroup id="selectSituacao">
+                    <h:panelGroup id="selectSituacao" rendered="#{not row.documento.excluido}">
                         <h:selectOneRadio id="selectSituacaoRadio" value="#{row.situacao}" styleClass="checklistRadio"
                             layout="lineDirection" style="border: none">
                             <f:selectItems value="#{checklistView.situacoes}" />
@@ -129,9 +129,10 @@
                                 listener="#{checklistView.onChangeSituacao(row)}" />
                         </h:selectOneRadio>
                     </h:panelGroup>
+                    <h:outputText rendered="#{row.documento.excluido}" value="#{checklistView.getTextoDocumentoExcluido(row.documento)}" />
                 </p:column>
                 
-                <p:column headerText="#{infoxMessages['checklist.comentarios']}">
+                <p:column styleClass="#{row.documento.excluido ? 'inativo' : ''}" headerText="#{infoxMessages['checklist.comentarios']}">
                     <h:panelGroup id="textArea" styleClass="textAreaPanel#{row.id}">
                         <h:inputTextarea rows="3" cols="30" rendered="#{row.situacao eq 'NCO' or row.situacao eq 'NVE'}"
                             value="#{row.comentario}">
