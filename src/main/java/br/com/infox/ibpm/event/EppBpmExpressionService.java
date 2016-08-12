@@ -173,7 +173,17 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
         Date dataMaxima = prazoComunicacaoService.getDataMaximaRespostaComunicacao(idProcesso, taskName);
         return dataMaxima;
     }
-	
+
+	@External(expressionType = ExpressionType.GATEWAY,
+        tooltip = "process.events.expression.prazoProrrogadoNaoExpirado.tooltip",
+        value = {@Parameter(defaultValue = "'Nome da Tarefa'", selectable = true)}
+	)
+	public Boolean isPrazoProrrogadoENaoExpirado(String taskName) {
+	    ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
+	    Integer idProcesso = (Integer) executionContext.getContextInstance().getVariable("processo");
+	    return prazoComunicacaoService.isPrazoProrrogadoENaoExpirado(idProcesso, taskName);
+	}
+
 	@External(expressionType = ExpressionType.GERAL,
         tooltip = "process.events.expression.getUsuarioComLogin.tooltip",
         value = {

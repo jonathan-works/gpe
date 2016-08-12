@@ -26,6 +26,8 @@ import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.ModeloComunicacaoSearch;
 import br.com.infox.epp.processo.comunicacao.dao.ComunicacaoSearch;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
@@ -57,6 +59,8 @@ public class PrazoComunicacaoService {
 	private AssinaturaDocumentoService assinaturaDocumentoService;
 	@Inject
 	private ComunicacaoSearch comunicacaoSearch;
+	@Inject
+	private ModeloComunicacaoSearch modeloComunicacaoSearch;
 
 	public Date contabilizarPrazoCiencia(Processo comunicacao) {
 		DestinatarioModeloComunicacao destinatario = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.DESTINATARIO);
@@ -250,7 +254,23 @@ public class PrazoComunicacaoService {
     public boolean isPrazoProrrogado(Processo comunicacao){
     	return  !getDataLimiteCumprimentoInicial(comunicacao).equals(getDataLimiteCumprimento(comunicacao));
     }
-    
+
+    public Boolean isPrazoProrrogadoENaoExpirado(Integer idProcesso, String taskName) {
+        Boolean resp = false;
+        Date now = new Date();
+        List<ModeloComunicacao> modelos = modeloComunicacaoSearch.getByProcessoAndTaskName(idProcesso, taskName);
+        loopModelos: for (ModeloComunicacao modelo : modelos) {
+            for (DestinatarioModeloComunicacao destinatario : modelo.getDestinatarios()) {
+                Processo comunicacao = destinatario.getProcesso();
+                if (isPrazoProrrogado(comunicacao) && now.before(getDataLimiteCumprimento(comunicacao))) {
+                    resp = true;
+                    break loopModelos;
+                }
+            }
+        }
+        return resp;
+    }
+
     public Date getDataLimiteCumprimentoInicial(Processo comunicacao){
     	return getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO_INICIAL);
     }
