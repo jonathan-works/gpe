@@ -11,9 +11,9 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
-import org.h2.util.Task;
 import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.exe.ProcessInstance;
+import org.jbpm.taskmgmt.def.Task;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.processo.entity.Processo;
