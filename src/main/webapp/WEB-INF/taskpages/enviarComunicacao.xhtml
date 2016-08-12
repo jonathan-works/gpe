@@ -9,7 +9,8 @@
       xmlns:s="http://jboss.org/schema/seam/taglib"
       xmlns:infox="http://www.infox.com.br/jsf"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:c="http://java.sun.com/jsp/jstl/core">
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:i="http://java.sun.com/jsf/composite/infox">
 
 	<h:outputScript library="js" name="components.js" />
 	<s:div style="background-color: white; padding-top: 20px; margin-bottom: 20px; padding-left: 10px; padding-right: 10px;">
@@ -89,28 +90,41 @@
 			
 			<!-- Localizações disponíveis para serem selecionadas como Destinatários -->
 			<h:form rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
-					<rich:collapsiblePanel header="#{infoxMessages['comunicacao.localizacoes']}" switchType="client">
+					<rich:collapsiblePanel id="destinoLocalizacaoPerfilPanel" header="#{infoxMessages['comunicacao.localizacoes']}" switchType="client">
                        	<s:div style="margin-botton:1em">
                        		<wi:outputText id="mensagemEnvioLocalizacao" value="#{infoxMessages['comunicacao.mensagemEnvioParaLocalizacao']}" />
                        	</s:div>
-                        <wi:tree
-                            id="localizacao"
-                            assignTo="destinatarioComunicacaoAction.localizacao"
-                            tree="#{localizacaoSubTree}"
-                            icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
-                            iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
-                            label="#{infoxMessages['comunicacao.localizacoes']}"
-                            required="true"
-                            render="perfisPermitidosDestino" />
-                        <wi:selectOneMenuEntity
-                            id="perfisPermitidosDestino"
+                       	<i:autoComplete id="localizacao" label="#{infoxMessages['comunicacao.localizacoes']}"
+                       		value="#{destinatarioComunicacaoAction.localizacao}" required="true"
+                       		completeMethod="#{destinatarioComunicacaoAction.getLocalizacoesDisponiveis}"
+                       		converter="org.jboss.seam.ui.EntityConverter"
+                       		var="localizacao" itemLabel="#{localizacao.localizacao}" itemValue="#{localizacao}" forceSelection="true"
+                       		ajax="true" event="itemSelect" render="@(.perfis-destino) @(.button-add-destino)">
+		                    <f:facet name="itemtip">
+		                         <h:outputText value="#{localizacao.caminhoCompletoFormatado}" />
+		                    </f:facet>
+            			</i:autoComplete>
+                        <i:selectOneMenu id="perfisPermitidosDestino" styleClass="perfis-destino"
                             value="#{destinatarioComunicacaoAction.perfilDestino}"
                             label="#{infoxMessages['usuarioPerfil.perfil']}"
                             items="#{destinatarioComunicacaoAction.perfisPermitidosDestino}"
-                            showLabelSelecione="true"
-                            disabled="#{empty destinatarioComunicacaoAction.localizacao}" />
-                        <wi:commandButton id="adicionarLocalizacao" reRender="destinatariosPanel, pageBodyDialogMessage" value="#{infoxMessages['button.add']}"
-				        	action="#{destinatarioComunicacaoAction.adicionarDestino(destinatarioComunicacaoAction.localizacao, destinatarioComunicacaoAction.perfilDestino)}" />
+                            converterId="org.jboss.seam.ui.EntityConverter"
+                            disabled="#{empty destinatarioComunicacaoAction.localizacao}"
+                            ajax="true" render="@(.button-add-destino)"/>
+ 						<s:div styleClass="button-add-destino" style="display: inline-block;">
+	                        <wi:commandButton id="adicionarLocalizacao" 
+	                        	reRender="destinatariosPanel, pageBodyDialogMessage"
+	                        	value="#{infoxMessages['button.add']}"
+					        	action="#{destinatarioComunicacaoAction.adicionarDestino()}"
+					        	rendered="#{destinatarioComunicacaoAction.existeUsuarioDestino()}" />
+				        	<wi:commandButton id="adicionarLocalizacaoWithConfirm"
+	                        	reRender="destinatariosPanel, pageBodyDialogMessage"
+	                        	value="#{infoxMessages['button.add']}"
+					        	action="#{destinatarioComunicacaoAction.adicionarDestino()}"
+					        	onclick="if(confirm('Não existem usuários no destino selecionado. Deseja continuar?')) {infox.showLoading();} else {return false};"
+					        	oncomplete="infox.hideLoading();"
+					        	rendered="#{not destinatarioComunicacaoAction.existeUsuarioDestino()}" />
+ 						</s:div>
 					</rich:collapsiblePanel>
 				</h:form>
 			
@@ -474,21 +488,26 @@
 								<wi:outputText id="mensagemSelecionarLocalizacaoResponsavelAssinatura"
 									label="#{infoxMessages['comunicacao.mensagemLocalizacaoResponsavelAssinatura']}" />
 							</div>
-							<wi:tree
-					            id="localizacoesTree"
-					            assignTo="envioComunicacaoController.modeloComunicacao.localizacaoResponsavelAssinatura"
-					            tree="#{localizacaoSubTree}"
-					            icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
-					            iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
-					            clearRender="@this"
-					            label="#{infoxMessages['comunicacao.localizacoes']}" 
-					            render="perfisPermitidos" />
-				        	<wi:selectOneMenuEntity id="perfisPermitidos"
+							
+							<i:autoComplete id="localizacaoResponsavelAssinatura" label="#{infoxMessages['comunicacao.localizacoes']}"
+                       			value="#{envioComunicacaoController.modeloComunicacao.localizacaoResponsavelAssinatura}"
+                       			completeMethod="#{envioComunicacaoController.getLocalizacoesDisponiveisAssinatura}"
+                       			converter="org.jboss.seam.ui.EntityConverter"
+                       			var="item" itemLabel="#{item.localizacao}" itemValue="#{item}" forceSelection="true"
+                       			ajax="true" event="itemSelect" render="@(.perfis-responsavel-assinatura) @(.button-gravar-comunicacao)"
+                       			onselect="#{envioComunicacaoController.verificaExistenciaUsuario()}">
+			                    <f:facet name="itemtip">
+			                         <h:outputText value="#{item.caminhoCompletoFormatado}" />
+			                    </f:facet>
+	            			</i:autoComplete>
+				        	<i:selectOneMenu id="perfisPermitidos" styleClass="perfis-responsavel-assinatura"
 					            value="#{envioComunicacaoController.modeloComunicacao.perfilResponsavelAssinatura}"
 					            label="#{infoxMessages['usuarioPerfil.perfil']}"
 					            items="#{destinatarioComunicacaoAction.perfisPermitidos}"
-					            showLabelSelecione="true"
-					            disabled="#{empty envioComunicacaoController.modeloComunicacao.localizacaoResponsavelAssinatura}" />
+					            converterId="org.jboss.seam.ui.EntityConverter"
+					            disabled="#{empty envioComunicacaoController.modeloComunicacao.localizacaoResponsavelAssinatura}"
+					            ajax="true" render="@(.button-gravar-comunicacao)" 
+					            listener="#{envioComunicacaoController.verificaExistenciaUsuario()}"/>
 				        </s:div>
 				        <s:fragment rendered="#{envioComunicacaoController.modeloComunicacao.finalizada}">
 				        	<wi:outputText id="localizacaoRespAssinatura" label="#{infoxMessages['comunicacao.localizacaoRespAssinatura']}" 
@@ -501,10 +520,18 @@
 		        </rich:panel>
 		        
 		        <!-- Botões de Controle -->
-				<wi:commandButton id="gravar" value="#{infoxMessages['crud.update']}" 
-					action="envioComunicacaoController.gravar" reRender=":pageBodyDialogMessage comunicacaoDiv buttonsTaskPageComunicacaoForm"
-					rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}"
-					oncomplete="if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"/>
+		        <s:div styleClass="button-gravar-comunicacao">
+					<wi:commandButton id="gravar" value="#{infoxMessages['crud.update']}" 
+						action="envioComunicacaoController.gravar" reRender=":pageBodyDialogMessage comunicacaoDiv buttonsTaskPageComunicacaoForm"
+						rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada and 
+							envioComunicacaoController.existeUsuarioLocalizacaoAssinatura()}"
+						oncomplete="if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"/>
+					<wi:commandButton id="gravarWithConfirmation" value="#{infoxMessages['crud.update']}" 
+						action="envioComunicacaoController.gravar" reRender=":pageBodyDialogMessage comunicacaoDiv buttonsTaskPageComunicacaoForm"
+						rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada and 
+							not envioComunicacaoController.existeUsuarioLocalizacaoAssinatura()}"
+						oncomplete="if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"/>
+				</s:div>
 			</h:form>
 		</s:div>
 	</s:div>

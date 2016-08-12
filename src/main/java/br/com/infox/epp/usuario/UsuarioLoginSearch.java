@@ -14,8 +14,12 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import br.com.infox.core.persistence.PersistenceController;
+import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioLogin_;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.access.entity.UsuarioPerfil_;
 import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaFisica_;
@@ -103,6 +107,23 @@ public class UsuarioLoginSearch extends PersistenceController {
 		cq = cq.select(usuario).where(cb.and(ativo, humano, loginIgual));
 		
 		return getEntityManager().createQuery(cq).getSingleResult();
+	}
+	
+	public boolean existsUsuarioWithLocalizacaoPerfil(Localizacao localizacao, PerfilTemplate perfilTemplate) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+		Root<UsuarioLogin> usuario = cq.from(UsuarioLogin.class);
+		Join<UsuarioLogin, UsuarioPerfil> up = usuario.join(UsuarioLogin_.usuarioPerfilList);
+		cq.where(usuarioAtivo(cb, usuario),
+				cb.equal(usuario.get(UsuarioLogin_.tipoUsuario), UsuarioEnum.H),
+				cb.isTrue(up.get(UsuarioPerfil_.ativo)),
+				cb.equal(up.get(UsuarioPerfil_.localizacao), localizacao));
+		if (perfilTemplate != null) {
+			cq.where(cq.getRestriction(),
+					cb.equal(up.get(UsuarioPerfil_.perfilTemplate), perfilTemplate));
+		}
+		cq.select(cb.count(usuario.get(UsuarioLogin_.idUsuarioLogin)));
+		return getEntityManager().createQuery(cq).getSingleResult() > 0;
 	}
 	
 }
