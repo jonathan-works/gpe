@@ -25,6 +25,7 @@ import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.cliente.dao.CalendarioEventosDAO;
 import br.com.infox.epp.entrega.EntregaResponsavelService;
 import br.com.infox.epp.entrega.checklist.ChecklistSituacao;
 import br.com.infox.epp.entrega.checklist.ChecklistVariableService;
@@ -44,7 +45,6 @@ import br.com.infox.epp.relacionamentoprocessos.RelacionamentoProcessoManager;
 import br.com.infox.epp.relacionamentoprocessos.TipoRelacionamentoProcessoManager;
 import br.com.infox.ibpm.event.External.ExpressionType;
 import br.com.infox.ibpm.sinal.SignalService;
-import br.com.infox.ibpm.variable.JbpmVariavelLabel;
 import br.com.infox.util.time.DateWrapper;
 
 @Stateless
@@ -76,6 +76,8 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
     private RelacionamentoProcessoManager relacionamentoProcessoManager;
     @Inject
     private LinkAplicacaoExternaService linkAplicacaoExternaService;
+    @Inject
+    protected CalendarioEventosDAO calendarioEventosDAO;
 
     @External(tooltip = "process.events.expression.atribuirCiencia.tooltip")
     public void atribuirCiencia() {
@@ -260,6 +262,29 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
                 throw e;
             }
         }
+    }
+    
+    @External(expressionType = ExpressionType.GERAL
+            , example ="#{bpmExpressionService.dateAdd(type, date, amount, util)}", tooltip = "process.events.expression.dateAdd.tooltip", value = {
+            @Parameter(defaultValue = "type", label = "process.events.expression.dateAdd.param.type.label", tooltip = "process.events.expression.dateAdd.param.type.tooltip"),
+            @Parameter(defaultValue = "date", label = "process.events.expression.dateAdd.param.date.label", tooltip = "process.events.expression.dateAdd.param.date.tooltip"),
+            @Parameter(defaultValue = "amount", label = "process.events.expression.dateAdd.param.amount.label", tooltip = "process.events.expression.dateAdd.param.amount.tooltip"),
+            @Parameter(defaultValue = "util", label = "process.events.expression.dateAdd.param.util.label", tooltip = "process.events.expression.dateAdd.param.util.tooltip")})
+    public DateWrapper dateAdd(String type, Date date, int amount, boolean util) {
+    	if (util) {
+    		return new DateWrapper(calendarioEventosDAO.dataUtilAdd(type, date, amount));
+    	} else {
+    		DateWrapper dateWrapper = new DateWrapper(date);
+    		if ("day".equals(type)) {
+    			return dateWrapper.plusDays(amount);
+    		} else if ("month".equals(type)) {
+    			return dateWrapper.plusMonths(amount);
+    		} else if ("year".equals(type)) {
+    			return dateWrapper.plusYears(amount);
+    		} else {
+    			throw new IllegalArgumentException("Valor do atributo type '" + type + "' não suportado");
+    		}
+    	}
     }
 
     @Override
