@@ -12,7 +12,7 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.jbpm.context.exe.VariableInstance;
+import org.jbpm.context.exe.variableinstance.StringInstance;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.taskmgmt.def.Task;
 import org.jbpm.taskmgmt.exe.TaskInstance;
@@ -47,7 +47,30 @@ public class ModeloComunicacaoSearch extends PersistenceController {
         cq.select(modeloComunicacao).where(restrictions);
         return getEntityManager().createQuery(cq).getResultList();
     }
+    
+    public Long countRespostasComunicacaoByProcessoAndTaskName(Integer idProcesso, String taskName, boolean somenteProrrogacaoPrazo){
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        From<?, ModeloComunicacao> modeloComunicacao = cq.from(ModeloComunicacao.class);
+        From<?, Processo> paiComunicacao = modeloComunicacao.join(ModeloComunicacao_.processo, JoinType.INNER);
+        From<?, DestinatarioModeloComunicacao> destinatario = modeloComunicacao.join(ModeloComunicacao_.destinatarios, JoinType.INNER);
+        From<?, Processo> comunicacao = destinatario.join(DestinatarioModeloComunicacao_.processo, JoinType.INNER);
+        
+        Predicate restrictions = cb.and(
+            cb.equal(paiComunicacao.get(Processo_.idProcesso), idProcesso),
+            cb.isTrue(destinatario.get(DestinatarioModeloComunicacao_.expedido)),
+            createPredicateProcessoExisteEAtivo(comunicacao),
+            createPredicateTaskNameEqual(cq, modeloComunicacao, paiComunicacao, taskName)
+        );
 
+        From<?, Processo> respostaComunicacao = comunicacao.join(Processo_.processosFilhos, JoinType.INNER);
+        restrictions = cb.and(restrictions, createPredicateRespostaComunicacao(cq, respostaComunicacao, somenteProrrogacaoPrazo));
+        
+        cq.select(cb.count(respostaComunicacao)).where(restrictions);
+        return getEntityManager().createQuery(cq).getSingleResult();
+    }
+    
     public List<Processo> getRespostasComunicacaoByProcessoAndTaskName(Integer idProcesso, String taskName, boolean somenteProrrogacaoPrazo){
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         
@@ -92,15 +115,15 @@ public class ModeloComunicacaoSearch extends PersistenceController {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         From<?,MetadadoProcesso> metadadoProcesso = analiseDocumento.join(Processo_.metadadoProcessoList, JoinType.INNER);
         return cb.and(
-            cb.equal(metadadoProcesso.get(MetadadoProcesso_.metadadoType), EppMetadadoProvider.TIPO_PROCESSO),
+            cb.equal(metadadoProcesso.get(MetadadoProcesso_.metadadoType), EppMetadadoProvider.TIPO_PROCESSO.getMetadadoType()),
             cb.equal(metadadoProcesso.get(MetadadoProcesso_.valor), TipoProcesso.DOCUMENTO.toString())
         );
     }
     
     private Predicate createPredicateIsPedidoProrrogacaoPrazo(AbstractQuery<?> cq, From<?,Processo> analiseDocumento){
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        Root<VariableInstance> variableInstance = cq.from(VariableInstance.class);
-        From<?, ProcessInstance> analiseDocumentoJbpm = variableInstance.<VariableInstance,ProcessInstance>join("processInstance", JoinType.INNER);
+        Root<StringInstance> variableInstance = cq.from(StringInstance.class);
+        From<?, ProcessInstance> analiseDocumentoJbpm = variableInstance.<StringInstance,ProcessInstance>join("processInstance", JoinType.INNER);
         return cb.and(
             cb.equal(analiseDocumento.get(Processo_.idJbpm), analiseDocumentoJbpm.get("id")),
             cb.equal(variableInstance.get("name"), VariaveisJbpmAnaliseDocumento.PEDIDO_PRORROGACAO_PRAZO),
