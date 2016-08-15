@@ -42,9 +42,10 @@ public interface UsuarioPerfilQuery {
             + " and up.ativo = true";
     
     String LIST_PESSOA_BY_LOCALIZACAO_PERFIL_ATIVO = "listUsuarioByLocalizacaoPerfilAtivo";
-    String LIST_PESSOA_BY_LOCALIZACAO_PERFIL_ATIVO_QUERY = "select distinct pf from UsuarioPerfil up inner join up.usuarioLogin ul "
-            + " inner join ul.pessoaFisica pf "
-            + " where up.localizacao.idLocalizacao = :" + PARAM_LOCALIZACAO + " and up.perfilTemplate.id = :" + PARAM_PERFIL_TEMPLATE
-            + " and up.ativo = true";
+    String LIST_PESSOA_BY_LOCALIZACAO_PERFIL_ATIVO_QUERY = "select pf from PessoaFisica pf "
+            + " where exists (select 1 from UsuarioPerfil up inner join up.usuarioLogin ul "
+            + "                where ul.pessoaFisica = pf and up.localizacao.idLocalizacao = :" + PARAM_LOCALIZACAO
+            + "                and up.perfilTemplate.id = :" + PARAM_PERFIL_TEMPLATE + " and up.ativo = true "
+            + "              )";
     
 }
