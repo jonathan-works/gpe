@@ -81,6 +81,10 @@ public class TipoComunicacaoCrudAction extends AbstractCrudAction<TipoComunicaca
 		}
 	}
     
+    public TipoUsoComunicacaoEnum[] tipoUsoComunicacaoDisponiveis() {
+		return TipoUsoComunicacaoEnum.values();
+	}
+    
     @Override
 	public void setInstance(TipoComunicacao instance) {
 		super.setInstance(instance);

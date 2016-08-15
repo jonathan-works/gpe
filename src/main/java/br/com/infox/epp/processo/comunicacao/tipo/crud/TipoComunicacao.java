@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -47,6 +49,11 @@ public class TipoComunicacao implements Serializable {
     @Column(name = "nr_dias_prazo_ciencia", nullable = false)
     private Integer quantidadeDiasCiencia;
     
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tp_uso_comunicacao", nullable = false)
+    private TipoUsoComunicacaoEnum tipoUsoComunicacao = TipoUsoComunicacaoEnum.A;
+	
     @NotNull
     @Column(name = "in_ativo", nullable = false)
     private Boolean ativo;
@@ -90,7 +97,15 @@ public class TipoComunicacao implements Serializable {
         this.quantidadeDiasCiencia = quantidadeDiasCiencia;
     }
     
-    public Boolean getAtivo() {
+	public TipoUsoComunicacaoEnum getTipoUsoComunicacao() {
+		return tipoUsoComunicacao;
+	}
+
+	public void setTipoUsoComunicacao(TipoUsoComunicacaoEnum tipoUsoComunicacao) {
+		this.tipoUsoComunicacao = tipoUsoComunicacao;
+	}
+
+	public Boolean getAtivo() {
         return ativo;
     }
     
