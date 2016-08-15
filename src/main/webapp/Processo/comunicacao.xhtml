@@ -7,7 +7,8 @@
     xmlns:a="http://richfaces.org/a4j"
     xmlns:rich="http://richfaces.org/rich"
     xmlns:p="http://primefaces.org/ui"
-    xmlns:infox="http://www.infox.com.br/jsf">
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:i="http://java.sun.com/jsf/composite/infox">
 
 	<wi:commandButton id="criarComunicacao" value="#{infoxMessages['comunicacao.criarComunicacao']}"
 		onclick="infox.openPopUp('_blank', '#{pathResolver.contextPath}/Processo/criarComunicacao.seam?jbpmProcessId=#{comunicacaoAction.jbpmProcessId}','1024'); hideLoading(); return false;" 
@@ -134,9 +135,17 @@
     	<ui:include src="Comunicacao/painelPedidoProrrogacao.xhtml" />
 	    	    
 	    <s:div id="painelDocumentos" style="margin-top:1em">
-	    	<rich:panel header="#{infoxMessages['comunicacao.documentos']} #{comunicacaoAction.destinatario.numeroComunicacao} / #{comunicacaoAction.destinatario.nome} / #{comunicacaoAction.destinatario.tipoComunicacao}"
+	    	<rich:panel header="#{infoxMessages['comunicacao.documentos']}"
 	    		rendered="#{comunicacaoAction.documentos}">
-	    		<h:form>
+	    		<div>
+	    			<i:outputText id="numeroComunicacao" label="#{infoxMessages['comunicacao.numeroComunicacao']}"
+	    				value="#{comunicacaoAction.destinatario.numeroComunicacao}"/>
+	    			<i:outputText id="destinatarioComunicacao" label="#{infoxMessages['comunicacao.destinatario']}"
+	    				value="#{comunicacaoAction.destinatario.nome}"/>
+	    			<i:outputText id="tipoComunicacao" label="#{infoxMessages['comunicacao.tipoComunicacao']}"
+	    				value="#{comunicacaoAction.destinatario.tipoComunicacao}"/>
+	    		</div>
+	    		<h:form id="documentoComunicacaoDownload" style="padding-bottom: 1em;">
 	    			<a:commandButton id="baixarDocumentoComunicacao" 
 						value="#{infoxMessages['comunicacao.comunicacao']}"
 						rendered="#{comunicacaoAction.getComunicacaoDestinatario().documentoBin.binario}" 
@@ -164,6 +173,10 @@
 	    			<rich:column>
 	    				<f:facet name="header">#{infoxMessages['comunicacao.documento']}</f:facet>
 	    				<h:outputText value="#{documento.descricao}" />
+	    			</rich:column>
+	    			<rich:column>
+	    				<f:facet name="header">#{infoxMessages['processoDocumento.classificacaoDocumento']}</f:facet>
+	    				<h:outputText value="#{documento.classificacaoDocumento}" />
 	    			</rich:column>
 	    		</rich:dataTable>
 	    	</rich:panel>
