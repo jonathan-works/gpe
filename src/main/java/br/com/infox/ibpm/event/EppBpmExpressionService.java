@@ -30,6 +30,7 @@ import br.com.infox.epp.entrega.EntregaResponsavelService;
 import br.com.infox.epp.entrega.checklist.ChecklistSituacao;
 import br.com.infox.epp.entrega.checklist.ChecklistVariableService;
 import br.com.infox.epp.entrega.documentos.Entrega;
+import br.com.infox.epp.processo.comunicacao.ModeloComunicacaoSearch;
 import br.com.infox.epp.processo.comunicacao.prazo.ContabilizadorPrazo;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -62,6 +63,8 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
     protected DocumentoManager documentoManager;
     @Inject
     protected PrazoComunicacaoService prazoComunicacaoService;
+    @Inject
+    private ModeloComunicacaoSearch modeloComunicacaoSearch;
     @Inject 
     protected UsuarioLoginManager usuarioLoginManager;
     @Inject
@@ -175,6 +178,21 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
         Date dataMaxima = prazoComunicacaoService.getDataMaximaRespostaComunicacao(idProcesso, taskName);
         return dataMaxima;
     }
+	
+	@External(expressionType = ExpressionType.GATEWAY,
+	            tooltip = "process.events.expression.comunicacao.isPrazoProrrogadoENaoExpirado.tooltip",
+	            example = "#{bpmExpressionService.isPrazoProrrogadoENaoExpirado(processo, 'Tarefa 1')}")
+	public Boolean isPrazoProrrogadoENaoExpirado(Integer idProcesso, String taskName){
+	    return prazoComunicacaoService.isPrazoProrrogadoENaoExpirado(idProcesso, taskName);
+	}
+	
+	@External(expressionType = ExpressionType.GATEWAY,
+                tooltip = "process.events.expression.comunicacao.possuiRespostaDiferenteProrrogacaoprazo.tooltip",
+                example = "#{bpmExpressionService.possuiRespostaDiferenteProrrogacaoprazo(processo, 'Tarefa 1')}")
+	public Boolean possuiRespostaDiferenteProrrogacaoprazo(Integer idProcesso, String taskName){
+	    Boolean isProrrogacaoPrazo = Boolean.FALSE;
+            return 0 < modeloComunicacaoSearch.countRespostasComunicacaoByProcessoAndTaskName(idProcesso, taskName, isProrrogacaoPrazo);
+	}
 	
 	@External(expressionType = ExpressionType.GERAL,
         tooltip = "process.events.expression.getUsuarioComLogin.tooltip",

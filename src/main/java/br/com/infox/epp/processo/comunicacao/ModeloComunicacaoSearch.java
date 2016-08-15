@@ -48,7 +48,7 @@ public class ModeloComunicacaoSearch extends PersistenceController {
         return getEntityManager().createQuery(cq).getResultList();
     }
     
-    public Long countRespostasComunicacaoByProcessoAndTaskName(Integer idProcesso, String taskName, boolean somenteProrrogacaoPrazo){
+    public Long countRespostasComunicacaoByProcessoAndTaskName(Integer idProcesso, String taskName, Boolean prorrogacaoPrazo){
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
@@ -65,13 +65,13 @@ public class ModeloComunicacaoSearch extends PersistenceController {
         );
 
         From<?, Processo> respostaComunicacao = comunicacao.join(Processo_.processosFilhos, JoinType.INNER);
-        restrictions = cb.and(restrictions, createPredicateRespostaComunicacao(cq, respostaComunicacao, somenteProrrogacaoPrazo));
+        restrictions = cb.and(restrictions, createPredicateRespostaComunicacao(cq, respostaComunicacao, prorrogacaoPrazo));
         
         cq.select(cb.count(respostaComunicacao)).where(restrictions);
         return getEntityManager().createQuery(cq).getSingleResult();
     }
     
-    public List<Processo> getRespostasComunicacaoByProcessoAndTaskName(Integer idProcesso, String taskName, boolean somenteProrrogacaoPrazo){
+    public List<Processo> getRespostasComunicacaoByProcessoAndTaskName(Integer idProcesso, String taskName, Boolean prorrogacaoPrazo){
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         
         CriteriaQuery<Processo> cq = cb.createQuery(Processo.class);
@@ -88,7 +88,7 @@ public class ModeloComunicacaoSearch extends PersistenceController {
         );
 
         From<?, Processo> respostaComunicacao = comunicacao.join(Processo_.processosFilhos, JoinType.INNER);
-        restrictions = cb.and(restrictions, createPredicateRespostaComunicacao(cq, respostaComunicacao, somenteProrrogacaoPrazo));
+        restrictions = cb.and(restrictions, createPredicateRespostaComunicacao(cq, respostaComunicacao, prorrogacaoPrazo));
         
         cq.select(respostaComunicacao).where(restrictions);
         return getEntityManager().createQuery(cq).getResultList();
@@ -102,11 +102,11 @@ public class ModeloComunicacaoSearch extends PersistenceController {
         );
     }
     
-    private Predicate createPredicateRespostaComunicacao(AbstractQuery<?> cq, From<?,Processo> respostaComunicacao, boolean somenteProrrogacaoPrazo){
+    private Predicate createPredicateRespostaComunicacao(AbstractQuery<?> cq, From<?,Processo> respostaComunicacao, Boolean prorrogacaoPrazo){
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Predicate predicate = createPredicateIsAnaliseDocumento(respostaComunicacao);
-        if (somenteProrrogacaoPrazo){
-            predicate = cb.and(predicate, createPredicateIsPedidoProrrogacaoPrazo(cq, respostaComunicacao));
+        if (prorrogacaoPrazo != null){
+            predicate = cb.and(predicate, createPredicateIsPedidoProrrogacaoPrazo(cq, respostaComunicacao, prorrogacaoPrazo));
         }
         return predicate;
     }
@@ -120,14 +120,14 @@ public class ModeloComunicacaoSearch extends PersistenceController {
         );
     }
     
-    private Predicate createPredicateIsPedidoProrrogacaoPrazo(AbstractQuery<?> cq, From<?,Processo> analiseDocumento){
+    private Predicate createPredicateIsPedidoProrrogacaoPrazo(AbstractQuery<?> cq, From<?,Processo> analiseDocumento, Boolean prorrogacaoPrazo){
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Root<StringInstance> variableInstance = cq.from(StringInstance.class);
         From<?, ProcessInstance> analiseDocumentoJbpm = variableInstance.<StringInstance,ProcessInstance>join("processInstance", JoinType.INNER);
         return cb.and(
             cb.equal(analiseDocumento.get(Processo_.idJbpm), analiseDocumentoJbpm.get("id")),
             cb.equal(variableInstance.get("name"), VariaveisJbpmAnaliseDocumento.PEDIDO_PRORROGACAO_PRAZO),
-            cb.equal(variableInstance.get("value"), "T")
+            cb.equal(variableInstance.get("value"), Boolean.TRUE.equals(prorrogacaoPrazo) ? "T" : "F")
         );
     }
     
