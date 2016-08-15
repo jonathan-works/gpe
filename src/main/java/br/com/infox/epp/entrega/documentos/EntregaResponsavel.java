@@ -140,8 +140,8 @@ public class EntregaResponsavel implements Serializable {
             return true;
         if (obj == null)
             return false;
-        if (getClass() != obj.getClass())
-            return false;
+		if (!(obj instanceof EntregaResponsavel))
+			return false;
         EntregaResponsavel other = (EntregaResponsavel) obj;
         if (getId() == null) {
             if (other.getId() != null)
