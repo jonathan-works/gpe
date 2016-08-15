@@ -168,6 +168,7 @@
 			<wi:columnOutputText columnHeader="#{infoxMessages['documentoProcesso.descricao']}" value="#{row.documento.descricao}" />
 			<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.classificacaoDocumento']}" value="#{row.documento.classificacaoDocumento.descricao}" />
 			<wi:columnOutputText columnHeader="#{infoxMessages['processoDocumento.tamanho']}" value="#{row.documento.documentoBin.sizeFormatado}" />
+			<wi:columnBoolean columnHeader="#{infoxMessages['processoDocumentoBin.minuta']}" value="#{row.documento.documentoBin.minuta}" />
 			<ui:define name="conteudoAdicional">
 				<h:form style="text-align:left">
 					<wi:commandButton id="gravar" value="#{infoxMessages['comunicacao.enviarResposta']}" 
