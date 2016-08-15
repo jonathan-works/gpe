@@ -226,7 +226,7 @@
 						
 					<a:jsFunction name="assinar" action="#{envioComunicacaoController.expedirComunicacao()}"
 						execute="@this appletAssinaturaToken" 
-						render="pageBodyDialogMessage comunicacaoDiv assinaturaListExpedirComunicacao"
+						render="pageBodyDialogMessage comunicacaoDiv assinaturaListExpedirComunicacao buttonsTaskPageComunicacaoForm"
 					  	oncomplete="infox.hideLoading(); if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"/>
              
 					<wi:certificadoDigital id="appletAssinatura"
