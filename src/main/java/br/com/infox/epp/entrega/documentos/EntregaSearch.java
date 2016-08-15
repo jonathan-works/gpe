@@ -94,7 +94,17 @@ public class EntregaSearch extends PersistenceController {
 		cq.orderBy(cb.asc(pessoa.get(Pessoa_.nome)));
 		
 		if (!query.matches("\\d+")) {
-			cq.where(cb.like(cb.lower(pessoa.get(Pessoa_.nome)), "%" + query.toLowerCase() + "%"));
+			Subquery<Integer> pessoaFisicaQuery = cq.subquery(Integer.class);
+            Root<PessoaFisica> pessoaFisica = pessoaFisicaQuery.from(PessoaFisica.class);
+            pessoaFisicaQuery.select(cb.literal(1));
+            pessoaFisicaQuery.where(cb.equal(pessoaFisica, pessoa), cb.like(cb.lower(pessoaFisica.get(PessoaFisica_.nome)), "%" + query.toLowerCase() + "%"));
+
+            Subquery<Integer> pessoaJuridicaQuery = cq.subquery(Integer.class);
+            Root<PessoaJuridica> pessoaJuridica = pessoaJuridicaQuery.from(PessoaJuridica.class);
+            pessoaJuridicaQuery.select(cb.literal(1));
+            pessoaJuridicaQuery.where(cb.equal(pessoaJuridica, pessoa), cb.like(cb.lower(pessoaJuridica.get(PessoaJuridica_.nome)), "%" + query.toLowerCase() + "%"));
+
+            cq.where(cb.or(cb.exists(pessoaFisicaQuery), cb.exists(pessoaJuridicaQuery)));
 		} else {
 			Subquery<Integer> pessoaFisicaQuery = cq.subquery(Integer.class);
 			Root<PessoaFisica> pessoaFisica = pessoaFisicaQuery.from(PessoaFisica.class);
