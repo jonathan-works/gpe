@@ -109,6 +109,7 @@ public class AnexarDocumentosView implements Serializable {
 
 	// Controle do uploader
 	private ClassificacaoDocumento classificacaoDocumentoUploader;
+	private String descricaoUploader;
 	private Pasta pastaUploader;
 	private List<Marcador> marcadoresUpload;
 	private List<DadosUpload> dadosUploader = new ArrayList<>();
@@ -224,6 +225,7 @@ public class AnexarDocumentosView implements Serializable {
 	private void resetUploader() {
 		clearUploadFile();
 		classificacaoDocumentoUploader = null;
+		descricaoUploader = null;
 		pastaUploader = null;
 		showUploader = false;
 		marcadoresUpload = null;
@@ -263,7 +265,7 @@ public class AnexarDocumentosView implements Serializable {
 
 	private DocumentoTemporario gravarArquivoUpload(DadosUpload dadosUpload) throws Exception {
 		DocumentoTemporario retorno = new DocumentoTemporario();
-		retorno.setDescricao(dadosUpload.getUploadedFile().getName());
+		retorno.setDescricao(getDescricaoUploader());
 		retorno.setDocumentoBin(documentoUploaderService.createProcessoDocumentoBin(dadosUpload.getUploadedFile()));
 		retorno.setAnexo(Boolean.TRUE);
 		retorno.setClassificacaoDocumento(classificacaoDocumentoUploader);
@@ -727,7 +729,7 @@ public class AnexarDocumentosView implements Serializable {
 	}
 
 	public boolean isShowUploaderButton() {
-		return !dadosUploader.isEmpty();
+		return !dadosUploader.isEmpty() && descricaoUploader != null && !descricaoUploader.isEmpty();
 	}
 
 	public ClassificacaoDocumento getClassificacaoDocumentoUploader() {
@@ -738,7 +740,15 @@ public class AnexarDocumentosView implements Serializable {
 		this.classificacaoDocumentoUploader = classificacaoDocumentoUploader;
 	}
 	
-    public List<Marcador> getMarcadoresUpload() {
+    public String getDescricaoUploader() {
+		return descricaoUploader;
+	}
+
+	public void setDescricaoUploader(String descricaoUploader) {
+		this.descricaoUploader = descricaoUploader;
+	}
+
+	public List<Marcador> getMarcadoresUpload() {
         return marcadoresUpload;
     }
 

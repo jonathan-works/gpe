@@ -21,6 +21,15 @@
 			header="#{infoxMessages['fileUpload.header']}"
 			style="margin-bottom: 1em" switchType="client">
 			<h:form id="uploadForm">
+			
+				<wi:inputText id="uploadDescricao" required="true"
+					label="#{infoxMessages['processo.anexarDocumentoDescricao']}"
+					value="#{anexarDocumentosView.descricaoUploader}">
+					<a:ajax id="uploadDescricaoAjax" event="change"
+						onbeforesubmit="infox.showLoading();"
+						oncomplete="infox.hideLoading();" render="uploadArquivoAnexarButton"
+						limitRender="true" execute="@this"/>
+				</wi:inputText>
 				<wi:selectOneMenuEntity id="uploadClassificacao" required="true"
 					label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
 					value="#{anexarDocumentosView.classificacaoDocumentoUploader}"
