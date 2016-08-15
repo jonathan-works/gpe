@@ -42,7 +42,8 @@ import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoInternaService;
 import br.com.infox.epp.processo.comunicacao.service.DestinatarioComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
-import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacaoManager;
+import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacaoSearch;
+import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoUsoComunicacaoEnum;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.usuario.UsuarioLoginSearch;
@@ -56,7 +57,7 @@ public class EnvioComunicacaoInternaView implements Serializable {
     private static final Logger LOGGER = Logger.getLogger(EnvioComunicacaoInternaView.class.getName());
     
     @Inject
-    private TipoComunicacaoManager tipoComunicacaoManager;
+    private TipoComunicacaoSearch tipoComunicacaoSearch;
     @Inject
     private LocalizacaoManager localizacaoManager;
     @Inject
@@ -325,7 +326,7 @@ public class EnvioComunicacaoInternaView implements Serializable {
     }
     
     private void loadTiposComunicacao() {
-        tiposComunicacao = tipoComunicacaoManager.listTiposComunicacaoAtivos();
+        tiposComunicacao = tipoComunicacaoSearch.getTiposComunicacaoAtivosByUso(TipoUsoComunicacaoEnum.I);
     }
     
     public Boolean getIndividual() {

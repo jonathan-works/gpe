@@ -46,7 +46,8 @@ import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
-import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacaoManager;
+import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacaoSearch;
+import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoUsoComunicacaoEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -71,7 +72,6 @@ public class EnvioComunicacaoController implements Serializable {
 	private static final LogProvider LOG = Logging.getLogProvider(EnvioComunicacaoController.class);
 	public static final int MAX_RESULTS = 15;
 	
-	private TipoComunicacaoManager tipoComunicacaoManager = ComponentUtil.getComponent(TipoComunicacaoManager.NAME);
 	private AssinaturaDocumentoService assinaturaDocumentoService = ComponentUtil.getComponent(AssinaturaDocumentoService.NAME);
 	private CertificateSignatures certificateSignatures = ComponentUtil.getComponent(CertificateSignatures.NAME);
 	
@@ -93,6 +93,8 @@ public class EnvioComunicacaoController implements Serializable {
 	private LocalizacaoSearch localizacaoSearch;
 	@Inject
 	private UsuarioLoginSearch usuarioLoginSearch;
+	@Inject
+	private TipoComunicacaoSearch tipoComunicacaoSearch;
 	
 	private String raizLocalizacoesComunicacao = Parametros.RAIZ_LOCALIZACOES_COMUNICACAO.getValue();
 	private Localizacao localizacaoRaizComunicacao;
@@ -380,7 +382,7 @@ public class EnvioComunicacaoController implements Serializable {
 
 	public List<TipoComunicacao> getTiposComunicacao() {
 		if (tiposComunicacao == null) {
-			tiposComunicacao = tipoComunicacaoManager.listTiposComunicacaoAtivos();
+			tiposComunicacao = tipoComunicacaoSearch.getTiposComunicacaoAtivosByUso(TipoUsoComunicacaoEnum.E);
 		}
 		return tiposComunicacao;
 	}
