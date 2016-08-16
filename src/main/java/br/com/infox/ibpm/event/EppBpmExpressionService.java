@@ -173,8 +173,7 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
         }
     )
     public Date dataMaximaRespostaComunicacao(String taskName) throws DAOException {
-        ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
-        Integer idProcesso = (Integer) executionContext.getContextInstance().getVariable("processo");
+        Integer idProcesso = getIdProcessoAtual();
         Date dataMaxima = prazoComunicacaoService.getDataMaximaRespostaComunicacao(idProcesso, taskName);
         return dataMaxima;
     }
@@ -226,8 +225,7 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
                     @Parameter(defaultValue = "entrega", selectable = false, label = "Entrega", tooltip = "Entrega de Documentos que irá prover os Responsáveis")
             })
     public void addParticipanteFromResponsavelEntrega(Entrega entrega) {
-        ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
-        Integer idProcesso = (Integer) executionContext.getContextInstance().getVariable("processo");
+        Integer idProcesso = getIdProcessoAtual();
         Processo processo = EntityManagerProducer.getEntityManager().find(Processo.class, idProcesso);
         entregaResponsavelService.adicionaParticipantes(processo, entrega);
     }
@@ -239,8 +237,7 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
             @Parameter(defaultValue = "metadados", label = "process.events.expression.param.relacionamento.metadados.label", tooltip = "process.events.expression.param.relacionamento.metadados.tooltip") 
 	})
     public void relacionarProcessosPorMetadados(String tipoRelacionamento, String motivo, Map<String, Object> metadados) {
-    	ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
-        Integer idProcesso = (Integer) executionContext.getContextInstance().getVariable("processo");
+    	Integer idProcesso = getIdProcessoAtual();
         
         Map<String, Object> parametrosMetadados = new HashMap<String, Object>();
         parametrosMetadados.putAll(metadados);
@@ -250,6 +247,31 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
         relacionamentoProcessoManager.relacionarProcessosPorMetadados(idProcesso, tipoRelacionamentoProcesso, motivo, parametrosMetadados);
     }
 
+    @External(expressionType = ExpressionType.GERAL,
+    		tooltip = "process.events.expression.relacionarProcessosPorNaturezaCategoriaMetadados.tooltip", value = {
+    		@Parameter(defaultValue = "tipoRelacionamento", label = "process.events.expression.param.relacionamento.tipoRelacionamento.label", tooltip = "process.events.expression.param.relacionamento.tipoRelacionamento.tooltip"),
+    		@Parameter(defaultValue = "motivo", label = "process.events.expression.param.relacionamento.motivo.label", tooltip = "process.events.expression.param.relacionamento.motivo.tooltip"),
+    		@Parameter(defaultValue = "codigoNatureza", label = "process.events.expression.param.relacionamento.codigoNatureza.label", tooltip = "process.events.expression.param.relacionamento.codigoNatureza.tooltip"),
+    		@Parameter(defaultValue = "codigoCategoria", label = "process.events.expression.param.relacionamento.codigoCategoria.label", tooltip = "process.events.expression.param.relacionamento.codigoCategoria.tooltip"),
+            @Parameter(defaultValue = "metadados", label = "process.events.expression.param.relacionamento.metadados.label", tooltip = "process.events.expression.param.relacionamento.metadados.tooltip") 
+	})
+    public void relacionarProcessosPorNaturezaCategoriaMetadados(String tipoRelacionamento, String motivo, String codigoNatureza, String codigoCategoria, Map<String, Object> metadados) {
+    	Integer idProcesso = getIdProcessoAtual();
+        
+        Map<String, Object> parametrosMetadados = new HashMap<String, Object>();
+        parametrosMetadados.putAll(metadados);
+
+        TipoRelacionamentoProcesso tipoRelacionamentoProcesso = tipoRelacionamentoProcessoManager.findByCodigo(tipoRelacionamento);
+        
+        relacionamentoProcessoManager.relacionarProcessosPorNaturezaCategoriaMetadados(idProcesso, tipoRelacionamentoProcesso, motivo, codigoNatureza, codigoCategoria, parametrosMetadados);
+    }
+
+	private Integer getIdProcessoAtual() {
+		ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
+        Integer idProcesso = (Integer) executionContext.getContextInstance().getVariable("processo");
+		return idProcesso;
+	}
+    
     @External(expressionType = ExpressionType.GERAL, tooltip = "process.events.expression.urlBuilder.tooltip", example = "#{bpmExpressionService.urlBuilder(baseUrl).path(variavelString).query('chave','valor').path('string').query('chave2',variavelListaString).build()}", value = {
             @Parameter(defaultValue = "urlBase", label = "process.events.expression.urlBuilder.param.urlBase.label", tooltip = "process.events.expression.urlBuilder.param.urlBase.tooltip", selectable = false),
             @Parameter(defaultValue = "urlBase", label = "process.events.expression.urlBuilder.param.path.label", tooltip = "process.events.expression.urlBuilder.param.path.tooltip", selectable = false),
@@ -264,8 +286,7 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
             @Parameter(defaultValue = "descricao", label = "process.events.expression.linkAplicacaoExterna.param.descricao.label", tooltip = "process.events.expression.param.linkAplicacaoExterna.codigo.tooltip"),
             @Parameter(defaultValue = "url", label = "process.events.expression.linkAplicacaoExterna.param.url.label", tooltip = "process.events.expression.param.linkAplicacaoExterna.codigo.tooltip") })
     public void criarLink(String codigo, String descricao, String url) {
-        ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
-        Integer idProcesso = (Integer) executionContext.getContextInstance().getVariable("processo");
+        Integer idProcesso = getIdProcessoAtual();
         Processo processo = EntityManagerProducer.getEntityManager().find(Processo.class, idProcesso);
 
         LinkAplicacaoExterna link = new LinkAplicacaoExterna();
