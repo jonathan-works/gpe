@@ -379,7 +379,7 @@ public class DocumentoBin implements Serializable {
             float sizeF = size / BYTES_IN_A_KILOBYTE;
             return formatter.format(sizeF) + " Kb";
         }
-        return "0 Kb";
+        return "-";
     }
 
 	@Override
