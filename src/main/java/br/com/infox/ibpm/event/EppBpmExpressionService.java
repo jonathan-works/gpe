@@ -263,6 +263,13 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
 
         TipoRelacionamentoProcesso tipoRelacionamentoProcesso = tipoRelacionamentoProcessoManager.findByCodigo(tipoRelacionamento);
         
+        if(codigoNatureza.isEmpty()) {
+        	codigoNatureza = null;
+        }
+        if(codigoCategoria.isEmpty()) {
+        	codigoCategoria = null;
+        }
+        
         relacionamentoProcessoManager.relacionarProcessosPorNaturezaCategoriaMetadados(idProcesso, tipoRelacionamentoProcesso, motivo, codigoNatureza, codigoCategoria, parametrosMetadados);
     }
 

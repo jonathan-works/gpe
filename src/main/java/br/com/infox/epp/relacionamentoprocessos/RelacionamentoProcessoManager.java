@@ -113,8 +113,8 @@ public class RelacionamentoProcessoManager extends Manager<RelacionamentoProcess
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void relacionarProcessosPorNaturezaCategoriaMetadados(Integer idProcesso, TipoRelacionamentoProcesso tipoRelacionamento, String motivo, String codigoNatureza, String codigoCategoria, Map<String, Object> metadados) {
 		Processo processo = getProcesso(idProcesso);
-        Natureza natureza = naturezaManager.getByCodigo(codigoNatureza);
-        Categoria categoria = categoriaManager.getByCodigo(codigoCategoria);
+        Natureza natureza = codigoNatureza == null ? null : naturezaManager.getByCodigo(codigoNatureza);
+        Categoria categoria = codigoCategoria == null ? null : categoriaManager.getByCodigo(codigoCategoria);
 		
 		List<Processo> processos = processoService.getProcessosContendoNaturezaCategoriaMetadados(natureza, categoria, metadados);
 		relacionarProcessosInternos(tipoRelacionamento, motivo, processo, processos);
