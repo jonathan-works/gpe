@@ -50,6 +50,19 @@ public class CategoriaDAO extends DAO<Categoria> {
     	return getEntityManager().createQuery(hql, Categoria.class).getResultList();
     }
     
+	public Categoria getByCodigo(String codigo) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Categoria> cq = cb.createQuery(Categoria.class);
+		Root<Categoria> categoria = cq.from(Categoria.class);
+		
+		cq.select(categoria).where(
+				cb.equal(categoria.get(Categoria_.codigo), codigo)
+		);
+		
+		return getEntityManager().createQuery(cq).getSingleResult();
+	}
+    
+    
     public List<Categoria> getCategoriasPrimariasAtivas() {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Categoria> cq = cb.createQuery(Categoria.class);
