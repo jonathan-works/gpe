@@ -76,9 +76,8 @@ public class DocumentoBin implements Serializable {
     @Column(name = "ds_modelo_documento")
     private String modeloDocumento;
     
-    @NotNull
     @Size(max = LengthConstants.DESCRICAO_MD5)
-    @Column(name = "ds_md5_documento", nullable = false, length = LengthConstants.DESCRICAO_MD5)
+    @Column(name = "ds_md5_documento", length = LengthConstants.DESCRICAO_MD5)
     private String md5Documento;
     
     @Size(max = LengthConstants.DESCRICAO_NOME_ARQUIVO)
@@ -226,6 +225,8 @@ public class DocumentoBin implements Serializable {
 		if(getId() == null) {
 			return size;
 		}				
+		if(size == null)
+			return null;
 		return getDocumentoBinService().getSize(getId());
 	}
 
