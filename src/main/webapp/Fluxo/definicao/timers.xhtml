@@ -103,9 +103,8 @@
                     
                     <p:outputPanel styleClass="dueDateTimer">
 	                    <p:outputPanel rendered="#{nodeFitter.nodeHandler.dueDateType.period}">
-	                    
 		                    <i:inputText id="duedatePeriod" value="#{nodeFitter.nodeHandler.dueDateValue}" 
-		                    	label="#{infoxMessages['process.timer.prazo']}" ajax="true" listener="#{node.onChangeDueDate}" />
+		                    	label="#{infoxMessages['process.timer.prazo']}" ajax="true" listener="#{nodeFitter.nodeHandler.onChangeDueDate}" />
 		                    
 		                    <i:selectOneMenu id="unit" value="#{nodeFitter.nodeHandler.dueDateUnit}"  
 		                    	label="#{infoxMessages['process.timer.prazo.unidade']}"
