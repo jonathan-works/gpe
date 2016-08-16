@@ -47,7 +47,7 @@
 	                      <i:autoComplete id="localizacao"
 	                      	label="#{infoxMessages['comunicacao.localizacoes']}"
 	                      	value="#{envioComunicacaoInternaView.localizacaoDestino}"
-	                      	required="true"
+	                      	required="true" style="position: relative;"
 	                      	completeMethod="#{envioComunicacaoInternaView.getLocalizacoesDisponiveis}"
 	                      	converter="org.jboss.seam.ui.EntityConverter"
 	                      	var="item" itemLabel="#{item.localizacao}" itemValue="#{item}" forceSelection="true"
@@ -59,17 +59,17 @@
 	                      </i:autoComplete>
             			
 	                      <p:outputPanel styleClass="opcoes-destino" style="display: inline;">
-	                      	<i:selectOneMenu id="perfisPermitidosDestino"
+	                      	<wi:selectOneMenuEntity id="perfisPermitidosDestino"
 	                          value="#{envioComunicacaoInternaView.perfilDestino}"
 	                          label="#{infoxMessages['usuarioPerfil.perfil']}"
 	                          items="#{envioComunicacaoInternaView.perfisDestino}"
-	                          converterId="org.jboss.seam.ui.EntityConverter"
 	                          required="true"
-	                          disabled="#{empty envioComunicacaoInternaView.localizacaoDestino}"
-	                          ajax="true" render="@(.pessoas-destino) @(.buttons-destino)" 
-                              listener="#{envioComunicacaoInternaView.onChangePerfilDestino}"/>
+	                          disabled="#{empty envioComunicacaoInternaView.localizacaoDestino}">
+                              <a:ajax execute="@this" limitRender="true" render="pessoasPermitidosDestino buttonAdicionarDestinoComunicacaoInterna"
+                              	listener="#{envioComunicacaoInternaView.onChangePerfilDestino}"/>
+                            </wi:selectOneMenuEntity>
 	                          
-	                      	<i:selectOneMenu id="pessoasPermitidosDestino" styleClass="pessoas-destino"
+	                      	<wi:selectOneMenu id="pessoasPermitidosDestino" styleClass="pessoas-destino"
 	                          value="#{envioComunicacaoInternaView.pessoaDestinatario}"
 	                          label="Destinatário"
 	                          items="#{envioComunicacaoInternaView.pessoasDestinatario}"
@@ -79,7 +79,7 @@
 	                      <wi:selectBooleanCheckbox id="comunicacaoIndividual" label="Individual?" 
 	                      	value="#{envioComunicacaoInternaView.individual}"/>
 	                      
-	                      <p:outputPanel styleClass="buttons-destino">
+	                      <p:outputPanel id="buttonAdicionarDestinoComunicacaoInterna" styleClass="buttons-destino">
 		                      <a:commandButton id="adicionarLocalizacao" styleClass="buttons"
 		                      	  render="@form, pageBodyDialogMessage panelDestinatariosComunicacao"
 		                      	  value="#{infoxMessages['button.add']}" execute="@form"

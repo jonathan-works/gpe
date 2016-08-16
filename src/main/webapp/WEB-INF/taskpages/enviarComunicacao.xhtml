@@ -97,21 +97,21 @@
                        	<i:autoComplete id="localizacao" label="#{infoxMessages['comunicacao.localizacoes']}"
                        		value="#{destinatarioComunicacaoAction.localizacao}" required="true"
                        		completeMethod="#{destinatarioComunicacaoAction.getLocalizacoesDisponiveis}"
-                       		converter="org.jboss.seam.ui.EntityConverter"
+                       		converter="org.jboss.seam.ui.EntityConverter" style="position: relative;"
                        		var="localizacao" itemLabel="#{localizacao.localizacao}" itemValue="#{localizacao}" forceSelection="true"
                        		ajax="true" event="itemSelect" render="@(.perfis-destino) @(.button-add-destino)">
 		                    <f:facet name="itemtip">
 		                         <h:outputText value="#{localizacao.caminhoCompletoFormatado}" />
 		                    </f:facet>
             			</i:autoComplete>
-                        <i:selectOneMenu id="perfisPermitidosDestino" styleClass="perfis-destino"
-                            value="#{destinatarioComunicacaoAction.perfilDestino}"
-                            label="#{infoxMessages['usuarioPerfil.perfil']}"
-                            items="#{destinatarioComunicacaoAction.perfisPermitidosDestino}"
-                            converterId="org.jboss.seam.ui.EntityConverter"
-                            disabled="#{empty destinatarioComunicacaoAction.localizacao}"
-                            ajax="true" render="@(.button-add-destino)"/>
- 						<s:div styleClass="button-add-destino" style="display: inline-block;">
+            			<wi:selectOneMenuEntity id="perfisPermitidosDestino" styleClass="perfis-destino"
+            				value="#{destinatarioComunicacaoAction.perfilDestino}"
+            				label="#{infoxMessages['usuarioPerfil.perfil']}"
+            				items="#{destinatarioComunicacaoAction.perfisPermitidosDestino}"
+            				disabled="#{empty destinatarioComunicacaoAction.localizacao}">
+            				<a:ajax event="change" execute="@this" limitRender="true" render="buttonAdicionarDestinoComunicacao" />
+            			</wi:selectOneMenuEntity>
+            			<s:div id="buttonAdicionarDestinoComunicacao" styleClass="button-add-destino" style="display: inline-block;">
 	                        <wi:commandButton id="adicionarLocalizacao" 
 	                        	reRender="destinatariosPanel, pageBodyDialogMessage"
 	                        	value="#{infoxMessages['button.add']}"
@@ -492,7 +492,7 @@
 							<i:autoComplete id="localizacaoResponsavelAssinatura" label="#{infoxMessages['comunicacao.localizacoes']}"
                        			value="#{envioComunicacaoController.modeloComunicacao.localizacaoResponsavelAssinatura}"
                        			completeMethod="#{envioComunicacaoController.getLocalizacoesDisponiveisAssinatura}"
-                       			converter="org.jboss.seam.ui.EntityConverter"
+                       			converter="org.jboss.seam.ui.EntityConverter" style="position: relative;"
                        			var="item" itemLabel="#{item.localizacao}" itemValue="#{item}" forceSelection="true"
                        			ajax="true" event="itemSelect" render="@(.perfis-responsavel-assinatura) @(.button-gravar-comunicacao)"
                        			onselect="#{envioComunicacaoController.verificaExistenciaUsuario()}">
@@ -500,14 +500,14 @@
 			                         <h:outputText value="#{item.caminhoCompletoFormatado}" />
 			                    </f:facet>
 	            			</i:autoComplete>
-				        	<i:selectOneMenu id="perfisPermitidos" styleClass="perfis-responsavel-assinatura"
+				        	<wi:selectOneMenuEntity id="perfisPermitidos" styleClass="perfis-responsavel-assinatura"
 					            value="#{envioComunicacaoController.modeloComunicacao.perfilResponsavelAssinatura}"
 					            label="#{infoxMessages['usuarioPerfil.perfil']}"
 					            items="#{destinatarioComunicacaoAction.perfisPermitidos}"
-					            converterId="org.jboss.seam.ui.EntityConverter"
-					            disabled="#{empty envioComunicacaoController.modeloComunicacao.localizacaoResponsavelAssinatura}"
-					            ajax="true" render="@(.button-gravar-comunicacao)" 
-					            listener="#{envioComunicacaoController.verificaExistenciaUsuario()}"/>
+					            disabled="#{empty envioComunicacaoController.modeloComunicacao.localizacaoResponsavelAssinatura}">
+					            <a:ajax event="change" execute="@this" limitRender="true" render="gravarComunicacaoButtonDiv"
+					            	listener="#{envioComunicacaoController.verificaExistenciaUsuario()}"/>
+					        </wi:selectOneMenuEntity>
 				        </s:div>
 				        <s:fragment rendered="#{envioComunicacaoController.modeloComunicacao.finalizada}">
 				        	<wi:outputText id="localizacaoRespAssinatura" label="#{infoxMessages['comunicacao.localizacaoRespAssinatura']}" 
@@ -520,7 +520,7 @@
 		        </rich:panel>
 		        
 		        <!-- Botões de Controle -->
-		        <s:div styleClass="button-gravar-comunicacao">
+		        <s:div id="gravarComunicacaoButtonDiv" styleClass="button-gravar-comunicacao">
 					<wi:commandButton id="gravar" value="#{infoxMessages['crud.update']}" 
 						action="envioComunicacaoController.gravar" reRender=":pageBodyDialogMessage comunicacaoDiv buttonsTaskPageComunicacaoForm"
 						rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada and 
