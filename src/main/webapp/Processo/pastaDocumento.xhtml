@@ -91,7 +91,7 @@
 								dropValue="#{pasta}" rendered="#{pastaAction.canWrite(pasta)}"
 								render="documentoListPanel, documentoListSearchForm"
 								limitRender="true" />
-							<a:commandLink render="documentoListDiv" execute="@form"
+							<a:commandLink render="documentoListDiv pageBodyDialogMessage" execute="@form"
 								action="#{pastaAction.selectPasta(pasta)}"
 								onbegin="infox.showLoading();" oncomplete="infox.hideLoading();"
 								styleClass="folder" limitRender="true">
