@@ -216,7 +216,7 @@
 									label="#{infoxMessages['pasta.codigoPasta']}"
 									value="#{nodeFitter.nodeHandler.codigoPasta}"
 									rendered="#{not empty nodeFitter.nodeHandler.modeloDocumento}">
-									<a:ajax event="blur"
+									<a:ajax event="change"
 										execute="@this" limitRender="true" 
 										onbegin="infox.showLoading();" oncomplete="infox.hideLoading();"
 										render="documentoGenerateForm, eventsForm" />

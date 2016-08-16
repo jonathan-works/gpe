@@ -620,6 +620,7 @@ public class NodeHandler implements Serializable {
     public void setClassificacaoDocumento(ClassificacaoDocumento classificacaoDocumento) {
     	if (this.classificacaoDocumento == null || !this.classificacaoDocumento.equals(classificacaoDocumento)) {
     		setModeloDocumento(null);
+    		setCodigoPasta(null);
     	}
     	this.classificacaoDocumento = classificacaoDocumento;
 	}
@@ -630,19 +631,20 @@ public class NodeHandler implements Serializable {
     
     public void setCodigoPasta(String codigoPasta) { //TODO Ajustar quando integrar a branch do exportador
     	Action action = null;
-        if (this.node.hasEvent(Event.EVENTTYPE_NODE_LEAVE)) {
-            action = retrieveGenerateDocumentoEvent(this.node.getEvent(Event.EVENTTYPE_NODE_LEAVE));
-            Delegation actionDelegation = action.getActionDelegation();
-            if (actionDelegation != null && GenerateDocumentoHandler.class.getName().equals(actionDelegation.getClassName())) {
-            	actionDelegation.setConfigType("constructor");
-            	GenerateDocumentoConfiguration configuration = new GenerateDocumentoConfiguration();
-            	configuration.setIdClassificacaoDocumento(classificacaoDocumento.getId());
-            	configuration.setIdModeloDocumento(modeloDocumento.getIdModeloDocumento());
-            	configuration.setCodigoPasta(codigoPasta);
-            	actionDelegation.setConfiguration(new Gson().toJson(configuration));
-            }
-        } 
-    	
+    	if (codigoPasta != null){
+	        if (this.node.hasEvent(Event.EVENTTYPE_NODE_LEAVE)) {
+	            action = retrieveGenerateDocumentoEvent(this.node.getEvent(Event.EVENTTYPE_NODE_LEAVE));
+	            Delegation actionDelegation = action.getActionDelegation();
+	            if (actionDelegation != null && GenerateDocumentoHandler.class.getName().equals(actionDelegation.getClassName())) {
+	            	actionDelegation.setConfigType("constructor");
+	            	GenerateDocumentoConfiguration configuration = new GenerateDocumentoConfiguration();
+	            	configuration.setIdClassificacaoDocumento(classificacaoDocumento.getId());
+	            	configuration.setIdModeloDocumento(modeloDocumento.getIdModeloDocumento());
+	            	configuration.setCodigoPasta(codigoPasta);
+	            	actionDelegation.setConfiguration(new Gson().toJson(configuration));
+	            }
+	        } 
+    	}
     	this.codigoPasta = codigoPasta;
 	}
 
