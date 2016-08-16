@@ -23,6 +23,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -50,16 +51,21 @@ public class FluxoDAO extends DAO<Fluxo> {
     public List<Fluxo> getFluxosPrimariosAtivos() {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Fluxo> cq = cb.createQuery(Fluxo.class);
-        Root<NaturezaCategoriaFluxo> ncf = cq.from(NaturezaCategoriaFluxo.class);
+        
+        Subquery<Integer> sq = cq.subquery(Integer.class);
+        Root<NaturezaCategoriaFluxo> ncf = sq.from(NaturezaCategoriaFluxo.class);
         Join<NaturezaCategoriaFluxo, Fluxo> fluxo = ncf.join(NaturezaCategoriaFluxo_.fluxo);
         Path<Natureza> natureza = ncf.join(NaturezaCategoriaFluxo_.natureza);
         
-        cq.select(fluxo);
-        cq.distinct(true);
-        cq.where(
+        sq.select(fluxo.get(Fluxo_.idFluxo));
+        sq.distinct(true);
+        sq.where(
         		cb.equal(fluxo.get(Fluxo_.ativo), true),
         		cb.equal(natureza.get(Natureza_.primaria), true)
 		);
+        
+        Root<Fluxo> fluxo2 = cq.from(Fluxo.class);
+        cq.where(cb.in(fluxo2.get(Fluxo_.idFluxo)).value(sq));
         
         return getEntityManager().createQuery(cq).getResultList();
     }
