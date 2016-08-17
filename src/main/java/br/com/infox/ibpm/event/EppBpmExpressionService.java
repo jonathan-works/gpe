@@ -349,7 +349,11 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
         Integer idProcesso = (Integer) executionContext.getContextInstance().getVariable(VariaveisJbpmProcessosGerais.PROCESSO);
         Processo processo = processoManager.find(idProcesso);
         List<MetadadoProcesso> metadados = processo.getMetadadoList(nomeMetadado);
-        metadadoProcessoManager.removeAll(metadados);
+        for (MetadadoProcesso metadado : metadados) {
+            metadadoProcessoManager.removeWithoutFlush(metadado);
+            processo.getMetadadoProcessoList().remove(metadado);
+        }
+        metadadoProcessoManager.flush();;
     }
 
     @Override
