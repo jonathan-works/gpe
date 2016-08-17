@@ -72,6 +72,7 @@ public class EnvioComunicacaoController implements Serializable {
 	private static final LogProvider LOG = Logging.getLogProvider(EnvioComunicacaoController.class);
 	public static final int MAX_RESULTS = 10;
 	private static final String TIPO_COMUNICACAO = "tipoComunicacao";
+	private static final String PRAZO_PRADRAO_RESPOSTA = "prazoPradraoResposta";
 	private static final TipoUsoComunicacaoEnum TIPO = TipoUsoComunicacaoEnum.E;
 	
 	private AssinaturaDocumentoService assinaturaDocumentoService = ComponentUtil.getComponent(AssinaturaDocumentoService.NAME);
@@ -100,6 +101,8 @@ public class EnvioComunicacaoController implements Serializable {
 	
 	private String raizLocalizacoesComunicacao = Parametros.RAIZ_LOCALIZACOES_COMUNICACAO.getValue();
 	private Localizacao localizacaoRaizComunicacao;
+	@TaskpageParameter(name = PRAZO_PRADRAO_RESPOSTA, type="Integer", description = "enviarComunicacao.parameter.prazo")
+	private Integer prazoDefaultComunicacao = null;
 	
 	private ModeloComunicacao modeloComunicacao;
 	private Long processInstanceId;
@@ -150,6 +153,15 @@ public class EnvioComunicacaoController implements Serializable {
 					modeloComunicacao.setTipoComunicacao(tipoComunicacao);
 				}
 			}
+			
+			String prazo = (String) TaskInstance.instance().getVariable(PRAZO_PRADRAO_RESPOSTA);
+			if (!Strings.isNullOrEmpty(prazo)) {
+				try {
+					prazoDefaultComunicacao = new Integer(prazo);
+				} catch (NumberFormatException e) {
+					FacesMessages.instance().add("O prazo de resposta padrão sugerido não foi definido com um valor válido.");
+				}
+			}
 		}
 	}
 
@@ -160,7 +172,7 @@ public class EnvioComunicacaoController implements Serializable {
 	
 	private void initDestinatarioComunicacaoAction() {
 		destinatarioComunicacaoAction.setModeloComunicacao(modeloComunicacao);
-		destinatarioComunicacaoAction.init(getLocalizacaoRaizComunicacao());		
+		destinatarioComunicacaoAction.init(getLocalizacaoRaizComunicacao(), prazoDefaultComunicacao);		
 	}
 	
 	private void initLocalizacaoRaiz() {
@@ -353,7 +365,7 @@ public class EnvioComunicacaoController implements Serializable {
 			minuta = true;
 			resetEntityState();
 			clear();
-			destinatarioComunicacaoAction.init(getLocalizacaoRaizComunicacao());
+			destinatarioComunicacaoAction.init(getLocalizacaoRaizComunicacao(), prazoDefaultComunicacao);
 			FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.sucesso.reabertura"));
 		} catch (DAOException | CloneNotSupportedException e) {
 			LOG.error("Erro ao rebarir comunicação", e);

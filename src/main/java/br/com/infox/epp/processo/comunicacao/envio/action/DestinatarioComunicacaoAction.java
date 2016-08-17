@@ -60,6 +60,7 @@ public class DestinatarioComunicacaoAction implements Serializable{
 	private UsuarioLoginSearch usuarioLoginSearch;
 	
 	private Localizacao localizacaoRaizComunicacao;
+	private Integer prazoDefaultTarefa;
 	private List<Integer> idsLocalizacoesSelecionadas = new ArrayList<>();
 	private Map<Localizacao, List<PerfilTemplate>> perfisSelecionados = new HashMap<>();
 	private List<DestinatarioModeloComunicacao> destinatariosExcluidos = new ArrayList<>();
@@ -70,9 +71,10 @@ public class DestinatarioComunicacaoAction implements Serializable{
 	private PerfilTemplate perfilDestino;
 	private boolean existeUsuarioNoDestino = true;
 	
-	public void init(Localizacao localizacaoRaizComunicacao) {
+	public void init(Localizacao localizacaoRaizComunicacao, Integer prazoDefaultTarefa) {
 		initEntityLists();
 		this.localizacaoRaizComunicacao = localizacaoRaizComunicacao;
+		this.prazoDefaultTarefa = prazoDefaultTarefa;
 	}
 	
 	@Remove
@@ -135,8 +137,8 @@ public class DestinatarioComunicacaoAction implements Serializable{
 	    }
 	}
 
-	protected Integer getPrazoDefaultByTipoComunicacao( TipoComunicacao tipoComunicacao){
-		return null;
+	protected Integer getPrazoDefaultByTipoComunicacao(TipoComunicacao tipoComunicacao) { 
+		return prazoDefaultTarefa;
 	}
 	
 	public void removerDestinatario(DestinatarioModeloComunicacao destinatario) {
