@@ -41,11 +41,14 @@ import br.com.infox.epp.processo.entity.TipoRelacionamentoProcesso;
 import br.com.infox.epp.processo.linkExterno.LinkAplicacaoExterna;
 import br.com.infox.epp.processo.linkExterno.LinkAplicacaoExternaService;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
+import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais;
 import br.com.infox.epp.relacionamentoprocessos.RelacionamentoProcessoManager;
 import br.com.infox.epp.relacionamentoprocessos.TipoRelacionamentoProcessoManager;
 import br.com.infox.ibpm.event.External.ExpressionType;
 import br.com.infox.ibpm.sinal.SignalService;
+import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.util.time.DateWrapper;
 
 @Stateless
@@ -81,6 +84,8 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
     private LinkAplicacaoExternaService linkAplicacaoExternaService;
     @Inject
     protected CalendarioEventosDAO calendarioEventosDAO;
+    @Inject
+    private MetadadoProcessoManager metadadoProcessoManager;
 
     @External(tooltip = "process.events.expression.atribuirCiencia.tooltip")
     public void atribuirCiencia() {
@@ -331,6 +336,20 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
     			throw new IllegalArgumentException("Valor do atributo type '" + type + "' não suportado");
     		}
     	}
+    }
+
+    @External(expressionType = ExpressionType.GERAL, tooltip = "Remove metadados do processo", value = {
+            @Parameter(defaultValue = "'nomeMetadado'", selectable = true)
+    })
+    public void removerMetadado(String nomeMetadado) {
+        ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
+        if (executionContext == null) {
+            throw new BusinessException("ExecutionContext está nulo.");
+        }
+        Integer idProcesso = (Integer) executionContext.getContextInstance().getVariable(VariaveisJbpmProcessosGerais.PROCESSO);
+        Processo processo = processoManager.find(idProcesso);
+        List<MetadadoProcesso> metadados = processo.getMetadadoList(nomeMetadado);
+        metadadoProcessoManager.removeAll(metadados);
     }
 
     @Override
