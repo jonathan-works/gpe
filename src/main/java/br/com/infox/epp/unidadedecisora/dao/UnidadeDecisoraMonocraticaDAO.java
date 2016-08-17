@@ -71,6 +71,20 @@ public class UnidadeDecisoraMonocraticaDAO extends DAO<UnidadeDecisoraMonocratic
 		return entityManager.createQuery(query).getResultList();
 	}
 
+	public UnidadeDecisoraMonocratica findByRelator(PessoaFisica relator) {
+		EntityManager entityManager = getEntityManager();
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<UnidadeDecisoraMonocratica> query = cb.createQuery(UnidadeDecisoraMonocratica.class);
+		Root<UnidadeDecisoraMonocratica> udm = query.from(UnidadeDecisoraMonocratica.class);
+		query.where(
+				cb.equal(udm.get(UnidadeDecisoraMonocratica_.chefeGabinete), relator),
+				cb.isTrue(udm.get(UnidadeDecisoraMonocratica_.ativo))
+		);
+		query.select(udm);
+		query.orderBy(cb.asc(udm.get(UnidadeDecisoraMonocratica_.chefeGabinete).get(PessoaFisica_.nome)));
+		return getSingleResult(entityManager.createQuery(query));
+	}
+	
 	public List<UnidadeDecisoraMonocratica> searchUnidadeDecisoraMonocraticaAtivo() {
 	    CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 	    CriteriaQuery<UnidadeDecisoraMonocratica> cq = cb.createQuery(UnidadeDecisoraMonocratica.class);
