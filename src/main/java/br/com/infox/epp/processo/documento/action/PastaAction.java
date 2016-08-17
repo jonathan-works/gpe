@@ -70,6 +70,9 @@ public class PastaAction implements Serializable {
         documentoList.selectPasta(pasta);
         setInstance(pasta);
         setShowGrid(true);
+        for (Documento documento : documentoList.list(15)) {
+            documentoProcessoAction.deveMostrarCadeado(documento);
+        }
     }
     
     public void associaDocumento(DropEvent evt) {
