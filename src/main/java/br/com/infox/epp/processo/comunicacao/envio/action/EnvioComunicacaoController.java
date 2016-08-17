@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.comunicacao.envio.action;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -53,6 +54,8 @@ import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.usuario.UsuarioLoginSearch;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.ibpm.variable.Taskpage;
+import br.com.infox.ibpm.variable.TaskpageParameter;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
@@ -61,12 +64,15 @@ import br.com.infox.seam.util.ComponentUtil;
 @Named(EnvioComunicacaoController.NAME)
 @ViewScoped
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+@Taskpage(name = "enviarComunicacao", description = "enviarComunicacao.description")
 public class EnvioComunicacaoController implements Serializable {
 	
 	public static final String NAME = "envioComunicacaoController";
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(EnvioComunicacaoController.class);
 	public static final int MAX_RESULTS = 10;
+	private static final String TIPO_COMUNICACAO = "tipoComunicacao";
+	private static final TipoUsoComunicacaoEnum TIPO = TipoUsoComunicacaoEnum.E;
 	
 	private AssinaturaDocumentoService assinaturaDocumentoService = ComponentUtil.getComponent(AssinaturaDocumentoService.NAME);
 	private CertificateSignatures certificateSignatures = ComponentUtil.getComponent(CertificateSignatures.NAME);
@@ -97,7 +103,7 @@ public class EnvioComunicacaoController implements Serializable {
 	
 	private ModeloComunicacao modeloComunicacao;
 	private Long processInstanceId;
-	
+	@TaskpageParameter(name = TIPO_COMUNICACAO, description = "enviarComunicacao.parameter.tipoComunicacao")
 	private List<TipoComunicacao> tiposComunicacao;
 	
 	private boolean finalizada;
@@ -126,9 +132,27 @@ public class EnvioComunicacaoController implements Serializable {
 			idModeloComunicacaoVariableName = "idModeloComunicacao-" + taskInstance.getId();
 		}
 		initModelo(idModelo == null ? null : Long.valueOf(idModelo));
+		initParametros();
 		clear();
 	}
 	
+	private void initParametros() {
+		if (inTask) {
+			String tipoComunicacaoCodigo = (String) TaskInstance.instance().getVariable(TIPO_COMUNICACAO);
+			if (!Strings.isNullOrEmpty(tipoComunicacaoCodigo)) {
+				TipoComunicacao tipoComunicacao = tipoComunicacaoSearch.getTiposComunicacaoAtivosByCodigo(tipoComunicacaoCodigo, TIPO);
+				if (tipoComunicacao == null) {
+					FacesMessages.instance().add("O Tipo de Comunicação não foi definido com um valor válido.");
+					tiposComunicacao = Collections.emptyList();
+				} else { 
+					tiposComunicacao = new ArrayList<>(1);
+					tiposComunicacao.add(tipoComunicacao);
+					modeloComunicacao.setTipoComunicacao(tipoComunicacao);
+				}
+			}
+		}
+	}
+
 	private void initDocumentoComunicacaoAction() {
 		documentoComunicacaoAction.setModeloComunicacao(modeloComunicacao);
 		documentoComunicacaoAction.init();		
@@ -497,5 +521,9 @@ public class EnvioComunicacaoController implements Serializable {
 			existeUsuarioLocalizacaoAssinatura = usuarioLoginSearch.existsUsuarioWithLocalizacaoPerfil(getModeloComunicacao().getLocalizacaoResponsavelAssinatura(),
 					getModeloComunicacao().getPerfilResponsavelAssinatura());
 		}
+	}
+	
+	public boolean canChooseTipoComunicacao() {
+		return getTiposComunicacao() != null && getTiposComunicacao().size() > 1 && !getModeloComunicacao().getFinalizada();
 	}
 }

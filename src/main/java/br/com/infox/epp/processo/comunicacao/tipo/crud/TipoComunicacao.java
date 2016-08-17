@@ -21,6 +21,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
@@ -43,6 +44,11 @@ public class TipoComunicacao implements Serializable {
     @NotNull
     @Column(name = "ds_tipo_comunicacao", nullable = false, length = LengthConstants.DESCRICAO_MEDIA, unique = true)
     private String descricao;
+    
+    @NotNull
+    @Size(min = 1, max = 150)
+    @Column(name = "cd_tipo_comunicacao", nullable = false, length = 150, unique = true)
+    private String codigo;
 
 	@Min(0)
     @NotNull
@@ -89,7 +95,15 @@ public class TipoComunicacao implements Serializable {
         this.descricao = descricao;
     }
 
-    public Integer getQuantidadeDiasCiencia() {
+    public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+
+	public Integer getQuantidadeDiasCiencia() {
         return quantidadeDiasCiencia;
     }
 

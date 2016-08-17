@@ -15,13 +15,12 @@
 	<h:outputScript library="js" name="components.js" />
 	<s:div style="background-color: white; padding-top: 20px; margin-bottom: 20px; padding-left: 10px; padding-right: 10px;">
 		<s:div id="comunicacaoDiv">
-		
 			<!-- Combo de tipo de comunicação e botão de visualizar comunicação -->
 			<h:form id="comunicacaoForm">
 				<wi:selectOneMenuEntity id="tipoComunicacao" label="#{infoxMessages['comunicacao.tipoComunicacao']}"
 					showRequired="true" items="#{envioComunicacaoController.tiposComunicacao}"
 					value="#{envioComunicacaoController.tipoComunicacao}"
-					disabled="#{envioComunicacaoController.modeloComunicacao.finalizada}">
+					disabled="#{not envioComunicacaoController.canChooseTipoComunicacao()}">
 					<a:ajax event="change" render="modeloDocumento, classificacaoComunicacao" />
 				</wi:selectOneMenuEntity>
 				<div />
@@ -99,7 +98,8 @@
                        		completeMethod="#{destinatarioComunicacaoAction.getLocalizacoesDisponiveis}"
                        		converter="org.jboss.seam.ui.EntityConverter" style="position: relative;"
                        		var="localizacao" itemLabel="#{localizacao.localizacao}" itemValue="#{localizacao}" forceSelection="true"
-                       		ajax="true" event="itemSelect" render="@(.perfis-destino) @(.button-add-destino)">
+                       		ajax="true" event="itemSelect" render="@(.perfis-destino) @(.button-add-destino)"
+                       		onstart="infox.showLoading();" oncomplete="infox.hideLoading();">
 		                    <f:facet name="itemtip">
 		                         <h:outputText value="#{localizacao.caminhoCompletoFormatado}" />
 		                    </f:facet>
@@ -109,7 +109,8 @@
             				label="#{infoxMessages['usuarioPerfil.perfil']}"
             				items="#{destinatarioComunicacaoAction.perfisPermitidosDestino}"
             				disabled="#{empty destinatarioComunicacaoAction.localizacao}">
-            				<a:ajax event="change" execute="@this" limitRender="true" render="buttonAdicionarDestinoComunicacao" />
+            				<a:ajax event="change" execute="@this" limitRender="true" render="buttonAdicionarDestinoComunicacao"
+            					onbegin="infox.showLoading();" oncomplete="infox.hideLoading();" />
             			</wi:selectOneMenuEntity>
             			<s:div id="buttonAdicionarDestinoComunicacao" styleClass="button-add-destino" style="display: inline-block;">
 	                        <wi:commandButton id="adicionarLocalizacao" 
@@ -495,6 +496,7 @@
                        			converter="org.jboss.seam.ui.EntityConverter" style="position: relative;" minQueryLength="1"
                        			var="item" itemLabel="#{item.localizacao}" itemValue="#{item}" forceSelection="true"
                        			ajax="true" event="itemSelect" render="@(.perfis-responsavel-assinatura) @(.button-gravar-comunicacao)"
+                       			onstart="infox.showLoading();" oncomplete="infox.hideLoading();"
                        			onselect="#{envioComunicacaoController.verificaExistenciaUsuario()}">
 			                    <f:facet name="itemtip">
 			                         <h:outputText value="#{item.caminhoCompletoFormatado}" />
@@ -506,6 +508,7 @@
 					            items="#{destinatarioComunicacaoAction.perfisPermitidos}"
 					            disabled="#{empty envioComunicacaoController.modeloComunicacao.localizacaoResponsavelAssinatura}">
 					            <a:ajax event="change" execute="@this" limitRender="true" render="gravarComunicacaoButtonDiv"
+					            	onbegin="infox.showLoading();" oncomplete="infox.hideLoading();"
 					            	listener="#{envioComunicacaoController.verificaExistenciaUsuario()}"/>
 					        </wi:selectOneMenuEntity>
 				        </s:div>
