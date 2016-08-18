@@ -20,7 +20,7 @@ import javax.interceptor.InterceptorBinding;
  */
 public @interface Log {
 	
-	public static final String EMPTY = "";
+	public static final String EMPTY = " ";
 	
 	/**
 	 * Define o código do LOG que será gerado
