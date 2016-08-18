@@ -7,10 +7,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.persistence.EntityManager;
-
 import org.jbpm.graph.exe.ProcessInstance;
 
+import br.com.infox.cdi.producer.JbpmContextProducer;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
@@ -37,11 +36,10 @@ public class JbpmExpressionResolver implements ExpressionResolver {
 	public Expression resolve(Expression expression) {
 		String realVariableName = expression.getExpression().substring(2, expression.getExpression().length() - 1);
 		ProcessoManager processoManager = ComponentUtil.getComponent(ProcessoManager.NAME);
-		EntityManager entityManager = BeanManager.INSTANCE.getReference(EntityManager.class);
 		Object value = null;
 		Processo processo = processoManager.find(idProcesso);
 		do {
-			ProcessInstance processInstance = entityManager.find(ProcessInstance.class, processo.getIdJbpm());
+			ProcessInstance processInstance = JbpmContextProducer.getJbpmContext().getProcessInstance(processo.getIdJbpm());
 	        value = processInstance.getContextInstance().getVariable(realVariableName);
 	        VariableInfo variableInfo = getVariableInfo(realVariableName, processInstance.getProcessDefinition().getId());
 	        if (variableInfo == null && value != null) {
