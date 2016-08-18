@@ -31,7 +31,7 @@
 
     <a:commandLink execute="@this" rendered="#{empty owner and showMovimentarToolBar}"
       target="#{idProcesso}popUpFluxo"
-      render="@form" action="#{painelUsuarioController.atribuirTarefa(row)}"
+      render="@form"
       onclick="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;idTaskInstance=#{idTaskInstance}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
       <f:param name="idProcesso" value="#{idProcesso}" />
       <f:param name="idTaskInstance" value="#{idTaskInstance}" />
