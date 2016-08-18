@@ -187,7 +187,7 @@
 							
 						<a:commandButton id="enviar" value="#{infoxMessages['crud.send']}" 
 							action="#{envioComunicacaoInternaView.enviar}" render=":pageBodyDialogMessage, comunicacaoInternaPanel"
-							oncomplete="if (#{not envioComunicacaoInternaView.taskPage and not facesContext.validationFailed}) { opener.reload(); window.close(); }"
+							oncomplete="if (#{not envioComunicacaoInternaView.taskPage and not facesContext.validationFailed}) { opener.reload(); }"
 							rendered="#{not envioComunicacaoInternaView.expedida}"
 							styleClass="buttons"/>
 					</div>
