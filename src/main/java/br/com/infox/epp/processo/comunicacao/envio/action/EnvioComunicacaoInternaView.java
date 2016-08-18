@@ -280,6 +280,7 @@ public class EnvioComunicacaoInternaView implements Serializable {
     
     public void enviar() {
         try {
+            validaDestinatarios();
             gravar();
             comunicacaoInternaService.enviarComunicacao(getModeloComunicacao());
             loadComunicacaoExpedida();
@@ -293,7 +294,13 @@ public class EnvioComunicacaoInternaView implements Serializable {
             FacesContext.getCurrentInstance().validationFailed();
         }
     }
-    
+
+    private void validaDestinatarios() {
+	if (getModeloComunicacao().getDestinatarios() == null || getModeloComunicacao().getDestinatarios().isEmpty()) {
+	    throw new BusinessException("Nenhum destinatário foi selecionado.");
+	}
+    }
+
     public void clearDestinoDestinatario() {
         setIndividual(Boolean.FALSE);
         setLocalizacaoDestino(null);
