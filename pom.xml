@@ -516,7 +516,7 @@
                 <exclude>**/*.import.less</exclude>
               </excludes>
             </configuration>
-						<phase>compile</phase>
+            <phase>generate-sources</phase>
             <goals>
               <goal>compile</goal>
             </goals>
