@@ -91,7 +91,12 @@ public class Documento implements Serializable, Cloneable {
     @Column(name = "id_documento", unique = true, nullable = false)
     private Integer id;
     
-    @NotNull
+    /** Anotação removida por conta de bug ao tentar movimentar uma tarefa
+     * com variável editor não obrigatória. Ver se vale a pena fazer implementação
+     * de contorno em classe de negócios de movimentação jbpm
+     * @see <a href="https://redmine.infox.com.br/issues/83644">#83644</a>
+     */
+    //@NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_classificacao_documento", nullable = false)
     private ClassificacaoDocumento classificacaoDocumento;
