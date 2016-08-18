@@ -142,7 +142,7 @@
 	    				<wi:selectOneMenuEntity id="classificacaoComunicacao"
 	    					label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
 				      		items="#{envioComunicacaoInternaView.classificacoes}"
-				      		showLabelSelecione="true"
+				      		showLabelSelecione="true" required="true"
 				      		value="#{envioComunicacaoInternaView.classificacaoDocumento}"
 				      		readonly="#{not envioComunicacaoInternaView.minuta or envioComunicacaoInternaView.classificacoes.size() eq 1}"
 	      					disabled="#{not envioComunicacaoInternaView.minuta or envioComunicacaoInternaView.classificacoes.size() eq 1}">
