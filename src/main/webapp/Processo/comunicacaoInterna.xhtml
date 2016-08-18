@@ -51,6 +51,12 @@
     		</ui:repeat>
     	</wi:column>
     	
+    	<wi:column columnId="dataAlteracao" columnHeader="Data de Alteração">
+    		<h:outputText value="#{row.dataAlteracao}">
+    			<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+    		</h:outputText>
+    	</wi:column>
+    	
     </wi:dataTable>
     
     <wi:dataTable id="comunicacaoInternaList" tableTitle="Comunicações Internas expedidas" values="#{comunicacaoInternaView.comunicacoesInternas}"
@@ -87,6 +93,12 @@
     	<wi:columnDateTime columnId="dataInicio" columnHeader="Data de Início" value="#{row.dataInicio}"/>
     	
     	<wi:columnDateTime columnId="dataFim" columnHeader="Data de Fim" value="#{row.dataFim}"/>
+    	
+    	<wi:column columnId="dataAlteracao" columnHeader="Data de Alteração">
+    		<h:outputText value="#{destinatario.getModeloComunicacao().dataAlteracao}">
+    			<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+    		</h:outputText>
+    	</wi:column>
     
     </wi:dataTable>
     
