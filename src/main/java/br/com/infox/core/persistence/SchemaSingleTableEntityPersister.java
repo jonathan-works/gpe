@@ -2,6 +2,7 @@ package br.com.infox.core.persistence;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.util.Iterator;
 
 import javax.sql.DataSource;
 
@@ -12,8 +13,12 @@ import org.hibernate.engine.spi.Mapping;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.id.IdentifierGenerator;
 import org.hibernate.id.SequenceGenerator;
+import org.hibernate.mapping.Collection;
 import org.hibernate.mapping.PersistentClass;
+import org.hibernate.mapping.Property;
 import org.hibernate.mapping.Table;
+import org.hibernate.mapping.Value;
+import org.hibernate.metamodel.binding.EntityBinding;
 import org.hibernate.persister.entity.SingleTableEntityPersister;
 
 import br.com.infox.core.util.ReflectionsUtil;
@@ -27,18 +32,38 @@ public class SchemaSingleTableEntityPersister extends SingleTableEntityPersister
 		super(convertSchemaPersistentClass(persistentClass, factory), cacheAccessStrategy, naturalIdRegionAccessStrategy, factory, mapping);
 	}
 	
-	private static PersistentClass convertSchemaPersistentClass(PersistentClass persistentClass, SessionFactoryImplementor factory) {
+	public SchemaSingleTableEntityPersister(EntityBinding entityBinding, EntityRegionAccessStrategy cacheAccessStrategy,
+            NaturalIdRegionAccessStrategy naturalIdRegionAccessStrategy, SessionFactoryImplementor factory,
+            Mapping mapping) throws HibernateException {
+	    super(entityBinding, cacheAccessStrategy, naturalIdRegionAccessStrategy, factory, mapping);
+	}
+	
+	@SuppressWarnings("unchecked")
+    private static PersistentClass convertSchemaPersistentClass(PersistentClass persistentClass, SessionFactoryImplementor factory) {
 		String property = EppProperties.getProperty(EppProperties.PROPERTY_TIPO_BANCO_DADOS);
 		if ("oracle".equalsIgnoreCase(property)) {
-			Table table = persistentClass.getRootTable();
-			String schema = table.getSchema();
 			String userName = getUsername(factory).toLowerCase();
-			table.setSchema(userName.concat("_").concat(schema));
+			updateSchema(persistentClass.getRootTable(), userName);
 			customizeSequence(persistentClass, factory, userName);
+			Iterator<Property> iterator = persistentClass.getDeclaredPropertyIterator();
+			while (iterator.hasNext()) {
+			    Property next = iterator.next();
+			    Value value = next.getValue();
+			    if (value instanceof Collection) {
+			        Collection collection = (Collection) value;
+			        updateSchema(collection.getCollectionTable(), userName);
+			    }
+			}
 		}
 		return persistentClass;
 	}
 	
+	private static void updateSchema(Table table, String username) {
+	    String schema = table.getSchema();
+	    if (schema != null) {
+	        table.setSchema(username.concat("_").concat(schema));
+	    }
+	}
 
     private static String getUsername(SessionFactoryImplementor factory) {
 		DataSource datasource = (DataSource) factory.getProperties().get("hibernate.connection.datasource");
