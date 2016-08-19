@@ -28,15 +28,6 @@ public class LogWebserviceServerManager extends Manager<LogWebserviceServerDAO, 
 	
 	
 	public LogWebserviceServer beginLog(String webserviceName, String token, String requisicao){
-		if(token == null || token.isEmpty())
-			token = "  ";
-		
-		if(webserviceName == null || webserviceName.isEmpty())
-			webserviceName = "  ";
-		
-		if(requisicao == null || requisicao.isEmpty())
-			requisicao = "  ";
-		
 		LogWebserviceServer logWebserviceServer = new LogWebserviceServer();
 		logWebserviceServer.setDataInicio(Calendar.getInstance().getTime());
 		logWebserviceServer.setToken(token);
