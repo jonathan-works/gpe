@@ -761,7 +761,9 @@ public class AnexarDocumentosView implements Serializable {
 			VariableTypeResolver variableTypeResolver = ComponentUtil.getComponent(VariableTypeResolver.NAME);
 			EntityManager entityManager = BeanManager.INSTANCE.getReference(EntityManager.class);
 			ProcessInstance processInstance = entityManager.find(ProcessInstance.class, processoReal.getIdJbpm());
-			variableTypeResolver.setProcessInstance(processInstance);
+			if (variableTypeResolver.getProcessInstance() == null) {
+			    variableTypeResolver.setProcessInstance(processInstance);
+			}
 			ExecutionContext executionContext = new ExecutionContext(processInstance.getRootToken());
 			expressionResolver = ExpressionResolverChainBuilder
 					.defaultExpressionResolverChain(processoReal.getIdProcesso(), executionContext);
