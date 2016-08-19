@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.Remove;
-import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.faces.context.FacesContext;
@@ -62,7 +60,6 @@ import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Named(EnvioComunicacaoController.NAME)
-@Stateful
 @ViewScoped
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class EnvioComunicacaoController implements Serializable {
@@ -133,11 +130,6 @@ public class EnvioComunicacaoController implements Serializable {
 		clear();
 	}
 	
-	@Remove
-	public void destroy(){
-		
-	}
-
 	private void initDocumentoComunicacaoAction() {
 		documentoComunicacaoAction.setModeloComunicacao(modeloComunicacao);
 		documentoComunicacaoAction.init();		
@@ -203,6 +195,7 @@ public class EnvioComunicacaoController implements Serializable {
 			
 			modeloComunicacaoManager.update(modeloComunicacao);
 			setIdModeloVariable(modeloComunicacao.getId());
+                        isNew = false;
 			if (isFinalizada()) {
 				comunicacaoService.finalizarComunicacao(modeloComunicacao);
 				if ((!modeloComunicacao.isDocumentoBinario() && !modeloComunicacao.isClassificacaoAssinavel()) 
@@ -212,7 +205,6 @@ public class EnvioComunicacaoController implements Serializable {
 			}
 			clear();
 			FacesMessages.instance().add("Registro gravado com sucesso");
-			isNew = false;
 			minuta = modeloComunicacao.isMinuta();
 		} catch (Exception e) {
 			LOG.error("Erro ao gravar comunicação ", e);
