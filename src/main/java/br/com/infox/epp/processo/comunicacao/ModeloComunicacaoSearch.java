@@ -25,6 +25,7 @@ import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso_;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.service.VariaveisJbpmAnaliseDocumento;
 import br.com.infox.epp.processo.type.TipoProcesso;
+import br.com.infox.hibernate.function.CustomSqlFunctions;
 
 @Stateless
 public class ModeloComunicacaoSearch extends PersistenceController {
@@ -126,8 +127,9 @@ public class ModeloComunicacaoSearch extends PersistenceController {
         From<?, ProcessInstance> analiseDocumentoJbpm = variableInstance.<StringInstance,ProcessInstance>join("processInstance", JoinType.INNER);
         return cb.and(
             cb.equal(analiseDocumento.get(Processo_.idJbpm), analiseDocumentoJbpm.get("id")),
-            cb.equal(variableInstance.get("name"), VariaveisJbpmAnaliseDocumento.PEDIDO_PRORROGACAO_PRAZO),
-            cb.equal(variableInstance.get("value"), Boolean.TRUE.equals(prorrogacaoPrazo) ? "T" : "F")
+            cb.equal(cb.function(CustomSqlFunctions.MD5_BINARY, byte[].class, variableInstance.<String>get("value")), 
+                        cb.function(CustomSqlFunctions.MD5_BINARY, byte[].class, Boolean.TRUE.equals(prorrogacaoPrazo) ? cb.literal("T") : cb.literal("F"))),
+            cb.equal(variableInstance.get("name"), VariaveisJbpmAnaliseDocumento.PEDIDO_PRORROGACAO_PRAZO)
         );
     }
     
