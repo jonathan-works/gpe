@@ -64,9 +64,9 @@ public class ProcessoEpaList extends EntityList<Processo> {
 
     private static final long serialVersionUID = 1L;
 
-    private static final String DEFAULT_EJBQL = "select o from Processo o where o.idJbpm is not null and o.processoPai is null and "
+    private static final String DEFAULT_EJBQL = "select o from Processo o left join o.prioridadeProcesso prp inner join o.naturezaCategoriaFluxo naturezaCategoriaFluxo where o.idJbpm is not null and o.processoPai is null and "
             + SigiloProcessoPermissaoManager.getPermissaoConditionFragment();
-    private static final String DEFAULT_ORDER = "coalesce(o.prioridadeProcesso, -1) DESC, o.dataInicio ASC";
+    private static final String DEFAULT_ORDER = "coalesce(prp.peso, -1) DESC, o.dataInicio ASC";
     private static final String R1 = "cast(dataInicio as date) >= #{processoEpaList.dataInicio.from}";
     private static final String R2 = "cast(dataInicio as date) <= #{processoEpaList.dataInicio.to}";
     private static final String R3 = "cast(dataFim as date) >= #{processoEpaList.dataFim.from}";
