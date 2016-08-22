@@ -16,6 +16,7 @@ import javax.inject.Named;
 import javax.persistence.OptimisticLockException;
 
 import org.jboss.seam.faces.FacesMessages;
+import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.primefaces.model.LazyDataModel;
 
 import br.com.infox.epp.access.api.Authenticator;
@@ -98,7 +99,11 @@ public class ChecklistView implements Serializable {
      * @return Pasta, caso encontre, null caso contrário.
      */
     private Pasta retrievePasta() {
-        Object nomePasta = taskInstanceHome.getCurrentTaskInstance().getVariable(PARAMETER_PASTA);
+        TaskInstance taskInstance = taskInstanceHome.getCurrentTaskInstance();
+        if (taskInstance == null) { // isso ocorre quando a raia é dinâmica e o usuário que movimentou não tem permissão
+            return null;
+        }
+        Object nomePasta = taskInstance.getVariable(PARAMETER_PASTA);
         if (nomePasta == null) {
             message = "Não foi possível recuperar o parâmetro com o nome da pasta.";
             return null;
