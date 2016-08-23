@@ -41,7 +41,7 @@ public class ToMD5Binary implements SQLFunction {
         if (dialect instanceof InfoxSQLServer2012Dialect) {
             return " HASHBYTES('MD5', convert(varbinary, " + arguments.get(0) + " )) ";
         } else if (dialect instanceof InfoxOracleDialect) {
-            return " DBMS_CRYPTO.HASH( " + arguments.get(0) + " , 2 ) "; // 2 indica o algoritmo MD5
+            return " DBMS_CRYPTO.HASH( TO_NCLOB(" + arguments.get(0) + ") , 2 ) "; // 2 indica o algoritmo MD5
         } else if (dialect instanceof InfoxPostgreSQLDialect) {
             return " convert_to(md5( " + arguments.get(0) + " ), 'UTF-8') ";
         } else {
