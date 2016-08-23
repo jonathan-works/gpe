@@ -3,10 +3,11 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
     xmlns:infox="http://www.infox.com.br/jsf" xmlns:p="http://primefaces.org/ui" xmlns:wi="http://www.itx.com.br/jsf">
+    
+    <f:event type="preRenderView" listener="#{linkAplicacaoExternaViewController.setProcesso(processo)}" />
+    
     <infox:div id="linkAplicacaoExternaContainer"
-        rendered="#{security.checkPage('/pages/Processo/linkAplicacaoExternaView')}">
-        <ui:param name="processo" value="#{wi:get(processo, processoEpaHome.instance)}"></ui:param>
-        <f:event type="preRenderView" listener="#{linkAplicacaoExternaViewController.setProcesso(processo)}" />
+        rendered="#{linkAplicacaoExternaViewController.podeVisualizar}">
 
         <fieldset>
             <legend>
@@ -24,7 +25,7 @@
                     </h:form>
                 </p:outputPanel>
             </legend>
-            <h:form rendered="#{security.checkPage('/pages/Processo/linkAplicacaoExternaEdit')}">
+            <h:form rendered="#{linkAplicacaoExternaViewController.podeCadastrar}">
                 <p:outputPanel rendered="#{not empty linkAplicacaoExternaViewController.entity}">
                     <fieldset>
                         <legend>
@@ -43,7 +44,8 @@
                     </fieldset>
                 </p:outputPanel>
             </h:form>
-            <h:form>
+            <h:outputText rendered="#{not linkAplicacaoExternaViewController.existemLinks}" value="#{infoxMessages['crud.linkAplicacaoExterna.listEmpty']}" />
+            <h:form rendered="#{linkAplicacaoExternaViewController.existemLinks}">
                 <ui:repeat var="link" value="#{linkAplicacaoExternaViewController.links}">
                     <div style="display: inline-block;">
                         <div style="display: inline-block; vertical-align: middle;">
