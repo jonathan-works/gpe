@@ -95,7 +95,7 @@
                        		<wi:outputText id="mensagemEnvioLocalizacao" value="#{infoxMessages['comunicacao.mensagemEnvioParaLocalizacao']}" />
                        	</s:div>
                        	<i:autoComplete id="localizacao" label="#{infoxMessages['comunicacao.localizacoes']}"
-                       		value="#{destinatarioComunicacaoAction.localizacao}" required="true"
+                       		value="#{destinatarioComunicacaoAction.localizacao}" required="true" minQueryLength="1"
                        		completeMethod="#{destinatarioComunicacaoAction.getLocalizacoesDisponiveis}"
                        		converter="org.jboss.seam.ui.EntityConverter" style="position: relative;"
                        		var="localizacao" itemLabel="#{localizacao.localizacao}" itemValue="#{localizacao}" forceSelection="true"
@@ -492,7 +492,7 @@
 							<i:autoComplete id="localizacaoResponsavelAssinatura" label="#{infoxMessages['comunicacao.localizacoes']}"
                        			value="#{envioComunicacaoController.modeloComunicacao.localizacaoResponsavelAssinatura}"
                        			completeMethod="#{envioComunicacaoController.getLocalizacoesDisponiveisAssinatura}"
-                       			converter="org.jboss.seam.ui.EntityConverter" style="position: relative;"
+                       			converter="org.jboss.seam.ui.EntityConverter" style="position: relative;" minQueryLength="1"
                        			var="item" itemLabel="#{item.localizacao}" itemValue="#{item}" forceSelection="true"
                        			ajax="true" event="itemSelect" render="@(.perfis-responsavel-assinatura) @(.button-gravar-comunicacao)"
                        			onselect="#{envioComunicacaoController.verificaExistenciaUsuario()}">

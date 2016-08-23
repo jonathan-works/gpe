@@ -207,7 +207,7 @@ public class DestinatarioComunicacaoAction implements Serializable{
 	}
 	
 	public List<Localizacao> getLocalizacoesDisponiveis(String query) {
-		if (localizacaoRaizComunicacao != null && query != null && !query.isEmpty()) {
+		if (localizacaoRaizComunicacao != null) {
 			return localizacaoSearch.getLocalizacoesByRaizWithDescricaoLike(localizacaoRaizComunicacao, query, EnvioComunicacaoController.MAX_RESULTS);
 		}
 		return Collections.emptyList();

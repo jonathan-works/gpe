@@ -67,7 +67,7 @@ public class EnvioComunicacaoController implements Serializable {
 	public static final String NAME = "envioComunicacaoController";
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(EnvioComunicacaoController.class);
-	public static final int MAX_RESULTS = 15;
+	public static final int MAX_RESULTS = 10;
 	
 	private AssinaturaDocumentoService assinaturaDocumentoService = ComponentUtil.getComponent(AssinaturaDocumentoService.NAME);
 	private CertificateSignatures certificateSignatures = ComponentUtil.getComponent(CertificateSignatures.NAME);
@@ -366,10 +366,7 @@ public class EnvioComunicacaoController implements Serializable {
 	}
 	
 	public List<Localizacao> getLocalizacoesDisponiveisAssinatura(String query) {
-		if (localizacaoRaizComunicacao != null && query != null && !query.isEmpty()) {
-			return localizacaoSearch.getLocalizacoesByRaizWithDescricaoLike(Authenticator.getLocalizacaoAtual(), query, MAX_RESULTS);
-		}
-		return Collections.emptyList();
+		return localizacaoSearch.getLocalizacoesByRaizWithDescricaoLike(Authenticator.getLocalizacaoAtual(), query, MAX_RESULTS);
 	}
 
 	public List<TipoComunicacao> getTiposComunicacao() {
