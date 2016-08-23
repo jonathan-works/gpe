@@ -43,6 +43,7 @@ import br.com.infox.epp.processo.linkExterno.LinkAplicacaoExternaService;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
+import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais;
 import br.com.infox.epp.relacionamentoprocessos.RelacionamentoProcessoManager;
 import br.com.infox.epp.relacionamentoprocessos.TipoRelacionamentoProcessoManager;
@@ -354,6 +355,26 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
             processo.getMetadadoProcessoList().remove(metadado);
         }
         metadadoProcessoManager.flush();;
+    }
+
+    @External(expressionType = ExpressionType.GATEWAY, tooltip = "Verifica se algum dos documentos em análise possui a classificação de documento parametrizada", value = {
+            @Parameter(defaultValue = "'codigoClassificacaoDocumento'", selectable = true)
+    })
+    public boolean documentoEmAnaliseTemClassificacao(String codigoClassificacao) {
+        ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
+        if (executionContext == null) {
+            throw new BusinessException("ExecutionContext está nulo.");
+        }
+        Integer idProcesso = (Integer) executionContext.getContextInstance().getVariable(VariaveisJbpmProcessosGerais.PROCESSO);
+        Processo processo = processoManager.find(idProcesso);
+        List<MetadadoProcesso> metadadoList = processo.getMetadadoList(EppMetadadoProvider.DOCUMENTO_EM_ANALISE);
+        for (MetadadoProcesso metadado : metadadoList) {
+            Documento documento = metadado.getValue();
+            if (documento.getClassificacaoDocumento().getCodigoDocumento().equals(codigoClassificacao)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
