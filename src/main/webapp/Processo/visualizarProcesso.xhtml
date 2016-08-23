@@ -33,7 +33,7 @@
         <rich:collapsiblePanel
             switchType="client"
             header="#{infoxMessages['processo.titleView']} #{processoEpaHome.instance.numeroProcessoRoot}"
-            expanded="false">
+            expanded="true">
             <h:panelGrid
                 columns="3"
                 width="100%"
@@ -54,6 +54,9 @@
 		      	</ui:repeat>
                     
             </h:panelGrid>
+            <ui:include src="linkAplicacaoExterna.xhtml">
+                <ui:param name="processo" value="#{processoEpaHome.instance}" />
+            </ui:include>
         </rich:collapsiblePanel>
         <infox:tabPanel
             switchType="ajax"

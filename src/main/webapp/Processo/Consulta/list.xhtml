@@ -24,7 +24,7 @@
     <rich:collapsiblePanel
       switchType="client"
       header="#{infoxMessages['processo.titleView']} #{consultaController.processo.numeroProcessoRoot}"
-      expanded="false">
+      expanded="true">
       <h:panelGrid
         columns="3"
         width="100%"
@@ -43,6 +43,9 @@
         	<wi:outputText id="variavel#{variavel.nome}" label="#{variavel.label}" value="#{variavel.valor}"/>
        	</ui:repeat>
     </h:panelGrid>
+        <ui:include src="/Processo/linkAplicacaoExterna.xhtml">
+            <ui:param name="processo" value="#{consultaController.processo}" />
+        </ui:include>
     </rich:collapsiblePanel>
     <infox:tabPanel
       headerSpacing="2"
