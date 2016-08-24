@@ -11,11 +11,11 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.jbpm.context.exe.variableinstance.StringInstance;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.taskmgmt.def.Task;
-import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.epp.processo.entity.Processo;
@@ -33,22 +33,21 @@ public class ModeloComunicacaoSearch extends PersistenceController {
     public List<ModeloComunicacao> getByProcessoAndTaskName(Integer idProcesso, String taskName) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<ModeloComunicacao> cq = cb.createQuery(ModeloComunicacao.class);
-        From<?, ModeloComunicacao> modeloComunicacao = cq.from(ModeloComunicacao.class);
-        From<?, Processo> paiComunicacao = modeloComunicacao.join(ModeloComunicacao_.processo, JoinType.INNER);
-        From<?, DestinatarioModeloComunicacao> destinatario = modeloComunicacao.join(ModeloComunicacao_.destinatarios, JoinType.INNER);
-        From<?, Processo> comunicacao = destinatario.join(DestinatarioModeloComunicacao_.processo, JoinType.INNER);
+        Root<ModeloComunicacao> mc = cq.from(ModeloComunicacao.class);
+        Join<ModeloComunicacao, Processo> p = mc.join(ModeloComunicacao_.processo, JoinType.INNER);
+        cq.select(mc);
         
-        Predicate restrictions = cb.and(
-            cb.equal(paiComunicacao.get(Processo_.idProcesso), idProcesso),
-            cb.isTrue(destinatario.get(DestinatarioModeloComunicacao_.expedido)),
-            createPredicateProcessoExisteEAtivo(comunicacao),
-            createPredicateTaskNameEqual(cq, modeloComunicacao, paiComunicacao, taskName)
-        );
+        Subquery<Integer> existsTask = cq.subquery(Integer.class);
+        existsTask.select(cb.literal(1));
+        Root<Task> task = existsTask.from(Task.class);
+        existsTask.where(cb.equal(task.get("key"), mc.get(ModeloComunicacao_.taskKey)),
+                cb.equal(task.get("name"), taskName));
         
-        cq.select(modeloComunicacao).where(restrictions);
+        cq.where(cb.equal(p.get(Processo_.idProcesso), idProcesso),
+                cb.exists(existsTask));
         return getEntityManager().createQuery(cq).getResultList();
     }
-    
+
     public Long countRespostasComunicacaoByProcessoAndTaskName(Integer idProcesso, String taskName, Boolean prorrogacaoPrazo){
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         
@@ -62,13 +61,13 @@ public class ModeloComunicacaoSearch extends PersistenceController {
             cb.equal(paiComunicacao.get(Processo_.idProcesso), idProcesso),
             cb.isTrue(destinatario.get(DestinatarioModeloComunicacao_.expedido)),
             createPredicateProcessoExisteEAtivo(comunicacao),
-            createPredicateTaskNameEqual(cq, modeloComunicacao, paiComunicacao, taskName)
+            createPredicateTaskNameEqual(cq, modeloComunicacao, taskName)
         );
 
         From<?, Processo> respostaComunicacao = comunicacao.join(Processo_.processosFilhos, JoinType.INNER);
         restrictions = cb.and(restrictions, createPredicateRespostaComunicacao(cq, respostaComunicacao, prorrogacaoPrazo));
         
-        cq.select(cb.count(respostaComunicacao)).where(restrictions);
+        cq.select(cb.countDistinct(respostaComunicacao)).where(restrictions);
         return getEntityManager().createQuery(cq).getSingleResult();
     }
     
@@ -85,7 +84,7 @@ public class ModeloComunicacaoSearch extends PersistenceController {
             cb.equal(paiComunicacao.get(Processo_.idProcesso), idProcesso),
             cb.isTrue(destinatario.get(DestinatarioModeloComunicacao_.expedido)),
             createPredicateProcessoExisteEAtivo(comunicacao),
-            createPredicateTaskNameEqual(cq, modeloComunicacao, paiComunicacao, taskName)
+            createPredicateTaskNameEqual(cq, modeloComunicacao, taskName)
         );
 
         From<?, Processo> respostaComunicacao = comunicacao.join(Processo_.processosFilhos, JoinType.INNER);
@@ -134,15 +133,12 @@ public class ModeloComunicacaoSearch extends PersistenceController {
     }
     
     private Predicate createPredicateTaskNameEqual(AbstractQuery<?> cq,
-            From<?,ModeloComunicacao> modeloComunicacao, From<?, Processo> paiComunicacao, String taskName){
+            From<?,ModeloComunicacao> modeloComunicacao, String taskName){
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        Root<TaskInstance> taskInstance = cq.from(TaskInstance.class);
-        Join<?, ProcessInstance> processInstance = taskInstance.<TaskInstance,ProcessInstance>join("processInstance", JoinType.INNER);
-        Join<?,Task> task = taskInstance.<TaskInstance,Task>join("task", JoinType.INNER);
+        Root<Task> task = cq.from(Task.class);
         return cb.and(
             cb.equal(task.get("name"), taskName),
-            cb.equal(task.get("key"), modeloComunicacao.get(ModeloComunicacao_.taskKey)),
-            cb.equal(processInstance.get("id"), paiComunicacao.get(Processo_.idJbpm))
+            cb.equal(task.get("key"), modeloComunicacao.get(ModeloComunicacao_.taskKey))
         );
     }
     

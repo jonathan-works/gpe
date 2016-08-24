@@ -17,8 +17,6 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
-import org.jbpm.graph.def.ProcessDefinition;
-import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.taskmgmt.def.Task;
 
 import br.com.infox.core.persistence.PersistenceController;
@@ -69,7 +67,7 @@ public class ComunicacaoSearch extends PersistenceController {
         );
         
         if (!StringUtil.isEmpty(taskName)) {
-            predicate = appendTaskNameFilter(predicate, cq, processo, taskName, destinatarioComunicacao);
+            predicate = appendTaskNameFilter(predicate, cq, taskName, destinatarioComunicacao);
         }
         cq.groupBy(limiteCiencia.get(MetadadoProcesso_.valor));
         cq.where(predicate);
@@ -84,20 +82,16 @@ public class ComunicacaoSearch extends PersistenceController {
         return map;
     }
 
-    protected Predicate appendTaskNameFilter(Predicate predicate, CriteriaQuery<Tuple> cq, Join<?, Processo> processo, String taskName,
+    protected Predicate appendTaskNameFilter(Predicate predicate, CriteriaQuery<Tuple> cq, String taskName,
             Root<DestinatarioModeloComunicacao> destinatarioComunicacao) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Join<DestinatarioModeloComunicacao, ModeloComunicacao> modeloComunicacao = destinatarioComunicacao.join(DestinatarioModeloComunicacao_.modeloComunicacao, JoinType.INNER);
-        Join<Processo, Processo> processoPai = processo.join(Processo_.processoPai, JoinType.INNER);
         Subquery<Integer> existsSubquery = cq.subquery(Integer.class);
         existsSubquery.select(cb.literal(1));
         Root<Task> task = existsSubquery.from(Task.class);
-        Root<ProcessInstance> processInstance = existsSubquery.from(ProcessInstance.class);
         existsSubquery.where(
             cb.like(task.<String>get("name"), cb.literal(taskName)),
-            cb.equal(task.get("key"), modeloComunicacao.get(ModeloComunicacao_.taskKey)),
-            cb.equal(processInstance.<Long>get("id"), processoPai.get(Processo_.idJbpm)),
-            cb.equal(task.<ProcessDefinition>get("processDefinition").<Long>get("id"), processInstance.<ProcessDefinition>get("processDefinition").<Long>get("id"))
+            cb.equal(task.get("key"), modeloComunicacao.get(ModeloComunicacao_.taskKey))
         );
         predicate = cb.and(cb.exists(existsSubquery), predicate);
         return predicate;
