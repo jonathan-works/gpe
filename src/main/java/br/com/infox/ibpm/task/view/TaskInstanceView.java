@@ -91,6 +91,10 @@ public class TaskInstanceView implements Serializable {
                     if (VariableType.TASK_PAGE.equals(type)){
                         continue;
                     }
+                    Object value = taskInstance.getVariable(var.getVariableName());
+                    if(value == null) {
+                    	continue;
+                    }
                     String name = tokens[1];
                     FormField ff = new FormField();
                     ff.setFormId(form.getFormId());
@@ -99,7 +103,6 @@ public class TaskInstanceView implements Serializable {
                     ff.setRequired(var.isRequired() + "");
                     String label = JbpmUtil.instance().getMessages().get(taskInstance.getProcessInstance().getProcessDefinition().getName() + ":" + name);
                     ff.setLabel(label);
-                    Object value = taskInstance.getVariable(var.getVariableName());
                     Map<String, Object> properties = ff.getProperties();
 
                     properties.put("pagePath", type.getPath());
