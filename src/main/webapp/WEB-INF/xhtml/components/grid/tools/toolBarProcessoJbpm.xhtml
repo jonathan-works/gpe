@@ -23,7 +23,9 @@
     </div>
 
     <a:commandLink execute="@this" target="#{idProcesso}popUpFluxo"
-      onclick="open('#{pathResolver.contextPath}/Processo/visualizarProcesso.seam?idProcesso=#{idProcesso}&amp;idTaskInstance=#{idTaskInstance}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
+      onclick="open('#{pathResolver.contextPath}/Processo/visualizarProcesso.seam?idProcesso=#{idProcesso}&amp;idTaskInstance=#{idTaskInstance}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');"
+      title="#{infoxMessages['painel.visualizar.tooltip']}"
+      >
       <f:param name="idProcesso" value="#{idProcesso}" />
       <f:param name="idTaskInstance" value="#{idTaskInstance}" />
       <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
@@ -32,7 +34,9 @@
     <a:commandLink execute="@this" rendered="#{empty owner and showMovimentarToolBar}"
       target="#{idProcesso}popUpFluxo"
       render="@form"
-      onclick="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;idTaskInstance=#{idTaskInstance}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
+      onclick="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;idTaskInstance=#{idTaskInstance}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');"
+      title="#{infoxMessages['painel.movimentarUnassigned.tooltip']}"
+      >
       <f:param name="idProcesso" value="#{idProcesso}" />
       <f:param name="idTaskInstance" value="#{idTaskInstance}" />
       <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/mod/edit.png')}" />
@@ -41,7 +45,9 @@
     <a:commandLink execute="@this"
       rendered="#{owner eq authenticator.getUsuarioLogado().login and showMovimentarToolBar}"
       target="#{idProcesso}popUpFluxo"
-      onclick="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;idTaskInstance=#{idTaskInstance}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');">
+      onclick="open('#{pathResolver.contextPath}/Processo/movimentar.seam?idProcesso=#{idProcesso}&amp;idTaskInstance=#{idTaskInstance}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');"
+      title="#{infoxMessages['painel.movimentarUnassigned.tooltip']}"
+      >
       <f:param name="idProcesso" value="#{idProcesso}" />
       <f:param name="idTaskInstance" value="#{idTaskInstance}" />
       <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/processAssigned.png')}" />
@@ -56,6 +62,7 @@
       execute="@this" render="baseBody, pageBodyDialogMessage"
       onclick="return confirm(\'#{infoxMessages['movimentar.confirmLiberarTarefa']}\');"
       limitRender="true"
+      title="#{infoxMessages['painel.liberarTarefa.tooltip']}"
       rendered="#{(owner ne authenticator.getUsuarioLogado().login and not empty owner and authenticator.isUsuarioAtualResponsavel())}">
       <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/role.gif')}"
         title="#{infoxMessages['painel.list.liberarTarefaServidor']} #{row.nomeUsuarioTarefa}" />
