@@ -57,6 +57,7 @@ import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.hibernate.util.HibernateUtil;
+import br.com.infox.ibpm.task.service.MovimentarTarefaService;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -86,6 +87,8 @@ public class ComunicacaoService {
 	private DocumentoComunicacaoService documentoComunicacaoService;
 	@Inject
 	private UsuarioLoginManager usuarioLoginManager;
+    @Inject
+    private MovimentarTarefaService movimentarTarefaService;
 	@Inject
 	private ModeloComunicacaoManager modeloComunicacaoManager;
 	@Inject
@@ -105,20 +108,20 @@ public class ComunicacaoService {
 	public void expedirComunicacao(DestinatarioModeloComunicacao destinatario) throws DAOException {
 		ModeloComunicacao modeloComunicacao = destinatario.getModeloComunicacao();
 		
-		Processo processo = new Processo();
-		processo.setLocalizacao(Authenticator.getLocalizacaoAtual());
-		processo.setNaturezaCategoriaFluxo(getNaturezaCategoriaFluxo(destinatario));
-		processo.setNumeroProcesso("");
-		processo.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
-		processo.setProcessoPai(modeloComunicacao.getProcesso());
-		processo.setDataInicio(DateTime.now().toDate());
-		processo.setUsuarioCadastro(Authenticator.getUsuarioLogado());
-		processoManager.persist(processo);
-		destinatario.setProcesso(processo);
+		Processo comunicacao = new Processo();
+		comunicacao.setLocalizacao(Authenticator.getLocalizacaoAtual());
+		comunicacao.setNaturezaCategoriaFluxo(getNaturezaCategoriaFluxo(destinatario));
+		comunicacao.setNumeroProcesso("");
+		comunicacao.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
+		comunicacao.setProcessoPai(modeloComunicacao.getProcesso());
+		comunicacao.setDataInicio(DateTime.now().toDate());
+		comunicacao.setUsuarioCadastro(Authenticator.getUsuarioLogado());
+		processoManager.persist(comunicacao);
+		destinatario.setProcesso(comunicacao);
 		
-		iniciarProcessoService.iniciarProcesso(processo, createVariaveisJbpm(destinatario));
+		iniciarProcessoService.iniciarProcesso(comunicacao, createVariaveisJbpm(destinatario));
 
-		criarMetadados(destinatario, processo);
+		criarMetadados(destinatario, comunicacao);
 		
 		destinatario.setExpedido(true);
 		genericManager.update(destinatario);
@@ -308,8 +311,8 @@ public class ComunicacaoService {
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	private void criarMetadados(DestinatarioModeloComunicacao destinatario, Processo processo) throws DAOException {
-		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processo);
+	private void criarMetadados(DestinatarioModeloComunicacao destinatario, Processo comunicacao) throws DAOException {
+		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
 		List<MetadadoProcesso> metadados = new ArrayList<>();
 
 		criarMetadadoDestinatario(destinatario, metadadoProcessoProvider);
@@ -335,18 +338,19 @@ public class ComunicacaoService {
 		}
 		
 		metadadoProcessoManager.persistMetadados(metadadoProcessoProvider, metadados);
-		createMetadadosCiencia(destinatario, processo);
+		createMetadadosCiencia(destinatario, comunicacao);
 		
 	}
 	
-	protected void createMetadadosCiencia(DestinatarioModeloComunicacao destinatario, Processo processo) {
-		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processo);
+	protected void createMetadadosCiencia(DestinatarioModeloComunicacao destinatario, Processo comunicacao) {
+		MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(comunicacao);
 		List<MetadadoProcesso> metadados;
 		metadados = new ArrayList<>();
 		if (destinatario.getModeloComunicacao().getTipoComunicacao().getQuantidadeDiasCiencia() == 0) {
-			prazoComunicacaoService.darCiencia(processo, new Date(), usuarioLoginManager.find(Integer.valueOf(Parametros.ID_USUARIO_SISTEMA.getValue())));
+			prazoComunicacaoService.darCiencia(comunicacao, DateTime.now().toDate(), usuarioLoginManager.find(Integer.valueOf(Parametros.ID_USUARIO_SISTEMA.getValue())));
+		    movimentarTarefaService.finalizarTarefasEmAberto(comunicacao);
 		} else {
-		    Date dataLimiteCiencia = prazoComunicacaoService.contabilizarPrazoCiencia(processo);
+		    Date dataLimiteCiencia = prazoComunicacaoService.contabilizarPrazoCiencia(comunicacao);
             metadados.add(metadadoProcessoProvider.gerarMetadado(
 		            ComunicacaoMetadadoProvider.LIMITE_DATA_CIENCIA, new SimpleDateFormat(MetadadoProcesso.DATE_PATTERN).format(dataLimiteCiencia)));
             metadadoProcessoManager.persistMetadados(metadadoProcessoProvider, metadados);

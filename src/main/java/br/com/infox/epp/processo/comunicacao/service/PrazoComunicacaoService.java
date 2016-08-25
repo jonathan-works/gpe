@@ -19,6 +19,7 @@ import org.joda.time.DateTime;
 import br.com.infox.certificado.bean.CertificateSignatureBean;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
@@ -66,11 +67,11 @@ public class PrazoComunicacaoService {
 		DestinatarioModeloComunicacao destinatario = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.DESTINATARIO);
         Integer qtdDias = destinatario.getModeloComunicacao().getTipoComunicacao().getQuantidadeDiasCiencia();
         //O início do prazo de ciência começa no dia do envio. 66741
-        return calcularPrazoCiencia(new Date(), qtdDias);
+        return calcularPrazoCiencia(comunicacao.getDataInicio(), qtdDias);
     }
     
 	public Date calcularPrazoCiencia(Date dataInicio, Integer qtdDias){
-		return calendarioEventosManager.getPrimeiroDiaUtil(dataInicio, qtdDias);
+		return calendarioEventosManager.getPrimeiroDiaUtil(DateUtil.getEndOfDay(dataInicio), qtdDias);
 	}
 	
 	public Date contabilizarPrazoCumprimento(Processo comunicacao) {
