@@ -60,6 +60,7 @@ public class LocalizacaoSearch {
         Root<Localizacao> localizacao = (Root<Localizacao>) query.getRoots().iterator().next();
         query.where(query.getRestriction(),
         		cb.isNotNull(localizacao.get(Localizacao_.estruturaFilho)));
+        query.orderBy(cb.asc(localizacao.get(Localizacao_.localizacao)));
         return getEntityManager().createQuery(query).setMaxResults(maxResults).getResultList();
     }
 

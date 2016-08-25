@@ -1,7 +1,6 @@
 package br.com.infox.epp.processo.comunicacao.envio.action;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
