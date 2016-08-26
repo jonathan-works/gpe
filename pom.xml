@@ -403,6 +403,33 @@
 		<classifier>rest</classifier>
 		<version>1.0.0</version>
 	</dependency>
+        <dependency>
+            <groupId>br.com.infox.certificadoDigital</groupId>
+            <artifactId>certificado-digital</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.cxf</groupId>
+                    <artifactId>cxf-rt-rs-client</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.cxf</groupId>
+                    <artifactId>cxf-rt-transports-http-hc</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.jaxrs</groupId>
+                    <artifactId>jackson-jaxrs-json-provider</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcprov-jdk15</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcmail-jdk15</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 	</dependencies>
 	<build>
 		<resources>
@@ -561,6 +588,32 @@
 					</gitDescribe>
 				</configuration>
 			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.10</version>
+                <executions>
+                  <execution>
+                    <id>copy</id>
+                    <phase>prepare-package</phase>
+                    <goals>
+                      <goal>copy</goal>
+                    </goals>
+                    <configuration>
+                      <artifactItems>
+                        <artifactItem>
+                          <groupId>br.com.infox.certificadoDigital</groupId>
+                          <artifactId>certificado-digital</artifactId>
+                          <classifier>jar-with-dependencies</classifier>
+                          <overWrite>true</overWrite>
+                          <outputDirectory>${project.build.directory}/assinador-auto-assinado</outputDirectory>
+                          <destFileName>certificado_digital.jar</destFileName>
+                        </artifactItem>
+                      </artifactItems>
+                    </configuration>
+                  </execution>
+                </executions>
+            </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
@@ -583,7 +636,7 @@
 							<excludes>
 								<exclude>WEB-INF/web.xml</exclude>
 								<exclude>WEB-INF/components.xml</exclude>
-                <exclude>WEB-INF/jboss-deployment-structure.xml</exclude>
+                                <exclude>WEB-INF/jboss-deployment-structure.xml</exclude>
 							</excludes>
 						</resource>
 						<resource>
@@ -592,9 +645,16 @@
 							<includes>
 								<include>WEB-INF/web.xml</include>
 								<include>WEB-INF/components.xml</include>
-                <include>WEB-INF/jboss-deployment-structure.xml</include>
+                                <include>WEB-INF/jboss-deployment-structure.xml</include>
 							</includes>
 						</resource>
+                        <resource>
+                            <directory>${project.build.directory}</directory>
+                            <includes>
+                                <include>assinador-auto-assinado/certificado_digital.jar</include>
+                            </includes>
+                            <targetPath>/</targetPath>
+                        </resource>
 					</webResources>
 				</configuration>
 			</plugin>
@@ -672,35 +732,6 @@
     <epp.quartz.schedulerDelay>600</epp.quartz.schedulerDelay>
 	</properties>
 	<profiles>
-		<profile>
-        <id>assinatura-rest</id>
-        <build>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>2.6</version>
-                    <executions>
-                      <execution>
-                        <phase>package</phase>
-                        <goals>
-                          <goal>jar</goal>
-                        </goals>
-                        <configuration>
-                          <classifier>assinatura-rest</classifier>
-                          <includes>
-                            <include>**/br/com/infox/epp/assinador/api/**/*.class</include>
-                            <include>**/br/com/infox/epp/rest/RestException.class</include>
-                            <include>**/br/com/infox/epp/ws/exception/ErroServico.class</include>
-                            <include>**/br/com/infox/epp/ws/exception/ErroServicoImpl.class</include>
-                          </includes>
-                        </configuration>
-                      </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </build>
-    </profile>
     <profile>
 			<id>producao</id>
 		</profile>
