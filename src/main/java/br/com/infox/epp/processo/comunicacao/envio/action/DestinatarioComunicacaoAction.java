@@ -168,7 +168,8 @@ public class DestinatarioComunicacaoAction implements Serializable{
 		}
 	}
 	
-	public void gerenciarRelator() {
+	@Deprecated
+	public void gerenciarRelator() { //FIXME Método subistituido pelo adicionar relatoria após alteração de usabilidade. Verificar clientes para excluir.
 		PessoaFisica relator = getRelator();
 		if (modeloComunicacao.getEnviarRelatoria()) {
 			if (!isPessoaFisicaNaListaDestinatarios(relator)) {
@@ -190,7 +191,20 @@ public class DestinatarioComunicacaoAction implements Serializable{
 			removerDestinatario(destinatarioRelator);
 		}
 	}
-	
+
+    public void adicionarRelatoria() {
+        modeloComunicacao.setEnviarRelatoria(true);
+        PessoaFisica relator = getRelator();
+        if (!isPessoaFisicaNaListaDestinatarios(relator)) {
+            DestinatarioModeloComunicacao destinatario = new DestinatarioModeloComunicacao();
+            destinatario.setDestinatario(relator);
+            destinatario.setModeloComunicacao(modeloComunicacao);
+            destinatario.setPrazo(getPrazoDefaultByTipoComunicacao(modeloComunicacao.getTipoComunicacao()));
+            modeloComunicacao.getDestinatarios().add(destinatario);
+            participanteProcessoComunicacaoList.adicionarIdPessoa(relator.getIdPessoa());
+        }
+    }
+
 	private boolean isPessoaFisicaNaListaDestinatarios(PessoaFisica relator) {
 		for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
 			if (destinatario.getDestinatario() != null && destinatario.getDestinatario().equals(relator)) {
@@ -204,7 +218,7 @@ public class DestinatarioComunicacaoAction implements Serializable{
 		return destinatarioComunicacaoService.getMeiosExpedicao(destinatario);
 	}
 	
-	public boolean isProcessoPossuiRelator() {
+	public boolean isProcessoPossuiRelator() { 
 		return processoPossuiRelator;
 	}
 	
@@ -268,7 +282,7 @@ public class DestinatarioComunicacaoAction implements Serializable{
 		}
 	}
 
-	private PessoaFisica getRelator() {
+	public PessoaFisica getRelator() {
 		MetadadoProcesso metadadoProcesso = modeloComunicacao.getProcesso().getProcessoRoot().getMetadado(EppMetadadoProvider.RELATOR);
 		return (PessoaFisica) (metadadoProcesso != null ? metadadoProcesso.getValue() : null);
 	}
