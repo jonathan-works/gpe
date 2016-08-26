@@ -12,11 +12,13 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Path;
 
 import com.google.gson.Gson;
 import com.samskivert.mustache.Mustache;
 
-import br.com.infox.epp.assinador.api.ConfiguracoesAssinador;
+import br.com.infox.assinador.rest.api.ConfiguracoesAssinador;
+import br.com.infox.epp.assinador.rest.TokenAssinaturaRest;
 
 
 @WebServlet(urlPatterns = CertificadoDigitalJNLPServlet.SERVLET_PATH)
@@ -56,7 +58,8 @@ public class CertificadoDigitalJNLPServlet extends HttpServlet {
 		if( originalRequestProtocol != null){
 			urlEpp = urlEpp.replace("http://", originalRequestProtocol + "://");
 		}
-		config.setUrl(urlEpp + "/rest");
+		
+		config.setUrl(String.format("%s/rest/%s", urlEpp, TokenAssinaturaRest.class.getAnnotation(Path.class).value()));
 		config.setToken(token);
 		
 		params.put("urlEpp", urlEpp);

@@ -9,12 +9,12 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.codec.binary.Hex;
 
+import br.com.infox.assinador.rest.api.AssinaturaResource;
+import br.com.infox.assinador.rest.api.Assinavel;
+import br.com.infox.assinador.rest.api.AssinavelResource;
+import br.com.infox.connection.RestException;
 import br.com.infox.epp.assinador.AssinadorService;
-import br.com.infox.epp.assinador.api.AssinaturaResource;
-import br.com.infox.epp.assinador.api.Assinavel;
-import br.com.infox.epp.assinador.api.AssinavelResource;
 import br.com.infox.epp.cdi.config.BeanManager;
-import br.com.infox.epp.rest.RestException;
 
 public class AssinavelResourceImpl implements AssinavelResource {
 

@@ -5,9 +5,9 @@ import java.util.UUID;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 
+import br.com.infox.assinador.rest.api.Assinatura;
+import br.com.infox.assinador.rest.api.AssinaturaResource;
 import br.com.infox.epp.assinador.AssinadorService;
-import br.com.infox.epp.assinador.api.Assinatura;
-import br.com.infox.epp.assinador.api.AssinaturaResource;
 
 public class AssinaturaResourceImpl implements AssinaturaResource {
 	

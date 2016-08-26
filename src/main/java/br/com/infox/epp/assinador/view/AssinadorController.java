@@ -13,13 +13,13 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.UriBuilder;
 
+import br.com.infox.assinador.rest.api.TokenAssinaturaResource;
+import br.com.infox.assinador.rest.api.TokenAssinaturaBaseResource;
 import br.com.infox.certificado.service.CertificadoDigitalJNLPServlet;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.assinador.AssinadorGroupService;
 import br.com.infox.epp.assinador.AssinadorGroupService.StatusToken;
 import br.com.infox.epp.assinador.AssinadorService;
-import br.com.infox.epp.assinador.api.TokenAssinaturaResource;
-import br.com.infox.epp.assinador.api.TokenAssinaturaRest;
 import br.com.infox.epp.assinador.assinavel.AssinavelDocumentoBinProvider;
 import br.com.infox.epp.assinador.assinavel.AssinavelGenericoProvider;
 import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
@@ -78,12 +78,12 @@ public class AssinadorController implements Serializable {
 		Method metodo;
 		Method metodoResource;
 		try {
-			metodoResource = TokenAssinaturaRest.class.getDeclaredMethod("getTokenAssinaturaResource", String.class);
+			metodoResource = TokenAssinaturaBaseResource.class.getDeclaredMethod("getTokenAssinaturaResource", String.class);
 			metodo = TokenAssinaturaResource.class.getDeclaredMethod(nomeMetodo);
 		} catch (NoSuchMethodException | SecurityException e) {
 			throw new RuntimeException(e);
 		}
-		URI uri = UriBuilder.fromResource(TokenAssinaturaRest.class).path(metodoResource).path(metodo).build(token);
+		URI uri = UriBuilder.fromResource(TokenAssinaturaBaseResource.class).path(metodoResource).path(metodo).build(token);
 		String retorno = pathResolver.getRestBaseUrl() + "/" + uri.toString(); 
 		return retorno;		
 	}
