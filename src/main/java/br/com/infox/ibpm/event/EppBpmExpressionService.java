@@ -47,6 +47,7 @@ import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais;
 import br.com.infox.epp.relacionamentoprocessos.RelacionamentoProcessoManager;
 import br.com.infox.epp.relacionamentoprocessos.TipoRelacionamentoProcessoManager;
+import br.com.infox.epp.system.custom.variables.CustomVariableSearch;
 import br.com.infox.ibpm.event.External.ExpressionType;
 import br.com.infox.ibpm.sinal.SignalService;
 import br.com.infox.seam.exception.BusinessException;
@@ -85,6 +86,8 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
     private LinkAplicacaoExternaService linkAplicacaoExternaService;
     @Inject
     protected CalendarioEventosDAO calendarioEventosDAO;
+    @Inject
+    private CustomVariableSearch customVariableSearch;
     @Inject
     private MetadadoProcessoManager metadadoProcessoManager;
 
@@ -376,6 +379,17 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
         }
         return false;
     }
+    
+    @External(expressionType = ExpressionType.GATEWAY,
+    		tooltip = "process.events.expression.customExpression.tooltip",
+            value = {
+                @Parameter(defaultValue = "'codigoVariavel'", label = "process.events.expression.customExpression.param.codigo.label",
+                		tooltip = "process.events.expression.customExpression.param.codigo.tooltip")
+            },
+            example = "#{bpmExpressionService.getVariavel('codigoVariavel')}")
+    public Object getVariavel(String codigo) {
+		return customVariableSearch.getCustomVariableByCodigo(codigo);
+	}
 
     @Override
     public List<ExternalMethod> getExternalMethods() {

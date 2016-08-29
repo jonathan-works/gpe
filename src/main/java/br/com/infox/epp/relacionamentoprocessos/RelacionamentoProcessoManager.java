@@ -25,6 +25,7 @@ import br.com.infox.epp.processo.entity.RelacionamentoProcessoInterno;
 import br.com.infox.epp.processo.entity.TipoRelacionamentoProcesso;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.service.ProcessoService;
+import br.com.infox.seam.security.SecurityUtil;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -42,9 +43,19 @@ public class RelacionamentoProcessoManager extends Manager<RelacionamentoProcess
     private CategoriaManager categoriaManager;
     @Inject
     private NaturezaManager naturezaManager;
+    @Inject
+    private SecurityUtil securityUtil;
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "relacionamentoProcessoManager";
+	
+    public boolean isPermittedVisualizar() {
+        return securityUtil.isPermitted("ProcessosRelacionados/visualizar");
+    }
+
+    public boolean isPermittedModificar() {
+        return securityUtil.isPermitted("ProcessosRelacionados/modificar");
+    }
 
 	public boolean existeRelacionamentoInterno(String numeroProcesso1, String numeroProcesso2) {
 		Relacionamento relacionamento = new Relacionamento();

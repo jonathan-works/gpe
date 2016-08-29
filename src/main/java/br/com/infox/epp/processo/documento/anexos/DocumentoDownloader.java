@@ -109,7 +109,7 @@ public class DocumentoDownloader implements Serializable {
         byte[] data = documentoBinarioManager.getData(documento.getId());
         String fileName = documento.getNomeArquivo();
         String contentType = "application/" + documento.getExtensao();
-        if (gerarMargens && contentType.equals("application/pdf") && !documento.getAssinaturas().isEmpty()) {
+        if (gerarMargens && contentType.equals("application/pdf")) {
             downloadPdf(documento, data, fileName);
         } else {
             FileDownloader.download(data, contentType, fileName);
@@ -154,11 +154,7 @@ public class DocumentoDownloader implements Serializable {
     
     public void downloadPdf(Documento documento, byte[] pdf, String nome) {
     	if (validarSigilo(documento)) {
-    		if (!documento.getDocumentoBin().getAssinaturas().isEmpty()) {
-    			downloadPdf(documento.getDocumentoBin(), pdf, nome);
-    		} else {
-    			FileDownloader.download(pdf, "application/pdf", nome);
-    		}
+    	    downloadPdf(documento.getDocumentoBin(), pdf, nome);
     	}
     }
 

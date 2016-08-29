@@ -327,7 +327,7 @@
             <infox:tab
                 id="relacionamentoProcessoTab"
                 name="relacionamentoProcessoTab"
-                rendered="#{home.isManaged()}"
+                rendered="#{home.isManaged() and relacionamentoProcessoView.podeVisualizar()}"
                 actionListener="#{relacionamentoProcessoView.initView(processoEpaHome.instance, false)}"
                 title="#{infoxMessages['relacionamentoProcesso.titleTab']}">
                 <ui:fragment rendered="#{home.tab eq 'relacionamentoProcessoTab'}">

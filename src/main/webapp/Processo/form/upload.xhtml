@@ -21,7 +21,7 @@
 	     label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
 	     value="#{formField.properties.classificacaoDocumento}"
 	     items="#{classificacoesDocumento}"
-	     showLabelSelecione="true" required="false"
+	     showLabelSelecione="true" required="#{formField.properties.required}"
 	     rendered="#{not readonly and not formField.value.hasAssinatura() and not formField.value.documentoBin.suficientementeAssinado}"
 	     disabled="#{classificacoesDocumento.size eq 1}">
 	     <a:ajax render="#{varId}UploadDiv #{varId}assinaturaDocumentoDiv" event="change" execute="@this" limitRender="true" />

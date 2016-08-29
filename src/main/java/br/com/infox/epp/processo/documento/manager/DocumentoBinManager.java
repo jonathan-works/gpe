@@ -188,6 +188,8 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
     }
 
 	public String getTextoAssinatura(final DocumentoBin documento) {
+	    if (documento.getAssinaturas() == null || documento.getAssinaturas().isEmpty())
+	        return "";
         final StringBuilder sb = new StringBuilder("Documento Assinado Digitalmente por: ");
 		for (final AssinaturaDocumento assinatura : documento.getAssinaturas()) {
 			sb.append(assinatura.getNomeUsuario());

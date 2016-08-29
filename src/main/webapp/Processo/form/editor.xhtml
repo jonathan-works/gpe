@@ -20,7 +20,7 @@
 	<wi:selectOneMenuEntity id="#{varId}ClassificacaoDocumento"
 		label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
 		items="#{classificacoesDocumento}"
-		required="#{not readonly}"
+		required="#{wi:get(required, false)}"
 		showLabelSelecione="true"
 		value="#{formField.properties.classificacaoDocumento}"
 		readonly="#{readonly or classificacoesDocumento.size eq 1 or formField.value.hasAssinatura()}"
@@ -55,6 +55,7 @@
 	    </s:div>
 	    
 	    <wi:editor id="#{varId}" value="#{formField.value.documentoBin.modeloDocumento}"
+            required="#{wi:get(required, false)}" rendered="#{not empty formField.properties.classificacaoDocumento}"
 	        readonly="#{readonly or formField.value.hasAssinatura()}" 
 	        label="#{formField.label}"/>
 	        
