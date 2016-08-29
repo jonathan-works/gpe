@@ -10,6 +10,7 @@ import javax.naming.NamingException;
 import org.jboss.seam.Component;
 
 import br.com.infox.core.messages.InfoxMessages;
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.manager.ldap.LDAPManager;
@@ -21,13 +22,10 @@ public class LoginService {
 	
     @Inject
     protected InfoxMessages infoxMessages;
-    
     @Inject
     protected UsuarioLoginManager usuarioLoginManager;
-    
     @Inject
     private Logger logger;
-    
     @Inject
     private LDAPManager ldapManager;
     @Inject
@@ -55,9 +53,11 @@ public class LoginService {
     }
     
     private boolean autenticarLdap(String login, String senha) {
-        UsuarioLogin usuario;
+    	String providerUrl = getProviderUrl();
+    	String domainName = getDomainName();
+    	if (StringUtil.isEmpty(providerUrl)) return false;
 		try {
-			usuario = ldapManager.autenticarLDAP(login, senha, getProviderUrl(), getDomainName());
+			UsuarioLogin usuario = ldapManager.autenticarLDAP(login, senha, providerUrl, domainName);
 	        if(usuario == null) {
 	        	return false;
 	        }
