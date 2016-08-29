@@ -208,7 +208,7 @@ public class DocumentoProcessoAction implements Serializable {
 	
     public boolean deveMostrarCadeado(Documento documento) {
         try {
-            return documento.hasAssinatura() || documento.isDocumentoAssinavel();
+            return documento.isDocumentoAssinavel() || documento.hasAssinatura();
         } catch (Exception e) {
             actionMessagesService.handleGenericException(e, null);
             return false;
