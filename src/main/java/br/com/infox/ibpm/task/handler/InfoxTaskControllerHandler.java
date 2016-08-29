@@ -27,12 +27,12 @@ public class InfoxTaskControllerHandler implements TaskControllerHandler {
 			} else if (variableAccess.isReadable()) {
 			    String defaultValue = variableAccess.getValue();
                 if (defaultValue != null) {
-                    String substring = defaultValue.substring(0, 2);
-                    if (substring.equals("#{") || substring.equals("${")) {
+                	if (defaultValue.startsWith("#{") || defaultValue.startsWith("${")) {
                         ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
                         Object evaluate = JbpmExpressionEvaluator.evaluate(defaultValue, executionContext);
                         taskInstance.setVariableLocally(variableAccess.getVariableName(), evaluate);
-                    } else {
+                	}
+                    else {
                         taskInstance.setVariableLocally(variableAccess.getVariableName(), defaultValue);
                     }
 			    } else {
