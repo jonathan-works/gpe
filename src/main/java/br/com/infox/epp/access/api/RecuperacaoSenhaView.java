@@ -8,6 +8,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.codec.binary.Base64;
@@ -17,11 +18,14 @@ import br.com.infox.core.exception.EppConfigurationException;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
+import br.com.infox.epp.access.service.AuthenticatorService;
 import br.com.infox.epp.access.service.RecuperacaoSenhaService;
+import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.system.dao.ParametroDAO;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import br.com.infox.seam.exception.BusinessException;
 
 @Named
 @ViewScoped
@@ -37,6 +41,10 @@ public class RecuperacaoSenhaView implements Serializable {
 	private RecuperacaoSenhaService recuperacaoSenhaService;
 	@Inject
 	private UsuarioLoginManager usuarioLoginManager;
+	@Inject
+	private AuthenticatorService authenticatorService;
+	@Inject
+	private InfoxMessages infoxMessages;
 
 	private String login;
 	private String codigo;
@@ -77,12 +85,11 @@ public class RecuperacaoSenhaView implements Serializable {
 		
 		try {
 			UsuarioLogin usuario = usuarioLoginManager.getUsuarioLoginByLogin(login);
-			if (usuario == null) {
-				FacesMessages.instance().add("Usuário não encontrado");
-				return null;
-			}
+                        authenticatorService.checkValidadeUsuarioLogin(usuario, UsuarioEnum.P);
 			recuperacaoSenhaService.requisitarCodigoRecuperacao(usuario, minutesToExpire, eppURL);
 			return "/recuperacaoSenha.seam?faces-redirect=true";
+		} catch (LoginException e) {
+		    FacesMessages.instance().add(e.getMessage());
 		} catch (Exception e) {
 			LOG.error("Erro ao requisitar código de recuperação de senha", e);
 			FacesMessages.instance().add(e.getMessage());
@@ -92,18 +99,24 @@ public class RecuperacaoSenhaView implements Serializable {
 
 	public String trocarSenha() {
 		UsuarioLogin usuario = usuarioLoginManager.getUsuarioLoginByLogin(login);
-    	if (usuario == null || !recuperacaoSenhaService.verificarValidadeCodigo(codigo, usuario, minutesToExpire)) {
-    		FacesMessages.instance().add("Código de recuperação de senha inválido ou expirado.");
+		try {
+		    authenticatorService.checkValidadeUsuarioLogin(usuario, UsuarioEnum.P);
+		} catch (LoginException e) {
+		    FacesMessages.instance().add(e.getMessage());
+		    return null;
+		}
+    	if (!recuperacaoSenhaService.verificarValidadeCodigo(codigo, usuario, minutesToExpire)) {
+    		FacesMessages.instance().add(infoxMessages.get("login.error.codigoInvalido"));
     		FacesContext.getCurrentInstance().validationFailed();
     		return null;
     	}
     	if (pass1 == null || pass2 == null || pass1.isEmpty() || pass2.isEmpty() || !pass1.equals(pass2)) {
-    		FacesMessages.instance().add(InfoxMessages.getInstance().get("login.error.novaSenhaNaoConfere"));
+    		FacesMessages.instance().add(infoxMessages.get("login.error.novaSenhaNaoConfere"));
     		FacesContext.getCurrentInstance().validationFailed();
     		return null;
     	}
 		recuperacaoSenhaService.changePassword(usuario, pass1, codigo);
-		FacesMessages.instance().add("Senha alterada com sucesso");
+		FacesMessages.instance().add(infoxMessages.get("login.error.senhaAlteradaSucesso"));
 		setLogin(null);
 		setCodigo(null);
 		setPass1(null);

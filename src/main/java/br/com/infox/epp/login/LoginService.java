@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.naming.NamingException;
+import javax.security.auth.login.LoginException;
 
 import org.jboss.seam.Component;
 
@@ -13,8 +14,11 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.manager.ldap.LDAPManager;
+import br.com.infox.epp.access.service.AuthenticatorService;
 import br.com.infox.epp.access.service.PasswordService;
+import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.system.manager.ParametroManager;
+import br.com.infox.seam.exception.BusinessException;
 
 @Stateless
 public class LoginService {
@@ -32,6 +36,8 @@ public class LoginService {
     private LDAPManager ldapManager;
     @Inject
     private PasswordService passwordService;
+    @Inject
+    private AuthenticatorService authenticatorService;
     
     protected String getDomainName() {
         final ParametroManager parametroManager = (ParametroManager) Component.getInstance(ParametroManager.NAME);
@@ -48,6 +54,11 @@ public class LoginService {
         if(usuario == null) {
         	return false;
         }
+        try {
+            authenticatorService.checkValidadeUsuarioLogin(usuario, UsuarioEnum.P);
+        } catch (LoginException e) {
+            throw new BusinessException(e.getMessage());
+        }
         if(usuario.getSenha().equals(passwordService.generatePasswordHash(senha, usuario.getSalt()))) {
         	return true;
         }
@@ -58,15 +69,15 @@ public class LoginService {
         UsuarioLogin usuario;
 		try {
 			usuario = ldapManager.autenticarLDAP(login, senha, getProviderUrl(), getDomainName());
-	        if(usuario == null) {
-	        	return false;
-	        }
+			authenticatorService.checkValidadeUsuarioLogin(usuario, UsuarioEnum.P);
 	        usuarioLoginManager.persist(usuario);
 	        return true;
 		} catch (NamingException e) {
 			logger.log(Level.WARNING, "ldapException", e);
 			return false;
-		}
+		} catch (LoginException e) {
+	            throw new BusinessException(e.getMessage());
+	        }
     }
     
     
