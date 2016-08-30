@@ -348,7 +348,8 @@ public class Authenticator implements Serializable {
         setVariaveisDoContexto(usuarioPerfil, roleSet);
         securityUtil.clearPermissionCache();
         BeanManager.INSTANCE.getReference(MenuNavigation.class).refresh();
-        if (!getUsuarioLogado().getProvisorio() && !isUsuarioExterno()) {
+        
+        if (!isUsuarioExterno()) {
         	if (!hasToSignTermoAdesao()) {
         		redirectToPainelDoUsuario();
         	} else {
