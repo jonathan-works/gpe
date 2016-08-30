@@ -430,9 +430,22 @@ public class UsuarioLogin implements Serializable {
         return getNomeUsuario();
     }
 
+	@Transient
+    public boolean isLoginComSenhaHabilitado(){
+	    return UsuarioEnum.H.equals(tipoUsuario) || UsuarioEnum.P.equals(tipoUsuario);
+	}
+	@Transient
+	public boolean isLoginComCertificadoHabilitado(){
+	    return UsuarioEnum.H.equals(tipoUsuario) || UsuarioEnum.C.equals(tipoUsuario);
+	}
+	@Transient
+	public boolean isUsuarioSistema(){
+	    return UsuarioEnum.S.equals(tipoUsuario);
+	}
+	
     @Transient
     public boolean isHumano() {
-        return UsuarioEnum.H.equals(tipoUsuario);
+        return !isUsuarioSistema();
     }
 
     @Transient
