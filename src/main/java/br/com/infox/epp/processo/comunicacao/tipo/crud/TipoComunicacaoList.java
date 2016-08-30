@@ -29,6 +29,7 @@ public class TipoComunicacaoList extends EntityList<TipoComunicacao> {
     @Override
     protected void addSearchFields() {
         addSearchField("descricao", SearchCriteria.CONTENDO);
+        addSearchField("codigo", SearchCriteria.CONTENDO);
         addSearchField("tipoUsoComunicacao", SearchCriteria.IGUAL);
         addSearchField("ativo", SearchCriteria.IGUAL);
         addSearchField("classificacaoDocumento", SearchCriteria.IGUAL);

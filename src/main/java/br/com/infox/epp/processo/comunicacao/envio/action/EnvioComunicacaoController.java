@@ -202,7 +202,7 @@ public class EnvioComunicacaoController implements Serializable {
 	
 	private void initDestinatarioComunicacaoAction() {
 		destinatarioComunicacaoAction.setModeloComunicacao(modeloComunicacao);
-		destinatarioComunicacaoAction.init(getLocalizacaoRaizComunicacao(), prazoDefaultComunicacao);		
+		destinatarioComunicacaoAction.init(getLocalizacaoRaizComunicacao(), prazoDefaultComunicacao, perfilAssinatura);		
 	}
 	
 	private void initLocalizacaoRaiz() {
@@ -395,7 +395,7 @@ public class EnvioComunicacaoController implements Serializable {
 			minuta = true;
 			resetEntityState();
 			clear();
-			destinatarioComunicacaoAction.init(getLocalizacaoRaizComunicacao(), prazoDefaultComunicacao);
+			destinatarioComunicacaoAction.init(getLocalizacaoRaizComunicacao(), prazoDefaultComunicacao, perfilAssinatura);
 			FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.sucesso.reabertura"));
 		} catch (DAOException | CloneNotSupportedException e) {
 			LOG.error("Erro ao rebarir comunicação", e);
@@ -460,8 +460,8 @@ public class EnvioComunicacaoController implements Serializable {
 	public void setFinalizada(boolean finalizada) {
 		this.finalizada = finalizada;
 		if (!this.finalizada) {
-			modeloComunicacao.setLocalizacaoResponsavelAssinatura(null);
-			modeloComunicacao.setPerfilResponsavelAssinatura(null);
+			modeloComunicacao.setLocalizacaoResponsavelAssinatura(localizacaoAssinatura);
+			modeloComunicacao.setPerfilResponsavelAssinatura(perfilAssinatura);
 		}
 	}
 	

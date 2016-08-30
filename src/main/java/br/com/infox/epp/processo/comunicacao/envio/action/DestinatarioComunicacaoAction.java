@@ -61,6 +61,7 @@ public class DestinatarioComunicacaoAction implements Serializable{
 	
 	private Localizacao localizacaoRaizComunicacao;
 	private Integer prazoDefaultTarefa;
+	private PerfilTemplate perfilAssinatura;
 	private List<Integer> idsLocalizacoesSelecionadas = new ArrayList<>();
 	private Map<Localizacao, List<PerfilTemplate>> perfisSelecionados = new HashMap<>();
 	private List<DestinatarioModeloComunicacao> destinatariosExcluidos = new ArrayList<>();
@@ -71,10 +72,11 @@ public class DestinatarioComunicacaoAction implements Serializable{
 	private PerfilTemplate perfilDestino;
 	private boolean existeUsuarioNoDestino = true;
 	
-	public void init(Localizacao localizacaoRaizComunicacao, Integer prazoDefaultTarefa) {
+	public void init(Localizacao localizacaoRaizComunicacao, Integer prazoDefaultTarefa, PerfilTemplate perfilAssinatura) {
 		initEntityLists();
 		this.localizacaoRaizComunicacao = localizacaoRaizComunicacao;
 		this.prazoDefaultTarefa = prazoDefaultTarefa;
+		this.perfilAssinatura = perfilAssinatura;
 	}
 	
 	@Remove
@@ -230,10 +232,16 @@ public class DestinatarioComunicacaoAction implements Serializable{
 	}
 	
 	public List<PerfilTemplate> getPerfisPermitidos() {
-		if (modeloComunicacao.getLocalizacaoResponsavelAssinatura() == null) {
+	    if (modeloComunicacao.getLocalizacaoResponsavelAssinatura() == null) {
 			return Collections.emptyList();
 		}
-		return usuarioPerfilManager.getPerfisPermitidos(modeloComunicacao.getLocalizacaoResponsavelAssinatura());
+		List<PerfilTemplate> perfisPermitidos = usuarioPerfilManager.getPerfisPermitidos(modeloComunicacao.getLocalizacaoResponsavelAssinatura());
+		if (modeloComunicacao.getPerfilResponsavelAssinatura() != null && !perfisPermitidos.contains(modeloComunicacao.getPerfilResponsavelAssinatura())) {
+		    modeloComunicacao.setPerfilResponsavelAssinatura(null);
+		} else {
+		    modeloComunicacao.setPerfilResponsavelAssinatura(perfilAssinatura);
+		}
+		return perfisPermitidos;
 	}
 	
 	public List<PerfilTemplate> getPerfisPermitidosDestino() {
