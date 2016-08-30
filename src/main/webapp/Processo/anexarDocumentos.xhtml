@@ -24,12 +24,7 @@
 			
 				<wi:inputText id="uploadDescricao" required="true"
 					label="#{infoxMessages['processo.anexarDocumentoDescricao']}"
-					value="#{anexarDocumentosView.descricaoUploader}">
-					<a:ajax id="uploadDescricaoAjax" event="change"
-						onbeforesubmit="infox.showLoading();"
-						oncomplete="infox.hideLoading();" render="uploadArquivoAnexarButton"
-						limitRender="true" execute="@this"/>
-				</wi:inputText>
+					value="#{anexarDocumentosView.descricaoUploader}" />
 				<wi:selectOneMenuEntity id="uploadClassificacao" required="true"
 					label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
 					value="#{anexarDocumentosView.classificacaoDocumentoUploader}"
@@ -129,11 +124,11 @@
 
 						<s:div id="uploadArquivoAnexarButton">
 							<a:commandButton id="uploadSubmitButton" styleClass="buttons"
-								action="#{anexarDocumentosView.persistUpload()}"
+								action="#{anexarDocumentosView.persistUpload(rich:clientId('uploadPanel'))}"
 								value="#{infoxMessages['crud.update']}"
 								onclick="infox.showLoading();" oncomplete="infox.hideLoading();"
 								rendered="#{anexarDocumentosView.showUploaderButton}"
-								render="uploadPanel documentoDataTable pageBodyDialogMessage"/>
+								render="uploadDescricaoDecoration uploadClassificacaoDecoration documentoDataTable pageBodyDialogMessage"/>
 						</s:div>
 					</s:div>
 				</s:div>

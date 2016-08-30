@@ -205,15 +205,9 @@
                 name="tabAnexar"
                 rendered="#{processoEpaHome.managed}"
                 status=":status"
+                action="#{anexarDocumentosView.setProcesso(processoEpaHome.instance)}"
                 title="#{infoxMessages['movimentar.anexar.titleTab']}">
-                <wi:dataForm
-                    formId="anexarDocumentosForm"
-                    formTitle="#{infoxMessages['movimentar.anexar.titleForm']}"
-                    isUploadForm="true">
-					<f:event listener="#{anexarDocumentosView.setProcesso(processoEpaHome.instance)}" type="preRenderView" />        
-                    <ui:include src="anexarDocumentos.xhtml" />
-                    <ui:define name="buttons" />
-                </wi:dataForm>
+                <ui:include src="anexarDocumentos.xhtml" />
             </infox:tab>
             <infox:tab
                 id="tabComunicacao"
