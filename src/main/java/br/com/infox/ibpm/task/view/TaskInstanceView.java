@@ -2,13 +2,15 @@ package br.com.infox.ibpm.task.view;
 
 import static br.com.infox.ibpm.process.definition.variable.constants.VariableConstants.DEFAULT_PATH;
 import static java.text.MessageFormat.format;
-import static br.com.infox.ibpm.task.view.TaskInstanceForm.FRAME_URL_PREFIX;
 
+import java.io.File;
 import java.io.Serializable;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import org.jboss.seam.Component;
@@ -21,6 +23,7 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.core.util.FileUtil;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
@@ -160,7 +163,17 @@ public class TaskInstanceView implements Serializable {
                         }
                         break;
                         case FRAME:
-                            setFrameProperties(FRAME_URL_PREFIX + name, ff);
+                            String url = format("/{0}.{1}", name.replaceAll("_", "/"), "xhtml");
+                            String framePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath(url);
+                            File file = new File(framePath);
+                            if (!file.exists()) {
+                                String containerPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("");
+                                Path findFirst = FileUtil.findFirst(containerPath + "/WEB-INF", "**" + url);
+                                if (findFirst != null) {
+                                    url = findFirst.toString().replace(containerPath.toString(), "");
+                                }
+                            }
+                            ff.getProperties().put("urlFrame", url);
                             ff.setType(type.name());
                             break;
                         case FRAGMENT:{
@@ -194,11 +207,6 @@ public class TaskInstanceView implements Serializable {
         return form;
     }
     
-    private void setFrameProperties(String name, FormField ff) {
-        final String url = format("/{0}.{1}", name.replaceAll("_", "/"), "xhtml");
-        ff.getProperties().put("urlFrame", url);
-    }
-
     private void getTaskInstance() {
         TaskInstance newInstance = org.jboss.seam.bpm.TaskInstance.instance();
         if (newInstance == null || !newInstance.equals(taskInstance)) {
