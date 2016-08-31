@@ -22,6 +22,8 @@ import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import com.google.common.base.Strings;
+
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcesso;
 import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoSearch;
@@ -108,9 +110,9 @@ public class VariavelProcessoService {
     }
 
     private VariavelProcesso getPrimeiraVariavelProcessoAncestral(Processo processo, DefinicaoVariavelProcesso definicao, TaskInstance taskInstance) {
-        VariavelProcesso variavelProcesso = null;
+    	VariavelProcesso variavelProcesso = null;
         Processo corrente = processo;
-        while (corrente != null && (variavelProcesso == null || variavelProcesso.getValor() == null || variavelProcesso.getValor().isEmpty())) {
+        while (corrente != null && (variavelProcesso == null || Strings.isNullOrEmpty(variavelProcesso.getValor()))) {
             variavelProcesso = getVariavelProcesso(corrente, definicao, taskInstance);
             // Só deve olhar na taskInstance na primeira iteração
             taskInstance = null;
@@ -121,6 +123,7 @@ public class VariavelProcessoService {
 
     private VariavelProcesso getVariavelProcesso(Processo processo, DefinicaoVariavelProcesso definicao, TaskInstance taskInstance) {
         Long idJbpm = processo.getIdJbpm();
+        VariavelProcesso variavelProcesso = inicializaVariavelProcesso(definicao);
         if (idJbpm != null) {
             ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(idJbpm);
             Object variable;
@@ -130,7 +133,6 @@ public class VariavelProcessoService {
             } else {
             	variable = processInstance.getContextInstance().getVariable(definicao.getNome());
             }
-            VariavelProcesso variavelProcesso = inicializaVariavelProcesso(definicao);
             if (variable != null) {
             	 variavelProcesso.setValor(formatarValor(variable));
             } else {
@@ -155,17 +157,16 @@ public class VariavelProcessoService {
 	                    		setValor(valorPadrao, processo, variavelProcesso);
 	                    	}
 	                    } else {
-	                        variavelProcesso = null;
+	                        variavelProcesso.setValor(null);
 	                    }
 	                }
             	}catch(Exception e){
-            		variavelProcesso = null;
+            		variavelProcesso.setValor(null);
             		LOG.error("Não foi possível recuperar o metadado "+ definicao.getNome() + " do processo id="+ processo.getIdProcesso().toString(), e);
             	}
             }
-            return variavelProcesso;
         }
-        return null;
+        return variavelProcesso;
     }
 
     private String formatarValor(Object variable) {
