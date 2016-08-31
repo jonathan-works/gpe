@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:wi="http://www.itx.com.br/jsf" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich"
+    xmlns:a="http://richfaces.org/a4j" xmlns:infox="http://www.infox.com.br/jsf" xmlns:p="http://primefaces.org/ui"
+    xmlns:i="http://java.sun.com/jsf/composite/infox" template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+
+    <ui:define name="title">#{infoxMessages['statusProcesso.titlePage']}</ui:define>
+
+    <ui:define name="body">
+        <infox:tabPanel id="defaultTabPanel" switchType="ajax">
+            <h:form>
+                <infox:tabHeaders />
+            </h:form>
+            <infox:tabChangeListener listener="#{crudTabCleaner}" />
+            <infox:tab id="search" name="search" immediate="true" title="#{infoxMessages['template.abaPesquisaText']}"
+                action="#{statusProcessoView.clickSearchTab}">
+                <wi:dataTable values="#{statusProcessoList.list(15)}" bean="#{statusProcessoList}"
+                    tableTitle="#{infoxMessages['statusProcesso.tableTitle']}" id="statusProcessoList"
+                    rowId="#{row.idPrioridade}">
+                    <ui:define name="searchForm">
+                        <wi:searchForm formId="pesquisarStatusProcessoForm"
+                            formTitle="#{infoxMessages['searchForm.title']}">
+                            <i:inputText id="nomeSearchForm" label="#{infoxMessages['statusProcesso.nome']}"
+                                value="#{statusProcessoList.nome}"
+                                maxlength="100" />
+                            <i:inputText id="descricaoSearchForm"
+                                value="#{statusProcessoList.descricao}"
+                                label="#{infoxMessages['statusProcesso.descricao']}" maxlength="100" />
+                        </wi:searchForm>
+                    </ui:define>
+
+                    <ui:define name="headerToolBar" />
+                    <ui:define name="toolBar">
+                        <h:form>
+                            <h:commandLink action="#{statusProcessoView.edit(row)}">
+                                <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
+                                    title="#{infoxMessages['button.selecionar']}" styleClass="opacityHover" />
+                                <a:ajax render="defaultTabPanel" execute="@this" />
+                            </h:commandLink>
+                            <h:commandLink action="#{statusProcessoView.remove(row)}"
+                                onclick="return confirm('#{infoxMessages['crud.confirmRemove']}');">
+                                <a:ajax render="defaultTabPanel pageBodyDialogMessage " execute="@this"
+                                    onbegin="infox.showLoading();" oncomplete="infox.hideLoading();" />
+                                <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
+                                    title="#{infoxMessages['button.delete']}" styleClass="opacityHover" />
+                            </h:commandLink>
+                        </h:form>
+                    </ui:define>
+
+                    <wi:columnOutputText columnId="nome" columnHeader="#{infoxMessages['statusProcesso.nome']}"
+                        value="#{row.nome}" />
+                    <wi:columnOutputText columnId="descricao"
+                        columnHeader="#{infoxMessages['statusProcesso.descricao']}" value="#{row.descricao}" />
+                </wi:dataTable>
+            </infox:tab>
+            <infox:tab id="form" name="form" immediate="true" title="#{infoxMessages['template.abaFormularioText']}"
+                action="#{statusProcessoView.clickFormTab}">
+                <h:form enctype="application/x-www-form-urlencoded" acceptcharset="UTF-8">
+                    <rich:panel styleClass="dt-form-p" bodyClass="dt-form-p-b" headerClass="dt-form-p-h"
+                        header="#{infoxMessages['form.title']}">
+                        <i:inputText id="nomeStatusProcesso" label="#{infoxMessages['statusProcesso.nome']}"
+                            value="#{statusProcessoView.nome}" required="true" maxlength="100" />
+                        <i:inputText id="descricaoStatusProcesso" label="#{infoxMessages['statusProcesso.descricao']}"
+                            value="#{statusProcessoView.descricao}" required="true" maxlength="100" />
+                        <div class="required-alert">
+                            <img
+                                src="#{pathResolver.contextPath}#{layoutController.getResourceUrlByPath('/imagens/mod/balao.png')}" />
+                            <span class="required">*</span> <span><h:outputText
+                                    value="#{infoxMessages['form.required']}" /></span>
+                        </div>
+                        <p:outputPanel rendered="#{not statusProcessoView.managed}">
+                            <h:commandButton id="persistButton" styleClass="buttons"
+                                action="#{statusProcessoView.persist}" value="#{messages['crud.persist']}">
+                                <a:ajax execute="@form" render="pageBody pageBodyDialogMessage" />
+                            </h:commandButton>
+                        </p:outputPanel>
+                        <p:outputPanel rendered="#{statusProcessoView.managed}">
+                            <h:commandButton id="updateButton" styleClass="buttons"
+                                action="#{statusProcessoView.update}" value="#{messages['crud.update']}">
+                                <a:ajax execute="@form" render="pageBody pageBodyDialogMessage" />
+                            </h:commandButton>
+                            <h:commandButton id="newButton" styleClass="buttons"
+                                action="#{statusProcessoView.newInstance}" value="#{infoxMessages['crud.new']}">
+                                <a:ajax execute="@this" render="pageBody pageBodyDialogMessage" />
+                            </h:commandButton>
+                        </p:outputPanel>
+                    </rich:panel>
+                </h:form>
+            </infox:tab>
+        </infox:tabPanel>
+    </ui:define>
+
+</ui:composition>
