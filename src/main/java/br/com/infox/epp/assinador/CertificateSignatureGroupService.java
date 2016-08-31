@@ -15,6 +15,7 @@ import javax.validation.ValidationException;
 
 import org.jboss.seam.util.Base64;
 
+import br.com.infox.assinador.rest.api.StatusToken;
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.assinador.assinavel.AssinavelDocumentoBinSource;
 import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
@@ -165,7 +166,7 @@ public class CertificateSignatureGroupService implements AssinadorGroupService, 
 		case W:
 			return StatusToken.AGUARDANDO_ASSINATURA;
 		default:
-			return StatusToken.DESCONHECIDO;
+			return null;
 		}		
 	}
 	

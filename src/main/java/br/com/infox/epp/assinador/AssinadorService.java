@@ -21,7 +21,7 @@ import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.PerfilTemplateManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
-import br.com.infox.epp.assinador.AssinadorGroupService.StatusToken;
+import br.com.infox.assinador.rest.api.StatusToken;
 import br.com.infox.epp.assinador.assinavel.AssinavelDocumentoBinProvider;
 import br.com.infox.epp.assinador.assinavel.AssinavelGenericoProvider;
 import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
@@ -162,11 +162,11 @@ public class AssinadorService implements Serializable {
 	}
 
 	private void validarStatus(DadosAssinatura dadosAssinatura) throws AssinaturaException {
-		if (dadosAssinatura.getStatus() != StatusToken.SUCESSO) {
+		if (!StatusToken.SUCESSO.equals(dadosAssinatura.getStatus())) {
 			if (dadosAssinatura.getMensagemErro() != null) {
 				throw new AssinaturaException(dadosAssinatura.getMensagemErro());
 			} 
-			else if (dadosAssinatura.getStatus() == StatusToken.EXPIRADO) {
+			else if (StatusToken.EXPIRADO.equals(dadosAssinatura.getStatus())) {
 		        throw new AssinaturaException(infoxMessages.get("assinatura.error.hasExpired"));
 		    }
 			else {

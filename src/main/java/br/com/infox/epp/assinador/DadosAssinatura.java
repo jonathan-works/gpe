@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import org.apache.commons.codec.binary.Base64;
 
-import br.com.infox.epp.assinador.AssinadorGroupService.StatusToken;
+import br.com.infox.assinador.rest.api.StatusToken;
 import br.com.infox.epp.assinador.assinavel.TipoSignedData;
 import br.com.infox.epp.certificado.entity.TipoAssinatura;
 

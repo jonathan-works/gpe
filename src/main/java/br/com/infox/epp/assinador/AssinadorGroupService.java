@@ -3,13 +3,10 @@ package br.com.infox.epp.assinador;
 import java.util.List;
 import java.util.UUID;
 
+import br.com.infox.assinador.rest.api.StatusToken;
 import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
 
 public interface AssinadorGroupService {
-
-	public enum StatusToken {
-		ERRO, SUCESSO, DESCONHECIDO, AGUARDANDO_ASSINATURA, EXPIRADO
-	}
 
 	public String createNewGroupWithAssinavelProvider(AssinavelProvider assinavelProvider);
 

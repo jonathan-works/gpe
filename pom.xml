@@ -406,7 +406,7 @@
         <dependency>
             <groupId>br.com.infox.certificadoDigital</groupId>
             <artifactId>certificado-digital</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>1.0.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.cxf</groupId>

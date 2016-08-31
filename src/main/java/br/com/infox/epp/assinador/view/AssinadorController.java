@@ -13,12 +13,12 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.UriBuilder;
 
-import br.com.infox.assinador.rest.api.TokenAssinaturaResource;
+import br.com.infox.assinador.rest.api.StatusToken;
 import br.com.infox.assinador.rest.api.TokenAssinaturaBaseResource;
+import br.com.infox.assinador.rest.api.TokenAssinaturaResource;
 import br.com.infox.certificado.service.CertificadoDigitalJNLPServlet;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.assinador.AssinadorGroupService;
-import br.com.infox.epp.assinador.AssinadorGroupService.StatusToken;
 import br.com.infox.epp.assinador.AssinadorService;
 import br.com.infox.epp.assinador.assinavel.AssinavelDocumentoBinProvider;
 import br.com.infox.epp.assinador.assinavel.AssinavelGenericoProvider;

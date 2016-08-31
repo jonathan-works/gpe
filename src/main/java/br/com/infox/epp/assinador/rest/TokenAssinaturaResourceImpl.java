@@ -3,6 +3,7 @@ package br.com.infox.epp.assinador.rest;
 import javax.inject.Inject;
 
 import br.com.infox.assinador.rest.api.AssinavelResource;
+import br.com.infox.assinador.rest.api.StatusToken;
 import br.com.infox.assinador.rest.api.TokenAssinaturaResource;
 import br.com.infox.epp.assinador.AssinadorService;
 import br.com.infox.epp.cdi.config.BeanManager;
@@ -22,8 +23,8 @@ public class TokenAssinaturaResourceImpl implements TokenAssinaturaResource {
     }
 
     @Override
-    public String getStatus() {
-        return assinadorService.getStatus(token).toString();
+    public StatusToken getStatus() {
+        return assinadorService.getStatus(token);
     }
 
     @Override

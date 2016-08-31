@@ -24,7 +24,7 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.service.AuthenticatorService;
-import br.com.infox.epp.assinador.AssinadorGroupService.StatusToken;
+import br.com.infox.assinador.rest.api.StatusToken;
 import br.com.infox.epp.assinador.assinavel.AssinavelGenericoProvider;
 import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
 import br.com.infox.epp.assinador.AssinadorService;
