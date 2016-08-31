@@ -29,7 +29,7 @@
 	    </ui:include>
 
 	</rich:collapsiblePanel>
-	<h:form>
+	<h:form rendered="#{not props.readonly and not props.type eq 'FRAME'}">
 		<ui:include src="/WEB-INF/xhtml/components/form/buttons/taskButtons.xhtml"></ui:include>
 	</h:form>
 </ui:composition>
