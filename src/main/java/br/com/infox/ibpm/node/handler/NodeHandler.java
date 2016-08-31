@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.faces.model.SelectItem;
 import javax.persistence.NoResultException;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -481,6 +482,15 @@ public class NodeHandler implements Serializable {
             }
         }
         return list;
+    }
+    
+    public List<SelectItem> getTransitionItens() {
+        List<SelectItem> selectItens = new ArrayList<>();
+        if (node == null || node.getLeavingTransitions() == null) return selectItens;
+        for (Transition transition : node.getLeavingTransitions()) {
+        	selectItens.add(new SelectItem(transition.getKey(), transition.getName()));
+        }
+        return selectItens;
     }
 
     public void setTimerName(String timerName) {
