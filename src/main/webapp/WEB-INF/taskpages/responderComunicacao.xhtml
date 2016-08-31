@@ -36,7 +36,7 @@
 
 	</rich:collapsiblePanel>
 	
-	<h:form id="editorRespostaComunicacaoForm" style="margin-top:1em">
+	<h:form id="editorRespostaComunicacaoForm" style="margin-top:1em" rendered="#{not empty respostaComunicacaoAction.classificacoesEditor}">
 		<rich:collapsiblePanel header="#{infoxMessages['comunicacao.editor']}" switchType="client" id="painelEditor">
 			<ui:param name="minuta" value="#{empty respostaComunicacaoAction.documentoEdicao.id or 
 				respostaComunicacaoAction.documentoEdicao.documentoBin.minuta}" />
@@ -92,7 +92,7 @@
 		</rich:collapsiblePanel>
 	</h:form>
 	
-	<h:form id="anexoRespostaComunicacaoForm" style="margin-top:1em">
+	<h:form id="anexoRespostaComunicacaoForm" style="margin-top:1em" rendered="#{not empty respostaComunicacaoAction.classificacoesAnexo}">
 		<rich:collapsiblePanel header="#{infoxMessages['anexosProcesso.titleView']}" switchType="client">
 			<wi:inputText id="descricaoAnexo" value="#{respostaComunicacaoAction.descricaoAnexo}"
 				label="#{infoxMessages['documentoProcesso.descricao']}" showRequired="true">
@@ -135,7 +135,8 @@
 	</h:form>
 	<wi:assinaturaPopup id="respostaComunicacaoAssinaturaDocumentoPopup" afterRender="respostasPanel" showIniciarAnaliseDocumentos="false" 
 			actionPosSign="respostaComunicacaoAction.verificarPossibilidadeEnvioResposta()" />
-	<rich:collapsiblePanel header="#{infoxMessages['comunicacao.documentosResposta']}" switchType="client" style="margin-top:1em">
+	<rich:collapsiblePanel header="#{infoxMessages['comunicacao.documentosResposta']}" switchType="client" style="margin-top:1em"
+        rendered="#{not empty respostaComunicacaoAction.classificacoesEditor or not empty respostaComunicacaoAction.classificacoesAnexo}">
 		<wi:dataTable id="respostas" tableTitle="#{infoxMessages['comunicacao.documentosResposta']}" bean="#{respostaComunicacaoList}"
 			values="#{respostaComunicacaoList.list(10)}" rowId="#{row.id}" hideOrder="true" >
 			<ui:define name="searchForm">
