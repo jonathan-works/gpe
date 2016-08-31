@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.transaction.SystemException;
+import javax.transaction.TransactionManager;
 
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.contexts.Lifecycle;
@@ -16,11 +18,13 @@ import org.joda.time.DateTime;
 
 import br.com.infox.cdi.producer.JbpmContextProducer;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.server.ApplicationServerService;
 import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.access.entity.BloqueioUsuario;
 import br.com.infox.epp.access.manager.BloqueioUsuarioManager;
 import br.com.infox.epp.calendario.CalendarioEventosService;
 import br.com.infox.epp.cdi.transaction.Transactional;
+import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.entity.Processo;
@@ -55,6 +59,8 @@ public class QuartzResourceImpl implements QuartzResource {
     private CalendarioEventosService calendarioEventosService;
     @Inject
     private BamResourceImpl bamResourceImpl;
+    @Inject
+    private ApplicationServerService applicationServerService;
 
     @Override
     @Transactional
@@ -74,24 +80,30 @@ public class QuartzResourceImpl implements QuartzResource {
     }
     
     @Override
-    @Transactional
 	public void taskExpirationProcessor() {
 		Lifecycle.beginCall();
-		JbpmContextProducer.createJbpmContextTransactional();
 		try {
 			List<ProcessoTarefa> processoTarefaList = processoTarefaManager.getWithTaskExpiration();
 			for (ProcessoTarefa processoTarefa : processoTarefaList) {
-				TaskExpiration taskExpiration = this.taskExpirationManager.getByFluxoAndTaskName(
-						processoTarefa.getProcesso().getNaturezaCategoriaFluxo().getFluxo(),
-						processoTarefa.getTarefa().getTarefa());
+			    Fluxo fluxo = processoTarefa.getProcesso().getNaturezaCategoriaFluxo().getFluxo();
+			    String nomeTarefa = processoTarefa.getTarefa().getTarefa();
+				TaskExpiration taskExpiration = taskExpirationManager.getByFluxoAndTaskName(fluxo, nomeTarefa);
 				if (taskExpiration != null) {
 					DateTime expirationDate = new DateTime(DateUtil.getEndOfDay(taskExpiration.getExpiration()));
 					if (expirationDate.isBeforeNow()) {
-						TaskInstance taskInstance = ManagedJbpmContext.instance().getTaskInstanceForUpdate(processoTarefa.getTaskInstance());
+					    TransactionManager transactionManager = applicationServerService.getTransactionManager();
 						try {
+						    transactionManager.begin();
+						    TaskInstance taskInstance = ManagedJbpmContext.instance().getTaskInstanceForUpdate(processoTarefa.getTaskInstance());
 							processoTarefaManager.finalizarInstanciaTarefa(taskInstance, taskExpiration.getTransition());
-						} catch (DAOException e) {
+							transactionManager.commit();
+						} catch (Exception e) {
 							LOG.error("quartzRestImpl.processTaskExpiration()", e);
+							try {
+                                transactionManager.rollback();
+                            } catch (IllegalStateException | SecurityException | SystemException e1) {
+                                LOG.error("Error rolling back transaction", e1);
+                            }
 						}
 					}
 				}

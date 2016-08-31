@@ -26,6 +26,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.processo.partes.type.ParteProcessoEnum;
 import br.com.infox.hibernate.util.HibernateUtil;
 
@@ -43,6 +44,11 @@ public class Natureza implements java.io.Serializable {
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_NATUREZA, unique = true, nullable = false)
     private Integer idNatureza;
+    
+    @NotNull
+    @Column(name = "cd_natureza")    
+    @Size(max = LengthConstants.CODIGO_DOCUMENTO)
+    private String codigo;
     
     @Column(name = DESCRICAO_NATUREZA, length = DESCRICAO_PEQUENA, nullable = false, unique = true)
     @Size(min = FLAG, max = DESCRICAO_PEQUENA)
@@ -233,6 +239,14 @@ public class Natureza implements java.io.Serializable {
 
 	public void setPrimaria(Boolean primaria) {
 		this.primaria = primaria;
+	}
+
+	public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
 	}
 
 }

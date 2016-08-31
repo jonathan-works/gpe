@@ -41,7 +41,7 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
     private static final long serialVersionUID = 4455754174682600299L;
     private static final LogProvider LOG = Logging.getLogProvider(ModeloDocumentoManager.class);
     public static final String NAME = "modeloDocumentoManager";
-
+    
     @Inject
     private VariavelDAO variavelDAO;
     
@@ -142,7 +142,7 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
                 if (expression == null) {
                 	expression = group;
                 }
-                expression = StringEscapeUtils.unescapeHtml4(expression);
+                expression = unscapeHtmlFromExpression(expression);
                 String value = "";
                 if (!expression.startsWith("#{modelo:")) {
 	            	Expression expr = new Expression(expression);
@@ -164,8 +164,8 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
                 } else {
                 	String titulo = expression.substring("#{modelo:".length(), expression.length()-1);
                 	ModeloDocumento modeloDocumentoInside = getModeloDocumentoByTitulo(titulo);
-                	if (modeloDocumento != null) {
-                		value = evaluateModeloDocumento(modeloDocumentoInside, modeloDocumentoInside.getModeloDocumento(), resolver);
+                	if (modeloDocumentoInside != null) {
+                		value = evaluateModeloDocumento(modeloDocumentoInside, resolver);
                 	} else {
                 		value = value == null ? "" : value;
                 		value = value.replace("\\", "\\\\").replace("$", "\\$");
@@ -217,6 +217,12 @@ public class ModeloDocumentoManager extends Manager<ModeloDocumentoDAO, ModeloDo
             map.put("nomeUsuarioRec", "<nomeUsuarioRec>");
         }
         return map;
+    }
+    
+    private static String unscapeHtmlFromExpression(String expression) {
+        expression = StringEscapeUtils.unescapeHtml4(expression);
+        expression = expression.replaceAll("\u00A0", "");
+        return expression;
     }
 
     public String getConteudo(int idModeloDocumento) {

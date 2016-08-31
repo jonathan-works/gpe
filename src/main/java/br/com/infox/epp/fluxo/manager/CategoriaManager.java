@@ -34,4 +34,9 @@ public class CategoriaManager extends Manager<CategoriaDAO, Categoria> {
 	public List<Object[]> listProcessoByCategoria() {
 		return categoriaDAO.listProcessoByCategoria();
 	}
+	
+	public Categoria getByCodigo(String codigo) {
+		return getDao().getByCodigo(codigo);
+	}
+
 }

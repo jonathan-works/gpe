@@ -19,6 +19,10 @@ import javax.persistence.criteria.Subquery;
 import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioLogin_;
+import br.com.infox.epp.fluxo.entity.Categoria;
+import br.com.infox.epp.fluxo.entity.Natureza;
+import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
+import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo_;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.Processo_;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
@@ -69,11 +73,23 @@ public class ProcessoSearch extends PersistenceController {
     }
     
     public List<Processo> getProcessosContendoMetadados(Map<String, ValorMetadado> metadados) {
+    	return getProcessosContendoNaturezaCategoriaMetadados(null, null, metadados);
+    }
+    
+    public List<Processo> getProcessosContendoNaturezaCategoriaMetadados(Natureza natureza, Categoria categoria, Map<String, ValorMetadado> metadados) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Processo> cq = cb.createQuery(Processo.class);
         Root<Processo> processo = cq.from(Processo.class);
+        Path<NaturezaCategoriaFluxo> ncf = processo.join(Processo_.naturezaCategoriaFluxo);
         
         List<Predicate> where = new ArrayList<>();
+        
+        if(natureza != null) {
+        	where.add(cb.equal(ncf.get(NaturezaCategoriaFluxo_.natureza), natureza));
+        }
+        if(categoria != null) {
+        	where.add(cb.equal(ncf.get(NaturezaCategoriaFluxo_.categoria), categoria));
+        }
         
         for(String nomeMetadado : metadados.keySet()) {
         	ValorMetadado valorMetadado = metadados.get(nomeMetadado);

@@ -2,7 +2,6 @@ package br.com.infox.epp.processo.documento.service;
 
 import static java.text.MessageFormat.format;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -14,13 +13,8 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
 import org.richfaces.model.UploadedFile;
 
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.PdfCopy;
-import com.lowagie.text.pdf.PdfImportedPage;
 import com.lowagie.text.pdf.PdfReader;
 
 import br.com.infox.core.messages.InfoxMessages;
@@ -39,7 +33,6 @@ import br.com.infox.log.Logging;
 @Stateless
 @Scope(ScopeType.STATELESS)
 @Name(DocumentoUploaderService.NAME)
-@Transactional
 public class DocumentoUploaderService implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -51,6 +44,8 @@ public class DocumentoUploaderService implements Serializable {
 	private ExtensaoArquivoManager extensaoArquivoManager;
 	@Inject
 	private DocumentoManager documentoManager;
+	@Inject
+	private InfoxMessages infoxMessages;
 	
 	public DocumentoBin createProcessoDocumentoBin(UploadedFile uploadedFile) throws Exception {
 		DocumentoBin documentoBin = new DocumentoBin();
@@ -78,29 +73,28 @@ public class DocumentoUploaderService implements Serializable {
         }
         return ret.toLowerCase();
     }
+	
+	public void validaDocumento(UploadedFile uploadFile, ClassificacaoDocumento classificacaoDocumento) throws Exception {
+		validaDocumento(uploadFile, classificacaoDocumento, null);
+	}
 
 	public void validaDocumento(UploadedFile uploadFile, ClassificacaoDocumento classificacaoDocumento, byte[] dataStream) throws Exception {
         if (uploadFile == null) {
-        	throw new ValidationException(InfoxMessages.getInstance().get("documentoUploader.error.noFile"));
+        	throw new ValidationException(infoxMessages.get("documentoUploader.error.noFile"));
         }
         String extensao = getFileType(uploadFile.getName());
         ExtensaoArquivo extensaoArquivo = extensaoArquivoManager.getTamanhoMaximo(classificacaoDocumento, extensao);
         if (extensaoArquivo == null) {
-        	throw new ValidationException("Arquivo: "+ uploadFile.getName() + " - " + InfoxMessages.getInstance().get("documentoUploader.error.invalidExtension"));
+        	throw new ValidationException(infoxMessages.get("documentoUploader.error.invalidExtension"));
         }
         if ((uploadFile.getSize() / 1024F) > extensaoArquivo.getTamanho()) {
-        	throw new ValidationException("Arquivo: "+ uploadFile.getName() + " - " +format(InfoxMessages.getInstance().get("documentoUploader.error.invalidFileSize"), extensaoArquivo.getTamanho()));
-        }
+        	throw new ValidationException(format(infoxMessages.get("documentoUploader.error.invalidFileSize"), extensaoArquivo.getTamanho()));
+        }	
         if (extensaoArquivo.getPaginavel()) {
-        	try {
-        	    if (dataStream == null) {
-        	        dataStream = uploadFile.getData();
-        	    }
-//        		validaLimitePorPagina(extensaoArquivo.getTamanhoPorPagina(), dataStream, uploadFile.getSize());  // Tira média de tamanho do documento por páginas
-        		validaLimitePorPagina(extensaoArquivo.getTamanhoPorPagina(), dataStream);
-        	} catch(Exception e){
-        		throw new Exception("Arquivo: " + uploadFile.getName() + " - " + e.getMessage());
-        	}
+    	    if (dataStream == null) {
+    	        dataStream = uploadFile.getData();
+    	    }
+    		validaLimitePorPagina(extensaoArquivo.getTamanhoPorPagina(), dataStream, uploadFile.getSize());
         }
     }
 	
@@ -109,48 +103,21 @@ public class DocumentoUploaderService implements Serializable {
         documentoManager.gravarDocumentoNoProcesso(documento);
 	}
 	
-	//Alteração solicitada no bug #69320 para utilizar a média do tamanho do documento pelo número de páginas e comparar com o limite do tamanho por paǵina 
-	public void validaLimitePorPagina(Integer limitePorPagina, byte[] dataStream, Long tamanhoTotalArquivo) throws Exception {
+	public void validaLimitePorPagina(Integer limitePorPagina, byte[] dataStream, Long tamanhoTotalArquivo) throws ValidationException {
         try {
         	PdfReader reader = new PdfReader(dataStream);
         	int qtdPaginas = reader.getNumberOfPages();
         	long tamanhoPorPagina = tamanhoTotalArquivo / qtdPaginas;
 			if ((tamanhoPorPagina / 1024F) > limitePorPagina) {
-			    throw new ValidationException("O tamanho limite de " + limitePorPagina + "kb por página é excedido.");
+			    throw new ValidationException(format(infoxMessages.get("documentoUploader.error.invalidPageSize"), limitePorPagina));
 			}
         } catch (IOException e) {
             if (e.getMessage().contains("PDF header signature")) {
-                throw new Exception("PDF inválido!");
+                throw new ValidationException(infoxMessages.get("documentoUploader.error.invalidPDFFile"));
             } else {
-                LOG.error("", e);
-                throw new Exception(InfoxMessages.getInstance().get("documentoUploader.error.notPaginable"));
+                LOG.warn("", e);
+                throw new ValidationException(infoxMessages.get("documentoUploader.error.notPaginable"));
             }
         }
     }
-	
-	public void validaLimitePorPagina(Integer limitePorPagina, byte[] dataStream){
-		try {
-			PdfReader reader = new PdfReader(dataStream);
-			for (int i = 1,numberOfPages = reader.getNumberOfPages(); i <= numberOfPages; i++) {
-				Document document = new Document(reader.getPageSizeWithRotation(i));
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				PdfCopy writer = new PdfCopy(document, baos);
-				PdfImportedPage page = writer.getImportedPage(reader, i);
-				document.open();
-				writer.addPage(page);
-				document.close();
-				if (baos.toByteArray().length/1024F > limitePorPagina){
-					throw new ValidationException("O tamanho limite de " + limitePorPagina + "kb por página é excedido na página "+ i + ".");
-				}
-			}
-		} catch (DocumentException|IOException e) {
-			if (e.getMessage().contains("PDF header signature")) {
-                throw new RuntimeException("PDF inválido!");
-            } else {
-                LOG.error("", e);
-                throw new RuntimeException(InfoxMessages.getInstance().get("documentoUploader.error.notPaginable"));
-            }
-		}
-	}
-	
 }

@@ -34,7 +34,7 @@ public class TaskConteudo {
         this.idTaskInstance = idTaskInstance;
     }
 
-    @Column(name="ds_conteudo", nullable=false)
+    @Column(name="ds_conteudo")
     @Field(index = Index.YES, store = Store.NO, name = "conteudo")
     public String getConteudo() {
         return conteudo;

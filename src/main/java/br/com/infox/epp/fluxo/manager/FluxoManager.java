@@ -82,6 +82,10 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
         }
     }
     
+    public List<Fluxo> getFluxosPrimariosAtivos() {
+    	return getDao().getFluxosPrimariosAtivos();
+    }
+    
     public List<Fluxo> getFluxosAtivosList() {
         return getDao().getFluxosAtivosList();
     }

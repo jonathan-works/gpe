@@ -30,11 +30,19 @@ public enum Parametros {
     HAS_CONSULTA_EXTERNA_PADRAO("ativaConsultaExternaPadrao"),
     CODIGO_UF_SISTEMA("codigoUnidadeFederativaSistema"),
     EPP_API_RSA_PRIVATE_KEY("controleAcesso","eppApiPrivateKey"),
-    EPP_API_RSA_PUBLIC_KEY("controleAcesso","eppApiPublicKey");
+    EPP_API_RSA_PUBLIC_KEY("controleAcesso","eppApiPublicKey"),
+    ATIVAR_MASSIVE_REINDEX("ativarMassiveReindex"),
+    REST_THREAD_POOL_EXECUTOR_MAXIMUM_POOL_SIZE("restPublicApi", "restThreadPoolExecutorMaximumPoolSize"),
+    REST_THREAD_POOL_EXECUTOR_CORE_POOL_SIZE("restPublicApi", "restThreadPoolExecutorCorePoolSize", true),
+    REST_THREAD_POOL_EXECUTOR_KEEP_ALIVE_TIME("restPublicApi", "restThreadPoolExecutorKeepAliveTime", true);
 
     private final String label;
     private final ParametroDefinition<?> parametroDefinition;
 
+    private Parametros(String grupo, String nome, boolean sistema){
+        this(new ParametroDefinition<>(grupo, nome, FieldType.STRING, sistema, false));
+        
+    }
     private Parametros(String grupo, String nome){
         this(new ParametroDefinition<>(grupo, nome, FieldType.STRING));
     }

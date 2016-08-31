@@ -191,16 +191,17 @@
 	                                        value="#{controller.getAnexosPublicos(task)}"
 	                                        rowKeyVar="key" var="doc">
 	                                        <rich:column>
-	                                            <h:commandLink
-	                                                action="#{documentoHtmlView.setViewInstance(doc)}"
-	                                                onclick="openPopUp('PopUpDocumentoBin', '')"
-	                                                rendered="#{empty doc.documentoBin.extensao}"
-	                                                target="PopUpDocumentoBin">
-	                                                <h:graphicImage
-	                                                    title="Visualizar"
-	                                                    url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
-	                                            </h:commandLink>
-	
+	                                        	<h:form>
+		                                        	<infox:flashcopy/>
+		                                            <a:commandLink rendered="#{empty doc.documentoBin.extensao}" execute="@this" render="@form"
+		                                                oncomplete="infox.openPopUp('PopUpDocumentoBin', '#{pathResolver.contextPath}/Processo/baixarDocumento.seam','1024');" >
+		                                                <f:setPropertyActionListener value="#{doc.id}" target="#{flash.idDocumento}" />
+	            										<f:setPropertyActionListener value="#{false}" target="#{flash.binario}" />
+		                                                <h:graphicImage
+		                                                    title="Visualizar"
+		                                                    url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
+		                                            </a:commandLink>
+	                                            </h:form>
 	                                            <h:commandLink target="idPdf#{row}"
 	                                                rendered="#{not empty doc.documentoBin.extensao}"
 	                                                action="#{documentoDownloader.downloadDocumento(doc)}">

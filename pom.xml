@@ -4,7 +4,7 @@
 	<groupId>br.com.infox.epp</groupId>
 	<artifactId>epp</artifactId>
 	<packaging>war</packaging>
-  <version>2.13.3</version>
+  <version>2.13.6</version>
 	<name>epp</name>
 	<url>http://www.infox.com.br</url>
 	<dependencyManagement>
@@ -386,7 +386,7 @@
 		<dependency>
 			<groupId>br.com.infox</groupId>
 		<artifactId>rest-client</artifactId>
-		<version>1.0.1-1</version>
+		<version>1.0.3</version>
 	</dependency>
 	<dependency>
 		<groupId>commons-codec</groupId>
@@ -527,7 +527,7 @@
 								<exclude>**/*.import.less</exclude>
 							</excludes>
 						</configuration>
-						<phase>compile</phase>
+            <phase>generate-sources</phase>
 						<goals>
 							<goal>compile</goal>
 						</goals>

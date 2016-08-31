@@ -1,6 +1,7 @@
 package br.com.infox.epp.processo.documento.manager;
 
 import java.util.List;
+import java.util.ListIterator;
 
 import javax.ejb.Stateless;
 
@@ -38,5 +39,22 @@ public class HistoricoStatusDocumentoManager extends Manager<HistoricoStatusDocu
 	public List<HistoricoStatusDocumento> getListHistoricoByDocumento(Documento documento){
 		return getDao().getListHistoricoByDocumento(documento);
 	}
+	
+	
+	public List<HistoricoStatusDocumento> getListHistoricoByDocumentoOrdenadoData(Documento documento) {
+		return getDao().getListHistoricoByDocumentoOrdenadoData(documento);
+	}
+	
+    public HistoricoStatusDocumento getUltimoHistorico(Documento documento, TipoAlteracaoDocumento tipo) {
+    	List<HistoricoStatusDocumento> historicoList = getListHistoricoByDocumentoOrdenadoData(documento);
+    	ListIterator<HistoricoStatusDocumento> it = historicoList.listIterator(historicoList.size());
+    	while(it.hasPrevious()) {
+    		HistoricoStatusDocumento historico = it.previous();
+    		if(historico.getTipoAlteracaoDocumento() == tipo) {
+    			return historico;
+    		}
+    	}
+    	return null;
+    }
 
 }

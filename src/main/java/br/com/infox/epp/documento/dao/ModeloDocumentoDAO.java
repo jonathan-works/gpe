@@ -20,12 +20,15 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.documento.entity.ClassificacaoDocumento_;
 import br.com.infox.epp.documento.entity.GrupoModeloDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento_;
@@ -77,7 +80,7 @@ public class ModeloDocumentoDAO extends DAO<ModeloDocumento> {
 
 		cq.select(from);
 		cq.where(where);
-		cq.orderBy(cb.asc(from.get(ModeloDocumento_.modeloDocumento)));
+		cq.orderBy(cb.asc(from.get(ModeloDocumento_.tituloModeloDocumento)));
 
 		return getEntityManager().createQuery(cq).getResultList();
 	}
@@ -93,7 +96,29 @@ public class ModeloDocumentoDAO extends DAO<ModeloDocumento> {
         Predicate ativo = cb.isTrue(modeloDocumento.get(ModeloDocumento_.ativo));
         Predicate where = cb.and(equalPapel, ativo);
         cq.where(where);
-        cq.orderBy(cb.asc(modeloDocumento.get(ModeloDocumento_.modeloDocumento)));
+        cq.orderBy(cb.asc(modeloDocumento.get(ModeloDocumento_.tituloModeloDocumento)));
         return getEntityManager().createQuery(cq).getResultList();
     }
+	
+    public List<ModeloDocumento> getModelosDocumentoLitsByClassificacaoEPapel(ClassificacaoDocumento classificacaoDocumento, Papel papel) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<ModeloDocumento> cq =cb.createQuery(ModeloDocumento.class);
+		Root<ClassificacaoDocumento> classificacao = cq.from(ClassificacaoDocumento.class);
+		Join<ClassificacaoDocumento, TipoModeloDocumento> tipoModelo = classificacao.join(ClassificacaoDocumento_.tipoModeloDocumento);
+		Join<TipoModeloDocumento, ModeloDocumento> modeloDocumento = tipoModelo.join(TipoModeloDocumento_.modeloDocumentoList);
+		
+		Subquery<Integer> subqueryPapel = cq.subquery(Integer.class);
+		Root<TipoModeloDocumentoPapel> tipoModeloPapel = subqueryPapel.from(TipoModeloDocumentoPapel.class);
+		subqueryPapel.where(cb.equal(tipoModeloPapel.get(TipoModeloDocumentoPapel_.papel), papel),
+				cb.equal(tipoModeloPapel.get(TipoModeloDocumentoPapel_.tipoModeloDocumento), tipoModelo));
+		subqueryPapel.select(cb.literal(1));
+		
+		cq.where(cb.equal(classificacao, classificacaoDocumento),
+				cb.isTrue(tipoModelo.get(TipoModeloDocumento_.ativo)),
+				cb.isTrue(modeloDocumento.get(ModeloDocumento_.ativo)),
+				cb.exists(subqueryPapel));
+		cq.select(modeloDocumento);
+		
+		return getEntityManager().createQuery(cq).getResultList();
+	}
 }

@@ -123,14 +123,14 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
             if (sendMail){
             	accessMailService.enviarEmailDeMudancaDeSenha("email", persisted, password);
             }
-	    return persisted;
+	    return getDao().update(persisted);
         } catch (IllegalArgumentException e) {
             throw new DAOException(e);
         }
     }
     
     @Override
-    public UsuarioLogin persist(final UsuarioLogin usuario) throws DAOException {
+    public UsuarioLogin persist(UsuarioLogin usuario) throws DAOException {
         return persist(usuario, true);
     }
     

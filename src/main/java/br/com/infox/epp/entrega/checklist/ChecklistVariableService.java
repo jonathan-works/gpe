@@ -48,13 +48,21 @@ public class ChecklistVariableService implements Serializable {
     }
 
     public String listBySituacao(String nomePasta, String codigoSituacao) {
+    	return listBySituacao(nomePasta, codigoSituacao, true);
+    }
+    
+    public String listBySituacao(String nomePasta, String codigoSituacao, boolean mostrarIncluidoPor) {
         Processo processo = retrieveProcessoFromExecutionContext();
         Pasta pasta = pastaManager.getPastaByNome(nomePasta, processo);
         if (pasta == null || pasta.getId() == null) return "";
-        return listBySituacao(processo.getIdProcesso(), pasta.getId(), codigoSituacao);
+        return listBySituacao(processo.getIdProcesso(), pasta.getId(), codigoSituacao, mostrarIncluidoPor);
     }
 
     public String listBySituacao(Integer idProcesso, Integer idPasta, String codigoSituacao) {
+    	return listBySituacao(idProcesso, idPasta, codigoSituacao, true);
+    }
+    
+    public String listBySituacao(Integer idProcesso, Integer idPasta, String codigoSituacao, boolean mostrarIncluidoPor) {
         ChecklistSituacao situacao = ChecklistSituacao.valueOf(codigoSituacao);
         if (situacao == null) return "";
         Checklist checklist = checklistSearch.getByIdProcessoIdPasta(idProcesso, idPasta);
@@ -68,13 +76,17 @@ public class ChecklistVariableService implements Serializable {
         String response = "<table border=\"1\" style=\"border-collapse: collapse; width: 100%\">";
         response += "<thead>";
         response += "<th>Classificação de Documento</th>";
-        response += "<th>Incluído por</th>";
+        if(mostrarIncluidoPor) {
+        	response += "<th>Incluído por</th>";
+        }
         response += "<th>Motivo</th>";
         response += "</thead><tbody>"; 
         for (ChecklistDoc clDoc : clDocList) {
             response += "<tr>";
             response += "<td style=\"text-align: center;\">" + clDoc.getDocumento().getClassificacaoDocumento().getDescricao() + "</td>";
-            response += "<td style=\"text-align: center;\">" + clDoc.getDocumento().getUsuarioInclusao().getNomeUsuario() + "</td>";
+            if(mostrarIncluidoPor) {
+            	response += "<td style=\"text-align: center;\">" + clDoc.getDocumento().getUsuarioInclusao().getNomeUsuario() + "</td>";
+            }
             response += "<td>" + (clDoc.getComentario() == null ? "" : clDoc.getComentario()) + "</td>";
             response += "</tr>";
         }

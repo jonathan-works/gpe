@@ -21,8 +21,16 @@ public class TipoComunicacaoList extends EntityList<TipoComunicacao> {
     private static final String DEFAULT_ORDER = "descricao";
     
     @Override
+    public void newInstance() {
+    	super.newInstance();
+    	getEntity().setTipoUsoComunicacao(null);
+    }
+    
+    @Override
     protected void addSearchFields() {
         addSearchField("descricao", SearchCriteria.CONTENDO);
+        addSearchField("codigo", SearchCriteria.CONTENDO);
+        addSearchField("tipoUsoComunicacao", SearchCriteria.IGUAL);
         addSearchField("ativo", SearchCriteria.IGUAL);
         addSearchField("classificacaoDocumento", SearchCriteria.IGUAL);
         addSearchField("tipoModeloDocumento", SearchCriteria.IGUAL);

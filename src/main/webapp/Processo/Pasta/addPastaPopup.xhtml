@@ -11,6 +11,7 @@
     <script type="text/javascript">
     	function clearAddPastaFields() {
             #{rich:jQuery('addPastaInputName')}.val('');
+            #{rich:jQuery('addPastaInputCodigo')}.val('');
             #{rich:jQuery('addPastaInputDescricao')}.val('');
             #{rich:jQuery('addPastaInputOrdemNumber')}.val('');
             $('.property-error.property-msg').remove();
@@ -34,6 +35,12 @@
                 value="#{pastaRestricaoAction.instance.nome}" required="true"
                 maxlength="250" label="#{infoxMessages['pasta.nome']}">
                 <f:validator validatorId="nomePastaValidator" />
+                <f:attribute name="idProcesso" value="#{pastaRestricaoAction.processo.idProcesso}" />
+            </wi:inputText>
+            <wi:inputText id="addPastaInputCodigo"
+                value="#{pastaRestricaoAction.instance.codigo}" required="true"
+                maxlength="250" label="#{infoxMessages['pasta.codigo']}">
+                <f:validator validatorId="codigoPastaValidator" />
                 <f:attribute name="idProcesso" value="#{pastaRestricaoAction.processo.idProcesso}" />
             </wi:inputText>
             <wi:inputText id="addPastaInputDescricao"

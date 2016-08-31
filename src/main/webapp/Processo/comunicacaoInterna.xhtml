@@ -51,6 +51,12 @@
     		</ui:repeat>
     	</wi:column>
     	
+    	<wi:column columnId="dataAlteracao" columnHeader="Data de Alteração">
+    		<h:outputText value="#{row.dataAlteracao}">
+    			<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+    		</h:outputText>
+    	</wi:column>
+    	
     </wi:dataTable>
     
     <wi:dataTable id="comunicacaoInternaList" tableTitle="Comunicações Internas expedidas" values="#{comunicacaoInternaView.comunicacoesInternas}"
@@ -73,7 +79,10 @@
     
     	<wi:columnOutputText columnId="numeroProcesso" columnHeader="Número Processo" value="#{row.numeroProcesso}"/>
     	
-    	<wi:columnOutputText columnId="localizacao" columnHeader="Localização" value="#{row.localizacao}"/>
+    	<wi:columnOutputText columnId="remetente" columnHeader="Remetente" value="#{row.getMetadado('remetente')}"/>
+    	<ui:param name="destinatario" value="#{row.getMetadado('destinatarioComunicacao').getValue()}"></ui:param>
+    	<wi:columnOutputText columnId="destinatario" columnHeader="Destinatário" value="#{destinatario}"/>
+    	<wi:columnOutputText columnId="tipoComunicacao" columnHeader="Tipo da Comunicação" value="#{destinatario.getModeloComunicacao().getTipoComunicacao()}"/>
     	
     	<wi:column columnId="tarefa(s)" columnHeader="Tarefas">
     		<ui:repeat var="task" value="#{comunicacaoInternaView.getTaskNames(row)}" varStatus="status">
@@ -81,10 +90,9 @@
     		</ui:repeat>
     	</wi:column>
     	
-    	<wi:columnDateTime columnId="dataInicio" columnHeader="Data de Início" value="#{row.dataInicio}"/>
-    	
+    	<wi:columnDateTime columnId="dataInicio" columnHeader="Data de Início" value="#{row.dataInicio}" showTime="true"/>
     	<wi:columnDateTime columnId="dataFim" columnHeader="Data de Fim" value="#{row.dataFim}"/>
-    
+    	
     </wi:dataTable>
     
 </ui:composition>

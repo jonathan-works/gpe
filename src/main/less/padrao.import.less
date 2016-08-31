@@ -184,8 +184,13 @@ h1 {
 }
 
 .decoration-div {
+  @decoration-div-max-width:100%;
   display: inline-block;
   vertical-align: top;
+  max-width:@decoration-div-max-width;
+  .property.field .value > * {
+    max-width:@decoration-div-max-width;
+  }
 }
 
 .activeRow {
@@ -663,3 +668,8 @@ form {
   font-family:'Roboto','Helvetica','Arial',sans-serif;
   position:relative;
 }
+
+.texto-underline {
+	text-decoration: underline;
+}
+

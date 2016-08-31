@@ -70,6 +70,10 @@ public class CategoriaEntregaController implements Serializable {
         }
     }
     
+    public boolean isManaged() {
+		return Modo.EDITAR.equals(this.modo);
+	}
+    
     public String getCodigo() {
         return codigo;
     }

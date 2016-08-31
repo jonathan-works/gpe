@@ -140,6 +140,7 @@ public class PastaManager extends Manager<PastaDAO, Pasta> {
     private Pasta createPastaFromModelo(ModeloPasta modeloPasta, Processo processo) {
         Pasta pasta = new Pasta();
         pasta.setNome(modeloPasta.getNome());
+        pasta.setCodigo(modeloPasta.getCodigo());
         pasta.setRemovivel(modeloPasta.getRemovivel());
         pasta.setProcesso(processo);
         pasta.setSistema(modeloPasta.getSistema());

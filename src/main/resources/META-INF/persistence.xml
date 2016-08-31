@@ -52,6 +52,10 @@
 	<persistence-unit name="EPABinPersistenceUnit" transaction-type="JTA">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<jta-data-source>${epp.datasource.jndi.prefix}${epp.datasourcebin.name}</jta-data-source>
+		<class>br.com.infox.epp.layout.entity.Binario</class>
+		<class>br.com.infox.epp.documento.entity.DocumentoBinario</class>
+		<class>br.com.infox.epp.imagem.entity.ImagemBin</class>
+		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.show_sql" value="${desenvolvimento}" />
 			<property name="hibernate.format_sql" value="false" />

@@ -2,7 +2,6 @@ package br.com.infox.epp.tarefa.dao;
 
 import static br.com.infox.epp.tarefa.query.TarefaQuery.FLUXO_PARAM;
 import static br.com.infox.epp.tarefa.query.TarefaQuery.ID_JBPM_TASK_PARAM;
-import static br.com.infox.epp.tarefa.query.TarefaQuery.NOVAS_TAREFAS;
 import static br.com.infox.epp.tarefa.query.TarefaQuery.TAREFA_BY_ID_JBPM_TASK;
 import static br.com.infox.epp.tarefa.query.TarefaQuery.TAREFA_BY_TAREFA_AND_FLUXO;
 import static br.com.infox.epp.tarefa.query.TarefaQuery.TAREFA_PARAM;
@@ -13,6 +12,8 @@ import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.faces.model.SelectItem;
+import javax.inject.Inject;
+import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
@@ -23,11 +24,17 @@ import javax.persistence.criteria.Subquery;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jbpm.graph.def.Node;
+import org.jbpm.graph.def.ProcessDefinition;
 import org.jbpm.graph.def.Transition;
+import org.jbpm.taskmgmt.def.Task;
 
 import br.com.infox.core.dao.DAO;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.entity.Fluxo_;
+import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.tarefa.entity.Tarefa;
+import br.com.infox.epp.tarefa.entity.Tarefa_;
 
 @Stateless
 @AutoCreate
@@ -36,6 +43,9 @@ public class TarefaDAO extends DAO<Tarefa> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "tarefaDAO";
+    
+    @Inject
+    private FluxoManager fluxoManager;
     
     public String getTaskName(String taskKey) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
@@ -84,7 +94,32 @@ public class TarefaDAO extends DAO<Tarefa> {
      * @throws DAOException 
      */
     public void encontrarNovasTarefas() throws DAOException {
-        executeNamedQueryUpdate(NOVAS_TAREFAS);
+    	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+    	CriteriaQuery<Tuple> query = cb.createTupleQuery();
+    	Root<Task> task = query.from(Task.class);
+    	Root<Fluxo> fluxo = query.from(Fluxo.class);
+    	Join<Task, ProcessDefinition> processDefinition = task.join("processDefinition", JoinType.INNER);
+    	
+    	Subquery<Integer> subquery = query.subquery(Integer.class);
+    	Root<Tarefa> tarefa = subquery.from(Tarefa.class);
+    	subquery.where(cb.equal(tarefa.get(Tarefa_.tarefa), task.get("name")), cb.equal(tarefa.get(Tarefa_.fluxo), fluxo));
+    	subquery.select(cb.literal(1));
+    	
+    	query.where(
+    		cb.equal(fluxo.get(Fluxo_.fluxo), processDefinition.get("name")),
+    		cb.exists(subquery).not()
+    	);
+    	query.groupBy(fluxo.get(Fluxo_.idFluxo), task.get("name"));
+    	query.multiselect(fluxo.get(Fluxo_.idFluxo).alias("idFluxo"), task.get("name").alias("taskName"));
+    	
+    	List<Tuple> result = getEntityManager().createQuery(query).getResultList();
+    	for (Tuple tuple : result) {
+    		Tarefa t = new Tarefa();
+    		t.setFluxo(fluxoManager.find(tuple.get("idFluxo")));
+    		t.setTarefa(tuple.get("taskName", String.class));
+    		persistWithoutFlush(t);
+    	}
+    	flush();
     }
 
     public Tarefa getTarefa(long idJbpmTask) {
@@ -102,10 +137,4 @@ public class TarefaDAO extends DAO<Tarefa> {
         parameters.put(FLUXO_PARAM, fluxo);
         return getNamedSingleResult(TAREFA_BY_TAREFA_AND_FLUXO, parameters);
     }
-    
-    @Override
-    public Tarefa persist(Tarefa object) throws DAOException {
-        throw new UnsupportedOperationException();
-    }
-
 }

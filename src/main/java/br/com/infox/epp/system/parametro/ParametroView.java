@@ -124,7 +124,7 @@ public class ParametroView implements Serializable {
 				parametro.setSistema(Boolean.FALSE);
 				parametro.setAtivo(Boolean.TRUE);
 			}
-			parametro.setValorVariavel(formField.getValue() != null ? formField.getValue().toString() : "");
+			parametro.setValorVariavel(formField.getValue() != null ? formField.getValue().toString() : null);
 			parametroManager.update(parametro);
 			Contexts.getApplicationContext().set(parametro.getNomeVariavel().trim(), parametro.getValorVariavel());
 		}

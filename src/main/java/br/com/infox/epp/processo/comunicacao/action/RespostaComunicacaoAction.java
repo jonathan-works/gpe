@@ -20,6 +20,7 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.documento.dao.ModeloDocumentoDAO;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
@@ -78,6 +79,8 @@ public class RespostaComunicacaoAction implements Serializable {
 	private AssinaturaDocumentoService assinaturaDocumentoService;
 	@Inject
 	private RespostaComunicacaoService respostaComunicacaoService;
+	@Inject
+	private ModeloDocumentoDAO modeloDocumentoDAO;
 	
 	
 	private DestinatarioModeloComunicacao destinatario;
@@ -174,6 +177,7 @@ public class RespostaComunicacaoAction implements Serializable {
 		documentoEditor.getDocumento().setPerfilTemplate(Authenticator.getUsuarioPerfilAtual().getPerfilTemplate());
 		documentoEditor.getDocumento().setAnexo(false);
 		modeloDocumento = null;
+		modeloDocumentoList = null;
 	}
 	
 	//TODO ver como colocar esse método no service
@@ -256,8 +260,8 @@ public class RespostaComunicacaoAction implements Serializable {
 	}
 	
 	public List<ModeloDocumento> getModeloDocumentoList() {
-		if (modeloDocumentoList == null) {
-			modeloDocumentoList = modeloDocumentoManager.getModeloDocumentoList();
+		if (modeloDocumentoList == null && getDocumentoEdicao() != null && getDocumentoEdicao().getClassificacaoDocumento() != null) {
+			modeloDocumentoList = modeloDocumentoDAO.getModelosDocumentoLitsByClassificacaoEPapel(getDocumentoEdicao().getClassificacaoDocumento(), Authenticator.getPapelAtual());
 		}
 		return modeloDocumentoList;
 	}
@@ -296,6 +300,15 @@ public class RespostaComunicacaoAction implements Serializable {
 	
 	public void setDocumentoEdicao(Documento documentoEdicao) {
 		documentoEditor.setDocumento(documentoEdicao);
+	}
+	
+	public ClassificacaoDocumento getClassificacaoDocumentoEditor() {
+		return getDocumentoEdicao().getClassificacaoDocumento();
+	}
+	
+	public void setClassificacaoDocumentoEditor(ClassificacaoDocumento classificacaoDocumento) {
+		getDocumentoEdicao().setClassificacaoDocumento(classificacaoDocumento);
+		modeloDocumentoList = null;
 	}
 	
 	public MeioExpedicao getMeioExpedicao() {

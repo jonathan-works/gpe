@@ -3,26 +3,8 @@
         xsi:schemaLocation="urn:infinispan:config:5.2 http://www.infinispan.org/schemas/infinispan-config-5.2.xsd"
         xmlns="urn:infinispan:config:5.2">
 
-	<global>
-		<transport
-			transportClass="org.infinispan.remoting.transport.jgroups.JGroupsTransport"
-			clusterName="infinispan-hibernate-cluster" distributedSyncTimeout="50000">
-			<!-- Note that the JGroups transport uses sensible defaults if no configuration property is defined. -->
-			<properties>
-				<!-- TODO: Change to udp.xml once streaming transfer requirement has been removed.
-				<property name="configurationFile" value="flush-udp.xml" />
-				 -->
-			</properties>
-			<!-- See the JGroupsTransport javadocs for more flags -->
-		</transport>
-	</global>
-
 	<!-- Default configuration is appropriate for entity/collection caching. -->
 	<namedCache name="entity">
-		<clustering mode="invalidation">
-			<stateTransfer fetchInMemoryState="false" timeout="20000" />
-			<sync replTimeout="20000" />
-		</clustering>
 		<locking isolationLevel="READ_COMMITTED" concurrencyLevel="1000" lockAcquisitionTimeout="15000" useLockStriping="false" />
 		<eviction maxEntries="10000" strategy="LRU" />
 		<expiration maxIdle="100000" />
@@ -42,10 +24,6 @@
 		if query caching is used, even if the query cache itself is configured with 
 		CacheMode=LOCAL. -->
 	<namedCache name="timestamps">
-		<clustering mode="replication">
-			<stateTransfer fetchInMemoryState="true" timeout="20000" />
-			<async />
-		</clustering>
 		<locking isolationLevel="READ_COMMITTED" concurrencyLevel="1000" lockAcquisitionTimeout="15000" useLockStriping="false" />
 		<lazyDeserialization enabled="true" />
 		<eviction strategy="NONE" />

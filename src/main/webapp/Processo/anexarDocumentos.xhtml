@@ -21,6 +21,15 @@
 			header="#{infoxMessages['fileUpload.header']}"
 			style="margin-bottom: 1em" switchType="client">
 			<h:form id="uploadForm">
+			
+				<wi:inputText id="uploadDescricao" required="true"
+					label="#{infoxMessages['processo.anexarDocumentoDescricao']}"
+					value="#{anexarDocumentosView.descricaoUploader}">
+					<a:ajax id="uploadDescricaoAjax" event="change"
+						onbeforesubmit="infox.showLoading();"
+						oncomplete="infox.hideLoading();" render="uploadArquivoAnexarButton"
+						limitRender="true" execute="@this"/>
+				</wi:inputText>
 				<wi:selectOneMenuEntity id="uploadClassificacao" required="true"
 					label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
 					value="#{anexarDocumentosView.classificacaoDocumentoUploader}"
@@ -99,15 +108,19 @@
 							maxFilesQuantity="20" immediateUpload="true" noDuplicate="true"
 							render="uploadArquivoAnexarButton pageBodyDialogMessage"
 							acceptedTypes="#{anexarDocumentosView.classificacaoDocumentoUploader.acceptedTypes}"
+							serverErrorLabel="Erro no envio"
+							onerror="processErrorMessage(this);"
 							onuploadcomplete="infox.hideLoading(); addClearEventUploadModelo();"
 							rendered="#{not empty anexarDocumentosView.classificacaoDocumentoUploader.extensaoArquivosList}">
 						</rich:fileUpload>
 						
 						<script type="text/javascript">
-                            var upload = #{rich:component('uploadArquivo')};
-                            upload.serverErrorProcLabel = 'Falha no Envio';
+							function processErrorMessage(uploader) {
+								var message = event.currentTarget.getResponseHeader('Error-Message');
+								uploader.serverErrorProcLabel = message;
+							}
                         </script>
-
+						
                         <a:jsFunction id="onClickClearItemList" name="onClickClearItemList" render="uploadArquivoAnexarButton"
                             actionListener="#{anexarDocumentosView.removeDocumentoUpload}" immediate="true" onbegin="infox.showLoading();"
                             oncomplete="infox.hideLoading();">

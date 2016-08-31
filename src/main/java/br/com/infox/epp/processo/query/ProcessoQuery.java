@@ -67,8 +67,8 @@ public interface ProcessoQuery {
 	String ID_LIST_PROCESSO_PARAM = "idList";
 	String CAIXA_PARAM = "caixa";
 
-	String ATUALIZAR_PROCESSOS = "atualizarProcessos";
-	String ATUALIZAR_PROCESSOS_QUERY = 
+	String ATUALIZAR_PROCESSOS1 = "atualizarProcessos1";
+	String ATUALIZAR_PROCESSOS_QUERY1 = 
 	        "UPDATE "
 	        + "    jbpm_processinstance "
             + "SET "
@@ -84,9 +84,10 @@ public interface ProcessoQuery {
             + "        AND  "
             + "            pd.name_ = :processDefinitionName "
             + "    ) "
-            + "AND end_ IS NULL; "
-            + "\n " +
-			
+            + "AND end_ IS NULL";
+            
+    String ATUALIZAR_PROCESSOS2 = "atualizarProcessos2";
+	String ATUALIZAR_PROCESSOS_QUERY2 = 
             "UPDATE "
             + "    jbpm_token "
             + "SET "
@@ -129,9 +130,10 @@ public interface ProcessoQuery {
             + "        AND "
             + "            pd.name_ = :processDefinitionName "
             + "    ) "
-            + "AND end_ IS NULL; "
-            + "\n " +
-			
+            + "AND end_ IS NULL";
+	
+	String ATUALIZAR_PROCESSOS3 = "atualizarProcessos3";
+	String ATUALIZAR_PROCESSOS_QUERY3 = 
             "UPDATE "
             + "    jbpm_taskinstance "
             + "SET "
@@ -166,9 +168,10 @@ public interface ProcessoQuery {
             + "        AND  " 
             + "            pd.name_ = :processDefinitionName  "
             + "    ) "
-            + "AND end_ IS NULL; "
-            + "\n; " +
-            
+            + "AND end_ IS NULL";
+	
+	String ATUALIZAR_PROCESSOS4 = "atualizarProcessos4";
+	String ATUALIZAR_PROCESSOS_QUERY4 = 
             "UPDATE "
             + "    JBPM_SWIMLANEINSTANCE "
             + "SET "
@@ -198,8 +201,7 @@ public interface ProcessoQuery {
             + "        WHERE "
             + "            ti.swimlaninstance_ = JBPM_SWIMLANEINSTANCE.id_ "
             + "        AND pinst.end_ IS NULL "
-            + "    ); "
-            + "\n;";
+            + "    )";
 
 
 	String GET_PROCESSO_BY_NUMERO_PROCESSO = "getProcessoByNumeroProcesso";

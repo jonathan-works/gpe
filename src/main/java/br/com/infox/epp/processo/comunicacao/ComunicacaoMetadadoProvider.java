@@ -61,4 +61,9 @@ public class ComunicacaoMetadadoProvider extends MetadadoProcessoProvider {
 	
 	public static final MetadadoProcessoDefinition DATA_ANALISE_PRORROGACAO = 
             new MetadadoProcessoDefinition("dataAnaliseProrrogacao", "Data da Análise da Prorrogação", Date.class);
+	
+	//Comunicação Interna
+	public static final MetadadoProcessoDefinition REMETENTE = 
+            new MetadadoProcessoDefinition("remetente", "Remetente", UsuarioLogin.class);
+	
 }

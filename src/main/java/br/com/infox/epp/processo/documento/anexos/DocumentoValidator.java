@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.documento.anexos;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import org.jboss.seam.ScopeType;
@@ -17,8 +18,13 @@ import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 @Name(DocumentoValidator.NAME)
 @Scope(ScopeType.SESSION)
 @AutoCreate
-public class DocumentoValidator {
-    public static final String NAME = "documentoValidator";
+public class DocumentoValidator implements Serializable{
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public static final String NAME = "documentoValidator";
     
     private String uuid;
     

@@ -15,8 +15,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.security.Identity;
 
 import com.google.common.base.Strings;
 
@@ -33,10 +35,17 @@ import br.com.infox.epp.fluxo.entity.Fluxo_;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo_;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
+import br.com.infox.epp.pessoa.entity.Pessoa;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.pessoa.entity.Pessoa_;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.Processo_;
+import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
+import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso_;
+import br.com.infox.epp.processo.sigilo.manager.SigiloProcessoPermissaoManager;
 import br.com.infox.epp.processo.variavel.bean.VariavelProcesso;
 import br.com.infox.epp.processo.variavel.service.VariavelProcessoService;
+import br.com.infox.epp.system.Parametros;
 import br.com.infox.seam.exception.BusinessException;
 
 @Named
@@ -100,18 +109,46 @@ public class ConsultaProcessoDynamicColumnsController implements Serializable {
     public List<Fluxo> getFluxos(String search) {
     	CriteriaBuilder cb = EntityManagerProducer.getEntityManager().getCriteriaBuilder();
     	CriteriaQuery<Fluxo> query = cb.createQuery(Fluxo.class);
-    	Root<Processo> processo = query.from(Processo.class);
-    	Join<Processo, NaturezaCategoriaFluxo> ncf = processo.join(Processo_.naturezaCategoriaFluxo, JoinType.INNER);
-    	Join<NaturezaCategoriaFluxo, Fluxo> fluxo = ncf.join(NaturezaCategoriaFluxo_.fluxo, JoinType.INNER);
-    	query.select(fluxo);
+    	Root<Fluxo> fluxo = query.from(Fluxo.class);
     	query.orderBy(cb.asc(fluxo.get(Fluxo_.fluxo)));
-    	query.distinct(true);
+    	
+    	Subquery<Integer> subquery = query.subquery(Integer.class);
+    	Root<Processo> processo = subquery.from(Processo.class);
+    	Join<Processo, NaturezaCategoriaFluxo> ncf = processo.join(Processo_.naturezaCategoriaFluxo, JoinType.INNER);
+    	subquery.select(cb.literal(1));
+    	subquery.where(cb.equal(ncf.get(NaturezaCategoriaFluxo_.fluxo), fluxo));
+    	
+    	query.where(cb.exists(subquery));
     	if (!Strings.isNullOrEmpty(search)) {
-    		query.where(cb.like(cb.lower(fluxo.get(Fluxo_.fluxo)), "%" + search.toLowerCase() + "%"));
+    		query.where(query.getRestriction(), cb.like(cb.lower(fluxo.get(Fluxo_.fluxo)), "%" + search.toLowerCase() + "%"));
     	}
-    	return EntityManagerProducer.getEntityManager().createQuery(query).getResultList();
+        appendFiltrosUsuarioExterno(cb, subquery, processo);
+        
+        return EntityManagerProducer.getEntityManager().createQuery(query).getResultList();
 	}
     
+    public boolean showComboFluxo() {
+        return !getFluxos(null).isEmpty();
+    }
+    
+    private void appendFiltrosUsuarioExterno(CriteriaBuilder cb, Subquery<Integer> subquery, Root<Processo> processo) {
+        PessoaFisica pessoaFisica = Authenticator.getUsuarioLogado().getPessoaFisica();
+        if (pessoaFisica != null && Identity.instance().hasRole(Parametros.PAPEL_USUARIO_EXTERNO.getValue())) {
+            Subquery<Integer> participante = subquery.subquery(Integer.class);
+            Root<ParticipanteProcesso> pp = participante.from(ParticipanteProcesso.class);
+            Join<ParticipanteProcesso, Pessoa> joinPessoa = pp.join(ParticipanteProcesso_.pessoa);
+            participante.where(cb.equal(pp.get(ParticipanteProcesso_.processo), processo),
+                    cb.equal(joinPessoa.get(Pessoa_.idPessoa), pessoaFisica.getIdPessoa()));
+            participante.select(cb.literal(1));
+            
+            subquery.where(subquery.getRestriction(),
+                    cb.isNotNull(processo.get(Processo_.idJbpm)),
+                    cb.isNull(processo.get(Processo_.processoPai)),
+                    SigiloProcessoPermissaoManager.getPermissaoConditionPredicate(cb, processo, subquery),
+                    cb.exists(participante));
+        }
+    }
+
     public void clearMensagensValidacao() {
     	controleMensagensValidacao = new ArrayList<>();
     }

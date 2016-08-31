@@ -44,6 +44,7 @@ public class DefinicaoVariavelProcesso implements Serializable {
     @NotNull(message = "{beanValidation.notNull}")
     private String label;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_fluxo", nullable = false)
     private Fluxo fluxo;

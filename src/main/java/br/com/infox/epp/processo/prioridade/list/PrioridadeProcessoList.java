@@ -22,7 +22,7 @@ public class PrioridadeProcessoList extends EntityList<PrioridadeProcesso> {
     private static final long serialVersionUID = 1L;
 
     private static final String DEFAULT_EJBQL = "select o from PrioridadeProcesso o";
-    private static final String DEFAULT_ORDER = "peso";
+    private static final String DEFAULT_ORDER = "o.peso desc";
     
     @In
     private PrioridadeProcessoManager prioridadeProcessoManager;

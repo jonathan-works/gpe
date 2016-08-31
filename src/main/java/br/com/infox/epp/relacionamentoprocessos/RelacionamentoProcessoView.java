@@ -24,7 +24,16 @@ public class RelacionamentoProcessoView implements SaveListener, Serializable {
 	@Inject
 	private RelacionamentoProcessoEdit relacionamentoProcessoEdit;
 	
+	@Inject
+	private RelacionamentoProcessoManager relacionamentoProcessoManager;
+	
+	private boolean readOnly;
+	
 	public void initView(Processo processo, boolean readonly) {
+		readonly = readonly || !relacionamentoProcessoManager.isPermittedModificar(); 
+		
+		this.readOnly = readonly;
+		
 		relacionamentoProcessoList.setProcesso(processo);
 		relacionamentoProcessoList.setReadOnly(readonly);
 		relacionamentoProcessoExternoList.setProcesso(processo);
@@ -43,6 +52,17 @@ public class RelacionamentoProcessoView implements SaveListener, Serializable {
 			relacionamentoProcessoExternoList.refresh();			
 		}
 	}
+
+	public boolean isReadOnly() {
+		return readOnly;
+	}
 	
+	/**
+	 * Verifica se o usuário logado tem permissão para visualizar processos relacionados
+	 * @return
+	 */
+	public boolean podeVisualizar() {
+		return relacionamentoProcessoManager.isPermittedVisualizar();
+	}
 
 }

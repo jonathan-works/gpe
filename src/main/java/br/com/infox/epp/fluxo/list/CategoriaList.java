@@ -32,6 +32,7 @@ public class CategoriaList extends EntityList<Categoria> {
     protected void addSearchFields() {
         addSearchField("categoria", SearchCriteria.CONTENDO);
         addSearchField("ativo", SearchCriteria.IGUAL);
+        addSearchField("codigo", SearchCriteria.CONTENDO);
     }
 
     @Override

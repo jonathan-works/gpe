@@ -278,7 +278,7 @@ public class AssinaturaDocumentoService {
 			documentoBin.setMinuta(Boolean.FALSE);
 		}
 		if (isDocumentoTotalmenteAssinado(documentoBin)){
-			setDocumentoSuficientementeAssinado(documentoBin, usuarioPerfilAtual);
+			documentoBinManager.setDocumentoSuficientementeAssinado(documentoBin, usuarioPerfilAtual);
 		}
 		documentoBinManager.update(documentoBin);
 		try {
@@ -292,26 +292,6 @@ public class AssinaturaDocumentoService {
 		}
 	}
 
-	public void setDocumentoSuficientementeAssinado(DocumentoBin documentoBin, UsuarioPerfil usuarioPerfilAtual) throws DAOException {
-		documentoBin.setSuficientementeAssinado(Boolean.TRUE);
-		documentoBin.setDataSuficientementeAssinado(new Date());
-		List<RegistroAssinaturaSuficiente> registrosAssinaturaSuficiente = documentoBin.getRegistrosAssinaturaSuficiente();
-		List<Documento> documentoList = documentoManager.getDocumentosFromDocumentoBin(documentoBin);
-		GenericManager genericManager = ComponentUtil.getComponent(GenericManager.NAME);
-        if (!(documentoList == null || documentoList.isEmpty()) && usuarioPerfilAtual != null) {
-            Documento documento = documentoList.get(0);
-            for (ClassificacaoDocumentoPapel classificacaoDocumentoPapel : documento.getClassificacaoDocumento().getClassificacaoDocumentoPapelList()) {
-                RegistroAssinaturaSuficiente registroAssinaturaSuficiente = new RegistroAssinaturaSuficiente();
-                registroAssinaturaSuficiente.setDocumentoBin(documentoBin);
-                registroAssinaturaSuficiente.setPapel(usuarioPerfilAtual.getPerfilTemplate().getPapel().getNome());
-                registroAssinaturaSuficiente.setTipoAssinatura(classificacaoDocumentoPapel.getTipoAssinatura());
-                registrosAssinaturaSuficiente.add(registroAssinaturaSuficiente);
-                genericManager.persist(registroAssinaturaSuficiente);
-            }
-        }
-        documentoBinManager.update(documentoBin);
-	}
-    
     public void assinarDocumento(final Documento documento,
             final UsuarioPerfil perfilAtual, final String certChain,
             final String signature) throws CertificadoException,

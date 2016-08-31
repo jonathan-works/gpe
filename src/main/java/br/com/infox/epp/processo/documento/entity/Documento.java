@@ -52,7 +52,6 @@ import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 
-import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
@@ -83,6 +82,7 @@ import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 public class Documento implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 1L;
+    public static final int TAMANHO_MAX_DESCRICAO_DOCUMENTO = 260;
     public static final String TABLE_NAME = "tb_documento";
 
     @Id
@@ -91,7 +91,12 @@ public class Documento implements Serializable, Cloneable {
     @Column(name = "id_documento", unique = true, nullable = false)
     private Integer id;
     
-    @NotNull
+    /** Anotação removida por conta de bug ao tentar movimentar uma tarefa
+     * com variável editor não obrigatória. Ver se vale a pena fazer implementação
+     * de contorno em classe de negócios de movimentação jbpm
+     * @see <a href="https://redmine.infox.com.br/issues/83644">#83644</a>
+     */
+    //@NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_classificacao_documento", nullable = false)
     private ClassificacaoDocumento classificacaoDocumento;
@@ -102,8 +107,8 @@ public class Documento implements Serializable, Cloneable {
     private DocumentoBin documentoBin;
     
     @NotNull
-    @Size(max = LengthConstants.DESCRICAO_PADRAO)
-    @Column(name = "ds_documento", nullable = false, length = LengthConstants.DESCRICAO_PADRAO)
+    @Size(max = TAMANHO_MAX_DESCRICAO_DOCUMENTO)
+    @Column(name = "ds_documento", nullable = false, length = TAMANHO_MAX_DESCRICAO_DOCUMENTO)
     private String descricao;
     
     @Column(name = "nr_documento", nullable = true)

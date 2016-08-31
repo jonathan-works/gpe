@@ -87,6 +87,10 @@ public class EppParametroProvider implements Serializable, ParametroProvider {
 				.addFilter(isTrue(Localizacao_.ativo));
 		create("comunicacao", "codigoFluxoComunicacao", Fluxo_.fluxo, Fluxo_.codFluxo).addFilter(isTrue(Fluxo_.ativo))
 				.addFilter(isTrue(Fluxo_.publicado));
+		create("comunicacao", "codigoFluxoComunicacaoNaoEletronico", Fluxo_.fluxo, Fluxo_.codFluxo).addFilter(isTrue(Fluxo_.ativo))
+		.addFilter(isTrue(Fluxo_.publicado));
+		create("comunicacao", "codigoFluxoComunicacaoInterna", Fluxo_.fluxo, Fluxo_.codFluxo).addFilter(isTrue(Fluxo_.ativo))
+		.addFilter(isTrue(Fluxo_.publicado));
 	}
 
 	private void initParametrosSistema() {

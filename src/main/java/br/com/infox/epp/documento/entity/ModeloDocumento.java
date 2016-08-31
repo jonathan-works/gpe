@@ -43,19 +43,33 @@ public class ModeloDocumento implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private int idModeloDocumento;
-    private TipoModeloDocumento tipoModeloDocumento;
-    private String tituloModeloDocumento;
-    private String modeloDocumento;
-    private Boolean ativo;
-
-    public ModeloDocumento() {
-    }
-
     @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_MODELO_DOCUMENTO)
     @Id
     @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
     @Column(name = ID_MODELO_DOCUMENTO, unique = true, nullable = false)
+    private int idModeloDocumento;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = ID_TIPO_MODELO_DOCUMENTO, nullable = false)
+    @NotNull
+    private TipoModeloDocumento tipoModeloDocumento;
+    
+    @Column(name = TITULO_MODELO_DOCUMENTO, nullable = false, length = 250)
+    @Size(max = 250)
+    @NotNull
+    private String tituloModeloDocumento;
+    
+    @Column(name = CONTEUDO_MODELO_DOCUMENTO, nullable = false)
+    @NotNull
+    private String modeloDocumento;
+    
+    @Column(name = ATIVO, nullable = false)
+    @NotNull
+    private Boolean ativo;
+
+    public ModeloDocumento() {
+    }
+    
     public int getIdModeloDocumento() {
         return this.idModeloDocumento;
     }
@@ -64,9 +78,6 @@ public class ModeloDocumento implements java.io.Serializable {
         this.idModeloDocumento = idModeloDocumento;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = ID_TIPO_MODELO_DOCUMENTO, nullable = false)
-    @NotNull
     public TipoModeloDocumento getTipoModeloDocumento() {
         return this.tipoModeloDocumento;
     }
@@ -75,9 +86,6 @@ public class ModeloDocumento implements java.io.Serializable {
         this.tipoModeloDocumento = tipoModeloDocumento;
     }
 
-    @Column(name = TITULO_MODELO_DOCUMENTO, nullable = false, length = 80)
-    @Size(max = 80)
-    @NotNull
     public String getTituloModeloDocumento() {
         return this.tituloModeloDocumento;
     }
@@ -86,8 +94,6 @@ public class ModeloDocumento implements java.io.Serializable {
         this.tituloModeloDocumento = tituloModeloDocumento;
     }
 
-    @Column(name = CONTEUDO_MODELO_DOCUMENTO, nullable = false)
-    @NotNull
     public String getModeloDocumento() {
         return this.modeloDocumento;
     }
@@ -96,8 +102,6 @@ public class ModeloDocumento implements java.io.Serializable {
         this.modeloDocumento = modeloDocumento;
     }
 
-    @Column(name = ATIVO, nullable = false)
-    @NotNull
     public Boolean getAtivo() {
         return this.ativo;
     }

@@ -66,10 +66,11 @@ public class SeamExpressionResolver implements ExpressionResolver {
 	@Override
 	public Expression resolve(Expression expression) {
 		Object value = null;
-		if (executionContext == null) {
-			value = Expressions.instance().createValueExpression(expression.getExpression()).getValue();
-		} else {
-			value = JbpmExpressionEvaluator.evaluate(expression.getExpression(), executionContext);
+		if (executionContext != null) {
+		    value = JbpmExpressionEvaluator.evaluate(expression.getExpression(), executionContext);
+		} 
+		if (value == null){
+		    value = Expressions.instance().createValueExpression(expression.getExpression()).getValue();
 		}
 		if (value != null) {
 			resolveAsJavaType(expression, value);

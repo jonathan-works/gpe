@@ -16,14 +16,19 @@ import javax.inject.Named;
 import javax.persistence.OptimisticLockException;
 
 import org.jboss.seam.faces.FacesMessages;
+import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.primefaces.model.LazyDataModel;
 
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.HistoricoStatusDocumento;
 import br.com.infox.epp.processo.documento.entity.Pasta;
+import br.com.infox.epp.processo.documento.manager.HistoricoStatusDocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
+import br.com.infox.epp.processo.documento.type.TipoAlteracaoDocumento;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.home.MovimentarController;
 import br.com.infox.epp.processo.marcador.MarcadorSearch;
@@ -51,6 +56,8 @@ public class ChecklistView implements Serializable {
     private PastaManager pastaManager;
     @Inject
     private MarcadorSearch marcadorSearch;
+    @Inject
+    private HistoricoStatusDocumentoManager historicoStatusDocumentoManager;
 
     @TaskpageParameter(name = PARAMETER_PASTA, description = "Pasta a ser considerada no checklist")
     private Pasta pasta;
@@ -92,7 +99,11 @@ public class ChecklistView implements Serializable {
      * @return Pasta, caso encontre, null caso contrário.
      */
     private Pasta retrievePasta() {
-        Object nomePasta = taskInstanceHome.getCurrentTaskInstance().getVariable(PARAMETER_PASTA);
+        TaskInstance taskInstance = taskInstanceHome.getCurrentTaskInstance();
+        if (taskInstance == null) { // isso ocorre quando a raia é dinâmica e o usuário que movimentou não tem permissão
+            return null;
+        }
+        Object nomePasta = taskInstance.getVariable(PARAMETER_PASTA);
         if (nomePasta == null) {
             message = "Não foi possível recuperar o parâmetro com o nome da pasta.";
             return null;
@@ -243,5 +254,14 @@ public class ChecklistView implements Serializable {
 
     public void setSituacaoBloco(ChecklistSituacao situacaoBloco) {
         this.situacaoBloco = situacaoBloco;
+    }
+    
+    public String getTextoDocumentoExcluido(Documento documento) {
+    	HistoricoStatusDocumento historico = historicoStatusDocumentoManager.getUltimoHistorico(documento, TipoAlteracaoDocumento.E);  
+    	if(historico == null) {
+    		return ""; 
+    	}
+    	String texto = String.format("Excluído por %s. Motivo: %s", historico.getUsuarioAlteracao(), historico.getMotivo());
+    	return texto;
     }
 }
