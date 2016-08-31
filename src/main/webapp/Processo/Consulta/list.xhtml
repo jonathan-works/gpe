@@ -33,6 +33,9 @@
         	<wi:outputText id="variavel#{variavel.nome}" label="#{variavel.label}" value="#{variavel.valor}"/>
        	</ui:repeat>
     </h:panelGrid>
+        <ui:include src="/Processo/linkAplicacaoExterna.xhtml">
+            <ui:param name="processo" value="#{consultaController.processo}" />
+        </ui:include>
     </rich:collapsiblePanel>
     <infox:tabPanel
       headerSpacing="2"
