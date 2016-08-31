@@ -46,7 +46,6 @@ public class FluxoCrudAction implements Controller {
     public Fluxo getInstance() {
     	if (fluxoController.getFluxo() == null) {
     		newInstance();
-        fluxo.setXmlExecucao(null);
     	}
     	return fluxoController.getFluxo();
     }
