@@ -59,6 +59,7 @@ public class TaskInstanceForm implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "taskInstaceForm";
     public static final String TASK_BUTTONS = "taskButtons";
+    public static final String FRAME_URL_PREFIX = "WEB-INF_taskpages_";
 
     private Form form;
 
@@ -128,7 +129,7 @@ public class TaskInstanceForm implements Serializable {
                         setPageProperties(name, ff, "seam", "url");
                         break;
                     case FRAME:
-                        setPageProperties(name, ff, "xhtml", "urlFrame");
+                        setPageProperties(FRAME_URL_PREFIX + name, ff, "xhtml", "urlFrame");
                         break;
                     case ENUMERATION_MULTIPLE:
                     case ENUMERATION: {

@@ -2,6 +2,7 @@ package br.com.infox.ibpm.task.view;
 
 import static br.com.infox.ibpm.process.definition.variable.constants.VariableConstants.DEFAULT_PATH;
 import static java.text.MessageFormat.format;
+import static br.com.infox.ibpm.task.view.TaskInstanceForm.FRAME_URL_PREFIX;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -158,6 +159,10 @@ public class TaskInstanceView implements Serializable {
                             }
                         }
                         break;
+                        case FRAME:
+                            setFrameProperties(FRAME_URL_PREFIX + name, ff);
+                            ff.setType(type.name());
+                            break;
                         case FRAGMENT:{
                             ff.setType(type.name());
                         ff.setValue(value);
@@ -187,6 +192,11 @@ public class TaskInstanceView implements Serializable {
             }
         }
         return form;
+    }
+    
+    private void setFrameProperties(String name, FormField ff) {
+        final String url = format("/{0}.{1}", name.replaceAll("_", "/"), "xhtml");
+        ff.getProperties().put("urlFrame", url);
     }
 
     private void getTaskInstance() {
