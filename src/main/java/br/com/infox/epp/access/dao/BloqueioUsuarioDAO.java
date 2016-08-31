@@ -2,12 +2,7 @@ package br.com.infox.epp.access.dao;
 
 import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.BLOQUEIOS_ATIVOS;
 import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.BLOQUEIO_MAIS_RECENTE;
-import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.PARAM_BLOQUEIO;
-import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.PARAM_DATA_DESBLOQUEIO;
-import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.PARAM_ID_USUARIO;
 import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.PARAM_USUARIO;
-import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.SAVE_DATA_DESBLOQUEIO;
-import static br.com.infox.epp.access.query.BloqueioUsuarioQuery.UNDO_BLOQUEIO;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -42,19 +37,17 @@ public class BloqueioUsuarioDAO extends DAO<BloqueioUsuario> {
     public void desfazerBloqueioUsuario(BloqueioUsuario bloqueioUsuario) throws DAOException {
         desbloquearUsuario(bloqueioUsuario.getUsuario());
         gravarDesbloqueio(bloqueioUsuario);
+        getEntityManager().flush();
     }
 
     private void desbloquearUsuario(UsuarioLogin usuarioLogin) throws DAOException {
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put(PARAM_ID_USUARIO, usuarioLogin.getIdUsuarioLogin());
-        executeNamedQueryUpdate(UNDO_BLOQUEIO, parameters);
+        usuarioLogin.setBloqueio(false);
+        getEntityManager().merge(usuarioLogin);
     }
 
     private void gravarDesbloqueio(BloqueioUsuario bloqueioUsuario) throws DAOException {
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put(PARAM_BLOQUEIO, bloqueioUsuario.getIdBloqueioUsuario());
-        parameters.put(PARAM_DATA_DESBLOQUEIO, new Date());
-        executeNamedQueryUpdate(SAVE_DATA_DESBLOQUEIO, parameters);
+        bloqueioUsuario.setDataDesbloqueio(new Date());
+        getEntityManager().merge(bloqueioUsuario);
     }
 
     public List<BloqueioUsuario> getBloqueiosAtivos() {
