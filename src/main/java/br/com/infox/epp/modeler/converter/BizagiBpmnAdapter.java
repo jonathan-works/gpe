@@ -6,6 +6,7 @@ import java.util.Iterator;
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.impl.BpmnModelConstants;
+import org.camunda.bpm.model.bpmn.instance.Association;
 import org.camunda.bpm.model.bpmn.instance.BaseElement;
 import org.camunda.bpm.model.bpmn.instance.Collaboration;
 import org.camunda.bpm.model.bpmn.instance.Definitions;
@@ -17,6 +18,8 @@ import org.camunda.bpm.model.bpmn.instance.LaneSet;
 import org.camunda.bpm.model.bpmn.instance.Participant;
 import org.camunda.bpm.model.bpmn.instance.Process;
 import org.camunda.bpm.model.bpmn.instance.SequenceFlow;
+import org.camunda.bpm.model.bpmn.instance.Text;
+import org.camunda.bpm.model.bpmn.instance.TextAnnotation;
 import org.camunda.bpm.model.bpmn.instance.bpmndi.BpmnDiagram;
 import org.camunda.bpm.model.bpmn.instance.bpmndi.BpmnEdge;
 import org.camunda.bpm.model.bpmn.instance.bpmndi.BpmnLabel;
@@ -45,12 +48,37 @@ class BizagiBpmnAdapter implements BpmnAdapter {
 	}
 	
 	private void normalizeBpmnModel() {
+		Process bizagiProcess = bizagiBpmnModel.getModelElementsByType(Process.class).iterator().next();
+		normalizedModel = Bpmn.createProcess(bizagiProcess.getId()).name(bizagiProcess.getName()).done();
+		normalizedProcess = normalizedModel.getModelElementById(bizagiProcess.getId());
 		removeUnnecessaryProcessesAndParticipants();
 		putNodesInLanes();
 		copyNodes();
+		copyAnnotations();
 		copyDiagram();
 	}
 	
+	private void copyAnnotations() {
+		for (TextAnnotation bizagiTextAnnotation : bizagiBpmnModel.getModelElementsByType(TextAnnotation.class)) {
+			TextAnnotation textAnnotation = normalizedModel.newInstance(TextAnnotation.class);
+			textAnnotation.setId(bizagiTextAnnotation.getId());
+			Text text = normalizedModel.newInstance(Text.class);
+			text.setTextContent(bizagiTextAnnotation.getText().getTextContent());
+			textAnnotation.setText(text);
+			normalizedProcess.addChildElement(textAnnotation);
+		}
+		
+		for (Association bizagiAssociation : bizagiBpmnModel.getModelElementsByType(Association.class)) {
+			if (bizagiAssociation.getTarget().getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_TEXT_ANNOTATION)) {
+				Association association = normalizedModel.newInstance(Association.class);
+				association.setId(bizagiAssociation.getId());
+				association.setSource((BaseElement) normalizedProcess.getModelInstance().getModelElementById(bizagiAssociation.getSource().getId()));
+				association.setTarget((BaseElement) normalizedProcess.getModelInstance().getModelElementById(bizagiAssociation.getTarget().getId()));
+				normalizedProcess.addChildElement(association);
+			}
+		}
+	}
+
 	private void putNodesInLanes() {
 		for (Lane lane : bizagiBpmnModel.getModelElementsByType(Lane.class)) {
 			Collection<FlowNode> nodes = DiagramUtil.getNodesInLaneGraphically(lane);
@@ -60,9 +88,6 @@ class BizagiBpmnAdapter implements BpmnAdapter {
 	
 	private void copyNodes() {
 		Process bizagiProcess = bizagiBpmnModel.getModelElementsByType(Process.class).iterator().next();
-		normalizedModel = Bpmn.createProcess(bizagiProcess.getId()).name(bizagiProcess.getName()).done();
-		normalizedProcess = normalizedModel.getModelElementById(bizagiProcess.getId());
-		
 		for (FlowNode bizagiNode : bizagiProcess.getChildElementsByType(FlowNode.class)) {
 			FlowNode node = normalizedModel.newInstance(bizagiNode.getElementType());
 			node.setId(bizagiNode.getId());
