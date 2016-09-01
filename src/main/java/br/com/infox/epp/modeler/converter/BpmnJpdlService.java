@@ -243,6 +243,10 @@ public class BpmnJpdlService {
 	private void updateNodes(BpmnJpdlTranslation translation, BpmnModelInstance bpmnModel, ProcessDefinition processDefinition) {
 		for (FlowNode flowNode : bpmnModel.getModelElementsByType(FlowNode.class)) {
 			Node node = processDefinition.getNode(flowNode.getId());
+			Node newCandidateNode = NodeFactory.createNode(flowNode, processDefinition);
+			if (!newCandidateNode.getClass().equals(node.getClass())) {
+				copyAndRemoveNode(processDefinition, node, newCandidateNode);
+			}
 			String label = NodeFactory.getLabel(flowNode);
 			if (label.equals(flowNode.getId()) && !label.equals(node.getName())) {
 				// workaround para o comportamento do método hasNode do ProcessDefinition
