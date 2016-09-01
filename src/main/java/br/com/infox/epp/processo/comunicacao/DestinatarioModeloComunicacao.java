@@ -184,6 +184,18 @@ public class DestinatarioModeloComunicacao implements Serializable, Cloneable {
 		}
 		return null;
 	}
+	
+	@Transient
+	public String getNomeDestino() {
+		if (destinatario != null) {
+			return destinatario.getNome();
+		} else if (perfilDestino != null) {
+			return (destino.getPathDescriptor() + " - " + perfilDestino.getPapel());
+		} else if (destino != null) {
+			return destino.getPathDescriptor();
+		}
+		return null;
+	}
 
     public PerfilTemplate getPerfilDestino() {
         return perfilDestino;
@@ -227,7 +239,7 @@ public class DestinatarioModeloComunicacao implements Serializable, Cloneable {
 
 	@Override
 	public String toString() {
-		return  getNome();
+		return  getNomeDestino();
 	}
 	
 	
