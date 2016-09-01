@@ -3,7 +3,7 @@
   <groupId>br.com.infox.epp</groupId>
   <artifactId>epp</artifactId>
   <packaging>war</packaging>
-  <version>2.13.6</version>
+  <version>2.13.7</version>
   <name>epp</name>
   <url>http://www.infox.com.br</url>
   <dependencyManagement>
@@ -552,7 +552,7 @@
         <version>2.6</version>
         <configuration>
           <attachClasses>true</attachClasses>
-          <classifier>${db.classifier}.${dep.classifier}</classifier>
+          <classifier>${db.classifier}-${epp.container}</classifier>
           <webResources>
             <resource>
               <directory>${basedir}/profiles/${db.classifier}</directory>
@@ -650,6 +650,7 @@
     <hibernate.dialect>br.com.infox.hibernate.postgres.dialect.InfoxPostgreSQLDialect</hibernate.dialect>
     <quartz.delegate>org.quartz.impl.jdbcjobstore.PostgreSQLDelegate</quartz.delegate>
     <database.type>PostgreSQL</database.type>
+    <epp.container>jboss</epp.container>
     <db.classifier>postgresql</db.classifier>
     <optional.oracle.module>true</optional.oracle.module>
     <session.factory.jndi>java:/sessionFactoryEPA</session.factory.jndi>
@@ -696,6 +697,7 @@
     <profile>
       <id>tomcat</id>
       <properties>
+	<epp.container>tomcat</epp.container>
         <epp.datasource.jndi.prefix>openejb:Resource/</epp.datasource.jndi.prefix>
         <epp.transaction.class>org.apache.openejb.hibernate.TransactionManagerLookup</epp.transaction.class>
         <hibernate.cache.region.class>org.hibernate.cache.infinispan.InfinispanRegionFactory</hibernate.cache.region.class>
