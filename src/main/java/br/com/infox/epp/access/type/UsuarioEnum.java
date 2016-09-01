@@ -4,11 +4,11 @@ import br.com.infox.core.type.Displayable;
 
 public enum UsuarioEnum implements Displayable {
 
-    H("Humano"), S("Sistema");
+    S("Não faz login"), C("Certificado Digital"), P("Senha"), H("Senha e Certificado Digital");
 
     private String label;
 
-    UsuarioEnum(String label) {
+    private UsuarioEnum(String label) {
         this.label = label;
     }
 
