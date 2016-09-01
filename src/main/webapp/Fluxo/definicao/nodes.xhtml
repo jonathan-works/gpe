@@ -19,10 +19,10 @@
 				completeMethod="#{nodeFitter.getNodesAutocomplete}" forceSelection="true"
 				var="item" itemLabel="#{item.name}"	itemValue="#{item}" converter="jbpmNodeConverter"
 				minQueryLength="3" dropdown="true" inputStyle="width: 450px;">
-				<p:column style="text-align:center">
+				<p:column style="text-align:center; width: 10%;">
 					<p:graphicImage value="#{layoutController.getResourceUrlByPath('/imagens/jbpm/'.concat(nodeFitter.getIcon(item)).concat('.gif'))}" />
 				</p:column>
-				<p:column>#{item.name}</p:column>
+				<p:column style="width: 90%">#{item.name}</p:column>
 				<p:ajax event="itemSelect" update="@form:@parent :pageBodyDialogMessage" process="@this"
 					onstart="infox.showLoading('Carregando dados da tarefa...');" oncomplete="infox.hideLoading()"/>
 			</p:autoComplete>
