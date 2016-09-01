@@ -46,7 +46,6 @@ import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacaoSearch;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoUsoComunicacaoEnum;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.system.Parametros;
-import br.com.infox.epp.usuario.UsuarioLoginSearch;
 import br.com.infox.seam.exception.BusinessException;
 
 @Named
@@ -78,8 +77,6 @@ public class EnvioComunicacaoInternaView implements Serializable {
     private ModeloDocumentoManager modeloDocumentoManager;
     @Inject
     private LocalizacaoSearch localizacaoSearch;
-    @Inject
-    private UsuarioLoginSearch usuarioLoginSearch;
     
     private Localizacao localizacaoRaiz;
     private ModeloComunicacao modeloComunicacao;
@@ -92,7 +89,6 @@ public class EnvioComunicacaoInternaView implements Serializable {
     private PerfilTemplate perfilDestino;
     private PessoaFisica pessoaDestinatario;
     private Boolean individual;
-    private boolean existeUsuarioDestino = true;
     
     //Variáveis de tela para o documento da Comunicação
     private ClassificacaoDocumento classificacaoDocumento;
@@ -175,7 +171,7 @@ public class EnvioComunicacaoInternaView implements Serializable {
         if (getLocalizacaoDestino() == null) {
             perfisPermitidos = Collections.emptyList();
         } else {
-            perfisPermitidos = usuarioPerfilManager.getPerfisPermitidos(getLocalizacaoDestino());
+            perfisPermitidos = usuarioPerfilManager.getPerfisAtivosByLocalizacaoContendoUsuario(getLocalizacaoDestino());
         }
     }
     
@@ -184,13 +180,8 @@ public class EnvioComunicacaoInternaView implements Serializable {
             pessoasDestinatario = Collections.emptyList();
         } else {
             pessoasDestinatario = usuarioPerfilManager.getPessoasPermitidos(getLocalizacaoDestino(), getPerfilDestino());
-            existeUsuarioDestino = usuarioLoginSearch.existsUsuarioWithLocalizacaoPerfil(getLocalizacaoDestino(), getPerfilDestino());
         }
     }
-    
-    public boolean existeUsuarioDestino() {
-		return existeUsuarioDestino;
-	}
     
     public void onChangeTipoComunicacao() {
         if (getTipoComunicacao() != null && !getTipoComunicacao().equals(getModeloComunicacao().getTipoComunicacao())) {
@@ -306,12 +297,11 @@ public class EnvioComunicacaoInternaView implements Serializable {
         setLocalizacaoDestino(null);
         setPerfilDestino(null);
         setPessoaDestinatario(null);
-        existeUsuarioDestino = true;
     }
     
     public List<Localizacao> getLocalizacoesDisponiveis(String query) {
     	if (query != null && !query.isEmpty()) {
-    		return localizacaoSearch.getLocalizacoesByRaizWithDescricaoLike(localizacaoRaiz, query, 15);
+    		return localizacaoSearch.getLocalizacoesByRaizWithDescricaoLikeContendoUsuario(localizacaoRaiz, query, 15);
     	}
     	return Collections.emptyList();
 	}

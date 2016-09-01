@@ -65,7 +65,7 @@
 	                          items="#{envioComunicacaoInternaView.perfisDestino}"
 	                          required="true"
 	                          disabled="#{empty envioComunicacaoInternaView.localizacaoDestino}">
-                              <a:ajax execute="@this" limitRender="true" render="pessoasPermitidosDestino buttonAdicionarDestinoComunicacaoInterna"
+                              <a:ajax execute="@this" limitRender="true" render="pessoasPermitidosDestino"
                               	listener="#{envioComunicacaoInternaView.onChangePerfilDestino}"/>
                             </wi:selectOneMenuEntity>
 	                          
@@ -78,25 +78,17 @@
 	                      
 	                      <wi:selectBooleanCheckbox id="comunicacaoIndividual" label="Individual?" 
 	                      	value="#{envioComunicacaoInternaView.individual}"/>
-	                      
-	                      <p:outputPanel id="buttonAdicionarDestinoComunicacaoInterna" styleClass="buttons-destino">
+	                      	
+	                      <div>
 		                      <a:commandButton id="adicionarLocalizacao" styleClass="buttons"
 		                      	  render="@form, pageBodyDialogMessage panelDestinatariosComunicacao"
 		                      	  value="#{infoxMessages['button.add']}" execute="@form"
-		                      	  rendered="#{envioComunicacaoInternaView.existeUsuarioDestino()}"
-				        	      action="#{envioComunicacaoInternaView.adicionarDestinatarioComunicacao}" />
-				        	  <a:commandButton id="adicionarLocalizacaoWithConfirmation" styleClass="buttons"
-		                      	  render="@form, pageBodyDialogMessage panelDestinatariosComunicacao"
-		                      	  value="#{infoxMessages['button.add']}" execute="@form"
-		                      	  rendered="#{not envioComunicacaoInternaView.existeUsuarioDestino()}"
-		                      	  onclick="if(confirm('Não existem usuários no destino selecionado. Deseja continuar?')) {infox.showLoading();} else {return false};"
-		                      	  oncomplete="infox.hideLoading();"
 				        	      action="#{envioComunicacaoInternaView.adicionarDestinatarioComunicacao}" />
 				        	      
 				        	  <a:commandButton id="limparDestinoDestinatario" render="@form" execute="@this" 
 				        	  	action="#{envioComunicacaoInternaView.clearDestinoDestinatario}" limitRender="true"
 				        	  	value="Limpar" styleClass="buttons"/>
-			        	  </p:outputPanel>
+			        	  </div>
 			        </h:form>
 				</rich:panel>
 				
