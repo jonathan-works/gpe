@@ -5,10 +5,13 @@ import java.util.Iterator;
 
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
+import org.camunda.bpm.model.bpmn.impl.BpmnModelConstants;
 import org.camunda.bpm.model.bpmn.instance.BaseElement;
 import org.camunda.bpm.model.bpmn.instance.Collaboration;
 import org.camunda.bpm.model.bpmn.instance.Definitions;
+import org.camunda.bpm.model.bpmn.instance.EventDefinition;
 import org.camunda.bpm.model.bpmn.instance.FlowNode;
+import org.camunda.bpm.model.bpmn.instance.IntermediateThrowEvent;
 import org.camunda.bpm.model.bpmn.instance.Lane;
 import org.camunda.bpm.model.bpmn.instance.LaneSet;
 import org.camunda.bpm.model.bpmn.instance.Participant;
@@ -64,6 +67,12 @@ class BizagiBpmnAdapter implements BpmnAdapter {
 			FlowNode node = normalizedModel.newInstance(bizagiNode.getElementType());
 			node.setId(bizagiNode.getId());
 			node.setName(bizagiNode.getName());
+			if (node.getElementType().getTypeName().equals(BpmnModelConstants.BPMN_ELEMENT_INTERMEDIATE_THROW_EVENT)) {
+				IntermediateThrowEvent bizagiEvent = (IntermediateThrowEvent) bizagiNode;
+				if (!bizagiEvent.getEventDefinitions().isEmpty()) {
+					copyEventDefinitions(bizagiEvent, (IntermediateThrowEvent) node);
+				}
+			}
 			normalizedProcess.addChildElement(node);
 		}
 		
@@ -97,6 +106,14 @@ class BizagiBpmnAdapter implements BpmnAdapter {
 		}
 	}
 	
+	private void copyEventDefinitions(IntermediateThrowEvent bizagiEvent, IntermediateThrowEvent event) {
+		for (EventDefinition bizagiEventDefinition : bizagiEvent.getEventDefinitions()) {
+			EventDefinition eventDefinition = event.getModelInstance().newInstance(bizagiEventDefinition.getElementType());
+			eventDefinition.setId(bizagiEventDefinition.getId());
+			event.getEventDefinitions().add(eventDefinition);
+		}
+	}
+
 	private void copyDiagram() {
 		Collaboration collaboration = normalizedModel.newInstance(Collaboration.class);
 		Collaboration bizagiCollaboration = bizagiBpmnModel.getModelElementsByType(Collaboration.class).iterator().next();
