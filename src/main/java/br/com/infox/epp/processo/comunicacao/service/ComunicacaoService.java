@@ -317,11 +317,10 @@ public class ComunicacaoService {
 
 		criarMetadadoDestinatario(destinatario, metadadoProcessoProvider);
 		
-		metadados.add(metadadoProcessoProvider.gerarMetadado(
-				ComunicacaoMetadadoProvider.MEIO_EXPEDICAO, destinatario.getMeioExpedicao().name()));
-		
-		metadados.add(metadadoProcessoProvider.gerarMetadado(
-				ComunicacaoMetadadoProvider.DESTINATARIO, destinatario.getId().toString()));
+		metadados.add(metadadoProcessoProvider.gerarMetadado(ComunicacaoMetadadoProvider.MEIO_EXPEDICAO, destinatario.getMeioExpedicao().name()));
+		metadados.add(metadadoProcessoProvider.gerarMetadado(ComunicacaoMetadadoProvider.DESTINATARIO, destinatario.getId().toString()));
+		metadados.add(metadadoProcessoProvider.gerarMetadado(ComunicacaoMetadadoProvider.MODELO_COMUNICACAO, 
+		        destinatario.getModeloComunicacao().getId().toString()));
 		
 		if (destinatario.getPrazo() != null) {
 			metadados.add(metadadoProcessoProvider.gerarMetadado(

@@ -253,16 +253,22 @@ public class ComunicacaoInternaService {
     	MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processo);
 		List<MetadadoProcesso> metadados = new ArrayList<>();
 		metadados.add(createMetadadosRemetente(documentoComunicacao, metadadoProcessoProvider));
+		metadados.add(createMetadadoModeloComunicacao(modeloComunicacao, metadadoProcessoProvider));
 		for (DestinatarioModeloComunicacao destinatarioModeloComunicacao : modeloComunicacao.getDestinatarios()) {
 			metadados.add(createMetadadoDestinatario(metadadoProcessoProvider, destinatarioModeloComunicacao));
 		}
 		metadadoProcessoManager.persistMetadados(metadadoProcessoProvider, metadados);
 	}
     
+    private MetadadoProcesso createMetadadoModeloComunicacao(ModeloComunicacao modeloComunicacao, MetadadoProcessoProvider metadadoProcessoProvider) {
+        return metadadoProcessoProvider.gerarMetadado(ComunicacaoMetadadoProvider.MODELO_COMUNICACAO, modeloComunicacao.getId().toString());
+    }
+
     private void createMetadados(Processo processo, DestinatarioModeloComunicacao destinatarioModeloComunicacao, Documento documentoComunicacao) {
     	MetadadoProcessoProvider metadadoProcessoProvider = new MetadadoProcessoProvider(processo);
 		List<MetadadoProcesso> metadados = new ArrayList<>();
 		metadados.add(createMetadadosRemetente(documentoComunicacao, metadadoProcessoProvider));
+		metadados.add(createMetadadoModeloComunicacao(destinatarioModeloComunicacao.getModeloComunicacao(), metadadoProcessoProvider));
 		metadados.add(createMetadadoDestinatario(metadadoProcessoProvider, destinatarioModeloComunicacao));
 		metadadoProcessoManager.persistMetadados(metadadoProcessoProvider, metadados);
 	}

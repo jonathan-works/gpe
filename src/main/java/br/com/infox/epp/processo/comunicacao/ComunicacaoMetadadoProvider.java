@@ -15,6 +15,9 @@ public class ComunicacaoMetadadoProvider extends MetadadoProcessoProvider {
 	public static final MetadadoProcessoDefinition DESTINATARIO = 
 			new MetadadoProcessoDefinition("destinatarioComunicacao", DestinatarioModeloComunicacao.class);
 	
+    public static final MetadadoProcessoDefinition MODELO_COMUNICACAO = 
+            new MetadadoProcessoDefinition("modeloComunicacao", ModeloComunicacao.class);
+	
 	public static final MetadadoProcessoDefinition PRAZO_DESTINATARIO = 
 			new MetadadoProcessoDefinition("prazoDestinatarioComunicacao", Integer.class);
 	
