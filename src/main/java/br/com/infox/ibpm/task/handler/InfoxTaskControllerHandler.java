@@ -28,7 +28,8 @@ public class InfoxTaskControllerHandler implements TaskControllerHandler {
 			    String defaultValue = variableAccess.getValue();
                 if (defaultValue != null) {
                 	if (defaultValue.startsWith("#{") || defaultValue.startsWith("${")) {
-                        ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
+                        ExecutionContext executionContext = new ExecutionContext(token);
+                        executionContext.setTaskInstance(taskInstance);
                         Object evaluate = JbpmExpressionEvaluator.evaluate(defaultValue, executionContext);
                         taskInstance.setVariableLocally(variableAccess.getVariableName(), evaluate);
                 	}
