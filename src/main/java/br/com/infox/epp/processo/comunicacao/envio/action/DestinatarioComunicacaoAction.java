@@ -137,6 +137,8 @@ public class DestinatarioComunicacaoAction implements Serializable{
             modeloComunicacao.getDestinatarios().add(destinatario);
             addPerfilSelecionado(destinatario);
 	    }
+		this.localizacao = null;
+		this.perfilDestino = null;
 	}
 
 	protected Integer getPrazoDefaultByTipoComunicacao(TipoComunicacao tipoComunicacao) { 
