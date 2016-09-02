@@ -649,11 +649,11 @@
 							</includes>
 						</resource>
                         <resource>
-                            <directory>${project.build.directory}</directory>
+				<directory>${project.build.directory}/assinador-auto-assinado</directory>
                             <includes>
-                                <include>assinador-auto-assinado/certificado_digital.jar</include>
+                                <include>certificado_digital.jar</include>
                             </includes>
-                            <targetPath>/</targetPath>
+                            <targetPath>certificado</targetPath>
                         </resource>
 					</webResources>
 				</configuration>
