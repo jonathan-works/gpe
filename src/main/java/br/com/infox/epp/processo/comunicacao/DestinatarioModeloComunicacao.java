@@ -239,7 +239,7 @@ public class DestinatarioModeloComunicacao implements Serializable, Cloneable {
 
 	@Override
 	public String toString() {
-		return  getNomeDestino();
+		return  getNome();
 	}
 	
 	
