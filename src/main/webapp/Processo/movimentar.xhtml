@@ -245,7 +245,7 @@
             <infox:tab
                 id="documentoFisicoTab"
                 name="documentoFisicoTab"
-                rendered="#{home.isManaged()}"
+                rendered="#{home.isManaged() and security.checkPage('/pages/Processo/abaDocumentoFisico')}"
                 action="#{localizacaoDocumentoFisicoCrudAction.setProcesso(processoEpaHome.instance)}"
                 title="#{infoxMessages['documentoFisico.titleTab']}">
                 <wi:dataForm
