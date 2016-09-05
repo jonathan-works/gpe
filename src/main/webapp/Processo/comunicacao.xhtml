@@ -53,10 +53,14 @@
 			switchType="client" id="comunicacoes" style="margin-top:1em">
 				<rich:dataTable value="#{comunicacaoAction.getDestinatarios()}" 
 					var="row" styleClass="dtable rf-dt-crud" rendered="#{not empty comunicacaoAction.comunicacoesDoProcesso}">
-					<rich:column styleClass="dt-toolbar-col" rendered="#{s:hasRole(usuarioInterno)}">
+					<rich:column styleClass="dt-toolbar-col"
+						rendered="#{renderVisualizarDocumentos or renderRegistrarCiencia or renderPedirProrrogacao or renderVisualizarResposta or 
+						comunicacaoAction.isDestinatarioComCienciaEmComunicacao()}">
 						<h:form>
+							<ui:param name="isDestinatario" value="#{comunicacaoAction.isDestinatario(row)}"></ui:param>
+							<ui:param name="isCienciaConfirmada" value="#{comunicacaoAction.isCienciaConfirmada(row)}"></ui:param>
 							<a:commandLink  
-								render="@this" execute="@this"
+								render="@this" execute="@this" rendered="#{renderVisualizarDocumentos or (isCienciaConfirmada and isDestinatario)}"
 								oncomplete="infox.openPopUp('download#{row.idDestinatario}', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');">
 								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['comunicacao.visualizarAComunicacao']}"/>
 								<f:setPropertyActionListener value="#{row.idDestinatario}" target="#{flash.idDestinatario}" />
@@ -64,14 +68,15 @@
 							</a:commandLink>
 							<a:commandLink 
 								action="#{comunicacaoAction.setDestinatarioDocumentos(row)}"
-								execute="@this" limitRender="true"
+								execute="@this" limitRender="true" rendered="#{renderVisualizarDocumentos or (isCienciaConfirmada and isDestinatario)}"
 								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, painelDocumentosResposta, pageBodyDialogMessage"
 								onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
 								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/anexo.png')}" title="#{infoxMessages['comunicacao.documentosAnexadosComunicacao']}"/>
 							</a:commandLink>
 							<a:commandLink 
 								action="#{darCienciaAction.setDestinatarioCiencia(row)}" 
-								execute="@this" limitRender="true" rendered="#{not comunicacaoAction.isCienciaConfirmada(row)}"
+								execute="@this" limitRender="true" 
+								rendered="#{renderRegistrarCiencia and not isCienciaConfirmada}"
 								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage, painelDocumentosResposta"
 								onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
 								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/jbpm/checked.gif')}" title="#{infoxMessages['comunicacao.registrarCiencia']}" />
@@ -79,14 +84,14 @@
 							<a:commandLink action="#{pedirProrrogacaoPrazoAction.setDestinatarioProrrogacaoPrazo(row)}"
 									render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage, painelDocumentosResposta" 
 									execute="@this" limitRender="true"
-									rendered="#{pedirProrrogacaoPrazoAction.podePedirProrrogacaoPrazo(row)}"
+									rendered="#{renderPedirProrrogacao and pedirProrrogacaoPrazoAction.podePedirProrrogacaoPrazo(row)}"
 									onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
 									<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/time_16.png')}" title="#{infoxMessages['comunicacao.pedirProrrogacaoPrazo']}" />
 							</a:commandLink>
 							<a:commandLink action="#{comunicacaoAction.setDestinatarioResposta(row)}"
 								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage, painelDocumentosResposta" 
 								execute="@this" limitRender="true"
-								rendered="#{row.meioExpedicao eq 'SI'}"
+								rendered="#{(renderVisualizarResposta or (isCienciaConfirmada and isDestinatario)) and row.meioExpedicao eq 'SI'}"
 								onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
 								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}" title="#{infoxMessages['comunicacao.documentosResposta']}" />
 							</a:commandLink>

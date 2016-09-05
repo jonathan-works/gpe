@@ -218,6 +218,10 @@
                 rendered="#{security.checkPage('abaComunicacao')}"
                 title="Comunicação"
                 action="#{comunicacaoAction.clear}">
+                <ui:param name="renderRegistrarCiencia" value="#{security.checkPage('Movimentar.Comunicacao.RegistrarCiencia')}" />
+                <ui:param name="renderPedirProrrogacao" value="#{security.checkPage('Movimentar.Comunicacao.ProrrogarPrazo')}" />
+                <ui:param name="renderVisualizarDocumentos" value="#{security.checkPage('Movimentar.Comunicacao.VisualizarDocumentos')}" />
+                <ui:param name="renderVisualizarResposta" value="#{security.checkPage('Movimentar.Comunicacao.VisualizarResposta')}" />
                 <ui:include src="comunicacao.xhtml" />
             </infox:tab>
             <infox:tab

@@ -21,6 +21,9 @@ import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
@@ -79,6 +82,7 @@ public class ComunicacaoAction implements Serializable {
 	private boolean documentos;
 	private boolean documentoResposta;
 	private List<Documento> documentosListResposta;
+	private Boolean destinatarioComCienciaEmComunicacao;
 	
 	protected static final Comparator<DestinatarioBean> comparatorDestinatarios = new Comparator<DestinatarioBean>() {
 		@Override
@@ -225,6 +229,18 @@ public class ComunicacaoAction implements Serializable {
 		return dadosCiencia.get(bean.getIdDestinatario());
 	}
 	
+    public boolean isDestinatario(DestinatarioBean bean) {
+        DestinatarioModeloComunicacao destinatario = getDestinatarioModeloComunicacao(bean);
+        UsuarioLogin usuario = Authenticator.getUsuarioLogado();
+        UsuarioPerfil perfil = Authenticator.getUsuarioPerfilAtual();
+        if ((destinatario.getDestinatario() != null && usuario.getPessoaFisica() != null && usuario.getPessoaFisica().equals(destinatario.getDestinatario()))
+                || (destinatario.getDestino() != null && destinatario.getDestino().equals(perfil.getLocalizacao())
+                        && (destinatario.getPerfilDestino() == null || (destinatario.getPerfilDestino().equals(perfil.getPerfilTemplate()))))) {
+            return true;
+        }
+        return false;
+    }
+	
 	public void clear() {
 		clearCacheModelos();
 		documentos = false;
@@ -273,5 +289,18 @@ public class ComunicacaoAction implements Serializable {
 	public Map<Long, Boolean> getDadosCiencia() {
 		return dadosCiencia;
 	}
+
+    public boolean isDestinatarioComCienciaEmComunicacao() {
+        if (destinatarioComCienciaEmComunicacao == null) {
+            List<DestinatarioBean> destinatarios = getDestinatarios();
+            destinatarioComCienciaEmComunicacao = false;
+            for (DestinatarioBean destinatario : destinatarios) {
+                if (isCienciaConfirmada(destinatario) && isDestinatario(destinatario)) {
+                    destinatarioComCienciaEmComunicacao = true;
+                }
+            }
+        }
+        return destinatarioComCienciaEmComunicacao;
+    }
 
 }
