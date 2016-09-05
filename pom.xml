@@ -406,7 +406,7 @@
         <dependency>
             <groupId>br.com.infox.certificadoDigital</groupId>
             <artifactId>certificado-digital</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.3</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.cxf</groupId>
@@ -427,6 +427,54 @@
                 <exclusion>
                     <groupId>org.bouncycastle</groupId>
                     <artifactId>bcmail-jdk15</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-lang3</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.pivot</groupId>
+                    <artifactId>pivot-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.code.gson</groupId>
+                    <artifactId>gson</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpclient</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>br.com.infox</groupId>
+                    <artifactId>infox-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-io</groupId>
+                    <artifactId>commons-io</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-codec</groupId>
+                    <artifactId>commons-codec</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.pivot</groupId>
+                    <artifactId>pivot-wtk</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.validation</groupId>
+                    <artifactId>validation-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.pivot</groupId>
+                    <artifactId>pivot-charts</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.pivot</groupId>
+                    <artifactId>pivot-wtk-terra</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.pivot</groupId>
+                    <artifactId>pivot-web</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
