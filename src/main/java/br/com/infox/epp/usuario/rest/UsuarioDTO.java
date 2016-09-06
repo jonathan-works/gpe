@@ -71,28 +71,30 @@ public class UsuarioDTO implements Serializable{
 	
 	public UsuarioDTO(UsuarioLogin usuarioLogin, PessoaFisica pessoaFisica) {
 		this.nome = usuarioLogin.getNomeUsuario();
-		this.cpf = pessoaFisica.getCpf();
 		this.email = usuarioLogin.getEmail();
 		this.metodoLogin = metodoLogin(usuarioLogin.getTipoUsuario());
-		if (pessoaFisica.getDataNascimento() != null) {
-			this.dataNascimento = new SimpleDateFormat(DATE_PATTERN).format(pessoaFisica.getDataNascimento());
-		}
-		if (pessoaFisica.getEstadoCivil() != null) {
-			this.estadoCivil = pessoaFisica.getEstadoCivil().name();
-		}
-		List<PessoaDocumento> pessoaDocumentoList = pessoaFisica.getPessoaDocumentoList();
-		if (pessoaDocumentoList != null) {
-			setDocumentos(new ArrayList<PessoaDocumentoDTO>());
-			for (PessoaDocumento pessoaDocumento : pessoaDocumentoList) {
-				getDocumentos().add(new PessoaDocumentoDTO(pessoaDocumento));
-			}
-		}
-		List<MeioContato> meioContatoList = pessoaFisica.getMeioContatoList();
-		if (meioContatoList != null) {
-			setMeiosContato(new ArrayList<MeioContatoDTO>());
-			for (MeioContato meioContato : meioContatoList) {
-				getMeiosContato().add(new MeioContatoDTO(meioContato));
-			}
+		if (pessoaFisica != null){
+        		this.cpf = pessoaFisica.getCpf();
+        		if (pessoaFisica.getDataNascimento() != null) {
+        			this.dataNascimento = new SimpleDateFormat(DATE_PATTERN).format(pessoaFisica.getDataNascimento());
+        		}
+        		if (pessoaFisica.getEstadoCivil() != null) {
+        			this.estadoCivil = pessoaFisica.getEstadoCivil().name();
+        		}
+        		List<PessoaDocumento> pessoaDocumentoList = pessoaFisica.getPessoaDocumentoList();
+        		if (pessoaDocumentoList != null) {
+        			setDocumentos(new ArrayList<PessoaDocumentoDTO>());
+        			for (PessoaDocumento pessoaDocumento : pessoaDocumentoList) {
+        				getDocumentos().add(new PessoaDocumentoDTO(pessoaDocumento));
+        			}
+        		}
+        		List<MeioContato> meioContatoList = pessoaFisica.getMeioContatoList();
+        		if (meioContatoList != null) {
+        			setMeiosContato(new ArrayList<MeioContatoDTO>());
+        			for (MeioContato meioContato : meioContatoList) {
+        				getMeiosContato().add(new MeioContatoDTO(meioContato));
+        			}
+        		}
 		}
 	}
 
