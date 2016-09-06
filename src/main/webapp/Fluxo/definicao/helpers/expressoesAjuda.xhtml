@@ -29,7 +29,7 @@
     
     <rich:popupPanel id="#{id}" modal="true" header="#{infoxMessages['process.events.expression.title']}" resizeable="true"
         styleClass="#{id}" onshow="onshowPopup#{id}();">
-        <h:panelGroup rendered="selectable">
+        <h:panelGroup rendered="#{selectable}">
             <script type="text/javascript">
     	    	function onSelectBpmnExpression#{id}(obj) {
     	    		var text = $($(obj).children().get(1)).text();

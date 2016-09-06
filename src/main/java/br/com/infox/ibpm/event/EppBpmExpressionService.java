@@ -44,7 +44,6 @@ import br.com.infox.epp.relacionamentoprocessos.RelacionamentoProcessoManager;
 import br.com.infox.epp.relacionamentoprocessos.TipoRelacionamentoProcessoManager;
 import br.com.infox.ibpm.event.External.ExpressionType;
 import br.com.infox.ibpm.sinal.SignalService;
-import br.com.infox.ibpm.variable.JbpmVariavelLabel;
 
 @Stateless
 @Named(BpmExpressionService.NAME)
@@ -76,21 +75,21 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
     @Inject
     private LinkAplicacaoExternaService linkAplicacaoExternaService;
 
-    @External(tooltip = "process.events.expression.atribuirCiencia.tooltip")
+    @External(tooltip = "process.events.expression.atribuirCiencia.tooltip", expressionType = ExpressionType.EVENTOS)
     public void atribuirCiencia() {
     	Integer idProcesso = (Integer) ExecutionContext.currentExecutionContext().getContextInstance().getVariable(VariaveisJbpmProcessosGerais.PROCESSO);
     	Processo comunicacao = processoManager.find(idProcesso);
         contabilizadorPrazo.atribuirCiencia(comunicacao);
     }
 
-    @External(tooltip = "process.events.expression.atribuirCumprimento.tooltip")
+    @External(tooltip = "process.events.expression.atribuirCumprimento.tooltip", expressionType = ExpressionType.EVENTOS)
     public void atribuirCumprimento() {
     	Integer idProcesso = (Integer) ExecutionContext.currentExecutionContext().getContextInstance().getVariable(VariaveisJbpmProcessosGerais.PROCESSO);
     	Processo comunicacao = processoManager.find(idProcesso);
         contabilizadorPrazo.atribuirCumprimento(comunicacao);
     }
 
-    @External(value = {
+    @External(expressionType = ExpressionType.EVENTOS, value = {
             @Parameter(defaultValue = "'Nome da pasta'", label = "process.events.expression.param.nomePasta.label", tooltip = "process.events.expression.param.nomePasta.tooltip", selectable = true),
             @Parameter(defaultValue = PROCESSO, label = "process.events.expression.param.processo.label", tooltip = "process.events.expression.param.processo.tooltip") }, tooltip = "process.events.expression.disponibilizarPastaParaParticipantesProcesso.tooltip")
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -99,7 +98,7 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
         pastaManager.disponibilizarPastaParaParticipantesProcesso(descricaoPasta, idProcesso);
     }
 
-    @External(value = {
+    @External(expressionType = ExpressionType.EVENTOS, value = {
             @Parameter(defaultValue = "'Nome da pasta'", label = "process.events.expression.param.nomePasta.label", tooltip = "process.events.expression.param.nomePasta.tooltip", selectable = true),
             @Parameter(defaultValue = PROCESSO, label = "process.events.expression.param.processo.label", tooltip = "process.events.expression.param.processo.tooltip") }, tooltip = "process.events.expression.tornarPastaPublica.tooltip")
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -107,7 +106,7 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
         pastaManager.tornarPastaPublica(nomePasta, processo);
     }
     
-    @External(value = {
+    @External(expressionType = ExpressionType.EVENTOS, value = {
             @Parameter(defaultValue = "'Código do Sinal'", label = "process.events.expression.param.codigoSinal.label", tooltip = "process.events.expression.param.codigoSinal.tooltip", selectable = true)
             })
     public void dispatchSignal(String codigoSinal) throws DAOException {
@@ -130,7 +129,7 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
 		return new ObjectMapBuilder();
     }
 	
-	@External(expressionType = ExpressionType.GERAL, value = {
+	@External(expressionType = ExpressionType.GATEWAY, value = {
         @Parameter(defaultValue = "'Nome variável editor/upload'", label = "process.events.expression.param.suficientementeAssinado.label", 
                 tooltip = "process.events.expression.param.suficientementeAssinado.tooltip", selectable = true)
     })
@@ -264,6 +263,10 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
     @Override
     public List<ExternalMethod> getExternalMethods() {
     	return BpmExpressionServiceConsumer.instance().getExternalMethods(this, ExpressionType.GERAL);
+    }
+
+    public List<ExternalMethod> getExternalEventosMethods() {
+        return BpmExpressionServiceConsumer.instance().getExternalMethods(this, ExpressionType.GERAL, ExpressionType.EVENTOS);
     }
 
 	@Override
