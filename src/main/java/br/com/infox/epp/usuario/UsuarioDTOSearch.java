@@ -7,6 +7,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.enterprise.inject.Specializes;
 import javax.inject.Inject;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
@@ -36,30 +37,41 @@ public class UsuarioDTOSearch extends UsuarioLoginSearch{
     private MeioContatoDTOSearch meioContatoDTOSearch;
     
 	public List<UsuarioDTO> getUsuarioDTOList() {
-		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-		CriteriaQuery<UsuarioDTO> cq = cb.createQuery(UsuarioDTO.class);
-		
-		Root<UsuarioLogin> usuario = cq.from(UsuarioLogin.class);
-		From<?, PessoaFisica> pessoa = usuario.join(UsuarioLogin_.pessoaFisica, JoinType.LEFT);
-		
-		Subquery<PessoaDocumento> subquery = cq.subquery(PessoaDocumento.class);
-		subquery.from(PessoaDocumento.class);
-		
-		Predicate ativo = usuarioAtivoPredicate(usuario);
-		Predicate isPessoa = podeFazerLoginPredicate(usuario);
-		
-		Selection<UsuarioDTO> selection = cb.construct(UsuarioDTO.class, usuario, pessoa);
-		
-		Order order = cb.asc(usuario.get(UsuarioLogin_.nomeUsuario));
-		
-		cq = cq.select(selection).where(cb.and(ativo, isPessoa)).orderBy(order);
-		
-		List<UsuarioDTO> resultList = getEntityManager().createQuery(cq).getResultList();
-		for (UsuarioDTO usuarioDTO : resultList) {
-                    usuarioDTO.setDocumentos(pessoaDocumentoDTOSearch.getDocumentosByCPF(usuarioDTO.getCpf()));
-                    usuarioDTO.setMeiosContato(meioContatoDTOSearch.getMeiosContatoByCPF(usuarioDTO.getCpf()));
-                }
-                return resultList;
+	    return getUsuarioDTOList(null, null);
 	}
+
+    public List<UsuarioDTO> getUsuarioDTOList(Integer limit, Integer offset) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<UsuarioDTO> cq = cb.createQuery(UsuarioDTO.class);
+        
+        Root<UsuarioLogin> usuario = cq.from(UsuarioLogin.class);
+        From<?, PessoaFisica> pessoa = usuario.join(UsuarioLogin_.pessoaFisica, JoinType.LEFT);
+        
+        Subquery<PessoaDocumento> subquery = cq.subquery(PessoaDocumento.class);
+        subquery.from(PessoaDocumento.class);
+        
+        Predicate ativo = usuarioAtivoPredicate(usuario);
+        Predicate isPessoa = podeFazerLoginPredicate(usuario);
+        
+        Selection<UsuarioDTO> selection = cb.construct(UsuarioDTO.class, usuario, pessoa);
+        
+        Order order = cb.asc(usuario.get(UsuarioLogin_.nomeUsuario));
+        
+        cq = cq.select(selection).where(cb.and(ativo, isPessoa)).orderBy(order);
+        if (offset == null){
+            offset = 0;
+        }
+        TypedQuery<UsuarioDTO> createdQuery = getEntityManager().createQuery(cq);
+        createdQuery.setFirstResult(offset);
+        if (limit != null){
+            createdQuery.setMaxResults(limit);
+        }
+        List<UsuarioDTO> resultList = createdQuery.getResultList();
+        for (UsuarioDTO usuarioDTO : resultList) {
+            usuarioDTO.setDocumentos(pessoaDocumentoDTOSearch.getDocumentosByCPF(usuarioDTO.getCpf()));
+            usuarioDTO.setMeiosContato(meioContatoDTOSearch.getMeiosContatoByCPF(usuarioDTO.getCpf()));
+        }
+        return resultList;
+    }
 	
 }

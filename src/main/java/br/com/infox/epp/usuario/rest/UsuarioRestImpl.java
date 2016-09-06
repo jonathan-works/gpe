@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
@@ -39,9 +40,14 @@ public class UsuarioRestImpl implements UsuarioRest {
 		return Response.ok().status(Status.CREATED).header(HttpHeaders.LOCATION, RestUtils.generateLocationURL(uriInfo,usuarioDTO.getCpf())).build();
 	}
 
-	@Override
-	public Response getUsuarios() {
-		return Response.ok(usuarioLoginRestService.getUsuarios()).build();
+	public Response getUsuarios(Integer limit, Integer offset) {
+	    if (limit==null){
+	        limit = 15;
+	    }
+	    if (offset == null){
+	        offset = 0;
+	    }
+		return Response.ok(usuarioLoginRestService.getUsuarios(limit, offset)).build();
 	}
 
 	@Override

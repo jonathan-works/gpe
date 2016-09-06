@@ -18,6 +18,8 @@ import br.com.infox.epp.ws.bean.UsuarioBean;
 import br.com.infox.epp.ws.bean.UsuarioSenhaBean;
 
 @Path("/usuario")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public interface UsuarioRest {
 
 	public static final String JWT_TOKEN_NAME = "Authorization";
@@ -25,14 +27,10 @@ public interface UsuarioRest {
     final String PATH_ATUALIZAR_SENHA = "/atualizarSenha";
 
 	@POST
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
 	Response adicionarUsuario(@Context UriInfo uriInfo, UsuarioDTO usuarioDTO);
 
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	Response getUsuarios();
+	Response getUsuarios(@QueryParam("limit") Integer limit, @QueryParam("offset") Integer offset);
 
 	@Path("/{cpf}")
 	UsuarioResource getUsuarioResource(@PathParam("cpf") String cpf);
@@ -49,12 +47,10 @@ public interface UsuarioRest {
     @POST
     @Path(PATH_GRAVAR_USUARIO)
     @Produces(MediaType.TEXT_PLAIN)
-    @Consumes(MediaType.APPLICATION_JSON)
     public String gravarUsuario(@HeaderParam("token") String token, UsuarioBean bean) throws DAOException;
     
     @POST
     @Path(PATH_ATUALIZAR_SENHA)
     @Produces(MediaType.TEXT_PLAIN)
-    @Consumes(MediaType.APPLICATION_JSON)
     public String atualizarSenha(@HeaderParam("token") String token, UsuarioSenhaBean bean) throws DAOException;
 }

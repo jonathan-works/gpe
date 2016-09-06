@@ -174,5 +174,8 @@ public class UsuarioLoginRestService {
 	public List<UsuarioDTO> getUsuarios() {
 		return usuarioDTOSearch.getUsuarioDTOList();
 	}
+	public List<UsuarioDTO> getUsuarios(int limit, int offset) {
+	    return usuarioDTOSearch.getUsuarioDTOList(limit, offset);
+	}
 		
 }

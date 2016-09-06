@@ -8,22 +8,18 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public interface UsuarioResource {
 
-	void setCpf(String cpf);
-	
-	@PUT
-	@Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-	Response atualizarUsuario(UsuarioDTO usuarioDTO);
-	
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	Response getUsuario(); 
-	
-	@DELETE
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	Response removerUsuario();
+    void setCpf(String cpf);
+
+    @PUT
+    Response atualizarUsuario(UsuarioDTO usuarioDTO);
+
+    @GET
+    Response getUsuario();
+
+    @DELETE
+    Response removerUsuario();
 }
