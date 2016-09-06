@@ -47,7 +47,18 @@
     	
     	<wi:column columnId="destinatarios" columnHeader="Destinatários">
     		<ui:repeat var="destinatario" value="#{row.destinatarios}" varStatus="status">
-    			<h:outputText value="#{destinatario.nome}" style="display: block;"/>
+    			<div style="display: block;">
+    				<h:outputText value="#{destinatario.nomeDestino} "/>
+    				<s:div id="tooltipComunicacao" styleClass="tooltip-parent" style="width: 10px; display:inline;"
+    					rendered="#{not empty destinatario.destino}">
+    					<h:graphicImage id="tooltipLocalizacao" url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
+    					<div class="epp-tooltip" style="display:inline;" >
+    						<div class="tooltip-panel">
+    							<h:outputText value="#{destinatario.nome}"/>
+   							</div>
+						</div>
+					</s:div>
+				</div>
     		</ui:repeat>
     	</wi:column>
     	
@@ -82,8 +93,19 @@
     	<wi:columnOutputText columnId="remetente" columnHeader="Remetente" value="#{row.getMetadado('remetente')}"/>
     	
     	<wi:column columnId="destinatarios" columnHeader="Destinatário(s)">
-    		<ui:repeat var="destinatario" value="#{row.getMetadadoList('destinatarioComunicacao')}" varStatus="status">
-    			<h:outputText value="#{destinatario.value.nome}" style="display: block;"/>
+    		<ui:repeat var="destinatario" value="#{row.getMetadadoList('destinatarioComunicacao')}" >
+    			<div style="display: block;">
+    				<h:outputText value="#{destinatario.value.nomeDestino} "/>
+    				<s:div id="tooltipComunicacao" styleClass="tooltip-parent" style="width: 10px; display:inline;"
+    					rendered="#{not empty destinatario.value.destino}">
+    					<h:graphicImage id="tooltipLocalizacao" url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
+    					<div class="epp-tooltip" style="display:inline;" >
+    						<div class="tooltip-panel">
+    							<h:outputText value="#{destinatario.value.nome}"/>
+    						</div>
+    					</div>
+    				</s:div>
+    			</div>
     		</ui:repeat>
     	</wi:column>
     	
