@@ -47,15 +47,14 @@
                         rendered="#{taskInstanceHome.podeAssinarDocumento(f.id.split('-')[0])}">
                         <a:jsFunction name="assinar" action="#{taskInstanceHome.assinarDocumento()}"
                             execute="@this, assinaturaDocumentoDiv#{f.id}"
-                            render="assinaturaDocumentoDiv#{f.id}, #{id}EditorDiv, pageBodyDialogMessage, @form"
+				render="assinaturaDocumentoDiv#{f.id}, #{id}EditorDiv, pageBodyDialogMessage, @form, botaoAssinatura" 
                             oncomplete="infox.hideLoading();" />
-
-                        <wi:certificadoDigital id="appletAssinatura"
+                        <wi:certificadoDigital id="botaoAssinatura"
                             signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
                             reRender="assinaturaDocumentoDiv#{f.id}, pageBodyDialogMessage"
                             tokenField="#{taskInstanceHome.tokenToSign}" propertyValue="#{f.id}"
                             propertyTarget="#{taskInstanceHome.variavelDocumentoToSign}"
-                            signableData="#{taskInstanceHome.documentoToSign.documentoBin.md5Documento}"
+                            documentoBinList="#{taskInstanceHome.variaveisDocumento[id].documentoBin}"
                             functionPreSign="infox.showLoading();" functionPosSign="assinar();">
                         </wi:certificadoDigital>
 

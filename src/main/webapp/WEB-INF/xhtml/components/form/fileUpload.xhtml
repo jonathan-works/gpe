@@ -100,11 +100,11 @@
                         render="assinaturaDocumentoDiv#{f.id}, pageBodyDialogMessage, #{f.id}TipoDocDiv, #{f.id}ToolTipDivExterna, #{id}Decoration, #{f.id}documentoExistente"
                         oncomplete="infox.hideLoading();" />
 
-                    <wi:certificadoDigital id="appletAssinatura"
+                    <wi:certificadoDigital id="botaoAssinatura"
                         signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
                         reRender="pageBodyDialogMessage, @form" tokenField="#{taskInstanceHome.tokenToSign}"
                         propertyValue="#{f.id}" propertyTarget="#{taskInstanceHome.variavelDocumentoToSign}"
-                        signableData="#{taskInstanceHome.documentoToSign.documentoBin.md5Documento}"
+                        documentoBinList="#{taskInstanceHome.variaveisDocumento[id].documentoBin}"
                         functionPreSign="infox.showLoading();" functionPosSign="assinar();">
                     </wi:certificadoDigital>
                 </p:outputPanel>

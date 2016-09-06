@@ -1,0 +1,65 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:a="http://richfaces.org/a4j"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:composite="http://java.sun.com/jsf/composite">
+
+<composite:interface type="certificadoDigital">
+    <composite:attribute name="tokenField" type="java.lang.String" required="true" />
+    <composite:attribute name="assinavelProvider" type="br.com.infox.epp.assinador.assinavel.AssinavelProvider" required="true" />
+    <composite:attribute name="value" type="java.lang.String" default="Assinar Digitalmente" />
+    <composite:attribute name="action" />
+    <composite:attribute name="execute" default="@this" />
+    <composite:attribute name="render" default="@this" />
+    <composite:attribute name="onbegin" />
+    <composite:attribute name="oncomplete" />
+
+    <composite:attribute name="signAction" method-signature="void action" />
+</composite:interface>
+
+<composite:implementation>
+    <infox:div rendered="#{not empty cc.attrs.signAction}">
+        <a:jsFunction name="executarAcaoAssinatura"
+            actionListener="#{cc.attrs.signAction}"
+            execute="token #{cc.attrs.execute}"
+            render="#{cc.attrs.render}"
+            oncomplete="#{cc.attrs.oncomplete}" />
+    </infox:div>
+    <infox:div rendered="#{empty cc.attrs.signAction}">
+        <a:jsFunction name="executarAcaoAssinatura"
+            actionListener="#{assinadorController.assinaturasRecebidas(cc.attrs.token)}"
+            execute="token #{cc.attrs.execute}"
+            render="#{cc.attrs.render}"
+            oncomplete="#{cc.attrs.oncomplete}" />
+    </infox:div>
+    <h:inputHidden id="token" value="#{cc.attrs.tokenField}" />
+    <h:commandButton type="button" styleClass="buttons" value="#{cc.attrs.value}"
+        oncomplete="window['callback-#{cc.clientId}']();">
+        <f:setPropertyActionListener value="#{assinadorController.criarGrupoAssinatura(cc.attrs.assinavelProvider)}" target="#{cc.attrs.token}" />
+        <f:setPropertyActionListener value="#{cc.attrs.token}" target="#{cc.attrs.tokenField}" />
+        <f:ajax event="click" execute="@this" render="#{cc.attrs.id}:token" onevent="function(event){
+            if (event.status==='begin'){
+                infox.showLoading();
+                #{cc.attrs.onbegin};
+            }
+            if (event.status==='complete'){
+            }
+            if (event.status==='success'){
+                if (/^2[0-9][0-9]$/.test(event.responseCode)){
+                    var token = document.getElementById('#{cc.clientId}:token').value;
+                    location.href='#{assinadorController.JNLPUrl}?token='+token;
+                    var intervalId = setInterval(function() {
+                      $.get('#{pathResolver.restBaseUrl}' + '/tokenAssinatura/' + token + '/status', function(status) {
+                          if (status !== 'AGUARDANDO_ASSINATURA') {  
+                              clearInterval(intervalId);
+                              executarAcaoAssinatura(token);
+                          }
+                      });  
+                  }, 2000);
+                }
+            }
+        }" />
+    </h:commandButton>
+
+</composite:implementation>
+
+</html>

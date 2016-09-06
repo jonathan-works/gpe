@@ -41,6 +41,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.query.UsuarioLoginQuery;
 import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.epp.certificado.entity.TipoAssinatura;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -104,8 +105,12 @@ public class AssinaturaDocumento implements Serializable {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "tp_assinatura")
 	private TipoAssinaturaEnum tipoAssinatura;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "tp_signature")
+	private TipoAssinatura signatureType;
 
-    public AssinaturaDocumento(DocumentoBin documentoBin, UsuarioPerfil usuarioPerfil, String certChain, String signature) throws CertificadoException {
+	public AssinaturaDocumento(DocumentoBin documentoBin, UsuarioPerfil usuarioPerfil, String certChain, String signature, TipoAssinatura signatureType) throws CertificadoException {
         this.documentoBin=documentoBin;
         this.usuario = usuarioPerfil.getUsuarioLogin();
         this.nomeUsuario = CertificadoFactory.createCertificado(certChain).getNome();
@@ -113,6 +118,7 @@ public class AssinaturaDocumento implements Serializable {
         this.nomeUsuarioPerfil = this.usuarioPerfil.getPerfilTemplate().getDescricao();
         this.signature = signature;
         this.certChain = certChain;
+        this.signatureType = signatureType;
         this.dataAssinatura = new Date();
         List<Documento> documentos = BeanManager.INSTANCE.getReference(DocumentoManager.class).getDocumentosFromDocumentoBin(documentoBin);
         if(documentos != null && !documentos.isEmpty()){
@@ -208,6 +214,14 @@ public class AssinaturaDocumento implements Serializable {
     public void setTipoAssinatura(TipoAssinaturaEnum tipoAssinatura) {
 		this.tipoAssinatura = tipoAssinatura;
 	}
+    
+    public TipoAssinatura getSignatureType() {
+    	return signatureType;
+    }
+    
+    public void setSignatureType(TipoAssinatura signatureType) {
+    	this.signatureType = signatureType;
+    }
     
     @Override
     public String toString() {

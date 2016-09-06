@@ -103,7 +103,7 @@
 				tokenField="#{controller.tokenToSign}"
 				propertyValue="#{formField.value}"
 				propertyTarget="#{controller.documentoToSign}"
-				signableData="#{controller.documentoToSign.documentoBin.md5Documento}"
+				documentoBinList="#{controller.documentoToSign.documentoBin}"
 				functionPreSign="infox.showLoading();"
 				functionPosSign="assinar();" >
 	       </wi:certificadoDigital>

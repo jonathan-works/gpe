@@ -43,11 +43,6 @@ import org.jbpm.graph.exe.Token;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.certificado.CertificateSignatures;
-import br.com.infox.certificado.bean.CertificateSignatureBean;
-import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
-import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
-import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.messages.InfoxMessages;
@@ -55,6 +50,7 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.assinador.AssinadorService;
 import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
@@ -143,7 +139,7 @@ public class TaskInstanceHome implements Serializable {
 	@Inject
 	private InfoxMessages infoxMessages;
 	@Inject
-	private CertificateSignatures certificateSignatures;
+	private AssinadorService assinadorService;
 	@In
 	private PathResolver pathResolver;
 	@In
@@ -537,28 +533,21 @@ public class TaskInstanceHome implements Serializable {
 		if (documentoToSign == null) {
 			FacesMessages.instance().add("Sem documento para assinar");
 		}
-		CertificateSignatureBundleBean certificateSignatureBundle = certificateSignatures.get(tokenToSign);
-		if (certificateSignatureBundle.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
-			FacesMessages.instance().add("Erro ao assinar");
-		} else {
-			CertificateSignatureBean signatureBean = certificateSignatureBundle.getSignatureBeanList().get(0);
-			try {
-				assinaturaDocumentoService.assinarDocumento(getDocumentoToSign(), Authenticator.getUsuarioPerfilAtual(),
-						signatureBean.getCertChain(), signatureBean.getSignature());
-				for (String variavel : variaveisDocumento.keySet()) {
-					if (documentoToSign.equals(variaveisDocumento.get(variavel))) {
-						setModeloReadonly(variavel.split("-")[0]);
-						break;
-					}
+		try {
+			assinadorService.assinarToken(tokenToSign, Authenticator.getUsuarioPerfilAtual());
+			for (String variavel : variaveisDocumento.keySet()) {
+				if (documentoToSign.equals(variaveisDocumento.get(variavel))) {
+					setModeloReadonly(variavel.split("-")[0]);
+					break;
 				}
-			} catch (CertificadoException | AssinaturaException | DAOException e) {
-				FacesMessages.instance().add(e.getMessage());
-				LOG.error("assinarDocumento()", e);
-			} finally {
-				setDocumentoToSign(null);
-				setVariavelDocumentoToSign(null);
-				setTokenToSign(null);
 			}
+		} catch (AssinaturaException | DAOException e) {
+			FacesMessages.instance().add(e.getMessage());
+			LOG.error("assinarDocumento()", e);
+		} finally {
+			setDocumentoToSign(null);
+			setVariavelDocumentoToSign(null);
+			setTokenToSign(null);
 		}
 	}
 
