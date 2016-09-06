@@ -7,6 +7,7 @@ import java.util.UUID;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 
 import br.com.infox.assinador.rest.api.AssinaturaResource;
@@ -40,7 +41,7 @@ public class AssinavelResourceImpl implements AssinavelResource {
 
 	@Override
 	public String getSHA256Hex(UUID uuid) {
-		return Hex.encodeHexString(getSHA256(uuid));
+		return Base64.encodeBase64String(getSHA256(uuid));
 	}
 
 	@Override
