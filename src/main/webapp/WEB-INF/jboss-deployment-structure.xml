@@ -2,7 +2,8 @@
 	<deployment>
 		<dependencies>
 			<module name="org.dom4j" export="true" />
-			<module name="oracle.ojdbc" export="true" optional="${optional.oracle.module}"/>
+			<module name="org.hibernate" export="true" />
+			<module name="oracle.ojdbc" export="true"/>
             <module name="org.infinispan" export="true" />
 		</dependencies>
 	</deployment>

@@ -1,6 +1,16 @@
 package br.com.infox.core.server;
 
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+
+import javax.sql.DataSource;
+
 import br.com.infox.epp.cdi.util.JNDI;
+import br.com.infox.epp.system.ApplicationServer;
+import br.com.infox.epp.system.Database;
+import br.com.infox.epp.system.DatabaseFactory;
+import br.com.infox.epp.system.JBossEapApplicationServer;
+import br.com.infox.epp.system.TomeeApplicationServer;
 
 public class ServerInfo {
     
@@ -20,6 +30,27 @@ public class ServerInfo {
             } else {
                 throw new IllegalStateException("Application Server not supported");
             }
+        }
+    }
+    
+    public static ApplicationServer createApplicationServer() {
+        if (isJboss()) {
+            return new JBossEapApplicationServer();
+        } else if (isTomee()) {
+            return new TomeeApplicationServer();
+        } else {
+            throw new IllegalStateException("Application Server not supported"); 
+        }
+    }
+    
+    public static Database createDatabase(ApplicationServer applicationServer) {
+        DataSource dataSource = applicationServer.getEpaDataSource();
+        try (Connection conn = dataSource.getConnection()){
+            DatabaseMetaData metaData = conn.getMetaData();
+            String databaseProductName = metaData.getDatabaseProductName();            
+            return DatabaseFactory.create(databaseProductName);
+        } catch (Exception e) {
+            throw new IllegalStateException("Error discovering database", e);
         }
     }
     

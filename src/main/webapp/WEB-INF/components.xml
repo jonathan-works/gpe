@@ -61,11 +61,7 @@
         
     <ui:jpa-entity-loader entity-manager="#{entityManager}" />
 
-    <security:remember-me
-        enabled="false"
-        mode="disabled" />
-
-    <mail:mail-session session-jndi-name="${epp.mail.session}" />
+    <security:remember-me enabled="false" mode="disabled" />
 
     <bpm:jbpm>
         <bpm:process-definitions></bpm:process-definitions>

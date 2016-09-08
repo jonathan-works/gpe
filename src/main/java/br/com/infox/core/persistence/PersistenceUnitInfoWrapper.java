@@ -11,7 +11,10 @@ import javax.persistence.spi.PersistenceUnitInfo;
 import javax.persistence.spi.PersistenceUnitTransactionType;
 import javax.sql.DataSource;
 
-public class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
+import br.com.infox.epp.cdi.util.JNDI;
+import br.com.infox.epp.system.Configuration;
+
+public class PersistenceUnitInfoWrapper implements PersistenceUnitInfo {
     
     private PersistenceUnitInfo delegate;
     
@@ -31,15 +34,12 @@ public class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
     private String persistenceXMLSchemaVersion;
     private ClassLoader classLoader;
     
-    public PersistenceUnitInfoImpl() {
-    }
-
-    public PersistenceUnitInfoImpl(PersistenceUnitInfo persistenceUnitInfo) {
+    public PersistenceUnitInfoWrapper(PersistenceUnitInfo persistenceUnitInfo, Configuration configuration) {
         this.delegate = persistenceUnitInfo;
         this.persistenceUnitName = persistenceUnitInfo.getPersistenceUnitName();
         this.persistenceProviderClassName = persistenceUnitInfo.getPersistenceProviderClassName();
         this.transactionType = persistenceUnitInfo.getTransactionType();
-        this.jtaDataSource = persistenceUnitInfo.getJtaDataSource();
+        this.jtaDataSource = configuration.getDatabase().getJtaDataSource(persistenceUnitName);
         this.nonJtaDataSource = persistenceUnitInfo.getNonJtaDataSource();
         this.mappingFileNames = persistenceUnitInfo.getMappingFileNames();
         this.jarFileUrls = persistenceUnitInfo.getJarFileUrls();
@@ -51,8 +51,9 @@ public class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
         this.properties = persistenceUnitInfo.getProperties();
         this.persistenceXMLSchemaVersion = persistenceUnitInfo.getPersistenceXMLSchemaVersion();
         this.classLoader = persistenceUnitInfo.getClassLoader();
+        configuration.configureJPA(properties);
     }
-
+    
     @Override
     public String getPersistenceUnitName() {
         return persistenceUnitName;
@@ -71,6 +72,14 @@ public class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
     @Override
     public DataSource getJtaDataSource() {
         return jtaDataSource;
+    }
+    
+    public void setJtaDataSource(DataSource jtaDataSource) {
+        this.jtaDataSource = jtaDataSource;
+    }
+    
+    public void setJtaDataSource(String datasourceJndi) {
+        this.jtaDataSource = JNDI.lookup(datasourceJndi);
     }
 
     @Override
