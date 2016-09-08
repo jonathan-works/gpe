@@ -229,7 +229,11 @@ public class EntregaSearch extends PersistenceController {
 		Root<Entrega> entrega = query.from(Entrega.class);
 		query.where(cb.equal(entrega.get(Entrega_.localizacao), localizacao),cb.equal(entrega.get(Entrega_.modeloEntrega), modeloEntrega));
 		query.select(entrega);
-        return getEntityManager().createQuery(query).getSingleResult();
+		try {
+		    return getEntityManager().createQuery(query).getSingleResult();
+		} catch (NoResultException nre) {
+		    return null;
+		}
 	}
 	
 	public ClassificacaoDocumentoEntrega getClassificacaoDocumentoEntrega(ClassificacaoDocumento classificacaoDocumento, ModeloEntrega modeloEntrega) {
