@@ -39,7 +39,19 @@
         	}
         	setTimeout(popupAndPrint, 500);
         }
+        
+        function exportarBpmn() {
+        	var bpmn = modeler.getBpmnInformation()['bpmn'];
+        	var element = document.createElement('a');
+        	element.setAttribute('href', 'data:text/xml;charset=utf-8,' + encodeURIComponent(bpmn));
+        	element.setAttribute('download', '#{bpmnView.fluxo.fluxo}.bpmn');
+        	element.style.display = 'none';
+        	document.body.appendChild(element);
+        	element.click();
+        	document.body.removeChild(element);
+        }
     </script>
     
     <button onclick="printSVG()" class="buttons">Imprimir</button>
+    <button onclick="exportarBpmn()" class="buttons">Exportar</button>
 </ui:composition>
