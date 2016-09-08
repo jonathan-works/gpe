@@ -47,13 +47,13 @@ var InfoxBpmnModeler =
 
 	var camundaModdle = __webpack_require__(1);
 	var BpmnModeler = __webpack_require__(2);
-	var InfoxPaletteProvider = __webpack_require__(831);
-	var InfoxReplaceMenuProvider = __webpack_require__(860);
-	var InfoxContextPadProvider = __webpack_require__(861);
-	var InfoxBpmnRules = __webpack_require__(862);
-	var brazilianPortugueseTranslation = __webpack_require__(863);
-	var ParallelGatewayDirectionProvider = __webpack_require__(864);
-	var InfoxLabelEditingProvider = __webpack_require__(865);
+	var InfoxPaletteProvider = __webpack_require__(828);
+	var InfoxReplaceMenuProvider = __webpack_require__(853);
+	var InfoxContextPadProvider = __webpack_require__(854);
+	var InfoxBpmnRules = __webpack_require__(855);
+	var brazilianPortugueseTranslation = __webpack_require__(856);
+	var ParallelGatewayDirectionProvider = __webpack_require__(857);
+	var InfoxLabelEditingProvider = __webpack_require__(858);
 	var BpmnModdle = __webpack_require__(176);
 
 	/**
@@ -446,7 +446,7 @@ var InfoxBpmnModeler =
 					{
 						"name": "calledElementVersion",
 						"isAttr": true,
-						"type": "Integer"
+						"type": "String"
 					},
 					{
 						"name": "calledElementTenantId",
@@ -467,7 +467,7 @@ var InfoxBpmnModeler =
 					{
 						"name": "caseVersion",
 						"isAttr": true,
-						"type": "Integer"
+						"type": "String"
 					},
 					{
 						"name": "caseTenantId",
@@ -996,6 +996,11 @@ var InfoxBpmnModeler =
 						"name": "fields",
 						"type": "FormField",
 						"isMany": true
+					},
+					{
+						"name": "businessKey",
+						"type": "String",
+						"isAttr": true
 					}
 				]
 			},
@@ -1269,16 +1274,16 @@ var InfoxBpmnModeler =
 	  __webpack_require__(500),
 	  __webpack_require__(507),
 	  __webpack_require__(523),
-	  __webpack_require__(530),
-	  __webpack_require__(535),
-	  __webpack_require__(544),
-	  __webpack_require__(591),
-	  __webpack_require__(705),
-	  __webpack_require__(710),
-	  __webpack_require__(727),
-	  __webpack_require__(820),
-	  __webpack_require__(824),
-	  __webpack_require__(826)
+	  __webpack_require__(532),
+	  __webpack_require__(537),
+	  __webpack_require__(546),
+	  __webpack_require__(799),
+	  __webpack_require__(812),
+	  __webpack_require__(619),
+	  __webpack_require__(592),
+	  __webpack_require__(817),
+	  __webpack_require__(821),
+	  __webpack_require__(823)
 	];
 
 
@@ -27830,9 +27835,6 @@ var InfoxBpmnModeler =
 	exports.Buffer = Buffer
 	exports.SlowBuffer = SlowBuffer
 	exports.INSPECT_MAX_BYTES = 50
-	Buffer.poolSize = 8192 // not used by this implementation
-
-	var rootParent = {}
 
 	/**
 	 * If `Buffer.TYPED_ARRAY_SUPPORT`:
@@ -27850,9 +27852,6 @@ var InfoxBpmnModeler =
 	 *   - Firefox 4-29 lacks support for adding new properties to `Uint8Array` instances,
 	 *     See: https://bugzilla.mozilla.org/show_bug.cgi?id=695438.
 	 *
-	 *   - Safari 5-7 lacks support for changing the `Object.prototype.constructor` property
-	 *     on objects.
-	 *
 	 *   - Chrome 9-10 is missing the `TypedArray.prototype.subarray` function.
 	 *
 	 *   - IE10 has a broken `TypedArray.prototype.subarray` function which returns arrays of
@@ -27865,14 +27864,16 @@ var InfoxBpmnModeler =
 	  ? global.TYPED_ARRAY_SUPPORT
 	  : typedArraySupport()
 
+	/*
+	 * Export kMaxLength after typed array support is determined.
+	 */
+	exports.kMaxLength = kMaxLength()
+
 	function typedArraySupport () {
-	  function Bar () {}
 	  try {
 	    var arr = new Uint8Array(1)
-	    arr.foo = function () { return 42 }
-	    arr.constructor = Bar
+	    arr.__proto__ = {__proto__: Uint8Array.prototype, foo: function () { return 42 }}
 	    return arr.foo() === 42 && // typed array instances can be augmented
-	        arr.constructor === Bar && // constructor can be set
 	        typeof arr.subarray === 'function' && // chrome 9-10 lack `subarray`
 	        arr.subarray(1, 1).byteLength === 0 // ie10 has broken `subarray`
 	  } catch (e) {
@@ -27886,184 +27887,252 @@ var InfoxBpmnModeler =
 	    : 0x3fffffff
 	}
 
-	/**
-	 * Class: Buffer
-	 * =============
-	 *
-	 * The Buffer constructor returns instances of `Uint8Array` that are augmented
-	 * with function properties for all the node `Buffer` API functions. We use
-	 * `Uint8Array` so that square bracket notation works as expected -- it returns
-	 * a single octet.
-	 *
-	 * By augmenting the instances, we can avoid modifying the `Uint8Array`
-	 * prototype.
-	 */
-	function Buffer (arg) {
-	  if (!(this instanceof Buffer)) {
-	    // Avoid going through an ArgumentsAdaptorTrampoline in the common case.
-	    if (arguments.length > 1) return new Buffer(arg, arguments[1])
-	    return new Buffer(arg)
+	function createBuffer (that, length) {
+	  if (kMaxLength() < length) {
+	    throw new RangeError('Invalid typed array length')
+	  }
+	  if (Buffer.TYPED_ARRAY_SUPPORT) {
+	    // Return an augmented `Uint8Array` instance, for best performance
+	    that = new Uint8Array(length)
+	    that.__proto__ = Buffer.prototype
+	  } else {
+	    // Fallback: Return an object instance of the Buffer class
+	    if (that === null) {
+	      that = new Buffer(length)
+	    }
+	    that.length = length
 	  }
 
-	  if (!Buffer.TYPED_ARRAY_SUPPORT) {
-	    this.length = 0
-	    this.parent = undefined
+	  return that
+	}
+
+	/**
+	 * The Buffer constructor returns instances of `Uint8Array` that have their
+	 * prototype changed to `Buffer.prototype`. Furthermore, `Buffer` is a subclass of
+	 * `Uint8Array`, so the returned instances will have all the node `Buffer` methods
+	 * and the `Uint8Array` methods. Square bracket notation works as expected -- it
+	 * returns a single octet.
+	 *
+	 * The `Uint8Array` prototype remains unmodified.
+	 */
+
+	function Buffer (arg, encodingOrOffset, length) {
+	  if (!Buffer.TYPED_ARRAY_SUPPORT && !(this instanceof Buffer)) {
+	    return new Buffer(arg, encodingOrOffset, length)
 	  }
 
 	  // Common case.
 	  if (typeof arg === 'number') {
-	    return fromNumber(this, arg)
+	    if (typeof encodingOrOffset === 'string') {
+	      throw new Error(
+	        'If encoding is specified then the first argument must be a string'
+	      )
+	    }
+	    return allocUnsafe(this, arg)
 	  }
-
-	  // Slightly less common case.
-	  if (typeof arg === 'string') {
-	    return fromString(this, arg, arguments.length > 1 ? arguments[1] : 'utf8')
-	  }
-
-	  // Unusual.
-	  return fromObject(this, arg)
+	  return from(this, arg, encodingOrOffset, length)
 	}
 
-	function fromNumber (that, length) {
-	  that = allocate(that, length < 0 ? 0 : checked(length) | 0)
+	Buffer.poolSize = 8192 // not used by this implementation
+
+	// TODO: Legacy, not needed anymore. Remove in next major version.
+	Buffer._augment = function (arr) {
+	  arr.__proto__ = Buffer.prototype
+	  return arr
+	}
+
+	function from (that, value, encodingOrOffset, length) {
+	  if (typeof value === 'number') {
+	    throw new TypeError('"value" argument must not be a number')
+	  }
+
+	  if (typeof ArrayBuffer !== 'undefined' && value instanceof ArrayBuffer) {
+	    return fromArrayBuffer(that, value, encodingOrOffset, length)
+	  }
+
+	  if (typeof value === 'string') {
+	    return fromString(that, value, encodingOrOffset)
+	  }
+
+	  return fromObject(that, value)
+	}
+
+	/**
+	 * Functionally equivalent to Buffer(arg, encoding) but throws a TypeError
+	 * if value is a number.
+	 * Buffer.from(str[, encoding])
+	 * Buffer.from(array)
+	 * Buffer.from(buffer)
+	 * Buffer.from(arrayBuffer[, byteOffset[, length]])
+	 **/
+	Buffer.from = function (value, encodingOrOffset, length) {
+	  return from(null, value, encodingOrOffset, length)
+	}
+
+	if (Buffer.TYPED_ARRAY_SUPPORT) {
+	  Buffer.prototype.__proto__ = Uint8Array.prototype
+	  Buffer.__proto__ = Uint8Array
+	  if (typeof Symbol !== 'undefined' && Symbol.species &&
+	      Buffer[Symbol.species] === Buffer) {
+	    // Fix subarray() in ES2016. See: https://github.com/feross/buffer/pull/97
+	    Object.defineProperty(Buffer, Symbol.species, {
+	      value: null,
+	      configurable: true
+	    })
+	  }
+	}
+
+	function assertSize (size) {
+	  if (typeof size !== 'number') {
+	    throw new TypeError('"size" argument must be a number')
+	  } else if (size < 0) {
+	    throw new RangeError('"size" argument must not be negative')
+	  }
+	}
+
+	function alloc (that, size, fill, encoding) {
+	  assertSize(size)
+	  if (size <= 0) {
+	    return createBuffer(that, size)
+	  }
+	  if (fill !== undefined) {
+	    // Only pay attention to encoding if it's a string. This
+	    // prevents accidentally sending in a number that would
+	    // be interpretted as a start offset.
+	    return typeof encoding === 'string'
+	      ? createBuffer(that, size).fill(fill, encoding)
+	      : createBuffer(that, size).fill(fill)
+	  }
+	  return createBuffer(that, size)
+	}
+
+	/**
+	 * Creates a new filled Buffer instance.
+	 * alloc(size[, fill[, encoding]])
+	 **/
+	Buffer.alloc = function (size, fill, encoding) {
+	  return alloc(null, size, fill, encoding)
+	}
+
+	function allocUnsafe (that, size) {
+	  assertSize(size)
+	  that = createBuffer(that, size < 0 ? 0 : checked(size) | 0)
 	  if (!Buffer.TYPED_ARRAY_SUPPORT) {
-	    for (var i = 0; i < length; i++) {
+	    for (var i = 0; i < size; ++i) {
 	      that[i] = 0
 	    }
 	  }
 	  return that
 	}
 
+	/**
+	 * Equivalent to Buffer(num), by default creates a non-zero-filled Buffer instance.
+	 * */
+	Buffer.allocUnsafe = function (size) {
+	  return allocUnsafe(null, size)
+	}
+	/**
+	 * Equivalent to SlowBuffer(num), by default creates a non-zero-filled Buffer instance.
+	 */
+	Buffer.allocUnsafeSlow = function (size) {
+	  return allocUnsafe(null, size)
+	}
+
 	function fromString (that, string, encoding) {
-	  if (typeof encoding !== 'string' || encoding === '') encoding = 'utf8'
+	  if (typeof encoding !== 'string' || encoding === '') {
+	    encoding = 'utf8'
+	  }
 
-	  // Assumption: byteLength() return value is always < kMaxLength.
+	  if (!Buffer.isEncoding(encoding)) {
+	    throw new TypeError('"encoding" must be a valid string encoding')
+	  }
+
 	  var length = byteLength(string, encoding) | 0
-	  that = allocate(that, length)
+	  that = createBuffer(that, length)
 
-	  that.write(string, encoding)
-	  return that
-	}
+	  var actual = that.write(string, encoding)
 
-	function fromObject (that, object) {
-	  if (Buffer.isBuffer(object)) return fromBuffer(that, object)
-
-	  if (isArray(object)) return fromArray(that, object)
-
-	  if (object == null) {
-	    throw new TypeError('must start with number, buffer, array or string')
+	  if (actual !== length) {
+	    // Writing a hex string, for example, that contains invalid characters will
+	    // cause everything after the first invalid character to be ignored. (e.g.
+	    // 'abxxcd' will be treated as 'ab')
+	    that = that.slice(0, actual)
 	  }
 
-	  if (typeof ArrayBuffer !== 'undefined') {
-	    if (object.buffer instanceof ArrayBuffer) {
-	      return fromTypedArray(that, object)
-	    }
-	    if (object instanceof ArrayBuffer) {
-	      return fromArrayBuffer(that, object)
-	    }
-	  }
-
-	  if (object.length) return fromArrayLike(that, object)
-
-	  return fromJsonObject(that, object)
-	}
-
-	function fromBuffer (that, buffer) {
-	  var length = checked(buffer.length) | 0
-	  that = allocate(that, length)
-	  buffer.copy(that, 0, 0, length)
-	  return that
-	}
-
-	function fromArray (that, array) {
-	  var length = checked(array.length) | 0
-	  that = allocate(that, length)
-	  for (var i = 0; i < length; i += 1) {
-	    that[i] = array[i] & 255
-	  }
-	  return that
-	}
-
-	// Duplicate of fromArray() to keep fromArray() monomorphic.
-	function fromTypedArray (that, array) {
-	  var length = checked(array.length) | 0
-	  that = allocate(that, length)
-	  // Truncating the elements is probably not what people expect from typed
-	  // arrays with BYTES_PER_ELEMENT > 1 but it's compatible with the behavior
-	  // of the old Buffer constructor.
-	  for (var i = 0; i < length; i += 1) {
-	    that[i] = array[i] & 255
-	  }
-	  return that
-	}
-
-	function fromArrayBuffer (that, array) {
-	  if (Buffer.TYPED_ARRAY_SUPPORT) {
-	    // Return an augmented `Uint8Array` instance, for best performance
-	    array.byteLength
-	    that = Buffer._augment(new Uint8Array(array))
-	  } else {
-	    // Fallback: Return an object instance of the Buffer class
-	    that = fromTypedArray(that, new Uint8Array(array))
-	  }
 	  return that
 	}
 
 	function fromArrayLike (that, array) {
-	  var length = checked(array.length) | 0
-	  that = allocate(that, length)
+	  var length = array.length < 0 ? 0 : checked(array.length) | 0
+	  that = createBuffer(that, length)
 	  for (var i = 0; i < length; i += 1) {
 	    that[i] = array[i] & 255
 	  }
 	  return that
 	}
 
-	// Deserialize { type: 'Buffer', data: [1,2,3,...] } into a Buffer object.
-	// Returns a zero-length buffer for inputs that don't conform to the spec.
-	function fromJsonObject (that, object) {
-	  var array
-	  var length = 0
+	function fromArrayBuffer (that, array, byteOffset, length) {
+	  array.byteLength // this throws if `array` is not a valid ArrayBuffer
 
-	  if (object.type === 'Buffer' && isArray(object.data)) {
-	    array = object.data
-	    length = checked(array.length) | 0
+	  if (byteOffset < 0 || array.byteLength < byteOffset) {
+	    throw new RangeError('\'offset\' is out of bounds')
 	  }
-	  that = allocate(that, length)
 
-	  for (var i = 0; i < length; i += 1) {
-	    that[i] = array[i] & 255
+	  if (array.byteLength < byteOffset + (length || 0)) {
+	    throw new RangeError('\'length\' is out of bounds')
 	  }
-	  return that
-	}
 
-	if (Buffer.TYPED_ARRAY_SUPPORT) {
-	  Buffer.prototype.__proto__ = Uint8Array.prototype
-	  Buffer.__proto__ = Uint8Array
-	} else {
-	  // pre-set for values that may exist in the future
-	  Buffer.prototype.length = undefined
-	  Buffer.prototype.parent = undefined
-	}
+	  if (byteOffset === undefined && length === undefined) {
+	    array = new Uint8Array(array)
+	  } else if (length === undefined) {
+	    array = new Uint8Array(array, byteOffset)
+	  } else {
+	    array = new Uint8Array(array, byteOffset, length)
+	  }
 
-	function allocate (that, length) {
 	  if (Buffer.TYPED_ARRAY_SUPPORT) {
 	    // Return an augmented `Uint8Array` instance, for best performance
-	    that = Buffer._augment(new Uint8Array(length))
+	    that = array
 	    that.__proto__ = Buffer.prototype
 	  } else {
 	    // Fallback: Return an object instance of the Buffer class
-	    that.length = length
-	    that._isBuffer = true
+	    that = fromArrayLike(that, array)
 	  }
-
-	  var fromPool = length !== 0 && length <= Buffer.poolSize >>> 1
-	  if (fromPool) that.parent = rootParent
-
 	  return that
 	}
 
+	function fromObject (that, obj) {
+	  if (Buffer.isBuffer(obj)) {
+	    var len = checked(obj.length) | 0
+	    that = createBuffer(that, len)
+
+	    if (that.length === 0) {
+	      return that
+	    }
+
+	    obj.copy(that, 0, 0, len)
+	    return that
+	  }
+
+	  if (obj) {
+	    if ((typeof ArrayBuffer !== 'undefined' &&
+	        obj.buffer instanceof ArrayBuffer) || 'length' in obj) {
+	      if (typeof obj.length !== 'number' || isnan(obj.length)) {
+	        return createBuffer(that, 0)
+	      }
+	      return fromArrayLike(that, obj)
+	    }
+
+	    if (obj.type === 'Buffer' && isArray(obj.data)) {
+	      return fromArrayLike(that, obj.data)
+	    }
+	  }
+
+	  throw new TypeError('First argument must be a string, Buffer, ArrayBuffer, Array, or array-like object.')
+	}
+
 	function checked (length) {
-	  // Note: cannot use `length < kMaxLength` here because that fails when
+	  // Note: cannot use `length < kMaxLength()` here because that fails when
 	  // length is NaN (which is otherwise coerced to zero.)
 	  if (length >= kMaxLength()) {
 	    throw new RangeError('Attempt to allocate Buffer larger than maximum ' +
@@ -28072,12 +28141,11 @@ var InfoxBpmnModeler =
 	  return length | 0
 	}
 
-	function SlowBuffer (subject, encoding) {
-	  if (!(this instanceof SlowBuffer)) return new SlowBuffer(subject, encoding)
-
-	  var buf = new Buffer(subject, encoding)
-	  delete buf.parent
-	  return buf
+	function SlowBuffer (length) {
+	  if (+length != length) { // eslint-disable-line eqeqeq
+	    length = 0
+	  }
+	  return Buffer.alloc(+length)
 	}
 
 	Buffer.isBuffer = function isBuffer (b) {
@@ -28094,17 +28162,12 @@ var InfoxBpmnModeler =
 	  var x = a.length
 	  var y = b.length
 
-	  var i = 0
-	  var len = Math.min(x, y)
-	  while (i < len) {
-	    if (a[i] !== b[i]) break
-
-	    ++i
-	  }
-
-	  if (i !== len) {
-	    x = a[i]
-	    y = b[i]
+	  for (var i = 0, len = Math.min(x, y); i < len; ++i) {
+	    if (a[i] !== b[i]) {
+	      x = a[i]
+	      y = b[i]
+	      break
+	    }
 	  }
 
 	  if (x < y) return -1
@@ -28118,9 +28181,9 @@ var InfoxBpmnModeler =
 	    case 'utf8':
 	    case 'utf-8':
 	    case 'ascii':
+	    case 'latin1':
 	    case 'binary':
 	    case 'base64':
-	    case 'raw':
 	    case 'ucs2':
 	    case 'ucs-2':
 	    case 'utf16le':
@@ -28132,32 +28195,46 @@ var InfoxBpmnModeler =
 	}
 
 	Buffer.concat = function concat (list, length) {
-	  if (!isArray(list)) throw new TypeError('list argument must be an Array of Buffers.')
+	  if (!isArray(list)) {
+	    throw new TypeError('"list" argument must be an Array of Buffers')
+	  }
 
 	  if (list.length === 0) {
-	    return new Buffer(0)
+	    return Buffer.alloc(0)
 	  }
 
 	  var i
 	  if (length === undefined) {
 	    length = 0
-	    for (i = 0; i < list.length; i++) {
+	    for (i = 0; i < list.length; ++i) {
 	      length += list[i].length
 	    }
 	  }
 
-	  var buf = new Buffer(length)
+	  var buffer = Buffer.allocUnsafe(length)
 	  var pos = 0
-	  for (i = 0; i < list.length; i++) {
-	    var item = list[i]
-	    item.copy(buf, pos)
-	    pos += item.length
+	  for (i = 0; i < list.length; ++i) {
+	    var buf = list[i]
+	    if (!Buffer.isBuffer(buf)) {
+	      throw new TypeError('"list" argument must be an Array of Buffers')
+	    }
+	    buf.copy(buffer, pos)
+	    pos += buf.length
 	  }
-	  return buf
+	  return buffer
 	}
 
 	function byteLength (string, encoding) {
-	  if (typeof string !== 'string') string = '' + string
+	  if (Buffer.isBuffer(string)) {
+	    return string.length
+	  }
+	  if (typeof ArrayBuffer !== 'undefined' && typeof ArrayBuffer.isView === 'function' &&
+	      (ArrayBuffer.isView(string) || string instanceof ArrayBuffer)) {
+	    return string.byteLength
+	  }
+	  if (typeof string !== 'string') {
+	    string = '' + string
+	  }
 
 	  var len = string.length
 	  if (len === 0) return 0
@@ -28167,13 +28244,12 @@ var InfoxBpmnModeler =
 	  for (;;) {
 	    switch (encoding) {
 	      case 'ascii':
+	      case 'latin1':
 	      case 'binary':
-	      // Deprecated
-	      case 'raw':
-	      case 'raws':
 	        return len
 	      case 'utf8':
 	      case 'utf-8':
+	      case undefined:
 	        return utf8ToBytes(string).length
 	      case 'ucs2':
 	      case 'ucs-2':
@@ -28196,13 +28272,39 @@ var InfoxBpmnModeler =
 	function slowToString (encoding, start, end) {
 	  var loweredCase = false
 
-	  start = start | 0
-	  end = end === undefined || end === Infinity ? this.length : end | 0
+	  // No need to verify that "this.length <= MAX_UINT32" since it's a read-only
+	  // property of a typed array.
+
+	  // This behaves neither like String nor Uint8Array in that we set start/end
+	  // to their upper/lower bounds if the value passed is out of range.
+	  // undefined is handled specially as per ECMA-262 6th Edition,
+	  // Section 13.3.3.7 Runtime Semantics: KeyedBindingInitialization.
+	  if (start === undefined || start < 0) {
+	    start = 0
+	  }
+	  // Return early if start > this.length. Done here to prevent potential uint32
+	  // coercion fail below.
+	  if (start > this.length) {
+	    return ''
+	  }
+
+	  if (end === undefined || end > this.length) {
+	    end = this.length
+	  }
+
+	  if (end <= 0) {
+	    return ''
+	  }
+
+	  // Force coersion to uint32. This will also coerce falsey/NaN values to 0.
+	  end >>>= 0
+	  start >>>= 0
+
+	  if (end <= start) {
+	    return ''
+	  }
 
 	  if (!encoding) encoding = 'utf8'
-	  if (start < 0) start = 0
-	  if (end > this.length) end = this.length
-	  if (end <= start) return ''
 
 	  while (true) {
 	    switch (encoding) {
@@ -28216,8 +28318,9 @@ var InfoxBpmnModeler =
 	      case 'ascii':
 	        return asciiSlice(this, start, end)
 
+	      case 'latin1':
 	      case 'binary':
-	        return binarySlice(this, start, end)
+	        return latin1Slice(this, start, end)
 
 	      case 'base64':
 	        return base64Slice(this, start, end)
@@ -28234,6 +28337,53 @@ var InfoxBpmnModeler =
 	        loweredCase = true
 	    }
 	  }
+	}
+
+	// The property is used by `Buffer.isBuffer` and `is-buffer` (in Safari 5-7) to detect
+	// Buffer instances.
+	Buffer.prototype._isBuffer = true
+
+	function swap (b, n, m) {
+	  var i = b[n]
+	  b[n] = b[m]
+	  b[m] = i
+	}
+
+	Buffer.prototype.swap16 = function swap16 () {
+	  var len = this.length
+	  if (len % 2 !== 0) {
+	    throw new RangeError('Buffer size must be a multiple of 16-bits')
+	  }
+	  for (var i = 0; i < len; i += 2) {
+	    swap(this, i, i + 1)
+	  }
+	  return this
+	}
+
+	Buffer.prototype.swap32 = function swap32 () {
+	  var len = this.length
+	  if (len % 4 !== 0) {
+	    throw new RangeError('Buffer size must be a multiple of 32-bits')
+	  }
+	  for (var i = 0; i < len; i += 4) {
+	    swap(this, i, i + 3)
+	    swap(this, i + 1, i + 2)
+	  }
+	  return this
+	}
+
+	Buffer.prototype.swap64 = function swap64 () {
+	  var len = this.length
+	  if (len % 8 !== 0) {
+	    throw new RangeError('Buffer size must be a multiple of 64-bits')
+	  }
+	  for (var i = 0; i < len; i += 8) {
+	    swap(this, i, i + 7)
+	    swap(this, i + 1, i + 6)
+	    swap(this, i + 2, i + 5)
+	    swap(this, i + 3, i + 4)
+	  }
+	  return this
 	}
 
 	Buffer.prototype.toString = function toString () {
@@ -28259,63 +28409,197 @@ var InfoxBpmnModeler =
 	  return '<Buffer ' + str + '>'
 	}
 
-	Buffer.prototype.compare = function compare (b) {
-	  if (!Buffer.isBuffer(b)) throw new TypeError('Argument must be a Buffer')
-	  if (this === b) return 0
-	  return Buffer.compare(this, b)
+	Buffer.prototype.compare = function compare (target, start, end, thisStart, thisEnd) {
+	  if (!Buffer.isBuffer(target)) {
+	    throw new TypeError('Argument must be a Buffer')
+	  }
+
+	  if (start === undefined) {
+	    start = 0
+	  }
+	  if (end === undefined) {
+	    end = target ? target.length : 0
+	  }
+	  if (thisStart === undefined) {
+	    thisStart = 0
+	  }
+	  if (thisEnd === undefined) {
+	    thisEnd = this.length
+	  }
+
+	  if (start < 0 || end > target.length || thisStart < 0 || thisEnd > this.length) {
+	    throw new RangeError('out of range index')
+	  }
+
+	  if (thisStart >= thisEnd && start >= end) {
+	    return 0
+	  }
+	  if (thisStart >= thisEnd) {
+	    return -1
+	  }
+	  if (start >= end) {
+	    return 1
+	  }
+
+	  start >>>= 0
+	  end >>>= 0
+	  thisStart >>>= 0
+	  thisEnd >>>= 0
+
+	  if (this === target) return 0
+
+	  var x = thisEnd - thisStart
+	  var y = end - start
+	  var len = Math.min(x, y)
+
+	  var thisCopy = this.slice(thisStart, thisEnd)
+	  var targetCopy = target.slice(start, end)
+
+	  for (var i = 0; i < len; ++i) {
+	    if (thisCopy[i] !== targetCopy[i]) {
+	      x = thisCopy[i]
+	      y = targetCopy[i]
+	      break
+	    }
+	  }
+
+	  if (x < y) return -1
+	  if (y < x) return 1
+	  return 0
 	}
 
-	Buffer.prototype.indexOf = function indexOf (val, byteOffset) {
-	  if (byteOffset > 0x7fffffff) byteOffset = 0x7fffffff
-	  else if (byteOffset < -0x80000000) byteOffset = -0x80000000
-	  byteOffset >>= 0
+	// Finds either the first index of `val` in `buffer` at offset >= `byteOffset`,
+	// OR the last index of `val` in `buffer` at offset <= `byteOffset`.
+	//
+	// Arguments:
+	// - buffer - a Buffer to search
+	// - val - a string, Buffer, or number
+	// - byteOffset - an index into `buffer`; will be clamped to an int32
+	// - encoding - an optional encoding, relevant is val is a string
+	// - dir - true for indexOf, false for lastIndexOf
+	function bidirectionalIndexOf (buffer, val, byteOffset, encoding, dir) {
+	  // Empty buffer means no match
+	  if (buffer.length === 0) return -1
 
-	  if (this.length === 0) return -1
-	  if (byteOffset >= this.length) return -1
+	  // Normalize byteOffset
+	  if (typeof byteOffset === 'string') {
+	    encoding = byteOffset
+	    byteOffset = 0
+	  } else if (byteOffset > 0x7fffffff) {
+	    byteOffset = 0x7fffffff
+	  } else if (byteOffset < -0x80000000) {
+	    byteOffset = -0x80000000
+	  }
+	  byteOffset = +byteOffset  // Coerce to Number.
+	  if (isNaN(byteOffset)) {
+	    // byteOffset: it it's undefined, null, NaN, "foo", etc, search whole buffer
+	    byteOffset = dir ? 0 : (buffer.length - 1)
+	  }
 
-	  // Negative offsets start from the end of the buffer
-	  if (byteOffset < 0) byteOffset = Math.max(this.length + byteOffset, 0)
+	  // Normalize byteOffset: negative offsets start from the end of the buffer
+	  if (byteOffset < 0) byteOffset = buffer.length + byteOffset
+	  if (byteOffset >= buffer.length) {
+	    if (dir) return -1
+	    else byteOffset = buffer.length - 1
+	  } else if (byteOffset < 0) {
+	    if (dir) byteOffset = 0
+	    else return -1
+	  }
 
+	  // Normalize val
 	  if (typeof val === 'string') {
-	    if (val.length === 0) return -1 // special case: looking for empty string always fails
-	    return String.prototype.indexOf.call(this, val, byteOffset)
-	  }
-	  if (Buffer.isBuffer(val)) {
-	    return arrayIndexOf(this, val, byteOffset)
-	  }
-	  if (typeof val === 'number') {
-	    if (Buffer.TYPED_ARRAY_SUPPORT && Uint8Array.prototype.indexOf === 'function') {
-	      return Uint8Array.prototype.indexOf.call(this, val, byteOffset)
-	    }
-	    return arrayIndexOf(this, [ val ], byteOffset)
+	    val = Buffer.from(val, encoding)
 	  }
 
-	  function arrayIndexOf (arr, val, byteOffset) {
-	    var foundIndex = -1
-	    for (var i = 0; byteOffset + i < arr.length; i++) {
-	      if (arr[byteOffset + i] === val[foundIndex === -1 ? 0 : i - foundIndex]) {
-	        if (foundIndex === -1) foundIndex = i
-	        if (i - foundIndex + 1 === val.length) return byteOffset + foundIndex
+	  // Finally, search either indexOf (if dir is true) or lastIndexOf
+	  if (Buffer.isBuffer(val)) {
+	    // Special case: looking for empty string/buffer always fails
+	    if (val.length === 0) {
+	      return -1
+	    }
+	    return arrayIndexOf(buffer, val, byteOffset, encoding, dir)
+	  } else if (typeof val === 'number') {
+	    val = val & 0xFF // Search for a byte value [0-255]
+	    if (Buffer.TYPED_ARRAY_SUPPORT &&
+	        typeof Uint8Array.prototype.indexOf === 'function') {
+	      if (dir) {
+	        return Uint8Array.prototype.indexOf.call(buffer, val, byteOffset)
 	      } else {
-	        foundIndex = -1
+	        return Uint8Array.prototype.lastIndexOf.call(buffer, val, byteOffset)
 	      }
 	    }
-	    return -1
+	    return arrayIndexOf(buffer, [ val ], byteOffset, encoding, dir)
 	  }
 
 	  throw new TypeError('val must be string, number or Buffer')
 	}
 
-	// `get` is deprecated
-	Buffer.prototype.get = function get (offset) {
-	  console.log('.get() is deprecated. Access using array indexes instead.')
-	  return this.readUInt8(offset)
+	function arrayIndexOf (arr, val, byteOffset, encoding, dir) {
+	  var indexSize = 1
+	  var arrLength = arr.length
+	  var valLength = val.length
+
+	  if (encoding !== undefined) {
+	    encoding = String(encoding).toLowerCase()
+	    if (encoding === 'ucs2' || encoding === 'ucs-2' ||
+	        encoding === 'utf16le' || encoding === 'utf-16le') {
+	      if (arr.length < 2 || val.length < 2) {
+	        return -1
+	      }
+	      indexSize = 2
+	      arrLength /= 2
+	      valLength /= 2
+	      byteOffset /= 2
+	    }
+	  }
+
+	  function read (buf, i) {
+	    if (indexSize === 1) {
+	      return buf[i]
+	    } else {
+	      return buf.readUInt16BE(i * indexSize)
+	    }
+	  }
+
+	  var i
+	  if (dir) {
+	    var foundIndex = -1
+	    for (i = byteOffset; i < arrLength; i++) {
+	      if (read(arr, i) === read(val, foundIndex === -1 ? 0 : i - foundIndex)) {
+	        if (foundIndex === -1) foundIndex = i
+	        if (i - foundIndex + 1 === valLength) return foundIndex * indexSize
+	      } else {
+	        if (foundIndex !== -1) i -= i - foundIndex
+	        foundIndex = -1
+	      }
+	    }
+	  } else {
+	    if (byteOffset + valLength > arrLength) byteOffset = arrLength - valLength
+	    for (i = byteOffset; i >= 0; i--) {
+	      var found = true
+	      for (var j = 0; j < valLength; j++) {
+	        if (read(arr, i + j) !== read(val, j)) {
+	          found = false
+	          break
+	        }
+	      }
+	      if (found) return i
+	    }
+	  }
+
+	  return -1
 	}
 
-	// `set` is deprecated
-	Buffer.prototype.set = function set (v, offset) {
-	  console.log('.set() is deprecated. Access using array indexes instead.')
-	  return this.writeUInt8(v, offset)
+	Buffer.prototype.includes = function includes (val, byteOffset, encoding) {
+	  return this.indexOf(val, byteOffset, encoding) !== -1
+	}
+
+	Buffer.prototype.indexOf = function indexOf (val, byteOffset, encoding) {
+	  return bidirectionalIndexOf(this, val, byteOffset, encoding, true)
+	}
+
+	Buffer.prototype.lastIndexOf = function lastIndexOf (val, byteOffset, encoding) {
+	  return bidirectionalIndexOf(this, val, byteOffset, encoding, false)
 	}
 
 	function hexWrite (buf, string, offset, length) {
@@ -28332,14 +28616,14 @@ var InfoxBpmnModeler =
 
 	  // must be an even number of digits
 	  var strLen = string.length
-	  if (strLen % 2 !== 0) throw new Error('Invalid hex string')
+	  if (strLen % 2 !== 0) throw new TypeError('Invalid hex string')
 
 	  if (length > strLen / 2) {
 	    length = strLen / 2
 	  }
-	  for (var i = 0; i < length; i++) {
+	  for (var i = 0; i < length; ++i) {
 	    var parsed = parseInt(string.substr(i * 2, 2), 16)
-	    if (isNaN(parsed)) throw new Error('Invalid hex string')
+	    if (isNaN(parsed)) return i
 	    buf[offset + i] = parsed
 	  }
 	  return i
@@ -28353,7 +28637,7 @@ var InfoxBpmnModeler =
 	  return blitBuffer(asciiToBytes(string), buf, offset, length)
 	}
 
-	function binaryWrite (buf, string, offset, length) {
+	function latin1Write (buf, string, offset, length) {
 	  return asciiWrite(buf, string, offset, length)
 	}
 
@@ -28388,17 +28672,16 @@ var InfoxBpmnModeler =
 	    }
 	  // legacy write(string, encoding, offset, length) - remove in v0.13
 	  } else {
-	    var swap = encoding
-	    encoding = offset
-	    offset = length | 0
-	    length = swap
+	    throw new Error(
+	      'Buffer.write(string, encoding, offset[, length]) is no longer supported'
+	    )
 	  }
 
 	  var remaining = this.length - offset
 	  if (length === undefined || length > remaining) length = remaining
 
 	  if ((string.length > 0 && (length < 0 || offset < 0)) || offset > this.length) {
-	    throw new RangeError('attempt to write outside buffer bounds')
+	    throw new RangeError('Attempt to write outside buffer bounds')
 	  }
 
 	  if (!encoding) encoding = 'utf8'
@@ -28416,8 +28699,9 @@ var InfoxBpmnModeler =
 	      case 'ascii':
 	        return asciiWrite(this, string, offset, length)
 
+	      case 'latin1':
 	      case 'binary':
-	        return binaryWrite(this, string, offset, length)
+	        return latin1Write(this, string, offset, length)
 
 	      case 'base64':
 	        // Warning: maxLength not taken into account in base64Write
@@ -28552,17 +28836,17 @@ var InfoxBpmnModeler =
 	  var ret = ''
 	  end = Math.min(buf.length, end)
 
-	  for (var i = start; i < end; i++) {
+	  for (var i = start; i < end; ++i) {
 	    ret += String.fromCharCode(buf[i] & 0x7F)
 	  }
 	  return ret
 	}
 
-	function binarySlice (buf, start, end) {
+	function latin1Slice (buf, start, end) {
 	  var ret = ''
 	  end = Math.min(buf.length, end)
 
-	  for (var i = start; i < end; i++) {
+	  for (var i = start; i < end; ++i) {
 	    ret += String.fromCharCode(buf[i])
 	  }
 	  return ret
@@ -28575,7 +28859,7 @@ var InfoxBpmnModeler =
 	  if (!end || end < 0 || end > len) end = len
 
 	  var out = ''
-	  for (var i = start; i < end; i++) {
+	  for (var i = start; i < end; ++i) {
 	    out += toHex(buf[i])
 	  }
 	  return out
@@ -28613,16 +28897,15 @@ var InfoxBpmnModeler =
 
 	  var newBuf
 	  if (Buffer.TYPED_ARRAY_SUPPORT) {
-	    newBuf = Buffer._augment(this.subarray(start, end))
+	    newBuf = this.subarray(start, end)
+	    newBuf.__proto__ = Buffer.prototype
 	  } else {
 	    var sliceLen = end - start
 	    newBuf = new Buffer(sliceLen, undefined)
-	    for (var i = 0; i < sliceLen; i++) {
+	    for (var i = 0; i < sliceLen; ++i) {
 	      newBuf[i] = this[i + start]
 	    }
 	  }
-
-	  if (newBuf.length) newBuf.parent = this.parent || this
 
 	  return newBuf
 	}
@@ -28792,16 +29075,19 @@ var InfoxBpmnModeler =
 	}
 
 	function checkInt (buf, value, offset, ext, max, min) {
-	  if (!Buffer.isBuffer(buf)) throw new TypeError('buffer must be a Buffer instance')
-	  if (value > max || value < min) throw new RangeError('value is out of bounds')
-	  if (offset + ext > buf.length) throw new RangeError('index out of range')
+	  if (!Buffer.isBuffer(buf)) throw new TypeError('"buffer" argument must be a Buffer instance')
+	  if (value > max || value < min) throw new RangeError('"value" argument is out of bounds')
+	  if (offset + ext > buf.length) throw new RangeError('Index out of range')
 	}
 
 	Buffer.prototype.writeUIntLE = function writeUIntLE (value, offset, byteLength, noAssert) {
 	  value = +value
 	  offset = offset | 0
 	  byteLength = byteLength | 0
-	  if (!noAssert) checkInt(this, value, offset, byteLength, Math.pow(2, 8 * byteLength), 0)
+	  if (!noAssert) {
+	    var maxBytes = Math.pow(2, 8 * byteLength) - 1
+	    checkInt(this, value, offset, byteLength, maxBytes, 0)
+	  }
 
 	  var mul = 1
 	  var i = 0
@@ -28817,7 +29103,10 @@ var InfoxBpmnModeler =
 	  value = +value
 	  offset = offset | 0
 	  byteLength = byteLength | 0
-	  if (!noAssert) checkInt(this, value, offset, byteLength, Math.pow(2, 8 * byteLength), 0)
+	  if (!noAssert) {
+	    var maxBytes = Math.pow(2, 8 * byteLength) - 1
+	    checkInt(this, value, offset, byteLength, maxBytes, 0)
+	  }
 
 	  var i = byteLength - 1
 	  var mul = 1
@@ -28840,7 +29129,7 @@ var InfoxBpmnModeler =
 
 	function objectWriteUInt16 (buf, value, offset, littleEndian) {
 	  if (value < 0) value = 0xffff + value + 1
-	  for (var i = 0, j = Math.min(buf.length - offset, 2); i < j; i++) {
+	  for (var i = 0, j = Math.min(buf.length - offset, 2); i < j; ++i) {
 	    buf[offset + i] = (value & (0xff << (8 * (littleEndian ? i : 1 - i)))) >>>
 	      (littleEndian ? i : 1 - i) * 8
 	  }
@@ -28874,7 +29163,7 @@ var InfoxBpmnModeler =
 
 	function objectWriteUInt32 (buf, value, offset, littleEndian) {
 	  if (value < 0) value = 0xffffffff + value + 1
-	  for (var i = 0, j = Math.min(buf.length - offset, 4); i < j; i++) {
+	  for (var i = 0, j = Math.min(buf.length - offset, 4); i < j; ++i) {
 	    buf[offset + i] = (value >>> (littleEndian ? i : 3 - i) * 8) & 0xff
 	  }
 	}
@@ -28920,9 +29209,12 @@ var InfoxBpmnModeler =
 
 	  var i = 0
 	  var mul = 1
-	  var sub = value < 0 ? 1 : 0
+	  var sub = 0
 	  this[offset] = value & 0xFF
 	  while (++i < byteLength && (mul *= 0x100)) {
+	    if (value < 0 && sub === 0 && this[offset + i - 1] !== 0) {
+	      sub = 1
+	    }
 	    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF
 	  }
 
@@ -28940,9 +29232,12 @@ var InfoxBpmnModeler =
 
 	  var i = byteLength - 1
 	  var mul = 1
-	  var sub = value < 0 ? 1 : 0
+	  var sub = 0
 	  this[offset + i] = value & 0xFF
 	  while (--i >= 0 && (mul *= 0x100)) {
+	    if (value < 0 && sub === 0 && this[offset + i + 1] !== 0) {
+	      sub = 1
+	    }
 	    this[offset + i] = ((value / mul) >> 0) - sub & 0xFF
 	  }
 
@@ -29017,9 +29312,8 @@ var InfoxBpmnModeler =
 	}
 
 	function checkIEEE754 (buf, value, offset, ext, max, min) {
-	  if (value > max || value < min) throw new RangeError('value is out of bounds')
-	  if (offset + ext > buf.length) throw new RangeError('index out of range')
-	  if (offset < 0) throw new RangeError('index out of range')
+	  if (offset + ext > buf.length) throw new RangeError('Index out of range')
+	  if (offset < 0) throw new RangeError('Index out of range')
 	}
 
 	function writeFloat (buf, value, offset, littleEndian, noAssert) {
@@ -29084,142 +29378,90 @@ var InfoxBpmnModeler =
 
 	  if (this === target && start < targetStart && targetStart < end) {
 	    // descending copy from end
-	    for (i = len - 1; i >= 0; i--) {
+	    for (i = len - 1; i >= 0; --i) {
 	      target[i + targetStart] = this[i + start]
 	    }
 	  } else if (len < 1000 || !Buffer.TYPED_ARRAY_SUPPORT) {
 	    // ascending copy from start
-	    for (i = 0; i < len; i++) {
+	    for (i = 0; i < len; ++i) {
 	      target[i + targetStart] = this[i + start]
 	    }
 	  } else {
-	    target._set(this.subarray(start, start + len), targetStart)
+	    Uint8Array.prototype.set.call(
+	      target,
+	      this.subarray(start, start + len),
+	      targetStart
+	    )
 	  }
 
 	  return len
 	}
 
-	// fill(value, start=0, end=buffer.length)
-	Buffer.prototype.fill = function fill (value, start, end) {
-	  if (!value) value = 0
-	  if (!start) start = 0
-	  if (!end) end = this.length
+	// Usage:
+	//    buffer.fill(number[, offset[, end]])
+	//    buffer.fill(buffer[, offset[, end]])
+	//    buffer.fill(string[, offset[, end]][, encoding])
+	Buffer.prototype.fill = function fill (val, start, end, encoding) {
+	  // Handle string cases:
+	  if (typeof val === 'string') {
+	    if (typeof start === 'string') {
+	      encoding = start
+	      start = 0
+	      end = this.length
+	    } else if (typeof end === 'string') {
+	      encoding = end
+	      end = this.length
+	    }
+	    if (val.length === 1) {
+	      var code = val.charCodeAt(0)
+	      if (code < 256) {
+	        val = code
+	      }
+	    }
+	    if (encoding !== undefined && typeof encoding !== 'string') {
+	      throw new TypeError('encoding must be a string')
+	    }
+	    if (typeof encoding === 'string' && !Buffer.isEncoding(encoding)) {
+	      throw new TypeError('Unknown encoding: ' + encoding)
+	    }
+	  } else if (typeof val === 'number') {
+	    val = val & 255
+	  }
 
-	  if (end < start) throw new RangeError('end < start')
+	  // Invalid ranges are not set to a default, so can range check early.
+	  if (start < 0 || this.length < start || this.length < end) {
+	    throw new RangeError('Out of range index')
+	  }
 
-	  // Fill 0 bytes; we're done
-	  if (end === start) return
-	  if (this.length === 0) return
+	  if (end <= start) {
+	    return this
+	  }
 
-	  if (start < 0 || start >= this.length) throw new RangeError('start out of bounds')
-	  if (end < 0 || end > this.length) throw new RangeError('end out of bounds')
+	  start = start >>> 0
+	  end = end === undefined ? this.length : end >>> 0
+
+	  if (!val) val = 0
 
 	  var i
-	  if (typeof value === 'number') {
-	    for (i = start; i < end; i++) {
-	      this[i] = value
+	  if (typeof val === 'number') {
+	    for (i = start; i < end; ++i) {
+	      this[i] = val
 	    }
 	  } else {
-	    var bytes = utf8ToBytes(value.toString())
+	    var bytes = Buffer.isBuffer(val)
+	      ? val
+	      : utf8ToBytes(new Buffer(val, encoding).toString())
 	    var len = bytes.length
-	    for (i = start; i < end; i++) {
-	      this[i] = bytes[i % len]
+	    for (i = 0; i < end - start; ++i) {
+	      this[i + start] = bytes[i % len]
 	    }
 	  }
 
 	  return this
 	}
 
-	/**
-	 * Creates a new `ArrayBuffer` with the *copied* memory of the buffer instance.
-	 * Added in Node 0.12. Only available in browsers that support ArrayBuffer.
-	 */
-	Buffer.prototype.toArrayBuffer = function toArrayBuffer () {
-	  if (typeof Uint8Array !== 'undefined') {
-	    if (Buffer.TYPED_ARRAY_SUPPORT) {
-	      return (new Buffer(this)).buffer
-	    } else {
-	      var buf = new Uint8Array(this.length)
-	      for (var i = 0, len = buf.length; i < len; i += 1) {
-	        buf[i] = this[i]
-	      }
-	      return buf.buffer
-	    }
-	  } else {
-	    throw new TypeError('Buffer.toArrayBuffer not supported in this browser')
-	  }
-	}
-
 	// HELPER FUNCTIONS
 	// ================
-
-	var BP = Buffer.prototype
-
-	/**
-	 * Augment a Uint8Array *instance* (not the Uint8Array class!) with Buffer methods
-	 */
-	Buffer._augment = function _augment (arr) {
-	  arr.constructor = Buffer
-	  arr._isBuffer = true
-
-	  // save reference to original Uint8Array set method before overwriting
-	  arr._set = arr.set
-
-	  // deprecated
-	  arr.get = BP.get
-	  arr.set = BP.set
-
-	  arr.write = BP.write
-	  arr.toString = BP.toString
-	  arr.toLocaleString = BP.toString
-	  arr.toJSON = BP.toJSON
-	  arr.equals = BP.equals
-	  arr.compare = BP.compare
-	  arr.indexOf = BP.indexOf
-	  arr.copy = BP.copy
-	  arr.slice = BP.slice
-	  arr.readUIntLE = BP.readUIntLE
-	  arr.readUIntBE = BP.readUIntBE
-	  arr.readUInt8 = BP.readUInt8
-	  arr.readUInt16LE = BP.readUInt16LE
-	  arr.readUInt16BE = BP.readUInt16BE
-	  arr.readUInt32LE = BP.readUInt32LE
-	  arr.readUInt32BE = BP.readUInt32BE
-	  arr.readIntLE = BP.readIntLE
-	  arr.readIntBE = BP.readIntBE
-	  arr.readInt8 = BP.readInt8
-	  arr.readInt16LE = BP.readInt16LE
-	  arr.readInt16BE = BP.readInt16BE
-	  arr.readInt32LE = BP.readInt32LE
-	  arr.readInt32BE = BP.readInt32BE
-	  arr.readFloatLE = BP.readFloatLE
-	  arr.readFloatBE = BP.readFloatBE
-	  arr.readDoubleLE = BP.readDoubleLE
-	  arr.readDoubleBE = BP.readDoubleBE
-	  arr.writeUInt8 = BP.writeUInt8
-	  arr.writeUIntLE = BP.writeUIntLE
-	  arr.writeUIntBE = BP.writeUIntBE
-	  arr.writeUInt16LE = BP.writeUInt16LE
-	  arr.writeUInt16BE = BP.writeUInt16BE
-	  arr.writeUInt32LE = BP.writeUInt32LE
-	  arr.writeUInt32BE = BP.writeUInt32BE
-	  arr.writeIntLE = BP.writeIntLE
-	  arr.writeIntBE = BP.writeIntBE
-	  arr.writeInt8 = BP.writeInt8
-	  arr.writeInt16LE = BP.writeInt16LE
-	  arr.writeInt16BE = BP.writeInt16BE
-	  arr.writeInt32LE = BP.writeInt32LE
-	  arr.writeInt32BE = BP.writeInt32BE
-	  arr.writeFloatLE = BP.writeFloatLE
-	  arr.writeFloatBE = BP.writeFloatBE
-	  arr.writeDoubleLE = BP.writeDoubleLE
-	  arr.writeDoubleBE = BP.writeDoubleBE
-	  arr.fill = BP.fill
-	  arr.inspect = BP.inspect
-	  arr.toArrayBuffer = BP.toArrayBuffer
-
-	  return arr
-	}
 
 	var INVALID_BASE64_RE = /[^+\/0-9A-Za-z-_]/g
 
@@ -29252,7 +29494,7 @@ var InfoxBpmnModeler =
 	  var leadSurrogate = null
 	  var bytes = []
 
-	  for (var i = 0; i < length; i++) {
+	  for (var i = 0; i < length; ++i) {
 	    codePoint = string.charCodeAt(i)
 
 	    // is surrogate component
@@ -29327,7 +29569,7 @@ var InfoxBpmnModeler =
 
 	function asciiToBytes (str) {
 	  var byteArray = []
-	  for (var i = 0; i < str.length; i++) {
+	  for (var i = 0; i < str.length; ++i) {
 	    // Node's code seems to be doing this and not & 0x7F..
 	    byteArray.push(str.charCodeAt(i) & 0xFF)
 	  }
@@ -29337,7 +29579,7 @@ var InfoxBpmnModeler =
 	function utf16leToBytes (str, units) {
 	  var c, hi, lo
 	  var byteArray = []
-	  for (var i = 0; i < str.length; i++) {
+	  for (var i = 0; i < str.length; ++i) {
 	    if ((units -= 2) < 0) break
 
 	    c = str.charCodeAt(i)
@@ -29355,143 +29597,132 @@ var InfoxBpmnModeler =
 	}
 
 	function blitBuffer (src, dst, offset, length) {
-	  for (var i = 0; i < length; i++) {
+	  for (var i = 0; i < length; ++i) {
 	    if ((i + offset >= dst.length) || (i >= src.length)) break
 	    dst[i + offset] = src[i]
 	  }
 	  return i
 	}
 
+	function isnan (val) {
+	  return val !== val // eslint-disable-line no-self-compare
+	}
+
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(347).Buffer, (function() { return this; }())))
 
 /***/ },
 /* 348 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+	'use strict'
 
-	;(function (exports) {
-		'use strict';
+	exports.toByteArray = toByteArray
+	exports.fromByteArray = fromByteArray
 
-	  var Arr = (typeof Uint8Array !== 'undefined')
-	    ? Uint8Array
-	    : Array
+	var lookup = []
+	var revLookup = []
+	var Arr = typeof Uint8Array !== 'undefined' ? Uint8Array : Array
 
-		var PLUS   = '+'.charCodeAt(0)
-		var SLASH  = '/'.charCodeAt(0)
-		var NUMBER = '0'.charCodeAt(0)
-		var LOWER  = 'a'.charCodeAt(0)
-		var UPPER  = 'A'.charCodeAt(0)
-		var PLUS_URL_SAFE = '-'.charCodeAt(0)
-		var SLASH_URL_SAFE = '_'.charCodeAt(0)
+	function init () {
+	  var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+	  for (var i = 0, len = code.length; i < len; ++i) {
+	    lookup[i] = code[i]
+	    revLookup[code.charCodeAt(i)] = i
+	  }
 
-		function decode (elt) {
-			var code = elt.charCodeAt(0)
-			if (code === PLUS ||
-			    code === PLUS_URL_SAFE)
-				return 62 // '+'
-			if (code === SLASH ||
-			    code === SLASH_URL_SAFE)
-				return 63 // '/'
-			if (code < NUMBER)
-				return -1 //no match
-			if (code < NUMBER + 10)
-				return code - NUMBER + 26 + 26
-			if (code < UPPER + 26)
-				return code - UPPER
-			if (code < LOWER + 26)
-				return code - LOWER + 26
-		}
+	  revLookup['-'.charCodeAt(0)] = 62
+	  revLookup['_'.charCodeAt(0)] = 63
+	}
 
-		function b64ToByteArray (b64) {
-			var i, j, l, tmp, placeHolders, arr
+	init()
 
-			if (b64.length % 4 > 0) {
-				throw new Error('Invalid string. Length must be a multiple of 4')
-			}
+	function toByteArray (b64) {
+	  var i, j, l, tmp, placeHolders, arr
+	  var len = b64.length
 
-			// the number of equal signs (place holders)
-			// if there are two placeholders, than the two characters before it
-			// represent one byte
-			// if there is only one, then the three characters before it represent 2 bytes
-			// this is just a cheap hack to not do indexOf twice
-			var len = b64.length
-			placeHolders = '=' === b64.charAt(len - 2) ? 2 : '=' === b64.charAt(len - 1) ? 1 : 0
+	  if (len % 4 > 0) {
+	    throw new Error('Invalid string. Length must be a multiple of 4')
+	  }
 
-			// base64 is 4/3 + up to two characters of the original data
-			arr = new Arr(b64.length * 3 / 4 - placeHolders)
+	  // the number of equal signs (place holders)
+	  // if there are two placeholders, than the two characters before it
+	  // represent one byte
+	  // if there is only one, then the three characters before it represent 2 bytes
+	  // this is just a cheap hack to not do indexOf twice
+	  placeHolders = b64[len - 2] === '=' ? 2 : b64[len - 1] === '=' ? 1 : 0
 
-			// if there are placeholders, only get up to the last complete 4 chars
-			l = placeHolders > 0 ? b64.length - 4 : b64.length
+	  // base64 is 4/3 + up to two characters of the original data
+	  arr = new Arr(len * 3 / 4 - placeHolders)
 
-			var L = 0
+	  // if there are placeholders, only get up to the last complete 4 chars
+	  l = placeHolders > 0 ? len - 4 : len
 
-			function push (v) {
-				arr[L++] = v
-			}
+	  var L = 0
 
-			for (i = 0, j = 0; i < l; i += 4, j += 3) {
-				tmp = (decode(b64.charAt(i)) << 18) | (decode(b64.charAt(i + 1)) << 12) | (decode(b64.charAt(i + 2)) << 6) | decode(b64.charAt(i + 3))
-				push((tmp & 0xFF0000) >> 16)
-				push((tmp & 0xFF00) >> 8)
-				push(tmp & 0xFF)
-			}
+	  for (i = 0, j = 0; i < l; i += 4, j += 3) {
+	    tmp = (revLookup[b64.charCodeAt(i)] << 18) | (revLookup[b64.charCodeAt(i + 1)] << 12) | (revLookup[b64.charCodeAt(i + 2)] << 6) | revLookup[b64.charCodeAt(i + 3)]
+	    arr[L++] = (tmp >> 16) & 0xFF
+	    arr[L++] = (tmp >> 8) & 0xFF
+	    arr[L++] = tmp & 0xFF
+	  }
 
-			if (placeHolders === 2) {
-				tmp = (decode(b64.charAt(i)) << 2) | (decode(b64.charAt(i + 1)) >> 4)
-				push(tmp & 0xFF)
-			} else if (placeHolders === 1) {
-				tmp = (decode(b64.charAt(i)) << 10) | (decode(b64.charAt(i + 1)) << 4) | (decode(b64.charAt(i + 2)) >> 2)
-				push((tmp >> 8) & 0xFF)
-				push(tmp & 0xFF)
-			}
+	  if (placeHolders === 2) {
+	    tmp = (revLookup[b64.charCodeAt(i)] << 2) | (revLookup[b64.charCodeAt(i + 1)] >> 4)
+	    arr[L++] = tmp & 0xFF
+	  } else if (placeHolders === 1) {
+	    tmp = (revLookup[b64.charCodeAt(i)] << 10) | (revLookup[b64.charCodeAt(i + 1)] << 4) | (revLookup[b64.charCodeAt(i + 2)] >> 2)
+	    arr[L++] = (tmp >> 8) & 0xFF
+	    arr[L++] = tmp & 0xFF
+	  }
 
-			return arr
-		}
+	  return arr
+	}
 
-		function uint8ToBase64 (uint8) {
-			var i,
-				extraBytes = uint8.length % 3, // if we have 1 byte left, pad 2 bytes
-				output = "",
-				temp, length
+	function tripletToBase64 (num) {
+	  return lookup[num >> 18 & 0x3F] + lookup[num >> 12 & 0x3F] + lookup[num >> 6 & 0x3F] + lookup[num & 0x3F]
+	}
 
-			function encode (num) {
-				return lookup.charAt(num)
-			}
+	function encodeChunk (uint8, start, end) {
+	  var tmp
+	  var output = []
+	  for (var i = start; i < end; i += 3) {
+	    tmp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
+	    output.push(tripletToBase64(tmp))
+	  }
+	  return output.join('')
+	}
 
-			function tripletToBase64 (num) {
-				return encode(num >> 18 & 0x3F) + encode(num >> 12 & 0x3F) + encode(num >> 6 & 0x3F) + encode(num & 0x3F)
-			}
+	function fromByteArray (uint8) {
+	  var tmp
+	  var len = uint8.length
+	  var extraBytes = len % 3 // if we have 1 byte left, pad 2 bytes
+	  var output = ''
+	  var parts = []
+	  var maxChunkLength = 16383 // must be multiple of 3
 
-			// go through the array every three bytes, we'll deal with trailing stuff later
-			for (i = 0, length = uint8.length - extraBytes; i < length; i += 3) {
-				temp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
-				output += tripletToBase64(temp)
-			}
+	  // go through the array every three bytes, we'll deal with trailing stuff later
+	  for (var i = 0, len2 = len - extraBytes; i < len2; i += maxChunkLength) {
+	    parts.push(encodeChunk(uint8, i, (i + maxChunkLength) > len2 ? len2 : (i + maxChunkLength)))
+	  }
 
-			// pad the end with zeros, but make sure to not forget the extra bytes
-			switch (extraBytes) {
-				case 1:
-					temp = uint8[uint8.length - 1]
-					output += encode(temp >> 2)
-					output += encode((temp << 4) & 0x3F)
-					output += '=='
-					break
-				case 2:
-					temp = (uint8[uint8.length - 2] << 8) + (uint8[uint8.length - 1])
-					output += encode(temp >> 10)
-					output += encode((temp >> 4) & 0x3F)
-					output += encode((temp << 2) & 0x3F)
-					output += '='
-					break
-			}
+	  // pad the end with zeros, but make sure to not forget the extra bytes
+	  if (extraBytes === 1) {
+	    tmp = uint8[len - 1]
+	    output += lookup[tmp >> 2]
+	    output += lookup[(tmp << 4) & 0x3F]
+	    output += '=='
+	  } else if (extraBytes === 2) {
+	    tmp = (uint8[len - 2] << 8) + (uint8[len - 1])
+	    output += lookup[tmp >> 10]
+	    output += lookup[(tmp >> 4) & 0x3F]
+	    output += lookup[(tmp << 2) & 0x3F]
+	    output += '='
+	  }
 
-			return output
-		}
+	  parts.push(output)
 
-		exports.toByteArray = b64ToByteArray
-		exports.fromByteArray = uint8ToBase64
-	}( false ? (this.base64js = {}) : exports))
+	  return parts.join('')
+	}
 
 
 /***/ },
@@ -30058,7 +30289,6 @@ var InfoxBpmnModeler =
 /***/ function(module, exports) {
 
 	// shim for using process in browser
-
 	var process = module.exports = {};
 
 	// cached from whatever global is present so that test runners that stub it
@@ -30069,22 +30299,84 @@ var InfoxBpmnModeler =
 	var cachedSetTimeout;
 	var cachedClearTimeout;
 
+	function defaultSetTimout() {
+	    throw new Error('setTimeout has not been defined');
+	}
+	function defaultClearTimeout () {
+	    throw new Error('clearTimeout has not been defined');
+	}
 	(function () {
-	  try {
-	    cachedSetTimeout = setTimeout;
-	  } catch (e) {
-	    cachedSetTimeout = function () {
-	      throw new Error('setTimeout is not defined');
+	    try {
+	        if (typeof setTimeout === 'function') {
+	            cachedSetTimeout = setTimeout;
+	        } else {
+	            cachedSetTimeout = defaultSetTimout;
+	        }
+	    } catch (e) {
+	        cachedSetTimeout = defaultSetTimout;
 	    }
-	  }
-	  try {
-	    cachedClearTimeout = clearTimeout;
-	  } catch (e) {
-	    cachedClearTimeout = function () {
-	      throw new Error('clearTimeout is not defined');
+	    try {
+	        if (typeof clearTimeout === 'function') {
+	            cachedClearTimeout = clearTimeout;
+	        } else {
+	            cachedClearTimeout = defaultClearTimeout;
+	        }
+	    } catch (e) {
+	        cachedClearTimeout = defaultClearTimeout;
 	    }
-	  }
 	} ())
+	function runTimeout(fun) {
+	    if (cachedSetTimeout === setTimeout) {
+	        //normal enviroments in sane situations
+	        return setTimeout(fun, 0);
+	    }
+	    // if setTimeout wasn't available but was latter defined
+	    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+	        cachedSetTimeout = setTimeout;
+	        return setTimeout(fun, 0);
+	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedSetTimeout(fun, 0);
+	    } catch(e){
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+	            return cachedSetTimeout.call(null, fun, 0);
+	        } catch(e){
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+	            return cachedSetTimeout.call(this, fun, 0);
+	        }
+	    }
+
+
+	}
+	function runClearTimeout(marker) {
+	    if (cachedClearTimeout === clearTimeout) {
+	        //normal enviroments in sane situations
+	        return clearTimeout(marker);
+	    }
+	    // if clearTimeout wasn't available but was latter defined
+	    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+	        cachedClearTimeout = clearTimeout;
+	        return clearTimeout(marker);
+	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedClearTimeout(marker);
+	    } catch (e){
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+	            return cachedClearTimeout.call(null, marker);
+	        } catch (e){
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+	            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+	            return cachedClearTimeout.call(this, marker);
+	        }
+	    }
+
+
+
+	}
 	var queue = [];
 	var draining = false;
 	var currentQueue;
@@ -30109,7 +30401,7 @@ var InfoxBpmnModeler =
 	    if (draining) {
 	        return;
 	    }
-	    var timeout = cachedSetTimeout(cleanUpNextTick);
+	    var timeout = runTimeout(cleanUpNextTick);
 	    draining = true;
 
 	    var len = queue.length;
@@ -30126,7 +30418,7 @@ var InfoxBpmnModeler =
 	    }
 	    currentQueue = null;
 	    draining = false;
-	    cachedClearTimeout(timeout);
+	    runClearTimeout(timeout);
 	}
 
 	process.nextTick = function (fun) {
@@ -30138,7 +30430,7 @@ var InfoxBpmnModeler =
 	    }
 	    queue.push(new Item(fun, args));
 	    if (queue.length === 1 && !draining) {
-	        cachedSetTimeout(drainQueue, 0);
+	        runTimeout(drainQueue);
 	    }
 	};
 
@@ -39189,9 +39481,16 @@ var InfoxBpmnModeler =
 	    return renderLabel(p, semantic.name, { box: element, align: align, padding: 5 });
 	  }
 
-	  function renderExternalLabel(p, element, align) {
+	  function renderExternalLabel(p, element) {
 	    var semantic = getSemantic(element);
-	    return renderLabel(p, semantic.name, { box: element, align: align, style: { fontSize: '11px' } });
+	    var box = {
+	      width: 90,
+	      height: 30,
+	      x: element.width / 2 + element.x,
+	      y: element.height / 2 + element.y
+	    };
+
+	    return renderLabel(p, semantic.name, { box: box, style: { fontSize: '11px' } });
 	  }
 
 	  function renderLaneLabel(p, text, element) {
@@ -40145,7 +40444,27 @@ var InfoxBpmnModeler =
 	      });
 	    },
 	    'label': function(p, element) {
-	      return renderExternalLabel(p, element, '');
+	      // Update external label size and bounds during rendering when
+	      // we have the actual rendered bounds anyway.
+
+	      var textElement = renderExternalLabel(p, element);
+
+	      var textBBox = textElement.getBBox();
+
+	      // update element.x so that the layouted text is still
+	      // center alligned (newX = oldMidX - newWidth / 2)
+	      element.x = Math.round(element.x + element.width / 2) - Math.round((textBBox.width / 2));
+
+	      // take element width, height from actual bounds
+	      element.width = Math.ceil(textBBox.width);
+	      element.height = Math.ceil(textBBox.height);
+
+	      // compensate bounding box x
+	      textElement.attr({
+	        transform: 'translate(' + (-1 * textBBox.x) + ',0)'
+	      });
+
+	      return textElement;
 	    },
 	    'bpmn:TextAnnotation': function(p, element) {
 	      var style = {
@@ -42803,6 +43122,8 @@ var InfoxBpmnModeler =
 	var createLine = renderUtil.createLine,
 	    updateLine = renderUtil.updateLine;
 
+	var LOW_PRIORITY = 500;
+
 	/**
 	 * A plugin that provides interaction events for diagram elements.
 	 *
@@ -42965,9 +43286,10 @@ var InfoxBpmnModeler =
 	    hit.attr(HIT_STYLE).appendTo(gfx.node);
 	  });
 
-	  // update djs-hit on change
-
-	  eventBus.on('shape.changed', function(event) {
+	  // Update djs-hit on change.
+	  // A low priortity is necessary, because djs-hit of labels has to be updated
+	  // after the label bounds have been updated in the renderer.
+	  eventBus.on('shape.changed', LOW_PRIORITY, function(event) {
 
 	    var element = event.element,
 	        gfx = event.gfx,
@@ -43405,6 +43727,7 @@ var InfoxBpmnModeler =
 
 	var getBBox = __webpack_require__(137).getBBox;
 
+	var LOW_PRIORITY = 500;
 
 	/**
 	 * @class
@@ -43428,7 +43751,9 @@ var InfoxBpmnModeler =
 	    return gfx.rect(10, 10, 0, 0).attr(OUTLINE_STYLE);
 	  }
 
-	  eventBus.on([ 'shape.added', 'shape.changed' ], function(event) {
+	  // A low priortity is necessary, because outlines of labels have to be updated
+	  // after the label bounds have been updated in the renderer.
+	  eventBus.on([ 'shape.added', 'shape.changed' ], LOW_PRIORITY, function(event) {
 	    var element = event.element,
 	        gfx     = event.gfx;
 
@@ -45405,9 +45730,6 @@ var InfoxBpmnModeler =
 	    context = null;
 
 	    Cursor.unset();
-
-	    // prevent select
-	    EventUtil.stopEvent(event);
 	  }
 
 	  function handleStart(event) {
@@ -45428,9 +45750,6 @@ var InfoxBpmnModeler =
 
 	    domEvent.bind(document, 'mousemove', handleMove);
 	    domEvent.bind(document, 'mouseup', handleEnd);
-
-	    // prevent select
-	    EventUtil.stopEvent(event);
 	  }
 
 	  domEvent.bind(container, 'mousedown', handleStart);
@@ -51309,16 +51628,161 @@ var InfoxBpmnModeler =
 	    __webpack_require__(452),
 	    __webpack_require__(463),
 	    __webpack_require__(508),
-	    __webpack_require__(501)
+	    __webpack_require__(501),
+	    __webpack_require__(524)
 	  ],
-	  __init__: [ 'move', 'moveVisuals' ],
-	  move: [ 'type', __webpack_require__(524) ],
-	  moveVisuals: [ 'type', __webpack_require__(525) ]
+	  __init__: [ 'move', 'movePreview' ],
+	  move: [ 'type', __webpack_require__(526) ],
+	  movePreview: [ 'type', __webpack_require__(527) ]
 	};
 
 
 /***/ },
 /* 524 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	module.exports = {
+	  __init__: [ 'previewSupport' ],
+	  previewSupport: [ 'type', __webpack_require__(525) ]
+	};
+
+
+/***/ },
+/* 525 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var forEach = __webpack_require__(128);
+
+	var Snap = __webpack_require__(66);
+
+	/**
+	 * Adds support for previews of moving/resizing elements.
+	 */
+	function PreviewSupport(elementRegistry, canvas, styles) {
+	  this._elementRegistry = elementRegistry;
+	  this._canvas = canvas;
+	  this._styles = styles;
+	}
+
+	module.exports = PreviewSupport;
+
+	PreviewSupport.$inject = [ 'elementRegistry', 'canvas', 'styles' ];
+
+
+	/**
+	 * Returns graphics of an element.
+	 *
+	 * @param {djs.model.Base} element
+	 *
+	 * @return {Snap<SVGElement>}
+	 */
+	PreviewSupport.prototype.getGfx = function(element) {
+	  return this._elementRegistry.getGraphics(element);
+	};
+
+	/**
+	 * Adds a move preview of a given shape to a given snapsvg group.
+	 *
+	 * @param {djs.model.Base} element
+	 * @param {Snap<SVGElement>} group
+	 *
+	 * @return {Snap<SVGElement>} dragger
+	 */
+	PreviewSupport.prototype.addDragger = function(shape, group) {
+	  var gfx = this.getGfx(shape);
+	  var dragger = gfx.clone();
+	  var bbox = gfx.getBBox();
+
+	  // remove markers from connections
+	  if (isConnection(shape)) {
+	    removeMarkers(dragger);
+	  }
+
+	  dragger.attr(this._styles.cls('djs-dragger', [], {
+	    x: bbox.x,
+	    y: bbox.y
+	  }));
+
+	  group.add(dragger);
+
+	  return dragger;
+	};
+
+	/**
+	 * Adds a resize preview of a given shape to a given snapsvg group.
+	 *
+	 * @param {djs.model.Base} element
+	 * @param {Snap<SVGElement>} group
+	 *
+	 * @return {Snap<SVGElement>} frame
+	 */
+	PreviewSupport.prototype.addFrame = function(shape, group) {
+
+	  var frame = Snap.create('rect', {
+	    class: 'djs-resize-overlay',
+	    width:  shape.width,
+	    height: shape.height,
+	    x: shape.x,
+	    y: shape.y
+	  });
+
+	  group.add(frame);
+
+	  return frame;
+	};
+
+	////////// helpers //////////
+
+	/**
+	 * Removes all svg marker references from an SVG.
+	 *
+	 * @param {Snap<SVGElement>} gfx
+	 */
+	function removeMarkers(gfx) {
+
+	  if (gfx.node) {
+
+	    // snapsvg paper element
+	    forEach(gfx.node.childNodes, function(childNode) {
+	      if (childNode.node) {
+
+	        // recursion
+	        removeMarkers(childNode.node);
+
+	      } else if (childNode.childNodes) {
+
+	        forEach(childNode.childNodes, function(childNodeChild) {
+
+	          // recursion
+	          removeMarkers(childNodeChild);
+	        });
+
+	      }
+	    });
+
+	  } else {
+
+	    // plain svg element
+	    gfx.style.markerStart = '';
+	    gfx.style.markerEnd = '';
+	  }
+
+	}
+
+	/**
+	 * Checks if an element is a connection.
+	 */
+	function isConnection(element) {
+	  return element.waypoints;
+	}
+
+
+/***/ },
+/* 526 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51546,18 +52010,18 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 525 */
+/* 527 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var flatten = __webpack_require__(526),
+	var flatten = __webpack_require__(528),
 	    forEach = __webpack_require__(128),
 	    filter = __webpack_require__(475),
 	    find = __webpack_require__(468),
-	    size = __webpack_require__(527),
+	    size = __webpack_require__(529),
 	    groupBy = __webpack_require__(138),
-	    map = __webpack_require__(528);
+	    map = __webpack_require__(530);
 
 	var Elements = __webpack_require__(137);
 
@@ -51569,20 +52033,15 @@ var InfoxBpmnModeler =
 	    MARKER_NEW_PARENT = 'new-parent',
 	    MARKER_ATTACH = 'attach-ok';
 
-
 	/**
-	 * A plugin that makes shapes draggable / droppable.
+	 * Provides previews for moving shapes when moving.
 	 *
 	 * @param {EventBus} eventBus
 	 * @param {ElementRegistry} elementRegistry
 	 * @param {Canvas} canvas
 	 * @param {Styles} styles
 	 */
-	function MoveVisuals(eventBus, elementRegistry, canvas, styles) {
-
-	  function getGfx(e) {
-	    return elementRegistry.getGraphics(e);
-	  }
+	function MovePreview(eventBus, elementRegistry, canvas, styles, previewSupport) {
 
 	  function getVisualDragShapes(shapes) {
 	    var elements = getAllDraggedElements(shapes);
@@ -51602,7 +52061,9 @@ var InfoxBpmnModeler =
 	    return flatten(allShapes.concat(allConnections), true);
 	  }
 
-	  /** set drop marker on an element */
+	  /**
+	   * Sets drop marker on an element.
+	   */
 	  function setMarker(element, marker) {
 
 	    [ MARKER_ATTACH, MARKER_OK, MARKER_NOT_OK, MARKER_NEW_PARENT ].forEach(function(m) {
@@ -51615,43 +52076,9 @@ var InfoxBpmnModeler =
 	    });
 	  }
 
-	  /**
-	   * Add a dragger for the given shape in the specific
-	   * move context.
-	   *
-	   * @param {Object} context
-	   * @param {djs.model.Base} element
-	   */
-	  function addDragger(context, element) {
-
-	    var dragGroup = context.dragGroup;
-
-	    if (!dragGroup) {
-	      dragGroup = context.dragGroup =
-	        canvas.getDefaultLayer()
-	          .group()
-	            .attr(styles.cls('djs-drag-group', [ 'no-events' ]));
-	    }
-
-	    var gfx = getGfx(element),
-	        dragger = gfx.clone(),
-	        bbox = gfx.getBBox();
-
-	    dragger.attr(styles.cls('djs-dragger', [], {
-	      x: bbox.x,
-	      y: bbox.y
-	    }));
-
-	    dragGroup.add(dragger);
-
-	    return dragger;
-	  }
-
-	  this.addDragger = addDragger;
-
 	  function makeDraggable(context, element, addMarker) {
 
-	    addDragger(context, element);
+	    previewSupport.addDragger(element, context.dragGroup);
 
 	    if (addMarker) {
 	      canvas.addMarker(element, MARKER_DRAGGING);
@@ -51668,11 +52095,7 @@ var InfoxBpmnModeler =
 	  // that plug into the drag behavior
 	  this.makeDraggable = makeDraggable;
 
-
-	  // assign a low priority to this handler
-	  // to let others modify the move context before
-	  // we draw things
-	  //
+	  // add previews
 	  eventBus.on('shape.move.start', LOW_PRIORITY, function(event) {
 
 	    var context = event.context,
@@ -51681,8 +52104,14 @@ var InfoxBpmnModeler =
 
 	    var visuallyDraggedShapes = getVisualDragShapes(dragShapes);
 
+	    if (!context.dragGroup) {
+	      context.dragGroup = canvas.getDefaultLayer().group()
+	        .attr(styles.cls('djs-drag-group', [ 'no-events' ]));
+	    }
+
+	    // add previews
 	    visuallyDraggedShapes.forEach(function(shape) {
-	      addDragger(context, shape);
+	      previewSupport.addDragger(shape, context.dragGroup);
 	    });
 
 	    // cache all dragged elements / gfx
@@ -51704,10 +52133,7 @@ var InfoxBpmnModeler =
 	    context.differentParents = haveDifferentParents(dragShapes);
 	  });
 
-	  // assign a low priority to this handler
-	  // to let others modify the move context before
-	  // we draw things
-	  //
+	  // update previews
 	  eventBus.on('shape.move.move', LOW_PRIORITY, function(event) {
 
 	    var context = event.context,
@@ -51738,6 +52164,7 @@ var InfoxBpmnModeler =
 	    }
 	  });
 
+	  // remove previews
 	  eventBus.on('shape.move.cleanup', function(event) {
 
 	    var context = event.context,
@@ -51756,15 +52183,21 @@ var InfoxBpmnModeler =
 	  });
 	}
 
+	MovePreview.$inject = [ 'eventBus', 'elementRegistry', 'canvas', 'styles', 'previewSupport' ];
+
+	module.exports = MovePreview;
+
+	////////// helpers //////////
+
 	// returns elements minus all connections
 	// where source or target is not elements
 	function removeEdges(elements) {
 
 	  var filteredElements = filter(elements, function(element) {
 
-	    if (!element.waypoints) { // shapes
+	    if (!isConnection(element)) {
 	      return true;
-	    } else {                  // connections
+	    } else {
 	      var srcFound = find(elements, element.source);
 	      var targetFound = find(elements, element.target);
 
@@ -51779,13 +52212,16 @@ var InfoxBpmnModeler =
 	  return size(groupBy(elements, function(e) { return e.parent && e.parent.id; })) !== 1;
 	}
 
-	MoveVisuals.$inject = [ 'eventBus', 'elementRegistry', 'canvas', 'styles' ];
-
-	module.exports = MoveVisuals;
+	/**
+	 * Checks if an element is a connection.
+	 */
+	function isConnection(element) {
+	  return element.waypoints;
+	}
 
 
 /***/ },
-/* 526 */
+/* 528 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseFlatten = __webpack_require__(432),
@@ -51823,7 +52259,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 527 */
+/* 529 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var getLength = __webpack_require__(81),
@@ -51859,10 +52295,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 528 */
+/* 530 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayMap = __webpack_require__(529),
+	var arrayMap = __webpack_require__(531),
 	    baseCallback = __webpack_require__(103),
 	    baseMap = __webpack_require__(518),
 	    isArray = __webpack_require__(70);
@@ -51933,7 +52369,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 529 */
+/* 531 */
 /***/ function(module, exports) {
 
 	/**
@@ -51960,23 +52396,24 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 530 */
+/* 532 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
 	    __webpack_require__(508),
-	    __webpack_require__(501)
+	    __webpack_require__(501),
+	    __webpack_require__(524)
 	  ],
-	  __init__: [ 'resize', 'resizeVisuals', 'resizeHandles' ],
-	  resize: [ 'type', __webpack_require__(531) ],
-	  resizeVisuals: [ 'type', __webpack_require__(533) ],
-	  resizeHandles: [ 'type', __webpack_require__(534) ]
+	  __init__: [ 'resize', 'resizePreview', 'resizeHandles' ],
+	  resize: [ 'type', __webpack_require__(533) ],
+	  resizePreview: [ 'type', __webpack_require__(535) ],
+	  resizeHandles: [ 'type', __webpack_require__(536) ]
 	};
 
 
 /***/ },
-/* 531 */
+/* 533 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -51984,7 +52421,7 @@ var InfoxBpmnModeler =
 	var pick = __webpack_require__(431),
 	    assign = __webpack_require__(77);
 
-	var ResizeUtil = __webpack_require__(532);
+	var ResizeUtil = __webpack_require__(534);
 
 	var asTRBL = __webpack_require__(516).asTRBL,
 	    roundBounds = __webpack_require__(516).roundBounds;
@@ -52171,7 +52608,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 532 */
+/* 534 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52439,115 +52876,71 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 533 */
-/***/ function(module, exports, __webpack_require__) {
+/* 535 */
+/***/ function(module, exports) {
 
 	'use strict';
-
-	var Snap = __webpack_require__(66);
 
 	var MARKER_RESIZING = 'djs-resizing',
 	    MARKER_RESIZE_NOT_OK = 'resize-not-ok';
 
 	var LOW_PRIORITY = 500;
 
-
 	/**
-	 * This component is responsible for creating a visual during resize.
+	 * Provides previews for resizing shapes when resizing.
 	 *
 	 * @param {EventBus} eventBus
+	 * @param {ElementRegistry} elementRegistry
 	 * @param {Canvas} canvas
+	 * @param {Styles} styles
 	 */
-	function ResizeVisuals(eventBus, canvas) {
+	function ResizePreview(eventBus, elementRegistry, canvas, styles, previewSupport) {
 
-	  this._canvas = canvas;
-
-	  var self = this;
-
-	  eventBus.on('resize.start', LOW_PRIORITY, function(event) {
-	    var context = event.context,
-	        shape = context.shape;
-
-	    // add resizable indicator
-	    canvas.addMarker(shape, MARKER_RESIZING);
-
-	    self.create(context);
-	  });
-
-
+	  // add and update previews
 	  eventBus.on('resize.move', LOW_PRIORITY, function(event) {
-	    var context = event.context;
+	    var context = event.context,
+	        shape = context.shape,
+	        bounds = context.newBounds,
+	        frame = context.frame;
 
-	    // update resize frame visuals
-	    self.update(context);
+	    if (!frame) {
+	      frame = context.frame = previewSupport.addFrame(shape, canvas.getDefaultLayer());
+
+	      canvas.addMarker(shape, MARKER_RESIZING);
+	    }
+
+	    if (bounds.width > 5) {
+	      frame.attr({ x: bounds.x, width: bounds.width });
+	    }
+
+	    if (bounds.height > 5) {
+	      frame.attr({ y: bounds.y, height: bounds.height });
+	    }
+
+	    frame[context.canExecute ? 'removeClass' : 'addClass'](MARKER_RESIZE_NOT_OK);
 	  });
 
-
+	  // remove previews
 	  eventBus.on('resize.cleanup', function(event) {
 	    var context = event.context,
-	        shape = context.shape;
+	        shape = context.shape,
+	        frame = context.frame;
 
-	    // remove resizable indicator
+	    if (frame) {
+	      context.frame.remove();
+	    }
+
 	    canvas.removeMarker(shape, MARKER_RESIZING);
-
-	    // remove frame + destroy context
-	    self.remove(context);
 	  });
 	}
 
-	/**
-	 * A helper that realizes the resize visuals
-	 */
-	ResizeVisuals.prototype.create = function(context) {
-	  var container = this._canvas.getDefaultLayer(),
-	      shape = context.shape,
-	      frame;
+	ResizePreview.$inject = [ 'eventBus', 'elementRegistry', 'canvas', 'styles', 'previewSupport'];
 
-	  frame = context.frame = Snap.create('rect', {
-	    class: 'djs-resize-overlay',
-	    width:  shape.width + 10,
-	    height: shape.height + 10,
-	    x: shape.x -5,
-	    y: shape.y -5
-	  });
-
-	  frame.appendTo(container);
-	};
-
-	ResizeVisuals.prototype.update = function(context) {
-	  var frame = context.frame,
-	      bounds = context.newBounds;
-
-	  if (bounds.width > 5) {
-	    frame.attr({
-	      x: bounds.x,
-	      width: bounds.width
-	    });
-	  }
-
-	  if (bounds.height > 5) {
-	    frame.attr({
-	      y: bounds.y,
-	      height: bounds.height
-	    });
-	  }
-
-	  frame[context.canExecute ? 'removeClass' : 'addClass'](MARKER_RESIZE_NOT_OK);
-	};
-
-	ResizeVisuals.prototype.remove = function(context) {
-	  if (context.frame) {
-	    context.frame.remove();
-	  }
-	};
-
-	ResizeVisuals.$inject = [ 'eventBus', 'canvas' ];
-
-	module.exports = ResizeVisuals;
+	module.exports = ResizePreview;
 
 
 /***/ },
-/* 534 */
+/* 536 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52576,7 +52969,6 @@ var InfoxBpmnModeler =
 	 * @param {Canvas} canvas
 	 * @param {Selection} selection
 	 * @param {Resize} resize
-	 * @param {ResizeVisuals} resizeVisuals
 	 */
 	function ResizeHandles(eventBus, canvas, selection, resize) {
 
@@ -52707,21 +53099,21 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 535 */
+/* 537 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'bpmnAutoResize', 'bpmnAutoResizeProvider' ],
-	  bpmnAutoResize: [ 'type', __webpack_require__(536) ],
-	  bpmnAutoResizeProvider: [ 'type', __webpack_require__(541) ]
+	  bpmnAutoResize: [ 'type', __webpack_require__(538) ],
+	  bpmnAutoResizeProvider: [ 'type', __webpack_require__(543) ]
 	};
 
 
 /***/ },
-/* 536 */
+/* 538 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var AutoResize = __webpack_require__(537);
+	var AutoResize = __webpack_require__(539);
 
 	var inherits = __webpack_require__(3);
 
@@ -52758,7 +53150,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 537 */
+/* 539 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -52772,11 +53164,11 @@ var InfoxBpmnModeler =
 
 	var assign = __webpack_require__(77),
 	    forEach = __webpack_require__(128),
-	    values = __webpack_require__(538),
-	    flatten = __webpack_require__(526),
+	    values = __webpack_require__(540),
+	    flatten = __webpack_require__(528),
 	    groupBy = __webpack_require__(138);
 
-	var CommandInterceptor = __webpack_require__(540);
+	var CommandInterceptor = __webpack_require__(542);
 
 
 	/**
@@ -52815,7 +53207,12 @@ var InfoxBpmnModeler =
 	  this.postExecuted([ 'elements.move' ], function(event) {
 
 	    var context = event.context,
-	        elements = flatten(values(context.closure.topLevel));
+	        elements = flatten(values(context.closure.topLevel)),
+	        hints = context.hints;
+
+	    if (hints && hints.autoResize === false) {
+	      return;
+	    }
 
 	    var expandings = groupBy(elements, function(element) {
 	      return element.parent.id;
@@ -52947,10 +53344,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 538 */
+/* 540 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseValues = __webpack_require__(539),
+	var baseValues = __webpack_require__(541),
 	    keys = __webpack_require__(79);
 
 	/**
@@ -52986,7 +53383,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 539 */
+/* 541 */
 /***/ function(module, exports) {
 
 	/**
@@ -53014,7 +53411,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 540 */
+/* 542 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -53169,7 +53566,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 541 */
+/* 543 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -53180,7 +53577,7 @@ var InfoxBpmnModeler =
 
 	var forEach = __webpack_require__(415);
 
-	var AutoResizeProvider = __webpack_require__(542);
+	var AutoResizeProvider = __webpack_require__(544);
 
 	/**
 	 * This module is a provider for automatically resizing parent BPMN elements
@@ -53226,10 +53623,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 542 */
+/* 544 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var RuleProvider = __webpack_require__(543);
+	var RuleProvider = __webpack_require__(545);
 
 	var inherits = __webpack_require__(3);
 
@@ -53266,7 +53663,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 543 */
+/* 545 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -53274,7 +53671,7 @@ var InfoxBpmnModeler =
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(540);
+	var CommandInterceptor = __webpack_require__(542);
 
 	/**
 	 * A basic provider that may be extended to implement modeling rules.
@@ -53363,39 +53760,41 @@ var InfoxBpmnModeler =
 	RuleProvider.prototype.init = function() {};
 
 /***/ },
-/* 544 */
+/* 546 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(545),
 	    __webpack_require__(547),
-	    __webpack_require__(557),
-	    __webpack_require__(561),
+	    __webpack_require__(549),
+	    __webpack_require__(559),
 	    __webpack_require__(563),
-	    __webpack_require__(567),
-	    __webpack_require__(575),
+	    __webpack_require__(565),
+	    __webpack_require__(569),
 	    __webpack_require__(577),
-	    __webpack_require__(567),
-	    __webpack_require__(581)
+	    __webpack_require__(579),
+	    __webpack_require__(569),
+	    __webpack_require__(583),
+	    __webpack_require__(592)
 	  ],
-	  editorActions: [ 'type', __webpack_require__(590) ]
+	  editorActions: [ 'type', __webpack_require__(798) ]
 	};
 
+
 /***/ },
-/* 545 */
+/* 547 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
 	  __init__: [ 'alignElements' ],
-	  alignElements: [ 'type', __webpack_require__(546) ]
+	  alignElements: [ 'type', __webpack_require__(548) ]
 	};
 
 
 /***/ },
-/* 546 */
+/* 548 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -53573,46 +53972,46 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 547 */
+/* 549 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
 	    __webpack_require__(452),
-	    __webpack_require__(548),
+	    __webpack_require__(550),
 	    __webpack_require__(486)
 	  ],
 	  __init__: [ 'editorActions' ],
-	  editorActions: [ 'type', __webpack_require__(556) ]
-	};
-
-
-/***/ },
-/* 548 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __depends__: [
-	    __webpack_require__(549),
-	    __webpack_require__(508),
-	    __webpack_require__(504)
-	  ],
-	  __init__: [ 'copyPaste' ],
-	  copyPaste: [ 'type', __webpack_require__(551) ]
-	};
-
-
-/***/ },
-/* 549 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  clipboard: [ 'type', __webpack_require__(550) ]
+	  editorActions: [ 'type', __webpack_require__(558) ]
 	};
 
 
 /***/ },
 /* 550 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __depends__: [
+	    __webpack_require__(551),
+	    __webpack_require__(508),
+	    __webpack_require__(504)
+	  ],
+	  __init__: [ 'copyPaste' ],
+	  copyPaste: [ 'type', __webpack_require__(553) ]
+	};
+
+
+/***/ },
+/* 551 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  clipboard: [ 'type', __webpack_require__(552) ]
+	};
+
+
+/***/ },
+/* 552 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -53646,24 +54045,24 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 551 */
+/* 553 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var isArray = __webpack_require__(70),
 	    forEach = __webpack_require__(128),
-	    map = __webpack_require__(528),
+	    map = __webpack_require__(530),
 	    find = __webpack_require__(468),
-	    findIndex = __webpack_require__(552),
+	    findIndex = __webpack_require__(554),
 	    sortBy = __webpack_require__(517),
 	    reduce = __webpack_require__(94);
 
 	var getBBox = __webpack_require__(137).getBBox;
 
-	var PositionUtil = __webpack_require__(554);
+	var PositionUtil = __webpack_require__(556);
 
-	var CopyPasteUtil = __webpack_require__(555),
+	var CopyPasteUtil = __webpack_require__(557),
 	    ElementsUtil = __webpack_require__(137);
 
 
@@ -54113,10 +54512,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 552 */
+/* 554 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createFindIndex = __webpack_require__(553);
+	var createFindIndex = __webpack_require__(555);
 
 	/**
 	 * This method is like `_.find` except that it returns the index of the first
@@ -54172,7 +54571,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 553 */
+/* 555 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseCallback = __webpack_require__(103),
@@ -54199,7 +54598,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 554 */
+/* 556 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -54225,7 +54624,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 555 */
+/* 557 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -54275,7 +54674,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 556 */
+/* 558 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -54493,20 +54892,20 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 557 */
+/* 559 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
-	  __depends__: [ __webpack_require__(558) ],
+	  __depends__: [ __webpack_require__(560) ],
 	  __init__: [ 'handTool' ],
-	  handTool: [ 'type', __webpack_require__(560) ]
+	  handTool: [ 'type', __webpack_require__(562) ]
 	};
 
 
 /***/ },
-/* 558 */
+/* 560 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -54514,12 +54913,12 @@ var InfoxBpmnModeler =
 	module.exports = {
 	  __depends__: [ __webpack_require__(501) ],
 	  __init__: [ 'toolManager' ],
-	  toolManager: [ 'type', __webpack_require__(559) ]
+	  toolManager: [ 'type', __webpack_require__(561) ]
 	};
 
 
 /***/ },
-/* 559 */
+/* 561 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -54620,7 +55019,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 560 */
+/* 562 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -54746,25 +55145,25 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 561 */
+/* 563 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
-	  __depends__: [ __webpack_require__(558) ],
+	  __depends__: [ __webpack_require__(560) ],
 	  __init__: [ 'lassoTool' ],
-	  lassoTool: [ 'type', __webpack_require__(562) ]
+	  lassoTool: [ 'type', __webpack_require__(564) ]
 	};
 
 
 /***/ },
-/* 562 */
+/* 564 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var values = __webpack_require__(538);
+	var values = __webpack_require__(540);
 
 	var getEnclosedElements = __webpack_require__(137).getEnclosedElements;
 
@@ -55020,30 +55419,31 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 563 */
+/* 565 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
-	  __init__: ['spaceToolVisuals'],
+	  __init__: ['spaceToolPreview'],
 	  __depends__: [
 	    __webpack_require__(501),
 	    __webpack_require__(508),
-	    __webpack_require__(558)
+	    __webpack_require__(560),
+	    __webpack_require__(524)
 	  ],
-	  spaceTool: ['type', __webpack_require__(564)],
-	  spaceToolVisuals: ['type', __webpack_require__(566) ]
+	  spaceTool: ['type', __webpack_require__(566)],
+	  spaceToolPreview: ['type', __webpack_require__(568) ]
 	};
 
 
 /***/ },
-/* 564 */
+/* 566 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var SpaceUtil = __webpack_require__(565);
+	var SpaceUtil = __webpack_require__(567);
 
 	var Cursor = __webpack_require__(493);
 
@@ -55328,7 +55728,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 565 */
+/* 567 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -55422,19 +55822,21 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 566 */
+/* 568 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var forEach = __webpack_require__(128);
 
-	var MARKER_DRAGGING = 'djs-dragging';
+	var MARKER_DRAGGING = 'djs-dragging',
+	    MARKER_RESIZING = 'djs-resizing';
 
 	var LOW_PRIORITY = 250;
 
+
 	/**
-	 * A plugin that makes shapes draggable / droppable.
+	 * Provides previews for selecting/moving/resizing shapes when creating/removing space.
 	 *
 	 * @param {EventBus} eventBus
 	 * @param {ElementRegistry} elementRegistry
@@ -55442,25 +55844,17 @@ var InfoxBpmnModeler =
 	 * @param {Styles} styles
 	 */
 
-	function SpaceToolVisuals(eventBus, elementRegistry, canvas, styles) {
+	function SpaceToolPreview(eventBus, elementRegistry, canvas, styles, previewSupport) {
 
-	  function getGfx(e) {
-	    return elementRegistry.getGraphics(e);
+	  function addPreviewGfx(collection, dragGroup) {
+	    forEach(collection, function(element) {
+	      previewSupport.addDragger(element, dragGroup);
+
+	      canvas.addMarker(element, MARKER_DRAGGING);
+	    });
 	  }
 
-	  function addDragger(shape, dragGroup) {
-	    var gfx = getGfx(shape);
-	    var dragger = gfx.clone();
-	    var bbox = gfx.getBBox();
-
-	    dragger.attr(styles.cls('djs-dragger', [], {
-	      x: bbox.x,
-	      y: bbox.y
-	    }));
-
-	    dragGroup.add(dragger);
-	  }
-
+	  // add crosshair
 	  eventBus.on('spaceTool.selection.start', function(event) {
 	    var space = canvas.getLayer('space'),
 	        context = event.context;
@@ -55478,12 +55872,14 @@ var InfoxBpmnModeler =
 	    context.crosshairGroup = crosshairGroup;
 	  });
 
+	  // update crosshair
 	  eventBus.on('spaceTool.selection.move', function(event) {
 	    var crosshairGroup = event.context.crosshairGroup;
 
 	    crosshairGroup.translate(event.x, event.y);
 	  });
 
+	  // remove crosshair
 	  eventBus.on('spaceTool.selection.cleanup', function(event) {
 	    var context = event.context,
 	        crosshairGroup = context.crosshairGroup;
@@ -55493,19 +55889,14 @@ var InfoxBpmnModeler =
 	    }
 	  });
 
-
-	  // assign a low priority to this handler
-	  // to let others modify the move context before
-	  // we draw things
+	  // add and update move/resize previews
 	  eventBus.on('spaceTool.move', LOW_PRIORITY, function(event) {
-	    /*
-	      TODO (Ricardo): extend connections while adding space
-	    */
 
 	    var context = event.context,
 	        line = context.line,
 	        axis = context.axis,
-	        dragShapes = context.movingShapes;
+	        movingShapes = context.movingShapes,
+	        resizingShapes = context.resizingShapes;
 
 	    if (!context.initialized) {
 	      return;
@@ -55518,13 +55909,80 @@ var InfoxBpmnModeler =
 	      context.line  = line;
 	      var dragGroup = canvas.getDefaultLayer().group().attr(styles.cls('djs-drag-group', [ 'no-events' ]));
 
+	      // shapes
+	      addPreviewGfx(movingShapes, dragGroup);
 
-	      forEach(dragShapes, function(shape) {
-	        addDragger(shape, dragGroup);
-	        canvas.addMarker(shape, MARKER_DRAGGING);
+	      // connections
+	      var movingConnections = context.movingConnections = elementRegistry.filter(function(element, gfx) {
+	        var sourceIsMoving = false;
+
+	        forEach(movingShapes, function(shape) {
+	          forEach(shape.outgoing, function(connection) {
+	            if (element === connection) {
+	              sourceIsMoving = true;
+	            }
+	          });
+	        });
+
+	        var targetIsMoving = false;
+
+	        forEach(movingShapes, function(shape) {
+	          forEach(shape.incoming, function(connection) {
+	            if (element === connection) {
+	              targetIsMoving = true;
+	            }
+	          });
+	        });
+
+	        var sourceIsResizing = false;
+
+	        forEach(resizingShapes, function(shape) {
+	          forEach(shape.outgoing, function(connection) {
+	            if (element === connection) {
+	              sourceIsResizing = true;
+	            }
+	          });
+	        });
+
+	        var targetIsResizing = false;
+
+	        forEach(resizingShapes, function(shape) {
+	          forEach(shape.incoming, function(connection) {
+	            if (element === connection) {
+	              targetIsResizing = true;
+	            }
+	          });
+	        });
+
+	        return isConnection(element)
+	          && (sourceIsMoving || sourceIsResizing)
+	          && (targetIsMoving || targetIsResizing);
 	      });
 
+
+	      addPreviewGfx(movingConnections, dragGroup);
+
 	      context.dragGroup = dragGroup;
+	    }
+
+	    if (!context.frameGroup) {
+	      var frameGroup = canvas.getDefaultLayer().group().attr(styles.cls('djs-frame-group', [ 'no-events' ])),
+	          frames = [];
+
+	      forEach(resizingShapes, function(shape) {
+	        var frame = previewSupport.addFrame(shape, frameGroup);
+
+	        frames.push({
+	          element: frame,
+	          initialWidth: frame.getBBox().width,
+	          initialHeight: frame.getBBox().height
+	        });
+
+	        canvas.addMarker(shape, MARKER_RESIZING);
+	      });
+
+	      context.frameGroup = frameGroup;
+	      context.frames = frames;
 	    }
 
 	    var orientation = {
@@ -55541,59 +55999,70 @@ var InfoxBpmnModeler =
 	    var delta = { x: event.dx, y: event.dy };
 	    delta[ opposite[ context.axis ] ] = 0;
 
+	    // update move previews
 	    context.dragGroup.translate(delta.x, delta.y);
+
+	    // update resize previews
+	    forEach(context.frames, function(frame) {
+	      if (frame.initialWidth + delta.x > 5) {
+	        frame.element.attr({ width: frame.initialWidth + delta.x });
+	      }
+
+	      if (frame.initialHeight + delta.y > 5) {
+	        frame.element.attr({ height: frame.initialHeight + delta.y });
+	      }
+	    });
+
 	  });
 
+	  // remove move/resize previews
 	  eventBus.on('spaceTool.cleanup', function(event) {
 
 	    var context = event.context,
-	        shapes = context.movingShapes,
+	        movingShapes = context.movingShapes,
+	        movingConnections = context.movingConnections,
+	        resizingShapes = context.resizingShapes,
 	        line = context.line,
-	        dragGroup = context.dragGroup;
+	        dragGroup = context.dragGroup,
+	        frameGroup = context.frameGroup;
 
-	    // remove dragging marker
-	    forEach(shapes, function(e) {
-	      canvas.removeMarker(e, MARKER_DRAGGING);
+	    // moving shapes
+	    forEach(movingShapes, function(shape) {
+	      canvas.removeMarker(shape, MARKER_DRAGGING);
+	    });
+
+	    // moving connections
+	    forEach(movingConnections, function(connection) {
+	      canvas.removeMarker(connection, MARKER_DRAGGING);
 	    });
 
 	    if (dragGroup) {
 	      line.remove();
 	      dragGroup.remove();
 	    }
+
+	    forEach(resizingShapes, function(shape) {
+	      canvas.removeMarker(shape, MARKER_RESIZING);
+	    });
+
+	    if (frameGroup) {
+	      frameGroup.remove();
+	    }
 	  });
 	}
 
-	SpaceToolVisuals.$inject = [ 'eventBus', 'elementRegistry', 'canvas', 'styles' ];
+	SpaceToolPreview.$inject = [ 'eventBus', 'elementRegistry', 'canvas', 'styles', 'previewSupport' ];
 
-	module.exports = SpaceToolVisuals;
+	module.exports = SpaceToolPreview;
 
+	////////// helpers //////////
 
-/***/ },
-/* 567 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __depends__: [
-	    __webpack_require__(568)
-	  ],
-	  __init__: [ 'bpmnGlobalConnect' ],
-	  bpmnGlobalConnect: [ 'type', __webpack_require__(572) ]
-	};
-
-
-/***/ },
-/* 568 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __depends__: [
-	    __webpack_require__(569),
-	    __webpack_require__(508),
-	    __webpack_require__(501),
-	    __webpack_require__(558)
-	  ],
-	  globalConnect: [ 'type', __webpack_require__(571) ]
-	};
+	/**
+	 * Checks if an element is a connection.
+	 */
+	function isConnection(element) {
+	  return element.waypoints;
+	}
 
 
 /***/ },
@@ -55602,16 +56071,44 @@ var InfoxBpmnModeler =
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(452),
-	    __webpack_require__(508),
-	    __webpack_require__(501)
+	    __webpack_require__(570)
 	  ],
-	  connect: [ 'type', __webpack_require__(570) ]
+	  __init__: [ 'bpmnGlobalConnect' ],
+	  bpmnGlobalConnect: [ 'type', __webpack_require__(574) ]
 	};
 
 
 /***/ },
 /* 570 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __depends__: [
+	    __webpack_require__(571),
+	    __webpack_require__(508),
+	    __webpack_require__(501),
+	    __webpack_require__(560)
+	  ],
+	  globalConnect: [ 'type', __webpack_require__(573) ]
+	};
+
+
+/***/ },
+/* 571 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __depends__: [
+	    __webpack_require__(452),
+	    __webpack_require__(508),
+	    __webpack_require__(501)
+	  ],
+	  connect: [ 'type', __webpack_require__(572) ]
+	};
+
+
+/***/ },
+/* 572 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -55791,7 +56288,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 571 */
+/* 573 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -55913,12 +56410,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 572 */
+/* 574 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var isAny = __webpack_require__(573).isAny;
+	var isAny = __webpack_require__(575).isAny;
 
 	/**
 	 * Extention of GlobalConnect tool that implements BPMN specific rules about
@@ -55968,12 +56465,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 573 */
+/* 575 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var any = __webpack_require__(574);
+	var any = __webpack_require__(576);
 
 	var is = __webpack_require__(443).is;
 
@@ -56040,27 +56537,27 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 574 */
+/* 576 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __webpack_require__(428);
 
 
 /***/ },
-/* 575 */
+/* 577 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(548)
+	    __webpack_require__(550)
 	  ],
 	  __init__: [ 'bpmnCopyPaste' ],
-	  bpmnCopyPaste: [ 'type', __webpack_require__(576) ]
+	  bpmnCopyPaste: [ 'type', __webpack_require__(578) ]
 	};
 
 
 /***/ },
-/* 576 */
+/* 578 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -56270,32 +56767,32 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 577 */
+/* 579 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(578)
+	    __webpack_require__(580)
 	  ],
 	  __init__: [ 'bpmnDistributeElements' ],
-	  bpmnDistributeElements: [ 'type', __webpack_require__(580) ]
+	  bpmnDistributeElements: [ 'type', __webpack_require__(582) ]
 	};
 
 
 /***/ },
-/* 578 */
+/* 580 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
 	  __init__: [ 'distributeElements' ],
-	  distributeElements: [ 'type', __webpack_require__(579) ]
+	  distributeElements: [ 'type', __webpack_require__(581) ]
 	};
 
 
 /***/ },
-/* 579 */
+/* 581 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -56518,14 +57015,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 580 */
+/* 582 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var filter = __webpack_require__(383);
 
-	var isAny = __webpack_require__(573).isAny;
+	var isAny = __webpack_require__(575).isAny;
 
 	/**
 	 * Registers element exclude filters for elements that currently do 
@@ -56536,14 +57033,15 @@ var InfoxBpmnModeler =
 	  distributeElements.registerFilter(function(elements) {
 	    return filter(elements, function(element) {
 	      var cannotDistribute = isAny(element, [
-	        'bpmn:SequenceFlow',
-	        'bpmn:MessageFlow',
+	        'bpmn:Association',
+	        'bpmn:BoundaryEvent',
 	        'bpmn:DataInputAssociation',
 	        'bpmn:DataOutputAssociation',
-	        'bpmn:Association',
-	        'bpmn:TextAnnotation',
+	        'bpmn:Lane',
+	        'bpmn:MessageFlow',
 	        'bpmn:Participant',
-	        'bpmn:Lane'
+	        'bpmn:SequenceFlow',
+	        'bpmn:TextAnnotation'
 	      ]);
 
 	      return !(element.labelTarget || cannotDistribute);
@@ -56557,20 +57055,20 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 581 */
+/* 583 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(582)
+	    __webpack_require__(584)
 	  ],
 	  __init__: [ 'bpmnSearch'],
-	  bpmnSearch: [ 'type', __webpack_require__(584) ]
+	  bpmnSearch: [ 'type', __webpack_require__(586) ]
 	};
 
 
 /***/ },
-/* 582 */
+/* 584 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
@@ -56578,12 +57076,12 @@ var InfoxBpmnModeler =
 	    __webpack_require__(472),
 	    __webpack_require__(452)
 	  ],
-	  searchPad: [ 'type', __webpack_require__(583) ]
+	  searchPad: [ 'type', __webpack_require__(585) ]
 	};
 
 
 /***/ },
-/* 583 */
+/* 585 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57137,16 +57635,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 584 */
+/* 586 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var map = __webpack_require__(449),
 	    filter = __webpack_require__(383),
-	    sortBy = __webpack_require__(585);
+	    sortBy = __webpack_require__(587);
 
-	var labelUtil = __webpack_require__(589);
+	var labelUtil = __webpack_require__(591);
 
 
 	/**
@@ -57271,13 +57769,13 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 585 */
+/* 587 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseCallback = __webpack_require__(385),
 	    baseMap = __webpack_require__(450),
-	    baseSortBy = __webpack_require__(586),
-	    compareAscending = __webpack_require__(587),
+	    baseSortBy = __webpack_require__(588),
+	    compareAscending = __webpack_require__(589),
 	    isIterateeCall = __webpack_require__(29);
 
 	/**
@@ -57348,7 +57846,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 586 */
+/* 588 */
 /***/ function(module, exports) {
 
 	/**
@@ -57375,10 +57873,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 587 */
+/* 589 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseCompareAscending = __webpack_require__(588);
+	var baseCompareAscending = __webpack_require__(590);
 
 	/**
 	 * Used by `_.sortBy` to compare transformed elements of a collection and stable
@@ -57397,7 +57895,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 588 */
+/* 590 */
 /***/ function(module, exports) {
 
 	/**
@@ -57437,7 +57935,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 589 */
+/* 591 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57486,144 +57984,83 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 590 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var inherits = __webpack_require__(3);
-
-	var EditorActions = __webpack_require__(556);
-
-	var filter = __webpack_require__(383);
-
-	var is = __webpack_require__(443).is;
-
-
-	function BpmnEditorActions(
-	    injector,
-	    canvas, elementRegistry, selection,
-	    spaceTool,
-	    lassoTool,
-	    handTool,
-	    globalConnect,
-	    distributeElements,
-	    alignElements,
-	    directEditing,
-	    searchPad) {
-
-	  injector.invoke(EditorActions, this);
-
-	  this.register({
-	    selectElements: function() {
-	      // select all elements except for the invisible
-	      // root element
-	      var rootElement = canvas.getRootElement();
-
-	      var elements = elementRegistry.filter(function(element) {
-	        return element != rootElement;
-	      });
-
-	      selection.select(elements);
-	    },
-	    spaceTool: function() {
-	      spaceTool.toggle();
-	    },
-	    lassoTool: function() {
-	      lassoTool.toggle();
-	    },
-	    handTool: function() {
-	      handTool.toggle();
-	    },
-	    globalConnectTool: function() {
-	      globalConnect.toggle();
-	    },
-	    distributeElements: function(opts) {
-	      var currentSelection = selection.get(),
-	          type = opts.type;
-
-	      if (currentSelection.length) {
-	        distributeElements.trigger(currentSelection, type);
-	      }
-	    },
-	    alignElements: function(opts) {
-	      var currentSelection = selection.get(),
-	          aligneableElements = [],
-	          type = opts.type;
-
-	      if (currentSelection.length) {
-	        aligneableElements = filter(currentSelection, function(element) {
-	          return !is(element, 'bpmn:Lane');
-	        });
-
-	        alignElements.trigger(aligneableElements, type);
-	      }
-	    },
-	    directEditing: function() {
-	      var currentSelection = selection.get();
-
-	      if (currentSelection.length) {
-	        directEditing.activate(currentSelection[0]);
-	      }
-	    },
-	    find: function() {
-	      searchPad.toggle();
-	    }
-	  });
-	}
-
-	inherits(BpmnEditorActions, EditorActions);
-
-	BpmnEditorActions.$inject = [
-	  'injector',
-	  'canvas', 'elementRegistry', 'selection',
-	  'spaceTool',
-	  'lassoTool',
-	  'handTool',
-	  'globalConnect',
-	  'distributeElements',
-	  'alignElements',
-	  'directEditing',
-	  'searchPad'
-	];
-
-	module.exports = BpmnEditorActions;
-
-/***/ },
-/* 591 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __depends__: [
-	    __webpack_require__(592),
-	    __webpack_require__(688),
-	    __webpack_require__(452),
-	    __webpack_require__(569),
-	    __webpack_require__(690),
-	    __webpack_require__(692)
-	  ],
-	  __init__: [ 'contextPadProvider' ],
-	  contextPadProvider: [ 'type', __webpack_require__(703) ]
-	};
-
-/***/ },
 /* 592 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  __depends__: [ __webpack_require__(593) ],
-	  __init__: [ 'directEditing' ],
-	  directEditing: [ 'type', __webpack_require__(626) ]
+	  __init__: [ 'modeling', 'bpmnUpdater' ],
+	  __depends__: [
+	    __webpack_require__(593),
+	    __webpack_require__(619),
+	    __webpack_require__(722),
+	    __webpack_require__(725),
+	    __webpack_require__(730),
+	    __webpack_require__(620),
+	    __webpack_require__(736),
+	    __webpack_require__(738),
+	    __webpack_require__(740),
+	    __webpack_require__(452),
+	    __webpack_require__(632),
+	    __webpack_require__(565)
+	  ],
+	  bpmnFactory: [ 'type', __webpack_require__(745) ],
+	  bpmnUpdater: [ 'type', __webpack_require__(746) ],
+	  elementFactory: [ 'type', __webpack_require__(747) ],
+	  modeling: [ 'type', __webpack_require__(748) ],
+	  layouter: [ 'type', __webpack_require__(792) ],
+	  connectionDocking: [ 'type', __webpack_require__(797) ]
 	};
+
 
 /***/ },
 /* 593 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  __init__: [ 'interactionEvents' ],
-	  interactionEvents: [ 'type', __webpack_require__(594) ]
+	  __init__: [
+	    'appendBehavior',
+	    'copyPasteBehavior',
+	    'createBoundaryEventBehavior',
+	    'createDataObjectBehavior',
+	    'createOnFlowBehavior',
+	    'createParticipantBehavior',
+	    'dataInputAssociationBehavior',
+	    'deleteLaneBehavior',
+	    'importDockingFix',
+	    'labelBehavior',
+	    'modelingFeedback',
+	    'removeParticipantBehavior',
+	    'replaceConnectionBehavior',
+	    'replaceElementBehaviour',
+	    'resizeLaneBehavior',
+	    'unsetDefaultFlowBehavior',
+	    'updateFlowNodeRefsBehavior',
+	    'removeElementBehavior',
+	    'unclaimIdBehavior',
+	    'toggleElementCollapseBehaviour'
+	  ],
+	  appendBehavior: [ 'type', __webpack_require__(594) ],
+	  copyPasteBehavior: [ 'type', __webpack_require__(595) ],
+	  createBoundaryEventBehavior: [ 'type', __webpack_require__(596) ],
+	  createDataObjectBehavior: [ 'type', __webpack_require__(597) ],
+	  createOnFlowBehavior: [ 'type', __webpack_require__(598) ],
+	  createParticipantBehavior: [ 'type', __webpack_require__(599) ],
+	  dataInputAssociationBehavior: [ 'type', __webpack_require__(600) ],
+	  deleteLaneBehavior: [ 'type', __webpack_require__(601) ],
+	  importDockingFix: [ 'type', __webpack_require__(603) ],
+	  labelBehavior: [ 'type', __webpack_require__(605) ],
+	  modelingFeedback: [ 'type', __webpack_require__(609) ],
+	  removeParticipantBehavior: [ 'type', __webpack_require__(610) ],
+	  replaceConnectionBehavior: [ 'type', __webpack_require__(611) ],
+	  replaceElementBehaviour: [ 'type', __webpack_require__(612) ],
+	  resizeLaneBehavior: [ 'type', __webpack_require__(613) ],
+	  unsetDefaultFlowBehavior: [ 'type', __webpack_require__(614) ],
+	  updateFlowNodeRefsBehavior: [ 'type', __webpack_require__(615) ],
+	  removeElementBehavior: [ 'type', __webpack_require__(616) ],
+	  unclaimIdBehavior: [ 'type', __webpack_require__(617) ],
+	  toggleElementCollapseBehaviour : [ 'type', __webpack_require__(618) ]
 	};
+
 
 /***/ },
 /* 594 */
@@ -57631,7250 +58068,704 @@ var InfoxBpmnModeler =
 
 	'use strict';
 
-	var forEach = __webpack_require__(595),
-	    domDelegate = __webpack_require__(455);
+	var inherits = __webpack_require__(3);
+
+	var is = __webpack_require__(443).is;
+
+	var CommandInterceptor = __webpack_require__(542);
 
 
-	var isPrimaryButton = __webpack_require__(621).isPrimaryButton;
+	function AppendBehavior(eventBus, elementFactory, bpmnRules) {
 
-	var Snap = __webpack_require__(624);
+	  CommandInterceptor.call(this, eventBus);
 
-	var renderUtil = __webpack_require__(625);
+	  // assign correct shape position unless already set
 
-	var createLine = renderUtil.createLine,
-	    updateLine = renderUtil.updateLine;
+	  this.preExecute('shape.append', function(context) {
 
-	/**
-	 * A plugin that provides interaction events for diagram elements.
-	 *
-	 * It emits the following events:
-	 *
-	 *   * element.hover
-	 *   * element.out
-	 *   * element.click
-	 *   * element.dblclick
-	 *   * element.mousedown
-	 *
-	 * Each event is a tuple { element, gfx, originalEvent }.
-	 *
-	 * Canceling the event via Event#preventDefault() prevents the original DOM operation.
-	 *
-	 * @param {EventBus} eventBus
-	 */
-	function InteractionEvents(eventBus, elementRegistry, styles) {
+	    var source = context.source,
+	        shape = context.shape;
 
-	  var HIT_STYLE = styles.cls('djs-hit', [ 'no-fill', 'no-border' ], {
-	    stroke: 'white',
-	    strokeWidth: 15
-	  });
+	    if (!context.position) {
 
-	  /**
-	   * Fire an interaction event.
-	   *
-	   * @param {String} type local event name, e.g. element.click.
-	   * @param {DOMEvent} event native event
-	   * @param {djs.model.Base} [element] the diagram element to emit the event on;
-	   *                                   defaults to the event target
-	   */
-	  function fire(type, event, element) {
-
-	    // only react on left mouse button interactions
-	    // for interaction events
-	    if (!isPrimaryButton(event)) {
-	      return;
-	    }
-
-	    var target, gfx, returnValue;
-
-	    if (!element) {
-	      target = event.delegateTarget || event.target;
-
-	      if (target) {
-	        gfx = new Snap(target);
-	        element = elementRegistry.get(gfx);
+	      if (is(shape, 'bpmn:TextAnnotation')) {
+	        context.position = {
+	          x: source.x + source.width / 2 + 75,
+	          y: source.y - (50) - shape.height / 2
+	        };
+	      } else {
+	        context.position = {
+	          x: source.x + source.width + 80 + shape.width / 2,
+	          y: source.y + source.height / 2
+	        };
 	      }
-	    } else {
-	      gfx = elementRegistry.getGraphics(element);
 	    }
-
-	    if (!gfx || !element) {
-	      return;
-	    }
-
-	    returnValue = eventBus.fire(type, { element: element, gfx: gfx, originalEvent: event });
-
-	    if (returnValue === false) {
-	      event.stopPropagation();
-	      event.preventDefault();
-	    }
-	  }
-
-	  // TODO(nikku): document this
-	  var handlers = {};
-
-	  function mouseHandler(type) {
-
-	    var fn = handlers[type];
-
-	    if (!fn) {
-	      fn = handlers[type] = function(event) {
-	        fire(type, event);
-	      };
-	    }
-
-	    return fn;
-	  }
-
-	  var bindings = {
-	    mouseover: 'element.hover',
-	    mouseout: 'element.out',
-	    click: 'element.click',
-	    dblclick: 'element.dblclick',
-	    mousedown: 'element.mousedown',
-	    mouseup: 'element.mouseup'
-	  };
-
-
-	  ///// manual event trigger
-
-	  /**
-	   * Trigger an interaction event (based on a native dom event)
-	   * on the target shape or connection.
-	   *
-	   * @param {String} eventName the name of the triggered DOM event
-	   * @param {MouseEvent} event
-	   * @param {djs.model.Base} targetElement
-	   */
-	  function triggerMouseEvent(eventName, event, targetElement) {
-
-	    // i.e. element.mousedown...
-	    var localEventName = bindings[eventName];
-
-	    if (!localEventName) {
-	      throw new Error('unmapped DOM event name <' + eventName + '>');
-	    }
-
-	    return fire(localEventName, event, targetElement);
-	  }
-
-
-	  var elementSelector = 'svg, .djs-element';
-
-	  ///// event registration
-
-	  function registerEvent(node, event, localEvent) {
-	    var handler = mouseHandler(localEvent);
-	    handler.$delegate = domDelegate.bind(node, elementSelector, event, handler);
-	  }
-
-	  function unregisterEvent(node, event, localEvent) {
-	    domDelegate.unbind(node, event, mouseHandler(localEvent).$delegate);
-	  }
-
-	  function registerEvents(svg) {
-	    forEach(bindings, function(val, key) {
-	      registerEvent(svg.node, key, val);
-	    });
-	  }
-
-	  function unregisterEvents(svg) {
-	    forEach(bindings, function(val, key) {
-	      unregisterEvent(svg.node, key, val);
-	    });
-	  }
-
-	  eventBus.on('canvas.destroy', function(event) {
-	    unregisterEvents(event.svg);
-	  });
-
-	  eventBus.on('canvas.init', function(event) {
-	    registerEvents(event.svg);
-	  });
-
-
-	  eventBus.on([ 'shape.added', 'connection.added' ], function(event) {
-	    var element = event.element,
-	        gfx = event.gfx,
-	        hit;
-
-	    if (element.waypoints) {
-	      hit = createLine(element.waypoints);
-	    } else {
-	      hit = Snap.create('rect', { x: 0, y: 0, width: element.width, height: element.height });
-	    }
-
-	    hit.attr(HIT_STYLE).appendTo(gfx.node);
-	  });
-
-	  // update djs-hit on change
-
-	  eventBus.on('shape.changed', function(event) {
-
-	    var element = event.element,
-	        gfx = event.gfx,
-	        hit = gfx.select('.djs-hit');
-
-	    hit.attr({
-	      width: element.width,
-	      height: element.height
-	    });
-	  });
-
-	  eventBus.on('connection.changed', function(event) {
-
-	    var element = event.element,
-	        gfx = event.gfx,
-	        hit = gfx.select('.djs-hit');
-
-	    updateLine(hit, element.waypoints);
-	  });
-
-
-	  // API
-
-	  this.fire = fire;
-
-	  this.triggerMouseEvent = triggerMouseEvent;
-
-	  this.mouseHandler = mouseHandler;
-
-	  this.registerEvent = registerEvent;
-	  this.unregisterEvent = unregisterEvent;
+	  }, true);
 	}
 
 
-	InteractionEvents.$inject = [ 'eventBus', 'elementRegistry', 'styles' ];
+	AppendBehavior.$inject = [ 'eventBus', 'elementFactory', 'bpmnRules' ];
 
-	module.exports = InteractionEvents;
+	inherits(AppendBehavior, CommandInterceptor);
 
-
-	/**
-	 * An event indicating that the mouse hovered over an element
-	 *
-	 * @event element.hover
-	 *
-	 * @type {Object}
-	 * @property {djs.model.Base} element
-	 * @property {Snap<Element>} gfx
-	 * @property {Event} originalEvent
-	 */
-
-	/**
-	 * An event indicating that the mouse has left an element
-	 *
-	 * @event element.out
-	 *
-	 * @type {Object}
-	 * @property {djs.model.Base} element
-	 * @property {Snap<Element>} gfx
-	 * @property {Event} originalEvent
-	 */
-
-	/**
-	 * An event indicating that the mouse has clicked an element
-	 *
-	 * @event element.click
-	 *
-	 * @type {Object}
-	 * @property {djs.model.Base} element
-	 * @property {Snap<Element>} gfx
-	 * @property {Event} originalEvent
-	 */
-
-	/**
-	 * An event indicating that the mouse has double clicked an element
-	 *
-	 * @event element.dblclick
-	 *
-	 * @type {Object}
-	 * @property {djs.model.Base} element
-	 * @property {Snap<Element>} gfx
-	 * @property {Event} originalEvent
-	 */
-
-	/**
-	 * An event indicating that the mouse has gone down on an element.
-	 *
-	 * @event element.mousedown
-	 *
-	 * @type {Object}
-	 * @property {djs.model.Base} element
-	 * @property {Snap<Element>} gfx
-	 * @property {Event} originalEvent
-	 */
-
-	/**
-	 * An event indicating that the mouse has gone up on an element.
-	 *
-	 * @event element.mouseup
-	 *
-	 * @type {Object}
-	 * @property {djs.model.Base} element
-	 * @property {Snap<Element>} gfx
-	 * @property {Event} originalEvent
-	 */
-
+	module.exports = AppendBehavior;
 
 /***/ },
 /* 595 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var arrayEach = __webpack_require__(596),
-	    baseEach = __webpack_require__(597),
-	    createForEach = __webpack_require__(618);
+	'use strict';
 
-	/**
-	 * Iterates over elements of `collection` invoking `iteratee` for each element.
-	 * The `iteratee` is bound to `thisArg` and invoked with three arguments:
-	 * (value, index|key, collection). Iteratee functions may exit iteration early
-	 * by explicitly returning `false`.
-	 *
-	 * **Note:** As with other "Collections" methods, objects with a "length" property
-	 * are iterated like arrays. To avoid this behavior `_.forIn` or `_.forOwn`
-	 * may be used for object iteration.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @alias each
-	 * @category Collection
-	 * @param {Array|Object|string} collection The collection to iterate over.
-	 * @param {Function} [iteratee=_.identity] The function invoked per iteration.
-	 * @param {*} [thisArg] The `this` binding of `iteratee`.
-	 * @returns {Array|Object|string} Returns `collection`.
-	 * @example
-	 *
-	 * _([1, 2]).forEach(function(n) {
-	 *   console.log(n);
-	 * }).value();
-	 * // => logs each value from left to right and returns the array
-	 *
-	 * _.forEach({ 'a': 1, 'b': 2 }, function(n, key) {
-	 *   console.log(n, key);
-	 * });
-	 * // => logs each value-key pair and returns the object (iteration order is not guaranteed)
-	 */
-	var forEach = createForEach(arrayEach, baseEach);
+	var inherits = __webpack_require__(3);
 
-	module.exports = forEach;
+	var forEach = __webpack_require__(415);
+
+	var is = __webpack_require__(443).is;
+
+	var CommandInterceptor = __webpack_require__(542);
+
+
+	function CopyPasteBehavior(eventBus, modeling, canvas) {
+
+	  CommandInterceptor.call(this, eventBus);
+
+	  this.preExecute('elements.paste', 1500, function(context) {
+	    var topParent = context.topParent;
+
+	    // always grab the latest root
+	    if (!topParent.parent) {
+	      context.topParent = canvas.getRootElement();
+	    }
+
+	    if (is(topParent, 'bpmn:Lane')) {
+	      do {
+	        // unwrap Lane -> LaneSet -> (Lane | FlowElementsContainer)
+	        topParent = context.topParent = topParent.parent;
+
+	      } while (is(topParent, 'bpmn:Lane') || !is(topParent, 'bpmn:Participant'));
+	    }
+	  }, true);
+
+	  this.postExecute('elements.paste', function(context) {
+
+	    var tree = context.tree,
+	        createdElements = tree.createdElements;
+
+	    forEach(createdElements, function(data) {
+	      var element = data.element,
+	          businessObject = element.businessObject,
+	          descriptor = data.descriptor,
+	          defaultFlow;
+
+	      if ((is(businessObject, 'bpmn:ExclusiveGateway') || is(businessObject, 'bpmn:InclusiveGateway') ||
+	           is(businessObject, 'bpmn:Activity')) && descriptor.default) {
+
+	        defaultFlow = createdElements[descriptor.default];
+
+	        // if the default flow wasn't created, means that it wasn't copied
+	        if (defaultFlow) {
+	          defaultFlow = defaultFlow.element;
+	        } else {
+	          defaultFlow = undefined;
+	        }
+
+	        delete element.default;
+
+	        modeling.updateProperties(element, { default: defaultFlow });
+	      }
+	    });
+	  }, true);
+	}
+
+
+	CopyPasteBehavior.$inject = [ 'eventBus', 'modeling', 'canvas' ];
+
+	inherits(CopyPasteBehavior, CommandInterceptor);
+
+	module.exports = CopyPasteBehavior;
 
 
 /***/ },
 /* 596 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var inherits = __webpack_require__(3);
+
+	var CommandInterceptor = __webpack_require__(542);
+
+	var is = __webpack_require__(443).is;
+
 
 	/**
-	 * A specialized version of `_.forEach` for arrays without support for callback
-	 * shorthands and `this` binding.
-	 *
-	 * @private
-	 * @param {Array} array The array to iterate over.
-	 * @param {Function} iteratee The function invoked per iteration.
-	 * @returns {Array} Returns `array`.
+	 * BPMN specific create boundary event behavior
 	 */
-	function arrayEach(array, iteratee) {
-	  var index = -1,
-	      length = array.length;
+	function CreateBoundaryEventBehavior(eventBus, modeling, elementFactory, bpmnFactory) {
 
-	  while (++index < length) {
-	    if (iteratee(array[index], index, array) === false) {
-	      break;
+	  CommandInterceptor.call(this, eventBus);
+
+	  /**
+	   * replace intermediate event with boundary event when
+	   * attaching it to a shape
+	   */
+
+	  this.preExecute('shape.create', function(context) {
+	    var shape = context.shape,
+	        host = context.host,
+	        businessObject,
+	        boundaryEvent;
+
+	    var attrs = {
+	      cancelActivity: true
+	    };
+
+	    if (host && is(shape, 'bpmn:IntermediateThrowEvent')) {
+	      attrs.attachedToRef = host.businessObject;
+
+	      businessObject = bpmnFactory.create('bpmn:BoundaryEvent', attrs);
+
+	      boundaryEvent = {
+	        type: 'bpmn:BoundaryEvent',
+	        businessObject: businessObject
+	      };
+
+	      context.shape = elementFactory.createShape(boundaryEvent);
 	    }
-	  }
-	  return array;
+	  }, true);
 	}
 
-	module.exports = arrayEach;
+	CreateBoundaryEventBehavior.$inject = [ 'eventBus', 'modeling', 'elementFactory', 'bpmnFactory' ];
+
+	inherits(CreateBoundaryEventBehavior, CommandInterceptor);
+
+	module.exports = CreateBoundaryEventBehavior;
 
 
 /***/ },
 /* 597 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseForOwn = __webpack_require__(598),
-	    createBaseEach = __webpack_require__(617);
+	'use strict';
+
+	var inherits = __webpack_require__(3);
+
+	var CommandInterceptor = __webpack_require__(542);
+
+	var is = __webpack_require__(443).is;
 
 	/**
-	 * The base implementation of `_.forEach` without support for callback
-	 * shorthands and `this` binding.
-	 *
-	 * @private
-	 * @param {Array|Object|string} collection The collection to iterate over.
-	 * @param {Function} iteratee The function invoked per iteration.
-	 * @returns {Array|Object|string} Returns `collection`.
+	 * BPMN specific create data object behavior
 	 */
-	var baseEach = createBaseEach(baseForOwn);
+	function CreateDataObjectBehavior(eventBus, bpmnFactory, moddle) {
 
-	module.exports = baseEach;
+	  CommandInterceptor.call(this, eventBus);
+
+	  this.preExecute('shape.create', function(event) {
+
+	    var context = event.context,
+	        shape = context.shape;
+
+	    if (is(shape, 'bpmn:DataObjectReference') && shape.type !== 'label') {
+
+	      // create a DataObject every time a DataObjectReference is created
+	      var dataObject = bpmnFactory.create('bpmn:DataObject');
+
+	      // set the reference to the DataObject
+	      shape.businessObject.dataObjectRef = dataObject;
+	    }
+	  });
+
+	}
+
+	CreateDataObjectBehavior.$inject = [ 'eventBus', 'bpmnFactory', 'moddle' ];
+
+	inherits(CreateDataObjectBehavior, CommandInterceptor);
+
+	module.exports = CreateDataObjectBehavior;
 
 
 /***/ },
 /* 598 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseFor = __webpack_require__(599),
-	    keys = __webpack_require__(603);
+	'use strict';
 
-	/**
-	 * The base implementation of `_.forOwn` without support for callback
-	 * shorthands and `this` binding.
-	 *
-	 * @private
-	 * @param {Object} object The object to iterate over.
-	 * @param {Function} iteratee The function invoked per iteration.
-	 * @returns {Object} Returns `object`.
-	 */
-	function baseForOwn(object, iteratee) {
-	  return baseFor(object, iteratee, keys);
+	var inherits = __webpack_require__(3);
+
+	var assign = __webpack_require__(7);
+
+	var CommandInterceptor = __webpack_require__(542);
+
+	var getApproxIntersection = __webpack_require__(513).getApproxIntersection;
+
+
+	function copy(obj) {
+	  return assign({}, obj);
 	}
 
-	module.exports = baseForOwn;
+	function CreateOnFlowBehavior(eventBus, bpmnRules, modeling) {
+
+	  CommandInterceptor.call(this, eventBus);
+
+	  /**
+	   * Reconnect start / end of a connection after
+	   * dropping an element on a flow.
+	   */
+
+	  this.preExecute('shape.create', function(context) {
+
+	    var parent = context.parent,
+	        shape = context.shape;
+
+	    if (bpmnRules.canInsert(shape, parent)) {
+	      context.targetFlow = parent;
+	      context.parent = parent.parent;
+	    }
+	  }, true);
+
+
+	  this.postExecute('shape.create', function(context) {
+
+	    var shape = context.shape,
+	        targetFlow = context.targetFlow,
+	        position = context.position,
+	        source,
+	        target,
+	        reconnected,
+	        intersection,
+	        waypoints,
+	        waypointsBefore,
+	        waypointsAfter,
+	        dockingPoint;
+
+	    if (targetFlow) {
+
+	      waypoints = targetFlow.waypoints;
+
+
+	      intersection = getApproxIntersection(waypoints, position);
+
+	      if (intersection) {
+	        waypointsBefore = waypoints.slice(0, intersection.index);
+	        waypointsAfter = waypoints.slice(intersection.index + (intersection.bendpoint ? 1 : 0));
+
+	        dockingPoint = intersection.bendpoint ? waypoints[intersection.index] : position;
+
+	        waypointsBefore.push(copy(dockingPoint));
+	        waypointsAfter.unshift(copy(dockingPoint));
+	      }
+
+	      source = targetFlow.source;
+	      target = targetFlow.target;
+
+	      if (bpmnRules.canConnect(source, shape, targetFlow)) {
+	        // reconnect source -> inserted shape
+	        modeling.reconnectEnd(targetFlow, shape, waypointsBefore || copy(position));
+
+	        reconnected = true;
+	      }
+
+	      if (bpmnRules.canConnect(shape, target, targetFlow)) {
+
+	        if (!reconnected) {
+	          // reconnect inserted shape -> end
+	          modeling.reconnectStart(targetFlow, shape, waypointsAfter || copy(position));
+	        } else {
+	          modeling.connect(shape, target, { type: targetFlow.type, waypoints: waypointsAfter });
+	        }
+	      }
+	    }
+	  }, true);
+	}
+
+	inherits(CreateOnFlowBehavior, CommandInterceptor);
+
+	CreateOnFlowBehavior.$inject = [ 'eventBus', 'bpmnRules', 'modeling' ];
+
+	module.exports = CreateOnFlowBehavior;
 
 
 /***/ },
 /* 599 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createBaseFor = __webpack_require__(600);
+	'use strict';
+
+	var inherits = __webpack_require__(3);
+
+	var CommandInterceptor = __webpack_require__(542);
+
+	var is = __webpack_require__(443).is;
 
 	/**
-	 * The base implementation of `baseForIn` and `baseForOwn` which iterates
-	 * over `object` properties returned by `keysFunc` invoking `iteratee` for
-	 * each property. Iteratee functions may exit iteration early by explicitly
-	 * returning `false`.
-	 *
-	 * @private
-	 * @param {Object} object The object to iterate over.
-	 * @param {Function} iteratee The function invoked per iteration.
-	 * @param {Function} keysFunc The function to get the keys of `object`.
-	 * @returns {Object} Returns `object`.
+	 * BPMN specific create participant behavior
 	 */
-	var baseFor = createBaseFor();
+	function CreateParticipantBehavior(eventBus, modeling, elementFactory, bpmnFactory, canvas) {
 
-	module.exports = baseFor;
+	  CommandInterceptor.call(this, eventBus);
+
+	  /**
+	   * morph process into collaboration before adding
+	   * participant onto collaboration
+	   */
+
+	  this.preExecute('shape.create', function(context) {
+
+	    var parent = context.parent,
+	        shape = context.shape,
+	        position = context.position;
+
+	    var rootElement = canvas.getRootElement();
+
+	    if (is(parent, 'bpmn:Process') && is(shape, 'bpmn:Participant') && !is(rootElement, 'bpmn:Collaboration')) {
+
+	      // this is going to detach the process root
+	      // and set the returned collaboration element
+	      // as the new root element
+	      var collaborationElement = modeling.makeCollaboration();
+
+	      // monkey patch the create context
+	      // so that the participant is being dropped
+	      // onto the new collaboration root instead
+	      context.position = position;
+	      context.parent = collaborationElement;
+
+	      context.processRoot = parent;
+	    }
+	  }, true);
+
+
+	  this.execute('shape.create', function(context) {
+
+	    var processRoot = context.processRoot,
+	        shape = context.shape;
+
+	    if (processRoot) {
+	      context.oldProcessRef = shape.businessObject.processRef;
+
+	      // assign the participant processRef
+	      shape.businessObject.processRef = processRoot.businessObject;
+	    }
+	  }, true);
+
+
+	  this.revert('shape.create', function(context) {
+	    var processRoot = context.processRoot,
+	        shape = context.shape;
+
+	    if (processRoot) {
+	      // assign the participant processRef
+	      shape.businessObject.processRef = context.oldProcessRef;
+	    }
+	  }, true);
+
+
+	  this.postExecute('shape.create', function(context) {
+
+	    var processRoot = context.processRoot,
+	        shape = context.shape;
+
+	    if (processRoot) {
+	      // process root is already detached at this point
+	      var processChildren = processRoot.children.slice();
+	      modeling.moveElements(processChildren, { x: 0, y: 0 }, shape);
+	    }
+
+	  }, true);
+
+	}
+
+	CreateParticipantBehavior.$inject = [ 'eventBus', 'modeling', 'elementFactory', 'bpmnFactory', 'canvas' ];
+
+	inherits(CreateParticipantBehavior, CommandInterceptor);
+
+	module.exports = CreateParticipantBehavior;
 
 
 /***/ },
 /* 600 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var toObject = __webpack_require__(601);
+	'use strict';
+
+	var inherits = __webpack_require__(3);
+
+	var CommandInterceptor = __webpack_require__(542);
+
+	var Collections = __webpack_require__(136);
+
+	var find = __webpack_require__(411);
+
+	var is = __webpack_require__(443).is;
+
+	var TARGET_REF_PLACEHOLDER_NAME = '__targetRef_placeholder';
+
 
 	/**
-	 * Creates a base function for `_.forIn` or `_.forInRight`.
+	 * This behavior makes sure we always set a fake
+	 * DataInputAssociation#targetRef as demanded by the BPMN 2.0
+	 * XSD schema.
 	 *
-	 * @private
-	 * @param {boolean} [fromRight] Specify iterating from right to left.
-	 * @returns {Function} Returns the new base function.
+	 * The reference is set to a bpmn:Property{ name: '__targetRef_placeholder' }
+	 * which is created on the fly and cleaned up afterwards if not needed
+	 * anymore.
+	 *
+	 * @param {EventBus} eventBus
+	 * @param {BpmnFactory} bpmnFactory
 	 */
-	function createBaseFor(fromRight) {
-	  return function(object, iteratee, keysFunc) {
-	    var iterable = toObject(object),
-	        props = keysFunc(object),
-	        length = props.length,
-	        index = fromRight ? length : -1;
+	function DataInputAssociationBehavior(eventBus, bpmnFactory) {
 
-	    while ((fromRight ? index-- : ++index < length)) {
-	      var key = props[index];
-	      if (iteratee(iterable[key], key, iterable) === false) {
-	        break;
-	      }
+	  CommandInterceptor.call(this, eventBus);
+
+
+	  this.executed([
+	    'connection.create',
+	    'connection.delete',
+	    'connection.move',
+	    'connection.reconnectEnd'
+	  ], ifDataInputAssociation(fixTargetRef));
+
+	  this.reverted([
+	    'connection.create',
+	    'connection.delete',
+	    'connection.move',
+	    'connection.reconnectEnd'
+	  ], ifDataInputAssociation(fixTargetRef));
+
+
+	  function usesTargetRef(element, targetRef, removedConnection) {
+
+	    var inputAssociations = element.get('dataInputAssociations');
+
+	    return find(inputAssociations, function(association) {
+	      return association !== removedConnection &&
+	             association.targetRef === targetRef;
+	    });
+	  }
+
+	  function getTargetRef(element, create) {
+
+	    var properties = element.get('properties');
+
+	    var targetRefProp = find(properties, function(p) {
+	      return p.name === TARGET_REF_PLACEHOLDER_NAME;
+	    });
+
+	    if (!targetRefProp && create) {
+	      targetRefProp = bpmnFactory.create('bpmn:Property', {
+	        name: TARGET_REF_PLACEHOLDER_NAME
+	      });
+
+	      Collections.add(properties, targetRefProp);
 	    }
-	    return object;
-	  };
+
+	    return targetRefProp;
+	  }
+
+	  function cleanupTargetRef(element, connection) {
+
+	    var targetRefProp = getTargetRef(element);
+
+	    if (!targetRefProp) {
+	      return;
+	    }
+
+	    if (!usesTargetRef(element, targetRefProp, connection)) {
+	      Collections.remove(element.get('properties'), targetRefProp);
+	    }
+	  }
+
+	  /**
+	   * Make sure targetRef is set to a valid property or
+	   * `null` if the connection is detached.
+	   *
+	   * @param {Event} event
+	   */
+	  function fixTargetRef(event) {
+
+	    var context = event.context,
+	        connection = context.connection,
+	        connectionBo = connection.businessObject,
+	        target = connection.target,
+	        targetBo = target && target.businessObject,
+	        newTarget = context.newTarget,
+	        newTargetBo = newTarget && newTarget.businessObject,
+	        oldTarget = context.oldTarget || context.target,
+	        oldTargetBo = oldTarget && oldTarget.businessObject;
+
+	    var dataAssociation = connection.businessObject,
+	        targetRefProp;
+
+	    if (oldTargetBo && oldTargetBo !== targetBo) {
+	      cleanupTargetRef(oldTargetBo, connectionBo);
+	    }
+
+	    if (newTargetBo && newTargetBo !== targetBo) {
+	      cleanupTargetRef(newTargetBo, connectionBo);
+	    }
+
+	    if (targetBo) {
+	      targetRefProp = getTargetRef(targetBo, true);
+	      dataAssociation.targetRef = targetRefProp;
+	    } else {
+	      dataAssociation.targetRef = null;
+	    }
+	  }
 	}
 
-	module.exports = createBaseFor;
+	DataInputAssociationBehavior.$inject = [ 'eventBus', 'bpmnFactory' ];
 
+	inherits(DataInputAssociationBehavior, CommandInterceptor);
+
+	module.exports = DataInputAssociationBehavior;
+
+
+	/**
+	 * Only call the given function when the event
+	 * touches a bpmn:DataInputAssociation.
+	 *
+	 * @param {Function} fn
+	 * @return {Function}
+	 */
+	function ifDataInputAssociation(fn) {
+
+	  return function(event) {
+	    var context = event.context,
+	        connection = context.connection;
+
+	    if (is(connection, 'bpmn:DataInputAssociation')) {
+	      return fn(event);
+	    }
+	  };
+	}
 
 /***/ },
 /* 601 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(602);
+	'use strict';
+
+	var inherits = __webpack_require__(3);
+
+	var CommandInterceptor = __webpack_require__(542);
+
+	var is = __webpack_require__(443).is;
+
+	var getChildLanes = __webpack_require__(602).getChildLanes;
+
+	var eachElement = __webpack_require__(137).eachElement;
+
+
+	var LOW_PRIORITY = 500;
+
 
 	/**
-	 * Converts `value` to an object if it's not one.
-	 *
-	 * @private
-	 * @param {*} value The value to process.
-	 * @returns {Object} Returns the object.
+	 * BPMN specific delete lane behavior
 	 */
-	function toObject(value) {
-	  return isObject(value) ? value : Object(value);
+	function DeleteLaneBehavior(eventBus, modeling, spaceTool) {
+
+	  CommandInterceptor.call(this, eventBus);
+
+
+	  function compensateLaneDelete(shape, oldParent) {
+
+	    var siblings = getChildLanes(oldParent);
+
+	    var topAffected = [];
+	    var bottomAffected = [];
+
+	    eachElement(siblings, function(element) {
+
+	      if (element.y > shape.y) {
+	        bottomAffected.push(element);
+	      } else {
+	        topAffected.push(element);
+	      }
+
+	      return element.children;
+	    });
+
+	    if (!siblings.length) {
+	      return;
+	    }
+
+	    var offset;
+
+	    if (bottomAffected.length && topAffected.length) {
+	      offset = shape.height / 2;
+	    } else {
+	      offset = shape.height;
+	    }
+
+	    var topAdjustments,
+	        bottomAdjustments;
+
+	    if (topAffected.length) {
+	      topAdjustments = spaceTool.calculateAdjustments(
+	        topAffected, 'y', offset, shape.y - 10);
+
+	      spaceTool.makeSpace(
+	        topAdjustments.movingShapes,
+	        topAdjustments.resizingShapes,
+	        { x: 0, y: offset }, 's');
+	    }
+
+	    if (bottomAffected.length) {
+	      bottomAdjustments = spaceTool.calculateAdjustments(
+	        bottomAffected, 'y', -offset, shape.y + shape.height + 10);
+
+	      spaceTool.makeSpace(
+	        bottomAdjustments.movingShapes,
+	        bottomAdjustments.resizingShapes,
+	        { x: 0, y: -offset }, 'n');
+	    }
+	  }
+
+
+	  /**
+	   * Adjust sizes of other lanes after lane deletion
+	   */
+	  this.postExecuted('shape.delete', LOW_PRIORITY, function(event) {
+
+	    var context = event.context,
+	        hints = context.hints,
+	        shape = context.shape,
+	        oldParent = context.oldParent;
+
+	    // only compensate lane deletes
+	    if (!is(shape, 'bpmn:Lane')) {
+	      return;
+	    }
+
+	    // compensate root deletes only
+	    if (hints && hints.nested) {
+	      return;
+	    }
+
+	    compensateLaneDelete(shape, oldParent);
+	  });
 	}
 
-	module.exports = toObject;
+	DeleteLaneBehavior.$inject = [ 'eventBus', 'modeling', 'spaceTool' ];
 
+	inherits(DeleteLaneBehavior, CommandInterceptor);
+
+	module.exports = DeleteLaneBehavior;
 
 /***/ },
 /* 602 */
-/***/ function(module, exports) {
-
-	/**
-	 * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
-	 * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is an object, else `false`.
-	 * @example
-	 *
-	 * _.isObject({});
-	 * // => true
-	 *
-	 * _.isObject([1, 2, 3]);
-	 * // => true
-	 *
-	 * _.isObject(1);
-	 * // => false
-	 */
-	function isObject(value) {
-	  // Avoid a V8 JIT bug in Chrome 19-20.
-	  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
-	  var type = typeof value;
-	  return !!value && (type == 'object' || type == 'function');
-	}
-
-	module.exports = isObject;
-
-
-/***/ },
-/* 603 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var getNative = __webpack_require__(604),
-	    isArrayLike = __webpack_require__(608),
-	    isObject = __webpack_require__(602),
-	    shimKeys = __webpack_require__(612);
-
-	/* Native method references for those with the same name as other `lodash` methods. */
-	var nativeKeys = getNative(Object, 'keys');
-
-	/**
-	 * Creates an array of the own enumerable property names of `object`.
-	 *
-	 * **Note:** Non-object values are coerced to objects. See the
-	 * [ES spec](http://ecma-international.org/ecma-262/6.0/#sec-object.keys)
-	 * for more details.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Object
-	 * @param {Object} object The object to query.
-	 * @returns {Array} Returns the array of property names.
-	 * @example
-	 *
-	 * function Foo() {
-	 *   this.a = 1;
-	 *   this.b = 2;
-	 * }
-	 *
-	 * Foo.prototype.c = 3;
-	 *
-	 * _.keys(new Foo);
-	 * // => ['a', 'b'] (iteration order is not guaranteed)
-	 *
-	 * _.keys('hi');
-	 * // => ['0', '1']
-	 */
-	var keys = !nativeKeys ? shimKeys : function(object) {
-	  var Ctor = object == null ? undefined : object.constructor;
-	  if ((typeof Ctor == 'function' && Ctor.prototype === object) ||
-	      (typeof object != 'function' && isArrayLike(object))) {
-	    return shimKeys(object);
-	  }
-	  return isObject(object) ? nativeKeys(object) : [];
-	};
-
-	module.exports = keys;
-
-
-/***/ },
-/* 604 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isNative = __webpack_require__(605);
-
-	/**
-	 * Gets the native function at `key` of `object`.
-	 *
-	 * @private
-	 * @param {Object} object The object to query.
-	 * @param {string} key The key of the method to get.
-	 * @returns {*} Returns the function if it's native, else `undefined`.
-	 */
-	function getNative(object, key) {
-	  var value = object == null ? undefined : object[key];
-	  return isNative(value) ? value : undefined;
-	}
-
-	module.exports = getNative;
-
-
-/***/ },
-/* 605 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isFunction = __webpack_require__(606),
-	    isObjectLike = __webpack_require__(607);
-
-	/** Used to detect host constructors (Safari > 5). */
-	var reIsHostCtor = /^\[object .+?Constructor\]$/;
-
-	/** Used for native method references. */
-	var objectProto = Object.prototype;
-
-	/** Used to resolve the decompiled source of functions. */
-	var fnToString = Function.prototype.toString;
-
-	/** Used to check objects for own properties. */
-	var hasOwnProperty = objectProto.hasOwnProperty;
-
-	/** Used to detect if a method is native. */
-	var reIsNative = RegExp('^' +
-	  fnToString.call(hasOwnProperty).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
-	  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
-	);
-
-	/**
-	 * Checks if `value` is a native function.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is a native function, else `false`.
-	 * @example
-	 *
-	 * _.isNative(Array.prototype.push);
-	 * // => true
-	 *
-	 * _.isNative(_);
-	 * // => false
-	 */
-	function isNative(value) {
-	  if (value == null) {
-	    return false;
-	  }
-	  if (isFunction(value)) {
-	    return reIsNative.test(fnToString.call(value));
-	  }
-	  return isObjectLike(value) && reIsHostCtor.test(value);
-	}
-
-	module.exports = isNative;
-
-
-/***/ },
-/* 606 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isObject = __webpack_require__(602);
-
-	/** `Object#toString` result references. */
-	var funcTag = '[object Function]';
-
-	/** Used for native method references. */
-	var objectProto = Object.prototype;
-
-	/**
-	 * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objToString = objectProto.toString;
-
-	/**
-	 * Checks if `value` is classified as a `Function` object.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
-	 * @example
-	 *
-	 * _.isFunction(_);
-	 * // => true
-	 *
-	 * _.isFunction(/abc/);
-	 * // => false
-	 */
-	function isFunction(value) {
-	  // The use of `Object#toString` avoids issues with the `typeof` operator
-	  // in older versions of Chrome and Safari which return 'function' for regexes
-	  // and Safari 8 which returns 'object' for typed array constructors.
-	  return isObject(value) && objToString.call(value) == funcTag;
-	}
-
-	module.exports = isFunction;
-
-
-/***/ },
-/* 607 */
-/***/ function(module, exports) {
-
-	/**
-	 * Checks if `value` is object-like.
-	 *
-	 * @private
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
-	 */
-	function isObjectLike(value) {
-	  return !!value && typeof value == 'object';
-	}
-
-	module.exports = isObjectLike;
-
-
-/***/ },
-/* 608 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var getLength = __webpack_require__(609),
-	    isLength = __webpack_require__(611);
-
-	/**
-	 * Checks if `value` is array-like.
-	 *
-	 * @private
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
-	 */
-	function isArrayLike(value) {
-	  return value != null && isLength(getLength(value));
-	}
-
-	module.exports = isArrayLike;
-
-
-/***/ },
-/* 609 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseProperty = __webpack_require__(610);
-
-	/**
-	 * Gets the "length" property value of `object`.
-	 *
-	 * **Note:** This function is used to avoid a [JIT bug](https://bugs.webkit.org/show_bug.cgi?id=142792)
-	 * that affects Safari on at least iOS 8.1-8.3 ARM64.
-	 *
-	 * @private
-	 * @param {Object} object The object to query.
-	 * @returns {*} Returns the "length" value.
-	 */
-	var getLength = baseProperty('length');
-
-	module.exports = getLength;
-
-
-/***/ },
-/* 610 */
-/***/ function(module, exports) {
-
-	/**
-	 * The base implementation of `_.property` without support for deep paths.
-	 *
-	 * @private
-	 * @param {string} key The key of the property to get.
-	 * @returns {Function} Returns the new function.
-	 */
-	function baseProperty(key) {
-	  return function(object) {
-	    return object == null ? undefined : object[key];
-	  };
-	}
-
-	module.exports = baseProperty;
-
-
-/***/ },
-/* 611 */
-/***/ function(module, exports) {
-
-	/**
-	 * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
-	 * of an array-like value.
-	 */
-	var MAX_SAFE_INTEGER = 9007199254740991;
-
-	/**
-	 * Checks if `value` is a valid array-like length.
-	 *
-	 * **Note:** This function is based on [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
-	 *
-	 * @private
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
-	 */
-	function isLength(value) {
-	  return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
-	}
-
-	module.exports = isLength;
-
-
-/***/ },
-/* 612 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isArguments = __webpack_require__(613),
-	    isArray = __webpack_require__(614),
-	    isIndex = __webpack_require__(615),
-	    isLength = __webpack_require__(611),
-	    keysIn = __webpack_require__(616);
-
-	/** Used for native method references. */
-	var objectProto = Object.prototype;
-
-	/** Used to check objects for own properties. */
-	var hasOwnProperty = objectProto.hasOwnProperty;
-
-	/**
-	 * A fallback implementation of `Object.keys` which creates an array of the
-	 * own enumerable property names of `object`.
-	 *
-	 * @private
-	 * @param {Object} object The object to query.
-	 * @returns {Array} Returns the array of property names.
-	 */
-	function shimKeys(object) {
-	  var props = keysIn(object),
-	      propsLength = props.length,
-	      length = propsLength && object.length;
-
-	  var allowIndexes = !!length && isLength(length) &&
-	    (isArray(object) || isArguments(object));
-
-	  var index = -1,
-	      result = [];
-
-	  while (++index < propsLength) {
-	    var key = props[index];
-	    if ((allowIndexes && isIndex(key, length)) || hasOwnProperty.call(object, key)) {
-	      result.push(key);
-	    }
-	  }
-	  return result;
-	}
-
-	module.exports = shimKeys;
-
-
-/***/ },
-/* 613 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isArrayLike = __webpack_require__(608),
-	    isObjectLike = __webpack_require__(607);
-
-	/** Used for native method references. */
-	var objectProto = Object.prototype;
-
-	/** Used to check objects for own properties. */
-	var hasOwnProperty = objectProto.hasOwnProperty;
-
-	/** Native method references. */
-	var propertyIsEnumerable = objectProto.propertyIsEnumerable;
-
-	/**
-	 * Checks if `value` is classified as an `arguments` object.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
-	 * @example
-	 *
-	 * _.isArguments(function() { return arguments; }());
-	 * // => true
-	 *
-	 * _.isArguments([1, 2, 3]);
-	 * // => false
-	 */
-	function isArguments(value) {
-	  return isObjectLike(value) && isArrayLike(value) &&
-	    hasOwnProperty.call(value, 'callee') && !propertyIsEnumerable.call(value, 'callee');
-	}
-
-	module.exports = isArguments;
-
-
-/***/ },
-/* 614 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var getNative = __webpack_require__(604),
-	    isLength = __webpack_require__(611),
-	    isObjectLike = __webpack_require__(607);
-
-	/** `Object#toString` result references. */
-	var arrayTag = '[object Array]';
-
-	/** Used for native method references. */
-	var objectProto = Object.prototype;
-
-	/**
-	 * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objToString = objectProto.toString;
-
-	/* Native method references for those with the same name as other `lodash` methods. */
-	var nativeIsArray = getNative(Array, 'isArray');
-
-	/**
-	 * Checks if `value` is classified as an `Array` object.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
-	 * @example
-	 *
-	 * _.isArray([1, 2, 3]);
-	 * // => true
-	 *
-	 * _.isArray(function() { return arguments; }());
-	 * // => false
-	 */
-	var isArray = nativeIsArray || function(value) {
-	  return isObjectLike(value) && isLength(value.length) && objToString.call(value) == arrayTag;
-	};
-
-	module.exports = isArray;
-
-
-/***/ },
-/* 615 */
-/***/ function(module, exports) {
-
-	/** Used to detect unsigned integer values. */
-	var reIsUint = /^\d+$/;
-
-	/**
-	 * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
-	 * of an array-like value.
-	 */
-	var MAX_SAFE_INTEGER = 9007199254740991;
-
-	/**
-	 * Checks if `value` is a valid array-like index.
-	 *
-	 * @private
-	 * @param {*} value The value to check.
-	 * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
-	 * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
-	 */
-	function isIndex(value, length) {
-	  value = (typeof value == 'number' || reIsUint.test(value)) ? +value : -1;
-	  length = length == null ? MAX_SAFE_INTEGER : length;
-	  return value > -1 && value % 1 == 0 && value < length;
-	}
-
-	module.exports = isIndex;
-
-
-/***/ },
-/* 616 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isArguments = __webpack_require__(613),
-	    isArray = __webpack_require__(614),
-	    isIndex = __webpack_require__(615),
-	    isLength = __webpack_require__(611),
-	    isObject = __webpack_require__(602);
-
-	/** Used for native method references. */
-	var objectProto = Object.prototype;
-
-	/** Used to check objects for own properties. */
-	var hasOwnProperty = objectProto.hasOwnProperty;
-
-	/**
-	 * Creates an array of the own and inherited enumerable property names of `object`.
-	 *
-	 * **Note:** Non-object values are coerced to objects.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Object
-	 * @param {Object} object The object to query.
-	 * @returns {Array} Returns the array of property names.
-	 * @example
-	 *
-	 * function Foo() {
-	 *   this.a = 1;
-	 *   this.b = 2;
-	 * }
-	 *
-	 * Foo.prototype.c = 3;
-	 *
-	 * _.keysIn(new Foo);
-	 * // => ['a', 'b', 'c'] (iteration order is not guaranteed)
-	 */
-	function keysIn(object) {
-	  if (object == null) {
-	    return [];
-	  }
-	  if (!isObject(object)) {
-	    object = Object(object);
-	  }
-	  var length = object.length;
-	  length = (length && isLength(length) &&
-	    (isArray(object) || isArguments(object)) && length) || 0;
-
-	  var Ctor = object.constructor,
-	      index = -1,
-	      isProto = typeof Ctor == 'function' && Ctor.prototype === object,
-	      result = Array(length),
-	      skipIndexes = length > 0;
-
-	  while (++index < length) {
-	    result[index] = (index + '');
-	  }
-	  for (var key in object) {
-	    if (!(skipIndexes && isIndex(key, length)) &&
-	        !(key == 'constructor' && (isProto || !hasOwnProperty.call(object, key)))) {
-	      result.push(key);
-	    }
-	  }
-	  return result;
-	}
-
-	module.exports = keysIn;
-
-
-/***/ },
-/* 617 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var getLength = __webpack_require__(609),
-	    isLength = __webpack_require__(611),
-	    toObject = __webpack_require__(601);
-
-	/**
-	 * Creates a `baseEach` or `baseEachRight` function.
-	 *
-	 * @private
-	 * @param {Function} eachFunc The function to iterate over a collection.
-	 * @param {boolean} [fromRight] Specify iterating from right to left.
-	 * @returns {Function} Returns the new base function.
-	 */
-	function createBaseEach(eachFunc, fromRight) {
-	  return function(collection, iteratee) {
-	    var length = collection ? getLength(collection) : 0;
-	    if (!isLength(length)) {
-	      return eachFunc(collection, iteratee);
-	    }
-	    var index = fromRight ? length : -1,
-	        iterable = toObject(collection);
-
-	    while ((fromRight ? index-- : ++index < length)) {
-	      if (iteratee(iterable[index], index, iterable) === false) {
-	        break;
-	      }
-	    }
-	    return collection;
-	  };
-	}
-
-	module.exports = createBaseEach;
-
-
-/***/ },
-/* 618 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var bindCallback = __webpack_require__(619),
-	    isArray = __webpack_require__(614);
-
-	/**
-	 * Creates a function for `_.forEach` or `_.forEachRight`.
-	 *
-	 * @private
-	 * @param {Function} arrayFunc The function to iterate over an array.
-	 * @param {Function} eachFunc The function to iterate over a collection.
-	 * @returns {Function} Returns the new each function.
-	 */
-	function createForEach(arrayFunc, eachFunc) {
-	  return function(collection, iteratee, thisArg) {
-	    return (typeof iteratee == 'function' && thisArg === undefined && isArray(collection))
-	      ? arrayFunc(collection, iteratee)
-	      : eachFunc(collection, bindCallback(iteratee, thisArg, 3));
-	  };
-	}
-
-	module.exports = createForEach;
-
-
-/***/ },
-/* 619 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var identity = __webpack_require__(620);
-
-	/**
-	 * A specialized version of `baseCallback` which only supports `this` binding
-	 * and specifying the number of arguments to provide to `func`.
-	 *
-	 * @private
-	 * @param {Function} func The function to bind.
-	 * @param {*} thisArg The `this` binding of `func`.
-	 * @param {number} [argCount] The number of arguments to provide to `func`.
-	 * @returns {Function} Returns the callback.
-	 */
-	function bindCallback(func, thisArg, argCount) {
-	  if (typeof func != 'function') {
-	    return identity;
-	  }
-	  if (thisArg === undefined) {
-	    return func;
-	  }
-	  switch (argCount) {
-	    case 1: return function(value) {
-	      return func.call(thisArg, value);
-	    };
-	    case 3: return function(value, index, collection) {
-	      return func.call(thisArg, value, index, collection);
-	    };
-	    case 4: return function(accumulator, value, index, collection) {
-	      return func.call(thisArg, accumulator, value, index, collection);
-	    };
-	    case 5: return function(value, other, key, object, source) {
-	      return func.call(thisArg, value, other, key, object, source);
-	    };
-	  }
-	  return function() {
-	    return func.apply(thisArg, arguments);
-	  };
-	}
-
-	module.exports = bindCallback;
-
-
-/***/ },
-/* 620 */
-/***/ function(module, exports) {
-
-	/**
-	 * This method returns the first argument provided to it.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Utility
-	 * @param {*} value Any value.
-	 * @returns {*} Returns `value`.
-	 * @example
-	 *
-	 * var object = { 'user': 'fred' };
-	 *
-	 * _.identity(object) === object;
-	 * // => true
-	 */
-	function identity(value) {
-	  return value;
-	}
-
-	module.exports = identity;
-
-
-/***/ },
-/* 621 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var getOriginalEvent = __webpack_require__(622).getOriginal;
-
-	var isMac = __webpack_require__(623).isMac;
-
-
-	function isPrimaryButton(event) {
-	  // button === 0 -> left áka primary mouse button
-	  return !(getOriginalEvent(event) || event).button;
-	}
-
-	module.exports.isPrimaryButton = isPrimaryButton;
-
-	module.exports.isMac = isMac;
-
-	module.exports.hasPrimaryModifier = function(event) {
-	  var originalEvent = getOriginalEvent(event) || event;
-
-	  if (!isPrimaryButton(event)) {
-	    return false;
-	  }
-
-	  // Use alt as primary modifier key for mac OS
-	  if (isMac()) {
-	    return originalEvent.metaKey;
-	  } else {
-	    return originalEvent.ctrlKey;
-	  }
-	};
-
-
-	module.exports.hasSecondaryModifier = function(event) {
-	  var originalEvent = getOriginalEvent(event) || event;
-
-	  return isPrimaryButton(event) && originalEvent.shiftKey;
-	};
-
-
-/***/ },
-/* 622 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	function __preventDefault(event) {
-	  return event && event.preventDefault();
-	}
-
-	function __stopPropagation(event, immediate) {
-	  if (!event) {
-	    return;
-	  }
-
-	  if (event.stopPropagation) {
-	    event.stopPropagation();
-	  }
-
-	  if (immediate && event.stopImmediatePropagation) {
-	    event.stopImmediatePropagation();
-	  }
-	}
-
-
-	function getOriginal(event) {
-	  return event.originalEvent || event.srcEvent;
-	}
-
-	module.exports.getOriginal = getOriginal;
-
-
-	function stopEvent(event, immediate) {
-	  stopPropagation(event, immediate);
-	  preventDefault(event);
-	}
-
-	module.exports.stopEvent = stopEvent;
-
-
-	function preventDefault(event) {
-	  __preventDefault(event);
-	  __preventDefault(getOriginal(event));
-	}
-
-	module.exports.preventDefault = preventDefault;
-
-
-	function stopPropagation(event, immediate) {
-	  __stopPropagation(event, immediate);
-	  __stopPropagation(getOriginal(event), immediate);
-	}
-
-	module.exports.stopPropagation = stopPropagation;
-
-
-	function toPoint(event) {
-
-	  if (event.pointers && event.pointers.length) {
-	    event = event.pointers[0];
-	  }
-
-	  if (event.touches && event.touches.length) {
-	    event = event.touches[0];
-	  }
-
-	  return event ? {
-	    x: event.clientX,
-	    y: event.clientY
-	  } : null;
-	}
-
-	module.exports.toPoint = toPoint;
-
-
-/***/ },
-/* 623 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	module.exports.isMac = function isMac() {
-	  return (/mac/i).test(navigator.platform);
-	};
-
-/***/ },
-/* 624 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var snapsvg = module.exports = __webpack_require__(67);
-
-	snapsvg.plugin(function(Snap, Element) {
-
-	  /*\
-	   * Element.children
-	   [ method ]
-	   **
-	   * Returns array of all the children of the element.
-	   = (array) array of Elements
-	  \*/
-	  Element.prototype.children = function () {
-	      var out = [],
-	          ch = this.node.childNodes;
-	      for (var i = 0, ii = ch.length; i < ii; i++) {
-	          out[i] = new Snap(ch[i]);
-	      }
-	      return out;
-	  };
-	});
-
-
-	/**
-	 * @class ClassPlugin
-	 *
-	 * Extends snapsvg with methods to add and remove classes
-	 */
-	snapsvg.plugin(function (Snap, Element, Paper, global) {
-
-	  function split(str) {
-	    return str.split(/\s+/);
-	  }
-
-	  function join(array) {
-	    return array.join(' ');
-	  }
-
-	  function getClasses(e) {
-	    return split(e.attr('class') || '');
-	  }
-
-	  function setClasses(e, classes) {
-	    e.attr('class', join(classes));
-	  }
-
-	  /**
-	   * @method snapsvg.Element#addClass
-	   *
-	   * @example
-	   *
-	   * e.attr('class', 'selector');
-	   *
-	   * e.addClass('foo bar'); // adds classes foo and bar
-	   * e.attr('class'); // -> 'selector foo bar'
-	   *
-	   * e.addClass('fooBar');
-	   * e.attr('class'); // -> 'selector foo bar fooBar'
-	   *
-	   * @param {String} cls classes to be added to the element
-	   *
-	   * @return {snapsvg.Element} the element (this)
-	   */
-	  Element.prototype.addClass = function(cls) {
-	    var current = getClasses(this),
-	        add = split(cls),
-	        i, e;
-
-	    for (i = 0, e; !!(e = add[i]); i++) {
-	      if (current.indexOf(e) === -1) {
-	        current.push(e);
-	      }
-	    }
-
-	    setClasses(this, current);
-
-	    return this;
-	  };
-
-	  /**
-	   * @method snapsvg.Element#hasClass
-	   *
-	   * @param  {String}  cls the class to query for
-	   * @return {Boolean} returns true if the element has the given class
-	   */
-	  Element.prototype.hasClass = function(cls) {
-	    if (!cls) {
-	      throw new Error('[snapsvg] syntax: hasClass(clsStr)');
-	    }
-
-	    return getClasses(this).indexOf(cls) !== -1;
-	  };
-
-	  /**
-	   * @method snapsvg.Element#removeClass
-	   *
-	   * @example
-	   *
-	   * e.attr('class', 'foo bar');
-	   *
-	   * e.removeClass('foo');
-	   * e.attr('class'); // -> 'bar'
-	   *
-	   * e.removeClass('foo bar'); // removes classes foo and bar
-	   * e.attr('class'); // -> ''
-	   *
-	   * @param {String} cls classes to be removed from element
-	   *
-	   * @return {snapsvg.Element} the element (this)
-	   */
-	  Element.prototype.removeClass = function(cls) {
-	    var current = getClasses(this),
-	        remove = split(cls),
-	        i, e, idx;
-
-	    for (i = 0, e; !!(e = remove[i]); i++) {
-	      idx = current.indexOf(e);
-
-	      if (idx !== -1) {
-	        // remove element from array
-	        current.splice(idx, 1);
-	      }
-	    }
-
-	    setClasses(this, current);
-
-	    return this;
-	  };
-
-	});
-
-	/**
-	 * @class TranslatePlugin
-	 *
-	 * Extends snapsvg with methods to translate elements
-	 */
-	snapsvg.plugin(function (Snap, Element, Paper, global) {
-
-	  /*
-	   * @method snapsvg.Element#translate
-	   *
-	   * @example
-	   *
-	   * e.translate(10, 20);
-	   *
-	   * // sets transform matrix to translate(10, 20)
-	   *
-	   * @param {Number} x translation
-	   * @param {Number} y translation
-	   *
-	   * @return {snapsvg.Element} the element (this)
-	   */
-	  Element.prototype.translate = function(x, y) {
-	    var matrix = new Snap.Matrix();
-	    matrix.translate(x, y);
-	    return this.transform(matrix);
-	  };
-	});
-
-
-	/**
-	 * @class CreatePlugin
-	 *
-	 * Create an svg element without attaching it to the dom
-	 */
-	snapsvg.plugin(function(Snap) {
-
-	  Snap.create = function(name, attrs) {
-	    return Snap._.wrap(Snap._.$(name, attrs));
-	  };
-	});
-
-
-	/**
-	 * @class CreatSnapAtPlugin
-	 *
-	 * Extends snap.svg with a method to create a SVG element
-	 * at a specific position in the DOM.
-	 */
-	snapsvg.plugin(function(Snap, Element, Paper, global) {
-
-	  /*
-	   * @method snapsvg.createSnapAt
-	   *
-	   * @example
-	   *
-	   * snapsvg.createSnapAt(parentNode, 200, 200);
-	   *
-	   * @param {Number} width of svg
-	   * @param {Number} height of svg
-	   * @param {Object} parentNode svg Element will be child of this
-	   *
-	   * @return {snapsvg.Element} the newly created wrapped SVG element instance
-	   */
-	  Snap.createSnapAt = function(width, height, parentNode) {
-
-	    var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-	    svg.setAttribute('width', width);
-	    svg.setAttribute('height', height);
-	    if (!parentNode) {
-	      parentNode = document.body;
-	    }
-	    parentNode.appendChild(svg);
-
-	    return new Snap(svg);
-	  };
-	});
-
-/***/ },
-/* 625 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var Snap = __webpack_require__(624);
-
-
-	module.exports.componentsToPath = function(elements) {
-	  return elements.join(',').replace(/,?([A-z]),?/g, '$1');
-	};
-
-	function toSVGPoints(points) {
-	  var result = '';
-
-	  for (var i = 0, p; (p = points[i]); i++) {
-	    result += p.x + ',' + p.y + ' ';
-	  }
-
-	  return result;
-	}
-
-	module.exports.toSVGPoints = toSVGPoints;
-
-	module.exports.createLine = function(points, attrs) {
-	  return Snap.create('polyline', { points: toSVGPoints(points) }).attr(attrs || {});
-	};
-
-	module.exports.updateLine = function(gfx, points) {
-	  return gfx.attr({ points: toSVGPoints(points) });
-	};
-
-
-/***/ },
-/* 626 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var bind = __webpack_require__(627),
-	    find = __webpack_require__(655);
-
-	var TextBox = __webpack_require__(681);
-
-
-	/**
-	 * A direct editing component that allows users
-	 * to edit an elements text directly in the diagram
-	 *
-	 * @param {EventBus} eventBus the event bus
-	 */
-	function DirectEditing(eventBus, canvas) {
-
-	  this._eventBus = eventBus;
-
-	  this._providers = [];
-	  this._textbox = new TextBox({
-	    container: canvas.getContainer(),
-	    keyHandler: bind(this._handleKey, this)
-	  });
-	}
-
-	DirectEditing.$inject = [ 'eventBus', 'canvas' ];
-
-
-	/**
-	 * Register a direct editing provider
-
-	 * @param {Object} provider the provider, must expose an #activate(element) method that returns
-	 *                          an activation context ({ bounds: {x, y, width, height }, text }) if
-	 *                          direct editing is available for the given element.
-	 *                          Additionally the provider must expose a #update(element, value) method
-	 *                          to receive direct editing updates.
-	 */
-	DirectEditing.prototype.registerProvider = function(provider) {
-	  this._providers.push(provider);
-	};
-
-
-	/**
-	 * Returns true if direct editing is currently active
-	 *
-	 * @return {Boolean}
-	 */
-	DirectEditing.prototype.isActive = function() {
-	  return !!this._active;
-	};
-
-
-	/**
-	 * Cancel direct editing, if it is currently active
-	 */
-	DirectEditing.prototype.cancel = function() {
-	  if (!this._active) {
-	    return;
-	  }
-
-	  this._fire('cancel');
-	  this.close();
-	};
-
-
-	DirectEditing.prototype._fire = function(event) {
-	  this._eventBus.fire('directEditing.' + event, { active: this._active });
-	};
-
-	DirectEditing.prototype.close = function() {
-	  this._textbox.destroy();
-
-	  this._fire('deactivate');
-
-	  this._active = null;
-	};
-
-
-	DirectEditing.prototype.complete = function() {
-
-	  var active = this._active;
-
-	  if (!active) {
-	    return;
-	  }
-
-	  var text = this.getValue();
-
-	  if (text !== active.context.text) {
-	    active.provider.update(active.element, text, active.context.text);
-	  }
-
-	  this._fire('complete');
-
-	  this.close();
-	};
-
-
-	DirectEditing.prototype.getValue = function() {
-	  return this._textbox.getValue();
-	};
-
-
-	DirectEditing.prototype._handleKey = function(e) {
-
-	  // stop bubble
-	  e.stopPropagation();
-
-	  var key = e.keyCode || e.charCode;
-
-	  // ESC
-	  if (key === 27) {
-	    e.preventDefault();
-	    return this.cancel();
-	  }
-
-	  // Enter
-	  if (key === 13 && !e.shiftKey) {
-	    e.preventDefault();
-	    return this.complete();
-	  }
-	};
-
-
-	/**
-	 * Activate direct editing on the given element
-	 *
-	 * @param {Object} ElementDescriptor the descriptor for a shape or connection
-	 * @return {Boolean} true if the activation was possible
-	 */
-	DirectEditing.prototype.activate = function(element) {
-
-	  if (this.isActive()) {
-	    this.cancel();
-	  }
-
-	  // the direct editing context
-	  var context;
-
-	  var provider = find(this._providers, function(p) {
-	    return !!(context = p.activate(element)) ? p : null;
-	  });
-
-	  // check if activation took place
-	  if (context) {
-	    this._textbox.create(context.bounds, context.style, context.text);
-
-	    this._active = {
-	      element: element,
-	      context: context,
-	      provider: provider
-	    };
-
-	    this._fire('activate');
-	  }
-
-	  return !!context;
-	};
-
-
-	module.exports = DirectEditing;
-
-/***/ },
-/* 627 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var createWrapper = __webpack_require__(628),
-	    replaceHolders = __webpack_require__(649),
-	    restParam = __webpack_require__(654);
-
-	/** Used to compose bitmasks for wrapper metadata. */
-	var BIND_FLAG = 1,
-	    PARTIAL_FLAG = 32;
-
-	/**
-	 * Creates a function that invokes `func` with the `this` binding of `thisArg`
-	 * and prepends any additional `_.bind` arguments to those provided to the
-	 * bound function.
-	 *
-	 * The `_.bind.placeholder` value, which defaults to `_` in monolithic builds,
-	 * may be used as a placeholder for partially applied arguments.
-	 *
-	 * **Note:** Unlike native `Function#bind` this method does not set the "length"
-	 * property of bound functions.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Function
-	 * @param {Function} func The function to bind.
-	 * @param {*} thisArg The `this` binding of `func`.
-	 * @param {...*} [partials] The arguments to be partially applied.
-	 * @returns {Function} Returns the new bound function.
-	 * @example
-	 *
-	 * var greet = function(greeting, punctuation) {
-	 *   return greeting + ' ' + this.user + punctuation;
-	 * };
-	 *
-	 * var object = { 'user': 'fred' };
-	 *
-	 * var bound = _.bind(greet, object, 'hi');
-	 * bound('!');
-	 * // => 'hi fred!'
-	 *
-	 * // using placeholders
-	 * var bound = _.bind(greet, object, _, '!');
-	 * bound('hi');
-	 * // => 'hi fred!'
-	 */
-	var bind = restParam(function(func, thisArg, partials) {
-	  var bitmask = BIND_FLAG;
-	  if (partials.length) {
-	    var holders = replaceHolders(partials, bind.placeholder);
-	    bitmask |= PARTIAL_FLAG;
-	  }
-	  return createWrapper(func, bitmask, thisArg, partials, holders);
-	});
-
-	// Assign default placeholders.
-	bind.placeholder = {};
-
-	module.exports = bind;
-
-
-/***/ },
-/* 628 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseSetData = __webpack_require__(629),
-	    createBindWrapper = __webpack_require__(631),
-	    createHybridWrapper = __webpack_require__(634),
-	    createPartialWrapper = __webpack_require__(652),
-	    getData = __webpack_require__(641),
-	    mergeData = __webpack_require__(653),
-	    setData = __webpack_require__(650);
-
-	/** Used to compose bitmasks for wrapper metadata. */
-	var BIND_FLAG = 1,
-	    BIND_KEY_FLAG = 2,
-	    PARTIAL_FLAG = 32,
-	    PARTIAL_RIGHT_FLAG = 64;
-
-	/** Used as the `TypeError` message for "Functions" methods. */
-	var FUNC_ERROR_TEXT = 'Expected a function';
-
-	/* Native method references for those with the same name as other `lodash` methods. */
-	var nativeMax = Math.max;
-
-	/**
-	 * Creates a function that either curries or invokes `func` with optional
-	 * `this` binding and partially applied arguments.
-	 *
-	 * @private
-	 * @param {Function|string} func The function or method name to reference.
-	 * @param {number} bitmask The bitmask of flags.
-	 *  The bitmask may be composed of the following flags:
-	 *     1 - `_.bind`
-	 *     2 - `_.bindKey`
-	 *     4 - `_.curry` or `_.curryRight` of a bound function
-	 *     8 - `_.curry`
-	 *    16 - `_.curryRight`
-	 *    32 - `_.partial`
-	 *    64 - `_.partialRight`
-	 *   128 - `_.rearg`
-	 *   256 - `_.ary`
-	 * @param {*} [thisArg] The `this` binding of `func`.
-	 * @param {Array} [partials] The arguments to be partially applied.
-	 * @param {Array} [holders] The `partials` placeholder indexes.
-	 * @param {Array} [argPos] The argument positions of the new function.
-	 * @param {number} [ary] The arity cap of `func`.
-	 * @param {number} [arity] The arity of `func`.
-	 * @returns {Function} Returns the new wrapped function.
-	 */
-	function createWrapper(func, bitmask, thisArg, partials, holders, argPos, ary, arity) {
-	  var isBindKey = bitmask & BIND_KEY_FLAG;
-	  if (!isBindKey && typeof func != 'function') {
-	    throw new TypeError(FUNC_ERROR_TEXT);
-	  }
-	  var length = partials ? partials.length : 0;
-	  if (!length) {
-	    bitmask &= ~(PARTIAL_FLAG | PARTIAL_RIGHT_FLAG);
-	    partials = holders = undefined;
-	  }
-	  length -= (holders ? holders.length : 0);
-	  if (bitmask & PARTIAL_RIGHT_FLAG) {
-	    var partialsRight = partials,
-	        holdersRight = holders;
-
-	    partials = holders = undefined;
-	  }
-	  var data = isBindKey ? undefined : getData(func),
-	      newData = [func, bitmask, thisArg, partials, holders, partialsRight, holdersRight, argPos, ary, arity];
-
-	  if (data) {
-	    mergeData(newData, data);
-	    bitmask = newData[1];
-	    arity = newData[9];
-	  }
-	  newData[9] = arity == null
-	    ? (isBindKey ? 0 : func.length)
-	    : (nativeMax(arity - length, 0) || 0);
-
-	  if (bitmask == BIND_FLAG) {
-	    var result = createBindWrapper(newData[0], newData[2]);
-	  } else if ((bitmask == PARTIAL_FLAG || bitmask == (BIND_FLAG | PARTIAL_FLAG)) && !newData[4].length) {
-	    result = createPartialWrapper.apply(undefined, newData);
-	  } else {
-	    result = createHybridWrapper.apply(undefined, newData);
-	  }
-	  var setter = data ? baseSetData : setData;
-	  return setter(result, newData);
-	}
-
-	module.exports = createWrapper;
-
-
-/***/ },
-/* 629 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var identity = __webpack_require__(620),
-	    metaMap = __webpack_require__(630);
-
-	/**
-	 * The base implementation of `setData` without support for hot loop detection.
-	 *
-	 * @private
-	 * @param {Function} func The function to associate metadata with.
-	 * @param {*} data The metadata.
-	 * @returns {Function} Returns `func`.
-	 */
-	var baseSetData = !metaMap ? identity : function(func, data) {
-	  metaMap.set(func, data);
-	  return func;
-	};
-
-	module.exports = baseSetData;
-
-
-/***/ },
-/* 630 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {var getNative = __webpack_require__(604);
-
-	/** Native method references. */
-	var WeakMap = getNative(global, 'WeakMap');
-
-	/** Used to store function metadata. */
-	var metaMap = WeakMap && new WeakMap;
-
-	module.exports = metaMap;
-
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 631 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {var createCtorWrapper = __webpack_require__(632);
-
-	/**
-	 * Creates a function that wraps `func` and invokes it with the `this`
-	 * binding of `thisArg`.
-	 *
-	 * @private
-	 * @param {Function} func The function to bind.
-	 * @param {*} [thisArg] The `this` binding of `func`.
-	 * @returns {Function} Returns the new bound function.
-	 */
-	function createBindWrapper(func, thisArg) {
-	  var Ctor = createCtorWrapper(func);
-
-	  function wrapper() {
-	    var fn = (this && this !== global && this instanceof wrapper) ? Ctor : func;
-	    return fn.apply(thisArg, arguments);
-	  }
-	  return wrapper;
-	}
-
-	module.exports = createBindWrapper;
-
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 632 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseCreate = __webpack_require__(633),
-	    isObject = __webpack_require__(602);
-
-	/**
-	 * Creates a function that produces an instance of `Ctor` regardless of
-	 * whether it was invoked as part of a `new` expression or by `call` or `apply`.
-	 *
-	 * @private
-	 * @param {Function} Ctor The constructor to wrap.
-	 * @returns {Function} Returns the new wrapped function.
-	 */
-	function createCtorWrapper(Ctor) {
-	  return function() {
-	    // Use a `switch` statement to work with class constructors.
-	    // See http://ecma-international.org/ecma-262/6.0/#sec-ecmascript-function-objects-call-thisargument-argumentslist
-	    // for more details.
-	    var args = arguments;
-	    switch (args.length) {
-	      case 0: return new Ctor;
-	      case 1: return new Ctor(args[0]);
-	      case 2: return new Ctor(args[0], args[1]);
-	      case 3: return new Ctor(args[0], args[1], args[2]);
-	      case 4: return new Ctor(args[0], args[1], args[2], args[3]);
-	      case 5: return new Ctor(args[0], args[1], args[2], args[3], args[4]);
-	      case 6: return new Ctor(args[0], args[1], args[2], args[3], args[4], args[5]);
-	      case 7: return new Ctor(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
-	    }
-	    var thisBinding = baseCreate(Ctor.prototype),
-	        result = Ctor.apply(thisBinding, args);
-
-	    // Mimic the constructor's `return` behavior.
-	    // See https://es5.github.io/#x13.2.2 for more details.
-	    return isObject(result) ? result : thisBinding;
-	  };
-	}
-
-	module.exports = createCtorWrapper;
-
-
-/***/ },
-/* 633 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isObject = __webpack_require__(602);
-
-	/**
-	 * The base implementation of `_.create` without support for assigning
-	 * properties to the created object.
-	 *
-	 * @private
-	 * @param {Object} prototype The object to inherit from.
-	 * @returns {Object} Returns the new object.
-	 */
-	var baseCreate = (function() {
-	  function object() {}
-	  return function(prototype) {
-	    if (isObject(prototype)) {
-	      object.prototype = prototype;
-	      var result = new object;
-	      object.prototype = undefined;
-	    }
-	    return result || {};
-	  };
-	}());
-
-	module.exports = baseCreate;
-
-
-/***/ },
-/* 634 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {var arrayCopy = __webpack_require__(635),
-	    composeArgs = __webpack_require__(636),
-	    composeArgsRight = __webpack_require__(637),
-	    createCtorWrapper = __webpack_require__(632),
-	    isLaziable = __webpack_require__(638),
-	    reorder = __webpack_require__(648),
-	    replaceHolders = __webpack_require__(649),
-	    setData = __webpack_require__(650);
-
-	/** Used to compose bitmasks for wrapper metadata. */
-	var BIND_FLAG = 1,
-	    BIND_KEY_FLAG = 2,
-	    CURRY_BOUND_FLAG = 4,
-	    CURRY_FLAG = 8,
-	    CURRY_RIGHT_FLAG = 16,
-	    PARTIAL_FLAG = 32,
-	    PARTIAL_RIGHT_FLAG = 64,
-	    ARY_FLAG = 128;
-
-	/* Native method references for those with the same name as other `lodash` methods. */
-	var nativeMax = Math.max;
-
-	/**
-	 * Creates a function that wraps `func` and invokes it with optional `this`
-	 * binding of, partial application, and currying.
-	 *
-	 * @private
-	 * @param {Function|string} func The function or method name to reference.
-	 * @param {number} bitmask The bitmask of flags. See `createWrapper` for more details.
-	 * @param {*} [thisArg] The `this` binding of `func`.
-	 * @param {Array} [partials] The arguments to prepend to those provided to the new function.
-	 * @param {Array} [holders] The `partials` placeholder indexes.
-	 * @param {Array} [partialsRight] The arguments to append to those provided to the new function.
-	 * @param {Array} [holdersRight] The `partialsRight` placeholder indexes.
-	 * @param {Array} [argPos] The argument positions of the new function.
-	 * @param {number} [ary] The arity cap of `func`.
-	 * @param {number} [arity] The arity of `func`.
-	 * @returns {Function} Returns the new wrapped function.
-	 */
-	function createHybridWrapper(func, bitmask, thisArg, partials, holders, partialsRight, holdersRight, argPos, ary, arity) {
-	  var isAry = bitmask & ARY_FLAG,
-	      isBind = bitmask & BIND_FLAG,
-	      isBindKey = bitmask & BIND_KEY_FLAG,
-	      isCurry = bitmask & CURRY_FLAG,
-	      isCurryBound = bitmask & CURRY_BOUND_FLAG,
-	      isCurryRight = bitmask & CURRY_RIGHT_FLAG,
-	      Ctor = isBindKey ? undefined : createCtorWrapper(func);
-
-	  function wrapper() {
-	    // Avoid `arguments` object use disqualifying optimizations by
-	    // converting it to an array before providing it to other functions.
-	    var length = arguments.length,
-	        index = length,
-	        args = Array(length);
-
-	    while (index--) {
-	      args[index] = arguments[index];
-	    }
-	    if (partials) {
-	      args = composeArgs(args, partials, holders);
-	    }
-	    if (partialsRight) {
-	      args = composeArgsRight(args, partialsRight, holdersRight);
-	    }
-	    if (isCurry || isCurryRight) {
-	      var placeholder = wrapper.placeholder,
-	          argsHolders = replaceHolders(args, placeholder);
-
-	      length -= argsHolders.length;
-	      if (length < arity) {
-	        var newArgPos = argPos ? arrayCopy(argPos) : undefined,
-	            newArity = nativeMax(arity - length, 0),
-	            newsHolders = isCurry ? argsHolders : undefined,
-	            newHoldersRight = isCurry ? undefined : argsHolders,
-	            newPartials = isCurry ? args : undefined,
-	            newPartialsRight = isCurry ? undefined : args;
-
-	        bitmask |= (isCurry ? PARTIAL_FLAG : PARTIAL_RIGHT_FLAG);
-	        bitmask &= ~(isCurry ? PARTIAL_RIGHT_FLAG : PARTIAL_FLAG);
-
-	        if (!isCurryBound) {
-	          bitmask &= ~(BIND_FLAG | BIND_KEY_FLAG);
-	        }
-	        var newData = [func, bitmask, thisArg, newPartials, newsHolders, newPartialsRight, newHoldersRight, newArgPos, ary, newArity],
-	            result = createHybridWrapper.apply(undefined, newData);
-
-	        if (isLaziable(func)) {
-	          setData(result, newData);
-	        }
-	        result.placeholder = placeholder;
-	        return result;
-	      }
-	    }
-	    var thisBinding = isBind ? thisArg : this,
-	        fn = isBindKey ? thisBinding[func] : func;
-
-	    if (argPos) {
-	      args = reorder(args, argPos);
-	    }
-	    if (isAry && ary < args.length) {
-	      args.length = ary;
-	    }
-	    if (this && this !== global && this instanceof wrapper) {
-	      fn = Ctor || createCtorWrapper(func);
-	    }
-	    return fn.apply(thisBinding, args);
-	  }
-	  return wrapper;
-	}
-
-	module.exports = createHybridWrapper;
-
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 635 */
-/***/ function(module, exports) {
-
-	/**
-	 * Copies the values of `source` to `array`.
-	 *
-	 * @private
-	 * @param {Array} source The array to copy values from.
-	 * @param {Array} [array=[]] The array to copy values to.
-	 * @returns {Array} Returns `array`.
-	 */
-	function arrayCopy(source, array) {
-	  var index = -1,
-	      length = source.length;
-
-	  array || (array = Array(length));
-	  while (++index < length) {
-	    array[index] = source[index];
-	  }
-	  return array;
-	}
-
-	module.exports = arrayCopy;
-
-
-/***/ },
-/* 636 */
-/***/ function(module, exports) {
-
-	/* Native method references for those with the same name as other `lodash` methods. */
-	var nativeMax = Math.max;
-
-	/**
-	 * Creates an array that is the composition of partially applied arguments,
-	 * placeholders, and provided arguments into a single array of arguments.
-	 *
-	 * @private
-	 * @param {Array|Object} args The provided arguments.
-	 * @param {Array} partials The arguments to prepend to those provided.
-	 * @param {Array} holders The `partials` placeholder indexes.
-	 * @returns {Array} Returns the new array of composed arguments.
-	 */
-	function composeArgs(args, partials, holders) {
-	  var holdersLength = holders.length,
-	      argsIndex = -1,
-	      argsLength = nativeMax(args.length - holdersLength, 0),
-	      leftIndex = -1,
-	      leftLength = partials.length,
-	      result = Array(leftLength + argsLength);
-
-	  while (++leftIndex < leftLength) {
-	    result[leftIndex] = partials[leftIndex];
-	  }
-	  while (++argsIndex < holdersLength) {
-	    result[holders[argsIndex]] = args[argsIndex];
-	  }
-	  while (argsLength--) {
-	    result[leftIndex++] = args[argsIndex++];
-	  }
-	  return result;
-	}
-
-	module.exports = composeArgs;
-
-
-/***/ },
-/* 637 */
-/***/ function(module, exports) {
-
-	/* Native method references for those with the same name as other `lodash` methods. */
-	var nativeMax = Math.max;
-
-	/**
-	 * This function is like `composeArgs` except that the arguments composition
-	 * is tailored for `_.partialRight`.
-	 *
-	 * @private
-	 * @param {Array|Object} args The provided arguments.
-	 * @param {Array} partials The arguments to append to those provided.
-	 * @param {Array} holders The `partials` placeholder indexes.
-	 * @returns {Array} Returns the new array of composed arguments.
-	 */
-	function composeArgsRight(args, partials, holders) {
-	  var holdersIndex = -1,
-	      holdersLength = holders.length,
-	      argsIndex = -1,
-	      argsLength = nativeMax(args.length - holdersLength, 0),
-	      rightIndex = -1,
-	      rightLength = partials.length,
-	      result = Array(argsLength + rightLength);
-
-	  while (++argsIndex < argsLength) {
-	    result[argsIndex] = args[argsIndex];
-	  }
-	  var offset = argsIndex;
-	  while (++rightIndex < rightLength) {
-	    result[offset + rightIndex] = partials[rightIndex];
-	  }
-	  while (++holdersIndex < holdersLength) {
-	    result[offset + holders[holdersIndex]] = args[argsIndex++];
-	  }
-	  return result;
-	}
-
-	module.exports = composeArgsRight;
-
-
-/***/ },
-/* 638 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var LazyWrapper = __webpack_require__(639),
-	    getData = __webpack_require__(641),
-	    getFuncName = __webpack_require__(643),
-	    lodash = __webpack_require__(645);
-
-	/**
-	 * Checks if `func` has a lazy counterpart.
-	 *
-	 * @private
-	 * @param {Function} func The function to check.
-	 * @returns {boolean} Returns `true` if `func` has a lazy counterpart, else `false`.
-	 */
-	function isLaziable(func) {
-	  var funcName = getFuncName(func),
-	      other = lodash[funcName];
-
-	  if (typeof other != 'function' || !(funcName in LazyWrapper.prototype)) {
-	    return false;
-	  }
-	  if (func === other) {
-	    return true;
-	  }
-	  var data = getData(other);
-	  return !!data && func === data[0];
-	}
-
-	module.exports = isLaziable;
-
-
-/***/ },
-/* 639 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseCreate = __webpack_require__(633),
-	    baseLodash = __webpack_require__(640);
-
-	/** Used as references for `-Infinity` and `Infinity`. */
-	var POSITIVE_INFINITY = Number.POSITIVE_INFINITY;
-
-	/**
-	 * Creates a lazy wrapper object which wraps `value` to enable lazy evaluation.
-	 *
-	 * @private
-	 * @param {*} value The value to wrap.
-	 */
-	function LazyWrapper(value) {
-	  this.__wrapped__ = value;
-	  this.__actions__ = [];
-	  this.__dir__ = 1;
-	  this.__filtered__ = false;
-	  this.__iteratees__ = [];
-	  this.__takeCount__ = POSITIVE_INFINITY;
-	  this.__views__ = [];
-	}
-
-	LazyWrapper.prototype = baseCreate(baseLodash.prototype);
-	LazyWrapper.prototype.constructor = LazyWrapper;
-
-	module.exports = LazyWrapper;
-
-
-/***/ },
-/* 640 */
-/***/ function(module, exports) {
-
-	/**
-	 * The function whose prototype all chaining wrappers inherit from.
-	 *
-	 * @private
-	 */
-	function baseLodash() {
-	  // No operation performed.
-	}
-
-	module.exports = baseLodash;
-
-
-/***/ },
-/* 641 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var metaMap = __webpack_require__(630),
-	    noop = __webpack_require__(642);
-
-	/**
-	 * Gets metadata for `func`.
-	 *
-	 * @private
-	 * @param {Function} func The function to query.
-	 * @returns {*} Returns the metadata for `func`.
-	 */
-	var getData = !metaMap ? noop : function(func) {
-	  return metaMap.get(func);
-	};
-
-	module.exports = getData;
-
-
-/***/ },
-/* 642 */
-/***/ function(module, exports) {
-
-	/**
-	 * A no-operation function that returns `undefined` regardless of the
-	 * arguments it receives.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Utility
-	 * @example
-	 *
-	 * var object = { 'user': 'fred' };
-	 *
-	 * _.noop(object) === undefined;
-	 * // => true
-	 */
-	function noop() {
-	  // No operation performed.
-	}
-
-	module.exports = noop;
-
-
-/***/ },
-/* 643 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var realNames = __webpack_require__(644);
-
-	/**
-	 * Gets the name of `func`.
-	 *
-	 * @private
-	 * @param {Function} func The function to query.
-	 * @returns {string} Returns the function name.
-	 */
-	function getFuncName(func) {
-	  var result = (func.name + ''),
-	      array = realNames[result],
-	      length = array ? array.length : 0;
-
-	  while (length--) {
-	    var data = array[length],
-	        otherFunc = data.func;
-	    if (otherFunc == null || otherFunc == func) {
-	      return data.name;
-	    }
-	  }
-	  return result;
-	}
-
-	module.exports = getFuncName;
-
-
-/***/ },
-/* 644 */
-/***/ function(module, exports) {
-
-	/** Used to lookup unminified function names. */
-	var realNames = {};
-
-	module.exports = realNames;
-
-
-/***/ },
-/* 645 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var LazyWrapper = __webpack_require__(639),
-	    LodashWrapper = __webpack_require__(646),
-	    baseLodash = __webpack_require__(640),
-	    isArray = __webpack_require__(614),
-	    isObjectLike = __webpack_require__(607),
-	    wrapperClone = __webpack_require__(647);
-
-	/** Used for native method references. */
-	var objectProto = Object.prototype;
-
-	/** Used to check objects for own properties. */
-	var hasOwnProperty = objectProto.hasOwnProperty;
-
-	/**
-	 * Creates a `lodash` object which wraps `value` to enable implicit chaining.
-	 * Methods that operate on and return arrays, collections, and functions can
-	 * be chained together. Methods that retrieve a single value or may return a
-	 * primitive value will automatically end the chain returning the unwrapped
-	 * value. Explicit chaining may be enabled using `_.chain`. The execution of
-	 * chained methods is lazy, that is, execution is deferred until `_#value`
-	 * is implicitly or explicitly called.
-	 *
-	 * Lazy evaluation allows several methods to support shortcut fusion. Shortcut
-	 * fusion is an optimization strategy which merge iteratee calls; this can help
-	 * to avoid the creation of intermediate data structures and greatly reduce the
-	 * number of iteratee executions.
-	 *
-	 * Chaining is supported in custom builds as long as the `_#value` method is
-	 * directly or indirectly included in the build.
-	 *
-	 * In addition to lodash methods, wrappers have `Array` and `String` methods.
-	 *
-	 * The wrapper `Array` methods are:
-	 * `concat`, `join`, `pop`, `push`, `reverse`, `shift`, `slice`, `sort`,
-	 * `splice`, and `unshift`
-	 *
-	 * The wrapper `String` methods are:
-	 * `replace` and `split`
-	 *
-	 * The wrapper methods that support shortcut fusion are:
-	 * `compact`, `drop`, `dropRight`, `dropRightWhile`, `dropWhile`, `filter`,
-	 * `first`, `initial`, `last`, `map`, `pluck`, `reject`, `rest`, `reverse`,
-	 * `slice`, `take`, `takeRight`, `takeRightWhile`, `takeWhile`, `toArray`,
-	 * and `where`
-	 *
-	 * The chainable wrapper methods are:
-	 * `after`, `ary`, `assign`, `at`, `before`, `bind`, `bindAll`, `bindKey`,
-	 * `callback`, `chain`, `chunk`, `commit`, `compact`, `concat`, `constant`,
-	 * `countBy`, `create`, `curry`, `debounce`, `defaults`, `defaultsDeep`,
-	 * `defer`, `delay`, `difference`, `drop`, `dropRight`, `dropRightWhile`,
-	 * `dropWhile`, `fill`, `filter`, `flatten`, `flattenDeep`, `flow`, `flowRight`,
-	 * `forEach`, `forEachRight`, `forIn`, `forInRight`, `forOwn`, `forOwnRight`,
-	 * `functions`, `groupBy`, `indexBy`, `initial`, `intersection`, `invert`,
-	 * `invoke`, `keys`, `keysIn`, `map`, `mapKeys`, `mapValues`, `matches`,
-	 * `matchesProperty`, `memoize`, `merge`, `method`, `methodOf`, `mixin`,
-	 * `modArgs`, `negate`, `omit`, `once`, `pairs`, `partial`, `partialRight`,
-	 * `partition`, `pick`, `plant`, `pluck`, `property`, `propertyOf`, `pull`,
-	 * `pullAt`, `push`, `range`, `rearg`, `reject`, `remove`, `rest`, `restParam`,
-	 * `reverse`, `set`, `shuffle`, `slice`, `sort`, `sortBy`, `sortByAll`,
-	 * `sortByOrder`, `splice`, `spread`, `take`, `takeRight`, `takeRightWhile`,
-	 * `takeWhile`, `tap`, `throttle`, `thru`, `times`, `toArray`, `toPlainObject`,
-	 * `transform`, `union`, `uniq`, `unshift`, `unzip`, `unzipWith`, `values`,
-	 * `valuesIn`, `where`, `without`, `wrap`, `xor`, `zip`, `zipObject`, `zipWith`
-	 *
-	 * The wrapper methods that are **not** chainable by default are:
-	 * `add`, `attempt`, `camelCase`, `capitalize`, `ceil`, `clone`, `cloneDeep`,
-	 * `deburr`, `endsWith`, `escape`, `escapeRegExp`, `every`, `find`, `findIndex`,
-	 * `findKey`, `findLast`, `findLastIndex`, `findLastKey`, `findWhere`, `first`,
-	 * `floor`, `get`, `gt`, `gte`, `has`, `identity`, `includes`, `indexOf`,
-	 * `inRange`, `isArguments`, `isArray`, `isBoolean`, `isDate`, `isElement`,
-	 * `isEmpty`, `isEqual`, `isError`, `isFinite` `isFunction`, `isMatch`,
-	 * `isNative`, `isNaN`, `isNull`, `isNumber`, `isObject`, `isPlainObject`,
-	 * `isRegExp`, `isString`, `isUndefined`, `isTypedArray`, `join`, `kebabCase`,
-	 * `last`, `lastIndexOf`, `lt`, `lte`, `max`, `min`, `noConflict`, `noop`,
-	 * `now`, `pad`, `padLeft`, `padRight`, `parseInt`, `pop`, `random`, `reduce`,
-	 * `reduceRight`, `repeat`, `result`, `round`, `runInContext`, `shift`, `size`,
-	 * `snakeCase`, `some`, `sortedIndex`, `sortedLastIndex`, `startCase`,
-	 * `startsWith`, `sum`, `template`, `trim`, `trimLeft`, `trimRight`, `trunc`,
-	 * `unescape`, `uniqueId`, `value`, and `words`
-	 *
-	 * The wrapper method `sample` will return a wrapped value when `n` is provided,
-	 * otherwise an unwrapped value is returned.
-	 *
-	 * @name _
-	 * @constructor
-	 * @category Chain
-	 * @param {*} value The value to wrap in a `lodash` instance.
-	 * @returns {Object} Returns the new `lodash` wrapper instance.
-	 * @example
-	 *
-	 * var wrapped = _([1, 2, 3]);
-	 *
-	 * // returns an unwrapped value
-	 * wrapped.reduce(function(total, n) {
-	 *   return total + n;
-	 * });
-	 * // => 6
-	 *
-	 * // returns a wrapped value
-	 * var squares = wrapped.map(function(n) {
-	 *   return n * n;
-	 * });
-	 *
-	 * _.isArray(squares);
-	 * // => false
-	 *
-	 * _.isArray(squares.value());
-	 * // => true
-	 */
-	function lodash(value) {
-	  if (isObjectLike(value) && !isArray(value) && !(value instanceof LazyWrapper)) {
-	    if (value instanceof LodashWrapper) {
-	      return value;
-	    }
-	    if (hasOwnProperty.call(value, '__chain__') && hasOwnProperty.call(value, '__wrapped__')) {
-	      return wrapperClone(value);
-	    }
-	  }
-	  return new LodashWrapper(value);
-	}
-
-	// Ensure wrappers are instances of `baseLodash`.
-	lodash.prototype = baseLodash.prototype;
-
-	module.exports = lodash;
-
-
-/***/ },
-/* 646 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseCreate = __webpack_require__(633),
-	    baseLodash = __webpack_require__(640);
-
-	/**
-	 * The base constructor for creating `lodash` wrapper objects.
-	 *
-	 * @private
-	 * @param {*} value The value to wrap.
-	 * @param {boolean} [chainAll] Enable chaining for all wrapper methods.
-	 * @param {Array} [actions=[]] Actions to peform to resolve the unwrapped value.
-	 */
-	function LodashWrapper(value, chainAll, actions) {
-	  this.__wrapped__ = value;
-	  this.__actions__ = actions || [];
-	  this.__chain__ = !!chainAll;
-	}
-
-	LodashWrapper.prototype = baseCreate(baseLodash.prototype);
-	LodashWrapper.prototype.constructor = LodashWrapper;
-
-	module.exports = LodashWrapper;
-
-
-/***/ },
-/* 647 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var LazyWrapper = __webpack_require__(639),
-	    LodashWrapper = __webpack_require__(646),
-	    arrayCopy = __webpack_require__(635);
-
-	/**
-	 * Creates a clone of `wrapper`.
-	 *
-	 * @private
-	 * @param {Object} wrapper The wrapper to clone.
-	 * @returns {Object} Returns the cloned wrapper.
-	 */
-	function wrapperClone(wrapper) {
-	  return wrapper instanceof LazyWrapper
-	    ? wrapper.clone()
-	    : new LodashWrapper(wrapper.__wrapped__, wrapper.__chain__, arrayCopy(wrapper.__actions__));
-	}
-
-	module.exports = wrapperClone;
-
-
-/***/ },
-/* 648 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var arrayCopy = __webpack_require__(635),
-	    isIndex = __webpack_require__(615);
-
-	/* Native method references for those with the same name as other `lodash` methods. */
-	var nativeMin = Math.min;
-
-	/**
-	 * Reorder `array` according to the specified indexes where the element at
-	 * the first index is assigned as the first element, the element at
-	 * the second index is assigned as the second element, and so on.
-	 *
-	 * @private
-	 * @param {Array} array The array to reorder.
-	 * @param {Array} indexes The arranged array indexes.
-	 * @returns {Array} Returns `array`.
-	 */
-	function reorder(array, indexes) {
-	  var arrLength = array.length,
-	      length = nativeMin(indexes.length, arrLength),
-	      oldArray = arrayCopy(array);
-
-	  while (length--) {
-	    var index = indexes[length];
-	    array[length] = isIndex(index, arrLength) ? oldArray[index] : undefined;
-	  }
-	  return array;
-	}
-
-	module.exports = reorder;
-
-
-/***/ },
-/* 649 */
-/***/ function(module, exports) {
-
-	/** Used as the internal argument placeholder. */
-	var PLACEHOLDER = '__lodash_placeholder__';
-
-	/**
-	 * Replaces all `placeholder` elements in `array` with an internal placeholder
-	 * and returns an array of their indexes.
-	 *
-	 * @private
-	 * @param {Array} array The array to modify.
-	 * @param {*} placeholder The placeholder to replace.
-	 * @returns {Array} Returns the new array of placeholder indexes.
-	 */
-	function replaceHolders(array, placeholder) {
-	  var index = -1,
-	      length = array.length,
-	      resIndex = -1,
-	      result = [];
-
-	  while (++index < length) {
-	    if (array[index] === placeholder) {
-	      array[index] = PLACEHOLDER;
-	      result[++resIndex] = index;
-	    }
-	  }
-	  return result;
-	}
-
-	module.exports = replaceHolders;
-
-
-/***/ },
-/* 650 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseSetData = __webpack_require__(629),
-	    now = __webpack_require__(651);
-
-	/** Used to detect when a function becomes hot. */
-	var HOT_COUNT = 150,
-	    HOT_SPAN = 16;
-
-	/**
-	 * Sets metadata for `func`.
-	 *
-	 * **Note:** If this function becomes hot, i.e. is invoked a lot in a short
-	 * period of time, it will trip its breaker and transition to an identity function
-	 * to avoid garbage collection pauses in V8. See [V8 issue 2070](https://code.google.com/p/v8/issues/detail?id=2070)
-	 * for more details.
-	 *
-	 * @private
-	 * @param {Function} func The function to associate metadata with.
-	 * @param {*} data The metadata.
-	 * @returns {Function} Returns `func`.
-	 */
-	var setData = (function() {
-	  var count = 0,
-	      lastCalled = 0;
-
-	  return function(key, value) {
-	    var stamp = now(),
-	        remaining = HOT_SPAN - (stamp - lastCalled);
-
-	    lastCalled = stamp;
-	    if (remaining > 0) {
-	      if (++count >= HOT_COUNT) {
-	        return key;
-	      }
-	    } else {
-	      count = 0;
-	    }
-	    return baseSetData(key, value);
-	  };
-	}());
-
-	module.exports = setData;
-
-
-/***/ },
-/* 651 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var getNative = __webpack_require__(604);
-
-	/* Native method references for those with the same name as other `lodash` methods. */
-	var nativeNow = getNative(Date, 'now');
-
-	/**
-	 * Gets the number of milliseconds that have elapsed since the Unix epoch
-	 * (1 January 1970 00:00:00 UTC).
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Date
-	 * @example
-	 *
-	 * _.defer(function(stamp) {
-	 *   console.log(_.now() - stamp);
-	 * }, _.now());
-	 * // => logs the number of milliseconds it took for the deferred function to be invoked
-	 */
-	var now = nativeNow || function() {
-	  return new Date().getTime();
-	};
-
-	module.exports = now;
-
-
-/***/ },
-/* 652 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {var createCtorWrapper = __webpack_require__(632);
-
-	/** Used to compose bitmasks for wrapper metadata. */
-	var BIND_FLAG = 1;
-
-	/**
-	 * Creates a function that wraps `func` and invokes it with the optional `this`
-	 * binding of `thisArg` and the `partials` prepended to those provided to
-	 * the wrapper.
-	 *
-	 * @private
-	 * @param {Function} func The function to partially apply arguments to.
-	 * @param {number} bitmask The bitmask of flags. See `createWrapper` for more details.
-	 * @param {*} thisArg The `this` binding of `func`.
-	 * @param {Array} partials The arguments to prepend to those provided to the new function.
-	 * @returns {Function} Returns the new bound function.
-	 */
-	function createPartialWrapper(func, bitmask, thisArg, partials) {
-	  var isBind = bitmask & BIND_FLAG,
-	      Ctor = createCtorWrapper(func);
-
-	  function wrapper() {
-	    // Avoid `arguments` object use disqualifying optimizations by
-	    // converting it to an array before providing it `func`.
-	    var argsIndex = -1,
-	        argsLength = arguments.length,
-	        leftIndex = -1,
-	        leftLength = partials.length,
-	        args = Array(leftLength + argsLength);
-
-	    while (++leftIndex < leftLength) {
-	      args[leftIndex] = partials[leftIndex];
-	    }
-	    while (argsLength--) {
-	      args[leftIndex++] = arguments[++argsIndex];
-	    }
-	    var fn = (this && this !== global && this instanceof wrapper) ? Ctor : func;
-	    return fn.apply(isBind ? thisArg : this, args);
-	  }
-	  return wrapper;
-	}
-
-	module.exports = createPartialWrapper;
-
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 653 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var arrayCopy = __webpack_require__(635),
-	    composeArgs = __webpack_require__(636),
-	    composeArgsRight = __webpack_require__(637),
-	    replaceHolders = __webpack_require__(649);
-
-	/** Used to compose bitmasks for wrapper metadata. */
-	var BIND_FLAG = 1,
-	    CURRY_BOUND_FLAG = 4,
-	    CURRY_FLAG = 8,
-	    ARY_FLAG = 128,
-	    REARG_FLAG = 256;
-
-	/** Used as the internal argument placeholder. */
-	var PLACEHOLDER = '__lodash_placeholder__';
-
-	/* Native method references for those with the same name as other `lodash` methods. */
-	var nativeMin = Math.min;
-
-	/**
-	 * Merges the function metadata of `source` into `data`.
-	 *
-	 * Merging metadata reduces the number of wrappers required to invoke a function.
-	 * This is possible because methods like `_.bind`, `_.curry`, and `_.partial`
-	 * may be applied regardless of execution order. Methods like `_.ary` and `_.rearg`
-	 * augment function arguments, making the order in which they are executed important,
-	 * preventing the merging of metadata. However, we make an exception for a safe
-	 * common case where curried functions have `_.ary` and or `_.rearg` applied.
-	 *
-	 * @private
-	 * @param {Array} data The destination metadata.
-	 * @param {Array} source The source metadata.
-	 * @returns {Array} Returns `data`.
-	 */
-	function mergeData(data, source) {
-	  var bitmask = data[1],
-	      srcBitmask = source[1],
-	      newBitmask = bitmask | srcBitmask,
-	      isCommon = newBitmask < ARY_FLAG;
-
-	  var isCombo =
-	    (srcBitmask == ARY_FLAG && bitmask == CURRY_FLAG) ||
-	    (srcBitmask == ARY_FLAG && bitmask == REARG_FLAG && data[7].length <= source[8]) ||
-	    (srcBitmask == (ARY_FLAG | REARG_FLAG) && bitmask == CURRY_FLAG);
-
-	  // Exit early if metadata can't be merged.
-	  if (!(isCommon || isCombo)) {
-	    return data;
-	  }
-	  // Use source `thisArg` if available.
-	  if (srcBitmask & BIND_FLAG) {
-	    data[2] = source[2];
-	    // Set when currying a bound function.
-	    newBitmask |= (bitmask & BIND_FLAG) ? 0 : CURRY_BOUND_FLAG;
-	  }
-	  // Compose partial arguments.
-	  var value = source[3];
-	  if (value) {
-	    var partials = data[3];
-	    data[3] = partials ? composeArgs(partials, value, source[4]) : arrayCopy(value);
-	    data[4] = partials ? replaceHolders(data[3], PLACEHOLDER) : arrayCopy(source[4]);
-	  }
-	  // Compose partial right arguments.
-	  value = source[5];
-	  if (value) {
-	    partials = data[5];
-	    data[5] = partials ? composeArgsRight(partials, value, source[6]) : arrayCopy(value);
-	    data[6] = partials ? replaceHolders(data[5], PLACEHOLDER) : arrayCopy(source[6]);
-	  }
-	  // Use source `argPos` if available.
-	  value = source[7];
-	  if (value) {
-	    data[7] = arrayCopy(value);
-	  }
-	  // Use source `ary` if it's smaller.
-	  if (srcBitmask & ARY_FLAG) {
-	    data[8] = data[8] == null ? source[8] : nativeMin(data[8], source[8]);
-	  }
-	  // Use source `arity` if one is not provided.
-	  if (data[9] == null) {
-	    data[9] = source[9];
-	  }
-	  // Use source `func` and merge bitmasks.
-	  data[0] = source[0];
-	  data[1] = newBitmask;
-
-	  return data;
-	}
-
-	module.exports = mergeData;
-
-
-/***/ },
-/* 654 */
-/***/ function(module, exports) {
-
-	/** Used as the `TypeError` message for "Functions" methods. */
-	var FUNC_ERROR_TEXT = 'Expected a function';
-
-	/* Native method references for those with the same name as other `lodash` methods. */
-	var nativeMax = Math.max;
-
-	/**
-	 * Creates a function that invokes `func` with the `this` binding of the
-	 * created function and arguments from `start` and beyond provided as an array.
-	 *
-	 * **Note:** This method is based on the [rest parameter](https://developer.mozilla.org/Web/JavaScript/Reference/Functions/rest_parameters).
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Function
-	 * @param {Function} func The function to apply a rest parameter to.
-	 * @param {number} [start=func.length-1] The start position of the rest parameter.
-	 * @returns {Function} Returns the new function.
-	 * @example
-	 *
-	 * var say = _.restParam(function(what, names) {
-	 *   return what + ' ' + _.initial(names).join(', ') +
-	 *     (_.size(names) > 1 ? ', & ' : '') + _.last(names);
-	 * });
-	 *
-	 * say('hello', 'fred', 'barney', 'pebbles');
-	 * // => 'hello fred, barney, & pebbles'
-	 */
-	function restParam(func, start) {
-	  if (typeof func != 'function') {
-	    throw new TypeError(FUNC_ERROR_TEXT);
-	  }
-	  start = nativeMax(start === undefined ? (func.length - 1) : (+start || 0), 0);
-	  return function() {
-	    var args = arguments,
-	        index = -1,
-	        length = nativeMax(args.length - start, 0),
-	        rest = Array(length);
-
-	    while (++index < length) {
-	      rest[index] = args[start + index];
-	    }
-	    switch (start) {
-	      case 0: return func.call(this, rest);
-	      case 1: return func.call(this, args[0], rest);
-	      case 2: return func.call(this, args[0], args[1], rest);
-	    }
-	    var otherArgs = Array(start + 1);
-	    index = -1;
-	    while (++index < start) {
-	      otherArgs[index] = args[index];
-	    }
-	    otherArgs[start] = rest;
-	    return func.apply(this, otherArgs);
-	  };
-	}
-
-	module.exports = restParam;
-
-
-/***/ },
-/* 655 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseEach = __webpack_require__(597),
-	    createFind = __webpack_require__(656);
-
-	/**
-	 * Iterates over elements of `collection`, returning the first element
-	 * `predicate` returns truthy for. The predicate is bound to `thisArg` and
-	 * invoked with three arguments: (value, index|key, collection).
-	 *
-	 * If a property name is provided for `predicate` the created `_.property`
-	 * style callback returns the property value of the given element.
-	 *
-	 * If a value is also provided for `thisArg` the created `_.matchesProperty`
-	 * style callback returns `true` for elements that have a matching property
-	 * value, else `false`.
-	 *
-	 * If an object is provided for `predicate` the created `_.matches` style
-	 * callback returns `true` for elements that have the properties of the given
-	 * object, else `false`.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @alias detect
-	 * @category Collection
-	 * @param {Array|Object|string} collection The collection to search.
-	 * @param {Function|Object|string} [predicate=_.identity] The function invoked
-	 *  per iteration.
-	 * @param {*} [thisArg] The `this` binding of `predicate`.
-	 * @returns {*} Returns the matched element, else `undefined`.
-	 * @example
-	 *
-	 * var users = [
-	 *   { 'user': 'barney',  'age': 36, 'active': true },
-	 *   { 'user': 'fred',    'age': 40, 'active': false },
-	 *   { 'user': 'pebbles', 'age': 1,  'active': true }
-	 * ];
-	 *
-	 * _.result(_.find(users, function(chr) {
-	 *   return chr.age < 40;
-	 * }), 'user');
-	 * // => 'barney'
-	 *
-	 * // using the `_.matches` callback shorthand
-	 * _.result(_.find(users, { 'age': 1, 'active': true }), 'user');
-	 * // => 'pebbles'
-	 *
-	 * // using the `_.matchesProperty` callback shorthand
-	 * _.result(_.find(users, 'active', false), 'user');
-	 * // => 'fred'
-	 *
-	 * // using the `_.property` callback shorthand
-	 * _.result(_.find(users, 'active'), 'user');
-	 * // => 'barney'
-	 */
-	var find = createFind(baseEach);
-
-	module.exports = find;
-
-
-/***/ },
-/* 656 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseCallback = __webpack_require__(657),
-	    baseFind = __webpack_require__(679),
-	    baseFindIndex = __webpack_require__(680),
-	    isArray = __webpack_require__(614);
-
-	/**
-	 * Creates a `_.find` or `_.findLast` function.
-	 *
-	 * @private
-	 * @param {Function} eachFunc The function to iterate over a collection.
-	 * @param {boolean} [fromRight] Specify iterating from right to left.
-	 * @returns {Function} Returns the new find function.
-	 */
-	function createFind(eachFunc, fromRight) {
-	  return function(collection, predicate, thisArg) {
-	    predicate = baseCallback(predicate, thisArg, 3);
-	    if (isArray(collection)) {
-	      var index = baseFindIndex(collection, predicate, fromRight);
-	      return index > -1 ? collection[index] : undefined;
-	    }
-	    return baseFind(collection, predicate, eachFunc);
-	  };
-	}
-
-	module.exports = createFind;
-
-
-/***/ },
-/* 657 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseMatches = __webpack_require__(658),
-	    baseMatchesProperty = __webpack_require__(670),
-	    bindCallback = __webpack_require__(619),
-	    identity = __webpack_require__(620),
-	    property = __webpack_require__(677);
-
-	/**
-	 * The base implementation of `_.callback` which supports specifying the
-	 * number of arguments to provide to `func`.
-	 *
-	 * @private
-	 * @param {*} [func=_.identity] The value to convert to a callback.
-	 * @param {*} [thisArg] The `this` binding of `func`.
-	 * @param {number} [argCount] The number of arguments to provide to `func`.
-	 * @returns {Function} Returns the callback.
-	 */
-	function baseCallback(func, thisArg, argCount) {
-	  var type = typeof func;
-	  if (type == 'function') {
-	    return thisArg === undefined
-	      ? func
-	      : bindCallback(func, thisArg, argCount);
-	  }
-	  if (func == null) {
-	    return identity;
-	  }
-	  if (type == 'object') {
-	    return baseMatches(func);
-	  }
-	  return thisArg === undefined
-	    ? property(func)
-	    : baseMatchesProperty(func, thisArg);
-	}
-
-	module.exports = baseCallback;
-
-
-/***/ },
-/* 658 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseIsMatch = __webpack_require__(659),
-	    getMatchData = __webpack_require__(667),
-	    toObject = __webpack_require__(601);
-
-	/**
-	 * The base implementation of `_.matches` which does not clone `source`.
-	 *
-	 * @private
-	 * @param {Object} source The object of property values to match.
-	 * @returns {Function} Returns the new function.
-	 */
-	function baseMatches(source) {
-	  var matchData = getMatchData(source);
-	  if (matchData.length == 1 && matchData[0][2]) {
-	    var key = matchData[0][0],
-	        value = matchData[0][1];
-
-	    return function(object) {
-	      if (object == null) {
-	        return false;
-	      }
-	      return object[key] === value && (value !== undefined || (key in toObject(object)));
-	    };
-	  }
-	  return function(object) {
-	    return baseIsMatch(object, matchData);
-	  };
-	}
-
-	module.exports = baseMatches;
-
-
-/***/ },
-/* 659 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseIsEqual = __webpack_require__(660),
-	    toObject = __webpack_require__(601);
-
-	/**
-	 * The base implementation of `_.isMatch` without support for callback
-	 * shorthands and `this` binding.
-	 *
-	 * @private
-	 * @param {Object} object The object to inspect.
-	 * @param {Array} matchData The propery names, values, and compare flags to match.
-	 * @param {Function} [customizer] The function to customize comparing objects.
-	 * @returns {boolean} Returns `true` if `object` is a match, else `false`.
-	 */
-	function baseIsMatch(object, matchData, customizer) {
-	  var index = matchData.length,
-	      length = index,
-	      noCustomizer = !customizer;
-
-	  if (object == null) {
-	    return !length;
-	  }
-	  object = toObject(object);
-	  while (index--) {
-	    var data = matchData[index];
-	    if ((noCustomizer && data[2])
-	          ? data[1] !== object[data[0]]
-	          : !(data[0] in object)
-	        ) {
-	      return false;
-	    }
-	  }
-	  while (++index < length) {
-	    data = matchData[index];
-	    var key = data[0],
-	        objValue = object[key],
-	        srcValue = data[1];
-
-	    if (noCustomizer && data[2]) {
-	      if (objValue === undefined && !(key in object)) {
-	        return false;
-	      }
-	    } else {
-	      var result = customizer ? customizer(objValue, srcValue, key) : undefined;
-	      if (!(result === undefined ? baseIsEqual(srcValue, objValue, customizer, true) : result)) {
-	        return false;
-	      }
-	    }
-	  }
-	  return true;
-	}
-
-	module.exports = baseIsMatch;
-
-
-/***/ },
-/* 660 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseIsEqualDeep = __webpack_require__(661),
-	    isObject = __webpack_require__(602),
-	    isObjectLike = __webpack_require__(607);
-
-	/**
-	 * The base implementation of `_.isEqual` without support for `this` binding
-	 * `customizer` functions.
-	 *
-	 * @private
-	 * @param {*} value The value to compare.
-	 * @param {*} other The other value to compare.
-	 * @param {Function} [customizer] The function to customize comparing values.
-	 * @param {boolean} [isLoose] Specify performing partial comparisons.
-	 * @param {Array} [stackA] Tracks traversed `value` objects.
-	 * @param {Array} [stackB] Tracks traversed `other` objects.
-	 * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
-	 */
-	function baseIsEqual(value, other, customizer, isLoose, stackA, stackB) {
-	  if (value === other) {
-	    return true;
-	  }
-	  if (value == null || other == null || (!isObject(value) && !isObjectLike(other))) {
-	    return value !== value && other !== other;
-	  }
-	  return baseIsEqualDeep(value, other, baseIsEqual, customizer, isLoose, stackA, stackB);
-	}
-
-	module.exports = baseIsEqual;
-
-
-/***/ },
-/* 661 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var equalArrays = __webpack_require__(662),
-	    equalByTag = __webpack_require__(664),
-	    equalObjects = __webpack_require__(665),
-	    isArray = __webpack_require__(614),
-	    isTypedArray = __webpack_require__(666);
-
-	/** `Object#toString` result references. */
-	var argsTag = '[object Arguments]',
-	    arrayTag = '[object Array]',
-	    objectTag = '[object Object]';
-
-	/** Used for native method references. */
-	var objectProto = Object.prototype;
-
-	/** Used to check objects for own properties. */
-	var hasOwnProperty = objectProto.hasOwnProperty;
-
-	/**
-	 * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objToString = objectProto.toString;
-
-	/**
-	 * A specialized version of `baseIsEqual` for arrays and objects which performs
-	 * deep comparisons and tracks traversed objects enabling objects with circular
-	 * references to be compared.
-	 *
-	 * @private
-	 * @param {Object} object The object to compare.
-	 * @param {Object} other The other object to compare.
-	 * @param {Function} equalFunc The function to determine equivalents of values.
-	 * @param {Function} [customizer] The function to customize comparing objects.
-	 * @param {boolean} [isLoose] Specify performing partial comparisons.
-	 * @param {Array} [stackA=[]] Tracks traversed `value` objects.
-	 * @param {Array} [stackB=[]] Tracks traversed `other` objects.
-	 * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
-	 */
-	function baseIsEqualDeep(object, other, equalFunc, customizer, isLoose, stackA, stackB) {
-	  var objIsArr = isArray(object),
-	      othIsArr = isArray(other),
-	      objTag = arrayTag,
-	      othTag = arrayTag;
-
-	  if (!objIsArr) {
-	    objTag = objToString.call(object);
-	    if (objTag == argsTag) {
-	      objTag = objectTag;
-	    } else if (objTag != objectTag) {
-	      objIsArr = isTypedArray(object);
-	    }
-	  }
-	  if (!othIsArr) {
-	    othTag = objToString.call(other);
-	    if (othTag == argsTag) {
-	      othTag = objectTag;
-	    } else if (othTag != objectTag) {
-	      othIsArr = isTypedArray(other);
-	    }
-	  }
-	  var objIsObj = objTag == objectTag,
-	      othIsObj = othTag == objectTag,
-	      isSameTag = objTag == othTag;
-
-	  if (isSameTag && !(objIsArr || objIsObj)) {
-	    return equalByTag(object, other, objTag);
-	  }
-	  if (!isLoose) {
-	    var objIsWrapped = objIsObj && hasOwnProperty.call(object, '__wrapped__'),
-	        othIsWrapped = othIsObj && hasOwnProperty.call(other, '__wrapped__');
-
-	    if (objIsWrapped || othIsWrapped) {
-	      return equalFunc(objIsWrapped ? object.value() : object, othIsWrapped ? other.value() : other, customizer, isLoose, stackA, stackB);
-	    }
-	  }
-	  if (!isSameTag) {
-	    return false;
-	  }
-	  // Assume cyclic values are equal.
-	  // For more information on detecting circular references see https://es5.github.io/#JO.
-	  stackA || (stackA = []);
-	  stackB || (stackB = []);
-
-	  var length = stackA.length;
-	  while (length--) {
-	    if (stackA[length] == object) {
-	      return stackB[length] == other;
-	    }
-	  }
-	  // Add `object` and `other` to the stack of traversed objects.
-	  stackA.push(object);
-	  stackB.push(other);
-
-	  var result = (objIsArr ? equalArrays : equalObjects)(object, other, equalFunc, customizer, isLoose, stackA, stackB);
-
-	  stackA.pop();
-	  stackB.pop();
-
-	  return result;
-	}
-
-	module.exports = baseIsEqualDeep;
-
-
-/***/ },
-/* 662 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var arraySome = __webpack_require__(663);
-
-	/**
-	 * A specialized version of `baseIsEqualDeep` for arrays with support for
-	 * partial deep comparisons.
-	 *
-	 * @private
-	 * @param {Array} array The array to compare.
-	 * @param {Array} other The other array to compare.
-	 * @param {Function} equalFunc The function to determine equivalents of values.
-	 * @param {Function} [customizer] The function to customize comparing arrays.
-	 * @param {boolean} [isLoose] Specify performing partial comparisons.
-	 * @param {Array} [stackA] Tracks traversed `value` objects.
-	 * @param {Array} [stackB] Tracks traversed `other` objects.
-	 * @returns {boolean} Returns `true` if the arrays are equivalent, else `false`.
-	 */
-	function equalArrays(array, other, equalFunc, customizer, isLoose, stackA, stackB) {
-	  var index = -1,
-	      arrLength = array.length,
-	      othLength = other.length;
-
-	  if (arrLength != othLength && !(isLoose && othLength > arrLength)) {
-	    return false;
-	  }
-	  // Ignore non-index properties.
-	  while (++index < arrLength) {
-	    var arrValue = array[index],
-	        othValue = other[index],
-	        result = customizer ? customizer(isLoose ? othValue : arrValue, isLoose ? arrValue : othValue, index) : undefined;
-
-	    if (result !== undefined) {
-	      if (result) {
-	        continue;
-	      }
-	      return false;
-	    }
-	    // Recursively compare arrays (susceptible to call stack limits).
-	    if (isLoose) {
-	      if (!arraySome(other, function(othValue) {
-	            return arrValue === othValue || equalFunc(arrValue, othValue, customizer, isLoose, stackA, stackB);
-	          })) {
-	        return false;
-	      }
-	    } else if (!(arrValue === othValue || equalFunc(arrValue, othValue, customizer, isLoose, stackA, stackB))) {
-	      return false;
-	    }
-	  }
-	  return true;
-	}
-
-	module.exports = equalArrays;
-
-
-/***/ },
-/* 663 */
-/***/ function(module, exports) {
-
-	/**
-	 * A specialized version of `_.some` for arrays without support for callback
-	 * shorthands and `this` binding.
-	 *
-	 * @private
-	 * @param {Array} array The array to iterate over.
-	 * @param {Function} predicate The function invoked per iteration.
-	 * @returns {boolean} Returns `true` if any element passes the predicate check,
-	 *  else `false`.
-	 */
-	function arraySome(array, predicate) {
-	  var index = -1,
-	      length = array.length;
-
-	  while (++index < length) {
-	    if (predicate(array[index], index, array)) {
-	      return true;
-	    }
-	  }
-	  return false;
-	}
-
-	module.exports = arraySome;
-
-
-/***/ },
-/* 664 */
-/***/ function(module, exports) {
-
-	/** `Object#toString` result references. */
-	var boolTag = '[object Boolean]',
-	    dateTag = '[object Date]',
-	    errorTag = '[object Error]',
-	    numberTag = '[object Number]',
-	    regexpTag = '[object RegExp]',
-	    stringTag = '[object String]';
-
-	/**
-	 * A specialized version of `baseIsEqualDeep` for comparing objects of
-	 * the same `toStringTag`.
-	 *
-	 * **Note:** This function only supports comparing values with tags of
-	 * `Boolean`, `Date`, `Error`, `Number`, `RegExp`, or `String`.
-	 *
-	 * @private
-	 * @param {Object} object The object to compare.
-	 * @param {Object} other The other object to compare.
-	 * @param {string} tag The `toStringTag` of the objects to compare.
-	 * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
-	 */
-	function equalByTag(object, other, tag) {
-	  switch (tag) {
-	    case boolTag:
-	    case dateTag:
-	      // Coerce dates and booleans to numbers, dates to milliseconds and booleans
-	      // to `1` or `0` treating invalid dates coerced to `NaN` as not equal.
-	      return +object == +other;
-
-	    case errorTag:
-	      return object.name == other.name && object.message == other.message;
-
-	    case numberTag:
-	      // Treat `NaN` vs. `NaN` as equal.
-	      return (object != +object)
-	        ? other != +other
-	        : object == +other;
-
-	    case regexpTag:
-	    case stringTag:
-	      // Coerce regexes to strings and treat strings primitives and string
-	      // objects as equal. See https://es5.github.io/#x15.10.6.4 for more details.
-	      return object == (other + '');
-	  }
-	  return false;
-	}
-
-	module.exports = equalByTag;
-
-
-/***/ },
-/* 665 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var keys = __webpack_require__(603);
-
-	/** Used for native method references. */
-	var objectProto = Object.prototype;
-
-	/** Used to check objects for own properties. */
-	var hasOwnProperty = objectProto.hasOwnProperty;
-
-	/**
-	 * A specialized version of `baseIsEqualDeep` for objects with support for
-	 * partial deep comparisons.
-	 *
-	 * @private
-	 * @param {Object} object The object to compare.
-	 * @param {Object} other The other object to compare.
-	 * @param {Function} equalFunc The function to determine equivalents of values.
-	 * @param {Function} [customizer] The function to customize comparing values.
-	 * @param {boolean} [isLoose] Specify performing partial comparisons.
-	 * @param {Array} [stackA] Tracks traversed `value` objects.
-	 * @param {Array} [stackB] Tracks traversed `other` objects.
-	 * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
-	 */
-	function equalObjects(object, other, equalFunc, customizer, isLoose, stackA, stackB) {
-	  var objProps = keys(object),
-	      objLength = objProps.length,
-	      othProps = keys(other),
-	      othLength = othProps.length;
-
-	  if (objLength != othLength && !isLoose) {
-	    return false;
-	  }
-	  var index = objLength;
-	  while (index--) {
-	    var key = objProps[index];
-	    if (!(isLoose ? key in other : hasOwnProperty.call(other, key))) {
-	      return false;
-	    }
-	  }
-	  var skipCtor = isLoose;
-	  while (++index < objLength) {
-	    key = objProps[index];
-	    var objValue = object[key],
-	        othValue = other[key],
-	        result = customizer ? customizer(isLoose ? othValue : objValue, isLoose? objValue : othValue, key) : undefined;
-
-	    // Recursively compare objects (susceptible to call stack limits).
-	    if (!(result === undefined ? equalFunc(objValue, othValue, customizer, isLoose, stackA, stackB) : result)) {
-	      return false;
-	    }
-	    skipCtor || (skipCtor = key == 'constructor');
-	  }
-	  if (!skipCtor) {
-	    var objCtor = object.constructor,
-	        othCtor = other.constructor;
-
-	    // Non `Object` object instances with different constructors are not equal.
-	    if (objCtor != othCtor &&
-	        ('constructor' in object && 'constructor' in other) &&
-	        !(typeof objCtor == 'function' && objCtor instanceof objCtor &&
-	          typeof othCtor == 'function' && othCtor instanceof othCtor)) {
-	      return false;
-	    }
-	  }
-	  return true;
-	}
-
-	module.exports = equalObjects;
-
-
-/***/ },
-/* 666 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isLength = __webpack_require__(611),
-	    isObjectLike = __webpack_require__(607);
-
-	/** `Object#toString` result references. */
-	var argsTag = '[object Arguments]',
-	    arrayTag = '[object Array]',
-	    boolTag = '[object Boolean]',
-	    dateTag = '[object Date]',
-	    errorTag = '[object Error]',
-	    funcTag = '[object Function]',
-	    mapTag = '[object Map]',
-	    numberTag = '[object Number]',
-	    objectTag = '[object Object]',
-	    regexpTag = '[object RegExp]',
-	    setTag = '[object Set]',
-	    stringTag = '[object String]',
-	    weakMapTag = '[object WeakMap]';
-
-	var arrayBufferTag = '[object ArrayBuffer]',
-	    float32Tag = '[object Float32Array]',
-	    float64Tag = '[object Float64Array]',
-	    int8Tag = '[object Int8Array]',
-	    int16Tag = '[object Int16Array]',
-	    int32Tag = '[object Int32Array]',
-	    uint8Tag = '[object Uint8Array]',
-	    uint8ClampedTag = '[object Uint8ClampedArray]',
-	    uint16Tag = '[object Uint16Array]',
-	    uint32Tag = '[object Uint32Array]';
-
-	/** Used to identify `toStringTag` values of typed arrays. */
-	var typedArrayTags = {};
-	typedArrayTags[float32Tag] = typedArrayTags[float64Tag] =
-	typedArrayTags[int8Tag] = typedArrayTags[int16Tag] =
-	typedArrayTags[int32Tag] = typedArrayTags[uint8Tag] =
-	typedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] =
-	typedArrayTags[uint32Tag] = true;
-	typedArrayTags[argsTag] = typedArrayTags[arrayTag] =
-	typedArrayTags[arrayBufferTag] = typedArrayTags[boolTag] =
-	typedArrayTags[dateTag] = typedArrayTags[errorTag] =
-	typedArrayTags[funcTag] = typedArrayTags[mapTag] =
-	typedArrayTags[numberTag] = typedArrayTags[objectTag] =
-	typedArrayTags[regexpTag] = typedArrayTags[setTag] =
-	typedArrayTags[stringTag] = typedArrayTags[weakMapTag] = false;
-
-	/** Used for native method references. */
-	var objectProto = Object.prototype;
-
-	/**
-	 * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objToString = objectProto.toString;
-
-	/**
-	 * Checks if `value` is classified as a typed array.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
-	 * @example
-	 *
-	 * _.isTypedArray(new Uint8Array);
-	 * // => true
-	 *
-	 * _.isTypedArray([]);
-	 * // => false
-	 */
-	function isTypedArray(value) {
-	  return isObjectLike(value) && isLength(value.length) && !!typedArrayTags[objToString.call(value)];
-	}
-
-	module.exports = isTypedArray;
-
-
-/***/ },
-/* 667 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isStrictComparable = __webpack_require__(668),
-	    pairs = __webpack_require__(669);
-
-	/**
-	 * Gets the propery names, values, and compare flags of `object`.
-	 *
-	 * @private
-	 * @param {Object} object The object to query.
-	 * @returns {Array} Returns the match data of `object`.
-	 */
-	function getMatchData(object) {
-	  var result = pairs(object),
-	      length = result.length;
-
-	  while (length--) {
-	    result[length][2] = isStrictComparable(result[length][1]);
-	  }
-	  return result;
-	}
-
-	module.exports = getMatchData;
-
-
-/***/ },
-/* 668 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isObject = __webpack_require__(602);
-
-	/**
-	 * Checks if `value` is suitable for strict equality comparisons, i.e. `===`.
-	 *
-	 * @private
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` if suitable for strict
-	 *  equality comparisons, else `false`.
-	 */
-	function isStrictComparable(value) {
-	  return value === value && !isObject(value);
-	}
-
-	module.exports = isStrictComparable;
-
-
-/***/ },
-/* 669 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var keys = __webpack_require__(603),
-	    toObject = __webpack_require__(601);
-
-	/**
-	 * Creates a two dimensional array of the key-value pairs for `object`,
-	 * e.g. `[[key1, value1], [key2, value2]]`.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Object
-	 * @param {Object} object The object to query.
-	 * @returns {Array} Returns the new array of key-value pairs.
-	 * @example
-	 *
-	 * _.pairs({ 'barney': 36, 'fred': 40 });
-	 * // => [['barney', 36], ['fred', 40]] (iteration order is not guaranteed)
-	 */
-	function pairs(object) {
-	  object = toObject(object);
-
-	  var index = -1,
-	      props = keys(object),
-	      length = props.length,
-	      result = Array(length);
-
-	  while (++index < length) {
-	    var key = props[index];
-	    result[index] = [key, object[key]];
-	  }
-	  return result;
-	}
-
-	module.exports = pairs;
-
-
-/***/ },
-/* 670 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseGet = __webpack_require__(671),
-	    baseIsEqual = __webpack_require__(660),
-	    baseSlice = __webpack_require__(672),
-	    isArray = __webpack_require__(614),
-	    isKey = __webpack_require__(673),
-	    isStrictComparable = __webpack_require__(668),
-	    last = __webpack_require__(674),
-	    toObject = __webpack_require__(601),
-	    toPath = __webpack_require__(675);
-
-	/**
-	 * The base implementation of `_.matchesProperty` which does not clone `srcValue`.
-	 *
-	 * @private
-	 * @param {string} path The path of the property to get.
-	 * @param {*} srcValue The value to compare.
-	 * @returns {Function} Returns the new function.
-	 */
-	function baseMatchesProperty(path, srcValue) {
-	  var isArr = isArray(path),
-	      isCommon = isKey(path) && isStrictComparable(srcValue),
-	      pathKey = (path + '');
-
-	  path = toPath(path);
-	  return function(object) {
-	    if (object == null) {
-	      return false;
-	    }
-	    var key = pathKey;
-	    object = toObject(object);
-	    if ((isArr || !isCommon) && !(key in object)) {
-	      object = path.length == 1 ? object : baseGet(object, baseSlice(path, 0, -1));
-	      if (object == null) {
-	        return false;
-	      }
-	      key = last(path);
-	      object = toObject(object);
-	    }
-	    return object[key] === srcValue
-	      ? (srcValue !== undefined || (key in object))
-	      : baseIsEqual(srcValue, object[key], undefined, true);
-	  };
-	}
-
-	module.exports = baseMatchesProperty;
-
-
-/***/ },
-/* 671 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var toObject = __webpack_require__(601);
-
-	/**
-	 * The base implementation of `get` without support for string paths
-	 * and default values.
-	 *
-	 * @private
-	 * @param {Object} object The object to query.
-	 * @param {Array} path The path of the property to get.
-	 * @param {string} [pathKey] The key representation of path.
-	 * @returns {*} Returns the resolved value.
-	 */
-	function baseGet(object, path, pathKey) {
-	  if (object == null) {
-	    return;
-	  }
-	  if (pathKey !== undefined && pathKey in toObject(object)) {
-	    path = [pathKey];
-	  }
-	  var index = 0,
-	      length = path.length;
-
-	  while (object != null && index < length) {
-	    object = object[path[index++]];
-	  }
-	  return (index && index == length) ? object : undefined;
-	}
-
-	module.exports = baseGet;
-
-
-/***/ },
-/* 672 */
-/***/ function(module, exports) {
-
-	/**
-	 * The base implementation of `_.slice` without an iteratee call guard.
-	 *
-	 * @private
-	 * @param {Array} array The array to slice.
-	 * @param {number} [start=0] The start position.
-	 * @param {number} [end=array.length] The end position.
-	 * @returns {Array} Returns the slice of `array`.
-	 */
-	function baseSlice(array, start, end) {
-	  var index = -1,
-	      length = array.length;
-
-	  start = start == null ? 0 : (+start || 0);
-	  if (start < 0) {
-	    start = -start > length ? 0 : (length + start);
-	  }
-	  end = (end === undefined || end > length) ? length : (+end || 0);
-	  if (end < 0) {
-	    end += length;
-	  }
-	  length = start > end ? 0 : ((end - start) >>> 0);
-	  start >>>= 0;
-
-	  var result = Array(length);
-	  while (++index < length) {
-	    result[index] = array[index + start];
-	  }
-	  return result;
-	}
-
-	module.exports = baseSlice;
-
-
-/***/ },
-/* 673 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isArray = __webpack_require__(614),
-	    toObject = __webpack_require__(601);
-
-	/** Used to match property names within property paths. */
-	var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\n\\]|\\.)*?\1)\]/,
-	    reIsPlainProp = /^\w*$/;
-
-	/**
-	 * Checks if `value` is a property name and not a property path.
-	 *
-	 * @private
-	 * @param {*} value The value to check.
-	 * @param {Object} [object] The object to query keys on.
-	 * @returns {boolean} Returns `true` if `value` is a property name, else `false`.
-	 */
-	function isKey(value, object) {
-	  var type = typeof value;
-	  if ((type == 'string' && reIsPlainProp.test(value)) || type == 'number') {
-	    return true;
-	  }
-	  if (isArray(value)) {
-	    return false;
-	  }
-	  var result = !reIsDeepProp.test(value);
-	  return result || (object != null && value in toObject(object));
-	}
-
-	module.exports = isKey;
-
-
-/***/ },
-/* 674 */
-/***/ function(module, exports) {
-
-	/**
-	 * Gets the last element of `array`.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Array
-	 * @param {Array} array The array to query.
-	 * @returns {*} Returns the last element of `array`.
-	 * @example
-	 *
-	 * _.last([1, 2, 3]);
-	 * // => 3
-	 */
-	function last(array) {
-	  var length = array ? array.length : 0;
-	  return length ? array[length - 1] : undefined;
-	}
-
-	module.exports = last;
-
-
-/***/ },
-/* 675 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseToString = __webpack_require__(676),
-	    isArray = __webpack_require__(614);
-
-	/** Used to match property names within property paths. */
-	var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\n\\]|\\.)*?)\2)\]/g;
-
-	/** Used to match backslashes in property paths. */
-	var reEscapeChar = /\\(\\)?/g;
-
-	/**
-	 * Converts `value` to property path array if it's not one.
-	 *
-	 * @private
-	 * @param {*} value The value to process.
-	 * @returns {Array} Returns the property path array.
-	 */
-	function toPath(value) {
-	  if (isArray(value)) {
-	    return value;
-	  }
-	  var result = [];
-	  baseToString(value).replace(rePropName, function(match, number, quote, string) {
-	    result.push(quote ? string.replace(reEscapeChar, '$1') : (number || match));
-	  });
-	  return result;
-	}
-
-	module.exports = toPath;
-
-
-/***/ },
-/* 676 */
-/***/ function(module, exports) {
-
-	/**
-	 * Converts `value` to a string if it's not one. An empty string is returned
-	 * for `null` or `undefined` values.
-	 *
-	 * @private
-	 * @param {*} value The value to process.
-	 * @returns {string} Returns the string.
-	 */
-	function baseToString(value) {
-	  return value == null ? '' : (value + '');
-	}
-
-	module.exports = baseToString;
-
-
-/***/ },
-/* 677 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseProperty = __webpack_require__(610),
-	    basePropertyDeep = __webpack_require__(678),
-	    isKey = __webpack_require__(673);
-
-	/**
-	 * Creates a function that returns the property value at `path` on a
-	 * given object.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Utility
-	 * @param {Array|string} path The path of the property to get.
-	 * @returns {Function} Returns the new function.
-	 * @example
-	 *
-	 * var objects = [
-	 *   { 'a': { 'b': { 'c': 2 } } },
-	 *   { 'a': { 'b': { 'c': 1 } } }
-	 * ];
-	 *
-	 * _.map(objects, _.property('a.b.c'));
-	 * // => [2, 1]
-	 *
-	 * _.pluck(_.sortBy(objects, _.property(['a', 'b', 'c'])), 'a.b.c');
-	 * // => [1, 2]
-	 */
-	function property(path) {
-	  return isKey(path) ? baseProperty(path) : basePropertyDeep(path);
-	}
-
-	module.exports = property;
-
-
-/***/ },
-/* 678 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseGet = __webpack_require__(671),
-	    toPath = __webpack_require__(675);
-
-	/**
-	 * A specialized version of `baseProperty` which supports deep paths.
-	 *
-	 * @private
-	 * @param {Array|string} path The path of the property to get.
-	 * @returns {Function} Returns the new function.
-	 */
-	function basePropertyDeep(path) {
-	  var pathKey = (path + '');
-	  path = toPath(path);
-	  return function(object) {
-	    return baseGet(object, path, pathKey);
-	  };
-	}
-
-	module.exports = basePropertyDeep;
-
-
-/***/ },
-/* 679 */
-/***/ function(module, exports) {
-
-	/**
-	 * The base implementation of `_.find`, `_.findLast`, `_.findKey`, and `_.findLastKey`,
-	 * without support for callback shorthands and `this` binding, which iterates
-	 * over `collection` using the provided `eachFunc`.
-	 *
-	 * @private
-	 * @param {Array|Object|string} collection The collection to search.
-	 * @param {Function} predicate The function invoked per iteration.
-	 * @param {Function} eachFunc The function to iterate over `collection`.
-	 * @param {boolean} [retKey] Specify returning the key of the found element
-	 *  instead of the element itself.
-	 * @returns {*} Returns the found element or its key, else `undefined`.
-	 */
-	function baseFind(collection, predicate, eachFunc, retKey) {
-	  var result;
-	  eachFunc(collection, function(value, key, collection) {
-	    if (predicate(value, key, collection)) {
-	      result = retKey ? key : value;
-	      return false;
-	    }
-	  });
-	  return result;
-	}
-
-	module.exports = baseFind;
-
-
-/***/ },
-/* 680 */
-/***/ function(module, exports) {
-
-	/**
-	 * The base implementation of `_.findIndex` and `_.findLastIndex` without
-	 * support for callback shorthands and `this` binding.
-	 *
-	 * @private
-	 * @param {Array} array The array to search.
-	 * @param {Function} predicate The function invoked per iteration.
-	 * @param {boolean} [fromRight] Specify iterating from right to left.
-	 * @returns {number} Returns the index of the matched value, else `-1`.
-	 */
-	function baseFindIndex(array, predicate, fromRight) {
-	  var length = array.length,
-	      index = fromRight ? length : -1;
-
-	  while ((fromRight ? index-- : ++index < length)) {
-	    if (predicate(array[index], index, array)) {
-	      return index;
-	    }
-	  }
-	  return -1;
-	}
-
-	module.exports = baseFindIndex;
-
-
-/***/ },
-/* 681 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var assign = __webpack_require__(682),
-	    domEvent = __webpack_require__(484),
-	    domRemove = __webpack_require__(54);
-
-	function stopPropagation(event) {
-	  event.stopPropagation();
-	}
-
-	function TextBox(options) {
-
-	  this.container = options.container;
-	  this.textarea = document.createElement('textarea');
-
-	  this.keyHandler = options.keyHandler || function() {};
-	}
-
-	module.exports = TextBox;
-
-
-	TextBox.prototype.create = function(bounds, style, value) {
-
-	  var textarea = this.textarea,
-	      container = this.container;
-
-	  assign(textarea.style, {
-	    width: bounds.width + 'px',
-	    height: bounds.height + 'px',
-	    left: bounds.x + 'px',
-	    top: bounds.y + 'px',
-	    position: 'absolute',
-	    textAlign: 'center',
-	    boxSizing: 'border-box'
-	  }, style || {});
-
-	  textarea.value = value;
-	  textarea.title = 'Press SHIFT+Enter for line feed';
-
-	  domEvent.bind(textarea, 'keydown', this.keyHandler);
-	  domEvent.bind(textarea, 'mousedown', stopPropagation);
-
-	  container.appendChild(textarea);
-
-	  setTimeout(function() {
-	    if (textarea.parent) {
-	      textarea.select();
-	    }
-	    textarea.focus();
-	  }, 100);
-	};
-
-	TextBox.prototype.destroy = function() {
-	  var textarea = this.textarea;
-
-	  textarea.value = '';
-
-	  domEvent.unbind(textarea, 'keydown', this.keyHandler);
-	  domEvent.unbind(textarea, 'mousedown', stopPropagation);
-
-	  domRemove(textarea);
-	};
-
-	TextBox.prototype.getValue = function() {
-	  return this.textarea.value;
-	};
-
-
-/***/ },
-/* 682 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var assignWith = __webpack_require__(683),
-	    baseAssign = __webpack_require__(684),
-	    createAssigner = __webpack_require__(686);
-
-	/**
-	 * Assigns own enumerable properties of source object(s) to the destination
-	 * object. Subsequent sources overwrite property assignments of previous sources.
-	 * If `customizer` is provided it's invoked to produce the assigned values.
-	 * The `customizer` is bound to `thisArg` and invoked with five arguments:
-	 * (objectValue, sourceValue, key, object, source).
-	 *
-	 * **Note:** This method mutates `object` and is based on
-	 * [`Object.assign`](http://ecma-international.org/ecma-262/6.0/#sec-object.assign).
-	 *
-	 * @static
-	 * @memberOf _
-	 * @alias extend
-	 * @category Object
-	 * @param {Object} object The destination object.
-	 * @param {...Object} [sources] The source objects.
-	 * @param {Function} [customizer] The function to customize assigned values.
-	 * @param {*} [thisArg] The `this` binding of `customizer`.
-	 * @returns {Object} Returns `object`.
-	 * @example
-	 *
-	 * _.assign({ 'user': 'barney' }, { 'age': 40 }, { 'user': 'fred' });
-	 * // => { 'user': 'fred', 'age': 40 }
-	 *
-	 * // using a customizer callback
-	 * var defaults = _.partialRight(_.assign, function(value, other) {
-	 *   return _.isUndefined(value) ? other : value;
-	 * });
-	 *
-	 * defaults({ 'user': 'barney' }, { 'age': 36 }, { 'user': 'fred' });
-	 * // => { 'user': 'barney', 'age': 36 }
-	 */
-	var assign = createAssigner(function(object, source, customizer) {
-	  return customizer
-	    ? assignWith(object, source, customizer)
-	    : baseAssign(object, source);
-	});
-
-	module.exports = assign;
-
-
-/***/ },
-/* 683 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var keys = __webpack_require__(603);
-
-	/**
-	 * A specialized version of `_.assign` for customizing assigned values without
-	 * support for argument juggling, multiple sources, and `this` binding `customizer`
-	 * functions.
-	 *
-	 * @private
-	 * @param {Object} object The destination object.
-	 * @param {Object} source The source object.
-	 * @param {Function} customizer The function to customize assigned values.
-	 * @returns {Object} Returns `object`.
-	 */
-	function assignWith(object, source, customizer) {
-	  var index = -1,
-	      props = keys(source),
-	      length = props.length;
-
-	  while (++index < length) {
-	    var key = props[index],
-	        value = object[key],
-	        result = customizer(value, source[key], key, object, source);
-
-	    if ((result === result ? (result !== value) : (value === value)) ||
-	        (value === undefined && !(key in object))) {
-	      object[key] = result;
-	    }
-	  }
-	  return object;
-	}
-
-	module.exports = assignWith;
-
-
-/***/ },
-/* 684 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseCopy = __webpack_require__(685),
-	    keys = __webpack_require__(603);
-
-	/**
-	 * The base implementation of `_.assign` without support for argument juggling,
-	 * multiple sources, and `customizer` functions.
-	 *
-	 * @private
-	 * @param {Object} object The destination object.
-	 * @param {Object} source The source object.
-	 * @returns {Object} Returns `object`.
-	 */
-	function baseAssign(object, source) {
-	  return source == null
-	    ? object
-	    : baseCopy(source, keys(source), object);
-	}
-
-	module.exports = baseAssign;
-
-
-/***/ },
-/* 685 */
-/***/ function(module, exports) {
-
-	/**
-	 * Copies properties of `source` to `object`.
-	 *
-	 * @private
-	 * @param {Object} source The object to copy properties from.
-	 * @param {Array} props The property names to copy.
-	 * @param {Object} [object={}] The object to copy properties to.
-	 * @returns {Object} Returns `object`.
-	 */
-	function baseCopy(source, props, object) {
-	  object || (object = {});
-
-	  var index = -1,
-	      length = props.length;
-
-	  while (++index < length) {
-	    var key = props[index];
-	    object[key] = source[key];
-	  }
-	  return object;
-	}
-
-	module.exports = baseCopy;
-
-
-/***/ },
-/* 686 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var bindCallback = __webpack_require__(619),
-	    isIterateeCall = __webpack_require__(687),
-	    restParam = __webpack_require__(654);
-
-	/**
-	 * Creates a `_.assign`, `_.defaults`, or `_.merge` function.
-	 *
-	 * @private
-	 * @param {Function} assigner The function to assign values.
-	 * @returns {Function} Returns the new assigner function.
-	 */
-	function createAssigner(assigner) {
-	  return restParam(function(object, sources) {
-	    var index = -1,
-	        length = object == null ? 0 : sources.length,
-	        customizer = length > 2 ? sources[length - 2] : undefined,
-	        guard = length > 2 ? sources[2] : undefined,
-	        thisArg = length > 1 ? sources[length - 1] : undefined;
-
-	    if (typeof customizer == 'function') {
-	      customizer = bindCallback(customizer, thisArg, 5);
-	      length -= 2;
-	    } else {
-	      customizer = typeof thisArg == 'function' ? thisArg : undefined;
-	      length -= (customizer ? 1 : 0);
-	    }
-	    if (guard && isIterateeCall(sources[0], sources[1], guard)) {
-	      customizer = length < 3 ? undefined : customizer;
-	      length = 1;
-	    }
-	    while (++index < length) {
-	      var source = sources[index];
-	      if (source) {
-	        assigner(object, source, customizer);
-	      }
-	    }
-	    return object;
-	  });
-	}
-
-	module.exports = createAssigner;
-
-
-/***/ },
-/* 687 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isArrayLike = __webpack_require__(608),
-	    isIndex = __webpack_require__(615),
-	    isObject = __webpack_require__(602);
-
-	/**
-	 * Checks if the provided arguments are from an iteratee call.
-	 *
-	 * @private
-	 * @param {*} value The potential iteratee value argument.
-	 * @param {*} index The potential iteratee index or key argument.
-	 * @param {*} object The potential iteratee object argument.
-	 * @returns {boolean} Returns `true` if the arguments are from an iteratee call, else `false`.
-	 */
-	function isIterateeCall(value, index, object) {
-	  if (!isObject(object)) {
-	    return false;
-	  }
-	  var type = typeof index;
-	  if (type == 'number'
-	      ? (isArrayLike(object) && isIndex(index, object.length))
-	      : (type == 'string' && index in object)) {
-	    var other = object[index];
-	    return value === value ? (value === other) : (other !== other);
-	  }
-	  return false;
-	}
-
-	module.exports = isIterateeCall;
-
-
-/***/ },
-/* 688 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __depends__: [
-	    __webpack_require__(453),
-	    __webpack_require__(472)
-	  ],
-	  contextPad: [ 'type', __webpack_require__(689) ]
-	};
-
-/***/ },
-/* 689 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var isFunction = __webpack_require__(73),
-	    forEach = __webpack_require__(128),
-
-	    domDelegate = __webpack_require__(455),
-	    domEvent = __webpack_require__(484),
-	    domAttr = __webpack_require__(481),
-	    domQuery = __webpack_require__(52),
-	    domClasses = __webpack_require__(478),
-	    domify = __webpack_require__(50);
-
-
-	var entrySelector = '.entry';
-
-
-	/**
-	 * A context pad that displays element specific, contextual actions next
-	 * to a diagram element.
-	 *
-	 * @param {EventBus} eventBus
-	 * @param {Overlays} overlays
-	 */
-	function ContextPad(eventBus, overlays) {
-
-	  this._providers = [];
-
-	  this._eventBus = eventBus;
-	  this._overlays = overlays;
-
-	  this._current = null;
-
-	  this._init();
-	}
-
-	ContextPad.$inject = [ 'eventBus', 'overlays' ];
-
-	/**
-	 * Registers events needed for interaction with other components
-	 */
-	ContextPad.prototype._init = function() {
-
-	  var eventBus = this._eventBus;
-
-	  var self = this;
-
-	  eventBus.on('selection.changed', function(e) {
-
-	    var selection = e.newSelection;
-
-	    if (selection.length === 1) {
-	      self.open(selection[0]);
-	    } else {
-	      self.close();
-	    }
-	  });
-
-	  eventBus.on('elements.delete', function(event) {
-	    var elements = event.elements;
-
-	    forEach(elements, function(e) {
-	      if (self.isOpen(e)) {
-	        self.close();
-	      }
-	    });
-	  });
-
-	  eventBus.on('element.changed', function(event) {
-	    var element = event.element,
-	        current = self._current;
-
-	    // force reopen if element for which we are currently opened changed
-	    if (current && current.element === element) {
-	      self.open(element, true);
-	    }
-	  });
-	};
-
-
-	/**
-	 * Register a provider with the context pad
-	 *
-	 * @param  {ContextPadProvider} provider
-	 */
-	ContextPad.prototype.registerProvider = function(provider) {
-	  this._providers.push(provider);
-	};
-
-
-	/**
-	 * Returns the context pad entries for a given element
-	 *
-	 * @param {djs.element.Base} element
-	 *
-	 * @return {Array<ContextPadEntryDescriptor>} list of entries
-	 */
-	ContextPad.prototype.getEntries = function(element) {
-	  var entries = {};
-
-	  // loop through all providers and their entries.
-	  // group entries by id so that overriding an entry is possible
-	  forEach(this._providers, function(provider) {
-	    var e = provider.getContextPadEntries(element);
-
-	    forEach(e, function(entry, id) {
-	      entries[id] = entry;
-	    });
-	  });
-
-	  return entries;
-	};
-
-
-	/**
-	 * Trigger an action available on the opened context pad
-	 *
-	 * @param  {String} action
-	 * @param  {Event} event
-	 * @param  {Boolean} [autoActivate=false]
-	 */
-	ContextPad.prototype.trigger = function(action, event, autoActivate) {
-
-	  var element = this._current.element,
-	      entries = this._current.entries,
-	      entry,
-	      handler,
-	      originalEvent,
-	      button = event.delegateTarget || event.target;
-
-	  if (!button) {
-	    return event.preventDefault();
-	  }
-
-	  entry = entries[domAttr(button, 'data-action')];
-	  handler = entry.action;
-
-	  originalEvent = event.originalEvent || event;
-
-	  // simple action (via callback function)
-	  if (isFunction(handler)) {
-	    if (action === 'click') {
-	      return handler(originalEvent, element, autoActivate);
-	    }
-	  } else {
-	    if (handler[action]) {
-	      return handler[action](originalEvent, element, autoActivate);
-	    }
-	  }
-
-	  // silence other actions
-	  event.preventDefault();
-	};
-
-
-	/**
-	 * Open the context pad for the given element
-	 *
-	 * @param {djs.model.Base} element
-	 * @param {Boolean} force if true, force reopening the context pad
-	 */
-	ContextPad.prototype.open = function(element, force) {
-	  if (!force && this.isOpen(element)) {
-	    return;
-	  }
-
-	  this.close();
-	  this._updateAndOpen(element);
-	};
-
-
-	ContextPad.prototype._updateAndOpen = function(element) {
-
-	  var entries = this.getEntries(element),
-	      pad = this.getPad(element),
-	      html = pad.html;
-
-	  forEach(entries, function(entry, id) {
-	    var grouping = entry.group || 'default',
-	        control = domify(entry.html || '<div class="entry" draggable="true"></div>'),
-	        container;
-
-	    domAttr(control, 'data-action', id);
-
-	    container = domQuery('[data-group=' + grouping + ']', html);
-	    if (!container) {
-	      container = domify('<div class="group" data-group="' + grouping + '"></div>');
-	      html.appendChild(container);
-	    }
-
-	    container.appendChild(control);
-
-	    if (entry.className) {
-	      domClasses(control).add(entry.className);
-	    }
-
-	    if (entry.title) {
-	      domAttr(control, 'title', entry.title);
-	    }
-
-	    if (entry.imageUrl) {
-	      control.appendChild(domify('<img src="' + entry.imageUrl + '">'));
-	    }
-	  });
-
-	  domClasses(html).add('open');
-
-	  this._current = {
-	    element: element,
-	    pad: pad,
-	    entries: entries
-	  };
-
-	  this._eventBus.fire('contextPad.open', { current: this._current });
-	};
-
-
-	ContextPad.prototype.getPad = function(element) {
-	  if (this.isOpen()) {
-	    return this._current.pad;
-	  }
-
-	  var self = this;
-
-	  var overlays = this._overlays;
-
-	  var html = domify('<div class="djs-context-pad"></div>');
-
-	  domDelegate.bind(html, entrySelector, 'click', function(event) {
-	    self.trigger('click', event);
-	  });
-
-	  domDelegate.bind(html, entrySelector, 'dragstart', function(event) {
-	    self.trigger('dragstart', event);
-	  });
-
-	  // stop propagation of mouse events
-	  domEvent.bind(html, 'mousedown', function(event) {
-	    event.stopPropagation();
-	  });
-
-	  this._overlayId = overlays.add(element, 'context-pad', {
-	    position: {
-	      right: -9,
-	      top: -6
-	    },
-	    html: html
-	  });
-
-	  var pad = overlays.get(this._overlayId);
-
-	  this._eventBus.fire('contextPad.create', { element: element, pad: pad });
-
-	  return pad;
-	};
-
-
-	/**
-	 * Close the context pad
-	 */
-	ContextPad.prototype.close = function() {
-	  if (!this.isOpen()) {
-	    return;
-	  }
-
-	  this._overlays.remove(this._overlayId);
-
-	  this._overlayId = null;
-
-	  this._eventBus.fire('contextPad.close', { current: this._current });
-
-	  this._current = null;
-	};
-
-	/**
-	 * Check if pad is open. If element is given, will check
-	 * if pad is opened with given element.
-	 *
-	 * @param {Element} element
-	 * @return {Boolean}
-	 */
-	ContextPad.prototype.isOpen = function(element) {
-	  return !!this._current && (!element ? true : this._current.element === element);
-	};
-
-	module.exports = ContextPad;
-
-
-/***/ },
-/* 690 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __depends__: [
-	    __webpack_require__(501),
-	    __webpack_require__(452),
-	    __webpack_require__(508)
-	  ],
-	  create: [ 'type', __webpack_require__(691) ]
-	};
-
-
-/***/ },
-/* 691 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var LOW_PRIORITY = 750;
-
-	var MARKER_OK = 'drop-ok',
-	    MARKER_NOT_OK = 'drop-not-ok',
-	    MARKER_ATTACH = 'attach-ok',
-	    MARKER_NEW_PARENT = 'new-parent';
-
-
-	function Create(eventBus, dragging, rules, modeling, canvas, styles, graphicsFactory) {
-
-	  // rules
-
-	  function canCreate(shape, target, source, position) {
-
-	    if (source) {
-	      return rules.allowed('shape.append', {
-	        source: source,
-	        shape: shape,
-	        target: target,
-	        position: position
-	      });
-	    } else {
-	      return rules.allowed('shape.create', {
-	        shape: shape,
-	        target: target,
-	        position: position
-	      });
-	    }
-	  }
-
-
-	  /** set drop marker on an element */
-	  function setMarker(element, marker) {
-
-	    [ MARKER_ATTACH, MARKER_OK, MARKER_NOT_OK, MARKER_NEW_PARENT ].forEach(function(m) {
-
-	      if (m === marker) {
-	        canvas.addMarker(element, m);
-	      } else {
-	        canvas.removeMarker(element, m);
-	      }
-	    });
-	  }
-
-
-	  // visual helpers
-
-	  function createVisual(shape) {
-	    var group, preview, visual;
-
-	    group = canvas.getDefaultLayer().group().attr(styles.cls('djs-drag-group', [ 'no-events' ]));
-
-	    preview = group.group().addClass('djs-dragger');
-
-	    preview.translate(shape.width / -2, shape.height / -2);
-
-	    visual = preview.group().addClass('djs-visual');
-
-	    // hijack renderer to draw preview
-	    graphicsFactory.drawShape(visual, shape);
-
-	    return group;
-	  }
-
-
-	  // event handlers
-
-	  eventBus.on('create.move', function(event) {
-
-	    var context = event.context,
-	        hover = event.hover,
-	        canExecute;
-
-	    var position = {
-	      x: event.x,
-	      y: event.y
-	    };
-
-	    canExecute = context.canExecute = hover && canCreate(context.shape, hover, context.source, position);
-
-	    // ignore hover visually if canExecute is null
-	    if (hover && canExecute !== null) {
-	      context.target = hover;
-
-	      if (canExecute === 'attach') {
-	        setMarker(hover, MARKER_ATTACH);
-	      } else {
-	        setMarker(hover, context.canExecute ? MARKER_NEW_PARENT : MARKER_NOT_OK);
-	      }
-	    }
-	  });
-
-	  eventBus.on('create.move', LOW_PRIORITY, function(event) {
-
-	    var context = event.context,
-	        shape = context.shape,
-	        visual = context.visual;
-
-	    // lazy init drag visual once we received the first real
-	    // drag move event (this allows us to get the proper canvas local coordinates)
-	    if (!visual) {
-	      visual = context.visual = createVisual(shape);
-	    }
-
-	    visual.translate(event.x, event.y);
-	  });
-
-
-	  eventBus.on([ 'create.end', 'create.out', 'create.cleanup' ], function(event) {
-	    var context = event.context,
-	        target = context.target;
-
-	    if (target) {
-	      setMarker(target, null);
-	    }
-	  });
-
-	  eventBus.on('create.end', function(event) {
-	    var context = event.context,
-	        source = context.source,
-	        shape = context.shape,
-	        target = context.target,
-	        canExecute = context.canExecute,
-	        isAttach,
-	        position = {
-	          x: event.x,
-	          y: event.y
-	        };
-
-	    if (!canExecute) {
-	      return false;
-	    }
-
-	    if (source) {
-	      shape = modeling.appendShape(source, shape, position, target);
-	    } else {
-	      isAttach = canExecute === 'attach';
-
-	      shape = modeling.createShape(shape, position, target, isAttach);
-	    }
-
-	    // make sure we provide the actual attached
-	    // shape with the context so that selection and
-	    // other components can use it right after the create
-	    // operation ends
-	    context.shape = shape;
-	  });
-
-
-	  eventBus.on('create.cleanup', function(event) {
-	    var context = event.context;
-
-	    if (context.visual) {
-	      context.visual.remove();
-	    }
-	  });
-
-	  // API
-
-	  this.start = function(event, shape, source) {
-
-	    dragging.init(event, 'create', {
-	      cursor: 'grabbing',
-	      autoActivate: true,
-	      data: {
-	        shape: shape,
-	        context: {
-	          shape: shape,
-	          source: source
-	        }
-	      }
-	    });
-	  };
-	}
-
-	Create.$inject = [ 'eventBus', 'dragging', 'rules', 'modeling', 'canvas', 'styles', 'graphicsFactory' ];
-
-	module.exports = Create;
-
-
-/***/ },
-/* 692 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __depends__: [
-	    __webpack_require__(693),
-	    __webpack_require__(695)
-	  ],
-	  __init__: [ 'replaceMenuProvider' ],
-	  replaceMenuProvider: [ 'type', __webpack_require__(700) ]
-	};
-
-/***/ },
-/* 693 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	module.exports = {
-	  __init__: [ 'popupMenu' ],
-	  popupMenu: [ 'type', __webpack_require__(694) ]
-	};
-
-
-/***/ },
-/* 694 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var forEach = __webpack_require__(128),
-	    assign = __webpack_require__(77),
-	    find = __webpack_require__(468);
-
-	var domDelegate = __webpack_require__(455),
-	    domify = __webpack_require__(50),
-	    domClasses = __webpack_require__(478),
-	    domAttr = __webpack_require__(481),
-	    domRemove = __webpack_require__(54);
-
-	var DATA_REF = 'data-id';
-
-	/**
-	 * A popup menu that can be used to display a list of actions anywhere in the canvas.
-	 *
-	 * @param {EventBus} eventBus
-	 * @param {Canvas} canvas
-	 *
-	 * @class
-	 * @constructor
-	 */
-	function PopupMenu(eventBus, canvas) {
-
-	  this._eventBus = eventBus;
-	  this._canvas  = canvas;
-	  this._providers = {};
-	}
-
-	PopupMenu.$inject = [ 'eventBus', 'canvas' ];
-
-	/**
-	 * Registers a popup menu provider
-	 *
-	 * @param  {String} id
-	 * @param  {Object} provider
-	 *
-	 * @example
-	 * popupMenu.registerProvider('myMenuID', {
-	 *   getEntries: function(element) {
-	 *     return [
-	 *       {
-	 *          id: 'entry-1',
-	 *          label: 'My Entry',
-	 *          action: 'alert("I have been clicked!")'
-	 *        }
-	 *      ];
-	 *    }
-	 *  });
-	 * })
-	 */
-	PopupMenu.prototype.registerProvider = function(id, provider) {
-	  this._providers[id] = provider;
-	};
-
-
-	/**
-	 * Create a popup menu according to a given element. The id refers to the ID
-	 * of the provider that must be registered before.
-	 *
-	 * @param  {String} id provider id
-	 * @param  {Object} element
-	 *
-	 * @return {PopupMenu} popup menu instance
-	 */
-	PopupMenu.prototype.create = function(id, element) {
-
-	  var provider = this._providers[id];
-
-	  if (!provider) {
-	    throw new Error('Provider is not registered: ' + id);
-	  }
-
-	  if (!element) {
-	    throw new Error('Element is missing');
-	  }
-
-	  var current = this._current = {
-	    provider: provider,
-	    className: id,
-	    element: element
-	  };
-
-	  if (provider.getHeaderEntries) {
-	    current.headerEntries = provider.getHeaderEntries(element);
-	  }
-
-	  current.entries = provider.getEntries(element);
-
-	  return this;
-	};
-
-
-	/**
-	 * Determine if the popup menu has entries.
-	 *
-	 * @return {Boolean} true if empty
-	 */
-	PopupMenu.prototype.isEmpty = function() {
-
-	  var current = this._current;
-
-	  return current.entries.length === 0 && current.headerEntries && current.headerEntries.length === 0;
-	};
-
-
-	/**
-	 * Open popup menu at given position
-	 *
-	 * @param {Object} position
-	 *
-	 * @return {Object} popup menu instance
-	 */
-	PopupMenu.prototype.open = function(position) {
-
-	  if (!position) {
-	    throw new Error('the position argument is missing');
-	  }
-
-	  // make sure, only one popup menu is open at a time
-	  if (this.isOpen()) {
-	    this.close();
-	  }
-
-	  var current = this._current,
-	      canvas = this._canvas,
-	      parent = canvas.getContainer();
-
-	  current.position = position;
-
-	  current.container = this._createContainer();
-
-	  if (current.headerEntries) {
-	    var headerEntriesContainer = this._createEntries(current.headerEntries, 'djs-popup-header');
-
-	    current.container.appendChild(headerEntriesContainer);
-	  }
-
-	  if (current.entries) {
-	    var entriesContainer = this._createEntries(current.entries, 'djs-popup-body');
-
-	    current.container.appendChild(entriesContainer);
-	  }
-
-	  this._attachContainer(current.container, parent, position.cursor);
-
-	  return this;
-	};
-
-
-	/**
-	 * Removes the popup menu and unbinds the event handlers.
-	 */
-	PopupMenu.prototype.close = function() {
-
-	  if (!this.isOpen()) {
-	    return;
-	  }
-
-	  this._unbindHandlers();
-	  domRemove(this._current.container);
-	  this._current.container = null;
-	};
-
-
-	/**
-	 * Determine if an open popup menu exist.
-	 *
-	 * @return {Boolean} true if open
-	 */
-	PopupMenu.prototype.isOpen = function() {
-	  return !!this._current.container;
-	};
-
-
-	/**
-	 * Trigger an action associated with an entry.
-	 *
-	 * @param {Object} event
-	 *
-	 * @return the result of the action callback, if any
-	 */
-	PopupMenu.prototype.trigger = function(event) {
-
-	  // silence other actions
-	  event.preventDefault();
-
-	  var element = event.delegateTarget || event.target,
-	      entryId = domAttr(element, DATA_REF);
-
-	  var entry = this._getEntry(entryId);
-
-	  if (entry.action) {
-	    return entry.action.call(null, event, entry);
-	  }
-	};
-
-	/**
-	 * Gets an entry instance (either entry or headerEntry) by id.
-	 *
-	 * @param  {String} entryId
-	 *
-	 * @return {Object} entry instance
-	 */
-	PopupMenu.prototype._getEntry = function(entryId) {
-
-	  var search = { id: entryId };
-
-	  var entry = find(this._current.entries, search) || find(this._current.headerEntries, search);
-
-	  if (!entry) {
-	    throw new Error('entry not found');
-	  }
-
-	  return entry;
-	};
-
-
-	/**
-	 * Creates the popup menu container.
-	 *
-	 * @return {Object} a DOM container
-	 */
-	PopupMenu.prototype._createContainer = function() {
-	  var container = domify('<div class="djs-popup">'),
-	      position = this._current.position,
-	      className = this._current.className;
-
-	  assign(container.style, {
-	    position: 'absolute',
-	    left: position.x + 'px',
-	    top: position.y + 'px',
-	    visibility: 'hidden'
-	  });
-
-	  domClasses(container).add(className);
-
-	  return container;
-	};
-
-
-	/**
-	 * Attaches the container to the DOM and binds the event handlers.
-	 *
-	 * @param {Object} container
-	 * @param {Object} parent
-	 */
-	PopupMenu.prototype._attachContainer = function(container, parent, cursor) {
-	  var self = this;
-
-	   // Event handler
-	  domDelegate.bind(container, '.entry' ,'click', function(event) {
-	    self.trigger(event);
-	  });
-
-	  // apply canvas zoom level
-	  var zoom = this._canvas.zoom();
-
-	  container.style.transformOrigin = 'top left';
-	  container.style.transform = 'scale(' + zoom + ')';
-
-	  // Attach to DOM
-	  parent.appendChild(container);
-
-	  if (cursor) {
-	    this._assureIsInbounds(container, cursor);
-	  }
-
-	  // Add Handler
-	  this._bindHandlers();
-	};
-
-
-	/**
-	 * Make sure that the menu is always fully shown
-	 *
-	 * @method function
-	 *
-	 * @param  {Object} container
-	 * @param  {Position} cursor {x, y}
-	 */
-	PopupMenu.prototype._assureIsInbounds = function(container, cursor) {
-	  var canvas = this._canvas,
-	      clientRect = canvas._container.getBoundingClientRect();
-
-	  var containerX = container.offsetLeft,
-	      containerY = container.offsetTop,
-	      containerWidth = container.scrollWidth,
-	      containerHeight = container.scrollHeight,
-	      overAxis = {},
-	      left, top;
-
-	  var cursorPosition = {
-	    x: cursor.x - clientRect.left,
-	    y: cursor.y - clientRect.top
-	  };
-
-	  if (containerX + containerWidth > clientRect.width) {
-	    overAxis.x = true;
-	  }
-
-	  if (containerY + containerHeight > clientRect.height) {
-	    overAxis.y = true;
-	  }
-
-	  if (overAxis.x && overAxis.y) {
-	    left = cursorPosition.x - containerWidth + 'px';
-	    top = cursorPosition.y - containerHeight + 'px';
-	  } else if (overAxis.x) {
-	    left = cursorPosition.x - containerWidth + 'px';
-	    top = cursorPosition.y + 'px';
-	  } else if (overAxis.y && cursorPosition.y < containerHeight) {
-	    left = cursorPosition.x + 'px';
-	    top = 10 + 'px';
-	  } else if (overAxis.y) {
-	    left = cursorPosition.x + 'px';
-	    top = cursorPosition.y - containerHeight + 'px';
-	  }
-
-	  assign(container.style, { left: left, top: top }, { visibility: 'visible', 'z-index': 1000 });
-	};
-
-
-	/**
-	 * Creates a list of entries and returns them as a DOM container.
-	 *
-	 * @param {Array<Object>} entries an array of entry objects
-	 * @param {String} className the class name of the entry container
-	 *
-	 * @return {Object} a DOM container
-	 */
-	PopupMenu.prototype._createEntries = function(entries, className) {
-
-	  var entriesContainer = domify('<div>'),
-	      self = this;
-
-	  domClasses(entriesContainer).add(className);
-
-	  forEach(entries, function(entry) {
-	    var entryContainer = self._createEntry(entry, entriesContainer);
-	    entriesContainer.appendChild(entryContainer);
-	  });
-
-	  return entriesContainer;
-	};
-
-
-	/**
-	 * Creates a single entry and returns it as a DOM container.
-	 *
-	 * @param  {Object} entry
-	 *
-	 * @return {Object} a DOM container
-	 */
-	PopupMenu.prototype._createEntry = function(entry) {
-
-	  if (!entry.id) {
-	    throw new Error ('every entry must have the id property set');
-	  }
-
-	  var entryContainer = domify('<div>'),
-	      entryClasses = domClasses(entryContainer);
-
-	  entryClasses.add('entry');
-
-	  if (entry.className) {
-	    entryClasses.add(entry.className);
-	  }
-
-	  domAttr(entryContainer, DATA_REF, entry.id);
-
-	  if (entry.label) {
-	    var label = domify('<span>');
-	    label.textContent = entry.label;
-	    entryContainer.appendChild(label);
-	  }
-
-	  if (entry.imageUrl) {
-	    entryContainer.appendChild(domify('<img src="' + entry.imageUrl + '" />'));
-	  }
-
-	  if (entry.active === true) {
-	    entryClasses.add('active');
-	  }
-
-	  if (entry.disabled === true) {
-	    entryClasses.add('disabled');
-	  }
-
-	  if (entry.title) {
-	    entryContainer.title = entry.title;
-	  }
-
-	  return entryContainer;
-	};
-
-
-	/**
-	 * Binds the `close` method to 'contextPad.close' & 'canvas.viewbox.changed'.
-	 */
-	PopupMenu.prototype._bindHandlers = function() {
-
-	  var eventBus = this._eventBus,
-	      self = this;
-
-	  function close() {
-	    self.close();
-	  }
-
-	  eventBus.once('contextPad.close', close);
-	  eventBus.once('canvas.viewbox.changing', close);
-	  eventBus.once('commandStack.changed', close);
-	};
-
-
-	/**
-	 * Unbinds the `close` method to 'contextPad.close' & 'canvas.viewbox.changing'.
-	 */
-	PopupMenu.prototype._unbindHandlers = function() {
-
-	  var eventBus = this._eventBus,
-	      self = this;
-
-	  function close() {
-	    self.close();
-	  }
-
-	  eventBus.off('contextPad.close', close);
-	  eventBus.off('canvas.viewbox.changed', close);
-	  eventBus.off('commandStack.changed', close);
-	};
-
-	module.exports = PopupMenu;
-
-
-/***/ },
-/* 695 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __depends__: [
-	    __webpack_require__(696),
-	    __webpack_require__(452)
-	  ],
-	  bpmnReplace: [ 'type', __webpack_require__(698) ]
-	};
-
-/***/ },
-/* 696 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	module.exports = {
-	  __init__: [ 'replace' ],
-	  replace: [ 'type', __webpack_require__(697) ]
-	};
-
-
-/***/ },
-/* 697 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-
-	/**
-	 * Service that allow replacing of elements.
-	 *
-	 *
-	 * @class
-	 * @constructor
-	 */
-	function Replace(modeling) {
-
-	  this._modeling = modeling;
-	}
-
-	module.exports = Replace;
-
-	Replace.$inject = [ 'modeling' ];
-
-	/**
-	 * @param {Element} oldElement - Element to be replaced
-	 * @param {Object}  newElementData - Containing information about the new Element, for example height, width, type.
-	 * @param {Object}  options - Custom options that will be attached to the context. It can be used to inject data
-	 *                            that is needed in the command chain. For example it could be used in
-	 *                            eventbus.on('commandStack.shape.replace.postExecute') to change shape attributes after
-	 *                            shape creation.
-	 */
-	Replace.prototype.replaceElement = function(oldElement, newElementData, options) {
-
-	  var modeling = this._modeling;
-
-	  var newElement = null;
-
-	  if (oldElement.waypoints) {
-	    // TODO
-	    // modeling.replaceConnection
-	  } else {
-	    // set center of element for modeling API
-	    // if no new width / height is given use old elements size
-	    newElementData.x = Math.ceil(oldElement.x + (newElementData.width || oldElement.width) / 2);
-	    newElementData.y = Math.ceil(oldElement.y + (newElementData.height || oldElement.height) / 2);
-
-	    newElement = modeling.replaceShape(oldElement, newElementData, options);
-	  }
-
-	  return newElement;
-	};
-
-
-/***/ },
-/* 698 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var pick = __webpack_require__(699),
-	    assign = __webpack_require__(7);
-
-	var is = __webpack_require__(443).is,
-	    isExpanded = __webpack_require__(442).isExpanded,
-	    isEventSubProcess = __webpack_require__(442).isEventSubProcess;
-
-	var CUSTOM_PROPERTIES = [
-	  'cancelActivity',
-	  'instantiate',
-	  'eventGatewayType',
-	  'triggeredByEvent',
-	  'isInterrupting'
-	];
-
-
-	/**
-	 * This module takes care of replacing BPMN elements
-	 */
-	function BpmnReplace(bpmnFactory, replace, selection, modeling) {
-
-	  /**
-	   * Prepares a new business object for the replacement element
-	   * and triggers the replace operation.
-	   *
-	   * @param  {djs.model.Base} element
-	   * @param  {Object} target
-	   * @param  {Object} [hints]
-	   *
-	   * @return {djs.model.Base} the newly created element
-	   */
-	  function replaceElement(element, target, hints) {
-
-	    hints = hints || {};
-
-	    var type = target.type,
-	        oldBusinessObject = element.businessObject,
-	        newBusinessObject = bpmnFactory.create(type);
-
-	    var newElement = {
-	      type: type,
-	      businessObject: newBusinessObject
-	    };
-
-	    // initialize custom BPMN extensions
-	    if (target.eventDefinitionType) {
-	      newElement.eventDefinitionType = target.eventDefinitionType;
-	    }
-
-	    // initialize special properties defined in target definition
-	    assign(newBusinessObject, pick(target, CUSTOM_PROPERTIES));
-
-	    if (is(oldBusinessObject, 'bpmn:SubProcess')) {
-
-	      newElement.isExpanded = isExpanded(oldBusinessObject);
-	    }
-
-	    // preserve adhoc state while switching collapsed/expanded subprocess
-	    if (is(oldBusinessObject, 'bpmn:AdHocSubProcess') && target.isExpanded) {
-	      newElement.businessObject = bpmnFactory.create('bpmn:AdHocSubProcess');
-	    }
-
-	    if (is(oldBusinessObject, 'bpmn:Activity')) {
-
-	      // switch collapsed/expanded subprocesses
-	      if (target.isExpanded === true) {
-	        newElement.isExpanded = true;
-	      }
-
-	      // TODO: need also to respect min/max Size
-	      // copy size, from an expanded subprocess to an expanded alternative subprocess
-	      // except bpmn:Task, because Task is always expanded
-	      if ((isExpanded(oldBusinessObject) && !is(oldBusinessObject, 'bpmn:Task')) && target.isExpanded) {
-	        newElement.width = element.width;
-	        newElement.height = element.height;
-	      }
-
-	    }
-
-	    // transform collapsed/expanded pools
-	    if (is(oldBusinessObject, 'bpmn:Participant')) {
-
-	        // create expanded pool
-	      if (target.isExpanded === true) {
-	        newBusinessObject.processRef = bpmnFactory.create('bpmn:Process');
-	      } else {
-	          // remove children when transforming to collapsed pool
-	        hints.moveChildren = false;
-	      }
-
-	        // apply same size
-	      newElement.width = element.width;
-	      newElement.height = element.height;
-	    }
-
-	    newBusinessObject.name = oldBusinessObject.name;
-
-	    // retain loop characteristics if the target element is not an event sub process
-	    if (!isEventSubProcess(newBusinessObject)) {
-	      newBusinessObject.loopCharacteristics = oldBusinessObject.loopCharacteristics;
-	    }
-
-	    // retain default flow's reference between inclusive <-> exclusive gateways and activities
-	    if ((is(oldBusinessObject, 'bpmn:ExclusiveGateway') || is(oldBusinessObject, 'bpmn:InclusiveGateway') ||
-	         is(oldBusinessObject, 'bpmn:Activity')) &&
-	        (is(newBusinessObject, 'bpmn:ExclusiveGateway') || is(newBusinessObject, 'bpmn:InclusiveGateway') ||
-	         is(newBusinessObject, 'bpmn:Activity')))
-	    {
-	      newBusinessObject.default = oldBusinessObject.default;
-	    }
-
-	    if (oldBusinessObject.isForCompensation) {
-	      newBusinessObject.isForCompensation = true;
-	    }
-
-	    newElement = replace.replaceElement(element, newElement, hints);
-
-	    if (hints.select !== false) {
-	      selection.select(newElement);
-	    }
-
-	    return newElement;
-	  }
-
-	  this.replaceElement = replaceElement;
-	}
-
-	BpmnReplace.$inject = [ 'bpmnFactory', 'replace', 'selection', 'modeling' ];
-
-	module.exports = BpmnReplace;
-
-
-/***/ },
-/* 699 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseFlatten = __webpack_require__(40),
-	    bindCallback = __webpack_require__(27),
-	    pickByArray = __webpack_require__(42),
-	    pickByCallback = __webpack_require__(44),
-	    restParam = __webpack_require__(30);
-
-	/**
-	 * Creates an object composed of the picked `object` properties. Property
-	 * names may be specified as individual arguments or as arrays of property
-	 * names. If `predicate` is provided it's invoked for each property of `object`
-	 * picking the properties `predicate` returns truthy for. The predicate is
-	 * bound to `thisArg` and invoked with three arguments: (value, key, object).
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Object
-	 * @param {Object} object The source object.
-	 * @param {Function|...(string|string[])} [predicate] The function invoked per
-	 *  iteration or property names to pick, specified as individual property
-	 *  names or arrays of property names.
-	 * @param {*} [thisArg] The `this` binding of `predicate`.
-	 * @returns {Object} Returns the new object.
-	 * @example
-	 *
-	 * var object = { 'user': 'fred', 'age': 40 };
-	 *
-	 * _.pick(object, 'user');
-	 * // => { 'user': 'fred' }
-	 *
-	 * _.pick(object, _.isString);
-	 * // => { 'user': 'fred' }
-	 */
-	var pick = restParam(function(object, props) {
-	  if (object == null) {
-	    return {};
-	  }
-	  return typeof props[0] == 'function'
-	    ? pickByCallback(object, bindCallback(props[0], props[1], 3))
-	    : pickByArray(object, baseFlatten(props));
-	});
-
-	module.exports = pick;
-
-
-/***/ },
-/* 700 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var is = __webpack_require__(443).is,
-	    isEventSubProcess = __webpack_require__(442).isEventSubProcess,
-	    getBusinessObject = __webpack_require__(443).getBusinessObject,
-	    isExpanded = __webpack_require__(442).isExpanded,
-	    isDifferentType = __webpack_require__(701).isDifferentType;
-
-	var forEach = __webpack_require__(415),
-	    filter = __webpack_require__(383);
-
-	var replaceOptions = __webpack_require__ (702);
-
-
-	/**
-	 * This module is an element agnostic replace menu provider for the popup menu.
-	 */
-	function ReplaceMenuProvider(popupMenu, modeling, moddle, bpmnReplace, rules, translate) {
-
-	  this._popupMenu = popupMenu;
-	  this._modeling = modeling;
-	  this._moddle = moddle;
-	  this._bpmnReplace = bpmnReplace;
-	  this._rules = rules;
-	  this._translate = translate;
-
-	  this.register();
-	}
-
-	ReplaceMenuProvider.$inject = [ 'popupMenu', 'modeling', 'moddle', 'bpmnReplace', 'rules', 'translate' ];
-
-
-	/**
-	 * Register replace menu provider in the popup menu
-	 */
-	ReplaceMenuProvider.prototype.register = function() {
-	  this._popupMenu.registerProvider('bpmn-replace', this);
-	};
-
-
-	/**
-	 * Get all entries from replaceOptions for the given element and apply filters
-	 * on them. Get for example only elements, which are different from the current one.
-	 *
-	 * @param {djs.model.Base} element
-	 *
-	 * @return {Array<Object>} a list of menu entry items
-	 */
-	ReplaceMenuProvider.prototype.getEntries = function(element) {
-
-	  var businessObject = element.businessObject;
-
-	  var rules = this._rules;
-
-	  var entries;
-
-	  if (!rules.allowed('shape.replace', { element: element })) {
-	    return [];
-	  }
-
-	  var differentType = isDifferentType(element);
-
-	  // start events outside event sub processes
-	  if (is(businessObject, 'bpmn:StartEvent') && !isEventSubProcess(businessObject.$parent)) {
-
-	    entries = filter(replaceOptions.START_EVENT, differentType);
-
-	    return this._createEntries(element, entries);
-	  }
-
-	  // expanded/collapsed pools
-	  if (is(businessObject, 'bpmn:Participant')) {
-
-	    entries = filter(replaceOptions.PARTICIPANT, function(entry) {
-	      return isExpanded(businessObject) !== entry.target.isExpanded;
-	    });
-
-	    return this._createEntries(element, entries);
-	  }
-
-	  // start events inside event sub processes
-	  if (is(businessObject, 'bpmn:StartEvent') && isEventSubProcess(businessObject.$parent)) {
-
-	    entries = filter(replaceOptions.EVENT_SUB_PROCESS_START_EVENT, function(entry) {
-
-	      var target = entry.target;
-
-	      var isInterrupting = target.isInterrupting !== false;
-
-	      var isInterruptingEqual = getBusinessObject(element).isInterrupting === isInterrupting;
-
-	      // filters elements which types and event definition are equal but have have different interrupting types
-	      return differentType(entry) || !differentType(entry) && !isInterruptingEqual;
-
-	    });
-
-	    return this._createEntries(element, entries);
-	  }
-
-	  // end events
-	  if (is(businessObject, 'bpmn:EndEvent')) {
-
-	    entries = filter(replaceOptions.END_EVENT, function(entry) {
-	      var target = entry.target;
-
-	      // hide cancel end events outside transactions
-	      if (target.eventDefinition == 'bpmn:CancelEventDefinition' && !is(businessObject.$parent, 'bpmn:Transaction')) {
-	        return false;
-	      }
-	      return differentType(entry);
-	    });
-
-	    return this._createEntries(element, entries);
-	  }
-
-	  // boundary events
-	  if (is(businessObject, 'bpmn:BoundaryEvent')) {
-
-	    entries = filter(replaceOptions.BOUNDARY_EVENT, function(entry) {
-
-	      var target = entry.target;
-
-	      if (target.eventDefinition == 'bpmn:CancelEventDefinition' &&
-	         !is(businessObject.attachedToRef, 'bpmn:Transaction')) {
-	        return false;
-	      }
-	      var cancelActivity = target.cancelActivity !== false;
-
-	      var isCancelActivityEqual = businessObject.cancelActivity == cancelActivity;
-
-	      return differentType(entry) || !differentType(entry) && !isCancelActivityEqual;
-	    });
-
-	    return this._createEntries(element, entries);
-	  }
-
-	  // intermediate events
-	  if (is(businessObject, 'bpmn:IntermediateCatchEvent') ||
-	      is(businessObject, 'bpmn:IntermediateThrowEvent')) {
-
-	    entries = filter(replaceOptions.INTERMEDIATE_EVENT, differentType);
-
-	    return this._createEntries(element, entries);
-	  }
-
-	  // gateways
-	  if (is(businessObject, 'bpmn:Gateway')) {
-
-	    entries = filter(replaceOptions.GATEWAY, differentType);
-
-	    return this._createEntries(element, entries);
-	  }
-
-	  // transactions
-	  if (is(businessObject, 'bpmn:Transaction')) {
-
-	    entries = filter(replaceOptions.TRANSACTION, differentType);
-
-	    return this._createEntries(element, entries);
-	  }
-
-	  // expanded event sub processes
-	  if (isEventSubProcess(businessObject) && isExpanded(businessObject)) {
-
-	    entries = filter(replaceOptions.EVENT_SUB_PROCESS, differentType);
-
-	    return this._createEntries(element, entries);
-	  }
-
-	  // expanded sub processes
-	  if (is(businessObject, 'bpmn:SubProcess') && isExpanded(businessObject)) {
-
-	    entries = filter(replaceOptions.SUBPROCESS_EXPANDED, differentType);
-
-	    return this._createEntries(element, entries);
-	  }
-
-	  // collapsed ad hoc sub processes
-	  if (is(businessObject, 'bpmn:AdHocSubProcess') && !isExpanded(businessObject)) {
-
-	    entries = filter(replaceOptions.TASK, function(entry) {
-
-	      var target = entry.target;
-
-	      var isTargetSubProcess = target.type === 'bpmn:SubProcess';
-
-	      var isTargetExpanded = target.isExpanded === true;
-
-	      return isDifferentType(element, target) && ( !isTargetSubProcess || isTargetExpanded );
-	    });
-
-	    return this._createEntries(element, entries);
-	  }
-
-	  // sequence flows
-	  if (is(businessObject, 'bpmn:SequenceFlow')) {
-	    return this._createSequenceFlowEntries(element, replaceOptions.SEQUENCE_FLOW);
-	  }
-
-	  // flow nodes
-	  if (is(businessObject, 'bpmn:FlowNode')) {
-	    entries = filter(replaceOptions.TASK, differentType);
-
-	    if (businessObject.isForCompensation) {
-
-	      // can only replace to compensation activities
-	      entries = filter(entries, function(entry) {
-	        return !/CallActivity/.test(entry.target.type);
-	      });
-	    }
-
-	    return this._createEntries(element, entries);
-	  }
-
-	  return [];
-	};
-
-
-	/**
-	 * Get a list of header items for the given element. This includes buttons
-	 * for multi instance markers and for the ad hoc marker.
-	 *
-	 * @param {djs.model.Base} element
-	 *
-	 * @return {Array<Object>} a list of menu entry items
-	 */
-	ReplaceMenuProvider.prototype.getHeaderEntries = function(element) {
-
-	  var headerEntries = [];
-
-	  if (is(element, 'bpmn:Activity') && !isEventSubProcess(element)) {
-	    headerEntries = headerEntries.concat(this._getLoopEntries(element));
-	  }
-
-	  if (is(element, 'bpmn:SubProcess') &&
-	      !is(element, 'bpmn:Transaction') &&
-	      !isEventSubProcess(element)) {
-	    headerEntries.push(this._getAdHocEntry(element));
-	  }
-
-	  return headerEntries;
-	};
-
-
-	/**
-	 * Creates an array of menu entry objects for a given element and filters the replaceOptions
-	 * according to a filter function.
-	 *
-	 * @param  {djs.model.Base} element
-	 * @param  {Object} replaceOptions
-	 *
-	 * @return {Array<Object>} a list of menu items
-	 */
-	ReplaceMenuProvider.prototype._createEntries = function(element, replaceOptions) {
-	  var menuEntries = [];
-
-	  var self = this;
-
-	  forEach(replaceOptions, function(definition) {
-	    var entry = self._createMenuEntry(definition, element);
-
-	    menuEntries.push(entry);
-	  });
-
-	  return menuEntries;
-	};
-
-	/**
-	 * Creates an array of menu entry objects for a given sequence flow.
-	 *
-	 * @param  {djs.model.Base} element
-	 * @param  {Object} replaceOptions
-
-	 * @return {Array<Object>} a list of menu items
-	 */
-	ReplaceMenuProvider.prototype._createSequenceFlowEntries = function(element, replaceOptions) {
-
-	  var businessObject = getBusinessObject(element);
-
-	  var menuEntries = [];
-
-	  var modeling = this._modeling,
-	      moddle = this._moddle;
-
-	  var self = this;
-
-	  forEach(replaceOptions, function(entry) {
-
-	    switch (entry.actionName) {
-	    case 'replace-with-default-flow':
-	      if (businessObject.sourceRef.default !== businessObject &&
-	            (is(businessObject.sourceRef, 'bpmn:ExclusiveGateway') ||
-	             is(businessObject.sourceRef, 'bpmn:InclusiveGateway') ||
-	             is(businessObject.sourceRef, 'bpmn:ComplexGateway') ||
-	             is(businessObject.sourceRef, 'bpmn:Activity'))) {
-
-	        menuEntries.push(self._createMenuEntry(entry, element, function() {
-	          modeling.updateProperties(element.source, { default: businessObject });
-	        }));
-	      }
-	      break;
-	    case 'replace-with-conditional-flow':
-	      if (!businessObject.conditionExpression && is(businessObject.sourceRef, 'bpmn:Activity')) {
-
-	        menuEntries.push(self._createMenuEntry(entry, element, function() {
-	          var conditionExpression = moddle.create('bpmn:FormalExpression', { body: '' });
-
-	          modeling.updateProperties(element, { conditionExpression: conditionExpression });
-	        }));
-	      }
-	      break;
-	    default:
-	        // default flows
-	      if (is(businessObject.sourceRef, 'bpmn:Activity') && businessObject.conditionExpression) {
-	        return menuEntries.push(self._createMenuEntry(entry, element, function() {
-	          modeling.updateProperties(element, { conditionExpression: undefined });
-	        }));
-	      }
-	        // conditional flows
-	      if ((is(businessObject.sourceRef, 'bpmn:ExclusiveGateway') ||
-	           is(businessObject.sourceRef, 'bpmn:InclusiveGateway') ||
-	           is(businessObject.sourceRef, 'bpmn:ComplexGateway') ||
-	           is(businessObject.sourceRef, 'bpmn:Activity')) &&
-	           businessObject.sourceRef.default === businessObject) {
-
-	        return menuEntries.push(self._createMenuEntry(entry, element, function() {
-	          modeling.updateProperties(element.source, { default: undefined });
-	        }));
-	      }
-	    }
-	  });
-
-	  return menuEntries;
-	};
-
-
-	/**
-	 * Creates and returns a single menu entry item.
-	 *
-	 * @param  {Object} definition a single replace options definition object
-	 * @param  {djs.model.Base} element
-	 * @param  {Function} [action] an action callback function which gets called when
-	 *                             the menu entry is being triggered.
-	 *
-	 * @return {Object} menu entry item
-	 */
-	ReplaceMenuProvider.prototype._createMenuEntry = function(definition, element, action) {
-	  var translate = this._translate;
-	  var replaceElement = this._bpmnReplace.replaceElement;
-
-	  var replaceAction = function() {
-	    return replaceElement(element, definition.target);
-	  };
-
-	  action = action || replaceAction;
-
-	  var menuEntry = {
-	    label: translate(definition.label),
-	    className: definition.className,
-	    id: definition.actionName,
-	    action: action
-	  };
-
-	  return menuEntry;
-	};
-
-	/**
-	 * Get a list of menu items containing buttons for multi instance markers
-	 *
-	 * @param  {djs.model.Base} element
-	 *
-	 * @return {Array<Object>} a list of menu items
-	 */
-	ReplaceMenuProvider.prototype._getLoopEntries = function(element) {
-
-	  var self = this;
-	  var translate = this._translate;
-
-	  function toggleLoopEntry(event, entry) {
-	    var loopCharacteristics;
-
-	    if (entry.active) {
-	      loopCharacteristics = undefined;
-	    } else {
-	      loopCharacteristics = self._moddle.create(entry.options.loopCharacteristics);
-
-	      if (entry.options.isSequential) {
-	        loopCharacteristics.isSequential = entry.options.isSequential;
-	      }
-	    }
-	    self._modeling.updateProperties(element, { loopCharacteristics: loopCharacteristics });
-	  }
-
-	  var businessObject = getBusinessObject(element),
-	      loopCharacteristics = businessObject.loopCharacteristics;
-
-	  var isSequential,
-	      isLoop,
-	      isParallel;
-
-	  if (loopCharacteristics) {
-	    isSequential = loopCharacteristics.isSequential;
-	    isLoop = loopCharacteristics.isSequential === undefined;
-	    isParallel = loopCharacteristics.isSequential !== undefined && !loopCharacteristics.isSequential;
-	  }
-
-
-	  var loopEntries = [
-	    {
-	      id: 'toggle-parallel-mi',
-	      className: 'bpmn-icon-parallel-mi-marker',
-	      title: translate('Parallel Multi Instance'),
-	      active: isParallel,
-	      action: toggleLoopEntry,
-	      options: {
-	        loopCharacteristics: 'bpmn:MultiInstanceLoopCharacteristics',
-	        isSequential: false
-	      }
-	    },
-	    {
-	      id: 'toggle-sequential-mi',
-	      className: 'bpmn-icon-sequential-mi-marker',
-	      title: translate('Sequential Multi Instance'),
-	      active: isSequential,
-	      action: toggleLoopEntry,
-	      options: {
-	        loopCharacteristics: 'bpmn:MultiInstanceLoopCharacteristics',
-	        isSequential: true
-	      }
-	    },
-	    {
-	      id: 'toggle-loop',
-	      className: 'bpmn-icon-loop-marker',
-	      title: translate('Loop'),
-	      active: isLoop,
-	      action: toggleLoopEntry,
-	      options: {
-	        loopCharacteristics: 'bpmn:StandardLoopCharacteristics'
-	      }
-	    }
-	  ];
-	  return loopEntries;
-	};
-
-
-	/**
-	 * Get the menu items containing a button for the ad hoc marker
-	 *
-	 * @param  {djs.model.Base} element
-	 *
-	 * @return {Object} a menu item
-	 */
-	ReplaceMenuProvider.prototype._getAdHocEntry = function(element) {
-	  var translate = this._translate;
-	  var businessObject = getBusinessObject(element);
-
-	  var isAdHoc = is(businessObject, 'bpmn:AdHocSubProcess');
-
-	  var replaceElement = this._bpmnReplace.replaceElement;
-
-	  var adHocEntry = {
-	    id: 'toggle-adhoc',
-	    className: 'bpmn-icon-ad-hoc-marker',
-	    title: translate('Ad-hoc'),
-	    active: isAdHoc,
-	    action: function(event, entry) {
-	      if (isAdHoc) {
-	        return replaceElement(element, { type: 'bpmn:SubProcess' });
-	      } else {
-	        return replaceElement(element, { type: 'bpmn:AdHocSubProcess' });
-	      }
-	    }
-	  };
-
-	  return adHocEntry;
-	};
-
-	module.exports = ReplaceMenuProvider;
-
-
-/***/ },
-/* 701 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var getBusinessObject = __webpack_require__(443).getBusinessObject;
-	var isExpanded = __webpack_require__(442).isExpanded;
-
-	/**
-	 * Returns true, if an element is from a different type
-	 * than a target definition. Takes into account the type,
-	 * event definition type and triggeredByEvent property.
-	 *
-	 * @param {djs.model.Base} element
-	 *
-	 * @return {Boolean}
-	 */
-	function isDifferentType(element) {
-
-	  return function(entry) {
-	    var target = entry.target;
-
-	    var businessObject = getBusinessObject(element),
-	        eventDefinition = businessObject.eventDefinitions && businessObject.eventDefinitions[0];
-
-	    var isTypeEqual = businessObject.$type === target.type;
-
-	    var isEventDefinitionEqual = (
-	      (eventDefinition && eventDefinition.$type) === target.eventDefinitionType
-	    );
-
-	    var isTriggeredByEventEqual = (
-	      businessObject.triggeredByEvent === target.triggeredByEvent
-	    );
-
-	    var isExpandedEqual = (
-	        target.isExpanded === undefined ||
-	        target.isExpanded === isExpanded(businessObject)
-	    );
-
-	    return !isTypeEqual || !isEventDefinitionEqual || !isTriggeredByEventEqual || !isExpandedEqual;
-	  };
-	}
-
-	module.exports.isDifferentType = isDifferentType;
-
-/***/ },
-/* 702 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	module.exports.START_EVENT = [
-	  {
-	    label: 'Start Event',
-	    actionName: 'replace-with-none-start',
-	    className: 'bpmn-icon-start-event-none',
-	    target: {
-	      type: 'bpmn:StartEvent'
-	    }
-	  },
-	  {
-	    label: 'Intermediate Throw Event',
-	    actionName: 'replace-with-none-intermediate-throwing',
-	    className: 'bpmn-icon-intermediate-event-none',
-	    target: {
-	      type: 'bpmn:IntermediateThrowEvent'
-	    }
-	  },
-	  {
-	    label: 'End Event',
-	    actionName: 'replace-with-none-end',
-	    className: 'bpmn-icon-end-event-none',
-	    target: {
-	      type: 'bpmn:EndEvent'
-	    }
-	  },
-	  {
-	    label: 'Message Start Event',
-	    actionName: 'replace-with-message-start',
-	    className: 'bpmn-icon-start-event-message',
-	    target: {
-	      type: 'bpmn:StartEvent',
-	      eventDefinitionType: 'bpmn:MessageEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Timer Start Event',
-	    actionName: 'replace-with-timer-start',
-	    className: 'bpmn-icon-start-event-timer',
-	    target: {
-	      type: 'bpmn:StartEvent',
-	      eventDefinitionType: 'bpmn:TimerEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Conditional Start Event',
-	    actionName: 'replace-with-conditional-start',
-	    className: 'bpmn-icon-start-event-condition',
-	    target: {
-	      type: 'bpmn:StartEvent',
-	      eventDefinitionType: 'bpmn:ConditionalEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Signal Start Event',
-	    actionName: 'replace-with-signal-start',
-	    className: 'bpmn-icon-start-event-signal',
-	    target: {
-	      type: 'bpmn:StartEvent',
-	      eventDefinitionType: 'bpmn:SignalEventDefinition'
-	    }
-	  }
-	];
-
-	module.exports.INTERMEDIATE_EVENT = [
-	  {
-	    label: 'Start Event',
-	    actionName: 'replace-with-none-start',
-	    className: 'bpmn-icon-start-event-none',
-	    target: {
-	      type: 'bpmn:StartEvent'
-	    }
-	  },
-	  {
-	    label: 'Intermediate Throw Event',
-	    actionName: 'replace-with-none-intermediate-throw',
-	    className: 'bpmn-icon-intermediate-event-none',
-	    target: {
-	      type: 'bpmn:IntermediateThrowEvent'
-	    }
-	  },
-	  {
-	    label: 'End Event',
-	    actionName: 'replace-with-none-end',
-	    className: 'bpmn-icon-end-event-none',
-	    target: {
-	      type: 'bpmn:EndEvent'
-	    }
-	  },
-	  {
-	    label: 'Message Intermediate Catch Event',
-	    actionName: 'replace-with-message-intermediate-catch',
-	    className: 'bpmn-icon-intermediate-event-catch-message',
-	    target: {
-	      type: 'bpmn:IntermediateCatchEvent',
-	      eventDefinitionType: 'bpmn:MessageEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Message Intermediate Throw Event',
-	    actionName: 'replace-with-message-intermediate-throw',
-	    className: 'bpmn-icon-intermediate-event-throw-message',
-	    target: {
-	      type: 'bpmn:IntermediateThrowEvent',
-	      eventDefinitionType: 'bpmn:MessageEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Timer Intermediate Catch Event',
-	    actionName: 'replace-with-timer-intermediate-catch',
-	    className: 'bpmn-icon-intermediate-event-catch-timer',
-	    target: {
-	      type: 'bpmn:IntermediateCatchEvent',
-	      eventDefinitionType: 'bpmn:TimerEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Escalation Intermediate Throw Event',
-	    actionName: 'replace-with-escalation-intermediate-throw',
-	    className: 'bpmn-icon-intermediate-event-throw-escalation',
-	    target: {
-	      type: 'bpmn:IntermediateThrowEvent',
-	      eventDefinitionType: 'bpmn:EscalationEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Conditional Intermediate Catch Event',
-	    actionName: 'replace-with-conditional-intermediate-catch',
-	    className: 'bpmn-icon-intermediate-event-catch-condition',
-	    target: {
-	      type: 'bpmn:IntermediateCatchEvent',
-	      eventDefinitionType: 'bpmn:ConditionalEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Link Intermediate Catch Event',
-	    actionName: 'replace-with-link-intermediate-catch',
-	    className: 'bpmn-icon-intermediate-event-catch-link',
-	    target: {
-	      type: 'bpmn:IntermediateCatchEvent',
-	      eventDefinitionType: 'bpmn:LinkEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Link Intermediate Throw Event',
-	    actionName: 'replace-with-link-intermediate-throw',
-	    className: 'bpmn-icon-intermediate-event-throw-link',
-	    target: {
-	      type: 'bpmn:IntermediateThrowEvent',
-	      eventDefinitionType: 'bpmn:LinkEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Compensation Intermediate Throw Event',
-	    actionName: 'replace-with-compensation-intermediate-throw',
-	    className: 'bpmn-icon-intermediate-event-throw-compensation',
-	    target: {
-	      type: 'bpmn:IntermediateThrowEvent',
-	      eventDefinitionType: 'bpmn:CompensateEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Signal Intermediate Catch Event',
-	    actionName: 'replace-with-signal-intermediate-catch',
-	    className: 'bpmn-icon-intermediate-event-catch-signal',
-	    target: {
-	      type: 'bpmn:IntermediateCatchEvent',
-	      eventDefinitionType: 'bpmn:SignalEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Signal Intermediate Throw Event',
-	    actionName: 'replace-with-signal-intermediate-throw',
-	    className: 'bpmn-icon-intermediate-event-throw-signal',
-	    target: {
-	      type: 'bpmn:IntermediateThrowEvent',
-	      eventDefinitionType: 'bpmn:SignalEventDefinition'
-	    }
-	  }
-	];
-
-	module.exports.END_EVENT = [
-	  {
-	    label: 'Start Event',
-	    actionName: 'replace-with-none-start',
-	    className: 'bpmn-icon-start-event-none',
-	    target: {
-	      type: 'bpmn:StartEvent'
-	    }
-	  },
-	  {
-	    label: 'Intermediate Throw Event',
-	    actionName: 'replace-with-none-intermediate-throw',
-	    className: 'bpmn-icon-intermediate-event-none',
-	    target: {
-	      type: 'bpmn:IntermediateThrowEvent'
-	    }
-	  },
-	  {
-	    label: 'End Event',
-	    actionName: 'replace-with-none-end',
-	    className: 'bpmn-icon-end-event-none',
-	    target: {
-	      type: 'bpmn:EndEvent'
-	    }
-	  },
-	  {
-	    label: 'Message End Event',
-	    actionName: 'replace-with-message-end',
-	    className: 'bpmn-icon-end-event-message',
-	    target: {
-	      type: 'bpmn:EndEvent',
-	      eventDefinitionType: 'bpmn:MessageEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Escalation End Event',
-	    actionName: 'replace-with-escalation-end',
-	    className: 'bpmn-icon-end-event-escalation',
-	    target: {
-	      type: 'bpmn:EndEvent',
-	      eventDefinitionType: 'bpmn:EscalationEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Error End Event',
-	    actionName: 'replace-with-error-end',
-	    className: 'bpmn-icon-end-event-error',
-	    target: {
-	      type: 'bpmn:EndEvent',
-	      eventDefinitionType: 'bpmn:ErrorEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Cancel End Event',
-	    actionName: 'replace-with-cancel-end',
-	    className: 'bpmn-icon-end-event-cancel',
-	    target: {
-	      type: 'bpmn:EndEvent',
-	      eventDefinitionType: 'bpmn:CancelEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Compensation End Event',
-	    actionName: 'replace-with-compensation-end',
-	    className: 'bpmn-icon-end-event-compensation',
-	    target: {
-	      type: 'bpmn:EndEvent',
-	      eventDefinitionType: 'bpmn:CompensateEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Signal End Event',
-	    actionName: 'replace-with-signal-end',
-	    className: 'bpmn-icon-end-event-signal',
-	    target: {
-	      type: 'bpmn:EndEvent',
-	      eventDefinitionType: 'bpmn:SignalEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Terminate End Event',
-	    actionName: 'replace-with-terminate-end',
-	    className: 'bpmn-icon-end-event-terminate',
-	    target: {
-	      type: 'bpmn:EndEvent',
-	      eventDefinitionType: 'bpmn:TerminateEventDefinition'
-	    }
-	  }
-	];
-
-	module.exports.GATEWAY = [
-	  {
-	    label: 'Exclusive Gateway',
-	    actionName: 'replace-with-exclusive-gateway',
-	    className: 'bpmn-icon-gateway-xor',
-	    target: {
-	      type: 'bpmn:ExclusiveGateway'
-	    }
-	  },
-	  {
-	    label: 'Parallel Gateway',
-	    actionName: 'replace-with-parallel-gateway',
-	    className: 'bpmn-icon-gateway-parallel',
-	    target: {
-	      type: 'bpmn:ParallelGateway'
-	    }
-	  },
-	  {
-	    label: 'Inclusive Gateway',
-	    actionName: 'replace-with-inclusive-gateway',
-	    className: 'bpmn-icon-gateway-or',
-	    target: {
-	      type: 'bpmn:InclusiveGateway'
-	    }
-	  },
-	  {
-	    label: 'Complex Gateway',
-	    actionName: 'replace-with-complex-gateway',
-	    className: 'bpmn-icon-gateway-complex',
-	    target: {
-	      type: 'bpmn:ComplexGateway'
-	    }
-	  },
-	  {
-	    label: 'Event based Gateway',
-	    actionName: 'replace-with-event-based-gateway',
-	    className: 'bpmn-icon-gateway-eventbased',
-	    target: {
-	      type: 'bpmn:EventBasedGateway',
-	      instantiate: false,
-	      eventGatewayType: 'Exclusive'
-	    }
-	  }
-	  // Gateways deactivated until https://github.com/bpmn-io/bpmn-js/issues/194
-	  // {
-	  //   label: 'Event based instantiating Gateway',
-	  //   actionName: 'replace-with-exclusive-event-based-gateway',
-	  //   className: 'bpmn-icon-exclusive-event-based',
-	  //   target: {
-	  //     type: 'bpmn:EventBasedGateway'
-	  //   },
-	  //   options: {
-	  //     businessObject: { instantiate: true, eventGatewayType: 'Exclusive' }
-	  //   }
-	  // },
-	  // {
-	  //   label: 'Parallel Event based instantiating Gateway',
-	  //   actionName: 'replace-with-parallel-event-based-instantiate-gateway',
-	  //   className: 'bpmn-icon-parallel-event-based-instantiate-gateway',
-	  //   target: {
-	  //     type: 'bpmn:EventBasedGateway'
-	  //   },
-	  //   options: {
-	  //     businessObject: { instantiate: true, eventGatewayType: 'Parallel' }
-	  //   }
-	  // }
-	];
-
-	module.exports.SUBPROCESS_EXPANDED = [
-	  {
-	    label: 'Transaction',
-	    actionName: 'replace-with-transaction',
-	    className: 'bpmn-icon-transaction',
-	    target: {
-	      type: 'bpmn:Transaction',
-	      isExpanded: true
-	    }
-	  },
-	  {
-	    label: 'Event Sub Process',
-	    actionName: 'replace-with-event-subprocess',
-	    className: 'bpmn-icon-event-subprocess-expanded',
-	    target: {
-	      type: 'bpmn:SubProcess',
-	      triggeredByEvent: true,
-	      isExpanded: true
-	    }
-	  }
-	];
-
-	module.exports.TRANSACTION = [
-	  {
-	    label: 'Sub Process',
-	    actionName: 'replace-with-subprocess',
-	    className: 'bpmn-icon-subprocess-expanded',
-	    target: {
-	      type: 'bpmn:SubProcess',
-	      isExpanded: true
-	    }
-	  },
-	  {
-	    label: 'Event Sub Process',
-	    actionName: 'replace-with-event-subprocess',
-	    className: 'bpmn-icon-event-subprocess-expanded',
-	    target: {
-	      type: 'bpmn:SubProcess',
-	      triggeredByEvent: true,
-	      isExpanded: true
-	    }
-	  }
-	];
-
-	module.exports.EVENT_SUB_PROCESS = [
-	  {
-	    label: 'Sub Process',
-	    actionName: 'replace-with-subprocess',
-	    className: 'bpmn-icon-subprocess-expanded',
-	    target: {
-	      type: 'bpmn:SubProcess',
-	      isExpanded: true
-	    }
-	  },
-	  {
-	    label: 'Transaction',
-	    actionName: 'replace-with-transaction',
-	    className: 'bpmn-icon-transaction',
-	    target: {
-	      type: 'bpmn:Transaction',
-	      isExpanded: true
-	    }
-	  }
-	];
-
-	module.exports.TASK = [
-	  {
-	    label: 'Task',
-	    actionName: 'replace-with-task',
-	    className: 'bpmn-icon-task',
-	    target: {
-	      type: 'bpmn:Task'
-	    }
-	  },
-	  {
-	    label: 'Send Task',
-	    actionName: 'replace-with-send-task',
-	    className: 'bpmn-icon-send',
-	    target: {
-	      type: 'bpmn:SendTask'
-	    }
-	  },
-	  {
-	    label: 'Receive Task',
-	    actionName: 'replace-with-receive-task',
-	    className: 'bpmn-icon-receive',
-	    target: {
-	      type: 'bpmn:ReceiveTask'
-	    }
-	  },
-	  {
-	    label: 'User Task',
-	    actionName: 'replace-with-user-task',
-	    className: 'bpmn-icon-user',
-	    target: {
-	      type: 'bpmn:UserTask'
-	    }
-	  },
-	  {
-	    label: 'Manual Task',
-	    actionName: 'replace-with-manual-task',
-	    className: 'bpmn-icon-manual',
-	    target: {
-	      type: 'bpmn:ManualTask'
-	    }
-	  },
-	  {
-	    label: 'Business Rule Task',
-	    actionName: 'replace-with-rule-task',
-	    className: 'bpmn-icon-business-rule',
-	    target: {
-	      type: 'bpmn:BusinessRuleTask'
-	    }
-	  },
-	  {
-	    label: 'Service Task',
-	    actionName: 'replace-with-service-task',
-	    className: 'bpmn-icon-service',
-	    target: {
-	      type: 'bpmn:ServiceTask'
-	    }
-	  },
-	  {
-	    label: 'Script Task',
-	    actionName: 'replace-with-script-task',
-	    className: 'bpmn-icon-script',
-	    target: {
-	      type: 'bpmn:ScriptTask'
-	    }
-	  },
-	  {
-	    label: 'Call Activity',
-	    actionName: 'replace-with-call-activity',
-	    className: 'bpmn-icon-call-activity',
-	    target: {
-	      type: 'bpmn:CallActivity'
-	    }
-	  },
-	  {
-	    label: 'Sub Process (collapsed)',
-	    actionName: 'replace-with-collapsed-subprocess',
-	    className: 'bpmn-icon-subprocess-collapsed',
-	    target: {
-	      type: 'bpmn:SubProcess',
-	      isExpanded: false
-	    }
-	  },
-	  {
-	    label: 'Sub Process (expanded)',
-	    actionName: 'replace-with-expanded-subprocess',
-	    className: 'bpmn-icon-subprocess-expanded',
-	    target: {
-	      type: 'bpmn:SubProcess',
-	      isExpanded: true
-	    }
-	  }
-	];
-
-	module.exports.BOUNDARY_EVENT = [
-	  {
-	    label: 'Message Boundary Event',
-	    actionName: 'replace-with-message-boundary',
-	    className: 'bpmn-icon-intermediate-event-catch-message',
-	    target: {
-	      type: 'bpmn:BoundaryEvent',
-	      eventDefinitionType: 'bpmn:MessageEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Timer Boundary Event',
-	    actionName: 'replace-with-timer-boundary',
-	    className: 'bpmn-icon-intermediate-event-catch-timer',
-	    target: {
-	      type: 'bpmn:BoundaryEvent',
-	      eventDefinitionType: 'bpmn:TimerEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Escalation Boundary Event',
-	    actionName: 'replace-with-escalation-boundary',
-	    className: 'bpmn-icon-intermediate-event-catch-escalation',
-	    target: {
-	      type: 'bpmn:BoundaryEvent',
-	      eventDefinitionType: 'bpmn:EscalationEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Conditional Boundary Event',
-	    actionName: 'replace-with-conditional-boundary',
-	    className: 'bpmn-icon-intermediate-event-catch-condition',
-	    target: {
-	      type: 'bpmn:BoundaryEvent',
-	      eventDefinitionType: 'bpmn:ConditionalEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Error Boundary Event',
-	    actionName: 'replace-with-error-boundary',
-	    className: 'bpmn-icon-intermediate-event-catch-error',
-	    target: {
-	      type: 'bpmn:BoundaryEvent',
-	      eventDefinitionType: 'bpmn:ErrorEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Cancel Boundary Event',
-	    actionName: 'replace-with-cancel-boundary',
-	    className: 'bpmn-icon-intermediate-event-catch-cancel',
-	    target: {
-	      type: 'bpmn:BoundaryEvent',
-	      eventDefinitionType: 'bpmn:CancelEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Signal Boundary Event',
-	    actionName: 'replace-with-signal-boundary',
-	    className: 'bpmn-icon-intermediate-event-catch-signal',
-	    target: {
-	      type: 'bpmn:BoundaryEvent',
-	      eventDefinitionType: 'bpmn:SignalEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Compensation Boundary Event',
-	    actionName: 'replace-with-compensation-boundary',
-	    className: 'bpmn-icon-intermediate-event-catch-compensation',
-	    target: {
-	      type: 'bpmn:BoundaryEvent',
-	      eventDefinitionType: 'bpmn:CompensateEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Message Boundary Event (non-interrupting)',
-	    actionName: 'replace-with-non-interrupting-message-boundary',
-	    className: 'bpmn-icon-intermediate-event-catch-non-interrupting-message',
-	    target: {
-	      type: 'bpmn:BoundaryEvent',
-	      eventDefinitionType: 'bpmn:MessageEventDefinition',
-	      cancelActivity: false
-	    }
-	  },
-	  {
-	    label: 'Timer Boundary Event (non-interrupting)',
-	    actionName: 'replace-with-non-interrupting-timer-boundary',
-	    className: 'bpmn-icon-intermediate-event-catch-non-interrupting-timer',
-	    target: {
-	      type: 'bpmn:BoundaryEvent',
-	      eventDefinitionType: 'bpmn:TimerEventDefinition',
-	      cancelActivity: false
-	    }
-	  },
-	  {
-	    label: 'Escalation Boundary Event (non-interrupting)',
-	    actionName: 'replace-with-non-interrupting-escalation-boundary',
-	    className: 'bpmn-icon-intermediate-event-catch-non-interrupting-escalation',
-	    target: {
-	      type: 'bpmn:BoundaryEvent',
-	      eventDefinitionType: 'bpmn:EscalationEventDefinition',
-	      cancelActivity: false
-	    }
-	  },
-	  {
-	    label: 'Conditional Boundary Event (non-interrupting)',
-	    actionName: 'replace-with-non-interrupting-conditional-boundary',
-	    className: 'bpmn-icon-intermediate-event-catch-non-interrupting-condition',
-	    target: {
-	      type: 'bpmn:BoundaryEvent',
-	      eventDefinitionType: 'bpmn:ConditionalEventDefinition',
-	      cancelActivity: false
-	    }
-	  },
-	  {
-	    label: 'Signal Boundary Event (non-interrupting)',
-	    actionName: 'replace-with-non-interrupting-signal-boundary',
-	    className: 'bpmn-icon-intermediate-event-catch-non-interrupting-signal',
-	    target: {
-	      type: 'bpmn:BoundaryEvent',
-	      eventDefinitionType: 'bpmn:SignalEventDefinition',
-	      cancelActivity: false
-	    }
-	  }
-	];
-
-	module.exports.EVENT_SUB_PROCESS_START_EVENT = [
-	  {
-	    label: 'Message Start Event',
-	    actionName: 'replace-with-message-start',
-	    className: 'bpmn-icon-start-event-message',
-	    target: {
-	      type: 'bpmn:StartEvent',
-	      eventDefinitionType: 'bpmn:MessageEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Timer Start Event',
-	    actionName: 'replace-with-timer-start',
-	    className: 'bpmn-icon-start-event-timer',
-	    target: {
-	      type: 'bpmn:StartEvent',
-	      eventDefinitionType: 'bpmn:TimerEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Conditional Start Event',
-	    actionName: 'replace-with-conditional-start',
-	    className: 'bpmn-icon-start-event-condition',
-	    target: {
-	      type: 'bpmn:StartEvent',
-	      eventDefinitionType: 'bpmn:ConditionalEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Signal Start Event',
-	    actionName: 'replace-with-signal-start',
-	    className: 'bpmn-icon-start-event-signal',
-	    target: {
-	      type: 'bpmn:StartEvent',
-	      eventDefinitionType: 'bpmn:SignalEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Error Start Event',
-	    actionName: 'replace-with-error-start',
-	    className: 'bpmn-icon-start-event-error',
-	    target: {
-	      type: 'bpmn:StartEvent',
-	      eventDefinitionType: 'bpmn:ErrorEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Escalation Start Event',
-	    actionName: 'replace-with-escalation-start',
-	    className: 'bpmn-icon-start-event-escalation',
-	    target: {
-	      type: 'bpmn:StartEvent',
-	      eventDefinitionType: 'bpmn:EscalationEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Compensation Start Event',
-	    actionName: 'replace-with-compensation-start',
-	    className: 'bpmn-icon-start-event-compensation',
-	    target: {
-	      type: 'bpmn:StartEvent',
-	      eventDefinitionType: 'bpmn:CompensateEventDefinition'
-	    }
-	  },
-	  {
-	    label: 'Message Start Event (non-interrupting)',
-	    actionName: 'replace-with-non-interrupting-message-start',
-	    className: 'bpmn-icon-start-event-non-interrupting-message',
-	    target: {
-	      type: 'bpmn:StartEvent',
-	      eventDefinitionType: 'bpmn:MessageEventDefinition',
-	      isInterrupting: false
-	    }
-	  },
-	  {
-	    label: 'Timer Start Event (non-interrupting)',
-	    actionName: 'replace-with-non-interrupting-timer-start',
-	    className: 'bpmn-icon-start-event-non-interrupting-timer',
-	    target: {
-	      type: 'bpmn:StartEvent',
-	      eventDefinitionType: 'bpmn:TimerEventDefinition',
-	      isInterrupting: false
-	    }
-	  },
-	  {
-	    label: 'Conditional Start Event (non-interrupting)',
-	    actionName: 'replace-with-non-interrupting-conditional-start',
-	    className: 'bpmn-icon-start-event-non-interrupting-condition',
-	    target: {
-	      type: 'bpmn:StartEvent',
-	      eventDefinitionType: 'bpmn:ConditionalEventDefinition',
-	      isInterrupting: false
-	    }
-	  },
-	  {
-	    label: 'Signal Start Event (non-interrupting)',
-	    actionName: 'replace-with-non-interrupting-signal-start',
-	    className: 'bpmn-icon-start-event-non-interrupting-signal',
-	    target: {
-	      type: 'bpmn:StartEvent',
-	      eventDefinitionType: 'bpmn:SignalEventDefinition',
-	      isInterrupting: false
-	    }
-	  },
-	  {
-	    label: 'Escalation Start Event (non-interrupting)',
-	    actionName: 'replace-with-non-interrupting-escalation-start',
-	    className: 'bpmn-icon-start-event-non-interrupting-escalation',
-	    target: {
-	      type: 'bpmn:StartEvent',
-	      eventDefinitionType: 'bpmn:EscalationEventDefinition',
-	      isInterrupting: false
-	    }
-	  }
-	];
-
-	module.exports.SEQUENCE_FLOW = [
-	  {
-	    label: 'Sequence Flow',
-	    actionName: 'replace-with-sequence-flow',
-	    className: 'bpmn-icon-connection'
-	  },
-	  {
-	    label: 'Default Flow',
-	    actionName: 'replace-with-default-flow',
-	    className: 'bpmn-icon-default-flow'
-	  },
-	  {
-	    label: 'Conditional Flow',
-	    actionName: 'replace-with-conditional-flow',
-	    className: 'bpmn-icon-conditional-flow'
-	  }
-	];
-
-	module.exports.PARTICIPANT = [
-	  {
-	    label: 'Expanded Pool',
-	    actionName: 'replace-with-expanded-pool',
-	    className: 'bpmn-icon-participant',
-	    target: {
-	      type: 'bpmn:Participant',
-	      isExpanded: true
-	    }
-	  },
-	  {
-	    label: 'Collapsed Pool',
-	    actionName: 'replace-with-collapsed-pool',
-	    // TODO(@janstuemmel): maybe design new icon
-	    className: 'bpmn-icon-lane',
-	    target: {
-	      type: 'bpmn:Participant',
-	      isExpanded: false
-	    }
-	  }
-	];
-
-
-/***/ },
-/* 703 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-
-	var assign = __webpack_require__(7),
-	    forEach = __webpack_require__(415),
-	    isArray = __webpack_require__(21),
-	    is = __webpack_require__(443).is,
-	    isExpanded = __webpack_require__(442).isExpanded,
-	    isAny = __webpack_require__(573).isAny,
-	    getChildLanes = __webpack_require__(704).getChildLanes,
-	    isEventSubProcess = __webpack_require__(442).isEventSubProcess;
-
-
-	/**
-	 * A provider for BPMN 2.0 elements context pad
-	 */
-	function ContextPadProvider(contextPad, modeling, elementFactory,
-	                            connect, create, popupMenu,
-	                            canvas, rules, translate) {
-
-	  contextPad.registerProvider(this);
-
-	  this._contextPad = contextPad;
-
-	  this._modeling = modeling;
-
-	  this._elementFactory = elementFactory;
-	  this._connect = connect;
-	  this._create = create;
-	  this._popupMenu = popupMenu;
-	  this._canvas  = canvas;
-	  this._rules = rules;
-	  this._translate = translate;
-	}
-
-	ContextPadProvider.$inject = [
-	  'contextPad',
-	  'modeling',
-	  'elementFactory',
-	  'connect',
-	  'create',
-	  'popupMenu',
-	  'canvas',
-	  'rules',
-	  'translate'
-	];
-
-	module.exports = ContextPadProvider;
-
-
-	ContextPadProvider.prototype.getContextPadEntries = function(element) {
-
-	  var contextPad = this._contextPad,
-	      modeling = this._modeling,
-
-	      elementFactory = this._elementFactory,
-	      connect = this._connect,
-	      create = this._create,
-	      popupMenu = this._popupMenu,
-	      canvas = this._canvas,
-	      rules = this._rules,
-
-	      translate = this._translate;
-
-	  var actions = {};
-
-	  if (element.type === 'label') {
-	    return actions;
-	  }
-
-	  var businessObject = element.businessObject;
-
-	  function startConnect(event, element, autoActivate) {
-	    connect.start(event, element, autoActivate);
-	  }
-
-	  function removeElement(e) {
-	    modeling.removeElements([ element ]);
-	  }
-
-	  function getReplaceMenuPosition(element) {
-
-	    var Y_OFFSET = 5;
-
-	    var diagramContainer = canvas.getContainer(),
-	        pad = contextPad.getPad(element).html;
-
-	    var diagramRect = diagramContainer.getBoundingClientRect(),
-	        padRect = pad.getBoundingClientRect();
-
-	    var top = padRect.top - diagramRect.top;
-	    var left = padRect.left - diagramRect.left;
-
-	    var pos = {
-	      x: left,
-	      y: top + padRect.height + Y_OFFSET
-	    };
-
-	    return pos;
-	  }
-
-
-	  /**
-	   * Create an append action
-	   *
-	   * @param {String} type
-	   * @param {String} className
-	   * @param {String} [title]
-	   * @param {Object} [options]
-	   *
-	   * @return {Object} descriptor
-	   */
-	  function appendAction(type, className, title, options) {
-
-	    if (typeof title !== 'string') {
-	      options = title;
-	      title = translate('Append {type}', { type: type.replace(/^bpmn\:/, '') });
-	    }
-
-	    function appendListener(event, element) {
-
-	      var shape = elementFactory.createShape(assign({ type: type }, options));
-	      create.start(event, shape, element);
-	    }
-
-	    return {
-	      group: 'model',
-	      className: className,
-	      title: title,
-	      action: {
-	        dragstart: appendListener,
-	        click: appendListener
-	      }
-	    };
-	  }
-
-	  function splitLaneHandler(count) {
-
-	    return function(event, element) {
-	      // actual split
-	      modeling.splitLane(element, count);
-
-	      // refresh context pad after split to
-	      // get rid of split icons
-	      contextPad.open(element, true);
-	    };
-	  }
-
-
-	  if (isAny(businessObject, [ 'bpmn:Lane', 'bpmn:Participant' ]) && isExpanded(businessObject)) {
-
-	    var childLanes = getChildLanes(element);
-
-	    assign(actions, {
-	      'lane-insert-above': {
-	        group: 'lane-insert-above',
-	        className: 'bpmn-icon-lane-insert-above',
-	        title: translate('Add Lane above'),
-	        action: {
-	          click: function(event, element) {
-	            modeling.addLane(element, 'top');
-	          }
-	        }
-	      }
-	    });
-
-	    if (childLanes.length < 2) {
-
-	      if (element.height >= 120) {
-	        assign(actions, {
-	          'lane-divide-two': {
-	            group: 'lane-divide',
-	            className: 'bpmn-icon-lane-divide-two',
-	            title: translate('Divide into two Lanes'),
-	            action: {
-	              click: splitLaneHandler(2)
-	            }
-	          }
-	        });
-	      }
-
-	      if (element.height >= 180) {
-	        assign(actions, {
-	          'lane-divide-three': {
-	            group: 'lane-divide',
-	            className: 'bpmn-icon-lane-divide-three',
-	            title: translate('Divide into three Lanes'),
-	            action: {
-	              click: splitLaneHandler(3)
-	            }
-	          }
-	        });
-	      }
-	    }
-
-	    assign(actions, {
-	      'lane-insert-below': {
-	        group: 'lane-insert-below',
-	        className: 'bpmn-icon-lane-insert-below',
-	        title: translate('Add Lane below'),
-	        action: {
-	          click: function(event, element) {
-	            modeling.addLane(element, 'bottom');
-	          }
-	        }
-	      }
-	    });
-
-	  }
-
-	  if (is(businessObject, 'bpmn:FlowNode')) {
-
-	    if (is(businessObject, 'bpmn:EventBasedGateway')) {
-
-	      assign(actions, {
-	        'append.receive-task': appendAction('bpmn:ReceiveTask', 'bpmn-icon-receive-task'),
-	        'append.message-intermediate-event': appendAction('bpmn:IntermediateCatchEvent',
-	                                                  'bpmn-icon-intermediate-event-catch-message',
-	                                                  { eventDefinitionType: 'bpmn:MessageEventDefinition' }),
-	        'append.timer-intermediate-event': appendAction('bpmn:IntermediateCatchEvent',
-	                                                  'bpmn-icon-intermediate-event-catch-timer',
-	                                                  { eventDefinitionType: 'bpmn:TimerEventDefinition' }),
-	        'append.condtion-intermediate-event': appendAction('bpmn:IntermediateCatchEvent',
-	                                                  'bpmn-icon-intermediate-event-catch-condition',
-	                                                  { eventDefinitionType: 'bpmn:ConditionalEventDefinition' }),
-	        'append.signal-intermediate-event': appendAction('bpmn:IntermediateCatchEvent',
-	                                                  'bpmn-icon-intermediate-event-catch-signal',
-	                                                  { eventDefinitionType: 'bpmn:SignalEventDefinition' })
-	      });
-	    } else
-
-	    if (isEventType(businessObject, 'bpmn:BoundaryEvent', 'bpmn:CompensateEventDefinition')) {
-
-	      assign(actions, {
-	        'append.compensation-activity':
-	            appendAction('bpmn:Task', 'bpmn-icon-task', translate('Append compensation activity'), {
-	              isForCompensation: true
-	            })
-	      });
-	    } else
-
-	    if (!is(businessObject, 'bpmn:EndEvent') &&
-	        !businessObject.isForCompensation &&
-	        !isEventType(businessObject, 'bpmn:IntermediateThrowEvent', 'bpmn:LinkEventDefinition') &&
-	        !isEventSubProcess(businessObject)) {
-
-	      assign(actions, {
-	        'append.end-event': appendAction('bpmn:EndEvent', 'bpmn-icon-end-event-none'),
-	        'append.gateway': appendAction('bpmn:ExclusiveGateway', 'bpmn-icon-gateway-xor'),
-	        'append.append-task': appendAction('bpmn:Task', 'bpmn-icon-task'),
-	        'append.intermediate-event': appendAction('bpmn:IntermediateThrowEvent',
-	                                                  'bpmn-icon-intermediate-event-none')
-	      });
-	    }
-	  }
-
-	  var replaceMenu;
-
-	  if (popupMenu._providers['bpmn-replace']) {
-	    replaceMenu = popupMenu.create('bpmn-replace', element);
-	  }
-
-	  if (replaceMenu && !replaceMenu.isEmpty()) {
-
-	    // Replace menu entry
-	    assign(actions, {
-	      'replace': {
-	        group: 'edit',
-	        className: 'bpmn-icon-screw-wrench',
-	        title: translate('Change type'),
-	        action: {
-	          click: function(event, element) {
-	            replaceMenu.open(assign(getReplaceMenuPosition(element), {
-	              cursor: { x: event.x, y: event.y }
-	            }), element);
-	          }
-	        }
-	      }
-	    });
-	  }
-
-	  if (isAny(businessObject, [
-	    'bpmn:FlowNode',
-	    'bpmn:InteractionNode',
-	    'bpmn:DataObjectReference',
-	    'bpmn:DataStoreReference'
-	  ]) ) {
-
-	    assign(actions, {
-	      'append.text-annotation': appendAction('bpmn:TextAnnotation', 'bpmn-icon-text-annotation'),
-
-	      'connect': {
-	        group: 'connect',
-	        className: 'bpmn-icon-connection-multi',
-	        title: translate('Connect using ' +
-	                  (businessObject.isForCompensation ? '' : 'Sequence/MessageFlow or ') +
-	                  'Association'),
-	        action: {
-	          click: startConnect,
-	          dragstart: startConnect
-	        }
-	      }
-	    });
-	  }
-
-	  if (isAny(businessObject, [ 'bpmn:DataObjectReference', 'bpmn:DataStoreReference' ])) {
-	    assign(actions, {
-	      'connect': {
-	        group: 'connect',
-	        className: 'bpmn-icon-connection-multi',
-	        title: translate('Connect using DataInputAssociation'),
-	        action: {
-	          click: startConnect,
-	          dragstart: startConnect
-	        }
-	      }
-	    });
-	  }
-
-	  // delete element entry, only show if allowed by rules
-	  var deleteAllowed = rules.allowed('elements.delete', { elements: [ element ] });
-
-	  if (isArray(deleteAllowed)) {
-	    // was the element returned as a deletion candidate?
-	    deleteAllowed = deleteAllowed[0] === element;
-	  }
-
-	  if (deleteAllowed) {
-	    assign(actions, {
-	      'delete': {
-	        group: 'edit',
-	        className: 'bpmn-icon-trash',
-	        title: translate('Remove'),
-	        action: {
-	          click: removeElement,
-	          dragstart: removeElement
-	        }
-	      }
-	    });
-	  }
-
-	  return actions;
-	};
-
-	function isEventType(eventBo, type, definition) {
-
-	  var isType = eventBo.$instanceOf(type);
-	  var isDefinition = false;
-
-	  var definitions = eventBo.eventDefinitions || [];
-	  forEach(definitions, function(def) {
-	    if (def.$type === definition) {
-	      isDefinition = true;
-	    }
-	  });
-
-	  return isType && isDefinition;
-	}
-
-
-/***/ },
-/* 704 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var is = __webpack_require__(443).is;
 
-	var getParent = __webpack_require__(573).getParent;
+	var getParent = __webpack_require__(575).getParent;
 
 	var asTRBL = __webpack_require__(516).asTRBL,
-	    substractTRBL = __webpack_require__(532).substractTRBL,
-	    resizeTRBL = __webpack_require__(532).resizeTRBL;
+	    substractTRBL = __webpack_require__(534).substractTRBL,
+	    resizeTRBL = __webpack_require__(534).resizeTRBL;
 
 	var abs = Math.abs;
 
@@ -65026,461 +58917,1846 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 705 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __depends__: [
-	    __webpack_require__(706)
-	  ],
-	  __init__: [ 'bpmnKeyBindings' ],
-	  bpmnKeyBindings: [ 'type', __webpack_require__(709) ]
-	};
-
-
-/***/ },
-/* 706 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __init__: [ 'keyboard' ],
-	  keyboard: [ 'type', __webpack_require__(707) ]
-	};
-
-
-/***/ },
-/* 707 */
+/* 603 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var domEvent = __webpack_require__(484),
-	    domMatches = __webpack_require__(708);
+	var getMid = __webpack_require__(516).getMid;
+
+	var lineIntersect = __webpack_require__(604);
+
 
 	/**
-	 * A keyboard abstraction that may be activated and
-	 * deactivated by users at will, consuming key events
-	 * and triggering diagram actions.
+	 * Fix broken dockings after DI imports.
 	 *
-	 * The implementation fires the following key events that allow
-	 * other components to hook into key handling:
-	 *
-	 *  - keyboard.bind
-	 *  - keyboard.unbind
-	 *  - keyboard.init
-	 *  - keyboard.destroy
-	 *
-	 * All events contain the fields (node, listeners).
-	 *
-	 * A default binding for the keyboard may be specified via the
-	 * `keyboard.bindTo` configuration option.
-	 *
-	 * @param {Config} config
 	 * @param {EventBus} eventBus
-	 * @param {EditorActions} editorActions
 	 */
-	function Keyboard(config, eventBus, editorActions) {
-	  var self = this;
+	function ImportDockingFix(eventBus) {
 
-	  this._config = config || {};
-	  this._eventBus = eventBus;
-	  this._editorActions = editorActions;
+	  function adjustDocking(startPoint, nextPoint, elementMid) {
 
-	  this._listeners = [];
+	    var elementTop = {
+	      x: elementMid.x,
+	      y: elementMid.y - 50
+	    };
 
-	  // our key handler is a singleton that passes
-	  // (keycode, modifiers) to each listener.
-	  //
-	  // listeners must indicate that they handled a key event
-	  // by returning true. This stops the event propagation.
-	  //
-	  this._keyHandler = function(event) {
+	    var elementLeft = {
+	      x: elementMid.x - 50,
+	      y: elementMid.y
+	    };
 
-	    var i, l,
-	        target = event.target,
-	        listeners = self._listeners,
-	        code = event.keyCode || event.charCode || -1;
+	    var verticalIntersect = lineIntersect(startPoint, nextPoint, elementMid, elementTop),
+	        horizontalIntersect = lineIntersect(startPoint, nextPoint, elementMid, elementLeft);
 
-	    if (domMatches(target, 'input, textarea')) {
-	      return;
-	    }
+	    // original is horizontal or vertical center cross intersection
+	    var centerIntersect;
 
-	    for (i = 0; (l = listeners[i]); i++) {
-	      if (l(code, event)) {
-	        event.preventDefault();
-	        event.stopPropagation();
+	    if (verticalIntersect && horizontalIntersect) {
+	      if (getDistance(verticalIntersect, elementMid) > getDistance(horizontalIntersect, elementMid)) {
+	        centerIntersect = horizontalIntersect;
+	      } else {
+	        centerIntersect = verticalIntersect;
 	      }
+	    } else {
+	      centerIntersect = verticalIntersect || horizontalIntersect;
 	    }
-	  };
 
-	  // properly clean dom registrations
-	  eventBus.on('diagram.destroy', function() {
-	    self._fire('destroy');
+	    startPoint.original = centerIntersect;
+	  }
 
-	    self.unbind();
-	    self._listeners = null;
+	  function fixDockings(connection) {
+	    var waypoints = connection.waypoints;
+
+	    adjustDocking(
+	      waypoints[0],
+	      waypoints[1],
+	      getMid(connection.source)
+	    );
+
+	    adjustDocking(
+	      waypoints[waypoints.length - 1],
+	      waypoints[waypoints.length - 2],
+	      getMid(connection.target)
+	    );
+	  }
+
+	  eventBus.on('bpmnElement.added', function(e) {
+
+	    var element = e.element;
+
+	    if (element.waypoints) {
+	      fixDockings(element);
+	    }
 	  });
-
-	  eventBus.on('diagram.init', function() {
-	    self._fire('init');
-
-	    if (config && config.bindTo) {
-	      self.bind(config.bindTo);
-	    }
-	  });
-
-	  this._init();
 	}
 
-	Keyboard.$inject = [
-	  'config.keyboard',
-	  'eventBus',
-	  'editorActions'
-	];
+	ImportDockingFix.$inject = [ 'eventBus' ];
 
-	module.exports = Keyboard;
+	module.exports = ImportDockingFix;
 
 
-	Keyboard.prototype.bind = function(node) {
-	  // make sure that the keyboard is only bound once to the DOM
-	  this.unbind();
+	/////// helpers //////////////////////////////////
 
-	  this._node = node;
-
-	  // bind key events
-	  domEvent.bind(node, 'keydown', this._keyHandler, true);
-
-	  this._fire('bind');
-	};
-
-	Keyboard.prototype.getBinding = function() {
-	  return this._node;
-	};
-
-	Keyboard.prototype.unbind = function() {
-	  var node = this._node;
-
-	  if (node) {
-	    this._fire('unbind');
-
-	    // unbind key events
-	    domEvent.unbind(node, 'keydown', this._keyHandler, true);
-	  }
-
-	  this._node = null;
-	};
-
-	Keyboard.prototype._fire = function(event) {
-	  this._eventBus.fire('keyboard.' + event, { node: this._node, listeners: this._listeners });
-	};
-
-	Keyboard.prototype._init = function() {
-
-	  var listeners = this._listeners;
-
-	  var editorActions = this._editorActions,
-	      config = this._config;
-
-	  // init default listeners
-
-	  // undo
-	  // (CTRL|CMD) + Z
-	  function undo(key, modifiers) {
-
-	    if (isCmd(modifiers) && !isShift(modifiers) && key === 90) {
-	      editorActions.trigger('undo');
-
-	      return true;
-	    }
-	  }
-
-	  // redo
-	  // CTRL + Y
-	  // CMD + SHIFT + Z
-	  function redo(key, modifiers) {
-
-	    if (isCmd(modifiers) && (key === 89 || (key === 90 && isShift(modifiers)))) {
-	      editorActions.trigger('redo');
-
-	      return true;
-	    }
-	  }
-
-	  // copy
-	  // CTRL/CMD + C
-	  function copy(key, modifiers) {
-
-	    if (isCmd(modifiers) && (key === 67)) {
-	      editorActions.trigger('copy');
-
-	      return true;
-	    }
-	  }
-
-	  // paste
-	  // CTRL/CMD + V
-	  function paste(key, modifiers) {
-
-	    if (isCmd(modifiers) && (key === 86)) {
-	      editorActions.trigger('paste');
-
-	      return true;
-	    }
-	  }
-
-	  /**
-	   * zoom in one step
-	   * CTRL + +
-	   *
-	   * 107 = numpad plus
-	   * 187 = regular plus
-	   * 171 = regular plus in Firefox (german keyboard layout)
-	   *  61 = regular plus in Firefox (US keyboard layout)
-	   */
-	  function zoomIn(key, modifiers) {
-
-	    if ((key === 107 || key === 187 || key === 171 || key === 61) && isCmd(modifiers)) {
-	      editorActions.trigger('stepZoom', { value: 1 });
-
-	      return true;
-	    }
-	  }
-
-	  /**
-	   * zoom out one step
-	   * CTRL + -
-	   *
-	   * 109 = numpad minus
-	   * 189 = regular minus
-	   * 173 = regular minus in Firefox (US and german keyboard layout)
-	   */
-	  function zoomOut(key, modifiers) {
-
-	    if ((key === 109 || key === 189 || key === 173)  && isCmd(modifiers)) {
-	      editorActions.trigger('stepZoom', { value: -1 });
-
-	      return true;
-	    }
-	  }
-
-	  /**
-	   * zoom to the default level
-	   * CTRL + 0
-	   *
-	   * 96 = numpad zero
-	   * 48 = regular zero
-	   */
-	  function zoomDefault(key, modifiers) {
-
-	    if ((key === 96 || key === 48) && isCmd(modifiers)) {
-	      editorActions.trigger('zoom', { value: 1 });
-
-	      return true;
-	    }
-	  }
-
-	  // delete selected element
-	  // DEL
-	  function removeSelection(key, modifiers) {
-
-	    if (key === 46) {
-	      editorActions.trigger('removeSelection');
-
-	      return true;
-	    }
-	  }
-
-	  // move canvas left
-	  // left arrow
-	  //
-	  // 37 = Left
-	  // 38 = Up
-	  // 39 = Right
-	  // 40 = Down
-	  function moveCanvas(key, modifiers) {
-
-	    if ([37, 38, 39, 40].indexOf(key) >= 0) {
-
-	      var opts = {
-	        invertY: config.invertY,
-	        speed: (config.speed || 50)
-	      };
-
-	      switch (key) {
-	      case 37:    // Left
-	        opts.direction = 'left';
-	        break;
-	      case 38:    // Up
-	        opts.direction = 'up';
-	        break;
-	      case 39:    // Right
-	        opts.direction = 'right';
-	        break;
-	      case 40:    // Down
-	        opts.direction = 'down';
-	        break;
-	      }
-
-	      editorActions.trigger('moveCanvas', opts);
-
-	      return true;
-	    }
-	  }
-
-	  listeners.push(undo);
-	  listeners.push(redo);
-	  listeners.push(copy);
-	  listeners.push(paste);
-	  listeners.push(removeSelection);
-	  listeners.push(zoomIn);
-	  listeners.push(zoomOut);
-	  listeners.push(zoomDefault);
-	  listeners.push(moveCanvas);
-	};
-
-
-	/**
-	 * Add a listener function that is notified with (key, modifiers) whenever
-	 * the keyboard is bound and the user presses a key.
-	 *
-	 * @param {Function} listenerFn
-	 */
-	Keyboard.prototype.addListener = function(listenerFn) {
-	  this._listeners.push(listenerFn);
-	};
-
-	Keyboard.prototype.hasModifier = hasModifier;
-	Keyboard.prototype.isCmd = isCmd;
-	Keyboard.prototype.isShift = isShift;
-
-
-	function hasModifier(modifiers) {
-	  return (modifiers.ctrlKey || modifiers.metaKey || modifiers.shiftKey || modifiers.altKey);
+	function getDistance(p1, p2) {
+	  return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
 	}
-
-	function isCmd(modifiers) {
-	  return modifiers.ctrlKey || modifiers.metaKey;
-	}
-
-	function isShift(modifiers) {
-	  return modifiers.shiftKey;
-	}
-
 
 /***/ },
-/* 708 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __webpack_require__(458);
-
-/***/ },
-/* 709 */
+/* 604 */
 /***/ function(module, exports) {
 
 	'use strict';
 
 	/**
-	 * BPMN 2.0 specific key bindings.
+	 * Returns the intersection between two line segments a and b.
 	 *
-	 * @param {Keyboard} keyboard
-	 * @param {EditorActions} editorActions
+	 * @param {Point} l1s
+	 * @param {Point} l1e
+	 * @param {Point} l2s
+	 * @param {Point} l2e
+	 *
+	 * @return {Point}
 	 */
-	function BpmnKeyBindings(keyboard, editorActions) {
+	module.exports = function lineIntersect(l1s, l1e, l2s, l2e) {
+	  // if the lines intersect, the result contains the x and y of the
+	  // intersection (treating the lines as infinite) and booleans for
+	  // whether line segment 1 or line segment 2 contain the point
+	  var denominator, a, b, c, numerator;
 
-	  keyboard.addListener(function(key, modifiers) {
+	  denominator = ((l2e.y - l2s.y) * (l1e.x - l1s.x)) - ((l2e.x - l2s.x) * (l1e.y - l1s.y));
 
-	    // ctrl + a -> select all elements
-	    if (key === 65 && keyboard.isCmd(modifiers)) {
-	      editorActions.trigger('selectElements');
+	  if (denominator == 0) {
+	    return null;
+	  }
 
-	      return true;
-	    }
+	  a = l1s.y - l2s.y;
+	  b = l1s.x - l2s.x;
+	  numerator = ((l2e.x - l2s.x) * a) - ((l2e.y - l2s.y) * b);
 
-	    // ctrl + f -> search labels
-	    if (key === 70 && keyboard.isCmd(modifiers)) {
-	      editorActions.trigger('find');
+	  c = numerator / denominator;
 
-	      return true;
-	    }
-
-	    if (keyboard.hasModifier(modifiers)) {
-	      return;
-	    }
-
-	    // s -> activate space tool
-	    if (key === 83) {
-	      editorActions.trigger('spaceTool');
-
-	      return true;
-	    }
-
-	    // l -> activate lasso tool
-	    if (key === 76) {
-	      editorActions.trigger('lassoTool');
-
-	      return true;
-	    }
-
-	    // h -> activate hand tool
-	    if (key === 72) {
-	      editorActions.trigger('handTool');
-
-	      return true;
-	    }
-
-	    // c -> activate global connect tool
-	    if (key === 67) {
-	      editorActions.trigger('globalConnectTool');
-
-	      return true;
-	    }
-
-	    // e -> activate direct editing
-	    if (key === 69) {
-	      editorActions.trigger('directEditing');
-
-	      return true;
-	    }
-	  });
-	}
-
-	BpmnKeyBindings.$inject = [
-	  'keyboard',
-	  'editorActions'
-	];
-
-	module.exports = BpmnKeyBindings;
-
-/***/ },
-/* 710 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __depends__: [
-	    __webpack_require__(711),
-	    __webpack_require__(723),
-	    __webpack_require__(592)
-	  ],
-	  __init__: [ 'labelEditingProvider' ],
-	  labelEditingProvider: [ 'type', __webpack_require__(725) ]
+	  // if we cast these lines infinitely in
+	  // both directions, they intersect here
+	  return {
+	    x: Math.round(l1s.x + (c * (l1e.x - l1s.x))),
+	    y: Math.round(l1s.y + (c * (l1e.y - l1s.y)))
+	  };
 	};
 
 /***/ },
-/* 711 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  commandStack: [ 'type', __webpack_require__(712) ]
-	};
-
-
-/***/ },
-/* 712 */
+/* 605 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var unique = __webpack_require__(713),
+	var assign = __webpack_require__(7),
+	    inherits = __webpack_require__(3);
+
+	var LabelUtil = __webpack_require__(451),
+	    LabelLayoutUtil = __webpack_require__(606),
+	    ModelUtil = __webpack_require__(443),
+	    is = ModelUtil.is,
+	    getBusinessObject = ModelUtil.getBusinessObject;
+
+	var hasExternalLabel = LabelUtil.hasExternalLabel,
+	    getExternalLabelMid = LabelUtil.getExternalLabelMid,
+	    getLabelAdjustment = LabelLayoutUtil.getLabelAdjustment;
+
+	var CommandInterceptor = __webpack_require__(542);
+
+
+	/**
+	 * A component that makes sure that external labels are added
+	 * together with respective elements and properly updated (DI wise)
+	 * during move.
+	 *
+	 * @param {EventBus} eventBus
+	 * @param {Modeling} modeling
+	 * @param {BpmnFactory} bpmnFactory
+	 */
+	function LabelSupport(eventBus, modeling, bpmnFactory) {
+
+	  CommandInterceptor.call(this, eventBus);
+
+
+	  ///// create external labels on shape creation
+
+	  this.postExecute([ 'shape.create', 'connection.create' ], function(e) {
+	    var context = e.context;
+
+	    var element = context.shape || context.connection,
+	        businessObject = element.businessObject;
+
+	    var position;
+
+	    if (hasExternalLabel(businessObject)) {
+	      position = getExternalLabelMid(element);
+
+	      modeling.createLabel(element, position, {
+	        id: businessObject.id + '_label',
+	        hidden: !businessObject.name,
+	        businessObject: businessObject
+	      });
+	    }
+	  });
+
+
+	  ///// update di information on label creation
+
+	  this.executed([ 'label.create' ], function(event) {
+
+	    var element = event.context.shape,
+	        businessObject,
+	        di;
+
+	    // we want to trigger on real labels only
+	    if (!element.labelTarget) {
+	      return;
+	    }
+
+	    // we want to trigger on BPMN elements only
+	    if (!is(element.labelTarget || element, 'bpmn:BaseElement')) {
+	      return;
+	    }
+
+	    businessObject = element.businessObject,
+	    di = businessObject.di;
+
+
+	    if (!di.label) {
+	      di.label = bpmnFactory.create('bpmndi:BPMNLabel', {
+	        bounds: bpmnFactory.create('dc:Bounds')
+	      });
+	    }
+
+	    assign(di.label.bounds, {
+	      x: element.x,
+	      y: element.y,
+	      width: element.width,
+	      height: element.height
+	    });
+	  });
+
+
+	  ///// update label position on connection change
+
+	  function getHiddenLabelAdjustment(event) {
+
+	    var context = event.context,
+	        connection = context.connection,
+	        label = connection.label;
+
+	    var labelPosition = getExternalLabelMid(connection);
+
+	    return {
+	      x: labelPosition.x - label.x - label.width / 2,
+	      y: labelPosition.y - label.y - label.height / 2
+	    };
+	  }
+
+	  function getVisibleLabelAdjustment(event) {
+
+	    var command = event.command,
+	        context = event.context,
+	        connection = context.connection,
+	        label = connection.label,
+	        hints = assign({}, context.hints),
+	        newWaypoints = context.newWaypoints || connection.waypoints,
+	        oldWaypoints = context.oldWaypoints;
+
+
+	    if (typeof hints.startChanged === 'undefined') {
+	      hints.startChanged = (command === 'connection.reconnectStart');
+	    }
+
+	    if (typeof hints.endChanged === 'undefined') {
+	      hints.endChanged = (command === 'connection.reconnectEnd');
+	    }
+
+	    return getLabelAdjustment(label, newWaypoints, oldWaypoints, hints);
+	  }
+
+	  this.postExecute([
+	    'connection.layout',
+	    'connection.reconnectEnd',
+	    'connection.reconnectStart',
+	    'connection.updateWaypoints'
+	  ], function(event) {
+
+	    var label = event.context.connection.label,
+	        labelAdjustment;
+
+	    if (!label) {
+	      return;
+	    }
+
+	    if (label.hidden) {
+	      labelAdjustment = getHiddenLabelAdjustment(event);
+	    } else {
+	      labelAdjustment = getVisibleLabelAdjustment(event);
+	    }
+
+	    modeling.moveShape(label, labelAdjustment);
+	  });
+
+
+	  ////// keep label position on shape replace
+
+	  this.postExecute([ 'shape.replace' ], function(event) {
+	    var context = event.context,
+	        newShape = context.newShape,
+	        oldShape = context.oldShape;
+
+	    var businessObject = getBusinessObject(newShape);
+
+	    if (businessObject && hasExternalLabel(businessObject)) {
+	      newShape.label.x = oldShape.label.x;
+	      newShape.label.y = oldShape.label.y;
+	    }
+	  });
+
+	}
+
+	inherits(LabelSupport, CommandInterceptor);
+
+	LabelSupport.$inject = [ 'eventBus', 'modeling', 'bpmnFactory' ];
+
+	module.exports = LabelSupport;
+
+
+/***/ },
+/* 606 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var GeometricUtil = __webpack_require__(607);
+
+	var getDistancePointPoint = __webpack_require__(607).getDistancePointPoint;
+
+	var getAttachment = __webpack_require__(608).getAttachment;
+
+
+	function findNewLabelLineStartIndex(oldWaypoints, newWaypoints, attachment, hints) {
+
+	  var index = attachment.segmentIndex;
+
+	  var offset = newWaypoints.length - oldWaypoints.length;
+
+	  // segmentMove happend
+	  if (hints.segmentMove) {
+
+	    var oldSegmentStartIndex = hints.segmentMove.segmentStartIndex,
+	        newSegmentStartIndex = hints.segmentMove.newSegmentStartIndex;
+
+	    // if label was on moved segment return new segment index
+	    if (index === oldSegmentStartIndex) {
+	      return newSegmentStartIndex;
+	    }
+
+	    // label is after new segment index
+	    if (index >= newSegmentStartIndex) {
+	      return (index+offset < newSegmentStartIndex) ? newSegmentStartIndex : index+offset;
+	    }
+
+	    // if label is before new segment index
+	    return index;
+	  }
+
+	  // bendpointMove happend
+	  if (hints.bendpointMove) {
+
+	    var insert = hints.bendpointMove.insert,
+	        bendpointIndex = hints.bendpointMove.bendpointIndex,
+	        newIndex;
+
+	    // waypoints length didnt change
+	    if (offset === 0) {
+	      return index;
+	    }
+
+	    // label behind new/removed bendpoint
+	    if (index >= bendpointIndex) {
+	      newIndex = insert ? index + 1 : index - 1;
+	    }
+
+	    // label before new/removed bendpoint
+	    if (index < bendpointIndex) {
+
+	      newIndex = index;
+
+	      // decide label should take right or left segment
+	      if (insert && attachment.type !== 'bendpoint' && bendpointIndex-1 === index) {
+
+	        var rel = relativePositionMidWaypoint(newWaypoints, bendpointIndex);
+
+	        if (rel < attachment.relativeLocation) {
+	          newIndex++;
+	        }
+	      }
+	    }
+
+	    return newIndex;
+	  }
+
+	  // start/end changed
+	  if (offset === 0) {
+	    return index;
+	  }
+
+	  if (hints.connectionStart) {
+	    return (index === 0) ? 0 : null;
+	  }
+
+	  if (hints.connectionEnd) {
+	    return (index === oldWaypoints.length - 2) ? newWaypoints.length - 2 : null;
+	  }
+
+	  // if nothing fits, return null
+	  return null;
+	}
+
+	module.exports.findNewLabelLineStartIndex = findNewLabelLineStartIndex;
+
+
+	/**
+	 * Calculate the required adjustment (move delta) for the given label
+	 * after the connection waypoints got updated.
+	 *
+	 * @param {djs.model.Label} label
+	 * @param {Array<Point>} newWaypoints
+	 * @param {Array<Point>} oldWaypoints
+	 * @param {Object} hints
+	 *
+	 * @return {Point} delta
+	 */
+	function getLabelAdjustment(label, newWaypoints, oldWaypoints, hints) {
+
+	  var x = 0,
+	      y = 0;
+
+	  var labelPosition = getLabelMid(label);
+
+	  // get closest attachment
+	  var attachment = getAttachment(labelPosition, oldWaypoints),
+	      oldLabelLineIndex = attachment.segmentIndex,
+	      newLabelLineIndex = findNewLabelLineStartIndex(oldWaypoints, newWaypoints, attachment, hints);
+
+	  if ( newLabelLineIndex === null ) {
+	    return { x: x, y: y };
+	  }
+
+	  // should never happen
+	  // TODO(@janstuemmel): throw an error here when connectionSegmentMove is refactored
+	  if (newLabelLineIndex < 0 ||
+	      newLabelLineIndex > newWaypoints.length - 2) {
+	    return { x: x, y: y };
+	  }
+
+	  var oldLabelLine = getLine(oldWaypoints, oldLabelLineIndex),
+	      newLabelLine = getLine(newWaypoints, newLabelLineIndex),
+	      oldFoot = attachment.position;
+
+	  var relativeFootPosition = getRelativeFootPosition(oldLabelLine, oldFoot),
+	      angleDelta = getAngleDelta(oldLabelLine, newLabelLine);
+
+	  // special rule if label on bendpoint
+	  if (attachment.type === 'bendpoint') {
+
+	    var offset = newWaypoints.length - oldWaypoints.length,
+	        oldBendpointIndex = attachment.bendpointIndex,
+	        oldBendpoint = oldWaypoints[oldBendpointIndex];
+
+	    // bendpoint position hasnt changed, return same position
+	    if (newWaypoints.indexOf(oldBendpoint) !== -1) {
+	      return { x: x, y: y };
+	    }
+
+	    // new bendpoint and old bendpoint have same index, then just return the offset
+	    if (offset === 0) {
+	      var newBendpoint = newWaypoints[oldBendpointIndex];
+
+	      return {
+	        x: newBendpoint.x - attachment.position.x,
+	        y: newBendpoint.y - attachment.position.y
+	      };
+	    }
+
+	    // if bendpoints get removed
+	    if (offset < 0 && oldBendpointIndex !== 0 && oldBendpointIndex < oldWaypoints.length - 1) {
+	      relativeFootPosition = relativePositionMidWaypoint(oldWaypoints, oldBendpointIndex);
+	    }
+	  }
+
+	  var newFoot = {
+	    x: (newLabelLine[1].x - newLabelLine[0].x) * relativeFootPosition + newLabelLine[0].x,
+	    y: (newLabelLine[1].y - newLabelLine[0].y) * relativeFootPosition + newLabelLine[0].y
+	  };
+
+	  // the rotated vector to label
+	  var newLabelVector = GeometricUtil.rotateVector({
+	    x: labelPosition.x - oldFoot.x,
+	    y: labelPosition.y - oldFoot.y
+	  }, angleDelta);
+
+	  // the new relative position
+	  x = newFoot.x + newLabelVector.x - labelPosition.x;
+	  y = newFoot.y + newLabelVector.y - labelPosition.y;
+
+	  return { x: x, y: y };
+	}
+
+	module.exports.getLabelAdjustment = getLabelAdjustment;
+
+
+	//// HELPERS ///////
+
+	function relativePositionMidWaypoint(waypoints, idx) {
+
+	  var distanceSegment1 = getDistancePointPoint(waypoints[idx-1], waypoints[idx]),
+	      distanceSegment2 = getDistancePointPoint(waypoints[idx], waypoints[idx+1]);
+
+	  var relativePosition = distanceSegment1 / ( distanceSegment1 + distanceSegment2 );
+
+	  return relativePosition;
+
+	}
+
+	function getLabelMid(label) {
+	  return {
+	    x: label.x + label.width / 2,
+	    y: label.y + label.height / 2
+	  };
+	}
+
+	function getAngleDelta(l1, l2) {
+	  var a1 = GeometricUtil.getAngle(l1),
+	      a2 = GeometricUtil.getAngle(l2);
+	  return a2 - a1;
+	}
+
+	function getLine(waypoints, idx) {
+	  return [ waypoints[idx], waypoints[idx+1] ];
+	}
+
+	function getRelativeFootPosition(line, foot) {
+	  var length = getDistancePointPoint(line[0], line[1]),
+	      lengthToFoot = getDistancePointPoint(line[0], foot);
+
+	  return lengthToFoot / length;
+	}
+
+
+/***/ },
+/* 607 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	/**
+	 * Returns the length of a vector
+	 *
+	 * @param {Vector}
+	 * @return {Float}
+	 */
+	function vectorLength(v) {
+	  return Math.sqrt( Math.pow(v.x, 2) + Math.pow(v.y, 2) );
+	}
+
+	module.exports.vectorLength = vectorLength;
+
+	/**
+	 * Calculates the angle between a line a the yAxis
+	 *
+	 * @param {Array}
+	 * @return {Float}
+	 */
+	function getAngle(line) {
+	  // return value is between 0, 180 and -180, -0
+	  // @janstuemmel: maybe replace return a/b with b/a
+	  return Math.atan( (line[1].y - line[0].y) / (line[1].x - line[0].x) );
+	}
+
+	module.exports.getAngle = getAngle;
+
+	/**
+	 * Rotates a vector by a given angle
+	 *
+	 * @param {Vector}
+	 * @param {Float} Angle in radians
+	 * @return {Vector}
+	 */
+	function rotateVector(vector, angle) {
+	  return (!angle) ? vector : {
+	    x: Math.cos(angle) * vector.x - Math.sin(angle) * vector.y,
+	    y: Math.sin(angle) * vector.x + Math.cos(angle) * vector.y
+	  };
+	}
+
+	module.exports.rotateVector = rotateVector;
+
+	/**
+	 * Solves a 2D equation system
+	 * a + r*b = c, where a,b,c are 2D vectors
+	 *
+	 * @param {Vector}
+	 * @param {Vector}
+	 * @param {Vector}
+	 * @return {Float}
+	 */
+	function solveLambaSystem(a, b, c) {
+
+	  // the 2d system
+	  var system = [
+	    { n: a[0] - c[0], lambda: b[0] },
+	    { n: a[1] - c[1], lambda: b[1] }
+	  ];
+
+	  // solve
+	  var n = system[0].n * b[0] + system[1].n * b[1],
+	      l = system[0].lambda * b[0] + system[1].lambda * b[1];
+
+	  return -n/l;
+	}
+
+	/**
+	 * Position of perpendicular foot
+	 *
+	 * @param {Point}
+	 * @param [ {Point}, {Point} ] line defined throug two points
+	 * @return {Point} the perpendicular foot position
+	 */
+	function perpendicularFoot(point, line) {
+
+	  var a = line[0], b = line[1];
+
+	  // relative position of b from a
+	  var bd = { x: b.x - a.x, y: b.y - a.y };
+
+	  // solve equation system to the parametrized vectors param real value
+	  var r = solveLambaSystem( [ a.x, a.y ], [ bd.x, bd.y ], [ point.x, point.y ] );
+
+	  return { x: a.x + r*bd.x, y: a.y + r*bd.y };
+
+	}
+
+	module.exports.perpendicularFoot = perpendicularFoot;
+
+	/**
+	 * Calculates the distance between a point and a line
+	 *
+	 * @param {Point}
+	 * @param [ {Point}, {Point} ] line defined throug two points
+	 * @return {Float} distance
+	 */
+	function getDistancePointLine(point, line) {
+
+	  var pfPoint = perpendicularFoot(point, line);
+
+	  // distance vector
+	  var connectionVector = {
+	    x: pfPoint.x - point.x,
+	    y: pfPoint.y - point.y
+	  };
+
+	  return vectorLength(connectionVector);
+	}
+
+	module.exports.getDistancePointLine = getDistancePointLine;
+
+	/**
+	 * Calculates the distance between two points
+	 *
+	 * @param {Point}
+	 * @param {Point}
+	 * @return {Float} distance
+	 */
+	function getDistancePointPoint(point1, point2) {
+
+	  return vectorLength({
+	    x: point1.x - point2.x,
+	    y: point1.y - point2.y
+	  });
+	}
+
+	module.exports.getDistancePointPoint = getDistancePointPoint;
+
+
+/***/ },
+/* 608 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var sqrt = Math.sqrt,
+	    min = Math.min,
+	    max = Math.max;
+
+	/**
+	 * Calculate the square (power to two) of a number.
+	 *
+	 * @param {Number} n
+	 *
+	 * @return {Number}
+	 */
+	function sq(n) {
+	  return Math.pow(n, 2);
+	}
+
+	/**
+	 * Get distance between two points.
+	 *
+	 * @param {Point} p1
+	 * @param {Point} p2
+	 *
+	 * @return {Number}
+	 */
+	function getDistance(p1, p2) {
+	  return sqrt(sq(p1.x - p2.x) + sq(p1.y - p2.y));
+	}
+
+	/**
+	 * Return the attachment of the given point on the specified line.
+	 *
+	 * The attachment is either a bendpoint (attached to the given point)
+	 * or segment (attached to a location on a line segment) attachment:
+	 *
+	 * ```javascript
+	 * var pointAttachment = {
+	 *   type: 'bendpoint',
+	 *   bendpointIndex: 3,
+	 *   position: { x: 10, y: 10 } // the attach point on the line
+	 * };
+	 *
+	 * var segmentAttachment = {
+	 *   type: 'segment',
+	 *   segmentIndex: 2,
+	 *   relativeLocation: 0.31, // attach point location between 0 (at start) and 1 (at end)
+	 *   position: { x: 10, y: 10 } // the attach point on the line
+	 * };
+	 * ```
+	 *
+	 * @param {Point} point
+	 * @param {Array<Point>} line
+	 *
+	 * @return {Object} attachment
+	 */
+	function getAttachment(point, line) {
+
+	  var idx = 0,
+	      segmentStart,
+	      segmentEnd,
+	      segmentStartDistance,
+	      segmentEndDistance,
+	      attachmentPosition,
+	      minDistance,
+	      intersections,
+	      attachment,
+	      attachmentDistance,
+	      closestAttachmentDistance,
+	      closestAttachment;
+
+	  for (idx = 0; idx < line.length - 1; idx++) {
+
+	    segmentStart = line[idx];
+	    segmentEnd = line[idx + 1];
+
+	    if (pointsEqual(segmentStart, segmentEnd)) {
+	      continue;
+	    }
+
+	    segmentStartDistance = getDistance(point, segmentStart);
+	    segmentEndDistance = getDistance(point, segmentEnd);
+
+	    minDistance = min(segmentStartDistance, segmentEndDistance);
+
+	    intersections = getCircleSegmentIntersections(segmentStart, segmentEnd, point, minDistance);
+
+	    if (intersections.length < 1) {
+	      throw new Error('expected between [1, 2] circle -> line intersections');
+	    }
+
+	    // one intersection -> bendpoint attachment
+	    if (intersections.length === 1) {
+	      attachment = {
+	        type: 'bendpoint',
+	        position: intersections[0],
+	        segmentIndex: idx,
+	        bendpointIndex: pointsEqual(segmentStart, intersections[0]) ? idx : idx + 1
+	      };
+	    }
+
+	    // two intersections -> segment attachment
+	    if (intersections.length === 2) {
+
+	      attachmentPosition = mid(intersections[0], intersections[1]);
+
+	      attachment = {
+	        type: 'segment',
+	        position: attachmentPosition,
+	        segmentIndex: idx,
+	        relativeLocation: getDistance(segmentStart, attachmentPosition) / getDistance(segmentStart, segmentEnd)
+	      };
+	    }
+
+	    attachmentDistance = getDistance(attachment.position, point);
+
+	    if (!closestAttachment || closestAttachmentDistance > attachmentDistance) {
+	      closestAttachment = attachment;
+	      closestAttachmentDistance = attachmentDistance;
+	    }
+	  }
+
+	  return closestAttachment;
+	}
+
+	module.exports.getAttachment = getAttachment;
+
+	/**
+	 * Gets the intersection between a circle and a line segment.
+	 *
+	 * @param {Point} s1 segment start
+	 * @param {Point} s2 segment end
+	 * @param {Point} cc circle center
+	 * @param {Number} cr circle radius
+	 *
+	 * @return {Array<Point>} intersections
+	 */
+	function getCircleSegmentIntersections(s1, s2, cc, cr) {
+
+	  // silently round values
+	  s1 = roundPoint(s1);
+	  s2 = roundPoint(s2);
+	  cc = roundPoint(cc);
+	  cr = min(getDistance(s1, cc), getDistance(s2, cc));
+
+	  var baX = s2.x - s1.x;
+	  var baY = s2.y - s1.y;
+	  var caX = cc.x - s1.x;
+	  var caY = cc.y - s1.y;
+
+	  var a = baX * baX + baY * baY;
+	  var bBy2 = baX * caX + baY * caY;
+	  var c = caX * caX + caY * caY - cr * cr;
+
+	  var pBy2 = bBy2 / a;
+	  var q = c / a;
+
+	  var disc = pBy2 * pBy2 - q;
+	  if (disc < 0) {
+	    return [];
+	  }
+
+	  // if disc == 0 ... dealt with later
+	  var tmpSqrt = sqrt(disc);
+	  var abScalingFactor1 = -pBy2 + tmpSqrt;
+	  var abScalingFactor2 = -pBy2 - tmpSqrt;
+
+	  var i1 = {
+	    x: round(s1.x - baX * abScalingFactor1),
+	    y: round(s1.y - baY * abScalingFactor1)
+	  };
+
+	  if (disc === 0) { // abScalingFactor1 == abScalingFactor2
+	    return [ i1 ];
+	  }
+
+	  var i2 = {
+	    x: round(s1.x - baX * abScalingFactor2),
+	    y: round(s1.y - baY * abScalingFactor2)
+	  };
+
+	  return [ i1, i2 ].filter(function(p) {
+	    return isPointInSegment(p, s1, s2);
+	  });
+	}
+
+
+	function isPointInSegment(p, segmentStart, segmentEnd) {
+	  return (
+	    fenced(p.x, segmentStart.x, segmentEnd.x) &&
+	    fenced(p.y, segmentStart.y, segmentEnd.y)
+	  );
+	}
+
+	function fenced(n, rangeStart, rangeEnd) {
+	  return min(rangeStart, rangeEnd) <= n && n <= max(rangeStart, rangeEnd);
+	}
+
+	/**
+	 * Calculate mid of two points.
+	 *
+	 * @param {Point} p1
+	 * @param {Point} p2
+	 *
+	 * @return {Point}
+	 */
+	function mid(p1, p2) {
+
+	  return {
+	    x: (p1.x + p2.x) / 2,
+	    y: (p1.y + p2.y) / 2
+	  };
+	}
+
+	function round(n) {
+	  return Math.round(n * 1000) / 1000;
+	}
+
+	function roundPoint(p) {
+	  return {
+	    x: round(p.x),
+	    y: round(p.y)
+	  };
+	}
+
+	function pointsEqual(p1, p2) {
+	  return p1.x === p2.x && p1.y === p2.y;
+	}
+
+
+/***/ },
+/* 609 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var is = __webpack_require__(443).is;
+
+	var COLLAB_ERR_MSG = 'flow elements must be children of pools/participants',
+	    PROCESS_ERR_MSG = 'participants cannot be pasted onto a non-empty process diagram';
+
+	function ModelingFeedback(eventBus, tooltips, translate) {
+
+	  function showError(position, message, timeout) {
+	    tooltips.add({
+	      position: {
+	        x: position.x + 5,
+	        y: position.y + 5
+	      },
+	      type: 'error',
+	      timeout: timeout || 2000,
+	      html: '<div>' + message + '</div>'
+	    });
+	  }
+
+	  eventBus.on([ 'shape.move.rejected', 'create.rejected' ], function(event) {
+	    var context = event.context,
+	        shape = context.shape,
+	        target = context.target;
+
+	    if (is(target, 'bpmn:Collaboration') && is(shape, 'bpmn:FlowNode')) {
+	      showError(event, translate(COLLAB_ERR_MSG));
+	    }
+	  });
+
+	  eventBus.on([ 'elements.paste.rejected' ], function(event) {
+	    var context = event.context,
+	        position = context.position,
+	        target = context.target;
+
+	    if (is(target, 'bpmn:Collaboration')) {
+	      showError(position, translate(COLLAB_ERR_MSG));
+	    }
+
+	    if (is(target, 'bpmn:Process')) {
+	      showError(position, translate(PROCESS_ERR_MSG), 3000);
+	    }
+	  });
+	}
+
+
+	ModelingFeedback.$inject = [ 'eventBus', 'tooltips', 'translate' ];
+
+	module.exports = ModelingFeedback;
+
+
+/***/ },
+/* 610 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var inherits = __webpack_require__(3);
+
+	var CommandInterceptor = __webpack_require__(542);
+
+	var is = __webpack_require__(443).is;
+
+
+	/**
+	 * BPMN specific remove behavior
+	 */
+	function RemoveParticipantBehavior(eventBus, modeling) {
+
+	  CommandInterceptor.call(this, eventBus);
+
+
+	  /**
+	   * morph collaboration diagram into process diagram
+	   * after the last participant has been removed
+	   */
+
+	  this.preExecute('shape.delete', function(context) {
+
+	    var shape = context.shape,
+	        parent = shape.parent;
+
+	    // activate the behavior if the shape to be removed
+	    // is a participant
+	    if (is(shape, 'bpmn:Participant')) {
+	      context.collaborationRoot = parent;
+	    }
+	  }, true);
+
+	  this.postExecute('shape.delete', function(context) {
+
+	    var collaborationRoot = context.collaborationRoot;
+
+	    if (collaborationRoot && !collaborationRoot.businessObject.participants.length) {
+	      // replace empty collaboration with process diagram
+	      modeling.makeProcess();
+	    }
+	  }, true);
+
+	}
+
+	RemoveParticipantBehavior.$inject = [ 'eventBus', 'modeling' ];
+
+	inherits(RemoveParticipantBehavior, CommandInterceptor);
+
+	module.exports = RemoveParticipantBehavior;
+
+/***/ },
+/* 611 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var forEach = __webpack_require__(415),
+	    find = __webpack_require__(411),
+	    inherits = __webpack_require__(3);
+
+	var CommandInterceptor = __webpack_require__(542);
+
+	var is = __webpack_require__(443).is;
+
+	function ReplaceConnectionBehavior(eventBus, modeling, bpmnRules) {
+
+	  CommandInterceptor.call(this, eventBus);
+
+	  function fixConnection(connection) {
+
+	    var source = connection.source,
+	        target = connection.target,
+	        parent = connection.parent;
+
+	    // do not do anything if connection
+	    // is already deleted (may happen due to other
+	    // behaviors plugged-in before)
+	    if (!parent) {
+	      return;
+	    }
+
+	    var replacementType,
+	        remove;
+
+	    /**
+	     * Check if incoming or outgoing connections
+	     * can stay or could be substituted with an
+	     * appropriate replacement.
+	     *
+	     * This holds true for SequenceFlow <> MessageFlow.
+	     */
+
+	    if (is(connection, 'bpmn:SequenceFlow')) {
+	      if (!bpmnRules.canConnectSequenceFlow(source, target)) {
+	        remove = true;
+	      }
+
+	      if (bpmnRules.canConnectMessageFlow(source, target)) {
+	        replacementType = 'bpmn:MessageFlow';
+	      }
+	    }
+
+	    // transform message flows into sequence flows, if possible
+
+	    if (is(connection, 'bpmn:MessageFlow')) {
+
+	      if (!bpmnRules.canConnectMessageFlow(source, target)) {
+	        remove = true;
+	      }
+
+	      if (bpmnRules.canConnectSequenceFlow(source, target)) {
+	        replacementType = 'bpmn:SequenceFlow';
+	      }
+	    }
+
+	    if (is(connection, 'bpmn:Association') && !bpmnRules.canConnectAssociation(source, target)) {
+	      remove = true;
+	    }
+
+
+	    // remove invalid connection,
+	    // unless it has been removed already
+	    if (remove) {
+	      modeling.removeConnection(connection);
+	    }
+
+	    // replace SequenceFlow <> MessageFlow
+
+	    if (replacementType) {
+	      modeling.connect(source, target, {
+	        type: replacementType,
+	        waypoints: connection.waypoints.slice()
+	      });
+	    }
+	  }
+
+	  this.postExecuted('elements.move', function(context) {
+
+	    var closure = context.closure,
+	        allConnections = closure.allConnections;
+
+	    forEach(allConnections, fixConnection);
+	  }, true);
+
+	  this.postExecuted([
+	    'connection.reconnectStart',
+	    'connection.reconnectEnd'
+	  ], function(event) {
+
+	    var connection = event.context.connection;
+
+	    fixConnection(connection);
+	  });
+
+	  this.postExecuted('element.updateProperties', function(event) {
+	    var context = event.context,
+	        properties = context.properties,
+	        element = context.element,
+	        businessObject = element.businessObject,
+	        connection;
+
+	    // remove condition expression when morphing to default flow
+	    if (properties.default) {
+	      connection = find(element.outgoing, { id: element.businessObject.default.id });
+
+	      if (connection) {
+	        modeling.updateProperties(connection, { conditionExpression: undefined });
+	      }
+	    }
+
+	    // remove default property from source when morphing to conditional flow
+	    if (properties.conditionExpression && businessObject.sourceRef.default === businessObject) {
+	      modeling.updateProperties(element.source, { default: undefined });
+	    }
+	  });
+	}
+
+	inherits(ReplaceConnectionBehavior, CommandInterceptor);
+
+	ReplaceConnectionBehavior.$inject = [ 'eventBus', 'modeling', 'bpmnRules' ];
+
+	module.exports = ReplaceConnectionBehavior;
+
+
+/***/ },
+/* 612 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var inherits = __webpack_require__(3);
+
+	var CommandInterceptor = __webpack_require__(542);
+
+	var forEach = __webpack_require__(415);
+
+	var isEventSubProcess = __webpack_require__(442).isEventSubProcess;
+	var is = __webpack_require__(443).is;
+
+	/**
+	 * Defines the behaviour of what happens to the elements inside a container
+	 * that morphs into another BPMN element
+	 */
+	function ReplaceElementBehaviour(eventBus, bpmnReplace, bpmnRules, elementRegistry, selection, modeling) {
+	  CommandInterceptor.call(this, eventBus);
+
+	  this._bpmnReplace = bpmnReplace;
+	  this._elementRegistry = elementRegistry;
+	  this._selection = selection;
+	  this._modeling = modeling;
+
+	  this.postExecuted([ 'elements.move' ], 500, function(event) {
+
+	    var context = event.context,
+	        target = context.newParent,
+	        newHost = context.newHost,
+	        elements = [];
+
+	    forEach(context.closure.topLevel, function(topLevelElements) {
+	      if (isEventSubProcess(topLevelElements)) {
+	        elements = elements.concat(topLevelElements.children);
+	      } else {
+	        elements = elements.concat(topLevelElements);
+	      }
+	    });
+
+	    // Change target to host when the moving element is a `bpmn:BoundaryEvent`
+	    if (elements.length === 1 && newHost) {
+	      target = newHost;
+	    }
+
+	    var canReplace = bpmnRules.canReplace(elements, target);
+
+	    if (canReplace) {
+	      this.replaceElements(elements, canReplace.replacements, newHost);
+	    }
+	  }, this);
+
+	  // update attachments if the host is replaced
+	  this.postExecute([ 'shape.replace' ], 1500, function(e) {
+
+	    var context = e.context,
+	        oldShape = context.oldShape,
+	        newShape = context.newShape,
+	        attachers = oldShape.attachers,
+	        canReplace;
+
+	    if (attachers && attachers.length) {
+	      canReplace = bpmnRules.canReplace(attachers, newShape);
+
+	      this.replaceElements(attachers, canReplace.replacements);
+	    }
+
+	  }, this);
+
+	  this.postExecuted( [ 'shape.replace' ], 1500, function(e) {
+	    var context = e.context,
+	        oldShape = context.oldShape,
+	        newShape = context.newShape;
+
+	    modeling.unclaimId(oldShape.businessObject.id, oldShape.businessObject);
+	    modeling.updateProperties(newShape, { id: oldShape.id });
+	  });
+	}
+
+	inherits(ReplaceElementBehaviour, CommandInterceptor);
+
+
+	ReplaceElementBehaviour.prototype.replaceElements = function(elements, newElements, newHost) {
+	  var elementRegistry = this._elementRegistry,
+	      bpmnReplace = this._bpmnReplace,
+	      selection = this._selection,
+	      modeling = this._modeling;
+
+	  forEach(newElements, function(replacement) {
+
+	    var newElement = {
+	      type: replacement.newElementType
+	    };
+
+	    var oldElement = elementRegistry.get(replacement.oldElementId);
+
+	    if (newHost && is(oldElement, 'bpmn:BoundaryEvent')) {
+	      modeling.updateAttachment(oldElement, null);
+	    }
+
+	    var idx = elements.indexOf(oldElement);
+
+	    elements[idx] = bpmnReplace.replaceElement(oldElement, newElement, { select: false });
+
+	    if (newHost && is(elements[idx], 'bpmn:BoundaryEvent')) {
+	      modeling.updateAttachment(elements[idx], newHost);
+	    }
+	  });
+
+	  if (newElements) {
+	    selection.select(elements);
+	  }
+	};
+
+	ReplaceElementBehaviour.$inject = [ 'eventBus', 'bpmnReplace', 'bpmnRules', 'elementRegistry',
+	 'selection', 'modeling' ];
+
+	module.exports = ReplaceElementBehaviour;
+
+
+/***/ },
+/* 613 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var is = __webpack_require__(443).is;
+
+	var roundBounds = __webpack_require__(516).roundBounds;
+
+	var hasPrimaryModifier = __webpack_require__(460).hasPrimaryModifier;
+
+	var SLIGHTLY_HIGHER_PRIORITY = 1001;
+
+
+	/**
+	 * Invoke {@link Modeling#resizeLane} instead of
+	 * {@link Modeling#resizeShape} when resizing a Lane
+	 * or Participant shape.
+	 */
+	function ResizeLaneBehavior(eventBus, modeling) {
+
+	  eventBus.on('resize.start', SLIGHTLY_HIGHER_PRIORITY + 500, function(event) {
+	    var context = event.context,
+	        shape = context.shape;
+
+	    if (is(shape, 'bpmn:Lane') || is(shape, 'bpmn:Participant')) {
+
+	      // should we resize the opposite lane(s) in
+	      // order to compensate for the resize operation?
+	      context.balanced = !hasPrimaryModifier(event);
+	    }
+	  });
+
+	  /**
+	   * Intercept resize end and call resize lane function instead.
+	   */
+	  eventBus.on('resize.end', SLIGHTLY_HIGHER_PRIORITY, function(event) {
+	    var context = event.context,
+	        shape = context.shape,
+	        canExecute = context.canExecute,
+	        newBounds = context.newBounds;
+
+	    if (is(shape, 'bpmn:Lane') || is(shape, 'bpmn:Participant')) {
+
+	      if (canExecute) {
+	        // ensure we have actual pixel values for new bounds
+	        // (important when zoom level was > 1 during move)
+	        newBounds = roundBounds(newBounds);
+
+	        // perform the actual resize
+	        modeling.resizeLane(shape, newBounds, context.balanced);
+	      }
+
+	      // stop propagation
+	      return false;
+	    }
+	  });
+	}
+
+	ResizeLaneBehavior.$inject = [ 'eventBus', 'modeling' ];
+
+	module.exports = ResizeLaneBehavior;
+
+
+/***/ },
+/* 614 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var inherits = __webpack_require__(3);
+
+	var CommandInterceptor = __webpack_require__(542);
+
+	var is = __webpack_require__(443).is,
+	    getBusinessObject = __webpack_require__(443).getBusinessObject;
+
+	/**
+	 * A behavior that unsets the Default property of
+	 * sequence flow source on element delete, if the
+	 * removed element is the Gateway or Task's default flow.
+	 *
+	 * @param {EventBus} eventBus
+	 * @param {Modeling} modeling
+	 */
+	function DeleteSequenceFlowBehavior(eventBus, modeling) {
+
+	  CommandInterceptor.call(this, eventBus);
+
+
+	  this.preExecute('connection.delete', function(event) {
+	    var context = event.context,
+	        connection = context.connection,
+	        source = connection.source;
+
+	    if (isDefaultFlow(connection, source)) {
+	      modeling.updateProperties(source, {
+	        'default': null
+	      });
+	    }
+	  });
+	}
+
+	inherits(DeleteSequenceFlowBehavior, CommandInterceptor);
+
+	DeleteSequenceFlowBehavior.$inject = [ 'eventBus', 'modeling' ];
+
+	module.exports = DeleteSequenceFlowBehavior;
+
+
+	/////// helpers ///////////////////////////
+
+	function isDefaultFlow(connection, source) {
+
+	  if (!is(connection, 'bpmn:SequenceFlow')) {
+	    return false;
+	  }
+
+	  var sourceBo = getBusinessObject(source),
+	      sequenceFlow = getBusinessObject(connection);
+
+	  return sourceBo.get('default') === sequenceFlow;
+	}
+
+/***/ },
+/* 615 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+
+	var inherits = __webpack_require__(3);
+
+	var CommandInterceptor = __webpack_require__(542);
+
+	var is = __webpack_require__(443).is;
+
+	var LOW_PRIORITY = 500,
+	    HIGH_PRIORITY = 5000;
+
+
+	/**
+	 * BPMN specific delete lane behavior
+	 */
+	function UpdateFlowNodeRefsBehavior(eventBus, modeling, translate) {
+
+	  CommandInterceptor.call(this, eventBus);
+
+	  /**
+	   * Ok, this is it:
+	   *
+	   * We have to update the Lane#flowNodeRefs _and_
+	   * FlowNode#lanes with every FlowNode move/resize and
+	   * Lane move/resize.
+	   *
+	   * We want to group that stuff to recompute containments
+	   * as efficient as possible.
+	   *
+	   * Yea!
+	   */
+
+	  // the update context
+	  var context;
+
+
+	  function initContext() {
+	    context = context || new UpdateContext();
+	    context.enter();
+
+	    return context;
+	  }
+
+	  function getContext() {
+	    if (!context) {
+	      throw new Error(translate('out of bounds release'));
+	    }
+
+	    return context;
+	  }
+
+	  function releaseContext() {
+
+	    if (!context) {
+	      throw new Error(translate('out of bounds release'));
+	    }
+
+	    var triggerUpdate = context.leave();
+
+	    if (triggerUpdate) {
+	      modeling.updateLaneRefs(context.flowNodes, context.lanes);
+
+	      context = null;
+	    }
+
+	    return triggerUpdate;
+	  }
+
+
+	  var laneRefUpdateEvents = [
+	    'spaceTool',
+	    'lane.add',
+	    'lane.resize',
+	    'lane.split',
+	    'elements.move',
+	    'elements.delete',
+	    'shape.create',
+	    'shape.delete',
+	    'shape.move',
+	    'shape.resize'
+	  ];
+
+
+	  // listen to a lot of stuff to group lane updates
+
+	  this.preExecute(laneRefUpdateEvents, HIGH_PRIORITY, function(event) {
+	    initContext();
+	  });
+
+	  this.postExecuted(laneRefUpdateEvents, LOW_PRIORITY, function(event) {
+	    releaseContext();
+	  });
+
+
+	  // Mark flow nodes + lanes that need an update
+
+	  this.preExecute([
+	    'shape.create',
+	    'shape.move',
+	    'shape.delete',
+	    'shape.resize'
+	  ], function(event) {
+
+	    var context = event.context,
+	        shape = context.shape;
+
+	    var updateContext = getContext();
+
+	    // no need to update labels
+	    if (shape.labelTarget) {
+	      return;
+	    }
+
+	    if (is(shape, 'bpmn:Lane')) {
+	      updateContext.addLane(shape);
+	    }
+
+	    if (is(shape, 'bpmn:FlowNode')) {
+	      updateContext.addFlowNode(shape);
+	    }
+	  });
+	}
+
+	UpdateFlowNodeRefsBehavior.$inject = [ 'eventBus', 'modeling' , 'translate'];
+
+	inherits(UpdateFlowNodeRefsBehavior, CommandInterceptor);
+
+	module.exports = UpdateFlowNodeRefsBehavior;
+
+
+
+	function UpdateContext() {
+
+	  this.flowNodes = [];
+	  this.lanes = [];
+
+	  this.counter = 0;
+
+	  this.addLane = function(lane) {
+	    this.lanes.push(lane);
+	  };
+
+	  this.addFlowNode = function(flowNode) {
+	    this.flowNodes.push(flowNode);
+	  };
+
+	  this.enter = function() {
+	    this.counter++;
+	  };
+
+	  this.leave = function() {
+	    this.counter--;
+
+	    return !this.counter;
+	  };
+	}
+
+/***/ },
+/* 616 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var inherits = __webpack_require__(3);
+
+	var CommandInterceptor = __webpack_require__(542);
+
+	var lineIntersect = __webpack_require__(604);
+
+
+	function RemoveElementBehavior(eventBus, bpmnRules, modeling) {
+
+	  CommandInterceptor.call(this, eventBus);
+
+	  /**
+	   * Combine sequence flows when deleting an element
+	   * if there is one incoming and one outgoing
+	   * sequence flow
+	   */
+	  this.preExecute('shape.delete', function(e) {
+
+	    var shape = e.context.shape;
+
+	    if (shape.incoming.length == 1 && shape.outgoing.length == 1) {
+
+	      var inConnection = shape.incoming[0],
+	          outConnection = shape.outgoing[0];
+
+
+	      if (bpmnRules.canConnect(inConnection.source, outConnection.target, inConnection)) {
+
+	        // compute new, combined waypoints
+	        var newWaypoints = getNewWaypoints(inConnection.waypoints, outConnection.waypoints);
+
+	        modeling.reconnectEnd(inConnection, outConnection.target, newWaypoints);
+	      }
+	    }
+	  });
+
+	}
+
+	inherits(RemoveElementBehavior, CommandInterceptor);
+
+	RemoveElementBehavior.$inject = [ 'eventBus', 'bpmnRules', 'modeling' ];
+
+	module.exports = RemoveElementBehavior;
+
+
+	///////// helpers //////////////////////////////
+
+	function getDocking(point) {
+	  return point.original || point;
+	}
+
+
+	function getNewWaypoints(inWaypoints, outWaypoints) {
+
+	  var intersection = lineIntersect(
+	    getDocking(inWaypoints[inWaypoints.length - 2]),
+	    getDocking(inWaypoints[inWaypoints.length - 1]),
+	    getDocking(outWaypoints[1]),
+	    getDocking(outWaypoints[0]));
+
+	  if (intersection) {
+	    return [].concat(
+	      inWaypoints.slice(0, inWaypoints.length - 1),
+	      [ intersection ],
+	      outWaypoints.slice(1));
+	  } else {
+	    return [
+	      getDocking(inWaypoints[0]),
+	      getDocking(outWaypoints[outWaypoints.length - 1])
+	    ];
+	  }
+	}
+
+/***/ },
+/* 617 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var forEach = __webpack_require__(415);
+
+	var inherits = __webpack_require__(3);
+
+	var CommandInterceptor = __webpack_require__(542);
+
+	function UnclaimIdBehavior(eventBus, modeling) {
+
+	  CommandInterceptor.call(this, eventBus);
+
+	  this.preExecute('elements.delete', function(event) {
+	    var context = event.context,
+	        elements = context.elements;
+
+	    forEach(elements, function(element) {
+	      modeling.unclaimId(element.businessObject.id, element.businessObject);
+	    });
+
+	  });
+	}
+
+	inherits(UnclaimIdBehavior, CommandInterceptor);
+
+	UnclaimIdBehavior.$inject = [ 'eventBus', 'modeling' ];
+
+	module.exports = UnclaimIdBehavior;
+
+/***/ },
+/* 618 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var inherits = __webpack_require__(3);
+
+	var CommandInterceptor = __webpack_require__(542),
+	    getBusinessObject = __webpack_require__(443).getBusinessObject,
+	    is = __webpack_require__(443).is,
+	    computeChildrenBBox = __webpack_require__(534).computeChildrenBBox;
+
+
+	var LOW_PRIORITY = 500;
+
+
+	function ToggleElementCollapseBehaviour(eventBus, elementFactory, modeling, resize) {
+	  CommandInterceptor.call(this, eventBus);
+
+
+	  function hideEmptyLables(children) {
+	    if (children.length) {
+	      children.forEach(function(child) {
+	        if (child.type === 'label' && !child.businessObject.name) {
+	          child.hidden = true;
+	        }
+	      });
+	    }
+	  }
+
+	  function expandedBounds(shape, defaultSize) {
+	    var children = shape.children,
+	        newBounds = defaultSize,
+	        visibleElements,
+	        visibleBBox;
+
+	    visibleElements = filterVisible(children).concat([ shape ]);
+
+	    visibleBBox = computeChildrenBBox(visibleElements);
+
+	    if (visibleBBox) {
+	      // center to visibleBBox with max(defaultSize, childrenBounds)
+	      newBounds.width = Math.max(visibleBBox.width, newBounds.width);
+	      newBounds.height = Math.max(visibleBBox.height, newBounds.height);
+
+	      newBounds.x = visibleBBox.x + (visibleBBox.width - newBounds.width) / 2;
+	      newBounds.y = visibleBBox.y + (visibleBBox.height - newBounds.height) / 2;
+	    } else {
+	      // center to collapsed shape with defaultSize
+	      newBounds.x = shape.x + (shape.width - newBounds.width) / 2;
+	      newBounds.y = shape.y + (shape.height - newBounds.height) / 2;
+	    }
+
+	    return newBounds;
+	  }
+
+	  function collapsedBounds(shape, defaultSize) {
+
+	    return {
+	      x: shape.x + (shape.width - defaultSize.width) / 2,
+	      y: shape.y + (shape.height - defaultSize.height) / 2,
+	      width: defaultSize.width,
+	      height: defaultSize.height
+	    };
+	  }
+
+	  this.executed([ 'shape.toggleCollapse' ], LOW_PRIORITY, function(e) {
+
+	    var context = e.context,
+	        shape = context.shape;
+
+	    if (!is(shape, 'bpmn:SubProcess')) {
+	      return;
+	    }
+
+	    if (!shape.collapsed) {
+	      // all children got made visible through djs, hide empty labels
+	      hideEmptyLables(shape.children);
+
+	      // remove collapsed marker
+	      getBusinessObject(shape).di.isExpanded = true;
+	    } else {
+	      // place collapsed marker
+	      getBusinessObject(shape).di.isExpanded = false;
+	    }
+	  });
+
+	  this.reverted([ 'shape.toggleCollapse' ], LOW_PRIORITY, function(e) {
+
+	    var context = e.context;
+	    var shape = context.shape;
+
+
+	    // revert removing/placing collapsed marker
+	    if (!shape.collapsed) {
+	      getBusinessObject(shape).di.isExpanded = true;
+
+	    } else {
+	      getBusinessObject(shape).di.isExpanded = false;
+	    }
+	  });
+
+	  this.postExecuted([ 'shape.toggleCollapse' ], LOW_PRIORITY, function(e) {
+	    var shape = e.context.shape,
+	        defaultSize = elementFactory._getDefaultSize(shape),
+	        newBounds;
+
+	    if (shape.collapsed) {
+
+	      // resize to default size of collapsed shapes
+	      newBounds = collapsedBounds(shape, defaultSize);
+	    } else {
+
+	      // resize to bounds of max(visible children, defaultSize)
+	      newBounds = expandedBounds(shape, defaultSize);
+	    }
+
+	    modeling.resizeShape(shape, newBounds);
+	  });
+
+	}
+
+
+	inherits(ToggleElementCollapseBehaviour, CommandInterceptor);
+
+	ToggleElementCollapseBehaviour.$inject = [
+	  'eventBus',
+	  'elementFactory',
+	  'modeling'
+	];
+
+	module.exports = ToggleElementCollapseBehaviour;
+
+
+
+	/////// helpers ///////////////////////////
+
+	function filterVisible(elements) {
+	  return elements.filter(function(e) {
+	    return !e.hidden;
+	  });
+	}
+
+/***/ },
+/* 619 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __depends__: [
+	    __webpack_require__(620),
+	    __webpack_require__(632),
+	    __webpack_require__(634)
+	  ],
+	  __init__: [ 'labelEditingProvider' ],
+	  labelEditingProvider: [ 'type', __webpack_require__(720) ]
+	};
+
+/***/ },
+/* 620 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  commandStack: [ 'type', __webpack_require__(621) ]
+	};
+
+
+/***/ },
+/* 621 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var unique = __webpack_require__(622),
 	    isArray = __webpack_require__(70),
 	    assign = __webpack_require__(77);
 
@@ -65530,8 +60806,11 @@ var InfoxBpmnModeler =
 	 *
 	 * Command handlers should provide the {@link CommandHandler#execute(ctx)}
 	 * and {@link CommandHandler#revert(ctx)} methods to implement
-	 * redoing and undoing of a command. They must ensure undo is performed
-	 * properly in order not to break the undo chain.
+	 * redoing and undoing of a command.
+	 *
+	 * A command handler _must_ ensure undo is performed properly in order
+	 * not to break the undo chain. It must also return the shapes that
+	 * got changed during the `execute` and `revert` operations.
 	 *
 	 * Command handlers may execute other modeling operations (and thus
 	 * commands) in their `preExecute` and `postExecute` phases. The command
@@ -65555,6 +60834,7 @@ var InfoxBpmnModeler =
 	 * that elements have been changed. One use case for this is updating
 	 * their graphical representation after moving / resizing or deletion.
 	 *
+	 * @see CommandHandler
 	 *
 	 * @param {EventBus} eventBus
 	 * @param {Injector} injector
@@ -65979,20 +61259,20 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 713 */
+/* 622 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(714);
+	module.exports = __webpack_require__(623);
 
 
 /***/ },
-/* 714 */
+/* 623 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseCallback = __webpack_require__(103),
-	    baseUniq = __webpack_require__(715),
+	    baseUniq = __webpack_require__(624),
 	    isIterateeCall = __webpack_require__(92),
-	    sortedUniq = __webpack_require__(722);
+	    sortedUniq = __webpack_require__(631);
 
 	/**
 	 * Creates a duplicate-free version of an array, using
@@ -66063,12 +61343,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 715 */
+/* 624 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIndexOf = __webpack_require__(716),
-	    cacheIndexOf = __webpack_require__(718),
-	    createCache = __webpack_require__(719);
+	var baseIndexOf = __webpack_require__(625),
+	    cacheIndexOf = __webpack_require__(627),
+	    createCache = __webpack_require__(628);
 
 	/** Used as the size to enable large array optimizations. */
 	var LARGE_ARRAY_SIZE = 200;
@@ -66129,10 +61409,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 716 */
+/* 625 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var indexOfNaN = __webpack_require__(717);
+	var indexOfNaN = __webpack_require__(626);
 
 	/**
 	 * The base implementation of `_.indexOf` without support for binary searches.
@@ -66162,7 +61442,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 717 */
+/* 626 */
 /***/ function(module, exports) {
 
 	/**
@@ -66191,7 +61471,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 718 */
+/* 627 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var isObject = __webpack_require__(74);
@@ -66216,10 +61496,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 719 */
+/* 628 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var SetCache = __webpack_require__(720),
+	/* WEBPACK VAR INJECTION */(function(global) {var SetCache = __webpack_require__(629),
 	    getNative = __webpack_require__(71);
 
 	/** Native method references. */
@@ -66244,10 +61524,10 @@ var InfoxBpmnModeler =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 720 */
+/* 629 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var cachePush = __webpack_require__(721),
+	/* WEBPACK VAR INJECTION */(function(global) {var cachePush = __webpack_require__(630),
 	    getNative = __webpack_require__(71);
 
 	/** Native method references. */
@@ -66280,7 +61560,7 @@ var InfoxBpmnModeler =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 721 */
+/* 630 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var isObject = __webpack_require__(74);
@@ -66306,7 +61586,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 722 */
+/* 631 */
 /***/ function(module, exports) {
 
 	/**
@@ -66341,16 +61621,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 723 */
+/* 632 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'changeSupport'],
-	  changeSupport: [ 'type', __webpack_require__(724) ]
+	  changeSupport: [ 'type', __webpack_require__(633) ]
 	};
 
 /***/ },
-/* 724 */
+/* 633 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -66417,28 +61697,3680 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 725 */
+/* 634 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __depends__: [ __webpack_require__(453) ],
+	  __init__: [ 'directEditing' ],
+	  directEditing: [ 'type', __webpack_require__(635) ]
+	};
+
+/***/ },
+/* 635 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var UpdateLabelHandler = __webpack_require__(726);
+	var bind = __webpack_require__(636),
+	    find = __webpack_require__(673);
 
-	var LabelUtil = __webpack_require__(589);
+	var TextBox = __webpack_require__(713);
+
+
+	/**
+	 * A direct editing component that allows users
+	 * to edit an elements text directly in the diagram
+	 *
+	 * @param {EventBus} eventBus the event bus
+	 */
+	function DirectEditing(eventBus, canvas) {
+
+	  this._eventBus = eventBus;
+
+	  this._providers = [];
+	  this._textbox = new TextBox({
+	    container: canvas.getContainer(),
+	    keyHandler: bind(this._handleKey, this)
+	  });
+	}
+
+	DirectEditing.$inject = [ 'eventBus', 'canvas' ];
+
+
+	/**
+	 * Register a direct editing provider
+
+	 * @param {Object} provider the provider, must expose an #activate(element) method that returns
+	 *                          an activation context ({ bounds: {x, y, width, height }, text }) if
+	 *                          direct editing is available for the given element.
+	 *                          Additionally the provider must expose a #update(element, value) method
+	 *                          to receive direct editing updates.
+	 */
+	DirectEditing.prototype.registerProvider = function(provider) {
+	  this._providers.push(provider);
+	};
+
+
+	/**
+	 * Returns true if direct editing is currently active
+	 *
+	 * @return {Boolean}
+	 */
+	DirectEditing.prototype.isActive = function() {
+	  return !!this._active;
+	};
+
+
+	/**
+	 * Cancel direct editing, if it is currently active
+	 */
+	DirectEditing.prototype.cancel = function() {
+	  if (!this._active) {
+	    return;
+	  }
+
+	  this._fire('cancel');
+	  this.close();
+	};
+
+
+	DirectEditing.prototype._fire = function(event) {
+	  this._eventBus.fire('directEditing.' + event, { active: this._active });
+	};
+
+	DirectEditing.prototype.close = function() {
+	  this._textbox.destroy();
+
+	  this._fire('deactivate');
+
+	  this._active = null;
+	};
+
+
+	DirectEditing.prototype.complete = function() {
+
+	  var active = this._active;
+
+	  if (!active) {
+	    return;
+	  }
+
+	  var text = this.getValue();
+
+	  if (text !== active.context.text) {
+	    active.provider.update(active.element, text, active.context.text);
+	  }
+
+	  this._fire('complete');
+
+	  this.close();
+	};
+
+
+	DirectEditing.prototype.getValue = function() {
+	  return this._textbox.getValue();
+	};
+
+
+	DirectEditing.prototype._handleKey = function(e) {
+
+	  // stop bubble
+	  e.stopPropagation();
+
+	  var key = e.keyCode || e.charCode;
+
+	  // ESC
+	  if (key === 27) {
+	    e.preventDefault();
+	    return this.cancel();
+	  }
+
+	  // Enter
+	  if (key === 13 && !e.shiftKey) {
+	    e.preventDefault();
+	    return this.complete();
+	  }
+	};
+
+
+	/**
+	 * Activate direct editing on the given element
+	 *
+	 * @param {Object} ElementDescriptor the descriptor for a shape or connection
+	 * @return {Boolean} true if the activation was possible
+	 */
+	DirectEditing.prototype.activate = function(element) {
+
+	  if (this.isActive()) {
+	    this.cancel();
+	  }
+
+	  // the direct editing context
+	  var context;
+
+	  var provider = find(this._providers, function(p) {
+	    return (context = p.activate(element)) ? p : null;
+	  });
+
+	  // check if activation took place
+	  if (context) {
+	    this._textbox.create(context.bounds, context.style, context.text);
+
+	    this._active = {
+	      element: element,
+	      context: context,
+	      provider: provider
+	    };
+
+	    this._fire('activate');
+	  }
+
+	  return !!context;
+	};
+
+
+	module.exports = DirectEditing;
+
+/***/ },
+/* 636 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var createWrapper = __webpack_require__(637),
+	    replaceHolders = __webpack_require__(667),
+	    restParam = __webpack_require__(672);
+
+	/** Used to compose bitmasks for wrapper metadata. */
+	var BIND_FLAG = 1,
+	    PARTIAL_FLAG = 32;
+
+	/**
+	 * Creates a function that invokes `func` with the `this` binding of `thisArg`
+	 * and prepends any additional `_.bind` arguments to those provided to the
+	 * bound function.
+	 *
+	 * The `_.bind.placeholder` value, which defaults to `_` in monolithic builds,
+	 * may be used as a placeholder for partially applied arguments.
+	 *
+	 * **Note:** Unlike native `Function#bind` this method does not set the "length"
+	 * property of bound functions.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Function
+	 * @param {Function} func The function to bind.
+	 * @param {*} thisArg The `this` binding of `func`.
+	 * @param {...*} [partials] The arguments to be partially applied.
+	 * @returns {Function} Returns the new bound function.
+	 * @example
+	 *
+	 * var greet = function(greeting, punctuation) {
+	 *   return greeting + ' ' + this.user + punctuation;
+	 * };
+	 *
+	 * var object = { 'user': 'fred' };
+	 *
+	 * var bound = _.bind(greet, object, 'hi');
+	 * bound('!');
+	 * // => 'hi fred!'
+	 *
+	 * // using placeholders
+	 * var bound = _.bind(greet, object, _, '!');
+	 * bound('hi');
+	 * // => 'hi fred!'
+	 */
+	var bind = restParam(function(func, thisArg, partials) {
+	  var bitmask = BIND_FLAG;
+	  if (partials.length) {
+	    var holders = replaceHolders(partials, bind.placeholder);
+	    bitmask |= PARTIAL_FLAG;
+	  }
+	  return createWrapper(func, bitmask, thisArg, partials, holders);
+	});
+
+	// Assign default placeholders.
+	bind.placeholder = {};
+
+	module.exports = bind;
+
+
+/***/ },
+/* 637 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseSetData = __webpack_require__(638),
+	    createBindWrapper = __webpack_require__(646),
+	    createHybridWrapper = __webpack_require__(649),
+	    createPartialWrapper = __webpack_require__(670),
+	    getData = __webpack_require__(656),
+	    mergeData = __webpack_require__(671),
+	    setData = __webpack_require__(668);
+
+	/** Used to compose bitmasks for wrapper metadata. */
+	var BIND_FLAG = 1,
+	    BIND_KEY_FLAG = 2,
+	    PARTIAL_FLAG = 32,
+	    PARTIAL_RIGHT_FLAG = 64;
+
+	/** Used as the `TypeError` message for "Functions" methods. */
+	var FUNC_ERROR_TEXT = 'Expected a function';
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeMax = Math.max;
+
+	/**
+	 * Creates a function that either curries or invokes `func` with optional
+	 * `this` binding and partially applied arguments.
+	 *
+	 * @private
+	 * @param {Function|string} func The function or method name to reference.
+	 * @param {number} bitmask The bitmask of flags.
+	 *  The bitmask may be composed of the following flags:
+	 *     1 - `_.bind`
+	 *     2 - `_.bindKey`
+	 *     4 - `_.curry` or `_.curryRight` of a bound function
+	 *     8 - `_.curry`
+	 *    16 - `_.curryRight`
+	 *    32 - `_.partial`
+	 *    64 - `_.partialRight`
+	 *   128 - `_.rearg`
+	 *   256 - `_.ary`
+	 * @param {*} [thisArg] The `this` binding of `func`.
+	 * @param {Array} [partials] The arguments to be partially applied.
+	 * @param {Array} [holders] The `partials` placeholder indexes.
+	 * @param {Array} [argPos] The argument positions of the new function.
+	 * @param {number} [ary] The arity cap of `func`.
+	 * @param {number} [arity] The arity of `func`.
+	 * @returns {Function} Returns the new wrapped function.
+	 */
+	function createWrapper(func, bitmask, thisArg, partials, holders, argPos, ary, arity) {
+	  var isBindKey = bitmask & BIND_KEY_FLAG;
+	  if (!isBindKey && typeof func != 'function') {
+	    throw new TypeError(FUNC_ERROR_TEXT);
+	  }
+	  var length = partials ? partials.length : 0;
+	  if (!length) {
+	    bitmask &= ~(PARTIAL_FLAG | PARTIAL_RIGHT_FLAG);
+	    partials = holders = undefined;
+	  }
+	  length -= (holders ? holders.length : 0);
+	  if (bitmask & PARTIAL_RIGHT_FLAG) {
+	    var partialsRight = partials,
+	        holdersRight = holders;
+
+	    partials = holders = undefined;
+	  }
+	  var data = isBindKey ? undefined : getData(func),
+	      newData = [func, bitmask, thisArg, partials, holders, partialsRight, holdersRight, argPos, ary, arity];
+
+	  if (data) {
+	    mergeData(newData, data);
+	    bitmask = newData[1];
+	    arity = newData[9];
+	  }
+	  newData[9] = arity == null
+	    ? (isBindKey ? 0 : func.length)
+	    : (nativeMax(arity - length, 0) || 0);
+
+	  if (bitmask == BIND_FLAG) {
+	    var result = createBindWrapper(newData[0], newData[2]);
+	  } else if ((bitmask == PARTIAL_FLAG || bitmask == (BIND_FLAG | PARTIAL_FLAG)) && !newData[4].length) {
+	    result = createPartialWrapper.apply(undefined, newData);
+	  } else {
+	    result = createHybridWrapper.apply(undefined, newData);
+	  }
+	  var setter = data ? baseSetData : setData;
+	  return setter(result, newData);
+	}
+
+	module.exports = createWrapper;
+
+
+/***/ },
+/* 638 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var identity = __webpack_require__(639),
+	    metaMap = __webpack_require__(640);
+
+	/**
+	 * The base implementation of `setData` without support for hot loop detection.
+	 *
+	 * @private
+	 * @param {Function} func The function to associate metadata with.
+	 * @param {*} data The metadata.
+	 * @returns {Function} Returns `func`.
+	 */
+	var baseSetData = !metaMap ? identity : function(func, data) {
+	  metaMap.set(func, data);
+	  return func;
+	};
+
+	module.exports = baseSetData;
+
+
+/***/ },
+/* 639 */
+/***/ function(module, exports) {
+
+	/**
+	 * This method returns the first argument provided to it.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Utility
+	 * @param {*} value Any value.
+	 * @returns {*} Returns `value`.
+	 * @example
+	 *
+	 * var object = { 'user': 'fred' };
+	 *
+	 * _.identity(object) === object;
+	 * // => true
+	 */
+	function identity(value) {
+	  return value;
+	}
+
+	module.exports = identity;
+
+
+/***/ },
+/* 640 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {var getNative = __webpack_require__(641);
+
+	/** Native method references. */
+	var WeakMap = getNative(global, 'WeakMap');
+
+	/** Used to store function metadata. */
+	var metaMap = WeakMap && new WeakMap;
+
+	module.exports = metaMap;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 641 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isNative = __webpack_require__(642);
+
+	/**
+	 * Gets the native function at `key` of `object`.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @param {string} key The key of the method to get.
+	 * @returns {*} Returns the function if it's native, else `undefined`.
+	 */
+	function getNative(object, key) {
+	  var value = object == null ? undefined : object[key];
+	  return isNative(value) ? value : undefined;
+	}
+
+	module.exports = getNative;
+
+
+/***/ },
+/* 642 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isFunction = __webpack_require__(643),
+	    isObjectLike = __webpack_require__(645);
+
+	/** Used to detect host constructors (Safari > 5). */
+	var reIsHostCtor = /^\[object .+?Constructor\]$/;
+
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+
+	/** Used to resolve the decompiled source of functions. */
+	var fnToString = Function.prototype.toString;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+
+	/** Used to detect if a method is native. */
+	var reIsNative = RegExp('^' +
+	  fnToString.call(hasOwnProperty).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
+	  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
+	);
+
+	/**
+	 * Checks if `value` is a native function.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a native function, else `false`.
+	 * @example
+	 *
+	 * _.isNative(Array.prototype.push);
+	 * // => true
+	 *
+	 * _.isNative(_);
+	 * // => false
+	 */
+	function isNative(value) {
+	  if (value == null) {
+	    return false;
+	  }
+	  if (isFunction(value)) {
+	    return reIsNative.test(fnToString.call(value));
+	  }
+	  return isObjectLike(value) && reIsHostCtor.test(value);
+	}
+
+	module.exports = isNative;
+
+
+/***/ },
+/* 643 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isObject = __webpack_require__(644);
+
+	/** `Object#toString` result references. */
+	var funcTag = '[object Function]';
+
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+
+	/**
+	 * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+	 * of values.
+	 */
+	var objToString = objectProto.toString;
+
+	/**
+	 * Checks if `value` is classified as a `Function` object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+	 * @example
+	 *
+	 * _.isFunction(_);
+	 * // => true
+	 *
+	 * _.isFunction(/abc/);
+	 * // => false
+	 */
+	function isFunction(value) {
+	  // The use of `Object#toString` avoids issues with the `typeof` operator
+	  // in older versions of Chrome and Safari which return 'function' for regexes
+	  // and Safari 8 which returns 'object' for typed array constructors.
+	  return isObject(value) && objToString.call(value) == funcTag;
+	}
+
+	module.exports = isFunction;
+
+
+/***/ },
+/* 644 */
+/***/ function(module, exports) {
+
+	/**
+	 * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
+	 * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+	 * @example
+	 *
+	 * _.isObject({});
+	 * // => true
+	 *
+	 * _.isObject([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isObject(1);
+	 * // => false
+	 */
+	function isObject(value) {
+	  // Avoid a V8 JIT bug in Chrome 19-20.
+	  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
+	  var type = typeof value;
+	  return !!value && (type == 'object' || type == 'function');
+	}
+
+	module.exports = isObject;
+
+
+/***/ },
+/* 645 */
+/***/ function(module, exports) {
+
+	/**
+	 * Checks if `value` is object-like.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+	 */
+	function isObjectLike(value) {
+	  return !!value && typeof value == 'object';
+	}
+
+	module.exports = isObjectLike;
+
+
+/***/ },
+/* 646 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {var createCtorWrapper = __webpack_require__(647);
+
+	/**
+	 * Creates a function that wraps `func` and invokes it with the `this`
+	 * binding of `thisArg`.
+	 *
+	 * @private
+	 * @param {Function} func The function to bind.
+	 * @param {*} [thisArg] The `this` binding of `func`.
+	 * @returns {Function} Returns the new bound function.
+	 */
+	function createBindWrapper(func, thisArg) {
+	  var Ctor = createCtorWrapper(func);
+
+	  function wrapper() {
+	    var fn = (this && this !== global && this instanceof wrapper) ? Ctor : func;
+	    return fn.apply(thisArg, arguments);
+	  }
+	  return wrapper;
+	}
+
+	module.exports = createBindWrapper;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 647 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseCreate = __webpack_require__(648),
+	    isObject = __webpack_require__(644);
+
+	/**
+	 * Creates a function that produces an instance of `Ctor` regardless of
+	 * whether it was invoked as part of a `new` expression or by `call` or `apply`.
+	 *
+	 * @private
+	 * @param {Function} Ctor The constructor to wrap.
+	 * @returns {Function} Returns the new wrapped function.
+	 */
+	function createCtorWrapper(Ctor) {
+	  return function() {
+	    // Use a `switch` statement to work with class constructors.
+	    // See http://ecma-international.org/ecma-262/6.0/#sec-ecmascript-function-objects-call-thisargument-argumentslist
+	    // for more details.
+	    var args = arguments;
+	    switch (args.length) {
+	      case 0: return new Ctor;
+	      case 1: return new Ctor(args[0]);
+	      case 2: return new Ctor(args[0], args[1]);
+	      case 3: return new Ctor(args[0], args[1], args[2]);
+	      case 4: return new Ctor(args[0], args[1], args[2], args[3]);
+	      case 5: return new Ctor(args[0], args[1], args[2], args[3], args[4]);
+	      case 6: return new Ctor(args[0], args[1], args[2], args[3], args[4], args[5]);
+	      case 7: return new Ctor(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
+	    }
+	    var thisBinding = baseCreate(Ctor.prototype),
+	        result = Ctor.apply(thisBinding, args);
+
+	    // Mimic the constructor's `return` behavior.
+	    // See https://es5.github.io/#x13.2.2 for more details.
+	    return isObject(result) ? result : thisBinding;
+	  };
+	}
+
+	module.exports = createCtorWrapper;
+
+
+/***/ },
+/* 648 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isObject = __webpack_require__(644);
+
+	/**
+	 * The base implementation of `_.create` without support for assigning
+	 * properties to the created object.
+	 *
+	 * @private
+	 * @param {Object} prototype The object to inherit from.
+	 * @returns {Object} Returns the new object.
+	 */
+	var baseCreate = (function() {
+	  function object() {}
+	  return function(prototype) {
+	    if (isObject(prototype)) {
+	      object.prototype = prototype;
+	      var result = new object;
+	      object.prototype = undefined;
+	    }
+	    return result || {};
+	  };
+	}());
+
+	module.exports = baseCreate;
+
+
+/***/ },
+/* 649 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {var arrayCopy = __webpack_require__(650),
+	    composeArgs = __webpack_require__(651),
+	    composeArgsRight = __webpack_require__(652),
+	    createCtorWrapper = __webpack_require__(647),
+	    isLaziable = __webpack_require__(653),
+	    reorder = __webpack_require__(665),
+	    replaceHolders = __webpack_require__(667),
+	    setData = __webpack_require__(668);
+
+	/** Used to compose bitmasks for wrapper metadata. */
+	var BIND_FLAG = 1,
+	    BIND_KEY_FLAG = 2,
+	    CURRY_BOUND_FLAG = 4,
+	    CURRY_FLAG = 8,
+	    CURRY_RIGHT_FLAG = 16,
+	    PARTIAL_FLAG = 32,
+	    PARTIAL_RIGHT_FLAG = 64,
+	    ARY_FLAG = 128;
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeMax = Math.max;
+
+	/**
+	 * Creates a function that wraps `func` and invokes it with optional `this`
+	 * binding of, partial application, and currying.
+	 *
+	 * @private
+	 * @param {Function|string} func The function or method name to reference.
+	 * @param {number} bitmask The bitmask of flags. See `createWrapper` for more details.
+	 * @param {*} [thisArg] The `this` binding of `func`.
+	 * @param {Array} [partials] The arguments to prepend to those provided to the new function.
+	 * @param {Array} [holders] The `partials` placeholder indexes.
+	 * @param {Array} [partialsRight] The arguments to append to those provided to the new function.
+	 * @param {Array} [holdersRight] The `partialsRight` placeholder indexes.
+	 * @param {Array} [argPos] The argument positions of the new function.
+	 * @param {number} [ary] The arity cap of `func`.
+	 * @param {number} [arity] The arity of `func`.
+	 * @returns {Function} Returns the new wrapped function.
+	 */
+	function createHybridWrapper(func, bitmask, thisArg, partials, holders, partialsRight, holdersRight, argPos, ary, arity) {
+	  var isAry = bitmask & ARY_FLAG,
+	      isBind = bitmask & BIND_FLAG,
+	      isBindKey = bitmask & BIND_KEY_FLAG,
+	      isCurry = bitmask & CURRY_FLAG,
+	      isCurryBound = bitmask & CURRY_BOUND_FLAG,
+	      isCurryRight = bitmask & CURRY_RIGHT_FLAG,
+	      Ctor = isBindKey ? undefined : createCtorWrapper(func);
+
+	  function wrapper() {
+	    // Avoid `arguments` object use disqualifying optimizations by
+	    // converting it to an array before providing it to other functions.
+	    var length = arguments.length,
+	        index = length,
+	        args = Array(length);
+
+	    while (index--) {
+	      args[index] = arguments[index];
+	    }
+	    if (partials) {
+	      args = composeArgs(args, partials, holders);
+	    }
+	    if (partialsRight) {
+	      args = composeArgsRight(args, partialsRight, holdersRight);
+	    }
+	    if (isCurry || isCurryRight) {
+	      var placeholder = wrapper.placeholder,
+	          argsHolders = replaceHolders(args, placeholder);
+
+	      length -= argsHolders.length;
+	      if (length < arity) {
+	        var newArgPos = argPos ? arrayCopy(argPos) : undefined,
+	            newArity = nativeMax(arity - length, 0),
+	            newsHolders = isCurry ? argsHolders : undefined,
+	            newHoldersRight = isCurry ? undefined : argsHolders,
+	            newPartials = isCurry ? args : undefined,
+	            newPartialsRight = isCurry ? undefined : args;
+
+	        bitmask |= (isCurry ? PARTIAL_FLAG : PARTIAL_RIGHT_FLAG);
+	        bitmask &= ~(isCurry ? PARTIAL_RIGHT_FLAG : PARTIAL_FLAG);
+
+	        if (!isCurryBound) {
+	          bitmask &= ~(BIND_FLAG | BIND_KEY_FLAG);
+	        }
+	        var newData = [func, bitmask, thisArg, newPartials, newsHolders, newPartialsRight, newHoldersRight, newArgPos, ary, newArity],
+	            result = createHybridWrapper.apply(undefined, newData);
+
+	        if (isLaziable(func)) {
+	          setData(result, newData);
+	        }
+	        result.placeholder = placeholder;
+	        return result;
+	      }
+	    }
+	    var thisBinding = isBind ? thisArg : this,
+	        fn = isBindKey ? thisBinding[func] : func;
+
+	    if (argPos) {
+	      args = reorder(args, argPos);
+	    }
+	    if (isAry && ary < args.length) {
+	      args.length = ary;
+	    }
+	    if (this && this !== global && this instanceof wrapper) {
+	      fn = Ctor || createCtorWrapper(func);
+	    }
+	    return fn.apply(thisBinding, args);
+	  }
+	  return wrapper;
+	}
+
+	module.exports = createHybridWrapper;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 650 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copies the values of `source` to `array`.
+	 *
+	 * @private
+	 * @param {Array} source The array to copy values from.
+	 * @param {Array} [array=[]] The array to copy values to.
+	 * @returns {Array} Returns `array`.
+	 */
+	function arrayCopy(source, array) {
+	  var index = -1,
+	      length = source.length;
+
+	  array || (array = Array(length));
+	  while (++index < length) {
+	    array[index] = source[index];
+	  }
+	  return array;
+	}
+
+	module.exports = arrayCopy;
+
+
+/***/ },
+/* 651 */
+/***/ function(module, exports) {
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeMax = Math.max;
+
+	/**
+	 * Creates an array that is the composition of partially applied arguments,
+	 * placeholders, and provided arguments into a single array of arguments.
+	 *
+	 * @private
+	 * @param {Array|Object} args The provided arguments.
+	 * @param {Array} partials The arguments to prepend to those provided.
+	 * @param {Array} holders The `partials` placeholder indexes.
+	 * @returns {Array} Returns the new array of composed arguments.
+	 */
+	function composeArgs(args, partials, holders) {
+	  var holdersLength = holders.length,
+	      argsIndex = -1,
+	      argsLength = nativeMax(args.length - holdersLength, 0),
+	      leftIndex = -1,
+	      leftLength = partials.length,
+	      result = Array(leftLength + argsLength);
+
+	  while (++leftIndex < leftLength) {
+	    result[leftIndex] = partials[leftIndex];
+	  }
+	  while (++argsIndex < holdersLength) {
+	    result[holders[argsIndex]] = args[argsIndex];
+	  }
+	  while (argsLength--) {
+	    result[leftIndex++] = args[argsIndex++];
+	  }
+	  return result;
+	}
+
+	module.exports = composeArgs;
+
+
+/***/ },
+/* 652 */
+/***/ function(module, exports) {
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeMax = Math.max;
+
+	/**
+	 * This function is like `composeArgs` except that the arguments composition
+	 * is tailored for `_.partialRight`.
+	 *
+	 * @private
+	 * @param {Array|Object} args The provided arguments.
+	 * @param {Array} partials The arguments to append to those provided.
+	 * @param {Array} holders The `partials` placeholder indexes.
+	 * @returns {Array} Returns the new array of composed arguments.
+	 */
+	function composeArgsRight(args, partials, holders) {
+	  var holdersIndex = -1,
+	      holdersLength = holders.length,
+	      argsIndex = -1,
+	      argsLength = nativeMax(args.length - holdersLength, 0),
+	      rightIndex = -1,
+	      rightLength = partials.length,
+	      result = Array(argsLength + rightLength);
+
+	  while (++argsIndex < argsLength) {
+	    result[argsIndex] = args[argsIndex];
+	  }
+	  var offset = argsIndex;
+	  while (++rightIndex < rightLength) {
+	    result[offset + rightIndex] = partials[rightIndex];
+	  }
+	  while (++holdersIndex < holdersLength) {
+	    result[offset + holders[holdersIndex]] = args[argsIndex++];
+	  }
+	  return result;
+	}
+
+	module.exports = composeArgsRight;
+
+
+/***/ },
+/* 653 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var LazyWrapper = __webpack_require__(654),
+	    getData = __webpack_require__(656),
+	    getFuncName = __webpack_require__(658),
+	    lodash = __webpack_require__(660);
+
+	/**
+	 * Checks if `func` has a lazy counterpart.
+	 *
+	 * @private
+	 * @param {Function} func The function to check.
+	 * @returns {boolean} Returns `true` if `func` has a lazy counterpart, else `false`.
+	 */
+	function isLaziable(func) {
+	  var funcName = getFuncName(func),
+	      other = lodash[funcName];
+
+	  if (typeof other != 'function' || !(funcName in LazyWrapper.prototype)) {
+	    return false;
+	  }
+	  if (func === other) {
+	    return true;
+	  }
+	  var data = getData(other);
+	  return !!data && func === data[0];
+	}
+
+	module.exports = isLaziable;
+
+
+/***/ },
+/* 654 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseCreate = __webpack_require__(648),
+	    baseLodash = __webpack_require__(655);
+
+	/** Used as references for `-Infinity` and `Infinity`. */
+	var POSITIVE_INFINITY = Number.POSITIVE_INFINITY;
+
+	/**
+	 * Creates a lazy wrapper object which wraps `value` to enable lazy evaluation.
+	 *
+	 * @private
+	 * @param {*} value The value to wrap.
+	 */
+	function LazyWrapper(value) {
+	  this.__wrapped__ = value;
+	  this.__actions__ = [];
+	  this.__dir__ = 1;
+	  this.__filtered__ = false;
+	  this.__iteratees__ = [];
+	  this.__takeCount__ = POSITIVE_INFINITY;
+	  this.__views__ = [];
+	}
+
+	LazyWrapper.prototype = baseCreate(baseLodash.prototype);
+	LazyWrapper.prototype.constructor = LazyWrapper;
+
+	module.exports = LazyWrapper;
+
+
+/***/ },
+/* 655 */
+/***/ function(module, exports) {
+
+	/**
+	 * The function whose prototype all chaining wrappers inherit from.
+	 *
+	 * @private
+	 */
+	function baseLodash() {
+	  // No operation performed.
+	}
+
+	module.exports = baseLodash;
+
+
+/***/ },
+/* 656 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var metaMap = __webpack_require__(640),
+	    noop = __webpack_require__(657);
+
+	/**
+	 * Gets metadata for `func`.
+	 *
+	 * @private
+	 * @param {Function} func The function to query.
+	 * @returns {*} Returns the metadata for `func`.
+	 */
+	var getData = !metaMap ? noop : function(func) {
+	  return metaMap.get(func);
+	};
+
+	module.exports = getData;
+
+
+/***/ },
+/* 657 */
+/***/ function(module, exports) {
+
+	/**
+	 * A no-operation function that returns `undefined` regardless of the
+	 * arguments it receives.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Utility
+	 * @example
+	 *
+	 * var object = { 'user': 'fred' };
+	 *
+	 * _.noop(object) === undefined;
+	 * // => true
+	 */
+	function noop() {
+	  // No operation performed.
+	}
+
+	module.exports = noop;
+
+
+/***/ },
+/* 658 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var realNames = __webpack_require__(659);
+
+	/**
+	 * Gets the name of `func`.
+	 *
+	 * @private
+	 * @param {Function} func The function to query.
+	 * @returns {string} Returns the function name.
+	 */
+	function getFuncName(func) {
+	  var result = (func.name + ''),
+	      array = realNames[result],
+	      length = array ? array.length : 0;
+
+	  while (length--) {
+	    var data = array[length],
+	        otherFunc = data.func;
+	    if (otherFunc == null || otherFunc == func) {
+	      return data.name;
+	    }
+	  }
+	  return result;
+	}
+
+	module.exports = getFuncName;
+
+
+/***/ },
+/* 659 */
+/***/ function(module, exports) {
+
+	/** Used to lookup unminified function names. */
+	var realNames = {};
+
+	module.exports = realNames;
+
+
+/***/ },
+/* 660 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var LazyWrapper = __webpack_require__(654),
+	    LodashWrapper = __webpack_require__(661),
+	    baseLodash = __webpack_require__(655),
+	    isArray = __webpack_require__(662),
+	    isObjectLike = __webpack_require__(645),
+	    wrapperClone = __webpack_require__(664);
+
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+
+	/**
+	 * Creates a `lodash` object which wraps `value` to enable implicit chaining.
+	 * Methods that operate on and return arrays, collections, and functions can
+	 * be chained together. Methods that retrieve a single value or may return a
+	 * primitive value will automatically end the chain returning the unwrapped
+	 * value. Explicit chaining may be enabled using `_.chain`. The execution of
+	 * chained methods is lazy, that is, execution is deferred until `_#value`
+	 * is implicitly or explicitly called.
+	 *
+	 * Lazy evaluation allows several methods to support shortcut fusion. Shortcut
+	 * fusion is an optimization strategy which merge iteratee calls; this can help
+	 * to avoid the creation of intermediate data structures and greatly reduce the
+	 * number of iteratee executions.
+	 *
+	 * Chaining is supported in custom builds as long as the `_#value` method is
+	 * directly or indirectly included in the build.
+	 *
+	 * In addition to lodash methods, wrappers have `Array` and `String` methods.
+	 *
+	 * The wrapper `Array` methods are:
+	 * `concat`, `join`, `pop`, `push`, `reverse`, `shift`, `slice`, `sort`,
+	 * `splice`, and `unshift`
+	 *
+	 * The wrapper `String` methods are:
+	 * `replace` and `split`
+	 *
+	 * The wrapper methods that support shortcut fusion are:
+	 * `compact`, `drop`, `dropRight`, `dropRightWhile`, `dropWhile`, `filter`,
+	 * `first`, `initial`, `last`, `map`, `pluck`, `reject`, `rest`, `reverse`,
+	 * `slice`, `take`, `takeRight`, `takeRightWhile`, `takeWhile`, `toArray`,
+	 * and `where`
+	 *
+	 * The chainable wrapper methods are:
+	 * `after`, `ary`, `assign`, `at`, `before`, `bind`, `bindAll`, `bindKey`,
+	 * `callback`, `chain`, `chunk`, `commit`, `compact`, `concat`, `constant`,
+	 * `countBy`, `create`, `curry`, `debounce`, `defaults`, `defaultsDeep`,
+	 * `defer`, `delay`, `difference`, `drop`, `dropRight`, `dropRightWhile`,
+	 * `dropWhile`, `fill`, `filter`, `flatten`, `flattenDeep`, `flow`, `flowRight`,
+	 * `forEach`, `forEachRight`, `forIn`, `forInRight`, `forOwn`, `forOwnRight`,
+	 * `functions`, `groupBy`, `indexBy`, `initial`, `intersection`, `invert`,
+	 * `invoke`, `keys`, `keysIn`, `map`, `mapKeys`, `mapValues`, `matches`,
+	 * `matchesProperty`, `memoize`, `merge`, `method`, `methodOf`, `mixin`,
+	 * `modArgs`, `negate`, `omit`, `once`, `pairs`, `partial`, `partialRight`,
+	 * `partition`, `pick`, `plant`, `pluck`, `property`, `propertyOf`, `pull`,
+	 * `pullAt`, `push`, `range`, `rearg`, `reject`, `remove`, `rest`, `restParam`,
+	 * `reverse`, `set`, `shuffle`, `slice`, `sort`, `sortBy`, `sortByAll`,
+	 * `sortByOrder`, `splice`, `spread`, `take`, `takeRight`, `takeRightWhile`,
+	 * `takeWhile`, `tap`, `throttle`, `thru`, `times`, `toArray`, `toPlainObject`,
+	 * `transform`, `union`, `uniq`, `unshift`, `unzip`, `unzipWith`, `values`,
+	 * `valuesIn`, `where`, `without`, `wrap`, `xor`, `zip`, `zipObject`, `zipWith`
+	 *
+	 * The wrapper methods that are **not** chainable by default are:
+	 * `add`, `attempt`, `camelCase`, `capitalize`, `ceil`, `clone`, `cloneDeep`,
+	 * `deburr`, `endsWith`, `escape`, `escapeRegExp`, `every`, `find`, `findIndex`,
+	 * `findKey`, `findLast`, `findLastIndex`, `findLastKey`, `findWhere`, `first`,
+	 * `floor`, `get`, `gt`, `gte`, `has`, `identity`, `includes`, `indexOf`,
+	 * `inRange`, `isArguments`, `isArray`, `isBoolean`, `isDate`, `isElement`,
+	 * `isEmpty`, `isEqual`, `isError`, `isFinite` `isFunction`, `isMatch`,
+	 * `isNative`, `isNaN`, `isNull`, `isNumber`, `isObject`, `isPlainObject`,
+	 * `isRegExp`, `isString`, `isUndefined`, `isTypedArray`, `join`, `kebabCase`,
+	 * `last`, `lastIndexOf`, `lt`, `lte`, `max`, `min`, `noConflict`, `noop`,
+	 * `now`, `pad`, `padLeft`, `padRight`, `parseInt`, `pop`, `random`, `reduce`,
+	 * `reduceRight`, `repeat`, `result`, `round`, `runInContext`, `shift`, `size`,
+	 * `snakeCase`, `some`, `sortedIndex`, `sortedLastIndex`, `startCase`,
+	 * `startsWith`, `sum`, `template`, `trim`, `trimLeft`, `trimRight`, `trunc`,
+	 * `unescape`, `uniqueId`, `value`, and `words`
+	 *
+	 * The wrapper method `sample` will return a wrapped value when `n` is provided,
+	 * otherwise an unwrapped value is returned.
+	 *
+	 * @name _
+	 * @constructor
+	 * @category Chain
+	 * @param {*} value The value to wrap in a `lodash` instance.
+	 * @returns {Object} Returns the new `lodash` wrapper instance.
+	 * @example
+	 *
+	 * var wrapped = _([1, 2, 3]);
+	 *
+	 * // returns an unwrapped value
+	 * wrapped.reduce(function(total, n) {
+	 *   return total + n;
+	 * });
+	 * // => 6
+	 *
+	 * // returns a wrapped value
+	 * var squares = wrapped.map(function(n) {
+	 *   return n * n;
+	 * });
+	 *
+	 * _.isArray(squares);
+	 * // => false
+	 *
+	 * _.isArray(squares.value());
+	 * // => true
+	 */
+	function lodash(value) {
+	  if (isObjectLike(value) && !isArray(value) && !(value instanceof LazyWrapper)) {
+	    if (value instanceof LodashWrapper) {
+	      return value;
+	    }
+	    if (hasOwnProperty.call(value, '__chain__') && hasOwnProperty.call(value, '__wrapped__')) {
+	      return wrapperClone(value);
+	    }
+	  }
+	  return new LodashWrapper(value);
+	}
+
+	// Ensure wrappers are instances of `baseLodash`.
+	lodash.prototype = baseLodash.prototype;
+
+	module.exports = lodash;
+
+
+/***/ },
+/* 661 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseCreate = __webpack_require__(648),
+	    baseLodash = __webpack_require__(655);
+
+	/**
+	 * The base constructor for creating `lodash` wrapper objects.
+	 *
+	 * @private
+	 * @param {*} value The value to wrap.
+	 * @param {boolean} [chainAll] Enable chaining for all wrapper methods.
+	 * @param {Array} [actions=[]] Actions to peform to resolve the unwrapped value.
+	 */
+	function LodashWrapper(value, chainAll, actions) {
+	  this.__wrapped__ = value;
+	  this.__actions__ = actions || [];
+	  this.__chain__ = !!chainAll;
+	}
+
+	LodashWrapper.prototype = baseCreate(baseLodash.prototype);
+	LodashWrapper.prototype.constructor = LodashWrapper;
+
+	module.exports = LodashWrapper;
+
+
+/***/ },
+/* 662 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var getNative = __webpack_require__(641),
+	    isLength = __webpack_require__(663),
+	    isObjectLike = __webpack_require__(645);
+
+	/** `Object#toString` result references. */
+	var arrayTag = '[object Array]';
+
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+
+	/**
+	 * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+	 * of values.
+	 */
+	var objToString = objectProto.toString;
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeIsArray = getNative(Array, 'isArray');
+
+	/**
+	 * Checks if `value` is classified as an `Array` object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+	 * @example
+	 *
+	 * _.isArray([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isArray(function() { return arguments; }());
+	 * // => false
+	 */
+	var isArray = nativeIsArray || function(value) {
+	  return isObjectLike(value) && isLength(value.length) && objToString.call(value) == arrayTag;
+	};
+
+	module.exports = isArray;
+
+
+/***/ },
+/* 663 */
+/***/ function(module, exports) {
+
+	/**
+	 * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
+	 * of an array-like value.
+	 */
+	var MAX_SAFE_INTEGER = 9007199254740991;
+
+	/**
+	 * Checks if `value` is a valid array-like length.
+	 *
+	 * **Note:** This function is based on [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+	 */
+	function isLength(value) {
+	  return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+	}
+
+	module.exports = isLength;
+
+
+/***/ },
+/* 664 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var LazyWrapper = __webpack_require__(654),
+	    LodashWrapper = __webpack_require__(661),
+	    arrayCopy = __webpack_require__(650);
+
+	/**
+	 * Creates a clone of `wrapper`.
+	 *
+	 * @private
+	 * @param {Object} wrapper The wrapper to clone.
+	 * @returns {Object} Returns the cloned wrapper.
+	 */
+	function wrapperClone(wrapper) {
+	  return wrapper instanceof LazyWrapper
+	    ? wrapper.clone()
+	    : new LodashWrapper(wrapper.__wrapped__, wrapper.__chain__, arrayCopy(wrapper.__actions__));
+	}
+
+	module.exports = wrapperClone;
+
+
+/***/ },
+/* 665 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var arrayCopy = __webpack_require__(650),
+	    isIndex = __webpack_require__(666);
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeMin = Math.min;
+
+	/**
+	 * Reorder `array` according to the specified indexes where the element at
+	 * the first index is assigned as the first element, the element at
+	 * the second index is assigned as the second element, and so on.
+	 *
+	 * @private
+	 * @param {Array} array The array to reorder.
+	 * @param {Array} indexes The arranged array indexes.
+	 * @returns {Array} Returns `array`.
+	 */
+	function reorder(array, indexes) {
+	  var arrLength = array.length,
+	      length = nativeMin(indexes.length, arrLength),
+	      oldArray = arrayCopy(array);
+
+	  while (length--) {
+	    var index = indexes[length];
+	    array[length] = isIndex(index, arrLength) ? oldArray[index] : undefined;
+	  }
+	  return array;
+	}
+
+	module.exports = reorder;
+
+
+/***/ },
+/* 666 */
+/***/ function(module, exports) {
+
+	/** Used to detect unsigned integer values. */
+	var reIsUint = /^\d+$/;
+
+	/**
+	 * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
+	 * of an array-like value.
+	 */
+	var MAX_SAFE_INTEGER = 9007199254740991;
+
+	/**
+	 * Checks if `value` is a valid array-like index.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
+	 * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
+	 */
+	function isIndex(value, length) {
+	  value = (typeof value == 'number' || reIsUint.test(value)) ? +value : -1;
+	  length = length == null ? MAX_SAFE_INTEGER : length;
+	  return value > -1 && value % 1 == 0 && value < length;
+	}
+
+	module.exports = isIndex;
+
+
+/***/ },
+/* 667 */
+/***/ function(module, exports) {
+
+	/** Used as the internal argument placeholder. */
+	var PLACEHOLDER = '__lodash_placeholder__';
+
+	/**
+	 * Replaces all `placeholder` elements in `array` with an internal placeholder
+	 * and returns an array of their indexes.
+	 *
+	 * @private
+	 * @param {Array} array The array to modify.
+	 * @param {*} placeholder The placeholder to replace.
+	 * @returns {Array} Returns the new array of placeholder indexes.
+	 */
+	function replaceHolders(array, placeholder) {
+	  var index = -1,
+	      length = array.length,
+	      resIndex = -1,
+	      result = [];
+
+	  while (++index < length) {
+	    if (array[index] === placeholder) {
+	      array[index] = PLACEHOLDER;
+	      result[++resIndex] = index;
+	    }
+	  }
+	  return result;
+	}
+
+	module.exports = replaceHolders;
+
+
+/***/ },
+/* 668 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseSetData = __webpack_require__(638),
+	    now = __webpack_require__(669);
+
+	/** Used to detect when a function becomes hot. */
+	var HOT_COUNT = 150,
+	    HOT_SPAN = 16;
+
+	/**
+	 * Sets metadata for `func`.
+	 *
+	 * **Note:** If this function becomes hot, i.e. is invoked a lot in a short
+	 * period of time, it will trip its breaker and transition to an identity function
+	 * to avoid garbage collection pauses in V8. See [V8 issue 2070](https://code.google.com/p/v8/issues/detail?id=2070)
+	 * for more details.
+	 *
+	 * @private
+	 * @param {Function} func The function to associate metadata with.
+	 * @param {*} data The metadata.
+	 * @returns {Function} Returns `func`.
+	 */
+	var setData = (function() {
+	  var count = 0,
+	      lastCalled = 0;
+
+	  return function(key, value) {
+	    var stamp = now(),
+	        remaining = HOT_SPAN - (stamp - lastCalled);
+
+	    lastCalled = stamp;
+	    if (remaining > 0) {
+	      if (++count >= HOT_COUNT) {
+	        return key;
+	      }
+	    } else {
+	      count = 0;
+	    }
+	    return baseSetData(key, value);
+	  };
+	}());
+
+	module.exports = setData;
+
+
+/***/ },
+/* 669 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var getNative = __webpack_require__(641);
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeNow = getNative(Date, 'now');
+
+	/**
+	 * Gets the number of milliseconds that have elapsed since the Unix epoch
+	 * (1 January 1970 00:00:00 UTC).
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Date
+	 * @example
+	 *
+	 * _.defer(function(stamp) {
+	 *   console.log(_.now() - stamp);
+	 * }, _.now());
+	 * // => logs the number of milliseconds it took for the deferred function to be invoked
+	 */
+	var now = nativeNow || function() {
+	  return new Date().getTime();
+	};
+
+	module.exports = now;
+
+
+/***/ },
+/* 670 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {var createCtorWrapper = __webpack_require__(647);
+
+	/** Used to compose bitmasks for wrapper metadata. */
+	var BIND_FLAG = 1;
+
+	/**
+	 * Creates a function that wraps `func` and invokes it with the optional `this`
+	 * binding of `thisArg` and the `partials` prepended to those provided to
+	 * the wrapper.
+	 *
+	 * @private
+	 * @param {Function} func The function to partially apply arguments to.
+	 * @param {number} bitmask The bitmask of flags. See `createWrapper` for more details.
+	 * @param {*} thisArg The `this` binding of `func`.
+	 * @param {Array} partials The arguments to prepend to those provided to the new function.
+	 * @returns {Function} Returns the new bound function.
+	 */
+	function createPartialWrapper(func, bitmask, thisArg, partials) {
+	  var isBind = bitmask & BIND_FLAG,
+	      Ctor = createCtorWrapper(func);
+
+	  function wrapper() {
+	    // Avoid `arguments` object use disqualifying optimizations by
+	    // converting it to an array before providing it `func`.
+	    var argsIndex = -1,
+	        argsLength = arguments.length,
+	        leftIndex = -1,
+	        leftLength = partials.length,
+	        args = Array(leftLength + argsLength);
+
+	    while (++leftIndex < leftLength) {
+	      args[leftIndex] = partials[leftIndex];
+	    }
+	    while (argsLength--) {
+	      args[leftIndex++] = arguments[++argsIndex];
+	    }
+	    var fn = (this && this !== global && this instanceof wrapper) ? Ctor : func;
+	    return fn.apply(isBind ? thisArg : this, args);
+	  }
+	  return wrapper;
+	}
+
+	module.exports = createPartialWrapper;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 671 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var arrayCopy = __webpack_require__(650),
+	    composeArgs = __webpack_require__(651),
+	    composeArgsRight = __webpack_require__(652),
+	    replaceHolders = __webpack_require__(667);
+
+	/** Used to compose bitmasks for wrapper metadata. */
+	var BIND_FLAG = 1,
+	    CURRY_BOUND_FLAG = 4,
+	    CURRY_FLAG = 8,
+	    ARY_FLAG = 128,
+	    REARG_FLAG = 256;
+
+	/** Used as the internal argument placeholder. */
+	var PLACEHOLDER = '__lodash_placeholder__';
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeMin = Math.min;
+
+	/**
+	 * Merges the function metadata of `source` into `data`.
+	 *
+	 * Merging metadata reduces the number of wrappers required to invoke a function.
+	 * This is possible because methods like `_.bind`, `_.curry`, and `_.partial`
+	 * may be applied regardless of execution order. Methods like `_.ary` and `_.rearg`
+	 * augment function arguments, making the order in which they are executed important,
+	 * preventing the merging of metadata. However, we make an exception for a safe
+	 * common case where curried functions have `_.ary` and or `_.rearg` applied.
+	 *
+	 * @private
+	 * @param {Array} data The destination metadata.
+	 * @param {Array} source The source metadata.
+	 * @returns {Array} Returns `data`.
+	 */
+	function mergeData(data, source) {
+	  var bitmask = data[1],
+	      srcBitmask = source[1],
+	      newBitmask = bitmask | srcBitmask,
+	      isCommon = newBitmask < ARY_FLAG;
+
+	  var isCombo =
+	    (srcBitmask == ARY_FLAG && bitmask == CURRY_FLAG) ||
+	    (srcBitmask == ARY_FLAG && bitmask == REARG_FLAG && data[7].length <= source[8]) ||
+	    (srcBitmask == (ARY_FLAG | REARG_FLAG) && bitmask == CURRY_FLAG);
+
+	  // Exit early if metadata can't be merged.
+	  if (!(isCommon || isCombo)) {
+	    return data;
+	  }
+	  // Use source `thisArg` if available.
+	  if (srcBitmask & BIND_FLAG) {
+	    data[2] = source[2];
+	    // Set when currying a bound function.
+	    newBitmask |= (bitmask & BIND_FLAG) ? 0 : CURRY_BOUND_FLAG;
+	  }
+	  // Compose partial arguments.
+	  var value = source[3];
+	  if (value) {
+	    var partials = data[3];
+	    data[3] = partials ? composeArgs(partials, value, source[4]) : arrayCopy(value);
+	    data[4] = partials ? replaceHolders(data[3], PLACEHOLDER) : arrayCopy(source[4]);
+	  }
+	  // Compose partial right arguments.
+	  value = source[5];
+	  if (value) {
+	    partials = data[5];
+	    data[5] = partials ? composeArgsRight(partials, value, source[6]) : arrayCopy(value);
+	    data[6] = partials ? replaceHolders(data[5], PLACEHOLDER) : arrayCopy(source[6]);
+	  }
+	  // Use source `argPos` if available.
+	  value = source[7];
+	  if (value) {
+	    data[7] = arrayCopy(value);
+	  }
+	  // Use source `ary` if it's smaller.
+	  if (srcBitmask & ARY_FLAG) {
+	    data[8] = data[8] == null ? source[8] : nativeMin(data[8], source[8]);
+	  }
+	  // Use source `arity` if one is not provided.
+	  if (data[9] == null) {
+	    data[9] = source[9];
+	  }
+	  // Use source `func` and merge bitmasks.
+	  data[0] = source[0];
+	  data[1] = newBitmask;
+
+	  return data;
+	}
+
+	module.exports = mergeData;
+
+
+/***/ },
+/* 672 */
+/***/ function(module, exports) {
+
+	/** Used as the `TypeError` message for "Functions" methods. */
+	var FUNC_ERROR_TEXT = 'Expected a function';
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeMax = Math.max;
+
+	/**
+	 * Creates a function that invokes `func` with the `this` binding of the
+	 * created function and arguments from `start` and beyond provided as an array.
+	 *
+	 * **Note:** This method is based on the [rest parameter](https://developer.mozilla.org/Web/JavaScript/Reference/Functions/rest_parameters).
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Function
+	 * @param {Function} func The function to apply a rest parameter to.
+	 * @param {number} [start=func.length-1] The start position of the rest parameter.
+	 * @returns {Function} Returns the new function.
+	 * @example
+	 *
+	 * var say = _.restParam(function(what, names) {
+	 *   return what + ' ' + _.initial(names).join(', ') +
+	 *     (_.size(names) > 1 ? ', & ' : '') + _.last(names);
+	 * });
+	 *
+	 * say('hello', 'fred', 'barney', 'pebbles');
+	 * // => 'hello fred, barney, & pebbles'
+	 */
+	function restParam(func, start) {
+	  if (typeof func != 'function') {
+	    throw new TypeError(FUNC_ERROR_TEXT);
+	  }
+	  start = nativeMax(start === undefined ? (func.length - 1) : (+start || 0), 0);
+	  return function() {
+	    var args = arguments,
+	        index = -1,
+	        length = nativeMax(args.length - start, 0),
+	        rest = Array(length);
+
+	    while (++index < length) {
+	      rest[index] = args[start + index];
+	    }
+	    switch (start) {
+	      case 0: return func.call(this, rest);
+	      case 1: return func.call(this, args[0], rest);
+	      case 2: return func.call(this, args[0], args[1], rest);
+	    }
+	    var otherArgs = Array(start + 1);
+	    index = -1;
+	    while (++index < start) {
+	      otherArgs[index] = args[index];
+	    }
+	    otherArgs[start] = rest;
+	    return func.apply(this, otherArgs);
+	  };
+	}
+
+	module.exports = restParam;
+
+
+/***/ },
+/* 673 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseEach = __webpack_require__(674),
+	    createFind = __webpack_require__(687);
+
+	/**
+	 * Iterates over elements of `collection`, returning the first element
+	 * `predicate` returns truthy for. The predicate is bound to `thisArg` and
+	 * invoked with three arguments: (value, index|key, collection).
+	 *
+	 * If a property name is provided for `predicate` the created `_.property`
+	 * style callback returns the property value of the given element.
+	 *
+	 * If a value is also provided for `thisArg` the created `_.matchesProperty`
+	 * style callback returns `true` for elements that have a matching property
+	 * value, else `false`.
+	 *
+	 * If an object is provided for `predicate` the created `_.matches` style
+	 * callback returns `true` for elements that have the properties of the given
+	 * object, else `false`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @alias detect
+	 * @category Collection
+	 * @param {Array|Object|string} collection The collection to search.
+	 * @param {Function|Object|string} [predicate=_.identity] The function invoked
+	 *  per iteration.
+	 * @param {*} [thisArg] The `this` binding of `predicate`.
+	 * @returns {*} Returns the matched element, else `undefined`.
+	 * @example
+	 *
+	 * var users = [
+	 *   { 'user': 'barney',  'age': 36, 'active': true },
+	 *   { 'user': 'fred',    'age': 40, 'active': false },
+	 *   { 'user': 'pebbles', 'age': 1,  'active': true }
+	 * ];
+	 *
+	 * _.result(_.find(users, function(chr) {
+	 *   return chr.age < 40;
+	 * }), 'user');
+	 * // => 'barney'
+	 *
+	 * // using the `_.matches` callback shorthand
+	 * _.result(_.find(users, { 'age': 1, 'active': true }), 'user');
+	 * // => 'pebbles'
+	 *
+	 * // using the `_.matchesProperty` callback shorthand
+	 * _.result(_.find(users, 'active', false), 'user');
+	 * // => 'fred'
+	 *
+	 * // using the `_.property` callback shorthand
+	 * _.result(_.find(users, 'active'), 'user');
+	 * // => 'barney'
+	 */
+	var find = createFind(baseEach);
+
+	module.exports = find;
+
+
+/***/ },
+/* 674 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseForOwn = __webpack_require__(675),
+	    createBaseEach = __webpack_require__(686);
+
+	/**
+	 * The base implementation of `_.forEach` without support for callback
+	 * shorthands and `this` binding.
+	 *
+	 * @private
+	 * @param {Array|Object|string} collection The collection to iterate over.
+	 * @param {Function} iteratee The function invoked per iteration.
+	 * @returns {Array|Object|string} Returns `collection`.
+	 */
+	var baseEach = createBaseEach(baseForOwn);
+
+	module.exports = baseEach;
+
+
+/***/ },
+/* 675 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseFor = __webpack_require__(676),
+	    keys = __webpack_require__(679);
+
+	/**
+	 * The base implementation of `_.forOwn` without support for callback
+	 * shorthands and `this` binding.
+	 *
+	 * @private
+	 * @param {Object} object The object to iterate over.
+	 * @param {Function} iteratee The function invoked per iteration.
+	 * @returns {Object} Returns `object`.
+	 */
+	function baseForOwn(object, iteratee) {
+	  return baseFor(object, iteratee, keys);
+	}
+
+	module.exports = baseForOwn;
+
+
+/***/ },
+/* 676 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var createBaseFor = __webpack_require__(677);
+
+	/**
+	 * The base implementation of `baseForIn` and `baseForOwn` which iterates
+	 * over `object` properties returned by `keysFunc` invoking `iteratee` for
+	 * each property. Iteratee functions may exit iteration early by explicitly
+	 * returning `false`.
+	 *
+	 * @private
+	 * @param {Object} object The object to iterate over.
+	 * @param {Function} iteratee The function invoked per iteration.
+	 * @param {Function} keysFunc The function to get the keys of `object`.
+	 * @returns {Object} Returns `object`.
+	 */
+	var baseFor = createBaseFor();
+
+	module.exports = baseFor;
+
+
+/***/ },
+/* 677 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var toObject = __webpack_require__(678);
+
+	/**
+	 * Creates a base function for `_.forIn` or `_.forInRight`.
+	 *
+	 * @private
+	 * @param {boolean} [fromRight] Specify iterating from right to left.
+	 * @returns {Function} Returns the new base function.
+	 */
+	function createBaseFor(fromRight) {
+	  return function(object, iteratee, keysFunc) {
+	    var iterable = toObject(object),
+	        props = keysFunc(object),
+	        length = props.length,
+	        index = fromRight ? length : -1;
+
+	    while ((fromRight ? index-- : ++index < length)) {
+	      var key = props[index];
+	      if (iteratee(iterable[key], key, iterable) === false) {
+	        break;
+	      }
+	    }
+	    return object;
+	  };
+	}
+
+	module.exports = createBaseFor;
+
+
+/***/ },
+/* 678 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isObject = __webpack_require__(644);
+
+	/**
+	 * Converts `value` to an object if it's not one.
+	 *
+	 * @private
+	 * @param {*} value The value to process.
+	 * @returns {Object} Returns the object.
+	 */
+	function toObject(value) {
+	  return isObject(value) ? value : Object(value);
+	}
+
+	module.exports = toObject;
+
+
+/***/ },
+/* 679 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var getNative = __webpack_require__(641),
+	    isArrayLike = __webpack_require__(680),
+	    isObject = __webpack_require__(644),
+	    shimKeys = __webpack_require__(683);
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeKeys = getNative(Object, 'keys');
+
+	/**
+	 * Creates an array of the own enumerable property names of `object`.
+	 *
+	 * **Note:** Non-object values are coerced to objects. See the
+	 * [ES spec](http://ecma-international.org/ecma-262/6.0/#sec-object.keys)
+	 * for more details.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Object
+	 * @param {Object} object The object to query.
+	 * @returns {Array} Returns the array of property names.
+	 * @example
+	 *
+	 * function Foo() {
+	 *   this.a = 1;
+	 *   this.b = 2;
+	 * }
+	 *
+	 * Foo.prototype.c = 3;
+	 *
+	 * _.keys(new Foo);
+	 * // => ['a', 'b'] (iteration order is not guaranteed)
+	 *
+	 * _.keys('hi');
+	 * // => ['0', '1']
+	 */
+	var keys = !nativeKeys ? shimKeys : function(object) {
+	  var Ctor = object == null ? undefined : object.constructor;
+	  if ((typeof Ctor == 'function' && Ctor.prototype === object) ||
+	      (typeof object != 'function' && isArrayLike(object))) {
+	    return shimKeys(object);
+	  }
+	  return isObject(object) ? nativeKeys(object) : [];
+	};
+
+	module.exports = keys;
+
+
+/***/ },
+/* 680 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var getLength = __webpack_require__(681),
+	    isLength = __webpack_require__(663);
+
+	/**
+	 * Checks if `value` is array-like.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+	 */
+	function isArrayLike(value) {
+	  return value != null && isLength(getLength(value));
+	}
+
+	module.exports = isArrayLike;
+
+
+/***/ },
+/* 681 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseProperty = __webpack_require__(682);
+
+	/**
+	 * Gets the "length" property value of `object`.
+	 *
+	 * **Note:** This function is used to avoid a [JIT bug](https://bugs.webkit.org/show_bug.cgi?id=142792)
+	 * that affects Safari on at least iOS 8.1-8.3 ARM64.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @returns {*} Returns the "length" value.
+	 */
+	var getLength = baseProperty('length');
+
+	module.exports = getLength;
+
+
+/***/ },
+/* 682 */
+/***/ function(module, exports) {
+
+	/**
+	 * The base implementation of `_.property` without support for deep paths.
+	 *
+	 * @private
+	 * @param {string} key The key of the property to get.
+	 * @returns {Function} Returns the new function.
+	 */
+	function baseProperty(key) {
+	  return function(object) {
+	    return object == null ? undefined : object[key];
+	  };
+	}
+
+	module.exports = baseProperty;
+
+
+/***/ },
+/* 683 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isArguments = __webpack_require__(684),
+	    isArray = __webpack_require__(662),
+	    isIndex = __webpack_require__(666),
+	    isLength = __webpack_require__(663),
+	    keysIn = __webpack_require__(685);
+
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+
+	/**
+	 * A fallback implementation of `Object.keys` which creates an array of the
+	 * own enumerable property names of `object`.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @returns {Array} Returns the array of property names.
+	 */
+	function shimKeys(object) {
+	  var props = keysIn(object),
+	      propsLength = props.length,
+	      length = propsLength && object.length;
+
+	  var allowIndexes = !!length && isLength(length) &&
+	    (isArray(object) || isArguments(object));
+
+	  var index = -1,
+	      result = [];
+
+	  while (++index < propsLength) {
+	    var key = props[index];
+	    if ((allowIndexes && isIndex(key, length)) || hasOwnProperty.call(object, key)) {
+	      result.push(key);
+	    }
+	  }
+	  return result;
+	}
+
+	module.exports = shimKeys;
+
+
+/***/ },
+/* 684 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isArrayLike = __webpack_require__(680),
+	    isObjectLike = __webpack_require__(645);
+
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+
+	/** Native method references. */
+	var propertyIsEnumerable = objectProto.propertyIsEnumerable;
+
+	/**
+	 * Checks if `value` is classified as an `arguments` object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+	 * @example
+	 *
+	 * _.isArguments(function() { return arguments; }());
+	 * // => true
+	 *
+	 * _.isArguments([1, 2, 3]);
+	 * // => false
+	 */
+	function isArguments(value) {
+	  return isObjectLike(value) && isArrayLike(value) &&
+	    hasOwnProperty.call(value, 'callee') && !propertyIsEnumerable.call(value, 'callee');
+	}
+
+	module.exports = isArguments;
+
+
+/***/ },
+/* 685 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isArguments = __webpack_require__(684),
+	    isArray = __webpack_require__(662),
+	    isIndex = __webpack_require__(666),
+	    isLength = __webpack_require__(663),
+	    isObject = __webpack_require__(644);
+
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+
+	/**
+	 * Creates an array of the own and inherited enumerable property names of `object`.
+	 *
+	 * **Note:** Non-object values are coerced to objects.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Object
+	 * @param {Object} object The object to query.
+	 * @returns {Array} Returns the array of property names.
+	 * @example
+	 *
+	 * function Foo() {
+	 *   this.a = 1;
+	 *   this.b = 2;
+	 * }
+	 *
+	 * Foo.prototype.c = 3;
+	 *
+	 * _.keysIn(new Foo);
+	 * // => ['a', 'b', 'c'] (iteration order is not guaranteed)
+	 */
+	function keysIn(object) {
+	  if (object == null) {
+	    return [];
+	  }
+	  if (!isObject(object)) {
+	    object = Object(object);
+	  }
+	  var length = object.length;
+	  length = (length && isLength(length) &&
+	    (isArray(object) || isArguments(object)) && length) || 0;
+
+	  var Ctor = object.constructor,
+	      index = -1,
+	      isProto = typeof Ctor == 'function' && Ctor.prototype === object,
+	      result = Array(length),
+	      skipIndexes = length > 0;
+
+	  while (++index < length) {
+	    result[index] = (index + '');
+	  }
+	  for (var key in object) {
+	    if (!(skipIndexes && isIndex(key, length)) &&
+	        !(key == 'constructor' && (isProto || !hasOwnProperty.call(object, key)))) {
+	      result.push(key);
+	    }
+	  }
+	  return result;
+	}
+
+	module.exports = keysIn;
+
+
+/***/ },
+/* 686 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var getLength = __webpack_require__(681),
+	    isLength = __webpack_require__(663),
+	    toObject = __webpack_require__(678);
+
+	/**
+	 * Creates a `baseEach` or `baseEachRight` function.
+	 *
+	 * @private
+	 * @param {Function} eachFunc The function to iterate over a collection.
+	 * @param {boolean} [fromRight] Specify iterating from right to left.
+	 * @returns {Function} Returns the new base function.
+	 */
+	function createBaseEach(eachFunc, fromRight) {
+	  return function(collection, iteratee) {
+	    var length = collection ? getLength(collection) : 0;
+	    if (!isLength(length)) {
+	      return eachFunc(collection, iteratee);
+	    }
+	    var index = fromRight ? length : -1,
+	        iterable = toObject(collection);
+
+	    while ((fromRight ? index-- : ++index < length)) {
+	      if (iteratee(iterable[index], index, iterable) === false) {
+	        break;
+	      }
+	    }
+	    return collection;
+	  };
+	}
+
+	module.exports = createBaseEach;
+
+
+/***/ },
+/* 687 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseCallback = __webpack_require__(688),
+	    baseFind = __webpack_require__(711),
+	    baseFindIndex = __webpack_require__(712),
+	    isArray = __webpack_require__(662);
+
+	/**
+	 * Creates a `_.find` or `_.findLast` function.
+	 *
+	 * @private
+	 * @param {Function} eachFunc The function to iterate over a collection.
+	 * @param {boolean} [fromRight] Specify iterating from right to left.
+	 * @returns {Function} Returns the new find function.
+	 */
+	function createFind(eachFunc, fromRight) {
+	  return function(collection, predicate, thisArg) {
+	    predicate = baseCallback(predicate, thisArg, 3);
+	    if (isArray(collection)) {
+	      var index = baseFindIndex(collection, predicate, fromRight);
+	      return index > -1 ? collection[index] : undefined;
+	    }
+	    return baseFind(collection, predicate, eachFunc);
+	  };
+	}
+
+	module.exports = createFind;
+
+
+/***/ },
+/* 688 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseMatches = __webpack_require__(689),
+	    baseMatchesProperty = __webpack_require__(701),
+	    bindCallback = __webpack_require__(708),
+	    identity = __webpack_require__(639),
+	    property = __webpack_require__(709);
+
+	/**
+	 * The base implementation of `_.callback` which supports specifying the
+	 * number of arguments to provide to `func`.
+	 *
+	 * @private
+	 * @param {*} [func=_.identity] The value to convert to a callback.
+	 * @param {*} [thisArg] The `this` binding of `func`.
+	 * @param {number} [argCount] The number of arguments to provide to `func`.
+	 * @returns {Function} Returns the callback.
+	 */
+	function baseCallback(func, thisArg, argCount) {
+	  var type = typeof func;
+	  if (type == 'function') {
+	    return thisArg === undefined
+	      ? func
+	      : bindCallback(func, thisArg, argCount);
+	  }
+	  if (func == null) {
+	    return identity;
+	  }
+	  if (type == 'object') {
+	    return baseMatches(func);
+	  }
+	  return thisArg === undefined
+	    ? property(func)
+	    : baseMatchesProperty(func, thisArg);
+	}
+
+	module.exports = baseCallback;
+
+
+/***/ },
+/* 689 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseIsMatch = __webpack_require__(690),
+	    getMatchData = __webpack_require__(698),
+	    toObject = __webpack_require__(678);
+
+	/**
+	 * The base implementation of `_.matches` which does not clone `source`.
+	 *
+	 * @private
+	 * @param {Object} source The object of property values to match.
+	 * @returns {Function} Returns the new function.
+	 */
+	function baseMatches(source) {
+	  var matchData = getMatchData(source);
+	  if (matchData.length == 1 && matchData[0][2]) {
+	    var key = matchData[0][0],
+	        value = matchData[0][1];
+
+	    return function(object) {
+	      if (object == null) {
+	        return false;
+	      }
+	      return object[key] === value && (value !== undefined || (key in toObject(object)));
+	    };
+	  }
+	  return function(object) {
+	    return baseIsMatch(object, matchData);
+	  };
+	}
+
+	module.exports = baseMatches;
+
+
+/***/ },
+/* 690 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseIsEqual = __webpack_require__(691),
+	    toObject = __webpack_require__(678);
+
+	/**
+	 * The base implementation of `_.isMatch` without support for callback
+	 * shorthands and `this` binding.
+	 *
+	 * @private
+	 * @param {Object} object The object to inspect.
+	 * @param {Array} matchData The propery names, values, and compare flags to match.
+	 * @param {Function} [customizer] The function to customize comparing objects.
+	 * @returns {boolean} Returns `true` if `object` is a match, else `false`.
+	 */
+	function baseIsMatch(object, matchData, customizer) {
+	  var index = matchData.length,
+	      length = index,
+	      noCustomizer = !customizer;
+
+	  if (object == null) {
+	    return !length;
+	  }
+	  object = toObject(object);
+	  while (index--) {
+	    var data = matchData[index];
+	    if ((noCustomizer && data[2])
+	          ? data[1] !== object[data[0]]
+	          : !(data[0] in object)
+	        ) {
+	      return false;
+	    }
+	  }
+	  while (++index < length) {
+	    data = matchData[index];
+	    var key = data[0],
+	        objValue = object[key],
+	        srcValue = data[1];
+
+	    if (noCustomizer && data[2]) {
+	      if (objValue === undefined && !(key in object)) {
+	        return false;
+	      }
+	    } else {
+	      var result = customizer ? customizer(objValue, srcValue, key) : undefined;
+	      if (!(result === undefined ? baseIsEqual(srcValue, objValue, customizer, true) : result)) {
+	        return false;
+	      }
+	    }
+	  }
+	  return true;
+	}
+
+	module.exports = baseIsMatch;
+
+
+/***/ },
+/* 691 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseIsEqualDeep = __webpack_require__(692),
+	    isObject = __webpack_require__(644),
+	    isObjectLike = __webpack_require__(645);
+
+	/**
+	 * The base implementation of `_.isEqual` without support for `this` binding
+	 * `customizer` functions.
+	 *
+	 * @private
+	 * @param {*} value The value to compare.
+	 * @param {*} other The other value to compare.
+	 * @param {Function} [customizer] The function to customize comparing values.
+	 * @param {boolean} [isLoose] Specify performing partial comparisons.
+	 * @param {Array} [stackA] Tracks traversed `value` objects.
+	 * @param {Array} [stackB] Tracks traversed `other` objects.
+	 * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
+	 */
+	function baseIsEqual(value, other, customizer, isLoose, stackA, stackB) {
+	  if (value === other) {
+	    return true;
+	  }
+	  if (value == null || other == null || (!isObject(value) && !isObjectLike(other))) {
+	    return value !== value && other !== other;
+	  }
+	  return baseIsEqualDeep(value, other, baseIsEqual, customizer, isLoose, stackA, stackB);
+	}
+
+	module.exports = baseIsEqual;
+
+
+/***/ },
+/* 692 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var equalArrays = __webpack_require__(693),
+	    equalByTag = __webpack_require__(695),
+	    equalObjects = __webpack_require__(696),
+	    isArray = __webpack_require__(662),
+	    isTypedArray = __webpack_require__(697);
+
+	/** `Object#toString` result references. */
+	var argsTag = '[object Arguments]',
+	    arrayTag = '[object Array]',
+	    objectTag = '[object Object]';
+
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+
+	/**
+	 * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+	 * of values.
+	 */
+	var objToString = objectProto.toString;
+
+	/**
+	 * A specialized version of `baseIsEqual` for arrays and objects which performs
+	 * deep comparisons and tracks traversed objects enabling objects with circular
+	 * references to be compared.
+	 *
+	 * @private
+	 * @param {Object} object The object to compare.
+	 * @param {Object} other The other object to compare.
+	 * @param {Function} equalFunc The function to determine equivalents of values.
+	 * @param {Function} [customizer] The function to customize comparing objects.
+	 * @param {boolean} [isLoose] Specify performing partial comparisons.
+	 * @param {Array} [stackA=[]] Tracks traversed `value` objects.
+	 * @param {Array} [stackB=[]] Tracks traversed `other` objects.
+	 * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
+	 */
+	function baseIsEqualDeep(object, other, equalFunc, customizer, isLoose, stackA, stackB) {
+	  var objIsArr = isArray(object),
+	      othIsArr = isArray(other),
+	      objTag = arrayTag,
+	      othTag = arrayTag;
+
+	  if (!objIsArr) {
+	    objTag = objToString.call(object);
+	    if (objTag == argsTag) {
+	      objTag = objectTag;
+	    } else if (objTag != objectTag) {
+	      objIsArr = isTypedArray(object);
+	    }
+	  }
+	  if (!othIsArr) {
+	    othTag = objToString.call(other);
+	    if (othTag == argsTag) {
+	      othTag = objectTag;
+	    } else if (othTag != objectTag) {
+	      othIsArr = isTypedArray(other);
+	    }
+	  }
+	  var objIsObj = objTag == objectTag,
+	      othIsObj = othTag == objectTag,
+	      isSameTag = objTag == othTag;
+
+	  if (isSameTag && !(objIsArr || objIsObj)) {
+	    return equalByTag(object, other, objTag);
+	  }
+	  if (!isLoose) {
+	    var objIsWrapped = objIsObj && hasOwnProperty.call(object, '__wrapped__'),
+	        othIsWrapped = othIsObj && hasOwnProperty.call(other, '__wrapped__');
+
+	    if (objIsWrapped || othIsWrapped) {
+	      return equalFunc(objIsWrapped ? object.value() : object, othIsWrapped ? other.value() : other, customizer, isLoose, stackA, stackB);
+	    }
+	  }
+	  if (!isSameTag) {
+	    return false;
+	  }
+	  // Assume cyclic values are equal.
+	  // For more information on detecting circular references see https://es5.github.io/#JO.
+	  stackA || (stackA = []);
+	  stackB || (stackB = []);
+
+	  var length = stackA.length;
+	  while (length--) {
+	    if (stackA[length] == object) {
+	      return stackB[length] == other;
+	    }
+	  }
+	  // Add `object` and `other` to the stack of traversed objects.
+	  stackA.push(object);
+	  stackB.push(other);
+
+	  var result = (objIsArr ? equalArrays : equalObjects)(object, other, equalFunc, customizer, isLoose, stackA, stackB);
+
+	  stackA.pop();
+	  stackB.pop();
+
+	  return result;
+	}
+
+	module.exports = baseIsEqualDeep;
+
+
+/***/ },
+/* 693 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var arraySome = __webpack_require__(694);
+
+	/**
+	 * A specialized version of `baseIsEqualDeep` for arrays with support for
+	 * partial deep comparisons.
+	 *
+	 * @private
+	 * @param {Array} array The array to compare.
+	 * @param {Array} other The other array to compare.
+	 * @param {Function} equalFunc The function to determine equivalents of values.
+	 * @param {Function} [customizer] The function to customize comparing arrays.
+	 * @param {boolean} [isLoose] Specify performing partial comparisons.
+	 * @param {Array} [stackA] Tracks traversed `value` objects.
+	 * @param {Array} [stackB] Tracks traversed `other` objects.
+	 * @returns {boolean} Returns `true` if the arrays are equivalent, else `false`.
+	 */
+	function equalArrays(array, other, equalFunc, customizer, isLoose, stackA, stackB) {
+	  var index = -1,
+	      arrLength = array.length,
+	      othLength = other.length;
+
+	  if (arrLength != othLength && !(isLoose && othLength > arrLength)) {
+	    return false;
+	  }
+	  // Ignore non-index properties.
+	  while (++index < arrLength) {
+	    var arrValue = array[index],
+	        othValue = other[index],
+	        result = customizer ? customizer(isLoose ? othValue : arrValue, isLoose ? arrValue : othValue, index) : undefined;
+
+	    if (result !== undefined) {
+	      if (result) {
+	        continue;
+	      }
+	      return false;
+	    }
+	    // Recursively compare arrays (susceptible to call stack limits).
+	    if (isLoose) {
+	      if (!arraySome(other, function(othValue) {
+	            return arrValue === othValue || equalFunc(arrValue, othValue, customizer, isLoose, stackA, stackB);
+	          })) {
+	        return false;
+	      }
+	    } else if (!(arrValue === othValue || equalFunc(arrValue, othValue, customizer, isLoose, stackA, stackB))) {
+	      return false;
+	    }
+	  }
+	  return true;
+	}
+
+	module.exports = equalArrays;
+
+
+/***/ },
+/* 694 */
+/***/ function(module, exports) {
+
+	/**
+	 * A specialized version of `_.some` for arrays without support for callback
+	 * shorthands and `this` binding.
+	 *
+	 * @private
+	 * @param {Array} array The array to iterate over.
+	 * @param {Function} predicate The function invoked per iteration.
+	 * @returns {boolean} Returns `true` if any element passes the predicate check,
+	 *  else `false`.
+	 */
+	function arraySome(array, predicate) {
+	  var index = -1,
+	      length = array.length;
+
+	  while (++index < length) {
+	    if (predicate(array[index], index, array)) {
+	      return true;
+	    }
+	  }
+	  return false;
+	}
+
+	module.exports = arraySome;
+
+
+/***/ },
+/* 695 */
+/***/ function(module, exports) {
+
+	/** `Object#toString` result references. */
+	var boolTag = '[object Boolean]',
+	    dateTag = '[object Date]',
+	    errorTag = '[object Error]',
+	    numberTag = '[object Number]',
+	    regexpTag = '[object RegExp]',
+	    stringTag = '[object String]';
+
+	/**
+	 * A specialized version of `baseIsEqualDeep` for comparing objects of
+	 * the same `toStringTag`.
+	 *
+	 * **Note:** This function only supports comparing values with tags of
+	 * `Boolean`, `Date`, `Error`, `Number`, `RegExp`, or `String`.
+	 *
+	 * @private
+	 * @param {Object} object The object to compare.
+	 * @param {Object} other The other object to compare.
+	 * @param {string} tag The `toStringTag` of the objects to compare.
+	 * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
+	 */
+	function equalByTag(object, other, tag) {
+	  switch (tag) {
+	    case boolTag:
+	    case dateTag:
+	      // Coerce dates and booleans to numbers, dates to milliseconds and booleans
+	      // to `1` or `0` treating invalid dates coerced to `NaN` as not equal.
+	      return +object == +other;
+
+	    case errorTag:
+	      return object.name == other.name && object.message == other.message;
+
+	    case numberTag:
+	      // Treat `NaN` vs. `NaN` as equal.
+	      return (object != +object)
+	        ? other != +other
+	        : object == +other;
+
+	    case regexpTag:
+	    case stringTag:
+	      // Coerce regexes to strings and treat strings primitives and string
+	      // objects as equal. See https://es5.github.io/#x15.10.6.4 for more details.
+	      return object == (other + '');
+	  }
+	  return false;
+	}
+
+	module.exports = equalByTag;
+
+
+/***/ },
+/* 696 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var keys = __webpack_require__(679);
+
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+
+	/**
+	 * A specialized version of `baseIsEqualDeep` for objects with support for
+	 * partial deep comparisons.
+	 *
+	 * @private
+	 * @param {Object} object The object to compare.
+	 * @param {Object} other The other object to compare.
+	 * @param {Function} equalFunc The function to determine equivalents of values.
+	 * @param {Function} [customizer] The function to customize comparing values.
+	 * @param {boolean} [isLoose] Specify performing partial comparisons.
+	 * @param {Array} [stackA] Tracks traversed `value` objects.
+	 * @param {Array} [stackB] Tracks traversed `other` objects.
+	 * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
+	 */
+	function equalObjects(object, other, equalFunc, customizer, isLoose, stackA, stackB) {
+	  var objProps = keys(object),
+	      objLength = objProps.length,
+	      othProps = keys(other),
+	      othLength = othProps.length;
+
+	  if (objLength != othLength && !isLoose) {
+	    return false;
+	  }
+	  var index = objLength;
+	  while (index--) {
+	    var key = objProps[index];
+	    if (!(isLoose ? key in other : hasOwnProperty.call(other, key))) {
+	      return false;
+	    }
+	  }
+	  var skipCtor = isLoose;
+	  while (++index < objLength) {
+	    key = objProps[index];
+	    var objValue = object[key],
+	        othValue = other[key],
+	        result = customizer ? customizer(isLoose ? othValue : objValue, isLoose? objValue : othValue, key) : undefined;
+
+	    // Recursively compare objects (susceptible to call stack limits).
+	    if (!(result === undefined ? equalFunc(objValue, othValue, customizer, isLoose, stackA, stackB) : result)) {
+	      return false;
+	    }
+	    skipCtor || (skipCtor = key == 'constructor');
+	  }
+	  if (!skipCtor) {
+	    var objCtor = object.constructor,
+	        othCtor = other.constructor;
+
+	    // Non `Object` object instances with different constructors are not equal.
+	    if (objCtor != othCtor &&
+	        ('constructor' in object && 'constructor' in other) &&
+	        !(typeof objCtor == 'function' && objCtor instanceof objCtor &&
+	          typeof othCtor == 'function' && othCtor instanceof othCtor)) {
+	      return false;
+	    }
+	  }
+	  return true;
+	}
+
+	module.exports = equalObjects;
+
+
+/***/ },
+/* 697 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isLength = __webpack_require__(663),
+	    isObjectLike = __webpack_require__(645);
+
+	/** `Object#toString` result references. */
+	var argsTag = '[object Arguments]',
+	    arrayTag = '[object Array]',
+	    boolTag = '[object Boolean]',
+	    dateTag = '[object Date]',
+	    errorTag = '[object Error]',
+	    funcTag = '[object Function]',
+	    mapTag = '[object Map]',
+	    numberTag = '[object Number]',
+	    objectTag = '[object Object]',
+	    regexpTag = '[object RegExp]',
+	    setTag = '[object Set]',
+	    stringTag = '[object String]',
+	    weakMapTag = '[object WeakMap]';
+
+	var arrayBufferTag = '[object ArrayBuffer]',
+	    float32Tag = '[object Float32Array]',
+	    float64Tag = '[object Float64Array]',
+	    int8Tag = '[object Int8Array]',
+	    int16Tag = '[object Int16Array]',
+	    int32Tag = '[object Int32Array]',
+	    uint8Tag = '[object Uint8Array]',
+	    uint8ClampedTag = '[object Uint8ClampedArray]',
+	    uint16Tag = '[object Uint16Array]',
+	    uint32Tag = '[object Uint32Array]';
+
+	/** Used to identify `toStringTag` values of typed arrays. */
+	var typedArrayTags = {};
+	typedArrayTags[float32Tag] = typedArrayTags[float64Tag] =
+	typedArrayTags[int8Tag] = typedArrayTags[int16Tag] =
+	typedArrayTags[int32Tag] = typedArrayTags[uint8Tag] =
+	typedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] =
+	typedArrayTags[uint32Tag] = true;
+	typedArrayTags[argsTag] = typedArrayTags[arrayTag] =
+	typedArrayTags[arrayBufferTag] = typedArrayTags[boolTag] =
+	typedArrayTags[dateTag] = typedArrayTags[errorTag] =
+	typedArrayTags[funcTag] = typedArrayTags[mapTag] =
+	typedArrayTags[numberTag] = typedArrayTags[objectTag] =
+	typedArrayTags[regexpTag] = typedArrayTags[setTag] =
+	typedArrayTags[stringTag] = typedArrayTags[weakMapTag] = false;
+
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+
+	/**
+	 * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+	 * of values.
+	 */
+	var objToString = objectProto.toString;
+
+	/**
+	 * Checks if `value` is classified as a typed array.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+	 * @example
+	 *
+	 * _.isTypedArray(new Uint8Array);
+	 * // => true
+	 *
+	 * _.isTypedArray([]);
+	 * // => false
+	 */
+	function isTypedArray(value) {
+	  return isObjectLike(value) && isLength(value.length) && !!typedArrayTags[objToString.call(value)];
+	}
+
+	module.exports = isTypedArray;
+
+
+/***/ },
+/* 698 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isStrictComparable = __webpack_require__(699),
+	    pairs = __webpack_require__(700);
+
+	/**
+	 * Gets the propery names, values, and compare flags of `object`.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @returns {Array} Returns the match data of `object`.
+	 */
+	function getMatchData(object) {
+	  var result = pairs(object),
+	      length = result.length;
+
+	  while (length--) {
+	    result[length][2] = isStrictComparable(result[length][1]);
+	  }
+	  return result;
+	}
+
+	module.exports = getMatchData;
+
+
+/***/ },
+/* 699 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isObject = __webpack_require__(644);
+
+	/**
+	 * Checks if `value` is suitable for strict equality comparisons, i.e. `===`.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` if suitable for strict
+	 *  equality comparisons, else `false`.
+	 */
+	function isStrictComparable(value) {
+	  return value === value && !isObject(value);
+	}
+
+	module.exports = isStrictComparable;
+
+
+/***/ },
+/* 700 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var keys = __webpack_require__(679),
+	    toObject = __webpack_require__(678);
+
+	/**
+	 * Creates a two dimensional array of the key-value pairs for `object`,
+	 * e.g. `[[key1, value1], [key2, value2]]`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Object
+	 * @param {Object} object The object to query.
+	 * @returns {Array} Returns the new array of key-value pairs.
+	 * @example
+	 *
+	 * _.pairs({ 'barney': 36, 'fred': 40 });
+	 * // => [['barney', 36], ['fred', 40]] (iteration order is not guaranteed)
+	 */
+	function pairs(object) {
+	  object = toObject(object);
+
+	  var index = -1,
+	      props = keys(object),
+	      length = props.length,
+	      result = Array(length);
+
+	  while (++index < length) {
+	    var key = props[index];
+	    result[index] = [key, object[key]];
+	  }
+	  return result;
+	}
+
+	module.exports = pairs;
+
+
+/***/ },
+/* 701 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseGet = __webpack_require__(702),
+	    baseIsEqual = __webpack_require__(691),
+	    baseSlice = __webpack_require__(703),
+	    isArray = __webpack_require__(662),
+	    isKey = __webpack_require__(704),
+	    isStrictComparable = __webpack_require__(699),
+	    last = __webpack_require__(705),
+	    toObject = __webpack_require__(678),
+	    toPath = __webpack_require__(706);
+
+	/**
+	 * The base implementation of `_.matchesProperty` which does not clone `srcValue`.
+	 *
+	 * @private
+	 * @param {string} path The path of the property to get.
+	 * @param {*} srcValue The value to compare.
+	 * @returns {Function} Returns the new function.
+	 */
+	function baseMatchesProperty(path, srcValue) {
+	  var isArr = isArray(path),
+	      isCommon = isKey(path) && isStrictComparable(srcValue),
+	      pathKey = (path + '');
+
+	  path = toPath(path);
+	  return function(object) {
+	    if (object == null) {
+	      return false;
+	    }
+	    var key = pathKey;
+	    object = toObject(object);
+	    if ((isArr || !isCommon) && !(key in object)) {
+	      object = path.length == 1 ? object : baseGet(object, baseSlice(path, 0, -1));
+	      if (object == null) {
+	        return false;
+	      }
+	      key = last(path);
+	      object = toObject(object);
+	    }
+	    return object[key] === srcValue
+	      ? (srcValue !== undefined || (key in object))
+	      : baseIsEqual(srcValue, object[key], undefined, true);
+	  };
+	}
+
+	module.exports = baseMatchesProperty;
+
+
+/***/ },
+/* 702 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var toObject = __webpack_require__(678);
+
+	/**
+	 * The base implementation of `get` without support for string paths
+	 * and default values.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @param {Array} path The path of the property to get.
+	 * @param {string} [pathKey] The key representation of path.
+	 * @returns {*} Returns the resolved value.
+	 */
+	function baseGet(object, path, pathKey) {
+	  if (object == null) {
+	    return;
+	  }
+	  if (pathKey !== undefined && pathKey in toObject(object)) {
+	    path = [pathKey];
+	  }
+	  var index = 0,
+	      length = path.length;
+
+	  while (object != null && index < length) {
+	    object = object[path[index++]];
+	  }
+	  return (index && index == length) ? object : undefined;
+	}
+
+	module.exports = baseGet;
+
+
+/***/ },
+/* 703 */
+/***/ function(module, exports) {
+
+	/**
+	 * The base implementation of `_.slice` without an iteratee call guard.
+	 *
+	 * @private
+	 * @param {Array} array The array to slice.
+	 * @param {number} [start=0] The start position.
+	 * @param {number} [end=array.length] The end position.
+	 * @returns {Array} Returns the slice of `array`.
+	 */
+	function baseSlice(array, start, end) {
+	  var index = -1,
+	      length = array.length;
+
+	  start = start == null ? 0 : (+start || 0);
+	  if (start < 0) {
+	    start = -start > length ? 0 : (length + start);
+	  }
+	  end = (end === undefined || end > length) ? length : (+end || 0);
+	  if (end < 0) {
+	    end += length;
+	  }
+	  length = start > end ? 0 : ((end - start) >>> 0);
+	  start >>>= 0;
+
+	  var result = Array(length);
+	  while (++index < length) {
+	    result[index] = array[index + start];
+	  }
+	  return result;
+	}
+
+	module.exports = baseSlice;
+
+
+/***/ },
+/* 704 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isArray = __webpack_require__(662),
+	    toObject = __webpack_require__(678);
+
+	/** Used to match property names within property paths. */
+	var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\n\\]|\\.)*?\1)\]/,
+	    reIsPlainProp = /^\w*$/;
+
+	/**
+	 * Checks if `value` is a property name and not a property path.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @param {Object} [object] The object to query keys on.
+	 * @returns {boolean} Returns `true` if `value` is a property name, else `false`.
+	 */
+	function isKey(value, object) {
+	  var type = typeof value;
+	  if ((type == 'string' && reIsPlainProp.test(value)) || type == 'number') {
+	    return true;
+	  }
+	  if (isArray(value)) {
+	    return false;
+	  }
+	  var result = !reIsDeepProp.test(value);
+	  return result || (object != null && value in toObject(object));
+	}
+
+	module.exports = isKey;
+
+
+/***/ },
+/* 705 */
+/***/ function(module, exports) {
+
+	/**
+	 * Gets the last element of `array`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Array
+	 * @param {Array} array The array to query.
+	 * @returns {*} Returns the last element of `array`.
+	 * @example
+	 *
+	 * _.last([1, 2, 3]);
+	 * // => 3
+	 */
+	function last(array) {
+	  var length = array ? array.length : 0;
+	  return length ? array[length - 1] : undefined;
+	}
+
+	module.exports = last;
+
+
+/***/ },
+/* 706 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseToString = __webpack_require__(707),
+	    isArray = __webpack_require__(662);
+
+	/** Used to match property names within property paths. */
+	var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\n\\]|\\.)*?)\2)\]/g;
+
+	/** Used to match backslashes in property paths. */
+	var reEscapeChar = /\\(\\)?/g;
+
+	/**
+	 * Converts `value` to property path array if it's not one.
+	 *
+	 * @private
+	 * @param {*} value The value to process.
+	 * @returns {Array} Returns the property path array.
+	 */
+	function toPath(value) {
+	  if (isArray(value)) {
+	    return value;
+	  }
+	  var result = [];
+	  baseToString(value).replace(rePropName, function(match, number, quote, string) {
+	    result.push(quote ? string.replace(reEscapeChar, '$1') : (number || match));
+	  });
+	  return result;
+	}
+
+	module.exports = toPath;
+
+
+/***/ },
+/* 707 */
+/***/ function(module, exports) {
+
+	/**
+	 * Converts `value` to a string if it's not one. An empty string is returned
+	 * for `null` or `undefined` values.
+	 *
+	 * @private
+	 * @param {*} value The value to process.
+	 * @returns {string} Returns the string.
+	 */
+	function baseToString(value) {
+	  return value == null ? '' : (value + '');
+	}
+
+	module.exports = baseToString;
+
+
+/***/ },
+/* 708 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var identity = __webpack_require__(639);
+
+	/**
+	 * A specialized version of `baseCallback` which only supports `this` binding
+	 * and specifying the number of arguments to provide to `func`.
+	 *
+	 * @private
+	 * @param {Function} func The function to bind.
+	 * @param {*} thisArg The `this` binding of `func`.
+	 * @param {number} [argCount] The number of arguments to provide to `func`.
+	 * @returns {Function} Returns the callback.
+	 */
+	function bindCallback(func, thisArg, argCount) {
+	  if (typeof func != 'function') {
+	    return identity;
+	  }
+	  if (thisArg === undefined) {
+	    return func;
+	  }
+	  switch (argCount) {
+	    case 1: return function(value) {
+	      return func.call(thisArg, value);
+	    };
+	    case 3: return function(value, index, collection) {
+	      return func.call(thisArg, value, index, collection);
+	    };
+	    case 4: return function(accumulator, value, index, collection) {
+	      return func.call(thisArg, accumulator, value, index, collection);
+	    };
+	    case 5: return function(value, other, key, object, source) {
+	      return func.call(thisArg, value, other, key, object, source);
+	    };
+	  }
+	  return function() {
+	    return func.apply(thisArg, arguments);
+	  };
+	}
+
+	module.exports = bindCallback;
+
+
+/***/ },
+/* 709 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseProperty = __webpack_require__(682),
+	    basePropertyDeep = __webpack_require__(710),
+	    isKey = __webpack_require__(704);
+
+	/**
+	 * Creates a function that returns the property value at `path` on a
+	 * given object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Utility
+	 * @param {Array|string} path The path of the property to get.
+	 * @returns {Function} Returns the new function.
+	 * @example
+	 *
+	 * var objects = [
+	 *   { 'a': { 'b': { 'c': 2 } } },
+	 *   { 'a': { 'b': { 'c': 1 } } }
+	 * ];
+	 *
+	 * _.map(objects, _.property('a.b.c'));
+	 * // => [2, 1]
+	 *
+	 * _.pluck(_.sortBy(objects, _.property(['a', 'b', 'c'])), 'a.b.c');
+	 * // => [1, 2]
+	 */
+	function property(path) {
+	  return isKey(path) ? baseProperty(path) : basePropertyDeep(path);
+	}
+
+	module.exports = property;
+
+
+/***/ },
+/* 710 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseGet = __webpack_require__(702),
+	    toPath = __webpack_require__(706);
+
+	/**
+	 * A specialized version of `baseProperty` which supports deep paths.
+	 *
+	 * @private
+	 * @param {Array|string} path The path of the property to get.
+	 * @returns {Function} Returns the new function.
+	 */
+	function basePropertyDeep(path) {
+	  var pathKey = (path + '');
+	  path = toPath(path);
+	  return function(object) {
+	    return baseGet(object, path, pathKey);
+	  };
+	}
+
+	module.exports = basePropertyDeep;
+
+
+/***/ },
+/* 711 */
+/***/ function(module, exports) {
+
+	/**
+	 * The base implementation of `_.find`, `_.findLast`, `_.findKey`, and `_.findLastKey`,
+	 * without support for callback shorthands and `this` binding, which iterates
+	 * over `collection` using the provided `eachFunc`.
+	 *
+	 * @private
+	 * @param {Array|Object|string} collection The collection to search.
+	 * @param {Function} predicate The function invoked per iteration.
+	 * @param {Function} eachFunc The function to iterate over `collection`.
+	 * @param {boolean} [retKey] Specify returning the key of the found element
+	 *  instead of the element itself.
+	 * @returns {*} Returns the found element or its key, else `undefined`.
+	 */
+	function baseFind(collection, predicate, eachFunc, retKey) {
+	  var result;
+	  eachFunc(collection, function(value, key, collection) {
+	    if (predicate(value, key, collection)) {
+	      result = retKey ? key : value;
+	      return false;
+	    }
+	  });
+	  return result;
+	}
+
+	module.exports = baseFind;
+
+
+/***/ },
+/* 712 */
+/***/ function(module, exports) {
+
+	/**
+	 * The base implementation of `_.findIndex` and `_.findLastIndex` without
+	 * support for callback shorthands and `this` binding.
+	 *
+	 * @private
+	 * @param {Array} array The array to search.
+	 * @param {Function} predicate The function invoked per iteration.
+	 * @param {boolean} [fromRight] Specify iterating from right to left.
+	 * @returns {number} Returns the index of the matched value, else `-1`.
+	 */
+	function baseFindIndex(array, predicate, fromRight) {
+	  var length = array.length,
+	      index = fromRight ? length : -1;
+
+	  while ((fromRight ? index-- : ++index < length)) {
+	    if (predicate(array[index], index, array)) {
+	      return index;
+	    }
+	  }
+	  return -1;
+	}
+
+	module.exports = baseFindIndex;
+
+
+/***/ },
+/* 713 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var assign = __webpack_require__(714),
+	    domEvent = __webpack_require__(484),
+	    domRemove = __webpack_require__(54);
+
+	function stopPropagation(event) {
+	  event.stopPropagation();
+	}
+
+
+	/**
+	 * Initializes a container div 'contentContainer' which contains an editable content div 'content'.
+	 *
+	 * @param {object} options
+	 * @param {DOMElement} options.container The DOM element to append the contentContainer to
+	 * @param {String} options.keyHandler
+	 */
+	function TextBox(options) {
+
+	  this.container = options.container;
+
+	  this.content = document.createElement('div');
+
+	  this.content.contentEditable = 'true';
+
+	  this.keyHandler = options.keyHandler || function() {};
+	}
+
+	module.exports = TextBox;
+
+
+	/**
+	 * Create a text box with the given position, size, style and text content
+	 *
+	 * @param {Object} bounds
+	 * @param {Number} bounds.x absolute x position
+	 * @param {Number} bounds.y absolute y position
+	 * @param {Number} [bounds.width] fixed width value
+	 * @param {Number} [bounds.height] fixed height value
+	 * @param {Number} [bounds.maxWidth] maximum width value
+	 * @param {Number} [bounds.maxHeight] maximum height value
+	 * @param {Number} [bounds.minWidth] minimum width value
+	 * @param {Number} [bounds.minHeight] minimum height value
+	 * @param {Object} [style]
+	 * @param {String} value text content
+	 *
+	 * @return {DOMElement} The created content DOM element
+	 */
+	TextBox.prototype.create = function(bounds, style, value) {
+
+	  var content = this.content,
+	      container = this.container;
+
+	  assign(content.style, {
+	    width: bounds.width + 'px',
+	    height: bounds.height + 'px',
+	    maxWidth: bounds.maxWidth + 'px',
+	    maxHeight: bounds.maxHeight + 'px',
+	    minWidth: bounds.minWidth + 'px',
+	    minHeight: bounds.minHeight + 'px',
+	    left: bounds.x + 'px',
+	    top: bounds.y + 'px',
+	    backgroundColor: '#ffffff',
+	    position: 'absolute',
+	    overflowY: 'auto',
+	    border: '1px solid #ccc',
+	    padding: '2px',
+	    wordWrap: 'normal',
+	    textAlign: 'center',
+	    outline: 'none'
+	  }, style || {});
+
+	  content.innerText = value;
+
+	  domEvent.bind(content, 'keydown', this.keyHandler);
+	  domEvent.bind(content, 'mousedown', stopPropagation);
+
+	  container.appendChild(content);
+
+	  var self = this;
+
+	  setTimeout(function() {
+	    if (content.parent) {
+	      content.select();
+	    }
+	    self.setCursor();
+	  }, 100);
+
+	  return content;
+	};
+
+
+	/**
+	 * Clear content and style of the textbox, unbind listeners and
+	 * reset CSS style.
+	 */
+	TextBox.prototype.destroy = function() {
+	  var content = this.content;
+
+	  // clear content
+	  content.innerText = '';
+
+	  // clear optional bounds values
+	  assign(content.style, {
+	    width: '',
+	    height: '',
+	    maxWidth: '',
+	    maxHeight: '',
+	    minWidth: '',
+	    minHeight: ''
+	  });
+
+	  domEvent.unbind(content, 'keydown', this.keyHandler);
+	  domEvent.unbind(content, 'mousedown', stopPropagation);
+
+	  domRemove(content);
+	};
+
+
+	TextBox.prototype.getValue = function() {
+	  return this.content.innerText;
+	};
+
+
+	/**
+	 * Set the cursor to the end of the text
+	 */
+	TextBox.prototype.setCursor = function() {
+
+	  // scroll to the bottom
+	  this.content.scrollTop = this.content.scrollHeight;
+
+	  var range = document.createRange();
+
+	  range.selectNodeContents(this.content);
+	  range.collapse(false);
+
+	  var selection = window.getSelection();
+
+	  selection.removeAllRanges();
+	  selection.addRange(range);
+	};
+
+
+/***/ },
+/* 714 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var assignWith = __webpack_require__(715),
+	    baseAssign = __webpack_require__(716),
+	    createAssigner = __webpack_require__(718);
+
+	/**
+	 * Assigns own enumerable properties of source object(s) to the destination
+	 * object. Subsequent sources overwrite property assignments of previous sources.
+	 * If `customizer` is provided it's invoked to produce the assigned values.
+	 * The `customizer` is bound to `thisArg` and invoked with five arguments:
+	 * (objectValue, sourceValue, key, object, source).
+	 *
+	 * **Note:** This method mutates `object` and is based on
+	 * [`Object.assign`](http://ecma-international.org/ecma-262/6.0/#sec-object.assign).
+	 *
+	 * @static
+	 * @memberOf _
+	 * @alias extend
+	 * @category Object
+	 * @param {Object} object The destination object.
+	 * @param {...Object} [sources] The source objects.
+	 * @param {Function} [customizer] The function to customize assigned values.
+	 * @param {*} [thisArg] The `this` binding of `customizer`.
+	 * @returns {Object} Returns `object`.
+	 * @example
+	 *
+	 * _.assign({ 'user': 'barney' }, { 'age': 40 }, { 'user': 'fred' });
+	 * // => { 'user': 'fred', 'age': 40 }
+	 *
+	 * // using a customizer callback
+	 * var defaults = _.partialRight(_.assign, function(value, other) {
+	 *   return _.isUndefined(value) ? other : value;
+	 * });
+	 *
+	 * defaults({ 'user': 'barney' }, { 'age': 36 }, { 'user': 'fred' });
+	 * // => { 'user': 'barney', 'age': 36 }
+	 */
+	var assign = createAssigner(function(object, source, customizer) {
+	  return customizer
+	    ? assignWith(object, source, customizer)
+	    : baseAssign(object, source);
+	});
+
+	module.exports = assign;
+
+
+/***/ },
+/* 715 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var keys = __webpack_require__(679);
+
+	/**
+	 * A specialized version of `_.assign` for customizing assigned values without
+	 * support for argument juggling, multiple sources, and `this` binding `customizer`
+	 * functions.
+	 *
+	 * @private
+	 * @param {Object} object The destination object.
+	 * @param {Object} source The source object.
+	 * @param {Function} customizer The function to customize assigned values.
+	 * @returns {Object} Returns `object`.
+	 */
+	function assignWith(object, source, customizer) {
+	  var index = -1,
+	      props = keys(source),
+	      length = props.length;
+
+	  while (++index < length) {
+	    var key = props[index],
+	        value = object[key],
+	        result = customizer(value, source[key], key, object, source);
+
+	    if ((result === result ? (result !== value) : (value === value)) ||
+	        (value === undefined && !(key in object))) {
+	      object[key] = result;
+	    }
+	  }
+	  return object;
+	}
+
+	module.exports = assignWith;
+
+
+/***/ },
+/* 716 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseCopy = __webpack_require__(717),
+	    keys = __webpack_require__(679);
+
+	/**
+	 * The base implementation of `_.assign` without support for argument juggling,
+	 * multiple sources, and `customizer` functions.
+	 *
+	 * @private
+	 * @param {Object} object The destination object.
+	 * @param {Object} source The source object.
+	 * @returns {Object} Returns `object`.
+	 */
+	function baseAssign(object, source) {
+	  return source == null
+	    ? object
+	    : baseCopy(source, keys(source), object);
+	}
+
+	module.exports = baseAssign;
+
+
+/***/ },
+/* 717 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copies properties of `source` to `object`.
+	 *
+	 * @private
+	 * @param {Object} source The object to copy properties from.
+	 * @param {Array} props The property names to copy.
+	 * @param {Object} [object={}] The object to copy properties to.
+	 * @returns {Object} Returns `object`.
+	 */
+	function baseCopy(source, props, object) {
+	  object || (object = {});
+
+	  var index = -1,
+	      length = props.length;
+
+	  while (++index < length) {
+	    var key = props[index];
+	    object[key] = source[key];
+	  }
+	  return object;
+	}
+
+	module.exports = baseCopy;
+
+
+/***/ },
+/* 718 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var bindCallback = __webpack_require__(708),
+	    isIterateeCall = __webpack_require__(719),
+	    restParam = __webpack_require__(672);
+
+	/**
+	 * Creates a `_.assign`, `_.defaults`, or `_.merge` function.
+	 *
+	 * @private
+	 * @param {Function} assigner The function to assign values.
+	 * @returns {Function} Returns the new assigner function.
+	 */
+	function createAssigner(assigner) {
+	  return restParam(function(object, sources) {
+	    var index = -1,
+	        length = object == null ? 0 : sources.length,
+	        customizer = length > 2 ? sources[length - 2] : undefined,
+	        guard = length > 2 ? sources[2] : undefined,
+	        thisArg = length > 1 ? sources[length - 1] : undefined;
+
+	    if (typeof customizer == 'function') {
+	      customizer = bindCallback(customizer, thisArg, 5);
+	      length -= 2;
+	    } else {
+	      customizer = typeof thisArg == 'function' ? thisArg : undefined;
+	      length -= (customizer ? 1 : 0);
+	    }
+	    if (guard && isIterateeCall(sources[0], sources[1], guard)) {
+	      customizer = length < 3 ? undefined : customizer;
+	      length = 1;
+	    }
+	    while (++index < length) {
+	      var source = sources[index];
+	      if (source) {
+	        assigner(object, source, customizer);
+	      }
+	    }
+	    return object;
+	  });
+	}
+
+	module.exports = createAssigner;
+
+
+/***/ },
+/* 719 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isArrayLike = __webpack_require__(680),
+	    isIndex = __webpack_require__(666),
+	    isObject = __webpack_require__(644);
+
+	/**
+	 * Checks if the provided arguments are from an iteratee call.
+	 *
+	 * @private
+	 * @param {*} value The potential iteratee value argument.
+	 * @param {*} index The potential iteratee index or key argument.
+	 * @param {*} object The potential iteratee object argument.
+	 * @returns {boolean} Returns `true` if the arguments are from an iteratee call, else `false`.
+	 */
+	function isIterateeCall(value, index, object) {
+	  if (!isObject(object)) {
+	    return false;
+	  }
+	  var type = typeof index;
+	  if (type == 'number'
+	      ? (isArrayLike(object) && isIndex(index, object.length))
+	      : (type == 'string' && index in object)) {
+	    var other = object[index];
+	    return value === value ? (value === other) : (other !== other);
+	  }
+	  return false;
+	}
+
+	module.exports = isIterateeCall;
+
+
+/***/ },
+/* 720 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var UpdateLabelHandler = __webpack_require__(721);
+
+	var LabelUtil = __webpack_require__(591);
 
 	var is = __webpack_require__(443).is,
 	    isExpanded = __webpack_require__(442).isExpanded;
 
-
-	var MIN_BOUNDS = {
-	  width: 150,
-	  height: 50
-	};
-
+	var LINE_HEIGHT = 14,
+	    PADDING = 6;
 
 	function LabelEditingProvider(eventBus, canvas, directEditing, commandStack) {
 
+	  this._canvas = canvas;
+	  this._commandStack = commandStack;
+
 	  directEditing.registerProvider(this);
+
 	  commandStack.registerHandler('element.updateLabel', UpdateLabelHandler);
 
 	  // listen to dblclick on non-root elements
@@ -66455,9 +65387,6 @@ var InfoxBpmnModeler =
 	  eventBus.on([ 'commandStack.changed' ], function() {
 	    directEditing.cancel();
 	  });
-
-
-	  // activate direct editing for activities and text annotations
 
 
 	  if ('ontouchstart' in document.documentElement) {
@@ -66483,9 +65412,6 @@ var InfoxBpmnModeler =
 	      }
 	    });
 	  }
-
-	  this._canvas = canvas;
-	  this._commandStack = commandStack;
 	}
 
 	LabelEditingProvider.$inject = [ 'eventBus', 'canvas', 'directEditing', 'commandStack' ];
@@ -66493,6 +65419,13 @@ var InfoxBpmnModeler =
 	module.exports = LabelEditingProvider;
 
 
+	/**
+	 * Activate direct editing for activities and text annotations.
+	 *
+	 * @param  {djs.model.Base} element
+	 *
+	 * @return {Object} an object with properties bounds (position and size) and text
+	 */
 	LabelEditingProvider.prototype.activate = function(element) {
 
 	  var text = LabelUtil.getLabel(element);
@@ -66501,68 +65434,108 @@ var InfoxBpmnModeler =
 	    return;
 	  }
 
-	  var bbox = this.getEditingBBox(element);
+	  var properties = this.getEditingBBox(element);
 
-	  // adjust for expanded pools AND lanes
-	  if ((is(element, 'bpmn:Participant') && isExpanded(element)) || is(element, 'bpmn:Lane')) {
+	  properties.text = text;
 
-	    bbox.width = MIN_BOUNDS.width;
-	    bbox.height = MIN_BOUNDS.height;
-
-	    bbox.x = bbox.x + 10 - bbox.width / 2;
-	    bbox.y = bbox.mid.y - bbox.height / 2;
-	  }
-
-	  // ajust minumum size for task and activities
-	  if ((is(element, 'bpmn:Task') || is(element, 'bpmn:Activity') )) {
-
-	    if (bbox.width < 100) {
-	      bbox.width = 100;
-	      bbox.x = bbox.mid.x - bbox.width / 2;
-	    }
-
-	    if (bbox.height < 80) {
-	      bbox.height = 80;
-	      bbox.y = bbox.mid.y - bbox.height / 2;
-	    }
-	  }
-
-	  // adjust for expanded sub processes and collapsed pools
-	  if ((is(element, 'bpmn:SubProcess') && isExpanded(element)) ||
-	    (is(element, 'bpmn:Participant') && !isExpanded(element))) {
-
-	    bbox.width = element.width;
-	    bbox.height = MIN_BOUNDS.height;
-
-	    bbox.x = bbox.mid.x - element.width / 2;
-	  }
-
-	  return { bounds: bbox, text: text };
+	  return properties;
 	};
 
 
-	LabelEditingProvider.prototype.getEditingBBox = function(element, maxBounds) {
+	/**
+	 * Get the editing bounding box based on the element's size and position
+	 *
+	 * @param  {djs.model.Base} element
+	 *
+	 * @return {Object} an object containing information about position and size (fixed or minimum and/or maximum)
+	 */
+	LabelEditingProvider.prototype.getEditingBBox = function(element) {
+	  var canvas = this._canvas;
 
 	  var target = element.label || element;
 
-	  var bbox = this._canvas.getAbsoluteBBox(target);
+	  var bbox = canvas.getAbsoluteBBox(target);
 
 	  var mid = {
 	    x: bbox.x + bbox.width / 2,
 	    y: bbox.y + bbox.height / 2
 	  };
 
-	  // external label
-	  if (target.labelTarget) {
-	    bbox.width = Math.max(bbox.width, MIN_BOUNDS.width);
-	    bbox.height = Math.max(bbox.height, MIN_BOUNDS.height);
+	  // default position
+	  var bounds = { x: bbox.x, y: bbox.y };
 
-	    bbox.x = mid.x - bbox.width / 2;
+	  var style = {},
+	      zoom;
+
+	  // adjust for expanded pools AND lanes
+	  if ((is(element, 'bpmn:Participant') && isExpanded(element)) || is(element, 'bpmn:Lane')) {
+
+	    bounds.width = 150;
+	    bounds.minHeight = LINE_HEIGHT + PADDING;
+	    bounds.maxHeight = LINE_HEIGHT * 2 + PADDING;
+	    bounds.x = bbox.x - bounds.width / 2;
+	    bounds.y = mid.y - bounds.minHeight / 2;
 	  }
 
-	  bbox.mid = mid;
 
-	  return bbox;
+	  // internal labels for tasks and collapsed call activities, sub processes and participants
+	  if (
+	    is(element, 'bpmn:Task') ||
+	    (is(element, 'bpmn:CallActivity') && !isExpanded(element)) ||
+	    (is(element, 'bpmn:SubProcess') && !isExpanded(element)) ||
+	    (is(element, 'bpmn:Participant') && !isExpanded(element))
+	  ) {
+
+	    zoom = canvas.zoom();
+
+	    // fixed size for internal labels:
+	    // on high zoom levels: text box size === bbox size
+	    // on low zoom levels: text box size === bbox size at 100% zoom
+	    // This ensures minimum bounds at low zoom levels
+	    if (zoom > 1) {
+	      bounds.width = bbox.width;
+	      bounds.height = bbox.height;
+	    } else {
+	      bounds.width = bbox.width / zoom;
+	      bounds.height = bbox.height / zoom;
+	    }
+
+	    // centering overlapping text box size at low zoom levels
+	    if (zoom < 1) {
+	      bounds.x = bbox.x - (bounds.width / 2 - bbox.width / 2);
+	      bounds.y = bbox.y - (bounds.height / 2 - bbox.height / 2);
+	    }
+
+	  }
+
+
+	  // internal labels for expanded sub processes
+	  if (is(element, 'bpmn:SubProcess') && isExpanded(element)) {
+
+	    bounds.width = element.width;
+	    bounds.maxHeight = 3 * LINE_HEIGHT + PADDING; // maximum 3 lines
+	    bounds.x = mid.x - element.width / 2;
+	  }
+
+
+	  // external labels for events, data elements, gateways and connections
+	  if (target.labelTarget) {
+
+	    bounds.width = 150;
+	    bounds.minHeight = LINE_HEIGHT + PADDING; // 1 line
+	    bounds.x = mid.x - bounds.width / 2;
+	  }
+
+
+	  // text annotations
+	  if (is(element, 'bpmn:TextAnnotation')) {
+	    bounds.minWidth = 100;
+	    bounds.height = element.height;
+
+	    style.textAlign = 'left';
+	  }
+
+	  return { bounds: bounds, style: style };
 	};
 
 
@@ -66575,12 +65548,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 726 */
+/* 721 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var LabelUtil = __webpack_require__(589);
+	var LabelUtil = __webpack_require__(591);
 
 
 	/**
@@ -66626,2387 +65599,7 @@ var InfoxBpmnModeler =
 	module.exports = UpdateLabelHandler;
 
 /***/ },
-/* 727 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __init__: [ 'modeling', 'bpmnUpdater' ],
-	  __depends__: [
-	    __webpack_require__(728),
-	    __webpack_require__(710),
-	    __webpack_require__(751),
-	    __webpack_require__(754),
-	    __webpack_require__(695),
-	    __webpack_require__(711),
-	    __webpack_require__(759),
-	    __webpack_require__(761),
-	    __webpack_require__(763),
-	    __webpack_require__(452),
-	    __webpack_require__(723),
-	    __webpack_require__(563)
-	  ],
-	  bpmnFactory: [ 'type', __webpack_require__(768) ],
-	  bpmnUpdater: [ 'type', __webpack_require__(769) ],
-	  elementFactory: [ 'type', __webpack_require__(770) ],
-	  modeling: [ 'type', __webpack_require__(771) ],
-	  layouter: [ 'type', __webpack_require__(814) ],
-	  connectionDocking: [ 'type', __webpack_require__(819) ]
-	};
-
-
-/***/ },
-/* 728 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-	  __init__: [
-	    'appendBehavior',
-	    'copyPasteBehavior',
-	    'createBoundaryEventBehavior',
-	    'createDataObjectBehavior',
-	    'createOnFlowBehavior',
-	    'createParticipantBehavior',
-	    'dataInputAssociationBehavior',
-	    'deleteLaneBehavior',
-	    'importDockingFix',
-	    'labelBehavior',
-	    'modelingFeedback',
-	    'removeParticipantBehavior',
-	    'replaceConnectionBehavior',
-	    'replaceElementBehaviour',
-	    'resizeLaneBehavior',
-	    'unsetDefaultFlowBehavior',
-	    'updateFlowNodeRefsBehavior',
-	    'removeElementBehavior',
-	    'unclaimIdBehavior'
-	  ],
-	  appendBehavior: [ 'type', __webpack_require__(729) ],
-	  copyPasteBehavior: [ 'type', __webpack_require__(730) ],
-	  createBoundaryEventBehavior: [ 'type', __webpack_require__(731) ],
-	  createDataObjectBehavior: [ 'type', __webpack_require__(732) ],
-	  createOnFlowBehavior: [ 'type', __webpack_require__(733) ],
-	  createParticipantBehavior: [ 'type', __webpack_require__(734) ],
-	  dataInputAssociationBehavior: [ 'type', __webpack_require__(735) ],
-	  deleteLaneBehavior: [ 'type', __webpack_require__(736) ],
-	  importDockingFix: [ 'type', __webpack_require__(737) ],
-	  labelBehavior: [ 'type', __webpack_require__(738) ],
-	  modelingFeedback: [ 'type', __webpack_require__(742) ],
-	  removeParticipantBehavior: [ 'type', __webpack_require__(743) ],
-	  replaceConnectionBehavior: [ 'type', __webpack_require__(744) ],
-	  replaceElementBehaviour: [ 'type', __webpack_require__(745) ],
-	  resizeLaneBehavior: [ 'type', __webpack_require__(746) ],
-	  unsetDefaultFlowBehavior: [ 'type', __webpack_require__(747) ],
-	  updateFlowNodeRefsBehavior: [ 'type', __webpack_require__(748) ],
-	  removeElementBehavior: [ 'type', __webpack_require__(749) ],
-	  unclaimIdBehavior: [ 'type', __webpack_require__(750) ]
-	};
-
-
-/***/ },
-/* 729 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var inherits = __webpack_require__(3);
-
-	var is = __webpack_require__(443).is;
-
-	var CommandInterceptor = __webpack_require__(540);
-
-
-	function AppendBehavior(eventBus, elementFactory, bpmnRules) {
-
-	  CommandInterceptor.call(this, eventBus);
-
-	  // assign correct shape position unless already set
-
-	  this.preExecute('shape.append', function(context) {
-
-	    var source = context.source,
-	        shape = context.shape;
-
-	    if (!context.position) {
-
-	      if (is(shape, 'bpmn:TextAnnotation')) {
-	        context.position = {
-	          x: source.x + source.width / 2 + 75,
-	          y: source.y - (50) - shape.height / 2
-	        };
-	      } else {
-	        context.position = {
-	          x: source.x + source.width + 80 + shape.width / 2,
-	          y: source.y + source.height / 2
-	        };
-	      }
-	    }
-	  }, true);
-	}
-
-
-	AppendBehavior.$inject = [ 'eventBus', 'elementFactory', 'bpmnRules' ];
-
-	inherits(AppendBehavior, CommandInterceptor);
-
-	module.exports = AppendBehavior;
-
-/***/ },
-/* 730 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var inherits = __webpack_require__(3);
-
-	var forEach = __webpack_require__(415);
-
-	var is = __webpack_require__(443).is;
-
-	var CommandInterceptor = __webpack_require__(540);
-
-
-	function CopyPasteBehavior(eventBus, modeling, canvas) {
-
-	  CommandInterceptor.call(this, eventBus);
-
-	  this.preExecute('elements.paste', 1500, function(context) {
-	    var topParent = context.topParent;
-
-	    // always grab the latest root
-	    if (!topParent.parent) {
-	      context.topParent = canvas.getRootElement();
-	    }
-
-	    if (is(topParent, 'bpmn:Lane')) {
-	      do {
-	        // unwrap Lane -> LaneSet -> (Lane | FlowElementsContainer)
-	        topParent = context.topParent = topParent.parent;
-
-	      } while (is(topParent, 'bpmn:Lane') || !is(topParent, 'bpmn:Participant'));
-	    }
-	  }, true);
-
-	  this.postExecute('elements.paste', function(context) {
-
-	    var tree = context.tree,
-	        createdElements = tree.createdElements;
-
-	    forEach(createdElements, function(data) {
-	      var element = data.element,
-	          businessObject = element.businessObject,
-	          descriptor = data.descriptor,
-	          defaultFlow;
-
-	      if ((is(businessObject, 'bpmn:ExclusiveGateway') || is(businessObject, 'bpmn:InclusiveGateway') ||
-	           is(businessObject, 'bpmn:Activity')) && descriptor.default) {
-
-	        defaultFlow = createdElements[descriptor.default];
-
-	        // if the default flow wasn't created, means that it wasn't copied
-	        if (defaultFlow) {
-	          defaultFlow = defaultFlow.element;
-	        } else {
-	          defaultFlow = undefined;
-	        }
-
-	        delete element.default;
-
-	        modeling.updateProperties(element, { default: defaultFlow });
-	      }
-	    });
-	  }, true);
-	}
-
-
-	CopyPasteBehavior.$inject = [ 'eventBus', 'modeling', 'canvas' ];
-
-	inherits(CopyPasteBehavior, CommandInterceptor);
-
-	module.exports = CopyPasteBehavior;
-
-
-/***/ },
-/* 731 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var inherits = __webpack_require__(3);
-
-	var CommandInterceptor = __webpack_require__(540);
-
-	var is = __webpack_require__(443).is;
-
-
-	/**
-	 * BPMN specific create boundary event behavior
-	 */
-	function CreateBoundaryEventBehavior(eventBus, modeling, elementFactory, bpmnFactory) {
-
-	  CommandInterceptor.call(this, eventBus);
-
-	  /**
-	   * replace intermediate event with boundary event when
-	   * attaching it to a shape
-	   */
-
-	  this.preExecute('shape.create', function(context) {
-	    var shape = context.shape,
-	        host = context.host,
-	        businessObject,
-	        boundaryEvent;
-
-	    var attrs = {
-	      cancelActivity: true
-	    };
-
-	    if (host && is(shape, 'bpmn:IntermediateThrowEvent')) {
-	      attrs.attachedToRef = host.businessObject;
-
-	      businessObject = bpmnFactory.create('bpmn:BoundaryEvent', attrs);
-
-	      boundaryEvent = {
-	        type: 'bpmn:BoundaryEvent',
-	        businessObject: businessObject
-	      };
-
-	      context.shape = elementFactory.createShape(boundaryEvent);
-	    }
-	  }, true);
-	}
-
-	CreateBoundaryEventBehavior.$inject = [ 'eventBus', 'modeling', 'elementFactory', 'bpmnFactory' ];
-
-	inherits(CreateBoundaryEventBehavior, CommandInterceptor);
-
-	module.exports = CreateBoundaryEventBehavior;
-
-
-/***/ },
-/* 732 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var inherits = __webpack_require__(3);
-
-	var CommandInterceptor = __webpack_require__(540);
-
-	var is = __webpack_require__(443).is;
-
-	/**
-	 * BPMN specific create data object behavior
-	 */
-	function CreateDataObjectBehavior(eventBus, bpmnFactory, moddle) {
-
-	  CommandInterceptor.call(this, eventBus);
-
-	  this.preExecute('shape.create', function(event) {
-
-	    var context = event.context,
-	        shape = context.shape;
-
-	    if (is(shape, 'bpmn:DataObjectReference') && shape.type !== 'label') {
-
-	      // create a DataObject every time a DataObjectReference is created
-	      var dataObject = bpmnFactory.create('bpmn:DataObject');
-
-	      // set the reference to the DataObject
-	      shape.businessObject.dataObjectRef = dataObject;
-	    }
-	  });
-
-	}
-
-	CreateDataObjectBehavior.$inject = [ 'eventBus', 'bpmnFactory', 'moddle' ];
-
-	inherits(CreateDataObjectBehavior, CommandInterceptor);
-
-	module.exports = CreateDataObjectBehavior;
-
-
-/***/ },
-/* 733 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var inherits = __webpack_require__(3);
-
-	var assign = __webpack_require__(7);
-
-	var CommandInterceptor = __webpack_require__(540);
-
-	var getApproxIntersection = __webpack_require__(513).getApproxIntersection;
-
-
-	function copy(obj) {
-	  return assign({}, obj);
-	}
-
-	function CreateOnFlowBehavior(eventBus, bpmnRules, modeling) {
-
-	  CommandInterceptor.call(this, eventBus);
-
-	  /**
-	   * Reconnect start / end of a connection after
-	   * dropping an element on a flow.
-	   */
-
-	  this.preExecute('shape.create', function(context) {
-
-	    var parent = context.parent,
-	        shape = context.shape;
-
-	    if (bpmnRules.canInsert(shape, parent)) {
-	      context.targetFlow = parent;
-	      context.parent = parent.parent;
-	    }
-	  }, true);
-
-
-	  this.postExecute('shape.create', function(context) {
-
-	    var shape = context.shape,
-	        targetFlow = context.targetFlow,
-	        position = context.position,
-	        source,
-	        target,
-	        reconnected,
-	        intersection,
-	        waypoints,
-	        waypointsBefore,
-	        waypointsAfter,
-	        dockingPoint;
-
-	    if (targetFlow) {
-
-	      waypoints = targetFlow.waypoints;
-
-
-	      intersection = getApproxIntersection(waypoints, position);
-
-	      if (intersection) {
-	        waypointsBefore = waypoints.slice(0, intersection.index);
-	        waypointsAfter = waypoints.slice(intersection.index + (intersection.bendpoint ? 1 : 0));
-
-	        dockingPoint = intersection.bendpoint ? waypoints[intersection.index] : position;
-
-	        waypointsBefore.push(copy(dockingPoint));
-	        waypointsAfter.unshift(copy(dockingPoint));
-	      }
-
-	      source = targetFlow.source;
-	      target = targetFlow.target;
-
-	      if (bpmnRules.canConnect(source, shape, targetFlow)) {
-	        // reconnect source -> inserted shape
-	        modeling.reconnectEnd(targetFlow, shape, waypointsBefore || copy(position));
-
-	        reconnected = true;
-	      }
-
-	      if (bpmnRules.canConnect(shape, target, targetFlow)) {
-
-	        if (!reconnected) {
-	          // reconnect inserted shape -> end
-	          modeling.reconnectStart(targetFlow, shape, waypointsAfter || copy(position));
-	        } else {
-	          modeling.connect(shape, target, { type: targetFlow.type, waypoints: waypointsAfter });
-	        }
-	      }
-	    }
-	  }, true);
-	}
-
-	inherits(CreateOnFlowBehavior, CommandInterceptor);
-
-	CreateOnFlowBehavior.$inject = [ 'eventBus', 'bpmnRules', 'modeling' ];
-
-	module.exports = CreateOnFlowBehavior;
-
-
-/***/ },
-/* 734 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var inherits = __webpack_require__(3);
-
-	var CommandInterceptor = __webpack_require__(540);
-
-	var is = __webpack_require__(443).is;
-
-	/**
-	 * BPMN specific create participant behavior
-	 */
-	function CreateParticipantBehavior(eventBus, modeling, elementFactory, bpmnFactory, canvas) {
-
-	  CommandInterceptor.call(this, eventBus);
-
-	  /**
-	   * morph process into collaboration before adding
-	   * participant onto collaboration
-	   */
-
-	  this.preExecute('shape.create', function(context) {
-
-	    var parent = context.parent,
-	        shape = context.shape,
-	        position = context.position;
-
-	    var rootElement = canvas.getRootElement();
-
-	    if (is(parent, 'bpmn:Process') && is(shape, 'bpmn:Participant') && !is(rootElement, 'bpmn:Collaboration')) {
-
-	      // this is going to detach the process root
-	      // and set the returned collaboration element
-	      // as the new root element
-	      var collaborationElement = modeling.makeCollaboration();
-
-	      // monkey patch the create context
-	      // so that the participant is being dropped
-	      // onto the new collaboration root instead
-	      context.position = position;
-	      context.parent = collaborationElement;
-
-	      context.processRoot = parent;
-	    }
-	  }, true);
-
-
-	  this.execute('shape.create', function(context) {
-
-	    var processRoot = context.processRoot,
-	        shape = context.shape;
-
-	    if (processRoot) {
-	      context.oldProcessRef = shape.businessObject.processRef;
-
-	      // assign the participant processRef
-	      shape.businessObject.processRef = processRoot.businessObject;
-	    }
-	  }, true);
-
-
-	  this.revert('shape.create', function(context) {
-	    var processRoot = context.processRoot,
-	        shape = context.shape;
-
-	    if (processRoot) {
-	      // assign the participant processRef
-	      shape.businessObject.processRef = context.oldProcessRef;
-	    }
-	  }, true);
-
-
-	  this.postExecute('shape.create', function(context) {
-
-	    var processRoot = context.processRoot,
-	        shape = context.shape;
-
-	    if (processRoot) {
-	      // process root is already detached at this point
-	      var processChildren = processRoot.children.slice();
-	      modeling.moveElements(processChildren, { x: 0, y: 0 }, shape);
-	    }
-
-	  }, true);
-
-	}
-
-	CreateParticipantBehavior.$inject = [ 'eventBus', 'modeling', 'elementFactory', 'bpmnFactory', 'canvas' ];
-
-	inherits(CreateParticipantBehavior, CommandInterceptor);
-
-	module.exports = CreateParticipantBehavior;
-
-
-/***/ },
-/* 735 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var inherits = __webpack_require__(3);
-
-	var CommandInterceptor = __webpack_require__(540);
-
-	var Collections = __webpack_require__(136);
-
-	var find = __webpack_require__(411);
-
-	var is = __webpack_require__(443).is;
-
-	var TARGET_REF_PLACEHOLDER_NAME = '__targetRef_placeholder';
-
-
-	/**
-	 * This behavior makes sure we always set a fake
-	 * DataInputAssociation#targetRef as demanded by the BPMN 2.0
-	 * XSD schema.
-	 *
-	 * The reference is set to a bpmn:Property{ name: '__targetRef_placeholder' }
-	 * which is created on the fly and cleaned up afterwards if not needed
-	 * anymore.
-	 *
-	 * @param {EventBus} eventBus
-	 * @param {BpmnFactory} bpmnFactory
-	 */
-	function DataInputAssociationBehavior(eventBus, bpmnFactory) {
-
-	  CommandInterceptor.call(this, eventBus);
-
-
-	  this.executed([
-	    'connection.create',
-	    'connection.delete',
-	    'connection.move',
-	    'connection.reconnectEnd'
-	  ], ifDataInputAssociation(fixTargetRef));
-
-	  this.reverted([
-	    'connection.create',
-	    'connection.delete',
-	    'connection.move',
-	    'connection.reconnectEnd'
-	  ], ifDataInputAssociation(fixTargetRef));
-
-
-	  function usesTargetRef(element, targetRef, removedConnection) {
-
-	    var inputAssociations = element.get('dataInputAssociations');
-
-	    return find(inputAssociations, function(association) {
-	      return association !== removedConnection &&
-	             association.targetRef === targetRef;
-	    });
-	  }
-
-	  function getTargetRef(element, create) {
-
-	    var properties = element.get('properties');
-
-	    var targetRefProp = find(properties, function(p) {
-	      return p.name === TARGET_REF_PLACEHOLDER_NAME;
-	    });
-
-	    if (!targetRefProp && create) {
-	      targetRefProp = bpmnFactory.create('bpmn:Property', {
-	        name: TARGET_REF_PLACEHOLDER_NAME
-	      });
-
-	      Collections.add(properties, targetRefProp);
-	    }
-
-	    return targetRefProp;
-	  }
-
-	  function cleanupTargetRef(element, connection) {
-
-	    var targetRefProp = getTargetRef(element);
-
-	    if (!targetRefProp) {
-	      return;
-	    }
-
-	    if (!usesTargetRef(element, targetRefProp, connection)) {
-	      Collections.remove(element.get('properties'), targetRefProp);
-	    }
-	  }
-
-	  /**
-	   * Make sure targetRef is set to a valid property or
-	   * `null` if the connection is detached.
-	   *
-	   * @param {Event} event
-	   */
-	  function fixTargetRef(event) {
-
-	    var context = event.context,
-	        connection = context.connection,
-	        connectionBo = connection.businessObject,
-	        target = connection.target,
-	        targetBo = target && target.businessObject,
-	        newTarget = context.newTarget,
-	        newTargetBo = newTarget && newTarget.businessObject,
-	        oldTarget = context.oldTarget || context.target,
-	        oldTargetBo = oldTarget && oldTarget.businessObject;
-
-	    var dataAssociation = connection.businessObject,
-	        targetRefProp;
-
-	    if (oldTargetBo && oldTargetBo !== targetBo) {
-	      cleanupTargetRef(oldTargetBo, connectionBo);
-	    }
-
-	    if (newTargetBo && newTargetBo !== targetBo) {
-	      cleanupTargetRef(newTargetBo, connectionBo);
-	    }
-
-	    if (targetBo) {
-	      targetRefProp = getTargetRef(targetBo, true);
-	      dataAssociation.targetRef = targetRefProp;
-	    } else {
-	      dataAssociation.targetRef = null;
-	    }
-	  }
-	}
-
-	DataInputAssociationBehavior.$inject = [ 'eventBus', 'bpmnFactory' ];
-
-	inherits(DataInputAssociationBehavior, CommandInterceptor);
-
-	module.exports = DataInputAssociationBehavior;
-
-
-	/**
-	 * Only call the given function when the event
-	 * touches a bpmn:DataInputAssociation.
-	 *
-	 * @param {Function} fn
-	 * @return {Function}
-	 */
-	function ifDataInputAssociation(fn) {
-
-	  return function(event) {
-	    var context = event.context,
-	        connection = context.connection;
-
-	    if (is(connection, 'bpmn:DataInputAssociation')) {
-	      return fn(event);
-	    }
-	  };
-	}
-
-/***/ },
-/* 736 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var inherits = __webpack_require__(3);
-
-	var CommandInterceptor = __webpack_require__(540);
-
-	var is = __webpack_require__(443).is;
-
-	var getChildLanes = __webpack_require__(704).getChildLanes;
-
-	var eachElement = __webpack_require__(137).eachElement;
-
-
-	var LOW_PRIORITY = 500;
-
-
-	/**
-	 * BPMN specific delete lane behavior
-	 */
-	function DeleteLaneBehavior(eventBus, modeling, spaceTool) {
-
-	  CommandInterceptor.call(this, eventBus);
-
-
-	  function compensateLaneDelete(shape, oldParent) {
-
-	    var siblings = getChildLanes(oldParent);
-
-	    var topAffected = [];
-	    var bottomAffected = [];
-
-	    eachElement(siblings, function(element) {
-
-	      if (element.y > shape.y) {
-	        bottomAffected.push(element);
-	      } else {
-	        topAffected.push(element);
-	      }
-
-	      return element.children;
-	    });
-
-	    if (!siblings.length) {
-	      return;
-	    }
-
-	    var offset;
-
-	    if (bottomAffected.length && topAffected.length) {
-	      offset = shape.height / 2;
-	    } else {
-	      offset = shape.height;
-	    }
-
-	    var topAdjustments,
-	        bottomAdjustments;
-
-	    if (topAffected.length) {
-	      topAdjustments = spaceTool.calculateAdjustments(
-	        topAffected, 'y', offset, shape.y - 10);
-
-	      spaceTool.makeSpace(
-	        topAdjustments.movingShapes,
-	        topAdjustments.resizingShapes,
-	        { x: 0, y: offset }, 's');
-	    }
-
-	    if (bottomAffected.length) {
-	      bottomAdjustments = spaceTool.calculateAdjustments(
-	        bottomAffected, 'y', -offset, shape.y + shape.height + 10);
-
-	      spaceTool.makeSpace(
-	        bottomAdjustments.movingShapes,
-	        bottomAdjustments.resizingShapes,
-	        { x: 0, y: -offset }, 'n');
-	    }
-	  }
-
-
-	  /**
-	   * Adjust sizes of other lanes after lane deletion
-	   */
-	  this.postExecuted('shape.delete', LOW_PRIORITY, function(event) {
-
-	    var context = event.context,
-	        hints = context.hints,
-	        shape = context.shape,
-	        oldParent = context.oldParent;
-
-	    // only compensate lane deletes
-	    if (!is(shape, 'bpmn:Lane')) {
-	      return;
-	    }
-
-	    // compensate root deletes only
-	    if (hints && hints.nested) {
-	      return;
-	    }
-
-	    compensateLaneDelete(shape, oldParent);
-	  });
-	}
-
-	DeleteLaneBehavior.$inject = [ 'eventBus', 'modeling', 'spaceTool' ];
-
-	inherits(DeleteLaneBehavior, CommandInterceptor);
-
-	module.exports = DeleteLaneBehavior;
-
-/***/ },
-/* 737 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var getMid = __webpack_require__(516).getMid;
-
-
-	/**
-	 * Fix broken dockings after DI imports.
-	 *
-	 * @param {EventBus} eventBus
-	 */
-	function ImportDockingFix(eventBus) {
-
-	  function adjustDocking(startPoint, nextPoint, elementMid) {
-
-	    var elementTop = {
-	      x: elementMid.x,
-	      y: elementMid.y - 50
-	    };
-
-	    var elementLeft = {
-	      x: elementMid.x - 50,
-	      y: elementMid.y
-	    };
-
-	    var verticalIntersect = lineIntersect(startPoint, nextPoint, elementMid, elementTop),
-	        horizontalIntersect = lineIntersect(startPoint, nextPoint, elementMid, elementLeft);
-
-	    // original is horizontal or vertical center cross intersection
-	    var centerIntersect;
-
-	    if (verticalIntersect && horizontalIntersect) {
-	      if (getDistance(verticalIntersect, elementMid) > getDistance(horizontalIntersect, elementMid)) {
-	        centerIntersect = horizontalIntersect;
-	      } else {
-	        centerIntersect = verticalIntersect;
-	      }
-	    } else {
-	      centerIntersect = verticalIntersect || horizontalIntersect;
-	    }
-
-	    startPoint.original = centerIntersect;
-	  }
-
-	  function fixDockings(connection) {
-	    var waypoints = connection.waypoints;
-
-	    adjustDocking(
-	      waypoints[0],
-	      waypoints[1],
-	      getMid(connection.source)
-	    );
-
-	    adjustDocking(
-	      waypoints[waypoints.length - 1],
-	      waypoints[waypoints.length - 2],
-	      getMid(connection.target)
-	    );
-	  }
-
-	  eventBus.on('bpmnElement.added', function(e) {
-
-	    var element = e.element;
-
-	    if (element.waypoints) {
-	      fixDockings(element);
-	    }
-	  });
-	}
-
-	ImportDockingFix.$inject = [ 'eventBus' ];
-
-	module.exports = ImportDockingFix;
-
-
-	/////// helpers //////////////////////////////////
-
-	function lineIntersect(l1s, l1e, l2s, l2e) {
-	  // if the lines intersect, the result contains the x and y of the
-	  // intersection (treating the lines as infinite) and booleans for
-	  // whether line segment 1 or line segment 2 contain the point
-	  var denominator, a, b, c, numerator;
-
-	  denominator = ((l2e.y - l2s.y) * (l1e.x - l1s.x)) - ((l2e.x - l2s.x) * (l1e.y - l1s.y));
-
-	  if (denominator == 0) {
-	    return null;
-	  }
-
-	  a = l1s.y - l2s.y;
-	  b = l1s.x - l2s.x;
-	  numerator = ((l2e.x - l2s.x) * a) - ((l2e.y - l2s.y) * b);
-
-	  c = numerator / denominator;
-
-	  // if we cast these lines infinitely in
-	  // both directions, they intersect here
-	  return {
-	    x: Math.round(l1s.x + (c * (l1e.x - l1s.x))),
-	    y: Math.round(l1s.y + (c * (l1e.y - l1s.y)))
-	  };
-	}
-
-	function getDistance(p1, p2) {
-	  return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
-	}
-
-/***/ },
-/* 738 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var assign = __webpack_require__(7),
-	    inherits = __webpack_require__(3);
-
-	var LabelUtil = __webpack_require__(451),
-	    LabelLayoutUtil = __webpack_require__(739),
-	    ModelUtil = __webpack_require__(443),
-	    is = ModelUtil.is,
-	    getBusinessObject = ModelUtil.getBusinessObject;
-
-	var hasExternalLabel = LabelUtil.hasExternalLabel,
-	    getExternalLabelMid = LabelUtil.getExternalLabelMid,
-	    getLabelAdjustment = LabelLayoutUtil.getLabelAdjustment;
-
-	var CommandInterceptor = __webpack_require__(540);
-
-
-	/**
-	 * A component that makes sure that external labels are added
-	 * together with respective elements and properly updated (DI wise)
-	 * during move.
-	 *
-	 * @param {EventBus} eventBus
-	 * @param {Modeling} modeling
-	 * @param {BpmnFactory} bpmnFactory
-	 */
-	function LabelSupport(eventBus, modeling, bpmnFactory) {
-
-	  CommandInterceptor.call(this, eventBus);
-
-
-	  ///// create external labels on shape creation
-
-	  this.postExecute([ 'shape.create', 'connection.create' ], function(e) {
-	    var context = e.context;
-
-	    var element = context.shape || context.connection,
-	        businessObject = element.businessObject;
-
-	    var position;
-
-	    if (hasExternalLabel(businessObject)) {
-	      position = getExternalLabelMid(element);
-
-	      modeling.createLabel(element, position, {
-	        id: businessObject.id + '_label',
-	        hidden: !businessObject.name,
-	        businessObject: businessObject
-	      });
-	    }
-	  });
-
-
-	  ///// update di information on label creation
-
-	  this.executed([ 'label.create' ], function(event) {
-
-	    var element = event.context.shape,
-	        businessObject,
-	        di;
-
-	    // we want to trigger on real labels only
-	    if (!element.labelTarget) {
-	      return;
-	    }
-
-	    // we want to trigger on BPMN elements only
-	    if (!is(element.labelTarget || element, 'bpmn:BaseElement')) {
-	      return;
-	    }
-
-	    businessObject = element.businessObject,
-	    di = businessObject.di;
-
-
-	    if (!di.label) {
-	      di.label = bpmnFactory.create('bpmndi:BPMNLabel', {
-	        bounds: bpmnFactory.create('dc:Bounds')
-	      });
-	    }
-
-	    assign(di.label.bounds, {
-	      x: element.x,
-	      y: element.y,
-	      width: element.width,
-	      height: element.height
-	    });
-	  });
-
-
-	  ///// update label position on connection change
-
-	  function getHiddenLabelAdjustment(event) {
-
-	    var context = event.context,
-	        connection = context.connection,
-	        label = connection.label;
-
-	    var labelPosition = getExternalLabelMid(connection);
-
-	    return {
-	      x: labelPosition.x - label.x - label.width / 2,
-	      y: labelPosition.y - label.y - label.height / 2
-	    };
-	  }
-
-	  function getVisibleLabelAdjustment(event) {
-
-	    var command = event.command,
-	        context = event.context,
-	        connection = context.connection,
-	        label = connection.label,
-	        hints = assign({}, context.hints),
-	        newWaypoints = context.newWaypoints || connection.waypoints,
-	        oldWaypoints = context.oldWaypoints;
-
-
-	    if (typeof hints.startChanged === 'undefined') {
-	      hints.startChanged = (command === 'connection.reconnectStart');
-	    }
-
-	    if (typeof hints.endChanged === 'undefined') {
-	      hints.endChanged = (command === 'connection.reconnectEnd');
-	    }
-
-	    return getLabelAdjustment(label, newWaypoints, oldWaypoints, hints);
-	  }
-
-	  this.postExecute([
-	    'connection.layout',
-	    'connection.reconnectEnd',
-	    'connection.reconnectStart',
-	    'connection.updateWaypoints'
-	  ], function(event) {
-
-	    var label = event.context.connection.label,
-	        labelAdjustment;
-
-	    if (!label) {
-	      return;
-	    }
-
-	    if (label.hidden) {
-	      labelAdjustment = getHiddenLabelAdjustment(event);
-	    } else {
-	      labelAdjustment = getVisibleLabelAdjustment(event);
-	    }
-
-	    modeling.moveShape(label, labelAdjustment);
-	  });
-
-
-	  ////// keep label position on shape replace
-
-	  this.postExecute([ 'shape.replace' ], function(event) {
-	    var context = event.context,
-	        newShape = context.newShape,
-	        oldShape = context.oldShape;
-
-	    var businessObject = getBusinessObject(newShape);
-
-	    if (businessObject && hasExternalLabel(businessObject)) {
-	      newShape.label.x = oldShape.label.x;
-	      newShape.label.y = oldShape.label.y;
-	    }
-	  });
-
-	}
-
-	inherits(LabelSupport, CommandInterceptor);
-
-	LabelSupport.$inject = [ 'eventBus', 'modeling', 'bpmnFactory' ];
-
-	module.exports = LabelSupport;
-
-
-/***/ },
-/* 739 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var GeometricUtil = __webpack_require__(740);
-
-	var getDistance = __webpack_require__(740).getDistancePointPoint;
-
-	var getAttachment = __webpack_require__(741).getAttachment;
-
-
-	function findNewLabelLineStartIndex(oldWaypoints, newWaypoints, attachment, hints) {
-
-	  var index = attachment.segmentIndex;
-
-	  var offset = newWaypoints.length - oldWaypoints.length;
-
-	  // segmentMove happend
-	  if (hints.segmentMove) {
-
-	    var oldSegmentStartIndex = hints.segmentMove.segmentStartIndex,
-	        newSegmentStartIndex = hints.segmentMove.newSegmentStartIndex;
-
-	    // if label was on moved segment return new segment index
-	    if (index === oldSegmentStartIndex) {
-	      return newSegmentStartIndex;
-	    }
-
-	    // label is after new segment index
-	    if (index >= newSegmentStartIndex) {
-	      return (index+offset < newSegmentStartIndex) ? newSegmentStartIndex : index+offset;
-	    }
-
-	    // if label is before new segment index
-	    return index;
-	  }
-
-	  // bendpointMove happend
-	  if (hints.bendpointMove) {
-
-	    var insert = hints.bendpointMove.insert,
-	        bendpointIndex = hints.bendpointMove.bendpointIndex,
-	        newIndex;
-
-	    // waypoints length didnt change
-	    if (offset === 0) {
-	      return index;
-	    }
-
-	    // label behind new/removed bendpoint
-	    if (index >= bendpointIndex) {
-	      newIndex = insert ? index + 1 : index - 1;
-	    }
-
-	    // label before new/removed bendpoint
-	    if (index < bendpointIndex) {
-
-	      newIndex = index;
-
-	      // decide label should take right or left segment
-	      if (insert && attachment.type !== 'bendpoint' && bendpointIndex-1 === index) {
-
-	        var rel = relativePositionMidWaypoint(newWaypoints, bendpointIndex);
-
-	        if (rel < attachment.relativeLocation) {
-	          newIndex++;
-	        }
-	      }
-	    }
-
-	    return newIndex;
-	  }
-
-	  // start/end changed
-	  if (offset === 0) {
-	    return index;
-	  }
-
-	  if (hints.connectionStart) {
-	    return (index === 0) ? 0 : null;
-	  }
-
-	  if (hints.connectionEnd) {
-	    return (index === oldWaypoints.length - 2) ? newWaypoints.length - 2 : null;
-	  }
-
-	  // if nothing fits, return null
-	  return null;
-	}
-
-	module.exports.findNewLabelLineStartIndex = findNewLabelLineStartIndex;
-
-
-	/**
-	 * Calculate the required adjustment (move delta) for the given label
-	 * after the connection waypoints got updated.
-	 *
-	 * @param {djs.model.Label} label
-	 * @param {Array<Point>} newWaypoints
-	 * @param {Array<Point>} oldWaypoints
-	 * @param {Object} hints
-	 *
-	 * @return {Point} delta
-	 */
-	function getLabelAdjustment(label, newWaypoints, oldWaypoints, hints) {
-
-	  var x = 0,
-	      y = 0;
-
-	  var labelPosition = getLabelMid(label);
-
-	  // get closest attachment
-	  var attachment = getAttachment(labelPosition, oldWaypoints),
-	      oldLabelLineIndex = attachment.segmentIndex,
-	      newLabelLineIndex = findNewLabelLineStartIndex(oldWaypoints, newWaypoints, attachment, hints);
-
-	  if ( newLabelLineIndex === null ) {
-	    return { x: x, y: y };
-	  }
-
-	  // should never happen
-	  // TODO(@janstuemmel): throw an error here when connectionSegmentMove is refactored
-	  if (newLabelLineIndex < 0 ||
-	      newLabelLineIndex > newWaypoints.length - 2) {
-	    return { x: x, y: y };
-	  }
-
-	  var oldLabelLine = getLine(oldWaypoints, oldLabelLineIndex),
-	      newLabelLine = getLine(newWaypoints, newLabelLineIndex),
-	      oldFoot = attachment.position;
-
-	  var relativeFootPosition = getRelativeFootPosition(oldLabelLine, oldFoot),
-	      angleDelta = getAngleDelta(oldLabelLine, newLabelLine);
-
-	  // special rule if label on bendpoint
-	  if (attachment.type === 'bendpoint') {
-
-	    var offset = newWaypoints.length - oldWaypoints.length,
-	        oldBendpointIndex = attachment.bendpointIndex,
-	        oldBendpoint = oldWaypoints[oldBendpointIndex];
-
-	    // bendpoint position hasnt changed, return same position
-	    if (newWaypoints.indexOf(oldBendpoint) !== -1) {
-	      return { x: x, y: y };
-	    }
-
-	    // new bendpoint and old bendpoint have same index, then just return the offset
-	    if (offset === 0) {
-	      var newBendpoint = newWaypoints[oldBendpointIndex];
-
-	      return {
-	        x: newBendpoint.x - attachment.position.x,
-	        y: newBendpoint.y - attachment.position.y
-	      };
-	    }
-
-	    // if bendpoints get removed
-	    if (offset < 0 && oldBendpointIndex !== 0 && oldBendpointIndex < oldWaypoints.length - 1) {
-	      relativeFootPosition = relativePositionMidWaypoint(oldWaypoints, oldBendpointIndex);
-	    }
-	  }
-
-	  var newFoot = {
-	    x: (newLabelLine[1].x - newLabelLine[0].x) * relativeFootPosition + newLabelLine[0].x,
-	    y: (newLabelLine[1].y - newLabelLine[0].y) * relativeFootPosition + newLabelLine[0].y
-	  };
-
-	  // the rotated vector to label
-	  var newLabelVector = GeometricUtil.rotateVector({
-	    x: labelPosition.x - oldFoot.x,
-	    y: labelPosition.y - oldFoot.y
-	  }, angleDelta);
-
-	  // the new relative position
-	  x = newFoot.x + newLabelVector.x - labelPosition.x;
-	  y = newFoot.y + newLabelVector.y - labelPosition.y;
-
-	  return { x: x, y: y };
-	}
-
-	module.exports.getLabelAdjustment = getLabelAdjustment;
-
-
-	//// HELPERS ///////
-
-	function relativePositionMidWaypoint(waypoints, idx) {
-
-	  var distanceSegment1 = getDistance(waypoints[idx-1], waypoints[idx]),
-	      distanceSegment2 = getDistance(waypoints[idx], waypoints[idx+1]);
-
-	  var relativePosition = distanceSegment1 / ( distanceSegment1 + distanceSegment2 );
-
-	  return relativePosition;
-
-	}
-
-	function getLabelMid(label) {
-	  return {
-	    x: label.x + label.width / 2,
-	    y: label.y + label.height / 2
-	  };
-	}
-
-	function getAngleDelta(l1, l2) {
-	  var a1 = GeometricUtil.getAngle(l1),
-	      a2 = GeometricUtil.getAngle(l2);
-	  return a2 - a1;
-	}
-
-	function getLine(waypoints, idx) {
-	  return [ waypoints[idx], waypoints[idx+1] ];
-	}
-
-	function getRelativeFootPosition(line, foot) {
-	  var length = GeometricUtil.getDistancePointPoint(line[0], line[1]),
-	      lengthToFoot = GeometricUtil.getDistancePointPoint(line[0], foot);
-	  return lengthToFoot / length;
-	}
-
-
-/***/ },
-/* 740 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	/**
-	 * Returns the length of a vector
-	 *
-	 * @param {Vector}
-	 * @return {Float}
-	 */
-	function vectorLength(v) {
-	  return Math.sqrt( Math.pow(v.x, 2) + Math.pow(v.y, 2) );
-	}
-
-	module.exports.vectorLength = vectorLength;
-
-	/**
-	 * Calculates the angle between a line a the yAxis
-	 *
-	 * @param {Array}
-	 * @return {Float}
-	 */
-	function getAngle(line) {
-	  // return value is between 0, 180 and -180, -0
-	  // @janstuemmel: maybe replace return a/b with b/a
-	  return Math.atan( (line[1].y - line[0].y) / (line[1].x - line[0].x) );
-	}
-
-	module.exports.getAngle = getAngle;
-
-	/**
-	 * Rotates a vector by a given angle
-	 *
-	 * @param {Vector}
-	 * @param {Float} Angle in radians
-	 * @return {Vector}
-	 */
-	function rotateVector(vector, angle) {
-	  return (!angle) ? vector : {
-	    x: Math.cos(angle) * vector.x - Math.sin(angle) * vector.y,
-	    y: Math.sin(angle) * vector.x + Math.cos(angle) * vector.y
-	  };
-	}
-
-	module.exports.rotateVector = rotateVector;
-
-	/**
-	 * Solves a 2D equation system
-	 * a + r*b = c, where a,b,c are 2D vectors
-	 *
-	 * @param {Vector}
-	 * @param {Vector}
-	 * @param {Vector}
-	 * @return {Float}
-	 */
-	function solveLambaSystem(a, b, c) {
-
-	  // the 2d system
-	  var system = [
-	    { n: a[0] - c[0], lambda: b[0] },
-	    { n: a[1] - c[1], lambda: b[1] }
-	  ];
-
-	  // solve
-	  var n = system[0].n * b[0] + system[1].n * b[1],
-	      l = system[0].lambda * b[0] + system[1].lambda * b[1];
-
-	  return -n/l;
-	}
-
-	/**
-	 * Position of perpendicular foot
-	 *
-	 * @param {Point}
-	 * @param [ {Point}, {Point} ] line defined throug two points
-	 * @return {Point} the perpendicular foot position
-	 */
-	function perpendicularFoot(point, line) {
-
-	  var a = line[0], b = line[1];
-
-	  // relative position of b from a
-	  var bd = { x: b.x - a.x, y: b.y - a.y };
-
-	  // solve equation system to the parametrized vectors param real value
-	  var r = solveLambaSystem( [ a.x, a.y ], [ bd.x, bd.y ], [ point.x, point.y ] );
-
-	  return { x: a.x + r*bd.x, y: a.y + r*bd.y };
-
-	}
-
-	module.exports.perpendicularFoot = perpendicularFoot;
-
-	/**
-	 * Calculates the distance between a point and a line
-	 *
-	 * @param {Point}
-	 * @param [ {Point}, {Point} ] line defined throug two points
-	 * @return {Float} distance
-	 */
-	function getDistancePointLine(point, line) {
-
-	  var pfPoint = perpendicularFoot(point, line);
-
-	  // distance vector
-	  var connectionVector = {
-	    x: pfPoint.x - point.x,
-	    y: pfPoint.y - point.y
-	  };
-
-	  return vectorLength(connectionVector);
-	}
-
-	module.exports.getDistancePointLine = getDistancePointLine;
-
-	/**
-	 * Calculates the distance between two points
-	 *
-	 * @param {Point}
-	 * @param {Point}
-	 * @return {Float} distance
-	 */
-	function getDistancePointPoint(point1, point2) {
-
-	  return vectorLength({
-	    x: point1.x - point2.x,
-	    y: point1.y - point2.y
-	  });
-	}
-
-	module.exports.getDistancePointPoint = getDistancePointPoint;
-
-
-/***/ },
-/* 741 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var sqrt = Math.sqrt,
-	    min = Math.min,
-	    max = Math.max;
-
-	/**
-	 * Calculate the square (power to two) of a number.
-	 *
-	 * @param {Number} n
-	 *
-	 * @return {Number}
-	 */
-	function sq(n) {
-	  return Math.pow(n, 2);
-	}
-
-	/**
-	 * Get distance between two points.
-	 *
-	 * @param {Point} p1
-	 * @param {Point} p2
-	 *
-	 * @return {Number}
-	 */
-	function getDistance(p1, p2) {
-	  return sqrt(sq(p1.x - p2.x) + sq(p1.y - p2.y));
-	}
-
-	/**
-	 * Return the attachment of the given point on the specified line.
-	 *
-	 * The attachment is either a bendpoint (attached to the given point)
-	 * or segment (attached to a location on a line segment) attachment:
-	 *
-	 * ```javascript
-	 * var pointAttachment = {
-	 *   type: 'bendpoint',
-	 *   bendpointIndex: 3,
-	 *   position: { x: 10, y: 10 } // the attach point on the line
-	 * };
-	 *
-	 * var segmentAttachment = {
-	 *   type: 'segment',
-	 *   segmentIndex: 2,
-	 *   relativeLocation: 0.31, // attach point location between 0 (at start) and 1 (at end)
-	 *   position: { x: 10, y: 10 } // the attach point on the line
-	 * };
-	 * ```
-	 *
-	 * @param {Point} point
-	 * @param {Array<Point>} line
-	 *
-	 * @return {Object} attachment
-	 */
-	function getAttachment(point, line) {
-
-	  var idx = 0,
-	      segmentStart,
-	      segmentEnd,
-	      segmentStartDistance,
-	      segmentEndDistance,
-	      attachmentPosition,
-	      minDistance,
-	      intersections,
-	      attachment,
-	      attachmentDistance,
-	      closestAttachmentDistance,
-	      closestAttachment;
-
-	  for (idx = 0; idx < line.length - 1; idx++) {
-
-	    segmentStart = line[idx];
-	    segmentEnd = line[idx + 1];
-
-	    if (pointsEqual(segmentStart, segmentEnd)) {
-	      continue;
-	    }
-
-	    segmentStartDistance = getDistance(point, segmentStart);
-	    segmentEndDistance = getDistance(point, segmentEnd);
-
-	    minDistance = min(segmentStartDistance, segmentEndDistance);
-
-	    intersections = getCircleSegmentIntersections(segmentStart, segmentEnd, point, minDistance);
-
-	    if (intersections.length < 1) {
-	      throw new Error('expected between [1, 2] circle -> line intersections');
-	    }
-
-	    // one intersection -> bendpoint attachment
-	    if (intersections.length === 1) {
-	      attachment = {
-	        type: 'bendpoint',
-	        position: intersections[0],
-	        segmentIndex: idx,
-	        bendpointIndex: pointsEqual(segmentStart, intersections[0]) ? idx : idx + 1
-	      };
-	    }
-
-	    // two intersections -> segment attachment
-	    if (intersections.length === 2) {
-
-	      attachmentPosition = mid(intersections[0], intersections[1]);
-
-	      attachment = {
-	        type: 'segment',
-	        position: attachmentPosition,
-	        segmentIndex: idx,
-	        relativeLocation: getDistance(segmentStart, attachmentPosition) / getDistance(segmentStart, segmentEnd)
-	      };
-	    }
-
-	    attachmentDistance = getDistance(attachment.position, point);
-
-	    if (!closestAttachment || closestAttachmentDistance > attachmentDistance) {
-	      closestAttachment = attachment;
-	      closestAttachmentDistance = attachmentDistance;
-	    }
-	  }
-
-	  return closestAttachment;
-	}
-
-	module.exports.getAttachment = getAttachment;
-
-	/**
-	 * Gets the intersection between a circle and a line segment.
-	 *
-	 * @param {Point} s1 segment start
-	 * @param {Point} s2 segment end
-	 * @param {Point} cc circle center
-	 * @param {Number} cr circle radius
-	 *
-	 * @return {Array<Point>} intersections
-	 */
-	function getCircleSegmentIntersections(s1, s2, cc, cr) {
-
-	  s1 = roundPoint(s1);
-	  s2 = roundPoint(s2);
-
-	  var baX = s2.x - s1.x;
-	  var baY = s2.y - s1.y;
-	  var caX = cc.x - s1.x;
-	  var caY = cc.y - s1.y;
-
-	  var a = baX * baX + baY * baY;
-	  var bBy2 = baX * caX + baY * caY;
-	  var c = caX * caX + caY * caY - cr * cr;
-
-	  var pBy2 = bBy2 / a;
-	  var q = c / a;
-
-	  var disc = pBy2 * pBy2 - q;
-	  if (disc < 0) {
-	    return [];
-	  }
-
-	  // if disc == 0 ... dealt with later
-	  var tmpSqrt = sqrt(disc);
-	  var abScalingFactor1 = -pBy2 + tmpSqrt;
-	  var abScalingFactor2 = -pBy2 - tmpSqrt;
-
-	  var i1 = {
-	    x: round(s1.x - baX * abScalingFactor1),
-	    y: round(s1.y - baY * abScalingFactor1)
-	  };
-
-	  if (disc === 0) { // abScalingFactor1 == abScalingFactor2
-	    return [ i1 ];
-	  }
-
-	  var i2 = {
-	    x: round(s1.x - baX * abScalingFactor2),
-	    y: round(s1.y - baY * abScalingFactor2)
-	  };
-
-	  return [ i1, i2 ].filter(function(p) {
-	    return isPointInSegment(p, s1, s2);
-	  });
-	}
-
-
-	function isPointInSegment(p, segmentStart, segmentEnd) {
-	  return (
-	    fenced(p.x, segmentStart.x, segmentEnd.x) &&
-	    fenced(p.y, segmentStart.y, segmentEnd.y)
-	  );
-	}
-
-	function fenced(n, rangeStart, rangeEnd) {
-	  return min(rangeStart, rangeEnd) <= n && n <= max(rangeStart, rangeEnd);
-	}
-
-	/**
-	 * Calculate mid of two points.
-	 *
-	 * @param {Point} p1
-	 * @param {Point} p2
-	 *
-	 * @return {Point}
-	 */
-	function mid(p1, p2) {
-
-	  return {
-	    x: (p1.x + p2.x) / 2,
-	    y: (p1.y + p2.y) / 2
-	  };
-	}
-
-	function round(n) {
-	  return Math.round(n * 1000) / 1000;
-	}
-
-	function roundPoint(p) {
-	  return {
-	    x: round(p.x),
-	    y: round(p.y)
-	  };
-	}
-
-	function pointsEqual(p1, p2) {
-	  return p1.x === p2.x && p1.y === p2.y;
-	}
-
-
-/***/ },
-/* 742 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var is = __webpack_require__(443).is;
-
-	var COLLAB_ERR_MSG = 'flow elements must be children of pools/participants',
-	    PROCESS_ERR_MSG = 'participants cannot be pasted onto a non-empty process diagram';
-
-	function ModelingFeedback(eventBus, tooltips, translate) {
-
-	  function showError(position, message, timeout) {
-	    tooltips.add({
-	      position: {
-	        x: position.x + 5,
-	        y: position.y + 5
-	      },
-	      type: 'error',
-	      timeout: timeout || 2000,
-	      html: '<div>' + message + '</div>'
-	    });
-	  }
-
-	  eventBus.on([ 'shape.move.rejected', 'create.rejected' ], function(event) {
-	    var context = event.context,
-	        shape = context.shape,
-	        target = context.target;
-
-	    if (is(target, 'bpmn:Collaboration') && is(shape, 'bpmn:FlowNode')) {
-	      showError(event, translate(COLLAB_ERR_MSG));
-	    }
-	  });
-
-	  eventBus.on([ 'elements.paste.rejected' ], function(event) {
-	    var context = event.context,
-	        position = context.position,
-	        target = context.target;
-
-	    if (is(target, 'bpmn:Collaboration')) {
-	      showError(position, translate(COLLAB_ERR_MSG));
-	    }
-
-	    if (is(target, 'bpmn:Process')) {
-	      showError(position, translate(PROCESS_ERR_MSG), 3000);
-	    }
-	  });
-	}
-
-
-	ModelingFeedback.$inject = [ 'eventBus', 'tooltips', 'translate' ];
-
-	module.exports = ModelingFeedback;
-
-
-/***/ },
-/* 743 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var inherits = __webpack_require__(3);
-
-	var CommandInterceptor = __webpack_require__(540);
-
-	var is = __webpack_require__(443).is;
-
-
-	/**
-	 * BPMN specific remove behavior
-	 */
-	function RemoveParticipantBehavior(eventBus, modeling) {
-
-	  CommandInterceptor.call(this, eventBus);
-
-
-	  /**
-	   * morph collaboration diagram into process diagram
-	   * after the last participant has been removed
-	   */
-
-	  this.preExecute('shape.delete', function(context) {
-
-	    var shape = context.shape,
-	        parent = shape.parent;
-
-	    // activate the behavior if the shape to be removed
-	    // is a participant
-	    if (is(shape, 'bpmn:Participant')) {
-	      context.collaborationRoot = parent;
-	    }
-	  }, true);
-
-	  this.postExecute('shape.delete', function(context) {
-
-	    var collaborationRoot = context.collaborationRoot;
-
-	    if (collaborationRoot && !collaborationRoot.businessObject.participants.length) {
-	      // replace empty collaboration with process diagram
-	      modeling.makeProcess();
-	    }
-	  }, true);
-
-	}
-
-	RemoveParticipantBehavior.$inject = [ 'eventBus', 'modeling' ];
-
-	inherits(RemoveParticipantBehavior, CommandInterceptor);
-
-	module.exports = RemoveParticipantBehavior;
-
-/***/ },
-/* 744 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var forEach = __webpack_require__(415),
-	    find = __webpack_require__(411),
-	    inherits = __webpack_require__(3);
-
-	var CommandInterceptor = __webpack_require__(540);
-
-	var is = __webpack_require__(443).is;
-
-	function ReplaceConnectionBehavior(eventBus, modeling, bpmnRules) {
-
-	  CommandInterceptor.call(this, eventBus);
-
-	  function fixConnection(connection) {
-
-	    var source = connection.source,
-	        target = connection.target,
-	        parent = connection.parent;
-
-	    // do not do anything if connection
-	    // is already deleted (may happen due to other
-	    // behaviors plugged-in before)
-	    if (!parent) {
-	      return;
-	    }
-
-	    var replacementType,
-	        remove;
-
-	    /**
-	     * Check if incoming or outgoing connections
-	     * can stay or could be substituted with an
-	     * appropriate replacement.
-	     *
-	     * This holds true for SequenceFlow <> MessageFlow.
-	     */
-
-	    if (is(connection, 'bpmn:SequenceFlow')) {
-	      if (!bpmnRules.canConnectSequenceFlow(source, target)) {
-	        remove = true;
-	      }
-
-	      if (bpmnRules.canConnectMessageFlow(source, target)) {
-	        replacementType = 'bpmn:MessageFlow';
-	      }
-	    }
-
-	    // transform message flows into sequence flows, if possible
-
-	    if (is(connection, 'bpmn:MessageFlow')) {
-
-	      if (!bpmnRules.canConnectMessageFlow(source, target)) {
-	        remove = true;
-	      }
-
-	      if (bpmnRules.canConnectSequenceFlow(source, target)) {
-	        replacementType = 'bpmn:SequenceFlow';
-	      }
-	    }
-
-	    if (is(connection, 'bpmn:Association') && !bpmnRules.canConnectAssociation(source, target)) {
-	      remove = true;
-	    }
-
-
-	    // remove invalid connection,
-	    // unless it has been removed already
-	    if (remove) {
-	      modeling.removeConnection(connection);
-	    }
-
-	    // replace SequenceFlow <> MessageFlow
-
-	    if (replacementType) {
-	      modeling.connect(source, target, {
-	        type: replacementType,
-	        waypoints: connection.waypoints.slice()
-	      });
-	    }
-	  }
-
-	  this.postExecuted('elements.move', function(context) {
-
-	    var closure = context.closure,
-	        allConnections = closure.allConnections;
-
-	    forEach(allConnections, fixConnection);
-	  }, true);
-
-	  this.postExecuted([
-	    'connection.reconnectStart',
-	    'connection.reconnectEnd'
-	  ], function(event) {
-
-	    var connection = event.context.connection;
-
-	    fixConnection(connection);
-	  });
-
-	  this.postExecuted('element.updateProperties', function(event) {
-	    var context = event.context,
-	        properties = context.properties,
-	        element = context.element,
-	        businessObject = element.businessObject,
-	        connection;
-
-	    // remove condition expression when morphing to default flow
-	    if (properties.default) {
-	      connection = find(element.outgoing, { id: element.businessObject.default.id });
-
-	      if (connection) {
-	        modeling.updateProperties(connection, { conditionExpression: undefined });
-	      }
-	    }
-
-	    // remove default property from source when morphing to conditional flow
-	    if (properties.conditionExpression && businessObject.sourceRef.default === businessObject) {
-	      modeling.updateProperties(element.source, { default: undefined });
-	    }
-	  });
-	}
-
-	inherits(ReplaceConnectionBehavior, CommandInterceptor);
-
-	ReplaceConnectionBehavior.$inject = [ 'eventBus', 'modeling', 'bpmnRules' ];
-
-	module.exports = ReplaceConnectionBehavior;
-
-
-/***/ },
-/* 745 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var inherits = __webpack_require__(3);
-
-	var CommandInterceptor = __webpack_require__(540);
-
-	var forEach = __webpack_require__(415);
-
-	var isEventSubProcess = __webpack_require__(442).isEventSubProcess;
-	var is = __webpack_require__(443).is;
-
-	/**
-	 * Defines the behaviour of what happens to the elements inside a container
-	 * that morphs into another BPMN element
-	 */
-	function ReplaceElementBehaviour(eventBus, bpmnReplace, bpmnRules, elementRegistry, selection, modeling) {
-	  CommandInterceptor.call(this, eventBus);
-
-	  this._bpmnReplace = bpmnReplace;
-	  this._elementRegistry = elementRegistry;
-	  this._selection = selection;
-	  this._modeling = modeling;
-
-	  this.postExecuted([ 'elements.move' ], 500, function(event) {
-
-	    var context = event.context,
-	        target = context.newParent,
-	        newHost = context.newHost,
-	        elements = [];
-
-	    forEach(context.closure.topLevel, function(topLevelElements) {
-	      if (isEventSubProcess(topLevelElements)) {
-	        elements = elements.concat(topLevelElements.children);
-	      } else {
-	        elements = elements.concat(topLevelElements);
-	      }
-	    });
-
-	    // Change target to host when the moving element is a `bpmn:BoundaryEvent`
-	    if (elements.length === 1 && newHost) {
-	      target = newHost;
-	    }
-
-	    var canReplace = bpmnRules.canReplace(elements, target);
-
-	    if (canReplace) {
-	      this.replaceElements(elements, canReplace.replacements, newHost);
-	    }
-	  }, this);
-
-	  // update attachments if the host is replaced
-	  this.postExecute([ 'shape.replace' ], 1500, function(e) {
-
-	    var context = e.context,
-	        oldShape = context.oldShape,
-	        newShape = context.newShape,
-	        attachers = oldShape.attachers,
-	        canReplace;
-
-	    if (attachers && attachers.length) {
-	      canReplace = bpmnRules.canReplace(attachers, newShape);
-
-	      this.replaceElements(attachers, canReplace.replacements);
-	    }
-
-	  }, this);
-
-	  this.postExecuted( [ 'shape.replace' ], 1500, function(e) {
-	    var context = e.context,
-	        oldShape = context.oldShape,
-	        newShape = context.newShape;
-
-	    modeling.unclaimId(oldShape.businessObject.id, oldShape.businessObject);
-	    modeling.updateProperties(newShape, { id: oldShape.id });
-	  });
-	}
-
-	inherits(ReplaceElementBehaviour, CommandInterceptor);
-
-
-	ReplaceElementBehaviour.prototype.replaceElements = function(elements, newElements, newHost) {
-	  var elementRegistry = this._elementRegistry,
-	      bpmnReplace = this._bpmnReplace,
-	      selection = this._selection,
-	      modeling = this._modeling;
-
-	  forEach(newElements, function(replacement) {
-
-	    var newElement = {
-	      type: replacement.newElementType
-	    };
-
-	    var oldElement = elementRegistry.get(replacement.oldElementId);
-
-	    if (newHost && is(oldElement, 'bpmn:BoundaryEvent')) {
-	      modeling.updateAttachment(oldElement, null);
-	    }
-
-	    var idx = elements.indexOf(oldElement);
-
-	    elements[idx] = bpmnReplace.replaceElement(oldElement, newElement, { select: false });
-
-	    if (newHost && is(elements[idx], 'bpmn:BoundaryEvent')) {
-	      modeling.updateAttachment(elements[idx], newHost);
-	    }
-	  });
-
-	  if (newElements) {
-	    selection.select(elements);
-	  }
-	};
-
-	ReplaceElementBehaviour.$inject = [ 'eventBus', 'bpmnReplace', 'bpmnRules', 'elementRegistry',
-	 'selection', 'modeling' ];
-
-	module.exports = ReplaceElementBehaviour;
-
-
-/***/ },
-/* 746 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var is = __webpack_require__(443).is;
-
-	var roundBounds = __webpack_require__(516).roundBounds;
-
-	var hasPrimaryModifier = __webpack_require__(460).hasPrimaryModifier;
-
-	var SLIGHTLY_HIGHER_PRIORITY = 1001;
-
-
-	/**
-	 * Invoke {@link Modeling#resizeLane} instead of
-	 * {@link Modeling#resizeShape} when resizing a Lane
-	 * or Participant shape.
-	 */
-	function ResizeLaneBehavior(eventBus, modeling) {
-
-	  eventBus.on('resize.start', SLIGHTLY_HIGHER_PRIORITY + 500, function(event) {
-	    var context = event.context,
-	        shape = context.shape;
-
-	    if (is(shape, 'bpmn:Lane') || is(shape, 'bpmn:Participant')) {
-
-	      // should we resize the opposite lane(s) in
-	      // order to compensate for the resize operation?
-	      context.balanced = !hasPrimaryModifier(event);
-	    }
-	  });
-
-	  /**
-	   * Intercept resize end and call resize lane function instead.
-	   */
-	  eventBus.on('resize.end', SLIGHTLY_HIGHER_PRIORITY, function(event) {
-	    var context = event.context,
-	        shape = context.shape,
-	        canExecute = context.canExecute,
-	        newBounds = context.newBounds;
-
-	    if (is(shape, 'bpmn:Lane') || is(shape, 'bpmn:Participant')) {
-
-	      if (canExecute) {
-	        // ensure we have actual pixel values for new bounds
-	        // (important when zoom level was > 1 during move)
-	        newBounds = roundBounds(newBounds);
-
-	        // perform the actual resize
-	        modeling.resizeLane(shape, newBounds, context.balanced);
-	      }
-
-	      // stop propagation
-	      return false;
-	    }
-	  });
-	}
-
-	ResizeLaneBehavior.$inject = [ 'eventBus', 'modeling' ];
-
-	module.exports = ResizeLaneBehavior;
-
-
-/***/ },
-/* 747 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var inherits = __webpack_require__(3);
-
-	var CommandInterceptor = __webpack_require__(540);
-
-	var is = __webpack_require__(443).is,
-	    getBusinessObject = __webpack_require__(443).getBusinessObject;
-
-	/**
-	 * A behavior that unsets the Default property of
-	 * sequence flow source on element delete, if the
-	 * removed element is the Gateway or Task's default flow.
-	 *
-	 * @param {EventBus} eventBus
-	 * @param {Modeling} modeling
-	 */
-	function DeleteSequenceFlowBehavior(eventBus, modeling) {
-
-	  CommandInterceptor.call(this, eventBus);
-
-
-	  this.preExecute('connection.delete', function(event) {
-	    var context = event.context,
-	        connection = context.connection,
-	        source = connection.source;
-
-	    if (isDefaultFlow(connection, source)) {
-	      modeling.updateProperties(source, {
-	        'default': null
-	      });
-	    }
-	  });
-	}
-
-	inherits(DeleteSequenceFlowBehavior, CommandInterceptor);
-
-	DeleteSequenceFlowBehavior.$inject = [ 'eventBus', 'modeling' ];
-
-	module.exports = DeleteSequenceFlowBehavior;
-
-
-	/////// helpers ///////////////////////////
-
-	function isDefaultFlow(connection, source) {
-
-	  if (!is(connection, 'bpmn:SequenceFlow')) {
-	    return false;
-	  }
-
-	  var sourceBo = getBusinessObject(source),
-	      sequenceFlow = getBusinessObject(connection);
-
-	  return sourceBo.get('default') === sequenceFlow;
-	}
-
-/***/ },
-/* 748 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-
-	var inherits = __webpack_require__(3);
-
-	var CommandInterceptor = __webpack_require__(540);
-
-	var is = __webpack_require__(443).is;
-
-	var LOW_PRIORITY = 500,
-	    HIGH_PRIORITY = 5000;
-
-
-	/**
-	 * BPMN specific delete lane behavior
-	 */
-	function UpdateFlowNodeRefsBehavior(eventBus, modeling, translate) {
-
-	  CommandInterceptor.call(this, eventBus);
-
-	  /**
-	   * Ok, this is it:
-	   *
-	   * We have to update the Lane#flowNodeRefs _and_
-	   * FlowNode#lanes with every FlowNode move/resize and
-	   * Lane move/resize.
-	   *
-	   * We want to group that stuff to recompute containments
-	   * as efficient as possible.
-	   *
-	   * Yea!
-	   */
-
-	  // the update context
-	  var context;
-
-
-	  function initContext() {
-	    context = context || new UpdateContext();
-	    context.enter();
-
-	    return context;
-	  }
-
-	  function getContext() {
-	    if (!context) {
-	      throw new Error(translate('out of bounds release'));
-	    }
-
-	    return context;
-	  }
-
-	  function releaseContext() {
-
-	    if (!context) {
-	      throw new Error(translate('out of bounds release'));
-	    }
-
-	    var triggerUpdate = context.leave();
-
-	    if (triggerUpdate) {
-	      modeling.updateLaneRefs(context.flowNodes, context.lanes);
-
-	      context = null;
-	    }
-
-	    return triggerUpdate;
-	  }
-
-
-	  var laneRefUpdateEvents = [
-	    'spaceTool',
-	    'lane.add',
-	    'lane.resize',
-	    'lane.split',
-	    'elements.move',
-	    'elements.delete',
-	    'shape.create',
-	    'shape.delete',
-	    'shape.move',
-	    'shape.resize'
-	  ];
-
-
-	  // listen to a lot of stuff to group lane updates
-
-	  this.preExecute(laneRefUpdateEvents, HIGH_PRIORITY, function(event) {
-	    initContext();
-	  });
-
-	  this.postExecuted(laneRefUpdateEvents, LOW_PRIORITY, function(event) {
-	    releaseContext();
-	  });
-
-
-	  // Mark flow nodes + lanes that need an update
-
-	  this.preExecute([
-	    'shape.create',
-	    'shape.move',
-	    'shape.delete',
-	    'shape.resize'
-	  ], function(event) {
-
-	    var context = event.context,
-	        shape = context.shape;
-
-	    var updateContext = getContext();
-
-	    // no need to update labels
-	    if (shape.labelTarget) {
-	      return;
-	    }
-
-	    if (is(shape, 'bpmn:Lane')) {
-	      updateContext.addLane(shape);
-	    }
-
-	    if (is(shape, 'bpmn:FlowNode')) {
-	      updateContext.addFlowNode(shape);
-	    }
-	  });
-	}
-
-	UpdateFlowNodeRefsBehavior.$inject = [ 'eventBus', 'modeling' , 'translate'];
-
-	inherits(UpdateFlowNodeRefsBehavior, CommandInterceptor);
-
-	module.exports = UpdateFlowNodeRefsBehavior;
-
-
-
-	function UpdateContext() {
-
-	  this.flowNodes = [];
-	  this.lanes = [];
-
-	  this.counter = 0;
-
-	  this.addLane = function(lane) {
-	    this.lanes.push(lane);
-	  };
-
-	  this.addFlowNode = function(flowNode) {
-	    this.flowNodes.push(flowNode);
-	  };
-
-	  this.enter = function() {
-	    this.counter++;
-	  };
-
-	  this.leave = function() {
-	    this.counter--;
-
-	    return !this.counter;
-	  };
-	}
-
-/***/ },
-/* 749 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var inherits = __webpack_require__(3);
-
-	var CommandInterceptor = __webpack_require__(540);
-
-	function RemoveElementBehavior(eventBus, bpmnRules, modeling) {
-
-	  CommandInterceptor.call(this, eventBus);
-
-	  /**
-	   * Combine sequence flows when deleting an element
-	   * if there is one incoming and one outgoing
-	   * sequence flow
-	   */
-
-	  this.preExecute('shape.delete', function(e) {
-
-	    var shape = e.context.shape;
-
-	    if (shape.incoming.length == 1 && shape.outgoing.length == 1) {
-
-	      var inConnection = shape.incoming[0],
-	          outConnection = shape.outgoing[0];
-
-	      var docking = outConnection.waypoints[outConnection.waypoints.length - 1];
-
-	      if (bpmnRules.canConnect(inConnection.source, outConnection.target, inConnection)) {
-	        modeling.reconnectEnd(inConnection, outConnection.target, docking);
-	      }
-
-	    }
-	  });
-	}
-
-	inherits(RemoveElementBehavior, CommandInterceptor);
-
-	RemoveElementBehavior.$inject = [ 'eventBus', 'bpmnRules', 'modeling' ];
-
-	module.exports = RemoveElementBehavior;
-
-
-/***/ },
-/* 750 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var forEach = __webpack_require__(415);
-
-	var inherits = __webpack_require__(3);
-
-	var CommandInterceptor = __webpack_require__(540);
-
-	function UnclaimIdBehavior(eventBus, modeling) {
-
-	  CommandInterceptor.call(this, eventBus);
-
-	  this.preExecute('elements.delete', function(event) {
-	    var context = event.context,
-	        elements = context.elements;
-
-	    forEach(elements, function(element) {
-	      modeling.unclaimId(element.businessObject.id, element.businessObject);
-	    });
-
-	  });
-	}
-
-	inherits(UnclaimIdBehavior, CommandInterceptor);
-
-	UnclaimIdBehavior.$inject = [ 'eventBus', 'modeling' ];
-
-	module.exports = UnclaimIdBehavior;
-
-/***/ },
-/* 751 */
+/* 722 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
@@ -69014,35 +65607,35 @@ var InfoxBpmnModeler =
 	    __webpack_require__(508)
 	  ],
 	  __init__: [ 'bpmnRules' ],
-	  bpmnRules: [ 'type', __webpack_require__(752) ]
+	  bpmnRules: [ 'type', __webpack_require__(723) ]
 	};
 
 
 /***/ },
-/* 752 */
+/* 723 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var find = __webpack_require__(411),
-	    any = __webpack_require__(574),
+	    any = __webpack_require__(576),
 	    every = __webpack_require__(422),
 	    filter = __webpack_require__(383),
 	    forEach = __webpack_require__(415),
 	    inherits = __webpack_require__(3);
 
-	var getParents = __webpack_require__(573).getParents,
+	var getParents = __webpack_require__(575).getParents,
 	    is = __webpack_require__(443).is,
-	    isAny = __webpack_require__(573).isAny,
+	    isAny = __webpack_require__(575).isAny,
 	    getBusinessObject = __webpack_require__(443).getBusinessObject,
 	    isExpanded = __webpack_require__(442).isExpanded,
 	    isEventSubProcess = __webpack_require__(442).isEventSubProcess,
 	    isInterrupting = __webpack_require__(442).isInterrupting;
 
 
-	var RuleProvider = __webpack_require__(543);
+	var RuleProvider = __webpack_require__(545);
 
-	var isBoundaryAttachment = __webpack_require__(753).getBoundaryAttachment;
+	var isBoundaryAttachment = __webpack_require__(724).getBoundaryAttachment;
 
 	/**
 	 * BPMN specific modeling rule
@@ -69768,7 +66361,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 753 */
+/* 724 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -69797,8 +66390,8 @@ var InfoxBpmnModeler =
 
 	var asTRBL = __webpack_require__(516).asTRBL;
 
-	var collectLanes = __webpack_require__(704).collectLanes,
-	    getLanesRoot = __webpack_require__(704).getLanesRoot;
+	var collectLanes = __webpack_require__(602).collectLanes,
+	    getLanesRoot = __webpack_require__(602).getLanesRoot;
 
 	var abs = Math.abs,
 	    min = Math.min,
@@ -69933,7 +66526,7 @@ var InfoxBpmnModeler =
 	module.exports.getParticipantSizeConstraints = getParticipantSizeConstraints;
 
 /***/ },
-/* 754 */
+/* 725 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
@@ -69941,22 +66534,22 @@ var InfoxBpmnModeler =
 	  __depends__: [
 	    __webpack_require__(446)
 	  ],
-	  bpmnOrderingProvider: [ 'type', __webpack_require__(755) ]
+	  bpmnOrderingProvider: [ 'type', __webpack_require__(726) ]
 	};
 
 /***/ },
-/* 755 */
+/* 726 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var OrderingProvider = __webpack_require__(756);
+	var OrderingProvider = __webpack_require__(727);
 
-	var isAny = __webpack_require__(573).isAny;
+	var isAny = __webpack_require__(575).isAny;
 
-	var findIndex = __webpack_require__(757);
+	var findIndex = __webpack_require__(728);
 
 	var find = __webpack_require__(411);
 
@@ -69972,7 +66565,6 @@ var InfoxBpmnModeler =
 	  OrderingProvider.call(this, eventBus);
 
 	  var orders = [
-	    { type: 'label', order: { level: 10 } },
 	    { type: 'bpmn:SubProcess', order: { level: 6 } },
 	    {
 	      type: 'bpmn:SequenceFlow',
@@ -70004,6 +66596,10 @@ var InfoxBpmnModeler =
 	  ];
 
 	  function computeOrder(element) {
+	    if (element.labelTarget) {
+	      return { level: 10 };
+	    }
+
 	    var entry = find(orders, function(o) {
 	      return isAny(element, [ o.type ]);
 	    });
@@ -70095,14 +66691,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 756 */
+/* 727 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CommandInterceptor = __webpack_require__(540);
+	var CommandInterceptor = __webpack_require__(542);
 
 
 	/**
@@ -70199,10 +66795,10 @@ var InfoxBpmnModeler =
 	module.exports = OrderingProvider;
 
 /***/ },
-/* 757 */
+/* 728 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var createFindIndex = __webpack_require__(758);
+	var createFindIndex = __webpack_require__(729);
 
 	/**
 	 * This method is like `_.find` except that it returns the index of the first
@@ -70258,7 +66854,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 758 */
+/* 729 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseCallback = __webpack_require__(385),
@@ -70285,16 +66881,377 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 759 */
+/* 730 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __depends__: [
+	    __webpack_require__(731),
+	    __webpack_require__(452)
+	  ],
+	  bpmnReplace: [ 'type', __webpack_require__(733) ]
+	};
+
+/***/ },
+/* 731 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	module.exports = {
+	  __init__: [ 'replace' ],
+	  replace: [ 'type', __webpack_require__(732) ]
+	};
+
+
+/***/ },
+/* 732 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+
+	/**
+	 * Service that allow replacing of elements.
+	 *
+	 *
+	 * @class
+	 * @constructor
+	 */
+	function Replace(modeling) {
+
+	  this._modeling = modeling;
+	}
+
+	module.exports = Replace;
+
+	Replace.$inject = [ 'modeling' ];
+
+	/**
+	 * @param {Element} oldElement - Element to be replaced
+	 * @param {Object}  newElementData - Containing information about the new Element, for example height, width, type.
+	 * @param {Object}  options - Custom options that will be attached to the context. It can be used to inject data
+	 *                            that is needed in the command chain. For example it could be used in
+	 *                            eventbus.on('commandStack.shape.replace.postExecute') to change shape attributes after
+	 *                            shape creation.
+	 */
+	Replace.prototype.replaceElement = function(oldElement, newElementData, options) {
+
+	  var modeling = this._modeling;
+
+	  var newElement = null;
+
+	  if (oldElement.waypoints) {
+	    // TODO
+	    // modeling.replaceConnection
+	  } else {
+	    // set center of element for modeling API
+	    // if no new width / height is given use old elements size
+	    newElementData.x = Math.ceil(oldElement.x + (newElementData.width || oldElement.width) / 2);
+	    newElementData.y = Math.ceil(oldElement.y + (newElementData.height || oldElement.height) / 2);
+
+	    newElement = modeling.replaceShape(oldElement, newElementData, options);
+	  }
+
+	  return newElement;
+	};
+
+
+/***/ },
+/* 733 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var pick = __webpack_require__(734),
+	    assign = __webpack_require__(7),
+	    has = __webpack_require__(735);
+
+	var is = __webpack_require__(443).is,
+	    isExpanded = __webpack_require__(442).isExpanded,
+	    isEventSubProcess = __webpack_require__(442).isEventSubProcess;
+
+	var CUSTOM_PROPERTIES = [
+	  'cancelActivity',
+	  'instantiate',
+	  'eventGatewayType',
+	  'triggeredByEvent',
+	  'isInterrupting'
+	];
+
+	function toggeling(element, target) {
+
+	  var oldCollapsed = has(element, 'collapsed') ?
+	                     element.collapsed : !isExpanded(element);
+
+	  var targetCollapsed;
+
+	  if (has(target, 'collapsed') || has(target, 'isExpanded')) {
+	    // property is explicitly set so use it
+	    targetCollapsed = has(target, 'collapsed') ?
+	                      target.collapsed : !target.isExpanded;
+	  } else {
+	    // keep old state
+	    targetCollapsed = oldCollapsed;
+	  }
+
+	  if (oldCollapsed !== targetCollapsed) {
+	    element.collapsed = oldCollapsed;
+	    return true;
+	  }
+
+	  return false;
+	}
+
+
+	/**
+	 * This module takes care of replacing BPMN elements
+	 */
+	function BpmnReplace(bpmnFactory, replace, selection, modeling) {
+
+	  /**
+	   * Prepares a new business object for the replacement element
+	   * and triggers the replace operation.
+	   *
+	   * @param  {djs.model.Base} element
+	   * @param  {Object} target
+	   * @param  {Object} [hints]
+	   *
+	   * @return {djs.model.Base} the newly created element
+	   */
+	  function replaceElement(element, target, hints) {
+
+	    hints = hints || {};
+
+	    var type = target.type,
+	        oldBusinessObject = element.businessObject;
+
+
+
+	    if (is(oldBusinessObject, 'bpmn:SubProcess')) {
+	      if (type === 'bpmn:SubProcess') {
+	        if (toggeling(element, target)) {
+	          // expanding or collapsing process
+	          modeling.toggleCollapse(element);
+
+	          return element;
+	        }
+	      }
+	    }
+
+
+	    var newBusinessObject = bpmnFactory.create(type);
+
+	    var newElement = {
+	      type: type,
+	      businessObject: newBusinessObject
+	    };
+
+	    // initialize custom BPMN extensions
+	    if (target.eventDefinitionType) {
+	      newElement.eventDefinitionType = target.eventDefinitionType;
+	    }
+
+	    // initialize special properties defined in target definition
+	    assign(newBusinessObject, pick(target, CUSTOM_PROPERTIES));
+
+
+	    if (is(oldBusinessObject, 'bpmn:Activity')) {
+
+	      if (is(oldBusinessObject, 'bpmn:SubProcess')) {
+	        // no toggeling, so keep old state
+	        newElement.isExpanded = isExpanded(oldBusinessObject);
+	      }
+	      // else if property is explicitly set, use it
+	      else if (has(target, 'isExpanded')) {
+	        newElement.isExpanded = target.isExpanded;
+	      }
+
+	      // TODO: need also to respect min/max Size
+	      // copy size, from an expanded subprocess to an expanded alternative subprocess
+	      // except bpmn:Task, because Task is always expanded
+	      if ((isExpanded(oldBusinessObject) && !is(oldBusinessObject, 'bpmn:Task')) && target.isExpanded) {
+	        newElement.width = element.width;
+	        newElement.height = element.height;
+	      }
+
+	    }
+
+	    // transform collapsed/expanded pools
+	    if (is(oldBusinessObject, 'bpmn:Participant')) {
+
+	        // create expanded pool
+	      if (target.isExpanded === true) {
+	        newBusinessObject.processRef = bpmnFactory.create('bpmn:Process');
+	      } else {
+	          // remove children when transforming to collapsed pool
+	        hints.moveChildren = false;
+	      }
+
+	        // apply same size
+	      newElement.width = element.width;
+	      newElement.height = element.height;
+	    }
+
+	    newBusinessObject.name = oldBusinessObject.name;
+
+	    // retain loop characteristics if the target element is not an event sub process
+	    if (!isEventSubProcess(newBusinessObject)) {
+	      newBusinessObject.loopCharacteristics = oldBusinessObject.loopCharacteristics;
+	    }
+
+	    // retain default flow's reference between inclusive <-> exclusive gateways and activities
+	    if ((is(oldBusinessObject, 'bpmn:ExclusiveGateway') || is(oldBusinessObject, 'bpmn:InclusiveGateway') ||
+	         is(oldBusinessObject, 'bpmn:Activity')) &&
+	        (is(newBusinessObject, 'bpmn:ExclusiveGateway') || is(newBusinessObject, 'bpmn:InclusiveGateway') ||
+	         is(newBusinessObject, 'bpmn:Activity')))
+	    {
+	      newBusinessObject.default = oldBusinessObject.default;
+	    }
+
+	    if (oldBusinessObject.isForCompensation) {
+	      newBusinessObject.isForCompensation = true;
+	    }
+
+	    newElement = replace.replaceElement(element, newElement, hints);
+
+	    if (hints.select !== false) {
+	      selection.select(newElement);
+	    }
+
+	    return newElement;
+	  }
+
+	  this.replaceElement = replaceElement;
+	}
+
+	BpmnReplace.$inject = [ 'bpmnFactory', 'replace', 'selection', 'modeling' ];
+
+	module.exports = BpmnReplace;
+
+
+/***/ },
+/* 734 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseFlatten = __webpack_require__(40),
+	    bindCallback = __webpack_require__(27),
+	    pickByArray = __webpack_require__(42),
+	    pickByCallback = __webpack_require__(44),
+	    restParam = __webpack_require__(30);
+
+	/**
+	 * Creates an object composed of the picked `object` properties. Property
+	 * names may be specified as individual arguments or as arrays of property
+	 * names. If `predicate` is provided it's invoked for each property of `object`
+	 * picking the properties `predicate` returns truthy for. The predicate is
+	 * bound to `thisArg` and invoked with three arguments: (value, key, object).
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Object
+	 * @param {Object} object The source object.
+	 * @param {Function|...(string|string[])} [predicate] The function invoked per
+	 *  iteration or property names to pick, specified as individual property
+	 *  names or arrays of property names.
+	 * @param {*} [thisArg] The `this` binding of `predicate`.
+	 * @returns {Object} Returns the new object.
+	 * @example
+	 *
+	 * var object = { 'user': 'fred', 'age': 40 };
+	 *
+	 * _.pick(object, 'user');
+	 * // => { 'user': 'fred' }
+	 *
+	 * _.pick(object, _.isString);
+	 * // => { 'user': 'fred' }
+	 */
+	var pick = restParam(function(object, props) {
+	  if (object == null) {
+	    return {};
+	  }
+	  return typeof props[0] == 'function'
+	    ? pickByCallback(object, bindCallback(props[0], props[1], 3))
+	    : pickByArray(object, baseFlatten(props));
+	});
+
+	module.exports = pick;
+
+
+/***/ },
+/* 735 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseGet = __webpack_require__(399),
+	    baseSlice = __webpack_require__(400),
+	    isArguments = __webpack_require__(20),
+	    isArray = __webpack_require__(21),
+	    isIndex = __webpack_require__(22),
+	    isKey = __webpack_require__(401),
+	    isLength = __webpack_require__(18),
+	    last = __webpack_require__(402),
+	    toPath = __webpack_require__(403);
+
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+
+	/**
+	 * Checks if `path` is a direct property.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Object
+	 * @param {Object} object The object to query.
+	 * @param {Array|string} path The path to check.
+	 * @returns {boolean} Returns `true` if `path` is a direct property, else `false`.
+	 * @example
+	 *
+	 * var object = { 'a': { 'b': { 'c': 3 } } };
+	 *
+	 * _.has(object, 'a');
+	 * // => true
+	 *
+	 * _.has(object, 'a.b.c');
+	 * // => true
+	 *
+	 * _.has(object, ['a', 'b', 'c']);
+	 * // => true
+	 */
+	function has(object, path) {
+	  if (object == null) {
+	    return false;
+	  }
+	  var result = hasOwnProperty.call(object, path);
+	  if (!result && !isKey(path)) {
+	    path = toPath(path);
+	    object = path.length == 1 ? object : baseGet(object, baseSlice(path, 0, -1));
+	    if (object == null) {
+	      return false;
+	    }
+	    path = last(path);
+	    result = hasOwnProperty.call(object, path);
+	  }
+	  return result || (isLength(object.length) && isIndex(path, object.length) &&
+	    (isArray(object) || isArguments(object)));
+	}
+
+	module.exports = has;
+
+
+/***/ },
+/* 736 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'tooltips' ],
-	  tooltips: [ 'type', __webpack_require__(760) ]
+	  tooltips: [ 'type', __webpack_require__(737) ]
 	};
 
 /***/ },
-/* 760 */
+/* 737 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -70663,7 +67620,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 761 */
+/* 738 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
@@ -70671,12 +67628,12 @@ var InfoxBpmnModeler =
 	    __webpack_require__(523)
 	  ],
 	  __init__: [ 'labelSupport'],
-	  labelSupport: [ 'type', __webpack_require__(762) ]
+	  labelSupport: [ 'type', __webpack_require__(739) ]
 	};
 
 
 /***/ },
-/* 762 */
+/* 739 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -70688,14 +67645,14 @@ var InfoxBpmnModeler =
 	var LOW_PRIORITY = 250,
 	    HIGH_PRIORITY = 1400;
 
-	var CommandInterceptor = __webpack_require__(540);
+	var CommandInterceptor = __webpack_require__(542);
 
 
 	/**
 	 * A handler that makes sure labels are properly moved with
 	 * their label targets.
 	 */
-	function LabelSupport(eventBus, modeling, moveVisuals) {
+	function LabelSupport(eventBus, modeling, movePreview) {
 
 	  CommandInterceptor.call(this, eventBus);
 
@@ -70733,7 +67690,7 @@ var InfoxBpmnModeler =
 	    });
 
 	    forEach(labels, function(label) {
-	      moveVisuals.makeDraggable(context, label, true);
+	      movePreview.makeDraggable(context, label, true);
 	    });
 
 	  });
@@ -70759,7 +67716,7 @@ var InfoxBpmnModeler =
 
 	inherits(LabelSupport, CommandInterceptor);
 
-	LabelSupport.$inject = [ 'eventBus', 'modeling', 'moveVisuals' ];
+	LabelSupport.$inject = [ 'eventBus', 'modeling', 'movePreview' ];
 
 	module.exports = LabelSupport;
 
@@ -70785,45 +67742,45 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 763 */
+/* 740 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
 	    __webpack_require__(523),
-	    __webpack_require__(761)
+	    __webpack_require__(738)
 	  ],
 	  __init__: [ 'attachSupport'],
-	  attachSupport: [ 'type', __webpack_require__(764) ]
+	  attachSupport: [ 'type', __webpack_require__(741) ]
 	};
 
 
 /***/ },
-/* 764 */
+/* 741 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var forEach = __webpack_require__(128),
-	    flatten = __webpack_require__(526),
-	    union = __webpack_require__(765),
+	    flatten = __webpack_require__(528),
+	    union = __webpack_require__(742),
 	    filter = __webpack_require__(475),
 	    groupBy = __webpack_require__(138),
-	    map = __webpack_require__(528);
+	    map = __webpack_require__(530);
 
-	var saveClear = __webpack_require__(766).saveClear,
+	var saveClear = __webpack_require__(743).saveClear,
 	    Collections = __webpack_require__(136);
 
-	var getNewAttachShapeDelta = __webpack_require__(767).getNewAttachShapeDelta;
+	var getNewAttachShapeDelta = __webpack_require__(744).getNewAttachShapeDelta;
 
 	var inherits = __webpack_require__(3);
 
 	var HIGH_PRIORITY = 1500;
 
-	var CommandInterceptor = __webpack_require__(540);
+	var CommandInterceptor = __webpack_require__(542);
 
 
-	function AttachSupport(eventBus, modeling, moveVisuals, rules) {
+	function AttachSupport(eventBus, modeling, movePreview, rules) {
 
 	  CommandInterceptor.call(this, eventBus);
 
@@ -71032,7 +67989,7 @@ var InfoxBpmnModeler =
 
 	inherits(AttachSupport, CommandInterceptor);
 
-	AttachSupport.$inject = [ 'eventBus', 'modeling', 'moveVisuals', 'rules' ];
+	AttachSupport.$inject = [ 'eventBus', 'modeling', 'movePreview', 'rules' ];
 
 	module.exports = AttachSupport;
 
@@ -71092,11 +68049,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 765 */
+/* 742 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseFlatten = __webpack_require__(432),
-	    baseUniq = __webpack_require__(715),
+	    baseUniq = __webpack_require__(624),
 	    restParam = __webpack_require__(93);
 
 	/**
@@ -71122,7 +68079,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 766 */
+/* 743 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -71165,15 +68122,15 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 767 */
+/* 744 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var roundPoint = __webpack_require__(516).roundPoint;
 
-	var center = __webpack_require__(554).center,
-	    delta = __webpack_require__(554).delta;
+	var center = __webpack_require__(556).center,
+	    delta = __webpack_require__(556).delta;
 
 
 	/**
@@ -71241,14 +68198,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 768 */
+/* 745 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var map = __webpack_require__(449),
 	    assign = __webpack_require__(7),
-	    pick = __webpack_require__(699);
+	    pick = __webpack_require__(734);
 
 
 	function BpmnFactory(moddle) {
@@ -71344,7 +68301,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 769 */
+/* 746 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -71359,8 +68316,7 @@ var InfoxBpmnModeler =
 	var getBusinessObject = __webpack_require__(443).getBusinessObject,
 	    is = __webpack_require__(443).is;
 
-	var CommandInterceptor = __webpack_require__(540);
-
+	var CommandInterceptor = __webpack_require__(542);
 
 	/**
 	 * A handler responsible for updating the underlying BPMN 2.0 XML + DI
@@ -71473,9 +68429,33 @@ var InfoxBpmnModeler =
 	    self.updateBounds(shape);
 	  }
 
-	  this.executed([ 'shape.move', 'shape.create', 'shape.resize' ], ifBpmn(updateBounds));
-	  this.reverted([ 'shape.move', 'shape.create', 'shape.resize' ], ifBpmn(updateBounds));
+	  this.executed([ 'shape.move', 'shape.create', 'shape.resize' ], ifBpmn(function(event) {
 
+	    // exclude labels because they're handled separately during shape.changed
+	    if (event.context.shape.type === 'label') {
+	      return;
+	    }
+
+	    updateBounds(event);
+	  }));
+
+	  this.reverted([ 'shape.move', 'shape.create', 'shape.resize' ], ifBpmn(function(event) {
+
+	    // exclude labels because they're handled separately during shape.changed
+	    if (event.context.shape.type === 'label') {
+	      return;
+	    }
+
+	    updateBounds(event);
+	  }));
+
+	  // Handle labels separately. This is necessary, because the label bounds have to be updated
+	  // every time its shape changes, not only on move, create and resize.
+	  eventBus.on('shape.changed', function(event) {
+	    if (event.element.type === 'label') {
+	      updateBounds({ context: { shape: event.element } });
+	    }
+	  });
 
 	  // attach / detach connection
 	  function updateConnection(e) {
@@ -71998,7 +68978,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 770 */
+/* 747 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -72189,22 +69169,22 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 771 */
+/* 748 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var BaseModeling = __webpack_require__(772);
+	var BaseModeling = __webpack_require__(749);
 
-	var UpdatePropertiesHandler = __webpack_require__(805),
-	    UpdateCanvasRootHandler = __webpack_require__(808),
-	    AddLaneHandler = __webpack_require__(809),
-	    SplitLaneHandler = __webpack_require__(810),
-	    ResizeLaneHandler = __webpack_require__(811),
-	    UpdateFlowNodeRefsHandler = __webpack_require__(812),
-	    IdClaimHandler = __webpack_require__(813);
+	var UpdatePropertiesHandler = __webpack_require__(783),
+	    UpdateCanvasRootHandler = __webpack_require__(786),
+	    AddLaneHandler = __webpack_require__(787),
+	    SplitLaneHandler = __webpack_require__(788),
+	    ResizeLaneHandler = __webpack_require__(789),
+	    UpdateFlowNodeRefsHandler = __webpack_require__(790),
+	    IdClaimHandler = __webpack_require__(791);
 
 
 	/**
@@ -72361,7 +69341,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 772 */
+/* 749 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -72398,36 +69378,37 @@ var InfoxBpmnModeler =
 
 	Modeling.prototype.getHandlers = function() {
 	  return {
-	    'shape.append': __webpack_require__(773),
-	    'shape.create': __webpack_require__(778),
-	    'shape.delete': __webpack_require__(779),
-	    'shape.move': __webpack_require__(780),
-	    'shape.resize': __webpack_require__(783),
-	    'shape.replace': __webpack_require__(784),
+	    'shape.append': __webpack_require__(750),
+	    'shape.create': __webpack_require__(755),
+	    'shape.delete': __webpack_require__(756),
+	    'shape.move': __webpack_require__(757),
+	    'shape.resize': __webpack_require__(760),
+	    'shape.replace': __webpack_require__(761),
+	    'shape.toggleCollapse': __webpack_require__(762),
 
-	    'spaceTool': __webpack_require__(785),
+	    'spaceTool': __webpack_require__(763),
 
-	    'label.create': __webpack_require__(786),
+	    'label.create': __webpack_require__(764),
 
-	    'connection.create': __webpack_require__(787),
-	    'connection.delete': __webpack_require__(788),
-	    'connection.move': __webpack_require__(789),
-	    'connection.layout': __webpack_require__(790),
+	    'connection.create': __webpack_require__(765),
+	    'connection.delete': __webpack_require__(766),
+	    'connection.move': __webpack_require__(767),
+	    'connection.layout': __webpack_require__(768),
 
-	    'connection.updateWaypoints': __webpack_require__(791),
+	    'connection.updateWaypoints': __webpack_require__(769),
 
-	    'connection.reconnectStart': __webpack_require__(792),
-	    'connection.reconnectEnd': __webpack_require__(792),
+	    'connection.reconnectStart': __webpack_require__(770),
+	    'connection.reconnectEnd': __webpack_require__(770),
 
-	    'elements.move': __webpack_require__(793),
-	    'elements.delete': __webpack_require__(794),
+	    'elements.move': __webpack_require__(771),
+	    'elements.delete': __webpack_require__(772),
 
-	    'elements.distribute': __webpack_require__(795),
-	    'elements.align': __webpack_require__(796),
+	    'elements.distribute': __webpack_require__(773),
+	    'elements.align': __webpack_require__(774),
 
-	    'element.updateAttachment': __webpack_require__(797),
+	    'element.updateAttachment': __webpack_require__(775),
 
-	    'elements.paste': __webpack_require__(798)
+	    'elements.paste': __webpack_require__(776)
 	  };
 	};
 
@@ -72785,14 +69766,23 @@ var InfoxBpmnModeler =
 	  }
 	};
 
+	Modeling.prototype.toggleCollapse = function(shape, hints) {
+	  var context = {
+	    shape: shape,
+	    hints: hints || {}
+	  };
+
+	  this._commandStack.execute('shape.toggleCollapse', context);
+	};
+
 
 /***/ },
-/* 773 */
+/* 750 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var any = __webpack_require__(774);
+	var any = __webpack_require__(751);
 
 	var inherits = __webpack_require__(3);
 
@@ -72809,7 +69799,7 @@ var InfoxBpmnModeler =
 	  this._modeling = modeling;
 	}
 
-	inherits(AppendShapeHandler, __webpack_require__(777));
+	inherits(AppendShapeHandler, __webpack_require__(754));
 
 
 	AppendShapeHandler.$inject = [ 'modeling' ];
@@ -72858,19 +69848,19 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 774 */
+/* 751 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(775);
+	module.exports = __webpack_require__(752);
 
 
 /***/ },
-/* 775 */
+/* 752 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var arraySome = __webpack_require__(109),
 	    baseCallback = __webpack_require__(103),
-	    baseSome = __webpack_require__(776),
+	    baseSome = __webpack_require__(753),
 	    isArray = __webpack_require__(70),
 	    isIterateeCall = __webpack_require__(92);
 
@@ -72938,7 +69928,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 776 */
+/* 753 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var baseEach = __webpack_require__(96);
@@ -72967,7 +69957,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 777 */
+/* 754 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -72980,7 +69970,7 @@ var InfoxBpmnModeler =
 	NoopHandler.prototype.revert = function() {};
 
 /***/ },
-/* 778 */
+/* 755 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -73057,14 +70047,14 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 779 */
+/* 756 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var Collections = __webpack_require__(136);
 
-	var saveClear = __webpack_require__(766).saveClear;
+	var saveClear = __webpack_require__(743).saveClear;
 
 
 	/**
@@ -73167,7 +70157,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 780 */
+/* 757 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -73176,11 +70166,11 @@ var InfoxBpmnModeler =
 	    forEach = __webpack_require__(128),
 	    pick = __webpack_require__(431);
 
-	var MoveHelper = __webpack_require__(781),
+	var MoveHelper = __webpack_require__(758),
 	    Collections = __webpack_require__(136);
 
-	var getMovedSourceAnchor = __webpack_require__(782).getMovedSourceAnchor,
-	    getMovedTargetAnchor = __webpack_require__(782).getMovedTargetAnchor;
+	var getMovedSourceAnchor = __webpack_require__(759).getMovedSourceAnchor,
+	    getMovedTargetAnchor = __webpack_require__(759).getMovedTargetAnchor;
 
 
 	/**
@@ -73286,7 +70276,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 781 */
+/* 758 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -73295,8 +70285,8 @@ var InfoxBpmnModeler =
 
 	var Elements = __webpack_require__(137);
 
-	var getMovedSourceAnchor = __webpack_require__(782).getMovedSourceAnchor,
-	    getMovedTargetAnchor = __webpack_require__(782).getMovedTargetAnchor;
+	var getMovedSourceAnchor = __webpack_require__(759).getMovedSourceAnchor,
+	    getMovedTargetAnchor = __webpack_require__(759).getMovedTargetAnchor;
 
 	/**
 	 * A helper that is able to carry out serialized move operations on multiple elements.
@@ -73389,12 +70379,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 782 */
+/* 759 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getNewAttachPoint = __webpack_require__(767).getNewAttachPoint;
+	var getNewAttachPoint = __webpack_require__(744).getNewAttachPoint;
 
 	function getResizedSourceAnchor(connection, shape, oldBounds) {
 
@@ -73464,7 +70454,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 783 */
+/* 760 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -73472,8 +70462,8 @@ var InfoxBpmnModeler =
 	var assign = __webpack_require__(77),
 	    forEach = __webpack_require__(128);
 
-	var getResizedSourceAnchor = __webpack_require__(782).getResizedSourceAnchor,
-	    getResizedTargetAnchor = __webpack_require__(782).getResizedTargetAnchor;
+	var getResizedSourceAnchor = __webpack_require__(759).getResizedSourceAnchor,
+	    getResizedTargetAnchor = __webpack_require__(759).getResizedTargetAnchor;
 
 	/**
 	 * A handler that implements reversible resizing of shapes.
@@ -73572,7 +70562,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 784 */
+/* 761 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -73734,14 +70724,104 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 785 */
+/* 762 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	/**
+	 * A handler that toggles the collapsed state of an element
+	 * and the visibility of all its children.
+	 *
+	 * @param {Modeling} modeling
+	 */
+	function ToggleShapeCollapseHandler(modeling) {
+	  this._modeling = modeling;
+	}
+
+	ToggleShapeCollapseHandler.$inject = [ 'modeling' ];
+
+	module.exports = ToggleShapeCollapseHandler;
+
+
+	ToggleShapeCollapseHandler.prototype.execute = function(context) {
+
+	  var shape = context.shape,
+	      children = shape.children;
+
+	  // remember previous visibility of children
+	  context.oldChildrenVisibility = getElementsVisibility(children);
+
+	  // toggle state
+	  shape.collapsed = !shape.collapsed;
+
+	  // hide/show children
+	  setHidden(children, shape.collapsed);
+
+	  return [shape].concat(children);
+	};
+
+
+	ToggleShapeCollapseHandler.prototype.revert = function(context) {
+
+	  var shape = context.shape,
+	      oldChildrenVisibility = context.oldChildrenVisibility;
+
+	  var children = shape.children;
+
+	  // set old visability of children
+	  restoreVisibility(children, oldChildrenVisibility);
+
+	  // retoggle state
+	  shape.collapsed = !shape.collapsed;
+
+	  return [shape].concat(children);
+	};
+
+
+	/////// helpers ///////////////////////////////
+
+	/**
+	 * Return a map { elementId -> hiddenState}.
+	 *
+	 * @param {Array<djs.model.Shape>} elements
+	 *
+	 * @return {Object}
+	 */
+	function getElementsVisibility(elements) {
+
+	  var result = {};
+
+	  elements.forEach(function(e) {
+	    result[e.id] = e.hidden;
+	  });
+
+	  return result;
+	}
+
+
+	function setHidden(elements, newHidden) {
+	  elements.forEach(function(element) {
+	    element.hidden = newHidden;
+	  });
+	}
+
+	function restoreVisibility(elements, lastState) {
+	  elements.forEach(function(e) {
+	    e.hidden = lastState[e.id];
+	  });
+	}
+
+
+/***/ },
+/* 763 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var forEach = __webpack_require__(128);
 
-	var SpaceUtil = __webpack_require__(565);
+	var SpaceUtil = __webpack_require__(567);
 
 	/**
 	 * A handler that implements reversible creating and removing of space.
@@ -73781,7 +70861,7 @@ var InfoxBpmnModeler =
 	      movingShapes = context.movingShapes,
 	      delta = context.delta;
 
-	  modeling.moveElements(movingShapes, delta);
+	  modeling.moveElements(movingShapes, delta, undefined, false, { autoResize: false });
 	};
 
 	SpaceToolHandler.prototype.execute = function(context) {};
@@ -73789,14 +70869,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 786 */
+/* 764 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var inherits = __webpack_require__(3);
 
-	var CreateShapeHandler = __webpack_require__(778);
+	var CreateShapeHandler = __webpack_require__(755);
 
 
 	/**
@@ -73866,7 +70946,7 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 787 */
+/* 765 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -73932,7 +71012,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 788 */
+/* 766 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -74009,7 +71089,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 789 */
+/* 767 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -74095,7 +71175,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 790 */
+/* 768 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -74194,7 +71274,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 791 */
+/* 769 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -74226,7 +71306,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 792 */
+/* 770 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -74305,12 +71385,12 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 793 */
+/* 771 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var MoveHelper = __webpack_require__(781);
+	var MoveHelper = __webpack_require__(758);
 
 
 	/**
@@ -74347,7 +71427,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 794 */
+/* 772 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -74361,7 +71441,7 @@ var InfoxBpmnModeler =
 	  this._elementRegistry = elementRegistry;
 	}
 
-	inherits(DeleteElementsHandler, __webpack_require__(777));
+	inherits(DeleteElementsHandler, __webpack_require__(754));
 
 	DeleteElementsHandler.$inject = [ 'modeling', 'elementRegistry' ];
 
@@ -74391,7 +71471,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 795 */
+/* 773 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -74552,7 +71632,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 796 */
+/* 774 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -74615,7 +71695,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 797 */
+/* 775 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -74693,15 +71773,15 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 798 */
+/* 776 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var forEach = __webpack_require__(128),
-	    map = __webpack_require__(528),
+	    map = __webpack_require__(530),
 	    sortBy = __webpack_require__(517),
-	    clone = __webpack_require__(799);
+	    clone = __webpack_require__(777);
 
 	var inherits = __webpack_require__(3);
 
@@ -74734,7 +71814,7 @@ var InfoxBpmnModeler =
 	  this._rules = rules;
 	}
 
-	inherits(PasteHandler, __webpack_require__(777));
+	inherits(PasteHandler, __webpack_require__(754));
 
 
 	PasteHandler.$inject = [
@@ -74982,10 +72062,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 799 */
+/* 777 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseClone = __webpack_require__(800),
+	var baseClone = __webpack_require__(778),
 	    bindCallback = __webpack_require__(90),
 	    isIterateeCall = __webpack_require__(92);
 
@@ -75058,16 +72138,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 800 */
+/* 778 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var arrayCopy = __webpack_require__(155),
 	    arrayEach = __webpack_require__(129),
 	    baseAssign = __webpack_require__(87),
 	    baseForOwn = __webpack_require__(97),
-	    initCloneArray = __webpack_require__(801),
-	    initCloneByTag = __webpack_require__(802),
-	    initCloneObject = __webpack_require__(804),
+	    initCloneArray = __webpack_require__(779),
+	    initCloneByTag = __webpack_require__(780),
+	    initCloneObject = __webpack_require__(782),
 	    isArray = __webpack_require__(70),
 	    isObject = __webpack_require__(74);
 
@@ -75192,7 +72272,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 801 */
+/* 779 */
 /***/ function(module, exports) {
 
 	/** Used for native method references. */
@@ -75224,10 +72304,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 802 */
+/* 780 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var bufferClone = __webpack_require__(803);
+	var bufferClone = __webpack_require__(781);
 
 	/** `Object#toString` result references. */
 	var boolTag = '[object Boolean]',
@@ -75293,7 +72373,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 803 */
+/* 781 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/** Native method references. */
@@ -75320,7 +72400,7 @@ var InfoxBpmnModeler =
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 804 */
+/* 782 */
 /***/ function(module, exports) {
 
 	/**
@@ -75342,12 +72422,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 805 */
+/* 783 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var reduce = __webpack_require__(806),
+	var reduce = __webpack_require__(784),
 	    keys = __webpack_require__(9),
 	    forEach = __webpack_require__(415),
 	    assign = __webpack_require__(7);
@@ -75389,7 +72469,7 @@ var InfoxBpmnModeler =
 	 * @param {Object} context.properties a list of properties to set on the element's
 	 *                                    businessObject (the BPMN model element)
 	 *
-	 * @return {Array<djs.mode.Base>} the updated element
+	 * @return {Array<djs.model.Base>} the updated element
 	 */
 	UpdatePropertiesHandler.prototype.execute = function(context) {
 
@@ -75451,7 +72531,7 @@ var InfoxBpmnModeler =
 	 *
 	 * @param  {Object} context
 	 *
-	 * @return {djs.mode.Base} the updated element
+	 * @return {djs.model.Base} the updated element
 	 */
 	UpdatePropertiesHandler.prototype.revert = function(context) {
 
@@ -75522,12 +72602,12 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 806 */
+/* 784 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var arrayEach = __webpack_require__(416),
 	    baseCallback = __webpack_require__(385),
-	    baseCreate = __webpack_require__(807),
+	    baseCreate = __webpack_require__(785),
 	    baseForOwn = __webpack_require__(409),
 	    isArray = __webpack_require__(21),
 	    isFunction = __webpack_require__(12),
@@ -75589,7 +72669,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 807 */
+/* 785 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var isObject = __webpack_require__(13);
@@ -75618,7 +72698,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 808 */
+/* 786 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -75702,7 +72782,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 809 */
+/* 787 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -75711,9 +72791,9 @@ var InfoxBpmnModeler =
 
 	var Elements = __webpack_require__(137);
 
-	var getLanesRoot = __webpack_require__(704).getLanesRoot,
-	    getChildLanes = __webpack_require__(704).getChildLanes,
-	    LANE_INDENTATION = __webpack_require__(704).LANE_INDENTATION;
+	var getLanesRoot = __webpack_require__(602).getLanesRoot,
+	    getChildLanes = __webpack_require__(602).getChildLanes,
+	    LANE_INDENTATION = __webpack_require__(602).LANE_INDENTATION;
 
 	/**
 	 * A handler that allows us to add a new lane
@@ -75791,14 +72871,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 810 */
+/* 788 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var getChildLanes = __webpack_require__(704).getChildLanes;
+	var getChildLanes = __webpack_require__(602).getChildLanes;
 
-	var LANE_INDENTATION = __webpack_require__(704).LANE_INDENTATION;
+	var LANE_INDENTATION = __webpack_require__(602).LANE_INDENTATION;
 
 	/**
 	 * A handler that splits a lane into a number of sub-lanes,
@@ -75879,20 +72959,20 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 811 */
+/* 789 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var is = __webpack_require__(443).is;
 
-	var getLanesRoot = __webpack_require__(704).getLanesRoot,
-	    computeLanesResize = __webpack_require__(704).computeLanesResize;
+	var getLanesRoot = __webpack_require__(602).getLanesRoot,
+	    computeLanesResize = __webpack_require__(602).computeLanesResize;
 
 	var eachElement = __webpack_require__(137).eachElement;
 
 	var asTRBL = __webpack_require__(516).asTRBL,
-	    substractTRBL = __webpack_require__(532).substractTRBL;
+	    substractTRBL = __webpack_require__(534).substractTRBL;
 
 
 	/**
@@ -76010,14 +73090,14 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 812 */
+/* 790 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var collectLanes = __webpack_require__(704).collectLanes;
+	var collectLanes = __webpack_require__(602).collectLanes;
 
-	var getLanesRoot = __webpack_require__(704).getLanesRoot;
+	var getLanesRoot = __webpack_require__(602).getLanesRoot;
 
 	var is = __webpack_require__(443).is;
 
@@ -76201,7 +73281,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 813 */
+/* 791 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -76248,7 +73328,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 814 */
+/* 792 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -76257,8 +73337,8 @@ var InfoxBpmnModeler =
 
 	var assign = __webpack_require__(7);
 
-	var BaseLayouter = __webpack_require__(815),
-	    ManhattanLayout = __webpack_require__(816);
+	var BaseLayouter = __webpack_require__(793),
+	    ManhattanLayout = __webpack_require__(794);
 
 	var LayoutUtil = __webpack_require__(516);
 
@@ -76445,7 +73525,7 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 815 */
+/* 793 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -76488,14 +73568,14 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 816 */
+/* 794 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var isArray = __webpack_require__(70),
 	    find = __webpack_require__(468),
-	    without = __webpack_require__(817),
+	    without = __webpack_require__(795),
 	    assign = __webpack_require__(77);
 
 	var LayoutUtil = __webpack_require__(516),
@@ -76975,10 +74055,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 817 */
+/* 795 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseDifference = __webpack_require__(818),
+	var baseDifference = __webpack_require__(796),
 	    isArrayLike = __webpack_require__(80),
 	    restParam = __webpack_require__(93);
 
@@ -77008,12 +74088,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 818 */
+/* 796 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIndexOf = __webpack_require__(716),
-	    cacheIndexOf = __webpack_require__(718),
-	    createCache = __webpack_require__(719);
+	var baseIndexOf = __webpack_require__(625),
+	    cacheIndexOf = __webpack_require__(627),
+	    createCache = __webpack_require__(628);
 
 	/** Used as the size to enable large array optimizations. */
 	var LARGE_ARRAY_SIZE = 200;
@@ -77069,7 +74149,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 819 */
+/* 797 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -77170,39 +74250,3335 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 820 */
+/* 798 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var inherits = __webpack_require__(3);
+
+	var EditorActions = __webpack_require__(558);
+
+	var filter = __webpack_require__(383);
+
+	var is = __webpack_require__(443).is;
+
+	var getBBox = __webpack_require__(137).getBBox;
+
+	function BpmnEditorActions(
+	    injector,
+	    canvas, elementRegistry, selection,
+	    spaceTool,
+	    lassoTool,
+	    handTool,
+	    globalConnect,
+	    distributeElements,
+	    alignElements,
+	    directEditing,
+	    searchPad,
+	    modeling) {
+
+	  injector.invoke(EditorActions, this);
+
+	  this.register({
+	    selectElements: function() {
+	      // select all elements except for the invisible
+	      // root element
+	      var rootElement = canvas.getRootElement();
+
+	      var elements = elementRegistry.filter(function(element) {
+	        return element !== rootElement;
+	      });
+
+	      selection.select(elements);
+
+	      return elements;
+	    },
+	    spaceTool: function() {
+	      spaceTool.toggle();
+	    },
+	    lassoTool: function() {
+	      lassoTool.toggle();
+	    },
+	    handTool: function() {
+	      handTool.toggle();
+	    },
+	    globalConnectTool: function() {
+	      globalConnect.toggle();
+	    },
+	    distributeElements: function(opts) {
+	      var currentSelection = selection.get(),
+	          type = opts.type;
+
+	      if (currentSelection.length) {
+	        distributeElements.trigger(currentSelection, type);
+	      }
+	    },
+	    alignElements: function(opts) {
+	      var currentSelection = selection.get(),
+	          aligneableElements = [],
+	          type = opts.type;
+
+	      if (currentSelection.length) {
+	        aligneableElements = filter(currentSelection, function(element) {
+	          return !is(element, 'bpmn:Lane');
+	        });
+
+	        alignElements.trigger(aligneableElements, type);
+	      }
+	    },
+	    directEditing: function() {
+	      var currentSelection = selection.get();
+
+	      if (currentSelection.length) {
+	        directEditing.activate(currentSelection[0]);
+	      }
+	    },
+	    find: function() {
+	      searchPad.toggle();
+	    },
+	    moveToOrigin: function() {
+	      var rootElement = canvas.getRootElement(),
+	          boundingBox,
+	          elements;
+
+	      if (is(rootElement, 'bpmn:Collaboration')) {
+	        elements = elementRegistry.filter(function(element) {
+	          return is(element.parent, 'bpmn:Collaboration');
+	        });
+	      } else {
+	        elements = elementRegistry.filter(function(element) {
+	          return element !== rootElement;
+	        });
+	      }
+
+	      boundingBox = getBBox(elements);
+
+	      modeling.moveElements(elements, { x: -boundingBox.x, y: -boundingBox.y }, rootElement);
+	    }
+	  });
+	}
+
+	inherits(BpmnEditorActions, EditorActions);
+
+	BpmnEditorActions.$inject = [
+	  'injector',
+	  'canvas', 'elementRegistry', 'selection',
+	  'spaceTool',
+	  'lassoTool',
+	  'handTool',
+	  'globalConnect',
+	  'distributeElements',
+	  'alignElements',
+	  'directEditing',
+	  'searchPad',
+	  'modeling'
+	];
+
+	module.exports = BpmnEditorActions;
+
+
+/***/ },
+/* 799 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __depends__: [
-	    __webpack_require__(821),
-	    __webpack_require__(690),
-	    __webpack_require__(563),
-	    __webpack_require__(561),
-	    __webpack_require__(557),
-	    __webpack_require__(446),
-	    __webpack_require__(567)
+	    __webpack_require__(634),
+	    __webpack_require__(800),
+	    __webpack_require__(452),
+	    __webpack_require__(571),
+	    __webpack_require__(802),
+	    __webpack_require__(804)
 	  ],
-	  __init__: [ 'paletteProvider' ],
-	  paletteProvider: [ 'type', __webpack_require__(823) ]
+	  __init__: [ 'contextPadProvider' ],
+	  contextPadProvider: [ 'type', __webpack_require__(811) ]
+	};
+
+/***/ },
+/* 800 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __depends__: [
+	    __webpack_require__(453),
+	    __webpack_require__(472)
+	  ],
+	  contextPad: [ 'type', __webpack_require__(801) ]
+	};
+
+/***/ },
+/* 801 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var isFunction = __webpack_require__(73),
+	    forEach = __webpack_require__(128),
+
+	    domDelegate = __webpack_require__(455),
+	    domEvent = __webpack_require__(484),
+	    domAttr = __webpack_require__(481),
+	    domQuery = __webpack_require__(52),
+	    domClasses = __webpack_require__(478),
+	    domify = __webpack_require__(50);
+
+
+	var entrySelector = '.entry';
+
+
+	/**
+	 * A context pad that displays element specific, contextual actions next
+	 * to a diagram element.
+	 *
+	 * @param {EventBus} eventBus
+	 * @param {Overlays} overlays
+	 */
+	function ContextPad(eventBus, overlays) {
+
+	  this._providers = [];
+
+	  this._eventBus = eventBus;
+	  this._overlays = overlays;
+
+	  this._current = null;
+
+	  this._init();
+	}
+
+	ContextPad.$inject = [ 'eventBus', 'overlays' ];
+
+	/**
+	 * Registers events needed for interaction with other components
+	 */
+	ContextPad.prototype._init = function() {
+
+	  var eventBus = this._eventBus;
+
+	  var self = this;
+
+	  eventBus.on('selection.changed', function(e) {
+
+	    var selection = e.newSelection;
+
+	    if (selection.length === 1) {
+	      self.open(selection[0]);
+	    } else {
+	      self.close();
+	    }
+	  });
+
+	  eventBus.on('elements.delete', function(event) {
+	    var elements = event.elements;
+
+	    forEach(elements, function(e) {
+	      if (self.isOpen(e)) {
+	        self.close();
+	      }
+	    });
+	  });
+
+	  eventBus.on('element.changed', function(event) {
+	    var element = event.element,
+	        current = self._current;
+
+	    // force reopen if element for which we are currently opened changed
+	    if (current && current.element === element) {
+	      self.open(element, true);
+	    }
+	  });
+	};
+
+
+	/**
+	 * Register a provider with the context pad
+	 *
+	 * @param  {ContextPadProvider} provider
+	 */
+	ContextPad.prototype.registerProvider = function(provider) {
+	  this._providers.push(provider);
+	};
+
+
+	/**
+	 * Returns the context pad entries for a given element
+	 *
+	 * @param {djs.element.Base} element
+	 *
+	 * @return {Array<ContextPadEntryDescriptor>} list of entries
+	 */
+	ContextPad.prototype.getEntries = function(element) {
+	  var entries = {};
+
+	  // loop through all providers and their entries.
+	  // group entries by id so that overriding an entry is possible
+	  forEach(this._providers, function(provider) {
+	    var e = provider.getContextPadEntries(element);
+
+	    forEach(e, function(entry, id) {
+	      entries[id] = entry;
+	    });
+	  });
+
+	  return entries;
+	};
+
+
+	/**
+	 * Trigger an action available on the opened context pad
+	 *
+	 * @param  {String} action
+	 * @param  {Event} event
+	 * @param  {Boolean} [autoActivate=false]
+	 */
+	ContextPad.prototype.trigger = function(action, event, autoActivate) {
+
+	  var element = this._current.element,
+	      entries = this._current.entries,
+	      entry,
+	      handler,
+	      originalEvent,
+	      button = event.delegateTarget || event.target;
+
+	  if (!button) {
+	    return event.preventDefault();
+	  }
+
+	  entry = entries[domAttr(button, 'data-action')];
+	  handler = entry.action;
+
+	  originalEvent = event.originalEvent || event;
+
+	  // simple action (via callback function)
+	  if (isFunction(handler)) {
+	    if (action === 'click') {
+	      return handler(originalEvent, element, autoActivate);
+	    }
+	  } else {
+	    if (handler[action]) {
+	      return handler[action](originalEvent, element, autoActivate);
+	    }
+	  }
+
+	  // silence other actions
+	  event.preventDefault();
+	};
+
+
+	/**
+	 * Open the context pad for the given element
+	 *
+	 * @param {djs.model.Base} element
+	 * @param {Boolean} force if true, force reopening the context pad
+	 */
+	ContextPad.prototype.open = function(element, force) {
+	  if (!force && this.isOpen(element)) {
+	    return;
+	  }
+
+	  this.close();
+	  this._updateAndOpen(element);
+	};
+
+
+	ContextPad.prototype._updateAndOpen = function(element) {
+
+	  var entries = this.getEntries(element),
+	      pad = this.getPad(element),
+	      html = pad.html;
+
+	  forEach(entries, function(entry, id) {
+	    var grouping = entry.group || 'default',
+	        control = domify(entry.html || '<div class="entry" draggable="true"></div>'),
+	        container;
+
+	    domAttr(control, 'data-action', id);
+
+	    container = domQuery('[data-group=' + grouping + ']', html);
+	    if (!container) {
+	      container = domify('<div class="group" data-group="' + grouping + '"></div>');
+	      html.appendChild(container);
+	    }
+
+	    container.appendChild(control);
+
+	    if (entry.className) {
+	      domClasses(control).add(entry.className);
+	    }
+
+	    if (entry.title) {
+	      domAttr(control, 'title', entry.title);
+	    }
+
+	    if (entry.imageUrl) {
+	      control.appendChild(domify('<img src="' + entry.imageUrl + '">'));
+	    }
+	  });
+
+	  domClasses(html).add('open');
+
+	  this._current = {
+	    element: element,
+	    pad: pad,
+	    entries: entries
+	  };
+
+	  this._eventBus.fire('contextPad.open', { current: this._current });
+	};
+
+
+	ContextPad.prototype.getPad = function(element) {
+	  if (this.isOpen()) {
+	    return this._current.pad;
+	  }
+
+	  var self = this;
+
+	  var overlays = this._overlays;
+
+	  var html = domify('<div class="djs-context-pad"></div>');
+
+	  domDelegate.bind(html, entrySelector, 'click', function(event) {
+	    self.trigger('click', event);
+	  });
+
+	  domDelegate.bind(html, entrySelector, 'dragstart', function(event) {
+	    self.trigger('dragstart', event);
+	  });
+
+	  // stop propagation of mouse events
+	  domEvent.bind(html, 'mousedown', function(event) {
+	    event.stopPropagation();
+	  });
+
+	  this._overlayId = overlays.add(element, 'context-pad', {
+	    position: {
+	      right: -9,
+	      top: -6
+	    },
+	    html: html
+	  });
+
+	  var pad = overlays.get(this._overlayId);
+
+	  this._eventBus.fire('contextPad.create', { element: element, pad: pad });
+
+	  return pad;
+	};
+
+
+	/**
+	 * Close the context pad
+	 */
+	ContextPad.prototype.close = function() {
+	  if (!this.isOpen()) {
+	    return;
+	  }
+
+	  this._overlays.remove(this._overlayId);
+
+	  this._overlayId = null;
+
+	  this._eventBus.fire('contextPad.close', { current: this._current });
+
+	  this._current = null;
+	};
+
+	/**
+	 * Check if pad is open. If element is given, will check
+	 * if pad is opened with given element.
+	 *
+	 * @param {Element} element
+	 * @return {Boolean}
+	 */
+	ContextPad.prototype.isOpen = function(element) {
+	  return !!this._current && (!element ? true : this._current.element === element);
+	};
+
+	module.exports = ContextPad;
+
+
+/***/ },
+/* 802 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __depends__: [
+	    __webpack_require__(501),
+	    __webpack_require__(452),
+	    __webpack_require__(508)
+	  ],
+	  create: [ 'type', __webpack_require__(803) ]
 	};
 
 
 /***/ },
-/* 821 */
+/* 803 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var LOW_PRIORITY = 750;
+
+	var MARKER_OK = 'drop-ok',
+	    MARKER_NOT_OK = 'drop-not-ok',
+	    MARKER_ATTACH = 'attach-ok',
+	    MARKER_NEW_PARENT = 'new-parent';
+
+
+	function Create(eventBus, dragging, rules, modeling, canvas, styles, graphicsFactory) {
+
+	  // rules
+
+	  function canCreate(shape, target, source, position) {
+
+	    if (source) {
+	      return rules.allowed('shape.append', {
+	        source: source,
+	        shape: shape,
+	        target: target,
+	        position: position
+	      });
+	    } else {
+	      return rules.allowed('shape.create', {
+	        shape: shape,
+	        target: target,
+	        position: position
+	      });
+	    }
+	  }
+
+
+	  /** set drop marker on an element */
+	  function setMarker(element, marker) {
+
+	    [ MARKER_ATTACH, MARKER_OK, MARKER_NOT_OK, MARKER_NEW_PARENT ].forEach(function(m) {
+
+	      if (m === marker) {
+	        canvas.addMarker(element, m);
+	      } else {
+	        canvas.removeMarker(element, m);
+	      }
+	    });
+	  }
+
+
+	  // visual helpers
+
+	  function createVisual(shape) {
+	    var group, preview, visual;
+
+	    group = canvas.getDefaultLayer().group().attr(styles.cls('djs-drag-group', [ 'no-events' ]));
+
+	    preview = group.group().addClass('djs-dragger');
+
+	    preview.translate(shape.width / -2, shape.height / -2);
+
+	    visual = preview.group().addClass('djs-visual');
+
+	    // hijack renderer to draw preview
+	    graphicsFactory.drawShape(visual, shape);
+
+	    return group;
+	  }
+
+
+	  // event handlers
+
+	  eventBus.on('create.move', function(event) {
+
+	    var context = event.context,
+	        hover = event.hover,
+	        canExecute;
+
+	    var position = {
+	      x: event.x,
+	      y: event.y
+	    };
+
+	    canExecute = context.canExecute = hover && canCreate(context.shape, hover, context.source, position);
+
+	    // ignore hover visually if canExecute is null
+	    if (hover && canExecute !== null) {
+	      context.target = hover;
+
+	      if (canExecute === 'attach') {
+	        setMarker(hover, MARKER_ATTACH);
+	      } else {
+	        setMarker(hover, context.canExecute ? MARKER_NEW_PARENT : MARKER_NOT_OK);
+	      }
+	    }
+	  });
+
+	  eventBus.on('create.move', LOW_PRIORITY, function(event) {
+
+	    var context = event.context,
+	        shape = context.shape,
+	        visual = context.visual;
+
+	    // lazy init drag visual once we received the first real
+	    // drag move event (this allows us to get the proper canvas local coordinates)
+	    if (!visual) {
+	      visual = context.visual = createVisual(shape);
+	    }
+
+	    visual.translate(event.x, event.y);
+	  });
+
+
+	  eventBus.on([ 'create.end', 'create.out', 'create.cleanup' ], function(event) {
+	    var context = event.context,
+	        target = context.target;
+
+	    if (target) {
+	      setMarker(target, null);
+	    }
+	  });
+
+	  eventBus.on('create.end', function(event) {
+	    var context = event.context,
+	        source = context.source,
+	        shape = context.shape,
+	        target = context.target,
+	        canExecute = context.canExecute,
+	        isAttach,
+	        position = {
+	          x: event.x,
+	          y: event.y
+	        };
+
+	    if (!canExecute) {
+	      return false;
+	    }
+
+	    if (source) {
+	      shape = modeling.appendShape(source, shape, position, target);
+	    } else {
+	      isAttach = canExecute === 'attach';
+
+	      shape = modeling.createShape(shape, position, target, isAttach);
+	    }
+
+	    // make sure we provide the actual attached
+	    // shape with the context so that selection and
+	    // other components can use it right after the create
+	    // operation ends
+	    context.shape = shape;
+	  });
+
+
+	  eventBus.on('create.cleanup', function(event) {
+	    var context = event.context;
+
+	    if (context.visual) {
+	      context.visual.remove();
+	    }
+	  });
+
+	  // API
+
+	  this.start = function(event, shape, source) {
+
+	    dragging.init(event, 'create', {
+	      cursor: 'grabbing',
+	      autoActivate: true,
+	      data: {
+	        shape: shape,
+	        context: {
+	          shape: shape,
+	          source: source
+	        }
+	      }
+	    });
+	  };
+	}
+
+	Create.$inject = [ 'eventBus', 'dragging', 'rules', 'modeling', 'canvas', 'styles', 'graphicsFactory' ];
+
+	module.exports = Create;
+
+
+/***/ },
+/* 804 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __depends__: [
+	    __webpack_require__(805),
+	    __webpack_require__(730)
+	  ],
+	  __init__: [ 'replaceMenuProvider' ],
+	  replaceMenuProvider: [ 'type', __webpack_require__(807) ]
+	};
+
+/***/ },
+/* 805 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
-	  __depends__: [ __webpack_require__(558) ],
-	  __init__: [ 'palette' ],
-	  palette: [ 'type', __webpack_require__(822) ]
+	  __init__: [ 'popupMenu' ],
+	  popupMenu: [ 'type', __webpack_require__(806) ]
 	};
 
 
 /***/ },
-/* 822 */
+/* 806 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var forEach = __webpack_require__(128),
+	    assign = __webpack_require__(77),
+	    find = __webpack_require__(468);
+
+	var domDelegate = __webpack_require__(455),
+	    domify = __webpack_require__(50),
+	    domClasses = __webpack_require__(478),
+	    domAttr = __webpack_require__(481),
+	    domRemove = __webpack_require__(54);
+
+	var DATA_REF = 'data-id';
+
+	/**
+	 * A popup menu that can be used to display a list of actions anywhere in the canvas.
+	 *
+	 * @param {EventBus} eventBus
+	 * @param {Canvas} canvas
+	 *
+	 * @class
+	 * @constructor
+	 */
+	function PopupMenu(eventBus, canvas) {
+
+	  this._eventBus = eventBus;
+	  this._canvas  = canvas;
+	  this._providers = {};
+	}
+
+	PopupMenu.$inject = [ 'eventBus', 'canvas' ];
+
+	/**
+	 * Registers a popup menu provider
+	 *
+	 * @param  {String} id
+	 * @param  {Object} provider
+	 *
+	 * @example
+	 * popupMenu.registerProvider('myMenuID', {
+	 *   getEntries: function(element) {
+	 *     return [
+	 *       {
+	 *          id: 'entry-1',
+	 *          label: 'My Entry',
+	 *          action: 'alert("I have been clicked!")'
+	 *        }
+	 *      ];
+	 *    }
+	 *  });
+	 * })
+	 */
+	PopupMenu.prototype.registerProvider = function(id, provider) {
+	  this._providers[id] = provider;
+	};
+
+
+	/**
+	 * Create a popup menu according to a given element. The id refers to the ID
+	 * of the provider that must be registered before.
+	 *
+	 * @param  {String} id provider id
+	 * @param  {Object} element
+	 *
+	 * @return {PopupMenu} popup menu instance
+	 */
+	PopupMenu.prototype.create = function(id, element) {
+
+	  var provider = this._providers[id];
+
+	  if (!provider) {
+	    throw new Error('Provider is not registered: ' + id);
+	  }
+
+	  if (!element) {
+	    throw new Error('Element is missing');
+	  }
+
+	  var current = this._current = {
+	    provider: provider,
+	    className: id,
+	    element: element
+	  };
+
+	  if (provider.getHeaderEntries) {
+	    current.headerEntries = provider.getHeaderEntries(element);
+	  }
+
+	  current.entries = provider.getEntries(element);
+
+	  return this;
+	};
+
+
+	/**
+	 * Determine if the popup menu has entries.
+	 *
+	 * @return {Boolean} true if empty
+	 */
+	PopupMenu.prototype.isEmpty = function() {
+
+	  var current = this._current;
+
+	  return current.entries.length === 0 && current.headerEntries && current.headerEntries.length === 0;
+	};
+
+
+	/**
+	 * Open popup menu at given position
+	 *
+	 * @param {Object} position
+	 *
+	 * @return {Object} popup menu instance
+	 */
+	PopupMenu.prototype.open = function(position) {
+
+	  if (!position) {
+	    throw new Error('the position argument is missing');
+	  }
+
+	  // make sure, only one popup menu is open at a time
+	  if (this.isOpen()) {
+	    this.close();
+	  }
+
+	  var current = this._current,
+	      canvas = this._canvas,
+	      parent = canvas.getContainer();
+
+	  current.position = position;
+
+	  current.container = this._createContainer();
+
+	  if (current.headerEntries) {
+	    var headerEntriesContainer = this._createEntries(current.headerEntries, 'djs-popup-header');
+
+	    current.container.appendChild(headerEntriesContainer);
+	  }
+
+	  if (current.entries) {
+	    var entriesContainer = this._createEntries(current.entries, 'djs-popup-body');
+
+	    current.container.appendChild(entriesContainer);
+	  }
+
+	  this._attachContainer(current.container, parent, position.cursor);
+
+	  return this;
+	};
+
+
+	/**
+	 * Removes the popup menu and unbinds the event handlers.
+	 */
+	PopupMenu.prototype.close = function() {
+
+	  if (!this.isOpen()) {
+	    return;
+	  }
+
+	  this._unbindHandlers();
+	  domRemove(this._current.container);
+	  this._current.container = null;
+	};
+
+
+	/**
+	 * Determine if an open popup menu exist.
+	 *
+	 * @return {Boolean} true if open
+	 */
+	PopupMenu.prototype.isOpen = function() {
+	  return !!this._current.container;
+	};
+
+
+	/**
+	 * Trigger an action associated with an entry.
+	 *
+	 * @param {Object} event
+	 *
+	 * @return the result of the action callback, if any
+	 */
+	PopupMenu.prototype.trigger = function(event) {
+
+	  // silence other actions
+	  event.preventDefault();
+
+	  var element = event.delegateTarget || event.target,
+	      entryId = domAttr(element, DATA_REF);
+
+	  var entry = this._getEntry(entryId);
+
+	  if (entry.action) {
+	    return entry.action.call(null, event, entry);
+	  }
+	};
+
+	/**
+	 * Gets an entry instance (either entry or headerEntry) by id.
+	 *
+	 * @param  {String} entryId
+	 *
+	 * @return {Object} entry instance
+	 */
+	PopupMenu.prototype._getEntry = function(entryId) {
+
+	  var search = { id: entryId };
+
+	  var entry = find(this._current.entries, search) || find(this._current.headerEntries, search);
+
+	  if (!entry) {
+	    throw new Error('entry not found');
+	  }
+
+	  return entry;
+	};
+
+
+	/**
+	 * Creates the popup menu container.
+	 *
+	 * @return {Object} a DOM container
+	 */
+	PopupMenu.prototype._createContainer = function() {
+	  var container = domify('<div class="djs-popup">'),
+	      position = this._current.position,
+	      className = this._current.className;
+
+	  assign(container.style, {
+	    position: 'absolute',
+	    left: position.x + 'px',
+	    top: position.y + 'px',
+	    visibility: 'hidden'
+	  });
+
+	  domClasses(container).add(className);
+
+	  return container;
+	};
+
+
+	/**
+	 * Attaches the container to the DOM and binds the event handlers.
+	 *
+	 * @param {Object} container
+	 * @param {Object} parent
+	 */
+	PopupMenu.prototype._attachContainer = function(container, parent, cursor) {
+	  var self = this;
+
+	   // Event handler
+	  domDelegate.bind(container, '.entry' ,'click', function(event) {
+	    self.trigger(event);
+	  });
+
+	  // apply canvas zoom level
+	  var zoom = this._canvas.zoom();
+
+	  container.style.transformOrigin = 'top left';
+	  container.style.transform = 'scale(' + zoom + ')';
+
+	  // Attach to DOM
+	  parent.appendChild(container);
+
+	  if (cursor) {
+	    this._assureIsInbounds(container, cursor);
+	  }
+
+	  // Add Handler
+	  this._bindHandlers();
+	};
+
+
+	/**
+	 * Make sure that the menu is always fully shown
+	 *
+	 * @method function
+	 *
+	 * @param  {Object} container
+	 * @param  {Position} cursor {x, y}
+	 */
+	PopupMenu.prototype._assureIsInbounds = function(container, cursor) {
+	  var canvas = this._canvas,
+	      clientRect = canvas._container.getBoundingClientRect();
+
+	  var containerX = container.offsetLeft,
+	      containerY = container.offsetTop,
+	      containerWidth = container.scrollWidth,
+	      containerHeight = container.scrollHeight,
+	      overAxis = {},
+	      left, top;
+
+	  var cursorPosition = {
+	    x: cursor.x - clientRect.left,
+	    y: cursor.y - clientRect.top
+	  };
+
+	  if (containerX + containerWidth > clientRect.width) {
+	    overAxis.x = true;
+	  }
+
+	  if (containerY + containerHeight > clientRect.height) {
+	    overAxis.y = true;
+	  }
+
+	  if (overAxis.x && overAxis.y) {
+	    left = cursorPosition.x - containerWidth + 'px';
+	    top = cursorPosition.y - containerHeight + 'px';
+	  } else if (overAxis.x) {
+	    left = cursorPosition.x - containerWidth + 'px';
+	    top = cursorPosition.y + 'px';
+	  } else if (overAxis.y && cursorPosition.y < containerHeight) {
+	    left = cursorPosition.x + 'px';
+	    top = 10 + 'px';
+	  } else if (overAxis.y) {
+	    left = cursorPosition.x + 'px';
+	    top = cursorPosition.y - containerHeight + 'px';
+	  }
+
+	  assign(container.style, { left: left, top: top }, { visibility: 'visible', 'z-index': 1000 });
+	};
+
+
+	/**
+	 * Creates a list of entries and returns them as a DOM container.
+	 *
+	 * @param {Array<Object>} entries an array of entry objects
+	 * @param {String} className the class name of the entry container
+	 *
+	 * @return {Object} a DOM container
+	 */
+	PopupMenu.prototype._createEntries = function(entries, className) {
+
+	  var entriesContainer = domify('<div>'),
+	      self = this;
+
+	  domClasses(entriesContainer).add(className);
+
+	  forEach(entries, function(entry) {
+	    var entryContainer = self._createEntry(entry, entriesContainer);
+	    entriesContainer.appendChild(entryContainer);
+	  });
+
+	  return entriesContainer;
+	};
+
+
+	/**
+	 * Creates a single entry and returns it as a DOM container.
+	 *
+	 * @param  {Object} entry
+	 *
+	 * @return {Object} a DOM container
+	 */
+	PopupMenu.prototype._createEntry = function(entry) {
+
+	  if (!entry.id) {
+	    throw new Error ('every entry must have the id property set');
+	  }
+
+	  var entryContainer = domify('<div>'),
+	      entryClasses = domClasses(entryContainer);
+
+	  entryClasses.add('entry');
+
+	  if (entry.className) {
+	    entryClasses.add(entry.className);
+	  }
+
+	  domAttr(entryContainer, DATA_REF, entry.id);
+
+	  if (entry.label) {
+	    var label = domify('<span>');
+	    label.textContent = entry.label;
+	    entryContainer.appendChild(label);
+	  }
+
+	  if (entry.imageUrl) {
+	    entryContainer.appendChild(domify('<img src="' + entry.imageUrl + '" />'));
+	  }
+
+	  if (entry.active === true) {
+	    entryClasses.add('active');
+	  }
+
+	  if (entry.disabled === true) {
+	    entryClasses.add('disabled');
+	  }
+
+	  if (entry.title) {
+	    entryContainer.title = entry.title;
+	  }
+
+	  return entryContainer;
+	};
+
+
+	/**
+	 * Binds the `close` method to 'contextPad.close' & 'canvas.viewbox.changed'.
+	 */
+	PopupMenu.prototype._bindHandlers = function() {
+
+	  var eventBus = this._eventBus,
+	      self = this;
+
+	  function close() {
+	    self.close();
+	  }
+
+	  eventBus.once('contextPad.close', close);
+	  eventBus.once('canvas.viewbox.changing', close);
+	  eventBus.once('commandStack.changed', close);
+	};
+
+
+	/**
+	 * Unbinds the `close` method to 'contextPad.close' & 'canvas.viewbox.changing'.
+	 */
+	PopupMenu.prototype._unbindHandlers = function() {
+
+	  var eventBus = this._eventBus,
+	      self = this;
+
+	  function close() {
+	    self.close();
+	  }
+
+	  eventBus.off('contextPad.close', close);
+	  eventBus.off('canvas.viewbox.changed', close);
+	  eventBus.off('commandStack.changed', close);
+	};
+
+	module.exports = PopupMenu;
+
+
+/***/ },
+/* 807 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var is = __webpack_require__(443).is,
+	    isEventSubProcess = __webpack_require__(442).isEventSubProcess,
+	    getBusinessObject = __webpack_require__(443).getBusinessObject,
+	    isExpanded = __webpack_require__(442).isExpanded,
+	    isDifferentType = __webpack_require__(808).isDifferentType;
+
+	var forEach = __webpack_require__(415),
+	    filter = __webpack_require__(383),
+	    reject = __webpack_require__(809);
+
+	var replaceOptions = __webpack_require__ (810);
+
+
+	/**
+	 * This module is an element agnostic replace menu provider for the popup menu.
+	 */
+	function ReplaceMenuProvider(popupMenu, modeling, moddle, bpmnReplace, rules, translate) {
+
+	  this._popupMenu = popupMenu;
+	  this._modeling = modeling;
+	  this._moddle = moddle;
+	  this._bpmnReplace = bpmnReplace;
+	  this._rules = rules;
+	  this._translate = translate;
+
+	  this.register();
+	}
+
+	ReplaceMenuProvider.$inject = [ 'popupMenu', 'modeling', 'moddle', 'bpmnReplace', 'rules', 'translate' ];
+
+
+	/**
+	 * Register replace menu provider in the popup menu
+	 */
+	ReplaceMenuProvider.prototype.register = function() {
+	  this._popupMenu.registerProvider('bpmn-replace', this);
+	};
+
+
+	/**
+	 * Get all entries from replaceOptions for the given element and apply filters
+	 * on them. Get for example only elements, which are different from the current one.
+	 *
+	 * @param {djs.model.Base} element
+	 *
+	 * @return {Array<Object>} a list of menu entry items
+	 */
+	ReplaceMenuProvider.prototype.getEntries = function(element) {
+
+	  var businessObject = element.businessObject;
+
+	  var rules = this._rules;
+
+	  var entries;
+
+	  if (!rules.allowed('shape.replace', { element: element })) {
+	    return [];
+	  }
+
+	  var differentType = isDifferentType(element);
+
+	  // start events outside event sub processes
+	  if (is(businessObject, 'bpmn:StartEvent') && !isEventSubProcess(businessObject.$parent)) {
+
+	    entries = filter(replaceOptions.START_EVENT, differentType);
+
+	    return this._createEntries(element, entries);
+	  }
+
+	  // expanded/collapsed pools
+	  if (is(businessObject, 'bpmn:Participant')) {
+
+	    entries = filter(replaceOptions.PARTICIPANT, function(entry) {
+	      return isExpanded(businessObject) !== entry.target.isExpanded;
+	    });
+
+	    return this._createEntries(element, entries);
+	  }
+
+	  // start events inside event sub processes
+	  if (is(businessObject, 'bpmn:StartEvent') && isEventSubProcess(businessObject.$parent)) {
+
+	    entries = filter(replaceOptions.EVENT_SUB_PROCESS_START_EVENT, function(entry) {
+
+	      var target = entry.target;
+
+	      var isInterrupting = target.isInterrupting !== false;
+
+	      var isInterruptingEqual = getBusinessObject(element).isInterrupting === isInterrupting;
+
+	      // filters elements which types and event definition are equal but have have different interrupting types
+	      return differentType(entry) || !differentType(entry) && !isInterruptingEqual;
+
+	    });
+
+	    return this._createEntries(element, entries);
+	  }
+
+	  // end events
+	  if (is(businessObject, 'bpmn:EndEvent')) {
+
+	    entries = filter(replaceOptions.END_EVENT, function(entry) {
+	      var target = entry.target;
+
+	      // hide cancel end events outside transactions
+	      if (target.eventDefinitionType == 'bpmn:CancelEventDefinition' && !is(businessObject.$parent, 'bpmn:Transaction')) {
+	        return false;
+	      }
+
+	      return differentType(entry);
+	    });
+
+	    return this._createEntries(element, entries);
+	  }
+
+	  // boundary events
+	  if (is(businessObject, 'bpmn:BoundaryEvent')) {
+
+	    entries = filter(replaceOptions.BOUNDARY_EVENT, function(entry) {
+
+	      var target = entry.target;
+
+	      if (target.eventDefinition == 'bpmn:CancelEventDefinition' &&
+	         !is(businessObject.attachedToRef, 'bpmn:Transaction')) {
+	        return false;
+	      }
+	      var cancelActivity = target.cancelActivity !== false;
+
+	      var isCancelActivityEqual = businessObject.cancelActivity == cancelActivity;
+
+	      return differentType(entry) || !differentType(entry) && !isCancelActivityEqual;
+	    });
+
+	    return this._createEntries(element, entries);
+	  }
+
+	  // intermediate events
+	  if (is(businessObject, 'bpmn:IntermediateCatchEvent') ||
+	      is(businessObject, 'bpmn:IntermediateThrowEvent')) {
+
+	    entries = filter(replaceOptions.INTERMEDIATE_EVENT, differentType);
+
+	    return this._createEntries(element, entries);
+	  }
+
+	  // gateways
+	  if (is(businessObject, 'bpmn:Gateway')) {
+
+	    entries = filter(replaceOptions.GATEWAY, differentType);
+
+	    return this._createEntries(element, entries);
+	  }
+
+	  // transactions
+	  if (is(businessObject, 'bpmn:Transaction')) {
+
+	    entries = filter(replaceOptions.TRANSACTION, differentType);
+
+	    return this._createEntries(element, entries);
+	  }
+
+	  // expanded event sub processes
+	  if (isEventSubProcess(businessObject) && isExpanded(businessObject)) {
+
+	    entries = filter(replaceOptions.EVENT_SUB_PROCESS, differentType);
+
+	    return this._createEntries(element, entries);
+	  }
+
+	  // expanded sub processes
+	  if (is(businessObject, 'bpmn:SubProcess') && isExpanded(businessObject)) {
+
+	    entries = filter(replaceOptions.SUBPROCESS_EXPANDED, differentType);
+
+	    return this._createEntries(element, entries);
+	  }
+
+	  // collapsed ad hoc sub processes
+	  if (is(businessObject, 'bpmn:AdHocSubProcess') && !isExpanded(businessObject)) {
+
+	    entries = filter(replaceOptions.TASK, function(entry) {
+
+	      var target = entry.target;
+
+	      var isTargetSubProcess = target.type === 'bpmn:SubProcess';
+
+	      var isTargetExpanded = target.isExpanded === true;
+
+	      return isDifferentType(element, target) && ( !isTargetSubProcess || isTargetExpanded );
+	    });
+
+	    return this._createEntries(element, entries);
+	  }
+
+	  // sequence flows
+	  if (is(businessObject, 'bpmn:SequenceFlow')) {
+	    return this._createSequenceFlowEntries(element, replaceOptions.SEQUENCE_FLOW);
+	  }
+
+	  // flow nodes
+	  if (is(businessObject, 'bpmn:FlowNode')) {
+	    entries = filter(replaceOptions.TASK, differentType);
+
+	    // collapsed SubProcess can not be replaced with itself
+	    if (is(businessObject, 'bpmn:SubProcess') && !isExpanded(businessObject)) {
+	      entries = reject(entries, function(entry) {
+	        return entry.label === 'Sub Process (collapsed)';
+	      });
+	    }
+
+	    return this._createEntries(element, entries);
+	  }
+
+	  return [];
+	};
+
+
+	/**
+	 * Get a list of header items for the given element. This includes buttons
+	 * for multi instance markers and for the ad hoc marker.
+	 *
+	 * @param {djs.model.Base} element
+	 *
+	 * @return {Array<Object>} a list of menu entry items
+	 */
+	ReplaceMenuProvider.prototype.getHeaderEntries = function(element) {
+
+	  var headerEntries = [];
+
+	  if (is(element, 'bpmn:Activity') && !isEventSubProcess(element)) {
+	    headerEntries = headerEntries.concat(this._getLoopEntries(element));
+	  }
+
+	  if (is(element, 'bpmn:SubProcess') &&
+	      !is(element, 'bpmn:Transaction') &&
+	      !isEventSubProcess(element)) {
+	    headerEntries.push(this._getAdHocEntry(element));
+	  }
+
+	  return headerEntries;
+	};
+
+
+	/**
+	 * Creates an array of menu entry objects for a given element and filters the replaceOptions
+	 * according to a filter function.
+	 *
+	 * @param  {djs.model.Base} element
+	 * @param  {Object} replaceOptions
+	 *
+	 * @return {Array<Object>} a list of menu items
+	 */
+	ReplaceMenuProvider.prototype._createEntries = function(element, replaceOptions) {
+	  var menuEntries = [];
+
+	  var self = this;
+
+	  forEach(replaceOptions, function(definition) {
+	    var entry = self._createMenuEntry(definition, element);
+
+	    menuEntries.push(entry);
+	  });
+
+	  return menuEntries;
+	};
+
+	/**
+	 * Creates an array of menu entry objects for a given sequence flow.
+	 *
+	 * @param  {djs.model.Base} element
+	 * @param  {Object} replaceOptions
+
+	 * @return {Array<Object>} a list of menu items
+	 */
+	ReplaceMenuProvider.prototype._createSequenceFlowEntries = function(element, replaceOptions) {
+
+	  var businessObject = getBusinessObject(element);
+
+	  var menuEntries = [];
+
+	  var modeling = this._modeling,
+	      moddle = this._moddle;
+
+	  var self = this;
+
+	  forEach(replaceOptions, function(entry) {
+
+	    switch (entry.actionName) {
+	    case 'replace-with-default-flow':
+	      if (businessObject.sourceRef.default !== businessObject &&
+	            (is(businessObject.sourceRef, 'bpmn:ExclusiveGateway') ||
+	             is(businessObject.sourceRef, 'bpmn:InclusiveGateway') ||
+	             is(businessObject.sourceRef, 'bpmn:ComplexGateway') ||
+	             is(businessObject.sourceRef, 'bpmn:Activity'))) {
+
+	        menuEntries.push(self._createMenuEntry(entry, element, function() {
+	          modeling.updateProperties(element.source, { default: businessObject });
+	        }));
+	      }
+	      break;
+	    case 'replace-with-conditional-flow':
+	      if (!businessObject.conditionExpression && is(businessObject.sourceRef, 'bpmn:Activity')) {
+
+	        menuEntries.push(self._createMenuEntry(entry, element, function() {
+	          var conditionExpression = moddle.create('bpmn:FormalExpression', { body: '' });
+
+	          modeling.updateProperties(element, { conditionExpression: conditionExpression });
+	        }));
+	      }
+	      break;
+	    default:
+	        // default flows
+	      if (is(businessObject.sourceRef, 'bpmn:Activity') && businessObject.conditionExpression) {
+	        return menuEntries.push(self._createMenuEntry(entry, element, function() {
+	          modeling.updateProperties(element, { conditionExpression: undefined });
+	        }));
+	      }
+	        // conditional flows
+	      if ((is(businessObject.sourceRef, 'bpmn:ExclusiveGateway') ||
+	           is(businessObject.sourceRef, 'bpmn:InclusiveGateway') ||
+	           is(businessObject.sourceRef, 'bpmn:ComplexGateway') ||
+	           is(businessObject.sourceRef, 'bpmn:Activity')) &&
+	           businessObject.sourceRef.default === businessObject) {
+
+	        return menuEntries.push(self._createMenuEntry(entry, element, function() {
+	          modeling.updateProperties(element.source, { default: undefined });
+	        }));
+	      }
+	    }
+	  });
+
+	  return menuEntries;
+	};
+
+
+	/**
+	 * Creates and returns a single menu entry item.
+	 *
+	 * @param  {Object} definition a single replace options definition object
+	 * @param  {djs.model.Base} element
+	 * @param  {Function} [action] an action callback function which gets called when
+	 *                             the menu entry is being triggered.
+	 *
+	 * @return {Object} menu entry item
+	 */
+	ReplaceMenuProvider.prototype._createMenuEntry = function(definition, element, action) {
+	  var translate = this._translate;
+	  var replaceElement = this._bpmnReplace.replaceElement;
+
+	  var replaceAction = function() {
+	    return replaceElement(element, definition.target);
+	  };
+
+	  action = action || replaceAction;
+
+	  var menuEntry = {
+	    label: translate(definition.label),
+	    className: definition.className,
+	    id: definition.actionName,
+	    action: action
+	  };
+
+	  return menuEntry;
+	};
+
+	/**
+	 * Get a list of menu items containing buttons for multi instance markers
+	 *
+	 * @param  {djs.model.Base} element
+	 *
+	 * @return {Array<Object>} a list of menu items
+	 */
+	ReplaceMenuProvider.prototype._getLoopEntries = function(element) {
+
+	  var self = this;
+	  var translate = this._translate;
+
+	  function toggleLoopEntry(event, entry) {
+	    var loopCharacteristics;
+
+	    if (entry.active) {
+	      loopCharacteristics = undefined;
+	    } else {
+	      loopCharacteristics = self._moddle.create(entry.options.loopCharacteristics);
+
+	      if (entry.options.isSequential) {
+	        loopCharacteristics.isSequential = entry.options.isSequential;
+	      }
+	    }
+	    self._modeling.updateProperties(element, { loopCharacteristics: loopCharacteristics });
+	  }
+
+	  var businessObject = getBusinessObject(element),
+	      loopCharacteristics = businessObject.loopCharacteristics;
+
+	  var isSequential,
+	      isLoop,
+	      isParallel;
+
+	  if (loopCharacteristics) {
+	    isSequential = loopCharacteristics.isSequential;
+	    isLoop = loopCharacteristics.isSequential === undefined;
+	    isParallel = loopCharacteristics.isSequential !== undefined && !loopCharacteristics.isSequential;
+	  }
+
+
+	  var loopEntries = [
+	    {
+	      id: 'toggle-parallel-mi',
+	      className: 'bpmn-icon-parallel-mi-marker',
+	      title: translate('Parallel Multi Instance'),
+	      active: isParallel,
+	      action: toggleLoopEntry,
+	      options: {
+	        loopCharacteristics: 'bpmn:MultiInstanceLoopCharacteristics',
+	        isSequential: false
+	      }
+	    },
+	    {
+	      id: 'toggle-sequential-mi',
+	      className: 'bpmn-icon-sequential-mi-marker',
+	      title: translate('Sequential Multi Instance'),
+	      active: isSequential,
+	      action: toggleLoopEntry,
+	      options: {
+	        loopCharacteristics: 'bpmn:MultiInstanceLoopCharacteristics',
+	        isSequential: true
+	      }
+	    },
+	    {
+	      id: 'toggle-loop',
+	      className: 'bpmn-icon-loop-marker',
+	      title: translate('Loop'),
+	      active: isLoop,
+	      action: toggleLoopEntry,
+	      options: {
+	        loopCharacteristics: 'bpmn:StandardLoopCharacteristics'
+	      }
+	    }
+	  ];
+	  return loopEntries;
+	};
+
+
+	/**
+	 * Get the menu items containing a button for the ad hoc marker
+	 *
+	 * @param  {djs.model.Base} element
+	 *
+	 * @return {Object} a menu item
+	 */
+	ReplaceMenuProvider.prototype._getAdHocEntry = function(element) {
+	  var translate = this._translate;
+	  var businessObject = getBusinessObject(element);
+
+	  var isAdHoc = is(businessObject, 'bpmn:AdHocSubProcess');
+
+	  var replaceElement = this._bpmnReplace.replaceElement;
+
+	  var adHocEntry = {
+	    id: 'toggle-adhoc',
+	    className: 'bpmn-icon-ad-hoc-marker',
+	    title: translate('Ad-hoc'),
+	    active: isAdHoc,
+	    action: function(event, entry) {
+	      if (isAdHoc) {
+	        return replaceElement(element, { type: 'bpmn:SubProcess' });
+	      } else {
+	        return replaceElement(element, { type: 'bpmn:AdHocSubProcess' });
+	      }
+	    }
+	  };
+
+	  return adHocEntry;
+	};
+
+	module.exports = ReplaceMenuProvider;
+
+
+/***/ },
+/* 808 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var getBusinessObject = __webpack_require__(443).getBusinessObject;
+	var isExpanded = __webpack_require__(442).isExpanded;
+
+	/**
+	 * Returns true, if an element is from a different type
+	 * than a target definition. Takes into account the type,
+	 * event definition type and triggeredByEvent property.
+	 *
+	 * @param {djs.model.Base} element
+	 *
+	 * @return {Boolean}
+	 */
+	function isDifferentType(element) {
+
+	  return function(entry) {
+	    var target = entry.target;
+
+	    var businessObject = getBusinessObject(element),
+	        eventDefinition = businessObject.eventDefinitions && businessObject.eventDefinitions[0];
+
+	    var isTypeEqual = businessObject.$type === target.type;
+
+	    var isEventDefinitionEqual = (
+	      (eventDefinition && eventDefinition.$type) === target.eventDefinitionType
+	    );
+
+	    var isTriggeredByEventEqual = (
+	      businessObject.triggeredByEvent === target.triggeredByEvent
+	    );
+
+	    var isExpandedEqual = (
+	        target.isExpanded === undefined ||
+	        target.isExpanded === isExpanded(businessObject)
+	    );
+
+	    return !isTypeEqual || !isEventDefinitionEqual || !isTriggeredByEventEqual || !isExpandedEqual;
+	  };
+	}
+
+	module.exports.isDifferentType = isDifferentType;
+
+/***/ },
+/* 809 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var arrayFilter = __webpack_require__(384),
+	    baseCallback = __webpack_require__(385),
+	    baseFilter = __webpack_require__(407),
+	    isArray = __webpack_require__(21);
+
+	/**
+	 * The opposite of `_.filter`; this method returns the elements of `collection`
+	 * that `predicate` does **not** return truthy for.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Collection
+	 * @param {Array|Object|string} collection The collection to iterate over.
+	 * @param {Function|Object|string} [predicate=_.identity] The function invoked
+	 *  per iteration.
+	 * @param {*} [thisArg] The `this` binding of `predicate`.
+	 * @returns {Array} Returns the new filtered array.
+	 * @example
+	 *
+	 * _.reject([1, 2, 3, 4], function(n) {
+	 *   return n % 2 == 0;
+	 * });
+	 * // => [1, 3]
+	 *
+	 * var users = [
+	 *   { 'user': 'barney', 'age': 36, 'active': false },
+	 *   { 'user': 'fred',   'age': 40, 'active': true }
+	 * ];
+	 *
+	 * // using the `_.matches` callback shorthand
+	 * _.pluck(_.reject(users, { 'age': 40, 'active': true }), 'user');
+	 * // => ['barney']
+	 *
+	 * // using the `_.matchesProperty` callback shorthand
+	 * _.pluck(_.reject(users, 'active', false), 'user');
+	 * // => ['fred']
+	 *
+	 * // using the `_.property` callback shorthand
+	 * _.pluck(_.reject(users, 'active'), 'user');
+	 * // => ['barney']
+	 */
+	function reject(collection, predicate, thisArg) {
+	  var func = isArray(collection) ? arrayFilter : baseFilter;
+	  predicate = baseCallback(predicate, thisArg, 3);
+	  return func(collection, function(value, index, collection) {
+	    return !predicate(value, index, collection);
+	  });
+	}
+
+	module.exports = reject;
+
+
+/***/ },
+/* 810 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	module.exports.START_EVENT = [
+	  {
+	    label: 'Start Event',
+	    actionName: 'replace-with-none-start',
+	    className: 'bpmn-icon-start-event-none',
+	    target: {
+	      type: 'bpmn:StartEvent'
+	    }
+	  },
+	  {
+	    label: 'Intermediate Throw Event',
+	    actionName: 'replace-with-none-intermediate-throwing',
+	    className: 'bpmn-icon-intermediate-event-none',
+	    target: {
+	      type: 'bpmn:IntermediateThrowEvent'
+	    }
+	  },
+	  {
+	    label: 'End Event',
+	    actionName: 'replace-with-none-end',
+	    className: 'bpmn-icon-end-event-none',
+	    target: {
+	      type: 'bpmn:EndEvent'
+	    }
+	  },
+	  {
+	    label: 'Message Start Event',
+	    actionName: 'replace-with-message-start',
+	    className: 'bpmn-icon-start-event-message',
+	    target: {
+	      type: 'bpmn:StartEvent',
+	      eventDefinitionType: 'bpmn:MessageEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Timer Start Event',
+	    actionName: 'replace-with-timer-start',
+	    className: 'bpmn-icon-start-event-timer',
+	    target: {
+	      type: 'bpmn:StartEvent',
+	      eventDefinitionType: 'bpmn:TimerEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Conditional Start Event',
+	    actionName: 'replace-with-conditional-start',
+	    className: 'bpmn-icon-start-event-condition',
+	    target: {
+	      type: 'bpmn:StartEvent',
+	      eventDefinitionType: 'bpmn:ConditionalEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Signal Start Event',
+	    actionName: 'replace-with-signal-start',
+	    className: 'bpmn-icon-start-event-signal',
+	    target: {
+	      type: 'bpmn:StartEvent',
+	      eventDefinitionType: 'bpmn:SignalEventDefinition'
+	    }
+	  }
+	];
+
+	module.exports.INTERMEDIATE_EVENT = [
+	  {
+	    label: 'Start Event',
+	    actionName: 'replace-with-none-start',
+	    className: 'bpmn-icon-start-event-none',
+	    target: {
+	      type: 'bpmn:StartEvent'
+	    }
+	  },
+	  {
+	    label: 'Intermediate Throw Event',
+	    actionName: 'replace-with-none-intermediate-throw',
+	    className: 'bpmn-icon-intermediate-event-none',
+	    target: {
+	      type: 'bpmn:IntermediateThrowEvent'
+	    }
+	  },
+	  {
+	    label: 'End Event',
+	    actionName: 'replace-with-none-end',
+	    className: 'bpmn-icon-end-event-none',
+	    target: {
+	      type: 'bpmn:EndEvent'
+	    }
+	  },
+	  {
+	    label: 'Message Intermediate Catch Event',
+	    actionName: 'replace-with-message-intermediate-catch',
+	    className: 'bpmn-icon-intermediate-event-catch-message',
+	    target: {
+	      type: 'bpmn:IntermediateCatchEvent',
+	      eventDefinitionType: 'bpmn:MessageEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Message Intermediate Throw Event',
+	    actionName: 'replace-with-message-intermediate-throw',
+	    className: 'bpmn-icon-intermediate-event-throw-message',
+	    target: {
+	      type: 'bpmn:IntermediateThrowEvent',
+	      eventDefinitionType: 'bpmn:MessageEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Timer Intermediate Catch Event',
+	    actionName: 'replace-with-timer-intermediate-catch',
+	    className: 'bpmn-icon-intermediate-event-catch-timer',
+	    target: {
+	      type: 'bpmn:IntermediateCatchEvent',
+	      eventDefinitionType: 'bpmn:TimerEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Escalation Intermediate Throw Event',
+	    actionName: 'replace-with-escalation-intermediate-throw',
+	    className: 'bpmn-icon-intermediate-event-throw-escalation',
+	    target: {
+	      type: 'bpmn:IntermediateThrowEvent',
+	      eventDefinitionType: 'bpmn:EscalationEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Conditional Intermediate Catch Event',
+	    actionName: 'replace-with-conditional-intermediate-catch',
+	    className: 'bpmn-icon-intermediate-event-catch-condition',
+	    target: {
+	      type: 'bpmn:IntermediateCatchEvent',
+	      eventDefinitionType: 'bpmn:ConditionalEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Link Intermediate Catch Event',
+	    actionName: 'replace-with-link-intermediate-catch',
+	    className: 'bpmn-icon-intermediate-event-catch-link',
+	    target: {
+	      type: 'bpmn:IntermediateCatchEvent',
+	      eventDefinitionType: 'bpmn:LinkEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Link Intermediate Throw Event',
+	    actionName: 'replace-with-link-intermediate-throw',
+	    className: 'bpmn-icon-intermediate-event-throw-link',
+	    target: {
+	      type: 'bpmn:IntermediateThrowEvent',
+	      eventDefinitionType: 'bpmn:LinkEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Compensation Intermediate Throw Event',
+	    actionName: 'replace-with-compensation-intermediate-throw',
+	    className: 'bpmn-icon-intermediate-event-throw-compensation',
+	    target: {
+	      type: 'bpmn:IntermediateThrowEvent',
+	      eventDefinitionType: 'bpmn:CompensateEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Signal Intermediate Catch Event',
+	    actionName: 'replace-with-signal-intermediate-catch',
+	    className: 'bpmn-icon-intermediate-event-catch-signal',
+	    target: {
+	      type: 'bpmn:IntermediateCatchEvent',
+	      eventDefinitionType: 'bpmn:SignalEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Signal Intermediate Throw Event',
+	    actionName: 'replace-with-signal-intermediate-throw',
+	    className: 'bpmn-icon-intermediate-event-throw-signal',
+	    target: {
+	      type: 'bpmn:IntermediateThrowEvent',
+	      eventDefinitionType: 'bpmn:SignalEventDefinition'
+	    }
+	  }
+	];
+
+	module.exports.END_EVENT = [
+	  {
+	    label: 'Start Event',
+	    actionName: 'replace-with-none-start',
+	    className: 'bpmn-icon-start-event-none',
+	    target: {
+	      type: 'bpmn:StartEvent'
+	    }
+	  },
+	  {
+	    label: 'Intermediate Throw Event',
+	    actionName: 'replace-with-none-intermediate-throw',
+	    className: 'bpmn-icon-intermediate-event-none',
+	    target: {
+	      type: 'bpmn:IntermediateThrowEvent'
+	    }
+	  },
+	  {
+	    label: 'End Event',
+	    actionName: 'replace-with-none-end',
+	    className: 'bpmn-icon-end-event-none',
+	    target: {
+	      type: 'bpmn:EndEvent'
+	    }
+	  },
+	  {
+	    label: 'Message End Event',
+	    actionName: 'replace-with-message-end',
+	    className: 'bpmn-icon-end-event-message',
+	    target: {
+	      type: 'bpmn:EndEvent',
+	      eventDefinitionType: 'bpmn:MessageEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Escalation End Event',
+	    actionName: 'replace-with-escalation-end',
+	    className: 'bpmn-icon-end-event-escalation',
+	    target: {
+	      type: 'bpmn:EndEvent',
+	      eventDefinitionType: 'bpmn:EscalationEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Error End Event',
+	    actionName: 'replace-with-error-end',
+	    className: 'bpmn-icon-end-event-error',
+	    target: {
+	      type: 'bpmn:EndEvent',
+	      eventDefinitionType: 'bpmn:ErrorEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Cancel End Event',
+	    actionName: 'replace-with-cancel-end',
+	    className: 'bpmn-icon-end-event-cancel',
+	    target: {
+	      type: 'bpmn:EndEvent',
+	      eventDefinitionType: 'bpmn:CancelEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Compensation End Event',
+	    actionName: 'replace-with-compensation-end',
+	    className: 'bpmn-icon-end-event-compensation',
+	    target: {
+	      type: 'bpmn:EndEvent',
+	      eventDefinitionType: 'bpmn:CompensateEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Signal End Event',
+	    actionName: 'replace-with-signal-end',
+	    className: 'bpmn-icon-end-event-signal',
+	    target: {
+	      type: 'bpmn:EndEvent',
+	      eventDefinitionType: 'bpmn:SignalEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Terminate End Event',
+	    actionName: 'replace-with-terminate-end',
+	    className: 'bpmn-icon-end-event-terminate',
+	    target: {
+	      type: 'bpmn:EndEvent',
+	      eventDefinitionType: 'bpmn:TerminateEventDefinition'
+	    }
+	  }
+	];
+
+	module.exports.GATEWAY = [
+	  {
+	    label: 'Exclusive Gateway',
+	    actionName: 'replace-with-exclusive-gateway',
+	    className: 'bpmn-icon-gateway-xor',
+	    target: {
+	      type: 'bpmn:ExclusiveGateway'
+	    }
+	  },
+	  {
+	    label: 'Parallel Gateway',
+	    actionName: 'replace-with-parallel-gateway',
+	    className: 'bpmn-icon-gateway-parallel',
+	    target: {
+	      type: 'bpmn:ParallelGateway'
+	    }
+	  },
+	  {
+	    label: 'Inclusive Gateway',
+	    actionName: 'replace-with-inclusive-gateway',
+	    className: 'bpmn-icon-gateway-or',
+	    target: {
+	      type: 'bpmn:InclusiveGateway'
+	    }
+	  },
+	  {
+	    label: 'Complex Gateway',
+	    actionName: 'replace-with-complex-gateway',
+	    className: 'bpmn-icon-gateway-complex',
+	    target: {
+	      type: 'bpmn:ComplexGateway'
+	    }
+	  },
+	  {
+	    label: 'Event based Gateway',
+	    actionName: 'replace-with-event-based-gateway',
+	    className: 'bpmn-icon-gateway-eventbased',
+	    target: {
+	      type: 'bpmn:EventBasedGateway',
+	      instantiate: false,
+	      eventGatewayType: 'Exclusive'
+	    }
+	  }
+	  // Gateways deactivated until https://github.com/bpmn-io/bpmn-js/issues/194
+	  // {
+	  //   label: 'Event based instantiating Gateway',
+	  //   actionName: 'replace-with-exclusive-event-based-gateway',
+	  //   className: 'bpmn-icon-exclusive-event-based',
+	  //   target: {
+	  //     type: 'bpmn:EventBasedGateway'
+	  //   },
+	  //   options: {
+	  //     businessObject: { instantiate: true, eventGatewayType: 'Exclusive' }
+	  //   }
+	  // },
+	  // {
+	  //   label: 'Parallel Event based instantiating Gateway',
+	  //   actionName: 'replace-with-parallel-event-based-instantiate-gateway',
+	  //   className: 'bpmn-icon-parallel-event-based-instantiate-gateway',
+	  //   target: {
+	  //     type: 'bpmn:EventBasedGateway'
+	  //   },
+	  //   options: {
+	  //     businessObject: { instantiate: true, eventGatewayType: 'Parallel' }
+	  //   }
+	  // }
+	];
+
+	module.exports.SUBPROCESS_EXPANDED = [
+	  {
+	    label: 'Transaction',
+	    actionName: 'replace-with-transaction',
+	    className: 'bpmn-icon-transaction',
+	    target: {
+	      type: 'bpmn:Transaction',
+	      isExpanded: true
+	    }
+	  },
+	  {
+	    label: 'Event Sub Process',
+	    actionName: 'replace-with-event-subprocess',
+	    className: 'bpmn-icon-event-subprocess-expanded',
+	    target: {
+	      type: 'bpmn:SubProcess',
+	      triggeredByEvent: true,
+	      isExpanded: true
+	    }
+	  },
+	  {
+	    label: 'Sub Process (collapsed)',
+	    actionName: 'replace-with-collapsed-subprocess',
+	    className: 'bpmn-icon-subprocess-collapsed',
+	    target: {
+	      type: 'bpmn:SubProcess',
+	      isExpanded: false
+	    }
+	  }
+	];
+
+	module.exports.TRANSACTION = [
+	  {
+	    label: 'Sub Process',
+	    actionName: 'replace-with-subprocess',
+	    className: 'bpmn-icon-subprocess-expanded',
+	    target: {
+	      type: 'bpmn:SubProcess',
+	      isExpanded: true
+	    }
+	  },
+	  {
+	    label: 'Event Sub Process',
+	    actionName: 'replace-with-event-subprocess',
+	    className: 'bpmn-icon-event-subprocess-expanded',
+	    target: {
+	      type: 'bpmn:SubProcess',
+	      triggeredByEvent: true,
+	      isExpanded: true
+	    }
+	  }
+	];
+
+	module.exports.EVENT_SUB_PROCESS = [
+	  {
+	    label: 'Sub Process',
+	    actionName: 'replace-with-subprocess',
+	    className: 'bpmn-icon-subprocess-expanded',
+	    target: {
+	      type: 'bpmn:SubProcess',
+	      isExpanded: true
+	    }
+	  },
+	  {
+	    label: 'Transaction',
+	    actionName: 'replace-with-transaction',
+	    className: 'bpmn-icon-transaction',
+	    target: {
+	      type: 'bpmn:Transaction',
+	      isExpanded: true
+	    }
+	  }
+	];
+
+	module.exports.TASK = [
+	  {
+	    label: 'Task',
+	    actionName: 'replace-with-task',
+	    className: 'bpmn-icon-task',
+	    target: {
+	      type: 'bpmn:Task'
+	    }
+	  },
+	  {
+	    label: 'Send Task',
+	    actionName: 'replace-with-send-task',
+	    className: 'bpmn-icon-send',
+	    target: {
+	      type: 'bpmn:SendTask'
+	    }
+	  },
+	  {
+	    label: 'Receive Task',
+	    actionName: 'replace-with-receive-task',
+	    className: 'bpmn-icon-receive',
+	    target: {
+	      type: 'bpmn:ReceiveTask'
+	    }
+	  },
+	  {
+	    label: 'User Task',
+	    actionName: 'replace-with-user-task',
+	    className: 'bpmn-icon-user',
+	    target: {
+	      type: 'bpmn:UserTask'
+	    }
+	  },
+	  {
+	    label: 'Manual Task',
+	    actionName: 'replace-with-manual-task',
+	    className: 'bpmn-icon-manual',
+	    target: {
+	      type: 'bpmn:ManualTask'
+	    }
+	  },
+	  {
+	    label: 'Business Rule Task',
+	    actionName: 'replace-with-rule-task',
+	    className: 'bpmn-icon-business-rule',
+	    target: {
+	      type: 'bpmn:BusinessRuleTask'
+	    }
+	  },
+	  {
+	    label: 'Service Task',
+	    actionName: 'replace-with-service-task',
+	    className: 'bpmn-icon-service',
+	    target: {
+	      type: 'bpmn:ServiceTask'
+	    }
+	  },
+	  {
+	    label: 'Script Task',
+	    actionName: 'replace-with-script-task',
+	    className: 'bpmn-icon-script',
+	    target: {
+	      type: 'bpmn:ScriptTask'
+	    }
+	  },
+	  {
+	    label: 'Call Activity',
+	    actionName: 'replace-with-call-activity',
+	    className: 'bpmn-icon-call-activity',
+	    target: {
+	      type: 'bpmn:CallActivity'
+	    }
+	  },
+	  {
+	    label: 'Sub Process (collapsed)',
+	    actionName: 'replace-with-collapsed-subprocess',
+	    className: 'bpmn-icon-subprocess-collapsed',
+	    target: {
+	      type: 'bpmn:SubProcess',
+	      isExpanded: false
+	    }
+	  },
+	  {
+	    label: 'Sub Process (expanded)',
+	    actionName: 'replace-with-expanded-subprocess',
+	    className: 'bpmn-icon-subprocess-expanded',
+	    target: {
+	      type: 'bpmn:SubProcess',
+	      isExpanded: true
+	    }
+	  }
+	];
+
+	module.exports.BOUNDARY_EVENT = [
+	  {
+	    label: 'Message Boundary Event',
+	    actionName: 'replace-with-message-boundary',
+	    className: 'bpmn-icon-intermediate-event-catch-message',
+	    target: {
+	      type: 'bpmn:BoundaryEvent',
+	      eventDefinitionType: 'bpmn:MessageEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Timer Boundary Event',
+	    actionName: 'replace-with-timer-boundary',
+	    className: 'bpmn-icon-intermediate-event-catch-timer',
+	    target: {
+	      type: 'bpmn:BoundaryEvent',
+	      eventDefinitionType: 'bpmn:TimerEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Escalation Boundary Event',
+	    actionName: 'replace-with-escalation-boundary',
+	    className: 'bpmn-icon-intermediate-event-catch-escalation',
+	    target: {
+	      type: 'bpmn:BoundaryEvent',
+	      eventDefinitionType: 'bpmn:EscalationEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Conditional Boundary Event',
+	    actionName: 'replace-with-conditional-boundary',
+	    className: 'bpmn-icon-intermediate-event-catch-condition',
+	    target: {
+	      type: 'bpmn:BoundaryEvent',
+	      eventDefinitionType: 'bpmn:ConditionalEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Error Boundary Event',
+	    actionName: 'replace-with-error-boundary',
+	    className: 'bpmn-icon-intermediate-event-catch-error',
+	    target: {
+	      type: 'bpmn:BoundaryEvent',
+	      eventDefinitionType: 'bpmn:ErrorEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Cancel Boundary Event',
+	    actionName: 'replace-with-cancel-boundary',
+	    className: 'bpmn-icon-intermediate-event-catch-cancel',
+	    target: {
+	      type: 'bpmn:BoundaryEvent',
+	      eventDefinitionType: 'bpmn:CancelEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Signal Boundary Event',
+	    actionName: 'replace-with-signal-boundary',
+	    className: 'bpmn-icon-intermediate-event-catch-signal',
+	    target: {
+	      type: 'bpmn:BoundaryEvent',
+	      eventDefinitionType: 'bpmn:SignalEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Compensation Boundary Event',
+	    actionName: 'replace-with-compensation-boundary',
+	    className: 'bpmn-icon-intermediate-event-catch-compensation',
+	    target: {
+	      type: 'bpmn:BoundaryEvent',
+	      eventDefinitionType: 'bpmn:CompensateEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Message Boundary Event (non-interrupting)',
+	    actionName: 'replace-with-non-interrupting-message-boundary',
+	    className: 'bpmn-icon-intermediate-event-catch-non-interrupting-message',
+	    target: {
+	      type: 'bpmn:BoundaryEvent',
+	      eventDefinitionType: 'bpmn:MessageEventDefinition',
+	      cancelActivity: false
+	    }
+	  },
+	  {
+	    label: 'Timer Boundary Event (non-interrupting)',
+	    actionName: 'replace-with-non-interrupting-timer-boundary',
+	    className: 'bpmn-icon-intermediate-event-catch-non-interrupting-timer',
+	    target: {
+	      type: 'bpmn:BoundaryEvent',
+	      eventDefinitionType: 'bpmn:TimerEventDefinition',
+	      cancelActivity: false
+	    }
+	  },
+	  {
+	    label: 'Escalation Boundary Event (non-interrupting)',
+	    actionName: 'replace-with-non-interrupting-escalation-boundary',
+	    className: 'bpmn-icon-intermediate-event-catch-non-interrupting-escalation',
+	    target: {
+	      type: 'bpmn:BoundaryEvent',
+	      eventDefinitionType: 'bpmn:EscalationEventDefinition',
+	      cancelActivity: false
+	    }
+	  },
+	  {
+	    label: 'Conditional Boundary Event (non-interrupting)',
+	    actionName: 'replace-with-non-interrupting-conditional-boundary',
+	    className: 'bpmn-icon-intermediate-event-catch-non-interrupting-condition',
+	    target: {
+	      type: 'bpmn:BoundaryEvent',
+	      eventDefinitionType: 'bpmn:ConditionalEventDefinition',
+	      cancelActivity: false
+	    }
+	  },
+	  {
+	    label: 'Signal Boundary Event (non-interrupting)',
+	    actionName: 'replace-with-non-interrupting-signal-boundary',
+	    className: 'bpmn-icon-intermediate-event-catch-non-interrupting-signal',
+	    target: {
+	      type: 'bpmn:BoundaryEvent',
+	      eventDefinitionType: 'bpmn:SignalEventDefinition',
+	      cancelActivity: false
+	    }
+	  }
+	];
+
+	module.exports.EVENT_SUB_PROCESS_START_EVENT = [
+	  {
+	    label: 'Message Start Event',
+	    actionName: 'replace-with-message-start',
+	    className: 'bpmn-icon-start-event-message',
+	    target: {
+	      type: 'bpmn:StartEvent',
+	      eventDefinitionType: 'bpmn:MessageEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Timer Start Event',
+	    actionName: 'replace-with-timer-start',
+	    className: 'bpmn-icon-start-event-timer',
+	    target: {
+	      type: 'bpmn:StartEvent',
+	      eventDefinitionType: 'bpmn:TimerEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Conditional Start Event',
+	    actionName: 'replace-with-conditional-start',
+	    className: 'bpmn-icon-start-event-condition',
+	    target: {
+	      type: 'bpmn:StartEvent',
+	      eventDefinitionType: 'bpmn:ConditionalEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Signal Start Event',
+	    actionName: 'replace-with-signal-start',
+	    className: 'bpmn-icon-start-event-signal',
+	    target: {
+	      type: 'bpmn:StartEvent',
+	      eventDefinitionType: 'bpmn:SignalEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Error Start Event',
+	    actionName: 'replace-with-error-start',
+	    className: 'bpmn-icon-start-event-error',
+	    target: {
+	      type: 'bpmn:StartEvent',
+	      eventDefinitionType: 'bpmn:ErrorEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Escalation Start Event',
+	    actionName: 'replace-with-escalation-start',
+	    className: 'bpmn-icon-start-event-escalation',
+	    target: {
+	      type: 'bpmn:StartEvent',
+	      eventDefinitionType: 'bpmn:EscalationEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Compensation Start Event',
+	    actionName: 'replace-with-compensation-start',
+	    className: 'bpmn-icon-start-event-compensation',
+	    target: {
+	      type: 'bpmn:StartEvent',
+	      eventDefinitionType: 'bpmn:CompensateEventDefinition'
+	    }
+	  },
+	  {
+	    label: 'Message Start Event (non-interrupting)',
+	    actionName: 'replace-with-non-interrupting-message-start',
+	    className: 'bpmn-icon-start-event-non-interrupting-message',
+	    target: {
+	      type: 'bpmn:StartEvent',
+	      eventDefinitionType: 'bpmn:MessageEventDefinition',
+	      isInterrupting: false
+	    }
+	  },
+	  {
+	    label: 'Timer Start Event (non-interrupting)',
+	    actionName: 'replace-with-non-interrupting-timer-start',
+	    className: 'bpmn-icon-start-event-non-interrupting-timer',
+	    target: {
+	      type: 'bpmn:StartEvent',
+	      eventDefinitionType: 'bpmn:TimerEventDefinition',
+	      isInterrupting: false
+	    }
+	  },
+	  {
+	    label: 'Conditional Start Event (non-interrupting)',
+	    actionName: 'replace-with-non-interrupting-conditional-start',
+	    className: 'bpmn-icon-start-event-non-interrupting-condition',
+	    target: {
+	      type: 'bpmn:StartEvent',
+	      eventDefinitionType: 'bpmn:ConditionalEventDefinition',
+	      isInterrupting: false
+	    }
+	  },
+	  {
+	    label: 'Signal Start Event (non-interrupting)',
+	    actionName: 'replace-with-non-interrupting-signal-start',
+	    className: 'bpmn-icon-start-event-non-interrupting-signal',
+	    target: {
+	      type: 'bpmn:StartEvent',
+	      eventDefinitionType: 'bpmn:SignalEventDefinition',
+	      isInterrupting: false
+	    }
+	  },
+	  {
+	    label: 'Escalation Start Event (non-interrupting)',
+	    actionName: 'replace-with-non-interrupting-escalation-start',
+	    className: 'bpmn-icon-start-event-non-interrupting-escalation',
+	    target: {
+	      type: 'bpmn:StartEvent',
+	      eventDefinitionType: 'bpmn:EscalationEventDefinition',
+	      isInterrupting: false
+	    }
+	  }
+	];
+
+	module.exports.SEQUENCE_FLOW = [
+	  {
+	    label: 'Sequence Flow',
+	    actionName: 'replace-with-sequence-flow',
+	    className: 'bpmn-icon-connection'
+	  },
+	  {
+	    label: 'Default Flow',
+	    actionName: 'replace-with-default-flow',
+	    className: 'bpmn-icon-default-flow'
+	  },
+	  {
+	    label: 'Conditional Flow',
+	    actionName: 'replace-with-conditional-flow',
+	    className: 'bpmn-icon-conditional-flow'
+	  }
+	];
+
+	module.exports.PARTICIPANT = [
+	  {
+	    label: 'Expanded Pool',
+	    actionName: 'replace-with-expanded-pool',
+	    className: 'bpmn-icon-participant',
+	    target: {
+	      type: 'bpmn:Participant',
+	      isExpanded: true
+	    }
+	  },
+	  {
+	    label: 'Collapsed Pool',
+	    actionName: 'replace-with-collapsed-pool',
+	    // TODO(@janstuemmel): maybe design new icon
+	    className: 'bpmn-icon-lane',
+	    target: {
+	      type: 'bpmn:Participant',
+	      isExpanded: false
+	    }
+	  }
+	];
+
+
+/***/ },
+/* 811 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+
+	var assign = __webpack_require__(7),
+	    forEach = __webpack_require__(415),
+	    isArray = __webpack_require__(21),
+	    is = __webpack_require__(443).is,
+	    isExpanded = __webpack_require__(442).isExpanded,
+	    isAny = __webpack_require__(575).isAny,
+	    getChildLanes = __webpack_require__(602).getChildLanes,
+	    isEventSubProcess = __webpack_require__(442).isEventSubProcess,
+	    hasPrimaryModifier = __webpack_require__(460).hasPrimaryModifier;
+
+	/**
+	 * A provider for BPMN 2.0 elements context pad
+	 */
+	function ContextPadProvider(eventBus, contextPad, modeling, elementFactory,
+	                            connect, create, popupMenu,
+	                            canvas, rules, translate) {
+
+	  contextPad.registerProvider(this);
+
+	  this._contextPad = contextPad;
+
+	  this._modeling = modeling;
+
+	  this._elementFactory = elementFactory;
+	  this._connect = connect;
+	  this._create = create;
+	  this._popupMenu = popupMenu;
+	  this._canvas  = canvas;
+	  this._rules = rules;
+	  this._translate = translate;
+
+
+	  eventBus.on('create.end', 250, function(event) {
+	    var shape = event.shape,
+	        entries = contextPad.getEntries(shape);
+
+	    if (hasPrimaryModifier(event) && entries.replace) {
+	      entries.replace.action.click(event, shape);
+	    }
+	  });
+	}
+
+	ContextPadProvider.$inject = [
+	  'eventBus',
+	  'contextPad',
+	  'modeling',
+	  'elementFactory',
+	  'connect',
+	  'create',
+	  'popupMenu',
+	  'canvas',
+	  'rules',
+	  'translate'
+	];
+
+	module.exports = ContextPadProvider;
+
+
+	ContextPadProvider.prototype.getContextPadEntries = function(element) {
+
+	  var contextPad = this._contextPad,
+	      modeling = this._modeling,
+
+	      elementFactory = this._elementFactory,
+	      connect = this._connect,
+	      create = this._create,
+	      popupMenu = this._popupMenu,
+	      canvas = this._canvas,
+	      rules = this._rules,
+
+	      translate = this._translate;
+
+	  var actions = {};
+
+	  if (element.type === 'label') {
+	    return actions;
+	  }
+
+	  var businessObject = element.businessObject;
+
+	  function startConnect(event, element, autoActivate) {
+	    connect.start(event, element, autoActivate);
+	  }
+
+	  function removeElement(e) {
+	    modeling.removeElements([ element ]);
+	  }
+
+	  function getReplaceMenuPosition(element) {
+
+	    var Y_OFFSET = 5;
+
+	    var diagramContainer = canvas.getContainer(),
+	        pad = contextPad.getPad(element).html;
+
+	    var diagramRect = diagramContainer.getBoundingClientRect(),
+	        padRect = pad.getBoundingClientRect();
+
+	    var top = padRect.top - diagramRect.top;
+	    var left = padRect.left - diagramRect.left;
+
+	    var pos = {
+	      x: left,
+	      y: top + padRect.height + Y_OFFSET
+	    };
+
+	    return pos;
+	  }
+
+
+	  /**
+	   * Create an append action
+	   *
+	   * @param {String} type
+	   * @param {String} className
+	   * @param {String} [title]
+	   * @param {Object} [options]
+	   *
+	   * @return {Object} descriptor
+	   */
+	  function appendAction(type, className, title, options) {
+
+	    if (typeof title !== 'string') {
+	      options = title;
+	      title = translate('Append {type}', { type: type.replace(/^bpmn\:/, '') });
+	    }
+
+	    function appendListener(event, element) {
+
+	      var shape = elementFactory.createShape(assign({ type: type }, options));
+	      create.start(event, shape, element);
+	    }
+
+	    return {
+	      group: 'model',
+	      className: className,
+	      title: title,
+	      action: {
+	        dragstart: appendListener,
+	        click: appendListener
+	      }
+	    };
+	  }
+
+	  function splitLaneHandler(count) {
+
+	    return function(event, element) {
+	      // actual split
+	      modeling.splitLane(element, count);
+
+	      // refresh context pad after split to
+	      // get rid of split icons
+	      contextPad.open(element, true);
+	    };
+	  }
+
+
+	  if (isAny(businessObject, [ 'bpmn:Lane', 'bpmn:Participant' ]) && isExpanded(businessObject)) {
+
+	    var childLanes = getChildLanes(element);
+
+	    assign(actions, {
+	      'lane-insert-above': {
+	        group: 'lane-insert-above',
+	        className: 'bpmn-icon-lane-insert-above',
+	        title: translate('Add Lane above'),
+	        action: {
+	          click: function(event, element) {
+	            modeling.addLane(element, 'top');
+	          }
+	        }
+	      }
+	    });
+
+	    if (childLanes.length < 2) {
+
+	      if (element.height >= 120) {
+	        assign(actions, {
+	          'lane-divide-two': {
+	            group: 'lane-divide',
+	            className: 'bpmn-icon-lane-divide-two',
+	            title: translate('Divide into two Lanes'),
+	            action: {
+	              click: splitLaneHandler(2)
+	            }
+	          }
+	        });
+	      }
+
+	      if (element.height >= 180) {
+	        assign(actions, {
+	          'lane-divide-three': {
+	            group: 'lane-divide',
+	            className: 'bpmn-icon-lane-divide-three',
+	            title: translate('Divide into three Lanes'),
+	            action: {
+	              click: splitLaneHandler(3)
+	            }
+	          }
+	        });
+	      }
+	    }
+
+	    assign(actions, {
+	      'lane-insert-below': {
+	        group: 'lane-insert-below',
+	        className: 'bpmn-icon-lane-insert-below',
+	        title: translate('Add Lane below'),
+	        action: {
+	          click: function(event, element) {
+	            modeling.addLane(element, 'bottom');
+	          }
+	        }
+	      }
+	    });
+
+	  }
+
+	  if (is(businessObject, 'bpmn:FlowNode')) {
+
+	    if (is(businessObject, 'bpmn:EventBasedGateway')) {
+
+	      assign(actions, {
+	        'append.receive-task': appendAction('bpmn:ReceiveTask', 'bpmn-icon-receive-task'),
+	        'append.message-intermediate-event': appendAction('bpmn:IntermediateCatchEvent',
+	                                                  'bpmn-icon-intermediate-event-catch-message',
+	                                                  { eventDefinitionType: 'bpmn:MessageEventDefinition' }),
+	        'append.timer-intermediate-event': appendAction('bpmn:IntermediateCatchEvent',
+	                                                  'bpmn-icon-intermediate-event-catch-timer',
+	                                                  { eventDefinitionType: 'bpmn:TimerEventDefinition' }),
+	        'append.condtion-intermediate-event': appendAction('bpmn:IntermediateCatchEvent',
+	                                                  'bpmn-icon-intermediate-event-catch-condition',
+	                                                  { eventDefinitionType: 'bpmn:ConditionalEventDefinition' }),
+	        'append.signal-intermediate-event': appendAction('bpmn:IntermediateCatchEvent',
+	                                                  'bpmn-icon-intermediate-event-catch-signal',
+	                                                  { eventDefinitionType: 'bpmn:SignalEventDefinition' })
+	      });
+	    } else
+
+	    if (isEventType(businessObject, 'bpmn:BoundaryEvent', 'bpmn:CompensateEventDefinition')) {
+
+	      assign(actions, {
+	        'append.compensation-activity':
+	            appendAction('bpmn:Task', 'bpmn-icon-task', translate('Append compensation activity'), {
+	              isForCompensation: true
+	            })
+	      });
+	    } else
+
+	    if (!is(businessObject, 'bpmn:EndEvent') &&
+	        !businessObject.isForCompensation &&
+	        !isEventType(businessObject, 'bpmn:IntermediateThrowEvent', 'bpmn:LinkEventDefinition') &&
+	        !isEventSubProcess(businessObject)) {
+
+	      assign(actions, {
+	        'append.end-event': appendAction('bpmn:EndEvent', 'bpmn-icon-end-event-none'),
+	        'append.gateway': appendAction('bpmn:ExclusiveGateway', 'bpmn-icon-gateway-xor'),
+	        'append.append-task': appendAction('bpmn:Task', 'bpmn-icon-task'),
+	        'append.intermediate-event': appendAction('bpmn:IntermediateThrowEvent',
+	                                                  'bpmn-icon-intermediate-event-none')
+	      });
+	    }
+	  }
+
+	  var replaceMenu;
+
+	  if (popupMenu._providers['bpmn-replace']) {
+	    replaceMenu = popupMenu.create('bpmn-replace', element);
+	  }
+
+	  if (replaceMenu && !replaceMenu.isEmpty()) {
+
+	    // Replace menu entry
+	    assign(actions, {
+	      'replace': {
+	        group: 'edit',
+	        className: 'bpmn-icon-screw-wrench',
+	        title: translate('Change type'),
+	        action: {
+	          click: function(event, element) {
+	            replaceMenu.open(assign(getReplaceMenuPosition(element), {
+	              cursor: { x: event.x, y: event.y }
+	            }), element);
+	          }
+	        }
+	      }
+	    });
+	  }
+
+	  if (isAny(businessObject, [
+	    'bpmn:FlowNode',
+	    'bpmn:InteractionNode',
+	    'bpmn:DataObjectReference',
+	    'bpmn:DataStoreReference'
+	  ]) ) {
+
+	    assign(actions, {
+	      'append.text-annotation': appendAction('bpmn:TextAnnotation', 'bpmn-icon-text-annotation'),
+
+	      'connect': {
+	        group: 'connect',
+	        className: 'bpmn-icon-connection-multi',
+	        title: translate('Connect using ' +
+	                  (businessObject.isForCompensation ? '' : 'Sequence/MessageFlow or ') +
+	                  'Association'),
+	        action: {
+	          click: startConnect,
+	          dragstart: startConnect
+	        }
+	      }
+	    });
+	  }
+
+	  if (isAny(businessObject, [ 'bpmn:DataObjectReference', 'bpmn:DataStoreReference' ])) {
+	    assign(actions, {
+	      'connect': {
+	        group: 'connect',
+	        className: 'bpmn-icon-connection-multi',
+	        title: translate('Connect using DataInputAssociation'),
+	        action: {
+	          click: startConnect,
+	          dragstart: startConnect
+	        }
+	      }
+	    });
+	  }
+
+	  // delete element entry, only show if allowed by rules
+	  var deleteAllowed = rules.allowed('elements.delete', { elements: [ element ] });
+
+	  if (isArray(deleteAllowed)) {
+	    // was the element returned as a deletion candidate?
+	    deleteAllowed = deleteAllowed[0] === element;
+	  }
+
+	  if (deleteAllowed) {
+	    assign(actions, {
+	      'delete': {
+	        group: 'edit',
+	        className: 'bpmn-icon-trash',
+	        title: translate('Remove'),
+	        action: {
+	          click: removeElement,
+	          dragstart: removeElement
+	        }
+	      }
+	    });
+	  }
+
+	  return actions;
+	};
+
+	function isEventType(eventBo, type, definition) {
+
+	  var isType = eventBo.$instanceOf(type);
+	  var isDefinition = false;
+
+	  var definitions = eventBo.eventDefinitions || [];
+	  forEach(definitions, function(def) {
+	    if (def.$type === definition) {
+	      isDefinition = true;
+	    }
+	  });
+
+	  return isType && isDefinition;
+	}
+
+
+/***/ },
+/* 812 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __depends__: [
+	    __webpack_require__(813)
+	  ],
+	  __init__: [ 'bpmnKeyBindings' ],
+	  bpmnKeyBindings: [ 'type', __webpack_require__(816) ]
+	};
+
+
+/***/ },
+/* 813 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __init__: [ 'keyboard' ],
+	  keyboard: [ 'type', __webpack_require__(814) ]
+	};
+
+
+/***/ },
+/* 814 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var domEvent = __webpack_require__(484),
+	    domMatches = __webpack_require__(815);
+
+	/**
+	 * A keyboard abstraction that may be activated and
+	 * deactivated by users at will, consuming key events
+	 * and triggering diagram actions.
+	 *
+	 * The implementation fires the following key events that allow
+	 * other components to hook into key handling:
+	 *
+	 *  - keyboard.bind
+	 *  - keyboard.unbind
+	 *  - keyboard.init
+	 *  - keyboard.destroy
+	 *
+	 * All events contain the fields (node, listeners).
+	 *
+	 * A default binding for the keyboard may be specified via the
+	 * `keyboard.bindTo` configuration option.
+	 *
+	 * @param {Config} config
+	 * @param {EventBus} eventBus
+	 * @param {EditorActions} editorActions
+	 */
+	function Keyboard(config, eventBus, editorActions) {
+	  var self = this;
+
+	  this._config = config || {};
+	  this._eventBus = eventBus;
+	  this._editorActions = editorActions;
+
+	  this._listeners = [];
+
+	  // our key handler is a singleton that passes
+	  // (keycode, modifiers) to each listener.
+	  //
+	  // listeners must indicate that they handled a key event
+	  // by returning true. This stops the event propagation.
+	  //
+	  this._keyHandler = function(event) {
+
+	    var i, l,
+	        target = event.target,
+	        listeners = self._listeners,
+	        code = event.keyCode || event.charCode || -1;
+
+	    if (target && (domMatches(target, 'input, textarea') || target.contentEditable === 'true')) {
+	      return;
+	    }
+
+	    for (i = 0; (l = listeners[i]); i++) {
+	      if (l(code, event)) {
+	        event.preventDefault();
+	        event.stopPropagation();
+	      }
+	    }
+	  };
+
+	  // properly clean dom registrations
+	  eventBus.on('diagram.destroy', function() {
+	    self._fire('destroy');
+
+	    self.unbind();
+	    self._listeners = null;
+	  });
+
+	  eventBus.on('diagram.init', function() {
+	    self._fire('init');
+
+	    if (config && config.bindTo) {
+	      self.bind(config.bindTo);
+	    }
+	  });
+
+	  this._init();
+	}
+
+	Keyboard.$inject = [
+	  'config.keyboard',
+	  'eventBus',
+	  'editorActions'
+	];
+
+	module.exports = Keyboard;
+
+
+	Keyboard.prototype.bind = function(node) {
+	  // make sure that the keyboard is only bound once to the DOM
+	  this.unbind();
+
+	  this._node = node;
+
+	  // bind key events
+	  domEvent.bind(node, 'keydown', this._keyHandler, true);
+
+	  this._fire('bind');
+	};
+
+	Keyboard.prototype.getBinding = function() {
+	  return this._node;
+	};
+
+	Keyboard.prototype.unbind = function() {
+	  var node = this._node;
+
+	  if (node) {
+	    this._fire('unbind');
+
+	    // unbind key events
+	    domEvent.unbind(node, 'keydown', this._keyHandler, true);
+	  }
+
+	  this._node = null;
+	};
+
+	Keyboard.prototype._fire = function(event) {
+	  this._eventBus.fire('keyboard.' + event, { node: this._node, listeners: this._listeners });
+	};
+
+	Keyboard.prototype._init = function() {
+
+	  var listeners = this._listeners;
+
+	  var editorActions = this._editorActions,
+	      config = this._config;
+
+	  // init default listeners
+
+	  // undo
+	  // (CTRL|CMD) + Z
+	  function undo(key, modifiers) {
+
+	    if (isCmd(modifiers) && !isShift(modifiers) && key === 90) {
+	      editorActions.trigger('undo');
+
+	      return true;
+	    }
+	  }
+
+	  // redo
+	  // CTRL + Y
+	  // CMD + SHIFT + Z
+	  function redo(key, modifiers) {
+
+	    if (isCmd(modifiers) && (key === 89 || (key === 90 && isShift(modifiers)))) {
+	      editorActions.trigger('redo');
+
+	      return true;
+	    }
+	  }
+
+	  // copy
+	  // CTRL/CMD + C
+	  function copy(key, modifiers) {
+
+	    if (isCmd(modifiers) && (key === 67)) {
+	      editorActions.trigger('copy');
+
+	      return true;
+	    }
+	  }
+
+	  // paste
+	  // CTRL/CMD + V
+	  function paste(key, modifiers) {
+
+	    if (isCmd(modifiers) && (key === 86)) {
+	      editorActions.trigger('paste');
+
+	      return true;
+	    }
+	  }
+
+	  /**
+	   * zoom in one step
+	   * CTRL + +
+	   *
+	   * 107 = numpad plus
+	   * 187 = regular plus
+	   * 171 = regular plus in Firefox (german keyboard layout)
+	   *  61 = regular plus in Firefox (US keyboard layout)
+	   */
+	  function zoomIn(key, modifiers) {
+
+	    if ((key === 107 || key === 187 || key === 171 || key === 61) && isCmd(modifiers)) {
+	      editorActions.trigger('stepZoom', { value: 1 });
+
+	      return true;
+	    }
+	  }
+
+	  /**
+	   * zoom out one step
+	   * CTRL + -
+	   *
+	   * 109 = numpad minus
+	   * 189 = regular minus
+	   * 173 = regular minus in Firefox (US and german keyboard layout)
+	   */
+	  function zoomOut(key, modifiers) {
+
+	    if ((key === 109 || key === 189 || key === 173)  && isCmd(modifiers)) {
+	      editorActions.trigger('stepZoom', { value: -1 });
+
+	      return true;
+	    }
+	  }
+
+	  /**
+	   * zoom to the default level
+	   * CTRL + 0
+	   *
+	   * 96 = numpad zero
+	   * 48 = regular zero
+	   */
+	  function zoomDefault(key, modifiers) {
+
+	    if ((key === 96 || key === 48) && isCmd(modifiers)) {
+	      editorActions.trigger('zoom', { value: 1 });
+
+	      return true;
+	    }
+	  }
+
+	  // delete selected element
+	  // DEL
+	  function removeSelection(key, modifiers) {
+
+	    if (key === 46) {
+	      editorActions.trigger('removeSelection');
+
+	      return true;
+	    }
+	  }
+
+	  // move canvas left
+	  // left arrow
+	  //
+	  // 37 = Left
+	  // 38 = Up
+	  // 39 = Right
+	  // 40 = Down
+	  function moveCanvas(key, modifiers) {
+
+	    if ([37, 38, 39, 40].indexOf(key) >= 0) {
+
+	      var opts = {
+	        invertY: config.invertY,
+	        speed: (config.speed || 50)
+	      };
+
+	      switch (key) {
+	      case 37:    // Left
+	        opts.direction = 'left';
+	        break;
+	      case 38:    // Up
+	        opts.direction = 'up';
+	        break;
+	      case 39:    // Right
+	        opts.direction = 'right';
+	        break;
+	      case 40:    // Down
+	        opts.direction = 'down';
+	        break;
+	      }
+
+	      editorActions.trigger('moveCanvas', opts);
+
+	      return true;
+	    }
+	  }
+
+	  listeners.push(undo);
+	  listeners.push(redo);
+	  listeners.push(copy);
+	  listeners.push(paste);
+	  listeners.push(removeSelection);
+	  listeners.push(zoomIn);
+	  listeners.push(zoomOut);
+	  listeners.push(zoomDefault);
+	  listeners.push(moveCanvas);
+	};
+
+
+	/**
+	 * Add a listener function that is notified with (key, modifiers) whenever
+	 * the keyboard is bound and the user presses a key.
+	 *
+	 * @param {Function} listenerFn
+	 */
+	Keyboard.prototype.addListener = function(listenerFn) {
+	  this._listeners.push(listenerFn);
+	};
+
+	Keyboard.prototype.hasModifier = hasModifier;
+	Keyboard.prototype.isCmd = isCmd;
+	Keyboard.prototype.isShift = isShift;
+
+
+	function hasModifier(modifiers) {
+	  return (modifiers.ctrlKey || modifiers.metaKey || modifiers.shiftKey || modifiers.altKey);
+	}
+
+	function isCmd(modifiers) {
+	  return modifiers.ctrlKey || modifiers.metaKey;
+	}
+
+	function isShift(modifiers) {
+	  return modifiers.shiftKey;
+	}
+
+
+/***/ },
+/* 815 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(458);
+
+/***/ },
+/* 816 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	/**
+	 * BPMN 2.0 specific key bindings.
+	 *
+	 * @param {Keyboard} keyboard
+	 * @param {EditorActions} editorActions
+	 */
+	function BpmnKeyBindings(keyboard, editorActions) {
+
+	  keyboard.addListener(function(key, modifiers) {
+
+	    // ctrl + a -> select all elements
+	    if (key === 65 && keyboard.isCmd(modifiers)) {
+	      editorActions.trigger('selectElements');
+
+	      return true;
+	    }
+
+	    // ctrl + f -> search labels
+	    if (key === 70 && keyboard.isCmd(modifiers)) {
+	      editorActions.trigger('find');
+
+	      return true;
+	    }
+
+	    if (keyboard.hasModifier(modifiers)) {
+	      return;
+	    }
+
+	    // s -> activate space tool
+	    if (key === 83) {
+	      editorActions.trigger('spaceTool');
+
+	      return true;
+	    }
+
+	    // l -> activate lasso tool
+	    if (key === 76) {
+	      editorActions.trigger('lassoTool');
+
+	      return true;
+	    }
+
+	    // h -> activate hand tool
+	    if (key === 72) {
+	      editorActions.trigger('handTool');
+
+	      return true;
+	    }
+
+	    // c -> activate global connect tool
+	    if (key === 67) {
+	      editorActions.trigger('globalConnectTool');
+
+	      return true;
+	    }
+
+	    // e -> activate direct editing
+	    if (key === 69) {
+	      editorActions.trigger('directEditing');
+
+	      return true;
+	    }
+	  });
+	}
+
+	BpmnKeyBindings.$inject = [
+	  'keyboard',
+	  'editorActions'
+	];
+
+	module.exports = BpmnKeyBindings;
+
+/***/ },
+/* 817 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+	  __depends__: [
+	    __webpack_require__(818),
+	    __webpack_require__(802),
+	    __webpack_require__(565),
+	    __webpack_require__(563),
+	    __webpack_require__(559),
+	    __webpack_require__(446),
+	    __webpack_require__(569)
+	  ],
+	  __init__: [ 'paletteProvider' ],
+	  paletteProvider: [ 'type', __webpack_require__(820) ]
+	};
+
+
+/***/ },
+/* 818 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	module.exports = {
+	  __depends__: [ __webpack_require__(560) ],
+	  __init__: [ 'palette' ],
+	  palette: [ 'type', __webpack_require__(819) ]
+	};
+
+
+/***/ },
+/* 819 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -77215,7 +77591,7 @@ var InfoxBpmnModeler =
 	    domAttr = __webpack_require__(481),
 	    domClear = __webpack_require__(175),
 	    domClasses = __webpack_require__(478),
-	    domMatches = __webpack_require__(708),
+	    domMatches = __webpack_require__(815),
 	    domDelegate = __webpack_require__(455),
 	    domEvent = __webpack_require__(484);
 
@@ -77519,7 +77895,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 823 */
+/* 820 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -77683,23 +78059,23 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 824 */
+/* 821 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  __depends__: [ __webpack_require__(523) ],
-	  __init__: ['bpmnReplacePreview'],
-	  bpmnReplacePreview: [ 'type', __webpack_require__(825) ]
+	  __depends__: [ __webpack_require__(524) ],
+	  __init__: [ 'bpmnReplacePreview' ],
+	  bpmnReplacePreview: [ 'type', __webpack_require__(822) ]
 	};
 
 
 /***/ },
-/* 825 */
+/* 822 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var CommandInterceptor = __webpack_require__(540);
+	var CommandInterceptor = __webpack_require__(542);
 
 	var inherits = __webpack_require__(3);
 
@@ -77708,7 +78084,7 @@ var InfoxBpmnModeler =
 
 	var LOW_PRIORITY = 250;
 
-	function BpmnReplacePreview(eventBus, elementRegistry, elementFactory, canvas, moveVisuals) {
+	function BpmnReplacePreview(eventBus, elementRegistry, elementFactory, canvas, previewSupport) {
 
 	  CommandInterceptor.call(this, eventBus);
 
@@ -77751,7 +78127,7 @@ var InfoxBpmnModeler =
 	      }
 
 	      // clone the gfx of the temporary shape and add it to the drag group
-	      var dragger = moveVisuals.addDragger(context, tempShape);
+	      var dragger = previewSupport.addDragger(tempShape, context.dragGroup);
 
 	      context.visualReplacements[id] = dragger;
 
@@ -77801,7 +78177,7 @@ var InfoxBpmnModeler =
 	  });
 	}
 
-	BpmnReplacePreview.$inject = [ 'eventBus', 'elementRegistry', 'elementFactory', 'canvas', 'moveVisuals' ];
+	BpmnReplacePreview.$inject = [ 'eventBus', 'elementRegistry', 'elementFactory', 'canvas', 'previewSupport' ];
 
 	inherits(BpmnReplacePreview, CommandInterceptor);
 
@@ -77809,16 +78185,16 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 826 */
+/* 823 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 	  __init__: [ 'snapping' ],
-	  snapping: [ 'type', __webpack_require__(827) ]
+	  snapping: [ 'type', __webpack_require__(824) ]
 	};
 
 /***/ },
-/* 827 */
+/* 824 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -77834,11 +78210,11 @@ var InfoxBpmnModeler =
 	var getBoundingBox = __webpack_require__(137).getBBox;
 
 	var is = __webpack_require__(443).is,
-	    isAny = __webpack_require__(573).isAny,
+	    isAny = __webpack_require__(575).isAny,
 	    isExpanded = __webpack_require__(442).isExpanded;
 
-	var Snapping = __webpack_require__(828),
-	    SnapUtil = __webpack_require__(829);
+	var Snapping = __webpack_require__(825),
+	    SnapUtil = __webpack_require__(826);
 
 	var asTRBL = __webpack_require__(516).asTRBL;
 
@@ -77850,9 +78226,9 @@ var InfoxBpmnModeler =
 	    isSnapped = SnapUtil.isSnapped,
 	    setSnapped = SnapUtil.setSnapped;
 
-	var getBoundaryAttachment = __webpack_require__(753).getBoundaryAttachment,
-	    getParticipantSizeConstraints = __webpack_require__(753).getParticipantSizeConstraints,
-	    getLanesRoot = __webpack_require__(704).getLanesRoot;
+	var getBoundaryAttachment = __webpack_require__(724).getBoundaryAttachment,
+	    getParticipantSizeConstraints = __webpack_require__(724).getParticipantSizeConstraints,
+	    getLanesRoot = __webpack_require__(602).getLanesRoot;
 
 	var HIGH_PRIORITY = 1500;
 
@@ -78319,7 +78695,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 828 */
+/* 825 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -78329,11 +78705,11 @@ var InfoxBpmnModeler =
 	    debounce = __webpack_require__(134);
 
 
-	var mid = __webpack_require__(829).mid;
+	var mid = __webpack_require__(826).mid;
 
-	var SnapContext = __webpack_require__(830);
+	var SnapContext = __webpack_require__(827);
 
-	var SnapUtil = __webpack_require__(829);
+	var SnapUtil = __webpack_require__(826);
 
 	var HIGHER_PRIORITY = 1250;
 
@@ -78563,7 +78939,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 829 */
+/* 826 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -78698,14 +79074,14 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 830 */
+/* 827 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var forEach = __webpack_require__(128);
 
-	var snapTo = __webpack_require__(829).snapTo;
+	var snapTo = __webpack_require__(826).snapTo;
 
 
 	/**
@@ -78873,12 +79249,12 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 831 */
+/* 828 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var inherits = __webpack_require__(3);
-	var PaletteProvider = __webpack_require__(823);
-	var assign = __webpack_require__(832);
+	var PaletteProvider = __webpack_require__(820);
+	var assign = __webpack_require__(829);
 
 	function InfoxPaletteProvider(palette, create, elementFactory, spaceTool, lassoTool, handTool, globalConnect, translate) {
 	    PaletteProvider.call(this, palette, create, elementFactory, spaceTool, lassoTool, handTool, globalConnect, translate);
@@ -78933,15 +79309,15 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 832 */
+/* 829 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var assignValue = __webpack_require__(833),
-	    copyObject = __webpack_require__(835),
-	    createAssigner = __webpack_require__(836),
-	    isArrayLike = __webpack_require__(840),
-	    isPrototype = __webpack_require__(847),
-	    keys = __webpack_require__(848);
+	var assignValue = __webpack_require__(830),
+	    copyObject = __webpack_require__(832),
+	    createAssigner = __webpack_require__(833),
+	    isArrayLike = __webpack_require__(837),
+	    isPrototype = __webpack_require__(842),
+	    keys = __webpack_require__(843);
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -79003,10 +79379,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 833 */
+/* 830 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var eq = __webpack_require__(834);
+	var eq = __webpack_require__(831);
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -79016,7 +79392,7 @@ var InfoxBpmnModeler =
 
 	/**
 	 * Assigns `value` to `key` of `object` if the existing value is not equivalent
-	 * using [`SameValueZero`](http://ecma-international.org/ecma-262/6.0/#sec-samevaluezero)
+	 * using [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
 	 * for equality comparisons.
 	 *
 	 * @private
@@ -79036,12 +79412,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 834 */
+/* 831 */
 /***/ function(module, exports) {
 
 	/**
 	 * Performs a
-	 * [`SameValueZero`](http://ecma-international.org/ecma-262/6.0/#sec-samevaluezero)
+	 * [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
 	 * comparison between two values to determine if they are equivalent.
 	 *
 	 * @static
@@ -79079,10 +79455,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 835 */
+/* 832 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var assignValue = __webpack_require__(833);
+	var assignValue = __webpack_require__(830);
 
 	/**
 	 * Copies properties of `source` to `object`.
@@ -79116,11 +79492,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 836 */
+/* 833 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseRest = __webpack_require__(837),
-	    isIterateeCall = __webpack_require__(839);
+	var baseRest = __webpack_require__(834),
+	    isIterateeCall = __webpack_require__(836);
 
 	/**
 	 * Creates a function like `_.assign`.
@@ -79159,10 +79535,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 837 */
+/* 834 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var apply = __webpack_require__(838);
+	var apply = __webpack_require__(835);
 
 	/* Built-in method references for those with the same name as other `lodash` methods. */
 	var nativeMax = Math.max;
@@ -79200,7 +79576,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 838 */
+/* 835 */
 /***/ function(module, exports) {
 
 	/**
@@ -79227,13 +79603,13 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 839 */
+/* 836 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var eq = __webpack_require__(834),
-	    isArrayLike = __webpack_require__(840),
-	    isIndex = __webpack_require__(846),
-	    isObject = __webpack_require__(844);
+	var eq = __webpack_require__(831),
+	    isArrayLike = __webpack_require__(837),
+	    isIndex = __webpack_require__(841),
+	    isObject = __webpack_require__(839);
 
 	/**
 	 * Checks if the given arguments are from an iteratee call.
@@ -79263,12 +79639,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 840 */
+/* 837 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getLength = __webpack_require__(841),
-	    isFunction = __webpack_require__(843),
-	    isLength = __webpack_require__(845);
+	var isFunction = __webpack_require__(838),
+	    isLength = __webpack_require__(840);
 
 	/**
 	 * Checks if `value` is array-like. A value is considered array-like if it's
@@ -79296,59 +79671,17 @@ var InfoxBpmnModeler =
 	 * // => false
 	 */
 	function isArrayLike(value) {
-	  return value != null && isLength(getLength(value)) && !isFunction(value);
+	  return value != null && isLength(value.length) && !isFunction(value);
 	}
 
 	module.exports = isArrayLike;
 
 
 /***/ },
-/* 841 */
+/* 838 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseProperty = __webpack_require__(842);
-
-	/**
-	 * Gets the "length" property value of `object`.
-	 *
-	 * **Note:** This function is used to avoid a
-	 * [JIT bug](https://bugs.webkit.org/show_bug.cgi?id=142792) that affects
-	 * Safari on at least iOS 8.1-8.3 ARM64.
-	 *
-	 * @private
-	 * @param {Object} object The object to query.
-	 * @returns {*} Returns the "length" value.
-	 */
-	var getLength = baseProperty('length');
-
-	module.exports = getLength;
-
-
-/***/ },
-/* 842 */
-/***/ function(module, exports) {
-
-	/**
-	 * The base implementation of `_.property` without support for deep paths.
-	 *
-	 * @private
-	 * @param {string} key The key of the property to get.
-	 * @returns {Function} Returns the new accessor function.
-	 */
-	function baseProperty(key) {
-	  return function(object) {
-	    return object == null ? undefined : object[key];
-	  };
-	}
-
-	module.exports = baseProperty;
-
-
-/***/ },
-/* 843 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isObject = __webpack_require__(844);
+	var isObject = __webpack_require__(839);
 
 	/** `Object#toString` result references. */
 	var funcTag = '[object Function]',
@@ -79359,7 +79692,7 @@ var InfoxBpmnModeler =
 
 	/**
 	 * Used to resolve the
-	 * [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
 	 * of values.
 	 */
 	var objectToString = objectProto.toString;
@@ -79383,8 +79716,7 @@ var InfoxBpmnModeler =
 	 */
 	function isFunction(value) {
 	  // The use of `Object#toString` avoids issues with the `typeof` operator
-	  // in Safari 8 which returns 'object' for typed array and weak map constructors,
-	  // and PhantomJS 1.9 which returns 'function' for `NodeList` instances.
+	  // in Safari 8-9 which returns 'object' for typed array and other constructors.
 	  var tag = isObject(value) ? objectToString.call(value) : '';
 	  return tag == funcTag || tag == genTag;
 	}
@@ -79393,12 +79725,12 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 844 */
+/* 839 */
 /***/ function(module, exports) {
 
 	/**
 	 * Checks if `value` is the
-	 * [language type](http://www.ecma-international.org/ecma-262/6.0/#sec-ecmascript-language-types)
+	 * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
 	 * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
 	 *
 	 * @static
@@ -79430,7 +79762,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 845 */
+/* 840 */
 /***/ function(module, exports) {
 
 	/** Used as references for various `Number` constants. */
@@ -79439,16 +79771,15 @@ var InfoxBpmnModeler =
 	/**
 	 * Checks if `value` is a valid array-like length.
 	 *
-	 * **Note:** This function is loosely based on
-	 * [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
+	 * **Note:** This method is loosely based on
+	 * [`ToLength`](http://ecma-international.org/ecma-262/7.0/#sec-tolength).
 	 *
 	 * @static
 	 * @memberOf _
 	 * @since 4.0.0
 	 * @category Lang
 	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is a valid length,
-	 *  else `false`.
+	 * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
 	 * @example
 	 *
 	 * _.isLength(3);
@@ -79472,7 +79803,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 846 */
+/* 841 */
 /***/ function(module, exports) {
 
 	/** Used as references for various `Number` constants. */
@@ -79500,7 +79831,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 847 */
+/* 842 */
 /***/ function(module, exports) {
 
 	/** Used for built-in method references. */
@@ -79524,21 +79855,18 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 848 */
+/* 843 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseHas = __webpack_require__(849),
-	    baseKeys = __webpack_require__(852),
-	    indexKeys = __webpack_require__(853),
-	    isArrayLike = __webpack_require__(840),
-	    isIndex = __webpack_require__(846),
-	    isPrototype = __webpack_require__(847);
+	var arrayLikeKeys = __webpack_require__(844),
+	    baseKeys = __webpack_require__(850),
+	    isArrayLike = __webpack_require__(837);
 
 	/**
 	 * Creates an array of the own enumerable property names of `object`.
 	 *
 	 * **Note:** Non-object values are coerced to objects. See the
-	 * [ES spec](http://ecma-international.org/ecma-262/6.0/#sec-object.keys)
+	 * [ES spec](http://ecma-international.org/ecma-262/7.0/#sec-object.keys)
 	 * for more details.
 	 *
 	 * @static
@@ -79563,33 +79891,20 @@ var InfoxBpmnModeler =
 	 * // => ['0', '1']
 	 */
 	function keys(object) {
-	  var isProto = isPrototype(object);
-	  if (!(isProto || isArrayLike(object))) {
-	    return baseKeys(object);
-	  }
-	  var indexes = indexKeys(object),
-	      skipIndexes = !!indexes,
-	      result = indexes || [],
-	      length = result.length;
-
-	  for (var key in object) {
-	    if (baseHas(object, key) &&
-	        !(skipIndexes && (key == 'length' || isIndex(key, length))) &&
-	        !(isProto && key == 'constructor')) {
-	      result.push(key);
-	    }
-	  }
-	  return result;
+	  return isArrayLike(object) ? arrayLikeKeys(object) : baseKeys(object);
 	}
 
 	module.exports = keys;
 
 
 /***/ },
-/* 849 */
+/* 844 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getPrototype = __webpack_require__(850);
+	var baseTimes = __webpack_require__(845),
+	    isArguments = __webpack_require__(846),
+	    isArray = __webpack_require__(849),
+	    isIndex = __webpack_require__(841);
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -79598,121 +79913,37 @@ var InfoxBpmnModeler =
 	var hasOwnProperty = objectProto.hasOwnProperty;
 
 	/**
-	 * The base implementation of `_.has` without support for deep paths.
-	 *
-	 * @private
-	 * @param {Object} [object] The object to query.
-	 * @param {Array|string} key The key to check.
-	 * @returns {boolean} Returns `true` if `key` exists, else `false`.
-	 */
-	function baseHas(object, key) {
-	  // Avoid a bug in IE 10-11 where objects with a [[Prototype]] of `null`,
-	  // that are composed entirely of index properties, return `false` for
-	  // `hasOwnProperty` checks of them.
-	  return object != null &&
-	    (hasOwnProperty.call(object, key) ||
-	      (typeof object == 'object' && key in object && getPrototype(object) === null));
-	}
-
-	module.exports = baseHas;
-
-
-/***/ },
-/* 850 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var overArg = __webpack_require__(851);
-
-	/* Built-in method references for those with the same name as other `lodash` methods. */
-	var nativeGetPrototype = Object.getPrototypeOf;
-
-	/**
-	 * Gets the `[[Prototype]]` of `value`.
+	 * Creates an array of the enumerable property names of the array-like `value`.
 	 *
 	 * @private
 	 * @param {*} value The value to query.
-	 * @returns {null|Object} Returns the `[[Prototype]]`.
-	 */
-	var getPrototype = overArg(nativeGetPrototype, Object);
-
-	module.exports = getPrototype;
-
-
-/***/ },
-/* 851 */
-/***/ function(module, exports) {
-
-	/**
-	 * Creates a function that invokes `func` with its first argument transformed.
-	 *
-	 * @private
-	 * @param {Function} func The function to wrap.
-	 * @param {Function} transform The argument transform.
-	 * @returns {Function} Returns the new function.
-	 */
-	function overArg(func, transform) {
-	  return function(arg) {
-	    return func(transform(arg));
-	  };
-	}
-
-	module.exports = overArg;
-
-
-/***/ },
-/* 852 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var overArg = __webpack_require__(851);
-
-	/* Built-in method references for those with the same name as other `lodash` methods. */
-	var nativeKeys = Object.keys;
-
-	/**
-	 * The base implementation of `_.keys` which doesn't skip the constructor
-	 * property of prototypes or treat sparse arrays as dense.
-	 *
-	 * @private
-	 * @param {Object} object The object to query.
+	 * @param {boolean} inherited Specify returning inherited property names.
 	 * @returns {Array} Returns the array of property names.
 	 */
-	var baseKeys = overArg(nativeKeys, Object);
+	function arrayLikeKeys(value, inherited) {
+	  // Safari 8.1 makes `arguments.callee` enumerable in strict mode.
+	  // Safari 9 makes `arguments.length` enumerable in strict mode.
+	  var result = (isArray(value) || isArguments(value))
+	    ? baseTimes(value.length, String)
+	    : [];
 
-	module.exports = baseKeys;
+	  var length = result.length,
+	      skipIndexes = !!length;
 
-
-/***/ },
-/* 853 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseTimes = __webpack_require__(854),
-	    isArguments = __webpack_require__(855),
-	    isArray = __webpack_require__(858),
-	    isLength = __webpack_require__(845),
-	    isString = __webpack_require__(859);
-
-	/**
-	 * Creates an array of index keys for `object` values of arrays,
-	 * `arguments` objects, and strings, otherwise `null` is returned.
-	 *
-	 * @private
-	 * @param {Object} object The object to query.
-	 * @returns {Array|null} Returns index keys, else `null`.
-	 */
-	function indexKeys(object) {
-	  var length = object ? object.length : undefined;
-	  if (isLength(length) &&
-	      (isArray(object) || isString(object) || isArguments(object))) {
-	    return baseTimes(length, String);
+	  for (var key in value) {
+	    if ((inherited || hasOwnProperty.call(value, key)) &&
+	        !(skipIndexes && (key == 'length' || isIndex(key, length)))) {
+	      result.push(key);
+	    }
 	  }
-	  return null;
+	  return result;
 	}
 
-	module.exports = indexKeys;
+	module.exports = arrayLikeKeys;
 
 
 /***/ },
-/* 854 */
+/* 845 */
 /***/ function(module, exports) {
 
 	/**
@@ -79738,10 +79969,10 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 855 */
+/* 846 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLikeObject = __webpack_require__(856);
+	var isArrayLikeObject = __webpack_require__(847);
 
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]';
@@ -79754,7 +79985,7 @@ var InfoxBpmnModeler =
 
 	/**
 	 * Used to resolve the
-	 * [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
 	 * of values.
 	 */
 	var objectToString = objectProto.toString;
@@ -79781,7 +80012,7 @@ var InfoxBpmnModeler =
 	 * // => false
 	 */
 	function isArguments(value) {
-	  // Safari 8.1 incorrectly makes `arguments.callee` enumerable in strict mode.
+	  // Safari 8.1 makes `arguments.callee` enumerable in strict mode.
 	  return isArrayLikeObject(value) && hasOwnProperty.call(value, 'callee') &&
 	    (!propertyIsEnumerable.call(value, 'callee') || objectToString.call(value) == argsTag);
 	}
@@ -79790,11 +80021,11 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 856 */
+/* 847 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArrayLike = __webpack_require__(840),
-	    isObjectLike = __webpack_require__(857);
+	var isArrayLike = __webpack_require__(837),
+	    isObjectLike = __webpack_require__(848);
 
 	/**
 	 * This method is like `_.isArrayLike` except that it also checks if `value`
@@ -79829,7 +80060,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 857 */
+/* 848 */
 /***/ function(module, exports) {
 
 	/**
@@ -79864,7 +80095,7 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 858 */
+/* 849 */
 /***/ function(module, exports) {
 
 	/**
@@ -79896,58 +80127,82 @@ var InfoxBpmnModeler =
 
 
 /***/ },
-/* 859 */
+/* 850 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArray = __webpack_require__(858),
-	    isObjectLike = __webpack_require__(857);
-
-	/** `Object#toString` result references. */
-	var stringTag = '[object String]';
+	var isPrototype = __webpack_require__(842),
+	    nativeKeys = __webpack_require__(851);
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
 
-	/**
-	 * Used to resolve the
-	 * [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objectToString = objectProto.toString;
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
 
 	/**
-	 * Checks if `value` is classified as a `String` primitive or object.
+	 * The base implementation of `_.keys` which doesn't treat sparse arrays as dense.
 	 *
-	 * @static
-	 * @since 0.1.0
-	 * @memberOf _
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is a string, else `false`.
-	 * @example
-	 *
-	 * _.isString('abc');
-	 * // => true
-	 *
-	 * _.isString(1);
-	 * // => false
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @returns {Array} Returns the array of property names.
 	 */
-	function isString(value) {
-	  return typeof value == 'string' ||
-	    (!isArray(value) && isObjectLike(value) && objectToString.call(value) == stringTag);
+	function baseKeys(object) {
+	  if (!isPrototype(object)) {
+	    return nativeKeys(object);
+	  }
+	  var result = [];
+	  for (var key in Object(object)) {
+	    if (hasOwnProperty.call(object, key) && key != 'constructor') {
+	      result.push(key);
+	    }
+	  }
+	  return result;
 	}
 
-	module.exports = isString;
+	module.exports = baseKeys;
 
 
 /***/ },
-/* 860 */
+/* 851 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var overArg = __webpack_require__(852);
+
+	/* Built-in method references for those with the same name as other `lodash` methods. */
+	var nativeKeys = overArg(Object.keys, Object);
+
+	module.exports = nativeKeys;
+
+
+/***/ },
+/* 852 */
+/***/ function(module, exports) {
+
+	/**
+	 * Creates a unary function that invokes `func` with its argument transformed.
+	 *
+	 * @private
+	 * @param {Function} func The function to wrap.
+	 * @param {Function} transform The argument transform.
+	 * @returns {Function} Returns the new function.
+	 */
+	function overArg(func, transform) {
+	  return function(arg) {
+	    return func(transform(arg));
+	  };
+	}
+
+	module.exports = overArg;
+
+
+/***/ },
+/* 853 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var inherits = __webpack_require__(3);
-	var ReplaceMenuProvider = __webpack_require__(700);
+	var ReplaceMenuProvider = __webpack_require__(807);
 	var is = __webpack_require__(443).is;
-	var isAny = __webpack_require__(573).isAny;
+	var isAny = __webpack_require__(575).isAny;
 
 	function InfoxReplaceMenuProvider(popupMenu, modeling, moddle, bpmnReplace, rules, translate) {
 	    ReplaceMenuProvider.call(this, popupMenu, modeling, moddle, bpmnReplace, rules, translate);
@@ -79983,23 +80238,23 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 861 */
+/* 854 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var inherits = __webpack_require__(3);
-	var ContextPadProvider = __webpack_require__(703);
-	var assign = __webpack_require__(832);
+	var ContextPadProvider = __webpack_require__(811);
+	var assign = __webpack_require__(829);
 	var is = __webpack_require__(443).is;
-	var isAny = __webpack_require__(573).isAny;
+	var isAny = __webpack_require__(575).isAny;
 
-	function InfoxContextPadProvider(contextPad, modeling, elementFactory, connect, create, popupMenu, canvas, rules, translate, parallelGatewayDirectionProvider, infoxModeler) {
-	    ContextPadProvider.call(this, contextPad, modeling, elementFactory, connect, create, popupMenu, canvas, rules, translate);
+	function InfoxContextPadProvider(eventBus, contextPad, modeling, elementFactory, connect, create, popupMenu, canvas, rules, translate, parallelGatewayDirectionProvider, infoxModeler) {
+	    ContextPadProvider.call(this, eventBus, contextPad, modeling, elementFactory, connect, create, popupMenu, canvas, rules, translate);
 
 	    this._parallelGatewayDirectionProvider = parallelGatewayDirectionProvider;
 	    this._infoxModeler = infoxModeler;
 	}
 
-	InfoxContextPadProvider.$inject = ['contextPad', 'modeling', 'elementFactory', 'connect', 'create', 'popupMenu', 'canvas', 'rules', 'translate', 'parallelGatewayDirectionProvider', 'infoxModeler'];
+	InfoxContextPadProvider.$inject = ['eventBus', 'contextPad', 'modeling', 'elementFactory', 'connect', 'create', 'popupMenu', 'canvas', 'rules', 'translate', 'parallelGatewayDirectionProvider', 'infoxModeler'];
 
 	inherits(InfoxContextPadProvider, ContextPadProvider);
 	module.exports = InfoxContextPadProvider;
@@ -80133,11 +80388,11 @@ var InfoxBpmnModeler =
 	}
 
 /***/ },
-/* 862 */
+/* 855 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var inherits = __webpack_require__(3);
-	var BpmnRules = __webpack_require__(752);
+	var BpmnRules = __webpack_require__(723);
 	var is = __webpack_require__(443).is;
 
 	function InfoxBpmnRules(eventBus) {
@@ -80176,7 +80431,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 863 */
+/* 856 */
 /***/ function(module, exports) {
 
 	function brazilianPortugueseTranslate(template, replacements) {
@@ -80250,7 +80505,7 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 864 */
+/* 857 */
 /***/ function(module, exports) {
 
 	function ParallelGatewayDirectionProvider(popupMenu, translate, modeling) {
@@ -80290,12 +80545,12 @@ var InfoxBpmnModeler =
 	};
 
 /***/ },
-/* 865 */
+/* 858 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var LabelEditingProvider = __webpack_require__(725);
+	var LabelEditingProvider = __webpack_require__(720);
 	var is = __webpack_require__(443).is;
 	var inherits = __webpack_require__(3);
 
