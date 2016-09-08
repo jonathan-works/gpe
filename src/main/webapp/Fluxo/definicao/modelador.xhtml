@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:a="http://richfaces.org/a4j"
+	xmlns:infox="http://www.infox.com.br/jsf"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
 	<h:outputStylesheet name="diagram-js.css" library="modelador/css" />
@@ -12,7 +14,7 @@
 	<p:outputPanel layout="block" id="modelador" style="background-color: white; height: 600px" />
 	
 	<h:inputHidden id="bpmn" value="#{bpmnView.fluxo.bpmn}" />
-	
+
 	<script>
 		var bpmn;
 		if (!window.modeler) {
@@ -25,5 +27,19 @@
         	'bpmn': bpmn,
         	'configureElement': configureElement
         });
+        
+        function printSVG() {
+        	function popupAndPrint() {
+        		var svg = modeler.getBpmnInformation()['svg'];
+        		var printWindow = window.open('');
+        		printWindow.document.writeln(svg);
+        		printWindow.document.close();
+        		printWindow.print();
+        		printWindow.close();
+        	}
+        	setTimeout(popupAndPrint, 500);
+        }
     </script>
+    
+    <button onclick="printSVG()" class="buttons">Imprimir</button>
 </ui:composition>
