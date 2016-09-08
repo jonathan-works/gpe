@@ -19,8 +19,13 @@ public abstract class AbstractDatabase implements Database {
     }
     
     @Override
-    public void performJpaCustomizedProperties(Properties properties) {
+    public void performJpaCustomProperties(Properties properties) {
         properties.put("hibernate.dialect", getHibernateDialect());
+    }
+    
+    @Override
+    public void performQuartzProperties(Properties properties) {
+        properties.put("org.quartz.jobStore.driverDelegateClass", getQuartzDelegate());
     }
     
 }

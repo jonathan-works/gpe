@@ -12,7 +12,7 @@ public class PostgresqlDatabase extends AbstractDatabase {
     }
 
     @Override
-    public String getQuartzDialect() {
+    public String getQuartzDelegate() {
         return PostgreSQLDelegate.class.getName();
     }
 

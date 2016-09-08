@@ -31,12 +31,13 @@ public class Configuration {
     }
     
     public void configureQuartz(Properties properties) {
-        
+        applicationServer.performQuartzProperties(properties);
     }
     
-    public void configureJPA(Properties properties) {
+    public Properties configureJpa(Properties properties) {
         applicationServer.performJpaCustomProperties(properties);
-        database.performJpaCustomizedProperties(properties);
+        database.performJpaCustomProperties(properties);
+        return properties;
     }
 
     public ApplicationServer getApplicationServer() {

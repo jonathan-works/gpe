@@ -8,13 +8,15 @@ public interface Database {
     
     String getHibernateDialect();
 
-    String getQuartzDialect();
+    String getQuartzDelegate();
     
     DatabaseType getDatabaseType();
     
     DataSource getJtaDataSource(String persistenceUnitName);
     
-    void performJpaCustomizedProperties(Properties properties);
+    void performJpaCustomProperties(Properties properties);
+    
+    void performQuartzProperties(Properties properties);
     
     public enum DatabaseType {
         

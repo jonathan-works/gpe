@@ -12,7 +12,7 @@ public class OracleDatabase extends AbstractDatabase {
     }
 
     @Override
-    public String getQuartzDialect() {
+    public String getQuartzDelegate() {
         return OracleDelegate.class.getName();
     }
 
