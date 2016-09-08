@@ -108,7 +108,7 @@ public class DocumentoDownloader implements Serializable {
     public void downloadDocumento(DocumentoBin documento, boolean gerarMargens) {
         byte[] data = documentoBinarioManager.getData(documento.getId());
         String fileName = documento.getNomeArquivo();
-        String contentType = "application/" + documento.getExtensao();
+        String contentType = ("application/" + documento.getExtensao()).toLowerCase();
         if (gerarMargens && contentType.equals("application/pdf") && !documento.getAssinaturas().isEmpty()) {
             downloadPdf(documento, data, fileName);
         } else {
