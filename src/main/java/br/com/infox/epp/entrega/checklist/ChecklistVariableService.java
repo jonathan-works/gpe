@@ -73,7 +73,7 @@ public class ChecklistVariableService implements Serializable {
         if (clDocList == null || clDocList.isEmpty()) {
             return "";
         }
-        String response = "<table border=\"1\" style=\"border-collapse: collapse; width: 100%\">";
+        String response = "<table border=\"1\" style=\"font-size: 12px; border-collapse: collapse; width: 100%\">";
         response += "<thead>";
         response += "<th>Classificação de Documento</th>";
         if(mostrarIncluidoPor) {
