@@ -20,7 +20,7 @@
 	   		<ui:param name="tipoComunicacao" value="#{visualizarComunicacaoAction.destinatario.modeloComunicacao.tipoComunicacao.descricao}" />
 	   		<ui:param name="idDestinatario" value="#{visualizarComunicacaoAction.destinatario.id}" />
             <ui:param name="isAnexo" value="#{not empty visualizarComunicacaoAction.destinatario.documentoComunicacao.documentoBin.extensao}" />
-            <ui:param name="idModelo" value="#{visualizarComunicacaoAction.destinatario.modeloComunicacao.id}" />
+            <ui:param name="idDocumentoComunicacao" value="#{visualizarComunicacaoAction.destinatario.documentoComunicacao.id}" />
 	   	</ui:include>
 	    
 	    <ui:include src="/WEB-INF/xhtml/components/fragments/documentosComunicacao.xhtml">
