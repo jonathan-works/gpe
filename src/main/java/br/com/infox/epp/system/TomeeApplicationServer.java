@@ -1,5 +1,6 @@
 package br.com.infox.epp.system;
 
+import javax.mail.Session;
 import javax.sql.DataSource;
 import javax.transaction.TransactionManager;
 
@@ -7,6 +8,16 @@ import br.com.infox.epp.cdi.util.JNDI;
 
 public class TomeeApplicationServer extends AbstractApplicationServer {
 
+    @Override
+    public String getQuartzDataSourceJndi() {
+        return "openejb:Resource/EPAQuartzDataSource";
+    }
+
+    @Override
+    public String getEpaDataSourceJndi() {
+        return "openejb:Resource/EPADataSource";
+    }
+    
     @Override
     public DataSource getListaDadosDataSource() {
         return JNDI.lookup("openejb:Resource/ListaDadosDataSource");
@@ -33,8 +44,8 @@ public class TomeeApplicationServer extends AbstractApplicationServer {
     }
 
     @Override
-    public String getMailSession() {
-        return "openejb:Resource/mail/epp";
+    public Session getMailSession() {
+        return JNDI.lookup("openejb:Resource/mail/epp");
     }
 
     @Override
@@ -57,11 +68,6 @@ public class TomeeApplicationServer extends AbstractApplicationServer {
     public String getLogDir() {
         String logDir = System.getProperty("tomcat.server.log.dir");
         return logDir == null ? super.getLogDir() : logDir;
-    }
-
-    @Override
-    public String getTransactionManagerLookupClass() {
-        return "org.apache.openejb.hibernate.TransactionManagerLookup";
     }
 
 }

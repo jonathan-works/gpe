@@ -1,5 +1,6 @@
 package br.com.infox.epp.system;
 
+import javax.mail.Session;
 import javax.sql.DataSource;
 import javax.transaction.TransactionManager;
 
@@ -7,6 +8,15 @@ import br.com.infox.epp.cdi.util.JNDI;
 
 public class JBossEapApplicationServer extends AbstractApplicationServer {
     
+    @Override
+    public String getQuartzDataSourceJndi() {
+        return "java:jboss/datasources/EPAQuartzDataSource";
+    }
+
+    @Override
+    public String getEpaDataSourceJndi() {
+        return "java:jboss/datasources/EPADataSource";
+    }
     
     @Override
     public DataSource getListaDadosDataSource() {
@@ -34,8 +44,8 @@ public class JBossEapApplicationServer extends AbstractApplicationServer {
     }
 
     @Override
-    public String getMailSession() {
-        return "java:jboss/mail/epp";
+    public Session getMailSession() {
+        return JNDI.lookup("java:jboss/mail/epp");
     }
 
     @Override
@@ -60,9 +70,4 @@ public class JBossEapApplicationServer extends AbstractApplicationServer {
         return logDir == null ? super.getLogDir() : logDir;
     }
     
-    @Override
-    public String getTransactionManagerLookupClass() {
-        return "org.hibernate.transaction.JBossTransactionManagerLookup";
-    }
-
 }

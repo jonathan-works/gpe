@@ -2,6 +2,7 @@ package br.com.infox.epp.system;
 
 import java.util.Properties;
 
+import javax.mail.Session;
 import javax.sql.DataSource;
 import javax.transaction.TransactionManager;
 
@@ -15,13 +16,15 @@ public interface ApplicationServer {
     
     DataSource getQuartzDataSource();
     
+    String getQuartzDataSourceJndi();
+    
+    String getEpaDataSourceJndi();
+    
     String getHibernateCacheRegionClass();
 
     String getHibernateJtaPlataform();
     
-    String getMailSession();
-    
-    String getTransactionManagerLookupClass();
+    Session getMailSession();
     
     TransactionManager getTransactionManager();
     

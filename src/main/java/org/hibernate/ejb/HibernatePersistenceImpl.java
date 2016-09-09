@@ -14,7 +14,8 @@ public class HibernatePersistenceImpl extends HibernatePersistence {
     public EntityManagerFactory createContainerEntityManagerFactory(PersistenceUnitInfo info, Map properties) {
         Configuration configuration = Configuration.getInstance();
         PersistenceUnitInfoWrapper persistenceUnitInfo = new PersistenceUnitInfoWrapper(info, configuration);
-        return super.createContainerEntityManagerFactory(persistenceUnitInfo, properties);
+        EntityManagerFactory entityManagerFactory = super.createContainerEntityManagerFactory(persistenceUnitInfo, properties);
+        return entityManagerFactory;
     }
-    
+
 }

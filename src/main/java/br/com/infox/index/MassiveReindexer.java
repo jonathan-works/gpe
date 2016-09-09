@@ -16,7 +16,7 @@ import org.jboss.seam.annotations.Startup;
 
 import br.com.infox.core.server.ApplicationServerService;
 import br.com.infox.epp.cdi.config.BeanManager;
-import br.com.infox.epp.system.EppProperties;
+import br.com.infox.epp.system.Configuration;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.hibernate.util.HibernateUtil;
@@ -51,9 +51,9 @@ public class MassiveReindexer {
 	}
 	
 	private boolean canExecute() {
+	    Configuration configuration = Configuration.getInstance();
 		String valor = getParametroManager().getValorParametro(Parametros.ATIVAR_MASSIVE_REINDEX.getLabel());
-		return !EppProperties.getProperty(EppProperties.PROPERTY_DESENVOLVIMENTO).equals("true")
-				&& valor != null && "true".equals(valor.trim());
+		return !configuration.isDesenvolvimento() && valor != null && "true".equals(valor.trim());
 	}
 
 	private void execute() throws InterruptedException {

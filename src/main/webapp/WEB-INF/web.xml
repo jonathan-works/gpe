@@ -146,10 +146,6 @@
 		<servlet-name>Resource Servlet</servlet-name>
 		<url-pattern>/org.richfaces.resources/*</url-pattern>
 	</servlet-mapping>
-	<persistence-unit-ref>
-    	<persistence-unit-ref-name>EPAPersistenceUnit</persistence-unit-ref-name>
-        <persistence-unit-name>EPAPersistenceUnit</persistence-unit-name>
-    </persistence-unit-ref>
 
 	<mime-mapping>
 		<extension>woff</extension>

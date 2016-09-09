@@ -8,12 +8,14 @@ public class Configuration {
 
     private ApplicationServer applicationServer;
     private Database database;
+    private boolean desenvolvimento;
     
     private static Configuration INSTANCE;
     
     private Configuration(ApplicationServer applicationServer, Database database) {
         this.applicationServer = applicationServer;
         this.database = database;
+        this.desenvolvimento = System.getProperties().get("epp.desenvolvimento") == null ? false : (boolean) System.getProperties().get("epp.desenvolvimento");
     }
 
     public synchronized static Configuration getInstance() {
@@ -32,6 +34,7 @@ public class Configuration {
     
     public void configureQuartz(Properties properties) {
         applicationServer.performQuartzProperties(properties);
+        database.performQuartzProperties(properties);
     }
     
     public Properties configureJpa(Properties properties) {
@@ -46,6 +49,10 @@ public class Configuration {
 
     public Database getDatabase() {
         return database;
+    }
+    
+    public boolean isDesenvolvimento() {
+        return desenvolvimento;
     }
     
     public String getEpaPersistenceUnitName() {

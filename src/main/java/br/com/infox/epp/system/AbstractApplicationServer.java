@@ -25,7 +25,9 @@ public abstract class AbstractApplicationServer implements ApplicationServer {
     
     @Override
     public void performQuartzProperties(Properties properties) {
-        properties.put("org.quartz.jobStore.dataSource", getEpaDataSource());
-        properties.put("org.quartz.jobStore.nonManagedTXDataSource", getQuartzDataSource());
+        properties.put("org.quartz.jobStore.dataSource", "epaDataSource");
+        properties.put("org.quartz.jobStore.nonManagedTXDataSource", "epaQuartzDataSource");
+        properties.put("org.quartz.dataSource.epaDataSource.jndiURL", getEpaDataSourceJndi());
+        properties.put("org.quartz.dataSource.epaQuartzDataSource.jndiURL", getQuartzDataSourceJndi());
     }
 }

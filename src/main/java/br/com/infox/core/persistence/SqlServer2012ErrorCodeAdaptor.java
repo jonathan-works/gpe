@@ -4,7 +4,9 @@ import java.sql.SQLException;
 
 import br.com.infox.hibernate.sqlserver.error.SQLServer2012ErrorCode;
 
-public class SqlServer2012ErrorCodeAdaptor {
+public class SqlServer2012ErrorCodeAdaptor implements DatabaseErrorCodeAdapter {
+    
+    public static final DatabaseErrorCodeAdapter INSTANCE = new SqlServer2012ErrorCodeAdaptor();
 
     public GenericDatabaseErrorCode resolve(SQLException sqlException) {
         int code = sqlException.getErrorCode();

@@ -1,8 +1,13 @@
 package br.com.infox.epp.system;
 
 import java.util.Properties;
+import java.util.UUID;
 
 import javax.sql.DataSource;
+
+import org.hibernate.type.SingleColumnType;
+
+import br.com.infox.core.persistence.DatabaseErrorCodeAdapter;
 
 public interface Database {
     
@@ -17,6 +22,10 @@ public interface Database {
     void performJpaCustomProperties(Properties properties);
     
     void performQuartzProperties(Properties properties);
+    
+    DatabaseErrorCodeAdapter getErrorCodeAdapter();
+    
+    SingleColumnType<UUID> getUUIDType(); 
     
     public enum DatabaseType {
         
