@@ -7,27 +7,11 @@
 	xmlns:infox="http://www.infox.com.br/jsf"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
-	<h:outputStylesheet name="diagram-js.css" library="modelador/css" />
-	<link type="text/css" href="#{pathResolver.contextPath}/resources/modelador/vendor/bpmn-font/css/bpmn.css" rel="stylesheet"></link>
-	<h:outputScript name="bundle.js" library="modelador" />
-	
 	<p:outputPanel layout="block" id="modelador" style="background-color: white; height: 600px" />
 	
-	<h:inputHidden id="bpmn" value="#{bpmnView.fluxo.bpmn}" />
-
 	<script>
-		var bpmn;
-		if (!window.modeler) {
-			bpmn = document.getElementById("#{rich:clientId('bpmn')}").value;
-		} else {
-			bpmn = window.modeler.getBpmnInformation().bpmn;
-		}
-        window.modeler = new InfoxBpmnModeler({
-        	'container': document.getElementById("#{rich:clientId('modelador')}"),
-        	'bpmn': bpmn,
-        	'configureElement': configureElement
-        });
-        
+		initModelador("#{rich:clientId('modelador')}");	
+	
         function printSVG() {
         	function popupAndPrint() {
         		var svg = modeler.getBpmnInformation()['svg'];
