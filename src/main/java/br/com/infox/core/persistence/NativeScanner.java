@@ -240,9 +240,14 @@ public class NativeScanner implements Scanner {
     
     private void readExtendedMappings(URL jartoScan, Set<NamedInputStream> filesInJar) {
         try {
-            Enumeration<URL> files = getClass().getClassLoader().getResources("META-INF/extended-mappings.xml");
-            while (files.hasMoreElements()) {
-                URL file = files.nextElement();
+            Enumeration<URL> extendedMappings = getClass().getClassLoader().getResources("META-INF/extended-mappings.xml");
+            while (extendedMappings.hasMoreElements()) {
+                URL file = extendedMappings.nextElement();
+                filesInJar.add(new NamedInputStream(file.getPath(), file.openStream()));
+            }
+            extendedMappings = getClass().getClassLoader().getResources("META-INF/extended-named-queries.xml");
+            while (extendedMappings.hasMoreElements()) {
+                URL file = extendedMappings.nextElement();
                 filesInJar.add(new NamedInputStream(file.getPath(), file.openStream()));
             }
         } catch (IOException e) {
