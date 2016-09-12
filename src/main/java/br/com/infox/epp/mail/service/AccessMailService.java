@@ -19,10 +19,10 @@ import br.com.infox.core.mail.EMailBean;
 import br.com.infox.core.mail.MailSender;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import br.com.infox.epp.cdi.util.JNDI;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.mail.entity.EMailData;
+import br.com.infox.epp.system.Configuration;
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.seam.exception.ApplicationException;
@@ -128,11 +128,7 @@ public class AccessMailService {
     }
 
     private Session getEmailSession() {
-        Session session = JNDI.lookup("java:jboss/mail/epp");
-        if (session == null) {
-        	session = JNDI.lookup("openejb:Resource/mail/epp"); //TOMEE
-        }
-        return session;
+        return Configuration.getInstance().getApplicationServer().getMailSession();
     }
 
     private void enviarEmailModelo(final ModeloDocumento modelo, final UsuarioLogin usuario, final String password) {

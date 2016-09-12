@@ -566,7 +566,6 @@
 							<excludes>
 								<exclude>WEB-INF/web.xml</exclude>
 								<exclude>WEB-INF/components.xml</exclude>
-								<exclude>WEB-INF/jboss-deployment-structure.xml</exclude>
 							</excludes>
 						</resource>
 						<resource>
@@ -575,7 +574,6 @@
 							<includes>
 								<include>WEB-INF/web.xml</include>
 								<include>WEB-INF/components.xml</include>
-								<include>WEB-INF/jboss-deployment-structure.xml</include>
 							</includes>
 						</resource>
 					</webResources>

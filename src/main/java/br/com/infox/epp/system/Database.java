@@ -29,7 +29,23 @@ public interface Database {
     
     public enum DatabaseType {
         
-        PostgreSQL, SQLServer, Oracle
+        PostgreSQL("PostgreSQL"), SQLServer("Microsoft SQL Server"), Oracle("Oracle");
+        
+        private String productName;
+        
+        private DatabaseType(String productName) {
+            this.productName = productName;
+        }
+        
+        public static DatabaseType fromProductName(String productName) {
+            DatabaseType[] databaseTypes = DatabaseType.values();
+            for (DatabaseType databaseType : databaseTypes) {
+                if (databaseType.productName.equalsIgnoreCase(productName)) {
+                    return databaseType;
+                }
+            }
+            return null;
+        }
         
     }
 }
