@@ -229,7 +229,7 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
 	@External(expressionType = ExpressionType.GERAL,
         tooltip = "process.events.expression.dataMaximaRespostaComunicacao.tooltip",
         value = {
-            @Parameter(defaultValue = "'Nome da Tarefa'", selectable = true)
+            @Parameter(selectable = true, defaultValue = "'Nome da Tarefa'", label = "Nome da Tarefa", tooltip = "Nome da tarefa originária da comunicação")
         }
     )
     public Date dataMaximaRespostaComunicacao(String taskName) throws DAOException {
@@ -238,16 +238,25 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
         return dataMaxima;
     }
 	
-	@External(expressionType = ExpressionType.GATEWAY,
-	            tooltip = "process.events.expression.comunicacao.isPrazoProrrogadoENaoExpirado.tooltip",
-	            example = "#{bpmExpressionService.isPrazoProrrogadoENaoExpirado(processo, 'Tarefa 1')}")
+	@External(expressionType = ExpressionType.GATEWAY, tooltip = "process.events.expression.comunicacao.isPrazoProrrogadoENaoExpirado.tooltip",
+        example = "#{bpmExpressionService.isPrazoProrrogadoENaoExpirado(processo, 'Tarefa 1')}",
+        value = {
+            @Parameter(defaultValue = PROCESSO, label = "process.events.expression.param.processo.label", tooltip = "process.events.expression.param.processo.tooltip"),
+            @Parameter(defaultValue = "Nome da Tarefa", selectable = true, label = "Nome da Tarefa", tooltip = "Nome da tarefa originária da comunicação")
+        }
+	)
 	public Boolean isPrazoProrrogadoENaoExpirado(Integer idProcesso, String taskName){
 	    return prazoComunicacaoService.isPrazoProrrogadoENaoExpirado(idProcesso, taskName);
 	}
 	
 	@External(expressionType = ExpressionType.GATEWAY,
-                tooltip = "process.events.expression.comunicacao.possuiRespostaDiferenteProrrogacaoprazo.tooltip",
-                example = "#{bpmExpressionService.possuiRespostaDiferenteProrrogacaoprazo(processo, 'Tarefa 1')}")
+        tooltip = "process.events.expression.comunicacao.possuiRespostaDiferenteProrrogacaoprazo.tooltip",
+        example = "#{bpmExpressionService.possuiRespostaDiferenteProrrogacaoprazo(processo, 'Tarefa 1')}",
+        value = {
+            @Parameter(defaultValue = PROCESSO, label = "process.events.expression.param.processo.label", tooltip = "process.events.expression.param.processo.tooltip"),
+            @Parameter(defaultValue = "Nome da Tarefa", selectable = true, label = "Nome da Tarefa", tooltip = "Nome da tarefa originária da comunicação")
+        }
+	)
 	public Boolean possuiRespostaDiferenteProrrogacaoprazo(Integer idProcesso, String taskName){
 	    Boolean isProrrogacaoPrazo = Boolean.FALSE;
             return 0 < modeloComunicacaoSearch.countRespostasComunicacaoByProcessoAndTaskName(idProcesso, taskName, isProrrogacaoPrazo);
@@ -256,7 +265,7 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
 	@External(expressionType = ExpressionType.GERAL,
         tooltip = "process.events.expression.getUsuarioComLogin.tooltip",
         value = {
-            @Parameter(defaultValue = "'Login do usuário'", selectable = true)
+            @Parameter(defaultValue = "'login'", selectable = true, label = "login", tooltip = "Login do usuário")
         }
     )
     public UsuarioLogin getUsuarioComLogin(String login) throws DAOException {
@@ -274,8 +283,11 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
      * @return
      */
     @External(expressionType = ExpressionType.GATEWAY,
-            tooltip = "process.events.expression.checklist.hasNaoConforme.tooltip",
-            example = "#{bpmExpressionService.checklistHasItemNaoConforme('Documentos do Processo')}")
+        tooltip = "process.events.expression.checklist.hasNaoConforme.tooltip",
+        example = "#{bpmExpressionService.checklistHasItemNaoConforme('Documentos do Processo')}",
+        value = {
+            @Parameter(selectable = true, defaultValue = "'Nome da Pasta'", label = "Nome da Pasta", tooltip = "Nome da pasta que o checklist está baseado")
+        })
     public Boolean checklistHasItemNaoConforme(String nomePasta) {
         return checklistVariableService.existeItemNaoConforme(nomePasta);
     }
@@ -349,9 +361,9 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
 
     @External(expressionType = ExpressionType.GERAL
             , example ="#{bpmExpressionService.criarLink(variavelCodigo, 'Aplicacao externa X', bpmExpressionService.urlBuilder(baseUrl).path(variavelString).query('chave','valor').build())}", tooltip = "process.events.expression.linkAplicacaoExterna.tooltip", value = {
-            @Parameter(defaultValue = "codigo", label = "process.events.expression.linkAplicacaoExterna.param.codigo.label", tooltip = "process.events.expression.param.linkAplicacaoExterna.codigo.tooltip"),
-            @Parameter(defaultValue = "descricao", label = "process.events.expression.linkAplicacaoExterna.param.descricao.label", tooltip = "process.events.expression.param.linkAplicacaoExterna.codigo.tooltip"),
-            @Parameter(defaultValue = "url", label = "process.events.expression.linkAplicacaoExterna.param.url.label", tooltip = "process.events.expression.param.linkAplicacaoExterna.codigo.tooltip") })
+            @Parameter(defaultValue = "codigo", label = "process.events.expression.linkAplicacaoExterna.param.codigo.label", tooltip = "process.events.expression.linkAplicacaoExterna.param.codigo.tooltip"),
+            @Parameter(defaultValue = "descricao", label = "process.events.expression.linkAplicacaoExterna.param.descricao.label", tooltip = "process.events.expression.linkAplicacaoExterna.param.descricao.tooltip"),
+            @Parameter(defaultValue = "url", label = "process.events.expression.linkAplicacaoExterna.param.url.label", tooltip = "process.events.expression.linkAplicacaoExterna.param.url.tooltip") })
     public void criarLink(String codigo, String descricao, String url) {
         Integer idProcesso = getIdProcessoAtual();
         Processo processo = EntityManagerProducer.getEntityManager().find(Processo.class, idProcesso);
@@ -394,7 +406,7 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
     }
 
     @External(expressionType = ExpressionType.GERAL, tooltip = "Remove metadados do processo", value = {
-            @Parameter(defaultValue = "'nomeMetadado'", selectable = true)
+            @Parameter(selectable = true, defaultValue = "'nomeMetadado'", label = "Nome", tooltip = "Nome do Metadado a ser removido")
     })
     public void removerMetadado(String nomeMetadado) {
         ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
@@ -412,7 +424,7 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
     }
 
     @External(expressionType = ExpressionType.GATEWAY, tooltip = "Verifica se algum dos documentos em análise possui a classificação de documento parametrizada", value = {
-            @Parameter(defaultValue = "'codigoClassificacaoDocumento'", selectable = true)
+        @Parameter(defaultValue = "'codigoClassificacaoDocumento'", selectable = true, label = "codigoClassificacaoDocumento", tooltip = "Código da Classificação de Documento")
     })
     public boolean documentoEmAnaliseTemClassificacao(String codigoClassificacao) {
         ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
