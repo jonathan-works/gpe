@@ -80279,7 +80279,6 @@ var InfoxBpmnModeler =
 	    function appendAction(type, className, options) {
 	        function appendListener(event, element) {
 	            var shape = elementFactory.createShape(assign({ type: type }, options));
-	            console.log(element);
 	            create.start(event, shape, element);
 	        }
 	        var shortType = type.replace(/^bpmn\:/, '');
