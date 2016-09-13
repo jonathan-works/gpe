@@ -5,6 +5,9 @@ import java.util.Properties;
 import br.com.infox.core.server.ServerInfo;
 
 public class Configuration {
+	
+	public static final String EPA_PERSISTENCE_UNIT_NAME = "EPAPersistenceUnit";
+	public static final String EPA_BIN_PERSISTENCE_UNIT_NAME = "EPABinPersistenceUnit";
 
     private ApplicationServer applicationServer;
     private Database database;
@@ -37,7 +40,7 @@ public class Configuration {
         database.performQuartzProperties(properties);
     }
     
-    public Properties configureJpa(Properties properties) {
+    public Properties configureJpa(Properties properties, String persistenceUnitName) {
         applicationServer.performJpaCustomProperties(properties);
         database.performJpaCustomProperties(properties);
         return properties;
@@ -53,14 +56,6 @@ public class Configuration {
     
     public boolean isDesenvolvimento() {
         return desenvolvimento;
-    }
-    
-    public String getEpaPersistenceUnitName() {
-        return "EPAPersistenceUnit";
-    }
-    
-    public String getEpaBinPersistenceUnitName() {
-        return "EPABinPersistenceUnit";
     }
     
 }

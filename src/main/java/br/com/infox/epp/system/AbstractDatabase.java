@@ -9,9 +9,9 @@ public abstract class AbstractDatabase implements Database {
     @Override
     public DataSource getJtaDataSource(String persistenceUnitName) {
         ApplicationServer applicationServer = Configuration.getInstance().getApplicationServer();
-        if (Configuration.getInstance().getEpaPersistenceUnitName().equals(persistenceUnitName)) {
+        if (Configuration.EPA_PERSISTENCE_UNIT_NAME.equals(persistenceUnitName)) {
             return applicationServer.getEpaDataSource();
-        } else if (Configuration.getInstance().getEpaBinPersistenceUnitName().equals(persistenceUnitName)) {
+        } else if (Configuration.EPA_BIN_PERSISTENCE_UNIT_NAME.equals(persistenceUnitName)) {
             return applicationServer.getEpaBinDataSource();
         } else {
             throw new IllegalStateException("Unknow persistence unit name " + persistenceUnitName);
