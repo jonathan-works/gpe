@@ -48,7 +48,7 @@ public class PersistenceUnitInfoWrapper implements PersistenceUnitInfo {
         this.excludeUnlistedClasses = persistenceUnitInfo.excludeUnlistedClasses();
         this.sharedCacheMode = persistenceUnitInfo.getSharedCacheMode();
         this.validationMode = persistenceUnitInfo.getValidationMode();
-        this.properties = configuration.configureJpa(persistenceUnitInfo.getProperties());
+        this.properties = configuration.configureJpa(persistenceUnitInfo.getProperties(), persistenceUnitName);
         this.persistenceXMLSchemaVersion = persistenceUnitInfo.getPersistenceXMLSchemaVersion();
         this.classLoader = persistenceUnitInfo.getClassLoader();
     }
