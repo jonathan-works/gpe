@@ -23,8 +23,8 @@
 					<p:graphicImage value="#{layoutController.getResourceUrlByPath('/imagens/jbpm/'.concat(nodeFitter.getIcon(item)).concat('.gif'))}" />
 				</p:column>
 				<p:column style="width: 90%">#{item.name}</p:column>
-				<p:ajax event="itemSelect" update="@form:@parent :pageBodyDialogMessage" process="@this"
-					onstart="infox.showLoading('Carregando dados da tarefa...');" oncomplete="infox.hideLoading()"/>
+				<a:ajax event="itemSelect" render="nodes :pageBodyDialogMessage" execute="@this"
+					onbegin="infox.showLoading('Carregando dados da tarefa...');" oncomplete="infox.hideLoading()"/>
 			</p:autoComplete>
 		</h:form>
 		<rich:panel bodyClass="panel"
