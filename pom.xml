@@ -114,7 +114,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-jpamodelgen</artifactId>
-			<version>4.3.8.Final</version><!--$NO-MVN-MAN-VER$-->
+			<version>4.3.8.Final</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -139,13 +139,13 @@
 		<dependency>
 			<groupId>org.infinispan</groupId>
 			<artifactId>infinispan-core</artifactId>
-			<version>5.2.7.Final</version><!--$NO-MVN-MAN-VER$-->
+			<version>5.2.7.Final</version><!--$NO-MVN-MAN-VER$ -->
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<artifactId>dom4j</artifactId>
 			<groupId>dom4j</groupId>
-			<version>1.6</version><!--$NO-MVN-MAN-VER$-->
+			<version>1.6</version><!--$NO-MVN-MAN-VER$ -->
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -158,12 +158,12 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>18.0</version><!--$NO-MVN-MAN-VER$-->
+			<version>18.0</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.cssparser</groupId>
 			<artifactId>cssparser</artifactId>
-			<version>0.9.18</version><!--$NO-MVN-MAN-VER$-->
+			<version>0.9.18</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 		<dependency>
 			<groupId>br.com.infox</groupId>
@@ -176,6 +176,11 @@
 			<version>5.3</version>
 		</dependency>
 		<dependency>
+			<groupId>org.primefaces.extensions</groupId>
+			<artifactId>primefaces-extensions</artifactId>
+			<version>4.0.0</version>
+		</dependency>
+		<dependency>
 			<groupId>org.primefaces.themes</groupId>
 			<artifactId>bootstrap</artifactId>
 			<version>1.0.8</version>
@@ -183,7 +188,7 @@
 		<dependency>
 			<groupId>org.jbpm.jbpm3</groupId>
 			<artifactId>jbpm-jpdl</artifactId>
-			<version>3.4.4-1</version><!--$NO-MVN-MAN-VER$-->
+			<version>3.4.4-1</version><!--$NO-MVN-MAN-VER$ -->
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -196,7 +201,7 @@
 		<dependency>
 			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz</artifactId>
-			<version>2.2.1</version><!--$NO-MVN-MAN-VER$-->
+			<version>2.2.1</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
