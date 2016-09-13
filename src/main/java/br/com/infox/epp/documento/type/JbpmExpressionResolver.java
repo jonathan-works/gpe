@@ -10,11 +10,13 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 
 import org.jbpm.graph.exe.ProcessInstance;
+import org.jbpm.graph.exe.Token;
 
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 import br.com.infox.ibpm.variable.entity.VariableInfo;
 import br.com.infox.ibpm.variable.manager.DominioVariavelTarefaManager;
@@ -25,6 +27,7 @@ public class JbpmExpressionResolver implements ExpressionResolver {
 	// <Id Process Definition, <Variable Name, Variable Info>>
 	private Map<Long, Map<String, VariableInfo>> variableInfoMap = new HashMap<>();
 	private Integer idProcesso;
+	private ProcessInstance  processInstance;
 	
 	public JbpmExpressionResolver(Integer idProcesso) {
 		if (idProcesso == null) {
@@ -33,26 +36,58 @@ public class JbpmExpressionResolver implements ExpressionResolver {
 		this.idProcesso = idProcesso;
 	}
 	
+	public JbpmExpressionResolver(ProcessInstance processInstance) {
+		if (processInstance == null) {
+			throw new NullPointerException("O id do process instance não pode ser nulo");
+		}
+		this.processInstance = processInstance;
+	}
+	
 	@Override
 	public Expression resolve(Expression expression) {
 		String realVariableName = expression.getExpression().substring(2, expression.getExpression().length() - 1);
-		ProcessoManager processoManager = ComponentUtil.getComponent(ProcessoManager.NAME);
 		EntityManager entityManager = BeanManager.INSTANCE.getReference(EntityManager.class);
 		Object value = null;
-		Processo processo = processoManager.find(idProcesso);
+		
+		if(idProcesso == null && processInstance != null)
+			idProcesso = (Integer) processInstance.getContextInstance().getVariable(VariaveisJbpmProcessosGerais.PROCESSO);
+		
+		Processo  processo = entityManager.find(Processo.class, idProcesso);
+		if(processInstance == null)
+			processInstance = entityManager.find(ProcessInstance.class, processo.getIdJbpm());
+		ProcessInstance  procInst = processInstance;
 		do {
-			ProcessInstance processInstance = entityManager.find(ProcessInstance.class, processo.getIdJbpm());
-	        value = processInstance.getContextInstance().getVariable(realVariableName);
-	        VariableInfo variableInfo = getVariableInfo(realVariableName, processInstance.getProcessDefinition().getId());
-	        if (variableInfo == null && value != null) {
-	        	resolveAsJavaType(expression, value);
-	        } else if (variableInfo != null && value != null) {
-	        	resolveAsVariableType(expression, value, variableInfo);
-	        } else {
+	        value = resolveValue(procInst, realVariableName, expression);
+	        if(value == null){
+	        	//procura na hierarquia de processos acessórios 
 	        	processo = processo.getProcessoPai();
+	        	if(processo != null)
+	        		procInst = entityManager.find(ProcessInstance.class, processo.getIdJbpm());
 	        }
 		} while (value == null && processo != null);
+		
+		
+		
         return expression;
+	}
+	
+	private Object resolveValue(ProcessInstance processInstance, String realVariableName,Expression expression){
+		Object value;
+		do {
+			VariableInfo variableInfo = getVariableInfo(realVariableName, processInstance.getProcessDefinition().getId());
+			value = processInstance.getContextInstance().getVariable(realVariableName);
+			if (variableInfo == null && value != null) {
+				resolveAsJavaType(expression, value);
+			} else if (variableInfo != null && value != null) {
+				resolveAsVariableType(expression, value, variableInfo);
+			} else {
+				//procura na hierarquia de sub-processos
+				Token superProcessToken = processInstance.getSuperProcessToken();
+				processInstance = superProcessToken != null ? superProcessToken.getProcessInstance() : null;
+			}
+		} while (value == null && processInstance != null);
+		
+		return value;
 	}
 
 	private VariableInfo getVariableInfo(String variableName, Long processDefinitionId) {
@@ -115,6 +150,10 @@ public class JbpmExpressionResolver implements ExpressionResolver {
 		    String string = value.toString();
             expression.setValue(string);
 		    break;
+		    
+		case STRUCTURED_TEXT:
+			expression.setValue(value.toString());
+			break;
 		default:
 			expression.setResolved(false);
 			expression.setOriginalValue(null);

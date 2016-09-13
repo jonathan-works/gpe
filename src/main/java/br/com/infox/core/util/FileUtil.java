@@ -28,7 +28,7 @@ public final class FileUtil {
         if (nomeArquivo != null) {
             ret = nomeArquivo.substring(nomeArquivo.lastIndexOf('.') + 1);
         }
-        return ret;
+        return ret.toLowerCase();
     }
 
 }
