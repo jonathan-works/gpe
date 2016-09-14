@@ -99,13 +99,14 @@
 			
 			<!-- Ofício da Comunicação -->
 			<h:form id="documentoComunicacaoForm">
-				<s:div style="display: inline-block; vertical-align: top; width: inherit;" rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
-				<rich:collapsiblePanel id="editorDocumentoComunicacaoPanel" header="#{infoxMessages['comunicacao.panelEditorComunicacaoTitulo']}">
+				<s:div style="vertical-align: top;" rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
+				<rich:collapsiblePanel id="editorDocumentoComunicacaoPanel" header="#{infoxMessages['comunicacao.panelEditorComunicacaoTitulo']}" 
+					expanded="false" bodyClass="dtable-p-b" styleClass="dtable-p full-sized">
 					<s:div>
 	    				<wi:selectOneMenuEntity id="classificacaoComunicacao"
 	    					label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
 				      		items="#{documentoComunicacaoAction.classificacoes}"
-				      		showLabelSelecione="true"
+				      		showLabelSelecione="true" showRequired="true"
 				      		value="#{envioComunicacaoController.modeloComunicacao.classificacaoComunicacao}"
 				      		readonly="#{not envioComunicacaoController.modeloComunicacao.minuta}"
 	      					disabled="#{not envioComunicacaoController.modeloComunicacao.minuta}">
@@ -166,7 +167,7 @@
 				</rich:collapsiblePanel>
 				</s:div>
 				
-				<rich:panel id="panelFinalizacaoDaElaboracaoComunicacao" style="margin-top: 1em;">
+				<rich:panel id="panelFinalizacaoDaElaboracaoComunicacao" style="margin-top: 1em; margin-bottom: 1em;">
 					<!-- Finalização e Responsáveis pela Expedição da Comunicação -->
 					<s:div id="responsaveisAssinatura">
 						<wi:selectBooleanCheckbox id="finalizada" label="#{infoxMessages['comunicacao.finalizada']}" 

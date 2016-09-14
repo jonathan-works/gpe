@@ -98,7 +98,9 @@
             	</ui:repeat>
             	
             </h:panelGrid>
-            <ui:include src="linkAplicacaoExterna.xhtml" />
+            <ui:include src="linkAplicacaoExterna.xhtml">
+                <ui:param name="processo" value="#{processoEpaHome.instance}" />
+            </ui:include>
         </rich:collapsiblePanel>
         <h:form>
             <a:jsFunction
@@ -205,15 +207,9 @@
                 name="tabAnexar"
                 rendered="#{processoEpaHome.managed}"
                 status=":status"
+                action="#{anexarDocumentosView.setProcesso(processoEpaHome.instance)}"
                 title="#{infoxMessages['movimentar.anexar.titleTab']}">
-                <wi:dataForm
-                    formId="anexarDocumentosForm"
-                    formTitle="#{infoxMessages['movimentar.anexar.titleForm']}"
-                    isUploadForm="true">
-					<f:event listener="#{anexarDocumentosView.setProcesso(processoEpaHome.instance)}" type="preRenderView" />        
-                    <ui:include src="anexarDocumentos.xhtml" />
-                    <ui:define name="buttons" />
-                </wi:dataForm>
+                <ui:include src="anexarDocumentos.xhtml" />
             </infox:tab>
             <infox:tab
                 id="tabComunicacao"
@@ -222,6 +218,10 @@
                 rendered="#{security.checkPage('abaComunicacao')}"
                 title="Comunicação"
                 action="#{comunicacaoAction.clear}">
+                <ui:param name="renderRegistrarCiencia" value="#{security.checkPage('Movimentar.Comunicacao.RegistrarCiencia')}" />
+                <ui:param name="renderPedirProrrogacao" value="#{security.checkPage('Movimentar.Comunicacao.ProrrogarPrazo')}" />
+                <ui:param name="renderVisualizarDocumentos" value="#{security.checkPage('Movimentar.Comunicacao.VisualizarDocumentos')}" />
+                <ui:param name="renderVisualizarResposta" value="#{security.checkPage('Movimentar.Comunicacao.VisualizarResposta')}" />
                 <ui:include src="comunicacao.xhtml" />
             </infox:tab>
             <infox:tab
@@ -258,7 +258,7 @@
             <infox:tab
                 id="documentoFisicoTab"
                 name="documentoFisicoTab"
-                rendered="#{home.isManaged()}"
+                rendered="#{home.isManaged() and security.checkPage('/pages/Processo/abaDocumentoFisico')}"
                 action="#{localizacaoDocumentoFisicoCrudAction.setProcesso(processoEpaHome.instance)}"
                 title="#{infoxMessages['documentoFisico.titleTab']}">
                 <wi:dataForm

@@ -3,7 +3,12 @@ package br.com.infox.ibpm.event;
 import static br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais.PROCESSO;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +23,7 @@ import javax.inject.Named;
 import org.jbpm.graph.exe.ExecutionContext;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.componentes.reflection.Reflection;
 import br.com.infox.core.net.UrlBuilder;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.GenericDatabaseErrorCode;
@@ -160,13 +166,58 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
 	    return suficientementeAssinado;
     }
 	
-	@External(expressionType = ExpressionType.RAIA_DINAMICA, 
+	@External(expressionType = ExpressionType.GERAL, 
         tooltip = "process.events.expression.toList.tooltip",
         example = "#{bpmExpressionService.toList(variavel).put(variavelLista).put(variavel2))}"
     )
     public Collection<Object> toList(Object object) {
+		if(object == null)
+			return null;
+		if(object instanceof Collection<?>)
+			return (Collection<Object>)object;
 	    return new ObjectCollection(object.getClass()).put(object);
     }
+	
+	@External(expressionType = ExpressionType.GERAL, 
+	        tooltip = "process.events.expression.toList.listExecuteMethod",
+	        example = "#{bpmExpressionService.listExecuteMethod(colecao<Pasta>,'getNome')}"
+	 )
+    public String listExecuteMethod(Collection<?> colecao,String methodNameChain){
+    	StringBuilder result = new StringBuilder();
+    	for (Object obj : colecao) {
+    		List<String> methodName = new ArrayList<String>();
+    		if(methodNameChain == null || methodNameChain.trim().isEmpty())
+    			methodName.add("toString") ;
+    		else{
+    			if(methodNameChain.contains("."))
+    				methodName = Arrays.asList(methodNameChain.split("\\.")) ;
+    			else
+    				methodName.add(methodNameChain);
+    		}
+			try {
+				for (int i = 0; i < methodName.size(); i++) {
+					if(methodName.get(i).trim().isEmpty())
+						continue;
+					Reflection reflection = new Reflection(obj.getClass());
+					Method declaredMethod = reflection.getMethod(methodName.get(i));
+					obj = declaredMethod.invoke(obj);
+					if(i != methodName.size() -1 )
+						continue;
+					if (obj != null) {
+						if(!result.toString().isEmpty())
+							result.append(", ");
+						result.append(obj.toString());
+					}
+				}
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+					| NoSuchMethodException | SecurityException e) {
+				throw new BusinessException(
+						"Método " + methodName + "() não encontrado em: " + obj.getClass().getSimpleName(), e);
+			}
+		}
+    	return result.toString();
+    }
+    
 	
 	@External(expressionType = ExpressionType.GERAL,
         tooltip = "process.events.expression.dataMaximaRespostaComunicacao.tooltip"

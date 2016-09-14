@@ -8,13 +8,5 @@
 		<!-- Esta aba foi separada para poder ser sobrescrita pelos clientes sem afetar o comportamento padrão do core -->
 	</ui:remove>
 
-    <wi:dataForm
-        formId="anexarDocumentosForm"
-        formTitle="#{infoxMessages['movimentar.anexar.titleForm']}"
-        isUploadForm="true">
-		<f:event listener="#{anexarDocumentosView.setProcesso(processoEpaHome.instance)}" type="preRenderView" />        
-        <ui:include src="anexarDocumentos.xhtml" />
-        <ui:define name="buttons" />
-    </wi:dataForm>
-
+    <ui:include src="anexarDocumentos.xhtml" />
 </ui:composition>

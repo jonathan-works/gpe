@@ -31,9 +31,9 @@ import org.jboss.seam.security.Identity;
 import org.jboss.seam.security.management.IdentityManager;
 import org.jboss.seam.security.management.JpaIdentityStore;
 
-import br.com.infox.cdi.producer.EntityManagerProducer;
 import com.google.common.base.Strings;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.crud.TermoAdesaoAction;
@@ -48,6 +48,7 @@ import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.manager.ldap.LDAPManager;
 import br.com.infox.epp.access.service.AuthenticatorService;
 import br.com.infox.epp.access.service.PasswordService;
+import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.menu.MenuNavigation;
@@ -132,8 +133,6 @@ public class Authenticator implements Serializable {
             JpaIdentityStore store = getJpaIdentyStore();
             UsuarioLogin usuario = (UsuarioLogin) store.lookupUser(id);
             try {
-                validaCadastroDeUsuario(id, usuario);
-                getAuthenticatorService().validarUsuario(usuario);
                 if (isTrocarSenha()) {
                     trocarSenhaUsuario(usuario);
                 } else {
@@ -162,7 +161,7 @@ public class Authenticator implements Serializable {
         boolean hasToSign = papelManager.hasToSignTermoAdesao(usuario);
         if(hasToSign){
         	if (pessoaFisica == null) {
-            	throw new LoginException(infoxMessages.get("login.error.semPessoaFisica"));
+            	throw new LoginException(infoxMessages.get(AuthenticatorService.LOGIN_ERROR_SEM_PESSOA_FISICA));
             }
             hasToSign = pessoaFisica.getTermoAdesao() == null;
         }
@@ -180,12 +179,6 @@ public class Authenticator implements Serializable {
 
     private JpaIdentityStore getJpaIdentyStore() {
         return (JpaIdentityStore) IdentityManager.instance().getIdentityStore();
-    }
-
-    private void validaCadastroDeUsuario(String id, UsuarioLogin usuario) throws LoginException {
-        if (usuario == null) {
-            throw new LoginException(String.format(infoxMessages.get("login.error.usuarioProblemaCadastro"), id));
-        }
     }
 
     private boolean isTrocarSenha() {
@@ -210,7 +203,14 @@ public class Authenticator implements Serializable {
     public void login() {
         Identity identity = Identity.instance();
         Credentials credentials = identity.getCredentials();
-        
+        JpaIdentityStore store = getJpaIdentyStore();
+        UsuarioLogin usuario = (UsuarioLogin) store.lookupUser(credentials.getUsername());
+        try {
+            getAuthenticatorService().checkValidadeUsuarioLogin(usuario, UsuarioEnum.P);
+        } catch (LoginException e) {
+            getMessagesHandler().add(Severity.ERROR, e.getMessage());
+            return;
+        }
         if (cdiAuthenticator.authenticate(credentials.getUsername(), credentials.getPassword())){
         	getAuthenticatorService().loginWithoutPassword(credentials.getUsername());
         	return;
@@ -268,7 +268,7 @@ public class Authenticator implements Serializable {
     public void loginFailed(Object obj) throws LoginException {
         UsuarioLogin usuario = usuarioLoginManager.getUsuarioLoginByLogin(Identity.instance().getCredentials().getUsername());
         if (usuario != null && !usuario.getAtivo()) {
-            FacesMessages.instance().add(infoxMessages.get("login.error.usuarioNaoAtivo"));
+            FacesMessages.instance().add(infoxMessages.get("login.error.inativo"));
         }
         FacesMessages.instance().add(infoxMessages.get("login.error.usuarioOuSenhaInvalidos"));
     }
@@ -328,7 +328,7 @@ public class Authenticator implements Serializable {
             setUsuarioPerfilAtual(usuarioPerfil);
             return true;
         }
-        throw new LoginException(String.format(infoxMessages.get("login.error.usuarioProblemaCadastro"), usuario));
+        throw new LoginException(String.format(infoxMessages.get(AuthenticatorService.LOGIN_ERROR_USUARIO_SEM_PERFIL), usuario));
     }
 
     /**
@@ -348,7 +348,8 @@ public class Authenticator implements Serializable {
         setVariaveisDoContexto(usuarioPerfil, roleSet);
         securityUtil.clearPermissionCache();
         BeanManager.INSTANCE.getReference(MenuNavigation.class).refresh();
-        if (!getUsuarioLogado().getProvisorio() && !isUsuarioExterno()) {
+        
+        if (!isUsuarioExterno()) {
         	if (!hasToSignTermoAdesao()) {
         		redirectToPainelDoUsuario();
         	} else {

@@ -8,8 +8,8 @@ import javax.ejb.TransactionAttributeType;
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -47,8 +47,8 @@ public class UsuarioLoginSearch extends PersistenceController {
 
 	private Root<UsuarioLogin> createQueryGetUsuarioByPessoaFisica(PessoaFisica pessoaFisica, CriteriaBuilder cb, CriteriaQuery<?> cq) {
 		Root<UsuarioLogin> usuario = cq.from(UsuarioLogin.class);
-		Predicate ativo = usuarioAtivo(cb, usuario);
-		Predicate humano = cb.equal(usuario.get(UsuarioLogin_.tipoUsuario), UsuarioEnum.H);
+		Predicate ativo = usuarioAtivoPredicate(usuario);
+		Predicate humano = podeFazerLoginPredicate(usuario);
 		Predicate pessoaIgual = cb.equal(usuario.get(UsuarioLogin_.pessoaFisica), pessoaFisica);
 		cq.where(cb.and(ativo, humano, pessoaIgual));
 		
@@ -62,21 +62,26 @@ public class UsuarioLoginSearch extends PersistenceController {
 		Root<UsuarioLogin> usuario = cq.from(UsuarioLogin.class);
 		Join<UsuarioLogin, PessoaFisica> pessoa = usuario.join(UsuarioLogin_.pessoaFisica);
 		
-		Predicate ativo = usuarioAtivo(cb, usuario);
-		Predicate humano = cb.equal(usuario.get(UsuarioLogin_.tipoUsuario), UsuarioEnum.H);
+		Predicate ativo = usuarioAtivoPredicate(usuario);
+		Predicate podeFazerLogin = podeFazerLoginPredicate(usuario);
 		Predicate cpfIgual = cb.equal(pessoa.get(PessoaFisica_.cpf), cpf);
 		
-		cq = cq.select(usuario).where(cb.and(ativo, humano, cpfIgual));
+		cq = cq.select(usuario).where(cb.and(ativo, podeFazerLogin, cpfIgual));
 		
 		return getEntityManager().createQuery(cq).getSingleResult();
 	}
+
+    Predicate podeFazerLoginPredicate(From<?,UsuarioLogin> usuario) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        return cb.equal(usuario.get(UsuarioLogin_.tipoUsuario), UsuarioEnum.S).not();
+    }
 	
 	public UsuarioLogin getUsuarioLoginByCpfWhenExists(String cpf) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<UsuarioLogin> cq = cb.createQuery(UsuarioLogin.class);
 		Root<UsuarioLogin> usuario = cq.from(UsuarioLogin.class);
 		Join<UsuarioLogin, PessoaFisica> pessoa = usuario.join(UsuarioLogin_.pessoaFisica);
-		cq.where(cb.equal(usuario.get(UsuarioLogin_.tipoUsuario), UsuarioEnum.H),
+		cq.where(podeFazerLoginPredicate(usuario),
 				cb.equal(pessoa.get(PessoaFisica_.cpf), cpf));
 		try {
 			return getEntityManager().createQuery(cq).getSingleResult();
@@ -85,7 +90,8 @@ public class UsuarioLoginSearch extends PersistenceController {
 		}
 	}
 
-	private Predicate usuarioAtivo(CriteriaBuilder cb, Path<UsuarioLogin> usuario) {
+	Predicate usuarioAtivoPredicate(From<?,UsuarioLogin> usuario) {
+	        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		Predicate naoProvisorio = cb.isFalse(usuario.get(UsuarioLogin_.provisorio));
 		Predicate provisorioNoPrazo = cb.and(cb.isTrue(usuario.get(UsuarioLogin_.provisorio)), cb.greaterThan(usuario.get(UsuarioLogin_.dataExpiracao), new Date()));
 		Predicate naoExpirado = cb.or(naoProvisorio,provisorioNoPrazo);
@@ -100,11 +106,12 @@ public class UsuarioLoginSearch extends PersistenceController {
 		
 		Root<UsuarioLogin> usuario = cq.from(UsuarioLogin.class);
 		
-		Predicate ativo = usuarioAtivo(cb, usuario);
-		Predicate humano = cb.equal(usuario.get(UsuarioLogin_.tipoUsuario), UsuarioEnum.H);
+		Predicate ativo = usuarioAtivoPredicate(usuario);
+		
+		Predicate podeFazerLogin = podeFazerLoginPredicate(usuario);
 		Predicate loginIgual = cb.equal(usuario.get(UsuarioLogin_.login), login);
 		
-		cq = cq.select(usuario).where(cb.and(ativo, humano, loginIgual));
+		cq = cq.select(usuario).where(cb.and(ativo, podeFazerLogin, loginIgual));
 		
 		return getEntityManager().createQuery(cq).getSingleResult();
 	}
@@ -114,9 +121,8 @@ public class UsuarioLoginSearch extends PersistenceController {
 		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
 		Root<UsuarioLogin> usuario = cq.from(UsuarioLogin.class);
 		Join<UsuarioLogin, UsuarioPerfil> up = usuario.join(UsuarioLogin_.usuarioPerfilList);
-		cq.where(usuarioAtivo(cb, usuario),
-				cb.equal(usuario.get(UsuarioLogin_.tipoUsuario), UsuarioEnum.H),
-				cb.isTrue(up.get(UsuarioPerfil_.ativo)),
+		cq.where(usuarioAtivoPredicate(usuario),
+		                podeFazerLoginPredicate(usuario),
 				cb.equal(up.get(UsuarioPerfil_.localizacao), localizacao));
 		if (perfilTemplate != null) {
 			cq.where(cq.getRestriction(),

@@ -139,7 +139,7 @@
 
 	<rich:popupPanel id="addDestinatariosComunicacaoPopup" modal="true"
 		autosized="true" minWidth="800" minHeight="420"
-		header="Adicionar Destinatário" onbeforehide="onBeforeHidePopup();">
+		header="Adicionar Destinatário" onbeforehide="onBeforeHidePopup();" onbeforeshow="#{rich:component('destinoLocalizacaoPerfilPanel')}.switchToItem('false');">
 		<f:facet name="controls">
 			<h:graphicImage id="closeBtnAddDestinatarioPopup"
 				value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"

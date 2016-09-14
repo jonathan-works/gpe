@@ -22,16 +22,8 @@ public interface BloqueioUsuarioQuery extends Serializable {
     String BLOQUEIOS_ATIVOS_QUERY = "select o from BloqueioUsuario o where o.dataDesbloqueio = null";
 
     String PARAM_ID_USUARIO = "id_usuario";
-    String UNDO_BLOQUEIO = "undoBloqueio";
-    String UNDO_BLOQUEIO_NATIVE_QUERY = "update tb_usuario_login set in_bloqueio=false where id_usuario_login = :"
-            + PARAM_ID_USUARIO;
 
     String PARAM_BLOQUEIO = "bloqueio";
     String PARAM_DATA_DESBLOQUEIO = "dataDesbloqueio";
-    String SAVE_DATA_DESBLOQUEIO = "saveDataDesbloqueio";
-    String SAVE_DATA_DESBLOQUEIO_QUERY = "UPDATE BloqueioUsuario b SET b.dataDesbloqueio = :"
-            + PARAM_DATA_DESBLOQUEIO
-            + " WHERE b.idBloqueioUsuario = :"
-            + PARAM_BLOQUEIO;
 
 }

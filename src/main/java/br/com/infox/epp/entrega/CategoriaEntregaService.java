@@ -2,6 +2,8 @@ package br.com.infox.epp.entrega;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -100,5 +102,45 @@ public class CategoriaEntregaService {
 			throw new EppConfigurationException("O parâmetro " + nomeParametro + " não está configurado");
 		}
 		return getCategoria(codigo);
+	}
+	
+	private int getNivelCategoria(CategoriaEntrega categoria) {
+		int nivel = 1;
+		while(categoria.getCategoriaEntregaPai() != null) {
+			nivel++;
+			categoria = categoria.getCategoriaEntregaPai();
+		}
+		return nivel;
+	}
+	
+	
+	private List<CategoriaEntrega> ordenarCategoriasPorNivel(List<CategoriaEntrega> categorias) {
+		SortedMap<Integer, List<CategoriaEntrega>> mapaNiveis = new TreeMap<>();
+		
+		for(CategoriaEntrega categoria : categorias) {
+			int nivel = getNivelCategoria(categoria);
+			if(!mapaNiveis.containsKey(nivel)) {
+				mapaNiveis.put(nivel, new ArrayList<CategoriaEntrega>());
+			}
+			mapaNiveis.get(nivel).add(categoria);
+		}
+		
+		List<CategoriaEntrega> retorno = new ArrayList<>();
+		for(List<CategoriaEntrega> categoriasList : mapaNiveis.values()) {
+			for(CategoriaEntrega categoria : categoriasList) {
+				retorno.add(categoria);
+			}
+		}
+		
+		return retorno;
+	}
+	
+	public List<CategoriaEntrega> getCategoriasModelos(String codigoItemModelo) {
+		CategoriaEntregaItem item = categoriaEntregaItemSearch.getCategoriaEntregaItemByCodigo(codigoItemModelo);
+		List<CategoriaEntrega> categorias = categoriaEntregaSearch.getCategoriasModelos(item.getId());
+		
+		List<CategoriaEntrega> retorno = ordenarCategoriasPorNivel(categorias);
+		
+		return retorno;
 	}
 }

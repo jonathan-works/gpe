@@ -44,6 +44,9 @@
 		      	</ui:repeat>
                     
             </h:panelGrid>
+            <ui:include src="linkAplicacaoExterna.xhtml">
+                <ui:param name="processo" value="#{processoEpaHome.instance}" />
+            </ui:include>
         </rich:collapsiblePanel>
         <infox:tabPanel
             switchType="ajax"
@@ -101,8 +104,9 @@
                 name="tabAnexar"
                 rendered="#{security.checkPage('/pages/Processo/abaAnexar')}"
                 status=":status"
+                action="#{anexarDocumentosView.setProcesso(processoEpaHome.instance)}"
                 title="#{infoxMessages['movimentar.anexar.titleTab']}">
-                    <ui:include src="/Processo/visualizarAbaAnexar.xhtml" />
+                <ui:include src="/Processo/visualizarAbaAnexar.xhtml" />
             </infox:tab>
             <infox:tab
                 id="tabComunicacao"
@@ -111,6 +115,10 @@
                 rendered="#{security.checkPage('abaComunicacao')}"
                 title="Comunicação"
                 action="#{comunicacaoAction.clear}">
+                <ui:param name="renderRegistrarCiencia" value="#{security.checkPage('Visualizar.Comunicacao.RegistrarCiencia')}" />
+                <ui:param name="renderPedirProrrogacao" value="#{security.checkPage('Visualizar.Comunicacao.ProrrogarPrazo')}" />
+                <ui:param name="renderVisualizarDocumentos" value="#{security.checkPage('Visualizar.Comunicacao.VisualizarDocumentos')}" />
+                <ui:param name="renderVisualizarResposta" value="#{security.checkPage('Visualizar.Comunicacao.VisualizarResposta')}" />
                 <ui:include src="comunicacao.xhtml" />
             </infox:tab>
             <infox:tab

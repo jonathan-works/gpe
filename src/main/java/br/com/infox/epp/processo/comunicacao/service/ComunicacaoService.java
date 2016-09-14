@@ -298,8 +298,13 @@ public class ComunicacaoService {
 			if (modeloComunicacao.getClassificacaoComunicacao() == null) {
 				rollbackAndThrow("Escolha a classificação de documento do editor", null);
 			}
-		} else if (documentoComunicacaoService.getDocumentoInclusoPorUsuarioInterno(modeloComunicacao) == null) {
-			rollbackAndThrow("Deve haver texto no editor da comunicação ou pelo menos um documento incluso por usuário interno", null);
+		} else {
+		    DocumentoModeloComunicacao documentoInclusoPorUsuarioInterno = documentoComunicacaoService.getDocumentoInclusoPorUsuarioInterno(modeloComunicacao);
+		    if (documentoInclusoPorUsuarioInterno == null) {
+		        rollbackAndThrow("Deve haver texto no editor da comunicação ou pelo menos um documento incluso por usuário interno", null);
+	        } else {
+	            modeloComunicacao.setClassificacaoComunicacao(documentoInclusoPorUsuarioInterno.getDocumento().getClassificacaoDocumento());
+	        }
 		}
 		
 		modeloComunicacao.setFinalizada(true);
@@ -317,11 +322,10 @@ public class ComunicacaoService {
 
 		criarMetadadoDestinatario(destinatario, metadadoProcessoProvider);
 		
-		metadados.add(metadadoProcessoProvider.gerarMetadado(
-				ComunicacaoMetadadoProvider.MEIO_EXPEDICAO, destinatario.getMeioExpedicao().name()));
-		
-		metadados.add(metadadoProcessoProvider.gerarMetadado(
-				ComunicacaoMetadadoProvider.DESTINATARIO, destinatario.getId().toString()));
+		metadados.add(metadadoProcessoProvider.gerarMetadado(ComunicacaoMetadadoProvider.MEIO_EXPEDICAO, destinatario.getMeioExpedicao().name()));
+		metadados.add(metadadoProcessoProvider.gerarMetadado(ComunicacaoMetadadoProvider.DESTINATARIO, destinatario.getId().toString()));
+		metadados.add(metadadoProcessoProvider.gerarMetadado(ComunicacaoMetadadoProvider.MODELO_COMUNICACAO, 
+		        destinatario.getModeloComunicacao().getId().toString()));
 		
 		if (destinatario.getPrazo() != null) {
 			metadados.add(metadadoProcessoProvider.gerarMetadado(

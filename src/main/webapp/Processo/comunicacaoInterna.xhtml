@@ -47,7 +47,18 @@
     	
     	<wi:column columnId="destinatarios" columnHeader="Destinatários">
     		<ui:repeat var="destinatario" value="#{row.destinatarios}" varStatus="status">
-    			<h:outputText value="#{destinatario.nome}" style="display: block;"/>
+    			<div style="display: block;">
+    				<h:outputText value="#{destinatario.nomeDestino} "/>
+    				<s:div id="tooltipComunicacao" styleClass="tooltip-parent" style="width: 10px; display:inline;"
+    					rendered="#{not empty destinatario.destino}">
+    					<h:graphicImage id="tooltipLocalizacao" url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
+    					<div class="epp-tooltip" style="display:inline;" >
+    						<div class="tooltip-panel">
+    							<h:outputText value="#{destinatario.nome}"/>
+   							</div>
+						</div>
+					</s:div>
+				</div>
     		</ui:repeat>
     	</wi:column>
     	
@@ -80,9 +91,26 @@
     	<wi:columnOutputText columnId="numeroProcesso" columnHeader="Número Processo" value="#{row.numeroProcesso}"/>
     	
     	<wi:columnOutputText columnId="remetente" columnHeader="Remetente" value="#{row.getMetadado('remetente')}"/>
-    	<ui:param name="destinatario" value="#{row.getMetadado('destinatarioComunicacao').getValue()}"></ui:param>
-    	<wi:columnOutputText columnId="destinatario" columnHeader="Destinatário" value="#{destinatario}"/>
-    	<wi:columnOutputText columnId="tipoComunicacao" columnHeader="Tipo da Comunicação" value="#{destinatario.getModeloComunicacao().getTipoComunicacao()}"/>
+    	
+    	<wi:column columnId="destinatarios" columnHeader="Destinatário(s)">
+    		<ui:repeat var="destinatario" value="#{row.getMetadadoList('destinatarioComunicacao')}" >
+    			<div style="display: block;">
+    				<h:outputText value="#{destinatario.value.nomeDestino} "/>
+    				<s:div id="tooltipComunicacao" styleClass="tooltip-parent" style="width: 10px; display:inline;"
+    					rendered="#{not empty destinatario.value.destino}">
+    					<h:graphicImage id="tooltipLocalizacao" url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
+    					<div class="epp-tooltip" style="display:inline;" >
+    						<div class="tooltip-panel">
+    							<h:outputText value="#{destinatario.value.nome}"/>
+    						</div>
+    					</div>
+    				</s:div>
+    			</div>
+    		</ui:repeat>
+    	</wi:column>
+    	
+    	<wi:columnOutputText columnId="tipoComunicacao" columnHeader="Tipo da Comunicação" 
+    		value="#{row.getMetadado('destinatarioComunicacao').value.modeloComunicacao.tipoComunicacao}"/>
     	
     	<wi:column columnId="tarefa(s)" columnHeader="Tarefas">
     		<ui:repeat var="task" value="#{comunicacaoInternaView.getTaskNames(row)}" varStatus="status">

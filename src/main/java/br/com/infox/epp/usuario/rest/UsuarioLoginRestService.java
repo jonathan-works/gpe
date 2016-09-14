@@ -109,7 +109,7 @@ public class UsuarioLoginRestService {
 		usuarioLogin.setEmail(usuarioDTO.getEmail());
 		usuarioLogin.setNomeUsuario(usuarioDTO.getNome());
 		usuarioLogin.setLogin(usuarioDTO.getCpf());
-		usuarioLogin.setTipoUsuario(UsuarioEnum.H);
+		usuarioLogin.setTipoUsuario(UsuarioDTO.metodoLogin(usuarioDTO.getMetodoLogin()));
 		PessoaFisica pessoaFisica = getPessoaFisica(usuarioDTO);
 		usuarioLogin.setPessoaFisica(pessoaFisica);
 		aplicarValoresPessoaDocumento(usuarioDTO.getDocumentos(), pessoaFisica);
@@ -173,6 +173,9 @@ public class UsuarioLoginRestService {
 
 	public List<UsuarioDTO> getUsuarios() {
 		return usuarioDTOSearch.getUsuarioDTOList();
+	}
+	public List<UsuarioDTO> getUsuarios(int limit, int offset) {
+	    return usuarioDTOSearch.getUsuarioDTOList(limit, offset);
 	}
 		
 }

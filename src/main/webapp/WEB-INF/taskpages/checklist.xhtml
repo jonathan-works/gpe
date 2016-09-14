@@ -15,59 +15,44 @@
     </infox:div>
 
     <p:panel rendered="#{checklistView.hasPasta}" style="margin-top: 1rem; margin-bottom: 1rem;">
-    	<p:panel header="#{infoxMessages['searchForm.title']}" style="margin-bottom: 1rem;">
-    		<h:form id="formFiltros">
-	    		<div class="property-field-edit" style="display: inline-block;">
-					<div class="property-field-edit-name">
-						<h:outputLabel value="#{infoxMessages['marcador.marcadores']}" for="marcadorFilter"/>
-					</div>
-					<div class="property-field-edit-value">
-						<p:autoComplete id="marcadorFilter" multiple="true" inputStyle="display: inline-block;"
-							value="#{checklistView.documentoList.codigosMarcadores}" 
-				        	completeMethod="#{checklistView.autoCompleteMarcadores}"
-				        	itemLabel="#{item}" itemValue="#{item}" var="item" dropdown="true"
-				        	minQueryLength="3" queryDelay="600" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
-				        	<p:ajax event="itemSelect" update="@this" process="@this" />
-				        	<p:ajax event="itemUnselect" update="@this" process="@this" />
-				        </p:autoComplete>
-				        <style type="text/css">
-				    		.ui-autocomplete-multiple-container.ui-widget.ui-inputfield.ui-state-default.ui-corner-all {
-				    			display: inline-block;
-				    			vertical-align: middle;
-				    		}
-				    		.ui-button-icon-primary.ui-icon.ui-icon-triangle-1-s {
-				    			vertical-align: middle;
-				    		}
-				    	</style>
-			        </div>
-				</div>
-				<div>
-					<h:commandButton id="btnFiltrarDocumentos"
-						value="#{infoxMessages['button.pesquisar']}"
-						styleClass="buttons buttons">
-						<f:ajax immediate="true" execute="@form" render="@form :movimentarTabPanel:checklistTableform" />
-					</h:commandButton>
-					
-					<h:commandButton id="btnLimparFiltro"
-						value="#{infoxMessages['button.limpar']}"
-						action="#{checklistView.documentoList.clearFiltros()}"
-						styleClass="buttons buttons">
-						<f:ajax immediate="true" execute="@form" render="@form :movimentarTabPanel:checklistTableform" />
-					</h:commandButton>
-				</div>
-			</h:form>
-    	</p:panel>
-        <h:form id="blocoSituacaoForm">
+        <h:form id="blocoSituacaoForm" style="display: inline-block; vertical-align: top;">
             <wi:selectOneMenuEnum id="blocoSituacaoMenu" label="#{infoxMessages['checklist.blocoSituacao.label']}"
                 value="#{checklistView.situacaoBloco}"
                 items="#{checklistView.checklistSituacaoOptions}"/>
-
             <a:commandButton id="blocoSituacaoButton" styleClass="buttons"
                 value="#{infoxMessages['checklist.blocoSituacao.button']}" onclick="infox.showLoading();"
                 actionListener="#{checklistView.setBlockSituacao()}"
                 oncomplete="infox.hideLoading();" execute="@form"
                 render="checklistMessage pageBodyDialogMessage @form checklistTable" />
         </h:form>
+
+        <h:form id="formFiltros" style="display: inline-block; margin-left: 1em;">
+            <div class="property-field-edit" style="display: inline-block;">
+                <div class="property-field-edit-name">
+                    <h:outputLabel value="#{infoxMessages['marcador.marcadores']}" for="marcadorFilter"/>
+                </div>
+                <div class="property-field-edit-value">
+                    <p:autoComplete id="marcadorFilter" multiple="true" inputStyle="display: inline-block;"
+                        value="#{checklistView.documentoList.codigosMarcadores}"
+                        completeMethod="#{checklistView.autoCompleteMarcadores}"
+                        itemLabel="#{item}" itemValue="#{item}" var="item" dropdown="true"
+                        minQueryLength="3" queryDelay="600" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
+                        <p:ajax event="itemSelect" update="@this :movimentarTabPanel:checklistTableform" process="@this" />
+                        <p:ajax event="itemUnselect" update="@this :movimentarTabPanel:checklistTableform" process="@this" />
+                    </p:autoComplete>
+                    <style type="text/css">
+                        .ui-autocomplete-multiple-container.ui-widget.ui-inputfield.ui-state-default.ui-corner-all {
+                            display: inline-block;
+                            vertical-align: middle;
+                        }
+                        .ui-button-icon-primary.ui-icon.ui-icon-triangle-1-s {
+                            vertical-align: middle;
+                        }
+                    </style>
+                </div>
+            </div>
+        </h:form>
+
         <h:form id="checklistTableform">
             <p:dataTable id="checklistTable" widgetVar="checklistTable"
                 var="row" rowKey="#{row.id}" rowIndexVar="rowNumber" value="#{checklistView.documentoList}"
@@ -110,7 +95,14 @@
                     <f:facet name="filter">
                         <h:inputText id="filterNomeDocumento" onchange="PF('checklistTable').filter()" style="max-width: 100%;" />
                     </f:facet>
-                    <h:outputText value="#{row.documento.descricao}" />
+                    <div align="center">
+                        <h:outputText value="#{row.documento.descricao}" style="display: block;" />
+                        <ui:repeat var="marcador" value="#{row.documento.documentoBin.marcadoresList}">
+                            <h:outputText value="#{marcador.codigo} "
+                                style=" #{row.documento.excluido ? 'text-decoration:line-through; color:red;' : ''}"
+                                styleClass="marcadorLabel" />
+                        </ui:repeat>
+                    </div>
                 </p:column>
                 
                 <p:column headerText="#{infoxMessages['checklist.situacao']}" filterBy="#{row.situacao}" style="width: 345px">
