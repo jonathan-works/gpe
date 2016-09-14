@@ -1,6 +1,7 @@
 package br.com.infox.epp.usuario;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -10,6 +11,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -23,6 +25,7 @@ import br.com.infox.epp.access.entity.UsuarioPerfil_;
 import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaFisica_;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -131,5 +134,20 @@ public class UsuarioLoginSearch extends PersistenceController {
 		cq.select(cb.count(usuario.get(UsuarioLogin_.idUsuarioLogin)));
 		return getEntityManager().createQuery(cq).getSingleResult() > 0;
 	}
+
+    public boolean getAssinouTermoAdesao(String cpf) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Boolean> cq = cb.createQuery(Boolean.class);
+        
+        Root<PessoaFisica> pessoa = cq.from(PessoaFisica.class);
+        From<?, DocumentoBin> termoAdesao = pessoa.join(PessoaFisica_.termoAdesao, JoinType.INNER);
+        
+        cq=cq.where(cb.equal(pessoa.get(PessoaFisica_.cpf), cpf));
+        cq=cq.select(termoAdesao.isNotNull());
+        
+        
+        List<Boolean> resultList = getEntityManager().createQuery(cq).getResultList();
+        return resultList == null || resultList.isEmpty() ? false : resultList.get(0);
+    }
 	
 }
