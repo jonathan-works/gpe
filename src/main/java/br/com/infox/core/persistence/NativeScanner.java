@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -39,6 +38,7 @@ public class NativeScanner implements Scanner {
     private static final int PACKAGE_FILTER_INDEX = 0;
     private static final int CLASS_FILTER_INDEX = 1;
     private static final int FILE_FILTER_INDEX = 2;
+    
 
     /**
      * This implementation does not honor the list of annotations and return
@@ -198,7 +198,6 @@ public class NativeScanner implements Scanner {
                 // swallow as we don't care about these files
             }
         }
-        readExtendedMappings(jarToScan, files);
         return files;
     }
     
@@ -238,23 +237,6 @@ public class NativeScanner implements Scanner {
         }
     }
     
-    private void readExtendedMappings(URL jartoScan, Set<NamedInputStream> filesInJar) {
-        try {
-            Enumeration<URL> extendedMappings = getClass().getClassLoader().getResources("META-INF/extended-mappings.xml");
-            while (extendedMappings.hasMoreElements()) {
-                URL file = extendedMappings.nextElement();
-                filesInJar.add(new NamedInputStream(file.getPath(), file.openStream()));
-            }
-            extendedMappings = getClass().getClassLoader().getResources("META-INF/extended-named-queries.xml");
-            while (extendedMappings.hasMoreElements()) {
-                URL file = extendedMappings.nextElement();
-                filesInJar.add(new NamedInputStream(file.getPath(), file.openStream()));
-            }
-        } catch (IOException e) {
-            throw new IllegalStateException("Fail to read files extended-mappings.xml", e);
-        }
-    }
-
     public Set<NamedInputStream> getFilesInClasspath(Set<String> filePatterns) {
         throw new AssertionFailure("Not implemented");
     }
