@@ -32,7 +32,7 @@ public class QuartzDispatcher extends org.jboss.seam.async.QuartzDispatcher {
         StdSchedulerFactory schedulerFactory = new StdSchedulerFactory();
         Configuration configuration = Configuration.getInstance();
         InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("seam.quartz.properties");
-        int schedulerDelay = configuration.isDesenvolvimento() ? 90 : 600;;
+        int schedulerDelay = configuration.isDesenvolvimento() ? 90 : 600;
         if (inputStream != null) {
             try {
                 Properties properties = new Properties();
