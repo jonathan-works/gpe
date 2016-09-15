@@ -1,12 +1,10 @@
 package br.com.infox.hibernate;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
-import java.util.Properties;
 import java.util.UUID;
 
 import org.dom4j.Node;
@@ -17,15 +15,13 @@ import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.metamodel.relational.Size;
 import org.hibernate.type.ForeignKeyDirection;
-import org.hibernate.type.PostgresUUIDType;
 import org.hibernate.type.SingleColumnType;
 import org.hibernate.type.Type;
-import org.hibernate.type.UUIDBinaryType;
-import org.hibernate.type.UUIDCharType;
 
-import br.com.infox.epp.system.EppProperties;
+import br.com.infox.epp.system.Configuration;
 
 public class UUIDGenericType implements SingleColumnType<UUID> {
+    
     public static final String TYPE_NAME = "uuid-generic";
     public static final SingleColumnType<UUID> INSTANCE = new UUIDGenericType();
     private static final long serialVersionUID = 1L;
@@ -33,22 +29,7 @@ public class UUIDGenericType implements SingleColumnType<UUID> {
     private SingleColumnType<UUID> realType;
 
     public UUIDGenericType() {
-        Properties properties = new Properties();
-        try {
-            properties.load(getClass().getResourceAsStream("/epp.properties"));
-        } catch (IOException e) {
-            // TODO logar este erro.
-            e.printStackTrace();
-        }
-        String banco = properties
-                .getProperty(EppProperties.PROPERTY_TIPO_BANCO_DADOS);
-        if (banco.equals("PostgreSQL")) {
-            realType = PostgresUUIDType.INSTANCE;
-        } else if (banco.equals("SQLServer")) {
-            realType = UUIDCharType.INSTANCE;
-        } else {
-            realType = UUIDBinaryType.INSTANCE;
-        }
+        realType = Configuration.getInstance().getDatabase().getUUIDType();
     }
 
     @Override

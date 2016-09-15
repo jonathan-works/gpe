@@ -4,7 +4,9 @@ import java.sql.SQLException;
 
 import br.com.infox.hibernate.oracle.error.OracleErrorCode;
 
-public class OracleErrorAdaptor {
+public class OracleErrorAdaptor implements DatabaseErrorCodeAdapter {
+    
+    public static final DatabaseErrorCodeAdapter INSTANCE = new OracleErrorAdaptor();
 
     public GenericDatabaseErrorCode resolve(SQLException sqlException) {
         int code = sqlException.getErrorCode();

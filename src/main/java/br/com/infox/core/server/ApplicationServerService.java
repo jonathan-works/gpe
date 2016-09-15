@@ -14,12 +14,10 @@ import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
-import javax.sql.DataSource;
 import javax.transaction.TransactionManager;
 
 import br.com.infox.epp.cdi.config.BeanManager;
-import br.com.infox.epp.cdi.util.JNDI;
-import br.com.infox.epp.system.EppProperties;
+import br.com.infox.epp.system.Configuration;
 
 @Singleton
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
@@ -77,33 +75,16 @@ public class ApplicationServerService implements Serializable {
         }
 	}
 	
-	public DataSource getDataSource(String name) {
-	    String datasourcePrefix = EppProperties.getProperty(EppProperties.PROPERTY_DATASOURCE_PREFIX);
-	    return JNDI.lookup(datasourcePrefix.concat(name));
-	}
-	
 	public TransactionManager getTransactionManager() {
-	    TransactionManager transactionManager = JNDI.lookup("java:jboss/TransactionManager"); // JBOSS
-        if (transactionManager == null) {
-            transactionManager = JNDI.lookup("java:comp/TransactionManager"); // TOMCAT
-        }
-        return transactionManager;
+        return Configuration.getInstance().getApplicationServer().getTransactionManager();
 	}
             
     public String getInstanceName() {
-        String nodeName = System.getProperty("jboss.node.name");
-        if (nodeName == null) {
-            nodeName = System.getProperty("tomcat.node.name");
-        }
-        return nodeName;
+        return Configuration.getInstance().getApplicationServer().getInstanceName();
     }
     
     public String getLogDir() {
-        String logDir = System.getProperty("jboss.server.log.dir");
-        if (logDir == null) {
-            logDir = System.getProperty("tomcat.server.log.dir");
-        }
-        return logDir;
+        return Configuration.getInstance().getApplicationServer().getLogDir();
     }
     
     public static ApplicationServerService instance() {

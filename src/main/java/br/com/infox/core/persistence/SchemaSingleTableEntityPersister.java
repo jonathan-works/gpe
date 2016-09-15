@@ -22,7 +22,8 @@ import org.hibernate.metamodel.binding.EntityBinding;
 import org.hibernate.persister.entity.SingleTableEntityPersister;
 
 import br.com.infox.core.util.ReflectionsUtil;
-import br.com.infox.epp.system.EppProperties;
+import br.com.infox.epp.system.Configuration;
+import br.com.infox.epp.system.Database.DatabaseType;
 
 public class SchemaSingleTableEntityPersister extends SingleTableEntityPersister {
 	
@@ -40,8 +41,8 @@ public class SchemaSingleTableEntityPersister extends SingleTableEntityPersister
 	
 	@SuppressWarnings("unchecked")
     private static PersistentClass convertSchemaPersistentClass(PersistentClass persistentClass, SessionFactoryImplementor factory) {
-		String property = EppProperties.getProperty(EppProperties.PROPERTY_TIPO_BANCO_DADOS);
-		if ("oracle".equalsIgnoreCase(property)) {
+		DatabaseType databaseType = Configuration.getInstance().getDatabase().getDatabaseType();
+		if (databaseType.equals(DatabaseType.Oracle)) {
 			String userName = getUsername(factory).toLowerCase();
 			updateSchema(persistentClass.getRootTable(), userName);
 			customizeSequence(persistentClass, factory, userName);

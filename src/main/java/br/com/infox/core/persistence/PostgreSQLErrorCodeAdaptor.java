@@ -4,7 +4,9 @@ import java.sql.SQLException;
 
 import br.com.infox.hibernate.postgres.error.PostgreSQLErrorCode;
 
-public class PostgreSQLErrorCodeAdaptor {
+public class PostgreSQLErrorCodeAdaptor implements DatabaseErrorCodeAdapter {
+    
+    public static final DatabaseErrorCodeAdapter INSTANCE = new PostgreSQLErrorCodeAdaptor();
 
     public GenericDatabaseErrorCode resolve(SQLException sqlException) {
         String sqlState = sqlException.getSQLState();
