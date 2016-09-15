@@ -24,5 +24,6 @@ public interface UsuarioResource {
     
     @GET
     @Path("/situacaoTermoAdesao")
+    @Produces(MediaType.TEXT_PLAIN)
     Response getSituacaoTermoAdesao();
 }
