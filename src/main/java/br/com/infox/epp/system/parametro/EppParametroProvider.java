@@ -53,8 +53,6 @@ public class EppParametroProvider implements Serializable, ParametroProvider {
 
 	private void initParametrosControleAcesso() {
 		final String grupo = "controleAcesso";
-		create(grupo, "termoAdesao", ModeloDocumento_.tituloModeloDocumento, ModeloDocumento_.tituloModeloDocumento)
-				.addFilter(isTrue(ModeloDocumento_.ativo));
 		create(grupo, "usuarioExternoPodeVerDocExcluido", FieldType.BOOLEAN);
 		create(grupo, "somenteUsuarioInternoVerMotivoExclusaoDoc", FieldType.BOOLEAN);
 		create(grupo, "authorizationSecret", FieldType.STRING);
