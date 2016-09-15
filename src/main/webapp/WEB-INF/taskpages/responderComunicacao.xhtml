@@ -9,9 +9,6 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:s="http://jboss.org/schema/seam/taglib">
 	
-	<c:set value="#{processoEpaHome.instance}" target="#{respostaComunicacaoList}" property="processo" />
-	<f:setPropertyActionListener value="#{respostaComunicacaoAction.destinatario.modeloComunicacao}" target="#{documentoComunicacaoList.modeloComunicacao}"/>
-	
 	<rich:collapsiblePanel id="painelComunicacao" header="#{infoxMessages['comunicacao.comunicacao']}" switchType="client">
 	
 		<ui:include src="/WEB-INF/xhtml/components/fragments/detalhesComunicacao.xhtml">
@@ -179,8 +176,11 @@
 			</ui:define>
 		</wi:dataTable>
 	</rich:collapsiblePanel>
-	<h:form>
-		<ui:include src="/WEB-INF/xhtml/components/form/buttons/taskButtons.xhtml"></ui:include>
-	</h:form>
+	
+	<c:if test="#{empty showtaskButtons ? true : showtaskButtons}">
+		<h:form>
+			<ui:include src="/WEB-INF/xhtml/components/form/buttons/taskButtons.xhtml"></ui:include>
+		</h:form>
+	</c:if>
 	
 </ui:composition>

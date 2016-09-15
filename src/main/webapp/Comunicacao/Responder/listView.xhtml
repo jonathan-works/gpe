@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:infox="http://www.infox.com.br/jsf"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+
+	<ui:define name="title">#{infoxMessages['comunicacao.reponder']}</ui:define>
+
+	<ui:define name="body">
+		
+		<infox:tabPanel switchType="ajax" activeTab="#{expedicaoComunicacaoAction.tab}" id="comunicacaoTabPanel">
+		
+			<h:form>
+				<infox:tabHeaders/>
+			</h:form>
+			
+			<infox:tab id="list" name="comunicacoes" immediate="true" title="#{infoxMessages['comunicacao.comunicacoes']}"
+				action="#{responderComunicacaoController.onClickTabComunicacaoes}">
+				
+				<h:commandButton>
+					<p:ajax />
+				</h:commandButton>
+				
+			</infox:tab>
+			
+			<infox:tab id="responder" name="responder" title="#{infoxMessages['comunicacao.reponder']}"
+				rendered="#{not empty responderComunicacaoController.processoComunicacao}">
+				
+				<ui:include src="/WEB-INF/taskpages/responderComunicacao.xhtml">
+					<ui:param name="showtaskButtons" value="false"/>
+				</ui:include>
+				
+			</infox:tab>
+		
+		</infox:tabPanel>
+		
+	</ui:define>
+
+</ui:composition>

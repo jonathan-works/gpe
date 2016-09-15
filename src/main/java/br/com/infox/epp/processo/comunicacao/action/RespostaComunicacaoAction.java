@@ -82,11 +82,10 @@ public class RespostaComunicacaoAction implements Serializable {
 	@Inject
 	private ModeloDocumentoDAO modeloDocumentoDAO;
 	
-	
 	private DestinatarioModeloComunicacao destinatario;
 
 	protected Processo processoComunicacao;
-	private Processo processoRaiz;
+	protected Processo processoRaiz;
 	protected Date prazoResposta;
 	protected String statusProrrogacao;
 	
@@ -101,8 +100,14 @@ public class RespostaComunicacaoAction implements Serializable {
 	
 	@PostConstruct
 	public void init() {
-		this.processoComunicacao = JbpmUtil.getProcesso();
-		respostaComunicacaoList.setProcesso(processoComunicacao);
+		processoComunicacao = JbpmUtil.getProcesso();
+		if (processoComunicacao != null) {
+		    init(processoComunicacao);
+		}
+	}
+
+    public void init(Processo processoComunicacao) {
+        respostaComunicacaoList.setProcesso(processoComunicacao);
 		prazoResposta = prazoComunicacaoService.getDataLimiteCumprimento(processoComunicacao);
 		MetadadoProcesso metadadoDestinatario = processoComunicacao.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO);
 		if(metadadoDestinatario != null){
@@ -110,16 +115,18 @@ public class RespostaComunicacaoAction implements Serializable {
 			documentoComunicacaoList.setModeloComunicacao(destinatario.getModeloComunicacao());
 		}
 		
-		this.processoRaiz = processoComunicacao.getProcessoRoot();
+		processoRaiz = processoComunicacao.getProcessoRoot();
 		documentoUploader.newInstance();
 		documentoUploader.clear();
 		documentoUploader.setProcesso(processoRaiz);
 		documentoEditor.setProcesso(processoRaiz);
-
+		
 		newDocumentoEdicao();
 		initClassificacoes();
 		verificarPossibilidadeEnvioResposta();
-	}
+		
+		documentoComunicacaoList.setModeloComunicacao(destinatario.getModeloComunicacao());
+    }
 
 	public Long getIdDestinatario(){
 		return destinatario.getId();
