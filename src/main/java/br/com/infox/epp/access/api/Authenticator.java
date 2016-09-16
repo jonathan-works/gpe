@@ -58,6 +58,7 @@ import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
+import br.com.infox.epp.usuario.UsuarioLoginSearch;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.security.SecurityUtil;
@@ -82,6 +83,8 @@ public class Authenticator implements Serializable {
     private SecurityUtil securityUtil;
     @Inject
     private CdiAuthenticator cdiAuthenticator;
+    @Inject
+    private UsuarioLoginSearch usuarioLoginSearch;
     
     private String newPassword1;
     private String newPassword2;
@@ -163,7 +166,7 @@ public class Authenticator implements Serializable {
         	if (pessoaFisica == null) {
             	throw new LoginException(infoxMessages.get(AuthenticatorService.LOGIN_ERROR_SEM_PESSOA_FISICA));
             }
-            hasToSign = pessoaFisica.getTermoAdesao() == null;
+            hasToSign = !usuarioLoginSearch.getAssinouTermoAdesao(pessoaFisica.getCpf());
         }
         
         Contexts.getConversationContext().set(TermoAdesaoAction.TERMO_ADESAO_REQ, hasToSign);
