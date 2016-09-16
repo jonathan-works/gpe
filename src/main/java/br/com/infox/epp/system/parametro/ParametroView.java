@@ -16,9 +16,11 @@ import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jboss.seam.contexts.Contexts;
 
 import br.com.infox.core.messages.InfoxMessages;
+import br.com.infox.core.type.Displayable;
 import br.com.infox.epp.DynamicField;
 import br.com.infox.epp.DynamicFieldAction;
 import br.com.infox.epp.access.api.Authenticator;
@@ -64,6 +66,7 @@ public class ParametroView implements Serializable {
 		refreshFormFields(parametroService.getParametros(grupo));
 	}
 	
+	@SuppressWarnings("unchecked")
 	public DynamicField createFormField(ParametroDefinition<?> definicaoParametro) {
 	    if (definicaoParametro.isSistema())
 	        return null;
@@ -80,12 +83,26 @@ public class ParametroView implements Serializable {
                     List<SelectItem> items = parametroService.getItems(definicaoParametro);
                     ff.set("items", items);
                 }
+                ff.setEnumValues(definicaoParametro.getEnumValues());
                 for (Entry<String, String> action : definicaoParametro.getActions()) {
                     String label = infoxMessages.get(String.format("parametro.%s.actions.%s", definicaoParametro.getNome(), action.getKey()));
                     String actionListener = action.getValue();
                     ff.addAction(new DynamicFieldAction(null, label, actionListener));
                 }
-                ff.setValue(parametro == null ? null : parametro.getValorVariavel());
+                
+                if (parametro == null) {
+                	ff.setValue(null);
+                } else if (definicaoParametro.getEnumValues() == null) {
+                	ff.setValue(parametro.getValorVariavel());
+                } else {
+                	Enum<? extends Displayable> enumValue = definicaoParametro.getEnumValues()[0];
+                	String[] split = parametro.getValorVariavel().split(",");
+                	Enum<? extends Displayable>[] valores = new Enum[split.length];
+                	for (int i = 0; i < split.length; i++) {
+                		valores[i] = Enum.valueOf(enumValue.getDeclaringClass(), split[i]);
+                	}
+                	ff.setValue(valores);
+                }
 		ff.set("actions", definicaoParametro.getActions());
 		return ff;
 	}
@@ -124,7 +141,13 @@ public class ParametroView implements Serializable {
 				parametro.setSistema(Boolean.FALSE);
 				parametro.setAtivo(Boolean.TRUE);
 			}
-			parametro.setValorVariavel(formField.getValue() != null ? formField.getValue().toString() : null);
+			if (formField.getValue() == null) {
+				parametro.setValorVariavel(null);
+			} else if (formField.getEnumValues() == null) {
+				parametro.setValorVariavel(formField.getValue().toString());
+			} else {
+				parametro.setValorVariavel(StringUtils.join((Object[]) formField.getValue(), ','));
+			}
 			parametroManager.update(parametro);
 			Contexts.getApplicationContext().set(parametro.getNomeVariavel().trim(), parametro.getValorVariavel());
 		}

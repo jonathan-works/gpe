@@ -19,12 +19,15 @@ import javax.faces.component.html.HtmlCommandLink;
 import javax.faces.component.html.HtmlInputText;
 import javax.faces.component.html.HtmlPanelGroup;
 import javax.faces.component.html.HtmlSelectBooleanCheckbox;
+import javax.faces.component.html.HtmlSelectManyCheckbox;
 import javax.faces.component.html.HtmlSelectOneMenu;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
 import org.primefaces.component.calendar.Calendar;
 import org.primefaces.component.outputlabel.OutputLabel;
+
+import br.com.infox.core.type.Displayable;
 
 @FacesComponent(value = "DynamicFieldSet")
 @ResourceDependencies({ @ResourceDependency(library = "primefaces", name = "primefaces.css"),
@@ -119,6 +122,8 @@ public class DynamicFieldSet extends UIComponentBase {
 			return createSelectOneInput(formField);
 		case STRING:
 			return createStringInput(formField);
+		case CHECKBOX_ENUM:
+			return createCheckboxEnum(formField);
 		default:
 			{
 			        HtmlInputText input = new HtmlInputText();
@@ -128,6 +133,20 @@ public class DynamicFieldSet extends UIComponentBase {
 				return input;
 			}
 		}
+	}
+
+	private UIInput createCheckboxEnum(DynamicField formField) {
+		HtmlSelectManyCheckbox menu = new HtmlSelectManyCheckbox();
+		menu.setTitle(formField.getTooltip());
+		menu.setStyleClass(INPUT_STYLE_CLASS);
+		for (Enum<? extends Displayable> enumConstant : formField.getEnumValues()) {
+			UISelectItem item = new UISelectItem();
+			item.setItemLabel(((Displayable) enumConstant).getLabel());
+			item.setItemValue(enumConstant);
+			menu.getChildren().add(item);
+		}
+		menu.setValue(formField.getValue());
+		return menu;
 	}
 
 	private UIInput createSelectOneInput(DynamicField formField) {
