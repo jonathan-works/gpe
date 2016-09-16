@@ -18,7 +18,6 @@ import br.com.infox.certificado.CertificateSignatures;
 import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
 import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
 import br.com.infox.certificado.exception.CertificadoException;
-import br.com.infox.core.exception.SystemException;
 import br.com.infox.core.exception.SystemExceptionFactory;
 import br.com.infox.core.file.download.DocumentoServlet;
 import br.com.infox.core.file.download.DocumentoServletOperation;
@@ -56,7 +55,6 @@ import br.com.infox.security.rsa.RSAErrorCodes;
 import br.com.infox.security.rsa.RSAUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.SignatureException;
 
 @Stateless
 public class TermoAdesaoService {
@@ -138,7 +136,7 @@ public class TermoAdesaoService {
         return outputStream.toByteArray();
     }
 
-    private Map<String, String> getTermoAdesaoVariables(PessoaFisica pessoaFisica) {
+    protected Map<String, String> getTermoAdesaoVariables(PessoaFisica pessoaFisica) {
         HashMap<String, String> variaveis = new HashMap<>();
         variaveis.put("#{usuarioLogado}", pessoaFisica.getNome());
         variaveis.put("#{CPF_pessoa_logada}", pessoaFisica.getCodigoFormatado());
@@ -153,7 +151,7 @@ public class TermoAdesaoService {
                 variaveis.put("#{emailUsuarioLogado}", "-");
         }
         MeioContato fixo = pessoaFisica.getMeioContato(TipoMeioContatoEnum.TF);
-        if (email != null)
+        if (fixo != null)
             variaveis.put("#{Telefone_pessoa_logada}", fixo.getMeioContato());
         else
             variaveis.put("#{Telefone_pessoa_logada}", "-");
