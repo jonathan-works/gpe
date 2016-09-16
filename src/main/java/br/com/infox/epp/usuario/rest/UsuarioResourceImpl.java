@@ -27,9 +27,19 @@ public class UsuarioResourceImpl implements UsuarioResource {
 		return Response.ok().build();
 	}
 
-	@Override
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
+
+    @Override
+    public Response getSituacaoTermoAdesao() {
+        Object entity;
+        if (Boolean.TRUE.equals(usuarioRestService.getAssinouTermoAdesao(cpf))){
+            entity = "ASSINADO";
+        } else {
+            entity = "NAO_ASSINADO";
+        }
+        return Response.ok(entity).build();
+    }
 
 }

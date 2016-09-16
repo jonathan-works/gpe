@@ -22,7 +22,8 @@ import br.com.infox.epp.ws.bean.UsuarioSenhaBean;
 @Consumes(MediaType.APPLICATION_JSON)
 public interface UsuarioRest {
 
-	public static final String JWT_TOKEN_NAME = "Authorization";
+	public static final String PARAM_NAME_JWT = "epp.auth.jwt";
+    public static final String JWT_TOKEN_NAME = "Authorization";
 	final String PATH_GRAVAR_USUARIO = "/gravar";
     final String PATH_ATUALIZAR_SENHA = "/atualizarSenha";
 
@@ -41,7 +42,7 @@ public interface UsuarioRest {
 
 	@GET
 	@Path("/signin")
-	Response loginGet(@QueryParam("epp.auth.jwt") String jwt);
+	Response loginGet(@QueryParam(PARAM_NAME_JWT) String jwt);
 	
 	//TODO serviço criado pro tcmba, movido para essa classe pela urgência do bug #74700. Avaliar no futuro padronização desse serviço
     @POST

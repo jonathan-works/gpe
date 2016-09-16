@@ -11,7 +11,6 @@ import javax.ws.rs.WebApplicationException;
 
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
-import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.meiocontato.dao.MeioContatoDAO;
 import br.com.infox.epp.meiocontato.entity.MeioContato;
 import br.com.infox.epp.meiocontato.manager.MeioContatoManager;
@@ -177,5 +176,9 @@ public class UsuarioLoginRestService {
 	public List<UsuarioDTO> getUsuarios(int limit, int offset) {
 	    return usuarioDTOSearch.getUsuarioDTOList(limit, offset);
 	}
+
+    public boolean getAssinouTermoAdesao(String cpf) {
+        return usuarioSearch.getAssinouTermoAdesao(cpf);
+    }
 		
 }
