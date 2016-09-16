@@ -22,7 +22,7 @@ body {
     text-align: center;
     padding: 15px;
 }
-.termo-adesao-buttons form,.termo-adesao-buttons button {
+.termo-adesao-buttons > * {
     display:inline-block;
 }
 .buttons.buttons-primary {
@@ -40,18 +40,22 @@ body {
                 <a href="#{termoAdesaoViewController.urlTermoAdesao}">Download</a>
             </object>
 
-            <p:outputPanel rendered="#{not termoAdesaoViewController.termoAdesaoAssinado}" styleClass="termo-adesao-buttons">
-                
-                <h:form id="termoAdesaoForm">
-                    <a:jsFunction name="assinarTermo" action="#{termoAdesaoViewController.assinarTermoAdesao}"
-                        execute="@this termoAdesaoToken" render="DialogMessage @form" limitRender="true"
-                        oncomplete="infox.hideLoading();" />
-                    <wi:certificadoDigital id="termoAdesao" styleClass="buttons-primary" tokenField="#{termoAdesaoViewController.token}"
-                        signableData="#{termoAdesaoViewController.digestDocumento}"
-                        functionPreSign="infox.showLoading();" functionPosSign="assinarTermo();"
-                        signButtonCaption="#{infoxMessages['login.assinarTermoAdesao']}" />
-
-                </h:form>
+            <p:outputPanel styleClass="termo-adesao-buttons">
+                <p:outputPanel id="termoAdesaoFormPanel">
+                    <h:form id="termoAdesaoForm" rendered="#{not termoAdesaoViewController.termoAdesaoAssinado}">
+                        <a:jsFunction name="assinarTermo" action="#{termoAdesaoViewController.assinarTermoAdesao}"
+                            rendered="#{not termoAdesaoViewController.termoAdesaoAssinado}"
+                            execute="@this termoAdesaoToken" render="DialogMessage termoAdesaoFormPanel" limitRender="true"
+                            oncomplete="infox.hideLoading();" />
+                        <wi:certificadoDigital id="termoAdesao"
+                            rendered="#{not termoAdesaoViewController.termoAdesaoAssinado}" 
+                            styleClass="buttons-primary" tokenField="#{termoAdesaoViewController.token}"
+                            signableData="#{termoAdesaoViewController.digestDocumento}"
+                            functionPreSign="infox.showLoading();" functionPosSign="assinarTermo();"
+                            signButtonCaption="#{infoxMessages['login.assinarTermoAdesao']}" />
+    
+                    </h:form>
+                </p:outputPanel>
                 <button onclick="infox.redirect({url:window.document.referrer})"
                     class="buttons">
                     <h:outputText value="#{infoxMessages['page.return']}" />

@@ -1,7 +1,6 @@
 package br.com.infox.epp.access;
 
 import java.io.ByteArrayOutputStream;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +18,7 @@ import br.com.infox.certificado.CertificateSignatures;
 import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
 import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
 import br.com.infox.certificado.exception.CertificadoException;
+import br.com.infox.core.exception.SystemException;
 import br.com.infox.core.exception.SystemExceptionFactory;
 import br.com.infox.core.file.download.DocumentoServlet;
 import br.com.infox.core.file.download.DocumentoServletOperation;
@@ -55,6 +55,7 @@ import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.security.rsa.RSAErrorCodes;
 import br.com.infox.security.rsa.RSAUtil;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.SignatureException;
 
 @Stateless
@@ -70,6 +71,7 @@ public class TermoAdesaoService {
     @Inject private UsuarioLoginSearch usuarioLoginSearch;
     @Inject private CertificateSignatures certificateSignatures;
     @Inject private AssinaturaDocumentoService assinaturaDocumentoService;
+    @Inject private InfoxMessages infoxMessages;
 
     @Inject private PapelManager papelManager;
 
@@ -193,7 +195,8 @@ public class TermoAdesaoService {
     public PessoaFisica retrievePessoaFisica(String jwt) {
         try {
             Map<String, Object> decodedPayload = JWT.parser().setKey(getSecret()).parse(jwt);
-            Verifiers.allOf(InfoxPrivateClaims.CPF, JWTRegisteredClaims.ISSUED_AT,JWTRegisteredClaims.EXPIRATION_DATE)
+            
+            Verifiers.allOf(infoxMessages.get("termoAdesao.exception.requiredClaims"),InfoxPrivateClaims.CPF, JWTRegisteredClaims.ISSUED_AT, JWTRegisteredClaims.EXPIRATION_DATE)
             .verify(decodedPayload);
             String cpf = (String) decodedPayload.get(InfoxPrivateClaims.CPF.getClaim());
             if (cpf != null) {
@@ -201,8 +204,8 @@ public class TermoAdesaoService {
             }
         } catch (ExpiredJwtException e){
             Integer expirationDate = (Integer) e.getClaims().get(JWTRegisteredClaims.EXPIRATION_DATE.getClaim());
-            throw new BusinessException(String.format(InfoxMessages.getInstance().get("termoAdesao.exception.expiredJwt"), new Date(expirationDate*1000L)));
-        } catch (SignatureException e){
+            throw new BusinessException(String.format(infoxMessages.get("termoAdesao.exception.expiredJwt"), new Date(expirationDate*1000L)));
+        } catch (JwtException|IllegalArgumentException e){
             throw new BusinessException(e.getMessage());
         }
         return null;

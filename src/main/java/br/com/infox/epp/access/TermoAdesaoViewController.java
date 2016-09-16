@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJBException;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -15,13 +16,12 @@ import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
 import org.jboss.seam.international.StatusMessage.Severity;
 
-import br.com.infox.core.action.ActionMessagesService;
+import br.com.infox.core.exception.SystemException;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.service.AuthenticatorService;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
@@ -73,8 +73,12 @@ public class TermoAdesaoViewController implements Serializable {
             if (jwt != null) {
                 try {
                     this.pessoaFisica = termoAdesaoService.retrievePessoaFisica(jwt.trim());
-                } catch (BusinessException e){
+                } catch (SystemException|BusinessException e){
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), null));
+                } catch (EJBException e){
+                    if (e.getCause() instanceof SystemException || e.getCause() instanceof BusinessException){
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getCause().getMessage(), null));
+                    }
                 }
             }
         }
