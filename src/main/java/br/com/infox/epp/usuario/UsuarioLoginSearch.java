@@ -10,6 +10,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -138,19 +139,18 @@ public class UsuarioLoginSearch extends PersistenceController {
 
     public boolean getAssinouTermoAdesao(String cpf) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<Boolean> cq = cb.createQuery(Boolean.class);
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
         
         Root<PessoaFisica> pessoa = cq.from(PessoaFisica.class);
-        From<?, DocumentoBin> termoAdesao = pessoa.join(PessoaFisica_.termoAdesao);
-        From<?, AssinaturaDocumento> assinatura = termoAdesao.join(DocumentoBin_.assinaturas);
-        From<?, UsuarioLogin> usuario = assinatura.join(AssinaturaDocumento_.usuario);
-        From<?, PessoaFisica> pessoaFisica = usuario.join(UsuarioLogin_.pessoaFisica);
+        From<?, DocumentoBin> termoAdesao = pessoa.join(PessoaFisica_.termoAdesao, JoinType.INNER);
+        From<?, AssinaturaDocumento> assinatura = termoAdesao.join(DocumentoBin_.assinaturas, JoinType.INNER);
+        From<?, UsuarioLogin> usuario = assinatura.join(AssinaturaDocumento_.usuario, JoinType.INNER);
+        From<?, PessoaFisica> pessoaFisica = usuario.join(UsuarioLogin_.pessoaFisica, JoinType.INNER);
         
         cq=cq.where(cb.equal(pessoaFisica.get(PessoaFisica_.cpf), cpf));
-        cq=cq.select(cb.greaterThan(cb.countDistinct(assinatura), 0L));
+        cq=cq.select(cb.countDistinct(assinatura));
         
-        
-        return getEntityManager().createQuery(cq).getSingleResult();
+        return getEntityManager().createQuery(cq).getSingleResult() > 0L;
     }
 	
 }
