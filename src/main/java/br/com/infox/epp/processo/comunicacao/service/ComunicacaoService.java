@@ -64,6 +64,7 @@ import br.com.infox.ibpm.task.service.MovimentarTarefaService;
 public class ComunicacaoService {
 	
 	public static final String NAME = "comunicacaoService";
+	public static final String COMUNICACAO_EM_ELABORACAO = "comunicacaoEmElaboracao";
 	
 	@Inject
 	private NaturezaCategoriaFluxoManager naturezaCategoriaFluxoManager;
@@ -128,6 +129,7 @@ public class ComunicacaoService {
 		if (!modeloComunicacao.getDestinatarios().contains(destinatario)) {
 			modeloComunicacao.getDestinatarios().add(destinatario);
 		}
+		atualizaModeloEmElaboracaoAoExpedir(modeloComunicacao);
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -157,6 +159,7 @@ public class ComunicacaoService {
 				}
 				atualizaVariavelModeloComunicacao(modeloComunicacao, copyModeloComunicacao.getId());
 				modeloComunicacaoManager.update(copyModeloComunicacao);
+				atualizaModeloEmElaboracaoAoReabrirComunicacao(modeloComunicacao, copyModeloComunicacao);
 			} else {
 				modeloComunicacao.setFinalizada(false);
 				modeloComunicacao.setMinuta(true);
@@ -182,6 +185,7 @@ public class ComunicacaoService {
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void excluirComunicacao (ModeloComunicacao modeloComunicacao) throws DAOException {
 		if (!modeloComunicacaoManager.hasComunicacaoExpedida(modeloComunicacao)) {
+		    removeModeloEmElaboracao(modeloComunicacao);
 			modeloComunicacaoManager.removerDestinatariosModelo(modeloComunicacao);
 			modeloComunicacaoManager.removerDocumentosRelacionados(modeloComunicacao);
 			modeloComunicacaoManager.remove(modeloComunicacao);
@@ -431,4 +435,42 @@ public class ComunicacaoService {
 			throw new DAOException(e);
 		}
 	}
+	
+    private void atualizaModeloEmElaboracaoAoExpedir(ModeloComunicacao modeloComunicacao) {
+        for (DestinatarioModeloComunicacao destinatario : modeloComunicacao.getDestinatarios()) {
+            if (!destinatario.getExpedido()) {
+                return;
+            }
+        }
+        removeModeloEmElaboracao(modeloComunicacao);
+    }
+
+    private ModeloComunicacao getModeloEmElaboracao(Processo processo) {
+        ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(processo.getIdJbpm());
+        ContextInstance contextInstance = processInstance.getContextInstance();
+        return (ModeloComunicacao) contextInstance.getVariable(COMUNICACAO_EM_ELABORACAO);
+    }
+    
+    private void atualizaModeloEmElaboracaoAoReabrirComunicacao(ModeloComunicacao oldModeloComunicacao, ModeloComunicacao newModeloComunicacao) {
+        if (getModeloEmElaboracao(oldModeloComunicacao.getProcesso()) != null) {
+            if (removeModeloEmElaboracao(oldModeloComunicacao)) {
+                ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(newModeloComunicacao.getProcesso().getIdJbpm());
+                ContextInstance contextInstance = processInstance.getContextInstance();
+                contextInstance.setVariable(COMUNICACAO_EM_ELABORACAO, newModeloComunicacao);
+                ManagedJbpmContext.instance().getSession().flush();
+            }
+        }
+    }
+
+    private boolean removeModeloEmElaboracao(ModeloComunicacao modeloComunicacao) {
+        ModeloComunicacao modeloEmElaboracao = getModeloEmElaboracao(modeloComunicacao.getProcesso());
+        if (modeloEmElaboracao != null && modeloEmElaboracao.equals(modeloComunicacao)) {
+            ProcessInstance processInstance = ManagedJbpmContext.instance().getProcessInstance(modeloComunicacao.getProcesso().getIdJbpm());
+            ContextInstance contextInstance = processInstance.getContextInstance();
+            contextInstance.deleteVariable(COMUNICACAO_EM_ELABORACAO);
+            ManagedJbpmContext.instance().getSession().flush();
+            return true;
+        }
+        return false;
+    }
 }
