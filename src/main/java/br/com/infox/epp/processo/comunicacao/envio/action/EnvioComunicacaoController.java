@@ -40,6 +40,7 @@ import br.com.infox.epp.access.manager.PerfilTemplateManager;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.transaction.Transactional;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
 import br.com.infox.epp.localizacao.LocalizacaoSearch;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
@@ -79,7 +80,7 @@ public class EnvioComunicacaoController implements Serializable {
 	private static final String CODIGO_LOCALIZACAO_ASSINATURA = "localizacaoAssinaturaComunicacao";
 	private static final String CODIGO_PERFIL_ASSINATURA = "perfilAssinatura";
 	private static final String EM_ELABORACAO = "emElaboracao";
-	
+	private static final String EXIBIR_TRANSICOES = "exibirTransicoes";
 	
 	private AssinaturaDocumentoService assinaturaDocumentoService = ComponentUtil.getComponent(AssinaturaDocumentoService.NAME);
 	private CertificateSignatures certificateSignatures = ComponentUtil.getComponent(CertificateSignatures.NAME);
@@ -106,6 +107,8 @@ public class EnvioComunicacaoController implements Serializable {
 	private TipoComunicacaoSearch tipoComunicacaoSearch;
 	@Inject
 	private PerfilTemplateManager perfilTemplateManager;
+	@Inject
+	private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
 	
 	private String raizLocalizacoesComunicacao = Parametros.RAIZ_LOCALIZACOES_COMUNICACAO.getValue();
 	private Localizacao localizacaoRaizComunicacao;
@@ -120,6 +123,8 @@ public class EnvioComunicacaoController implements Serializable {
 	private List<TipoComunicacao> tiposComunicacao;
 	@TaskpageParameter(name = EM_ELABORACAO, type="Boolean", description = "enviarComunicacao.parameter.emElaboracao")
 	private ModeloComunicacao modeloComunicacao;
+	@TaskpageParameter(name = EXIBIR_TRANSICOES, type="Boolean", description = "enviarComunicacao.parameter.exibirTransicoes")
+	private boolean exibirTransicoes = false;
 	
 	private boolean finalizada;
 	private String token;
@@ -191,6 +196,11 @@ public class EnvioComunicacaoController implements Serializable {
                     throw new EppConfigurationException("O perfil para assinatura não foi definida com um valor válido");
                 }
                 getModeloComunicacao().setPerfilResponsavelAssinatura(perfilAssinatura);
+            }
+            
+            Boolean exibirTransicoes = (Boolean) TaskInstance.instance().getVariable(EXIBIR_TRANSICOES);
+            if (exibirTransicoes != null && exibirTransicoes) {
+                this.exibirTransicoes = true;
             }
         }
     }
@@ -590,4 +600,24 @@ public class EnvioComunicacaoController implements Serializable {
 	public boolean canChooseResponsavelAssinatura() {
         return localizacaoAssinatura == null;
     }
+    
+    public boolean isExibirTransicoes() {
+        return exibirTransicoes && getModeloComunicacao().getFinalizada() && (!podeAssinar() || assinouComunicacao());
+    }
+
+    private boolean podeAssinar() {
+        return !getModeloComunicacao().isDocumentoBinario() && isUsuarioLogadoNaLocalizacaoPerfilResponsavel() && 
+                classificacaoDocumentoPapelManager.papelPodeAssinarClassificacao(Authenticator.getPapelAtual(), modeloComunicacao.getClassificacaoComunicacao());
+    }
+    
+    private boolean assinouComunicacao() {
+        for (DestinatarioModeloComunicacao destinatario : getModeloComunicacao().getDestinatarios()) {
+            if (!assinaturaDocumentoService.isDocumentoAssinado(destinatario.getDocumentoComunicacao().getDocumentoBin(),Authenticator.getPapelAtual(), 
+                    Authenticator.getUsuarioLogado())) {
+                return false;
+            }
+        }
+        return true; 
+    }
+
 }

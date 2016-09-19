@@ -231,7 +231,7 @@
 		</s:div>
 	</s:div>
    <h:form id="buttonsTaskPageComunicacaoForm">
-		<s:fragment rendered="#{envioComunicacaoController.expedida and envioComunicacaoController.inTask}">
+		<s:fragment rendered="#{envioComunicacaoController.inTask and (envioComunicacaoController.expedida or envioComunicacaoController.exibirTransicoes)}">
 			<!-- O ui:include tenta incluir o facelet mesmo se o rendered estiver falso -->
 			<ui:include src="#{envioComunicacaoController.inTask ? '/WEB-INF/xhtml/components/form/buttons/taskButtons.xhtml' : ''}" />
 		</s:fragment>
