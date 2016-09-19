@@ -185,7 +185,7 @@ public class TermoAdesaoService {
                 throw new BusinessException(AuthenticatorService.LOGIN_ERROR_USUARIO_SEM_PERFIL);
             }
         } catch (CertificadoException | AssinaturaException e) {
-            throw new BusinessException(e);
+            throw new BusinessException(e.getMessage());
         }
 
     }
