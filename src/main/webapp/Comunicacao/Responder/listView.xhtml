@@ -8,38 +8,90 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:infox="http://www.infox.com.br/jsf"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:i="http://java.sun.com/jsf/composite/infox"
 	template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
 
 	<ui:define name="title">#{infoxMessages['comunicacao.reponder']}</ui:define>
 
 	<ui:define name="body">
-		
-		<infox:tabPanel switchType="ajax" activeTab="#{expedicaoComunicacaoAction.tab}" id="comunicacaoTabPanel">
-		
+
+		<infox:tabPanel switchType="ajax" activeTab="#{expedicaoComunicacaoAction.tab}" id="comunicacaoTabPanel" styleClass="comunicacaoTabPanel">
+
 			<h:form>
-				<infox:tabHeaders/>
+				<infox:tabHeaders />
 			</h:form>
-			
+
 			<infox:tab id="list" name="comunicacoes" immediate="true" title="#{infoxMessages['comunicacao.comunicacoes']}"
 				action="#{responderComunicacaoController.onClickTabComunicacaoes}">
-				
-				<h:commandButton>
-					<p:ajax />
-				</h:commandButton>
-				
+
+				<wi:dataTable values="#{responderComunicacaoList.list(15)}" bean="#{responderComunicacaoList}" 
+					tableTitle="#{infoxMessages['produtividade.tableTitle']}" id="responderComunicacaoList">
+					
+					<ui:define name="searchForm">
+					
+						<wi:searchForm formId="pesquisaComunicacaoForm" formTitle="#{infoxMessages['searchForm.title']}">
+							
+							<i:inputText label="#{infoxMessages['processo.numeroProcessoOrigem']}"
+								value=""/>
+							
+							<i:inputText  />
+							
+							<wi:selectOneMenuEntity id="comboFluxo"
+								value="#{produtividadeAction.fluxo}"
+								label="#{infoxMessages['naturezaCategoriaFluxo.fluxo']}"
+								items="#{produtividadeAction.fluxoList}"
+								showLabelSelecione="true" />
+								
+							<wi:inputDataPeriodo id="periodo"
+								valueDateFrom="#{produtividadeAction.dataInicio}"
+								valueDateTo="#{produtividadeAction.dataFim}"
+								label="#{infoxMessages['data.inputPeriodo']}"/>
+								
+						</wi:searchForm>
+						
+					</ui:define>
+					
+					<ui:define name="toolBar">
+						<h:form>
+							<p:commandLink update="@(.comunicacaoTabPanel)" actionListener="#{responderComunicacaoController.onSelectComunicacao(row)}">
+								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['button.selecionar']}"/>
+							</p:commandLink>
+						</h:form>	
+					</ui:define>
+					
+					<wi:columnOutputText columnId="numeroProcessoRoot" columnHeader="#{infoxMessages['processo.numeroProcessoOrigem']}"
+						value="#{row.processoRoot.numeroProcesso}"/>
+					
+					<wi:columnOutputText columnId="numeroProcesso" columnHeader="#{infoxMessages['processo.numeroProcesso']}"
+						value="#{row.numeroProcesso}"/>
+						
+					<wi:columnOutputText columnId="tipoComunicacao" columnHeader="#{infoxMessages['comunicacao.tipoComunicacao']}"
+						value="#{row.localizacao}" />
+						
+					<wi:columnOutputText columnId="destinatario" columnHeader="#{infoxMessages['comunicacao.destinatario']}"
+						value="#{row.papel}" />
+						
+					<wi:columnOutputText columnId="dataCiencia"	columnHeader="#{infoxMessages['produtividade.tarefa']}"
+						value="#{row.tarefa}" />
+						
+					<wi:columnOutputText columnId="prazoResposta" columnHeader="#{infoxMessages['produtividade.quantidade']}"
+						value="#{row.quantidadeTarefas}" />
+						
+				</wi:dataTable>
+
 			</infox:tab>
-			
+
 			<infox:tab id="responder" name="responder" title="#{infoxMessages['comunicacao.reponder']}"
 				rendered="#{not empty responderComunicacaoController.processoComunicacao}">
-				
+
 				<ui:include src="/WEB-INF/taskpages/responderComunicacao.xhtml">
-					<ui:param name="showtaskButtons" value="false"/>
+					<ui:param name="showTaskButtons" value="false" />
 				</ui:include>
-				
+
 			</infox:tab>
-		
+
 		</infox:tabPanel>
-		
+
 	</ui:define>
 
 </ui:composition>

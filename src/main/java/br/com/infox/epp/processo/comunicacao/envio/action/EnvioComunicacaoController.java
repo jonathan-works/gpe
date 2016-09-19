@@ -602,7 +602,7 @@ public class EnvioComunicacaoController implements Serializable {
 	}
 	
 	public boolean canChooseTipoComunicacao() {
-		return getTiposComunicacao() != null && getTiposComunicacao().size() > 1 && !getModeloComunicacao().getFinalizada();
+		return !getModeloComunicacao().getFinalizada();
 	}
 	
 	public boolean canChooseResponsavelAssinatura() {

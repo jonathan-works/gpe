@@ -19,18 +19,25 @@ import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.dao.PerfilTemplateDAO;
+import br.com.infox.epp.access.dao.UsuarioPerfilDAO;
+import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.documento.dao.ModeloDocumentoDAO;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DocumentoRespostaComunicacao;
 import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
+import br.com.infox.epp.processo.comunicacao.PessoaRespostaComunicacao;
 import br.com.infox.epp.processo.comunicacao.list.DocumentoComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.list.RespostaComunicacaoList;
 import br.com.infox.epp.processo.comunicacao.service.DocumentoComunicacaoService;
+import br.com.infox.epp.processo.comunicacao.service.PessoaRespostaComunicacaoSearch;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.RespostaComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
@@ -42,6 +49,7 @@ import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.jsf.util.JsfUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
@@ -81,6 +89,12 @@ public class RespostaComunicacaoAction implements Serializable {
 	private RespostaComunicacaoService respostaComunicacaoService;
 	@Inject
 	private ModeloDocumentoDAO modeloDocumentoDAO;
+	@Inject
+	private PerfilTemplateDAO perfilTemplateDAO;
+	@Inject 
+	private UsuarioPerfilDAO usuarioPerfilDAO;
+	@Inject
+	private PessoaRespostaComunicacaoSearch pessoaRespostaComunicacaoSearch; 
 	
 	private DestinatarioModeloComunicacao destinatario;
 
@@ -88,25 +102,32 @@ public class RespostaComunicacaoAction implements Serializable {
 	protected Processo processoRaiz;
 	protected Date prazoResposta;
 	protected String statusProrrogacao;
+	protected PerfilTemplate perfilResponderFilter;
+	protected PessoaFisica pessoaResponder;
 	
 	private List<ClassificacaoDocumento> classificacoesEditor;
 	private List<ClassificacaoDocumento> classificacoesAnexo;
 	private List<ModeloDocumento> modeloDocumentoList;
+	private List<PessoaRespostaComunicacao> pessoaResponderComunicacaoList;
+	private List<PerfilTemplate> perfilTemplateList;
+	private List<PessoaFisica> pessoaResponderList;
 	
 	private ModeloDocumento modeloDocumento;
 	
-	private boolean possivelMostrarBotaoEnvio = false;
+	private boolean possivelMostrarBotaoEnvio;
+	private boolean possivelLiberarResponder;
 	
 	
 	@PostConstruct
 	public void init() {
-		processoComunicacao = JbpmUtil.getProcesso();
+		Processo processoComunicacao = JbpmUtil.getProcesso();
 		if (processoComunicacao != null) {
 		    init(processoComunicacao);
 		}
 	}
 
     public void init(Processo processoComunicacao) {
+        this.processoComunicacao = processoComunicacao;
         respostaComunicacaoList.setProcesso(processoComunicacao);
 		prazoResposta = prazoComunicacaoService.getDataLimiteCumprimento(processoComunicacao);
 		MetadadoProcesso metadadoDestinatario = processoComunicacao.getMetadado(ComunicacaoMetadadoProvider.DESTINATARIO);
@@ -126,9 +147,77 @@ public class RespostaComunicacaoAction implements Serializable {
 		verificarPossibilidadeEnvioResposta();
 		
 		documentoComunicacaoList.setModeloComunicacao(destinatario.getModeloComunicacao());
+
+		possivelLiberarResponder = isDestinatarioComunicacao(destinatario);
+		
+		if (possivelLiberarResponder) {
+		    perfilTemplateList = perfilTemplateDAO.listByEstrutura(Authenticator.getLocalizacaoAtual().getEstruturaFilho().getId());
+		    loadPessoasResponderList();
+		    loadPessoaResponderComunicacaoList();
+		}
+    }
+    
+    public void adicionarPessoaResponder() {
+        try {
+            respostaComunicacaoService.adicionarPessoaResponderComunicacao(processoComunicacao, pessoaResponder);
+            pessoaResponder = null;
+            perfilResponderFilter = null;
+            loadPessoaResponderComunicacaoList();
+            FacesMessages.instance().add("Registro adicionado com sucesso!");
+        } catch (BusinessException | DAOException e) {
+            FacesMessages.instance().add(e.getMessage());
+        } catch (Exception e1) {
+            FacesMessages.instance().add("Erro ao adicionar novo usuário");
+            LOG.error("", e1);
+        }
+    }
+    
+    public void removerPessoaResponder(PessoaRespostaComunicacao pessoaResponderComunicacao) {
+        try {
+            respostaComunicacaoService.removerPessoaResponderComunicacao(pessoaResponderComunicacao);
+            loadPessoaResponderComunicacaoList();
+            FacesMessages.instance().add("Registro removido com sucesso!");
+        } catch (BusinessException | DAOException e) {
+            FacesMessages.instance().add(e.getMessage());
+            LOG.info(e);
+        } catch (Exception e1) {
+            FacesMessages.instance().add("Erro ao remover usuário");
+            LOG.error("", e1);
+        }
     }
 
-	public Long getIdDestinatario(){
+	private void loadPessoasResponderList() {
+	    Localizacao localizacaoAtual = Authenticator.getLocalizacaoAtual();
+	    if ( perfilResponderFilter == null ) {
+	        pessoaResponderList = usuarioPerfilDAO.listByLocalizacaoAtivo(localizacaoAtual);
+	    } else {
+	        pessoaResponderList = usuarioPerfilDAO.getPessoasPermitidos(localizacaoAtual, perfilResponderFilter);
+	    }
+    }
+	
+	private void loadPessoaResponderComunicacaoList() {
+	    pessoaResponderComunicacaoList = pessoaRespostaComunicacaoSearch.listByComunicacao(processoComunicacao.getIdProcesso());
+	}
+	
+	public void onChangePerfilResponder() {
+	    loadPessoasResponderList();
+	}
+
+    private boolean isDestinatarioComunicacao(DestinatarioModeloComunicacao destinatarioComunicacao) {
+	    PessoaFisica pessoaDestinatario = destinatarioComunicacao.getDestinatario();
+	    if ( pessoaDestinatario != null ) {
+	        PessoaFisica pessoaFisica = Authenticator.getUsuarioLogado().getPessoaFisica();
+	        return pessoaDestinatario.equals(pessoaFisica);
+	    } else {
+	        Localizacao localizacaoAtual = Authenticator.getLocalizacaoAtual();
+	        PerfilTemplate perfilDestino = destinatarioComunicacao.getPerfilDestino();
+	        PerfilTemplate perfilAtual = Authenticator.getUsuarioPerfilAtual().getPerfilTemplate();
+	        return localizacaoAtual.equals(destinatarioComunicacao.getDestino())
+	                   && (perfilDestino == null || perfilDestino.equals(perfilAtual));
+	    }
+    }
+
+    public Long getIdDestinatario(){
 		return destinatario.getId();
 	}
 	
@@ -152,6 +241,10 @@ public class RespostaComunicacaoAction implements Serializable {
 		return possivelMostrarBotaoEnvio;
 	}
 	
+	public boolean isPossivelLiberarResponder() {
+        return possivelLiberarResponder;
+    } 
+	
 	public void gravarResposta() {
 		if (Strings.isNullOrEmpty(documentoEditor.getDocumento().getDocumentoBin().getModeloDocumento())) {
 			FacesMessages.instance().add("Insira texto no editor");
@@ -170,6 +263,7 @@ public class RespostaComunicacaoAction implements Serializable {
 			}
 			newDocumentoEdicao();
 			respostaComunicacaoList.refresh();
+			JsfUtil.instance().execute("PF('panelPessoaResponderEditor').toggle();");
 			FacesMessages.instance().add(infoxMessages.get("comunicacao.resposta.gravadoSucesso"));
 		} catch (DAOException e) {
 			LOG.error("", e);
@@ -204,6 +298,7 @@ public class RespostaComunicacaoAction implements Serializable {
 			documentoComunicacaoService.vincularDocumentoRespostaComunicacao(resposta, processoComunicacao);
 			respostaComunicacaoList.refresh();
 			FacesMessages.instance().add(infoxMessages.get("comunicacao.resposta.gravadoSucesso"));
+			JsfUtil.instance().execute("PF('panelPessoaResponderUpload').toggle();");
 		} catch (DAOException e) {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);
@@ -374,5 +469,33 @@ public class RespostaComunicacaoAction implements Serializable {
         }
 	    return documentosResposta;
 	}
+	
+	public List<PerfilTemplate> getPerfilTemplateList() {
+        return perfilTemplateList;
+    }
+	
+	public List<PessoaFisica> getPessoaResponderList() {
+        return pessoaResponderList;
+    }
+	
+	public List<PessoaRespostaComunicacao> getPessoaResponderComunicacaoList() {
+        return pessoaResponderComunicacaoList;
+    }
+
+    public PerfilTemplate getPerfilResponderFilter() {
+        return perfilResponderFilter;
+    }
+
+    public void setPerfilResponderFilter(PerfilTemplate perfilResponderFilter) {
+        this.perfilResponderFilter = perfilResponderFilter;
+    }
+
+    public PessoaFisica getPessoaResponder() {
+        return pessoaResponder;
+    }
+
+    public void setPessoaResponder(PessoaFisica pessoaResponder) {
+        this.pessoaResponder = pessoaResponder;
+    }
 	
 }
