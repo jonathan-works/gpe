@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -14,6 +17,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.access.entity.UsuarioPerfil_;
 import br.com.infox.epp.access.query.UsuarioPerfilQuery;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 
@@ -80,4 +84,13 @@ public class UsuarioPerfilDAO extends DAO<UsuarioPerfil> {
         return getNamedResultList(UsuarioPerfilQuery.LIST_BY_USUARIO_PERFIL_LOCALIZACAO_ATIVO, params);
     }
     
+    public boolean existeUsuarioPerfil(UsuarioLogin usuarioLogin, PerfilTemplate perfilTemplate, boolean ativo) {
+    	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+    	CriteriaQuery<Integer> query = cb.createQuery(Integer.class);
+    	Root<UsuarioPerfil> up = query.from(UsuarioPerfil.class);
+    	query.where(cb.equal(up.get(UsuarioPerfil_.usuarioLogin), usuarioLogin), cb.equal(up.get(UsuarioPerfil_.perfilTemplate), perfilTemplate),
+    			cb.equal(up.get(UsuarioPerfil_.ativo), ativo));
+    	query.select(cb.literal(1));
+    	return getSingleResult(getEntityManager().createQuery(query)) != null;
+    }
 }
