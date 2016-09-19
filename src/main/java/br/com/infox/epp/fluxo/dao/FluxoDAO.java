@@ -69,7 +69,26 @@ public class FluxoDAO extends DAO<Fluxo> {
         
         return getEntityManager().createQuery(cq).getResultList();
     }
-    
+
+    public List<Fluxo> getFluxosPrimarios() {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Fluxo> cq = cb.createQuery(Fluxo.class);
+
+        Subquery<Integer> sq = cq.subquery(Integer.class);
+        Root<NaturezaCategoriaFluxo> ncf = sq.from(NaturezaCategoriaFluxo.class);
+        Join<NaturezaCategoriaFluxo, Fluxo> fluxoSQ = ncf.join(NaturezaCategoriaFluxo_.fluxo);
+        Path<Natureza> natureza = ncf.join(NaturezaCategoriaFluxo_.natureza);
+
+        sq.select(fluxoSQ.get(Fluxo_.idFluxo));
+        sq.distinct(true);
+        sq.where(cb.equal(natureza.get(Natureza_.primaria), true));
+
+        Root<Fluxo> f = cq.from(Fluxo.class);
+        cq.where(cb.in(f.get(Fluxo_.idFluxo)).value(sq));
+        cq.orderBy(cb.asc(f.get(Fluxo_.fluxo)));
+
+        return getEntityManager().createQuery(cq).getResultList();
+    }
 
     public Long quantidadeProcessosAtrasados(Fluxo fluxo) {
         Map<String, Object> map = new HashMap<String, Object>();
