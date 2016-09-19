@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.ejb.Remove;
-import javax.ejb.Stateful;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -37,7 +35,6 @@ import br.com.infox.epp.processo.marcador.MarcadorService;
 import br.com.infox.epp.system.Parametros;
 
 @Named(DocumentoComunicacaoAction.NAME)
-@Stateful
 @ViewScoped
 public class DocumentoComunicacaoAction implements Serializable {
 	
@@ -83,9 +80,6 @@ public class DocumentoComunicacaoAction implements Serializable {
 			}
 		}
 	}
-	
-	@Remove
-	public void destroy() {}
 	
 	public void persistDocumentos() throws DAOException {
 		documentoComunicacaoService.persistDocumentos(modeloComunicacao.getDocumentos());

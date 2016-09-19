@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -40,6 +38,7 @@ import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.PerfilTemplateManager;
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.transaction.Transactional;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.localizacao.LocalizacaoSearch;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
@@ -66,7 +65,6 @@ import br.com.infox.seam.util.ComponentUtil;
 
 @Named(EnvioComunicacaoController.NAME)
 @ViewScoped
-@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 @Taskpage(name = "enviarComunicacao", description = "enviarComunicacao.description")
 public class EnvioComunicacaoController implements Serializable {
 	
@@ -246,7 +244,7 @@ public class EnvioComunicacaoController implements Serializable {
 		minuta = modeloComunicacao.isMinuta();
 	}
 	
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	@Transactional
 	public void gravar() {
 		try {
 			validarGravacao();
@@ -257,8 +255,7 @@ public class EnvioComunicacaoController implements Serializable {
 
 			destinatarioComunicacaoAction.persistDestinatarios();
 			documentoComunicacaoAction.persistDocumentos();
-			
-			modeloComunicacaoManager.update(modeloComunicacao);
+			modeloComunicacao = modeloComunicacaoManager.update(modeloComunicacao);
 			setIdModeloVariable(modeloComunicacao.getId());
 			isNew = false;
 			if (isFinalizada()) {
@@ -353,7 +350,7 @@ public class EnvioComunicacaoController implements Serializable {
 		modeloComunicacao.setMinuta(minuta);
 	}
 
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	@Transactional
 	public void expedirComunicacao() {
 		try {
 			if (destinatario != null) {
@@ -387,8 +384,7 @@ public class EnvioComunicacaoController implements Serializable {
 		}
 	}
 
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void reabrirComunicacao() {
+    public void reabrirComunicacao() {
 		try {
 			modeloComunicacao = comunicacaoService.reabrirComunicacao(getModeloComunicacao());
 			isNew = false;
@@ -403,7 +399,7 @@ public class EnvioComunicacaoController implements Serializable {
 		}
 	}
 	
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	@Transactional
 	public void excluirDestinatarioComunicacao(DestinatarioModeloComunicacao destinatarioModeloComunicacao) {
 		try {
 			destinatarioComunicacaoAction.excluirDestinatario(destinatarioModeloComunicacao);
