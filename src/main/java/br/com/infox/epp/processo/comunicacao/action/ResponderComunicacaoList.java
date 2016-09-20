@@ -1,7 +1,9 @@
 package br.com.infox.epp.processo.comunicacao.action;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -10,6 +12,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
 import br.com.infox.core.list.DataList;
+import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
@@ -33,7 +36,7 @@ public class ResponderComunicacaoList extends DataList<ResponderComunicacaoBean>
     @Inject
     private TipoComunicacaoSearch tipoComunicacaoSearch;
     
-    private final String DEFAULT_JPQL = "select new br.com.infox.epp.processo.comunicacao.action.ResponderComunicacaoList$ResponderComunicacaoBean( "
+    private static final String DEFAULT_JPQL = "select new br.com.infox.epp.processo.comunicacao.action.ResponderComunicacaoList$ResponderComunicacaoBean( "
             + "o.idProcesso, pr.numeroProcesso, o.numeroProcesso, "
             + " (case when destModelo.destinatario is not null then "
             + "       pf.nome "
@@ -56,17 +59,19 @@ public class ResponderComunicacaoList extends DataList<ResponderComunicacaoBean>
             + "left join destModelo.destino loc "
             + "left join destModelo.perfilDestino perf ";
     
-    private final String DEFAULT_WHERE = "where exists ( select 1 from MetadadoProcesso mp where mp.processo.idProcesso = o.idProcesso " +
-                                                "                and mp.metadadoType = '" + EppMetadadoProvider.TIPO_PROCESSO.getMetadadoType() + "' " +
-                                                "                and mp.valor = '" + TipoProcesso.COMUNICACAO.value() + "' ) " + 
-                                                "and mpDestinatario.metadadoType =  '" + ComunicacaoMetadadoProvider.DESTINATARIO.getMetadadoType() + "' " +
-                                                "and mpDataCiencia.metadadoType = '" + ComunicacaoMetadadoProvider.DATA_CIENCIA.getMetadadoType()  + "' " +
-                                                "and mpDataResposta.metadadoType = '" + ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO.getMetadadoType()  + "' " +
-                                                "and cast(destModelo.id as string) = mpDestinatario.valor " +
-                                                "and o.dataFim is null and o.idJbpm is not null " +
-                                                "and #{currentDate} <= to_date(mpDataResposta.valor) ";
+    private static final String DEFAULT_WHERE = "where "
+            + "exists ( select 1 from MetadadoProcesso mp where mp.processo.idProcesso = o.idProcesso "
+            + "            and mp.metadadoType = '" + EppMetadadoProvider.TIPO_PROCESSO.getMetadadoType() + "' "
+            + "            and mp.valor = '" + TipoProcesso.COMUNICACAO.value() + "' "
+            + " ) "
+            + "and mpDestinatario.metadadoType =  '" + ComunicacaoMetadadoProvider.DESTINATARIO.getMetadadoType() + "' "
+            + "and mpDataCiencia.metadadoType = '" + ComunicacaoMetadadoProvider.DATA_CIENCIA.getMetadadoType()  + "' "
+            + "and mpDataResposta.metadadoType = '" + ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO.getMetadadoType()  + "' "
+            + "and cast(destModelo.id as string) = mpDestinatario.valor "
+            + "and o.dataFim is null and o.idJbpm is not null "
+            + "and current_timestamp <= to_date(mpDataResposta.valor) ";
     
-    private final String FILTER_DESTINATARIO = " 'true' = "
+    private static final String FILTER_DESTINATARIO = " and ( 'true' = "
             + "( case when (destModelo.destinatario is not null) then "
             + "    case when pf.idPessoa = {idPessoaLogada} then 'true' else 'false' end "
             + "else "
@@ -75,10 +80,10 @@ public class ResponderComunicacaoList extends DataList<ResponderComunicacaoBean>
             + "    else "
             + "        case when (loc.idLocalizacao = {idLocalizacaoLogado}) then 'true' else 'false' end "
             + "    end "
-            + "end ) ";
-    
-    private final String FILTER_DESTINATARIO_LIBERADO = " exists (select 1 from PessoaRespostaComunicacao prc "
-            + "where prc.comunicacao.idProcesso = o.idProcesso and prc.pessoaFisica.idPessoa = {idPessoaLogada} ) ";
+            + "end ) "
+            + "or exists (select 1 from PessoaRespostaComunicacao prc "
+            + " where prc.comunicacao.idProcesso = o.idProcesso and prc.pessoaFisica.idPessoa = {idPessoaLogada} )"
+            + ")";
     
     private String numeroProcessoRoot;
     private String numeroProcesso;
@@ -111,13 +116,23 @@ public class ResponderComunicacaoList extends DataList<ResponderComunicacaoBean>
     }
     
     @Override
+    protected Map<String, String> getCustomColumnsOrder() {
+        Map<String, String> map = new HashMap<>();
+        map.put("numeroProcessoRoot", "pr.numeroProcesso");
+        map.put("numeroProcesso", "o.numeroProcesso");
+        map.put("dataCiencia", "to_date(mpDataCiencia.valor)");
+        map.put("prazoResposta", "to_date(mpDataResposta.valor)");
+        return map;
+    }
+    
+    @Override
     protected void addRestrictionFields() {
         addRestrictionField("numeroProcessoRoot", "pr.numeroProcesso like concat('%', #{responderComunicacaoList.numeroProcessoRoot}, '%')");
         addRestrictionField("numeroProcesso", "o.numeroProcesso like concat('%', #{responderComunicacaoList.numeroProcesso}, '%')");
         addRestrictionField("tipoComunicacao", "modCom.tipoComunicacao.id = #{responderComunicacaoList.tipoComunicacao.id}");
         addRestrictionField("dataCienciaFrom", "to_date(mpDataCiencia.valor) >= #{responderComunicacaoList.dataCienciaFrom}");
         addRestrictionField("dataCienciaTo", "to_date(mpDataCiencia.valor) <= #{responderComunicacaoList.dataCienciaTo}");
-        addRestrictionField("dataRespostaFrom", "to_date(mpDataResposta.valor) <= #{responderComunicacaoList.dataRespostaFrom}");
+        addRestrictionField("dataRespostaFrom", "to_date(mpDataResposta.valor) >= #{responderComunicacaoList.dataRespostaFrom}");
         addRestrictionField("dataRespostaTo", "to_date(mpDataResposta.valor) <= #{responderComunicacaoList.dataRespostaTo}");
     }
     
@@ -130,8 +145,7 @@ public class ResponderComunicacaoList extends DataList<ResponderComunicacaoBean>
         String filterDestinatario = FILTER_DESTINATARIO.replace("{idPessoaLogada}", idPessoa.toString())
                 .replace("{idPerfilLogado}", perfilTemplate.getId().toString())
                 .replace("{idLocalizacaoLogado}", localizacaoAtual.getIdLocalizacao().toString());
-        String filterDestinatarioLiberado = FILTER_DESTINATARIO_LIBERADO.replace("{idPessoaLogada}", idPessoa.toString());
-        sb.append(" and ( ").append(filterDestinatario).append(" or ").append(filterDestinatarioLiberado).append(" ) ") ;
+        sb.append(filterDestinatario);
     }
     
     public List<TipoComunicacao> getTipoComunicacaoList() {
@@ -167,7 +181,7 @@ public class ResponderComunicacaoList extends DataList<ResponderComunicacaoBean>
     }
 
     public void setDataCienciaFrom(Date dataCienciaFrom) {
-        this.dataCienciaFrom = dataCienciaFrom;
+        this.dataCienciaFrom = DateUtil.getBeginningOfDay(dataCienciaFrom);
     }
 
     public Date getDataCienciaTo() {
@@ -175,7 +189,7 @@ public class ResponderComunicacaoList extends DataList<ResponderComunicacaoBean>
     }
 
     public void setDataCienciaTo(Date dataCienciaTo) {
-        this.dataCienciaTo = dataCienciaTo;
+        this.dataCienciaTo = DateUtil.getEndOfDay(dataCienciaTo);
     }
 
     public Date getDataRespostaFrom() {
@@ -183,7 +197,7 @@ public class ResponderComunicacaoList extends DataList<ResponderComunicacaoBean>
     }
 
     public void setDataRespostaFrom(Date dataRespostaFrom) {
-        this.dataRespostaFrom = dataRespostaFrom;
+        this.dataRespostaFrom = DateUtil.getBeginningOfDay(dataRespostaFrom);
     }
 
     public Date getDataRespostaTo() {
@@ -191,7 +205,7 @@ public class ResponderComunicacaoList extends DataList<ResponderComunicacaoBean>
     }
 
     public void setDataRespostaTo(Date dataRespostaTo) {
-        this.dataRespostaTo = dataRespostaTo;
+        this.dataRespostaTo = DateUtil.getEndOfDay(dataRespostaTo);
     }
     
     public static class ResponderComunicacaoBean {
@@ -243,7 +257,6 @@ public class ResponderComunicacaoList extends DataList<ResponderComunicacaoBean>
         public Date getPrazoResposta() {
             return prazoResposta;
         }
-
     }
 
 }

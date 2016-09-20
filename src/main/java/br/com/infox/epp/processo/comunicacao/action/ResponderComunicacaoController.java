@@ -28,7 +28,6 @@ public class ResponderComunicacaoController implements Serializable {
     }
     
     public void onSelectComunicacao(Integer idProcesso) {
-        setTab("responder");
         Processo processoComunicacao = processoManager.find(idProcesso);
         respostaComunicacaoAction.init(processoComunicacao);
         this.processoComunicacao = processoComunicacao;

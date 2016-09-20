@@ -11,11 +11,11 @@
 	xmlns:i="http://java.sun.com/jsf/composite/infox"
 	template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
 
-	<ui:define name="title">#{infoxMessages['comunicacao.reponder']}</ui:define>
+	<ui:define name="title">#{infoxMessages['comunicacao.responder']}</ui:define>
 
 	<ui:define name="body">
 
-		<infox:tabPanel switchType="ajax" activeTab="#{expedicaoComunicacaoAction.tab}" id="comunicacaoTabPanel" styleClass="comunicacaoTabPanel">
+		<infox:tabPanel switchType="ajax" activeTab="#{responderComunicacaoController.tab}" id="comunicacaoTabPanel">
 
 			<h:form>
 				<infox:tabHeaders />
@@ -64,7 +64,7 @@
 					
 					<ui:define name="toolBar">
 						<h:form>
-							<p:commandLink update=":pageBody" actionListener="#{responderComunicacaoController.onSelectComunicacao(row.idComunicacao)}"
+							<p:commandLink update=":comunicacaoTabPanel" actionListener="#{responderComunicacaoController.onSelectComunicacao(row.idComunicacao)}"
 								process="@this" onstart="infox.showLoading()" oncomplete="infox.hideLoading()">
 								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['button.selecionar']}"/>
 								<f:setPropertyActionListener value="responder" target="#{responderComunicacaoController.tab}"/>
@@ -78,8 +78,8 @@
 					<wi:columnOutputText columnId="numeroProcesso" columnHeader="#{infoxMessages['processo.numeroProcesso']}"
 						value="#{row.numeroProcesso}"/>
 						
-					<wi:columnOutputText columnId="destinatario" columnHeader="#{infoxMessages['comununicacao.destinatario']}"
-						value="#{row.destinatario}"/>
+					<wi:columnOutputText columnId="destinatario" columnHeader="#{infoxMessages['comunicacao.destinatario']}"
+						value="#{row.destinatario}" hideOrder="true"/>
 						
 					<wi:columnOutputText columnId="dataCiencia" columnHeader="#{infoxMessages['comunicacao.dataCiencia']}"
 						value="#{row.dataCiencia}"/>
@@ -91,7 +91,7 @@
 
 			</infox:tab>
 
-			<infox:tab id="responder" name="responder" title="#{infoxMessages['comunicacao.reponder']}"
+			<infox:tab id="responder" name="responder" title="#{infoxMessages['comunicacao.responder']}"
 				rendered="#{not empty responderComunicacaoController.processoComunicacao}">
 
 				<ui:include src="/WEB-INF/taskpages/responderComunicacao.xhtml">

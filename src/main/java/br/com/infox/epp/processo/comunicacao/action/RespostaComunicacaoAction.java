@@ -141,10 +141,6 @@ public class RespostaComunicacaoAction implements Serializable {
 		documentoUploader.setProcesso(processoRaiz);
 		documentoEditor.setProcesso(processoRaiz);
 		
-		newDocumentoEdicao();
-		initClassificacoes();
-		verificarPossibilidadeEnvioResposta();
-		
 		documentoComunicacaoList.setModeloComunicacao(destinatario.getModeloComunicacao());
 
 		possivelLiberarResponder = isDestinatarioComunicacao(destinatario);
@@ -154,6 +150,10 @@ public class RespostaComunicacaoAction implements Serializable {
 		    loadPessoasResponderList();
 		    loadPessoaResponderComunicacaoList();
 		}
+		
+		newDocumentoEdicao();
+        initClassificacoes();
+        verificarPossibilidadeEnvioResposta();
     }
     
     public void adicionarPessoaResponder() {
@@ -318,6 +318,8 @@ public class RespostaComunicacaoAction implements Serializable {
 				newDocumentoEdicao();
 				initClassificacoes();
 				respostaComunicacaoList.refresh();
+			} else {
+			    FacesMessages.instance().add(infoxMessages.get("comunicacao.responder.error.semDocumento"));
 			}
 		} catch (DAOException e) {
 			LOG.error("", e);
@@ -445,22 +447,23 @@ public class RespostaComunicacaoAction implements Serializable {
 		possivelMostrarBotaoEnvio = true;
 		if ( !possivelLiberarResponder ) {
 		    possivelMostrarBotaoEnvio = false;
-		    return;
-		}
-		List<Documento> documentosResposta = getDocumentoRespostaList();
-		if (documentosResposta == null || documentosResposta.isEmpty()) {
-			possivelMostrarBotaoEnvio = false;
-			return;
-		}
-		for (Documento documento : documentosResposta) {
-			if(!assinaturaDocumentoService.isDocumentoTotalmenteAssinado(documento) || documento.getDocumentoBin().isMinuta()) {
-				possivelMostrarBotaoEnvio = false;
-				return;
-			}
+		} else {
+		    List<Documento> documentosResposta = getDocumentoRespostaList();
+	        if (documentosResposta == null || documentosResposta.isEmpty()) {
+	            possivelMostrarBotaoEnvio = false;
+	        } else {
+	            for (Documento documento : documentosResposta) {
+	                if(!assinaturaDocumentoService.isDocumentoTotalmenteAssinado(documento) || documento.getDocumentoBin().isMinuta()) {
+	                    possivelMostrarBotaoEnvio = false;
+	                    break;
+	                }
+	            }
+	        }
 		}
 	}
 	
 	protected List<Documento> getDocumentoRespostaList(){
+	    respostaComunicacaoList.refresh();
 	    List<DocumentoRespostaComunicacao> documentosRespostaComunicacao = new ArrayList<DocumentoRespostaComunicacao>(respostaComunicacaoList.list());
 	    List<Documento> documentosResposta = new ArrayList<Documento>();
 	    for (DocumentoRespostaComunicacao documentoRespostaComunicacao : documentosRespostaComunicacao) {
