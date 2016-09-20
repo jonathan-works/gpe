@@ -81,6 +81,7 @@ public class EnvioComunicacaoController implements Serializable {
 	private static final String CODIGO_PERFIL_ASSINATURA = "perfilAssinatura";
 	private static final String EM_ELABORACAO = "emElaboracao";
 	private static final String EXIBIR_TRANSICOES = "exibirTransicoes";
+	private static final String EXIBIR_RESPONSAVEIS_ASSINATURA = "exibirResponsavelAssinatura";
 	
 	private AssinaturaDocumentoService assinaturaDocumentoService = ComponentUtil.getComponent(AssinaturaDocumentoService.NAME);
 	private CertificateSignatures certificateSignatures = ComponentUtil.getComponent(CertificateSignatures.NAME);
@@ -125,6 +126,8 @@ public class EnvioComunicacaoController implements Serializable {
 	private ModeloComunicacao modeloComunicacao;
 	@TaskpageParameter(name = EXIBIR_TRANSICOES, type="Boolean", description = "enviarComunicacao.parameter.exibirTransicoes")
 	private boolean exibirTransicoes = false;
+	@TaskpageParameter(name = EXIBIR_RESPONSAVEIS_ASSINATURA, type = "Boolean", description = "enviarComunicacao.parameter.exibirResponsavelAssinatura")
+	private boolean exibirResponsaveisAssinatura = true;
 	
 	private boolean finalizada;
 	private String token;
@@ -201,6 +204,11 @@ public class EnvioComunicacaoController implements Serializable {
             Boolean exibirTransicoes = (Boolean) TaskInstance.instance().getVariable(EXIBIR_TRANSICOES);
             if (exibirTransicoes != null && exibirTransicoes) {
                 this.exibirTransicoes = true;
+            }
+            
+            Boolean exibirResponsavelAssinatura = (Boolean) TaskInstance.instance().getVariable(EXIBIR_RESPONSAVEIS_ASSINATURA);
+            if (exibirResponsavelAssinatura != null && !exibirResponsavelAssinatura) {
+                this.exibirResponsaveisAssinatura = false;
             }
         }
     }
@@ -620,4 +628,7 @@ public class EnvioComunicacaoController implements Serializable {
         return true; 
     }
 
+    public boolean isExibirResponsaveisAssinatura() {
+        return exibirResponsaveisAssinatura;
+    }
 }
