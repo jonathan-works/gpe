@@ -45,6 +45,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.manager.ldap.LDAPManager;
 import br.com.infox.epp.access.service.AuthenticatorService;
@@ -159,9 +160,13 @@ public class Authenticator implements Serializable {
     private boolean hasToSignTermoAdesao(UsuarioLogin usuario) throws LoginException {
         
         PessoaFisica pessoaFisica = usuario.getPessoaFisica();
-        if (pessoaFisica == null)
-            throw new LoginException(infoxMessages.get(AuthenticatorService.LOGIN_ERROR_SEM_PESSOA_FISICA));
-        boolean hasToSign = termoAdesaoService.isDeveAssinarTermoAdesao(pessoaFisica);
+        boolean hasToSign = BeanManager.INSTANCE.getReference(PapelManager.class).hasToSignTermoAdesao(usuario);
+        if (hasToSign){
+            if (pessoaFisica == null)
+               throw new LoginException(String.format(infoxMessages.get(AuthenticatorService.LOGIN_ERROR_SEM_PESSOA_FISICA), usuario));
+            
+            hasToSign = !termoAdesaoService.isTermoAdesaoAssinado(pessoaFisica.getCpf());
+        }
         
         
         Contexts.getConversationContext().set(TermoAdesaoAction.TERMO_ADESAO_REQ, hasToSign);
