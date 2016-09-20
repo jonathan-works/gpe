@@ -36,6 +36,7 @@ import com.google.common.base.Strings;
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.TermoAdesaoService;
 import br.com.infox.epp.access.crud.TermoAdesaoAction;
 import br.com.infox.epp.access.dao.UsuarioLoginDAO;
 import br.com.infox.epp.access.dao.UsuarioPerfilDAO;
@@ -43,7 +44,6 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
-import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.manager.ldap.LDAPManager;
 import br.com.infox.epp.access.service.AuthenticatorService;
@@ -58,7 +58,6 @@ import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
-import br.com.infox.epp.usuario.UsuarioLoginSearch;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.security.SecurityUtil;
@@ -78,13 +77,11 @@ public class Authenticator implements Serializable {
     @Inject
     protected InfoxMessages infoxMessages;
     @Inject
-    private PapelManager papelManager;
+    private TermoAdesaoService termoAdesaoService;
     @Inject
     private SecurityUtil securityUtil;
     @Inject
     private CdiAuthenticator cdiAuthenticator;
-    @Inject
-    private UsuarioLoginSearch usuarioLoginSearch;
     
     private String newPassword1;
     private String newPassword2;
@@ -161,13 +158,10 @@ public class Authenticator implements Serializable {
     private boolean hasToSignTermoAdesao(UsuarioLogin usuario) throws LoginException {
         
         PessoaFisica pessoaFisica = usuario.getPessoaFisica();
-        boolean hasToSign = papelManager.hasToSignTermoAdesao(usuario);
-        if(hasToSign){
-        	if (pessoaFisica == null) {
-            	throw new LoginException(infoxMessages.get(AuthenticatorService.LOGIN_ERROR_SEM_PESSOA_FISICA));
-            }
-            hasToSign = !usuarioLoginSearch.getAssinouTermoAdesao(pessoaFisica.getCpf());
-        }
+        if (pessoaFisica == null)
+            throw new LoginException(infoxMessages.get(AuthenticatorService.LOGIN_ERROR_SEM_PESSOA_FISICA));
+        boolean hasToSign = termoAdesaoService.isDeveAssinarTermoAdesao(pessoaFisica);
+        
         
         Contexts.getConversationContext().set(TermoAdesaoAction.TERMO_ADESAO_REQ, hasToSign);
         return hasToSign;
