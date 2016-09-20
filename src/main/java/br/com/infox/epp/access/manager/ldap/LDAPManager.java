@@ -7,6 +7,7 @@ import java.util.Hashtable;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
@@ -17,8 +18,11 @@ import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
+import org.apache.commons.lang3.StringUtils;
+
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.type.UsuarioEnum;
+import br.com.infox.epp.system.manager.ParametroManager;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
@@ -29,6 +33,9 @@ public class LDAPManager {
     public enum SecurityAuthenticationType {
         NONE, SIMPLE, SASL_MECH
     }
+    
+    @Inject
+    private ParametroManager parametroManager;
 
     private UsuarioLogin createUsuario(final String login, final String senha,
             final Attributes attributes) throws NamingException {
@@ -55,9 +62,23 @@ public class LDAPManager {
 
         return usuarioLogin;
     }
+    
+    protected String getDomainName() {
+        return parametroManager.getValorParametro("ldapDomainName");
+    }
 
+    protected String getProviderUrl() {
+        return parametroManager.getValorParametro("ldapProviderUrl");
+    }
+    
+    public UsuarioLogin autenticarLDAP(String usuario, String senha) throws NamingException {
+        return autenticarLDAP(usuario, senha, getProviderUrl(), getDomainName());
+    }
+    
     public UsuarioLogin autenticarLDAP(String usuario, String senha, String providerUrl, String domainName) throws NamingException {
-        
+        if (StringUtils.isEmpty(providerUrl) || "-1".equals(providerUrl)){
+            return null;
+        }
     	Hashtable<String, String> env = new Hashtable<>();
         env.put(Context.INITIAL_CONTEXT_FACTORY, CONTEXT_FACTORY);
         env.put(Context.SECURITY_AUTHENTICATION, SecurityAuthenticationType.SIMPLE.name());

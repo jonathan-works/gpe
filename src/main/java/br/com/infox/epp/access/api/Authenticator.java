@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import javax.naming.NamingException;
 import javax.security.auth.login.LoginException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jboss.seam.Component;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Install;
@@ -241,9 +242,14 @@ public class Authenticator implements Serializable {
     protected boolean ldapLoginExists(final Credentials credentials) {
         boolean ldapUserExists = false;
         try {
+            String providerUrl = getProviderUrl();
+            if (StringUtils.isEmpty(providerUrl) || "-1".equals(providerUrl)){
+                return false;
+            }
             LDAPManager ldapManager = BeanManager.INSTANCE.getReference(LDAPManager.class);
-            UsuarioLogin user = ldapManager.autenticarLDAP(credentials.getUsername(), credentials.getPassword(), getProviderUrl(), getDomainName());
-            usuarioLoginManager.persist(user);
+            UsuarioLogin user = ldapManager.autenticarLDAP(credentials.getUsername(), credentials.getPassword(), providerUrl, getDomainName());
+            if (user != null)
+                usuarioLoginManager.persist(user);
             ldapUserExists = user != null;
         } catch (NamingException | DAOException e) {
             LOG.warn("ldapException", e);
