@@ -86,6 +86,11 @@ public class TermoAdesaoService {
     public boolean isTermoAdesaoAssinado(String cpf) {
         return usuarioLoginSearch.getAssinouTermoAdesao(cpf);
     }
+    
+    public boolean isDeveAssinarTermoAdesao(PessoaFisica pessoaFisica){
+        return papelManager.hasToSignTermoAdesao(pessoaFisica.getUsuarioLogin()) 
+                && !usuarioLoginSearch.getAssinouTermoAdesao(pessoaFisica.getCpf());
+    }
 
     public DocumentoBin createTermoAdesaoFor(PessoaFisica pessoaFisica) {
         if (pessoaFisica == null) {
