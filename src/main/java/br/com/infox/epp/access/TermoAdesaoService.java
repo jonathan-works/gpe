@@ -2,7 +2,6 @@ package br.com.infox.epp.access;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -26,6 +25,7 @@ import br.com.infox.core.pdf.PdfManager;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.PapelManager;
+import br.com.infox.epp.access.provider.TermoAdesaoVariableProducer;
 import br.com.infox.epp.access.service.AuthenticatorService;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
@@ -33,8 +33,6 @@ import br.com.infox.epp.documento.type.ArbitraryExpressionResolver;
 import br.com.infox.epp.documento.type.ExpressionResolverChain;
 import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
 import br.com.infox.epp.documento.type.SeamExpressionResolver;
-import br.com.infox.epp.meiocontato.entity.MeioContato;
-import br.com.infox.epp.meiocontato.type.TipoMeioContatoEnum;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.pessoaFisica.PessoaFisicaSearch;
@@ -69,6 +67,7 @@ public class TermoAdesaoService {
     @Inject private UsuarioLoginSearch usuarioLoginSearch;
     @Inject private CertificateSignatures certificateSignatures;
     @Inject private AssinaturaDocumentoService assinaturaDocumentoService;
+    @Inject private TermoAdesaoVariableProducer termoAdesaoVariableProducer;
     @Inject private InfoxMessages infoxMessages;
 
     @Inject private PapelManager papelManager;
@@ -97,7 +96,7 @@ public class TermoAdesaoService {
         }
         String tituloTermoAdesao = Parametros.TERMO_ADESAO.getValue();
         ModeloDocumento modeloDocumento = modeloDocumentoManager.getModeloDocumentoByTitulo(tituloTermoAdesao);
-        Map<String, String> variables = getTermoAdesaoVariables(pessoaFisica);
+        Map<String, String> variables = termoAdesaoVariableProducer.getTermoAdesaoVariables(pessoaFisica);
         byte[] termoAdesao;
         try {
             termoAdesao = getTermoAdesaoByteArray(modeloDocumento, variables);
@@ -134,28 +133,6 @@ public class TermoAdesaoService {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         pdfManager.convertHtmlToPdf(termoAdesao, outputStream);
         return outputStream.toByteArray();
-    }
-
-    protected Map<String, String> getTermoAdesaoVariables(PessoaFisica pessoaFisica) {
-        HashMap<String, String> variaveis = new HashMap<>();
-        variaveis.put("#{usuarioLogado}", pessoaFisica.getNome());
-        variaveis.put("#{CPF_pessoa_logada}", pessoaFisica.getCodigoFormatado());
-        variaveis.put("#{Data_nascimento_pessoa_logada}", pessoaFisica.getDataFormatada());
-        MeioContato email = pessoaFisica.getMeioContato(TipoMeioContatoEnum.EM);
-        if (pessoaFisica.getUsuarioLogin() != null) {
-            variaveis.put("#{emailUsuarioLogado}", pessoaFisica.getUsuarioLogin().getEmail());
-        } else {
-            if (email != null)
-                variaveis.put("#{emailUsuarioLogado}", email.getMeioContato());
-            else
-                variaveis.put("#{emailUsuarioLogado}", "-");
-        }
-        MeioContato fixo = pessoaFisica.getMeioContato(TipoMeioContatoEnum.TF);
-        if (fixo != null)
-            variaveis.put("#{Telefone_pessoa_logada}", fixo.getMeioContato());
-        else
-            variaveis.put("#{Telefone_pessoa_logada}", "-");
-        return variaveis;
     }
 
     private ExpressionResolverChain getExpressionResolver(Map<String, String> variables) {
