@@ -7,24 +7,29 @@ import javax.inject.Named;
 
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.manager.ProcessoManager;
 
 @Named
 @ViewScoped
 public class ResponderComunicacaoController implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    private String tab;
-    private Processo processoComunicacao;
     
     @Inject
     private RespostaComunicacaoAction respostaComunicacaoAction;
+    @Inject
+    private ProcessoManager processoManager;
+    
+    private String tab;
+    private Processo processoComunicacao;
     
     public void onClickTabComunicacaoes() {
         processoComunicacao = null;
     }
     
-    public void onSelectComunicacao(Processo processoComunicacao) {
+    public void onSelectComunicacao(Integer idProcesso) {
+        setTab("responder");
+        Processo processoComunicacao = processoManager.find(idProcesso);
         respostaComunicacaoAction.init(processoComunicacao);
         this.processoComunicacao = processoComunicacao;
     }

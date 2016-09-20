@@ -10,7 +10,6 @@ import javax.ejb.Stateful;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.faces.FacesMessages;
 
 import com.google.common.base.Strings;
@@ -312,11 +311,7 @@ public class RespostaComunicacaoAction implements Serializable {
 		List<Documento> documentosRespostaComunicacao = getDocumentoRespostaList();
 		try {
 			if(!documentosRespostaComunicacao.isEmpty()){
-			    long processId = BusinessProcess.instance().getProcessId();
-			    long taskId = BusinessProcess.instance().getTaskId();
 			    respostaComunicacaoService.enviarResposta(documentosRespostaComunicacao);
-				BusinessProcess.instance().setProcessId(processId);
-				BusinessProcess.instance().setTaskId(taskId);
 				initClassificacoes();
 				FacesMessages.instance().add(infoxMessages.get("comunicacao.resposta.enviadaSucesso"));
 				modeloDocumentoList = null;
@@ -448,6 +443,10 @@ public class RespostaComunicacaoAction implements Serializable {
 	
 	public void verificarPossibilidadeEnvioResposta() {
 		possivelMostrarBotaoEnvio = true;
+		if ( !possivelLiberarResponder ) {
+		    possivelMostrarBotaoEnvio = false;
+		    return;
+		}
 		List<Documento> documentosResposta = getDocumentoRespostaList();
 		if (documentosResposta == null || documentosResposta.isEmpty()) {
 			possivelMostrarBotaoEnvio = false;

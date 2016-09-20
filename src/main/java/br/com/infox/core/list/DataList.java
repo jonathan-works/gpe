@@ -27,6 +27,7 @@ public abstract class DataList<E> extends JpaQuery<E> {
 		addRestrictionFields();
 		customColumnsOrder = getCustomColumnsOrder();
 		setOrder(getDefaultOrder());
+		postInit();
 	}
 	
 	@Override
@@ -35,6 +36,8 @@ public abstract class DataList<E> extends JpaQuery<E> {
 		this.orderedColumn = null;
 		super.newInstance();
 	}
+	
+	protected void postInit(){};
 	
 	protected void addRestrictionFields(){}
 	

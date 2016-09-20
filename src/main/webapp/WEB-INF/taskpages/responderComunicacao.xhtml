@@ -80,7 +80,7 @@
 		
 		<p:dataTable id="pessoaResponderDataTable" styleClass="pessoaResponderDataTable" style="margin-top: 1rem;"
 			value="#{respostaComunicacaoAction.pessoaResponderComunicacaoList}" var="pessoaComunicacao"
-			emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
+			emptyMessage="" rows="10" paginatorAlwaysVisible="false" paginator="true" paginatorPosition="top">
 			
 			<p:column style="width: 16px;">
 				<h:form>

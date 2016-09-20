@@ -25,57 +25,67 @@
 				action="#{responderComunicacaoController.onClickTabComunicacaoes}">
 
 				<wi:dataTable values="#{responderComunicacaoList.list(15)}" bean="#{responderComunicacaoList}" 
-					tableTitle="#{infoxMessages['produtividade.tableTitle']}" id="responderComunicacaoList">
+					tableTitle="#{infoxMessages['comunicacao.comunicacoes']}" id="responderComunicacaoList"
+					clearAction="#{responderComunicacaoList.newInstance()}">
 					
 					<ui:define name="searchForm">
 					
 						<wi:searchForm formId="pesquisaComunicacaoForm" formTitle="#{infoxMessages['searchForm.title']}">
 							
-							<i:inputText label="#{infoxMessages['processo.numeroProcessoOrigem']}"
-								value=""/>
+							<i:inputText id="numeroProcessoOrigemFilter" 
+								label="#{infoxMessages['processo.numeroProcessoRoot']}"
+								value="#{bean.numeroProcessoRoot}"/>
 							
-							<i:inputText  />
+							<i:inputText id="numeroProcessoFilter" 
+								label="#{infoxMessages['processo.numeroProcesso']}"
+								value="#{bean.numeroProcesso}"/>
 							
-							<wi:selectOneMenuEntity id="comboFluxo"
-								value="#{produtividadeAction.fluxo}"
-								label="#{infoxMessages['naturezaCategoriaFluxo.fluxo']}"
-								items="#{produtividadeAction.fluxoList}"
-								showLabelSelecione="true" />
+							<i:selectOneMenu id="tipoComunicacaoFilter"
+								value="#{bean.tipoComunicacao}"
+								label="#{infoxMessages['comunicacao.tipoComunicacao']}"
+								items="#{responderComunicacaoList.tipoComunicacaoList}"
+								converterId="org.jboss.seam.ui.EntityConverter" />
 								
-							<wi:inputDataPeriodo id="periodo"
-								valueDateFrom="#{produtividadeAction.dataInicio}"
-								valueDateTo="#{produtividadeAction.dataFim}"
-								label="#{infoxMessages['data.inputPeriodo']}"/>
+							<wi:inputDataPeriodo id="dataCienciaFilter"
+								valueDateFrom="#{bean.dataCienciaFrom}"
+								valueDateTo="#{bean.dataCienciaTo}"
+								label="#{infoxMessages['comunicacao.dataCiencia']}"/>
+								
+							<wi:inputDataPeriodo id="dataRespostaFilter"
+								valueDateFrom="#{bean.dataRespostaFrom}"
+								valueDateTo="#{bean.dataRespostaTo}"
+								label="#{infoxMessages['comunicacao.prazoResposta']}"/>
 								
 						</wi:searchForm>
 						
 					</ui:define>
 					
+					<ui:define name="headerToolBar"/>
+					
 					<ui:define name="toolBar">
 						<h:form>
-							<p:commandLink update="@(.comunicacaoTabPanel)" actionListener="#{responderComunicacaoController.onSelectComunicacao(row)}">
+							<p:commandLink update=":pageBody" actionListener="#{responderComunicacaoController.onSelectComunicacao(row.idComunicacao)}"
+								process="@this" onstart="infox.showLoading()" oncomplete="infox.hideLoading()">
 								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['button.selecionar']}"/>
+								<f:setPropertyActionListener value="responder" target="#{responderComunicacaoController.tab}"/>
 							</p:commandLink>
-						</h:form>	
+						</h:form>
 					</ui:define>
 					
-					<wi:columnOutputText columnId="numeroProcessoRoot" columnHeader="#{infoxMessages['processo.numeroProcessoOrigem']}"
-						value="#{row.processoRoot.numeroProcesso}"/>
+					<wi:columnOutputText columnId="numeroProcessoRoot" columnHeader="#{infoxMessages['processo.numeroProcessoRoot']}"
+						value="#{row.numeroProcessoRoot}"/>
 					
 					<wi:columnOutputText columnId="numeroProcesso" columnHeader="#{infoxMessages['processo.numeroProcesso']}"
 						value="#{row.numeroProcesso}"/>
 						
-					<wi:columnOutputText columnId="tipoComunicacao" columnHeader="#{infoxMessages['comunicacao.tipoComunicacao']}"
-						value="#{row.localizacao}" />
+					<wi:columnOutputText columnId="destinatario" columnHeader="#{infoxMessages['comununicacao.destinatario']}"
+						value="#{row.destinatario}"/>
 						
-					<wi:columnOutputText columnId="destinatario" columnHeader="#{infoxMessages['comunicacao.destinatario']}"
-						value="#{row.papel}" />
+					<wi:columnOutputText columnId="dataCiencia" columnHeader="#{infoxMessages['comunicacao.dataCiencia']}"
+						value="#{row.dataCiencia}"/>
 						
-					<wi:columnOutputText columnId="dataCiencia"	columnHeader="#{infoxMessages['produtividade.tarefa']}"
-						value="#{row.tarefa}" />
-						
-					<wi:columnOutputText columnId="prazoResposta" columnHeader="#{infoxMessages['produtividade.quantidade']}"
-						value="#{row.quantidadeTarefas}" />
+					<wi:columnOutputText columnId="prazoResposta" columnHeader="#{infoxMessages['comunicacao.prazoResposta']}"
+						value="#{row.prazoResposta}"/>
 						
 				</wi:dataTable>
 
