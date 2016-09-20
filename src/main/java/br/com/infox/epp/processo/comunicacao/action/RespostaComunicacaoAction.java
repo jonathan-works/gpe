@@ -163,11 +163,11 @@ public class RespostaComunicacaoAction implements Serializable {
             pessoaResponder = null;
             perfilResponderFilter = null;
             loadPessoaResponderComunicacaoList();
-            FacesMessages.instance().add("Registro adicionado com sucesso!");
+            FacesMessages.instance().add(infoxMessages.get("entity_created"));
         } catch (BusinessException | DAOException e) {
             FacesMessages.instance().add(e.getMessage());
         } catch (Exception e1) {
-            FacesMessages.instance().add("Erro ao adicionar novo usuário");
+            FacesMessages.instance().add(e1.getMessage());
             LOG.error("", e1);
         }
     }
@@ -176,12 +176,12 @@ public class RespostaComunicacaoAction implements Serializable {
         try {
             respostaComunicacaoService.removerPessoaResponderComunicacao(pessoaResponderComunicacao);
             loadPessoaResponderComunicacaoList();
-            FacesMessages.instance().add("Registro removido com sucesso!");
+            FacesMessages.instance().add(infoxMessages.get("entity_deleted"));
         } catch (BusinessException | DAOException e) {
             FacesMessages.instance().add(e.getMessage());
             LOG.info(e);
         } catch (Exception e1) {
-            FacesMessages.instance().add("Erro ao remover usuário");
+            FacesMessages.instance().add(e1.getMessage());
             LOG.error("", e1);
         }
     }

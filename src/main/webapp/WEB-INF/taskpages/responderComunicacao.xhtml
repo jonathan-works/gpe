@@ -79,7 +79,8 @@
 		</h:form>
 		
 		<p:dataTable id="pessoaResponderDataTable" styleClass="pessoaResponderDataTable" style="margin-top: 1rem;"
-			value="#{respostaComunicacaoAction.pessoaResponderComunicacaoList}" var="pessoaComunicacao">
+			value="#{respostaComunicacaoAction.pessoaResponderComunicacaoList}" var="pessoaComunicacao"
+			emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
 			
 			<p:column style="width: 16px;">
 				<h:form>
@@ -272,10 +273,7 @@
 	
 		function clickEditorUploadPanel(widgetClicked, widgetOther) {
 			widgetClicked.toggle();
-			var closed = widgetOther.toggleStateHolder.attr('value');
-			if (closed != 'true') {
-				widgetOther.toggle();
-			}
+			widgetOther.collapse();
 		}
 	
 		$(document).ready( function() {
