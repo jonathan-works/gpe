@@ -113,6 +113,7 @@ public class EnvioComunicacaoController implements Serializable {
 	
 	private String raizLocalizacoesComunicacao = Parametros.RAIZ_LOCALIZACOES_COMUNICACAO.getValue();
 	private Localizacao localizacaoRaizComunicacao;
+	private Localizacao localizacaoRaizAssinaturaComunicacao;
 	private Long processInstanceId;
 	@TaskpageParameter(name = PRAZO_PRADRAO_RESPOSTA, type="Integer", description = "enviarComunicacao.parameter.prazo")
 	private Integer prazoDefaultComunicacao = null;
@@ -237,6 +238,16 @@ public class EnvioComunicacaoController implements Serializable {
 				actionMessagesService.handleDAOException(e);
 			}
 		}
+        String codigoLocalizacaoRaizAssinaturaComunicacao = Parametros.RAIZ_LOCALIZACOES_ASSINATURA_COMUNICACAO.getValue();
+        if (codigoLocalizacaoRaizAssinaturaComunicacao != null && !codigoLocalizacaoRaizAssinaturaComunicacao.isEmpty()) {
+            try {
+                localizacaoRaizAssinaturaComunicacao = localizacaoSearch.getLocalizacaoByCodigo(codigoLocalizacaoRaizAssinaturaComunicacao);
+            } catch (Exception e) {
+                throw new EppConfigurationException("O parâmetro codigoRaizResponsavelAssinaturaLocalizacao não foi definido corretamente");
+            }
+        } else {
+            localizacaoRaizAssinaturaComunicacao = Authenticator.getLocalizacaoAtual();
+        }
 	}
 
 	private void initModelo(Long idModelo) {
@@ -467,7 +478,7 @@ public class EnvioComunicacaoController implements Serializable {
 	}
 	
 	public List<Localizacao> getLocalizacoesDisponiveisAssinatura(String query) {
-		return localizacaoSearch.getLocalizacoesByRaizWithDescricaoLike(Authenticator.getLocalizacaoAtual(), query, MAX_RESULTS);
+		return localizacaoSearch.getLocalizacoesByRaizWithDescricaoLike(localizacaoRaizAssinaturaComunicacao, query, MAX_RESULTS);
 	}
 
 	public List<TipoComunicacao> getTiposComunicacao() {

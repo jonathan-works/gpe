@@ -20,6 +20,7 @@ public enum Parametros {
     PASTA_DOCUMENTO_GERADO("pastaDocumentoGerado"),
     RAIZ_LOCALIZACOES_COMUNICACAO("raizLocalizacoesComunicacao"),
     RAIZ_LOCALIZACOES_COMUNICACAO_INTERNA("raizLocalizacoesComunicacaoInterna"),
+    RAIZ_LOCALIZACOES_ASSINATURA_COMUNICACAO("codigoRaizResponsavelAssinaturaLocalizacao"),
     CODIGO_FLUXO_COMUNICACAO_ELETRONICA("codigoFluxoComunicacao"),
     CODIGO_FLUXO_COMUNICACAO_NAO_ELETRONICA("codigoFluxoComunicacaoNaoEletronico"),
     CODIGO_FLUXO_DOCUMENTO("codigoFluxoDocumento"),
