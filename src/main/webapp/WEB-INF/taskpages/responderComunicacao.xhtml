@@ -60,15 +60,14 @@
 		
 		<h:form id="pessoaResponderForm">
 			
-			<i:selectOneMenu id="perfilResponder" label="#{infoxMessages['comunicacao.responder.perfil']}" 
-				value="#{respostaComunicacaoAction.perfilResponderFilter}" converterId="org.jboss.seam.ui.EntityConverter" 
-				required="false" items="#{respostaComunicacaoAction.perfilTemplateList}" ajax="true" render="@(.pessoaResponder)" execute="@this"
-				listener="#{respostaComunicacaoAction.onChangePerfilResponder}" onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
+			<wi:selectOneMenuEntity id="perfilResponder" label="#{infoxMessages['comunicacao.responder.perfil']}" 
+				value="#{respostaComunicacaoAction.perfilResponderFilter}" required="false" items="#{respostaComunicacaoAction.perfilTemplateList}">
+				<p:ajax update="@form:pessoaResponderDecoration" process="@this" listener="#{respostaComunicacaoAction.onChangePerfilResponder}" 
+					onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
+			</wi:selectOneMenuEntity>
 				
-			<i:selectOneMenu id="pessoaResponder" label="#{infoxMessages['comunicacao.responder.pessoa']}" value="#{respostaComunicacaoAction.pessoaResponder}" 
-				required="true" items="#{respostaComunicacaoAction.pessoaResponderList}" itemLabel="#{item.nome}" 
-				converterId="org.jboss.seam.ui.EntityConverter" 
-				styleClass="pessoaResponder"/>
+			<wi:selectOneMenuEntity id="pessoaResponder" label="#{infoxMessages['comunicacao.responder.pessoa']}"  
+				required="true" items="#{respostaComunicacaoAction.pessoaResponderList}" value="#{respostaComunicacaoAction.pessoaResponder}"/>
 			
 			<h:commandButton value="#{infoxMessages['button.add']}" actionListener="#{respostaComunicacaoAction.adicionarPessoaResponder}"
 				styleClass="buttons" style="margin-top: 10px; margin-left: 3rem;">
