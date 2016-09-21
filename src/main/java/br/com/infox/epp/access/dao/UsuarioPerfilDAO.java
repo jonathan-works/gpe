@@ -93,4 +93,13 @@ public class UsuarioPerfilDAO extends DAO<UsuarioPerfil> {
     	query.select(cb.literal(1));
     	return getSingleResult(getEntityManager().createQuery(query)) != null;
     }
+    
+    public UsuarioPerfil getUsuarioPerfil(UsuarioLogin usuarioLogin, PerfilTemplate perfilTemplate, Localizacao localizacao) {
+    	CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+    	CriteriaQuery<UsuarioPerfil> query = cb.createQuery(UsuarioPerfil.class);
+    	Root<UsuarioPerfil> up = query.from(UsuarioPerfil.class);
+    	query.where(cb.equal(up.get(UsuarioPerfil_.usuarioLogin), usuarioLogin), cb.equal(up.get(UsuarioPerfil_.perfilTemplate), perfilTemplate),
+    			cb.equal(up.get(UsuarioPerfil_.localizacao), localizacao));
+    	return getSingleResult(getEntityManager().createQuery(query));
+    }
 }

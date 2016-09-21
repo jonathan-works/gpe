@@ -113,5 +113,9 @@ public class UsuarioPerfilManager extends Manager<UsuarioPerfilDAO, UsuarioPerfi
         query.select(up.get(UsuarioPerfil_.perfilTemplate)).distinct(true);
         return getDao().getEntityManager().createQuery(query).getResultList();
     }
+    
+    public UsuarioPerfil getUsuarioPerfil(UsuarioLogin usuarioLogin, PerfilTemplate perfilTemplate, Localizacao localizacao) {
+    	return getDao().getUsuarioPerfil(usuarioLogin, perfilTemplate, localizacao);
+    }
 	
 }
