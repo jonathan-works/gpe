@@ -40,7 +40,6 @@ public class UploadFormType extends FileFormType {
         }
         if (value instanceof Integer) {
             Documento documento = getDocumentoManager().find((Integer) value);
-            setDocumentoToSign(documento);
             return documento;
         }
         return null;
@@ -57,8 +56,6 @@ public class UploadFormType extends FileFormType {
             getFileVariableHandler().gravarDocumento(file, uploadFile.getId(), formField, formData.getProcesso());
             TypedValue typedValue = new TypedValue(formField.getValue(), formField.getType().getValueType());
             formData.setVariable(formField.getId(), typedValue);
-            if (formField.getValue() instanceof Documento)
-                setDocumentoToSign((Documento) formField.getValue());
         } catch (BusinessRollbackException e) {
              LOG.log(Level.SEVERE, "Erro ao remover o documento existente", e);
              if (e.getCause() instanceof DAOException) {

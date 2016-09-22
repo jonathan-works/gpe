@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.jboss.seam.faces.FacesMessages;
 
-import br.com.infox.certificado.CertificateSignatures;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
@@ -30,7 +29,6 @@ public abstract class FileFormType implements FormType {
     
     protected String name;
     protected String path;
-    protected Documento documentoToSign;
     protected String tokenToSign;
     
     public FileFormType(String name, String path) {
@@ -80,16 +78,11 @@ public abstract class FileFormType implements FormType {
     @ExceptionHandled(value = MethodType.UNSPECIFIED)
     public void assinar() throws DAOException, AssinaturaException {
         try {
-        	AssinadorService assinadorService = BeanManager.INSTANCE.getReference(AssinadorService.class);
-        	try {
-        		assinadorService.assinarToken(tokenToSign, Authenticator.getUsuarioPerfilAtual());
-        	}
-        	catch(AssinaturaException e) {
-                FacesMessages.instance().add("Erro ao assinar");
-                throw e;
-        	}
+    		getAssinadorService().assinarToken(tokenToSign, Authenticator.getUsuarioPerfilAtual());
+    		FacesMessages.instance().add(InfoxMessages.getInstance().get("assinatura.assinadoSucesso"));
+        } catch(AssinaturaException e) {
+            FacesMessages.instance().add(e.getMessage());
         } finally {
-            setDocumentoToSign(null);
             setTokenToSign(null);
         }
     }
@@ -108,14 +101,6 @@ public abstract class FileFormType implements FormType {
                 && !documento.isDocumentoAssinado(Authenticator.getPapelAtual());
     }
     
-    public Documento getDocumentoToSign() {
-        return documentoToSign;
-    }
-
-    public void setDocumentoToSign(Documento documentoToSign) {
-        this.documentoToSign = documentoToSign;
-    }
-
     public String getTokenToSign() {
         return tokenToSign;
     }
@@ -128,11 +113,11 @@ public abstract class FileFormType implements FormType {
     public boolean isPersistable() {
         return true;
     }
-
-    protected CertificateSignatures getCertificateSignatures() {
-        return BeanManager.INSTANCE.getReference(CertificateSignatures.class);
-    }
     
+    private AssinadorService getAssinadorService() {
+        return BeanManager.INSTANCE.getReference(AssinadorService.class);
+    }
+
     protected AssinaturaDocumentoService getAssinaturaDocumentoService() {
         return BeanManager.INSTANCE.getReference(AssinaturaDocumentoService.class);
     }

@@ -4,24 +4,21 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
-import javax.inject.Inject;
 
 import org.jbpm.graph.def.Node;
 
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.ibpm.process.definition.fitter.NodeFitter;
 
 @FacesConverter("jbpmNodeConverter")
 public class JbpmNodeConverter implements Converter {
 	
-	@Inject
-	private NodeFitter nodeFitter;
-
 	@Override
 	public Object getAsObject(FacesContext context, UIComponent component, String value) {
 		if (value == null) {
 			return null;
 		}
-		return nodeFitter.getNodeByKey(value);
+		return getNodeFitter().getNodeByKey(value);
 	}
 
 	@Override
@@ -30,5 +27,9 @@ public class JbpmNodeConverter implements Converter {
 			return null;
 		}
 		return ((Node) value).getKey();
+	}
+	
+	private NodeFitter getNodeFitter() {
+	    return BeanManager.INSTANCE.getReference(NodeFitter.class);
 	}
 }

@@ -62,8 +62,6 @@ public class EditorFormType extends FileFormType {
             documento.setDocumentoBin(documentoBin);
             formField.setValue(documento);
         }
-
-        setDocumentoToSign(documento);
     }
     
     @Override

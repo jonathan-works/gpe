@@ -17,17 +17,14 @@
       <a:jsFunction name="apagarGrupo" action="#{assinadorController.apagarGrupo()}" execute="@none" render="@none" />
       <ui:param name="objetoAssinatura" value="#{empty documentoBin ? (empty textoAssinavelList ? (empty documentoBinList ? assinadorController.criarGrupoAssinatura(assinavelProvider) : assinadorController.criarGrupoAssinaturaWithDocumentoBin(documentoBinList)) : assinadorController.criarGrupoAssinatura(textoAssinavelList)) : assinadorController.criarGrupoAssinaturaWithDocumentoBin(documentoBin)}" />
       <a:commandButton type="button" styleClass="buttons #{styleClass}" disabled="#{disabled}" onbegin="infox.showLoading();" style="#{signButtonStyle}"
-      		action="#{elFunctions.invokeMethod(preSignAction)}" execute="#{execute}" rendered="#{empty rendered? 'true' : rendered}"
+      		action="#{elFunctions.invokeMethod(preSignAction)}" execute="@this #{execute}" rendered="#{empty rendered ? true : rendered}"
       		oncomplete="infox.hideLoading(); if (#{!facesContext.validationFailed}) {infox.CertDig.#{id}.init();}"
-            render="#{empty id ? 'divApplet' : id}"
+            render="#{reRender} #{empty id ? 'divApplet' : id}"
       		value="#{empty signButtonCaption ? 'Assinar Digitalmente' : signButtonCaption}" >
-      			<f:setPropertyActionListener
-      				value="#{objetoAssinatura}"
-      				target="#{tokenField}" />
+      			<f:setPropertyActionListener value="#{objetoAssinatura}" target="#{tokenField}" />
       			<f:setPropertyActionListener value="#{propertyValue}" target="#{propertyTarget}" />      				
       </a:commandButton>
       
-
       <h:outputScript>
           namespace('infox.CertDig.#{id}', {  
   	          init: function() {  
