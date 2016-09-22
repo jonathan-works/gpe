@@ -80,8 +80,6 @@ public abstract class FileFormType implements FormType {
         try {
     		getAssinadorService().assinarToken(tokenToSign, Authenticator.getUsuarioPerfilAtual());
     		FacesMessages.instance().add(InfoxMessages.getInstance().get("assinatura.assinadoSucesso"));
-        } catch(AssinaturaException e) {
-            FacesMessages.instance().add(e.getMessage());
         } finally {
             setTokenToSign(null);
         }
