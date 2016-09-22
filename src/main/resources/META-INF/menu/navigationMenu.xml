@@ -45,4 +45,5 @@
 
     <value>menu.operacoes/comunicacao.menuText/comunicacoes.menuText:/Comunicacao/listView.seam</value>
     <value>menu.operacoes/comunicacao.menuText/comunicacoes.impressao.menuText:/Comunicacao/Impressao/listView.seam</value>
+    <value>menu.operacoes/comunicacao.menuText/comunicacoes.responder.menuText:/Comunicacao/Responder/listView.seam</value>
 </items>

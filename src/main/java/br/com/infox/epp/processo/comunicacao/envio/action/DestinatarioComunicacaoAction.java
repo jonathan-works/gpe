@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.ejb.Remove;
-import javax.ejb.Stateful;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -21,6 +19,7 @@ import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.transaction.Transactional;
 import br.com.infox.epp.localizacao.LocalizacaoSearch;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
@@ -39,7 +38,6 @@ import br.com.infox.seam.util.ComponentUtil;
 
 @Named(DestinatarioComunicacaoAction.NAME)
 @ViewScoped
-@Stateful
 public class DestinatarioComunicacaoAction implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -79,10 +77,8 @@ public class DestinatarioComunicacaoAction implements Serializable{
 		this.perfilAssinatura = perfilAssinatura;
 	}
 	
-	@Remove
-	public void destroy() {}
-	
 	//TODO ver como colocar esse método no service
+	@Transactional
 	public void persistDestinatarios() throws DAOException {
 		destinatarioComunicacaoService.removeDestinatariosModeloComunicacaoList(destinatariosExcluidos);
 		destinatarioComunicacaoService.gravaDestinatariosModeloComunicacaoList(modeloComunicacao.getDestinatarios());
@@ -172,30 +168,6 @@ public class DestinatarioComunicacaoAction implements Serializable{
 		}
 	}
 	
-	@Deprecated
-	public void gerenciarRelator() { //FIXME Método subistituido pelo adicionar relatoria após alteração de usabilidade. Verificar clientes para excluir.
-		PessoaFisica relator = getRelator();
-		if (modeloComunicacao.getEnviarRelatoria()) {
-			if (!isPessoaFisicaNaListaDestinatarios(relator)) {
-				DestinatarioModeloComunicacao destinatario = new DestinatarioModeloComunicacao();
-				destinatario.setDestinatario(relator);
-				destinatario.setModeloComunicacao(modeloComunicacao);
-				destinatario.setPrazo(getPrazoDefaultByTipoComunicacao(modeloComunicacao.getTipoComunicacao()));
-				modeloComunicacao.getDestinatarios().add(destinatario);
-				participanteProcessoComunicacaoList.adicionarIdPessoa(relator.getIdPessoa());
-			}
-		} else {
-			DestinatarioModeloComunicacao destinatarioRelator = null;
-			for (DestinatarioModeloComunicacao destinatarioModeloComunicacao : modeloComunicacao.getDestinatarios()) {
-				if (destinatarioModeloComunicacao.getDestinatario() != null && destinatarioModeloComunicacao.getDestinatario().equals(relator)) {
-					destinatarioRelator = destinatarioModeloComunicacao;
-					break;
-				}
-			}
-			removerDestinatario(destinatarioRelator);
-		}
-	}
-
     public void adicionarRelatoria() {
         modeloComunicacao.setEnviarRelatoria(true);
         PessoaFisica relator = getRelator();

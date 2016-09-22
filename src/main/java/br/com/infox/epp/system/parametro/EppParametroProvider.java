@@ -53,8 +53,6 @@ public class EppParametroProvider implements Serializable, ParametroProvider {
 
 	private void initParametrosControleAcesso() {
 		final String grupo = "controleAcesso";
-		create(grupo, "termoAdesao", ModeloDocumento_.tituloModeloDocumento, ModeloDocumento_.tituloModeloDocumento)
-				.addFilter(isTrue(ModeloDocumento_.ativo));
 		create(grupo, "usuarioExternoPodeVerDocExcluido", FieldType.BOOLEAN);
 		create(grupo, "somenteUsuarioInternoVerMotivoExclusaoDoc", FieldType.BOOLEAN);
 		create(grupo, "authorizationSecret", FieldType.STRING);
@@ -91,6 +89,8 @@ public class EppParametroProvider implements Serializable, ParametroProvider {
 		.addFilter(isTrue(Fluxo_.publicado));
 		create("comunicacao", "codigoFluxoComunicacaoInterna", Fluxo_.fluxo, Fluxo_.codFluxo).addFilter(isTrue(Fluxo_.ativo))
 		.addFilter(isTrue(Fluxo_.publicado));
+		create("comunicacao", "codigoRaizResponsavelAssinaturaLocalizacao", Localizacao_.localizacao, Localizacao_.codigo)
+		    .addFilter(isTrue(Localizacao_.ativo)).addFilter(isNull(Localizacao_.estruturaPai));
 	}
 
 	private void initParametrosSistema() {

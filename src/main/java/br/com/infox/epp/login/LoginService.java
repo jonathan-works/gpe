@@ -8,17 +8,13 @@ import javax.inject.Inject;
 import javax.naming.NamingException;
 import javax.security.auth.login.LoginException;
 
-import org.jboss.seam.Component;
-
 import br.com.infox.core.messages.InfoxMessages;
-import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.manager.ldap.LDAPManager;
 import br.com.infox.epp.access.service.AuthenticatorService;
 import br.com.infox.epp.access.service.PasswordService;
 import br.com.infox.epp.access.type.UsuarioEnum;
-import br.com.infox.epp.system.manager.ParametroManager;
 import br.com.infox.seam.exception.BusinessException;
 
 @Stateless
@@ -37,16 +33,6 @@ public class LoginService {
     @Inject
     private AuthenticatorService authenticatorService;
     
-    protected String getDomainName() {
-        final ParametroManager parametroManager = (ParametroManager) Component.getInstance(ParametroManager.NAME);
-        return parametroManager.getValorParametro("ldapDomainName");
-    }
-
-    protected String getProviderUrl() {
-        final ParametroManager parametroManager = (ParametroManager) Component.getInstance(ParametroManager.NAME);
-        return parametroManager.getValorParametro("ldapProviderUrl");
-    }
-    
     private boolean autenticarBanco(String login, String senha) {
         UsuarioLogin usuario = usuarioLoginManager.getUsuarioLoginByLogin(login);
         if(usuario == null) {
@@ -64,14 +50,14 @@ public class LoginService {
     }
     
     private boolean autenticarLdap(String login, String senha) {
-    	String providerUrl = getProviderUrl();
-    	String domainName = getDomainName();
-    	if (StringUtil.isEmpty(providerUrl)) return false;
+    	
 		try {
-			UsuarioLogin usuario = ldapManager.autenticarLDAP(login, senha, providerUrl, domainName);
-			authenticatorService.checkValidadeUsuarioLogin(usuario, UsuarioEnum.P);
-	        usuarioLoginManager.persist(usuario);
-	        return true;
+			UsuarioLogin usuario = ldapManager.autenticarLDAP(login, senha);
+			if (usuario != null){
+			    authenticatorService.checkValidadeUsuarioLogin(usuario, UsuarioEnum.P);
+	                    usuarioLoginManager.persist(usuario);
+			}
+	                return usuario != null;
 		} catch (NamingException e) {
 			logger.log(Level.WARNING, "ldapException", e);
 			return false;

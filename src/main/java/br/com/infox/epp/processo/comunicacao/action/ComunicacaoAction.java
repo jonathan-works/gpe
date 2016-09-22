@@ -153,9 +153,6 @@ public class ComunicacaoAction implements Serializable {
 	}
 	
 	public void clearCacheModelos() {
-		for (ModeloComunicacao modeloComunicacao : modeloComunicacaoRascunhoList.getResultList()) {
-			modeloComunicacaoManager.detach(modeloComunicacao);
-		}
 		modeloComunicacaoRascunhoList.refresh();
 		this.comunicacoes = null;
 		this.destinatario = null;

@@ -175,7 +175,7 @@
 							<a:ajax event="change" execute="@this" render="responsaveisAssinatura" />
 						</wi:selectBooleanCheckbox>
 						<s:div rendered="#{envioComunicacaoController.finalizada and not envioComunicacaoController.modeloComunicacao.finalizada
-						and envioComunicacaoController.canChooseResponsavelAssinatura()}"
+							and envioComunicacaoController.canChooseResponsavelAssinatura()}"
 							style="display:inline-block">
 							<div>
 								<wi:outputText id="mensagemSelecionarLocalizacaoResponsavelAssinatura"
@@ -204,7 +204,8 @@
 					            	listener="#{envioComunicacaoController.verificaExistenciaUsuario()}"/>
 					        </wi:selectOneMenuEntity>
 				        </s:div>
-				        <s:fragment rendered="#{envioComunicacaoController.modeloComunicacao.finalizada or not envioComunicacaoController.canChooseResponsavelAssinatura()}">
+				        <s:fragment rendered="#{(envioComunicacaoController.modeloComunicacao.finalizada or not envioComunicacaoController.canChooseResponsavelAssinatura())
+				        	and envioComunicacaoController.exibirResponsaveisAssinatura}">
 				        	<wi:outputText id="localizacaoRespAssinatura" label="#{infoxMessages['comunicacao.localizacaoRespAssinatura']}" 
 				        		value="#{envioComunicacaoController.modeloComunicacao.localizacaoResponsavelAssinatura.caminhoCompletoFormatado}"/>
 				        	<wi:outputText id="perfilRespAssinatura" label="#{infoxMessages['comunicacao.perfilRespAssinatura']}"
@@ -231,7 +232,7 @@
 		</s:div>
 	</s:div>
    <h:form id="buttonsTaskPageComunicacaoForm">
-		<s:fragment rendered="#{envioComunicacaoController.expedida and envioComunicacaoController.inTask}">
+		<s:fragment rendered="#{envioComunicacaoController.inTask and (envioComunicacaoController.expedida or envioComunicacaoController.exibirTransicoes)}">
 			<!-- O ui:include tenta incluir o facelet mesmo se o rendered estiver falso -->
 			<ui:include src="#{envioComunicacaoController.inTask ? '/WEB-INF/xhtml/components/form/buttons/taskButtons.xhtml' : ''}" />
 		</s:fragment>

@@ -216,7 +216,7 @@ public class FluxoMergeService {
                 variableAccesses = tasks.iterator().next().getTaskController().getVariableAccesses();
             } else if (node instanceof StartState) {
                 Task task = instance.getTaskMgmtDefinition().getStartTask();
-                if (task != null) {
+                if (task != null && task.getTaskController() != null) {
                     variableAccesses = task.getTaskController().getVariableAccesses();
                 }
             }

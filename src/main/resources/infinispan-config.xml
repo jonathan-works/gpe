@@ -2,14 +2,14 @@
 <infinispan xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="urn:infinispan:config:5.2 http://www.infinispan.org/schemas/infinispan-config-5.2.xsd"
         xmlns="urn:infinispan:config:5.2">
-
+        
 	<!-- Default configuration is appropriate for entity/collection caching. -->
 	<namedCache name="entity">
 		<locking isolationLevel="READ_COMMITTED" concurrencyLevel="1000" lockAcquisitionTimeout="15000" useLockStriping="false" />
 		<eviction maxEntries="10000" strategy="LRU" />
 		<expiration maxIdle="100000" />
 		<lazyDeserialization enabled="true" />
-		<transaction transactionMode="NON_TRANSACTIONAL" />
+		<transaction transactionMode="NON_TRANSACTIONAL" transactionManagerLookupClass="org.infinispan.transaction.lookup.GenericTransactionManagerLookup"/>
 	</namedCache>
 
 	<!-- A config appropriate for query caching. Does not replicate queries. -->
@@ -17,7 +17,7 @@
 		<locking isolationLevel="READ_COMMITTED" concurrencyLevel="1000" lockAcquisitionTimeout="15000" useLockStriping="false" />
 		<eviction maxEntries="10000" strategy="LRU" />
 		<expiration maxIdle="100000" />
-		<transaction transactionMode="NON_TRANSACTIONAL" />
+		<transaction transactionMode="NON_TRANSACTIONAL" transactionManagerLookupClass="org.infinispan.transaction.lookup.GenericTransactionManagerLookup"/>
 	</namedCache>
 
 	<!-- Optimized for timestamp caching. A clustered timestamp cache is required 

@@ -4,7 +4,7 @@
 	<groupId>br.com.infox.epp</groupId>
 	<artifactId>epp</artifactId>
 	<packaging>war</packaging>
-  <version>2.13.6</version>
+	<version>2.13.6</version>
 	<name>epp</name>
 	<url>http://www.infox.com.br</url>
 	<dependencyManagement>
@@ -12,7 +12,7 @@
 			<dependency>
 				<groupId>org.jboss.seam</groupId>
 				<artifactId>bom</artifactId>
-        <version>2.3.9-6-1</version>
+				<version>2.3.9-6-2</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -42,12 +42,12 @@
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
-      <version>1.8.3</version>
-    </dependency>
-    <dependency>
-      <groupId>io.jsonwebtoken</groupId>
-      <artifactId>jjwt</artifactId>
-      <version>0.6.0</version>
+			<version>1.8.3</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.6.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
@@ -58,7 +58,7 @@
 			<groupId>org.jboss.seam</groupId>
 			<artifactId>jboss-seam</artifactId>
 			<scope>compile</scope>
-      <version>2.3.9-6-1</version><!--$NO-MVN-MAN-VER$ -->
+			<version>2.3.9-6-2</version><!--$NO-MVN-MAN-VER$ -->
 			<type>jar</type>
 			<exclusions>
 				<exclusion>
@@ -119,7 +119,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-jpamodelgen</artifactId>
-			<version>4.3.8.Final</version>
+			<version>4.3.8.Final</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -142,15 +142,15 @@
 			<version>4.4.3.Final</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 		<dependency>
-		<groupId>org.infinispan</groupId>
-		<artifactId>infinispan-core</artifactId>
-		<version>5.2.7.Final</version>
-		<scope>provided</scope>
-	</dependency>
+			<groupId>org.infinispan</groupId>
+			<artifactId>infinispan-core</artifactId>
+			<version>5.2.7.Final</version><!--$NO-MVN-MAN-VER$ -->
+			<scope>provided</scope>
+		</dependency>
 		<dependency>
 			<artifactId>dom4j</artifactId>
 			<groupId>dom4j</groupId>
-			<version>1.6</version>
+			<version>1.6</version><!--$NO-MVN-MAN-VER$ -->
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -163,62 +163,62 @@
 			<artifactId>richfaces</artifactId>
 			<type>jar</type>
 			<scope>compile</scope>
-      <version>4.5.13.Final</version>
+			<version>4.5.13.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>18.0</version>
+			<version>18.0</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.cssparser</groupId>
 			<artifactId>cssparser</artifactId>
-      <version>0.9.18</version>
+			<version>0.9.18</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 		<dependency>
 			<groupId>br.com.infox</groupId>
 			<artifactId>epp-cdi</artifactId>
-	  <version>1.3.3</version>
+			<version>1.3.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.primefaces</groupId>
 			<artifactId>primefaces</artifactId>
-      <version>5.3</version>
-    </dependency>
-    <dependency>
-      <groupId>org.primefaces.extensions</groupId>
-      <artifactId>primefaces-extensions</artifactId>
-      <version>4.0.0</version>
-    </dependency>
-    <dependency>
-		<groupId>org.primefaces.themes</groupId>
-		<artifactId>bootstrap</artifactId>
-		<version>1.0.8</version>
-	</dependency>
+			<version>5.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.primefaces.extensions</groupId>
+			<artifactId>primefaces-extensions</artifactId>
+			<version>4.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.primefaces.themes</groupId>
+			<artifactId>bootstrap</artifactId>
+			<version>1.0.8</version>
+		</dependency>
 		<dependency>
 			<groupId>org.jbpm.jbpm3</groupId>
 			<artifactId>jbpm-jpdl</artifactId>
-            <version>3.4.5-5</version>
+			<version>3.4.5-5</version><!--$NO-MVN-MAN-VER$ -->
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jbpm.jbpm3</groupId>
 			<artifactId>jbpm-identity</artifactId>
-            <version>3.4.5-5</version>
+			<version>3.4.5-5</version>
 			<scope>compile</scope>
 			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz</artifactId>
-			<version>2.2.1</version>
+			<version>2.2.1</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
-        <artifactId>bcpkix-jdk15on</artifactId>
-        <version>1.54</version>
-    </dependency>    
-    <dependency>
+			<artifactId>bcpkix-jdk15on</artifactId>
+			<version>1.54</version>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-highlighter</artifactId>
 			<version>3.6.2</version>
@@ -265,12 +265,12 @@
 			<groupId>org.apache.solr</groupId>
 			<artifactId>solr-core</artifactId>
 			<version>3.6.2</version>
-      <exclusions>
-          <exclusion>
-              <artifactId>servlet-api</artifactId>
-              <groupId>javax.servlet</groupId>
-          </exclusion>
-      </exclusions>
+			<exclusions>
+				<exclusion>
+					<artifactId>servlet-api</artifactId>
+					<groupId>javax.servlet</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.jxls</groupId>
@@ -314,7 +314,7 @@
 		<dependency>
 			<groupId>br.com.infox</groupId>
 			<artifactId>componentes</artifactId>
-      <version>1.3.7</version>
+			<version>1.3.7</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -387,102 +387,108 @@
 			<artifactId>reflections</artifactId>
 			<version>0.9.9</version>
 		</dependency>
-    <dependency>
-        <groupId>net.coobird</groupId>
-        <artifactId>thumbnailator</artifactId>
-        <version>0.4.8</version>
-    </dependency>
+		<dependency>
+			<groupId>net.coobird</groupId>
+			<artifactId>thumbnailator</artifactId>
+			<version>0.4.8</version>
+		</dependency>
 		<dependency>
 			<groupId>br.com.infox</groupId>
-		<artifactId>rest-client</artifactId>
-		<version>1.0.3</version>
-	</dependency>
-	<dependency>
-		<groupId>commons-codec</groupId>
-		<artifactId>commons-codec</artifactId>
-		<version>1.10</version>
+			<artifactId>rest-client</artifactId>
+			<version>1.0.3</version>
 		</dependency>
-	<dependency>
-		<groupId>br.com.infox</groupId>
-		<artifactId>epp-services</artifactId>
-		<classifier>rest</classifier>
-		<version>1.0.0</version>
-	</dependency>
-        <dependency>
-            <groupId>br.com.infox.certificadoDigital</groupId>
-            <artifactId>certificado-digital</artifactId>
-            <version>1.0.4</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.cxf</groupId>
-                    <artifactId>cxf-rt-rs-client</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.cxf</groupId>
-                    <artifactId>cxf-rt-transports-http-hc</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.jaxrs</groupId>
-                    <artifactId>jackson-jaxrs-json-provider</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.bouncycastle</groupId>
-                    <artifactId>bcprov-jdk15</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.bouncycastle</groupId>
-                    <artifactId>bcmail-jdk15</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.commons</groupId>
-                    <artifactId>commons-lang3</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.pivot</groupId>
-                    <artifactId>pivot-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.google.code.gson</groupId>
-                    <artifactId>gson</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.httpcomponents</groupId>
-                    <artifactId>httpclient</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>br.com.infox</groupId>
-                    <artifactId>infox-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-io</groupId>
-                    <artifactId>commons-io</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-codec</groupId>
-                    <artifactId>commons-codec</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.pivot</groupId>
-                    <artifactId>pivot-wtk</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.validation</groupId>
-                    <artifactId>validation-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.pivot</groupId>
-                    <artifactId>pivot-charts</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.pivot</groupId>
-                    <artifactId>pivot-wtk-terra</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.pivot</groupId>
-                    <artifactId>pivot-web</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.10</version><!--$NO-MVN-MAN-VER$ -->
+		</dependency>
+		<dependency>
+			<groupId>br.com.infox</groupId>
+			<artifactId>epp-services</artifactId>
+			<classifier>rest</classifier>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.18.1-GA</version><!--$NO-MVN-MAN-VER$ -->
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>br.com.infox.certificadoDigital</groupId>
+			<artifactId>certificado-digital</artifactId>
+			<version>1.0.4</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.cxf</groupId>
+					<artifactId>cxf-rt-rs-client</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.cxf</groupId>
+					<artifactId>cxf-rt-transports-http-hc</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.fasterxml.jackson.jaxrs</groupId>
+					<artifactId>jackson-jaxrs-json-provider</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bcprov-jdk15</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bcmail-jdk15</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.commons</groupId>
+					<artifactId>commons-lang3</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.pivot</groupId>
+					<artifactId>pivot-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.google.code.gson</groupId>
+					<artifactId>gson</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.httpcomponents</groupId>
+					<artifactId>httpclient</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>br.com.infox</groupId>
+					<artifactId>infox-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-io</groupId>
+					<artifactId>commons-io</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-codec</groupId>
+					<artifactId>commons-codec</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.pivot</groupId>
+					<artifactId>pivot-wtk</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>javax.validation</groupId>
+					<artifactId>validation-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.pivot</groupId>
+					<artifactId>pivot-charts</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.pivot</groupId>
+					<artifactId>pivot-wtk-terra</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.pivot</groupId>
+					<artifactId>pivot-web</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 	</dependencies>
 	<build>
 		<resources>
@@ -520,7 +526,7 @@
 					<include>**/*.properties</include>
 					<include>**/*.csv</include>
 					<include>**/*.sql</include>
-          <include>/rsa-keypair/**/*</include>
+					<include>/rsa-keypair/**/*</include>
 				</includes>
 			</testResource>
 			<testResource>
@@ -611,7 +617,7 @@
 								<exclude>**/*.import.less</exclude>
 							</excludes>
 						</configuration>
-            <phase>generate-sources</phase>
+						<phase>generate-sources</phase>
 						<goals>
 							<goal>compile</goal>
 						</goals>
@@ -621,7 +627,7 @@
 			<plugin>
 				<groupId>pl.project13.maven</groupId>
 				<artifactId>git-commit-id-plugin</artifactId>
-        <version>2.1.15</version>
+				<version>2.1.15</version>
 				<executions>
 					<execution>
 						<goals>
@@ -641,55 +647,45 @@
 					</gitDescribe>
 				</configuration>
 			</plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.10</version>
-                <executions>
-                  <execution>
-                    <id>copy</id>
-                    <phase>prepare-package</phase>
-                    <goals>
-                      <goal>copy</goal>
-                    </goals>
-                    <configuration>
-                      <artifactItems>
-                        <artifactItem>
-                          <groupId>br.com.infox.certificadoDigital</groupId>
-                          <artifactId>certificado-digital</artifactId>
-                          <classifier>jar-with-dependencies</classifier>
-                          <overWrite>true</overWrite>
-                          <outputDirectory>${project.build.directory}/assinador-auto-assinado</outputDirectory>
-                          <destFileName>certificado_digital.jar</destFileName>
-                        </artifactItem>
-                      </artifactItems>
-                    </configuration>
-                  </execution>
-                </executions>
-            </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.10</version>
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>br.com.infox.certificadoDigital</groupId>
+									<artifactId>certificado-digital</artifactId>
+									<classifier>jar-with-dependencies</classifier>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.build.directory}/assinador-auto-assinado</outputDirectory>
+									<destFileName>certificado_digital.jar</destFileName>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.6</version>
 				<configuration>
 					<attachClasses>true</attachClasses>
-					<classifier>${db.classifier}.${dep.classifier}</classifier>
 					<webResources>
-						<resource>
-							<directory>${basedir}/profiles/${db.classifier}</directory>
-							<filtering>true</filtering>
-							<targetPath>WEB-INF/classes</targetPath>
-							<includes>
-								<include>seam.quartz.properties</include>
-							</includes>
-						</resource>
 						<resource>
 							<directory>${basedir}/src/main/webapp</directory>
 							<filtering>false</filtering>
 							<excludes>
 								<exclude>WEB-INF/web.xml</exclude>
 								<exclude>WEB-INF/components.xml</exclude>
-                                <exclude>WEB-INF/jboss-deployment-structure.xml</exclude>
 							</excludes>
 						</resource>
 						<resource>
@@ -698,16 +694,15 @@
 							<includes>
 								<include>WEB-INF/web.xml</include>
 								<include>WEB-INF/components.xml</include>
-                                <include>WEB-INF/jboss-deployment-structure.xml</include>
 							</includes>
 						</resource>
-                        <resource>
-				<directory>${project.build.directory}/assinador-auto-assinado</directory>
-                            <includes>
-                                <include>certificado_digital.jar</include>
-                            </includes>
-                            <targetPath>certificado</targetPath>
-                        </resource>
+						<resource>
+							<directory>${project.build.directory}/assinador-auto-assinado</directory>
+							<includes>
+								<include>certificado_digital.jar</include>
+							</includes>
+							<targetPath>certificado</targetPath>
+						</resource>
 					</webResources>
 				</configuration>
 			</plugin>
@@ -761,31 +756,15 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.build.timestamp.format>yyyy-MM-dd_HH-mm-ss</maven.build.timestamp.format>
 		<epp.name>epp</epp.name>
-		<epp.datasource.name>EPADataSource</epp.datasource.name>
-		<epp.datasourcebin.name>EPADataSourceBin</epp.datasourcebin.name>
-		<epp.datasourcequartz.name>EPAQuartzDataSource</epp.datasourcequartz.name>
-		<epp.datasource.jndi.prefix>java:jboss/datasources/</epp.datasource.jndi.prefix>
-		<epp.transaction.class>org.hibernate.transaction.JBossTransactionManagerLookup</epp.transaction.class>
-		<hibernate.cache.region.class>org.jboss.as.jpa.hibernate4.infinispan.InfinispanRegionFactory</hibernate.cache.region.class>
 		<userTransaction.jndi>java:jboss/UserTransaction</userTransaction.jndi>
-		<epp.mail.session>java:jboss/mail/${epp.name}</epp.mail.session>
-		<epp.transactionManager.jndi>java:jboss/TransactionManager</epp.transactionManager.jndi>
-		<desenvolvimento>false</desenvolvimento>
 		<producao>true</producao>
 		<log.jbpm>WARNING</log.jbpm>
 		<log.hibernate.sql>ERROR</log.hibernate.sql>
 		<project.stage>Production</project.stage>
-		<dep.classifier>prod</dep.classifier>
-		<hibernate.dialect>br.com.infox.hibernate.postgres.dialect.InfoxPostgreSQLDialect</hibernate.dialect>
-		<quartz.delegate>org.quartz.impl.jdbcjobstore.PostgreSQLDelegate</quartz.delegate>
-		<database.type>PostgreSQL</database.type>
-		<db.classifier>postgresql</db.classifier>
-    <optional.oracle.module>true</optional.oracle.module>
-    <session.factory.jndi>java:/sessionFactoryEPA</session.factory.jndi>
-    <epp.quartz.schedulerDelay>600</epp.quartz.schedulerDelay>
+		<desenvolvimento>false</desenvolvimento>
 	</properties>
 	<profiles>
-    <profile>
+		<profile>
 			<id>producao</id>
 		</profile>
 		<profile>
@@ -797,76 +776,92 @@
 				<log.jbpm>INFO</log.jbpm>
 				<log.hibernate.sql>INFO</log.hibernate.sql>
 				<dep.classifier>dev</dep.classifier>
-        <epp.quartz.schedulerDelay>90</epp.quartz.schedulerDelay>
+				<epp.quartz.schedulerDelay>90</epp.quartz.schedulerDelay>
 			</properties>
 		</profile>
 		<profile>
-			<id>sqlserver</id>
-			<properties>
-				<hibernate.dialect>br.com.infox.hibernate.sqlserver.dialect.InfoxSQLServer2012Dialect</hibernate.dialect>
-				<quartz.delegate>org.quartz.impl.jdbcjobstore.MSSQLDelegate</quartz.delegate>
-				<database.type>SQLServer</database.type>
-				<db.classifier>sqlserver</db.classifier>
-			</properties>
-		</profile>
-		<profile>
-      <id>oracle</id>
-      <properties>
-        <hibernate.dialect>br.com.infox.hibernate.oracle.dialect.InfoxOracleDialect</hibernate.dialect>
-        <quartz.delegate>org.quartz.impl.jdbcjobstore.oracle.OracleDelegate</quartz.delegate>
-        <database.type>Oracle</database.type>
-        <db.classifier>oracle</db.classifier>
-        <optional.oracle.module>false</optional.oracle.module>
-      </properties>
-    </profile>
-    <profile>
-			<id>postgresql</id>
-		</profile>
-		<profile>
-			<id>tomcat</id>
-			<properties>
-				<epp.datasource.jndi.prefix>openejb:Resource/</epp.datasource.jndi.prefix>
-				<epp.transaction.class>org.apache.openejb.hibernate.TransactionManagerLookup</epp.transaction.class>
-				<hibernate.cache.region.class>org.hibernate.cache.infinispan.InfinispanRegionFactory</hibernate.cache.region.class>
-        <epp.mail.session>openejb:Resource/mail/${epp.name}</epp.mail.session>
-				<epp.transactionManager.jndi>java:comp/TransactionManager</epp.transactionManager.jndi>
-        <session.factory.jndi>java:comp/env/EPAPersistenceUnit</session.factory.jndi>
-        <userTransaction.jndi>java:comp/UserTransaction</userTransaction.jndi>
-			</properties>
-			<dependencies>
-				<dependency>
-					<groupId>org.javassist</groupId>
-					<artifactId>javassist</artifactId>
-					<version>3.18.1-GA</version>
-					<scope>provided</scope>
-				</dependency>
-			</dependencies>
-		</profile>
-		<profile>
-			<id>jboss-eap</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<dependencies>
-				<dependency>
-					<groupId>org.jboss.as</groupId>
-					<artifactId>jboss-as-arquillian-container-managed</artifactId>
-					<scope>test</scope>
-				</dependency>
-			</dependencies>
+			<id>change-version</id>
+			<userTransaction.jndi>java:comp/UserTransaction</userTransaction.jndi>
 			<build>
+				<defaultGoal>validate</defaultGoal>
 				<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-failsafe-plugin</artifactId>
 						<version>2.16</version>
-						<configuration>
-							<systemPropertyVariables>
-								<arquillian.launch>jbossas-managed</arquillian.launch>
-								<jboss_management_port>9999</jboss_management_port>
-								<jboss_port_offset>0</jboss_port_offset>
-							</systemPropertyVariables>
-						</configuration>
+						<executions>
+							<execution>
+								<id>catch-new-version</id>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<phase>validate</phase>
+								<configuration>
+									<systemPropertyVariables>
+										<arquillian.launch>jbossas-managed</arquillian.launch>
+										<jboss_management_port>9999</jboss_management_port>
+										<jboss_port_offset>0</jboss_port_offset>
+									</systemPropertyVariables>
+									<exportAntProperties>true</exportAntProperties>
+								</configuration>
+							</execution>
+						</executions>
+						<dependencies>
+							<dependency>
+								<groupId>org.apache.ant</groupId>
+								<artifactId>ant</artifactId>
+								<version>1.8.4</version>
+							</dependency>
+						</dependencies>
+					</plugin>
+					<defaultGoal>validate</defaultGoal>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.7</version>
+						<executions>
+							<execution>
+								<id>catch-new-version</id>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<phase>validate</phase>
+								<configuration>
+									<target>
+										<!-- == catch new version in a prompt == -->
+										<input
+											message="Defina nova versão para o artefato '${project.artifactId}' do grupo '${project.groupId}': (atual '${project.version}'): "
+											addproperty="version.epp" />
+									</target>
+									<exportAntProperties>true</exportAntProperties>
+								</configuration>
+							</execution>
+						</executions>
+						<dependencies>
+							<dependency>
+								<groupId>org.apache.ant</groupId>
+								<artifactId>ant</artifactId>
+								<version>1.8.4</version>
+							</dependency>
+						</dependencies>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>versions-maven-plugin</artifactId>
+						<version>1.3.1</version>
+						<executions>
+							<execution>
+								<id>set-new-version</id>
+								<goals>
+									<goal>set</goal>
+								</goals>
+								<phase>validate</phase>
+								<configuration>
+									<generateBackupPoms>false</generateBackupPoms>
+									<newVersion>${version.epp}</newVersion>
+								</configuration>
+							</execution>
+						</executions>
 					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
@@ -879,33 +874,11 @@
 								<goals>
 									<goal>clean</goal>
 								</goals>
-								<configuration>
-									<excludeDefaultDirectories>true</excludeDefaultDirectories>
-									<filesets>
-										<fileset>
-											<directory>${env.JBOSS_HOME}/standalone/deployments</directory>
-											<includes>
-												<include>**/*</include>
-											</includes>
-										</fileset>
-										<fileset>
-											<directory>${env.JBOSS_HOME}/standalone/tmp</directory>
-											<includes>
-												<include>**/*</include>
-											</includes>
-										</fileset>
-										<fileset>
-											<directory>${env.JBOSS_HOME}/standalone/data</directory>
-											<includes>
-												<include>**/*</include>
-											</includes>
-										</fileset>
-									</filesets>
-								</configuration>
 							</execution>
 						</executions>
 					</plugin>
 				</plugins>
+
 			</build>
 		</profile>
 	</profiles>
@@ -917,12 +890,12 @@
 		<repository>
 			<id>infox-releases</id>
 			<name>Infox Releases</name>
-      <url>http://ci.infox.intranet:8081/nexus/content/repositories/infox-releases/</url>
+			<url>http://ci.infox.intranet:8081/nexus/content/repositories/infox-releases/</url>
 		</repository>
 		<snapshotRepository>
 			<id>infox-snapshots</id>
 			<name>Infox Snapshots</name>
-      <url>http://ci.infox.intranet:8081/nexus/content/repositories/infox-snapshots/</url>
+			<url>http://ci.infox.intranet:8081/nexus/content/repositories/infox-snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 </project>

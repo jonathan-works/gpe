@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:infox="http://www.infox.com.br/jsf"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:i="http://java.sun.com/jsf/composite/infox"
+	template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
+
+	<ui:define name="title">#{infoxMessages['comunicacao.responder']}</ui:define>
+
+	<ui:define name="body">
+
+		<infox:tabPanel switchType="ajax" activeTab="#{responderComunicacaoController.tab}" id="comunicacaoTabPanel">
+
+			<h:form>
+				<infox:tabHeaders />
+			</h:form>
+
+			<infox:tab id="list" name="comunicacoes" immediate="true" title="#{infoxMessages['comunicacao.comunicacoes']}"
+				action="#{responderComunicacaoController.onClickTabComunicacaoes}">
+
+				<wi:dataTable values="#{responderComunicacaoList.list(15)}" bean="#{responderComunicacaoList}" 
+					tableTitle="#{infoxMessages['comunicacao.comunicacoes']}" id="responderComunicacaoList"
+					clearAction="#{responderComunicacaoList.newInstance()}">
+					
+					<ui:define name="searchForm">
+					
+						<wi:searchForm formId="pesquisaComunicacaoForm" formTitle="#{infoxMessages['searchForm.title']}">
+							
+							<i:inputText id="numeroProcessoOrigemFilter" 
+								label="#{infoxMessages['processo.numeroProcessoRoot']}"
+								value="#{bean.numeroProcessoRoot}"/>
+							
+							<i:inputText id="numeroProcessoFilter" 
+								label="#{infoxMessages['processo.numeroProcesso']}"
+								value="#{bean.numeroProcesso}"/>
+							
+							<i:selectOneMenu id="tipoComunicacaoFilter"
+								value="#{bean.tipoComunicacao}"  selectStyle="max-width: 260px;"
+								label="#{infoxMessages['comunicacao.tipoComunicacao']}"
+								items="#{responderComunicacaoList.tipoComunicacaoList}"
+								converterId="org.jboss.seam.ui.EntityConverter" />
+								
+							<wi:inputDataPeriodo id="dataCienciaFilter"
+								valueDateFrom="#{bean.dataCienciaFrom}"
+								valueDateTo="#{bean.dataCienciaTo}"
+								label="#{infoxMessages['comunicacao.dataCiencia']}"/>
+								
+							<wi:inputDataPeriodo id="dataRespostaFilter"
+								valueDateFrom="#{bean.dataRespostaFrom}"
+								valueDateTo="#{bean.dataRespostaTo}"
+								label="#{infoxMessages['comunicacao.prazoResposta']}"/>
+								
+						</wi:searchForm>
+						
+					</ui:define>
+					
+					<ui:define name="headerToolBar"/>
+					
+					<ui:define name="toolBar">
+						<h:form>
+							<p:commandLink update=":comunicacaoTabPanel" actionListener="#{responderComunicacaoController.onSelectComunicacao(row.idComunicacao)}"
+								process="@this" onstart="infox.showLoading()" oncomplete="infox.hideLoading()">
+								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['button.selecionar']}"/>
+								<f:setPropertyActionListener value="responder" target="#{responderComunicacaoController.tab}"/>
+							</p:commandLink>
+						</h:form>
+					</ui:define>
+					
+					<wi:columnOutputText columnId="numeroProcessoRoot" columnHeader="#{infoxMessages['processo.numeroProcessoRoot']}"
+						value="#{row.numeroProcessoRoot}"/>
+					
+					<wi:columnOutputText columnId="numeroProcesso" columnHeader="#{infoxMessages['processo.numeroProcesso']}"
+						value="#{row.numeroProcesso}"/>
+						
+					<wi:columnOutputText columnId="destinatario" columnHeader="#{infoxMessages['comunicacao.destinatario']}"
+						value="#{row.destinatario}" hideOrder="true"/>
+						
+					<wi:columnOutputText columnId="dataCiencia" columnHeader="#{infoxMessages['comunicacao.dataCiencia']}"
+						value="#{row.dataCiencia}"/>
+						
+					<wi:columnOutputText columnId="prazoResposta" columnHeader="#{infoxMessages['comunicacao.prazoResposta']}"
+						value="#{row.prazoResposta}"/>
+						
+				</wi:dataTable>
+
+			</infox:tab>
+
+			<infox:tab id="responder" name="responder" title="#{infoxMessages['comunicacao.responder']}"
+				rendered="#{not empty responderComunicacaoController.processoComunicacao}">
+
+				<ui:include src="/WEB-INF/taskpages/responderComunicacao.xhtml">
+					<ui:param name="showTaskButtons" value="false" />
+				</ui:include>
+
+			</infox:tab>
+
+		</infox:tabPanel>
+
+	</ui:define>
+
+</ui:composition>

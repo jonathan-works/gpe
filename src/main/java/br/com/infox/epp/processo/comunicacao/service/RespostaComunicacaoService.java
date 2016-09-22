@@ -15,7 +15,10 @@ import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.context.exe.ContextInstance;
 import org.jbpm.graph.exe.ProcessInstance;
 
+import br.com.infox.cdi.dao.Dao;
+import br.com.infox.cdi.qualifier.GenericDao;
 import br.com.infox.certificado.exception.CertificadoException;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -23,8 +26,10 @@ import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.assinador.DadosAssinatura;
 import br.com.infox.epp.certificado.entity.TipoAssinatura;
 import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.PessoaRespostaComunicacao;
 import br.com.infox.epp.processo.comunicacao.dao.DocumentoRespostaComunicacaoDAO;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
@@ -36,6 +41,7 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
+import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.util.ComponentUtil;
 import br.com.infox.util.time.DateRange;
 
@@ -55,6 +61,12 @@ public class RespostaComunicacaoService {
 	private DocumentoManager documentoManager;
 	@Inject
 	private CalendarioEventosManager calendarioEventosManager;
+	@Inject
+	protected InfoxMessages infoxMessages;
+	@Inject
+	private PessoaRespostaComunicacaoSearch pessoaRespostaComunicacaoSearch;
+	@Inject @GenericDao
+	private Dao<PessoaRespostaComunicacao, Long> pessoaRespostaComunicacaoDao;
 	
 	private AssinaturaDocumentoService assinaturaDocumentoService = ComponentUtil.getComponent(AssinaturaDocumentoService.NAME);
 	
@@ -142,8 +154,25 @@ public class RespostaComunicacaoService {
 		}
 		contextInstance.setVariable(VariaveisJbpmComunicacao.RESPOSTA_TEMPESTIVA, respostaTempestiva);
 	}
+	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void adicionarPessoaResponderComunicacao(Processo comunicacao, PessoaFisica pessoaFisica) {
+	    PessoaRespostaComunicacao pessoaRespostaComunicacao = pessoaRespostaComunicacaoSearch.findByComunicacaoAndPessoa(comunicacao.getIdProcesso(), pessoaFisica.getIdPessoa());
+	    if ( pessoaRespostaComunicacao != null ) {
+	        throw new BusinessException(infoxMessages.get("comunicacao.responder.pessoa.exists"));
+	    }
+	    pessoaRespostaComunicacao = new PessoaRespostaComunicacao();
+	    pessoaRespostaComunicacao.setComunicacao(comunicacao);
+	    pessoaRespostaComunicacao.setPessoaFisica(pessoaFisica);
+	    pessoaRespostaComunicacaoDao.persist(pessoaRespostaComunicacao);
+	}
 
 	boolean isRespostaTempestiva(Date dataCiencia, Date dataLimiteCumprimento, Date dataResposta) {
 		return new DateRange(dataCiencia, dataLimiteCumprimento).contains(dataResposta);
 	}
+
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void removerPessoaResponderComunicacao(PessoaRespostaComunicacao pessoaResponderComunicacao) {
+        pessoaRespostaComunicacaoDao.remove(pessoaResponderComunicacao);
+    }
 }

@@ -1,5 +1,6 @@
 package br.com.infox.epp.documento;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.ejb.Stateless;
@@ -13,11 +14,14 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
+import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento_;
 import br.com.infox.epp.entrega.documentos.Entrega;
 import br.com.infox.epp.entrega.documentos.Entrega_;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.pessoa.entity.PessoaFisica_;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin_;
@@ -80,6 +84,17 @@ public class DocumentoBinSearch extends PersistenceController {
         Join<?, Documento> docSigiloso = sigiloDocumento.join(SigiloDocumento_.documento, JoinType.INNER);
         subquery.select(cb.literal(1)).where(cb.equal(docSigiloso.get(Documento_.documentoBin), documentoBin));
         return cb.exists(subquery);
+    }
+
+    public DocumentoBin getTermoAdesaoByUUID(String uid) {
+        CriteriaBuilder cb = EntityManagerProducer.getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<DocumentoBin> cq = cb.createQuery(DocumentoBin.class);
+        Root<PessoaFisica> pf = cq.from(PessoaFisica.class);
+        From<?, DocumentoBin> docBin = pf.join(PessoaFisica_.termoAdesao, JoinType.INNER);
+        cq = cq.select(docBin).where(cb.equal(docBin.get(DocumentoBin_.uuid), UUID.fromString(uid)));
+        List<DocumentoBin> resultList = EntityManagerProducer.getEntityManager().createQuery(cq).getResultList();
+
+        return resultList == null || resultList.isEmpty() ? null : resultList.get(0);
     }
 
 }

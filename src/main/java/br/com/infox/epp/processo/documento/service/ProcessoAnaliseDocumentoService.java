@@ -17,7 +17,6 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.jboss.seam.bpm.BusinessProcess;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jbpm.graph.exe.ProcessInstance;
 
@@ -118,13 +117,7 @@ public class ProcessoAnaliseDocumentoService {
 				}
 			}
 		}
-		Long processIdOriginal = BusinessProcess.instance().getProcessId();
-		Long taskIdOriginal = BusinessProcess.instance().getTaskId();
-		BusinessProcess.instance().setProcessId(null);
-		BusinessProcess.instance().setTaskId(null);
 		iniciarProcessoService.iniciarProcesso(processoAnalise, variaveisJbpm);
-		BusinessProcess.instance().setProcessId(processIdOriginal);
-		BusinessProcess.instance().setTaskId(taskIdOriginal);
 	}
 
 	protected Boolean hasPedidoProrrogacaoPrazo(List<Documento> documentos, DestinatarioModeloComunicacao destinatarioComunicacao) {

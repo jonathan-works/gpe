@@ -15,8 +15,7 @@
     <s:fragment rendered="#{empty rendered ? true : rendered}">
 
       <a:jsFunction name="apagarGrupo" action="#{assinadorController.apagarGrupo()}" execute="@none" render="@none" />
-      
-      <a:commandButton type="button" styleClass="buttons" disabled="#{disableb}" onbegin="infox.showLoading();" style="#{signButtonStyle}"
+      <a:commandButton type="button" styleClass="buttons #{styleClass}" disabled="#{disabled}" onbegin="infox.showLoading();" style="#{signButtonStyle}"
       		action="#{elFunctions.invokeMethod(preSignAction)}" execute="#{execute}" rendered="#{empty rendered? 'true' : rendered}"
       		oncomplete="infox.hideLoading(); if (#{!facesContext.validationFailed}) {infox.CertDig.#{id}.init();}"
             render="#{empty id ? 'divApplet' : id}"

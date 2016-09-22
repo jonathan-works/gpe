@@ -6,12 +6,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -27,7 +26,7 @@ public class UsuarioRestImpl implements UsuarioRest {
 	@Inject
 	private UsuarioLoginRestService usuarioLoginRestService;
 	@Inject
-	private UsuarioResource usuarioResource;
+	private UsuarioResourceImpl usuarioResource;
 	@Inject
 	private LoginRestService loginRestService;
 	//Servico movido devido ao bug #74700

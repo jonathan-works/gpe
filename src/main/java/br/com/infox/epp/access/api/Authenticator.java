@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import javax.naming.NamingException;
 import javax.security.auth.login.LoginException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jboss.seam.Component;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Install;
@@ -36,6 +37,7 @@ import com.google.common.base.Strings;
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.access.TermoAdesaoService;
 import br.com.infox.epp.access.crud.TermoAdesaoAction;
 import br.com.infox.epp.access.dao.UsuarioLoginDAO;
 import br.com.infox.epp.access.dao.UsuarioPerfilDAO;
@@ -77,7 +79,7 @@ public class Authenticator implements Serializable {
     @Inject
     protected InfoxMessages infoxMessages;
     @Inject
-    private PapelManager papelManager;
+    private TermoAdesaoService termoAdesaoService;
     @Inject
     private SecurityUtil securityUtil;
     @Inject
@@ -158,13 +160,14 @@ public class Authenticator implements Serializable {
     private boolean hasToSignTermoAdesao(UsuarioLogin usuario) throws LoginException {
         
         PessoaFisica pessoaFisica = usuario.getPessoaFisica();
-        boolean hasToSign = papelManager.hasToSignTermoAdesao(usuario);
-        if(hasToSign){
-        	if (pessoaFisica == null) {
-            	throw new LoginException(infoxMessages.get(AuthenticatorService.LOGIN_ERROR_SEM_PESSOA_FISICA));
-            }
-            hasToSign = pessoaFisica.getTermoAdesao() == null;
+        boolean hasToSign = BeanManager.INSTANCE.getReference(PapelManager.class).hasToSignTermoAdesao(usuario);
+        if (hasToSign){
+            if (pessoaFisica == null)
+               throw new LoginException(String.format(infoxMessages.get(AuthenticatorService.LOGIN_ERROR_SEM_PESSOA_FISICA), usuario));
+            
+            hasToSign = !termoAdesaoService.isTermoAdesaoAssinado(pessoaFisica.getCpf());
         }
+        
         
         Contexts.getConversationContext().set(TermoAdesaoAction.TERMO_ADESAO_REQ, hasToSign);
         return hasToSign;
@@ -244,9 +247,14 @@ public class Authenticator implements Serializable {
     protected boolean ldapLoginExists(final Credentials credentials) {
         boolean ldapUserExists = false;
         try {
+            String providerUrl = getProviderUrl();
+            if (StringUtils.isEmpty(providerUrl) || "-1".equals(providerUrl)){
+                return false;
+            }
             LDAPManager ldapManager = BeanManager.INSTANCE.getReference(LDAPManager.class);
-            UsuarioLogin user = ldapManager.autenticarLDAP(credentials.getUsername(), credentials.getPassword(), getProviderUrl(), getDomainName());
-            usuarioLoginManager.persist(user);
+            UsuarioLogin user = ldapManager.autenticarLDAP(credentials.getUsername(), credentials.getPassword(), providerUrl, getDomainName());
+            if (user != null)
+                usuarioLoginManager.persist(user);
             ldapUserExists = user != null;
         } catch (NamingException | DAOException e) {
             LOG.warn("ldapException", e);

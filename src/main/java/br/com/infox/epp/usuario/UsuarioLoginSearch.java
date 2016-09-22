@@ -10,6 +10,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -23,6 +24,10 @@ import br.com.infox.epp.access.entity.UsuarioPerfil_;
 import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.entity.PessoaFisica_;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento_;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin_;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -131,5 +136,21 @@ public class UsuarioLoginSearch extends PersistenceController {
 		cq.select(cb.count(usuario.get(UsuarioLogin_.idUsuarioLogin)));
 		return getEntityManager().createQuery(cq).getSingleResult() > 0;
 	}
+
+    public boolean getAssinouTermoAdesao(String cpf) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        
+        Root<PessoaFisica> pessoa = cq.from(PessoaFisica.class);
+        From<?, DocumentoBin> termoAdesao = pessoa.join(PessoaFisica_.termoAdesao, JoinType.INNER);
+        From<?, AssinaturaDocumento> assinatura = termoAdesao.join(DocumentoBin_.assinaturas, JoinType.INNER);
+        From<?, UsuarioLogin> usuario = assinatura.join(AssinaturaDocumento_.usuario, JoinType.INNER);
+        From<?, PessoaFisica> pessoaFisica = usuario.join(UsuarioLogin_.pessoaFisica, JoinType.INNER);
+        
+        cq=cq.where(cb.equal(pessoaFisica.get(PessoaFisica_.cpf), cpf));
+        cq=cq.select(cb.countDistinct(assinatura));
+        
+        return getEntityManager().createQuery(cq).getSingleResult() > 0L;
+    }
 	
 }

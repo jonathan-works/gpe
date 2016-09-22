@@ -1,7 +1,9 @@
 package br.com.infox.epp.entrega.checklist;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -15,6 +17,7 @@ import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.marcador.Marcador;
 
 @Named
 @Stateless
@@ -48,21 +51,28 @@ public class ChecklistVariableService implements Serializable {
     }
 
     public String listBySituacao(String nomePasta, String codigoSituacao) {
-    	return listBySituacao(nomePasta, codigoSituacao, true);
+    	return listBySituacao(nomePasta, codigoSituacao, true, false);
     }
-    
-    public String listBySituacao(String nomePasta, String codigoSituacao, boolean mostrarIncluidoPor) {
+
+    public String listBySituacao(String nomePasta, String codigoSituacao, boolean mostrarIncluidoPor, boolean mostrarMarcadores) {
         Processo processo = retrieveProcessoFromExecutionContext();
         Pasta pasta = pastaManager.getPastaByNome(nomePasta, processo);
         if (pasta == null || pasta.getId() == null) return "";
-        return listBySituacao(processo.getIdProcesso(), pasta.getId(), codigoSituacao, mostrarIncluidoPor);
+        return listBySituacao(processo.getIdProcesso(), pasta.getId(), codigoSituacao, mostrarIncluidoPor, mostrarMarcadores);
     }
 
     public String listBySituacao(Integer idProcesso, Integer idPasta, String codigoSituacao) {
-    	return listBySituacao(idProcesso, idPasta, codigoSituacao, true);
+    	return listBySituacao(idProcesso, idPasta, codigoSituacao, true, false);
     }
-    
-    public String listBySituacao(Integer idProcesso, Integer idPasta, String codigoSituacao, boolean mostrarIncluidoPor) {
+
+    public String mudarEsseNomeDepois(String nomePasta, String codigoSituacao, boolean mostrarMarcadores) {
+        Processo processo = retrieveProcessoFromExecutionContext();
+        Pasta pasta = pastaManager.getPastaByNome(nomePasta, processo);
+        if (pasta == null || pasta.getId() == null) return "";
+        return "";
+    }
+
+    public String listBySituacao(Integer idProcesso, Integer idPasta, String codigoSituacao, boolean mostrarIncluidoPor, boolean mostrarMarcadores) {
         ChecklistSituacao situacao = ChecklistSituacao.valueOf(codigoSituacao);
         if (situacao == null) return "";
         Checklist checklist = checklistSearch.getByIdProcessoIdPasta(idProcesso, idPasta);
@@ -83,7 +93,21 @@ public class ChecklistVariableService implements Serializable {
         response += "</thead><tbody>"; 
         for (ChecklistDoc clDoc : clDocList) {
             response += "<tr>";
-            response += "<td style=\"text-align: center;\">" + clDoc.getDocumento().getClassificacaoDocumento().getDescricao() + "</td>";
+            if (mostrarMarcadores) {
+                response += "<td style=\"text-align: center;\">" + clDoc.getDocumento().getClassificacaoDocumento().getDescricao();
+                Set<Marcador> marcadores = clDoc.getDocumento().getDocumentoBin().getMarcadores();
+                if (marcadores != null && !marcadores.isEmpty()) {
+                    response += " (";
+                    for (Iterator<Marcador> iterator = marcadores.iterator(); iterator.hasNext();) {
+                        Marcador marcador = iterator.next();
+                        response += iterator.hasNext() ? marcador.getCodigo() + ", " : marcador.getCodigo();
+                    }
+                    response += ")";
+                }
+                response += "</td>";
+            } else {
+                response += "<td style=\"text-align: center;\">" + clDoc.getDocumento().getClassificacaoDocumento().getDescricao() + "</td>";
+            }
             if(mostrarIncluidoPor) {
             	response += "<td style=\"text-align: center;\">" + clDoc.getDocumento().getUsuarioInclusao().getNomeUsuario() + "</td>";
             }

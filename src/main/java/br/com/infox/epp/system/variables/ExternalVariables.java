@@ -116,7 +116,11 @@ public class ExternalVariables implements Serializable {
     
     @Factory(EMAIL_USUARIO_LOGADO)
     public String getEmailUsuarioLogado() {
-        return extractObjectStringValue(Authenticator.getUsuarioLogado().getEmail());
+        try {
+            return Authenticator.getUsuarioLogado().getEmail();
+        } catch (NullPointerException e){
+            return "-";
+        }
     }
     
     @Factory(NUMERO_PROCESSO_ATUAL)

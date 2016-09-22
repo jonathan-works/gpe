@@ -17,11 +17,11 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
-import br.com.infox.core.server.ApplicationServerService;
 import br.com.infox.epp.documento.type.Expression;
 import br.com.infox.epp.documento.type.ExpressionResolver;
 import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
 import br.com.infox.epp.documento.type.SeamExpressionResolver;
+import br.com.infox.epp.system.Configuration;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
@@ -32,7 +32,6 @@ public class ListaDadosSqlDAO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	public static final String NAME = "listaDadosSqlDAO";
-	public static final String LISTA_DADOS_DS = "ListaDadosDataSource";
 	
 	private final LogProvider logger = Logging.getLogProvider(ListaDadosSqlDAO.class);
     
@@ -40,7 +39,7 @@ public class ListaDadosSqlDAO implements Serializable {
     
     public DataSource getDataSource() {
     	if (dataSource == null){
-    		dataSource = ApplicationServerService.instance().getDataSource(LISTA_DADOS_DS);
+    		dataSource = Configuration.getInstance().getApplicationServer().getListaDadosDataSource();
     	}
     	return dataSource;
     }
