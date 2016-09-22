@@ -23,6 +23,6 @@ public class JbpmDispatcher implements Serializable {
         JbpmConfiguration jbpmConfiguration = JbpmConfiguration.getInstance();
         DbPersistenceServiceFactory persistenceServiceFactory = (DbPersistenceServiceFactory) jbpmConfiguration.getServiceFactory(Services.SERVICENAME_PERSISTENCE);
         persistenceServiceFactory.setSessionFactory(HibernateUtil.getSessionFactoryImpl());
+        persistenceServiceFactory.setSessionExpression("#{hibernateSession}");
     }
-
 }
