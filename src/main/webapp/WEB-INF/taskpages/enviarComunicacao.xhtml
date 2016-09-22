@@ -94,14 +94,11 @@
           		</s:div>
 			</h:form>
 
-			<!-- Painel dos Documentos Anexos -->
-			<ui:include src="/WEB-INF/taskpages/comunicacao/anexosComunicacao.xhtml"></ui:include>
-			
 			<!-- Ofício da Comunicação -->
 			<h:form id="documentoComunicacaoForm">
-				<s:div style="vertical-align: top;" rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
+				<s:div style="vertical-align: top; margin-top: 1em;" rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
 				<rich:collapsiblePanel id="editorDocumentoComunicacaoPanel" header="#{infoxMessages['comunicacao.panelEditorComunicacaoTitulo']}" 
-					expanded="false" bodyClass="dtable-p-b" styleClass="dtable-p full-sized">
+					bodyClass="dtable-p-b" styleClass="dtable-p full-sized">
 					<s:div>
 	    				<wi:selectOneMenuEntity id="classificacaoComunicacao"
 	    					label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
@@ -167,6 +164,9 @@
 				</rich:collapsiblePanel>
 				</s:div>
 				
+				<!-- Painel dos Documentos Anexos -->
+				<ui:include src="/WEB-INF/taskpages/comunicacao/anexosComunicacao.xhtml"></ui:include>
+			
 				<rich:panel id="panelFinalizacaoDaElaboracaoComunicacao" style="margin-top: 1em; margin-bottom: 1em;">
 					<!-- Finalização e Responsáveis pela Expedição da Comunicação -->
 					<s:div id="responsaveisAssinatura">
@@ -229,6 +229,10 @@
 						oncomplete="if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"/>
 				</s:div>
 			</h:form>
+			
+			<!-- Popup dos Documentos Anexos -->
+			<ui:include src="/WEB-INF/taskpages/comunicacao/anexosComunicacaoPopup.xhtml"></ui:include>
+			
 		</s:div>
 	</s:div>
    <h:form id="buttonsTaskPageComunicacaoForm">

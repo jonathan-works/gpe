@@ -5,18 +5,12 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:wi="http://www.itx.com.br/jsf"
 	xmlns:rich="http://richfaces.org/rich"
-	xmlns:a="http://richfaces.org/a4j"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:infox="http://www.infox.com.br/jsf"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:i="http://java.sun.com/jsf/composite/infox">
+	xmlns:a="http://richfaces.org/a4j">
 
 	<!-- Documentos vinculados à comunicação -->
 	<rich:panel id="documentos" header="#{infoxMessages['comunicacao.documentosAnexados']}"
 		switchType="client" style="margin:1em 0em 1em;" bodyClass="dtable-p-b" styleClass="dtable-p full-sized"
 		rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
-		<h:form>
 			<rich:dataTable id="documentosSelecionados" styleClass="dtable rf-dt-crud"
 				value="#{envioComunicacaoController.modeloComunicacao.documentos}" var="row">
 
@@ -69,134 +63,6 @@
 					<h:outputText value="#{row.documento.documentoBin.sizeFormatado}" />
 				</rich:column>
 			</rich:dataTable>
-		</h:form>
 	</rich:panel>
-
-	<script type="text/javascript">
-        function closeAddDocumentosPopup() {
-        	#{rich:component('addDocumentosAnexosComunicacaoPopup')}.hide();
-        }
-    </script>
-    
-	<!-- Documentos disponíveis para serem vinculados à comunicação -->
-	<rich:popupPanel id="addDocumentosAnexosComunicacaoPopup" header="#{infoxMessages['comunicacao.anexarDocumentos']}}"
-		modal="true" minWidth="1000" minHeight="400" autosized="true" maxHeight="800">
-		<f:facet name="controls">
-			<h:graphicImage id="closeBtnAddAnexoComunicacaoPopup"
-				value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"
-				onclick="closeAddDocumentosPopup();" style="cursor: pointer;" />
-		</f:facet>
-		<s:div id="documentosDisponiveisComunicacaoDiv">
-			<wi:dataTable id="documentosProcesso"
-				values="#{documentoDisponivelComunicacaoList.list(10)}"
-				bean="#{documentoDisponivelComunicacaoList}" rowId="#{row.id}"
-				searchFormStyleClass="documentos-disponiveis-comunicacao"
-				panelStyleClass="documentos-disponiveis-comunicacao"
-				showGrid="#{not envioComunicacaoController.modeloComunicacao.finalizada}"
-				tableTitle="#{infoxMessages['comunicacao.documentosDisponiveis']}">
-				<ui:define name="searchForm">
-					<rich:panel header="#{infoxMessages['searchForm.title']}" style="margin-bottom: 1rem;"
-						rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
-						<h:form id="comunicacaoMarcadorForm" style="margin-bottom: 1em;">
-							<div class="property-field-edit" style="display: inline-block; width: 100%;">
-								<div class="property-field-edit-name">
-									<h:outputLabel value="#{infoxMessages['marcador.marcadores']}" for="marcadorFilter" />
-								</div>
-								<div class="property-field-edit-value">
-									<p:autoComplete id="marcadorFilter" multiple="true"
-										value="#{documentoDisponivelComunicacaoList.codigoMarcadores}"
-										completeMethod="#{documentoDisponivelComunicacaoList.autoCompleteMarcadores}"
-										itemLabel="#{item}" itemValue="#{item}" var="item"
-										minQueryLength="3" queryDelay="600" styleClass="autocomplete-popup"
-										emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
-										<p:ajax event="itemSelect" update="@this" process="@this" />
-										<p:ajax event="itemUnselect" update="@this" process="@this" />
-									</p:autoComplete>
-								</div>
-							</div>
-							<div>
-								<h:commandButton id="btnFiltrarDocumentos"
-									value="#{infoxMessages['button.pesquisar']}"
-									action="#{documentoDisponivelComunicacaoList.refresh()}"
-									styleClass="buttons">
-									<p:ajax immediate="true" process="@form"
-										update="@form @(.documentos-disponiveis-comunicacao)"
-										onstart="infox.showLoading();" oncomplete="infox.hideLoading();" />
-								</h:commandButton>
-		
-								<h:commandButton id="btnLimparFiltro"
-									value="#{infoxMessages['button.limpar']}"
-									action="#{documentoDisponivelComunicacaoList.newInstance()}"
-									styleClass="buttons">
-									<p:ajax immediate="true" process="@form"
-										update="@form @(.documentos-disponiveis-comunicacao)"
-										onstart="infox.showLoading();" oncomplete="infox.hideLoading();" />
-								</h:commandButton>
-							</div>
-						</h:form>
-						<rich:panel header="Pastas"
-							rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
-							<rich:list value="#{documentoComunicacaoAction.pastas}"
-								styleClass="folder-ul" rowClass="folder-li" var="pasta">
-								<h:form rendered="#{documentoComunicacaoAction.canSee(pasta)}" styleClass="rf-tr-nd">
-									<a:commandLink
-										render="documentosProcessoPanel, documentosProcessoSearchForm"
-										execute="@form" styleClass="folder" limitRender="true"
-										action="#{documentoDisponivelComunicacaoList.setPasta(pasta)}">
-										<h:graphicImage	url="#{layoutController.getResourceUrlByPath('/imagens/folder.png')}" title="#{pasta}" />
-										<h:outputText class="folder" value="#{eventCache.get('documentoDisponivelComunicacaoList.getTextoPasta(pasta)', pasta.id)}"/>
-									</a:commandLink>
-								</h:form>
-							</rich:list>
-						</rich:panel>
-					</rich:panel>
-				</ui:define>
-				<ui:define name="headerToolBar" />
-				<ui:define name="toolBar">
-					<h:form>
-						<a:commandLink
-							action="#{documentoComunicacaoAction.adicionarDocumento(row)}"
-							execute="@this" render="documentos" onclick="infox.showLoading();" oncomplete="closeAddDocumentosPopup(); infox.hideLoading();">
-							<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}" title="#{infoxMessages['button.add']}" />
-						</a:commandLink>
-						<a:commandLink execute="@this"
-							onclick="closeAddDocumentosPopup(); infox.editor['comunicacao'].insertText('#{documentoComunicacaoAction.getLink(row.documentoBin)}'); return false;">
-							<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/link.gif')}" title="#{infoxMessages['button.copiarLink']}" />
-						</a:commandLink>
-						<ui:include
-							src="/WEB-INF/xhtml/components/grid/processoDocumentoBin.xhtml">
-							<ui:param name="bin" value="#{row.documentoBin}" />
-							<ui:param name="header" value="#{row.descricao}" />
-							<ui:param name="hideSignature" value="true" />
-						</ui:include>
-					</h:form>
-				</ui:define>
 	
-				<wi:column hideOrder="true" columnHeader="#{infoxMessages['documentoProcesso.processoDocumento']}">
-					<div align="center">
-						<h:outputText value="#{row.descricao}" style="display: block;" />
-						<ui:repeat var="marcador" value="#{row.documentoBin.marcadoresList}">
-							<h:outputText value="#{marcador.codigo} " styleClass="marcadorLabel" />
-						</ui:repeat>
-					</div>
-				</wi:column>
-				<rich:column>
-					<f:facet name="header">#{infoxMessages['processoDocumento.classificacaoDocumento']}</f:facet>
-					<h:outputText value="#{row.classificacaoDocumento.descricao}" />
-				</rich:column>
-				<rich:column>
-					<f:facet name="header">#{infoxMessages['processoDocumento.tamanho']}</f:facet>
-					<h:outputText value="#{row.documentoBin.sizeFormatado}" />
-				</rich:column>
-			</wi:dataTable>
-		</s:div>
-	</rich:popupPanel>
-	<style type="text/css">
-		.autocomplete-popup {
-			width: 100%;
-		}
-		.autocomplete-popup > ul {
-			width: inherit;
-		}
-	</style>
 </ui:composition>

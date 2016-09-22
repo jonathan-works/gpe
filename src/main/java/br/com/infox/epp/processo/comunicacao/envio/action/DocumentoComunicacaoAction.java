@@ -94,7 +94,7 @@ public class DocumentoComunicacaoAction implements Serializable {
 	private void initEntityLists() {
 		documentoDisponivelComunicacaoList.setProcesso(modeloComunicacao.getProcesso().getProcessoRoot());
 		for (DocumentoModeloComunicacao documentoModelo : modeloComunicacao.getDocumentos()) {
-			documentoDisponivelComunicacaoList.adicionarIdDocumento(documentoModelo.getDocumento().getDocumentoBin().getId());
+			documentoDisponivelComunicacaoList.adicionarIdDocumento(documentoModelo.getDocumento().getId());
 		}
 	}
 
