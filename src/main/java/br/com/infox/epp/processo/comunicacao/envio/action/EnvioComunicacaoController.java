@@ -128,6 +128,7 @@ public class EnvioComunicacaoController implements Serializable {
 	private String idModeloComunicacaoVariableName;
 	private boolean isNew = true;
 	private boolean existeUsuarioLocalizacaoAssinatura = true;
+	private boolean existeParametroTipoComunicacao = false;
 	
 	@PostConstruct
 	public void init() {
@@ -159,6 +160,7 @@ public class EnvioComunicacaoController implements Serializable {
                     tiposComunicacao = new ArrayList<>(1);
                     tiposComunicacao.add(tipoComunicacao);
                     modeloComunicacao.setTipoComunicacao(tipoComunicacao);
+                    existeParametroTipoComunicacao = true;
                 }
             }
 
@@ -550,7 +552,7 @@ public class EnvioComunicacaoController implements Serializable {
 	}
 	
 	public boolean canChooseTipoComunicacao() {
-		return getTiposComunicacao() != null && getTiposComunicacao().size() > 1 && !getModeloComunicacao().getFinalizada();
+		return !existeParametroTipoComunicacao && !getModeloComunicacao().getFinalizada();
 	}
 	
 	public boolean canChooseResponsavelAssinatura() {
