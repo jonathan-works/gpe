@@ -417,7 +417,7 @@
 		<dependency>
 			<groupId>br.com.infox.certificadoDigital</groupId>
 			<artifactId>certificado-digital</artifactId>
-			<version>1.0.4</version>
+			<version>1.0.6</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.apache.cxf</groupId>
