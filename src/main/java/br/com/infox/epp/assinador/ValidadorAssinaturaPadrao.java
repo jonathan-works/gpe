@@ -87,18 +87,21 @@ public class ValidadorAssinaturaPadrao implements ValidadorAssinatura, Validador
 		} catch (CertPathValidatorException e) {
 			Reason reason = e.getReason();
 			if (reason == BasicReason.EXPIRED) {
-				logger.log(Level.SEVERE, "Certificado expirado", e);
+				logger.log(Level.WARNING, "Certificado expirado", e);
 				if (ParametroUtil.isProducao()) {
+				    logger.log(Level.SEVERE, "Certificado expirado", e);
 					throw new CertificadoException("Certificado expirado. ");
 				}
 			} else if (reason == BasicReason.NOT_YET_VALID) {
-				logger.log(Level.SEVERE, "Certificado ainda não válido", e);
+				logger.log(Level.WARNING, "Certificado ainda não válido", e);
 				if (ParametroUtil.isProducao()) {
+				    logger.log(Level.SEVERE, "Certificado ainda não válido", e);
 					throw new CertificadoException("O certificado ainda não está válido. ");
 				}
 			} else {
-				logger.log(Level.SEVERE, "Erro ao verificar a validade do certificado", e);
+				logger.log(Level.WARNING, "Erro ao verificar a validade do certificado", e);
 				if (ParametroUtil.isProducao()) {
+				    logger.log(Level.SEVERE, "Erro ao verificar a validade do certificado", e);
 					throw new CertificadoException(e.getMessage());
 				}
 			}
