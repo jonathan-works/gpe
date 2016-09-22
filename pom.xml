@@ -756,7 +756,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.build.timestamp.format>yyyy-MM-dd_HH-mm-ss</maven.build.timestamp.format>
 		<epp.name>epp</epp.name>
-		<userTransaction.jndi>java:jboss/UserTransaction</userTransaction.jndi>
 		<producao>true</producao>
 		<log.jbpm>WARNING</log.jbpm>
 		<log.hibernate.sql>ERROR</log.hibernate.sql>
@@ -781,7 +780,6 @@
 		</profile>
 		<profile>
 			<id>change-version</id>
-			<userTransaction.jndi>java:comp/UserTransaction</userTransaction.jndi>
 			<build>
 				<defaultGoal>validate</defaultGoal>
 				<plugins>
@@ -814,7 +812,6 @@
 							</dependency>
 						</dependencies>
 					</plugin>
-					<defaultGoal>validate</defaultGoal>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-antrun-plugin</artifactId>

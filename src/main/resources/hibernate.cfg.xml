@@ -55,9 +55,6 @@
     <!-- Simple memory-only cache -->
     
     <property name="hibernate.cache.provider_class">org.hibernate.cache.HashtableCacheProvider</property>
-
-    <!-- User Transaction JNDI -->
-    <property name="jta.UserTransaction">${userTransaction.jndi}</property>
     <!-- logging properties --> 
 <!--      <property name="hibernate.show_sql">${desenvolvimento}</property>
     <property name="hibernate.format_sql">false</property>
