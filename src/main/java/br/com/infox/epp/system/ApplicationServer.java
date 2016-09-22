@@ -20,6 +20,8 @@ public interface ApplicationServer {
     
     String getEpaDataSourceJndi();
     
+    String getUserTransactionJndi();
+    
     String getHibernateCacheRegionClass();
 
     String getHibernateJtaPlataform();

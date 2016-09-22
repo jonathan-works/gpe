@@ -10,8 +10,6 @@ import org.jbpm.JbpmConfiguration;
 import org.jbpm.persistence.db.DbPersistenceServiceFactory;
 import org.jbpm.svc.Services;
 
-import br.com.infox.hibernate.util.HibernateUtil;
-
 @Startup
 @Singleton
 public class JbpmDispatcher implements Serializable {
@@ -20,9 +18,10 @@ public class JbpmDispatcher implements Serializable {
     
     @PostConstruct
     private void init() {
+        Configuration configuration = Configuration.getInstance();
         JbpmConfiguration jbpmConfiguration = JbpmConfiguration.getInstance();
         DbPersistenceServiceFactory persistenceServiceFactory = (DbPersistenceServiceFactory) jbpmConfiguration.getServiceFactory(Services.SERVICENAME_PERSISTENCE);
-        persistenceServiceFactory.setSessionFactory(HibernateUtil.getSessionFactoryImpl());
         persistenceServiceFactory.setSessionExpression("#{hibernateSession}");
+        persistenceServiceFactory.getConfiguration().setProperty("jta.UserTransaction", configuration.getApplicationServer().getUserTransactionJndi());
     }
 }
