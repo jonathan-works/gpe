@@ -514,5 +514,10 @@
 	    </rich:dataTable>
 	    
     </infox:tab>
+    
+    <c:forEach var="tab" items="#{extensaoCrudUsuario.tabs}">
+    	<ui:include src="#{tab}" />
+    </c:forEach>
+    
   </ui:define>
 </ui:composition>
