@@ -205,20 +205,23 @@ public class FluxoMergeService {
        }
 	}
     
-    private List<String> getVariaveisDocumento(ProcessDefinition processDefinition) {
+    private List<String> getVariaveisDocumento(ProcessDefinition instance) {
         List<String> variaveis = new ArrayList<>();
-        List<Node> nodes = processDefinition.getNodes();
+        List<Node> nodes = instance.getNodes();
         for (Node node : nodes) {
-            if (!(node instanceof TaskNode)) {
-                continue;
-            }
-            TaskNode taskNode = (TaskNode) node;
-            Set<Task> tasks = taskNode.getTasks();
-            for (Task task : tasks) {
-                if (task.getTaskController() == null) {
-                    continue;
+            List<VariableAccess> variableAccesses = null;
+            if (node instanceof TaskNode) {
+                TaskNode taskNode = (TaskNode) node;
+                Set<Task> tasks = taskNode.getTasks();
+                variableAccesses = tasks.iterator().next().getTaskController().getVariableAccesses();
+            } else if (node instanceof StartState) {
+                Task task = instance.getTaskMgmtDefinition().getStartTask();
+                if (task != null) {
+                    variableAccesses = task.getTaskController().getVariableAccesses();
                 }
-                List<VariableAccess> variableAccesses = task.getTaskController().getVariableAccesses();
+            }
+
+            if (variableAccesses != null) {
                 for (VariableAccess variableAccess : variableAccesses) {
                     String[] mappedName = variableAccess.getMappedName().split(":");
                     VariableType type = VariableType.valueOf(mappedName[0]);
@@ -230,7 +233,7 @@ public class FluxoMergeService {
         }
         return variaveis;
     }
-    
+
     private void updatePostDeploy(ProcessDefinition processDefinition) {
         processoManager.atualizarProcessos(processDefinition.getId(), processDefinition.getName());
         tarefaManager.encontrarNovasTarefas();
