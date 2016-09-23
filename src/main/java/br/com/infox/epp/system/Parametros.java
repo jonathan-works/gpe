@@ -41,7 +41,8 @@ public enum Parametros {
             .addFilter(isTrue(ModeloDocumento_.ativo))),
     REST_THREAD_POOL_EXECUTOR_MAXIMUM_POOL_SIZE("restPublicApi", "restThreadPoolExecutorMaximumPoolSize"),
     REST_THREAD_POOL_EXECUTOR_CORE_POOL_SIZE("restPublicApi", "restThreadPoolExecutorCorePoolSize", true),
-    REST_THREAD_POOL_EXECUTOR_KEEP_ALIVE_TIME("restPublicApi", "restThreadPoolExecutorKeepAliveTime", true);
+    REST_THREAD_POOL_EXECUTOR_KEEP_ALIVE_TIME("restPublicApi", "restThreadPoolExecutorKeepAliveTime", true),
+    PRODUCAO("producao");
 
     private final String label;
     private final ParametroDefinition<?> parametroDefinition;
