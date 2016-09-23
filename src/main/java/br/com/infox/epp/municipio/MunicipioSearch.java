@@ -11,6 +11,8 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 
+import com.google.common.base.Strings;
+
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.system.Parametros;
 
@@ -58,5 +60,33 @@ public class MunicipioSearch {
 		query.where(cb.isTrue(from.get(Municipio_.ativo)), cb.equal(estado.get(Estado_.codigo), codigoUf));
 		query.orderBy(cb.asc(from.get(Municipio_.nome)));
 		return getEntityManager().createQuery(query).getResultList();
+	}
+	
+	public List<Municipio> getMunicipios(String queryNome, String codigoUf) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Municipio> query = cb.createQuery(Municipio.class);
+		Root<Municipio> from = query.from(Municipio.class);
+		Join<Municipio, Estado> estado = from.join(Municipio_.estado, JoinType.INNER);
+		query.where(cb.equal(estado.get(Estado_.codigo), codigoUf), cb.isTrue(from.get(Municipio_.ativo)));
+		if (!Strings.isNullOrEmpty(queryNome)) {
+			query.where(query.getRestriction(), cb.like(cb.lower(from.get(Municipio_.nome)), "%" + queryNome.toLowerCase() + "%"));
+		}
+		query.orderBy(cb.asc(from.get(Municipio_.nome)));
+		return getEntityManager().createQuery(query).getResultList();
+	}
+	
+	public Municipio getMunicipioByNome(String nome, String codigoUf) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Municipio> query = cb.createQuery(Municipio.class);
+		Root<Municipio> from = query.from(Municipio.class);
+		Join<Municipio, Estado> estado = from.join(Municipio_.estado, JoinType.INNER);
+		query.where(cb.equal(estado.get(Estado_.codigo), codigoUf), cb.isTrue(from.get(Municipio_.ativo)));
+		query.where(query.getRestriction(), cb.equal(cb.lower(from.get(Municipio_.nome)), nome.toLowerCase()));
+		query.orderBy(cb.asc(from.get(Municipio_.nome)));
+		try {
+			return getEntityManager().createQuery(query).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
 	}
 }
