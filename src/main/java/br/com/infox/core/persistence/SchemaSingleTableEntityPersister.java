@@ -2,7 +2,9 @@ package br.com.infox.core.persistence;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import javax.sql.DataSource;
 
@@ -59,10 +61,13 @@ public class SchemaSingleTableEntityPersister extends SingleTableEntityPersister
 		return persistentClass;
 	}
 	
+	private static final Set<String> EXECUTED_SET=new HashSet<>();
+	
 	private static void updateSchema(Table table, String username) {
 	    String schema = table.getSchema();
-	    if (schema != null) {
+	    if (schema != null && !EXECUTED_SET.contains(table.toString())) {
 	        table.setSchema(username.concat("_").concat(schema));
+	        EXECUTED_SET.add(table.toString());
 	    }
 	}
 
