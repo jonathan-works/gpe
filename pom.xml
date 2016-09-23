@@ -558,6 +558,33 @@
 					</gitDescribe>
 				</configuration>
 			</plugin>
+                        <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                               <artifactId>maven-dependency-plugin</artifactId>
+                               <version>2.10</version>
+                               <executions>
+                                       <execution>
+                                               <id>copy</id>
+                                               <phase>prepare-package</phase>
+                                               <goals>
+                                                       <goal>copy</goal>
+                                               </goals>
+                                               <configuration>
+                                                       <artifactItems>
+                                                               <artifactItem>
+                                                                       <groupId>br.com.infox.certificadoDigital</groupId>
+                                                                       <artifactId>certificado-digital</artifactId>
+                                                                       <version>0.0.4</version>
+                                                                       <classifier>jar-with-dependencies</classifier>
+                                                                       <overWrite>true</overWrite>
+                                                                       <outputDirectory>${project.build.directory}/assinador-auto-assinado</outputDirectory>
+                                                                       <destFileName>certificado_digital.jar</destFileName>
+                                                               </artifactItem>
+                                                       </artifactItems>
+                                               </configuration>
+                                       </execution>
+                               </executions>
+                       </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
@@ -581,6 +608,13 @@
 								<include>WEB-INF/components.xml</include>
 							</includes>
 						</resource>
+                                               <resource>
+                                                       <directory>${project.build.directory}/assinador-auto-assinado</directory>
+                                                       <includes>
+                                                               <include>certificado_digital.jar</include>
+                                                       </includes>
+                                                       <targetPath>certificado</targetPath>
+                                               </resource>
 					</webResources>
 				</configuration>
 			</plugin>
