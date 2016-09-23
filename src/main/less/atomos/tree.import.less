@@ -11,10 +11,12 @@
         z-index: 10;
         border-style: solid;
         border-width: 1px;
+        overflow: auto;
     }
     &-b.rf-cp-b {
         width:100%;
         overflow:auto;
+        position:absolute;
     }
     &-div-clear {
       height: 18px;
@@ -62,6 +64,8 @@
   }
   .rich-tree {
     text-align: left;
+    max-height: 300px;
+    max-width: 250px;
     &-nd.rf-drp-hlight {
       border-width: 1px;
       border-style: solid;
