@@ -17,6 +17,7 @@ import javax.persistence.TypedQuery;
 import br.com.infox.cdi.dao.Dao;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.DocumentoTemporario;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
@@ -41,6 +42,10 @@ public class DocumentoTemporarioDao extends Dao<DocumentoTemporario, Integer> {
         query.setParameter(PARAM_PROCESSO, processo);
         query.setParameter(PARAM_LOCALIZACAO, localizacao);
         return query.getResultList();
+    }
+
+    public List<DocumentoTemporario> listByProcesso(Processo processo, UsuarioPerfil usuarioPerfil, String order) {
+        return listByProcesso(processo, usuarioPerfil.getLocalizacao(), order);
     }
 
     @TransactionAttribute(TransactionAttributeType.MANDATORY)

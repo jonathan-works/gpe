@@ -32,7 +32,6 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.ArrayUtil;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.cdi.ViewScoped;
@@ -301,10 +300,10 @@ public class AnexarDocumentosView implements Serializable {
 
 	private List<DocumentoTemporarioWrapper> loadDocumentoTemporarioList() {
 		List<DocumentoTemporarioWrapper> dtList = new ArrayList<>();
-		Localizacao localizacao = Authenticator.getLocalizacaoAtual();
+		UsuarioPerfil usuarioPerfil = Authenticator.getUsuarioPerfilAtual();
 		if (getProcesso() != null) {
 			List<DocumentoTemporario> listByProcesso = documentoTemporarioManager.listByProcesso(getProcesso(),
-					localizacao, getOrder());
+					usuarioPerfil, getOrder());
 			for (DocumentoTemporario documentoTemporario : listByProcesso) {
 				dtList.add(new DocumentoTemporarioWrapper(documentoTemporario));
 			}

@@ -18,6 +18,7 @@ import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.PermissaoService;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
@@ -84,6 +85,10 @@ public class DocumentoTemporarioManager extends PersistenceController {
 
     public List<DocumentoTemporario> listByProcesso(Processo processo, Localizacao localizacao, String order) {
         return documentoTemporarioDao.listByProcesso(processo, localizacao, order);
+    }
+
+    public List<DocumentoTemporario> listByProcesso(Processo processo, UsuarioPerfil usuarioPerfil, String order) {
+        return documentoTemporarioDao.listByProcesso(processo, usuarioPerfil, order);
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
