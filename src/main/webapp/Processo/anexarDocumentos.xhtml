@@ -322,13 +322,10 @@
 								rendered="#{not isModelo}" render="@this" limitRender="true"
 								status=":status" styleClass="opacityHover"
 								onclick="infox.showLoading();"
-								oncomplete="infox.hideLoading(); infox.openPopUp('download#{row.documentoBin.id}', '#{pathResolver.contextPath}/downloadDocumento.seam?id=#{row.documentoBin.id}&amp;binario=true',screen.availWidth,screen.availHeight);">
+								oncomplete="infox.hideLoading(); infox.openPopUp('download#{row.documentoBin.id}', '#{fileDownloader.getDownloadUrl(row)}',screen.availWidth,screen.availHeight);">
 								<infox:flashcopy />
 								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
-								<f:setPropertyActionListener value="#{row}"
-									target="#{flash.documentoTemporario}" />
 							</a:commandLink>
-
 
 							<a:commandLink
 								oncomplete="#{rich:component('assinaturasDocumento')}.show();"

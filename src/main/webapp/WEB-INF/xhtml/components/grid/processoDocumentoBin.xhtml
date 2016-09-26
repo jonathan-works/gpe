@@ -20,7 +20,7 @@
         <span class="#{row.excluido ? 'inativo' : ''}" />
         <a:commandLink
             rendered="#{isModelo}" execute="@this" render="@form"
-            oncomplete="infox.openPopUp('PopUpDocumentoBin', '#{pathResolver.contextPath}/Processo/baixarDocumento.seam','1024');" >
+            oncomplete="infox.openPopUp('PopUpDocumentoBin', '#{fileDownloader.getDownloadUrl(bin)}','1024');" >
             <h:graphicImage styleClass="opacityHover" title="#{infoxMessages['processoDocumento.visualizar']}"
                 url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
             <f:setPropertyActionListener value="#{row.id}" target="#{flash.idDocumento}" />
@@ -29,11 +29,9 @@
         
         <a:commandLink
             rendered="#{!isModelo}" execute="@this" render="@form"
-            oncomplete="infox.openPopUp('PopUpDocumentoBin', '#{pathResolver.contextPath}/Processo/baixarDocumento.seam','1024');">
+            oncomplete="infox.openPopUp('PopUpDocumentoBin', '#{fileDownloader.getDownloadUrl(bin)}','1024');">
             <h:graphicImage styleClass="opacityHover" value="#{layoutController.getResourceUrlByPath('/imagens/mod/pdf.gif')}"
                 title="#{bin.nomeArquivo} (#{documentoDownloader.getFormattedKb(bin)})"/>
-            <f:setPropertyActionListener value="#{row.id}" target="#{flash.idDocumento}" />
-            <f:setPropertyActionListener value="#{true}" target="#{flash.binario}" />
         </a:commandLink>
         
         <wi:toolBarAssinatura idDocumento="#{row.id}" styleClass="opacityHover" renderedLock="#{bin.suficientementeAssinado}" />
