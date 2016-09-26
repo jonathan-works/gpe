@@ -65,13 +65,6 @@ public class ChecklistVariableService implements Serializable {
     	return listBySituacao(idProcesso, idPasta, codigoSituacao, true, false);
     }
 
-    public String mudarEsseNomeDepois(String nomePasta, String codigoSituacao, boolean mostrarMarcadores) {
-        Processo processo = retrieveProcessoFromExecutionContext();
-        Pasta pasta = pastaManager.getPastaByNome(nomePasta, processo);
-        if (pasta == null || pasta.getId() == null) return "";
-        return "";
-    }
-
     public String listBySituacao(Integer idProcesso, Integer idPasta, String codigoSituacao, boolean mostrarIncluidoPor, boolean mostrarMarcadores) {
         ChecklistSituacao situacao = ChecklistSituacao.valueOf(codigoSituacao);
         if (situacao == null) return "";
