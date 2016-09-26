@@ -98,18 +98,28 @@
             formTitle="#{infoxMessages['form.title']}">
             <wi:inputText
                 id="codFluxo"
+                rendered="#{not fluxoCrudAction.hasProcessoRunning}"
                 value="#{fluxoCrudAction.instance.codFluxo}"
                 required="true"
                 label="#{infoxMessages['fluxo.codFluxo']}"
                 maxlength="30" >
                 <f:validator validatorId="jsfComponentIdValidator" />
             </wi:inputText>
+            <wi:outputText id="codFluxoReadonly"
+                rendered="#{fluxoCrudAction.hasProcessoRunning}"
+                label="#{infoxMessages['fluxo.codFluxo']}"
+                value="#{fluxoCrudAction.instance.codFluxo}" />
             <wi:inputText
                 id="descricaoFluxo"
+                rendered="#{not fluxoCrudAction.hasProcessoRunning}"
                 required="true"
                 label="#{infoxMessages['fluxo.descricao']}"
                 value="#{fluxoCrudAction.instance.fluxo}" 
                 maxlength="100" />
+            <wi:outputText id="descricaoFluxoReadonly"
+                rendered="#{fluxoCrudAction.hasProcessoRunning}"
+                label="#{infoxMessages['fluxo.descricao']}"
+                value="#{fluxoCrudAction.instance.fluxo}" />
             <wi:inputNumber
                 id="prazoDias"
                 label="#{infoxMessages['fluxo.qtPrazo']}"
