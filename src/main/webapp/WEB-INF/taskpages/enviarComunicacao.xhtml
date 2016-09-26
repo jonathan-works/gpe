@@ -33,7 +33,7 @@
 					<infox:flashcopy/>
 				</a:commandButton>
 				<a:commandButton id="reabrirComunicacao" 
-					render="comunicacaoDiv" execute="@this"
+					render="comunicacaoDiv buttonsTaskPageComunicacaoForm" execute="@this"
 					value="#{infoxMessages['comunicacao.reabrir']}" 
 					styleClass="buttons"
 					rendered="#{envioComunicacaoController.modeloComunicacao.finalizada and not envioComunicacaoController.expedida}"
