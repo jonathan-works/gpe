@@ -7,7 +7,6 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.tree.AbstractTreeHandler;
 import br.com.infox.core.tree.EntityNode;
 import br.com.infox.epp.processo.partes.controller.AbstractParticipantesController;
-import br.com.infox.epp.processo.partes.controller.ParticipantesController;
 import br.com.infox.epp.processo.partes.controller.ParticipantesProcessoController;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 
