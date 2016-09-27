@@ -28,6 +28,8 @@ import org.camunda.bpm.model.bpmn.instance.bpmndi.BpmnShape;
 import org.camunda.bpm.model.bpmn.instance.dc.Bounds;
 import org.camunda.bpm.model.bpmn.instance.di.Waypoint;
 
+import br.com.infox.seam.exception.BusinessException;
+
 class BizagiBpmnAdapter implements BpmnAdapter {
 	
 	private BpmnModelInstance bizagiBpmnModel;
@@ -262,6 +264,9 @@ class BizagiBpmnAdapter implements BpmnAdapter {
 				}
 				process.getParentElement().removeChildElement(process);
 			}
+		}
+		if (bizagiBpmnModel.getModelElementsByType(Process.class).isEmpty()) {
+			throw new BusinessException("A definição de processo não contém um processo com nós");
 		}
 	}
 }
