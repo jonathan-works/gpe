@@ -16,7 +16,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-import br.com.infox.core.persistence.NativeScanner;
 import br.com.infox.core.server.ServerInfo;
 
 public class Configuration {
@@ -72,7 +71,6 @@ public class Configuration {
     public Properties configureJpa(Properties properties, String persistenceUnitName) {
         applicationServer.performJpaCustomProperties(properties);
         database.performJpaCustomProperties(properties);
-        properties.put("hibernate.ejb.resource_scanner", NativeScanner.class.getName());
         return properties;
     }
 

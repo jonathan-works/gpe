@@ -41,7 +41,7 @@ public class PersistenceUnitInfoWrapper implements PersistenceUnitInfo {
         this.transactionType = persistenceUnitInfo.getTransactionType();
         this.jtaDataSource = configuration.getDatabase().getJtaDataSource(persistenceUnitName);
         this.nonJtaDataSource = persistenceUnitInfo.getNonJtaDataSource();
-        this.mappingFileNames = performMappingFileNames(persistenceUnitInfo.getMappingFileNames(), persistenceUnitName);
+        this.mappingFileNames = persistenceUnitInfo.getMappingFileNames();
         this.jarFileUrls = persistenceUnitInfo.getJarFileUrls();
         this.persistenceUnitRootUrl = persistenceUnitInfo.getPersistenceUnitRootUrl();
         this.managedClassNames = persistenceUnitInfo.getManagedClassNames();
@@ -53,14 +53,6 @@ public class PersistenceUnitInfoWrapper implements PersistenceUnitInfo {
         this.classLoader = persistenceUnitInfo.getClassLoader();
     }
     
-    private List<String> performMappingFileNames(List<String> mappingFileNames, String persistenceUnitName) {
-        if (Configuration.EPA_PERSISTENCE_UNIT_NAME.equals(persistenceUnitName)) {
-            mappingFileNames.add("META-INF/extended-mappings.xml");
-            mappingFileNames.add("META-INF/extended-named-queries.xml");
-        }
-        return mappingFileNames;
-    }
-
     @Override
     public String getPersistenceUnitName() {
         return persistenceUnitName;

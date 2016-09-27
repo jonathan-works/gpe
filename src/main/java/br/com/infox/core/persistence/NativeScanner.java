@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -30,6 +31,8 @@ import org.hibernate.ejb.packaging.Scanner;
 import org.hibernate.internal.util.ReflectHelper;
 import org.hibernate.internal.util.StringHelper;
 
+import br.com.infox.epp.system.Configuration;
+
 public class NativeScanner implements Scanner {
 
     private static final String META_INF_ORM_XML = "META-INF/orm.xml";
@@ -38,7 +41,13 @@ public class NativeScanner implements Scanner {
     private static final int PACKAGE_FILTER_INDEX = 0;
     private static final int CLASS_FILTER_INDEX = 1;
     private static final int FILE_FILTER_INDEX = 2;
-    
+    private static final int FILE_EXTENDED_FILTER_INDEX = 3;
+
+    private String persistenceUnitName;
+
+    public NativeScanner(String persistenceUnitName) {
+        this.persistenceUnitName = persistenceUnitName;
+    }
 
     /**
      * This implementation does not honor the list of annotations and return
@@ -77,7 +86,7 @@ public class NativeScanner implements Scanner {
         StateJarVisitor stateJarVisitor = visitors.get(jar);
 
         if (stateJarVisitor == null) {
-
+            
             Filter[] filters = new Filter[3];
             filters[PACKAGE_FILTER_INDEX] = new PackageFilter(false, null) {
                 public boolean accept(String javaElementName) {
@@ -198,45 +207,59 @@ public class NativeScanner implements Scanner {
                 // swallow as we don't care about these files
             }
         }
+        loadExtendedMappingClasses(files);
         return files;
     }
-    
+
+    private void loadExtendedMappingClasses(Set<NamedInputStream> files) {
+        if (Configuration.EPA_PERSISTENCE_UNIT_NAME.equals(persistenceUnitName)) {
+            try {
+                Enumeration<URL> extendedMappings = getClass().getClassLoader().getResources("META-INF/extended-mappings.xml");
+                while (extendedMappings.hasMoreElements()) {
+                    URL file = extendedMappings.nextElement();
+                    files.add(new NamedInputStream(file.getPath(), file.openStream()));
+                }
+                extendedMappings = getClass().getClassLoader().getResources("META-INF/extended-named-queries.xml");
+                while (extendedMappings.hasMoreElements()) {
+                    URL file = extendedMappings.nextElement();
+                    files.add(new NamedInputStream(file.getPath(), file.openStream()));
+                }
+            } catch (IOException e) {
+                throw new IllegalStateException("Fail to read files extended-mappings.xml", e);
+            }
+        }
+    }
+
     public JarVisitor getVisitor(URL jarUrl, Filter[] filters, String entry) throws IllegalArgumentException {
         String protocol = jarUrl.getProtocol();
-        if ( "jar".equals( protocol ) ) {
-            return new JarProtocolVisitor( jarUrl, filters, entry );
-        }
-        else if ( StringHelper.isEmpty( protocol ) || "file".equals( protocol ) || "vfs".equals(protocol) || "vfszip".equals( protocol ) || "vfsfile".equals( protocol ) ) {
+        if ("jar".equals(protocol)) {
+            return new JarProtocolVisitor(jarUrl, filters, entry);
+        } else if (StringHelper.isEmpty(protocol) || "file".equals(protocol) || "vfs".equals(protocol) || "vfszip".equals(protocol)
+                || "vfsfile".equals(protocol)) {
             File file;
             try {
                 final String filePart = jarUrl.getFile();
-                if ( filePart != null && filePart.indexOf( ' ' ) != -1 ) {
-                    //unescaped (from the container), keep as is
-                    file = new File( jarUrl.getFile() );
+                if (filePart != null && filePart.indexOf(' ') != -1) {
+                    // unescaped (from the container), keep as is
+                    file = new File(jarUrl.getFile());
+                } else {
+                    file = new File(jarUrl.toURI().getSchemeSpecificPart());
                 }
-                else {
-                    file = new File( jarUrl.toURI().getSchemeSpecificPart() );
-                }
-            }
-            catch (URISyntaxException e) {
-                throw new IllegalArgumentException(
-                        "Unable to visit JAR " + jarUrl + ". Cause: " + e.getMessage(), e
-                );
+            } catch (URISyntaxException e) {
+                throw new IllegalArgumentException("Unable to visit JAR " + jarUrl + ". Cause: " + e.getMessage(), e);
             }
 
-            if ( file.isDirectory() ) {
-                return new ExplodedJarVisitor( jarUrl, filters, entry );
+            if (file.isDirectory()) {
+                return new ExplodedJarVisitor(jarUrl, filters, entry);
+            } else {
+                return new FileZippedJarVisitor(jarUrl, filters, entry);
             }
-            else {
-                return new FileZippedJarVisitor( jarUrl, filters, entry );
-            }
-        }
-        else {
-            //let's assume the url can return the jar as a zip stream
-            return new InputStreamZippedJarVisitor( jarUrl, filters, entry );
+        } else {
+            // let's assume the url can return the jar as a zip stream
+            return new InputStreamZippedJarVisitor(jarUrl, filters, entry);
         }
     }
-    
+
     public Set<NamedInputStream> getFilesInClasspath(Set<String> filePatterns) {
         throw new AssertionFailure("Not implemented");
     }
