@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.EJBException;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -48,12 +49,14 @@ public class BpmnUploader implements Serializable {
 	@ExceptionHandled
 	public void importar() {
 		try {
+			mensagens = new ArrayList<>();
 			fluxoController.setFluxo(bpmnJpdlService.importarBpmn(getFluxo(), bpmn));
 			fluxoImportado = true;
 			FacesMessages.instance().add("Fluxo importado com sucesso");
 		} catch (BusinessException e) {
-			mensagens = new ArrayList<>();
 			mensagens.add(e.getMessage());
+		} catch (EJBException e) {
+			mensagens.add(e.getCause().getMessage());
 		} finally {
 			bpmn = null;
 		}
