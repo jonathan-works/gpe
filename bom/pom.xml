@@ -72,6 +72,11 @@
                 </exclusions>
             </dependency>
             <dependency>
+                <groupId>org.twitter4j</groupId>
+                <artifactId>twitter4j-core</artifactId>
+                <version>3.0.6</version>
+            </dependency>
+            <dependency>
                 <groupId>org.jboss.seam</groupId>
                 <artifactId>jboss-seam-mail</artifactId>
                 <version>${seam.version}</version>
@@ -301,6 +306,93 @@
                 <groupId>jgraph</groupId>
                 <artifactId>jgraph</artifactId>
                 <version>5.13.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.11</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian.protocol</groupId>
+                <artifactId>arquillian-protocol-servlet</artifactId>
+                <version>1.1.4.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+                <version>2.1.1</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                <artifactId>shrinkwrap-resolver-depchain</artifactId>
+                <scope>test</scope>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian.junit</groupId>
+                <artifactId>arquillian-junit-container</artifactId>
+                <version>1.1.5.Final</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>1.3.174</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.glxn</groupId>
+                <artifactId>qrgen</artifactId>
+                <version>1.4</version>
+            </dependency>
+            <dependency>
+                <groupId>com.samskivert</groupId>
+                <artifactId>jmustache</artifactId>
+                <version>1.9</version>
+            </dependency>
+            <dependency>
+                <groupId>br.com.infox</groupId>
+                <artifactId>infox-certificate-signature</artifactId>
+                <version>0.0.3</version>
+            </dependency>
+            <dependency>
+                <groupId>br.com.infox</groupId>
+                <artifactId>infox-core</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.reflections</groupId>
+                <artifactId>reflections</artifactId>
+                <version>0.9.10</version>
+            </dependency>
+            <dependency>
+                <groupId>net.coobird</groupId>
+                <artifactId>thumbnailator</artifactId>
+                <version>0.4.8</version>
+            </dependency>
+            <dependency>
+                <groupId>br.com.infox</groupId>
+                <artifactId>rest-client</artifactId>
+                <version>1.0.3</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>1.10</version>
+            </dependency>
+            <dependency>
+                <groupId>br.com.infox</groupId>
+                <artifactId>epp-services</artifactId>
+                <classifier>rest</classifier>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.javassist</groupId>
+                <artifactId>javassist</artifactId>
+                <version>3.18.1-GA</version>
+                <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
