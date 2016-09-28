@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.util.UUID;
 
 import javax.inject.Inject;
@@ -20,10 +21,12 @@ import org.jboss.seam.servlet.ContextualHttpServletRequest;
 
 import com.lowagie.text.DocumentException;
 
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.pdf.PdfManager;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.documento.DocumentoBinSearch;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
@@ -42,27 +45,42 @@ public class DocumentoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         DocumentoInfo downloadDocumentoInfo = extractFromRequest(req, DocumentoServletOperation.DOWNLOAD);
+        DocumentoBin documento=null;
         if (downloadDocumentoInfo == null) {
-            writeNotFoundResponse(resp);
-            return;
+            Object documentoDownload = req.getSession().getAttribute("documentoDownload");
+            if (documentoDownload == null){
+                writeNotFoundResponse(resp);
+                return;
+            }
+            if (documentoDownload instanceof Documento){
+                documento = ((Documento) documentoDownload).getDocumentoBin();
+            } else if (documentoDownload instanceof DocumentoBin){
+                documento = (DocumentoBin) documentoDownload;
+            }
         }
-        UUID uuid = UUID.fromString(downloadDocumentoInfo.getUid());
-        DocumentoBin documento = ObjectUtils.firstNonNull(
-            documentoBinSearch.getTermoAdesaoByUUID(uuid),
-            documentoBinSearch.getDocumentoPublicoByUUID(uuid),
-            documentoBinSearch.getDocumentoByUsuarioPerfilUUID(uuid, getUsuarioPerfil(req))
+        if (documento == null)
+        documento = ObjectUtils.firstNonNull(
+            documentoBinSearch.getTermoAdesaoByUUID(UUID.fromString(downloadDocumentoInfo.getUid())),
+            documentoBinSearch.getDocumentoPublicoByUUID(UUID.fromString(downloadDocumentoInfo.getUid()))
         );
         
         if (documento == null) {
             writeNotFoundResponse(resp);
             return;
         }
-
-        if (downloadDocumentoInfo.isFileNameEmpty()) {
+        String suffix="";
+        if (!documento.isBinario()){
+            documento.setExtensao("pdf");
+        }
+        if (documento.getNomeArquivo().endsWith("."+documento.getExtensao()))
+            suffix = documento.getNomeArquivo();
+        else    
+            suffix = documento.getNomeArquivo()+"."+documento.getExtensao();
+        if (!URI.create(req.getRequestURI()).getPath().endsWith(suffix)) {
             resp.sendRedirect(buildPathWithFilename(req, documento));
             return;
         }
-
+        req.getSession().removeAttribute("documentoDownload");
         writeDocumentoBinToResponse(resp, documento);
     }
     
@@ -106,13 +124,18 @@ public class DocumentoServlet extends HttpServlet {
         } else {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             try {
-                pdfManager.convertHtmlToPdf(documento.getModeloDocumento(), outputStream);
+                String modeloDocumento = ObjectUtils.defaultIfNull(documento.getModeloDocumento(), getMensagemDocumentoNulo());
+                pdfManager.convertHtmlToPdf(modeloDocumento, outputStream);
                 documento.setExtensao("pdf");
             } catch (DocumentException e) {
             }
             data = outputStream.toByteArray();
         }
         return data;
+    }
+
+    private String getMensagemDocumentoNulo() {
+        return "<div style=\"text-align:center;font-weight:bolder;\">"+InfoxMessages.getInstance().get("documentoProcesso.error.noFileOrDeleted")+"</div>";
     }
 
     private String buildPathWithFilename(HttpServletRequest req, DocumentoBin documento) {

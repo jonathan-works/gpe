@@ -11,6 +11,8 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.ServletLifecycle;
 
+import br.com.infox.epp.cdi.config.BeanManager;
+
 @Name(PathResolver.NAME)
 @Scope(ScopeType.APPLICATION)
 @AutoCreate
@@ -75,6 +77,8 @@ public class PathResolver implements Serializable {
             if (requestObj instanceof HttpServletRequest) {
                 return (HttpServletRequest) requestObj;
             }
+        } else {
+            return BeanManager.INSTANCE.getReference(HttpServletRequest.class);
         }
         return null;
     }
