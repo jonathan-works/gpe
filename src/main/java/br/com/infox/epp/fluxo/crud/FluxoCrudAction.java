@@ -35,6 +35,7 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
     public static final String NAME = "fluxoCrudAction";
 
     private boolean replica = false;
+    private boolean hasProcessoRunning = false;
 
     public String criarReplica() {
         this.replica = true;
@@ -116,6 +117,7 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
         super.newInstance();
         getInstance().setPublicado(false);
         this.replica = false;
+        this.hasProcessoRunning = false;
     }
 
     @Override
@@ -123,6 +125,17 @@ public class FluxoCrudAction extends AbstractCrudAction<Fluxo, FluxoManager> {
         super.afterSave(ret);
         if (PERSISTED.equals(ret)) {
             definicaoVariavelProcessoManager.createDefaultDefinicaoVariavelProcessoList(getInstance());
+            this.hasProcessoRunning = false;
         }
+    }
+
+    @Override
+    public void setInstance(Fluxo instance) {
+        super.setInstance(instance);
+        this.hasProcessoRunning = getManager().existemProcessoEmAndamento(getInstance());
+    }
+
+    public boolean isHasProcessoRunning() {
+        return hasProcessoRunning;
     }
 }
