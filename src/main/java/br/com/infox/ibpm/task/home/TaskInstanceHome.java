@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.transaction.SystemException;
 
 import org.hibernate.HibernateException;
+import org.jboss.com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Factory;
@@ -87,6 +88,7 @@ import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
 import br.com.infox.ibpm.task.action.TaskPageAction;
 import br.com.infox.ibpm.task.dao.TaskConteudoDAO;
 import br.com.infox.ibpm.task.entity.TaskConteudo;
+import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
 import br.com.infox.ibpm.task.manager.TaskInstanceManager;
 import br.com.infox.ibpm.task.view.Form;
 import br.com.infox.ibpm.task.view.FormField;
@@ -928,7 +930,8 @@ public class TaskInstanceHome implements Serializable {
 	}
 
 	public Object getValueOfVariableFromTaskInstance(String variableName) {
-		TaskController taskController = getCurrentTaskInstance().getTask().getTaskController();
+		TaskInstance taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
+        TaskController taskController = taskInstance.getTask().getTaskController();
 		if (taskController != null) {
 			List<VariableAccess> variables = taskController.getVariableAccesses();
 			for (VariableAccess variable : variables) {
