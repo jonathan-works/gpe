@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.jboss.seam.faces.FacesMessages;
 import org.richfaces.event.FileUploadEvent;
 
@@ -56,7 +57,11 @@ public class BpmnUploader implements Serializable {
 		} catch (BusinessException e) {
 			mensagens.add(e.getMessage());
 		} catch (EJBException e) {
-			mensagens.add(e.getCause().getMessage());
+			if (!Strings.isEmpty(e.getCause().getMessage())) {
+				mensagens.add(e.getCause().getMessage());
+			} else {
+				mensagens.add("Houve um erro na importação, contate o administrador do sistema");
+			}
 		} finally {
 			bpmn = null;
 		}
