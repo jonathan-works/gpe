@@ -16,10 +16,15 @@
     <description>E-PP Bill of material</description>
 
     <properties>
-        <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
-        <maven-compiler-plugin.source>1.7</maven-compiler-plugin.source>
-        <maven-compiler-plugin.target>1.7</maven-compiler-plugin.target>
-        <git-commit-id-plugin.version>2.2.1</git-commit-id-plugin.version>
+        <version.git-commit-id-plugin>2.2.1</version.git-commit-id-plugin>
+        <version.maven-compiler-plugin>3.5.1</version.maven-compiler-plugin>
+        <version.maven-source-plugin>2.4</version.maven-source-plugin>
+        <version.lesscss-maven-plugin>1.7.0.1.1</version.lesscss-maven-plugin>
+        <version.maven-war-plugin>2.6</version.maven-war-plugin>
+        <version.maven-assembly-plugin>2.5.3</version.maven-assembly-plugin>
+        <version.maven-processor-plugin>2.2.4</version.maven-processor-plugin>
+        <version.lifecycle-mapping>1.0.0</version.lifecycle-mapping>
+        <version.maven-compiler-java>1.7</version.maven-compiler-java>
 
         <!-- Dependency versions -->
         <seam.version>2.3.9-6-2</seam.version>
@@ -42,6 +47,10 @@
         <quartz.version>2.2.1</quartz.version>
         <mojarra.jsf.version>2.1.28</mojarra.jsf.version>
         <infox.componentes.version>1.3.7</infox.componentes.version>
+        <version.cdi-unit>3.0.0</version.cdi-unit>
+        <version.weld-se-core>1.1.16.Final</version.weld-se-core>
+        <version.mockito-all>1.9.5</version.mockito-all>
+        <version.httpcomponents-httpclient>4.5.2</version.httpcomponents-httpclient>
     </properties>
 
     <dependencyManagement>
@@ -133,6 +142,7 @@
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-jpamodelgen</artifactId>
                 <version>${hibernate.jpamodelgen}</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.hibernate</groupId>
@@ -393,6 +403,26 @@
                 <artifactId>javassist</artifactId>
                 <version>3.18.1-GA</version>
                 <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jglue.cdi-unit</groupId>
+                <artifactId>cdi-unit</artifactId>
+                <version>${version.cdi-unit}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>${version.mockito-all}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.weld.se</groupId>
+                <artifactId>weld-se-core</artifactId>
+                <version>${version.weld-se-core}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${version.httpcomponents-httpclient}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

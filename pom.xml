@@ -6,6 +6,7 @@
         <groupId>br.com.infox.epp</groupId>
         <artifactId>bom</artifactId>
         <version>2.13.0</version>
+        <relativePath>bom</relativePath>
     </parent>
 
     <version>2.13.6</version>
@@ -304,10 +305,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
+                <version>${version.maven-compiler-plugin}</version>
                 <configuration>
-                    <source>${maven-compiler-plugin.source}</source>
-                    <target>${maven-compiler-plugin.target}</target>
+                    <source>${version.maven-compiler-java}</source>
+                    <target>${version.maven-compiler-java}</target>
                     <compilerArguments>
                         <processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>
                     </compilerArguments>
@@ -366,7 +367,7 @@
             <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
-                <version>${git-commit-id-plugin.version}</version>
+                <version>${version.git-commit-id-plugin}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -416,12 +417,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.6</version>
+                <version>${version.maven-war-plugin}</version>
                 <configuration>
                     <attachClasses>true</attachClasses>
                     <webResources>
                         <resource>
-                            <directory>${basedir}/src/main/webapp</directory>
+                            <directory>${project.basedir}/src/main/webapp</directory>
                             <filtering>false</filtering>
                             <excludes>
                                 <exclude>WEB-INF/web.xml</exclude>
@@ -429,7 +430,7 @@
                             </excludes>
                         </resource>
                         <resource>
-                            <directory>${basedir}/src/main/webapp</directory>
+                            <directory>${project.basedir}/src/main/webapp</directory>
                             <filtering>true</filtering>
                             <includes>
                                 <include>WEB-INF/web.xml</include>
@@ -482,8 +483,6 @@
                 <producao>false</producao>
                 <log.jbpm>INFO</log.jbpm>
                 <log.hibernate.sql>INFO</log.hibernate.sql>
-                <dep.classifier>dev</dep.classifier>
-                <epp.quartz.schedulerDelay>90</epp.quartz.schedulerDelay>
             </properties>
         </profile>
         <profile>
