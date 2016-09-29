@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
@@ -36,8 +35,6 @@ import br.com.infox.seam.security.SecurityUtil;
 @ViewScoped
 public class PainelUsuarioController implements Serializable {
 
-	public static final String NUMERO_PROCESSO_FILTERED = "numeroProcessoFiltered";
-
 	private static final long serialVersionUID = 1L;
 	
 	@Inject
@@ -56,7 +53,7 @@ public class PainelUsuarioController implements Serializable {
 	protected ActionMessagesService actionMessagesService;
 	@Inject
 	private TaskInstanceManager taskInstanceManager;
-	
+
 	private FluxoBean selectedFluxo;
 	protected List<FluxoBean> fluxosDisponiveis;
 	private List<TipoProcesso> tipoProcessoDisponiveis;
@@ -67,19 +64,9 @@ public class PainelUsuarioController implements Serializable {
 
 	@PostConstruct
 	protected void init() {
-		setNumeroProcesso(getNumeroProcessoFromSession());
+		setNumeroProcesso(null);
 		loadTipoProcessoDisponiveis();
 		loadFluxosDisponiveis();
-	}
-	
-	private String getNumeroProcessoFromSession(){
-		Map<String, Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
-		return (String) sessionMap.get(NUMERO_PROCESSO_FILTERED);
-	}
-	
-	public void changePerfil() throws IOException{
-		limparFiltros();
-		atualizarPainelProcessos();
 	}
 	
 	public void atualizarPainelProcessos() throws IOException {
@@ -216,11 +203,9 @@ public class PainelUsuarioController implements Serializable {
 		setSelectedFluxo(null);
 		painelTreeHandler.clearTree();
 		loadFluxosDisponiveis();
-		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(NUMERO_PROCESSO_FILTERED, getNumeroProcesso());
 	}
 	
 	public void limparFiltros(){
-		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove(NUMERO_PROCESSO_FILTERED);
 		init();
 		painelTreeHandler.clearTree();
 		setSelectedFluxo(null);
