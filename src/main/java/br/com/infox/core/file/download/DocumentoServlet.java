@@ -3,9 +3,11 @@ package br.com.infox.core.file.download;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.security.SecureRandom;
 import java.util.UUID;
 
 import javax.inject.Inject;
@@ -23,6 +25,7 @@ import com.lowagie.text.DocumentException;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.pdf.PdfManager;
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.documento.DocumentoBinSearch;
@@ -71,6 +74,9 @@ public class DocumentoServlet extends HttpServlet {
         String suffix="";
         if (!documento.isBinario()){
             documento.setExtensao("pdf");
+        }
+        if (StringUtil.isEmpty(documento.getNomeArquivo())){
+            documento.setNomeArquivo(BigInteger.probablePrime(32, new SecureRandom()).toString(Character.MAX_RADIX));
         }
         if (documento.getNomeArquivo().endsWith("."+documento.getExtensao()))
             suffix = documento.getNomeArquivo();
