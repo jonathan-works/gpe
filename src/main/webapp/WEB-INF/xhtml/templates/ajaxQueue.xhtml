@@ -24,7 +24,7 @@
 		    } else {
 		    xhttp = new ActiveXObject("Microsoft.XMLHTTP");
 		  }
-		  xhttp.open('HEAD', '#{pathResolver.contextPath}/sessionPoll');
+		  xhttp.open('HEAD', '#{pathResolver.contextPath}/sessionPoll?conversationId=#{org.jboss.seam.core.conversation.id}');
 		  xhttp.onload = function() {
 	          setTimeout(executePoll, #{intervalPush});
 		  }
