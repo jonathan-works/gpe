@@ -67,23 +67,29 @@ public class DocumentoServlet extends HttpServlet {
             writeNotFoundResponse(resp);
             return;
         }
-        String suffix="";
-        if (!documento.isBinario()){
-            documento.setExtensao("pdf");
-        }
-        if (StringUtil.isEmpty(documento.getNomeArquivo())){
-            documento.setNomeArquivo(BigInteger.probablePrime(32, new SecureRandom()).toString(Character.MAX_RADIX));
-        }
-        if (documento.getNomeArquivo().endsWith("."+documento.getExtensao()))
-            suffix = documento.getNomeArquivo();
-        else    
-            suffix = documento.getNomeArquivo()+"."+documento.getExtensao();
-        if (!URI.create(req.getRequestURI()).getPath().endsWith(suffix)) {
-            resp.sendRedirect(buildPathWithFilename(req, documento));
+        String nomeArquivo = extractNomeArquivo(documento);
+        if (!URI.create(req.getRequestURI()).getPath().endsWith(nomeArquivo)) {
+            UriBuilder uriBuilder = UriBuilder.fromPath(req.getRequestURI());
+            uriBuilder.path(nomeArquivo);
+            resp.sendRedirect(uriBuilder.build().toString());
             return;
         }
         req.getSession().removeAttribute("documentoDownload");
         writeDocumentoBinToResponse(resp, documento);
+    }
+
+    private String extractNomeArquivo(DocumentoBin documento) {
+        String nomeArquivo=documento.getNomeArquivo();
+        String extensao = documento.getExtensao();
+        if (StringUtil.isEmpty(extensao)){
+            documento.setExtensao("pdf");
+        }
+        if (StringUtil.isEmpty(nomeArquivo)){
+            nomeArquivo=documento.getUuid().toString();
+        }
+        if (!nomeArquivo.endsWith("."+extensao))
+            nomeArquivo = nomeArquivo+"."+documento.getExtensao();
+        return nomeArquivo;
     }
     
     private void writeNotFoundResponse(HttpServletResponse resp) throws IOException {
@@ -124,18 +130,6 @@ public class DocumentoServlet extends HttpServlet {
 
     private String getMensagemDocumentoNulo() {
         return "<div style=\"text-align:center;font-weight:bolder;\">"+InfoxMessages.getInstance().get("documentoProcesso.error.noFileOrDeleted")+"</div>";
-    }
-
-    private String buildPathWithFilename(HttpServletRequest req, DocumentoBin documento) {
-        UriBuilder uriBuilder = UriBuilder.fromPath(req.getRequestURI());
-        if (!documento.isBinario()){
-            documento.setExtensao("pdf");
-        }
-        if (!documento.getNomeArquivo().endsWith("."+documento.getExtensao()))
-            uriBuilder = uriBuilder.path(String.format("%s.%s", documento.getNomeArquivo(), documento.getExtensao()));
-        else 
-            uriBuilder = uriBuilder.path(documento.getNomeArquivo());
-        return uriBuilder.build().toString();
     }
 
     private DocumentoInfo extractFromRequest(HttpServletRequest req, DocumentoServletOperation action) {
