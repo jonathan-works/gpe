@@ -85,6 +85,22 @@ public class FileDownloader implements Serializable {
         String contextPath = request.getContextPath();
         UriBuilder uriBuilder = UriBuilder.fromPath(contextPath);
         uriBuilder = uriBuilder.path(DocumentoServlet.BASE_SERVLET_PATH);
+        uriBuilder = uriBuilder.path(DocumentoServletOperation.DOWNLOAD.getPath());
+        return uriBuilder.build().toString();
+    }
+    
+    public String getDownloadUrlDocumentoPublico(DocumentoTemporario documento){
+        return getDownloadUrl(documento.getDocumentoBin());
+    }
+    public String getDownloadUrlDocumentoPublico(Documento documento){
+        return getDownloadUrl(documento.getDocumentoBin());
+    }
+    public String getDownloadUrlDocumentoPublico(DocumentoBin documentoBin){
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
+        String contextPath = request.getContextPath();
+        UriBuilder uriBuilder = UriBuilder.fromPath(contextPath);
+        uriBuilder = uriBuilder.path(DocumentoServlet.BASE_SERVLET_PATH);
         uriBuilder = uriBuilder.path(documentoBin.getUuid().toString());
         uriBuilder = uriBuilder.path(DocumentoServletOperation.DOWNLOAD.getPath());
         return uriBuilder.build().toString();
