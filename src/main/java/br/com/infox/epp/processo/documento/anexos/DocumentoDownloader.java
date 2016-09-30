@@ -1,6 +1,5 @@
 package br.com.infox.epp.processo.documento.anexos;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.DecimalFormat;
@@ -11,7 +10,6 @@ import java.util.Locale;
 import javax.ejb.Stateless;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.jboss.seam.ScopeType;
@@ -53,8 +51,7 @@ public class DocumentoDownloader implements Serializable {
 	public static final String NAME = "documentoDownloader";
 	private static final LogProvider LOG = Logging.getLogProvider(DocumentoValidator.class);
 
-    private static final String URL_DOWNLOAD_BINARIO = "{0}/downloadDocumento.seam?id={1}";
-    private static final String URL_DOWNLOAD_HTML = "{0}/Painel/documentoHTML.seam?id={1}";
+    private static final String URL_DOWNLOAD = "{0}/downloadDocumento.seam?id={1}";
 
     @In
     private PathResolver pathResolver;
@@ -131,34 +128,7 @@ public class DocumentoDownloader implements Serializable {
     	downloadDocumento(documentoBin);
     }
 
-	private void downloadPdf(DocumentoBin documento, byte[] data, String fileName) {
-		try {
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-		    documentoBinManager.writeMargemDocumento(documento, data, out);
-		    data = out.toByteArray();
-		} catch (BusinessException e) {
-		    LOG.error("", e);
-		    FacesMessages.instance().clear();
-		    mensagemErro = "Erro ao gerar a margem do PDF: " + e.getMessage();
-		    FacesMessages.instance().add(mensagemErro);
-		    erroMargem = true;
-		    return;
-		}
-		try {
-		    HttpServletResponse response = FileDownloader.prepareDownloadResponse("application/pdf", fileName);
-		    response.getOutputStream().write(data);
-		    response.getOutputStream().flush();
-		    FacesContext.getCurrentInstance().responseComplete();			
-		}
-		catch (IOException e) {
-		    LOG.error("", e);
-		    FacesMessages.instance().clear();
-		    mensagemErro = "Erro fazer upload do PDF: " + e.getMessage();
-		    FacesMessages.instance().add(mensagemErro);
-		}
-	}
-    
-    public void downloadPdf(Documento documento, byte[] pdf, String nome) {
+	public void downloadPdf(Documento documento, byte[] pdf, String nome) {
     	if (validarSigilo(documento)) {
     	    try {
                 downloadDocumentoViaServlet(documento);
@@ -214,10 +184,7 @@ public class DocumentoDownloader implements Serializable {
     		throw new BusinessException("Não foi possível carregar os documentos. ");
     	}
     		
-        if (documento.getDocumentoBin().isBinario()) {
-            return MessageFormat.format(URL_DOWNLOAD_BINARIO, pathResolver.getContextPath(), documento.getId().toString());
-        }
-        return MessageFormat.format(URL_DOWNLOAD_HTML, pathResolver.getContextPath(), documento.getId().toString());
+        return MessageFormat.format(URL_DOWNLOAD, pathResolver.getContextPath(), documento.getId().toString());
     }
     
     public String getMensagemErro() {
@@ -245,16 +212,20 @@ public class DocumentoDownloader implements Serializable {
 
     private void downloadDocumentoViaServlet(DocumentoBin documentoBin) throws IOException {
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        HttpSession session = ((HttpServletRequest)facesContext.getExternalContext().getRequest()).getSession();
+        HttpServletRequest request = (HttpServletRequest)facesContext.getExternalContext().getRequest();
+        HttpSession session = request.getSession();
         session.setAttribute("documentoDownload", documentoBin);
-        HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
-        response.sendRedirect(ComponentUtil.<FileDownloader>getComponent(FileDownloader.NAME).getDownloadUrl(documentoBin));
+        
+        String downloadUrl = ComponentUtil.<FileDownloader>getComponent(FileDownloader.NAME).getDownloadUrl(documentoBin);
+        facesContext.getExternalContext().redirect(downloadUrl);
     }
     private void downloadDocumentoViaServlet(Documento documento) throws IOException {
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        HttpSession session = ((HttpServletRequest)facesContext.getExternalContext().getRequest()).getSession();
+        HttpServletRequest request = (HttpServletRequest)facesContext.getExternalContext().getRequest();
+        HttpSession session = request.getSession();
         session.setAttribute("documentoDownload", documento);
-        HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
-        response.sendRedirect(ComponentUtil.<FileDownloader>getComponent(FileDownloader.NAME).getDownloadUrl(documento));
+        
+        String downloadUrl = ComponentUtil.<FileDownloader>getComponent(FileDownloader.NAME).getDownloadUrl(documento);
+        facesContext.getExternalContext().redirect(downloadUrl);
     }
 }
