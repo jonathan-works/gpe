@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLEncoder;
 import java.security.SecureRandom;
 import java.util.UUID;
 
@@ -19,15 +18,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.UriBuilder;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.jboss.seam.servlet.ContextualHttpServletRequest;
 
 import com.lowagie.text.DocumentException;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.pdf.PdfManager;
 import br.com.infox.core.util.StringUtil;
-import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.documento.DocumentoBinSearch;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
@@ -88,20 +84,6 @@ public class DocumentoServlet extends HttpServlet {
         }
         req.getSession().removeAttribute("documentoDownload");
         writeDocumentoBinToResponse(resp, documento);
-    }
-    
-    private UsuarioPerfil getUsuarioPerfil(HttpServletRequest req) throws ServletException, IOException {
-        /**
-         * Necessário enquanto a sessão for controlada pelo seam
-         */
-        final UsuarioPerfilWrapper usuarioPerfilHolder = new UsuarioPerfilWrapper();
-        new ContextualHttpServletRequest(req){
-            @Override
-            public void process() throws Exception {
-                usuarioPerfilHolder.setUsuarioPerfil(Authenticator.getUsuarioPerfilAtual());
-            }
-        }.run();
-        return usuarioPerfilHolder.getUsuarioPerfil();
     }
     
     private void writeNotFoundResponse(HttpServletResponse resp) throws IOException {
