@@ -29,7 +29,7 @@
 					label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
 					value="#{anexarDocumentosView.classificacaoDocumentoUploader}"
 					items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumentoAnexar('D')}">
-					<a:ajax id="uploadClassificacaoAjax" event="change"
+					<a:ajax event="change"
 						onbeforesubmit="infox.showLoading();"
 						oncomplete="infox.hideLoading();" render="uploadArquivoDiv"
 						limitRender="true" execute="@this"
@@ -178,7 +178,7 @@
 					value="#{anexarDocumentosView.documentoEditor.classificacaoDocumento}"
 					items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumentoAnexar('P')}"
 					disabled="#{not minuta}" readonly="#{not minuta}">
-					<a:ajax id="editorClassificacaoAjax" event="change"
+					<a:ajax event="change"
 						listener="#{anexarDocumentosView.onChangeEditorClassificacaoDocumento()}"
 						onbeforesubmit="infox.showLoading();"
 						oncomplete="infox.hideLoading();"
@@ -218,7 +218,7 @@
 						items="#{anexarDocumentosView.modeloDocumentoList}"
 						disabled="#{not minuta}" readonly="#{not minuta}"
 						rendered="#{anexarDocumentosView.showModeloDocumentoCombo}">
-						<a:ajax id="editorModeloDocumentoAjax" event="change"
+						<a:ajax event="change"
 							execute="@this" render="editorDiv"
 							listener="#{anexarDocumentosView.onSelectModeloDocumento}" />
 					</wi:selectOneMenuEntity>
