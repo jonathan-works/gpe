@@ -5,11 +5,10 @@
     <parent>
         <groupId>br.com.infox.epp</groupId>
         <artifactId>bom</artifactId>
-        <version>2.13.0</version>
+        <version>2.13.6</version>
         <relativePath>bom</relativePath>
     </parent>
 
-    <version>2.13.6</version>
     <artifactId>epp</artifactId>
     <packaging>war</packaging>
     <name>epp</name>
@@ -342,7 +341,7 @@
             <plugin>
                 <groupId>org.lesscss</groupId>
                 <artifactId>lesscss-maven-plugin</artifactId>
-                <version>1.7.0.1.1</version>
+                <version>${version.lesscss-maven-plugin}</version>
                 <executions>
                     <execution>
                         <id>css</id>
