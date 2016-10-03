@@ -1,6 +1,8 @@
 package br.com.infox.epp.fluxo.dao;
 
-import static br.com.infox.epp.fluxo.query.ModeloPastaRestricaoQuery.*;
+import static br.com.infox.epp.fluxo.query.ModeloPastaRestricaoQuery.DELETE_BY_MODELO_PASTA;
+import static br.com.infox.epp.fluxo.query.ModeloPastaRestricaoQuery.GET_BY_MODELO_PASTA;
+import static br.com.infox.epp.fluxo.query.ModeloPastaRestricaoQuery.PARAM_MODELO_PASTA;
 
 import java.util.HashMap;
 import java.util.List;

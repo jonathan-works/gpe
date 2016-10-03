@@ -4,8 +4,19 @@ import static br.com.infox.constants.LengthConstants.DESCRICAO_PEQUENA;
 import static br.com.infox.constants.LengthConstants.FLAG;
 import static br.com.infox.core.persistence.ORConstants.ATIVO;
 import static br.com.infox.core.persistence.ORConstants.GENERATOR;
-import static br.com.infox.epp.fluxo.query.NaturezaQuery.*;
-
+import static br.com.infox.epp.fluxo.query.NaturezaQuery.DESCRICAO_NATUREZA;
+import static br.com.infox.epp.fluxo.query.NaturezaQuery.ID_NATUREZA;
+import static br.com.infox.epp.fluxo.query.NaturezaQuery.LOCKED;
+import static br.com.infox.epp.fluxo.query.NaturezaQuery.NATUREZA_ATTRIBUTE;
+import static br.com.infox.epp.fluxo.query.NaturezaQuery.NATUREZA_FIND_BY_PRIMARIA;
+import static br.com.infox.epp.fluxo.query.NaturezaQuery.NATUREZA_FIND_BY_PRIMARIA_QUERY;
+import static br.com.infox.epp.fluxo.query.NaturezaQuery.NUMERO_PARTES_FISICAS;
+import static br.com.infox.epp.fluxo.query.NaturezaQuery.NUMERO_PARTES_JURIDICAS;
+import static br.com.infox.epp.fluxo.query.NaturezaQuery.OBRIGATORIO_PARTES;
+import static br.com.infox.epp.fluxo.query.NaturezaQuery.PRIMARIA;
+import static br.com.infox.epp.fluxo.query.NaturezaQuery.SEQUENCE_NATUREZA;
+import static br.com.infox.epp.fluxo.query.NaturezaQuery.TABLE_NATUREZA;
+import static br.com.infox.epp.fluxo.query.NaturezaQuery.TIPO_PARTES;
 
 import java.util.ArrayList;
 import java.util.List;

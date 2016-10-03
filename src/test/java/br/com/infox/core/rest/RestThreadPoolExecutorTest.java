@@ -4,7 +4,6 @@ import java.util.concurrent.Future;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
 
 import br.com.infox.epp.system.Parametros;
 

@@ -9,7 +9,6 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.junit.Before;
-import org.junit.Test;
 
 /**
  * @author Luciano Sampaio

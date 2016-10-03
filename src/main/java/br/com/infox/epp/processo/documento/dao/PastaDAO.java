@@ -1,7 +1,8 @@
 package br.com.infox.epp.processo.documento.dao;
 
-import static br.com.infox.epp.processo.documento.query.PastaQuery.*;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_CLASSIFICACAO_DOCUMENTO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_EXCLUIDO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_MARCADOR_DOCUMENTO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_NUMERO_DOCUMENTO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_SIGILO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_SUFICIENTEMENTE_ASSINADO_OU_SETOR;
@@ -9,6 +10,7 @@ import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_NOME;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_PROCESSO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_PROCESSO_AND_DESCRICAO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_CLASSIFICACAO_DOCUMENTO;
+import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_CODIGO_MARCADOR;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_DESCRICAO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_LOCALIZACAO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_NOME;

@@ -10,8 +10,6 @@ import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.async.QuartzDispatcher;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jbpm.util.ClassLoaderUtil;
 import org.quartz.SchedulerException;
 
@@ -20,6 +18,8 @@ import br.com.infox.epp.estatistica.abstracts.BamTimerProcessor;
 import br.com.infox.epp.estatistica.manager.BamTimerManager;
 import br.com.infox.epp.estatistica.processor.ProcessoTimerProcessor;
 import br.com.infox.epp.estatistica.processor.TarefaTimerProcessor;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.quartz.QuartzConstant;
 
 @Name(BamTimerStarter.NAME)

@@ -25,7 +25,6 @@ import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.system.dao.ParametroDAO;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-import br.com.infox.seam.exception.BusinessException;
 
 @Named
 @ViewScoped

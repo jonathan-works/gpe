@@ -20,8 +20,6 @@ import java.util.Properties;
 
 import javax.swing.JOptionPane;
 
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jgraph.JGraph;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.CellView;
@@ -30,6 +28,9 @@ import org.jgraph.graph.DefaultPort;
 import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.GraphModel;
 import org.jgraph.graph.VertexView;
+
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 /**
  * Arranges the nodes with the Sugiyama Layout Algorithm.<br>

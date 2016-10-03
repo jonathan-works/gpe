@@ -3,12 +3,13 @@ package br.com.infox.epp.fluxo.xpdl;
 import java.io.InputStream;
 import java.util.List;
 
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.input.sax.XMLReaders;
+
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 /**
  * Deprecated : Utilizada apenas para o XPDL, cuja funcionalidade será

@@ -159,9 +159,6 @@ public class TaskInstanceView implements Serializable {
                                 Documento documento = documentoManager().find(value);
                                 ff.setValue(documento.getDescricao());
                                 ff.getProperties().put("classificacaoDocumento", documento.getClassificacaoDocumento().getDescricao());
-                            } else {
-                                ff.setValue("(sem anexo)");
-                                ff.getProperties().put("classificacaoDocumento", "(sem anexo)");
                             }
                         }
                         break;
@@ -199,10 +196,6 @@ public class TaskInstanceView implements Serializable {
                     }
                     
                     properties.put("readonly", !var.isWritable());
-                    if (value == null && !var.isWritable()
-                            && VariableType.EDITOR.equals(type)) {
-                        properties.put("rendered", false);
-                    }
                     form.getFields().add(ff);
                 }
             }

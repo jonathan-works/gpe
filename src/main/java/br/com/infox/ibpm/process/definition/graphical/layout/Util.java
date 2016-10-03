@@ -12,9 +12,10 @@ import java.net.URL;
 
 import javax.swing.ImageIcon;
 
+import org.jgraph.JGraph;
+
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-import org.jgraph.JGraph;
 
 public class Util {
 

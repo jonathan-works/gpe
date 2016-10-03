@@ -8,8 +8,6 @@ import java.util.List;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Scope;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.richfaces.event.FileUploadEvent;
 import org.richfaces.event.FileUploadListener;
 import org.richfaces.model.UploadedFile;
@@ -19,6 +17,8 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.util.ArrayUtil;
 import br.com.infox.epp.imagem.entity.ImagemBin;
 import br.com.infox.epp.imagem.manager.ImagemBinManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @Scope(ScopeType.CONVERSATION)
 public abstract class AbstractImageUploader implements FileUploadListener, Serializable {

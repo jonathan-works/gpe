@@ -23,11 +23,11 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jboss.seam.util.Base64;
 
 import br.com.infox.certificado.exception.CertificadoException;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 /**
  * Utility class for digital signatures and certificates verification.

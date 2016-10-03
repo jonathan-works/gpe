@@ -3,11 +3,11 @@ package br.com.infox.seam.transaction;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jboss.seam.transaction.Transaction;
 import org.jboss.seam.transaction.UserTransaction;
 
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.ApplicationException;
 
 @Name(TransactionService.NAME)

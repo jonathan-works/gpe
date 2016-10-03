@@ -1,6 +1,14 @@
 package br.com.infox.epp.cliente.query;
 
-import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.*;
+import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.DATA;
+import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.DATA_FIM;
+import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.DATA_INICIO;
+import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.DESCRICAO_EVENTO;
+import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.LOCALIZACAO;
+import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.PARAM_END_DATE;
+import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.PARAM_START_DATE;
+import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.SERIE;
+import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.TIPO_EVENTO;
 
 public interface CalendarioEventosQuery {
     public interface Param {

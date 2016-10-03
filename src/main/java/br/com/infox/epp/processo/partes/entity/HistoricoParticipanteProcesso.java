@@ -1,5 +1,10 @@
 package br.com.infox.epp.processo.partes.entity;
 
+import static br.com.infox.epp.processo.partes.query.HistoricoParticipanteProcessoQuery.HAS_HISTORICO_BY_PARTICIPANTE;
+import static br.com.infox.epp.processo.partes.query.HistoricoParticipanteProcessoQuery.HAS_HISTORICO_BY_PARTICIPANTE_QUERY;
+import static br.com.infox.epp.processo.partes.query.HistoricoParticipanteProcessoQuery.LIST_BY_PARTICIPANTE_PROCESSO;
+import static br.com.infox.epp.processo.partes.query.HistoricoParticipanteProcessoQuery.LIST_BY_PARTICIPANTE_PROCESSO_QUERY;
+
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
@@ -24,7 +29,6 @@ import javax.validation.constraints.Size;
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
-import static br.com.infox.epp.processo.partes.query.HistoricoParticipanteProcessoQuery.*;
 
 @Entity
 @Table(name = HistoricoParticipanteProcesso.TABLE_NAME)
