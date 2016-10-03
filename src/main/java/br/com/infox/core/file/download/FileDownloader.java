@@ -4,9 +4,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
 
+import javax.ejb.Stateless;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.UriBuilder;
 
 import org.apache.commons.lang3.StringUtils;
@@ -16,22 +19,26 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.FacesMessages;
 
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.DocumentoTemporario;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Name(FileDownloader.NAME)
 @Scope(ScopeType.EVENT)
+@Stateless
 @BypassInterceptors
 public class FileDownloader implements Serializable {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "fileDownloader";
     private static final LogProvider LOG = Logging.getLogProvider(FileDownloader.class);
+    
+    @Inject
+    private DocumentoBinarioManager documentoBinarioManager;
     
     public static void download(byte[] data, String contentType, String fileName) {
         if (data == null) {
@@ -80,9 +87,7 @@ public class FileDownloader implements Serializable {
         return getDownloadUrl(documento.getDocumentoBin());
     }
     public String getDownloadUrl(DocumentoBin documentoBin){
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
-        String contextPath = request.getContextPath();
+        String contextPath = getRequest().getContextPath();
         UriBuilder uriBuilder = UriBuilder.fromPath(contextPath);
         uriBuilder = uriBuilder.path(DocumentoServlet.BASE_SERVLET_PATH);
         uriBuilder = uriBuilder.path(DocumentoServletOperation.DOWNLOAD.getPath());
@@ -96,9 +101,7 @@ public class FileDownloader implements Serializable {
         return getDownloadUrl(documento.getDocumentoBin());
     }
     public String getDownloadUrlDocumentoPublico(DocumentoBin documentoBin){
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
-        String contextPath = request.getContextPath();
+        String contextPath = getRequest().getContextPath();
         UriBuilder uriBuilder = UriBuilder.fromPath(contextPath);
         uriBuilder = uriBuilder.path(DocumentoServlet.BASE_SERVLET_PATH);
         uriBuilder = uriBuilder.path(documentoBin.getUuid().toString());
@@ -115,9 +118,37 @@ public class FileDownloader implements Serializable {
     public String getContentType(DocumentoBin documentoBin){
         return String.format("application/%s", documentoBin.getExtensao());
     }
+    public void downloadDocumentoViaServlet(DocumentoBin documentoBin) throws IOException {
+        HttpSession session = getRequest().getSession();
+        session.setAttribute("documentoDownload", documentoBin);
+        
+        getResponse().sendRedirect(getDownloadUrl(documentoBin));
+    }
+    public void downloadDocumentoViaServlet(Documento documento) throws IOException {
+        HttpSession session = getRequest().getSession();
+        session.setAttribute("documentoDownload", documento);
+        
+        getResponse().sendRedirect(getDownloadUrl(documento));
+    }
     
+    public HttpServletResponse getResponse() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        if (facesContext != null){
+            return (HttpServletResponse) facesContext.getExternalContext().getResponse();
+        }
+        return BeanManager.INSTANCE.getReference(HttpServletResponse.class);
+    }
+
+    public HttpServletRequest getRequest() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        if (facesContext != null){
+            return (HttpServletRequest) facesContext.getExternalContext().getRequest();
+        }
+        return BeanManager.INSTANCE.getReference(HttpServletRequest.class);
+    }
+
     public void download(DocumentoBin documentoBin) {
-    	byte[] data = ComponentUtil.<DocumentoBinarioManager>getComponent(DocumentoBinarioManager.NAME).getData(documentoBin.getId());
+    	byte[] data = documentoBinarioManager.getData(documentoBin.getId());
     	download(data, "application/" + documentoBin.getExtensao(), documentoBin.getNomeArquivo());
     }
 }
