@@ -9,8 +9,6 @@ import java.util.Locale;
 
 import javax.ejb.Stateless;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -36,7 +34,6 @@ import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.path.PathResolver;
-import br.com.infox.seam.util.ComponentUtil;
 
 @AutoCreate
 @Scope(ScopeType.EVENT)
@@ -85,9 +82,9 @@ public class DocumentoDownloader implements Serializable {
     public void downloadDocumento(Documento documento, boolean gerarMargens) {
     	if (validarSigilo(documento)) {
     	    try {
-                downloadDocumentoViaServlet(documento);
+    	        getFileDownloader().downloadDocumentoViaServlet(documento);
             } catch (IOException e) {
-                handleException(e);
+                getActionMessagesService().handleException(null, e);
             }
     	}
     }
@@ -113,9 +110,9 @@ public class DocumentoDownloader implements Serializable {
 
     public void downloadDocumento(DocumentoBin documento, boolean gerarMargens) {
         try {
-            downloadDocumentoViaServlet(documento);
+            getFileDownloader().downloadDocumentoViaServlet(documento);
         } catch (IOException e) {
-            handleException(e);
+            getActionMessagesService().handleException(null, e);
         }
     }
     
@@ -131,9 +128,9 @@ public class DocumentoDownloader implements Serializable {
 	public void downloadPdf(Documento documento, byte[] pdf, String nome) {
     	if (validarSigilo(documento)) {
     	    try {
-                downloadDocumentoViaServlet(documento);
+    	        getFileDownloader().downloadDocumentoViaServlet(documento);
             } catch (IOException e) {
-                handleException(e);
+                getActionMessagesService().handleException(null, e);
             }
     	}
     }
@@ -206,26 +203,12 @@ public class DocumentoDownloader implements Serializable {
     	return true;
 	}
     
-    private void handleException(Exception e) {
-        BeanManager.INSTANCE.getReference(ActionMessagesService.class).handleException(null, e);
+    private FileDownloader getFileDownloader(){
+        return BeanManager.INSTANCE.getReference(FileDownloader.class);
     }
-
-    private void downloadDocumentoViaServlet(DocumentoBin documentoBin) throws IOException {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        HttpServletRequest request = (HttpServletRequest)facesContext.getExternalContext().getRequest();
-        HttpSession session = request.getSession();
-        session.setAttribute("documentoDownload", documentoBin);
-        
-        String downloadUrl = ComponentUtil.<FileDownloader>getComponent(FileDownloader.NAME).getDownloadUrl(documentoBin);
-        facesContext.getExternalContext().redirect(downloadUrl);
+    
+    private ActionMessagesService getActionMessagesService(){
+        return BeanManager.INSTANCE.getReference(ActionMessagesService.class);
     }
-    private void downloadDocumentoViaServlet(Documento documento) throws IOException {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        HttpServletRequest request = (HttpServletRequest)facesContext.getExternalContext().getRequest();
-        HttpSession session = request.getSession();
-        session.setAttribute("documentoDownload", documento);
-        
-        String downloadUrl = ComponentUtil.<FileDownloader>getComponent(FileDownloader.NAME).getDownloadUrl(documento);
-        facesContext.getExternalContext().redirect(downloadUrl);
-    }
+    
 }

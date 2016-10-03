@@ -3,10 +3,8 @@ package br.com.infox.core.file.download;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.security.SecureRandom;
 import java.util.UUID;
 
 import javax.inject.Inject;
@@ -17,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.UriBuilder;
 
-import org.apache.commons.lang3.ObjectUtils;
+import static org.apache.commons.lang3.ObjectUtils.*;
 
 import com.lowagie.text.DocumentException;
 
@@ -40,6 +38,7 @@ public class DocumentoServlet extends HttpServlet {
     @Inject private DocumentoBinManager documentoBinManager;
     @Inject private DocumentoBinarioManager documentoBinarioManager;
     @Inject private PdfManager pdfManager;
+    @Inject private InfoxMessages infoxMessages;
     
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -58,7 +57,7 @@ public class DocumentoServlet extends HttpServlet {
             }
         }
         if (documento == null)
-        documento = ObjectUtils.firstNonNull(
+        documento = firstNonNull(
             documentoBinSearch.getTermoAdesaoByUUID(UUID.fromString(downloadDocumentoInfo.getUid())),
             documentoBinSearch.getDocumentoPublicoByUUID(UUID.fromString(downloadDocumentoInfo.getUid()))
         );
@@ -118,7 +117,7 @@ public class DocumentoServlet extends HttpServlet {
         } else {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             try {
-                String modeloDocumento = ObjectUtils.defaultIfNull(documento.getModeloDocumento(), getMensagemDocumentoNulo());
+                String modeloDocumento = documento.isBinario() ? getMensagemDocumentoNulo() : defaultIfNull(documento.getModeloDocumento(), getMensagemDocumentoNulo());
                 pdfManager.convertHtmlToPdf(modeloDocumento, outputStream);
                 documento.setExtensao("pdf");
             } catch (DocumentException e) {
@@ -129,7 +128,7 @@ public class DocumentoServlet extends HttpServlet {
     }
 
     private String getMensagemDocumentoNulo() {
-        return "<div style=\"text-align:center;font-weight:bolder;\">"+InfoxMessages.getInstance().get("documentoProcesso.error.noFileOrDeleted")+"</div>";
+        return infoxMessages.get("documentoProcesso.error.noFileOrDeleted");
     }
 
     private DocumentoInfo extractFromRequest(HttpServletRequest req, DocumentoServletOperation action) {
