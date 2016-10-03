@@ -8,11 +8,15 @@ import java.util.List;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.instance.FlowNode;
 import org.camunda.bpm.model.bpmn.instance.Lane;
+import org.camunda.bpm.model.bpmn.instance.Participant;
+import org.camunda.bpm.model.bpmn.instance.Process;
 import org.camunda.bpm.model.bpmn.instance.bpmndi.BpmnDiagram;
 import org.camunda.bpm.model.bpmn.instance.bpmndi.BpmnPlane;
 import org.camunda.bpm.model.bpmn.instance.bpmndi.BpmnShape;
 import org.camunda.bpm.model.bpmn.instance.dc.Bounds;
 import org.camunda.bpm.model.bpmn.instance.di.DiagramElement;
+
+import br.com.infox.seam.exception.BusinessException;
 
 class DiagramUtil {
 	
@@ -33,8 +37,12 @@ class DiagramUtil {
 			BpmnPlane plane = diagram.getBpmnPlane();
 			BpmnShape laneShape = (BpmnShape) lane.getDiagramElement();
 			if (laneShape != null) {
+				Participant participant = getParticipant(lane);
+				Bounds participantBounds = ((BpmnShape) participant.getDiagramElement()).getBounds();
 				Bounds laneBounds = laneShape.getBounds();
-				Rectangle laneRectangle = new Rectangle(laneBounds.getX().intValue(), laneBounds.getY().intValue(), 
+				// Soma a coordenada x mas não a y pois o Bizagi gera o BPMN de forma diferente do XPDL por alguma razão
+				Rectangle laneRectangle = new Rectangle(laneBounds.getX().intValue() + participantBounds.getX().intValue(), 
+						laneBounds.getY().intValue(),
 						laneBounds.getWidth().intValue(), laneBounds.getHeight().intValue());
 				for (DiagramElement diagramElement : plane.getDiagramElements()) {
 					if (!(diagramElement instanceof BpmnShape) || diagramElement.equals(laneShape)) {
@@ -55,5 +63,15 @@ class DiagramUtil {
 	
 	static BpmnDiagram getDefaultDiagram(BpmnModelInstance model) {
 		return model.getDefinitions().getBpmDiagrams().iterator().next();
+	}
+	
+	private static Participant getParticipant(Lane lane) {
+		Process process = (Process) lane.getParentElement().getParentElement();
+		for (Participant participant : lane.getModelInstance().getModelElementsByType(Participant.class)) {
+			if (participant.getProcess().equals(process)) {
+				return participant;
+			}
+		}
+		throw new BusinessException("Participante não encontrado para a lane " + lane.getName());
 	}
 }
