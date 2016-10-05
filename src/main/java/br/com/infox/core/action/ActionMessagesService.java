@@ -23,6 +23,7 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.GenericDatabaseErrorCode;
 import br.com.infox.core.util.ExceptionUtil;
+import br.com.infox.seam.exception.BusinessException;
 
 @Name(ActionMessagesService.NAME)
 @AutoCreate
@@ -32,6 +33,7 @@ public class ActionMessagesService implements Serializable {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "actionMessagesService";
+    private static final String LOCK_MESSAGE = "entity.lock";
     
     public String handleException(final String msg, final Exception e){
         final StatusMessages messages = getMessagesHandler();
@@ -107,15 +109,19 @@ public class ActionMessagesService implements Serializable {
         return FacesMessages.instance();
     }
     
+    public void handleGenericException(Exception exception) {
+    	handleGenericException(exception, getInfoxMessages().get(LOCK_MESSAGE));
+    }
+    
     public void handleGenericException(Exception exception, String lockExceptionMessage) {
 		if (ExceptionUtil.isLockException(exception)) {
 			FacesMessages.instance().add(lockExceptionMessage);
 		} else if (exception instanceof DAOException) {
 			handleDAOException((DAOException) exception);
 		} else if (exception instanceof EJBException) {
-		        handleException(exception.getCause().getMessage(), exception);
+	        handleException(findBusinessExceptionMessage((Exception) exception.getCause()), exception);
 		} else if (exception instanceof PersistenceException) {
-		        handlePersistenceException(exception);
+	        handlePersistenceException(exception);
 		} else if (exception.getMessage() != null) {
 			handleException(exception.getMessage(), exception);
 		} else {
@@ -123,7 +129,16 @@ public class ActionMessagesService implements Serializable {
 		}
 	}
     
-    private InfoxMessages getInfoxMessages() {
+    private String findBusinessExceptionMessage(Exception exception) {
+    	if (exception instanceof BusinessException) {
+    		return exception.getMessage();
+    	} else if (exception == null) {
+    		return "";
+    	}
+    	return findBusinessExceptionMessage((Exception) exception.getCause());
+	}
+
+	private InfoxMessages getInfoxMessages() {
     	return InfoxMessages.getInstance();
     }
 
