@@ -1,6 +1,5 @@
 package br.com.infox.epp.processo.documento.anexos;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.DecimalFormat;
@@ -10,7 +9,6 @@ import java.util.Locale;
 
 import javax.ejb.Stateless;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -20,9 +18,11 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.FacesMessages;
 
+import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
@@ -48,8 +48,7 @@ public class DocumentoDownloader implements Serializable {
 	public static final String NAME = "documentoDownloader";
 	private static final LogProvider LOG = Logging.getLogProvider(DocumentoValidator.class);
 
-    private static final String URL_DOWNLOAD_BINARIO = "{0}/downloadDocumento.seam?id={1}";
-    private static final String URL_DOWNLOAD_HTML = "{0}/Painel/documentoHTML.seam?id={1}";
+    private static final String URL_DOWNLOAD = "{0}/downloadDocumento.seam?id={1}";
 
     @In
     private PathResolver pathResolver;
@@ -82,7 +81,11 @@ public class DocumentoDownloader implements Serializable {
 
     public void downloadDocumento(Documento documento, boolean gerarMargens) {
     	if (validarSigilo(documento)) {
-    		downloadDocumento(documento.getDocumentoBin(), gerarMargens);
+    	    try {
+    	        getFileDownloader().downloadDocumentoViaServlet(documento);
+            } catch (IOException e) {
+                getActionMessagesService().handleException(null, e);
+            }
     	}
     }
     
@@ -106,14 +109,11 @@ public class DocumentoDownloader implements Serializable {
     }
 
     public void downloadDocumento(DocumentoBin documento, boolean gerarMargens) {
-        byte[] data = documentoBinarioManager.getData(documento.getId());
-        String fileName = documento.getNomeArquivo();
-        String contentType = ("application/" + documento.getExtensao()).toLowerCase();
-        if (gerarMargens && contentType.equals("application/pdf") && !documento.getAssinaturas().isEmpty()) {
-            downloadPdf(documento, data, fileName);
-        } else {
-            FileDownloader.download(data, contentType, fileName);
-        }    	
+        try {
+            getFileDownloader().downloadDocumentoViaServlet(documento);
+        } catch (IOException e) {
+            getActionMessagesService().handleException(null, e);
+        }
     }
     
     public void downloadDocumento(DocumentoBin documento) {
@@ -125,40 +125,13 @@ public class DocumentoDownloader implements Serializable {
     	downloadDocumento(documentoBin);
     }
 
-	private void downloadPdf(DocumentoBin documento, byte[] data, String fileName) {
-		try {
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-		    documentoBinManager.writeMargemDocumento(documento, data, out);
-		    data = out.toByteArray();
-		} catch (BusinessException e) {
-		    LOG.error("", e);
-		    FacesMessages.instance().clear();
-		    mensagemErro = "Erro ao gerar a margem do PDF: " + e.getMessage();
-		    FacesMessages.instance().add(mensagemErro);
-		    erroMargem = true;
-		    return;
-		}
-		try {
-		    HttpServletResponse response = FileDownloader.prepareDownloadResponse("application/pdf", fileName);
-		    response.getOutputStream().write(data);
-		    response.getOutputStream().flush();
-		    FacesContext.getCurrentInstance().responseComplete();			
-		}
-		catch (IOException e) {
-		    LOG.error("", e);
-		    FacesMessages.instance().clear();
-		    mensagemErro = "Erro fazer upload do PDF: " + e.getMessage();
-		    FacesMessages.instance().add(mensagemErro);
-		}
-	}
-    
-    public void downloadPdf(Documento documento, byte[] pdf, String nome) {
+	public void downloadPdf(Documento documento, byte[] pdf, String nome) {
     	if (validarSigilo(documento)) {
-    		if (!documento.getDocumentoBin().getAssinaturas().isEmpty()) {
-    			downloadPdf(documento.getDocumentoBin(), pdf, nome);
-    		} else {
-    			FileDownloader.download(pdf, "application/pdf", nome);
-    		}
+    	    try {
+    	        getFileDownloader().downloadDocumentoViaServlet(documento);
+            } catch (IOException e) {
+                getActionMessagesService().handleException(null, e);
+            }
     	}
     }
 
@@ -208,10 +181,7 @@ public class DocumentoDownloader implements Serializable {
     		throw new BusinessException("Não foi possível carregar os documentos. ");
     	}
     		
-        if (documento.getDocumentoBin().isBinario()) {
-            return MessageFormat.format(URL_DOWNLOAD_BINARIO, pathResolver.getContextPath(), documento.getId().toString());
-        }
-        return MessageFormat.format(URL_DOWNLOAD_HTML, pathResolver.getContextPath(), documento.getId().toString());
+        return MessageFormat.format(URL_DOWNLOAD, pathResolver.getContextPath(), documento.getId().toString());
     }
     
     public String getMensagemErro() {
@@ -232,4 +202,13 @@ public class DocumentoDownloader implements Serializable {
         }
     	return true;
 	}
+    
+    private FileDownloader getFileDownloader(){
+        return BeanManager.INSTANCE.getReference(FileDownloader.class);
+    }
+    
+    private ActionMessagesService getActionMessagesService(){
+        return BeanManager.INSTANCE.getReference(ActionMessagesService.class);
+    }
+    
 }

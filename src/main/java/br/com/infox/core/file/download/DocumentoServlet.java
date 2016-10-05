@@ -1,0 +1,162 @@
+package br.com.infox.core.file.download;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.UUID;
+
+import javax.inject.Inject;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.UriBuilder;
+
+import static org.apache.commons.lang3.ObjectUtils.*;
+
+import com.lowagie.text.DocumentException;
+
+import br.com.infox.core.messages.InfoxMessages;
+import br.com.infox.core.pdf.PdfManager;
+import br.com.infox.core.util.StringUtil;
+import br.com.infox.epp.documento.DocumentoBinSearch;
+import br.com.infox.epp.processo.documento.entity.Documento;
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
+
+@WebServlet(urlPatterns = DocumentoServlet.BASE_SERVLET_PATH + "/*")
+public class DocumentoServlet extends HttpServlet {
+
+    private static final long serialVersionUID = 1L;
+    public static final String BASE_SERVLET_PATH = "/file";
+
+    @Inject private DocumentoBinSearch documentoBinSearch;
+    @Inject private DocumentoBinManager documentoBinManager;
+    @Inject private DocumentoBinarioManager documentoBinarioManager;
+    @Inject private PdfManager pdfManager;
+    @Inject private InfoxMessages infoxMessages;
+    
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        DocumentoInfo downloadDocumentoInfo = extractFromRequest(req, DocumentoServletOperation.DOWNLOAD);
+        DocumentoBin documento=null;
+        if (downloadDocumentoInfo == null) {
+            Object documentoDownload = req.getSession().getAttribute("documentoDownload");
+            if (documentoDownload == null){
+                writeNotFoundResponse(resp);
+                return;
+            }
+            if (documentoDownload instanceof Documento){
+                documento = ((Documento) documentoDownload).getDocumentoBin();
+            } else if (documentoDownload instanceof DocumentoBin){
+                documento = (DocumentoBin) documentoDownload;
+            }
+        }
+        if (documento == null)
+        documento = firstNonNull(
+            documentoBinSearch.getTermoAdesaoByUUID(UUID.fromString(downloadDocumentoInfo.getUid())),
+            documentoBinSearch.getDocumentoPublicoByUUID(UUID.fromString(downloadDocumentoInfo.getUid()))
+        );
+        
+        if (documento == null) {
+            writeNotFoundResponse(resp);
+            return;
+        }
+        String nomeArquivo = extractNomeArquivo(documento);
+        if (!URI.create(req.getRequestURI()).getPath().endsWith(nomeArquivo)) {
+            UriBuilder uriBuilder = UriBuilder.fromPath(req.getRequestURI());
+            uriBuilder.path(nomeArquivo);
+            resp.sendRedirect(uriBuilder.build().toString());
+            return;
+        }
+        req.getSession().removeAttribute("documentoDownload");
+        writeDocumentoBinToResponse(resp, documento);
+    }
+
+    private String extractNomeArquivo(DocumentoBin documento) {
+        String nomeArquivo=documento.getNomeArquivo();
+        String extensao = documento.getExtensao();
+        if (StringUtil.isEmpty(extensao)){
+            documento.setExtensao("pdf");
+        }
+        if (StringUtil.isEmpty(nomeArquivo)){
+            nomeArquivo=documento.getUuid().toString();
+        }
+        if (!nomeArquivo.endsWith("."+extensao))
+            nomeArquivo = nomeArquivo+"."+documento.getExtensao();
+        return nomeArquivo;
+    }
+    
+    private void writeNotFoundResponse(HttpServletResponse resp) throws IOException {
+        resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+        resp.flushBuffer();
+    }
+
+    private void writeDocumentoBinToResponse(HttpServletResponse resp, DocumentoBin documento) throws IOException {
+        byte[] data = getData(documento);
+        String contentType = "application/" + documento.getExtensao();
+        resp.setContentType(contentType);
+        resp.setStatus(200);
+        if ("application/pdf".equalsIgnoreCase(contentType)){
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            documentoBinManager.writeMargemDocumento(documento, data, out);
+            data = out.toByteArray();
+        }
+        resp.getOutputStream().write(data);
+        resp.getOutputStream().flush();
+    }
+
+    private byte[] getData(DocumentoBin documento) {
+        byte[] data = new byte[0];
+        if (documentoBinarioManager.existeBinario(documento.getId())){
+            data = documentoBinarioManager.getData(documento.getId());
+        } else {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            try {
+                String modeloDocumento = documento.isBinario() ? getMensagemDocumentoNulo() : defaultIfNull(documento.getModeloDocumento(), getMensagemDocumentoNulo());
+                pdfManager.convertHtmlToPdf(modeloDocumento, outputStream);
+                documento.setExtensao("pdf");
+            } catch (DocumentException e) {
+            }
+            data = outputStream.toByteArray();
+        }
+        return data;
+    }
+
+    private String getMensagemDocumentoNulo() {
+        return infoxMessages.get("documentoProcesso.error.noFileOrDeleted");
+    }
+
+    private DocumentoInfo extractFromRequest(HttpServletRequest req, DocumentoServletOperation action) {
+        String uriPath = req.getRequestURI();
+        try {
+            URI uri = new URI(uriPath);
+            uriPath = uri.getPath();
+        } catch (URISyntaxException e) {
+        }
+
+        String basePath = req.getContextPath() + BASE_SERVLET_PATH + "/";
+        if (!uriPath.startsWith(basePath)) {
+            return null;
+        }
+        uriPath = uriPath.substring(basePath.length());
+        int indexOfActionPath = uriPath.indexOf(action.getPath());
+        if (indexOfActionPath < 0) {
+            return null;
+        }
+        String uid = uriPath.substring(0, indexOfActionPath);
+
+        uriPath = uriPath.substring(indexOfActionPath + action.getPath().length());
+        if (uriPath.length() > 0 && uriPath.charAt(0) == '/')
+            uriPath = uriPath.substring(0);
+
+        String filename = new File(uriPath).getName();
+
+        return new DocumentoInfo(uid, filename);
+    }
+
+}

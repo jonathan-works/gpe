@@ -122,20 +122,19 @@ public class QuartzResourceImpl implements QuartzResource {
     }
     
     @Override
-    @Transactional
     public void retryAutomaticNodes() {
         Lifecycle.beginCall();
-        JbpmContextProducer.createJbpmContextTransactional();
-        JbpmContext jbpmContext = ComponentUtil.getComponent("org.jboss.seam.bpm.jbpmContext");
         try {
             List<Token> tokens = JbpmUtil.getTokensOfAutomaticNodesNotEnded();
             for (Token token : tokens) {
-                Token tokenForUpdate = jbpmContext.getTokenForUpdate(token.getId());
-                Node node = (Node) HibernateUtil.removeProxy(tokenForUpdate.getNode());
-                ExecutionContext executionContext = new ExecutionContext(tokenForUpdate);
                 TransactionManager transactionManager = applicationServerService.getTransactionManager();
                 try {
                     transactionManager.begin();
+                    JbpmContextProducer.createJbpmContextTransactional();
+                    JbpmContext jbpmContext = ComponentUtil.getComponent("org.jboss.seam.bpm.jbpmContext");
+                    Token tokenForUpdate = jbpmContext.getTokenForUpdate(token.getId());
+                    Node node = (Node) HibernateUtil.removeProxy(tokenForUpdate.getNode());
+                    ExecutionContext executionContext = new ExecutionContext(tokenForUpdate);
                     node.execute(executionContext);
                     transactionManager.commit();
                 } catch (Exception e) {
@@ -146,7 +145,7 @@ public class QuartzResourceImpl implements QuartzResource {
                         LOG.error("Error rolling back transaction", e1);
                     }
                 }
-            } 
+            }
         } finally {
             Lifecycle.endCall();
         }
