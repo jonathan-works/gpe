@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.comunicacao.action;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 import javax.ejb.Stateless;
@@ -12,6 +13,7 @@ import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
@@ -34,6 +36,7 @@ public class DownloadComunicacaoAction implements Serializable{
 	private ComunicacaoService comunicacaoService;
 	@Inject
 	private ActionMessagesService actionMessagesService;
+	@Inject private FileDownloader fileDownloader;
 	
 	public void downloadComunicacaoCompleta(Long idModelo, Long idDestinatario) {
 		DestinatarioModeloComunicacao destinatario = null;
@@ -43,10 +46,14 @@ public class DownloadComunicacaoAction implements Serializable{
 		ModeloComunicacao modeloComunicacao = destinatario != null ? destinatario.getModeloComunicacao() : genericManager.find(ModeloComunicacao.class, idModelo);
 		try {
 			byte[] pdf = comunicacaoService.gerarPdfCompleto(modeloComunicacao, destinatario);
-			FileDownloader.download(pdf, "application/pdf", "Comunicação.pdf");
+			
+			fileDownloader.downloadDocumentoViaServlet(pdf, "application/pdf", "Comunicação.pdf");
 		} catch (DAOException e) {
 			LOG.error("", e);
 			actionMessagesService.handleDAOException(e);
+		} catch (IOException e){
+		    LOG.error("", e);
+                    actionMessagesService.handleException(null, e);
 		}
 	}
 }
