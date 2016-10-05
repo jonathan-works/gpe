@@ -94,7 +94,7 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
     @Inject
     private CustomVariableSearch customVariableSearch;
     @Inject
-    private MetadadoProcessoManager metadadoProcessoManager;
+    protected MetadadoProcessoManager metadadoProcessoManager;
 
     @External(tooltip = "process.events.expression.atribuirCiencia.tooltip", expressionType = ExpressionType.EVENTOS)
     public void atribuirCiencia() {
