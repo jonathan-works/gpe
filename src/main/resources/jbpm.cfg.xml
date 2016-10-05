@@ -1,14 +1,10 @@
 <jbpm-configuration>
 
-
   <jbpm-context>
     <service name="persistence">
        <factory>
           <bean class="org.jbpm.persistence.db.DbPersistenceServiceFactory">
              <field name="isTransactionEnabled"><false/></field>
-             <field name="sessionFactoryJndiName">
-             	<string>${session.factory.jndi}</string>
-             </field>
           </bean>
        </factory>
     </service>

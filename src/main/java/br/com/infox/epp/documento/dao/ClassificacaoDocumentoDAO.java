@@ -113,9 +113,7 @@ public class ClassificacaoDocumentoDAO extends DAO<ClassificacaoDocumento> {
     //TODO retirar dessa exibição a classificação do pedido de prorrogação /\
 	public List<ClassificacaoDocumento> getClassificacoesDocumentoDisponiveisRespostaComunicacao(DestinatarioModeloComunicacao destinatarioModeloComunicacao, boolean isModelo, Papel papel) {
     	CriteriaQuery<ClassificacaoDocumento> query = createQueryUseableClassificacaoDocumento(isModelo, papel);
-    	if (!destinatarioModeloComunicacao.getModeloComunicacao().getTipoComunicacao().getTipoComunicacaoClassificacaoDocumentos().isEmpty()) {
-        	query.where(query.getRestriction(), createClassificacoesDocumentoVinculadasTipoComunicacaoPredicate(query, destinatarioModeloComunicacao));
-    	}
+        query.where(query.getRestriction(), createClassificacoesDocumentoVinculadasTipoComunicacaoPredicate(query, destinatarioModeloComunicacao));
     	return getEntityManager().createQuery(query).getResultList();
     }
     

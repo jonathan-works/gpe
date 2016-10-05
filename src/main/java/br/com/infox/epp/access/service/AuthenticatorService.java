@@ -5,7 +5,6 @@ import static br.com.infox.constants.WarningConstants.UNCHECKED;
 import java.security.Principal;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -38,10 +37,9 @@ import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.BloqueioUsuarioManager;
 import br.com.infox.epp.access.manager.CertificateManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
+import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
-import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
-import br.com.infox.epp.processo.documento.assinatura.AssinaturaException.Motivo;
 import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -53,13 +51,17 @@ import br.com.infox.seam.exception.RedirectToLoginApplicationException;
 @Name(AuthenticatorService.NAME)
 public class AuthenticatorService {
 
+    public static final String LOGIN_ERROR_SEM_PESSOA_FISICA = "login.error.semPessoaFisica";
+    public static final String LOGIN_ERROR_TERMO_ADESAO_FAILED = "login.termoAdesao.failed";
+    public static final String LOGIN_ERROR_USUARIO_SEM_PERFIL = "login.error.semPerfil";
+    public static final String LOGIN_ERROR_LOGIN_CERTIFICADO_DESABILITADO = "login.error.loginCertificadoDesabilitado";
+    public static final String LOGIN_ERROR_LOGIN_COM_SENHA_DESABILITADO = "login.error.loginComSenhaDesabilitado";
     public static final String CERTIFICATE_ERROR_EXPIRED = "certificate.error.expired";
-    private static final String CERTIFICATE_ERROR_USUARIO_LOGIN_PROVISORIO_EXPIRADO = "certificate.error.usuarioLoginProvisorioExpirado";
-    private static final String CERTIFICATE_ERROR_USUARIO_LOGIN_BLOQUEADO = "certificate.error.usuarioLoginBloqueado";
-    private static final String CERTIFICATE_ERROR_USUARIO_LOGIN_INATIVO = "certificate.error.usuarioLoginInativo";
-    private static final String CERTIFICATE_ERROR_TIPO_USUARIO_SISTEMA = "certificate.error.tipoUsuarioSistema";
-    private static final String CERTIFICATE_ERROR_SEM_USUARIO_LOGIN = "certificate.error.semUsuarioLogin";
-    private static final String CERTIFICATE_ERROR_SEM_PESSOA_FISICA = "certificate.error.semPessoaFisica";
+    public static final String LOGIN_ERROR_USUARIO_PROVISORIO_EXPIRADO = "login.error.expirado";
+    public static final String LOGIN_ERROR_USUARIO_BLOQUEADO = "login.error.bloqueado";
+    public static final String LOGIN_ERROR_USUARIO_INATIVO = "login.error.inativo";
+    public static final String LOGIN_ERROR_LOGIN_DESABILITADO = "login.error.loginDesabilitado";
+    public static final String LOGIN_ERROR_USUARIO_INEXISTENTE = "login.error.inexistente";
     private static final String SEAM_SECURITY_CREDENTIALS = "org.jboss.seam.security.credentials";
     private static final String CHECK_VALIDADE_CERTIFICADO = "CertificateAuthenticator.checkValidadeCertificado(Certificado)";
     public static final String NAME = "authenticatorService";
@@ -114,23 +116,6 @@ public class AuthenticatorService {
         Contexts.getSessionContext().set(USUARIO_PERFIL_LIST, usuarioPerfilList);
     }
 
-    public void validarUsuario(UsuarioLogin usuario) throws LoginException, DAOException {
-        if (usuario.getBloqueio()) {
-            if (bloqueioUsuarioManager.liberarUsuarioBloqueado(usuario)) {
-                bloqueioUsuarioManager.desfazerBloqueioUsuario(usuario);
-            } else {
-                throw new LoginException("O usuário " + usuario.getNomeUsuario() + " está bloqueado. Por favor, contate o adminstrador do sistema");
-            }
-        } else if (usuario.getProvisorio()) {
-            if (usuarioLoginManager.usuarioExpirou(usuario)) {
-                usuarioLoginManager.inativarUsuario(usuario);
-                throw new LoginException("O usuário " + usuario.getNomeUsuario() + " expirou. Por favor, contate o adminstrador do sistema");
-            }
-        } else if (!usuario.getAtivo()) {
-            throw new LoginException("O usuário " + usuario.getNomeUsuario() + " não está ativo.\n");
-        }
-    }
-
     public UsuarioLogin getUsuarioByLogin(String login) {
         return usuarioLoginManager.getUsuarioLoginByLogin(login);
     }
@@ -163,7 +148,8 @@ public class AuthenticatorService {
             UsuarioPerfil usuarioPerfil = usuarioPerfilList.get(0);
             return usuarioPerfilDAO.getReference(usuarioPerfil.getIdUsuarioPerfil());
         }
-        throw new LoginException("O usuário " + usuario + " não possui Perfil");
+        
+        throw new LoginException(String.format(infoxMessages.get(LOGIN_ERROR_USUARIO_SEM_PERFIL), usuario));
     }
 
     public void signatureAuthentication(UsuarioLogin usuario, String signature, String certChain, boolean termoAdesao)
@@ -175,14 +161,9 @@ public class AuthenticatorService {
                 pessoaFisica.setCertChain(certChain);
                 pessoaFisicaManager.merge(pessoaFisica);
                 pessoaFisicaManager.flush();
-            } else {
-                if (!pessoaFisica.getCertChain().equals(certChain)) {
-                    AssinaturaException ex = new AssinaturaException(Motivo.CERTIFICADO_USUARIO_DIFERENTE_CADASTRO);
-                    throw new RedirectToLoginApplicationException(ex.getMessage());
-                }
             }
             if (signature == null && termoAdesao) {
-                throw new RedirectToLoginApplicationException(infoxMessages.get("login.termoAdesao.failed"));
+                throw new RedirectToLoginApplicationException(infoxMessages.get(LOGIN_ERROR_TERMO_ADESAO_FAILED));
             }
         }
     }
@@ -192,32 +173,67 @@ public class AuthenticatorService {
         checkValidadeCertificado(c);
         String cpf = new StringBuilder(((CertificadoDadosPessoaFisica) c).getCPF()).insert(9, '-').insert(6, '.')
                 .insert(3, '.').toString();
-        return checkValidadeUsuarioLogin(cpf);
+        return checkValidadeLoginCertificado(cpf);
     }
 
-    private UsuarioLogin checkValidadeUsuarioLogin(final String cpf) throws LoginException {
+    private UsuarioLogin checkValidadeLoginCertificado(final String cpf) throws LoginException {
         final PessoaFisica pessoaFisica = pessoaFisicaManager.getByCpf(cpf);
         if (pessoaFisica == null) {
-            throw new LoginException(infoxMessages.get(CERTIFICATE_ERROR_SEM_PESSOA_FISICA));
+            throw new LoginException(infoxMessages.get(LOGIN_ERROR_USUARIO_INEXISTENTE));
         }
         final UsuarioLogin usuarioLogin;
         usuarioLogin = usuarioLoginManager.getUsuarioLoginByPessoaFisica(pessoaFisica);
-        if (usuarioLogin == null) {
-            throw new LoginException(infoxMessages.get(CERTIFICATE_ERROR_SEM_USUARIO_LOGIN));
+        if (!usuarioLogin.isLoginComCertificadoHabilitado()){
+            throw new LoginException(infoxMessages.get(LOGIN_ERROR_LOGIN_CERTIFICADO_DESABILITADO));
         }
-        if (!usuarioLogin.isHumano()) {
-            throw new LoginException(infoxMessages.get(CERTIFICATE_ERROR_TIPO_USUARIO_SISTEMA));
+        checkValidadeUsuarioLogin(usuarioLogin, UsuarioEnum.C);
+        return usuarioLogin;
+    }
+
+    public void checkValidadeUsuarioLogin(final UsuarioLogin usuarioLogin, UsuarioEnum tipoLoginValido) throws LoginException {
+        if (usuarioLogin == null) {
+            throw new LoginException(infoxMessages.get(LOGIN_ERROR_USUARIO_INEXISTENTE));
+        }
+        
+        validaMeioLogin(usuarioLogin.getTipoUsuario(), tipoLoginValido);
+        
+        if (usuarioLogin.isUsuarioSistema()) {
+            throw new LoginException(infoxMessages.get(LOGIN_ERROR_LOGIN_DESABILITADO));
         }
         if (!usuarioLogin.getAtivo()) {
-            throw new LoginException(infoxMessages.get(CERTIFICATE_ERROR_USUARIO_LOGIN_INATIVO));
+            throw new LoginException(infoxMessages.get(LOGIN_ERROR_USUARIO_INATIVO));
         }
         if (usuarioLogin.getBloqueio()) {
-            throw new LoginException(infoxMessages.get(CERTIFICATE_ERROR_USUARIO_LOGIN_BLOQUEADO));
+            if (bloqueioUsuarioManager.liberarUsuarioBloqueado(usuarioLogin)) {
+                bloqueioUsuarioManager.desfazerBloqueioUsuario(usuarioLogin);
+            } else {
+                throw new LoginException(infoxMessages.get(LOGIN_ERROR_USUARIO_BLOQUEADO));
+            }
         }
-        if (usuarioLogin.getProvisorio() && new Date().after(usuarioLogin.getDataExpiracao())) {
-            throw new LoginException(infoxMessages.get(CERTIFICATE_ERROR_USUARIO_LOGIN_PROVISORIO_EXPIRADO));
+        if (usuarioLogin.getProvisorio() && usuarioLoginManager.usuarioExpirou(usuarioLogin)) {
+            throw new LoginException(infoxMessages.get(LOGIN_ERROR_USUARIO_PROVISORIO_EXPIRADO));
         }
-        return usuarioLogin;
+    }
+
+    private void validaMeioLogin(final UsuarioEnum tipoLoginUsuario, UsuarioEnum tipoLoginValido) throws LoginException {
+        if (UsuarioEnum.S.equals(tipoLoginUsuario))
+            throw new LoginException(infoxMessages.get(LOGIN_ERROR_LOGIN_DESABILITADO));
+        
+        if (!UsuarioEnum.H.equals(tipoLoginUsuario) && !tipoLoginUsuario.equals(tipoLoginValido)) {
+            if (UsuarioEnum.P.equals(tipoLoginValido))
+                throw new LoginException(infoxMessages.get(LOGIN_ERROR_LOGIN_COM_SENHA_DESABILITADO));
+            else if (UsuarioEnum.C.equals(tipoLoginValido))
+                throw new LoginException(infoxMessages.get(LOGIN_ERROR_LOGIN_CERTIFICADO_DESABILITADO));
+            
+        }
+    }
+
+    /**
+     * @deprecated Método duplicado, utilizar {@link AuthenticatorService#checkValidadeUsuarioLogin(UsuarioLogin, UsuarioEnum)}
+     */
+    @Deprecated
+    public void validarUsuario(UsuarioLogin usuario) throws LoginException, DAOException {
+        checkValidadeUsuarioLogin(usuario, UsuarioEnum.P);
     }
 
     public void loginWithoutPassword(UsuarioLogin usuarioLogin){

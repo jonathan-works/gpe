@@ -9,13 +9,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.event.Observes;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.NonUniqueResultException;
 
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
@@ -24,8 +22,6 @@ import com.lowagie.text.DocumentException;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.access.component.tree.LocalizacaoSubTreeHandler;
-import br.com.infox.epp.access.component.tree.LocalizacaoSubTreeHandler.LocalizacaoSubTreeSelectEvent;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
@@ -37,6 +33,7 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.localizacao.LocalizacaoSearch;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
@@ -45,11 +42,11 @@ import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoInternaService;
 import br.com.infox.epp.processo.comunicacao.service.DestinatarioComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
-import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacaoManager;
+import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacaoSearch;
+import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoUsoComunicacaoEnum;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.seam.exception.BusinessException;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Named
 @ViewScoped
@@ -59,7 +56,7 @@ public class EnvioComunicacaoInternaView implements Serializable {
     private static final Logger LOGGER = Logger.getLogger(EnvioComunicacaoInternaView.class.getName());
     
     @Inject
-    private TipoComunicacaoManager tipoComunicacaoManager;
+    private TipoComunicacaoSearch tipoComunicacaoSearch;
     @Inject
     private LocalizacaoManager localizacaoManager;
     @Inject
@@ -78,7 +75,10 @@ public class EnvioComunicacaoInternaView implements Serializable {
     private ComunicacaoInternaService comunicacaoInternaService;
     @Inject
     private ModeloDocumentoManager modeloDocumentoManager;
+    @Inject
+    private LocalizacaoSearch localizacaoSearch;
     
+    private Localizacao localizacaoRaiz;
     private ModeloComunicacao modeloComunicacao;
     private TipoComunicacao tipoComunicacao;
     private Boolean expedida;
@@ -140,10 +140,8 @@ public class EnvioComunicacaoInternaView implements Serializable {
 
     private void initLocalizacaoRaiz() {
         try {
-            Localizacao localizacaoRaiz = localizacaoManager.getLocalizacaoByCodigo(getCodigoRaizLocalizacoesComunicacaoInterna());
-            if (localizacaoRaiz != null) {
-                getLocalizacaoSubTree().setIdLocalizacaoPai(localizacaoRaiz.getIdLocalizacao());
-            } else {
+            localizacaoRaiz = localizacaoManager.getLocalizacaoByCodigo(getCodigoRaizLocalizacoesComunicacaoInterna());
+            if (localizacaoRaiz == null) {
                 FacesMessages.instance().add("O parâmetro raizLocalizacoesComunicacao não foi definido.");
             }
         } catch (DAOException e) {
@@ -169,11 +167,11 @@ public class EnvioComunicacaoInternaView implements Serializable {
         }
     }
     
-    public void onChangeLocalizacao(@Observes @LocalizacaoSubTreeSelectEvent Localizacao localizacao) {
-        if (localizacao == null) {
+    public void onChangeLocalizacao() {
+        if (getLocalizacaoDestino() == null) {
             perfisPermitidos = Collections.emptyList();
         } else {
-            perfisPermitidos = usuarioPerfilManager.getPerfisPermitidos(localizacao);
+            perfisPermitidos = usuarioPerfilManager.getPerfisAtivosByLocalizacaoContendoUsuario(getLocalizacaoDestino());
         }
     }
     
@@ -254,7 +252,6 @@ public class EnvioComunicacaoInternaView implements Serializable {
         setPessoaDestinatario(null);
         setLocalizacaoDestino(null);
         setPerfilDestino(null);
-        getLocalizacaoSubTree().clearTree();
     }
 
     @ExceptionHandled(value = MethodType.REMOVE, removedMessage="Destinatário removido com sucesso!")
@@ -274,6 +271,7 @@ public class EnvioComunicacaoInternaView implements Serializable {
     
     public void enviar() {
         try {
+            validaDestinatarios();
             gravar();
             comunicacaoInternaService.enviarComunicacao(getModeloComunicacao());
             loadComunicacaoExpedida();
@@ -287,13 +285,26 @@ public class EnvioComunicacaoInternaView implements Serializable {
             FacesContext.getCurrentInstance().validationFailed();
         }
     }
-    
+
+    private void validaDestinatarios() {
+	if (getModeloComunicacao().getDestinatarios() == null || getModeloComunicacao().getDestinatarios().isEmpty()) {
+	    throw new BusinessException("Nenhum destinatário foi selecionado.");
+	}
+    }
+
     public void clearDestinoDestinatario() {
         setIndividual(Boolean.FALSE);
         setLocalizacaoDestino(null);
         setPerfilDestino(null);
         setPessoaDestinatario(null);
     }
+    
+    public List<Localizacao> getLocalizacoesDisponiveis(String query) {
+    	if (query != null && !query.isEmpty()) {
+    		return localizacaoSearch.getLocalizacoesByRaizWithDescricaoLikeContendoUsuario(localizacaoRaiz, query, 15);
+    	}
+    	return Collections.emptyList();
+	}
     
     public List<ClassificacaoDocumento> getClassificacoes() {
         return classificacoes;
@@ -312,7 +323,7 @@ public class EnvioComunicacaoInternaView implements Serializable {
     }
     
     private void loadTiposComunicacao() {
-        tiposComunicacao = tipoComunicacaoManager.listTiposComunicacaoAtivos();
+        tiposComunicacao = tipoComunicacaoSearch.getTiposComunicacaoAtivosByUso(TipoUsoComunicacaoEnum.I);
     }
     
     public Boolean getIndividual() {
@@ -413,10 +424,6 @@ public class EnvioComunicacaoInternaView implements Serializable {
     
     public boolean isTaskPage() {
         return taskPage;
-    }
-
-    public LocalizacaoSubTreeHandler getLocalizacaoSubTree() {
-        return ComponentUtil.getComponent(LocalizacaoSubTreeHandler.NAME, ScopeType.PAGE);
     }
 
 }

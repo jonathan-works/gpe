@@ -11,6 +11,7 @@ import org.jbpm.graph.action.Script;
 import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.GraphElement;
+import org.jbpm.scheduler.def.CancelTimerAction;
 
 import br.com.infox.ibpm.node.handler.NodeHandler;
 import br.com.infox.jbpm.action.ActionTemplateHandler;
@@ -137,6 +138,10 @@ public class EventHandler implements Serializable {
                     Action action = it.next();
                     if (NodeHandler.GENERATE_DOCUMENTO_ACTION_NAME.equals(action.getName())) {
                         it.remove();
+                        break;
+                    }
+                    if (action instanceof CancelTimerAction) {
+                    	it.remove();
                         break;
                     }
                 }

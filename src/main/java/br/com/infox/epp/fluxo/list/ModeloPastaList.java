@@ -18,6 +18,7 @@ public class ModeloPastaList extends EntityList<ModeloPasta>{
 	private final String DEFAULT_ORDER = "ordem";
 	
 	public void clearSearchFields() {
+		getEntity().setCodigo(null);
 	    getEntity().setNome(null);
 	    getEntity().setDescricao(null);
 	}
@@ -25,6 +26,7 @@ public class ModeloPastaList extends EntityList<ModeloPasta>{
 	@Override
 	protected void addSearchFields() {
 		addSearchField("nome", SearchCriteria.CONTENDO);
+		addSearchField("codigo", SearchCriteria.CONTENDO);
 		addSearchField("descricao", SearchCriteria.CONTENDO);
 		addSearchField("fluxo", SearchCriteria.IGUAL);
 	}

@@ -9,21 +9,20 @@
       xmlns:s="http://jboss.org/schema/seam/taglib"
       xmlns:infox="http://www.infox.com.br/jsf"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:c="http://java.sun.com/jsp/jstl/core">
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:i="http://java.sun.com/jsf/composite/infox">
 
 	<h:outputScript library="js" name="components.js" />
 	<s:div style="background-color: white; padding-top: 20px; margin-bottom: 20px; padding-left: 10px; padding-right: 10px;">
 		<s:div id="comunicacaoDiv">
-		
 			<!-- Combo de tipo de comunicação e botão de visualizar comunicação -->
 			<h:form id="comunicacaoForm">
 				<wi:selectOneMenuEntity id="tipoComunicacao" label="#{infoxMessages['comunicacao.tipoComunicacao']}"
 					showRequired="true" items="#{envioComunicacaoController.tiposComunicacao}"
 					value="#{envioComunicacaoController.tipoComunicacao}"
-					disabled="#{envioComunicacaoController.modeloComunicacao.finalizada}">
+					disabled="#{not envioComunicacaoController.canChooseTipoComunicacao()}">
 					<a:ajax event="change" render="modeloDocumento, classificacaoComunicacao" />
 				</wi:selectOneMenuEntity>
-				<div />
 				<a:commandButton id="visualizarComunicacao" 
 					render="@this" execute="@this"
 					value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
@@ -34,7 +33,7 @@
 					<infox:flashcopy/>
 				</a:commandButton>
 				<a:commandButton id="reabrirComunicacao" 
-					render="comunicacaoDiv" execute="@this"
+					render="comunicacaoDiv buttonsTaskPageComunicacaoForm" execute="@this"
 					value="#{infoxMessages['comunicacao.reabrir']}" 
 					styleClass="buttons"
 					rendered="#{envioComunicacaoController.modeloComunicacao.finalizada and not envioComunicacaoController.expedida}"
@@ -44,152 +43,8 @@
 			</h:form>
 			
 			<!-- Painel dos Destinatários -->
-        <s:div id="destinatariosPanel">				
-			<!-- Participantes Disponíveis -->
-			<s:div rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
-				<rich:collapsiblePanel header="#{infoxMessages['comunicacao.participantesProcesso']}" switchType="client"
-					rendered="#{participanteProcessoComunicacaoList.resultCount gt 0}">
-					<wi:dataTable id="participantesDisponiveis" values="#{participanteProcessoComunicacaoList.list(15)}" 
-						bean="#{participanteProcessoComunicacaoList}" showSearchForm="false" rowId="#{row.id}">
-						<ui:define name="headerToolBar" />
-						<ui:define name="toolBar">
-							<h:form>
-								<a:commandLink render="destinatariosPanel"
-									action="#{destinatarioComunicacaoAction.adicionarDestinatario(row)}">
-									<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}" title="#{infoxMessages['button.add']}" />
-								</a:commandLink>
-							</h:form>
-						</ui:define>
-						<rich:column>
-							<f:facet name="header">#{infoxMessages['participanteProcesso.nome']}</f:facet>
-							<h:outputText value="#{row.nome}" />
-						</rich:column>
-						<rich:column>
-							<f:facet name="header">#{infoxMessages['participanteProcesso.tipoParticipante']}</f:facet>
-							<h:outputText value="#{row.tipoParte.descricao}" />
-						</rich:column>
-                           <rich:column>
-                               <f:facet name="header">#{infoxMessages['participanteProcesso.superior']}</f:facet>
-                               <h:outputText value="#{row.participantePai}"></h:outputText>
-                           </rich:column>
-					</wi:dataTable>
-				</rich:collapsiblePanel>
-			</s:div>
+			<ui:include src="/WEB-INF/taskpages/comunicacao/destinatarios.xhtml"></ui:include>
 			
-			<!-- Controle do Relator -->
-			<h:form rendered="#{destinatarioComunicacaoAction.processoPossuiRelator and not envioComunicacaoController.modeloComunicacao.finalizada}"
-				style="margin-top:1em;">
-				<wi:selectBooleanCheckbox id="relator" label="#{infoxMessages['comunicacao.enviarParaRelator']}" 
-					value="#{destinatarioComunicacaoAction.modeloComunicacao.enviarRelatoria}">
-					<a:ajax event="change" render="destinatariosPanel" limitRender="true" execute="@this"
-						listener="#{destinatarioComunicacaoAction.gerenciarRelator}"/>
-				</wi:selectBooleanCheckbox>
-			</h:form>
-			<div />
-			
-			<!-- Localizações disponíveis para serem selecionadas como Destinatários -->
-			<h:form rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
-					<rich:collapsiblePanel header="#{infoxMessages['comunicacao.localizacoes']}" switchType="client">
-                       	<s:div style="margin-botton:1em">
-                       		<wi:outputText id="mensagemEnvioLocalizacao" value="#{infoxMessages['comunicacao.mensagemEnvioParaLocalizacao']}" />
-                       	</s:div>
-                        <wi:tree
-                            id="localizacao"
-                            assignTo="destinatarioComunicacaoAction.localizacao"
-                            tree="#{localizacaoSubTree}"
-                            icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
-                            iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
-                            label="#{infoxMessages['comunicacao.localizacoes']}"
-                            required="true"
-                            render="perfisPermitidosDestino" />
-                        <wi:selectOneMenuEntity
-                            id="perfisPermitidosDestino"
-                            value="#{destinatarioComunicacaoAction.perfilDestino}"
-                            label="#{infoxMessages['usuarioPerfil.perfil']}"
-                            items="#{destinatarioComunicacaoAction.perfisPermitidosDestino}"
-                            showLabelSelecione="true"
-                            disabled="#{empty destinatarioComunicacaoAction.localizacao}" />
-                        <wi:commandButton id="adicionarLocalizacao" reRender="destinatariosPanel, pageBodyDialogMessage" value="#{infoxMessages['button.add']}"
-				        	action="#{destinatarioComunicacaoAction.adicionarDestino(destinatarioComunicacaoAction.localizacao, destinatarioComunicacaoAction.perfilDestino)}" />
-					</rich:collapsiblePanel>
-				</h:form>
-			
-			<h:form>
-				<!-- Grid dos destinatários selecionados -->
-				<rich:panel id="destinatariosSelecionadosComunicacaoPanel" 
-					header="#{infoxMessages['comunicacao.destinatarios']}"
-					style="margin-top:1em" bodyClass="dtable-p-b" styleClass="dtable-p full-sized">
-				<rich:dataTable id="destinatariosSelecionados"
-					value="#{envioComunicacaoController.modeloComunicacao.destinatarios}"
-					styleClass="dtable rf-dt-crud" var="row" 
-					rendered="#{not empty envioComunicacaoController.modeloComunicacao.destinatarios}">
-					<ui:param name="showToolbarNaoFinalizada" value="#{not envioComunicacaoController.modeloComunicacao.finalizada}" />
-					<ui:param name="showToolbarFinalizada" value="#{envioComunicacaoController.modeloComunicacao.finalizada and
-															 not envioComunicacaoController.modeloComunicacao.documentoBinario}" />
-					<rich:column styleClass="dt-toolbar-col" rendered="#{showToolbarNaoFinalizada or showToolbarFinalizada}">
-						<a:commandLink execute="@this" render="destinatariosPanel"
-							action="#{destinatarioComunicacaoAction.removerDestinatario(row)}"
-							rendered="#{showToolbarNaoFinalizada}">
-							<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="#{infoxMessages['button.delete']}" />
-						</a:commandLink>
-						<s:div rendered="#{showToolbarFinalizada}">
-   							<a:commandLink action="#{envioComunicacaoController.setDestinatario(row)}" render="comunicacaoDestinatarioForm" execute="@this"
-   								rendered="#{envioComunicacaoController.usuarioLogadoNaLocalizacaoPerfilResponsavel and not row.expedido}">
-   								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/expedir_comunicacao.png')}" title="#{infoxMessages['button.selecionar']}" />
-   							</a:commandLink>
-   							<a:commandLink oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');"
-   								rendered="#{row.expedido}" render="@this" execute="@this">
-								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/reopen.png')}" title="#{infoxMessages['comunicacao.visualizarAComunicacao']}"/>
-								<f:setPropertyActionListener value="#{row.id}" target="#{flash.idDestinatario}" />
-								<infox:flashcopy/>
-							</a:commandLink>
-							<a:commandLink execute="@this"
-								rendered="#{not row.expedido}"
-								render="comunicacaoDiv :pageBodyDialogMessage"
-								action="#{envioComunicacaoController.excluirDestinatarioComunicacao(row)}"
-								onclick="if (confirm('#{envioComunicacaoController.modeloComunicacao.destinatarios.size gt 1 ? infoxMessages['crud.confirmRemove'] : infoxMessages['comunicacao.msg.aviso.exclusaoUltimoDestinatario']}')) {infox.showLoading(); return true;} else return false;"
-								oncomplete="infox.hideLoading(); if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();">
-								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="#{infoxMessages['comunicacao.excluir']}"/>
-							</a:commandLink>
-						</s:div>
-					</rich:column>
-					<rich:column>
-						<f:facet name="header">#{infoxMessages['participanteProcesso.nome']}</f:facet>
-						<h:outputText value="#{row.nome}" />
-					</rich:column>
-					<rich:column style="width:12em;">
-						<f:facet name="header">#{infoxMessages['comunicacao.meioExpedicao']}<span class="required">*</span></f:facet>
-						<h:selectOneMenu value="#{row.meioExpedicao}" 
-							rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
-							<f:selectItem noSelectionOption="true" itemLabel="#{infoxMessages['crud.select.select']}" />
-							<f:selectItems var="v" value="#{destinatarioComunicacaoAction.getMeiosExpedicao(row)}" 
-								itemLabel="#{v.label}" itemValue="#{v}"/>
-							<a:ajax event="change" />
-						</h:selectOneMenu>
-						<h:outputText value="#{row.meioExpedicao.label}" rendered="#{envioComunicacaoController.modeloComunicacao.finalizada}" />
-					</rich:column>
-					<rich:column style="width:15em;">
-						<f:facet name="header">
-							#{infoxMessages['comunicacao.prazo']}
-							<s:fragment rendered="#{envioComunicacaoController.prazoComunicacaoRequired}">
-								<span class="required">*</span>
-							</s:fragment>
-						</f:facet>
-						<h:inputText value="#{row.prazo}" rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}"
-							onkeyup="onlyPositiveNumber(this)" converterId="integerConverter" id="prazo">
-							<a:ajax event="change" />
-						</h:inputText>
-						<h:outputText value="#{row.prazo}" rendered="#{envioComunicacaoController.modeloComunicacao.finalizada}" />
-					</rich:column>
-					<rich:column styleClass="dt-toolbar-col" rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
-						<a:commandButton value="#{infoxMessages['comunicacao.replicarPrazo']}" 
-							render="destinatariosPanel" action="#{destinatarioComunicacaoAction.replicarPrazo(row)}"
-							rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}" execute="@this, prazo"/>
-					</rich:column>
-				</rich:dataTable>
-				</rich:panel>
-			</h:form>
-        </s:div>
 			<!-- Botão Visualizar Comunicações (o ofício da documentação é o último documento incluso por usuário interno) -->
 			<h:form id="visualizarComunicacaoAnexoForm">
 				<s:div rendered="#{envioComunicacaoController.podeExibirBotaoVisualizarComunicacoes()}">
@@ -239,168 +94,16 @@
           		</s:div>
 			</h:form>
 
-			<!-- Documentos disponíveis para serem vinculados à comunicação -->
-			<rich:collapsiblePanel id="documentos" 
-				header="#{envioComunicacaoController.expedida ? infoxMessages['comunicacao.documentosAnexados'] 
-					: infoxMessages['comunicacao.anexarDocumentos']}"
-				switchType="client" style="margin-top:1em;"
-				rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada or not empty envioComunicacaoController.modeloComunicacao.documentos}">
-				
-				<rich:panel header="#{infoxMessages['searchForm.title']}" style="margin-bottom: 1rem;" rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
-					<h:form>
-				        <div class="property-field-edit" style="display: inline-block;">
-							<div class="property-field-edit-name">
-								<h:outputLabel value="#{infoxMessages['marcador.marcadores']}" for="marcadorFilter"/>
-							</div>
-							<div class="property-field-edit-value">
-								<p:autoComplete id="marcadorFilter" multiple="true" 
-									value="#{documentoDisponivelComunicacaoList.codigoMarcadores}" 
-						        	completeMethod="#{documentoDisponivelComunicacaoList.autoCompleteMarcadores}"
-						        	itemLabel="#{item}" itemValue="#{item}" var="item"
-						        	minQueryLength="3" queryDelay="600" emptyMessage="#{infoxMessages['list.defaultNoDataLabel']}">
-						        	<p:ajax event="itemSelect" update="@this" process="@this" />
-						        	<p:ajax event="itemUnselect" update="@this" process="@this" />
-						        </p:autoComplete>
-					        </div>
-						</div>
-						
-						<div>
-							<h:commandButton id="btnFiltrarDocumentos"
-								value="#{infoxMessages['button.pesquisar']}"
-								action="#{documentoDisponivelComunicacaoList.refresh()}"
-								styleClass="buttons buttons">
-								<p:ajax immediate="true" process="@form" update="@form @(.documentos-disponiveis-comunicacao)" 
-									onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
-							</h:commandButton>
-							
-							<h:commandButton id="btnLimparFiltro"
-								value="#{infoxMessages['button.limpar']}"
-								action="#{documentoDisponivelComunicacaoList.newInstance()}"
-								styleClass="buttons buttons">
-								<p:ajax immediate="true" process="@form" update="@form @(.documentos-disponiveis-comunicacao)" 
-									onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
-							</h:commandButton>
-						</div>
-			
-					</h:form>
-				</rich:panel>
-				
-				<wi:dataTable id="documentosProcesso" values="#{documentoDisponivelComunicacaoList.list(10)}" 
-					bean="#{documentoDisponivelComunicacaoList}" rowId="#{row.id}" 
-					searchFormStyleClass="documentos-disponiveis-comunicacao" panelStyleClass="documentos-disponiveis-comunicacao"
-					showGrid="#{not envioComunicacaoController.modeloComunicacao.finalizada}"
-					tableTitle="#{infoxMessages['comunicacao.documentosDisponiveis']}">
-					<ui:define name="headerToolBar" />
-					<ui:define name="toolBar">
-						<h:form>
-							<a:commandLink action="#{documentoComunicacaoAction.adicionarDocumento(row)}" 
-								execute="@this" render="documentos">
-								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}" title="#{infoxMessages['button.add']}" />
-							</a:commandLink>
-							<a:commandLink
-								onclick="infox.editor['comunicacao'].insertText('#{documentoComunicacaoAction.getLink(row.documentoBin)}'); return false;">
-								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/link.gif')}" title="#{infoxMessages['button.copiarLink']}" />
-							</a:commandLink>
-                            <ui:include src="/WEB-INF/xhtml/components/grid/processoDocumentoBin.xhtml">
-                                <ui:param name="bin" value="#{row.documentoBin}" />
-                                <ui:param name="header" value="#{row.descricao}" />
-                                <ui:param name="hideSignature" value="true" />
-                            </ui:include>
-                        </h:form>
-					</ui:define>
-					<ui:define name="searchForm">
-						<rich:panel header="Pastas" rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
-							<rich:list value="#{documentoComunicacaoAction.pastas}" styleClass="folder-ul" rowClass="folder-li"
-								var="pasta">
-								<h:form rendered="#{documentoComunicacaoAction.canSee(pasta)}"
-									styleClass="rf-tr-nd">
-									<a:commandLink render="documentosProcessoPanel, documentosProcessoSearchForm"
-										execute="@form"	styleClass="folder" limitRender="true" action="#{documentoDisponivelComunicacaoList.setPasta(pasta)}">
-				  		              <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/folder.png')}"
-				                          rendered="true" title="#{pasta}" />
-										<h:outputText value="#{eventCache.get('documentoDisponivelComunicacaoList.getTextoPasta(pasta)', pasta.id)}" class="folder" />
-									</a:commandLink>
-								</h:form>
-							</rich:list>
-						</rich:panel>
-					</ui:define>
-					<wi:column hideOrder="true"	columnHeader="#{infoxMessages['documentoProcesso.processoDocumento']}">
-						<div align="center">
-							<h:outputText value="#{row.descricao}" style="display: block;" />
-							<ui:repeat var="marcador"
-								value="#{row.documentoBin.marcadoresList}">
-								<h:outputText value="#{marcador.codigo} "
-									styleClass="marcadorLabel" />
-							</ui:repeat>
-						</div>
-					</wi:column>
-					<rich:column>
-						<f:facet name="header">#{infoxMessages['processoDocumento.classificacaoDocumento']}</f:facet>
-						<h:outputText value="#{row.classificacaoDocumento.descricao}" />
-					</rich:column>
-					<rich:column>
-						<f:facet name="header">#{infoxMessages['processoDocumento.tamanho']}</f:facet>
-						<h:outputText value="#{row.documentoBin.sizeFormatado}" />
-					</rich:column>
-				</wi:dataTable>
-				
-				<!-- Documentos vinculados à comunicação -->
-				<rich:panel header="#{envioComunicacaoController.expedida ? '' : infoxMessages['comunicacao.documentosSelecionados']}" headerClass="text-center">
-					<rich:dataTable id="documentosSelecionados" value="#{envioComunicacaoController.modeloComunicacao.documentos}"
-						styleClass="dtable rf-dt-crud" var="row" rendered="#{not empty envioComunicacaoController.modeloComunicacao.documentos}">
-						<rich:column styleClass="dt-toolbar-col" rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
-							<h:form>
-								<a:commandLink action="#{documentoComunicacaoAction.removerDocumento(row)}" 
-									execute="@this" render="documentos">
-									<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="#{infoxMessages['button.delete']}" />
-								</a:commandLink>
-								<a:commandLink
-									onclick="infox.editor['comunicacao'].insertText('#{documentoComunicacaoAction.getLink(row.documento.documentoBin)}'); return false;">
-									<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/link.gif')}" title="#{infoxMessages['button.copiarLink']}" />
-								</a:commandLink>
-                                <ui:include src="/WEB-INF/xhtml/components/grid/processoDocumentoBin.xhtml">
-                                    <ui:param name="bin" value="#{row.documento.documentoBin}" />
-                                    <ui:param name="header" value="#{row.documento.descricao}" />
-                                    <ui:param name="row" value="#{row.documento}" />
-                                    <ui:param name="hideSignature" value="true" />
-                                </ui:include>
-                            </h:form> 
-						</rich:column>
-						<wi:column hideOrder="true" columnHeader="#{infoxMessages['documentoProcesso.processoDocumento']}">
-							<div align="center">
-								<h:outputText value="#{row.documento.descricao}" style="display: block;" />
-								<ui:repeat var="marcador"
-									value="#{row.documento.documentoBin.marcadoresList}">
-									<h:outputText value="#{marcador.codigo} "
-										styleClass="marcadorLabel" />
-								</ui:repeat>
-							</div>
-						</wi:column>
-	                    <rich:column>
-	                        <f:facet name="header">#{infoxMessages['documentoProcesso.pastaDocumento']}</f:facet>
-	                        <h:outputText value="#{row.documento.pasta}" />
-	                    </rich:column>
-						<rich:column>
-							<f:facet name="header">#{infoxMessages['processoDocumento.classificacaoDocumento']}</f:facet>
-							<h:outputText value="#{row.documento.classificacaoDocumento.descricao}" />
-						</rich:column>
-						<rich:column>
-							<f:facet name="header">#{infoxMessages['processoDocumento.tamanho']}</f:facet>
-							<h:outputText value="#{row.documento.documentoBin.sizeFormatado}" />
-						</rich:column>
-						</rich:dataTable>
-					</rich:panel>
-				</rich:collapsiblePanel>
-			
 			<!-- Ofício da Comunicação -->
 			<h:form id="documentoComunicacaoForm">
-				<s:div style="display: inline-block; vertical-align: top" rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
-				<rich:collapsiblePanel id="editorDocumentoComunicacaoPanel" header="#{infoxMessages['comunicacao.panelEditorComunicacaoTitulo']}">
+				<s:div style="vertical-align: top; margin-top: 1em;" rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
+				<rich:collapsiblePanel id="editorDocumentoComunicacaoPanel" header="#{infoxMessages['comunicacao.panelEditorComunicacaoTitulo']}" 
+					bodyClass="dtable-p-b" styleClass="dtable-p full-sized">
 					<s:div>
 	    				<wi:selectOneMenuEntity id="classificacaoComunicacao"
 	    					label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
 				      		items="#{documentoComunicacaoAction.classificacoes}"
-				      		showLabelSelecione="true"
+				      		showLabelSelecione="true" showRequired="true"
 				      		value="#{envioComunicacaoController.modeloComunicacao.classificacaoComunicacao}"
 				      		readonly="#{not envioComunicacaoController.modeloComunicacao.minuta}"
 	      					disabled="#{not envioComunicacaoController.modeloComunicacao.minuta}">
@@ -461,36 +164,48 @@
 				</rich:collapsiblePanel>
 				</s:div>
 				
-				<rich:panel id="panelFinalizacaoDaElaboracaoComunicacao" style="margin-top: 1em;">
+				<!-- Painel dos Documentos Anexos -->
+				<ui:include src="/WEB-INF/taskpages/comunicacao/anexosComunicacao.xhtml"></ui:include>
+			
+				<rich:panel id="panelFinalizacaoDaElaboracaoComunicacao" style="margin-top: 1em; margin-bottom: 1em;">
 					<!-- Finalização e Responsáveis pela Expedição da Comunicação -->
 					<s:div id="responsaveisAssinatura">
 						<wi:selectBooleanCheckbox id="finalizada" label="#{infoxMessages['comunicacao.finalizada']}" 
 							value="#{envioComunicacaoController.finalizada}" disabled="#{envioComunicacaoController.modeloComunicacao.finalizada}">
 							<a:ajax event="change" execute="@this" render="responsaveisAssinatura" />
 						</wi:selectBooleanCheckbox>
-						<s:div rendered="#{envioComunicacaoController.finalizada and not envioComunicacaoController.modeloComunicacao.finalizada}"
+						<s:div rendered="#{envioComunicacaoController.finalizada and not envioComunicacaoController.modeloComunicacao.finalizada
+							and envioComunicacaoController.canChooseResponsavelAssinatura()}"
 							style="display:inline-block">
 							<div>
 								<wi:outputText id="mensagemSelecionarLocalizacaoResponsavelAssinatura"
 									label="#{infoxMessages['comunicacao.mensagemLocalizacaoResponsavelAssinatura']}" />
 							</div>
-							<wi:tree
-					            id="localizacoesTree"
-					            assignTo="envioComunicacaoController.modeloComunicacao.localizacaoResponsavelAssinatura"
-					            tree="#{localizacaoSubTree}"
-					            icon="#{layoutController.getResourceUrlByPath('/imagens/nivelTree.gif')}"
-					            iconLeaf="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}"
-					            clearRender="@this"
-					            label="#{infoxMessages['comunicacao.localizacoes']}" 
-					            render="perfisPermitidos" />
-				        	<wi:selectOneMenuEntity id="perfisPermitidos"
+							
+							<i:autoComplete id="localizacaoResponsavelAssinatura" label="#{infoxMessages['comunicacao.localizacoes']}"
+                       			value="#{envioComunicacaoController.modeloComunicacao.localizacaoResponsavelAssinatura}"
+                       			completeMethod="#{envioComunicacaoController.getLocalizacoesDisponiveisAssinatura}"
+                       			converter="org.jboss.seam.ui.EntityConverter" style="position: relative;" minQueryLength="1"
+                       			var="item" itemLabel="#{item.localizacao}" itemValue="#{item}" forceSelection="true"
+                       			ajax="true" event="itemSelect" render="@(.perfis-responsavel-assinatura) @(.button-gravar-comunicacao)"
+                       			onstart="infox.showLoading();" oncomplete="infox.hideLoading();"
+                       			onselect="#{envioComunicacaoController.verificaExistenciaUsuario()}">
+			                    <f:facet name="itemtip">
+			                         <h:outputText value="#{item.caminhoCompletoFormatado}" />
+			                    </f:facet>
+	            			</i:autoComplete>
+				        	<wi:selectOneMenuEntity id="perfisPermitidos" styleClass="perfis-responsavel-assinatura"
 					            value="#{envioComunicacaoController.modeloComunicacao.perfilResponsavelAssinatura}"
 					            label="#{infoxMessages['usuarioPerfil.perfil']}"
 					            items="#{destinatarioComunicacaoAction.perfisPermitidos}"
-					            showLabelSelecione="true"
-					            disabled="#{empty envioComunicacaoController.modeloComunicacao.localizacaoResponsavelAssinatura}" />
+					            disabled="#{empty envioComunicacaoController.modeloComunicacao.localizacaoResponsavelAssinatura}">
+					            <a:ajax event="change" execute="@this" limitRender="true" render="gravarComunicacaoButtonDiv"
+					            	onbegin="infox.showLoading();" oncomplete="infox.hideLoading();"
+					            	listener="#{envioComunicacaoController.verificaExistenciaUsuario()}"/>
+					        </wi:selectOneMenuEntity>
 				        </s:div>
-				        <s:fragment rendered="#{envioComunicacaoController.modeloComunicacao.finalizada}">
+				        <s:fragment rendered="#{(envioComunicacaoController.modeloComunicacao.finalizada or not envioComunicacaoController.canChooseResponsavelAssinatura())
+				        	and envioComunicacaoController.exibirResponsaveisAssinatura}">
 				        	<wi:outputText id="localizacaoRespAssinatura" label="#{infoxMessages['comunicacao.localizacaoRespAssinatura']}" 
 				        		value="#{envioComunicacaoController.modeloComunicacao.localizacaoResponsavelAssinatura.caminhoCompletoFormatado}"/>
 				        	<wi:outputText id="perfilRespAssinatura" label="#{infoxMessages['comunicacao.perfilRespAssinatura']}"
@@ -501,15 +216,27 @@
 		        </rich:panel>
 		        
 		        <!-- Botões de Controle -->
-				<wi:commandButton id="gravar" value="#{infoxMessages['crud.update']}" 
-					action="envioComunicacaoController.gravar" reRender=":pageBodyDialogMessage comunicacaoDiv buttonsTaskPageComunicacaoForm"
-					rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}"
-					oncomplete="if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"/>
+		        <s:div id="gravarComunicacaoButtonDiv" styleClass="button-gravar-comunicacao">
+					<wi:commandButton id="gravar" value="#{infoxMessages['crud.update']}" 
+						action="envioComunicacaoController.gravar" reRender=":pageBodyDialogMessage comunicacaoDiv buttonsTaskPageComunicacaoForm"
+						rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada and 
+							envioComunicacaoController.existeUsuarioLocalizacaoAssinatura()}"
+						oncomplete="if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"/>
+					<wi:commandButton id="gravarWithConfirmation" value="#{infoxMessages['crud.update']}" 
+						action="envioComunicacaoController.gravar" reRender=":pageBodyDialogMessage comunicacaoDiv buttonsTaskPageComunicacaoForm"
+						rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada and 
+							not envioComunicacaoController.existeUsuarioLocalizacaoAssinatura()}"
+						oncomplete="if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"/>
+				</s:div>
 			</h:form>
+			
+			<!-- Popup dos Documentos Anexos -->
+			<ui:include src="/WEB-INF/taskpages/comunicacao/anexosComunicacaoPopup.xhtml"></ui:include>
+			
 		</s:div>
 	</s:div>
    <h:form id="buttonsTaskPageComunicacaoForm">
-		<s:fragment rendered="#{envioComunicacaoController.expedida and envioComunicacaoController.inTask}">
+		<s:fragment rendered="#{envioComunicacaoController.inTask and (envioComunicacaoController.expedida or envioComunicacaoController.exibirTransicoes)}">
 			<!-- O ui:include tenta incluir o facelet mesmo se o rendered estiver falso -->
 			<ui:include src="#{envioComunicacaoController.inTask ? '/WEB-INF/xhtml/components/form/buttons/taskButtons.xhtml' : ''}" />
 		</s:fragment>

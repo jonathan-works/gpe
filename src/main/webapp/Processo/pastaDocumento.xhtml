@@ -91,7 +91,7 @@
 								dropValue="#{pasta}" rendered="#{pastaAction.canWrite(pasta)}"
 								render="documentoListPanel, documentoListSearchForm"
 								limitRender="true" />
-							<a:commandLink render="documentoListDiv" execute="@form"
+							<a:commandLink render="documentoListDiv pageBodyDialogMessage" execute="@form"
 								action="#{pastaAction.selectPasta(pasta)}"
 								onbegin="infox.showLoading();" oncomplete="infox.hideLoading();"
 								styleClass="folder" limitRender="true">
@@ -234,7 +234,7 @@
 	<rich:popupPanel id="requestMotivoPanel" header="teste"
 		headerClass="motivo-header" moveable="true" show="false"
 		resizeable="true" minWidth="690" minHeight="310"
-		onbeforehide="clearFieldsExcludeRestore();">
+		onbeforeshow="clearFieldsExcludeRestore();">
 		<f:facet name="controls">
 			<h:graphicImage id="mp_taskNodeCloseBtn" styleClass="mp-close"
 				value="#{layoutController.getResourceUrlByPath('/imagens/closeMP.gif')}"

@@ -34,7 +34,6 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.Documento_;
 import br.com.infox.epp.processo.partes.entity.TipoParte;
 import br.com.infox.epp.processo.partes.entity.TipoParte_;
-import br.com.infox.seam.exception.BusinessException;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
@@ -94,7 +93,17 @@ public class EntregaSearch extends PersistenceController {
 		cq.orderBy(cb.asc(pessoa.get(Pessoa_.nome)));
 		
 		if (!query.matches("\\d+")) {
-			cq.where(cb.like(cb.lower(pessoa.get(Pessoa_.nome)), "%" + query.toLowerCase() + "%"));
+			Subquery<Integer> pessoaFisicaQuery = cq.subquery(Integer.class);
+            Root<PessoaFisica> pessoaFisica = pessoaFisicaQuery.from(PessoaFisica.class);
+            pessoaFisicaQuery.select(cb.literal(1));
+            pessoaFisicaQuery.where(cb.equal(pessoaFisica, pessoa), cb.like(cb.lower(pessoaFisica.get(PessoaFisica_.nome)), "%" + query.toLowerCase() + "%"));
+
+            Subquery<Integer> pessoaJuridicaQuery = cq.subquery(Integer.class);
+            Root<PessoaJuridica> pessoaJuridica = pessoaJuridicaQuery.from(PessoaJuridica.class);
+            pessoaJuridicaQuery.select(cb.literal(1));
+            pessoaJuridicaQuery.where(cb.equal(pessoaJuridica, pessoa), cb.like(cb.lower(pessoaJuridica.get(PessoaJuridica_.nome)), "%" + query.toLowerCase() + "%"));
+
+            cq.where(cb.or(cb.exists(pessoaFisicaQuery), cb.exists(pessoaJuridicaQuery)));
 		} else {
 			Subquery<Integer> pessoaFisicaQuery = cq.subquery(Integer.class);
 			Root<PessoaFisica> pessoaFisica = pessoaFisicaQuery.from(PessoaFisica.class);
@@ -221,10 +230,10 @@ public class EntregaSearch extends PersistenceController {
 		query.where(cb.equal(entrega.get(Entrega_.localizacao), localizacao),cb.equal(entrega.get(Entrega_.modeloEntrega), modeloEntrega));
 		query.select(entrega);
 		try {
-            return getEntityManager().createQuery(query).getSingleResult();
-        } catch (NoResultException nre) {
-            throw new BusinessException("Não foi encontrada Entrega para essa Localização e Modelo de Entrega");
-        }
+		    return getEntityManager().createQuery(query).getSingleResult();
+		} catch (NoResultException nre) {
+		    return null;
+		}
 	}
 	
 	public ClassificacaoDocumentoEntrega getClassificacaoDocumentoEntrega(ClassificacaoDocumento classificacaoDocumento, ModeloEntrega modeloEntrega) {

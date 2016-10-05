@@ -67,6 +67,7 @@ import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.ibpm.task.home.VariableTypeResolver;
+import br.com.infox.jsf.util.JsfUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.ApplicationException;
@@ -109,6 +110,7 @@ public class AnexarDocumentosView implements Serializable {
 
 	// Controle do uploader
 	private ClassificacaoDocumento classificacaoDocumentoUploader;
+	private String descricaoUploader;
 	private Pasta pastaUploader;
 	private List<Marcador> marcadoresUpload;
 	private List<DadosUpload> dadosUploader = new ArrayList<>();
@@ -224,7 +226,8 @@ public class AnexarDocumentosView implements Serializable {
 	private void resetUploader() {
 		clearUploadFile();
 		classificacaoDocumentoUploader = null;
-		pastaUploader = null;
+		descricaoUploader = null;
+		pastaUploader = pastaDefault;
 		showUploader = false;
 		marcadoresUpload = null;
 	}
@@ -263,7 +266,7 @@ public class AnexarDocumentosView implements Serializable {
 
 	private DocumentoTemporario gravarArquivoUpload(DadosUpload dadosUpload) throws Exception {
 		DocumentoTemporario retorno = new DocumentoTemporario();
-		retorno.setDescricao(dadosUpload.getUploadedFile().getName());
+		retorno.setDescricao(getDescricaoUploader());
 		retorno.setDocumentoBin(documentoUploaderService.createProcessoDocumentoBin(dadosUpload.getUploadedFile()));
 		retorno.setAnexo(Boolean.TRUE);
 		retorno.setClassificacaoDocumento(classificacaoDocumentoUploader);
@@ -274,7 +277,7 @@ public class AnexarDocumentosView implements Serializable {
 		return retorno;
 	}
 
-	public void persistUpload() {
+	public void persistUpload(String toRender) {
 	    if (pastaDefault == null) {
 	        FacesMessages.instance().add(infoxMessages.get("documento.erro.processSemPasta"));
 	        return;
@@ -286,6 +289,7 @@ public class AnexarDocumentosView implements Serializable {
 				dadosUpload.getUploadedFile().delete();
 			}
 			resetUploader();
+		    JsfUtil.instance().render(toRender);
 		} catch (DAOException e) {
 			FacesMessages.instance().add("Não foi possível enviar o arquivo. Tente novamente");
 			LOG.error("Erro ao gravar documento temporário", e);
@@ -443,19 +447,19 @@ public class AnexarDocumentosView implements Serializable {
 		} else {
 			this.processo = processo.getProcessoRoot();
 			this.processoReal = processo;
-			if (pastaDefault == null) {
-				List<MetadadoProcesso> metaPastas = metadadoProcessoManager.getMetadadoProcessoByType(getProcessoReal(),
+			List<MetadadoProcesso> metaPastas = metadadoProcessoManager.getMetadadoProcessoByType(getProcessoReal(),
+					EppMetadadoProvider.PASTA_DEFAULT.getMetadadoType());
+			if (!metaPastas.isEmpty()) {
+				pastaDefault = metaPastas.get(0).getValue();
+			} else {
+				metaPastas = metadadoProcessoManager.getMetadadoProcessoByType(getProcesso(),
 						EppMetadadoProvider.PASTA_DEFAULT.getMetadadoType());
 				if (!metaPastas.isEmpty()) {
 					pastaDefault = metaPastas.get(0).getValue();
-				} else {
-					metaPastas = metadadoProcessoManager.getMetadadoProcessoByType(getProcesso(),
-							EppMetadadoProvider.PASTA_DEFAULT.getMetadadoType());
-					if (!metaPastas.isEmpty()) {
-						pastaDefault = metaPastas.get(0).getValue();
-					}
 				}
 			}
+			pastaUploader = pastaDefault;
+			newEditorInstance();
 			createExpressionResolver();
 		}
 	}
@@ -738,7 +742,15 @@ public class AnexarDocumentosView implements Serializable {
 		this.classificacaoDocumentoUploader = classificacaoDocumentoUploader;
 	}
 	
-    public List<Marcador> getMarcadoresUpload() {
+    public String getDescricaoUploader() {
+		return descricaoUploader;
+	}
+
+	public void setDescricaoUploader(String descricaoUploader) {
+		this.descricaoUploader = descricaoUploader;
+	}
+
+	public List<Marcador> getMarcadoresUpload() {
         return marcadoresUpload;
     }
 
@@ -751,7 +763,9 @@ public class AnexarDocumentosView implements Serializable {
 			VariableTypeResolver variableTypeResolver = ComponentUtil.getComponent(VariableTypeResolver.NAME);
 			EntityManager entityManager = BeanManager.INSTANCE.getReference(EntityManager.class);
 			ProcessInstance processInstance = entityManager.find(ProcessInstance.class, processoReal.getIdJbpm());
-			variableTypeResolver.setProcessInstance(processInstance);
+			if (variableTypeResolver.getProcessInstance() == null) {
+			    variableTypeResolver.setProcessInstance(processInstance);
+			}
 			ExecutionContext executionContext = new ExecutionContext(processInstance.getRootToken());
 			expressionResolver = ExpressionResolverChainBuilder
 					.defaultExpressionResolverChain(processoReal.getIdProcesso(), executionContext);

@@ -1,0 +1,30 @@
+#custom-fieldset() {
+   .login-fieldset {
+      border-style:solid;
+      border-width:1px 0 0;
+      padding: 1em 0;
+      
+      > *:first-child {
+        text-align: center;
+        margin: -1.75em 0 0;
+        
+        > * {
+        	padding: 5px;
+        }
+      }
+   }
+   .login-fieldset-colors{
+      border-color:@fieldset-border-color;
+	  > *:first-child {
+        > * {
+	        background-color:@fieldset-header-bg-color;
+	        color:@fieldset-header-txt-color;
+        }
+      }
+   }
+
+}
+
+.login-fieldset {
+	#custom-fieldset > .login-fieldset;
+}

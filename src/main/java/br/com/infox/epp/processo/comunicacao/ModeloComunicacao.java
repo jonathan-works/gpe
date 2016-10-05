@@ -2,6 +2,7 @@ package br.com.infox.epp.processo.comunicacao;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -23,8 +24,12 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+
+import org.joda.time.DateTime;
 
 import com.google.common.base.Strings;
 import com.google.common.reflect.TypeToken;
@@ -109,6 +114,10 @@ public class ModeloComunicacao implements Serializable, Cloneable {
 	@Column(name = "cd_marcadores", nullable = true)
 	private String codigosMarcadoresString = "";
 	
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "dt_alteracao")
+    private Date dataAlteracao;
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "modeloComunicacao")
 	private List<DestinatarioModeloComunicacao> destinatarios = new ArrayList<>(0);
 	
@@ -117,17 +126,19 @@ public class ModeloComunicacao implements Serializable, Cloneable {
 	
 	@Transient
 	private List<String> codigosMarcadores = new ArrayList<>(1);
-	
-	@PrePersist
-	private void prePersist() {
-	    updateColumnCodigoMarcadoresString();
-	}
-	
-	@PreUpdate
-    private void preUpdate() {
-	    updateColumnCodigoMarcadoresString();
+
+    @PrePersist
+    private void prePersist() {
+	updateColumnCodigoMarcadoresString();
+	setDataAlteracao(DateTime.now().toDate());
     }
-	
+
+    @PreUpdate
+    private void preUpdate() {
+	updateColumnCodigoMarcadoresString();
+	setDataAlteracao(DateTime.now().toDate());
+    }
+
 	@PostLoad
 	private void postLoad() {
 	    loadMarcadoresList();
@@ -271,6 +282,14 @@ public class ModeloComunicacao implements Serializable, Cloneable {
     
     public List<String> getCodigosMarcadores() {
         return codigosMarcadores;
+    }
+
+    public Date getDataAlteracao() {
+	return dataAlteracao;
+    }
+
+    public void setDataAlteracao(Date dataAlteracao) {
+	this.dataAlteracao = dataAlteracao;
     }
 
     @Transient

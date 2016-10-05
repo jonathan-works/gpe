@@ -1,7 +1,9 @@
 package br.com.infox.epp.entrega.checklist;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -15,6 +17,7 @@ import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.marcador.Marcador;
 
 @Named
 @Stateless
@@ -48,13 +51,21 @@ public class ChecklistVariableService implements Serializable {
     }
 
     public String listBySituacao(String nomePasta, String codigoSituacao) {
+    	return listBySituacao(nomePasta, codigoSituacao, true, false);
+    }
+
+    public String listBySituacao(String nomePasta, String codigoSituacao, boolean mostrarIncluidoPor, boolean mostrarMarcadores) {
         Processo processo = retrieveProcessoFromExecutionContext();
         Pasta pasta = pastaManager.getPastaByNome(nomePasta, processo);
         if (pasta == null || pasta.getId() == null) return "";
-        return listBySituacao(processo.getIdProcesso(), pasta.getId(), codigoSituacao);
+        return listBySituacao(processo.getIdProcesso(), pasta.getId(), codigoSituacao, mostrarIncluidoPor, mostrarMarcadores);
     }
 
     public String listBySituacao(Integer idProcesso, Integer idPasta, String codigoSituacao) {
+    	return listBySituacao(idProcesso, idPasta, codigoSituacao, true, false);
+    }
+
+    public String listBySituacao(Integer idProcesso, Integer idPasta, String codigoSituacao, boolean mostrarIncluidoPor, boolean mostrarMarcadores) {
         ChecklistSituacao situacao = ChecklistSituacao.valueOf(codigoSituacao);
         if (situacao == null) return "";
         Checklist checklist = checklistSearch.getByIdProcessoIdPasta(idProcesso, idPasta);
@@ -65,16 +76,34 @@ public class ChecklistVariableService implements Serializable {
         if (clDocList == null || clDocList.isEmpty()) {
             return "";
         }
-        String response = "<table border=\"1\" style=\"border-collapse: collapse; width: 100%\">";
+        String response = "<table border=\"1\" style=\"font-size: 12px; border-collapse: collapse; width: 100%\">";
         response += "<thead>";
         response += "<th>Classificação de Documento</th>";
-        response += "<th>Incluído por</th>";
+        if(mostrarIncluidoPor) {
+        	response += "<th>Incluído por</th>";
+        }
         response += "<th>Motivo</th>";
         response += "</thead><tbody>"; 
         for (ChecklistDoc clDoc : clDocList) {
             response += "<tr>";
-            response += "<td style=\"text-align: center;\">" + clDoc.getDocumento().getClassificacaoDocumento().getDescricao() + "</td>";
-            response += "<td style=\"text-align: center;\">" + clDoc.getDocumento().getUsuarioInclusao().getNomeUsuario() + "</td>";
+            if (mostrarMarcadores) {
+                response += "<td style=\"text-align: center;\">" + clDoc.getDocumento().getClassificacaoDocumento().getDescricao();
+                Set<Marcador> marcadores = clDoc.getDocumento().getDocumentoBin().getMarcadores();
+                if (marcadores != null && !marcadores.isEmpty()) {
+                    response += " (";
+                    for (Iterator<Marcador> iterator = marcadores.iterator(); iterator.hasNext();) {
+                        Marcador marcador = iterator.next();
+                        response += iterator.hasNext() ? marcador.getCodigo() + ", " : marcador.getCodigo();
+                    }
+                    response += ")";
+                }
+                response += "</td>";
+            } else {
+                response += "<td style=\"text-align: center;\">" + clDoc.getDocumento().getClassificacaoDocumento().getDescricao() + "</td>";
+            }
+            if(mostrarIncluidoPor) {
+            	response += "<td style=\"text-align: center;\">" + clDoc.getDocumento().getUsuarioInclusao().getNomeUsuario() + "</td>";
+            }
             response += "<td>" + (clDoc.getComentario() == null ? "" : clDoc.getComentario()) + "</td>";
             response += "</tr>";
         }

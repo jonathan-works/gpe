@@ -80,7 +80,7 @@ public class ModeloDocumentoDAO extends DAO<ModeloDocumento> {
 
 		cq.select(from);
 		cq.where(where);
-		cq.orderBy(cb.asc(from.get(ModeloDocumento_.modeloDocumento)));
+		cq.orderBy(cb.asc(from.get(ModeloDocumento_.tituloModeloDocumento)));
 
 		return getEntityManager().createQuery(cq).getResultList();
 	}
@@ -96,7 +96,7 @@ public class ModeloDocumentoDAO extends DAO<ModeloDocumento> {
         Predicate ativo = cb.isTrue(modeloDocumento.get(ModeloDocumento_.ativo));
         Predicate where = cb.and(equalPapel, ativo);
         cq.where(where);
-        cq.orderBy(cb.asc(modeloDocumento.get(ModeloDocumento_.modeloDocumento)));
+        cq.orderBy(cb.asc(modeloDocumento.get(ModeloDocumento_.tituloModeloDocumento)));
         return getEntityManager().createQuery(cq).getResultList();
     }
 	

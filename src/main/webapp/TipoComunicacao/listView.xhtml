@@ -25,8 +25,14 @@
                     <wi:inputText id="descricao"
                         label="#{infoxMessages['tipoComunicacao.descricao']}" 
                         value="#{tipoComunicacaoList.entity.descricao}"/>
-                    <wi:selectSituacaoOneMenu
-                        id="ativo"
+                    <wi:inputText id="codigo"
+                        label="#{infoxMessages['tipoComunicacao.codigo']}" 
+                        value="#{tipoComunicacaoList.entity.codigo}"/>
+                    <wi:selectOneMenu id="tipoUsoComunicacao" label="#{infoxMessages['tipoComunicacao.tipoUso']}" 
+		            	value="#{tipoComunicacaoList.entity.tipoUsoComunicacao}"
+		            	showLabelTodos="true" optionLabel="#{item.label}"
+		            	items="#{tipoComunicacaoCrudAction.tipoUsoComunicacaoDisponiveis()}"/>
+                    <wi:selectSituacaoOneMenu id="ativo"
                         label="#{infoxMessages['field.situacao']}"
                         value="#{tipoComunicacaoList.entity.ativo}" />
                     <wi:selectOneMenuEntity id="classificacaoDocumento" label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}" 
@@ -41,6 +47,12 @@
             <wi:columnOutputText columnId="descricao"
                 columnHeader="#{infoxMessages['tipoComunicacao.descricao']}"
                 value="#{row.descricao}" />
+            <wi:columnOutputText columnId="codigo"
+                columnHeader="#{infoxMessages['tipoComunicacao.codigo']}"
+                value="#{row.codigo}" />
+            <wi:columnOutputText columnId="tipoUsoComunicacao"
+                columnHeader="#{infoxMessages['tipoComunicacao.tipoUso']}"
+                value="#{row.tipoUsoComunicacao.label}" />
             <wi:columnOutputText columnId="quantidadeDiasCiencia"
                 columnHeader="#{infoxMessages['tipoComunicacao.diasCiencia']}"
                 value="#{row.quantidadeDiasCiencia}" />
@@ -64,6 +76,14 @@
                 label="#{infoxMessages['tipoComunicacao.descricao']}"
                 value="#{tipoComunicacaoCrudAction.instance.descricao}"
                 required="true" />
+            <wi:inputText id="codigo"
+                label="#{infoxMessages['tipoComunicacao.codigo']}"
+                value="#{tipoComunicacaoCrudAction.instance.codigo}"
+                required="true" />
+           	<wi:selectOneMenu id="tipoUsoComunicacao" label="#{infoxMessages['tipoComunicacao.tipoUso']}" 
+            	value="#{tipoComunicacaoCrudAction.instance.tipoUsoComunicacao}" optionLabel="#{item.label}"
+            	required="true" hideNoSelectionLabel="true"
+            	items="#{tipoComunicacaoCrudAction.tipoUsoComunicacaoDisponiveis()}"/>
             <wi:inputNumber id="diasCiencia"
                 label="#{infoxMessages['tipoComunicacao.diasCiencia']}"
                 value="#{tipoComunicacaoCrudAction.instance.quantidadeDiasCiencia}"

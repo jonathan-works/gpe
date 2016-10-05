@@ -7,8 +7,8 @@
 	xmlns:infox="http://www.infox.com.br/jsf"
 	xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:f="http://java.sun.com/jsf/core">
-	<s:div id="relacionamentoProcessoDiv">
-		<s:div id="relacionamentoProcessoFormDiv">
+	<s:div id="relacionamentoProcessoDiv" rendered="#{relacionamentoProcessoView.podeVisualizar()}">
+		<s:div id="relacionamentoProcessoFormDiv" rendered="#{not relacionamentoProcessoView.readOnly}">
 			<ui:include
 				src="/WEB-INF/xhtml/templates/relacionamentoprocesso/relacionamentoProcessoEdit.xhtml" />
 		</s:div>

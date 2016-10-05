@@ -34,4 +34,8 @@ public class NaturezaManager extends Manager<NaturezaDAO, Natureza> {
             update(natureza);
         }
     }
+    
+    public Natureza getByCodigo(String codigo) {
+    	return getDao().getByCodigo(codigo);
+    }
 }

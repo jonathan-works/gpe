@@ -12,6 +12,8 @@ import javax.inject.Inject;
 import org.jbpm.graph.exe.ProcessInstance;
 
 import br.com.infox.core.persistence.PersistenceController;
+import br.com.infox.epp.fluxo.entity.Categoria;
+import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.processo.dao.ProcessoSearch;
 import br.com.infox.epp.processo.dao.ProcessoSearch.ValorMetadado;
 import br.com.infox.epp.processo.entity.Processo;
@@ -64,6 +66,12 @@ public class ProcessoService extends PersistenceController {
 	    return processInstance;
 	}
 		
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public List<Processo> getProcessosContendoNaturezaCategoriaMetadados(Natureza natureza, Categoria categoria, Map<String, Object> metadados) {
+		Map<String, ValorMetadado> valoresMetadadosBanco = getValoresMetadadosBanco(metadados);
+		return processoSearch.getProcessosContendoNaturezaCategoriaMetadados(natureza, categoria, valoresMetadadosBanco);				
+	}
+	
 	/**
 	 * Localiza os processos que contêm todos os metadados informados
 	 * @param definicoesMetadados Definições específicas de metadados que serão utilizados para converter valores para pesquisa no banco
@@ -72,6 +80,12 @@ public class ProcessoService extends PersistenceController {
 	 */
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public List<Processo> getProcessosContendoMetadados(Map<String, Object> metadados) {
+		Map<String, ValorMetadado> valoresMetadadosBanco = getValoresMetadadosBanco(metadados);
+		
+		return processoSearch.getProcessosContendoMetadados(valoresMetadadosBanco);		
+	}
+
+	private Map<String, ValorMetadado> getValoresMetadadosBanco(Map<String, Object> metadados) {
 		Map<String, ValorMetadado> valoresMetadadosBanco = new HashMap<>();
 		for(String metadado : metadados.keySet()) {
 			Object valorOriginal = metadados.get(metadado);
@@ -94,8 +108,7 @@ public class ProcessoService extends PersistenceController {
 			ValorMetadado valorMetadadoBanco = new ValorMetadado(classe, valor);
 			valoresMetadadosBanco.put(metadado, valorMetadadoBanco);
 		}
-		
-		return processoSearch.getProcessosContendoMetadados(valoresMetadadosBanco);		
+		return valoresMetadadosBanco;
 	}
 	
 }

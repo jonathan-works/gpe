@@ -15,7 +15,6 @@ import org.jbpm.graph.exe.Token;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.entity.Processo;
-import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.service.VariaveisJbpmProcessosGerais;
 import br.com.infox.ibpm.variable.entity.DominioVariavelTarefa;
 import br.com.infox.ibpm.variable.entity.VariableInfo;
@@ -86,8 +85,7 @@ public class JbpmExpressionResolver implements ExpressionResolver {
 				processInstance = superProcessToken != null ? superProcessToken.getProcessInstance() : null;
 			}
 		} while (value == null && processInstance != null);
-		
-		return value;
+        return expression;
 	}
 
 	private VariableInfo getVariableInfo(String variableName, Long processDefinitionId) {

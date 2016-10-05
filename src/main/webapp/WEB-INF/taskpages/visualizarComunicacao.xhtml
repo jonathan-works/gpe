@@ -19,6 +19,8 @@
 	   		<ui:param name="showDataResposta" value="false" />
 	   		<ui:param name="tipoComunicacao" value="#{visualizarComunicacaoAction.destinatario.modeloComunicacao.tipoComunicacao.descricao}" />
 	   		<ui:param name="idDestinatario" value="#{visualizarComunicacaoAction.destinatario.id}" />
+            <ui:param name="isAnexo" value="#{not empty visualizarComunicacaoAction.destinatario.documentoComunicacao.documentoBin.extensao}" />
+            <ui:param name="idDocumentoComunicacao" value="#{visualizarComunicacaoAction.destinatario.documentoComunicacao.id}" />
 	   	</ui:include>
 	    
 	    <ui:include src="/WEB-INF/xhtml/components/fragments/documentosComunicacao.xhtml">
@@ -29,7 +31,7 @@
 	    </ui:include>
 
 	</rich:collapsiblePanel>
-	<h:form>
+	<h:form rendered="#{not props.readonly and not props.type eq 'FRAME'}">
 		<ui:include src="/WEB-INF/xhtml/components/form/buttons/taskButtons.xhtml"></ui:include>
 	</h:form>
 </ui:composition>

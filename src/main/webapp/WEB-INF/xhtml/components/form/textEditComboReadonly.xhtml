@@ -11,18 +11,21 @@
     xmlns:wi="http://www.itx.com.br/jsf">
     
     <s:div id="#{id}TipoProcDocDiv">
-        <wi:selectOneMenuEntity id="#{id}TipoProcDoc"
-            label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-            value="#{props.tipoProcessoDocumentoRO}"
-            items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumento('P')}"
-            required="true" disabled="#{readonly ? true : false}"
-            showLabelSelecione="true">
-        </wi:selectOneMenuEntity>
+        <fieldset>
+            <legend>
+                <h:outputText styleClass="property-field-edit-name" value="#{label}" />
+            </legend>
 
-        <s:div id="#{id}EditorDiv">
-            <wi:editor id="#{id}Editor"
-                value="#{props.modeloDocumentoRO}" />
-        </s:div>
+            <wi:outputText id="#{id}ClassDocReadonly"
+                label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
+                value="#{props.tipoProcessoDocumentoRO}"
+                rendered="#{readonly}" />
+
+            <s:div id="#{id}EditorDiv">
+                <wi:editor id="#{id}Editor"
+                    value="#{props.modeloDocumentoRO}" />
+            </s:div>
+        </fieldset>
     </s:div>
 
 </ui:composition>

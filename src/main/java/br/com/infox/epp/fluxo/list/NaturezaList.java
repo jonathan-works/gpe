@@ -27,6 +27,7 @@ public class NaturezaList extends EntityList<Natureza> {
         addSearchField("natureza", SearchCriteria.CONTENDO);
         addSearchField("ativo", SearchCriteria.IGUAL);
         addSearchField("hasPartes", SearchCriteria.IGUAL);
+        addSearchField("codigo", SearchCriteria.CONTENDO);
     }
 
     @Override

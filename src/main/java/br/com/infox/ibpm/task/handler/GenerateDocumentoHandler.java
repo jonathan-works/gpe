@@ -11,10 +11,12 @@ import org.jbpm.graph.exe.ExecutionContext;
 
 import com.google.gson.Gson;
 
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.documento.pasta.PastaSearch;
 import br.com.infox.epp.documento.type.ExpressionResolverChain;
 import br.com.infox.epp.documento.type.ExpressionResolverChain.ExpressionResolverChainBuilder;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -69,13 +71,23 @@ public class GenerateDocumentoHandler implements ActionHandler, CustomAction {
 			DocumentoBin documentoBin = documentoBinManager.createProcessoDocumentoBin(modeloDocumento.getTituloModeloDocumento(), texto);
 			Documento documento = documentoManager.createDocumento(processoRaiz, modeloDocumento.getTituloModeloDocumento(), documentoBin, classificacaoDocumento);
 			
-			String parametroNomePastaDocumentoGerado = Parametros.PASTA_DOCUMENTO_GERADO.getValue();
-			if (parametroNomePastaDocumentoGerado != null) {
-				Pasta pasta = pastaManager.getPastaByNome(parametroNomePastaDocumentoGerado, processoRaiz);
-				if (pasta != null) {
-					documento.setPasta(pasta);
-					documentoManager.update(documento);
+			Pasta pasta = null;
+			if (configuration.getCodigoPasta() != null && !configuration.getCodigoPasta().isEmpty()){
+				PastaSearch pastaSearch = BeanManager.INSTANCE.getReference(PastaSearch.class);
+				pasta = pastaSearch.getPastaByCodigoIdProcesso(configuration.getCodigoPasta(), processo.getIdProcesso());
+				if (pasta == null) {
+					pasta = pastaSearch.getPastaByCodigoIdProcesso(configuration.getCodigoPasta(), processoRaiz.getIdProcesso());
 				}
+			}
+			if (pasta == null) {
+				String parametroNomePastaDocumentoGerado = Parametros.PASTA_DOCUMENTO_GERADO.getValue();
+				if (parametroNomePastaDocumentoGerado != null) {
+					pasta = pastaManager.getPastaByNome(parametroNomePastaDocumentoGerado, processoRaiz);
+				}
+			}
+			if (pasta != null) {
+				documento.setPasta(pasta);
+				documentoManager.update(documento);
 			}
 		} catch (Exception e) {
 			LOG.error(MessageFormat.format("Erro ao gerar documento para o id de modelo de documento: {0}, no processo com id: {1}, nó: {2}", 
@@ -86,6 +98,7 @@ public class GenerateDocumentoHandler implements ActionHandler, CustomAction {
 	public static class GenerateDocumentoConfiguration {
 		private Integer idModeloDocumento;
 		private Integer idClassificacaoDocumento;
+		private String codigoPasta;
 		
 		public Integer getIdClassificacaoDocumento() {
 			return idClassificacaoDocumento;
@@ -101,6 +114,14 @@ public class GenerateDocumentoHandler implements ActionHandler, CustomAction {
 		
 		public void setIdModeloDocumento(Integer idModeloDocumento) {
 			this.idModeloDocumento = idModeloDocumento;
+		}
+
+		public String getCodigoPasta() {
+			return codigoPasta;
+		}
+
+		public void setCodigoPasta(String codigoPasta) {
+			this.codigoPasta = codigoPasta;
 		}
 	}
 }

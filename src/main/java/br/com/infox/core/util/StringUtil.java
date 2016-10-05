@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.seam.util.Strings;
@@ -73,5 +74,14 @@ public final class StringUtil {
             throw new BusinessException("StringUtil.decodeFromUrlSafeString",e);
         }
     }
-    
+
+    public static List<String> splitToList(String source, String separator) {
+        List<String> resp = new ArrayList<>();
+        if (source != null && !source.trim().isEmpty()) {
+            for (String slice : source.split(separator)) {
+                resp.add(slice.trim());
+            }
+        }
+        return resp;
+    }
 }

@@ -9,7 +9,6 @@
     <composite:interface>
     	
     	<composite:attribute name="id"/>
-    	<composite:attribute name="rendered" default="true"/>
     	<composite:attribute name="label" />
     	<composite:attribute name="help" />
     	<composite:attribute name="value" type="java.lang.Object"/>
@@ -19,6 +18,7 @@
     	<composite:attribute name="itemLabel" default="#{item}" />
     	<composite:attribute name="itemValue" default="#{item}" />
     	<composite:attribute name="disabled" default="false"/>
+    	<composite:attribute name="selectStyle" default=""/>
     	<composite:attribute name="styleClass"/>
     	<composite:attribute name="readonly" default="false"/>
     	<composite:attribute name="required" default="false" />
@@ -63,7 +63,8 @@
         		</div>
         		<div class="property-field-edit-value #{cc.attrs.id}DivClass">
         			<h:selectOneMenu id="#{cc.attrs.id}Input" value="#{cc.attrs.value}" styleClass="input select #{cc.attrs.styleClass}" 
-        				required="#{cc.attrs.required}" onchange="#{cc.attrs.onchange}" readonly="#{cc.attrs.readonly}" disabled="#{cc.attrs.disabled}">
+        				required="#{cc.attrs.required}" onchange="#{cc.attrs.onchange}" readonly="#{cc.attrs.readonly}" disabled="#{cc.attrs.disabled}"
+        				style="#{cc.attrs.selectStyle}">
         				<c:if test="#{not cc.attrs.hideNoSelectionLabel}">
 				        	<f:selectItem noSelectionOption="true" itemValue="" itemLabel="#{cc.attrs.noSelectionLabel}" />
 				        </c:if>

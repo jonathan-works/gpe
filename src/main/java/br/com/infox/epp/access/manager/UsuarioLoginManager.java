@@ -29,6 +29,7 @@ import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.system.dao.ParametroDAO;
 import br.com.infox.epp.system.entity.Parametro;
 import br.com.infox.epp.system.util.ParametroUtil;
+import br.com.infox.epp.usuario.UsuarioLoginSearch;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
@@ -67,7 +68,13 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
     public UsuarioLogin getUsuarioLoginByEmail(final String email) {
         return getDao().getUsuarioLoginByEmail(email);
     }
-
+    
+    /**
+     * Utilizar {@link UsuarioLoginSearch#getUsuarioByLogin(String)} pra recuperar usuários que podem efetuar login.
+     * Para encontrar um usuário sem impor restrições continuar utilizando este método
+     * @param login Login do usuário a recuperar
+     * @return Usuário referente ao login
+     */
     public UsuarioLogin getUsuarioLoginByLogin(final String login) {
         return getDao().getUsuarioLoginByLogin(login);
     }
@@ -131,7 +138,7 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
     
     @Override
     public UsuarioLogin persist(UsuarioLogin usuario) throws DAOException {
-        return persist(usuario, true);
+        return persist(usuario, usuario.isLoginComSenhaHabilitado());
     }
     
     public UsuarioLogin getUsuarioSistema() {

@@ -9,8 +9,8 @@ import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -26,7 +26,7 @@ public class UsuarioRestImpl implements UsuarioRest {
 	@Inject
 	private UsuarioLoginRestService usuarioLoginRestService;
 	@Inject
-	private UsuarioResource usuarioResource;
+	private UsuarioResourceImpl usuarioResource;
 	@Inject
 	private LoginRestService loginRestService;
 	//Servico movido devido ao bug #74700
@@ -39,9 +39,14 @@ public class UsuarioRestImpl implements UsuarioRest {
 		return Response.ok().status(Status.CREATED).header(HttpHeaders.LOCATION, RestUtils.generateLocationURL(uriInfo,usuarioDTO.getCpf())).build();
 	}
 
-	@Override
-	public Response getUsuarios() {
-		return Response.ok(usuarioLoginRestService.getUsuarios()).build();
+	public Response getUsuarios(Integer limit, Integer offset) {
+	    if (limit==null){
+	        limit = 15;
+	    }
+	    if (offset == null){
+	        offset = 0;
+	    }
+		return Response.ok(usuarioLoginRestService.getUsuarios(limit, offset)).build();
 	}
 
 	@Override

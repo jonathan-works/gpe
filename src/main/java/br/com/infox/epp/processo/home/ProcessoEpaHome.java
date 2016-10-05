@@ -117,9 +117,13 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 			LOG.error("ProcessoEpaHome.iniciarTarefaProcesso()", e);
 		} catch (DAOException e) {
 			LOG.error("Erro ao vincular Usuario", e);
+		} catch (BusinessRollbackException e) {
+		    FacesMessages.instance().add(e.getMessage());
+		    throw new OptimisticLockException();
 		} catch (EJBException e) {
 			if (e.getCause() instanceof BusinessRollbackException) {
-				throw new OptimisticLockException();
+			    FacesMessages.instance().add(e.getMessage());
+			    throw new OptimisticLockException();
 			}
 		}
 	}

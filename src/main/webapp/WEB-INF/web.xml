@@ -6,6 +6,10 @@
         <param-name>primefaces.THEME</param-name>
         <param-value>bootstrap</param-value>
     </context-param>
+    <context-param>
+        <param-name>primefaces.FONT_AWESOME</param-name>
+        <param-value>true</param-value>
+    </context-param>
 	<!-- JSF -->
 	<context-param>
 	   <param-name>com.sun.faces.numberOfLogicalViews</param-name>
@@ -142,10 +146,6 @@
 		<servlet-name>Resource Servlet</servlet-name>
 		<url-pattern>/org.richfaces.resources/*</url-pattern>
 	</servlet-mapping>
-	<persistence-unit-ref>
-    	<persistence-unit-ref-name>EPAPersistenceUnit</persistence-unit-ref-name>
-        <persistence-unit-name>EPAPersistenceUnit</persistence-unit-name>
-    </persistence-unit-ref>
 
 	<mime-mapping>
 		<extension>woff</extension>

@@ -1,62 +1,77 @@
 package br.com.infox.epp.usuario;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.persistence.EntityManager;
+import javax.enterprise.inject.Specializes;
+import javax.inject.Inject;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
+import javax.persistence.criteria.From;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Order;
-import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
+import javax.persistence.criteria.Subquery;
 
-import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioLogin_;
-import br.com.infox.epp.access.type.UsuarioEnum;
+import br.com.infox.epp.pessoa.documento.entity.PessoaDocumento;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
+import br.com.infox.epp.usuario.rest.MeioContatoDTOSearch;
+import br.com.infox.epp.usuario.rest.PessoaDocumentoDTOSearch;
 import br.com.infox.epp.usuario.rest.UsuarioDTO;
 
 @Stateless
+@Specializes
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-public class UsuarioDTOSearch {
+public class UsuarioDTOSearch extends UsuarioLoginSearch{
 	
-	private EntityManager getEntityManager() {
-		return EntityManagerProducer.getEntityManager();
-	}
-	
+    @Inject
+    private PessoaDocumentoDTOSearch pessoaDocumentoDTOSearch;
+    @Inject
+    private MeioContatoDTOSearch meioContatoDTOSearch;
+    
 	public List<UsuarioDTO> getUsuarioDTOList() {
-		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-		CriteriaQuery<UsuarioDTO> cq = cb.createQuery(UsuarioDTO.class);
-		
-		Root<UsuarioLogin> usuario = cq.from(UsuarioLogin.class);
-		Join<UsuarioLogin, PessoaFisica> pessoa = usuario.join(UsuarioLogin_.pessoaFisica);
-		
-		Predicate ativo = usuarioAtivo(cb, usuario);
-		Predicate humano = cb.equal(usuario.get(UsuarioLogin_.tipoUsuario), UsuarioEnum.H);
-		
-		Selection<UsuarioDTO> selection = cb.construct(UsuarioDTO.class, usuario, pessoa);
-		
-		Order order = cb.asc(usuario.get(UsuarioLogin_.nomeUsuario));
-		
-		cq = cq.select(selection).where(cb.and(ativo, humano)).orderBy(order);
-		
-		return getEntityManager().createQuery(cq).getResultList();
+	    return getUsuarioDTOList(null, null);
 	}
 
-	private Predicate usuarioAtivo(CriteriaBuilder cb, Path<UsuarioLogin> usuario) {
-		Predicate naoProvisorio = cb.isFalse(usuario.get(UsuarioLogin_.provisorio));
-		
-		Predicate naoExpirado = cb.or(naoProvisorio, cb.greaterThan(usuario.get(UsuarioLogin_.dataExpiracao), cb.function("current_timestamp", Date.class)));
-		Predicate naoBloqueado = cb.isFalse(usuario.get(UsuarioLogin_.bloqueio));
-		Predicate ativo = cb.and(cb.isTrue(usuario.get(UsuarioLogin_.ativo)), naoBloqueado, naoExpirado);
-		return ativo;
-	}
+    public List<UsuarioDTO> getUsuarioDTOList(Integer limit, Integer offset) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<UsuarioDTO> cq = cb.createQuery(UsuarioDTO.class);
+        
+        Root<UsuarioLogin> usuario = cq.from(UsuarioLogin.class);
+        From<?, PessoaFisica> pessoa = usuario.join(UsuarioLogin_.pessoaFisica, JoinType.LEFT);
+        
+        Subquery<PessoaDocumento> subquery = cq.subquery(PessoaDocumento.class);
+        subquery.from(PessoaDocumento.class);
+        
+        Predicate ativo = usuarioAtivoPredicate(usuario);
+        Predicate isPessoa = podeFazerLoginPredicate(usuario);
+        
+        Selection<UsuarioDTO> selection = cb.construct(UsuarioDTO.class, usuario, pessoa);
+        
+        Order order = cb.asc(usuario.get(UsuarioLogin_.nomeUsuario));
+        
+        cq = cq.select(selection).where(cb.and(ativo, isPessoa)).orderBy(order);
+        if (offset == null){
+            offset = 0;
+        }
+        TypedQuery<UsuarioDTO> createdQuery = getEntityManager().createQuery(cq);
+        createdQuery.setFirstResult(offset);
+        if (limit != null){
+            createdQuery.setMaxResults(limit);
+        }
+        List<UsuarioDTO> resultList = createdQuery.getResultList();
+        for (UsuarioDTO usuarioDTO : resultList) {
+            usuarioDTO.setDocumentos(pessoaDocumentoDTOSearch.getDocumentosByCPF(usuarioDTO.getCpf()));
+            usuarioDTO.setMeiosContato(meioContatoDTOSearch.getMeiosContatoByCPF(usuarioDTO.getCpf()));
+        }
+        return resultList;
+    }
 	
 }

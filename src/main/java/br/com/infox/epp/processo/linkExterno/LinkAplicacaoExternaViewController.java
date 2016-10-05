@@ -2,7 +2,6 @@ package br.com.infox.epp.processo.linkExterno;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -21,10 +20,15 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.jwt.JWT;
 import br.com.infox.jwt.claims.InfoxPrivateClaims;
 import br.com.infox.jwt.claims.JWTClaim;
+import br.com.infox.seam.security.SecurityUtil;
 
 @Named
 @ViewScoped
 public class LinkAplicacaoExternaViewController implements Serializable{
+
+    private static final String RECURSO_EDICAO = "/pages/Processo/linkAplicacaoExternaEdit";
+
+    private static final String RECURSO_VISUALIZACAO = "/pages/Processo/linkAplicacaoExternaView";
 
     private static final long serialVersionUID = 1L;
     
@@ -32,6 +36,8 @@ public class LinkAplicacaoExternaViewController implements Serializable{
     private LinkAplicacaoExternaService service;
     @Inject
     private LinkAplicacaoExternaSearch search;
+    @Inject
+    private SecurityUtil security;
     
     private LinkAplicacaoExterna entity;
     private Processo processo;
@@ -67,7 +73,21 @@ public class LinkAplicacaoExternaViewController implements Serializable{
     }
     
     public List<LinkAplicacaoExterna> getLinks(){
+        if (getProcesso()==null)
+            return new ArrayList<>();
         return search.carregarLinksAplicacaoExternaAtivos(getProcesso());
+    }
+    
+    public boolean isPodeVisualizar(){
+        return isPodeCadastrar() || ( security.checkPage(RECURSO_VISUALIZACAO) && isExistemLinks());
+    }
+
+    public boolean isExistemLinks() {
+        return !getLinks().isEmpty();
+    }
+    
+    public boolean isPodeCadastrar(){
+        return security.checkPage(RECURSO_EDICAO);
     }
     
     @ExceptionHandled

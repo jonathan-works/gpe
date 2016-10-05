@@ -38,7 +38,6 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.entity.DocumentoBinario;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
-import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.entity.RegistroAssinaturaSuficiente;
 import br.com.infox.epp.processo.documento.dao.DocumentoBinDAO;
 import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
@@ -188,6 +187,8 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
     }
 
 	public String getTextoAssinatura(final DocumentoBin documento) {
+	    if (documento.getAssinaturas() == null || documento.getAssinaturas().isEmpty())
+	        return "";
         final StringBuilder sb = new StringBuilder("Documento Assinado Digitalmente por: ");
 		for (final AssinaturaDocumento assinatura : documento.getAssinaturas()) {
 			sb.append(assinatura.getNomeUsuario());

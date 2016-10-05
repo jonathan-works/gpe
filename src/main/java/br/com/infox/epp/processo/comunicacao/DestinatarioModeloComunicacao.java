@@ -24,6 +24,7 @@ import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.partes.entity.TipoParte;
 
 @Entity
 @Table(name = "tb_destinatario_modelo_comunic", uniqueConstraints = {
@@ -79,6 +80,10 @@ public class DestinatarioModeloComunicacao implements Serializable, Cloneable {
 	
 	@Column(name = "in_individual", nullable = true)
 	private Boolean individual = Boolean.TRUE;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_tipo_parte", nullable = true)
+	private TipoParte tipoParte;
 	
 	public Long getId() {
 		return id;
@@ -159,8 +164,16 @@ public class DestinatarioModeloComunicacao implements Serializable, Cloneable {
     public void setIndividual(Boolean individual) {
         this.individual = individual;
     }
+    
+    public TipoParte getTipoParte() {
+		return tipoParte;
+	}
 
-    @Transient
+	public void setTipoParte(TipoParte tipoParte) {
+		this.tipoParte = tipoParte;
+	}
+
+	@Transient
 	public String getNome() {
 		if (destinatario != null) {
 			return destinatario.getNome();
@@ -168,6 +181,18 @@ public class DestinatarioModeloComunicacao implements Serializable, Cloneable {
 		    return (destino.getCaminhoCompletoFormatado() + " (" + perfilDestino.getPapel() + ")");
 		} else if (destino != null) {
 		    return destino.getCaminhoCompletoFormatado();
+		}
+		return null;
+	}
+	
+	@Transient
+	public String getNomeDestino() {
+		if (destinatario != null) {
+			return destinatario.getNome();
+		} else if (perfilDestino != null) {
+			return (destino.getPathDescriptor() + " - " + perfilDestino.getPapel());
+		} else if (destino != null) {
+			return destino.getPathDescriptor();
 		}
 		return null;
 	}
