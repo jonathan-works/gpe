@@ -1,5 +1,7 @@
 package br.com.infox.core.file.download;
 
+import static org.apache.commons.lang3.ObjectUtils.firstNonNull;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -15,18 +17,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.UriBuilder;
 
-import static org.apache.commons.lang3.ObjectUtils.*;
+import org.apache.commons.io.IOUtils;
 
-import com.lowagie.text.DocumentException;
-
-import br.com.infox.core.messages.InfoxMessages;
-import br.com.infox.core.pdf.PdfManager;
-import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.documento.DocumentoBinSearch;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
-import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 
 @WebServlet(urlPatterns = DocumentoServlet.BASE_SERVLET_PATH + "/*")
 public class DocumentoServlet extends HttpServlet {
@@ -36,14 +32,13 @@ public class DocumentoServlet extends HttpServlet {
 
     @Inject private DocumentoBinSearch documentoBinSearch;
     @Inject private DocumentoBinManager documentoBinManager;
-    @Inject private DocumentoBinarioManager documentoBinarioManager;
-    @Inject private PdfManager pdfManager;
-    @Inject private InfoxMessages infoxMessages;
+    @Inject private FileDownloader fileDownloader;
     
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         DocumentoInfo downloadDocumentoInfo = extractFromRequest(req, DocumentoServletOperation.DOWNLOAD);
         DocumentoBin documento=null;
+        DownloadResource downloadResource = null;
         if (downloadDocumentoInfo == null) {
             Object documentoDownload = req.getSession().getAttribute("documentoDownload");
             if (documentoDownload == null){
@@ -54,19 +49,28 @@ public class DocumentoServlet extends HttpServlet {
                 documento = ((Documento) documentoDownload).getDocumentoBin();
             } else if (documentoDownload instanceof DocumentoBin){
                 documento = (DocumentoBin) documentoDownload;
+            } else if (documentoDownload instanceof DownloadResource){
+                downloadResource = (DownloadResource) documentoDownload;
             }
         }
-        if (documento == null)
-        documento = firstNonNull(
-            documentoBinSearch.getTermoAdesaoByUUID(UUID.fromString(downloadDocumentoInfo.getUid())),
-            documentoBinSearch.getDocumentoPublicoByUUID(UUID.fromString(downloadDocumentoInfo.getUid()))
-        );
-        
-        if (documento == null) {
-            writeNotFoundResponse(resp);
-            return;
+        if (documento == null && downloadResource == null) {
+            documento = firstNonNull(
+                documentoBinSearch.getTermoAdesaoByUUID(UUID.fromString(downloadDocumentoInfo.getUid())),
+                documentoBinSearch.getDocumentoPublicoByUUID(UUID.fromString(downloadDocumentoInfo.getUid()))
+            );
         }
-        String nomeArquivo = extractNomeArquivo(documento);
+        
+        if (downloadResource != null){
+            processDownload(req, resp, downloadResource);
+        } else if (documento != null){
+            processDownload(req, resp, documento);
+        } else {
+            writeNotFoundResponse(resp);
+        }
+    }
+    
+    private void processDownload(HttpServletRequest req, HttpServletResponse resp, DownloadResource downloadResource) throws IOException{
+        String nomeArquivo = downloadResource.getFileName();
         if (!URI.create(req.getRequestURI()).getPath().endsWith(nomeArquivo)) {
             UriBuilder uriBuilder = UriBuilder.fromPath(req.getRequestURI());
             uriBuilder.path(nomeArquivo);
@@ -74,21 +78,31 @@ public class DocumentoServlet extends HttpServlet {
             return;
         }
         req.getSession().removeAttribute("documentoDownload");
-        writeDocumentoBinToResponse(resp, documento);
+        writeDownloadResponse(resp, downloadResource);
+    }
+    
+    private void processDownload(HttpServletRequest req, HttpServletResponse resp, DocumentoBin documento) throws IOException{
+        String nomeArquivo = fileDownloader.extractNomeArquivo(documento);
+        if (!URI.create(req.getRequestURI()).getPath().endsWith(nomeArquivo)) {
+            UriBuilder uriBuilder = UriBuilder.fromPath(req.getRequestURI());
+            uriBuilder.path(nomeArquivo);
+            resp.sendRedirect(uriBuilder.build().toString());
+            return;
+        }
+        req.getSession().removeAttribute("documentoDownload");
+        writeDownloadResponse(resp, documento);
     }
 
-    private String extractNomeArquivo(DocumentoBin documento) {
-        String nomeArquivo=documento.getNomeArquivo();
-        String extensao = documento.getExtensao();
-        if (StringUtil.isEmpty(extensao)){
-            documento.setExtensao("pdf");
-        }
-        if (StringUtil.isEmpty(nomeArquivo)){
-            nomeArquivo=documento.getUuid().toString();
-        }
-        if (!nomeArquivo.endsWith("."+extensao))
-            nomeArquivo = nomeArquivo+"."+documento.getExtensao();
-        return nomeArquivo;
+    private void deleteFile(final DownloadResource toRemove) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    toRemove.delete();
+                } catch (IOException e) {
+                }
+            }
+        }).start();
     }
     
     private void writeNotFoundResponse(HttpServletResponse resp) throws IOException {
@@ -96,11 +110,19 @@ public class DocumentoServlet extends HttpServlet {
         resp.flushBuffer();
     }
 
-    private void writeDocumentoBinToResponse(HttpServletResponse resp, DocumentoBin documento) throws IOException {
-        byte[] data = getData(documento);
+    private void writeDownloadResponse(HttpServletResponse resp, DownloadResource fileDownloadWrapper) throws IOException {
+        resp.setContentType(fileDownloadWrapper.getContentType());
+        resp.setStatus(HttpServletResponse.SC_OK);
+        IOUtils.copy(fileDownloadWrapper.getInputStream(), resp.getOutputStream());
+        resp.getOutputStream().flush();
+        deleteFile(fileDownloadWrapper);
+    }
+    
+    private void writeDownloadResponse(HttpServletResponse resp, DocumentoBin documento) throws IOException {
+        byte[] data = fileDownloader.getData(documento);
         String contentType = "application/" + documento.getExtensao();
         resp.setContentType(contentType);
-        resp.setStatus(200);
+        resp.setStatus(HttpServletResponse.SC_OK);
         if ("application/pdf".equalsIgnoreCase(contentType)){
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             documentoBinManager.writeMargemDocumento(documento, data, out);
@@ -108,27 +130,6 @@ public class DocumentoServlet extends HttpServlet {
         }
         resp.getOutputStream().write(data);
         resp.getOutputStream().flush();
-    }
-
-    private byte[] getData(DocumentoBin documento) {
-        byte[] data = new byte[0];
-        if (documentoBinarioManager.existeBinario(documento.getId())){
-            data = documentoBinarioManager.getData(documento.getId());
-        } else {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            try {
-                String modeloDocumento = documento.isBinario() ? getMensagemDocumentoNulo() : defaultIfNull(documento.getModeloDocumento(), getMensagemDocumentoNulo());
-                pdfManager.convertHtmlToPdf(modeloDocumento, outputStream);
-                documento.setExtensao("pdf");
-            } catch (DocumentException e) {
-            }
-            data = outputStream.toByteArray();
-        }
-        return data;
-    }
-
-    private String getMensagemDocumentoNulo() {
-        return infoxMessages.get("documentoProcesso.error.noFileOrDeleted");
     }
 
     private DocumentoInfo extractFromRequest(HttpServletRequest req, DocumentoServletOperation action) {
