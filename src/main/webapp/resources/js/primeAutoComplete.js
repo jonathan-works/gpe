@@ -13,6 +13,8 @@ PrimeFaces.widget.AutoComplete = PrimeFaces.widget.AutoComplete.extend({
 					break;
 				}
 			}
+			console.log(a.items);
+			console.log(a.currentItems);
 			if (!c) {
 				if (a.cfg.multiple) {
 					a.input.val("")
@@ -20,10 +22,15 @@ PrimeFaces.widget.AutoComplete = PrimeFaces.widget.AutoComplete.extend({
 					a.input.val("");
 					a.hinput.val("")
 				}
-			} else if (!a.cfg.multiple && a.currentItems.length === 1) {
-				var item = a.items.get(0);
-				a.hinput.val(item.getAttribute('data-item-value'));
+			} else if (!a.cfg.multiple) {
+				for (var i = 0; i < a.items.length; i++) {
+					if (a.hinput.val() === a.items[i].getAttribute('data-item-value')) {
+						return;
+					}
+				}
+				a.input.val("");
+				a.hinput.val("");
 			}
-		})
+		});
 	}
 });
