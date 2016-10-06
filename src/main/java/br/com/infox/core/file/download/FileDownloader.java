@@ -1,5 +1,8 @@
 package br.com.infox.core.file.download;
 
+import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
@@ -12,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.UriBuilder;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Name;
@@ -19,6 +23,11 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.faces.FacesMessages;
 
+import com.lowagie.text.DocumentException;
+
+import br.com.infox.core.messages.InfoxMessages;
+import br.com.infox.core.pdf.PdfManager;
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
@@ -39,6 +48,34 @@ public class FileDownloader implements Serializable {
     
     @Inject
     private DocumentoBinarioManager documentoBinarioManager;
+    @Inject private PdfManager pdfManager;
+    @Inject private InfoxMessages infoxMessages;
+    @Inject private DownloadResourceFactory downloadResourceFactory;
+    
+    public static void download(DownloadResource downloadResource){
+        if (downloadResource == null)
+            return;
+        HttpServletResponse response;
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        response = facesContext != null ? (HttpServletResponse) facesContext.getExternalContext().getResponse() : BeanManager.INSTANCE.getReference(HttpServletResponse.class);
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentLength((int) downloadResource.getDataLength());
+        response.setContentType(downloadResource.getContentType());
+        if ("application/pdf".equals(downloadResource.getContentType())){
+            response.setHeader("Content-disposition", String.format("attachment; filename=\"%s\"", downloadResource.getFileName()));
+        }
+        try {
+            IOUtils.copy(downloadResource.getInputStream(), response.getOutputStream());
+            response.getOutputStream().flush();
+            if (facesContext != null){
+                facesContext.responseComplete();
+            }
+            downloadResource.delete();
+        } catch (IOException e) {
+            LOG.error(".download()", e);
+            FacesMessages.instance().add(String.format("Erro ao descarregar o arquivo: %s", downloadResource.getFileName()));
+        }
+    }
     
     public static void download(byte[] data, String contentType, String fileName) {
         if (data == null) {
@@ -81,15 +118,18 @@ public class FileDownloader implements Serializable {
     }
     
     public String getDownloadUrl(DocumentoTemporario documento){
-        return getDownloadUrl(documento.getDocumentoBin());
+        return getDownloadUrl(documento == null ? null : documento.getDocumentoBin());
     }
     public String getDownloadUrl(Documento documento){
-        return getDownloadUrl(documento.getDocumentoBin());
+        return getDownloadUrl(documento == null ? null : documento.getDocumentoBin());
     }
     public String getDownloadUrl(DocumentoBin documentoBin){
         String contextPath = getRequest().getContextPath();
         UriBuilder uriBuilder = UriBuilder.fromPath(contextPath);
         uriBuilder = uriBuilder.path(DocumentoServlet.BASE_SERVLET_PATH);
+        if (documentoBin != null){
+            uriBuilder = uriBuilder.path(documentoBin.getUuid().toString());
+        }
         uriBuilder = uriBuilder.path(DocumentoServletOperation.DOWNLOAD.getPath());
         return uriBuilder.build().toString();
     }
@@ -119,16 +159,56 @@ public class FileDownloader implements Serializable {
         return String.format("application/%s", documentoBin.getExtensao());
     }
     public void downloadDocumentoViaServlet(DocumentoBin documentoBin) throws IOException {
-        HttpSession session = getRequest().getSession();
-        session.setAttribute("documentoDownload", documentoBin);
+        if (documentoBin == null)
+            return;
         
-        getResponse().sendRedirect(getDownloadUrl(documentoBin));
+        downloadDocumentoViaServlet(getData(documentoBin), getContentType(documentoBin), extractNomeArquivo(documentoBin));
     }
     public void downloadDocumentoViaServlet(Documento documento) throws IOException {
+        if (documento == null)
+            return;
+        downloadDocumentoViaServlet(documento.getDocumentoBin());
+    }
+    
+    public void downloadDocumentoViaServlet(byte[] data, String contentType, String fileName) throws IOException{
+        DownloadResource downloadResource = downloadResourceFactory.create(fileName, contentType, data);
         HttpSession session = getRequest().getSession();
-        session.setAttribute("documentoDownload", documento);
-        
-        getResponse().sendRedirect(getDownloadUrl(documento));
+        session.setAttribute("documentoDownload", downloadResource);
+        getResponse().sendRedirect(getDownloadUrl((DocumentoBin)null));
+    }
+
+    public String getMensagemDocumentoNulo() {
+        return infoxMessages.get("documentoProcesso.error.noFileOrDeleted");
+    }
+    public String extractNomeArquivo(DocumentoBin documento) {
+        String nomeArquivo=documento.getNomeArquivo();
+        String extensao = documento.getExtensao();
+        if (StringUtil.isEmpty(extensao)){
+            documento.setExtensao("pdf");
+        }
+        if (StringUtil.isEmpty(nomeArquivo)){
+            nomeArquivo=documento.getUuid().toString();
+        }
+        if (!nomeArquivo.endsWith("."+extensao))
+            nomeArquivo = nomeArquivo+"."+documento.getExtensao();
+        return nomeArquivo;
+    }
+
+    public byte[] getData(DocumentoBin documento) {
+        byte[] data = new byte[0];
+        if (documentoBinarioManager.existeBinario(documento.getId())){
+            data = documentoBinarioManager.getData(documento.getId());
+        } else {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            try {
+                String modeloDocumento = documento.isBinario() ? getMensagemDocumentoNulo() : defaultIfNull(documento.getModeloDocumento(), getMensagemDocumentoNulo());
+                pdfManager.convertHtmlToPdf(modeloDocumento, outputStream);
+                documento.setExtensao("pdf");
+            } catch (DocumentException e) {
+            }
+            data = outputStream.toByteArray();
+        }
+        return data;
     }
     
     public HttpServletResponse getResponse() {
