@@ -367,7 +367,7 @@ public class DocumentoBin implements Serializable {
 
     @Transient
     public boolean isBinario() {
-        return !Strings.isEmpty(getExtensao());
+        return !Strings.isEmpty(getExtensao()) && (size != null &&  size.intValue() > 0 ) ;
     }
 
     @Transient
