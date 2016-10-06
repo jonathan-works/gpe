@@ -17,6 +17,7 @@ import javax.persistence.OptimisticLockException;
 
 import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.taskmgmt.exe.TaskInstance;
+import org.omnifaces.cdi.param.ParamValue;
 import org.primefaces.model.LazyDataModel;
 
 import br.com.infox.epp.access.api.Authenticator;
@@ -130,6 +131,8 @@ public class ChecklistView implements Serializable {
         if (param == null) {
             return true;
         } else {
+        	if(param instanceof Boolean)
+        		return (Boolean) param;
             String paramValue = ((String) param).trim().toLowerCase();
             return paramValue.isEmpty() || !"false".equals(paramValue);
         }
