@@ -32,6 +32,7 @@ import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.DocumentoTemporario;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -51,6 +52,7 @@ public class FileDownloader implements Serializable {
     @Inject private PdfManager pdfManager;
     @Inject private InfoxMessages infoxMessages;
     @Inject private DownloadResourceFactory downloadResourceFactory;
+    @Inject private DocumentoBinManager documentoBinManager;
     
     public static void download(DownloadResource downloadResource){
         if (downloadResource == null)
@@ -208,7 +210,7 @@ public class FileDownloader implements Serializable {
             }
             data = outputStream.toByteArray();
         }
-        return data;
+        return documentoBinManager.writeMargemDocumento(data, documentoBinManager.getTextoAssinatura(documento), documentoBinManager.getTextoCodigo(documento.getUuid()), documentoBinManager.getQrCodeSignatureImage(documento));
     }
     
     public HttpServletResponse getResponse() {
