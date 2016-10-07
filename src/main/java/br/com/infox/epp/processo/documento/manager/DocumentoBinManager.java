@@ -1,5 +1,6 @@
 package br.com.infox.epp.processo.documento.manager;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -38,7 +39,6 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.entity.DocumentoBinario;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
-import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.entity.RegistroAssinaturaSuficiente;
 import br.com.infox.epp.processo.documento.dao.DocumentoBinDAO;
 import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
@@ -135,43 +135,52 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
 	public DocumentoBin getByUUID(final UUID uuid) {
 		return getDao().getByUUID(uuid);
 	}
+	
+    public byte[] writeMargemDocumento(byte[] pdf, String textoAssinatura, String textoCodigo, final byte[] qrcode) {
+        try (ByteArrayOutputStream outStream = new ByteArrayOutputStream()) {
+            final PdfReader pdfReader = new PdfReader(pdf);
+            final PdfStamper stamper = new PdfStamper(pdfReader, outStream);
+            final Font font = new Font(Font.TIMES_ROMAN, 8);
 
-	public void writeMargemDocumento(final DocumentoBin documento, final byte[] pdf, final OutputStream outStream) {
-		try {
-			final PdfReader pdfReader = new PdfReader(pdf);
-			final PdfStamper stamper = new PdfStamper(pdfReader, outStream);
-			final Font font = new Font(Font.TIMES_ROMAN, 8);
-			
-			final Phrase phrase = new Phrase(getTextoAssinatura(documento), font);
-			final Phrase codPhrase = new Phrase(getTextoCodigo(documento.getUuid()), font);
+            final Phrase phrase = new Phrase(textoAssinatura, font);
+            final Phrase codPhrase = new Phrase(textoCodigo, font);
 
-			final byte[] qrcode = getQrCodeSignatureImage(documento);
-			for (int page = 1; page <= pdfReader.getNumberOfPages(); page++) {
-				int rotation = pdfReader.getPageRotation(page);
-				final PdfContentByte content = stamper.getOverContent(page);
-				final Image image = Image.getInstance(qrcode);
-				float right = pdfReader.getCropBox(page).getRight();
-				float top = pdfReader.getCropBox(page).getTop();
-				if (rotation == 90 || rotation == 270) {
-					// Invertendo posições quando o PDF estiver em modo Paisagem
-					float tempRight = right;
-					right = top;
-					top = tempRight;
-				}
-				image.setAbsolutePosition(right - 60, top - 70);
-				content.addImage(image);
-				ColumnText.showTextAligned(content, Element.ALIGN_LEFT, phrase, right - 15, top - 70, -90);
-				ColumnText.showTextAligned(content, Element.ALIGN_LEFT, codPhrase, right - 25, top - 70, -90);
-			}
+            for (int page = 1; page <= pdfReader.getNumberOfPages(); page++) {
+                int rotation = pdfReader.getPageRotation(page);
+                final PdfContentByte content = stamper.getOverContent(page);
+                final Image image = Image.getInstance(qrcode);
+                float right = pdfReader.getCropBox(page).getRight();
+                float top = pdfReader.getCropBox(page).getTop();
+                if (rotation == 90 || rotation == 270) {
+                    // Invertendo posições quando o PDF estiver em modo Paisagem
+                    float tempRight = right;
+                    right = top;
+                    top = tempRight;
+                }
+                image.setAbsolutePosition(right - 60, top - 70);
+                content.addImage(image);
+                ColumnText.showTextAligned(content, Element.ALIGN_LEFT, phrase, right - 15, top - 70, -90);
+                ColumnText.showTextAligned(content, Element.ALIGN_LEFT, codPhrase, right - 25, top - 70, -90);
+            }
 
-			stamper.close();
-			outStream.flush();
-		} catch (BadPasswordException e) {
-			throw new BusinessException("Documento somente leitura, não é possível gravar", e);
-		} catch (IOException | DocumentException e) {
-			throw new BusinessException("Erro ao gravar a margem do PDF", e);
-		}
-	}
+            stamper.close();
+            outStream.flush();
+            return outStream.toByteArray();
+        } catch (BadPasswordException e) {
+            throw new BusinessException("Documento somente leitura, não é possível gravar", e);
+        } catch (IOException | DocumentException e) {
+            throw new BusinessException("Erro ao gravar a margem do PDF", e);
+        }
+    }
+
+    public void writeMargemDocumento(final DocumentoBin documento, final byte[] pdf, final OutputStream outStream) {
+        try {
+            outStream.write(writeMargemDocumento(pdf, getTextoAssinatura(documento), getTextoCodigo(documento.getUuid()), getQrCodeSignatureImage(documento)));
+            outStream.flush();
+        } catch (IOException e) {
+            throw new BusinessException("Erro ao gravar a margem do PDF", e);
+        }
+    }
 
         public byte[] getQrCodeSignatureImage(final DocumentoBin documento){
             return QRCode.from(getUrlValidacaoDocumento() + "?cod=" + documento.getUuid().toString())
@@ -187,15 +196,19 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
         return string;
     }
 
-	public String getTextoAssinatura(final DocumentoBin documento) {
-        final StringBuilder sb = new StringBuilder("Documento Assinado Digitalmente por: ");
-		for (final AssinaturaDocumento assinatura : documento.getAssinaturas()) {
-			sb.append(assinatura.getNomeUsuario());
-			sb.append(", ");
-		}
-		sb.delete(sb.length() - 2, sb.length());
-		String textoAssinatura = sb.toString();
-        return textoAssinatura;
+    public String getTextoAssinatura(final DocumentoBin documento) {
+        final StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < documento.getAssinaturas().size(); i++) {
+            if (i == 0) {
+                sb.append("Documento Assinado Digitalmente por: ");
+            } else {
+                sb.append(", ");
+            }
+            AssinaturaDocumento assinatura = documento.getAssinaturas().get(i);
+            sb.append(assinatura.getNomeUsuario());
+        }
+
+        return sb.toString();
     }
 
 	@Override
