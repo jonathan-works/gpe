@@ -9,6 +9,8 @@ import java.util.Map;
 
 import javax.persistence.EntityManager;
 
+import org.jbpm.JbpmConfiguration;
+import org.jbpm.JbpmContext;
 import org.jbpm.graph.exe.ProcessInstance;
 import org.jbpm.graph.exe.Token;
 
@@ -51,9 +53,17 @@ public class JbpmExpressionResolver implements ExpressionResolver {
 		if(idProcesso == null && processInstance != null)
 			idProcesso = (Integer) processInstance.getContextInstance().getVariable(VariaveisJbpmProcessosGerais.PROCESSO);
 		
+
+	     boolean created = false;
+	     JbpmContext jbpmContext = JbpmContext.getCurrentJbpmContext();
+	     if (jbpmContext == null) {
+	         jbpmContext = JbpmConfiguration.getInstance().createJbpmContext();
+	         created = true;
+	     }
+		
 		Processo  processo = entityManager.find(Processo.class, idProcesso);
 		if(processInstance == null)
-			processInstance = entityManager.find(ProcessInstance.class, processo.getIdJbpm());
+			processInstance = jbpmContext.getProcessInstance(processo.getIdJbpm());
 		ProcessInstance  procInst = processInstance;
 		do {
 	        value = resolveValue(procInst, realVariableName, expression);
@@ -61,11 +71,11 @@ public class JbpmExpressionResolver implements ExpressionResolver {
 	        	//procura na hierarquia de processos acessórios 
 	        	processo = processo.getProcessoPai();
 	        	if(processo != null)
-	        		procInst = entityManager.find(ProcessInstance.class, processo.getIdJbpm());
+	        		procInst = jbpmContext.getProcessInstance(processo.getIdJbpm());
 	        }
 		} while (value == null && processo != null);
 		
-		
+		if (created) jbpmContext.close();
 		
         return expression;
 	}
