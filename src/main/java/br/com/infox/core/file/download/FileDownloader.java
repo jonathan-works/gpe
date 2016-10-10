@@ -210,7 +210,10 @@ public class FileDownloader implements Serializable {
             }
             data = outputStream.toByteArray();
         }
-        return documentoBinManager.writeMargemDocumento(data, documentoBinManager.getTextoAssinatura(documento), documentoBinManager.getTextoCodigo(documento.getUuid()), documentoBinManager.getQrCodeSignatureImage(documento));
+        if("pdf".equalsIgnoreCase(documento.getExtensao()))
+        	return documentoBinManager.writeMargemDocumento(data, documentoBinManager.getTextoAssinatura(documento), documentoBinManager.getTextoCodigo(documento.getUuid()), documentoBinManager.getQrCodeSignatureImage(documento));
+        else
+        	return data;
     }
     
     public HttpServletResponse getResponse() {
