@@ -211,12 +211,19 @@ public class FileDownloader implements Serializable {
             }
             data = outputStream.toByteArray();
         }
-        if ("pdf".equalsIgnoreCase(documento.getExtensao()) && Boolean.TRUE.equals(documento.getSuficientementeAssinado())) {
+         
+        if (podeExibirMargem(documento)) {
             data = documentoBinManager.writeMargemDocumento(data, documentoBinManager.getTextoAssinatura(documento), documentoBinManager.getTextoCodigo(documento.getUuid()), documentoBinManager.getQrCodeSignatureImage(documento));
         }
         return data;
     }
     
+    private boolean podeExibirMargem(DocumentoBin documento) {
+        return "pdf".equalsIgnoreCase(documento.getExtensao())
+                && (Boolean.TRUE.equals(documento.getSuficientementeAssinado())
+                        || documento.getAssinaturas() != null && !documento.getAssinaturas().isEmpty());
+    }
+
     public HttpServletResponse getResponse() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         if (facesContext != null){
