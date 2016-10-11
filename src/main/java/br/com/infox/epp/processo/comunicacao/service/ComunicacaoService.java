@@ -219,10 +219,10 @@ public class ComunicacaoService {
 			for (DocumentoModeloComunicacao documentoModelo : modeloComunicacao.getDocumentos()) {
 				if (documentoModelo.getDocumento().getId() != documentoComunicacaoId){
 					DocumentoBin documentoBin = documentoModelo.getDocumento().getDocumentoBin();
-					if ("pdf".equals(documentoBin.getExtensao())) {
+					if ("pdf".equals(documentoBin.getExtensao()) && documentoBinarioManager.existeBinario(documentoBin.getId())) {
 						byte[] documento = documentoBinarioManager.getData(documentoBin.getId());
 						copy = pdfManager.copyPdf(copy, documento);
-					} else if (documentoBin.getExtensao() == null) {
+					} else if (!documentoBin.isBinario()) {
 						ByteArrayOutputStream bos = new ByteArrayOutputStream();
 						pdfManager.convertHtmlToPdf(documentoBin.getModeloDocumento(), bos);
 						copy = pdfManager.copyPdf(copy, bos.toByteArray());
