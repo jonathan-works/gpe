@@ -24,6 +24,7 @@
     	<composite:attribute name="required" default="false" />
     	<composite:attribute name="validatorId" />
     	<composite:attribute name="converterId"/>
+    	<composite:attribute name="enumClassName"/>
     	
     	<composite:attribute name="ajax" default="false" />
     	<composite:attribute name="render" default="@this" />
@@ -84,6 +85,9 @@
 		   				</c:if>
 		   			    <c:if test="#{not empty cc.attrs.converterId}">
 		   			    	<f:converter converterId="#{cc.attrs.converterId}" />
+		   			    </c:if>
+		   			    <c:if test="#{not empty cc.attrs.enumClassName}">
+			   			    <f:attribute name="enumClassName" value="#{cc.attrs.enumClassName}"/>
 		   			    </c:if>
 		   			    <composite:insertChildren />
     				</h:selectOneMenu>
