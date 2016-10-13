@@ -34,7 +34,7 @@ public class PropertiesLoader {
     private static final LogProvider LOG = Logging.getLogProvider(PropertiesLoader.class);
 
     private static final String PAGE_PROPERTIES = "/custom_pages.properties";
-    private static final String MENU_PROPERTIES = "/menu.properties";
+    private static final String MENU_PROPERTIES = "menu.properties";
 
     private Properties pageProperties;
     private Properties menuProperties;
@@ -105,25 +105,26 @@ public class PropertiesLoader {
         return file.getParent(); // o WAR
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public List<String> getMenuItems() {
         if (menuProperties == null) {
             menuProperties = new Properties();
-            InputStream is = getClass().getResourceAsStream(MENU_PROPERTIES);
-            if (is != null) {
-                try {
+            menuItems = new ArrayList<>();
+            try {
+                Enumeration<URL> menuUrls = getClass().getClassLoader().getResources(MENU_PROPERTIES);
+                while (menuUrls.hasMoreElements()) {
+                    InputStream is = menuUrls.nextElement().openStream();
                     menuProperties.load(is);
-                    menuItems = Collections.unmodifiableList(new ArrayList(
-                            menuProperties.values()));
-                } catch (IOException e) {
-                    LOG.error(
-                            "Falha ao recuperar arquivos especificados no Properties Loader.",
-                            e);
+                    for (String key : menuProperties.stringPropertyNames()) {
+                        menuItems.add(menuProperties.getProperty(key));
+                    }
+                    menuProperties.clear();
+                    is.close();
                 }
+            } catch (IOException e) {
+                LOG.error("Falha ao recuperar arquivos especificados no Properties Loader.", e);
             }
         }
-        return (menuItems == null ? (menuItems = Collections
-                .unmodifiableList(new ArrayList<String>())) : menuItems);
+        return Collections.unmodifiableList(menuItems);
     }
 
     public Map<String, String> getMessages() {
