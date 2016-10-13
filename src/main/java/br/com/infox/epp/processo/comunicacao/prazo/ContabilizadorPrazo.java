@@ -19,7 +19,6 @@ import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.system.Parametros;
-import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 
