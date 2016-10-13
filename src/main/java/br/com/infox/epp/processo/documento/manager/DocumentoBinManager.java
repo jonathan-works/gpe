@@ -157,10 +157,10 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
                     right = top;
                     top = tempRight;
                 }
-                image.setAbsolutePosition(right - 60, top - 70);
+                image.setAbsolutePosition(right - 62, top - 70);
                 content.addImage(image);
-                ColumnText.showTextAligned(content, Element.ALIGN_LEFT, phrase, right - 15, top - 70, -90);
-                ColumnText.showTextAligned(content, Element.ALIGN_LEFT, codPhrase, right - 25, top - 70, -90);
+                ColumnText.showTextAligned(content, Element.ALIGN_LEFT, phrase, right - 25, top - 70, -90);
+                ColumnText.showTextAligned(content, Element.ALIGN_LEFT, codPhrase, right - 35, top - 70, -90);
             }
 
             stamper.close();
