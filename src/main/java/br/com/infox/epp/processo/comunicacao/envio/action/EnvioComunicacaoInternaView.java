@@ -36,9 +36,9 @@ import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
 import br.com.infox.epp.localizacao.LocalizacaoSearch;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
-import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
+import br.com.infox.epp.processo.comunicacao.meioexpedicao.MeioExpedicaoSearch;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoInternaService;
 import br.com.infox.epp.processo.comunicacao.service.DestinatarioComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
@@ -75,6 +75,8 @@ public class EnvioComunicacaoInternaView implements Serializable {
     private ComunicacaoInternaService comunicacaoInternaService;
     @Inject
     private ModeloDocumentoManager modeloDocumentoManager;
+    @Inject
+    private MeioExpedicaoSearch meioExpedicaoSearch;
     @Inject
     private LocalizacaoSearch localizacaoSearch;
     
@@ -240,7 +242,7 @@ public class EnvioComunicacaoInternaView implements Serializable {
                 destinatario.setDestino(getLocalizacaoDestino());
                 destinatario.setPerfilDestino(getPerfilDestino());
             }
-            destinatario.setMeioExpedicao(MeioExpedicao.SI);
+            destinatario.setMeioExpedicao(meioExpedicaoSearch.getMeioExpedicaoSistema());
             destinatario.setModeloComunicacao(getModeloComunicacao());
             comunicacaoInternaService.gravarDestinatario(destinatario);
             clearDestinatarioProperties();

@@ -131,7 +131,7 @@ public class DocumentoComunicacaoService {
 		Map<String, String> variaveis = new HashMap<>();
 		String format = "#'{'{0}'}'";
 		
-		variaveis.put(MessageFormat.format(format, VariaveisJbpmComunicacao.MEIO_EXPEDICAO), destinatario.getMeioExpedicao().getLabel());
+		variaveis.put(MessageFormat.format(format, VariaveisJbpmComunicacao.MEIO_EXPEDICAO), destinatario.getMeioExpedicao().getDescricao());
 		variaveis.put(MessageFormat.format(format, VariaveisJbpmComunicacao.PRAZO_DESTINATARIO), destinatario.getPrazo() != null ? destinatario.getPrazo().toString() : null);
 		variaveis.put(MessageFormat.format(format, VariaveisJbpmComunicacao.NOME_DESTINATARIO), destinatario.getNome());
 		variaveis.put(MessageFormat.format(format, VariaveisJbpmComunicacao.TIPO_PARTICIPANTE_COMUNICACAO), destinatario.getTipoParte() == null ? "" : destinatario.getTipoParte().getDescricao());

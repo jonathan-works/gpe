@@ -5,18 +5,24 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
 import br.com.infox.core.list.EntityList;
+import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
-import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
+import br.com.infox.epp.processo.comunicacao.meioexpedicao.MeioExpedicao;
+import br.com.infox.epp.processo.comunicacao.meioexpedicao.MeioExpedicaoSearch;
 import br.com.infox.epp.processo.entity.Processo;
 
 @Scope(ScopeType.PAGE)
 @Name(ImpressaoComunicacaoList.NAME)
+@ContextDependency
 public class ImpressaoComunicacaoList extends EntityList<Processo> {
 
 	private static final long serialVersionUID = 1L;
@@ -29,7 +35,7 @@ public class ImpressaoComunicacaoList extends EntityList<Processo> {
 												"left join bin.assinaturas a " +
 												"where exists (select 1 from MetadadoProcesso mp " +
 												"			  where mp.metadadoType = '" + ComunicacaoMetadadoProvider.MEIO_EXPEDICAO.getMetadadoType() + "' " + 
-												"			  and (mp.valor = '" + MeioExpedicao.DO.name() + "' or mp.valor = '" + MeioExpedicao.IM.name() + "' ) " +
+												"			  and (mp.valor = '" + MeioExpedicaoSearch.CODIGO_MEIO_DIARIO_OFICIAL + "' or mp.valor = '" + MeioExpedicaoSearch.CODIGO_MEIO_IMPRESSAO + "' ) " +
 												"			  and mp.processo = o) " +
 												"and o.localizacao = #{usuarioLogadoPerfilAtual.localizacao} ";
 	
@@ -72,6 +78,9 @@ public class ImpressaoComunicacaoList extends EntityList<Processo> {
 	@In
 	private ImpressaoComunicacaoService impressaoComunicacaoService;
 	
+	@Inject
+	private MeioExpedicaoSearch meioExpedicaoSearch;
+	
 	private List<MeioExpedicao> meiosExpedicao;
 	private MeioExpedicao meioExpedicao;
 	private Boolean showDataTable = false;
@@ -79,11 +88,14 @@ public class ImpressaoComunicacaoList extends EntityList<Processo> {
 	private Date dataFim;
 	private Boolean impresso = false;
 	
-	{
-		meioExpedicao = MeioExpedicao.IM;
-		meiosExpedicao = new ArrayList<>(2);
-		meiosExpedicao.add(MeioExpedicao.IM);
-		meiosExpedicao.add(MeioExpedicao.DO);
+	@Override
+	@PostConstruct
+	public void init() {
+	    meioExpedicao = meioExpedicaoSearch.getMeioExpedicaoImpressao();
+        meiosExpedicao = new ArrayList<>(2);
+        meiosExpedicao.add(meioExpedicao);
+        meiosExpedicao.add(meioExpedicaoSearch.getMeioExpedicaoDiarioOficial());
+	    super.init();
 	}
 	
 	private String getEjbqlRestrictedByFilters() {
@@ -120,7 +132,7 @@ public class ImpressaoComunicacaoList extends EntityList<Processo> {
     @Override
     public void newInstance() {
         super.newInstance();
-        this.meioExpedicao = MeioExpedicao.IM;
+        this.meioExpedicao = meioExpedicaoSearch.getMeioExpedicaoImpressao();
         this.dataInicio = null;
         this.dataFim = null;
         this.impresso = false;
