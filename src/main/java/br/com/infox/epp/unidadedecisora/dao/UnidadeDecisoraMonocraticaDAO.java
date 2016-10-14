@@ -93,4 +93,13 @@ public class UnidadeDecisoraMonocraticaDAO extends DAO<UnidadeDecisoraMonocratic
 	    cq.where(cb.isTrue(udm.get(UnidadeDecisoraMonocratica_.ativo)));
 	    return getEntityManager().createQuery(cq).getResultList();
 	}
+	
+	@Override
+	public List<UnidadeDecisoraMonocratica> findAll() {
+	    CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<UnidadeDecisoraMonocratica> cq = cb.createQuery(UnidadeDecisoraMonocratica.class);
+        Root<UnidadeDecisoraMonocratica> root = cq.from(UnidadeDecisoraMonocratica.class);
+        cq.orderBy(cb.asc(root.get(UnidadeDecisoraMonocratica_.nome)));
+        return getEntityManager().createQuery(cq).getResultList();
+	}
 }
