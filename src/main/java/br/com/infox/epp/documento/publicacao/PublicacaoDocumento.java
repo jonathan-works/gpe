@@ -55,8 +55,8 @@ public class PublicacaoDocumento {
     private Integer pagina;
     
     @Size(max=LengthConstants.TEXTO)
-    @Column(name="ds_observacao")
-    private String observacao;
+    @Column(name="ds_observacoes")
+    private String observacoes;
     
     @ManyToOne
     @JoinColumn(name="id_documento_certidao")
@@ -98,12 +98,12 @@ public class PublicacaoDocumento {
 		this.pagina = pagina;
 	}
 
-	public String getObservacao() {
-		return observacao;
+	public String getObservacoes() {
+		return observacoes;
 	}
 
-	public void setObservacao(String observacao) {
-		this.observacao = observacao;
+	public void setObservacoes(String observacoes) {
+		this.observacoes = observacoes;
 	}
 
 	public Documento getCertidao() {
