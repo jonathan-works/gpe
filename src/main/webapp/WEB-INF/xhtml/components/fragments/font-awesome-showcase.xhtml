@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:wi="http://www.itx.com.br/jsf" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui">
+    <div>
+        <div class="font-awesome-showcase">
+        </div>
+        <h:outputScript>
+//<![CDATA[
+(function () {
+    var link = document.querySelector('link[href*=\'font-awesome\']');
+    var createFontAwesomeElement = function (icon, outputObject) {
+        var container = document.createElement('span');
+        var iconElement = document.createElement('span');
+        var labelElement = document.createElement('div');
+        labelElement.textContent = icon;
+        iconElement.classList.add('fa');
+        iconElement.classList.add(['fa',
+        icon].join('-'));
+        container.appendChild(iconElement);
+        container.appendChild(labelElement);
+        container.style=[
+            'display:inline-block',
+            'vertical-align:top',
+            'padding:10px',
+            'text-align:center',
+            'font-size:16px'
+        ].join(';');
+        outputObject.appendChild(container);
+    };
+    var createFontAwesomeElements = function (icon) {
+        var outputObjects = document.querySelectorAll('.font-awesome-showcase');
+        for (var i = 0, l = outputObjects.length; i < l; i++) {
+            createFontAwesomeElement(icon, outputObjects.item(i));
+        }
+    };
+    var clearElements = function () {
+        var outputObjects = document.querySelectorAll('.font-awesome-showcase');
+        for (var i = 0, l = outputObjects.length; i < l; i++) {
+            outputObjects.item(i).innerHTML='';
+        }
+    };
+    jQuery.get(link.href, function (data, textStatus, jqXHR) {
+        var re = /\.fa-([^:]+):before/g;
+        var m;
+        var text = data;
+        var icons = [
+        ];
+        do {
+            m = re.exec(text);
+            if (m) {
+                icons.push(m[1]);
+            }
+        } while (m);
+        clearElements();
+        icons = icons.sort();
+        for(var i=0,l=icons.length;i<l;i++){
+            createFontAwesomeElements(icons[i]);
+        }
+    });
+})()
+//]]>
+        </h:outputScript>
+    </div>
+
+</ui:composition>
