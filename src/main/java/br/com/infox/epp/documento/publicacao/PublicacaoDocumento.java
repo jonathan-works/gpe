@@ -66,6 +66,85 @@ public class PublicacaoDocumento {
     	return id;
     }
     
+	public interface PublicacaoBuilder {
+		public LocalBuilder documento(Documento documento);		
+	}
+	
+	public interface LocalBuilder {
+		public BuilderFinal local(LocalPublicacao local);		
+	}
+	
+	public interface BuilderFinal {
+		public BuilderFinal numero(String numero);		
+		public BuilderFinal data(Date data);
+		public BuilderFinal pagina(Integer pagina);
+		public BuilderFinal observacoes(String observacoes);
+		public BuilderFinal certidao(Documento certidao);
+		public PublicacaoDocumento build();
+	}
+	
+	public static PublicacaoBuilder builder() {
+		return new PublicacaoBuilderImpl();
+	}
+	
+	public static class PublicacaoBuilderImpl implements PublicacaoBuilder, LocalBuilder, BuilderFinal {
+
+		private PublicacaoDocumento publicacao = new PublicacaoDocumento();
+		
+		public PublicacaoBuilderImpl() {
+			publicacao.setDataPublicacao(new Date());
+		}
+		
+		@Override
+		public BuilderFinal numero(String numero) {
+			publicacao.setNumero(numero);
+			return this;
+		}
+
+		@Override
+		public BuilderFinal data(Date data) {
+			publicacao.setDataPublicacao(data);
+			return this;
+		}
+
+		@Override
+		public BuilderFinal pagina(Integer pagina) {
+			publicacao.setPagina(pagina);
+			return this;
+		}
+
+		@Override
+		public BuilderFinal observacoes(String observacoes) {
+			publicacao.setObservacoes(observacoes);
+			return this;
+		}
+
+		@Override
+		public PublicacaoDocumento build() {
+			return publicacao;
+		}
+
+		@Override
+		public BuilderFinal local(LocalPublicacao local) {
+			publicacao.setLocalPublicacao(local);
+			return this;
+		}
+
+		@Override
+		public LocalBuilder documento(Documento documento) {
+			publicacao.setDocumento(documento);
+			return this;
+		}
+
+		@Override
+		public BuilderFinal certidao(Documento certidao) {
+			publicacao.setCertidao(certidao);
+			return this;
+		}
+		
+	}
+    
+    
 	public LocalPublicacao getLocalPublicacao() {
 		return localPublicacao;
 	}

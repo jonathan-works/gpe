@@ -30,6 +30,10 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cliente.dao.CalendarioEventosDAO;
+import br.com.infox.epp.documento.publicacao.LocalPublicacao;
+import br.com.infox.epp.documento.publicacao.LocalPublicacaoSearch;
+import br.com.infox.epp.documento.publicacao.PublicacaoDocumento;
+import br.com.infox.epp.documento.publicacao.PublicacaoDocumentoService;
 import br.com.infox.epp.entrega.EntregaResponsavelService;
 import br.com.infox.epp.entrega.checklist.ChecklistSituacao;
 import br.com.infox.epp.entrega.checklist.ChecklistVariableService;
@@ -94,6 +98,10 @@ public class BpmExpressionService {
     private CustomVariableSearch customVariableSearch;
     @Inject
     protected MetadadoProcessoManager metadadoProcessoManager;
+    @Inject
+    private LocalPublicacaoSearch localPublicacaoSearch;
+    @Inject
+    private PublicacaoDocumentoService publicacaoDocumentoService;
 
     @External(tooltip = "process.events.expression.atribuirCiencia.tooltip", expressionType = ExpressionType.EVENTOS)
     public void atribuirCiencia() {
@@ -453,6 +461,38 @@ public class BpmExpressionService {
 		return customVariableSearch.getCustomVariableByCodigo(codigo);
 	}
 
+    @External(expressionType = ExpressionType.GERAL, tooltip = "Publica um documento", value = {
+            @Parameter(selectable = true, defaultValue = "idDocumento", label = "ID documento", tooltip = "ID do documento a ser publicado"),
+            @Parameter(selectable = true, defaultValue = "'DO'", label = "Código do LocalPublicacao", tooltip = "Código do Local onde será feita a publicação"),
+            @Parameter(selectable = true, defaultValue = "numeroPublicacao", label = "Número da publicação", tooltip = "Número da publicação"),
+            @Parameter(selectable = true, defaultValue = "dataPublicacao", label = "Data da publicação", tooltip = "Data da publicação"),
+            @Parameter(selectable = true, defaultValue = "paginaPublicacao", label = "Página da publicação", tooltip = "Número da página onde foi feita a publicação"),
+            @Parameter(selectable = true, defaultValue = "observacoesPublicacao", label = "Observações da publicação", tooltip = "Observações da publicação"),
+            @Parameter(selectable = true, defaultValue = "idCertidaoPublicacao", label = "ID da certidão de publicação", tooltip = "ID do documento que representa a certidão de publicação")
+            
+    })
+    public void publicarDocumento(Integer idDocumento, String codigoLocalPublicacao, String numero, Date data, Integer pagina, String observacoes, Integer idCertidao) {
+    	Documento documento = documentoManager.find(idDocumento);
+    	LocalPublicacao localPublicacao = localPublicacaoSearch.findByCodigo(codigoLocalPublicacao);
+    	
+    	Documento certidao = null;
+    	if(idCertidao != null) {
+    		certidao = documentoManager.find(idCertidao);
+    	}
+    	
+    	PublicacaoDocumento publicacao = PublicacaoDocumento.builder()
+    		.documento(documento)
+    		.local(localPublicacao)
+    		.numero(numero)
+    		.data(data)
+    		.pagina(pagina)
+    		.observacoes(observacoes)
+    		.certidao(certidao)
+    		.build();
+    	
+    	publicacaoDocumentoService.publicarDocumento(publicacao);
+    }
+    
     public List<ExternalMethod> getExternalMethods() {
     	return BpmExpressionServiceConsumer.instance().getExternalMethods(this, ExpressionType.GERAL);
     }
