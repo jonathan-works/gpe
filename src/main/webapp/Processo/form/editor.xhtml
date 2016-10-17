@@ -72,7 +72,7 @@
 				oncomplete="infox.hideLoading();"/>
 				
 			<wi:certificadoDigital
-	            id="appletAssinatura"
+	            id="#{varId}appletAssinatura"
 				signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
 				reRender="#{varId}AssinaturaDocumento, :pageBodyDialogMessage"
 				tokenField="#{controller.tokenToSign}"
