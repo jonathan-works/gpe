@@ -2,9 +2,56 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:wi="http://www.itx.com.br/jsf" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
     xmlns:p="http://primefaces.org/ui">
-    <div>
+    <p:outputPanel rendered="#{not producao}">
         <div class="font-awesome-showcase">
         </div>
+        <h:outputScript>
+//<![CDATA[
+(function () {
+    var charBuffer = [
+    ];
+    var bufferCleaner = undefined;
+    var cleanBuffer = function () {
+        charBuffer = [
+        ];
+    };
+    var startCleanBufferTimer = function () {
+        bufferCleaner = setTimeout(cleanBuffer, 1000);
+    };
+    var stopCleanBufferTimer = function () {
+        clearTimeout(bufferCleaner);
+    };
+    var restartCleanBufferTimer = function () {
+        stopCleanBufferTimer();
+        startCleanBufferTimer();
+    };
+    var shortcuts = {};
+    document.querySelector('body').addEventListener('keypress', function (evt) {
+        charBuffer.push(evt.keyCode || evt.charCode);
+        var stringFromBuffer = charBuffer.join(',');
+        if (shortcuts[stringFromBuffer]) {
+            shortcuts[stringFromBuffer].apply({
+            }, [
+                stringFromBuffer
+            ]);
+            cleanBuffer();
+            stopCleanBufferTimer();
+        } else {
+            restartCleanBufferTimer();
+        }
+    });
+    window.registerShortcut=function(shortcut, callback){
+        unregisterShortcut(shortcut);
+        shortcuts[shortcut]=callback;
+    };
+    window.unregisterShortcut=function(shortcut){
+      if (shortcuts[shortcut])  {
+          delete shortcuts[shortcut];
+      }
+    };
+}) ();
+//]]>
+        </h:outputScript>
         <h:outputScript>
 //<![CDATA[
 (function () {
@@ -58,9 +105,22 @@
             createFontAwesomeElements(icons[i]);
         }
     });
+    var toggleFontAwesomeShowCase=function(){
+        var outputObjects = document.querySelectorAll('.font-awesome-showcase');
+        for (var i = 0, l = outputObjects.length; i < l; i++) {
+            
+            if ('none'===outputObjects.item(i).style.display){
+                outputObjects.item(i).style.display='block';
+            } else {
+                outputObjects.item(i).style.display='none';
+            }
+        }
+    };
+    toggleFontAwesomeShowCase();
+    registerShortcut('38,38,40,40,37,39,37,39,98,97,98,97',toggleFontAwesomeShowCase);
 })()
 //]]>
         </h:outputScript>
-    </div>
+    </p:outputPanel>
 
 </ui:composition>
