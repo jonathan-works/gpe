@@ -198,24 +198,32 @@ public class FileDownloader implements Serializable {
 
     public byte[] getData(DocumentoBin documento) {
         byte[] data = new byte[0];
-        if (documentoBinarioManager.existeBinario(documento.getId())){
+        if (documentoBinarioManager.existeBinario(documento.getId())) {
             data = documentoBinarioManager.getData(documento.getId());
         } else {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             try {
-                String modeloDocumento = documento.isBinario() ? getMensagemDocumentoNulo() : defaultIfNull(documento.getModeloDocumento(), getMensagemDocumentoNulo());
+                String modeloDocumento = documento.isBinario() ? getMensagemDocumentoNulo()
+                        : defaultIfNull(documento.getModeloDocumento(), getMensagemDocumentoNulo());
                 pdfManager.convertHtmlToPdf(modeloDocumento, outputStream);
                 documento.setExtensao("pdf");
             } catch (DocumentException e) {
             }
             data = outputStream.toByteArray();
         }
-        if("pdf".equalsIgnoreCase(documento.getExtensao()))
-        	return documentoBinManager.writeMargemDocumento(data, documentoBinManager.getTextoAssinatura(documento), documentoBinManager.getTextoCodigo(documento.getUuid()), documentoBinManager.getQrCodeSignatureImage(documento));
-        else
-        	return data;
+         
+        if (podeExibirMargem(documento)) {
+            data = documentoBinManager.writeMargemDocumento(data, documentoBinManager.getTextoAssinatura(documento), documentoBinManager.getTextoCodigo(documento.getUuid()), documentoBinManager.getQrCodeSignatureImage(documento));
+        }
+        return data;
     }
     
+    private boolean podeExibirMargem(DocumentoBin documento) {
+        return "pdf".equalsIgnoreCase(documento.getExtensao())
+                && (Boolean.TRUE.equals(documento.getSuficientementeAssinado())
+                        || documento.getAssinaturas() != null && !documento.getAssinaturas().isEmpty());
+    }
+
     public HttpServletResponse getResponse() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         if (facesContext != null){
