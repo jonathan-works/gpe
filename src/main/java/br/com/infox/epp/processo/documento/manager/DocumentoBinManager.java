@@ -32,9 +32,7 @@ import br.com.infox.core.file.reader.InfoxPdfReader;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Papel;
-import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.entity.DocumentoBinario;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
@@ -212,33 +210,33 @@ public class DocumentoBinManager extends Manager<DocumentoBinDAO, DocumentoBin> 
     }
 
 	@Override
-	public DocumentoBin persist(DocumentoBin o) throws DAOException {
-		if (o.isBinario()) {
-            o.setMinuta(false);
+	public DocumentoBin persist(DocumentoBin documentoBin) throws DAOException {
+		if (documentoBin.isBinario()) {
+            documentoBin.setMinuta(false);
         }
-		o = super.persist(o);
-		List<Documento> documentoList = documentoDAO.getDocumentosFromDocumentoBin(o);
-		if (!o.getSuficientementeAssinado() && !documentoList.isEmpty()) {
-			if (!classificacaoDocumentoPapelManager.classificacaoExigeAssinatura(documentoList.get(0).getClassificacaoDocumento()) && !o.isMinuta()) {
-				this.setDocumentoSuficientementeAssinado(o, Authenticator.getUsuarioPerfilAtual());
+		documentoBin = super.persist(documentoBin);
+		List<Documento> documentoList = documentoDAO.getDocumentosFromDocumentoBin(documentoBin);
+		if (!documentoBin.getSuficientementeAssinado() && !documentoList.isEmpty()) {
+			if (!classificacaoDocumentoPapelManager.classificacaoExigeAssinatura(documentoList.get(0).getClassificacaoDocumento()) && !documentoBin.isMinuta()) {
+				this.setDocumentoSuficientementeAssinado(documentoBin);
 			}
 		}
-		return o;
+		return documentoBin;
 	}
 	
 	
-	public void setDocumentoSuficientementeAssinado(DocumentoBin documentoBin, UsuarioPerfil usuarioPerfilAtual) throws DAOException {
+	public void setDocumentoSuficientementeAssinado(DocumentoBin documentoBin) throws DAOException {
 		documentoBin.setSuficientementeAssinado(Boolean.TRUE);
 		documentoBin.setDataSuficientementeAssinado(new Date());
 		List<RegistroAssinaturaSuficiente> registrosAssinaturaSuficiente = documentoBin.getRegistrosAssinaturaSuficiente();
 		List<Documento> documentoList = documentoDAO.getDocumentosFromDocumentoBin(documentoBin);
 		GenericManager genericManager = ComponentUtil.getComponent(GenericManager.NAME);
-        if (!(documentoList == null || documentoList.isEmpty()) && usuarioPerfilAtual != null) {
+        if (documentoList != null && !documentoList.isEmpty()) {
             Documento documento = documentoList.get(0);
             for (ClassificacaoDocumentoPapel classificacaoDocumentoPapel : documento.getClassificacaoDocumento().getClassificacaoDocumentoPapelList()) {
                 RegistroAssinaturaSuficiente registroAssinaturaSuficiente = new RegistroAssinaturaSuficiente();
                 registroAssinaturaSuficiente.setDocumentoBin(documentoBin);
-                registroAssinaturaSuficiente.setPapel(usuarioPerfilAtual.getPerfilTemplate().getPapel().getNome());
+                registroAssinaturaSuficiente.setPapel(classificacaoDocumentoPapel.getPapel().getIdentificador());
                 registroAssinaturaSuficiente.setTipoAssinatura(classificacaoDocumentoPapel.getTipoAssinatura());
                 registrosAssinaturaSuficiente.add(registroAssinaturaSuficiente);
                 genericManager.persist(registroAssinaturaSuficiente);
