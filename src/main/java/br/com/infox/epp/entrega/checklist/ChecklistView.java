@@ -17,7 +17,6 @@ import javax.persistence.OptimisticLockException;
 
 import org.jboss.seam.faces.FacesMessages;
 import org.jbpm.taskmgmt.exe.TaskInstance;
-import org.omnifaces.cdi.param.ParamValue;
 import org.primefaces.model.LazyDataModel;
 
 import br.com.infox.epp.access.api.Authenticator;

@@ -4,7 +4,6 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +23,6 @@ import br.com.infox.certificado.CertificadoDadosPessoaFisica;
 import br.com.infox.certificado.CertificadoFactory;
 import br.com.infox.certificado.ValidaDocumento;
 import br.com.infox.certificado.exception.CertificadoException;
-import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.PerfilTemplate;
@@ -38,7 +36,6 @@ import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException.Motivo;
-import br.com.infox.epp.processo.documento.assinatura.entity.RegistroAssinaturaSuficiente;
 import br.com.infox.epp.processo.documento.dao.AssinaturaDocumentoDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
@@ -48,7 +45,6 @@ import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-import br.com.infox.seam.util.ComponentUtil;
 
 @Stateless
 @AutoCreate
