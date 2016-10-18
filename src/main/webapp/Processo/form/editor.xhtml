@@ -25,7 +25,8 @@
 		value="#{formField.properties.classificacaoDocumento}"
 		readonly="#{readonly or classificacoesDocumento.size eq 1 or formField.value.hasAssinatura()}"
 		disabled="#{readonly or classificacoesDocumento.size eq 1 or formField.value.hasAssinatura()}">
-		<a:ajax event="change" render="#{varId}AssinaturaDocumento #{varId}EditorDiv" execute="@this" limitRender="true" />
+		<f:validator validatorId="classificacaoEditorValidator" for="@this"/>
+		<f:attribute name="editorId" value="#{rich:clientId(varId)}"/>
 	</wi:selectOneMenuEntity>
 	
     <wi:selectOneMenuEntity id="#{varId}ModeloDocumento"
@@ -55,7 +56,7 @@
 	    </s:div>
 	    
 	    <wi:editor id="#{varId}" value="#{formField.value.documentoBin.modeloDocumento}"
-            required="#{wi:get(required, false)}" rendered="#{not empty formField.properties.classificacaoDocumento}"
+	    	required="#{wi:get(required, false)}"
 	        readonly="#{readonly or formField.value.hasAssinatura()}" 
 	        label="#{formField.label}"/>
 	        

@@ -60,7 +60,7 @@
 	    			<h:commandButton styleClass="buttons" action="/Processo/listView.seam?faces-redirect=true" value="Voltar" immediate="true"/>
 	    			
 	    			<h:commandButton styleClass="buttons" action="#{iniciarProcessoVariaveisView.gravar}" value="Gravar" >
-	    				<a:ajax execute="@form" render="@form :pageBodyDialogMessage" onsubmit="infox.showLoading();" 
+	    				<a:ajax execute="@form" render="@form :pageBodyDialogMessage" onbeforesubmit="infox.showLoading();" 
 	    					oncomplete="infox.hideLoading();"/>
 	    			</h:commandButton>
 	    		

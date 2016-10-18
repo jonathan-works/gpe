@@ -73,10 +73,16 @@ public abstract class FileFormType implements FormType {
     
     @Override
     public void validate(FormField formField, FormData formData) throws BusinessException {
+        String required = formField.getProperty("required", String.class);
         Documento documento = formField.getTypedValue(Documento.class);
-        boolean assinaturaVariavelOk = validarAssinaturaDocumento(documento);
-        if (!assinaturaVariavelOk) {
-            throw new BusinessException(String.format(InfoxMessages.getInstance().get("assinaturaDocumento.faltaAssinatura"), formField.getLabel()));
+        if ("true".equals(required) && (documento == null || documento.getId() == null)) {
+            throw new BusinessException("O arquivo do campo " + formField.getLabel() + " é obrigatório");
+        }
+        if (documento != null && documento.getId() != null) {
+            boolean assinaturaVariavelOk = validarAssinaturaDocumento(documento);
+            if (!assinaturaVariavelOk) {
+                throw new BusinessException(String.format(InfoxMessages.getInstance().get("assinaturaDocumento.faltaAssinatura"), formField.getLabel()));
+            }
         }
     }
 
