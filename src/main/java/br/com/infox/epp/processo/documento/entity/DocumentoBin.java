@@ -127,18 +127,18 @@ public class DocumentoBin implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "documentoBin", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private List<AssinaturaDocumento> assinaturas = new ArrayList<>();
     
-    @Transient
+	@Column(name = "tp_documento_externo")
+	private String tipoDocumentoExterno;
+	
+	@Size(max = 1000)
+	@Column(name="id_documento_externo")
+	private String idDocumentoExterno;
+	
+	@Transient
     private byte[] processoDocumento;
     
     @Transient
-	private DocumentoBinService documentoBinService;
-
-	@Column(name="tp_documento_externo")
-	private String tipoDocumentoExterno;
-	
-	@Size(max=1000)
-	@Column(name="id_documento_externo")
-	private String idDocumentoExterno;
+    private DocumentoBinService documentoBinService;
 
 	public String getTipoDocumentoExterno() {
 		return tipoDocumentoExterno;
