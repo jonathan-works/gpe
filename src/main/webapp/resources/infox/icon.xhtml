@@ -7,14 +7,16 @@
     <composite:attribute name="value" />
     <composite:attribute name="text" />
     <composite:attribute name="showText" type="java.lang.Boolean" default="false" />
+    <composite:attribute name="style" />
+    <composite:attribute name="onclick" />
     
 
 </composite:interface>
 
 <composite:implementation>
-    <span class="fa fa-#{cc.attrs.value}">
+    <span class="fa fa-#{cc.attrs.value}" style="#{cc.attrs.style}" onclick="#{cc.attrs.onclick}">
         <div class="#{cc.attrs.showText ? '':'hidden-text'}">
-            <h:outputText value="#{cc.attrs.text}" />
+            <h:outputText rendered="#{cc.attrs.showText}" value="#{cc.attrs.text}" />
         </div>
     </span>
 </composite:implementation>

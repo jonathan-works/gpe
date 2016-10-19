@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    >
+
+    <p:dialog id="popupPublicacao" 
+        modal="true"
+        styleClass="popupPublicacao"
+        widgetVar="popupPublicacaoVar"
+        closable="true"
+        appendTo="@(body)"
+    >
+        <f:facet name="header">
+            <h:outputText value="#{infoxMessages['publicacao.popup.header']}" />
+        </f:facet>
+
+        <p:dataTable var="row" value="#{publicacaoDialogView.publicacoes}" tableStyle="table-layout: auto !important" >
+            <p:column headerText="Certidão" style="text-align: center">
+                <p:outputPanel style="text-align: center" rendered="#{not empty row.certidao}">
+                    <h:form>
+                        <infox:flashcopy/>
+                        <h:commandLink
+                            execute="@this" render="@form">
+                            <h:graphicImage styleClass="opacityHover" title="#{infoxMessages['processoDocumento.visualizar']}"
+                                url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
+                            <f:setPropertyActionListener value="#{row.certidao.id}" target="#{flash.idDocumento}" />
+                            <f:setPropertyActionListener value="#{false}" target="#{flash.binario}" />
+                            <p:ajax oncomplete="infox.openPopUp('PopUpDocumentoBin', '#{fileDownloader.getDownloadUrl(row.certidao.documentoBin)}','1024');" />
+                        </h:commandLink>
+                    </h:form>
+                </p:outputPanel>
+            </p:column>
+            <p:column headerText="Data">
+                <h:outputText value="#{row.dataPublicacao}" />
+            </p:column>
+            <p:column headerText="Local">
+                <h:outputText value="#{row.localPublicacao.descricao}" />
+            </p:column>
+            <p:column headerText="Página" style="text-align: center">
+                <h:outputText value="#{row.pagina}" />
+            </p:column>
+            <p:column headerText="Observações" style="max-width: 500px">
+                <h:outputText value="#{row.observacoes}" />
+            </p:column>
+        
+        </p:dataTable>
+
+        <!--         
+        <h:form>
+            <h:commandButton value="#{infoxMessages['comunicacao.iniciarAnaliseDocumento']}" styleClass="buttons">
+               <p:ajax partialSubmit="true" process="@this" oncomplete="PF('popupPublicacaoVar').hide();"
+                update=":pageBodyDialogMessage" /> 
+            </h:commandButton> 
+        </h:form>
+         -->   
+        
+    </p:dialog>
+
+</ui:composition>
