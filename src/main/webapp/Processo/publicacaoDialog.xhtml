@@ -6,20 +6,8 @@
     xmlns:p="http://primefaces.org/ui"
     xmlns:infox="http://www.infox.com.br/jsf"
     >
-
-    <p:dialog id="popupPublicacao" 
-        modal="true"
-        styleClass="popupPublicacao"
-        widgetVar="popupPublicacaoVar"
-        closable="true"
-        appendTo="@(body)"
-    >
-        <f:facet name="header">
-            <h:outputText value="#{infoxMessages['publicacao.popup.header']}" />
-        </f:facet>
-
         <p:dataTable var="row" value="#{publicacaoDialogView.publicacoes}" tableStyle="table-layout: auto !important" >
-            <p:column headerText="Certidão" style="text-align: center">
+            <p:column headerText="#{infoxMessages['publicacao.certidao']}" style="text-align: center">
                 <p:outputPanel style="text-align: center" rendered="#{not empty row.certidao}">
                     <h:form>
                         <infox:flashcopy/>
@@ -34,30 +22,24 @@
                     </h:form>
                 </p:outputPanel>
             </p:column>
-            <p:column headerText="Data">
+            <p:column headerText="#{infoxMessages['publicacao.data']}">
                 <h:outputText value="#{row.dataPublicacao}" />
             </p:column>
-            <p:column headerText="Local">
+            <p:column headerText="#{infoxMessages['publicacao.local']}">
                 <h:outputText value="#{row.localPublicacao.descricao}" />
             </p:column>
-            <p:column headerText="Página" style="text-align: center">
+            <p:column headerText="#{infoxMessages['publicacao.pagina']}" style="text-align: center">
                 <h:outputText value="#{row.pagina}" />
             </p:column>
-            <p:column headerText="Observações" style="max-width: 500px">
+            <p:column headerText="#{infoxMessages['publicacao.observacoes']}" style="max-width: 500px">
                 <h:outputText value="#{row.observacoes}" />
             </p:column>
         
         </p:dataTable>
 
-        <!--         
-        <h:form>
-            <h:commandButton value="#{infoxMessages['comunicacao.iniciarAnaliseDocumento']}" styleClass="buttons">
-               <p:ajax partialSubmit="true" process="@this" oncomplete="PF('popupPublicacaoVar').hide();"
-                update=":pageBodyDialogMessage" /> 
-            </h:commandButton> 
-        </h:form>
-         -->   
+        <!--
+        Teste para ver se o onHide é chamado 
+        <p:commandButton update="@this @(.genericDialog)" oncomplete="PF('genericDialogVar').hide();" value="FECHAR" />
+         -->
         
-    </p:dialog>
-
 </ui:composition>
