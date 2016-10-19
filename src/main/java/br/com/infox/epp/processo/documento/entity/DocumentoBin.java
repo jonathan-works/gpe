@@ -41,7 +41,6 @@ import br.com.infox.constants.LengthConstants;
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.util.ArrayUtil;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
-import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.assinatura.entity.RegistroAssinaturaSuficiente;
 import br.com.infox.epp.processo.documento.query.DocumentoBinQuery;
@@ -259,9 +258,7 @@ public class DocumentoBin implements Serializable {
     }
 
     public DocumentoBinService getDocumentoBinService() {
-		if(documentoBinService == null) {
-			documentoBinService = BeanManager.INSTANCE.getReference(DocumentoBinService.class);
-		}
+		if(documentoBinService == null) documentoBinService = DocumentoBinService.createInstance();
 		return documentoBinService; 		
 	}
 

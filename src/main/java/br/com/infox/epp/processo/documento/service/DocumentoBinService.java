@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.entity.DocumentoBinario;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.dao.DocumentoBinDAO;
@@ -57,5 +58,9 @@ public class DocumentoBinService {
 	public String getHash(Integer idDocumentoBin) {
 		DocumentoBin documentoBin = getDocumentoBin(idDocumentoBin);
 		return documentoBin.getMd5DocumentoAtributo();
+	}
+	
+	public static DocumentoBinService createInstance() {
+	    return BeanManager.INSTANCE.getReference(DocumentoBinService.class);
 	}
 }
