@@ -39,7 +39,7 @@ public final class FileUtil {
         if (nomeArquivo != null) {
             ret = nomeArquivo.substring(nomeArquivo.lastIndexOf('.') + 1);
         }
-        return ret;
+        return ret.toLowerCase();
     }
     
     public static List<Path> find(String startingFrom, String pattern) {

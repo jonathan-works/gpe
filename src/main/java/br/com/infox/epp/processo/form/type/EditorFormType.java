@@ -13,8 +13,8 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.form.FormData;
 import br.com.infox.epp.processo.form.FormField;
-import br.com.infox.epp.processo.form.StartFormData;
-import br.com.infox.epp.processo.form.TaskFormData;
+import br.com.infox.epp.processo.form.variable.value.TypedValue;
+import br.com.infox.epp.processo.form.variable.value.ValueType;
 
 public class EditorFormType extends FileFormType {
 
@@ -49,18 +49,33 @@ public class EditorFormType extends FileFormType {
         super.performUpdate(formField, formData);
         Documento documento = formField.getTypedValue(Documento.class);
         ClassificacaoDocumento classificacaoDocumento = formField.getProperty("classificacaoDocumento", ClassificacaoDocumento.class);
-        if (documento.getId() == null) {
-            documento.setDescricao(formField.getLabel());
-            documento.setClassificacaoDocumento(classificacaoDocumento);
-            getDocumentoBinManager().createProcessoDocumentoBin(documento);
-            getDocumentoManager().gravarDocumentoNoProcesso(formData.getProcesso(), documento);
-        } else {
-            if (!documento.getClassificacaoDocumento().equals(classificacaoDocumento)) {
-                documento = getDocumentoManager().update(documento);
+        if (classificacaoDocumento == null) {
+            if (documento.getId() != null) {
+                formData.setVariable(formField.getId(), new TypedValue(null, ValueType.FILE));
+                formField.addProperty("modeloDocumento", null);
+                getDocumentoManager().remove(documento);
+                getDocumentoBinManager().remove(documento.getDocumentoBin());
+                documento = createNewDocumento();
+                formField.setValue(documento);
+            } else {
+                formField.addProperty("modeloDocumento", null);
+                documento.getDocumentoBin().setModeloDocumento("");
             }
-            DocumentoBin documentoBin = getDocumentoBinManager().update(documento.getDocumentoBin());
-            documento.setDocumentoBin(documentoBin);
-            formField.setValue(documento);
+        } else {
+            if (documento.getId() != null) {
+                if (!classificacaoDocumento.equals(documento.getClassificacaoDocumento())) {
+                    documento = getDocumentoManager().update(documento);
+                }
+                DocumentoBin documentoBin = getDocumentoBinManager().update(documento.getDocumentoBin());
+                documento.setDocumentoBin(documentoBin);
+                formField.setValue(documento);
+            } else {
+                documento.setDescricao(formField.getLabel());
+                documento.setClassificacaoDocumento(classificacaoDocumento);
+                if (documento.getDocumentoBin().getModeloDocumento() == null) documento.getDocumentoBin().setModeloDocumento("");
+                getDocumentoBinManager().createProcessoDocumentoBin(documento);
+                getDocumentoManager().gravarDocumentoNoProcesso(formData.getProcesso(), documento);
+            }
         }
     }
     
@@ -92,12 +107,7 @@ public class EditorFormType extends FileFormType {
     }
     
     private List<ModeloDocumento> readModelosDocumento(FormField formField, FormData formData) {
-        Event event = null;
-        if (formData instanceof StartFormData) {
-            event = ((StartFormData) formData).getProcessDefinition().getStartState().getEvent(Event.EVENTTYPE_NODE_ENTER);
-        } else if (formData instanceof TaskFormData) {
-            event = ((TaskFormData) formData).getTaskInstance().getTask().getTaskNode().getEvent(Event.EVENTTYPE_NODE_ENTER);
-        }
+        Event event = formData.getNode().getEvent(Event.EVENTTYPE_NODE_ENTER);
         List<ModeloDocumento> modelos = new ArrayList<>();
         if (event != null && event.getAction(formField.getId()) != null) {
             String expression = event.getAction(formField.getId()).getActionExpression();

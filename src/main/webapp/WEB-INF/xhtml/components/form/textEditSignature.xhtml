@@ -16,14 +16,16 @@
                 <p:outputPanel id="#{f.id}TipoDocDiv">
                     <wi:selectOneMenuEntity id="#{f.id}tipoProcessoDocumento"
                         label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-                        items="#{home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), taskInstanceHome.currentTaskInstance)}"
-                        required="#{wi:get(required, false)}" showLabelSelecione="true"
+                        items="#{home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), taskInstanceHome.currentTaskInstance)}" 
+                        showLabelSelecione="true" required="#{wi:get(required, false)}"
                         value="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento}"
                         readonly="#{readonly or home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo).size eq 1 
         			or taskInstanceHome.variaveisDocumento[id].hasAssinatura()}"
                         disabled="#{readonly or home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo).size eq 1 
         			or taskInstanceHome.variaveisDocumento[id].hasAssinatura()}">
-                        <a:ajax event="change" render="#{f.id}Block" execute="#{f.id}Block" />
+                        <f:validateBean disabled="true"/>
+                        <f:validator validatorId="classificacaoEditorValidator" for="@this"/>
+						<f:attribute name="editorId" value="#{rich:clientId(editorId)}"/>
                     </wi:selectOneMenuEntity>
                 </p:outputPanel>
                 <p:outputPanel id="#{id}EditorDiv">
@@ -36,8 +38,7 @@
                             value="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.observacao}" />
                     </i:help>
                     <wi:editor id="${editorId}" label="#{infoxMessages['indexedSearch.conteudo']}"
-                        required="#{wi:get(required, false)}"
-                        rendered="#{not empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento}"
+                    	required="#{wi:get(required, false)}"
                         value="#{taskInstanceHome.variaveisDocumento[id].documentoBin.modeloDocumento}"
                         readonly="${readonly or taskInstanceHome.variaveisDocumento[id].hasAssinatura()}">
                     </wi:editor>

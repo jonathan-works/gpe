@@ -4,10 +4,7 @@
     xmlns:a="http://richfaces.org/a4j"
     xmlns:c="http://java.sun.com/jsp/jstl/core"
     xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:rich="http://richfaces.org/rich"
-    xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:wi="http://www.itx.com.br/jsf">
+    xmlns:h="http://java.sun.com/jsf/html">
 
     <style>
         @media print{
@@ -16,15 +13,19 @@
             }
         }
     </style>
-    
-        <h:outputText
-            value="#{documentoHtmlView.getConteudo()}"
-            escape="false" />
-        <br />
 
-        <center>
-            <button id="btnimprimir" onclick="window.print();">Imprimir</button>
-        </center>
+    <c:if test="#{not empty flash.documentoBin}">
+        <f:event type="preRenderView"
+            listener="#{documentoHtmlView.setViewInstance(flash.documentoBin)}" />
+    </c:if>
 
+    <h:outputText
+        value="#{documentoHtmlView.getConteudo()}"
+        escape="false" />
+    <br />
+
+    <center>
+        <button id="btnimprimir" onclick="window.print();">Imprimir</button>
+    </center>
 
 </ui:composition>

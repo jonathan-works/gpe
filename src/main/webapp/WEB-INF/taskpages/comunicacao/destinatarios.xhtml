@@ -88,8 +88,9 @@
 								itemLabel="#{infoxMessages['crud.select.select']}" />
 							<f:selectItems var="v"
 								value="#{destinatarioComunicacaoAction.getMeiosExpedicao(row)}"
-								itemLabel="#{v.label}" itemValue="#{v}" />
+								itemLabel="#{v.descricao}" itemValue="#{v}" />
 							<a:ajax event="change" />
+							<s:convertEntity />
 						</h:selectOneMenu>
 						<h:outputText value="#{row.meioExpedicao.label}"
 							rendered="#{envioComunicacaoController.modeloComunicacao.finalizada}" />

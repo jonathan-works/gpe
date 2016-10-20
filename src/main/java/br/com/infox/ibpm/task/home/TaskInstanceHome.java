@@ -365,9 +365,14 @@ public class TaskInstanceHome implements Serializable {
 	}
 
 	private void updateVariableEditor(Documento documento, VariableAccess variableAccess) throws DAOException {
-		if (documento.getId() != null) {
-			documentoBinManager.update(documento.getDocumentoBin());
-			documentoManager.update(documento);
+		if (documento.getId() != null && documento.getClassificacaoDocumento() != null) {
+	        documentoBinManager.update(documento.getDocumentoBin());
+	        documentoManager.update(documento);
+		} else if (documento.getId() != null && documento.getClassificacaoDocumento() == null) {
+		    documentoManager.remove(documento);
+		    documentoBinManager.remove(documento.getDocumentoBin());
+		    documento = new Documento();
+		    documento.setDocumentoBin(new DocumentoBin());
 		} else {
 			if (documento.getClassificacaoDocumento() != null) {
 				createVariableEditor(documento, variableAccess);
@@ -593,10 +598,10 @@ public class TaskInstanceHome implements Serializable {
 			if (!update()) {
 				return null;
 			}
-			if (!validarAssinaturaDocumentosAoMovimentar()) {
-				return null;
+			if (!validFileUpload() || !validEditor()) {
+			    return null;
 			}
-			if (!validFileUpload()) {
+			if (!validarAssinaturaDocumentosAoMovimentar()) {
 				return null;
 			}
 			this.currentTaskInstance = null;
@@ -619,7 +624,28 @@ public class TaskInstanceHome implements Serializable {
 		return null;
 	}
 
-	private boolean validarAssinaturaDocumentosAoMovimentar() {
+	private boolean validEditor() {
+	    if (possuiTask()) {
+            TaskController taskController = taskInstance.getTask().getTaskController();
+            if (taskController == null) {
+                return true;
+            }
+            List<?> list = taskController.getVariableAccesses();
+            for (Object object : list) {
+                VariableAccess var = (VariableAccess) object;
+                if (var.isRequired() && var.getMappedName().split(":")[0].equals("EDITOR")
+                        && getInstance().get(getFieldName(var.getVariableName())) == null) {
+                    String label = JbpmUtil.instance().getMessages()
+                            .get(taskInstance.getProcessInstance().getProcessDefinition().getName() + ":" + var.getVariableName());
+                    FacesMessages.instance().add("O editor do campo " + label + " é obrigatório");
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean validarAssinaturaDocumentosAoMovimentar() {
 		Map<String, VariableInstance> variableMap = org.jboss.seam.bpm.TaskInstance.instance().getVariableInstances();
 		FacesMessages.instance().clear();
 		boolean isAssinaturaOk = true;
@@ -630,6 +656,7 @@ public class TaskInstanceHome implements Serializable {
 					continue;
 				}
 				Documento documento = documentoManager.find(variableInstance.getValue());
+				if ( documento == null ) continue;
 				boolean assinaturaVariavelOk = validarAssinaturaDocumento(documento);
 				if (!assinaturaVariavelOk) {
 				    String label = VariableHandler.getLabel(format("{0}:{1}", taskInstance.getTask().getProcessDefinition().getName(), key.split(":")[1]));
