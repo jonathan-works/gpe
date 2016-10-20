@@ -1,9 +1,12 @@
 package br.com.infox.core.util;
 
+import java.util.Collection;
+
 public interface ObjectComparator<T> {
 
     @SuppressWarnings("unchecked")
     boolean in(T... args);
+    boolean in (Collection<T> args);
 }
 
 class ObjectComparatorImpl<T> implements ObjectComparator<T> {
@@ -22,6 +25,13 @@ class ObjectComparatorImpl<T> implements ObjectComparator<T> {
                 return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean in(Collection<T> args) {
+        if (args == null)
+            return false;
+        return args.contains(obj);
     }
 
 }
