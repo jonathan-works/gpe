@@ -79,7 +79,13 @@ public class JsfUtil {
     }
     
     public void addFlashParam(String name, Object value) {
-        context.getExternalContext().getFlash().put(name, value);
+        addFlashParam(name, value, false);
+    }
+    
+    public void addFlashParam(String name, Object value, Boolean keep) {
+    	context.getExternalContext().getFlash().put(name, value);
+    	if(keep)
+    		context.getExternalContext().getFlash().keep(name);
     }
     
     public <T> T getFlashParam(String name, Class<T> clazz) {
