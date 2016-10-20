@@ -16,6 +16,7 @@
   <ui:define name="title">#{infoxMessages['consultaProcesso.titlePage']}</ui:define>
   
   <ui:define name="body">
+    <ui:include src="/WEB-INF/xhtml/components/genericDialog.xhtml" />    
   	<c:if test="#{not empty flash.idProcesso}">
   		<c:set value="#{flash.idProcesso}" target="#{consultaController}" property="id" ></c:set>
   		<c:set value="#{flash.idJbpm}"  target="#{org.jboss.seam.bpm.businessProcess}" property="processId"  ></c:set>

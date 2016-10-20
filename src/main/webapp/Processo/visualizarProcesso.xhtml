@@ -25,6 +25,7 @@
         name="checkPermission"
         value="#{processoEpaHome.checarVisibilidade()}" />
     <ui:define name="body">
+        <ui:include src="/WEB-INF/xhtml/components/genericDialog.xhtml" />  
         <h:form>
             <a:jsFunction
                 name="renderButtons"

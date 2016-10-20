@@ -39,7 +39,8 @@
         
         <wi:toolBarAssinatura idDocumento="#{row.id}" styleClass="opacityHover" renderedLock="#{bin.suficientementeAssinado}" />
 
-        <p:commandLink 
+        <p:commandLink
+            rendered="#{security.checkPage('PublicacoesDocumentos/visualizar') and not empty row.publicacoes}" 
             update="@this @(.genericDialog)" process="@this" 
             action="#{dialogController.builder()
                 .src('/Processo/publicacaoDialog.xhtml')
