@@ -1,5 +1,6 @@
 package br.com.infox.epp.localizacao;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -16,6 +17,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.entity.Estrutura;
 import br.com.infox.epp.access.entity.Estrutura_;
 import br.com.infox.epp.access.entity.Localizacao;
@@ -107,6 +109,30 @@ public class LocalizacaoSearch {
         }
     }
 
+    public List<Localizacao> retrieveLocalizacaoByEstruturaFilho(Estrutura _estrutura){
+        return retrieveLocalizacaoByEstruturaFilho(_estrutura, null);
+    }
+    
+    public List<Localizacao> retrieveLocalizacaoByEstruturaFilho(Estrutura _estrutura, String query){
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Localizacao> cq = cb.createQuery(Localizacao.class);
+        Root<Localizacao> loc = cq.from(Localizacao.class);
+        Join<?, Estrutura> estrutura = loc.join(Localizacao_.estruturaFilho);
+        
+        Predicate restrictions = cb.equal(estrutura, _estrutura);
+        restrictions = cb.and(restrictions, cb.isTrue(loc.get(Localizacao_.ativo)));
+        if (!StringUtil.isEmpty(query)){
+            String formattedQuery = MessageFormat.format("%{0}%", query.toLowerCase());
+            restrictions = cb.and(restrictions, 
+                cb.like(cb.lower(loc.get(Localizacao_.localizacao)), formattedQuery)
+            );
+        }
+        
+        cq.select(loc);
+        cq.where(restrictions);
+        return getEntityManager().createQuery(cq).getResultList();
+    }
+    
 	private EntityManager getEntityManager() {
 		return EntityManagerProducer.getEntityManager();
 	}
