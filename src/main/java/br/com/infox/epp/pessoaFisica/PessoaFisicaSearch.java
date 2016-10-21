@@ -17,7 +17,8 @@ import javax.persistence.criteria.Root;
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.entity.Localizacao;
-import br.com.infox.epp.access.entity.PerfilTemplate;
+import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.access.entity.PerfilTemplate_;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioLogin_;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
@@ -47,7 +48,7 @@ public class PessoaFisicaSearch {
 		return pessoas == null || pessoas.isEmpty() ? null : pessoas.get(0);
 	}
 
-    public List<PessoaFisica> retrieveBy(Localizacao _localizacao, PerfilTemplate _perfilTemplate, String query) {
+    public List<PessoaFisica> retrieveBy(Localizacao _localizacao, Papel papel, String query) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<PessoaFisica> cq = cb.createQuery(PessoaFisica.class);
         
@@ -57,7 +58,7 @@ public class PessoaFisicaSearch {
         
         Predicate restrictions = cb.isTrue(usuarioPerfil.get(UsuarioPerfil_.ativo));
         restrictions = cb.and(restrictions, cb.equal(usuarioPerfil.join(UsuarioPerfil_.localizacao, JoinType.INNER), _localizacao));
-        restrictions = cb.and(restrictions, cb.equal(usuarioPerfil.join(UsuarioPerfil_.perfilTemplate, JoinType.INNER), _perfilTemplate));
+        restrictions = cb.and(restrictions, cb.equal(usuarioPerfil.join(UsuarioPerfil_.perfilTemplate, JoinType.INNER).join(PerfilTemplate_.papel, JoinType.INNER), papel));
         
         if (StringUtil.isEmpty(query)){
             String formattedQuery = MessageFormat.format("%{0}%", query.toLowerCase());
