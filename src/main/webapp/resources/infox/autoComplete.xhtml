@@ -48,6 +48,8 @@
     <composite:attribute name="onstart" />
     <composite:attribute name="oncomplete"/>
 
+    <composite:clientBehavior name="itemSelect" targets="#{cc.attrs.id}Input" event="itemSelect" />
+
     <composite:facet name="label" />
     <composite:facet name="itemtip" />
 </composite:interface>
