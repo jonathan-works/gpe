@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.SystemException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.HibernateException;
 import org.jboss.com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
 import org.jboss.seam.Component;
@@ -50,6 +51,7 @@ import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
 import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.action.ActionMessagesService;
+import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
@@ -74,6 +76,7 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.handler.ProcessoHandler;
@@ -142,6 +145,8 @@ public class TaskInstanceHome implements Serializable {
 	private PastaManager pastaManager; 
 	@Inject
 	private DocumentoBinManager documentoBinManager;
+	@Inject
+	private DocumentoBinarioManager documentoBinarioManager;
 	@Inject
 	private InfoxMessages infoxMessages;
 	@Inject
@@ -525,14 +530,29 @@ public class TaskInstanceHome implements Serializable {
 		}
 		return false;
 	}
+	
+	public boolean isPdf(String variableName){
+		Documento documento = getDocumentoFromVariableName(variableName);
+		return "pdf".equalsIgnoreCase(documento.getDocumentoBin().getExtensao()) || StringUtils.isEmpty(documento.getDocumentoBin().getExtensao());
+	}
+	
+	public void downloadDocumento(String variableName){
+		Documento documento = getDocumentoFromVariableName(variableName);
+		byte[] data = documentoBinarioManager.getData(documento.getDocumentoBin().getId());
+		FileDownloader.download(data, "application/" + documento.getDocumentoBin().getExtensao(), documento.getDocumentoBin().getNomeArquivo());
+	}
 
 	public String getViewUrlDownload(String variableName) {
-		Integer idDocumento = (Integer) org.jboss.seam.bpm.TaskInstance.instance().getVariable("FILE:" + variableName);
-		Documento documento = documentoManager.find(idDocumento);
+		Documento documento = getDocumentoFromVariableName(variableName);
 		if (documento.getDocumentoBin().isBinario()) {
 			return MessageFormat.format(URL_DOWNLOAD_BINARIO, pathResolver.getContextPath(), documento.getId().toString());
 		}
 		return MessageFormat.format(URL_DOWNLOAD_HTML, pathResolver.getContextPath(), documento.getId().toString());
+	}
+
+	private Documento getDocumentoFromVariableName(String variableName) {
+		Integer idDocumento = (Integer) org.jboss.seam.bpm.TaskInstance.instance().getVariable("FILE:" + variableName);
+		return documentoManager.find(idDocumento);
 	}
 
 	public void assinarDocumento() {
