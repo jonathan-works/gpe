@@ -11,6 +11,7 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Named;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 @Named
 @RequestScoped
@@ -211,6 +212,11 @@ public class DateUtil {
         date1 = DateUtil.getBeginningOfDay(date1);
         date2 = DateUtil.getBeginningOfDay(date2);
         return date1.getTime() <= date2.getTime();
+    }
+
+    public static Date getInicioAno(Date data) {
+        return new DateTime(data).withZone(DateTimeZone.UTC).withDayOfMonth(1).withMonthOfYear(1).withTimeAtStartOfDay()
+                .toDate();
     }
 
 }
