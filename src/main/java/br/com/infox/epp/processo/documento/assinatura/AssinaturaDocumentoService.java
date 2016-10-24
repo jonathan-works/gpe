@@ -60,7 +60,7 @@ public class AssinaturaDocumentoService {
     @Inject
     private DocumentoBinarioManager documentoBinarioManager;
     @Inject
-    private DocumentoBinManager documentoBinManager;
+    protected DocumentoBinManager documentoBinManager;
     @Inject
     private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
     @In
@@ -68,7 +68,7 @@ public class AssinaturaDocumentoService {
     @Inject
     private PessoaFisicaManager pessoaFisicaManager;
     @Inject
-    private AssinaturaDocumentoDAO assinaturaDocumentoDAO;
+    protected AssinaturaDocumentoDAO assinaturaDocumentoDAO;
 
     public Boolean isDocumentoAssinado(final Documento documento) {
         final DocumentoBin documentoBin = documento.getDocumentoBin();
@@ -188,6 +188,18 @@ public class AssinaturaDocumentoService {
             }
         }
         return result;
+    }
+    
+    public boolean isDocumentoAssinado(Integer idDocumentoBin, PessoaFisica pessoaFisica) {
+        DocumentoBin bin = documentoBinManager.find(idDocumentoBin);
+        if (bin != null && bin.getAssinaturas() != null) {
+            for (AssinaturaDocumento assinatura : bin.getAssinaturas()) {
+                if (assinatura.getUsuario().getPessoaFisica() != null && assinatura.getUsuario().getPessoaFisica().equals(pessoaFisica)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public boolean isDocumentoAssinado(Documento documento, UsuarioLogin usuarioLogin) {
@@ -389,7 +401,7 @@ public class AssinaturaDocumentoService {
     	return true;
     }
     
-    private void checkValidadeCertificado(String certChain) throws CertificadoException {
+    protected void checkValidadeCertificado(String certChain) throws CertificadoException {
         try {
             CertificateManager.instance().verificaCertificado(certChain);
         } catch (CertificateExpiredException e) {
