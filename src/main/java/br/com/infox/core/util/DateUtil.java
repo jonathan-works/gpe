@@ -219,4 +219,9 @@ public class DateUtil {
                 .toDate();
     }
 
+    public static Date getFimAno(Date data) {
+        return new DateTime(data).withZone(DateTimeZone.UTC).withDayOfMonth(31).withMonthOfYear(12).withHourOfDay(23)
+                .withMinuteOfHour(59).withSecondOfMinute(59).withMillisOfSecond(999).toDate();
+    }
+
 }
