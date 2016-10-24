@@ -22,7 +22,7 @@ public class DocumentoAnexoList extends EntityList<Documento> {
             + "inner join tb_processo p on (p.id_processo = pa.id_processo) "
             + "inner join tb_documento_bin bin on (bin.id_documento_bin = pd.id_documento_bin) "
             + "where "
-            + "pd.id_processo = #{documentoAnexoList.processo} and "
+            + "p.id_processo = #{documentoAnexoList.processo} and "
             + "not exists (select 1 from jbpm_variableinstance v where "
             + "v.longvalue_ = pd.id_documento and "
             + "v.taskinstance_ in (select t.id_ from jbpm_taskinstance t where t.procinst_ = p.id_jbpm)"
