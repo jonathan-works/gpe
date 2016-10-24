@@ -26,12 +26,12 @@
 				<div />
 				<a:commandButton id="visualizarComunicacao" 
 					render="@this" execute="@this"
+					action="#{jsfUtil.applyLastPhaseFlashAction}"
 					value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
 					styleClass="buttons"
 					rendered="#{envioComunicacaoController.podeVisualizarComunicacaoNaoFinalizada()}" 
 					oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');" >
 					<f:setPropertyActionListener value="#{envioComunicacaoController.modeloComunicacao.id}" target="#{flash.idModelo}" />
-					<infox:flashcopy/>
 				</a:commandButton>
 				<a:commandButton id="reabrirComunicacao" 
 					render="comunicacaoDiv" execute="@this"
@@ -137,11 +137,11 @@
    								rendered="#{envioComunicacaoController.usuarioLogadoNaLocalizacaoPerfilResponsavel and not row.expedido}">
    								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/expedir_comunicacao.png')}" title="#{infoxMessages['button.selecionar']}" />
    							</a:commandLink>
-   							<a:commandLink oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');"
+   							<a:commandLink action="#{jsfUtil.applyLastPhaseFlashAction}" 
+   								oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');"
    								rendered="#{row.expedido}" render="@this" execute="@this">
 								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/reopen.png')}" title="#{infoxMessages['comunicacao.visualizarAComunicacao']}"/>
 								<f:setPropertyActionListener value="#{row.id}" target="#{flash.idDestinatario}" />
-								<infox:flashcopy/>
 							</a:commandLink>
 							<a:commandLink execute="@this"
 								rendered="#{not row.expedido}"
@@ -196,10 +196,9 @@
 					<a:commandButton id="visualizarComunicacao" 
 							render="@this" execute="@this"
 							value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
-							styleClass="buttons"
+							styleClass="buttons" action="#{jsfUtil.applyLastPhaseFlashAction}"
 							oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');" >
 						<f:setPropertyActionListener value="#{envioComunicacaoController.modeloComunicacao.id}" target="#{flash.idModelo}" />
-						<infox:flashcopy/>
 					</a:commandButton>
           		</s:div>
 			</h:form>
@@ -210,11 +209,11 @@
 					and not empty envioComunicacaoController.destinatario and not envioComunicacaoController.destinatario.expedido}">
 					
 					<a:commandButton id="visualizarComunicacao" 
+								action="#{jsfUtil.applyLastPhaseFlashAction}"
 								value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
 								styleClass="buttons" render="@this" execute="@this"
 								oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');" >
 						<f:setPropertyActionListener value="#{envioComunicacaoController.destinatario.id}" target="#{flash.idDestinatario}" />
-						<infox:flashcopy/>
 					</a:commandButton>
 					<a:commandButton id="btnExpedirComunicacaoAssinada" execute="@this" styleClass="buttons"
 						value="${infoxMessages['comunicacao.expedirComunicacao']}"

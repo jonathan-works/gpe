@@ -16,11 +16,10 @@
     <ui:param name="row" value="#{row}" />
     
     <span>
-        <infox:flashcopy/>
         <span class="#{row.excluido ? 'inativo' : ''}" />
         
         <a:commandLink
-            execute="@this" render="@form"
+            execute="@this" render="@form" action="#{jsfUtil.applyLastPhaseFlashAction}"
             oncomplete="infox.openPopUp('PopUpDocumentoBin', '#{pathResolver.contextPath}/Processo/baixarDocumento.seam','1024');">
             <h:graphicImage styleClass="opacityHover" value="#{layoutController.getResourceUrlByPath('/imagens/mod/pdf.gif')}"
                 title="#{bin.nomeArquivo} (#{documentoDownloader.getFormattedKb(bin)})"/>

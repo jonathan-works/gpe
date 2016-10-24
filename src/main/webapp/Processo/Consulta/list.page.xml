@@ -6,9 +6,6 @@ xsi:schemaLocation="http://jboss.org/schema/seam/pages http://jboss.org/schema/s
 login-required="true"
 >
     <begin-conversation join="true"/>
-    <param name="id" value="#{consultaController.id}"/>
-    <param name="tab" value="#{consultaController.tab}"/>
-    <param name="idJbpm" value="#{org.jboss.seam.bpm.businessProcess.processId}" />
     <restrict>#{sigiloProcessoService.usuarioPossuiPermissao(usuarioLogado, consultaController.processo)}</restrict>
   
 </page>

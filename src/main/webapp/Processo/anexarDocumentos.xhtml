@@ -304,25 +304,22 @@
 							</a:commandLink>
 
 							<a:commandLink id="viewEditorLink" execute="@form"
+								action="#{jsfUtil.applyLastPhaseFlashAction}"
 								rendered="#{isModelo and not row.documentoBin.minuta}"
 								status=":status" styleClass="opacityHover"
 								onclick="infox.showLoading();" render="@this"
 								oncomplete="infox.hideLoading(); infox.openPopUp('download#{row.documentoBin.id}', '#{pathResolver.contextPath}/Processo/downloadDocumento.seam',screen.availWidth,screen.availHeight);">
-								<infox:flashcopy />
 								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
-								<f:setPropertyActionListener value="#{row}"
-									target="#{flash.documentoTemporario}" />
+								<f:setPropertyActionListener value="#{row}" target="#{flash.documentoTemporario}" />
 							</a:commandLink>
 
 							<a:commandLink id="downloadLink" execute="@form"
 								rendered="#{not isModelo}" render="@this" limitRender="true"
 								status=":status" styleClass="opacityHover"
-								onclick="infox.showLoading();"
+								onclick="infox.showLoading();" action="#{jsfUtil.applyLastPhaseFlashAction}"
 								oncomplete="infox.hideLoading(); infox.openPopUp('download#{row.documentoBin.id}', '#{pathResolver.contextPath}/downloadDocumento.seam?id=#{row.documentoBin.id}&amp;binario=true',screen.availWidth,screen.availHeight);">
-								<infox:flashcopy />
 								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
-								<f:setPropertyActionListener value="#{row}"
-									target="#{flash.documentoTemporario}" />
+								<f:setPropertyActionListener value="#{row}" target="#{flash.documentoTemporario}" />
 							</a:commandLink>
 
 
