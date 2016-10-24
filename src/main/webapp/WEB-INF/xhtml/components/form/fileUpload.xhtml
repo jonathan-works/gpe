@@ -6,6 +6,7 @@
   xmlns:f="http://java.sun.com/jsf/core"
   xmlns:h="http://java.sun.com/jsf/html"
   xmlns:rich="http://richfaces.org/rich"
+  xmlns:p="http://primefaces.org/ui"
   xmlns:s="http://jboss.org/schema/seam/taglib"
   xmlns:wi="http://www.itx.com.br/jsf">
   <ui:param
@@ -90,8 +91,13 @@
                 <h:outputText value="#{infoxMessages['processoDocumento.classificacaoDocumento']}: #{not readonly or not empty taskInstanceHome.variaveisDocumento[id] ? taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.descricao : props.classificacaoDocumento}"/>
                 <br />
                 <h:outputText id="file#{id}" value="Documento: #{not readonly or not empty taskInstanceHome.variaveisDocumento[id] ? taskInstanceHome.variaveisDocumento[id].documentoBin.nomeArquivo : value}"/>
-               	<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}" title="Visualizar" style="cursor: pointer" rendered="#{not readonly or not empty taskInstanceHome.variaveisDocumento[id]}"
+               	<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}" title="Visualizar" style="cursor: pointer" 
+               	rendered="#{(not readonly or not empty taskInstanceHome.variaveisDocumento[id]) and taskInstanceHome.isPdf(id.split('-')[0])}" 
                 				onclick="infox.openPopUp('documento', '#{taskInstanceHome.getViewUrlDownload(id.split('-')[0])}');" />
+				 <p:commandLink ajax="false" action="#{taskInstanceHome.downloadDocumento(id.split('-')[0])}"
+				  rendered="#{(not readonly or not empty taskInstanceHome.variaveisDocumento[id]) and not taskInstanceHome.isPdf(id.split('-')[0])}">
+					 <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}" title="Visualizar" style="cursor: pointer" />
+				 </p:commandLink>               				
             </fieldset>
         </s:fragment>
     </s:div>

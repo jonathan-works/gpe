@@ -314,8 +314,8 @@
 									target="#{flash.documentoTemporario}" />
 							</a:commandLink>
 
-							<a:commandLink id="downloadLink" execute="@form"
-								rendered="#{not isModelo}" render="@this" limitRender="true"
+							<a:commandLink id="downloadLinkPDF" execute="@form"
+								rendered="#{not isModelo and fileDownloader.isPdf(row.documentoBin)}" render="@this" limitRender="true"
 								status=":status" styleClass="opacityHover"
 								onclick="infox.showLoading();"
 								oncomplete="infox.hideLoading(); infox.openPopUp('download#{row.documentoBin.id}', '#{pathResolver.contextPath}/downloadDocumento.seam?id=#{row.documentoBin.id}&amp;binario=true',screen.availWidth,screen.availHeight);">
@@ -324,6 +324,12 @@
 								<f:setPropertyActionListener value="#{row}"
 									target="#{flash.documentoTemporario}" />
 							</a:commandLink>
+							
+							<p:commandLink id="downloadLink" action="#{fileDownloader.download(row.documentoBin)}"
+                               rendered="#{not isModelo and not fileDownloader.isPdf(row.documentoBin)}" 
+                               styleClass="opacityHover" ajax="false">
+                               <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
+                            </p:commandLink>
 
 
 							<a:commandLink
