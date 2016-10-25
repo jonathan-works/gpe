@@ -17,6 +17,8 @@ import javax.servlet.ServletContext;
 import org.primefaces.context.RequestContext;
 import org.richfaces.component.UIDataTable;
 
+import com.sun.faces.context.flash.ELFlash;
+
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.seam.exception.ApplicationException;
 
@@ -86,7 +88,12 @@ public class JsfUtil {
     public void addFlashParam(String name, Object value) {
         context.getExternalContext().getFlash().put(name, value);
     }
-    
+
+    public void applyLastPhaseFlashAction() {
+        ELFlash flash = (ELFlash) context.getExternalContext().getFlash();
+        flash.doLastPhaseActions(context, true);
+    }
+
     public <T> T getFlashParam(String name, Class<T> clazz) {
         return clazz.cast(context.getExternalContext().getFlash().get(name));
     }
