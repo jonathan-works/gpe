@@ -70,7 +70,9 @@
         rendered="#{processoHandler.hasPartes()}"
                 title="#{infoxMessages['participanteProcesso.participantes']}"
                 action="#{participanteProcessoList.entity.setProcesso(consultaController.processo)}">
-        <ui:include src="/Processo/parteProcessoGridRO.xhtml" />
+         <h:panelGroup rendered="#{consultaController.tab eq 'tabPartesDoProcesso'}">
+        	<ui:include src="/Processo/parteProcessoGridRO.xhtml" />
+         </h:panelGroup>	
       </infox:tab>
       <infox:tab
         id="tabAnexar"
