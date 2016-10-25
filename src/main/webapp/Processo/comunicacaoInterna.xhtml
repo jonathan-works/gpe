@@ -16,9 +16,9 @@
     
     <h:form>
 		<a:commandButton value="Criar Comunicação Interna" styleClass="buttons" render="@form" execute="@form"
+			action="#{jsfUtil.applyLastPhaseFlashAction}"
 			oncomplete="infox.openPopUp('criarComunicacaoInterna', '#{pathResolver.contextPath}/Processo/criarComunicacaoInterna.seam?scid=#{conversation.id}','1024');">
 			<f:setPropertyActionListener value="#{true}" target="#{flash.abaComunicacao}" />
-			<infox:flashcopy/>
 		</a:commandButton>    
     </h:form>
     
@@ -30,11 +30,11 @@
     	<ui:define name="toolBar">
     		<h:form>
     			<a:commandLink render="@form" execute="@form" style="margin-right: 0.3em;"
+    				action="#{jsfUtil.applyLastPhaseFlashAction}"
 					oncomplete="infox.openPopUp('criarComunicacaoInterna', '#{pathResolver.contextPath}/Processo/criarComunicacaoInterna.seam?scid=#{conversation.id}','1024');">
 					<f:setPropertyActionListener value="#{row.id}" target="#{flash.idModeloComunicacao}" />
 					<f:setPropertyActionListener value="#{true}" target="#{flash.abaComunicacao}" />
 					<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/mod/edit.png')}" />
-					<infox:flashcopy/>
 				</a:commandLink>
 				<a:commandLink styleClass="opacityHover" render="comunicacaoInternaNaoExpedidaListPanel" execute="@form" 
 					action="#{comunicacaoInternaView.excluirModelo(row)}">
@@ -60,13 +60,12 @@
     	
     	<ui:define name="toolBar">
     		<h:form>
-    			<a:commandLink
+    			<a:commandLink action="#{jsfUtil.applyLastPhaseFlashAction}"
 					render="@this" execute="@this"
 					oncomplete="infox.openPopUp('download#{row.idProcesso}', '#{pathResolver.contextPath}/Processo/baixarDocumento.seam','1024');">
 					<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['comunicacao.visualizarAComunicacao']}"/>
 					<f:setPropertyActionListener value="#{comunicacaoInternaView.getIdDocumentoComunicacao(row)}" target="#{flash.idDocumento}" />
 					<f:setPropertyActionListener value="#{true}" target="#{flash.binario}" />
-					<infox:flashcopy/>
 				</a:commandLink>
     		</h:form>
     	</ui:define>

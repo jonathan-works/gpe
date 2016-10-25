@@ -56,10 +56,10 @@
 						<h:form>
 							<a:commandLink  
 								render="@this" execute="@this"
+								action="#{jsfUtil.applyLastPhaseFlashAction}"
 								oncomplete="infox.openPopUp('download#{row.idDestinatario}', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');">
 								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['comunicacao.visualizarAComunicacao']}"/>
 								<f:setPropertyActionListener value="#{row.idDestinatario}" target="#{flash.idDestinatario}" />
-								<infox:flashcopy/>
 							</a:commandLink>
 							<a:commandLink 
 								action="#{comunicacaoAction.setDestinatarioDocumentos(row)}"

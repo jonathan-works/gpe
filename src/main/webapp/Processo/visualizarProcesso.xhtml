@@ -103,7 +103,9 @@
                     id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
                     <ui:define name="title">#{infoxMessages['participanteProcesso.participantes']}</ui:define>
-                    <ui:include src="parteProcessoGridRO.xhtml" />
+                    <h:panelGroup rendered="#{home.tab eq 'tabPartesDoProcesso'}">
+                    	<ui:include src="parteProcessoGridRO.xhtml" />
+                    </h:panelGroup>	
                 </ui:decorate>
             </infox:tab>
             <infox:tab

@@ -235,6 +235,8 @@ public class VariableAccessHandler implements Serializable {
     	if (parent.getEvents() == null) return;
         for (Object entry : parent.getEvents().entrySet()) {
 			Event event = ((Map.Entry<String,Event>)entry).getValue();
+			if(event.getActions() == null)
+				continue;
 			for (Object o : event.getActions()) {
                 Action a = (Action) o;
                 String name = a.getName();
