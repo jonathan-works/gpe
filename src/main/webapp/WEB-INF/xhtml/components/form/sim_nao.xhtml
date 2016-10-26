@@ -27,8 +27,10 @@
     </h:selectOneRadio>
     <h:outputScript>
       invoke(["infox.escapeId"],function(EscapeId) {
-      	$(EscapeId("##{rich:clientId(id)}:#{empty boxChecked ? 0 : boxChecked}"))
-      	.attr({checked:#{empty value ? true : value}});
+      	if( #{not empty value} ){
+	      	$(EscapeId("##{rich:clientId(id)}:#{empty boxChecked ? 0 : boxChecked}"))
+	      	.attr({checked:#{empty value ? true : value}});
+      	}
       });
 	</h:outputScript>
   </s:decorate>
