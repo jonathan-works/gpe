@@ -44,7 +44,8 @@ import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.assinatura.entity.RegistroAssinaturaSuficiente;
 import br.com.infox.epp.processo.documento.query.DocumentoBinQuery;
-import br.com.infox.epp.processo.documento.service.DocumentoBinService;
+import br.com.infox.epp.processo.documento.service.DocumentoBinWrapper;
+import br.com.infox.epp.processo.documento.service.DocumentoBinWrapperFactory;
 import br.com.infox.epp.processo.marcador.Marcador;
 import br.com.infox.hibernate.UUIDGenericType;
 
@@ -137,7 +138,7 @@ public class DocumentoBin implements Serializable {
     private byte[] processoDocumento;
     
     @Transient
-    private DocumentoBinService documentoBinService;
+    private DocumentoBinWrapper documentoBinWrapper;
 
 	public String getTipoDocumentoExterno() {
 		return tipoDocumentoExterno;
@@ -201,7 +202,7 @@ public class DocumentoBin implements Serializable {
 		if(getId() == null) {
 			return md5Documento;
 		}				
-		return getDocumentoBinService().getHash(getId());
+		return getDocumentoBinWrapper().getHash();
 	}
 
 	public void setMd5Documento(String md5Documento) {
@@ -226,7 +227,7 @@ public class DocumentoBin implements Serializable {
 		}				
 		if(size == null)
 			return null;
-		return getDocumentoBinService().getSize(getId());
+		return getDocumentoBinWrapper().getSize();
 	}
 
 	public void setSize(Integer size) {
@@ -257,9 +258,11 @@ public class DocumentoBin implements Serializable {
         this.documentoTemporarioList = documentoTemporarioList;
     }
 
-    public DocumentoBinService getDocumentoBinService() {
-		if(documentoBinService == null) documentoBinService = DocumentoBinService.createInstance();
-		return documentoBinService; 		
+    public DocumentoBinWrapper getDocumentoBinWrapper() {
+		if( documentoBinWrapper == null ) {
+		    documentoBinWrapper = DocumentoBinWrapperFactory.getInstance().createWrapperInstance(this);
+		}
+		return documentoBinWrapper; 		
 	}
 
 	public List<AssinaturaDocumento> getAssinaturasAtributo() {
@@ -270,7 +273,7 @@ public class DocumentoBin implements Serializable {
 		if(getId() == null) {
 			return getAssinaturasAtributo();
 		}		
-		return getDocumentoBinService().carregarAssinaturas(getId());
+		return getDocumentoBinWrapper().carregarAssinaturas();
 	}
 
 	public void setAssinaturas(List<AssinaturaDocumento> assinaturas) {
