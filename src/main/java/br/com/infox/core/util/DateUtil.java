@@ -215,13 +215,13 @@ public class DateUtil {
     }
 
     public static Date getInicioAno(Date data) {
-        return new DateTime(data).withZone(DateTimeZone.UTC).withDayOfMonth(1).withMonthOfYear(1).withTimeAtStartOfDay()
-                .toDate();
+        DateTime dateTime = new DateTime(data).withZone(DateTimeZone.UTC);
+        return dateTime.withDate(dateTime.getYear(), 1, 1).withTimeAtStartOfDay().toDate();
     }
 
     public static Date getFimAno(Date data) {
-        return new DateTime(data).withZone(DateTimeZone.UTC).withDayOfMonth(31).withMonthOfYear(12).withHourOfDay(23)
-                .withMinuteOfHour(59).withSecondOfMinute(59).withMillisOfSecond(999).toDate();
+        DateTime dateTime = new DateTime(data).withZone(DateTimeZone.UTC);
+        return dateTime.withDate(dateTime.getYear(), 12, 31).withTime(23, 59, 59, 999).toDate();
     }
 
 }
