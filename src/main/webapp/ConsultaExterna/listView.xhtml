@@ -192,8 +192,7 @@
 	                                        rowKeyVar="key" var="doc">
 	                                        <rich:column>
 	                                        	<h:form>
-		                                        	<infox:flashcopy/>
-		                                            <a:commandLink rendered="#{empty doc.documentoBin.extensao}" execute="@this" render="@form"
+		                                            <a:commandLink rendered="#{empty doc.documentoBin.extensao}" execute="@this" render="@form" action="#{jsfUtil.applyLastPhaseFlashAction()}"
 		                                                oncomplete="infox.openPopUp('PopUpDocumentoBin', '#{pathResolver.contextPath}/Processo/baixarDocumento.seam','1024');" >
 		                                                <f:setPropertyActionListener value="#{doc.id}" target="#{flash.idDocumento}" />
 	            										<f:setPropertyActionListener value="#{false}" target="#{flash.binario}" />
