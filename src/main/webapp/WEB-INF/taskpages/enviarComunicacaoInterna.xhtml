@@ -29,11 +29,10 @@
 			<a:commandButton id="visualizarComunicacao" 
 				render="@this" execute="@this"
 				value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
-				styleClass="buttons"
+				styleClass="buttons" action="#{jsfUtil.applyLastPhaseFlashAction}"
 				rendered="#{envioComunicacaoInternaView.expedida}"
 				oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');" >
 				<f:setPropertyActionListener value="#{envioComunicacaoInternaView.modeloComunicacao.id}" target="#{flash.idModelo}" />
-				<infox:flashcopy/>
 			</a:commandButton>
 		</h:form>
 		

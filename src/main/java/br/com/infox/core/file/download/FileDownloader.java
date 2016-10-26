@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.io.Serializable;
 
 import javax.ejb.Stateless;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -65,6 +66,11 @@ public class FileDownloader implements Serializable {
         response.setContentType(downloadResource.getContentType());
         if ("application/pdf".equals(downloadResource.getContentType())){
             response.setHeader("Content-disposition", String.format("attachment; filename=\"%s\"", downloadResource.getFileName()));
+        }
+        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+        if(externalContext.isSecure()) {
+            externalContext.setResponseHeader("Cache-Control", "public");
+            externalContext.setResponseHeader("Pragma", "public");
         }
         try {
             IOUtils.copy(downloadResource.getInputStream(), response.getOutputStream());
@@ -241,7 +247,7 @@ public class FileDownloader implements Serializable {
     }
 
     public void download(DocumentoBin documentoBin) {
-    	byte[] data = documentoBinarioManager.getData(documentoBin.getId());
+    	byte[] data = getData(documentoBin);
     	download(data, "application/" + documentoBin.getExtensao(), documentoBin.getNomeArquivo());
     }
 }

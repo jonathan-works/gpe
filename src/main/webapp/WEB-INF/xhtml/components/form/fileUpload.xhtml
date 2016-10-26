@@ -3,6 +3,7 @@
     xmlns:a="http://richfaces.org/a4j" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html"
     xmlns:i="http://java.sun.com/jsf/composite/infox" xmlns:rich="http://richfaces.org/rich"
     xmlns:p="http://primefaces.org/ui" xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:p="http://primefaces.org/ui"
     xmlns:wi="http://www.itx.com.br/jsf">
     <ui:param name="template" value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
     <ui:param name="readonly"
@@ -86,11 +87,15 @@
                             value="#{infoxMessages['processoDocumento.classificacaoDocumento']}: #{not readonly or not empty taskInstanceHome.variaveisDocumento[id] ? taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.descricao : props.classificacaoDocumento}" />
                         <br />
                         <h:outputText id="file#{id}"
-                            value="Documento: #{not readonly or not empty taskInstanceHome.variaveisDocumento[id] ? taskInstanceHome.variaveisDocumento[id].documentoBin.nomeArquivo : value}" />
-                        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}"
+               	<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}" title="Visualizar" style="cursor: pointer" 
+               	rendered="#{(not readonly or not empty taskInstanceHome.variaveisDocumento[id]) and taskInstanceHome.isPdf(id.split('-')[0])}" 
                             title="Visualizar" style="cursor: pointer"
                             rendered="#{not readonly or not empty taskInstanceHome.variaveisDocumento[id]}"
                             onclick="infox.openPopUp('documento', '#{taskInstanceHome.getViewUrlDownload(id.split('-')[0])}');" />
+				 <p:commandLink ajax="false" action="#{taskInstanceHome.downloadDocumento(id.split('-')[0])}"
+				  rendered="#{(not readonly or not empty taskInstanceHome.variaveisDocumento[id]) and not taskInstanceHome.isPdf(id.split('-')[0])}">
+					 <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}" title="Visualizar" style="cursor: pointer" />
+				 </p:commandLink>               				
                     </fieldset>
                 </s:fragment>
             </p:outputPanel>

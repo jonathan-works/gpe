@@ -9,6 +9,7 @@
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:wi="http://www.itx.com.br/jsf" 
+	xmlns:p="http://primefaces.org/ui"
 	xmlns:infox="http://www.infox.com.br/jsf">
 	
     <ui:param name="bin" value="#{empty bin ? c.value : bin}" />
@@ -16,18 +17,21 @@
     <ui:param name="row" value="#{row}" />
     
     <span>
-        <infox:flashcopy/>
         <span class="#{row.excluido ? 'inativo' : ''}" />
         
         <a:commandLink
-            execute="@this" render="@form"
+            execute="@this" render="@form" action="#{jsfUtil.applyLastPhaseFlashAction}" rendered="#{fileDownloader.isPdf(bin)}"
             oncomplete="infox.openPopUp('PopUpDocumentoBin', '#{pathResolver.contextPath}/Processo/baixarDocumento.seam','1024');">
             <h:graphicImage styleClass="opacityHover" value="#{layoutController.getResourceUrlByPath('/imagens/mod/pdf.gif')}"
                 title="#{bin.nomeArquivo} (#{documentoDownloader.getFormattedKb(bin)})"/>
             <f:setPropertyActionListener value="#{row.id}" target="#{flash.idDocumento}" />
             <f:setPropertyActionListener value="#{true}" target="#{flash.binario}" />
         </a:commandLink>
-        
+
+ 	<p:commandLink ajax="false" rendered="#{not fileDownloader.isPdf(bin)}"  action="#{fileDownloader.download(bin)}">
+ 		<h:graphicImage styleClass="opacityHover" value="#{layoutController.getResourceUrlByPath('/imagens/mod/pdf.gif')}"
+                title="#{bin.nomeArquivo} (#{documentoDownloader.getFormattedKb(bin)})"/>
+ 	</p:commandLink>
         <wi:toolBarAssinatura idDocumento="#{row.id}" styleClass="opacityHover" renderedLock="#{bin.suficientementeAssinado}" />
     </span>
 </ui:composition>
