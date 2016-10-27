@@ -48,7 +48,7 @@ public class DocumentoUploaderService implements Serializable {
 	@Inject
 	private InfoxMessages infoxMessages;
 	
-	public DocumentoBin createProcessoDocumentoBin(UploadedFile uploadedFile) throws Exception {
+	public DocumentoBin createProcessoDocumentoBin(UploadedFile uploadedFile) {
 		DocumentoBin documentoBin = new DocumentoBin();
 		documentoBin.setExtensao(FileUtil.getFileType(uploadedFile.getName()));
 		documentoBin.setNomeArquivo(uploadedFile.getName());
@@ -68,11 +68,12 @@ public class DocumentoUploaderService implements Serializable {
     }
 	
 	
-	public void validaDocumento(UploadedFile uploadFile, ClassificacaoDocumento classificacaoDocumento) throws Exception {
+	public void validaDocumento(UploadedFile uploadFile, ClassificacaoDocumento classificacaoDocumento) throws ValidationException {
 		validaDocumento(uploadFile, classificacaoDocumento, null);
 	}
 
-	public void validaDocumento(UploadedFile uploadFile, ClassificacaoDocumento classificacaoDocumento, byte[] dataStream) throws Exception {
+	public void validaDocumento(UploadedFile uploadFile, ClassificacaoDocumento classificacaoDocumento, byte[] dataStream) 
+	        throws ValidationException {
         if (uploadFile == null) {
         	throw new ValidationException(infoxMessages.get("documentoUploader.error.noFile"));
         }

@@ -95,9 +95,8 @@ public class DocumentoManager extends Manager<DocumentoDAO, Documento> {
         		throw new BusinessRollbackException("O processo informado e o processo da pasta do documento são diferentes");
         	}
         }
-        documento = gravarDocumento(documento);
         documento.setNumeroDocumento(getNextNumeracao(documento));
-        return update(documento);
+        return gravarDocumento(documento);
     }
     
     public Documento gravarDocumentoNoProcesso(Documento documento) throws DAOException {
