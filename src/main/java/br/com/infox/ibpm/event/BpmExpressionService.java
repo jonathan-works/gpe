@@ -59,10 +59,11 @@ import br.com.infox.epp.system.custom.variables.CustomVariableSearch;
 import br.com.infox.ibpm.event.External.ExpressionType;
 import br.com.infox.ibpm.sinal.SignalService;
 import br.com.infox.seam.exception.BusinessException;
+import br.com.infox.seam.exception.BusinessRollbackException;
 import br.com.infox.util.time.DateWrapper;
 
-@Stateless
 @Named
+@Stateless
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class BpmExpressionService {
 
@@ -281,6 +282,18 @@ public class BpmExpressionService {
 	        usuarioLogin = usuarioLoginManager.getUsuarioLoginByLogin(login);
 	    }
         return usuarioLogin;
+    }
+
+    protected Processo getProcessoAtual() {
+        ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
+        if (executionContext == null) {
+            throw new BusinessRollbackException("O contexto de execução BPM não está disponível");
+        }
+        Integer idProcesso = (Integer) executionContext.getVariable(VariaveisJbpmProcessosGerais.PROCESSO);
+        if (idProcesso == null) {
+            throw new BusinessRollbackException("Não foi encontrada variável 'processo'");
+        }
+        return processoManager.find(idProcesso);
     }
 
    /**

@@ -286,7 +286,7 @@ public class AssinaturaDocumentoService {
 			documentoBin.setMinuta(Boolean.FALSE);
 		}
 		if (isDocumentoTotalmenteAssinado(documentoBin)){
-			documentoBinManager.setDocumentoSuficientementeAssinado(documentoBin, usuarioPerfilAtual);
+			documentoBinManager.setDocumentoSuficientementeAssinado(documentoBin);
 		}
 		documentoBinManager.update(documentoBin);
 		try {

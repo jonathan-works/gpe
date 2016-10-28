@@ -7,7 +7,10 @@ import java.util.Calendar;
 import java.util.Date;
 
 import javax.enterprise.context.RequestScoped;
+import javax.enterprise.inject.Produces;
 import javax.inject.Named;
+
+import org.joda.time.DateTime;
 
 @Named
 @RequestScoped
@@ -168,7 +171,20 @@ public class DateUtil {
         dt.set(Calendar.MILLISECOND, 0);
         return dt.getTime();
     }
+    
+    @Produces
+    @Named("currentDateTime")
+    public DateTime currentDateTime(){
+    	return new DateTime();
+    }
 
+    @Produces
+    @Named("currentDate")
+    public Date currentDate(){
+    	return new Date();
+    }
+    
+    
     /**
      * Calcula a diferença em minutos entre as datas (Date) informadas nos
      * parametros.

@@ -5,7 +5,7 @@ import java.util.Date;
 
 import com.google.common.base.Strings;
 
-import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
+import br.com.infox.epp.processo.comunicacao.meioexpedicao.MeioExpedicao;
 
 public class DestinatarioBean {
 	

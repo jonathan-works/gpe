@@ -3,6 +3,7 @@
     xmlns:a="http://richfaces.org/a4j" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html"
     xmlns:i="http://java.sun.com/jsf/composite/infox" xmlns:rich="http://richfaces.org/rich"
     xmlns:p="http://primefaces.org/ui" xmlns:s="http://jboss.org/schema/seam/taglib"
+  xmlns:p="http://primefaces.org/ui"
     xmlns:wi="http://www.itx.com.br/jsf">
     <ui:param name="template" value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
     <ui:param name="readonly"
@@ -20,7 +21,7 @@
                     items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumento(false, taskInstanceHome.getVariableName(id), taskInstanceHome.currentTaskInstance)}"
                     required="#{wi:get(required, false)}" showLabelSelecione="true" rendered="#{not readonly}">
                     <a:ajax
-                        render="#{f.id}TipoDocDiv #{f.id}Decoration #{f.id}ToolTipDivExterna #{f.id}documentoExistente assinaturaDocumentoDiv#{f.id}"
+                        render="#{f.id}TipoDocDiv #{f.id}Div #{f.id}ToolTipDivExterna #{f.id}documentoExistente assinaturaDocumentoDiv#{f.id}"
                         event="change" execute="@this" listener="#{taskInstanceHome.removerDocumento(f.id)}"
                         limitRender="true" />
                 </wi:selectOneMenuEntity>
@@ -54,26 +55,28 @@
                     </p:outputPanel>
                 </i:help>
             </p:outputPanel>
-            <s:decorate id="#{id}Decoration" template="#{template}">
-                <ui:define name="label">
-                    <h:outputText value="#{infoxMessages['fileUpload.header']}"
-                        rendered="#{not empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento and not readonly}" />
-                </ui:define>
-                <rich:fileUpload id="#{id}" execute="@this" status=":status" limitRender="true"
-                    required="#{wi:get(required, false)}" fileUploadListener="#{fileUpload.processFileUpload}"
-                    addLabel="#{infoxMessages['processoDocumento.addLabel']}"
-                    clearAllLabel="#{infoxMessages['processoDocumento.clearAllLabel']}"
-                    clearLabel="#{infoxMessages['processoDocumento.clearLabel']}"
-                    doneLabel="#{empty doneLabel ? infoxMessages['processoDocumento.doneLabel'] : doneLabel}"
-                    uploadLabel="#{infoxMessages['processoDocumento.uploadLabel']}"
-                    sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}" maxFilesQuantity="10"
-                    listHeight="50px" immediateUpload="true" noDuplicate="true"
-                    render="#{id}Decoration, #{id}, pageBodyDialogMessage, #{f.id}TipoDocDiv, #{f.id}documentoExistente, assinaturaDocumentoDiv#{f.id}"
-                    acceptedTypes="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.acceptedTypes}"
-                    rendered="#{not empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento and not readonly}"
-                    ontyperejected="new infox.Messages({'timeout': 3000}).dialog(\'#{infoxMessages['processoDocumento.extensaoNaoPermitida']}\')">
-                </rich:fileUpload>
-            </s:decorate>
+            <s:div id="#{id}Div">
+            	<ui:fragment rendered="#{not empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento and not readonly}">
+		            <s:decorate id="#{id}Decoration" template="#{template}">
+		                <ui:define name="label">
+		                    <h:outputText value="#{infoxMessages['fileUpload.header']}" />
+		                </ui:define>
+		                <rich:fileUpload id="#{id}" execute="@this" status=":status" limitRender="true"
+		                    required="#{wi:get(required, false)}" fileUploadListener="#{fileUpload.processFileUpload}"
+		                    addLabel="#{infoxMessages['processoDocumento.addLabel']}"
+		                    clearAllLabel="#{infoxMessages['processoDocumento.clearAllLabel']}"
+		                    clearLabel="#{infoxMessages['processoDocumento.clearLabel']}"
+		                    doneLabel="#{empty doneLabel ? infoxMessages['processoDocumento.doneLabel'] : doneLabel}"
+		                    uploadLabel="#{infoxMessages['processoDocumento.uploadLabel']}"
+		                    sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}" maxFilesQuantity="10"
+		                    listHeight="50px" immediateUpload="true" noDuplicate="true"
+		                    render="#{id}Decoration, #{id}, pageBodyDialogMessage, #{f.id}TipoDocDiv, #{f.id}documentoExistente, assinaturaDocumentoDiv#{f.id}"
+		                    acceptedTypes="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.acceptedTypes}"
+		                    ontyperejected="new infox.Messages({'timeout': 3000}).dialog(\'#{infoxMessages['processoDocumento.extensaoNaoPermitida']}\')">
+		                </rich:fileUpload>
+		            </s:decorate>
+		    	</ui:fragment>
+	        </s:div>
             <p:outputPanel id="#{f.id}documentoExistente">
                 <s:fragment rendered="#{not empty taskInstanceHome.instance[id]}">
                     <fieldset>
@@ -84,11 +87,15 @@
                             value="#{infoxMessages['processoDocumento.classificacaoDocumento']}: #{not readonly or not empty taskInstanceHome.variaveisDocumento[id] ? taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.descricao : props.classificacaoDocumento}" />
                         <br />
                         <h:outputText id="file#{id}"
-                            value="Documento: #{not readonly or not empty taskInstanceHome.variaveisDocumento[id] ? taskInstanceHome.variaveisDocumento[id].documentoBin.nomeArquivo : value}" />
-                        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}"
+               	<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}" title="Visualizar" style="cursor: pointer" 
+               	rendered="#{(not readonly or not empty taskInstanceHome.variaveisDocumento[id]) and taskInstanceHome.isPdf(id.split('-')[0])}" 
                             title="Visualizar" style="cursor: pointer"
                             rendered="#{not readonly or not empty taskInstanceHome.variaveisDocumento[id]}"
                             onclick="infox.openPopUp('documento', '#{taskInstanceHome.getViewUrlDownload(id.split('-')[0])}');" />
+				 <p:commandLink ajax="false" action="#{taskInstanceHome.downloadDocumento(id.split('-')[0])}"
+				  rendered="#{(not readonly or not empty taskInstanceHome.variaveisDocumento[id]) and not taskInstanceHome.isPdf(id.split('-')[0])}">
+					 <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}" title="Visualizar" style="cursor: pointer" />
+				 </p:commandLink>               				
                     </fieldset>
                 </s:fragment>
             </p:outputPanel>
@@ -97,7 +104,7 @@
                     rendered="#{taskInstanceHome.podeAssinarDocumento(f.id.split('-')[0])}">
                     <a:jsFunction name="assinar" action="#{taskInstanceHome.assinarDocumento()}"
                         execute="@this, assinaturaDocumentoDiv#{f.id}"
-                        render="assinaturaDocumentoDiv#{f.id}, pageBodyDialogMessage, #{f.id}TipoDocDiv, #{f.id}ToolTipDivExterna, #{id}Decoration, #{f.id}documentoExistente"
+                        render="assinaturaDocumentoDiv#{f.id}, pageBodyDialogMessage, #{f.id}TipoDocDiv, #{f.id}ToolTipDivExterna, #{id}Div, #{f.id}documentoExistente"
                         oncomplete="infox.hideLoading();" />
 
                     <wi:certificadoDigital id="appletAssinatura"

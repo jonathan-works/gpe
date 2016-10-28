@@ -19,6 +19,7 @@ import com.lowagie.text.pdf.PdfReader;
 
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.util.FileUtil;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ExtensaoArquivo;
 import br.com.infox.epp.documento.manager.ExtensaoArquivoManager;
@@ -47,9 +48,9 @@ public class DocumentoUploaderService implements Serializable {
 	@Inject
 	private InfoxMessages infoxMessages;
 	
-	public DocumentoBin createProcessoDocumentoBin(UploadedFile uploadedFile) throws Exception {
+	public DocumentoBin createProcessoDocumentoBin(UploadedFile uploadedFile) {
 		DocumentoBin documentoBin = new DocumentoBin();
-		documentoBin.setExtensao(getFileType(uploadedFile.getName()));
+		documentoBin.setExtensao(FileUtil.getFileType(uploadedFile.getName()));
 		documentoBin.setNomeArquivo(uploadedFile.getName());
 		documentoBin.setSize(Long.valueOf(uploadedFile.getSize()).intValue());
 		documentoBin.setProcessoDocumento(uploadedFile.getData());
@@ -59,30 +60,24 @@ public class DocumentoUploaderService implements Serializable {
 	
 	public DocumentoBin createDocumentoBin(UploadedFile uploadedFile) {
         DocumentoBin documentoBin = new DocumentoBin();
-        documentoBin.setExtensao(getFileType(uploadedFile.getName()));
+        documentoBin.setExtensao(FileUtil.getFileType(uploadedFile.getName()));
         documentoBin.setNomeArquivo(uploadedFile.getName());
         documentoBin.setSize(Long.valueOf(uploadedFile.getSize()).intValue());
         documentoBin.setModeloDocumento(null);
         return documentoBin;
     }
 	
-	private String getFileType(String nomeArquivo) {
-        String ret = "";
-        if (nomeArquivo != null) {
-            ret = nomeArquivo.substring(nomeArquivo.lastIndexOf('.') + 1);
-        }
-        return ret.toLowerCase();
-    }
 	
-	public void validaDocumento(UploadedFile uploadFile, ClassificacaoDocumento classificacaoDocumento) throws Exception {
+	public void validaDocumento(UploadedFile uploadFile, ClassificacaoDocumento classificacaoDocumento) throws ValidationException {
 		validaDocumento(uploadFile, classificacaoDocumento, null);
 	}
 
-	public void validaDocumento(UploadedFile uploadFile, ClassificacaoDocumento classificacaoDocumento, byte[] dataStream) throws Exception {
+	public void validaDocumento(UploadedFile uploadFile, ClassificacaoDocumento classificacaoDocumento, byte[] dataStream) 
+	        throws ValidationException {
         if (uploadFile == null) {
         	throw new ValidationException(infoxMessages.get("documentoUploader.error.noFile"));
         }
-        String extensao = getFileType(uploadFile.getName());
+        String extensao = FileUtil.getFileType(uploadFile.getName());
         ExtensaoArquivo extensaoArquivo = extensaoArquivoManager.getTamanhoMaximo(classificacaoDocumento, extensao);
         if (extensaoArquivo == null) {
         	throw new ValidationException(infoxMessages.get("documentoUploader.error.invalidExtension"));

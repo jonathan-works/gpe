@@ -21,6 +21,7 @@ import javax.ejb.Stateless;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
@@ -35,6 +36,8 @@ import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo_;
 import br.com.infox.epp.fluxo.entity.Natureza_;
+import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.entity.Processo_;
 
 @Stateless
 @AutoCreate
@@ -130,5 +133,17 @@ public class FluxoDAO extends DAO<Fluxo> {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(PARAM_DESCRICAO, descricao);
         return (Long) getNamedSingleResult(COUNT_FLUXO_BY_DESCRICAO, parameters) > 0;
+    }
+
+    public Long getQuantidadeDeProcessosEmAndamento(Fluxo fluxo) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root<Processo> p = cq.from(Processo.class);
+        Join<Processo, NaturezaCategoriaFluxo> ncf = p.join(Processo_.naturezaCategoriaFluxo, JoinType.INNER);
+        Join<NaturezaCategoriaFluxo, Fluxo> f = ncf.join(NaturezaCategoriaFluxo_.fluxo, JoinType.INNER);
+        cq.select(cb.count(f.get(Fluxo_.idFluxo)));
+        cq.where(cb.equal(f.get(Fluxo_.idFluxo), fluxo.getIdFluxo()),
+                cb.isNull(p.get(Processo_.dataFim)));
+        return getEntityManager().createQuery(cq).getSingleResult();
     }
 }

@@ -99,6 +99,10 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
         return getDao().getQuantidadeDeProcessoAssociadosAFluxo(fluxo) > 0;
     }
 
+    public boolean existemProcessoEmAndamento(Fluxo fluxo) {
+        return getDao().getQuantidadeDeProcessosEmAndamento(fluxo) > 0L;
+    }
+
     public boolean existeFluxoComDescricao(final String descricao) {
         return getDao().existeFluxoComDescricao(descricao);
     }
@@ -133,5 +137,4 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
         return fluxo.getPublicado() && isValidDataInicio(fluxo, now) && isValidDataFim(fluxo, now)
                 && isValidUsuarioPerfil(fluxo, usuarioPerfil);
     }
-
 }

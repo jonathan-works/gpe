@@ -23,7 +23,6 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.GenericDatabaseErrorCode;
 import br.com.infox.core.util.ExceptionUtil;
-import br.com.infox.seam.exception.BusinessException;
 
 @Name(ActionMessagesService.NAME)
 @AutoCreate
@@ -119,7 +118,7 @@ public class ActionMessagesService implements Serializable {
 		} else if (exception instanceof DAOException) {
 			handleDAOException((DAOException) exception);
 		} else if (exception instanceof EJBException) {
-	        handleException(findBusinessExceptionMessage((Exception) exception.getCause()), exception);
+	        handleException(findRealExceptionMessage((Exception) exception), exception);
 		} else if (exception instanceof PersistenceException) {
 	        handlePersistenceException(exception);
 		} else if (exception.getMessage() != null) {
@@ -129,13 +128,11 @@ public class ActionMessagesService implements Serializable {
 		}
 	}
     
-    private String findBusinessExceptionMessage(Exception exception) {
-    	if (exception instanceof BusinessException) {
+    private String findRealExceptionMessage(Exception exception) {
+    	if (exception.getCause() == null) {
     		return exception.getMessage();
-    	} else if (exception == null) {
-    		return "";
     	}
-    	return findBusinessExceptionMessage((Exception) exception.getCause());
+    	return findRealExceptionMessage((Exception) exception.getCause());
 	}
 
 	private InfoxMessages getInfoxMessages() {

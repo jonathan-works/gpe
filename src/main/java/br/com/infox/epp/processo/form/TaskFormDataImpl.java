@@ -2,6 +2,7 @@ package br.com.infox.epp.processo.form;
 
 import java.util.Map;
 
+import org.jbpm.graph.def.Node;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epp.documento.type.ExpressionResolverChain;
@@ -48,6 +49,11 @@ public class TaskFormDataImpl extends AbstractFormData implements TaskFormData {
     @Override
     public ExpressionResolverChain getExpressionResolver() {
         return expressionResolver;
+    }
+
+    @Override
+    public Node getNode() {
+        return getTaskInstance().getTask().getTaskNode();
     }
 
 }

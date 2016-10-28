@@ -5,13 +5,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.ejb.EJBException;
 import javax.ejb.Stateful;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
+import javax.validation.ValidationException;
 
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
+import org.richfaces.event.FileUploadEvent;
+import org.richfaces.model.UploadedFile;
 
 import br.com.infox.certificado.CertificateSignatures;
 import br.com.infox.certificado.bean.CertificateSignatureBean;
@@ -30,12 +34,12 @@ import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.service.PrazoComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.service.RespostaComunicacaoService;
-import br.com.infox.epp.processo.documento.anexos.DocumentoUploader;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.error.DocumentoErrorCode;
+import br.com.infox.epp.processo.documento.service.DocumentoUploaderService;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -53,8 +57,6 @@ public class PedirProrrogacaoPrazoAction implements Serializable {
 	@Inject
 	private ComunicacaoAction comunicacaoAction;
 	@Inject
-	private DocumentoUploader documentoUploader;
-	@Inject
 	private PrazoComunicacaoService prazoComunicacaoService;
 	@Inject
 	private ActionMessagesService actionMessagesService;
@@ -70,6 +72,8 @@ public class PedirProrrogacaoPrazoAction implements Serializable {
 	private CertificateSignatures certificateSignatures;
 	@Inject
 	private RespostaComunicacaoService respostaComunicacaoService;
+	@Inject
+	private DocumentoUploaderService documentoUploaderService;
 	
 	protected List<ClassificacaoDocumento> classificacoesDocumentoProrrogacaoPrazo;
 	private DestinatarioBean destinatario;
@@ -79,6 +83,9 @@ public class PedirProrrogacaoPrazoAction implements Serializable {
 	private boolean assinaPedidoProrrogacao;
 	private String tokenAssinaturaDocumentoPedidoProrrogacao;
 	private String signableDocumentoPedidoProrrogacao;
+	
+	private Documento documento;
+	private boolean isValido;
 	
 	
 	
@@ -92,7 +99,7 @@ public class PedirProrrogacaoPrazoAction implements Serializable {
 	public void pedirProrrogacaoPrazo() {
 		try {
 			Processo comunicacao = getDestinatarioModeloComunicacao(destinatario).getProcesso();
-			respostaComunicacaoService.enviarProrrogacaoPrazo(createDocumentoPedidoProrrogacao(), comunicacao);
+			respostaComunicacaoService.enviarProrrogacaoPrazo(documento, comunicacao);
 			clear();
 			FacesMessages.instance().add(infoxMessages.get("comunicacao.msg.sucesso.pedidoProrrogacao"));
 		} catch (DAOException e) {
@@ -104,16 +111,26 @@ public class PedirProrrogacaoPrazoAction implements Serializable {
 		}
 	}
 
-	private Documento createDocumentoPedidoProrrogacao() {
-		Documento documento = documentoUploader.getDocumento();
-		documento.setDescricao(documentoUploader.getClassificacaoDocumento().getDescricao());
-		return documento;
-	}
+	public void processFileUpload(FileUploadEvent fileUploadEvent) {
+        final UploadedFile ui = fileUploadEvent.getUploadedFile();
+        try {
+            documentoUploaderService.validaDocumento(ui, classificacaoDocumentoProrrogPrazo);
+            documento.setDocumentoBin(documentoUploaderService.createProcessoDocumentoBin(ui));
+            setValido(true);
+            FacesMessages.instance().add(infoxMessages.get("processoDocumento.uploadCompleted"));
+        } catch (EJBException e) {
+            setValido(false);
+            actionMessagesService.handleGenericException(e);
+            if (! (e.getCause() instanceof ValidationException)) {
+                LOG.error("", e);
+            }
+        }
+    }
 	
 	public void updateSignablePedidoProrrogacao(){
-		if (documentoUploader.getDocumento() != null) {
-			String md5 = MD5Encoder.encode(documentoUploader.getDocumento().getDocumentoBin().getProcessoDocumento());
-			documentoUploader.getDocumento().getDocumentoBin().setMd5Documento(md5);
+		if (documento != null) {
+			String md5 = MD5Encoder.encode(documento.getDocumentoBin().getProcessoDocumento());
+			documento.getDocumentoBin().setMd5Documento(md5);
 			setSignableDocumentoPedidoProrrogacao(md5);
 		}
 	}
@@ -124,7 +141,7 @@ public class PedirProrrogacaoPrazoAction implements Serializable {
 			CertificateSignatureBean signatureBean = bundle.getSignatureBeanList().get(0);
 			validaDocumentoAssinatura(signatureBean);
 			Processo comunicacao = getDestinatarioModeloComunicacao(destinatario).getProcesso();
-			respostaComunicacaoService.assinarEnviarProrrogacaoPrazo(createDocumentoPedidoProrrogacao(), comunicacao, signatureBean, Authenticator.getUsuarioPerfilAtual());
+			respostaComunicacaoService.assinarEnviarProrrogacaoPrazo(documento, comunicacao, signatureBean, Authenticator.getUsuarioPerfilAtual());
 			clear();
 			FacesMessages.instance().add(infoxMessages.get("comunicacao.msg.sucesso.pedidoProrrogacao"));
 		} catch (CertificadoException | AssinaturaException e) {
@@ -139,11 +156,11 @@ public class PedirProrrogacaoPrazoAction implements Serializable {
 	}
 	
 	private void validaDocumentoAssinatura(CertificateSignatureBean signatureBean) throws CertificadoException {
-		DocumentoBin bin = documentoUploader.getDocumento().getDocumentoBin();
+		DocumentoBin bin = documento.getDocumentoBin();
 		if (!bin.getMd5Documento().equals(signatureBean.getDocumentMD5())){
 			throw new CertificadoException("Documento recebido difere do documento enviado para assinatura.");
 		} 
-		if (!documentoUploader.isValido()) {
+		if (!isValido()) {
 			throw new EppSystemException(DocumentoErrorCode.INVALID_DOCUMENT_TYPE);
 		}
 		
@@ -169,12 +186,17 @@ public class PedirProrrogacaoPrazoAction implements Serializable {
 		}
 	}
 	
+	public void clearDocumento() {
+	    documento = new Documento();
+        documento.setDocumentoBin(new DocumentoBin());   
+        documento.setClassificacaoDocumento(classificacaoDocumentoProrrogPrazo);
+	}
+	
 	public void clear(){
 		comunicacaoAction.clear();
 		destinatario = null;
 		prorrogacaoPrazo = false;
 		setClassificacaoDocumentoProrrogPrazo(null);
-		documentoUploader.clear();
 	}
 	
 	protected DestinatarioModeloComunicacao getDestinatarioModeloComunicacao(DestinatarioBean bean) {
@@ -185,8 +207,6 @@ public class PedirProrrogacaoPrazoAction implements Serializable {
 		clear();
 		this.destinatario = destinatario;
 		prorrogacaoPrazo = true;
-		documentoUploader.setClassificacaoDocumento(null);
-		classificacoesDocumentoProrrogacaoPrazo = null;
 	}
 	
 	public boolean isProrrogacaoPrazo() {
@@ -217,8 +237,9 @@ public class PedirProrrogacaoPrazoAction implements Serializable {
 
 	public void setClassificacaoDocumentoProrrogPrazo(ClassificacaoDocumento classificacaoDocumentoProrrogPrazo) {
 		this.classificacaoDocumentoProrrogPrazo = classificacaoDocumentoProrrogPrazo;
-		if (documentoUploader.getDocumento() != null) {
-			documentoUploader.setClassificacaoDocumento(classificacaoDocumentoProrrogPrazo);
+		clearDocumento();
+		if (classificacaoDocumentoProrrogPrazo != null) {
+		    documento.setDescricao(classificacaoDocumentoProrrogPrazo.getDescricao());
 		}
 		validaClassificacao();
 	}
@@ -243,5 +264,12 @@ public class PedirProrrogacaoPrazoAction implements Serializable {
 		this.signableDocumentoPedidoProrrogacao = signableDocumentoPedidoProrrogacao;
 	}
 
-	
+    public boolean isValido() {
+        return isValido;
+    }
+
+    public void setValido(boolean isValido) {
+        this.isValido = isValido;
+    }
+
 }

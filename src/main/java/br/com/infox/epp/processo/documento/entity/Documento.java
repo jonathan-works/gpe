@@ -93,12 +93,7 @@ public class Documento implements Serializable, Cloneable {
     @Column(name = "id_documento", unique = true, nullable = false)
     private Integer id;
     
-    /** Anotação removida por conta de bug ao tentar movimentar uma tarefa
-     * com variável editor não obrigatória. Ver se vale a pena fazer implementação
-     * de contorno em classe de negócios de movimentação jbpm
-     * @see <a href="https://redmine.infox.com.br/issues/83644">#83644</a>
-     */
-    //@NotNull
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_classificacao_documento", nullable = false)
     private ClassificacaoDocumento classificacaoDocumento;
@@ -351,7 +346,7 @@ public class Documento implements Serializable, Cloneable {
 	}
 
     public boolean isDocumentoAssinavel(Papel papel){
-		if (getDocumentoBin() == null) {
+		if (getDocumentoBin() == null || getClassificacaoDocumento() == null) {
 			return false;
 		}
 		if(getPasta().getProcesso() != null && getPasta().getProcesso().isFinalizado()) {

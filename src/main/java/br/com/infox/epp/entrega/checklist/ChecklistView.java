@@ -130,6 +130,8 @@ public class ChecklistView implements Serializable {
         if (param == null) {
             return true;
         } else {
+        	if(param instanceof Boolean)
+        		return (Boolean) param;
             String paramValue = ((String) param).trim().toLowerCase();
             return paramValue.isEmpty() || !"false".equals(paramValue);
         }

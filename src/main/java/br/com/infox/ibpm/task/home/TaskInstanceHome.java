@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.SystemException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.HibernateException;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
@@ -49,6 +50,7 @@ import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
 import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.action.ActionMessagesService;
+import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
@@ -73,6 +75,7 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.handler.ProcessoHandler;
@@ -140,6 +143,8 @@ public class TaskInstanceHome implements Serializable {
 	private PastaManager pastaManager; 
 	@Inject
 	private DocumentoBinManager documentoBinManager;
+	@Inject
+	private DocumentoBinarioManager documentoBinarioManager;
 	@Inject
 	private InfoxMessages infoxMessages;
 	@Inject
@@ -365,9 +370,14 @@ public class TaskInstanceHome implements Serializable {
 	}
 
 	private void updateVariableEditor(Documento documento, VariableAccess variableAccess) throws DAOException {
-		if (documento.getId() != null) {
-			documentoBinManager.update(documento.getDocumentoBin());
-			documentoManager.update(documento);
+		if (documento.getId() != null && documento.getClassificacaoDocumento() != null) {
+	        documentoBinManager.update(documento.getDocumentoBin());
+	        documentoManager.update(documento);
+		} else if (documento.getId() != null && documento.getClassificacaoDocumento() == null) {
+		    documentoManager.remove(documento);
+		    documentoBinManager.remove(documento.getDocumentoBin());
+		    documento = new Documento();
+		    documento.setDocumentoBin(new DocumentoBin());
 		} else {
 			if (documento.getClassificacaoDocumento() != null) {
 				createVariableEditor(documento, variableAccess);
@@ -523,14 +533,29 @@ public class TaskInstanceHome implements Serializable {
 		}
 		return false;
 	}
+	
+	public boolean isPdf(String variableName){
+		Documento documento = getDocumentoFromVariableName(variableName);
+		return "pdf".equalsIgnoreCase(documento.getDocumentoBin().getExtensao()) || StringUtils.isEmpty(documento.getDocumentoBin().getExtensao());
+	}
+	
+	public void downloadDocumento(String variableName){
+		Documento documento = getDocumentoFromVariableName(variableName);
+		byte[] data = documentoBinarioManager.getData(documento.getDocumentoBin().getId());
+		FileDownloader.download(data, "application/" + documento.getDocumentoBin().getExtensao(), documento.getDocumentoBin().getNomeArquivo());
+	}
 
 	public String getViewUrlDownload(String variableName) {
-		Integer idDocumento = (Integer) org.jboss.seam.bpm.TaskInstance.instance().getVariable("FILE:" + variableName);
-		Documento documento = documentoManager.find(idDocumento);
+		Documento documento = getDocumentoFromVariableName(variableName);
 		if (documento.getDocumentoBin().isBinario()) {
 			return MessageFormat.format(URL_DOWNLOAD_BINARIO, pathResolver.getContextPath(), documento.getId().toString());
 		}
 		return MessageFormat.format(URL_DOWNLOAD_HTML, pathResolver.getContextPath(), documento.getId().toString());
+	}
+
+	private Documento getDocumentoFromVariableName(String variableName) {
+		Integer idDocumento = (Integer) org.jboss.seam.bpm.TaskInstance.instance().getVariable("FILE:" + variableName);
+		return documentoManager.find(idDocumento);
 	}
 
 	public void assinarDocumento() {
@@ -593,10 +618,10 @@ public class TaskInstanceHome implements Serializable {
 			if (!update()) {
 				return null;
 			}
-			if (!validarAssinaturaDocumentosAoMovimentar()) {
-				return null;
+			if (!validFileUpload() || !validEditor()) {
+			    return null;
 			}
-			if (!validFileUpload()) {
+			if (!validarAssinaturaDocumentosAoMovimentar()) {
 				return null;
 			}
 			this.currentTaskInstance = null;
@@ -619,7 +644,28 @@ public class TaskInstanceHome implements Serializable {
 		return null;
 	}
 
-	private boolean validarAssinaturaDocumentosAoMovimentar() {
+	private boolean validEditor() {
+	    if (possuiTask()) {
+            TaskController taskController = taskInstance.getTask().getTaskController();
+            if (taskController == null) {
+                return true;
+            }
+            List<?> list = taskController.getVariableAccesses();
+            for (Object object : list) {
+                VariableAccess var = (VariableAccess) object;
+                if (var.isRequired() && var.getMappedName().split(":")[0].equals("EDITOR")
+                        && getInstance().get(getFieldName(var.getVariableName())) == null) {
+                    String label = JbpmUtil.instance().getMessages()
+                            .get(taskInstance.getProcessInstance().getProcessDefinition().getName() + ":" + var.getVariableName());
+                    FacesMessages.instance().add("O editor do campo " + label + " é obrigatório");
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean validarAssinaturaDocumentosAoMovimentar() {
 		Map<String, VariableInstance> variableMap = org.jboss.seam.bpm.TaskInstance.instance().getVariableInstances();
 		FacesMessages.instance().clear();
 		boolean isAssinaturaOk = true;
@@ -630,6 +676,7 @@ public class TaskInstanceHome implements Serializable {
 					continue;
 				}
 				Documento documento = documentoManager.find(variableInstance.getValue());
+				if ( documento == null ) continue;
 				boolean assinaturaVariavelOk = validarAssinaturaDocumento(documento);
 				if (!assinaturaVariavelOk) {
 				    String label = VariableHandler.getLabel(format("{0}:{1}", taskInstance.getTask().getProcessDefinition().getName(), key.split(":")[1]));

@@ -115,11 +115,14 @@
                     </ui:define>
                     <ui:define name="headerToolBar" />
                     <ui:define name="toolBar">
-                        <wi:toolBar
-                            url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
-                            title="#{infoxMessages['button.selecionar']}"
-                            action="#{processoSearcher.visualizarProcesso(row)}">
-                        </wi:toolBar>
+                          <h:commandLink
+	                    	id="visualizaProcessoLink"
+	                        action="/Processo/Consulta/list.seam">
+	                        <f:setPropertyActionListener value="#{row.idProcesso}" target="#{consultaController.id}" />
+	                        <f:setPropertyActionListener value="#{row.idJbpm}" target="#{org.jboss.seam.bpm.businessProcess.processId}" />
+	                        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['button.selecionar']}"/>
+	                        <f:ajax execute="@this" render="@this"/>
+	                    </h:commandLink>
                         <a:commandLink
                             id="setPrioridadeLink"
                             rendered="#{security.checkPage('/pages/Processo/Consulta/setPrioridadeProcesso')}"

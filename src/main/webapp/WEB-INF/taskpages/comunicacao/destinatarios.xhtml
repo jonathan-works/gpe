@@ -53,7 +53,7 @@
 									url="#{layoutController.getResourceUrlByPath('/imagens/expedir_comunicacao.png')}"
 									title="#{infoxMessages['button.selecionar']}" />
 							</a:commandLink>
-							<a:commandLink
+							<a:commandLink action="#{jsfUtil.applyLastPhaseFlashAction()}"
 								oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');"
 								rendered="#{row.expedido}" render="@this" execute="@this">
 								<h:graphicImage
@@ -61,7 +61,6 @@
 									title="#{infoxMessages['comunicacao.visualizarAComunicacao']}" />
 								<f:setPropertyActionListener value="#{row.id}"
 									target="#{flash.idDestinatario}" />
-								<infox:flashcopy />
 							</a:commandLink>
 							<a:commandLink execute="@this" rendered="#{not row.expedido}"
 								render="comunicacaoDiv :pageBodyDialogMessage"
@@ -88,8 +87,9 @@
 								itemLabel="#{infoxMessages['crud.select.select']}" />
 							<f:selectItems var="v"
 								value="#{destinatarioComunicacaoAction.getMeiosExpedicao(row)}"
-								itemLabel="#{v.label}" itemValue="#{v}" />
+								itemLabel="#{v.descricao}" itemValue="#{v}" />
 							<a:ajax event="change" />
+							<s:convertEntity />
 						</h:selectOneMenu>
 						<h:outputText value="#{row.meioExpedicao.label}"
 							rendered="#{envioComunicacaoController.modeloComunicacao.finalizada}" />

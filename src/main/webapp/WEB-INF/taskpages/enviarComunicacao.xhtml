@@ -25,12 +25,12 @@
 				</wi:selectOneMenuEntity>
 				<a:commandButton id="visualizarComunicacao" 
 					render="@this" execute="@this"
+					action="#{jsfUtil.applyLastPhaseFlashAction}"
 					value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
 					styleClass="buttons"
 					rendered="#{envioComunicacaoController.podeVisualizarComunicacaoNaoFinalizada()}" 
 					oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');" >
 					<f:setPropertyActionListener value="#{envioComunicacaoController.modeloComunicacao.id}" target="#{flash.idModelo}" />
-					<infox:flashcopy/>
 				</a:commandButton>
 				<a:commandButton id="reabrirComunicacao" 
 					render="comunicacaoDiv buttonsTaskPageComunicacaoForm" execute="@this"
@@ -51,10 +51,9 @@
 					<a:commandButton id="visualizarComunicacao" 
 							render="@this" execute="@this"
 							value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
-							styleClass="buttons"
+							styleClass="buttons" action="#{jsfUtil.applyLastPhaseFlashAction}"
 							oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');" >
 						<f:setPropertyActionListener value="#{envioComunicacaoController.modeloComunicacao.id}" target="#{flash.idModelo}" />
-						<infox:flashcopy/>
 					</a:commandButton>
           		</s:div>
 			</h:form>
@@ -65,11 +64,11 @@
 					and not empty envioComunicacaoController.destinatario and not envioComunicacaoController.destinatario.expedido}">
 					
 					<a:commandButton id="visualizarComunicacao" 
+								action="#{jsfUtil.applyLastPhaseFlashAction}"
 								value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
 								styleClass="buttons" render="@this" execute="@this"
 								oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');" >
 						<f:setPropertyActionListener value="#{envioComunicacaoController.destinatario.id}" target="#{flash.idDestinatario}" />
-						<infox:flashcopy/>
 					</a:commandButton>
 					<a:commandButton id="btnExpedirComunicacaoAssinada" execute="@this" styleClass="buttons"
 						value="${infoxMessages['comunicacao.expedirComunicacao']}"
