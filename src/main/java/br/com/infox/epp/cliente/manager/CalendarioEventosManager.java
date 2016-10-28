@@ -156,7 +156,7 @@ public class CalendarioEventosManager extends Manager<CalendarioEventosDAO, Cale
 
 	public DateRange calcularPrazoEncerrandoEmDiaUtil(DateRange periodo, Collection<DateRange> eventos){
 		DateRange[] periodosNaoUteis = eventos.toArray(new DateRange[eventos.size()]);
-	    return periodo.withEnd(periodo.getEnd().nextWeekday(periodosNaoUteis).withTimeAtEndOfDay());
+	    return periodo.withExtendedEnd(periodo.getEnd().nextWeekday(periodosNaoUteis).withTimeAtEndOfDay());
 	}
 
 	public DateRange calcularPrazoEncerrandoEmDiaUtil(DateRange periodo){
