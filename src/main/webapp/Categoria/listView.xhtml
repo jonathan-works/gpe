@@ -23,6 +23,9 @@
             <ui:define name="searchForm">
                 <wi:searchForm formId="pesquisarCategoriaForm"
                     formTitle="#{infoxMessages['searchForm.title']}">
+                    <wi:inputText id="codigo"
+                        value="#{categoriaList.entity.codigo}"
+                        label="#{infoxMessages['categoria.codigo']}" />
                     <wi:inputText id="categoria"
                         value="#{categoriaList.entity.categoria}"
                         label="#{infoxMessages['categoria.categoria']}" />
@@ -36,6 +39,9 @@
                 <wi:toolBarInactive
                     actionInactive="categoriaCrudAction.inactive(row)" />
             </ui:define>
+            <wi:columnOutputText columnId="codigo"
+                columnHeader="#{infoxMessages['categoria.codigo']}"
+                value="#{row.codigo}" />
             <wi:columnOutputText columnId="categoria"
                 columnHeader="#{infoxMessages['categoria.categoria']}"
                 value="#{row.categoria}" />
@@ -47,6 +53,10 @@
     <ui:define name="form">
         <wi:dataForm formId="categoriaForm"
             formTitle="#{infoxMessages['form.title']}">
+            <wi:inputText id="codigo"
+                value="#{crudAction.instance.codigo}" required="true"
+                label="#{infoxMessages['categoria.codigo']}" 
+                maxlength="30" />
             <wi:inputText id="categoria"
                 value="#{crudAction.instance.categoria}" required="true"
                 label="#{infoxMessages['categoria.categoria']}" 

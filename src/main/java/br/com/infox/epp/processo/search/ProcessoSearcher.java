@@ -8,12 +8,12 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.faces.Redirect;
 
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @Name(ProcessoSearcher.NAME)
 @Scope(ScopeType.EVENT)

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    xmlns:wi="http://www.itx.com.br/jsf"
+    template="/WEB-INF/xhtml/templates/core/defaultTemplate.xhtml">
+
+    <ui:define name="title">#{infoxMessages['meioExpedicao.titlePage']}</ui:define>
+
+    <ui:param name="home" value="#{meioExpedicaoView}" />
+
+    <ui:define name="searchGrid">
+        <wi:dataTable values="#{meioExpedicaoList.list(15)}"
+            bean="#{meioExpedicaoList}"
+            tableTitle="#{infoxMessages['meioExpedicao.tableTitle']}"
+            id="meioExpedicaoList" rowId="#{row.id}">
+            
+            <ui:define name="headerToolBar"/>
+            
+            <ui:define name="toolBar">
+            	<h:form>
+            		<a:commandLink execute="@this" render=":pageBody" action="#{meioExpedicaoView.load(row)}" limitRender="true">
+            			<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="Selecionar" styleClass="opacityHover"/>
+            			<f:setPropertyActionListener value="form" target="#{meioExpedicaoView.tab}" />
+            		</a:commandLink>
+            		
+            		<a:commandLink execute="@form" render="meioExpedicaoListPanel :pageBodyDialogMessage"
+            			action="#{meioExpedicaoView.inativar(row)}" limitRender="true" rendered="#{row.ativo}"
+            			onclick="return confirm(\'#{infoxMessages['crud.confirmInactivate']}\');">
+            			<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="Inativar" styleClass="opacityHover"/>
+            		</a:commandLink>
+            	</h:form>
+            </ui:define>
+            
+            <ui:define name="searchForm">
+                <wi:searchForm formId="meioExpedicaoSearchForm" formTitle="#{infoxMessages['searchForm.title']}">
+                    <wi:inputText id="codigo" value="#{meioExpedicaoList.codigo}" label="#{infoxMessages['meioExpedicao.codigo']}" />
+                    <wi:inputText id="descricao" label="#{infoxMessages['meioExpedicao.descricao']}" value="#{meioExpedicaoList.descricao}" />
+                    <wi:selectBooleanMenu id="eletronico" label="#{infoxMessages['meioExpedicao.eletronico']}" value="#{meioExpedicaoList.eletronico}" />
+                    <wi:selectSituacaoOneMenu id="ativo" label="#{infoxMessages['field.situacao']}" value="#{meioExpedicaoList.ativo}" />
+                </wi:searchForm>
+            </ui:define>
+            
+            <wi:columnOutputText columnId="codigo" columnHeader="#{infoxMessages['meioExpedicao.codigo']}" value="#{row.codigo}" />
+            <wi:columnOutputText columnId="descricao" columnHeader="#{infoxMessages['meioExpedicao.descricao']}" value="#{row.descricao}" />
+            <wi:columnBoolean columnId="eletronico" columnHeader="#{infoxMessages['meioExpedicao.eletronico']}" value="#{row.eletronico}" />
+            <wi:columnSituacao columnId="ativo" columnHeader="#{infoxMessages['field.situacao']}" value="#{row.ativo}" />
+                
+        </wi:dataTable>
+    </ui:define>
+
+    <ui:define name="form">
+    	<wi:dataForm formId="meioExpedicaoForm" formTitle="#{infoxMessages['meioExpedicao.meioExpedicaoForm']}">
+			
+			<wi:inputText id="codigo" label="#{infoxMessages['meioExpedicao.codigo']}" value="#{meioExpedicaoView.meioExpedicao.codigo}" />
+            <wi:inputText id="descricao" label="#{infoxMessages['meioExpedicao.descricao']}" value="#{meioExpedicaoView.meioExpedicao.descricao}" />
+            <wi:selectBooleanCheckbox id="eletronico" label="#{infoxMessages['meioExpedicao.eletronico']}" value="#{meioExpedicaoView.meioExpedicao.eletronico}" />
+			<wi:selectSituacaoRadio id="ativo" label="#{infoxMessages['field.situacao']}" value="#{meioExpedicaoView.meioExpedicao.ativo}" />
+
+			<ui:define name="buttons">
+				<a:commandButton action="#{meioExpedicaoView.persist}" value="#{infoxMessages['crud.persist']}" 
+					rendered="#{empty meioExpedicaoView.meioExpedicao.id}" render="@form :pageBodyDialogMessage" execute="@form"
+					styleClass="buttons"/>
+					
+				<a:commandButton action="#{meioExpedicaoView.update}" value="#{infoxMessages['crud.update']}" 
+					rendered="#{not empty meioExpedicaoView.meioExpedicao.id}" render="@form :pageBodyDialogMessage" execute="@form"
+					styleClass="buttons"/>
+					
+				<a:commandButton action="#{meioExpedicaoView.init}" value="#{infoxMessages['crud.new']}" 
+					render="@form" execute="@form" styleClass="buttons"/>
+			</ui:define>
+
+		</wi:dataForm>
+    </ui:define>
+
+</ui:composition>

@@ -12,6 +12,7 @@ import br.com.infox.epp.processo.entity.Processo;
 @Named
 @ViewScoped
 public class RespostaComunicacaoList extends DataList<DocumentoRespostaComunicacao> {
+    
 	public static final String NAME = "respostaComunicacaoList";
 	private static final long serialVersionUID = 1L;
 
@@ -25,7 +26,6 @@ public class RespostaComunicacaoList extends DataList<DocumentoRespostaComunicac
 
 	private Processo processo;
 	private String descricaoDocumento;
-	
 	
     @Override
 	protected void addRestrictionFields() {

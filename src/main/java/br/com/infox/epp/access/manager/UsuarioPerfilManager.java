@@ -5,6 +5,11 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Root;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
@@ -16,7 +21,9 @@ import br.com.infox.epp.access.dao.UsuarioPerfilDAO;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioLogin_;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
+import br.com.infox.epp.access.entity.UsuarioPerfil_;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 
 @AutoCreate
@@ -72,6 +79,10 @@ public class UsuarioPerfilManager extends Manager<UsuarioPerfilDAO, UsuarioPerfi
     public boolean existeUsuarioPerfilAtivo(UsuarioLogin usuarioLogin, String descricaoPerfil, boolean ativo) {
     	return getDao().existeUsuarioPerfil(usuarioLogin, descricaoPerfil, ativo);
     }
+    
+    public boolean existeUsuarioPerfilAtivo(UsuarioLogin usuarioLogin, PerfilTemplate perfilTemplate, boolean ativo) {
+    	return getDao().existeUsuarioPerfil(usuarioLogin, perfilTemplate, ativo);
+    }
 
 	@Override
 	public UsuarioPerfil persist(UsuarioPerfil o) throws DAOException {
@@ -88,5 +99,23 @@ public class UsuarioPerfilManager extends Manager<UsuarioPerfilDAO, UsuarioPerfi
 	    return getDao().listByLocalizacaoAtivo(localizacao);
 	}
 	
+    public List<PerfilTemplate> getPerfisAtivosByLocalizacaoContendoUsuario(Localizacao localizacao) {
+        CriteriaBuilder cb = getDao().getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<PerfilTemplate> query = cb.createQuery(PerfilTemplate.class);
+
+        Root<UsuarioPerfil> up = query.from(UsuarioPerfil.class);
+        Join<UsuarioPerfil, UsuarioLogin> ul = up.join(UsuarioPerfil_.usuarioLogin, JoinType.INNER);
+        query.where(cb.equal(up.get(UsuarioPerfil_.localizacao), localizacao),
+                cb.isTrue(up.get(UsuarioPerfil_.ativo)),
+                cb.isTrue(ul.get(UsuarioLogin_.ativo)),
+                cb.isNotNull(ul.get(UsuarioLogin_.pessoaFisica)));
+
+        query.select(up.get(UsuarioPerfil_.perfilTemplate)).distinct(true);
+        return getDao().getEntityManager().createQuery(query).getResultList();
+    }
+    
+    public UsuarioPerfil getUsuarioPerfil(UsuarioLogin usuarioLogin, PerfilTemplate perfilTemplate, Localizacao localizacao) {
+    	return getDao().getUsuarioPerfil(usuarioLogin, perfilTemplate, localizacao);
+    }
 	
 }

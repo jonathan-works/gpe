@@ -573,7 +573,8 @@ public class JpdlXmlWriter {
             initCreateTimerAction(parentElement, action);
             return true;
         } else if (action instanceof CancelTimerAction) {
-            initCancelTimerAction(parentElement, action);
+            initCancelTimerAction(parentElement, action);//TODO: Verificar necessidade disso 
+        	return true;
         }
         
         return false;

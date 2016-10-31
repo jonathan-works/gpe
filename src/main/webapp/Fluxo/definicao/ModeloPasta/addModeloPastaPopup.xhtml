@@ -11,6 +11,7 @@
     <script type="text/javascript">
 	    function clearAddModeloPastaFields() {
 	        #{rich:jQuery('addModeloPastaInputName')}.val('');
+	        #{rich:jQuery('addModeloPastaInputCodigo')}.val('');
 	        #{rich:jQuery('addModeloPastaInputDescricao')}.val('');
 	        #{rich:jQuery('addModeloPastaInputOrdemNumberNumber')}.val('');
 	        #{rich:jQuery('modeloPastaRemovivel')}.attr('checked', true);
@@ -46,6 +47,14 @@
 	          	required="true" maxlength="250"
 	        	label="#{infoxMessages['modeloPasta.nome']}">
                 <f:validator validatorId="nomeModeloPastaValidator" />
+                <f:attribute name="idFluxo" value="#{modeloPastaRestricaoAction.fluxo.idFluxo}" />
+	        </wi:inputText>
+	        <wi:inputText
+	          	id="addModeloPastaInputCodigo"
+	          	value="#{modeloPastaRestricaoAction.instance.codigo}"
+	          	required="true" maxlength="250"
+	        	label="#{infoxMessages['modeloPasta.codigo']}">
+	        	<f:validator validatorId="codigoModeloPastaValidator" />
                 <f:attribute name="idFluxo" value="#{modeloPastaRestricaoAction.fluxo.idFluxo}" />
 	        </wi:inputText>
 			<wi:inputText

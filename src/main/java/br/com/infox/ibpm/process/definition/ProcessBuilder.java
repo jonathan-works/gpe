@@ -531,15 +531,9 @@ public class ProcessBuilder implements Serializable {
         List<String> variaveis = new ArrayList<>();
         List<Node> nodes = instance.getNodes();
         for (Node node : nodes) {
-            if (!(node instanceof TaskNode)) {
-                continue;
-            }
-            TaskNode taskNode = (TaskNode) node;
-            Set<Task> tasks = taskNode.getTasks();
-            for (Task task : tasks) {
-                if (task.getTaskController() == null) {
-                    continue;
-                }
+            Task task = resolveTaskFromNode(node);
+
+            if (task != null && task.getTaskController() != null && task.getTaskController().getVariableAccesses() != null) {
                 List<VariableAccess> variableAccesses = task.getTaskController().getVariableAccesses();
                 for (VariableAccess variableAccess : variableAccesses) {
                     String[] mappedName = variableAccess.getMappedName().split(":");
@@ -551,6 +545,18 @@ public class ProcessBuilder implements Serializable {
             }
         }
         return variaveis;
+    }
+
+    private Task resolveTaskFromNode(Node node) {
+        Task task = null;
+        if (node instanceof TaskNode) {
+            TaskNode taskNode = (TaskNode) node;
+            Set<Task> tasks = taskNode.getTasks();
+            task = tasks.iterator().next();
+        } else if (node instanceof StartState) {
+            task = instance.getTaskMgmtDefinition().getStartTask();
+        }
+        return task;
     }
 
     public void clearDefinition() {

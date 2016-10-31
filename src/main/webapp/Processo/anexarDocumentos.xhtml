@@ -21,11 +21,15 @@
 			header="#{infoxMessages['fileUpload.header']}"
 			style="margin-bottom: 1em" switchType="client">
 			<h:form id="uploadForm">
+			
+				<wi:inputText id="uploadDescricao" required="true"
+					label="#{infoxMessages['processo.anexarDocumentoDescricao']}"
+					value="#{anexarDocumentosView.descricaoUploader}" />
 				<wi:selectOneMenuEntity id="uploadClassificacao" required="true"
 					label="#{infoxMessages['tipoProcessoDocumento.tipoProcessoDocumento']}"
 					value="#{anexarDocumentosView.classificacaoDocumentoUploader}"
 					items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumentoAnexar('D')}">
-					<a:ajax id="uploadClassificacaoAjax" event="change"
+					<a:ajax event="change"
 						onbeforesubmit="infox.showLoading();"
 						oncomplete="infox.hideLoading();" render="uploadArquivoDiv"
 						limitRender="true" execute="@this"
@@ -120,11 +124,11 @@
 
 						<s:div id="uploadArquivoAnexarButton">
 							<a:commandButton id="uploadSubmitButton" styleClass="buttons"
-								action="#{anexarDocumentosView.persistUpload()}"
+								action="#{anexarDocumentosView.persistUpload(rich:clientId('uploadPanel'))}"
 								value="#{infoxMessages['crud.update']}"
 								onclick="infox.showLoading();" oncomplete="infox.hideLoading();"
 								rendered="#{anexarDocumentosView.showUploaderButton}"
-								render="uploadPanel documentoDataTable pageBodyDialogMessage"/>
+								render="uploadDescricaoDecoration uploadClassificacaoDecoration documentoDataTable pageBodyDialogMessage"/>
 						</s:div>
 					</s:div>
 				</s:div>
@@ -174,7 +178,7 @@
 					value="#{anexarDocumentosView.documentoEditor.classificacaoDocumento}"
 					items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumentoAnexar('P')}"
 					disabled="#{not minuta}" readonly="#{not minuta}">
-					<a:ajax id="editorClassificacaoAjax" event="change"
+					<a:ajax event="change"
 						listener="#{anexarDocumentosView.onChangeEditorClassificacaoDocumento()}"
 						onbeforesubmit="infox.showLoading();"
 						oncomplete="infox.hideLoading();"
@@ -214,7 +218,7 @@
 						items="#{anexarDocumentosView.modeloDocumentoList}"
 						disabled="#{not minuta}" readonly="#{not minuta}"
 						rendered="#{anexarDocumentosView.showModeloDocumentoCombo}">
-						<a:ajax id="editorModeloDocumentoAjax" event="change"
+						<a:ajax event="change"
 							execute="@this" render="editorDiv"
 							listener="#{anexarDocumentosView.onSelectModeloDocumento}" />
 					</wi:selectOneMenuEntity>
@@ -313,21 +317,21 @@
 								<f:setPropertyActionListener value="#{row}" target="#{flash.documentoTemporario}" />
 							</a:commandLink>
 
-							<a:commandLink id="downloadLinkPDF" execute="@form"
-								rendered="#{not isModelo and fileDownloader.isPdf(row.documentoBin)}" render="@this" limitRender="true"
-								status=":status" styleClass="opacityHover"
-								onclick="infox.showLoading();" action="#{jsfUtil.applyLastPhaseFlashAction}"
-								oncomplete="infox.hideLoading(); infox.openPopUp('download#{row.documentoBin.id}', '#{pathResolver.contextPath}/downloadDocumento.seam?id=#{row.documentoBin.id}&amp;binario=true',screen.availWidth,screen.availHeight);">
-								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
-								<f:setPropertyActionListener value="#{row}" target="#{flash.documentoTemporario}" />
-							</a:commandLink>
-							
-							<p:commandLink id="downloadLink" action="#{fileDownloader.download(row.documentoBin)}"
+						   <a:commandLink id="downloadLinkPDF"
+                               execute="@form" action="#{jsfUtil.applyLastPhaseFlashAction}"
+                               rendered="#{not isModelo and fileDownloader.isPdf(row.documentoBin)}" render="@this pageBodyDialogMessage" limitRender="true"
+                               status=":status" styleClass="opacityHover"
+                               onclick="infox.showLoading();"
+                               oncomplete="infox.hideLoading(); infox.openPopUp('PopUpDocumentoBin', '#{pathResolver.contextPath}/Processo/downloadDocumento.seam','1024');">
+                               <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
+                               <f:setPropertyActionListener value="#{row}" target="#{flash.documentoTemporario}" />
+                            </a:commandLink>
+                            
+                             <p:commandLink id="downloadLink" action="#{fileDownloader.download(row.documentoBin)}"
                                rendered="#{not isModelo and not fileDownloader.isPdf(row.documentoBin)}" 
                                styleClass="opacityHover" ajax="false">
                                <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
                             </p:commandLink>
-
 
 							<a:commandLink
 								oncomplete="#{rich:component('assinaturasDocumento')}.show();"

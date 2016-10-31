@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.meiocontato.annotation.Email;
 import br.com.infox.epp.meiocontato.entity.MeioContato;
 import br.com.infox.epp.pessoa.annotation.Cpf;
@@ -36,17 +37,20 @@ public class UsuarioDTO implements Serializable{
 	private String dataNascimento;
 	@EstadoCivil
 	private String estadoCivil;
+	@MetodoLogin
+	private String metodoLogin;
 	
 	private List<PessoaDocumentoDTO> documentos=new ArrayList<>();
 	private List<MeioContatoDTO> meiosContato=new ArrayList<>();
 	
 	public UsuarioDTO() {
 	}
-
+	
 	public UsuarioDTO(UsuarioLogin usuarioLogin, PessoaFisica pessoaFisica, List<PessoaDocumento> documentos, List<MeioContato> meiosContato){
 		this.nome = usuarioLogin.getNomeUsuario();
 		this.cpf = pessoaFisica.getCpf();
 		this.email = usuarioLogin.getEmail();
+		this.metodoLogin = metodoLogin(usuarioLogin.getTipoUsuario());
 		if (pessoaFisica.getDataNascimento() != null) {
 			this.dataNascimento = new SimpleDateFormat(DATE_PATTERN).format(pessoaFisica.getDataNascimento());
 		}
@@ -67,27 +71,30 @@ public class UsuarioDTO implements Serializable{
 	
 	public UsuarioDTO(UsuarioLogin usuarioLogin, PessoaFisica pessoaFisica) {
 		this.nome = usuarioLogin.getNomeUsuario();
-		this.cpf = pessoaFisica.getCpf();
 		this.email = usuarioLogin.getEmail();
-		if (pessoaFisica.getDataNascimento() != null) {
-			this.dataNascimento = new SimpleDateFormat(DATE_PATTERN).format(pessoaFisica.getDataNascimento());
-		}
-		if (pessoaFisica.getEstadoCivil() != null) {
-			this.estadoCivil = pessoaFisica.getEstadoCivil().name();
-		}
-		List<PessoaDocumento> pessoaDocumentoList = pessoaFisica.getPessoaDocumentoList();
-		if (pessoaDocumentoList != null) {
-			setDocumentos(new ArrayList<PessoaDocumentoDTO>());
-			for (PessoaDocumento pessoaDocumento : pessoaDocumentoList) {
-				getDocumentos().add(new PessoaDocumentoDTO(pessoaDocumento));
-			}
-		}
-		List<MeioContato> meioContatoList = pessoaFisica.getMeioContatoList();
-		if (meioContatoList != null) {
-			setMeiosContato(new ArrayList<MeioContatoDTO>());
-			for (MeioContato meioContato : meioContatoList) {
-				getMeiosContato().add(new MeioContatoDTO(meioContato));
-			}
+		this.metodoLogin = metodoLogin(usuarioLogin.getTipoUsuario());
+		if (pessoaFisica != null){
+        		this.cpf = pessoaFisica.getCpf();
+        		if (pessoaFisica.getDataNascimento() != null) {
+        			this.dataNascimento = new SimpleDateFormat(DATE_PATTERN).format(pessoaFisica.getDataNascimento());
+        		}
+        		if (pessoaFisica.getEstadoCivil() != null) {
+        			this.estadoCivil = pessoaFisica.getEstadoCivil().name();
+        		}
+        		List<PessoaDocumento> pessoaDocumentoList = pessoaFisica.getPessoaDocumentoList();
+        		if (pessoaDocumentoList != null) {
+        			setDocumentos(new ArrayList<PessoaDocumentoDTO>());
+        			for (PessoaDocumento pessoaDocumento : pessoaDocumentoList) {
+        				getDocumentos().add(new PessoaDocumentoDTO(pessoaDocumento));
+        			}
+        		}
+        		List<MeioContato> meioContatoList = pessoaFisica.getMeioContatoList();
+        		if (meioContatoList != null) {
+        			setMeiosContato(new ArrayList<MeioContatoDTO>());
+        			for (MeioContato meioContato : meioContatoList) {
+        				getMeiosContato().add(new MeioContatoDTO(meioContato));
+        			}
+        		}
 		}
 	}
 
@@ -146,5 +153,41 @@ public class UsuarioDTO implements Serializable{
 	public void setMeiosContato(List<MeioContatoDTO> meiosContato) {
 		this.meiosContato = meiosContato;
 	}
+
+        public String getMetodoLogin() {
+        return metodoLogin;
+    }
+
+    public void setMetodoLogin(String metodoLogin) {
+        this.metodoLogin = metodoLogin;
+    }
+
+        public static UsuarioEnum metodoLogin(String string){
+            switch (string) {
+            case "CERTIFICADO":
+                return UsuarioEnum.C;
+            case "SENHA":
+                return UsuarioEnum.P;
+            case "SEM_LOGIN":
+                return UsuarioEnum.S;
+            case "SENHA_E_CERTIFICADO":
+            default:
+                return UsuarioEnum.H;
+            }
+        }
+        
+        public static String metodoLogin(UsuarioEnum usuarioEnum){
+            switch (usuarioEnum) {
+                case C:
+                    return "CERTIFICADO";
+                case P:
+                    return "SENHA";
+                case S:
+                    return "SEM_LOGIN";
+                case H:
+                default:
+                    return "SENHA_E_CERTIFICADO";
+            }
+        }
 	
 }

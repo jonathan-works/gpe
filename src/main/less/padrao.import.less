@@ -6,6 +6,7 @@
 @import "normalizacao/base.import.less";
 
 // COMPONENTES / ÁTOMOS
+@import "atomos/fieldset.import.less";
 @import "atomos/badge.import.less";
 @import "atomos/treeCategorias.import.less";
 @import "atomos/buttons.import.less";
@@ -14,6 +15,7 @@
 @import "atomos/calendar.import.less";
 @import "atomos/context-menu.import.less";
 @import "atomos/file-upload.import.less";
+@import "atomos/lista-truncada.import.less";
 @import "atomos/datatable.import.less";
 @import "atomos/dataGrid.import.less";
 @import "atomos/dataScroller.import.less";
@@ -184,8 +186,13 @@ h1 {
 }
 
 .decoration-div {
+  @decoration-div-max-width:100%;
   display: inline-block;
   vertical-align: top;
+  max-width:@decoration-div-max-width;
+  .property.field .value > * {
+    max-width:@decoration-div-max-width;
+  }
 }
 
 .activeRow {
@@ -530,10 +537,9 @@ img.disabled {
 }
 
 .lateral-editor-ajuda {
-  position: relative;
-  right: -700rem/16;
-  top: -600rem/16;
   width: 420rem/16;
+  display: inline-block;
+  vertical-align: top;
 }
 
 form {
@@ -663,3 +669,8 @@ form {
   font-family:'Roboto','Helvetica','Arial',sans-serif;
   position:relative;
 }
+
+.texto-underline {
+	text-decoration: underline;
+}
+

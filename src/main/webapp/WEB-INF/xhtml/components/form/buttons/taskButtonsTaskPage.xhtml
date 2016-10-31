@@ -48,7 +48,8 @@
             value="#{processoEpaHome.instance.prioridadeProcesso}">
             <s:selectItems value="#{prioridadeProcessoList.listAtivos()}"
                 var="p" label="#{p.descricaoPrioridade}"
-                showLabelSelecione="true" />
+                noSelectionLabel="Sem prioridade"
+                hideNoSelectionLabel="false" />
             <s:convertEntity />
         </h:selectOneMenu>
     </ui:fragment>

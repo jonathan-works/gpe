@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:wi="http://www.itx.com.br/jsf"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a="http://richfaces.org/a4j">
+
+	<!-- Documentos vinculados à comunicação -->
+	<rich:panel id="documentos" header="#{infoxMessages['comunicacao.documentosAnexados']}"
+		switchType="client" style="margin:1em 0em 1em;" bodyClass="dtable-p-b" styleClass="dtable-p full-sized"
+		rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
+			<rich:dataTable id="documentosSelecionados" styleClass="dtable rf-dt-crud"
+				value="#{envioComunicacaoController.modeloComunicacao.documentos}" var="row">
+
+				<rich:column styleClass="dt-toolbar-col"
+					rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
+					<f:facet name="header">
+						<a:commandLink id="abrirPopupAnexarDocumentos" 
+							execute="@this"	onclick="infox.showLoading();" render="documentosDisponiveisComunicacaoDiv"
+							oncomplete="infox.hideLoading(); #{rich:component('addDocumentosAnexosComunicacaoPopup')}.show();"
+							rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
+							<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}" title="#{infoxMessages['button.add']}" />
+						</a:commandLink>
+					</f:facet>
+					<a:commandLink
+						action="#{documentoComunicacaoAction.removerDocumento(row)}"
+						execute="@this" render="documentos">
+						<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="#{infoxMessages['button.delete']}" />
+					</a:commandLink>
+					<a:commandLink
+						onclick="infox.editor['comunicacao'].insertText('#{documentoComunicacaoAction.getLink(row.documento.documentoBin)}'); return false;">
+						<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/link.gif')}" title="#{infoxMessages['button.copiarLink']}" />
+					</a:commandLink>
+					<ui:include
+						src="/WEB-INF/xhtml/components/grid/processoDocumentoBin.xhtml">
+						<ui:param name="bin" value="#{row.documento.documentoBin}" />
+						<ui:param name="header" value="#{row.documento.descricao}" />
+						<ui:param name="row" value="#{row.documento}" />
+						<ui:param name="hideSignature" value="true" />
+					</ui:include>
+				</rich:column>
+
+				<wi:column hideOrder="true" columnHeader="#{infoxMessages['documentoProcesso.processoDocumento']}">
+					<div align="center">
+						<h:outputText value="#{row.documento.descricao}" style="display: block;" />
+						<ui:repeat var="marcador" value="#{row.documento.documentoBin.marcadoresList}">
+							<h:outputText value="#{marcador.codigo} " styleClass="marcadorLabel" />
+						</ui:repeat>
+					</div>
+				</wi:column>
+				<rich:column>
+					<f:facet name="header">#{infoxMessages['documentoProcesso.pastaDocumento']}</f:facet>
+					<h:outputText value="#{row.documento.pasta}" />
+				</rich:column>
+				<rich:column>
+					<f:facet name="header">#{infoxMessages['processoDocumento.classificacaoDocumento']}</f:facet>
+					<h:outputText value="#{row.documento.classificacaoDocumento.descricao}" />
+				</rich:column>
+				<rich:column>
+					<f:facet name="header">#{infoxMessages['processoDocumento.tamanho']}</f:facet>
+					<h:outputText value="#{row.documento.documentoBin.sizeFormatado}" />
+				</rich:column>
+			</rich:dataTable>
+	</rich:panel>
+	
+</ui:composition>

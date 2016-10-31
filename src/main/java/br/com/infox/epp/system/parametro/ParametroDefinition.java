@@ -9,6 +9,7 @@ import java.util.Objects;
 
 import javax.persistence.metamodel.SingularAttribute;
 
+import br.com.infox.core.type.Displayable;
 import br.com.infox.epp.FieldType;
 import br.com.infox.epp.Filter;
 
@@ -28,9 +29,10 @@ public class ParametroDefinition<T> implements Comparable<ParametroDefinition<T>
 	private final SingularAttribute<T, ?> keyAttribute;
 	private final SingularAttribute<T, ?> labelAttribute;
 	private final List<Filter<T,?>> filters;
-        private final boolean sistema;
-        private final boolean readonly;
-        private final List<Entry<String,String>> actions;
+    private final boolean sistema;
+    private final boolean readonly;
+    private final List<Entry<String,String>> actions;
+    private Enum<? extends Displayable>[] enumValues;
 
 	public ParametroDefinition(String grupo, String nome, FieldType tipo) {
 		this(grupo, nome, tipo, Precedencia.DEFAULT);
@@ -162,5 +164,12 @@ public class ParametroDefinition<T> implements Comparable<ParametroDefinition<T>
 	public List<Filter<T,?>> getFilters() {
 		return Collections.unmodifiableList(filters);
 	}
-
+	
+	public Enum<? extends Displayable>[] getEnumValues() {
+		return enumValues;
+	}
+	
+	public void setEnumValues(Enum<? extends Displayable>[] enumValues) {
+		this.enumValues = enumValues;
+	}
 }

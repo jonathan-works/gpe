@@ -34,18 +34,21 @@
                             formId="pesquisarProcessoEpaForm"
                             formTitle="#{infoxMessages['searchForm.title']}"
                             searchAction="processoEpaList.search">
-                            <div class="property-field-edit-name">
-								<h:outputLabel id="fluxoLabel" for="fluxo">
-									<h:outputText value="#{infoxMessages['processo.fluxo']}" />
-								</h:outputLabel>
-							</div>
-                            <p:autoComplete	id="fluxo" value="#{processoEpaList.fluxo}" scrollHeight="300"
-								completeMethod="#{consultaProcessoDynamicColumnsController.getFluxos}" forceSelection="true"
-								var="item" itemLabel="#{item.fluxo}" itemValue="#{item}" converter="br.com.infox.jsf.converter.EntityConverter"
-								minQueryLength="3" dropdown="true">
-								<p:ajax event="itemSelect" process="@this" update="processoEpaContentPanel" onstart="infox.showLoading();" oncomplete="infox.hideLoading();"/>
-							</p:autoComplete>
-                            <div />
+							<p:outputPanel rendered="#{consultaProcessoDynamicColumnsController.showComboFluxo()}">
+								<div class="property-field-edit-name">
+									<h:outputLabel id="fluxoLabel" for="fluxo">
+										<h:outputText value="#{infoxMessages['processo.fluxo']}" />
+									</h:outputLabel>
+								</div>
+								<p:autoComplete id="fluxo" value="#{processoEpaList.fluxo}" scrollHeight="300"
+									completeMethod="#{consultaProcessoDynamicColumnsController.getFluxos}"
+									forceSelection="true" var="item" itemLabel="#{item.fluxo}" itemValue="#{item}"
+									converter="br.com.infox.jsf.converter.EntityConverter" minQueryLength="3" dropdown="true">
+									<p:ajax event="itemSelect" process="@this" update="processoEpaContentPanel"
+										onstart="infox.showLoading();" oncomplete="infox.hideLoading();" />
+								</p:autoComplete>
+							</p:outputPanel>
+							<div />
                             <wi:inputText
                                 id="numeroProcesso"
                                 label="#{infoxMessages['processoEpa.numeroProcesso']}"
@@ -112,11 +115,14 @@
                     </ui:define>
                     <ui:define name="headerToolBar" />
                     <ui:define name="toolBar">
-                        <wi:toolBar
-                            url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
-                            title="#{infoxMessages['button.selecionar']}"
-                            action="#{processoSearcher.visualizarProcesso(row)}">
-                        </wi:toolBar>
+                          <h:commandLink
+	                    	id="visualizaProcessoLink"
+	                        action="/Processo/Consulta/list.seam">
+	                        <f:setPropertyActionListener value="#{row.idProcesso}" target="#{consultaController.id}" />
+	                        <f:setPropertyActionListener value="#{row.idJbpm}" target="#{org.jboss.seam.bpm.businessProcess.processId}" />
+	                        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['button.selecionar']}"/>
+	                        <f:ajax execute="@this" render="@this"/>
+	                    </h:commandLink>
                         <a:commandLink
                             id="setPrioridadeLink"
                             rendered="#{security.checkPage('/pages/Processo/Consulta/setPrioridadeProcesso')}"
@@ -158,6 +164,7 @@
                     <wi:selectOneMenuEntity
                         id="selectPrioridade"
                         value="#{prioridadeProcessoChanger.prioridadeProcesso}"
+                        hideNoSelectionLabel="false"
                         styleClass="PaletteMenu">
                         <f:selectItems value="#{prioridadeProcessoList.listAtivos()}" />
                     </wi:selectOneMenuEntity>

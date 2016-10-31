@@ -42,7 +42,11 @@ public class VariableTypeResolver implements Serializable {
             buildVariableInfoMap();
         }
     }
-    
+
+    public ProcessInstance getProcessInstance() {
+        return processInstance;
+    }
+
     public void setProcessInstance(ProcessInstance processInstance) {
         this.processInstance = processInstance;
         buildVariableInfoMap();

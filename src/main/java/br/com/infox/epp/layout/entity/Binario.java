@@ -1,7 +1,5 @@
 package br.com.infox.epp.layout.entity;
 
-import java.sql.Blob;
-
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;

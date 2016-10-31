@@ -14,24 +14,26 @@
       <wi:dataForm
         formId="ajudaForm"
         formTitle="#{infoxMessages['ajuda.text']}">
-        <wi:editor
-          id="texto"
-          label="#{infoxMessages['ajuda.text']}"
-          width="660"
-          height="450"
-          value="#{ajudaCrudAction.instance.texto}">
-          <f:converter converterId="internalLinkHelpEditorConverter" />
-        </wi:editor>
-        <div />
-        <wi:commandButton
-          id="ajudaPersistButton"
-          action="ajudaCrudAction.save"
-          value="#{infoxMessages['crud.update']}"
-          reRender="gridAjuda, formAjudaDialogMessage"
-          oncomplete="opener.refreshPage(#{ajudaCrudAction.oldInstanceId})">
-        </wi:commandButton>
-        <ui:define name="buttons">
-        </ui:define>
+        <div style="display: inline-block;">
+            <wi:editor
+              id="texto"
+              label="#{infoxMessages['ajuda.text']}"
+              width="660"
+              height="450"
+              value="#{ajudaCrudAction.instance.texto}">
+              <f:converter converterId="internalLinkHelpEditorConverter" />
+            </wi:editor>
+            <div />
+            <wi:commandButton
+              id="ajudaPersistButton"
+              action="ajudaCrudAction.save"
+              value="#{infoxMessages['crud.update']}"
+              reRender="gridAjuda, formAjudaDialogMessage"
+              oncomplete="opener.refreshPage(#{ajudaCrudAction.oldInstanceId})">
+            </wi:commandButton>
+            <ui:define name="buttons">
+            </ui:define>
+        </div>
         <s:div styleClass="lateral-editor-ajuda">
           <wi:imageUpload imageBean="#{helpFileUploader}" editorId="texto" useBase64="true" />
           <s:div

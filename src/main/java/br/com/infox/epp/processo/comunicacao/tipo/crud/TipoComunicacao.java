@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,6 +21,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
@@ -41,12 +44,22 @@ public class TipoComunicacao implements Serializable {
     @NotNull
     @Column(name = "ds_tipo_comunicacao", nullable = false, length = LengthConstants.DESCRICAO_MEDIA, unique = true)
     private String descricao;
+    
+    @NotNull
+    @Size(min = 1, max = 150)
+    @Column(name = "cd_tipo_comunicacao", nullable = false, length = 150, unique = true)
+    private String codigo;
 
 	@Min(0)
     @NotNull
     @Column(name = "nr_dias_prazo_ciencia", nullable = false)
     private Integer quantidadeDiasCiencia;
     
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tp_uso_comunicacao", nullable = false)
+    private TipoUsoComunicacaoEnum tipoUsoComunicacao = TipoUsoComunicacaoEnum.A;
+	
     @NotNull
     @Column(name = "in_ativo", nullable = false)
     private Boolean ativo;
@@ -82,7 +95,15 @@ public class TipoComunicacao implements Serializable {
         this.descricao = descricao;
     }
 
-    public Integer getQuantidadeDiasCiencia() {
+    public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+
+	public Integer getQuantidadeDiasCiencia() {
         return quantidadeDiasCiencia;
     }
 
@@ -90,7 +111,15 @@ public class TipoComunicacao implements Serializable {
         this.quantidadeDiasCiencia = quantidadeDiasCiencia;
     }
     
-    public Boolean getAtivo() {
+	public TipoUsoComunicacaoEnum getTipoUsoComunicacao() {
+		return tipoUsoComunicacao;
+	}
+
+	public void setTipoUsoComunicacao(TipoUsoComunicacaoEnum tipoUsoComunicacao) {
+		this.tipoUsoComunicacao = tipoUsoComunicacao;
+	}
+
+	public Boolean getAtivo() {
         return ativo;
     }
     

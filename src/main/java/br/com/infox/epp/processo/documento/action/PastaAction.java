@@ -70,6 +70,9 @@ public class PastaAction implements Serializable {
         documentoList.selectPasta(pasta);
         setInstance(pasta);
         setShowGrid(true);
+        for (Documento documento : documentoList.list(15)) {
+            documentoProcessoAction.deveMostrarCadeado(documento);
+        }
     }
     
     public void associaDocumento(DropEvent evt) {
@@ -85,6 +88,7 @@ public class PastaAction implements Serializable {
                 documentoManager.update(doc);
                 pastaManager.refresh(pasta);
                 pastaManager.refresh(pastaAnterior);
+                documentoList.refresh();
             } catch (DAOException e) {
                 actionMessagesService.handleDAOException(e);
             }

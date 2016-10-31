@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.jboss.seam.core.Expressions;
 import org.jbpm.context.def.VariableAccess;
+import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.ProcessDefinition;
 
 import br.com.infox.epp.cdi.config.BeanManager;
@@ -106,6 +107,11 @@ public class StartFormDataImpl extends AbstractFormData implements StartFormData
 
     public VariavelInicioProcessoService getVariavelService() {
         return BeanManager.INSTANCE.getReference(VariavelInicioProcessoService.class);
+    }
+
+    @Override
+    public Node getNode() {
+        return getProcessDefinition().getStartState();
     }
 
 }

@@ -131,7 +131,7 @@ public abstract class JpaQuery<E> implements Serializable {
 
 	private void setParameters(Query query) {
 		for (RestrictionField restriction : restrictionsParams.keySet()) {
-			query.setParameter(getFieldName(restriction.getName()), restrictionsParams.get(restriction));
+			query.setParameter(getParameterName(restriction.getName()), restrictionsParams.get(restriction));
 		}
 	}
 	
@@ -143,6 +143,14 @@ public abstract class JpaQuery<E> implements Serializable {
 		}
 	}
 	
+	private String getParameterName(String value) {
+		String parameterName = getFieldName(value);
+		if(parameterName.contains("[")) {
+			parameterName = parameterName.replaceAll("[\\[\\]\"']", "");
+		}
+		return parameterName;
+	}
+	
 	private void parseEjbql(String queryString) {
 		boolean first = true;
 		boolean hasWhereClause = getDefaultWhere() != null;
@@ -150,7 +158,8 @@ public abstract class JpaQuery<E> implements Serializable {
 		if (hasWhereClause) sb.append(" ").append(getDefaultWhere());
 		for (RestrictionField fieldFilter : restrictionsParams.keySet()){
 			sb.append(hasWhereClause ? " and " : (first ? " where " : " and "));
-			sb.append(fieldFilter.getExpression().replace(getEl(fieldFilter.getExpression()), ":"+getFieldName(fieldFilter.getName())));
+			String parameterName = getParameterName(fieldFilter.getName());
+			sb.append(fieldFilter.getExpression().replace(getEl(fieldFilter.getExpression()), ":"+ parameterName));
 			first = false;
 		}
 		addAdditionalClauses(sb);

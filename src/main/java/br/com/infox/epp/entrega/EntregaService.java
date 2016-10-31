@@ -58,6 +58,8 @@ public class EntregaService {
 	public void gerarCertidao(Entrega entrega, Map<String, String> mapaEL) {
 		byte[] pdf = gerarPdfCertidao(entrega, mapaEL);
 		DocumentoBin documentoBin = documentoBinManager.createProcessoDocumentoBin("Certidão Entrega.pdf", pdf, "pdf");
+		documentoBin.setSuficientementeAssinado(Boolean.TRUE);
+		documentoBin.setMinuta(Boolean.FALSE);
 		documentoBin = documentoBinManager.createProcessoDocumentoBin(documentoBin);
 		getEntityManager().flush();
 		entrega.setCertidaoEntrega(documentoBin);

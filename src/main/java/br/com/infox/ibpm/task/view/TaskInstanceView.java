@@ -3,11 +3,14 @@ package br.com.infox.ibpm.task.view;
 import static br.com.infox.ibpm.process.definition.variable.constants.VariableConstants.DEFAULT_PATH;
 import static java.text.MessageFormat.format;
 
+import java.io.File;
 import java.io.Serializable;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import org.jboss.seam.Component;
@@ -20,6 +23,7 @@ import org.jbpm.context.def.VariableAccess;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import br.com.infox.core.util.FileUtil;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
@@ -91,6 +95,10 @@ public class TaskInstanceView implements Serializable {
                     if (VariableType.TASK_PAGE.equals(type)){
                         continue;
                     }
+                    Object value = taskInstance.getVariable(var.getVariableName());
+                    if(value == null) {
+                    	continue;
+                    }
                     String name = tokens[1];
                     FormField ff = new FormField();
                     ff.setFormId(form.getFormId());
@@ -99,7 +107,6 @@ public class TaskInstanceView implements Serializable {
                     ff.setRequired(var.isRequired() + "");
                     String label = JbpmUtil.instance().getMessages().get(taskInstance.getProcessInstance().getProcessDefinition().getName() + ":" + name);
                     ff.setLabel(label);
-                    Object value = taskInstance.getVariable(var.getVariableName());
                     Map<String, Object> properties = ff.getProperties();
 
                     properties.put("pagePath", type.getPath());
@@ -152,12 +159,23 @@ public class TaskInstanceView implements Serializable {
                                 Documento documento = documentoManager().find(value);
                                 ff.setValue(documento.getDescricao());
                                 ff.getProperties().put("classificacaoDocumento", documento.getClassificacaoDocumento().getDescricao());
-                            } else {
-                                ff.setValue("(sem anexo)");
-                                ff.getProperties().put("classificacaoDocumento", "(sem anexo)");
                             }
                         }
                         break;
+                        case FRAME:
+                            String url = format("/{0}.{1}", name.replaceAll("_", "/"), "xhtml");
+                            String framePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath(url);
+                            File file = new File(framePath);
+                            if (!file.exists()) {
+                                String containerPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("");
+                                Path findFirst = FileUtil.findFirst(containerPath + "/WEB-INF", "**" + url);
+                                if (findFirst != null) {
+                                    url = findFirst.toString().replace(containerPath.toString(), "");
+                                }
+                            }
+                            ff.getProperties().put("urlFrame", url);
+                            ff.setType(type.name());
+                            break;
                         case FRAGMENT:{
                             ff.setType(type.name());
                         ff.setValue(value);
@@ -178,17 +196,13 @@ public class TaskInstanceView implements Serializable {
                     }
                     
                     properties.put("readonly", !var.isWritable());
-                    if (value == null && !var.isWritable()
-                            && VariableType.EDITOR.equals(type)) {
-                        properties.put("rendered", false);
-                    }
                     form.getFields().add(ff);
                 }
             }
         }
         return form;
     }
-
+    
     private void getTaskInstance() {
         TaskInstance newInstance = org.jboss.seam.bpm.TaskInstance.instance();
         if (newInstance == null || !newInstance.equals(taskInstance)) {

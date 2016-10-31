@@ -1,8 +1,12 @@
 package br.com.infox.epp.system;
 
+import static br.com.infox.epp.FieldType.SELECT_ONE;
+import static br.com.infox.epp.Filter.isTrue;
+
 import org.jboss.seam.contexts.Contexts;
 
 import br.com.infox.epp.FieldType;
+import br.com.infox.epp.documento.entity.ModeloDocumento_;
 import br.com.infox.epp.system.parametro.ParametroDefinition;
 
 public enum Parametros {
@@ -16,6 +20,7 @@ public enum Parametros {
     PASTA_DOCUMENTO_GERADO("pastaDocumentoGerado"),
     RAIZ_LOCALIZACOES_COMUNICACAO("raizLocalizacoesComunicacao"),
     RAIZ_LOCALIZACOES_COMUNICACAO_INTERNA("raizLocalizacoesComunicacaoInterna"),
+    RAIZ_LOCALIZACOES_ASSINATURA_COMUNICACAO("codigoRaizResponsavelAssinaturaLocalizacao"),
     CODIGO_FLUXO_COMUNICACAO_ELETRONICA("codigoFluxoComunicacao"),
     CODIGO_FLUXO_COMUNICACAO_NAO_ELETRONICA("codigoFluxoComunicacaoNaoEletronico"),
     CODIGO_FLUXO_DOCUMENTO("codigoFluxoDocumento"),
@@ -31,11 +36,21 @@ public enum Parametros {
     CODIGO_UF_SISTEMA("codigoUnidadeFederativaSistema"),
     EPP_API_RSA_PRIVATE_KEY("controleAcesso","eppApiPrivateKey"),
     EPP_API_RSA_PUBLIC_KEY("controleAcesso","eppApiPublicKey"),
-    ATIVAR_MASSIVE_REINDEX("ativarMassiveReindex");
+    ATIVAR_MASSIVE_REINDEX("ativarMassiveReindex"),
+    TERMO_ADESAO(new ParametroDefinition<>("controleAcesso", "termoAdesao", SELECT_ONE, ModeloDocumento_.tituloModeloDocumento, ModeloDocumento_.tituloModeloDocumento)
+            .addFilter(isTrue(ModeloDocumento_.ativo))),
+    REST_THREAD_POOL_EXECUTOR_MAXIMUM_POOL_SIZE("restPublicApi", "restThreadPoolExecutorMaximumPoolSize"),
+    REST_THREAD_POOL_EXECUTOR_CORE_POOL_SIZE("restPublicApi", "restThreadPoolExecutorCorePoolSize", true),
+    REST_THREAD_POOL_EXECUTOR_KEEP_ALIVE_TIME("restPublicApi", "restThreadPoolExecutorKeepAliveTime", true),
+    PRODUCAO("producao");
 
     private final String label;
     private final ParametroDefinition<?> parametroDefinition;
 
+    private Parametros(String grupo, String nome, boolean sistema){
+        this(new ParametroDefinition<>(grupo, nome, FieldType.STRING, sistema, false));
+        
+    }
     private Parametros(String grupo, String nome){
         this(new ParametroDefinition<>(grupo, nome, FieldType.STRING));
     }

@@ -1,17 +1,18 @@
 package br.com.infox.hibernate.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Properties;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.dialect.Dialect;
+import org.hibernate.dialect.function.SQLFunction;
 import org.hibernate.ejb.EntityManagerFactoryImpl;
 import org.hibernate.engine.spi.TypedValue;
 import org.hibernate.internal.QueryImpl;
@@ -21,10 +22,9 @@ import org.hibernate.proxy.HibernateProxy;
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.util.ReflectionsUtil;
 import br.com.infox.epp.cdi.config.BeanManager;
+import br.com.infox.hibernate.oracle.dialect.InfoxOracleDialect;
 
 public final class HibernateUtil {
-
-	private static final Logger LOGGER = Logger.getLogger(HibernateUtil.class.getName());
 
 	private HibernateUtil() {
 	}
@@ -41,28 +41,14 @@ public final class HibernateUtil {
 	}
 
 	public static Dialect getDialect() {
-		Class<? extends Dialect> dialectClass = getDialectClass();
-		if (dialectClass == null)
-			return null;
-		try {
-			return dialectClass.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			LOGGER.log(Level.SEVERE, "", e);
-			return null;
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	public static Class<? extends Dialect> getDialectClass() {
 		EntityManager em = EntityManagerProducer.getEntityManager();
-		EntityManagerFactory emf = em.getEntityManagerFactory();
-		String dialectClassName = (String) emf.getProperties().get("hibernate.dialect");
-		try {
-			return (Class<? extends Dialect>) Class.forName(dialectClassName);
-		} catch (ClassNotFoundException e) {
-			LOGGER.log(Level.SEVERE, "", e);
-		}
-		return null;
+		return getDialect(em);
+	}
+	
+	public static Dialect getDialect(EntityManager entityManager) {
+		Properties properties = new Properties();
+		properties.putAll(entityManager.getEntityManagerFactory().getProperties());
+    	return Dialect.getDialect(properties);
 	}
 
 	public static void enableCache(Query query) {
@@ -101,6 +87,27 @@ public final class HibernateUtil {
 		// HibernateProxyHelper.getClassWithoutInitializingProxy(entity);
 		// Inicializa o proxy, mas reconhece heranças corretamente
 		return Hibernate.getClass(entity);
+	}
+	
+	public static Query createCallFunctionQuery(String functionName, List<Object> arguments, EntityManager entityManager) {
+		Map<String, Object> namedParameters =  new HashMap<>();
+		List<String> stringNamedParameters = new ArrayList<>();
+		for (int index = 0 ; index < arguments.size() ; index++) {
+			String argName = "arg" + index;
+			stringNamedParameters.add(":" + argName);
+			namedParameters.put(argName, arguments.get(index)); 
+		}
+    	Dialect dialect = getDialect(entityManager);
+    	SQLFunction sqlFunction = dialect.getFunctions().get(functionName.toLowerCase());
+    	String nativeQuery = "select " + sqlFunction.render(null, stringNamedParameters, HibernateUtil.getSessionFactoryImpl());
+		if (dialect instanceof InfoxOracleDialect) {
+			nativeQuery += " from dual";
+		}
+		Query query = entityManager.createNativeQuery(nativeQuery);
+		for (Map.Entry<String, Object> namedParam : namedParameters.entrySet()) {
+			query.setParameter(namedParam.getKey(), namedParam.getValue());
+		}
+		return query;
 	}
 
 }

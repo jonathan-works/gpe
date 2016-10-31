@@ -13,6 +13,18 @@ import javax.ejb.TransactionAttributeType;
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class DefinicaoVariavelProcessoRecursos {
 
+	protected static class ComparatorRecursoVariavel implements Comparator<RecursoVariavel> {
+
+		public ComparatorRecursoVariavel() {
+		}
+		
+		@Override
+		public int compare(RecursoVariavel o1, RecursoVariavel o2) {
+			return o1.getIdentificador().compareToIgnoreCase(o2.getIdentificador());
+		}
+		
+	}
+	
 	public List<RecursoVariavel> getRecursosDisponiveis() {
 		List<RecursoVariavel> recursos = new ArrayList<>();
 		recursos.add(CONSULTA_PROCESSOS);
@@ -21,12 +33,7 @@ public class DefinicaoVariavelProcessoRecursos {
 		recursos.add(PAINEL_INTERNO);
 		recursos.add(CONSULTA_EXTERNA);
 		
-		Collections.sort(recursos, new Comparator<RecursoVariavel>() {
-			@Override
-			public int compare(RecursoVariavel o1, RecursoVariavel o2) {
-				return o1.getIdentificador().compareToIgnoreCase(o2.getIdentificador());
-			}
-		});
+		Collections.sort(recursos, new ComparatorRecursoVariavel());
 		
 		return recursos;
 	}

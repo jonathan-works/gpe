@@ -8,5 +8,5 @@ public interface PrioridadeProcessoQuery {
     String COLUMN_NR_PESO = "nr_peso";
 
     String NAMED_QUERY_PRIORIDADES_ATIVAS = "PrioridadeProcesso.prioridadesAtivas";
-    String QUERY_PRIORIDADES_ATIVAS = "select o from PrioridadeProcesso o where o.ativo = true order by o.peso";
+    String QUERY_PRIORIDADES_ATIVAS = "select o from PrioridadeProcesso o where o.ativo = true order by o.peso desc";
 }

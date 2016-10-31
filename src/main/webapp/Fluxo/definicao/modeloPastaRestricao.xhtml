@@ -20,6 +20,8 @@
                 
             <wi:inputText id="nome" value="#{modeloPastaList.entity.nome}"
                 label="#{infoxMessages['modeloPasta.nome']}" />
+            <wi:inputText id="codigo" value="#{modeloPastaList.entity.codigo}"
+                label="#{infoxMessages['modeloPasta.codigo']}" />
             <wi:inputText id="descricao" value="#{modeloPastaList.entity.descricao}"
                 label="#{infoxMessages['modeloPasta.descricao']}" />
             <div />
@@ -68,6 +70,9 @@
         <wi:columnOutputText columnId="nome"
             columnHeader="#{infoxMessages['modeloPasta.nome']}"
             value="#{row.nome}" />
+        <wi:columnOutputText columnId="codigo"
+            columnHeader="#{infoxMessages['modeloPasta.codigo']}"
+            value="#{row.codigo}" />
         <wi:columnOutputText columnId="descricao"
             columnHeader="#{infoxMessages['modeloPasta.descricao']}"
             value="#{row.descricao}" />
@@ -106,6 +111,15 @@
 		          	required="true" maxlength="250"
 		        	label="#{infoxMessages['modeloPasta.nome']}">
                     <f:validator validatorId="nomeModeloPastaValidator" />
+                    <f:attribute name="idFluxo" value="#{modeloPastaRestricaoAction.fluxo.idFluxo}" />
+                    <f:attribute name="idModeloPasta" value="#{modeloPastaRestricaoAction.instance.id}" />
+		        </wi:inputText>
+		        <wi:inputText
+		          	id="editModeloPastaInputCodigo"
+		          	value="#{modeloPastaRestricaoAction.instance.codigo}"
+		          	required="true" maxlength="250"
+		        	label="#{infoxMessages['modeloPasta.codigo']}">
+		        	<f:validator validatorId="codigoModeloPastaValidator" />
                     <f:attribute name="idFluxo" value="#{modeloPastaRestricaoAction.fluxo.idFluxo}" />
                     <f:attribute name="idModeloPasta" value="#{modeloPastaRestricaoAction.instance.id}" />
 		        </wi:inputText>

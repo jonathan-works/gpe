@@ -139,7 +139,7 @@ public class AnalisarPedidoProrrogacaoPrazoAction implements Serializable {
 	}
 		
 	public String getMeioExpedicao() {
-		return destinatarioComunicacao.getMeioExpedicao().getLabel();
+		return destinatarioComunicacao.getMeioExpedicao().getDescricao();
 	}
 	
 	public Date getDataFimPrazoCumprimento() {

@@ -32,6 +32,6 @@ public interface ModeloDocumentoQuery {
     String MODELO_BY_LISTA_IDS = "listModelosByListaIdsModelo";
     String MODELO_BY_LISTA_IDS_QUERY = "select o from ModeloDocumento o "
             + "where o.idModeloDocumento in (:" + PARAM_LISTA_IDS
-            + ") order by modeloDocumento";
+            + ") ";
 
 }

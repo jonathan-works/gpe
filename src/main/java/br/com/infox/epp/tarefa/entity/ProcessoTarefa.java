@@ -8,6 +8,8 @@ import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.FORA_PRAZO_TAREF
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.FORA_PRAZO_TAREFA_QUERY;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.GET_PROCESSO_TAREFA_BY_TASKINSTNACE;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.GET_PROCESSO_TAREFA_BY_TASKINSTNACE_QUERY;
+import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PROCESSO_TAREFA_ABERTO;
+import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PROCESSO_TAREFA_ABERTO_QUERY;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PROCESSO_TAREFA_BY_ID_PROCESSO_AND_ID_TAREFA;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PROCESSO_TAREFA_BY_ID_PROCESSO_AND_ID_TAREFA_QUERY;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.TAREFA_COM_EXPIRACAO;
@@ -18,8 +20,6 @@ import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.TAREFA_NOT_ENDED
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.TAREFA_NOT_ENDED_BY_TIPO_PRAZO_QUERY;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.TAREFA_PROXIMA_LIMITE;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.TAREFA_PROXIMA_LIMITE_QUERY;
-import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PROCESSO_TAREFA_ABERTO;
-import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PROCESSO_TAREFA_ABERTO_QUERY;
 
 import java.io.Serializable;
 import java.util.Date;

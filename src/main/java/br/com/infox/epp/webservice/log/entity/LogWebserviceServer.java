@@ -45,15 +45,15 @@ public class LogWebserviceServer implements Serializable {
 	@Size(max=50)
 	private String mensagemRetorno;
 	
-	@Column(name="cd_webservice", nullable=false)
+	@Column(name="cd_webservice", nullable=true)
 	@Size(max=10)
 	private String webService;
 	
-	@Column(name="vl_token", nullable=false)
+	@Column(name="vl_token", nullable=true)
 	@Size(max=30)
 	private String token;
 	
-	@Column(name="ds_requisicao", nullable=false)
+	@Column(name="ds_requisicao", nullable=true)
 	@Basic(fetch=FetchType.LAZY)
 	private String requisicao;
 

@@ -1,16 +1,14 @@
 package br.com.infox.epp.processo.comunicacao.envio.action;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.Remove;
-import javax.ejb.Stateful;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.OptimisticLockException;
 
@@ -28,48 +26,63 @@ import br.com.infox.certificado.bean.CertificateSignatureBundleBean;
 import br.com.infox.certificado.bean.CertificateSignatureBundleStatus;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.action.ActionMessagesService;
+import br.com.infox.core.exception.EppConfigurationException;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
-import br.com.infox.epp.access.component.tree.LocalizacaoSubTreeHandler;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.LocalizacaoManager;
+import br.com.infox.epp.access.manager.PerfilTemplateManager;
 import br.com.infox.epp.cdi.ViewScoped;
+import br.com.infox.epp.cdi.transaction.Transactional;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
+import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
+import br.com.infox.epp.localizacao.LocalizacaoSearch;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
-import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacaoManager;
+import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacaoSearch;
+import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoUsoComunicacaoEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.system.Parametros;
+import br.com.infox.epp.usuario.UsuarioLoginSearch;
 import br.com.infox.ibpm.util.JbpmUtil;
+import br.com.infox.ibpm.variable.Taskpage;
+import br.com.infox.ibpm.variable.TaskpageParameter;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
 import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.util.ComponentUtil;
 
 @Named(EnvioComunicacaoController.NAME)
-@Stateful
 @ViewScoped
-@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+@Taskpage(name = "enviarComunicacao", description = "enviarComunicacao.description")
 public class EnvioComunicacaoController implements Serializable {
 	
 	public static final String NAME = "envioComunicacaoController";
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(EnvioComunicacaoController.class);
+	public static final int MAX_RESULTS = 10;
+	private static final TipoUsoComunicacaoEnum TIPO = TipoUsoComunicacaoEnum.E;
+	//Parametros disponíveis para configuração da página de tarefa
+	private static final String CODIGO_TIPO_COMUNICACAO = "tipoComunicacao";
+	private static final String PRAZO_PRADRAO_RESPOSTA = "prazoPradraoResposta";
+	private static final String CODIGO_LOCALIZACAO_ASSINATURA = "localizacaoAssinaturaComunicacao";
+	private static final String CODIGO_PERFIL_ASSINATURA = "perfilAssinatura";
+	private static final String EM_ELABORACAO = "emElaboracao";
+	private static final String EXIBIR_TRANSICOES = "exibirTransicoes";
+	private static final String EXIBIR_RESPONSAVEIS_ASSINATURA = "exibirResponsavelAssinatura";
 	
-	private TipoComunicacaoManager tipoComunicacaoManager = ComponentUtil.getComponent(TipoComunicacaoManager.NAME);
-	private LocalizacaoSubTreeHandler localizacaoSubTree = ComponentUtil.getComponent(LocalizacaoSubTreeHandler.NAME);
 	private AssinaturaDocumentoService assinaturaDocumentoService = ComponentUtil.getComponent(AssinaturaDocumentoService.NAME);
 	private CertificateSignatures certificateSignatures = ComponentUtil.getComponent(CertificateSignatures.NAME);
 	
@@ -87,14 +100,35 @@ public class EnvioComunicacaoController implements Serializable {
 	protected LocalizacaoManager localizacaoManager;
 	@Inject
 	private ActionMessagesService actionMessagesService;
+	@Inject
+	private LocalizacaoSearch localizacaoSearch;
+	@Inject
+	private UsuarioLoginSearch usuarioLoginSearch;
+	@Inject
+	private TipoComunicacaoSearch tipoComunicacaoSearch;
+	@Inject
+	private PerfilTemplateManager perfilTemplateManager;
+	@Inject
+	private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
 	
 	private String raizLocalizacoesComunicacao = Parametros.RAIZ_LOCALIZACOES_COMUNICACAO.getValue();
 	private Localizacao localizacaoRaizComunicacao;
-	
-	private ModeloComunicacao modeloComunicacao;
+	private Localizacao localizacaoRaizAssinaturaComunicacao;
 	private Long processInstanceId;
-	
+	@TaskpageParameter(name = PRAZO_PRADRAO_RESPOSTA, type="Integer", description = "enviarComunicacao.parameter.prazo")
+	private Integer prazoDefaultComunicacao = null;
+	@TaskpageParameter(name = CODIGO_LOCALIZACAO_ASSINATURA, type="String", description = "enviarComunicacao.parameter.codLocalizacaoAssinatura")
+    private Localizacao localizacaoAssinatura;
+	@TaskpageParameter(name = CODIGO_PERFIL_ASSINATURA, type="String", description = "enviarComunicacao.parameter.codPerfilAssinatura")
+    private PerfilTemplate perfilAssinatura;
+	@TaskpageParameter(name = CODIGO_TIPO_COMUNICACAO, description = "enviarComunicacao.parameter.tipoComunicacao")
 	private List<TipoComunicacao> tiposComunicacao;
+	@TaskpageParameter(name = EM_ELABORACAO, type="Boolean", description = "enviarComunicacao.parameter.emElaboracao")
+	private ModeloComunicacao modeloComunicacao;
+	@TaskpageParameter(name = EXIBIR_TRANSICOES, type="Boolean", description = "enviarComunicacao.parameter.exibirTransicoes")
+	private boolean exibirTransicoes = false;
+	@TaskpageParameter(name = EXIBIR_RESPONSAVEIS_ASSINATURA, type = "Boolean", description = "enviarComunicacao.parameter.exibirResponsavelAssinatura")
+	private boolean exibirResponsaveisAssinatura = true;
 	
 	private boolean finalizada;
 	private String token;
@@ -105,6 +139,7 @@ public class EnvioComunicacaoController implements Serializable {
 	private boolean minuta;
 	private String idModeloComunicacaoVariableName;
 	private boolean isNew = true;
+	private boolean existeUsuarioLocalizacaoAssinatura = true;
 	
 	@PostConstruct
 	public void init() {
@@ -121,13 +156,63 @@ public class EnvioComunicacaoController implements Serializable {
 			idModeloComunicacaoVariableName = "idModeloComunicacao-" + taskInstance.getId();
 		}
 		initModelo(idModelo == null ? null : Long.valueOf(idModelo));
+		initParametros();
 		clear();
 	}
-	
-	@Remove
-	public void destroy(){
-		
-	}
+
+    private void initParametros() {
+        if (inTask) {
+            String tipoComunicacaoCodigo = (String) TaskInstance.instance().getVariable(CODIGO_TIPO_COMUNICACAO);
+            if (!Strings.isNullOrEmpty(tipoComunicacaoCodigo)) {
+                TipoComunicacao tipoComunicacao = tipoComunicacaoSearch.getTiposComunicacaoAtivosByCodigo(tipoComunicacaoCodigo, TIPO);
+                if (tipoComunicacao == null) {
+                    throw new EppConfigurationException("O Tipo de Comunicação não foi definido com um valor válido.");
+                } else {
+                    tiposComunicacao = new ArrayList<>(1);
+                    tiposComunicacao.add(tipoComunicacao);
+                    modeloComunicacao.setTipoComunicacao(tipoComunicacao);
+                }
+            }
+
+            String prazo = (String) TaskInstance.instance().getVariable(PRAZO_PRADRAO_RESPOSTA);
+            if (!Strings.isNullOrEmpty(prazo)) {
+                try {
+                    prazoDefaultComunicacao = new Integer(prazo);
+                } catch (NumberFormatException e) {
+                    throw new EppConfigurationException("O prazo de resposta padrão sugerido não foi definido com um valor válido.");
+                }
+            }
+
+            String codigoLocalizacaoAssinatura = (String) TaskInstance.instance().getVariable(CODIGO_LOCALIZACAO_ASSINATURA);
+            if (!Strings.isNullOrEmpty(codigoLocalizacaoAssinatura)) {
+                try {
+                    localizacaoAssinatura = localizacaoSearch.getLocalizacaoByCodigo(codigoLocalizacaoAssinatura);
+                    getModeloComunicacao().setLocalizacaoResponsavelAssinatura(localizacaoAssinatura);
+                } catch (NoResultException e) {
+                    throw new EppConfigurationException("A localização para assinatura não foi definida com um valor válido");
+                }
+            }
+
+            String codigoPerfilTemplateAssinatura = (String) TaskInstance.instance().getVariable(CODIGO_PERFIL_ASSINATURA);
+            if (!Strings.isNullOrEmpty(codigoPerfilTemplateAssinatura)) {
+                perfilAssinatura = perfilTemplateManager.getPerfilTemplateByCodigo(codigoPerfilTemplateAssinatura);
+                if (perfilAssinatura == null) {
+                    throw new EppConfigurationException("O perfil para assinatura não foi definida com um valor válido");
+                }
+                getModeloComunicacao().setPerfilResponsavelAssinatura(perfilAssinatura);
+            }
+            
+            Boolean exibirTransicoes = (Boolean) TaskInstance.instance().getVariable(EXIBIR_TRANSICOES);
+            if (exibirTransicoes != null && exibirTransicoes) {
+                this.exibirTransicoes = true;
+            }
+            
+            Boolean exibirResponsavelAssinatura = (Boolean) TaskInstance.instance().getVariable(EXIBIR_RESPONSAVEIS_ASSINATURA);
+            if (exibirResponsavelAssinatura != null && !exibirResponsavelAssinatura) {
+                this.exibirResponsaveisAssinatura = false;
+            }
+        }
+    }
 
 	private void initDocumentoComunicacaoAction() {
 		documentoComunicacaoAction.setModeloComunicacao(modeloComunicacao);
@@ -136,37 +221,53 @@ public class EnvioComunicacaoController implements Serializable {
 	
 	private void initDestinatarioComunicacaoAction() {
 		destinatarioComunicacaoAction.setModeloComunicacao(modeloComunicacao);
-		destinatarioComunicacaoAction.init();		
+		destinatarioComunicacaoAction.init(getLocalizacaoRaizComunicacao(), prazoDefaultComunicacao, perfilAssinatura);		
 	}
 	
 	private void initLocalizacaoRaiz() {
 		try {
 			localizacaoRaizComunicacao = localizacaoManager.getLocalizacaoByNome(raizLocalizacoesComunicacao);
-			if (localizacaoRaizComunicacao != null) {
-				localizacaoSubTree.setIdLocalizacaoPai(localizacaoRaizComunicacao.getIdLocalizacao());
-			} else {
-				FacesMessages.instance().add("O parâmetro raizLocalizacoesComunicacao não foi definido.");
+			if (localizacaoRaizComunicacao == null) {
+			    throw new EppConfigurationException("O parâmetro raizLocalizacoesComunicacao não foi definido.");
 			}
 		} catch (DAOException e) {
 			LOG.error("", e);
 			if (e.getCause() instanceof NonUniqueResultException) {
-				FacesMessages.instance().add("Existe mais de uma localização com o nome definido no parâmetro raizLocalizacoesComunicacao: " + raizLocalizacoesComunicacao);
+			    throw new EppConfigurationException("Existe mais de uma localização com o nome definido no parâmetro raizLocalizacoesComunicacao: " + raizLocalizacoesComunicacao);
 			} else {
 				actionMessagesService.handleDAOException(e);
 			}
 		}
+        String codigoLocalizacaoRaizAssinaturaComunicacao = Parametros.RAIZ_LOCALIZACOES_ASSINATURA_COMUNICACAO.getValue();
+        if (codigoLocalizacaoRaizAssinaturaComunicacao != null && !codigoLocalizacaoRaizAssinaturaComunicacao.isEmpty()) {
+            try {
+                localizacaoRaizAssinaturaComunicacao = localizacaoSearch.getLocalizacaoByCodigo(codigoLocalizacaoRaizAssinaturaComunicacao);
+            } catch (Exception e) {
+                throw new EppConfigurationException("O parâmetro codigoRaizResponsavelAssinaturaLocalizacao não foi definido corretamente");
+            }
+        } else {
+            localizacaoRaizAssinaturaComunicacao = Authenticator.getLocalizacaoAtual();
+        }
 	}
 
 	private void initModelo(Long idModelo) {
 	    org.jbpm.taskmgmt.exe.TaskInstance taskInstance = TaskInstance.instance();
-		if (idModelo == null) { // Nova comunicação
-			if (taskInstance != null) { // Nova comunicação na aba de saída
-				ContextInstance context = taskInstance.getContextInstance();
-				Token taskToken = taskInstance.getToken();
-				idModelo = (Long) context.getVariable(idModeloComunicacaoVariableName, taskToken);
+		if (idModelo == null && taskInstance != null) { //Comunicação na aba de saída 
+			ContextInstance context = taskInstance.getContextInstance();
+			Token taskToken = taskInstance.getToken();
+			idModelo = (Long) context.getVariable(idModeloComunicacaoVariableName, taskToken);
+			if (idModelo == null) {
+	            Boolean emElaboracao = (Boolean) TaskInstance.instance().getVariable(EM_ELABORACAO);
+	            if (emElaboracao != null && emElaboracao.equals(Boolean.TRUE)) {
+	                ModeloComunicacao modeloComunicacaoEmElaboracao = getModeloEmElaboracao();
+	                if (modeloComunicacaoEmElaboracao != null) {
+	                    idModelo = modeloComunicacaoEmElaboracao.getId();
+	                    context.setVariable(idModeloComunicacaoVariableName, idModelo, taskToken);
+	                }
+	            }
 			}
 		}
-		if (idModelo == null) {
+		if (idModelo == null) { // Nova comunicação
 			this.modeloComunicacao = new ModeloComunicacao();
 			this.modeloComunicacao.setProcesso(processoManager.getProcessoByIdJbpm(processInstanceId));
 			if (taskInstance != null && inTask) {
@@ -182,7 +283,7 @@ public class EnvioComunicacaoController implements Serializable {
 		minuta = modeloComunicacao.isMinuta();
 	}
 	
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	@Transactional
 	public void gravar() {
 		try {
 			validarGravacao();
@@ -193,9 +294,9 @@ public class EnvioComunicacaoController implements Serializable {
 
 			destinatarioComunicacaoAction.persistDestinatarios();
 			documentoComunicacaoAction.persistDocumentos();
-			
-			modeloComunicacaoManager.update(modeloComunicacao);
+			modeloComunicacao = modeloComunicacaoManager.update(modeloComunicacao);
 			setIdModeloVariable(modeloComunicacao.getId());
+			isNew = false;
 			if (isFinalizada()) {
 				comunicacaoService.finalizarComunicacao(modeloComunicacao);
 				if ((!modeloComunicacao.isDocumentoBinario() && !modeloComunicacao.isClassificacaoAssinavel()) 
@@ -205,7 +306,6 @@ public class EnvioComunicacaoController implements Serializable {
 			}
 			clear();
 			FacesMessages.instance().add("Registro gravado com sucesso");
-			isNew = false;
 			minuta = modeloComunicacao.isMinuta();
 		} catch (Exception e) {
 			LOG.error("Erro ao gravar comunicação ", e);
@@ -224,7 +324,6 @@ public class EnvioComunicacaoController implements Serializable {
 
 	private void clear() {
 		destinatario = null;
-		localizacaoSubTree.clearTree();
 		initLocalizacaoRaiz();
 		initDestinatarioComunicacaoAction();
 		initDocumentoComunicacaoAction();
@@ -236,6 +335,9 @@ public class EnvioComunicacaoController implements Serializable {
 			ContextInstance context = taskInstance.getContextInstance();
 			Token taskToken = taskInstance.getToken();
 			context.setVariable(idModeloComunicacaoVariableName, id, taskToken);
+			if (id != null) {
+			    context.setVariable(ComunicacaoService.COMUNICACAO_EM_ELABORACAO, getModeloComunicacao());
+			}
 		}
 	}
 
@@ -290,7 +392,7 @@ public class EnvioComunicacaoController implements Serializable {
 		modeloComunicacao.setMinuta(minuta);
 	}
 
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	@Transactional
 	public void expedirComunicacao() {
 		try {
 			if (destinatario != null) {
@@ -324,15 +426,14 @@ public class EnvioComunicacaoController implements Serializable {
 		}
 	}
 
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void reabrirComunicacao() {
+    public void reabrirComunicacao() {
 		try {
 			modeloComunicacao = comunicacaoService.reabrirComunicacao(getModeloComunicacao());
 			isNew = false;
 			minuta = true;
 			resetEntityState();
 			clear();
-			destinatarioComunicacaoAction.init();
+			destinatarioComunicacaoAction.init(getLocalizacaoRaizComunicacao(), prazoDefaultComunicacao, perfilAssinatura);
 			FacesMessages.instance().add(InfoxMessages.getInstance().get("comunicacao.msg.sucesso.reabertura"));
 		} catch (DAOException | CloneNotSupportedException e) {
 			LOG.error("Erro ao rebarir comunicação", e);
@@ -340,7 +441,7 @@ public class EnvioComunicacaoController implements Serializable {
 		}
 	}
 	
-	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	@Transactional
 	public void excluirDestinatarioComunicacao(DestinatarioModeloComunicacao destinatarioModeloComunicacao) {
 		try {
 			destinatarioComunicacaoAction.excluirDestinatario(destinatarioModeloComunicacao);
@@ -358,6 +459,15 @@ public class EnvioComunicacaoController implements Serializable {
 		}
 	}
 	
+    private ModeloComunicacao getModeloEmElaboracao() {
+        org.jbpm.taskmgmt.exe.TaskInstance taskInstance = TaskInstance.instance();
+        if (taskInstance != null) {
+            ContextInstance context = taskInstance.getContextInstance();
+            return (ModeloComunicacao) context.getVariable(ComunicacaoService.COMUNICACAO_EM_ELABORACAO);
+        }
+        return null;
+    }
+
 	private CertificateSignatureBean getCertificateSignatureBean() throws DAOException {
 		CertificateSignatureBundleBean certificateSignatureBundleBean = certificateSignatures.get(token);
 		if (certificateSignatureBundleBean.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
@@ -366,10 +476,14 @@ public class EnvioComunicacaoController implements Serializable {
 		CertificateSignatureBean signatureBean = certificateSignatureBundleBean.getSignatureBeanList().get(0);
 		return signatureBean;
 	}
+	
+	public List<Localizacao> getLocalizacoesDisponiveisAssinatura(String query) {
+		return localizacaoSearch.getLocalizacoesByRaizWithDescricaoLike(localizacaoRaizAssinaturaComunicacao, query, MAX_RESULTS);
+	}
 
 	public List<TipoComunicacao> getTiposComunicacao() {
 		if (tiposComunicacao == null) {
-			tiposComunicacao = tipoComunicacaoManager.listTiposComunicacaoAtivos();
+			tiposComunicacao = tipoComunicacaoSearch.getTiposComunicacaoAtivosByUso(TipoUsoComunicacaoEnum.E);
 		}
 		return tiposComunicacao;
 	}
@@ -393,9 +507,8 @@ public class EnvioComunicacaoController implements Serializable {
 	public void setFinalizada(boolean finalizada) {
 		this.finalizada = finalizada;
 		if (!this.finalizada) {
-			modeloComunicacao.setLocalizacaoResponsavelAssinatura(null);
-			modeloComunicacao.setPerfilResponsavelAssinatura(null);
-			localizacaoSubTree.clearTree();
+			modeloComunicacao.setLocalizacaoResponsavelAssinatura(localizacaoAssinatura);
+			modeloComunicacao.setPerfilResponsavelAssinatura(perfilAssinatura);
 		}
 	}
 	
@@ -487,4 +600,46 @@ public class EnvioComunicacaoController implements Serializable {
 	public Long getJbpmProcessId() {
 		return JbpmUtil.getProcesso().getIdJbpm();
 	}
+	
+	public boolean existeUsuarioLocalizacaoAssinatura() {
+		return existeUsuarioLocalizacaoAssinatura;
+	}
+	
+	public void verificaExistenciaUsuario() {
+		if (getModeloComunicacao().getLocalizacaoResponsavelAssinatura() != null) {
+			existeUsuarioLocalizacaoAssinatura = usuarioLoginSearch.existsUsuarioWithLocalizacaoPerfil(getModeloComunicacao().getLocalizacaoResponsavelAssinatura(),
+					getModeloComunicacao().getPerfilResponsavelAssinatura());
+		}
+	}
+	
+	public boolean canChooseTipoComunicacao() {
+		return !getModeloComunicacao().getFinalizada();
+	}
+	
+	public boolean canChooseResponsavelAssinatura() {
+        return localizacaoAssinatura == null;
+    }
+    
+    public boolean isExibirTransicoes() {
+        return exibirTransicoes && getModeloComunicacao().getFinalizada() && (!podeAssinar() || assinouComunicacao());
+    }
+
+    private boolean podeAssinar() {
+        return !getModeloComunicacao().isDocumentoBinario() && isUsuarioLogadoNaLocalizacaoPerfilResponsavel() && 
+                classificacaoDocumentoPapelManager.papelPodeAssinarClassificacao(Authenticator.getPapelAtual(), modeloComunicacao.getClassificacaoComunicacao());
+    }
+    
+    private boolean assinouComunicacao() {
+        for (DestinatarioModeloComunicacao destinatario : getModeloComunicacao().getDestinatarios()) {
+            if (!assinaturaDocumentoService.isDocumentoAssinado(destinatario.getDocumentoComunicacao().getDocumentoBin(),Authenticator.getPapelAtual(), 
+                    Authenticator.getUsuarioLogado())) {
+                return false;
+            }
+        }
+        return true; 
+    }
+
+    public boolean isExibirResponsaveisAssinatura() {
+        return exibirResponsaveisAssinatura;
+    }
 }

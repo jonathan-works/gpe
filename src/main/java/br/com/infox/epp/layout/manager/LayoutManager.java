@@ -233,6 +233,14 @@ public class LayoutManager {
 	}
 
 	private String getUrlJavaByPath(String codigoSkin, String resourcePath) {
+	    switch (codigoSkin) {
+	    case "cinza":
+            case "altoContraste":
+                break;
+            default:
+                codigoSkin="default";
+                break;
+            }
 		return MessageFormat.format("/resources/styleSkinInfox/{0}{1}", codigoSkin, resourcePath);
 	}
 

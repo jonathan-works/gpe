@@ -20,7 +20,8 @@
       required="#{required}"
       onchange="#{onchange}"
       onclick="#{onclick}"
-      styleClass="radio">
+      styleClass="radio"
+      converter="javax.faces.Boolean">
       <f:selectItems
         value="#{selectItemFunctions.createFromString('true:crud.yes,false:crud.no') }" />
       <ui:insert />

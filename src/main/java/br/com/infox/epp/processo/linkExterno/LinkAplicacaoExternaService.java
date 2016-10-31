@@ -9,7 +9,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
-import org.jgroups.util.UUID;
 import org.joda.time.DateTime;
 
 import br.com.infox.cdi.dao.Dao;

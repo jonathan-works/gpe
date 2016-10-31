@@ -15,16 +15,14 @@ import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
-
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
-
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epp.processo.documento.dao.DocumentoDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @Scope(ScopeType.CONVERSATION)
 @Name(DocumentoSearch.NAME)

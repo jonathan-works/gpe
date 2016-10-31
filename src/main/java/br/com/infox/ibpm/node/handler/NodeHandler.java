@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.faces.model.SelectItem;
 import javax.persistence.NoResultException;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -145,6 +146,7 @@ public class NodeHandler implements Serializable {
     private StatusProcesso statusProcesso;
     private ModeloDocumento modeloDocumento;
     private ClassificacaoDocumento classificacaoDocumento;
+    private String codigoPasta;
 	private EventHandler multiInstanceEvent;
 	private ActivityNodeType activityNodeType;
 	private List<Pair<String, Pair<VariableType, Boolean>>> startVariablesSubProcess;
@@ -183,6 +185,7 @@ public class NodeHandler implements Serializable {
                             ClassificacaoDocumentoManager classificacaoDocumentoManager = ComponentUtil.getComponent(ClassificacaoDocumentoManager.NAME);
                             this.modeloDocumento = modeloDocumentoManager.find(generateDocumentoConfiguration.getIdModeloDocumento());
                             this.classificacaoDocumento = classificacaoDocumentoManager.find(generateDocumentoConfiguration.getIdClassificacaoDocumento());
+                        	this.codigoPasta = generateDocumentoConfiguration.getCodigoPasta();
                         } catch (JsonSyntaxException e) {
                         	LOG.warn("Erro ao ler configuração da action GenerateDocumento no nó " + this.node.getName(), e);
                         }
@@ -480,6 +483,15 @@ public class NodeHandler implements Serializable {
         }
         return list;
     }
+    
+    public List<SelectItem> getTransitionItens() {
+        List<SelectItem> selectItens = new ArrayList<>();
+        if (node == null || node.getLeavingTransitions() == null) return selectItens;
+        for (Transition transition : node.getLeavingTransitions()) {
+        	selectItens.add(new SelectItem(transition.getKey(), transition.getName()));
+        }
+        return selectItens;
+    }
 
     public void setTimerName(String timerName) {
         Event e = node.getEvent(Event.EVENTTYPE_NODE_LEAVE);
@@ -618,8 +630,32 @@ public class NodeHandler implements Serializable {
     public void setClassificacaoDocumento(ClassificacaoDocumento classificacaoDocumento) {
     	if (this.classificacaoDocumento == null || !this.classificacaoDocumento.equals(classificacaoDocumento)) {
     		setModeloDocumento(null);
+    		setCodigoPasta(null);
     	}
     	this.classificacaoDocumento = classificacaoDocumento;
+	}
+    
+    public String getCodigoPasta() {
+		return this.codigoPasta;
+	}
+    
+    public void setCodigoPasta(String codigoPasta) { //TODO Ajustar quando integrar a branch do exportador
+    	Action action = null;
+    	if (codigoPasta != null){
+	        if (this.node.hasEvent(Event.EVENTTYPE_NODE_LEAVE)) {
+	            action = retrieveGenerateDocumentoEvent(this.node.getEvent(Event.EVENTTYPE_NODE_LEAVE));
+	            Delegation actionDelegation = action.getActionDelegation();
+	            if (actionDelegation != null && GenerateDocumentoHandler.class.getName().equals(actionDelegation.getClassName())) {
+	            	actionDelegation.setConfigType("constructor");
+	            	GenerateDocumentoConfiguration configuration = new GenerateDocumentoConfiguration();
+	            	configuration.setIdClassificacaoDocumento(classificacaoDocumento.getId());
+	            	configuration.setIdModeloDocumento(modeloDocumento.getIdModeloDocumento());
+	            	configuration.setCodigoPasta(codigoPasta);
+	            	actionDelegation.setConfiguration(new Gson().toJson(configuration));
+	            }
+	        } 
+    	}
+    	this.codigoPasta = codigoPasta;
 	}
 
     private Action retrieveStatusProcessoEvent(Event event) {

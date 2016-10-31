@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
@@ -17,6 +20,7 @@ import org.jboss.seam.annotations.Name;
 import br.com.infox.core.dao.DAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.HistoricoStatusDocumento;
+import br.com.infox.epp.processo.documento.entity.HistoricoStatusDocumento_;
 
 @Stateless
 @AutoCreate
@@ -36,6 +40,18 @@ public class HistoricoStatusDocumentoDAO extends DAO<HistoricoStatusDocumento> {
 		Map<String, Object> params = new HashMap<String, Object>(1);
 		params.put(PARAM_DOCUMENTO, documento);
 		return getNamedResultList(LIST_HISTORICO_BY_DOCUMENTO, params);
+	}
+	
+	public List<HistoricoStatusDocumento> getListHistoricoByDocumentoOrdenadoData(Documento documento) {
+		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<HistoricoStatusDocumento> cq = cb.createQuery(HistoricoStatusDocumento.class);
+		Root<HistoricoStatusDocumento> hist = cq.from(HistoricoStatusDocumento.class);
+
+		cq.where(cb.equal(hist.get(HistoricoStatusDocumento_.documento), documento));
+		cq.orderBy(cb.asc(hist.get(HistoricoStatusDocumento_.dataAlteracao)));
+		
+		return getEntityManager().createQuery(cq).getResultList();
+		
 	}
 
 }

@@ -235,20 +235,20 @@ public class VariableAccessHandler implements Serializable {
     	if (parent.getEvents() == null) return;
         for (Object entry : parent.getEvents().entrySet()) {
 			Event event = ((Map.Entry<String,Event>)entry).getValue();
-			if(event.getActions() == null)
-				continue;
-			for (Object o : event.getActions()) {
-                Action a = (Action) o;
-                String name = a.getName();
-                String exp = a.getActionExpression();
-                if ( (name != null && name.equalsIgnoreCase(actionName) ) || ( exp != null  && exp.contains("'"+ actionName +"'") ) ) {
-                	event.removeAction(a);
-                	if (event.getActions().isEmpty()) {
-                         event.getGraphElement().removeEvent(event);
-                    }
-                    return ;
-                }
-            }
+			if (event.hasActions()) {
+				for (Object o : event.getActions()) {
+	                Action a = (Action) o;
+	                String name = a.getName();
+	                String exp = a.getActionExpression();
+	                if ( (name != null && name.equalsIgnoreCase(actionName) ) || ( exp != null  && exp.contains("'"+ actionName +"'") ) ) {
+	                	event.removeAction(a);
+	                	if (event.getActions().isEmpty()) {
+	                         event.getGraphElement().removeEvent(event);
+	                    }
+	                    return ;
+	                }
+	            }
+			}
 		}
     }
 

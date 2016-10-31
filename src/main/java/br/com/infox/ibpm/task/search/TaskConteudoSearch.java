@@ -15,12 +15,12 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 
 import br.com.infox.epp.search.SearchService;
 import br.com.infox.ibpm.task.dao.TaskConteudoDAO;
 import br.com.infox.ibpm.task.entity.TaskConteudo;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 @Scope(ScopeType.CONVERSATION)
 @Name(TaskConteudoSearch.NAME)

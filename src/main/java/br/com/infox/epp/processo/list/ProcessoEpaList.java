@@ -20,10 +20,13 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
 
+import org.jboss.seam.security.Identity;
+
 import com.google.common.base.Strings;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioLogin_;
 import br.com.infox.epp.cdi.ViewScoped;
@@ -47,6 +50,7 @@ import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
 import br.com.infox.epp.processo.sigilo.manager.SigiloProcessoPermissaoManager;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.entity.StatusProcesso_;
+import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada_;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
@@ -60,9 +64,9 @@ public class ProcessoEpaList extends EntityList<Processo> {
 
     private static final long serialVersionUID = 1L;
 
-    private static final String DEFAULT_EJBQL = "select o from Processo o where o.idJbpm is not null and o.processoPai is null and "
+    private static final String DEFAULT_EJBQL = "select o from Processo o left join o.prioridadeProcesso prp inner join o.naturezaCategoriaFluxo naturezaCategoriaFluxo where o.idJbpm is not null and o.processoPai is null and "
             + SigiloProcessoPermissaoManager.getPermissaoConditionFragment();
-    private static final String DEFAULT_ORDER = "coalesce(o.prioridadeProcesso, -1) DESC, o.dataInicio ASC";
+    private static final String DEFAULT_ORDER = "coalesce(prp.peso, -1) DESC, o.dataInicio ASC";
     private static final String R1 = "cast(dataInicio as date) >= #{processoEpaList.dataInicio.from}";
     private static final String R2 = "cast(dataInicio as date) <= #{processoEpaList.dataInicio.to}";
     private static final String R3 = "cast(dataFim as date) >= #{processoEpaList.dataFim.from}";
@@ -86,6 +90,9 @@ public class ProcessoEpaList extends EntityList<Processo> {
     		+ "and mp.valor = cast(#{processoEpaList.statusProcesso.idStatusProcesso} as string) "
     		+ "and mp.metadadoType = '" + EppMetadadoProvider.STATUS_PROCESSO.getMetadadoType() + "'"
     		+ ")";
+    
+    private static final String FILTRO_PARTICIPANTE_PROCESSO = "and exists (select 1 from ParticipanteProcesso pp "
+            + "where pp.processo = o and pp.pessoa.idPessoa = %d ) " ;
 
     @Inject
     private ConsultaProcessoDynamicColumnsController consultaProcessoDynamicColumnsController;
@@ -154,6 +161,10 @@ public class ProcessoEpaList extends EntityList<Processo> {
 
     @Override
     protected String getDefaultEjbql() {
+        PessoaFisica pessoaFisica = Authenticator.getUsuarioLogado().getPessoaFisica();
+        if (pessoaFisica != null && Identity.instance().hasRole(Parametros.PAPEL_USUARIO_EXTERNO.getValue())) {
+            return DEFAULT_EJBQL + String.format(FILTRO_PARTICIPANTE_PROCESSO, pessoaFisica.getIdPessoa());
+        }
         return DEFAULT_EJBQL;
     }
 

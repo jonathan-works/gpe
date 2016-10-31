@@ -11,8 +11,6 @@ import java.text.MessageFormat;
 import java.util.Date;
 import java.util.Properties;
 
-import org.junit.Test;
-
 /**
  * @author erikliberal
  *

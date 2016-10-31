@@ -1,6 +1,7 @@
 package br.com.infox.epp.entrega.entity;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -18,7 +19,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import br.com.infox.constants.LengthConstants;
-import java.util.Collections;
 
 @Entity
 @Table(name="tb_categoria_entrega")

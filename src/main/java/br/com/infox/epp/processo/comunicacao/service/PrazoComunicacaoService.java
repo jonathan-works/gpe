@@ -19,6 +19,7 @@ import org.joda.time.DateTime;
 import br.com.infox.certificado.bean.CertificateSignatureBean;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
@@ -26,6 +27,8 @@ import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
+import br.com.infox.epp.processo.comunicacao.ModeloComunicacaoSearch;
 import br.com.infox.epp.processo.comunicacao.dao.ComunicacaoSearch;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
@@ -57,16 +60,18 @@ public class PrazoComunicacaoService {
 	private AssinaturaDocumentoService assinaturaDocumentoService;
 	@Inject
 	private ComunicacaoSearch comunicacaoSearch;
+	@Inject
+	private ModeloComunicacaoSearch modeloComunicacaoSearch;
 
 	public Date contabilizarPrazoCiencia(Processo comunicacao) {
 		DestinatarioModeloComunicacao destinatario = getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.DESTINATARIO);
         Integer qtdDias = destinatario.getModeloComunicacao().getTipoComunicacao().getQuantidadeDiasCiencia();
         //O início do prazo de ciência começa no dia do envio. 66741
-        return calcularPrazoCiencia(new Date(), qtdDias);
+        return calcularPrazoCiencia(comunicacao.getDataInicio(), qtdDias);
     }
     
 	public Date calcularPrazoCiencia(Date dataInicio, Integer qtdDias){
-		return calendarioEventosManager.getPrimeiroDiaUtil(dataInicio, qtdDias);
+		return calendarioEventosManager.getPrimeiroDiaUtil(DateUtil.getEndOfDay(dataInicio), qtdDias);
 	}
 	
 	public Date contabilizarPrazoCumprimento(Processo comunicacao) {
@@ -250,7 +255,23 @@ public class PrazoComunicacaoService {
     public boolean isPrazoProrrogado(Processo comunicacao){
     	return  !getDataLimiteCumprimentoInicial(comunicacao).equals(getDataLimiteCumprimento(comunicacao));
     }
-    
+
+    public Boolean isPrazoProrrogadoENaoExpirado(Integer idProcesso, String taskName) {
+        Boolean resp = false;
+        Date now = new Date();
+        List<ModeloComunicacao> modelos = modeloComunicacaoSearch.getByProcessoAndTaskName(idProcesso, taskName);
+        loopModelos: for (ModeloComunicacao modelo : modelos) {
+            for (DestinatarioModeloComunicacao destinatario : modelo.getDestinatarios()) {
+                Processo comunicacao = destinatario.getProcesso();
+                if (isPrazoProrrogado(comunicacao) && now.before(getDataLimiteCumprimento(comunicacao))) {
+                    resp = true;
+                    break loopModelos;
+                }
+            }
+        }
+        return resp;
+    }
+
     public Date getDataLimiteCumprimentoInicial(Processo comunicacao){
     	return getValueMetadado(comunicacao, ComunicacaoMetadadoProvider.LIMITE_DATA_CUMPRIMENTO_INICIAL);
     }

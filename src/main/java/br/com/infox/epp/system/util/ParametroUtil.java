@@ -8,7 +8,6 @@ import java.util.Map;
 
 import javax.persistence.NoResultException;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Install;

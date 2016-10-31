@@ -5,7 +5,7 @@ import java.util.Date;
 import javax.persistence.Entity;
 
 public enum FieldType {
-	DATE, BOOLEAN, STRING, SELECT_ONE;
+	DATE, BOOLEAN, STRING, SELECT_ONE, CHECKBOX_ENUM;
 
 	public static FieldType getByClass(Class<?> type) {
 		if (Date.class.equals(type)) {

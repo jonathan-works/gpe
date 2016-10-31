@@ -3,13 +3,14 @@ package br.com.infox.quartz;
 import java.io.Serializable;
 import java.util.Date;
 
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.Trigger;
 import org.quartz.Trigger.CompletedExecutionInstruction;
 import org.quartz.TriggerListener;
+
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 public class TriggerListenerLog implements TriggerListener, Serializable {
 

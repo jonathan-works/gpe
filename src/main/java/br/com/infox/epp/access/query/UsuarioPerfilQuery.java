@@ -31,9 +31,10 @@ public interface UsuarioPerfilQuery {
     		+ " and up.ativo = :" + PARAM_ATIVO;
     
     String LIST_BY_LOCALIZACAO_ATIVO = "listByLocalizacaoAtivo";
-    String LIST_BY_LOCALIZACAO_ATIVO_QUERY = "select distinct pf from UsuarioPerfil up inner join up.usuarioLogin ul "
-            + " inner join ul.pessoaFisica pf where up.localizacao.idLocalizacao = :" + PARAM_LOCALIZACAO 
-            + " and up.ativo = true";
+    String LIST_BY_LOCALIZACAO_ATIVO_QUERY = "select pf from PessoaFisica pf where "
+            + "exists (select 1 from UsuarioPerfil up inner join up.usuarioLogin ul "
+            + " where up.localizacao.idLocalizacao = :" + PARAM_LOCALIZACAO
+            + " and up.ativo = true and ul.pessoaFisica = pf ) ";
     
     String LIST_BY_USUARIO_PERFIL_LOCALIZACAO_ATIVO = "listUsuarioPerfilByLocalizacaoAtivo";
     String LIST_BY_USUARIO_PERFIL_LOCALIZACAO_ATIVO_QUERY = "select distinct up from UsuarioPerfil up inner join up.usuarioLogin ul "
@@ -41,9 +42,10 @@ public interface UsuarioPerfilQuery {
             + " and up.ativo = true";
     
     String LIST_PESSOA_BY_LOCALIZACAO_PERFIL_ATIVO = "listUsuarioByLocalizacaoPerfilAtivo";
-    String LIST_PESSOA_BY_LOCALIZACAO_PERFIL_ATIVO_QUERY = "select distinct pf from UsuarioPerfil up inner join up.usuarioLogin ul "
-            + " inner join ul.pessoaFisica pf "
-            + " where up.localizacao.idLocalizacao = :" + PARAM_LOCALIZACAO + " and up.perfilTemplate.id = :" + PARAM_PERFIL_TEMPLATE
-            + " and up.ativo = true";
+    String LIST_PESSOA_BY_LOCALIZACAO_PERFIL_ATIVO_QUERY = "select pf from PessoaFisica pf "
+            + " where exists (select 1 from UsuarioPerfil up inner join up.usuarioLogin ul "
+            + "                where ul.pessoaFisica = pf and up.localizacao.idLocalizacao = :" + PARAM_LOCALIZACAO
+            + "                and up.perfilTemplate.id = :" + PARAM_PERFIL_TEMPLATE + " and up.ativo = true "
+            + "              )";
     
 }

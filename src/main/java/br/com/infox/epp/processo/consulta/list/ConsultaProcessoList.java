@@ -47,7 +47,7 @@ public class ConsultaProcessoList extends DataList<TaskBean> {
 
         @Override
         public int compare(TaskBean taskBean1, TaskBean taskBean2) {
-            int pesoCompare = taskBean1.getPesoPrioridadeProcesso().compareTo(taskBean2.getPesoPrioridadeProcesso());
+            int pesoCompare = taskBean2.getPesoPrioridadeProcesso().compareTo(taskBean1.getPesoPrioridadeProcesso());
             if (pesoCompare != 0) {
                 return pesoCompare;
             } else {

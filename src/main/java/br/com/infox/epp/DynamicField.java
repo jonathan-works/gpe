@@ -7,6 +7,8 @@ import java.util.Set;
 
 import javax.persistence.metamodel.SingularAttribute;
 
+import br.com.infox.core.type.Displayable;
+
 public class DynamicField {
 
 	private String id;
@@ -20,6 +22,8 @@ public class DynamicField {
 	private SingularAttribute<?, String> labelAttribute;
 	private final Map<String, Object> options;
 	private final Set<DynamicFieldAction> actions;
+	private Enum<? extends Displayable>[] enumValues;
+	
 	public DynamicField() {
 		this.options = new HashMap<>();
 		this.previousValue = null;
@@ -117,5 +121,12 @@ public class DynamicField {
 	public String toString() {
 		return "DynamicField [id=" + id + ", value=" + value + ", type=" + type + "]";
 	}
-
+	
+	public Enum<? extends Displayable>[] getEnumValues() {
+		return enumValues;
+	}
+	
+	public void setEnumValues(Enum<? extends Displayable>[] enumValues) {
+		this.enumValues = enumValues;
+	}
 }

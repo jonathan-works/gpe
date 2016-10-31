@@ -27,25 +27,18 @@
     <rich:collapsiblePanel
       switchType="client"
       header="#{infoxMessages['processo.titleView']} #{consultaController.processo.numeroProcessoRoot}"
-      expanded="false">
+      expanded="true">
       <h:panelGrid
         columns="3"
         width="100%"
         columnClasses="viewColumn">
-        <wi:outputText
-          id="dataInicio"
-          label="#{infoxMessages['processo.dataInicio']}"
-          value="#{consultaController.processo.dataInicio}">
-          <f:convertDateTime pattern="dd/MM/yyyy kk:mm" />
-        </wi:outputText>
-        <wi:outputText
-          id="usuarioCadastro"
-          label="#{infoxMessages['processo.usuarioCadastroProcesso']}"
-          value="#{consultaController.processo.usuarioCadastro}" />
        	<ui:repeat var="variavel" value="#{consultaController.variaveisDetalhe}" >
         	<wi:outputText id="variavel#{variavel.nome}" label="#{variavel.label}" value="#{variavel.valor}"/>
        	</ui:repeat>
     </h:panelGrid>
+        <ui:include src="/Processo/linkAplicacaoExterna.xhtml">
+            <ui:param name="processo" value="#{consultaController.processo}" />
+        </ui:include>
     </rich:collapsiblePanel>
     <infox:tabPanel
       headerSpacing="2"
@@ -83,10 +76,9 @@
         immediate="true"
         status=":status"
         title="#{infoxMessages['processoDocumento.anexarDocumento']}"
+        action="#{anexarDocumentosView.setProcesso(consultaController.processo)}"
         rendered="#{empty consultaController.processo.dataFim}">
-        <wi:ajaxDiv id="divAnexarDocumentos">
-            <ui:include src="consultarAbaAnexar.xhtml" />
-        </wi:ajaxDiv>
+        <ui:include src="consultarAbaAnexar.xhtml" />
       </infox:tab>
       <infox:tab
         id="form"

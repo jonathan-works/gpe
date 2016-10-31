@@ -1,82 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ui:composition
-  xmlns:ui="http://java.sun.com/jsf/facelets"
-  xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:a="http://richfaces.org/a4j"
-  xmlns:c="http://java.sun.com/jsp/jstl/core"
-  xmlns:f="http://java.sun.com/jsf/core"
-  xmlns:h="http://java.sun.com/jsf/html"
-  xmlns:rich="http://richfaces.org/rich"
-  xmlns:s="http://jboss.org/schema/seam/taglib"
-  xmlns:wi="http://www.itx.com.br/jsf">
-  <ui:param
-    name="editorId"
-    value="#{id}Editor" />
-  <ui:param
-    name="idSignature"
-    value="#{id}signature" />
-  <ui:param
-    name="idCertChain"
-    value="#{id}certChain" />
-  <f:subview id="#{f.id}SubView">
-    <s:div id="#{f.id}TipoDocDiv">
-      <wi:selectOneMenuEntity
-        id="#{f.id}tipoProcessoDocumento"
-        label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-        items="#{home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo)}"
-        required="#{not readonly}"
-        showLabelSelecione="true"
-        value="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento}"
-        readonly="#{readonly or home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo).size eq 1 
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:i="http://java.sun.com/jsf/composite/infox" xmlns:p="http://primefaces.org/ui"
+    xmlns:wi="http://www.itx.com.br/jsf">
+    <ui:param name="editorId" value="#{id}Editor" />
+    <ui:param name="idSignature" value="#{id}signature" />
+    <ui:param name="idCertChain" value="#{id}certChain" />
+    <f:subview id="#{f.id}SubView">
+        <p:outputPanel id="#{f.id}Block">
+            <fieldset>
+                <legend>
+                    <h:outputText styleClass="property-field-edit-name" value="#{label}" />
+                </legend>
+                <p:outputPanel id="#{f.id}TipoDocDiv">
+                    <wi:selectOneMenuEntity id="#{f.id}tipoProcessoDocumento"
+                        label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
+                        items="#{home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), taskInstanceHome.currentTaskInstance)}" 
+                        showLabelSelecione="true" required="#{wi:get(required, false)}"
+                        value="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento}"
+                        readonly="#{readonly or home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo).size eq 1 
         			or taskInstanceHome.variaveisDocumento[id].hasAssinatura()}"
-        disabled="#{readonly or home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo).size eq 1 
+                        disabled="#{readonly or home.getUseableClassificacaoDocumento(true, taskInstanceHome.getVariableName(id), processoEpaHome.instance.naturezaCategoriaFluxo.fluxo.idFluxo).size eq 1 
         			or taskInstanceHome.variaveisDocumento[id].hasAssinatura()}">
-        <a:ajax
-          event="change"
-          render="assinaturaDocumentoDiv#{f.id} #{id}EditorDiv"
-          execute="@this"
-          limitRender="true" />
-      </wi:selectOneMenuEntity>
-    </s:div>
-    <s:div id="#{id}EditorDiv">
-    	<s:div id="#{editorId.replace('-','')}ToolTipDivExterna">
-		    <s:div id="#{editorId.replace('-','')}ToolTipDiv" styleClass="tooltip-parent" style="width: 10px" 
-			  	rendered="#{not empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.observacao and not (readonly or taskInstanceHome.variaveisDocumento[id].hasAssinatura())}">
-			  	<h:graphicImage id="#{id}helpEditTipImg" url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
-				<div class="epp-tooltip">
-					<div class="tooltip-panel">
-						<div><h:outputText value="Observação:"/></div>
-						<h:outputText value="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.observacao}"/>
-					</div>
-				</div>
-		    </s:div>
-	    </s:div>
-	    <wi:editor
-	      id="${editorId}"
-	      value="#{taskInstanceHome.variaveisDocumento[id].documentoBin.modeloDocumento}"
-	      readonly="${readonly or taskInstanceHome.variaveisDocumento[id].hasAssinatura()}" />
-    </s:div>
-    <s:div id="assinaturaDocumentoDiv#{f.id}" >
-	    <s:div id="conteudoAssinatura#{f.id}" rendered="#{taskInstanceHome.podeAssinarDocumento(f.id.split('-')[0])}">
-			<a:jsFunction name="assinar"
-				action="#{taskInstanceHome.assinarDocumento()}"
-				execute="@this, assinaturaDocumentoDiv#{f.id}"
-				render="assinaturaDocumentoDiv#{f.id}, #{id}EditorDiv, pageBodyDialogMessage, @form" 
-				oncomplete="infox.hideLoading();"/>
-				
-			<wi:certificadoDigital
-	            id="appletAssinatura"
-				signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
-				reRender="assinaturaDocumentoDiv#{f.id}, pageBodyDialogMessage"
-				tokenField="#{taskInstanceHome.tokenToSign}"
-				propertyValue="#{f.id}"
-				propertyTarget="#{taskInstanceHome.variavelDocumentoToSign}"
-				signableData="#{taskInstanceHome.documentoToSign.documentoBin.md5Documento}"
-				functionPreSign="infox.showLoading();"
-				functionPosSign="assinar();" >
-	       </wi:certificadoDigital>
-	       
-		</s:div>
-	</s:div>
-  </f:subview>
+                        <f:validateBean disabled="true"/>
+                        <f:validator validatorId="classificacaoEditorValidator" for="@this"/>
+						<f:attribute name="editorId" value="#{rich:clientId(editorId)}"/>
+                    </wi:selectOneMenuEntity>
+                </p:outputPanel>
+                <p:outputPanel id="#{id}EditorDiv">
+                    <i:help id="#{editorId.replace('-','')}ToolTipDiv"
+                        rendered="#{not empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.observacao and not (readonly or taskInstanceHome.variaveisDocumento[id].hasAssinatura())}">
+                        <div>
+                            <h:outputText value="Observação:" />
+                        </div>
+                        <h:outputText
+                            value="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.observacao}" />
+                    </i:help>
+                    <wi:editor id="${editorId}" label="#{infoxMessages['indexedSearch.conteudo']}"
+                    	required="#{wi:get(required, false)}"
+                        value="#{taskInstanceHome.variaveisDocumento[id].documentoBin.modeloDocumento}"
+                        readonly="${readonly or taskInstanceHome.variaveisDocumento[id].hasAssinatura()}">
+                    </wi:editor>
+                </p:outputPanel>
+                <p:outputPanel id="assinaturaDocumentoDiv#{f.id}">
+                    <p:outputPanel id="conteudoAssinatura#{f.id}"
+                        rendered="#{taskInstanceHome.podeAssinarDocumento(f.id.split('-')[0])}">
+                        <a:jsFunction name="assinar" action="#{taskInstanceHome.assinarDocumento()}"
+                            execute="@this, assinaturaDocumentoDiv#{f.id}"
+                            render="assinaturaDocumentoDiv#{f.id}, #{id}EditorDiv, pageBodyDialogMessage, @form"
+                            oncomplete="infox.hideLoading();" />
+
+                        <wi:certificadoDigital id="appletAssinatura"
+                            signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
+                            reRender="assinaturaDocumentoDiv#{f.id}, pageBodyDialogMessage"
+                            tokenField="#{taskInstanceHome.tokenToSign}" propertyValue="#{f.id}"
+                            propertyTarget="#{taskInstanceHome.variavelDocumentoToSign}"
+                            signableData="#{taskInstanceHome.documentoToSign.documentoBin.md5Documento}"
+                            functionPreSign="infox.showLoading();" functionPosSign="assinar();">
+                        </wi:certificadoDigital>
+
+                    </p:outputPanel>
+                </p:outputPanel>
+            </fieldset>
+        </p:outputPanel>
+    </f:subview>
 </ui:composition>

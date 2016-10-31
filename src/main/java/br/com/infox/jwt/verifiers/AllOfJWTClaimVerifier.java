@@ -32,8 +32,8 @@ public class AllOfJWTClaimVerifier implements JWTClaimVerifier {
                     sb.append(", ");
                 }
                 sb.append(key);
+                first=false;
             }
-            first=false;
         }
         if (!sb.toString().trim().isEmpty()){
             throw new IllegalArgumentException(String.format(errorMessagePattern, sb.toString()));

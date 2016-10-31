@@ -7,8 +7,8 @@ import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.GET_PROCESSO_TAR
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PARAM_CATEGORIA;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PARAM_ID_PROCESSO;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PARAM_ID_TAREFA;
-import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PROCESSO_TAREFA_ABERTO;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PROCESSOS_TAREFA;
+import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PROCESSO_TAREFA_ABERTO;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.PROCESSO_TAREFA_BY_ID_PROCESSO_AND_ID_TAREFA;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.QUERY_PARAM_PROCESSO;
 import static br.com.infox.epp.tarefa.query.ProcessoTarefaQuery.QUERY_PARAM_TASKINSTANCE;

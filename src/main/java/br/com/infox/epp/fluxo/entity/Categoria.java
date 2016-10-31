@@ -49,6 +49,11 @@ public class Categoria implements Serializable {
     private Integer idCategoria;
 
     @NotNull
+    @Column(name = "cd_categoria")    
+    @Size(max = LengthConstants.CODIGO_DOCUMENTO)
+    private String codigo;
+    
+    @NotNull
     @Size(min = LengthConstants.FLAG, max = LengthConstants.DESCRICAO_PEQUENA)
     @Column(name = DESCRICAO_CATEGORIA, length = LengthConstants.DESCRICAO_PEQUENA, nullable = false)
     private String categoria;
@@ -142,5 +147,17 @@ public class Categoria implements Serializable {
         }
         return true;
     }
+
+	public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 
 }
