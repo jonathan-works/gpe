@@ -113,11 +113,15 @@ public class ConsultaProcessoList extends DataList<TaskBean> {
                 tasksToRemove.add(taskBean);
             } else if (dataFim != null && !DateUtil.isDataMenorIgual(taskBean.getDataInicio(), dataFim)) {
                 tasksToRemove.add(taskBean);
+            } else {
+                applyExtraFilters(taskBean, tasksToRemove);
             }
         }
         filteredTasks.removeAll(tasksToRemove);
     }
     
+    protected void applyExtraFilters(TaskBean taskBean, List<TaskBean> tasksToRemove) {}
+
     private void applySort() {
         Collections.sort(filteredTasks, TASK_COMPARATOR);
     }
@@ -147,10 +151,13 @@ public class ConsultaProcessoList extends DataList<TaskBean> {
         setCategoria(null);
         setDataInicio(null);
         setDataFim(null);
+        clearExtraFilters();
         setPage(1);
         search();
     }
     
+    protected void clearExtraFilters() {}
+
     @Override
     public boolean isNextExists() {
         return getPage() * getMaxResults() < filteredTasks.size();

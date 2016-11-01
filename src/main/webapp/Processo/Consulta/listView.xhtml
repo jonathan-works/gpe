@@ -45,6 +45,7 @@
 									forceSelection="true" var="item" itemLabel="#{item.fluxo}" itemValue="#{item}"
 									converter="br.com.infox.jsf.converter.EntityConverter" minQueryLength="3" dropdown="true">
 									<p:ajax event="itemSelect" process="@this" update="processoEpaContentPanel"
+										listener="#{processoEpaList.onSelectFluxo()}"
 										onstart="infox.showLoading();" oncomplete="infox.hideLoading();" />
 								</p:autoComplete>
 							</p:outputPanel>
@@ -74,7 +75,7 @@
 								completeMethod="#{processoEpaList.getRelatores}" forceSelection="true" label="#{infoxMessages['processo.relator']}"
 								var="item" itemLabel="#{item.nome}" itemValue="#{item}" converter="br.com.infox.jsf.converter.EntityConverter"
 								rendered="#{not empty processoEpaList.fluxo}" minQueryLength="3" dropdown="true" />
-                            <div />       
+                            <div />
                             <i:autoComplete	id="udm" value="#{processoEpaList.unidadeDecisoraMonocratica}" scrollHeight="300"
 								completeMethod="#{processoEpaList.getUnidadesDecisorasMonocraticas}" forceSelection="true" 
 								label="#{infoxMessages['processo.unidadeDecisoraMonocratica']}"
@@ -111,6 +112,7 @@
                                 validatePastDateTo="true"
                                 rendered="#{not empty processoEpaList.fluxo}" />
                              <div />
+                             <ui:include src="/Processo/Consulta/filtroExtraConsulta.xhtml" />
                         </wi:searchForm>
                     </ui:define>
                     <ui:define name="headerToolBar" />
