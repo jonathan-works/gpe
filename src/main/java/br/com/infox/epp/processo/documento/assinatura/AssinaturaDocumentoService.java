@@ -13,7 +13,6 @@ import javax.inject.Inject;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.util.Strings;
@@ -63,7 +62,7 @@ public class AssinaturaDocumentoService {
     protected DocumentoBinManager documentoBinManager;
     @Inject
     private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
-    @In
+    @Inject
     private AssinaturaDocumentoListenerService assinaturaDocumentoListenerService;
     @Inject
     private PessoaFisicaManager pessoaFisicaManager;
