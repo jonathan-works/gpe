@@ -10,6 +10,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
 import br.com.infox.core.persistence.PersistenceController;
@@ -119,4 +120,14 @@ public class UnidadeDecisoraMonocraticaSearch extends PersistenceController {
         }
     }
 
+    public List<UnidadeDecisoraMonocratica> findAtivas() {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<UnidadeDecisoraMonocratica> cq = cb.createQuery(UnidadeDecisoraMonocratica.class);
+        Root<UnidadeDecisoraMonocratica> udm = cq.from(UnidadeDecisoraMonocratica.class);
+
+        cq.select(udm);
+        cq.where(cb.isTrue(udm.get(UnidadeDecisoraMonocratica_.ativo)));
+
+        return getEntityManager().createQuery(cq).getResultList();
+    }
 }
