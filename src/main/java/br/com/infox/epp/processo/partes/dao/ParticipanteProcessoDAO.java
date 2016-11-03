@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.LockModeType;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -40,6 +41,7 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso;
 import br.com.infox.epp.processo.partes.entity.ParticipanteProcesso_;
 import br.com.infox.epp.processo.partes.entity.TipoParte;
+import br.com.infox.epp.processo.partes.manager.HistoricoParticipanteProcessoManager;
 
 @Stateless
 @AutoCreate
@@ -48,6 +50,9 @@ public class ParticipanteProcessoDAO extends DAO<ParticipanteProcesso> {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "participanteProcessoDAO";
+    
+    @Inject
+    private HistoricoParticipanteProcessoManager historicoParticipanteProcessoManager;
     
     public void lockPessimistic(Processo processo){
     	if (!getEntityManager().contains(processo)){
@@ -152,5 +157,11 @@ public class ParticipanteProcessoDAO extends DAO<ParticipanteProcesso> {
 		params.put(PARAM_PESSOA, idPessoa);
 		params.put(PARAM_PROCESSO, idProcesso);
 		return getNamedResultList(PARTICIPANTE_BY_PESSOA_FETCH, params);
+	}
+	
+	public void inverterSituacao(ParticipanteProcesso instance, String motivo) {
+		historicoParticipanteProcessoManager.createHistorico(instance, motivo);
+		instance.setAtivo(!instance.getAtivo());
+		update(instance);
 	}
 }
