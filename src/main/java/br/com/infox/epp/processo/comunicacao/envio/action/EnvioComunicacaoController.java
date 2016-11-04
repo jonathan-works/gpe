@@ -8,7 +8,6 @@ import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.OptimisticLockException;
 
@@ -185,12 +184,11 @@ public class EnvioComunicacaoController implements Serializable {
 
             String codigoLocalizacaoAssinatura = (String) TaskInstance.instance().getVariable(CODIGO_LOCALIZACAO_ASSINATURA);
             if (!Strings.isNullOrEmpty(codigoLocalizacaoAssinatura)) {
-                try {
-                    localizacaoAssinatura = localizacaoSearch.getLocalizacaoByCodigo(codigoLocalizacaoAssinatura);
-                    getModeloComunicacao().setLocalizacaoResponsavelAssinatura(localizacaoAssinatura);
-                } catch (NoResultException e) {
+                localizacaoAssinatura = localizacaoSearch.getLocalizacaoByCodigo(codigoLocalizacaoAssinatura);
+                if (localizacaoAssinatura == null) {
                     throw new EppConfigurationException("A localização para assinatura não foi definida com um valor válido");
                 }
+                getModeloComunicacao().setLocalizacaoResponsavelAssinatura(localizacaoAssinatura);
             }
 
             String codigoPerfilTemplateAssinatura = (String) TaskInstance.instance().getVariable(CODIGO_PERFIL_ASSINATURA);
@@ -240,9 +238,8 @@ public class EnvioComunicacaoController implements Serializable {
 		}
         String codigoLocalizacaoRaizAssinaturaComunicacao = Parametros.RAIZ_LOCALIZACOES_ASSINATURA_COMUNICACAO.getValue();
         if (codigoLocalizacaoRaizAssinaturaComunicacao != null && !codigoLocalizacaoRaizAssinaturaComunicacao.isEmpty()) {
-            try {
-                localizacaoRaizAssinaturaComunicacao = localizacaoSearch.getLocalizacaoByCodigo(codigoLocalizacaoRaizAssinaturaComunicacao);
-            } catch (Exception e) {
+            localizacaoRaizAssinaturaComunicacao = localizacaoSearch.getLocalizacaoByCodigo(codigoLocalizacaoRaizAssinaturaComunicacao);
+            if (localizacaoRaizAssinaturaComunicacao == null) {
                 throw new EppConfigurationException("O parâmetro codigoRaizResponsavelAssinaturaLocalizacao não foi definido corretamente");
             }
         } else {

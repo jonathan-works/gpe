@@ -36,9 +36,13 @@ public class LocalizacaoSearch {
 		Predicate codigoIgual = cb.equal(estrutura.get(Localizacao_.codigo), codigoLocalizacao);
 		Predicate ativo = cb.isTrue(estrutura.get(Localizacao_.ativo));
 		cq = cq.select(estrutura).where(cb.and(codigoIgual, ativo));
-		return getEntityManager().createQuery(cq).getSingleResult();
+        try {
+            return getEntityManager().createQuery(cq).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
 	}
-
+	
     public List<Localizacao> getLocalizacoesExternasWithDescricaoLike(Localizacao localizacaoRaiz, String descricao) {
         CriteriaQuery<Localizacao> query = createQueryLocalizacaoExternaByRaizDescricao(localizacaoRaiz, descricao);
         return getEntityManager().createQuery(query).getResultList();
