@@ -26,6 +26,7 @@ import br.com.infox.epp.pessoa.type.TipoPessoaEnum;
 import br.com.infox.epp.pessoaFisica.PessoaFisicaSearch;
 import br.com.infox.epp.usuario.UsuarioDTOSearch;
 import br.com.infox.epp.usuario.UsuarioLoginSearch;
+import br.com.infox.epp.ws.exception.ConflictWSException;
 import br.com.infox.epp.ws.interceptors.TokenAuthentication;
 import br.com.infox.epp.ws.interceptors.ValidarParametros;
 
@@ -96,11 +97,13 @@ public class UsuarioLoginRestService {
 	
 	public void adicionarUsuario(UsuarioDTO usuarioDTO) {
 		UsuarioLogin usuarioLogin = usuarioSearch.getUsuarioLoginByCpfWhenExists(usuarioDTO.getCpf());
-		if (usuarioLogin != null && !usuarioLogin.getAtivo()) {
+		if (usuarioLogin == null) {
+		    adicionarUsuario(usuarioDTO, false);
+		} else if (!usuarioLogin.getAtivo()) {
 			usuarioLogin.setAtivo(Boolean.TRUE);
 			usuarioLoginManager.update(aplicarValoresUsuarioLogin(usuarioDTO, usuarioLogin));
 		} else {
-			adicionarUsuario(usuarioDTO, false);
+		    throw new ConflictWSException("Já existe um usuário castrado com o código " + usuarioDTO.getCpf());
 		}
 	}
 
