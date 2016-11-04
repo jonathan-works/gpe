@@ -3,14 +3,21 @@ package br.com.infox.epp.documento.rest;
 import java.util.UUID;
 
 import javax.inject.Inject;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import br.com.infox.epp.processo.documento.entity.DocumentoBin;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
+
 public class DocumentoResourceImpl implements DocumentoResource {
 
-    private UUID uuid;
     @Inject
     private DocumentoRestService documentoRestService;
+    @Inject
+    private DocumentoBinManager documentoBinManager;
+
+    private UUID uuid;
 
     private Response buildOtherResponse(DocumentoDownloadWrapper documentWrapper) {
         return Response.status(Status.OK).type(documentWrapper.getContentType()).entity(documentWrapper.getData())
@@ -40,6 +47,15 @@ public class DocumentoResourceImpl implements DocumentoResource {
 
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
+    }
+
+    @Override
+    public byte[] getBinario() {
+        DocumentoBin documentoBin = documentoBinManager.getByUUID(uuid);
+        if (documentoBin == null) {
+            throw new WebApplicationException(Status.NOT_FOUND);
+        }
+        return documentoBin.getDocumentoBinWrapper().carregarDocumentoBinario().getDocumentoBinario();
     }
 
 }
