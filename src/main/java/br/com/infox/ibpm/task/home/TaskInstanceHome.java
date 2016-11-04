@@ -69,6 +69,8 @@ import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.documento.type.TipoDocumentoEnum;
 import br.com.infox.epp.documento.type.TipoNumeracaoEnum;
 import br.com.infox.epp.documento.type.VisibilidadeEnum;
+import br.com.infox.epp.fluxo.entity.Fluxo;
+import br.com.infox.epp.fluxo.manager.FluxoManager;
 import br.com.infox.epp.menu.MenuMovimentar;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
@@ -149,6 +151,8 @@ public class TaskInstanceHome implements Serializable {
 	private DocumentoBinarioManager documentoBinarioManager;
 	@Inject
 	private InfoxMessages infoxMessages;
+	@Inject
+	private FluxoManager fluxoManager;
 	@Inject
 	private CertificateSignatures certificateSignatures;
 	@In
@@ -235,9 +239,20 @@ public class TaskInstanceHome implements Serializable {
 			}
 		}
 	}
+	
+	public Integer getIdfluxo(TaskInstance taskInstance){
+		Integer idFluxo = null;
+		String nomeFluxo = taskInstance.getProcessInstance().getProcessDefinition().getName();
+		Fluxo fluxoByDescricao = fluxoManager.getFluxoByDescricao(nomeFluxo);
+		if(fluxoByDescricao != null)
+			idFluxo = fluxoByDescricao.getIdFluxo();
+		else
+			idFluxo = processoEpaHome.getInstance().getNaturezaCategoriaFluxo().getFluxo().getIdFluxo();
+		return idFluxo;
+	}
 
 	private void loadClassificacaoDocumentoDefault(TaskVariableRetriever variableRetriever, Documento documento) {
-		Integer idFluxo = processoEpaHome.getInstance().getNaturezaCategoriaFluxo().getFluxo().getIdFluxo();
+		Integer idFluxo = getIdfluxo(variableRetriever.taskInstance);
 		List<ClassificacaoDocumento> classificacoes = getUseableClassificacaoDocumento(false, variableRetriever.getName(), idFluxo);
 		if (classificacoes != null && classificacoes.size() == 1) {
 			documento.setClassificacaoDocumento(classificacoes.get(0));
@@ -513,11 +528,12 @@ public class TaskInstanceHome implements Serializable {
 	}
 
 	public boolean podeAssinarDocumento(String variableName) {
-		VariableInfo variableInfo = variableTypeResolver.getVariableInfoMap().get(variableName);
 		TaskInstance taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
 		if (taskInstance == null){
 			return false;
 		}
+		variableTypeResolver.setProcessInstance(taskInstance.getProcessInstance());
+		VariableInfo variableInfo = variableTypeResolver.getVariableInfoMap().get(variableName);
 		if (variableInfo == null){
 			return false;
 		}
