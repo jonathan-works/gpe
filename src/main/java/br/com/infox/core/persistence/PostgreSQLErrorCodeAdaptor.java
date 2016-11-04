@@ -1,15 +1,12 @@
 package br.com.infox.core.persistence;
 
-import java.sql.SQLException;
-
 import br.com.infox.hibernate.postgres.error.PostgreSQLErrorCode;
 
 public class PostgreSQLErrorCodeAdaptor implements DatabaseErrorCodeAdapter {
     
     public static final DatabaseErrorCodeAdapter INSTANCE = new PostgreSQLErrorCodeAdaptor();
 
-    public GenericDatabaseErrorCode resolve(SQLException sqlException) {
-        String sqlState = sqlException.getSQLState();
+    public GenericDatabaseErrorCode resolve(Integer errorCode, String sqlState) {
         for (PostgreSQLErrorCode code : PostgreSQLErrorCode.values()) {
             if (code.getCode().equals(sqlState)) {
                 switch (code) {
