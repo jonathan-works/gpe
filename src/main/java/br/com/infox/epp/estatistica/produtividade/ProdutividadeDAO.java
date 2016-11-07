@@ -1,25 +1,5 @@
 package br.com.infox.epp.estatistica.produtividade;
 
-import static br.com.infox.constants.WarningConstants.UNCHECKED;
-import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.BASE_QUERY;
-import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.CONDICAO_DATA_FIM;
-import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.CONDICAO_DATA_INICIO;
-import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.CONDICAO_FIXA;
-import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.CONDICAO_FLUXO;
-import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.CONDICAO_USUARIO;
-import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.GROUP_BY;
-import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.INDEX_LOCALIZACAO;
-import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.INDEX_MAXIMO_TEMPO_GASTO;
-import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.INDEX_MEDIA_TEMPO_GASTO;
-import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.INDEX_MINIMO_TEMPO_GASTO;
-import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.INDEX_PAPEL;
-import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.INDEX_QUANTIDADE_TAREFAS;
-import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.INDEX_TAREFA;
-import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.INDEX_TEMPO_PREVISTO;
-import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.INDEX_TIPO_PRAZO_TAREFA;
-import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.INDEX_USUARIO;
-import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.INNER_JOIN_FLUXO;
-import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.ORDER_BY;
 import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.PARAM_COUNT;
 import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.PARAM_DATA_FIM;
 import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.PARAM_DATA_INICIO;
@@ -27,18 +7,39 @@ import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.PARA
 import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.PARAM_START;
 import static br.com.infox.epp.estatistica.produtividade.ProdutividadeQuery.PARAM_USUARIO;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
 
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.dao.DAO;
-import br.com.infox.epp.tarefa.type.PrazoEnum;
+import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.entity.Localizacao_;
+import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.access.entity.Papel_;
+import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.access.entity.UsuarioLogin_;
+import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
+import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo_;
+import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.entity.Processo_;
+import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
+import br.com.infox.epp.tarefa.entity.ProcessoTarefa_;
+import br.com.infox.epp.tarefa.entity.Tarefa;
+import br.com.infox.epp.tarefa.entity.Tarefa_;
+import br.com.infox.ibpm.task.entity.UsuarioTaskInstance;
+import br.com.infox.ibpm.task.entity.UsuarioTaskInstance_;
 
 @Stateless
 @AutoCreate
@@ -48,72 +49,36 @@ public class ProdutividadeDAO extends DAO<ProdutividadeBean> {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "produtividadeDAO";
 
-    @SuppressWarnings(UNCHECKED)
     public List<ProdutividadeBean> listProdutividade(Map<String, Object> params) {
-        String sql = buildOrderedSql(params);
-        Query query = setParameters(params, getEntityManager().createNativeQuery(sql));
-        query = setPaginationParams(params, query);
-        List<Object[]> results = query.getResultList();
-        List<ProdutividadeBean> produtividades = new ArrayList<>();
-        for (Object[] o : results) {
-            produtividades.add(buildProdutividade(o));
-        }
-        return produtividades;
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<ProdutividadeBean> query = cb.createQuery(ProdutividadeBean.class);
+        QueryBean queryBean = buildBaseQuery(params, query);
+        
+        query.select(cb.construct(ProdutividadeBean.class,
+                queryBean.tarefa.get(Tarefa_.prazo),
+                queryBean.localizacao.get(Localizacao_.localizacao),
+                queryBean.papel.get(Papel_.nome),
+                queryBean.usuario.get(UsuarioLogin_.nomeUsuario),
+                queryBean.tarefa.get(Tarefa_.tarefa),
+                cb.avg(queryBean.processoTarefa.get(ProcessoTarefa_.tempoGasto)),
+                cb.min(queryBean.processoTarefa.get(ProcessoTarefa_.tempoGasto)),
+                cb.max(queryBean.processoTarefa.get(ProcessoTarefa_.tempoGasto)),
+                cb.count(queryBean.processoTarefa),
+                queryBean.tarefa.get(Tarefa_.tipoPrazo)
+        ));
+        
+        return setPaginationParams(params, getEntityManager().createQuery(query)).getResultList();
     }
 
     public Long totalProdutividades(Map<String, Object> params) {
-        String sql = buildSql(params);
-        StringBuilder sb = new StringBuilder("SELECT COUNT(*) FROM (");
-        sb.append(sql);
-        sb.append(") a");
-        Query query = setParameters(params, getEntityManager().createNativeQuery(sb.toString()));
-        Number result = (Number) query.getSingleResult();
-        return result.longValue();
-    }
-    
-    private String buildOrderedSql(Map<String, Object> params) {
-        return buildSql(params) + ORDER_BY;
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Integer> query = cb.createQuery(Integer.class);
+        QueryBean queryBean = buildBaseQuery(params, query);
+        query.select(queryBean.tarefa.get(Tarefa_.idTarefa));
+        return Long.valueOf(getEntityManager().createQuery(query).getResultList().size());
     }
 
-    private String buildSql(Map<String, Object> params) {
-        StringBuilder sb = new StringBuilder(BASE_QUERY);
-        if (params.containsKey(PARAM_FLUXO)) {
-            sb.append(INNER_JOIN_FLUXO);
-        }
-        sb.append(CONDICAO_FIXA);
-        if (params.containsKey(PARAM_USUARIO)) {
-            sb.append(CONDICAO_USUARIO);
-        }
-        if (params.containsKey(PARAM_FLUXO)) {
-            sb.append(CONDICAO_FLUXO);
-        }
-        if (params.containsKey(PARAM_DATA_INICIO)) {
-            sb.append(CONDICAO_DATA_INICIO);
-        }
-        if (params.containsKey(PARAM_DATA_FIM)) {
-            sb.append(CONDICAO_DATA_FIM);
-        }
-        sb.append(GROUP_BY);
-        return sb.toString();
-    }
-
-    private Query setParameters(Map<String, Object> params, Query base) {
-        if (params.containsKey(PARAM_USUARIO)) {
-            base.setParameter(PARAM_USUARIO, params.get(PARAM_USUARIO));
-        }
-        if (params.containsKey(PARAM_FLUXO)) {
-            base.setParameter(PARAM_FLUXO, params.get(PARAM_FLUXO));
-        }
-        if (params.containsKey(PARAM_DATA_INICIO)) {
-            base.setParameter(PARAM_DATA_INICIO, params.get(PARAM_DATA_INICIO));
-        }
-        if (params.containsKey(PARAM_DATA_FIM)) {
-            base.setParameter(PARAM_DATA_FIM, params.get(PARAM_DATA_FIM));
-        }
-        return base;
-    }
-
-    private Query setPaginationParams(Map<String, Object> params, Query base) {
+    private TypedQuery<ProdutividadeBean> setPaginationParams(Map<String, Object> params, TypedQuery<ProdutividadeBean> base) {
         if (params.containsKey(PARAM_START)) {
             base.setFirstResult((int) params.get(PARAM_START));
         }
@@ -122,37 +87,63 @@ public class ProdutividadeDAO extends DAO<ProdutividadeBean> {
         }
         return base;
     }
-
-    private ProdutividadeBean buildProdutividade(Object[] o) {
-        ProdutividadeBean produtividade = new ProdutividadeBean();
-
-        String c;
-        if (o[INDEX_TIPO_PRAZO_TAREFA] instanceof Character) {
-            c = ((Character) o[INDEX_TIPO_PRAZO_TAREFA]).toString();
-        } else {
-            // SQLServer
-            c = (String) o[INDEX_TIPO_PRAZO_TAREFA];
+    
+    private QueryBean buildBaseQuery(Map<String, Object> params, CriteriaQuery<?> query) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        Root<ProcessoTarefa> processoTarefa = query.from(ProcessoTarefa.class);
+        Root<UsuarioTaskInstance> usuarioTaskInstance = query.from(UsuarioTaskInstance.class);
+        Join<UsuarioTaskInstance, Papel> papel = usuarioTaskInstance.join(UsuarioTaskInstance_.papel, JoinType.INNER);
+        Join<UsuarioTaskInstance, UsuarioLogin> usuario = usuarioTaskInstance.join(UsuarioTaskInstance_.usuario, JoinType.INNER);
+        Join<UsuarioTaskInstance, Localizacao> localizacao = usuarioTaskInstance.join(UsuarioTaskInstance_.localizacao, JoinType.INNER);
+        Join<ProcessoTarefa, Tarefa> tarefa = processoTarefa.join(ProcessoTarefa_.tarefa, JoinType.INNER);
+        
+        query.where(cb.equal(processoTarefa.get(ProcessoTarefa_.taskInstance), usuarioTaskInstance.get(UsuarioTaskInstance_.idTaskInstance)));
+        
+        if (params.containsKey(PARAM_FLUXO)) {
+            Join<ProcessoTarefa, Processo> processo = processoTarefa.join(ProcessoTarefa_.processo, JoinType.INNER);
+            Join<Processo, NaturezaCategoriaFluxo> ncf = processo.join(Processo_.naturezaCategoriaFluxo, JoinType.INNER);
+            query.where(query.getRestriction(), cb.equal(ncf.get(NaturezaCategoriaFluxo_.fluxo), params.get(PARAM_FLUXO)));
         }
-        PrazoEnum tipoPrazo = null;
-        if (c != null) {
-            tipoPrazo = PrazoEnum.valueOf(c);
+        
+        if (params.containsKey(PARAM_USUARIO)) {
+            query.where(query.getRestriction(), cb.equal(usuario, params.get(PARAM_USUARIO)));
         }
-
-        produtividade.setLocalizacao((String) o[INDEX_LOCALIZACAO]);
-        produtividade.setMaximoTempoGasto(PrazoEnum.formatTempo((Integer) o[INDEX_MAXIMO_TEMPO_GASTO], tipoPrazo));
-        Integer media = ((Number) o[INDEX_MEDIA_TEMPO_GASTO]).intValue();
-        produtividade.setMediaTempoGasto(PrazoEnum.formatTempo(media, tipoPrazo));
-        produtividade.setMinimoTempoGasto(PrazoEnum.formatTempo((Integer) o[INDEX_MINIMO_TEMPO_GASTO], tipoPrazo));
-        produtividade.setPapel((String) o[INDEX_PAPEL]);
-        Long quantidadeTarefas = ((Number) o[INDEX_QUANTIDADE_TAREFAS]).longValue();
-        produtividade.setQuantidadeTarefas(quantidadeTarefas);
-        produtividade.setTarefa((String) o[INDEX_TAREFA]);
-        Integer tempo = (Integer) o[INDEX_TEMPO_PREVISTO];
-        if (tempo != null) {
-            tempo *= 60;
+        
+        if (params.containsKey(PARAM_DATA_INICIO)) {
+            query.where(query.getRestriction(), cb.greaterThanOrEqualTo(processoTarefa.get(ProcessoTarefa_.dataInicio), (Date) params.get(PARAM_DATA_INICIO)));
         }
-        produtividade.setTempoPrevisto(PrazoEnum.formatTempo(tempo, tipoPrazo));
-        produtividade.setUsuario((String) o[INDEX_USUARIO]);
-        return produtividade;
+        
+        if (params.containsKey(PARAM_DATA_FIM)) {
+            query.where(query.getRestriction(), cb.lessThanOrEqualTo(processoTarefa.get(ProcessoTarefa_.dataFim), (Date) params.get(PARAM_DATA_FIM)));
+        }
+        
+        query.orderBy(cb.asc(usuario.get(UsuarioLogin_.nomeUsuario)));
+        query.groupBy(
+                tarefa.get(Tarefa_.idTarefa),
+                tarefa.get(Tarefa_.prazo),
+                localizacao.get(Localizacao_.localizacao),
+                papel.get(Papel_.nome),
+                usuario.get(UsuarioLogin_.nomeUsuario),
+                tarefa.get(Tarefa_.tarefa),
+                tarefa.get(Tarefa_.tipoPrazo)
+        );
+        return new QueryBean(tarefa, localizacao, papel, usuario, processoTarefa);
+    }
+    
+    private static class QueryBean {
+        private Path<Tarefa> tarefa;
+        private Path<Localizacao> localizacao;
+        private Path<Papel> papel;
+        private Path<UsuarioLogin> usuario;
+        private Path<ProcessoTarefa> processoTarefa;
+        
+        public QueryBean(Path<Tarefa> tarefa, Path<Localizacao> localizacao, Path<Papel> papel,
+                Path<UsuarioLogin> usuario, Path<ProcessoTarefa> processoTarefa) {
+            this.tarefa = tarefa;
+            this.localizacao = localizacao;
+            this.papel = papel;
+            this.usuario = usuario;
+            this.processoTarefa = processoTarefa;
+        }
     }
 }

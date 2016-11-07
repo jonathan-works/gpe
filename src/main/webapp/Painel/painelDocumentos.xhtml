@@ -59,8 +59,10 @@
 						value="#{consultaProcessoList.categoria}" showLabelSelecione="true"
 						inNewLine="true" items="#{naturezaCategoriaFluxoFacade.getCategoriaList()}" />
 				</a:outputPanel>
-
-					</wi:searchForm>
+				
+				<ui:include src="/Painel/filtroExtra.xhtml" />
+				
+				</wi:searchForm>
 	         </ui:define>
 	         
 	         <infox:dynamicColumns columns="#{consultaProcessoList.dynamicColumns}" />

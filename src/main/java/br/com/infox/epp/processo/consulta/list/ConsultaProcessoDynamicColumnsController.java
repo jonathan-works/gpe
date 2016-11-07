@@ -132,7 +132,10 @@ public class ConsultaProcessoDynamicColumnsController implements Serializable {
     }
     
     private void appendFiltrosUsuarioExterno(CriteriaBuilder cb, Subquery<Integer> subquery, Root<Processo> processo) {
-        PessoaFisica pessoaFisica = Authenticator.getUsuarioLogado().getPessoaFisica();
+    	PessoaFisica pessoaFisica = null;
+    	if(Authenticator.getUsuarioLogado() != null)
+    		pessoaFisica = Authenticator.getUsuarioLogado().getPessoaFisica();
+    	
         if (pessoaFisica != null && Identity.instance().hasRole(Parametros.PAPEL_USUARIO_EXTERNO.getValue())) {
             Subquery<Integer> participante = subquery.subquery(Integer.class);
             Root<ParticipanteProcesso> pp = participante.from(ParticipanteProcesso.class);
