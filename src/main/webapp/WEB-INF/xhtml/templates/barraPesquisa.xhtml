@@ -17,7 +17,7 @@
 		<h:inputText id="searchText" styleClass="BP-ipt"
             value="#{search.searchText}" required="true"/>					
         <a:commandButton
-                 action="/Pesquisa/indexedSearch.xhtml"
+                 action="#{search.search}"
                  image="#{layoutController.getResourceUrlByPath('/imagens/imgPes.png')}" 
                  render="@this"
                  execute="@form"

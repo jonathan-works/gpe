@@ -66,12 +66,16 @@ public class SearchHandler implements Serializable {
      * é Numero de Processo, Id de Processo ({@link #searchProcesso()}), ou se é
      * texto normal ({@link #searchIndexer()})
      */
-    public void search() {
+    public String search() {
+    	String value = "/Pesquisa/indexedSearch.seam";
         if (searchText == null || "".equals(searchText.trim())) {
-            return;
+            return null;
         }
         processoHandler.clear();
-        processoSearcher.searchProcesso(searchText);
+        if ( processoSearcher.searchProcesso(searchText) ) {
+        	value = "/Processo/Consulta/list.seam";
+        }
+        return value;
     }
 
     public String getTextoDestacado(Variavel v) {
