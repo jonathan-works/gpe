@@ -291,4 +291,27 @@ public class MarcadorSearch extends PersistenceController {
     	return stringsUpperCase;
     }
     
+    public Marcador getMarcadorByCodigo(String codigoMarcador, Integer idProcesso) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Marcador> cq = cb.createQuery(Marcador.class);
+        Root<DocumentoBin> documentoBin = cq.from(DocumentoBin.class);
+        Root<Pasta> pasta = cq.from(Pasta.class); 
+        Join<DocumentoBin, Documento> documento = documentoBin.join(DocumentoBin_.documentoList, JoinType.LEFT);
+        Join<DocumentoBin, DocumentoTemporario> documentoTemporario = documentoBin.join(DocumentoBin_.documentoTemporarioList, JoinType.LEFT);
+        Join<DocumentoBin, Marcador> marcador = documentoBin.join(DocumentoBin_.marcadores, JoinType.INNER);
+        cq.select(marcador).distinct(true);
+        Predicate predicate = cb.and(
+                                  cb.or(
+                                      cb.equal(documento.get(Documento_.pasta).get(Pasta_.id), pasta.get(Pasta_.id)),
+                                      cb.equal(documentoTemporario.get(DocumentoTemporario_.pasta).get(Pasta_.id), pasta.get(Pasta_.id))
+                                  ),
+                                  cb.isNotNull(pasta.get(Pasta_.processo)),
+                                  cb.equal(pasta.get(Pasta_.processo).get(Processo_.idProcesso), cb.literal(idProcesso)),
+                                  cb.equal(marcador.get(Marcador_.codigo), cb.upper(cb.literal(codigoMarcador)))
+                              );
+        cq.where(predicate);
+        List<Marcador> resultList =  getEntityManager().createQuery(cq).setMaxResults(1).getResultList();
+        return resultList.isEmpty() ? null : resultList.get(0);
+    }
+    
 }
