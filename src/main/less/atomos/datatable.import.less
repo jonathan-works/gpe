@@ -168,6 +168,14 @@
 		.prefixed-atrib(flex-grow, 0);
 		.prefixed-atrib(flex-shrink, 0);
 		.prefixed-atrib(flex-basis, ~"calc(50% - 5px)");
+		
+        padding:2px 2px;
+        &:nth-child(4n+1),&:nth-child(4n){
+        }
+        &:nth-child(4n+2),&:nth-child(4n+3){
+            background-color:rgba(0,0,0,0.15);
+        }
+		
 		&.hidden{
 		    display:none;
 		}
