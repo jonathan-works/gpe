@@ -63,7 +63,7 @@ public class DocumentoResourceImpl implements DocumentoResource {
     }
     
     @Override
-    public List<AssinaturaDto> getAssinaturas() {
+    public AssinaturaDto[] getAssinaturas() {
         DocumentoBin documentoBin = documentoBinManager.getByUUID(uuid);
         if (documentoBin == null) {
             throw new WebApplicationException(Status.NOT_FOUND);
@@ -73,7 +73,7 @@ public class DocumentoResourceImpl implements DocumentoResource {
         for (AssinaturaDocumento assinaturaDocumento : assinaturas) {
             assinaturaDtos.add(new AssinaturaDto(assinaturaDocumento));
         }
-        return assinaturaDtos;
+        return assinaturaDtos.toArray(new AssinaturaDto[]{});
     }
    
 }

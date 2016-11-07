@@ -15,7 +15,7 @@ public class AssinaturaDto {
     }
     
     public AssinaturaDto(AssinaturaDocumento assinaturaDocumento) {
-        this.cpf = assinaturaDocumento.getPessoaFisica().getCpf();
+        this.cpf = assinaturaDocumento.getPessoaFisica() != null ?  assinaturaDocumento.getPessoaFisica().getCpf() : null;
         this.nome = assinaturaDocumento.getNomeUsuario();
         this.perfil = assinaturaDocumento.getNomeUsuarioPerfil();
         this.dataAssinatura = new DateTime(assinaturaDocumento.getDataAssinatura()).toString("yyyy-MM-dd");
