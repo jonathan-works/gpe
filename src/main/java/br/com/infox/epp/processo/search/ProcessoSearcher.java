@@ -1,14 +1,17 @@
 package br.com.infox.epp.processo.search;
 
+import javax.faces.context.FacesContext;
+import javax.faces.context.Flash;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
-import org.jboss.seam.faces.Redirect;
 
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.processo.consulta.action.ConsultaController;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
@@ -35,11 +38,9 @@ public class ProcessoSearcher {
      * @param processo Processo a ser visualizado no paginador
      */
     public void visualizarProcesso(Processo processo) {
-        Redirect.instance().setConversationPropagationEnabled(true);
-        Redirect.instance().setViewId("/Processo/Consulta/list.xhtml");
-        Redirect.instance().setParameter("id", processo.getIdProcesso());
-        Redirect.instance().setParameter("idJbpm", processo.getIdJbpm());
-        Redirect.instance().execute();
+        Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
+        flash.put("idProcesso", processo.getIdProcesso());
+        flash.put("idJbpm", processo.getIdJbpm());
     }
     
     /**
@@ -58,6 +59,7 @@ public class ProcessoSearcher {
         if (processo != null && processo.getIdJbpm() != null && processo.getProcessoPai() == null
         		&& sigiloProcessoService.usuarioPossuiPermissao(Authenticator.getUsuarioLogado(), processoManager.find(processo.getIdProcesso()))) {
             visualizarProcesso(processo);
+            return true;
         }
         return false;
     }
