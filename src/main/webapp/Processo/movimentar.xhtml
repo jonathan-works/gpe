@@ -331,7 +331,10 @@
             </infox:tab>
             
         	<ui:include src="abasCustomizadasDoMovimentar.xhtml" />
-        	
+
+            <c:forEach var="tab" items="#{extensaoMovimentar.tabs}">
+                <ui:include src="#{tab}" />
+            </c:forEach>
         </infox:tabPanel>
         
         <rich:popupPanel

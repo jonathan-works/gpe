@@ -117,6 +117,9 @@
         </ui:decorate>
       </infox:tab>
       <ui:include src="/Processo/Consulta/abasCustomizadasDoDetalheDoProcesso.xhtml"/>
+      <c:forEach var="tab" items="#{extensaoConsultar.tabs}">
+        <ui:include src="#{tab}" />
+      </c:forEach>
       <div>
       	<h:form>
       		<p:remoteCommand name="redirectToView" action="#{consultaController.redirectToView}" process="@this" />

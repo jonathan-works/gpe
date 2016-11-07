@@ -210,6 +210,10 @@
             </infox:tab>
   
             <ui:include src="abasCustomizadasDoVisualizar.xhtml"/>
+
+            <c:forEach var="tab" items="#{extensaoVisualizar.tabs}">
+                <ui:include src="#{tab}" />
+            </c:forEach>
         </infox:tabPanel>
         <c:if test="#{!checkPermission}">
             <wi:outputText
