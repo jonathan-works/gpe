@@ -85,6 +85,7 @@
                             <h:graphicImage
                                 title="#{infoxMessages['variavelClassificacaoDocumento.gerenciarClassificacoes']}"
                                 status=":status" url="#{layoutController.getResourceUrlByPath('/imagens/hamburger.png')}" />
+                            <f:setPropertyActionListener value="#{processBuilder.fluxo}" target="#{variavelClassificacaoDocumentoAction.fluxo}" />
                             <f:setPropertyActionListener value="#{var.name}" target="#{variavelClassificacaoDocumentoAction.currentVariable}" />
                             <f:setPropertyActionListener value="#{var.type}" target="#{variavelClassificacaoDocumentoAction.currentVariableType}" />
                         </a:commandLink>
