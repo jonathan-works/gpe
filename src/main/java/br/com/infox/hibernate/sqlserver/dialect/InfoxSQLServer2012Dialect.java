@@ -6,6 +6,7 @@ import org.hibernate.dialect.SQLServer2012Dialect;
 import org.hibernate.type.StandardBasicTypes;
 
 import br.com.infox.hibernate.function.CustomSqlFunctions;
+import br.com.infox.hibernate.function.DataAdd;
 import br.com.infox.hibernate.function.DataUtilAdd;
 import br.com.infox.hibernate.function.DateDiffDaySQLServer;
 import br.com.infox.hibernate.function.DocumentoSuficientementeAssinado;
@@ -21,6 +22,7 @@ public class InfoxSQLServer2012Dialect extends SQLServer2012Dialect {
         registerFunction(CustomSqlFunctions.DOCUMENTO_SUFICIENTEMENTE_ASSINADO, new DocumentoSuficientementeAssinado());
         registerFunction(CustomSqlFunctions.NUMERO_PROCESSO_ROOT, new NumeroProcessoRoot());
         registerFunction(CustomSqlFunctions.TO_DATE, new ToDateJpql());
+        registerFunction(CustomSqlFunctions.DATA_ADD, new DataAdd());
         registerFunction(CustomSqlFunctions.DATA_UTIL_ADD, new DataUtilAdd());
         registerFunction(CustomSqlFunctions.DATE_DIFF_DAY, new DateDiffDaySQLServer());
         registerFunction(CustomSqlFunctions.TO_TIME, new ToTimeSQLServer());

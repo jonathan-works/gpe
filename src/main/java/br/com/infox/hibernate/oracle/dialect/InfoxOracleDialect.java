@@ -6,6 +6,7 @@ import org.hibernate.dialect.Oracle10gDialect;
 import org.hibernate.type.StandardBasicTypes;
 
 import br.com.infox.hibernate.function.CustomSqlFunctions;
+import br.com.infox.hibernate.function.DataAdd;
 import br.com.infox.hibernate.function.DataUtilAdd;
 import br.com.infox.hibernate.function.DateDiffDayOracle;
 import br.com.infox.hibernate.function.NumeroProcessoRoot;
@@ -16,6 +17,7 @@ public class InfoxOracleDialect extends Oracle10gDialect {
 
     public InfoxOracleDialect() {
         registerFunction(CustomSqlFunctions.NUMERO_PROCESSO_ROOT, new NumeroProcessoRoot());
+        registerFunction(CustomSqlFunctions.DATA_ADD, new DataAdd());
         registerFunction(CustomSqlFunctions.DATA_UTIL_ADD, new DataUtilAdd());
         registerFunction(CustomSqlFunctions.DATE_DIFF_DAY, new DateDiffDayOracle());
         registerFunction(CustomSqlFunctions.TO_DATE, new ToDateJpql());
