@@ -108,13 +108,13 @@ public class CategoriaEntrega implements Serializable {
             return true;
         if (obj == null)
             return false;
-        if (getClass() != obj.getClass())
+        if (!(obj instanceof CategoriaEntrega))
             return false;
         CategoriaEntrega other = (CategoriaEntrega) obj;
-        if (codigo == null) {
-            if (other.codigo != null)
+        if (getCodigo() == null) {
+            if (other.getCodigo() != null)
                 return false;
-        } else if (!codigo.equals(other.codigo))
+        } else if (!getCodigo().equals(other.getCodigo()))
             return false;
         return true;
     }
