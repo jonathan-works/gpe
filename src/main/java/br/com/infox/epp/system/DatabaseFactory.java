@@ -16,8 +16,7 @@ public final class DatabaseFactory {
     
     static {
         try {
-            String packageName = DatabaseFactory.class.getPackage().getName().replace('.', '/');
-            Enumeration<URL> databasePropertiesUrls = DatabaseFactory.class.getClassLoader().getResources(packageName + "/database.properties");
+            Enumeration<URL> databasePropertiesUrls = DatabaseFactory.class.getClassLoader().getResources("database.properties");
             TreeMap<Integer, URL> sortedProperties = new TreeMap<>();
             while (databasePropertiesUrls.hasMoreElements()) {
                 URL databasePropertyUrl = databasePropertiesUrls.nextElement();
