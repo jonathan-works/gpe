@@ -14,59 +14,63 @@ import br.com.infox.epp.processo.status.entity.StatusProcesso;
 @ViewScoped
 public class StatusProcessoList extends DataList<StatusProcesso> {
 
-    private static final long serialVersionUID = 1L;
-
-    private static final String DEFAULT_JPQL = "select sp from StatusProcesso sp";
-    private static final String DEFAULT_ORDER = "sp.descricao";
+private static final long serialVersionUID = 1L;
     
-    private String nome;
-    private String descricao;
-    
-    @Override
-    protected String getDefaultOrder() {
-        return DEFAULT_ORDER;
-    }
+private static final String DEFAULT_JPQL = "select o from StatusProcesso o ";
+private static final String DEFAULT_ORDER = "o.descricao";
 
-    @Override
-    protected String getDefaultEjbql() {
-        return DEFAULT_JPQL;
-    }
-    
-    @Override
-    protected void addRestrictionFields() {
-        addRestrictionField("nome", "sp.nome", RestrictionType.contendoLower);
-        addRestrictionField("descricao", "sp.descricao", RestrictionType.contendoLower);
-    }
-    
-    @Override
-    protected Map<String, String> getCustomColumnsOrder() {
-        Map<String, String> mapOrder = new HashMap<>();
-        mapOrder.put("nome", "sp.nome");
-        mapOrder.put("descricao", "sp.descricao");
-        return mapOrder;
-    }
-    
-    @Override
-    public void newInstance() {
-        this.setNome("");
-        this.setDescricao("");
-        super.newInstance();
-    }
+private String nome;
+private String descricao;
+private Boolean ativo;
 
-    public String getNome() {
-        return nome;
-    }
+@Override
+protected String getDefaultOrder() {
+    return DEFAULT_ORDER;
+}
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+@Override
+protected String getDefaultEjbql() {
+    return DEFAULT_JPQL;
+}
 
-    public String getDescricao() {
-        return descricao;
-    }
+@Override
+protected void addRestrictionFields() {
+    addRestrictionField("nome", RestrictionType.contendo);
+    addRestrictionField("descricao", RestrictionType.contendo);
+    addRestrictionField("ativo", RestrictionType.contendo);
+}
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
+@Override
+protected Map<String, String> getCustomColumnsOrder() {
+    Map<String, String> orderMap = new HashMap<>(3);
+    orderMap.put("nome", "o.nome");
+    orderMap.put("descricao", "o.descricao");
+    orderMap.put("ativo", "o.ativo");
+    return orderMap;
+}
+
+public String getNome() {
+    return nome;
+}
+
+public void setNome(String nome) {
+    this.nome = nome;
+}
+
+public String getDescricao() {
+    return descricao;
+}
+
+public void setDescricao(String descricao) {
+    this.descricao = descricao;
+}
+
+public Boolean getAtivo() {
+	return ativo;
+}
+
+public void setAtivo(Boolean ativo) {
+	this.ativo = ativo;
+}
 
 }

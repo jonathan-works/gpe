@@ -471,6 +471,87 @@
         </c:forEach>
         
         
+      	
+      	
+      	
+      	
+      	
+      	
+      	
+      	<infox:tab
+            id="statusProcessoFluxo"
+            name="statusProcessoFluxo"
+            rendered="#{home.managed and not fluxoCrudAction.replica}"
+            title="#{infoxMessages['statusProcesso.titleView']}">
+            <s:div id="statusProcessoFluxoDiv">
+                <div>
+                    <wi:dataForm
+                        formId="statusProcessoFluxoForm"
+                        formTitle="#{infoxMessages['form.title']}: #{fluxoCrudAction.instance}">
+                        <i:selectOneMenu
+                            id="statusProcessoFluxo"
+                            value="#{fluxoLocalizacaoCrudAction.naturezaCategoriaFluxo}"
+                            required="true"
+                            label="#{infoxMessages['natCatFluxoLocalizacao.naturezaCategoriaFluxo']}"
+                            showLabelSelecione="true"
+                            items="#{statusProcessoView.consultaProcessosAtivoNaoSelecionados(fluxoCrudAction.instance)}" />
+                        <ui:define name="buttons">
+                            <wi:commandButton
+                                id="saveButton"
+                                action="fluxoLocalizacaoCrudAction.save"
+                                reRender="natCatFluxoLocDiv, pageBodyDialogMessage"
+                                value="#{infoxMessages['crud.persist']}" />
+                        </ui:define>
+                    </wi:dataForm>
+                </div>
+                <s:div id="statusProcessoDiv">
+                    <wi:dataTable
+                        values="#{natCatFluxoLocalizacaoList.list(15)}"
+                        bean="#{natCatFluxoLocalizacaoList}"
+                        tableTitle="#{infoxMessages['natCatFluxoLocalizacao.tableTitle']}"
+                        id="statusProcessoList"
+                        rowId="#{row.idNatCatFluxoLocalizacao}"
+                        actionInactive="fluxoLocalizacaoCrudAction.inactive"
+                        showSearchForm="false" panelStyle="margin-top: 1em;">
+                        <ui:define name="searchForm" />
+                        <ui:define name="headerToolBar" />
+                        <ui:define name="toolBar">
+                            <wi:toolBarRemove
+                                actionRemove="fluxoLocalizacaoCrudAction.remove(row)"
+                                reRender="natCatFluxoLocDiv pageBodyDialogMessage" />
+                        </ui:define>
+                        <wi:columnOutputText
+                            columnId="naturezaCategoriaFluxo.natureza"
+                            columnHeader="#{infoxMessages['naturezaCategoriaFluxo.natureza']}"
+                            columnWidth="25%"
+                            value="#{row.naturezaCategoriaFluxo.natureza}" />
+                        <wi:columnOutputText
+                            columnId="naturezaCategoriaFluxo.categoria"
+                            columnHeader="#{infoxMessages['naturezaCategoriaFluxo.categoria']}"
+                            columnWidth="20%"
+                            value="#{row.naturezaCategoriaFluxo.categoria}" />
+                        <wi:columnOutputText
+                            columnId="naturezaCategoriaFluxo.fluxo"
+                            columnHeader="#{infoxMessages['naturezaCategoriaFluxo.fluxo']}"
+                            columnWidth="20%"
+                            value="#{row.naturezaCategoriaFluxo.fluxo}" />
+                        <wi:columnOutputText
+                            columnId="localizacao"
+                            columnHeader="#{infoxMessages['localizacao.titleView']}"
+                            columnWidth="20%"
+                            value="#{row.localizacao}" />
+                    </wi:dataTable>
+                </s:div>
+            </s:div>
+        </infox:tab>
+      	
+      	
+      	
+      	
+      	
+      	
+      	
+      	
     </ui:define>
     
     <ui:define name="extraContent">

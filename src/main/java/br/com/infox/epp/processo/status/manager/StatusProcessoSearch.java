@@ -10,6 +10,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import br.com.infox.core.persistence.PersistenceController;
+import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.entity.StatusProcesso_;
 
@@ -28,6 +29,15 @@ public class StatusProcessoSearch extends PersistenceController {
         List<StatusProcesso> result = getEntityManager().createQuery(cq).setMaxResults(1).getResultList();
         return result.isEmpty() ? null : result.get(0);
     }
+    
+    public List<StatusProcesso> getProcessosAtivoNaoSelecionados(Fluxo fluxo) {
+	    CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+	    CriteriaQuery<StatusProcesso> cq = cb.createQuery(StatusProcesso.class);
+	    Root<StatusProcesso> udm = cq.from(StatusProcesso.class);
+	    cq.select(udm);
+	    cq.where(cb.isTrue(udm.get(StatusProcesso_.ativo)));
+	    return getEntityManager().createQuery(cq).getResultList();
+	}
     
 	public Boolean existeStatusProcessoByNome(String nome) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
