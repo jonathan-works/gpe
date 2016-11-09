@@ -17,7 +17,6 @@
   <ui:define name="head">
   <c:if test="#{not empty flash.fluxo}">
   		<c:set property="fluxo" target="#{processBuilder}" value="#{flash.fluxo}"></c:set>
-  		<c:set property="fluxo" target="#{variavelClassificacaoDocumentoAction}" value="#{flash.fluxo}"></c:set>
  		 <f:metadata>
 	  			<f:event listener="#{processBuilder.load()}" type="preRenderView" />
   		</f:metadata>
