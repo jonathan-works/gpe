@@ -37,7 +37,7 @@ protected String getDefaultEjbql() {
 protected void addRestrictionFields() {
     addRestrictionField("nome", RestrictionType.contendo);
     addRestrictionField("descricao", RestrictionType.contendo);
-    addRestrictionField("ativo", RestrictionType.contendo);
+    addRestrictionField("ativo", RestrictionType.igual);
 }
 
 @Override

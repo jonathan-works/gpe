@@ -53,7 +53,7 @@ public class StatusProcesso implements Serializable {
     @Column(name = "in_ativo", nullable = false)
     private Boolean ativo;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "tb_fluxo_status_processo", 
             joinColumns=@JoinColumn(name="id_status_processo", referencedColumnName="id_status_processo"),
             inverseJoinColumns=@JoinColumn(name="id_fluxo", referencedColumnName="id_fluxo"))
@@ -120,6 +120,14 @@ public class StatusProcesso implements Serializable {
 
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
+	}
+
+	public Set<Fluxo> getFluxos() {
+		return fluxos;
+	}
+
+	public void setFluxos(Set<Fluxo> fluxos) {
+		this.fluxos = fluxos;
 	}
 	
 }

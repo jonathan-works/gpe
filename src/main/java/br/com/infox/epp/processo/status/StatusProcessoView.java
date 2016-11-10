@@ -13,7 +13,6 @@ import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
 import br.com.infox.epp.processo.status.manager.StatusProcessoManager;
-import br.com.infox.epp.processo.status.manager.StatusProcessoSearch;
 
 @Named
 @ViewScoped
@@ -44,6 +43,7 @@ public class StatusProcessoView implements Serializable {
         statusProcesso.setNome(getNome());
         statusProcesso.setDescricao(getDescricao());
         statusProcesso.setAtivo(getAtivo());
+        statusProcessoManager.validateBeforePersist(statusProcesso);
         statusProcessoManager.persist(statusProcesso);
         setId(statusProcesso.getIdStatusProcesso());
     }
@@ -51,23 +51,18 @@ public class StatusProcessoView implements Serializable {
     @ExceptionHandled(value = MethodType.UPDATE)
     public void atualizar() {
     	StatusProcesso statusProcesso = statusProcessoManager.find(getId());
-    	statusProcesso.setNome(getNome());
         statusProcesso.setDescricao(getDescricao());
         statusProcesso.setAtivo(getAtivo());
         statusProcessoManager.update(statusProcesso);
     }
     
-    @ExceptionHandled(value = MethodType.UPDATE, updatedMessage = "Registro Inativado com sucesso!" )
+    @ExceptionHandled(value = MethodType.UPDATE, updatedMessage = "#{infoxMessages['entity_inactived']}" )
     public void inativar() {
     	StatusProcesso statusProcesso = statusProcessoManager.find(getId());
     	statusProcesso.setAtivo(Boolean.FALSE);
     	statusProcessoManager.update(statusProcesso);
     }
     
-    public List<StatusProcesso> consultaProcessosAtivoNaoSelecionados(Fluxo fluxo) {
-    	return statusProcessoManager.getProcessosAtivoNaoSelecionados(fluxo);
-    }
-
     public void load(StatusProcesso statusProcesso) {
         setId(statusProcesso.getIdStatusProcesso());
         setDescricao(statusProcesso.getDescricao());

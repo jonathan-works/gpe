@@ -487,59 +487,51 @@
                 <div>
                     <wi:dataForm
                         formId="statusProcessoFluxoForm"
-                        formTitle="#{infoxMessages['form.title']}: #{fluxoCrudAction.instance}">
+                        formTitle="#{infoxMessages['form.title']}">
                         <i:selectOneMenu
                             id="statusProcessoFluxo"
-                            value="#{fluxoLocalizacaoCrudAction.naturezaCategoriaFluxo}"
+                            value="#{fluxoStatusProcessoView.statusProcesso}"
                             required="true"
-                            label="#{infoxMessages['natCatFluxoLocalizacao.naturezaCategoriaFluxo']}"
+                            converterId="br.com.infox.jsf.converter.EntityConverter"
+                            label="#{infoxMessages['statusProcesso.statusFluxo']}"
                             showLabelSelecione="true"
-                            items="#{statusProcessoView.consultaProcessosAtivoNaoSelecionados(fluxoCrudAction.instance)}" />
+                            items="#{fluxoStatusProcessoView.statusProcessosNaoRelacionados(fluxoCrudAction.instance)}" />
                         <ui:define name="buttons">
                             <wi:commandButton
                                 id="saveButton"
-                                action="fluxoLocalizacaoCrudAction.save"
-                                reRender="natCatFluxoLocDiv, pageBodyDialogMessage"
+                                action="#{fluxoStatusProcessoView.incluir(fluxoCrudAction.instance)}"
+                                reRender="statusProcessoFluxoDiv, pageBodyDialogMessage"
                                 value="#{infoxMessages['crud.persist']}" />
                         </ui:define>
                     </wi:dataForm>
                 </div>
                 <s:div id="statusProcessoDiv">
                     <wi:dataTable
-                        values="#{natCatFluxoLocalizacaoList.list(15)}"
-                        bean="#{natCatFluxoLocalizacaoList}"
-                        tableTitle="#{infoxMessages['natCatFluxoLocalizacao.tableTitle']}"
+                        values="#{fluxoStatusProcessoView.statusProcessosRelacionados(fluxoCrudAction.instance)}"
+                        bean="#{statusProcessoList}"
+                        tableTitle="#{infoxMessages['statusProcesso.tableTitle']}"
                         id="statusProcessoList"
-                        rowId="#{row.idNatCatFluxoLocalizacao}"
-                        actionInactive="fluxoLocalizacaoCrudAction.inactive"
+                        rowId="#{row.idStatusProcesso}"
+                        actionInactive="fluxoStatusProcessoView.inactive"
+                        hideOrder="true"
                         showSearchForm="false" panelStyle="margin-top: 1em;">
                         <ui:define name="searchForm" />
                         <ui:define name="headerToolBar" />
                         <ui:define name="toolBar">
                             <wi:toolBarRemove
-                                actionRemove="fluxoLocalizacaoCrudAction.remove(row)"
-                                reRender="natCatFluxoLocDiv pageBodyDialogMessage" />
+                                actionRemove="fluxoStatusProcessoView.remover(fluxoCrudAction.instance, row)"
+                                reRender="statusProcessoFluxoDiv pageBodyDialogMessage" />
                         </ui:define>
                         <wi:columnOutputText
-                            columnId="naturezaCategoriaFluxo.natureza"
-                            columnHeader="#{infoxMessages['naturezaCategoriaFluxo.natureza']}"
+                            columnId="fluxoStatusProcesso.nome"
+                            columnHeader="#{infoxMessages['statusProcesso.nome']}"
                             columnWidth="25%"
-                            value="#{row.naturezaCategoriaFluxo.natureza}" />
+                            value="#{row.nome}" />
                         <wi:columnOutputText
-                            columnId="naturezaCategoriaFluxo.categoria"
-                            columnHeader="#{infoxMessages['naturezaCategoriaFluxo.categoria']}"
+                            columnId="fluxoStatusProcesso.descricao"
+                            columnHeader="#{infoxMessages['statusProcesso.descricao']}"
                             columnWidth="20%"
-                            value="#{row.naturezaCategoriaFluxo.categoria}" />
-                        <wi:columnOutputText
-                            columnId="naturezaCategoriaFluxo.fluxo"
-                            columnHeader="#{infoxMessages['naturezaCategoriaFluxo.fluxo']}"
-                            columnWidth="20%"
-                            value="#{row.naturezaCategoriaFluxo.fluxo}" />
-                        <wi:columnOutputText
-                            columnId="localizacao"
-                            columnHeader="#{infoxMessages['localizacao.titleView']}"
-                            columnWidth="20%"
-                            value="#{row.localizacao}" />
+                            value="#{row.descricao}" />
                     </wi:dataTable>
                 </s:div>
             </s:div>

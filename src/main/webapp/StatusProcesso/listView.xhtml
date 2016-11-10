@@ -18,7 +18,7 @@
         <wi:dataTable values="#{statusProcessoList.list(15)}"
             bean="#{statusProcessoList}"
             tableTitle="#{infoxMessages['statusProcesso.tableTitle']}"
-            id="statusProcessoList" rowId="#{row.id}">
+            id="statusProcessoList" rowId="#{row.idStatusProcesso}">
             
             <ui:define name="headerToolBar"/>
             
@@ -31,7 +31,7 @@
             		
             		<a:commandLink execute="@form" render="statusProcessoListPanel :pageBodyDialogMessage" 
             			action="#{statusProcessoView.inativar}" limitRender="true" rendered="#{row.ativo}">
-            			<f:setPropertyActionListener value="#{row.id}" target="#{statusProcessoView.id}" />
+            			<f:setPropertyActionListener value="#{row.idStatusProcesso}" target="#{statusProcessoView.id}" />
             			<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}" title="Inativar" styleClass="opacityHover"/>
             		</a:commandLink>
             	</h:form>

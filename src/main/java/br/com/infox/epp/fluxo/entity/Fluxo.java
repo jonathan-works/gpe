@@ -150,7 +150,7 @@ public class Fluxo implements Serializable {
     private List<DefinicaoProcesso> definicaoProcesso = new ArrayList<>();
 
     
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "tb_fluxo_status_processo", 
             joinColumns=@JoinColumn(name="id_fluxo", referencedColumnName="id_fluxo"),
             inverseJoinColumns=@JoinColumn(name="id_status_processo", referencedColumnName="id_status_processo"))

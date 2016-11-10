@@ -35,8 +35,9 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.epp.documento.facade.ClassificacaoDocumentoFacade;
 import br.com.infox.epp.documento.manager.ModeloDocumentoManager;
+import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.processo.status.entity.StatusProcesso;
-import br.com.infox.epp.processo.status.manager.StatusProcessoManager;
+import br.com.infox.epp.processo.status.manager.StatusProcessoSearch;
 import br.com.infox.ibpm.node.InfoxMailNode;
 import br.com.infox.ibpm.node.constants.NodeTypeConstants;
 import br.com.infox.ibpm.node.handler.NodeHandler;
@@ -72,7 +73,7 @@ public class NodeFitter extends Fitter implements Serializable {
     private boolean managedCatchSignal = false;
 
     @Inject
-    private StatusProcessoManager statusProcessoManager;
+    private StatusProcessoSearch statusProcessoSearch ;
     @Inject
     private ClassificacaoDocumentoFacade classificacaoDocumentoFacade;
     @Inject
@@ -273,8 +274,8 @@ public class NodeFitter extends Fitter implements Serializable {
         nodes = null;
     }
 
-    public List<StatusProcesso> getStatusProcessoList() {
-        return statusProcessoManager.findAll();
+    public List<StatusProcesso> getStatusProcessoList(Fluxo fluxo) {
+        return statusProcessoSearch.getStatusProcessosAtivoRelacionados(fluxo);
     }
     
     public List<ClassificacaoDocumento> getClassificacoesDocumento() {
