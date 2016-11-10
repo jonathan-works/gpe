@@ -227,7 +227,10 @@ public class TaskInstanceHome implements Serializable {
 					documento.setDocumentoBin(new DocumentoBin());
 				}
 			}
-			variaveisDocumento.put(getFieldName(variableRetriever.getName()), documento);
+			if(variableAccess.isWritable())
+				variaveisDocumento.put(getFieldName(variableRetriever.getName()), documento);
+			else
+				variaveisDocumento.put(variableRetriever.getName(), documento);
 			if (variableRetriever.isEditor() && documento.getId() == null) {
 				setModeloWhenExists(variableRetriever, documento);
 			}
@@ -561,6 +564,7 @@ public class TaskInstanceHome implements Serializable {
 	public void assinarDocumento() {
 		if (documentoToSign == null) {
 			FacesMessages.instance().add("Sem documento para assinar");
+			return;
 		}
 		CertificateSignatureBundleBean certificateSignatureBundle = certificateSignatures.get(tokenToSign);
 		if (certificateSignatureBundle.getStatus() != CertificateSignatureBundleStatus.SUCCESS) {
