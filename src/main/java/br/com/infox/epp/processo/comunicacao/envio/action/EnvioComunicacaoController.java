@@ -353,6 +353,9 @@ public class EnvioComunicacaoController implements Serializable {
 		if (modeloComunicacao.getDestinatarios().isEmpty()) {
 			msg.append("Nenhum destinatário foi selecionado.\n");
 		}
+		if (finalizada && modeloComunicacao.isMinuta()) {
+		    msg.append("Não é possível finalizar pois o texto no editor da comunicação é minuta.\n");
+		}
 		if (!modeloComunicacao.isMinuta() && modeloComunicacao.getClassificacaoComunicacao() == null){
 			msg.append("Escolha a classificação de documento.\n");
 		}
