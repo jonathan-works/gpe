@@ -23,9 +23,11 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 
+import org.hibernate.Session;
 import org.jboss.seam.Component;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
+import org.jbpm.JbpmContext;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
@@ -53,6 +55,7 @@ import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.util.ELUtil;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cdi.transaction.Transactional;
@@ -473,6 +476,7 @@ public class ProcessBuilder implements Serializable {
                 taskFitter.checkCurrentTaskPersistenceState();
                 atualizarRaiaPooledActors(instance.getId());
                 atualizarTimer();
+                atualizarParametros(instance.getId());
                 FacesMessages.instance().clear();
                 FacesMessages.instance().add("Fluxo publicado com sucesso!");
             } catch (Exception e) {
@@ -481,6 +485,50 @@ public class ProcessBuilder implements Serializable {
             }
         }
         return true;
+    }
+    
+    /**
+     * Carrega as TaskInstances informadas da sessão do hibernate do JBPM para que
+     * seus métodos possam ser chamados corretamente no contexto da sessão JBPM
+     * e não do entityManager de onde foram carregadas
+     * @return
+     */
+    private List<TaskInstance> carregarTaskInstancesSessaoJbpm(List<TaskInstance> taskInstances) {
+        List<Long> ids = new ArrayList<>();
+        for(TaskInstance taskInstance : taskInstances) {
+        	ids.add(taskInstance.getId());
+        }
+        
+        Session session = JbpmContext.getCurrentJbpmContext().getSession();
+        taskInstances = new ArrayList<>();
+        for(Long id : ids) {
+        	TaskInstance taskInstance = (TaskInstance)session.load(TaskInstance.class, id);
+        	taskInstances.add(taskInstance);        	
+        }
+        return taskInstances;
+    }
+    
+    public void atualizarParametros(Long idProcessDefinition) {
+        EntityManager entityManager = EntityManagerProducer.instance().getEntityManagerNotManaged();
+        List<TaskInstance> taskInstances = taskInstanceDAO.getTaskInstancesOpen(idProcessDefinition, entityManager);
+        
+        //Carrega as taskInstances da sessão do JBPM e não do entityManager atual (para utilizar seus método - já que 
+        //internamente eles utilizam a Session do contexto JBPM)
+        taskInstances = carregarTaskInstancesSessaoJbpm(taskInstances);
+        
+        for (TaskInstance taskInstance : taskInstances) {
+    		List<VariableAccess> variableAccesses = taskInstance.getTask().getTaskController().getVariableAccesses();
+    		for (VariableAccess variableAccess : variableAccesses) {
+                String type = variableAccess.getMappedName().split(":")[0];
+                if (VariableType.PARAMETER.name().equals(type)) {                	
+    			    String defaultValue = variableAccess.getValue();
+    			    Object novoValor = ELUtil.evaluateJbpm(taskInstance, defaultValue);
+    			    String variableName = variableAccess.getVariableName();
+    			    
+                	taskInstance.setVariableLocally(variableName, novoValor);
+    			}
+    		}
+        }
     }
     
     public void updatePostDeploy(ProcessDefinition processDefinition) throws DAOException {
