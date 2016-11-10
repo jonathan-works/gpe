@@ -374,14 +374,6 @@ public class NodeHandler implements Serializable {
             node.addEvent(e);
         }
         e.addAction(newTimer);
-        e = node.getEvent(Event.EVENTTYPE_NODE_LEAVE);
-        if (e == null) {
-            e = new Event(Event.EVENTTYPE_NODE_LEAVE);
-            node.addEvent(e);
-        }
-        final CancelTimerAction c = new CancelTimerAction();
-        c.setTimerName(newTimer.getTimerName());
-        e.addAction(c);
     }
 
     private String getGeneratedTimerName() {
