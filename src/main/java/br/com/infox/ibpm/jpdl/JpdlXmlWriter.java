@@ -41,6 +41,7 @@ import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.instantiation.Delegation;
 import org.jbpm.jpdl.JpdlException;
+import org.jbpm.scheduler.def.CancelTimerAction;
 import org.jbpm.scheduler.def.CreateTimerAction;
 import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
@@ -561,6 +562,8 @@ public class JpdlXmlWriter {
         if (action instanceof CreateTimerAction) {
             initCreateTimerAction(parentElement, action);
             return true;
+        } else if(action instanceof CancelTimerAction){
+        	return true;
         }
         return false;
     }
