@@ -11,6 +11,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jbpm.taskmgmt.exe.TaskInstance;
 
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
@@ -53,6 +54,16 @@ public class ClassificacaoDocumentoFacade {
     
     public TipoAssinaturaEnum[] getTipoAssinaturaEnumValues() {
         return TipoAssinaturaEnum.values();
+    }
+
+    public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo, String nomeVariavel, TaskInstance taskInstance) {
+        String nomeFluxo = taskInstance.getTask().getProcessDefinition().getName();
+        Fluxo fluxo = fluxoManager.getFluxoByDescricao(nomeFluxo);
+        if (fluxo != null) {
+            return getUseableClassificacaoDocumento(isModelo, nomeVariavel, fluxo.getIdFluxo());
+        } else {
+            return getUseableClassificacaoDocumento(false);
+        }
     }
 
     public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo, String nomeVariavel, Integer idFluxo) {

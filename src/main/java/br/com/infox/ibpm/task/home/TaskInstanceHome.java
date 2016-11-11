@@ -994,15 +994,7 @@ public class TaskInstanceHome implements Serializable {
 	public TipoAssinaturaEnum[] getTipoAssinaturaEnumValues() {
 		return classificacaoDocumentoFacade.getTipoAssinaturaEnumValues();
 	}
-	public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo, String nomeVariavel, TaskInstance taskInstance) {
-	    String nomeFluxo = taskInstance.getTask().getProcessDefinition().getName();
-	    Fluxo fluxo = fluxoManager.getFluxoByDescricao(nomeFluxo);
-	    if (fluxo != null) {
-	        return classificacaoDocumentoFacade.getUseableClassificacaoDocumento(isModelo, nomeVariavel, fluxo.getIdFluxo());
-	    } else {
-	        return classificacaoDocumentoFacade.getUseableClassificacaoDocumento(false);
-	    }
-	}
+
 	public List<ClassificacaoDocumento> getUseableClassificacaoDocumento(boolean isModelo, String nomeVariavel, Integer idFluxo) {
 		return classificacaoDocumentoFacade.getUseableClassificacaoDocumento(isModelo, nomeVariavel, idFluxo);
 	}
