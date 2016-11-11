@@ -34,16 +34,20 @@ public class UsuarioLoginList extends EntityList<UsuarioLogin> {
     private static final String FILTRO_BY_PAPEL = "exists (select 1 from UsuarioPerfil upl inner join upl.perfilTemplate pt "
     		+ " where pt.papel = #{usuarioLoginList.papel} and upl.usuarioLogin = o and upl.ativo = true)";
     
+    private static final String FILTRO_BY_CPF = "exists (select 1 from PessoaFisica pf where o.pessoaFisica = pf and pf.cpf = #{usuarioLoginList.cpf} )";
+    
     private static final String DEFAULT_ORDER = "o.nomeUsuario";
     
     private Localizacao localizacao;
     private Papel papel;
+    private String cpf;
     
     @Override
     public void newInstance() {
     	super.newInstance();
     	setLocalizacao(null);
     	setPapel(null);
+    	setCpf(null);
     	LocalizacaoTreeHandler localizacaoTreeHandler = ComponentUtil.getComponent(LocalizacaoTreeHandler.NAME);
     	localizacaoTreeHandler.clearTree();
     	PapelTreeHandler papelTreeHandler = ComponentUtil.getComponent(PapelTreeHandler.NAME);
@@ -54,6 +58,8 @@ public class UsuarioLoginList extends EntityList<UsuarioLogin> {
     protected void addSearchFields() {
         addSearchField("tipoUsuario", SearchCriteria.IGUAL);
         addSearchField("nomeUsuario", SearchCriteria.CONTENDO);
+        addSearchField("cpf", SearchCriteria.IGUAL, FILTRO_BY_CPF);
+        addSearchField("login", SearchCriteria.CONTENDO);
         addSearchField("bloqueio", SearchCriteria.IGUAL);
         addSearchField("provisorio", SearchCriteria.IGUAL);
         addSearchField("ativo", SearchCriteria.IGUAL);
@@ -100,6 +106,14 @@ public class UsuarioLoginList extends EntityList<UsuarioLogin> {
 
 	public void setPapel(Papel papel) {
 		this.papel = papel;
+	}
+
+	public String getCpf() {
+		return cpf;
+	}
+
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
 	}
 
 }
