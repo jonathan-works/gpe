@@ -41,7 +41,6 @@ import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.instantiation.Delegation;
 import org.jbpm.jpdl.JpdlException;
-import org.jbpm.scheduler.def.CancelTimerAction;
 import org.jbpm.scheduler.def.CreateTimerAction;
 import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
@@ -558,24 +557,11 @@ public class JpdlXmlWriter {
         timer.addAttribute("transition", create.getTransitionName());
     }
     
-    private void initCancelTimerAction(final Element parentElement, final Action action) {
-        final CancelTimerAction timer = (CancelTimerAction) action;
-        final String name = timer.getTimerName();
-        final Action firstTimer = timers.get(name);
-        
-        if (firstTimer == null) {
-            timers.put(name, action);
-        }
-    }
-    
     private boolean writeTimer(Element parentElement, Action action) {
         if (action instanceof CreateTimerAction) {
             initCreateTimerAction(parentElement, action);
             return true;
-        } else if (action instanceof CancelTimerAction) {
-            initCancelTimerAction(parentElement, action);
         }
-        
         return false;
     }
 
