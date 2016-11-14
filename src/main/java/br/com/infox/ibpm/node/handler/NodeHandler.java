@@ -282,7 +282,7 @@ public class NodeHandler implements Serializable {
                 list.addAll(Arrays.asList(new Task().getSupportedEventTypes()));
             }
             for (Event event : node.getEvents().values()) {
-                if (list.contains(event.getEventType())) {
+                if (list.contains(event.getEventType()) && !EventHandler.hasOnlyTimers(event)) {
                     list.remove(event.getEventType());
                 }
             }
