@@ -11,6 +11,8 @@ import org.jbpm.graph.action.Script;
 import org.jbpm.graph.def.Action;
 import org.jbpm.graph.def.Event;
 import org.jbpm.graph.def.GraphElement;
+import org.jbpm.scheduler.def.CancelTimerAction;
+import org.jbpm.scheduler.def.CreateTimerAction;
 
 import br.com.infox.ibpm.node.handler.NodeHandler;
 import br.com.infox.jbpm.action.ActionTemplateHandler;
@@ -86,10 +88,26 @@ public class EventHandler implements Serializable {
     private static boolean isIgnoreEvent(Event event) {
         return event.isListener() || Event.EVENTTYPE_DISPATCHER.equals(event.getEventType()) 
                 || MultiInstanceActivityBehavior.NONE_EVENT_BEHAVIOR.equals(event.getEventType()) 
-                || MultiInstanceActivityBehavior.ONE_EVENT_BEHAVIOR.equals(event.getEventType());
+                || MultiInstanceActivityBehavior.ONE_EVENT_BEHAVIOR.equals(event.getEventType())
+                || hasOnlyTimers(event);
     }
+    
+    public static boolean hasOnlyTimers(Event event) {
+    	if (event.getActions() == null) {
+    		return false;
+    	}
+    	
+    	boolean hasRealAction = false;
+    	for (Action action : event.getActions()) {
+    		if (!(action instanceof CreateTimerAction) && !(action instanceof CancelTimerAction)) {
+    			hasRealAction = true;
+    			break;
+    		}
+    	}
+		return !hasRealAction;
+	}
 
-    @Override
+	@Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
@@ -135,9 +153,10 @@ public class EventHandler implements Serializable {
             if (actionList != null) {
                 for (Iterator<Action> it = actionList.iterator(); it.hasNext();) {
                     Action action = it.next();
-                    if (NodeHandler.GENERATE_DOCUMENTO_ACTION_NAME.equals(action.getName())) {
+                    if (NodeHandler.GENERATE_DOCUMENTO_ACTION_NAME.equals(action.getName()) 
+                    		|| action instanceof CreateTimerAction
+                    		|| action instanceof CancelTimerAction) {
                         it.remove();
-                        break;
                     }
                 }
             }
