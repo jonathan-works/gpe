@@ -75,26 +75,48 @@ public class Papel implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Id
+    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_PAPEL)
+    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
+    @Column(name = ID_PAPEL, unique = true, nullable = false)
     private Integer idPapel;
+    
+    @Column(name = NOME_PAPEL, length = NOME_PADRAO)
+    @Size(min = LengthConstants.FLAG, max = NOME_PADRAO)
     private String nome;
+    
+    @NotNull
+    @RoleName
+    @Column(name = IDENTIFICADOR, length = DESCRICAO_PADRAO)
+    @Size(min = LengthConstants.FLAG, max = DESCRICAO_PADRAO)
     private String identificador;
+    
+    @NotNull
+    @Column(name=COL_TERMO_ADESAO, nullable=false)
     private Boolean termoAdesao;
 
+    @RoleGroups
+    @ManyToMany
+    @JoinTable(name = "tb_papel_grupo", joinColumns = @JoinColumn(name = "id_papel"), inverseJoinColumns = @JoinColumn(name = "membro_do_grupo"))
+    @ForeignKey(name = "tb_papel_grupo_papel_fk", inverseName = "tb_papel_grupo_membro_fk")
+    @OrderBy("nome")
     private List<Papel> grupos;
 
     public Papel() {
     }
 
-    public Papel(final String nome, final String identificador) {
+    public Papel(String nome, String identificador) {
         this.nome = nome;
         this.identificador = identificador;
         this.termoAdesao = Boolean.FALSE;
     }
+    
+    public Papel(String nome, String identificador, Boolean termoAdesao) {
+        this.nome = nome;
+        this.identificador = identificador;
+        this.termoAdesao = termoAdesao;
+    }
 
-    @SequenceGenerator(allocationSize=1, initialValue=1, name = GENERATOR, sequenceName = SEQUENCE_PAPEL)
-    @Id
-    @GeneratedValue(generator = GENERATOR, strategy = GenerationType.SEQUENCE)
-    @Column(name = ID_PAPEL, unique = true, nullable = false)
     public Integer getIdPapel() {
         return this.idPapel;
     }
@@ -103,8 +125,6 @@ public class Papel implements java.io.Serializable {
         this.idPapel = idPerfil;
     }
 
-    @Column(name = NOME_PAPEL, length = NOME_PADRAO)
-    @Size(min = LengthConstants.FLAG, max = NOME_PADRAO)
     public String getNome() {
         return this.nome;
     }
@@ -113,10 +133,6 @@ public class Papel implements java.io.Serializable {
         this.nome = nome;
     }
 
-    @Column(name = IDENTIFICADOR, length = DESCRICAO_PADRAO)
-    @Size(min = LengthConstants.FLAG, max = DESCRICAO_PADRAO)
-    @NotNull
-    @RoleName
     public String getIdentificador() {
         return this.identificador;
     }
@@ -125,17 +141,20 @@ public class Papel implements java.io.Serializable {
         this.identificador = identificador;
     }
 
-    @RoleGroups
-    @ManyToMany
-    @JoinTable(name = "tb_papel_grupo", joinColumns = @JoinColumn(name = "id_papel"), inverseJoinColumns = @JoinColumn(name = "membro_do_grupo"))
-    @ForeignKey(name = "tb_papel_grupo_papel_fk", inverseName = "tb_papel_grupo_membro_fk")
-    @OrderBy("nome")
     public List<Papel> getGrupos() {
         return this.grupos;
     }
 
     public void setGrupos(List<Papel> grupos) {
         this.grupos = grupos;
+    }
+    
+    public Boolean getTermoAdesao() {
+        return termoAdesao;
+    }
+
+    public void setTermoAdesao(Boolean termoAdesao) {
+        this.termoAdesao = termoAdesao;
     }
 
     @Override
@@ -182,14 +201,4 @@ public class Papel implements java.io.Serializable {
         PapelDAO pd = ComponentUtil.getComponent(PapelDAO.NAME);
         return pd.getListaPermissoes(this);
     }
-
-    @NotNull
-    @Column(name=COL_TERMO_ADESAO, nullable=false)
-    public Boolean getTermoAdesao() {
-        return this.termoAdesao;
-    }
-    public void setTermoAdesao(Boolean termoAdesao) {
-        this.termoAdesao=termoAdesao;
-    }
-
 }
