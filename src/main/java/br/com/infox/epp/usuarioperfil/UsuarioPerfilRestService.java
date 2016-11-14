@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.validation.ValidationException;
 
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.access.entity.UsuarioLogin;
@@ -16,6 +17,7 @@ import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.access.manager.PerfilTemplateManager;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
+import br.com.infox.epp.ws.exception.ConflictWSException;
 import br.com.infox.epp.ws.interceptors.TokenAuthentication;
 import br.com.infox.epp.ws.interceptors.ValidarParametros;
 
@@ -133,13 +135,11 @@ public class UsuarioPerfilRestService {
 	public void novo(UsuarioPerfilDTO usuarioPerfilDTO) {
 		UsuarioPerfil usuarioBanco = getUsuarioPerfil(usuarioPerfilDTO);
 		if(usuarioBanco != null) {
-			throw new ValidationException("UsuarioPerfil já cadastrado");
+		    throw new ConflictWSException(InfoxMessages.getInstance().get("constraintViolation.uniqueViolation"));
 		}
 		
 		UsuarioPerfil usuarioPerfil = new UsuarioPerfil();
-		
 		atualizarUsuarioPerfil(usuarioPerfil, usuarioPerfilDTO);
-		
 		usuarioPerfilManager.persist(usuarioPerfil);
 	}
 	

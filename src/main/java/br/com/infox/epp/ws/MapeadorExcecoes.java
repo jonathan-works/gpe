@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import javax.ejb.EJBException;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceException;
 import javax.validation.ValidationException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
@@ -15,7 +16,13 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
+import org.hibernate.exception.ConstraintViolationException;
+
+import br.com.infox.core.messages.InfoxMessages;
+import br.com.infox.core.persistence.GenericDatabaseErrorCode;
 import br.com.infox.epp.rest.RestException;
+import br.com.infox.epp.system.Configuration;
+import br.com.infox.epp.system.Database;
 import br.com.infox.epp.ws.exception.ExcecaoServico;
 import br.com.infox.epp.ws.exception.MediaTypeSource;
 import br.com.infox.epp.ws.messages.WSMessages;
@@ -51,12 +58,11 @@ public class MapeadorExcecoes implements ExceptionMapper<Throwable> {
 		}
 		else if (CLASSE_NOT_FOUND_RESTEASY.equals(e.getClass().getName())) {
 			return Status.NOT_FOUND.getStatusCode();
-		}
-		else {
-			return Status.INTERNAL_SERVER_ERROR.getStatusCode();
+		} else {
+		    return Status.INTERNAL_SERVER_ERROR.getStatusCode();
 		}
 	}
-
+	
 	@Override
 	public Response toResponse(Throwable e) {
 		e = getExcecao(e);
@@ -66,14 +72,15 @@ public class MapeadorExcecoes implements ExceptionMapper<Throwable> {
 		
 		if(e instanceof ExcecaoServico) {
 			WebApplicationException wae = buildWebApplicationException((ExcecaoServico) e);
-			
 			return wae.getResponse();
 		}
 		else if (e instanceof WebApplicationException) {
 			WebApplicationException exception = (WebApplicationException) e;
 			return exception.getResponse();
-		}
-		else if (e instanceof ValidationException) {
+		} else if (e instanceof PersistenceException && e.getCause() != null && e.getCause() instanceof ConstraintViolationException) {
+		    WebApplicationException wae = buildWebApplicationException((PersistenceException) e);
+		    return wae.getResponse();
+		} else if (e instanceof ValidationException) {
 			WebApplicationException wae = buildWebApplicationException((ValidationException) e);
 			return wae.getResponse();
 		}
@@ -113,4 +120,22 @@ public class MapeadorExcecoes implements ExceptionMapper<Throwable> {
 		setMediaType(response, e);
 		return new WebApplicationException(response.build());
 	}
+
+    private WebApplicationException buildWebApplicationException(PersistenceException pe) {
+        Database database = Configuration.getInstance().getDatabase();
+        ConstraintViolationException cve = (ConstraintViolationException) pe.getCause();
+        
+        RestException re;
+        ResponseBuilder response;
+        if (GenericDatabaseErrorCode.UNIQUE_VIOLATION.equals(database.getErrorCodeAdapter().resolve(cve.getErrorCode(), cve.getSQLState()))) {
+            re = new RestException(MensagensErroService.CODIGO_DAO_EXCEPTION, InfoxMessages.getInstance().get("constraintViolation.uniqueViolation"));
+            response = Response.status(Status.CONFLICT).entity(re);
+        } else {
+            re = new RestException(MensagensErroService.CODIGO_DAO_EXCEPTION, pe.getMessage());
+            response = Response.status(Status.BAD_REQUEST).entity(re);
+        }
+        setMediaType(response, pe);
+        return new WebApplicationException(response.build());
+    }
+    
 }

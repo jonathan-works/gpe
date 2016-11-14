@@ -1,7 +1,10 @@
 package br.com.infox.epp.localizacao.rest;
 
+import java.net.URI;
+
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 public class LocalizacaoRestImpl implements LocalizacaoRest {
 
@@ -11,9 +14,10 @@ public class LocalizacaoRestImpl implements LocalizacaoRest {
 	private LocalizacaoRestService localizacaoRestService;
 
 	@Override
-	public Response adicionarLocalizacao(LocalizacaoDTO localizacao) {
-		localizacaoRestService.adicionarLocalizacao(localizacao);
-		return Response.ok().build();
+	public Response adicionarLocalizacao(UriInfo uriInfo, LocalizacaoDTO localizacao) {
+		LocalizacaoDTO novaLocalizacao = localizacaoRestService.adicionarLocalizacao(localizacao);
+		URI location = uriInfo.getAbsolutePathBuilder().path(novaLocalizacao.getCodigo()).build();
+        return Response.created(location).build();
 	}
 
 	@Override

@@ -89,7 +89,7 @@ public class DAOException extends RuntimeException {
         if (current != null) {
         	this.sqlException = (SQLException) current;
         	Database database = Configuration.getInstance().getDatabase();
-        	return database.getErrorCodeAdapter().resolve(sqlException);
+        	return database.getErrorCodeAdapter().resolve(sqlException.getErrorCode(), sqlException.getSQLState());
         }
         return null;
     }

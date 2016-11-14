@@ -9,6 +9,8 @@ import br.com.infox.epp.processo.partes.entity.TipoParte;
 import br.com.infox.epp.processo.partes.manager.TipoParteManager;
 import br.com.infox.epp.tipoParte.TipoParteSearch;
 import br.com.infox.epp.tipoParticipante.TipoParticipanteDTOSearch;
+import br.com.infox.epp.ws.exception.ConflictWSException;
+import br.com.infox.epp.ws.exception.NotFoundWSException;
 import br.com.infox.epp.ws.interceptors.TokenAuthentication;
 import br.com.infox.epp.ws.interceptors.ValidarParametros;
 
@@ -25,7 +27,11 @@ public class TipoParticipanteRestService {
 	private TipoParteManager tipoParteManager;
 
 	public TipoParticipanteDTO getTipoParticipanteByCodigo(String codigo) {
-		return new TipoParticipanteDTO(tipoParteSearch.getTipoParteByIdentificador(codigo));
+		TipoParte tipoParte = tipoParteSearch.getTipoParteByIdentificador(codigo);
+		if (tipoParte ==  null) {
+            throw new NotFoundWSException("Não foi encontrado tipo de parte com código " + codigo);
+        }
+        return new TipoParticipanteDTO(tipoParte);
 	}
 
 	public List<TipoParticipanteDTO> getTiposParticipantes() {
@@ -33,15 +39,26 @@ public class TipoParticipanteRestService {
 	}
 
 	public void adicionarTipoParticipante(TipoParticipanteDTO tipoParticipanteDTO) {
+	    if (tipoParteSearch.getTipoParteByIdentificador(tipoParticipanteDTO.getCodigo()) != null) {
+	        throw new ConflictWSException("Já existe um tipo de participante com o código " + tipoParticipanteDTO.getCodigo());
+	    }
 		tipoParteManager.persist(aplicar(tipoParticipanteDTO,new TipoParte()));
 	}
 
 	public void atualizarTipoParticipante(String codigo, TipoParticipanteDTO tipoParticipanteDTO) {
-		tipoParteManager.update(aplicar(tipoParticipanteDTO,tipoParteSearch.getTipoParteByIdentificador(codigo)));
+		TipoParte tipoParte = tipoParteSearch.getTipoParteByIdentificador(codigo);
+		if (tipoParte ==  null) {
+            throw new NotFoundWSException("Não foi encontrado tipo de parte com código " + codigo);
+        }
+        tipoParteManager.update(aplicar(tipoParticipanteDTO,tipoParte));
 	}
 
 	public void removerTipoParticipante(String codigo) {
-		tipoParteManager.remove(tipoParteSearch.getTipoParteByIdentificador(codigo));
+		TipoParte tipoParte = tipoParteSearch.getTipoParteByIdentificador(codigo);
+		if (tipoParte ==  null) {
+            throw new NotFoundWSException("Não foi encontrado tipo de parte com código " + codigo);
+        }
+        tipoParteManager.remove(tipoParte);
 	}
 
 	public TipoParte aplicar(TipoParticipanteDTO tipoParticipanteDTO, TipoParte tipoParte){

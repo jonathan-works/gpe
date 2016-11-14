@@ -12,6 +12,5 @@ login-required="true"
     <begin-conversation join="true" />
     <action execute="#{documentoSearch.setPalavraPesquisada(search.searchText)}" on-postback="false"/>
     <action execute="#{taskConteudoSearch.setPalavraPesquisada(search.searchText)}" on-postback="false"/>
-    <action execute="#{search.search}" on-postback="false"/>
 
 </page>
