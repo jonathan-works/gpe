@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
@@ -16,7 +15,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import br.com.infox.core.persistence.DAOException;
-import br.com.infox.epp.ws.RestUtils;
 import br.com.infox.epp.ws.bean.UsuarioBean;
 import br.com.infox.epp.ws.bean.UsuarioSenhaBean;
 import br.com.infox.epp.ws.services.UsuarioRestService;
@@ -36,7 +34,8 @@ public class UsuarioRestImpl implements UsuarioRest {
 	@Override
 	public Response adicionarUsuario(UriInfo uriInfo, UsuarioDTO usuarioDTO) {
 		usuarioLoginRestService.adicionarUsuario(usuarioDTO);
-		return Response.ok().status(Status.CREATED).header(HttpHeaders.LOCATION, RestUtils.generateLocationURL(uriInfo,usuarioDTO.getCpf())).build();
+		URI location = uriInfo.getAbsolutePathBuilder().path(usuarioDTO.getCpf()).build();
+        return Response.created(location).build();
 	}
 
 	public Response getUsuarios(Integer limit, Integer offset) {

@@ -1,5 +1,7 @@
 package br.com.infox.epp.pessoa.rest;
 
+import java.net.URI;
+
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -18,8 +20,8 @@ public class PessoaJuridicaRestImpl implements PessoaJuridicaRest {
     @Override
     public Response add(UriInfo uriInfo, PessoaJuridicaDTO pjDTO) {
         pessoaJuridicaRestService.add(pjDTO);
-        String stringRetorno = uriInfo.getAbsolutePath().toASCIIString() + pjDTO.getCnpj();
-        return Response.ok().header("Location", stringRetorno).build();
+        URI location = uriInfo.getAbsolutePathBuilder().path(pjDTO.getCnpj()).build();
+        return Response.created(location).build();
     }
 
     @Override

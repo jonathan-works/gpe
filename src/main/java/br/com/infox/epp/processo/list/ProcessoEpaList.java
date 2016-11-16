@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
@@ -95,7 +94,7 @@ public class ProcessoEpaList extends EntityList<Processo> {
             + "where pp.processo = o and pp.pessoa.idPessoa = %d ) " ;
 
     @Inject
-    private ConsultaProcessoDynamicColumnsController consultaProcessoDynamicColumnsController;
+    protected ConsultaProcessoDynamicColumnsController consultaProcessoDynamicColumnsController;
     @Inject
     private FluxoManager fluxoManager;
     
@@ -117,6 +116,7 @@ public class ProcessoEpaList extends EntityList<Processo> {
     	Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
     	if (flash.containsKey("idFluxo")) {
     		setFluxo(fluxoManager.find(flash.get("idFluxo")));
+    		onSelectFluxo();
     	}
     	consultaProcessoDynamicColumnsController.setRecurso(DefinicaoVariavelProcessoRecursos.CONSULTA_PROCESSOS);
     }
@@ -141,6 +141,7 @@ public class ProcessoEpaList extends EntityList<Processo> {
     @Override
     public void newInstance() {
     	setFluxo(null);
+    	onSelectFluxo();
     }
     
     public Periodo getDataInicio() {
@@ -204,20 +205,21 @@ public class ProcessoEpaList extends EntityList<Processo> {
 	}
     
     public void setFluxo(Fluxo fluxo) {
-    	if (fluxo == null || !Objects.equals(fluxo, this.fluxo)) {
-			this.fluxo = fluxo;
-			dataInicio = new Periodo();
-	    	dataFim = new Periodo();
-	    	setCategoria(null);
-	    	setNatureza(null);
-	    	setRelator(null);
-	    	setStatusProcesso(null);
-	    	setUnidadeDecisoraColegiada(null);
-	    	setUnidadeDecisoraMonocratica(null);
-	    	consultaProcessoDynamicColumnsController.setFluxo(fluxo);
-	    	super.newInstance();
-    	}
+		this.fluxo = fluxo;
 	}
+    
+    public void onSelectFluxo() {
+        dataInicio = new Periodo();
+        dataFim = new Periodo();
+        setCategoria(null);
+        setNatureza(null);
+        setRelator(null);
+        setStatusProcesso(null);
+        setUnidadeDecisoraColegiada(null);
+        setUnidadeDecisoraMonocratica(null);
+        consultaProcessoDynamicColumnsController.setFluxo(fluxo);
+        super.newInstance();
+    }
     
 	public PessoaFisica getRelator() {
 		return relator;

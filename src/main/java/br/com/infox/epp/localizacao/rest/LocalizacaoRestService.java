@@ -10,6 +10,8 @@ import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.localizacao.EstruturaSearch;
 import br.com.infox.epp.localizacao.LocalizacaoDTOSearch;
 import br.com.infox.epp.localizacao.LocalizacaoSearch;
+import br.com.infox.epp.ws.exception.ConflictWSException;
+import br.com.infox.epp.ws.exception.NotFoundWSException;
 import br.com.infox.epp.ws.interceptors.TokenAuthentication;
 import br.com.infox.epp.ws.interceptors.ValidarParametros;
 
@@ -28,7 +30,12 @@ public class LocalizacaoRestService {
 	private EstruturaSearch estruturaSearch;
 	
 	public LocalizacaoDTO adicionarLocalizacao(LocalizacaoDTO localizacaoDTO) {
-		Localizacao localizacao = new Localizacao();
+        Localizacao locExistente = localizacaoSearch.getLocalizacaoByCodigo(localizacaoDTO.getCodigo());
+        if (locExistente != null) {
+            throw new ConflictWSException("Já existe uma localização castrada com o código " + localizacaoDTO.getCodigo());
+        }
+
+	    Localizacao localizacao = new Localizacao();
 		localizacao.setCodigo(localizacaoDTO.getCodigo());
 		localizacao.setLocalizacao(localizacaoDTO.getNome());
 		localizacao.setLocalizacaoPai(localizacaoSearch.getLocalizacaoByCodigo(localizacaoDTO.getCodigoLocalizacaoSuperior()));
@@ -43,6 +50,9 @@ public class LocalizacaoRestService {
 
 	public LocalizacaoDTO atualizarLocalizacao(String codigoLocalizacao, LocalizacaoDTO localizacaoDTO) {
 		Localizacao localizacao = localizacaoSearch.getLocalizacaoByCodigo(codigoLocalizacao);
+		if (localizacao ==  null) {
+		    throw new NotFoundWSException("Não foi encontrada localização com código " + codigoLocalizacao);
+		}
 		localizacao.setLocalizacao(localizacaoDTO.getNome());
 		localizacao.setLocalizacaoPai(localizacaoSearch.getLocalizacaoByCodigo(localizacaoDTO.getCodigoLocalizacaoSuperior()));
 		if (localizacaoDTO.getCodigoEstrutura() != null){
@@ -54,12 +64,19 @@ public class LocalizacaoRestService {
 
 	public void removerLocalizacao(String codigoLocalizacao) {
 		Localizacao localizacao = localizacaoSearch.getLocalizacaoByCodigo(codigoLocalizacao);
+		if (localizacao ==  null) {
+            throw new NotFoundWSException("Não foi encontrada localização com código " + codigoLocalizacao);
+        }
 		localizacao.setAtivo(Boolean.FALSE);
 		localizacaoManager.update(localizacao);
 	}
 
 	public LocalizacaoDTO getLocalizacao(String codigoLocalizacao) {
-		return new LocalizacaoDTO(localizacaoSearch.getLocalizacaoByCodigo(codigoLocalizacao));
+		Localizacao localizacao = localizacaoSearch.getLocalizacaoByCodigo(codigoLocalizacao);
+		if (localizacao ==  null) {
+            throw new NotFoundWSException("Não foi encontrada localização com código " + codigoLocalizacao);
+        }
+        return new LocalizacaoDTO(localizacao);
 	}
 
 	public List<LocalizacaoDTO> getLocalizacoes() {

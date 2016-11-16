@@ -45,7 +45,7 @@ public interface CalendarioEventosQuery {
     String GET_PERIODICOS_NAO_ATUALIZADOS_QUERY = "select cd from CalendarioEventos cd"
             + " where cd.dataFim < :" + DATA
             + " and cd.serie is not null"
-            + " and not exists(select 1 from CalendarioEventos future where future.serie=cd.serie and future.dataFim > :" + DATA + ")";
+            + " and not exists(select 1 from CalendarioEventos future where future.serie=cd.serie and future.dataFim > cd.dataFim)";
     String GET_BY_SERIE="CalendarioEventos.getBySerie";
     String GET_BY_SERIE_QUERY = "select cd from CalendarioEventos cd where cd.serie = :" + SERIE;
     String GET_ULTIMO_EVENTO_SERIE="CalendarioEventos.getUltimoEventoSerie";

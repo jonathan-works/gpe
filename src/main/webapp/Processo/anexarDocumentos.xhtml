@@ -317,16 +317,17 @@
 								<f:setPropertyActionListener value="#{row}" target="#{flash.documentoTemporario}" />
 							</a:commandLink>
 
-							<a:commandLink id="downloadLinkPDF" execute="@form"
-								rendered="#{not isModelo and fileDownloader.isPdf(row.documentoBin)}" render="@this" limitRender="true"
-								status=":status" styleClass="opacityHover"
-								onclick="infox.showLoading();" action="#{jsfUtil.applyLastPhaseFlashAction}"
-								oncomplete="infox.hideLoading(); infox.openPopUp('download#{row.documentoBin.id}', '#{fileDownloader.getDownloadUrl(row)}',screen.availWidth,screen.availHeight);">
-								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
-								<f:setPropertyActionListener value="#{row}" target="#{flash.documentoTemporario}" />
-							</a:commandLink>
-							
-							<p:commandLink id="downloadLink" action="#{fileDownloader.download(row.documentoBin)}"
+						   <a:commandLink id="downloadLinkPDF"
+                               execute="@form" action="#{jsfUtil.applyLastPhaseFlashAction}"
+                               rendered="#{not isModelo and fileDownloader.isPdf(row.documentoBin)}" render="@this pageBodyDialogMessage" limitRender="true"
+                               status=":status" styleClass="opacityHover"
+                               onclick="infox.showLoading();"
+                               oncomplete="infox.hideLoading(); infox.openPopUp('PopUpDocumentoBin', '#{pathResolver.contextPath}/Processo/downloadDocumento.seam','1024');">
+                               <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
+                               <f:setPropertyActionListener value="#{row}" target="#{flash.documentoTemporario}" />
+                            </a:commandLink>
+                            
+                             <p:commandLink id="downloadLink" action="#{fileDownloader.download(row.documentoBin)}"
                                rendered="#{not isModelo and not fileDownloader.isPdf(row.documentoBin)}" 
                                styleClass="opacityHover" ajax="false">
                                <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />

@@ -61,7 +61,7 @@
                 currentPageReportTemplate="Página {currentPage} de {totalPages} em {totalRecords} registros" >
                 
                 <p:column styleClass="dt-toolbar-col" exportable="false">
-                    <a:commandLink id="downloadDocumento" rendered="#{row.documento.documentoBin.extensao ne null}" 
+                    <a:commandLink id="downloadDocumentoPDF" rendered="#{row.documento.documentoBin.extensao ne null and fileDownloader.isPdf(row.documento.documentoBin)}" 
                     	action="#{jsfUtil.applyLastPhaseFlashAction}"
                         style="margin-right: 0.5em;" title="#{row.documento.descricao}"
                         onclick="infox.showLoading();" execute="@this" render="@this" limitRender="true"
@@ -69,6 +69,12 @@
                         <h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" title="#{row.documento.documentoBin}" styleClass="opacityHover"/>
                         <f:setPropertyActionListener value="#{row.documento.documentoBin}" target="#{flash.documentoBin}" />
                     </a:commandLink>
+                    
+                     <p:commandLink id="downloadLink" action="#{fileDownloader.download(row.documento.documentoBin)}" ajax="false"
+                               rendered="#{row.documento.documentoBin.extensao ne null and not fileDownloader.isPdf(row.documento.documentoBin)}" >
+                               <h:graphicImage url="#{wiSkin.imageFolder}/reopen.png" title="#{row.documento.documentoBin}" styleClass="opacityHover"/>
+                     </p:commandLink>
+           
                     
                     <a:commandLink id="viewEditor" rendered="#{row.documento.documentoBin.extensao eq null}"
                         style="margin-right: 0.5em;" title="#{row.documento.descricao}"

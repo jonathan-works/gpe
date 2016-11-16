@@ -115,8 +115,8 @@ public class JbpmUtil {
         CriteriaQuery<Object[]> cq = cb.createQuery(Object[].class);
         Root<ProcessInstance> processInstance = cq.from(ProcessInstance.class);
         Root<TaskNode> taskNode = cq.from(TaskNode.class);
+        Root<Token> token = cq.from(Token.class);
         Root<CreateTimerAction> createTimeAction = cq.from(CreateTimerAction.class);
-        Join<ProcessInstance, Token> token = processInstance.join("rootToken", JoinType.INNER);
         Join<TaskNode, Event> event = taskNode.join("events", JoinType.INNER);
         
         Subquery<Integer> subquery = cq.subquery(Integer.class);
@@ -131,6 +131,7 @@ public class JbpmUtil {
         
         cq.where(
             cb.equal(processInstance.<ProcessDefinition>get("processDefinition").get("id"), processDefinition.getId()),
+            cb.equal(token.<ProcessInstance>get("processInstance").<Long>get("id"), processInstance.<Long>get("id")),
             cb.equal(token.<Node>get("node").<Long>get("id"), taskNode.<Long>get("id")),
             cb.isNull(processInstance.get("end")),
             cb.isNull(token.get("end")),
