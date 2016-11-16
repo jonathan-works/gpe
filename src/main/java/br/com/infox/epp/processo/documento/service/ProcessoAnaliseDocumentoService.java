@@ -24,6 +24,8 @@ import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
@@ -67,26 +69,30 @@ public class ProcessoAnaliseDocumentoService {
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public Processo criarProcessoAnaliseDocumentos(Processo processoPai, Documento... documentoAnalise) throws DAOException {
-		Fluxo fluxoDocumento = getFluxoDocumento();
-		List<NaturezaCategoriaFluxo> ncfs = naturezaCategoriaFluxoManager.getActiveNaturezaCategoriaFluxoListByFluxo(fluxoDocumento);
-		if (ncfs == null || ncfs.isEmpty()) {
-			throw new DAOException(InfoxMessages.getInstance().get("fluxo.naoExisteCategoria") + fluxoDocumento.getFluxo());
-		}
-		
-		Processo processoAnalise = new Processo();
-		processoAnalise.setNaturezaCategoriaFluxo(ncfs.get(0));
-		processoAnalise.setProcessoPai(processoPai);
-		processoAnalise.setNumeroProcesso("");
-		processoAnalise.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
-		processoAnalise.setLocalizacao(Authenticator.getLocalizacaoAtual());
-		processoAnalise.setUsuarioCadastro(Authenticator.getUsuarioLogado());
-		processoAnalise.setDataInicio(new Date());
-		processoManager.persist(processoAnalise);
-		
-		criarMetadadosProcessoAnalise(processoAnalise, documentoAnalise);
-		
-		return processoAnalise;
+		return criarProcessoAnaliseDocumentos(processoPai, Authenticator.getLocalizacaoAtual(), Authenticator.getUsuarioLogado(), documentoAnalise);
 	}
+	
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public Processo criarProcessoAnaliseDocumentos(Processo processoPai, Localizacao localizacao, UsuarioLogin usuarioLogin, Documento... documentoAnalise) throws DAOException {
+        Fluxo fluxoDocumento = getFluxoDocumento();
+        List<NaturezaCategoriaFluxo> ncfs = naturezaCategoriaFluxoManager.getActiveNaturezaCategoriaFluxoListByFluxo(fluxoDocumento);
+        if (ncfs == null || ncfs.isEmpty()) {
+            throw new DAOException(InfoxMessages.getInstance().get("fluxo.naoExisteCategoria") + fluxoDocumento.getFluxo());
+        }
+        
+        Processo processoAnalise = new Processo();
+        processoAnalise.setNaturezaCategoriaFluxo(ncfs.get(0));
+        processoAnalise.setProcessoPai(processoPai);
+        processoAnalise.setSituacaoPrazo(SituacaoPrazoEnum.SAT);
+        processoAnalise.setLocalizacao(localizacao);
+        processoAnalise.setUsuarioCadastro(usuarioLogin);
+        processoAnalise.setDataInicio(new Date());
+        processoManager.persist(processoAnalise);
+        
+        criarMetadadosProcessoAnalise(processoAnalise, documentoAnalise);
+        
+        return processoAnalise;
+    }
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void inicializarFluxoDocumento(Processo processoAnalise, Map<String, Object> variaveisJbpm) throws DAOException {
