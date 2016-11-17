@@ -15,7 +15,7 @@
 </composite:interface>
 
 <composite:implementation>
-    <c:if test="#{materialDesignIcon}">
+    <c:if test="#{cc.attrs.materialDesignIcon}">
         <span class="#{cc.attrs.styleClass}" style="#{cc.attrs.style}" onclick="#{cc.attrs.onclick}" title="#{cc.attrs.text}">
             <h:graphicImage url="#{layoutController.getMaterialDesignIconJSFUrl('1x','black','18dp', cc.attrs.value)}"/>
             <div class="#{cc.attrs.showText ? '':'hidden-text'}">
@@ -23,7 +23,7 @@
             </div>
         </span>
     </c:if>
-    <c:if test="#{not materialDesignIcon}">
+    <c:if test="#{not cc.attrs.materialDesignIcon}">
         <span class="#{cc.attrs.styleClass} fa fa-#{cc.attrs.value}" style="#{cc.attrs.style}" onclick="#{cc.attrs.onclick}" title="#{cc.attrs.text}">
             <div class="#{cc.attrs.showText ? '':'hidden-text'}">
                 <h:outputText value="#{cc.attrs.text}" />
