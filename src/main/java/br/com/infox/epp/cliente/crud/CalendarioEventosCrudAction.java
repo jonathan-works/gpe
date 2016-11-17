@@ -3,7 +3,6 @@ package br.com.infox.epp.cliente.crud;
 import static java.text.MessageFormat.format;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -17,9 +16,9 @@ import javax.inject.Named;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.international.StatusMessages;
-import org.richfaces.component.UITree;
 
 import br.com.infox.componentes.tabs.TabPanel;
+import br.com.infox.epp.access.manager.LocalizacaoManager;
 import br.com.infox.epp.calendario.CalendarioEventosModification;
 import br.com.infox.epp.calendario.CalendarioEventosService;
 import br.com.infox.epp.calendario.TipoEvento;
@@ -27,11 +26,11 @@ import br.com.infox.epp.calendario.TipoSerie;
 import br.com.infox.epp.calendario.entity.SerieEventos;
 import br.com.infox.epp.calendario.modification.process.CalendarioEventosModificationProcessor;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
+import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
 import br.com.infox.epp.cliente.entity.CalendarioEventos;
 import br.com.infox.epp.cliente.list.CalendarioEventosList;
-import br.com.infox.epp.cliente.manager.CalendarioEventosManager;
+import br.com.infox.epp.cliente.manager.CalendarioEventosSearch;
 
 @Named(CalendarioEventosCrudAction.NAME)
 @ViewScoped
@@ -40,137 +39,133 @@ public class CalendarioEventosCrudAction implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final String NAME = "calendarioEventosCrudAction";
 
-    private static final String ID_FORM_TREE = "defaultTabPanel"+ ":"+ "formTabForm"+ ":"+ "localizacaoTreeDecoration"
-			+ ":"+ "localizacaoTree";
-    
     @Inject
     private CalendarioEventosList calendarioEventosList;
     @Inject
     private CalendarioEventosService calendarioEventosService;
     @Inject
     private CalendarioEventosModificationProcessor modificationProcessor;
+    @Inject
+    private CalendarioEventosSearch calendarioEventosSearch;
+    @Inject
+    private LocalizacaoManager localizacaoManager;
 
-    private CalendarioEventos calendarioEventos;
+    private Integer id;
+    private String descricao;
+    private Date dataInicio;
+    private Date dataFim;
+    private SerieEventos serie;
+    private TipoEvento tipoEvento;
 
     private List<CalendarioEventosModification> calendarioEventosModifications;
 
-    private boolean persisted=false;
-    
-    private void resetTree(String treeId){
-    	((UITree)FacesContext.getCurrentInstance().getViewRoot().findComponent(treeId)).setSelection(null);
+    public boolean isPersisted() {
+        return getId() != null;
     }
-    
-    public boolean isPersisted(){
-    	return persisted;
-    }
-    
+
     public void clickSearchTab() {
-    	newInstance();
+        newInstance();
+        setCalendarioEventosModifications(null);
         calendarioEventosList.refresh();
     }
 
-    public void newInstance(){
-    	persisted = false;
-    	resetTree(ID_FORM_TREE);
-    	setCalendarioEventos(new CalendarioEventos());
+    public void newInstance() {
+        setId(null);
+        setDescricao(null);
+        setDataInicio(null);
+        setDataFim(null);
+        setTipoEvento(null);
+        this.serie = null;
     }
-    
+
     public void clickFormTab() {
-        if (getCalendarioEventos() == null || getCalendarioEventos().getIdCalendarioEvento() == null) {
-        	newInstance();
+        if (getId() == null) {
+            newInstance();
         }
     }
 
     public void cancelar(){
         setCalendarioEventosModifications(null);
     }
-    
-    private void resolveMessage(Collection<CalendarioEventosModification> modifications){
-    	for (CalendarioEventosModification modification : calendarioEventosModifications) {
-			resolveMessage(modification);
-			break;
-		}
-    }
-    
-    private void resolveMessage(CalendarioEventosModification modification){
-    	switch (modification.getType()) {
-		case CREATE:
-			StatusMessages.instance().add(Severity.INFO, "#{infoxMessages['entity_created']}");
-			if (modification.getAfter().getIdCalendarioEvento() != null){
-				CalendarioEventosManager calendarioEventosManager = BeanManager.INSTANCE.getReference(CalendarioEventosManager.class);
-				setCalendarioEventos(calendarioEventosManager.find(modification.getAfter().getIdCalendarioEvento()));
-				persisted = true;
-			}
-			break;
-		case UPDATE:
-			if (modification.getAfter().getIdCalendarioEvento() != null){
-				CalendarioEventosManager calendarioEventosManager = BeanManager.INSTANCE.getReference(CalendarioEventosManager.class);
-				setCalendarioEventos(calendarioEventosManager.find(modification.getAfter().getIdCalendarioEvento()));
-			}
-			StatusMessages.instance().add(Severity.INFO, "#{infoxMessages['entity_updated']}");
-			break;
-		case DELETE:
-			StatusMessages.instance().add(Severity.INFO, "#{infoxMessages['entity_deleted']}");
-			break;
-		default:
-			break;
-		}
-    }
-    
+
     @ExceptionHandled
     public void aplicarModificacoes() {
         calendarioEventosService.persistir(getCalendarioEventosModifications());
-        resolveMessage(getCalendarioEventosModifications());
+        if (getCalendarioEventosModifications() != null && !getCalendarioEventosModifications().isEmpty()) {
+            setId(getCalendarioEventosModifications().get(0).getEvento().getIdCalendarioEvento());
+        }
+        StatusMessages.instance().add(Severity.INFO, "#{infoxMessages['entity_created']}");
         setCalendarioEventosModifications(null);
         calendarioEventosList.refresh();
     }
 
-    @ExceptionHandled
-    public void aplicarModificacao(CalendarioEventosModification calendarioEventosModification) {
-        calendarioEventosService.persistir(calendarioEventosModification);
-        resolveMessage(calendarioEventosModification);
-        getCalendarioEventosModifications().remove(calendarioEventosModification);
-        if (getCalendarioEventosModifications().isEmpty()){
-            setCalendarioEventosModifications(null);
+    public void persist() {
+        if (getDataFim() == null) {
+            setDataFim(getDataInicio());
         }
+        if (TipoEvento.S.equals(getTipoEvento())
+                && calendarioEventosSearch.existeColisaoDeSuspensaoDePrazo(getDataInicio(), getDataFim())) {
+            FacesMessages.instance().add(Severity.ERROR,
+                    "Não é possível cadastrar uma suspensão de prazo num dia ou período onde já existe uma suspensão cadastrada.");
+        } else {
+            CalendarioEventos eventoCriar = new CalendarioEventos();
+            eventoCriar.setLocalizacao(localizacaoManager.getLocalizacaoByCodigo("LOC1"));
+            eventoCriar.setDescricaoEvento(getDescricao());
+            eventoCriar.setDataInicio(getDataInicio());
+            eventoCriar.setDataFim(getDataFim());
+            eventoCriar.setTipoEvento(getTipoEvento());
+            eventoCriar.setSerie(serie);
+            setCalendarioEventosModifications(calendarioEventosService.criar(eventoCriar));
+            modificationProcessor.process(getCalendarioEventosModifications());
+        }
+    }
+
+    @ExceptionHandled(MethodType.REMOVE)
+    public void remover(CalendarioEventos calendarioEventos) {
+        calendarioEventosService.remover(calendarioEventos, false);
+        calendarioEventosList.refresh();
+        newInstance();
+    }
+
+    @ExceptionHandled(MethodType.REMOVE)
+    public void removerEvento() {
+        CalendarioEventos calendarioEventos = calendarioEventosSearch.find(getId());
+        remover(calendarioEventos);
+    }
+
+    @ExceptionHandled(MethodType.REMOVE)
+    public void removerSerie() {
+        CalendarioEventos calendarioEventos = calendarioEventosSearch.find(getId());
+        calendarioEventosService.remover(calendarioEventos, true);
+        calendarioEventosList.refresh();
+        newInstance();
+    }
+
+    @ExceptionHandled(MethodType.UPDATE)
+    public void update() {
+        CalendarioEventos eventoAlterar = calendarioEventosSearch.find(getId());
+        eventoAlterar.setDescricaoEvento(getDescricao());
+        calendarioEventosService.atualizar(eventoAlterar);
         calendarioEventosList.refresh();
     }
 
-    private void processarModificacoes() {
-        modificationProcessor.process(getCalendarioEventosModifications());
-    }
-
-    public void persist() {
-        setCalendarioEventosModifications(calendarioEventosService.criar(getCalendarioEventos()));
-        processarModificacoes();
-    }
-
-    //FIXME O remover não vai surtir efeito nos prazos já cadastrados.
-    public void remover(CalendarioEventos calendarioEventos) {
-        setCalendarioEventosModifications(calendarioEventosService.remover(calendarioEventos));
-    }
-
-    //FIXME Ao alterar será permitido apenas modificar o título do evento e dessa forma não haverá modificação nos prazos.
-    public void update() {
-        setCalendarioEventosModifications(calendarioEventosService.atualizar(getCalendarioEventos()));
-    }
-
     public void edit(CalendarioEventos calendarioEventos) {
-        setCalendarioEventos(calendarioEventos);
-        persisted = true;
+        setId(calendarioEventos.getIdCalendarioEvento());
+        setDescricao(calendarioEventos.getDescricaoEvento());
+        setDataInicio(calendarioEventos.getDataInicio());
+        setDataFim(calendarioEventos.getDataFim());
+        setTipoEvento(calendarioEventos.getTipoEvento());
+        this.serie = calendarioEventos.getSerie();
         ((TabPanel) FacesContext.getCurrentInstance().getViewRoot().findComponent("defaultTabPanel"))
                 .setActiveTab("form");
     }
 
-    public CalendarioEventos getCalendarioEventos() {
-        return calendarioEventos;
+    public void setCalendarioToRemove(CalendarioEventos calendarioEventos) {
+        setId(calendarioEventos.getIdCalendarioEvento());
     }
 
-    public void setCalendarioEventos(CalendarioEventos calendarioEventos) {
-        this.calendarioEventos = calendarioEventos;
-        if (this.calendarioEventos.getDataFim() == null){
-        	this.calendarioEventos.setDataFim(this.calendarioEventos.getDataInicio());
-        }
+    public boolean isParteSerie() {
+        return this.serie != null;
     }
 
     public TipoEvento[] getTiposEvento() {
@@ -178,16 +173,15 @@ public class CalendarioEventosCrudAction implements Serializable {
     }
 
     public boolean getAnual() {
-        return getCalendarioEventos() != null && getCalendarioEventos().getSerie() != null
-                && TipoSerie.A.equals(getCalendarioEventos().getSerie().getTipo());
+        return this.serie != null && TipoSerie.A.equals(this.serie.getTipo());
     }
 
     public void setAnual(boolean anual) {
-        if (anual && getCalendarioEventos().getSerie() == null) {
-            getCalendarioEventos().setSerie(new SerieEventos());
-            getCalendarioEventos().getSerie().setTipo(TipoSerie.A);
-        } else if (!anual && getCalendarioEventos().getSerie() != null) {
-            getCalendarioEventos().setSerie(null);
+        if (anual) {
+            this.serie = new SerieEventos();
+            this.serie.setTipo(TipoSerie.A);
+        } else if (!anual) {
+            this.serie = null;
         }
     }
 
@@ -213,6 +207,46 @@ public class CalendarioEventosCrudAction implements Serializable {
 
     private void setCalendarioEventosModifications(List<CalendarioEventosModification> calendarioEventosModifications) {
         this.calendarioEventosModifications = calendarioEventosModifications;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public Date getDataInicio() {
+        return dataInicio;
+    }
+
+    public void setDataInicio(Date dataInicio) {
+        this.dataInicio = dataInicio;
+    }
+
+    public Date getDataFim() {
+        return dataFim;
+    }
+
+    public void setDataFim(Date dataFim) {
+        this.dataFim = dataFim;
+    }
+
+    public TipoEvento getTipoEvento() {
+        return tipoEvento;
+    }
+
+    public void setTipoEvento(TipoEvento tipoEvento) {
+        this.tipoEvento = tipoEvento;
     }
 
 }

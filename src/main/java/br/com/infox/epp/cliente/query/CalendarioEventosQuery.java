@@ -43,8 +43,6 @@ public interface CalendarioEventosQuery {
     String GET_ULTIMO_EVENTO_SERIE="CalendarioEventos.getUltimoEventoSerie";
     String GET_ULTIMO_EVENTO_SERIE_QUERY = GET_BY_SERIE_QUERY
             + " and cd.serie is not null order by cd.dataInicio desc, cd.dataFim desc";
-    String GET_BY_SERIE_AFTER_DATE="CalendarioEventos.getBySerieAfterDate";
-    String GET_BY_SERIE_AFTER_DATE_QUERY = GET_BY_SERIE_QUERY + " and cd.dataInicio >= :" + DATA_FIM;
     String GET_ORPHAN_SERIES="SerieEventos.getOrphanSeries";
     String GET_ORPHAN_SERIES_QUERY = "select s from CalendarioEventos cd right join cd.serie s where cd is null";
 
