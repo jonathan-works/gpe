@@ -13,6 +13,7 @@ import javax.inject.Named;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.DateTimeConstants;
 
 @Named
 @RequestScoped
@@ -147,13 +148,14 @@ public class DateUtil {
         if (date == null) {
             return null;
         }
-        Calendar dt = Calendar.getInstance();
-        dt.setTime(date);
-        dt.set(Calendar.HOUR_OF_DAY, 23);
-        dt.set(Calendar.MINUTE, 59);
-        dt.set(Calendar.SECOND, 59);
-        dt.set(Calendar.MILLISECOND, 999);
-        return dt.getTime();
+        return getEndOfDay(new DateTime(date.getTime())).toDate();
+    }
+
+    public static DateTime getEndOfDay(DateTime date) {
+        if (date == null) {
+            return null;
+        }
+        return date.withTime(23, 59, 59, 0);
     }
 
     /**
@@ -181,13 +183,11 @@ public class DateUtil {
         if (date == null) {
             return null;
         }
-        Calendar dt = Calendar.getInstance();
-        dt.setTime(date);
-        dt.set(Calendar.HOUR_OF_DAY, 0);
-        dt.set(Calendar.MINUTE, 0);
-        dt.set(Calendar.SECOND, 0);
-        dt.set(Calendar.MILLISECOND, 0);
-        return dt.getTime();
+        return getBeginningOfDay(new DateTime(date.getTime())).toDate();
+    }
+
+    public static DateTime getBeginningOfDay(DateTime data) {
+        return data.withTime(0, 0, 0, 0);
     }
     
     @Produces
@@ -229,6 +229,10 @@ public class DateUtil {
         date1 = DateUtil.getBeginningOfDay(date1);
         date2 = DateUtil.getBeginningOfDay(date2);
         return date1.getTime() <= date2.getTime();
+    }
+
+    public static Boolean isFinalDeSemana(DateTime dia) {
+        return DateTimeConstants.SATURDAY == dia.getDayOfWeek() || DateTimeConstants.SUNDAY == dia.getDayOfWeek();
     }
 
     public static Date getInicioAno(Date data) {

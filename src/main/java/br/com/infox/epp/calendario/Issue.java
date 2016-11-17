@@ -1,11 +1,17 @@
 package br.com.infox.epp.calendario;
 
+import br.com.infox.epp.processo.entity.Processo;
+
 public class Issue {
     
     private IssueType type;
     private String issue;
     private String previousState;
     private String futureState;
+    private Processo processo;
+    private String valorAposModificaoes;
+
+    public static interface IssueType{}
 
     public String getIssue() {
         return issue;
@@ -33,7 +39,7 @@ public class Issue {
         this.futureState = futureState;
         return this;
     }
-    
+
     public IssueType getType() {
         return type;
     }
@@ -42,5 +48,20 @@ public class Issue {
         this.type = type;
     }
 
-    public static interface IssueType{}
+    public Processo getProcesso() {
+        return processo;
+    }
+
+    public void setProcesso(Processo processo) {
+        this.processo = processo;
+    }
+
+    public String getValorAposModificaoes() {
+        return valorAposModificaoes;
+    }
+
+    public void setValorAposModificaoes(String valorAposModificaoes) {
+        this.valorAposModificaoes = valorAposModificaoes;
+    }
+
 }

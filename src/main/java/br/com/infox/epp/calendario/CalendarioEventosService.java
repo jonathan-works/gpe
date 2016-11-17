@@ -1,14 +1,13 @@
 package br.com.infox.epp.calendario;
 
 import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.GET_BY_SERIE;
-import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.GET_BY_SERIE_AFTER_DATE;
 import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.GET_ORPHAN_SERIES;
 import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.GET_PERIODICOS_NAO_ATUALIZADOS;
 import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.DATA;
-import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.DATA_FIM;
 import static br.com.infox.epp.cliente.query.CalendarioEventosQuery.Param.SERIE;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -18,41 +17,20 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import org.joda.time.DateTime;
+
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.persistence.PersistenceController;
+import br.com.infox.core.util.DateUtil;
 import br.com.infox.epp.calendario.entity.SerieEventos;
 import br.com.infox.epp.calendario.modification.process.CalendarioEventosModificationProcessor;
-import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cliente.entity.CalendarioEventos;
 
 @Stateless
-public class CalendarioEventosService {
+public class CalendarioEventosService extends PersistenceController {
 
     @Inject
     private CalendarioEventosModificationProcessor calendarioEventosProcessor;
-
-    public List<CalendarioEventosModification> atualizar(CalendarioEventos calendarioEventos) {
-        CalendarioEventosModification modification = new CalendarioEventosModification(null, calendarioEventos);
-        getEntityManager().refresh(calendarioEventos);
-        modification.setBefore(calendarioEventos);
-        final List<CalendarioEventosModification> result = new ArrayList<>();
-        result.add(modification);
-        result.addAll(removerSerie(modification.getBefore()));
-        result.addAll(criarSerie(modification.getAfter()));
-        return result;
-    }
-
-    private void atualizar(CalendarioEventosModification modification) {
-        try {
-            if (modification.getAfter().getSerie() != null && modification.getAfter().getSerie().getId() ==null){
-                getEntityManager().persist(modification.getAfter().getSerie());
-            }
-            getEntityManager().merge(modification.getAfter());
-            getEntityManager().flush();
-            calendarioEventosProcessor.afterPersist(modification);
-        } catch (Exception e) {
-            throw new DAOException(e);
-        }
-    }
 
     public void atualizarSeries() {
         for (CalendarioEventos calendarioEventos : getNotUpToDate(getDataLimite())) {
@@ -63,38 +41,6 @@ public class CalendarioEventosService {
         }
     }
 
-    public List<CalendarioEventosModification> criar(CalendarioEventos calendarioEventos) {
-        final List<CalendarioEventosModification> result = new ArrayList<>();
-        result.add(new CalendarioEventosModification(null, calendarioEventos));
-        result.addAll(criarSerie(calendarioEventos));
-        return result;
-    }
-
-    private void criar(CalendarioEventosModification modification) {
-        try {
-            if (modification.getAfter().getSerie() != null && modification.getAfter().getSerie().getId() ==null){
-                getEntityManager().persist(modification.getAfter().getSerie());
-            }
-            getEntityManager().persist(modification.getAfter());
-            getEntityManager().flush();
-            calendarioEventosProcessor.afterPersist(modification);
-        } catch (Exception e) {
-            throw new DAOException(e);
-        }
-    }
-
-    private List<CalendarioEventosModification> criarSerie(CalendarioEventos calendarioEventos) {
-        java.util.Date dataLimite = getDataLimite();
-        final List<CalendarioEventosModification> result = new ArrayList<>();
-        if (calendarioEventos != null && calendarioEventos.getSerie() != null) {
-            CalendarioEventos proximoEvento = calendarioEventos;
-            while ((proximoEvento = proximoEvento.getProximoEvento()) != null && proximoEvento.isBefore(dataLimite)) {
-                result.add(new CalendarioEventosModification(null, proximoEvento));
-            }
-        }
-        return result;
-    }
-
     public List<CalendarioEventos> getBySerie(SerieEventos serie) {
         EntityManager em = getEntityManager();
         TypedQuery<CalendarioEventos> query = em.createNamedQuery(GET_BY_SERIE, CalendarioEventos.class);
@@ -102,19 +48,8 @@ public class CalendarioEventosService {
         return query.getResultList();
     }
 
-    private List<CalendarioEventos> getBySerieAfterDate(SerieEventos serie, java.util.Date dataFim) {
-        EntityManager em = getEntityManager();
-        TypedQuery<CalendarioEventos> query = em.createNamedQuery(GET_BY_SERIE_AFTER_DATE, CalendarioEventos.class);
-        query = query.setParameter(SERIE, serie).setParameter(DATA_FIM, dataFim);
-        return query.getResultList();
-    }
-
     private java.util.Date getDataLimite() {
-        return new br.com.infox.util.time.Date().plusYears(1).withTimeAtStartOfDay().toDate();
-    }
-
-    private EntityManager getEntityManager() {
-        return BeanManager.INSTANCE.getReference(EntityManager.class);
+        return DateUtil.getBeginningOfDay(DateTime.now().plusYears(1)).toDate();
     }
 
     private List<CalendarioEventos> getNotUpToDate(java.util.Date data) {
@@ -132,30 +67,6 @@ public class CalendarioEventosService {
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void persistir(CalendarioEventosModification modification) {
-        switch (modification.getType()) {
-        case CREATE:
-            criar(modification);
-            break;
-        case UPDATE:
-            atualizar(modification);
-            break;
-        case DELETE:
-            remover(modification);
-            break;
-        default:
-            break;
-        }
-    }
-
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void persistir(List<CalendarioEventosModification> modifications) {
-        for (CalendarioEventosModification modification : modifications) {
-            persistir(modification);
-        }
-    }
-
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void removeOrphanSeries() {
         try {
             EntityManager entityManager = getEntityManager();
@@ -168,40 +79,88 @@ public class CalendarioEventosService {
         }
     }
 
-    public List<CalendarioEventosModification> remover(CalendarioEventos calendarioEventos) {
-        final List<CalendarioEventosModification> result = new ArrayList<>();
-        result.add(new CalendarioEventosModification(calendarioEventos, null));
-        result.addAll(removerSerie(calendarioEventos));
+    // CRUD
+
+    public List<CalendarioEventosModification> criar(CalendarioEventos calendarioEventos) {
+        List<CalendarioEventosModification> result = new ArrayList<>();
+        result.add(new CalendarioEventosModification(calendarioEventos));
+        result.addAll(criarSerie(calendarioEventos));
         return result;
     }
 
-    private void remover(CalendarioEventosModification modification) {
+    private List<CalendarioEventosModification> criarSerie(CalendarioEventos calendarioEventos) {
+        Date dataLimite = getDataLimite();
+        List<CalendarioEventosModification> result = new ArrayList<>();
+        CalendarioEventos proximoEvento = calendarioEventos;
+        if (proximoEvento != null && proximoEvento.getSerie() != null) {
+            while (proximoEvento != null && proximoEvento.isBefore(dataLimite)) {
+                proximoEvento = proximoEvento.getProximoEvento();
+                result.add(new CalendarioEventosModification(proximoEvento));
+            }
+        }
+        return result;
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void persistir(List<CalendarioEventosModification> modifications) {
         try {
-            CalendarioEventos calendarioEventos = modification.getBefore();
-            getEntityManager().remove(getEntityManager().merge(calendarioEventos));
-            getEntityManager().flush();
+            for (CalendarioEventosModification modification : modifications) {
+                if (modification.getEvento().getSerie() != null && modification.getEvento().getSerie().getId() == null) {
+                    getEntityManager().persist(modification.getEvento().getSerie());
+                }
+                getEntityManager().persist(modification.getEvento());
+                getEntityManager().flush();
                 //Conforme pedido no chamadao OTRS 46000191 de ticket #86567 , só recalcula o prazo se o evento for do tipo Feriado
                 if(TipoEvento.F.equals(modification.getEvento().getTipoEvento())){
                 calendarioEventosProcessor.afterPersist(modification);
                 }
+            }
         } catch (Exception e) {
             throw new DAOException(e);
         }
     }
 
-    private List<CalendarioEventosModification> removerSerie(CalendarioEventos calendarioEventos) {
-        final List<CalendarioEventosModification> result = new ArrayList<>();
-        if (calendarioEventos != null && calendarioEventos.getSerie() != null) {
-            /**
-             * TODO: confirmar se é pra remover apenas eventos futuros, ou todos os eventos da série
-             */
-            for (CalendarioEventos evento : getBySerieAfterDate(calendarioEventos.getSerie(), new br.com.infox.util.time.Date().withTimeAtStartOfDay().toDate())) {
-                if (!calendarioEventos.equals(evento)) {
-                    result.add(new CalendarioEventosModification(evento, null));
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void remover(CalendarioEventos eventoRemover, boolean removeSerie) {
+        List<CalendarioEventos> result = new ArrayList<>();
+        SerieEventos serie = eventoRemover.getSerie();
+        if (removeSerie && serie != null) {
+            for (CalendarioEventos evento : getBySerie(eventoRemover.getSerie())) {
+                result.add(evento);
+            }
+        } else {
+            result.add(eventoRemover);
+        }
+        try {
+            for (CalendarioEventos calendarioEventos : result) {
+                getEntityManager().remove(calendarioEventos);
+            }
+            if (removeSerie) {
+                getEntityManager().remove(serie);
+            }
+            getEntityManager().flush();
+        } catch (Exception e) {
+            throw new DAOException(e);
+        }
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void atualizar(CalendarioEventos eventoAtualizar) {
+        try {
+            if (eventoAtualizar != null) {
+                if (eventoAtualizar.getSerie() != null) {
+                    for (CalendarioEventos evento : getBySerie(eventoAtualizar.getSerie())) {
+                        evento.setDescricaoEvento(eventoAtualizar.getDescricaoEvento());
+                        getEntityManager().merge(evento);
+                    }
+                } else {
+                    getEntityManager().merge(eventoAtualizar);
                 }
             }
+            getEntityManager().flush();
+        } catch (Exception e) {
+            throw new DAOException(e);
         }
-        return result;
     }
-    
+
 }
