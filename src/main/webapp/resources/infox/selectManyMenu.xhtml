@@ -15,6 +15,7 @@
     <composite:attribute name="styleClass" />
     <composite:attribute name="readonly" default="false" />
     <composite:attribute name="required" default="false" />
+    <composite:attribute name="showRequired" default="false" />
     <composite:attribute name="validatorId" />
     <composite:attribute name="converterId" />
 
@@ -41,7 +42,7 @@
                     </c:if>
                     <composite:renderFacet name="label" />
                 </h:outputLabel>
-                <h:outputText styleClass="required" rendered="#{cc.attrs.required}" value="*" />
+                <h:outputText styleClass="required" rendered="#{cc.attrs.required or cc.attrs.showRequired}" value="*" />
                 <h:message for="#{cc.attrs.id}Input" styleClass="property-error property-msg #{cc.attrs.id}ErrorClass" />
             </div>
             <div class="property-field-edit-value #{cc.attrs.id}DivClass">

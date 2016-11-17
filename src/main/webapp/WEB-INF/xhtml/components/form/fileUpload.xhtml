@@ -31,6 +31,7 @@
 						event="change" execute="@this"
 						listener="#{taskInstanceHome.removerDocumento(f.id)}"
 						limitRender="true" />
+					<f:validateBean disabled="true" />
 				</wi:selectOneMenuEntity>
 			</p:outputPanel>
 			<p:outputPanel id="#{f.id}ToolTipDivExterna">
@@ -70,8 +71,9 @@
 						<ui:define name="label">
 							<h:outputText value="#{infoxMessages['fileUpload.header']}" />
 						</ui:define>
+						<h:inputHidden id="#{id}Hidden" /> <!-- Apenas para dar a marcação de campo obrigatório -->
 						<rich:fileUpload id="#{id}" execute="@this" status=":status"
-							limitRender="true" required="#{wi:get(required, false)}"
+							limitRender="true"
 							fileUploadListener="#{fileUpload.processFileUpload}"
 							addLabel="#{infoxMessages['processoDocumento.addLabel']}"
 							clearAllLabel="#{infoxMessages['processoDocumento.clearAllLabel']}"

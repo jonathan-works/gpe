@@ -61,8 +61,9 @@
                       name="rendered"
                       value="#{empty rendered ? true : rendered}" />
                     <ui:param
-                      name="required"
+                      name="showRequired"
                       value="#{empty props.required ? rf.required : props.required}" />
+                    <ui:param name="required" value="false" />
                     <ui:param
                       name="disabled"
                       value="#{props.disabled}" />
@@ -113,8 +114,9 @@
                     name="rendered"
                     value="#{empty rendered ? true : rendered}" />
                   <ui:param
-                    name="required"
+                    name="showRequired"
                     value="#{empty props.required ? f.required : props.required}" />
+                  <ui:param name="required" value="false" />
                   <ui:param
                     name="bypassUpdate"
                     value="#{props.bypassUpdate}" />
