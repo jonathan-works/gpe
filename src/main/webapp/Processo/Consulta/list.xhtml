@@ -24,6 +24,11 @@
   		<c:set value="#{flash.idJbpm}"  target="#{org.jboss.seam.bpm.businessProcess}" property="processId"  ></c:set>
   		<c:set value="#{flash.showBackButton}"  target="#{consultaController}" property="showBackButton"  ></c:set>
   	</c:if>
+  	
+  	<c:if test="#{not empty flash.filtros}">
+        <c:set value="#{flash.filtros}" target="#{consultaController}" property="filtros" />
+    </c:if>
+  	
     <rich:collapsiblePanel
       switchType="client"
       header="#{infoxMessages['processo.titleView']} #{consultaController.processo.numeroProcessoRoot}"
