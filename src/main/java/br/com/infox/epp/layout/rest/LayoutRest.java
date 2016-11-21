@@ -1,5 +1,7 @@
 package br.com.infox.epp.layout.rest;
 
+import java.util.logging.Logger;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -23,6 +25,9 @@ public class LayoutRest {
 
 	@Inject
 	LayoutManager servico;
+	
+	@Inject
+	private Logger logger;
 
 	@GET
 	@Path("path/{path : .+}")
@@ -42,6 +47,7 @@ public class LayoutRest {
 		ResponseBuilder builder = request.evaluatePreconditions(etag);
 
 		if (builder == null) {
+			logger.info("Resource de código: "+ codigoResource+ " não encontrado na base binaria");
 			byte[] resource = servico.carregarBinario(codigoSkin, codigoResource);
 			TipoArquivo tipoResource = metadados.getTipo();
 			String type = "image/" + tipoResource.toString().toLowerCase();
