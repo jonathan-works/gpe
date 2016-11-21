@@ -64,21 +64,50 @@
                 <h:form id="formTabForm">
                     <wi:tree id="localizacao" label="#{infoxMessages['calendarioEventos.localizacao']}"
                         assignTo="calendarioEventosCrudAction.calendarioEventos.localizacao" tree="#{localizacaoTree}"
-                        required="true" />
+                        required="true" rendered="#{not calendarioEventosCrudAction.persisted}" />
+                    <wi:outputText id="localizacaoPersisted"
+                    	label="#{infoxMessages['calendarioEventos.localizacao']}"
+                    	value="#{calendarioEventosCrudAction.calendarioEventos.localizacao}"
+                    	rendered="#{calendarioEventosCrudAction.persisted}" />
+                    	
                     <wi:inputText id="descricaoEvento" label="#{infoxMessages['calendarioEventos.descricaoEvento']}"
                         value="#{calendarioEventosCrudAction.calendarioEventos.descricaoEvento}" maxlength="100"
                         required="true" />
+                        
                     <f:event listener="#{calendarioEventosCrudAction.validarDatas}" type="postValidate" />
                     <wi:inputDate id="dataInicio" label="#{infoxMessages['calendarioEventos.dataInicio']}"
-                        value="#{calendarioEventosCrudAction.calendarioEventos.dataInicio}" required="true" />
+                        value="#{calendarioEventosCrudAction.calendarioEventos.dataInicio}" required="true"
+                        rendered="#{not calendarioEventosCrudAction.persisted}" />
+                    <wi:outputText id="dataInicioPersisted"
+                    	label="#{infoxMessages['calendarioEventos.dataInicio']}"
+                    	value="#{calendarioEventosCrudAction.calendarioEventos.dataInicio}"
+                    	rendered="#{calendarioEventosCrudAction.persisted}" />
+                    	
                     <wi:inputDate id="dataFim" label="#{infoxMessages['calendarioEventos.dataFim']}"
-                        value="#{calendarioEventosCrudAction.calendarioEventos.dataFim}" required="false" />
+                        value="#{calendarioEventosCrudAction.calendarioEventos.dataFim}" required="false" 
+                        rendered="#{not calendarioEventosCrudAction.persisted}" />
+                    <wi:outputText id="dataFimPersisted"
+                    	label="#{infoxMessages['calendarioEventos.dataFim']}"
+                    	value="#{calendarioEventosCrudAction.calendarioEventos.dataFim}"
+                    	rendered="#{calendarioEventosCrudAction.persisted}" />
+                    	
                     <wi:selectBooleanCheckbox id="periodico" label="#{infoxMessages['calendarioEventos.periodico']}"
-                        value="#{calendarioEventosCrudAction.anual}" />
+                        value="#{calendarioEventosCrudAction.anual}"
+                        rendered="#{not calendarioEventosCrudAction.persisted}" />
+                    <wi:outputText id="periodicoPersisted"
+                    	label="#{infoxMessages['calendarioEventos.periodico']}"
+                    	value="#{calendarioEventosCrudAction.anual ? 'Sim' : 'Não'}"
+                    	rendered="#{calendarioEventosCrudAction.persisted}" />
+                    
                     <wi:selectOneMenuEnum id="tipoPrestacaoContas"
                         label="#{infoxMessages['calendarioEventos.tipoEvento']}"
                         items="#{calendarioEventosCrudAction.tiposEvento}"
-                        value="#{calendarioEventosCrudAction.calendarioEventos.tipoEvento}" required="true" />
+                        value="#{calendarioEventosCrudAction.calendarioEventos.tipoEvento}" required="true" 
+                        rendered="#{not calendarioEventosCrudAction.persisted}" />
+                    <wi:outputText id="tipoEventoPersisted"
+                    	label="#{infoxMessages['calendarioEventos.tipoEvento']}"
+                    	value="#{calendarioEventosCrudAction.calendarioEventos.tipoEvento}"
+                    	rendered="#{calendarioEventosCrudAction.persisted}" />
                     <div>
                         <a:commandButton action="#{calendarioEventosCrudAction.persist}"
                             render="defaultTabPanel :pageBodyDialogMessage calendarioProblems" execute="@form"

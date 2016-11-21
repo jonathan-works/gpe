@@ -145,14 +145,14 @@ public class CalendarioEventosCrudAction implements Serializable {
         processarModificacoes();
     }
 
+    //FIXME O remover não vai surtir efeito nos prazos já cadastrados.
     public void remover(CalendarioEventos calendarioEventos) {
         setCalendarioEventosModifications(calendarioEventosService.remover(calendarioEventos));
-        processarModificacoes();
     }
 
+    //FIXME Ao alterar será permitido apenas modificar o título do evento e dessa forma não haverá modificação nos prazos.
     public void update() {
         setCalendarioEventosModifications(calendarioEventosService.atualizar(getCalendarioEventos()));
-        processarModificacoes();
     }
 
     public void edit(CalendarioEventos calendarioEventos) {
