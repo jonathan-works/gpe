@@ -122,6 +122,20 @@ public class CalendarioEventosManager extends Manager<CalendarioEventosDAO, Cale
 		return getDateMinusBusinessDays(date, totalBusinessDays, getFeriados(periodo));
 	}
 	
+	public Date getDatePlusBusinessDays(Date date, int totalBusinessDays, Collection<DateRange> eventos){
+		int businessDays = 0;
+		br.com.infox.util.time.Date newDate = new br.com.infox.util.time.Date(date);
+		while(businessDays++ < totalBusinessDays){
+			newDate = newDate.plusDays(1).nextWeekday(eventos.toArray(new DateRange[eventos.size()]));
+		}
+		return newDate.toDate();
+	}
+	public Date getDatePlusBusinessDays(Date date, int totalBusinessDays){
+		DateRange periodo = new DateRange(date, date);
+		periodo = periodo.withStart(periodo.getStart().minusYears(1)).withEnd(periodo.getEnd().plusYears(1));
+		return getDatePlusBusinessDays(date, totalBusinessDays, getFeriados(periodo));
+	}
+	
 	public br.com.infox.util.time.Date getPreviousBusinessDay(Date date, Collection<DateRange> eventos){
 		return new br.com.infox.util.time.Date(date).prevWeekday(eventos.toArray(new DateRange[eventos.size()]));
 	}
