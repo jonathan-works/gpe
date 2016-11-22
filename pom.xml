@@ -259,9 +259,6 @@
                     <include>**/*.properties</include>
                     <include>**/*.csv</include>
                 </includes>
-                <excludes>
-                    <exclude>mock-*.xml</exclude>
-                </excludes>
             </resource>
             <resource>
                 <directory>${project.basedir}/src/main/resources</directory>
@@ -269,6 +266,10 @@
                 <includes>
                     <include>**/*.crt</include>
                 </includes>
+            </resource>
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <filtering>true</filtering>
                 <excludes>
                     <exclude>mock-*.xml</exclude>
                 </excludes>
