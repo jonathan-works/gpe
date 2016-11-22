@@ -2,10 +2,11 @@ package br.com.infox.epp.webservice.log.manager;
 
 import java.util.Calendar;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
@@ -14,14 +15,15 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.webservice.log.dao.LogWebserviceClientDAO;
 import br.com.infox.epp.webservice.log.entity.LogWebserviceClient;
 
+@Stateless
 @Name(LogWebserviceClientManager.NAME)
-@AutoCreate
-@Scope(ScopeType.EVENT)
 public class LogWebserviceClientManager extends Manager<LogWebserviceClientDAO, LogWebserviceClient> {
-	public static final String NAME = "logWebserviceClientManager";
+
+    public static final String NAME = "logWebserviceClientManager";
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(LogWebserviceClientManager.class);
 	
+	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	public LogWebserviceClient beginLog(String codigoWebService, String requisicao, String informacoesAdicionais) {
 		LogWebserviceClient logWebserviceClient = new LogWebserviceClient();
 		logWebserviceClient.setDataInicioRequisicao(Calendar.getInstance().getTime());
@@ -36,6 +38,7 @@ public class LogWebserviceClientManager extends Manager<LogWebserviceClientDAO, 
 		return null;
 	}
 	
+	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	public void endLog(LogWebserviceClient logWebserviceClient, String resposta) {
 		logWebserviceClient.setDataFimRequisicao(Calendar.getInstance().getTime());
 		logWebserviceClient.setResposta(resposta);
