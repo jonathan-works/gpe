@@ -8,6 +8,7 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:p="http://primefaces.org/ui"
     xmlns:wi="http://www.itx.com.br/jsf">
     <ui:param name="taskEndAction" value="#{empty taskEndAction ? 'taskInstanceHome.end(taskInstanceHome.name)' : taskEndAction}"/>
     <s:div
@@ -58,17 +59,31 @@
             rendered="#{taskInstanceHome.transitions.size gt 0}" />
         <c:if test="#{taskInstanceHome.transitions.size gt 3}">
             <h:selectOneMenu value="#{taskInstanceHome.name}">
-                <f:selectItems
-                    value="#{taskInstanceHome.transtionsSelectItems}" />
+                <f:selectItems value="#{taskInstanceHome.transtionsSelectItems}" />
+                <f:ajax event="change" execute="@this" render="okTransitionButtonDiv" />
             </h:selectOneMenu>
-            <a:commandButton
-                action="#{elFunctions.invokeMethod(taskEndAction)}"
-                value="OK"
-                status="none"
-                onmouseup="showLoading()"
-                styleClass="buttons"
-                oncomplete="verifyFields();"
-                render=":script,#{reRenderSave},:pageBodyDialogMessage" />
+            
+            <p:outputPanel id="okTransitionButtonDiv">
+		            <a:commandButton
+		                action="#{elFunctions.invokeMethod(taskEndAction)}"
+		                value="OK"
+		                status="none"
+		                onmouseup="showLoading()"
+		                styleClass="buttons"
+		                oncomplete="verifyFields();"
+		                rendered="#{empty taskInstanceHome.name or not taskInstanceHome.getTransition(taskInstanceHome.name).configuration.skipFormValidation}"
+	                	render=":script,#{reRenderSave},:pageBodyDialogMessage" />
+	                <a:commandButton
+		                action="#{elFunctions.invokeMethod(taskEndAction)}"
+		                value="OK"
+		                status="none"
+		                onmouseup="showLoading()"
+		                styleClass="buttons"
+		                oncomplete="verifyFields()"
+		                execute="@this"
+		                rendered="#{not empty taskInstanceHome.name and taskInstanceHome.getTransition(taskInstanceHome.name).configuration.skipFormValidation}"
+	                	render=":script,#{reRenderSave},:pageBodyDialogMessage" />
+            </p:outputPanel>
         </c:if>
         <c:if test="#{taskInstanceHome.transitions.size le 3}">
             <a:repeat
@@ -81,7 +96,20 @@
                     render=":pageBodyDialogMessage,:script,#{reRenderSave}"
                     value="#{transition.name}"
                     styleClass="buttons"
-                    action="#{elFunctions.invokeMethod(taskEndAction)}">
+                    action="#{elFunctions.invokeMethod(taskEndAction)}"
+                    rendered="#{not transition.configuration.skipFormValidation}">
+                    <f:setPropertyActionListener target="#{taskInstanceHome.name}" value="#{transition.name}" />
+                </a:commandButton>
+                <a:commandButton
+                    status="none"
+                    onmouseup="showLoading()"
+                    render=":pageBodyDialogMessage,:script,#{reRenderSave}"
+                    value="#{transition.name}"
+                    styleClass="buttons"
+                    action="#{elFunctions.invokeMethod(taskEndAction)}"
+                    oncomplete="verifyFields();"
+                    execute="@this"
+                    rendered="#{transition.configuration.skipFormValidation}">
                     <f:setPropertyActionListener target="#{taskInstanceHome.name}" value="#{transition.name}" />
                 </a:commandButton>
             </a:repeat>
