@@ -194,13 +194,8 @@ public class SituacaoProcessoDAO extends PersistenceController {
 	
     protected void appendNumeroProcessoRootFilter(AbstractQuery<?> abstractQuery, String numeroProcesso, Path<Processo> processoRoot) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        Predicate predicate = abstractQuery.getRestriction();
-        abstractQuery.where(
-               cb.and(
-                       cb.like(processoRoot.get(Processo_.numeroProcesso),  cb.literal("%" + numeroProcesso + "%")),
-                       predicate
-               )
-        );
+        abstractQuery.where(cb.like(processoRoot.get(Processo_.numeroProcesso), cb.literal("%" + numeroProcesso + "%")),
+                abstractQuery.getRestriction());
     }
     
     public void appendTipoProcessoFilters(AbstractQuery<?> abstractQuery, TipoProcesso tipoProcesso, Boolean comunicacoesExpedidas, 
