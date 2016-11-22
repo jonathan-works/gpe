@@ -1,8 +1,6 @@
 package br.com.infox.ibpm.sinal;
 
 import java.io.Serializable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.jbpm.graph.exe.ExecutionContext;
 import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
@@ -12,7 +10,6 @@ import br.com.infox.core.util.StringUtil;
 public class SignalNodeBean implements Serializable {
 	
     private static final long serialVersionUID = 1L;
-    private static final Logger LOGGER = Logger.getLogger(SignalNodeBean.class.getName());
 
 	private Long id;
 	private SignalConfigurationBean listenerConfiguration;
@@ -45,12 +42,7 @@ public class SignalNodeBean implements Serializable {
         if (StringUtil.isEmpty(condition)) {
             return true;
         }
-        try {
-            return (boolean) JbpmExpressionEvaluator.evaluate(condition, executionContext, Boolean.class);
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "", e);
-            return false;
-        }
+        return (boolean) JbpmExpressionEvaluator.evaluate(condition, executionContext, Boolean.class);
     }
     
     private static DispatcherConfiguration createSignalDispatcherConfiguration() {
