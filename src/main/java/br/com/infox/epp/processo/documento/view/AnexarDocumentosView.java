@@ -496,7 +496,7 @@ public class AnexarDocumentosView implements Serializable {
 		List<AssinaturaDocumento> assinaturas = docBin.getAssinaturas();
 		if (assinaturas != null) {
 			for (AssinaturaDocumento assinatura : assinaturas) {
-				if (usuarioPerfil.equals(assinatura.getUsuarioPerfil())) {
+				if (usuarioPerfil.getPerfilTemplate().getPapel().equals(assinatura.getPapel())) {
 					return true;
 				}
 			}

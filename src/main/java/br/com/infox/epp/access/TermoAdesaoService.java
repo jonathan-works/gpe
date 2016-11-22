@@ -57,20 +57,32 @@ import io.jsonwebtoken.JwtException;
 @Stateless
 public class TermoAdesaoService {
 
-    @Inject private DocumentoBinManager documentoBinManager;
-    @Inject private DocumentoBinarioManager documentoBinarioManager;
-    @Inject private ModeloDocumentoManager modeloDocumentoManager;
-    @Inject private PessoaFisicaManager pessoaFisicaManager;
-    @Inject private ParametroManager parametroManager;
-    @Inject private PessoaFisicaSearch pessoaFisicaSearch;
-    @Inject private PdfManager pdfManager;
-    @Inject private UsuarioLoginSearch usuarioLoginSearch;
-    @Inject private CertificateSignatures certificateSignatures;
-    @Inject private AssinaturaDocumentoService assinaturaDocumentoService;
-    @Inject private TermoAdesaoVariableProducer termoAdesaoVariableProducer;
-    @Inject private InfoxMessages infoxMessages;
-
-    @Inject private PapelManager papelManager;
+    @Inject 
+    private DocumentoBinManager documentoBinManager;
+    @Inject 
+    private DocumentoBinarioManager documentoBinarioManager;
+    @Inject 
+    private ModeloDocumentoManager modeloDocumentoManager;
+    @Inject 
+    private PessoaFisicaManager pessoaFisicaManager;
+    @Inject 
+    private ParametroManager parametroManager;
+    @Inject 
+    private PessoaFisicaSearch pessoaFisicaSearch;
+    @Inject 
+    private PdfManager pdfManager;
+    @Inject 
+    private UsuarioLoginSearch usuarioLoginSearch;
+    @Inject 
+    private CertificateSignatures certificateSignatures;
+    @Inject 
+    private AssinaturaDocumentoService assinaturaDocumentoService;
+    @Inject 
+    private TermoAdesaoVariableProducer termoAdesaoVariableProducer;
+    @Inject 
+    private InfoxMessages infoxMessages;
+    @Inject 
+    private PapelManager papelManager;
 
     public String buildUrlDownload(String contextPath, String jwt, String uidTermoAdesao) {
         UriBuilder uriBuilder = UriBuilder.fromPath(contextPath);
@@ -155,7 +167,7 @@ public class TermoAdesaoService {
             String certChain = bundle.getSignatureBeanList().get(0).getCertChain();
             String signature = bundle.getSignatureBeanList().get(0).getSignature();
             UsuarioLogin usuarioLogin = pessoaFisica.getUsuarioLogin();
-            assinaturaDocumentoService.verificaCertificadoUsuarioLogado(certChain, usuarioLogin);
+            assinaturaDocumentoService.verificaCertificadoUsuarioLogado(certChain, usuarioLogin.getPessoaFisica());
 
             UsuarioPerfil perfil = papelManager.getPerfilTermoAdesao(usuarioLogin);
             if (perfil == null){

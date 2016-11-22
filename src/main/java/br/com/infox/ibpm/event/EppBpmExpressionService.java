@@ -23,6 +23,7 @@ import org.jbpm.graph.exe.ExecutionContext;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
 import br.com.infox.componentes.reflection.Reflection;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.net.UrlBuilder;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.GenericDatabaseErrorCode;
@@ -31,6 +32,7 @@ import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cliente.dao.CalendarioEventosDAO;
+import br.com.infox.epp.documento.pasta.PastaSearch;
 import br.com.infox.epp.entrega.EntregaResponsavelService;
 import br.com.infox.epp.entrega.checklist.ChecklistSituacao;
 import br.com.infox.epp.entrega.checklist.ChecklistVariableService;
@@ -67,7 +69,8 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
     private static final long serialVersionUID = 1L;
 
     private ContabilizadorPrazo contabilizadorPrazo = BeanManager.INSTANCE.getReference(ContabilizadorPrazo.class);
-    private PastaManager pastaManager = BeanManager.INSTANCE.getReference(PastaManager.class);
+    @Inject
+    protected PastaManager pastaManager;
     @Inject
     protected SignalService signalService;
     @Inject
@@ -75,7 +78,7 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
     @Inject
     protected PrazoComunicacaoService prazoComunicacaoService;
     @Inject
-    private ModeloComunicacaoSearch modeloComunicacaoSearch;
+    protected ModeloComunicacaoSearch modeloComunicacaoSearch;
     @Inject 
     protected UsuarioLoginManager usuarioLoginManager;
     @Inject
@@ -85,17 +88,21 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
     @Inject
     protected EntregaResponsavelService entregaResponsavelService;
     @Inject
-    private TipoRelacionamentoProcessoManager tipoRelacionamentoProcessoManager;
+    protected TipoRelacionamentoProcessoManager tipoRelacionamentoProcessoManager;
     @Inject
-    private RelacionamentoProcessoManager relacionamentoProcessoManager;
+    protected RelacionamentoProcessoManager relacionamentoProcessoManager;
     @Inject
-    private LinkAplicacaoExternaService linkAplicacaoExternaService;
+    protected LinkAplicacaoExternaService linkAplicacaoExternaService;
     @Inject
     protected CalendarioEventosDAO calendarioEventosDAO;
     @Inject
-    private CustomVariableSearch customVariableSearch;
+    protected CustomVariableSearch customVariableSearch;
     @Inject
-    private MetadadoProcessoManager metadadoProcessoManager;
+    protected MetadadoProcessoManager metadadoProcessoManager;
+    @Inject
+    protected PastaSearch pastaSearch;
+    @Inject
+    protected InfoxMessages infoxMessages;
 
     @External(tooltip = "process.events.expression.atribuirCiencia.tooltip", expressionType = ExpressionType.EVENTOS)
     public void atribuirCiencia() {
@@ -288,6 +295,15 @@ public class EppBpmExpressionService extends BpmExpressionService implements Ser
         }
         return processoManager.find(idProcesso);
     }
+	
+	protected <T> T getVariable(String name, Class<T> clazz) {
+	    ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
+	    if (executionContext == null) {
+            throw new BusinessRollbackException("O contexto de execução BPM não está disponível");
+        }
+	    Object variableValue = executionContext.getVariable(name);
+	    return clazz.cast(variableValue);
+	}
 
    /**
      * Baseado no processo, procura a Entrega referente e verifica se o checklist respectivo tem

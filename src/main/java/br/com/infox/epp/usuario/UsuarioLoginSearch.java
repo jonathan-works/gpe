@@ -144,8 +144,7 @@ public class UsuarioLoginSearch extends PersistenceController {
         Root<PessoaFisica> pessoa = cq.from(PessoaFisica.class);
         From<?, DocumentoBin> termoAdesao = pessoa.join(PessoaFisica_.termoAdesao, JoinType.INNER);
         From<?, AssinaturaDocumento> assinatura = termoAdesao.join(DocumentoBin_.assinaturas, JoinType.INNER);
-        From<?, UsuarioLogin> usuario = assinatura.join(AssinaturaDocumento_.usuario, JoinType.INNER);
-        From<?, PessoaFisica> pessoaFisica = usuario.join(UsuarioLogin_.pessoaFisica, JoinType.INNER);
+        From<?, PessoaFisica> pessoaFisica = assinatura.join(AssinaturaDocumento_.pessoaFisica, JoinType.INNER);
         
         cq=cq.where(cb.equal(pessoaFisica.get(PessoaFisica_.cpf), cpf));
         cq=cq.select(cb.countDistinct(assinatura));

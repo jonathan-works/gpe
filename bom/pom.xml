@@ -53,6 +53,7 @@
         <version.weld-se-core>1.1.16.Final</version.weld-se-core>
         <version.mockito-all>1.9.5</version.mockito-all>
         <version.httpcomponents-httpclient>4.5.2</version.httpcomponents-httpclient>
+        <version.gson>2.7</version.gson>
     </properties>
 
     <dependencyManagement>
@@ -454,6 +455,11 @@
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
                 <version>${version.httpcomponents-httpclient}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${version.gson}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
