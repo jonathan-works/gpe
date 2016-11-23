@@ -413,13 +413,9 @@ public class TaskInstanceHome implements Serializable {
 			variableResolver.resolve();
 			if (variableResolver.isEditor()) {
 				Documento documento = variaveisDocumento.get(getFieldName(variableResolver.getName()));
-				try {
-					updateVariableEditor(documento, variableAccess);
-					variableResolver.assignValueFromMapaDeVariaveis(mapaDeVariaveis);
-					variableResolver.resolve();
-				} catch (DAOException e) {
-					LOG.error("updateVariable(variableAccess)", e);
-				}
+				updateVariableEditor(documento, variableAccess);
+				variableResolver.assignValueFromMapaDeVariaveis(mapaDeVariaveis);
+				variableResolver.resolve();
 			} else if (variableResolver.isFile()) {
 				retrieveVariable(variableAccess);
 			}
