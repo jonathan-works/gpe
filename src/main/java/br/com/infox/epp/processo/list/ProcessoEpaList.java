@@ -53,7 +53,6 @@ import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada_;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica_;
-import br.com.infox.util.time.Periodo;
 
 @Named
 @ViewScoped
@@ -179,15 +178,7 @@ public class ProcessoEpaList extends EntityList<Processo> {
     }
     
     public void onSelectFluxo() {
-        filtros.setDataInicio(new Periodo());
-        filtros.setDataFim(new Periodo());
-        filtros.setCategoria(null);
-        filtros.setNatureza(null);
-        filtros.setRelator(null);
-        filtros.setStatusProcesso(null);
-        filtros.setUnidadeDecisoraColegiada(null);
-        filtros.setUnidadeDecisoraMonocratica(null);
-        filtros.setNumeroProcesso(null);
+        filtros.clear();
         consultaProcessoDynamicColumnsController.setFluxo(filtros.getFluxo());
         setEntity(new Processo());
     }

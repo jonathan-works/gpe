@@ -115,5 +115,17 @@ public class FiltrosBeanList implements Serializable {
 	public void setUsuarioLogin(UsuarioLogin usuarioLogin) {
 		this.usuarioLogin = usuarioLogin;
 	}
+	
+	public void clear() {
+	    setDataInicio(new Periodo());
+        setDataFim(new Periodo());
+        setCategoria(null);
+        setNatureza(null);
+        setRelator(null);
+        setStatusProcesso(null);
+        setUnidadeDecisoraColegiada(null);
+        setUnidadeDecisoraMonocratica(null);
+        setNumeroProcesso(null);
+	}
 
 }
