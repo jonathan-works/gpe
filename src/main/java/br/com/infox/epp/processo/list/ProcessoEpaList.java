@@ -100,11 +100,11 @@ public class ProcessoEpaList extends EntityList<Processo> {
     protected ConsultaProcessoDynamicColumnsController consultaProcessoDynamicColumnsController;
     @Inject
     private FluxoManager fluxoManager;
-    @Inject
-    private FiltrosBeanList filtros;
     
-    @PostConstruct
+    protected FiltrosBeanList filtros;
+    
     @Override
+    @PostConstruct
     public void init() {
     	super.init();
     	Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
@@ -189,7 +189,7 @@ public class ProcessoEpaList extends EntityList<Processo> {
         filtros.setUnidadeDecisoraMonocratica(null);
         filtros.setNumeroProcesso(null);
         consultaProcessoDynamicColumnsController.setFluxo(filtros.getFluxo());
-        super.newInstance();
+        setEntity(new Processo());
     }
     
 	public void search() {
@@ -326,6 +326,5 @@ public class ProcessoEpaList extends EntityList<Processo> {
 	public void setFiltros(FiltrosBeanList filtros) {
 		this.filtros = filtros;
 	}
-	
 	
 }
