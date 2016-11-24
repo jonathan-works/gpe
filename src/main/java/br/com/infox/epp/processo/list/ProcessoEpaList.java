@@ -105,13 +105,14 @@ public class ProcessoEpaList extends EntityList<Processo> {
     @Override
     @PostConstruct
     public void init() {
-    	super.init();
-    	Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
-    	if (flash.containsKey("idFluxo")) {
-    		filtros.setFluxo(fluxoManager.find(flash.get("idFluxo")));
-    		onSelectFluxo();
-    	}
-    	consultaProcessoDynamicColumnsController.setRecurso(DefinicaoVariavelProcessoRecursos.CONSULTA_PROCESSOS);
+        filtros = new FiltrosBeanList();
+        super.init();
+        Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
+        if (flash.containsKey("idFluxo")) {
+            filtros.setFluxo(fluxoManager.find(flash.get("idFluxo")));
+            onSelectFluxo();
+        }
+        consultaProcessoDynamicColumnsController.setRecurso(DefinicaoVariavelProcessoRecursos.CONSULTA_PROCESSOS);
     }
     
     @Override
