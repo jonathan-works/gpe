@@ -669,13 +669,14 @@ public class TaskInstanceHome implements Serializable {
 	public String end(String transition) {
 		if (checkAccess()) {
 			checkCurrentTask();
-			if (!update(getTransition(transition).getConfiguration().isValidateForm())) {
+			boolean validateForm = getTransition(transition).getConfiguration().isValidateForm();
+			if (!update(validateForm)) {
 				return null;
 			}
-			if (!validFileUpload() || !validEditor()) {
+			if (validateForm && (!validFileUpload() || !validEditor())) {
 			    return null;
 			}
-			if (!validarAssinaturaDocumentosAoMovimentar()) {
+			if (validateForm && !validarAssinaturaDocumentosAoMovimentar()) {
 				return null;
 			}
 			this.currentTaskInstance = null;
