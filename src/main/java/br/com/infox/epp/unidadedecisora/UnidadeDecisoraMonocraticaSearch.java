@@ -130,4 +130,34 @@ public class UnidadeDecisoraMonocraticaSearch extends PersistenceController {
 
         return getEntityManager().createQuery(cq).getResultList();
     }
+    
+    public List<UnidadeDecisoraMonocratica> findAtivas(String descricao) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<UnidadeDecisoraMonocratica> cq = cb.createQuery(UnidadeDecisoraMonocratica.class);
+        Root<UnidadeDecisoraMonocratica> udm = cq.from(UnidadeDecisoraMonocratica.class);
+
+        cq.select(udm);
+        Predicate restrictions = cb.isTrue(udm.get(UnidadeDecisoraMonocratica_.ativo));
+        if (!StringUtil.isEmpty(descricao)){
+            String formattedQuery = MessageFormat.format("%{0}%", descricao.toLowerCase());
+            Predicate nomeLikeQuery = cb.like(
+                cb.lower( udm.get(UnidadeDecisoraMonocratica_.nome)), 
+                formattedQuery
+            );
+            Predicate nomeChefeGabineteLikeQuery = cb.like(
+                cb.lower( udm.join(UnidadeDecisoraMonocratica_.chefeGabinete, JoinType.INNER).get(PessoaFisica_.nome) ),
+                formattedQuery
+            );
+            Predicate nomeLocalizacaoLikeQuery = cb.like(
+                cb.lower( udm.join(UnidadeDecisoraMonocratica_.localizacao, JoinType.INNER).get(Localizacao_.localizacao) ),
+                formattedQuery
+            );
+            restrictions = cb.and(restrictions, cb.or(
+                nomeLikeQuery, nomeChefeGabineteLikeQuery, nomeLocalizacaoLikeQuery
+            ));    
+        }
+        cq.where(restrictions);
+
+        return getEntityManager().createQuery(cq).getResultList();
+    }
 }
