@@ -88,6 +88,7 @@
 			<ui:param name="editorWidth" value="#{wi:get(width, 625)}" />
 			<ui:param name="canCollapse" value="#{wi:get(canCollapse, false)}" />
             <f:facet name="config">
+                extraPlugins: 'showprotected',
                 removePlugins: 'elementspath',
                 allowedContent: true,
                 resize_enable:true,
@@ -128,6 +129,7 @@
                         if (tags.length &lt; 1) {
                             return;
                         }
+                        config.protectedSource.push( /#\{[^{}]+\}/g );
                         editor.ui.addRichCombo('variables.cmb', {
                             label : "Variáveis",
                             title : "Variáveis",
