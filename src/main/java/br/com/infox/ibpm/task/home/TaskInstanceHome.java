@@ -320,6 +320,9 @@ public class TaskInstanceHome implements Serializable {
 	}
 
 	private boolean validateRequiredVariables() {
+	    if ( taskInstance.getTask().getTaskController() == null ) {
+	        return true;
+	    }
         List<VariableAccess> variables = taskInstance.getTask().getTaskController().getVariableAccesses();
         List<String> failedInputIds = new ArrayList<>();
         for (VariableAccess variable : variables) {
