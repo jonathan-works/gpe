@@ -46,15 +46,31 @@ public class LayoutController implements Serializable {
 		return layoutManager.getResourceUrlByPath(skin, path);
 	}
 	
+	/**
+	 * A set of assert methods.  Messages are only displayed when an assert fails.
+	 *
+	 * @deprecated Por favor utilizar o componente de ícones. Ex: <i:icon materialDesignIcon="true" value="face"></i:icon>
+	 */
+	@Deprecated
 	public String getMaterialDesignIconJSFUrl(String dpir, String cor, String res, String nome){
             return String.format("/resources/styleSkinInfox/all/%s_web/ic_%s_%s_%s.png", dpir, nome, cor, res);
 	}
-	
+	/**
+         * A set of assert methods.  Messages are only displayed when an assert fails.
+         *
+         * @deprecated Por favor utilizar o componente de ícones. Ex: <i:icon materialDesignIcon="true" value="face"></i:icon>
+         */
+	@Deprecated
 	public String getMaterialDesignIconUrl(String dpir, String cor, String res, String nome){
 	    String urlBase=FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
 	    return String.format("%s/resources/styleSkinInfox/all/%s_web/ic_%s_%s_%s.png", urlBase, dpir, nome, cor, res); 
 	}
-
+	/**
+         * A set of assert methods.  Messages are only displayed when an assert fails.
+         *
+         * @deprecated Por favor utilizar o componente de ícones. Ex: <i:icon materialDesignIcon="true" value="face"></i:icon>
+         */
+	@Deprecated
 	public String getMaterialDesignIconJsfUrl(String dpir, String cor, String res, String nome){
 	    return String.format("/resources/styleSkinInfox/all/%s_web/ic_%s_%s_%s.png", dpir, nome, cor, res); 
 	}
