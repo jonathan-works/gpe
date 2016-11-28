@@ -488,8 +488,7 @@ public class ProcessBuilder implements Serializable {
     }
     
     public void atualizarParametros(Long idProcessDefinition) {
-        EntityManager entityManagerNotManaged = EntityManagerProducer.instance().getEntityManagerNotManaged();
-        List<TaskInstance> taskInstances = taskInstanceDAO.getTaskInstancesOpen(idProcessDefinition, entityManagerNotManaged);
+        List<TaskInstance> taskInstances = taskInstanceDAO.getTaskInstancesOpen(idProcessDefinition);
         
         for (TaskInstance taskInstance : taskInstances) {
             taskInstance = JbpmContextProducer.getJbpmContext().getTaskInstance(taskInstance.getId());
@@ -507,9 +506,6 @@ public class ProcessBuilder implements Serializable {
                     }
                 }
             }
-        }
-        if (entityManagerNotManaged.isOpen()) {
-            entityManagerNotManaged.close();
         }
     }
     
