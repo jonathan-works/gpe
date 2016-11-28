@@ -23,11 +23,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 
-import org.hibernate.Session;
 import org.jboss.seam.Component;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
-import org.jbpm.JbpmContext;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.def.Node;
 import org.jbpm.graph.def.Node.NodeType;
@@ -39,6 +37,7 @@ import org.jbpm.graph.node.ProcessState;
 import org.jbpm.graph.node.StartState;
 import org.jbpm.graph.node.TaskNode;
 import org.jbpm.jpdl.JpdlException;
+import org.jbpm.jpdl.el.impl.JbpmExpressionEvaluator;
 import org.jbpm.jpdl.xml.Problem;
 import org.jbpm.taskmgmt.def.Swimlane;
 import org.jbpm.taskmgmt.def.Task;
@@ -51,6 +50,7 @@ import org.xml.sax.InputSource;
 import com.google.common.base.Strings;
 
 import br.com.infox.cdi.producer.EntityManagerProducer;
+import br.com.infox.cdi.producer.JbpmContextProducer;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.manager.GenericManager;
 import br.com.infox.core.messages.InfoxMessages;
@@ -487,47 +487,29 @@ public class ProcessBuilder implements Serializable {
         return true;
     }
     
-    /**
-     * Carrega as TaskInstances informadas da sessão do hibernate do JBPM para que
-     * seus métodos possam ser chamados corretamente no contexto da sessão JBPM
-     * e não do entityManager de onde foram carregadas
-     * @return
-     */
-    private List<TaskInstance> carregarTaskInstancesSessaoJbpm(List<TaskInstance> taskInstances) {
-        List<Long> ids = new ArrayList<>();
-        for(TaskInstance taskInstance : taskInstances) {
-        	ids.add(taskInstance.getId());
-        }
-        
-        Session session = JbpmContext.getCurrentJbpmContext().getSession();
-        taskInstances = new ArrayList<>();
-        for(Long id : ids) {
-        	TaskInstance taskInstance = (TaskInstance)session.load(TaskInstance.class, id);
-        	taskInstances.add(taskInstance);        	
-        }
-        return taskInstances;
-    }
-    
     public void atualizarParametros(Long idProcessDefinition) {
-        EntityManager entityManager = EntityManagerProducer.instance().getEntityManagerNotManaged();
-        List<TaskInstance> taskInstances = taskInstanceDAO.getTaskInstancesOpen(idProcessDefinition, entityManager);
-        
-        //Carrega as taskInstances da sessão do JBPM e não do entityManager atual (para utilizar seus método - já que 
-        //internamente eles utilizam a Session do contexto JBPM)
-        taskInstances = carregarTaskInstancesSessaoJbpm(taskInstances);
+        EntityManager entityManagerNotManaged = EntityManagerProducer.instance().getEntityManagerNotManaged();
+        List<TaskInstance> taskInstances = taskInstanceDAO.getTaskInstancesOpen(idProcessDefinition, entityManagerNotManaged);
         
         for (TaskInstance taskInstance : taskInstances) {
-    		List<VariableAccess> variableAccesses = taskInstance.getTask().getTaskController().getVariableAccesses();
-    		for (VariableAccess variableAccess : variableAccesses) {
-                String type = variableAccess.getMappedName().split(":")[0];
-                if (VariableType.PARAMETER.name().equals(type)) {                	
-    			    String defaultValue = variableAccess.getValue();
-    			    Object novoValor = ELUtil.evaluateJbpm(taskInstance, defaultValue);
-    			    String variableName = variableAccess.getVariableName();
-    			    
-                	taskInstance.setVariableLocally(variableName, novoValor);
-    			}
-    		}
+            taskInstance = JbpmContextProducer.getJbpmContext().getTaskInstance(taskInstance.getId());
+            if (taskInstance.getTask().getTaskController() != null && taskInstance.getTask().getTaskController().getVariableAccesses() != null) {
+                List<VariableAccess> variableAccesses = taskInstance.getTask().getTaskController().getVariableAccesses();
+                for (VariableAccess variableAccess : variableAccesses) {
+                    ExecutionContext executionContext = new ExecutionContext(taskInstance.getToken());
+                    executionContext.setTaskInstance(taskInstance);
+                    String type = variableAccess.getMappedName().split(":")[0];
+                    if ( VariableType.PARAMETER.name().equals(type) ) {
+                        String defaultValue = variableAccess.getValue();
+                        Object novoValor = ELUtil.isEL(defaultValue) ? JbpmExpressionEvaluator.evaluate(defaultValue, executionContext) : defaultValue;
+                        String variableName = variableAccess.getVariableName();
+                        taskInstance.setVariableLocally(variableName, novoValor);
+                    }
+                }
+            }
+        }
+        if (entityManagerNotManaged.isOpen()) {
+            entityManagerNotManaged.close();
         }
     }
     
