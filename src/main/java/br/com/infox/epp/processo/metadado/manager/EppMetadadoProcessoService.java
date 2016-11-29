@@ -30,14 +30,11 @@ public class EppMetadadoProcessoService {
 	public void setRelator(Processo processo, PessoaFisica relator) {
         setMetadado(EppMetadadoProvider.RELATOR, processo, relator.getIdPessoa().toString());        
 	}
-	
-	public void setRelator(Processo processo, UnidadeDecisoraMonocratica udm) {
-        setRelator(processo, udm.getChefeGabinete());
-	}
-	
+
 	public void setUnidadeDecisoraMonocratica(Processo processo, UnidadeDecisoraMonocratica udm) {
         setMetadado(EppMetadadoProvider.UNIDADE_DECISORA_MONOCRATICA, processo, udm.getIdUnidadeDecisoraMonocratica().toString());		
 	}
+
 	public void setUnidadeDecisoraColegiada(Processo processo, UnidadeDecisoraColegiada udc){
 	    setMetadado(EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA, processo, udc.getIdUnidadeDecisoraColegiada().toString());
 	}

@@ -15,7 +15,6 @@ import br.com.infox.epp.processo.service.ProcessoService;
 public class MovimentarController implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	public static final String NAME = "movimentarController";
 	
 	@Inject
 	private ProcessoService processoService;
