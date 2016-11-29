@@ -104,7 +104,8 @@ public class MetadadoProcessoManager extends Manager<MetadadoProcessoDAO, Metada
             } catch (IllegalAccessException | InvocationTargetException e) {
                 throw new BusinessException("Não foi possível extrair o valor do id do objeto");
             }
-        } else if (Date.class.isInstance(definition.getClassType())) {
+            
+        } else if (Date.class.isAssignableFrom(definition.getClassType())) {
             valor = new SimpleDateFormat(DATE_PATTERN).format(objeto);
         } else {
             valor = objeto.toString();
