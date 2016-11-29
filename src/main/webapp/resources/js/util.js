@@ -376,7 +376,26 @@ namespace("infox",{
 	    document.querySelector(object.inputSelector).addEventListener('input', function(evt) {
 	        filterFunction({input:evt.target, filtered:object.filtered});
             });
-	}
+	}, selectText:function (domElement){
+            if (typeof domElement === "string"){
+                domElement = document.getElementById(domElement) || document.querySelector(domElement); 
+            }
+            if (!(typeof domElement === "object" && domElement instanceof Element)){
+                return;
+            }
+            var range, selection;
+            if (document.body.createTextRange){
+                range = document.body.createTextRange();
+                range.moveToElementText(domElement);
+                range.select();
+            } else if (window.getSelection){
+                selection = window.getSelection();
+                range = document.createRange();
+                range.selectNodeContents(domElement);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+        }
 }, {
 	callback:function (Infox) {
 		window.showLoading = Infox.showLoading;
