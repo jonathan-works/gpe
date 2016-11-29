@@ -3,7 +3,7 @@ package br.com.infox.epp.processo.metadado.type;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.PerfilTemplate;
 import br.com.infox.epp.entrega.documentos.Entrega;
-import br.com.infox.epp.entrega.rest.Categoria;
+import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.Item;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
