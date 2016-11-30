@@ -250,8 +250,8 @@ public class JbpmUtil {
     }
 
     public static Processo getProcesso() {
-        Long idProcesso = JbpmUtil.getProcessVariable("processo");
-        return idProcesso != null ? processoManager().find(idProcesso.intValue()) : null;
+        Integer idProcesso = JbpmUtil.getProcessVariable("processo");
+        return idProcesso != null ? processoManager().find(idProcesso) : null;
     }
 
     public static boolean isTypeEditor(String type) {
