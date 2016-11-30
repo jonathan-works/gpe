@@ -297,11 +297,12 @@ public class BpmExpressionService {
         if (executionContext == null) {
             throw new BusinessRollbackException("O contexto de execução BPM não está disponível");
         }
-        Integer idProcesso = (Integer) executionContext.getVariable(VariaveisJbpmProcessosGerais.PROCESSO);
+        Long idProcesso =  ((Long) executionContext.getVariable(VariaveisJbpmProcessosGerais.PROCESSO));
+        
         if (idProcesso == null) {
             throw new BusinessRollbackException("Não foi encontrada variável 'processo'");
         }
-        return processoManager.find(idProcesso);
+        return processoManager.find(idProcesso.intValue());
     }
     
     protected <T> T getVariable(String name, Class<T> clazz) {
