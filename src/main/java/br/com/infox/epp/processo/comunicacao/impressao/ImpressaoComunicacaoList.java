@@ -7,26 +7,20 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
+import javax.inject.Named;
 
 import br.com.infox.core.list.EntityList;
-import br.com.infox.epp.cdi.seam.ContextDependency;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.meioexpedicao.MeioExpedicao;
 import br.com.infox.epp.processo.comunicacao.meioexpedicao.MeioExpedicaoSearch;
 import br.com.infox.epp.processo.entity.Processo;
 
-@Scope(ScopeType.PAGE)
-@Name(ImpressaoComunicacaoList.NAME)
-@ContextDependency
+@Named
+@ViewScoped
 public class ImpressaoComunicacaoList extends EntityList<Processo> {
 
 	private static final long serialVersionUID = 1L;
-	public static final String NAME = "impressaoComunicacaoList";
 	
 	private static final String DEFAULT_EJBQL = "select o from DestinatarioModeloComunicacao dmc " +
 												"inner join dmc.processo o " +
@@ -35,16 +29,17 @@ public class ImpressaoComunicacaoList extends EntityList<Processo> {
 												"left join bin.assinaturas a " +
 												"where exists (select 1 from MetadadoProcesso mp " +
 												"			  where mp.metadadoType = '" + ComunicacaoMetadadoProvider.MEIO_EXPEDICAO.getMetadadoType() + "' " + 
-												"			  and (mp.valor = '" + MeioExpedicaoSearch.CODIGO_MEIO_DIARIO_OFICIAL + "' or mp.valor = '" + MeioExpedicaoSearch.CODIGO_MEIO_IMPRESSAO + "' ) " +
+												"			  and (mp.valor = #{impressaoComunicacaoList.idMeioExpedicaoImpressao} or " +
+												                    "mp.valor = #{impressaoComunicacaoList.idMeioExpedicaoDiarioOficial}) " +
 												"			  and mp.processo = o) " +
 												"and o.localizacao = #{usuarioLogadoPerfilAtual.localizacao} ";
 	
 	private static final String DEFAULT_ORDER = "a.dataAssinatura desc";
 	
-	private static final String CONDICAO_MEIO_IMPRESSAO =
+	private static final String CONDICAO_MEIO_EXPEDICAO =
 	        "and exists (select 1 from MetadadoProcesso mp where "
 	                + "mp.metadadoType = '" + ComunicacaoMetadadoProvider.MEIO_EXPEDICAO.getMetadadoType() + "' "
-                    + "and mp.valor = #{impressaoComunicacaoList.meioExpedicao.name()} "
+                    + "and mp.valor = cast(#{impressaoComunicacaoList.meioExpedicao.id} as string) "
                     + "and mp.processo = o) ";
 	//Essa query pode trazer resultados incorretos quando houver mais de uma assinatura
 	private static final String CONDICAO_DATA_ASSINATURA_PREFIX =
@@ -74,10 +69,7 @@ public class ImpressaoComunicacaoList extends EntityList<Processo> {
                     + "and cast(mp.valor as boolean) = #{impressaoComunicacaoList.impresso} "
                     + "and mp.processo = o)"
             + ")";
-	
-	@In
-	private ImpressaoComunicacaoService impressaoComunicacaoService;
-	
+
 	@Inject
 	private MeioExpedicaoSearch meioExpedicaoSearch;
 	
@@ -101,7 +93,7 @@ public class ImpressaoComunicacaoList extends EntityList<Processo> {
 	private String getEjbqlRestrictedByFilters() {
         StringBuilder sb = new StringBuilder(DEFAULT_EJBQL);
         if (meioExpedicao != null) {
-            sb.append(CONDICAO_MEIO_IMPRESSAO);
+            sb.append(CONDICAO_MEIO_EXPEDICAO);
         }
         if (impresso != null) {
             sb.append(impresso ? CONDICAO_IMPRESSO : CONDICAO_NAO_IMPRESSO);
@@ -153,6 +145,14 @@ public class ImpressaoComunicacaoList extends EntityList<Processo> {
     public List<MeioExpedicao> getMeiosExpedicao() {
 		return meiosExpedicao;
 	}
+
+    public String getIdMeioExpedicaoImpressao() {
+        return meioExpedicaoSearch.getMeioExpedicaoImpressao().getId().toString();
+    }
+
+    public String getIdMeioExpedicaoDiarioOficial() {
+        return meioExpedicaoSearch.getMeioExpedicaoDiarioOficial().getId().toString();
+    }
 
 	@Override
 	protected String getDefaultEjbql() {

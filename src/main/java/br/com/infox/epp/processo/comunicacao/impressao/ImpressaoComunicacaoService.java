@@ -41,7 +41,6 @@ public class ImpressaoComunicacaoService implements Serializable {
 	private MetadadoProcessoManager metadadoProcessoManager;
 	@Inject
 	private DocumentoDownloader documentoDownloader;
-	
 	@Inject
 	private ModeloComunicacaoManager modeloComunicacaoManager;
 	
