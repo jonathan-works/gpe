@@ -37,12 +37,11 @@ import javax.validation.constraints.Size;
 import br.com.infox.certificado.CertificadoFactory;
 import br.com.infox.certificado.exception.CertificadoException;
 import br.com.infox.epp.access.entity.Papel;
-import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
-import br.com.infox.epp.access.query.UsuarioLoginQuery;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
@@ -65,14 +64,14 @@ public class AssinaturaDocumento implements Serializable {
 	
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = UsuarioLoginQuery.ID_USUARIO, nullable = false)
-    private UsuarioLogin usuario;
-	
+	@JoinColumn(name = "id_pessoa_fisica", nullable = false)
+	private PessoaFisica pessoaFisica;
+
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_usuario_perfil", nullable = false)
-    private UsuarioPerfil usuarioPerfil;
-	
+	@JoinColumn(name = "id_papel", nullable = false)
+	private Papel papel;
+
 	@NotNull
 	@Size(max = NOME_ATRIBUTO)
 	@Column(name = COL_NOME_USUARIO, nullable = false, length = NOME_ATRIBUTO)
@@ -107,10 +106,10 @@ public class AssinaturaDocumento implements Serializable {
 
     public AssinaturaDocumento(DocumentoBin documentoBin, UsuarioPerfil usuarioPerfil, String certChain, String signature) throws CertificadoException {
         this.documentoBin=documentoBin;
-        this.usuario = usuarioPerfil.getUsuarioLogin();
+        this.pessoaFisica = usuarioPerfil.getUsuarioLogin().getPessoaFisica();
         this.nomeUsuario = CertificadoFactory.createCertificado(certChain).getNome();
-        this.usuarioPerfil = usuarioPerfil;
-        this.nomeUsuarioPerfil = this.usuarioPerfil.getPerfilTemplate().getDescricao();
+        this.papel = usuarioPerfil.getPerfilTemplate().getPapel();
+        this.nomeUsuarioPerfil = usuarioPerfil.getPerfilTemplate().getDescricao();
         this.signature = signature;
         this.certChain = certChain;
         this.dataAssinatura = new Date();
@@ -137,20 +136,20 @@ public class AssinaturaDocumento implements Serializable {
         this.idAssinatura = idAssinatura;
     }
 
-    public UsuarioLogin getUsuario() {
-        return usuario;
+    public PessoaFisica getPessoaFisica() {
+        return pessoaFisica;
     }
 
-    public void setUsuario(UsuarioLogin usuario) {
-        this.usuario = usuario;
+    public void setPessoaFisica(PessoaFisica pessoaFisica) {
+        this.pessoaFisica = pessoaFisica;
     }
 
-    public UsuarioPerfil getUsuarioPerfil() {
-        return usuarioPerfil;
+    public Papel getPapel() {
+        return papel;
     }
 
-    public void setUsuarioPerfil(UsuarioPerfil usuarioPerfil) {
-        this.usuarioPerfil = usuarioPerfil;
+    public void setPapel(Papel papel) {
+        this.papel = papel;
     }
 
     public String getNomeUsuario() {

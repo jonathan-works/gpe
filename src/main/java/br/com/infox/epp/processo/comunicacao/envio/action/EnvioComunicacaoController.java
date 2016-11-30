@@ -292,7 +292,6 @@ public class EnvioComunicacaoController implements Serializable {
 			destinatarioComunicacaoAction.persistDestinatarios();
 			documentoComunicacaoAction.persistDocumentos();
 			modeloComunicacao = modeloComunicacaoManager.update(modeloComunicacao);
-			setIdModeloVariable(modeloComunicacao.getId());
 			isNew = false;
 			if (isFinalizada()) {
 				comunicacaoService.finalizarComunicacao(modeloComunicacao);
@@ -304,6 +303,7 @@ public class EnvioComunicacaoController implements Serializable {
 			clear();
 			FacesMessages.instance().add("Registro gravado com sucesso");
 			minuta = modeloComunicacao.isMinuta();
+			setIdModeloVariable(modeloComunicacao.getId());
 		} catch (Exception e) {
 			LOG.error("Erro ao gravar comunicação ", e);
 			if (e instanceof DAOException) {
@@ -352,6 +352,9 @@ public class EnvioComunicacaoController implements Serializable {
 		}
 		if (modeloComunicacao.getDestinatarios().isEmpty()) {
 			msg.append("Nenhum destinatário foi selecionado.\n");
+		}
+		if (finalizada && modeloComunicacao.isMinuta()) {
+		    msg.append("Não é possível finalizar pois o texto no editor da comunicação é minuta.\n");
 		}
 		if (!modeloComunicacao.isMinuta() && modeloComunicacao.getClassificacaoComunicacao() == null){
 			msg.append("Escolha a classificação de documento.\n");

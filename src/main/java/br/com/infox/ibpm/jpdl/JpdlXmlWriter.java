@@ -25,6 +25,7 @@ import org.dom4j.Namespace;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
 import org.jbpm.JbpmException;
+import org.jbpm.configuration.ConfigurationManager;
 import org.jbpm.context.def.VariableAccess;
 import org.jbpm.graph.action.ActionTypes;
 import org.jbpm.graph.action.Script;
@@ -413,7 +414,7 @@ public class JpdlXmlWriter {
     		transition.setKey("key_" + UUID.randomUUID().toString());
     	}
     	transitionElement.addAttribute("key", transition.getKey());
-    	transitionElement.addAttribute("hidden", String.valueOf(transition.isHidden()));
+    	transitionElement.addAttribute("configuration", ConfigurationManager.serialize(transition.getConfiguration()));
         if (transition.getTo() != null) {
         	if (transition.getTo().getKey() == null){
         		transition.getTo().setKey("key_" + UUID.randomUUID().toString());

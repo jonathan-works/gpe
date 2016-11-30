@@ -19,7 +19,7 @@
             styleClass="#{readonly ? 'readOnly' : '' } inputText"
             readonly="#{readonly}"
             disabled="#{empty disabled ? (props.disabled ? false : props.disabled) :disabled}"
-            required="#{required}" onblur="#{onblur}"
+            onblur="#{onblur}"
             onkeypress="#{onkeypress}"
             maxlength="#{empty maxlength ? 255 : maxlength}">
             <ui:insert />

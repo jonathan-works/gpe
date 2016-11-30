@@ -78,6 +78,8 @@ public class ProcessoDAO extends DAO<Processo> {
 	
 	@Inject
 	private FluxoDAO fluxoDAO;
+	@Inject
+	private MeioExpedicaoSearch meioExpedicaoSearch;
 
 	public Processo findProcessosByIdProcessoAndIdUsuario(int idProcesso, Integer idUsuarioLogin, Long idTask) {
 		Map<String, Object> parameters = new HashMap<>(3);
@@ -238,7 +240,7 @@ public class ProcessoDAO extends DAO<Processo> {
 		Fluxo fluxoComunicacao = fluxoDAO.getFluxoByCodigo(ParametroUtil.getParametro(Parametros.CODIGO_FLUXO_COMUNICACAO_ELETRONICA.getLabel()));
 		Map<String, Object> params = new HashMap<>(2);
 		params.put(ProcessoQuery.TIPO_PROCESSO_PARAM, TipoProcesso.COMUNICACAO.toString());
-		params.put(ProcessoQuery.MEIO_EXPEDICAO_PARAM, MeioExpedicaoSearch.CODIGO_MEIO_SISTEMA);
+		params.put(ProcessoQuery.MEIO_EXPEDICAO_PARAM, meioExpedicaoSearch.getMeioExpedicaoSistema().getId().toString());
 		params.put(ProcessoQuery.QUERY_PARAM_FLUXO_COMUNICACAO, fluxoComunicacao.getFluxo());
 		return getNamedResultList(ProcessoQuery.LIST_PROCESSOS_COMUNICACAO_SEM_CIENCIA, params);
 	}
@@ -247,7 +249,7 @@ public class ProcessoDAO extends DAO<Processo> {
 		Fluxo fluxoComunicacao = fluxoDAO.getFluxoByCodigo(ParametroUtil.getParametro(Parametros.CODIGO_FLUXO_COMUNICACAO_ELETRONICA.getLabel()));
 		Map<String, Object> params = new HashMap<>(2);
 		params.put(ProcessoQuery.TIPO_PROCESSO_PARAM, TipoProcesso.COMUNICACAO.toString());
-		params.put(ProcessoQuery.MEIO_EXPEDICAO_PARAM, MeioExpedicaoSearch.CODIGO_MEIO_SISTEMA);
+		params.put(ProcessoQuery.MEIO_EXPEDICAO_PARAM, meioExpedicaoSearch.getMeioExpedicaoSistema().getId().toString());
 		params.put(ProcessoQuery.QUERY_PARAM_FLUXO_COMUNICACAO, fluxoComunicacao.getFluxo());
 		return getNamedResultList(ProcessoQuery.LIST_PROCESSOS_COMUNICACAO_SEM_CUMPRIMENTO, params);
 	}

@@ -32,7 +32,6 @@ import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoRecursos;
 import br.com.infox.epp.fluxo.entity.Categoria;
 import br.com.infox.epp.fluxo.entity.Categoria_;
-import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Natureza;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo;
 import br.com.infox.epp.fluxo.entity.NaturezaCategoriaFluxo_;
@@ -54,7 +53,6 @@ import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada_;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica_;
-import br.com.infox.util.time.Periodo;
 
 @Named
 @ViewScoped
@@ -66,29 +64,33 @@ public class ProcessoEpaList extends EntityList<Processo> {
     private static final String DEFAULT_EJBQL = "select o from Processo o left join o.prioridadeProcesso prp inner join o.naturezaCategoriaFluxo naturezaCategoriaFluxo where o.idJbpm is not null and o.processoPai is null and "
             + SigiloProcessoPermissaoManager.getPermissaoConditionFragment();
     private static final String DEFAULT_ORDER = "coalesce(prp.peso, -1) DESC, o.dataInicio ASC";
-    private static final String R1 = "cast(dataInicio as date) >= #{processoEpaList.dataInicio.from}";
-    private static final String R2 = "cast(dataInicio as date) <= #{processoEpaList.dataInicio.to}";
-    private static final String R3 = "cast(dataFim as date) >= #{processoEpaList.dataFim.from}";
-    private static final String R4 = "cast(dataFim as date) <= #{processoEpaList.dataFim.to}";
-    private static final String R5 = "naturezaCategoriaFluxo.fluxo = #{processoEpaList.fluxo}";
-    private static final String R6 = "naturezaCategoriaFluxo.natureza = #{processoEpaList.natureza}";
-    private static final String R7 = "naturezaCategoriaFluxo.categoria = #{processoEpaList.categoria}";
+    private static final String R1 = "cast(o.dataInicio as date) >= #{processoEpaList.filtros.dataInicio.from}";
+    private static final String R2 = "cast(o.dataInicio as date) <= #{processoEpaList.filtros.dataInicio.to}";
+    private static final String R3 = "cast(o.dataFim as date) >= #{processoEpaList.filtros.dataFim.from}";
+    private static final String R4 = "cast(o.dataFim as date) <= #{processoEpaList.filtros.dataFim.to}";
+    private static final String R5 = "naturezaCategoriaFluxo.fluxo = #{processoEpaList.filtros.fluxo}";
+    private static final String R6 = "naturezaCategoriaFluxo.natureza = #{processoEpaList.filtros.natureza}";
+    private static final String R7 = "naturezaCategoriaFluxo.categoria = #{processoEpaList.filtros.categoria}";
     private static final String R8 = "exists(select 1 from MetadadoProcesso mp where mp.processo = o "
-    		+ "and mp.valor = cast(#{processoEpaList.relator.idPessoa} as string) "
+    		+ "and mp.valor = cast(#{processoEpaList.filtros.relator.idPessoa} as string) "
     		+ "and mp.metadadoType = '" + EppMetadadoProvider.RELATOR.getMetadadoType() + "'"
     		+ ")";
     private static final String R9 = "exists(select 1 from MetadadoProcesso mp where mp.processo = o "
-    		+ "and mp.valor = cast(#{processoEpaList.unidadeDecisoraMonocratica.idUnidadeDecisoraMonocratica} as string) "
+    		+ "and mp.valor = cast(#{processoEpaList.filtros.unidadeDecisoraMonocratica.idUnidadeDecisoraMonocratica} as string) "
     		+ "and mp.metadadoType = '" + EppMetadadoProvider.UNIDADE_DECISORA_MONOCRATICA.getMetadadoType() + "'"
     		+ ")";
     private static final String R10 = "exists(select 1 from MetadadoProcesso mp where mp.processo = o "
-    		+ "and mp.valor = cast(#{processoEpaList.unidadeDecisoraColegiada.idUnidadeDecisoraColegiada} as string) "
+    		+ "and mp.valor = cast(#{processoEpaList.filtros.unidadeDecisoraColegiada.idUnidadeDecisoraColegiada} as string) "
     		+ "and mp.metadadoType = '" + EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA.getMetadadoType() + "'"
     		+ ")";
     private static final String R11 = "exists(select 1 from MetadadoProcesso mp where mp.processo = o "
-    		+ "and mp.valor = cast(#{processoEpaList.statusProcesso.idStatusProcesso} as string) "
+    		+ "and mp.valor = cast(#{processoEpaList.filtros.statusProcesso.idStatusProcesso} as string) "
     		+ "and mp.metadadoType = '" + EppMetadadoProvider.STATUS_PROCESSO.getMetadadoType() + "'"
     		+ ")";
+    
+    private static final String R12 = " o.numeroProcesso = #{processoEpaList.filtros.numeroProcesso} ";
+    
+    private static final String R13 = " o.usuarioCadastro = #{processoEpaList.filtros.usuarioLogin} ";
     
     private static final String FILTRO_PARTICIPANTE_PROCESSO = "and exists (select 1 from ParticipanteProcesso pp "
             + "where pp.processo = o and pp.pessoa.idPessoa = %d ) " ;
@@ -98,33 +100,25 @@ public class ProcessoEpaList extends EntityList<Processo> {
     @Inject
     private FluxoManager fluxoManager;
     
-    private Fluxo fluxo;
+    protected FiltrosBeanList filtros;
     
-    private Periodo dataInicio;
-    private Periodo dataFim;
-    private PessoaFisica relator;
-    private UnidadeDecisoraMonocratica unidadeDecisoraMonocratica;
-    private UnidadeDecisoraColegiada unidadeDecisoraColegiada;
-    private Natureza natureza;
-    private Categoria categoria;
-    private StatusProcesso statusProcesso;
-    
-    @PostConstruct
     @Override
+    @PostConstruct
     public void init() {
-    	super.init();
-    	Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
-    	if (flash.containsKey("idFluxo")) {
-    		setFluxo(fluxoManager.find(flash.get("idFluxo")));
-    		onSelectFluxo();
-    	}
-    	consultaProcessoDynamicColumnsController.setRecurso(DefinicaoVariavelProcessoRecursos.CONSULTA_PROCESSOS);
+        filtros = new FiltrosBeanList();
+        super.init();
+        Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
+        if (flash.containsKey("idFluxo")) {
+            filtros.setFluxo(fluxoManager.find(flash.get("idFluxo")));
+            onSelectFluxo();
+        }
+        consultaProcessoDynamicColumnsController.setRecurso(DefinicaoVariavelProcessoRecursos.CONSULTA_PROCESSOS);
     }
     
     @Override
     protected void addSearchFields() {
-        addSearchField("numeroProcesso", SearchCriteria.IGUAL);
-        addSearchField("usuarioCadastro", SearchCriteria.IGUAL);
+        addSearchField("numeroProcesso", SearchCriteria.IGUAL, R12);
+        addSearchField("usuarioCadastro", SearchCriteria.IGUAL, R13);
         addSearchField("dataInicioDe", SearchCriteria.MAIOR_IGUAL, R1);
         addSearchField("dataInicioAte", SearchCriteria.MENOR_IGUAL, R2);
         addSearchField("dataFimDe", SearchCriteria.MAIOR_IGUAL, R3);
@@ -140,25 +134,9 @@ public class ProcessoEpaList extends EntityList<Processo> {
     
     @Override
     public void newInstance() {
-    	setFluxo(null);
+    	filtros.setFluxo(null);
     	onSelectFluxo();
     }
-    
-    public Periodo getDataInicio() {
-		return dataInicio;
-	}
-
-	public void setDataInicio(Periodo dataInicio) {
-		this.dataInicio = dataInicio;
-	}
-
-	public Periodo getDataFim() {
-		return dataFim;
-	}
-
-	public void setDataFim(Periodo dataFim) {
-		this.dataFim = dataFim;
-	}
 
     @Override
     protected String getDefaultEjbql() {
@@ -188,7 +166,7 @@ public class ProcessoEpaList extends EntityList<Processo> {
 		query.select(usuario);
 		query.distinct(true);
 		query.orderBy(cb.asc(usuario.get(UsuarioLogin_.nomeUsuario)));
-		query.where(cb.equal(ncf.get(NaturezaCategoriaFluxo_.fluxo), fluxo));
+		query.where(cb.equal(ncf.get(NaturezaCategoriaFluxo_.fluxo), filtros.getFluxo()));
 		if (!Strings.isNullOrEmpty(search)) {
 			query.where(query.getRestriction(), cb.like(cb.lower(usuario.get(UsuarioLogin_.nomeUsuario)), "%" + search.toLowerCase() + "%"));
 		}
@@ -200,77 +178,14 @@ public class ProcessoEpaList extends EntityList<Processo> {
         return mp != null ? (StatusProcesso) mp.getValue() : null;
     }
     
-    public Fluxo getFluxo() {
-		return fluxo;
-	}
-    
-    public void setFluxo(Fluxo fluxo) {
-		this.fluxo = fluxo;
-	}
-    
     public void onSelectFluxo() {
-        dataInicio = new Periodo();
-        dataFim = new Periodo();
-        setCategoria(null);
-        setNatureza(null);
-        setRelator(null);
-        setStatusProcesso(null);
-        setUnidadeDecisoraColegiada(null);
-        setUnidadeDecisoraMonocratica(null);
-        consultaProcessoDynamicColumnsController.setFluxo(fluxo);
-        super.newInstance();
+        filtros.clear();
+        consultaProcessoDynamicColumnsController.setFluxo(filtros.getFluxo());
+        setEntity(new Processo());
     }
     
-	public PessoaFisica getRelator() {
-		return relator;
-	}
-
-	public void setRelator(PessoaFisica relator) {
-		this.relator = relator;
-	}
-
-	public UnidadeDecisoraMonocratica getUnidadeDecisoraMonocratica() {
-		return unidadeDecisoraMonocratica;
-	}
-
-	public void setUnidadeDecisoraMonocratica(UnidadeDecisoraMonocratica unidadeDecisoraMonocratica) {
-		this.unidadeDecisoraMonocratica = unidadeDecisoraMonocratica;
-	}
-
-	public UnidadeDecisoraColegiada getUnidadeDecisoraColegiada() {
-		return unidadeDecisoraColegiada;
-	}
-
-	public void setUnidadeDecisoraColegiada(UnidadeDecisoraColegiada unidadeDecisoraColegiada) {
-		this.unidadeDecisoraColegiada = unidadeDecisoraColegiada;
-	}
-
-	public Natureza getNatureza() {
-		return natureza;
-	}
-
-	public void setNatureza(Natureza natureza) {
-		this.natureza = natureza;
-	}
-
-	public Categoria getCategoria() {
-		return categoria;
-	}
-
-	public void setCategoria(Categoria categoria) {
-		this.categoria = categoria;
-	}
-
-	public StatusProcesso getStatusProcesso() {
-		return statusProcesso;
-	}
-
-	public void setStatusProcesso(StatusProcesso statusProcesso) {
-		this.statusProcesso = statusProcesso;
-	}
-	
 	public void search() {
-		if (fluxo == null && !Strings.isNullOrEmpty(getEntity().getNumeroProcesso())) {
+		if (filtros.getFluxo() == null && !Strings.isNullOrEmpty(filtros.getNumeroProcesso())) {
 			List<Processo> results = getResultList();
 			if (!results.isEmpty()) {
 				consultaProcessoDynamicColumnsController.setFluxo(results.get(0).getNaturezaCategoriaFluxo().getFluxo());
@@ -286,7 +201,7 @@ public class ProcessoEpaList extends EntityList<Processo> {
 		Join<NaturezaCategoriaFluxo, Categoria> categoria = ncf.join(NaturezaCategoriaFluxo_.categoria, JoinType.INNER);
 		query.select(categoria);
 		query.distinct(true);
-		query.where(cb.equal(ncf.get(NaturezaCategoriaFluxo_.fluxo), fluxo));
+		query.where(cb.equal(ncf.get(NaturezaCategoriaFluxo_.fluxo), filtros.getFluxo()));
 		if (!Strings.isNullOrEmpty(search)) {
 			query.where(query.getRestriction(), cb.like(cb.lower(categoria.get(Categoria_.categoria)), "%" + search.toLowerCase() + "%"));
 		}
@@ -302,7 +217,7 @@ public class ProcessoEpaList extends EntityList<Processo> {
 		Join<NaturezaCategoriaFluxo, Natureza> natureza = ncf.join(NaturezaCategoriaFluxo_.natureza, JoinType.INNER);
 		query.select(natureza);
 		query.distinct(true);
-		query.where(cb.equal(ncf.get(NaturezaCategoriaFluxo_.fluxo), fluxo));
+		query.where(cb.equal(ncf.get(NaturezaCategoriaFluxo_.fluxo), filtros.getFluxo()));
 		if (!Strings.isNullOrEmpty(search)) {
 			query.where(query.getRestriction(), cb.like(cb.lower(natureza.get(Natureza_.natureza)), "%" + search.toLowerCase() + "%"));
 		}
@@ -370,7 +285,7 @@ public class ProcessoEpaList extends EntityList<Processo> {
 		query.select(mp.get(MetadadoProcesso_.valor));
 		query.distinct(true);
 		query.where(cb.equal(mp.get(MetadadoProcesso_.metadadoType), metadadoType),
-				cb.equal(ncf.get(NaturezaCategoriaFluxo_.fluxo), fluxo));
+				cb.equal(ncf.get(NaturezaCategoriaFluxo_.fluxo), filtros.getFluxo()));
 		return getEntityManager().createQuery(query).getResultList();
 	}
 	
@@ -395,4 +310,13 @@ public class ProcessoEpaList extends EntityList<Processo> {
 		
 		return results;
 	}
+
+	public FiltrosBeanList getFiltros() {
+		return filtros;
+	}
+
+	public void setFiltros(FiltrosBeanList filtros) {
+		this.filtros = filtros;
+	}
+	
 }
