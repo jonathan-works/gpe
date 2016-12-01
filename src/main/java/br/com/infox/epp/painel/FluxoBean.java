@@ -137,6 +137,10 @@ public class FluxoBean implements Comparable<FluxoBean> {
 	public String getNumeroProcessoRootFilter() {
         return numeroProcessoRootFilter;
     }
+	
+	public void setNumeroProcessoRootFilter(String numeroProcessoRootFilter) {
+        this.numeroProcessoRootFilter = numeroProcessoRootFilter;
+    }
 
     @Override
 	public String toString() {
