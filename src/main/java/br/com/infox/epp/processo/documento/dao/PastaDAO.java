@@ -7,7 +7,6 @@ import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_NUMERO
 import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_SIGILO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.FILTER_SUFICIENTEMENTE_ASSINADO_OU_SETOR;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_NOME;
-import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_PROCESSO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.GET_BY_PROCESSO_AND_DESCRICAO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_CLASSIFICACAO_DOCUMENTO;
 import static br.com.infox.epp.processo.documento.query.PastaQuery.PARAM_CODIGO_MARCADOR;
@@ -53,9 +52,13 @@ public class PastaDAO extends DAO<Pasta> {
     public static final String NAME = "pastaDAO";
     
     public List<Pasta> getByProcesso(Processo processo) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put(PARAM_PROCESSO, processo);
-        return getNamedResultList(GET_BY_PROCESSO, parameters);
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Pasta> cq = cb.createQuery(Pasta.class);
+        Root<Pasta> pasta = cq.from(Pasta.class);
+        cq.select(pasta);
+        cq.where(cb.equal(pasta.get(Pasta_.processo), processo));
+        cq.orderBy(cb.asc(pasta.get(Pasta_.ordem)));
+        return getEntityManager().createQuery(cq).getResultList();
     }
     
 	public int getTotalDocumentosPasta(Pasta pasta) {

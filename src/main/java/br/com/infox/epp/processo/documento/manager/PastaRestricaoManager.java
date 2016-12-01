@@ -51,9 +51,12 @@ public class PastaRestricaoManager extends Manager<PastaRestricaoDAO, PastaRestr
     private ModeloPastaRestricaoManager modeloPastaRestricaoManager;
 
     public Map<Integer, PastaRestricaoBean> loadRestricoes(Processo processo, UsuarioLogin usuario, Localizacao localizacao, Papel papel) throws DAOException {
-        Map<Integer, PastaRestricaoBean> restricoes = new HashMap<>();
         List<Pasta> pastas = pastaManager.getByProcesso(processo);
-        
+        return loadRestricoes(pastas, usuario, localizacao, papel);
+    }
+
+    public Map<Integer, PastaRestricaoBean> loadRestricoes(List<Pasta> pastas, UsuarioLogin usuario, Localizacao localizacao, Papel papel) throws DAOException {
+        Map<Integer, PastaRestricaoBean> restricoes = new HashMap<>();
         for (Pasta pasta : pastas) {
             PastaRestricaoBean restricaoBean = new PastaRestricaoBean();
             List<PastaRestricao> restricoesDaPasta = getByPasta(pasta);
@@ -79,10 +82,8 @@ public class PastaRestricaoManager extends Manager<PastaRestricaoDAO, PastaRestr
             if (!usuarioComRestricao && restricaoDefault != null) {
                 populateBeanDefault(restricaoBean, restricaoDefault);
             }
-            
             restricoes.put(pasta.getId(), restricaoBean);
         }
-        
         return restricoes;
     }
     

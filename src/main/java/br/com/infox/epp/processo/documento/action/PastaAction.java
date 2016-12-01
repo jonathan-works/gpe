@@ -6,18 +6,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.Create;
-import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.Transactional;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.jboss.seam.faces.FacesMessages;
 import org.richfaces.event.DropEvent;
 
 import br.com.infox.core.action.ActionMessagesService;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.access.api.Authenticator;
+import br.com.infox.epp.access.entity.Localizacao;
+import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.processo.documento.bean.PastaRestricaoBean;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.Pasta;
@@ -26,28 +29,34 @@ import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.documento.manager.PastaRestricaoManager;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
+import br.com.infox.seam.util.ComponentUtil;
 
-@Name(PastaAction.NAME)
-@Scope(ScopeType.CONVERSATION)
-@AutoCreate
-@Transactional
+@Named
+@ViewScoped
 public class PastaAction implements Serializable {
-
     private static final long serialVersionUID = 1L;
-    public static final String NAME = "pastaAction";
 
-    @In
+    @Inject
     private PastaManager pastaManager;
-    @In
+    @Inject
     private ActionMessagesService actionMessagesService;
-    @In
+    @Inject
     private DocumentoManager documentoManager;
-    @In
-    private DocumentoList documentoList;
-    @In
-    private DocumentoProcessoAction documentoProcessoAction;
-    @In
+    @Inject
     private PastaRestricaoManager pastaRestricaoManager;
+    @Inject
+    private PastaCompartilhamentoSearch pastaCompartilhamentoSearch;
+    @Inject
+    private PastaCompartilhamentoService pastaCompartilhamentoService;
+    @Inject
+    private PastaCompartilhamentoView pastaCompartilhamentoView;
+
+    private DocumentoProcessoAction documentoProcessoAction = ComponentUtil.getComponent(DocumentoProcessoAction.NAME);
+    private DocumentoList documentoList = ComponentUtil.getComponent(DocumentoList.NAME);
+
+    private LogProvider LOG = Logging.getLogProvider(PastaAction.class);
 
     private Processo processo;
     private List<Pasta> pastaList = new ArrayList<>();
@@ -56,9 +65,19 @@ public class PastaAction implements Serializable {
     private Map<Integer, PastaRestricaoBean> restricoes;
     private Boolean showGrid = false;
 
-    @Create
+    private String msgConfigurarCompartilhamento;
+    private Map<Integer, Boolean> possuiCompartilhamentoMap = new HashMap<>();
+    private List<Pasta> pastaCompartilhadaList = new ArrayList<>(0);
+    private List<PastaCompartilhamentoProcessoVO> processoPastaCompList;
+    private String msgRemoverCompartilhamento;
+    private Pasta compartilhamentoToRemove;
+
+    @PostConstruct
     public void create() {
         newInstance();
+        InfoxMessages infoxMessages = InfoxMessages.getInstance();
+        msgConfigurarCompartilhamento = infoxMessages.get("pasta.compartilhamento.msgConfigurar");
+        msgRemoverCompartilhamento = infoxMessages.get("pasta.compartilhamento.remover.msg");
     }
 
     public void newInstance() {
@@ -74,7 +93,7 @@ public class PastaAction implements Serializable {
             documentoProcessoAction.deveMostrarCadeado(documento);
         }
     }
-    
+
     public void associaDocumento(DropEvent evt) {
         Object od = evt.getDragValue();
         Object op = evt.getDropValue();
@@ -122,7 +141,16 @@ public class PastaAction implements Serializable {
     public Boolean canLogicDeleteFromInstance() {
         return canLogicDelete(getInstance());
     }
-    
+
+    public boolean possuiCompartilhamento(Pasta pasta) {
+        Boolean possuiCompartilhamento = possuiCompartilhamentoMap.get(pasta.getId());
+        if (possuiCompartilhamento == null) {
+            possuiCompartilhamento = pastaCompartilhamentoSearch.possuiCompartilhamento(pasta);
+            possuiCompartilhamentoMap.put(pasta.getId(), possuiCompartilhamento);
+        }
+        return possuiCompartilhamento;
+    }
+
     public Pasta getInstance() {
         return instance;
     }
@@ -137,28 +165,66 @@ public class PastaAction implements Serializable {
 
     public void setProcesso(Processo processo) {
         this.processo = processo.getProcessoRoot();
+        UsuarioLogin usuario = Authenticator.getUsuarioLogado();
+        Localizacao localizacao = Authenticator.getLocalizacaoAtual();
+        Papel papel = Authenticator.getPapelAtual();
         try {
             this.pastaList = pastaManager.getByProcesso(processo.getProcessoRoot());
-            this.restricoes = pastaRestricaoManager.loadRestricoes(processo.getProcessoRoot(),
-                    Authenticator.getUsuarioLogado(),
-                    Authenticator.getLocalizacaoAtual(),
-                    Authenticator.getPapelAtual());
+            this.restricoes = pastaRestricaoManager.loadRestricoes(processo.getProcessoRoot(), usuario, localizacao, papel);
+
             if (!processo.equals(processo.getProcessoRoot())) {
                 this.pastaList.addAll(pastaManager.getByProcesso(processo));
-                this.restricoes.putAll(pastaRestricaoManager.loadRestricoes(processo,
-                        Authenticator.getUsuarioLogado(),
-                        Authenticator.getLocalizacaoAtual(),
-                        Authenticator.getPapelAtual()));
+                this.restricoes.putAll(pastaRestricaoManager.loadRestricoes(processo, usuario, localizacao, papel));
             }
+
+            loadPastasCompartilhadas(processo, usuario, localizacao, papel);
         } catch (DAOException e) {
             actionMessagesService.handleDAOException(e);
+        }
+    }
+
+    private void loadPastasCompartilhadas(Processo processo, UsuarioLogin usuario, Localizacao localizacao, Papel papel) {
+        this.pastaCompartilhadaList = pastaCompartilhamentoSearch.listPastasCompartilhadas(processo.getProcessoRoot());
+        this.restricoes.putAll(loadRestricoesPastasCompartilhadas(usuario, localizacao, papel));
+        preencherVOPastasCompartilhadas();
+    }
+
+    private Map<Integer, PastaRestricaoBean> loadRestricoesPastasCompartilhadas(UsuarioLogin usuario, Localizacao localizacao, Papel papel) {
+        Map<Integer, PastaRestricaoBean> map = pastaRestricaoManager.loadRestricoes(pastaCompartilhadaList, usuario, localizacao, papel);
+        for (PastaRestricaoBean restricaoBean : map.values()) {
+            restricaoBean.setDelete(false);
+            restricaoBean.setLogicDelete(false);
+            restricaoBean.setWrite(false);
+        }
+        return map;
+    }
+
+    private void preencherVOPastasCompartilhadas() {
+        processoPastaCompList = new ArrayList<>(0);
+        Map<String, PastaCompartilhamentoProcessoVO> map = new HashMap<>();
+        for (Pasta pasta : pastaCompartilhadaList) {
+            if (canSee(pasta)) {
+                String numeroProcesso = pasta.getProcesso().getProcessoRoot().getNumeroProcesso();
+                PastaCompartilhamentoProcessoVO processoVO = map.get(numeroProcesso);
+                if (processoVO != null) {
+                    processoVO.addPasta(pasta);
+                } else {
+                    processoVO = new PastaCompartilhamentoProcessoVO(numeroProcesso, pasta);
+                    processoPastaCompList.add(processoVO);
+                    map.put(numeroProcesso, processoVO);
+                }
+            }
         }
     }
 
     public List<Pasta> getPastaList() {
         return pastaList;
     }
-    
+
+    public List<Pasta> getPastaCompartilhadaList() {
+        return pastaCompartilhadaList;
+    }
+
     public List<Pasta> getPastaListComRestricaoEscrita() {
         List<Pasta> pastasRestritas= new ArrayList<>();
         for (Pasta pasta : pastaList) {
@@ -167,6 +233,34 @@ public class PastaAction implements Serializable {
             }
         }
         return pastasRestritas;
+    }
+
+    public void configurarCompartilhamentoPasta(Pasta pasta) {
+        pastaCompartilhamentoView.initWithPasta(pasta);
+        possuiCompartilhamentoMap.remove(pasta.getId());
+    }
+
+    public void selectCompartilhamentoToRemove(Pasta pasta) {
+        compartilhamentoToRemove = pasta;
+    }
+
+    public String getMsgRemoverCompartilhamento() {
+        return compartilhamentoToRemove == null ? ""
+                : String.format(msgRemoverCompartilhamento, compartilhamentoToRemove.getNome(), processo.getNumeroProcesso());
+    }
+
+    public void removerCompartilhamento() {
+        try {
+            pastaCompartilhamentoService.removerCompartilhamento(compartilhamentoToRemove, processo);
+            loadPastasCompartilhadas(processo, Authenticator.getUsuarioLogado(), Authenticator.getLocalizacaoAtual(), Authenticator.getPapelAtual());
+            if (getInstance().equals(compartilhamentoToRemove)) {
+                setShowGrid(false);
+            }
+            FacesMessages.instance().add("Compartilhamento removido com sucesso");
+        } catch (Exception e) {
+            FacesMessages.instance().add("Falha ao tentar remover compartilhamento. Favor tentar novamente.");
+            LOG.error("pastaAction.removerCompartilhamento.", e);
+        }
     }
 
     public void setPastaList(List<Pasta> pastaList) {
@@ -186,6 +280,10 @@ public class PastaAction implements Serializable {
 		return pastaManager.getNomePasta(pasta, documentoProcessoAction.getDocumentoFilter(), !documentoProcessoAction.podeUsuarioVerHistorico());
     }
 
+    public String getNomePastaConfigurarCompartilhamento(Pasta pasta) {
+        return String.format(msgConfigurarCompartilhamento, pasta.getNome());
+    }
+
     public Map<Integer, PastaRestricaoBean> getRestricoes() {
         return restricoes;
     }
@@ -200,5 +298,9 @@ public class PastaAction implements Serializable {
     
     public void setShowGrid(Boolean showGrid) {
         this.showGrid = showGrid;
+    }
+
+    public List<PastaCompartilhamentoProcessoVO> getProcessoPastaCompList() {
+        return processoPastaCompList;
     }
 }

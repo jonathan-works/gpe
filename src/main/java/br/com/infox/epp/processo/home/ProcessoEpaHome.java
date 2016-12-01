@@ -84,8 +84,6 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	@In
 	private ConsultaController consultaController;
 	@In
-	private PastaAction pastaAction;
-	@In
 	private PastaRestricaoAction pastaRestricaoAction;
 	@In
 	private DocumentoList documentoList;
@@ -94,6 +92,8 @@ public class ProcessoEpaHome extends AbstractHome<Processo> {
 	@In
 	private PastaList pastaList;
 	
+	@Inject
+	private PastaAction pastaAction;
 	@Inject
 	private SituacaoProcessoDAO situacaoProcessoDAO;
 	@Inject
