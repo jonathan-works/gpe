@@ -26,6 +26,7 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.net.UrlBuilder;
 import br.com.infox.core.persistence.DAOException;
 import br.com.infox.core.persistence.GenericDatabaseErrorCode;
+import br.com.infox.core.util.DateUtil;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.access.manager.UsuarioLoginManager;
@@ -521,7 +522,21 @@ public class BpmExpressionService {
     	
     	publicacaoDocumentoService.publicarDocumento(publicacao);
     }
-    
+
+    @External(expressionType = ExpressionType.GERAL, tooltip = "process.events.expression.formataData.tooltip", example = "#{bpmExpressionService.formatarData(data)}",
+            value = {@Parameter(defaultValue = "data", label = "process.events.expression.formataData.param.label",
+                    tooltip = "process.events.expression.formataData.param.tooltip", selectable = true)})
+    public String formatarData(Date data) {
+        return DateUtil.formatarData(data);
+    }
+
+    @External(expressionType = ExpressionType.GERAL, tooltip = "process.events.expression.formataData.extenso.tooltip", example = "#{bpmExpressionService.formatarDataPorExtenso(data)}",
+            value = {@Parameter(defaultValue = "data", label = "process.events.expression.formataData.param.label",
+                    tooltip = "process.events.expression.formataData.param.tooltip", selectable = true)})
+    public String formatarDataPorExtenso(Date data) {
+        return DateUtil.formatarDataPorExtenso(data);
+    }
+
     public List<ExternalMethod> getExternalMethods() {
     	return BpmExpressionServiceConsumer.instance().getExternalMethods(this, ExpressionType.GERAL);
     }

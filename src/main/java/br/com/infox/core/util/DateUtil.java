@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
@@ -42,13 +43,29 @@ public class DateUtil {
 	 */
 	public static String formatarData(Date data) {
 		try {
-			
 			return formatter.format(data);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}		
-	}	
+	}
+	
+    /**
+     * Converte uma instância de Date para uma String em formato por extenso.
+     *
+     * @param data
+     * @return String no formato dd de mesPorExtenso de yyyy
+     */
+    public static String formatarDataPorExtenso(Date data) {
+        try {
+            Locale br = new Locale("pt", "BR");
+            DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, br);
+            return df.format(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     
     /**
      * Adiciona/Subtrai dias de uma data
