@@ -470,6 +470,7 @@ public class TaskInstanceHome implements Serializable {
 	    try {
             hasAccess = checkAccess();
         } catch (ApplicationException e) {
+        	LOG.error(e);
             FacesMessages.instance().add(e.getMessage());
         }
         return hasAccess;
