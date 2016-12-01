@@ -100,12 +100,11 @@ public class ProcessoEpaList extends EntityList<Processo> {
     @Inject
     private FluxoManager fluxoManager;
     
-    protected FiltrosBeanList filtros;
+    protected FiltrosBeanList filtros = new FiltrosBeanList();;
     
     @Override
     @PostConstruct
     public void init() {
-        filtros = new FiltrosBeanList();
         super.init();
         Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
         if (flash.containsKey("idFluxo")) {
