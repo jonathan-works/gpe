@@ -349,6 +349,8 @@ public class TaskInstanceHome implements Serializable {
                     }
                 } else if (variableInfo.getVariableType() == VariableType.ENUMERATION_MULTIPLE && ((String[]) value).length == 0) {
                     failedInputIds.add(String.format("%s:%s:%sInput", TASK_INSTANCE_FORM_ID, fieldName, fieldName));
+                } else if (variableInfo.getVariableType() == VariableType.FRAME){
+                	continue;
                 } else if (value == null || (value instanceof String && ((String) value).isEmpty())) {
                     failedInputIds.add(String.format("%s:%sDecoration:%s", TASK_INSTANCE_FORM_ID, fieldName, fieldName));
                 }
