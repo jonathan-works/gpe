@@ -326,10 +326,11 @@ public class Authenticator implements Serializable {
         return sb.toString();
     }
 
-    public void unAuthenticate() throws DAOException {
-        Identity.instance().unAuthenticate();
-        Identity.instance().logout();
-        limparContexto();
+    public String unAuthenticate() throws DAOException {
+		LOG.info("unAuthenticate sessao do usuário: " + Contexts.getSessionContext().get(USUARIO_LOGADO));
+		Identity.instance().unAuthenticate();
+		Identity.instance().logout();
+		return "/login.seam";
     }
 
     private boolean obterPerfilAtual(UsuarioLogin usuario) throws LoginException {
@@ -368,7 +369,7 @@ public class Authenticator implements Serializable {
         }
     }
 
-    private void redirectToPainelDoUsuario() {
+    public void redirectToPainelDoUsuario() {
     	try {
 	        Redirect redirect = Redirect.instance();
 	        redirect.getParameters().clear();
@@ -627,4 +628,5 @@ public class Authenticator implements Serializable {
     	}
     	return true;
     }
+
 }
