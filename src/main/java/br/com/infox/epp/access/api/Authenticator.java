@@ -54,6 +54,7 @@ import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.menu.MenuNavigation;
+import br.com.infox.epp.painel.PainelUsuarioController;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.system.manager.ParametroManager;
@@ -294,6 +295,7 @@ public class Authenticator implements Serializable {
         context.remove(ID_LOCALIZACOES_FILHAS_ATUAIS);
         context.remove(USUARIO_PERFIL_LIST);
         context.remove(COLEGIADA_DA_MONOCRATICA_LOGADA);
+        context.remove(PainelUsuarioController.NUMERO_PROCESSO_FILTERED);
     }
 
     public static List<Localizacao> getLocalizacoesFilhas(
