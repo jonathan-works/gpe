@@ -946,6 +946,11 @@ public class TaskInstanceHome implements Serializable {
 			setTaskId(org.jboss.seam.bpm.TaskInstance.instance().getId());
 		}
 	}
+	
+	public boolean possuiModelo(String variavelModelo) {
+		String listaModelos = (String) taskInstance.getContextInstance().getVariable(variavelModelo);
+		return listaModelos != null;
+	}
 
 	public List<ModeloDocumento> getModeloItems(String variavel) {
 		if (!variavel.endsWith("Modelo")) {

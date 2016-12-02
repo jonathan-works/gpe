@@ -27,6 +27,7 @@
                         <f:validator validatorId="classificacaoEditorValidator" for="@this"/>
 						<f:attribute name="editorId" value="#{rich:clientId(editorId)}"/>
                     </wi:selectOneMenuEntity>
+                    <ui:include src="/WEB-INF/xhtml/components/form/comboModelos.xhtml" />
                 </p:outputPanel>
                 <p:outputPanel id="#{id}EditorDiv">
                     <i:help id="#{editorId.replace('-','')}ToolTipDiv"

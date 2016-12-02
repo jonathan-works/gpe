@@ -104,19 +104,6 @@ public class TaskInstanceForm implements Serializable {
                         continue;
                     }
                     String name = tokens[1];
-                    Object variable = JbpmUtil.getProcessVariable(name + "Modelo");
-                    if (variable != null) {
-                        FormField ff = new FormField();
-                        ff.setFormId(form.getFormId());
-                        ff.setId(name + "Modelo");
-                        ff.setLabel("Modelo");
-                        ff.setType("comboModelos");
-                        Map<String, Object> props = getInNewLineMap();
-                        props.put("editorId", var.getVariableName() + "-" + taskInstance.getId());
-                        props.put("pagePath", MessageFormat.format(VariableConstants.DEFAULT_PATH, "comboModelos"));
-                        ff.setProperties(props);
-                        form.getFields().add(ff);
-                    }
                     String label = JbpmUtil.instance().getMessages()
                             .get(taskInstance.getProcessInstance().getProcessDefinition().getName() + ":" + name);
                     FormField ff = new FormField();
@@ -181,6 +168,11 @@ public class TaskInstanceForm implements Serializable {
                         }
                     }
                         break;
+                    case EDITOR: {
+                        ff.getProperties().put("editorId", var.getVariableName() + "-" + taskInstance.getId());
+                        ff.getProperties().put("variavelModelos", var.getVariableName() + "Modelo");
+                    }
+                    	break;
                     default:
                         break;
                     }
