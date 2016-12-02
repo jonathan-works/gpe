@@ -177,13 +177,8 @@ public class SituacaoProcessoDAO extends PersistenceController {
 	
     protected void appendNumeroProcessoRootFilter(AbstractQuery<?> abstractQuery, String numeroProcesso, Path<Processo> processoRoot) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        Predicate predicate = abstractQuery.getRestriction();
-        abstractQuery.where(
-               cb.and(
-                       cb.like(processoRoot.get(Processo_.numeroProcesso),  cb.literal("%" + numeroProcesso + "%")),
-                       predicate
-               )
-        );
+        abstractQuery.where(cb.like(processoRoot.get(Processo_.numeroProcesso), cb.literal("%" + numeroProcesso + "%")),
+                abstractQuery.getRestriction());
     }
     
     public void appendTipoProcessoFilters(AbstractQuery<?> abstractQuery, TipoProcesso tipoProcesso, Boolean comunicacoesExpedidas, 
@@ -202,7 +197,7 @@ public class SituacaoProcessoDAO extends PersistenceController {
         }
     }
 	
-	private void appendSigiloProcessoFilter(AbstractQuery<?> principalQuery, Path<Processo> processo) {
+	protected void appendSigiloProcessoFilter(AbstractQuery<?> principalQuery, Path<Processo> processo) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Subquery<Integer> existsSigiloProcesso = principalQuery.subquery(Integer.class);
         Root<SigiloProcesso> sigiloProcesso = existsSigiloProcesso.from(SigiloProcesso.class);
@@ -316,7 +311,7 @@ public class SituacaoProcessoDAO extends PersistenceController {
         return subquery;
     }
 	
-    private void appendTipoProcessoFilter(AbstractQuery<?> abstractQuery, TipoProcesso tipoProcesso, Path<Processo> processo) {
+    protected void appendTipoProcessoFilter(AbstractQuery<?> abstractQuery, TipoProcesso tipoProcesso, Path<Processo> processo) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
         Root<MetadadoProcesso> metadado = subquery.from(MetadadoProcesso.class);

@@ -2,10 +2,10 @@ package br.com.infox.epp.webservice.log.manager;
 
 import java.util.Calendar;
 
-import org.jboss.seam.ScopeType;
+import javax.ejb.Stateless;
+
 import org.jboss.seam.annotations.AutoCreate;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.log.LogProvider;
 import org.jboss.seam.log.Logging;
 
@@ -14,10 +14,11 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.webservice.log.dao.LogWebserviceClientDAO;
 import br.com.infox.epp.webservice.log.entity.LogWebserviceClient;
 
-@Name(LogWebserviceClientManager.NAME)
+@Stateless
 @AutoCreate
-@Scope(ScopeType.EVENT)
+@Name(LogWebserviceClientManager.NAME)
 public class LogWebserviceClientManager extends Manager<LogWebserviceClientDAO, LogWebserviceClient> {
+    
 	public static final String NAME = "logWebserviceClientManager";
 	private static final long serialVersionUID = 1L;
 	private static final LogProvider LOG = Logging.getLogProvider(LogWebserviceClientManager.class);
