@@ -134,7 +134,7 @@ public class DocumentoTemporarioManager extends PersistenceController {
         documento.setAnexo(dt.getAnexo());
         documento.setIdJbpmTask(dt.getIdJbpmTask());
         documento.setPerfilTemplate(dt.getPerfilTemplate());
-        documento.setDataInclusao(dt.getDataInclusao());
+        documento.setDataInclusao(new Date());
         documento.setUsuarioInclusao(dt.getUsuarioInclusao());
         documento.setDataAlteracao(dt.getDataAlteracao());
         documento.setUsuarioAlteracao(dt.getUsuarioAlteracao());

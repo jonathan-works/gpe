@@ -123,7 +123,7 @@ public abstract class Pessoa implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result
-                + ((getIdPessoa() == null) ? 0 : getIdPessoa().hashCode());
+                + ((getCodigo() == null) ? 0 : getCodigo().hashCode());
         return result;
     }
 
@@ -139,11 +139,11 @@ public abstract class Pessoa implements Serializable {
             return false;
         }
         Pessoa other = (Pessoa) obj;
-        if (getIdPessoa() == null) {
-            if (other.getIdPessoa() != null) {
+        if (getCodigo() == null) {
+            if (other.getCodigo() != null) {
                 return false;
             }
-        } else if (!getIdPessoa().equals(other.getIdPessoa())) {
+        } else if (!getCodigo().equals(other.getCodigo())) {
             return false;
         }
         return true;

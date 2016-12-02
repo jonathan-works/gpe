@@ -374,7 +374,7 @@ public class Documento implements Serializable, Cloneable {
     
     public boolean isDocumentoAssinado(Papel papel){
     	for(AssinaturaDocumento assinaturaDocumento : getDocumentoBin().getAssinaturas()){
-    		if (assinaturaDocumento.getUsuarioPerfil().getPerfilTemplate().getPapel().equals(papel)){
+    		if (assinaturaDocumento.getPapel().equals(papel)){
     			return true;
     		}
     	}
@@ -383,7 +383,7 @@ public class Documento implements Serializable, Cloneable {
     
     public boolean isDocumentoAssinado(UsuarioLogin usuarioLogin){
     	for(AssinaturaDocumento assinaturaDocumento : getDocumentoBin().getAssinaturas()){
-    		if (assinaturaDocumento.getUsuarioPerfil().getUsuarioLogin().equals(usuarioLogin)){
+    		if (assinaturaDocumento.getPessoaFisica().equals(usuarioLogin.getPessoaFisica())){
     			return true;
     		}
     	}

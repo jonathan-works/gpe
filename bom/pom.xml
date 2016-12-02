@@ -10,14 +10,14 @@
 
     <groupId>br.com.infox.epp</groupId>
     <artifactId>bom</artifactId>
-    <version>2.14.3-SNAPSHOT</version>
+    <version>2.14-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>epp-bom</name>
     <description>E-PP Bill of material</description>
 
     <properties>
-        <version.epp>2.14.3-SNAPSHOT</version.epp>
-        <version.liquibase-epp>2.14.3-SNAPSHOT</version.liquibase-epp>
+        <version.epp>2.14-SNAPSHOT</version.epp>
+        <version.liquibase-epp>2.14-SNAPSHOT</version.liquibase-epp>
         <version.git-commit-id-plugin>2.2.1</version.git-commit-id-plugin>
         <version.maven-compiler-plugin>3.5.1</version.maven-compiler-plugin>
         <version.maven-source-plugin>2.4</version.maven-source-plugin>
@@ -37,7 +37,7 @@
         <infinispan.version>5.2.7.Final</infinispan.version>
         <primefaces.version>5.3</primefaces.version>
         <primefaces.extensions.version>4.0.0</primefaces.extensions.version>
-        <jbpm.version>3.4.4-1</jbpm.version>
+        <jbpm.version>3.4.4-2</jbpm.version>
         <dom4j.version>1.6</dom4j.version>
         <richfaces.version>4.5.13.Final</richfaces.version>
         <guava.version>18.0</guava.version>
@@ -53,6 +53,7 @@
         <version.weld-se-core>1.1.16.Final</version.weld-se-core>
         <version.mockito-all>1.9.5</version.mockito-all>
         <version.httpcomponents-httpclient>4.5.2</version.httpcomponents-httpclient>
+        <version.gson>2.7</version.gson>
     </properties>
 
     <dependencyManagement>
@@ -454,6 +455,11 @@
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
                 <version>${version.httpcomponents-httpclient}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${version.gson}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
