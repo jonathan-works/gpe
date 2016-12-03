@@ -15,27 +15,22 @@
 CKEDITOR.plugins.add( 'showprotected', {
 	requires: 'dialog,fakeobjects',
 	onLoad: function() {
-		// Add the CSS styles for protected source placeholders.
-		var iconPath = CKEDITOR.getUrl( this.path + 'images' + '/code.gif' ),
-			baseStyle = 'background:url(' + iconPath + ') no-repeat %1 center;border:1px dotted #00f;background-size:16px;';
-
-		var template = '.%2 img.cke_protected' +
-			'{' +
-				baseStyle +
-				'width:16px;' +
-				'min-height:15px;' +
-				// The default line-height on IE.
-				'height:1.15em;' +
-				// Opera works better with "middle" (even if not perfect)
-				'vertical-align:' + ( CKEDITOR.env.opera ? 'middle' : 'text-bottom' ) + ';' +
-			'}';
-
-		// Styles with contents direction awareness.
-		function cssWithDir( dir ) {
-			return template.replace( /%1/g, dir == 'rtl' ? 'right' : 'left' ).replace( /%2/g, 'cke_contents_' + dir );
-		}
-
-		CKEDITOR.addCss( cssWithDir( 'ltr' ) + cssWithDir( 'rtl' ) );
+                // Styles with contents direction awareness.
+                function cssWithDir( template , dir ) {
+                        return template.replace( /%1/g, dir == 'rtl' ? 'right' : 'left' ).replace( /%2/g, 'cke_contents_' + dir );
+                }
+                
+		var template = '.%2 span.cke_protected' +
+	        '{' +
+	          'cursor:pointer;' +
+	          '-webkit-user-select: none;' +
+	          '-moz-user-select: none;' +
+	          '-ms-user-select: none;' +
+	          'user-select: none;' +
+	          'border: 1px dotted #00f;'
+	        '}';
+		
+		CKEDITOR.addCss( cssWithDir( template, 'ltr' ) + cssWithDir( template, 'rtl' ) );
 	},
 
 	init: function( editor ) {
@@ -44,7 +39,8 @@ CKEDITOR.plugins.add( 'showprotected', {
 		editor.on( 'doubleclick', function( evt ) {
 			var element = evt.data.element;
 
-			if ( element.is( 'img' ) && element.hasClass( 'cke_protected' ) ) {
+			if ( element.is( 'span' ) && element.hasClass( 'cke_protected' ) ) {
+			    editor.getSelection().fake(element);
 				evt.data.dialog = 'showProtectedDialog';
 			}
 		} );
@@ -62,10 +58,11 @@ CKEDITOR.plugins.add( 'showprotected', {
 					if(commentText.indexOf(CKEDITOR.plugins.showprotected.protectedSourceMarker) == 0) {
 						commentElement.attributes = [];
 						var fakeElement = editor.createFakeParserElement( commentElement, 'cke_protected', 'protected' );
-						
+						fakeElement = CKEDITOR.plugins.showprotected.createFakeParserElement.apply(editor, [ commentElement, 'cke_protected', 'protected' ]);
 						var cleanedCommentText = CKEDITOR.plugins.showprotected.decodeProtectedSource( commentText );
-						fakeElement.attributes.title = fakeElement.attributes.alt = cleanedCommentText;
+						fakeElement.attributes.title = cleanedCommentText;
 						
+						fakeElement.add(new CKEDITOR.htmlParser.text( cleanedCommentText.slice(2, cleanedCommentText.length-1) ));
 						return fakeElement;
 					}
 					
@@ -89,17 +86,40 @@ CKEDITOR.plugins.showprotected = {
 	decodeProtectedSource: function( protectedSource ) {
 		if(protectedSource.indexOf('%3C!--') == 0) {
 			return decodeURIComponent(protectedSource).replace( /<!--\{cke_protected\}([\s\S]+?)-->/g, function( match, data ) {
-                return decodeURIComponent( data );
-			} );
+                            return decodeURIComponent( data );
+			});
 		} else {
 			return decodeURIComponent(protectedSource.substr(CKEDITOR.plugins.showprotected.protectedSourceMarker.length));
 		}
 	},
 	
 	encodeProtectedSource: function( protectedSource ) {
-		return '<!--' + CKEDITOR.plugins.showprotected.protectedSourceMarker +
+		return encodeURIComponent('<!--' + CKEDITOR.plugins.showprotected.protectedSourceMarker) +
         	encodeURIComponent( protectedSource ).replace( /--/g, '%2D%2D' ) +
-        	'-->';
-	}
+        	encodeURIComponent('-->');
+	},
+
+	createFakeParserElement : function(realElement, className, realElementType) {
+            var lang = this.lang.fakeobjects, label = lang[realElementType] || lang.unknown, html;
+    
+            var writer = new CKEDITOR.htmlParser.basicWriter();
+            realElement.writeHtml(writer);
+            html = writer.getHtml();
+    
+            var attributes = {
+                'class' : className,
+                'data-cke-realelement' : encodeURIComponent(html),
+                'data-cke-real-node-type' : realElement.type,
+                align : realElement.attributes.align || ''
+            };
+    
+            if (!CKEDITOR.env.hc)
+                attributes.src = CKEDITOR.tools.transparentImageData;
+    
+            if (realElementType)
+                attributes['data-cke-real-element-type'] = realElementType;
+    
+            return new CKEDITOR.htmlParser.element('span', attributes);
+        }
 	
 };
