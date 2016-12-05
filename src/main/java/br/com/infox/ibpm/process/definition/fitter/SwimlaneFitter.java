@@ -5,13 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jbpm.taskmgmt.def.Swimlane;
 
-import br.com.infox.epp.access.entity.PerfilTemplate;
-import br.com.infox.epp.access.manager.PerfilTemplateManager;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.ibpm.swimlane.SwimlaneHandler;
 
@@ -23,10 +20,6 @@ public class SwimlaneFitter extends Fitter implements Serializable {
 
     private List<SwimlaneHandler> swimlanes;
     private SwimlaneHandler currentSwimlane;
-    private List<PerfilTemplate> perfisDisponiveis;
-
-    @Inject
-    private PerfilTemplateManager perfilTemplateManager;
 
     public SwimlaneHandler getCurrentSwimlane() {
         return currentSwimlane;
@@ -54,23 +47,5 @@ public class SwimlaneFitter extends Fitter implements Serializable {
     @Override
     public void clear() {
         swimlanes = null;
-    }
-
-    public List<PerfilTemplate> getPerfisDisponiveis() {
-        if (perfisDisponiveis == null) {
-            perfisDisponiveis = perfilTemplateManager.listPerfisDentroDeEstrutura();
-        }
-        List<PerfilTemplate> perfisDisponiveisParaSwimlaneAtual;
-        if (currentSwimlane != null) {
-            perfisDisponiveisParaSwimlaneAtual = new ArrayList<>();
-            for (PerfilTemplate perfil : perfisDisponiveis) {
-                if (!currentSwimlane.getPerfilList().contains(perfil)) {
-                    perfisDisponiveisParaSwimlaneAtual.add(perfil);
-                }
-            }
-        } else {
-            perfisDisponiveisParaSwimlaneAtual = perfisDisponiveis;
-        }
-        return perfisDisponiveisParaSwimlaneAtual;
     }
 }

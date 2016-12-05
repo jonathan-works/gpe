@@ -9,8 +9,9 @@
   xmlns:rich="http://richfaces.org/rich"
   xmlns:s="http://jboss.org/schema/seam/taglib"
   xmlns:wi="http://www.itx.com.br/jsf"
-  xmlns:p="http://primefaces.org/ui"
+  xmlns:i="http://java.sun.com/jsf/composite/infox"
   xmlns:infox="http://www.infox.com.br/jsf"
+  xmlns:p="http://primefaces.org/ui"
   template="/WEB-INF/xhtml/templates/minimal.xhtml">
  
   <ui:define name="title">#{infoxMessages['fluxo.titlePage']}: #{empty processBuilder.instance ? '' : processBuilder.instance.name}</ui:define>
@@ -197,7 +198,11 @@
       width="920">
       <ui:include src="actions/addClassificacaoDocumento.xhtml" />
     </wi:modalPanel>
-    
+
+	<p:dialog id="configuracaoSwimlanePanel" appendTo="body" modal="true" closable="true" dynamic="true" widgetVar="configuracaoSwimlanePanel"
+		header="#{swimlaneFitter.currentSwimlane.name}" style="margin-left: 10px; margin-right: 10px">
+		<ui:include src="actions/swimlaneConfiguration.xhtml" />
+	</p:dialog>
     <rich:popupPanel id="modalVisualizarHistorico" width="950" height="650" maxHeight="600" modal="true" header="Histórico">
 		<f:facet name="controls">
 		    <h:graphicImage styleClass="mp-close"
@@ -206,5 +211,5 @@
 		</f:facet>
 		<ui:include src="visualizarHistorico.xhtml" />
 	</rich:popupPanel>
-  </ui:define>
+	</ui:define>
 </ui:composition>

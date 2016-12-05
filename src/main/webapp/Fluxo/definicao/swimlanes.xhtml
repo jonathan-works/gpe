@@ -8,78 +8,39 @@
     xmlns:s="http://jboss.org/schema/seam/taglib"
     xmlns:wi="http://www.itx.com.br/jsf">
 
-    <s:div styleClass="Swimlane swimlane-list">
-        <ui:decorate template="dataTable.xhtml">
-            <ui:param name="values" value="#{swimlaneFitter.swimlanes}" />
-            <ui:param name="id" value="swimlanesTable" />
-            <ui:param name="showToolbar" value="false"/>
-
-            <ui:define name="columns">
-                <rich:column>
-                    <h:form>
-                        <f:facet name="header">#{infoxMessages['processBuilder.swimlanes']}</f:facet>
-                        <ui:param name="current"
-                            value="#{row == swimlaneFitter.currentSwimlane}" />
-                        <a:commandLink
-                            action="#{swimlaneFitter.setCurrentSwimlane(row)}"
-                            execute="@this" render="swimlanesForm @form"
-                            styleClass="link" limitRender="true"
-                            style="#{current ? 'font-weight:bold' : ''}">
-                            <h:outputText value="#{row.swimlane.name}" />
-                        </a:commandLink>
-                    </h:form>
-                </rich:column>
-            </ui:define>
-        </ui:decorate>
-    </s:div>
-
-    <h:form id="swimlanesForm" styleClass="swimlane-form">
-        <s:div rendered="#{!empty swimlaneFitter.currentSwimlane}">
-            <ui:decorate template="dataTable.xhtml">
-                <ui:param name="values"
-                    value="#{swimlaneFitter.currentSwimlane.perfilList}" />
-                <ui:param name="id" value="localPapeis" />
-                <ui:param name="styleClass" value="PerfilSwimlane" />
-                <ui:define name="toolBar">
-                    <h:graphicImage
-                        title="#{infoxMessages['processBuilder.swimlane.removeUsuarioPerfil']}"
-                        url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}">
-                        <a:ajax event="click"
-                            listener="#{swimlaneFitter.currentSwimlane.removePerfil(row)}"
-                            execute="@this"
-                            onbeforesubmit="return confirm('#{infoxMessages['processBuilder.confirm']}')"
-                            render="swimlanesForm" limitRender="true" />
-                    </h:graphicImage>
-                </ui:define>
-
-                <ui:define name="columns">
-                    <rich:column>
-                        <f:facet name="header">#{infoxMessages['perfil.titlePage']}</f:facet>
-                        <h:outputText value="#{row.descricao}" />
-                    </rich:column>
-                    <f:facet name="footer">
-                        <rich:columnGroup>
-                            <rich:column>
-                                <h:graphicImage
-                                    title="#{infoxMessages['processBuilder.swimlane.addUsuarioPerfil']}"
-                                    styleClass="pointer"
-                                    id="novoLocPapel" url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}">
-                                    <a:ajax event="click"
-                                        listener="#{swimlaneFitter.currentSwimlane.addPerfil()}"
-                                        execute="@this, swimlaneName, localPapeis"
-                                        render="swimlanesForm"
-                                        limitRender="true" />
-                                </h:graphicImage>
-                            </rich:column>
-                            <rich:column>
-                                <wi:selectOneMenuEntity id="perfil"
-                                    value="#{swimlaneFitter.currentSwimlane.perfil}" showLabelSelecione="true"
-                                    items="#{swimlaneFitter.perfisDisponiveis}" required="true"/>
-                            </rich:column>
-                        </rich:columnGroup>
-                    </f:facet>
-                </ui:define>
-            </ui:decorate>
-        </s:div>
-    </h:form>
+	<rich:dataTable var="row" value="#{swimlaneFitter.swimlanes}" id="swimlanesTable" style="display: inline-block">
+		<rich:column styleClass="dr-dt-sh">
+            <f:facet name="header">
+            	<h:form>
+					<a:commandLink action="#{swimlaneFitter.addSwimlane}"
+						execute="@this" render="swimlanesTable" limitRender="true">
+						<h:graphicImage	title="#{infoxMessages['processBuilder.addSwimlane']}"
+							url="#{layoutController.getResourceUrlByPath('/imagens/add.gif')}" />
+					</a:commandLink>
+				</h:form>
+            </f:facet>
+			<h:form>
+				<a:commandLink action="#{swimlaneFitter.removeSwimlane(row)}"
+					execute="@this"	onclick="return confirm('#{infoxMessages['processBuilder.confirm']}')"
+					render="swimlanesTable" limitRender="true">
+					<h:graphicImage	title="#{infoxMessages['processBuilder.removeSwimlane']}"
+						url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
+						styleClass="opacityHover pointer" />
+				</a:commandLink>
+			</h:form>
+        </rich:column>
+        
+        <rich:column>
+			<rich:column>
+				<f:facet name="header">#{infoxMessages['processBuilder.swimlanes']}</f:facet>
+				<h:form>
+					<a:commandLink action="#{swimlaneFitter.setCurrentSwimlane(row)}"
+						execute="@this" render="configuracaoSwimlanePanel" styleClass="link" limitRender="true"
+						oncomplete="PF('configuracaoSwimlanePanel').show()">
+						<h:outputText value="#{row.swimlane.name}"/>
+					</a:commandLink>
+				</h:form>
+			</rich:column>
+		</rich:column>
+	</rich:dataTable>
 </ui:composition>
