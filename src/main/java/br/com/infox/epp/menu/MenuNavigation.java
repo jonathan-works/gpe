@@ -40,7 +40,6 @@ public class MenuNavigation implements Serializable {
     public List<MenuItemDTO> getActionMenu() {
         if (dropMenus == null){
             if (!pagesChecked && securityUtil.isLoggedIn()) {
-                menuService.discoverAndCreateRoles();
                 pagesChecked = true;
             }
             this.dropMenus = menuService.getMenuItemList();
