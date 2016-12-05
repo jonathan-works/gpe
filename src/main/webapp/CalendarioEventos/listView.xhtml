@@ -42,6 +42,7 @@
                                     title="#{infoxMessages['button.selecionar']}" />
                             </a:commandLink>
                             <a:commandLink action="#{calendarioEventosCrudAction.remover(row)}"
+								onclick="return confirm('#{infoxMessages['crud.confirmRemove']}');"
                                 render="defaultTabPanel pageBodyDialogMessage calendarioProblems" execute="@this">
                                 <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/remove.png')}"
                                     title="#{infoxMessages['crud.remove']}" />
