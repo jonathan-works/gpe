@@ -110,7 +110,10 @@ public class CalendarioEventosService extends PersistenceController {
                 }
                 getEntityManager().persist(modification.getEvento());
                 getEntityManager().flush();
-                calendarioEventosProcessor.afterPersist(modification);
+                //Conforme pedido no chamadao OTRS 46000191 de ticket #86567 , só recalcula o prazo se o evento for do tipo Feriado
+                if(TipoEvento.F.equals(modification.getEvento().getTipoEvento())){
+                	calendarioEventosProcessor.afterPersist(modification);
+                }
             }
         } catch (Exception e) {
             throw new DAOException(e);
