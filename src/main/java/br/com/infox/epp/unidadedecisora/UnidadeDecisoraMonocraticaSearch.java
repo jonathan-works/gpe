@@ -14,6 +14,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
 import br.com.infox.core.persistence.PersistenceController;
+import br.com.infox.core.util.CollectionUtil;
 import br.com.infox.core.util.StringUtil;
 import br.com.infox.epp.access.entity.Localizacao_;
 import br.com.infox.epp.pessoa.entity.PessoaFisica_;
@@ -28,6 +29,24 @@ public class UnidadeDecisoraMonocraticaSearch extends PersistenceController {
 
     public List<UnidadeDecisoraMonocratica> findAtivasForaDaUDC(UnidadeDecisoraColegiada udc) {
         return findAtivasForaDaUDC(udc, null);
+    }
+    
+    public boolean existeNaUDC(UnidadeDecisoraColegiada _udc, Integer idUdm){
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<UnidadeDecisoraMonocratica> cq = cb.createQuery(UnidadeDecisoraMonocratica.class);
+        
+        From<?, UnidadeDecisoraMonocratica> udm = cq.from(UnidadeDecisoraMonocratica.class);
+        
+        Predicate isAtiva = cb.isTrue(udm.get(UnidadeDecisoraMonocratica_.ativo));
+        
+        Predicate udcIgual = createExisteRelacaoComUdcPredicate(cq, udm, _udc);
+        Predicate idUdmIgual = cb.equal(udm.get(UnidadeDecisoraMonocratica_.idUnidadeDecisoraMonocratica), idUdm);
+        
+        Predicate restrictions = cb.and(isAtiva, udcIgual, idUdmIgual);
+        
+        cq = cq.select(udm).where(restrictions);
+        
+        return !CollectionUtil.isEmpty(getEntityManager().createQuery(cq).getResultList());
     }
     
     public List<UnidadeDecisoraMonocratica> findAtivasForaDaUDC(UnidadeDecisoraColegiada _udc, String query) {
