@@ -100,11 +100,15 @@ public class CalendarioEventos implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "tp_evento", nullable = false)
     private TipoEvento tipoEvento;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "dt_criacao_evento", nullable = true)
+    private Date dataCriacaoEvento;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_serie_eventos", nullable = true)
     private SerieEventos serie;
-
+    
     public Integer getIdCalendarioEvento() {
         return idCalendarioEvento;
     }
@@ -160,10 +164,19 @@ public class CalendarioEventos implements Serializable {
     public void setTipoEvento(TipoEvento tipoEvento) {
         this.tipoEvento = tipoEvento;
     }
+    
+    public Date getDataCriacaoEvento() {
+		return dataCriacaoEvento;
+	}
 
-    @PrePersist
+	public void setDataCriacaoEvento(Date dataCriacaoEvento) {
+		this.dataCriacaoEvento = dataCriacaoEvento;
+	}
+
+	@PrePersist
     private void beforePersist() {
         setDefaultValues();
+       	dataCriacaoEvento = new Date();
     }
 
     @PreUpdate
