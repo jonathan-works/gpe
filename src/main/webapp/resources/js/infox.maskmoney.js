@@ -5,20 +5,26 @@ if (!window.maskMoney) {
 	    options.symbol = options.symbol || 'R$';
 	    options.decimal = options.decimal || ',';
 	    options.thousands = options.thousands || '.';
+	    options.nullable = options.nullable || false;
 	    
 	    if (!input.value) {
-	        showValue(input, '0');
+	        showValue(input, options.nullable ? null : '0');
 	    }
 	    
 	    input.addEventListener('keyup', showMasked, false);
 	    
 	    function showMasked() {
-	        showValue(this, this.value || '');
+	        showValue(this, this.value || (options.nullable ? null : ''));
 	    }
 	    
 	    function showValue(input, value) {
+	    	if(!value && options.nullable) {
+	    		input.value = null;
+	    		return;
+	    	}
+	    	
 	        var normalized = value.replace(/\D/g, '');
-	        if (normalized === '') {
+	        if (!normalized || normalized === '') {
 	        	normalized = '0';
 	        }
 	        
