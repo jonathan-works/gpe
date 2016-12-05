@@ -10,6 +10,7 @@ public class CsvWriter implements CsvRecordBuilder, CsvBaseBuilder, AutoCloseabl
 
 	public static final char DEFAULT_SEPARATOR = ',';
 	public static final char DEFAULT_QUOTE = '"';
+	public static final char SEMICOLON_SEPARATOR = ';';
 	public static final char DEFAULT_ESCAPE = '"';
 	public static final String DEFAULT_LINE_END = "\n";
 	

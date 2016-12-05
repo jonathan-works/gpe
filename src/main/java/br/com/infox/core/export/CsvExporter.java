@@ -38,7 +38,9 @@ public class CsvExporter {
 	
 	public static interface CsvExporterFinalBuilder<T> extends CsvExporterOpcionaisBuilder<T> {
 		void download(String fileName);
-		String exportar();		
+		void download(String fileName, char separator);
+		String exportar();
+		String exportar(char separator);
 	}
 	
 	private static interface EntitiesLoader<T> {
@@ -125,14 +127,25 @@ public class CsvExporter {
 
 		@Override
 		public void download(String filename) {
-			String csv = exportar();
+			String csv = exportar(CsvWriter.DEFAULT_SEPARATOR);
+			FileDownloader.download(csv.getBytes(Charsets.UTF_8), "text/csv", filename);					
+		}
+		
+		@Override
+		public void download(String filename, char separator) {
+			String csv = exportar(separator);
 			FileDownloader.download(csv.getBytes(Charsets.UTF_8), "text/csv", filename);					
 		}
 
 		@Override
 		public String exportar() {
+			return exportar(CsvWriter.DEFAULT_ESCAPE);
+		}
+		
+		@Override
+		public String exportar(char separator) {
 			List<T> data = loader.load();
-			String csv = exportarCsv(data, writer);
+			String csv = exportarCsv(data, writer, separator);
 			return csv;
 		}
 
@@ -166,10 +179,10 @@ public class CsvExporter {
 		return new CsvExporterBuilderImpl<T>();	
 	}
 	
-	public static <T> String exportarCsv(List<T> dataList, CsvGenerator<T> writer) {
+	public static <T> String exportarCsv(List<T> dataList, CsvGenerator<T> writer, char separator) {
 		StringWriter sw = new StringWriter(); 
 		
-		try(CsvWriter exporter = new CsvWriter(sw);) {
+		try(CsvWriter exporter = new CsvWriter(sw, separator);) {
 			writer.writeHeader(exporter);
 			for(T data : dataList) {
 				writer.writeRow(exporter, data);
