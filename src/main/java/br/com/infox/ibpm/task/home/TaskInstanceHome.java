@@ -21,6 +21,7 @@ import javax.transaction.SystemException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Factory;
@@ -30,6 +31,7 @@ import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 import org.jboss.seam.bpm.BusinessProcess;
+import org.jboss.seam.bpm.ManagedJbpmContext;
 import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.faces.Redirect;
@@ -686,24 +688,41 @@ public class TaskInstanceHome implements Serializable {
 				return null;
 			}
 			this.currentTaskInstance = null;
-			finalizarTaskDoJbpm(transition);
-			// Flush para que a consulta do canOpenTask consiga ver o pooled
-			// actor que o jbpm criou
-			// no TaskInstance#create, caso contrário, o epp achará que o
-			// usuário não pode ver a tarefa seguinte,
-			// mesmo que possa
 			try {
+			    finalizarTaskDoJbpm(transition);
+    			// Flush para que a consulta do canOpenTask consiga ver o pooled
+    			// actor que o jbpm criou
+    			// no TaskInstance#create, caso contrário, o epp achará que o
+    			// usuário não pode ver a tarefa seguinte,
+    			// mesmo que possa
 				if (Transaction.instance().isActive()) {
 					JbpmUtil.getJbpmSession().flush();
 				}
-			} catch (HibernateException | SystemException e) {
-				LOG.error("", e);
-			}
-			mapaDeVariaveis = null;
-			atualizarPaginaDeMovimentacao();
+				mapaDeVariaveis = null;
+	            atualizarPaginaDeMovimentacao();
+		    } catch (HibernateException | SystemException | JbpmException | DAOException e) {
+		        LOG.error("", e);
+		        actionMessagesService.handleGenericException(e);
+		        rollbackActions();
+		        try {
+                    if (Transaction.instance().isActive()) {
+                        Transaction.instance().setRollbackOnly();
+                    }
+                } catch (IllegalStateException | SystemException e1) {
+                    LOG.error("", e1);
+                    actionMessagesService.handleGenericException(e1);
+                }
+		    }
 		}
 		return null;
 	}
+
+    private void rollbackActions() {
+        Session session = ManagedJbpmContext.instance().getSession();
+        session.refresh(taskInstance.getToken());
+        session.refresh(taskInstance.getProcessInstance().getTaskMgmtInstance());
+        setCurrentTaskInstance(taskInstance);
+    }
 
 	private boolean validEditor() {
 	    if (possuiTask()) {
@@ -814,24 +833,16 @@ public class TaskInstanceHome implements Serializable {
 	}
 
 	private void finalizarTaskDoJbpm(String transition) {
-		try {
-			BusinessProcess.instance().endTask(transition);
-			atualizarBam();
-		} catch (JbpmException e) {
-			LOG.error(".end()", e);
-		}
+		BusinessProcess.instance().endTask(transition);
+		atualizarBam();
 	}
 
 	private void atualizarBam() {
 		ProcessoTarefa pt = processoTarefaManager.getByTaskInstance(taskInstance.getId());
 		Date dtFinalizacao = taskInstance.getEnd();
 		pt.setDataFim(dtFinalizacao);
-		try {
-			processoTarefaManager.update(pt);
-			processoTarefaManager.updateTempoGasto(dtFinalizacao, pt);
-		} catch (DAOException e) {
-			LOG.error(".atualizarBam()", e);
-		}
+		processoTarefaManager.update(pt);
+		processoTarefaManager.updateTempoGasto(dtFinalizacao, pt);
 	}
 
 	private void checkCurrentTask() {
