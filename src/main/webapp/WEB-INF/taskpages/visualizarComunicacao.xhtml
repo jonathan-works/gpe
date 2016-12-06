@@ -13,7 +13,7 @@
 		<ui:include src="/WEB-INF/xhtml/components/fragments/detalhesComunicacao.xhtml">
 	   		<ui:param name="id" value="visualizarComunicacao" />
 	   		<ui:param name="showDestinatario" value="false" />
-	   		<ui:param name="meioExpedicao" value="#{visualizarComunicacaoAction.destinatario.meioExpedicao.label}" />
+	   		<ui:param name="meioExpedicao" value="#{visualizarComunicacaoAction.destinatario.meioExpedicao.descricao}" />
 	   		<ui:param name="showMeioExpedicao" value="true" />
 	   		<ui:param name="dataEnvio" value="#{visualizarComunicacaoAction.dataEnvio}" />
 	   		<ui:param name="showDataResposta" value="false" />

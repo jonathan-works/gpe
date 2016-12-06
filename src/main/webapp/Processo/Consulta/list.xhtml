@@ -16,6 +16,7 @@
   <ui:define name="title">#{infoxMessages['consultaProcesso.titlePage']}</ui:define>
   
   <ui:define name="body">
+    <ui:include src="/WEB-INF/xhtml/components/genericDialog.xhtml" />    
     <c:if test="#{not empty flash.showMenu}" >
 		<c:set value="#{null}" target="#{flash}" property="showMenu"/>
 	</c:if>
@@ -121,6 +122,9 @@
         </ui:decorate>
       </infox:tab>
       <ui:include src="/Processo/Consulta/abasCustomizadasDoDetalheDoProcesso.xhtml"/>
+      <c:forEach var="tab" items="#{extensaoConsultar.tabs}">
+        <ui:include src="#{tab}" />
+      </c:forEach>
       <div>
       	<h:form>
       		<p:remoteCommand name="redirectToView" action="#{consultaController.redirectToView}" process="@this" />

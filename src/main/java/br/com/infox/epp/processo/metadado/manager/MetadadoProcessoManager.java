@@ -1,5 +1,10 @@
 package br.com.infox.epp.processo.metadado.manager;
 
+import static br.com.infox.epp.processo.metadado.entity.MetadadoProcesso.DATE_PATTERN;
+
+import java.lang.reflect.InvocationTargetException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -15,12 +20,14 @@ import org.jboss.seam.annotations.Name;
 
 import br.com.infox.core.manager.Manager;
 import br.com.infox.core.persistence.DAOException;
+import br.com.infox.core.util.EntityUtil;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.dao.MetadadoProcessoDAO;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoDefinition;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;
+import br.com.infox.seam.exception.BusinessException;
 import br.com.infox.seam.util.ComponentUtil;
 
 @AutoCreate
@@ -86,6 +93,31 @@ public class MetadadoProcessoManager extends Manager<MetadadoProcessoDAO, Metada
 		}
 		return null;
 	}
+	
+    public void setMetadado(MetadadoProcessoDefinition definition, Processo processo, Object objeto) {
+        MetadadoProcesso metadadoExistente = processo.getMetadado(definition);
+        String valor;
+        
+        if (EntityUtil.isEntity(definition.getClassType())){
+            try {
+                valor=EntityUtil.getId(definition.getClassType()).getReadMethod().invoke(objeto).toString();
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new BusinessException("Não foi possível extrair o valor do id do objeto");
+            }
+            
+        } else if (Date.class.isAssignableFrom(definition.getClassType())) {
+            valor = new SimpleDateFormat(DATE_PATTERN).format(objeto);
+        } else {
+            valor = objeto.toString();
+        }
+        
+        if (metadadoExistente != null) {
+            metadadoExistente.setValor(valor);
+            update(metadadoExistente);
+        } else {
+            addMetadadoProcesso(processo, definition, valor);
+        }
+    }
 
     public void removeAll(List<MetadadoProcesso> metadadoList) {
         getDao().removeAll(metadadoList);

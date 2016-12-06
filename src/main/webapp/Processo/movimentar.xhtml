@@ -85,6 +85,7 @@
         name="panelStyleClass"
         value="rf-dt-crud" />
     <ui:define name="body">
+        <ui:include src="/WEB-INF/xhtml/components/genericDialog.xhtml" />  
         <rich:collapsiblePanel
             switchType="client" rendered="#{checkPermission}"
             header="#{infoxMessages['processo.titleView']} #{processoEpaHome.instance.numeroProcessoRoot} - #{taskInstance.processInstance.processDefinition.name} - #{taskInstance.name} "
@@ -330,7 +331,10 @@
             </infox:tab>
             
         	<ui:include src="abasCustomizadasDoMovimentar.xhtml" />
-        	
+
+            <c:forEach var="tab" items="#{extensaoMovimentar.tabs}">
+                <ui:include src="#{tab}" />
+            </c:forEach>
         </infox:tabPanel>
         
         <rich:popupPanel

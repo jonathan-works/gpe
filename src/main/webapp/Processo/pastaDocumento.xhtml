@@ -9,7 +9,8 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:wi="http://www.itx.com.br/jsf"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:i="http://java.sun.com/jsf/composite/infox">
+	xmlns:i="http://java.sun.com/jsf/composite/infox"
+	xmlns:infox="http://www.infox.com.br/jsf">
 
 	<ui:param name="pastaDocumentoRenderId"
 		value="#{empty pastaDocumentoRenderId ? '' : pastaDocumentoRenderId}" />
@@ -135,8 +136,10 @@
 					rendered="#{row.excluido and pastaAction.canLogicDeleteFromInstance()}"
 					title="#{infoxMessages['button.restaurar']}"
 					onmouseup="#{rich:component('requestMotivoPanel')}.show(); setValuesToExcludeRestore(false, #{rowId}, #{row.numeroDocumento}, '#{row.descricao}', '#{row.classificacaoDocumento.descricao}');" />
-
-				<h:form>
+                
+                
+                
+				<h:form style="display:inline">
 					<ui:include
 						src="/WEB-INF/xhtml/components/grid/processoDocumentoBin.xhtml">
 						<ui:param name="bin" value="#{row.documentoBin}" />
@@ -144,6 +147,7 @@
                         <ui:param name="hideSignature" value="#{not documentoProcessoAction.deveMostrarCadeado(row)}" />
 					</ui:include>
 				</h:form>
+				
 			</ui:define>
 
 			<ui:define name="headerToolBar" />
@@ -230,7 +234,7 @@
 		      }
 		  }
 	</script>
-
+	
 	<rich:popupPanel id="requestMotivoPanel" header="teste"
 		headerClass="motivo-header" moveable="true" show="false"
 		resizeable="true" minWidth="690" minHeight="310"

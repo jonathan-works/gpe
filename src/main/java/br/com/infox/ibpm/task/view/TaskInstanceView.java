@@ -89,52 +89,55 @@ public class TaskInstanceView implements Serializable {
             for (VariableAccess var : list) {
                 final boolean isWritable = var.isWritable();
                 final boolean isReadable = var.isReadable();
+                
                 if (isReadable && !isWritable) {
-                    String[] tokens = var.getMappedName().split(":");
-                    VariableType type = VariableType.valueOf(tokens[0]);
-                    if (VariableType.TASK_PAGE.equals(type)){
-                        continue;
-                    }
-                    Object value = taskInstance.getVariable(var.getVariableName());
-                    if(value == null) {
-                    	continue;
-                    }
-                    String name = tokens[1];
-                    FormField ff = new FormField();
-                    ff.setFormId(form.getFormId());
-                    ff.setFormHome(form.getHomeName());
-                    ff.setId(var.getVariableName());
-                    ff.setRequired(var.isRequired() + "");
-                    String label = JbpmUtil.instance().getMessages().get(taskInstance.getProcessInstance().getProcessDefinition().getName() + ":" + name);
-                    ff.setLabel(label);
-                    Map<String, Object> properties = ff.getProperties();
-
-                    properties.put("pagePath", type.getPath());
-                    switch (type) {
-                        case EDITOR:
-                        {
-                            ff.setType(type.name());
-                            properties.put("pagePath", format(DEFAULT_PATH,"textEditComboReadonly"));
-                            if (value != null) {
-                                try {
-                                    Documento documento = documentoManager().find(Integer.parseInt(value.toString(), 10));
-                                    if (documento != null) {
-                                        properties.put("modeloDocumentoRO", documento.getDocumentoBin().getModeloDocumento());
-                                        properties.put("tipoProcessoDocumentoRO", documento.getClassificacaoDocumento());
-                                    }
-                                } catch (NumberFormatException e) {
-                                    LOG.error("Identificador de Documento inválido", e);
-                                }
+                    Variable variable = new Variable(var, taskInstance);
+                    if (variable.type == VariableType.FRAME) {
+                        FormField formField = createFormField(variable);
+                        String url = format("/{0}.{1}", variable.name.replaceAll("_", "/"), "xhtml");
+                        String framePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath(url);
+                        File file = new File(framePath);
+                        if (!file.exists()) {
+                            String containerPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("");
+                            Path findFirst = FileUtil.findFirst(containerPath + "/WEB-INF", "**" + url);
+                            if (findFirst != null) {
+                                url = findFirst.toString().replace(containerPath.toString(), "");
                             }
                         }
-                            break;
+                        formField.getProperties().put("urlFrame", url);
+                        formField.getProperties().put("readonly", true);
+                        formField.getProperties().put("pagePath", variable.type.getPath());
+                        form.getFields().add(formField);
+                        continue;
+                    } else if (variable.type == VariableType.TASK_PAGE || variable.value == null) {
+                        continue;
+                    }
+                    
+                    FormField ff = createFormField(variable);
+                    Map<String, Object> properties = ff.getProperties();
+                    properties.put("pagePath", variable.type.getPath());
+                    
+                    switch (variable.type) {
+                        case EDITOR:
+                        {
+                            properties.put("pagePath", format(DEFAULT_PATH,"textEditComboReadonly"));
+                            try {
+                                Documento documento = documentoManager().find(Integer.parseInt(variable.value.toString(), 10));
+                                if (documento != null) {
+                                    properties.put("modeloDocumentoRO", documento.getDocumentoBin().getModeloDocumento());
+                                    properties.put("tipoProcessoDocumentoRO", documento.getClassificacaoDocumento());
+                                }
+                            } catch (NumberFormatException e) {
+                                LOG.error("Identificador de Documento inválido", e);
+                            }
+                        }
+                        break;
                         case ENUMERATION:
                         case ENUMERATION_MULTIPLE:
                         {
-                            ff.setType(type.name());
-                            ff.setValue(value);
+                            ff.setValue(variable.value);
                             DominioVariavelTarefaManager dominioVariavelTarefaManager = (DominioVariavelTarefaManager) Component.getInstance(DominioVariavelTarefaManager.NAME);
-                            Integer id = Integer.valueOf(tokens[2]);
+                            Integer id = Integer.valueOf(variable.configuration);
                             DominioVariavelTarefa dominio = dominioVariavelTarefaManager.find(id);
 
                             List<SelectItem> selectItens = new ArrayList<>();
@@ -150,37 +153,18 @@ public class TaskInstanceView implements Serializable {
                             }
                             ff.getProperties().put("items", selectItens);
                         }
-                            break;
+                        break;
                         case FILE:
                         {
-                            ff.setType(type.name());
-                            ff.getProperties().put("readonly", true);
-                            if (value != null) {
-                                Documento documento = documentoManager().find(value);
-                                ff.setValue(documento.getDescricao());
-                                ff.getProperties().put("classificacaoDocumento", documento.getClassificacaoDocumento().getDescricao());
-                            }
+                            Documento documento = documentoManager().find(variable.value);
+                            ff.setValue(documento.getDescricao());
+                            ff.getProperties().put("classificacaoDocumento", documento.getClassificacaoDocumento().getDescricao());
                         }
                         break;
-                        case FRAME:
-                            String url = format("/{0}.{1}", name.replaceAll("_", "/"), "xhtml");
-                            String framePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath(url);
-                            File file = new File(framePath);
-                            if (!file.exists()) {
-                                String containerPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("");
-                                Path findFirst = FileUtil.findFirst(containerPath + "/WEB-INF", "**" + url);
-                                if (findFirst != null) {
-                                    url = findFirst.toString().replace(containerPath.toString(), "");
-                                }
-                            }
-                            ff.getProperties().put("urlFrame", url);
-                            ff.setType(type.name());
-                            break;
                         case FRAGMENT:{
-                            ff.setType(type.name());
-                        ff.setValue(value);
-                            if (tokens.length >=3){
-                                FragmentConfiguration fragmentConfiguration = BeanManager.INSTANCE.getReference(FragmentConfigurationCollector.class).getByCode(tokens[2]);
+                            ff.setValue(variable.value);
+                            if (variable.configuration != null) {
+                                FragmentConfiguration fragmentConfiguration = BeanManager.INSTANCE.getReference(FragmentConfigurationCollector.class).getByCode(variable.configuration);
                                 Map<String, Object> map = ff.getProperties();
                                 map.put("fragmentConfig", fragmentConfiguration);
                                 map.put("fragmentPath", fragmentConfiguration.getPath());
@@ -189,18 +173,29 @@ public class TaskInstanceView implements Serializable {
                         break;
                         default:
                         {
-                            ff.setType(type.name());
-                            ff.setValue(value);
+                            ff.setValue(variable.value);
                         }
-                            break;
+                        break;
                     }
                     
-                    properties.put("readonly", !var.isWritable());
+                    properties.put("readonly", true);
                     form.getFields().add(ff);
                 }
             }
         }
         return form;
+    }
+    
+    private FormField createFormField(Variable var) {
+        FormField ff = new FormField();
+        ff.setFormId(form.getFormId());
+        ff.setFormHome(form.getHomeName());
+        ff.setId(var.variableAccess.getVariableName());
+        ff.setRequired(String.valueOf(var.variableAccess.isRequired()));
+        String label = JbpmUtil.instance().getMessages().get(taskInstance.getProcessInstance().getProcessDefinition().getName() + ":" + var.name);
+        ff.setLabel(label);
+        ff.setType(var.type.name());
+        return ff;
     }
     
     private void getTaskInstance() {
@@ -213,5 +208,24 @@ public class TaskInstanceView implements Serializable {
 
     private DocumentoManager documentoManager() {
         return ComponentUtil.getComponent(DocumentoManager.NAME);
+    }
+    
+    private static class Variable {
+        VariableAccess variableAccess;
+        String name;
+        VariableType type;
+        Object value;
+        String configuration;
+        
+        public Variable(VariableAccess variableAccess, TaskInstance taskInstance) {
+            this.variableAccess = variableAccess;
+            String[] tokens = variableAccess.getMappedName().split(":");
+            this.type = VariableType.valueOf(tokens[0]);
+            this.name = tokens[1];
+            this.value = taskInstance.getVariable(variableAccess.getVariableName());
+            if (tokens.length == 3) {
+                configuration = tokens[2];
+            }
+        }
     }
 }

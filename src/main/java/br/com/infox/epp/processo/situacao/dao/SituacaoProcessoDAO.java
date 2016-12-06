@@ -211,10 +211,7 @@ public class SituacaoProcessoDAO extends PersistenceController {
             } else {
                 appendDestinoOrDestinatarioFilter(abstractQuery, processo);
             }
-        } else if (TipoProcesso.DOCUMENTO.equals(tipoProcesso)) {
-            appendPooledActorFilter(abstractQuery, taskInstance);
         } else {
-            appendUnidadeDecisoraFilter(abstractQuery, processo);
             appendPooledActorFilter(abstractQuery, taskInstance);
         }
     }
@@ -354,53 +351,6 @@ public class SituacaoProcessoDAO extends PersistenceController {
         abstractQuery.where(predicate);
     }
     
-    protected void appendUnidadeDecisoraFilter(AbstractQuery<?> abstractQuery, From<?, Processo> processo) {
-    	if (getAuthenticator().isUsuarioLogandoInMonocraticaAndColegiada()) {
-    		appendUnidadeDecisoraColegiadaFilter(abstractQuery, processo);
-    		appendUnidadeDecisoraMonocraticaFilter(abstractQuery, processo);
-        } else if (getAuthenticator().isUsuarioLogadoInColegiada()) {
-            appendUnidadeDecisoraColegiadaFilter(abstractQuery, processo);
-        } else if (getAuthenticator().isUsuarioLogadoInMonocratica()) {
-        	appendUnidadeDecisoraMonocraticaFilter(abstractQuery, processo);
-        }
-	}
-    
-    protected void appendUnidadeDecisoraColegiadaFilter(AbstractQuery<?> abstractQuery, From<?, Processo> processo) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
-        Root<MetadadoProcesso> metadado = subquery.from(MetadadoProcesso.class);
-        subquery.select(cb.literal(1));
-        
-        String metadadoUnidadeDecisora = EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA.getMetadadoType();
-        Integer idUnidadeDecisora = getAuthenticator().getColegiadaLogada().getIdUnidadeDecisoraColegiada();
-        Predicate predicateSubquery = cb.and(cb.equal(metadado.get(MetadadoProcesso_.metadadoType), metadadoUnidadeDecisora));
-        predicateSubquery = cb.and(cb.equal(metadado.get(MetadadoProcesso_.valor), idUnidadeDecisora.toString()), predicateSubquery);
-        predicateSubquery = cb.and(cb.equal(metadado.get(MetadadoProcesso_.processo).get(Processo_.idProcesso), processo.get(Processo_.processoRoot).get(Processo_.idProcesso)), predicateSubquery);
-        subquery.where(predicateSubquery);
-        Predicate predicate = abstractQuery.getRestriction();
-        
-        predicate = cb.and(cb.exists(subquery), predicate);
-        abstractQuery.where(predicate);
-    }
-    
-	protected void appendUnidadeDecisoraMonocraticaFilter(AbstractQuery<?> abstractQuery, From<?, Processo> processo) {
-		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        Subquery<Integer> subquery = abstractQuery.subquery(Integer.class);
-        Root<MetadadoProcesso> metadado = subquery.from(MetadadoProcesso.class);
-        subquery.select(cb.literal(1));
-        
-        String metadadoUnidadeDecisora = EppMetadadoProvider.UNIDADE_DECISORA_MONOCRATICA.getMetadadoType();
-        Integer idUnidadeDecisora = getAuthenticator().getMonocraticaLogada().getIdUnidadeDecisoraMonocratica();
-        Predicate predicateSubquery = cb.and(cb.equal(metadado.get(MetadadoProcesso_.metadadoType), metadadoUnidadeDecisora));
-        predicateSubquery = cb.and(cb.equal(metadado.get(MetadadoProcesso_.valor), idUnidadeDecisora.toString()), predicateSubquery);
-        predicateSubquery = cb.and(cb.equal(metadado.get(MetadadoProcesso_.processo).get(Processo_.idProcesso),	processo.get(Processo_.processoRoot).get(Processo_.idProcesso)), predicateSubquery);
-        subquery.where(predicateSubquery);
-        Predicate predicate = abstractQuery.getRestriction();
-        
-    	predicate = cb.and(cb.exists(subquery), predicate);
-    	abstractQuery.where(predicate);
-	}
-	
     protected void appendPooledActorFilter(AbstractQuery<?> abstractQuery, From<?, TaskInstance> taskInstance) {
         PerfilTemplate perfilTemplate = Authenticator.getUsuarioPerfilAtual().getPerfilTemplate();
         String login = Authenticator.getUsuarioLogado().getLogin();

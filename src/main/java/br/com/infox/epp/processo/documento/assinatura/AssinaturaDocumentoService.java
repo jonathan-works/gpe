@@ -13,7 +13,6 @@ import javax.inject.Inject;
 
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.util.Strings;
@@ -60,15 +59,15 @@ public class AssinaturaDocumentoService {
     @Inject
     private DocumentoBinarioManager documentoBinarioManager;
     @Inject
-    private DocumentoBinManager documentoBinManager;
+    protected DocumentoBinManager documentoBinManager;
     @Inject
     private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
-    @In
+    @Inject
     private AssinaturaDocumentoListenerService assinaturaDocumentoListenerService;
     @Inject
     private PessoaFisicaManager pessoaFisicaManager;
     @Inject
-    private AssinaturaDocumentoDAO assinaturaDocumentoDAO;
+    protected AssinaturaDocumentoDAO assinaturaDocumentoDAO;
 
     public Boolean isDocumentoAssinado(final Documento documento) {
         final DocumentoBin documentoBin = documento.getDocumentoBin();
@@ -188,6 +187,18 @@ public class AssinaturaDocumentoService {
             }
         }
         return result;
+    }
+    
+    public boolean isDocumentoAssinado(Integer idDocumentoBin, PessoaFisica pessoaFisica) {
+        DocumentoBin bin = documentoBinManager.find(idDocumentoBin);
+        if (bin != null && bin.getAssinaturas() != null) {
+            for (AssinaturaDocumento assinatura : bin.getAssinaturas()) {
+                if (assinatura.getPessoaFisica() != null && assinatura.getPessoaFisica().equals(pessoaFisica)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public boolean isDocumentoAssinado(Documento documento, UsuarioLogin usuarioLogin) {
@@ -389,7 +400,7 @@ public class AssinaturaDocumentoService {
     	return true;
     }
     
-    private void checkValidadeCertificado(String certChain) throws CertificadoException {
+    protected void checkValidadeCertificado(String certChain) throws CertificadoException {
         try {
             CertificateManager.instance().verificaCertificado(certChain);
         } catch (CertificateExpiredException e) {

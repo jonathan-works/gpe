@@ -8,6 +8,7 @@ import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.metadado.entity.MetadadoProcesso;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoDefinition;
 import br.com.infox.epp.processo.metadado.type.EppMetadadoProvider;
+import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraColegiada;
 import br.com.infox.epp.unidadedecisora.entity.UnidadeDecisoraMonocratica;
 
 @Stateless
@@ -29,13 +30,13 @@ public class EppMetadadoProcessoService {
 	public void setRelator(Processo processo, PessoaFisica relator) {
         setMetadado(EppMetadadoProvider.RELATOR, processo, relator.getIdPessoa().toString());        
 	}
-	
-	public void setRelator(Processo processo, UnidadeDecisoraMonocratica udm) {
-        setRelator(processo, udm.getChefeGabinete());
-	}
-	
+
 	public void setUnidadeDecisoraMonocratica(Processo processo, UnidadeDecisoraMonocratica udm) {
         setMetadado(EppMetadadoProvider.UNIDADE_DECISORA_MONOCRATICA, processo, udm.getIdUnidadeDecisoraMonocratica().toString());		
+	}
+
+	public void setUnidadeDecisoraColegiada(Processo processo, UnidadeDecisoraColegiada udc){
+	    setMetadado(EppMetadadoProvider.UNIDADE_DECISORA_COLEGIADA, processo, udc.getIdUnidadeDecisoraColegiada().toString());
 	}
 
 }

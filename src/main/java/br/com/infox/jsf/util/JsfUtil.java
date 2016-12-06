@@ -95,7 +95,7 @@ public class JsfUtil {
         ELFlash flash = (ELFlash) context.getExternalContext().getFlash();
         flash.doLastPhaseActions(context, true);
     }
-    
+
     public <T> T getFlashParam(String name, Class<T> clazz) {
         return clazz.cast(context.getExternalContext().getFlash().get(name));
     }

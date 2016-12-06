@@ -76,6 +76,7 @@
 
         <ui:define name="label">#{label}</ui:define>
         <span id="#{id}Locator" />
+        
         <rich:editor
         	id="#{id}"
         	value="#{value}"
@@ -88,6 +89,8 @@
 			<ui:param name="editorWidth" value="#{wi:get(width, 625)}" />
 			<ui:param name="canCollapse" value="#{wi:get(canCollapse, false)}" />
             <f:facet name="config">
+                protectedSource: [/#\{[^{}]+\}/g],
+                extraPlugins: 'showprotected',
                 removePlugins: 'elementspath',
                 allowedContent: true,
                 resize_enable:true,

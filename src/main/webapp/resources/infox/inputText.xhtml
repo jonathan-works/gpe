@@ -10,7 +10,7 @@
     	
     	<composite:attribute name="label" />
     	<composite:attribute name="help" />
-    	<composite:attribute name="value" type="java.lang.String"/>
+    	<composite:attribute name="value" />
     	<composite:attribute name="disabled" default="false"/>
     	<composite:attribute name="styleClass"/>
     	<composite:attribute name="onblur" />
@@ -21,6 +21,7 @@
     	<composite:attribute name="onchange" />
     	<composite:attribute name="onkeyup" />
     	<composite:attribute name="validatorId" />
+    	<composite:attribute name="converterId" default="stringConverter"/>
     	
     	<!-- Ajax Attributes -->
     	<composite:attribute name="ajax" default="false" />
@@ -67,7 +68,7 @@
 		   				<c:if test="#{not empty cc.attrs.validatorId}">
 		   					<f:validator validatorId="#{cc.attrs.validatorId}" />
 		   				</c:if>
-		   				<f:converter converterId="stringConverter" />
+		   				<f:converter converterId="#{cc.attrs.converterId}" />
 		   			</h:inputText>	
         		</div>
         	</div>

@@ -21,7 +21,7 @@
     <composite:attribute name="var" default="item"/>
     <composite:attribute name="itemLabel" type="java.lang.String" default="#{item}"/>
     <composite:attribute name="itemValue" type="java.lang.Object" default="#{item}" />
-    <composite:attribute name="maxResults" default="100"/>
+    <composite:attribute name="maxResults" default="2147483647"/>
     <composite:attribute name="minQueryLength" default="0" type="java.lang.Integer" />
     <composite:attribute name="queryDelay" default="300" />
     <composite:attribute name="forceSelection" default="false" />
@@ -47,6 +47,8 @@
     <composite:attribute name="partialSubmit" default="false" />
     <composite:attribute name="onstart" />
     <composite:attribute name="oncomplete"/>
+
+    <composite:clientBehavior name="itemSelect" targets="#{cc.attrs.id}Input" event="itemSelect" />
 
     <composite:facet name="label" />
     <composite:facet name="itemtip" />

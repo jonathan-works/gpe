@@ -11,12 +11,13 @@
     	<composite:attribute name="id"/>
     	<composite:attribute name="styleClass"/>
     	<composite:attribute name="style"/>
+    	<composite:attribute name="layout" default="block"/>
     	
     </composite:interface>
 	
     <composite:implementation>
 		<p:outputPanel id="#{cc.attrs.id}" styleClass="tooltip-parent #{cc.attrs.styleClass}" style="width: 10px; #{cc.attrs.style}" 
-			rendered="#{cc.attrs.rendered}">
+			rendered="#{cc.attrs.rendered}" layout="#{cc.attrs.layout}">
 		   	<h:graphicImage id="#{cc.attrs.id}Img" url="#{layoutController.getResourceUrlByPath('/imagens/help.gif')}" />
 			<div class="epp-tooltip">
 				<div class="tooltip-panel">

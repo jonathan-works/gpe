@@ -1,19 +1,14 @@
 package br.com.infox.epp.access.component.menu;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.jboss.seam.Component;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Expressions;
-import org.jboss.seam.security.Identity;
 import org.richfaces.event.DropEvent;
 
 import br.com.infox.core.messages.InfoxMessages;
@@ -21,7 +16,6 @@ import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.system.PropertiesLoader;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
-import br.com.infox.seam.path.PathResolver;
 import br.com.infox.seam.security.SecurityUtil;
 
 /**
@@ -39,12 +33,6 @@ public class Menu implements Serializable {
 
     private List<MenuItem> dropMenus;
     
-    /**
-     * Flag para indicar que as páginas já foram verificadas Isso ocorre apenas
-     * uma vez (static)
-     */
-    private static boolean pagesChecked;
-
     public void drop(DropEvent o) {
         bookmark.add((MenuItem) o.getDragValue());
     }
@@ -67,13 +55,6 @@ public class Menu implements Serializable {
         }
     	
         dropMenus = new ArrayList<MenuItem>();
-        boolean ok = true;
-
-        try {
-            discoverAndCreateRolesIfNeeded();
-        } catch (IOException e) {
-            LOG.error("Não foi possível descobrir e criar os recursos", e);
-        }
 
         for (String key : items) {
             try {
@@ -89,21 +70,9 @@ public class Menu implements Serializable {
                 }
             } catch (Exception e) {
                 LOG.error(".setItems()", e);
-                ok = false;
                 break;
             }
         }
-        pagesChecked = ok;
-    }
-
-    private void discoverAndCreateRolesIfNeeded() throws IOException {
-        if (pagesChecked || !Identity.instance().isLoggedIn()) {
-            return;
-        }
-
-        RecursoCreator roleCreator = new RecursoCreatorImpl();
-        PathResolver pathResolver = (PathResolver) Component.getInstance(PathResolver.NAME);
-        Files.walkFileTree(new File(pathResolver.getContextRealPath()).toPath(), roleCreator);
     }
 
     protected void buildItem(String key, String url) {

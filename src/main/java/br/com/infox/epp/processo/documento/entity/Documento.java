@@ -58,8 +58,10 @@ import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
+import br.com.infox.epp.documento.publicacao.PublicacaoDocumento;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
+import edu.emory.mathcs.backport.java.util.Collections;
 
 @Entity
 @Table(name = Documento.TABLE_NAME)
@@ -151,6 +153,10 @@ public class Documento implements Serializable, Cloneable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "documento", cascade = CascadeType.REMOVE)
     @OrderBy(value="dataAlteracao DESC")
     private List<HistoricoStatusDocumento> historicoStatusDocumentoList = new ArrayList<>();
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "documento")
+    @OrderBy(value="dataPublicacao DESC")
+    private List<PublicacaoDocumento> publicacoes = new ArrayList<>();
     
     @PrePersist
     private void prePersist(){
@@ -473,5 +479,10 @@ public class Documento implements Serializable, Cloneable {
 		}
 		cDocumento.setHistoricoStatusDocumentoList(cList);
 		return cDocumento;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<PublicacaoDocumento> getPublicacoes() {
+		return Collections.unmodifiableList(publicacoes);
 	}
 }

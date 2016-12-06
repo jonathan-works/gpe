@@ -35,7 +35,60 @@ public class ExpressionResolverChain implements ExpressionResolver {
 		return expression;
 	}
 	
-	public static class ExpressionResolverChainBuilder {
+	public static BuilderInicial builder() {
+		return new BuilderExpressionResolverChain();
+	}
+	
+	public static interface BuilderInicial {
+		public BuilderDefault defaultResolver(Integer idProcesso);
+		public BuilderOpcionais with(ExpressionResolver resolver);
+	}
+	
+	public static interface BuilderDefault {
+		public BuilderOpcionais executionContext(ExecutionContext executionContext);
+		public BuilderOpcionais taskInstance(TaskInstance taskInstance);
+		public BuilderOpcionais processInstance(ProcessInstance processInstance);
+	}
+	
+	public static interface BuilderOpcionais {
+		public BuilderOpcionais and(ExpressionResolver resolver);
+		public ExpressionResolverChain build();
+	}
+	
+	public static class BuilderExpressionResolverChain implements BuilderInicial, BuilderDefault {
+
+		private Integer idProcesso;
+		
+		@Override
+		public BuilderOpcionais executionContext(ExecutionContext executionContext) {
+			return ExpressionResolverChainBuilder.with(new JbpmExpressionResolver(idProcesso)).and(new SeamExpressionResolver(executionContext));
+		}
+
+		@Override
+		public BuilderOpcionais taskInstance(TaskInstance taskInstance) {
+			return ExpressionResolverChainBuilder.with(new JbpmExpressionResolver(idProcesso)).and(new SeamExpressionResolver(taskInstance));
+		}
+		
+		@Override
+		public BuilderOpcionais processInstance(ProcessInstance processInstance) {
+			return ExpressionResolverChainBuilder.with(new JbpmExpressionResolver(idProcesso)).and(new SeamExpressionResolver(processInstance));
+		}
+		
+		@Override
+		public BuilderDefault defaultResolver(Integer idProcesso) {
+			this.idProcesso = idProcesso;
+			return this;
+		}
+
+		@Override
+		public BuilderOpcionais with(ExpressionResolver resolver) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+	}
+	
+	public static class ExpressionResolverChainBuilder implements BuilderOpcionais {
 		private List<ExpressionResolver> resolvers;
 		
 		public ExpressionResolverChainBuilder(ExpressionResolver resolver) {

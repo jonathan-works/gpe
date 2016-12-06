@@ -54,6 +54,7 @@ import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.menu.MenuNavigation;
+import br.com.infox.epp.painel.PainelUsuarioController;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.epp.system.manager.ParametroManager;
@@ -294,6 +295,7 @@ public class Authenticator implements Serializable {
         context.remove(ID_LOCALIZACOES_FILHAS_ATUAIS);
         context.remove(USUARIO_PERFIL_LIST);
         context.remove(COLEGIADA_DA_MONOCRATICA_LOGADA);
+        context.remove(PainelUsuarioController.NUMERO_PROCESSO_FILTERED);
     }
 
     public static List<Localizacao> getLocalizacoesFilhas(
@@ -324,10 +326,11 @@ public class Authenticator implements Serializable {
         return sb.toString();
     }
 
-    public void unAuthenticate() throws DAOException {
-        Identity.instance().unAuthenticate();
-        Identity.instance().logout();
-        limparContexto();
+    public String unAuthenticate() throws DAOException {
+		LOG.info("unAuthenticate sessao do usuário: " + Contexts.getSessionContext().get(USUARIO_LOGADO));
+		Identity.instance().unAuthenticate();
+		Identity.instance().logout();
+		return "/login.seam";
     }
 
     private boolean obterPerfilAtual(UsuarioLogin usuario) throws LoginException {
@@ -366,7 +369,7 @@ public class Authenticator implements Serializable {
         }
     }
 
-    private void redirectToPainelDoUsuario() {
+    public void redirectToPainelDoUsuario() {
     	try {
 	        Redirect redirect = Redirect.instance();
 	        redirect.getParameters().clear();
@@ -625,4 +628,5 @@ public class Authenticator implements Serializable {
     	}
     	return true;
     }
+
 }
