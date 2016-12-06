@@ -66,10 +66,10 @@
 	
 	<div style="margin-top: 5px;" />
 	<s:div id="documentoListDiv" styleClass="documentoListDiv">
-		<wi:dataTable values="#{documentoList.list(15)}"
-			bean="#{documentoList}" id="documentoList"
+		<wi:dataTable values="#{pastaAction.activeBean.list(15)}"
+			bean="#{pastaAction.activeBean}" id="documentoList"
 			showGrid="#{pastaAction.isShowGrid()}"
-			tableTitle="#{empty documentoList.pasta ? '' : documentoList.pasta.nome}"
+			tableTitle="#{pastaAction.tableTitle}"
 			rowId="#{row.id}" showSearchForm="true">
 
 			<ui:define name="searchForm">
@@ -93,6 +93,7 @@
                                 limitRender="true" />
                             <p:commandLink process="@this" update="@(.pastaCompartilhamentoModal)"
                                 onstart="infox.showLoading();" oncomplete="PF('pastaCompartilhamentoModal').show(); infox.hideLoading();"
+                                rendered="#{security.checkPage('pastaCompartilhamento')}"
                                 action="#{pastaAction.configurarCompartilhamentoPasta(pasta)}">
                                 <h:graphicImage title="#{eventCache.get('pastaAction.getNomePastaConfigurarCompartilhamento(pasta)', pasta.id)}"
                                     url="#{layoutController.getMaterialDesignIconJSFUrl('1x', 'black', '18dp', 'share')}"
@@ -122,9 +123,19 @@
                     <ui:repeat var="processo" value="#{pastaAction.processoPastaCompList}">
                         <div style="margin-bottom: 1em;">
                             <h:outputText value="#{processo.numeroProcesso}" style="font-weight: bold;"/>
+                            <s:div rendered="#{processo.documentoCompartilhado}" styleClass="folder-row" style="margin-left: 0.6em; padding-left: 1.4em;">
+                                <a:commandLink render="documentoListDiv pageBodyDialogMessage" execute="@form"
+                                    action="#{pastaAction.selectPastaDocumentosCompartilhados(processo.processo)}"
+                                    onbegin="infox.showLoading();" oncomplete="infox.hideLoading();"
+                                    styleClass="folder" limitRender="true">
+                                    <h:graphicImage url="#{layoutController.getMaterialDesignIconJSFUrl('1x', 'black', '18dp', 'folder_shared')}" title="#{pasta}" />
+                                    <h:outputText class="folder" value="#{infoxMessages['documento.compartilhamento.nomePasta']}" />
+                                </a:commandLink>
+                            </s:div>
                             <ui:repeat var="pasta" value="#{processo.pastas}">
-                                <s:div rendered="#{pastaAction.canSee(pasta)}" styleClass="folder-row">
+                                <s:div rendered="#{pastaAction.canSee(pasta)}" styleClass="folder-row" style="margin-left: 0.6em;">
                                     <p:commandLink process="@this" update="@(.confirmaRemoverCompModal)"
+                                        rendered="#{security.checkPage('pastaCompartilhamento')}"
                                         onstart="infox.showLoading();" oncomplete="PF('confirmaRemoverCompModal').show(); infox.hideLoading();"
                                         action="#{pastaAction.selectCompartilhamentoToRemove(pasta)}">
                                         <h:graphicImage url="#{layoutController.getMaterialDesignIconJSFUrl('1x', 'black', '18dp', 'clear')}"
@@ -154,6 +165,21 @@
 						<span class="caixa-ind-lbl">#{row.descricao}</span>
 					</rich:dragIndicator>
 				</rich:dragSource>
+                <p:commandLink process="@this" update="@(.documentoCompModal)"
+                    rendered="#{security.checkPage('documentoCompartilhamento') and not pastaAction.documentoCompartilhado}"
+                    onstart="infox.showLoading();" oncomplete="PF('documentoCompModal').show(); infox.hideLoading();"
+                    action="#{pastaAction.configurarCompartilhamentoDocumento(row)}">
+                    <h:graphicImage title="#{eventCache.get('pastaAction.getNomeDocumentoConfigurarCompartilhamento(row)', row.id)}"
+                        url="#{layoutController.getMaterialDesignIconJSFUrl('1x', 'black', '18dp', 'share')}"
+                        style="opacity: #{pastaAction.possuiCompartilhamento(row) ? 1 : 0.3}" />
+                </p:commandLink>
+                <p:commandLink process="@this" update="@(.confirmaRemoverCompDocModal)"
+                    rendered="#{security.checkPage('documentoCompartilhamento') and pastaAction.documentoCompartilhado}"
+                    onstart="infox.showLoading();" oncomplete="PF('confirmaRemoverCompDocModal').show(); infox.hideLoading();"
+                    action="#{pastaAction.selectCompartilhamentoDocumentoToRemove(row)}">
+                    <h:graphicImage url="#{layoutController.getMaterialDesignIconJSFUrl('1x', 'black', '18dp', 'clear')}"
+                        title="#{infoxMessages['pasta.compartilhamento.remover']}" />
+                </p:commandLink>
 				<h:graphicImage rendered="#{pastaAction.canDeleteFromInstance()}"
 					url="#{layoutController.getResourceUrlByPath('/imagens/anexo.png')}"
 					title="#{infoxMessages['documentoProcesso.moverDocumento']}" />
@@ -405,6 +431,59 @@
                     value="#{infoxMessages['pasta.compartilhamento.remover']}" />
                 <a:commandButton id="cancelRemoverCompartilhamento" styleClass="buttons"
                     execute="@this" oncomplete="PF('confirmaRemoverCompModal').hide();"
+                    value="#{infoxMessages['button.cancelar']}" />
+            </h:form>
+        </h:panelGroup>
+    </p:dialog>
+
+    <p:dialog id="documentoCompModal" widgetVar="documentoCompModal" styleClass="documentoCompModal"
+        modal="true" width="50%" position="center top" visible="false"
+        header="#{documentoCompartilhamentoView.dialogTitle}">
+        <p:ajax event="close" process="@this" update="documentoListPanel"
+            onstart="infox.showLoading();" oncomplete="infox.hideLoading();" />
+        <h:panelGroup id="documentoCompModalPanel" styleClass="documentoCompModalPanel" rendered="#{not empty documentoCompartilhamentoView.documento}">
+            <p:dataTable value="#{documentoCompartilhamentoView.processosRelacionados}" var="processo">
+                <p:column styleClass="dt-toolbar-col">
+                    <p:commandLink rendered="#{not documentoCompartilhamentoView.possuiCompartilhamento(processo)}"
+                        action="#{documentoCompartilhamentoView.adicionarCompartilhamento(processo)}"
+                        process="@this" update="@(.documentoCompModalPanel)">
+                        <h:graphicImage title="#{infoxMessages['documento.compartilhamento.adicionar']}"
+                            url="#{layoutController.getMaterialDesignIconJSFUrl('1x', 'black', '18dp', 'share')}" />
+                    </p:commandLink>
+                    <p:commandLink rendered="#{documentoCompartilhamentoView.possuiCompartilhamento(processo)}"
+                        action="#{documentoCompartilhamentoView.removerCompartilhamento(processo)}"
+                        process="@this" update="@(.documentoCompModalPanel)">
+                        <h:graphicImage title="#{infoxMessages['documento.compartilhamento.remover']}"
+                            url="#{layoutController.getMaterialDesignIconJSFUrl('1x', 'black', '18dp', 'delete')}" />
+                    </p:commandLink>
+                </p:column>
+                <p:column headerText="#{infoxMessages['pasta.compartilhamento.processo']}">
+                    <h:outputText value="#{processo.numeroProcesso}" />
+                </p:column>
+                <p:column headerText="#{infoxMessages['documento.compartilhamento.possuiCompartilhamento']}">
+                    <h:outputText value="#{infoxMessages[documentoCompartilhamentoView.possuiCompartilhamento(processo) ? 'crud.yes' : 'crud.no']}" />
+                </p:column>
+            </p:dataTable>
+        </h:panelGroup>
+    </p:dialog>
+
+    <p:dialog id="confirmaRemoverCompDocModal" widgetVar="confirmaRemoverCompDocModal" styleClass="confirmaRemoverCompDocModal"
+        modal="true" width="50%" position="center top" visible="false">
+        <f:facet name="header">
+            <h:outputText value="#{infoxMessages['pasta.compartilhamento.atencao']}" />
+        </f:facet>
+        <h:panelGroup id="confirmaRemoverCompDocModalPanel" styleClass="confirmaRemoverCompDocModalPanel">
+            <h3>
+                <h:outputText value="#{pastaAction.msgRemoverCompartilhamentoDocumento}" />
+            </h3>
+            <h:form>
+                <a:commandButton id="confirmRemoverCompartilhamento" styleClass="buttons"
+                    execute="@this" render="documentoListDiv" limitRender="true"
+                    action="#{pastaAction.removerCompartilhamentoDocumento()}"
+                    onbegin="infox.showLoading();" oncomplete="PF('confirmaRemoverCompDocModal').hide(); infox.hideLoading();"
+                    value="#{infoxMessages['pasta.compartilhamento.remover']}" />
+                <a:commandButton id="cancelRemoverCompartilhamento" styleClass="buttons"
+                    execute="@this" oncomplete="PF('confirmaRemoverCompDocModal').hide();"
                     value="#{infoxMessages['button.cancelar']}" />
             </h:form>
         </h:panelGroup>

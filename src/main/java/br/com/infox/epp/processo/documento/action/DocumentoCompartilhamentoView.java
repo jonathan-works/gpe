@@ -13,7 +13,7 @@ import org.jboss.seam.faces.FacesMessages;
 
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.cdi.ViewScoped;
-import br.com.infox.epp.processo.documento.entity.Pasta;
+import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.entity.Processo;
 import br.com.infox.epp.processo.entity.RelacionamentoProcessoInterno;
 import br.com.infox.epp.relacionamentoprocessos.RelacionamentoProcessoDAO;
@@ -22,25 +22,25 @@ import br.com.infox.log.Logging;
 
 @Named
 @ViewScoped
-public class PastaCompartilhamentoView implements Serializable {
+public class DocumentoCompartilhamentoView implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Inject
-    private PastaCompartilhamentoSearch pastaCompartilhamentoSearch;
+    private DocumentoCompartilhamentoSearch documentoCompartilhamentoSearch;
     @Inject
-    private PastaCompartilhamentoService pastaCompartilhamentoService;
+    private DocumentoCompartilhamentoService documentoCompartilhamentoService;
     @Inject
     private RelacionamentoProcessoDAO relacionamentoProcessoDAO;
 
-    private LogProvider LOG = Logging.getLogProvider(PastaCompartilhamentoView.class);
+    private LogProvider LOG = Logging.getLogProvider(DocumentoCompartilhamentoView.class);
 
-    private Pasta pasta;
+    private Documento documento;
     private List<Processo> processosRelacionados;
     private Map<Integer, Boolean> compartilhamento;
 
-    public void initWithPasta(Pasta pasta) {
-        this.pasta = pasta;
-        Processo processo = pasta.getProcesso().getProcessoRoot();
+    public void initWithDocumento(Documento documento) {
+        this.documento = documento;
+        Processo processo = documento.getPasta().getProcesso().getProcessoRoot();
         List<RelacionamentoProcessoInterno> relacionamentoList = relacionamentoProcessoDAO.getListProcessosEletronicosRelacionados(processo);
         processosRelacionados = new ArrayList<>(relacionamentoList.size());
         for (RelacionamentoProcessoInterno relacionamentoProcesso : relacionamentoList) {
@@ -50,13 +50,13 @@ public class PastaCompartilhamentoView implements Serializable {
     }
 
     public String getDialogTitle() {
-        return pasta == null ? "" : pasta.getNome();
+        return documento == null ? "" : documento.getNumeroDocumento() + " - " + documento.getDescricao();
     }
 
     public Boolean possuiCompartilhamento(Processo processo) {
-        Boolean resp = compartilhamento.get(processo.getIdProcesso());
+        Boolean resp = compartilhamento.get(processo);
         if (resp == null) {
-            resp = pastaCompartilhamentoSearch.possuiCompartilhamento(pasta, processo);
+            resp = documentoCompartilhamentoSearch.possuiCompartilhamento(documento, processo);
             compartilhamento.put(processo.getIdProcesso(), resp);
         }
         return resp;
@@ -64,26 +64,26 @@ public class PastaCompartilhamentoView implements Serializable {
 
     public void adicionarCompartilhamento(Processo processo) {
         try {
-            pastaCompartilhamentoService.adicionarCompartilhamento(pasta, processo, Authenticator.getUsuarioLogado());
+            documentoCompartilhamentoService.adicionarCompartilhamento(documento, processo, Authenticator.getUsuarioLogado());
             compartilhamento.put(processo.getIdProcesso(), true);
         } catch (Exception e) {
-            LOG.error("pastaCompartilhamentoView.adicionarCompartilhamento(processo)", e);
-            FacesMessages.instance().add("Falha ao tentar configurar compartilhamento. Favor tentar novamente");
+            LOG.error("documentoCompartilhamentoView.adicionarCompartilhamento(processo)", e);
+            FacesMessages.instance().add("Falha ao tentar configurar compartilhamento. Favor tentar novamente.");
         }
     }
 
     public void removerCompartilhamento(Processo processo) {
         try {
-            pastaCompartilhamentoService.removerCompartilhamento(pasta, processo, Authenticator.getUsuarioLogado());
+            documentoCompartilhamentoService.removerCompartilhamento(documento, processo, Authenticator.getUsuarioLogado());
             compartilhamento.put(processo.getIdProcesso(), false);
         } catch (Exception e) {
-            LOG.error("pastaCompartilhamentoView.removerCompartilhamento(processo)", e);
-            FacesMessages.instance().add("Falha ao tentar configurar compartilhamento. Favor tentar novamente");
+            LOG.error("documentoCompartilhamentoView.removerCompartilhamento(processo)", e);
+            FacesMessages.instance().add("Falha ao tentar configurar compartilhamento. Favor tentar novamente.");
         }
     }
 
-    public Pasta getPasta() {
-        return pasta;
+    public Documento getDocumento() {
+        return documento;
     }
 
     public List<Processo> getProcessosRelacionados() {

@@ -4,20 +4,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.infox.epp.processo.documento.entity.Pasta;
+import br.com.infox.epp.processo.entity.Processo;
 
 public class PastaCompartilhamentoProcessoVO {
 
+    private Processo processo;
     private String numeroProcesso;
+    private boolean documentoCompartilhado;
     private List<Pasta> pastas;
 
-    public PastaCompartilhamentoProcessoVO(String numeroProcesso, Pasta pasta) {
-        this.numeroProcesso = numeroProcesso;
-        this.pastas = new ArrayList<>();
+    public PastaCompartilhamentoProcessoVO(Processo processo, Pasta pasta) {
+        this.setProcesso(processo);
+        this.numeroProcesso = processo.getNumeroProcessoRoot();
+        this.documentoCompartilhado = false;
+        this.pastas = new ArrayList<>(1);
         this.pastas.add(pasta);
+    }
+
+    public PastaCompartilhamentoProcessoVO(Processo processo, boolean documentoCompartilhado) {
+        this.setProcesso(processo);
+        this.numeroProcesso = processo.getNumeroProcessoRoot();
+        this.documentoCompartilhado = documentoCompartilhado;
+        this.pastas = new ArrayList<>(0);
     }
 
     public void addPasta(Pasta pasta) {
         pastas.add(pasta);
+    }
+
+    public Processo getProcesso() {
+        return processo;
+    }
+
+    public void setProcesso(Processo processo) {
+        this.processo = processo;
     }
 
     public String getNumeroProcesso() {
@@ -26,6 +46,14 @@ public class PastaCompartilhamentoProcessoVO {
 
     public void setNumeroProcesso(String numeroProcesso) {
         this.numeroProcesso = numeroProcesso;
+    }
+
+    public boolean isDocumentoCompartilhado() {
+        return documentoCompartilhado;
+    }
+
+    public void setDocumentoCompartilhado(boolean documentoCompartilhado) {
+        this.documentoCompartilhado = documentoCompartilhado;
     }
 
     public List<Pasta> getPastas() {
