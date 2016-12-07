@@ -34,6 +34,10 @@ public class PessoaFisicaSearch {
 		return EntityManagerProducer.getEntityManager();
 	}
 
+    public PessoaFisica find(Integer idPessoaFisica) {
+        return getEntityManager().find(PessoaFisica.class, idPessoaFisica);
+    }
+
 	public PessoaFisica getByCpf(String cpf) {
 		CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<PessoaFisica> cq = cb.createQuery(PessoaFisica.class);
