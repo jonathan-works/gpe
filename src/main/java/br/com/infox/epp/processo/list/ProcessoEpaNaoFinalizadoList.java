@@ -1,7 +1,9 @@
 package br.com.infox.epp.processo.list;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,9 +17,11 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
+import org.primefaces.model.chart.MeterGaugeChartModel;
 
 import br.com.infox.core.list.EntityList;
 import br.com.infox.core.list.SearchCriteria;
+import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.estatistica.type.SituacaoPrazoEnum;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.entity.Item;
@@ -36,7 +40,7 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoTarefa> {
     private static final String DEFAULT_EJBQL = "select o from ProcessoTarefa o "
             + "inner join o.processo p "
             + "inner join p.naturezaCategoriaFluxo ncf "
-            + "where o.dataFim is null";
+            + "where p.dataFim is null";
     
     private static final String DEFAULT_ORDER = "p.idProcesso";
     private static final String R1 = "ncf.fluxo = #{processoEpaNaoFinalizadoList.fluxo}";
@@ -46,12 +50,13 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoTarefa> {
     private static final Map<String, String> CUSTOM_ORDER_MAP;
     
     static {
-        CUSTOM_ORDER_MAP = new HashMap<>();
-        CUSTOM_ORDER_MAP.put("fluxo", "ncf.fluxo");
-        CUSTOM_ORDER_MAP.put("prioridadeProcesso", "p.prioridadeProcesso");
-        CUSTOM_ORDER_MAP.put("dataChegadaTarefa", "o.dataInicio");
-        CUSTOM_ORDER_MAP.put("tempoGastoTarefa", "o.tempoGasto");
-        CUSTOM_ORDER_MAP.put("dataInicio", "p.dataInicio");
+        Map<String,String> map = new HashMap<>();
+        map.put("fluxo", "ncf.fluxo");
+        map.put("prioridadeProcesso", "p.prioridadeProcesso");
+        map.put("dataChegadaTarefa", "o.dataInicio");
+        map.put("tempoGastoTarefa", "o.tempoGasto");
+        map.put("dataInicio", "p.dataInicio");
+        CUSTOM_ORDER_MAP = Collections.unmodifiableMap(map);
     }
 
     private Fluxo fluxo;
@@ -101,6 +106,16 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoTarefa> {
         this.fluxo = fluxo;
     }
 
+    public MeterGaugeChartModel getMeterMediaTempoGastoDesdeInicioProcesso(){
+        MeterGaugeChartModel gauge = new MeterGaugeChartModel();
+        gauge.setValue(getMediaTempoGastoDesdeInicioProcesso());
+        gauge.setMin(0);
+        gauge.setMax(getFluxo().getQtPrazo());
+        gauge.setGaugeLabel(InfoxMessages.getInstance().get("bam.medidorProcSel"));
+        gauge.setShowTickLabels(true);
+        return gauge;
+    }
+    
     public long getMediaTempoGastoDesdeInicioProcesso() {
         long media = 0;
         StringBuilder hql = new StringBuilder("select p.dataInicio from Processo p ");
@@ -136,7 +151,7 @@ public class ProcessoEpaNaoFinalizadoList extends EntityList<ProcessoTarefa> {
 
     public List<Fluxo> getFluxoList() {
         if (updateFluxoList) {
-            fluxoList = getEntityManager().createQuery("select o from Fluxo o order by o.fluxo", Fluxo.class).getResultList();
+            fluxoList = getEntityManager().createQuery("select o from Fluxo o where exists (select 1 from Processo p inner join p.naturezaCategoriaFluxo ncf inner join ncf.fluxo fluxo where fluxo=o and p.dataFim is null) order by o.fluxo", Fluxo.class).getResultList();
         }
         return fluxoList;
     }
