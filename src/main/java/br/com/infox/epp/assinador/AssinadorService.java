@@ -28,6 +28,7 @@ import br.com.infox.epp.assinador.assinavel.AssinavelProvider;
 import br.com.infox.epp.assinador.assinavel.AssinavelSource;
 import br.com.infox.epp.assinador.assinavel.TipoSignedData;
 import br.com.infox.epp.certificado.entity.TipoAssinatura;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumentoService;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
@@ -150,14 +151,14 @@ public class AssinadorService implements Serializable {
 					usuarioPerfil.getLocalizacao().getCodigo(), dadosAssinatura.getAssinatura(), dadosAssinatura.getSignedData(), dadosAssinatura.getTipoSignedData());
 		}
 		else {
-			validarAssinatura(dadosAssinatura, usuarioPerfil.getUsuarioLogin());			
+			validarAssinatura(dadosAssinatura, usuarioPerfil.getUsuarioLogin().getPessoaFisica());			
 		}
 	}
 
-	public void validarGrupo(String tokenGrupo, UsuarioLogin usuarioLogin) throws AssinaturaException {
+	public void validarGrupo(String tokenGrupo, PessoaFisica pessoaFisica) throws AssinaturaException {
 		List<DadosAssinatura> dadosAssinaturas = groupService.getDadosAssinatura(tokenGrupo);
 		for (DadosAssinatura dadosAssinatura : dadosAssinaturas) {
-			validarAssinatura(dadosAssinatura, usuarioLogin);
+			validarAssinatura(dadosAssinatura, pessoaFisica);
 		}
 	}
 
@@ -176,10 +177,10 @@ public class AssinadorService implements Serializable {
 		}		
 	}
 	
-	public void validarAssinatura(DadosAssinatura dadosAssinatura, UsuarioLogin usuarioLogin)
+	public void validarAssinatura(DadosAssinatura dadosAssinatura, PessoaFisica pessoaFisica)
 			throws AssinaturaException {
 		validarStatus(dadosAssinatura);
-		validadorAssinatura.validarAssinatura(dadosAssinatura.getSignedData(), dadosAssinatura.getTipoSignedData(), dadosAssinatura.getAssinatura(), usuarioLogin);
+		validadorAssinatura.validarAssinatura(dadosAssinatura.getSignedData(), dadosAssinatura.getTipoSignedData(), dadosAssinatura.getAssinatura(), pessoaFisica);
 	}
 
 	public boolean validarDadosAssinadosByText(List<DadosAssinatura> dadosAssinatura, List<String> textList) {
@@ -220,9 +221,9 @@ public class AssinadorService implements Serializable {
 		return true;
 	}
 
-	public void validarAssinaturas(List<DadosAssinatura> dadosAssinaturaList, UsuarioLogin usuarioLogin) throws AssinaturaException {
+	public void validarAssinaturas(List<DadosAssinatura> dadosAssinaturaList, PessoaFisica pessoaFisica) throws AssinaturaException {
 		for(DadosAssinatura dadosAssinatura : dadosAssinaturaList) {
-			validarAssinatura(dadosAssinatura, usuarioLogin);
+			validarAssinatura(dadosAssinatura, pessoaFisica);
 		}
 	}
 

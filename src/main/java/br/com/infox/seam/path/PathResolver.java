@@ -86,6 +86,8 @@ public class PathResolver implements Serializable {
             if (requestObj instanceof HttpServletRequest) {
                 return (HttpServletRequest) requestObj;
             }
+        } else {
+            return BeanManager.INSTANCE.getReference(HttpServletRequest.class);
         }
         return BeanManager.INSTANCE.getReference(HttpServletRequest.class);
     }

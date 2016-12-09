@@ -1,6 +1,7 @@
 package br.com.infox.epp.login;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
@@ -27,6 +28,8 @@ public class LoginView implements Serializable {
     private Authenticator authenticator;
     @Inject
     private InfoxMessages infoxMessages;
+    @Inject
+    private ExtensaoLogin extensaoLogin;
 
 	private static final long serialVersionUID = 1L;
 
@@ -60,5 +63,7 @@ public class LoginView implements Serializable {
         authenticator.login();
 	}
 	
-	
+	public List<String> getExtensoes(){
+	    return extensaoLogin.getExtensoes();
+	}
 }

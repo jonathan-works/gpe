@@ -8,7 +8,6 @@ import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.OptimisticLockException;
 
@@ -184,12 +183,11 @@ public class EnvioComunicacaoController implements Serializable {
 
             String codigoLocalizacaoAssinatura = (String) TaskInstance.instance().getVariable(CODIGO_LOCALIZACAO_ASSINATURA);
             if (!Strings.isNullOrEmpty(codigoLocalizacaoAssinatura)) {
-                try {
-                    localizacaoAssinatura = localizacaoSearch.getLocalizacaoByCodigo(codigoLocalizacaoAssinatura);
-                    getModeloComunicacao().setLocalizacaoResponsavelAssinatura(localizacaoAssinatura);
-                } catch (NoResultException e) {
+                localizacaoAssinatura = localizacaoSearch.getLocalizacaoByCodigo(codigoLocalizacaoAssinatura);
+                if (localizacaoAssinatura == null) {
                     throw new EppConfigurationException("A localização para assinatura não foi definida com um valor válido");
                 }
+                getModeloComunicacao().setLocalizacaoResponsavelAssinatura(localizacaoAssinatura);
             }
 
             String codigoPerfilTemplateAssinatura = (String) TaskInstance.instance().getVariable(CODIGO_PERFIL_ASSINATURA);
@@ -239,9 +237,8 @@ public class EnvioComunicacaoController implements Serializable {
 		}
         String codigoLocalizacaoRaizAssinaturaComunicacao = Parametros.RAIZ_LOCALIZACOES_ASSINATURA_COMUNICACAO.getValue();
         if (codigoLocalizacaoRaizAssinaturaComunicacao != null && !codigoLocalizacaoRaizAssinaturaComunicacao.isEmpty()) {
-            try {
-                localizacaoRaizAssinaturaComunicacao = localizacaoSearch.getLocalizacaoByCodigo(codigoLocalizacaoRaizAssinaturaComunicacao);
-            } catch (Exception e) {
+            localizacaoRaizAssinaturaComunicacao = localizacaoSearch.getLocalizacaoByCodigo(codigoLocalizacaoRaizAssinaturaComunicacao);
+            if (localizacaoRaizAssinaturaComunicacao == null) {
                 throw new EppConfigurationException("O parâmetro codigoRaizResponsavelAssinaturaLocalizacao não foi definido corretamente");
             }
         } else {
@@ -294,7 +291,6 @@ public class EnvioComunicacaoController implements Serializable {
 			destinatarioComunicacaoAction.persistDestinatarios();
 			documentoComunicacaoAction.persistDocumentos();
 			modeloComunicacao = modeloComunicacaoManager.update(modeloComunicacao);
-			setIdModeloVariable(modeloComunicacao.getId());
 			isNew = false;
 			if (isFinalizada()) {
 				comunicacaoService.finalizarComunicacao(modeloComunicacao);
@@ -306,6 +302,7 @@ public class EnvioComunicacaoController implements Serializable {
 			clear();
 			FacesMessages.instance().add("Registro gravado com sucesso");
 			minuta = modeloComunicacao.isMinuta();
+			setIdModeloVariable(modeloComunicacao.getId());
 		} catch (Exception e) {
 			LOG.error("Erro ao gravar comunicação ", e);
 			if (e instanceof DAOException) {
@@ -354,6 +351,9 @@ public class EnvioComunicacaoController implements Serializable {
 		}
 		if (modeloComunicacao.getDestinatarios().isEmpty()) {
 			msg.append("Nenhum destinatário foi selecionado.\n");
+		}
+		if (finalizada && modeloComunicacao.isMinuta()) {
+		    msg.append("Não é possível finalizar pois o texto no editor da comunicação é minuta.\n");
 		}
 		if (!modeloComunicacao.isMinuta() && modeloComunicacao.getClassificacaoComunicacao() == null){
 			msg.append("Escolha a classificação de documento.\n");

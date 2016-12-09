@@ -7,12 +7,9 @@ import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
-import junit.framework.Assert;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.Test;
 
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.core.action.AbstractAction;
@@ -26,6 +23,7 @@ import br.com.infox.epp.test.crud.CrudActions;
 import br.com.infox.epp.test.crud.PersistSuccessTest;
 import br.com.infox.epp.test.crud.RunnableTest.ActionContainer;
 import br.com.infox.epp.test.infra.ArquillianSeamTestSetup;
+import junit.framework.Assert;
 
 //@RunWith(Arquillian.class)
 public class NaturezaCrudActionIT extends AbstractCrudTest<Natureza> {

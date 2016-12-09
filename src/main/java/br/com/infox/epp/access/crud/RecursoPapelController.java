@@ -14,8 +14,6 @@ import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.epp.access.entity.Recurso;
 import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.manager.RecursoManager;
-
-
 import br.com.infox.seam.security.operation.UpdateResourcesOperation;
 
 @Scope(ScopeType.CONVERSATION)

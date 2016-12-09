@@ -93,6 +93,9 @@
                                 outcome="/codigoRecuperacaoSenha.seam" value="#{infoxMessages['login.esqueciSenhaBtn']}"></h:button>
                         </p:outputPanel>
                     </h:form>
+                    <c:forEach var="extensao" items="#{loginView.extensoes}">
+    	               <ui:include src="#{extensao}" />
+                    </c:forEach>
                 </div>
             </div>
             <rich:popupPanel id="mp_formValidar" height="100" width="250" resizeable="false">

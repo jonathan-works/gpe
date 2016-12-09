@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:infox="http://www.infox.com.br/jsf"
+    >
+        <p:dataTable var="row" value="#{publicacaoDialogView.publicacoes}" tableStyle="table-layout: auto !important" >
+            <p:column headerText="#{infoxMessages['publicacao.certidao']}" style="text-align: center">
+                <p:outputPanel style="text-align: center" rendered="#{not empty row.certidao}">
+                    <h:form>
+                        <infox:flashcopy/>
+                        <h:commandLink
+                            execute="@this" render="@form">
+                            <h:graphicImage styleClass="opacityHover" title="#{infoxMessages['processoDocumento.visualizar']}"
+                                url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
+                            <f:setPropertyActionListener value="#{row.certidao.id}" target="#{flash.idDocumento}" />
+                            <f:setPropertyActionListener value="#{false}" target="#{flash.binario}" />
+                            <p:ajax oncomplete="infox.openPopUp('PopUpDocumentoBin', '#{fileDownloader.getDownloadUrl(row.certidao.documentoBin)}','1024');" />
+                        </h:commandLink>
+                    </h:form>
+                </p:outputPanel>
+            </p:column>
+            <p:column headerText="#{infoxMessages['publicacao.data']}">
+                <h:outputText value="#{row.dataPublicacao}" />
+            </p:column>
+            <p:column headerText="#{infoxMessages['publicacao.local']}">
+                <h:outputText value="#{row.localPublicacao.descricao}" />
+            </p:column>
+            <p:column headerText="#{infoxMessages['publicacao.pagina']}" style="text-align: center">
+                <h:outputText value="#{row.pagina}" />
+            </p:column>
+            <p:column headerText="#{infoxMessages['publicacao.observacoes']}" style="max-width: 500px">
+                <h:outputText value="#{row.observacoes}" />
+            </p:column>
+        
+        </p:dataTable>
+
+        <!--
+        Teste para ver se o onHide é chamado 
+        <p:commandButton update="@this @(.genericDialog)" oncomplete="PF('genericDialogVar').hide();" value="FECHAR" />
+         -->
+        
+</ui:composition>

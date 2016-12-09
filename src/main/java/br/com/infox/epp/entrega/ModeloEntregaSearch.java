@@ -1,6 +1,7 @@
 package br.com.infox.epp.entrega;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -38,7 +39,7 @@ import br.com.infox.epp.entrega.modelo.ModeloEntrega_;
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 public class ModeloEntregaSearch extends PersistenceController {
 
-	public ModeloEntrega findWithItems(List<CategoriaEntregaItem> items) {
+	public ModeloEntrega findWithItems(Collection<CategoriaEntregaItem> items) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<ModeloEntrega> cq = cb.createQuery(ModeloEntrega.class);
         Root<ModeloEntrega> from = cq.from(ModeloEntrega.class);

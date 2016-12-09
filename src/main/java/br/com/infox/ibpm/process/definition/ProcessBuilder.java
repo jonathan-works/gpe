@@ -198,7 +198,7 @@ public class ProcessBuilder implements Serializable {
             }
         }
     }
-    
+
     public void clearDefinition() {
     	Fluxo fluxo = getFluxo();
     	fluxo.setXml(null);

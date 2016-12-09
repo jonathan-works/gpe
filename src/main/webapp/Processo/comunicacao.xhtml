@@ -15,7 +15,7 @@
 		rendered="#{s:hasRole(usuarioInterno)}" />
 	<h:form>
 		<a:jsFunction name="reloadAll" render="comunicacoesDiv" limitRender="true" execute="@this" 
-			action="#{comunicacaoAction.clear}"/>
+			action="#{comunicacaoAction.clear}" oncomplete="infox.hideLoading();"/>
 	</h:form>
 	<s:div id="comunicacoesDiv">
 		<rich:collapsiblePanel switchType="client" id="rascunhos" header="#{infoxMessages['comunicacao.rascunhos']}" rendered="#{s:hasRole(usuarioInterno)}">
@@ -33,7 +33,7 @@
 							rendered="#{comunicacaoAction.podeReabrirComunicacao(row)}"
 							actionListener="#{comunicacaoAction.reabrirComunicacao(row)}"
 							onclick="infox.showLoading();"
-							oncomplete="infox.hideLoading(); ">
+							oncomplete="reloadAll();">
 							<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/mod/edit.png')}" title="#{infoxMessages['comunicacao.reabrir']}"/>
 						</p:commandLink>
 						<a:commandLink id="removerComunicacaoLink" execute="@this"
@@ -61,10 +61,10 @@
 							<ui:param name="isCienciaConfirmada" value="#{comunicacaoAction.isCienciaConfirmada(row)}"></ui:param>
 							<a:commandLink  
 								render="@this" execute="@this" rendered="#{renderVisualizarDocumentos or (isCienciaConfirmada and isDestinatario)}"
+								action="#{jsfUtil.applyLastPhaseFlashAction}"
 								oncomplete="infox.openPopUp('download#{row.idDestinatario}', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');">
 								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['comunicacao.visualizarAComunicacao']}"/>
 								<f:setPropertyActionListener value="#{row.idDestinatario}" target="#{flash.idDestinatario}" />
-								<infox:flashcopy/>
 							</a:commandLink>
 							<a:commandLink 
 								action="#{comunicacaoAction.setDestinatarioDocumentos(row)}"
@@ -91,7 +91,7 @@
 							<a:commandLink action="#{comunicacaoAction.setDestinatarioResposta(row)}"
 								render="painelProrrogacaoPrazo, painelCiencia, painelDocumentos, pageBodyDialogMessage, painelDocumentosResposta" 
 								execute="@this" limitRender="true"
-								rendered="#{(renderVisualizarResposta or (isCienciaConfirmada and isDestinatario)) and row.meioExpedicao eq 'SI'}"
+								rendered="#{(renderVisualizarResposta or (isCienciaConfirmada and isDestinatario)) and row.meioExpedicao.codigo eq 'SI'}"
 								onclick="infox.showLoading();" oncomplete="infox.hideLoading();">
 								<h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/file.gif')}" title="#{infoxMessages['comunicacao.documentosResposta']}" />
 							</a:commandLink>
@@ -115,7 +115,7 @@
 					</rich:column>
 					<rich:column>
 						<f:facet name="header">#{infoxMessages['comunicacao.meioComunicacao']}</f:facet>
-						<h:outputText value="#{row.meioExpedicao.label}" />
+						<h:outputText value="#{row.meioExpedicao.descricao}" />
 					</rich:column>
 					<rich:column>
 						<f:facet name="header">#{infoxMessages['comunicacao.dataEnvio']}</f:facet>

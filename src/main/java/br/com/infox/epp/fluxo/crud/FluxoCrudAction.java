@@ -11,6 +11,7 @@ import br.com.infox.core.controller.Controller;
 import br.com.infox.epp.cdi.ViewScoped;
 import br.com.infox.epp.cdi.exception.ExceptionHandled;
 import br.com.infox.epp.cdi.exception.ExceptionHandled.MethodType;
+import br.com.infox.epp.fluxo.definicaovariavel.DefinicaoVariavelProcessoManager;
 import br.com.infox.epp.fluxo.entity.Fluxo;
 import br.com.infox.epp.fluxo.manager.FluxoManager;
 
@@ -23,9 +24,12 @@ public class FluxoCrudAction implements Controller {
     private FluxoController fluxoController;
     @Inject
     private FluxoManager fluxoManager;
+    @Inject
+    private DefinicaoVariavelProcessoManager definicaoVariavelProcessoManager;
     
     private Fluxo replica;
     private String tab = TAB_SEARCH;
+    private boolean hasProcessoRunning = false;
     
     @ExceptionHandled(MethodType.INACTIVE)
     public void inactive(final Fluxo fluxo) {
@@ -38,20 +42,11 @@ public class FluxoCrudAction implements Controller {
         }
     }
 
-    public void newInstance() {
-        fluxoController.setFluxo(new Fluxo());
-        getInstance().setPublicado(false);
-    }
-    
     public Fluxo getInstance() {
     	if (fluxoController.getFluxo() == null) {
     		newInstance();
     	}
     	return fluxoController.getFluxo();
-    }
-    
-    public void setInstance(Fluxo instance) {
-    	fluxoController.setFluxo(instance);
     }
     
     @ExceptionHandled(MethodType.UPDATE)
@@ -62,6 +57,8 @@ public class FluxoCrudAction implements Controller {
     @ExceptionHandled(MethodType.PERSIST)
     public void persist() {
     	fluxoManager.persist(getInstance());
+    	definicaoVariavelProcessoManager.createDefaultDefinicaoVariavelProcessoList(getInstance());
+        this.hasProcessoRunning = false;
     }
     
     public void gerarReplica() {
@@ -117,5 +114,21 @@ public class FluxoCrudAction implements Controller {
 	
 	public Fluxo getReplica() {
 		return replica;
+	}
+	
+    public boolean isHasProcessoRunning() {
+        return hasProcessoRunning;
+    }
+    
+    public void newInstance() {
+    	fluxoController.setFluxo(new Fluxo());
+        getInstance().setPublicado(false);
+        this.replica = null;
+        this.hasProcessoRunning = false;
+    }
+    
+	public void setInstance(Fluxo instance) {
+		fluxoController.setFluxo(instance);
+		this.hasProcessoRunning = fluxoManager.existemProcessoEmAndamento(getInstance());
 	}
 }

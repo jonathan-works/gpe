@@ -28,3 +28,4 @@ src/main/webapp/resources/styleSkinInfox/*.ecss
 /.apt_generated/
 /sonar-project.properties
 **/.DS_Store
+.DS_Store

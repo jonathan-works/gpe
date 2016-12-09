@@ -89,7 +89,8 @@ public class NatCatFluxoLocalizacaoDAO extends DAO<NatCatFluxoLocalizacao> {
         Join<Fluxo, FluxoPapel> fluxoPapel = fluxo.join(Fluxo_.fluxoPapelList, JoinType.INNER);
         subquery.where(
             cb.equal(fluxoPapel.get(FluxoPapel_.papel).get(Papel_.idPapel), papel.getIdPapel()),
-            cb.equal(natCatFluxo.get(NaturezaCategoriaFluxo_.fluxo).get(Fluxo_.idFluxo), fluxo.get(Fluxo_.idFluxo))
+            cb.equal(natCatFluxo.get(NaturezaCategoriaFluxo_.fluxo).get(Fluxo_.idFluxo), fluxo.get(Fluxo_.idFluxo)),
+            cb.equal(fluxo.get(Fluxo_.publicado), true)
         );
         
         cq.where(

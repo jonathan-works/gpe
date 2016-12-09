@@ -33,11 +33,11 @@
                 <div>
                     <a:commandButton id="submitButton" styleClass="buttons"
                         execute="@form" render="@form pageBodyDialogMessage"
+                        action="#{jsfUtil.applyLastPhaseFlashAction}"
                         onclick="infox.showLoading();" oncomplete="infox.hideLoading();"
-                        action="#{recuperacaoSenhaView.requisitarCodigoRecuperacao()}"
+                        actionListener="#{recuperacaoSenhaView.requisitarCodigoRecuperacao()}"
                         value="#{infoxMessages['login.requisitarCodigoSenhaBtn']}">
                         <f:setPropertyActionListener value="#{recuperacaoSenhaView.login}" target="#{flash.login}" />
-                        <infox:flashcopy/>
                     </a:commandButton>
                     <h:button id="voltarButtn"  styleClass="buttons"
                         value="#{infoxMessages['login.cancelaTrocaSenhaBtn']}"

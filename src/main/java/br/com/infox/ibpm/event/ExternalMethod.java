@@ -4,8 +4,6 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
-import br.com.infox.ibpm.event.Parameter;
-
 public class ExternalMethod {
 
     private final String expression;

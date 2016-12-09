@@ -13,20 +13,24 @@ public class EditorCleanerConverter implements Converter {
         if (value == null) {
             return null;
         } else {
-            String xml10pattern = "[^"
-                    + "\u0009\r\n"
-                    + "\u0020-\uD7FF"
-                    + "\uE000-\uFFFD"
-                    + "\ud800\udc00-\udbff\udfff"
-                    + "]";
-            
-            return value.replaceAll(xml10pattern, "");
+            return replaceAll(value);
         }
     }
 
     @Override
     public String getAsString(FacesContext context, UIComponent component, Object value) {
         return value == null ? null : value.toString();
+    }
+    
+    public static String replaceAll(String value) {
+        String xml10pattern = "[^"
+                + "\u0009\r\n"
+                + "\u0020-\uD7FF"
+                + "\uE000-\uFFFD"
+                + "\ud800\udc00-\udbff\udfff"
+                + "]";
+        
+        return value.replaceAll(xml10pattern, "");
     }
 
 }

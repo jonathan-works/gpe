@@ -3,6 +3,7 @@ package br.com.infox.epp.processo.comunicacao;
 import java.util.Date;
 
 import br.com.infox.epp.access.entity.UsuarioLogin;
+import br.com.infox.epp.processo.comunicacao.meioexpedicao.MeioExpedicao;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoDefinition;
 import br.com.infox.epp.processo.metadado.system.MetadadoProcessoProvider;

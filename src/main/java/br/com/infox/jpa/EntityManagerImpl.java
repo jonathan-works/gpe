@@ -256,17 +256,18 @@ public class EntityManagerImpl implements EntityManagerSerializable, Serializabl
 
 	private Pair<String, Map<String, Object>> resolveEl(String qlString) {
 		Map<String, Object> parameters = new HashMap<>();
-		String newQlString = new String(qlString);
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		Matcher matcher = patternEl.matcher(qlString);
+		StringBuffer sb = new StringBuffer();
 		while (matcher.find()) {
-			String expression = matcher.group();
+			String expression = matcher.group().replace("\\", "\\\\").replace("$", "\\$");
 			String key = "parameterExpression_" + parameters.size();
 			Object value = facesContext.getApplication().evaluateExpressionGet(facesContext, expression, Object.class);
 			parameters.put(key, value);
-			newQlString = newQlString.replace(expression, ":" + key);
+			matcher.appendReplacement(sb, ":" + key);
 		}
-		return new ImmutablePair<String, Map<String, Object>>(newQlString, parameters);
+		matcher.appendTail(sb);
+		return new ImmutablePair<String, Map<String, Object>>(sb.toString(), parameters);
 	}
 
     @Override

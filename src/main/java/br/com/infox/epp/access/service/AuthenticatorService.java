@@ -24,6 +24,7 @@ import org.jboss.seam.security.Credentials;
 import org.jboss.seam.security.Identity;
 import org.jboss.seam.security.SimplePrincipal;
 import org.jboss.seam.security.management.IdentityManager;
+import org.jboss.seam.util.Strings;
 
 import br.com.infox.certificado.Certificado;
 import br.com.infox.certificado.CertificadoDadosPessoaFisica;
@@ -40,6 +41,8 @@ import br.com.infox.epp.access.manager.UsuarioLoginManager;
 import br.com.infox.epp.access.type.UsuarioEnum;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaException;
+import br.com.infox.epp.processo.documento.assinatura.AssinaturaException.Motivo;
 import br.com.infox.epp.system.util.ParametroUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
@@ -52,6 +55,7 @@ import br.com.infox.seam.exception.RedirectToLoginApplicationException;
 public class AuthenticatorService {
 
     public static final String LOGIN_ERROR_SEM_PESSOA_FISICA = "login.error.semPessoaFisica";
+    public static final String LOGIN_ERROR_CPF_NAO_ENCONTRADO = "login.error.semCPF";
     public static final String LOGIN_ERROR_TERMO_ADESAO_FAILED = "login.termoAdesao.failed";
     public static final String LOGIN_ERROR_USUARIO_SEM_PERFIL = "login.error.semPerfil";
     public static final String LOGIN_ERROR_LOGIN_CERTIFICADO_DESABILITADO = "login.error.loginCertificadoDesabilitado";
@@ -169,10 +173,18 @@ public class AuthenticatorService {
     }
 
     public UsuarioLogin getUsuarioLoginFromCertChain(String certChain) throws CertificadoException, LoginException, CertificateException {
-        Certificado c = CertificadoFactory.createCertificado(certChain);
+    	if (Strings.isEmpty(certChain)) {
+    		throw new CertificadoException("Sem certificado");
+    	}
+        final Certificado c = CertificadoFactory.createCertificado(certChain);
         checkValidadeCertificado(c);
-        String cpf = new StringBuilder(((CertificadoDadosPessoaFisica) c).getCPF()).insert(9, '-').insert(6, '.')
-                .insert(3, '.').toString();
+        String cpf;
+        if(((CertificadoDadosPessoaFisica)c).getCPF()  != null && !((CertificadoDadosPessoaFisica)c).getCPF().isEmpty() ){
+			cpf = new StringBuilder(((CertificadoDadosPessoaFisica) c).getCPF()).insert(9, '-').insert(6, '.')
+	                .insert(3, '.').toString();
+        }else{
+        	throw new LoginException(infoxMessages.get(LOGIN_ERROR_CPF_NAO_ENCONTRADO));
+        }
         return checkValidadeLoginCertificado(cpf);
     }
 

@@ -85,7 +85,11 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
     public List<Fluxo> getFluxosPrimariosAtivos() {
     	return getDao().getFluxosPrimariosAtivos();
     }
-    
+
+    public List<Fluxo> getFluxosPrimarios() {
+        return getDao().getFluxosPrimarios();
+    }
+
     public List<Fluxo> getFluxosAtivosList() {
         return getDao().getFluxosAtivosList();
     }
@@ -104,6 +108,10 @@ public class FluxoManager extends Manager<FluxoDAO, Fluxo> {
     
     public boolean existemProcessosAssociadosAFluxo(final Fluxo fluxo) {
         return getDao().getQuantidadeDeProcessoAssociadosAFluxo(fluxo) > 0;
+    }
+
+    public boolean existemProcessoEmAndamento(Fluxo fluxo) {
+        return getDao().getQuantidadeDeProcessosEmAndamento(fluxo) > 0L;
     }
 
     public boolean existeFluxoComDescricao(final String descricao) {

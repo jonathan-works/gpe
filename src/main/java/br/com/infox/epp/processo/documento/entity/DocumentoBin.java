@@ -41,11 +41,11 @@ import br.com.infox.constants.LengthConstants;
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.util.ArrayUtil;
 import br.com.infox.epp.access.entity.UsuarioPerfil;
-import br.com.infox.epp.cdi.config.BeanManager;
 import br.com.infox.epp.processo.documento.assinatura.AssinaturaDocumento;
 import br.com.infox.epp.processo.documento.assinatura.entity.RegistroAssinaturaSuficiente;
 import br.com.infox.epp.processo.documento.query.DocumentoBinQuery;
-import br.com.infox.epp.processo.documento.service.DocumentoBinService;
+import br.com.infox.epp.processo.documento.service.DocumentoBinWrapper;
+import br.com.infox.epp.processo.documento.service.DocumentoBinWrapperFactory;
 import br.com.infox.epp.processo.marcador.Marcador;
 import br.com.infox.hibernate.UUIDGenericType;
 
@@ -127,18 +127,18 @@ public class DocumentoBin implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "documentoBin", cascade = {CascadeType.REMOVE, CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private List<AssinaturaDocumento> assinaturas = new ArrayList<>();
     
-    @Transient
+	@Column(name = "tp_documento_externo")
+	private String tipoDocumentoExterno;
+	
+	@Size(max = 1000)
+	@Column(name="id_documento_externo")
+	private String idDocumentoExterno;
+	
+	@Transient
     private byte[] processoDocumento;
     
     @Transient
-	private DocumentoBinService documentoBinService;
-
-	@Column(name="tp_documento_externo")
-	private String tipoDocumentoExterno;
-	
-	@Size(max=1000)
-	@Column(name="id_documento_externo")
-	private String idDocumentoExterno;
+    private DocumentoBinWrapper documentoBinWrapper;
 
 	public String getTipoDocumentoExterno() {
 		return tipoDocumentoExterno;
@@ -202,7 +202,7 @@ public class DocumentoBin implements Serializable {
 		if(getId() == null) {
 			return md5Documento;
 		}				
-		return getDocumentoBinService().getHash(getId());
+		return getDocumentoBinWrapper().getHash();
 	}
 
 	public void setMd5Documento(String md5Documento) {
@@ -227,7 +227,7 @@ public class DocumentoBin implements Serializable {
 		}				
 		if(size == null)
 			return null;
-		return getDocumentoBinService().getSize(getId());
+		return getDocumentoBinWrapper().getSize();
 	}
 
 	public void setSize(Integer size) {
@@ -258,11 +258,11 @@ public class DocumentoBin implements Serializable {
         this.documentoTemporarioList = documentoTemporarioList;
     }
 
-    public DocumentoBinService getDocumentoBinService() {
-		if(documentoBinService == null) {
-			documentoBinService = BeanManager.INSTANCE.getReference(DocumentoBinService.class);
+    public DocumentoBinWrapper getDocumentoBinWrapper() {
+		if( documentoBinWrapper == null ) {
+		    documentoBinWrapper = DocumentoBinWrapperFactory.getInstance().createWrapperInstance(this);
 		}
-		return documentoBinService; 		
+		return documentoBinWrapper; 		
 	}
 
 	public List<AssinaturaDocumento> getAssinaturasAtributo() {
@@ -273,7 +273,7 @@ public class DocumentoBin implements Serializable {
 		if(getId() == null) {
 			return getAssinaturasAtributo();
 		}		
-		return getDocumentoBinService().carregarAssinaturas(getId());
+		return getDocumentoBinWrapper().carregarAssinaturas();
 	}
 
 	public void setAssinaturas(List<AssinaturaDocumento> assinaturas) {
@@ -353,8 +353,8 @@ public class DocumentoBin implements Serializable {
 	public boolean isAssinadoPor(UsuarioPerfil usuarioPerfil) {
         if (getAssinaturas() == null || getAssinaturas().isEmpty()) return false;
         for (AssinaturaDocumento assinatura : getAssinaturas()) {
-            if (usuarioPerfil.getPerfilTemplate().getPapel().equals(assinatura.getUsuarioPerfil().getPerfilTemplate().getPapel())
-            		&& usuarioPerfil.getUsuarioLogin().equals(assinatura.getUsuario())) {
+            if (usuarioPerfil.getPerfilTemplate().getPapel().equals(assinatura.getPapel())
+            		&& assinatura.getPessoaFisica().equals(usuarioPerfil.getUsuarioLogin().getPessoaFisica())) {
                 return true;
             }
         }
@@ -368,7 +368,7 @@ public class DocumentoBin implements Serializable {
 
     @Transient
     public boolean isBinario() {
-        return !Strings.isEmpty(getExtensao());
+        return !Strings.isEmpty(getExtensao()) && (size != null &&  size.intValue() > 0 ) ;
     }
 
     @Transient

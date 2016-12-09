@@ -39,6 +39,14 @@ public class PessoaJuridica extends Pessoa {
     public PessoaJuridica() {
         setTipoPessoa(TipoPessoaEnum.J);
     }
+    
+    public PessoaJuridica(String cnpj, String razaoSocial, String nome, Boolean ativo) {
+        super();
+        setNome(nome);
+        setAtivo(ativo);
+        this.cnpj = cnpj;
+        this.razaoSocial = razaoSocial;
+    }
 
     public String getCnpj() {
         return cnpj;

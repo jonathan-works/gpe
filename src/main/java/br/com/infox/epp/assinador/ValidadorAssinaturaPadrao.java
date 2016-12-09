@@ -16,7 +16,6 @@ import br.com.infox.certificado.Certificado;
 import br.com.infox.certificado.CertificadoDadosPessoaFisica;
 import br.com.infox.certificado.CertificadoFactory;
 import br.com.infox.certificado.exception.CertificadoException;
-import br.com.infox.epp.access.entity.UsuarioLogin;
 import br.com.infox.epp.assinador.assinavel.TipoSignedData;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.pessoa.manager.PessoaFisicaManager;
@@ -46,30 +45,28 @@ public class ValidadorAssinaturaPadrao implements ValidadorAssinatura, Validador
     }
     
 	@Override
-    public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded,
-            UsuarioLogin usuarioLogado) throws AssinaturaException {
+    public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded, PessoaFisica pessoaFisica) throws AssinaturaException {
 		try {
 			if (Strings.isEmpty(certChainBase64Encoded)) {
 				throw new AssinaturaException(Motivo.SEM_CERTIFICADO);
 			}
-			if (usuarioLogado.getPessoaFisica() == null) {
+			if (pessoaFisica == null) {
 				throw new AssinaturaException(Motivo.USUARIO_SEM_PESSOA_FISICA);
 			}
-			if (Strings.isEmpty(usuarioLogado.getPessoaFisica().getCertChain())) {
+			if (Strings.isEmpty(pessoaFisica.getCertChain())) {
 				final Certificado certificado = CertificadoFactory.createCertificado(certChainBase64Encoded); 
 				if (!(certificado instanceof CertificadoDadosPessoaFisica)) {
 					throw new CertificadoException("Este certificado não é de pessoa física");
 				}
 				final String cpfCertificado = ((CertificadoDadosPessoaFisica) certificado).getCPF();
-				if (cpfCertificado.equals(usuarioLogado.getPessoaFisica().getCpf()
-						.replace(".", "").replace("-", ""))) {
-					usuarioLogado.getPessoaFisica().setCertChain(certChainBase64Encoded);
+				if (cpfCertificado.equals(pessoaFisica.getCpf().replace(".", "").replace("-", ""))) {
+					pessoaFisica.setCertChain(certChainBase64Encoded);
 				} else {
 					throw new AssinaturaException(Motivo.CADASTRO_USUARIO_NAO_ASSINADO);
 				}
 			}
 			PessoaFisica pessoaFisicaCertificado = getPessoaFisicaFromCertChain(certChainBase64Encoded);
-			if (!usuarioLogado.getPessoaFisica().equals(pessoaFisicaCertificado)) {
+			if (!pessoaFisica.equals(pessoaFisicaCertificado)) {
 				throw new AssinaturaException(Motivo.CPF_CERTIFICADO_DIFERENTE_USUARIO);
 			}
 			if (!pessoaFisicaCertificado.checkCertChain(certChainBase64Encoded)) {
@@ -120,11 +117,10 @@ public class ValidadorAssinaturaPadrao implements ValidadorAssinatura, Validador
 	}
 
 	@Override
-	public void validarAssinatura(byte[] signedData, TipoSignedData tipoSignedData, byte[] signature, UsuarioLogin usuario)
-			throws AssinaturaException {
+	public void validarAssinatura(byte[] signedData, TipoSignedData tipoSignedData, byte[] signature, PessoaFisica pessoaFisica) throws AssinaturaException {
 		DadosAssinaturaLegada dadosAssinaturaLegada = cmsAdapter.convert(signature);
 		String certChainBase64 = dadosAssinaturaLegada.getCertChainBase64();
-		verificaCertificadoUsuarioLogado(certChainBase64, usuario);
+		verificaCertificadoUsuarioLogado(certChainBase64, pessoaFisica);
 		validarAssinatura(signedData, tipoSignedData, signature);
 	}
 

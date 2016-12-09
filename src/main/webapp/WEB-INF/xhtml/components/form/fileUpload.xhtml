@@ -1,114 +1,141 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:a="http://richfaces.org/a4j" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:i="http://java.sun.com/jsf/composite/infox" xmlns:rich="http://richfaces.org/rich"
-    xmlns:p="http://primefaces.org/ui" xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:wi="http://www.itx.com.br/jsf">
-    <ui:param name="template" value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
-    <ui:param name="readonly"
-        value="#{empty readonly ? true : (props.readonly or not empty taskInstanceHome.variaveisDocumento[id].documentoBin.assinaturas 
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml" xmlns:a="http://richfaces.org/a4j"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:i="http://java.sun.com/jsf/composite/infox"
+	xmlns:wi="http://www.itx.com.br/jsf">
+	<ui:param name="template"
+		value="#{wi:get(template, '/WEB-INF/xhtml/components/templates/edit.xhtml')}" />
+	<ui:param name="readonly"
+		value="#{empty readonly ? true : (props.readonly or not empty taskInstanceHome.variaveisDocumento[id].documentoBin.assinaturas 
   									 or taskInstanceHome.variaveisDocumento[id].documentoBin.suficientementeAssinado)}" />
-    <f:subview id="#{f.id}SubView">
-        <fieldset>
-            <legend>
-                <h:outputText styleClass="property-field-edit-name" value="#{label}" />
-            </legend>
-            <p:outputPanel id="#{f.id}TipoDocDiv" styleClass="padding-top-10">
-                <wi:selectOneMenuEntity id="#{f.id}tipoProcessoDocumento"
-                    label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
-                    value="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento}"
-                    items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumento(false, taskInstanceHome.getVariableName(id), taskInstanceHome.currentTaskInstance)}"
-                    required="#{wi:get(required, false)}" showLabelSelecione="true" rendered="#{not readonly}">
-                    <a:ajax
-                        render="#{f.id}TipoDocDiv #{f.id}Decoration #{f.id}ToolTipDivExterna #{f.id}documentoExistente assinaturaDocumentoDiv#{f.id}"
-                        event="change" execute="@this" listener="#{taskInstanceHome.removerDocumento(f.id)}"
-                        limitRender="true" />
-                </wi:selectOneMenuEntity>
-            </p:outputPanel>
-            <p:outputPanel id="#{f.id}ToolTipDivExterna">
+	<f:subview id="#{f.id}SubView">
+		<fieldset>
+			<legend>
+				<h:outputText styleClass="property-field-edit-name" value="#{label}" />
+			</legend>
 
-                <i:help id="#{f.id}ToolTipDiv"
-                    rendered="#{not empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento and not readonly}">
-                    <p:outputPanel rendered="#{empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento}">
-                        <h:outputText value="Selecione uma classificação de documento" />
-                    </p:outputPanel>
-                    <p:outputPanel
-                        rendered="#{not empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento}">
-                        <div>
-                            <h:outputText value="Extensões Aceitas:" />
-                        </div>
-                        <ui:repeat var="documento"
-                            value="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.acceptedTypesList}">
-                            <div>
-                                <h:outputText value="#{documento}" styleClass="tooltip-panel-div" />
-                            </div>
-                        </ui:repeat>
-                        <p:outputPanel styleClass="tooltip-panel-top"
-                            rendered="#{not empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.observacao}">
-                            <div>
-                                <h:outputText value="Observação:" />
-                            </div>
-                            <h:outputText
-                                value="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.observacao}" />
-                        </p:outputPanel>
-                    </p:outputPanel>
-                </i:help>
-            </p:outputPanel>
-            <s:decorate id="#{id}Decoration" template="#{template}">
-                <ui:define name="label">
-                    <h:outputText value="#{infoxMessages['fileUpload.header']}"
-                        rendered="#{not empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento and not readonly}" />
-                </ui:define>
-                <rich:fileUpload id="#{id}" execute="@this" status=":status" limitRender="true"
-                    required="#{wi:get(required, false)}" fileUploadListener="#{fileUpload.processFileUpload}"
-                    addLabel="#{infoxMessages['processoDocumento.addLabel']}"
-                    clearAllLabel="#{infoxMessages['processoDocumento.clearAllLabel']}"
-                    clearLabel="#{infoxMessages['processoDocumento.clearLabel']}"
-                    doneLabel="#{empty doneLabel ? infoxMessages['processoDocumento.doneLabel'] : doneLabel}"
-                    uploadLabel="#{infoxMessages['processoDocumento.uploadLabel']}"
-                    sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}" maxFilesQuantity="10"
-                    listHeight="50px" immediateUpload="true" noDuplicate="true"
-                    render="#{id}Decoration, #{id}, pageBodyDialogMessage, #{f.id}TipoDocDiv, #{f.id}documentoExistente, assinaturaDocumentoDiv#{f.id}"
-                    acceptedTypes="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.acceptedTypes}"
-                    rendered="#{not empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento and not readonly}"
-                    ontyperejected="new infox.Messages({'timeout': 3000}).dialog(\'#{infoxMessages['processoDocumento.extensaoNaoPermitida']}\')">
-                </rich:fileUpload>
-            </s:decorate>
-            <p:outputPanel id="#{f.id}documentoExistente">
-                <s:fragment rendered="#{not empty taskInstanceHome.instance[id]}">
-                    <fieldset>
-                        <legend>Documento Anexado #{not empty
-                            taskInstanceHome.variaveisDocumento[id].documentoBin.assinaturas ? '(já assinado, não pode
-                            ser substituído)' : ''}</legend>
-                        <h:outputText
-                            value="#{infoxMessages['processoDocumento.classificacaoDocumento']}: #{not readonly or not empty taskInstanceHome.variaveisDocumento[id] ? taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.descricao : props.classificacaoDocumento}" />
-                        <br />
-                        <h:outputText id="file#{id}"
-                            value="Documento: #{not readonly or not empty taskInstanceHome.variaveisDocumento[id] ? taskInstanceHome.variaveisDocumento[id].documentoBin.nomeArquivo : value}" />
-                        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}"
-                            title="Visualizar" style="cursor: pointer"
-                            rendered="#{not readonly or not empty taskInstanceHome.variaveisDocumento[id]}"
-                            onclick="infox.openPopUp('documento', '#{taskInstanceHome.getViewUrlDownload(id.split('-')[0])}');" />
-                    </fieldset>
-                </s:fragment>
-            </p:outputPanel>
-            <p:outputPanel id="assinaturaDocumentoDiv#{f.id}">
-                <p:outputPanel id="conteudoAssinatura#{f.id}"
-                    rendered="#{taskInstanceHome.podeAssinarDocumento(f.id.split('-')[0])}">
-                    <a:jsFunction name="assinar" action="#{taskInstanceHome.assinarDocumento()}"
-                        execute="@this, assinaturaDocumentoDiv#{f.id}"
-                        render="assinaturaDocumentoDiv#{f.id}, pageBodyDialogMessage, #{f.id}TipoDocDiv, #{f.id}ToolTipDivExterna, #{id}Decoration, #{f.id}documentoExistente"
-                        oncomplete="infox.hideLoading();" />
+			<p:outputPanel id="#{f.id}TipoDocDiv" styleClass="padding-top-10">
+				<wi:selectOneMenuEntity id="#{f.id}tipoProcessoDocumento"
+					label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
+					value="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento}"
+					items="#{classificacaoDocumentoFacade.getUseableClassificacaoDocumento(false, taskInstanceHome.getVariableName(id), taskInstanceHome.currentTaskInstance)}"
+					required="#{wi:get(required, false)}" showLabelSelecione="true"
+					rendered="#{not readonly}">
+					<a:ajax
+						render="#{f.id}TipoDocDiv #{f.id}Div #{f.id}ToolTipDivExterna #{f.id}documentoExistente assinaturaDocumentoDiv#{f.id}"
+						event="change" execute="@this"
+						listener="#{taskInstanceHome.removerDocumento(f.id)}"
+						limitRender="true" />
+					<f:validateBean disabled="true" />
+				</wi:selectOneMenuEntity>
+			</p:outputPanel>
+			<p:outputPanel id="#{f.id}ToolTipDivExterna">
+				<i:help id="#{f.id}ToolTipDiv"
+					rendered="#{not empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento and not readonly}">
+					<p:outputPanel
+						rendered="#{empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento}">
+						<h:outputText value="Selecione uma classificação de documento" />
+					</p:outputPanel>
+					<p:outputPanel
+						rendered="#{not empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento}">
+						<div>
+							<h:outputText value="Extensões Aceitas:" />
+						</div>
+						<ui:repeat var="documento"
+							value="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.acceptedTypesList}">
+							<div>
+								<h:outputText value="#{documento}"
+									styleClass="tooltip-panel-div" />
+							</div>
+						</ui:repeat>
+						<p:outputPanel styleClass="tooltip-panel-top"
+							rendered="#{not empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.observacao}">
+							<div>
+								<h:outputText value="Observação:" />
+							</div>
+							<h:outputText
+								value="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.observacao}" />
+						</p:outputPanel>
+					</p:outputPanel>
+				</i:help>
+			</p:outputPanel>
+			<s:div id="#{id}Div">
+				<ui:fragment
+					rendered="#{not empty taskInstanceHome.variaveisDocumento[id].classificacaoDocumento and not readonly}">
+					<s:decorate id="#{id}Decoration" template="#{template}">
+						<ui:define name="label">
+							<h:outputText value="#{infoxMessages['fileUpload.header']}" />
+						</ui:define>
+						<h:inputHidden id="#{id}Hidden" /> <!-- Apenas para dar a marcação de campo obrigatório -->
+						<rich:fileUpload id="#{id}" execute="@this" status=":status"
+							limitRender="true"
+							fileUploadListener="#{fileUpload.processFileUpload}"
+							addLabel="#{infoxMessages['processoDocumento.addLabel']}"
+							clearAllLabel="#{infoxMessages['processoDocumento.clearAllLabel']}"
+							clearLabel="#{infoxMessages['processoDocumento.clearLabel']}"
+							doneLabel="#{empty doneLabel ? infoxMessages['processoDocumento.doneLabel'] : doneLabel}"
+							uploadLabel="#{infoxMessages['processoDocumento.uploadLabel']}"
+							sizeExceededLabel="#{infoxMessages['processoDocumento.sizeExceededLabel']}"
+							maxFilesQuantity="10" listHeight="50px" immediateUpload="true"
+							noDuplicate="true"
+							render="#{id}Div, #{id}, pageBodyDialogMessage, #{f.id}TipoDocDiv, #{f.id}documentoExistente, assinaturaDocumentoDiv#{f.id}"
+							acceptedTypes="#{taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.acceptedTypes}"
+							ontyperejected="new infox.Messages({'timeout': 3000}).dialog(\'#{infoxMessages['processoDocumento.extensaoNaoPermitida']}\')">
+						</rich:fileUpload>
+					</s:decorate>
+				</ui:fragment>
+			</s:div>
+			<p:outputPanel id="#{f.id}documentoExistente">
+				<s:fragment rendered="#{not empty taskInstanceHome.instance[id]}">
+					<fieldset>
+						<legend>Documento Anexado #{not empty
+							taskInstanceHome.variaveisDocumento[id].documentoBin.assinaturas
+							? '(já assinado, não pode ser substituído)' : ''}</legend>
+						<h:outputText
+							value="#{infoxMessages['processoDocumento.classificacaoDocumento']}: #{not readonly or not empty taskInstanceHome.variaveisDocumento[id] ? taskInstanceHome.variaveisDocumento[id].classificacaoDocumento.descricao : props.classificacaoDocumento}" />
+						<br />
+						<h:outputText id="file#{id}"
+							value="Documento: #{not readonly or not empty taskInstanceHome.variaveisDocumento[id] ? taskInstanceHome.variaveisDocumento[id].documentoBin.nomeArquivo : value}" />
+						<h:graphicImage
+							url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}"
+							title="Visualizar" style="cursor: pointer"
+							rendered="#{(not readonly or not empty taskInstanceHome.variaveisDocumento[id]) and taskInstanceHome.isPdf(id.split('-')[0])}"
+							onclick="infox.openPopUp('documento', '#{taskInstanceHome.getViewUrlDownload(id.split('-')[0])}');" />
+						<p:commandLink ajax="false"
+							action="#{taskInstanceHome.downloadDocumento(id.split('-')[0])}"
+							rendered="#{(not readonly or not empty taskInstanceHome.variaveisDocumento[id]) and not taskInstanceHome.isPdf(id.split('-')[0])}">
+							<h:graphicImage
+								url="#{layoutController.getResourceUrlByPath('/imagens/show.gif')}"
+								title="Visualizar" style="cursor: pointer" />
+						</p:commandLink>
+					</fieldset>
+				</s:fragment>
+			</p:outputPanel>
+			<p:outputPanel id="assinaturaDocumentoDiv#{f.id}">
+				<p:outputPanel id="conteudoAssinatura#{f.id}"
+					rendered="#{taskInstanceHome.podeAssinarDocumento(f.id.split('-')[0])}">
+					<a:jsFunction name="assinar"
+						action="#{taskInstanceHome.assinarDocumento()}"
+						execute="@this, assinaturaDocumentoDiv#{f.id}"
+						render="assinaturaDocumentoDiv#{f.id}, pageBodyDialogMessage, #{f.id}TipoDocDiv, #{f.id}ToolTipDivExterna, #{id}Div, #{f.id}documentoExistente"
+						oncomplete="infox.hideLoading();" />
 
                     <wi:certificadoDigital id="botaoAssinatura"
-                        signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
-                        reRender="pageBodyDialogMessage, @form" tokenField="#{taskInstanceHome.tokenToSign}"
-                        propertyValue="#{f.id}" propertyTarget="#{taskInstanceHome.variavelDocumentoToSign}"
+						signButtonCaption="#{infoxMessages['assinaturas.assinar']}"
+						reRender="pageBodyDialogMessage, @form"
+						tokenField="#{taskInstanceHome.tokenToSign}"
                         documentoBinList="#{taskInstanceHome.variaveisDocumento[id].documentoBin}"
-                        functionPreSign="infox.showLoading();" functionPosSign="assinar();">
-                    </wi:certificadoDigital>
-                </p:outputPanel>
-            </p:outputPanel>
-        </fieldset>
-    </f:subview>
+						propertyTarget="#{taskInstanceHome.variavelDocumentoToSign}"
+						functionPreSign="infox.showLoading();"
+						functionPosSign="assinar();">
+					</wi:certificadoDigital>
+				</p:outputPanel>
+			</p:outputPanel>
+		</fieldset>
+	</f:subview>
 </ui:composition>

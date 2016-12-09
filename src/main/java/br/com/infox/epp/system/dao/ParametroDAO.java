@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
-
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;

@@ -79,6 +79,10 @@ public class UsuarioPerfilManager extends Manager<UsuarioPerfilDAO, UsuarioPerfi
     public boolean existeUsuarioPerfilAtivo(UsuarioLogin usuarioLogin, String descricaoPerfil, boolean ativo) {
     	return getDao().existeUsuarioPerfil(usuarioLogin, descricaoPerfil, ativo);
     }
+    
+    public boolean existeUsuarioPerfilAtivo(UsuarioLogin usuarioLogin, PerfilTemplate perfilTemplate, boolean ativo) {
+    	return getDao().existeUsuarioPerfil(usuarioLogin, perfilTemplate, ativo);
+    }
 
 	@Override
 	public UsuarioPerfil persist(UsuarioPerfil o) throws DAOException {
@@ -108,6 +112,10 @@ public class UsuarioPerfilManager extends Manager<UsuarioPerfilDAO, UsuarioPerfi
 
         query.select(up.get(UsuarioPerfil_.perfilTemplate)).distinct(true);
         return getDao().getEntityManager().createQuery(query).getResultList();
+    }
+    
+    public UsuarioPerfil getUsuarioPerfil(UsuarioLogin usuarioLogin, PerfilTemplate perfilTemplate, Localizacao localizacao) {
+    	return getDao().getUsuarioPerfil(usuarioLogin, perfilTemplate, localizacao);
     }
 	
 }

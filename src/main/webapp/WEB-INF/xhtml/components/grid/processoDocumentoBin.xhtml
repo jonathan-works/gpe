@@ -9,33 +9,44 @@
     xmlns:rich="http://richfaces.org/rich"
     xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:wi="http://www.itx.com.br/jsf" 
-	xmlns:infox="http://www.infox.com.br/jsf">
+	xmlns:infox="http://www.infox.com.br/jsf"
+	xmlns:p="http://primefaces.org/ui"
+    xmlns:i="http://java.sun.com/jsf/composite/infox">
 	
     <ui:param name="bin" value="#{empty bin ? c.value : bin}" />
     <ui:param name="isModelo" value="#{empty bin.extensao}" />
     <ui:param name="row" value="#{row}" />
     
     <span>
-        <infox:flashcopy/>
         <span class="#{row.excluido ? 'inativo' : ''}" />
-        <a:commandLink
-            rendered="#{isModelo}" execute="@this" render="@form"
-            oncomplete="infox.openPopUp('PopUpDocumentoBin', '#{pathResolver.contextPath}/Processo/baixarDocumento.seam','1024');" >
-            <h:graphicImage styleClass="opacityHover" title="#{infoxMessages['processoDocumento.visualizar']}"
-                url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" />
-            <f:setPropertyActionListener value="#{row.id}" target="#{flash.idDocumento}" />
-            <f:setPropertyActionListener value="#{false}" target="#{flash.binario}" />
-        </a:commandLink>
         
         <a:commandLink
-            rendered="#{!isModelo}" execute="@this" render="@form"
+            execute="@this" render="@form" action="#{jsfUtil.applyLastPhaseFlashAction}" rendered="#{fileDownloader.isPdf(bin)}"
             oncomplete="infox.openPopUp('PopUpDocumentoBin', '#{pathResolver.contextPath}/Processo/baixarDocumento.seam','1024');">
             <h:graphicImage styleClass="opacityHover" value="#{layoutController.getResourceUrlByPath('/imagens/mod/pdf.gif')}"
                 title="#{bin.nomeArquivo} (#{documentoDownloader.getFormattedKb(bin)})"/>
             <f:setPropertyActionListener value="#{row.id}" target="#{flash.idDocumento}" />
             <f:setPropertyActionListener value="#{true}" target="#{flash.binario}" />
         </a:commandLink>
-        
+
+ 	<p:commandLink ajax="false" rendered="#{not fileDownloader.isPdf(bin)}"  action="#{fileDownloader.download(bin)}">
+ 		<h:graphicImage styleClass="opacityHover" value="#{layoutController.getResourceUrlByPath('/imagens/mod/pdf.gif')}"
+                title="#{bin.nomeArquivo} (#{documentoDownloader.getFormattedKb(bin)})"/>
+ 	</p:commandLink>
         <wi:toolBarAssinatura idDocumento="#{row.id}" styleClass="opacityHover" renderedLock="#{bin.suficientementeAssinado}" />
+
+        <p:commandLink
+            rendered="#{security.checkPage('PublicacoesDocumentos/visualizar') and not empty row.publicacoes}" 
+            update="@this @(.genericDialog)" process="@this" 
+            action="#{dialogController.builder()
+                .src('/Processo/publicacaoDialog.xhtml')
+                .header(infoxMessages['publicacao.popup.header'])
+                .show()}" 
+            style="text-decoration: none"
+        >
+            <i:icon value="globe" text="#{infoxMessages['processoDocumento.visualizarPublicacao']}" style="font-size: 16px; vertical-align: top; color: rgb(0,80, 180);"/>
+            <f:setPropertyActionListener value="#{row}" target="#{publicacaoDialogView.documento}"/>
+        </p:commandLink> 
+
     </span>
 </ui:composition>

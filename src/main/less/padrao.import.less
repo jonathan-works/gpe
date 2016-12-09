@@ -15,6 +15,7 @@
 @import "atomos/calendar.import.less";
 @import "atomos/context-menu.import.less";
 @import "atomos/file-upload.import.less";
+@import "atomos/lista-truncada.import.less";
 @import "atomos/datatable.import.less";
 @import "atomos/dataGrid.import.less";
 @import "atomos/dataScroller.import.less";
@@ -28,6 +29,7 @@
 @import "atomos/abas.import.less";
 @import "atomos/auto-complete.import.less";
 @import "atomos/selectManyMenu.import.less";
+@import "atomos/scheduler.import.less";
 @import "atomos/panel.import.less";
 @import "atomos/picklist.import.less";
 @import "atomos/toolbar.import.less";
@@ -58,6 +60,34 @@
 @import "paginas/help.import.less";
 @import "paginas/painelUsuario.import.less";
 
+.hidden-text {
+  .prefixed-atrib(transform, ~"scale(0)");
+  height: 1px;
+  width: 1px;
+  margin-left: -1px;
+  margin-top: -1px;
+}
+.inline-form {
+  display: inline;
+}
+.action-icon {
+    display: inline-block;
+    vertical-align: top;
+    font-size: 1.3em;
+    margin:0 2px;
+}
+.disabled-content{
+    position:relative;
+    &:after{
+      content:'';
+      position:absolute;
+      width:100%;
+      height:100%;
+      top:0;
+      left:0;
+      background-color:rgba(255,255,255,0.7);
+    }
+}
 .mdl-shadow--2dp {
   .prefixed-atrib(box-shadow, ~"0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12)");
 }
@@ -672,4 +702,3 @@ form {
 .texto-underline {
 	text-decoration: underline;
 }
-

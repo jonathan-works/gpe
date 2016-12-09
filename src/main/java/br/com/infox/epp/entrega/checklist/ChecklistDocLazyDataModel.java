@@ -159,7 +159,7 @@ public class ChecklistDocLazyDataModel extends LazyDataModel<ChecklistDoc> {
         dpc.alias(JOIN_DOCUMENTO__ALIAS);
         cd.alias(JOIN_CLASSIFICACAO_DOCUMENTO_ALIAS);
         if (order) {
-            cq.orderBy(cb.asc(cd.get(ClassificacaoDocumento_.descricao)), cb.asc(dpc.get(Documento_.descricao)));
+            cq.orderBy(cb.asc(cd.get(ClassificacaoDocumento_.descricao)), cb.asc(dpc.get(Documento_.descricao)), cb.asc(clDoc.get(ChecklistDoc_.id)));
         }
         cq.where(cb.equal(cl.get(Checklist_.id), this.cl.getId()));
     }

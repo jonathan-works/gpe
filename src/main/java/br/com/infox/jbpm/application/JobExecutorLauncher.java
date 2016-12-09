@@ -10,10 +10,11 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Startup;
 import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.bpm.Jbpm;
-import br.com.infox.log.LogProvider;
-import br.com.infox.log.Logging;
 import org.jbpm.job.executor.EppJobExecutorThread;
 import org.jbpm.job.executor.JobExecutor;
+
+import br.com.infox.log.LogProvider;
+import br.com.infox.log.Logging;
 
 /**
  * Componente responsavel por inicializar o serviço de Job utilizado pelos

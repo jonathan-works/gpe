@@ -5,7 +5,6 @@ import java.text.MessageFormat;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OverProtocol;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.Test;
 
 import br.com.infox.constants.LengthConstants;
 import br.com.infox.epp.documento.crud.ClassificacaoDocumentoCrudAction;

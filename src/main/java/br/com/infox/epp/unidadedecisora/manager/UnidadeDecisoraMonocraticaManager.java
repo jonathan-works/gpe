@@ -38,4 +38,8 @@ public class UnidadeDecisoraMonocraticaManager extends Manager<UnidadeDecisoraMo
     public UnidadeDecisoraMonocratica findByCodigoLocalizacao(String codigoLocalizacao) {
     	return getDao().findByCodigoLocalizacao(codigoLocalizacao);
     }
+
+    public List<UnidadeDecisoraMonocratica> getListUnidadeDecisoraMonocraticaAtivo() {
+        return getDao().searchUnidadeDecisoraMonocraticaAtivo();
+    }
 }

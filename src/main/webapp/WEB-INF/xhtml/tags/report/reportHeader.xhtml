@@ -2,6 +2,7 @@
 
 <ui:composition
      xmlns:ui="http://java.sun.com/jsf/facelets"
+     xmlns:h="http://java.sun.com/jsf/html"
      xmlns:f="http://java.sun.com/jsf/core"
      xmlns:p="http://jboss.org/schema/seam/pdf"
      xmlns:s="http://jboss.org/schema/seam/taglib">
@@ -14,12 +15,7 @@
 			<p:cell
              borderWidth="0"
              verticalAlignment="left">
-				<p:html>
-				    <img
-                     src="${facesContext.externalContext.request.getRealPath(&quot;/&quot;)}#{layoutController.getResourceUrl('LOGO_LOGIN')}"
-                     width="30%"
-                     height="30%" />
-				</p:html>
+                <p:image value="#{layoutController.getResourceAsURL('LOGO_LOGIN')}" />
 			</p:cell>
 			<p:cell
              borderWidth="0"

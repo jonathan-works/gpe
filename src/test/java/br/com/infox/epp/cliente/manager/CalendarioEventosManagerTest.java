@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -19,7 +20,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonStreamParser;
 
-import java.util.Date;
 import br.com.infox.util.time.DateRange;
 
 public class CalendarioEventosManagerTest {

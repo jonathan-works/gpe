@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
     <context-param>
         <param-name>primefaces.THEME</param-name>
         <param-value>bootstrap</param-value>
@@ -10,62 +10,62 @@
         <param-name>primefaces.FONT_AWESOME</param-name>
         <param-value>true</param-value>
     </context-param>
-	<!-- JSF -->
-	<context-param>
-		<param-name>com.sun.faces.numberOfLogicalViews</param-name>
-		<param-value>8</param-value>
-	</context-param>
-	<context-param>
-		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
-		<param-value>.xhtml</param-value>
-	</context-param>
-	<context-param>
-		<param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
-		<param-value>true</param-value>
-	</context-param>
-	<!-- Facelets -->
-	<context-param>
-		<param-name>javax.faces.FACELETS_LIBRARIES</param-name>
-		<param-value>/WEB-INF/xhtml/infox.taglib.xml;/WEB-INF/xhtml/itx.dojo.gauge.taglib.xml</param-value>
-	</context-param>
-	<context-param>
-		<param-name>javax.faces.FACELETS_REFRESH_PERIOD</param-name>
-		<param-value>1</param-value>
-	</context-param>
-	<context-param>
-		<param-name>javax.faces.FACELETS_RESOURCE_RESOLVER</param-name>
-		<param-value>br.com.infox.epp.access.service.CustomResourceResolver</param-value>
-	</context-param>
-	<context-param>
-		<param-name>javax.faces.PROJECT_STAGE</param-name>
-		<param-value>${project.stage}</param-value>
-	</context-param>
-	<context-param>
-		<param-name>org.richfaces.resourceOptimization.enabled</param-name>
-		<param-value>false</param-value>
-	</context-param>
-	<!-- Fila padrão para as requisições ajax -->
-	<context-param>
-		<param-name>org.richfaces.queue.global.enabled</param-name>
-		<param-value>true</param-value>
-	</context-param>
-	<!-- Ajax4jsf -->
-	<context-param>
-		<param-name>org.richfaces.CONTROL_SKINNING</param-name>
-		<param-value>disable</param-value>
-	</context-param>
-	<context-param>
-		<param-name>org.richfaces.CONTROL_SKINNING_CLASSES</param-name>
-		<param-value>disable</param-value>
-	</context-param>
-	<context-param>
-		<param-name>org.richfaces.fileUpload.maxRequestSize</param-name>
-		<param-value>2040109465</param-value>
-	</context-param>
-	<context-param>
-		<param-name>org.richfaces.fileUpload.createTempFiles</param-name>
-		<param-value>true</param-value>
-	</context-param>
+    <!-- JSF -->
+    <context-param>
+        <param-name>com.sun.faces.numberOfLogicalViews</param-name>
+        <param-value>8</param-value>
+    </context-param>
+    <context-param>
+        <param-name>javax.faces.DEFAULT_SUFFIX</param-name>
+        <param-value>.xhtml</param-value>
+    </context-param>
+    <context-param>
+        <param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <!-- Facelets -->
+    <context-param>
+        <param-name>javax.faces.FACELETS_LIBRARIES</param-name>
+        <param-value>/WEB-INF/xhtml/infox.taglib.xml;/WEB-INF/xhtml/itx.dojo.gauge.taglib.xml</param-value>
+    </context-param>
+    <context-param>
+        <param-name>javax.faces.FACELETS_REFRESH_PERIOD</param-name>
+        <param-value>1</param-value>
+    </context-param>
+    <context-param>
+        <param-name>javax.faces.FACELETS_RESOURCE_RESOLVER</param-name>
+        <param-value>br.com.infox.epp.access.service.CustomResourceResolver</param-value>
+    </context-param>
+    <context-param>
+        <param-name>javax.faces.PROJECT_STAGE</param-name>
+        <param-value>${project.stage}</param-value>
+    </context-param>
+    <context-param>
+        <param-name>org.richfaces.resourceOptimization.enabled</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <!-- Fila padrão para as requisições ajax -->
+    <context-param>
+        <param-name>org.richfaces.queue.global.enabled</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <!-- Ajax4jsf -->
+    <context-param>
+        <param-name>org.richfaces.CONTROL_SKINNING</param-name>
+        <param-value>disable</param-value>
+    </context-param>
+    <context-param>
+        <param-name>org.richfaces.CONTROL_SKINNING_CLASSES</param-name>
+        <param-value>disable</param-value>
+    </context-param>
+    <context-param>
+        <param-name>org.richfaces.fileUpload.maxRequestSize</param-name>
+        <param-value>2040109465</param-value>
+    </context-param>
+    <context-param>
+        <param-name>org.richfaces.fileUpload.createTempFiles</param-name>
+        <param-value>true</param-value>
+    </context-param>
 
     <context-param>
         <param-name>COMPONENTES.recaptchaPrivateKey</param-name>
@@ -75,77 +75,77 @@
         <param-name>COMPONENTES.recaptchaPublicKey</param-name>
         <param-value>#{recaptchaPublicKey}</param-value>
     </context-param>
-    
-	<filter>
-		<filter-name>Seam Filter</filter-name>
-		<filter-class>org.jboss.seam.servlet.SeamFilter</filter-class>
-		<async-supported>true</async-supported>
-	</filter>
-	<filter-mapping>
-		<filter-name>Seam Filter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-	<!-- Listener for RequestInternalPage before seam listener -->
-	<listener>
-		<listener-class>br.com.infox.jsf.events.EppServletEventListener</listener-class>
-	</listener>
-	<!-- Seam -->
-	<context-param>
-		<param-name>org.jboss.seam.core.init.jndiPattern</param-name>
-		<param-value>java:global/moduleName/#{ejbName}</param-value>
-	</context-param>
-	<listener>
-		<listener-class>org.jboss.seam.servlet.SeamListener</listener-class>
-	</listener>
+
+    <filter>
+        <filter-name>Seam Filter</filter-name>
+        <filter-class>org.jboss.seam.servlet.SeamFilter</filter-class>
+        <async-supported>true</async-supported>
+    </filter>
+    <filter-mapping>
+        <filter-name>Seam Filter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <!-- Listener for RequestInternalPage before seam listener -->
+    <listener>
+        <listener-class>br.com.infox.jsf.events.EppServletEventListener</listener-class>
+    </listener>
+    <!-- Seam -->
+    <context-param>
+        <param-name>org.jboss.seam.core.init.jndiPattern</param-name>
+        <param-value>java:global/moduleName/#{ejbName}</param-value>
+    </context-param>
+    <listener>
+        <listener-class>org.jboss.seam.servlet.SeamListener</listener-class>
+    </listener>
     <!-- Listener for EppServletCaptchaParameters after seam listener -->
     <listener>
         <listener-class>br.com.infox.jsf.events.EppServletCaptchaParameters</listener-class>
     </listener>
-    
-	<servlet>
-		<servlet-name>Seam Resource Servlet</servlet-name>
-		<servlet-class>org.jboss.seam.servlet.SeamResourceServlet</servlet-class>
-		<async-supported>true</async-supported>
-	</servlet>
-	<servlet>
-		<servlet-name>Faces Servlet</servlet-name>
-		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet>
-		<servlet-name>Document Store Servlet</servlet-name>
-		<servlet-class>org.jboss.seam.document.DocumentStoreServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>Document Store Servlet</servlet-name>
-		<url-pattern>*.pdf</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>Seam Resource Servlet</servlet-name>
-		<url-pattern>/seam/resource/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>Faces Servlet</servlet-name>
-		<url-pattern>*.seam</url-pattern>
-	</servlet-mapping>
-	<security-constraint>
-		<display-name>Restrict raw XHTML Documents</display-name>
-		<web-resource-collection>
-			<web-resource-name>XHTML</web-resource-name>
-			<url-pattern>*.xhtml</url-pattern>
-		</web-resource-collection>
-		<auth-constraint />
-	</security-constraint>
-	<servlet>
-		<servlet-name>Resource Servlet</servlet-name>
-		<servlet-class>org.richfaces.webapp.ResourceServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-		<async-supported>true</async-supported>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>Resource Servlet</servlet-name>
-		<url-pattern>/org.richfaces.resources/*</url-pattern>
-	</servlet-mapping>
+
+    <servlet>
+        <servlet-name>Seam Resource Servlet</servlet-name>
+        <servlet-class>org.jboss.seam.servlet.SeamResourceServlet</servlet-class>
+        <async-supported>true</async-supported>
+    </servlet>
+    <servlet>
+        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet>
+        <servlet-name>Document Store Servlet</servlet-name>
+        <servlet-class>org.jboss.seam.document.DocumentStoreServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Document Store Servlet</servlet-name>
+        <url-pattern>*.pdf</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Seam Resource Servlet</servlet-name>
+        <url-pattern>/seam/resource/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>*.seam</url-pattern>
+    </servlet-mapping>
+    <security-constraint>
+        <display-name>Restrict raw XHTML Documents</display-name>
+        <web-resource-collection>
+            <web-resource-name>XHTML</web-resource-name>
+            <url-pattern>*.xhtml</url-pattern>
+        </web-resource-collection>
+        <auth-constraint />
+    </security-constraint>
+    <servlet>
+        <servlet-name>Resource Servlet</servlet-name>
+        <servlet-class>org.richfaces.webapp.ResourceServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+        <async-supported>true</async-supported>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Resource Servlet</servlet-name>
+        <url-pattern>/org.richfaces.resources/*</url-pattern>
+    </servlet-mapping>
 	<filter>
 		<filter-name>CORS</filter-name>
 		<filter-class>com.thetransactioncompany.cors.CORSFilter</filter-class>
@@ -158,8 +158,20 @@
 		<filter-name>CORS</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	<mime-mapping>
-		<extension>woff</extension>
-		<mime-type>application/font-woff</mime-type>
-	</mime-mapping>
+    <mime-mapping>
+        <extension>woff</extension>
+        <mime-type>application/font-woff</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>woff2</extension>
+        <mime-type>application/font-woff2</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>ttf</extension>
+        <mime-type>application/font-sfnt</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>eot</extension>
+        <mime-type>application/vnd.ms-fontobject</mime-type>
+    </mime-mapping>
 </web-app>

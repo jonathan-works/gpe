@@ -1,9 +1,6 @@
 package br.com.infox.epp.processo.comunicacao.service;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -22,7 +19,8 @@ import br.com.infox.epp.access.manager.PapelManager;
 import br.com.infox.epp.access.manager.UsuarioPerfilManager;
 import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
-import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
+import br.com.infox.epp.processo.comunicacao.meioexpedicao.MeioExpedicao;
+import br.com.infox.epp.processo.comunicacao.meioexpedicao.MeioExpedicaoSearch;
 import br.com.infox.epp.system.Parametros;
 import br.com.infox.seam.util.ComponentUtil;
 
@@ -37,6 +35,8 @@ public class DestinatarioComunicacaoService implements Serializable{
 	private UsuarioPerfilManager usuarioPerfilManager;
 	@Inject
 	private LocalizacaoManager localizacaoManager;
+	@Inject
+	private MeioExpedicaoSearch meioExpedicaoSearch;
 	
 	private GenericManager genericManager = ComponentUtil.getComponent(GenericManager.NAME);
 	private PapelManager papelManager = ComponentUtil.getComponent(PapelManager.NAME);
@@ -48,7 +48,7 @@ public class DestinatarioComunicacaoService implements Serializable{
 			PessoaFisica pessoa = destinatario.getDestinatario();
 			UsuarioLogin usuario = pessoa.getUsuarioLogin();
 			if (pessoa.getTermoAdesao() != null) {
-				return order(MeioExpedicao.values());
+				return meioExpedicaoSearch.getMeiosExpedicaoAtivos();
 			}
 			if (usuario != null) {
 				List<UsuarioPerfil> usuarioPerfilList = usuarioPerfilManager.listByUsuarioLogin(usuario);
@@ -56,29 +56,18 @@ public class DestinatarioComunicacaoService implements Serializable{
 				for (UsuarioPerfil usuarioPerfil : usuarioPerfilList) {
 					Papel papel = usuarioPerfil.getPerfilTemplate().getPapel();
 					if (papeisHerdeirosUsuarioInterno.contains(papel.getIdentificador())) {
-						return order(MeioExpedicao.values());
+					    return meioExpedicaoSearch.getMeiosExpedicaoAtivos();
 					}
 				}
 			}
 		} else {
 			Localizacao localizacaoRaiz = localizacaoManager.getLocalizacaoByNome(raizLocalizacoesComunicacao);
 			if (destinatario.getDestino().getCaminhoCompleto().startsWith(localizacaoRaiz.getCaminhoCompleto())) {
-				return order(MeioExpedicao.values());
+			    return meioExpedicaoSearch.getMeiosExpedicaoAtivos();
 			}
 		}
 		
-		return order(MeioExpedicao.DO, MeioExpedicao.EM, MeioExpedicao.IM);
-	}
-	
-	private List<MeioExpedicao> order(MeioExpedicao... meios) {
-		List<MeioExpedicao> meiosExpedicao = Arrays.asList(meios);
-		Collections.sort(meiosExpedicao, new Comparator<MeioExpedicao>() {
-			@Override
-			public int compare(MeioExpedicao o1, MeioExpedicao o2) {
-				return o1.getLabel().compareToIgnoreCase(o2.getLabel());
-			}
-		});
-		return meiosExpedicao;
+		return meioExpedicaoSearch.getMeiosExpedicaoAtivosNaoEletronicos();
 	}
 	
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)

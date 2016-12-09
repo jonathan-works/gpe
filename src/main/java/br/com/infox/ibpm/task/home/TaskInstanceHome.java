@@ -12,12 +12,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.SystemException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.HibernateException;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
@@ -43,7 +45,10 @@ import org.jbpm.graph.exe.Token;
 import org.jbpm.taskmgmt.def.TaskController;
 import org.jbpm.taskmgmt.exe.TaskInstance;
 
+import com.google.common.base.Strings;
+
 import br.com.infox.core.action.ActionMessagesService;
+import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.core.file.encode.MD5Encoder;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
@@ -69,6 +74,7 @@ import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
 import br.com.infox.epp.processo.documento.entity.Pasta;
 import br.com.infox.epp.processo.documento.manager.DocumentoBinManager;
+import br.com.infox.epp.processo.documento.manager.DocumentoBinarioManager;
 import br.com.infox.epp.processo.documento.manager.DocumentoManager;
 import br.com.infox.epp.processo.documento.manager.PastaManager;
 import br.com.infox.epp.processo.handler.ProcessoHandler;
@@ -80,6 +86,7 @@ import br.com.infox.epp.processo.situacao.dao.SituacaoProcessoDAO;
 import br.com.infox.epp.processo.type.TipoProcesso;
 import br.com.infox.epp.tarefa.entity.ProcessoTarefa;
 import br.com.infox.epp.tarefa.manager.ProcessoTarefaManager;
+import br.com.infox.ibpm.process.definition.variable.VariableType;
 import br.com.infox.ibpm.task.action.TaskPageAction;
 import br.com.infox.ibpm.task.dao.TaskConteudoDAO;
 import br.com.infox.ibpm.task.entity.TaskConteudo;
@@ -115,6 +122,7 @@ public class TaskInstanceHome implements Serializable {
 	public static final String NAME = "taskInstanceHome";
 	private static final String URL_DOWNLOAD_BINARIO = "{0}/downloadDocumento.seam?id={1}";
 	private static final String URL_DOWNLOAD_HTML = "{0}/Painel/documentoHTML.seam?id={1}";
+	private static final String TASK_INSTANCE_FORM_ID = "movimentarTabPanel:taskInstanceForm";
 
 	@Inject
 	private ProcessoManager processoManager;
@@ -136,6 +144,8 @@ public class TaskInstanceHome implements Serializable {
 	private PastaManager pastaManager; 
 	@Inject
 	private DocumentoBinManager documentoBinManager;
+	@Inject
+	private DocumentoBinarioManager documentoBinarioManager;
 	@Inject
 	private InfoxMessages infoxMessages;
 	@Inject
@@ -218,7 +228,10 @@ public class TaskInstanceHome implements Serializable {
 					documento.setDocumentoBin(new DocumentoBin());
 				}
 			}
-			variaveisDocumento.put(getFieldName(variableRetriever.getName()), documento);
+			if(variableAccess.isWritable())
+				variaveisDocumento.put(getFieldName(variableRetriever.getName()), documento);
+			else
+				variaveisDocumento.put(variableRetriever.getName(), documento);
 			if (variableRetriever.isEditor() && documento.getId() == null) {
 				setModeloWhenExists(variableRetriever, documento);
 			}
@@ -274,28 +287,82 @@ public class TaskInstanceHome implements Serializable {
 	}
 
 	public boolean update() {
-		prepareForUpdate();
-		if (possuiTask()) {
-			TaskController taskController = taskInstance.getTask().getTaskController();
-			TaskPageAction taskPageAction = ComponentUtil.getComponent(TaskPageAction.NAME);
-			if (taskController != null) {
-				if (!taskPageAction.getHasTaskPage(getCurrentTaskInstance())) {
-					try {
-						updateVariables(taskController);
-					} catch (BusinessException e) {
-						LOG.error("", e);
-						FacesMessages.instance().clear();
-						FacesMessages.instance().add(e.getMessage());
-						return false;
-					}
-				}
-				completeUpdate();
-			}
-		}
-		return true;
+		return update(false);
+	}
+	
+	private boolean update(boolean validateForm) {
+	    prepareForUpdate();
+        if (possuiTask()) {
+            if (validateForm && !validateRequiredVariables()) {
+                return false;
+            }
+            TaskController taskController = taskInstance.getTask().getTaskController();
+            TaskPageAction taskPageAction = ComponentUtil.getComponent(TaskPageAction.NAME);
+            if (taskController != null) {
+                if (!taskPageAction.getHasTaskPage(getCurrentTaskInstance())) {
+                    try {
+                        updateVariables(taskController);
+                    } catch (BusinessException e) {
+                        LOG.error("", e);
+                        FacesMessages.instance().clear();
+                        FacesMessages.instance().add(e.getMessage());
+                        return false;
+                    }
+                }
+                completeUpdate();
+            }
+        }
+        return true;
 	}
 
-	private void prepareForUpdate() {
+	private boolean validateRequiredVariables() {
+	    if (taskInstance.getTask().getTaskController() == null || taskInstance.getTask().getTaskController().getVariableAccesses() == null) {
+	        return true;
+	    }
+        List<VariableAccess> variables = taskInstance.getTask().getTaskController().getVariableAccesses();
+        List<String> failedInputIds = new ArrayList<>();
+        for (VariableAccess variable : variables) {
+            if (variable.isWritable() && variable.isRequired()) {
+                Object value = mapaDeVariaveis.get(getFieldName(variable.getVariableName()));
+                VariableInfo variableInfo = variableTypeResolver.getVariableInfoMap().get(variable.getVariableName());
+                String fieldName = getFieldName(variable.getVariableName());
+                
+                if (variableInfo.getVariableType() == VariableType.EDITOR) {
+                    Documento documento = variaveisDocumento.get(fieldName);
+                    if (documento.getClassificacaoDocumento() == null) {
+                        failedInputIds.add(String.format("%s:%sSubView:%stipoProcessoDocumentoDecoration:%stipoProcessoDocumento", TASK_INSTANCE_FORM_ID, fieldName, fieldName, fieldName));
+                    }
+                    if (documento.getDocumentoBin() == null || Strings.isNullOrEmpty(documento.getDocumentoBin().getModeloDocumento())) {
+                        failedInputIds.add(String.format("%s:%sSubView:%sEditorDecoration:%sEditor", TASK_INSTANCE_FORM_ID, fieldName, fieldName, fieldName));
+                    }
+                } else if (variableInfo.getVariableType() == VariableType.FILE) {
+                    Documento documento = variaveisDocumento.get(fieldName);
+                    if (documento.getClassificacaoDocumento() == null) {
+                        failedInputIds.add(String.format("%s:%sSubView:%stipoProcessoDocumentoDecoration:%stipoProcessoDocumento", TASK_INSTANCE_FORM_ID, fieldName, fieldName, fieldName));
+                    }
+                    if (documento.getDocumentoBin() == null) {
+                        failedInputIds.add(String.format("%s:%sSubView:%sDecoration:%sHidden", TASK_INSTANCE_FORM_ID, fieldName, fieldName, fieldName));
+                    }
+                } else if (variableInfo.getVariableType() == VariableType.ENUMERATION_MULTIPLE && ((String[]) value).length == 0) {
+                    failedInputIds.add(String.format("%s:%s:%sInput", TASK_INSTANCE_FORM_ID, fieldName, fieldName));
+                } else if (variableInfo.getVariableType() == VariableType.FRAME){
+                	continue;
+                } else if (value == null || (value instanceof String && ((String) value).isEmpty())) {
+                    failedInputIds.add(String.format("%s:%sDecoration:%s", TASK_INSTANCE_FORM_ID, fieldName, fieldName));
+                }
+            }                
+        }
+        
+        for (String failedInputId : failedInputIds) {
+            FacesContext.getCurrentInstance().addMessage(
+                    failedInputId,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, infoxMessages.get("beanValidation.notNull"), null));
+        }
+
+        return failedInputIds.isEmpty();
+	}
+
+    private void prepareForUpdate() {
 		modeloDocumento = null;
 		taskInstance = org.jboss.seam.bpm.TaskInstance.instance();
 	}
@@ -347,13 +414,9 @@ public class TaskInstanceHome implements Serializable {
 			variableResolver.resolve();
 			if (variableResolver.isEditor()) {
 				Documento documento = variaveisDocumento.get(getFieldName(variableResolver.getName()));
-				try {
-					updateVariableEditor(documento, variableAccess);
-					variableResolver.assignValueFromMapaDeVariaveis(mapaDeVariaveis);
-					variableResolver.resolve();
-				} catch (DAOException e) {
-					LOG.error("updateVariable(variableAccess)", e);
-				}
+				updateVariableEditor(documento, variableAccess);
+				variableResolver.assignValueFromMapaDeVariaveis(mapaDeVariaveis);
+				variableResolver.resolve();
 			} else if (variableResolver.isFile()) {
 				retrieveVariable(variableAccess);
 			}
@@ -361,9 +424,14 @@ public class TaskInstanceHome implements Serializable {
 	}
 
 	private void updateVariableEditor(Documento documento, VariableAccess variableAccess) throws DAOException {
-		if (documento.getId() != null) {
-			documentoBinManager.update(documento.getDocumentoBin());
-			documentoManager.update(documento);
+		if (documento.getId() != null && documento.getClassificacaoDocumento() != null) {
+	        documentoBinManager.update(documento.getDocumentoBin());
+	        documentoManager.update(documento);
+		} else if (documento.getId() != null && documento.getClassificacaoDocumento() == null) {
+		    documentoManager.remove(documento);
+		    documentoBinManager.remove(documento.getDocumentoBin());
+		    documento = new Documento();
+		    documento.setDocumentoBin(new DocumentoBin());
 		} else {
 			if (documento.getClassificacaoDocumento() != null) {
 				createVariableEditor(documento, variableAccess);
@@ -400,6 +468,7 @@ public class TaskInstanceHome implements Serializable {
 	    try {
             hasAccess = checkAccess();
         } catch (ApplicationException e) {
+        	LOG.error(e);
             FacesMessages.instance().add(e.getMessage());
         }
         return hasAccess;
@@ -519,19 +588,35 @@ public class TaskInstanceHome implements Serializable {
 		}
 		return false;
 	}
+	
+	public boolean isPdf(String variableName){
+		Documento documento = getDocumentoFromVariableName(variableName);
+		return "pdf".equalsIgnoreCase(documento.getDocumentoBin().getExtensao()) || StringUtils.isEmpty(documento.getDocumentoBin().getExtensao());
+	}
+	
+	public void downloadDocumento(String variableName){
+		Documento documento = getDocumentoFromVariableName(variableName);
+		byte[] data = documentoBinarioManager.getData(documento.getDocumentoBin().getId());
+		FileDownloader.download(data, "application/" + documento.getDocumentoBin().getExtensao(), documento.getDocumentoBin().getNomeArquivo());
+	}
 
 	public String getViewUrlDownload(String variableName) {
-		Integer idDocumento = (Integer) org.jboss.seam.bpm.TaskInstance.instance().getVariable("FILE:" + variableName);
-		Documento documento = documentoManager.find(idDocumento);
+		Documento documento = getDocumentoFromVariableName(variableName);
 		if (documento.getDocumentoBin().isBinario()) {
 			return MessageFormat.format(URL_DOWNLOAD_BINARIO, pathResolver.getContextPath(), documento.getId().toString());
 		}
 		return MessageFormat.format(URL_DOWNLOAD_HTML, pathResolver.getContextPath(), documento.getId().toString());
 	}
 
+	private Documento getDocumentoFromVariableName(String variableName) {
+		Integer idDocumento = (Integer) org.jboss.seam.bpm.TaskInstance.instance().getVariable("FILE:" + variableName);
+		return documentoManager.find(idDocumento);
+	}
+
 	public void assinarDocumento() {
 		if (documentoToSign == null) {
 			FacesMessages.instance().add("Sem documento para assinar");
+			return;
 		}
 		try {
 			assinadorService.assinarToken(tokenToSign, Authenticator.getUsuarioPerfilAtual());
@@ -579,13 +664,14 @@ public class TaskInstanceHome implements Serializable {
 	public String end(String transition) {
 		if (checkAccess()) {
 			checkCurrentTask();
-			if (!update()) {
+			boolean validateForm = getTransition(transition).getConfiguration().isValidateForm();
+			if (!update(validateForm)) {
 				return null;
 			}
-			if (!validarAssinaturaDocumentosAoMovimentar()) {
-				return null;
+			if (validateForm && (!validFileUpload() || !validEditor())) {
+			    return null;
 			}
-			if (!validFileUpload()) {
+			if (validateForm && !validarAssinaturaDocumentosAoMovimentar()) {
 				return null;
 			}
 			this.currentTaskInstance = null;
@@ -608,7 +694,28 @@ public class TaskInstanceHome implements Serializable {
 		return null;
 	}
 
-	private boolean validarAssinaturaDocumentosAoMovimentar() {
+	private boolean validEditor() {
+	    if (possuiTask()) {
+            TaskController taskController = taskInstance.getTask().getTaskController();
+            if (taskController == null) {
+                return true;
+            }
+            List<?> list = taskController.getVariableAccesses();
+            for (Object object : list) {
+                VariableAccess var = (VariableAccess) object;
+                if (var.isRequired() && var.getMappedName().split(":")[0].equals("EDITOR")
+                        && getInstance().get(getFieldName(var.getVariableName())) == null) {
+                    String label = JbpmUtil.instance().getMessages()
+                            .get(taskInstance.getProcessInstance().getProcessDefinition().getName() + ":" + var.getVariableName());
+                    FacesMessages.instance().add("O editor do campo " + label + " é obrigatório");
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean validarAssinaturaDocumentosAoMovimentar() {
 		Map<String, VariableInstance> variableMap = org.jboss.seam.bpm.TaskInstance.instance().getVariableInstances();
 		FacesMessages.instance().clear();
 		boolean isAssinaturaOk = true;
@@ -619,6 +726,7 @@ public class TaskInstanceHome implements Serializable {
 					continue;
 				}
 				Documento documento = documentoManager.find(variableInstance.getValue());
+				if ( documento == null ) continue;
 				boolean assinaturaVariavelOk = validarAssinaturaDocumento(documento);
 				if (!assinaturaVariavelOk) {
 				    String label = VariableHandler.getLabel(format("{0}:{1}", taskInstance.getTask().getProcessDefinition().getName(), key.split(":")[1]));
@@ -792,7 +900,7 @@ public class TaskInstanceHome implements Serializable {
 			for (Transition transition : leavingTransitions) {
 				// POG temporario devido a falha no JBPM de avaliar as
 				// avaliablesTransitions
-				if (availableTransitions.contains(transition) && !transition.isHidden()) {
+				if (availableTransitions.contains(transition) && !transition.getConfiguration().isHidden()) {
 					list.add(transition);
 				}
 			}
@@ -1002,5 +1110,14 @@ public class TaskInstanceHome implements Serializable {
 				documento.setDocumentoBin(null);
 			}
 		}
+	}
+	
+	private Transition getTransition(String name) {
+	    for (Transition transition : getTransitions()) {
+	        if (transition.getName().equals(name)) {
+	            return transition;
+	        }
+	    }
+	    return null;
 	}
 }

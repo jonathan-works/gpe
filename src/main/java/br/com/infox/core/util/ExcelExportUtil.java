@@ -9,9 +9,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.jxls.exception.ParsePropertyException;
-import net.sf.jxls.transformer.XLSTransformer;
-
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.jboss.seam.Component;
 import org.jboss.seam.util.RandomStringUtils;
@@ -19,6 +16,8 @@ import org.jboss.seam.util.RandomStringUtils;
 import br.com.infox.core.exception.ExcelExportException;
 import br.com.infox.core.file.download.FileDownloader;
 import br.com.infox.seam.path.PathResolver;
+import net.sf.jxls.exception.ParsePropertyException;
+import net.sf.jxls.transformer.XLSTransformer;
 
 // TODO Transformar essa classe em um Util de verdade ou em um componente
 public class ExcelExportUtil {

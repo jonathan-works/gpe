@@ -15,11 +15,13 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.xml.ws.http.HTTPException;
 
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.Header;
+import org.apache.http.HttpException;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClients;
 
 import br.com.infox.core.exception.FailResponseAction;
 import br.com.infox.core.server.ApplicationServerService;
@@ -74,27 +76,27 @@ public class RequestInternalPageService implements Serializable {
     }
  
 	private String requestInternalPage(String fullPath) throws IOException,	HttpException {
-		HttpClient client = new HttpClient();
-		HttpMethod getMethod = new GetMethod(fullPath);
-		getMethod.addRequestHeader(KEY_HEADER_NAME, getKey().toString());
-		client.executeMethod(getMethod);
-		Header errorHeader = getMethod.getResponseHeader(FailResponseAction.HEADER_ERROR_RESPONSE);
+	    HttpClient httpclient = HttpClients.createDefault();
+	    HttpGet httpGet = new HttpGet(fullPath);
+	    httpGet.addHeader(KEY_HEADER_NAME, getKey().toString());
+	    HttpResponse response = httpclient.execute(httpGet);
+		Header errorHeader = response.getFirstHeader(FailResponseAction.HEADER_ERROR_RESPONSE);
 		if (errorHeader != null && !errorHeader.getValue().isEmpty()) {
 		    throw new BusinessException("A requisição interna falhou");
 		}
-		return getMethod.getResponseBodyAsString();
+		return IOUtils.toString(response.getEntity().getContent());
 	}
 
 	private byte[] requestInternalPageAsPdf(String fullPath) throws IOException, HTTPException {
-	    HttpClient client = new HttpClient();
-	    HttpMethod getMethod = new GetMethod(fullPath);
-	    getMethod.addRequestHeader(KEY_HEADER_NAME, getKey().toString());
-	    client.executeMethod(getMethod);
-	    Header errorHeader = getMethod.getResponseHeader(FailResponseAction.HEADER_ERROR_RESPONSE);
+	    HttpClient httpclient = HttpClients.createDefault();
+        HttpGet httpGet = new HttpGet(fullPath);
+        httpGet.addHeader(KEY_HEADER_NAME, getKey().toString());
+        HttpResponse response = httpclient.execute(httpGet);
+        Header errorHeader = response.getFirstHeader(FailResponseAction.HEADER_ERROR_RESPONSE);
 	    if (errorHeader != null && !errorHeader.getValue().isEmpty()) {
 	        throw new BusinessException("A requisição interna falhou");
 	    }
-	    return getMethod.getResponseBody();
+	    return IOUtils.toByteArray(response.getEntity().getContent());
 	}
 
 	public String getContextPath() {

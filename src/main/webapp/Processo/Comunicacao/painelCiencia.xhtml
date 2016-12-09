@@ -18,6 +18,8 @@
 					errorMessage="#{infoxMessages['comunicacao.validator.dataCienciaIncorreta']}">
 					<a:ajax event="change" render="dataCienciaDecoration buttonDarCiencia"
 						execute="@this" limitRender="true" />
+					<a:ajax event="inputchange" render="dataCienciaDecoration buttonDarCiencia"
+						execute="@this" limitRender="true" />
 				</wi:inputDate>
 				
 				<wi:selectOneRadio id="tipoAnexoBoolean"

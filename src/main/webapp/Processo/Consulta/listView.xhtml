@@ -16,6 +16,9 @@
     template="/WEB-INF/xhtml/templates/core/menuTemplate.xhtml">
     <ui:define name="title">#{infoxMessages['processo.titlePage']}</ui:define>
     <ui:define name="body">
+        <c:if test="#{not empty flash.filtros}">
+            <c:set value="#{flash.filtros}" target="#{processoEpaList}" property="filtros" />
+        </c:if>
         <h:form>
             <wi:panel
                 id="processoEpaContentPanel"
@@ -27,7 +30,7 @@
                     id="processoEpaList"
                     rowId="#{row.idProcesso}"
                     hideOrder="true"
-                    showGrid="#{not empty processoEpaList.fluxo or not empty processoEpaList.entity.numeroProcesso}"
+                    showGrid="#{not empty processoEpaList.filtros.fluxo or not empty processoEpaList.filtros.numeroProcesso}"
                     inForm="true">
                     <ui:define name="searchForm">
                         <wi:searchForm
@@ -40,11 +43,12 @@
 										<h:outputText value="#{infoxMessages['processo.fluxo']}" />
 									</h:outputLabel>
 								</div>
-								<p:autoComplete id="fluxo" value="#{processoEpaList.fluxo}" scrollHeight="300"
+								<p:autoComplete id="fluxo" value="#{processoEpaList.filtros.fluxo}" scrollHeight="300"
 									completeMethod="#{consultaProcessoDynamicColumnsController.getFluxos}"
 									forceSelection="true" var="item" itemLabel="#{item.fluxo}" itemValue="#{item}"
 									converter="br.com.infox.jsf.converter.EntityConverter" minQueryLength="3" dropdown="true">
 									<p:ajax event="itemSelect" process="@this" update="processoEpaContentPanel"
+										listener="#{processoEpaList.onSelectFluxo()}"
 										onstart="infox.showLoading();" oncomplete="infox.hideLoading();" />
 								</p:autoComplete>
 							</p:outputPanel>
@@ -52,74 +56,79 @@
                             <wi:inputText
                                 id="numeroProcesso"
                                 label="#{infoxMessages['processoEpa.numeroProcesso']}"
-                                value="#{processoEpaList.entity.numeroProcesso}"
+                                value="#{processoEpaList.filtros.numeroProcesso}"
                                 minlength="1"/>
                             <div />
-							<i:autoComplete	id="natureza" value="#{processoEpaList.natureza}" scrollHeight="300"
+							<i:autoComplete	id="natureza" value="#{processoEpaList.filtros.natureza}" scrollHeight="300"
 								completeMethod="#{processoEpaList.getNaturezas}" forceSelection="true" label="#{infoxMessages['consultaProcesso.natureza']}"
 								var="item" itemLabel="#{item.natureza}" itemValue="#{item}" converter="br.com.infox.jsf.converter.EntityConverter"
-								rendered="#{not empty processoEpaList.fluxo}" minQueryLength="3" dropdown="true" />
+								rendered="#{not empty processoEpaList.filtros.fluxo}" minQueryLength="3" dropdown="true" />
                             <div />
-                            <i:autoComplete	id="categoria" value="#{processoEpaList.categoria}" scrollHeight="300"
+                            <i:autoComplete	id="categoria" value="#{processoEpaList.filtros.categoria}" scrollHeight="300"
 								completeMethod="#{processoEpaList.getCategorias}" forceSelection="true" label="#{infoxMessages['consultaProcesso.categoria']}"
 								var="item" itemLabel="#{item.categoria}" itemValue="#{item}" converter="br.com.infox.jsf.converter.EntityConverter"
-								rendered="#{not empty processoEpaList.fluxo}" minQueryLength="3" dropdown="true" />
+								rendered="#{not empty processoEpaList.filtros.fluxo}" minQueryLength="3" dropdown="true" />
                             <div />
-							<i:autoComplete	id="statusProcesso" value="#{processoEpaList.statusProcesso}" scrollHeight="300"
+							<i:autoComplete	id="statusProcesso" value="#{processoEpaList.filtros.statusProcesso}" scrollHeight="300"
 								completeMethod="#{processoEpaList.getStatusProcessos}" forceSelection="true" label="#{infoxMessages['processo.statusProcesso']}"
 								var="item" itemLabel="#{item.nome}" itemValue="#{item}" converter="br.com.infox.jsf.converter.EntityConverter"
-								rendered="#{not empty processoEpaList.fluxo}" minQueryLength="3" dropdown="true" />
+								rendered="#{not empty processoEpaList.filtros.fluxo}" minQueryLength="3" dropdown="true" />
                             <div />
-                            <i:autoComplete	id="relator" value="#{processoEpaList.relator}" scrollHeight="300"
+                            <i:autoComplete	id="relator" value="#{processoEpaList.filtros.relator}" scrollHeight="300"
 								completeMethod="#{processoEpaList.getRelatores}" forceSelection="true" label="#{infoxMessages['processo.relator']}"
 								var="item" itemLabel="#{item.nome}" itemValue="#{item}" converter="br.com.infox.jsf.converter.EntityConverter"
-								rendered="#{not empty processoEpaList.fluxo}" minQueryLength="3" dropdown="true" />
-                            <div />       
-                            <i:autoComplete	id="udm" value="#{processoEpaList.unidadeDecisoraMonocratica}" scrollHeight="300"
+								rendered="#{not empty processoEpaList.filtros.fluxo}" minQueryLength="3" dropdown="true" />
+                            <div />
+                            <i:autoComplete	id="udm" value="#{processoEpaList.filtros.unidadeDecisoraMonocratica}" scrollHeight="300"
 								completeMethod="#{processoEpaList.getUnidadesDecisorasMonocraticas}" forceSelection="true" 
 								label="#{infoxMessages['processo.unidadeDecisoraMonocratica']}"
 								var="item" itemLabel="#{item.nome}" itemValue="#{item}" converter="br.com.infox.jsf.converter.EntityConverter"
-								rendered="#{not empty processoEpaList.fluxo}" minQueryLength="3" dropdown="true" />
+								rendered="#{not empty processoEpaList.filtros.fluxo}" minQueryLength="3" dropdown="true" />
                             <div />
-                            <i:autoComplete	id="udc" value="#{processoEpaList.unidadeDecisoraColegiada}" scrollHeight="300"
+                            <i:autoComplete	id="udc" value="#{processoEpaList.filtros.unidadeDecisoraColegiada}" scrollHeight="300"
 								completeMethod="#{processoEpaList.getUnidadesDecisorasColegiadas}" forceSelection="true" 
 								label="#{infoxMessages['processo.unidadeDecisoraColegiada']}"
 								var="item" itemLabel="#{item.nome}" itemValue="#{item}" converter="br.com.infox.jsf.converter.EntityConverter"
-								rendered="#{not empty processoEpaList.fluxo}" minQueryLength="3" dropdown="true" />
+								rendered="#{not empty processoEpaList.filtros.fluxo}" minQueryLength="3" dropdown="true" />
                             <div /> 
-                            <i:autoComplete	id="usuarioCadastro" value="#{processoEpaList.entity.usuarioCadastro}" 
+                            <i:autoComplete	id="usuarioCadastro" value="#{processoEpaList.filtros.usuarioLogin}" 
                             	scrollHeight="300" completeMethod="#{processoEpaList.getUsuarios}" forceSelection="true" 
 								label="#{infoxMessages['processo.usuarioCadastroProcesso']}"
 								var="item" itemLabel="#{item.nomeUsuario}" itemValue="#{item}" converter="br.com.infox.jsf.converter.EntityConverter"
-								rendered="#{not empty processoEpaList.fluxo}" minQueryLength="3" dropdown="true" />
+								rendered="#{not empty processoEpaList.filtros.fluxo}" minQueryLength="3" dropdown="true" />
                             <div />
                             <wi:inputDataPeriodo
                             	label="#{infoxMessages['processo.dataInicio']}"
                                 id="periodoInicio"
-                                valueDateFrom="#{processoEpaList.dataInicio.from}"
-                                valueDateTo="#{processoEpaList.dataInicio.to}"
+                                valueDateFrom="#{processoEpaList.filtros.dataInicio.from}"
+                                valueDateTo="#{processoEpaList.filtros.dataInicio.to}"
                                 validatePastDateFrom="true"
                                 validatePastDateTo="true"
-                                rendered="#{not empty processoEpaList.fluxo}" />
+                                rendered="#{not empty processoEpaList.filtros.fluxo}" />
                             <div />
                             <wi:inputDataPeriodo
                             	label="#{infoxMessages['processo.dataFim']}"
                                 id="periodoFim"
-                                valueDateFrom="#{processoEpaList.dataFim.from}"
-                                valueDateTo="#{processoEpaList.dataFim.to}"
+                                valueDateFrom="#{processoEpaList.filtros.dataFim.from}"
+                                valueDateTo="#{processoEpaList.filtros.dataFim.to}"
                                 validatePastDateFrom="true"
                                 validatePastDateTo="true"
-                                rendered="#{not empty processoEpaList.fluxo}" />
+                                rendered="#{not empty processoEpaList.filtros.fluxo}" />
                              <div />
+                             <ui:include src="/Processo/Consulta/filtroExtraConsulta.xhtml" />
                         </wi:searchForm>
                     </ui:define>
                     <ui:define name="headerToolBar" />
                     <ui:define name="toolBar">
-                        <wi:toolBar
-                            url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}"
-                            title="#{infoxMessages['button.selecionar']}"
-                            action="#{processoSearcher.visualizarProcesso(row)}">
-                        </wi:toolBar>
+                          <h:commandLink
+	                    	id="visualizaProcessoLink"
+	                        action="/Processo/Consulta/list.seam">
+	                        <f:setPropertyActionListener value="#{row.idProcesso}" target="#{consultaController.id}" />
+	                        <f:setPropertyActionListener value="#{row.idJbpm}" target="#{org.jboss.seam.bpm.businessProcess.processId}" />
+	                        <f:setPropertyActionListener value="#{processoEpaList.filtros}" target="#{consultaController.filtros}" />
+	                        <h:graphicImage url="#{layoutController.getResourceUrlByPath('/imagens/view.png')}" title="#{infoxMessages['button.selecionar']}"/>
+	                        <f:ajax execute="@this" render="@this"/>
+	                    </h:commandLink>
                         <a:commandLink
                             id="setPrioridadeLink"
                             rendered="#{security.checkPage('/pages/Processo/Consulta/setPrioridadeProcesso')}"

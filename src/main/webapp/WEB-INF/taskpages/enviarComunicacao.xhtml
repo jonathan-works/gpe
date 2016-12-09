@@ -25,15 +25,15 @@
 				</wi:selectOneMenuEntity>
 				<a:commandButton id="visualizarComunicacao" 
 					render="@this" execute="@this"
+					action="#{jsfUtil.applyLastPhaseFlashAction}"
 					value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
 					styleClass="buttons"
 					rendered="#{envioComunicacaoController.podeVisualizarComunicacaoNaoFinalizada()}" 
 					oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');" >
 					<f:setPropertyActionListener value="#{envioComunicacaoController.modeloComunicacao.id}" target="#{flash.idModelo}" />
-					<infox:flashcopy/>
 				</a:commandButton>
 				<a:commandButton id="reabrirComunicacao" 
-					render="comunicacaoDiv" execute="@this"
+					render="comunicacaoDiv buttonsTaskPageComunicacaoForm" execute="@this"
 					value="#{infoxMessages['comunicacao.reabrir']}" 
 					styleClass="buttons"
 					rendered="#{envioComunicacaoController.modeloComunicacao.finalizada and not envioComunicacaoController.expedida}"
@@ -51,10 +51,9 @@
 					<a:commandButton id="visualizarComunicacao" 
 							render="@this" execute="@this"
 							value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
-							styleClass="buttons"
+							styleClass="buttons" action="#{jsfUtil.applyLastPhaseFlashAction}"
 							oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');" >
 						<f:setPropertyActionListener value="#{envioComunicacaoController.modeloComunicacao.id}" target="#{flash.idModelo}" />
-						<infox:flashcopy/>
 					</a:commandButton>
           		</s:div>
 			</h:form>
@@ -65,11 +64,11 @@
 					and not empty envioComunicacaoController.destinatario and not envioComunicacaoController.destinatario.expedido}">
 					
 					<a:commandButton id="visualizarComunicacao" 
+								action="#{jsfUtil.applyLastPhaseFlashAction}"
 								value="#{infoxMessages['comunicacao.visualizarComunicacao']}" 
 								styleClass="buttons" render="@this" execute="@this"
 								oncomplete="infox.openPopUp('download', '#{pathResolver.contextPath}/Processo/baixarComunicacao.seam','1024');" >
 						<f:setPropertyActionListener value="#{envioComunicacaoController.destinatario.id}" target="#{flash.idDestinatario}" />
-						<infox:flashcopy/>
 					</a:commandButton>
 					<a:commandButton id="btnExpedirComunicacaoAssinada" execute="@this" styleClass="buttons"
 						value="${infoxMessages['comunicacao.expedirComunicacao']}"
@@ -94,14 +93,11 @@
           		</s:div>
 			</h:form>
 
-			<!-- Painel dos Documentos Anexos -->
-			<ui:include src="/WEB-INF/taskpages/comunicacao/anexosComunicacao.xhtml"></ui:include>
-			
 			<!-- Ofício da Comunicação -->
 			<h:form id="documentoComunicacaoForm">
-				<s:div style="vertical-align: top;" rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
+				<s:div style="vertical-align: top; margin-top: 1em;" rendered="#{not envioComunicacaoController.modeloComunicacao.finalizada}">
 				<rich:collapsiblePanel id="editorDocumentoComunicacaoPanel" header="#{infoxMessages['comunicacao.panelEditorComunicacaoTitulo']}" 
-					expanded="false" bodyClass="dtable-p-b" styleClass="dtable-p full-sized">
+					bodyClass="dtable-p-b" styleClass="dtable-p full-sized">
 					<s:div>
 	    				<wi:selectOneMenuEntity id="classificacaoComunicacao"
 	    					label="#{infoxMessages['processoDocumento.classificacaoDocumento']}"
@@ -167,6 +163,9 @@
 				</rich:collapsiblePanel>
 				</s:div>
 				
+				<!-- Painel dos Documentos Anexos -->
+				<ui:include src="/WEB-INF/taskpages/comunicacao/anexosComunicacao.xhtml"></ui:include>
+			
 				<rich:panel id="panelFinalizacaoDaElaboracaoComunicacao" style="margin-top: 1em; margin-bottom: 1em;">
 					<!-- Finalização e Responsáveis pela Expedição da Comunicação -->
 					<s:div id="responsaveisAssinatura">
@@ -229,6 +228,10 @@
 						oncomplete="if (opener &amp;&amp; opener['reloadAll']) opener['reloadAll']();"/>
 				</s:div>
 			</h:form>
+			
+			<!-- Popup dos Documentos Anexos -->
+			<ui:include src="/WEB-INF/taskpages/comunicacao/anexosComunicacaoPopup.xhtml"></ui:include>
+			
 		</s:div>
 	</s:div>
    <h:form id="buttonsTaskPageComunicacaoForm">

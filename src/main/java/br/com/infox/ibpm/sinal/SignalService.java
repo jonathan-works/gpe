@@ -106,6 +106,7 @@ public class SignalService {
         while (processo != null) {
             List<SignalNodeBean> signalNodes = getTasksListening(processo.getIdJbpm(), eventType);
             for (SignalNodeBean signalNodeBean : signalNodes) {
+                ExecutionContext.currentExecutionContext().setTaskInstance(ManagedJbpmContext.instance().getTaskInstanceForUpdate(signalNodeBean.getId()));
                 if (signalNodeBean.canExecute()) {
                     processoManager.movimentarProcessoJBPM(signalNodeBean.getId(), signalNodeBean.getListenerConfiguration().getTransitionKey());
                 }

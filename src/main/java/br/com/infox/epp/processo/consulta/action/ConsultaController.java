@@ -31,6 +31,7 @@ import br.com.infox.epp.processo.documento.list.PastaList;
 import br.com.infox.epp.processo.documento.manager.PastaRestricaoAction;
 import br.com.infox.epp.processo.documento.sigilo.manager.SigiloDocumentoPermissaoManager;
 import br.com.infox.epp.processo.entity.Processo;
+import br.com.infox.epp.processo.list.FiltrosBeanList;
 import br.com.infox.epp.processo.manager.ProcessoManager;
 import br.com.infox.epp.processo.metadado.manager.MetadadoProcessoManager;
 import br.com.infox.epp.processo.sigilo.service.SigiloProcessoService;
@@ -70,6 +71,8 @@ public class ConsultaController extends AbstractController {
     private VariavelProcessoService variavelProcessoService;
     @Inject
     private PapelManager papelManager;
+    
+    private FiltrosBeanList filtros;
     
     private Processo processo;
     private boolean showAllDocuments = false;
@@ -221,6 +224,9 @@ public class ConsultaController extends AbstractController {
 				Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
 				flash.put("idFluxo", processo.getNaturezaCategoriaFluxo().getFluxo().getIdFluxo());
 				flash.put("recurso", DefinicaoVariavelProcessoRecursos.CONSULTA_PROCESSOS);
+				
+				flash.put("filtros", getFiltros());
+				
 				Redirect.instance().setConversationPropagationEnabled(false);
 				Redirect.instance().getParameters().clear();
 			} else {
@@ -231,5 +237,13 @@ public class ConsultaController extends AbstractController {
 		} catch (MalformedURLException e) {
 			FacesMessages.instance().add("URL de retorno mal-formada: " + FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("url"));
 		}
+	}
+
+	public FiltrosBeanList getFiltros() {
+		return filtros;
+	}
+
+	public void setFiltros(FiltrosBeanList filtros) {
+		this.filtros = filtros;
 	}
 }

@@ -9,10 +9,6 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
 
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.auth.AccessToken;
-import twitter4j.auth.RequestToken;
 import br.com.infox.core.crud.AbstractCrudAction;
 import br.com.infox.core.messages.InfoxMessages;
 import br.com.infox.core.persistence.DAOException;
@@ -28,6 +24,10 @@ import br.com.infox.epp.twitter.type.TipoTwitterEnum;
 import br.com.infox.epp.twitter.util.TwitterUtil;
 import br.com.infox.log.LogProvider;
 import br.com.infox.log.Logging;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.auth.AccessToken;
+import twitter4j.auth.RequestToken;
 
 @Name(ContaTwitterCrudAction.NAME)
 @Scope(ScopeType.CONVERSATION)

@@ -6,6 +6,7 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -25,7 +26,11 @@ public class TipoParteSearch {
 		Root<TipoParte> tipoParte = cq.from(TipoParte.class);
 		Predicate identificadorIgual = cb.equal(tipoParte.get(TipoParte_.identificador), identificador);
 		cq.select(tipoParte).where(identificadorIgual);
-		return getEntityManager().createQuery(cq).getSingleResult();
+        try {
+            return getEntityManager().createQuery(cq).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
 	}
 	
 	public List<TipoParte> findAll() {

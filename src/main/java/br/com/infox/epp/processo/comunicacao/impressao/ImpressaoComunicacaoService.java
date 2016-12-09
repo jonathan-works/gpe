@@ -14,9 +14,9 @@ import br.com.infox.core.persistence.DAOException;
 import br.com.infox.epp.cdi.seam.ContextDependency;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
-import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
+import br.com.infox.epp.processo.comunicacao.meioexpedicao.MeioExpedicao;
 import br.com.infox.epp.processo.comunicacao.service.ComunicacaoService;
 import br.com.infox.epp.processo.comunicacao.tipo.crud.TipoComunicacao;
 import br.com.infox.epp.processo.documento.anexos.DocumentoDownloader;
@@ -41,7 +41,6 @@ public class ImpressaoComunicacaoService implements Serializable {
 	private MetadadoProcessoManager metadadoProcessoManager;
 	@Inject
 	private DocumentoDownloader documentoDownloader;
-	
 	@Inject
 	private ModeloComunicacaoManager modeloComunicacaoManager;
 	

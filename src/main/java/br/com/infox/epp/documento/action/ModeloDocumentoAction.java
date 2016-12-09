@@ -8,7 +8,6 @@ import org.jbpm.graph.exe.ExecutionContext;
 
 import br.com.infox.epp.documento.entity.ModeloDocumento;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
-import br.com.infox.ibpm.util.JbpmUtil;
 import br.com.infox.jbpm.action.ActionTemplate;
 
 @Name(ModeloDocumentoAction.NAME)
@@ -61,7 +60,6 @@ public class ModeloDocumentoAction extends ActionTemplate {
     }
 
     public void set(String variavel, int... idModeloDocumento) {
-    	ExecutionContext currentExecutionContext = ExecutionContext.currentExecutionContext();
         String variavelModelo = variavel + "Modelo";
         StringBuilder s = new StringBuilder();
         for (int i : idModeloDocumento) {
@@ -70,12 +68,12 @@ public class ModeloDocumentoAction extends ActionTemplate {
             }
             s.append(i);
         }
-        Object valor = currentExecutionContext.getContextInstance().getVariable(variavelModelo);
+        ExecutionContext executionContext = ExecutionContext.currentExecutionContext();
+        Object valor = executionContext.getVariable(variavelModelo);
         if (valor == null) {
-        	currentExecutionContext.getContextInstance().setVariable(variavelModelo, s.toString());
+            executionContext.getContextInstance().createVariable(variavelModelo, s.toString());
         } else {
-        	currentExecutionContext.getContextInstance().setVariable(variavelModelo, valor + ","
-                    + s.toString());
+            executionContext.getContextInstance().setVariable(variavelModelo, valor + "," + s.toString());
         }
     }
 

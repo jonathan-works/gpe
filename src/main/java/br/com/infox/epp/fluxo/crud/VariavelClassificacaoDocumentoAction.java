@@ -9,8 +9,6 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.Transactional;
 
-import br.com.infox.log.Log;
-import br.com.infox.log.Logging;
 import br.com.infox.core.action.ActionMessagesService;
 import br.com.infox.core.list.Pageable;
 import br.com.infox.core.persistence.DAOException;
@@ -21,6 +19,8 @@ import br.com.infox.epp.fluxo.entity.VariavelClassificacaoDocumento;
 import br.com.infox.epp.fluxo.manager.VariavelClassificacaoDocumentoManager;
 import br.com.infox.ibpm.process.definition.ProcessBuilder;
 import br.com.infox.ibpm.process.definition.variable.VariableType;
+import br.com.infox.log.Log;
+import br.com.infox.log.Logging;
 
 @Name(VariavelClassificacaoDocumentoAction.NAME)
 @Scope(ScopeType.PAGE)

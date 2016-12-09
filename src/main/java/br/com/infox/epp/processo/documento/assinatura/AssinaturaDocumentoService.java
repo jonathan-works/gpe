@@ -14,7 +14,6 @@ import javax.inject.Inject;
 import org.apache.commons.codec.binary.Base64;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
@@ -34,6 +33,7 @@ import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumentoPapel;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoPapelManager;
 import br.com.infox.epp.documento.type.TipoAssinaturaEnum;
+import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.documento.dao.AssinaturaDocumentoDAO;
 import br.com.infox.epp.processo.documento.entity.Documento;
 import br.com.infox.epp.processo.documento.entity.DocumentoBin;
@@ -58,13 +58,13 @@ public class AssinaturaDocumentoService {
     @Inject
     private DocumentoBinarioManager documentoBinarioManager;
     @Inject
-    private DocumentoBinManager documentoBinManager;
+    protected DocumentoBinManager documentoBinManager;
     @Inject
     private ClassificacaoDocumentoPapelManager classificacaoDocumentoPapelManager;
-    @In
+    @Inject
     private AssinaturaDocumentoListenerService assinaturaDocumentoListenerService;
     @Inject
-    private AssinaturaDocumentoDAO assinaturaDocumentoDAO;
+    protected AssinaturaDocumentoDAO assinaturaDocumentoDAO;
     @Inject
     private ValidadorAssinatura validadorAssinatura;
     @Inject
@@ -80,7 +80,7 @@ public class AssinaturaDocumentoService {
         boolean result = false;
         try {
             verificaCertificadoUsuarioLogado(assinatura.getCertChain(),
-                    assinatura.getUsuario());
+                    assinatura.getPessoaFisica());
             result = true;
         } catch (CertificadoException | AssinaturaException e) {
             LOG.error(e.getMessage(), e);
@@ -183,11 +183,23 @@ public class AssinaturaDocumentoService {
         for (AssinaturaDocumento assinaturaDocumento : documento.getDocumentoBin().getAssinaturas()) {
             Papel papel = usuarioLocalizacao.getPerfilTemplate().getPapel();
             UsuarioLogin usuario = usuarioLocalizacao.getUsuarioLogin();
-            if (result = (assinaturaDocumento.getUsuarioPerfil().getPerfilTemplate().getPapel().equals(papel) && assinaturaDocumento.getUsuario().equals(usuario))) {
+            if (result = (assinaturaDocumento.getPapel().equals(papel) && assinaturaDocumento.getPessoaFisica().equals(usuario.getPessoaFisica()))) {
                 break;
             }
         }
         return result;
+    }
+    
+    public boolean isDocumentoAssinado(Integer idDocumentoBin, PessoaFisica pessoaFisica) {
+        DocumentoBin bin = documentoBinManager.find(idDocumentoBin);
+        if (bin != null && bin.getAssinaturas() != null) {
+            for (AssinaturaDocumento assinatura : bin.getAssinaturas()) {
+                if (assinatura.getPessoaFisica() != null && assinatura.getPessoaFisica().equals(pessoaFisica)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public boolean isDocumentoAssinado(Documento documento, UsuarioLogin usuarioLogin) {
@@ -200,7 +212,7 @@ public class AssinaturaDocumentoService {
     	}
     	boolean result = false;
         for (AssinaturaDocumento assinaturaDocumento : documentoBin.getAssinaturas()) {
-            if (assinaturaDocumento.getUsuario().equals(usuarioLogin)) {
+            if (assinaturaDocumento.getPessoaFisica().equals(usuarioLogin.getPessoaFisica())) {
                 result = isSignatureValid(assinaturaDocumento);
                 break;
             }
@@ -212,7 +224,7 @@ public class AssinaturaDocumentoService {
         boolean result = false;
         List<AssinaturaDocumento> assinaturas = assinaturaDocumentoDAO.listAssinaturaByDocumentoBin(documentoBin);
         for (AssinaturaDocumento assinaturaDocumento : assinaturas) {
-            if (assinaturaDocumento.getUsuarioPerfil().getPerfilTemplate().getPapel().equals(papel)) {
+            if (assinaturaDocumento.getPapel().equals(papel)) {
                 result = isSignatureValid(assinaturaDocumento);
                 break;
             }
@@ -220,14 +232,13 @@ public class AssinaturaDocumentoService {
         return result;
     }
 
-    public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded,
-            UsuarioLogin usuarioLogado) throws CertificadoException, AssinaturaException {
-    	validadorUsuarioCertificado.verificaCertificadoUsuarioLogado(certChainBase64Encoded, usuarioLogado);
+    public void verificaCertificadoUsuarioLogado(String certChainBase64Encoded, PessoaFisica pessoaFisica) throws CertificadoException, AssinaturaException {
+    	validadorUsuarioCertificado.verificaCertificadoUsuarioLogado(certChainBase64Encoded, pessoaFisica);
     }
     
     
-    public void validarCertificado(String certChain, UsuarioLogin usuario) throws CertificadoException, AssinaturaException {
-		verificaCertificadoUsuarioLogado(certChain, usuario);
+    public void validarCertificado(String certChain, PessoaFisica pessoaFisica) throws CertificadoException, AssinaturaException {
+		verificaCertificadoUsuarioLogado(certChain, pessoaFisica);
 		checkValidadeCertificado(certChain);    	
     }
     
@@ -238,7 +249,7 @@ public class AssinaturaDocumentoService {
 	public void assinarDocumento(DocumentoBin documentoBin, UsuarioPerfil usuarioPerfilAtual, final String certChain,
 			String signature, TipoAssinatura tipoAssinatura, byte[] signedData, TipoSignedData tipoSignedData) throws CertificadoException, AssinaturaException, DAOException {
 		UsuarioLogin usuario = usuarioPerfilAtual.getUsuarioLogin();
-		validadorAssinatura.validarAssinatura(signedData, tipoSignedData, Base64.decodeBase64(signature), usuario);
+		validadorAssinatura.validarAssinatura(signedData, tipoSignedData, Base64.decodeBase64(signature), usuario.getPessoaFisica());
 
 		AssinaturaDocumento assinaturaDocumento = new AssinaturaDocumento(documentoBin, usuarioPerfilAtual, certChain, signature, tipoAssinatura);
 		List<Documento> documentosNaoSuficientementeAssinados = documentoBinManager.getDocumentosNaoSuficientementeAssinados(documentoBin);
@@ -249,7 +260,7 @@ public class AssinaturaDocumentoService {
 			documentoBin.setMinuta(Boolean.FALSE);
 		}
 		if (isDocumentoTotalmenteAssinado(documentoBin)){
-			documentoBinManager.setDocumentoSuficientementeAssinado(documentoBin, usuarioPerfilAtual);
+			documentoBinManager.setDocumentoSuficientementeAssinado(documentoBin);
 		}
 		documentoBinManager.update(documentoBin);
 		try {
@@ -311,8 +322,8 @@ public class AssinaturaDocumentoService {
     public boolean isDocumentoAssinado(DocumentoBin documentoBin, Papel papel, UsuarioLogin usuario) {
         boolean result = false;
         for (AssinaturaDocumento assinaturaDocumento : documentoBin.getAssinaturas()) {
-            if (assinaturaDocumento.getUsuarioPerfil().getPerfilTemplate().getPapel().equals(papel) && 
-            		assinaturaDocumento.getUsuarioPerfil().getUsuarioLogin().equals(usuario)) {
+            if (assinaturaDocumento.getPapel().equals(papel) && 
+            		assinaturaDocumento.getPessoaFisica().equals(usuario.getPessoaFisica())) {
                 result = isSignatureValid(assinaturaDocumento);
                 break;
             }
@@ -350,7 +361,7 @@ public class AssinaturaDocumentoService {
     	return true;
     }
     
-    private void checkValidadeCertificado(String certChain) throws CertificadoException {
+    protected void checkValidadeCertificado(String certChain) throws CertificadoException {
         try {
             CertificateManager.instance().verificaCertificado(certChain);
         } catch (CertificateExpiredException e) {

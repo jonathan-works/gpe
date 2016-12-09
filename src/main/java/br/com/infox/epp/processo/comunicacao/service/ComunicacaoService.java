@@ -39,7 +39,6 @@ import br.com.infox.epp.pessoa.entity.PessoaFisica;
 import br.com.infox.epp.processo.comunicacao.ComunicacaoMetadadoProvider;
 import br.com.infox.epp.processo.comunicacao.DestinatarioModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.DocumentoModeloComunicacao;
-import br.com.infox.epp.processo.comunicacao.MeioExpedicao;
 import br.com.infox.epp.processo.comunicacao.ModeloComunicacao;
 import br.com.infox.epp.processo.comunicacao.manager.ModeloComunicacaoManager;
 import br.com.infox.epp.processo.documento.entity.Documento;
@@ -219,10 +218,10 @@ public class ComunicacaoService {
 			for (DocumentoModeloComunicacao documentoModelo : modeloComunicacao.getDocumentos()) {
 				if (documentoModelo.getDocumento().getId() != documentoComunicacaoId){
 					DocumentoBin documentoBin = documentoModelo.getDocumento().getDocumentoBin();
-					if ("pdf".equals(documentoBin.getExtensao())) {
+					if ("pdf".equals(documentoBin.getExtensao()) && documentoBinarioManager.existeBinario(documentoBin.getId())) {
 						byte[] documento = documentoBinarioManager.getData(documentoBin.getId());
 						copy = pdfManager.copyPdf(copy, documento);
-					} else if (documentoBin.getExtensao() == null) {
+					} else if (!documentoBin.isBinario()) {
 						ByteArrayOutputStream bos = new ByteArrayOutputStream();
 						pdfManager.convertHtmlToPdf(documentoBin.getModeloDocumento(), bos);
 						copy = pdfManager.copyPdf(copy, bos.toByteArray());
@@ -326,7 +325,7 @@ public class ComunicacaoService {
 
 		criarMetadadoDestinatario(destinatario, metadadoProcessoProvider);
 		
-		metadados.add(metadadoProcessoProvider.gerarMetadado(ComunicacaoMetadadoProvider.MEIO_EXPEDICAO, destinatario.getMeioExpedicao().name()));
+		metadados.add(metadadoProcessoProvider.gerarMetadado(ComunicacaoMetadadoProvider.MEIO_EXPEDICAO, destinatario.getMeioExpedicao().getId().toString()));
 		metadados.add(metadadoProcessoProvider.gerarMetadado(ComunicacaoMetadadoProvider.DESTINATARIO, destinatario.getId().toString()));
 		metadados.add(metadadoProcessoProvider.gerarMetadado(ComunicacaoMetadadoProvider.MODELO_COMUNICACAO, 
 		        destinatario.getModeloComunicacao().getId().toString()));
@@ -337,7 +336,7 @@ public class ComunicacaoService {
 			
 		}
 		
-		if (destinatario.getMeioExpedicao() == MeioExpedicao.SI) {
+		if (destinatario.getMeioExpedicao().getEletronico()) {
 			metadados.add(metadadoProcessoProvider.gerarMetadado(
 					EppMetadadoProvider.TIPO_PROCESSO, TipoProcesso.COMUNICACAO.toString()));
 		} else {
@@ -367,8 +366,8 @@ public class ComunicacaoService {
 	
 	private Map<String, Object> createVariaveisJbpm(DestinatarioModeloComunicacao destinatario) {
 		Map<String, Object> variaveis = new HashMap<>();
-		variaveis.put(VariaveisJbpmComunicacao.MEIO_EXPEDICAO, destinatario.getMeioExpedicao().getLabel());
-		variaveis.put(VariaveisJbpmComunicacao.CODIGO_MEIO_EXPEDICAO, destinatario.getMeioExpedicao().name());
+		variaveis.put(VariaveisJbpmComunicacao.MEIO_EXPEDICAO, destinatario.getMeioExpedicao().getDescricao());
+		variaveis.put(VariaveisJbpmComunicacao.CODIGO_MEIO_EXPEDICAO, destinatario.getMeioExpedicao().getCodigo());
 		variaveis.put(VariaveisJbpmComunicacao.NOME_DESTINATARIO, destinatario.getNome());
 		if(destinatario.getTipoParte() != null) {
 			variaveis.put(VariaveisJbpmComunicacao.TIPO_PARTICIPANTE_COMUNICACAO, HibernateUtil.removeProxy(destinatario.getTipoParte()));
@@ -384,7 +383,7 @@ public class ComunicacaoService {
 	
 	private NaturezaCategoriaFluxo getNaturezaCategoriaFluxo(DestinatarioModeloComunicacao destinatario) throws DAOException {
 		Fluxo fluxo;
-		if (destinatario.getMeioExpedicao() == MeioExpedicao.SI) {
+		if (destinatario.getMeioExpedicao().getEletronico()) {
 			fluxo = fluxoManager.getFluxoByCodigo(codigoFluxoComunicacao);
 		} else {
 			fluxo = fluxoManager.getFluxoByCodigo(codigoFluxoComunicacaoNaoEletronico);

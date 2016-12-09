@@ -18,6 +18,7 @@ import br.com.infox.core.persistence.PersistenceController;
 import br.com.infox.epp.access.api.Authenticator;
 import br.com.infox.epp.access.entity.Localizacao;
 import br.com.infox.epp.access.entity.Papel;
+import br.com.infox.epp.access.entity.UsuarioPerfil;
 import br.com.infox.epp.access.manager.PermissaoService;
 import br.com.infox.epp.documento.entity.ClassificacaoDocumento;
 import br.com.infox.epp.documento.manager.ClassificacaoDocumentoManager;
@@ -86,6 +87,10 @@ public class DocumentoTemporarioManager extends PersistenceController {
         return documentoTemporarioDao.listByProcesso(processo, localizacao, order);
     }
 
+    public List<DocumentoTemporario> listByProcesso(Processo processo, UsuarioPerfil usuarioPerfil, String order) {
+        return documentoTemporarioDao.listByProcesso(processo, usuarioPerfil, order);
+    }
+
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void removeAllSomenteTemporario(List<DocumentoTemporario> documentoTemporarioList) throws DAOException {
 		documentoTemporarioDao.removeAllSomenteTemporario(documentoTemporarioList);
@@ -129,7 +134,7 @@ public class DocumentoTemporarioManager extends PersistenceController {
         documento.setAnexo(dt.getAnexo());
         documento.setIdJbpmTask(dt.getIdJbpmTask());
         documento.setPerfilTemplate(dt.getPerfilTemplate());
-        documento.setDataInclusao(dt.getDataInclusao());
+        documento.setDataInclusao(new Date());
         documento.setUsuarioInclusao(dt.getUsuarioInclusao());
         documento.setDataAlteracao(dt.getDataAlteracao());
         documento.setUsuarioAlteracao(dt.getUsuarioAlteracao());

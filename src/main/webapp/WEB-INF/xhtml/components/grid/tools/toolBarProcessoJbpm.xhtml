@@ -11,6 +11,7 @@
     <ui:param name="idProcesso" value="#{row.idProcesso}" />
     <ui:param name="idTaskInstance" value="#{row.idTaskInstance}" />
     <ui:param name="owner" value="#{row.assignee}" />
+    <ui:param name="inTabExpedidas" value="#{painelUsuarioController.selectedFluxo.expedida}" />
     <ui:param name="showMovimentarToolBar" value="#{wi:get(showMovimentarToolBar, true)}" />
 
     <div style="display: inline-block;">
@@ -23,7 +24,7 @@
     </div>
 
     <a:commandLink execute="@this" target="#{idProcesso}popUpFluxo"
-      onclick="open('#{pathResolver.contextPath}/Processo/visualizarProcesso.seam?idProcesso=#{idProcesso}&amp;idTaskInstance=#{idTaskInstance}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');"
+      onclick="open('#{pathResolver.contextPath}/Processo/visualizarProcesso.seam?idProcesso=#{idProcesso}&amp;idTaskInstance=#{idTaskInstance}&amp;inTabExpedidas=#{inTabExpedidas}', '#{idProcesso}popUpFluxo', 'fullscreen=1, resizable=yes,scrollbars=1');"
       title="#{infoxMessages['painel.visualizar.tooltip']}"
       >
       <f:param name="idProcesso" value="#{idProcesso}" />

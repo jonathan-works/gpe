@@ -1,6 +1,7 @@
 package br.com.infox.core.messages;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -10,7 +11,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
+import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
+import java.util.ResourceBundle.Control;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -18,8 +21,8 @@ import javax.faces.context.FacesContext;
 
 @Stateless
 public class InfoxMessagesLoader {
-
-    private static final String[] RESOURCE_MESSAGES = {"entity_messages", "messages", "standard_messages", "process_definition_messages", "ValidationMessages", "extended_messages"}; 
+    
+    private static final String[] RESOURCE_MESSAGES = {"entity_messages", "messages", "standard_messages", "process_definition_messages", "ValidationMessages"}; 
     
 	@EJB
 	private InfoxMessages infoxMessages;
@@ -28,16 +31,17 @@ public class InfoxMessagesLoader {
 	    List<String> resourceMessages = new ArrayList<>(Arrays.asList(RESOURCE_MESSAGES));
 	    appendCustomizesMessages(resourceMessages);
 		Iterator<Locale> supportedLocales = getSupportedLocales();
-		
 		while (supportedLocales.hasNext()) {
 			Locale locale = supportedLocales.next();
-			List<ResourceBundle> resourceBundles = new ArrayList<>(resourceMessages.size());
+			List<ResourceBundle> resourceBundles = new ArrayList<>();
 			for (String resourceMessage : resourceMessages) {
-			    ResourceBundle resourceBundle = getResourceBundle(resourceMessage, locale);
-			    if (resourceBundle != null) {
-			        resourceBundles.add(resourceBundle);
-			    }
+		        ResourceBundle resourceBundle = getResourceBundle(resourceMessage, locale);
+                if (resourceBundle != null) {
+                    resourceBundles.add(resourceBundle);
+                }
 			}
+			
+			loadExtendedMessages(resourceBundles, locale);
 
 			Map<String, String> mensagens = generateMessages(resourceBundles);
 			
@@ -45,6 +49,19 @@ public class InfoxMessagesLoader {
 		}
 	}
 	
+    private void loadExtendedMessages(List<ResourceBundle> resourceBundles, Locale locale) throws IOException {
+        Control control = ResourceBundle.Control.getControl(ResourceBundle.Control.FORMAT_PROPERTIES);
+        int position = RESOURCE_MESSAGES.length;
+        String resourceName = control.toBundleName("extended_messages", locale) + ".properties";
+        Enumeration<URL> extendedMessagesResources = getClass().getClassLoader().getResources(resourceName);
+        while (extendedMessagesResources.hasMoreElements()) {
+            URL extendedMessagesResource = extendedMessagesResources.nextElement();
+            ResourceBundle resourceBundle = new PropertyResourceBundle(extendedMessagesResource.openStream());
+            resourceBundles.add(position, resourceBundle);
+            position++;
+        }
+    }
+
     protected void appendCustomizesMessages(List<String> resourceMessages) {
         // for customized messages
     }

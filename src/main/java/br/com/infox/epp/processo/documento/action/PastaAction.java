@@ -88,6 +88,7 @@ public class PastaAction implements Serializable {
                 documentoManager.update(doc);
                 pastaManager.refresh(pasta);
                 pastaManager.refresh(pastaAnterior);
+                documentoList.refresh();
             } catch (DAOException e) {
                 actionMessagesService.handleDAOException(e);
             }

@@ -21,7 +21,7 @@
     <composite:attribute name="var" default="item"/>
     <composite:attribute name="itemLabel" type="java.lang.String" default="#{item}"/>
     <composite:attribute name="itemValue" type="java.lang.Object" default="#{item}" />
-    <composite:attribute name="maxResults" default="100"/>
+    <composite:attribute name="maxResults" default="2147483647"/>
     <composite:attribute name="minQueryLength" default="0" type="java.lang.Integer" />
     <composite:attribute name="queryDelay" default="300" />
     <composite:attribute name="forceSelection" default="false" />
@@ -48,11 +48,14 @@
     <composite:attribute name="onstart" />
     <composite:attribute name="oncomplete"/>
 
+    <composite:clientBehavior name="itemSelect" targets="#{cc.attrs.id}Input" event="itemSelect" />
+
     <composite:facet name="label" />
     <composite:facet name="itemtip" />
 </composite:interface>
 
 <composite:implementation>
+	<h:outputScript name="primeAutoComplete.js" library="js" />
     <p:outputPanel id="#{cc.attrs.id}" styleClass="decoration-div inputText-div">
         <div class="property-field-edit">
             <div class="property-field-edit-name">
@@ -75,7 +78,7 @@
                     required="#{cc.attrs.required}" onchange="#{cc.attrs.onchange}" onkeypress="#{cc.attrs.onkeypress}"
                     onkeyup="#{cc.attrs.onkeyup}" placeholder="#{cc.attrs.placeholder}"
                     var="#{cc.attrs.var}" itemLabel="#{cc.attrs.itemLabel}" itemValue="#{cc.attrs.itemValue}"
-                    completeMethod="#{cc.attrs.completeMethod}" inputStyle="#{cc.attrs.inputStyle}" inputStyleClass="#{cc.attrs.inputStyleClass}"
+                    completeMethod="#{cc.attrs.completeMethod}" inputStyle="color: #333333; #{cc.attrs.inputStyle}" inputStyleClass="#{cc.attrs.inputStyleClass}"
                     maxResults="#{cc.attrs.maxResults}" minQueryLength="#{cc.attrs.minQueryLength}" 
                     queryDelay="#{cc.attrs.queryDelay}" emptyMessage="#{cc.attrs.emptyMessage}"
                     forceSelection="#{cc.attrs.forceSelection}" dropdown="#{cc.attrs.dropdown}"

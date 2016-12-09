@@ -7,6 +7,7 @@ import javax.persistence.spi.PersistenceProvider;
 import javax.persistence.spi.PersistenceUnitInfo;
 import javax.persistence.spi.ProviderUtil;
 
+import br.com.infox.core.persistence.NativeScanner;
 import br.com.infox.core.persistence.PersistenceUnitInfoWrapper;
 import br.com.infox.epp.system.Configuration;
 
@@ -21,8 +22,9 @@ public class HibernatePersistenceImpl implements PersistenceProvider {
     }
 
     @Override
-    @SuppressWarnings({ "rawtypes" })
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public EntityManagerFactory createContainerEntityManagerFactory(PersistenceUnitInfo info, Map properties) {
+        properties.put(AvailableSettings.SCANNER, new NativeScanner(info.getPersistenceUnitName()));
         PersistenceUnitInfoWrapper persistenceUnitInfo = new PersistenceUnitInfoWrapper(info, configuration);
         EntityManagerFactory entityManagerFactory = delegate.createContainerEntityManagerFactory(persistenceUnitInfo, properties);
         return entityManagerFactory;

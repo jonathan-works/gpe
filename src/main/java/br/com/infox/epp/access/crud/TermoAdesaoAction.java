@@ -50,6 +50,8 @@ import br.com.infox.seam.exception.RedirectToLoginApplicationException;
 public class TermoAdesaoAction implements Serializable {
 	
     private static final String TERMS_CONDITIONS_SIGN_SUCCESS = "termoAdesao.sign.success";
+    private static final String TERMO_ADESAO_CERT_CHAIN_ERROR = "termoAdesao.error.certchain";
+    private static final String TERMO_ADESAO_SIGNATURE_ERROR = "termoAdesao.error.signaturechain";
     private static final String METHOD_ASSINAR_TERMO_ADESAO = "termoAdesaoAction.assinarTermoAdesao()";
     private static final String PARAMETRO_TERMO_ADESAO = "termoAdesao";
     private static final long serialVersionUID = 1L;
@@ -90,6 +92,12 @@ public class TermoAdesaoAction implements Serializable {
         	DadosAssinatura dadosAssinatura = dadosAssinaturaList.get(0);
         	String certChain = dadosAssinatura.getCertChainBase64();
         	String signature = dadosAssinatura.getAssinaturaBase64();
+        	if(certChain == null){
+        		throw new CertificadoException(infoxMessages.get(TERMO_ADESAO_CERT_CHAIN_ERROR));
+        	}
+        	if(signature == null){
+        		throw new CertificadoException(infoxMessages.get(TERMO_ADESAO_SIGNATURE_ERROR));
+        	}
         	UsuarioLogin usuarioLogin = Authenticator.getUsuarioLogado();
         	if(usuarioLogin == null){
         		usuarioLogin = authenticatorService.getUsuarioLoginFromCertChain(certChain);

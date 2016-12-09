@@ -73,7 +73,7 @@ public class CertificateAuthenticator implements Serializable {
             String certChain = dadosAssinatura.getCertChainBase64();
             UsuarioLogin usuarioLogin = authenticatorService.getUsuarioLoginFromCertChain(certChain);
             
-            assinadorService.validarAssinaturas(dadosAssinaturaList, usuarioLogin);
+            assinadorService.validarAssinaturas(dadosAssinaturaList, usuarioLogin.getPessoaFisica());
             authenticatorService.signatureAuthentication(usuarioLogin, null, certChain, false);
             Events events = Events.instance();
             events.raiseEvent(Identity.EVENT_LOGIN_SUCCESSFUL, new Object[1]);

@@ -32,6 +32,7 @@ public class ActionMessagesService implements Serializable {
 
     private static final long serialVersionUID = 1L;
     public static final String NAME = "actionMessagesService";
+    private static final String LOCK_MESSAGE = "entity.lock";
     
     public String handleException(final String msg, final Exception e){
         final StatusMessages messages = getMessagesHandler();
@@ -108,7 +109,7 @@ public class ActionMessagesService implements Serializable {
     }
     
     public void handleGenericException(Exception exception) {
-    	handleGenericException(exception, "Registro alterado por outro usuário, tente novamente");
+    	handleGenericException(exception, getInfoxMessages().get(LOCK_MESSAGE));
     }
     
     public void handleGenericException(Exception exception, String lockExceptionMessage) {
@@ -117,9 +118,9 @@ public class ActionMessagesService implements Serializable {
 		} else if (exception instanceof DAOException) {
 			handleDAOException((DAOException) exception);
 		} else if (exception instanceof EJBException) {
-			handleException(exception.getCause().getMessage(), exception);
+	        handleException(findRealExceptionMessage((Exception) exception), exception);
 		} else if (exception instanceof PersistenceException) {
-			handlePersistenceException(exception);
+	        handlePersistenceException(exception);
 		} else if (exception.getMessage() != null) {
 			handleException(exception.getMessage(), exception);
 		} else {
@@ -127,7 +128,14 @@ public class ActionMessagesService implements Serializable {
 		}
 	}
     
-    private InfoxMessages getInfoxMessages() {
+    private String findRealExceptionMessage(Exception exception) {
+    	if (exception.getCause() == null) {
+    		return exception.getMessage();
+    	}
+    	return findRealExceptionMessage((Exception) exception.getCause());
+	}
+
+	private InfoxMessages getInfoxMessages() {
     	return InfoxMessages.getInstance();
     }
 

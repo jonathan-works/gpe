@@ -25,6 +25,7 @@
         name="checkPermission"
         value="#{processoEpaHome.checarVisibilidade()}" />
     <ui:define name="body">
+        <ui:include src="/WEB-INF/xhtml/components/genericDialog.xhtml" />  
         <h:form>
             <a:jsFunction
                 name="renderButtons"
@@ -96,7 +97,9 @@
                     id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
                     <ui:define name="title">#{infoxMessages['participanteProcesso.participantes']}</ui:define>
-                    <ui:include src="parteProcessoGridRO.xhtml" />
+                    <h:panelGroup rendered="#{home.tab eq 'tabPartesDoProcesso'}">
+                    	<ui:include src="parteProcessoGridRO.xhtml" />
+                    </h:panelGroup>	
                 </ui:decorate>
             </infox:tab>
             <infox:tab
@@ -193,7 +196,9 @@
                     id="frameDecorate"
                     template="../WEB-INF/xhtml/templates/core/include/frame.xhtml">
                     <ui:define name="title">#{infoxMessages['pasta.pastaRestricaoTab']}</ui:define>
-                    <ui:include src="pastaRestricao.xhtml" />
+                    <h:panelGroup rendered="#{home.tab eq 'tabPastaRestricao'}">
+                    	<ui:include src="pastaRestricao.xhtml" />
+                    </h:panelGroup>	
                 </ui:decorate>
             </infox:tab>
             <ui:param
@@ -214,6 +219,10 @@
             </infox:tab>
   
             <ui:include src="abasCustomizadasDoVisualizar.xhtml"/>
+
+            <c:forEach var="tab" items="#{extensaoVisualizar.tabs}">
+                <ui:include src="#{tab}" />
+            </c:forEach>
         </infox:tabPanel>
         <c:if test="#{!checkPermission}">
             <wi:outputText

@@ -1,9 +1,6 @@
 package br.com.infox.epp.menu;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -21,7 +18,6 @@ import org.dom4j.io.SAXReader;
 import org.xml.sax.SAXException;
 
 import br.com.infox.core.messages.InfoxMessages;
-import br.com.infox.epp.access.component.menu.RecursoCreator;
 import br.com.infox.epp.system.PropertiesLoader;
 import br.com.infox.jsf.function.ElFunctions;
 import br.com.infox.seam.path.PathResolver;
@@ -31,7 +27,6 @@ import br.com.infox.seam.security.SecurityUtil;
 public class MenuService {
 
     @Inject private PathResolver pathResolver;
-    @Inject private RecursoCreator roleCreator;
     @Inject private PropertiesLoader propertiesLoader;
     @Inject private SecurityUtil securityUtil;
 
@@ -52,14 +47,6 @@ public class MenuService {
             }
         }
         return dropMenus;
-    }
-
-    public void discoverAndCreateRoles() {
-        try {
-            Files.walkFileTree(new File(pathResolver.getContextRealPath()).toPath(), roleCreator);
-        } catch (IOException e){
-            throw new RuntimeException(e);
-        }
     }
 
     @SuppressWarnings("unchecked")
