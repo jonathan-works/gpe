@@ -6,6 +6,9 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.security.auth.login.LoginException;
 
 import org.apache.commons.lang3.StringUtils;
@@ -188,4 +191,16 @@ public class UsuarioLoginManager extends Manager<UsuarioLoginDAO, UsuarioLogin> 
 		String password = passwordService.generatePasswordHash("admin", admin.getSalt());
 		return password.equals(admin.getSenha());
 	}
+    
+    public boolean existeTaskInstaceComUsuario(String login) {
+        CriteriaBuilder cb = getDao().getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root<TaskInstance> taskInstance = cq.from(TaskInstance.class);
+        cq.select(cb.count(taskInstance));
+        cq.where(
+            cb.equal(taskInstance.get("assignee"), cb.literal(login))        
+        );
+        Long count = getDao().getEntityManager().createQuery(cq).getSingleResult();
+        return count > 0L;
+    }
 }
